@@ -1,132 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152E02580F2
-	for <mptcp@lists.linux.dev>; Wed, 22 Jul 2026 10:48:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10DEA43F4DB;
+	Wed, 22 Jul 2026 11:07:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784717285; cv=none; b=gc2/d3PrQvXS4d7qPdUB95VuSOgjMqmrGt6AZBHwMHi1UHo8WPoiUFHiIDub+MAUHubfocvH6Vje5l0Fkust1/m7wGqKsgPoXHEhyTtO5QSEvlImEK0JFe92V78wkMToN1EshXO2viEHrg2g/ms9vA9Jm+QiIt2IsNUiyFAhvmw=
+	t=1784718472; cv=none; b=jqP/Ej1vp69AJG2ZY117xEalDR12Ggfm7IHeyfAiRKZwiVurfrC/RyG7nQycZLpis4OLRCFaS9awHmfHyi1WX13gRxjxxrx2Y1bSlIZsL3HYo0b5TmcZePOQTBU3x6bxI0oOrwWvaw/+n2vraEI/7PaRfXEDXLO85l3tRZghlIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784717285; c=relaxed/simple;
-	bh=dEa6esfGZuICFQAfJzhn72RramoNIhWSRzQkZpSDH/k=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Bs/pwJwc1k7WDA9PNv65OdlOEEX8qWno5NApCNefRK5mtFgk46ZrQ/p29HbVFQ0mfQadNJOiYgLnTtdi+dAQfM1rHPcYO22+m/tzSB3P+tInsMX9OIi16za3UG0pWqzuJm45iv7zCDFB++DGoXPMXeveaHyeEafUvVh9UsdQoc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ETPYE7+C; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784718472; c=relaxed/simple;
+	bh=aUtb6aFviQFvPTrQFOc0j4WZUnQJinH0Lbl+HrF3O+E=;
+	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
+	 References:Date:Message-Id; b=U05jIEf6EbSKfMAZz51uGsg8oswHJqgnBjlow1PvitMdQHkoRkOf2zSJ9jEMIuuSDDReg3aRrblxDHsMOFboB27paWn4AfUwQHuaO9/+bHG8eiBrOzPzkdlYJmRP/VU64gG/vnjIk2YivekGBZDGaJp9+KnbY6aH/JFxxs2u2c4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hA43C66L; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ETPYE7+C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 633211F000E9;
-	Wed, 22 Jul 2026 10:48:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hA43C66L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43F391F00A3A;
+	Wed, 22 Jul 2026 11:07:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784717283;
-	bh=CfZwiG575+aCCyxEBW+iMw/3ruzua+pGc7XkK1GEGow=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=ETPYE7+CArn8AYFou9ViZYLnb4DkuTamgGMAYEQlCmN8wIBK9TLbYdwAHQtb5XIjH
-	 MFlO/+iy7FV6DanJvdZiTl/V7l3MHSULtzQMfftLuJzdTlXMT1ZBaEFDIVjRikBOCW
-	 5G9oSrOui0Lnsw8/mZV9w4tyXP1GVpCvoqfsMIkQVe5yosf8d9/0cmg89lPczetpOY
-	 p+PM32CoJfjCzxcZlYJk3VKGdU4h05Rvk52ThfyGNxPevapwfQlWaHREz8GCw0jrJr
-	 n2BLkCmyZ10YIB1EGnTe6RmaFKmEdNAmJm/C8PkXYEkHDeW1XNTBT0eYQphQujWAL8
-	 MNUBt8NsE1/LQ==
-Message-ID: <0ec3e0dcf31345a1356956c2b5082a6b56bf35d4.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v2 2/5] Squash to "bpf: Export mptcp packet
- scheduler helpers"
-From: Geliang Tang <geliang@kernel.org>
-To: Shardul Bankar <shardul.b@mpiricsoftware.com>, mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
- <martineau@kernel.org>,  Paolo Abeni <pabeni@redhat.com>,
- kalpan.jani@mpiricsoftware.com, janak@mpiric.us, shardulsb08@gmail.com
-Date: Wed, 22 Jul 2026 18:47:58 +0800
-In-Reply-To: <2ec98c9e15ef4f96d01be048c59b160069cb3923.camel@mpiricsoftware.com>
-References: 
-	<20260703-mptcp_bpf_kfunc_fixes-v2-0-87ae3c64dc7e@mpiricsoftware.com>
-		 <20260703-mptcp_bpf_kfunc_fixes-v2-2-87ae3c64dc7e@mpiricsoftware.com>
-		 <0dc8e723ee2af76224d2fe23eca6c4891207fbe0.camel@kernel.org>
-	 <2ec98c9e15ef4f96d01be048c59b160069cb3923.camel@mpiricsoftware.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.2-9 
+	s=k20260515; t=1784718470;
+	bh=dIpBV1dfLU2FyRTOsqA6fN0VHzKm+EbGBmi4vyKtTAI=;
+	h=Subject:From:To:Cc:In-Reply-To:References:Date;
+	b=hA43C66LglFoCOgQFt48/SZV8E1AFVOgHdIipgXyO3XDXEkdslgQTT7Troqlf6QTP
+	 oUmE9MzA+AbF2KgoVSj5hw4z272NekroHVDQWLzCDQrz7ZZ0Nm8BVRIH0cnWQosQ63
+	 YpEDawuj0Is1pBBBUbfuEhGuA44qzu1fke+u44ZODNwdj2t5ne4fAN+LgYMmxQHuvX
+	 XcOgcrbrlJ2Qs3sDAGXpEyCXYpmwPWZZ+3dx9s7cMlcRQrxb91xXxBSieNMYK5zv4R
+	 Nq34e28DhD6t6OEMSPMd4RdbzfMMaNdA486XiRsDBu5g2aVbRokYbpoeuHT2o8A8GT
+	 rZqQEhoJdt7bw==
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH mptcp_net-next 1/1] mptcp: fastopen: only mark MPTFO
+ subflows with SYN data
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: Ren Wei <n05ec@lzu.edu.cn>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, matttbe@kernel.org, 
+ martineau@kernel.org, geliang@kernel.org, pabeni@redhat.com, 
+ kuba@kernel.org, dmytro@shytyi.net, yuantan098@gmail.com, 
+ yifanwucs@gmail.com, tomapufckgml@gmail.com, zcliangcn@gmail.com, 
+ bird@lzu.edu.cn, bronzed_45_vested@icloud.com
+In-Reply-To: <81f26b8fddd59ebb6cecc417fb138d9ff5214e08.1780458440.git.bronzed_45_vested@icloud.com>
+References: <cover.1780458440.git.bronzed_45_vested@icloud.com>
+ <81f26b8fddd59ebb6cecc417fb138d9ff5214e08.1780458440.git.bronzed_45_vested@icloud.com>
+Date: Wed, 22 Jul 2026 13:07:42 +0200
+Message-Id: <178471846217.973832.14121853580804517391.b4-review@b4>
+X-Mailer: b4 0.16-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1645; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=aUtb6aFviQFvPTrQFOc0j4WZUnQJinH0Lbl+HrF3O+E=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLISljS/afb2fSVS23+s7ItAcbSwSdCNSUVavifOaWpsV
+ Ld9URDcUcrCIMbFICumyCLdFpk/83kVb4mXnwXMHFYmkCEMXJwCMJGznYwMuz/fPcGzIOPeLFvG
+ 5a1PqwT3eZ8WVS2bae7w1arZ5P7LdYwMD+QajkZKXPr86lmb1z+GZ2+dhDu2suUuudYjW3NIx/0
+ 6CwA=
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Shardul,
+Hi Ren, Wyatt, Yuan,
 
-On Mon, 2026-07-06 at 16:33 +0530, Shardul Bankar wrote:
-> Hi Geliang,
-> 
-> Thanks for taking a look.
-> 
-> On Mon, 2026-07-06 at 14:34 +0800, Geliang Tang wrote:
-> > Hi Shardul,
-> > 
-> > Thanks for this v2. It's much better now.
-> > 
-> > On Fri, 2026-07-03 at 22:27 +0530, Shardul Bankar wrote:
-> > > ...
-> > > ...
-> > 
-> > Sashiko complained that the rcu lock is not held here [1]. It seems
-> > we
-> > can add the lock, something like:
-> > 
-> >     rcu_read_lock();
-> >     subflow = mptcp_subflow_ctx(ssk);
-> >     if (subflow && subflow->conn == (const struct sock *)msk)
-> >             mptcp_pm_subflow_chk_stale(msk, ssk);
-> >     rcu_read_unlock();
-> > 
-> > 
-> > WDYT?
-> > 
-> > Thanks,
-> > -Geliang
-> > 
-> > [1]
-> > https://sashiko.dev/#/patchset/20260703-mptcp_bpf_kfunc_fixes-v2-0-87ae3c64dc7e@mpiricsoftware.com?part=2
-> > 
-> > 
-> 
-> I don't think we need the rcu_read_lock() here, and I think it would
-> actually be unsafe.
-> 
-> The subflow context is freed with kfree_rcu(), but in this path the
-> msk
-> socket lock prevents that free, so rcu_read_lock() is not needed.
-> get_retrans() runs with the msk lock held (msk_owned_by_me() in
-> mptcp_sched_get_retrans()). A subflow is removed from msk->conn_list
-> by
-> __mptcp_close_ssk() under that same lock, and only then can it be
-> torn
-> down and its context freed, so it cannot be freed while get_retrans()
-> is running. The in-kernel mptcp_subflow_get_retrans() relies on
-> exactly
-> this: it dereferences the subflow and calls
-> mptcp_pm_subflow_chk_stale() under the msk lock, without
-> rcu_read_lock().
+> Passive TCP Fast Open accepts a valid-cookie SYN even when it carries
+> no data. In that case the child socket's receive queue is intentionally
+> left empty.
+>
+> mptcp_fastopen_subflow_synack_set_params() set is_mptfo before checking
+> for queued SYN data. That made data-less TFO SYNs hit a WARN and, if
+> the warning was non-fatal, left stale MPTFO state behind. The stale
+> flag could later trigger a state-confusion bug in
+> check_fully_established().
+>
+> Only mark the subflow as MPTFO after confirming that a SYN-data skb is
+> present. Return quietly when the receive queue is empty.
 
-If that is the case, would it be reasonable to add a
-msk_owned_by_me(msk) check inside bpf_mptcp_pm_subflow_chk_stale()?
+Thank you for the fix, it looks good to me:
 
-Thanks,
--Geliang
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-> 
-> rcu_read_lock() would also not be the right call here:
-> mptcp_pm_subflow_chk_stale() is not a pure reader (it updates
-> subflow-
-> > stale_count and can trigger a retransmit), so it needs the msk lock
-> for serialization, which rcu_read_lock() would not provide. It is
-> also
-> KF_SLEEPABLE and can sleep (its stale path takes lock_sock_fast() and
-> calls __mptcp_push_pending()), so it cannot run inside an RCU
-> read-side critical section anyway.
-> 
-> So I'd prefer to keep the code as is. If it helps, I can add a short
-> comment noting that the msk lock keeps the subflow context alive.
-> Does
-> this address the concern?
-> 
-> Thanks,
-> Shardul
+@Netdev maintainers: this can be applied directly in net.
+
+
+Sorry for the delay, I initially wanted to understand the reproducer,
+then wrote a small packetdrill script, then I lost track of this patch.
+
+As I mentioned to Yuan last week at NetdevConf, it would be great if the
+PoC could first try to use Packetdrill when it is doable. For example,
+in this case, this packetdrill script appears to be far more readable
+than the .c files generated by AI:
+
+  https://github.com/multipath-tcp/packetdrill/pull/202/changes
+
+=> It is easy to read the syscalls, the injected packets (<) and the
+expected ones (>) with an output similar to the one from tcpdump.
+
+Note that for MPTCP, this fork should be used:
+
+  https://github.com/multipath-tcp/packetdrill
+
+Otherwise, the official repo can be used:
+
+  https://github.com/google/packetdrill
+
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
