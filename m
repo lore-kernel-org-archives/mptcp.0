@@ -1,124 +1,166 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E212343CE79
-	for <mptcp@lists.linux.dev>; Thu, 23 Jul 2026 10:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58109470136;
+	Thu, 23 Jul 2026 13:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784803714; cv=none; b=clka5rjcFcJUTPeI0+MycHnqXKmAjGBz/6cXCUJQ+y6rB+BkOQx5Ny29fxI26CTPoUBzBvW58vrC1nRxpujKoGqp67NerUdlLhwMRmdxTmacUhoI3bD3BuQZAZg5u72fRdrfXtDfwUWawNsgxlahdSjlH+8tpgONStnhbNW5fGA=
+	t=1784814434; cv=none; b=QAh5Wu3WgyHSjuE+URLAc/UpHEKsOmzYEPZXQ2xIEHMAJ30X3qQJJJfoEq9qllF0jIVVamvd+D6UkWfCui76a0wY0DANTij3uxXyLWct4MctwFA/KkMyJ4wEGfacSIAogMKavQ+SIK0bqDQhuy2iMosEnegocflVmk3mGLwXB5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784803714; c=relaxed/simple;
-	bh=NXGd6Lism5/nH7BxRNve+gF8hyKb2LHeDAOtfhNSPhc=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=J92aBtQGUzrGs7NlfxV8qhuSACruIznHsd3SekCL5O6uNW8LyiUl2re8qbYPI/RQp3FZgJ+KiE1MGybIkxRYajAouEHknOua3WZmgLAn9YpYi7a4ghpdm+juXNhIqTYF2wDH+3JUlNdGMaQnB1wtUjnbU0oOLy7GgBMsFj/gbTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RJ6B7t/Y; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1784814434; c=relaxed/simple;
+	bh=TTOiuNpKd3ZCkUsJNnXQtcBfFIarUNgpz9bYK41z5To=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TPhnfols7Fmty+5Y7y0d1nPxx38bTEaU2UgJPdKYoMPI0S6I3wmgOHcp9NCaJGL0c/mBuJBsGqZS7RYo5+KAlVA7hN1y64Fqs0y+KB28dYi4JFzeYGEkMtz2n3X6yvKKGwWIJvjSSkaMrwwcEVIqrjkGDnEaAvYzwyindwBoDSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mjuIWYOm; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RJ6B7t/Y"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mjuIWYOm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784814430; x=1816350430;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=TTOiuNpKd3ZCkUsJNnXQtcBfFIarUNgpz9bYK41z5To=;
+  b=mjuIWYOmzd0+XTh/J6NZ+5oeuqt3ifSmNj3cizp8bKUH6GRHMVBv61k8
+   5NPr7QLBJpFEvlIy1quBAfLQ1IEMFfITrSXpgfvMmyEgEB6CndpV3z3+e
+   k8BIgQW9AqPeC0apuEtf4MWuX6sgP2ROAWNF/zYbVKx9B+z659Dh5SDZh
+   H/tZE/7haOKzifdtG0k028grZ8WUDtKXr1uiFZqIzdEmq1GJuyfftFOop
+   If9g9YcodNa23oKuuQBArLy1OxexUCjOrDLvmkoa4tUiipo5o0AVwkVVu
+   sIC/LZsDPF03ZIjUo11Q1Y097UX3/ZeYsJN8rfYWQDZLPhZ2N099Olqwe
+   w==;
+X-CSE-ConnectionGUID: DFquW1EVQkCCTurZoUojmg==
+X-CSE-MsgGUID: 7dX0GByZRqqYrPsP4AkRpg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11854"; a="88008487"
+X-IronPort-AV: E=Sophos;i="6.25,180,1779174000"; 
+   d="scan'208";a="88008487"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2026 06:47:07 -0700
+X-CSE-ConnectionGUID: 5I8g06L0RzW2DP7JqA5g0A==
+X-CSE-MsgGUID: b1+2gPZ+TkuUBaWrc2aoow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,180,1779174000"; 
+   d="scan'208";a="261962172"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2026 06:47:07 -0700
+Date: Thu, 23 Jul 2026 06:47:00 -0700
+From: Andi Kleen <ak@linux.intel.com>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: acpica-devel@lists.linux.dev, bpf@vger.kernel.org,
+	coresight@lists.linaro.org, kvm@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, mptcp@lists.linux.dev,
+	netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alex Mastro <amastro@fb.com>, Alex Williamson <alex@shazbot.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Ankur Arora <ankur.a.arora@oracle.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Bobby Eshleman <bobbyeshleman@meta.com>,
+	Christian =?iso-8859-1?Q?Borntr=E4ger?= <borntraeger@linux.ibm.com>,
+	Christophe Leroy <chleroy@kernel.org>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	David Hildenbrand <david@kernel.org>,
+	David Matlack <dmatlack@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Emil Tsalapatis <emil@etsalapatis.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Geliang Tang <geliang@kernel.org>, Ian Rogers <irogers@google.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Ivan Pravdin <ipravdin.official@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Janosch Frank <frankja@linux.ibm.com>,
+	Jason Xing <kerneljasonxing@gmail.com>,
+	Jiri Olsa <jolsa@kernel.org>, Joe Damato <joe@dama.to>,
+	John Garry <john.g.garry@oracle.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Kaushlendra Kumar <kaushlendra.kumar@intel.com>,
+	Kent Gibson <warthog618@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Len Brown <lenb@kernel.org>, Leo Yan <leo.yan@linux.dev>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Mike Leach <mike.leach@arm.com>,
+	Mina Almasry <almasrymina@google.com>,
+	Mykyta Yatsenko <yatsenko@meta.com>, Nam Cao <namcao@linutronix.de>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Pawel Chmielewski <pawel.chmielewski@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Quentin Monnet <qmo@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Raghavendra Rao Ananta <rananta@google.com>,
+	Saket Dumbre <saket.dumbre@intel.com>,
+	Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>,
+	Song Liu <song@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Stefano Garzarella <sgarzare@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Swapnil Sapkal <swapnil.sapkal@amd.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Vipin Sharma <vipinsh@google.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Willy Tarreau <w@1wt.eu>, Yonghong Song <yonghong.song@linux.dev>,
+	Zhang Chujun <zhangchujun@cmss.chinamobile.com>,
+	Zhang Rui <rui.zhang@intel.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] tools: Use fputc() calls in some functions
+Message-ID: <amIbVOIsOeZgcBZF@tassilo>
+References: <48f2d61f-d468-49b7-881e-f00777db073f@web.de>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1784803711;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CusY4yasjA0rpwjEX0TeiX4LdGf5wVS2epko2/fLlcE=;
-	b=RJ6B7t/Yy7McKs+Shpr0oqSHeO9GQphr2yT2lNm8tgMtN4hP1BJthR3UK4DMVV5NYqKeCx
-	xSDm+oInT8B6uw7eJxkn68cGb8xGXtf7XRMhZyVHak5DsUS8pbU2fPXBhqwPHAyVYxB0lo
-	J5qH4AinxLUj5LABAJ04XQkI13bpVkw=
-Date: Thu, 23 Jul 2026 10:48:28 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: gang.yan@linux.dev
-Message-ID: <b05aee1e4487409adb2fae8b665454c64b760a24@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH mptcp-next 1/2] mptcp: pm: userspace: decrement
- local_addr_used when remove
-To: "MPTCP Linux" <mptcp@lists.linux.dev>
-Cc: "Gang Yan" <yangang@kylinos.cn>
-In-Reply-To: <20260723-localaddr-v1-1-ce84b865594a@kylinos.cn>
-References: <20260723-localaddr-v1-0-ce84b865594a@kylinos.cn>
- <20260723-localaddr-v1-1-ce84b865594a@kylinos.cn>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <48f2d61f-d468-49b7-881e-f00777db073f@web.de>
 
-July 23, 2026 at 5:55 PM, "Gang Yan" <gang.yan@linux.dev mailto:gang.yan@=
-linux.dev?to=3D%22Gang%20Yan%22%20%3Cgang.yan%40linux.dev%3E > wrote:
+On Thu, Jul 23, 2026 at 12:25:25PM +0200, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Thu, 23 Jul 2026 11:13:30 +0200
+> Subject: [PATCH] tools: Use fputc() calls in some functions
+> MIME-Version: 1.0
+> Content-Type: text/plain; charset=UTF-8
+> Content-Transfer-Encoding: 8bit
+> 
+> Single characters should occasionally be transferred into the output.
+> Thus use the corresponding function “fputc” (or even “putchar”).
+> 
+> The source code was transformed by using the Coccinelle software.
 
-
-Hi Matt, Hi Ge Liang,
-=20
-Sorry=20for the confusion. I didn=E2=80=99t notice you(Geliang) had squas=
-hed this patch in your prior submission, and I didn=E2=80=99t mean to dup=
-licate work on purpose. My
-apologies for the oversight.
-=20
-Separately,=20I recently spotted a TODO item in the userspace PM code tha=
-t requires
-adding refcount support for entry. I=E2=80=99ve been going through the re=
-levant source
-code to get familiar with the logic these days.
-=20
-I=E2=80=99m writing to ask if you have a timeline to merge Ge Liang=E2=80=
-=99s patch series
-anytime soon. This is not a reminder by any means. If the merge is still =
-pending,
-I can build my development work directly on top of his patches to avoid e=
-xtra
-conflicts.
-=20
-Thanks,
-Gang
-
->=20
-> From: Gang Yan <yangang@kylinos.cn>
->=20
->=20mptcp_userspace_pm_append_new_local_addr() increments msk->pm.local_a=
-ddr_used
-> when a new local address is appended, and mptcp_userspace_pm_delete_loc=
-al_addr()
-> decrements it when an entry is removed via the subflow destroy path. Th=
-e
-> mptcp_pm_nl_remove_doit() netlink REMOVE_ADDR handler, however, only un=
-links
-> the matching entry from msk->pm.userspace_pm_local_addr_list via
-> list_del_rcu() without touching the counter, so the counter is not chan=
-ged every
-> time userspace removes an address by id.
->=20
->=20Decrement msk->pm.local_addr_used under the pm lock right after list_=
-del_rcu(),
-> mirroring the increment site, so the counter stays in sync with the act=
-ual
-> number of entries left in the list.
->=20
->=20Assisted-by: Codex:GLM-5.2
-> Fixes: 77e4b94a3de6 ("mptcp: update userspace pm infos")
-> Signed-off-by: Gang Yan <yangang@kylinos.cn>
-> ---
->  net/mptcp/pm_userspace.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
->=20diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index 73094bdbdbf2..6402226a9f0e 100644
-> --- a/net/mptcp/pm_userspace.c
-> +++ b/net/mptcp/pm_userspace.c
-> @@ -334,6 +334,7 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, st=
-ruct genl_info *info)
->  }
->=20=20
->=20 list_del_rcu(&match->list);
-> + msk->pm.local_addr_used--;
->  spin_unlock_bh(&msk->pm.lock);
->=20=20
->=20 mptcp_pm_remove_addr_entry(msk, match);
->=20
->=20--=20
->=202.43.0
->
+gcc already does this transformation automatically.
