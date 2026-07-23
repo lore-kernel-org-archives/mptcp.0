@@ -1,139 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D643D28033B
-	for <mptcp@lists.linux.dev>; Thu, 23 Jul 2026 01:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF1121773D
+	for <mptcp@lists.linux.dev>; Thu, 23 Jul 2026 03:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784769010; cv=none; b=m/IFtUqvks84jfY9izjG/hHgeFE+vaPECrzGIVv9iLoRwxxhKo6dk3SjqqSZA92EduzW3wCKMR0NEzjyOyf/UxJTUEWXwMM8W0sxiUKYsL3psA74/1uPio0wNgboY6O6hIwnh3Qu/vuMVNUuIw+B9UQTQm84TE3QbTWxwE/9bz4=
+	t=1784777043; cv=none; b=siXUQumnveAk8fBdET7HM3tL3iakCUezGhL0LpDw1aflUfQi/ig3og+si+cBS0CJp1EpwsiPJAcQdIrhGVuJdZqOahIsq2fv1LW2oJSQNknoFETMinV0VvjwQaPy3fs7MiXceHKLwriwhqNy8cFe9KXVPLFO62tyH/dps4Jz3U4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784769010; c=relaxed/simple;
-	bh=wgnaYI/o/RwW78RPmcyJQ0uOiSRnrC7tvLqcdX0MVsI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PA0uP/LyPE5b6ZTJpNiy/1kMPzXhwlxyoG2vNSlXmedLwCkRybGw0P7/dgamt+ZCuRCxYaB6u4xN1BOKWFLDFA9ESvlT8MAhYI/7xC8TS+J9NCaivfVQJev1DqDe6ygNgVuRD60/7k0FCT02VVpI6sojCBeV28xZ9ueBzZwgUC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lV64kDRa; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784777043; c=relaxed/simple;
+	bh=scbWTGfxfh3VGb0/0KvJBbsyDH7t3SNPKWqjFthAHq4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hhwPIbBzXufOVbFqyg7o96GNKwyHhSG3ejTzgVVy5tg9YRjr0MqJjPmjo79MogIbgE5puseslinQm/lDkuqv+U2VxjnNZTBw1Kvf1vDaepA2oKCw60vvviYi0v5v0zFUMHnBuewtxvfvqO39K8hw/KMRVTIE32jtIcgyCyCmSt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ogoIXI73; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lV64kDRa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 732AF1F000E9;
-	Thu, 23 Jul 2026 01:10:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784769009;
-	bh=VsSGxGgQHAydGGn2pwxrR+Ml3gofRJhtpaQr3OxLch0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=lV64kDRa3R6rmSHu8zB+yLlFw5Qlc8OcqmLdfGD4oixxTnkrGk0BL/Hyj2vrluCmg
-	 PMqkY+UORtyPa6pcVz74UCe0rQEB4DWUuwo4PJrgXKDb8aBjOUdqoJ0cTAueea11Dv
-	 +voA1SGXzGpYlBB60KJy9YUkASg+sFkT7aVkFVVEY3UhBpsMAnauhMJ++LRsOyKSgO
-	 vyh8mj3ETYeqHe+1fsfUJeAshpi+QaQQXu5+ODS1ODdVN/9dv2vClyNxnSkA9yqyud
-	 /FWECKTInq0hEHKzFlQg1IwpPwYor0zjc/322w4TrH7S5Op1ubguaoiFggnChx0VKQ
-	 /dZZ9DHjrEVrg==
-Message-ID: <f28023650f3feaec991e266ee0226c5c0110f17e.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v2 2/7] mptcp: take TCP_MAXSEG handling into
- __mptcp_setsockopt_set_val
-From: Geliang Tang <geliang@kernel.org>
-To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
-Cc: pabeni@redhat.com, Gang Yan <yangang@kylinos.cn>
-Date: Thu, 23 Jul 2026 09:10:01 +0800
-In-Reply-To: <11304a8f1ec63390553390404d9164f7a4213b79.1784601268.git.yangang@kylinos.cn>
-References: <cover.1784601268.git.yangang@kylinos.cn>
-	 <11304a8f1ec63390553390404d9164f7a4213b79.1784601268.git.yangang@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.2-9 
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ogoIXI73"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version:
+	Content-Type; bh=IbD1RDHQe6lCAcpt0iLgLtyTwux8x/D3ZrB4wVldLHs=;
+	b=ogoIXI73y3GZyl9HSL+EWx73K3XUb1liKQ1lKM/iiLDULHQ777pDh9CoF+Ew17
+	yKaMzXHBj0RdVCmXkN5ykUoFSCMwBweXvN6jfSw5L1gJ4fblA+D87M8WYNRVaiqc
+	nrUfaAT+DaXN+kYrIKYTpdoLLxf8Qt1qxj8Jy1iDndrY4=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wCnrxktiWFqBwaILA--.33598S2;
+	Thu, 23 Jul 2026 11:23:26 +0800 (CST)
+From: luoqing <l1138897701@163.com>
+To: matttbe@kernel.org
+Cc: gang.yan@linux.dev,
+	l1138897701@163.com,
+	luoqing@kylinos.cn,
+	mptcp@lists.linux.dev
+Subject: [PATCH mptcp-net v4] mptcp: pm: fix data race in add_addr timer callback
+Date: Thu, 23 Jul 2026 11:23:24 +0800
+Message-Id: <20260723032324.189675-1-l1138897701@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <da4b96a3-c7ba-4444-bc41-96760e5ee08d@kernel.org>
+References: <da4b96a3-c7ba-4444-bc41-96760e5ee08d@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wCnrxktiWFqBwaILA--.33598S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXr1UXw15ZFWxXr18uF1Utrb_yoW5Kry3pF
+	4rW3Z8GF1kGr47Jr1xAF4kWFy0gFZ5JrW5GrWjgwsIyws8XFyUXFyfG3yYqa47WFsYv3W0
+	vrWjvas8Zw4DuaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pirOzxUUUUU=
+X-CM-SenderInfo: jorrjmiyzxliqr6rljoofrz/xtbC3Q9gpGphiS8+zQAA3I
 
-Hi Gang,
+From: Qing Luo <luoqing@kylinos.cn>
 
-On Tue, 2026-07-21 at 10:40 +0800, Gang Yan wrote:
-> From: Gang Yan <yangang@kylinos.cn>
-> 
-> mptcp_setsockopt_all_sf is only used in 'TCP_MAXSEG', and it can be
-> replaced with __mptcp_setsockopt_set_val.
-> 
-> Signed-off-by: Gang Yan <yangang@kylinos.cn>
-> ---
->  net/ipv4/tcp.c      |  1 +
->  net/mptcp/sockopt.c | 27 ++-------------------------
->  2 files changed, 3 insertions(+), 25 deletions(-)
-> 
-> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-> index b427f924608c..5915d0e62f43 100644
-> --- a/net/ipv4/tcp.c
-> +++ b/net/ipv4/tcp.c
-> @@ -3830,6 +3830,7 @@ int tcp_sock_set_maxseg(struct sock *sk, int
-> val)
->  	WRITE_ONCE(tcp_sk(sk)->rx_opt.user_mss, val);
->  	return 0;
->  }
-> +EXPORT_SYMBOL(tcp_sock_set_maxseg);
->  
->  /*
->   *	Socket option code for TCP.
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index 9c4faa0d82ef..3e000436ab94 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-> @@ -808,28 +808,6 @@ static int mptcp_setsockopt_first_sf_only(struct
-> mptcp_sock *msk, int level, int
->  	return ret;
->  }
->  
-> -static int mptcp_setsockopt_all_sf(struct mptcp_sock *msk, int
-> level,
-> -				   int optname, sockptr_t optval,
-> -				   unsigned int optlen)
-> -{
-> -	struct mptcp_subflow_context *subflow;
-> -	int ret = 0;
-> -
-> -	mptcp_for_each_subflow(msk, subflow) {
-> -		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-> -		int err;
-> -
-> -		err = tcp_setsockopt(ssk, level, optname, optval,
-> optlen);
-> -		if (err < 0 && ret == 0)
-> -			ret = err;
-> -	}
-> -
-> -	if (!ret)
-> -		sockopt_seq_inc(msk);
-> -
-> -	return ret;
-> -}
+The timer callback reads entry->retrans_times outside pm.lock to decide
+whether to call mptcp_pm_subflow_established(). Since
+mptcp_pm_announced_del_timer() can concurrently set retrans_times =
+ADD_ADDR_RETRANS_MAX under pm.lock, a race condition exists.
 
-This helper will also be used when implementing IPV6_TCLASS [1], so
-don't delete it for now. Let's wait until IPV6_TCLASS is merged before
-posting this patch.
+Use a local 'retransmit' flag set inside pm.lock to capture whether
+retransmission is still possible. This ensures that
+mptcp_pm_subflow_established() is only called when the retransmission
+naturally exhausts.
 
-Thanks,
--Geliang
+Fixes: 348d5c1dec60 ("mptcp: move to next addr when timeout")
+Signed-off-by: Qing Luo <luoqing@kylinos.cn>
+---
+ net/mptcp/pm.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-[1]
-https://patchwork.kernel.org/project/mptcp/patch/2617b8684039574734b8622936ef126d6a7cd519.1754986785.git.tanggeliang@kylinos.cn/
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 6afd39aea110..c71dcf887683 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -380,6 +380,7 @@ static void mptcp_pm_add_addr_timer(struct timer_list *timer)
+ 	struct mptcp_sock *msk = entry->sock;
+ 	struct sock *sk = (struct sock *)msk;
+ 	unsigned int timeout = 0;
++	bool retransmit;
+ 
+ 	pr_debug("msk=%p\n", msk);
+ 
+@@ -412,14 +413,15 @@ static void mptcp_pm_add_addr_timer(struct timer_list *timer)
+ 		entry->retrans_times++;
+ 	}
+ 
+-	if (entry->retrans_times < ADD_ADDR_RETRANS_MAX)
++	retransmit = entry->retrans_times < ADD_ADDR_RETRANS_MAX;
++	if (retransmit)
+ 		timeout <<= entry->retrans_times;
+ 	else
+ 		timeout = 0;
+ 
+ 	spin_unlock_bh(&msk->pm.lock);
+ 
+-	if (entry->retrans_times == ADD_ADDR_RETRANS_MAX)
++	if (!retransmit)
+ 		mptcp_pm_subflow_established(msk);
+ 
+ out:
+-- 
+2.25.1
+Hi,
 
-> -
->  static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int
-> optname,
->  				    sockptr_t optval, unsigned int
-> optlen)
->  {
-> @@ -889,9 +867,8 @@ static int mptcp_setsockopt_sol_tcp(struct
-> mptcp_sock *msk, int optname,
->  						 val);
->  		break;
->  	case TCP_MAXSEG:
-> -		msk->maxseg = val;
-> -		ret = mptcp_setsockopt_all_sf(msk, SOL_TCP, optname,
-> optval,
-> -					      optlen);
-> +		ret = __mptcp_setsockopt_set_val(msk,
-> &tcp_sock_set_maxseg,
-> +						 &msk->maxseg, val);
->  		break;
->  	default:
->  		ret = -ENOPROTOOPT;
+Thank you for your review and suggestions. I'm very sorry for not replying to your question in time and causing you inconvenience. It's because some issues are difficult to explain, so I merely followed your suggestion to analyze and submit the code.
+
+> Don't forget to reply to each question from previous reviews 😉
+>
+> How did you find the bug? Do you have a reproducer or is it by analysing
+> the code?
+>
+> Were you assisted by a tool/LLM? If yes, please add the Assisted-by tag.
+I discovered this potential issue while studying the new MPTCP path manager code. Through code analysis, I noticed that entry->retrans_times could be accessed both inside and outside the pm.lock, which appeared to create a race condition with mptcp_pm_announced_del_timer().
+
+Unfortunately, I don’t have a reproducer for this issue at the moment, as it’s difficult to construct a test scenario that reliably triggers this specific race condition. I submitted the patch based on code analysis to prevent potential issues.
+
+I used AI tools to help verify and analyze the code logic during my investigation. However, I’m not entirely certain about the extent to which I should acknowledge this assistance, so I didn’t add an Assisted-by tag in the current version. If you think it’s necessary, I’d be happy to add it.
+
+> For legal reasons, you are supposed to put your full name. Having only
+> one "word" for your full name, without capital letters looks wrong, no?
+I apologize for the confusion. “Luoqing” is actually my full name in Chinese convention - “Luo” (罗) is my family name and “Qing” (庆) is my given name. In Chinese, we don’t typically capitalize individual characters or add spaces between them. However, I understand the concern about the formatting, and I’ve updated the Signed-off-by to “Qing Luo luoqing@kylinos.cn” to follow the Western name order convention, which I hope is more appropriate.
+
+Best regards,
+luoqing
+
