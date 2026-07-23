@@ -1,132 +1,179 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CA8384CE5
-	for <mptcp@lists.linux.dev>; Thu, 23 Jul 2026 04:31:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147C23DDAEB
+	for <mptcp@lists.linux.dev>; Thu, 23 Jul 2026 08:13:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784781140; cv=none; b=jhxLjR2n8Owk8I4Gkf1/ntPT4aSHGGOIPKa7UmD5DeaKNLNF5X0FxPkjRN/ca92qJrjwaf/VKYTTxwzbPpJ+38tWU5CflMDl+5+t9tAc3SEj6UG15BjZBIeNfj9zvZGrFjX1F7Jxsr5HhIgnZQwVO2Y8BfsuIbhd5cYea6+VBF8=
+	t=1784794412; cv=none; b=MX/FwIZrGVBbuksM01lwuOuKnDvmV5DS576utPE5xFxmsvsk7BCPtJvFNInnLjr0W1hqwxud6Wy0mPoy2ORxyfj5A1Jc/TM14tYasdgphJIHsbWKLu8GxtcfAVYezCahg2Bg4h3vq3dysETcYpEI8d847Dun/7KeqFgGkPdTjKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784781140; c=relaxed/simple;
-	bh=Jh+j6dT9IioEapW9/wYwCKX0mHTJGgXPcioggbxXZSM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=R9isdqUDZc7T6S9hTwM8hKouAhzvceXhFlSKK4+zWEbV+V1I/btaLF7m06ImbiuuknxZs1OUgF4hqHGquCK5iplpvGr/E9hXo3d8kuxN2AmGElmpoR9jmwtzgh7DaiHDEI7hkm0jhNySOo3J3kN7OVk+vgltd02wZsz7XXE1kBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dRTdSPhx; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1784794412; c=relaxed/simple;
+	bh=N6kp4rTCXZLSoS2zmu/QyRs/7yzaNocasgINH+W1IkE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tKKFthLuFLTziaVrhjB1bHE4mxYyuq8au+gHLL388ilkbUMILRjHJR/tucVplGWaAJAXwobC4DneJHGIAQTCVr/mteaXGIW3WFAOuXq1SpzHVteI2EULjeTP0+GgZJIwchAq6Ve7eBf+45NTPKSezdX8wEO+hSFwlaLxN0YjwJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aJBjWK3g; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dRTdSPhx"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2cad4170e8eso3516415ad.3
-        for <mptcp@lists.linux.dev>; Wed, 22 Jul 2026 21:31:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784781110; x=1785385910; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=33llZZ5Ev+L2gr3Leb4K7ySsJw3k3EkLi9Nv8aCi1t8=;
-        b=dRTdSPhx1C+W/Aj+/7ptM+nu2je/ULra2lKTJn7o8MzSTOToLKNoWfJLEqReWOp/o/
-         6yRkB1OHk3mNaclPl7j16QOxi0Jx/9UlavAzWo80YnRL1IP+1m30SwYNKyOU6eji+K1y
-         xtNjYlSsoUJAFMb9FHz3oBqZvmDxiUYYcL7buJMHzdhDp1cJHnBWWzfqLl6hRFBcqIRa
-         rzPsonMUKBbSI9wVfJD7h/tLEbO1+AEdagX0b+mY2NCG4ipvR6waSfPEszK1/7Rppf5X
-         TfGaxwVFTHdWmz1urCDgJdkmNTDJxz+ePpvoMlY+kXG36CIDqjpyh8uLFwi78XrrP90r
-         5K6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784781110; x=1785385910;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=33llZZ5Ev+L2gr3Leb4K7ySsJw3k3EkLi9Nv8aCi1t8=;
-        b=kr5HcHUJ8Bhl4qqNeISueZRfeI2ucj+bVR7gHg3dIqGz/nxZGfq/v58m4jv8+A6Al4
-         pfzmWIfD+5Vqwp97aXYeUMq/wpRVjDgrW2iloZeTA7DGqQGWb0bQCjvX1RUaNVP+Dpes
-         li3ydm+kx/YQquMmvB8FMK8I8oApgJbNQHKyBqq4tCQzHauzGi7dLH5ySKCEwOY9rYyb
-         RS/zHmnoNxgOcyJlXJysgKeN7wuP7GHsys3sjKfELQ4yys+boOKbKFwW7pOD6Eab/x1A
-         EakilAi3247/7iEPVKMzuUYlgItZFbPaHFzrHbMTBqdi7NnWExp8pA9HuAH2odM4mwAe
-         KhIw==
-X-Gm-Message-State: AOJu0YwK/R7p7mrpO5TPduSdCJ3WvARhPZKg56Yvj149n4TVSzc2Y0Up
-	Loacrp31iv7xDE/M9ab3REgj+r8uKL1pD9i9mHBg0fMLKvlzhk5jWGlsxTzy
-X-Gm-Gg: AR+sD11Wqt3GA/ZAgE8Ovu2rlf/B48hSL0Et7CbPA5kOe/e24v9hkgKdBJv2HFKYpO+
-	SWtEoIPQFCyyLqUioS4wQ+yl6Z4LNDX8ZuQPBUZljDe5k0UZC8WExmipQL2B70+vBeNnsj3cHc7
-	0Ew3VV8SdyV3SVOo1bmDmJqJF2hGOKICfalMxtNXk8/8fx2wQIRyOo9k5mcgO+MYfJrEJDnCpAj
-	Zkf2ZL3L6JqHMjjADwf82+Ts31niP0QCRyrwBEXH9eogTXJ0X3i/5LJpElHs6hKS8ut+pSJC7U3
-	qiwCHWDQmQ+GcdCjYuKidDdrtbzsauXXiNe0aVLr/EQPCT1CaUC7mM5ozLrdxPOrqStkFr8vA5O
-	qr52inFCc73soqVjwpytqhm8Mg5Ezc411rbDyjR3nITQnyQ2PTDoLfdJN5Rc7AeqhX3ADBVxia5
-	Gty2VgL4IKkpPPrmg=
-X-Received: by 2002:a17:903:3c24:b0:2c8:1f58:55dd with SMTP id d9443c01a7336-2cfa6a43f89mr20953965ad.9.1784781110128;
-        Wed, 22 Jul 2026 21:31:50 -0700 (PDT)
-Received: from [127.0.0.1] ([134.33.67.161])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3147e07000fsm28052224eec.21.2026.07.22.21.31.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2026 21:31:49 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Qing Luo <luoqing@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260723032324.189675-1-l1138897701@163.com>
-References: <20260723032324.189675-1-l1138897701@163.com>
-Subject: Re: [PATCH mptcp-net v4] mptcp: pm: fix data race in add_addr
- timer callback
-Message-ID: <62e52f72-7c47-97dc-3198-8c1e33d39b5b@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 23 Jul 2026 04:31:49 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aJBjWK3g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACF8A1F000E9;
+	Thu, 23 Jul 2026 08:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784794410;
+	bh=KMiMH3BKO8Njrj8uw3LXH716CLlJYP8AgpmzPtH7lgg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=aJBjWK3gTABH06f3Rtb+KzXlji7ophzpRrNQWTHjwyS0iM9fFJPsoiR2TRO/nhgAc
+	 sTmMQezAQXg1CigJdMJjYsIpOZWf4VN/VwbeuTF4vQ4nNERcl1iSbuOl+wjT62F/wH
+	 6+7LYixuJtavGL8KfnjfwN46je7OzhrlkHElzWlR7AVlM86xsNNyM8tvxwxUJT7MPD
+	 GAuW3DtkYWcUjzr+Ga4O3ZZRhynwDh3TFiVKGVfgWI0hcLdlIK9JZkt5tqfILHz5cR
+	 oQ66bhbHSmdjhCeZkakR5EfMWb8LT4PpFTt/KcaZuzisl8MA0UZ6iB/evfbVn4DBkE
+	 ExO91YBplcVXA==
+Message-ID: <be6c654f-f7a2-4eab-95ce-c49889445f6f@kernel.org>
+Date: Thu, 23 Jul 2026 10:13:24 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net v4] mptcp: pm: fix data race in add_addr timer
+ callback
+Content-Language: fr
+To: luoqing <l1138897701@163.com>
+Cc: gang.yan@linux.dev, luoqing@kylinos.cn, mptcp@lists.linux.dev
+References: <da4b96a3-c7ba-4444-bc41-96760e5ee08d@kernel.org>
+ <20260723032324.189675-1-l1138897701@163.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260723032324.189675-1-l1138897701@163.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Qing,
+Hi luoqing,
 
-Thank you for your modifications, that's great!
+Thank you for the v4 and the reply.
 
-Our CI did some validations and here is its report:
+Please next time do not send a new version as a reply to a previous one,
+that's easier with a new thread and a link to the previous one.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): selftest_mptcp_connect_splice =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/299776=
-60387
+On 23/07/2026 05:23, luoqing wrote:
+>> How did you find the bug? Do you have a reproducer or is it by analysing
+>> the code?
+>>
+>> Were you assisted by a tool/LLM? If yes, please add the Assisted-by tag.
+>
+> I discovered this potential issue while studying the new MPTCP path
+> manager code. Through code analysis, I noticed that entry->retrans_times
+> could be accessed both inside and outside the pm.lock, which appeared to
+> create a race condition with mptcp_pm_announced_del_timer().
+> Unfortunately, I don’t have a reproducer for this issue at the moment,
+> as it’s difficult to construct a test scenario that reliably triggers
+> this specific race condition. I submitted the patch based on code
+> analysis to prevent potential issues.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/d751a7841525
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1132868
+To help categorise data race issues, these questions should be ideally
+answered in the commit message:
 
+- Is it a potential issue (i.e. code analysis but never reproduced), or
+do we have a proof it can happen (i.e. KCSAN trace)
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+- If there is a proof, is it easy to reproduce? Is there a reliable
+reproducer?
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+- Could this issue cause damages?
 
-For more details:
+With the increase number of issues reported by AI, potential issues
+without proofs might not need to be fixed, especially if it introduces a
+higher complexity. Having a reproducer or at least a calltrace would
+really help not to waste time on potentially unreproducible bug spot by
+AI. But AI could also help to find a reproducer (ideally using packetdrill).
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+> I used AI tools to help verify and
+> analyze the code logic during my investigation. However, I’m not
+> entirely certain about the extent to which I should acknowledge this
+> assistance, so I didn’t add an Assisted-by tag in the current version.
+> If you think it’s necessary, I’d be happy to add it.
 
+OK, thank you for the explanation. There are ongoing discussions [1] to
+use this tag like this:
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+  Assisted-by: LLM # find issue, code, review, test
+
+In your case, it would be this I suppose:
+
+  Assisted-by: LLM # review
+
+[1] https://lore.kernel.org/ksummit/87wluv7yzc.fsf@trenco.lwn.net/
+
+But that's still under discussions. In the meantime, it would help if
+you write this with word in the commit message, e.g.
+
+  I discovered this potential issue while studying the code. AI tools
+  helped me to verify the issue can potentially happen.
+
+(no need to send a v5, I will apply the v4)
+
+>> For legal reasons, you are supposed to put your full name. Having only
+>> one "word" for your full name, without capital letters looks wrong, no?
+> I apologize for the confusion. “Luoqing” is actually my full name in
+> Chinese convention - “Luo” (罗) is my family name and “Qing” (庆) is my
+> given name. In Chinese, we don’t typically capitalize individual
+> characters or add spaces between them. However, I understand the concern
+> about the formatting, and I’ve updated the Signed-off-by to “Qing Luo
+> luoqing@kylinos.cn” to follow the Western name order convention, which I
+> hope is more appropriate.
+
+Thank you for the explanation! I understand that conventions are
+different. I was asking because usually the "Western name order
+convention" is used, and the full name is required, not a nickname. To
+avoid confusions, even if I'm not a big fan of force people using a
+different convention, I think it is easier with the Western form, if
+that's OK for you.
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
