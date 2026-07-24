@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C0D3BCD23
-	for <mptcp@lists.linux.dev>; Fri, 24 Jul 2026 09:27:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852F1377AB6
+	for <mptcp@lists.linux.dev>; Fri, 24 Jul 2026 09:28:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784885263; cv=none; b=EYb8njy8BBCJqjI11uzgejARJ0EaM3OKyfA6srMQSm2tpg2DGX/E5xYZq8u7lSFLaXq28cXXX3Jwrmh79aJMs/ZB5whdgPbDyMH1DL/TyAD4nlVoN0PyvSrcUG3GluzBm1yt0/CgDwk2KOLTS2AG449yojuQCmXOwtw+OAmbwTc=
+	t=1784885327; cv=none; b=uU8l79NOfYQkrdZE4o5NLAJaVSnQoIDTx9R7XqUCNwmkpnzz7SBkZwSp2aacBxu3BTHf+CtvA5j3oKx+yzYxzdMCDtgJQyNjWxgt/ABYAX5Jm/Vxc6CknfxxWx8lmZ9ffEVbEAKqa/fbfx/E87eHtBPV+PG8Sbx1bEBuBY9I7UM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784885263; c=relaxed/simple;
-	bh=Zvtj7oz8BBgHRmKQkicp6CqZmXDGQTVpuZz6imhZX9w=;
+	s=arc-20240116; t=1784885327; c=relaxed/simple;
+	bh=jCcu1YZgAdkakAd90MQh9oc6ObIKVPsEkZyapHqoDuU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fJ0uue0nM0gmerm9FSFcWu8f5++5KvsesmV+fUFAqlbWcSYpLjsd9YLYAIQ/lxU+AjrlgWcUjRoegkeNFx9OOeAY6hNDzogxjnffscVpG0Q+FsY0FYErlyQYNPhnLMSD9KrXljrYWJxTDFUqyYTLGd/ueiWbu2HxXfW99MDcgPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lkTc33du; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=EsrenLjtEwLrQ6bXaKCHC5zLIeyR4zwSvgHvh4Yt5AcHMJMc0M1VMK3C0kpkQwqR048r10xaQ4nQWvFu7okR5Iwcz99XP1m1eZvtBLcycT/3lbn7PhQfshvQEH6EsYGXiG1suyZH4yCqIdqb5426VpMnLDyRPf5riZSfBHUOMLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SlTUbEOr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lkTc33du"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4F4A1F00A3A;
-	Fri, 24 Jul 2026 09:27:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SlTUbEOr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6554E1F00A3A;
+	Fri, 24 Jul 2026 09:28:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784885260;
-	bh=IuT2rmpjiYkxjcFKYKYBH8qpbOSKqK1AgExRx6yVBbg=;
+	s=k20260515; t=1784885326;
+	bh=nyNQ6HgOa8YRRsgbxwKMEDnqWW0PO07wIpx6xnIthUg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=lkTc33du7Kapy6VrKOdngPk1nkExW8aQJPlNImCYBZv+20DvBSMcAwS0Wqzp6AgRZ
-	 ZM3dBN60VyaB/X35CmILIekuNtQxeFVqukVdq1MA0KYWrMWOjZSL9RpfjUSGcmkx9Q
-	 nfMd8Ovi41Ee3S1eMPcrLC9XHvIfsQAbEeVtPSX7XCpGA/FPxOS2UgzKbTPmBCwHDs
-	 w7wZYzx6iM9lnGI0nqtMaIyqKmZzEAN3/Ay/gyIWua9UgjEsQR0QmqUN5FrMgZszEe
-	 cFeasx8ungxP+c+PsD36EUcdbOFvKAPevyYQ0DLLaTZsQuDRKlbBWlX8gCHrFMu+Hw
-	 HTCu+0cb9+JGA==
-Message-ID: <c6091b33-77ec-4bda-abcd-e40554f33e71@kernel.org>
-Date: Fri, 24 Jul 2026 11:27:37 +0200
+	b=SlTUbEOrqMzp7HhHGQWKtAN7Gh79lkhNsVJ8HhJzcN2VhVTZhMEoy9TTBjKQw7367
+	 kM3/iddh3Ue9Q9G0+qMyTAlyKgiwlYUCvlEm94H2Rn1x24XDgN8WAAyycgG8Uu489V
+	 U9DXeismtB6EslM9zSqE7JIJCSCH9buBzi3+fos4KRM6RwPd0o9j9IJJmKFLCXmRE9
+	 16OR2+GqbegSZv2OVmpdV7Dacn1d4bc5I+mKL5C6iFp7YllnbSbS8Ky3MTV/zVIbIC
+	 UCaaRoyDGo22Ll1edLuZb0dUox15VB9HeW8mvmFlww4VUhzd7ANVJqXtLB9w1M61vi
+	 8NxhSspG1++FA==
+Message-ID: <560844d2-60e5-4d43-b039-071125fc9f08@kernel.org>
+Date: Fri, 24 Jul 2026 11:28:43 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 2/2] selftests: mptcp: simult_flows: set EXIT
- trap earlier
+Subject: Re: [PATCH mptcp-next 1/2] selftests: mptcp: run fail_test in main
+ shell during join test
 Content-Language: fr
 To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
 Cc: Gang Yan <yangang@kylinos.cn>
 References: <20260724065229.36736-1-gang.yan@linux.dev>
- <20260724065229.36736-3-gang.yan@linux.dev>
+ <20260724065229.36736-2-gang.yan@linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260724065229.36736-3-gang.yan@linux.dev>
+In-Reply-To: <20260724065229.36736-2-gang.yan@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,44 +96,19 @@ Hi Gang,
 On 24/07/2026 08:52, Gang Yan wrote:
 > From: Gang Yan <yangang@kylinos.cn>
 > 
-> Set the EXIT trap for cleanup immediately after creating the temporary
-> file variables, before the dd commands that fill them and the namespace
-> init, to ensure cleanup runs on any failure or interruption during the
-> early setup phase. If either dd fails (e.g. ENOSPC), the temp files
-> already created are not cleaned up.
+> check_transfer() compares the input and output files byte-by-byte using
+> `cmp -l "$in" "$out" | while read ...`. Because the while-loop body runs
+> in a subshell (the script sets neither lastpipe nor pipefail), the
+> fail_test call inside it -- which sets the global ret/last_test_failed --
+> and the `return 1` both act on the subshell, not on check_transfer().
+> check_transfer() thus always falls through to `return 0`, and any data
+> corruption affecting only the payload (leaving the subflow/PM counters
+> untouched) is silently reported as PASS.
 
-From what I see, if one of the 'dd' command fails, the errors are simply
-ignored.
+Good catch!
 
-> Assisted-by: Codex: GLM-5.2
-> Signed-off-by: Gang Yan <yangang@kylinos.cn>
-> ---
->  tools/testing/selftests/net/mptcp/simult_flows.sh | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
-> index 3ea3d1efe32e..b40dea5f9b30 100755
-> --- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-> +++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-> @@ -62,13 +62,12 @@ setup()
->  	sout=$(mktemp)
->  	cout=$(mktemp)
->  	capout=$(mktemp)
-> +	trap cleanup EXIT
->  	size=$((2 * 2048 * 4096))
->  
->  	dd if=/dev/zero of=$small bs=4096 count=20 >/dev/null 2>&1
->  	dd if=/dev/zero of=$large bs=4096 count=$((size / 4096)) >/dev/null 2>&1
-
-This 'fix' is only interesting when the script is abort while one of the
-dd command is in progress, to create files of 80k and 16M in RAM. I
-guess this is very unlikely, no?
-
-If you already managed to end-up in this situation by accident, OK to
-accept the change, but the commit message needs to be updated.
-
-If it is a potential fix for an unlikely situation with the selftests,
-we probably don't need that.
+This looks like a fix that should be backported. Do you have a Fixes tag
+to add here?
 
 Cheers,
 Matt
