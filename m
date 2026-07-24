@@ -1,169 +1,154 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF0F43A81B;
-	Fri, 24 Jul 2026 14:02:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15136385D87
+	for <mptcp@lists.linux.dev>; Fri, 24 Jul 2026 18:48:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784901770; cv=none; b=VRS5VY6BPJ7Muoa1PpZQEEFsyooKDLPDtOVQ5GmPk3mSmjXOK3Q6U5UlO0Pf65qGmxhtl8jalg081Fa/f8U2ZJqz3zqJpm9l1I0Axj4An3m52aVB3UTC7dGFK8QPah1jKouLuTu6xvVHmQ06JWcQkwf1zP2FdKlutgvboFo5mkM=
+	t=1784918917; cv=none; b=dU7zZpLFekA0yKPRc2px8JeNyBG3QjZmgDgr6dDtEIKlioGzNFEwIT76HM1j3ai5OmLxn+4o9moRkMUlc4NNvlMeZVkmRWWEhnq1059m0RkP4uPARePkRAxerTuSeF3r+svSow2MKqf6l/FunEYyFxWSWqtMCtu9jwTfgAVA294=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784901770; c=relaxed/simple;
-	bh=S3MdV3UAR+ADbXfkUpujD9LpujITJkIrZfRUogdwTOI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rG2FlA3VWKYywyOvxeV4DhhgCiNBrj15WmOAOBmZad4sYigbyt6FbmOxV61nvscg+ZqH0QawJIQkzjEDsiKowc4I7Dr9ukHXqxra5RgUpPt7TAZ+HSo8lPfn9PKYgfvT5vgPgqMGV4R9PD2fuAIJ9NElLkPiDBfmrS0MwfKGYww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gYZp48Gp; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784918917; c=relaxed/simple;
+	bh=vLyM/nWrXP9rpv5P1x0VUI55x8VjMwT1zYVp/Q3fi/U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lW8BAKqtIEWiF5tZARAhU4Lq3jbqJy0Co/RS+T7982G089ppdOc6q15qob7sRup0cEiQJDGOxfcg9JiLjM9J+i9Wp7oR0CNetuAdaCJ4KxiBUrtwnVs63PrOGlRRJFHS7YfVjfTTztIRPoXSPqGe1xyINKaUGPnhxE3MooXXQo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qq5B7gGt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gYZp48Gp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9BA21F000E9;
-	Fri, 24 Jul 2026 14:02:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qq5B7gGt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C89221F000E9;
+	Fri, 24 Jul 2026 18:48:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784901767;
-	bh=eiIkZX9UKn62Wt3UHZGy8oEPX9InDuKj5kOafRz6D3M=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=gYZp48Gpn8wxKY98OEwH4fJVZL/ZImbDl5uOCR75i3jG1+w6tpJjsKv9omFE/qsfg
-	 qlVXjsCaNpgE0t5Xd4bojwezYpSRi63sVzMR1PpjKeiOKwk8+q7HButPdUUtiA7gTC
-	 heLbLjBUV1btBtC08rVvq1P3olYLxdQxDBCxU4jp+UDCe8/CURCRxI5E1PW5qvxEGF
-	 XNuyvtI/cPgJxoqqMwcR6cEGxDtAil/xufYr25hqOuPIMsOMk/Rg5e/Na9TQ1RGp/+
-	 6awyAluITZNaWBu9PcOn55eSIYCcD+DOMO3ENQh6HG6MeU2Zt8Bhj1Sl0z9upjcyOL
-	 WyeIpLtgeJnvA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 24 Jul 2026 16:02:17 +0200
-Subject: [PATCH net-next 5/5] mptcp: implemented OoO queue pruning
+	s=k20260515; t=1784918915;
+	bh=84TmnsWJs3P1bIX+C1bPAVbZplPke4MkzwyxZooisis=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=Qq5B7gGt7VN05W8GcmhOsqL97MwBjibOr4GS/UVaXyww6ORIm0fHdFz8EnCImPoGn
+	 5Kvl51HDVmIdPGtIeWMZPVgwsKfAw36crZWauLA+lgwwj4DVuEjfSIA3GcYvLvv9bw
+	 nWtLcJAwdB+sH7IW3h6bTHIi6nB+eph6nAn0I5KBfKnhBsWVvBXCpSTpIdrcfAOcFW
+	 o7lhpffaqxG/jZ+sQ7Dvnan0SHMj0ORP3Cv2GvTYfJI/GJm6tM+K1A2YXeUe5W+84Y
+	 V0keKShmtgLzx8+7NV4NhHASO09VLZ68w1CNRE907JwOOHL/kAfTj391wbcJsK0RgN
+	 lYf9kxey+/DXQ==
+Message-ID: <4da53292-aa11-45be-ac7f-11afcfb278a1@kernel.org>
+Date: Fri, 24 Jul 2026 20:48:32 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260724-net-next-mptcp-oooq-pruning-v1-5-5dd4dec63a54@kernel.org>
-References: <20260724-net-next-mptcp-oooq-pruning-v1-0-5dd4dec63a54@kernel.org>
-In-Reply-To: <20260724-net-next-mptcp-oooq-pruning-v1-0-5dd4dec63a54@kernel.org>
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Gang Yan <yangang@kylinos.cn>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3583; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=0TP0HmzvNCrhNepV2D684uiABQ8/iw2HmKqfNTiVn14=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLKSCyrLXn2vsjnL+X8Vx8zbfV+DjLU4WhbdMzs3bX0kY
- 0/l02OpHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABPRn8/wz1ak6GH+cv6mFh0H
- y6Bshheu4WzVNTHaIc3OfNsm7pWdychwo+XsVcMN/mdVOCrmRrebG8vMdfS7uSPs5LzQdWopp52
- YAQ==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v6 1/3] mptcp: pm: userspace: drop
+ delete_local_addr helper
+Content-Language: fr
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1782513313.git.tanggeliang@kylinos.cn>
+ <0d2025431ba1b2a34da3a1747880d7b23779cf76.1782513313.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <0d2025431ba1b2a34da3a1747880d7b23779cf76.1782513313.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Paolo Abeni <pabeni@redhat.com>
+Hi Geliang,
 
-When moving incoming skbs in the msk receive queue and the latter
-is above limits, prune it as needed quite alike what TCP is doing
-at the subflow level. The main difference relies in the stop condition:
-since MPTCP does not perform collapsing, it's better off dropping the
-bare minimum to fit the (newer) incoming packet.
+On 27/06/2026 00:45, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> Address entries should not be removed from local_addr_list when a subflow
+> is deleted by the userspace PM, should only be removed when sending a
+> REMOVE_ADDR.
+> 
+> So mptcp_userspace_pm_delete_local_addr() helper shouldn't be called in
+> mptcp_pm_nl_subflow_create_doit() and mptcp_pm_nl_subflow_destroy_doit().
+> 
+> Since this helper is open-coding in mptcp_pm_nl_remove_doit(), it can be
+> dropped now.
+> 
+> Address entries are removed from local_addr_list when sending a REMOVE_ADDR
+> by the userspace PM, the local_addr_used counter of PM should also be
+> decremented accordingly.
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Tested-by: Gang Yan <yangang@kylinos.cn>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/mib.c      |  1 +
- net/mptcp/mib.h      |  1 +
- net/mptcp/protocol.c | 46 +++++++++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 47 insertions(+), 1 deletion(-)
+I was re-reviewing this series after having read the comments from Sashiko:
 
-diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-index ef65e2df709f..d9bd4f4afcc0 100644
---- a/net/mptcp/mib.c
-+++ b/net/mptcp/mib.c
-@@ -87,6 +87,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
- 	SNMP_MIB_ITEM("WinProbe", MPTCP_MIB_WINPROBE),
- 	SNMP_MIB_ITEM("BacklogDrop", MPTCP_MIB_BACKLOGDROP),
- 	SNMP_MIB_ITEM("RcvPruned", MPTCP_MIB_RCVPRUNED),
-+	SNMP_MIB_ITEM("OfoPruned", MPTCP_MIB_OFO_PRUNED),
- };
- 
- /* mptcp_mib_alloc - allocate percpu mib counters
-diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-index c84eb853d499..18f35f7e0a2d 100644
---- a/net/mptcp/mib.h
-+++ b/net/mptcp/mib.h
-@@ -90,6 +90,7 @@ enum linux_mptcp_mib_field {
- 	MPTCP_MIB_WINPROBE,		/* MPTCP-level zero window probe */
- 	MPTCP_MIB_BACKLOGDROP,		/* Backlog over memory limit */
- 	MPTCP_MIB_RCVPRUNED,		/* Dropped due to memory constrains */
-+	MPTCP_MIB_OFO_PRUNED,		/* MPTCP-level OoO queue pruned */
- 	__MPTCP_MIB_MAX
- };
- 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 7f257419c5ea..5cf44eab76f1 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -373,6 +373,49 @@ static void mptcp_init_skb(struct sock *ssk, struct sk_buff *skb, int offset,
- 	skb_dst_drop(skb);
- }
- 
-+/* "Inspired" from the TCP version; main difference: stop as soon as the MPTCP
-+ * socket is under memory limit.
-+ */
-+static bool mptcp_prune_ofo_queue(struct sock *sk, u64 seq)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct rb_node *node, *prev;
-+	bool pruned = false;
-+	u64 mem;
-+
-+	if (RB_EMPTY_ROOT(&msk->out_of_order_queue))
-+		goto out;
-+
-+	node = &msk->ooo_last_skb->rbnode;
-+
-+	do {
-+		struct sk_buff *skb = rb_to_skb(node);
-+
-+		/* Stop pruning if the incoming skb would land in OoO tail. */
-+		if (after64(seq, MPTCP_SKB_CB(skb)->map_seq))
-+			break;
-+
-+		pruned = true;
-+		prev = rb_prev(node);
-+		rb_erase(node, &msk->out_of_order_queue);
-+		mptcp_drop(sk, skb);
-+		msk->ooo_last_skb = rb_to_skb(prev);
-+
-+		mem = (unsigned int)sk_rmem_alloc_get(sk);
-+		if (mem <= sk->sk_rcvbuf)
-+			break;
-+
-+		node = prev;
-+	} while (node);
-+
-+	if (pruned)
-+		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_OFO_PRUNED);
-+
-+out:
-+	mem = (unsigned int)sk_rmem_alloc_get(sk);
-+	return mem <= sk->sk_rcvbuf;
-+}
-+
- static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
- {
- 	u64 copy_len = MPTCP_SKB_CB(skb)->end_seq - MPTCP_SKB_CB(skb)->map_seq;
-@@ -385,7 +428,8 @@ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
- 	 * will break.
- 	 */
- 	if (unlikely(sk_rmem_alloc_get(sk) > READ_ONCE(sk->sk_rcvbuf)) &&
--	    !__mptcp_check_fallback(msk)) {
-+	    !__mptcp_check_fallback(msk) &&
-+	    !mptcp_prune_ofo_queue(sk, MPTCP_SKB_CB(skb)->map_seq)) {
- 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
- 		mptcp_drop(sk, skb);
- 		return false;
+https://sashiko.dev/#/patchset/cover.1782513313.git.tanggeliang@kylinos.cn
 
+I think the series is correct, but it feels like additional fixes are
+required:
+
+- msk->pm.userspace_pm_local_addr_list doesn't contain an entry for the
+ID0 when initialised
+  - That's probably fine, but then it means the ID0 case needs to be
+handled separately, like it is with the in-kernel PM.
+  - Or maybe easier to add it when the userspace PM is used, to avoid
+all these exceptions?
+    - If yes, then the remove_doit should no longer handle the ID0
+differently as well.
+    - same for announce_doit?
+    - maybe better to do that to avoid all these exceptions?
+
+- When creating a subflow with ID0, an entry can be added to the list
+(to be checked)
+  - If the ID0 is not added at init time, then an exception should be
+added there
+  - (also there is a check to avoid announcing ID0 → I think it is valid
+to re-announce the ID0 if this address is no longer used, an exception
+should be added there too, no?)
+
+- each time the list is traversed, it doesn't take into account the ID0
+case:
+  - If the ID0 is not added at init time, then an extra check should be
+added there
+
+WDYT?
+
+If yes, maybe this kind of patch can help? (not tested)
+
+  https://github.com/matttbe/mptcp_net-next/commit/e03ee2728e98
+
+Cheers,
+Matt
 -- 
-2.53.0
+Sponsored by the NGI0 Core fund.
 
