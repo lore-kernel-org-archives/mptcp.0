@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF1B416878
-	for <mptcp@lists.linux.dev>; Fri, 24 Jul 2026 10:02:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10BA429CD5
+	for <mptcp@lists.linux.dev>; Fri, 24 Jul 2026 10:25:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784887370; cv=none; b=gzN7WT6D99VJ5n0qfNWXYN2be6Dq/cyxm7yUpNjJsjIp+TxxU01ef5yiJ+YnWR2MIFWTdoEciAqTmWg0yX8O6pk1M9BzDOjoLZM0mcovlD6K2rp7hIlow5YqmSOb49V4SMBAMyjHhivReNK2S6QjwHSkJ0FoE/ZVLbufsAsUhKM=
+	t=1784888705; cv=none; b=RW4QG7T605lvM4APDF6RCklXD4C4rT1WMssIJ5rtr2T7F60l+sFeMSi0WBu9QJccLII3Tgz7hLnRpx1Rx757yYqwV4QZGf8j4lwSkDC7zdWJgbdJDrKztlzkkeEKUpcmY5HmwdWEsy9Q9lFAvTaZso6LKmB60Af/deuXMoy4G/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784887370; c=relaxed/simple;
-	bh=WS1i4Op1Iiko/4FwJg2XXlmYGx/C3ITWfIZelXMBMlg=;
+	s=arc-20240116; t=1784888705; c=relaxed/simple;
+	bh=Gy8WwhwXyYWU4W02yPSiiY5F1u3DGxhchGdv1Bvn4yM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lj2b8yExdhDqL6s/5p2ziZ0Us3PK3wx+ziaA8TXok2bkb3xAlDVh1Tp3I/sZrqT9nFEYfWqW0PVStvBew1ZAgWpcy+GyxoInHJYmA9p6t4CM7BY3ZwE3nING2neYptL86xiX1GXBKXbQPXV+1EIm1xUu7iLzxXJr1n/fj3vEpr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GNoQxq9r; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=KU3VOFK0zWvytkN2HfS+e4wMwA2TYn97VNdf9wqpTj4b3a0oUK7MpuX2jmNxM7ph3rBdLgiH6vTctGJgAujWy4VvZDBom2X8kvxNsVGJJNMjSzuOBsavESx4nuTWRU2hx6FB9gnt3qi2q+zqJ4q+Z7MBnUj4IAxD+Sq2otD2inY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FWAaIAEx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GNoQxq9r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4301E1F000E9;
-	Fri, 24 Jul 2026 10:02:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FWAaIAEx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6872D1F00A3D;
+	Fri, 24 Jul 2026 10:25:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784887367;
-	bh=Kl86muXIpMbbQ7Nh6BQMf1X93lqArEfWuH+teyDZNNI=;
+	s=k20260515; t=1784888704;
+	bh=uLiv6xTsbDN8XCqXUPzU3rfiOVe2Dwev2zDIDIV8wnM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=GNoQxq9rcZ1sATHHbUoJYTC9kYRmLVLrj+Qm9J4/TGxyKoVflRCf5p27hByoWOPrd
-	 qcU+peNoh9TvsBRJTT0/XnYEiSGdzi/Fgjdb8E6XxLYR+Ybq2YAU0U2iVf5vfCSO7r
-	 BEZzJttLvrEiZAg/bbj21+0N0zp7kA15Up8YMOA92b/jDcFEIpCRJQ538nI8ZcKL8C
-	 J7LyGVToY4fOuLtkZXFdF3sbDXp/yVD4TMnituJdi63WrkE1Nqa6tuo8OrSdwU3eL9
-	 W2WDkkSipmj1dJKm7a2j3HCOuI+9qBakWwNYZHDXe7xXGzqjCh1KdvSqDmcpmgUMxS
-	 bPeJM4J+jhgLA==
-Message-ID: <5885399f-96c1-451c-ade7-64bea9d72ec4@kernel.org>
-Date: Fri, 24 Jul 2026 12:02:44 +0200
+	b=FWAaIAEx9jDKfRZuDAwjoi9GvS8E5cZanRGNwCmXXmWO80Imr3VwgNx7gffYl7P/9
+	 Lr8EDQcY8Qs6sr12Px3XG/JI/vex3DG8Jay18+h1A/CxPxjvz0mrh8gieb7aSFPxJ3
+	 n+QoUlSMbxWXOIKNrwOhCyY21/cZS4/GQ9f1haihPoLumDFwFP18SfDkCHUHFzjO4d
+	 VNKUDNR+GkGwCn+A+aAniOmvKfFVQ7RIWWsM+7ljOxg2sju1uB5aTA7hruryCBXZp4
+	 cAqjKS3igjOD72zpnIbIT2gouZ2povF8uJTORJRh4mXsDkfs/LXDCQs6jKEFZJhHRH
+	 FCp0T9h9bH7VA==
+Message-ID: <190a8af0-1a1c-4bb8-a129-c245511f54f1@kernel.org>
+Date: Fri, 24 Jul 2026 12:25:01 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 1/2] selftests: mptcp: run fail_test in main
- shell during join test
+Subject: Re: [mptcp-next,v5,07/12] mptcp: sync mptcp skb cb layout with tcp
+ one
 Content-Language: fr
-To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>
-References: <20260724065229.36736-1-gang.yan@linux.dev>
- <20260724065229.36736-2-gang.yan@linux.dev>
+To: Geliang Tang <geliang@kernel.org>, pabeni@redhat.com
+Cc: mptcp@lists.linux.dev
+References: <8acd04596a44fa0a03e39f9f3d10a2e301b52763.1778446731.git.pabeni@redhat.com>
+ <20260722100104.1241778-1-geliang@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,41 +87,84 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260724065229.36736-2-gang.yan@linux.dev>
+In-Reply-To: <20260722100104.1241778-1-geliang@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Gang,
+Hi Geliang,
 
-On 24/07/2026 08:52, Gang Yan wrote:
-> From: Gang Yan <yangang@kylinos.cn>
+On 22/07/2026 12:01, Geliang Tang wrote:
+> Hi Paolo,
 > 
-> check_transfer() compares the input and output files byte-by-byte using
-> `cmp -l "$in" "$out" | while read ...`. Because the while-loop body runs
-> in a subshell (the script sets neither lastpipe nor pipefail), the
-> fail_test call inside it -- which sets the global ret/last_test_failed --
-> and the `return 1` both act on the subshell, not on check_transfer().
-> check_transfer() thus always falls through to `return 0`, and any data
-> corruption affecting only the payload (leaving the subflow/PM counters
-> untouched) is silently reported as PASS.
+> Patches 6 and 7 turn out to be very helpful for simplifying my MPTCP KTLS
+> support implementation.
+> 
+> To let KTLS obtain an skb's sequence number, I had defined a get_skb_seq
+> operation in [1]. The TCP implementation was:
+> 
+> static u32 tcp_get_skb_seq(struct sk_buff *skb)
+> {
+>       return TCP_SKB_CB(skb)->seq;
+> }
+> 
+> and the MPTCP one was:
+> 
+> static u32 mptcp_get_skb_seq(struct sk_buff *skb)
+> {
+>       return MPTCP_SKB_CB(skb)->map_seq - MPTCP_SKB_CB(skb)->offset;
+> }
+> 
+> After Patch 6 removes the CB offset field, the MPTCP implementation collapses
+> to simply:
+> 
+>       return MPTCP_SKB_CB(skb)->map_seq;
+> 
+> And after Patch 7 changes map_seq from u64 to u32, the get_skb_seq operation
+> is no longer needed at all. The two control blocks now expose the sequence
+> number identically (same type, same offset), so I can define a single
+> TLS_SKB_CB accessor that works for both TCP and MPTCP without any
+> per-protocol dispatch:
+> 
+> struct tls_skb_cb {
+>       u32 seq;
+> };
+> 
+> #define TLS_SKB_CB(__skb)     ((struct tls_skb_cb *)&((__skb)->cb[0]))
+> 
+> static_assert(offsetof(struct tcp_skb_cb, seq) == 0);
+> static_assert(offsetof(struct mptcp_skb_cb, map_seq) == 0);
+> 
+> The static_asserts guarantee at compile time that both layouts keep the
+> sequence number at offset 0, so TLS_SKB_CB(skb)->seq reads the correct
+> value regardless of the underlying protocol.
+> 
+> I have reworked the entire MPTCP KTLS series on top of patches 4-8 of this
+> series. Building on the removal of the CB offset field, I also added a patch
+> that trims the duplicated skb head at receive enqueue. With that in place,
+> KTLS can retrieve the record header via skb_copy_bits() directly, so there
+> is no longer any need for a dedicated MPTCP helper like the
+> mptcp_skb_get_header() I introduced in [2].
+> 
+> Looking forward to your next version of patches 4-8. Happy to help out with
+> them if that's useful.
 
-Thanks, now in our tree (I changed the commit title, I hope that's OK)
+That's good if these patches are helping you, but I don't think Paolo is
+going to work on a new version for these patches. The attached series --
+mptcp: address stall under memory pressure -- has been applied, and it
+didn't need these patches at the end.
 
-New patches for t/upstream-net and t/upstream:
-- 3e32d738332f: selftests: mptcp: join: mark tests with data corruption
-as failed
-- Results: c00da97f2a8c..14dbb670bb6e (export-net)
-- Results: 95ac470148fe..ddf9f880a057 (export)
-
-Tests are now in progress:
-
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/2c0ef2a0cdbea15d71a70a858397322358520133/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/fdfb144e9842f54cc7d121e468375e2b91aa8575/checks
+I don't remember why these patches were not needed, but I guess you can
+always cherry-pick them on your side, and modify them if needed.
 
 Cheers,
 Matt
+
+> Thanks,
+> -Geliang
+> 
+> [1] https://patchwork.kernel.org/project/mptcp/patch/eacfe3e5929c07d35d08cab6663c61d40fac8649.1782123118.git.tanggeliang@kylinos.cn/
+> [2] https://patchwork.kernel.org/project/mptcp/patch/447fc4384ba0d4b0f78c452239dbb3e87e021578.1782123118.git.tanggeliang@kylinos.cn/
+
 -- 
 Sponsored by the NGI0 Core fund.
 
