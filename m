@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D33243230E;
-	Fri, 24 Jul 2026 14:02:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF0F43A81B;
+	Fri, 24 Jul 2026 14:02:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784901769; cv=none; b=k/ol7djJMi4F7RgIdW4/gpDw65iwqzh7C3Rqnaf1eFmBoZYUYbVWnWMz2CujSUVMiV9HK6H5/geJOkN6VuLwUwOHwU/El1hg4OBR4trdUmC9gv1MuozLig5Fdn1JpYuviSgz3hocHs1XKfhEIWVNTbgZEqwwoZemroqz6IovUA0=
+	t=1784901770; cv=none; b=VRS5VY6BPJ7Muoa1PpZQEEFsyooKDLPDtOVQ5GmPk3mSmjXOK3Q6U5UlO0Pf65qGmxhtl8jalg081Fa/f8U2ZJqz3zqJpm9l1I0Axj4An3m52aVB3UTC7dGFK8QPah1jKouLuTu6xvVHmQ06JWcQkwf1zP2FdKlutgvboFo5mkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784901769; c=relaxed/simple;
-	bh=FGREC4W6Mh/CHWXFlthiI7UvopuXq/RVGFIwYGmO6W4=;
+	s=arc-20240116; t=1784901770; c=relaxed/simple;
+	bh=S3MdV3UAR+ADbXfkUpujD9LpujITJkIrZfRUogdwTOI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WFdgHrDnq1m7IdGyOQ/c3ToTKl/Y3osBqpyyI51hIgsd69UL3XpHgxN0KGYB70W+qUzBE5kALcqVRFELhOClrk91K16ziQsurY6qf9E1K2s3WoPcSw+p53tdXb/vjmMTCf8sABDEDDF45sYedLfZAd/v3UeCx5ZcsnAMK/TvCcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UcpZEdyh; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=rG2FlA3VWKYywyOvxeV4DhhgCiNBrj15WmOAOBmZad4sYigbyt6FbmOxV61nvscg+ZqH0QawJIQkzjEDsiKowc4I7Dr9ukHXqxra5RgUpPt7TAZ+HSo8lPfn9PKYgfvT5vgPgqMGV4R9PD2fuAIJ9NElLkPiDBfmrS0MwfKGYww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gYZp48Gp; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UcpZEdyh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 725EB1F00A3D;
-	Fri, 24 Jul 2026 14:02:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gYZp48Gp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9BA21F000E9;
+	Fri, 24 Jul 2026 14:02:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784901765;
-	bh=36lAnMkjB07VIYCCBLdzVx8RoT1sIGgW6HHKCR5eWMg=;
+	s=k20260515; t=1784901767;
+	bh=eiIkZX9UKn62Wt3UHZGy8oEPX9InDuKj5kOafRz6D3M=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=UcpZEdyhat91TWRDwkFKUzDUIIAdLPG5fJH6W3uXjKWjvgc3HdQmk0cQu+gvR6+HO
-	 N2c/fbL1wo7wGy5v4DBmKUrd82LgiliEi9vYOZOWpqOeW3PkWvZdd5QgI/rQYmSzIc
-	 0rdt7sgBuy5uX1NU2q5yvFNrUmCHGqVUFnHsi9D4apGmDtbJVpaC/mL4p6v+7+z4U+
-	 Mr11amWEc99fcqdwRGwZ++Z1G+3biN+krwslszSUwytQnwKI/73o5uP0rcAOs4BChC
-	 4JeTCNx3nQDoBf/4vThIEFGibxEPX37wrt3YmcefZULykCs4iaYJ2/z6VN9d3M2grl
-	 igosbsBDwo9dA==
+	b=gYZp48Gpn8wxKY98OEwH4fJVZL/ZImbDl5uOCR75i3jG1+w6tpJjsKv9omFE/qsfg
+	 qlVXjsCaNpgE0t5Xd4bojwezYpSRi63sVzMR1PpjKeiOKwk8+q7HButPdUUtiA7gTC
+	 heLbLjBUV1btBtC08rVvq1P3olYLxdQxDBCxU4jp+UDCe8/CURCRxI5E1PW5qvxEGF
+	 XNuyvtI/cPgJxoqqMwcR6cEGxDtAil/xufYr25hqOuPIMsOMk/Rg5e/Na9TQ1RGp/+
+	 6awyAluITZNaWBu9PcOn55eSIYCcD+DOMO3ENQh6HG6MeU2Zt8Bhj1Sl0z9upjcyOL
+	 WyeIpLtgeJnvA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 24 Jul 2026 16:02:16 +0200
-Subject: [PATCH net-next 4/5] mptcp: enforce hard limit on backlog flushing
+Date: Fri, 24 Jul 2026 16:02:17 +0200
+Subject: [PATCH net-next 5/5] mptcp: implemented OoO queue pruning
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,7 +37,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260724-net-next-mptcp-oooq-pruning-v1-4-5dd4dec63a54@kernel.org>
+Message-Id: <20260724-net-next-mptcp-oooq-pruning-v1-5-5dd4dec63a54@kernel.org>
 References: <20260724-net-next-mptcp-oooq-pruning-v1-0-5dd4dec63a54@kernel.org>
 In-Reply-To: <20260724-net-next-mptcp-oooq-pruning-v1-0-5dd4dec63a54@kernel.org>
 To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
@@ -45,107 +45,124 @@ To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
  Simon Horman <horms@kernel.org>
 Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+ linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Gang Yan <yangang@kylinos.cn>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2868; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=8oehzmC/Ja20Y/2KJD9sivd0mO9h5X8ufkiQiwQH0Fc=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLKSCyosFGPsFjp0+fAtvFGjs4mNedMBoR1Lu2dO3ri2N
- uC5ZLNxRykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwESOvGZkWNL3XuPrP+0QmXVf
- Vm755Nm6Yd7jvjYTM0fPUuPLpTdWazEy/AmJbJz+9HTUqZf+XHw3Vq3facpgP/1myKQc5tOzGLi
- jGAE=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3583; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=0TP0HmzvNCrhNepV2D684uiABQ8/iw2HmKqfNTiVn14=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLKSCyrLXn2vsjnL+X8Vx8zbfV+DjLU4WhbdMzs3bX0kY
+ 0/l02OpHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABPRn8/wz1ak6GH+cv6mFh0H
+ y6Bshheu4WzVNTHaIc3OfNsm7pWdychwo+XsVcMN/mdVOCrmRrebG8vMdfS7uSPs5LzQdWopp52
+ YAQ==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-Currently a wild producer could keep the backlog flushing operation
-spinning for an unbound time.
-
-Since the previous patch, the amount of data present in the backlog is
-hard-limited. Move the backlog len update at the end of the flush loop to
-prevent it spinning forever.
-
-Also, no need to splice back the remaining skbs list into the backlog, as
-such list is always empty after each backlog processing loop.
+When moving incoming skbs in the msk receive queue and the latter
+is above limits, prune it as needed quite alike what TCP is doing
+at the subflow level. The main difference relies in the stop condition:
+since MPTCP does not perform collapsing, it's better off dropping the
+bare minimum to fit the (newer) incoming packet.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Tested-by: Gang Yan <yangang@kylinos.cn>
 Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/protocol.c | 21 ++++++---------------
- 1 file changed, 6 insertions(+), 15 deletions(-)
+ net/mptcp/mib.c      |  1 +
+ net/mptcp/mib.h      |  1 +
+ net/mptcp/protocol.c | 46 +++++++++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 47 insertions(+), 1 deletion(-)
 
+diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+index ef65e2df709f..d9bd4f4afcc0 100644
+--- a/net/mptcp/mib.c
++++ b/net/mptcp/mib.c
+@@ -87,6 +87,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+ 	SNMP_MIB_ITEM("WinProbe", MPTCP_MIB_WINPROBE),
+ 	SNMP_MIB_ITEM("BacklogDrop", MPTCP_MIB_BACKLOGDROP),
+ 	SNMP_MIB_ITEM("RcvPruned", MPTCP_MIB_RCVPRUNED),
++	SNMP_MIB_ITEM("OfoPruned", MPTCP_MIB_OFO_PRUNED),
+ };
+ 
+ /* mptcp_mib_alloc - allocate percpu mib counters
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index c84eb853d499..18f35f7e0a2d 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -90,6 +90,7 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_WINPROBE,		/* MPTCP-level zero window probe */
+ 	MPTCP_MIB_BACKLOGDROP,		/* Backlog over memory limit */
+ 	MPTCP_MIB_RCVPRUNED,		/* Dropped due to memory constrains */
++	MPTCP_MIB_OFO_PRUNED,		/* MPTCP-level OoO queue pruned */
+ 	__MPTCP_MIB_MAX
+ };
+ 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 5f7d8340a3d9..7f257419c5ea 100644
+index 7f257419c5ea..5cf44eab76f1 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2223,7 +2223,6 @@ static bool __mptcp_move_skbs(struct sock *sk, struct list_head *skbs, u32 *delt
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	bool moved = false;
- 
--	*delta = 0;
- 	while (1) {
- 		prefetch(skb->next);
- 		list_del(&skb->list);
-@@ -2260,20 +2259,12 @@ static bool mptcp_can_spool_backlog(struct sock *sk, struct list_head *skbs)
- 	return true;
+@@ -373,6 +373,49 @@ static void mptcp_init_skb(struct sock *ssk, struct sk_buff *skb, int offset,
+ 	skb_dst_drop(skb);
  }
  
--static void mptcp_backlog_spooled(struct sock *sk, u32 moved,
--				  struct list_head *skbs)
--{
--	struct mptcp_sock *msk = mptcp_sk(sk);
--
--	WRITE_ONCE(msk->backlog_len, msk->backlog_len - moved);
--	list_splice(skbs, &msk->backlog_list);
--}
--
- static bool mptcp_move_skbs(struct sock *sk)
- {
++/* "Inspired" from the TCP version; main difference: stop as soon as the MPTCP
++ * socket is under memory limit.
++ */
++static bool mptcp_prune_ofo_queue(struct sock *sk, u64 seq)
++{
 +	struct mptcp_sock *msk = mptcp_sk(sk);
- 	struct list_head skbs;
- 	bool enqueued = false;
--	u32 moved;
-+	u32 moved = 0;
- 
- 	mptcp_data_lock(sk);
- 	while (mptcp_can_spool_backlog(sk, &skbs)) {
-@@ -2281,8 +2272,8 @@ static bool mptcp_move_skbs(struct sock *sk)
- 		enqueued |= __mptcp_move_skbs(sk, &skbs, &moved);
- 
- 		mptcp_data_lock(sk);
--		mptcp_backlog_spooled(sk, moved, &skbs);
- 	}
-+	WRITE_ONCE(msk->backlog_len, msk->backlog_len - moved);
- 	mptcp_data_unlock(sk);
- 
- 	if (enqueued && mptcp_epollin_ready(sk))
-@@ -3752,12 +3743,12 @@ static void mptcp_release_cb(struct sock *sk)
- 	__must_hold(&sk->sk_lock.slock)
++	struct rb_node *node, *prev;
++	bool pruned = false;
++	u64 mem;
++
++	if (RB_EMPTY_ROOT(&msk->out_of_order_queue))
++		goto out;
++
++	node = &msk->ooo_last_skb->rbnode;
++
++	do {
++		struct sk_buff *skb = rb_to_skb(node);
++
++		/* Stop pruning if the incoming skb would land in OoO tail. */
++		if (after64(seq, MPTCP_SKB_CB(skb)->map_seq))
++			break;
++
++		pruned = true;
++		prev = rb_prev(node);
++		rb_erase(node, &msk->out_of_order_queue);
++		mptcp_drop(sk, skb);
++		msk->ooo_last_skb = rb_to_skb(prev);
++
++		mem = (unsigned int)sk_rmem_alloc_get(sk);
++		if (mem <= sk->sk_rcvbuf)
++			break;
++
++		node = prev;
++	} while (node);
++
++	if (pruned)
++		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_OFO_PRUNED);
++
++out:
++	mem = (unsigned int)sk_rmem_alloc_get(sk);
++	return mem <= sk->sk_rcvbuf;
++}
++
+ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
  {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
-+	u32 moved = 0;
- 
- 	for (;;) {
- 		unsigned long flags = (msk->cb_flags & MPTCP_FLAGS_PROCESS_CTX_NEED);
- 		struct list_head join_list, skbs;
- 		bool spool_bl;
--		u32 moved;
- 
- 		spool_bl = mptcp_can_spool_backlog(sk, &skbs);
- 		if (!flags && !spool_bl)
-@@ -3790,9 +3781,9 @@ static void mptcp_release_cb(struct sock *sk)
- 
- 		cond_resched();
- 		spin_lock_bh(&sk->sk_lock.slock);
--		if (spool_bl)
--			mptcp_backlog_spooled(sk, moved, &skbs);
- 	}
-+	if (moved)
-+		WRITE_ONCE(msk->backlog_len, msk->backlog_len - moved);
- 
- 	if (__test_and_clear_bit(MPTCP_CLEAN_UNA, &msk->cb_flags))
- 		__mptcp_clean_una_wakeup(sk);
+ 	u64 copy_len = MPTCP_SKB_CB(skb)->end_seq - MPTCP_SKB_CB(skb)->map_seq;
+@@ -385,7 +428,8 @@ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
+ 	 * will break.
+ 	 */
+ 	if (unlikely(sk_rmem_alloc_get(sk) > READ_ONCE(sk->sk_rcvbuf)) &&
+-	    !__mptcp_check_fallback(msk)) {
++	    !__mptcp_check_fallback(msk) &&
++	    !mptcp_prune_ofo_queue(sk, MPTCP_SKB_CB(skb)->map_seq)) {
+ 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
+ 		mptcp_drop(sk, skb);
+ 		return false;
 
 -- 
 2.53.0
