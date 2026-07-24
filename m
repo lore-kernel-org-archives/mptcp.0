@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093E63CF1F2
-	for <mptcp@lists.linux.dev>; Fri, 24 Jul 2026 08:25:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C0D3BCD23
+	for <mptcp@lists.linux.dev>; Fri, 24 Jul 2026 09:27:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784881529; cv=none; b=JwLufdHtpWo+VP6OArcksVbImGI1TGIGokrLmZ5iQxpjEH0GFjfLybdlruN0ughZnHytnVPS/u3oBukq+daYmF/dYkjWAmAltcfhinVCRHqxiZdePZg/GpCgn5Ift3I26dbigi9TCorINVSPU/SUsrxCtY34UIfupGCla6kbzzU=
+	t=1784885263; cv=none; b=EYb8njy8BBCJqjI11uzgejARJ0EaM3OKyfA6srMQSm2tpg2DGX/E5xYZq8u7lSFLaXq28cXXX3Jwrmh79aJMs/ZB5whdgPbDyMH1DL/TyAD4nlVoN0PyvSrcUG3GluzBm1yt0/CgDwk2KOLTS2AG449yojuQCmXOwtw+OAmbwTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784881529; c=relaxed/simple;
-	bh=cvaKfz1tiMP+bydu3JotQGF+12Mp5mgHJOnj1wU1+mo=;
+	s=arc-20240116; t=1784885263; c=relaxed/simple;
+	bh=Zvtj7oz8BBgHRmKQkicp6CqZmXDGQTVpuZz6imhZX9w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FM99qjEvQ2ycjB3hXgWg/MHD+IkL/WvQ3w/xmWoMLS8Shijrfbdht0cb1K6mfsLWtS0k9AbvURdTdwAJ+FcrqEZkDaXP8SCIYJPRTge09UB4QLGUKl/hIqNzcbFKOuaNm1yL+b7UpD0vU8GB8MKTX6skXADzmS9flHaHV7CYvAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J8mDFtPb; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=fJ0uue0nM0gmerm9FSFcWu8f5++5KvsesmV+fUFAqlbWcSYpLjsd9YLYAIQ/lxU+AjrlgWcUjRoegkeNFx9OOeAY6hNDzogxjnffscVpG0Q+FsY0FYErlyQYNPhnLMSD9KrXljrYWJxTDFUqyYTLGd/ueiWbu2HxXfW99MDcgPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lkTc33du; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J8mDFtPb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E48CB1F000E9;
-	Fri, 24 Jul 2026 08:25:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lkTc33du"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4F4A1F00A3A;
+	Fri, 24 Jul 2026 09:27:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784881527;
-	bh=MCJENH9rSHxHEKXCDdpDdt/OT3irv+fmaBAEqNFWg9g=;
+	s=k20260515; t=1784885260;
+	bh=IuT2rmpjiYkxjcFKYKYBH8qpbOSKqK1AgExRx6yVBbg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=J8mDFtPb4y5dUJ3FA7CxpbQ7RV7CsCI6kLncJtO5iqbgafg5jfIBO82Xz1yN8qPm4
-	 1OKwA3BRwX+aZcwZs369DEe1+0ToEHunAo1/e0AJfrP9e7wRHpaGqorr00ghbD50wO
-	 XjFpMF3l9Mi24tuAqV2gcQuwV7Fq/FRCIMvyqtANgQaXZrsEIrYeZMesI6YH5DWpLu
-	 K6yDTDg1aVs4AGXre2EEus/GQpXacarXhwX9uKU3E/4lvn6B2JWmPl7A6iC1tUuk4C
-	 hMs58tSWPwdOhsWxzTORwTRyPHLO/s/NS6WJXlVUIevEHnD0meC260ljKKA+E52nLz
-	 9kLmciQTmaaOA==
-Message-ID: <9ff166c8-d045-4922-ad9a-c658a71e842d@kernel.org>
-Date: Fri, 24 Jul 2026 10:25:24 +0200
+	b=lkTc33du7Kapy6VrKOdngPk1nkExW8aQJPlNImCYBZv+20DvBSMcAwS0Wqzp6AgRZ
+	 ZM3dBN60VyaB/X35CmILIekuNtQxeFVqukVdq1MA0KYWrMWOjZSL9RpfjUSGcmkx9Q
+	 nfMd8Ovi41Ee3S1eMPcrLC9XHvIfsQAbEeVtPSX7XCpGA/FPxOS2UgzKbTPmBCwHDs
+	 w7wZYzx6iM9lnGI0nqtMaIyqKmZzEAN3/Ay/gyIWua9UgjEsQR0QmqUN5FrMgZszEe
+	 cFeasx8ungxP+c+PsD36EUcdbOFvKAPevyYQ0DLLaTZsQuDRKlbBWlX8gCHrFMu+Hw
+	 HTCu+0cb9+JGA==
+Message-ID: <c6091b33-77ec-4bda-abcd-e40554f33e71@kernel.org>
+Date: Fri, 24 Jul 2026 11:27:37 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: fix BUILD_BUG_ON on legacy ARM config
+Subject: Re: [PATCH mptcp-next 2/2] selftests: mptcp: simult_flows: set EXIT
+ trap earlier
 Content-Language: fr
-To: Arnd Bergmann <arnd@arndb.de>, MPTCP Linux <mptcp@lists.linux.dev>
-Cc: Frank Ranner <frank.ranner@intel.com>, kernel test robot <lkp@intel.com>
-References: <20260707-mptcp-opt-fix-config_aeabi-v1-1-f428d0aa0318@kernel.org>
- <ceb3b719-0a4c-4998-9a14-1eac1d574bb2@app.fastmail.com>
+To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+References: <20260724065229.36736-1-gang.yan@linux.dev>
+ <20260724065229.36736-3-gang.yan@linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,51 +87,54 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <ceb3b719-0a4c-4998-9a14-1eac1d574bb2@app.fastmail.com>
+In-Reply-To: <20260724065229.36736-3-gang.yan@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Arnd,
+Hi Gang,
 
-Thank you for your review!
-
-On 24/07/2026 09:57, Arnd Bergmann wrote:
-> On Tue, Jul 7, 2026, at 18:48, Matthieu Baerts (NGI0) wrote:
->> The 0-day bot managed to find kernel configs that cause build failures,
->> e.g. when using the StrongARM SA1100 target (ARMv4).
->>
->> On such legacy ARM architecture, all structures are apparently aligned
->> to 32 bits, causing build issue here. Indeed, on such architecture,
->> 'flags' size is not equivalent to sizeof(u16) as expected, but to
->> sizeof(u32).
+On 24/07/2026 08:52, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
 > 
-> I just saw the patch get merged upstream and wanted to clarify that
-> this is ARM OABI (CONFIG_AEABI=n), which is technically unrelated
-> to the CPU type. It has a lot of problems and should hopefully
-> go away soon.
+> Set the EXIT trap for cleanup immediately after creating the temporary
+> file variables, before the dd commands that fill them and the namespace
+> init, to ensure cleanup runs on any failure or interruption during the
+> early setup phase. If either dd fails (e.g. ENOSPC), the temp files
+> already created are not cleaned up.
 
-Fingers crossed!
+From what I see, if one of the 'dd' command fails, the errors are simply
+ignored.
 
-> While I'm testing randconfig builds on Arm all the time, I specifically
-> don't test OABI kernels.
+> Assisted-by: Codex: GLM-5.2
+> Signed-off-by: Gang Yan <yangang@kylinos.cn>
+> ---
+>  tools/testing/selftests/net/mptcp/simult_flows.sh | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> I had to check that this isn't actually ABI or wire protocol though,
-> otherwise dropping the BUILD_BUG_ON() would be hiding bigger problems.
+> diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
+> index 3ea3d1efe32e..b40dea5f9b30 100755
+> --- a/tools/testing/selftests/net/mptcp/simult_flows.sh
+> +++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+> @@ -62,13 +62,12 @@ setup()
+>  	sout=$(mktemp)
+>  	cout=$(mktemp)
+>  	capout=$(mktemp)
+> +	trap cleanup EXIT
+>  	size=$((2 * 2048 * 4096))
+>  
+>  	dd if=/dev/zero of=$small bs=4096 count=20 >/dev/null 2>&1
+>  	dd if=/dev/zero of=$large bs=4096 count=$((size / 4096)) >/dev/null 2>&1
 
-Thank you for having checked!
+This 'fix' is only interesting when the script is abort while one of the
+dd command is in progress, to create files of 80k and 16M in RAM. I
+guess this is very unlikely, no?
 
->> Instead, use memset(). It was not used before to ensure a simple clear
->> operation was used by the compiler. But at the end, it shouldn't matter,
->> and the compiler should optimise this to the same operation with or
->> without memset() when -O above 0 is used. So let's switch to memset() to
->> fix this issue, and reduce this complexity.
-> 
-> The optimization will not be used on architectures that build
-> with -ffreestanding (apparently m68k, mips, sh, i386). We probably
-> don't care about performance on those or we would have changed
-> that already.
-Good point, I didn't know about that. Indeed, I don't think we need to
-care about them in this case here.
+If you already managed to end-up in this situation by accident, OK to
+accept the change, but the commit message needs to be updated.
+
+If it is a potential fix for an unlikely situation with the selftests,
+we probably don't need that.
+
 Cheers,
 Matt
 -- 
