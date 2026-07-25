@@ -1,222 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B90C02E8DE3
-	for <mptcp@lists.linux.dev>; Sat, 25 Jul 2026 13:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A5118A93F
+	for <mptcp@lists.linux.dev>; Sat, 25 Jul 2026 13:47:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784985259; cv=none; b=CYakAha5IBsJKTODrwncVfzFjpV+EtDN0+3/B7c+WGEgOEIjVIL6sGsCyTUoZAAI3LVK7WCfzzSOwf3bDCREvAr2u7pMPahXUML1+k1XRMk8lTPlDZpn8F5pevHlG+47++1P3qV3RnjIlur80tKP27gRu1O58O/axQ3vEA3qMzk=
+	t=1784987238; cv=none; b=mQZheIdsYWXOnnUJKC/4DKAx0Zk0Le+FRr/RzuqstU4PS50PowWfKSxyl1SB9JRB73o6IY47npvsxhvGOYOYwpql0lXvV4VNlpZGykGC6zlH4F7k/MnLUEvTbNeV68rmUFB8gNxNfadGA+xBGSVv0QMTjtVK8z5ygTA3YaLdddk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784985259; c=relaxed/simple;
-	bh=wj8lVo6tzFkl+Vy0qQBqCoY9i8jUX7m+o8IQAreL0e4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nRwE7FtoujcLacxDzgGvFhWpkJns6wyUM5lKomMQ/RORhWOZtIFLMz/AAuN6hz7Pvo4gZ82gXOL01hIn+xyCSpiAPLeC+UwznjMi94j5bgHGt1LtkmPkdt5zAkrYjB7dp6QozbNZfoU7yIwbeu7Ttr8TNcZlVUEclOKzyvzyjvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WPYVyb5R; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784987238; c=relaxed/simple;
+	bh=Niw1Foau7Hd+cFG6aW2AE46IaGKW+fVRSk/LSqyVcsw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=rFyIrakAL8BR7DI8JPdOGr2pP+e1TDzApMVAGaUN5Mdy7E1p3/smV+tO/7q0OOfhmjN9tl1p0BopJ4X9vaiVXi73h7WZ9WQlXcKVbolGPHd8jOAMB3MzFotJc8a1LmQN5xgWThgvnMm6Um5Dk5GHsJxUvTXZedMTsRAI5ZSqtQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=It8orn7Y; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WPYVyb5R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4E881F000E9;
-	Sat, 25 Jul 2026 13:14:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784985258;
-	bh=rQKUOQwkGHcYW9n0GP3LeQK8QxSnFVbnQZ+xUmXIhJI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=WPYVyb5R3ap/UNNYFTpa3HWzBCzj0PYy+buZDgwnIQCKBSXslUXN+9YIoi/zqUOej
-	 +YhdPwiopRFScmnTYLDyxNinXP5LZxXvh1+5I/GYtioPadG96OiKk+1FlhGyv2V/9W
-	 /qqm/JQ8HVTXsXsooFj2vwZSEC1P7H6OciFZUN1szeL1wIWu9lO4Rd1JXAaTZJE70Y
-	 jQjen1wlkfBeoPAoMsXsIOW+5sUmX7iMrzcxtWa1CELiHXreoqjnkHM/y+SdIfMtKE
-	 /fqE2YKRIrCEMIpbQ4NnikvvscQomdWhHeU+oxKCWtkGBIBGO84JEx+EcqKEGXkN79
-	 eBOHqORniGJQA==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 6/6] selftests: mptcp: sockopt: cover LINGER REUSEADDR PRIORITY NODELAY SYNCNT
-Date: Sat, 25 Jul 2026 21:13:43 +0800
-Message-ID: <d8365475a20c80c0d4b33d490de4f9885e0838b8.1784985085.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1784985085.git.tanggeliang@kylinos.cn>
-References: <cover.1784985085.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="It8orn7Y"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-930f618435cso123438885a.3
+        for <mptcp@lists.linux.dev>; Sat, 25 Jul 2026 06:47:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784987236; x=1785592036; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=WwStBPAOxl5k4YUw1RSTUKA48BRWkE1J93cBV5CLnHE=;
+        b=It8orn7YyoYbNABF2cbFAOgGeg+e+FiDwFlEFmAXgAuvFRreJ5Rl83Q/wfLzxI6Jwr
+         T+MZvAFS2L2WQHIUlH3mUgUbvNmU6CPu5zyZ5bUvKnqbXBBnf1UI6YYYGm+wZG3B5Z/T
+         Yw4ur1/5LJysE2IJxuHcVpRd50UOZJrb2ikhDklycjSkFpik+2UDcDeGr6zR3KE6PWzv
+         DOGsOOLjvlQAscplb9SARtWHYKINMje0YTEHTesNhHBc0XMOUSDaLtAiYv88o4uXiDdV
+         /1YclbA2Cox9yV1zQSvY/0JAGFhduM6pL7MGYhuS8rQxCp7FdHOXf5ASDgc1hfV8Ikg3
+         9glw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784987236; x=1785592036;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=WwStBPAOxl5k4YUw1RSTUKA48BRWkE1J93cBV5CLnHE=;
+        b=VmDzqmeI/gCCUUKBmCUJ5ghF77nGiU9lSHRM9KD0YVOUFhJ3NqKpkUohL4BEQ4Dg1R
+         AV0hHLpG/QU/cyUVM1LWu2/PLRdQYd8Wn2Pc9DDM8LPFztxCNADLjWrOSvFmmXEqlQqJ
+         CO2udxhOZLwJnKoz2P9Dvu+BzJlZvuxB34/9nCfpvCvYWDk+EHkpkloZjngV7lHvVgIQ
+         I17qzB68+SA4sjgZZHGk4Wdsmt56ZXqFBkdcDgyYpD9cOHQYHFDDMXXzj7WpvSnF24Ho
+         6QIzh14DBsvsZj5hkYb3cp5OmmvyPEiDfG/IEsw+UtAkGK2oKDPwsw3NDMig8TybFAll
+         03Jg==
+X-Gm-Message-State: AOJu0YyAp8i+khAz84jSiPy4SL5WMDm3nyY0tnAIMwCO/NgSMm5EEkV7
+	BVU+D+CLeGCY6e+9O9ZaaON/8UBgVdjSQZgfA0LIHVce5FJhVP+QFOiZdNcf
+X-Gm-Gg: AR+sD12hDLoA79Wf8BjLwJ5K+Dh36gTLAP0/CML1C8DnibCJku69VTZsVAnvJL98gN/
+	QZDRCwzd9SiRgKSAlw1p9CHO8KJpXo2iLUXWv1Lb0iXdoPKb/DzLxYsfB7ZauIKhkkxUXQv+qsg
+	HW5hBOl+Lp5cdv8HCQwuqPpp94smjBnkCY8f+WcRlfOxAyUvGnlxQWohnmckFXGaGDN0nwGXOEK
+	SfhWySZXHYmxsBhgQHpq6q3GnTT2Yifv0NT0+DnLkzBrXWZG2cPHsCDGLMiAtwk4SHdF5CRVrNe
+	S8+/3J3sSi83EqX5LgAg53fuGCCKJAnUTFWfC7v90lPQxOxdiOJHW6OGvr+N8rnbuS2p/zkj1ss
+	N0qIUJL6k7sQipmpaGE4o4mpmNLKb0oSU1z5aKE/DeQSlRjVSQWlL89IT6NTG8G+sXPw7wLJpS/
+	NBrIUrN/b6+MXk9pTc
+X-Received: by 2002:a05:620a:4589:b0:92e:874f:d929 with SMTP id af79cd13be357-932df6765d4mr183700085a.19.1784987236124;
+        Sat, 25 Jul 2026 06:47:16 -0700 (PDT)
+Received: from [127.0.0.1] ([172.190.102.90])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-932de66b2b4sm153351085a.41.2026.07.25.06.47.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Jul 2026 06:47:15 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1784981974.git.tanggeliang@kylinos.cn>
+References: <cover.1784981974.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v12 00/12] selftests: consolidate TCP_INQ
+ testing into sockopt
+Message-ID: <e427f195-76a0-0234-a468-90f1c992db00@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 25 Jul 2026 13:47:15 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-Extend mptcp_sockopt.c with tests for SOL_SOCKET (SO_REUSEADDR,
-SO_LINGER, SO_PRIORITY) and SOL_TCP (TCP_NODELAY, TCP_SYNCNT), each
-exercising both setsockopt() and getsockopt() on a connected
-MPTCP socket.
+Thank you for your modifications, that's great!
 
-SO_REUSEADDR on the msk reports 1 (SK_CAN_REUSE) once any non-zero
-value is set; this captures the documented behaviour where the
-master socket reflects the subflow's reuse state.
+Our CI did some validations and here is its report:
 
-TCP_SYNCNT coverage pairs with the kernel side that propagates
-icsk_syn_retries to the subflow.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/301589=
+00549
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- .../selftests/net/mptcp/mptcp_sockopt.c       | 116 ++++++++++++++++++
- 1 file changed, 116 insertions(+)
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/8c7c0137602f
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1134392
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index b6e58d936ebe..b04e24df9dfe 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -35,6 +35,9 @@ static int pf = AF_INET;
- #ifndef SOL_MPTCP
- #define SOL_MPTCP 284
- #endif
-+#ifndef SOL_TCP
-+#define SOL_TCP 6
-+#endif
- 
- #ifndef MPTCP_INFO
- struct mptcp_info {
-@@ -229,6 +232,30 @@ static int sock_listen_mptcp(const char * const listenaddr,
- 	return sock;
- }
- 
-+static void test_so_reuseaddr_sockopt(int fd)
-+{
-+	int val_in = 1, val_out, expected;
-+	socklen_t s;
-+	int r;
-+
-+	r = setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &val_in, sizeof(val_in));
-+	if (r != 0)
-+		die_perror("setsockopt SO_REUSEADDR");
-+
-+	s = sizeof(val_out);
-+	r = getsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &val_out, &s);
-+	if (r != 0)
-+		die_perror("getsockopt SO_REUSEADDR");
-+
-+	/* SO_REUSEADDR on MPTCP msk returns 1 (SK_CAN_REUSE) when set,
-+	 * regardless of the input value. The actual reuse semantics are
-+	 * applied to the nmpc subflow.
-+	 */
-+	expected = val_in ? 1 : 0;
-+	if (val_out != expected)
-+		xerror("SO_REUSEADDR %d != %d\n", expected, val_out);
-+}
-+
- static int sock_connect_mptcp(const char * const remoteaddr,
- 			      const char * const port, int proto)
- {
-@@ -247,6 +274,8 @@ static int sock_connect_mptcp(const char * const remoteaddr,
- 		if (sock < 0)
- 			continue;
- 
-+		test_so_reuseaddr_sockopt(sock);
-+
- 		if (connect(sock, a->ai_addr, a->ai_addrlen) == 0)
- 			break; /* success */
- 
-@@ -769,6 +798,89 @@ static void test_ip_tos_sockopt(int fd)
- 		xerror("expect socklen_t == -1");
- }
- 
-+static void test_so_linger_sockopt(int fd)
-+{
-+	struct linger ling_in, ling_out;
-+	socklen_t s;
-+	int r;
-+
-+	ling_in.l_onoff = 1;
-+	ling_in.l_linger = 30;
-+	r = setsockopt(fd, SOL_SOCKET, SO_LINGER, &ling_in, sizeof(ling_in));
-+	if (r != 0)
-+		die_perror("setsockopt SO_LINGER");
-+
-+	s = sizeof(ling_out);
-+	memset(&ling_out, 0, sizeof(ling_out));
-+	r = getsockopt(fd, SOL_SOCKET, SO_LINGER, &ling_out, &s);
-+	if (r != 0)
-+		die_perror("getsockopt SO_LINGER");
-+
-+	if (ling_in.l_onoff != ling_out.l_onoff ||
-+	    ling_in.l_linger != ling_out.l_linger)
-+		xerror("SO_LINGER %d/%d != %d/%d\n",
-+		       ling_in.l_onoff, ling_in.l_linger,
-+		       ling_out.l_onoff, ling_out.l_linger);
-+}
-+
-+static void test_so_priority_sockopt(int fd)
-+{
-+	int prio_in, prio_out;
-+	socklen_t s;
-+	int r;
-+
-+	prio_in = 5;
-+	r = setsockopt(fd, SOL_SOCKET, SO_PRIORITY, &prio_in, sizeof(prio_in));
-+	if (r != 0)
-+		die_perror("setsockopt SO_PRIORITY");
-+
-+	s = sizeof(prio_out);
-+	r = getsockopt(fd, SOL_SOCKET, SO_PRIORITY, &prio_out, &s);
-+	if (r != 0)
-+		die_perror("getsockopt SO_PRIORITY");
-+
-+	if (prio_in != prio_out)
-+		xerror("SO_PRIORITY %d != %d\n", prio_in, prio_out);
-+}
-+
-+static void test_tcp_nodelay_sockopt(int fd)
-+{
-+	int val_in = 1, val_out;
-+	socklen_t s;
-+	int r;
-+
-+	r = setsockopt(fd, SOL_TCP, TCP_NODELAY, &val_in, sizeof(val_in));
-+	if (r != 0)
-+		die_perror("setsockopt TCP_NODELAY");
-+
-+	s = sizeof(val_out);
-+	r = getsockopt(fd, SOL_TCP, TCP_NODELAY, &val_out, &s);
-+	if (r != 0)
-+		die_perror("getsockopt TCP_NODELAY");
-+
-+	if (val_in != val_out)
-+		xerror("TCP_NODELAY %d != %d\n", val_in, val_out);
-+}
-+
-+static void test_tcp_syncnt_sockopt(int fd)
-+{
-+	int val_in = 3, val_out;
-+	socklen_t s;
-+	int r;
-+
-+	r = setsockopt(fd, SOL_TCP, TCP_SYNCNT, &val_in, sizeof(val_in));
-+	if (r != 0)
-+		die_perror("setsockopt TCP_SYNCNT");
-+
-+	s = sizeof(val_out);
-+	r = getsockopt(fd, SOL_TCP, TCP_SYNCNT, &val_out, &s);
-+	if (r != 0)
-+		die_perror("getsockopt TCP_SYNCNT");
-+
-+	if (val_in != val_out)
-+		xerror("TCP_SYNCNT %d != %d\n", val_in, val_out);
-+}
-+
- static int client(int pipefd)
- {
- 	int fd = -1;
-@@ -787,6 +899,10 @@ static int client(int pipefd)
- 	}
- 
- 	test_ip_tos_sockopt(fd);
-+	test_so_linger_sockopt(fd);
-+	test_so_priority_sockopt(fd);
-+	test_tcp_nodelay_sockopt(fd);
-+	test_tcp_syncnt_sockopt(fd);
- 
- 	connect_one_server(fd, pipefd);
- 
--- 
-2.53.0
 
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
