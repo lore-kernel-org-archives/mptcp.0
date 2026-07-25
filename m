@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71071253958
-	for <mptcp@lists.linux.dev>; Sat, 25 Jul 2026 13:14:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A60B2459DD
+	for <mptcp@lists.linux.dev>; Sat, 25 Jul 2026 13:14:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784985253; cv=none; b=nQXeKEvS0HQdk3owOd+2suOxcvK7GMjCsygWT2N42Nij1JYv2vCnD9w3w8yKp9letq1lN9XUfwP4VTyAbSD9mLypjJReFVjwZp4pT6h8yOCzu1d7f8XHTjN2i9ZQgSAJ2WZmE0H9lDJ1Fy6vh0v8qLAOvui9I0SylIE1P5KN+SE=
+	t=1784985255; cv=none; b=bFQRAVRZWhkguMVCWoY0VVrtL5MihxzSbpuIM+YQ11WvjJqEEJSWX//DQnEJekVqfuctYlX+M3W8vazfzqAX01duH1szort7YvXDjPM3vBpAHLWGVbAb/IakEcd/BrVCWc8tmxjETgXW6K0a/R5ExtUiuzsp4JDlw+lhmjt0QqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784985253; c=relaxed/simple;
-	bh=9qU4Vb2AP1lR+FkMg2hxSUxiBrxulIXnxEZVAWX86/c=;
+	s=arc-20240116; t=1784985255; c=relaxed/simple;
+	bh=MnUUPbvgRWLBW3H0TRwqFdI7VpHcbuKPYoATHp8Eozg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TQl7MMmD7J2s5umxR1hpHox7BGxVD9kbOze/AGX3/UIdRzepB2lLYLQ1k6s7MnY/MyagjfJ58l3hfPvs+OWu8MpWLUPpkiFIu/Ki1ASsAjTTL94/r6zzBmvdIwRXSY8rTwIwKtBF/5XBj70ogS5k3JtuENbhow/z3zLGrm8tPIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y2ZAwaiA; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=p6ThS8DmtPBNRBktXJ0ryZG+pu+eFdM53gjmlf2oezrPQMY4VWzligAW/Y0gRWvFnLHdpchv/exhwXUfBmHaQdDGZA1ttgHyvbaSl2moB3Hj/Im3zuUTc1mKkDVlCPAaYAd9JLtkN7/K3wNaRBydSALRjO612+oSLv7p1gVIrXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lPciFFHa; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y2ZAwaiA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF66A1F000E9;
-	Sat, 25 Jul 2026 13:14:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lPciFFHa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A67E31F00A3A;
+	Sat, 25 Jul 2026 13:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784985252;
-	bh=Ep5w7qcPFEaguSGfLYzCUc0XaQhWMbbQ5Ekt3QGueuM=;
+	s=k20260515; t=1784985253;
+	bh=RE1Cqk2Ezk8fjSzTnDbDcIxnX2r/UFAV/PuAyWcUx5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Y2ZAwaiA/IJDYwerbPRl/Wq4732+V6vyq8ekUfYg2fYruxsDplynujeznPqw4DvqJ
-	 0cm97AYBQPRC+ASLK9IxcTa/aiasdnBwTJ5il815gqSfl/gy6XrD1LRq9deHyisgpA
-	 uz94mK6a+pCehZ7XrHT8ArMtBxJnD5ztjhnBaiT0kZjVhJS6WrOKzWZcY/nMphiROZ
-	 ib16CMNuKBqCIL1L1fyHmfmwd0Cym1TR3pmQjkQHilOJfxH+gK9nn8xPqCiRYtBYTf
-	 DgoVBUKmtTHX1cy0g8nGC940mePqWoWkEewMYbSYLkReWI/wJ8N35UxcPZHnKVWclU
-	 3KQbGFCCpDVOg==
+	b=lPciFFHa20wr5Cqpu8UOID1YKiHqDAfr6E+iB0Hjl5rMfeu8Kk3recyw5kczB00qy
+	 jR8PFuhSNEZSYRTZ2L2RxWKqhNDep+EAD8NqsDdsMkIGsb9E9jGzKD0QqjWak7+5D2
+	 rNJ1pZAq6L1rdXWk7QCWUEjKlDR6cC/55upa+feDcMoHUMiX5I5olfCjLzZQiJsyKY
+	 D1FKg2mLaRs8+UGfoQRCYBftUQ7HbIJlakA3kjVJ37jNaRx9JDGUDcyXmM/iLeomkH
+	 swPzJErbSePVIknOxTKr+ak+ZT2HPmm38WLOlHL6C0CVAyJi3j8XE7AwXsrkgbHaB0
+	 22PAsmcRTJM5Q==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 2/6] mptcp: don't reset dst when setting default 0 tos
-Date: Sat, 25 Jul 2026 21:13:39 +0800
-Message-ID: <80a22df256550b7bbed7a7e06b8d8c6a6019fee0.1784985085.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 3/6] mptcp: inherit sk_reuse on subflow creation
+Date: Sat, 25 Jul 2026 21:13:40 +0800
+Message-ID: <de70ce4930f7757820cddf40e87cc9dbc4d514ef.1784985085.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1784985085.git.tanggeliang@kylinos.cn>
 References: <cover.1784985085.git.tanggeliang@kylinos.cn>
@@ -45,43 +45,32 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-__ip_sock_set_tos() is called unconditionally during setsockopt and
-on each sync_socket_options() pass, even when inet_sk(sk)->tos is 0
-(the default). On SOCK_STREAM the helper masks out the ECN bits and
-writes sk_tos2prio(), which leaves priority=0 alone but still calls
-sk_dst_reset() unconditionally, forcing a route lookup on the next
-packet. Guard both call sites with 'if (val > 0)' so the default-0
-case is a no-op.
+Propagate sk_reuse from the MPTCP master socket to newly-created
+subflows in sync_socket_options(), mirroring how sk_reuseport and
+sk_reuse are already handled for the subflow.
+
+Without this, a subflow started after the master toggled SO_REUSEADDR
+would not inherit the setting, leading to inconsistent reuse
+semantics between msk and ssk.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/sockopt.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/mptcp/sockopt.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index fcf6feb2a9eb..1b2487a5ae2f 100644
+index 1b2487a5ae2f..594ce3b4b707 100644
 --- a/net/mptcp/sockopt.c
 +++ b/net/mptcp/sockopt.c
-@@ -762,7 +762,8 @@ static int mptcp_setsockopt_v4_set_tos(struct mptcp_sock *msk, int optname,
- 		bool slow;
+@@ -1603,6 +1603,8 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+ 	inet_assign_bit(FREEBIND, ssk, inet_test_bit(FREEBIND, sk));
+ 	inet_assign_bit(BIND_ADDRESS_NO_PORT, ssk, inet_test_bit(BIND_ADDRESS_NO_PORT, sk));
+ 	WRITE_ONCE(inet_sk(ssk)->local_port_range, READ_ONCE(inet_sk(sk)->local_port_range));
++
++	ssk->sk_reuse = sk->sk_reuse;
+ }
  
- 		slow = lock_sock_fast(ssk);
--		__ip_sock_set_tos(ssk, val);
-+		if (val > 0)
-+			__ip_sock_set_tos(ssk, val);
- 		unlock_sock_fast(ssk, slow);
- 	}
- 	release_sock(sk);
-@@ -1562,7 +1563,8 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
- 	ssk->sk_bound_dev_if = sk->sk_bound_dev_if;
- 	ssk->sk_incoming_cpu = sk->sk_incoming_cpu;
- 	ssk->sk_ipv6only = sk->sk_ipv6only;
--	__ip_sock_set_tos(ssk, inet_sk(sk)->tos);
-+	if (inet_sk(sk)->tos > 0)
-+		__ip_sock_set_tos(ssk, inet_sk(sk)->tos);
- 
- 	if (sk->sk_userlocks & tx_rx_locks) {
- 		ssk->sk_userlocks |= sk->sk_userlocks & tx_rx_locks;
+ void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk)
 -- 
 2.53.0
 
