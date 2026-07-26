@@ -1,45 +1,45 @@
 Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4024A344DAE
-	for <mptcp@lists.linux.dev>; Sun, 26 Jul 2026 05:55:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E7A345EBA
+	for <mptcp@lists.linux.dev>; Sun, 26 Jul 2026 05:55:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785045351; cv=pass; b=ofpqMJ832Px/xPr/4CvH0aClVwUP3OyWwfss9xTb50cGR8uj+xew+XkAhq5Bt0qBae2jW7/ai+zYa2wJ3VndQg5Mnd9gp3F8BK6NNtEQbDE6m7RP1vhWZq7j6/7s0DBmFftivphzyud2AAf9TqfrWkC6O/fDZ0iMU+Wt9sbo4BE=
+	t=1785045358; cv=pass; b=RKpIcjjnVm0zQqR0mAwMnKDYUVEN6adeEKyNRn5UMchhH7ypOCYMeXfAInFEoXUl9L2GXyN4okgw9A7m3kIVwqybyHnwK607p4bJpxUY4jorEQLBSawQfLiYTQUjWPqZUFLqvCjtkn91EbPeOlSAWdB41H9Qm4B+iUCylpnORnE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785045351; c=relaxed/simple;
-	bh=pPZ3qBtbX5MCLcG/XOLpsQ0di6aCw4Nq978O8Aef+j0=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=QpzutTWvrn8CYdXkNXoCmiClTNLJJfTXsFCk5OEyGoE+Mcs0R94ZDSmW+XqPvWavsEYu5gGvqpr2xJkV3R4uDkcGIMI0MF+ufGFbVS0UwDeilb4pvRClak1O0hj1KJNCRa+XqXGijpL9B27LCSL2Su/AF6mPgij3n8qFZKd7+cw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=dOL8MhPt reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.52
+	s=arc-20240116; t=1785045358; c=relaxed/simple;
+	bh=Cv4Vjadr/xT4540f5vJ4RvllAke9wZV6FPfeUgyBrew=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=c4SSJp7SjPdwmRsqMb7kyZFC0AmsAWOR6/5Q8uc2JKJHXhum9N3sZxPekfOIwEAa7TAYfSGB9SOzbY6ntQqOHJpK1w+s7Z7lei1poRUqFOWAzYBaOqj+IGz7ohd002qneXuGiH9vroD/TBM/sYDx8/QWv2jtpxYxZGCXqdcuk1M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=nlUx+g44 reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="dOL8MhPt"
-ARC-Seal: i=1; a=rsa-sha256; t=1785045347; cv=none; 
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="nlUx+g44"
+ARC-Seal: i=1; a=rsa-sha256; t=1785045349; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=Qq3w3zewcuGsOiqMgJYm5r0aarASJi5riIz3hoM9lBfmL+9UZPur4OGT9oNe5D+nx9emSEu1Usq+f4uEzS3ZPfcvm9jaB/Zz3ACVY5afF36PV+tCkv19MqGLzE/ejMs9YIDv4J4tjtN7/XypcpD/A3zG4M/GMcyEi+8RcrYTmtA=
+	b=Pcx6aJSTCAAZmXgax45oErpj13cUkYIIze+xWGb/NLtykmTAUMLc4oVC8QalsF5In6K5eKbbaPgr2o8/S142XRT+Xc+PFS9Sr7o9pk3eEk+A10xaMUbCTszAjamMAuKAd/9DNRsAtL4khes20s0zJ4jJ0CmwLbr7TuMSp63xHHY=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1785045347; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=XA5MfRebIgfrdK2vbEGbq2pPXKL0pgJsWW7Ejbzs5h0=; 
-	b=Wg6a4Fp324mIRllHujz8VPqASTXRIKC7gRWjjN0819M95Tc75+adRlTpsAaa236NcYz2rbIL0PAaRaDYreiKSW7pbxlBONpNWOvk7Dgg/flFXCxNqp/aElF7v7ELDmbfxXdeIBT86O0GVOHzdWNTsWLcWWLIwr+I5QoflYWYuag=
+	t=1785045349; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=UVtITDEgz/KxhUnTc1UPqAUDFUyjySAdLQEixgkK4g0=; 
+	b=ZX36XphVUht70CUmHl09GD3AvgOisB5KfLN6SEwuXZ4gqZfSeiQIQs+fB49K3P4IPJPEYjV6Kp66ZCJUBbweRogglaOIvbYB/KXNKN6q1lxKAvB5dkQsj/qDeVUhHpDSulcfKs1fY9bkyca/YhV+lj4efAY7nHU/zbl4gxnfiJk=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=mpiricsoftware.com;
 	spf=pass  smtp.mailfrom=shardul.b@mpiricsoftware.com;
 	dmarc=pass header.from=<shardul.b@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1785045347;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1785045349;
 	s=mpiric; d=mpiricsoftware.com; i=shardul.b@mpiricsoftware.com;
-	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
-	bh=XA5MfRebIgfrdK2vbEGbq2pPXKL0pgJsWW7Ejbzs5h0=;
-	b=dOL8MhPtuQwQUIp0SSBuUy8Z7j4xvGs9Y6Ocu2sLVnv5Ldu5OidQrqviVqfc9K8y
-	oV0FT8jdKCer2uF9OHKJ/XXgvwvAUOOowDz76zplUeZQ7T9NuNCH5JQdF28N3wfKBpG
-	FU9vRSdgaHVlCjik6WdW0nrPsbJ15JWDGIYUr7YQ=
-Received: by mx.zohomail.com with SMTPS id 1785045345004810.5507381962997;
-	Sat, 25 Jul 2026 22:55:45 -0700 (PDT)
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=UVtITDEgz/KxhUnTc1UPqAUDFUyjySAdLQEixgkK4g0=;
+	b=nlUx+g44IyNdNgvEg2qHDX/H+mIQatrYmdhb6wWyamSDdB0zi02C/1A1W16lBtTA
+	8Xl9bhfk+Ad12gTkFgAde5YzhuCZ0ifxATpHKAgz6XKQTuJgVW+vJ6UGcyPqiwoURBg
+	ZaIiKUzUZiiOHtBoB/ZPihQDFZ5oGtgFHiiXm2Z0=
+Received: by mx.zohomail.com with SMTPS id 1785045347193826.8495920531584;
+	Sat, 25 Jul 2026 22:55:47 -0700 (PDT)
 From: Shardul Bankar <shardul.b@mpiricsoftware.com>
-Subject: [PATCH mptcp-next 0/3] mptcp: sched: penalise a slow subflow
- (#345, first cut for your lab)
-Date: Sun, 26 Jul 2026 11:25:38 +0530
-Message-Id: <20260726-mptcp_penalise_send-v1-0-84485e0e995b@mpiricsoftware.com>
+Date: Sun, 26 Jul 2026 11:25:39 +0530
+Subject: [PATCH mptcp-next 1/3] mptcp: sched: penalise a slow subflow by
+ halving its cwnd
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,140 +48,178 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAFqhZWoC/yWMUQrCMBAFr1L220CzYoteRaS06YuuaAzZKIXSu
- zetn8MwM5MiCZQu1UwJP1H5hAL2UJF79OEOI2Nh4pqbuuXGvGN2sYsI/UsUnSKMhv3g7enIZ9d
- aKmVM8DLt1yvtgQmYMt3+Tr/DEy5vW1qWFSl+ja6DAAAA
-X-Change-ID: 20260726-mptcp_penalise_send-2fbf15329c71
+Message-Id: <20260726-mptcp_penalise_send-v1-1-84485e0e995b@mpiricsoftware.com>
+References: <20260726-mptcp_penalise_send-v1-0-84485e0e995b@mpiricsoftware.com>
+In-Reply-To: <20260726-mptcp_penalise_send-v1-0-84485e0e995b@mpiricsoftware.com>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
  MPTCP Linux <mptcp@lists.linux.dev>
 Cc: shardulsb08@gmail.com, Shardul Bankar <shardul.b@mpiricsoftware.com>
 X-Mailer: b4 0.15.2
 X-ZohoMailClient: External
 
-Hi Matt,
+Issue #345: a poorly-performing but usable subflow (high latency, loss,
+bufferbloat) can soak up connection resources and cause head-of-line
+blocking of the aggregate stream. Give the default packet scheduler a way
+to send less than such a subflow's full congestion window.
 
-Following up on my note about aligning #345 to mptcp_rcv_buf_optimization():
-here is a first cut, as a 3-patch series. A few things came out differently
-from what I described there, so I have called each one out below rather than
-leave it for you to spot.
+Once a subflow has been picked for transmission, flag it for penalisation
+when:
+- its smoothed delivery rate (avg_pacing_rate) is below half that of the
+  fastest path, keying on rate, not RTT, so a slow-but-high-throughput
+  path is left alone;
+- the fastest path is cwnd-limited (saturated), so shifting load off the
+  slow path is worthwhile;
+- the subflow is in TCP_CA_Open, so its cwnd is not already being reduced
+  by loss recovery;
+- it has not been penalised in the last RTT.
 
-  1/3 penalise a slow subflow by halving its cwnd
-  2/3 do not penalise when receive-window-limited
-  3/3 DO-NOT-MERGE counters (for testing only)
+The reduction halves tcp_snd_cwnd (floor 2) and ssthresh if cwnd
+is past it. It is applied in the push path under the subflow socket lock,
+which protects snd_cwnd (the scheduler runs under the msk lock). The
+congestion control grows the window back, ACK-clocked; that regrowth is
+the built-in probe, so no explicit MPTCP-side probing is needed.
 
-1/3 is the simple version. In the scheduler, once a subflow is picked, it is
-flagged for a cwnd halving that is applied in the push path under the subflow
-socket lock (so it is safe with the per-subflow locks, as I mentioned). The
-flag is set when the subflow is clearly slower than the fastest path, the
-fastest path is cwnd-limited, and the subflow is in TCP_CA_Open. The reduction
-halves cwnd (and ssthresh if cwnd is past it), at most once per RTT, and the
-congestion control grows it back.
-
-What differs from what I described, and why:
-
-- Trigger on delivery rate, not RTT. I had said "slower by RTT". In testing
-  that over-penalised a path that is only higher latency but still carries its
-  share of the traffic (equal bandwidth, unequal delay): it fires on the
-  slower-by-latency path even though shrinking its window loses real goodput.
-  Keying on the pacing rate instead (penalise only a path whose rate is below
-  half the fastest) targets a genuinely low-throughput path, and reuses the
-  avg_pacing_rate the scheduler already maintains. On the threshold I raised
-  with you (the fork's "any slower" versus a small factor): I had said I would
-  default to "any slower", but with a rate trigger that fires on almost every
-  non-fastest path, since rates always vary a little, so I used the factor to
-  keep it to genuinely slow paths, as I flagged might be needed. Half is just
-  a starting point, easy to tune.
-
-- I did not carry over the fork's "meta is send-buffer-limited" gate. In
-  mainline the msk send buffer is the sum of the subflow send buffers, and it
-  is effectively never full when the scheduler samples it (the scheduler runs
-  on the push path, just after an ACK has opened room), so that gate never
-  fires and the penalty stays dormant. That is why 1/3 has no send-buffer
-  condition.
-
-- 2/3 is a guard that is in neither the fork nor what I described. Without it,
-  1/3 regresses badly (about 2x slower in my runs) when the connection is
-  receive-window-limited. In that case the fastest path is capped by the same
-  shared window, so it cannot absorb what the slow path gives up, and halving
-  just sheds the slow path's throughput. 2/3 skips the penalty while the
-  application has queued past the send-window edge (write_seq > wnd_end), which
-  is the sign that the receiver, not our congestion window, is the bottleneck.
-  I kept it a separate patch so you can test 1/3 on its own, or drop or retune
-  2/3 independently. The exact condition is the piece I would most value your
-  lab checking.
-
-Testing was local (network namespaces plus netem, patched against a clean
-mptcp/export), starting from the existing simult_flows selftest. It is a debug
-kernel and mostly single runs, so please read the numbers as directional; I am
-happy to share the full logs and the scenario script.
-
-- No regression on the simult_flows suite.
-- To see the intended effect I looked at MPTcpExtOFOQueue, the number of
-  segments the receiver had to hold out of order over the transfer, since that
-  is what the change is meant to reduce and a plain throughput number cannot
-  show it. On the asymmetric-bandwidth pair (10 vs 3 mbit) with a small
-  SO_SNDBUF, that count fell by roughly a fifth (about 18 to 23% in my runs)
-  with no change in throughput. So this is a reduction in reordering, i.e. a
-  latency and smoothness effect, not more bytes per second; whether that is
-  worth it for a real workload is exactly what I hope your lab can judge.
-- The receive-window-limited regression above is back to baseline with 2/3.
-- Two honest limits. First, with fully autotuned buffers (the common default)
-  the guard does not fire, because the connection is not receive-window-
-  limited, and the penalty then leaves a small reordering cost: halving trims
-  the slow path's delivery rate, so its share of the in-order stream arrives a
-  little later and the out-of-order count rises a few percent. I did not find a
-  simple way to also suppress
-  that without re-opening the gating, and I did not want to over-build v1;
-  scoping it more tightly (for example only when send-buffer-limited) may be
-  the right call and I would defer to your lab on it. Second, I have only
-  exercised two subflows and no backup subflow so far.
-
-3/3 adds two MPTcpExt counters (CwndPenalized, PenalCandidate) so a run can
-tell "the guard held the penalty back" from "the trigger never fired". Not for
-merge. I left your Co-developed-by on it in case it is useful to you elsewhere.
-
-I drove those regimes with a small simult_flows variant (receive-window-
-limited, send-buffer-limited, and autotuned cases). It is a helper, not
-selftest quality, so I did not fold it into the series; it is on a branch of
-my tree, in case it saves your lab time or you spot a case I missed:
-
-https://github.com/shardulsdk-mpiric/linux/blob/6926c4b7f583/tools/testing/selftests/net/mptcp/mptcp_sched_penalise.sh
-
-Run it on a baseline and a patched kernel and compare (prefix with
-MPTCP_LIB_IP_MPTCP=1 if pm_nl_ctl does not work in your setup):
-
-  SCENARIO=suite                              ./mptcp_sched_penalise.sh
-  SCENARIO=unbounded                          ./mptcp_sched_penalise.sh
-  SCENARIO=rwnd    RCVBUF=262144              ./mptcp_sched_penalise.sh
-  SCENARIO=sndbuf  SNDBUF=65536               ./mptcp_sched_penalise.sh
-  SCENARIO=both    RCVBUF=262144 SNDBUF=65536 ./mptcp_sched_penalise.sh
-
-For the rwnd/sndbuf/both scenarios the simult_flows pass/fail bound is not
-meaningful (it assumes both paths are fully used): read the printed runtime
-and out-of-order counts, not OK/FAIL. The "both" case also occasionally fails
-to bring up the second subflow with the very small SO_SNDBUF; just rerun it if
-you see a single-subflow run.
-
-Thanks,
-Shardul
-
+Co-developed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
 ---
-Shardul Bankar (3):
-      mptcp: sched: penalise a slow subflow by halving its cwnd
-      mptcp: sched: do not penalise when receive-window-limited
-      DO-NOT-MERGE: mptcp: sched: penalise counters
-
- net/mptcp/mib.c      |  2 ++
- net/mptcp/mib.h      |  2 ++
- net/mptcp/protocol.c | 94 ++++++++++++++++++++++++++++++++++++++++++++++++++--
+ net/mptcp/protocol.c | 68 +++++++++++++++++++++++++++++++++++++++++++++++++---
  net/mptcp/protocol.h |  2 ++
- 4 files changed, 97 insertions(+), 3 deletions(-)
----
-base-commit: 97ce11d2793f114ca652a565a8d2795c085d8ff1
-change-id: 20260726-mptcp_penalise_send-2fbf15329c71
+ 2 files changed, 67 insertions(+), 3 deletions(-)
 
-Best regards,
---  
-Shardul Bankar <shardul.b@mpiricsoftware.com>
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 954e20bb27de..d31bcb9ad894 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1556,6 +1556,44 @@ bool mptcp_subflow_active(struct mptcp_subflow_context *subflow)
+ #define SSK_MODE_BACKUP	1
+ #define SSK_MODE_MAX	2
+ 
++/* Penalise a subflow whose delivery (pacing) rate is below the fraction
++ * 1 / MPTCP_PENALISE_RATE_RATIO of the fastest path's rate. Keying on rate,
++ * not RTT, throttles only a path whose throughput contribution is small
++ * relative to the head-of-line cost it imposes, and leaves a merely
++ * higher-latency but high-throughput path alone.
++ */
++#define MPTCP_PENALISE_RATE_RATIO	2
++
++/* Rate-limit the penalty to at most once per subflow RTT, so the congestion
++ * control can grow the window back between reductions.
++ */
++static bool mptcp_penalise_throttle_ok(struct mptcp_subflow_context *subflow)
++{
++	struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++	u32 rtt = usecs_to_jiffies(tcp_sk(ssk)->srtt_us >> 3);
++
++	return tcp_jiffies32 - subflow->last_penalise >= max_t(u32, rtt, 1);
++}
++
++/* Halve the congestion window (and ssthresh, if cwnd is past it) of a subflow
++ * the scheduler flagged. Runs in the push path under the subflow socket lock,
++ * which protects snd_cwnd. The congestion control grows the window back,
++ * ACK-clocked, and that regrowth is the built-in probe, so no explicit probing
++ * is needed.
++ */
++static void mptcp_penalise_cwnd(struct sock *ssk)
++{
++	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
++	struct tcp_sock *tp = tcp_sk(ssk);
++	u32 cwnd = tcp_snd_cwnd(tp);
++
++	subflow->penalise = false;
++	subflow->last_penalise = tcp_jiffies32;
++	tcp_snd_cwnd_set(tp, max_t(u32, cwnd >> 1, 2));
++	if (cwnd >= tp->snd_ssthresh)
++		tp->snd_ssthresh = max_t(u32, tp->snd_ssthresh >> 1, 2);
++}
++
+ /* implement the mptcp packet scheduler;
+  * returns the subflow that will transmit the next DSS
+  * additionally updates the rtx timeout
+@@ -1565,9 +1603,9 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+ 	struct subflow_send_info send_info[SSK_MODE_MAX];
+ 	struct mptcp_subflow_context *subflow;
+ 	struct sock *sk = (struct sock *)msk;
+-	u32 pace, burst, wmem;
++	u32 pace, burst, wmem, max_pace = 0;
+ 	int i, nr_active = 0;
+-	struct sock *ssk;
++	struct sock *ssk, *fastest = NULL;
+ 	u64 linger_time;
+ 	long tout = 0;
+ 
+@@ -1596,6 +1634,14 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+ 				continue;
+ 		}
+ 
++		/* track the fastest path by delivery rate; the penalty below
++		 * throttles paths that are slow relative to it.
++		 */
++		if (pace > max_pace) {
++			max_pace = pace;
++			fastest = ssk;
++		}
++
+ 		linger_time = div_u64((u64)READ_ONCE(ssk->sk_wmem_queued) << 32, pace);
+ 		if (linger_time < send_info[backup].linger_time) {
+ 			send_info[backup].ssk = ssk;
+@@ -1623,12 +1669,25 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+ 	if (!ssk || !sk_stream_memory_free(ssk))
+ 		return NULL;
+ 
++	/* Flag the chosen subflow for cwnd halving (applied in the push path)
++	 * when its delivery rate is a small fraction of the fastest path's and
++	 * that fast path is saturated (cwnd-limited), so moving load off the
++	 * slow path is worthwhile. Only penalise a path in TCP_CA_Open, one
++	 * whose cwnd is not already being shrunk by loss recovery, and at most
++	 * once per RTT.
++	 */
++	subflow = mptcp_subflow_ctx(ssk);
++	subflow->penalise = fastest && ssk != fastest &&
++			    (u64)subflow->avg_pacing_rate * MPTCP_PENALISE_RATE_RATIO < max_pace &&
++			    inet_csk(ssk)->icsk_ca_state == TCP_CA_Open &&
++			    tcp_is_cwnd_limited(fastest) &&
++			    mptcp_penalise_throttle_ok(subflow);
++
+ 	burst = min(MPTCP_SEND_BURST_SIZE, mptcp_wnd_end(msk) - msk->snd_nxt);
+ 	wmem = READ_ONCE(ssk->sk_wmem_queued);
+ 	if (!burst)
+ 		return ssk;
+ 
+-	subflow = mptcp_subflow_ctx(ssk);
+ 	subflow->avg_pacing_rate = div_u64((u64)subflow->avg_pacing_rate * wmem +
+ 					   READ_ONCE(ssk->sk_pacing_rate) * burst,
+ 					   burst + wmem);
+@@ -1685,6 +1744,9 @@ static int __subflow_push_pending(struct sock *sk, struct sock *ssk,
+ 	struct mptcp_data_frag *dfrag;
+ 	int len, copied = 0, err = 0;
+ 
++	if (mptcp_subflow_ctx(ssk)->penalise)
++		mptcp_penalise_cwnd(ssk);
++
+ 	while ((dfrag = mptcp_send_head(sk))) {
+ 		info->sent = dfrag->already_sent;
+ 		info->limit = dfrag->data_len;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index da40c6f3705f..2bf801292563 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -587,6 +587,7 @@ struct mptcp_subflow_context {
+ 		__unused : 8;
+ 	bool	data_avail;
+ 	bool	scheduled;
++	bool	penalise;	    /* scheduler flagged this subflow for cwnd halving */
+ 	bool	pm_listener;	    /* a listener managed by the kernel PM? */
+ 	bool	fully_established;  /* path validated */
+ 	u32	lent_mem_frag;
+@@ -606,6 +607,7 @@ struct mptcp_subflow_context {
+ 	u8	stale_count;
+ 
+ 	u32	subflow_id;
++	u32	last_penalise;	    /* tcp_jiffies32 of the last cwnd penalty */
+ 
+ 	long	delegated_status;
+ 	unsigned long	fail_tout;
+
+-- 
+2.34.1
 
