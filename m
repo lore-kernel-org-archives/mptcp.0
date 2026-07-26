@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472581DE3B7
-	for <mptcp@lists.linux.dev>; Sun, 26 Jul 2026 08:30:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52081DE3B7
+	for <mptcp@lists.linux.dev>; Sun, 26 Jul 2026 08:30:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785054627; cv=none; b=bGqQFimA5jcpXogUqFHB26n2UKeM7H/a65UFStEtgDhndbUUf4iHvv4tOaSL22kEtGUKW0SmxmqxStKD2Vsh4j7a4qk4QLbqRABGXzqBH+o7FqOZeVcuwfvvqAp8/bE3twJ+0YvS5+jgbzc6R//4Wcwq1FGfxiRLmep4RAO3bgI=
+	t=1785054628; cv=none; b=n0hd/110VjQTemi/k5YKmsKig1uvEpF4o88V3fIBwwBfVwwtVkILc05r6IGKByMBPP08JbRZz1Pu0rtgqAiQpC4ISBzRGu94azfntvq2TustJD0CX2SzxtNjyyOeuV7Scndowsg9fl5P3y4Oi8a6QNNP7+gxW3Ng30qlNXP+L/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785054627; c=relaxed/simple;
-	bh=ueP1imoXOc+NytGOTzyA5tXXy2JV/JYY7hOAPA0sARk=;
+	s=arc-20240116; t=1785054628; c=relaxed/simple;
+	bh=54RU6yRc9qeD0tcfjyoka7QKsx1+RquwweBEULIY+Yk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ak04UuzhDZrXUH7ElmVrnNwjzIrwiCdwl7WaVuuoPvaY5W/8LATz7XaqEPqLrblHnNsUPrehkQk6T1qSi0uwkMSFXd/+jXvzY6fHEIfmj8u3JNaFNEepBWLs18wTvUfeudxlDHs3k26FOlylFVSqH4krvRX0BES+JFGeyaEK2RI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fUohnRwY; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=AWZJ2W0QOs2MKsQRWA8Qw9YSFhrdivXLM2kpNqBRx55NM3BQNqdF9IYX+ip6fAdE/R8Nh+Q47zjPMY3wBH24h0y9iUaN6K3XscsLg6DiM9TsIEu2QTEHYTtQwW2OyzH6K3wgCzTBkh5QcyDj09jc4VUUVxuM3WXGnoBjJrADp14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZbMEKjA5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fUohnRwY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36EF41F00A3E;
-	Sun, 26 Jul 2026 08:30:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZbMEKjA5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 897741F00A3A;
+	Sun, 26 Jul 2026 08:30:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785054626;
-	bh=W1NabytxOtzXfAt74Uq1mHRW7TcBXBLpkjn3gvvJPUY=;
+	s=k20260515; t=1785054627;
+	bh=QC6FRY0ncAnlonmIKXjv3a9HL6OULQy+CqRKZpH/AIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=fUohnRwYV3KWbQscpfy+Vh03l+/tOfCybcjXvdarRg2pK/9MLEZK+REGGVO5ZxdkK
-	 qf7sqegugMx8kifhK7n5su/hgHwYMuLeb+8tUXUzKYzlGuj96Y/0j4Wg/AU6+qhAxk
-	 C0gl7MeUlz2gscQks0/EFNWxypHI3fbL7x5NnGhYZmqQdXrWEXxsL5CeUmCTS+5CQh
-	 5use2bBostJBHmTS17h6TKzxuOkLPwAOCKzduCUF9YYRSYR6xxzz5E7eaEJfqH8ZCs
-	 h0Y25G73rj2500qQwRPa2VLLE5R53WplbaXsC14RVwQPh8IWL4UeE4fXQYIt7mpNfH
-	 YIjHZPl+fn1tA==
+	b=ZbMEKjA5yaXWWM3+onHdBri8qcbcEC+21rnyps/s4hXgm0tVzlqbdr1ZoYtsYzo3R
+	 eg5FcRDXkK8+RCxNFSXSKDcNmuK2x+FUtIKEOEYGM4UR0qwD8ydmyBRHOggPDg8CAc
+	 /3o3W56AZD65R8r3ARJUsM4J5gx7zziW/mLvz8JKEkhl+HyeR1rezSQb3BSFqIPOww
+	 qpjKFJwHiaoWJBD+Tq9PahUmRJR7K5vLSfNZF1rLPUF3n+nm+DdebWRUh9w8bm+j/X
+	 ORDxTJBw3Sk3Mhv6jl9sWSOX+Tb8BfFa9Mj3I1yQewX8wXCrN4IDNLpPDOIu/VnFFl
+	 wDysYmwuK0s0A==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v13 03/12] selftests: mptcp: sockopt: add check_stat_equal helper
-Date: Sun, 26 Jul 2026 16:30:08 +0800
-Message-ID: <43789c8b18c33a8a2343ba375c895576bc36acf9.1785054129.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v13 04/12] selftests: mptcp: sockopt: use size_t for byte counters
+Date: Sun, 26 Jul 2026 16:30:09 +0800
+Message-ID: <89bb8d9e2665492d4c91dbe60fa554b7ace910cd.1785054129.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1785054129.git.tanggeliang@kylinos.cn>
 References: <cover.1785054129.git.tanggeliang@kylinos.cn>
@@ -45,75 +45,84 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Add check_stat_equal() helper to reduce repetitive error reporting code
-when validating MPTCP statistics values in process_one_client().
+Rename ret/ret2/ret3 to ret (ssize_t, for syscall return values) and
+r/w (size_t, for byte counters) for better readability.
 
-Also fix bytes_acked validation: compare it against the amount of data
-written (ret2) instead of the amount read (ret), as bytes_acked tracks
-sent and acknowledged data.
+The byte counters were previously stored in ssize_t but never hold
+negative values; size_t is the natural type and matches the parameter
+types of do_getsockopts(s, fd, size_t r, size_t w). This also prepares
+for future updates where r will be modified via '+='.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../selftests/net/mptcp/mptcp_sockopt.c       | 39 ++++++++++---------
- 1 file changed, 21 insertions(+), 18 deletions(-)
+ .../selftests/net/mptcp/mptcp_sockopt.c       | 30 +++++++++++--------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index 469384823dc6..a68fbe13b096 100644
+index a68fbe13b096..3a7fcef5aa54 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -638,6 +638,16 @@ static void connect_one_server(int fd, int pipefd)
- 	close(fd);
- }
+@@ -650,9 +650,10 @@ static void check_stat_equal(const char *name, uint64_t actual,
  
-+static void check_stat_equal(const char *name, uint64_t actual,
-+			     uint64_t expected)
-+{
-+	if (actual == expected)
-+		return;
-+
-+	xerror("%s %" PRIu64 ", expect %" PRIu64 ", diff %" PRId64,
-+	       name, actual, expected, (int64_t)(actual - expected));
-+}
-+
  static void process_one_client(int fd, int pipefd)
  {
- 	ssize_t ret, ret2, ret3;
-@@ -669,27 +679,20 @@ static void process_one_client(int fd, int pipefd)
- 		xerror("expected EOF, got %lu", ret3);
+-	ssize_t ret, ret2, ret3;
+ 	struct so_state s;
+ 	char buf[4096];
++	ssize_t ret;
++	size_t r, w;
  
- 	do_getsockopts(&s, fd, ret, ret2);
--	if (s.mptcpi_rcv_delta != (uint64_t)ret + 1)
--		xerror("mptcpi_rcv_delta %" PRIu64 ", expect %" PRIu64 ", diff %" PRId64,
--		       s.mptcpi_rcv_delta, ret + 1, s.mptcpi_rcv_delta - (ret + 1));
-+	check_stat_equal("mptcpi_rcv_delta", s.mptcpi_rcv_delta,
-+			 (uint64_t)ret + 1); /* +1 for FIN */
+ 	memset(&s, 0, sizeof(s));
+ 	do_getsockopts(&s, fd, 0, 0);
+@@ -663,36 +664,39 @@ static void process_one_client(int fd, int pipefd)
+ 	ret = read(fd, buf, sizeof(buf));
+ 	if (ret < 0)
+ 		die_perror("read");
++	r = ret;
+ 
+-	assert(s.mptcpi_rcv_delta <= (uint64_t)ret);
++	assert(s.mptcpi_rcv_delta <= (uint64_t)r);
+ 
+ 	if (s.tcpi_rcv_delta)
+-		assert(s.tcpi_rcv_delta == (uint64_t)ret);
++		assert(s.tcpi_rcv_delta == (uint64_t)r);
+ 
+-	ret2 = write(fd, buf, ret);
+-	if (ret2 < 0)
++	ret = write(fd, buf, r);
++	if (ret < 0)
+ 		die_perror("write");
++	w = ret;
+ 
+ 	/* wait for hangup */
+-	ret3 = read(fd, buf, 1);
+-	if (ret3 != 0)
+-		xerror("expected EOF, got %lu", ret3);
++	ret = read(fd, buf, 1);
++	if (ret != 0)
++		xerror("expected EOF, got %zd", ret);
++	r += ret;
+ 
+-	do_getsockopts(&s, fd, ret, ret2);
++	do_getsockopts(&s, fd, r, w);
+ 	check_stat_equal("mptcpi_rcv_delta", s.mptcpi_rcv_delta,
+-			 (uint64_t)ret + 1); /* +1 for FIN */
++			 (uint64_t)r + 1); /* +1 for FIN */
  
  	/* be nice when running on top of older kernel */
  	if (s.pkt_stats_avail) {
--		if (s.last_sample.mptcpi_bytes_sent != ret2)
--			xerror("mptcpi_bytes_sent %" PRIu64 ", expect %" PRIu64
--			       ", diff %" PRId64,
--			       s.last_sample.mptcpi_bytes_sent, ret2,
--			       s.last_sample.mptcpi_bytes_sent - ret2);
--		if (s.last_sample.mptcpi_bytes_received != ret)
--			xerror("mptcpi_bytes_received %" PRIu64 ", expect %" PRIu64
--			       ", diff %" PRId64,
--			       s.last_sample.mptcpi_bytes_received, ret,
--			       s.last_sample.mptcpi_bytes_received - ret);
--		if (s.last_sample.mptcpi_bytes_acked != ret)
--			xerror("mptcpi_bytes_acked %" PRIu64 ", expect %" PRIu64
--			       ", diff %" PRId64,
--			       s.last_sample.mptcpi_bytes_acked, ret,
--			       s.last_sample.mptcpi_bytes_acked - ret);
-+		check_stat_equal("mptcpi_bytes_sent",
-+				 s.last_sample.mptcpi_bytes_sent,
-+				 (uint64_t)ret2);
-+		check_stat_equal("mptcpi_bytes_received",
-+				 s.last_sample.mptcpi_bytes_received,
-+				 (uint64_t)ret);
-+		check_stat_equal("mptcpi_bytes_acked",
-+				 s.last_sample.mptcpi_bytes_acked,
-+				 (uint64_t)ret2);
+ 		check_stat_equal("mptcpi_bytes_sent",
+ 				 s.last_sample.mptcpi_bytes_sent,
+-				 (uint64_t)ret2);
++				 (uint64_t)w);
+ 		check_stat_equal("mptcpi_bytes_received",
+ 				 s.last_sample.mptcpi_bytes_received,
+-				 (uint64_t)ret);
++				 (uint64_t)r);
+ 		check_stat_equal("mptcpi_bytes_acked",
+ 				 s.last_sample.mptcpi_bytes_acked,
+-				 (uint64_t)ret2);
++				 (uint64_t)w);
  	}
  
  	close(fd);
