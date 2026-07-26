@@ -1,116 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F19A1E4BE
-	for <mptcp@lists.linux.dev>; Sun, 26 Jul 2026 08:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD6718A6A8
+	for <mptcp@lists.linux.dev>; Sun, 26 Jul 2026 09:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785055444; cv=none; b=EMkqTIFchG5y5PVMLxSjKkm1BxRGEonIoU3dNWx+WAG572mHLAoY18jGXZWHQqMwKW/pbUl1Bhwe6A2tc74Sd13k0V1cvlCaT+wumyOOhed74GtOhuRxlCi4jqpqTMzrF16g3/8kapWxfvaOnH5u0k7b7+SWiQGq+KTRm9gBW3A=
+	t=1785058634; cv=none; b=ZqJw1cL7sr5fRFbJqJBmhf16hikTFSY3qxJy6A5R7/8j+9IDr+zh7G5GwkWl/EWLecr8rI1NVC4t1MEiFKI7oOL1XGDMM9LM/YjMPBgjLbokLvyprFatliD9X7Tuk8hO9AZB4mb4kOKbqWJxAHc/sMLUcmh+UmqJuvNhl0I8+QA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785055444; c=relaxed/simple;
-	bh=N/iL1qLsyw0M/bFA5RvGTUxBR7YGSADuZPL7VhUoUTk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aaBI8jaEmyT7hbPUw0+gISHr7053w2m2lszCQ0QGm0Dv1rN7+OpG5uNRMismoqeE9jdX/Un+xaL+2MTWLfwAStTYmV826YzLUcs8+DJy68BePeFQolN2/KM8mO9O7VBwgHT8xZIg1XppBwVF1FUd7jmbcMhXf2y4Q/DOF7tCTwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cbBhOx41; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785058634; c=relaxed/simple;
+	bh=pAd6qps85yBwvpfBuqNy7fquBV7gSNhyisB4yVYXRy4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=oQlkrP/FeNi/E8xlQJ4HRQvPSAzinaJ0F1qQHv6IzEN5JwAeqae1dljMjPiw5AbHD4NoL2kDoMgfc9ZkrYO8EcYlT/xMQHNsG5Iy3afFzuzryz0ClV/noBltTxuWpvU6K6golLwBraqHXjbwnehTBqpLTydrfQ3m3QQdRKaSaXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WkViM1QO; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cbBhOx41"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F0FA1F000E9;
-	Sun, 26 Jul 2026 08:44:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785055443;
-	bh=Sm6aDRPWiPNVWJxHPvSb+6Fu3H63njI2hWyWxESrdJ8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=cbBhOx41K83WrQtxr/JWYr/P0t2cA7Y9/hb7F8lRDYRdCKHmbNCwKUEk52n9i7PY1
-	 0HulXigssMrDSTqTLpBxE3Z+V+4UO3R9kzzg069ojbwGLgmXKyuC83IweLw+L6Thpy
-	 tMihBNxdeg42yLUoG7mfukdtbR08/JIVx/upoqRzy4wrcD7rsHie/HwzHhlMV5YufJ
-	 OcFulOxY3LG9yLXGr0GK71DqoFy6IS8yc176KRIgfXiGCy1Vrlu8CPQnWT1Tm1l8Lp
-	 VnvDAKEv7oY1eyY8XgL6dNeW5qWemqXw1rdF+ltBBIK05DYficz9km3Imys7sm3xq0
-	 NIAyMgcM21cYg==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v2 5/5] mptcp: add TCP_SYNCNT setsockopt/getsockopt
-Date: Sun, 26 Jul 2026 16:43:44 +0800
-Message-ID: <eafc0fe4728acbfb17f1fabe5945af17d60ad558.1785054808.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkViM1QO"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-51c04bf4711so18977111cf.2
+        for <mptcp@lists.linux.dev>; Sun, 26 Jul 2026 02:37:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785058632; x=1785663432; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=fAnoJS/9GjG4MlRoPOZAd2Y9WU45AO+3NzVDe1/7ASI=;
+        b=WkViM1QObp6x3IfBCPA18gaosQ/qXJM8NVDd/ypp7V8EBuYL8rRWMZDG+LakU+fuvW
+         lJyyuaxZhf2+MCWCN9F3lnVMbB9dpCJvIIkdFl2ghcuM5+Mu+v/mCPCQ5yVJlZGv7G56
+         dH6zswliSETQn1FUxv1NRffgW8zhIHXIM4n4j4R9JkKPX0TWjcZXilrBpTUk0ca/ORE1
+         6mjuE/8OsbREHNn4MA3aFQlSNOx5wzksBs+MRd/mFQ42IyAOSzFgtKlTi4PUcZ5nBomp
+         HtReKWUjnV87vQRNMikBWf4UpOSr6TPfi5StVo6NtXmq+GVeNO+Rbg7gXfiTsGMOe+RA
+         Av7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785058632; x=1785663432;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=fAnoJS/9GjG4MlRoPOZAd2Y9WU45AO+3NzVDe1/7ASI=;
+        b=OTLfBjdubk5d33C+F6cp3KeecpGizASIVxaZNCuS9rT/VtLo9PzGbV8C4pS1gf9LuC
+         KsQ4GUURRgU22ZmYAZ6rCbd1n+va49p5vhcUhmEQM9unvFQ9y/u83XotW1gPAzy3ssgx
+         aWjw4lJgkbp3My09KL+2QgGpEAAVBtIY7vEqM2U/rxxEQkGkOKYRPQm89zqPmKUsanis
+         S/W5i8gKPJ4PG9OiezhyTxAHnFWEN6n5nAg/OPMgqnpRp4vfWwmzD8/Tsy3L6uYl4SIJ
+         WL4z5S13pzkB4H6rD2Gfa/LSdoeVcdGNz1mD/cyHmj8ZFp/rSBtOAIUC3k5O+zZ+Jdzl
+         cTyw==
+X-Gm-Message-State: AOJu0Yy4iyK5hrXSaLPplJaAGpD2PVe7FzaGPTX15ErrEGc4Ge4MTpdr
+	h7Z/mC6z3QwLQiRK67aLliyb7Qn7ZCoyWGW0vhRBbrbXICzyVlfCP4Pnj5+D
+X-Gm-Gg: AR+sD12Af6mrUyYzD457JLCMkvAmflEPBOyaNlPFhbWBfOCa75R5HyETjluBCKc5BYD
+	rvdO3sCjARGzMFsGy66ERJTOGt+LdGtPOTCC3KPZJWvtWEoGI7KwkX80aFjBjPontLm4xdAgGtD
+	18oZdGJ3mdkYuF3kJIh2dICG1zmAl3wfZTqs0boXPpBLLfBZLaQW+gTXsAx97/kXtT4fsqUGK5R
+	lRdlKvSnsGdPs2IiBN4pkPcMhNeVHFg6n6Na9pVNABNoFWleS2Ydgl91HNOERTWdyKirJFFdV3N
+	AC2eZF+MB46wmZqFhJqYSKmSrGSJV1PZE+q0MvTrQErlunAPMQFrFd4FXzXkVsZQuAI0aXMdzE/
+	JbdgorIkcUl+dSH1nQ7wOHpy6ARz61jvxzbSa9HmDd60V88zIH7JM9ntkpfjgR+2AjFRVAH7+Vt
+	2QtkQdfJYRQ6OuvJpB
+X-Received: by 2002:a05:622a:1910:b0:51a:6feb:dc8a with SMTP id d75a77b69052e-529a8381dbfmr46330631cf.18.1785058631756;
+        Sun, 26 Jul 2026 02:37:11 -0700 (PDT)
+Received: from [127.0.0.1] ([135.232.201.42])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-529a27cebedsm32576291cf.1.2026.07.26.02.37.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jul 2026 02:37:11 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
 In-Reply-To: <cover.1785054808.git.tanggeliang@kylinos.cn>
 References: <cover.1785054808.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v2 0/5] Fix socket options used by NVMe over
+ MPTCP
+Message-ID: <eae09e30-f6da-83d7-8820-627b22c48563@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 26 Jul 2026 09:37:09 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-Surface TCP_SYNCNT to userspace on the MPTCP master socket.
+Thank you for your modifications, that's great!
 
-setsockopt(TCP_SYNCNT) validates the value via __mptcp_setsockopt_set_val()
-and stores it in inet_csk(sk)->icsk_syn_retries on the msk. getsockopt()
-reads the same field back.
+Our CI did some validations and here is its report:
 
-A newly created subflow picks up the master socket's syn_retries through
-sync_socket_options(), so the setting takes effect for outgoing SYNs
-without further plumbing.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/301952=
+36916
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- net/mptcp/sockopt.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/006edc38647a
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1134602
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 34f6cd9c7967..6e4c5b5314af 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -898,6 +898,23 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 		ret = mptcp_setsockopt_all_sf(msk, SOL_TCP, optname, optval,
- 					      optlen);
- 		break;
-+	case TCP_SYNCNT: {
-+		int syncnt;
-+
-+		if (val < 1 || val > MAX_TCP_SYNCNT) {
-+			ret = -EINVAL;
-+			break;
-+		}
-+
-+		syncnt = val;
-+		ret = __mptcp_setsockopt_set_val(msk, MAX_TCP_SYNCNT,
-+						 &tcp_sock_set_syncnt,
-+						 &syncnt,
-+						 val);
-+		if (ret == 0)
-+			inet_csk(sk)->icsk_syn_retries = syncnt;
-+		break;
-+	}
- 	default:
- 		ret = -ENOPROTOOPT;
- 	}
-@@ -1450,6 +1467,10 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 		return mptcp_put_int_option(msk, optval, optlen, msk->notsent_lowat);
- 	case TCP_IS_MPTCP:
- 		return mptcp_put_int_option(msk, optval, optlen, 1);
-+	case TCP_SYNCNT:
-+		return mptcp_put_int_option(msk, optval, optlen,
-+					    inet_csk(sk)->icsk_syn_retries ? :
-+					    READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_syn_retries));
- 	}
- 	return -EOPNOTSUPP;
- }
-@@ -1604,6 +1625,11 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
- 
- 	ssk->sk_reuse = sk->sk_reuse;
- 	ssk->sk_reuseport = sk->sk_reuseport;
-+	if (inet_csk(sk)->icsk_syn_retries > 0) {
-+		if (tcp_sock_set_syncnt(ssk, inet_csk(sk)->icsk_syn_retries))
-+			pr_warn("Failed to sync TCP_SYNCNT=%u to subflow\n",
-+				inet_csk(sk)->icsk_syn_retries);
-+	}
- }
- 
- void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk)
--- 
-2.53.0
 
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
