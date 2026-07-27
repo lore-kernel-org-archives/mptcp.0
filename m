@@ -1,136 +1,118 @@
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8A335AC16
-	for <mptcp@lists.linux.dev>; Mon, 27 Jul 2026 03:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A578635D
+	for <mptcp@lists.linux.dev>; Mon, 27 Jul 2026 06:04:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785121957; cv=none; b=SNn6k/0jXVvjH6rCnwC/lc4GRAPvLZHdDnVuJcu0uuLgrK6iVTBKf9zlYkSCX8Bl+7R7U87gO05mcK5kfItZaf5xk8cbF6bjnQ/3QclGiGUvC6f6wzduhZq3dBblgznhyj/lIpe9yIY4VgLIoDWuaCJmJRzxPXXd0tb0l+SyNQw=
+	t=1785132274; cv=none; b=COfN83mbz6miKBKTk5s8bJuz9pq7QAsbfYRZFZPPupxdkNaAokZhZycoIL0JZ+IA14i+FZarDnso2r0KQ1/+eMreR19WzuVT4qq3s4r/sxXYfDcHYwBKqv/TxswEuTUQcK6gc58mrmE0puk2PnLwOu6OkJU4gVkmF+XH1Pz1OPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785121957; c=relaxed/simple;
-	bh=lVc9j8C1Rmc4MoGygjJDwNmKPWQKQb8rbi/rh1H/124=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=DAiA+k5rv7R6h194lk3G62FXWsXrVZ7J754I1jQHCY0qRhzG0JF/SpfvZPrbgpm/3pRcfYA3TmNMkVN+ZTI4HK9e0/KoFa7KON81o+YE6vDsFw8ILp0oZ9Q+91/Vd+XAU3WGU+T+HmUd+HFvGTqfu+/LTPpngaBbQmQZqAfBiPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kOQlOJ3f; arc=none smtp.client-ip=209.85.160.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1785132274; c=relaxed/simple;
+	bh=XEOZdAUaRD9DAB3SkV8wDCvx1MgH+dzROrI1eOxCg+g=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jhsdcje0EvjOlTcJHenMTy6SGc+z5DIJEdyJ7UoDqmiwxetUExK1WaElv7+XSfAK81QMKLL/aQeVqYG3GOL9BmhjqT+hC8B6Mi/zf9pC8nJsQDKxcL/q+Mjx8QTPZ8iKuNV6MXwNoJbyzvineKfYHkdd12JXw5X16qt/9GE5FHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P8+Recfh; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kOQlOJ3f"
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-45691990234so1450553fac.3
-        for <mptcp@lists.linux.dev>; Sun, 26 Jul 2026 20:12:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785121954; x=1785726754; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=bveUaaf9p1ColOllDPQbzQsE+Ik9DFXcZevgLWRGn5I=;
-        b=kOQlOJ3fnfdk9ok9shzdyQZwsEdjCQjkMrx9DnlgC4KFYdTAGXnbAkW5L1IFbiCTPX
-         CUm+URcddWee8fiBk983N8HDTJLoDrHgEF6nu0D6rObRzj6F6nRUcn43VM5hQEQrlgJC
-         9sq7UeJ9N2EhZ/bYZ8XaVNmtxbWDA0TtOxi9vJWTbAQTk1r02X7kkrdyN/03pVyqbgf0
-         eD4noo8vJMCKJdNjKG7kJ+fkM0aPvR78dGF1c1tcP/utu2vpqrZKBR/a5TTZLHl1JtCC
-         vDFwxQdDDCwNDqiLyg8CongAzOPwgpS6BK2Pcy2B0YPuqxU9e5KHXQ3qyaWgBNVQ3MDh
-         gmNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785121954; x=1785726754;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=bveUaaf9p1ColOllDPQbzQsE+Ik9DFXcZevgLWRGn5I=;
-        b=S+ozr4tS85fLvapBO7k4ZFK80pFcZwHmQyPrXSXlrfg+rrR+o6/qDODiK3UuEQya65
-         SI5VkvgbEvcm2PQxrDygdGnZgvgMBWIPSrtYX4mWiQEvEUXKyl9XqSJKIdT3bdulBbx1
-         ZWSaT6FdyyuMGXEZrHEMUsNPFEQjmYwA+hn/MSVB3e/FlESKhBYlfNfrhSD6M2S7eWOT
-         rgTNVncJfEyhJv4o0AchfoRD+evFFo8tATjpFRyQnz+vVgitHQ+VEo150Un30IIYwsAG
-         l0d1zZyDChOF235yrzLtWBndOkTBg+NmmuZocrxGBM4jNK3RKJcDCN0agxlr3RzUrqIq
-         2p3Q==
-X-Gm-Message-State: AOJu0Yz+iHqlxyE5D7e3tJT5VkNurawUkOqcR3ZHhHEhjdCmOgVp4B1X
-	+Xbab4Wp3tQtsB+jPdI2pdFfBehCv6OePOphBXTjLe6biTLCoet3qaS5pnbj
-X-Gm-Gg: AR+sD13whdAUhBkfMv7Eo9Sbluk4hrXTczhiF4qhS6SAwek6akdodsJF8iydHn9gl3S
-	6/vruLIitPvE1Kv6s2U7ggZsWVwIf8KpzOM8ptSRYJdnIeGf5vjPqsA8ZGQ6yadbugUBXJxST/0
-	HKC47g2t03WfrDpfSNNIwmCmeC17Qjv9b7NV5gXjnbS4r0ZfgOsQMNAaSLdRimuX3auFhKZiwQ8
-	7dN/mJwQNLY31bVwY+J6ilMHoMup+FP+ZbXktn6ByWTdPgiqDcD5btyWCncVyNgLuZskCKlIi6R
-	aPYP+Zu9+WTgE/pyKPlJysoYn1/+OMlpODXZbwcEYaIuQgwruuOpVaWQo4xGezjjs0DdAmb3iwD
-	DHucfe8CiHS71QUTqJEqY9/D7gTaky+i8pZGYizV4joX1QT/mdEBqoJfOQGMW86t1jdaTo7jygl
-	tLnWBuoEuCTKxu/a2d
-X-Received: by 2002:a05:6870:350f:b0:456:5873:3b56 with SMTP id 586e51a60fabf-457f270f3b0mr5962193fac.27.1785121954482;
-        Sun, 26 Jul 2026 20:12:34 -0700 (PDT)
-Received: from [127.0.0.1] ([52.176.124.187])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-457674879f7sm14781563fac.13.2026.07.26.20.12.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jul 2026 20:12:33 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Gang Yan <yangang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P8+Recfh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EF0E1F000E9;
+	Mon, 27 Jul 2026 06:04:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785132273;
+	bh=7ZaELvY2J+0bHRXLUPm/xZshY5z3GWQZHpD56t13z3E=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=P8+RecfhK1pA9lE1jYnc92AMwecq7seiX0aoyfSLYIQW4uAS9u1QMg0br19sons1G
+	 Zts9sG4VuXlfH30Vu1DGbQpW+GtuJFa4PaLULsS8Rga6//Z+08PSgVZ0DmurRf477i
+	 nscUv7Rz6RZjRWJG8tkGh34WAKkMIZcJ4hRUPiTt+sR7lL3HtL/29B6mnfZMo3Ldi0
+	 y9czqaRkYH0yG68SUmRaKi5lqkI80DFKF3oDkd/wvGOwaBnnoLSGz25EPbLbzm9a2v
+	 KJXTJSsT9KDs8d+CMe3KuycqXohhL9lz+HyYlaZlNbxOEWvuWIVmRDvsr082vh90uV
+	 crf+PHqwDTN7w==
+Message-ID: <7769654745b0fc72ac1a2a9c697ead37dc841666.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v3 0/7] mptcp: add bpf_setsockopt support
+From: Geliang Tang <geliang@kernel.org>
+To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+Date: Mon, 27 Jul 2026 14:04:27 +0800
 In-Reply-To: <20260727022849.20923-1-gang.yan@linux.dev>
 References: <20260727022849.20923-1-gang.yan@linux.dev>
-Subject: Re: [PATCH mptcp-next v3 0/7] mptcp: add bpf_setsockopt support
-Message-ID: <a98db90c-d2c7-abc8-4a88-83fb39d57a1e@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 27 Jul 2026 03:12:32 +0000
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-9 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
 Hi Gang,
 
-Thank you for your modifications, that's great!
+On Mon, 2026-07-27 at 10:28 +0800, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
+> 
+> Hi, Matt, Geliang, Paolo
+> 
+> Patch 3-4 have been reviewed by Paolo before, and ready for merge
+> [1][2].
 
-Our CI did some validations and here is its report:
+Do not put unrelated code into a single series. This series is for
+adding bpf_setsockopt support; other patches do not belong here.
 
-- KVM Validation: normal (except selftest_mptcp_join): Script error! =
-=E2=9D=93
-- KVM Validation: normal (only selftest_mptcp_join): Script error=
-! =E2=9D=93
-- KVM Validation: debug (except selftest_mptcp_join): Script =
-error! =E2=9D=93
-- KVM Validation: debug (only selftest_mptcp_join): Script=
- error! =E2=9D=93
-- KVM Validation: btf-normal (only bpftest_all): Script =
-error! =E2=9D=93
-- KVM Validation: btf-debug (only bpftest_all): Script =
-error! =E2=9D=93
-- Task: https://github.com/multipath-tcp/mptcp_net-next/ac=
-tions/runs/30233020793
+> 
+> Changelog:
+> v3:
+>   - Patch 2 keeps the mptcp_setsockopt_all_sf as Geliang suggested.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/acb09ec8b8b1
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1134827
+I recommend that you hold off on sending this patch for now: "Let's
+wait until IPV6_TCLASS is merged before posting this patch." Rather
+than keeping an unused mptcp_setsockopt_all_sf.
 
+Do not send code that has not passed compilation to the mailing list.
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+> v2:
+>   - Patches 1 and 2 are new in this series; they address TCP_MAXSEG
+>     handling in the bpf_setsockopt() path.
+>   - Patch 4 adds an early return to fix msk->sk_rcvlowat being
+>     unexpectedly modified, an issue seen in v1.
+>   - Patch 5 makes the hook safe for the non-tcp master socket: it
+> guards
+>     bpf_sock_ops_cb_flags_set() with sk_is_tcp() to prevent out-of-
+> bounds
+>     heap reads/writes through tcp_sk(sk)->bpf_sock_ops_cb_flags, and
+> does
+>     not set is_locked_tcp_sock for the msk (unlike tcp_call_bpf()).
+> That
+>     flag authorizes the verifier's direct tcp_sock-offset field
+> accesses;
+>     since the msk is not a tcp_sock, leaving it at the default 0 is
+> safe.
+> 
+> v1:
+>   Link:
+> https://patchwork.kernel.org/project/mptcp/cover/20260713095735.1222033-1-gang.yan@linux.dev/
+> 
+> [1]
+> https://patchwork.kernel.org/project/mptcp/patch/20260522-sockopt_lock-v5-2-108629a46e98@kylinos.cn/
+> [2]
+> https://patchwork.kernel.org/project/mptcp/patch/20260522-sockopt_lock-v5-4-108629a46e98@kylinos.cn/
+> 
+> Gang Yan (7):
+>   mptcp: drop unused @max arg of __mptcp_setsockopt_set_val
+>   mptcp: take TCP_MAXSEG handling into __mptcp_setsockopt_set_val
+>   mptcp: use sockopt_lock/release_sock in sockopt
+>   mptcp: reject sockopt requiring ssks' lock in BPF context
+>   mptcp: enable bpf_setsockopt on the master socket
+>   mptcp: add TCP_CONNECT_CB sock_ops hook
+>   selftests: bpf: verify mptcp bpf_setsockopt from TCP_CONNECT_CB
+> 
+>  include/net/mptcp.h                           |   9 ++
+>  net/core/filter.c                             |  10 ++
+>  net/ipv4/tcp.c                                |   1 +
+>  net/mptcp/protocol.c                          |   6 +
+>  net/mptcp/protocol.h                          |  29 ++++
+>  net/mptcp/sockopt.c                           | 127 +++++++++++-----
+> --
+>  .../testing/selftests/bpf/prog_tests/mptcp.c  |  61 +++++++++
+>  .../selftests/bpf/progs/mptcp_setsockopt.c    |  32 +++++
+>  8 files changed, 223 insertions(+), 52 deletions(-)
+>  create mode 100644
+> tools/testing/selftests/bpf/progs/mptcp_setsockopt.c
