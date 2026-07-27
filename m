@@ -1,38 +1,38 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C84363C48
-	for <mptcp@lists.linux.dev>; Mon, 27 Jul 2026 02:29:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F013536215B
+	for <mptcp@lists.linux.dev>; Mon, 27 Jul 2026 02:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785119395; cv=none; b=BXVznBqORBzNi25AsLdCdXpmckrOLYBUa7hFpPhj+az/5Yw/mT7oly4kS5rdkSR+lAyt99dnhTCvIbEypJCvdNsYTHmVNfrc9yN4ZTfGGvGOuFxpgS0U7hdRu2KJcg2oC+98IOf5BdnB0CZEiSZx0DJFO5EXsMm9uY6cNP2iYZg=
+	t=1785119397; cv=none; b=HzNA6QxB9t72sY4O7Zruu6gorHOTpnHmk6BNcabG4TqoPzYSNkZLz9BYM+sgan4Gjz/pb9DgPDJOLwcVrSAJGIf2As1RVF+mvri+Hx4o00Ua8t5dYIpcWZ2m99ul0ycKlirof2rBZpMZ0VSYkA9ZcCw+OLzW86X+d2ZPuy3e+IQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785119395; c=relaxed/simple;
-	bh=u9rOxdo46iYB47A/63iPa4+zqlamizywuT2wExIeXdo=;
+	s=arc-20240116; t=1785119397; c=relaxed/simple;
+	bh=5ENV5Fd57hzmb7xSW4bYLIJnGboG3xK5zWrvvfpNfQU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DamSbSKl2iC2oorw/srqYsw4En1scC+9A6wdyNvbbUN81CgqTG/elz+VhJkqWav5sQ0CV7i6LrY4Wrrz+vW5SszNP5ugCieZpTCWFyH6S66UPbBNmxanaJFAeNco9Khzjq37vXpJFUyFDyD22H0qkLEJXsF8EYYC3bT35v9kIiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tWW/jA4E; arc=none smtp.client-ip=91.218.175.185
+	 MIME-Version; b=CmdrZuPND07Gigr3GYKR8B5G8Rl76XfvNyNGymmslpdMuo/M2n2PYjmT/bnBO74Xd1ZOseacqZaFVhZJbm4VbMjUBe8mIVKTY7dNAHZtuX0lQdbSSCKrvJxn6izzCeoHWhmuiwfTF6yDAXTntXsNnUEGFchKlVM5S9GdkZKqNhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=t89t0ZS8; arc=none smtp.client-ip=91.218.175.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tWW/jA4E"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="t89t0ZS8"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1785119391;
+	t=1785119393;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PsBoRQaC3WCt4CgwfpkF2/eFkbf4253syltUQVweLlI=;
-	b=tWW/jA4EPUMQKYrIJMnIMuhzQWN86YY/+oOjZtcTEQsOXtCHsaeXgdUvHv0Rg51PLsvbkW
-	C+CTys8EIJSSfkd+m1Ii+RtJA9KHcCOs8NgUvqeh5YLQWC33aWXSvvtC5D0QQyqqWYUAgM
-	DOhgjXXqPZW3okRpPOQFqKXoV5bLYZU=
+	bh=u5KSWnznuuD2BQAMxk3d2zE+dJZ+HCdUDIt7xKsPYug=;
+	b=t89t0ZS861Ga1j39+dGCjkQU+fbAX7FFAgwEyp8Y9RIL7YeC1i2yW0zCYIw4wLfJyyDhiE
+	wKFtH2p7Yh6BTN5lIqece0mTrXkDPreiCZQRoqD6Wxxy+FSJGbT54Pb3I4/Jmp7afCm43H
+	750jqLPayEqQ3NCSZ0ykYg4nOVzcKEk=
 From: Gang Yan <gang.yan@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Gang Yan <yangang@kylinos.cn>
-Subject: [PATCH mptcp-next v3 6/7] mptcp: add TCP_CONNECT_CB sock_ops hook
-Date: Mon, 27 Jul 2026 10:28:48 +0800
-Message-ID: <20260727022849.20923-7-gang.yan@linux.dev>
+Subject: [PATCH mptcp-next v3 7/7] selftests: bpf: verify mptcp bpf_setsockopt from TCP_CONNECT_CB
+Date: Mon, 27 Jul 2026 10:28:49 +0800
+Message-ID: <20260727022849.20923-8-gang.yan@linux.dev>
 In-Reply-To: <20260727022849.20923-1-gang.yan@linux.dev>
 References: <20260727022849.20923-1-gang.yan@linux.dev>
 Precedence: bulk
@@ -46,92 +46,145 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Gang Yan <yangang@kylinos.cn>
 
-This patch adds a helper named 'mptcp_call_bpf' like tcp_call_bpf.
-Invoke the new helper from mptcp_connect() with
-BPF_SOCK_OPS_TCP_CONNECT_CB, placed after the subflow lock is acquired
-and before tcp_connect(). At this point the msk lock is held by
-__inet_stream_connect(), mirroring the placement of TCP_CONNECT_CB in
-tcp_v4_connect()/tcp_v6_connect().
+Add a BPF sockops program attached to BPF_CGROUP_SOCK_OPS that fires
+on BPF_SOCK_OPS_TCP_CONNECT_CB and exercises bpf_setsockopt() on the
+mptcp master socket (msk).
 
-'bpf_sock_ops_cb_flags_set' can be called via msk, so using sk_is_tcp()
-to avoid this issue.
+Two scenarios are covered by the new "setsockopt" subtest:
+ - TCP_INQ must succeed and the value (1) must be observable from
+   userspace via getsockopt() on the mptcp socket.
+ - TCP_CONGESTION needs the subflow lock and is therefore rejected
+   in bpf context with -EOPNOTSUPP.
 
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 ---
- net/core/filter.c    |  3 +++
- net/mptcp/protocol.c |  6 ++++++
- net/mptcp/protocol.h | 29 +++++++++++++++++++++++++++++
- 3 files changed, 38 insertions(+)
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 61 +++++++++++++++++++
+ .../selftests/bpf/progs/mptcp_setsockopt.c    | 32 ++++++++++
+ 2 files changed, 93 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf/progs/mptcp_setsockopt.c
 
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 18e650bf7393..2f9778181279 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -6097,6 +6097,9 @@ BPF_CALL_2(bpf_sock_ops_cb_flags_set, struct bpf_sock_ops_kern *, bpf_sock,
- 	if (!IS_ENABLED(CONFIG_INET) || !sk_fullsock(sk))
- 		return -EINVAL;
+diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+index 7f48fd9e94e1..ad59f8fcbb68 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
++++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+@@ -18,6 +18,7 @@
+ #include "mptcp_bpf_rr.skel.h"
+ #include "mptcp_bpf_red.skel.h"
+ #include "mptcp_bpf_burst.skel.h"
++#include "mptcp_setsockopt.skel.h"
  
-+	if (!sk_is_tcp(sk))
-+		return -EOPNOTSUPP;
-+
- 	tcp_sk(sk)->bpf_sock_ops_cb_flags = val;
+ #define NS_TEST "mptcp_ns"
+ #define ADDR_1	"10.0.1.1"
+@@ -813,6 +814,64 @@ static void test_burst(void)
+ 	mptcp_bpf_burst__destroy(skel);
+ }
  
- 	return argval & (~BPF_SOCK_OPS_ALL_CB_FLAGS);
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index ffcf5a1788f6..837bb76e5c2d 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -4149,6 +4149,12 @@ static int mptcp_connect(struct sock *sk, struct sockaddr_unsized *uaddr,
- 	if (!msk->fastopening)
- 		lock_sock(ssk);
- 
-+	/* Notify cgroup BPF on the msk before initiating the subflow connect.
-+	 * Mirrors BPF_SOCK_OPS_TCP_CONNECT_CB; msk lock is held by the
-+	 * caller (__inet_stream_connect) and ssk is held before.
-+	 */
-+	mptcp_call_bpf(sk, BPF_SOCK_OPS_TCP_CONNECT_CB, 0, NULL);
-+
- 	/* the following mirrors closely a very small chunk of code from
- 	 * __inet_stream_connect()
- 	 */
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index da40c6f3705f..e862310b2f81 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1374,4 +1374,33 @@ mptcp_token_join_cookie_init_state(struct mptcp_subflow_request_sock *subflow_re
- static inline void mptcp_join_cookie_init(void) {}
- #endif
- 
-+#ifdef CONFIG_BPF_JIT
-+static inline int mptcp_call_bpf(struct sock *sk, int op, u32 nargs, u32 *args)
++static void test_setsockopt(void)
 +{
-+	struct bpf_sock_ops_kern sock_ops;
-+	int ret;
++	struct mptcp_setsockopt *skel;
++	struct netns_obj *netns;
++	int cgroup_fd, server_fd, client_fd;
++	int err;
++	int inq;
++	socklen_t len;
 +
-+	memset(&sock_ops, 0, offsetof(struct bpf_sock_ops_kern, temp));
++	cgroup_fd = test__join_cgroup("/mptcp_setsockopt");
++	if (!ASSERT_OK_FD(cgroup_fd, "join_cgroup"))
++		return;
 +
-+	if (sk_fullsock(sk)) {
-+		sock_ops.is_fullsock = 1;
-+		sock_owned_by_me(sk);
-+	}
++	skel = mptcp_setsockopt__open_and_load();
++	if (!ASSERT_OK_PTR(skel, "skel_open_load"))
++		goto close_cgroup;
 +
-+	sock_ops.sk = sk;
-+	sock_ops.op = op;
++	skel->links.mptcp_connect_cb =
++		bpf_program__attach_cgroup(skel->progs.mptcp_connect_cb,
++					   cgroup_fd);
++	if (!ASSERT_OK_PTR(skel->links.mptcp_connect_cb, "attach connect_cb"))
++		goto skel_destroy;
 +
-+	if (nargs > 0)
-+		memcpy(sock_ops.args, args, nargs * sizeof(*args));
++	netns = netns_new(NS_TEST, true);
++	if (!ASSERT_OK_PTR(netns, "netns_new"))
++		goto skel_destroy;
 +
-+	ret = BPF_CGROUP_RUN_PROG_SOCK_OPS(&sock_ops);
-+	return ret == 0 ? sock_ops.reply : -1;
++	server_fd = start_mptcp_server(AF_INET, NULL, 0, 0);
++	if (!ASSERT_OK_FD(server_fd, "start_mptcp_server"))
++		goto close_netns;
++
++	client_fd = connect_to_fd(server_fd, 0);
++	if (!ASSERT_OK_FD(client_fd, "connect_to_fd"))
++		goto close_server;
++
++	/* TCP_INQ should be set successfullly */
++	ASSERT_EQ(skel->bss->connect_cb_inq_ret, 0, "connect_cb TCP_INQ ret");
++
++	len = sizeof(inq);
++	err = getsockopt(client_fd, SOL_TCP, TCP_INQ, &inq, &len);
++	if (ASSERT_OK(err, "getsockopt TCP_INQ"))
++		ASSERT_EQ(inq, 1, "TCP_INQ value");
++
++	/* TCP_CONGESTION should be -EOPNOTSUPP */
++	ASSERT_EQ(skel->bss->connect_cb_cc_ret, -EOPNOTSUPP,
++		  "connect_cb TCP_CONGESTION ret");
++
++	close(client_fd);
++close_server:
++	close(server_fd);
++close_netns:
++	netns_free(netns);
++skel_destroy:
++	mptcp_setsockopt__destroy(skel);
++close_cgroup:
++	close(cgroup_fd);
 +}
-+#else
-+static inline int mptcp_call_bpf(struct sock *sk, int op, u32 nargs, u32 *args)
-+{
-+	return -1;
-+}
++
+ void test_mptcp(void)
+ {
+ 	if (test__start_subtest("base"))
+@@ -835,4 +894,6 @@ void test_mptcp(void)
+ 		test_red();
+ 	if (test__start_subtest("burst"))
+ 		test_burst();
++	if (test__start_subtest("setsockopt"))
++		test_setsockopt();
+ }
+diff --git a/tools/testing/selftests/bpf/progs/mptcp_setsockopt.c b/tools/testing/selftests/bpf/progs/mptcp_setsockopt.c
+new file mode 100644
+index 000000000000..f54b77ea6c5f
+--- /dev/null
++++ b/tools/testing/selftests/bpf/progs/mptcp_setsockopt.c
+@@ -0,0 +1,32 @@
++#include "bpf_tracing_net.h"
++#include "mptcp_bpf.h"
++
++#ifndef TCP_INQ
++#define TCP_INQ 36
 +#endif
 +
- #endif /* __MPTCP_PROTOCOL_H */
++int connect_cb_inq_ret;
++int connect_cb_cc_ret;
++
++char cc_reno[TCP_CA_NAME_MAX] = "reno";
++
++SEC("sockops")
++int mptcp_connect_cb(struct bpf_sock_ops *skops)
++{
++	struct bpf_sock *sk = skops->sk;
++	int one = 1;
++
++	if (skops->op != BPF_SOCK_OPS_TCP_CONNECT_CB)
++		return 1;
++
++	if (!sk || sk->protocol != IPPROTO_MPTCP)
++		return 1;
++
++	connect_cb_inq_ret =
++		bpf_setsockopt(skops, SOL_TCP, TCP_INQ, &one, sizeof(one));
++	connect_cb_cc_ret =
++		bpf_setsockopt(skops, SOL_TCP, TCP_CONGESTION,
++			       cc_reno, sizeof(cc_reno));
++
++	return 1;
++}
 -- 
 2.43.0
 
