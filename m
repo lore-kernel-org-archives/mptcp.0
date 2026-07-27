@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8E83939BF
-	for <mptcp@lists.linux.dev>; Mon, 27 Jul 2026 11:35:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2429C3F824D;
+	Mon, 27 Jul 2026 11:58:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785152157; cv=none; b=OKRtZSf6tzd3pe4yf0T2nOnZJMPqvEz0w7ay+aCfgX7RwwPsmgEniOqwvOo+7lvzOK7Wwa5l06flPiPxQc/0c2rbvSiSI3w+EIAj6cSlmuuo/XdWT3wTp4cGKqhDlrJzQZuEPhSwzKbrHHrhzvM1AMOcxeSr7xilx6ga6gTfxoo=
+	t=1785153510; cv=none; b=r55lZnH0OyJnVBJwXCqLn1DAE1/T83xLDTCT5NHn6Bb0FYjJTOtNn2EWhHyHAVla0TZN16SmmLNM+k8ZHkba+LkVqehmTMy0b4J2UGrMqVH0IjGuo+4El2XytHb72CnyTknccJ5yzh6dvOWEECn2dQYlNw0pGveeYBXAMSWd5Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785152157; c=relaxed/simple;
-	bh=09DRvdUYO7NkfbfqjsSxAyxOgEspfP79IoUUIM+unoM=;
+	s=arc-20240116; t=1785153510; c=relaxed/simple;
+	bh=SzjrISe0q2eeqep3ox/nJoLw7KB0CxpdGDcPMRmFCYo=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=W9n1U3tn5GrZL+YZpuDFlmJW02WbuD3r2jmN98mCuOFZZC81JZzAaJ1vWlQxca26wMfl7ZlFzcepQdNk73yZJMo7WDwy8NRG82LA0WDB2+6xVzWwJF+O/knt82zARCb0LXaUFz+vjNrGXAp2VwwtarBIxYPMcj+xp0XMp+LHag4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bNDV4pFC; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:MIME-Version; b=VEGEkrqV5XM6vI3/Y30ItXcS4TBH2yC5WVM4ZWhAxFQCt/wJa+i+cNdIXU0suPprnO9P1xdYNylNFmUCKDVK4QIwrKbIKYaSzUmKC2rRU3wwNZZlVYJJRg9VmR1hl2sTB+ivrS0tqWZq2mDiNW53iuTSZbb03u6Da6c2tOtGBLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y81S7S89; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bNDV4pFC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B9901F000E9;
-	Mon, 27 Jul 2026 11:35:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y81S7S89"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CABA41F00A3A;
+	Mon, 27 Jul 2026 11:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785152154;
-	bh=5HG4LqQb3GZebJsLGBi8jvvRnJOQYcBLbwp3YcZTz+4=;
+	s=k20260515; t=1785153508;
+	bh=krbGZKLd0O8JA4ydKurme+tDNfqpnhsHFKUIwH7Hfug=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=bNDV4pFCEq68+rWaTEaRs0TQ/nvRWJtyE4zWuRDFf5Y1ImoJC5+P6YbQE+yTyIAyZ
-	 XQCk6qJJTNVCf83+rDaoVySq+0YPjT3hOC8tQCQxPvkwQSbKczmMlGrdZYyzD0EQTu
-	 A0xSHOgRo7gWFkq1nMG2PQUGFjadZaEdxkN0ek6WRMQaH7SHSNOZHipZQ0rfy586xy
-	 3oxgqBPGRxM4X7pQg5+gagLKKBPjvs/8NHTiQuQE+hf9I6L9olmPGOaVfRAqJzJL2N
-	 /kKPqah66dNcWd3Y6aX2VVKbqiOe1jR8BvBf/HmXZtpEWPLV1K2/a+4xtUaWU6dkm/
-	 /2JF2rPq5P5nQ==
-Message-ID: <e4734c66172f63a66e0013e67c87694d6c5328fd.camel@kernel.org>
-Subject: Re: [mptcp-next,v5,07/12] mptcp: sync mptcp skb cb layout with tcp
- one
+	b=Y81S7S89vmen4nypsdQDdcIvTx2A+KSV7agJRtqYJspYB3gOJ20G2OHO2BKGMHEZX
+	 MtK69DPPHcpnA4u6sW/QvOU0dPy6jS+ZcDApu32OX01kz1DW9NZcCu8aRE0sqGGPmm
+	 cI6oxoz28vV3O+VL7440HR6/tTRrTYZXfilabbEpa7aimDQeLLwJwRExhUJjr2rJ3i
+	 FYb62hUEwlxXsfdRrT7nDQK4Cecvgqg5bDubIsAdiB4XGG2BGcxi2A+PtkrSQsEX5c
+	 RwcJS0kUJuht1p3mL5cLbW9t7wZkFFIa4BpyPYgNNznhe1HKp/tEin+j5wxvP5RD2K
+	 b6L/coik+c0Ag==
+Message-ID: <b2b89abe26e0c603e929733a32240484b7feaa05.camel@kernel.org>
+Subject: Re: [PATCH net-next v2] mptcp: sockopt: implement IPV6_TCLASS
 From: Geliang Tang <geliang@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>, Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Date: Mon, 27 Jul 2026 19:35:48 +0800
-In-Reply-To: <6ffced08-a83a-4262-b6d3-f1e31599848e@redhat.com>
-References: 
-	<8acd04596a44fa0a03e39f9f3d10a2e301b52763.1778446731.git.pabeni@redhat.com>
-	 <20260722100104.1241778-1-geliang@kernel.org>
-	 <190a8af0-1a1c-4bb8-a129-c245511f54f1@kernel.org>
-	 <6ffced08-a83a-4262-b6d3-f1e31599848e@redhat.com>
+To: Matthieu Baerts <matttbe@kernel.org>, David 'equinox' Lamparter
+	 <equinox@diac24.net>
+Cc: Mat Martineau <martineau@kernel.org>, netdev@vger.kernel.org, 
+	mptcp@lists.linux.dev
+Date: Mon, 27 Jul 2026 19:58:24 +0800
+In-Reply-To: <f2c103ac-b85e-4c9b-a590-23f63388855f@kernel.org>
+References: <20260713135551.569365-1-equinox@diac24.net>
+	 <c3b017e1c96cdafce15012e737389108d7cbf8f6.camel@kernel.org>
+	 <alYF-78I4LUaePGo@eidolon.nox.tf>
+	 <f2c103ac-b85e-4c9b-a590-23f63388855f@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.2-9 
 Precedence: bulk
@@ -47,108 +47,52 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi David, Matt,
 
-On Mon, 2026-07-27 at 12:04 +0200, Paolo Abeni wrote:
-> On 7/24/26 12:25 PM, Matthieu Baerts wrote:
-> > On 22/07/2026 12:01, Geliang Tang wrote:
-> > > Hi Paolo,
-> > > 
-> > > Patches 6 and 7 turn out to be very helpful for simplifying my
-> > > MPTCP KTLS
-> > > support implementation.
-> > > 
-> > > To let KTLS obtain an skb's sequence number, I had defined a
-> > > get_skb_seq
-> > > operation in [1]. The TCP implementation was:
-> > > 
-> > > static u32 tcp_get_skb_seq(struct sk_buff *skb)
-> > > {
-> > >       return TCP_SKB_CB(skb)->seq;
-> > > }
-> > > 
-> > > and the MPTCP one was:
-> > > 
-> > > static u32 mptcp_get_skb_seq(struct sk_buff *skb)
-> > > {
-> > >       return MPTCP_SKB_CB(skb)->map_seq - MPTCP_SKB_CB(skb)-
-> > > >offset;
-> > > }
-> > > 
-> > > After Patch 6 removes the CB offset field, the MPTCP
-> > > implementation collapses
-> > > to simply:
-> > > 
-> > >       return MPTCP_SKB_CB(skb)->map_seq;
-> > > 
-> > > And after Patch 7 changes map_seq from u64 to u32, the
-> > > get_skb_seq operation
-> > > is no longer needed at all. The two control blocks now expose the
-> > > sequence
-> > > number identically (same type, same offset), so I can define a
-> > > single
-> > > TLS_SKB_CB accessor that works for both TCP and MPTCP without any
-> > > per-protocol dispatch:
-> > > 
-> > > struct tls_skb_cb {
-> > >       u32 seq;
-> > > };
-> > > 
-> > > #define TLS_SKB_CB(__skb)     ((struct tls_skb_cb *)&((__skb)-
-> > > >cb[0]))
-> > > 
-> > > static_assert(offsetof(struct tcp_skb_cb, seq) == 0);
-> > > static_assert(offsetof(struct mptcp_skb_cb, map_seq) == 0);
-> > > 
-> > > The static_asserts guarantee at compile time that both layouts
-> > > keep the
-> > > sequence number at offset 0, so TLS_SKB_CB(skb)->seq reads the
-> > > correct
-> > > value regardless of the underlying protocol.
-> > > 
-> > > I have reworked the entire MPTCP KTLS series on top of patches 4-
-> > > 8 of this
-> > > series. Building on the removal of the CB offset field, I also
-> > > added a patch
-> > > that trims the duplicated skb head at receive enqueue. With that
-> > > in place,
-> > > KTLS can retrieve the record header via skb_copy_bits() directly,
-> > > so there
-> > > is no longer any need for a dedicated MPTCP helper like the
-> > > mptcp_skb_get_header() I introduced in [2].
-> > > 
-> > > Looking forward to your next version of patches 4-8. Happy to
-> > > help out with
-> > > them if that's useful.
-> > 
-> > That's good if these patches are helping you, but I don't think
-> > Paolo is
-> > going to work on a new version for these patches. The attached
-> > series --
-> > mptcp: address stall under memory pressure -- has been applied, and
-> > it
-> > didn't need these patches at the end.
-> > 
-> > I don't remember why these patches were not needed, but I guess you
-> > can
-> > always cherry-pick them on your side, and modify them if needed.
-> The goal behind that patches was to reuse for mptcp the tcp ofo queue
-> pruning helper. Discussion with Eric pointed out that ofo queue
-> pruning
-> is actually a bad thing, so I just omitted that for mptcp and dropped
-> the pre-req patches.
+On Tue, 2026-07-14 at 11:53 +0200, Matthieu Baerts wrote:
+> Hi David, Geliang,
 > 
-> Patch 6 could have some merit on its own, as IIRC reduced the
-> conditionals in fast-path and cleaned-up the code a bit.
+> On 14/07/2026 11:48, David 'equinox' Lamparter wrote:
+> > On Tue, Jul 14, 2026 at 10:22:12AM +0800, Geliang Tang wrote:
+> > > Thanks for your patch. However there is already a version under
+> > > review
+> > > on the MPTCP mailing list that adds IPV6_TCLASS [1] (as well as
+> > > IP_TTL
+> > > and IPV6_UNICAST_HOPS).
+> > > 
+> > > https://patchwork.kernel.org/project/mptcp/patch/2617b8684039574734b8622936ef126d6a7cd519.1754986785.git.tanggeliang@kylinos.cn/
+> > 
+> > Darn, I looked for patches for this & didn't find any, but I've
+> > also
+> > been carrying this locally for a bit.
+> > 
+> > Anything I can do to help get your patch moving?
+> I was hoping to do some refactoring around Geliang's code, but I
+> didn't
+> manage to do that so far. I will to see if it is fine to apply
+> Geliang's
+> patch (after netdevconf) and do the refactoring after.
+> 
+> @Geliang: do you mind rebasing this series, please? No hurry, I can
+> also
+> check later on. (And sorry for the delay on that)
 
-Thanks for your reply. I just did a little cleanup on patches 4-7 and
-sent them together with my two patches to the mailing list, under the
-name "Reduce the differences between TCP and MPTCP for TLS usage".
+I finally had time to do this IPV6_TCLASS refactoring. I merged my
+changes into David's patch, keeping David as the patch author and
+adding "Co-developed-by" tag for myself.
+
+To verify the correctness of IPV6_TCLASS, I added IPV6_TCLASS support
+to "NVMe over MPTCP" feature I'm currently working on, and all the
+tests passed.
+
+I will include this IPV6_TCLASS patch in my upcoming v3 of "Fix socket
+options used by NVMe over MPTCP" soon.
 
 Thanks,
 -Geliang
 
 > 
-> /P
+> Cheers,
+> Matt
