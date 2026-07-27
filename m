@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972063FB067
-	for <mptcp@lists.linux.dev>; Mon, 27 Jul 2026 11:29:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C0C3F1AD7
+	for <mptcp@lists.linux.dev>; Mon, 27 Jul 2026 11:29:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785151788; cv=none; b=JG5U91cnZUVX3ZTb8anfZ+4PKIHOoUlXZ1lWB3ujuNWWdedmp63XDTH+BUEv6KPWMshN21Z2rHDQiRPrkvwK0EtvxbdvK0H29IYHlN3Acbwt1mgTt3CLibLG+Z4LozzEqvi5YEYOYF4dOrbmFnES4V2OpYie4eXufE9z3bIvVBI=
+	t=1785151790; cv=none; b=tPtMnQfwbl6eK9A9xGfkgeAuaNU7EcRnLQ73bkh6FIKR67pPX7NKhfiOPKrM08eiSZt1WdTvOOcDR9g3qScbEgiFz9B8grdWMlapm05DsiWxmdsCbnK+cfV66IBQVmOQodFP8/rNWvg6J0F3nU2Ng4enmE8MTbgPFttKQ3sOuOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785151788; c=relaxed/simple;
-	bh=IiuCd/XadySPOkV69d9lrEmUQ0CtR/jUUFl6UKTKPOY=;
+	s=arc-20240116; t=1785151790; c=relaxed/simple;
+	bh=vRoXiBR4d/+nWQBWjFeIDTZY5GiuYbnWMuE7lyAlz0A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jyqjJ6FKPZWVY3/bg1zU6MJ0EUtgwlcL5KpDWgYYklo4VwEF4ksm5NADEwM8GLaQQH2N2AhCjJXHlWXrkHNpD6LpNfX1G6IIHif1pqhlqFtiYkBKYEDx8dQE9r82dJipGNE1t58LsZjn4R7zy+4gZ7YGK+qcO7gsqGleigpORZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=im3c9RVB; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=P0pWSpiuAh7IHWIYA6nSuhGasQY2LNMgltTJEkhPqmtKIwpv+GW0VFPOlacrJc2g5BL8rBpuXbDCOeU44LnTpeKaNbU75EEAX7q5bYIZcD7TyOgqdqPA3NWpToFVkwhPBKHS8NOX0F9BUjUfScReIlRLLKDYmKDDfW9hnlOY1Ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E1dsI0Rr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="im3c9RVB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4DDD1F00A3E;
-	Mon, 27 Jul 2026 11:29:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E1dsI0Rr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0BCC1F000E9;
+	Mon, 27 Jul 2026 11:29:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785151787;
-	bh=jpXm/hJOvBXqROpamkMRhqcfbQbabC7Wd2Hxenf60Vw=;
+	s=k20260515; t=1785151788;
+	bh=7hJ5GPi815MX/iylDVo0keGB06RD65fz8uydIxo/qSU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=im3c9RVB2Csi13kyh+RW+izfVwpVrR+GWbf5YUwHTjBfpQkX8b/AYY1GQIQdFGOxB
-	 GawVC5AJIgbzjm8JNF/atNLd4HnpoQOUYR2r6VbuMJOtG8x8PNfWChfHzCheL1j7sk
-	 O2lHZReGx5i/9ryK6RDY0mEHGVV0df51p3ka06kFYMPpRcgnzQ3f/CqtolP9IA3lFX
-	 yVw3Z0HeQfojNwb3JhfGFNuP90y2rYqNEzgfdIm82R+W7z4MpP8der4wTGivaPBb8k
-	 MfDHIVfHjmcelnLBYUP0m6SpMvs9qs/jQFcO0vwmFwPe4XhROPHcUiCUCUI/sgr42Q
-	 wB4J3qo/CWNkA==
+	b=E1dsI0RrJ1mcWDDJ91sSiTF04KIHNtNQ6ElzGuJRckYbOq0gN/wxkjOjgRmJY1vuI
+	 Ozu46/jnHdNzQ9SEt75PskLyeGk9poZ96HVHSE7Ws3beYTIiZ1O7UxIMVaX+IICEFv
+	 rPCifUV0OVxSE6EDwfZaDK4KKnE6YaOuL/J3oSqCMSqV7UXcxUg/f1qf2ZnGrsnxyJ
+	 8gbFkUroa+pZN81AMVpUVjDgT/v/UEVkxTp2ni14RRGlQfRvXxoWl44gyfLjy4e8Oa
+	 zI/hpIyWHtxMi7MeEdbHWUOsRYEy9by6+6CZ5Vpl7cDTicT2hYeVFrLIyUytuqMBuZ
+	 hYSRmUmC4Wjzw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 5/6] mptcp: trim the duplicated skb head at receive enqueue
-Date: Mon, 27 Jul 2026 19:29:20 +0800
-Message-ID: <81bd1e2fa9c959927bf0d1cae718a9da72164b5b.1785150300.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 6/6] mptcp: defer sk_data_ready to the worker
+Date: Mon, 27 Jul 2026 19:29:21 +0800
+Message-ID: <5ab5630bc288d5af26ecacfcf29c7fe35f1fd670.1785150300.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1785150300.git.tanggeliang@kylinos.cn>
 References: <cover.1785150300.git.tanggeliang@kylinos.cn>
@@ -45,162 +45,67 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-After the CB offset field removal, the msk receive queue tracks the
-consumed position with the msk-level copied_seq and each skb map_seq
-points at its first byte (skb->data[0]). When the same DSN range is
-delivered more than once - a partially-acked segment, or duplicate
-data arriving on a second subflow - the skb is queued whole: its
-map_seq sits below msk->ack_seq and the duplicated bytes stay
-physically at the front of the skb.
+When MPTCP carries TLS, the data path runs under mptcp_data_lock().
+Reaching sk->sk_data_ready(sk) synchronously ends up at
+tls_strp_check_rcv() -> mptcp_recv_skb() -> mptcp_move_skbs(), which
+calls mptcp_data_lock() on the same sk and recurses on sk_lock.slock.
 
-The linear readers (recvmsg, read_sock, read_done) cope with that by
-computing a per-skb offset = copied_seq - map_seq and skipping it. But
-consumers that treat the receive queue as a single contiguous byte
-stream cannot: the TLS strparser builds an anchor whose frag_list is
-the receive-queue skbs and reads it with a plain skb_copy_bits(), which
-has no per-skb offset knowledge. A record spanning such an skb boundary
-then reads the duplicated prefix and gets corrupted.
+Fix this by deferring sk->sk_data_ready(sk) to mptcp_worker() via a
+new MPTCP_WORK_DATA_READY bit, re-using the existing
+mptcp_schedule_work()/mptcp_cancel_work() infrastructure. The wakeup
+bit is consumed after the SOCK_DEAD && TCP_CLOSE destroy branch, so a
+socket that reaches the destroy path drops the pending wakeup rather
+than running it post-free.
 
-Physically drop the duplicated leading bytes at enqueue time instead,
-so the receive queue is always contiguous. Add mptcp_trim_dup_head(),
-modelled on tcp_trim_head()/__pskb_trim_head() but tolerating a
-non-empty linear area: it pulls the linear head first, then eats the
-remaining bytes from the paged frags, and the caller bumps map_seq
-accordingly. The skb truesize is left unchanged on purpose - dropping
-only skb->len/data_len keeps the memory accounting over-reserved, hence
-always safe, at both callers and avoids any rmem/fwd_alloc fixup.
-
-Two callers trim the overlap:
- - __mptcp_move_skb() partial-packet branch (map_seq < ack_seq <
-   end_seq). The skb is not owned yet, so on the -ENOMEM unclone
-   failure refund the truesize borrowed by mptcp_borrow_fwdmem()
-   before dropping it.
- - __mptcp_ofo_queue() uncoalesced branch. The skb is already msk
-   owned, so mptcp_drop() refunds it; skip advancing ack_seq on
-   failure.
-
-After trimming, map_seq equals the queue tail end_seq, so the segment
-can be coalesced normally.
+No new work_struct, workqueue or cancel path is introduced; only a new
+flag bit and the corresponding set_bit()/test_and_clear_bit() in the
+mptcp_worker() body.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 79 +++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 78 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.c | 9 +++++++--
+ net/mptcp/protocol.h | 1 +
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b9e44c64c620..09b888ff33c7 100644
+index 09b888ff33c7..be139718ed15 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -11,6 +11,7 @@
- #include <linux/netdevice.h>
- #include <linux/sched/signal.h>
- #include <linux/atomic.h>
-+#include <linux/skbuff_ref.h>
- #include <net/aligned_data.h>
- #include <net/rps.h>
- #include <net/sock.h>
-@@ -429,6 +430,62 @@ void __mptcp_sync_rcv_sequence(struct sock *sk)
- 	MPTCP_SKB_CB(skb)->end_seq = MPTCP_SKB_CB(skb)->map_seq + skb->len;
- }
- 
-+static int mptcp_trim_dup_head(struct sk_buff *skb, int delta)
-+{
-+	struct skb_shared_info *shinfo;
-+	int headlen, eat, i, k;
-+
-+	if (delta <= 0)
-+		return 0;
-+
-+	/* Received skbs are not expected to carry a frag_list; the frag loop
-+	 * below only handles the linear area and the paged frags.
-+	 */
-+	DEBUG_NET_WARN_ON_ONCE(skb_has_frag_list(skb));
-+
-+	if (skb_unclone_keeptruesize(skb, GFP_ATOMIC))
-+		return -ENOMEM;
-+
-+	/* Eat the linear head first, then the paged frags. Note the skb
-+	 * truesize is left unchanged on purpose: dropping only skb->len /
-+	 * skb->data_len keeps the memory accounting over-reserved (hence
-+	 * always safe) at both callers.
-+	 */
-+	headlen = skb_headlen(skb);
-+	eat = min(delta, headlen);
-+	if (eat) {
-+		__skb_pull(skb, eat);
-+		delta -= eat;
-+	}
-+	if (!delta)
-+		return 0;
-+
-+	shinfo = skb_shinfo(skb);
-+	eat = delta;
-+	k = 0;
-+	for (i = 0; i < shinfo->nr_frags; i++) {
-+		int size = skb_frag_size(&shinfo->frags[i]);
-+
-+		if (size <= eat) {
-+			skb_frag_unref(skb, i);
-+			eat -= size;
-+		} else {
-+			shinfo->frags[k] = shinfo->frags[i];
-+			if (eat) {
-+				skb_frag_off_add(&shinfo->frags[k], eat);
-+				skb_frag_size_sub(&shinfo->frags[k], eat);
-+				eat = 0;
-+			}
-+			k++;
+@@ -1085,8 +1085,10 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
+ 	mptcp_rcv_rtt_update(msk, subflow);
+ 	if (!sock_owned_by_user(sk)) {
+ 		/* Wake-up the reader only for in-sequence data */
+-		if (move_skbs_to_msk(msk, ssk) && mptcp_epollin_ready(sk))
+-			sk->sk_data_ready(sk);
++		if (move_skbs_to_msk(msk, ssk) && mptcp_epollin_ready(sk)) {
++			set_bit(MPTCP_WORK_DATA_READY, &msk->flags);
++			mptcp_schedule_work(sk);
 +		}
-+	}
-+	shinfo->nr_frags = k;
-+
-+	skb->data_len -= delta;
-+	skb->len -= delta;
-+	return 0;
-+}
-+
- static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
- {
- 	u32 copy_len = MPTCP_SKB_CB(skb)->end_seq - MPTCP_SKB_CB(skb)->map_seq;
-@@ -474,6 +531,16 @@ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
- 		/* Partial packet: map_seq < ack_seq < end_seq. */
- 		int delta = (u32)msk->ack_seq - MPTCP_SKB_CB(skb)->map_seq;
- 
-+		if (mptcp_trim_dup_head(skb, delta)) {
-+			/* skb is not owned yet: mptcp_borrow_fwdmem() added its
-+			 * truesize to sk_forward_alloc and cleared skb->sk, so
-+			 * mptcp_drop() won't refund it. Do it here.
-+			 */
-+			sk_forward_alloc_add(sk, -skb->truesize);
-+			mptcp_drop(sk, skb);
-+			return false;
-+		}
-+		MPTCP_SKB_CB(skb)->map_seq += delta;
- 		copy_len -= delta;
- 		goto add_queue;
+ 	} else {
+ 		__mptcp_move_skbs_from_subflow(msk, ssk, false);
  	}
-@@ -889,10 +956,20 @@ static bool __mptcp_ofo_queue(struct mptcp_sock *msk)
- 		if (!tail || !mptcp_try_coalesce(sk, tail, skb)) {
- 			int delta = ack_seq - MPTCP_SKB_CB(skb)->map_seq;
+@@ -3223,6 +3225,9 @@ static void mptcp_worker(struct work_struct *work)
+ 	if (test_and_clear_bit(MPTCP_WORK_RTX, &msk->flags))
+ 		__mptcp_retrans(sk);
  
--			/* skip overlapping data, if any */
-+			/* Physically trim the overlapping prefix, if any,
-+			 * so the receive queue stays contiguous.
-+			 */
- 			pr_debug("uncoalesced seq=%x ack seq=%x delta=%d\n",
- 				 MPTCP_SKB_CB(skb)->map_seq, ack_seq,
- 				 delta);
-+			if (mptcp_trim_dup_head(skb, delta)) {
-+				/* skb is msk-owned here; mptcp_drop() refunds
-+				 * it. Skip advancing ack_seq/bytes_received.
-+				 */
-+				mptcp_drop(sk, skb);
-+				continue;
-+			}
-+			MPTCP_SKB_CB(skb)->map_seq += delta;
- 			__skb_queue_tail(&sk->sk_receive_queue, skb);
- 		}
- 		msk->bytes_received += seq_delta;
++	if (test_and_clear_bit(MPTCP_WORK_DATA_READY, &msk->flags))
++		sk->sk_data_ready(sk);
++
+ 	fail_tout = msk->first ? READ_ONCE(mptcp_subflow_ctx(msk->first)->fail_tout) : 0;
+ 	if (fail_tout && time_after(jiffies, fail_tout))
+ 		mptcp_mp_fail_no_response(msk);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 8b16b0a4eb9f..7ba8b78ac6e4 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -115,6 +115,7 @@
+ #define MPTCP_WORK_RTX		1
+ #define MPTCP_FALLBACK_DONE	2
+ #define MPTCP_WORK_CLOSE_SUBFLOW 3
++#define MPTCP_WORK_DATA_READY	4
+ 
+ /* MPTCP socket release cb flags */
+ #define MPTCP_PUSH_PENDING	1
 -- 
 2.53.0
 
