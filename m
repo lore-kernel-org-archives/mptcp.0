@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D434F41BA9C
-	for <mptcp@lists.linux.dev>; Tue, 28 Jul 2026 09:11:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82D23FB067
+	for <mptcp@lists.linux.dev>; Tue, 28 Jul 2026 09:19:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785229869; cv=none; b=q6ka4lG33kIgYzJWSqmhfx60yJR2LszRiwQba1XqGW0d5TkiyXwKiUeR4phXDJCrTit9kGYeRXWVvn3tPbpd/EEIqz6xE9mVAiUA9uhPFcckkMzXC+HC0AZ/26yihCJjcCZOMoUvbz29AsRIjjkstlzlIbedyKu7ijuZxEY/W5U=
+	t=1785230347; cv=none; b=U3vlT3pDlBAYLpfS31aogLACjGGnRPpV5DNYnlP5Z7qJcnhin4bg5W2hlDMqhyLA2XpkJQZO4X/bl86aRDyvN3rct3f76yqHSaRseeseI+z8sltRUKuccuOAM6+9aUOwem60uEM/2/PgNmvVw7dG8nTW5wZBzLvv4/HjsInKK70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785229869; c=relaxed/simple;
-	bh=a2IX1mEDr9JmTXQevkYrQXjN74Jd8rlETkkgGr0DelY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=DwEmGBPYhBhFqTAzc4iaWINu2D2zOGb+HQs7Yjd8Axza1iuGXfzygWzZOrzZTJs3X513ByWZzae9eybRsLW3qiiLJ/sMyvBifPbqXM2BzpJzjbXtYU+M4X/8NSm3jEcaUU4+k7n7I6oNo0op8bGII12OoPF+47AIfWh3SA+thZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kbhfXlAB; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785230347; c=relaxed/simple;
+	bh=4vMoLi0SJEel+yOM7NHPzNElv5wfpdq4XCKP1oOVxo8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=edAUtJEx58b0cD8H64st3hXxEZGEd9MnMvE/dqyMSMpYcfzHcADB8xOGp+QmCfVh+eLupKE4iRIOdFdWbF1A6G6rcvzfJm4b03+y3XW2E4ySZBQCXcOQFrRKnG9xRZGnvUY1/u0MB5Zlt2Ho8WRPEOX5VUk7dLfCn8+dIJLCURY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C4NR/3jO; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kbhfXlAB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA15F1F000E9;
-	Tue, 28 Jul 2026 09:11:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C4NR/3jO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D2701F000E9
+	for <mptcp@lists.linux.dev>; Tue, 28 Jul 2026 09:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785229867;
-	bh=UdnfcI95aPCbSna2IT7CsGmHawwRRgAbAZmDkOFh1Ss=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To;
-	b=kbhfXlABruwt+lLUunDMWH8DmL/+k56pehYopussEI8M8YGQfY9c/BkzajDpcfmZg
-	 1C8nJYtiZ5MSSoXfweyk8fcpWSXVZacgt6lBOQfD8gVuCA+Sxysm6XcLdJgP2NEwkD
-	 0VmF4IoVw6LE4fjS3usS5uzJdsBlJYDP/UQ2SSHU4sJZxagfvU3jyDQGpDTbDJbDhQ
-	 HSiYI/nMlORtW9nCg3C0epSQ6T6Wu3zYzSKeapKIMk7wI2bJ997kovgqRkvR/0nPae
-	 TOyhcPKqW3XLAhagIeqEyEZh9FAqi/3DuXXn+TB6Al9bd4enKy6ZkTcfHhYJgtIGAf
-	 +ZsuO4Oo5akNg==
-Message-ID: <63a4d3de-7af5-4045-9250-0eb93e5f05c2@kernel.org>
-Date: Tue, 28 Jul 2026 11:11:05 +0200
+	s=k20260515; t=1785230345;
+	bh=mCu97LPY3NY6//+iZi//xC4QkCgBhb5cOI7+YkmVaek=;
+	h=Date:Subject:To:References:From:In-Reply-To;
+	b=C4NR/3jONk9lHfbgzJRYT5Rr8pjNrdUFuWAEFWb+FHwbQHwIcgIrS3d4vxOQd3Ryu
+	 0vNZVYwzUYfQZXgQaekXDGIXWuvBDXzIQ86r5x9I603LR3WUwoWMY8RSfScycugCNF
+	 CcUFLolvUF9s+ipjan06b1mXkE7M+MDsfD6RcMHbPqPy/YdR67DzlSZbhaklFEdOwW
+	 zaPlae6nfdK53pPAp0ARD9zbxNTavd+nV7vLFi6b+US2M7QThzcHzNVSQdYuw9Z5o0
+	 zRVYS2AUC4iUaxChYva8VdKFTie4SCKcksqI6/2Te0l09J4LQR/a3Kgl5hqSntkw3a
+	 3EyeL45FaPd/w==
+Message-ID: <9b249085-49bc-4150-99e9-02d5c2cb8e3f@kernel.org>
+Date: Tue, 28 Jul 2026 11:19:03 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: reclaim forward-allocated memory on RX
- path errors
+Subject: Re: [PATCH mptcp-net v2] mptcp: avoid combining some incoming
+ suboptions
 Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>
-References: <54ad24594f194dace522b8f1be3912b242708a6e.1785162224.git.pabeni@redhat.com>
+To: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260722-mptcp-harden-combine-opt-v2-1-2021e67703f3@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,35 +85,69 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-Cc: mptcp@lists.linux.dev
-In-Reply-To: <54ad24594f194dace522b8f1be3912b242708a6e.1785162224.git.pabeni@redhat.com>
+In-Reply-To: <20260722-mptcp-harden-combine-opt-v2-1-2021e67703f3@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hello,
 
-On 27/07/2026 19:36, Paolo Abeni wrote:
-> After commit 9db5b3cec4ec ("mptcp: borrow forward memory from subflow"),
-> errors in the receive path prior to queueing skbs into the receive
-> queue do not trigger forward-allocated memory reclaiming.
+On 22/07/2026 00:57, Matthieu Baerts (NGI0) wrote:
+> Some MPTCP suboptions are mutually exclusive according to the RFC8684,
+> but also because in different places, the code doesn't expect some
+> combinations to be present. That's specially true for suboptions that
+> would be present twice, but with different attributes.
 > 
-> Prevent forward memory from growing unboundedly in pathological drop
-> scenarios by explicitly reclaiming memory when skbs are dropped.
-Thank you for this fix, it looks good to me:
-
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> The new restrictions are the same as the ones applied on the output
+> side, with mptcp_write_options. The same rules can be reused:
+> 
+>   Which options can be used together?
+> 
+>   X: mutually exclusive
+>   O: often used together
+>   C: can be used together in some cases
+>   P: could be used together but we prefer not to (optimisations)
+> 
+>   | Opt: | MPC  | MPJ  | DSS  | ADD  |  RM  | PRIO | FAIL |  FC  |
+>   |------|------|------|------|------|------|------|------|------|
+>   | MPC  |------|------|------|------|------|------|------|------|
+>   | MPJ  |  X   |------|------|------|------|------|------|------|
+>   | DSS  |  X   |  X   |------|------|------|------|------|------|
+>   | ADD  |  X   |  X   |  P   |------|------|------|------|------|
+>   | RM   |  C   |  C   |  C   |  P   |------|------|------|------|
+>   | PRIO |  X   |  C   |  C   |  C   |  C   |------|------|------|
+>   | FAIL |  X   |  X   |  C   |  X   |  X   |  X   |------|------|
+>   | FC   |  X   |  X   |  X   |  X   |  X   |  X   |  X   |------|
+>   | RST  |  X   |  X   |  X   |  X   |  X   |  X   |  O   |  O   |
+>   |------|------|------|------|------|------|------|------|------|
+> 
+> The only difference is with the 'P': another stack could send and
+> ADD_ADDR with other suboptions (DSS, RM_ADDR), and this should be
+> allowed.
+> 
+> A point of attention is with the MP_CAPABLE: it could be used with a
+> RM_ADDR, but there is no reason to add it with a SYN. Note that even
+> with a 4th ACK, it doesn't seem to be useful, except when IDs are known
+> in advance via another channel. Better not to break that.
+> 
+> Also, in mp_opt->suboptions, there is also a bit reserved to the
+> checksum, which can be used in an MP_CAPABLE and a DSS. Each time a DSS
+> option can be used in parallel with another option, the checksum can be
+> set, so the verification is combined into a new OPTIONS_MPTCP_DSS macro.
+I hope that's OK if I apply this patch: I would rather send it upstream
+soon to avoid even more AI-generated reports when combining incompatible
+options.
 
 New patches for t/upstream-net and t/upstream:
-- 0ab6395f5005: mptcp: reclaim forward-allocated memory on RX path errors
-- Results: c37d29475f67..2668d30f6377 (export-net)
-- Results: aca5be746b7a..a596e199424d (export)
+- f34e22f63cde: mptcp: avoid combining some incoming suboptions
+- Results: 2668d30f6377..aa8e7044082a (export-net)
+- Results: a596e199424d..f630d7e8910a (export)
 
 Tests are now in progress:
 
 - export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/ad1a23355073cf3bf47b6f544c590998f451a9d5/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/bffeddcac4e2dc23c53eeb0b2cc0251289dd1948/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/288eb31a56e9cd5a843c911085bb7968bb25057f/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/5daa351aeda080c736302d73482d93f9b78e5aa8/checks
 
 Cheers,
 Matt
