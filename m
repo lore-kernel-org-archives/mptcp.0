@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 986723A7F48
-	for <mptcp@lists.linux.dev>; Tue, 28 Jul 2026 11:40:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD093A7F48
+	for <mptcp@lists.linux.dev>; Tue, 28 Jul 2026 11:40:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785238824; cv=none; b=hW/xD5h5bPqn4hWdUA6KM9f/VY4Ellk6N3yMq+2JCrbkQ/zR8HeQfcPbLHGKHpTWYRengwAnonX3Ow6U3Zlwe4Do6yxo+FDlbS4HsDix2+xP+Ai9iPls0yYU2b3fKGBNQNAlTyjZ28LtOahe334KF0WFawTrMYkMVpKKrKM9nWU=
+	t=1785238826; cv=none; b=PvVJQiYQ28C8WYJzZ2DXI9DDKGWcvUkJ5qWIkRlNamy9+JZpiBL7lyvf8fzZR7V8l6AvF92pLYygcU7omOuk9nwFic2XpnV6zJQpKPjfyEGZCNHyBBJnw6Y0vr3UVeXpUbrIJ4bY5EZyI+LPxT1hLJRfdz3l0GmVPqHwZnyeYas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785238824; c=relaxed/simple;
-	bh=AjZ1WSulHSmj89YlRW2OgkXlmqRlw11HjQRD4f4M34Y=;
+	s=arc-20240116; t=1785238826; c=relaxed/simple;
+	bh=jrmEqBcW+YfyX0GDfc5NSOoAfZUxpVbWWG3TGa3Vl80=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=poDXrz9ig69BPzzLe2NX6DKsETbVra30hjpYRJc1UfXaVc0v1iZJ0Jb3G9mlGGP14y5yvv0c8RLywSdP3rsCp4cslL/Sz1o/zGqUt463cRNUtzerDGrXP8dnkREZLQkB4d2D1yqUd+vJD7GZ3UziAlOpl8/oy17QsHNDevMeC+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aMTbs44O; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=XLWc1pPIBrWFjNwqkIZ4TcHt9VzpD4PDdQK87o4k9LXs16rpwW6zKmLwuTuMUd32Jy7dUMBUMnQoObxPkM9LBsA/lWsB1eE7WVvt1j+LWdCSNNcG/JIPHddabBAgRsaZU2NimETS2VbRtp+lKpnXcvlewAY+b9eTPfZRncmDLmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=buz4uBbn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aMTbs44O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 156FB1F000E9;
-	Tue, 28 Jul 2026 11:40:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="buz4uBbn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA2851F00A3A;
+	Tue, 28 Jul 2026 11:40:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785238823;
-	bh=tIcG6b3HvL/2LQLJf2cMCuROBvCrA274D5Z+Qrjw5Ws=;
+	s=k20260515; t=1785238825;
+	bh=pcL0niRVO2GkZX45imZtqOuw/NWgsuyAotnDCGLuWfM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=aMTbs44OVaTvPAFL+J+6KFigLcWAT8AJ61ipFh9kYVAXHwbsYTZMjzZGW4S4vhikz
-	 jgy58hPAjhHMw4gSlHp2oECX0TftRJHHVP5lzQzkeKlT5cpowlEUPsQnFPe0mE+FAf
-	 gjKGLS3o9wAlpzj3osJEkqO2jbFq1Z5D9LPqNDU3LutMQKhCA0BBzfqmWflwM+E/x3
-	 TGDLzWqSKoCSEYsHAh1tjbBukhA8d1MjAfQiUtvsQ1PBziUvx5f6ZIIBNCWqnJ66NK
-	 rJAuyK4h/Qbl90KH3lBw2Ba0tGpqpVj1deLpsuBnngqf3msuK3qNXKbc2aNrCYlNeS
-	 FfBvrXd9IhwnQ==
+	b=buz4uBbnRLEDsfyNDVz+0GQYRh94ceeuRaO07giGUDTtA5Z/bCe37DlYd8H7OKARy
+	 PGo+rPcusMY5QEwZ9hjTw3yXkGxxoA0MPGmbMtPslS/MaaW3y9HqY3P5P7BY4vSYtJ
+	 4/o7bR1sBbCMxpBNzOdcbaN9NNjIM0ESjKq0HrV93x9v2ZkZvhq2Vmiq67W2fK4P90
+	 VuKJIgarpmC9LCoeVBk8dw7nz1F1thnmbL4ozm7kIVNVbzmHuhXa9GOIbPFVZxb5+L
+	 ChbMfFOFJ2Rfv4fuK5MohW9Onmu8fxL7/EG/4x3qL4D8vBb/+m7vkcKOWMVYc9t1fU
+	 HkHhWka4G9Tlg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v3 6/9] nvme-tcp: support IPv6 traffic class
-Date: Tue, 28 Jul 2026 19:39:39 +0800
-Message-ID: <d039bbbdeeb369915c85fc8fd8b32dc052b5c3da.1785238723.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v3 7/9] nvmet-tcp: support IPv6 traffic class
+Date: Tue, 28 Jul 2026 19:39:40 +0800
+Message-ID: <c0601abe9391f2f4c30ede8dfb2537f5cd3ce7b9.1785238723.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1785238723.git.tanggeliang@kylinos.cn>
 References: <cover.1785238723.git.tanggeliang@kylinos.cn>
@@ -45,41 +45,50 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The fabrics layer now supports parsing the tclass option, but the
-NVMe/TCP transport does not currently advertise or apply it.
+nvmet-tcp currently applies the received IPv4 TOS value when setting
+up a queue socket, but does not handle the IPv6 traffic class.
 
-Allow NVMe/TCP to use NVMF_OPT_TCLASS and set IPV6_TCLASS on each queue
-socket when a traffic class is specified. Keep the existing IPv4 TOS
-handling unchanged.
+Extend the queue socket setup to handle AF_INET6 sockets. Obtain the
+traffic class from the IPv6 socket and apply it through IPV6_TCLASS.
+Keep the existing IPv4 TOS handling unchanged.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- drivers/nvme/host/tcp.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/nvme/target/tcp.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index ba5c7b3e2a7c..a9bb1568d929 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -1837,6 +1837,8 @@ static int nvme_tcp_alloc_queue(struct nvme_ctrl *nctrl, int qid,
- 	/* Set socket type of service */
- 	if (nctrl->opts->tos >= 0)
- 		ip_sock_set_tos(queue->sock->sk, nctrl->opts->tos);
-+	if (nctrl->opts->tclass >= 0)
-+		ip6_sock_set_tclass(queue->sock->sk, nctrl->opts->tclass);
+diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
+index 75a276d73be3..95cd57196973 100644
+--- a/drivers/nvme/target/tcp.c
++++ b/drivers/nvme/target/tcp.c
+@@ -1699,7 +1699,6 @@ static void nvmet_tcp_state_change(struct sock *sk)
+ static int nvmet_tcp_set_queue_sock(struct nvmet_tcp_queue *queue)
+ {
+ 	struct socket *sock = queue->sock;
+-	struct inet_sock *inet = inet_sk(sock->sk);
+ 	int ret;
  
- 	/* Set 10 seconds timeout for icresp recvmsg */
- 	queue->sock->sk->sk_rcvtimeo = 10 * HZ;
-@@ -3041,7 +3043,8 @@ static struct nvmf_transport_ops nvme_tcp_transport = {
- 			  NVMF_OPT_HOST_TRADDR | NVMF_OPT_CTRL_LOSS_TMO |
- 			  NVMF_OPT_HDR_DIGEST | NVMF_OPT_DATA_DIGEST |
- 			  NVMF_OPT_NR_WRITE_QUEUES | NVMF_OPT_NR_POLL_QUEUES |
--			  NVMF_OPT_TOS | NVMF_OPT_HOST_IFACE | NVMF_OPT_TLS |
-+			  NVMF_OPT_TOS | NVMF_OPT_TCLASS |
-+			  NVMF_OPT_HOST_IFACE | NVMF_OPT_TLS |
- 			  NVMF_OPT_KEYRING | NVMF_OPT_TLS_KEY | NVMF_OPT_CONCAT,
- 	.create_ctrl	= nvme_tcp_create_ctrl,
- };
+ 	ret = kernel_getsockname(sock,
+@@ -1723,8 +1722,17 @@ static int nvmet_tcp_set_queue_sock(struct nvmet_tcp_queue *queue)
+ 		sock_set_priority(sock->sk, so_priority);
+ 
+ 	/* Set socket type of service */
+-	if (inet->rcv_tos > 0)
+-		ip_sock_set_tos(sock->sk, inet->rcv_tos);
++	if (sock->sk->sk_family == AF_INET) {
++		struct inet_sock *inet = inet_sk(sock->sk);
++
++		if (inet->rcv_tos > 0)
++			ip_sock_set_tos(sock->sk, inet->rcv_tos);
++	} else if (sock->sk->sk_family == AF_INET6) {
++		struct ipv6_pinfo *np = inet6_sk(sock->sk);
++
++		if (np->tclass > 0)
++			ip6_sock_set_tclass(sock->sk, np->tclass);
++	}
+ 
+ 	ret = 0;
+ 	write_lock_bh(&sock->sk->sk_callback_lock);
 -- 
 2.53.0
 
