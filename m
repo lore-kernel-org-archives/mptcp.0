@@ -1,294 +1,235 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A46534749D8
-	for <mptcp@lists.linux.dev>; Wed, 29 Jul 2026 11:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C8922A4E9
+	for <mptcp@lists.linux.dev>; Wed, 29 Jul 2026 11:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785324584; cv=none; b=jA+Yg23i878ayzwfudQI/1uQrUIDOs4xAvhCLprom4+sloOrZYeaeZneiyD5PDCG+qTkqizX1pOwhlf1RqwFeH4WiAtJThyvOEPYSssLn+j9eHBVRwWpBH9rA6CMRCfOWS6s5JAFOedgioTvwAFZlu7mMHmDDzXsLGSQwmhOCEA=
+	t=1785325745; cv=none; b=TRlag4jvzCwANqlTt3i46vysSn9A0kwf3oL1QYCy0zkS0Zht+b97ptlj8FgzbyeTz1zujrR+IAdnN9RjdxrxtKQfP/PGg4fVSBUeJDypjN2O7GPOJvW6Kj3ROfdjyOveHDOdBbwgAeWqgfHFiUZE9IneIDnir+GgOMq62UHCi8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785324584; c=relaxed/simple;
-	bh=9MhVi3tBuUVUiWdwEgz/IihUj3etazN9M4/4mSNlqdQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TP4N06DtM/az8Kya9BaygX4gEfXD7pSzcnLTyu3BHXDfHosDp4MJjIH/YOMcay+OVYIdhJERkcnfl+f/1wWwkgFSyqZKqpHuSUwttu3ZogRzKlz0bH81HzAvxuYj8h5Auli68CoQft5TG6DcaxbnRNTIZZuBTl1Q0rdrypW+PMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nebusec.ai; spf=pass smtp.mailfrom=nebusec.ai; dkim=pass (2048-bit key) header.d=nebusec.ai header.i=@nebusec.ai header.b=e60V2GPj; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nebusec.ai
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nebusec.ai
+	s=arc-20240116; t=1785325745; c=relaxed/simple;
+	bh=kEvDugujU/U6a4H3Z8X+BEHZN0Tn2Me6MaK9tZ2HwEw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q1tH1hWqbn6NvZK1+gS2JCfwzcF7Iw2yjz1lE3nKGDSsZJWpE7OdVCN2H9hX7wC7hsTYuLL6aO7STmx4jVGut4fAPPNOCccvYTfKI8ThsHX0/9Mj/gY8Snx7/SCWkMHo+dSccYJkOk9j65rKtD6jrhUoDo8wQ0TZuejyGQZipRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h6mGw/lT; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nebusec.ai header.i=@nebusec.ai header.b="e60V2GPj"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2ce87c7e3bbso9459965ad.1
-        for <mptcp@lists.linux.dev>; Wed, 29 Jul 2026 04:29:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=nebusec.ai; s=google; t=1785324582; x=1785929382; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=VYe2iubu6ASdkv/skq7uS2fIda+uHnh2Q+ijL0hRfXc=;
-        b=e60V2GPjkGrkKEEyUI8Wphlm34yO8b4+/UAizL9GVBgQlkE8FyLvx8EceAvqxXhyVo
-         +PlnB+Zcww3hStzAPtatYkcvNEk0Sv2kNkGgM5R0uOxEnvV2g1j+gqKseFciGFLw0L6o
-         zZ9KxLwqZuxwn9OBbncpcYi4So2zADS5OZ+ljQLVAwSk+MwGJ+zvm5EpYrhvG7ZRDIR/
-         uf8hPA+f6kL+iyDynVvdNvtot1uPtw5i6YRgz+Jm5K40qjO6C/fmQe83zpnXlXSmVcC5
-         5v718YjW5xk5KHLm+nP/qZNk4G0l50b7XPN/4nC7RNA00a2KQXNflMrDb9yWrN5MRqRo
-         muGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785324582; x=1785929382;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=VYe2iubu6ASdkv/skq7uS2fIda+uHnh2Q+ijL0hRfXc=;
-        b=IWM5Ym53qnawtATrsAm8l0Cm/bA/Qo9kOQlR/P+Fw90fbWaR53tj7PIxJ+W7CSzFgB
-         WGBFXCKRAT8Pas4Al1ZDSG4o2s4DqGq868ooswoWrevdlzByqGH6qsMdSvt6bZ6c+Tpw
-         PLHUobIAtPJme5cEQQ1qHpUA4NLlY2udSG4q6xUHQxdYBY3mA9KaINyhrw+G3oXc12yY
-         b6EJldmWDZaLMY4m1yVA3EXgwwaJZTOKUwUsFLsf55tSci9crfyiuh7uGo3LOiWHVhCD
-         fQjXl3Sp0qjJJgzfJEyViJ1J60sTOls0PgM0+Cp9UQJfR+FTEzFsDGguwsHewjRkckfA
-         Ulkw==
-X-Forwarded-Encrypted: i=1; AHgh+Ro4y4byXz+ntMdAd97xkQ7gF2gGon4nCLesG8gtRwInRFtnLNAQEA/RNP9RINBsCmzT1pHSPA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxpqjslvzso4+TFWUFxBDaFapktCgX8mNEgl6Bki63keMu8jcwP
-	OyDXN/wZT35KFdCbbkKncvG7dk8gGI3yT9IXeWDVd+F5EEYPdfml0GivAD+ZnvdV5Ksz
-X-Gm-Gg: AR+sD13PQRGx2k4Z+F1T++3PqG8eAJv1kO8a/DWygx683RTd1rVSCzFbNtrvyxzE68x
-	DQi1ahaquCsp7hwtqxGfJOUObmn6X+p+jAY+cpz3wR+ATmaSAFpt7xlFHCC9CtQuIk6LrEL0feK
-	T8HwmBRmj6ijwwC7zKpFiinL9kZNQNriTL7gRnzgYqOU60X0Cs65QhqxI0WSppMFWpaWT2cjaUH
-	eL43MzsaEzdzHM51vWi3lAN5p6mNcTwuV3C/Tijws8WWCUPT0QNTEXJTX6RCEl9WKGW0OTnPhe0
-	a30CkghH9Zgot1xB3DZ5cbNKuyskb4Vh7suWhwSd+4EktEHo8WD1JlnsCSkHjZEeju3KhvZfRNn
-	jhnwnhNyfePcZ2sk6G1M15hgFvALx/l+8EBgGZq3anAFJPdasGv1CBZHc5ghbqu65vPzlO4cAYD
-	xM9JKNCheA5p3BkEBlctP5JmMr4yfqNp4I4YoauNFYpNA5/SHP2Lf7F+/EXT0iSkUh0wMYBOxf5
-	+u6XMx2xA==
-X-Received: by 2002:a17:903:1a2d:b0:2ca:d7a3:3723 with SMTP id d9443c01a7336-2d015d238bdmr70760425ad.29.1785324581971;
-        Wed, 29 Jul 2026 04:29:41 -0700 (PDT)
-Received: from localhost.localdomain ([115.192.250.185])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d022c55a7dsm9898505ad.84.2026.07.29.04.29.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2026 04:29:41 -0700 (PDT)
-From: Zihan Xi <zihanx@nebusec.ai>
-To: netdev@vger.kernel.org,
-	mptcp@lists.linux.dev
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	ncardwell@google.com,
-	kuniyu@google.com,
-	dsahern@kernel.org,
-	kees@kernel.org,
-	matttbe@kernel.org,
-	martineau@kernel.org,
-	geliang@kernel.org,
-	fw@strlen.de,
-	vega@nebusec.ai,
-	zihanx@nebusec.ai
-Subject: [PATCH net 2/2] mptcp: diag: fix unbounded listener bucket lock hold
-Date: Wed, 29 Jul 2026 11:28:40 +0000
-Message-ID: <4632ca2134dbd3947529180ba8b8ba4b467c2098.1785307984.git.zihanx@nebusec.ai>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <cover.1785307984.git.zihanx@nebusec.ai>
-References: <cover.1785307984.git.zihanx@nebusec.ai>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h6mGw/lT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DEF71F000E9;
+	Wed, 29 Jul 2026 11:49:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785325741;
+	bh=fzHbu05lnMwsMv/WXoDgvuYSSkYfzL7FbUEk22zdf8Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=h6mGw/lTYyF3k9WdnZ3ogy2ASTE2QQ3R+YV/JuY3iAlWLjTXpbqIuV9f9IoOKseB9
+	 vQw7iTjZFiQqty/Wf6Euo4QGH181LRXQXachYEPKjWfyipCZ2nYEphU87NqSxCQ3fx
+	 PjE3E0leOYH4YA/pEfnDgkNR+x0qZ7Uc9gMNFNsn7mNxWhuPVQfhQimfUhRBYOzgaV
+	 iFxnmb9FP/avr75F396Ek3XJPte9r/MDceOlbOQi2JoycvIeA4Xcy8PpMLsMqtLKlN
+	 nnRyIgPG3/HH/2xKpDdH2dOyB/KtNzLOmCtcxFaF4w7BJ+hB0L5NHeLM3s10u81Iwj
+	 VIwu/pIKz5qAQ==
+Message-ID: <1a0d5c3b-05ef-4dbf-bb34-3141ad3d6f58@kernel.org>
+Date: Wed, 29 Jul 2026 13:48:59 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next 0/3] mptcp: sched: penalise a slow subflow
+ (#345, first cut for your lab)
+Content-Language: fr
+To: Shardul Bankar <shardul.b@mpiricsoftware.com>
+Cc: shardulsb08@gmail.com, MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260726-mptcp_penalise_send-v1-0-84485e0e995b@mpiricsoftware.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260726-mptcp_penalise_send-v1-0-84485e0e995b@mpiricsoftware.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-MPTCP listener diag dumping reuses sk_diag_dump(), which executes
-inet_diag_bc_sk() before filling the netlink reply. The listener walk in
-mptcp_diag_dump_listeners() currently performs MPTCP listener selection
-and bytecode-triggering dump work while holding the listener bucket lock.
+Hi Shardul,
 
-A dump request can therefore force unbounded per-bucket lock hold by
-arranging for many listeners in the same bucket to miss the MPTCP or
-socket-attribute prefilters, so the old 16-entry batching limit no longer
-bounds the locked scan itself.
+On 26/07/2026 07:55, Shardul Bankar wrote:
+> Hi Matt,
+> 
+> Following up on my note about aligning #345 to mptcp_rcv_buf_optimization():
+> here is a first cut, as a 3-patch series. A few things came out differently
+> from what I described there, so I have called each one out below rather than
+> leave it for you to spot.
+> 
+>   1/3 penalise a slow subflow by halving its cwnd
+>   2/3 do not penalise when receive-window-limited
+>   3/3 DO-NOT-MERGE counters (for testing only)
+> 
+> 1/3 is the simple version. In the scheduler, once a subflow is picked, it is
+> flagged for a cwnd halving that is applied in the push path under the subflow
+> socket lock (so it is safe with the per-subflow locks, as I mentioned). The
+> flag is set when the subflow is clearly slower than the fastest path, the
+> fastest path is cwnd-limited, and the subflow is in TCP_CA_Open. The reduction
+> halves cwnd (and ssthresh if cwnd is past it), at most once per RTT, and the
+> congestion control grows it back.
 
-Fix this by collecting only referenced listener sockets under the bucket
-lock. Re-check the MPTCP listener properties, obtain the parent MPTCP
-socket reference, and run sk_diag_dump() only after dropping the lock.
-Keep a referenced dump cursor so the next batch resumes after the previous
-listener instead of rescanning the bucket head under the listener lock.
+Thank you for having sent these patches!
 
-Fixes: 4fa39b701ce9 ("mptcp: listen diag dump support")
-Cc: stable@vger.kernel.org
-Reported-by: Vega <vega@nebusec.ai>
-Assisted-by: Codex:gpt-5.4
-Signed-off-by: Zihan Xi <zihanx@nebusec.ai>
----
- net/mptcp/mptcp_diag.c | 124 +++++++++++++++++++++++++++++------------
- 1 file changed, 87 insertions(+), 37 deletions(-)
+Note for others: these were supposed to be offlist RFC patches, as an
+iteration for the development we started off list, but they were
+accidentally shared here. I think that's fine, sorry for the noise, but
+please consider this series as an RFC.
 
-diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
-index 136c2d05c0ee..981e64343039 100644
---- a/net/mptcp/mptcp_diag.c
-+++ b/net/mptcp/mptcp_diag.c
-@@ -6,12 +6,25 @@
-  * Author: Paolo Abeni <pabeni@redhat.com>
-  */
- 
-+/* Process a bounded number of listeners per bucket lock hold. */
-+#define MPTCP_DIAG_BULK_SZ 16
-+
- #include <linux/kernel.h>
- #include <linux/net.h>
- #include <linux/inet_diag.h>
- #include <net/netlink.h>
- #include "protocol.h"
- 
-+static void mptcp_diag_save_cursor(struct inet_diag_dump_data *cb_data,
-+				   unsigned int slot, struct sock *sk)
-+{
-+	sock_hold(sk);
-+	inet_diag_dump_clear_cursor(cb_data);
-+	cb_data->dump_cursor = sk;
-+	cb_data->dump_cursor_slot = slot;
-+	cb_data->dump_cursor_type = INET_DIAG_DUMP_CURSOR_MPTCP_LISTEN;
-+}
-+
- static int sk_diag_dump(struct sock *sk, struct sk_buff *skb,
- 			struct netlink_callback *cb,
- 			const struct inet_diag_req_v2 *req,
-@@ -77,6 +90,7 @@ static void mptcp_diag_dump_listeners(struct sk_buff *skb, struct netlink_callba
- 				      bool net_admin)
- {
- 	struct mptcp_diag_ctx *diag_ctx = (void *)cb->ctx;
-+	struct inet_diag_dump_data *cb_data = cb->data;
- 	struct net *net = sock_net(skb->sk);
- 	struct inet_hashinfo *hinfo;
- 	int i;
-@@ -86,62 +100,98 @@ static void mptcp_diag_dump_listeners(struct sk_buff *skb, struct netlink_callba
- 	for (i = diag_ctx->l_slot; i <= hinfo->lhash2_mask; i++) {
- 		struct inet_listen_hashbucket *ilb;
- 		struct hlist_nulls_node *node;
--		struct sock *sk;
--		int num = 0;
--
-+		struct sock *tmp, *sk, *sk_arr[MPTCP_DIAG_BULK_SZ];
-+		struct sock *cursor;
-+		int accum, idx, num, ret;
-+		int num_arr[MPTCP_DIAG_BULK_SZ];
-+		bool use_cursor;
-+
-+resume_listen_walk:
-+		num = 0;
-+		accum = 0;
- 		ilb = &hinfo->lhash2[i];
-+		ret = 0;
- 
- 		rcu_read_lock();
- 		spin_lock(&ilb->lock);
--		sk_nulls_for_each(sk, node, &ilb->nulls_head) {
--			const struct mptcp_subflow_context *ctx = mptcp_subflow_ctx(sk);
--			struct inet_sock *inet = inet_sk(sk);
--			int ret;
--
--			if (num < diag_ctx->l_num)
--				goto next_listen;
--
--			if (!ctx || strcmp(inet_csk(sk)->icsk_ulp_ops->name, "mptcp"))
--				goto next_listen;
--
--			sk = ctx->conn;
--			if (!sk || !net_eq(sock_net(sk), net))
--				goto next_listen;
--
--			if (r->sdiag_family != AF_UNSPEC &&
--			    sk->sk_family != r->sdiag_family)
--				goto next_listen;
--
--			if (r->id.idiag_sport != inet->inet_sport &&
--			    r->id.idiag_sport)
-+		cursor = cb_data->dump_cursor;
-+		use_cursor = cursor &&
-+			     cb_data->dump_cursor_type ==
-+			     INET_DIAG_DUMP_CURSOR_MPTCP_LISTEN &&
-+			     cb_data->dump_cursor_slot == i &&
-+			     !hlist_nulls_unhashed(&cursor->sk_nulls_node) &&
-+			     cursor->sk_nulls_node.pprev != LIST_POISON2;
-+		node = use_cursor ? cursor->sk_nulls_node.next :
-+				    ilb->nulls_head.first;
-+		hlist_nulls_for_each_entry_from(sk, node, sk_nulls_node) {
-+			if (!use_cursor && num < diag_ctx->l_num)
- 				goto next_listen;
- 
- 			if (!refcount_inc_not_zero(&sk->sk_refcnt))
- 				goto next_listen;
- 
--			ret = sk_diag_dump(sk, skb, cb, r, net_admin);
--
--			sock_put(sk);
--
--			if (ret < 0) {
--				spin_unlock(&ilb->lock);
--				rcu_read_unlock();
--				diag_ctx->l_slot = i;
--				diag_ctx->l_num = num;
--				return;
--			}
--			diag_ctx->l_num = num + 1;
--			num = 0;
-+			num_arr[accum] = num;
-+			sk_arr[accum] = sk;
-+			if (++accum == MPTCP_DIAG_BULK_SZ)
-+				break;
- next_listen:
- 			++num;
- 		}
- 		spin_unlock(&ilb->lock);
- 		rcu_read_unlock();
- 
-+		for (idx = 0; idx < accum; idx++) {
-+			const struct tcp_ulp_ops *ulp_ops;
-+			const struct mptcp_subflow_context *ctx;
-+			struct inet_sock *inet;
-+
-+			sk = sk_arr[idx];
-+			rcu_read_lock();
-+			ctx = mptcp_subflow_ctx(sk);
-+			ulp_ops = READ_ONCE(inet_csk(sk)->icsk_ulp_ops);
-+			inet = inet_sk(sk);
-+			tmp = ctx ? ctx->conn : NULL;
-+			if (!ctx || !ulp_ops || strcmp(ulp_ops->name, "mptcp") ||
-+			    !tmp || !net_eq(sock_net(tmp), net) ||
-+			    (r->sdiag_family != AF_UNSPEC &&
-+			     tmp->sk_family != r->sdiag_family) ||
-+			    (r->id.idiag_sport != inet->inet_sport &&
-+			     r->id.idiag_sport) ||
-+			    !refcount_inc_not_zero(&tmp->sk_refcnt)) {
-+				rcu_read_unlock();
-+				goto processed_listener_sk;
-+			}
-+			rcu_read_unlock();
-+			if (ret >= 0) {
-+				ret = sk_diag_dump(tmp, skb, cb, r, net_admin);
-+				if (ret < 0)
-+					num = num_arr[idx];
-+			}
-+			sock_put(tmp);
-+processed_listener_sk:
-+			if (ret >= 0)
-+				mptcp_diag_save_cursor(cb_data, i, sk);
-+			sock_put(sk);
-+		}
-+
-+		if (ret < 0) {
-+			diag_ctx->l_slot = i;
-+			diag_ctx->l_num = num;
-+			return;
-+		}
-+
- 		cond_resched();
-+
-+		if (accum == MPTCP_DIAG_BULK_SZ) {
-+			diag_ctx->l_num = 0;
-+			goto resume_listen_walk;
-+		}
-+
-+		inet_diag_dump_clear_cursor(cb_data);
- 		diag_ctx->l_num = 0;
- 	}
- 
-+	inet_diag_dump_clear_cursor(cb_data);
- 	diag_ctx->l_num = 0;
- 	diag_ctx->l_slot = i;
- }
+I have some questions and small comments.
+
+> What differs from what I described, and why:
+> 
+> - Trigger on delivery rate, not RTT. I had said "slower by RTT". In testing
+>   that over-penalised a path that is only higher latency but still carries its
+>   share of the traffic (equal bandwidth, unequal delay): it fires on the
+>   slower-by-latency path even though shrinking its window loses real goodput.
+>   Keying on the pacing rate instead (penalise only a path whose rate is below
+>   half the fastest) targets a genuinely low-throughput path, and reuses the
+>   avg_pacing_rate the scheduler already maintains. On the threshold I raised
+>   with you (the fork's "any slower" versus a small factor): I had said I would
+>   default to "any slower", but with a rate trigger that fires on almost every
+>   non-fastest path, since rates always vary a little, so I used the factor to
+>   keep it to genuinely slow paths, as I flagged might be needed. Half is just
+>   a starting point, easy to tune.
+
+Sounds good to me!
+
+> - I did not carry over the fork's "meta is send-buffer-limited" gate. In
+>   mainline the msk send buffer is the sum of the subflow send buffers, and it
+>   is effectively never full when the scheduler samples it (the scheduler runs
+>   on the push path, just after an ACK has opened room), so that gate never
+>   fires and the penalty stays dormant. That is why 1/3 has no send-buffer
+>   condition.
+> 
+> - 2/3 is a guard that is in neither the fork nor what I described. Without it,
+>   1/3 regresses badly (about 2x slower in my runs) when the connection is
+>   receive-window-limited. In that case the fastest path is capped by the same
+>   shared window, so it cannot absorb what the slow path gives up, and halving
+>   just sheds the slow path's throughput. 2/3 skips the penalty while the
+>   application has queued past the send-window edge (write_seq > wnd_end), which
+>   is the sign that the receiver, not our congestion window, is the bottleneck.
+>   I kept it a separate patch so you can test 1/3 on its own, or drop or retune
+>   2/3 independently. The exact condition is the piece I would most value your
+>   lab checking.
+
+It feels to me that you require this because patch 1/3 doesn't check if
+the MPTCP connection was "send-buffer-limited", no? But you are doing
+something very similar, no? Without testing, it feels like this is
+required not to limit the penalisation to when it is really needed.
+
+> Testing was local (network namespaces plus netem, patched against a clean
+> mptcp/export), starting from the existing simult_flows selftest. It is a debug
+> kernel and mostly single runs, so please read the numbers as directional; I am
+> happy to share the full logs and the scenario script.
+> 
+> - No regression on the simult_flows suite.
+> - To see the intended effect I looked at MPTcpExtOFOQueue, the number of
+>   segments the receiver had to hold out of order over the transfer, since that
+>   is what the change is meant to reduce and a plain throughput number cannot
+>   show it. On the asymmetric-bandwidth pair (10 vs 3 mbit) with a small
+>   SO_SNDBUF, that count fell by roughly a fifth (about 18 to 23% in my runs)
+>   with no change in throughput. So this is a reduction in reordering, i.e. a
+>   latency and smoothness effect, not more bytes per second; whether that is
+>   worth it for a real workload is exactly what I hope your lab can judge.
+> - The receive-window-limited regression above is back to baseline with 2/3.
+> - Two honest limits. First, with fully autotuned buffers (the common default)
+>   the guard does not fire, because the connection is not receive-window-
+>   limited, and the penalty then leaves a small reordering cost: halving trims
+>   the slow path's delivery rate, so its share of the in-order stream arrives a
+>   little later and the out-of-order count rises a few percent. I did not find a
+>   simple way to also suppress
+>   that without re-opening the gating, and I did not want to over-build v1;
+>   scoping it more tightly (for example only when send-buffer-limited) may be
+>   the right call and I would defer to your lab on it. Second, I have only
+>   exercised two subflows and no backup subflow so far.
+> 
+> 3/3 adds two MPTcpExt counters (CwndPenalized, PenalCandidate) so a run can
+> tell "the guard held the penalty back" from "the trigger never fired". Not for
+> merge. I left your Co-developed-by on it in case it is useful to you elsewhere.
+> 
+> I drove those regimes with a small simult_flows variant (receive-window-
+> limited, send-buffer-limited, and autotuned cases). It is a helper, not
+> selftest quality, so I did not fold it into the series; it is on a branch of
+> my tree, in case it saves your lab time or you spot a case I missed:
+> 
+> https://github.com/shardulsdk-mpiric/linux/blob/6926c4b7f583/tools/testing/selftests/net/mptcp/mptcp_sched_penalise.sh
+> 
+> Run it on a baseline and a patched kernel and compare (prefix with
+> MPTCP_LIB_IP_MPTCP=1 if pm_nl_ctl does not work in your setup):
+> 
+>   SCENARIO=suite                              ./mptcp_sched_penalise.sh
+>   SCENARIO=unbounded                          ./mptcp_sched_penalise.sh
+>   SCENARIO=rwnd    RCVBUF=262144              ./mptcp_sched_penalise.sh
+>   SCENARIO=sndbuf  SNDBUF=65536               ./mptcp_sched_penalise.sh
+>   SCENARIO=both    RCVBUF=262144 SNDBUF=65536 ./mptcp_sched_penalise.sh
+
+Sounds good! Did you check with a fixed sndbuf higher than the rcv one?
+
+Also, be careful that with netem, the limits you give to run_test() can
+influence a lot the bufferbloat. Did you monitor the RTTs during these
+transfers?
+
+On the other hand, it would be good to validate this with one path
+having bufferbloat. These patches should also help to improve the
+situation. (And issue #332 should help even more)
+
+> For the rwnd/sndbuf/both scenarios the simult_flows pass/fail bound is not
+> meaningful (it assumes both paths are fully used): read the printed runtime
+> and out-of-order counts, not OK/FAIL. The "both" case also occasionally fails
+> to bring up the second subflow with the very small SO_SNDBUF; just rerun it if
+> you see a single-subflow run.
+
+I see, yes. I think what is important here for #345, is that when the
+transfer is buffer limited, the slow subflow impact should be reduced.
+At least not to cause the transfer to be worse than without this slow
+subflow.
+
+Cheers,
+Matt
 -- 
-2.43.0
+Sponsored by the NGI0 Core fund.
 
