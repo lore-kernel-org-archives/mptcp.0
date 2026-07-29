@@ -1,100 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5179D39EF23;
-	Tue, 28 Jul 2026 17:12:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB47919CCF7
+	for <mptcp@lists.linux.dev>; Wed, 29 Jul 2026 00:59:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785258755; cv=none; b=lrUA2+wWSFhWOSIOSKZDLoRlqCfsgh+OSM/cseqFiocPJbEFc1mZ0Sr8hBVgwJ+7ZpM7nQQ1lkW1qU+Baas2/Bn8WDcM3+D7XUFL73kGcrNoh0HuovyzWAz9cCS7lwCVUDAkD7E9FiadDm+bodH2tZ2i2QDhvgh/c5dHOhBiTD0=
+	t=1785286763; cv=none; b=RXUUHnYITOV1Uqzbhs7RwTUfsBh58Q0kAcep7Kp+ihqdjoioPnx8yH0RyU8upk50TztgTV0C8HfGdybvawUA23ovpw2RxnRzAOo0NDkX6Emmb22yBbngaA1KdvghSD/NUQx0JSlMUF5YvHtgyq0k865dmEBGAAF4S1FfK/iPW7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785258755; c=relaxed/simple;
-	bh=95laPrOyZSSO2MaKvtBXnM4BRisS7e05Qe6xBWMwGB4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ah+1ogJ0xlavJm1kmZNS8gfWfGBfh8iyTwyd3LCn6dXJXhxglw5v3Aw2F9R7UIjgBN8J2AU8MG8AAGTNnhIIl3DMse/wbHBlH9ksoUdsbTEvVnte88WEI0G3Y2j8gGK6IGRMkUnmXaeRl7Fd+FNjGa2oKC0qQ4KHGPxAHNDzUi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tl6x6V7U; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785286763; c=relaxed/simple;
+	bh=duxA9bFVaZLtGbkAvDgv+xiYLKuHD+hW1QwTwjn0/Mk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Pg14euGKUp77JL+/AC5dsr+bRlLawcoS8AwjXs+b3EiGIp0+h1Phwl/8mPchNQqe9SzfYegdSFBt/XgtCvRIwgOHNLxHDJGpk1086yiL5wzqJ1ia5Lx8je5cpEIDuJsws4sVvC4KTuRWjSsZXb6MM6rLLeDbgwP5zWNslEVBwFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JvAJIAjD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tl6x6V7U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 447771F00A3E;
-	Tue, 28 Jul 2026 17:12:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JvAJIAjD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D67E71F000E9;
+	Wed, 29 Jul 2026 00:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785258754;
-	bh=u+AZSEUgWhE7D0opgqssDSdlP1ic8S4Y/lQMRdKfPpQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=Tl6x6V7UlymHMlPBeGcqKgc5LuaccS90SYjsuDVR21vB9v3Cr1xlKcORHr/J2obSB
-	 xsQBH8GopcsDsSmilveK04UfnviET3cN/0imp3c2lRgkdHtkvNThuQi1a7GpLT1M30
-	 iWWSKnPbNg9Qz8R/inVIJ3JsiieIltDQf3hn4pOaXW9V9Be14F/kW8DKuSfaxCXWGv
-	 10w13m4r6lIpbUtkKYziQDRNOfMQ4EQ2wPow9Fa3OA4/gebyKyi2XkngLXu2erl/Lc
-	 muzfO+xFCi1NdNW3ILzDL9lLMY6A7IsomzdRRZWKKj1IPzsc/rnVCsj14B7R2kYcaC
-	 H8y5sckhFRlgA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 28 Jul 2026 19:12:01 +0200
-Subject: [PATCH net 5/5] mptcp: reclaim forward-allocated memory on RX path
- errors
+	s=k20260515; t=1785286761;
+	bh=PcFsTk1oYSNI216D1366RVUBHC3n3O0Xj2rzbbQaf/0=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=JvAJIAjD3qZb9WL00L7uYHKdVgiZyfajlDQ9vzFYdkRWMfhBPLuBfQlu8PXLp3iAu
+	 sSQDSJveKkoxzTL9HUXjU3e3SYNgHeexFBzkCBr81vYNXo3EffbDoe1iNV7/eO0uxy
+	 hn6lFc1QOz6i7Hqq7AltNw6LJrltecLkXhoDdgWuMJkKvkqSP38ruUsvBRD2WzRPbF
+	 7+fevNUVtyASQs3uf7ferlLu+f86afj9u+n5FOBRNwV4Ma+SBBjCSlVJF314uloZjM
+	 DhKjKruWZuLFD4frIR+J65lsMqbaEX6GrKtnmuKXGwYWlIpwrurQlhoyn3WhInJzIh
+	 aCkhCE3EoCUZA==
+Message-ID: <0e52429885c42258fea0d81934f489c6d3f37acd.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v6 1/3] mptcp: pm: userspace: drop
+ delete_local_addr helper
+From: Geliang Tang <geliang@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Date: Wed, 29 Jul 2026 08:59:16 +0800
+In-Reply-To: <154f5323-fbe1-4283-8b7a-04ab778013de@kernel.org>
+References: <cover.1782513313.git.tanggeliang@kylinos.cn>
+	 <0d2025431ba1b2a34da3a1747880d7b23779cf76.1782513313.git.tanggeliang@kylinos.cn>
+	 <4da53292-aa11-45be-ac7f-11afcfb278a1@kernel.org>
+	 <154f5323-fbe1-4283-8b7a-04ab778013de@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-9 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260728-net-mptcp-misc-fixes-7-2-rc6-v1-5-f7e2d229159d@kernel.org>
-References: <20260728-net-mptcp-misc-fixes-7-2-rc6-v1-0-f7e2d229159d@kernel.org>
-In-Reply-To: <20260728-net-mptcp-misc-fixes-7-2-rc6-v1-0-f7e2d229159d@kernel.org>
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- stable@vger.kernel.org
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1239; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=9MruphuE0mDyM48vy8r+FyoIyzzsuXdFdAn+ZcRkOGE=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIyHr2/vyPl4MGgvJ7bgVX6h19ybnRJkMo6dWHt7f4dA
- V6fOL3TO0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACai3cPIcFgjriXW1muL9o9J
- Sznvdm9fPmfeJ4c/DE/te+rjV2e4rWFkuH+Xw+Hil4IjPzUrP15ve+HrHHC7cxXzSd9t+rNcfaY
- WMwAA
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-From: Paolo Abeni <pabeni@redhat.com>
+Hi Matt,
 
-After commit 9db5b3cec4ec ("mptcp: borrow forward memory from subflow"),
-errors in the receive path prior to queueing skbs into the receive
-queue do not trigger forward-allocated memory reclaiming.
+On Mon, 2026-07-27 at 19:24 +0200, Matthieu Baerts wrote:
+> Hi Geliang,
+> 
+> On 24/07/2026 20:48, Matthieu Baerts wrote:
+> > Hi Geliang,
+> > 
+> > On 27/06/2026 00:45, Geliang Tang wrote:
+> > > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > > 
+> > > Address entries should not be removed from local_addr_list when a
+> > > subflow
+> > > is deleted by the userspace PM, should only be removed when
+> > > sending a
+> > > REMOVE_ADDR.
+> > > 
+> > > So mptcp_userspace_pm_delete_local_addr() helper shouldn't be
+> > > called in
+> > > mptcp_pm_nl_subflow_create_doit() and
+> > > mptcp_pm_nl_subflow_destroy_doit().
+> > > 
+> > > Since this helper is open-coding in mptcp_pm_nl_remove_doit(), it
+> > > can be
+> > > dropped now.
+> > > 
+> > > Address entries are removed from local_addr_list when sending a
+> > > REMOVE_ADDR
+> > > by the userspace PM, the local_addr_used counter of PM should
+> > > also be
+> > > decremented accordingly.
+> > 
+> > I was re-reviewing this series after having read the comments from
+> > Sashiko:
+> > 
+> > https://sashiko.dev/#/patchset/cover.1782513313.git.tanggeliang@kylinos.cn
+> > 
+> > I think the series is correct, but it feels like additional fixes
+> > are
+> > required:
+> > 
+> > - msk->pm.userspace_pm_local_addr_list doesn't contain an entry for
+> > the
+> > ID0 when initialised
+> >   - That's probably fine, but then it means the ID0 case needs to
+> > be
+> > handled separately, like it is with the in-kernel PM.
+> >   - Or maybe easier to add it when the userspace PM is used, to
+> > avoid
+> > all these exceptions?
+> >     - If yes, then the remove_doit should no longer handle the ID0
+> > differently as well.
+> >     - same for announce_doit?
+> >     - maybe better to do that to avoid all these exceptions?
+> > 
+> > - When creating a subflow with ID0, an entry can be added to the
+> > list
+> > (to be checked)
+> >   - If the ID0 is not added at init time, then an exception should
+> > be
+> > added there
+> >   - (also there is a check to avoid announcing ID0 → I think it is
+> > valid
+> > to re-announce the ID0 if this address is no longer used, an
+> > exception
+> > should be added there too, no?)
+> > 
+> > - each time the list is traversed, it doesn't take into account the
+> > ID0
+> > case:
+> >   - If the ID0 is not added at init time, then an extra check
+> > should be
+> > added there
+> > 
+> > WDYT?
+> > 
+> > If yes, maybe this kind of patch can help? (not tested)
+> > 
+> >   https://github.com/matttbe/mptcp_net-next/commit/e03ee2728e98
+> 
+> I just sent this: WDYT?
+> 
+> https://lore.kernel.org/mptcp/20260727-mptcp-pm-userspace-id0-case-v1-0-9877f02a9bae@kernel.org/
+> 
+> Would it be compatible with your series?
 
-Prevent forward memory from growing unboundedly in pathological drop
-scenarios by explicitly reclaiming memory when skbs are dropped.
+Thank you for your patch. I will rebase my patch soon and review yours.
 
-Fixes: 9db5b3cec4ec ("mptcp: borrow forward memory from subflow")
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/protocol.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+-Geliang
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index ca644ec53eed..47eaf64a54ba 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -149,6 +149,13 @@ struct sock *__mptcp_nmpc_sk(struct mptcp_sock *msk)
- 
- static void mptcp_drop(struct sock *sk, struct sk_buff *skb)
- {
-+	/*
-+	 * The skb forward memory was already transferred to sk by
-+	 * mptcp_borrow_fwdmem(), even before setting the destructor.
-+	 */
-+	if (!skb->destructor)
-+		sk_mem_reclaim(sk);
-+
- 	sk_drops_skbadd(sk, skb);
- 	__kfree_skb(skb);
- }
-
--- 
-2.53.0
-
+> 
+> Cheers,
+> Matt
