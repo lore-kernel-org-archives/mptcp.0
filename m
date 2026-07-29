@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DAF3CDBD3
-	for <mptcp@lists.linux.dev>; Wed, 29 Jul 2026 11:49:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E2647A0BA
+	for <mptcp@lists.linux.dev>; Wed, 29 Jul 2026 11:50:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785325792; cv=none; b=osjnRaXdCxi403G0GutZAyUvDEwUMrMES06i/TJUK+YkNWQyqbV/IogQ1KD2EAj6ggteH4Df5V4AxBrWqdHgMXSo92X+8n4zq1mXysicThSWvY5UnxnobUc2gzzJwRAUrpyy2FI4YXNCL7YQYLmJn9Hd/QP8ZpXXJ+7SXEPpdjg=
+	t=1785325846; cv=none; b=VofyI7dqeUof79xbFt5iymO3k4q1cAB5USMVxRGPJFsx4zv5KoX8C/ubi7b6xInacYUY+IZ9DOuGbB/i6IF29D9EjmBaKO4qMZi+Zs6jW7h2squlfXMMJ1v3YThXQ9iQgdUux/LHnKIrlbewFAZkSOMf8qV8SxDkzsBeI5d+1co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785325792; c=relaxed/simple;
-	bh=rXpNLKRgeIkaNRVWkTLuvJ8eNsyCogLEs+859pwERjw=;
+	s=arc-20240116; t=1785325846; c=relaxed/simple;
+	bh=OZg4v1OL8lkbbT4rynpcKQ5ePvV99OJ6XxY4nvbx8IY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IVO24kQ/ifVr3/RT+UJqngXvTXwONWFFXot9MUPKMpfCkPB8XNI/VQ3bnami3EiFy5cX4XiatgOYkoSoO0s98ji3amJGfRnafhelLhpyvQ/M+6qSngL9T8wgD4vCoSKywiolD7QhZJZhntW6vR4XaCnsYiO73xW95elFMWDvoVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RCK/lxnc; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=tjOeSsF8H91LiH06IOMDHZJzPmlogsC7cJqoBYHdJrijECBWwDS2N4HeydnDAMFpomMVgU+IDI3Rxgh8vmhA2QmJrSGjRBe2opFh41hFljKKMZyr6uAlRsLlnNum900e7fJs0Tt7GjNSZLdGJbUdbFAJHh5/BeKQlPV/sf+FDfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fgk/UdCc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RCK/lxnc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C9FE1F000E9;
-	Wed, 29 Jul 2026 11:49:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fgk/UdCc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A0071F00A3A;
+	Wed, 29 Jul 2026 11:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785325791;
-	bh=YxZhHPtlksPwk83MM/zgyR/kCOg2UqXpkTzJ3zW3K68=;
+	s=k20260515; t=1785325844;
+	bh=h8EHksasKKTJTxOXF8E4gK+SUzlozdilKTK8jFJE5cQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=RCK/lxncOc46r6g5igvw7LQ8H29HhOxmqMnW3yMdAN1sJChJEtqfV3llTmrPvJoO4
-	 uCoOA+6vRhkkb/iUPPaM60Wtti9MyD4fH36QFO8BwbVW6B9oW+BxePtW09LMD1TXs+
-	 oJPjfjzbKFfSBIK2yGVFYXVyjrDpbi3GANliKUUCIazMoMt72N1chqdZ+udCrHk3yi
-	 k9RifVBl3oGxchrFV9z3eFwmCqUrQqKJAnCkOKMQ1ozPZGI12X9PdqBvBySaTiHcaM
-	 7M3HjZuAhU5mh9zmHPOHPN0H3V1ExjklIwgAoKHPEgjv6CNi4AuR7Rbxga/2/4i1oK
-	 8uwkd+wUV6ZPA==
-Message-ID: <39a6ac82-7044-4f57-8a89-84b729491d78@kernel.org>
-Date: Wed, 29 Jul 2026 13:49:48 +0200
+	b=Fgk/UdCcI0d5rf8L1FJW4gDXuGWE6KL8IU1BZsxfq5H8Mo8tBdUqCswk6udkP5iWt
+	 cWzycmF7MeqSCxtv3LKljfQ5BNFVTrESTpisDI9ecOnuuS3fM2R0PBL/sprMS+ryD/
+	 5UkOA3H1ozb9oCsmYfITZrFn42k+g/fs+cfoD3SZNnx0A11E/3T3M2pTwG/s+7MdVG
+	 zwC+H0I8LldlOngX6lusTW/cTH5MCibaR7MG3EaNGjGJY1TfGogg87+84Mr61IraZ4
+	 t7it9GKkRz0IxNZmVOWFOSgrqTE7pvXspnuEUI035eql5fpeDbJRJHhIyKAxUAyIvJ
+	 RJGhH6Hsvl0nA==
+Message-ID: <70fa5aff-40c0-4ca5-8a29-4e57489d3637@kernel.org>
+Date: Wed, 29 Jul 2026 13:50:42 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 2/3] mptcp: sched: do not penalise when
- receive-window-limited
+Subject: Re: [PATCH mptcp-next 3/3] DO-NOT-MERGE: mptcp: sched: penalise
+ counters
 Content-Language: fr
 To: Shardul Bankar <shardul.b@mpiricsoftware.com>
 Cc: shardulsb08@gmail.com, MPTCP Linux <mptcp@lists.linux.dev>
 References: <20260726-mptcp_penalise_send-v1-0-84485e0e995b@mpiricsoftware.com>
- <20260726-mptcp_penalise_send-v1-2-84485e0e995b@mpiricsoftware.com>
+ <20260726-mptcp_penalise_send-v1-3-84485e0e995b@mpiricsoftware.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,103 +87,94 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260726-mptcp_penalise_send-v1-2-84485e0e995b@mpiricsoftware.com>
+In-Reply-To: <20260726-mptcp_penalise_send-v1-3-84485e0e995b@mpiricsoftware.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Shardul,
 
 On 26/07/2026 07:55, Shardul Bankar wrote:
-> The penalty in the previous patch shifts load off a slow subflow onto the
-> fastest one, which only helps if the fastest path can absorb it. When the
-> connection is receive-window-limited (the receiver's advertised window,
-> not our congestion window, is the bottleneck), the fastest path is capped
-> by that shared window too and cannot send more, so halving the slow path's
-> cwnd just sheds its throughput. In a receive-window-limited transfer this
-> was measured roughly 2x slower than baseline.
+> Instrumentation for validating the two preceding patches; not for merge.
 > 
-> Gate on the application's queued data fitting within the send window:
-> penalise only while write_seq <= wnd_end. If the application has queued
-> past the window edge the receive window is the binding constraint, so skip
-> the penalty. Both write_seq (application demand) and wnd_end (peer window)
-> are standing values and neither is derived from cwnd, so the test is not
-> biased by the scheduler sampling just after an ACK opened the window, nor
-> made circular by the window itself suppressing cwnd.
+> Adds two MPTcpExt SNMP counters:
+> - CwndPenalized: times a subflow cwnd was actually halved;
+> - PenalCandidate: times the rate trigger picked a slow subflow.
+
+I think at least the first counter is interesting, probably the second
+one as well, no?
+
+Generally, if you need counters during the development, they might be
+needed to debug issues. But here with the scheduler, maybe the tracing
+are better. Did you use "trace_mptcp_subflow_get_send"?
+
+> Together they separate "the guard held the penalty back" (PenalCandidate
+> high, CwndPenalized ~0) from "the trigger never fired" (both ~0), which is
+> what the receive-window-limited case needs to be read correctly.
 > 
 > Co-developed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
 > ---
->  net/mptcp/protocol.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+>  net/mptcp/mib.c      | 2 ++
+>  net/mptcp/mib.h      | 2 ++
+>  net/mptcp/protocol.c | 8 ++++++++
+>  3 files changed, 12 insertions(+)
 > 
+> diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+> index d9bd4f4afcc0..1299613e183b 100644
+> --- a/net/mptcp/mib.c
+> +++ b/net/mptcp/mib.c
+> @@ -88,6 +88,8 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+>  	SNMP_MIB_ITEM("BacklogDrop", MPTCP_MIB_BACKLOGDROP),
+>  	SNMP_MIB_ITEM("RcvPruned", MPTCP_MIB_RCVPRUNED),
+>  	SNMP_MIB_ITEM("OfoPruned", MPTCP_MIB_OFO_PRUNED),
+> +	SNMP_MIB_ITEM("CwndPenalized", MPTCP_MIB_CWNDPENALIZED),
+> +	SNMP_MIB_ITEM("PenalCandidate", MPTCP_MIB_PENALCAND),
+>  };
+>  
+>  /* mptcp_mib_alloc - allocate percpu mib counters
+> diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+> index 18f35f7e0a2d..93b3a7e9584f 100644
+> --- a/net/mptcp/mib.h
+> +++ b/net/mptcp/mib.h
+> @@ -91,6 +91,8 @@ enum linux_mptcp_mib_field {
+>  	MPTCP_MIB_BACKLOGDROP,		/* Backlog over memory limit */
+>  	MPTCP_MIB_RCVPRUNED,		/* Dropped due to memory constrains */
+>  	MPTCP_MIB_OFO_PRUNED,		/* MPTCP-level OoO queue pruned */
+> +	MPTCP_MIB_CWNDPENALIZED,	/* DEBUG: subflow cwnd halved by the scheduler (#345) */
+> +	MPTCP_MIB_PENALCAND,		/* DEBUG: picker chose a slow (low-rate) subflow */
+>  	__MPTCP_MIB_MAX
+>  };
+>  
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index d31bcb9ad894..7cbc5aa17e22 100644
+> index 7cbc5aa17e22..80866f09831a 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -1575,6 +1575,23 @@ static bool mptcp_penalise_throttle_ok(struct mptcp_subflow_context *subflow)
->  	return tcp_jiffies32 - subflow->last_penalise >= max_t(u32, rtt, 1);
+> @@ -1607,6 +1607,7 @@ static void mptcp_penalise_cwnd(struct sock *ssk)
+>  	subflow->penalise = false;
+>  	subflow->last_penalise = tcp_jiffies32;
+>  	tcp_snd_cwnd_set(tp, max_t(u32, cwnd >> 1, 2));
+> +	MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_CWNDPENALIZED);
+>  	if (cwnd >= tp->snd_ssthresh)
+>  		tp->snd_ssthresh = max_t(u32, tp->snd_ssthresh >> 1, 2);
 >  }
->  
-> +/* Only penalise when the connection is not receive-window-limited: all the
-> + * data the application has queued fits within the current send window
-> + * (write_seq <= wnd_end). If it has queued past the window edge, the peer's
-> + * receive window (not our congestion window) is the bottleneck: the fast
-> + * path is capped by that shared window too and cannot use capacity freed from
-> + * the slow path, so penalising would only shed the slow path's throughput.
-> + *
-> + * write_seq (application demand) and wnd_end (peer-advertised window) are both
-> + * standing values and neither is derived from cwnd, so unlike the instantaneous
-> + * window headroom this is not biased by the scheduler sampling just after an
-> + * ACK opened the window, nor circular when the window is what suppresses cwnd.
+> @@ -1694,6 +1695,13 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+>  	 * once per RTT.
+>  	 */
+>  	subflow = mptcp_subflow_ctx(ssk);
+> +	/* DEBUG: count how often the trigger picks a slow path, so a gated-off
+> +	 * run (PenalCandidate high, CwndPenalized 0) is distinguishable from one
+> +	 * where the trigger never fired.
+> +	 */
+> +	if (fastest && ssk != fastest &&
+> +	    (u64)subflow->avg_pacing_rate * MPTCP_PENALISE_RATE_RATIO < max_pace)
 
-(a bit too long, some text can probably be moved to the commit message
-if not there already → but also, I guess this commit will be squashed in
-the previous one at the end)
+If this counter is interesting, you could have a variable for penal_cand
+and use it below.
 
-> + */
-> +static bool mptcp_penalise_send_window_ok(const struct mptcp_sock *msk)
-> +{
-> +	return msk->write_seq <= mptcp_wnd_end(msk);
-
-It looks like you are doing something similar to tcp_snd_wnd_test(), no?
-
-I guess you should at least use after64/before64. Here we don't have the
-skb, that might change later if the MPTCP scheduler API is modified, but
-that can be an optimisation for later.
-
-You could name the helper mptcp_snd_wnd_test(), and mention it is
-inspired by the TCP version, but without checking the packet len (for
-the moment).
-
-Other than that, this Sashiko's comment is interesting:
-
-> Does this heuristic correctly identify receive-window bottlenecks without
-> unintentionally disabling the penalty for congestion-limited bulk transfers?
-> Because write_seq is limited by the socket send buffer (sk_sndbuf) rather
-> than the congestion window, an application performing a bulk transfer with a
-> large send buffer can easily queue data past the peer's advertised receive
-> window.
-> If the connection is heavily congestion-limited, the fast path is saturated
-> and the slow path should still be penalized to reduce head-of-line blocking.
-> However, since write_seq > mptcp_wnd_end(msk) in this scenario, it seems
-> this check will incorrectly assume the connection is receive-window limited
-> and skip the penalty.
-
-By chance, did you already validate this case?
-
-> +}
-> +
->  /* Halve the congestion window (and ssthresh, if cwnd is past it) of a subflow
->   * the scheduler flagged. Runs in the push path under the subflow socket lock,
->   * which protects snd_cwnd. The congestion control grows the window back,
-> @@ -1681,6 +1698,7 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+> +		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_PENALCAND);
+>  	subflow->penalise = fastest && ssk != fastest &&
 >  			    (u64)subflow->avg_pacing_rate * MPTCP_PENALISE_RATE_RATIO < max_pace &&
 >  			    inet_csk(ssk)->icsk_ca_state == TCP_CA_Open &&
->  			    tcp_is_cwnd_limited(fastest) &&
-> +			    mptcp_penalise_send_window_ok(msk) &&
->  			    mptcp_penalise_throttle_ok(subflow);
->  
->  	burst = min(MPTCP_SEND_BURST_SIZE, mptcp_wnd_end(msk) - msk->snd_nxt);
 > 
 
 Cheers,
