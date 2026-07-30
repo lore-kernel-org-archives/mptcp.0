@@ -1,131 +1,137 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D75236212D
-	for <mptcp@lists.linux.dev>; Thu, 30 Jul 2026 04:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C230269D18
+	for <mptcp@lists.linux.dev>; Thu, 30 Jul 2026 07:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785385361; cv=none; b=AlHgjfz2g/8oPs30LhBeMTVzskdRd0rvXCLWab34eQX33/G7CIkdCohcFm2ekRKk1gfeHkyrpBuoRRKqnnm/3ydyq8LnMYbjcneCR7Ev3muN9nLZZiqcxrdpeLlXK6qF9i1Sbeg+qqZiB2D7hiQ6zrajv6cwC6Z4eDtfAP6GMNQ=
+	t=1785395574; cv=none; b=OLk44guXsGCBMSn1i6az22sv8Y8NPY37hBYS/JF08/kPjB1i8HEMGUYAyFFhMNlnSFFEdE5AYua3QYzCID4T4ZC58uo02CzmU7HIhogIPUkwEhTWBEC/BnXaEoY5DTOALfA6896yO+wv/7PUb3CmivV03PWvdOOldOSIh9AcvDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785385361; c=relaxed/simple;
-	bh=cTkK/gnEHJWvaukS3uhR8p671zlwQYzc/E3uXckeLqM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=hvPnYfLkY3cpR/dv1YiUrD3taPsrBB51U06Li/rWHExaD/e+q7vvq5Y+VSGO2cfRFvn0No9mDHa67hMaaojIB1hqzElYSscSbp/TPibVC10f/VWN7UM6wQgtf8Y7n8Zho/8pjy2MUHo/GbEJYVvxJAT8NUq7CbM/va9xWJRL0SM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jOgL7l9d; arc=none smtp.client-ip=209.85.222.181
+	s=arc-20240116; t=1785395574; c=relaxed/simple;
+	bh=hJ0At0S1WYIoZRuM3MTkHnKiz8hXAw9lrFqef1mxF50=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ATblnswGjyiRvp8Gco2w6XUEyuqAtncywx3GHWOT5A6cAjsLdR0uAoLUWyR2LfmtBlzaiDKeeXkC3kGST9wqgvez4ouYfyAIt4k+s5iRBYfxcnyYd78DNavoc9yXilgWM8V9I2c3YmY/jbV9sl+s9/NtOjmVpUtByHgsrWg9LRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lYwGJlQB; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jOgL7l9d"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-92e602d2c0fso25217285a.0
-        for <mptcp@lists.linux.dev>; Wed, 29 Jul 2026 21:22:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lYwGJlQB"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-47f97d310caso1665992f8f.2
+        for <mptcp@lists.linux.dev>; Thu, 30 Jul 2026 00:12:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785385359; x=1785990159; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=Efd+WxfgWzmkmQuNNiRNc9z+IZsFPVeqBIrKKrxPAW8=;
-        b=jOgL7l9drC7O5UaFMywFXAVMV4UM7Ob4uUCP/zp7T/pw0Kcj5qNuNkY04o3mvkz8Bg
-         p3PcTUX+RyjY5Md977uxuPtyZ8os3PKu4VQILIHyGaddtFBiILV68DSH4+I662zzyxH0
-         HmC9AlHxTo/s27A4AN9YqgErgj/b0Wk/LYfV7+xe8aGFpqJ1YQc9fzUgUCGa2waHNM7J
-         Z7yTXvw31XKVTdfl3kvqWW7W9vIbhI/Egu+cdq+Cd+tyooS69qOXZ1G1f9gr1ll2Ed9C
-         h/pXpS9tT0yNHPhxjOxj5y3rfL/cyegTGB2NLbkyVnUKeQa5VSb7UM6XeUhB5sasGiCF
-         zo+A==
+        d=gmail.com; s=20251104; t=1785395568; x=1786000368; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=8A48b86Q8tzhL6JgqpOj7us+/7g5P8hkVgC8RTpeQFI=;
+        b=lYwGJlQBjkDE//iAagTf25NyjZO7eN11WOSgb9C0dI4ZQP+0bzbpq6DeJ/lp+cyvOb
+         1QyzBA5oEO+b7WzxM+s5pgR/7FxLAUEgkzJGwXLal+bxy2TuX9dl2FtlgObi525Mz3wh
+         ZmovvwybfQvq443/FloEDe9uBbnXhLkN6i7ixJJ0UXiH5Je6/FsY7EbqKh2Y6+y81C6d
+         ICdQiNxaLEB5xXwbKeHtgp5OtlfmGY1KpsbKIph9rY2tksdahhNjhnS4HJKdH9RaS139
+         abviKuXRYD6d0P5/VtsyoXskgRtu3Wn5lyZp2JgVOq0AlY8Igyr/RJsQBlQ7bGLvyRYc
+         7KCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785385359; x=1785990159;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Efd+WxfgWzmkmQuNNiRNc9z+IZsFPVeqBIrKKrxPAW8=;
-        b=e/FdHQIhNwOXhJ/IZjQ/m8mOQO9N7QCD7uiLcm3EaIBeFbqK7Q6YXx7ZYY2m1VuN6j
-         HOLfH/rgiTIqMmmPwhBd28VTR1fBItfiBJIay7n3K+r6zSyqS1ICvrA5+ddmpZ5CyYZH
-         6/EdOtzwTNEp40KP+87r3EGYISOr8U/QKQjEvDXVrjrpr+dENu40QhwX+VkjbkprhMBX
-         83BRwZv9JIP8kxgAwbo1wpwIwbMfKAunRSHWktStn79FuJGgWVnC0RbQmIzKnLu0RDR3
-         B+hr+x/W7X/YtuaHosuii+VNkrWrJ00gU9+ezj1HZ6dvFxQ6/jL/Ij5CDR7x0OuOdUIx
-         vOeQ==
-X-Gm-Message-State: AOJu0Yxq70jU1PgB6gXbhVGvhObz3x2u5JFzeS7ONhVlGHF2yapRKotk
-	QSlHdMtjQAjNUGmucjWUjv5GXiusM3heKNMkUdyPiC6QQbZyjFDH9RUpAbXE
-X-Gm-Gg: AR+sD102FvsB/h50ULEXYBmIX54xX7XfWOtWFCif1CHDbtbb9p0NlPXbTrUEXlV3rkB
-	mVbNBCQYvKBPaU7kAi8I2Dn8jro9fW/s3uoF+e7fAC/MoaQeZxka4bPOeqsgNPzHt1+jgOiqH+t
-	/VoZTD+kcALhmaGEqfTrd8DIyhl8aW0m5cTG9+Zu0Myr/am9yaH1SROO4hLGxU+N3D4uPyaWg5D
-	xanm7w+bW1UDj4chkE4yhQOXq61UubzLswoc5LxZ6ZUONI2zxqwyRG74Vw1ROCPVODb3ODd73VF
-	GrlbBBJCT//0KCXMZVE88mbSXpwoTSdRv8aTkkV57WGoSCtCRColpbPYR6j9B+AvCQihQ0ZvIbv
-	inhZikOu47cWEJUmS+pRcJ21k/0GvFL9g9+HAGk0mLhO6jAY0f2WccOZ/RaflTVRydWKYgDHU6+
-	y57Eer3lJ/TvqHmnr9XfdU+Afz3CF5gFREMijXcoMBDcBisGSdsJVyrKxWWJZUd/nVP/FsMnLv
-X-Received: by 2002:a05:6214:509d:b0:907:785e:61a6 with SMTP id 6a1803df08f44-90834fe6f98mr7856976d6.16.1785385359323;
-        Wed, 29 Jul 2026 21:22:39 -0700 (PDT)
-Received: from [127.0.0.1] ([52.188.87.68])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-90832219d0dsm8511666d6.0.2026.07.29.21.22.37
+        d=1e100.net; s=20251104; t=1785395568; x=1786000368;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=8A48b86Q8tzhL6JgqpOj7us+/7g5P8hkVgC8RTpeQFI=;
+        b=P7umSaPYGwk7kIN7xNFdg5hvyFCMTJQcGYtZJGRAecuaZayCPVWYITELYCaJgmrcCh
+         PftoSaJuO3atiGXRvIWcCPD0OsR2gL5sgquA4BAbM8VrdNcW9IgSsBlDh9OEuPBJNHNP
+         ZlrdirnNFwKV92uZASayejcx2OKHnjUrXFdUvHPqmOBxbtkDfLV+EoNHxrXrzPamEUww
+         90mwX69yb8m/prRNwSkBbGZoTIalvrGtg2a/90Ze07AIKiEFOpTc+8teZ7VFSi+Tji0x
+         943LxIk3ZgAFvk5RPKjamkC24pAsa8KgN5+H8In/3P8a+x0hmJXeoAWwhSjewY5L97pt
+         mHGQ==
+X-Gm-Message-State: AOJu0YxN43urfSTz2HZDEpS9g1IpGABJA7GJKrY8wJYiwiRlgdRs2zT6
+	dZFd/BQn1gQD/x/CifibaCIrZa2vtA0KLvr32c3v5Fj8AMTc1CPyX6E3lYB1fQ==
+X-Gm-Gg: AR+sD138VqaXB09IgVBfQ2zYzt9Gc4vNw06a20MKFH9zRBZrpT7pOLiPNisdZi9S2l8
+	Heiof5V92FxX4MYpNZPKfVhRvsn1ZPQtBREXTwuXqFExP6k1K/qODvX++tCIst0OQzn3/8Q0N0g
+	xO77U09z/iAesUCqlXSN/J0+rKmVHSSm2ZCDVL/pKC17mnhAuo8n0dxEN24U0ua2MDfIjGkLIRO
+	0aV4S3WQjZsdRFVUeoQ2NUkxpRKrJyXKb6kmF1kby+9NKFkJPhhcOEoGscoaxwTNf4Q8eHwjCf/
+	9T8D2WPIKypchRTqzNj0tepJzxHqIkYXN/+ZPshZrWHXvmsQJiVAeGjoj33Rb/aWRq3mKvz2dD5
+	dS1hDeBNXZ3QIW9GvVfrl52UgjKpatS46e3FbVnEy6QDuWReWh1uGDHkNYHKaazNHWsChVIQQMe
+	7XOtJ1lRk3lS80SVMsu3A8+Abqlg59La3P5+JEheoiviHGQo2EMh3o7Unmvrxi4/BFRSCjGWMXh
+	13WvBto+3YSbGFOLMnOtgBQEGoa72CGkoavl99rNPOFh9Tx
+X-Received: by 2002:a05:600c:19cb:b0:497:fefa:6728 with SMTP id 5b1f17b1804b1-49800ea4a20mr17055615e9.24.1785395567438;
+        Thu, 30 Jul 2026 00:12:47 -0700 (PDT)
+Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47fc88d6e5bsm3821717f8f.3.2026.07.30.00.12.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2026 21:22:38 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1785380422.git.tanggeliang@kylinos.cn>
-References: <cover.1785380422.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v14 00/12] selftests: consolidate TCP_INQ
- testing into sockopt
-Message-ID: <d9faaf77-47f5-6e02-4739-8d58472eba15@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 30 Jul 2026 04:22:37 +0000
+        Thu, 30 Jul 2026 00:12:47 -0700 (PDT)
+From: David Carlier <devnexen@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: matttbe@kernel.org,
+	martineau@kernel.org,
+	geliang@kernel.org,
+	pabeni@redhat.com,
+	David Carlier <devnexen@gmail.com>
+Subject: [PATCH mptcp-next v12 0/4] mptcp: MSG_ERRQUEUE support on the parent socket
+Date: Thu, 30 Jul 2026 08:12:40 +0100
+Message-ID: <20260730071244.69473-1-devnexen@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+This series lets MPTCP applications use poll(EPOLLERR) and
+recvmsg(MSG_ERRQUEUE) on the parent socket to drain TX timestamps
+through the standard inet ABI, the same way they would on a plain TCP
+socket. ICMP-derived errors stay on the subflow queue: the legacy
+RECVERR ABI cannot convey their per-subflow peer identity, and they
+are intended for a future MPTCP_RECERR channel.
 
-Thank you for your modifications, that's great!
+Patch 1 splices subflow err-skbs onto the parent's sk_error_queue at
+error-report time. All forwarded events go through sock_queue_err_skb(),
+which re-homes skb->sk onto the parent and charges sk_rmem_alloc, so the
+parent's error queue stays bounded by sk_rcvbuf and is dropped under rmem
+pressure, matching tcp's tx-timestamp path and ip_icmp_error() /
+ipv6_icmp_error(). mptcp_recvmsg(MSG_ERRQUEUE) forwards directly to
+inet_recv_error(), and mptcp_poll() advertises EPOLLERR purely on the
+parent's sk_err / sk_error_queue, matching tcp_poll().
 
-Our CI did some validations and here is its report:
+Patch 2 factors the existing inet_flags subflow-propagation hard-coded
+list into a mask, so the next patch can extend it without churn.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/305115=
-31933
+Patch 3 makes IP_RECVERR / IPV6_RECVERR (and the RFC4884 variants)
+propagate to the subflows. The parent stores the bit so MPTCP-aware
+helpers can branch on it.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/2c5e79970359
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1137065
+Patch 4 is a selftest covering the propagation path.
+
+Changes in v12 (addresses Paolo's v11 review):
+ - reordered the series so the core MSG_ERRQUEUE infrastructure lands
+   first, before the sockopt plumbing that exposes it to user space.
+   The former patch 3/4 is now 1/4.
+ - 1/4: narrow mptcp_errqueue_skb_forwardable() to
+   SO_EE_ORIGIN_TIMESTAMPING. SO_EE_ORIGIN_ZEROCOPY and
+   SO_EE_ORIGIN_LOCAL events cannot be generated on an MPTCP parent
+   today, so the helper only needs extending if and when they can be.
+ - 1/4: trim the block comment above sock_queue_err_skb() and the
+   matching changelog paragraphs, now redundant with the narrower
+   filter.
+ - 2/4: reverse christmas tree declaration ordering in
+   sync_socket_options().
+ - dropped the Suggested-by: Paolo Abeni tags from patches 1-3.
+ - rebased on current export.
+
+v11: https://lore.kernel.org/mptcp/20260531145955.322337-1-devnexen@gmail.com/
+v10: https://lore.kernel.org/mptcp/20260529174524.260199-1-devnexen@gmail.com/
+
+David Carlier (4):
+  mptcp: support MSG_ERRQUEUE on the parent socket
+  mptcp: sockopt: factor inet_flags propagation into a mask
+  mptcp: propagate RECVERR sockopts to subflows
+  selftests: mptcp: cover IP_RECVERR sockopt propagation
+
+ net/mptcp/protocol.c                          |  54 +++++--
+ net/mptcp/sockopt.c                           | 153 +++++++++++++++---
+ .../selftests/net/mptcp/mptcp_sockopt.c       |  55 +++++++
+ 3 files changed, 228 insertions(+), 34 deletions(-)
 
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+base-commit: 6201be839b36e8dd22a23b9b367388ed900a257f
+-- 
+2.53.0
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
