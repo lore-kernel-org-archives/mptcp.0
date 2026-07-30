@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC32A2DB795
-	for <mptcp@lists.linux.dev>; Thu, 30 Jul 2026 03:15:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C63380FEB
+	for <mptcp@lists.linux.dev>; Thu, 30 Jul 2026 03:15:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785381335; cv=none; b=TLPLDywTPrxwbni8Re9ztoitigkyLln5WMJIFGwUCPJ4PJmRZB3mup6wXn8hlOxvwKu7NGFoSM95IDPW7riURYMRZMwmVIcNFtTgp7YAmX7TzstF/COs7U8lUnt18BtVsSCHSgqB2A1f8Vt2i0TAiGVmaCUkmg9E6RMA6VXSL8Y=
+	t=1785381337; cv=none; b=JJ5wDE46Zwbb5MYD9LTrm6rYyGIQmgKKfwaXak4Y7hvFtRUGWWnIk8469T6MuPn7VHaZOKE6qEcWkVMmSAgGp6ITrYJKPFwLsDf6sfDTN2RtZx9TYVFaku9Av/w7FWMxIUdyMvyQTp3QVqzDOjucFQQj3KyPTspi1wR0vofq1MM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785381335; c=relaxed/simple;
-	bh=uvfZ6kDhqO0L3HnNSmvXqrG4OhMUiWk1+eIM4AP+02U=;
+	s=arc-20240116; t=1785381337; c=relaxed/simple;
+	bh=+7WgKNSlrugYDiZ5+80t0H5Hlr3KXOlbLNCsPwqHfYI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dzpMeUBbCoH7LewbtNG31zxitc+YcRWTuxgTnLqeEgDSHrvxoL54l2qIHlLsnucmakiDBge6sKaeb2FjqgJXhPxpJpsSh71Q3nvCIjiDeR9eOXP5kgIwspZKq3BorDscb0/x86CJlnB8IjkZnm2mooOqgD7sRisLqnX8yDvzX+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kmgunpA3; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=Oz5hq+5Nh9AVBlUDu3GYuxl2S/YoLvOpIZTDKVZ8/dmphsZz5eV68hQ++tlySVOSp/hldCBCKduiAyewUbFgmjBJioP4mpnFwujNxxb6Uua6LdWynA0W6TF+54a1dsk1enWFMaIzyW0RlDhC15eW1U/CLLTrosuDDrL8PlWHAXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TRfjLvIj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kmgunpA3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 506EA1F00A3A;
-	Thu, 30 Jul 2026 03:15:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TRfjLvIj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D83D1F000E9;
+	Thu, 30 Jul 2026 03:15:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785381333;
-	bh=2J/s/eXSR8JDR/0lG9znHs/mhbbm0LpOf8PbPcED0/M=;
+	s=k20260515; t=1785381335;
+	bh=xLhJCXWMpWarH0jIkywBa5ypIEKygvKthsKGETUyyZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=kmgunpA36F/9F73yfUF9cty9196FzbseLhxGXIzOWZ1mXGicDrD2Jh7me4HAbNHVp
-	 Q6EpirRRdilhzy09WC/WRgZRtOqg6+NoUtNaMar+Nt+uAEp2vOULNQgtWayv8rb8Wm
-	 s9lqXoXSAzpx+kD5BLXb1odMq7mmPXSwcvus2L8prS8zMbZVkwz3w3nt4Q3xjX04UB
-	 +dJ+a1qFYC1JzkaxiJ7+q/OyvD7uNGhwNMR528aqWHi25QQ23yW+21J4VKBpan4q3Z
-	 tcxngnma8t2HE4QsM4n6WFyD2P9ZtKI/kr6RzenHsL5nGegk/VsjSdNCAX3GLvTd13
-	 2O9rVYo6VR6Cw==
+	b=TRfjLvIjqflGTtcnD+ZnvNlolyE2CsnKFnpH9HGITuhcW/+eck2lll2lrrqfiYK/9
+	 l7iWtco1ooIrxGbZAweJ34KnNhKt67owCFTAeGg3BCzkqzvLjDbhmTT37BNZl/Fdzu
+	 BlOaeQfl5LED4pZc3SJLg8omvvWkV+82xcllJr4cIz6irv2ztNM/2Ra/WjMnn92lVS
+	 9WtYT8J69VJe2+E0fGz5HvxT5x8odDl2Ny0q05EGt1r2Jk0+7f5qVoNA0SNfCMmYLT
+	 Lcz5Vi94LnQCIK+bcCzfK8Dr3pPLvenwN4A4QY4q9WIxiHQH0gB/ZcEDTDR44cbVyA
+	 5+vkYnQ1w0TVA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v14 01/12] selftests: mptcp: sockopt: reseed RNG after fork
-Date: Thu, 30 Jul 2026 11:15:12 +0800
-Message-ID: <f15197064d657dccc64d2057cdd8ee28a6026788.1785380422.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v14 02/12] selftests: mptcp: sockopt: use exact length in connect_one_server
+Date: Thu, 30 Jul 2026 11:15:13 +0800
+Message-ID: <6ec4570fb7b73f92905ef38beb414a4a7709e0a4.1785380422.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1785380422.git.tanggeliang@kylinos.cn>
 References: <cover.1785380422.git.tanggeliang@kylinos.cn>
@@ -45,76 +45,44 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-xfork() does not reseed the RNG in the child, so server and client
-processes use the same rand() sequence. Restore the per-fork reseed
-from mptcp_inq.c by calling init_rng() in the child, ensuring
-independent random values for buffer contents and transfer sizes.
+Use the exact remaining length ('len - total') when reading the echoed data
+from the socket, instead of the full buffer size.
 
-init_rng() is now called from each forked child (server, client) so that
-rand() sequences don't diverge from a single parent seed. But the fallback
-path did 'srand(time(NULL))' - and time(NULL) has 1-second resolution, so
-the two children spawned back-to-back in main() almost always land in the
-same second and end up with the same seed, defeating the per-child re-seed.
+This silences a false positive -Wstringop-overflow warning from GCC, as the
+compiler can now prove that the destination buffer is large enough for the
+specified read size.
 
-Mix in getpid() (per-process unique, kernel-guaranteed) with time(NULL)
-(cross-second entropy) so the fallback produces an independent seed for
-each child even when /dev/urandom is unavailable.
-
-Also hoist the 'foo' local to function scope and collapse the two srand()
-callsites into a single one at the end, so both branches consistently write
-the seed into 'foo' first.
+connect_one_server() passes per-chunk 'ret' to do_getsockopts() instead of
+cumulative 'total', causing mismatches when the echo is fragmented. Fix by
+passing 'total' to match the semantics used in process_one_client().
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index b6e58d936ebe..6c3d896d4a1b 100644
+index 6c3d896d4a1b..469384823dc6 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -128,6 +128,8 @@ struct so_state {
- #define MIN(a, b) ((a) < (b) ? (a) : (b))
- #endif
+@@ -609,7 +609,7 @@ static void connect_one_server(int fd, int pipefd)
  
-+static void init_rng(void);
-+
- static void __noreturn die_perror(const char *msg)
- {
- 	perror(msg);
-@@ -799,6 +801,8 @@ static pid_t xfork(void)
+ 	total = 0;
+ 	do {
+-		ret = read(fd, buf2 + total, sizeof(buf2) - total);
++		ret = read(fd, buf2 + total, len - total);
+ 		if (ret < 0)
+ 			die_perror("read");
+ 		if (ret == 0) {
+@@ -629,7 +629,7 @@ static void connect_one_server(int fd, int pipefd)
+ 	if (s.tcpi_rcv_delta)
+ 		assert(s.tcpi_rcv_delta <= total);
  
- 	if (p < 0)
- 		die_perror("fork");
-+	else if (p == 0)
-+		init_rng();
+-	do_getsockopts(&s, fd, ret, ret);
++	do_getsockopts(&s, fd, total, total);
  
- 	return p;
- }
-@@ -822,9 +826,9 @@ static int rcheck(int wstatus, const char *what)
- static void init_rng(void)
- {
- 	int fd = open("/dev/urandom", O_RDONLY);
-+	unsigned int foo;
- 
- 	if (fd >= 0) {
--		unsigned int foo;
- 		ssize_t ret;
- 
- 		/* can't fail */
-@@ -832,10 +836,10 @@ static void init_rng(void)
- 		assert(ret == sizeof(foo));
- 
- 		close(fd);
--		srand(foo);
- 	} else {
--		srand(time(NULL));
-+		foo = getpid() ^ time(NULL);
- 	}
-+	srand(foo);
- }
- 
- int main(int argc, char *argv[])
+ 	if (eof)
+ 		total += 1; /* sequence advances due to FIN */
 -- 
 2.53.0
 
