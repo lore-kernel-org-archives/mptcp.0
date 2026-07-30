@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDE52BCF4C
-	for <mptcp@lists.linux.dev>; Thu, 30 Jul 2026 02:54:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE533769FD
+	for <mptcp@lists.linux.dev>; Thu, 30 Jul 2026 02:54:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785380058; cv=none; b=YtfX464Ozfx54jpg9cpYdTcRtYAQH6Zm+8he6O+AcjR3Ad/jggdUTFqZ9+dfueHNM0RVHDrSMRF0NMnrAcUBVC3uawuCZaF3JNWTNRGmN3IEMWzcnNwUpPIgs8Lnxzrk5qsmF181dMOnkAP48QOfKbl4f5rqD0v1pfUHAAwrHtw=
+	t=1785380059; cv=none; b=A3WAbai6r2qU0CX7SBWAUO6aAKD/2sVipYMxRNS1+s5060KGYuDwXsd7dmz/rPQd1F7SqOdI6gK/0CaBOHRwWAZe0J+SYHc+H4tA4iKeewiaHCnxxotCVkbP5zWTij2WvPUN2drcZ8JZc489ZEu7L4+j/H7uEdXCRxf7Su87NKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785380058; c=relaxed/simple;
-	bh=hnRdmd3i4pMqRlq2KAW5JlOwu1gHDhXakz3I13cZSUM=;
+	s=arc-20240116; t=1785380059; c=relaxed/simple;
+	bh=kk0D3Cu9w0/3UuowOtQsb7momeqoPNl2h1YDokcuBlo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k1jxo/KjL+HHppE5/0MnEs9ero4ijutMPzHAUAyC8zr654uoCbN9+nYagGAwnzxaK8o10szd5TfySYW8oi7aw1IFfNeAijb07BdJIaHIQq2Q7+yBokO11U8plIo/8m/s8Nic/MylZbGgFgJPsD2fBiLVCPdU2msiG2Ln2tHSXjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CA7ZzUFi; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=VSBkQputXz5sEQ0yjLGYhlDu61Zmr/JPgtaSo6reH+e1Q98wTcV3aKGhVRbvFkJICKAr9YFeW8bf5CJu6rLJw7N3Xcjq1vi84ebUXs2Nf8+0IIATsOoxFRqlOoJhvPVNaVhl+y90UOlgqF1Xyu4z6qsNhRzl4O+v44zPukpQ7Ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZBU4P58l; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CA7ZzUFi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6DD51F000E9;
-	Thu, 30 Jul 2026 02:54:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZBU4P58l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3641A1F00A3A;
+	Thu, 30 Jul 2026 02:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785380056;
-	bh=YV0JXnpiXszaXfnHGLGoqUaEj8Uho1EeAyo0R88VJLo=;
+	s=k20260515; t=1785380058;
+	bh=E1ea4hOszjWN+JFqnbAEFVGA8MgKCluidESeC82tVFo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=CA7ZzUFiLUVwJy9ku1tT9CMAQ2Loaa9SWZNMPSE0u3GY/BfB7Y5+TVHjDcN2Nvq5Q
-	 HkkmhWKyIgP4pN332+K9QHtpzbqPM3R7QAeNuBokqSkP3F8I8LLD8Uip19jSxb7bYr
-	 ZGs3xFsc2gdIhe6+J/+mlyYG/LWt8UN0lvjLBzVO+pdYsGAHPyPapR8hNGtIqv8Rwu
-	 o1LdWcrSkPUUrSAGN/p2DMvQX2lCBV947J5kPWo0J3Hpo61kIZjz64xKHMZfK60tuH
-	 KM8oqfgjvrWRicALgBULe94Pyz6e96vGKqKoUl81DJDRXxpIh5fuVt7pGSNZnuu67n
-	 ONv/aDBvVArfQ==
+	b=ZBU4P58lPeT3HDjLdD1XCd7vncVUfd36lEhCJCKZsZeL/Yh0fs7F3VwyqHWKmaYTN
+	 /EB9/E1SRI0KQVOXPco22Ki4+0nM+8CG2iSA9zDoA8lfTItcRLbt7wDJNv1xFv35jk
+	 b7DicVtWFFXhq4BtN5o7Dy3qyi6t1NXW6RwVLAqLdDKBLBSfp1Ds2dm1IV4vT7YU4l
+	 J3jAsks/1n/A23OatgmiWKvrk/3DrBauQCDWnMIxxsRpCvivxftZLh+U3Tq3qwRZc+
+	 WDzBcD89SGE4a9LWoCadFMrLEsWxbOPKdgcFVKiyRH0Lo1gHW8Kym/4Af2h/5obPYp
+	 CBPALlR6XZ9ZQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v4 02/10] mptcp: inherit sk_reuse/sk_reuseport on subflow creation
-Date: Thu, 30 Jul 2026 10:53:55 +0800
-Message-ID: <7e0df1d3036d4eed4667c3997d04bf482b792e0d.1785378180.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v4 03/10] mptcp: handle TCP_MAXSEG getsockopt in common case
+Date: Thu, 30 Jul 2026 10:53:56 +0800
+Message-ID: <bbfa975b1699a11633d6325e6c6f3687b7fb05fd.1785378180.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1785378180.git.tanggeliang@kylinos.cn>
 References: <cover.1785378180.git.tanggeliang@kylinos.cn>
@@ -45,42 +45,39 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Propagate sk_reuse and sk_reuseport from the master socket to newly-created
-subflows. Without this, subflows created after the master toggles
-SO_REUSEADDR/SO_REUSEPORT would not inherit the setting.
+Move TCP_MAXSEG from a tail-clause into the common case alongside other
+"first subflow only" options (TCP_FASTOPEN_*), making the dispatch logic
+more uniform.
 
-Also bump setsockopt_seq in the SO_REUSEPORT/SO_REUSEADDR path so that
-subflows created later (e.g. via MP_JOIN) trigger sync_socket_options()
-instead of skipping it.
+No behavioural change.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/sockopt.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/mptcp/sockopt.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index fcf6feb2a9eb..37e65923f544 100644
+index 37e65923f544..34f6cd9c7967 100644
 --- a/net/mptcp/sockopt.c
 +++ b/net/mptcp/sockopt.c
-@@ -326,6 +326,8 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
- 				sk->sk_bound_dev_if = ssk->sk_bound_dev_if;
- 			else if (optname == SO_BINDTOIFINDEX)
- 				sk->sk_bound_dev_if = ssk->sk_bound_dev_if;
-+
-+			sockopt_seq_inc(msk);
- 		}
- 		release_sock(sk);
- 		return ret;
-@@ -1601,6 +1603,9 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
- 	inet_assign_bit(FREEBIND, ssk, inet_test_bit(FREEBIND, sk));
- 	inet_assign_bit(BIND_ADDRESS_NO_PORT, ssk, inet_test_bit(BIND_ADDRESS_NO_PORT, sk));
- 	WRITE_ONCE(inet_sk(ssk)->local_port_range, READ_ONCE(inet_sk(sk)->local_port_range));
-+
-+	ssk->sk_reuse = sk->sk_reuse;
-+	ssk->sk_reuseport = sk->sk_reuseport;
+@@ -1425,6 +1425,7 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 	case TCP_FASTOPEN_CONNECT:
+ 	case TCP_FASTOPEN_KEY:
+ 	case TCP_FASTOPEN_NO_COOKIE:
++	case TCP_MAXSEG:
+ 		return mptcp_getsockopt_first_sf_only(msk, SOL_TCP, optname,
+ 						      optval, optlen);
+ 	case TCP_INQ:
+@@ -1449,9 +1450,6 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 		return mptcp_put_int_option(msk, optval, optlen, msk->notsent_lowat);
+ 	case TCP_IS_MPTCP:
+ 		return mptcp_put_int_option(msk, optval, optlen, 1);
+-	case TCP_MAXSEG:
+-		return mptcp_getsockopt_first_sf_only(msk, SOL_TCP, optname,
+-						      optval, optlen);
+ 	}
+ 	return -EOPNOTSUPP;
  }
- 
- void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk)
 -- 
 2.53.0
 
