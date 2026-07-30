@@ -1,63 +1,63 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9873BD64D
-	for <mptcp@lists.linux.dev>; Thu, 30 Jul 2026 07:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05783BB69A
+	for <mptcp@lists.linux.dev>; Thu, 30 Jul 2026 07:12:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785395576; cv=none; b=bnXgxY8kqOK367LPSpgkMgfPltdXY6kMCTsk8RuVWWdtfjFxb2IeR8J8DZgiqkKugR5mqRxe5l05Q4RmXe5oYgoxU/3fg1QXCQhMBJIwJfXOg0/x0QkvxWpjeugQS7zL5dgz5QN4L9w7uGhqNeYhy8Nc25bF4Qp++vFnZU+//YE=
+	t=1785395577; cv=none; b=t+1/prWXUC70A/fbxKy0NR1WnpBwdaavcfHP/XBgEVDCOepkXugUscWhD5pqG0HmT2lkL9uy23e0x0BIxclc/C/CE5YuZ/3N+bBzbadw2S2L8O21b5nUP3aZK91qKWMWbdNNDh5e4JYIKqwjQvbhNLHjBGUuWIVh7K15LFUtnFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785395576; c=relaxed/simple;
-	bh=Vdq51RVUF1oQq0L2xdAL1r37YbnTayVtpjjYKl9BPPI=;
+	s=arc-20240116; t=1785395577; c=relaxed/simple;
+	bh=K6l8M2ImgLWDN8CNAxnVhqrnL3ehaBwMea8ZVifFxn4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lSzeCd2+wzi4Q0GS0PblU2yflfib0uWdZL7gmCR1I1MMl4vXFtrTZ/w0Us1ZLx7g4/xc4V5ibI19MazEO1Cd97aD//j7oG8m99FMpidmienTsepSFG6ue+m4MPY+aZZHKtnGvILgvEXqI0AvQcTc7+i4huX6PDhYJP6EX+Wt51c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=flQ/x1FV; arc=none smtp.client-ip=209.85.221.45
+	 MIME-Version; b=lLnmZpXKHms+4E1j1GI3+c56ujJKbVO449Euj1p/5kD2EVCaeOyZS6M/zN7LmZWZ1R+7at7QvN570Q0yyiu9CDofEWq+ApGtwstm5XG7chlZm9tVV/MmOL+qpD6ZWvIiZg9bhxwCVNRzgXHgjtS5PB4q4t9fKH+fW280IK66m2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=q7iByrdg; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="flQ/x1FV"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-47df43bfb07so671715f8f.1
-        for <mptcp@lists.linux.dev>; Thu, 30 Jul 2026 00:12:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q7iByrdg"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-47f7872abb6so1067516f8f.3
+        for <mptcp@lists.linux.dev>; Thu, 30 Jul 2026 00:12:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785395569; x=1786000369; darn=lists.linux.dev;
+        d=gmail.com; s=20251104; t=1785395570; x=1786000370; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=riAP+ewYVwhw0rJlj7JyI87rScGwTcKhqzJ8HeBg2uw=;
-        b=flQ/x1FVOaqsr//fCAwFPpXc3xZFDqjxUVKILDsM/Poi44unaH3cDM0YoIUYQhLytf
-         d9R+vLy5CfJqGchZhDciIjhN4F/WCOTMMCLJEzEv52TEhD4JANxq1VDFF51ccw4OLBeZ
-         OgqMvst4LgfMmHh1NNDf6n2MAp4v03WhDXrWXaKU/u/9HQB/ZmK1EVG2ryyoz1xzB5Vk
-         EsDo1T/FlbD9fFKUtKuiZAVgUL2sLaIy+jX9WXTDkEeJIQF2E6h+QxK9JWZSKbYIDl9/
-         vepM9rkgyDWU+fDGO6yS3mDs+iuE8hgiVQ1EGjnXT/ODnIz8W7/IsI3cYtR460fvfdm+
-         LjFQ==
+        bh=NFrk/CZh/9/ejNoVEbaW39y3qp7KGHiAW2542tNoiGQ=;
+        b=q7iByrdg8czmr//ml80EacxtIs8DxO+NQY17ocKZc4jaDva9WvP3BXF8sduyKi6hEO
+         84l2TFtyTB2EUPd5zAhBu/yOoVyoi6o0FTwWq8mSHtOm6llfqdiaEizWEdGo3myIs8Wq
+         yWjlgiZ9/JQ+ZjuqjT82W3ngu4mVP5wyEJ2+XHYtpLF0JsOiD1QsB9ygwkhz0oTrI1MT
+         MvZ6oL16Kr3Me6ZtixWkLjM9iOxKY57Q0aD1dOyT+4gUz+DY3uVjNlZvlv5KkaZOlfWi
+         Ml2toUBINIRJDWjslgQB7Za6xgt+Ty5wfMa13ZerLQvsQLMjFZN5Xa+bNmnOPnap4NWO
+         8EqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785395569; x=1786000369;
+        d=1e100.net; s=20251104; t=1785395570; x=1786000370;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=riAP+ewYVwhw0rJlj7JyI87rScGwTcKhqzJ8HeBg2uw=;
-        b=NzMtktZkGwktz8MSX3SnHe1uFMKMzDvwdOPu941rsdGKmaS0aEkragzTeDeRU74jhS
-         DPf5cLojR2FopRtH6iZcpiDcaMIE/OWhSApNqFYEnSzaU7qIGmbkrwz+bDpzUeXwR85L
-         6Oc54R+fqVopDJpstoxQ3EUNeudMafkVufoSSBek9KW9JpUEA5M33WdhBpv7rul8xJKp
-         uIkFBpgOW+VwP5EnyzSHVUX7E7VjS67IS1u9DbASp8A61uOk0sJJ/HiALhI52Lw9m52f
-         B2UgUX2/GFRPBACBfympIRfmNRrf/yvEwZUUenfYkS2x0AyNibAZNzfwHWSgI2aqrHl8
-         FzFQ==
-X-Gm-Message-State: AOJu0YzVQ/yusz3SAVGuS+Q/FIqTFPeKHejpUpqnmgvPwHebw9Q+czEF
-	gLHOITILrIBnM13D8IL6HZkXGAB6E4jzgWnzmVcTP3lk0OzmSz/47aCGVjshDQ==
-X-Gm-Gg: AR+sD12SKsFw7NafGO2S9JjIIzkQ1oqnVBa3XYN79Xd+LuxRg1mFfXqNa9UYLICrkh2
-	BbauJ7QOrrhHj0DPOjz9uiTNhK2JtbPcA0O9idA7vhcg+i5y2QFALrElE8sahwZnDjH2FTFYGAo
-	/uRp72WTXoJrIjhGLCNMmgOwoWEi78vC+4XdEAK5C2QyI/avxSz/Fv6SNEUSdQ/PRJSk8YoM0De
-	VTTPqZJignJJAW2UlBaZNy7zuI12he/oilqHfnr8gyQTM15dDdUCUGV+X/yP/mW9kbq2F0Ew+J1
-	r6q/G2qxNsisNbwlrk1MpTcwYHIXC3dSy/ORv4l3HDAUt3/ELtf3HdK0CXeWCfMFQqoQ3r9ge4J
-	n6SA2PtipDtRaoby1+GHIwAFxPy99m38t269eU6xJFlD/3KQGbacFbiW4987v99Jxb+QxCp+wR5
-	n5df96ugtc40UAfMLI5M0fiz7NaZ54C9wGPwhJ90jSKzOMAV2cbLN8lN33YgVWbEP/92bvbjlcL
-	bOqkpsTXd9RNfj9Bv6gk/Szz8AhDU/G5039hSxvxN+svZRw
-X-Received: by 2002:a5d:588a:0:b0:478:77c1:787c with SMTP id ffacd0b85a97d-47fc8212e7dmr1780819f8f.56.1785395569297;
-        Thu, 30 Jul 2026 00:12:49 -0700 (PDT)
+        bh=NFrk/CZh/9/ejNoVEbaW39y3qp7KGHiAW2542tNoiGQ=;
+        b=m9yCh6IsYo2q6Yw20C7gZ8hQG/+7BxahpfQ3dESAwL4ZbwpS7e06xQ/7QSRrHhEzK5
+         kY6ht2iqWteWXjBgQSr2r8UugoNjgrGxHED9BtzPt9EuuRlqiXl2V/ol2vC+ZJ7Y5KeT
+         mpmoi7Qj7X++n+s7ZSw2ZQw29xGhI9Du5A4azop+kPrx3o+CG55/n9OaHey6V1GiZi5Z
+         //ioL6JMPm98SudINbHCwf16DVqZ9KS0cI3R3eRjHOTy4TtXlZ8OLsl/vvgkYCglpula
+         aVq78BVKy2vb32P9PySP/hw7/vqiws1ZG5EX6o4lA7f5q/1vDQ3snqx0peBAg0Yql+qZ
+         sB+Q==
+X-Gm-Message-State: AOJu0YxURI1Bwrc6FzTjtNOs2CUCmpiNs9zXrKtmccPnU2xWctOMZcX8
+	MqoCWIL3Cu41GaV8Y20p1C72Qlh0fmolpV+ysCktG8zXw+GhuT8qC91sfxhCiw==
+X-Gm-Gg: AR+sD10YjhglR7wv69AyIpdaTihQPawV/+d6UhQXZNaR/BeS/Sgub4qvIuGjt6IbeGS
+	4xdkxdi4bjxiSlZ0nSfGOcYXsffI9NuBoidMJCeAsDKV6RiME3deyeh3LYB8itlVdPOWbWXL55p
+	yFPNABJe2+INtnSyS4xs1EhCjtHh+HQL8iC8V4rZHW062L3ZlftA0ShHFsI/x3hLMAf/paWjlNj
+	eFggr5Y9LniqfToFpcX0iocipCZPbIzIfAhg7UYeRjb0sZK+KvBkODgIBkD3SyIcFR0HgXNU1as
+	fomcgbG1NbIsHKQ5vm5yaXgWUi7AjRhiT4ou3pzgqxPKlioMyeynRjCern3mu3+SZpMZ/fJ0Ced
+	IwOXMjL5Kxwhyl+4RfuhX9ulZ0TFRWGqL2n/HA6srykVrmmZHlHn/0AV+bAy/o5IUucHGtbHRhz
+	kCJiVq5ygZdt/aMgmEmXFlANAU0dbpe2UOwqCW0aajgkf6JkDUJOR1J2obTAM0ih2V+ZIDsNDSi
+	g37PtFgwHBVAD+MVDJnG2MkHibcP0m3Ezg42N1XNOJ6ditd
+X-Received: by 2002:a05:6000:381:b0:47f:762f:32a9 with SMTP id ffacd0b85a97d-47fc80c62admr1713288f8f.12.1785395570221;
+        Thu, 30 Jul 2026 00:12:50 -0700 (PDT)
 Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47fc88d6e5bsm3821717f8f.3.2026.07.30.00.12.48
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47fc88d6e5bsm3821717f8f.3.2026.07.30.00.12.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2026 00:12:48 -0700 (PDT)
+        Thu, 30 Jul 2026 00:12:49 -0700 (PDT)
 From: David Carlier <devnexen@gmail.com>
 To: mptcp@lists.linux.dev
 Cc: matttbe@kernel.org,
@@ -65,9 +65,9 @@ Cc: matttbe@kernel.org,
 	geliang@kernel.org,
 	pabeni@redhat.com,
 	David Carlier <devnexen@gmail.com>
-Subject: [PATCH mptcp-next v12 2/4] mptcp: sockopt: factor inet_flags propagation into a mask
-Date: Thu, 30 Jul 2026 08:12:42 +0100
-Message-ID: <20260730071244.69473-3-devnexen@gmail.com>
+Subject: [PATCH mptcp-next v12 3/4] mptcp: propagate RECVERR sockopts to subflows
+Date: Thu, 30 Jul 2026 08:12:43 +0100
+Message-ID: <20260730071244.69473-4-devnexen@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260730071244.69473-1-devnexen@gmail.com>
 References: <20260730071244.69473-1-devnexen@gmail.com>
@@ -79,61 +79,238 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce MPTCP_INET_FLAGS_MASK and replace the per-flag
-inet_assign_bit() calls in sync_socket_options() with a loop driven
-by the mask that calls assign_bit() per set bit, preserving the
-per-bit atomicity of the original. Further flags propagated by MPTCP
-can be added by extending the mask rather than touching the call
-site.
+Propagate IP_RECVERR/IP_RECVERR_RFC4884 and
+IPV6_RECVERR/IPV6_RECVERR_RFC4884 from the MPTCP socket to existing
+and future subflows.
 
-No functional change.
+mptcp_setsockopt_recverr() snapshots optval into a local int, applies
+it to the parent socket via ip_setsockopt() / ipv6_setsockopt(), bumps
+msk->setsockopt_seq, and forwards to every subflow via
+mptcp_setsockopt_all_sf(). Newly-joining subflows pick up the four
+RECVERR bits through sync_socket_options() now that
+MPTCP_INET_FLAGS_MASK covers them.
 
+mptcp_setsockopt_all_sf() skips IPv4 subflows when called with
+SOL_IPV6: ipv6_setsockopt() on a sock with sk_family != AF_INET6
+returns an error, which would abort the loop and leave the remaining
+subflows desynchronised. This branch was unreachable before this
+patch (the only caller was TCP_MAXSEG, family-agnostic); it becomes
+live with the new IPV6_RECVERR / IPV6_RECVERR_RFC4884 caller and the
+v4-subflow-on-AF_INET6-msk case (v4 MP_JOIN, or userspace PM grafting
+a v4 subflow onto a v6 msk).
+
+Assisted-by: Codex:gpt-5
 Signed-off-by: David Carlier <devnexen@gmail.com>
 ---
- net/mptcp/sockopt.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ net/mptcp/sockopt.c | 140 ++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 117 insertions(+), 23 deletions(-)
 
 diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index fcf6feb2a9eb..2ba56832587e 100644
+index 2ba56832587e..bc9d581a9744 100644
 --- a/net/mptcp/sockopt.c
 +++ b/net/mptcp/sockopt.c
-@@ -16,6 +16,10 @@
+@@ -8,6 +8,7 @@
  
- #define MIN_INFO_OPTLEN_SIZE		16
- #define MIN_FULL_INFO_OPTLEN_SIZE	40
-+#define MPTCP_INET_FLAGS_MASK \
-+	(BIT(INET_FLAGS_TRANSPARENT) | \
-+	 BIT(INET_FLAGS_FREEBIND) | \
-+	 BIT(INET_FLAGS_BIND_ADDRESS_NO_PORT))
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <net/ipv6.h>
+ #include <net/sock.h>
+ #include <net/protocol.h>
+ #include <net/tcp.h>
+@@ -19,7 +20,11 @@
+ #define MPTCP_INET_FLAGS_MASK \
+ 	(BIT(INET_FLAGS_TRANSPARENT) | \
+ 	 BIT(INET_FLAGS_FREEBIND) | \
+-	 BIT(INET_FLAGS_BIND_ADDRESS_NO_PORT))
++	 BIT(INET_FLAGS_BIND_ADDRESS_NO_PORT) | \
++	 BIT(INET_FLAGS_RECVERR) | \
++	 BIT(INET_FLAGS_RECVERR_RFC4884) | \
++	 BIT(INET_FLAGS_RECVERR6) | \
++	 BIT(INET_FLAGS_RECVERR6_RFC4884))
  
  static struct sock *__mptcp_tcp_fallback(struct mptcp_sock *msk)
  {
-@@ -1550,8 +1554,11 @@ int mptcp_getsockopt(struct sock *sk, int level, int optname,
- static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
- {
- 	static const unsigned int tx_rx_locks = SOCK_RCVBUF_LOCK | SOCK_SNDBUF_LOCK;
-+	unsigned long mask = MPTCP_INET_FLAGS_MASK;
- 	struct sock *sk = (struct sock *)msk;
-+	unsigned long src;
- 	bool keep_open;
-+	int b;
- 
- 	keep_open = sock_flag(sk, SOCK_KEEPOPEN);
- 	if (ssk->sk_prot->keepalive)
-@@ -1597,9 +1604,11 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
- 	tcp_sock_set_keepcnt(ssk, msk->keepalive_cnt);
- 	tcp_sock_set_maxseg(ssk, msk->maxseg);
- 
--	inet_assign_bit(TRANSPARENT, ssk, inet_test_bit(TRANSPARENT, sk));
--	inet_assign_bit(FREEBIND, ssk, inet_test_bit(FREEBIND, sk));
--	inet_assign_bit(BIND_ADDRESS_NO_PORT, ssk, inet_test_bit(BIND_ADDRESS_NO_PORT, sk));
-+	src = READ_ONCE(inet_sk(sk)->inet_flags);
-+
-+	for_each_set_bit(b, &mask, BITS_PER_LONG)
-+		assign_bit(b, &inet_sk(ssk)->inet_flags, src & BIT(b));
-+
- 	WRITE_ONCE(inet_sk(ssk)->local_port_range, READ_ONCE(inet_sk(sk)->local_port_range));
+@@ -398,6 +403,86 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
+ 	return -EOPNOTSUPP;
  }
+ 
++static int mptcp_setsockopt_all_sf(struct mptcp_sock *msk, int level,
++				   int optname, sockptr_t optval,
++				   unsigned int optlen)
++{
++	struct mptcp_subflow_context *subflow;
++	int ret = 0;
++
++	mptcp_for_each_subflow(msk, subflow) {
++		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++		int err;
++
++		/* SOL_IPV6 options on a v4 subflow (v4 MP_JOIN, or userspace PM
++		 * grafting a v4 subflow onto an AF_INET6 msk) would otherwise
++		 * abort the loop with -EAFNOSUPPORT from ipv6_setsockopt().
++		 */
++		if (level == SOL_IPV6 && ssk->sk_family != AF_INET6)
++			continue;
++
++		err = tcp_setsockopt(ssk, level, optname, optval, optlen);
++		if (err < 0 && ret == 0)
++			ret = err;
++	}
++
++	if (!ret)
++		sockopt_seq_inc(msk);
++
++	return ret;
++}
++
++static int mptcp_setsockopt_recverr(struct mptcp_sock *msk, int level,
++				    int optname, sockptr_t optval,
++				    unsigned int optlen)
++{
++	struct sock *sk = (struct sock *)msk;
++	int val = 0, ret;
++
++	/* Let ip_setsockopt() / ipv6_setsockopt() validate optval and optlen
++	 * (so 1-byte boolean writes keep the same ABI as plain TCP) and update
++	 * the parent's RECVERR bit. Re-read that bit under lock_sock() and
++	 * push it to the subflows: concurrent setsockopt callers cannot leave
++	 * parent and subflows desynchronized this way.
++	 */
++	if (level == SOL_IP)
++		ret = ip_setsockopt(sk, level, optname, optval, optlen);
++#if IS_ENABLED(CONFIG_IPV6)
++	else if (level == SOL_IPV6) {
++		if (sk->sk_family != AF_INET6)
++			return -ENOPROTOOPT;
++		ret = ipv6_setsockopt(sk, level, optname, optval, optlen);
++	}
++#endif
++	else
++		return -EOPNOTSUPP;
++	if (ret)
++		return ret;
++
++	lock_sock(sk);
++	switch (optname) {
++	case IP_RECVERR:
++		val = inet_test_bit(RECVERR, sk);
++		break;
++	case IP_RECVERR_RFC4884:
++		val = inet_test_bit(RECVERR_RFC4884, sk);
++		break;
++#if IS_ENABLED(CONFIG_IPV6)
++	case IPV6_RECVERR:
++		val = inet6_test_bit(RECVERR6, sk);
++		break;
++	case IPV6_RECVERR_RFC4884:
++		val = inet6_test_bit(RECVERR6_RFC4884, sk);
++		break;
++#endif
++	}
++
++	ret = mptcp_setsockopt_all_sf(msk, level, optname,
++				      KERNEL_SOCKPTR(&val), sizeof(val));
++	release_sock(sk);
++	return ret;
++}
++
+ static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
+ 			       sockptr_t optval, unsigned int optlen)
+ {
+@@ -440,6 +525,10 @@ static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
+ 
+ 		release_sock(sk);
+ 		break;
++	case IPV6_RECVERR:
++	case IPV6_RECVERR_RFC4884:
++		ret = mptcp_setsockopt_recverr(msk, SOL_IPV6, optname, optval, optlen);
++		break;
+ 	}
+ 
+ 	return ret;
+@@ -785,6 +874,9 @@ static int mptcp_setsockopt_v4(struct mptcp_sock *msk, int optname,
+ 		return mptcp_setsockopt_sol_ip_set(msk, optname, optval, optlen);
+ 	case IP_TOS:
+ 		return mptcp_setsockopt_v4_set_tos(msk, optname, optval, optlen);
++	case IP_RECVERR:
++	case IP_RECVERR_RFC4884:
++		return mptcp_setsockopt_recverr(msk, SOL_IP, optname, optval, optlen);
+ 	}
+ 
+ 	return -EOPNOTSUPP;
+@@ -812,28 +904,6 @@ static int mptcp_setsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
+ 	return ret;
+ }
+ 
+-static int mptcp_setsockopt_all_sf(struct mptcp_sock *msk, int level,
+-				   int optname, sockptr_t optval,
+-				   unsigned int optlen)
+-{
+-	struct mptcp_subflow_context *subflow;
+-	int ret = 0;
+-
+-	mptcp_for_each_subflow(msk, subflow) {
+-		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+-		int err;
+-
+-		err = tcp_setsockopt(ssk, level, optname, optval, optlen);
+-		if (err < 0 && ret == 0)
+-			ret = err;
+-	}
+-
+-	if (!ret)
+-		sockopt_seq_inc(msk);
+-
+-	return ret;
+-}
+-
+ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 				    sockptr_t optval, unsigned int optlen)
+ {
+@@ -1478,6 +1548,12 @@ static int mptcp_getsockopt_v4(struct mptcp_sock *msk, int optname,
+ 	case IP_LOCAL_PORT_RANGE:
+ 		return mptcp_put_int_option(msk, optval, optlen,
+ 				READ_ONCE(inet_sk(sk)->local_port_range));
++	case IP_RECVERR:
++		return mptcp_put_int_option(msk, optval, optlen,
++				inet_test_bit(RECVERR, sk));
++	case IP_RECVERR_RFC4884:
++		return mptcp_put_int_option(msk, optval, optlen,
++				inet_test_bit(RECVERR_RFC4884, sk));
+ 	}
+ 
+ 	return -EOPNOTSUPP;
+@@ -1498,6 +1574,16 @@ static int mptcp_getsockopt_v6(struct mptcp_sock *msk, int optname,
+ 	case IPV6_FREEBIND:
+ 		return mptcp_put_int_option(msk, optval, optlen,
+ 					    inet_test_bit(FREEBIND, sk));
++	case IPV6_RECVERR:
++		if (sk->sk_family != AF_INET6)
++			return -ENOPROTOOPT;
++		return mptcp_put_int_option(msk, optval, optlen,
++					    inet6_test_bit(RECVERR6, sk));
++	case IPV6_RECVERR_RFC4884:
++		if (sk->sk_family != AF_INET6)
++			return -ENOPROTOOPT;
++		return mptcp_put_int_option(msk, optval, optlen,
++					    inet6_test_bit(RECVERR6_RFC4884, sk));
+ 	}
+ 
+ 	return -EOPNOTSUPP;
+@@ -1606,6 +1692,14 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+ 
+ 	src = READ_ONCE(inet_sk(sk)->inet_flags);
+ 
++	/* RECVERR6 bits are only read on AF_INET6 sockets; copying them onto a
++	 * v4 subflow is dead state and diverges from the SOL_IPV6 skip in
++	 * mptcp_setsockopt_all_sf().
++	 */
++	if (ssk->sk_family != AF_INET6)
++		mask &= ~(BIT(INET_FLAGS_RECVERR6) |
++			BIT(INET_FLAGS_RECVERR6_RFC4884));
++
+ 	for_each_set_bit(b, &mask, BITS_PER_LONG)
+ 		assign_bit(b, &inet_sk(ssk)->inet_flags, src & BIT(b));
  
 -- 
 2.53.0
