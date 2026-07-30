@@ -1,40 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C3837A498
-	for <mptcp@lists.linux.dev>; Thu, 30 Jul 2026 02:54:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1AB331EA8
+	for <mptcp@lists.linux.dev>; Thu, 30 Jul 2026 02:54:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785380066; cv=none; b=SoJgLgPEB64ST74o+Y6LZeW9XAKd7NuuiWhqGMa972tEnRYnqZoLaUePqIDXur+GjgBNdLCxcm4tvkFizfEvFgO6ZstLwRyDcYBSbsxuA6c2EnZgjPSLevWvGCs4ZqbrFP/gygwMK9U5Ilfk3s9syRKgT2jW/yymU8lVQNXCnQQ=
+	t=1785380067; cv=none; b=pSf9bRWtdHrmDqcvCqLIeDrrwHM2r4WtZjDtQ1JddfttKeiRCpcGBwi0o5KHD6k4Ii8POTZXT/NWI9OJxennevT8RmTEGEd7xvyrbxUY4BxSk0MMJhdciICF4Hol2cpaiqPbN5DWCagd4f73jyCDto5jGClrDdvOJv3talLgjgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785380066; c=relaxed/simple;
-	bh=rwu8deKZGVe8SmyWi/hEuHJiiVBpvG7ZAk6fqto/KcM=;
+	s=arc-20240116; t=1785380067; c=relaxed/simple;
+	bh=KRPh7fISW5NMLh5Vzahx09rCQt+9Yh5tDak4XkwJJiY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YhYk91uxMzJsgPilpLb3miT6bTKc4ItuGZnM2SPcT0Rnh27hjbUEGnkPK8tqisS1MSXjUMoBeKtsu12jYHazqIkxH0uKTQAehX68bP9eYsY2ZBgumQOmr7rTkiVvT8K8e5MNrj5l22/i7qboDdZbRQvhVrk1+S+E6HcJoewDFPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZHRy1vSO; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=UMDoTHqqrjuGnrmY/jGofxm4Yvxa0z1dXbiMeePMQnXzfGLrS2v+vJNrzI/LqVgse7azfBnhqDBWvwKQCyNF3VPoE7d4cHF3aOtuqWZcIDMAEqLpMQRRfJ+XK1BApaInKpjd4med24juUoNI8YNw1P0vNGrZyMxKr1N9dRUyY60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=afkO11/A; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZHRy1vSO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91F7D1F000E9;
-	Thu, 30 Jul 2026 02:54:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="afkO11/A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E87BF1F00A3A;
+	Thu, 30 Jul 2026 02:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785380064;
-	bh=XDX0U+/iVtt01S16tIoLgpUE3pgRThp7Vr4ImZoK42I=;
+	s=k20260515; t=1785380066;
+	bh=9MRMLyR4gDDDsa0qYB4qq0t3wlbO7Eh+ftCeQ0k2BlY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ZHRy1vSOShrUDmwGppg8V8qRMZoMV4X/HFXz5DO0tLsSHCc40lBgmD4l2Jx/IOC/v
-	 KHfwDlwbtXEqpvz7sfAaJOujpkDmrk5sHdoXXH863npKedxRK3gtYl3OVKtnoDbqQA
-	 QPK5xY0WobTpTDeTSZyvmIaJWoatZKNflLFl/DO1mZOGXw7qgfKjk0XJLVgAi/QoFD
-	 hMAy/Puu2m30xev/ouF3mDnz85QFlPZRRixx1Zlf8OUT/RlSYtYHp5TcgYokO0xwk+
-	 O9huxadCEuQUVaOhtqhPa31oxkg6KwaxSy+72NCrVKHv6Imgrkmo4tqsxjHE/vENaM
-	 yHKLA0iRFXkog==
+	b=afkO11/ACYPb93bE/mx+5pdKSq5wAau5KaZM6j/zj+uagmy8biFJL0IMJeo0XLuGP
+	 +pNnnSlscVc+Vut8ITcpHqa89jo7Y03DlWUmXMsd5fDlEqZdZQYtd4Q4zHiEdresHb
+	 YozJSIGd0pd6PsTfm0CLZNkHg+thHaoOxCwK8nX5cNeDdrHMETLBjgi8Q+qYTp+4NB
+	 7D3TfuSUM+87AWVtI1QhyzMsGTwr6lHmc129ptkCitlMP6iYQh/108fhiE1KkWAH78
+	 LHpUwOUmk0ZDbzzKZ5fPlRIHnGCaOWa6jziHAcsaS6MRGBgCYst/x3We1kKjnnQHlo
+	 JrO62Yc9cV2pQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: David 'equinox' Lamparter <equinox@diac24.net>,
-	Mat Martineau <martineau@kernel.org>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Geliang Tang <geliang@kernel.org>
-Subject: [PATCH mptcp-next v4 06/10] mptcp: sockopt: implement IPV6_TCLASS
-Date: Thu, 30 Jul 2026 10:53:59 +0800
-Message-ID: <99dba4119e87c33b1da6055042efcacddf115419.1785378180.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v4 07/10] mptcp: copy the subflow's tos/tclass to the msk on accept
+Date: Thu, 30 Jul 2026 10:54:00 +0800
+Message-ID: <eb35da8169f0ff292b1f4c023a9e6c47a44ad77c.1785378180.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1785378180.git.tanggeliang@kylinos.cn>
 References: <cover.1785378180.git.tanggeliang@kylinos.cn>
@@ -46,121 +43,52 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: David 'equinox' Lamparter <equinox@diac24.net>
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The IPV6_TCLASS setsockopt just needs to be forwarded to the individual
-TCP sockets, like IP_TOS is already handled for IPv4.
+When a new MPTCP socket is accepted, copy the tos (and rcv_tos for IPv4)
+or tclass (and rcv_flowinfo for IPv6) from the first subflow to the
+newly-created msk.
 
-Coincidentally, ssh uses this sockopt and prints an error in the middle
-of your ongoing SSH session when it doesn't work (very annoying when
-doing SCP/SFTP on a multiplexed session.)
+This mirrors what plain TCP does in tcp_v4_syn_recv_sock() and
+tcp_v6_syn_recv_sock(), where these values are copied from the incoming
+skb to the accepted socket.
 
-For setsockopt, the value is first applied to the MPTCP socket itself via
-ipv6_setsockopt(), then propagated to all existing subflows using
-__ip6_sock_set_tclass(). The setsockopt_seq is bumped to ensure that
-subflows created later will pick up the setting through
-sync_socket_options().
+Without this, MP_JOIN subflows created later would inherit tos/tclass=0
+from the msk and lose the peer's reflected value, causing inconsistent
+traffic class behavior.
 
-For getsockopt, the value is read directly from the MPTCP socket.
-
-Also add sync_socket_options() support for IPV6_TCLASS, so that new
-subflows created after the option is set inherit the correct tclass
-value.
-
-Cc: Mat Martineau <martineau@kernel.org>
-Cc: Matthieu Baerts <matttbe@kernel.org>
-Co-developed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Geliang Tang <geliang@kernel.org>
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/568
-Signed-off-by: David 'equinox' Lamparter <equinox@diac24.net>
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/sockopt.c | 52 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+ net/mptcp/protocol.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 3dbf8d27005c..676268f922b1 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -396,6 +396,42 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
- 	return -EOPNOTSUPP;
- }
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 90dc894cb976..1544a4e411b5 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3706,6 +3706,22 @@ struct sock *mptcp_sk_clone_init(const struct sock *sk,
+ #endif
+ 		mptcp_copy_ip_options(nsk, sk);
  
-+#if IS_ENABLED(CONFIG_IPV6)
-+static int mptcp_setsockopt_v6_set_tclass(struct mptcp_sock *msk, int optname,
-+					  sockptr_t optval, unsigned int optlen)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct sock *sk = (struct sock *)msk;
-+	int err, val;
-+
-+	if (sk->sk_family != AF_INET6)
-+		return -EOPNOTSUPP;
-+
-+	err = ipv6_setsockopt(sk, SOL_IPV6, optname, optval, optlen);
-+
-+	if (err != 0)
-+		return err;
-+
-+	lock_sock(sk);
-+	sockopt_seq_inc(msk);
-+	val = READ_ONCE(inet6_sk(sk)->tclass);
-+	mptcp_for_each_subflow(msk, subflow) {
-+		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+		bool slow;
-+
-+		if (ssk->sk_family != AF_INET6)
-+			continue;
-+
-+		slow = lock_sock_fast(ssk);
-+		__ip6_sock_set_tclass(ssk, val);
-+		unlock_sock_fast(ssk, slow);
++	if (ssk->sk_family == AF_INET) {
++		inet_sk(nsk)->rcv_tos = inet_sk(ssk)->rcv_tos;
++		__ip_sock_set_tos(nsk, inet_sk(ssk)->tos);
 +	}
-+	release_sock(sk);
-+
-+	return 0;
-+}
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++	else if (ssk->sk_family == AF_INET6 &&
++		 ipv6_addr_v4mapped(&ssk->sk_v6_daddr)) {
++		inet_sk(nsk)->rcv_tos = inet_sk(ssk)->rcv_tos;
++		__ip_sock_set_tos(nsk, inet_sk(ssk)->tos);
++	}
++	else if (ssk->sk_family == AF_INET6) {
++		inet6_sk(nsk)->rcv_flowinfo = inet6_sk(ssk)->rcv_flowinfo;
++		__ip6_sock_set_tclass(nsk, inet6_sk(ssk)->tclass);
++	}
 +#endif
 +
- static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
- 			       sockptr_t optval, unsigned int optlen)
- {
-@@ -438,6 +474,11 @@ static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
- 
- 		release_sock(sk);
- 		break;
-+#if IS_ENABLED(CONFIG_IPV6)
-+	case IPV6_TCLASS:
-+		return mptcp_setsockopt_v6_set_tclass(msk, optname, optval,
-+						      optlen);
-+#endif
- 	}
- 
- 	return ret;
-@@ -1505,6 +1546,13 @@ static int mptcp_getsockopt_v6(struct mptcp_sock *msk, int optname,
- 	case IPV6_FREEBIND:
- 		return mptcp_put_int_option(msk, optval, optlen,
- 					    inet_test_bit(FREEBIND, sk));
-+#if IS_ENABLED(CONFIG_IPV6)
-+	case IPV6_TCLASS:
-+		if (sk->sk_family != AF_INET6)
-+			return -EOPNOTSUPP;
-+		return mptcp_put_int_option(msk, optval, optlen,
-+					    READ_ONCE(inet6_sk(sk)->tclass));
-+#endif
- 	}
- 
- 	return -EOPNOTSUPP;
-@@ -1619,6 +1667,10 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
- 	syncnt = READ_ONCE(inet_csk(sk)->icsk_syn_retries);
- 	if (syncnt > 0 && tcp_sock_set_syncnt(ssk, syncnt))
- 		pr_warn("Failed to sync TCP_SYNCNT=%u to subflow\n", syncnt);
-+#if IS_ENABLED(CONFIG_IPV6)
-+	if (sk->sk_family == AF_INET6 && ssk->sk_family == AF_INET6)
-+		__ip6_sock_set_tclass(ssk, READ_ONCE(inet6_sk(sk)->tclass));
-+#endif
- }
- 
- void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk)
+ 	msk = mptcp_sk(nsk);
+ 	WRITE_ONCE(msk->local_key, subflow_req->local_key);
+ 	WRITE_ONCE(msk->token, subflow_req->token);
 -- 
 2.53.0
 
