@@ -1,37 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C53305E28
-	for <mptcp@lists.linux.dev>; Thu, 30 Jul 2026 02:54:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8364B305E28
+	for <mptcp@lists.linux.dev>; Thu, 30 Jul 2026 02:54:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785380055; cv=none; b=ibOfZ538KHNgwWFk3o+fv2DTFtSjZ4CyTIsgxXsrN9URnACfiUmDDv+KQ+1uV28brGbBNT/9Jn23fq6psiazGbJBt8htQKxq957/AamhHRGg4dMPjElHPvKF3Tn2CF90ApiicKokkQJOHt43AmsAk68EYDopQmARQMH7LNoIW4A=
+	t=1785380056; cv=none; b=synqen9GZrPZB0593RqQN+AVGIekUTEGB03BMXbPO00PyMo6KlNf7CkGijW4cExxiQ4LlE8fu9QcMMCG5BF/71IMaXFArepcQo/ErXBvlNGO+OpD8bKjkA8CuDqdJW+QC8RKfN8GA3iEzWiOemd6ML/93pohu39u4Z0Rvcywx7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785380055; c=relaxed/simple;
-	bh=RXsSk3+Yuh6jtFImRXX5HF8dIUuJdKVaQ+3lklhiQUA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uiQjhggMPQyKbtacdq308rTkPIJrSe69g9q3STuLtHvfUm+/LzRBmwNCeLZtpwVX0vkRDLHAa7HpXl/e8fGHmVoL07b2bEv9OJqXwAGIXfn7oR9rZrqTkxpVILTWTlBVh8JQCV9qPCbUYbEEFZqHtS58nkTAIFxjA2jvfp6ZhAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BIGbcHLb; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785380056; c=relaxed/simple;
+	bh=s8pq05OInwO8anMtKSeboSR9vH0O5yCtMQNiEBAcHsQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=C3nUcYO32i9eGtNUB+l1LnDrUf0eaee/m+PyzcsmIApwqz3jcsQKwGhHJJyDXforpfFFgT5ZtnWBnjh/e27lRzGL1f2I7udnAjjpc3aVCBN7x9GAWAVkpIWRE12DJ5XLtSsUz/ZSoxhfhbz1x2vvl3W2eGlbQOzVHvhkn5NIoGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b7S4yBSj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BIGbcHLb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39FDC1F000E9;
-	Thu, 30 Jul 2026 02:54:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b7S4yBSj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 639BC1F00A3A;
+	Thu, 30 Jul 2026 02:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785380053;
-	bh=hgSaGYmyRk3+d1y6ZYYEEm3BimjTPoEuxkNdesnJvZI=;
-	h=From:To:Cc:Subject:Date;
-	b=BIGbcHLbZEJlRWbIw6scdL6EVCp+x2YS9iVj8+Bm01tddLjzVxTRXt1gJ3lnc8h1c
-	 PvZr4/Ge6P0oodE/T5ANPf+7oX4xQ8LqTQ0UamTdAJ2OOcI47OBypD4B/6T8bOFTpi
-	 LZ2r21U+TqVVZDDTAzSxwYtXbTDEX3vazTTQhYgadvUIuaQW4h6sRrAnU/pAxs2xQw
-	 I/IyEMZGESrMYYs6bt2XoazLrnYFOqZ3Ae2q2vN2Zu5M58BrPp/ko+g2ZsAOGA6s+u
-	 nHBpbzoBNJeSp66zIxZ7NJAEIk88xXLjvY9kxfAssseRVon/PemYtsA4MxJM/MDLBc
-	 VJuOklBs4tpMw==
+	s=k20260515; t=1785380055;
+	bh=swZuJTtqz0JiPaHZ7U6Tc7cZUI0KHu5XATW4pxYnpZ4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=b7S4yBSjAOwTFvmf0RObG2ZWMmRZsC5mD+nh/HR975X/wi038pjS7RDw0JQGXbwUx
+	 p3NoM4sc+CAkAqow+paS5PXnSmxOL3a6q/5gYkeXwXW4NWiJdtzDIVeFyeg/5Kk/oI
+	 IGOKlrnAPPrCkccojXDVStZLuAsO77vJHXNeKGFMHLzudAzD3wXHokCJcBId5VJ2lD
+	 i36HZpdd36+DFiYhH/d/9WLALyKW9pFVOrlGyRyJDnnKzETBnf0PZV3ZKnVBNjVYDp
+	 dzYXDzzRx7N19T/hgsc4QLHIrYDOzJ9HniNdzjRxpeidJzSNhV6T+OgG8ih+M6Vicq
+	 5kM46o90gpurg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v4 00/10] Fix socket options used by NVMe over MPTCP
-Date: Thu, 30 Jul 2026 10:53:53 +0800
-Message-ID: <cover.1785378180.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v4 01/10] mptcp: preserve msk's sk_bound_dev_if on PM-default subflows
+Date: Thu, 30 Jul 2026 10:53:54 +0800
+Message-ID: <fc150fbcf8384d9ef0b3c650de3759399773a144.1785378180.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <cover.1785378180.git.tanggeliang@kylinos.cn>
+References: <cover.1785378180.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,81 +45,49 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-NVMe over MPTCP relies on SO_LINGER, SO_PRIORITY, SO_REUSEADDR, TCP_SYNCNT,
-TCP_NODELAY, IP_TOS, and SO_BINDTODEVICE. This series contains fixes to
-make all of them work correctly, and adds tclass support for it.
+When the path manager creates a new subflow via __mptcp_subflow_connect(),
+it currently writes local->ifindex to ssk->sk_bound_dev_if unconditionally.
+The value was previously synced from the msk by mptcp_sockopt_sync_locked()
+-> sync_socket_options(), so the unconditional write in the connect path
+overwrites that inheritance.
 
-v4:
- - patch 1: skip ssk->sk_bound_dev_if = local->ifindex when local->ifindex
-   is 0, so __mptcp_subflow_connect() doesn't overwrite the inherited
-   SO_BINDTODEVICE binding.
- - patch 4: assign tcp_sock_set_syncnt()'s return to ret so an invalid
-   TCP_SYNCNT is propagated, not silently dropped.
- - patch 6: skip IPV6_TCLASS setsockopt/getsockopt paths on AF_INET
-   sockets/subflows (inet6_sk is NULL there).
- - patch 7: treat IPv4-mapped IPv6 as AF_INET for the TOS/tclass path.
- - patch 9: gate ip6_sock_set_tclass() behind sk_family == AF_INET6 and
-   IS_ENABLED(CONFIG_IPV6) to avoid IPv4 NULL-deref and link failure when
-   CONFIG_IPV6 is off.
- - patch 10: gate tclass on sk_family, skip IPv6 branch for IPv4-mapped
-   connections, wrap IPv6 in CONFIG_IPV6.
+When the path manager leaves local->ifindex at 0 (no interface pinned
+for this subflow), the write wipes the synced value and clears any
+SO_BINDTODEVICE / SO_BINDTOIFINDEX binding the user set on the msk. The
+subflow then becomes free to route over any interface, bypassing VRF and
+per-interface binding restrictions the user explicitly requested on the
+master socket.
 
-v3:
- - include tclass patches.
- - I also included three NVMe patches here because they have dependencies.
- - https://patchwork.kernel.org/project/mptcp/cover/cover.1785238723.git.tanggeliang@kylinos.cn/
+Only override sk_bound_dev_if when the path manager actually picked an
+interface for this subflow; otherwise keep the value inherited from the
+msk.
 
-v2:
- - Drop "mptcp: don't reset dst when setting default 0 tos"
-   and "selftests: mptcp: sockopt: cover LINGER, REUSEADDR,
-   PRIORITY, NODELAY, SYNCNT": the 'if (val > 0)' guard
-   blocked the legitimate "reset to 0" path, and the test
-   only ran val_in=1, missing the SK_CAN_REUSE "any non-zero
-   -> 1" normalization.
- - mptcp: bump setsockopt_seq for subflow-only socket options,
-   so secondary subflows created via MP_JOIN re-sync
-   sk_reuse / sk_reuseport / sk_bound_dev_if from msk.
- - mptcp: copy the subflow's TOS to the msk on accept
-   (alongside the existing ssk->rcv_tos copy), so MP_JOIN'd
-   subflows inherit the reflected outgoing TOS.
- - mptcp: propagate sk_reuseport to subflows via
-   sync_socket_options, so secondary subflows inherit
-   SO_REUSEPORT, not just SO_REUSEADDR.
- - mptcp: tighten TCP_SYNCNT bounds check
-   ('val < 1 || val > MAX_TCP_SYNCNT'), so out-of-bounds
-   values are rejected even when msk has no subflows yet
-   (where __mptcp_setsockopt_set_val would otherwise return 0
-   without invoking the set_val callback).
- - https://patchwork.kernel.org/project/mptcp/cover/cover.1785054808.git.tanggeliang@kylinos.cn/
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ net/mptcp/subflow.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-v1:
- - https://patchwork.kernel.org/project/mptcp/cover/cover.1784985085.git.tanggeliang@kylinos.cn/
-
-David 'equinox' Lamparter (1):
-  mptcp: sockopt: implement IPV6_TCLASS
-
-Geliang Tang (9):
-  mptcp: preserve msk's sk_bound_dev_if on PM-default subflows
-  mptcp: inherit sk_reuse/sk_reuseport on subflow creation
-  mptcp: handle TCP_MAXSEG getsockopt in common case
-  mptcp: add TCP_SYNCNT setsockopt/getsockopt
-  ipv6: extract and export ip6_sock_set_tclass helpers
-  mptcp: copy the subflow's tos/tclass to the msk on accept
-  nvme-fabrics: add IPv6 traffic class option
-  nvme-tcp: support IPv6 traffic class
-  nvmet-tcp: support IPv6 traffic class
-
- drivers/nvme/host/fabrics.c | 18 +++++++++
- drivers/nvme/host/fabrics.h |  3 ++
- drivers/nvme/host/tcp.c     |  8 +++-
- drivers/nvme/target/tcp.c   |  8 ++++
- include/net/ipv6.h          |  3 ++
- net/ipv6/ipv6_sockglue.c    | 31 +++++++++++----
- net/mptcp/protocol.c        | 16 ++++++++
- net/mptcp/sockopt.c         | 76 +++++++++++++++++++++++++++++++++++--
- net/mptcp/subflow.c         | 10 ++++-
- 9 files changed, 160 insertions(+), 13 deletions(-)
-
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 8e386899ceb9..c39243c85f50 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1667,7 +1667,15 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_pm_local *local,
+ 	if (addr.ss_family == AF_INET6)
+ 		addrlen = sizeof(struct sockaddr_in6);
+ #endif
+-	ssk->sk_bound_dev_if = local->ifindex;
++	/* Only override the bound device if the path manager picked one.
++	 * When local->ifindex == 0 the subflow must inherit sk_bound_dev_if
++	 * synced from the msk via mptcp_sockopt_sync_locked() - otherwise
++	 * SO_BINDTODEVICE / SO_BINDTOIFINDEX set on the master socket would
++	 * be silently cleared, letting traffic route over unintended
++	 * interfaces (bypassing VRF / interface-binding restrictions).
++	 */
++	if (local->ifindex)
++		ssk->sk_bound_dev_if = local->ifindex;
+ 	err = kernel_bind(sf, (struct sockaddr_unsized *)&addr, addrlen);
+ 	if (err) {
+ 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_JOINSYNTXBINDERR);
 -- 
 2.53.0
 
