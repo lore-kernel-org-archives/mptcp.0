@@ -1,171 +1,141 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE7E3BCD1A
-	for <mptcp@lists.linux.dev>; Thu, 30 Jul 2026 07:12:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A0B1C84A0;
+	Thu, 30 Jul 2026 08:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785395578; cv=none; b=Do14lNHxH0uOwk1O6isQDlLSvftOee5tHgIgc+WeiEwphN4qStBISnah1PCDtxAAcs9GZ5PnluOTQmxpAx9DwVW6MCBRASkcHtALddiBR0GeRTkhvvcDC0f40pC0jYe9J89KHkLeJvGiR1Z2LvJfxQV77yhvYSEDgWjJKytzefk=
+	t=1785399300; cv=none; b=BCOcGZ7/r8Rz0sKsx0xUdZyGsDqaOgnbh/nbUbd2NwegHGqZCX2v88TWsm2L446CR4w0wgNEAAwBnfctMHMikb8pEqcBiwWFyELEwHbNfZL+93eyzsAuNSEA+H8ffTeBLflHysZqd6H/nmrvwdF1pP3/GRV3jJoaXTD9AoFwvIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785395578; c=relaxed/simple;
-	bh=QcNVzrHJDmzDhVBtHzMTu8HUGMD/QTYlMSpRK5EIoOU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kqNQk5LWqY9qEYl7U3K31THoOQ17LFFl8rHnQWkKa1nYMgybHpxqWOgNdeHHrJFPQfVsfmup+L+aDSlRIFEajKQV56N18cDXERN+TECBoyxrhr3t4xNmxEPmsb4MDNLSYN8ekj4XqW7oSvNNvEWNO/rLtJUWmIJnYUGYooHCC9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hiv1TQaO; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1785399300; c=relaxed/simple;
+	bh=C5WrY1vEz31ML3OlQd1IhwzItZ5XB0CaN9YsdnlVPmQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tz/rbNxRrtyL4xD5FytHovo0H0jFHGjT21TgKujchEQY8weiHL0CSK/iKHTx/xYJIi9aaE5S5jV4vv9oR9fOVLbR1JBPkU3TsB3vONOYiudDgEyY73/km/Gy4e2kzca0suTNI6i4I4iBzdaZ4G8AmDQKP1cCcqBouQdkGG9ZAeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EOPLNFhk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hiv1TQaO"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-47c2b362ee2so1486413f8f.1
-        for <mptcp@lists.linux.dev>; Thu, 30 Jul 2026 00:12:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785395571; x=1786000371; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=+lXcg061bbhFrI0v23H2NQAB6iGsZBPcokYpsEnhLcE=;
-        b=hiv1TQaO2YlSKdjWrLa19Hy0ljJNFCQTVPLxsnc88ofLyYTuXK7eL1FVWio5QDRmQL
-         Ft7HW7KDMqIQWkomlpZkVfnaBeX6hr1QqkwrUE/XrTR6hR5Qlpxf8NqWUPiHYe2cliNy
-         UGzEP1jWw0+a9rUSViaOVcbnJFPxEEJeFDWllicIUEpen6n1hpLxlmnIfuz+7omKlI7E
-         2Oq0ZLeJEtpZEwx4futcACdHVx92U/6iF0VPnnNR4qiREpkT4+kG+Lzdm2qEx+nAsyyZ
-         p43ZQOmYEfJLd7bTyI8zNtX8EouZu3gHwI+0JBYKNfsKZQ05Y3TF0vxrDAPu6Ou/hpeX
-         Fnxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785395571; x=1786000371;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=+lXcg061bbhFrI0v23H2NQAB6iGsZBPcokYpsEnhLcE=;
-        b=IoA7Lbk0SO++hDqRUwiS1b7qj9g6cG+cMaGge9zdE3IUFMW04qZdCHjai44GOzaomH
-         E42ly71NFwrSzqOJuUUnD7kRR0lG+RQpDCp2WFYLGp2CMMAD8YHLg3NgObYXT1LLKGuG
-         jGCm6WME2nH+8EKMnIsMSAxLv7Rj+ojbaEJZU3DgtwoFXyqPD/ketuvfFXayQd1pprV1
-         Ew3/Mypf2o7tGWN+wm4FcIwCafH4URIphYoaNnlK7mGVV0F4tMoxmXGsDz4GfnXPvLPw
-         UrZHnjD1wp0Pj5cE6YB+i6yRtz02ql/nTEB7fLaITpFlOVhKgUysK0U/uV0yUkyvTW4r
-         PmiQ==
-X-Gm-Message-State: AOJu0Yyb7cO2jEtBt/USY/9OZE22DMjxeVMA5eCAWdGh5ejdocLwqHFf
-	UstkR0cqW0l2xXR1NUacwUqVAKq4Z1OlrRmSz0i2Rg0Ixrb5WnpPoumJxmagxw==
-X-Gm-Gg: AR+sD11lAzmcYyoPwDuT1lm6R4gyBUUN1ld9bZImw1wG8N7qpSEANGEXrP2WlfyMiKZ
-	xwxaNRsrp44H2NfjYV222KP3NItJI+f8/fxvy1wILrTTdtQP2Atdj1d6+o4MDTqCXTevA6V7emv
-	q1prUF8J0pQxnDX1Nqp4i4i6y5ld107V31ytE0Uti5H4vDcGapCJrYewSsF16VSjwOC7vsBlrCV
-	PsV184WknCmVxHv/5RWbR4XiofojYXXIkTU8s/WX3mRatwS18ybbgXY5nSM4kFsKam1f5U249CR
-	0eJogTgBABRbEOqZaL8aGle+E2gTpQItjtM4uFuPxjDNpGILGfsJ9N9gw8tmWBspjN3TRJsF2Ba
-	acWzVqcKZ7cyoE/cjekZ3yz0Q56V0kWjICCejokLr/0UURGatPuNq+SmtKgzFYn+8vCjBC1mmBk
-	GgfE7heZXKQa8HBK1bbhDvCpoYrLvoGpHwOhknKbM8wLyvylV+rfblKHcpyK4oyAEJv51rpLAh8
-	ESDqpeWRdjOrCqnG8IWo5yM3ybw8QSC3Q80MP9QnzrWmG5G
-X-Received: by 2002:a05:6000:2910:b0:47e:81aa:3822 with SMTP id ffacd0b85a97d-47fc8200038mr1809200f8f.42.1785395571167;
-        Thu, 30 Jul 2026 00:12:51 -0700 (PDT)
-Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47fc88d6e5bsm3821717f8f.3.2026.07.30.00.12.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2026 00:12:50 -0700 (PDT)
-From: David Carlier <devnexen@gmail.com>
-To: mptcp@lists.linux.dev
-Cc: matttbe@kernel.org,
-	martineau@kernel.org,
-	geliang@kernel.org,
-	pabeni@redhat.com,
-	David Carlier <devnexen@gmail.com>
-Subject: [PATCH mptcp-next v12 4/4] selftests: mptcp: cover IP_RECVERR sockopt propagation
-Date: Thu, 30 Jul 2026 08:12:44 +0100
-Message-ID: <20260730071244.69473-5-devnexen@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260730071244.69473-1-devnexen@gmail.com>
-References: <20260730071244.69473-1-devnexen@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EOPLNFhk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29C781F00A3A;
+	Thu, 30 Jul 2026 08:14:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785399299;
+	bh=GoiNtXq8Abb50lnLbXDPvEIZ8aemEipO0A0IZNA5T2c=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=EOPLNFhkCb7ZOY1aU3N0p1YIXJXUxobiMB3b2P1sbmIi8wQ/nE2ImRcE7k0F2Y94z
+	 LJYXcwMja4s9/cblXhryh3pEFY4D9yavJ0D7TIGEcjC6Wt7UnRN53Ro+ighqsw+v44
+	 4+LnXslJsPgN43esz4eBggKezKYkFkv/z33qH9M3uazJNuEd6YIOvCP/Hy2H0e6ahe
+	 4STqQl/qja2ba8TVao/WGyhED6CofFZYL5oqPEdu0jy1KXkau6Jjyae0ki4VffDZwk
+	 qyMdT5RHOGMwgqshOS1OAa+kSnS0yZ6pNBfuSt5Xz5EMBALfJERidlNbRR0fd8cVz4
+	 k4UZ7VWLwXehA==
+Message-ID: <c77bd843-725f-4d65-8750-87da6105a8d3@kernel.org>
+Date: Thu, 30 Jul 2026 10:14:53 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net 1/5] mptcp: avoid combining some incoming suboptions
+Content-Language: fr
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+ Davide Caratti <dcaratti@redhat.com>, Christoph Paasch <cpaasch@openai.com>
+References: <20260728-net-mptcp-misc-fixes-7-2-rc6-v1-0-f7e2d229159d@kernel.org>
+ <20260728-net-mptcp-misc-fixes-7-2-rc6-v1-1-f7e2d229159d@kernel.org>
+ <20260729172306.31deb67d@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260729172306.31deb67d@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Exercise setsockopt/getsockopt of IP_RECVERR and IPV6_RECVERR on the
-MPTCP parent socket, including the empty-errqueue EAGAIN contract on
-MSG_ERRQUEUE|MSG_DONTWAIT.
+Hi Jakub,
 
-End-to-end errqueue delivery (ICMP, TX timestamps, zerocopy) depends on
-subflow-side producers that are out of scope for this series and will be
-covered by follow-up work.
+On 30/07/2026 02:23, Jakub Kicinski wrote:
+> On Tue, 28 Jul 2026 19:11:57 +0200 Matthieu Baerts (NGI0) wrote:
+>> Some MPTCP suboptions are mutually exclusive according to the RFC8684,
+>> but also because in different places, the code doesn't expect some
+>> combinations to be present. That's specially true for suboptions that
+>> would be present twice, but with different attributes.
+> 
+> Looks like Clashiko has much to say about this patch.
+> Could you check?
 
-Assisted-by: Codex:gpt-5
-Signed-off-by: David Carlier <devnexen@gmail.com>
----
- .../selftests/net/mptcp/mptcp_sockopt.c       | 55 +++++++++++++++++++
- 1 file changed, 55 insertions(+)
+Sure, I will check that.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index b6e58d936ebe..95bb2cc8e2ff 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -769,6 +769,60 @@ static void test_ip_tos_sockopt(int fd)
- 		xerror("expect socklen_t == -1");
- }
- 
-+static void test_ip_recverr_sockopt(int fd)
-+{
-+	struct iovec iov = {
-+		.iov_base = &(char){ 0 },
-+		.iov_len = 1,
-+	};
-+	struct msghdr msg = {
-+		.msg_iov = &iov,
-+		.msg_iovlen = 1,
-+	};
-+	int one = 1, zero = 0, val = -1;
-+	socklen_t s = sizeof(val);
-+	int level, optname, r;
-+
-+	switch (pf) {
-+	case AF_INET:
-+		level = SOL_IP;
-+		optname = IP_RECVERR;
-+		break;
-+	case AF_INET6:
-+		level = SOL_IPV6;
-+		optname = IPV6_RECVERR;
-+		break;
-+	default:
-+		xerror("Unknown pf %d\n", pf);
-+	}
-+
-+	r = setsockopt(fd, level, optname, &one, sizeof(one));
-+	if (r)
-+		die_perror("setsockopt recverr on");
-+
-+	r = getsockopt(fd, level, optname, &val, &s);
-+	if (r)
-+		die_perror("getsockopt recverr on");
-+	if (s != sizeof(val) || val != one)
-+		xerror("recverr on mismatch val=%d len=%u", val, s);
-+
-+	r = recvmsg(fd, &msg, MSG_ERRQUEUE | MSG_DONTWAIT);
-+	if (r != -1 || errno != EAGAIN)
-+		xerror("expected empty errqueue to return EAGAIN, ret=%d errno=%d", r, errno);
-+
-+	r = setsockopt(fd, level, optname, &zero, sizeof(zero));
-+	if (r)
-+		die_perror("setsockopt recverr off");
-+
-+	val = -1;
-+	s = sizeof(val);
-+	r = getsockopt(fd, level, optname, &val, &s);
-+	if (r)
-+		die_perror("getsockopt recverr off");
-+	if (s != sizeof(val) || val != zero)
-+		xerror("recverr off mismatch val=%d len=%u", val, s);
-+}
-+
- static int client(int pipefd)
- {
- 	int fd = -1;
-@@ -787,6 +841,7 @@ static int client(int pipefd)
- 	}
- 
- 	test_ip_tos_sockopt(fd);
-+	test_ip_recverr_sockopt(fd);
- 
- 	connect_one_server(fd, pipefd);
- 
+Do you think Clashiko could look at patches from the MPTCP ML as well?
+Because the (deprecated?) AI review tool we use didn't find anything:
+
+
+https://netdev-ai.bots.linux.dev/ai-review.html?id=d1d1ff69-0f15-4812-ad16-e4f6f2df9f6b
+
+Or maybe that's because the model is different, and this can be easily
+fixed? Or maybe the prompts are different too?
+
+I'm asking, mainly because once patches have been accepted in our tree,
+it can be hard to have the original author fixing them. Not to block
+other patches too long, I often have to fix them, so I would prefer to
+get the same review tools (if possible) to prevent that :)
+
+> From my perspective I'm not sure if such RFC compliance changes
+> really belong as Fixes? I don't feel too strongly tho.
+
+I think this fix is important: it is not really about RFC compliances,
+but more about the fact the rest of the code is not taking into account
+suboptions combinations. For example, if the same suboption is present
+twice, but with different values, then the parsing will end up with a
+mix of the two. Also, when such combinations are used, it is likely the
+remote peer is attempting an attack, so better to block this early.
+
+Cheers,
+Matt
 -- 
-2.53.0
+Sponsored by the NGI0 Core fund.
 
