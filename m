@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB7C42642D
-	for <mptcp@lists.linux.dev>; Fri, 31 Jul 2026 13:36:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAFA1426EAD
+	for <mptcp@lists.linux.dev>; Fri, 31 Jul 2026 13:36:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785505017; cv=none; b=neIFnEBbwUsENfC6tI8HRb8OTVY81/VYrWCzF36r+DqpDAGirNYPPzsKGLFMhvNAmeZNDWwOyDNv1Hgp3rBh7ljb3rntL3BiLDvSUF7EDJvnhH5NSgLEmMAffhz8KTlvqOOzYP2I2pwXUh6LFJHKdvNoXmjorLvJ8VPgpCFTFhU=
+	t=1785505019; cv=none; b=kodl+RNP/4qJUhRDygQBP0q7bzNwfvI6tYyKTd79iMxMgKbMZyAQHorOKEkto0f3mjlm6J4NYz6+J9eWSFiAlBsDgH8aKhOcmKlGa//1cSWJ8M+hqHjqTC9kccmkhJE/NFeqNUmI0SMNRLusw+E4ON8/HRFYVmGiKqqstZVmVRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785505017; c=relaxed/simple;
-	bh=Q8LI2wLClKWgMdcNNGOaC0V0Mu1v6FgmHKgz2+Jc7GU=;
+	s=arc-20240116; t=1785505019; c=relaxed/simple;
+	bh=A/1kUH51wJGNQJ1e/m0OL4JrNZeyNVOFalxF9ZgyO8U=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LiazsgAmp+pgseKgiE2Qojr2s9AUR6AsdiS91FuHF6mWE9Je8jLYSqoJh5wqpoBwSd1eY5QPVoyhK6/Bj3SsHbRt9i0AbI7z6ai3fZW+EvJnyth572Rf7KZwP1UGFC2UlrFiIYnxnet2mLXX5FgEZaDhqPfxE3OplXDriKWGF7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EVohs6oa; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=qHDYTg7h5fbfiCNboSYZfZq3Pwvyvr6Ez1/5znrT3jWpWM+x6XqwlQ0yfgPRC3elkx74S6wjwsb2DcjtdTBXc4V3wS/QTLqJ7mKS9uyf2ixb4XirztKQHud+y+1t5NGze4+z7vAdXdIRoT9V+Ry6TZyxPZDfUrZZxJzyApikKTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q7phLt1v; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EVohs6oa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16B3F1F00A3E;
-	Fri, 31 Jul 2026 13:36:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q7phLt1v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDC541F00A3F;
+	Fri, 31 Jul 2026 13:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785505010;
-	bh=BQce/aYFDIi/uehmDusbV6BuB7vBsnRhRNQdFsfExog=;
+	s=k20260515; t=1785505011;
+	bh=zMrRwDSQPruKPueTszchR0AK15jiRZ/ywP7bgU7cZcs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=EVohs6oaLALIzoNi6DzGZq7JUflBiEOwXjZ4t0bECYpZbKZ7W+QdOJ6bXFitGxpO7
-	 pY6APxHM0iaPNv4IFJoormunMjBxcZnW9GGzCNEfFu1jhymWPXsIbRNVP+rWzD2hjF
-	 NUufsuVa3Pz04GWvdJ5mophsaB5grL8Tq8ewvYdS36J+IEuKaD2dtCyPzVjm36NzvH
-	 OUK6UEXh839fX6shW8ut09yDunl/PqXHgmVsnIiHSiud3GzMcaB259Y1sNiuJ/srJN
-	 7FQo/2RPu1ayVyTbDA+oLQBuHEoj4eSqhj5hyy+a6mBBOvtY/Beisb4x/bcwZDwHvQ
-	 /pjAaQUsjcMhw==
+	b=Q7phLt1v5GJlO5bqGBBFVbb/pGovk4UeD/KVMviPU0JgOCjZeXKILzrj+ZLZ8+ZQA
+	 fXXgP40khulPTkq/G3y4Ylu2dcRyDgclNoKYCYCK0OVMUmW0i5GXn9Gx+XqrpKNMz3
+	 fGrWkogMyy99bAdatiR5+6vgZigISMOfVULoBmv40s61cPTJgnWnYLY9gmP9I1qTxJ
+	 eYeUhpNh5oQKd/ZwOSpz6Ka5bpX6WUGnOL4i8lmQP+BHdym49txdBoC42wUCuybeC6
+	 2kE+XKiPQ7ok6ROiBYrmO4nmn26IJgm2Qpz338bDWU3CWIzVpKJxQnlobSRvIMCZAX
+	 gAS5r4g4LpQjw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 31 Jul 2026 15:35:37 +0200
-Subject: [PATCH mptcp-net 3/4] mptcp: options: reset DSS fields in case of
- unexpected size
+Date: Fri, 31 Jul 2026 15:35:38 +0200
+Subject: [PATCH mptcp-next mptcp-net 4/4] mptcp: remove MPC && MPJ check
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,56 +37,58 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260731-mptcp-squash-fix-7-2rc6-v1-3-cfe460beb666@kernel.org>
+Message-Id: <20260731-mptcp-squash-fix-7-2rc6-v1-4-cfe460beb666@kernel.org>
 References: <20260731-mptcp-squash-fix-7-2rc6-v1-0-cfe460beb666@kernel.org>
 In-Reply-To: <20260731-mptcp-squash-fix-7-2rc6-v1-0-cfe460beb666@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1395; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=Q8LI2wLClKWgMdcNNGOaC0V0Mu1v6FgmHKgz2+Jc7GU=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJylrxjY7lZuPeA2+VpfYxVgtNvxLY8lpMLjbta7PL9h
- UR0pgJfRykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwETUjjP84XkkHvCkh2X2nVmL
- 3npxPNSQdV3rOj3SIGb1wvN6ktLLAhkZdqmmns4zF/IsLVL0EytZY/ZMYXV50o/SGItwTWfRuCI
- OAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1303; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=A/1kUH51wJGNQJ1e/m0OL4JrNZeyNVOFalxF9ZgyO8U=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJylrx/JXZM6rTqkdnTTRhT9goHnuc67rlWZv7m6E2L1
+ 4j7/d3e2FHKwiDGxSArpsgi3RaZP/N5FW+Jl58FzBxWJpAhDFycAjAR91+MDGeUjv8Qqls/48H7
+ EDe75afDSiUsK2UPTJT5+2ZS7a5vXYmMDE+T7zScFI4vCXzxs/3oRM4jqXxKOx7y2a3ZuOifmO2
+ GJ1wA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-A remote peer could send a malformed DSS with a wrong size, followed by
-another DSS or MPC + Data. In this case, the first suboption will be
-ignored, but leaving some fields written, which could lead to
-inconsistency or access uninitialized data.
+After commit <   TODO   > ("mptcp: avoid combining some incoming
+suboptions"), the parsing step no longer allow to have both the
+MP_CAPABLE and MP_JOIN suboptions set together.
 
-Explicitly reset the fields that could have been modified in case of
-unexpected size.
+These checks can then be removed.
 
-Link: https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20260728-net-mptcp-misc-fixes-7-2-rc6-v1-0-f7e2d229159d%40kernel.org?part=1
-Fixes: 648ef4b88673 ("mptcp: Implement MPTCP receive path")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/options.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Note: the commit "mptcp: avoid combining some incoming suboptions" is
+not upstream yet, hence the TODO for the SHA
+---
+ net/mptcp/subflow.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 5611de38f4d9..dd75fef7f046 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -209,8 +209,14 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		 * RFC 8684 Section 3.3.0 checks later in subflow_data_ready
- 		 */
- 		if (opsize != expected_opsize &&
--		    opsize != expected_opsize + TCPOLEN_MPTCP_DSS_CHECKSUM)
-+		    opsize != expected_opsize + TCPOLEN_MPTCP_DSS_CHECKSUM) {
-+			mp_opt->dsn64 = 0;
-+			mp_opt->use_map = 0;
-+			mp_opt->ack64 = 0;
-+			mp_opt->use_ack = 0;
-+			mp_opt->data_fin = 0;
- 			break;
-+		}
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 8e386899ceb9..e1f20ff8fdb4 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -174,8 +174,6 @@ static int subflow_check_req(struct request_sock *req,
  
- 		mp_opt->suboptions |= OPTION_MPTCP_DSS;
- 		if (mp_opt->use_ack) {
+ 		if (unlikely(listener->pm_listener))
+ 			return subflow_reset_req_endp(req, skb);
+-		if (opt_mp_join)
+-			return 0;
+ 	} else if (opt_mp_join) {
+ 		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINSYNRX);
+ 
+@@ -277,9 +275,6 @@ int mptcp_subflow_init_cookie_req(struct request_sock *req,
+ 
+ 	opt_mp_capable = !!(mp_opt.suboptions & OPTION_MPTCP_MPC_ACK);
+ 	opt_mp_join = !!(mp_opt.suboptions & OPTION_MPTCP_MPJ_ACK);
+-	if (opt_mp_capable && opt_mp_join)
+-		return -EINVAL;
+-
+ 	if (opt_mp_capable && listener->request_mptcp) {
+ 		if (mp_opt.sndr_key == 0)
+ 			return -EINVAL;
 
 -- 
 2.53.0
