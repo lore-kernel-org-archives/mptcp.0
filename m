@@ -1,111 +1,165 @@
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7513CCFBD
-	for <mptcp@lists.linux.dev>; Fri, 31 Jul 2026 10:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2D13E7BB2
+	for <mptcp@lists.linux.dev>; Fri, 31 Jul 2026 10:17:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785492462; cv=none; b=ofIpx9vJJgU+BgfwHkxI0o9Vcpc4PKNweVxYzTRAvnk/QMeKgoFu3Ruxs7FIGDgKTOBLgVynLOP3AkgkpSfmi8iRjMimCDB6lIiB21VCn5dXHyO04ThvEw9xZfDRUHJOde21ax77svj5TKn4XGPgQg/v0B7mwNpdtodFMkTvcJA=
+	t=1785493038; cv=none; b=VEsHzBX3vr3NIba9g5aN2TpCphEhO0vCeXY+Mi1BJjwgJLEJgfpXYE1jDU19zlkV+rh1cX+nE5qIlsiH40NrKefmPDofpGzlCjfMLHV9gxJPmf3TTxbcQ9vjbGHbe1j00OWGegol9N95YdCuzR8R7At09ZW5PFg9GOn0WB3zT+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785492462; c=relaxed/simple;
-	bh=3Cj1wOH2DAQ7ScEDmE8CtWW8jGmSvIimjJsTCSmmkWQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=Ave1Wmj/bLhwxMZk1UZ5h4wydx1/zhUo+d5JVlgcwp4rZ3jCFH/sAFI6s/YltdVe3/zNDSNcQBQSufub1rLLX2VWGVtR21ccpRmJFHK9mcQUakfdVT00l5WYR1OUVKXO6ZvsgWoUOUJW51ivEaDiFLcdjNufF3B3Bc4kA7eaHeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BtFYm5UD; arc=none smtp.client-ip=209.85.161.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1785493038; c=relaxed/simple;
+	bh=AvpUXtwHjJPOuh9LKYeH0+pz8sS+X9XDTChHi5tpDpA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NaegKISOIPOsyvgFLNQuW3lhTcWzsS4jAVg6E0QNnYJfv4+IvwPYeDt3KBqxcVUhStyvlIrUv68Udf5pVgPZaz/URTNmzLnemp1TbOpTvhU2IZMv4G77heykK33wtT/dDS5mczTYQ/vVcon7F2bdrX3G7bxZ76o8nHgkY89GHho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YakjCYSm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BtFYm5UD"
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-6acc74fee76so319995eaf.3
-        for <mptcp@lists.linux.dev>; Fri, 31 Jul 2026 03:07:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785492443; x=1786097243; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=6qoFUPhtnt6SHRM6xlwTZJ9BzPd3jJDgYO6QVbOFomY=;
-        b=BtFYm5UDGLCzdqu8kOVmirvHkY9JT5YmF3sFzfUAKT8mAlt0WqI//ZkRd56++NckG5
-         HZ04P75nRl4T0DAiYK8xe+XgfyT8jfHbYu69i6Q3spbsuIseaa4dkVci/hPJQKUfjWzt
-         BrldKdlWJns8iC4uTJRmf+Dx5ly3OCYj5auHe9JkzwWw2RJ0HH353t7NcfzPCaQ/+pue
-         MEoq+pkoDmonjLKibFZ5AaN2+BSw1QGWgu72/rgH9G9CH9MQK/Lzj3Rc/DknL4oJ12uQ
-         SqqvSQ8L5OPBb4hj1uFb1iBQU0KuBL7c8EsbC1CbY7eF60Q4naRRL4DmqceQ5qhdkE0c
-         kfNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785492443; x=1786097243;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=6qoFUPhtnt6SHRM6xlwTZJ9BzPd3jJDgYO6QVbOFomY=;
-        b=YXDn3vIpLr8KJOe8bdQOUQqXvU1wlDnmXy86N4BNLIKsZm9iesWLlv1XnwPMWNIT1L
-         MLV24J8zHMmMx6wSCZzsvsJmW31bTf78Hfv4/QFz5ZjOLsMT9lIBGnTMdTAF+HS22P6A
-         FOu1wM+jhGtBpK/x/LBgmiF7UBZ17iQSvdURj1ThWcprFUifs9cPlZxebu4uXz870Cci
-         LtYdHMCVkyQ6qDlhmlunrrRubTE/u76hct+E/Tp8AINiImeCdHeKuSTGioasEdpGP+Km
-         EBYihbmUxcrxBgd1T0xl/qSgP9rqUdo6UBpKBjQAH0AUMR2Xdg+9AWTzqhoviic0qX/F
-         90MA==
-X-Gm-Message-State: AOJu0YzhkLXrVorayFVRdajLPMudzGBqtJkLZa7Nm3Hx+Zppy7WEFd4C
-	3ENXHTmWS7q6SNAYBt0IrxFRHYq4BlQHzHKROREc4DlI1w7c1+3eSWCKjLx76OY=
-X-Gm-Gg: AR+sD12OnXjbtbnNPI0vnFYDYrj//4zmLwN/T3NNLi5fgfNADRF0hnqBf4PtFmc+ggh
-	rIMrwTWNmDanZP3lr6MqzkUDIge9MgDyQD0WaY0sRTRttj53advKRpp1+6fYY+3w+iSGx+cj7/n
-	jUdSM5xlJiW+BTHnOas7A2XAuJn9og9tZsxGJ4wfDL+gkKoMe3KhnrLKG5TIJJwbPSMJLJFIwYB
-	eFtt4gv/zgC7pBDLFI+DN8MdFFwxfgii7+rxxN/m8VGhTLmNvQcFLLW1rwN8Vbcs+2XVzz+XMrJ
-	5e48Wntbdgpf+ZyQe6LiX4v/KaJh26mwjt/9DB1ILbF+D0e1RD6UzNsJnKPE4O8qUughX9Ruztm
-	5gTQ8v4PmK9sdtwmOlSJoz3hxs08lSzKWSny4nydDQf3qxPPKzaJO5id3aWWstCDxvorLxhfdsj
-	/d4+ldVNXO8H2gwtDgRf3qMIgAzvewt3AtPUL1FjZBFRTdPrurfsuTK5usq8ko9I2CZvWOcyQsD
-	CU=
-X-Received: by 2002:a05:6820:80b:b0:6ac:b80e:76b0 with SMTP id 006d021491bc7-6ae37d88314mr1017288eaf.3.1785492442704;
-        Fri, 31 Jul 2026 03:07:22 -0700 (PDT)
-Received: from [127.0.0.1] ([52.154.130.212])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6ae3a0c9162sm603304eaf.11.2026.07.31.03.07.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2026 03:07:21 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20260731-mptcp-squash-ooo-pruning-v1-0-a5f5115e1e24@kernel.org>
-References:
- <20260731-mptcp-squash-ooo-pruning-v1-0-a5f5115e1e24@kernel.org>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_mptcp-next_0/2=5D_Squash_?=
- =?UTF-8?Q?to_=22mptcp=3A_out-of-order_queue_prunin?= =?UTF-8?Q?g=22?=
-Message-ID: <b04f3574-2431-538b-9dfd-53becf4111cf@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 31 Jul 2026 10:07:20 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YakjCYSm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73E8F1F000E9;
+	Fri, 31 Jul 2026 10:17:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785493029;
+	bh=CdJSRMN0Pf2DtlqmcZBxTeBsos9sbkpW01aEBxfJyMk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=YakjCYSm91Uc7whuD7H3ncvUiDV4MxWQRbcAqx6mpZ0FEH3wo2T1DxtGJ413LfSMY
+	 JeDOiuI2Q3LSw6XMwaA5BLQ+xwJsQZna3zqBaVaA7dKYOgNKzTK/1TnbAH6o2M+qaP
+	 7FYDTnBAnSM/YqjHwiCMXXXkxcTYgZsyIeobpO0TNDFfxjh8QCbijrO29Eo41gqJ5h
+	 p+1DWEMErr47Dj55c88vft/5TgiRQuQ1sxSsAFbCFM+96QWCfIf64T3CRtl9NfEAkc
+	 UsAs+jAS4zmf0UscAvKSC5W4CV0o0hgxtCxB5FanHX0SDpAvFOweU14aeb9V4lEAuV
+	 EdmFfHWhfBQmg==
+Message-ID: <b5f74349-ab93-401a-9f90-a7bfc7ea4f1d@kernel.org>
+Date: Fri, 31 Jul 2026 12:17:06 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next 1/2] Squash to "mptcp: explicitly drop over
+ memory limits"
+Content-Language: fr
+To: MPTCP Linux <mptcp@lists.linux.dev>
+Cc: Paolo Abeni <pabeni@redhat.com>
+References: <20260731-mptcp-squash-ooo-pruning-v1-0-a5f5115e1e24@kernel.org>
+ <20260731-mptcp-squash-ooo-pruning-v1-1-a5f5115e1e24@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260731-mptcp-squash-ooo-pruning-v1-1-a5f5115e1e24@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matthieu,
+Hello,
 
-Thank you for your modifications, that's great!
+On 31/07/2026 11:23, Matthieu Baerts (NGI0) wrote:
+> Address comments from Clashiko [1]:
+> 
+> - mib: typo: "constrains" -> "constraints".
+> 
+> - mptcp_over_limit: precise it is not only 0-win, but retrans, dup or
+>   old acks.
+> 
+> - mptcp_over_limit: bump LINUX_MIB_TCPRCVQDROP, as previously discussed
+>   in [2].
+> 
+> Link: https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20260724-net-next-mptcp-oooq-pruning-v1-0-5dd4dec63a54%40kernel.org?part=3 [1]
+> Link: https://lore.kernel.org/b5244dd4-205d-4abd-8ea5-fd879a97038f@redhat.com
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+>  net/mptcp/mib.h     | 2 +-
+>  net/mptcp/options.c | 6 +++++-
+>  2 files changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+> index 18f35f7e0a2d..25f360724c57 100644
+> --- a/net/mptcp/mib.h
+> +++ b/net/mptcp/mib.h
+> @@ -89,7 +89,7 @@ enum linux_mptcp_mib_field {
+>  	MPTCP_MIB_FALLBACKFAILED,	/* Can't fallback due to msk status */
+>  	MPTCP_MIB_WINPROBE,		/* MPTCP-level zero window probe */
+>  	MPTCP_MIB_BACKLOGDROP,		/* Backlog over memory limit */
+> -	MPTCP_MIB_RCVPRUNED,		/* Dropped due to memory constrains */
+> +	MPTCP_MIB_RCVPRUNED,		/* Dropped due to memory constraints */
+>  	MPTCP_MIB_OFO_PRUNED,		/* MPTCP-level OoO queue pruned */
+>  	__MPTCP_MIB_MAX
+>  };
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index d6b009319839..23503984a084 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -1193,7 +1193,7 @@ static bool mptcp_over_limit(struct sock *sk, struct sock *ssk,
+>  	if (likely(mem <= READ_ONCE(sk->sk_rcvbuf)))
+>  		return false;
+>  
+> -	/* Avoid silently dropping pure acks, fin or zero win probes. */
+> +	/* Avoid silently dropping pure acks, fin or already-acked segments. */
+>  	if (TCP_SKB_CB(skb)->seq == TCP_SKB_CB(skb)->end_seq ||
+>  	    TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN ||
+>  	    !after(TCP_SKB_CB(skb)->end_seq, tcp_sk(ssk)->rcv_nxt))
+> @@ -1202,6 +1202,10 @@ static bool mptcp_over_limit(struct sock *sk, struct sock *ssk,
+>  	/* Dropped due to memory constraints, schedule an ack. */
+>  	inet_csk(ssk)->icsk_ack.pending |= ICSK_ACK_NOMEM | ICSK_ACK_NOW;
+>  	inet_csk_schedule_ack(ssk);
+> +
+> +	/* In fallback mode: skb is dropped before the TCP recv queue. */
+> +	MPTCP_INC_STATS(sock_net(sk), LINUX_MIB_TCPRCVQDROP);
 
-But sadly, our CI spotted some issues with it when trying to build it.
+Arf, it should be NET_INC_STATS(), not the MPTCP version: I changed to
+LINUX_MIB_TCPRCVQDROP just before sending the patches, without checking
+in between...
 
-You can find more details there:
+Sorry for the noise, v2 is coming.
 
-  https://github.com/multipath-tcp/mptcp_=
-net-next/actions/runs/30621520151
-
-Status: failure
-Initiator: Patchew =
-Applier
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/ca=
-0afcf3d680
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1138022
-
-Feel free to reply to this email if you cannot access =
-logs, if you need
-some support to fix the error, if this doesn't seem to be=
- caused by your
-modifications or if the error is a false positive one.
+> +
+>  	return true;
+>  }
+>  
+> 
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
