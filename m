@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69ECD430CC8
-	for <mptcp@lists.linux.dev>; Fri, 31 Jul 2026 14:56:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00009439014
+	for <mptcp@lists.linux.dev>; Fri, 31 Jul 2026 15:13:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785509771; cv=none; b=QBLt95f+k+Z4FwlBboFona/H50loorBUKOzwC8fmKarn3O2xte9Llolq9dLYEgtatREK5mHoaIj1G8DVgNI80oYtWvwaieL0WSXV1h6xv/YRRM2LXRTzOHPoEd940P9VLasJUvh4w025+4ovPCPjV7gLvp4aVS14z0PTrAwcOtA=
+	t=1785510790; cv=none; b=La+2Pl60ZlTJStOBG7GSc6VYNI83QoRGCeSKNJpxaqaRpCEuYBJgc5Yo14L082pOXE3ocDn2uLUPIYn9wtbmn9gKx0Ic/2xJi/J6uIK5qSyA2GewoHwaIxgVLQKCU5ZrnSONQLOFM2o4UbyoXpuX/4ICZw/WsFJar6Qo9fb2vXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785509771; c=relaxed/simple;
-	bh=I5Yds2vFSZcgEVuLCvY2qWhQyESsfYJOnm4na2mg64Q=;
+	s=arc-20240116; t=1785510790; c=relaxed/simple;
+	bh=rWmsWBSDHtnYFmrBxqc+UBJIZqobRJuWodWqYNwNN98=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xt6C3BYx2ToHr98UAdg29sXjoRmHPJhoCa+HY52IBxtn0cRzvqse4cVzZjgXgQ6drYQ1GQd5772xkbj9n1GoH0VW8MLdYAPfMNdzRC6H2JaH1059ra/dXGnqNw+HJZ01a5toUGMveBWODt8aVKaegGe8NHy04mmKkLmUnyZJ+U8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FfdsIDWK; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=gWUJyjbING4k3iCTmYgAP/fLlYgIAyj2tK4nR3PfuDWVgcpKTxL7ioakzAylOcSsrkZ/RNkcnJrS5Ed8dRO8j2ZEtGq3Yf0gGO8AntpoqG/wRnkK31BfAi/F5FPBw//JSFBci0Ckey5mG/ExUoVbdmO5rkkZfgGfk6JJEYDF9hA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eWBZ0VE2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FfdsIDWK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3CBD1F000E9;
-	Fri, 31 Jul 2026 14:56:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eWBZ0VE2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C38F51F00A3A;
+	Fri, 31 Jul 2026 15:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785509770;
-	bh=5qtVaB1aQS4/Zw7ZFHMt+C61PR8poH4bKeK6N1ib59g=;
+	s=k20260515; t=1785510788;
+	bh=C0P78TCODWQt0Rm0RtdmfiakZ0wKgyVlSrr+y8fVvjo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=FfdsIDWKEtYo8Od/EsKWxj8Vdl4LBDQ6+eL+ckNVcojvWtSmk0PZBCylPUOigfODj
-	 j0p9+Koiabmq+lSvrqV7NQNxW5cG62lfryrxLGeodtsrRnJsTJ+vv2+cixHkPgbyQt
-	 IA5+pJK1kFFmc8EvH0NEiupWdHv6ys2BZ3gWzL5GTscH4o6g+0r4naH34JQgBrSAH7
-	 Jh8eaa/25qWSk0V4I54wx6ZB4wd7S6w7AasTYnD0vkk4qUs8vHy+6/5cq2Kp551VzD
-	 XTjFdYL7Feft9hNueIpjtMet0R+i9/qCIuTXBz0FbrfWeZL+58GwJ+1eAoHdGbaJO2
-	 G3+3DyYUs+yGw==
-Message-ID: <81f26efb-2a53-44f7-a55d-51792507e32c@kernel.org>
-Date: Fri, 31 Jul 2026 16:56:06 +0200
+	b=eWBZ0VE2lAi+wW6JBatqYH8kzhKUv9U1sUjvbJlP38VQ2TshBS8dfYfw6ZXB5ASPi
+	 aWyeKcSIcOlZtINcgg1a3Ye0TNoZshj+faLeAFX4jxMDEcv7uxMB87+G2SBLAgXDzE
+	 WLLlHQcAzTxyYgNNBXIWoTQGLJbELV4xmsUbDq00RKyvogmgOJBN36bXwJ35RZf+8s
+	 +2WrODpR11t5q9sp8pHRzhTH7/yAF9HcaTH0/YPAqCP3sAa+TNzzRyLl3jKE6/nqqr
+	 Em5U4rK2nnqM3M4Vv0S9m8H7Rpba39Z/lHMEBdYVbi4GUSV2mJBQWKOPj5AnB7wzwQ
+	 RlvHRobYfHIOw==
+Message-ID: <9a65ac39-48fb-4398-8527-8ab6eca1c794@kernel.org>
+Date: Fri, 31 Jul 2026 17:13:05 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v12 0/4] mptcp: MSG_ERRQUEUE support on the
- parent socket
+Subject: Re: [PATCH mptcp-next v3] selftests: mptcp: diag: fix stack buffer
+ overflow in get_subflow_info()
 Content-Language: fr
-To: David Carlier <devnexen@gmail.com>, pabeni@redhat.com
-Cc: martineau@kernel.org, geliang@kernel.org, mptcp@lists.linux.dev
-References: <20260730071244.69473-1-devnexen@gmail.com>
+To: Geliang Tang <geliang@kernel.org>, Jiangshan Yi <yijiangshan@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+References: <f66bcc626255440b7fc7ef8c2a9b9dde0675f30e.camel@kernel.org>
+ <20260702062909.4147641-1-yijiangshan@kylinos.cn>
+ <9155c24a8743c2648ced51f304bc72a9c96036d8.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,73 +88,71 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260730071244.69473-1-devnexen@gmail.com>
+In-Reply-To: <9155c24a8743c2648ced51f304bc72a9c96036d8.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi David, Paolo,
+Hi Jiangshan, Geliang,
 
-On 30/07/2026 09:12, David Carlier wrote:
-> This series lets MPTCP applications use poll(EPOLLERR) and
-> recvmsg(MSG_ERRQUEUE) on the parent socket to drain TX timestamps
-> through the standard inet ABI, the same way they would on a plain TCP
-> socket. ICMP-derived errors stay on the subflow queue: the legacy
-> RECVERR ABI cannot convey their per-subflow peer identity, and they
-> are intended for a future MPTCP_RECERR channel.
+On 03/07/2026 03:09, Geliang Tang wrote:
+> Hi Jiangshan,
 > 
-> Patch 1 splices subflow err-skbs onto the parent's sk_error_queue at
-> error-report time. All forwarded events go through sock_queue_err_skb(),
-> which re-homes skb->sk onto the parent and charges sk_rmem_alloc, so the
-> parent's error queue stays bounded by sk_rcvbuf and is dropped under rmem
-> pressure, matching tcp's tx-timestamp path and ip_icmp_error() /
-> ipv6_icmp_error(). mptcp_recvmsg(MSG_ERRQUEUE) forwards directly to
-> inet_recv_error(), and mptcp_poll() advertises EPOLLERR purely on the
-> parent's sk_err / sk_error_queue, matching tcp_poll().
+> On Thu, 2026-07-02 at 14:29 +0800, Jiangshan Yi wrote:
+>> get_subflow_info() parses the subflow address string with:
+>>
+>> 	char saddr[64], daddr[64];
+>>
+>> 	ret = sscanf(subflow_addrs, "%[^:]:%d %[^:]:%d",
+>> 		     saddr, &sport, daddr, &dport);
+>>
+>> The subflow_addrs buffer holds up to 1024 bytes and is taken directly
+>> from the command line ("-c" argument). The "%[^:]" conversions have
+>> no
+>> maximum field width, so if the address substring before the ':'
+>> exceeds
+>> 63 bytes, sscanf() writes past the end of the 64-byte saddr/daddr
+>> stack
+>> buffers. This overflows the stack, corrupting adjacent stack data
+>> such
+>> as the saved return address, and can crash the tool or lead to
+>> out-of-bounds writes controlled by user-supplied input.
+>>
+>> Bound both string conversions to the destination buffer size by
+>> adding
+>> an explicit maximum field width of 63 (leaving room for the
+>> terminating
+>> NUL), so at most 63 bytes are written into each 64-byte buffer:
+>>
+>> 	ret = sscanf(subflow_addrs, "%63[^:]:%d %63[^:]:%d",
+>> 		     saddr, &sport, daddr, &dport);
+>>
+>> Reviewed-by: Geliang Tang <geliang@kernel.org>
+>> Signed-off-by: Jiangshan Yi <yijiangshan@kylinos.cn>
+>> ---
+>> v3:
+>>  - drop the Fixes tag: this is a cleanup/hardening, not a fix
+>> (Geliang)
+>>  - drop the Suggested-by tag, keep Geliang's Reviewed-by (Geliang)
 > 
-> Patch 2 factors the existing inet_flags subflow-propagation hard-coded
-> list into a mask, so the next patch can extend it without churn.
-> 
-> Patch 3 makes IP_RECVERR / IPV6_RECVERR (and the RFC4884 variants)
-> propagate to the subflows. The parent stores the bit so MPTCP-aware
-> helpers can branch on it.
-> 
-> Patch 4 is a selftest covering the propagation path.
-> 
-> Changes in v12 (addresses Paolo's v11 review):
->  - reordered the series so the core MSG_ERRQUEUE infrastructure lands
->    first, before the sockopt plumbing that exposes it to user space.
->    The former patch 3/4 is now 1/4.
->  - 1/4: narrow mptcp_errqueue_skb_forwardable() to
->    SO_EE_ORIGIN_TIMESTAMPING. SO_EE_ORIGIN_ZEROCOPY and
->    SO_EE_ORIGIN_LOCAL events cannot be generated on an MPTCP parent
->    today, so the helper only needs extending if and when they can be.
->  - 1/4: trim the block comment above sock_queue_err_skb() and the
->    matching changelog paragraphs, now redundant with the narrower
->    filter.
->  - 2/4: reverse christmas tree declaration ordering in
->    sync_socket_options().
->  - dropped the Suggested-by: Paolo Abeni tags from patches 1-3.
->  - rebased on current export.
-Thank you for the v12 and for the previous reviews!
+> Actually, there's no need to send this v3, since it doesn't introduce
+> any code changes compared to v2; we could simply reply and continue the
+> discussion on the v2 thread.
+Thank you for the patch and the review!
 
-I just applied this series with Paolo's ACK, as I understood the v11 was
-good for him, and you applied the last requests he had. I hope that's
-OK, I can always fix that later.
+When sending a new version, please start a new thread, do not reply to
+an existing one:
 
-Note that I also fixed a few checkpatch issues, not to get in troubles
-when upstreaming these patches later.
+ https://docs.kernel.org/process/maintainer-netdev.html#resending-after-review
 
 New patches for t/upstream:
-- d1c8339c6464: mptcp: support MSG_ERRQUEUE on the parent socket
-- b10c2f76fdcf: mptcp: sockopt: factor inet_flags propagation into a mask
-- 36a365e46b58: mptcp: propagate RECVERR sockopts to subflows
-- a2f437ee45ab: selftests: mptcp: cover IP_RECVERR sockopt propagation
-- Results: e5730411f842..e486d89a0699 (export)
+- 46e0ae412a9c: selftests: mptcp: diag: fix stack buffer overflow in
+get_subflow_info()
+- Results: e486d89a0699..588708fb07a7 (export)
 
 Tests are now in progress:
 
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/0565f7c5598354965c1a391e4f96fe5d2f1c09a1/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/59dd662fd0777835b9f742de6298ba0953675008/checks
 
 Cheers,
 Matt
