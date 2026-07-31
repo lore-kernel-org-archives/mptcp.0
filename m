@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57799429CDC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFF142A165
 	for <mptcp@lists.linux.dev>; Fri, 31 Jul 2026 13:36:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785505013; cv=none; b=XJ6EX72vF20lt6NQG8yp6rUJVtXT+SCHPTUsu21QYHcmO/sQTiapfseBA2pVzypliQmOaaytxNoob649T0K4o1D7FR769gsS0Aawra4IiuvdQaEEJHydVGp/KpY3frtwMUAWqX3dZwqOFC4P55nZd4wc00ahHxKGCJNrLen9QUo=
+	t=1785505013; cv=none; b=e8+PMrQGX5mrjPWlueot2WRWd1XFRdB3sscuRWWLxHeubNHg0OVYy/fYih1a2jqr1VH90MMOY+JIQxN7BN0p7Ojo4PuVV46s0iH35iLHDCXEJo+V+eJ1GAvkFm/EJe+Ori8KLMGVkOpUVjkpTEQH78XtX4kfM4zE3itKCoOa+p0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1785505013; c=relaxed/simple;
-	bh=3d61TPLDedwu55k65Rj+GmTJA7yfGLv/8fURSSZB+uI=;
+	bh=TxywdlczJNNYW5Yuyz8Jn9+pnQu7T2G2mfXN9ISwZYM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CTbcPZOx05X7FXK7D7HpuqpmRjIbSHb/gT8twPlVPeqBh7rd7M5UpCS/fEPcBpL7YTUZau+/LQYwQ00W2S9LoovcA5lrXg5mvAs9p5H2RoewdDMhVZ+og4c7tFV39cPMtqBrHfQ98FTGt1LtKO0GM7eWAT/DCjTA7c3Hu6dNeT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LW09j/5j; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=Iz9XcAALVR4SDnsWV4Y3qBjwbscnoWCihfmG/JFuEP6ZokDwqOb1H+i82N1LseGtRlRNp0kb0v4e6TJz7nvBmoSUraf/tdnSuRemdAYvwvGbibCyJcM0hsQZ2E1idt30wB9ZCWzBGF72JjQhA7AUXxem0ShBeYRGClMW9E97/eQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ni/FhOk/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LW09j/5j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 710AD1F00A3A;
-	Fri, 31 Jul 2026 13:36:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ni/FhOk/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43ED91F00A3D;
+	Fri, 31 Jul 2026 13:36:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785505008;
-	bh=HtroDACWq0gaAnsjTD2gAENEKJNiDGnQStiDyEN4k0M=;
+	s=k20260515; t=1785505009;
+	bh=a4AlyqJAyOiO5TpCS+oh4/m3B0UurQMtrFxmYkoG1C8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=LW09j/5j965BhbXDcy6m+Px9CFJzzeSnHNa3GFPZ3JqACR1s9Kv7oio2wAureLg/e
-	 lQRAukMFRmnCLEqxYC8DSHXhNOG0oV3j1jNbA5F9ebEg2r+NW36rCi4hfcfb+RHZXI
-	 wgi9o/i7VtEn1lGfKTBDIFgrVW6Xoua0sfrxIU7Y1T//5YNSBCPDb4rwvCYF/MhXJ1
-	 lLm95T8ygAZOGItALzOWkhgjPy9PgvFA0I2szHNnZAPs3uE4ll0jiknsnmUpl5Wdxu
-	 dyA+B+0zppGBsHEhIzKoUz7q9sl3DKdTcxfOzBBmTOgbmhFhrb5A8aWBImGTNhkqDQ
-	 U2tdWrm2eOjFA==
+	b=ni/FhOk/QBEsyWU09nPUTArQcOLU8bWWCr6KI1hSQFJnGD8W3Ol6+zOwVTKyRaXzt
+	 PMh2/M89LREmzrvSw/3V+o/jOwkATKobBzkVl3Mr4ij2BVud9sDAbts4YS++dNeD4i
+	 4mdQRqSHGa+ndl88qgjzJ6gb35+ectnsrj7hMEl15wr4mF44Kcu6iwCHENZrv1GEdk
+	 R+Bd9V83Z8va9+h0Z7bWEVxXQkOYIZ4Q8OGpLmQeqzLBiaRf9Fc1ySOChQ2+/WrMQJ
+	 TERO8TPPFGWCVEv2OtvK8y7aWBNVsknWeVaxbr56Amu54SNFEfPQGVH1UGRNGc+Xbo
+	 q+2yde5PXeh1g==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 31 Jul 2026 15:35:35 +0200
-Subject: [PATCH mptcp-net 1/4] Squash to "mptcp: avoid combining some
- incoming suboptions"
+Date: Fri, 31 Jul 2026 15:35:36 +0200
+Subject: [PATCH mptcp-net 2/4] Squash to "mptcp: reclaim forward-allocated
+ memory on RX path errors"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,75 +38,43 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260731-mptcp-squash-fix-7-2rc6-v1-1-cfe460beb666@kernel.org>
+Message-Id: <20260731-mptcp-squash-fix-7-2rc6-v1-2-cfe460beb666@kernel.org>
 References: <20260731-mptcp-squash-fix-7-2rc6-v1-0-cfe460beb666@kernel.org>
 In-Reply-To: <20260731-mptcp-squash-fix-7-2rc6-v1-0-cfe460beb666@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2329; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=3d61TPLDedwu55k65Rj+GmTJA7yfGLv/8fURSSZB+uI=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJylrzROKDSPW/lrJMHZK2DHmxNmGwkqdzRZiDH/Y5L8
- NaJ+4fKOkpZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACbSIMDw3+f7Ro5T394t42fb
- PMXnQknKe6U+9vY3z7oX9D7qcAyM/s3IcF333BrBif9aEoxCmL4eeHntcmpjikWY43JGs8WHl/L
- 6MQEA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=793; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=TxywdlczJNNYW5Yuyz8Jn9+pnQu7T2G2mfXN9ISwZYM=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJylry9zhe/62MjdxtzU3RMmeiSm/7/I8WT30TfT9tva
+ 18hxrGho5SFQYyLQVZMkUW6LTJ/5vMq3hIvPwuYOaxMIEMYuDgFYCKCyxj+R7cJq97S8VvN7HI8
+ 530Ez8VLd7Y3OSyK7GrzDSr2ZrPWZvgflTSDleFJxTdtpnX3Ju16qOjxUfb4t/wwNi4Rhj1bt03
+ mAgA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Another stack could send a FASTCLOSE on a plain ACK, with a DSS. That's
-when they follow the "Option A" [1], while here, the "Option B" is
-implemented on the sent side.
+Follow the same style as in most places in MPTCP. This was the
+previously enforced style for netdev.
 
-So we need to allow that, and this seems to be handled by the stack in
-mptcp_incoming_options().
-
-Note: this note should be added in the commit message:
-
-  Note that now, combining both an MP_CAPABLE and an MP_JOIN will no
-  longer result to a reject of the two options, but only the second one.
-  That seems OK to do that for this unexpected error. At least now all
-  inconsistent combinations are handled the same way. This could change
-  later.
-
-Link: https://www.rfc-editor.org/rfc/rfc8684.html#section-3.5-5.1
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/options.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ net/mptcp/protocol.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index d6b009319839..5611de38f4d9 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -170,6 +170,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		if ((mp_opt->suboptions & ~(OPTION_MPTCP_ADD_ADDR |
- 					    OPTION_MPTCP_RM_ADDR |
- 					    OPTION_MPTCP_PRIO |
-+					    OPTION_MPTCP_FASTCLOSE |
- 					    OPTION_MPTCP_FAIL)) != 0)
- 			break;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 90dc894cb976..3dee08862027 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -149,8 +149,7 @@ struct sock *__mptcp_nmpc_sk(struct mptcp_sock *msk)
  
-@@ -357,8 +358,9 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		break;
- 
- 	case MPTCPOPT_MP_FASTCLOSE:
--		/* Can be used only with RST */
--		if ((mp_opt->suboptions & ~OPTION_MPTCP_RST) != 0)
-+		/* Can be used with a restricted number of other options */
-+		if ((mp_opt->suboptions & ~(OPTIONS_MPTCP_DSS |
-+					    OPTION_MPTCP_RST)) != 0)
- 			break;
- 
- 		if (opsize != TCPOLEN_MPTCP_FASTCLOSE)
-@@ -1478,7 +1480,7 @@ void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
- 	 *  RM   |  C   |  C   |  C   |  P   |------|------|------|------|
- 	 *  PRIO |  X   |  C   |  C   |  C   |  C   |------|------|------|
- 	 *  FAIL |  X   |  X   |  C   |  X   |  X   |  X   |------|------|
--	 *  FC   |  X   |  X   |  X   |  X   |  X   |  X   |  X   |------|
-+	 *  FC   |  X   |  X   |  P   |  X   |  X   |  X   |  X   |------|
- 	 *  RST  |  X   |  X   |  X   |  X   |  X   |  X   |  O   |  O   |
- 	 * ------|------|------|------|------|------|------|------|------|
- 	 *
+ static void mptcp_drop(struct sock *sk, struct sk_buff *skb)
+ {
+-	/*
+-	 * The skb forward memory was already transferred to sk by
++	/* The skb forward memory was already transferred to sk by
+ 	 * mptcp_borrow_fwdmem(), even before setting the destructor.
+ 	 */
+ 	if (!skb->destructor)
 
 -- 
 2.53.0
