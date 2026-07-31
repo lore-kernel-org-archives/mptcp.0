@@ -1,148 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC52B444712
-	for <mptcp@lists.linux.dev>; Fri, 31 Jul 2026 15:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433DF369D54;
+	Fri, 31 Jul 2026 18:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785512987; cv=none; b=LlgpUboFWo7lk+5u04wL/IVgnZ/HlK/XMGLVnsSQb9h6S8VydvMGhLuYpVw8IHklHu3BIj8tzKVFfhpQ/DKGJlxPyIuyTeebOik9ZOb+r349MkucuqnCXc6KMW7dKtJNu1qg7QkN7Vsl6dvMQFD90Ct4ukmTR/p3XTpLGuWUcdU=
+	t=1785522169; cv=none; b=NQDXU9hgPFBJYVM0ewEog1W5wK/IdOOLtklTsM5tOLGvxByjzUTJM7+yHP5bUlsDpQTWNMY51sbOVN7CSVyuzBIRHS9ataDm0EFl82203i3Mqa6gMin16XjG6rBdvMWdRZc/C2yFf1ZFctV2xT4Nd4yj7ore9K5S/Ml4IQPe/g0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785512987; c=relaxed/simple;
-	bh=NqsqXZHSEMPTag77GloLNp3MwclQNoCTKx4V4d/zZEA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HS2GM5xDQV3VTaVN88VWUv6SpGxB0Ww0zNYQAdeqhV4E+2Zjp1EyuJsorZiBy+E3eXXD0Xens6rCfpXqd92FvClfH2ZiBtAQ037hp/UYMEzu7IoqwJ48bmlqh7eO4wqjsTcEd0YXpWh+L4H2qe9dlEhN1CjVa4wtbr4aTdhgozI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ehuCSEsm; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785522169; c=relaxed/simple;
+	bh=l0UYV6v99l4kayaDyVsaa3EEMIjdVs53AKYspVyykdQ=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=qpCUF7S7vrBdREqyxL2iLnMcY0JOO7Y2aSYgGLguAVqeHSay0gYFMMm6RgTb/OMRcNWp2HJ+B0+57R7d7EEcfnNqgnPYGo6q5SgBJdqu/Hs0NkjcPUVtsE3hba18WqVULIV1jNAuA8uD0hgtLNNRtl6c1qWCH2J/G3mdTHlk3M8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RUp1QjnA; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ehuCSEsm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D70641F000E9;
-	Fri, 31 Jul 2026 15:49:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785512986;
-	bh=3/DpHdM38dowTxEFz+n4yQ6oULtLoAadW1bjECJwhHo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=ehuCSEsmAee34/qF8g0uZEpOsSFPacb+ACMbQNNs3fG3Z+qsnVv8/wamhdx/2lyea
-	 BlV5CHXW2+aazJ8tVKpEnE+sVQlpVUaVNWRso4YzK1Ij5YmSU6xni1nJAu39W/II8g
-	 JPHbHnGonkR25tjY3z/191IMnPTlZGW1S5QoRpfr9vYz0vi7rfXaHUQ+ztonEIseTM
-	 iCjag7WqWIhGcliAVLiAE7fFDmsWlPJP42bCe2kgpmXwj7B+LC0A28i5zKOfrHaGRv
-	 5rG3Dur5q6p+akweadp6jSxD4O3CHdCK+wzKsfNVf9epf3rImQoBCEoypnZBcHQMUa
-	 HKEbKOccGy2Dw==
-Message-ID: <a303c170-7290-406b-ad63-69af313877ad@kernel.org>
-Date: Fri, 31 Jul 2026 17:49:42 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RUp1QjnA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1785522167; x=1817058167;
+  h=date:from:to:cc:subject:message-id;
+  bh=l0UYV6v99l4kayaDyVsaa3EEMIjdVs53AKYspVyykdQ=;
+  b=RUp1QjnAjuRFhzI/uo9sHKXn8/V86IdApUEUhQMwru9cnm82SbyLoX+y
+   hCy3NN6zQ03Uw+fABrJZijTN6Ai98WxqmvQSJs/BkQMMx5XaIkDkOCmWC
+   66ajM7ORZwfBFRObXEDGwTv2CmncatPqsse5L/sWPr6jjsjMBhpqnaAh9
+   HwThhAY5kIQ2b0qM7VxWYNKNrnIw/4fdpx9w/GpFmDwUTR4I3bLo1dGOd
+   GEMoZq1JGinNsnQLXCuH3dshCjbXvavGk5gx1D0bTO6DjYNVlG+OUJ77Y
+   SAsTexmtn4PZ+7sVMjU31Yuo4oseDRmZz9bpxvoqaCMzvzobXu/D4wL/l
+   w==;
+X-CSE-ConnectionGUID: 9sEERp8FRA2yxifUoRotGQ==
+X-CSE-MsgGUID: S8x5hYUNSfWbf+0rGT8YMw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11861"; a="97526556"
+X-IronPort-AV: E=Sophos;i="6.25,196,1779174000"; 
+   d="scan'208";a="97526556"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2026 11:22:46 -0700
+X-CSE-ConnectionGUID: aRT1qm6iT5uwlu1gED8IRA==
+X-CSE-MsgGUID: 1ruQRTDaSY2hpAdqC0WJ5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,196,1779174000"; 
+   d="scan'208";a="261256406"
+Received: from igk-lkp-server01.igk.intel.com (HELO 3cba2a188a06) ([10.211.93.152])
+  by orviesa009.jf.intel.com with ESMTP; 31 Jul 2026 11:22:45 -0700
+Received: from kbuild by 3cba2a188a06 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wprsY-000000003FC-2g1K;
+	Fri, 31 Jul 2026 18:22:42 +0000
+Date: Fri, 31 Jul 2026 20:22:06 +0200
+From: kernel test robot <lkp@intel.com>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, mptcp@lists.linux.dev,
+ matthieu.baerts@tessares.net, 0day robot <lkp@intel.com>
+Subject: net/mptcp/options.c:1207:39: warning: implicit conversion
+ from 'enum <anonymous>' to 'enum linux_mptcp_mib_field'
+Message-ID: <202607312002.iM0J3v4Q-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 0/2] mptcp: pm: net-next port of the
- alloc-during-teardown leak fix
-Content-Language: fr
-To: Shardul Bankar <shardul.b@mpiricsoftware.com>, mptcp@lists.linux.dev
-Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- pabeni@redhat.com, kalpan.jani@mpiricsoftware.com, janak@mpiric.us,
- shardulsb08@gmail.com
-References: <20260620084424.3072634-1-shardul.b@mpiricsoftware.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20260620084424.3072634-1-shardul.b@mpiricsoftware.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Shardul,
+tree:   https://github.com/intel-lab-lkp/linux/commits/Matthieu-Baerts-NGI0/Squash-to-mptcp-explicitly-drop-over-memory-limits/20260731-182110
+head:   85f8043c37254556a09478e4f26c2012a1c92fc6
+commit: 79d68403b0c660279617aeb43ee4265c72640fd3 Squash to "mptcp: explicitly drop over memory limits"
+date:   8 hours ago
+config: s390-allnoconfig-bpf (https://download.01.org/0day-ci/archive/20260731/202607312002.iM0J3v4Q-lkp@intel.com/config)
+compiler: s390x-linux-gnu-gcc (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260731/202607312002.iM0J3v4Q-lkp@intel.com/reproduce)
 
-On 20/06/2026 10:44, Shardul Bankar wrote:
-> This is the net-next counterpart of the net fix "mptcp: pm: fix memory
-> leak from alloc-during-teardown race" (v3):
-> https://lore.kernel.org/all/20260611003613.3184956-1-shardul.b@mpiricsoftware.com/
-> 
-> v3 remains the canonical fix for net; it applies as-is on export-net. It
-> does not apply on export, because the userspace local address list free
-> moved into the userspace path manager .release callback in "mptcp: pm:
-> init and release mptcp_pm_ops". This series ports the fix to net-next:
-> 
->   1/2 squashes the unconditional free into that refactor commit (covering
->       the disconnect/reuse path).
->   2/2 is the MPTCP_PM_DESTROYING fence (the alloc-during-teardown race),
->       rebased onto the renamed mptcp_pm_announced_alloc() /
->       mptcp_pm_destroy().
-> 
-> The net fix was validated with an MPTCP protocol-flow harness (BRF) over
-> multi-hour runs with zero kmemleak reports (reported on the v3 thread).
-> This port is structurally equivalent and is sent so the CI can exercise
-> it on net-next.
-Thank you for the v3, the reply to Sashiko's comment, and sorry for the
-delay.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202607312002.iM0J3v4Q-lkp@intel.com/
 
-Note that I applied the patch from the v2 on top of net, and used the
-message that was on the v3. I also reduced the comments in the code.
+All warnings (new ones prefixed by >>):
 
-I got a bunch of conflicts, but that was expected.
+   net/mptcp/options.c: In function 'mptcp_over_limit':
+>> net/mptcp/options.c:1207:39: warning: implicit conversion from 'enum <anonymous>' to 'enum linux_mptcp_mib_field' [-Wenum-conversion]
+    1207 |         MPTCP_INC_STATS(sock_net(sk), LINUX_MIB_TCPRCVQDROP);
+         |                                       ^~~~~~~~~~~~~~~~~~~~~
 
-Now in our tree:
 
-New patches for t/upstream-net and t/upstream:
-- 2b2f15275853: mptcp: pm: fix memory leak from alloc-during-teardown race
-- f53bd07233a6: conflict in t/mptcp-pm-init-and-release-mptcp_pm_ops
-- 919a44ee381d: "squashed" (with conflicts) in "mptcp: pm: init and
-release mptcp_pm_ops"
-- c7d92e52241a: conflict in t/mptcp-pm-add-get_local_id-interface
-- 58c196b64826: conflict in t/mptcp-pm-add-get_priority-interface
-- Results: 8fa2ab05d71f..a811f9685bfd (export-net)
-- Results: 588708fb07a7..4cc6862c4795 (export)
+vim +1207 net/mptcp/options.c
 
-Tests are now in progress:
+  1185	
+  1186	static bool mptcp_over_limit(struct sock *sk, struct sock *ssk,
+  1187				     const struct sk_buff *skb)
+  1188	{
+  1189		struct mptcp_sock *msk = mptcp_sk(sk);
+  1190		u64 mem = sk_rmem_alloc_get(sk);
+  1191	
+  1192		mem += READ_ONCE(msk->backlog_len);
+  1193		if (likely(mem <= READ_ONCE(sk->sk_rcvbuf)))
+  1194			return false;
+  1195	
+  1196		/* Avoid silently dropping pure acks, fin or already-acked segments. */
+  1197		if (TCP_SKB_CB(skb)->seq == TCP_SKB_CB(skb)->end_seq ||
+  1198		    TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN ||
+  1199		    !after(TCP_SKB_CB(skb)->end_seq, tcp_sk(ssk)->rcv_nxt))
+  1200			return false;
+  1201	
+  1202		/* Dropped due to memory constraints, schedule an ack. */
+  1203		inet_csk(ssk)->icsk_ack.pending |= ICSK_ACK_NOMEM | ICSK_ACK_NOW;
+  1204		inet_csk_schedule_ack(ssk);
+  1205	
+  1206		/* In fallback mode: skb is dropped before the TCP recv queue. */
+> 1207		MPTCP_INC_STATS(sock_net(sk), LINUX_MIB_TCPRCVQDROP);
+  1208	
+  1209		return true;
+  1210	}
+  1211	
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/a1feb73d0d2bb6aa9873ac55926f920e6d1209ba/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/ca43dbbb8a8abda8ead4866bfd62b06bdf1c7d08/checks
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
