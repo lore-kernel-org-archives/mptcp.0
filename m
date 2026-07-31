@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00009439014
-	for <mptcp@lists.linux.dev>; Fri, 31 Jul 2026 15:13:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC52B444712
+	for <mptcp@lists.linux.dev>; Fri, 31 Jul 2026 15:49:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785510790; cv=none; b=La+2Pl60ZlTJStOBG7GSc6VYNI83QoRGCeSKNJpxaqaRpCEuYBJgc5Yo14L082pOXE3ocDn2uLUPIYn9wtbmn9gKx0Ic/2xJi/J6uIK5qSyA2GewoHwaIxgVLQKCU5ZrnSONQLOFM2o4UbyoXpuX/4ICZw/WsFJar6Qo9fb2vXQ=
+	t=1785512987; cv=none; b=LlgpUboFWo7lk+5u04wL/IVgnZ/HlK/XMGLVnsSQb9h6S8VydvMGhLuYpVw8IHklHu3BIj8tzKVFfhpQ/DKGJlxPyIuyTeebOik9ZOb+r349MkucuqnCXc6KMW7dKtJNu1qg7QkN7Vsl6dvMQFD90Ct4ukmTR/p3XTpLGuWUcdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785510790; c=relaxed/simple;
-	bh=rWmsWBSDHtnYFmrBxqc+UBJIZqobRJuWodWqYNwNN98=;
+	s=arc-20240116; t=1785512987; c=relaxed/simple;
+	bh=NqsqXZHSEMPTag77GloLNp3MwclQNoCTKx4V4d/zZEA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gWUJyjbING4k3iCTmYgAP/fLlYgIAyj2tK4nR3PfuDWVgcpKTxL7ioakzAylOcSsrkZ/RNkcnJrS5Ed8dRO8j2ZEtGq3Yf0gGO8AntpoqG/wRnkK31BfAi/F5FPBw//JSFBci0Ckey5mG/ExUoVbdmO5rkkZfgGfk6JJEYDF9hA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eWBZ0VE2; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=HS2GM5xDQV3VTaVN88VWUv6SpGxB0Ww0zNYQAdeqhV4E+2Zjp1EyuJsorZiBy+E3eXXD0Xens6rCfpXqd92FvClfH2ZiBtAQ037hp/UYMEzu7IoqwJ48bmlqh7eO4wqjsTcEd0YXpWh+L4H2qe9dlEhN1CjVa4wtbr4aTdhgozI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ehuCSEsm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eWBZ0VE2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C38F51F00A3A;
-	Fri, 31 Jul 2026 15:13:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ehuCSEsm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D70641F000E9;
+	Fri, 31 Jul 2026 15:49:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785510788;
-	bh=C0P78TCODWQt0Rm0RtdmfiakZ0wKgyVlSrr+y8fVvjo=;
+	s=k20260515; t=1785512986;
+	bh=3/DpHdM38dowTxEFz+n4yQ6oULtLoAadW1bjECJwhHo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=eWBZ0VE2lAi+wW6JBatqYH8kzhKUv9U1sUjvbJlP38VQ2TshBS8dfYfw6ZXB5ASPi
-	 aWyeKcSIcOlZtINcgg1a3Ye0TNoZshj+faLeAFX4jxMDEcv7uxMB87+G2SBLAgXDzE
-	 WLLlHQcAzTxyYgNNBXIWoTQGLJbELV4xmsUbDq00RKyvogmgOJBN36bXwJ35RZf+8s
-	 +2WrODpR11t5q9sp8pHRzhTH7/yAF9HcaTH0/YPAqCP3sAa+TNzzRyLl3jKE6/nqqr
-	 Em5U4rK2nnqM3M4Vv0S9m8H7Rpba39Z/lHMEBdYVbi4GUSV2mJBQWKOPj5AnB7wzwQ
-	 RlvHRobYfHIOw==
-Message-ID: <9a65ac39-48fb-4398-8527-8ab6eca1c794@kernel.org>
-Date: Fri, 31 Jul 2026 17:13:05 +0200
+	b=ehuCSEsmAee34/qF8g0uZEpOsSFPacb+ACMbQNNs3fG3Z+qsnVv8/wamhdx/2lyea
+	 BlV5CHXW2+aazJ8tVKpEnE+sVQlpVUaVNWRso4YzK1Ij5YmSU6xni1nJAu39W/II8g
+	 JPHbHnGonkR25tjY3z/191IMnPTlZGW1S5QoRpfr9vYz0vi7rfXaHUQ+ztonEIseTM
+	 iCjag7WqWIhGcliAVLiAE7fFDmsWlPJP42bCe2kgpmXwj7B+LC0A28i5zKOfrHaGRv
+	 5rG3Dur5q6p+akweadp6jSxD4O3CHdCK+wzKsfNVf9epf3rImQoBCEoypnZBcHQMUa
+	 HKEbKOccGy2Dw==
+Message-ID: <a303c170-7290-406b-ad63-69af313877ad@kernel.org>
+Date: Fri, 31 Jul 2026 17:49:42 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3] selftests: mptcp: diag: fix stack buffer
- overflow in get_subflow_info()
+Subject: Re: [PATCH mptcp-next 0/2] mptcp: pm: net-next port of the
+ alloc-during-teardown leak fix
 Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>, Jiangshan Yi <yijiangshan@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-References: <f66bcc626255440b7fc7ef8c2a9b9dde0675f30e.camel@kernel.org>
- <20260702062909.4147641-1-yijiangshan@kylinos.cn>
- <9155c24a8743c2648ced51f304bc72a9c96036d8.camel@kernel.org>
+To: Shardul Bankar <shardul.b@mpiricsoftware.com>, mptcp@lists.linux.dev
+Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ pabeni@redhat.com, kalpan.jani@mpiricsoftware.com, janak@mpiric.us,
+ shardulsb08@gmail.com
+References: <20260620084424.3072634-1-shardul.b@mpiricsoftware.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,71 +88,58 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <9155c24a8743c2648ced51f304bc72a9c96036d8.camel@kernel.org>
+In-Reply-To: <20260620084424.3072634-1-shardul.b@mpiricsoftware.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Jiangshan, Geliang,
+Hi Shardul,
 
-On 03/07/2026 03:09, Geliang Tang wrote:
-> Hi Jiangshan,
+On 20/06/2026 10:44, Shardul Bankar wrote:
+> This is the net-next counterpart of the net fix "mptcp: pm: fix memory
+> leak from alloc-during-teardown race" (v3):
+> https://lore.kernel.org/all/20260611003613.3184956-1-shardul.b@mpiricsoftware.com/
 > 
-> On Thu, 2026-07-02 at 14:29 +0800, Jiangshan Yi wrote:
->> get_subflow_info() parses the subflow address string with:
->>
->> 	char saddr[64], daddr[64];
->>
->> 	ret = sscanf(subflow_addrs, "%[^:]:%d %[^:]:%d",
->> 		     saddr, &sport, daddr, &dport);
->>
->> The subflow_addrs buffer holds up to 1024 bytes and is taken directly
->> from the command line ("-c" argument). The "%[^:]" conversions have
->> no
->> maximum field width, so if the address substring before the ':'
->> exceeds
->> 63 bytes, sscanf() writes past the end of the 64-byte saddr/daddr
->> stack
->> buffers. This overflows the stack, corrupting adjacent stack data
->> such
->> as the saved return address, and can crash the tool or lead to
->> out-of-bounds writes controlled by user-supplied input.
->>
->> Bound both string conversions to the destination buffer size by
->> adding
->> an explicit maximum field width of 63 (leaving room for the
->> terminating
->> NUL), so at most 63 bytes are written into each 64-byte buffer:
->>
->> 	ret = sscanf(subflow_addrs, "%63[^:]:%d %63[^:]:%d",
->> 		     saddr, &sport, daddr, &dport);
->>
->> Reviewed-by: Geliang Tang <geliang@kernel.org>
->> Signed-off-by: Jiangshan Yi <yijiangshan@kylinos.cn>
->> ---
->> v3:
->>  - drop the Fixes tag: this is a cleanup/hardening, not a fix
->> (Geliang)
->>  - drop the Suggested-by tag, keep Geliang's Reviewed-by (Geliang)
+> v3 remains the canonical fix for net; it applies as-is on export-net. It
+> does not apply on export, because the userspace local address list free
+> moved into the userspace path manager .release callback in "mptcp: pm:
+> init and release mptcp_pm_ops". This series ports the fix to net-next:
 > 
-> Actually, there's no need to send this v3, since it doesn't introduce
-> any code changes compared to v2; we could simply reply and continue the
-> discussion on the v2 thread.
-Thank you for the patch and the review!
+>   1/2 squashes the unconditional free into that refactor commit (covering
+>       the disconnect/reuse path).
+>   2/2 is the MPTCP_PM_DESTROYING fence (the alloc-during-teardown race),
+>       rebased onto the renamed mptcp_pm_announced_alloc() /
+>       mptcp_pm_destroy().
+> 
+> The net fix was validated with an MPTCP protocol-flow harness (BRF) over
+> multi-hour runs with zero kmemleak reports (reported on the v3 thread).
+> This port is structurally equivalent and is sent so the CI can exercise
+> it on net-next.
+Thank you for the v3, the reply to Sashiko's comment, and sorry for the
+delay.
 
-When sending a new version, please start a new thread, do not reply to
-an existing one:
+Note that I applied the patch from the v2 on top of net, and used the
+message that was on the v3. I also reduced the comments in the code.
 
- https://docs.kernel.org/process/maintainer-netdev.html#resending-after-review
+I got a bunch of conflicts, but that was expected.
 
-New patches for t/upstream:
-- 46e0ae412a9c: selftests: mptcp: diag: fix stack buffer overflow in
-get_subflow_info()
-- Results: e486d89a0699..588708fb07a7 (export)
+Now in our tree:
+
+New patches for t/upstream-net and t/upstream:
+- 2b2f15275853: mptcp: pm: fix memory leak from alloc-during-teardown race
+- f53bd07233a6: conflict in t/mptcp-pm-init-and-release-mptcp_pm_ops
+- 919a44ee381d: "squashed" (with conflicts) in "mptcp: pm: init and
+release mptcp_pm_ops"
+- c7d92e52241a: conflict in t/mptcp-pm-add-get_local_id-interface
+- 58c196b64826: conflict in t/mptcp-pm-add-get_priority-interface
+- Results: 8fa2ab05d71f..a811f9685bfd (export-net)
+- Results: 588708fb07a7..4cc6862c4795 (export)
 
 Tests are now in progress:
 
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/a1feb73d0d2bb6aa9873ac55926f920e6d1209ba/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/59dd662fd0777835b9f742de6298ba0953675008/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/ca43dbbb8a8abda8ead4866bfd62b06bdf1c7d08/checks
 
 Cheers,
 Matt
