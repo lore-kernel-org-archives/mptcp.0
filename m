@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774C439FCD8
-	for <mptcp@lists.linux.dev>; Fri, 31 Jul 2026 10:18:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D456C419FCB
+	for <mptcp@lists.linux.dev>; Fri, 31 Jul 2026 10:18:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785493143; cv=none; b=GC7T22u1irRwWMdUmrvKNdhI7Exi+5JlZ7Z7Q/M1xuR3XHbvEe4pqfro0mwv8OUtZz56DAZh8lYPE9Q3Za0BrGU/ooQ7kvuI4JkZJdZK/4iGTS4Rfu1dAVOuC9IFK9La/A7dWT9+prqD2OWhy5ZS7TOyYdo7yrfq2MScSXzdppY=
+	t=1785493145; cv=none; b=KtzD9pqF+1rUhGCfmuAvjVuGzd+AJwzNOdQtMC0lxERq03yqzm1HF30euyinQDfn2wAboJ1KogdEefNPTlNIQBSY9yEWup2WeE7QjaEzWJylqiDhNzjv4+Yir9XIfSOMXK0hGRxPD6mXs4x4Ruvq35IVlLDtK+XVg1dufrFAyhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785493143; c=relaxed/simple;
-	bh=Hp9/m6o3vT3e8QyeZJyRzCkNZ4e7XsR4I1ZF0OEB4y8=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JNaxpp+8ClayaN4I5sIXsoR6TpCitWlO6EQtv4QraWpqW/hGsiCOO+Dkq1jBdOvrIuU3nHOXWFphZNyYMqoYhIoAa0sksYwm5nALI3e3UWPKlPbsZtABySWForg9PyhxPk6Bcxy6YJRa0t7rl7w/Q/auhE9sikwHpj8vwm6Y4b4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YKB0eqrJ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785493145; c=relaxed/simple;
+	bh=0HQczlsRk6ulA4HUX8jH281qPMQIphdNwhcxuUcMCTA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=K6yTt6POfMBtSJRCNp0jcoxJZDbrCuT77G6TBOodxin9ktI4cpF0FuFpT0LWozP+oZlLwS/uQx1VUcgH5LXxhgWpZZBVE+NF+yR5yYRg0h+oGBQ88mdXFi8De/sldFj8ST16iGI+I7NhzCdLgxQl2GvWF/TPVZ/WkJyGFA9VoSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E6eNcEBk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YKB0eqrJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BEDC1F00A3E;
-	Fri, 31 Jul 2026 10:18:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E6eNcEBk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E45CC1F00AC4;
+	Fri, 31 Jul 2026 10:18:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785493130;
-	bh=pNezEncCCAaL6mlsgE31fVSlLlBbCEa6QKEGdlUJglE=;
-	h=From:Subject:Date:To:Cc;
-	b=YKB0eqrJipY4GUTuaq8sqA4lKXZ1rJ2UbK3rGGaVMC4De3pZLgcpGEmfFuBIFNFZk
-	 WuNMQbBPHlOO+8xaERdHPOxM/M9nVPacRJsEcjY+XAGxF62uWqvo2TUCxrPegyrveD
-	 5oAuY6qWcTXs8i9TeWVQ3oDb7V3f7sE2+Xgvop2zGbpqs/aPBTRN3/5g0r5x0UUm+t
-	 EJZ9BtdzzjQD2FV40ByeupHlEFk4puphbwzvPeQyxhXeBvVVeHNlYnmMGVcwMw2nwc
-	 byWVPX18j0RX8p+Ysh49+dox35QbEHtXRXdtdnunoYdYvVdfLSu7FurVaOaqg+X1/q
-	 keAUIPhz7vMIA==
+	s=k20260515; t=1785493131;
+	bh=Lv4+0o2m5LkSth64dac8eYjlXTC7rag4sWRl9eif6CM=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=E6eNcEBkPCzRkYKeZi3h29oX3Rxcv5AmZLfEs19POtyGzxOm1VoO75U/Pv4Wh3FH3
+	 pJm8ihRFh1OjxX7JnklzIltrluc2GcIFfw6HNNfxrXHnPQYlVCfhPNrp6q55LkK68K
+	 lWhgtJnXj35lXBsxdSSV9p5QSLdoiqljPnPHUZkHQzdSM6g2rWzE+t60GnbJbB5PA6
+	 pN4kGxmjrLgjGASg0fOV2UsO8iKRwH3Mg4EMFszpra1oEH0v8oMA2E+QaGcOeXAU/f
+	 hTXFi246ftx7GUioTGiU6Ia+MEqVV7kS/8L7CvyVQazPUiR5hO/au4AcIsMHuo2P1Y
+	 S4n8mvAxFbXEg==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH mptcp-next v2 0/2] Squash to "mptcp: out-of-order queue
- pruning"
-Date: Fri, 31 Jul 2026 12:18:42 +0200
-Message-Id: <20260731-mptcp-squash-ooo-pruning-v2-0-499a523bbce3@kernel.org>
+Date: Fri, 31 Jul 2026 12:18:43 +0200
+Subject: [PATCH mptcp-next v2 1/2] Squash to "mptcp: explicitly drop over
+ memory limits"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,89 +38,77 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/3WOzQ6CMBCEX4Xs2TVtoWg8+R6GQy0L1J+2toVgC
- O8uoFePk5lvZiaIFAxFOGUTBBpMNM4uQuwy0J2yLaGpFw2CiZIdcoZPn7TH+OpV7NA5hz701tg
- WZV6X5bEutFAKFtwHasy4VV/gS1kaE1RfL/bXG+m0dq/pzsTkwnv7MfCN+U3y/5MDR4ZKNpJzS
- ZxEcb5TsPTYu9BCNc/zB4fQ8B7fAAAA
-X-Change-ID: 20260730-mptcp-squash-ooo-pruning-53d668d4c2aa
+Message-Id: <20260731-mptcp-squash-ooo-pruning-v2-1-499a523bbce3@kernel.org>
+References: <20260731-mptcp-squash-ooo-pruning-v2-0-499a523bbce3@kernel.org>
+In-Reply-To: <20260731-mptcp-squash-ooo-pruning-v2-0-499a523bbce3@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2606; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=Hp9/m6o3vT3e8QyeZJyRzCkNZ4e7XsR4I1ZF0OEB4y8=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJyyto5w3w6XqgZc96475oXHLLkfKjC5z8b5TYcusa0+
- OHas1W/O0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACbyp4GR4Z7yelOWY2cPlrfZ
- mAZqThTQ2WrmKM/K9lboifn+i4cC3Bn+R3qfPZ/1y/a9A+OPew4NU/7bTZ+223rTlV2GjOZKh3h
- 0+QE=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2278; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=0HQczlsRk6ulA4HUX8jH281qPMQIphdNwhcxuUcMCTA=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJyyjrOnJbIk/lksaH21/vABMlL2jrr92yaPfO6jc3KJ
+ d9sc96Id5SyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAExkLh8jw2apvIPGjzep37z0
+ 4pa/1CLHBefuhL5+kbZhqbeZge7WeycYGb7Vnin2aW9fE3pXSt1/ucHskwuPaPbpz88o4J9336l
+ NkQ8A
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Addressing comments reported by Clashiko [1], but not detected before
-with the AI review tools using a different model version.
+Address comments from Clashiko [1]:
 
-Note: the last comment from the 3rd patch has not been addressed, as it
-is not clear to me whether this comment is valid:
+- mib: typo: "constrains" -> "constraints".
 
----------------------------------- 8< ----------------------------------
+- mptcp_over_limit: precise it is not only 0-win, but retrans, dup or
+  old acks.
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 72b1fa3ca71c..5f7d8340a3d9 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
+- mptcp_over_limit: bump LINUX_MIB_TCPRCVQDROP, as previously discussed
+  in [2].
 
-[ ... ]
-
-> @@ -682,6 +693,16 @@ static void __mptcp_add_backlog(struct sock *sk,
->  		return;
->  	}
->
-> +	/* Similar additional allowance as plain TCP. */
-> +	limit = READ_ONCE(sk->sk_rcvbuf);
-> +	limit += (limit >> 1) + 64 * 1024;
-> +	limit = min_t(u64, limit, UINT_MAX);
-> +	if (msk->backlog_len > limit && !__mptcp_check_fallback(msk)) {
-> +		__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_BACKLOGDROP);
-> +		kfree_skb_reason(skb, SKB_DROP_REASON_SOCKET_BACKLOG);
-> +		return;
-> +	}
-> +
-
-[Low]
-The check compares the current backlog_len against limit before the
-incoming skb's truesize is added (the truesize is folded in at the
-account: label further down). Was that intentional?
-TCP's sk_add_backlog() analog compares queue_size + skb->truesize
-against the limit, so a single skb can push msk->backlog_len past
-limit here and the drop only fires on the next admission. The overshoot
-is bounded by one skb's truesize and the commit message already notes
-"This is not a complete fix for the stall issue, as the drop strategy
-needs refinements that will come in the next patches.", so perhaps this
-is one of the follow-up items?
-
----------------------------------- 8< ----------------------------------
-
-Link: https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20260724-net-next-mptcp-oooq-pruning-v1-0-5dd4dec63a54%40kernel.org
+Link: https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20260724-net-next-mptcp-oooq-pruning-v1-0-5dd4dec63a54%40kernel.org?part=3 [1]
+Link: https://lore.kernel.org/b5244dd4-205d-4abd-8ea5-fd879a97038f@redhat.com
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Changes in v2:
-- patch 1: s/MPTCP_INC_STATS/NET_INC_STATS/
-- Link to v1: https://patch.msgid.link/20260731-mptcp-squash-ooo-pruning-v1-0-a5f5115e1e24@kernel.org
+ net/mptcp/mib.h     | 2 +-
+ net/mptcp/options.c | 6 +++++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
----
-Matthieu Baerts (NGI0) (2):
-      Squash to "mptcp: explicitly drop over memory limits"
-      Squash to "mptcp: implemented OoO queue pruning"
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index 18f35f7e0a2d..25f360724c57 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -89,7 +89,7 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_FALLBACKFAILED,	/* Can't fallback due to msk status */
+ 	MPTCP_MIB_WINPROBE,		/* MPTCP-level zero window probe */
+ 	MPTCP_MIB_BACKLOGDROP,		/* Backlog over memory limit */
+-	MPTCP_MIB_RCVPRUNED,		/* Dropped due to memory constrains */
++	MPTCP_MIB_RCVPRUNED,		/* Dropped due to memory constraints */
+ 	MPTCP_MIB_OFO_PRUNED,		/* MPTCP-level OoO queue pruned */
+ 	__MPTCP_MIB_MAX
+ };
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index d6b009319839..7c0bce3780c5 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -1193,7 +1193,7 @@ static bool mptcp_over_limit(struct sock *sk, struct sock *ssk,
+ 	if (likely(mem <= READ_ONCE(sk->sk_rcvbuf)))
+ 		return false;
+ 
+-	/* Avoid silently dropping pure acks, fin or zero win probes. */
++	/* Avoid silently dropping pure acks, fin or already-acked segments. */
+ 	if (TCP_SKB_CB(skb)->seq == TCP_SKB_CB(skb)->end_seq ||
+ 	    TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN ||
+ 	    !after(TCP_SKB_CB(skb)->end_seq, tcp_sk(ssk)->rcv_nxt))
+@@ -1202,6 +1202,10 @@ static bool mptcp_over_limit(struct sock *sk, struct sock *ssk,
+ 	/* Dropped due to memory constraints, schedule an ack. */
+ 	inet_csk(ssk)->icsk_ack.pending |= ICSK_ACK_NOMEM | ICSK_ACK_NOW;
+ 	inet_csk_schedule_ack(ssk);
++
++	/* In fallback mode: skb is dropped before the TCP recv queue. */
++	NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPRCVQDROP);
++
+ 	return true;
+ }
+ 
 
- net/mptcp/mib.c      | 2 +-
- net/mptcp/mib.h      | 4 ++--
- net/mptcp/options.c  | 6 +++++-
- net/mptcp/protocol.c | 2 +-
- 4 files changed, 9 insertions(+), 5 deletions(-)
----
-base-commit: 23c7cb4262d954b810468b0e661d48af82b418d5
-change-id: 20260730-mptcp-squash-ooo-pruning-53d668d4c2aa
-
-Best regards,
---  
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+-- 
+2.53.0
 
