@@ -1,116 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433DF369D54;
-	Fri, 31 Jul 2026 18:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD9825392C
+	for <mptcp@lists.linux.dev>; Sat,  1 Aug 2026 00:06:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785522169; cv=none; b=NQDXU9hgPFBJYVM0ewEog1W5wK/IdOOLtklTsM5tOLGvxByjzUTJM7+yHP5bUlsDpQTWNMY51sbOVN7CSVyuzBIRHS9ataDm0EFl82203i3Mqa6gMin16XjG6rBdvMWdRZc/C2yFf1ZFctV2xT4Nd4yj7ore9K5S/Ml4IQPe/g0=
+	t=1785542784; cv=none; b=W84nseNXb+jF8M9U7pk/VPULQonlFSJ+1imwRSBCh2V6C9Ir1l/Y2xe9FId5eYEV32XvDp61kmEPBB2f3+RnnAlGFV4dVVub6JKCzpoW5C8h7UdRGhyyqsndAXCeHgSrmVT7X1749SE3jyDf969HR4O1ivHTTsXv9yNcH+Nel04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785522169; c=relaxed/simple;
-	bh=l0UYV6v99l4kayaDyVsaa3EEMIjdVs53AKYspVyykdQ=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=qpCUF7S7vrBdREqyxL2iLnMcY0JOO7Y2aSYgGLguAVqeHSay0gYFMMm6RgTb/OMRcNWp2HJ+B0+57R7d7EEcfnNqgnPYGo6q5SgBJdqu/Hs0NkjcPUVtsE3hba18WqVULIV1jNAuA8uD0hgtLNNRtl6c1qWCH2J/G3mdTHlk3M8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RUp1QjnA; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1785542784; c=relaxed/simple;
+	bh=NoQpXfv3c7THUi9ONzieOiUoB9yTh5eau8STOwWOxG0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ZF1bflNFBA00rN/+8I4cktP+p/rRyK+5p936njASZrv7y8yLJnoOPRjgWT+RNDpbNuilNf0NLv8yRn3WgIcbzhcnKa+sarysGDBaxCSC7QecUbniIjwGIfL97Zeou5kN2TRKbBuZoTMgr8ZvnCIkzUPh4uZE46EVni552/oeP84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QtG9+e7a; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RUp1QjnA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785522167; x=1817058167;
-  h=date:from:to:cc:subject:message-id;
-  bh=l0UYV6v99l4kayaDyVsaa3EEMIjdVs53AKYspVyykdQ=;
-  b=RUp1QjnAjuRFhzI/uo9sHKXn8/V86IdApUEUhQMwru9cnm82SbyLoX+y
-   hCy3NN6zQ03Uw+fABrJZijTN6Ai98WxqmvQSJs/BkQMMx5XaIkDkOCmWC
-   66ajM7ORZwfBFRObXEDGwTv2CmncatPqsse5L/sWPr6jjsjMBhpqnaAh9
-   HwThhAY5kIQ2b0qM7VxWYNKNrnIw/4fdpx9w/GpFmDwUTR4I3bLo1dGOd
-   GEMoZq1JGinNsnQLXCuH3dshCjbXvavGk5gx1D0bTO6DjYNVlG+OUJ77Y
-   SAsTexmtn4PZ+7sVMjU31Yuo4oseDRmZz9bpxvoqaCMzvzobXu/D4wL/l
-   w==;
-X-CSE-ConnectionGUID: 9sEERp8FRA2yxifUoRotGQ==
-X-CSE-MsgGUID: S8x5hYUNSfWbf+0rGT8YMw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11861"; a="97526556"
-X-IronPort-AV: E=Sophos;i="6.25,196,1779174000"; 
-   d="scan'208";a="97526556"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2026 11:22:46 -0700
-X-CSE-ConnectionGUID: aRT1qm6iT5uwlu1gED8IRA==
-X-CSE-MsgGUID: 1ruQRTDaSY2hpAdqC0WJ5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,196,1779174000"; 
-   d="scan'208";a="261256406"
-Received: from igk-lkp-server01.igk.intel.com (HELO 3cba2a188a06) ([10.211.93.152])
-  by orviesa009.jf.intel.com with ESMTP; 31 Jul 2026 11:22:45 -0700
-Received: from kbuild by 3cba2a188a06 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wprsY-000000003FC-2g1K;
-	Fri, 31 Jul 2026 18:22:42 +0000
-Date: Fri, 31 Jul 2026 20:22:06 +0200
-From: kernel test robot <lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QtG9+e7a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88EFC1F00AC4;
+	Sat,  1 Aug 2026 00:06:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785542775;
+	bh=RU0PMssrt6SrKilsfcufB6p3t0gyUga6mHrMxYCDXDw=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References;
+	b=QtG9+e7aUAbqfMqiMJFJBwVLwaS/cBGul/P/Gdzl+VUW8DVmEyiA9siKIHBru0Ro6
+	 yu9iBJzNNeV0Qxit0Q3k9PGpOujiZZFZeI7l/sP3Bug/O5VDOtxNcQjAfAU3UKdee8
+	 7CkDjMHSWQVWGDQsGahOE/zfEFqF2JSFHkbkAWmrpd+qeFFkpnE2N0OkSbO7VbbBhj
+	 JRBmP3NiSvvrII3bplSWY823scHHh5m5UwmNjDzlSlBQm2er7qg8NcOgi0Jvnx2kb6
+	 kmGCgfObVamJ1kTmtLRP8Mtf3gOrlmVabamzQgz40Obd+BHf65avgzE+7tz0scHxEO
+	 SwlefgwJIDLTw==
+Date: Fri, 31 Jul 2026 17:06:14 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, mptcp@lists.linux.dev,
- matthieu.baerts@tessares.net, 0day robot <lkp@intel.com>
-Subject: net/mptcp/options.c:1207:39: warning: implicit conversion
- from 'enum <anonymous>' to 'enum linux_mptcp_mib_field'
-Message-ID: <202607312002.iM0J3v4Q-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+cc: MPTCP Linux <mptcp@lists.linux.dev>
+Subject: Re: [PATCH mptcp-net 0/6] mptcp: pm: userspace: properly deal with
+ the ID0 case
+In-Reply-To: <20260727-mptcp-pm-userspace-id0-case-v1-0-9877f02a9bae@kernel.org>
+Message-ID: <317887c0-8298-3b5a-5cb1-70beaf968a04@kernel.org>
+References: <20260727-mptcp-pm-userspace-id0-case-v1-0-9877f02a9bae@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-tree:   https://github.com/intel-lab-lkp/linux/commits/Matthieu-Baerts-NGI0/Squash-to-mptcp-explicitly-drop-over-memory-limits/20260731-182110
-head:   85f8043c37254556a09478e4f26c2012a1c92fc6
-commit: 79d68403b0c660279617aeb43ee4265c72640fd3 Squash to "mptcp: explicitly drop over memory limits"
-date:   8 hours ago
-config: s390-allnoconfig-bpf (https://download.01.org/0day-ci/archive/20260731/202607312002.iM0J3v4Q-lkp@intel.com/config)
-compiler: s390x-linux-gnu-gcc (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260731/202607312002.iM0J3v4Q-lkp@intel.com/reproduce)
+On Mon, 27 Jul 2026, Matthieu Baerts (NGI0) wrote:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202607312002.iM0J3v4Q-lkp@intel.com/
+> In MPTCP, the local address and port used by the initial subflow has the
+> ID "0". It means that when this address and port are used for some
+> operations -- e.g. creating a new subflow -- they should be linked to
+> the ID0, and no other addresses and ports can get this special ID while
+> the initial IP address and port is used.
+>
+> Instead of dealing with the ID0 case as an exception, add it to the
+> local addr list, and deal with it like the others, with minor
+> exceptions. That way, it seems easier to maintain instead of adding new
+> exceptions at a few places, at the cost of a few more bytes, which seems
+> OK in this mode.
+>
+> The first patch modifies add the initial address to the list, and the
+> others remove exceptions, and validate that in the selftests.
+>
 
-All warnings (new ones prefixed by >>):
+The approach looks ok to me. Have you tested with mptcpd?
 
-   net/mptcp/options.c: In function 'mptcp_over_limit':
->> net/mptcp/options.c:1207:39: warning: implicit conversion from 'enum <anonymous>' to 'enum linux_mptcp_mib_field' [-Wenum-conversion]
-    1207 |         MPTCP_INC_STATS(sock_net(sk), LINUX_MIB_TCPRCVQDROP);
-         |                                       ^~~~~~~~~~~~~~~~~~~~~
+- Mat
 
 
-vim +1207 net/mptcp/options.c
-
-  1185	
-  1186	static bool mptcp_over_limit(struct sock *sk, struct sock *ssk,
-  1187				     const struct sk_buff *skb)
-  1188	{
-  1189		struct mptcp_sock *msk = mptcp_sk(sk);
-  1190		u64 mem = sk_rmem_alloc_get(sk);
-  1191	
-  1192		mem += READ_ONCE(msk->backlog_len);
-  1193		if (likely(mem <= READ_ONCE(sk->sk_rcvbuf)))
-  1194			return false;
-  1195	
-  1196		/* Avoid silently dropping pure acks, fin or already-acked segments. */
-  1197		if (TCP_SKB_CB(skb)->seq == TCP_SKB_CB(skb)->end_seq ||
-  1198		    TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN ||
-  1199		    !after(TCP_SKB_CB(skb)->end_seq, tcp_sk(ssk)->rcv_nxt))
-  1200			return false;
-  1201	
-  1202		/* Dropped due to memory constraints, schedule an ack. */
-  1203		inet_csk(ssk)->icsk_ack.pending |= ICSK_ACK_NOMEM | ICSK_ACK_NOW;
-  1204		inet_csk_schedule_ack(ssk);
-  1205	
-  1206		/* In fallback mode: skb is dropped before the TCP recv queue. */
-> 1207		MPTCP_INC_STATS(sock_net(sk), LINUX_MIB_TCPRCVQDROP);
-  1208	
-  1209		return true;
-  1210	}
-  1211	
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> Matthieu Baerts (NGI0) (6):
+>      mptcp: pm: userspace: properly handle the ID0 case
+>      mptcp: pm: userspace: allow announcing ID0 addr
+>      mptcp: pm: userspace: no ID0 exception for RM_ADDR
+>      mptcp: pm: userspace: don't dump initial ID0
+>      selftests: mptcp: join: new ID0 subflow from the right IP
+>      mptcp: pm: restrict in-kernel worker actions to this PM
+>
+> net/mptcp/pm.c                                  |  8 ++-
+> net/mptcp/pm_userspace.c                        | 69 +++++++++----------------
+> net/mptcp/protocol.h                            |  1 +
+> tools/testing/selftests/net/mptcp/mptcp_join.sh |  7 +--
+> 4 files changed, 37 insertions(+), 48 deletions(-)
+> ---
+> base-commit: ddf9f880a057486230f16d6a4a8cab7e41c40da1
+> change-id: 20260724-mptcp-pm-userspace-id0-case-f074f64466c8
+>
+> Best regards,
+> --
+> Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>
+>
+>
