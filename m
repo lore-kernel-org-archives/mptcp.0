@@ -1,93 +1,154 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD9825392C
-	for <mptcp@lists.linux.dev>; Sat,  1 Aug 2026 00:06:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 951C978C9C
+	for <mptcp@lists.linux.dev>; Sun,  2 Aug 2026 17:46:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785542784; cv=none; b=W84nseNXb+jF8M9U7pk/VPULQonlFSJ+1imwRSBCh2V6C9Ir1l/Y2xe9FId5eYEV32XvDp61kmEPBB2f3+RnnAlGFV4dVVub6JKCzpoW5C8h7UdRGhyyqsndAXCeHgSrmVT7X1749SE3jyDf969HR4O1ivHTTsXv9yNcH+Nel04=
+	t=1785692783; cv=none; b=NvjEmq5etqGATlHBDhlExdzZrOyTB3wrRps3rlM6f2zCRzHI7FF+5KViPdxDV/FIXFtZ0Ni5q8fl6A3OuHF7aq1x8ScunW/uWFjiFZwwwsNL/HCN+mk+072MGoGrqsx8KAmeLAr0mEMv7Btp7Z5xlrndFOs+gRBDk4l8900r/N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785542784; c=relaxed/simple;
-	bh=NoQpXfv3c7THUi9ONzieOiUoB9yTh5eau8STOwWOxG0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ZF1bflNFBA00rN/+8I4cktP+p/rRyK+5p936njASZrv7y8yLJnoOPRjgWT+RNDpbNuilNf0NLv8yRn3WgIcbzhcnKa+sarysGDBaxCSC7QecUbniIjwGIfL97Zeou5kN2TRKbBuZoTMgr8ZvnCIkzUPh4uZE46EVni552/oeP84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QtG9+e7a; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785692783; c=relaxed/simple;
+	bh=6naE2L7vx9nK5QsOToCWVNUzelTHr6rEUscyHYz0zM4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=fFt8+6CuqMoSM/NC3U0ayP71rgLhxBEOVa1nMMnhdsoK5MnZu21ACB6vvgg2NUhIaMHusnwKh+nPGDYnlfk91Bu9dKuifrx79ay1GDwAxFpzSfLvXGTmDuUjUcz2zVDXW195GKdK8cPuYM1iLcpKAjW9COp+PWDhuPhh+qi9yTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HlY2jTJR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QtG9+e7a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88EFC1F00AC4;
-	Sat,  1 Aug 2026 00:06:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HlY2jTJR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD3941F000E9;
+	Sun,  2 Aug 2026 17:46:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785542775;
-	bh=RU0PMssrt6SrKilsfcufB6p3t0gyUga6mHrMxYCDXDw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References;
-	b=QtG9+e7aUAbqfMqiMJFJBwVLwaS/cBGul/P/Gdzl+VUW8DVmEyiA9siKIHBru0Ro6
-	 yu9iBJzNNeV0Qxit0Q3k9PGpOujiZZFZeI7l/sP3Bug/O5VDOtxNcQjAfAU3UKdee8
-	 7CkDjMHSWQVWGDQsGahOE/zfEFqF2JSFHkbkAWmrpd+qeFFkpnE2N0OkSbO7VbbBhj
-	 JRBmP3NiSvvrII3bplSWY823scHHh5m5UwmNjDzlSlBQm2er7qg8NcOgi0Jvnx2kb6
-	 kmGCgfObVamJ1kTmtLRP8Mtf3gOrlmVabamzQgz40Obd+BHf65avgzE+7tz0scHxEO
-	 SwlefgwJIDLTw==
-Date: Fri, 31 Jul 2026 17:06:14 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-cc: MPTCP Linux <mptcp@lists.linux.dev>
-Subject: Re: [PATCH mptcp-net 0/6] mptcp: pm: userspace: properly deal with
- the ID0 case
-In-Reply-To: <20260727-mptcp-pm-userspace-id0-case-v1-0-9877f02a9bae@kernel.org>
-Message-ID: <317887c0-8298-3b5a-5cb1-70beaf968a04@kernel.org>
-References: <20260727-mptcp-pm-userspace-id0-case-v1-0-9877f02a9bae@kernel.org>
+	s=k20260515; t=1785692782;
+	bh=/uqJ9haYjJjrNa2p7dmF/x4zzh0qEEHizEqZvh74I1E=;
+	h=From:Date:Subject:To:Cc;
+	b=HlY2jTJRFhKrOq4a5/Q8gxAUAchTmPNPYqPfz45cgvuKI+SE5a6gKCeVjaZmiLk0T
+	 mlTdMttK6w0AnH98rt9xmpP7seXe5HacTI83jBWMkfPjCmkMdpE5kJn0HJqY06CZph
+	 tVfdBoENihK3J86HsUmFYtCIV+SqqCxnvQlyo87V1/9YQJ+MP7bAN06mUnF4XXqPPp
+	 W+lxxHpkVTFzgYpkvBZDebAn+CpDz94rlvlyZYpkJBg8dN0EPStnUtg1H/I7+45IKc
+	 P8Vh1kvjiv/rs10NFvpijiwcFp2WS8GOPo6KYRUUes0Lv1Q1m9WTIOcz+2I/4g3Ode
+	 SxrlquB3jQ9nA==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Sun, 02 Aug 2026 19:46:16 +0200
+Subject: [PATCH mptcp-next] Squash to "selftests: mptcp: cover IP_RECVERR
+ sockopt propagation"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260802-mptcp-squash-sft-recverr-v1-1-df5f5e366e7a@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWM0Q6CMAwAf4X02SZliBp/xfiAo5OaOGc7CAnh3
+ 53weLncLWCswgbXagHlSUw+sUB9qMAPXXwySl8YHLkTXcjhO2Wf0L5jZwNayKjsJ1bFlqnpQ31
+ uiI5Q8qQcZN7WN9iryHOG++5sfLzY5/8b1vUHBzmqgogAAAA=
+X-Change-ID: 20260802-mptcp-squash-sft-recverr-5e03df173004
+To: MPTCP Linux <mptcp@lists.linux.dev>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ David Carlier <devnexen@gmail.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3249; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=6naE2L7vx9nK5QsOToCWVNUzelTHr6rEUscyHYz0zM4=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLym3JVH8qdM5R1UTRsaz2mv0pr2QHnO+n7Z+h/DF2d5
+ upY6FzYUcrCIMbFICumyCLdFpk/83kVb4mXnwXMHFYmkCEMXJwCMJEpvowMP7zCL3q9EOy8+3Ph
+ 2oPdDorlWy/qG1d+2rm4adsfN+dLogz/83uEP+auvXxvbj2f7q0LPq3yG4uuGTOUa3rOzwvdWef
+ FCwA=
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On Mon, 27 Jul 2026, Matthieu Baerts (NGI0) wrote:
+The CI validating the latest sefltests on stable kernels reported an
+issue with the MPTCP Sockopt selftest:
 
-> In MPTCP, the local address and port used by the initial subflow has the
-> ID "0". It means that when this address and port are used for some
-> operations -- e.g. creating a new subflow -- they should be linked to
-> the ID0, and no other addresses and ports can get this special ID while
-> the initial IP address and port is used.
->
-> Instead of dealing with the ID0 case as an exception, add it to the
-> local addr list, and deal with it like the others, with minor
-> exceptions. That way, it seems easier to maintain instead of adding new
-> exceptions at a few places, at the cost of a few more bytes, which seems
-> OK in this mode.
->
-> The first patch modifies add the initial address to the list, and the
-> others remove exceptions, and validate that in the selftests.
->
+  04 Mark v6                                           [ OK ]
+  setsockopt recverr on: Operation not supported
+  client exited, status=1
+  05 SOL_MPTCP sockopt v4                              [FAIL]
 
-The approach looks ok to me. Have you tested with mptcpd?
+That's normal, because this feature is not supported by these kernels.
 
-- Mat
+Skip the new test when the feature is not supported by a kernel, but
+keep failing if SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES env var is set
+to 1.
 
+While at it, also set the socket option name in the error message, to
+quicker understand it is linked to the IP(V6)_RECVERR option, and not
+a "receive error" type.
 
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> Matthieu Baerts (NGI0) (6):
->      mptcp: pm: userspace: properly handle the ID0 case
->      mptcp: pm: userspace: allow announcing ID0 addr
->      mptcp: pm: userspace: no ID0 exception for RM_ADDR
->      mptcp: pm: userspace: don't dump initial ID0
->      selftests: mptcp: join: new ID0 subflow from the right IP
->      mptcp: pm: restrict in-kernel worker actions to this PM
->
-> net/mptcp/pm.c                                  |  8 ++-
-> net/mptcp/pm_userspace.c                        | 69 +++++++++----------------
-> net/mptcp/protocol.h                            |  1 +
-> tools/testing/selftests/net/mptcp/mptcp_join.sh |  7 +--
-> 4 files changed, 37 insertions(+), 48 deletions(-)
-> ---
-> base-commit: ddf9f880a057486230f16d6a4a8cab7e41c40da1
-> change-id: 20260724-mptcp-pm-userspace-id0-case-f074f64466c8
->
-> Best regards,
-> --
-> Matthieu Baerts (NGI0) <matttbe@kernel.org>
->
->
->
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Cc: David Carlier <devnexen@gmail.com>
+---
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 28 +++++++++++++++++------
+ 1 file changed, 21 insertions(+), 7 deletions(-)
+
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+index a51828112c43..d68515b7903b 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+@@ -183,6 +183,13 @@ static void xgetaddrinfo(const char *node, const char *service,
+ 	}
+ }
+ 
++static bool expect_all_features(void)
++{
++	char *env = getenv("SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES");
++
++	return env && strcmp(env, "1") == 0;
++}
++
+ static int sock_listen_mptcp(const char * const listenaddr,
+ 			     const char * const port)
+ {
+@@ -797,14 +804,21 @@ static void test_ip_recverr_sockopt(int fd)
+ 	}
+ 
+ 	r = setsockopt(fd, level, optname, &one, sizeof(one));
+-	if (r)
+-		die_perror("setsockopt recverr on");
++	if (r) {
++		/* For older kernels not supporting IP(V6)_RECVERR yet */
++		if (errno == EOPNOTSUPP && !expect_all_features()) {
++			fprintf(stderr, "IP(V6)_RECVERR not supported, SKIP\n");
++			return;
++		}
++
++		die_perror("setsockopt IP(V6)_RECVERR on");
++	}
+ 
+ 	r = getsockopt(fd, level, optname, &val, &s);
+ 	if (r)
+-		die_perror("getsockopt recverr on");
++		die_perror("getsockopt IP(V6)_RECVERR on");
+ 	if (s != sizeof(val) || val != one)
+-		xerror("recverr on mismatch val=%d len=%u", val, s);
++		xerror("IP(V6)_RECVERR on mismatch val=%d len=%u", val, s);
+ 
+ 	r = recvmsg(fd, &msg, MSG_ERRQUEUE | MSG_DONTWAIT);
+ 	if (r != -1 || errno != EAGAIN)
+@@ -813,15 +827,15 @@ static void test_ip_recverr_sockopt(int fd)
+ 
+ 	r = setsockopt(fd, level, optname, &zero, sizeof(zero));
+ 	if (r)
+-		die_perror("setsockopt recverr off");
++		die_perror("setsockopt IP(V6)_RECVERR off");
+ 
+ 	val = -1;
+ 	s = sizeof(val);
+ 	r = getsockopt(fd, level, optname, &val, &s);
+ 	if (r)
+-		die_perror("getsockopt recverr off");
++		die_perror("getsockopt IP(V6)_RECVERR off");
+ 	if (s != sizeof(val) || val != zero)
+-		xerror("recverr off mismatch val=%d len=%u", val, s);
++		xerror("IP(V6)_RECVERR off mismatch val=%d len=%u", val, s);
+ }
+ 
+ static int client(int pipefd)
+
+---
+base-commit: 4cc6862c479597e623e4dab36bf9e82fa4289bcd
+change-id: 20260802-mptcp-squash-sft-recverr-5e03df173004
+
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
