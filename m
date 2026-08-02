@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A8423393C
-	for <mptcp@lists.linux.dev>; Sun,  2 Aug 2026 17:51:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 548A62D7380
+	for <mptcp@lists.linux.dev>; Sun,  2 Aug 2026 17:55:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785693085; cv=none; b=V4Cs9jwMUq6WYlN0z7yPglm5TUG3sj4hITrmViO4I74HYEOJBwcY4SbPvRCuwv7eMTUC8r07eGphN2ePa1N2ubFcdgg8bICLv/n6PDp7fci/q4Zq1ORIX5z1JQJZelBicRPlTGSkP276BQsHkPJ01r6ro+1bzV8VW7fVJzegZRE=
+	t=1785693311; cv=none; b=FLhZO6kvaPgqLg8mGx3gDfqdhZAsbB19dIsWs+A6t0aIB+sxISw0veTZMQ4PtwZW08y9f3bS2I6+kev2CZ7GwtuSurNsIjHMeKrfdl7oGs3gMyMRtfzdmq7fXr22OqGnz6C2MTGMo0Tk1bCsHv6O2kBZXImLtIMoWoJNYFa5MO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785693085; c=relaxed/simple;
-	bh=6mAsA3KLl7o+EYwNN27iFD4QkKKHF9n+7nFvke40vLM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B+KOKhFYJZhdIT6vjQC4DklgrbK4ZkBzaxMTNXllF+PMjg1WM7r0jAtlDkpQVZu1kIricccmQpehTEnnsl1R047vqEEyB9tcZdC1FBlSguLRViSLk08l5DS042Q96HtF1BJbCC3iPsehm3vfXSnBYzxfFHinY0vnYdSmkc10LJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LtiSoiiu; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785693311; c=relaxed/simple;
+	bh=f8+Brq6KUsjECXyfeJ94YP9r9arwVB/IoD59YF5eYko=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=FYDAq8ngLt1fEXxO9q1MGmgRy89ROnh0uxSVvheTCp2j7Fmshk6carWWR+McCC9gD0D94kKMfYcPVofuVLuT/gAdimPz5l5OFAlm+T0UrNeeV94xva5HKh7blUt2CvZqeo6eRcffiJNP9sol2wwGC6BA9ziv9ZLRaPY/PD9b8hs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YouwSggt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LtiSoiiu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BC0C1F000E9;
-	Sun,  2 Aug 2026 17:51:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YouwSggt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACD191F000E9;
+	Sun,  2 Aug 2026 17:55:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785693084;
-	bh=pl3MQpRXv8dnL7tLUpezAW17wkpmfyEdXTfpiqRuACQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=LtiSoiiutqdwyA6gm7cbpkO01youf99NThi6XQ0yFdWEc6V9X3PQ2/x/O0JxLuemj
-	 K3j3FvgBVxgr72OJUue/yAvHU5RCxMlnWt7znTcdS4tjCG1gk/qqg0B/Yg4mLsxFUZ
-	 KvYn8FpHxlbaNuTPwFrLvYm5d5DOlp+15jHls54ziIh4MSBZYQNsJKb0iVcJ4Jpo91
-	 xKN45UOVVdHa5w4MiBM+basNYRV7ygovCv+A0576RdG7qHhuDkgeFiLBmfaX4g3/T9
-	 Y7ie+d+0yV+5gF1arFaJ9zA9Z+HI22rszqBxVti87xlYTJZea6IcNgl9LIHo2Cco1L
-	 ymQfItjfZsqvQ==
-Message-ID: <6bc62a92-766c-4551-8d7e-a6b3fd37f5a9@kernel.org>
-Date: Sun, 2 Aug 2026 19:51:21 +0200
+	s=k20260515; t=1785693310;
+	bh=0zlAzirxxUsNOUUx7YEPXBNImQOmpg13v6u6/L8U/Lw=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To;
+	b=YouwSggtM6NfOfBcY7mQ+spBJukiEquYI6fC/UazZYNnPSS45JmeffUkkNGq3m9hQ
+	 DSHJ7V30+iYFMxZ9ACEC1rfRBrYzdyUoNkvkmOwrepaGZiPIDrwMc5ABWnXYzhsj2X
+	 lCPHvMX8iclOuKvfJG4D6eOqZWhgC+TmbGW0WF62A+7G7eZBqOXEn5ISHHWZs4w9pG
+	 cgLLKrqOTTQgDpsEHgqqPS0xURLwKY88IJsag+KkA76qbPUxTrQy55YjmAG0uXjbdY
+	 0Et3GZrQu/NmwR6K6MVKBmLhfu8KbPeNaXM9hSnddyRYIZzud0EdqyUx22WErRmw2b
+	 MCcexBL8HemLQ==
+Message-ID: <1e048894-2c52-4c9a-86c6-36df60d8ef9e@kernel.org>
+Date: Sun, 2 Aug 2026 19:55:08 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,10 +38,11 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: cover IP_RECVERR
  sockopt propagation"
 Content-Language: fr
+From: Matthieu Baerts <matttbe@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: David Carlier <devnexen@gmail.com>
 References: <20260802-mptcp-squash-sft-recverr-v1-1-df5f5e366e7a@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <6bc62a92-766c-4551-8d7e-a6b3fd37f5a9@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,32 +87,45 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260802-mptcp-squash-sft-recverr-v1-1-df5f5e366e7a@kernel.org>
+In-Reply-To: <6bc62a92-766c-4551-8d7e-a6b3fd37f5a9@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
+On 02/08/2026 19:51, Matthieu Baerts wrote:
+> Hello,
+> 
+> On 02/08/2026 19:46, Matthieu Baerts (NGI0) wrote:
+>> The CI validating the latest sefltests on stable kernels reported an
+>> issue with the MPTCP Sockopt selftest:
+>>
+>>   04 Mark v6                                           [ OK ]
+>>   setsockopt recverr on: Operation not supported
+>>   client exited, status=1
+>>   05 SOL_MPTCP sockopt v4                              [FAIL]
+>>
+>> That's normal, because this feature is not supported by these kernels.
+>>
+>> Skip the new test when the feature is not supported by a kernel, but
+>> keep failing if SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES env var is set
+>> to 1.
+>>
+>> While at it, also set the socket option name in the error message, to
+>> quicker understand it is linked to the IP(V6)_RECVERR option, and not
+>> a "receive error" type.
+> If there is no objection, I suggest applying the patch in our tree, to
+> stop the CI to complain. Extra fixes can be added later.
 
-On 02/08/2026 19:46, Matthieu Baerts (NGI0) wrote:
-> The CI validating the latest sefltests on stable kernels reported an
-> issue with the MPTCP Sockopt selftest:
-> 
->   04 Mark v6                                           [ OK ]
->   setsockopt recverr on: Operation not supported
->   client exited, status=1
->   05 SOL_MPTCP sockopt v4                              [FAIL]
-> 
-> That's normal, because this feature is not supported by these kernels.
-> 
-> Skip the new test when the feature is not supported by a kernel, but
-> keep failing if SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES env var is set
-> to 1.
-> 
-> While at it, also set the socket option name in the error message, to
-> quicker understand it is linked to the IP(V6)_RECVERR option, and not
-> a "receive error" type.
-If there is no objection, I suggest applying the patch in our tree, to
-stop the CI to complain. Extra fixes can be added later.
+Just did:
+
+New patches for t/upstream:
+- 5fede501cf07: "squashed" in "selftests: mptcp: cover IP_RECVERR
+sockopt propagation"
+- Results: 4cc6862c4795..39f1e342c901 (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/ff8e53068f03a934be5192cdcad821833c10136a/checks
 
 Cheers,
 Matt
