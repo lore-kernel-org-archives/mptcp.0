@@ -1,126 +1,145 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321B940DB57
-	for <mptcp@lists.linux.dev>; Mon,  3 Aug 2026 13:42:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38A413D539;
+	Mon,  3 Aug 2026 16:16:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785764577; cv=none; b=PwT4vtgYjFjZhtMejoavT0kxwz3BzP9wNiyCRTVKSOUy9jcvxeapLSzm28+5MEYG9rDkwuv6+KIHvbCQ1/Yt6AV2ZFjuWzlJ3H+hPZTeGypNaHugkEzzUNSUml+WAcs9xHqi/7RQ3ZO/IabCwtXQu8siatD0Y1N8LbE9Q4CS84c=
+	t=1785773818; cv=none; b=aCKea5cqRRdteGMPdCgdWLAZYPSCsb9nUAzDQ1A9rfm5GN4pyWf2kdgXY4MtgIdGGiycAlc8ZSWSOt22QlgqTc5NsFBWlLWXYyQ3mB5yBBuhwDYltXzOH1AhSjXjRIURvRqqWROYoIGu2gmvxnFWapeVc5mY72fCBJBX7SeLK9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785764577; c=relaxed/simple;
-	bh=7hgNn5i2CXZAeHNCzJI18FtpzkKrFl/iGqxowaJ9TbU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bY5VUMb4Nuxkfciyjjb2ICf63YcF+S8hVAZgiJRfMOESVkbGFCT+isk4zH3JcpgCcNrfgfFJ832o9kQv0fbqsqicvzDGVj5jiad1bjAylje1T9Rc4YXegS+IUncWlFxLQJOr1nazJBjWwxqdgITVqJu4m+iwWoYhnSzTQdhwHfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eZHH29ah; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1785773818; c=relaxed/simple;
+	bh=WZs+8/yiJF0P/e4Ck26Shd+DGPg0HtRuV3kDVuZ1wc8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=dxfTbwd5mrVUd2sax+E/L45sa8UJSt0gqYsoyGi1LDL85VsytFxncHgszVuGMTf7V72j4x65h5u9JAKor72/G3FsyOMuajbFKXVaZ5Ioy6AYkGP+w7jbcBbvAywA4KIwWI+VfPwerXm3Xj24N9STqod4nMIoTensePH8qQkkhrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TX5fpOxs; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eZHH29ah"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1785764574;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=q9mewyqdJBERhE/mcQ+h6iaGDeJtrxCLQvnbpvnUU7Q=;
-	b=eZHH29ahoYvKuS4P+4ObITDqw/lthXw83Uf89FNzY0qU7iLUFJg+VeIoTDtSYXV8o0gl3l
-	wdti/g+A40ka/9E7VmXnvZpr2TjTntILYESnMOT7PpQ9uDy6AhjOT+sLCUJ8Z0mwvSdV0g
-	L2KDrSsXw37PyuxpS5644lheD7Kr8eQ=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-257-gd3K3vXlOS2UWxt6p8LHYw-1; Mon, 03 Aug 2026 09:42:52 -0400
-X-MC-Unique: gd3K3vXlOS2UWxt6p8LHYw-1
-X-Mimecast-MFC-AGG-ID: gd3K3vXlOS2UWxt6p8LHYw_1785764571
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-49544a639e9so11280495e9.1
-        for <mptcp@lists.linux.dev>; Mon, 03 Aug 2026 06:42:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785764570; x=1786369370;
-        h=content-transfer-encoding:content-type:in-reply-to:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=q9mewyqdJBERhE/mcQ+h6iaGDeJtrxCLQvnbpvnUU7Q=;
-        b=R2IQdOGRLRXNpARLwuVdlJUtNMKq5kfSk0Yt3bFFZCZeXNRX/YlIfAewn/WxptFM7e
-         4tjOShRHjPfwKIhu1G3vWKFuFZPokQBq2LM6WXYAe3dMl8q4w5/QGLKiHfAo6gux8PQ5
-         FQNuA+KFKyEu+810kf0JVnz+sh3Sru2lpeTWu8NNBoh9v+Dpk6gHbdUj3oVUWKVyrTy3
-         3lXDujDnKci2/8x7ZOZWMDdCuM7BDVDjIQYvyqX7141NcFP+Q8ZkJCFQmYZtbfKvprRW
-         BKXMdOZ6mnx7xoPw0QoexK4L+jXo0gamtDnCjC6mhixxAlwhBe1X0fmc/Ed31SE56zrQ
-         PLjA==
-X-Forwarded-Encrypted: i=1; AHgh+RpTeJItER9xUdglHhhSOUvIfxU9CIX4ZQoL+94LDacAbYOpaf2lV9/lnrbzoaDGp+ZccmdQLw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzF/QLxfACES/39DGJfY5hfxHP0/UvkXKGhIFTcg/rLAltafVPt
-	Yp3O3w69Jqv0O4J3irHrXZllqDxaGe86AhEYOKhn+7oMl5SZwgegifRDWe0GiYmwofy2zvW52G5
-	H2zFzHmvk/YQE06FTl7JICejRFo/477LNQW/HRSspMQfOy4STAWVfemz/PvGpKS6q
-X-Gm-Gg: AR+sD10POWqz+vayuZsltwLGPeYUKEWv+neSurdpGxJxjgmRyJcuGGQx93GpcWU/3KJ
-	Ikj2qUDCsXKQi+UM9WG9OIkI+htdzPJJXgNfJ0aza4sOZpgp5TO/g+jw2NU1hV9qIkay+IgrB+T
-	WpVLaoJSj24NQIKi8THk1Y8uADOq99KQkuV229YZjmbTW0QVhqnmFqHenqx76meyHW7YBZOlMc3
-	csmX/0PJrRHAUVp6d5FdeUjMT8nG9RTEsi6XRnkSv056Xh3cHx/YrO2yPkSMOv4Wdk+0qBUxPNm
-	JTHcTR89PMfFHkJuJPzujz6ds3ZY8ArdwKgNyFSE9znmpfOKgrpj7+94KBOnkYMZkdR2/5TaRYs
-	ZIFgmsmQ17KldgYWfVN8W7kYbmS0K59GnY0eP2jSfIJbr3Mvf8QIYcBJcPBHjpi+fyyWBfcQegE
-	8=
-X-Received: by 2002:a05:600c:4fc5:b0:494:6baa:ccef with SMTP id 5b1f17b1804b1-4980f23257cmr218813035e9.11.1785764570719;
-        Mon, 03 Aug 2026 06:42:50 -0700 (PDT)
-X-Received: by 2002:a05:600c:4fc5:b0:494:6baa:ccef with SMTP id 5b1f17b1804b1-4980f23257cmr218812405e9.11.1785764570346;
-        Mon, 03 Aug 2026 06:42:50 -0700 (PDT)
-Received: from [192.168.188.217] (ip239-44-231-195.pool-bba.aruba.it. [195.231.44.239])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47fd458b73asm31017655f8f.29.2026.08.03.06.42.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Aug 2026 06:42:49 -0700 (PDT)
-Message-ID: <22c1fffc-68c5-44c4-a686-6642e4af4234@redhat.com>
-Date: Mon, 3 Aug 2026 15:42:48 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TX5fpOxs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0137B1F000E9;
+	Mon,  3 Aug 2026 16:16:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785773817;
+	bh=FACHO5L9ypzZbRxgf/kKsyj67LIz/bYjAPs9VlKXMpA=;
+	h=From:Subject:Date:To:Cc;
+	b=TX5fpOxs/gWrepWJt+T47+H1iDzUAQaPYb1PgDcrL+2tHevvWL3oWqFrt0rtZg71P
+	 ha7192pBClpoLkyGXAY+UrV6UjELbbABarrENXScxULIqx98pES7LwaNevY/UJ1A/K
+	 kn27cg+cUZzqcuNX5dO6mX8lAerOwDQNtAxodKkiPYWi3158SSe9K6GwH+UGxtC4Cy
+	 zy7snDkBXCU9p/TrWGUEe6f2KjUQMJL7emfeM8Q6eYUD/WHsvAAguehU1mCep6ghzX
+	 chlKAa0tmGYNG68QalHe1ag/2bz4yCJdrqqZJjpHGmX60AflwNKGxTxbOQjXF9CBzQ
+	 SS2PxahsePNlQ==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net v2 0/8] mptcp: misc fixes for v7.2-rc6
+Date: Mon, 03 Aug 2026 18:16:32 +0200
+Message-Id: <20260803-net-mptcp-misc-fixes-7-2-rc6-v2-0-b8f496d71664@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2 5/5] mptcp: implemented OoO queue pruning
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
- Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, Gang Yan <yangang@kylinos.cn>
-References: <20260731-net-next-mptcp-oooq-pruning-v2-0-24838164fa21@kernel.org>
- <20260731-net-next-mptcp-oooq-pruning-v2-5-24838164fa21@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20260731-net-next-mptcp-oooq-pruning-v2-5-24838164fa21@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: i6n-h-aRbHAx99dGFJ4z-reAtZ1U8iXkp0ittc5R-nE_1785764571
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/42OQQ6CMBBFr0Jm7Rg6hlZceQ/DQssAVSlkWomGc
+ HcLXsDln7x5/88QWBwHOGUzCE8uuMGnQLsMbHf1LaOrUwbKSeeGjug5Yj9GO2LvgsXGvTmgQUK
+ xGolIHazW3JgCkmIU3oBkuED6hOp3DK/bnW1cxSvWuRAH+WwjJrXB//VNCnNsDFNNVKqirM8PF
+ s/P/SAtVMuyfAGllri34AAAAA==
+X-Change-ID: 20260728-net-mptcp-misc-fixes-7-2-rc6-22213c66ef75
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ stable@vger.kernel.org, Davide Caratti <dcaratti@redhat.com>, 
+ Florian Westphal <fw@strlen.de>, Christoph Paasch <cpaasch@openai.com>, 
+ Qing Luo <luoqing@kylinos.cn>, Gang Yan <yangang@kylinos.cn>, 
+ Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org, 
+ Shardul Bankar <shardul.b@mpiricsoftware.com>, 
+ Kishen Maloor <kishen.maloor@intel.com>, 
+ Wyatt Feng <bronzed_45_vested@icloud.com>, Yuan Tan <yuantan098@gmail.com>, 
+ Yifan Wu <yifanwucs@gmail.com>, Juefei Pu <tomapufckgml@gmail.com>, 
+ Zhengchuan Liang <zcliangcn@gmail.com>, Xin Liu <bird@lzu.edu.cn>, 
+ Ren Wei <n05ec@lzu.edu.cn>, Dmytro Shytyi <dmytro@shytyi.net>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2882; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=WZs+8/yiJF0P/e4Ck26Shd+DGPg0HtRuV3kDVuZ1wc8=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIK9r15tPtXaldKpczeu3m3JbQDhXeyLl/3+MQ2vT8ft
+ i+/tvHHgY5SFgYxLgZZMUUW6bbI/JnPq3hLvPwsYOawMoEMYeDiFICJTHjEyNC/atesstOaMccW
+ 35xyY6Latc19dnvrFuzVu8e6ZtmDdgl9Rob9eTv4bENrc/n1Vk2Rm8H3iPteHvsuYfcQD44dL1I
+ f7WIEAA==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On 7/31/26 4:24 PM, Matthieu Baerts (NGI0) wrote:
-> +/* "Inspired" from the TCP version; main difference: stop as soon as the MPTCP
-> + * socket is under memory limit.
-> + */
-> +static bool mptcp_prune_ofo_queue(struct sock *sk, u64 seq)
-> +{
-> +	struct mptcp_sock *msk = mptcp_sk(sk);
-> +	struct rb_node *node, *prev;
-> +	bool pruned = false;
-> +	u64 mem;
-> +
-> +	if (RB_EMPTY_ROOT(&msk->out_of_order_queue))
-> +		goto out;
-> +
-> +	node = &msk->ooo_last_skb->rbnode;
-> +
-> +	do {
-> +		struct sk_buff *skb = rb_to_skb(node);
-> +
-> +		/* Stop pruning if the incoming skb would land in OoO tail. */
-> +		if (after64(seq, MPTCP_SKB_CB(skb)->map_seq))
-> +			break;
+Here are various unrelated fixes:
 
-Clashiko noted that duplicate/old skbs can reach here, leading to
-serious damage. It needs to be fixed.
+- Patches 1-3: harden incoming MPTCP suboptions parsing by rejecting
+  non-combinable ones. Patch 3 removes unreachable code after patch 2
+  added here for consistency, and to reduce comments from AI reviews.
+  Fixes for v5.6.
 
-It looks like opus-5 catches a lot of things that previous models (and
-humans) were not able to see. It should be a :-) but it feels more like :(
+- Patch 4: fix a data race in the ADD_ADDR timer callback. A fix for
+  v5.13.
 
-/P
+- Patch 5: correctly catch data corruption during the MPTCP join
+  selftest by marking tests as failed, instead of only printing a
+  warning. A fix for v5.18.
+
+- Patch 6: fix a leak with the userspace ADD_ADDR list in case of race
+  condition during teardown. A fix for v5.19.
+
+- Patch 7: deal with MPTFO with a valid token, but no data in the SYN. A
+  fix for v6.2.
+
+- Patch 8: reclaim forward-allocated memory in case of error on the
+  receive side. A fix for v6.19.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v2:
+- Patches 1, 3, 6: new.
+- Patch 2: handle MP_FASTCLOSE & DSS case.
+- Patches 2, 4, 7: updated commit message to reply to AI reviews.
+- Patch 8: start comment on the same line as the opening /*.
+- Note: the title of this series has not been updated: the fixes are
+  obviously for the next RC.
+- Also, apart from patch 3, the different fixes are independent: in case
+  of new issues discovered at review time, valid fixes can already been
+  picked up, not to be blocked by unrelated patches.
+- Link to v1: https://patch.msgid.link/20260728-net-mptcp-misc-fixes-7-2-rc6-v1-0-f7e2d229159d@kernel.org
+
+---
+Gang Yan (1):
+      selftests: mptcp: join: mark tests with data corruption as failed
+
+Matthieu Baerts (NGI0) (3):
+      mptcp: options: reset DSS fields in case of unexpected size
+      mptcp: avoid combining some incoming suboptions
+      mptcp: remove MPC && MPJ check
+
+Paolo Abeni (1):
+      mptcp: reclaim forward-allocated memory on RX path errors
+
+Qing Luo (1):
+      mptcp: pm: fix data race in add_addr timer callback
+
+Shardul Bankar (1):
+      mptcp: pm: fix memory leak from alloc-during-teardown race
+
+Wyatt Feng (1):
+      mptcp: fastopen: only mark MPTFO subflows with SYN data
+
+ net/mptcp/fastopen.c                            |  7 +--
+ net/mptcp/options.c                             | 67 ++++++++++++++++++++++++-
+ net/mptcp/pm.c                                  | 19 +++++--
+ net/mptcp/pm_userspace.c                        |  4 ++
+ net/mptcp/protocol.c                            |  6 +++
+ net/mptcp/protocol.h                            |  8 +--
+ net/mptcp/subflow.c                             |  5 --
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |  4 +-
+ 8 files changed, 101 insertions(+), 19 deletions(-)
+---
+base-commit: af39eb111ce6b5eba9c08513b62c4868eb7e7fd5
+change-id: 20260728-net-mptcp-misc-fixes-7-2-rc6-22213c66ef75
+
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
