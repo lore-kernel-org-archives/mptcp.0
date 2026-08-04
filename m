@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C31E3F39FB
-	for <mptcp@lists.linux.dev>; Tue,  4 Aug 2026 18:05:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78ADB3F44FB
+	for <mptcp@lists.linux.dev>; Tue,  4 Aug 2026 18:22:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785866736; cv=none; b=C+snM8w+2VWebhRHV+NJBfAehCKXCZXKuTRa1YNCTv6MiEmUjCGkVEzMHVJ6hDFb9HD/1+OMnmO0nMjkfy8uOMKfe3H0cgA4H/exWvwp2yQeca5OXoTprjfcga9figdtRf/h6BCU5DXa1xe/8/0oXdYS8K+gXfXlMZAxeWrSHYU=
+	t=1785867764; cv=none; b=BkrH9sSWp/xornB/4ZUwKkgUVRBAt7D+GErhIXKgYBsZfnU/lyEXmaQd/ky+RaOS7VEYkDpcbKUht9lNzfKzTbZkc32WoMEEOEkSEterOFEYnf+5Dmu05ci/fM4BAsTSneiQzaMoq7gkMvfWGQnXI7BF3CnywwduSzX4OVQ6Ho0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785866736; c=relaxed/simple;
-	bh=9Pw+5+/w5a0djT2RxIc3B3AvBrM9msAb5sAUEH/cKYU=;
+	s=arc-20240116; t=1785867764; c=relaxed/simple;
+	bh=JgiQuJ9hA9NlYnj1TMPYOdP7iOpmdxpxK+AnI0B45Mk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LHHn5Czcq0Ws+3lBKNB7m3mViTMUpYixcnW6AnrZjpXtIq4an3eZvtUAr1T9LkbboXRna1e0tsMynlkSGAN9W61cbzuYyhlwr5NYzg6GNYV2eA3TLbieNIerQWl2s3cpf5vRKHq4gSZDEHmmeNwIfaXBt8Fh7F35Y5RZ+XYc/cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IhHUKZ7D; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=P34vknMGw9S8hTADQq/b0oV3wQezoall1fAVttkx6DoTwTrJDylj78aCzTbbjpNMYF4EGd0EkrrZvJS2d6R8k8YurpuZNnU+jguxx4tgzXOpe6aQuAo4GPgE4rS43az07cuEFb5xPRk3XkgoyKlhpZakaqm2L3y42b4BN0h1Lfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nKUpePGM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IhHUKZ7D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B4DA1F000E9;
-	Tue,  4 Aug 2026 18:05:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nKUpePGM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C89C91F000E9;
+	Tue,  4 Aug 2026 18:22:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785866734;
-	bh=ZvlnOjk9yamJ9UBxZcbZ2vDv6r6JR1oTawJwBIN40ok=;
+	s=k20260515; t=1785867763;
+	bh=YEYXSOGBuQFvi5Hb4FTz642JzKV3m2rqHQAkAoEwAMQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=IhHUKZ7D9LofCbxYeaWWIrN4ow5C3gTsMkhmWxyGKYFpWqflZwR2sUvV/VHvv6Bxv
-	 fFJ5xYEvDHNRNEWeKUzS2YAP2tdqkIQRKvq/bZQQcYKs0gVbi0pi3A9cQG8XTpNpyR
-	 Zo0tQtvQT/umYfeW3gTshZhsbdTiozEkQq8TDYQK9VGl5MxF0KaCLtKMMq6TrvnMsp
-	 Y+Oolwf6FVJY7sLd7gUgscOGoCVw9nlSmN7fGcAO7WXy7Y+5TzM0wi3YDzkzBNf8P3
-	 F8342Lh6jSdznMRsZXE7Gk7TsSMiNHFkZ0yXJDD2rRU0EoA7X97dH0tvkbHs1ZhuX4
-	 +fN71z5hga8qA==
-Message-ID: <892a96b6-f41e-42a5-a21c-afd8fc05b861@kernel.org>
-Date: Tue, 4 Aug 2026 20:05:30 +0200
+	b=nKUpePGMuHER6yMiYZORix6fZ2gNXeQLfCz8SQeEuewvmBdtdzfdbxZAyWaQ94QYf
+	 YnvPRoJLe5ey6HD16+iZhIyB8LfNyQ9EAns764VQ0qhE//7lE+1eRvzMOXjLnNT0Fj
+	 59A3NDjuZRij/4DGZR0xdbmmnh0Z/c9b59Eu+G+Dn53OoxXkvPgUYawblBvTVWDesF
+	 t8snDDQP/ntQciV+f0QI3d7ORsOfYvO850XSZ7SP93MPV/Yyph0mgXXduG1TW8b4dd
+	 q7P8GasNYeTQlkSrrIJyj2eBsr5jIJ83jy6VsHvyPVVj2sC9ztX0mCHt5ZxzKk0BNn
+	 eDhMDAT9yZotQ==
+Message-ID: <63f14fa5-f2d3-46e4-bb3a-f02430701cc8@kernel.org>
+Date: Tue, 4 Aug 2026 20:22:40 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,18 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3] mptcp: honour configured min/max RTO in
- retransmit paths
+Subject: Re: [PATCH v2 MPTCP-net] pm: userspace: fix address ID overflow when
+ all IDs exhausted
 Content-Language: fr
-To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-Cc: mptcp <mptcp@lists.linux.dev>, martineau <martineau@kernel.org>,
- pabeni <pabeni@redhat.com>, "shardul.b" <shardul.b@mpiricsoftware.com>,
- janak <janak@mpiric.us>, kalpanjani009 <kalpanjani009@gmail.com>,
- Lixiasong1 <lixiasong1@huawei.com>
-References: <20260617114508.253716-1-kalpan.jani@mpiricsoftware.com>
- <19fc5f77283.636e19ae49491.8985382660057875751@mpiricsoftware.com>
- <b47803d8-d192-46bd-97de-da4baa74fbc0@kernel.org>
- <19fccbf4342.1a9db47f221406.2661422723033045309@mpiricsoftware.com>
+To: luoqing <l1138897701@163.com>
+Cc: mptcp@lists.linux.dev
+References: <20260714080356.805839-1-l1138897701@163.com>
+ <20260804022350.181323-1-l1138897701@163.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -92,16 +87,114 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <19fccbf4342.1a9db47f221406.2661422723033045309@mpiricsoftware.com>
+In-Reply-To: <20260804022350.181323-1-l1138897701@163.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Kalpan,
+Hi luoqing,
 
-On 04/08/2026 14:28, Kalpan Jani wrote:
-> Will send a v4 with all that if it sounds good to you.
+(-cc David/Paolo)
 
-Thanks, sounds good to me!
+Thank you for the patch.
+
+Please only Cc the MPTCP mailing list.
+
+Also, please send new versions in a new email thread, not as a reply to
+a previous one.
+
+One last thing: here, you can send the fix and the selftest as part of
+the same series, not as separated patches, so the CI will validate the
+new selftest with the fix. It is fine to have patches for -net and -next
+in the same series. Also, please use 'mptcp-ne(x)t', no capital letters.
+
+On 04/08/2026 04:23, luoqing wrote:
+> From: Qing Luo <luoqing@kylinos.cn>
+> 
+> When all MPTCP address IDs (1-255) are exhausted in the userspace PM,
+> find_next_zero_bit() returns MPTCP_PM_MAX_ADDR_ID + 1 (256). This value
+> overflows when stored in the u8 field e->addr.id, resulting in ID 0
+> being stored and the entry being incorrectly added to the list.
+> 
+> ID 0 is reserved for the initial connection in MPTCP, so this overflow
+> can cause address conflicts.
+> 
+> Note: the in-kernel PM already has an 'endpoints == MPTCP_PM_MAX_ADDR_ID'
+> check in mptcp_pm_nl_append_new_local_addr() that returns -ERANGE before
+> reaching find_next_zero_bit(), preventing this overflow. So this fix only
+> addresses the userspace PM path.
+> 
+> Store the find_next_zero_bit() result in a temporary unsigned int, check
+> against MPTCP_PM_MAX_ADDR_ID, and return -ENOSPC if all IDs are truly
+> exhausted. Properly free the allocated entry with sock_kfree_s() on error.
+> 
+> Also modify the CSF (subflow create) handler to pass !entry.addr.id as
+> the needs_id parameter. When no local ID is provided by user-space
+> (entry.addr.id == 0), this triggers auto-allocation instead of silently
+> using the reserved ID 0.
+> 
+> Fixes: 4638de5aefe5 ("mptcp: handle local addrs announced by userspace PMs")
+> Assisted-by: LLM # review
+> Signed-off-by: Qing Luo <luoqing@kylinos.cn>
+> ---
+>  net/mptcp/pm_userspace.c | 18 +++++++++++++-----
+>  1 file changed, 13 insertions(+), 5 deletions(-)
+> 
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index 945aa5afc2dd..ada7d6cef625 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -74,10 +74,17 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
+>  			goto append_err;
+>  		}
+>  
+> -		if (!e->addr.id && needs_id)
+> -			e->addr.id = find_next_zero_bit(id_bitmap,
+> -							MPTCP_PM_MAX_ADDR_ID + 1,
+> -							1);
+> +		if (!e->addr.id && needs_id) {
+> +			unsigned int id = find_next_zero_bit(id_bitmap,
+> +							     MPTCP_PM_MAX_ADDR_ID + 1,
+> +							     1);
+> +			if (id > MPTCP_PM_MAX_ADDR_ID) {
+> +				sock_kfree_s(sk, e, sizeof(*e));
+> +				ret = -ENOSPC;
+> +				goto append_err;
+> +			}
+> +			e->addr.id = id;
+> +		}
+>  		list_add_tail_rcu(&e->list, &msk->pm.userspace_pm_local_addr_list);
+>  		msk->pm.local_addr_used++;
+>  		ret = e->addr.id;
+> @@ -400,7 +407,8 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+>  		goto create_err;
+>  	}
+>  
+> -	err = mptcp_userspace_pm_append_new_local_addr(msk, &entry, false);
+> +	err = mptcp_userspace_pm_append_new_local_addr(msk, &entry,
+> +						       !entry.addr.id);
+
+I don't think you can do that: it is valid to give an ID set to 0. But
+it is different to give no ID.
+
+I don't think this modification here should be part of this patch: it is
+different from the overflow case you are trying to fix. It could be in
+another patch, but that's changing the behaviour, and that's not a fix I
+think.
+
+Also, see my series:
+
+
+https://lore.kernel.org/20260727-mptcp-pm-userspace-id0-case-v1-0-9877f02a9bae@kernel.org
+
+*Maybe*, for -next, we could check if the ID was not set via Netlink
+(and not set to 0), and pick an ID for it. *But*, it might not be a good
+idea: the userspace daemon will not know the ID that has been picked,
+and will need to get it via another request. That doesn't sound like a
+good idea, no?
+
+>  	if (err < 0) {
+>  		NL_SET_ERR_MSG_ATTR(info->extack, laddr,
+>  				    "did not match address and id");
 
 Cheers,
 Matt
