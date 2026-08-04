@@ -1,191 +1,131 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A6843FD2D
-	for <mptcp@lists.linux.dev>; Tue,  4 Aug 2026 09:50:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E48A456DE4
+	for <mptcp@lists.linux.dev>; Tue,  4 Aug 2026 10:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785837062; cv=none; b=dht+3C5BNKipO6LahaJdyOV8e1xQoSe2caXNZLXprosw3+zD2w9fLZWyM41+fqDU302kBRs/bMfRHOvkPNqWjxrUplfrfIpficRd7X0KIE9vCK7HTZFTJqWPY6CiEeEZB6qXpcDnzmdBwLUlF5zk0wAoGJpoJv9ahjfN8spv21I=
+	t=1785841079; cv=none; b=SdqPtWeHZLDax457goh44S0lrX5cx9Zih5xHC1Ks1A02sw5rAVRnvsHa5YQOVAzul7swOHqYa5Eq5Eg37gbAXHLEK72KwMDAj/Mq8l+hZwtgxdIe/cA3hTxTcKaO9vPIKx1Z2cSzj3nDkU1obkKauKcHJkzg6qObUlppF/RwGlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785837062; c=relaxed/simple;
-	bh=CXhrDt2N1ZKsuvoyPZevD5brYgEi/7BxYv7KLNTjNVQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YtC04+8HeK+jO50gmQcR8ipPgu7ocNYqbgifGW38L23Iomqe6jCUOrA05xmpcYgSFKZS6Pw5swwuich4nq26MzPT4SPULR6XrGTcmVCVd0V7aNBRWYb11V6gnMa0THQLhjmIaO3NOiX3/9x9VrA8P74a6rcB2X879Jz5dcH3f8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=trailofbits.com; spf=pass smtp.mailfrom=trailofbits.com; dkim=pass (2048-bit key) header.d=trailofbits.com header.i=@trailofbits.com header.b=MpMATb4b; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=trailofbits.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trailofbits.com
+	s=arc-20240116; t=1785841079; c=relaxed/simple;
+	bh=hWBexvjPaDQeXWbPgnt8K2kV5Qrhb0v+sp7MmP9XA2A=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=nvuxYlfiO+hjnktUxQ8dXC9ZmIDAb4IwNMEywUJR7PPn1p/90KScAj6tTDVZz7x3e3s57Laxp7CTtfAa2lXZGa3PsAbSvGGRxSUwxLWVMNNhRL6plDZM96DowfmOZcIh3rESkmiwHO/FCkAPRHhLMqc3+AZZx2yAwVsMCz3TamU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bH91AQsQ; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=trailofbits.com header.i=@trailofbits.com header.b="MpMATb4b"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-8f1a8e914a9so34044646d6.1
-        for <mptcp@lists.linux.dev>; Tue, 04 Aug 2026 02:50:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bH91AQsQ"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-ca913a601fbso3111248a12.3
+        for <mptcp@lists.linux.dev>; Tue, 04 Aug 2026 03:57:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=trailofbits.com; s=google; t=1785837057; x=1786441857; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=PERyMvv//ZV8JmFeNOxGHBbrhQ702Zt9Cubl7TxpCpg=;
-        b=MpMATb4btQVxfjepVjIdPo6el/S3C6W9dTwx1cgPIThnIjS5IRVIbNZhKEwPWwVbCF
-         +4BvnhyhTV1zxUCpSZiLikh+ofVVdOVdMm+3c8EHvNlmdd2FqwU2jmsdjO8zRxEMjSxm
-         PJtTsMN/UlHs4ht36fY/9z1d6KunZg1M0MnwYycT5uDGOqGwgps30M2JkmupgWBbOxqg
-         Ci/FgwmNvB+OeJc+K6UzOUEcKnQ3y2qY62Fq5X0HhW6Z7hM3VmKVwP2ZSLqTaut73THQ
-         R6T471ybnw28ZRpXp8sFN2vOxv/1gpBsjJwOQRxyPCV2MpUgODU1b9xapdK3jLkzLCzi
-         G+Mw==
+        d=gmail.com; s=20251104; t=1785841071; x=1786445871; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=dNZUrFsCDcu5lbtN+VxFHlzhitmeXi8cLM0b+t26G08=;
+        b=bH91AQsQ+jpH6CzcmDhfIIMB5k6CPHinvGyGu+pvAjUIz/uq6+c0RYuhii7N/IPVeC
+         mDGap/3Dd9vbWWDumx/0UphvcZxLtez37YtJlXgwAzbXNaRunpD6uuyW7A3l0FwUaI5j
+         i6CZdegra6AUImWzds9w6tn3xPBJoNBQJFAml9CpTiXXPW+ZMkKKawftuZoZUwawnxpg
+         Llvo5LM2vKNwz8DLs2JfGaBDuoah/yqvv32uoyUG9mysZwM/c2f5okurRWKqF6ZhywyR
+         u399svtn7zmmxfctQuLebRuleUAeAjFIR6+I7JCKMVWazVbBJX9ML3aKuyO9+7CIpMIZ
+         +SSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785837057; x=1786441857;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=PERyMvv//ZV8JmFeNOxGHBbrhQ702Zt9Cubl7TxpCpg=;
-        b=hm+ms9CS08ZtVkKovhfAnhvTQ9kuzd046WnIM+xDWCHQndAyu5V2OQQLXsn6i9l3X8
-         y7vSOkd5LmlbZOAXDAl3N1fEWLD0bmQr2xCqTOs8dVWDsWjNyQISuO5z9JtBhqXD4EDo
-         jb7D+Ay4Supl/pRzULAPmlJOg1LaIxoxyMQQqO3R7gQyMes5HxcVSh+0Jgls5ji3A9Tr
-         aQczd+/Z8tZCIhr1LRQcJoltmb2ID4IEO0/Qr6tApyGciFMOnJti1Jpvp1XOgc2uyRnh
-         2vsCbjkPzEm+BibDe9Vk3Bi/qzq2Jp/GYgZNCAaWNtpY0s24rfEK53+igWq7NRrGrJTo
-         vIGA==
-X-Forwarded-Encrypted: i=1; AHgh+RqXCA88rE8MPvPBNHqNVgxNVh2obHAPG2j0c9udDvSIlANIo94pSrkezT0w3sdse2zd1LfpJw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzKBt7/P71G6PPZGoR4Fqg1JX0z9HfMfqlwZn/xGF8hHCBw72cx
-	oEjYWO81yI3AKb44+xDSUByzVqo6NRxoiAKFR/BHXFD5dmPZTK8RNdD8Vv4tAniXlxM=
-X-Gm-Gg: AR+sD13Uxxl6+nDEmUaPhLYytX8mYxwMR+XZ9N+LoRG0yMuRkiM1wEqQHs6pUzdZSB3
-	MGo3gzZjeo/KLJ6Lzma5AGge3ju1uPiq519smIwLLi23OROI8hgN95f1Tj6LDSdOH7t4W8LNxj7
-	R4s1hXK8m/fyhK4ZPQEzUHHDlsIos/aZI0Z6hg9JZJU3OjuI5OR5w88Sh0gwUOq2gz/YXmbJlv6
-	EJm18iDsOIOmNKtSgOkhdMhYUZM5HE+XznDGOfb9I4dpc/6fLxspe19OrO5pLwltKvIF09eJGJ8
-	b9dARarMbIQaUD0J0jOnL0KjcxNbyi/dUK+1clFhitZmrrKsmFhYFTDd0E47wVtuuc08sPqurUa
-	MvTaONofc2iKnkuPkeuD5SRoTpSX5l2IoWlStCPnrukNd3CGNvWszwaRbNgM7Yfvo1yjcbEjvvb
-	Jn++XNeQXs/aqoTKHP8zmILuNgK2hRo9X8KTast+cFtSjPSMa+7tAknIxY8JI/oZuEEA==
-X-Received: by 2002:a05:6214:5d0f:b0:908:25a2:6bbf with SMTP id 6a1803df08f44-908496b3d1emr290394186d6.30.1785837052734;
-        Tue, 04 Aug 2026 02:50:52 -0700 (PDT)
-Received: from localhost ([146.190.222.192])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-908434a2c2asm95469626d6.19.2026.08.04.02.50.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Aug 2026 02:50:52 -0700 (PDT)
-From: David Lee <david.lee@trailofbits.com>
-To: matttbe@kernel.org,
-	martineau@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	ncardwell@google.com
-Cc: Kyle Zeng <kylebot@openai.com>,
-	Dominik 'Disconnect3d' Czarnota <dominik.czarnota@trailofbits.com>,
-	geliang@kernel.org,
-	horms@kernel.org,
-	kuniyu@google.com,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	David Lee <david.lee@trailofbits.com>
-Subject: [PATCH net] mptcp: hold msk reference when cloning request sockets
-Date: Tue,  4 Aug 2026 09:50:49 +0000
-Message-ID: <20260804095051.715355-1-david.lee@trailofbits.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20251104; t=1785841071; x=1786445871;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=dNZUrFsCDcu5lbtN+VxFHlzhitmeXi8cLM0b+t26G08=;
+        b=O1RH+cDFWrS0XO3ZHnG0sM2Hm8QMsKrf0PcvZG702O5NGYOFdRGl94k7Idvfa2Tbfq
+         t7Asyy0XgmY5ILaj2smlGNVhDMy/SJT5hwmJCUzwHgrghgRT0dkl7xkHndl6e1YOYIsP
+         OJQQ1HQ4yFx98HknWGWKtmB2MyNsDGy8TSzvQjZ7b/3+07VrzIwxpW4Exavo2sApSijT
+         lDl2aDdVZgtnhGEZ+Q0+KV79hFh6V+juGhqI3eBI19rMnrLOGwrH152nGRmnbWWQZdf7
+         cx0y6lmkZAfpl7ZW1Wah43ylvEA8gs8pksyTjTCo+j+nVUPFNoT4KCf6VprlHDREjz4B
+         Lc7A==
+X-Gm-Message-State: AOJu0YzJqclkvCYS6VaHuPaBKCxZoaCbphMpeDZONCybbL3jNDaZBoam
+	Ls+AqcdPxQafmTedCjATwhaWE+k1Q/bO0137rl37F2ph7aqt5yKCyas=
+X-Gm-Gg: AR+sD13zrCX9MZf7R7OG1svtR8C9495l5oCQx/5Bcer0FIfWmlpWgBvHmuN1iMFgp+4
+	ZWyVBxVNIkLwERXh5g1IwbRA+nusQHEvGR+Fw+7cQsCoOvPiPaxJP6D6/foK/XREr+sgmaLmCMI
+	HlgrqGyTXtFt0EZTVk23PJgwofTkWjdIKa00Nu3uPFI2/9VyvXhqHcnq0bmg/A33o6LxQ2WjCHM
+	d7BTT3zp/LXGuP28/AvfMzWXVQDs7L52Ys2gtHSUlUGmO0Sp7IECXpIbxYB2yxk7yk/uL9EZS3U
+	SRmkj3TXoVfbPRrddCazlIfpELJYdJqm1zDMgBAwSqPIPn7BEjBYakXOkJwF5LNbx3uaZhOiZTo
+	piex174fHkyYjg+eAJ6YQwXF87trYl6e20XB2J0uzgGxMZtsW9Oiputu2jVTxHKB9nX3x0ANPAR
+	ZIXhbu716a4MBMKLfmstXSJ3m/Po3sM9Y+SKeVINGlPSM860cnz/NpTDMf+rYEDuMFFtFVwsGf
+X-Received: by 2002:a05:6a00:92a4:b0:84a:29a7:f3b3 with SMTP id d2e1a72fcca58-84ee493ea79mr13005768b3a.68.1785841071525;
+        Tue, 04 Aug 2026 03:57:51 -0700 (PDT)
+Received: from [127.0.0.1] ([13.66.174.87])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84edbe7a243sm4967756b3a.24.2026.08.04.03.57.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Aug 2026 03:57:51 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Kyle Zeng <kylebot@openai.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260804095051.715355-1-david.lee@trailofbits.com>
+References: <20260804095051.715355-1-david.lee@trailofbits.com>
+Subject: Re: [PATCH net] mptcp: hold msk reference when cloning request
+ sockets
+Message-ID: <ff2fffe3-d52a-2038-b327-b2a8c9ab723c@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 04 Aug 2026 10:57:50 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 
-From: Kyle Zeng <kylebot@openai.com>
+Hi Kyle,
 
-An MP_JOIN request owns the reference stored in subflow_req->msk.
-inet_reqsk_clone() byte-copies that pointer when migrating a request,
-but does not acquire a reference for the clone.  The original and cloned
-request destructors can consequently drop the same reference, leaving
-one request with a dangling msk pointer.
+Thank you for your modifications, that's great!
 
-Let cloned MPTCP requests take their own msk reference.  The source
-request still owns its reference while it is being cloned, so sock_hold()
-is safe.  The clone's normal destructor balances the new reference on
-both successful and failed migration paths.
+Our CI did some validations and here is its report:
 
-Fixes: c905dee62232 ("tcp: Migrate TCP_NEW_SYN_RECV requests at retransmitting SYN+ACKs.")
-Cc: stable@vger.kernel.org
-Assisted-by: Codex:gpt-5.6-sol Codex:gpt-5.5-cyber
-Signed-off-by: Kyle Zeng <kylebot@openai.com>
-Co-developed-by: David Lee <david.lee@trailofbits.com>
-Signed-off-by: David Lee <david.lee@trailofbits.com>
----
-Bug found and triaged by OpenAI Security Research and
-validated by Trail of Bits.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/308992=
+32462
 
-Trail of Bits has a reproducer for this bug that triggers a
-KASAN use-after-free and can share if needed.
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/0a0e78978315
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1139981
 
- include/net/mptcp.h             |  5 +++++
- net/ipv4/inet_connection_sock.c | 10 ++++++++--
- net/mptcp/subflow.c             |  8 ++++++++
- 3 files changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 71b9fc5a5..51d4b02f5 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -223,6 +223,7 @@ int mptcp_subflow_init_cookie_req(struct request_sock *req,
- struct request_sock *mptcp_subflow_reqsk_alloc(const struct request_sock_ops *ops,
- 					       struct sock *sk_listener,
- 					       bool attach_listener);
-+void mptcp_subflow_reqsk_clone(struct request_sock *req);
- 
- __be32 mptcp_get_reset_option(const struct sk_buff *skb);
- 
-@@ -309,6 +310,10 @@ static inline struct request_sock *mptcp_subflow_reqsk_alloc(const struct reques
- 	return NULL;
- }
- 
-+static inline void mptcp_subflow_reqsk_clone(struct request_sock *req)
-+{
-+}
-+
- static inline __be32 mptcp_reset_option(const struct sk_buff *skb)  { return htonl(0u); }
- 
- static inline void mptcp_active_detect_blackhole(struct sock *sk, bool expired) { }
-diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
-index 56902bba5..f3ef9c15a 100644
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -17,6 +17,7 @@
- #include <net/inet_timewait_sock.h>
- #include <net/ip.h>
- #include <net/route.h>
-+#include <net/mptcp.h>
- #include <net/tcp_states.h>
- #include <net/xfrm.h>
- #include <net/tcp.h>
-@@ -946,8 +947,13 @@ static struct request_sock *inet_reqsk_clone(struct request_sock *req,
- 	/* We need not acquire fastopenq->lock
- 	 * because the child socket is locked in inet_csk_listen_stop().
- 	 */
--	if (sk->sk_protocol == IPPROTO_TCP && tcp_rsk(nreq)->tfo_listener)
--		rcu_assign_pointer(tcp_sk(nreq->sk)->fastopen_rsk, nreq);
-+	if (sk->sk_protocol == IPPROTO_TCP) {
-+		if (tcp_rsk(nreq)->tfo_listener)
-+			rcu_assign_pointer(tcp_sk(nreq->sk)->fastopen_rsk, nreq);
-+
-+		if (rsk_is_mptcp(req))
-+			mptcp_subflow_reqsk_clone(nreq);
-+	}
- 
- 	return nreq;
- }
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 8e386899c..1b6aa5e8c 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -47,6 +47,14 @@ static void subflow_req_destructor(struct request_sock *req)
- 	mptcp_token_destroy_request(req);
- }
- 
-+void mptcp_subflow_reqsk_clone(struct request_sock *req)
-+{
-+	struct mptcp_subflow_request_sock *subflow_req = mptcp_subflow_rsk(req);
-+
-+	if (subflow_req->msk)
-+		sock_hold((struct sock *)subflow_req->msk);
-+}
-+
- static void subflow_generate_hmac(u64 key1, u64 key2, u32 nonce1, u32 nonce2,
- 				  void *hmac)
- {
--- 
-2.47.3
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
