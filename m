@@ -1,147 +1,196 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED6235E94E
-	for <mptcp@lists.linux.dev>; Mon,  3 Aug 2026 17:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0F43EC824
+	for <mptcp@lists.linux.dev>; Tue,  4 Aug 2026 02:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785778503; cv=none; b=tAJWATiatiFPxCkP3IVPBUo/68lD7Fi0MJ3sbpOGjIkeFnKzeApywStzP7ZO8KuzArzlw4HgzfNdrYC4JMsia88JS3iBnVuMw7lakXs2kgqOVJIBqoyCPvsMMD5kFxPRj3RR1YLlm9iK295+3HD1MfXHeVv6qM6uR/ScwqtvFE4=
+	t=1785810261; cv=none; b=Od8TcnJ6tkQ0UXxjrFZ6CYzjybBhpV6RKh9cOEnHLDj9i99Xau7LfYJbvbBi8kZJ1bEs+oOJg0mlhCom4yh+KsxCGGTRzQQYYkdEseDDxCq6tMz+RycdZSm+rWIKphHGdzCtKiMXdadmzygZ5PXk1q04xmA3ryssuKEKVYYTASY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785778503; c=relaxed/simple;
-	bh=QxPvw7Nijm3Qi3YEMTi+zGw28LL6ynttElpeoxIIhIo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IILFuHUhzXqTXeDixx+rM2r0D79z6RxPcZG9kSRvlVzzkwIGrtjYr3xM+x9IBuxqYIRdeE8b0RKcifT7fDmrjVTknyoJD8ncMiNY8nhPi4MBa6kuy5h9rF3dJz0pA9EUMpwjddNFps026PtuH4JY4F45zLbfpAhY37CTktZtaK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g72Eg/oq; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785810261; c=relaxed/simple;
+	bh=bUl8q9P04oP9MIfJfn7DhAIJYL6/87yTWMRFsYLo2MM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=VHpwPNmcnFflpreVtqXZ161uqQASp4yp8AvQLG3vBwK+rFJUNg1SVty3FYLL89b3A8kVY55c6wjlXFNcOgAOc9EglKDowCVWzsy72Dap7iYhu4mQTIkqVpLTEFL+dVghTPCjS6MtRRXuutjanHxhLtNgTa6BuwJ6DJV8lzxmKvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=WwnDOngw; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g72Eg/oq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB6701F000E9;
-	Mon,  3 Aug 2026 17:35:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785778502;
-	bh=OvrwhJv1F+iQDn8JGmzHLxFVvv+pqHUnf6c82vFn8ko=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=g72Eg/oq9JhK/GscLCKzLJNJ3M4qKMpFgNnbP91v8EWiYPGEenWeC28As/bEFIvAv
-	 +ESitiKz4OiBdzCgq1Dh0II33PlNZfQs+RMJIz/4dSOJB3XpYAh57yUzBN2Ul9qlX1
-	 5AaqBE6L+QFlNS6MTZyXeSWyOZbMFD9RX04sEEqoEG3g5DcwLvXWEsfwdq1dL+wgIn
-	 5kLkzHd19t+2htBpQnyzTAspEi1G7HxNqyvWhZ304UWB1SETU1wOpoZWO9xjuULzDr
-	 Sjx9WIrJQAoYejcEpVlozHowcRmjikgXMg7YvIxGAaSNCC/pY0a9G+IQPiv4tdttp6
-	 An+1vH4zYh20A==
-Message-ID: <b47803d8-d192-46bd-97de-da4baa74fbc0@kernel.org>
-Date: Mon, 3 Aug 2026 19:34:58 +0200
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="WwnDOngw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=4U
+	tTpZIpkwOO/83se/zETkGsr3p8/gqobaeCgkkE9WY=; b=WwnDOngwS8RlHT+pDt
+	i/hPl31bGT73nB46IqJ8YBkdnzJxtIeAbBsObuFBL4be/5JiMvauxeMc8juHivG7
+	F/mMNOvVlXAur1AIGOZzatl30tx5vxxYjRQ3XNATYNFgZcG3c3C+ef6mVGuPbUhC
+	E0B9rMnyxRTF9brtfXWxPZALs=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id PCgvCgCHX6U2TXFqCeVfJA--.27903S3;
+	Tue, 04 Aug 2026 10:23:52 +0800 (CST)
+From: luoqing <l1138897701@163.com>
+To: l1138897701@163.com
+Cc: davem@davemloft.net,
+	matttbe@kernel.org,
+	mptcp@lists.linux.dev,
+	pabeni@redhat.com
+Subject: [PATCH MPTCH-next] selftests: add test for userspace PM address ID overflow
+Date: Tue,  4 Aug 2026 10:23:50 +0800
+Message-Id: <20260804022350.181323-2-l1138897701@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20260804022350.181323-1-l1138897701@163.com>
+References: <20260714080356.805839-1-l1138897701@163.com>
+ <20260804022350.181323-1-l1138897701@163.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3] mptcp: honour configured min/max RTO in
- retransmit paths
-Content-Language: fr
-To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>,
- mptcp <mptcp@lists.linux.dev>
-Cc: martineau <martineau@kernel.org>, pabeni <pabeni@redhat.com>,
- "shardul.b" <shardul.b@mpiricsoftware.com>, janak <janak@mpiric.us>,
- kalpanjani009 <kalpanjani009@gmail.com>, Lixiasong1 <lixiasong1@huawei.com>
-References: <20260617114508.253716-1-kalpan.jani@mpiricsoftware.com>
- <19fc5f77283.636e19ae49491.8985382660057875751@mpiricsoftware.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
- YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
- c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
- WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
- CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
- nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
- TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
- nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
- VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
- 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
- YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
- AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
- EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
- /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
- MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
- cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
- iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
- jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
- 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
- VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
- BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
- ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
- 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
- 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
- 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
- mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
- Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
- Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
- Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
- x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
- V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
- Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
- HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
- 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
- Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
- voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
- KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
- UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
- vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
- mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
- JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <19fc5f77283.636e19ae49491.8985382660057875751@mpiricsoftware.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PCgvCgCHX6U2TXFqCeVfJA--.27903S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW3GF4kJFyfXw43uF4fAw13Jwb_yoW7Xryrp3
+	yfC3ZxJFy8JF17XwnrKr4j9FyfuanIyFWDKw42kr9rZF4DGFn2qw1rKayjgrnruFZ2qa90
+	va42vF45WF1kuaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zZg44PUUUUU=
+X-CM-SenderInfo: jorrjmiyzxliqr6rljoofrz/xtbC+hhYnGpxTTjEpgAA3q
 
-Hi Kalpan,
+From: Qing Luo <luoqing@kylinos.cn>
 
-On 03/08/2026 06:52, Kalpan Jani wrote:
-> Hi all,
-> 
-> Gentle ping on this v3, sent on 2026-06-17:-
-> 
->   https://lore.kernel.org/all/20260617114508.253716-1-kalpan.jani@mpiricsoftware.com/
+Add a test that verifies the userspace PM correctly returns an error
+when all address IDs (1-255) are exhausted, instead of overflowing.
 
-Sorry, thank you for your patience. The priority is on the fixes, and we
-are trying to go through all patches when we can. But I admit is way
-longer than usual.
+The test first announces 255 unique addresses (IDs 1-255) to fill the
+ID bitmap. It then attempts to create a subflow (CSF) without specifying
+a local ID, which triggers auto-allocation via
+mptcp_userspace_pm_get_local_id(). With all IDs in use, the allocation
+should fail with -ENOSPC.
 
-> I didn't get any CI results or review comments on it, so I want to
-> make sure it didn't get lost somewhere. As far as I can tell it was
-> sent to the right list with the right prefix.
+Also modify pm_nl_ctl to make the 'lid' parameter optional for the CSF
+command. When omitted, the kernel auto-allocates a local ID.
 
-It looks like the CI didn't manage to send the notification. I restarted it.
+MPTCP_PM_MAX_ADDR_ID has been 255 since the userspace PM was introduced,
+so no version-dependent limit adjustment is needed (unlike pm_netlink.sh).
 
-It looks like the AI review was available:
+Assisted-by: LLM # code
+Signed-off-by: Qing Luo <luoqing@kylinos.cn>
+---
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  8 +--
+ .../selftests/net/mptcp/userspace_pm.sh       | 63 +++++++++++++++++++
+ 2 files changed, 67 insertions(+), 4 deletions(-)
 
-
-https://sashiko.dev/#/patchset/20260617114508.253716-1-kalpan.jani%40mpiricsoftware.com
-
-I guess at least the commit message should be updated, because the MPTCP
-sockets do not perform routing lookups. It could only do it when a
-subflow has been selected, which is not the case in the cases you
-modified. Same for the socket option: it is not available yet.
-
-Also, maybe better to directly use icsk_rto_{min,max} to avoid
-confusions, no? By doing that, you can remove the exception for "ip
-route ... rto_min 0" that doesn't influence anything here anyway from
-what I understood.
-
-> Happy to rebase and resend as v4 if that is easier, or to rework it
-> if this isn't the approach you'd like for issue #618.
-
-It would be good to have a validation for this. Because it is
-time-sensitive, the easier would be to do it with Packetdrill. Here, no
-need to create a new one, simply extend existing ones, e.g.
-mptcp/dss/dss_fin_retrans_* → we could set the tcp_rto_max_ms sysctl to
-have a shorter time, no? If at least one test is modified to validate
-your modifications in mptcp_set_datafin_timeout(), that would be good.
-
-WDYT?
-
-Cheers,
-Matt
+diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+index 78180da1efcc..a9dd650805a9 100644
+--- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
++++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+@@ -32,7 +32,7 @@ static void syntax(char *argv[])
+ 	fprintf(stderr, "\tadd [flags signal|subflow|backup|fullmesh] [id <nr>] [dev <name>] <ip>\n");
+ 	fprintf(stderr, "\tann <local-ip> id <local-id> token <token> [port <local-port>] [dev <name>]\n");
+ 	fprintf(stderr, "\trem id <local-id> token <token>\n");
+-	fprintf(stderr, "\tcsf lip <local-ip> lid <local-id> rip <remote-ip> rport <remote-port> token <token>\n");
++	fprintf(stderr, "\tcsf lip <local-ip> [lid <local-id>] rip <remote-ip> rport <remote-port> token <token>\n");
+ 	fprintf(stderr, "\tdsf lip <local-ip> lport <local-port> rip <remote-ip> rport <remote-port> token <token>\n");
+ 	fprintf(stderr, "\tdel <id> [<ip>]\n");
+ 	fprintf(stderr, "\tget <id>\n");
+@@ -481,7 +481,7 @@ int csf(int fd, int pm_family, int argc, char *argv[])
+ 	off = init_genl_req(data, pm_family, MPTCP_PM_CMD_SUBFLOW_CREATE,
+ 			    MPTCP_PM_VER);
+ 
+-	if (argc < 12)
++	if (argc < 10)
+ 		syntax(argv);
+ 
+ 	/* Params recorded in this order:
+@@ -557,9 +557,9 @@ int csf(int fd, int pm_family, int argc, char *argv[])
+ 			off += NLMSG_ALIGN(rta->rta_len);
+ 		}
+ 
+-		if (arg == 0) {
++		if (arg == 0 && params[1]) {
+ 			/* id */
+-			id = atoi(params[arg + 1]);
++			id = atoi(params[1]);
+ 			rta = (void *)(data + off);
+ 			rta->rta_type = MPTCP_PM_ADDR_ATTR_ID;
+ 			rta->rta_len = RTA_LENGTH(1);
+diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+index 30a809752d1b..45b040a8c0e5 100755
+--- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
++++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+@@ -847,6 +847,68 @@ test_subflows_v4_v6_mix()
+ 	sleep 0.5
+ }
+ 
++test_addr_id_overflow()
++{
++	print_title "Address ID overflow tests"
++
++	local i announced=0
++
++	:>"$server_evts"
++
++	# Clear leftover addresses from previous tests
++	for i in $(seq 0 255); do
++		ip netns exec "$ns2" ./pm_nl_ctl rem token "$client4_token" id "$i" > /dev/null 2>&1
++	done
++
++	# Announce 255 addresses (IDs 1-255) to exhaust all available IDs
++	for i in $(seq 1 255); do
++		if ip netns exec "$ns2" ./pm_nl_ctl ann 10.0.3."${i}" token "$client4_token" id \
++			"$i" dev ns2eth1 > /dev/null 2>&1; then
++			announced=$((announced + 1))
++		fi
++	done
++
++	print_test "ADD_ADDR with all IDs 1-255 exhausted"
++	sleep 1
++	if [ -s "$server_evts" ]; then
++		test_pass
++	else
++		test_fail "No events generated"
++		return
++	fi
++
++	# Start listener to ensure subflow creation doesn't fail on connectivity
++	ip netns exec "$ns1" ./pm_nl_ctl listen 10.0.1.1 "$app4_port" >/dev/null 2>&1 &
++	local listener_pid=$!
++	sleep 0.5
++
++	# Try to create a subflow without specifying a local ID.
++	# With all IDs exhausted, this should fail with -ENOSPC.
++	print_test "CSF without local ID after all IDs exhausted - expect failure"
++	local out
++	if out=$(ip netns exec "$ns2" ./pm_nl_ctl csf lip 10.0.1.2 \
++		rip 10.0.1.1 rport "$app4_port" token "$client4_token" 2>&1); then
++		test_fail "Expected failure but CSF succeeded"
++	else
++		# pm_nl_ctl prints the kernel error as "netlink error -28 (No space
++		# left on device)" for -ENOSPC. Match either form.
++		if echo "$out" | grep -qE "netlink error -?28|No space left on device"; then
++			test_pass
++		else
++			test_fail "CSF failed, but not with the expected ENOSPC: ${out}"
++		fi
++	fi
++
++	# Delete the listener from the server ns, if one was created
++	mptcp_lib_kill_wait $listener_pid
++
++	# Cleanup: remove all announced addresses
++	for i in $(seq 1 255); do
++		ip netns exec "$ns2" ./pm_nl_ctl rem token "$client4_token" id "$i" > /dev/null 2>&1
++	done
++	sleep 1
++}
++
+ test_prio()
+ {
+ 	print_title "Prio tests"
+@@ -940,6 +1002,7 @@ test_subflows
+ test_subflows_v4_v6_mix
+ test_prio
+ test_listener
++test_addr_id_overflow
+ 
+ mptcp_lib_result_print_all_tap
+ exit ${ret}
 -- 
-Sponsored by the NGI0 Core fund.
+2.25.1
 
