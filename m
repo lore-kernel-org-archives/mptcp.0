@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78ADB3F44FB
-	for <mptcp@lists.linux.dev>; Tue,  4 Aug 2026 18:22:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC06416846
+	for <mptcp@lists.linux.dev>; Tue,  4 Aug 2026 18:37:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785867764; cv=none; b=BkrH9sSWp/xornB/4ZUwKkgUVRBAt7D+GErhIXKgYBsZfnU/lyEXmaQd/ky+RaOS7VEYkDpcbKUht9lNzfKzTbZkc32WoMEEOEkSEterOFEYnf+5Dmu05ci/fM4BAsTSneiQzaMoq7gkMvfWGQnXI7BF3CnywwduSzX4OVQ6Ho0=
+	t=1785868670; cv=none; b=d7z0f3dk5AVByQUeR3Cx9RPb27QRRxYtcLAD7NZmy7AbkMkcRytZ+WgWKLEG2dpH0EPy8dHT8YTxn+ZHRTLEt12PiKk7oigOXf20u8D7V0ukQiB6maYuzbciQHSL5PRvHj8hzPrDO9xTrhAdLImDWCsc6KyGufI5Ov7f7BvZ4Pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785867764; c=relaxed/simple;
-	bh=JgiQuJ9hA9NlYnj1TMPYOdP7iOpmdxpxK+AnI0B45Mk=;
+	s=arc-20240116; t=1785868670; c=relaxed/simple;
+	bh=QJz7HRKyZ+iWKF7zjV1oZ+apFjV53zXBb7vXadWBZLo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P34vknMGw9S8hTADQq/b0oV3wQezoall1fAVttkx6DoTwTrJDylj78aCzTbbjpNMYF4EGd0EkrrZvJS2d6R8k8YurpuZNnU+jguxx4tgzXOpe6aQuAo4GPgE4rS43az07cuEFb5xPRk3XkgoyKlhpZakaqm2L3y42b4BN0h1Lfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nKUpePGM; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=q7mxbUiqCFAsqcp1GWI5fWaTszpk4tQPfe6SAncqVikJQPjUtNr17UCKorLvQ+0Qmtu5cSagY4NYXMzVQwcAL2+HX9RzNu+3Lj8xitVYve7ak1otPkAcb8sYDRj/AtGPwYmOPxSsTiF+oGqowzbzz4SUVcRS/50Deh8qcFnq3JE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PPj2MqJ5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nKUpePGM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C89C91F000E9;
-	Tue,  4 Aug 2026 18:22:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PPj2MqJ5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 842B31F000E9;
+	Tue,  4 Aug 2026 18:37:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785867763;
-	bh=YEYXSOGBuQFvi5Hb4FTz642JzKV3m2rqHQAkAoEwAMQ=;
+	s=k20260515; t=1785868668;
+	bh=kg2kw2WtiAWPsrD6qceSohIzETG5m73r56oLy7MYP84=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=nKUpePGMuHER6yMiYZORix6fZ2gNXeQLfCz8SQeEuewvmBdtdzfdbxZAyWaQ94QYf
-	 YnvPRoJLe5ey6HD16+iZhIyB8LfNyQ9EAns764VQ0qhE//7lE+1eRvzMOXjLnNT0Fj
-	 59A3NDjuZRij/4DGZR0xdbmmnh0Z/c9b59Eu+G+Dn53OoxXkvPgUYawblBvTVWDesF
-	 t8snDDQP/ntQciV+f0QI3d7ORsOfYvO850XSZ7SP93MPV/Yyph0mgXXduG1TW8b4dd
-	 q7P8GasNYeTQlkSrrIJyj2eBsr5jIJ83jy6VsHvyPVVj2sC9ztX0mCHt5ZxzKk0BNn
-	 eDhMDAT9yZotQ==
-Message-ID: <63f14fa5-f2d3-46e4-bb3a-f02430701cc8@kernel.org>
-Date: Tue, 4 Aug 2026 20:22:40 +0200
+	b=PPj2MqJ55PE04ci9qY9lEtOUMdWEz/9s9kd7HNlzMHPb/uBYDXYwkfxS8ZsKHNbS2
+	 hU9XIj7vDMSQtHgjFg6JRQM4b+1JQsydzvIeh7nRv7tcGEpzTVVPDSPoYG29SdTRG5
+	 xsq5ouYhuovxHq4V5yuq37CzcWv4wPtpXOqpdezR7BEyMDMhvkFISExTBt3EpKO54w
+	 fodt7HCvnWECcmXYmMlpHjwbD5FnoTyI/UVkp7VXP8iFermBn7wnRa47SPUaocjtMa
+	 eGaRTlGic8R4cfMylVinlbUDqKOhnGFPmNGxr5qz6B2GjM8QerZFZUnWu48CcX37oJ
+	 bZ/qhnhIisWng==
+Message-ID: <71a95e5f-957b-4783-be1e-375cb36f94a3@kernel.org>
+Date: Tue, 4 Aug 2026 20:37:45 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2 MPTCP-net] pm: userspace: fix address ID overflow when
- all IDs exhausted
+Subject: Re: [PATCH MPTCH-next] selftests: add test for userspace PM address
+ ID overflow
 Content-Language: fr
 To: luoqing <l1138897701@163.com>
 Cc: mptcp@lists.linux.dev
 References: <20260714080356.805839-1-l1138897701@163.com>
  <20260804022350.181323-1-l1138897701@163.com>
+ <20260804022350.181323-2-l1138897701@163.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,114 +88,189 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260804022350.181323-1-l1138897701@163.com>
+In-Reply-To: <20260804022350.181323-2-l1138897701@163.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi luoqing,
 
-(-cc David/Paolo)
-
-Thank you for the patch.
-
-Please only Cc the MPTCP mailing list.
-
-Also, please send new versions in a new email thread, not as a reply to
-a previous one.
-
-One last thing: here, you can send the fix and the selftest as part of
-the same series, not as separated patches, so the CI will validate the
-new selftest with the fix. It is fine to have patches for -net and -next
-in the same series. Also, please use 'mptcp-ne(x)t', no capital letters.
-
 On 04/08/2026 04:23, luoqing wrote:
 > From: Qing Luo <luoqing@kylinos.cn>
 > 
-> When all MPTCP address IDs (1-255) are exhausted in the userspace PM,
-> find_next_zero_bit() returns MPTCP_PM_MAX_ADDR_ID + 1 (256). This value
-> overflows when stored in the u8 field e->addr.id, resulting in ID 0
-> being stored and the entry being incorrectly added to the list.
+> Add a test that verifies the userspace PM correctly returns an error
+> when all address IDs (1-255) are exhausted, instead of overflowing.
 > 
-> ID 0 is reserved for the initial connection in MPTCP, so this overflow
-> can cause address conflicts.
+> The test first announces 255 unique addresses (IDs 1-255) to fill the
+> ID bitmap. It then attempts to create a subflow (CSF) without specifying
+> a local ID, which triggers auto-allocation via
+> mptcp_userspace_pm_get_local_id(). With all IDs in use, the allocation
+> should fail with -ENOSPC.
 > 
-> Note: the in-kernel PM already has an 'endpoints == MPTCP_PM_MAX_ADDR_ID'
-> check in mptcp_pm_nl_append_new_local_addr() that returns -ERANGE before
-> reaching find_next_zero_bit(), preventing this overflow. So this fix only
-> addresses the userspace PM path.
+> Also modify pm_nl_ctl to make the 'lid' parameter optional for the CSF
+> command. When omitted, the kernel auto-allocates a local ID.
+
+Same as for the other patch: should be in a different patch, but can
+certainly be dropped.
+
+> MPTCP_PM_MAX_ADDR_ID has been 255 since the userspace PM was introduced,
+> so no version-dependent limit adjustment is needed (unlike pm_netlink.sh).
 > 
-> Store the find_next_zero_bit() result in a temporary unsigned int, check
-> against MPTCP_PM_MAX_ADDR_ID, and return -ENOSPC if all IDs are truly
-> exhausted. Properly free the allocated entry with sock_kfree_s() on error.
-> 
-> Also modify the CSF (subflow create) handler to pass !entry.addr.id as
-> the needs_id parameter. When no local ID is provided by user-space
-> (entry.addr.id == 0), this triggers auto-allocation instead of silently
-> using the reserved ID 0.
-> 
-> Fixes: 4638de5aefe5 ("mptcp: handle local addrs announced by userspace PMs")
-> Assisted-by: LLM # review
+> Assisted-by: LLM # code
 > Signed-off-by: Qing Luo <luoqing@kylinos.cn>
 > ---
->  net/mptcp/pm_userspace.c | 18 +++++++++++++-----
->  1 file changed, 13 insertions(+), 5 deletions(-)
+>  tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  8 +--
+>  .../selftests/net/mptcp/userspace_pm.sh       | 63 +++++++++++++++++++
+>  2 files changed, 67 insertions(+), 4 deletions(-)
 > 
-> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index 945aa5afc2dd..ada7d6cef625 100644
-> --- a/net/mptcp/pm_userspace.c
-> +++ b/net/mptcp/pm_userspace.c
-> @@ -74,10 +74,17 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
->  			goto append_err;
+> diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+> index 78180da1efcc..a9dd650805a9 100644
+> --- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+> +++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+> @@ -32,7 +32,7 @@ static void syntax(char *argv[])
+>  	fprintf(stderr, "\tadd [flags signal|subflow|backup|fullmesh] [id <nr>] [dev <name>] <ip>\n");
+>  	fprintf(stderr, "\tann <local-ip> id <local-id> token <token> [port <local-port>] [dev <name>]\n");
+>  	fprintf(stderr, "\trem id <local-id> token <token>\n");
+> -	fprintf(stderr, "\tcsf lip <local-ip> lid <local-id> rip <remote-ip> rport <remote-port> token <token>\n");
+> +	fprintf(stderr, "\tcsf lip <local-ip> [lid <local-id>] rip <remote-ip> rport <remote-port> token <token>\n");
+>  	fprintf(stderr, "\tdsf lip <local-ip> lport <local-port> rip <remote-ip> rport <remote-port> token <token>\n");
+>  	fprintf(stderr, "\tdel <id> [<ip>]\n");
+>  	fprintf(stderr, "\tget <id>\n");
+> @@ -481,7 +481,7 @@ int csf(int fd, int pm_family, int argc, char *argv[])
+>  	off = init_genl_req(data, pm_family, MPTCP_PM_CMD_SUBFLOW_CREATE,
+>  			    MPTCP_PM_VER);
+>  
+> -	if (argc < 12)
+> +	if (argc < 10)
+>  		syntax(argv);
+>  
+>  	/* Params recorded in this order:
+> @@ -557,9 +557,9 @@ int csf(int fd, int pm_family, int argc, char *argv[])
+>  			off += NLMSG_ALIGN(rta->rta_len);
 >  		}
 >  
-> -		if (!e->addr.id && needs_id)
-> -			e->addr.id = find_next_zero_bit(id_bitmap,
-> -							MPTCP_PM_MAX_ADDR_ID + 1,
-> -							1);
-> +		if (!e->addr.id && needs_id) {
-> +			unsigned int id = find_next_zero_bit(id_bitmap,
-> +							     MPTCP_PM_MAX_ADDR_ID + 1,
-> +							     1);
-> +			if (id > MPTCP_PM_MAX_ADDR_ID) {
-> +				sock_kfree_s(sk, e, sizeof(*e));
-> +				ret = -ENOSPC;
-> +				goto append_err;
-> +			}
-> +			e->addr.id = id;
-> +		}
->  		list_add_tail_rcu(&e->list, &msk->pm.userspace_pm_local_addr_list);
->  		msk->pm.local_addr_used++;
->  		ret = e->addr.id;
-> @@ -400,7 +407,8 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
->  		goto create_err;
->  	}
+> -		if (arg == 0) {
+> +		if (arg == 0 && params[1]) {
+>  			/* id */
+> -			id = atoi(params[arg + 1]);
+> +			id = atoi(params[1]);
+>  			rta = (void *)(data + off);
+>  			rta->rta_type = MPTCP_PM_ADDR_ATTR_ID;
+>  			rta->rta_len = RTA_LENGTH(1);
+> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> index 30a809752d1b..45b040a8c0e5 100755
+> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> @@ -847,6 +847,68 @@ test_subflows_v4_v6_mix()
+>  	sleep 0.5
+>  }
 >  
-> -	err = mptcp_userspace_pm_append_new_local_addr(msk, &entry, false);
-> +	err = mptcp_userspace_pm_append_new_local_addr(msk, &entry,
-> +						       !entry.addr.id);
+> +test_addr_id_overflow()
+> +{
+> +	print_title "Address ID overflow tests"
+> +
+> +	local i announced=0
+> +
+> +	:>"$server_evts"
+> +
+> +	# Clear leftover addresses from previous tests
+> +	for i in $(seq 0 255); do
+> +		ip netns exec "$ns2" ./pm_nl_ctl rem token "$client4_token" id "$i" > /dev/null 2>&1
+> +	done
 
-I don't think you can do that: it is valid to give an ID set to 0. But
-it is different to give no ID.
+Is this really needed?
 
-I don't think this modification here should be part of this patch: it is
-different from the overflow case you are trying to fix. It could be in
-another patch, but that's changing the behaviour, and that's not a fix I
-think.
+> +
+> +	# Announce 255 addresses (IDs 1-255) to exhaust all available IDs
+> +	for i in $(seq 1 255); do
+> +		if ip netns exec "$ns2" ./pm_nl_ctl ann 10.0.3."${i}" token "$client4_token" id \
+> +			"$i" dev ns2eth1 > /dev/null 2>&1; then
 
-Also, see my series:
+Why hiding errors? (OK to hide if it is just to use all bits, then try
+one extra to check the error)
 
+> +			announced=$((announced + 1))
 
-https://lore.kernel.org/20260727-mptcp-pm-userspace-id0-case-v1-0-9877f02a9bae@kernel.org
+Set but not used?
 
-*Maybe*, for -next, we could check if the ID was not set via Netlink
-(and not set to 0), and pick an ID for it. *But*, it might not be a good
-idea: the userspace daemon will not know the ID that has been picked,
-and will need to get it via another request. That doesn't sound like a
-good idea, no?
+> +		fi
+> +	done
 
->  	if (err < 0) {
->  		NL_SET_ERR_MSG_ATTR(info->extack, laddr,
->  				    "did not match address and id");
+Mmh, all of this is very slow: 19 seconds on the CI with a "normal"
+kconfig, 52 seconds with a "debug" one...
+
+That's a lot... Any ideas on how to reduce this time? (maybe not possible?)
+
+> +
+> +	print_test "ADD_ADDR with all IDs 1-255 exhausted"
+> +	sleep 1
+
+Why this "sleep 1"?
+
+> +	if [ -s "$server_evts" ]; then
+> +		test_pass
+> +	else
+> +		test_fail "No events generated"
+> +		return
+> +	fi
+> +
+> +	# Start listener to ensure subflow creation doesn't fail on connectivity
+
+Really needed?
+
+> +	ip netns exec "$ns1" ./pm_nl_ctl listen 10.0.1.1 "$app4_port" >/dev/null 2>&1 &
+> +	local listener_pid=$!
+> +	sleep 0.5
+> +
+> +	# Try to create a subflow without specifying a local ID.
+> +	# With all IDs exhausted, this should fail with -ENOSPC.
+> +	print_test "CSF without local ID after all IDs exhausted - expect failure"
+> +	local out
+> +	if out=$(ip netns exec "$ns2" ./pm_nl_ctl csf lip 10.0.1.2 \
+> +		rip 10.0.1.1 rport "$app4_port" token "$client4_token" 2>&1); then
+
+I guess you cannot have an overflow with csf, because an ID is required.
+
+> +		test_fail "Expected failure but CSF succeeded"
+> +	else
+> +		# pm_nl_ctl prints the kernel error as "netlink error -28 (No space
+> +		# left on device)" for -ENOSPC. Match either form.
+
+Really needed? The pm_nl_ctl should fail.
+
+> +		if echo "$out" | grep -qE "netlink error -?28|No space left on device"; then
+> +			test_pass
+> +		else
+> +			test_fail "CSF failed, but not with the expected ENOSPC: ${out}"
+> +		fi
+> +	fi
+> +
+> +	# Delete the listener from the server ns, if one was created
+> +	mptcp_lib_kill_wait $listener_pid
+> +
+> +	# Cleanup: remove all announced addresses
+> +	for i in $(seq 1 255); do
+> +		ip netns exec "$ns2" ./pm_nl_ctl rem token "$client4_token" id "$i" > /dev/null 2>&1
+> +	done
+
+Maybe not needed?
+
+> +	sleep 1
+
+Clearly not needed.
+
+> +}
+> +
+>  test_prio()
+>  {
+>  	print_title "Prio tests"
+> @@ -940,6 +1002,7 @@ test_subflows
+>  test_subflows_v4_v6_mix
+>  test_prio
+>  test_listener
+> +test_addr_id_overflow
+>  
+>  mptcp_lib_result_print_all_tap
+>  exit ${ret}
 
 Cheers,
 Matt
