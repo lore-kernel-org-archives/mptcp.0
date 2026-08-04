@@ -1,183 +1,166 @@
-Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B835A25785C
-	for <mptcp@lists.linux.dev>; Tue,  4 Aug 2026 12:28:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785846522; cv=pass; b=j9TlitNKVRSPNBT2iKlpLpWHQJ3UTJopAU4Nc/5BiM2Z9cLWCzCvyjrqiGOjBtT9tqxZTcsCtsobiM7KsLjOIofwVP+QEkmEZbyYrzNl/92RR0fL0uJ740/TxaWKRpI9sZ25/GQ7TEN1YsZqeqJI2/RLUEgsGAL+iZhSFQOBb5o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785846522; c=relaxed/simple;
-	bh=4YFcVKIbof9Uh0zUPiG+iRa6NJGCwgyBOlp0FL68Uwk=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=PpIV/Fz+uQ5E8XC/86SJIbjshRjSEyGSZOhhEJauEifCVajT9fzgn9y1AQy+8YHfxYVyHMD1WErf2821fs9hnHYon7eFfbLtM+80mh2qKT81+2vGY2tENwTPbAaJu+acOmXv8LRPrtE13/Lnr3rpoJJ7v3rkCMA5K5GebrVm4og=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=EPXUsKZ/ reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D24481FDF;
+	Tue,  4 Aug 2026 18:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785866455; cv=none; b=TodLYNO5QA5b/jYyH+ZK1e9jcdqz60hQGAuVjgIFbBqm3a+2R/TFMLZJaemfrGBa0nMoJL3MLdwAzPVG5a3+DS7IO4nscsAQGMT0MB/ldue+fXCJcLqJ4Zpe+pWR+VmrmQjCzQZMfYef4yytdtKaMn3+MhH9pVWNvfjlKqkErSE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785866455; c=relaxed/simple;
+	bh=iYbz8ptwNvphLEpaCX5NMpJJCU8tvPOhVm0UJfyvN1c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UOEcOTf03p04szUFsLKDhqoFJo57qiCyB3DqEIclm+1Qp8ck4jkHJL6gVSAz5f36LD+Bbyp062bdZJNp2itveJ2lKRDRCfJ7xIwUjNezCVyzGRepvF5p81VynUrdWbUId7/MXhobRJefk0uYszYOmXHKuobyDgZPNYHWwb3qPdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lH2Q/ph9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="EPXUsKZ/"
-ARC-Seal: i=1; a=rsa-sha256; t=1785846516; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=IyL81w9FlBwYXa1LQ9J8pt/j8NyS00aqRobZ+a5irY/084BRmTFtODIMkNK0WHnQyF1LorobqzKJiDfoHhHe39nMgH3gLEF9zCYscdiqk0IYjtO8vf4GUgL2t4A7JFBqLahUFyX6ZXxAzCccC/r/dH4o2QXmZ2GzONVB96owWs8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1785846516; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=j8oPiumzShej7XmN9svYE9Vb7HwMYkqPn3TP1Y5sBas=; 
-	b=HzcuClHJM+uHTHrfO9FrW2IetiHfz2+9QOuRED4z27ncy3PHLbO/MHxPDK15nbygeLP5yxy9pt/VARToL74OiBNKL/Uoc6k8D4ZB4ITWUIDHxkCA1/tKdRmavZNvb5JrCcdyTxn/SquY5Kv8I1N2ie46zx06Yp2AJcW7/qCjDv8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=mpiricsoftware.com;
-	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
-	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1785846516;
-	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=j8oPiumzShej7XmN9svYE9Vb7HwMYkqPn3TP1Y5sBas=;
-	b=EPXUsKZ/WePznMgvjoSBJYijRF5n1mMFkgydkd1EkwrseXZjnaEhyHhZOR+CAQc2
-	Y2T8UwqP8wpq9lp4QjjT6LgiQ5Xx5kvUBtlfQ2ihC61fBbXtauCsXOmfNgQRqFBEHnP
-	qH4l4OuKHidWTXwvaSSEOzUKvYqf2Ch8LSwVZms4=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1785846515516369.2758114810108; Tue, 4 Aug 2026 05:28:35 -0700 (PDT)
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1785846514516309.476551362396; Tue, 4 Aug 2026 05:28:34 -0700 (PDT)
-Date: Tue, 04 Aug 2026 17:58:34 +0530
-From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-To: "Matthieu Baerts" <matttbe@kernel.org>
-Cc: "mptcp" <mptcp@lists.linux.dev>, "martineau" <martineau@kernel.org>,
-	"pabeni" <pabeni@redhat.com>,
-	"shardul.b" <shardul.b@mpiricsoftware.com>,
-	"janak" <janak@mpiric.us>, "kalpanjani009" <kalpanjani009@gmail.com>,
-	"Lixiasong1" <lixiasong1@huawei.com>
-Message-ID: <19fccbf4342.1a9db47f221406.2661422723033045309@mpiricsoftware.com>
-In-Reply-To: <b47803d8-d192-46bd-97de-da4baa74fbc0@kernel.org>
-References: <20260617114508.253716-1-kalpan.jani@mpiricsoftware.com> <19fc5f77283.636e19ae49491.8985382660057875751@mpiricsoftware.com> <b47803d8-d192-46bd-97de-da4baa74fbc0@kernel.org>
-Subject: Re: [PATCH mptcp-next v3] mptcp: honour configured min/max RTO in
- retransmit paths
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lH2Q/ph9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29F6A1F000E9;
+	Tue,  4 Aug 2026 18:00:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785866453;
+	bh=Ol4u73S6iewdfvEZtCXNgbQ1k86m1sgo4EC26jm0nDs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=lH2Q/ph9dte98Ehh3x/G9+ZuCkl9gy7qofZqnmouUTacoGXpTDkAJ06Wrpp5/PzRF
+	 5amPgP7rnoYCm30u45mG8J7HEyiLUkTnzKkNDOxaxBsXG+5xbzB0W41er6rkvG7i8W
+	 JBQOnms5HzDkBdRtij1ILtJNNnzf5jHCT27rvTXgaA/jWuRHeXA3CjBbneYp7WNoIh
+	 taLVGOoBhR8TjXUn3xxyVoMlqpaWZP0Z5CRgQwnP9Fhw/mNO63vruTWi52wMU25HNx
+	 Jsn+buyNdmKCKk2dt1jnr3VX7KcRVfsXhTG3pfrBurvr1wVPpHl6f+5VlgWHziUB2x
+	 qB/r6ihDMk8Xw==
+Message-ID: <ec043cd9-ffc5-4a16-a80e-b736ea50bf3f@kernel.org>
+Date: Tue, 4 Aug 2026 20:00:43 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net] mptcp: hold msk reference when cloning request
+ sockets
+Content-Language: fr
+To: David Lee <david.lee@trailofbits.com>, Kyle Zeng <kylebot@openai.com>
+Cc: Dominik 'Disconnect3d' Czarnota <dominik.czarnota@trailofbits.com>,
+ geliang@kernel.org, horms@kernel.org, kuniyu@google.com,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, Ren Wei <n05ec@lzu.edu.cn>, yuantan098@gmail.com,
+ yifanwucs@gmail.com, tomapufckgml@gmail.com, bird@lzu.edu.cn,
+ caoruide123@gmail.com, enjou1224z@gmail.com, Ren Wei <n05ec@lzu.edu.cn>,
+ yuantan098@gmail.com, yifanwucs@gmail.com, tomapufckgml@gmail.com,
+ bird@lzu.edu.cn, caoruide123@gmail.com, enjou1224z@gmail.com,
+ Vega <vega@nebusec.ai>, martineau@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, ncardwell@google.com
+References: <20260804095051.715355-1-david.lee@trailofbits.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260804095051.715355-1-david.lee@trailofbits.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matt,
+Hi David, Kyle,
 
-Thanks for taking a look.
+(+cc Vega's people)
 
-> I guess at least the commit message should be updated, because the MPTCP
-> sockets do not perform routing lookups. It could only do it when a
-> subflow has been selected, which is not the case in the cases you
-> modified. Same for the socket option: it is not available yet.
+On 04/08/2026 11:50, David Lee wrote:
+> From: Kyle Zeng <kylebot@openai.com>
+> 
+> An MP_JOIN request owns the reference stored in subflow_req->msk.
+> inet_reqsk_clone() byte-copies that pointer when migrating a request,
+> but does not acquire a reference for the clone.  The original and cloned
+> request destructors can consequently drop the same reference, leaving
+> one request with a dangling msk pointer.
+> 
+> Let cloned MPTCP requests take their own msk reference.  The source
+> request still owns its reference while it is being cloned, so sock_hold()
+> is safe.  The clone's normal destructor balances the new reference on
+> both successful and failed migration paths.
+> 
+> Fixes: c905dee62232 ("tcp: Migrate TCP_NEW_SYN_RECV requests at retransmitting SYN+ACKs.")
 
-Ah right, I missed that. So effectively only the two sysctls matter here,
-since that's what gets seeded in __mptcp_init_sock(). I'll fix the commit
-message to say that, and drop the claims about the route metric and the
-socket options.
+Thank you for this patch. It looks like it is similar to this one sent a
+few months ago, but where changes have been requested:
 
-> Also, maybe better to directly use icsk_rto_{min,max} to avoid
-> confusions, no? By doing that, you can remove the exception for "ip
-> route ... rto_min 0" that doesn't influence anything here anyway from
-> what I understood.
+  https://lore.kernel.org/40fd38e7a368e5b7bc9bc83364a32241f977d53f.1778404619.git.caoruide123@gmail.com
 
-Yes, makes sense. That also gets rid of the __mptcp_init_sock() special
-case I added in v2 for the lockdep splat, so everything reads the icsk
-fields the same way. And agreed the rto_min 0 check can go, the sysctl
-can't go below 1us anyway.
+Do you mind checking what they did, and explaining the different approach, please?
 
-I'd still keep the max_t(..., 1) inside the ilog2() though: nothing
-stops someone from setting tcp_rto_min_us higher than tcp_rto_max_ms
-(they're validated separately), and then rto_max / rto_min is 0. I'll
-add a comment for that.
+It seems there are two issues the Vega's team tried to solve: one with
+MP_JOIN requests (what you are trying to fix here) and with MP_CAPABLE.
+For me, it is fine to split that in two patches. I also don't mind who
+is writing the final patch(es), as long as credits are given. If you,
+David/Kyle, are doing that, it might be OK to add a:
 
-> It would be good to have a validation for this. Because it is
-> time-sensitive, the easier would be to do it with Packetdrill. Here, no
-> need to create a new one, simply extend existing ones, e.g.
-> mptcp/dss/dss_fin_retrans_* -> we could set the tcp_rto_max_ms sysctl to
-> have a shorter time, no? If at least one test is modified to validate
-> your modifications in mptcp_set_datafin_timeout(), that would be good.
+  Reported-by: Vega <vega@nebusec.ai>
+  Closes: https://lore.kernel.org/40fd38e7a368e5b7bc9bc83364a32241f977d53f.1778404619.git.caoruide123@gmail.com
 
-Good idea. I'll try with tcp_rto_max_ms=3D1000 (the minimum) in
-dss_fin_retrans_established.pkt: with the default rto_min that caps the
-shift at ilog2(5) =3D 2, so the intervals should stop doubling after
-~800ms. The current test only checks 3 retransmissions and the
-divergence should be on the 4th one, so I'll extend it a bit and check
-it fails on a kernel without the patch. Packetdrill patch to follow
-separately.
+@Vega's team: OK with that? Or are you actively working on a v3?
 
-Will send a v4 with all that if it sounds good to you.
+One last thing: it looks like your patch is conflicting with this one:
+
+  https://lore.kernel.org/netdev/20260803061739.134737-1-jiayuan.chen@linux.dev/
+
+> Cc: stable@vger.kernel.org
+> Assisted-by: Codex:gpt-5.6-sol Codex:gpt-5.5-cyber
+> Signed-off-by: Kyle Zeng <kylebot@openai.com>
+> Co-developed-by: David Lee <david.lee@trailofbits.com>
+> Signed-off-by: David Lee <david.lee@trailofbits.com>
+> ---
+> Bug found and triaged by OpenAI Security Research and
+> validated by Trail of Bits.
+> 
+> Trail of Bits has a reproducer for this bug that triggers a
+> KASAN use-after-free and can share if needed.
+
+I think it would be good to include the (decoded) KASAN warning in the
+commit message. Regarding the reproducer, if it is with packetdrill, I
+think it is always useful to share it. For others, don't hesitate to
+share it to the same people: it can help better understanding the issue.
+Maybe remove the mailing list when doing that if it is security related?
 
 Cheers,
-Kalpan Jani
-
-
-From: Matthieu Baerts <matttbe@kernel.org>
-To: "Kalpan Jani"<kalpan.jani@mpiricsoftware.com>, "mptcp"<mptcp@lists.linu=
-x.dev>
-Cc: "martineau"<martineau@kernel.org>, "pabeni"<pabeni@redhat.com>, "shardu=
-l.b"<shardul.b@mpiricsoftware.com>, "janak"<janak@mpiric.us>, "kalpanjani00=
-9"<kalpanjani009@gmail.com>, "Lixiasong1"<lixiasong1@huawei.com>
-Date: Mon, 03 Aug 2026 23:04:58 +0530
-Subject: Re: [PATCH mptcp-next v3] mptcp: honour configured min/max RTO in =
-retransmit paths
-
- > Hi Kalpan,
- >=20
- > On 03/08/2026 06:52, Kalpan Jani wrote:
- > > Hi all,
- > >=20
- > > Gentle ping on this v3, sent on 2026-06-17:-
- > >=20
- > >   https://lore.kernel.org/all/20260617114508.253716-1-kalpan.jani@mpir=
-icsoftware.com/
- >=20
- > Sorry, thank you for your patience. The priority is on the fixes, and we
- > are trying to go through all patches when we can. But I admit is way
- > longer than usual.
- >=20
- > > I didn't get any CI results or review comments on it, so I want to
- > > make sure it didn't get lost somewhere. As far as I can tell it was
- > > sent to the right list with the right prefix.
- >=20
- > It looks like the CI didn't manage to send the notification. I restarted=
- it.
- >=20
- > It looks like the AI review was available:
- >=20
- >=20
- > https://sashiko.dev/#/patchset/20260617114508.253716-1-kalpan.jani%40mpi=
-ricsoftware.com
- >=20
- > I guess at least the commit message should be updated, because the MPTCP
- > sockets do not perform routing lookups. It could only do it when a
- > subflow has been selected, which is not the case in the cases you
- > modified. Same for the socket option: it is not available yet.
- >=20
- > Also, maybe better to directly use icsk_rto_{min,max} to avoid
- > confusions, no? By doing that, you can remove the exception for "ip
- > route ... rto_min 0" that doesn't influence anything here anyway from
- > what I understood.
- >=20
- > > Happy to rebase and resend as v4 if that is easier, or to rework it
- > > if this isn't the approach you'd like for issue #618.
- >=20
- > It would be good to have a validation for this. Because it is
- > time-sensitive, the easier would be to do it with Packetdrill. Here, no
- > need to create a new one, simply extend existing ones, e.g.
- > mptcp/dss/dss_fin_retrans_* =E2=86=92 we could set the tcp_rto_max_ms sy=
-sctl to
- > have a shorter time, no? If at least one test is modified to validate
- > your modifications in mptcp_set_datafin_timeout(), that would be good.
- >=20
- > WDYT?
- >=20
- > Cheers,
- > Matt
- > --=20
- > Sponsored by the NGI0 Core fund.
- >=20
- >=20
-
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
