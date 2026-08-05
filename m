@@ -1,119 +1,132 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1944F3DC85B
-	for <mptcp@lists.linux.dev>; Wed,  5 Aug 2026 07:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD013C5826
+	for <mptcp@lists.linux.dev>; Wed,  5 Aug 2026 07:58:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785913779; cv=none; b=mVnfOoj7LlD/d8dm71PToV+s3Hze4aOxEwBvgHP9DnMqNMP3K3OMaosgOmn2kqd2NuwW9JLzlpwRiVvkAc41LQscpVXe3g1N4zO4BA3zNB1ftcNgOYgPig71X7Xpgs7sqI8ZDea08Ot+VsgRk0yKoeUwGJ3ZbjulefWH7ZmoWgg=
+	t=1785916713; cv=none; b=p9mSRuJjEcl087IMnUeqV5suM03ShU4mQ5krs4fNl0mUOHW2Zny4prcBFC9Fwx9xc2Mz/fUEXSfiU8tOm4f/y6o0tseBF0Lgb1cKXiEDFPMNz0zseyksVoKimrIuR77KgHO8gfV0QuwcnJW8KTG0DyrFkmDiFUiMnoh8BPe80Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785913779; c=relaxed/simple;
-	bh=B7gp+IvVWjd/OtK5O+nBoDXy1OaPLDNH85rBroiu8e8=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=RGumtllFrn6jMZosCsqm+sVK7mjDmvGdzKQvt3xLzxoLqfdYYKDgN19dSDaNG72mzq90q0n8IsMMg3NTqRutudSXObRG+OdcROcBWCtH84/pJjj1zCWYdHTPmYkbDcU4QDBIalxysf5GNObFfCBq11S6+OfC7I5/DDtbXilLNxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=kKVtB4ZS; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1785916713; c=relaxed/simple;
+	bh=wij+uC5f1va6zsWSXwnTBRDEkcYdII1lbvuu/2OywLY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=TfPuOwWdS+/ulZT/dv5RlUkevaopNwZ+19h/w/202bN6iqrkjOwJ+JEryozhGR28L/YxxkTcLYxrIZEjGMA//iFuhhS0vk5PsukfjVQIhhnb/+3e+0E12yO2VDTUTyRomQnojEw+I87gVUdNZpzHvpFekdxFrEuAmdOwnOWwi9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KhUOE3D+; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="kKVtB4ZS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=qe
-	95k5nRHvFtyXl9T8JSocOULtF8aS+HfA06g998y9I=; b=kKVtB4ZSmwRXw/AlrS
-	s0UMbxY4EZQZ9cPbYL6D2k/UoiJJMDCiduPx/42C0jB8Xd38z+0ppjC27HpfCN0a
-	w2szXvc7wQPbr7EYRvnhsi/wZvkJpiTq7SMKgxp+120eY0rTgNuZmDE3kSYCR54c
-	7bIxATq5nt+cm1xnKH35BRsIE=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wBH_7en4XJqnHY1MA--.48S2;
-	Wed, 05 Aug 2026 15:09:30 +0800 (CST)
-From: luoqing <l1138897701@163.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net v3] mptcp: pm: fix userspace PM address ID overflow when all IDs are exhausted
-Date: Wed,  5 Aug 2026 15:09:26 +0800
-Message-Id: <20260805070926.716768-1-l1138897701@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KhUOE3D+"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-51c8e2e39easo6805381cf.0
+        for <mptcp@lists.linux.dev>; Wed, 05 Aug 2026 00:58:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785916711; x=1786521511; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=kvOKP3MkU3NfA52ibF5wmvP0+amwaFBSE2V1OysupNI=;
+        b=KhUOE3D+Uhz+1sn6npyzxLQj2gN3vKrCFGRoGcDUahscEeKHJApqojF3yecLYD4zw9
+         rRUobUdg7Gm2myYsRDwq2W5z2uhoJWk7vNLlyczEaCP8PO6DhETUwf1lBtZMZ/18ndRZ
+         aH5oCACLP15W7K1ldkF01mAqznfd4pqPgobIVhU6SIwlYxKmjg8NvI458AkdTz4eUpeF
+         2Rdp8NeuDQsFKB7NuuCnz30pAopcyW3zarN2+6hpAvgcCZPUv4RbGHiHaQiaAyKCLRnR
+         DhzaG+RBN7ewAy+w2R+GdT7gyansyvD3pV108dWiTzsZrLhUG7FMvPy6SMxkegmHse8A
+         Yg9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785916711; x=1786521511;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=kvOKP3MkU3NfA52ibF5wmvP0+amwaFBSE2V1OysupNI=;
+        b=XlIt7ViQ9opSm6O5GQoTW4B4hv+zB9t9um5aqzPvHt0Zo1hJ4dWptyMp+kPZlO68O/
+         OHOwKvONibRNsg+DNTsGg0mu9zsli5Sw7xw6nwpA5WTEiRSzELFKbq6LBdFrFOnuQYsQ
+         qdYhZLPAKRWQ9+9NYzpHlT5Dr22EMr09ZQpPxtxJuSO4A8VCZBa2KyqmUBAvt2Fx1Meh
+         SDLQMVn2miricLhmc1AeugHxR69yJUZNhwsMoS0x8LeaB0h84d5nYEyM0W45iN3K560j
+         AdJnz9SOFqzcn1Km0lmPttJsp0b0wRt4R51M1nF8/osQSZ1NiUNwvjw+3qOKZHizy5n4
+         EUAA==
+X-Gm-Message-State: AOJu0YwG4/5cAj+GTpIiO7H9kYpQdanepTn0a1Kd4jclnpFMFLSiyYon
+	qXjdtrGamH5m76cSHIdaq85iJONBtSnaMMMkg+4Y3V9P1s4aSZCwVnA=
+X-Gm-Gg: AR+sD10C0kSNepzOdswB3xGCTz6D41hpESueqgJU36eGLf7DzgF0riSqboH13kpRGJT
+	o/mxBSTYuRcyYVIi/oSx03rZK65bIr6QDNynvZ1y56BzmWxDkUZ0s0TV8hhI/IsFSQCJ5Et17S+
+	cqfy0BXbz6XZOcw7NeFeXByhAi5F/Gzr52YAs3jh6mEt9HXcvYW9Mf3brksfyDgOijhRRIrcqbZ
+	p+DpztmIdEknbtqM6D1ZAdM65zGJ+VqRb626Po+HGJmv5UByIMK30ig9IP+ILtfnc93GJsDYPLY
+	0BN8I7Wc6EeXqeaJMvCy9Z8H5LHRRmRYNtVcd3AYYgUeqWgtI9PdrppHE9hxp2CGC7KunUjQ1am
+	odv5VY6RE2cSGQuQZJH8vSW6hy93WvNYW/e1jlZe3I6pLOclD2lXfsPcoQY9EFR3Immv0L0kP32
+	5K9AaFjI4FWbYZv8rcrJYopmY6zP2/Ic0V8xAfD9XYjymf7MfO7giPInOmKsmBVn0htN2sZ1W13
+	AzamTFzvE7oYQ==
+X-Received: by 2002:a05:6214:5084:b0:8f1:7a7:b869 with SMTP id 6a1803df08f44-90881396a88mr52277916d6.31.1785916710599;
+        Wed, 05 Aug 2026 00:58:30 -0700 (PDT)
+Received: from [127.0.0.1] ([52.224.247.165])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-9087ffb8f76sm22290856d6.11.2026.08.05.00.58.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2026 00:58:29 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260805063956.3052563-1-kalpan.jani@mpiricsoftware.com>
+References: <20260805063956.3052563-1-kalpan.jani@mpiricsoftware.com>
+Subject: Re: [PATCH mptcp-next v4] mptcp: honour configured min/max RTO in
+ retransmit paths
+Message-ID: <707c7e55-80dd-5b62-3f6d-0f9480ceee62@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 05 Aug 2026 07:58:29 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBH_7en4XJqnHY1MA--.48S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxZry8Aw1rXF4kCrW7Ww1fXrb_yoW5Wr4DpF
-	4akwn3Cr48X3WfKws2vrsrKF1fWwsYvF1fWFy2yrsa9F45WF1DCry8CF1Y9Fy7tFs7GFyU
-	XrW7t3y5Ga1UuaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zR4CJJUUUUU=
-X-CM-SenderInfo: jorrjmiyzxliqr6rljoofrz/xtbC3QvZHmpy4atxdQAA3H
+Content-Type: text/plain; charset=utf-8
 
-From: Qing Luo <luoqing@kylinos.cn>
+Hi Kalpan,
 
-When all MPTCP address IDs (1-255) are exhausted in the userspace PM,
-find_next_zero_bit() returns MPTCP_PM_MAX_ADDR_ID + 1 (256). This value
-overflows when stored in the u8 field e->addr.id, resulting in ID 0
-being stored and the entry being incorrectly added to the list.
+Thank you for your modifications, that's great!
 
-ID 0 is reserved for the initial connection in MPTCP, so this overflow
-can cause address conflicts.
+Our CI did some validations and here is its report:
 
-Note: the in-kernel PM already has an 'endpoints == MPTCP_PM_MAX_ADDR_ID'
-check in mptcp_pm_nl_append_new_local_addr() that returns -ERANGE before
-reaching find_next_zero_bit(), preventing this overflow. So this fix only
-addresses the userspace PM path.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/309834=
+30746
 
-Store the find_next_zero_bit() result in a temporary unsigned int, check
-against MPTCP_PM_MAX_ADDR_ID, and return -ENOSPC if all IDs are truly
-exhausted. Properly free the allocated entry with sock_kfree_s() on error.
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/f8bc9a73a07f
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1140556
 
-Fixes: 4638de5aefe5 ("mptcp: handle local addrs announced by userspace PMs")
-Assisted-by: LLM
-Signed-off-by: Qing Luo <luoqing@kylinos.cn>
----
- net/mptcp/pm_userspace.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 945aa5afc2dd..7d0e343c35ed 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -74,10 +74,17 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
- 			goto append_err;
- 		}
- 
--		if (!e->addr.id && needs_id)
--			e->addr.id = find_next_zero_bit(id_bitmap,
--							MPTCP_PM_MAX_ADDR_ID + 1,
--							1);
-+		if (!e->addr.id && needs_id) {
-+			unsigned int id = find_next_zero_bit(id_bitmap,
-+							     MPTCP_PM_MAX_ADDR_ID + 1,
-+							     1);
-+			if (id > MPTCP_PM_MAX_ADDR_ID) {
-+				sock_kfree_s(sk, e, sizeof(*e));
-+				ret = -ENOSPC;
-+				goto append_err;
-+			}
-+			e->addr.id = id;
-+		}
- 		list_add_tail_rcu(&e->list, &msk->pm.userspace_pm_local_addr_list);
- 		msk->pm.local_addr_used++;
- 		ret = e->addr.id;
--- 
-2.25.1
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-v3: 
-Hi Matthieu,
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-Thank you for your detailed review and for pointing out the issues with my patch. 
+For more details:
 
-Based on your feedback, I will withdraw this patch submission. The core fix for the ID overflow is valid, but my patch became muddled with an unnecessary and potentially harmful behavioral change.
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-If you believe the core fix (checking find_next_zero_bit's return value against MPTCP_PM_MAX_ADDR_ID) is still worth submitting on its own, I can prepare a clean v3 that only contains that fix and removes the needs_id logic change. Otherwise, I am happy to let this go.
 
-Please let me know your preference.
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-Best regards,
-luoqing
-
-v2: https://lore.kernel.org/all/63f14fa5-f2d3-46e4-bb3a-f02430701cc8@kernel.org/
-
-v1: https://lore.kernel.org/all/20260714080356.805839-1-l1138897701@163.com/
-
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
