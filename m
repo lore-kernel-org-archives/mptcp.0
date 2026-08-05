@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7F1483BDA
-	for <mptcp@lists.linux.dev>; Wed,  5 Aug 2026 16:42:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B063F23A6
+	for <mptcp@lists.linux.dev>; Wed,  5 Aug 2026 16:43:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785948173; cv=none; b=TLZKOTy0qnsJphz1gLrPRd5Zf4JFqva4//krNrL5QgshBbqm2QKYsU7Ij1AuPuBxBWacrPKSm51LAKuMPdRNO9p8cObjkJjfR0bNYJQyLHSEzdiCWDVCCz17Njf9D2cAnBqgpjk+sGITG+GQSm8SMFPgnUhymrjJYmqWw8I+dFA=
+	t=1785948210; cv=none; b=i6aDu3vg4KAaIFjTAcv6s7pzJUVzxXrF5vsEC8cvey2yKl8x/ZUOqOFlu93Iq0Y4ZTU+ZVnANlnN6bc1ftkTjFUqm7RADqg2pJSfPDSrayaRaTAcdK9NGBW2ABBKsanc+vM7/XWQrZ6g4E743rQDlJwDASqo3rwAi6OIwUZkR/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785948173; c=relaxed/simple;
-	bh=hfufyV7edXv9kes1l5d74dpou3Is1KsENiZKU5T+mBg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZCrGrrhJVgYic17kT6JpY1MqCjAcVAl+e5FOl1p/YVx9H5TD9no7UpfxkABq1Zph5bFgEjlGMpcsEz7xvn8/xeNML9vmI0W3Tz7ZCN25iBjoPxhGRTc7XoM4yYm1fEMUdq2qgloP6BWbuwBMWwTmjpGKdG/mbSUM5Tx8MG05FMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=igxLRrUn; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785948210; c=relaxed/simple;
+	bh=svXov/+/qacZXuCaADwR0fARBj86nQMY51zilcm/8c0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=e1tz5aZtLr0ClkliU05Qi5HQIJoziGVuCpLMGlQ9Cc9/3zi1Ivdr/JfHdTSupLvcEanTYaw1IezGGx7FU0RQYAnr5fksWPW5sbn174aWBJBGzZXkpsrH+lUjGkldkJQeIWSqjFeXhAaFw92n+JsD32ggRN0ZtIKJnRCHD4I4X+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M0a1a1Dw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="igxLRrUn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40D331F000E9;
-	Wed,  5 Aug 2026 16:42:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M0a1a1Dw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B36221F000E9
+	for <mptcp@lists.linux.dev>; Wed,  5 Aug 2026 16:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785948170;
-	bh=DYkKk2y7U9L6uzzHTUvlm1Pd2UMrO6V+TQcl5l8jCOw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=igxLRrUngUJeMQCzlrllpfnLb92lvbUp34hxnMN1apsyRiyVsPBONczRcZLtfXWqq
-	 VDOLAKyZt+FLjicfSe4ayGcsegBW55SkxQuYNSFXdjOdl6WFAsCTM9TLvYWiRRO18+
-	 /55rViAcZYmRPoZk/bHStARFZY369YBdQ0/TEAIUqSrESK8vU9wTUenYVTjFi7ht2V
-	 5dCgY9gMMoGqB8sDBpAtS+7TPpP2rnVIVMCHMevuDxes31lmaz1M7LqHoC8VUnbSt+
-	 mX3TxOJfhmA+ZcJuqZC2uPv8L7bkrGEy7gMua/EVFwAYEQL62CfuISbHb7S3q4ThvI
-	 HaQOHXAKGyYyA==
-Message-ID: <e6a045fd-10b3-4947-ad6f-819133f44039@kernel.org>
-Date: Wed, 5 Aug 2026 18:42:48 +0200
+	s=k20260515; t=1785948209;
+	bh=tji+GcZCXBNfxnDnTeLhiBD3OHZ6C0En0VGACUwku6Q=;
+	h=Date:Subject:To:References:From:In-Reply-To;
+	b=M0a1a1DwhniKJ8E3n81dueh2w8TNyAe26tgs92Aztghuk5NdTUe1u2qYJAcM/Pcoj
+	 +olMxcqFNy54uaQUzj374e3yADKMO29W+zpcfHCSvlNntiQVkJycqTcKl22EQ/UN1a
+	 nC1/8bAGC0EzUL9OopSsFXCViNZAK/VsmhfK0o+5joBnQ5jIVgRJOObx+DPCZLRNub
+	 ZQkXWvDErTUDqvAfWhemOFfFX6e48w3LjH/usmV/nce4+QPSyfDj5eLXP3HbwZgoC9
+	 jxnOomyd/ie8lZxN3Ge6WojeqoYATPuutr/rOtz0d4jHmZyKUYQBUvvPbMJU1SVHFd
+	 UaGhMprNHPzEA==
+Message-ID: <68abb788-0804-4afe-8c0d-b4b6d566c365@kernel.org>
+Date: Wed, 5 Aug 2026 18:43:27 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 0/6] mptcp: pm: userspace: properly deal with
- the ID0 case
+Subject: Re: [PATCH mptcp-net 1/6] mptcp: pm: userspace: properly handle the
+ ID0 case
 Content-Language: fr
-To: Mat Martineau <martineau@kernel.org>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>
+To: MPTCP Linux <mptcp@lists.linux.dev>
 References: <20260727-mptcp-pm-userspace-id0-case-v1-0-9877f02a9bae@kernel.org>
- <317887c0-8298-3b5a-5cb1-70beaf968a04@kernel.org>
+ <20260727-mptcp-pm-userspace-id0-case-v1-1-9877f02a9bae@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,39 +86,82 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <317887c0-8298-3b5a-5cb1-70beaf968a04@kernel.org>
+In-Reply-To: <20260727-mptcp-pm-userspace-id0-case-v1-1-9877f02a9bae@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 01/08/2026 02:06, Mat Martineau wrote:
-> On Mon, 27 Jul 2026, Matthieu Baerts (NGI0) wrote:
+Replying to Sashiko's review:
+>> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+>> index 73094bdbdbf27..6e6eeda91ade0 100644
+>> --- a/net/mptcp/pm_userspace.c
+>> +++ b/net/mptcp/pm_userspace.c
+>> @@ -55,7 +55,10 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
+>>  
+>>  	spin_lock_bh(&msk->pm.lock);
+>>  	mptcp_for_each_userspace_pm_addr(msk, e) {
+>> -		addr_match = mptcp_addresses_equal(&e->addr, &entry->addr, true);
+>> +		/* allow matching ID0 when no port is specified */
+>> +		addr_match = mptcp_addresses_equal(&e->addr, &entry->addr,
+>> +						   e->addr.id != 0 ||
+>> +						   entry->addr.port != 0);
+>>  		if (addr_match && entry->addr.id == 0 && needs_id)
+>>  			entry->addr.id = e->addr.id;
+>>  		id_match = (e->addr.id == entry->addr.id);
+>>  		if (addr_match || id_match)
+>>  			break;
 > 
->> In MPTCP, the local address and port used by the initial subflow has the
->> ID "0". It means that when this address and port are used for some
->> operations -- e.g. creating a new subflow -- they should be linked to
->> the ID0, and no other addresses and ports can get this special ID while
->> the initial IP address and port is used.
->>
->> Instead of dealing with the ID0 case as an exception, add it to the
->> local addr list, and deal with it like the others, with minor
->> exceptions. That way, it seems easier to maintain instead of adding new
->> exceptions at a few places, at the cost of a few more bytes, which seems
->> OK in this mode.
->>
->> The first patch modifies add the initial address to the list, and the
->> others remove exceptions, and validate that in the selftests.
->>
+> With ID 0 now always present in userspace_pm_local_addr_list, does this
+> id_match check prematurely break the loop for new unassigned addresses?
 > 
-> The approach looks ok to me. Have you tested with mptcpd?
-No, but the "make check" is not validating that. What I'm changing here
-is only about the ID0 case, which is quite specific, and cover by the
-kernel selftests. I don't think I'm breaking anything here, but only a
-full test suite would be able to check that, which we don't have with
-mptcpd. I know that Gang is looking at adding some tests, but I guess
-the first tests will not validate the IDs being used are the expected ones.
+> If an unconfigured address is evaluated (e.g. from an incoming MP_JOIN
+> request), entry->addr.id defaults to 0. Since the pre-added initial address
+> (ID 0) is now in the list, e->addr.id == entry->addr.id (0 == 0) will be
+> true, falsely detecting an ID collision and preventing the new address from
+> being inserted.
+
+I guess it meant "if the IP address is not the same". If it is, now the
+right ID0 will be returned instead of a new one. If the address is
+different, then yes, id_match should always be false when needs_id is
+set. I will adapt that in a v2. (The bug was also present before when
+the ID0 was in the list.)
+
+>> @@ -692,6 +695,24 @@ int mptcp_userspace_pm_get_addr(u8 id, struct mptcp_pm_addr_entry *addr,
+>>  	return ret;
+>>  }
+>>  
+>> +/* Add the initial local address (ID0) to the local list: easier that way */
+>> +void mptcp_pm_userspace_created(struct mptcp_sock *msk, const struct sock *ssk)
+>> +{
+>> +	struct mptcp_pm_addr_entry *entry;
+>> +
+>> +	entry = sock_kmalloc((struct sock *)msk, sizeof(*entry), GFP_ATOMIC);
+>> +	/* Fine not to handle the ID0 case in memory pressure */
+>> +	if (!entry)
+>> +		return;
+>> +
+>> +	memset(entry, 0, sizeof(*entry));
+>> +	mptcp_local_address((struct sock_common *)ssk, &entry->addr);
+>> +
+>> +	spin_lock_bh(&msk->pm.lock);
+>> +	list_add_tail_rcu(&entry->list, &msk->pm.userspace_pm_local_addr_list);
+> 
+> Does this code forget to increment msk->pm.local_addr_used?
+
+No, on purpose.
+
+> When this address is added here, the counter is not incremented. Later, if
+> userspace creates a subflow using ID 0 and destroys it, or if subflow creation
+> fails, mptcp_userspace_pm_delete_local_addr() will unconditionally decrement
+> msk->pm.local_addr_used. This could cause the counter to underflow to 255
+> and permanently remove the ID 0 address from the list.
+
+Indeed, an exception is needed there. Will add that in v2.
+
+> 
+>> +	spin_unlock_bh(&msk->pm.lock);
+>> +}
 
 Cheers,
 Matt
 -- 
 Sponsored by the NGI0 Core fund.
-
