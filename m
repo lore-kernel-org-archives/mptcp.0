@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2543BD643
-	for <mptcp@lists.linux.dev>; Wed,  5 Aug 2026 16:43:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA30247D93C
+	for <mptcp@lists.linux.dev>; Wed,  5 Aug 2026 16:43:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785948211; cv=none; b=qIkORuNYAMBALO9jTRpbn74tzR64iUs0vLj3uTO2gCx/slb9dPbzRQLKOunJY3k1Pbc6Uuw19hdMTPqCXkWOQA1GLxED6Ah0AMP4kHWkNyE72sZuK+hUkLQpmywUtvIbjEsF0ELgccmIDemwUIjaAPpI//KlPM7+Zci9RQtjsEs=
+	t=1785948218; cv=none; b=Pg8cc+jYoPiWKCP1sUyA5AX+LXxBM9oq8GGsYJOy1SeVMwvuss5fkFodD1t1h5f735oeCO8GZNMMJ5xQiJnj6rHdGuHvh4EtoYlWfkQN6F4aKiJDeLryRHpcJve5g3WgA96/JIhWGk/00BVJQIiPXIWH2EYyol//U/gc1sPidf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785948211; c=relaxed/simple;
-	bh=HFp9b3fyFj6TUY1liv5fx2joDDSi1B3KK+XEl22WFEo=;
+	s=arc-20240116; t=1785948218; c=relaxed/simple;
+	bh=m+DaYMTzRvYL1ZbMsRCuthE2sPGFkPySK7Vb4Myiq7I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=CgyQWY50mWoG7c8Mrr7Q5HxzlDUMMHPgUYhi7bvr7w5ObV/dwNXw/j1OD/H1vKk27MowRN43mMSI43kIrhWa4XUcAnc83K6dg5rcni4bkmB//Zz8ONIx6ChSpecFNLZfkK5hrC64xYAgzGA4LgiLzK1MCh7smkFYSdUd6ncRLwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=La7GQSxO; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=FEiwhkqLUBmKNHrup9cczwPjIaHAAKrDAwbfdAUNy/99/FYqAm4upWoWFplPU4SmdIXAR5jfxh2WXjLo+SNMJtNK4/fo03ou1PBiAIkHKTYlfmQ/YDYEj99iCWKeQvPedxH7c6gKbSdgF9JPIywGlEOy/QWURrdmXhFDlyDgFlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K5XWbCcl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="La7GQSxO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF1D61F00A3A
-	for <mptcp@lists.linux.dev>; Wed,  5 Aug 2026 16:43:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K5XWbCcl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C1871F00A3A
+	for <mptcp@lists.linux.dev>; Wed,  5 Aug 2026 16:43:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785948210;
-	bh=A+58uySFn+GP5sG515r9oAkbziyN8Bsi7b7JfCLOueU=;
+	s=k20260515; t=1785948217;
+	bh=QShTgui7c8EIeqUFSSvHCLazN79sqJhph1q6frDc8Fg=;
 	h=Date:Subject:To:References:From:In-Reply-To;
-	b=La7GQSxOEGyTJZ9i6GRC8gJsQXnnlIwXQg2m4oRgEWNGpbGhizBvqY2TfDuy6OuTO
-	 CoiNLy9tUL6H8GVcM88C1JnKez3Q6yU3pJfSL4yWuidkmMCMR1alFGjzd/MsaKyh+W
-	 hJUslmphUqcr43y+tDbELhb8XExQ0P4pCF6vFRSpxqhiuFhCA0gQVmYmmuCxRpyCZj
-	 126o4hFBXRW0GILnhjc7+cVyo4Qke+e9avG4EJfq3MQL3Jcv+IZCxCd3iCPeq4CvwD
-	 GBzQMaQCKFwf5NeO0B0B6ZwKwSbySntuAUS7RGrKW6pnrGAgNhLNkeqlVZX02Eyl3i
-	 /a21K4ya6JU+A==
-Message-ID: <ac1c48e0-de2f-4794-8661-b529e69e713e@kernel.org>
-Date: Wed, 5 Aug 2026 18:43:29 +0200
+	b=K5XWbCcluVbHAAex8fJYch12lMU1xei6fluFvJW+7FTuBZjDBh5BnGKpy96bjLFqK
+	 2omo2KeYqkcsrE5xAtUlGYlXQ0D8OXRcdR43j+s5YiT2LNm1cQ5919RPQWMLOaBZYj
+	 zC5PHCoxy1t+g3bAAHkFvacBDPDCSjTNQ0H69RhtlgFSwGtFUTz9t8fiSl0p/qoFxo
+	 0/Cnl+Dof/jVN5CyvIV9+NQqmzpceoy+kbg1hINB+Vv3PVwEzb2V/GhHcTE7fi8NbR
+	 aHtrarj78STxV3j0vgKqlTByWVJDG+119vZ5wV8G6BkM33qsincInQA1OUcfP9+OKK
+	 /7Grp3FuAmk1A==
+Message-ID: <cb57842a-8b2a-451b-8eb4-9fbf4f5412d1@kernel.org>
+Date: Wed, 5 Aug 2026 18:43:36 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 2/6] mptcp: pm: userspace: allow announcing ID0
- addr
+Subject: Re: [PATCH mptcp-net 3/6] mptcp: pm: userspace: no ID0 exception for
+ RM_ADDR
 Content-Language: fr
 To: MPTCP Linux <mptcp@lists.linux.dev>
 References: <20260727-mptcp-pm-userspace-id0-case-v1-0-9877f02a9bae@kernel.org>
- <20260727-mptcp-pm-userspace-id0-case-v1-2-9877f02a9bae@kernel.org>
+ <20260727-mptcp-pm-userspace-id0-case-v1-3-9877f02a9bae@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,74 +86,85 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260727-mptcp-pm-userspace-id0-case-v1-2-9877f02a9bae@kernel.org>
+In-Reply-To: <20260727-mptcp-pm-userspace-id0-case-v1-3-9877f02a9bae@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Replying to Sashiko's review:
 
+>> After the first patch of this series, the initial ID0 address is present
+>> in the local addr list when the connection has been created.
+> 
+> Does adding the initial ID 0 address to the local address list cause
+> secondary subflow creation to fail for incoming joins on unannounced
+> addresses?
+> 
+> When a secondary subflow is initiated using a new address with ID 0,
+> mptcp_userspace_pm_append_new_local_addr() loops over the list.
+> 
+> The new entry will match the ID 0 of the initial address (id_match = true)
+> but its IP differs (addr_match = false).
+> 
+> This causes the loop to break, bypassing allocation and ID assignment,
+> and returns -EINVAL.
+
+Same comment as on patch 1/6.
+
+> Does destroying the initial subflow (ID 0) via userspace PM cause an
+> underflow of msk->pm.local_addr_used?
+> 
+> If the initial ID 0 connection address is added without incrementing
+> the local_addr_used counter, later calling MPTCP_PM_CMD_SUBFLOW_DESTROY
+> on ID 0 will unconditionally decrement it in
+> mptcp_userspace_pm_delete_local_addr().
+> 
+> Could this wrap the 8-bit counter to 255 and corrupt the statistics
+> exported to userspace?
+
+Same comment as on patch 1/6.
 >> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
->> index 6e6eeda91ade0..4c96433590e36 100644
+>> index 4c96433590e36..9c7fab6a59bf4 100644
 >> --- a/net/mptcp/pm_userspace.c
 >> +++ b/net/mptcp/pm_userspace.c
->> @@ -212,12 +212,6 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
->>  	if (err < 0)
->>  		goto announce_err;
+> 
+> [ ... ]
+> 
+>> @@ -315,11 +284,6 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
 >>  
->> -	if (addr_val.addr.id == 0) {
->> -		NL_SET_ERR_MSG_ATTR(info->extack, addr, "invalid addr id");
->> -		err = -EINVAL;
->> -		goto announce_err;
+>>  	sk = (struct sock *)msk;
+>>  
+>> -	if (id_val == 0) {
+>> -		err = mptcp_userspace_pm_remove_id_zero_address(msk);
+>> -		goto out;
 >> -	}
 >> -
+>>  	lock_sock(sk);
+>>  
+>>  	spin_lock_bh(&msk->pm.lock);
 > 
-> If userspace deletes the initial subflow via MPTCP_PM_CMD_SUBFLOW_DESTROY,
-> which removes the ID 0 entry from the local address list, can userspace then
-> announce an arbitrary IP address with ID 0?
+> This is a pre-existing issue, but does decrementing sk_omem_alloc eagerly
+> while freeing memory via RCU allow a local user in a user namespace to
+> bypass socket memory limits?
 > 
-> Since the original ID 0 entry would be missing, it seems
-> mptcp_userspace_pm_append_new_local_addr() wouldn't find an address or ID
-> match:
+> Later in mptcp_pm_nl_remove_doit():
 > 
-> net/mptcp/pm_userspace.c:mptcp_userspace_pm_append_new_local_addr() {
->     ...
-> 	if (!addr_match && !id_match) {
-> 		...
-> 		list_add_tail_rcu(&e->list, &msk->pm.userspace_pm_local_addr_list);
-> 		msk->pm.local_addr_used++;
-> 		ret = e->addr.id;
-> 	}
->     ...
-> }
+> 	kfree_rcu_mightsleep(match);
+> 	/* Adjust sk_omem_alloc like sock_kfree_s() does, to match
+> 	 * with allocation of this memory by sock_kmemdup()
+> 	 */
+> 	atomic_sub(sizeof(*match), &sk->sk_omem_alloc);
 > 
-> Would this incorrectly append a new entry with ID 0 and an arbitrary IP
-> address, bypassing the validation mentioned in the commit message?
+> If a user with CAP_NET_ADMIN repeatedly announces and removes addresses in
+> a tight loop via MPTCP_PM_CMD_ANNOUNCE and MPTCP_PM_CMD_REMOVE, the
+> sk_omem_alloc counter is decremented immediately, but the actual freeing
+> is deferred to RCU grace periods.
+> 
+> Could this potentially lead to memory exhaustion (OOM) on the host?
 
-Yes, but the RFC8684 doesn't specify if the ID0 can be replaced by
-another address, once removed. But it says: "A host wishing to replace
-an existing Address ID MUST first remove the existing one". In this
-condition, better to let the responsibility to the userspace daemon.
+Mmh, I don't think we need to handle this case with CAP_NET_ADMIN, plus
+the netlink communication will not allow too many loops I suppose.
 
-I can add a note in the commit message.
-
-> Does allowing ID 0 announcements here also create a state inconsistency when
-> trying to remove them?
-> 
-> Looking at mptcp_pm_nl_remove_doit(), there is a hardcoded fast path for ID 0:
-> 
-> net/mptcp/pm_userspace.c:mptcp_pm_nl_remove_doit() {
->     ...
-> 	if (id_val == 0) {
-> 		err = mptcp_userspace_pm_remove_id_zero_address(msk);
-> 		goto out;
-> 	}
->     ...
-> }
-> 
-> Because mptcp_userspace_pm_remove_id_zero_address() doesn't call
-> mptcp_pm_announced_remove() and ignores msk->pm.anno_list, would this
-> leave the announcement un-cancellable and leak the state in anno_list?
-Removed in the next patch.
+(+ pre-existing issue: for a follow-up patch anyway)
 
 Cheers,
 Matt
