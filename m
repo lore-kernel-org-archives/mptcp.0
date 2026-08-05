@@ -1,116 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC9935E1D1
-	for <mptcp@lists.linux.dev>; Wed,  5 Aug 2026 15:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA91043B3C4
+	for <mptcp@lists.linux.dev>; Wed,  5 Aug 2026 15:12:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785942469; cv=none; b=PiKaWMiio4UWVkhTwS/PzTeNLKhumRMhYS6Z0YZ+5sf7XHfrsLRm7l5ed5DsxRZQAX8WndV+CyEvR6T3b5e1uFiMo3owdI5Z1TV6Q4LOm4Ys4boS4gV0GYCaYORREPxOIJBZOZQUUld1cqQdKZ9hZyTGGI575QxTlt9IGX06kms=
+	t=1785942741; cv=none; b=FtPDHolHlUCPF3hBuk+mE6W1wHcTqkqRZPb5Gw4lEpEOqjHhVKuHt4Ci163M17eLIClBGSqx01eCTdIrLcSzlQdYcR5PIQEgxjEqA0RzLrPi+z/Kq17/e6e5/PS7ZoWXwY58vknmegaqBXc4H+jFPk5pji0W1T+Wfg9Vy1PHtII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785942469; c=relaxed/simple;
-	bh=EjCht1h9T2RhKiQn4aVCRiiDCD2gP8TY5frpSO+82y4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=rYHO1iO8MYmLYB28hy78fsteHjt8Md2ampeQg8dWBSg8/+UEyqybqJd0Rf2uFg2Rx2Zz1/ibPDgSTX9xjkz4O9Pe8gKvi+W0qW9RNSDkeUV0lIavvKht0Tto81vZAYjXnin8FwOUuANSQA3LgUK8oFzTnBehyVHueq1aE8HpcII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D79PgGsc; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785942741; c=relaxed/simple;
+	bh=vaCSGwCmCIOsX5GHP8GwRIsW2FbV6l7cNI/N4JgLOi4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=i9PgS2kHOL1tvxm/gDwihDvB83vVH3llMic/jqAhmRX0VDVpcokP1o2oa4kz0NaAtEAa7Z6CUCk76er+gkisW19YgeL2KwQhD/QQgALApFi+gid+ArcPPqm/o7uZOdfLb2otY5+AKuM6lIv7+5hErPpmxf0wIpD68chkaGZFHXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tCGM4k+F; arc=none smtp.client-ip=209.85.167.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D79PgGsc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22B3E1F000E9;
-	Wed,  5 Aug 2026 15:07:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785942467;
-	bh=DKKMY2CamW9NapWN80moYtL+MHUHYS5MkHSSHImuC9w=;
-	h=From:Date:Subject:To:Cc;
-	b=D79PgGscZ/m7/29bltnxYMgnZHs10Y2hVdiD7WJNRbC+Rs+FDPow/bcEfVfoZ7uZi
-	 BQnUqULVD60PNbVZsBkUysOZhJyBBgweDjMlzBD4I94EAOAJ/zSVfNaqHDXO9LMo/Q
-	 S+1diR1wgr/CiJYvThyyaeB/sb8MVHhIacYSkXN14tRwNgfEYX7eK6HhoceXwm1QKx
-	 4oaR5HToEvjxVaN6o83f5CU5keP1Vt/v/OBZXZdVfhF6x81M5M2wBbBr4Y6xzAD4ti
-	 YgvuZ350tiSuarhBGoFfz9v3otCepu2olhs4w2SQOhYJTXQMr2KFBjB9UeioFrHDqT
-	 JCudUb7gh6M3w==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 05 Aug 2026 17:07:39 +0200
-Subject: [PATCH mptcp-net v2] mptcp: options: handle MPC data + csum reqd +
- no csum
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tCGM4k+F"
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-499f6e0bbabso712729b6e.0
+        for <mptcp@lists.linux.dev>; Wed, 05 Aug 2026 08:12:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785942737; x=1786547537; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=v+0vHLsLqGwg17UYt4mZSr6FSVU5eiP68K92yFFTBxk=;
+        b=tCGM4k+F4pAMooID6nWEk+I6M6/wqz63CYKIUXTfmAj30oytTaRihfG5D8KQRi50OG
+         MzepTbFGeg4YmZn3/yT3KhUeKqB0pITTEgfP1iQxf1XM6pausFVeJkLbb9GQOIVM5nPi
+         WM5h3i8ts5M9q/JMQflPrqMd/JqZXkgi/M8+PBcss3+6dnyqPbNDB0lbNBwQoESjEMtt
+         CZ2NFzdyQAj+U+DnY4+DiIIlW9PxMrluIQmn/NqrtMU+Cfz5sh4WTfb6tnW7hQmK5U/1
+         r7ii1OdO1IF53mdXBIyG5t+3WRRemzYCMH9/x29DBJnGIwPlDnWAiK8sLjEGoAmDKzEq
+         lFXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785942737; x=1786547537;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=v+0vHLsLqGwg17UYt4mZSr6FSVU5eiP68K92yFFTBxk=;
+        b=s4mcjL3c6de79VvZF6OfUkDB/pGuBbo6XtvrjfoD9Po1ByxZInlw1BTD1DOrmJnXW0
+         pl7ZHAIBOILqym0tADSC8U/VVlClwIAQ+kXsqfkhxnHqnR9PPH90GDCXCpmhRMt/1IZa
+         BOvjdTq6Q9F1br32WN9aHZMU3o98iCh7CodZnMTtA9lTzr7hvhTAlTSsACkUVPz9r3Rv
+         +Jrwxk5alixwobEhFYHwr4shG/St+umfj6ZJz9YceE2kunmeiJVJa5+ioV/EXr/+EixE
+         ZD20YCPS7NNTz27MVOr9rpI6pWPB2oh/EKF+b4QP06gvV75hwW5tvAsgoyuJsQuWQMEG
+         rw0Q==
+X-Gm-Message-State: AOJu0YwFildPiES/e5ypTaP/+9wVUfqZAqxb4xBIlR7i3Sf4+r1UNzHF
+	7WYGnSZoTG3PpVI5Vb5Mvn0KxRyRCfSQ/Ai3eyMvY4AhPZEhOji2gbA=
+X-Gm-Gg: AR+sD10+nSalh4GzT+o19gG+IFEab7TnrRWk01SrtVKAwawB/LfirHnMRq0KxGRpcTr
+	3Bj4IE6tG4EzMxL/yDSlmg2pFmTsAJat5JKUZLGVQs+MGQ29GoXYHUE4/FvdwFc8JImeSu/feip
+	3yRdDJx3GZTDLOlcj0r6VEgGHepf43MOUeajEhxyS/4hvjRCghyv0lZ0rNRmrKXS1Aqr/TD12Ry
+	fo0UfXAuzDUC7WDcazrhftPpg5jWNhDFNDAL1Oov6eTC4XYbAdzmsmGWyFglp/Ho3uDlWyV0Mh2
+	ixUvBaWYMG5zxxaxvhmwJnQbsCtIEaKcvLFv5OhFpFB/g+h7P7Wc/EyCfzJvxhMdGVBs6e/1NJW
+	coqxLTYQjkgNIr1OjWv2jAB5veH8War0NnYwWsX6piSb7YoLd1hjypHZMJQKBy9zGzg5tvYH/3+
+	kilYY+WbOzfgEVfKLCD8fK+vr97iS4GDjMMN29srJpbYJQCvROfNVBv3wrpxvv0fz1WXab26PQA
+	w==
+X-Received: by 2002:a05:6808:c196:b0:4a4:adaf:5576 with SMTP id 5614622812f47-4afaddd82cemr4180489b6e.4.1785942737141;
+        Wed, 05 Aug 2026 08:12:17 -0700 (PDT)
+Received: from [127.0.0.1] ([20.98.140.115])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-4afae7583eesm2198015b6e.13.2026.08.05.08.12.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2026 08:12:16 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20260805-mptcp-pm-reset-retrans_time-v1-1-19efbe17046d@kernel.org>
+References:
+ <20260805-mptcp-pm-reset-retrans_time-v1-1-19efbe17046d@kernel.org>
+Subject: Re: [PATCH mptcp-net] mptcp: pm: reset retrans_time when ADD_ADDR
+ entry is reused
+Message-ID: <865dc5cf-0db0-d7be-cc33-75ea695b61e6@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 05 Aug 2026 15:12:15 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260805-mptcp-opt-mpc-csumreqd-no-csum-v2-1-dbb52e01a36d@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/42OQQ7CIBREr9L8tRiorbGuvIfpgsKnRS0g0EbT9
- O5SegF3M5k/8/4CAb3GANdiAY+zDtqaZMpDAWLgpkeiZfJQ0vJML7Qmo4vCEetiUoKIMI0e35I
- YmzU5KVbVirNGVBLSiPOo9CcD7rB3DUZo9yhM3QNF3ADb8aBDtP6bn5lZrvzLnRlhRHQll7RrF
- HJxe6I3+Dpa30O7rusPTdDVIeoAAAA=
-X-Change-ID: 20260805-mptcp-opt-mpc-csumreqd-no-csum-3f145fa19c4d
-To: MPTCP Linux <mptcp@lists.linux.dev>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2600; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=EjCht1h9T2RhKiQn4aVCRiiDCD2gP8TY5frpSO+82y4=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLKKAw/ph5hc2vioLkyp7uzMy6yvXdoSirc/cDcR60qWu
- 1taOqm4o5SFQYyLQVZMkUW6LTJ/5vMq3hIvPwuYOaxMIEMYuDgFYCLq0Qz/VH5G2t0KexD4lGV+
- 4IbwnJD5ZzZ80Yv792LDBt5PTtH98xgZjiT++3wkKGZScVFzA0Pw9TdXujuPvft4PlT+3meVKSu
- m8AIA
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Type: text/plain; charset=utf-8
 
-Before this modification, a remote peer could send an MP_CAPABLE with
-data, with the checksum flag set, but without adding the actual 2 bytes
-of checksum. As a result, uninitialised bytes could be used for the
-'csum' field.
+Hi Matthieu,
 
-That was not a critical issue, because this 'csum' field is only used to
-compare with the expected one, if previously negotiated in the 3WHS.
-Worst case, the checksum is likely wrong, a fallback is done without a
-reject if the negotiation was done earlier. That's OK.
+Thank you for your modifications, that's great!
 
-Yet, better to take the expected path with this case: only look at the
-checksum flag for MP_CAPABLEs not carrying a data-len.
+Our CI did some validations and here is its report:
 
-Such packet can be seen as a 3rd or 4th ACK. The RFC8684 mentions [1]
-that the 3rd packet should have the checksum flag set. When an MPC + ACK
-contains data, the checksum flag is redundant with the checksum field.
-It is not clear what should be done for the 4th ACK, nor if the flag has
-to be set if the checksum field is set.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/310152=
+86192
 
-Therefore, it seems fine to only look at the presence of the checksum
-field, not to break the interaction with stacks that were not setting
-both.
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/c0750c235b43
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1140834
 
-Fixes: 208e8f66926c ("mptcp: receive checksum for MP_CAPABLE with data")
-Link: https://datatracker.ietf.org/doc/html/rfc8684#section-3.1-23 [1]
-Closes: https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20260803-net-mptcp-misc-fixes-7-2-rc6-v2-0-b8f496d71664%40kernel.org?part=1
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-Changes in v2:
-- back to my pre-version, only set CSUMREQD for non MPC + ACK + DATA
-  with a longer explanation about why it is OK. (Sashiko)
-- Link to v1: https://patch.msgid.link/20260805-mptcp-opt-mpc-csumreqd-no-csum-v1-1-cb2ad0b9feac@kernel.org
----
- net/mptcp/options.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index e1b38fe5faf8..73cec164d8bd 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -93,7 +93,8 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		 * In other words, the only way for checksums not to be used
- 		 * is if both hosts in their SYNs set A=0."
- 		 */
--		if (flags & MPTCP_CAP_CHECKSUM_REQD)
-+		if ((flags & MPTCP_CAP_CHECKSUM_REQD) &&
-+		    opsize < TCPOLEN_MPTCP_MPC_ACK_DATA)
- 			mp_opt->suboptions |= OPTION_MPTCP_CSUMREQD;
- 
- 		mp_opt->deny_join_id0 = !!(flags & MPTCP_CAP_DENY_JOIN_ID0);
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
----
-base-commit: 064fb643fcfcdddbad6da71da8f1ab206f018af7
-change-id: 20260805-mptcp-opt-mpc-csumreqd-no-csum-3f145fa19c4d
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-Best regards,
---  
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+For more details:
 
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
