@@ -1,132 +1,206 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFFC83EA962
-	for <mptcp@lists.linux.dev>; Wed,  5 Aug 2026 08:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785918615; cv=none; b=E4gOSnpoFuNCDFGeyI4sQbQ5u0G+CgOKMlpSLTyuZMIeJZBD2U8jOYNC0DjWILIC1FUbto0qYDu9V8NAilLRSys27er+QoFvTB3b9Wp2rOS1Mpeed0WsdaCNT8T6RwrkL6y5jB6yjRFxhQZAo6ct33WF/qSJJBDOeuvFywjxyEQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785918615; c=relaxed/simple;
-	bh=Cf34br/0EckHIBWCjq4In+rkhOSY3PjyEypYrvc9cgE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=O7LdxYuGw/1QLmUhQuO1dFvqbvBvpCEjv5soQW9n5bR9ZIzJDDlWRcssb1gSS4oBSXUNEmUkIc7QerA8+miWsQ/K4MPS/a2bCSrgm4sLwlWppcqeCqt4xvPeFXeGoT0RgPR2gLsm8l0yKxgFk2Bz927HJ0k7Hc2YwUfwYMu12YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NbSUNpGG; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEAF349CD3
+	for <mptcp@lists.linux.dev>; Wed,  5 Aug 2026 08:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.170
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785919944; cv=pass; b=MGDagyRbaYpqgUNPyBKryx7sPEMQuxZt5Qi6ziWvSTpSlyDEvTCBAUs+sgjjaHYCiC3Ynt2lh5cTcK6djjSQWeS0/upFssWfivEMKTmnFtiBMQFUXw8fPa4V7ZbJ1FGCHyMeLQgmPTnSV5j6F7yDNUiddR01/kAn9bHJUVh3fyI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785919944; c=relaxed/simple;
+	bh=j6DXQFZPqoJxKT6AqBIKO6CcGnuuFezI7MlEPU5EqfQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kdMpBclVQLva7zX9R6WWy+JgTw4ZRONLj1Jh/pVX3R2c8ao7gE+RRnw+QedFcQSIfwyz5XU8aBs83hoVL4kmcE8lhb84n9VrhTuxrMv7Ow8kjeRn8J5aXb8vA+P+TXyvYfeERPTlPxMcWMDD/dOKO+v74PS2W3v+Jmb3izmc2e8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bNxuiD74; arc=pass smtp.client-ip=209.85.160.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NbSUNpGG"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2d01663d816so6587735ad.1
-        for <mptcp@lists.linux.dev>; Wed, 05 Aug 2026 01:30:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bNxuiD74"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-52b4e988c77so3909521cf.3
+        for <mptcp@lists.linux.dev>; Wed, 05 Aug 2026 01:52:22 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1785919941; cv=none;
+        d=google.com; s=arc-20260327;
+        b=KvmPwU9k8U2i/a/DT4tYuz8b1UX1hZiVcx999NQjf137hNpDukCeLpp4tGl/0LdNjw
+         1GzFJe8hRtks65BISG+REAg/P8a0Ckt8fdfxIvPepQViXJjpTOnZNXoaehfgst2vuEMc
+         0ppAd9ld+BZpDS8kfGYWaEmGLIjAzlGwEe51xHPtGS5foP3/2lIQovKXXq1ltfLQOFyM
+         ywS+z0EMZB3g43Dlqx00oqFLzHGUEzWloTVr+FM8phoTwxClM6gR9Ua+lf4utOjQkTNh
+         dX5KoUggThGSUiZbXNq9nxJA+sKBffcSer7cefaPVVN7gaKKofmiTB316LDrss8kcE4+
+         BdeA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=ndI7WpQKsMazS/qdplorjx+o/2tpreiwv2UGpHfpCdw=;
+        fh=3koLGs7Lbsm+2oOVupTCnbTdZoDNbTzM5qAbhQivJrY=;
+        b=soGyn4GCVoSC1Eqic2UIIwOW8Z/S2mJdYuUZKj8Cou99v5OKv6Q1rlbpaNvpXUP40L
+         S396JklU5KfK6WZ5s2Wthv5KPMgrR9vDPH+hxIrBfySGIiPRSRJ6IJ11hSXUmqjh4bx6
+         ysizWU4/k8qVRVRqKCl4vj4rB2iFKZS0/zllOCXAU994BMl7udZyRwz8sl42hM5rMUCc
+         gn3FvTIbkGJ06rwa/CGKtCtNx8lSDBsOdzwvKSDcJjLXR91FdL9Wf5hIUwuTyE0lL6sx
+         wUHEy2sNf3B7rfGvJIyI60ypzJQ95NIO/UclX/tPGPN5380sTftsL3olDe49jq/VLhIz
+         kqOw==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785918613; x=1786523413; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=OLH1/FyACiXxZ6ELFTgIaAZmS63GfNE32KKBF7BkBIY=;
-        b=NbSUNpGGfwYoGwrO70IRU3VVacmQ3d+ECbgR61E+U9DC2L8OMDivw8fBU3nteePgFw
-         mpPvY+NAnZ7eA6ES/adrFaQxZmF0QPHTBrMFNp3YCUWLjIDLXjwus52By8q6NAE7jMB4
-         3jGRqqzm9jb7mZGSJn9+5A+q+6T/+wuU0tOM3YTP/cv67ohBbU4sK/cKur+wi+yw6q2Z
-         S2/imv+SnCEF/iinECjGEKrFzXfHDhfgPIeVRJnL96hh9KNh59asKcaDFCsDc7S9lkov
-         syaffYVinmufCOHoNbzWeIZiTaMdggTpwnxxsjlB/kGXSk9Zz7kXlCNq6Or5TV2nLwNQ
-         g5TQ==
+        d=gmail.com; s=20251104; t=1785919941; x=1786524741; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ndI7WpQKsMazS/qdplorjx+o/2tpreiwv2UGpHfpCdw=;
+        b=bNxuiD74iAnZlxmKBUW0RTag16tYkFt9DMQZbTb8ngxsaBehqh9i1eulmoR0lPT21w
+         Nk2HYit5RFs8XJZFvE6GPkJBzUNmQ1JkfLXjvSQ3bg6PeJ9oT9dt5mAbUui/S+imhHep
+         zKwulh78B+CAePmFydsux3LsvMPQbT8BSFYFmJNydgenZzWts9IWixxhCOTIGNBrCIbA
+         Iyv946kucaDwHo9Aj0kA3N6cOlLj5ELzetzqcgG4izSJOcWgo6a62g4ToO7Qa3dYgxY0
+         71kq28Tb24G8WpadwDFVD78oCPdJ1tQTGt+eTYWlOtvEm3rQX5mPsEf3Yzvdts40xT11
+         1RcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785918613; x=1786523413;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+        d=1e100.net; s=20251104; t=1785919941; x=1786524741;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=OLH1/FyACiXxZ6ELFTgIaAZmS63GfNE32KKBF7BkBIY=;
-        b=ZJWszxIFwuuH2hnDRB+Dzb+wiDirYcmYrNZk6guSg1soqMwDafpAY3Lnai3WPdH9a+
-         GrMSFkYqpaT+Q/sdMhDX+LnevDkFw/hqUSSM9rgpdnE/Fn3NeYCCLNT+O4s25y/hzW3r
-         VGP5S+WM8wjKR4B9Mhh4vc1Cp29W7/OX22qSZh43nNA5Yp+G5p10UGvRj6Efiw3wdsC4
-         VmVv/yW6kGoJJtZmkzs1DIxPLDPnGqwg4p6cKZDkrlPy/SMnT5wjOHYlgyp6datt5tt+
-         FPEgtoYoAkoawtYYq9td0UnkwPUtpPo/ArbtCjNBlzv63WjHBlmYFzxO6MxW+206X7CT
-         wgZw==
-X-Gm-Message-State: AOJu0YyiMX0I+c5tv4LiNpBpB7YaI3LOr/FiVKM5kjDSao4N/0Iu/Raz
-	E2HFLniS5f1QFzzdpOD34aeWaVEsAM8GPhJCpcA4rKVJ0wXy53xN4lLBnDjE
-X-Gm-Gg: AR+sD12xHeOhJzGazFNIrTXb4rw0T7Kk1sn1ELLZbli6+mGZG6/fc07zzTkRrbAUMyx
-	bS/kB3JmMFrkCMrJTxbCN2NCjLzjaaY2foimHxz0EcVjQO8a86SrVoDBSZlTvddc7Y7HH8Cp+WE
-	N2HXEGOJvSYUf3ykgN/o2FGRP3HYnhO0V/QTtQ3ECQDHPoitYvw6VL5Nesme6arC/sTm7T7AU90
-	AcRz44Ysl0JHOZtstPxn1YFH5QJaOQ86zmasuy1K0xJ13wxiS7raRq+BlHy/EXX3/Y9mVMWPWvJ
-	/BP2rBx448z5gGnNxD+6DDYfjgdK5lUDPKHaHQbL7nJUXlcqkCOOy+EFcM5S09Mjggisc3uFdJ9
-	Odutq1KfBxngydyA5cLnIQJfFW+bxFGPXEW7zfCEPNm3WFbq7ZrQt1wwJDbIE33q0B9rgplku6R
-	fhJyxEGdkHFGdV7dKMXlBi/IlzO++PKebTIMkyFNYxclpd0PiLtvaiWFn7Y3XxGSaZGxaUVUBas
-	OmS
-X-Received: by 2002:a17:903:41ca:b0:2c9:c083:cd50 with SMTP id d9443c01a7336-2d0ca981ba4mr42650615ad.17.1785918613007;
-        Wed, 05 Aug 2026 01:30:13 -0700 (PDT)
-Received: from [127.0.0.1] ([172.184.172.212])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d0aa4ec8c7sm14689225ad.80.2026.08.05.01.30.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2026 01:30:12 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Qing Luo <luoqing@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260805070926.716768-1-l1138897701@163.com>
-References: <20260805070926.716768-1-l1138897701@163.com>
-Subject: Re: [PATCH mptcp-net v3] mptcp: pm: fix userspace PM address ID
- overflow when all IDs are exhausted
-Message-ID: <ab4ff306-d5bd-bbee-49f8-058ee1b7ae9a@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 05 Aug 2026 08:30:11 +0000
+        bh=ndI7WpQKsMazS/qdplorjx+o/2tpreiwv2UGpHfpCdw=;
+        b=N/H9LZdTvznDsuRje65J8NTOikZ0tjt3rNdWqPjw0nltDrLxKaim8Ra/fxl60dscBO
+         oiDwP5lTP2w/hiaB1RwQTXAHWKltz4IAhAh/yHNjp66I9IahcEMlmS7UGzpMoydCx1AS
+         ceJbHBoC9fdmJytPL1ObAagF3f/0aa4trwcwUJcHg86Dkdq6b5mzgavdCLRcZsoZRPhs
+         MIdN6Nq172N2rXirYb6DpmsHd5bBpPi4YX/+gxJ7lGQBHF9T0txPdJ0HKcENXjwfC1y8
+         aGqe8RKFYRy9lShqwaKuvfBh20p4bpKvTze5+8g6G2BlFs8t8jOCxDzM1EDltu6vmhKi
+         h2Rg==
+X-Forwarded-Encrypted: i=1; AHgh+RroKZAoDDqywAyZRDv27G7n5CJF1ITTC0LKuaaVwaF7gBvnXGWE3zSSUWk91pFT42w7jOW/Tw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw+rJOmYgpXDh9WmHnT/F2lBAMx8gpFoa56+JONZZdODlEnleoc
+	U+jJP9GOv/OrdodiQafeRz2YSiQVdYBgVLyFx7ZwOAj/t9k4biJZdD/QRDUTpCDyY4ZkVBSR98p
+	HEVwWFfQ690Egjyd64OzFJZyovxZ3GfU=
+X-Gm-Gg: AR+sD13TRyEYk6H9HxBOXQoqQNuUKBpB6TfXn/nsDqevq2poxmFpeEcsp8Z9nXpqecF
+	7S+tn+1IWlv7bHbZ30z7Oq9j6VOSkh9V3jySAxjuCNviLtqoh4KLZIoNdCcLoD8MxsdKdOoip6c
+	UZhr45Wgu0xArxfSA2AZH61aL3VgauuGE4/jql5AfFks9rbRXOngB9txh5OIL3UTWzlKWL1qS5J
+	Ifk/FgKiNcypDtACkHccU4dKI8IX2DZtn7v4FuGyCYlliEtnyOq/P6nY92pSBv/Dh+HNFqZMA2T
+	CH85uOtNsWzri7VxOqCl3Tod4aD859eTZv7HCKlrC+k93LeUaaHKL8etcVA/KF7oA0Gjq0klMAx
+	in+o=
+X-Received: by 2002:a05:622a:1e12:b0:516:dda7:51e0 with SMTP id
+ d75a77b69052e-52ce5ff11acmr52330181cf.17.1785919941452; Wed, 05 Aug 2026
+ 01:52:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20260804095051.715355-1-david.lee@trailofbits.com> <ec043cd9-ffc5-4a16-a80e-b736ea50bf3f@kernel.org>
+In-Reply-To: <ec043cd9-ffc5-4a16-a80e-b736ea50bf3f@kernel.org>
+From: Yuan Tan <yuantan098@gmail.com>
+Date: Wed, 5 Aug 2026 01:52:10 -0700
+X-Gm-Features: AUfX_mx8a4ogrmDGIJBdqb1hUA7WGigHW93m5FaPqnH_UvGOCPhqWGAgYlL8EvI
+Message-ID: <CAPuPA7KZhv39w=nCG71WBLOcPRrrpb=CvDdVcnCRbfu+z9ZELg@mail.gmail.com>
+Subject: Re: [PATCH net] mptcp: hold msk reference when cloning request sockets
+To: Matthieu Baerts <matttbe@kernel.org>, Kyle Zeng <kylebot@openai.com>, 
+	David Lee <david.lee@trailofbits.com>
+Cc: "Dominik 'Disconnect3d' Czarnota" <dominik.czarnota@trailofbits.com>, geliang@kernel.org, horms@kernel.org, 
+	kuniyu@google.com, netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	Ren Wei <n05ec@lzu.edu.cn>, yifanwucs@gmail.com, tomapufckgml@gmail.com, 
+	bird@lzu.edu.cn, caoruide123@gmail.com, enjou1224z@gmail.com, 
+	Vega <vega@nebusec.ai>, martineau@kernel.org, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, ncardwell@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Qing,
+On Tue, Aug 4, 2026 at 11:00=E2=80=AFAM Matthieu Baerts <matttbe@kernel.org=
+> wrote:
+>
+> Hi David, Kyle,
+>
+> (+cc Vega's people)
+>
+> On 04/08/2026 11:50, David Lee wrote:
+> > From: Kyle Zeng <kylebot@openai.com>
+> >
+> > An MP_JOIN request owns the reference stored in subflow_req->msk.
+> > inet_reqsk_clone() byte-copies that pointer when migrating a request,
+> > but does not acquire a reference for the clone.  The original and clone=
+d
+> > request destructors can consequently drop the same reference, leaving
+> > one request with a dangling msk pointer.
+> >
+> > Let cloned MPTCP requests take their own msk reference.  The source
+> > request still owns its reference while it is being cloned, so sock_hold=
+()
+> > is safe.  The clone's normal destructor balances the new reference on
+> > both successful and failed migration paths.
+> >
+> > Fixes: c905dee62232 ("tcp: Migrate TCP_NEW_SYN_RECV requests at retrans=
+mitting SYN+ACKs.")
+>
+> Thank you for this patch. It looks like it is similar to this one sent a
+> few months ago, but where changes have been requested:
+>
+>   https://lore.kernel.org/40fd38e7a368e5b7bc9bc83364a32241f977d53f.177840=
+4619.git.caoruide123@gmail.com
+>
+> Do you mind checking what they did, and explaining the different approach=
+, please?
+>
+> It seems there are two issues the Vega's team tried to solve: one with
+> MP_JOIN requests (what you are trying to fix here) and with MP_CAPABLE.
+> For me, it is fine to split that in two patches. I also don't mind who
+> is writing the final patch(es), as long as credits are given. If you,
+> David/Kyle, are doing that, it might be OK to add a:
+>
+>   Reported-by: Vega <vega@nebusec.ai>
+>   Closes: https://lore.kernel.org/40fd38e7a368e5b7bc9bc83364a32241f977d53=
+f.1778404619.git.caoruide123@gmail.com
+>
+> @Vega's team: OK with that? Or are you actively working on a v3?
 
-Thank you for your modifications, that's great!
+We seem to have lost track of this patch, and we sincerely apologize.
 
-Our CI did some validations and here is its report:
+Our patch addresses two issues: one involving MP_JOIN requests and the
+other involving MP_CAPABLE.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/309854=
-48641
+I reviewed Kyle and David=E2=80=99s fix for the MP_JOIN issue, and it looks
+reasonable to me.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/04610d1b68b9
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1140580
+Ruide and I also do not have a preference regarding whose patch is accepted=
+.
 
+If David/Kyle' patch is accepted, please add:
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+Reported-by: Vega <vega@nebusec.ai>
+Reported-by: Ruide Cao <caoruide123@gmail.com>
+Closes: https://lore.kernel.org/40fd38e7a368e5b7bc9bc83364a32241f977d53f.17=
+78404619.git.caoruide123@gmail.com
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Btw, Kyle and David, would you be open to collaborating with us on
+Linux kernel patches? Over the past few months, our team has fixed
+more than 100 high-severity vulnerabilities in the kernel. We=E2=80=99ve
+learned a great deal from maintainers=E2=80=99 feedback and have built up
+extensive experience. We=E2=80=99d love to help improve kernel security whi=
+le
+minimizing the burden on maintainers as much as possible.
 
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+>
+> One last thing: it looks like your patch is conflicting with this one:
+>
+>   https://lore.kernel.org/netdev/20260803061739.134737-1-jiayuan.chen@lin=
+ux.dev/
+>
+> > Cc: stable@vger.kernel.org
+> > Assisted-by: Codex:gpt-5.6-sol Codex:gpt-5.5-cyber
+> > Signed-off-by: Kyle Zeng <kylebot@openai.com>
+> > Co-developed-by: David Lee <david.lee@trailofbits.com>
+> > Signed-off-by: David Lee <david.lee@trailofbits.com>
+> > ---
+> > Bug found and triaged by OpenAI Security Research and
+> > validated by Trail of Bits.
+> >
+> > Trail of Bits has a reproducer for this bug that triggers a
+> > KASAN use-after-free and can share if needed.
+>
+> I think it would be good to include the (decoded) KASAN warning in the
+> commit message. Regarding the reproducer, if it is with packetdrill, I
+> think it is always useful to share it. For others, don't hesitate to
+> share it to the same people: it can help better understanding the issue.
+> Maybe remove the mailing list when doing that if it is security related?
+>
+> Cheers,
+> Matt
+> --
+> Sponsored by the NGI0 Core fund.
+>
