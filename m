@@ -1,134 +1,96 @@
-Received: from mail-yx1-f49.google.com (mail-yx1-f49.google.com [74.125.224.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78211305699
-	for <mptcp@lists.linux.dev>; Wed,  5 Aug 2026 12:47:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B352352021
+	for <mptcp@lists.linux.dev>; Wed,  5 Aug 2026 14:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785934070; cv=none; b=YAyM4tfBvib4BpNgUqjUxzFCWh1s5/WldO+LdcLX+S5teRacOhGDDoKS5q62ECvaY1wNqT7TyKf1Yfvg2ogoYSGPQSl1POoCn3CDIbzlG7qRXQpn/Dt6eL0XSl0vE14WEYSKgFe08hTrq4o5WvThbrD8CRhAfCHwE0836xYEXaQ=
+	t=1785938958; cv=none; b=a+Q299MBs/yt6jf+tA419QiP+n3gqaGel+k2ahMzEQHSZRyti/jTqOCgZ02UBplh+9tquJe/i2PHCSy50F6imAk2RRTOprsIw1g3OWNExpPNJBs8Rzp0Hq91hKz9YQXASGEDAen8A4vCudHut/97iRNU6YGQ8DTZFsg5c5o3h1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785934070; c=relaxed/simple;
-	bh=/aYCxVl0xXNNEP1FZ7ruSsrObmtDL1+pOodBtUMDWmI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=cfGevZhCdxJbkP3eV3AdPgY043hzPi3M+zcHbRvVjpRTOoFb0hWqiw4SXXLR7+363+2XkbLbYLQncoqRUaI3iPJE4x73LwACJCyKTwmRnrmeycJ1+t8KMm8ubmQVrx0Qg8yXec2Vchs9Cm/m96umGj2I6TL5pGlR4Dro0p3a0R4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I4owqPA7; arc=none smtp.client-ip=74.125.224.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1785938958; c=relaxed/simple;
+	bh=v07TgdD2tPEsgU5cO4PRB7JmE/MRcvIgFi440Q4GVWA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=cUhPIRzd9cBYuRLNu7kxiHwuNCWYMpTGSr4/M+X1X/zu6AJo1LyJ+C4JgV59yFJE8e0jk55dnFjrBcOYvdO57MXEu1R4BKKbrOEyb8uAVQX/DyA1pGIhv+Dz2ZvGmKLdtvgr2xOzr9GSx39i7KkVf6Us7Z9BroScMBiZn1oy7hI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mm/9SGz1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I4owqPA7"
-Received: by mail-yx1-f49.google.com with SMTP id 956f58d0204a3-66807ba2f0fso1341102d50.3
-        for <mptcp@lists.linux.dev>; Wed, 05 Aug 2026 05:47:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785934068; x=1786538868; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=gpwZkNbU8/qwImr4VKarf9RiJHiYzufFo9VnnOqYqOA=;
-        b=I4owqPA7UzUSvFxs9G96t2OhcztOqWapI6yqP4yTUDcqQpCGqj205/Afs6d6W1RItL
-         /vSZBkpqUEipUM28ONlOOZemX/V8T6blMayz+22SXJZ6YLBcLTcISW8vL9pxtMNb6ic0
-         AMfJp9fBii8SzrnOwk+unAzall9StqaHqUxIvppowV3oqx1Aj9lf5+fIBLVkduh6g8Uk
-         Zq+MPsLmT/DYeaqp+XAVzLsYR+CmHbsKicw0YhC+SPDoe0IKN9gwRsvDP51z65K6YP2P
-         yxyuzzlXvtnHqpN7JbjMs0yoF1mMfqWrXw5HDeb+YHUF4HJWj8dL5gQIM5yRNt9sRKXZ
-         pa8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785934068; x=1786538868;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=gpwZkNbU8/qwImr4VKarf9RiJHiYzufFo9VnnOqYqOA=;
-        b=IRTtBNIpdT2stTSEET3P9al4oYyByltyU79xIBuLeBaoaFlS2/5BJjF4FEu1CWaMD4
-         1RVzyc4ysOID1PgBoYTzaesRKFv1NfT6dW7e4Lh0AToXJIe9TCNAjfSIo05yECewS4KF
-         MhHW/TCjjmwxbZnVbUbEyifKniIJLm53yZuC7+GsQKnG6zH/BAcD3AHwI/ZHoAJme+8Z
-         RKk3Bah1GXMgXAYSwxM9rPzd8BsZ3K3kwatsZaT+2L3Tq1aRFK3JroLpZ2LjP1GeX5pa
-         rql6E/UnyWXPcEeepcfBjWFRTOE6caG88Tk8ozEpjAiExR7tfxfHyoMjB5h7IMksep0l
-         wM1Q==
-X-Gm-Message-State: AOJu0YwWftqp9I0avpn+40GbKfHvbUAWexpki5hqbJdYjaseu96E4buA
-	l5WM/4wVYLQefbnVYE5vVRvue+0mmacu8Iss6W/OCJ7m+ruqNd1UeH4=
-X-Gm-Gg: AR+sD12ebTKKc5T1UAsPielzQOxdbutLPeHG6sg44ToRSwEJBDhYhAUtchlntqmet0z
-	EYVEK83l7sRxGK2AH7bjqobgEXzQZnBPRB/whYhEdiPM04ce0c2US5Lb0bx0HfgfAk0YolqmjjC
-	1cJIGAA38lCFePuIbK8yGomYO6UXLx9cXIO0uuYEGogX+5Gg5e9CQGh9wFIyBuHdQGYLe4bIPsm
-	NdYzaVad61eIhvq1crWgd3LWNjIt/O3M9i0hOc/s/ucC4SmAb02UNn7wLWzhiSUiAv+e2ZNgNN9
-	3L7qP29ybY0/BcXKhVGy8BkDazp9Q1estEC6kXoxG9/uFE/IY8C8fJ48aRzkJfJpMUoDf4UHsO0
-	dihPVT0DypzWYBJnPowtPqe7YC6S21julj81vI18HOokMOVAsvGKxQR9T+K+oRYpgRQTasAusiZ
-	53wO05nOMKxGeALJZolkDySkVnGjuUy4ocaVRFzyJ5wxPgzbp9aJuilF91jFskvZj3ykBr+KoMv
-	1g=
-X-Received: by 2002:a05:690e:424e:b0:667:d9af:27f6 with SMTP id 956f58d0204a3-6699a90ba6emr3244658d50.18.1785934068298;
-        Wed, 05 Aug 2026 05:47:48 -0700 (PDT)
-Received: from [127.0.0.1] ([64.236.143.214])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-66991672ebcsm3034174d50.21.2026.08.05.05.47.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2026 05:47:47 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20260805-mptcp-opt-mpc-csumreqd-no-csum-v1-1-cb2ad0b9feac@kernel.org>
-References:
- <20260805-mptcp-opt-mpc-csumreqd-no-csum-v1-1-cb2ad0b9feac@kernel.org>
-Subject: Re: [PATCH mptcp-net] mptcp: options: handle MPC data + csum reqd
- + no csum
-Message-ID: <082e519e-15e9-17f1-cfec-76375efe62f4@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 05 Aug 2026 12:47:46 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mm/9SGz1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 675511F00A3A;
+	Wed,  5 Aug 2026 14:09:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785938951;
+	bh=FYCHPeiCmFvOBqYXj0o/vhLzJSwQL1uZtcZSrlaqes8=;
+	h=From:Date:Subject:To:Cc;
+	b=Mm/9SGz1TbWeLXwV0iw6PiZ2aZiDHQ06NV7SEa+Y7JMx8cAjlP5AjAaYceOZYwI1N
+	 +HpJfS5snsh8L3up6wuzWO4Gm9fF4DSudv5qgwZx/wJS88S39XsU2HgDvdNYEZByct
+	 iZBeVymYnCra+MqOBKAEBk3Ehi/qrEG/y6vBK4K889vyTH6NBU9sIdeXeEz9ZFRnqI
+	 H3lWx99eIJetljTLt0+1G8x2CBMNgE8XaUgBC97VCFwjrebZPS4bJPHELzEKr6MymM
+	 skO1RH9R6LGwo1HRALeddRUY2AjucGlw+fTv+kNf2UxJsugUbCBvktz5Uaj/poGK4I
+	 tazXBpVfxHYcg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Wed, 05 Aug 2026 15:20:19 +0200
+Subject: [PATCH mptcp-net] mptcp: pm: reset retrans_time when ADD_ADDR
+ entry is reused
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260805-mptcp-pm-reset-retrans_time-v1-1-19efbe17046d@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWM0QrCMAxFf2Xk2UCdU6u/MkTWLmqE1pJEEcb+f
+ dW9XDhczplASZgUzs0EQh9WfuUK200D8THkOyGPlaF17cF5t8dULBYsCYWUrK7JkPVqnAi9P3V
+ +54IL4xFqoQjd+Puv97CKmQwu66Xv8KRovzrM8wJMLDI5igAAAA==
+X-Change-ID: 20260805-mptcp-pm-reset-retrans_time-8894830b0bd7
+To: MPTCP Linux <mptcp@lists.linux.dev>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1421; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=v07TgdD2tPEsgU5cO4PRB7JmE/MRcvIgFi440Q4GVWA=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLKKXdiCaycv+ZJ95++0Fe73F8RxtDH9Eb/zQHxNtynfr
+ IO3K+pbO0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACbS+5KRYe4BlldaLhfruIwY
+ NyruN0wsbPJosGByPHnjRPd9fYFzMgz/Y8LSmvVV903e/23d3BcqEo3PalzXJ0qoLV9xSfHB0wk
+ KTAA=
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Matthieu,
+When an ADD_ADDR entry is reused, the timer is re-armed, because the
+goal is to re-announce an ADD_ADDR, and eventually retransmit it if
+needed.
 
-Thank you for your modifications, that's great!
+In this case, the retransmission counter should be reset as well, so the
+re-announced address gets its retransmissions back instead of relying on
+what was left before, and possibly not being able to retransmit it.
 
-Our CI did some validations and here is its report:
+Fixes: 304ab97f4c7c ("mptcp: allow ADD_ADDR reissuance by userspace PMs")
+Link: https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20260803-net-mptcp-misc-fixes-7-2-rc6-v2-0-b8f496d71664%40kernel.org?part=4
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ net/mptcp/pm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/310040=
-40711
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 5e499ec1c50a..e46abbda7d27 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -462,10 +462,10 @@ bool mptcp_pm_announced_alloc(struct mptcp_sock *msk,
+ 
+ 	add_entry->addr = *addr;
+ 	add_entry->sock = msk;
+-	add_entry->retrans_times = 0;
+ 
+ 	timer_setup(&add_entry->timer, mptcp_pm_add_addr_timer, 0);
+ reset_timer:
++	add_entry->retrans_times = 0;
+ 	add_entry->timer_done = false;
+ 	timeout = mptcp_adjust_add_addr_timeout(msk);
+ 	if (timeout)
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/3866daec4517
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1140736
+---
+base-commit: 0715f5ba093a581def25b88da61c987b1719bc6d
+change-id: 20260805-mptcp-pm-reset-retrans_time-8894830b0bd7
 
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
