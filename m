@@ -1,173 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA30247D93C
-	for <mptcp@lists.linux.dev>; Wed,  5 Aug 2026 16:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97581350A35
+	for <mptcp@lists.linux.dev>; Wed,  5 Aug 2026 17:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785948218; cv=none; b=Pg8cc+jYoPiWKCP1sUyA5AX+LXxBM9oq8GGsYJOy1SeVMwvuss5fkFodD1t1h5f735oeCO8GZNMMJ5xQiJnj6rHdGuHvh4EtoYlWfkQN6F4aKiJDeLryRHpcJve5g3WgA96/JIhWGk/00BVJQIiPXIWH2EYyol//U/gc1sPidf8=
+	t=1785949354; cv=none; b=ehHVa7vSShiinsZWWnOuZzp3y+3wG+VsYCfhsHoo0rhOy/S0JYrtvkoMgdfgsjRRSwHEpe/CaqGtkwfrH1rX0eBVqGymbdJw+0TDmsZPV3Z4dsyj8tLg8u+qqzF+piUkZRTSzbBlviRlZrnKiK6Zazi5JsGFATopKZDmdC9qnZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785948218; c=relaxed/simple;
-	bh=m+DaYMTzRvYL1ZbMsRCuthE2sPGFkPySK7Vb4Myiq7I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=FEiwhkqLUBmKNHrup9cczwPjIaHAAKrDAwbfdAUNy/99/FYqAm4upWoWFplPU4SmdIXAR5jfxh2WXjLo+SNMJtNK4/fo03ou1PBiAIkHKTYlfmQ/YDYEj99iCWKeQvPedxH7c6gKbSdgF9JPIywGlEOy/QWURrdmXhFDlyDgFlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K5XWbCcl; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785949354; c=relaxed/simple;
+	bh=LU269jz9Kh8ecQoqK3XOMrQMn7K0Upmcp1g5DkYotOA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=CzHDJ0bnCcN5V9phJHPl2ru4U0yTF15fs1nT0hPg/vsq0lidRzZ2cpqO6xoIDq4kKhcRIdRqAz9B/u5rd63yhApgWJ2cp8ikkfuu3CeiJMd3ofsBGEjSzFO7S59/DZAc2+ZeH4exl2jU/FpSqCZqcTrSRfMi1Vt/Y+SwULUPo50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=haHe1C2V; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K5XWbCcl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C1871F00A3A
-	for <mptcp@lists.linux.dev>; Wed,  5 Aug 2026 16:43:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785948217;
-	bh=QShTgui7c8EIeqUFSSvHCLazN79sqJhph1q6frDc8Fg=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=K5XWbCcluVbHAAex8fJYch12lMU1xei6fluFvJW+7FTuBZjDBh5BnGKpy96bjLFqK
-	 2omo2KeYqkcsrE5xAtUlGYlXQ0D8OXRcdR43j+s5YiT2LNm1cQ5919RPQWMLOaBZYj
-	 zC5PHCoxy1t+g3bAAHkFvacBDPDCSjTNQ0H69RhtlgFSwGtFUTz9t8fiSl0p/qoFxo
-	 0/Cnl+Dof/jVN5CyvIV9+NQqmzpceoy+kbg1hINB+Vv3PVwEzb2V/GhHcTE7fi8NbR
-	 aHtrarj78STxV3j0vgKqlTByWVJDG+119vZ5wV8G6BkM33qsincInQA1OUcfP9+OKK
-	 /7Grp3FuAmk1A==
-Message-ID: <cb57842a-8b2a-451b-8eb4-9fbf4f5412d1@kernel.org>
-Date: Wed, 5 Aug 2026 18:43:36 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="haHe1C2V"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-92e5c9211d2so97075785a.1
+        for <mptcp@lists.linux.dev>; Wed, 05 Aug 2026 10:02:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785949352; x=1786554152; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=TMPblJDqvJNE6FutexnM3HF4de4T1h2BdhwB2F10WK8=;
+        b=haHe1C2VSwxSMVqDELxV3CWdKc3280I65M+TmjBE4RfFTF3bbGbXZDU/wqAz8wMgMP
+         yaFc2P/gAXLUrQ4XnpmXbZkU4I8KC0M4rGjS1v/ojIPyBGScmSVb4Bvas+CxowET5Ily
+         hji+PioP+w7ZHN5P7q1hQh220Hds+cSzjx+zt+2zfwL+LMCVkCdfWxG9GcCO/2erJanN
+         IkvVhIVPL3jg9vvJm/5J02obwDhl/O6LcdmxdO+X9G4rsPKimklKyWhKm3KDurlLty0l
+         XFWqI+m4GT4k827Uv9cWWac1mM6GuQMbug6CcvzEJ9KR8EHy8XQ0ppiPxcesRYo6oA3i
+         UjEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785949352; x=1786554152;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=TMPblJDqvJNE6FutexnM3HF4de4T1h2BdhwB2F10WK8=;
+        b=nscTjKmoWyJ3Dz8DRKF3fKUVQ7VcIFIuA9EaXd/wJf54N+ZJ7K6kgK4EXg8x+4MRU/
+         O8tFgMWTzaJl6wXt7tuMlJnGlJ/10wy5xb9PX5acZYpJIhSET8c846SRET3ickRYs95G
+         xlBXZ/Mb5+AimguKqVIUvbMcZuWnbS1OTFhj6kCxkwqUe6seXKoQz/T2LW1Nea3pHzJi
+         aheHOvxQj1U8/TZPIC2nYE5ZsbbsOtd0ub7hAamfMDgh9LX6TGwuabrAU/MwdHlHHIkZ
+         cqAo+XjWX1NCoCFrxz/mL6aKrDInGj0fAeqZqZlF7GNNXmAXnFLg4BVaV+NAu169qLKE
+         QoaQ==
+X-Gm-Message-State: AOJu0YyNG+18y4rYfBvjY/i5naxrrmSeeVrFKXVP4fEHo3QwDJ4HTc8L
+	U7Toaj1KZDO/eenzBHInf+oE+qgaiWmzZO2MGSPwLCfX338JMmEzYty1G34I
+X-Gm-Gg: AR+sD13ys+YtFSPWHHy9xIEPqujK1XZ9pJd049aI2G42vg3t+HPuzScleSt/wYFCPP6
+	GuGRo+xfiSYUx/gBYbD2fUAajEKltuFxcntnTGCOOWee0u0UZyKZMIcskYc4BjcgplRXN9CtejZ
+	v7iIkXqKP8akZOtHj9VVxIm685DdEjx3Lmtb2OikOgKf4ARh5Pqn7PFfOOXtz4fsJ8OEK8Chc94
+	t7kBzVhc3BhRIbPflFTR9mBZLG1j2T5u5GnHOTkEo5CJBwz3twti9dojKSjvLokOilzjwkoafoh
+	XXHeIrhKS3IYaTacPWbTny3IdvbMH017qe5lq4ldXlE3lhopuFoxeVGLpYCmsnqu7oLmCzUZO2r
+	YibsICqzqwgRED0tGhkVgvZOIIuJZcPB6hzLtcpSqGW/zkRNLclxEVRETiDx1XyMkvsB4RkhZxF
+	kjV3HNWs4VlAunYJNIstLix+6YFC15i0ly5neZb9jsiDX4zng6ZGo+B2O7+zr2mmFk3nJRX9LNe
+	Xo=
+X-Received: by 2002:a05:620a:a494:b0:930:f735:1377 with SMTP id af79cd13be357-93649097cf0mr707136985a.19.1785949352214;
+        Wed, 05 Aug 2026 10:02:32 -0700 (PDT)
+Received: from [127.0.0.1] ([172.172.203.45])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-9364a42a461sm191031685a.12.2026.08.05.10.02.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2026 10:02:31 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20260805-mptcp-opt-mpc-csumreqd-no-csum-v2-1-dbb52e01a36d@kernel.org>
+References:
+ <20260805-mptcp-opt-mpc-csumreqd-no-csum-v2-1-dbb52e01a36d@kernel.org>
+Subject: Re: [PATCH mptcp-net v2] mptcp: options: handle MPC data + csum
+ reqd + no csum
+Message-ID: <6a48e793-9cc3-bbf6-f531-97f4e06bef5c@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 05 Aug 2026 17:02:31 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 3/6] mptcp: pm: userspace: no ID0 exception for
- RM_ADDR
-Content-Language: fr
-To: MPTCP Linux <mptcp@lists.linux.dev>
-References: <20260727-mptcp-pm-userspace-id0-case-v1-0-9877f02a9bae@kernel.org>
- <20260727-mptcp-pm-userspace-id0-case-v1-3-9877f02a9bae@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20260727-mptcp-pm-userspace-id0-case-v1-3-9877f02a9bae@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 
-Replying to Sashiko's review:
+Hi Matthieu,
 
->> After the first patch of this series, the initial ID0 address is present
->> in the local addr list when the connection has been created.
-> 
-> Does adding the initial ID 0 address to the local address list cause
-> secondary subflow creation to fail for incoming joins on unannounced
-> addresses?
-> 
-> When a secondary subflow is initiated using a new address with ID 0,
-> mptcp_userspace_pm_append_new_local_addr() loops over the list.
-> 
-> The new entry will match the ID 0 of the initial address (id_match = true)
-> but its IP differs (addr_match = false).
-> 
-> This causes the loop to break, bypassing allocation and ID assignment,
-> and returns -EINVAL.
+Thank you for your modifications, that's great!
 
-Same comment as on patch 1/6.
+Our CI did some validations and here is its report:
 
-> Does destroying the initial subflow (ID 0) via userspace PM cause an
-> underflow of msk->pm.local_addr_used?
-> 
-> If the initial ID 0 connection address is added without incrementing
-> the local_addr_used counter, later calling MPTCP_PM_CMD_SUBFLOW_DESTROY
-> on ID 0 will unconditionally decrement it in
-> mptcp_userspace_pm_delete_local_addr().
-> 
-> Could this wrap the 8-bit counter to 255 and corrupt the statistics
-> exported to userspace?
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/310224=
+52135
 
-Same comment as on patch 1/6.
->> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
->> index 4c96433590e36..9c7fab6a59bf4 100644
->> --- a/net/mptcp/pm_userspace.c
->> +++ b/net/mptcp/pm_userspace.c
-> 
-> [ ... ]
-> 
->> @@ -315,11 +284,6 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
->>  
->>  	sk = (struct sock *)msk;
->>  
->> -	if (id_val == 0) {
->> -		err = mptcp_userspace_pm_remove_id_zero_address(msk);
->> -		goto out;
->> -	}
->> -
->>  	lock_sock(sk);
->>  
->>  	spin_lock_bh(&msk->pm.lock);
-> 
-> This is a pre-existing issue, but does decrementing sk_omem_alloc eagerly
-> while freeing memory via RCU allow a local user in a user namespace to
-> bypass socket memory limits?
-> 
-> Later in mptcp_pm_nl_remove_doit():
-> 
-> 	kfree_rcu_mightsleep(match);
-> 	/* Adjust sk_omem_alloc like sock_kfree_s() does, to match
-> 	 * with allocation of this memory by sock_kmemdup()
-> 	 */
-> 	atomic_sub(sizeof(*match), &sk->sk_omem_alloc);
-> 
-> If a user with CAP_NET_ADMIN repeatedly announces and removes addresses in
-> a tight loop via MPTCP_PM_CMD_ANNOUNCE and MPTCP_PM_CMD_REMOVE, the
-> sk_omem_alloc counter is decremented immediately, but the actual freeing
-> is deferred to RCU grace periods.
-> 
-> Could this potentially lead to memory exhaustion (OOM) on the host?
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/a564af426f38
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1140877
 
-Mmh, I don't think we need to handle this case with CAP_NET_ADMIN, plus
-the netlink communication will not allow too many loops I suppose.
 
-(+ pre-existing issue: for a follow-up patch anyway)
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
