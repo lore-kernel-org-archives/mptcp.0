@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931B814A4F0
-	for <mptcp@lists.linux.dev>; Wed,  5 Aug 2026 10:14:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9FD941F5EE;
+	Wed,  5 Aug 2026 10:34:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785924846; cv=none; b=cALiH7IG3JoLC0QqWLDftjMzZnEYAovJ3jFJHUXHkXnu6iOMfS9O9ZN8kPydnLQAuzsxTM03pL26SDJj8MlZjt402UPmYNp1dQKttEtnx/3CgsyOyekGsMu/u3VY3xT80zSoxro8sttfyvKqN4V5HQcK2jYk8UMGir7F2bp6KaM=
+	t=1785926100; cv=none; b=HFcoG1tYQaJM5fHy2aeSekWRQXvknWz+v5n9xkDmIVN89LZ71PPPifj5IeQy/UjjIK1kqXdzQBHjsZAPPsi+Yzbj2E5jAllTnL99pYBpvrqMMkL+kHh/dW1IvEERs0kuFKmxmx2sH0uMKddaOiVeloyKuRRKrt94MKlkXQn88BU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785924846; c=relaxed/simple;
-	bh=2HDx2logOiqRR6DL3sl8lLzk1Ngng7CtW+Uiwmiw33k=;
+	s=arc-20240116; t=1785926100; c=relaxed/simple;
+	bh=6yhnC/JB9zpHR98EjGt6/BBOLbeswDUkp+NkaIi6r5Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QdFPsquYdKyexgqOQmirkloY99HNyf3skEYOB05qw9rNXP/KpMZGgBfBl2a2YrlzMyYLTj/uqnr72Tc4uN66kRo0yIB3rR9Q1r5fDO8tqPk3l1QSXse0fQlNZXIfCaOR0SHMqiG2G16L9NvW+kv0jMBu/dWxnuf9RaRe/KaXUDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A99jD6rm; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=gCvHhltcbpP+gHsMqebwyxWGx6VRZeDZju41JtC5mVP9wVYDuIdQyOW0X/ncQgaNnxjG5qe+Wl1KDr+l0sPENjhuFDUKNoiGw3fxX0y3JA6cD+l2vDgVFFAXqsEQ2+1YrU3F+lvDjgSVEAfzBXZgtjgUU10ubdiJiM9Zji3RZEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ab1fxJ66; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A99jD6rm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 991791F000E9;
-	Wed,  5 Aug 2026 10:14:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ab1fxJ66"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B8631F000E9;
+	Wed,  5 Aug 2026 10:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785924845;
-	bh=oIyhFDrY1v4ntVivnpgCKKDABNTc4nsVznbhN1FohhY=;
+	s=k20260515; t=1785926091;
+	bh=fJaUVTxoVSLFYtIDACf5QAyWVCuC9LHzgmitQoJw2UY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=A99jD6rm/gqC+9Zh29fYz0fHaGos/fC+wEgtqrQj38KyMaot4aAuW8xhEC88f7re6
-	 5ufYOgtm5+nkfZclXzPcogsaiVGsByzQrfYtYgRJXX4IiIoZI/cQcQp1FwKbopJAxP
-	 N4PJuszV5CndGskVNGHFredHBcKEPbGzzyAPVm4GvNyvOjCC9jWuizCvfOjsQTT5Ay
-	 LHvkdd3su/PWYDpQe3VP93N5qBio6B//dI0FPnR6ozOK8zdzgbD49CruyS42+ao8Eh
-	 jIQIw+w2dqvzFSy80oDctSZaVR/FYTtQMIS99mJNbLiz2K753NB8EhdjEH5S5C/Oin
-	 tRcaIMuSUItZQ==
-Message-ID: <4d1d85f2-7654-4e81-80f5-4955d3cd1e95@kernel.org>
-Date: Wed, 5 Aug 2026 12:14:00 +0200
+	b=ab1fxJ66dgNjk8KUt7iazikxK9rs4TvkYuICwdUVa9V1VaMpVQWvxIwHvui4kW0sk
+	 mvHX9hSeJFvi+3vuUsWEbREAVDuDEAGHm7U3anF8pxMNLuhP/5OAuuL+n03R0DRtGG
+	 jayja7GKqvWX0/01+bYJCnls0h38hKkL5swvZocp33awSbQB7KmifLhDdgFeOx7Hpf
+	 uUPmb+49CXZf4AttmQQfDsoXAPEnPy0qU8POfhN/fWr2efvE8EZe/gLMSPp79+dUwb
+	 eKJbV0mPaQgVOn28odlif0G9VJBLZ2qBZHx42G/ad7s0PLt6AWyHV6qbbAzoNGz/L7
+	 qGcJdxVy3wEXA==
+Message-ID: <57e21541-ba97-42f7-9b93-29d443ff1fd3@kernel.org>
+Date: Wed, 5 Aug 2026 12:34:43 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,22 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4] mptcp: honour configured min/max RTO in
- retransmit paths
+Subject: Re: [PATCH net] mptcp: hold msk reference when cloning request
+ sockets
 Content-Language: fr
-To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>, mptcp@lists.linux.dev
-Cc: martineau@kernel.org, pabeni@redhat.com, shardul.b@mpiricsoftware.com,
- janak@mpiric.us, kalpanjani009@gmail.com, Li Xiasong <lixiasong1@huawei.com>
-References: <20260805063956.3052563-1-kalpan.jani@mpiricsoftware.com>
+To: Yuan Tan <yuantan098@gmail.com>, Kyle Zeng <kylebot@openai.com>,
+ David Lee <david.lee@trailofbits.com>
+Cc: Dominik 'Disconnect3d' Czarnota <dominik.czarnota@trailofbits.com>,
+ geliang@kernel.org, horms@kernel.org, kuniyu@google.com,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, Ren Wei <n05ec@lzu.edu.cn>, yifanwucs@gmail.com,
+ tomapufckgml@gmail.com, bird@lzu.edu.cn, caoruide123@gmail.com,
+ enjou1224z@gmail.com, Vega <vega@nebusec.ai>, martineau@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, ncardwell@google.com
+References: <20260804095051.715355-1-david.lee@trailofbits.com>
+ <ec043cd9-ffc5-4a16-a80e-b736ea50bf3f@kernel.org>
+ <CAPuPA7KZhv39w=nCG71WBLOcPRrrpb=CvDdVcnCRbfu+z9ZELg@mail.gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,52 +96,87 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260805063956.3052563-1-kalpan.jani@mpiricsoftware.com>
+In-Reply-To: <CAPuPA7KZhv39w=nCG71WBLOcPRrrpb=CvDdVcnCRbfu+z9ZELg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Kalpan,
+Hi Yuan,
 
-On 05/08/2026 08:39, Kalpan Jani wrote:
-> The MPTCP-level retransmit timers (DATA_FIN retransmissions and the
-> fallback timeout) used the hard-coded TCP_RTO_MIN / TCP_RTO_MAX
-> constants, ignoring the tcp_rto_min_us and tcp_rto_max_ms sysctls.
-> 
-> Make them follow the sysctls instead: seed icsk_rto_min / icsk_rto_max
-> on the MPTCP socket from the per-netns sysctls in __mptcp_init_sock()
-> -- the msk does not go through tcp_init_sock(), so these fields would
-> otherwise stay zero -- and read them directly where the constants were
-> used:
-> 
-> - mptcp_set_datafin_timeout(): both the backoff cap computation and
->   the resulting timer_ival. The two sysctls are validated
->   independently, so rto_min > rto_max is a valid configuration; keep
->   a max_t() guard so ilog2() is never called with 0.
-> 
-> - __mptcp_set_timeout(): the fallback when no subflow timeout is
->   available.
-> 
-> The icsk fields are read directly instead of using the
-> tcp_rto_min()/tcp_rto_max() helpers: the MPTCP socket does not perform
-> routing lookups in these paths, so the rto_min route metric checked by
-> tcp_rto_min() can never apply here. The TCP_RTO_MIN_US /
-> TCP_RTO_MAX_MS socket options are not supported by MPTCP setsockopt()
-> either; this can be revisited if they get supported on MPTCP sockets.
-> 
-> The remaining uses of TCP_RTO_MAX in net/mptcp/ctrl.c (default
-> add_addr_timeout) and net/mptcp/subflow.c (MP_FAIL timeout) are
-> intentionally left unchanged: they use the constant as a default
-> duration, not as an RTO bound on a retransmit timer.
-Now in our tree:
+Thank you for your reply.
 
-New patches for t/upstream:
-- 3dcc47c54bb6: mptcp: honour configured min/max RTO in retransmit paths
-- Results: 570d3b306aec..0715f5ba093a (export)
+On 05/08/2026 10:52, Yuan Tan wrote:
+> On Tue, Aug 4, 2026 at 11:00 AM Matthieu Baerts <matttbe@kernel.org> wrote:
+>>
+>> Hi David, Kyle,
+>>
+>> (+cc Vega's people)
+>>
+>> On 04/08/2026 11:50, David Lee wrote:
+>>> From: Kyle Zeng <kylebot@openai.com>
+>>>
+>>> An MP_JOIN request owns the reference stored in subflow_req->msk.
+>>> inet_reqsk_clone() byte-copies that pointer when migrating a request,
+>>> but does not acquire a reference for the clone.  The original and cloned
+>>> request destructors can consequently drop the same reference, leaving
+>>> one request with a dangling msk pointer.
+>>>
+>>> Let cloned MPTCP requests take their own msk reference.  The source
+>>> request still owns its reference while it is being cloned, so sock_hold()
+>>> is safe.  The clone's normal destructor balances the new reference on
+>>> both successful and failed migration paths.
+>>>
+>>> Fixes: c905dee62232 ("tcp: Migrate TCP_NEW_SYN_RECV requests at retransmitting SYN+ACKs.")
+>>
+>> Thank you for this patch. It looks like it is similar to this one sent a
+>> few months ago, but where changes have been requested:
+>>
+>>   https://lore.kernel.org/40fd38e7a368e5b7bc9bc83364a32241f977d53f.1778404619.git.caoruide123@gmail.com
+>>
+>> Do you mind checking what they did, and explaining the different approach, please?
+>>
+>> It seems there are two issues the Vega's team tried to solve: one with
+>> MP_JOIN requests (what you are trying to fix here) and with MP_CAPABLE.
+>> For me, it is fine to split that in two patches. I also don't mind who
+>> is writing the final patch(es), as long as credits are given. If you,
+>> David/Kyle, are doing that, it might be OK to add a:
+>>
+>>   Reported-by: Vega <vega@nebusec.ai>
+>>   Closes: https://lore.kernel.org/40fd38e7a368e5b7bc9bc83364a32241f977d53f.1778404619.git.caoruide123@gmail.com
+>>
+>> @Vega's team: OK with that? Or are you actively working on a v3?
+> 
+> We seem to have lost track of this patch, and we sincerely apologize.
+> 
+> Our patch addresses two issues: one involving MP_JOIN requests and the
+> other involving MP_CAPABLE.
+> 
+> I reviewed Kyle and David’s fix for the MP_JOIN issue, and it looks
+> reasonable to me.
 
-Tests are now in progress:
+Please note that Clashiko reported an issue. A new version *might* be
+required:
 
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/810cb9f0a83e758a5e310b4dc7248b5d7cec76bc/checks
+
+https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20260804095051.715355-1-david.lee%40trailofbits.com
+
+Note that both Clashiko and Sashiko are mentioning the other existing
+issue with MP_CAPABLE, that the Vega's team tried to fix in their v2:
+
+
+https://sashiko.dev/#/patchset/20260804095051.715355-1-david.lee%40trailofbits.com
+
+I think the fix can be done in two parts.
+
+> Ruide and I also do not have a preference regarding whose patch is accepted.
+> 
+> If David/Kyle' patch is accepted, please add:
+> 
+> Reported-by: Vega <vega@nebusec.ai>
+> Reported-by: Ruide Cao <caoruide123@gmail.com>
+> Closes: https://lore.kernel.org/40fd38e7a368e5b7bc9bc83364a32241f977d53f.1778404619.git.caoruide123@gmail.com
+If a new version is required, please sync on who is doing what. Let's
+wait for Kyle and David's reply. (In case of "timeout" (after a few
+days), feel free to work on the v3.)
 
 Cheers,
 Matt
