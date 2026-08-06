@@ -1,52 +1,52 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B403B5E19
-	for <mptcp@lists.linux.dev>; Thu,  6 Aug 2026 14:47:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FF53B71BA
+	for <mptcp@lists.linux.dev>; Thu,  6 Aug 2026 14:47:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786027654; cv=none; b=T/6Gh57jQS8hgNP9V/w4SU0A8ccjpfQPftCwYXNgv52EQHnspEcUNnTbW3EnleOVZug9ZI/+tsf91j4bdjXpbA5Gjuzsrjt8mSNsLXQU8O97lcT8rEMGaCiTMKP+POgfbQo8OhUn82/hhRCWnBWBfrTiAwqNIboucIKyN4jrAqw=
+	t=1786027655; cv=none; b=Ret0+70jrKn2mQ8QdG0xkocEVAGV07vjMTWGTpXl8cQhXtvajO5CsP2ege1u/6QT9R2t3/0Z4yhD48C2RWYTTzKzKfnmK1DP94V8OgcD2uEKUz80VCvjOkuJEKIbll1MxkrAipDVuAyRukDKgZm8SviikFkY1dC5dQ5Wq4BWKnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786027654; c=relaxed/simple;
-	bh=aVgwuqL/YyFyIyKfhfaMaxQ1t6tx0VLkwZf3gOOGw4w=;
+	s=arc-20240116; t=1786027655; c=relaxed/simple;
+	bh=5RRfxqMV/jxbfI4OyeCH5Tq4DW+s+iAdQETPHbkTLy4=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=FYd9Pr98cmqSk5nIq1BPO3qrtv+dEOKx9tRUsMzwbCUJerhUJLkf27qSQ5lmrSAYodjPkhlnFR6SljHLi6vEtNXcVq09tLflUDGV4o16wELp1FXG1/7qgtBu4d4n8ng2kwogNpADFNoGErnsOaJ44VfbZwEZ4fOFyW+ZfO/fArE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EArbLvdT; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=Sk85YSThwg73ypeEoapAi7s3AJbn0N8yLk4xWfr/u0/fzDowX1VIYWy2J+6Ri8YIAcYGh+HtKZ75jeqpV5N4TJrFxdhzKgeMQF85Lv00PpN0XF6G2wRXfGxuIAl3laweY0jBHlGMhc+uHjzts3G9jBPKTbYTaW5VRV6k1ERImHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BcMgyPbv; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EArbLvdT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BcMgyPbv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1786027652;
+	s=mimecast20190719; t=1786027653;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kuCb+F5SAZceNMUon89F2o3Bm+bZrtl4giopBLbI84g=;
-	b=EArbLvdTl+vCfciugB5to/81nMG0K8m6P2yza5b804AndJNsgsmo2+0ayFC4vUQIyYr/3W
-	xA6mYJZmhUMQquuR+G5er+PBZDRg1d2U0Sf30JjtJINZgdmiixDBpKs+Wkfa6ONcclQDIe
-	by8Gy/CunX7nbFY4uKemXIdSPPHgxcM=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=kPRCfmbU2pCKfQwHny6f+vIIUE7cp4KIQn14RwzcrsI=;
+	b=BcMgyPbvdPHhY5QeCmMn+wsE5y3yBxnUv1YqfD6frAeMRB4OutBjilzv7epveZ3XPgSu0t
+	7lNMV+0IHfu2fkxW9CqxKhERbG5mmYcCjgB4196JkAS2ncT+znU8KIHQs4NG9va+AiIpzV
+	9bpw6MzHeWRElyNgbjb5ag91iBCg3/A=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-586-jLLkyrt3NcmjkgQDkMYw_A-1; Thu,
- 06 Aug 2026 10:47:30 -0400
-X-MC-Unique: jLLkyrt3NcmjkgQDkMYw_A-1
-X-Mimecast-MFC-AGG-ID: jLLkyrt3NcmjkgQDkMYw_A_1786027649
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-624-I9CNYhk7M6GcycraSXubBw-1; Thu,
+ 06 Aug 2026 10:47:31 -0400
+X-MC-Unique: I9CNYhk7M6GcycraSXubBw-1
+X-Mimecast-MFC-AGG-ID: I9CNYhk7M6GcycraSXubBw_1786027651
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2BDA11956044
-	for <mptcp@lists.linux.dev>; Thu,  6 Aug 2026 14:47:29 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0EA94180034A
+	for <mptcp@lists.linux.dev>; Thu,  6 Aug 2026 14:47:31 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.44.33.123])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6E80A1956094
-	for <mptcp@lists.linux.dev>; Thu,  6 Aug 2026 14:47:28 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3BF5A1956094
+	for <mptcp@lists.linux.dev>; Thu,  6 Aug 2026 14:47:30 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH v2 mptcp-next 5/7] mptcp: enforce hard limit on backlog flushing
-Date: Thu,  6 Aug 2026 16:45:26 +0200
-Message-ID: <580549c43001f887cd093a78a34629d33f034a4c.1786026372.git.pabeni@redhat.com>
+Subject: [PATCH v2 mptcp-next 6/7] mptcp: avoid code duplication in __mptcp_move_skb()
+Date: Thu,  6 Aug 2026 16:45:27 +0200
+Message-ID: <e03f728db1a7db552864f4447ca43a1d1bc9c56c.1786026372.git.pabeni@redhat.com>
 In-Reply-To: <cover.1786026372.git.pabeni@redhat.com>
 References: <cover.1786026372.git.pabeni@redhat.com>
 Precedence: bulk
@@ -57,98 +57,73 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: VtMDh6iFmp_NMHFqV4GjvczazlO1dN9PwzXFkxRnQbs_1786027649
+X-Mimecast-MFC-PROC-ID: QFYPavjGCho2UvvonU6-x7B2og6CZflpyLywrRzqkRY_1786027651
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Currently a wild producer could keep the backlog flushing operation
-spinning for an unbound time.
+Alike TCP, MPTCP handles in-sequence packets and partially overlapping
+ones in a very similar way: we can use the same path to handle both,
+avoiding some code duplication.
 
-Since the previous patch the amount of data present in the backlog is
-hard-limited. Move the backlog len update at the end of the flush loop to
-prevent it spinning forever.
-
-Also, no need to splice back the remaining skbs list into the backlog, as
-such list is always empty after each backlog processing loop.
+This will also make the next patch simpler.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/protocol.c | 21 ++++++---------------
- 1 file changed, 6 insertions(+), 15 deletions(-)
+ net/mptcp/protocol.c | 31 +++++++++++++------------------
+ 1 file changed, 13 insertions(+), 18 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index cfb77a32518a..d96fbdc34dbb 100644
+index d96fbdc34dbb..63f2c18bc01f 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2229,7 +2229,6 @@ static bool __mptcp_move_skbs(struct sock *sk, struct list_head *skbs, u32 *delt
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	bool moved = false;
+@@ -399,6 +399,7 @@ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
  
--	*delta = 0;
- 	while (1) {
- 		prefetch(skb->next);
- 		list_del(&skb->list);
-@@ -2266,20 +2265,12 @@ static bool mptcp_can_spool_backlog(struct sock *sk, struct list_head *skbs)
- 	return true;
+ 	if (MPTCP_SKB_CB(skb)->map_seq == msk->ack_seq) {
+ 		/* in sequence */
++insert:
+ 		msk->bytes_received += copy_len;
+ 		WRITE_ONCE(msk->ack_seq, msk->ack_seq + copy_len);
+ 		tail = skb_peek_tail(&sk->sk_receive_queue);
+@@ -413,26 +414,20 @@ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
+ 		return false;
+ 	}
+ 
+-	/* Completely old data? */
+-	if (!after64(MPTCP_SKB_CB(skb)->end_seq, msk->ack_seq)) {
+-		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_DUPDATA);
+-		mptcp_drop(sk, skb);
+-		return false;
++	/* Partial packet */
++	if (after64(MPTCP_SKB_CB(skb)->end_seq, msk->ack_seq)) {
++		copy_len = MPTCP_SKB_CB(skb)->end_seq - msk->ack_seq;
++		MPTCP_SKB_CB(skb)->offset += msk->ack_seq -
++					     MPTCP_SKB_CB(skb)->map_seq;
++		MPTCP_SKB_CB(skb)->map_seq += msk->ack_seq -
++					      MPTCP_SKB_CB(skb)->map_seq;
++		goto insert;
+ 	}
+ 
+-	/* Partial packet: map_seq < ack_seq < end_seq.
+-	 * Skip the already-acked bytes and enqueue the new data.
+-	 */
+-	copy_len = MPTCP_SKB_CB(skb)->end_seq - msk->ack_seq;
+-	MPTCP_SKB_CB(skb)->offset += msk->ack_seq - MPTCP_SKB_CB(skb)->map_seq;
+-	MPTCP_SKB_CB(skb)->map_seq += msk->ack_seq -
+-				      MPTCP_SKB_CB(skb)->map_seq;
+-	msk->bytes_received += copy_len;
+-	WRITE_ONCE(msk->ack_seq, msk->ack_seq + copy_len);
+-
+-	skb_set_owner_r(skb, sk);
+-	__skb_queue_tail(&sk->sk_receive_queue, skb);
+-	return true;
++	/* Completely old data */
++	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_DUPDATA);
++	mptcp_drop(sk, skb);
++	return false;
  }
  
--static void mptcp_backlog_spooled(struct sock *sk, u32 moved,
--				  struct list_head *skbs)
--{
--	struct mptcp_sock *msk = mptcp_sk(sk);
--
--	WRITE_ONCE(msk->backlog_len, msk->backlog_len - moved);
--	list_splice(skbs, &msk->backlog_list);
--}
--
- static bool mptcp_move_skbs(struct sock *sk)
- {
-+	struct mptcp_sock *msk = mptcp_sk(sk);
- 	struct list_head skbs;
- 	bool enqueued = false;
--	u32 moved;
-+	u32 moved = 0;
- 
- 	mptcp_data_lock(sk);
- 	while (mptcp_can_spool_backlog(sk, &skbs)) {
-@@ -2287,8 +2278,8 @@ static bool mptcp_move_skbs(struct sock *sk)
- 		enqueued |= __mptcp_move_skbs(sk, &skbs, &moved);
- 
- 		mptcp_data_lock(sk);
--		mptcp_backlog_spooled(sk, moved, &skbs);
- 	}
-+	WRITE_ONCE(msk->backlog_len, msk->backlog_len - moved);
- 	mptcp_data_unlock(sk);
- 
- 	if (enqueued && mptcp_epollin_ready(sk))
-@@ -3747,12 +3738,12 @@ static void mptcp_release_cb(struct sock *sk)
- 	__must_hold(&sk->sk_lock.slock)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
-+	u32 moved = 0;
- 
- 	for (;;) {
- 		unsigned long flags = (msk->cb_flags & MPTCP_FLAGS_PROCESS_CTX_NEED);
- 		struct list_head join_list, skbs;
- 		bool spool_bl;
--		u32 moved;
- 
- 		spool_bl = mptcp_can_spool_backlog(sk, &skbs);
- 		if (!flags && !spool_bl)
-@@ -3785,9 +3776,9 @@ static void mptcp_release_cb(struct sock *sk)
- 
- 		cond_resched();
- 		spin_lock_bh(&sk->sk_lock.slock);
--		if (spool_bl)
--			mptcp_backlog_spooled(sk, moved, &skbs);
- 	}
-+	if (moved)
-+		WRITE_ONCE(msk->backlog_len, msk->backlog_len - moved);
- 
- 	if (__test_and_clear_bit(MPTCP_CLEAN_UNA, &msk->cb_flags))
- 		__mptcp_clean_una_wakeup(sk);
+ static void mptcp_stop_rtx_timer(struct sock *sk)
 -- 
 2.55.0
 
