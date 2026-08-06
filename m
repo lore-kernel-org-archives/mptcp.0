@@ -1,117 +1,101 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E7531F983
-	for <mptcp@lists.linux.dev>; Thu,  6 Aug 2026 07:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF7B3DDAE4
+	for <mptcp@lists.linux.dev>; Thu,  6 Aug 2026 08:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786001986; cv=none; b=hGnTLvsJdsKpPzyWvtm7TJZQ8mwMhG3hVmj9C/K71Q+a3KzPgsbrPcpv2oIJrmnR2g/nfNFvgSJONNe7lfat7kNw9lBvigen1AtEJ3MXbPRxj5TofwyJUMnChWSl9ZIIDhsz6im1QOkZqTiBBHVgqpYleS2oYHeUjt3mh3S2D9E=
+	t=1786005993; cv=none; b=PoBbygFlQmrTtYSG19QrtFYe+2Dz4UI0cCJ4wfEp1eDwcqyY0QmTMGn1XAC2Kqon/fIfasvg3XxULI88zhG3XDlrfCho/tCna1hAP4slme4nn6a58VAkiHHaNb1hrGog5rBEmeC26t60NIh2PzgPTBLYOiHpzzbBCqOzdrbBEBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786001986; c=relaxed/simple;
-	bh=9cXrHUkSeqyzWYvQw5/2gpshDNTptJm3lBi5YrqyStI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=MSoEZF5crGsEVxvBwLZoE1djZ0eHbUsV8D5ugx7n8UOjDTP7/WywA1Jiud0nwgpUqPeX4yxhe4bHdbrtS0qmEWKt0aXs4Q66iydmBW4IGY82ou5uY1mQ8Knp0HY6zcZCY5bD7WSG+mwZsEkskg3qgFQi8DPiCWkUhJVPnDoqfbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f9daDkTG; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1786005993; c=relaxed/simple;
+	bh=UrpNBpDaDfJ75UtE1w0uMsDyBUYjVyqXpfXuURcBuzs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=lMzCW1aKO0I0qIuCX4icpqf9HN94QtI4ur31Z9tf7D+LtE2HkpDG5I5bBK0YXqaOzBNLvOgiZukQY5OjhEuxG9AwVzJMKbvhQLeUA/NQL1lJXU+ZL+SEibCKHoJaIteyIzFwyKbx6yH9po+25vvuHd4PiXv612QzOi7zZF7O2OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U1a4+iRM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f9daDkTG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1786001981;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FUOYZm7oxVpQQZwCZctLOhPVh0C2lEzrSxVX+5/UodE=;
-	b=f9daDkTGne78TpCgDM7E6xJoXfVi5bfT7Ih3oGn2RWDv/5g9RspDHAh7KmID7isGt8P1rf
-	IzFEvhVvmCYjGXPCo22MR8k9D0XfUDpwrmOHBrOuTNDZHjjrO0Y+xq2Bjm7q5GeylJ8QtB
-	a35Bpr+RS3vlZAl5xwPDFijxQr3boTs=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-656-MnrS2pYuMuObI3fKsGTUBQ-1; Thu, 06 Aug 2026 03:39:39 -0400
-X-MC-Unique: MnrS2pYuMuObI3fKsGTUBQ-1
-X-Mimecast-MFC-AGG-ID: MnrS2pYuMuObI3fKsGTUBQ_1786001979
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-495569acf8dso11133205e9.1
-        for <mptcp@lists.linux.dev>; Thu, 06 Aug 2026 00:39:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786001979; x=1786606779;
-        h=content-transfer-encoding:content-type:in-reply-to:content-language
-         :references:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=FUOYZm7oxVpQQZwCZctLOhPVh0C2lEzrSxVX+5/UodE=;
-        b=qNjWIC62k3lb651SjdkIIPBL7BguDTiAbneIUNF2guP0Zh29slGkbuCdd6ecu0YlbE
-         vhTwpGg0SlSEktQ9pTLhFX9aik/rzVhC+iTblQOypOrQLfhYjB8R3Q5f9dNyPA24IBjL
-         GJ0WdsoOpdPpouNytHO+awN3h6H0mNEfc8OkQ/fDRENIQ6BbeV+g6zZshPKbRiTfpxCG
-         gy6bA1YDi1tc8JTWgNxeSu48VCLwLrjkqrKSBHVmOI1PwMK3nIBRf9zJJjNE7xvWSTrX
-         i++1DxzFGBVM//Z1Fi8WpDEvesfKjZyXfFI2369k6a3v8ferOE/kYdLMxyr/pAQMIya1
-         HEaQ==
-X-Gm-Message-State: AOJu0YxQQYGzfLIVfu5hn6Pd1YL08eC7JmkjzIlowl6J0v4RCOohnlZq
-	OCsnHGkKNVGnaVCTjJlCncRYEt8uqGnLz/5MJl9MdzJ9Foh/5iyjh8dr5ZtGtnvdcStr7CpsOXf
-	83HJ9uw7ACHMZEQrvbtJGRpyH+YJk365Qmm+0PMnXTv1D57eBY0nuWgWHJZge0Jng3wl4inevub
-	vYK0Hi+RQ8WHJIfszPXHx/lPGBYZ2859EBPZjc0g==
-X-Gm-Gg: AR+sD11fIrOhFHPgkTI6Yb4ss16unYH8Ay1bpJ4mulohgY9vzyiUXGVoZINDq2616Gp
-	8/25Xghec+DPQwcy+K2xR1UUwEx0Xw9BQvUolBRUpsjLugeJ4DEHR+kUXoiiHX3SeiWqGpMJa9y
-	euAg1YEMhF/QIMEN0MiCy5wTkDMUcCEuV3wgXwC4CqcK3uUEsVeiFnHkyYlgrwBVrYyW/r3tqFN
-	xU8XsbNSuLEPKvmBGc1lClZgnKdM7Z5bP2zOyloOSCLT5v0PkMAvpmToFxU96p7YPktnIf3eHla
-	mmhy6Ld4mDcbf7Jlf/fISRQFRr9Eoa+Mdd10Pk6OhfRsOdoaAY0ZOdPUwf+1nlxZGXTlUDxy+Gy
-	/IJ0nALyggRxkjuVNlkutssEjtEXvsXbfGVRWxNJ6oz1Jh4OdiHtVBZm3Y87f/U54SK3D5q8Uz1
-	I=
-X-Received: by 2002:a05:600c:8b51:b0:495:6b55:f938 with SMTP id 5b1f17b1804b1-4994e7ba99emr181915845e9.10.1786001978653;
-        Thu, 06 Aug 2026 00:39:38 -0700 (PDT)
-X-Received: by 2002:a05:600c:8b51:b0:495:6b55:f938 with SMTP id 5b1f17b1804b1-4994e7ba99emr181914935e9.10.1786001978065;
-        Thu, 06 Aug 2026 00:39:38 -0700 (PDT)
-Received: from [192.168.188.103] (ip239-44-231-195.pool-bba.aruba.it. [195.231.44.239])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4995421934asm42647065e9.5.2026.08.06.00.39.37
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2026 00:39:37 -0700 (PDT)
-Message-ID: <e0061681-7355-4c4e-96df-030ac8123eb7@redhat.com>
-Date: Thu, 6 Aug 2026 09:39:36 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U1a4+iRM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E82521F000E9;
+	Thu,  6 Aug 2026 08:46:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786005991;
+	bh=ed8uykDcWG5yd3xgy6yq1x+9bOT97EnIWZlr1gK31Hs=;
+	h=From:Subject:Date:To:Cc;
+	b=U1a4+iRMAo1XmbRaIXg5NjDcaFsQ74NzL6VTDmqgqLNCvdXZ6hiE8FwHkGThACWTp
+	 pXEBxOkClEsZK+oamWT/Fb+mbkjONHAbJUdEiwodkq5BuVsMtG2+2TpjmvVd/ft5IQ
+	 VhpjWMvYMag4U0eB6D5Tvc6M//7NzAP1FZpO0IOzwZXhMe9oaWjJ9F3w5GSw7mQqvX
+	 /WAnzwr43we5okNCVfZMeVnvmb2SIashV9nNcEibDXaL7g+pMMpXlv6pJUgxya9+oC
+	 Xm/EdHghz9icYhMW+d4OEL/L+sol0A/nVddT5mt0LkBmHZM7hhKCCTBHSoPNLnjb8J
+	 AuFW9NzAV1Cew==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-net v2 0/6] mptcp: pm: userspace: properly deal with
+ the ID0 case
+Date: Thu, 06 Aug 2026 10:46:17 +0200
+Message-Id: <20260806-mptcp-pm-userspace-id0-case-v2-0-fea1808e1c57@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 3/7] mptcp: let the retrans scheduler do its
- job
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-References: <cover.1785943854.git.pabeni@redhat.com>
- <362268703ac205e887e5bbc50f92f9099792a3d8.1785943854.git.pabeni@redhat.com>
-In-Reply-To: <362268703ac205e887e5bbc50f92f9099792a3d8.1785943854.git.pabeni@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: kGcuL93EYpFChJhWFQWlviGpl0EDm9WDI7bKWRGBWDQ_1786001979
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/32OQQ6DIBBFr2JmXRokBLSr3qNxgXRQ2ooE0LQx3
+ r2oXXf5M/+9PwtEDBYjXIoFAs422tHlwE4F6F65Dom95wyMMkEl42TwSXviBzJlMnqltwYlWkU
+ khkpuBOdC6AqywQc09r3bb3CADhM0xylO7QN12uxbubcxjeGzfzKXO/IblX9H55JQUldSGspU3
+ Sq8PjE4fJ3H0EGzrusXwsWvxuQAAAA=
+X-Change-ID: 20260724-mptcp-pm-userspace-id0-case-f074f64466c8
+To: MPTCP Linux <mptcp@lists.linux.dev>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1927; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=UrpNBpDaDfJ75UtE1w0uMsDyBUYjVyqXpfXuURcBuzs=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJKPO93T5LeenTui5O2dvfuvCr/KlC6bB1b40zFvZrmn
+ 2qFLhQldJSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEzEkJnhn4GpQRDjPNfl0pO0
+ n2W9tt/+5uGpV8p1sjbPTqT8NIxlX8LIcMo1u+7/pp9Pz188tmTOFsvVBc9KCv+uEfEPSXhlbvL
+ rKi8A
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On 8/5/26 6:17 PM, Paolo Abeni wrote:
-> @@ -2856,15 +2854,60 @@ static void __mptcp_retrans(struct sock *sk)
->  	struct mptcp_sock *msk = mptcp_sk(sk);
->  	struct mptcp_subflow_context *subflow;
->  	struct mptcp_data_frag *dfrag;
-> +	u64 retrans_seq, sent_seq;
-> +	bool need_retrans;
->  	int err, len;
->  
->  	mptcp_pm_chk_stale(msk);
->  
-> -	mptcp_clean_una_wakeup(sk);
-> +	for (;;) {
-> +		/* Get an updated and consistent rtx queue status. */
-> +		mptcp_data_lock(sk);
-> +		__mptcp_clean_una_wakeup(sk);
-> +		retrans_seq = msk->snd_una;
-> +		dfrag = mptcp_rtx_head(sk);
-> +		need_retrans = !!dfrag;
-> +		mptcp_data_unlock(sk);
+In MPTCP, the local address and port used by the initial subflow has the
+ID "0". It means that when this address and port are used for some
+operations -- e.g. creating a new subflow -- they should be linked to
+the ID0, and no other addresses and ports can get this special ID while
+the initial IP address and port is used.
 
-too much cleanup here. This needs more work
+Instead of dealing with the ID0 case as an exception, add it to the
+local addr list, and deal with it like the others, with minor
+exceptions. That way, it seems easier to maintain instead of adding new
+exceptions at a few places, at the cost of a few more bytes, which seems
+OK in this mode.
 
-/P
+The first patch modifies add the initial address to the list, and the
+others remove exceptions, and validate that in the selftests.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v2:
+- patch 1: commit msg + local_addr_used and needs_id exceptions
+- patch 2: commit msg
+- Link to v1: https://patch.msgid.link/20260727-mptcp-pm-userspace-id0-case-v1-0-9877f02a9bae@kernel.org
+
+---
+Matthieu Baerts (NGI0) (6):
+      mptcp: pm: userspace: properly handle the ID0 case
+      mptcp: pm: userspace: allow announcing ID0 addr
+      mptcp: pm: userspace: no ID0 exception for RM_ADDR
+      mptcp: pm: userspace: don't dump initial ID0
+      selftests: mptcp: join: new ID0 subflow from the right IP
+      mptcp: pm: restrict in-kernel worker actions to this PM
+
+ net/mptcp/pm.c                                  |  8 ++-
+ net/mptcp/pm_userspace.c                        | 91 ++++++++++++-------------
+ net/mptcp/protocol.h                            |  1 +
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |  7 +-
+ 4 files changed, 55 insertions(+), 52 deletions(-)
+---
+base-commit: 0715f5ba093a581def25b88da61c987b1719bc6d
+change-id: 20260724-mptcp-pm-userspace-id0-case-f074f64466c8
+
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
