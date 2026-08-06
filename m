@@ -1,219 +1,98 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 681E4472796
-	for <mptcp@lists.linux.dev>; Thu,  6 Aug 2026 14:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2112F47F2EB;
+	Thu,  6 Aug 2026 15:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786027657; cv=none; b=DyN1zEbkKnhKwta00VnTKbiaPQLaVKZJbGK6fE4fDgkalFRhd7FEx3YjDm+8wQm4RZA79LRTneyZd4GcLGziMCLICd8dyZaU4KiQ+E9108niOsZ2Co85cjv//SdCle3N5JQ+lErUAksMbvEgQHG+D/JFPvymAg3AAUwm+8JHb2o=
+	t=1786031475; cv=none; b=CVpW09pUD/zyui4XjCqedFRIQ+JM5nod7N3d4Q7Tacfhofir/Munys5WO3GFPiFJtuCYL0GtJG5BZYhDAwHCU9ZxHOYB8l+PPL0HMSArWyS5C9sHSUmWKqLRXzNRW2Z0y9atXu9ljaq5/1T15pdtpm3nPd40aFdNp5WxZVdru8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786027657; c=relaxed/simple;
-	bh=aC6PFIXLe7X8cSo2ZfNEAGVvOYE5z6yRkwStXGsTXXk=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=M87v8+zvrmWkx32ZGyyBlaLxWAl7w44evs5i+2f/fwdgOvyXp9KN2j6QcKQVYQN7/4Kr0Bh6j4Iwxmk9zcY6sruzL5iOMVR8RTj6ZS1/JkPPKoJ4g0wa/+uqL2TQHmJV5OtQvu7WhIgkByMFY8RiqigplFdrY8SA2ZKdVYJbfU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i0uyxu/U; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1786031475; c=relaxed/simple;
+	bh=lTf/WzEencw4fMDBNkWKQyUC5KKzcR2ZSXVn8D06zjg=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=aONNnwuBfGiimJ7JW0dMQopd0FfIlzCXdH+s7SyasbbLK1kt3RgpapOzlTe1HMebtnc96fNXE9DhNB5C9v+EG3J7lTtt0+MNwH3GMaNm/FecKuqLga4sdp3B5L71OAJ+BBGPzTt4mG57TCit3R0lMEQmOvIDpaySu41Ukt5LGBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QcQRdOXi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i0uyxu/U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1786027655;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yq2cXEcuTzHtSPgHfTCLCOCU4B13sNayDa+H6oXMdOI=;
-	b=i0uyxu/U0oyxFk3jF+K0mqD0LdEhtMIMB2SYR2r6/taGTPVAGpxJkgWfBgKW5g3nZ7aTtC
-	K9flidSotFPR+YqjK3x5hE76aoBICsdHp8ZOfeNBcBwr7jMj/tzh7BngbYFfAZIGpvBosv
-	Hg0guH0Lp5Laf23HKW97kBamUyMZXLM=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-556-bNRIpm8-O3-gzWZYthmf3w-1; Thu,
- 06 Aug 2026 10:47:33 -0400
-X-MC-Unique: bNRIpm8-O3-gzWZYthmf3w-1
-X-Mimecast-MFC-AGG-ID: bNRIpm8-O3-gzWZYthmf3w_1786027653
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D714C195609F
-	for <mptcp@lists.linux.dev>; Thu,  6 Aug 2026 14:47:32 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.44.33.123])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2656F1956094
-	for <mptcp@lists.linux.dev>; Thu,  6 Aug 2026 14:47:31 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH v2 mptcp-next 7/7] mptcp: implemented OoO queue pruning
-Date: Thu,  6 Aug 2026 16:45:28 +0200
-Message-ID: <be9dcbef291a424fdd54d19fc72f9f28fb239b81.1786026372.git.pabeni@redhat.com>
-In-Reply-To: <cover.1786026372.git.pabeni@redhat.com>
-References: <cover.1786026372.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QcQRdOXi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54ABE1F00A3A;
+	Thu,  6 Aug 2026 15:51:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786031462;
+	bh=0YkuvbUNUoMYFw+6i4h4rbeB4K95U4aarWRNfWOdHVA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc;
+	b=QcQRdOXiJzMLmp66O7T7Iarwdj/m/mF5w15BN5gCR9adbMRL2+sn0wpCfy6vcYR8O
+	 VcbPnUR3US2zvLO6SfgHON/KkN7j7bD0R4KMk2s1sY1BO2DWc+yojuXx6YYzUSZtr6
+	 /ReUmXmhadIANAsIqPr3Pj8r8SBv/FZUdxbvqyYRcHodst/lA+o0/1UNm2nk9k5Y3o
+	 ax7gbF91pOs7oezEGl8i+UYjwJfiKnfpZzJn7ehu2wnZmw9fJSFgkw9Z/rm0mDTXlS
+	 3A9XFOUDMnouQ/mfkiCrMYPJYHWZ1DG9hZR4RwxhGVS7r0q/vJ9aDt6V2yLwrLlbLm
+	 7VkgTzH57gPPA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id D0B80380820D;
+	Thu,  6 Aug 2026 15:50:22 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: BEinAA1A4ipRzC9zTuP2NxS4vWgxntxEmfxw5Lcc4Us_1786027653
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Subject: Re: [PATCH net v2 0/8] mptcp: misc fixes for v7.2-rc6
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <178603142138.1348318.7580608127608923718.git-patchwork-notify@kernel.org>
+Date: Thu, 06 Aug 2026 15:50:21 +0000
+References: 
+ <20260803-net-mptcp-misc-fixes-7-2-rc6-v2-0-b8f496d71664@kernel.org>
+In-Reply-To: 
+ <20260803-net-mptcp-misc-fixes-7-2-rc6-v2-0-b8f496d71664@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, dcaratti@redhat.com, fw@strlen.de,
+ cpaasch@openai.com, luoqing@kylinos.cn, yangang@kylinos.cn, shuah@kernel.org,
+ linux-kselftest@vger.kernel.org, shardul.b@mpiricsoftware.com,
+ kishen.maloor@intel.com, bronzed_45_vested@icloud.com, yuantan098@gmail.com,
+ yifanwucs@gmail.com, tomapufckgml@gmail.com, zcliangcn@gmail.com,
+ bird@lzu.edu.cn, n05ec@lzu.edu.cn, dmytro@shytyi.net
 
-When moving incoming skbs in the msk receive queue and the latter
-is above limits, prune it as needed quite alike what TCP is doing
-at the subflow level. The main difference relies in the stop condition:
-since MPTCP does not perform collapsing, it's better off dropping the
-bare minimum to fit the (newer) incoming packet.
+Hello:
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Tested-by: Gang Yan <yangang@kylinos.cn>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-v<n> -> v<n+1>:
-  - prune only for new data
-  - reorganize the code to follow more closely TCP
----
- net/mptcp/mib.c      |  1 +
- net/mptcp/mib.h      |  1 +
- net/mptcp/protocol.c | 81 ++++++++++++++++++++++++++++++++++++++------
- 3 files changed, 73 insertions(+), 10 deletions(-)
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-index ef65e2df709f..2569385bab7c 100644
---- a/net/mptcp/mib.c
-+++ b/net/mptcp/mib.c
-@@ -87,6 +87,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
- 	SNMP_MIB_ITEM("WinProbe", MPTCP_MIB_WINPROBE),
- 	SNMP_MIB_ITEM("BacklogDrop", MPTCP_MIB_BACKLOGDROP),
- 	SNMP_MIB_ITEM("RcvPruned", MPTCP_MIB_RCVPRUNED),
-+	SNMP_MIB_ITEM("OFOPruned", MPTCP_MIB_OFOPRUNED),
- };
- 
- /* mptcp_mib_alloc - allocate percpu mib counters
-diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-index 9271205f682e..3a3425e258a7 100644
---- a/net/mptcp/mib.h
-+++ b/net/mptcp/mib.h
-@@ -90,6 +90,7 @@ enum linux_mptcp_mib_field {
- 	MPTCP_MIB_WINPROBE,		/* MPTCP-level zero window probe */
- 	MPTCP_MIB_BACKLOGDROP,		/* Backlog over memory limit */
- 	MPTCP_MIB_RCVPRUNED,		/* Dropped due to memory constraints */
-+	MPTCP_MIB_OFOPRUNED,		/* MPTCP-level OoO queue pruned */
- 	__MPTCP_MIB_MAX
- };
- 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 63f2c18bc01f..ec874d2ead6a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -242,6 +242,65 @@ static bool mptcp_rcvbuf_grow(struct sock *sk, u32 newval)
- 	return false;
- }
- 
-+/* "Inspired" from the TCP version; main difference: stop as soon as the MPTCP
-+ * socket is under memory limit.
-+ */
-+static void mptcp_prune_ofo_queue(struct sock *sk,
-+				  const struct sk_buff *in_skb)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct rb_node *node, *prev;
-+	bool pruned = false;
-+	u64 mem;
-+
-+	if (RB_EMPTY_ROOT(&msk->out_of_order_queue))
-+		return;
-+
-+	node = &msk->ooo_last_skb->rbnode;
-+
-+	do {
-+		struct sk_buff *skb = rb_to_skb(node);
-+
-+		/* Stop pruning if the incoming skb would land in OoO tail. */
-+		if (after64(MPTCP_SKB_CB(in_skb)->map_seq,
-+			    MPTCP_SKB_CB(skb)->map_seq))
-+			break;
-+
-+		pruned = true;
-+		prev = rb_prev(node);
-+		rb_erase(node, &msk->out_of_order_queue);
-+		mptcp_drop(sk, skb);
-+		msk->ooo_last_skb = rb_to_skb(prev);
-+
-+		mem = (unsigned int)sk_rmem_alloc_get(sk);
-+		if (mem <= sk->sk_rcvbuf)
-+			break;
-+
-+		node = prev;
-+	} while (node);
-+
-+	if (pruned)
-+		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_OFOPRUNED);
-+}
-+
-+/* The stack can't drop packets for fallback socket at the msk level, or the
-+ * stream will break.
-+ */
-+static bool mptcp_can_ingest(const struct sock *sk)
-+{
-+	return unlikely(sk_rmem_alloc_get(sk) <= READ_ONCE(sk->sk_rcvbuf)) ||
-+			__mptcp_check_fallback(mptcp_sk(sk));
-+}
-+
-+static bool mptcp_try_rmem_schedule(struct sock *sk, const struct sk_buff *skb)
-+{
-+	if (!mptcp_can_ingest(sk)) {
-+		mptcp_prune_ofo_queue(sk, skb);
-+		return mptcp_can_ingest(sk);
-+	}
-+	return true;
-+}
-+
- /* "inspired" by tcp_data_queue_ofo(), main differences:
-  * - use mptcp seqs
-  * - don't cope with sacks
-@@ -253,6 +312,12 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
- 	u64 seq, end_seq, max_seq;
- 	struct sk_buff *skb1;
- 
-+	if (!mptcp_try_rmem_schedule(sk, skb)) {
-+		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
-+		mptcp_drop(sk, skb);
-+		return;
-+	}
-+
- 	seq = MPTCP_SKB_CB(skb)->map_seq;
- 	end_seq = MPTCP_SKB_CB(skb)->end_seq;
- 	max_seq = atomic64_read(&msk->rcv_wnd_sent);
-@@ -387,19 +452,15 @@ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
- 
- 	mptcp_borrow_fwdmem(sk, skb);
- 
--	/* Can't drop packets for fallback socket this late, or the stream
--	 * will break.
--	 */
--	if (unlikely(sk_rmem_alloc_get(sk) > READ_ONCE(sk->sk_rcvbuf)) &&
--	    !__mptcp_check_fallback(msk)) {
--		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
--		mptcp_drop(sk, skb);
--		return false;
--	}
--
- 	if (MPTCP_SKB_CB(skb)->map_seq == msk->ack_seq) {
- 		/* in sequence */
- insert:
-+		if (!mptcp_try_rmem_schedule(sk, skb)) {
-+			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
-+			mptcp_drop(sk, skb);
-+			return false;
-+		}
-+
- 		msk->bytes_received += copy_len;
- 		WRITE_ONCE(msk->ack_seq, msk->ack_seq + copy_len);
- 		tail = skb_peek_tail(&sk->sk_receive_queue);
+On Mon, 03 Aug 2026 18:16:32 +0200 you wrote:
+> Here are various unrelated fixes:
+> 
+> - Patches 1-3: harden incoming MPTCP suboptions parsing by rejecting
+>   non-combinable ones. Patch 3 removes unreachable code after patch 2
+>   added here for consistency, and to reduce comments from AI reviews.
+>   Fixes for v5.6.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net,v2,1/8] mptcp: options: reset DSS fields in case of unexpected size
+    https://git.kernel.org/netdev/net/c/35772b4981f3
+  - [net,v2,2/8] mptcp: avoid combining some incoming suboptions
+    https://git.kernel.org/netdev/net/c/b6ee36152464
+  - [net,v2,3/8] mptcp: remove MPC && MPJ check
+    https://git.kernel.org/netdev/net/c/900e6d80548e
+  - [net,v2,4/8] mptcp: pm: fix data race in add_addr timer callback
+    https://git.kernel.org/netdev/net/c/a7aad5b69d3b
+  - [net,v2,5/8] selftests: mptcp: join: mark tests with data corruption as failed
+    https://git.kernel.org/netdev/net/c/ca318e7bbb77
+  - [net,v2,6/8] mptcp: pm: fix memory leak from alloc-during-teardown race
+    https://git.kernel.org/netdev/net/c/efc33b5102ff
+  - [net,v2,7/8] mptcp: fastopen: only mark MPTFO subflows with SYN data
+    https://git.kernel.org/netdev/net/c/e00b63056fb4
+  - [net,v2,8/8] mptcp: reclaim forward-allocated memory on RX path errors
+    https://git.kernel.org/netdev/net/c/41b49a8b914e
+
+You are awesome, thank you!
 -- 
-2.55.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
