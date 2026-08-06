@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A55B322B8F
-	for <mptcp@lists.linux.dev>; Thu,  6 Aug 2026 16:45:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8203379960
+	for <mptcp@lists.linux.dev>; Thu,  6 Aug 2026 16:46:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786034736; cv=none; b=LWp0lTGHN0tMeHdwlNtulV9Zw5nuZPwDuKnQaVTHmR2Fzs2qVBo35izuCbqj43AjqwD3JaPOmKy6LxON0sxN8LlRPA6lPh0dmsqibe7rKlbO/M5bc5RunShxNXpXSFatESfB1bSZyzwW/kMvUgBQvzPMCQt1s1eBBDY1/tWjBMw=
+	t=1786034802; cv=none; b=ifoddDsa9i3S8PsrfDulBvtHrHLJ8RjZ649Pu4aLO23bEyzqtgjIMWhgDK1sHtb5XtiDSwJn2WSuZI5WuJEYCHSdFTB0Tt0PD10qQjqEU9aWtAO03uu25WxTjFjhXqnnU/5KPFwjwstuDqWb6F7QzX60sIbjQcCBWyPMulQtfEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786034736; c=relaxed/simple;
-	bh=2JTgvZXMbRn/gU4GMjtfRyQvsG3iH2cQv8BfnoMcYHM=;
+	s=arc-20240116; t=1786034802; c=relaxed/simple;
+	bh=73PjkmVxvGgNHF+lJCg53zVw6sB4ilPVti4TtsHuc+Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=SLKBXZarn3/TdBlIKAO5+0KQ/i0YTJ+tQ5r4HUs8vzVkiQxfD3EWgAnp3chxespjdM9rDC6Y9WOZPxkJuiXO0gWQINOmlbCSXpNd4+aajM+cNd69nWMpjOM5DyjL99jv+SAebCIkk/PHoVeK1UXKjDZqBdU5DaV65ow2sHVIjOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WC4Wn4g4; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=UWoKXuqmHeEYLOnvYXFmB3rpciWmr+0bWYunU0Rx791PuZRZo2jSnJvgU3+nJs3VXieLIFTI9yEZyKJkj0gQnOPUw8Tek9RQ249tMTmObol5pSm4yFyIza++87245tbfy4E90elEE9lK/he8jW0T1NzqXKcO58M8gMwEUDK+Dck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QnjQPSW+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WC4Wn4g4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 842681F000E9;
-	Thu,  6 Aug 2026 16:45:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QnjQPSW+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 380B11F00A3A;
+	Thu,  6 Aug 2026 16:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786034733;
-	bh=bVbO4oMQPULoUIk6vgf/rtOXtQn1kRQuXnrPqMC+sjQ=;
+	s=k20260515; t=1786034796;
+	bh=HEILB+hVmIf+AGLYg7yQOwLYR1h1+h8jh4vfqNXqMTI=;
 	h=Date:Subject:To:References:From:In-Reply-To;
-	b=WC4Wn4g47hJfPvukltE/+qLBi/Joaj7iK+A6gDZqKDVhNYrMCdou2tKXTj6Z0CyRC
-	 GUs8xyIlPUZ+STgn91UF7+GGkF01xNf4ul/uYS4yWPL4RCGTjPwcdi/EANrYkAOw4e
-	 X7bXnZB2gLaSbXIFFDmfqmggDvcACIYyAmJWPrG4Zl4MdlFb9h2RlpHfo9bE/YoJui
-	 tR8qIqEXa1wamM97SZ+5ED3nfii1XJ57Ed98cliC7IKOFOH5YgvAVGLm0Hies1/IGW
-	 /brktR1z8qsevs4AQUmczLNTZAy3tB4HhepFGGgNCpQiCieDUaOI8LEwGcX16r+RK6
-	 joUaskT+WO7Lw==
-Message-ID: <bf45dfb6-908b-409d-a5e0-f98c87b3bb90@kernel.org>
-Date: Thu, 6 Aug 2026 18:45:30 +0200
+	b=QnjQPSW+MrqoItkd2GuOXZhbGiOxx4LChgiXtSsoLilB54gF7urHqkbiRtz4oTKYz
+	 h0tyONJEayLNQehQKyjVw94uHvHfK1z7wDoTVohA77N36gtoWUk4FZHBl039Pv9Au4
+	 rfg+YBXYHU583vHpDhC+gklxRu47QgGD/lyEjbd/HpFR3BtgfKWYt0BZP8BmdHXu28
+	 0eRIZxkA3bABQQ0xfjyoa/S3VNEfS7Gcsshvx28X+XX8jdXEWeMRUC+Cn7hJKXSCpq
+	 1ACQbteN3tIQi3CZNbSYd4FJ0dIbUQO5ZazbITz0fom30rZR2x49O7letAatQRkvGQ
+	 Bv7yMRQMst0Mg==
+Message-ID: <b0d961b3-7a06-4237-92b2-67d8ab2ff28b@kernel.org>
+Date: Thu, 6 Aug 2026 18:46:34 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2 mptcp-next 2/7] mptcp: move the stale logic out of
- retrans scheduler
+Subject: Re: [PATCH v2 mptcp-next 7/7] mptcp: implemented OoO queue pruning
 Content-Language: fr
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <cover.1786026372.git.pabeni@redhat.com>
- <0a81a4bf60008faefdd1688012b8fcebc291a4d6.1786026372.git.pabeni@redhat.com>
- <f600ca63-d238-4340-a8f8-f5d2391d1e9d@redhat.com>
+ <be9dcbef291a424fdd54d19fc72f9f28fb239b81.1786026372.git.pabeni@redhat.com>
+ <80572775-6e76-4c79-83e2-efdedbd3f3b8@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,47 +86,117 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <f600ca63-d238-4340-a8f8-f5d2391d1e9d@redhat.com>
+In-Reply-To: <80572775-6e76-4c79-83e2-efdedbd3f3b8@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 06/08/2026 18:41, Paolo Abeni wrote:
+On 06/08/2026 18:42, Paolo Abeni wrote:
 > On 8/6/26 4:45 PM, Paolo Abeni wrote:
->> This allow separating the stale logic invocation and the retrans
->> scheduler, and will simplify the next patch.
->>
->> It's also a cleaner design as the retrans scheduler has currently
->> too many side effects. As a possible downside, the retrans work will
->> now traverse the subflows list additional times; that does not matter
->> much, as this is slowpath.
->>
->> While at it, pick more accurate names for the involved helpers and
->> explicitly note that the per subflow stale data is under msk socket
->> lock protection.
->>
->> The scheduler and the stale logic may observe different subflow
->> statues, as no subflow lock is acquired. This is intentional and not
->> harmful, worst case leading to slower retransmissions.
+>> When moving incoming skbs in the msk receive queue and the latter
+>> is above limits, prune it as needed quite alike what TCP is doing
+>> at the subflow level. The main difference relies in the stop condition:
+>> since MPTCP does not perform collapsing, it's better off dropping the
+>> bare minimum to fit the (newer) incoming packet.
 >>
 >> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>> Tested-by: Gang Yan <yangang@kylinos.cn>
+>> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 >> ---
->> v1 -> v2:
->>   - fix stale lockless access
+>> v<n> -> v<n+1>:
+>>   - prune only for new data
+>>   - reorganize the code to follow more closely TCP
+>> ---
+>>  net/mptcp/mib.c      |  1 +
+>>  net/mptcp/mib.h      |  1 +
+>>  net/mptcp/protocol.c | 81 ++++++++++++++++++++++++++++++++++++++------
+>>  3 files changed, 73 insertions(+), 10 deletions(-)
 >>
->> Note: BPF scheduler should be rebase to use the renamed helper
-> Additional note: I think the rename is a good thing, because the
-> function additionally changed the argument list.
-
-Fine by me: these helpers are only in our export branch anyway.
-
-> @Mat: please LMK if you are ok with squash-to patches for later
-> self-tests/bpf things to be adjusted.
-Yes, of course.
-
-Because they are now our of the scheduler API, I guess they can be
-removed. So Geliang's series can be used on top of yours:
-
-  https://lore.kernel.org/cover.1786007209.git.tanggeliang@kylinos.cn
+>> diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+>> index ef65e2df709f..2569385bab7c 100644
+>> --- a/net/mptcp/mib.c
+>> +++ b/net/mptcp/mib.c
+>> @@ -87,6 +87,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+>>  	SNMP_MIB_ITEM("WinProbe", MPTCP_MIB_WINPROBE),
+>>  	SNMP_MIB_ITEM("BacklogDrop", MPTCP_MIB_BACKLOGDROP),
+>>  	SNMP_MIB_ITEM("RcvPruned", MPTCP_MIB_RCVPRUNED),
+>> +	SNMP_MIB_ITEM("OFOPruned", MPTCP_MIB_OFOPRUNED),
+>>  };
+>>  
+>>  /* mptcp_mib_alloc - allocate percpu mib counters
+>> diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+>> index 9271205f682e..3a3425e258a7 100644
+>> --- a/net/mptcp/mib.h
+>> +++ b/net/mptcp/mib.h
+>> @@ -90,6 +90,7 @@ enum linux_mptcp_mib_field {
+>>  	MPTCP_MIB_WINPROBE,		/* MPTCP-level zero window probe */
+>>  	MPTCP_MIB_BACKLOGDROP,		/* Backlog over memory limit */
+>>  	MPTCP_MIB_RCVPRUNED,		/* Dropped due to memory constraints */
+>> +	MPTCP_MIB_OFOPRUNED,		/* MPTCP-level OoO queue pruned */
+>>  	__MPTCP_MIB_MAX
+>>  };
+>>  
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index 63f2c18bc01f..ec874d2ead6a 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+>> @@ -242,6 +242,65 @@ static bool mptcp_rcvbuf_grow(struct sock *sk, u32 newval)
+>>  	return false;
+>>  }
+>>  
+>> +/* "Inspired" from the TCP version; main difference: stop as soon as the MPTCP
+>> + * socket is under memory limit.
+>> + */
+>> +static void mptcp_prune_ofo_queue(struct sock *sk,
+>> +				  const struct sk_buff *in_skb)
+>> +{
+>> +	struct mptcp_sock *msk = mptcp_sk(sk);
+>> +	struct rb_node *node, *prev;
+>> +	bool pruned = false;
+>> +	u64 mem;
+>> +
+>> +	if (RB_EMPTY_ROOT(&msk->out_of_order_queue))
+>> +		return;
+>> +
+>> +	node = &msk->ooo_last_skb->rbnode;
+>> +
+>> +	do {
+>> +		struct sk_buff *skb = rb_to_skb(node);
+>> +
+>> +		/* Stop pruning if the incoming skb would land in OoO tail. */
+>> +		if (after64(MPTCP_SKB_CB(in_skb)->map_seq,
+>> +			    MPTCP_SKB_CB(skb)->map_seq))
+>> +			break;
+>> +
+>> +		pruned = true;
+>> +		prev = rb_prev(node);
+>> +		rb_erase(node, &msk->out_of_order_queue);
+>> +		mptcp_drop(sk, skb);
+>> +		msk->ooo_last_skb = rb_to_skb(prev);
+>> +
+>> +		mem = (unsigned int)sk_rmem_alloc_get(sk);
+>> +		if (mem <= sk->sk_rcvbuf)
+>> +			break;
+>> +
+>> +		node = prev;
+>> +	} while (node);
+>> +
+>> +	if (pruned)
+>> +		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_OFOPRUNED);
+>> +}
+>> +
+>> +/* The stack can't drop packets for fallback socket at the msk level, or the
+>> + * stream will break.
+>> + */
+>> +static bool mptcp_can_ingest(const struct sock *sk)
+>> +{
+>> +	return unlikely(sk_rmem_alloc_get(sk) <= READ_ONCE(sk->sk_rcvbuf)) ||
+>> +			__mptcp_check_fallback(mptcp_sk(sk));
+> The above should obviously be: 'likely(...)'
+> 
+> @Matttbe: please LMK if you prefer a repost or you could adjust that
+> while applying to the export branch.
+No problem, I can adjust them when applying them (if there are no other
+big modifications required, but I guess no).
 
 Cheers,
 Matt
