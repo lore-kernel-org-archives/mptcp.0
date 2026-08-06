@@ -1,205 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8203379960
-	for <mptcp@lists.linux.dev>; Thu,  6 Aug 2026 16:46:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBACE37C91A
+	for <mptcp@lists.linux.dev>; Thu,  6 Aug 2026 16:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786034802; cv=none; b=ifoddDsa9i3S8PsrfDulBvtHrHLJ8RjZ649Pu4aLO23bEyzqtgjIMWhgDK1sHtb5XtiDSwJn2WSuZI5WuJEYCHSdFTB0Tt0PD10qQjqEU9aWtAO03uu25WxTjFjhXqnnU/5KPFwjwstuDqWb6F7QzX60sIbjQcCBWyPMulQtfEg=
+	t=1786035284; cv=none; b=INiViadBcvG8FhBWLlcEB9ae5W7CW+f5hjsoM0zwzb7Pu/qIh2g7Zsg80yv/o3bTvNflrPhllkbRBL3wEnLCrAyjVtn8VavyAqIaSFRa/bBKDSgE2cnJsbBcMBb2cOVlCkRRyL7VRhE5joMZpEWuQkPPovl0hxAI+G38FHw01Hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786034802; c=relaxed/simple;
-	bh=73PjkmVxvGgNHF+lJCg53zVw6sB4ilPVti4TtsHuc+Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=UWoKXuqmHeEYLOnvYXFmB3rpciWmr+0bWYunU0Rx791PuZRZo2jSnJvgU3+nJs3VXieLIFTI9yEZyKJkj0gQnOPUw8Tek9RQ249tMTmObol5pSm4yFyIza++87245tbfy4E90elEE9lK/he8jW0T1NzqXKcO58M8gMwEUDK+Dck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QnjQPSW+; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786035284; c=relaxed/simple;
+	bh=ic7uh+aRLDG13y/GDh24irgZyOVruCD0PR2d9lLsVLE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GiGsvU/hgzW8qcuNEpka75uy6w7z2Ajh827QgxaeGBkz/g83YHaSes8TyR7vqXWxTtWAMfUO9vrm0rwXjt5VQanWVbKL35R1Bxe9YDVEk6LFLSkq5Xph5SX1CbJuoYDihsyCRZ1CkwseBOCou/UxGabUdqZ/hpocwGTC+KzDUkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jT2qPijo; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QnjQPSW+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 380B11F00A3A;
-	Thu,  6 Aug 2026 16:46:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786034796;
-	bh=HEILB+hVmIf+AGLYg7yQOwLYR1h1+h8jh4vfqNXqMTI=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=QnjQPSW+MrqoItkd2GuOXZhbGiOxx4LChgiXtSsoLilB54gF7urHqkbiRtz4oTKYz
-	 h0tyONJEayLNQehQKyjVw94uHvHfK1z7wDoTVohA77N36gtoWUk4FZHBl039Pv9Au4
-	 rfg+YBXYHU583vHpDhC+gklxRu47QgGD/lyEjbd/HpFR3BtgfKWYt0BZP8BmdHXu28
-	 0eRIZxkA3bABQQ0xfjyoa/S3VNEfS7Gcsshvx28X+XX8jdXEWeMRUC+Cn7hJKXSCpq
-	 1ACQbteN3tIQi3CZNbSYd4FJ0dIbUQO5ZazbITz0fom30rZR2x49O7letAatQRkvGQ
-	 Bv7yMRQMst0Mg==
-Message-ID: <b0d961b3-7a06-4237-92b2-67d8ab2ff28b@kernel.org>
-Date: Thu, 6 Aug 2026 18:46:34 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jT2qPijo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1786035281;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=61kmOMlZ0SLo6NQSHtnp1AUyEtTSu0NHGuj6AtE3bk4=;
+	b=jT2qPijoY20Pq+tUirVkTOTer5ktstzEPT7LiKwoD/TwjGWae9V0gJPRimPk7pzQvg0v8Q
+	MOOAW8iwn7WTouXV64jGZJQu/dh4hfeomUXNsGOfibmkHqwh+Sg2wp9OZGEDWsgD2on+ZS
+	38EUcWWcySmyaA4EPVo07xzEPmkVzIw=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-371-2gtj-FevP_e16z6eDL-Dyw-1; Thu, 06 Aug 2026 12:54:40 -0400
+X-MC-Unique: 2gtj-FevP_e16z6eDL-Dyw-1
+X-Mimecast-MFC-AGG-ID: 2gtj-FevP_e16z6eDL-Dyw_1786035279
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-47fe85684b9so2000705f8f.3
+        for <mptcp@lists.linux.dev>; Thu, 06 Aug 2026 09:54:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786035279; x=1786640079;
+        h=content-transfer-encoding:content-type:in-reply-to:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=61kmOMlZ0SLo6NQSHtnp1AUyEtTSu0NHGuj6AtE3bk4=;
+        b=UnW36bMcIBkwXpdUX5kSQKzgWh07vK5iMOhQdruZEPXIbeB6B+Jc1q5WkmbHP4ZBJL
+         uUKeg/Uq+RvtuZNAUKrM6puQkuIb3SX8VwlHF+Qvnj46AfDuzLVgpQbmblicQHT2I7qb
+         49RPjsvnhxAskXkisrUqkXGECQHd2diGcDp3mYuCxUo/oWYUoGdPKYLrhn95WchGY0U+
+         2burM4ife5iSHlL3trmskeic171TWbJVsun2YY8bhMM3cWM3rt6x1GgOUUDY4zxFvtcG
+         Q1eRWdBNWcGQQj6AwEymH/2OoqMOm9YwU+Lattx12gUCqfzVmqV1hmThM0/9Bw3p9ZMK
+         3Bdw==
+X-Forwarded-Encrypted: i=1; AHgh+RqBk9U4hYV9vBYSTtczJ81FarYaLNc1cQaw3o6bxmyhAHCt+6DlDFSrJkp/Hox5cTa1diK0rA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwzGlybsQKDxWlQrWYVWLbXcYvjSvYDRcIrbb3u4977xTJ/KYx8
+	Cdt8YLcL2zT8wgqDs69VHdy/eDHO8HwC+SLjr8VgxleY561Jvgqr7/bpnIKiVSp3LiWuE6lvyOA
+	zoka5wQOU1UCiNEqiq4JKkzTxkwVXbxe1iG0YOiJD/gJIDHWywJmy0/nI
+X-Gm-Gg: AR+sD111sI7VpVq1bh5kX6Thrugkqy6tZkOv2x6zC1LnBnI7vikPhGIVOhp9D5NMAuf
+	lORWg1vuVk5iihdVVn6GWIX1PwUZePK8P+C1esnaI4SIXmoYJZjgFWOOVtJJZoVX4Ly8vBwZaWv
+	YQaq7WxNFoXXQMMbcAPZLwI0qWTYCoQftZFQg//8ZziqIUJ/Cfi0tTzVCagLgVsgt7ikPIETokt
+	qcsbvnHL1S8oj/edcrxCUxhHAvjBbRcEV1Jt7MkXHOAxR0PzmGn9wzYA66VuVXi8ZagWIu+8BPv
+	qsA4/FIjxfHAxLTlLhf5ABSJaqplreYrRXsqKhZRMZqeeJSJvYoPTLvnzn9asGgl07NNU72b5Ux
+	e7xLEr1kE62uiDMYbCnC48OSesTNpIAOIKjpdYNSo9TDHaG5CuF5i/RcojAfZHpKzQLoPdDcVBJ
+	0=
+X-Received: by 2002:a05:6000:40c9:b0:47f:93b4:2def with SMTP id ffacd0b85a97d-47fec63ebcdmr26222545f8f.28.1786035278978;
+        Thu, 06 Aug 2026 09:54:38 -0700 (PDT)
+X-Received: by 2002:a05:6000:40c9:b0:47f:93b4:2def with SMTP id ffacd0b85a97d-47fec63ebcdmr26222482f8f.28.1786035278552;
+        Thu, 06 Aug 2026 09:54:38 -0700 (PDT)
+Received: from [192.168.188.103] (ip239-44-231-195.pool-bba.aruba.it. [195.231.44.239])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47ff79a7f07sm8076166f8f.8.2026.08.06.09.54.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Aug 2026 09:54:38 -0700 (PDT)
+Message-ID: <5f3c924f-6099-4d58-8332-df27e6a6b728@redhat.com>
+Date: Thu, 6 Aug 2026 18:54:37 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2 mptcp-next 7/7] mptcp: implemented OoO queue pruning
-Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1786026372.git.pabeni@redhat.com>
- <be9dcbef291a424fdd54d19fc72f9f28fb239b81.1786026372.git.pabeni@redhat.com>
- <80572775-6e76-4c79-83e2-efdedbd3f3b8@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <80572775-6e76-4c79-83e2-efdedbd3f3b8@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next 0/2] Drop mptcp_pm_subflow_chk_stale in bpf
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1786007209.git.tanggeliang@kylinos.cn>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <cover.1786007209.git.tanggeliang@kylinos.cn>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: rgQo2v512dl7pc8XYuY620WVamQ_3nYbLpeKRuDM4BE_1786035279
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 06/08/2026 18:42, Paolo Abeni wrote:
-> On 8/6/26 4:45 PM, Paolo Abeni wrote:
->> When moving incoming skbs in the msk receive queue and the latter
->> is above limits, prune it as needed quite alike what TCP is doing
->> at the subflow level. The main difference relies in the stop condition:
->> since MPTCP does not perform collapsing, it's better off dropping the
->> bare minimum to fit the (newer) incoming packet.
->>
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->> Tested-by: Gang Yan <yangang@kylinos.cn>
->> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> v<n> -> v<n+1>:
->>   - prune only for new data
->>   - reorganize the code to follow more closely TCP
->> ---
->>  net/mptcp/mib.c      |  1 +
->>  net/mptcp/mib.h      |  1 +
->>  net/mptcp/protocol.c | 81 ++++++++++++++++++++++++++++++++++++++------
->>  3 files changed, 73 insertions(+), 10 deletions(-)
->>
->> diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
->> index ef65e2df709f..2569385bab7c 100644
->> --- a/net/mptcp/mib.c
->> +++ b/net/mptcp/mib.c
->> @@ -87,6 +87,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
->>  	SNMP_MIB_ITEM("WinProbe", MPTCP_MIB_WINPROBE),
->>  	SNMP_MIB_ITEM("BacklogDrop", MPTCP_MIB_BACKLOGDROP),
->>  	SNMP_MIB_ITEM("RcvPruned", MPTCP_MIB_RCVPRUNED),
->> +	SNMP_MIB_ITEM("OFOPruned", MPTCP_MIB_OFOPRUNED),
->>  };
->>  
->>  /* mptcp_mib_alloc - allocate percpu mib counters
->> diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
->> index 9271205f682e..3a3425e258a7 100644
->> --- a/net/mptcp/mib.h
->> +++ b/net/mptcp/mib.h
->> @@ -90,6 +90,7 @@ enum linux_mptcp_mib_field {
->>  	MPTCP_MIB_WINPROBE,		/* MPTCP-level zero window probe */
->>  	MPTCP_MIB_BACKLOGDROP,		/* Backlog over memory limit */
->>  	MPTCP_MIB_RCVPRUNED,		/* Dropped due to memory constraints */
->> +	MPTCP_MIB_OFOPRUNED,		/* MPTCP-level OoO queue pruned */
->>  	__MPTCP_MIB_MAX
->>  };
->>  
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index 63f2c18bc01f..ec874d2ead6a 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -242,6 +242,65 @@ static bool mptcp_rcvbuf_grow(struct sock *sk, u32 newval)
->>  	return false;
->>  }
->>  
->> +/* "Inspired" from the TCP version; main difference: stop as soon as the MPTCP
->> + * socket is under memory limit.
->> + */
->> +static void mptcp_prune_ofo_queue(struct sock *sk,
->> +				  const struct sk_buff *in_skb)
->> +{
->> +	struct mptcp_sock *msk = mptcp_sk(sk);
->> +	struct rb_node *node, *prev;
->> +	bool pruned = false;
->> +	u64 mem;
->> +
->> +	if (RB_EMPTY_ROOT(&msk->out_of_order_queue))
->> +		return;
->> +
->> +	node = &msk->ooo_last_skb->rbnode;
->> +
->> +	do {
->> +		struct sk_buff *skb = rb_to_skb(node);
->> +
->> +		/* Stop pruning if the incoming skb would land in OoO tail. */
->> +		if (after64(MPTCP_SKB_CB(in_skb)->map_seq,
->> +			    MPTCP_SKB_CB(skb)->map_seq))
->> +			break;
->> +
->> +		pruned = true;
->> +		prev = rb_prev(node);
->> +		rb_erase(node, &msk->out_of_order_queue);
->> +		mptcp_drop(sk, skb);
->> +		msk->ooo_last_skb = rb_to_skb(prev);
->> +
->> +		mem = (unsigned int)sk_rmem_alloc_get(sk);
->> +		if (mem <= sk->sk_rcvbuf)
->> +			break;
->> +
->> +		node = prev;
->> +	} while (node);
->> +
->> +	if (pruned)
->> +		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_OFOPRUNED);
->> +}
->> +
->> +/* The stack can't drop packets for fallback socket at the msk level, or the
->> + * stream will break.
->> + */
->> +static bool mptcp_can_ingest(const struct sock *sk)
->> +{
->> +	return unlikely(sk_rmem_alloc_get(sk) <= READ_ONCE(sk->sk_rcvbuf)) ||
->> +			__mptcp_check_fallback(mptcp_sk(sk));
-> The above should obviously be: 'likely(...)'
+On 8/6/26 11:10 AM, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> @Matttbe: please LMK if you prefer a repost or you could adjust that
-> while applying to the export branch.
-No problem, I can adjust them when applying them (if there are no other
-big modifications required, but I guess no).
+> Since mptcp_pm_subflow_chk_stale is removed in the "mptcp: address stall
+> under memory pressure" series, this patch drops it from BPF to keep the
+> BPF tests passing.
+> 
+> Based-on: <cover.1785943854.git.pabeni@redhat.com>
+> 
+> Geliang Tang (2):
+>   Squash to "bpf: Export mptcp packet scheduler helpers"
+>   Squash to "selftests/bpf: Add bpf_burst scheduler & test"
+> 
+>  net/mptcp/bpf.c                                     | 1 -
+>  tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c | 2 --
+>  2 files changed, 3 deletions(-)
+> 
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+Thanks Geliang for the quick turn around!
+
+Both patches LGTM!
+
+Side note: I really think it's for the better to keep the stale subflow
+logic detection out of the retrans scheduler.
+
+/P
 
