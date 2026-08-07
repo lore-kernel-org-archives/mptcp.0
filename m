@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE7141DEE5
-	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 10:13:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA7C46C4CD
+	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 10:25:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786097618; cv=none; b=U32BJvyDGoZiZLx4t91a45yUajCkzqc5xSbq10BocXOg20ydrj9sBwNJEAbd6IlMa+I2AUWwbg4s1pGdrrw5+iTLGLFKSlFTohl438W7VzTumc78C5vnXt1oFlFoii4xarbfzmrvQAiOX+cJUmvciK5u0KPZRFQ1Buuk3umORpg=
+	t=1786098327; cv=none; b=p8IYKB1h1DlwZ/SDBQSFB9HC5IEDOw00cSGI6CRu3TewmyJEuVTEsteIdgYmXH85rFEeLFNZmXK1wcvF1hC1FEBIi54Mqm2KxcICCsjnNmbOXPHuv8vBE09llhL7nK3quy264fnkKPM4FM2ZNnOA48FWxY5Pzix92goCIqu79do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786097618; c=relaxed/simple;
-	bh=jIGrd5q+CVC9/cyiDU/FB0p9Dg2F101uoK2Tom+1G6U=;
+	s=arc-20240116; t=1786098327; c=relaxed/simple;
+	bh=LeZIPxJqT0YvPkkgYvR2UAZQXlbD+hktRvDZfXxzWSs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sm0u8hlRMscmCxLtMQZn/FPgD06r6sEX4fAQCSkv2PRKNpgABBw0naZhjl4jM3dssq9rdwYg0WN6/XSzwXGDlwLdYvAuCw+hiV49pNXYdjRJ5lFIg/p6E7GIhUz5P4G9JOY/nc5krsuH1S9owiuQnw3iXxyr4Sz1ZQ2IfYMdqyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JWspbsm9; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=L/OZl7YGxsGxXKnb/J1dMjnAPrnyF9LpS8ZjS4IjWkEuyaUXGPru7pizGcJUtlEU0Om/3Jj9sAaV3t5lUwfRpcYtKQ1ULqTJ9jVeolgKdOZiJUN5Stg4rS2TNetZgpP7Gtt/Ib7l8SGYr/lfP65zumjd0ZLIqcLxBWd97RrEBnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cZk4vzaT; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JWspbsm9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57D301F000E9;
-	Fri,  7 Aug 2026 10:13:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cZk4vzaT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B63B41F000E9;
+	Fri,  7 Aug 2026 10:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786097611;
-	bh=Kn1K9NoIPx6TObzihge1lBEmTIoir/jQJbFXDDLyh2Y=;
+	s=k20260515; t=1786098324;
+	bh=Y3OZ0pLcqiVrW5UXkxSp86hBedZKkiovlF+8H51N/pQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=JWspbsm9t6MP8t3VOT8ik+GeuaaK11EEqW0Iu3AzHyKy9HrCjYgulejn/lsiuizHm
-	 yt8q1wHVSDYX8EhzTCRPq868eXruC8wVBfoFvwgpDAjBBl1994JC8sTFhAjSGhNRSO
-	 jAgSO6uxWhMa5ClOg9sXJO/z2CYHrewxjZXX8KZeR+Esrj7yEFrY1gBnnsasgp6Pdb
-	 DhiRhuOQF7Qo1JzJsjNLQ7s6NYNbqlNXsOviJ7gX7TEGB0pyZfrPNDEs+GUv9SCzPT
-	 pBGJkRT+W3HMeAqByzVVQVBaaT5SFQuImrhz4LZkXA6nI0MKh2XUSrLX9mgsc9KLha
-	 T/Z2q/llKf7HA==
-Message-ID: <51c9e760-347f-4ecb-8661-ab32fc9f0c35@kernel.org>
-Date: Fri, 7 Aug 2026 12:13:26 +0200
+	b=cZk4vzaT8kLs0EPmWftMrUg7z8dA7rPFicYiOzub5pOUYAH0rMsEEXnTQZ8xvBEMO
+	 270e/QQ/hHZzUcLljF7rMaztD20qWRNJ13DuhfECk6kpmjB9W4WaT8cNbzi6/6x6S7
+	 +V9sxemhCvP0t2M2Zoxj4o0BwDweEJISO+y4zO5ayh7IHFj54HmqJiV1YuDvD4w1FS
+	 0cjFjfH85PLtA1AdA+RAJ+LZKaTQnYmJEytuVRJD3SEq6d0JwDjDLUo4QsL5I8e5KD
+	 fO2eZ4EiNGOWYPJtQt/+qbqoFF4KySHUPfeM7v4YMg5hb0LyNtmLtbT3MaH9o02ILB
+	 9NX/GevllsNzw==
+Message-ID: <4ba63d3b-ac2f-4035-8a7a-0c856ba46c42@kernel.org>
+Date: Fri, 7 Aug 2026 12:25:21 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,20 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net v5 1/2] mptcp: pm: drop pending ADD_ADDR when removing
- id 0 endpoint
+Subject: Re: [PATCH mptcp-net v4] mptcp: pm: fix userspace PM address ID
+ overflow when all IDs are exhausted
 Content-Language: fr
-To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>,
- mptcp <mptcp@lists.linux.dev>
-Cc: martineau <martineau@kernel.org>, pabeni <pabeni@redhat.com>,
- "shardul.b" <shardul.b@mpiricsoftware.com>, janak <janak@mpiric.us>,
- kalpanjani009 <kalpanjani009@gmail.com>, akshit <akshit@mpiricsoftware.com>,
- syzbot+55c2a5c871441261ed14
- <syzbot+55c2a5c871441261ed14@syzkaller.appspotmail.com>,
- Tao Cui <cuitao@kylinos.cn>
-References: <20260630150632.899750-1-kalpan.jani@mpiricsoftware.com>
- <20260630150632.899750-2-kalpan.jani@mpiricsoftware.com>
- <19fdb1b1cdd.122b1f65587045.5393804019530024742@mpiricsoftware.com>
+To: luoqing <l1138897701@163.com>
+Cc: mptcp@lists.linux.dev
+References: <20260805070926.716768-1-l1138897701@163.com>
+ <20260807074110.566170-1-l1138897701@163.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -94,79 +87,53 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <19fdb1b1cdd.122b1f65587045.5393804019530024742@mpiricsoftware.com>
+In-Reply-To: <20260807074110.566170-1-l1138897701@163.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Kalpan,
+Hi luoqing,
 
-On 07/08/2026 09:23, Kalpan Jani wrote:
-
-> Sorry for the long silence on this.
-
-Np, I was overloaded anyway (still am)
-> The packetdrill test is now up at
-> https://github.com/multipath-tcp/packetdrill/pull/201 - I rewrote it and this
-> time validated it in the virtme-docker environment: 3 failing without the
-> kernel fix, 3 passing with it, on export/20260622T173908. Your suggestion about
-> the endpoint linked to the initial subflow is what unblocked it. Details and
-> the limitations I hit are in the PR.
-
-Thanks, I just send some minor fixes, then merged. I hope that's OK.
-
-> Two things about v5 itself.
+On 07/08/2026 09:41, luoqing wrote:
+> From: Qing Luo <luoqing@kylinos.cn>
 > 
-> First, patch 1/2 is unchanged from what you have. I said I would rework the
-> addr argument because the anno_addr copy looked fragile for endpoints with a
-> port, but after re-checking I no longer think that case is reachable: the MPC
-> endpoint cannot be a ported endpoint, since both __lookup_addr() and
-> mptcp_nl_add_subflow_or_signal_addr() compare the port when the endpoint has
-> one, and that would require it to match the initial subflow's local port -
-> which mptcp_pm_nl_create_listen_socket() binding the same address:port makes
-> unreachable in practice. So the entry reachable from
-> mptcp_nl_remove_id_zero_address() always has port 0 and clearing it is correct.
-> Tell me if you see a case I have missed.
-
-Fine by me.
-
-> Second, and I should have raised this earlier: please drop patch 2/2. The
-> selftest does not exercise the fixed path. I used addr_nr_ns1=-1, which deletes
-> the endpoint by its real ID via pm_nl_del_endpoint ${listener_ns} $id and
-> therefore goes through mptcp_nl_remove_subflow_and_signal_addr() - the path
-> that was already correct. Only -9 reaches mptcp_nl_remove_id_zero_address(),
-> and the endpoint is 10.0.2.1, so the address check there would not have matched
-> even with -9. The subtest passes identically with and without patch 1/2, which
-> is why CI was green everywhere, and it largely duplicates the existing "remove
-> single address" subtest. Sorry for not catching that before sending v5.
+> When all MPTCP address IDs (1-255) are exhausted in the userspace PM,
+> find_next_zero_bit() returns MPTCP_PM_MAX_ADDR_ID + 1 (256). This value
+> overflows when stored in the u8 field e->addr.id, resulting in ID 0
+> being stored and the entry being incorrectly added to the list.
 > 
-> With the packetdrill test covering the same ground, I think patch 1/2 alone is
-> the right thing to apply. Happy to send a corrected mptcp_join.sh subtest as
-> well if you would rather have both.
-
-Indeed, dropped.
-
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
-> From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-
-BTW, do you mind avoiding top-posting please, it is not recommended on
-most ML:
-
-
-https://docs.kernel.org/process/submitting-patches.html#use-trimmed-interleaved-replies-in-email-discussions
-
+> ID 0 is reserved for the initial connection in MPTCP, so this overflow
+> can cause address conflicts.
+> 
+> Note: the in-kernel PM already has an 'endpoints == MPTCP_PM_MAX_ADDR_ID'
+> check in mptcp_pm_nl_append_new_local_addr() that returns -ERANGE before
+> reaching find_next_zero_bit(), preventing this overflow. So this fix only
+> addresses the userspace PM path.
+> 
+> Check the find_next_zero_bit() result against MPTCP_PM_MAX_ADDR_ID and
+> return -ENOSPC if all IDs are truly exhausted. Move the ID allocation
+> check before the memory allocation so that the error path does not need
+> to free the allocated entry.
+> 
+> Fixes: 4638de5aefe5 ("mptcp: handle local addrs announced by userspace PMs")
+> Assisted-by: LLM
+> Signed-off-by: Qing Luo <luoqing@kylinos.cn>
+> ---
+> v4: Move the ID allocation check before the memory allocation so that the error path 
+>     does not need to free the allocated entry
+Thanks, now in our tree:
 
 New patches for t/upstream-net and t/upstream:
-- a6a9ee8fc58c: mptcp: pm: drop pending ADD_ADDR when removing id 0 endpoint
-- Results: fb78b98bf563..4439056e6ccd (export-net)
-- Results: 6f0836d81132..e8891858656d (export)
+- b57c0c6fddb3: mptcp: pm: fix userspace PM address ID overflow when all
+IDs are exhausted
+- Results: 4439056e6ccd..d0562342cb80 (export-net)
+- Results: e8891858656d..f393de6a43c3 (export)
 
 Tests are now in progress:
 
 - export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/420be436959ff2164ff3087f88e6a9756d485436/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/1f6dc25f039e11595558280af68c916da4e86f71/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/c808c1fcb72b4387c5d2193a4c69f387d5a7e881/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/3601198557ef7a1d08e411ac4ca4aa5e636d4e3e/checks
 
 Cheers,
 Matt
