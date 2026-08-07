@@ -1,220 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFAA30E0E9;
-	Fri,  7 Aug 2026 13:50:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786110652; cv=none; b=h2RfGKI9GS31QGjwszZZvf1lomK6VZgWbizTgCIkdQQY0hWu5AJ/3fXC4EB8DNemqNRoCGKTnw40wq/USBzAoNtSsVlAmEnFeigeLwejm8PMzd9/rJ1bBSqA2jOgKOa0DHa8Za5Z7LFIn8bt7zWlYzQJ+++lcl1XHfYRXfyWrq0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786110652; c=relaxed/simple;
-	bh=lUkBtkqx0K2qkY5bwN2OdiEBPUwziZTeHLobcsOpFk4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SQiwjFzuTTF6FAfb41elPwfselAbNGO6LN+SZA5btDddlt6hWAHPeK9kIWIeLDZ37yCRlqKGrz4NnNvjvWRc73o063u0puErxhWksWyhd0KVzsm8rI8en0/voymzTcxRfm9gMych4Tnw7jyTQ5wIr1I+DCDZU83Xi/9ZMpgfF5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XR6Y9fDk; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B66326B2D3
+	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 15:17:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786115857; cv=pass; b=GGBg71+xiGP+ozZB/3kakkXCAIZh6jP0ku63584Gff+mAnFOCjnd0dNn5x3P1vZ/E2oaGONdN7VFdwjBjFlauFapRFKHyNbmoz7Lx7cftRurJybLPTUYLMttw6SSd2cOe5lkQdAkKhAMaPnVp/d4wuhdMhJM87bH6skxmZCkHig=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786115857; c=relaxed/simple;
+	bh=WdhBgFeigE+yD3yXVEdTFHkGfEAIUBIvbl1XB/WzN8M=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tyfnEjSgzh22SpEhrHecPY/QTMRhjslUGGhFotOcYWo4wGE8//eBWe1+XFOFx65pv6v7P12PtURkA6ObnKCOzuE0SzCHSUtVHIEAnsXV3N2zwnseordBBC1t5XmrtmNpbnsEa9bKUvLiyAVSvXkOnJQLvYYXZ6cCAeRhfZ5JS6c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=uuSzctq1 reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XR6Y9fDk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0640C1F00ACA;
-	Fri,  7 Aug 2026 13:50:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786110642;
-	bh=Hp8FSiOxKfQHeeC+JtYjdyoMvW0eZ8MoTAl8tlSx1hg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=XR6Y9fDkpVf+iujxTEiwkS5KPecMzgosMxK6rLB9TLqiO29s+kAOJRx7vzjOQdIBf
-	 4qtfp80hhadAicKPf391ooEekfOlyerLxdh0A/2HbWglr+5KmLmE4bjazXh7qMge6z
-	 ZdNH9Lxr2a5Z4+muwm5ttoRy+GUQrbjCy1NWP41jvRATt/HUkOzIjOuqAyTmzMkZOP
-	 /OnmyPz8iCzWUrNCCOvKPasBQHYCKsWuzIOYT3YMXsO80UqHtN/jO7cYNFoflfMvZU
-	 iHf9IkM9sGxkaTtd51/mXzoWn6m34Y2cpcyEi/TdafjZL4dLQKfZr0XKez91gdkiHo
-	 FZ/41Vmw7Zrsw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 07 Aug 2026 15:49:07 +0200
-Subject: [PATCH net-next v3 7/7] mptcp: implemented OoO queue pruning
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="uuSzctq1"
+ARC-Seal: i=1; a=rsa-sha256; t=1786115853; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=VrMz0j052XG2zRAr4jFzjfy/ke7yr9+jTOTJFaIPkUolCFQyl3p4pTDWRGQjPWyAjobRYuK5G6cYs1PeB4gsy5+bazmCEZfnBCY9C6YvcotHaLGSeuCj5HodOqK94VHBb3AmO6L5OWbcAxZG7x/o1ky1QyDBJMMi7+YM2MKnej4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1786115853; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=WdhBgFeigE+yD3yXVEdTFHkGfEAIUBIvbl1XB/WzN8M=; 
+	b=lKzS3W6KmB5CFVi+vdCinW13rr9zVyiY1CkUmCIG58Nd0KswMa8YpOX6NloralNrQOv2lMkq5dj1rIyg6rMtNFGI6zWbeWRBDGFCUidmVBp3CulPD6Wo3nU1fsRux8kEuVfFb2c9gOQSTp8NXUzjtcOPeC9i5Mced5h0HRLoeFw=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=shardul.b@mpiricsoftware.com;
+	dmarc=pass header.from=<shardul.b@mpiricsoftware.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1786115853;
+	s=mpiric; d=mpiricsoftware.com; i=shardul.b@mpiricsoftware.com;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=WdhBgFeigE+yD3yXVEdTFHkGfEAIUBIvbl1XB/WzN8M=;
+	b=uuSzctq146V9UpJZKbwHEIMrwzATrzEbrcoLjBWtg6gfiAB8gct+zZOq4ROq4QPt
+	1BhjkI9Bcd0KbMqKDOcPc2vXCohVrEJ8cjU6F3B6BxTTVnQmyuTyPD2b5pEdpfJAln4
+	YGuLoaL34/ZFRs0LOSP2MKYaRdSNhbmZudHeR8sc=
+Received: by mx.zohomail.com with SMTPS id 178611585140778.71476786624612;
+	Fri, 7 Aug 2026 08:17:31 -0700 (PDT)
+Message-ID: <745def4591c1b3b35ace0719159fe2c6cbbab467.camel@mpiricsoftware.com>
+Subject: Re: [PATCH mptcp-next 0/3] mptcp: sched: penalise a slow subflow
+ (#345, first cut for your lab)
+From: Shardul Bankar <shardul.b@mpiricsoftware.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>
+Date: Fri, 07 Aug 2026 20:47:21 +0530
+In-Reply-To: <1a0d5c3b-05ef-4dbf-bb34-3141ad3d6f58@kernel.org>
+References: 
+	<20260726-mptcp_penalise_send-v1-0-84485e0e995b@mpiricsoftware.com>
+	 <1a0d5c3b-05ef-4dbf-bb34-3141ad3d6f58@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2.1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260807-net-next-mptcp-oooq-pruning-v3-7-dbc1eb853cc3@kernel.org>
-References: <20260807-net-next-mptcp-oooq-pruning-v3-0-dbc1eb853cc3@kernel.org>
-In-Reply-To: <20260807-net-next-mptcp-oooq-pruning-v3-0-dbc1eb853cc3@kernel.org>
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Gang Yan <yangang@kylinos.cn>
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4979; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=D17M8n5T3NEzzAe7GBb53KDyX6iU9Q4IORwBahYPUVs=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJKH83vS0nJzOX6bbSnZOmB86/vZFws/rL0XX+fS0rXs
- WQZ9lNmHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABP5XMjwT99PbbqDlg77qt+G
- PCt4uuW3HT5wr+ed2dKo47v09yQvt2L4X1tZUB2c3LrZoCdCg1l5y/KwtVNerws8tM3k0NuFPXu
- 28gAA
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+X-ZohoMailClient: External
 
-From: Paolo Abeni <pabeni@redhat.com>
+Hi Matt,
 
-When moving incoming skbs in the msk receive queue and the latter
-is above limits, prune it as needed quite alike what TCP is doing
-at the subflow level. The main difference relies in the stop condition:
-since MPTCP does not perform collapsing, it's better off dropping the
-bare minimum to fit the (newer) incoming packet.
+On Wed, 2026-07-29 at 13:48 +0200, Matthieu Baerts wrote:
+> Hi Shardul,
+>=20
+> On 26/07/2026 07:55, Shardul Bankar wrote:
+> >=20
+> >=20
+> > - 2/3 is a guard that is in neither the fork nor what I described.
+> > Without it,
+> > =C2=A0 1/3 regresses badly (about 2x slower in my runs) when the
+> > connection is
+> > =C2=A0 receive-window-limited. In that case the fastest path is capped
+> > by the same
+> > =C2=A0 shared window, so it cannot absorb what the slow path gives up,
+> > and halving
+> > =C2=A0 just sheds the slow path's throughput. 2/3 skips the penalty
+> > while the
+> > =C2=A0 application has queued past the send-window edge (write_seq >
+> > wnd_end), which
+> > =C2=A0 is the sign that the receiver, not our congestion window, is the
+> > bottleneck.
+> > =C2=A0 I kept it a separate patch so you can test 1/3 on its own, or
+> > drop or retune
+> > =C2=A0 2/3 independently. The exact condition is the piece I would most
+> > value your
+> > =C2=A0 lab checking.
+>=20
+> It feels to me that you require this because patch 1/3 doesn't check
+> if
+> the MPTCP connection was "send-buffer-limited", no? But you are doing
+> something very similar, no? Without testing, it feels like this is
+> required not to limit the penalisation to when it is really needed.
+>=20
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Tested-by: Gang Yan <yangang@kylinos.cn>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-v2:
- - Uniform the new counter with the other OFO ones.
-v3:
- - prune only for new data
- - reorganize the code to follow more closely TCP
----
- net/mptcp/mib.c      |  1 +
- net/mptcp/mib.h      |  1 +
- net/mptcp/protocol.c | 81 +++++++++++++++++++++++++++++++++++++++++++++-------
- 3 files changed, 73 insertions(+), 10 deletions(-)
+Patch 1 does gate on load, with tcp_is_cwnd_limited(); though that is
+not the send-buffer-limited check. The send-buffer-limited check never
+fires at scheduler time in this tree, as the msk buffer has just
+drained into the subflows. Patch 2 guards the receive-window-limited
+case, where patch 1 without it can regress the transfer about 2x in my
+tests. I have kept it as the explicit guard and am still characterizing
+when patch 1 alone would suffice. Would you prefer we drop it?
 
-diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-index ef65e2df709f..2569385bab7c 100644
---- a/net/mptcp/mib.c
-+++ b/net/mptcp/mib.c
-@@ -87,6 +87,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
- 	SNMP_MIB_ITEM("WinProbe", MPTCP_MIB_WINPROBE),
- 	SNMP_MIB_ITEM("BacklogDrop", MPTCP_MIB_BACKLOGDROP),
- 	SNMP_MIB_ITEM("RcvPruned", MPTCP_MIB_RCVPRUNED),
-+	SNMP_MIB_ITEM("OFOPruned", MPTCP_MIB_OFOPRUNED),
- };
- 
- /* mptcp_mib_alloc - allocate percpu mib counters
-diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-index 9271205f682e..3a3425e258a7 100644
---- a/net/mptcp/mib.h
-+++ b/net/mptcp/mib.h
-@@ -90,6 +90,7 @@ enum linux_mptcp_mib_field {
- 	MPTCP_MIB_WINPROBE,		/* MPTCP-level zero window probe */
- 	MPTCP_MIB_BACKLOGDROP,		/* Backlog over memory limit */
- 	MPTCP_MIB_RCVPRUNED,		/* Dropped due to memory constraints */
-+	MPTCP_MIB_OFOPRUNED,		/* MPTCP-level OoO queue pruned */
- 	__MPTCP_MIB_MAX
- };
- 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 63f2c18bc01f..ec874d2ead6a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -242,6 +242,65 @@ static bool mptcp_rcvbuf_grow(struct sock *sk, u32 newval)
- 	return false;
- }
- 
-+/* "Inspired" from the TCP version; main difference: stop as soon as the MPTCP
-+ * socket is under memory limit.
-+ */
-+static void mptcp_prune_ofo_queue(struct sock *sk,
-+				  const struct sk_buff *in_skb)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct rb_node *node, *prev;
-+	bool pruned = false;
-+	u64 mem;
-+
-+	if (RB_EMPTY_ROOT(&msk->out_of_order_queue))
-+		return;
-+
-+	node = &msk->ooo_last_skb->rbnode;
-+
-+	do {
-+		struct sk_buff *skb = rb_to_skb(node);
-+
-+		/* Stop pruning if the incoming skb would land in OoO tail. */
-+		if (after64(MPTCP_SKB_CB(in_skb)->map_seq,
-+			    MPTCP_SKB_CB(skb)->map_seq))
-+			break;
-+
-+		pruned = true;
-+		prev = rb_prev(node);
-+		rb_erase(node, &msk->out_of_order_queue);
-+		mptcp_drop(sk, skb);
-+		msk->ooo_last_skb = rb_to_skb(prev);
-+
-+		mem = (unsigned int)sk_rmem_alloc_get(sk);
-+		if (mem <= sk->sk_rcvbuf)
-+			break;
-+
-+		node = prev;
-+	} while (node);
-+
-+	if (pruned)
-+		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_OFOPRUNED);
-+}
-+
-+/* The stack can't drop packets for fallback socket at the msk level, or the
-+ * stream will break.
-+ */
-+static bool mptcp_can_ingest(const struct sock *sk)
-+{
-+	return unlikely(sk_rmem_alloc_get(sk) <= READ_ONCE(sk->sk_rcvbuf)) ||
-+			__mptcp_check_fallback(mptcp_sk(sk));
-+}
-+
-+static bool mptcp_try_rmem_schedule(struct sock *sk, const struct sk_buff *skb)
-+{
-+	if (!mptcp_can_ingest(sk)) {
-+		mptcp_prune_ofo_queue(sk, skb);
-+		return mptcp_can_ingest(sk);
-+	}
-+	return true;
-+}
-+
- /* "inspired" by tcp_data_queue_ofo(), main differences:
-  * - use mptcp seqs
-  * - don't cope with sacks
-@@ -253,6 +312,12 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
- 	u64 seq, end_seq, max_seq;
- 	struct sk_buff *skb1;
- 
-+	if (!mptcp_try_rmem_schedule(sk, skb)) {
-+		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
-+		mptcp_drop(sk, skb);
-+		return;
-+	}
-+
- 	seq = MPTCP_SKB_CB(skb)->map_seq;
- 	end_seq = MPTCP_SKB_CB(skb)->end_seq;
- 	max_seq = atomic64_read(&msk->rcv_wnd_sent);
-@@ -387,19 +452,15 @@ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
- 
- 	mptcp_borrow_fwdmem(sk, skb);
- 
--	/* Can't drop packets for fallback socket this late, or the stream
--	 * will break.
--	 */
--	if (unlikely(sk_rmem_alloc_get(sk) > READ_ONCE(sk->sk_rcvbuf)) &&
--	    !__mptcp_check_fallback(msk)) {
--		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
--		mptcp_drop(sk, skb);
--		return false;
--	}
--
- 	if (MPTCP_SKB_CB(skb)->map_seq == msk->ack_seq) {
- 		/* in sequence */
- insert:
-+		if (!mptcp_try_rmem_schedule(sk, skb)) {
-+			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
-+			mptcp_drop(sk, skb);
-+			return false;
-+		}
-+
- 		msk->bytes_received += copy_len;
- 		WRITE_ONCE(msk->ack_seq, msk->ack_seq + copy_len);
- 		tail = skb_peek_tail(&sk->sk_receive_queue);
+> >=20
+> >=20
+> > I drove those regimes with a small simult_flows variant (receive-
+> > window-
+> > limited, send-buffer-limited, and autotuned cases). It is a helper,
+> > not
+> > selftest quality, so I did not fold it into the series; it is on a
+> > branch of
+> > my tree, in case it saves your lab time or you spot a case I
+> > missed:
+> >=20
+> > https://github.com/shardulsdk-mpiric/linux/blob/6926c4b7f583/tools/test=
+ing/selftests/net/mptcp/mptcp_sched_penalise.sh
+> >=20
+> > Run it on a baseline and a patched kernel and compare (prefix with
+> > MPTCP_LIB_IP_MPTCP=3D1 if pm_nl_ctl does not work in your setup):
+> >=20
+> > =C2=A0 SCENARIO=3Dsuite=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> > ./mptcp_sched_penalise.sh
+> > =C2=A0 SCENARIO=3Dunbounded=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> > ./mptcp_sched_penalise.sh
+> > =C2=A0 SCENARIO=3Drwnd=C2=A0=C2=A0=C2=A0 RCVBUF=3D262144=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> > ./mptcp_sched_penalise.sh
+> > =C2=A0 SCENARIO=3Dsndbuf=C2=A0 SNDBUF=3D65536=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> > ./mptcp_sched_penalise.sh
+> > =C2=A0 SCENARIO=3Dboth=C2=A0=C2=A0=C2=A0 RCVBUF=3D262144 SNDBUF=3D65536
+> > ./mptcp_sched_penalise.sh
+>=20
+> Sounds good! Did you check with a fixed sndbuf higher than the rcv
+> one?
+>=20
 
--- 
-2.53.0
+Yes (SNDBUF 256K, RCVBUF 128K). The guard correctly suppresses the
+penalty there: the receiver is genuinely at a zero window (receive-
+window-limited, not congestion-limited), and it is not slower than
+baseline.
 
+> Also, be careful that with netem, the limits you give to run_test()
+> can
+> influence a lot the bufferbloat. Did you monitor the RTTs during
+> these
+> transfers?
+>=20
+
+I do now. The harness samples the subflows' srtt, and it confirms your
+point: the netem queue length drives it (srtt max is about 40 ms with
+the fast path alone, rising to several seconds on a bufferbloated
+path).
+
+> On the other hand, it would be good to validate this with one path
+> having bufferbloat. These patches should also help to improve the
+> situation. (And issue #332 should help even more)
+>=20
+
+I added a bufferbloated-slow-path case, but it was too noisy to draw a
+firm conclusion: the completion times swung widely, and the same swing
+was on the baseline kernel, so my setup is not measuring the effect
+cleanly. I would build a more controlled bufferbloat case (a moderate,
+stable queue, and a latency metric rather than completion time). I
+agree #332 is likely the bigger lever there.
+
+> > For the rwnd/sndbuf/both scenarios the simult_flows pass/fail bound
+> > is not
+> > meaningful (it assumes both paths are fully used): read the printed
+> > runtime
+> > and out-of-order counts, not OK/FAIL. The "both" case also
+> > occasionally fails
+> > to bring up the second subflow with the very small SO_SNDBUF; just
+> > rerun it if
+> > you see a single-subflow run.
+>=20
+> I see, yes. I think what is important here for #345, is that when the
+> transfer is buffer limited, the slow subflow impact should be
+> reduced.
+> At least not to cause the transfer to be worse than without this slow
+> subflow.
+>=20
+
+Using that as the bar: when send-buffer-limited, the penalised two-path
+transfer beats the fast path alone (about 11.3 s against 14.4 s), with
+roughly 15 to 20% less out-of-order data, so the slow subflow helps.
+When it is bufferbloated, it comes out about even with the fast path
+alone.
+
+
+I have all of these changes ready in my tree. I would rather settle
+whether patch 2 stays (above) and the counters question on 3/3 before I
+post v2, but I am glad to send v2 now if you would prefer to look at
+the code directly.
+
+Thanks,
+Shardul
