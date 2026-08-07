@@ -1,133 +1,175 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4029F3EE1E0
-	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 09:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE7141DEE5
+	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 10:13:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786095824; cv=none; b=I2Yl5jJ3HdRbeSVbq4kEJr2kKySZtd7+fWqpmWIl4UBbRwe7T8FOC7wq8iUOpYDXPbrAkUxYMc8eM3ClSXI0k40nmwbsv73EQu0KleHsIcLDstCrEj9ov1ZPAUP8gedxC43TtK34K/bI550zWTcsPIBtlYJ87bJ/Jtdnq/mlOBY=
+	t=1786097618; cv=none; b=U32BJvyDGoZiZLx4t91a45yUajCkzqc5xSbq10BocXOg20ydrj9sBwNJEAbd6IlMa+I2AUWwbg4s1pGdrrw5+iTLGLFKSlFTohl438W7VzTumc78C5vnXt1oFlFoii4xarbfzmrvQAiOX+cJUmvciK5u0KPZRFQ1Buuk3umORpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786095824; c=relaxed/simple;
-	bh=sjc7s6lk2cpL2fiYUigrHisc0v5Jj9sbEBf7z1HOXEg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=u0nw4c00Ro4ayKeYvnF1VkB4lJZ8PPKJYgBssji2uoQz8RQb9/RHZxzE+v5CLRYgXxn29kQdIDUYNeOYsNyVSQQS15oCs4hZT9Jqio3xXLv4sQ9fMQNxTdAzyYCXC1AEtkgu0rH14ANtkdzenSpelFvfw+LBE6f0VK6SW6v87bM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UrObxIuw; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1786097618; c=relaxed/simple;
+	bh=jIGrd5q+CVC9/cyiDU/FB0p9Dg2F101uoK2Tom+1G6U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sm0u8hlRMscmCxLtMQZn/FPgD06r6sEX4fAQCSkv2PRKNpgABBw0naZhjl4jM3dssq9rdwYg0WN6/XSzwXGDlwLdYvAuCw+hiV49pNXYdjRJ5lFIg/p6E7GIhUz5P4G9JOY/nc5krsuH1S9owiuQnw3iXxyr4Sz1ZQ2IfYMdqyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JWspbsm9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UrObxIuw"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-cbb7926836eso2387912a12.3
-        for <mptcp@lists.linux.dev>; Fri, 07 Aug 2026 02:43:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786095822; x=1786700622; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=Xg/EUGcMOlgG9299LiUjoRCF4UCKyHI7lj8ZI32UDC4=;
-        b=UrObxIuw6PSEKp3/nkMOPIwJUK+sgp1Fb262sDR/SUFAm5lhsamB4YLuuKbsq0ErVW
-         K91P9kRv/AM/9FSXOAAR5GxANMDzkm0GqvEoR3r5Ry1AgC6Tv7MlfrTPMRWOnLIdfYlU
-         egLWgvRz9Gif/IuCb9BMB6u+DVqkIeGlvRjfWTKcXuoBaT4a986vFZMrBgWkbLqSIO4f
-         siba3B/gnPsoJlmJXK9a1fayI5afdioffn9fY586MRNz9Ust9b3dlZqsJQh1Q1T1kVur
-         AhHOURe1Fju0HHjq+qh09DufyqZZixu7qL7We6cgS8ocmHYi7UuCYOXcRTCGNcxWKjy6
-         qKpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786095822; x=1786700622;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Xg/EUGcMOlgG9299LiUjoRCF4UCKyHI7lj8ZI32UDC4=;
-        b=tH5wQfbIrjc5ty6rkoTmit72KoVYrO2rfI0PIdu/UO9UP7dOaSk8x7fUtUxCVTuaQx
-         0EPNY5Jll6nu2O2aXRRB/g+lQe4GRJOLAEIQwD0hPdG7PMLykF1EKjE7Hcxm9p2BZ1rh
-         0ON4NIiJlCNZEwMAVyxa5DhHz5bc3zRdGqCKU/a+C203G4vkFxdqRHdJ72xGrMBz4KE5
-         rSLJlkGWgq1iYl6QsFuYbGBYqrdm45fKAGhC0AZ2L1tyvky/9TzTJbPFwv2iwDnzE83l
-         XQIUmQ9Wu2C6wbBtLboF/fVaedbj8U6Eoraci3qtCQ8/A4VnMVwOWR9oA2GPvkWGCrbR
-         aSZA==
-X-Gm-Message-State: AOJu0YwRpYxhQnEed32m5YD7fIooQXLSdx0J2krZJL7EARc8iqtYPRUo
-	zcnahBHPw+r/sNoWYtQp0M/iHS/xyBsZ0KtjIash0bNkSBbnWOSEZoE=
-X-Gm-Gg: AR+sD108bgug0NgyppJ2gF2Q8l3E/YLVx0PWYRv2XLDiGfL9VT0QrBApKCV5wu/V/lT
-	B3vKZ+iH+7k4eTI0tHQeHB8IFa4nBaDcC0R0M8oIkMnPBmJgN/EAI6Q3nruZMjjy2Vywjl/uR/v
-	bk6/7ElJxcvdpzEsyngdZQgTFnZly8h2rMcolCGHDe+8A1Lt4hzj84rjiAfGw40R9tqEZQO4aAQ
-	O8FJ1wqbCPI2VwYZ+TXcUj3s9V4i1D1IyEMX2sFpeR+gToOUAh3fyWSACHnjzdZQzwT9e34GRuq
-	StfvTXrG1ZxEEdpW4w+WNku2IRzlHBeXJ5Hvs70yJRdxL6wuxwCss9eG+wxWCJN+3olWljg3OIK
-	gJrCuZku+2/DEExuUSgBP6ctJ3FH6bDeLzKMNcMrKqeck3eTp+p8mJuifF2PdqzhAmuPVff8s9Y
-	e1KHuiUKiMBls3tD6EcY97haXYXasghflw+lT7IzxGOI0mE4Sl1pxzSo71amCMWyUqszD/s9I=
-X-Received: by 2002:a05:6a00:1810:b0:842:6a3b:60d1 with SMTP id d2e1a72fcca58-84f2e07772dmr22311790b3a.31.1786095822459;
-        Fri, 07 Aug 2026 02:43:42 -0700 (PDT)
-Received: from [127.0.0.1] ([52.234.1.98])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84f5a51f17csm722988b3a.31.2026.08.07.02.43.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2026 02:43:42 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20260807-mptcp-pm-userspace-id0-case-v3-0-de9088549924@kernel.org>
-References:
- <20260807-mptcp-pm-userspace-id0-case-v3-0-de9088549924@kernel.org>
-Subject: Re: [PATCH mptcp-net v3 0/8] mptcp: pm: userspace: properly deal
- with the ID0 case
-Message-ID: <c08fec12-ac93-d808-5538-62e334db10de@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 07 Aug 2026 09:43:41 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JWspbsm9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57D301F000E9;
+	Fri,  7 Aug 2026 10:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786097611;
+	bh=Kn1K9NoIPx6TObzihge1lBEmTIoir/jQJbFXDDLyh2Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=JWspbsm9t6MP8t3VOT8ik+GeuaaK11EEqW0Iu3AzHyKy9HrCjYgulejn/lsiuizHm
+	 yt8q1wHVSDYX8EhzTCRPq868eXruC8wVBfoFvwgpDAjBBl1994JC8sTFhAjSGhNRSO
+	 jAgSO6uxWhMa5ClOg9sXJO/z2CYHrewxjZXX8KZeR+Esrj7yEFrY1gBnnsasgp6Pdb
+	 DhiRhuOQF7Qo1JzJsjNLQ7s6NYNbqlNXsOviJ7gX7TEGB0pyZfrPNDEs+GUv9SCzPT
+	 pBGJkRT+W3HMeAqByzVVQVBaaT5SFQuImrhz4LZkXA6nI0MKh2XUSrLX9mgsc9KLha
+	 T/Z2q/llKf7HA==
+Message-ID: <51c9e760-347f-4ecb-8661-ab32fc9f0c35@kernel.org>
+Date: Fri, 7 Aug 2026 12:13:26 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net v5 1/2] mptcp: pm: drop pending ADD_ADDR when removing
+ id 0 endpoint
+Content-Language: fr
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>,
+ mptcp <mptcp@lists.linux.dev>
+Cc: martineau <martineau@kernel.org>, pabeni <pabeni@redhat.com>,
+ "shardul.b" <shardul.b@mpiricsoftware.com>, janak <janak@mpiric.us>,
+ kalpanjani009 <kalpanjani009@gmail.com>, akshit <akshit@mpiricsoftware.com>,
+ syzbot+55c2a5c871441261ed14
+ <syzbot+55c2a5c871441261ed14@syzkaller.appspotmail.com>,
+ Tao Cui <cuitao@kylinos.cn>
+References: <20260630150632.899750-1-kalpan.jani@mpiricsoftware.com>
+ <20260630150632.899750-2-kalpan.jani@mpiricsoftware.com>
+ <19fdb1b1cdd.122b1f65587045.5393804019530024742@mpiricsoftware.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <19fdb1b1cdd.122b1f65587045.5393804019530024742@mpiricsoftware.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matthieu,
+Hi Kalpan,
 
-Thank you for your modifications, that's great!
+On 07/08/2026 09:23, Kalpan Jani wrote:
 
-Our CI did some validations and here is its report:
+> Sorry for the long silence on this.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/311639=
-06637
+Np, I was overloaded anyway (still am)
+> The packetdrill test is now up at
+> https://github.com/multipath-tcp/packetdrill/pull/201 - I rewrote it and this
+> time validated it in the virtme-docker environment: 3 failing without the
+> kernel fix, 3 passing with it, on export/20260622T173908. Your suggestion about
+> the endpoint linked to the initial subflow is what unblocked it. Details and
+> the limitations I hit are in the PR.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/91f23e3aba21
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1142037
+Thanks, I just send some minor fixes, then merged. I hope that's OK.
+
+> Two things about v5 itself.
+> 
+> First, patch 1/2 is unchanged from what you have. I said I would rework the
+> addr argument because the anno_addr copy looked fragile for endpoints with a
+> port, but after re-checking I no longer think that case is reachable: the MPC
+> endpoint cannot be a ported endpoint, since both __lookup_addr() and
+> mptcp_nl_add_subflow_or_signal_addr() compare the port when the endpoint has
+> one, and that would require it to match the initial subflow's local port -
+> which mptcp_pm_nl_create_listen_socket() binding the same address:port makes
+> unreachable in practice. So the entry reachable from
+> mptcp_nl_remove_id_zero_address() always has port 0 and clearing it is correct.
+> Tell me if you see a case I have missed.
+
+Fine by me.
+
+> Second, and I should have raised this earlier: please drop patch 2/2. The
+> selftest does not exercise the fixed path. I used addr_nr_ns1=-1, which deletes
+> the endpoint by its real ID via pm_nl_del_endpoint ${listener_ns} $id and
+> therefore goes through mptcp_nl_remove_subflow_and_signal_addr() - the path
+> that was already correct. Only -9 reaches mptcp_nl_remove_id_zero_address(),
+> and the endpoint is 10.0.2.1, so the address check there would not have matched
+> even with -9. The subtest passes identically with and without patch 1/2, which
+> is why CI was green everywhere, and it largely duplicates the existing "remove
+> single address" subtest. Sorry for not catching that before sending v5.
+> 
+> With the packetdrill test covering the same ground, I think patch 1/2 alone is
+> the right thing to apply. Happy to send a corrected mptcp_join.sh subtest as
+> well if you would rather have both.
+
+Indeed, dropped.
+
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+> From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+
+BTW, do you mind avoiding top-posting please, it is not recommended on
+most ML:
 
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+https://docs.kernel.org/process/submitting-patches.html#use-trimmed-interleaved-replies-in-email-discussions
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+New patches for t/upstream-net and t/upstream:
+- a6a9ee8fc58c: mptcp: pm: drop pending ADD_ADDR when removing id 0 endpoint
+- Results: fb78b98bf563..4439056e6ccd (export-net)
+- Results: 6f0836d81132..e8891858656d (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/420be436959ff2164ff3087f88e6a9756d485436/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/c808c1fcb72b4387c5d2193a4c69f387d5a7e881/checks
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
