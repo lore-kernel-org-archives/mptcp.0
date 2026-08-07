@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7F137B40A
-	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 11:46:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC424746C6
+	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 11:46:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786103172; cv=none; b=ahYdwVQU+WAVRj4NfIsuDKTQCZ0PoTuKnzpnXqFzrSUDcBTC+CI16i3KaLw+9dU7P+Qrtw4Yv9VH9rjhUbZ0Xa949qxY4aY0P2r670VJl3Cq7zddl1wt3Fkf4bJIl44tLTqxgYaWxLdCYBdXhkrbZ0ROeofLGk+5Aeby8tggOyg=
+	t=1786103179; cv=none; b=pCkgNHXK7+6CW0gR+5AKZySSoEexyD+3dlLmjLy2HsTmAKjQbbW6ITf05ugfZweCjVLTeU1ESwlxpfYFvYqFT53I7EfWgTZQKP6l0F/0gXUK7MSwBCYI+lXjnuN7tjz3puyK6GkpEQjg9PHJ88AtdS/q3g0QMlzrvxrpMJSswRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786103172; c=relaxed/simple;
-	bh=XbvPG/Ud/hWRYqDjZdkK8/zDIMjX4OxBSuBBjY6552g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=AZDaXyP6uB2Vcyp2/rscgRvfOehPlLUf66ZUVIuA6GY3KTHQtFvoc7xtL9KDteBhkSN/BOnoHoJsQBOsuQ55nz8hcxhbKATlRlUt+eacE4OKq3ru5MWhDpdcsCOpjGbijx7/VaAQQckCjHNSaZPBm7qAs5dqXWyn6GHH5XzxOEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kOFUGToU; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786103179; c=relaxed/simple;
+	bh=XSqYaDZfMlgSjGkz8lB3MNNKe5QoudTP1BKsGC62liI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pas1daybwHX91we752Ve1uYimRYBEm0/Cv/4rUoqkhGBFvJ+NZ83CJl+LvRt1nv+EddBSQbNwxaoQMvU9+YDsVmrovT01Ytk5M/9Uzs5klgPTthQp54FX0ZO2PERyYD4x2FnssNtMs2BilxH5uiHRdqHx5edjuH3wAuSFxOrRSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IKfnGpaB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kOFUGToU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05B891F00A3A;
-	Fri,  7 Aug 2026 11:46:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IKfnGpaB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F2C61F000E9;
+	Fri,  7 Aug 2026 11:46:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786103161;
-	bh=ahqry4BU68ODTew41CaAsr0Zn3dlVxKbKwP1j6g3oDM=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=kOFUGToUq54Ji9GEDsEQtXmvDimF/qj3sydYcBT1e7esqMPKi79S18g14XuJbB3gq
-	 3GYoYbDkv7TEnpOvaIAqqVSVtpoVuaZf6YKonwBBnT7/dAIt+rqoHiPy+5cKKA2Oxx
-	 5A/mbZYGGEUP9MT4Bd0iLYRcNbILFUE+0f7sT01jaYbBeRycqU1/0xNy2+QowVFUc0
-	 TtDJTfN1rFxz71usqUrXggrpgU+oU1KFtLu8yDNvkRewUoRfjIOX5aZb6cgCQqUmLg
-	 ATEUWjz80lYIpVR7vQrvXxP7siC1MsbBYiDUaeTV0F8qYW1whK6LlpwHy6JEG9plto
-	 kL8ZEh8oE8UqA==
-Message-ID: <6aa24894-a3c2-4c86-912a-0c17d6048433@kernel.org>
-Date: Fri, 7 Aug 2026 13:45:58 +0200
+	s=k20260515; t=1786103164;
+	bh=7OdP7PhUG/UOFM13ueV81XY6DTK2t5lg+GjwkiS/lzQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=IKfnGpaBOFLRXBo3KNpZAEcUDQqb+pZIXTJwF9TGkkfYoPNEgstu4ptk6CXIGV7av
+	 Tdi23SgxSe5kYdedcwlQ9kfHkOaIfM4Jzh34Dyr8SgBJ8XW/0WrSwVBVh6o6O7HbdD
+	 5Pa0ok2aEXnVtbQSyonb2qVU1oALVfd2MU//oyt4RSbP2H87tbaaTGui8MIjS+QdFn
+	 zyJQ6wbMyifbJopGINdYNbzzIgOlTLEowUjHwwTbo0iDBc4yF+j31F+gVpYzv4Iv4t
+	 HqUg3ZpzSd43ZKW/XvM/dtatqzBN6QOrA+ptvXfC+qngVaHqmik+66anUqzSsQj9vg
+	 GdRQUZkAuvAZA==
+Message-ID: <d80ad28c-afb9-4bcd-a5ea-a04b496e90ff@kernel.org>
+Date: Fri, 7 Aug 2026 13:46:02 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2 mptcp-next 0/7] mptcp: address stall under memory
- pressure
+Subject: Re: [PATCH mptcp-next 0/2] Drop mptcp_pm_subflow_chk_stale in bpf
 Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1786026372.git.pabeni@redhat.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1786007209.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,33 +85,25 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1786026372.git.pabeni@redhat.com>
+In-Reply-To: <cover.1786007209.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Geliang,
 
-On 06/08/2026 16:45, Paolo Abeni wrote:
-> This *should* address opus-5 feedback, as observed upstream.
-Thank you for the new version, and your patience with AI reviews!
-Hopefully opus-5 will not be even more picky!
+On 06/08/2026 11:10, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> Since mptcp_pm_subflow_chk_stale is removed in the "mptcp: address stall
+> under memory pressure" series, this patch drops it from BPF to keep the
+> BPF tests passing.
 
-This new version looks good to me:
-
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
+Thank you for fixing that!
 
 New patches for t/upstream:
-- b03efee5f28b: mptcp: move the retrans loop to a separate helper
-- 23b698046768: mptcp: move the stale logic out of retrans scheduler
-- 1a2614f8a410: mptcp: let the retrans scheduler do its job
-- 568cc4fa11f2: mptcp: explicitly drop over memory limits
-- c29573ac23e6: mptcp: enforce hard limit on backlog flushing
-- e76d982954d3: mptcp: avoid code duplication in __mptcp_move_skb()
-- b746103fb892: mptcp: implemented OoO queue pruning
-- Results: 775addc43266..7bf94a8339a9 (export)
-
-(+ Geliang's fixes for the BPF selftests)
+- 3e3fab142e29: "squashed" patch 1/2 in "bpf: Export mptcp packet scheduler helpers"
+- b1602f423178: "squashed" patch 2/2 in "selftests/bpf: Add bpf_burst scheduler & test"
+- Results: 7bf94a8339a9..b67053e5e63b (export)
 
 Tests are now in progress:
 
