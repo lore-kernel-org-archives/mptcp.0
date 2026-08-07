@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21F830FF36;
-	Fri,  7 Aug 2026 13:50:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFAA30E0E9;
+	Fri,  7 Aug 2026 13:50:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786110647; cv=none; b=u7/OEiKmD7PCO/3r9GZYdBtixhSp9x+DqjcI9/CCj+lEDCX7MwzNutrjjFMtBXiR6oIS4dz2ls9naE8tXIrJCuMLmlABNSJ15T1Lmp1v0pL04yoXb62458lpbF+YKBdxEgYtGEajksuKlaW6MzZ5yLozhUc8Zu+lJkBdv26ZLe0=
+	t=1786110652; cv=none; b=h2RfGKI9GS31QGjwszZZvf1lomK6VZgWbizTgCIkdQQY0hWu5AJ/3fXC4EB8DNemqNRoCGKTnw40wq/USBzAoNtSsVlAmEnFeigeLwejm8PMzd9/rJ1bBSqA2jOgKOa0DHa8Za5Z7LFIn8bt7zWlYzQJ+++lcl1XHfYRXfyWrq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786110647; c=relaxed/simple;
-	bh=1eiyJsGpZHXVZ4bb74ikO4gDWjHoZGmKm4vMNppG+U0=;
+	s=arc-20240116; t=1786110652; c=relaxed/simple;
+	bh=lUkBtkqx0K2qkY5bwN2OdiEBPUwziZTeHLobcsOpFk4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SN39Akq78+vOfVyT8g618uRUVXAyOca/FW8pOCX9MuUubP0E9Gfj4Pvfa/KpPvdfBtpdlWYoUYhZDnegYV02yzhHeR5wXCfBth/slFtdeLxqLo4kbiyHfCc8rzX2AWLYpjELXGq4boTHl927uvFlkZdsZ6ARF7GHhG95C2wfxwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KEPTZ2u6; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=SQiwjFzuTTF6FAfb41elPwfselAbNGO6LN+SZA5btDddlt6hWAHPeK9kIWIeLDZ37yCRlqKGrz4NnNvjvWRc73o063u0puErxhWksWyhd0KVzsm8rI8en0/voymzTcxRfm9gMych4Tnw7jyTQ5wIr1I+DCDZU83Xi/9ZMpgfF5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XR6Y9fDk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KEPTZ2u6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C948B1F00A3F;
-	Fri,  7 Aug 2026 13:50:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XR6Y9fDk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0640C1F00ACA;
+	Fri,  7 Aug 2026 13:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786110639;
-	bh=bTTBL9ZnohPensATpDZ27YbIQmHvsuAQwXU3J5quaLc=;
+	s=k20260515; t=1786110642;
+	bh=Hp8FSiOxKfQHeeC+JtYjdyoMvW0eZ8MoTAl8tlSx1hg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=KEPTZ2u6cipf1/m0JPnYnwnUj64eUM3aVP/4WYD2NDt0qYrRlo+w411zFMBu/2yyK
-	 WojOblDQPCBEB7lLx9xNHSrY/blsF/PETKet6IhJee1XgYMFPOGw34gakcBp6DCfoZ
-	 DnN2ZWxZmCa6WXrAzWFExbbKoJ/U0QdY3osOhoSc3AN/gTz4fkF3V2K/595laADKTW
-	 FvH3lKVkBQKO2ixK8Wp9Q+qcyZZdMq+1svhubD9mB9AxmoxOIh/Jr+GxIoHJhr3d0F
-	 9kdlhqxhJEB6mFYAiBXXxiG/SuFUX48ueNQQs7ANTDwTfa0bubO4PpBACN+HtSP0Sp
-	 +3OBOcYfoT0HA==
+	b=XR6Y9fDkpVf+iujxTEiwkS5KPecMzgosMxK6rLB9TLqiO29s+kAOJRx7vzjOQdIBf
+	 4qtfp80hhadAicKPf391ooEekfOlyerLxdh0A/2HbWglr+5KmLmE4bjazXh7qMge6z
+	 ZdNH9Lxr2a5Z4+muwm5ttoRy+GUQrbjCy1NWP41jvRATt/HUkOzIjOuqAyTmzMkZOP
+	 /OnmyPz8iCzWUrNCCOvKPasBQHYCKsWuzIOYT3YMXsO80UqHtN/jO7cYNFoflfMvZU
+	 iHf9IkM9sGxkaTtd51/mXzoWn6m34Y2cpcyEi/TdafjZL4dLQKfZr0XKez91gdkiHo
+	 FZ/41Vmw7Zrsw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 07 Aug 2026 15:49:06 +0200
-Subject: [PATCH net-next v3 6/7] mptcp: avoid code duplication in
- __mptcp_move_skb()
+Date: Fri, 07 Aug 2026 15:49:07 +0200
+Subject: [PATCH net-next v3 7/7] mptcp: implemented OoO queue pruning
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,7 +37,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260807-net-next-mptcp-oooq-pruning-v3-6-dbc1eb853cc3@kernel.org>
+Message-Id: <20260807-net-next-mptcp-oooq-pruning-v3-7-dbc1eb853cc3@kernel.org>
 References: <20260807-net-next-mptcp-oooq-pruning-v3-0-dbc1eb853cc3@kernel.org>
 In-Reply-To: <20260807-net-next-mptcp-oooq-pruning-v3-0-dbc1eb853cc3@kernel.org>
 To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
@@ -46,85 +45,175 @@ To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
  Simon Horman <horms@kernel.org>
 Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+ linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Gang Yan <yangang@kylinos.cn>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2367; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=397Kd7gjPDDLnPSX5yVPxXg++ui+5efdW+wfQQ/dn8I=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJKH807/HPLfIWItAtb9h59ryB6JfXV1wCvqnqh1K2Zw
- gWTzq6f0FHKwiDGxSArpsgi3RaZP/N5FW+Jl58FzBxWJpAhDFycAjCRhHSG/4kLVi+5bztXq3e1
- w/Jtk+7eePCmbKr1sfV77JRYubqq+A4zMsx8LPd+ioCCVGLo77+HFkUd89ylXXpC9PH6VZaiRzp
- /buQEAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4979; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=D17M8n5T3NEzzAe7GBb53KDyX6iU9Q4IORwBahYPUVs=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJKH83vS0nJzOX6bbSnZOmB86/vZFws/rL0XX+fS0rXs
+ WQZ9lNmHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABP5XMjwT99PbbqDlg77qt+G
+ PCt4uuW3HT5wr+ed2dKo47v09yQvt2L4X1tZUB2c3LrZoCdCg1l5y/KwtVNerws8tM3k0NuFPXu
+ 28gAA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-Alike TCP, MPTCP handles in-sequence packets and partially overlapping
-ones in a very similar way: we can use the same path to handle both,
-avoiding some code duplication.
-
-This will also make the next patch simpler.
+When moving incoming skbs in the msk receive queue and the latter
+is above limits, prune it as needed quite alike what TCP is doing
+at the subflow level. The main difference relies in the stop condition:
+since MPTCP does not perform collapsing, it's better off dropping the
+bare minimum to fit the (newer) incoming packet.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Tested-by: Gang Yan <yangang@kylinos.cn>
 Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v3: new
+v2:
+ - Uniform the new counter with the other OFO ones.
+v3:
+ - prune only for new data
+ - reorganize the code to follow more closely TCP
 ---
- net/mptcp/protocol.c | 31 +++++++++++++------------------
- 1 file changed, 13 insertions(+), 18 deletions(-)
+ net/mptcp/mib.c      |  1 +
+ net/mptcp/mib.h      |  1 +
+ net/mptcp/protocol.c | 81 +++++++++++++++++++++++++++++++++++++++++++++-------
+ 3 files changed, 73 insertions(+), 10 deletions(-)
 
+diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+index ef65e2df709f..2569385bab7c 100644
+--- a/net/mptcp/mib.c
++++ b/net/mptcp/mib.c
+@@ -87,6 +87,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+ 	SNMP_MIB_ITEM("WinProbe", MPTCP_MIB_WINPROBE),
+ 	SNMP_MIB_ITEM("BacklogDrop", MPTCP_MIB_BACKLOGDROP),
+ 	SNMP_MIB_ITEM("RcvPruned", MPTCP_MIB_RCVPRUNED),
++	SNMP_MIB_ITEM("OFOPruned", MPTCP_MIB_OFOPRUNED),
+ };
+ 
+ /* mptcp_mib_alloc - allocate percpu mib counters
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index 9271205f682e..3a3425e258a7 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -90,6 +90,7 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_WINPROBE,		/* MPTCP-level zero window probe */
+ 	MPTCP_MIB_BACKLOGDROP,		/* Backlog over memory limit */
+ 	MPTCP_MIB_RCVPRUNED,		/* Dropped due to memory constraints */
++	MPTCP_MIB_OFOPRUNED,		/* MPTCP-level OoO queue pruned */
+ 	__MPTCP_MIB_MAX
+ };
+ 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index d96fbdc34dbb..63f2c18bc01f 100644
+index 63f2c18bc01f..ec874d2ead6a 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -399,6 +399,7 @@ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
+@@ -242,6 +242,65 @@ static bool mptcp_rcvbuf_grow(struct sock *sk, u32 newval)
+ 	return false;
+ }
  
++/* "Inspired" from the TCP version; main difference: stop as soon as the MPTCP
++ * socket is under memory limit.
++ */
++static void mptcp_prune_ofo_queue(struct sock *sk,
++				  const struct sk_buff *in_skb)
++{
++	struct mptcp_sock *msk = mptcp_sk(sk);
++	struct rb_node *node, *prev;
++	bool pruned = false;
++	u64 mem;
++
++	if (RB_EMPTY_ROOT(&msk->out_of_order_queue))
++		return;
++
++	node = &msk->ooo_last_skb->rbnode;
++
++	do {
++		struct sk_buff *skb = rb_to_skb(node);
++
++		/* Stop pruning if the incoming skb would land in OoO tail. */
++		if (after64(MPTCP_SKB_CB(in_skb)->map_seq,
++			    MPTCP_SKB_CB(skb)->map_seq))
++			break;
++
++		pruned = true;
++		prev = rb_prev(node);
++		rb_erase(node, &msk->out_of_order_queue);
++		mptcp_drop(sk, skb);
++		msk->ooo_last_skb = rb_to_skb(prev);
++
++		mem = (unsigned int)sk_rmem_alloc_get(sk);
++		if (mem <= sk->sk_rcvbuf)
++			break;
++
++		node = prev;
++	} while (node);
++
++	if (pruned)
++		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_OFOPRUNED);
++}
++
++/* The stack can't drop packets for fallback socket at the msk level, or the
++ * stream will break.
++ */
++static bool mptcp_can_ingest(const struct sock *sk)
++{
++	return unlikely(sk_rmem_alloc_get(sk) <= READ_ONCE(sk->sk_rcvbuf)) ||
++			__mptcp_check_fallback(mptcp_sk(sk));
++}
++
++static bool mptcp_try_rmem_schedule(struct sock *sk, const struct sk_buff *skb)
++{
++	if (!mptcp_can_ingest(sk)) {
++		mptcp_prune_ofo_queue(sk, skb);
++		return mptcp_can_ingest(sk);
++	}
++	return true;
++}
++
+ /* "inspired" by tcp_data_queue_ofo(), main differences:
+  * - use mptcp seqs
+  * - don't cope with sacks
+@@ -253,6 +312,12 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
+ 	u64 seq, end_seq, max_seq;
+ 	struct sk_buff *skb1;
+ 
++	if (!mptcp_try_rmem_schedule(sk, skb)) {
++		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
++		mptcp_drop(sk, skb);
++		return;
++	}
++
+ 	seq = MPTCP_SKB_CB(skb)->map_seq;
+ 	end_seq = MPTCP_SKB_CB(skb)->end_seq;
+ 	max_seq = atomic64_read(&msk->rcv_wnd_sent);
+@@ -387,19 +452,15 @@ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
+ 
+ 	mptcp_borrow_fwdmem(sk, skb);
+ 
+-	/* Can't drop packets for fallback socket this late, or the stream
+-	 * will break.
+-	 */
+-	if (unlikely(sk_rmem_alloc_get(sk) > READ_ONCE(sk->sk_rcvbuf)) &&
+-	    !__mptcp_check_fallback(msk)) {
+-		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
+-		mptcp_drop(sk, skb);
+-		return false;
+-	}
+-
  	if (MPTCP_SKB_CB(skb)->map_seq == msk->ack_seq) {
  		/* in sequence */
-+insert:
+ insert:
++		if (!mptcp_try_rmem_schedule(sk, skb)) {
++			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
++			mptcp_drop(sk, skb);
++			return false;
++		}
++
  		msk->bytes_received += copy_len;
  		WRITE_ONCE(msk->ack_seq, msk->ack_seq + copy_len);
  		tail = skb_peek_tail(&sk->sk_receive_queue);
-@@ -413,26 +414,20 @@ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
- 		return false;
- 	}
- 
--	/* Completely old data? */
--	if (!after64(MPTCP_SKB_CB(skb)->end_seq, msk->ack_seq)) {
--		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_DUPDATA);
--		mptcp_drop(sk, skb);
--		return false;
-+	/* Partial packet */
-+	if (after64(MPTCP_SKB_CB(skb)->end_seq, msk->ack_seq)) {
-+		copy_len = MPTCP_SKB_CB(skb)->end_seq - msk->ack_seq;
-+		MPTCP_SKB_CB(skb)->offset += msk->ack_seq -
-+					     MPTCP_SKB_CB(skb)->map_seq;
-+		MPTCP_SKB_CB(skb)->map_seq += msk->ack_seq -
-+					      MPTCP_SKB_CB(skb)->map_seq;
-+		goto insert;
- 	}
- 
--	/* Partial packet: map_seq < ack_seq < end_seq.
--	 * Skip the already-acked bytes and enqueue the new data.
--	 */
--	copy_len = MPTCP_SKB_CB(skb)->end_seq - msk->ack_seq;
--	MPTCP_SKB_CB(skb)->offset += msk->ack_seq - MPTCP_SKB_CB(skb)->map_seq;
--	MPTCP_SKB_CB(skb)->map_seq += msk->ack_seq -
--				      MPTCP_SKB_CB(skb)->map_seq;
--	msk->bytes_received += copy_len;
--	WRITE_ONCE(msk->ack_seq, msk->ack_seq + copy_len);
--
--	skb_set_owner_r(skb, sk);
--	__skb_queue_tail(&sk->sk_receive_queue, skb);
--	return true;
-+	/* Completely old data */
-+	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_DUPDATA);
-+	mptcp_drop(sk, skb);
-+	return false;
- }
- 
- static void mptcp_stop_rtx_timer(struct sock *sk)
 
 -- 
 2.53.0
