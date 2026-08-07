@@ -1,132 +1,115 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D51130216D
-	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 08:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135DE367B77
+	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 08:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786092423; cv=none; b=MuDv1ppCiNRlmAwqtKpcdkKWtt50EpC8o5qFBREbUiJZhU08lTK5blV6qDE95jJglLH2H9nhlwZkasg0CCkbRysPc+KorYuoin/hrBI1zNikmE+h/9ZsS+Twzp5JXL5KpP9YNAxLfXi7R4XMXXoGkHnbrUx6dC2Y5Chm28CuRdI=
+	t=1786092615; cv=none; b=WTJGy/fy07B7VdW6bs6q2ETMN17PcE3v53CP/zINzdie4uysYcfnCJLc5+Zc+Ejm5f/5xRfZoiOB7axdCeyeuIp/MoRvGpuC7E1IaKtYSj9PBYGOGAkmqiCQzQVKItNw00GtWiOVms4SR7dPRdFszsGr+RKN5xpJRtLl5KAyhvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786092423; c=relaxed/simple;
-	bh=lDpird3hHObWiHWHu0yhpWUySgHrZhWTgSEwiQKulnQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=lAfp4ZCsjLYT+XuVZA9p+x9NHk7dEaY9FiR6cxuhr0vHQ14s3A43soTQjYVp+UhAZkPsC+gcPrA/ztA7tNptNJQUh0DuPhG3+RMpdmZSK+wxyoUZIQhzM4NqexUv5ZWjg0Qec6pMnzPPRgZmgYj2UKwKjbbem+ObV3Y8/DBIwlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m4EIym3z; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1786092615; c=relaxed/simple;
+	bh=AJ2JN08PiA/OlNEIwUmaI+uFpNUncGryknFy19CVQog=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=npjUWusYBMMlQYbokQ/dfAMKAxJ3R/HwzL/zb+RFs5m5XiPT0mmOpfUgTeTV2TlbQc8HTXN6CIRYv8pAjmKJYpZtG2CLnVTqnA7lqKXAn5scwLXrwhlUVx/zq5Jv6CQlraTePzb/gP63X6wwBrTe4uY4Lhnt+3MAl4mqfr6DiB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nlUOUW72; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m4EIym3z"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-8484f229529so2699997b3a.2
-        for <mptcp@lists.linux.dev>; Fri, 07 Aug 2026 01:47:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786092421; x=1786697221; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=bLaB3uYRir6YQN0QvA6Cz/FFX8vj/+D/EnGWxK30ic0=;
-        b=m4EIym3zMiU3WJC9cZD+7TBZUDny8QtVQtFL61ijiTXEL7kDtiHxS2CZdvUMj+MWAq
-         XayqM56BimnA/UgPWsgMxllqt4r/GeHPZoA0fb4RQDE7K6ttK/CQ5uqxCWW1EtKE+0K7
-         XkfjrJPiajp71eObArqUfMCHIrq4Q80mUkLVOxVsB1iBdFQmn6/1B57UH/Or8e50qkau
-         dBjRRsdIy8FGQ6rPdND6Gg7XxUhtxeRUoZLVOvMxxardW+siAPhgsa2bujM+MaJplPsQ
-         CtWKobezlelDwdkybTphW4nRfYNNISaa2Z6jOXKpoENSpskLDWd5vj8Gl+DX43c1R61U
-         efYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786092421; x=1786697221;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=bLaB3uYRir6YQN0QvA6Cz/FFX8vj/+D/EnGWxK30ic0=;
-        b=ZUzOUqTqHyJPzGHvStYa0hLJIp+lRTeewLh5zdwfaP53WbX81ti/wgraDt6bbQSDrx
-         hKeWsbizHp0N3B6k2h3QuvGyhnjQ8OmdvlOVg/WWRlUQrcSQpyT+9FB3JJQqbEWHOORG
-         qAtmnj1HBzoP7nDiT+bYfjApxzi4bSx29+nWStPlHjncj+Dmsh0AtlRZgRq9OKAiqRbS
-         B+bEUNDwqmDWKW7h2e8u5M7DXGSqisM/180WsziLWOk5I/ncj0DE7pNKYqh6+eIoB4H8
-         6mRljYGWpFllqJkPW4I5HcurorKbnaKLAeqbSHzZRBjDa6Kv45bz7QYjRNy5JLqe1Syb
-         eaxQ==
-X-Gm-Message-State: AOJu0YwkMoVfTHRRCe8mGV4GvAW1PrmOuX3jdUSLjJ+sR42aC+2tzxc7
-	NQjRvKkk7xsPACVqaR9vVH3puX9b/OJHX3Q4yaRzwPsD5zysfo+8GVqlZzGs
-X-Gm-Gg: AR+sD11XelhBd5qo1C5ZfLQyKipiCrBfi5xQMH6hkIKxZRwhf3KdYf99H7bdQ4Uc5J5
-	UIVf+u/y02VcSS5vecXGNZRYKpvX127nJrLfvZ7EzWJi7WlKyejD5YEqKpFK3d4vV+LcL73CHSZ
-	AsMEMez4sXfHvrPEYO8UZeDEtfpL6y6XIPcCjwhM5J+w7BU5wERm0Q8dPHV59phKjpHA3Yv1pk7
-	N/1nuuzeUVWVA5Lzsb7UgVulF1lpZV9+Dm4LZyCDESuPcdw94Z87QqW/tKZos0Y6FfzLCgzyZaf
-	buKeI0+W4bujSF8IRZQhmDP0r4x3l9iHZ/gc+8MH+Ke2QkU8P9bwwYigVyU3TfHkmuJF4lywKqE
-	aO9G//T1853wV9r8WwqKhNjLD33835Dr3ARhI6BjK4wAamX1eJtGq0Ug3MYXJJzDKhjRDNvDSIo
-	72bMlbgmsLINhqsuGFUD+6pnI1D3gQ7RpPrcqEUJc4Mo4do8Vh1V7THxsHbg4J6J//jA9wIfUGU
-	Ru0qVvqgIg=
-X-Received: by 2002:a05:6a00:390d:b0:845:31a6:d84d with SMTP id d2e1a72fcca58-84f2e0316ffmr21432219b3a.7.1786092421378;
-        Fri, 07 Aug 2026 01:47:01 -0700 (PDT)
-Received: from [127.0.0.1] ([4.154.85.171])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cbe8f19634dsm370950a12.7.2026.08.07.01.47.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2026 01:47:00 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Qing Luo <luoqing@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260807074110.566170-1-l1138897701@163.com>
-References: <20260807074110.566170-1-l1138897701@163.com>
-Subject: Re: [PATCH mptcp-net v4] mptcp: pm: fix userspace PM address ID
- overflow when all IDs are exhausted
-Message-ID: <f906b0d7-902d-ea12-d342-68eb909def91@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 07 Aug 2026 08:47:00 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nlUOUW72"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 030CB1F000E9;
+	Fri,  7 Aug 2026 08:50:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786092613;
+	bh=K15Mxa3su8ivmC1N1CqRE3C31JtOu0RtdZJqBVAnOs4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=nlUOUW72UR1wvmgmiSyDQXwThrTkIGRU9VIq7B+32xa/swPpbVSbxWD0S3dPdZAf8
+	 Om4vAtCe/icn6+mWDfTPl5S5qmIZMPGkWnsW5zg2VagLeknLQwYwCyxuSDSNBQmsrD
+	 T7a5Fpcv2JeTmt2J4YhlyhoOMchc4LG9Nl96/eFrg7dYun0wcpRH8FH3HD0yzA4Z/f
+	 QXQ9DHxS2IbJZRKf8HVqgkQ9S3rYz3e7hX0Cd4+Lx2aOBIb6AWVPGf5cNVV4SZUp04
+	 azdQo99fukKI9qBXA5MJWziTGCfOLp6X8vaYyy24sRIBq+DgkdeA7m6vtnLO+Hj1pv
+	 VynQF0N8VsySw==
+Message-ID: <1e3baf14-6e87-4450-a595-07de458e3626@kernel.org>
+Date: Fri, 7 Aug 2026 10:50:10 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net v4] mptcp: pm: fix userspace PM address ID
+ overflow when all IDs are exhausted
+Content-Language: fr
+To: luoqing <l1138897701@163.com>
+Cc: mptcp@lists.linux.dev
+References: <20260805070926.716768-1-l1138897701@163.com>
+ <20260807074110.566170-1-l1138897701@163.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260807074110.566170-1-l1138897701@163.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Qing,
+Hi luoqing,
 
-Thank you for your modifications, that's great!
+On 07/08/2026 09:41, luoqing wrote:
+> I have to admit I was a bit confused about the correct mailing‑list
+> workflow, especially whether I should start a brand‑new thread or
+> simply reply when sending new patch versions.
 
-Our CI did some validations and here is its report:
+In short:
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/311601=
-30229
+- Never use "git send-email --in-reply-to=(...)" (except when requested)
+  => Tip: use "b4 prep/send" to prepare and send patches
+     https://www.mptcp.dev/contributing.html#workflow
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/4f69b893564e
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1141997
-
-
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+- Reply to questions with your email client, never with "git send-email"
+  => Tip: use Evolution, Thunderbird, Mutt, etc.
+     https://docs.kernel.org/process/email-clients.html
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
