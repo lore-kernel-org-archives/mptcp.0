@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED306345EB7
-	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 16:10:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD1EEEB3
+	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 16:10:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786119008; cv=none; b=Dm/tBfZ0zuwZYvuS6Wqr0LXHHE3zqjJKdQliy6ffj0tpXv8UEiPW3B3fZ9N3SptPY85FbfwraZrOJYJC3cot16ABCvSl8A0qn0j9I4Peue8u+A5hTu9098aYfBMSwa+GoYCPdld1SDe5jvUvMZaHrBNecKCUONSLxSg80U0N0Lc=
+	t=1786119009; cv=none; b=a77jej/mfY6tp6Hn+3IfbE6BUWcmzX6I32wh3HgZ9T0f956y1znrNmtq11KgPujBMyHbPPiRSQBKXhi2nLRIyE+2LhLUGINNvCloVrIEtbA9koAwPfH2AtMM9EoXo1U81nutjHq8xU+NAB3WBtNsc+hubhelFWDNEQ0Cu7wBQH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786119008; c=relaxed/simple;
-	bh=03BTHd6kepChCEulUtnxyh4fbSaCXhGZHrAPNeEmE1g=;
+	s=arc-20240116; t=1786119009; c=relaxed/simple;
+	bh=IKFFXdNiWpjDg0C/NmE0fhU2cpXbXrBHoLtXvQYXTQU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Njh5tYwPL6jvw4oGGqt67FL6jQqlG2Ojnaz9NR3idWWu6Zj+8VUPqenYRY20/3NO4ldJIEBFA9106xXtNtmAwaYSP3becJD03YOffjHbPnTVlQsGWvNVrjGA+4zj3FGsdEnCzor1WV8lw5UtsqogdsKYpfF3I/a8x2H2udk3+yQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ww5uAFwF; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=dJi81IJrYvo1hMnpljmmJL/u6ZUELYh9JcAy3Zir5VnGg3GGSMSUmmxKQOgewqqaceG9ygTGPP3wV9RJCum+sQk018hrXpkuYB59QFMk8zYhNqAejdTzijmFQpTK20b6u8s+AHXmgKsVu2VfcUeQPmFSmuJ1v2lNGLAmWEmJEPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GX3hxIFN; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ww5uAFwF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D05761F000E9;
-	Fri,  7 Aug 2026 16:10:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GX3hxIFN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 724271F00A3A;
+	Fri,  7 Aug 2026 16:10:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786119006;
-	bh=LIXwymg6u06kJXC6WUuUb+mMkB/5s6sQgntn4aTb8yU=;
+	s=k20260515; t=1786119008;
+	bh=/mtwTs+TF8sAJqYaT74DDfXopTI7JcDDiLp4HGm56eE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Ww5uAFwFroubNSi8oTM5PgaSfkyy49KO5MuWqxsm5K4Lin+HRstIqYED73v9FXG2V
-	 14qYozIBkfBq2ukdaaU+mMTA5P9q/XbeYvJYQ6xW3l7g3FajN3tgreEtkTCKh17es1
-	 lcElEynLEMW6KwmN6z61/1A5efmUfzyttXcivq/+QjE4NeTv9XMiQpHaDUFoNts+HU
-	 V0lafr2Exk6nbBQztTX8El0wQtXEBjB7Fp8RCDVSiwaz9Es1un91QycBlwLmRHDHcA
-	 6Bvk9myacQv9gkwlvtTsW+tFT7JkEYzwJv1NSh4K9KBR9XIPx0EjtiWF25cr66hNky
-	 enPoVXJ0aQSPw==
-Message-ID: <9d846f7b-9c64-410d-a18e-933658f042c1@kernel.org>
-Date: Fri, 7 Aug 2026 18:10:04 +0200
+	b=GX3hxIFNBUIJn2ZTaH0GHA/FF1zMXq98PVqpVjnz5/wqnytYNF4LMp1cjRmc/avrE
+	 t2Ohk7g4ndZnfyhdrI9D7XjwvHo250Vmvdf+7xITBCxkuot6ky0AjHlvHog+Yw6hrl
+	 stjIHk5uwhUKYSo/oUfkZC0pQOXhw0d7c1DyqWrsFebdWmdaaa7mL7hwYwBLlM1G2+
+	 xOeeU6aN6q81EAE0FBjKllYoMeGzGD1Zw6N0ylTsLx6OXLPLPOyC3/Kv1uZnY1tai9
+	 A8akmw2z3Rh6V9VK8p9BRVO4aYzpcLitmTcmHuPSHnQjU4K1LLWPW4aAcQ+ZTKCQoz
+	 vkcr1Ews2ZICQ==
+Message-ID: <c4180506-a5a8-40c0-87db-a33a61ca0fe3@kernel.org>
+Date: Fri, 7 Aug 2026 18:10:06 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 3/3] DO-NOT-MERGE: mptcp: sched: penalise
- counters
+Subject: Re: [PATCH mptcp-next 0/3] mptcp: sched: penalise a slow subflow
+ (#345, first cut for your lab)
 Content-Language: fr
 To: Shardul Bankar <shardul.b@mpiricsoftware.com>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>, janak@mpiric.us
+Cc: MPTCP Linux <mptcp@lists.linux.dev>
 References: <20260726-mptcp_penalise_send-v1-0-84485e0e995b@mpiricsoftware.com>
- <20260726-mptcp_penalise_send-v1-3-84485e0e995b@mpiricsoftware.com>
- <70fa5aff-40c0-4ca5-8a29-4e57489d3637@kernel.org>
- <30b7b05258dda636068fd53b3e0b5a5ef509d3c1.camel@mpiricsoftware.com>
+ <1a0d5c3b-05ef-4dbf-bb34-3141ad3d6f58@kernel.org>
+ <745def4591c1b3b35ace0719159fe2c6cbbab467.camel@mpiricsoftware.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,48 +88,159 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <30b7b05258dda636068fd53b3e0b5a5ef509d3c1.camel@mpiricsoftware.com>
+In-Reply-To: <745def4591c1b3b35ace0719159fe2c6cbbab467.camel@mpiricsoftware.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Shardul,
 
 Thank you for your reply!
 
-On 07/08/2026 17:19, Shardul Bankar wrote:
+On 07/08/2026 17:17, Shardul Bankar wrote:
 > Hi Matt,
 > 
-> On Wed, 2026-07-29 at 13:50 +0200, Matthieu Baerts wrote:
+> On Wed, 2026-07-29 at 13:48 +0200, Matthieu Baerts wrote:
 >> Hi Shardul,
 >>
 >> On 26/07/2026 07:55, Shardul Bankar wrote:
->>> Instrumentation for validating the two preceding patches; not for
->>> merge.
 >>>
->>> Adds two MPTcpExt SNMP counters:
->>> - CwndPenalized: times a subflow cwnd was actually halved;
->>> - PenalCandidate: times the rate trigger picked a slow subflow.
+>>>
+>>> - 2/3 is a guard that is in neither the fork nor what I described.
+>>> Without it,
+>>>   1/3 regresses badly (about 2x slower in my runs) when the
+>>> connection is
+>>>   receive-window-limited. In that case the fastest path is capped
+>>> by the same
+>>>   shared window, so it cannot absorb what the slow path gives up,
+>>> and halving
+>>>   just sheds the slow path's throughput. 2/3 skips the penalty
+>>> while the
+>>>   application has queued past the send-window edge (write_seq >
+>>> wnd_end), which
+>>>   is the sign that the receiver, not our congestion window, is the
+>>> bottleneck.
+>>>   I kept it a separate patch so you can test 1/3 on its own, or
+>>> drop or retune
+>>>   2/3 independently. The exact condition is the piece I would most
+>>> value your
+>>>   lab checking.
 >>
->> I think at least the first counter is interesting, probably the
->> second
->> one as well, no?
->>
->> Generally, if you need counters during the development, they might be
->> needed to debug issues. But here with the scheduler, maybe the
->> tracing
->> are better. Did you use "trace_mptcp_subflow_get_send"?
+>> It feels to me that you require this because patch 1/3 doesn't check
+>> if
+>> the MPTCP connection was "send-buffer-limited", no? But you are doing
+>> something very similar, no? Without testing, it feels like this is
+>> required not to limit the penalisation to when it is really needed.
 >>
 > 
-> I did not. Looking at it now, it fires before the penalise decision and
-> does not see the halving, so it would need a small extension (a new
-> field, or a tracepoint at the halving point) to show what these
-> counters show. Which would you prefer for v2: keep the DO-NOT-MERGE
-> counters, or add that tracepoint? I will go with your call.
+> Patch 1 does gate on load, with tcp_is_cwnd_limited(); though that is
+> not the send-buffer-limited check. The send-buffer-limited check never
+> fires at scheduler time in this tree, as the msk buffer has just
+> drained into the subflows. Patch 2 guards the receive-window-limited
+> case, where patch 1 without it can regress the transfer about 2x in my
+> tests. I have kept it as the explicit guard and am still characterizing
+> when patch 1 alone would suffice. Would you prefer we drop it?
 
-Maybe both?
+Dropping it, no, but I was more thinking about squashing. But fine to
+keep it separated (but within the same series) for now or even for the
+final version if that helps with the explanations and reviews.
 
-If you can add a new field for the tracing, that would help with the
-development. The MIB counter would help with the debugging.
+>>> I drove those regimes with a small simult_flows variant (receive-
+>>> window-
+>>> limited, send-buffer-limited, and autotuned cases). It is a helper,
+>>> not
+>>> selftest quality, so I did not fold it into the series; it is on a
+>>> branch of
+>>> my tree, in case it saves your lab time or you spot a case I
+>>> missed:
+>>>
+>>> https://github.com/shardulsdk-mpiric/linux/blob/6926c4b7f583/tools/testing/selftests/net/mptcp/mptcp_sched_penalise.sh
+>>>
+>>> Run it on a baseline and a patched kernel and compare (prefix with
+>>> MPTCP_LIB_IP_MPTCP=1 if pm_nl_ctl does not work in your setup):
+>>>
+>>>   SCENARIO=suite                             
+>>> ./mptcp_sched_penalise.sh
+>>>   SCENARIO=unbounded                         
+>>> ./mptcp_sched_penalise.sh
+>>>   SCENARIO=rwnd    RCVBUF=262144             
+>>> ./mptcp_sched_penalise.sh
+>>>   SCENARIO=sndbuf  SNDBUF=65536              
+>>> ./mptcp_sched_penalise.sh
+>>>   SCENARIO=both    RCVBUF=262144 SNDBUF=65536
+>>> ./mptcp_sched_penalise.sh
+>>
+>> Sounds good! Did you check with a fixed sndbuf higher than the rcv
+>> one?
+>>
+> 
+> Yes (SNDBUF 256K, RCVBUF 128K). The guard correctly suppresses the
+> penalty there: the receiver is genuinely at a zero window (receive-
+> window-limited, not congestion-limited), and it is not slower than
+> baseline.
+
+Nice, thank you!
+
+>> Also, be careful that with netem, the limits you give to run_test()
+>> can
+>> influence a lot the bufferbloat. Did you monitor the RTTs during
+>> these
+>> transfers?
+>>
+> 
+> I do now. The harness samples the subflows' srtt, and it confirms your
+> point: the netem queue length drives it (srtt max is about 40 ms with
+> the fast path alone, rising to several seconds on a bufferbloated
+> path).
+> 
+>> On the other hand, it would be good to validate this with one path
+>> having bufferbloat. These patches should also help to improve the
+>> situation. (And issue #332 should help even more)
+>>
+> 
+> I added a bufferbloated-slow-path case, but it was too noisy to draw a
+> firm conclusion: the completion times swung widely, and the same swing
+> was on the baseline kernel, so my setup is not measuring the effect
+> cleanly. I would build a more controlled bufferbloat case (a moderate,
+> stable queue, and a latency metric rather than completion time). I
+> agree #332 is likely the bigger lever there.
+
+Indeed, that's where my lab would be handy (but not ready yet, keep
+being delayed by "urgent fixes"...)
+
+>>> For the rwnd/sndbuf/both scenarios the simult_flows pass/fail bound
+>>> is not
+>>> meaningful (it assumes both paths are fully used): read the printed
+>>> runtime
+>>> and out-of-order counts, not OK/FAIL. The "both" case also
+>>> occasionally fails
+>>> to bring up the second subflow with the very small SO_SNDBUF; just
+>>> rerun it if
+>>> you see a single-subflow run.
+>>
+>> I see, yes. I think what is important here for #345, is that when the
+>> transfer is buffer limited, the slow subflow impact should be
+>> reduced.
+>> At least not to cause the transfer to be worse than without this slow
+>> subflow.
+>>
+> 
+> Using that as the bar: when send-buffer-limited, the penalised two-path
+> transfer beats the fast path alone (about 11.3 s against 14.4 s), with
+> roughly 15 to 20% less out-of-order data, so the slow subflow helps.
+> When it is bufferbloated, it comes out about even with the fast path
+> alone.
+
+Excellent!
+
+> I have all of these changes ready in my tree. I would rather settle
+> whether patch 2 stays (above) and the counters question on 3/3 before I
+> post v2, but I am glad to send v2 now if you would prefer to look at
+> the code directly.
+
+See my other replies, but in short:
+
+ - patch 2 can stay or not, up to you
+ - extending the tracing and keeping the counters (at least "Penalized")
 
 Cheers,
 Matt
