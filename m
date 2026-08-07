@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70FC6EEB3
-	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 16:10:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED306345EB7
+	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 16:10:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786119004; cv=none; b=LfiO0pkKg0nb3ayOGllNw1509uQ0A4sAZnYo/+4TKofm5q+tc0ZW1PlZkFHJyS4SmoNN44M24zBCtkD01EWVKHF9v/15UMCCihK64SOqBm0qC8jxv58XSpUErk9WrGiG+GtvPQgQQTYOR1FZZszDRpu4avKwqJA82JyXFl8xP4U=
+	t=1786119008; cv=none; b=Dm/tBfZ0zuwZYvuS6Wqr0LXHHE3zqjJKdQliy6ffj0tpXv8UEiPW3B3fZ9N3SptPY85FbfwraZrOJYJC3cot16ABCvSl8A0qn0j9I4Peue8u+A5hTu9098aYfBMSwa+GoYCPdld1SDe5jvUvMZaHrBNecKCUONSLxSg80U0N0Lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786119004; c=relaxed/simple;
-	bh=gsaSOHo3SGefqsy4hDslpLglCx5SAB23qyw0r9GJw5Q=;
+	s=arc-20240116; t=1786119008; c=relaxed/simple;
+	bh=03BTHd6kepChCEulUtnxyh4fbSaCXhGZHrAPNeEmE1g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HRdNJQNML0SgpJcp5mBi+7Zq3f5K6cUvuELnTLLzUhI44NYVHDp6HDHBwuQJOGIJDRzZ+VqehssE6piWv1AzC4PQhHZ0JGKWGO3Unvi06ktRgrTRxN4ERc6hNSNpI9HKkSBFjLDb6Fsakz5GTeRyUQcul7Nz/63K7QZE6BPL9q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U9VJDDtM; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=Njh5tYwPL6jvw4oGGqt67FL6jQqlG2Ojnaz9NR3idWWu6Zj+8VUPqenYRY20/3NO4ldJIEBFA9106xXtNtmAwaYSP3becJD03YOffjHbPnTVlQsGWvNVrjGA+4zj3FGsdEnCzor1WV8lw5UtsqogdsKYpfF3I/a8x2H2udk3+yQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ww5uAFwF; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U9VJDDtM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99BFD1F000E9;
-	Fri,  7 Aug 2026 16:10:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ww5uAFwF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D05761F000E9;
+	Fri,  7 Aug 2026 16:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786119003;
-	bh=XkQF/dym1AspfXKdlLBeYze48CiBLWBPn+jVL224n1E=;
+	s=k20260515; t=1786119006;
+	bh=LIXwymg6u06kJXC6WUuUb+mMkB/5s6sQgntn4aTb8yU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=U9VJDDtM6DAbzehNwnEPXEZWKbVUuJKhW0/JArXMO2lHzcu8RTAGiAIqxGYKlBW0T
-	 ZtNX3kv9OSgIiwdLyxcaJcyh4ssR/WEkQ7JUHsPUjDmGfYusBcbuyF/TQkyzCSZ/7a
-	 pTkiJDu0qoQaUTMxq+6SlIQloS+V4ceGJuD0jc+sry6VfsRNoRQNeZweIMOqdfez9J
-	 kAX7Df6szb5KmTiJvztqB9zm3wyByiqxfZuwiW9zy6vfOY1hXEB7Jt15WGSH8VvDAM
-	 Cpbov9g6C40f1Y+tEpz06Pqa/0LzUilHRr+0JYFb8/WXMcSJDf/BPPM3HzKzjyaEpB
-	 oN4AumBJ9brzQ==
-Message-ID: <3240b6e2-e5d5-4356-8a8e-9374086c98ec@kernel.org>
-Date: Fri, 7 Aug 2026 18:10:00 +0200
+	b=Ww5uAFwFroubNSi8oTM5PgaSfkyy49KO5MuWqxsm5K4Lin+HRstIqYED73v9FXG2V
+	 14qYozIBkfBq2ukdaaU+mMTA5P9q/XbeYvJYQ6xW3l7g3FajN3tgreEtkTCKh17es1
+	 lcElEynLEMW6KwmN6z61/1A5efmUfzyttXcivq/+QjE4NeTv9XMiQpHaDUFoNts+HU
+	 V0lafr2Exk6nbBQztTX8El0wQtXEBjB7Fp8RCDVSiwaz9Es1un91QycBlwLmRHDHcA
+	 6Bvk9myacQv9gkwlvtTsW+tFT7JkEYzwJv1NSh4K9KBR9XIPx0EjtiWF25cr66hNky
+	 enPoVXJ0aQSPw==
+Message-ID: <9d846f7b-9c64-410d-a18e-933658f042c1@kernel.org>
+Date: Fri, 7 Aug 2026 18:10:04 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 1/3] mptcp: sched: penalise a slow subflow by
- halving its cwnd
+Subject: Re: [PATCH mptcp-next 3/3] DO-NOT-MERGE: mptcp: sched: penalise
+ counters
 Content-Language: fr
 To: Shardul Bankar <shardul.b@mpiricsoftware.com>
 Cc: MPTCP Linux <mptcp@lists.linux.dev>, janak@mpiric.us
 References: <20260726-mptcp_penalise_send-v1-0-84485e0e995b@mpiricsoftware.com>
- <20260726-mptcp_penalise_send-v1-1-84485e0e995b@mpiricsoftware.com>
- <085c3192-1adc-4016-ab27-a0c053a2f2c1@kernel.org>
- <087874be7587606209365cb9e9791a9f0e11b934.camel@mpiricsoftware.com>
+ <20260726-mptcp_penalise_send-v1-3-84485e0e995b@mpiricsoftware.com>
+ <70fa5aff-40c0-4ca5-8a29-4e57489d3637@kernel.org>
+ <30b7b05258dda636068fd53b3e0b5a5ef509d3c1.camel@mpiricsoftware.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,46 +89,48 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <087874be7587606209365cb9e9791a9f0e11b934.camel@mpiricsoftware.com>
+In-Reply-To: <30b7b05258dda636068fd53b3e0b5a5ef509d3c1.camel@mpiricsoftware.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Shardul,
 
 Thank you for your reply!
 
-On 07/08/2026 17:18, Shardul Bankar wrote:
-> On Wed, 2026-07-29 at 13:49 +0200, Matthieu Baerts wrote:
->> On 26/07/2026 07:55, Shardul Bankar wrote:
-
-(...)
-
->>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
->>> index da40c6f3705f..2bf801292563 100644
->>> --- a/net/mptcp/protocol.h
->>> +++ b/net/mptcp/protocol.h
->>> @@ -587,6 +587,7 @@ struct mptcp_subflow_context {
->>>                 __unused : 8;
->>>         bool    data_avail;
->>>         bool    scheduled;
->>> +       bool    penalise;           /* scheduler flagged this
->>> subflow for cwnd halving */
+On 07/08/2026 17:19, Shardul Bankar wrote:
+> Hi Matt,
+> 
+> On Wed, 2026-07-29 at 13:50 +0200, Matthieu Baerts wrote:
+>> Hi Shardul,
 >>
->> (If you don't need to read this locklessly, then you can probably use
->> one unused bit.)
+>> On 26/07/2026 07:55, Shardul Bankar wrote:
+>>> Instrumentation for validating the two preceding patches; not for
+>>> merge.
+>>>
+>>> Adds two MPTcpExt SNMP counters:
+>>> - CwndPenalized: times a subflow cwnd was actually halved;
+>>> - PenalCandidate: times the rate trigger picked a slow subflow.
+>>
+>> I think at least the first counter is interesting, probably the
+>> second
+>> one as well, no?
+>>
+>> Generally, if you need counters during the development, they might be
+>> needed to debug issues. But here with the scheduler, maybe the
+>> tracing
+>> are better. Did you use "trace_mptcp_subflow_get_send"?
 >>
 > 
-> It is written under two locks (set in the scheduler under the msk lock,
-> cleared in the push path under the subflow lock), so a shared bitfield
-> word would race on the read-modify-write, and I kept it a bool for that
-> reason. If you see a single-lock way to do it, I am glad to move it to
-> a bit.
+> I did not. Looking at it now, it fires before the penalise decision and
+> does not see the halving, so it would need a small extension (a new
+> field, or a tracepoint at the halving point) to show what these
+> counters show. Which would you prefer for v2: keep the DO-NOT-MERGE
+> counters, or add that tracepoint? I will go with your call.
 
-I didn't check all entries from the bitfield a few lines above, but are
-they not also written under the subflow lock? (but maybe not under the
-msk lock)
+Maybe both?
 
-But if you saw a risk, fine to keep it like that.
+If you can add a new field for the tracing, that would help with the
+development. The MIB counter would help with the debugging.
 
 Cheers,
 Matt
