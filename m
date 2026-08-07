@@ -1,116 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC424746C6
-	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 11:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF53418372
+	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 12:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786103179; cv=none; b=pCkgNHXK7+6CW0gR+5AKZySSoEexyD+3dlLmjLy2HsTmAKjQbbW6ITf05ugfZweCjVLTeU1ESwlxpfYFvYqFT53I7EfWgTZQKP6l0F/0gXUK7MSwBCYI+lXjnuN7tjz3puyK6GkpEQjg9PHJ88AtdS/q3g0QMlzrvxrpMJSswRk=
+	t=1786104097; cv=none; b=MJQYeWnknyQfndziwl4bh6NSw/zuDA3P5ub2+xM4ppKHC+e0b+rfBsffscM4PuzHi3Kt/2HBkOFUdiY6S1LtMaa2CFk9cr8FaYg3T+KgCROx8PXau1YLQWQtKNKe3lY2nPKso+2acLTLEbLGAM9w9TUAxHZv4fwj55YdcledvXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786103179; c=relaxed/simple;
-	bh=XSqYaDZfMlgSjGkz8lB3MNNKe5QoudTP1BKsGC62liI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pas1daybwHX91we752Ve1uYimRYBEm0/Cv/4rUoqkhGBFvJ+NZ83CJl+LvRt1nv+EddBSQbNwxaoQMvU9+YDsVmrovT01Ytk5M/9Uzs5klgPTthQp54FX0ZO2PERyYD4x2FnssNtMs2BilxH5uiHRdqHx5edjuH3wAuSFxOrRSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IKfnGpaB; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786104097; c=relaxed/simple;
+	bh=YaZr+6gluJki44HtVAv9vu5leJrZCsLpt7zvqV6nSrI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=OppT0JY197bGTkfG2lL4XR3SQ7csJ6BdBEDvSMndtM2XfNC/cdR7wRLp90IROGF72tCfLf21z2PgniGY1ZsaL0ekeMXzpAPaV1PCq0GbfR46KvY2l2scI/xF8BVkSISe9Tk5UnqXaqAnUCJDYFEzkvfntwLlmZurHlxfn+k17EA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SamxtMYr; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IKfnGpaB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F2C61F000E9;
-	Fri,  7 Aug 2026 11:46:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786103164;
-	bh=7OdP7PhUG/UOFM13ueV81XY6DTK2t5lg+GjwkiS/lzQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=IKfnGpaBOFLRXBo3KNpZAEcUDQqb+pZIXTJwF9TGkkfYoPNEgstu4ptk6CXIGV7av
-	 Tdi23SgxSe5kYdedcwlQ9kfHkOaIfM4Jzh34Dyr8SgBJ8XW/0WrSwVBVh6o6O7HbdD
-	 5Pa0ok2aEXnVtbQSyonb2qVU1oALVfd2MU//oyt4RSbP2H87tbaaTGui8MIjS+QdFn
-	 zyJQ6wbMyifbJopGINdYNbzzIgOlTLEowUjHwwTbo0iDBc4yF+j31F+gVpYzv4Iv4t
-	 HqUg3ZpzSd43ZKW/XvM/dtatqzBN6QOrA+ptvXfC+qngVaHqmik+66anUqzSsQj9vg
-	 GdRQUZkAuvAZA==
-Message-ID: <d80ad28c-afb9-4bcd-a5ea-a04b496e90ff@kernel.org>
-Date: Fri, 7 Aug 2026 13:46:02 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SamxtMYr"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-930f72317a6so190036585a.3
+        for <mptcp@lists.linux.dev>; Fri, 07 Aug 2026 05:01:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786104088; x=1786708888; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=/4Fn9+FaY+Y4HSl5/K+bHj6b1jCgAXOGljuvuGd/UsE=;
+        b=SamxtMYrOvjBAXVXLSTPtfn47AgZGTckmx4h1k+ui7Zhv+gT/gsc5WRVa9RlrW+nI7
+         GEasFlEJB/JZmlYubSweMk49f9cAZDO9KEsoJdy76Z4sBLJLIUlofztCva0tQjtL3nPF
+         U/itUe1XItkI0Zc6hYDZ/qtwCxGdSUNZYd/A9Fw4AaFsjEagcVnWbVfdwYrboNpxFn5G
+         xFnzYiaCk6Amck5PwnKX7g3Z5sZn6PGRdXt7vW5lethczxQPx84geTAvNfMiOmYy7J8N
+         F8WRmJiuLUWH6eV3T2dF4qmxQ5IxqeV7XjhhhnCTAi5FG70aY2g83tkqS/pdr9R73ZoR
+         uEyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786104088; x=1786708888;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=/4Fn9+FaY+Y4HSl5/K+bHj6b1jCgAXOGljuvuGd/UsE=;
+        b=pZyn4O6MWWhYfkgwfB0HOsFNeKPFL8lDF3ygV4oRScbV+yg07uUpBTUVS29b7642Vc
+         hQ34qrpHoBgfZ4NvL6GkVr3MXNNuvQ5x1aRJafiXEwAUX3q4p0TGHbbpeL+RUphS9xOM
+         UydQ/gt3AuOdr7wkqYQku2n5MybTKZfszz7rPcJCPjENfwYcL6kBoRy4PRLT6oLeDZG1
+         HEV/u50DCnSMJDNkYU8x6cuj1mYv1AaOwYMF6TtnhVxJ+1ZnRVNMcltFsDhuTHFi4eL3
+         GZV5Crd15dp+EHc2gLey8O2zVNAW5LoxZrZZ/smrwPOig1DSxdcYDxdKF/mJTVQtQA8f
+         V7FA==
+X-Gm-Message-State: AOJu0YxBxTt5uBwlKrdy/a9BKnwTZfHB/d7zFaqiB3NFxn/BRS2jb4eL
+	ac0ixC2HUq2sCc/hPktjKPY9RoqeAkr94EqH62tdfmYQEMZjeWUG3FcdS0G1
+X-Gm-Gg: AR+sD10GnVaWVsQtpq2vEgGirbkAteJ09fGvlA5pAwdWY8JmJB0fuReAbUVfV4rbJ49
+	6z6NIe5FW4bEyU+Tn493fCT/LcgBsWyyS1Zuzy6sHnNNSYD0OK5a58JeAhhG1H6mqQraGbvvbiG
+	VRS08fx3yJyV/HhXf35SeE20FKv6zCpcnfTAUnGJRyhVquA6ZFeS5NO49cb3rppE7SFk+Wug+9y
+	2vY9uMF21kyiH2P836EFu42+aq+oddtmXq++nOaO/FH0z9F31AFWOZU7MNtgeYQaGRNUYS3PKKv
+	pan2LodauLs3uxr+NjCTSZ/jF9laD/aBMkt3pAGuFcJG7OyU1gIb6fBAnrLtgj2LWdTy+GGFdwd
+	OL7F2C7NLI4rBj1vsBbrbw15rrVQZ7vIhOJwV5Asb+xrGpVNXdRPnRjrvk5wU746+RCfJMXycM4
+	TAl012xoQCpBeYekrW4UEfxgGYD23nksSz93Vy3wsyNCyb+SobgVPhkMRe2dg94TjrubjdjK3V
+X-Received: by 2002:ac8:6546:0:b0:51c:e14:87ae with SMTP id d75a77b69052e-52ce614ec09mr270568961cf.34.1786104088017;
+        Fri, 07 Aug 2026 05:01:28 -0700 (PDT)
+Received: from [127.0.0.1] ([9.234.151.25])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-52d1659b9f0sm10364451cf.14.2026.08.07.05.01.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2026 05:01:27 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20260807-mptcp-pm-user-remove_addr_entry-v1-1-c080a8a30e40@kernel.org>
+References:
+ <20260807-mptcp-pm-user-remove_addr_entry-v1-1-c080a8a30e40@kernel.org>
+Subject: Re: [PATCH next mptcp-next] mptcp: pm: userspace: make
+ remove_addr_entry static
+Message-ID: <cf89a819-ea0a-8228-b0c4-0721d328de92@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 07 Aug 2026 12:01:26 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 0/2] Drop mptcp_pm_subflow_chk_stale in bpf
-Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1786007209.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
- YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
- c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
- WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
- CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
- nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
- TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
- nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
- VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
- 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
- YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
- AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
- EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
- /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
- MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
- cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
- iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
- jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
- 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
- VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
- BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
- ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
- 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
- 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
- 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
- mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
- Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
- Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
- Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
- x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
- V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
- Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
- HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
- 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
- Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
- voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
- KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
- UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
- vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
- mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
- JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <cover.1786007209.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 
-Hi Geliang,
+Hi Matthieu,
 
-On 06/08/2026 11:10, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> Since mptcp_pm_subflow_chk_stale is removed in the "mptcp: address stall
-> under memory pressure" series, this patch drops it from BPF to keep the
-> BPF tests passing.
+Thank you for your modifications, that's great!
 
-Thank you for fixing that!
+Our CI did some validations and here is its report:
 
-New patches for t/upstream:
-- 3e3fab142e29: "squashed" patch 1/2 in "bpf: Export mptcp packet scheduler helpers"
-- b1602f423178: "squashed" patch 2/2 in "selftests/bpf: Add bpf_burst scheduler & test"
-- Results: 7bf94a8339a9..b67053e5e63b (export)
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/311734=
+77284
 
-Tests are now in progress:
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/5a8ab818b4b0
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1142138
 
-- export: https://github.com/multipath-tcp/mptcp_net-next/commit/58dcc35549b1dfcf3d689fc5e163a25fb11a335c/checks
+
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
