@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07B03DDDC1
-	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 08:42:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453D8363096
+	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 08:42:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786092124; cv=none; b=r+vGzjo7mNmpX1134gzqH4wP6x949efLXK5Zzy3iwWetIN4aKNN+y1l5BBk0oi8xZs/CDrmL4rM4j8G27FAJhF1Ix44zX2vKXcNXrR/sJWnvAxx0WD8kStYCODtfGRBWcHvvMSjejHHXerT41q8lwrMMuKYh/svM160nNacf2PA=
+	t=1786092125; cv=none; b=HBqsL/Xb+qsLM3QW1izAIglJ0IJ/6udtwF1pD1oRy7h/OlEdFpLXROF5OzsrCJaabvv2Gpwk8uZ/GZHKTlnjMjDpsE6iZ0tpe5TMhomqH4o4EdaHIgobwtKd5MDSEmDGfIbptbuIV62nACCLED1kEbS/2rMQ2EaCuLdZJfC5vb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786092124; c=relaxed/simple;
-	bh=AwLbiHudTi5LJ/tSjBIPC6inR6NWLPNk7kx5ujUb2Yw=;
+	s=arc-20240116; t=1786092125; c=relaxed/simple;
+	bh=Iw0J80hmMVIXVDH9gSMCsfAx5zDQWfkb7qWoVUxe5+o=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mL2u4rgKLPMkqRlRmbaWbZU6LScqZ2N99CaS572lJwxw71KPjU+nlKvYdOoDTp2x0InbzQGG1W29s18jIP1JRNWH+ggGpl1tPW2xPVNe5erSfOXOlq0pFQrjTLzCIHDDaNDGOZnf3SWv2p5KmSjD4YLrdK0mxOkVwelPRqAbIiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dHuSXBoh; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=jdaFEJLmKlzGDTlHjqjORv2+eL+X1LBYICcu6AdMwWpZcJj1Dl3UtbtJS7zDaqh6Suk1fYtpAhlsCxXVRhmzY5oVlCtsUI5aPY4vauyzUNcTbC3FVOkE3TislF3qdtXDeKwsrYx7KtkPpbMKUeXvK1Tbkn3z7tsFIUnouDPmHWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BurYvFYp; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dHuSXBoh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A3931F00A3D;
-	Fri,  7 Aug 2026 08:42:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BurYvFYp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C0D21F000E9;
+	Fri,  7 Aug 2026 08:42:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1786092122;
-	bh=0vzWfe8w0VbiaBY3HPEuUOeOEHXCj5FDBoujPFjT5ow=;
+	bh=hk5zDGBo5xWN/u3H1NR9bT2AO5UFDkdvL373SmX+IpE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=dHuSXBohqyeKxmg4B6vlQ8bQoKnarYxBLsjsbKUlMSfYdkf6+4IjM/bWv73UzRhqs
-	 sGOuGUOjwwMEy4rZQYOEdp71JFkrd9YAcJUtB19l6JJVbz5q0GeOAaSTYgALfTI2WP
-	 xe3YhH1wfYx3+h0B4bRBeoDpZ9pxJ+JtZ45OxpvtP1rD4h40We+Zjs+T4RAvXo3+9X
-	 9Bb7reY541sLZPGYguD1gmLUTCXGe5W3IvasH4roIOunevGE8g0L+a5NlzsdTLpDep
-	 ZrDASjoABobniQPD9dqwfhFPt+6ShuCG34nitk7OLciyQhxi9DHkP96lEB44giON+h
-	 ravHTuP4Ff7/A==
+	b=BurYvFYpiKDFH2OlUeAB7BJNwZm57l9s5A2QEnX106MgoaZ+WUQMmx8ka7NugwzUZ
+	 MciQSL1tfMxsY38LOJATMryxLVYL1CZX0JaJ91rvJEwAWGqJMxKmxFnW6oJ4gsUUUM
+	 1bRzg8Hk9RT6aUyDqHlwFGXiJ8B5Xjj7lwpI50T5YmnqBAsjFU6zBZoKl0WZ4fFrhR
+	 JXOHgfSmif46PujRM5x0EGf2dTSg7K+4VBwL78JBBUMh2AZr2vBrZ3FOsiF7jmZgIf
+	 HvHimxlh5WfCc6VGK9DKXH3UR5iKH5WcDgNQKPi/ciKxsW0eKBIazdlkE3lo1OiPLS
+	 r4Ptct2kKnOtw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 07 Aug 2026 10:41:49 +0200
-Subject: [PATCH mptcp-net v3 2/8] mptcp: pm: userspace: lookup: match port
- in priority
+Date: Fri, 07 Aug 2026 10:41:50 +0200
+Subject: [PATCH mptcp-net v3 3/8] mptcp: pm: userspace: ID0 is not part of
+ local_addr_used
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,63 +38,82 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260807-mptcp-pm-userspace-id0-case-v3-2-de9088549924@kernel.org>
+Message-Id: <20260807-mptcp-pm-userspace-id0-case-v3-3-de9088549924@kernel.org>
 References: <20260807-mptcp-pm-userspace-id0-case-v3-0-de9088549924@kernel.org>
 In-Reply-To: <20260807-mptcp-pm-userspace-id0-case-v3-0-de9088549924@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1501; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=AwLbiHudTi5LJ/tSjBIPC6inR6NWLPNk7kx5ujUb2Yw=;
- b=kA0DAAoWfCLwwvNHCpcByyZiAGp1mlKjLOs8y89oZOKzDzdbHjKiAZO8Ku7h2ixl0M5D9/zcx
- 4h1BAAWCgAdFiEEG4ZZb5nneg10Sk44fCLwwvNHCpcFAmp1mlIACgkQfCLwwvNHCpf2RwD8Cl0H
- pNqd/kuhh/yjuQHxV3DeONiQHtgA3xy6VnaXDf8A/0eZGV7XIxWt68XtKp8da+mubXIo+xXhHqs
- gq1Id4EwJ
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2180; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=Iw0J80hmMVIXVDH9gSMCsfAx5zDQWfkb7qWoVUxe5+o=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJKZwUH8e5yf/rrn07OocvBt/ZKrmbl4nyxef+zWRLnb
+ FPeaee2dZSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEwkYB3DPyXnHVx1Jwx3hNxf
+ zvHh16XS9Wu/NE3qSl2mw73VfopLcQ7D/2C9kx8kWzbV6vZdvf70t0e0cFaahkZk0+UbH+bMtHf
+ XYgAA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-In the local address list, there can be entries with the port set to 0
--- corresponding to the source port used by the initial subflow -- and
-others with a specific port.
+The PM's local_addr_used counter doesn't take into account the ID0,
+similar to what is done with the in-kernel PM.
 
-When performing a lookup, it is important to compare the ports to pick
-the right entry: when a specific port is given, then try to match it
-first. If no match is found, try to find entries with the port set to 0.
+When deleting a local address, only decrement the counter if it is not
+linked to the (initial) ID0. Similarly, do not increment it when
+re-adding the exact same entry.
 
-Fixes: 24430f8bf516 ("mptcp: add address into userspace pm list")
+Fixes: 77e4b94a3de6 ("mptcp: update userspace pm infos")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v3: new (Sashiko)
+v3:
+ - split from patch 1.
+ - do the same check when incrementing it to avoid a "leak". (Sashiko)
+ - use a new dedicated helper, clearer.
 ---
- net/mptcp/pm_userspace.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ net/mptcp/pm_userspace.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
 diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 663cbeb79548..3f1471ec3fc7 100644
+index 3f1471ec3fc7..27fed3519d39 100644
 --- a/net/mptcp/pm_userspace.c
 +++ b/net/mptcp/pm_userspace.c
-@@ -33,10 +33,22 @@ mptcp_userspace_pm_lookup_addr(struct mptcp_sock *msk,
- {
- 	struct mptcp_pm_addr_entry *entry;
- 
-+	/* Compare ports when set in addr */
- 	mptcp_for_each_userspace_pm_addr(msk, entry) {
--		if (mptcp_addresses_equal(&entry->addr, addr, false))
-+		if (mptcp_addresses_equal(&entry->addr, addr, addr->port != 0))
- 			return entry;
+@@ -27,6 +27,12 @@ void mptcp_userspace_pm_free_local_addr_list(struct mptcp_sock *msk)
  	}
+ }
+ 
++static bool
++is_init_id0(struct mptcp_pm_addr_entry *entry)
++{
++	return entry->addr.id == 0 && entry->addr.port == 0;
++}
 +
-+	if (addr->port == 0)
-+		return NULL;
+ static struct mptcp_pm_addr_entry *
+ mptcp_userspace_pm_lookup_addr(struct mptcp_sock *msk,
+ 			       const struct mptcp_addr_info *addr)
+@@ -95,7 +101,9 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
+ 							MPTCP_PM_MAX_ADDR_ID + 1,
+ 							1);
+ 		list_add_tail_rcu(&e->list, &msk->pm.userspace_pm_local_addr_list);
+-		msk->pm.local_addr_used++;
++		/* Just to avoid this counter not to decrease when deleted */
++		if (!is_init_id0(e))
++			msk->pm.local_addr_used++;
+ 		ret = e->addr.id;
+ 	} else if (addr_match && id_match) {
+ 		ret = entry->addr.id;
+@@ -121,12 +129,15 @@ static int mptcp_userspace_pm_delete_local_addr(struct mptcp_sock *msk,
+ 	if (!entry)
+ 		return -EINVAL;
+ 
++	/* The initial address ID doesn't increment local_addr_used */
++	if (!is_init_id0(entry))
++		msk->pm.local_addr_used--;
 +
-+	/* Check only wildcard ports if no exact match with the port */
-+	mptcp_for_each_userspace_pm_addr(msk, entry) {
-+		if (entry->addr.port == 0 &&
-+		    mptcp_addresses_equal(&entry->addr, addr, false))
-+			return entry;
-+	}
-+
- 	return NULL;
+ 	/* TODO: a refcount is needed because the entry can
+ 	 * be used multiple times (e.g. fullmesh mode).
+ 	 */
+ 	list_del_rcu(&entry->list);
+ 	sock_kfree_s(sk, entry, sizeof(*entry));
+-	msk->pm.local_addr_used--;
+ 	return 0;
  }
  
 
