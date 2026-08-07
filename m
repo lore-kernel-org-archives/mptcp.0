@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7627041835A
-	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 08:42:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7914940DB2E
+	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 08:42:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786092129; cv=none; b=QCkDPKqnQp+lEeiLD/7JYLLofBuZtjiKlwWd4vNXNpT3zDx2CilpvhALcAIprwHjFY+sQ0ghPK6Fu4PeZW33wCceabSV72dzcIujsW1GRcTbK5UAdXuxzSovhiDT9NQSXMQrFDYo0X/rUKwUwmlWO2Sby1uNPiGjCfBPh/neWjY=
+	t=1786092129; cv=none; b=ayP/Ezl8EAU+anig5Z7OA5f9rGTtkC2BNinRVIqP7KtC3HsBfNyzcmj1SKwxdPofN7d0XRSc9zM8fAyURgq4yYd41I9Q/cBFGTda+ok3EjRTUWSFZUvwVpoXZdnns8j5j1Ybe0USUuJiTWY0aJ6daDWSmqcqgto/ugJoLCdFtXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1786092129; c=relaxed/simple;
-	bh=1l2BrGr9D/QMBsvEatr2e8K8+KHsAP3MHOIJ7Ihr8S8=;
+	bh=pVlY5V1NdZnRmS1Bty8FhCGUI3wTuQyo/9EimjK5A2w=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tEQocHmL8CrbGlWs9gvrHSuGmUsctUbXPX/94v44ynqBOb8kav4UTAq2PXCb6I8ZkgqkI95SYTigD0Satsa0MRE0Q1Yqoeo6y3DGs+QSiaAcNbyl8BYVOGxdwog2CSFjJnKlc9DjQaqldvPrhSUJHGSnsOWaKx74uf4kRuEluT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HhvnuaTf; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=Ct/qJqAWUPP1pvkoUFrCwYgpY9E63/4gmO3GJeDDY1JKZBxxI4ZJM6FafQIxaWtU3LzfSHae5NsLbVbZoOt26sBsB57nYM5t1+cfRayRrH4h3F1bUhHZho2EqvzM/+IvKxcyDdftb0DOYeJ7LRlXRC2N/j+NV1M8wvCc1VNR5U0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DyJ75GhN; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HhvnuaTf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8EA81F000E9;
-	Fri,  7 Aug 2026 08:42:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DyJ75GhN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AA9D1F00A3A;
+	Fri,  7 Aug 2026 08:42:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1786092126;
-	bh=sHPVh6MsIT/s+4EMlZhmg8CEKL4NWWGYMsxIK5TzmKk=;
+	bh=4WRRWXYFEP0SFsYWbYx26UZhcenm1tKE9W3RVC8waQk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=HhvnuaTfaYlsZji2Byc+XsWTjDUkeOUnkqnqCOCQ5HbiUi1/iIwprRciz0aVAFMQ9
-	 fuJ/q1I8TFlqoTE7/5FPIvvUuUFaUkMVW5qYqXVS6P600RNVvoSBASXIDy4kF0yKef
-	 HR6N4RaEpMVIi22AfDmWCnsD1Io2hhZnp41GibNP+igQ4Tbx/vreqkz3fwLCfy7tnE
-	 zgwMcOWyM5qaA3X9gQsJeI3WHPV8Mrx35imv48hhZGoL8C5g4pfX6Nwc98C0MxPABE
-	 i7p5w75kKgGiBk91mEWtCElXUrBSWlqCJLcJWXbuzZhabFtxECPrPQdKu3NX22M4ba
-	 gHRRlNC064PRg==
+	b=DyJ75GhN7hmbh/Xv0oTxXMVAGXMfUM8344S0ooQEGDGmtqQcLHgpfkOFm1ThmNPIn
+	 NUliJiJy8mMxeuTtJEqemwjJ4yE0xFT6+SxApNbhjWWsBrXerjEnAz/PoNdH2LEiPT
+	 l+ZBZrWg9ZNo9fPg4Dp6zWe4z3Xrb56r4fgjTPRGVUb2IKr8yrMA2php7lubffVMmi
+	 72sX/kKVtUPQB0FnR9ptJyip/iWEs3V4y4fZKc6fE3KRdMqTPqaM6O1xzyMPe62SCV
+	 kligEBXJf23KumR1b+DyJMAL2jSZtiQha+PpfR5cKkG0UH057RU++YwvNn43cALzcH
+	 SSIyZZ8hX4HGg==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 07 Aug 2026 10:41:54 +0200
-Subject: [PATCH mptcp-net v3 7/8] selftests: mptcp: join: new ID0 subflow
- from the right IP
+Date: Fri, 07 Aug 2026 10:41:55 +0200
+Subject: [PATCH mptcp-net v3 8/8] mptcp: pm: restrict in-kernel worker
+ actions to this PM
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,64 +38,46 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260807-mptcp-pm-userspace-id0-case-v3-7-de9088549924@kernel.org>
+Message-Id: <20260807-mptcp-pm-userspace-id0-case-v3-8-de9088549924@kernel.org>
 References: <20260807-mptcp-pm-userspace-id0-case-v3-0-de9088549924@kernel.org>
 In-Reply-To: <20260807-mptcp-pm-userspace-id0-case-v3-0-de9088549924@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2087; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=1l2BrGr9D/QMBsvEatr2e8K8+KHsAP3MHOIJ7Ihr8S8=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJKZ4WJ8NSI6X4oeFK7X6bec3v9kuVvzSUyDpn6vxVry
- nIQzj3VUcrCIMbFICumyCLdFpk/83kVb4mXnwXMHFYmkCEMXJwCMBF3NUaG3WsnPO6RPpLIHicy
- 5Y/wFrN93ct8DPZ0eB/Yt2ttsUzzNUaGNadmqxkxxibPYVHgeWUZX8927pyriHnEk6mtD8LtMri
- YAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=784; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=pVlY5V1NdZnRmS1Bty8FhCGUI3wTuQyo/9EimjK5A2w=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJKZ4Vf/Lj4+YX/U77tCy7b+XyW8N5ZzW83ZU3oERXi4
+ Nq+88j9FR2lLAxiXAyyYoos0m2R+TOfV/GWePlZwMxhZQIZwsDFKQATOWXPyPCb7e3zKQVXLaZO
+ OlMl+OlaaV0/c57OHbaQL26tm1z3HZ3P8D+uSpPvUOjpVv+p94tPBN/LYMg4tVW3yeyO69KWyu3
+ m5vwA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-In MPTCP, the local address and port used by the initial subflow has the
-ID "0". It means that when this address and port are used for some
-operations -- e.g. creating a new subflow -- they should be linked to
-the ID0, and no other addresses and ports can get this special ID while
-the initial IP address and port is used.
+No need to check them for the userspace PM.
 
-Hence, this is not correct here to try to create a subflow with the ID
-"0", but from a different IP address. With the first patch of this
-series, this action now returns an error.
-
-Instead of simply using the right IP address, continue to also use the
-wrong one to check that the kernel is correctly not allowing the
-creation of an ID0 subflow with the wrong IP address.
-
-While at it, fix the dumped address: the initial address is not supposed
-to be dumped, similar to what is being done with the in-kernel PM. So no
-"extra" addresses should be printed there.
-
-Fixes: b2e2248f365a ("selftests: mptcp: userspace pm create id 0 subflow")
+Fixes: a49eb8ae95b8 ("mptcp: pm: worker: split in-kernel and common tasks")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+v3: use !mptcp_pm_is_userspace(), to handle WIP BPF MPTCP PM
+---
+ net/mptcp/pm.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 2413c832af03..0dc81eeb0636 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -4143,10 +4143,11 @@ userspace_tests()
- 		wait_event ns2 MPTCP_LIB_EVENT_ESTABLISHED 1
- 		chk_mptcp_info subflows 0 subflows 0
- 		chk_subflows_total 1 1
--		userspace_pm_add_sf $ns2 10.0.3.2 0
-+		# from an IP not linked to ID0: failure expected, no new MPJ
-+		userspace_pm_add_sf $ns2 10.0.3.2 0 2>/dev/null
-+		userspace_pm_add_sf $ns2 10.0.1.2 0
- 		wait_event ns2 MPTCP_LIB_EVENT_SUB_ESTABLISHED 1
--		userspace_pm_chk_dump_addr "${ns2}" \
--			"id 0 flags subflow 10.0.3.2" "id 0 subflow"
-+		userspace_pm_chk_dump_addr "${ns2}" "" "id 0 subflow"
- 		chk_join_nr 1 1 1
- 		chk_mptcp_info subflows 1 subflows 1
- 		chk_subflows_total 2 2
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 4ff12fe25d0b..ecf123526786 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -1141,7 +1141,9 @@ void mptcp_pm_worker(struct mptcp_sock *msk)
+ 		pm->status &= ~BIT(MPTCP_PM_RM_ADDR_RECEIVED);
+ 		mptcp_pm_rm_addr_recv(msk);
+ 	}
+-	__mptcp_pm_kernel_worker(msk);
++
++	if (!mptcp_pm_is_userspace(msk))
++		__mptcp_pm_kernel_worker(msk);
+ 
+ 	spin_unlock_bh(&msk->pm.lock);
+ }
 
 -- 
 2.53.0
