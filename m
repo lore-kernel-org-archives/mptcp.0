@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 876D2424641
-	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 11:36:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7F137B40A
+	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 11:46:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786102575; cv=none; b=Bq0LFnhOR/A1UMyt7cdic2F3HogPksrYeVE2tUaq21DNKOO4kOdVhLYf7XaBQwMcNUk8eEZ+33ToVtU9MkjRisJw1Glit3r3ul5ccFPi56pa/8F7Qa+nPW5L06jooj+pgES76RJvk4euuayBPJSQyWL+w9yqIvnh+sbMRA002Hg=
+	t=1786103172; cv=none; b=ahYdwVQU+WAVRj4NfIsuDKTQCZ0PoTuKnzpnXqFzrSUDcBTC+CI16i3KaLw+9dU7P+Qrtw4Yv9VH9rjhUbZ0Xa949qxY4aY0P2r670VJl3Cq7zddl1wt3Fkf4bJIl44tLTqxgYaWxLdCYBdXhkrbZ0ROeofLGk+5Aeby8tggOyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786102575; c=relaxed/simple;
-	bh=LL0K88Z6KPEEynW24VBbronQMPf1Fd9jl49XRUhLIKM=;
+	s=arc-20240116; t=1786103172; c=relaxed/simple;
+	bh=XbvPG/Ud/hWRYqDjZdkK8/zDIMjX4OxBSuBBjY6552g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=QJAUiCv1lN4yajsRQycNUtMJWHm1Xi47EAi/OR3q4YtAby6d0ISOKDFnq+Z4hSUIeTchCunNdbubAy/Ieh4SWPt1LUTwcPT+gyaOepqMWxakGLlbpnJROZeKhOF/cUrY9hiZEW2gAzcV2CC4zrOBq/gVH8doW19SsGbAs3zFux4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VzEsTRg7; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=AZDaXyP6uB2Vcyp2/rscgRvfOehPlLUf66ZUVIuA6GY3KTHQtFvoc7xtL9KDteBhkSN/BOnoHoJsQBOsuQ55nz8hcxhbKATlRlUt+eacE4OKq3ru5MWhDpdcsCOpjGbijx7/VaAQQckCjHNSaZPBm7qAs5dqXWyn6GHH5XzxOEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kOFUGToU; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VzEsTRg7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE33D1F00A3D
-	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 11:36:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kOFUGToU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05B891F00A3A;
+	Fri,  7 Aug 2026 11:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786102574;
-	bh=vUJs23x1ogw/PcX4jIuc0S0P2WY1PQumFga66vkdeuc=;
+	s=k20260515; t=1786103161;
+	bh=ahqry4BU68ODTew41CaAsr0Zn3dlVxKbKwP1j6g3oDM=;
 	h=Date:Subject:To:References:From:In-Reply-To;
-	b=VzEsTRg781wvU9EJWUg31VbeIjekj+MaskrXFhYN5GDFBv2t9LIkYi+xzqkC7AoCH
-	 dkwmAw1EVBZwXKq+CZCk8soYNIcPv8c+6rx4UE1AaLfpsVgmEE1sC8oqFeBasonyYi
-	 ZxOs/7uqk/FDpVuj3UaYY352NxB5gCe46FBZoPKVmrbEy5kfIU41+o4vjfavAxie8j
-	 gDt/WUAme3UMCWV1Ca2RHbkbd3xmTrwEE7OKlqW6ISkyWunGxI2AzdFJJPm99nKWMd
-	 ZyRd45yD0QP0BpWtGsxN0MXEeIiOIJ80wAJl3g+9yb7WVhD3ra63WjJCwxlSr4jz+I
-	 K6otRKNlj7v0Q==
-Message-ID: <0b5ac4d9-c818-46f9-a7d9-dc43e81efded@kernel.org>
-Date: Fri, 7 Aug 2026 13:36:12 +0200
+	b=kOFUGToUq54Ji9GEDsEQtXmvDimF/qj3sydYcBT1e7esqMPKi79S18g14XuJbB3gq
+	 3GYoYbDkv7TEnpOvaIAqqVSVtpoVuaZf6YKonwBBnT7/dAIt+rqoHiPy+5cKKA2Oxx
+	 5A/mbZYGGEUP9MT4Bd0iLYRcNbILFUE+0f7sT01jaYbBeRycqU1/0xNy2+QowVFUc0
+	 TtDJTfN1rFxz71usqUrXggrpgU+oU1KFtLu8yDNvkRewUoRfjIOX5aZb6cgCQqUmLg
+	 ATEUWjz80lYIpVR7vQrvXxP7siC1MsbBYiDUaeTV0F8qYW1whK6LlpwHy6JEG9plto
+	 kL8ZEh8oE8UqA==
+Message-ID: <6aa24894-a3c2-4c86-912a-0c17d6048433@kernel.org>
+Date: Fri, 7 Aug 2026 13:45:58 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v3 0/8] mptcp: pm: userspace: properly deal with
- the ID0 case
+Subject: Re: [PATCH v2 mptcp-next 0/7] mptcp: address stall under memory
+ pressure
 Content-Language: fr
-To: MPTCP Linux <mptcp@lists.linux.dev>
-References: <20260807-mptcp-pm-userspace-id0-case-v3-0-de9088549924@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <cover.1786026372.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,35 +85,37 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260807-mptcp-pm-userspace-id0-case-v3-0-de9088549924@kernel.org>
+In-Reply-To: <cover.1786026372.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi Paolo,
 
-On 07/08/2026 10:41, Matthieu Baerts (NGI0) wrote:
-> In MPTCP, the local address and port used by the initial subflow has the
-> ID "0". It means that when this address and port are used for some
-> operations -- e.g. creating a new subflow -- they should be linked to
-> the ID0, and no other addresses and ports can get this special ID while
-> the initial IP address and port is used.
-> 
-> Instead of dealing with the ID0 case as an exception, add it to the
-> local addr list, and deal with it like the others, with minor
-> exceptions. That way, it seems easier to maintain instead of adding new
-> exceptions at a few places, at the cost of a few more bytes, which seems
-> OK in this mode.
-> 
-> The first patch modifies add the initial address to the list, and the
-> others remove exceptions, and validate that in the selftests.
+On 06/08/2026 16:45, Paolo Abeni wrote:
+> This *should* address opus-5 feedback, as observed upstream.
+Thank you for the new version, and your patience with AI reviews!
+Hopefully opus-5 will not be even more picky!
 
-FYI, it looks like all comments from Sashiko are addressing issues fixed
-in the following patches, or by other series. Then, I think everything
-is OK on Sashiko's side.
+This new version looks good to me:
 
-(I'm not sure how to tell Sashiko to look at the next patches before
-complaining: the split is needed, because different issues are addressed
-in this series, and introduced by different commits.)
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+
+New patches for t/upstream:
+- b03efee5f28b: mptcp: move the retrans loop to a separate helper
+- 23b698046768: mptcp: move the stale logic out of retrans scheduler
+- 1a2614f8a410: mptcp: let the retrans scheduler do its job
+- 568cc4fa11f2: mptcp: explicitly drop over memory limits
+- c29573ac23e6: mptcp: enforce hard limit on backlog flushing
+- e76d982954d3: mptcp: avoid code duplication in __mptcp_move_skb()
+- b746103fb892: mptcp: implemented OoO queue pruning
+- Results: 775addc43266..7bf94a8339a9 (export)
+
+(+ Geliang's fixes for the BPF selftests)
+
+Tests are now in progress:
+
+- export: https://github.com/multipath-tcp/mptcp_net-next/commit/58dcc35549b1dfcf3d689fc5e163a25fb11a335c/checks
 
 Cheers,
 Matt
