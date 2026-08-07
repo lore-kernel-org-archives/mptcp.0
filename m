@@ -1,52 +1,53 @@
 Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B66326B2D3
-	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 15:17:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D23927466A
+	for <mptcp@lists.linux.dev>; Fri,  7 Aug 2026 15:18:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786115857; cv=pass; b=GGBg71+xiGP+ozZB/3kakkXCAIZh6jP0ku63584Gff+mAnFOCjnd0dNn5x3P1vZ/E2oaGONdN7VFdwjBjFlauFapRFKHyNbmoz7Lx7cftRurJybLPTUYLMttw6SSd2cOe5lkQdAkKhAMaPnVp/d4wuhdMhJM87bH6skxmZCkHig=
+	t=1786115916; cv=pass; b=D/F0hrMOHIOoHR0qFP//igyKcImOtFDvvBvPcgBSGoFrV4pHuPs9NODZ1ysSsUH2nM8PRIc2WJSgQcXma5Z0SFtns1qNBt4zj3/xZhj4mahh9y2nj3TpCLAhLTkwha+XzLf3IdIOH6AdN9+jvxdA9bsCqB3p9IEipiR0fN2uXAw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786115857; c=relaxed/simple;
-	bh=WdhBgFeigE+yD3yXVEdTFHkGfEAIUBIvbl1XB/WzN8M=;
+	s=arc-20240116; t=1786115916; c=relaxed/simple;
+	bh=3xjW7sl1t3xqX7yuV/ji/2KtlbBuLi0T15esoZdvKbY=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tyfnEjSgzh22SpEhrHecPY/QTMRhjslUGGhFotOcYWo4wGE8//eBWe1+XFOFx65pv6v7P12PtURkA6ObnKCOzuE0SzCHSUtVHIEAnsXV3N2zwnseordBBC1t5XmrtmNpbnsEa9bKUvLiyAVSvXkOnJQLvYYXZ6cCAeRhfZ5JS6c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=uuSzctq1 reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.52
+	 Content-Type:MIME-Version; b=LhS57OiUM4kZXHNK8MmbaTWzjE8Fvt/WUhMbqmjikYRTZsW1m0xd/sdBg3/u9ziavapEyBemAovdYSeX9C14GxWPuaQZ/nF7K6WgwOYxCjU8e/yYWD05lhsKvU5V/M2HQVJlnZRD7KiUWH9NkHOuAFgZX3zdW8vooSh/9FzCyzM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=Hy2Fwc5H reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="uuSzctq1"
-ARC-Seal: i=1; a=rsa-sha256; t=1786115853; cv=none; 
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="Hy2Fwc5H"
+ARC-Seal: i=1; a=rsa-sha256; t=1786115914; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=VrMz0j052XG2zRAr4jFzjfy/ke7yr9+jTOTJFaIPkUolCFQyl3p4pTDWRGQjPWyAjobRYuK5G6cYs1PeB4gsy5+bazmCEZfnBCY9C6YvcotHaLGSeuCj5HodOqK94VHBb3AmO6L5OWbcAxZG7x/o1ky1QyDBJMMi7+YM2MKnej4=
+	b=HopasuzWz3An0oxjxkMFQkGcHHp6zfyPOp3/5pQNLfhkVaSjcQtLUtHoTzbNeWlcgRXM+lBYZacUp+ux/B5lCayovbJWZC2vb3lNPPp22g2cD7zpTR75o5j4liyMgkqkvrBfG9IakjXAWQYbi3qjanhRhy9KQA+FR9QrtSAO/cw=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1786115853; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=WdhBgFeigE+yD3yXVEdTFHkGfEAIUBIvbl1XB/WzN8M=; 
-	b=lKzS3W6KmB5CFVi+vdCinW13rr9zVyiY1CkUmCIG58Nd0KswMa8YpOX6NloralNrQOv2lMkq5dj1rIyg6rMtNFGI6zWbeWRBDGFCUidmVBp3CulPD6Wo3nU1fsRux8kEuVfFb2c9gOQSTp8NXUzjtcOPeC9i5Mced5h0HRLoeFw=
+	t=1786115914; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=3xjW7sl1t3xqX7yuV/ji/2KtlbBuLi0T15esoZdvKbY=; 
+	b=FpyWiQezxgwgl864q0Mle55JQ7chlblmWkFjh8d1mIC0Q8UqstNbf1p63XBaVp9tzMs7d4isPEFuzY1zRNcaKoLo7GAwTsuh2tRc4ZOiC2VMtSMqBh/MmAg03TBPf1TTOtoxSnYmobjSfCloYrFE6TtEbiHZS7ZFR1x6zfjggmE=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=mpiricsoftware.com;
 	spf=pass  smtp.mailfrom=shardul.b@mpiricsoftware.com;
 	dmarc=pass header.from=<shardul.b@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1786115853;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1786115914;
 	s=mpiric; d=mpiricsoftware.com; i=shardul.b@mpiricsoftware.com;
 	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=WdhBgFeigE+yD3yXVEdTFHkGfEAIUBIvbl1XB/WzN8M=;
-	b=uuSzctq146V9UpJZKbwHEIMrwzATrzEbrcoLjBWtg6gfiAB8gct+zZOq4ROq4QPt
-	1BhjkI9Bcd0KbMqKDOcPc2vXCohVrEJ8cjU6F3B6BxTTVnQmyuTyPD2b5pEdpfJAln4
-	YGuLoaL34/ZFRs0LOSP2MKYaRdSNhbmZudHeR8sc=
-Received: by mx.zohomail.com with SMTPS id 178611585140778.71476786624612;
-	Fri, 7 Aug 2026 08:17:31 -0700 (PDT)
-Message-ID: <745def4591c1b3b35ace0719159fe2c6cbbab467.camel@mpiricsoftware.com>
-Subject: Re: [PATCH mptcp-next 0/3] mptcp: sched: penalise a slow subflow
- (#345, first cut for your lab)
+	bh=3xjW7sl1t3xqX7yuV/ji/2KtlbBuLi0T15esoZdvKbY=;
+	b=Hy2Fwc5Hcfy/iNmZnTQuj1wTARdpWkEvh8vr3FY8BuuZJ5zs5UXrbZpj3x+jEsvV
+	bomQboQqB+zWHo4O0sSWA6Iqm8wjy/TWjfiwGk3sXv0AtMVqZ6hGm0vg3SITXIysWI1
+	CtFeDp93kYloBIh4ACHrhZAEhNux0TT+X94p9os8=
+Received: by mx.zohomail.com with SMTPS id 1786115911092591.2045643641362;
+	Fri, 7 Aug 2026 08:18:31 -0700 (PDT)
+Message-ID: <087874be7587606209365cb9e9791a9f0e11b934.camel@mpiricsoftware.com>
+Subject: Re: [PATCH mptcp-next 1/3] mptcp: sched: penalise a slow subflow by
+ halving its cwnd
 From: Shardul Bankar <shardul.b@mpiricsoftware.com>
 To: Matthieu Baerts <matttbe@kernel.org>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>
-Date: Fri, 07 Aug 2026 20:47:21 +0530
-In-Reply-To: <1a0d5c3b-05ef-4dbf-bb34-3141ad3d6f58@kernel.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>, janak@mpiric.us
+Date: Fri, 07 Aug 2026 20:48:25 +0530
+In-Reply-To: <085c3192-1adc-4016-ab27-a0c053a2f2c1@kernel.org>
 References: 
 	<20260726-mptcp_penalise_send-v1-0-84485e0e995b@mpiricsoftware.com>
-	 <1a0d5c3b-05ef-4dbf-bb34-3141ad3d6f58@kernel.org>
+	 <20260726-mptcp_penalise_send-v1-1-84485e0e995b@mpiricsoftware.com>
+	 <085c3192-1adc-4016-ab27-a0c053a2f2c1@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.44.4-0ubuntu2.1 
@@ -60,142 +61,229 @@ X-ZohoMailClient: External
 
 Hi Matt,
 
-On Wed, 2026-07-29 at 13:48 +0200, Matthieu Baerts wrote:
+On Wed, 2026-07-29 at 13:49 +0200, Matthieu Baerts wrote:
 > Hi Shardul,
 >=20
 > On 26/07/2026 07:55, Shardul Bankar wrote:
 > >=20
-> >=20
-> > - 2/3 is a guard that is in neither the fork nor what I described.
-> > Without it,
-> > =C2=A0 1/3 regresses badly (about 2x slower in my runs) when the
-> > connection is
-> > =C2=A0 receive-window-limited. In that case the fastest path is capped
-> > by the same
-> > =C2=A0 shared window, so it cannot absorb what the slow path gives up,
-> > and halving
-> > =C2=A0 just sheds the slow path's throughput. 2/3 skips the penalty
-> > while the
-> > =C2=A0 application has queued past the send-window edge (write_seq >
-> > wnd_end), which
-> > =C2=A0 is the sign that the receiver, not our congestion window, is the
-> > bottleneck.
-> > =C2=A0 I kept it a separate patch so you can test 1/3 on its own, or
-> > drop or retune
-> > =C2=A0 2/3 independently. The exact condition is the piece I would most
-> > value your
-> > =C2=A0 lab checking.
 >=20
-> It feels to me that you require this because patch 1/3 doesn't check
-> if
-> the MPTCP connection was "send-buffer-limited", no? But you are doing
-> something very similar, no? Without testing, it feels like this is
-> required not to limit the penalisation to when it is really needed.
+> Could you reduce the size of the comments, please? I understood that
+> LLM
+> tends to leave long comments, but too long is not always good:
+> explanations can go in the commit message, or be understood by
+> reading
+> the conditions (or that's a sign the code should be improved).
+> Ideally,
+> comments should not be needed when reading the code, or limited to
+> one,
+> with some exceptions for complex cases.
+>=20
+> Here for example, I think you could limit the comment to one line:
+>=20
+> /* Penalise subflows with pacing rate < this fraction of the fastest
+> path */
 >=20
 
-Patch 1 does gate on load, with tcp_is_cwnd_limited(); though that is
-not the send-buffer-limited check. The send-buffer-limited check never
-fires at scheduler time in this tree, as the msk buffer has just
-drained into the subflows. Patch 2 guards the receive-window-limited
-case, where patch 1 without it can regress the transfer about 2x in my
-tests. I have kept it as the explicit guard and am still characterizing
-when patch 1 alone would suffice. Would you prefer we drop it?
+Yes, shortened them to one line each and moved the rationale into the
+commit messages.
 
-> >=20
-> >=20
-> > I drove those regimes with a small simult_flows variant (receive-
-> > window-
-> > limited, send-buffer-limited, and autotuned cases). It is a helper,
-> > not
-> > selftest quality, so I did not fold it into the series; it is on a
-> > branch of
-> > my tree, in case it saves your lab time or you spot a case I
-> > missed:
-> >=20
-> > https://github.com/shardulsdk-mpiric/linux/blob/6926c4b7f583/tools/test=
-ing/selftests/net/mptcp/mptcp_sched_penalise.sh
-> >=20
-> > Run it on a baseline and a patched kernel and compare (prefix with
-> > MPTCP_LIB_IP_MPTCP=3D1 if pm_nl_ctl does not work in your setup):
-> >=20
-> > =C2=A0 SCENARIO=3Dsuite=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+> > +
+> > +/* Halve the congestion window (and ssthresh, if cwnd is past it)
+> > of a subflow
+> > + * the scheduler flagged. Runs in the push path under the subflow
+> > socket lock,
+> > + * which protects snd_cwnd. The congestion control grows the
+> > window back,
+> > + * ACK-clocked, and that regrowth is the built-in probe, so no
+> > explicit probing
+> > + * is needed.
+> > + */
+>=20
+> Same here: I think what is important to mention is that it is under
+> subflow socket lock, and you can move the comment about the CC
+> growing
+> the window back below: no explicit probing required then.
+>=20
+
+Ack'ed.
+
+> > +static void mptcp_penalise_cwnd(struct sock *ssk)
+> > +{
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct mptcp_subflow_context=
+ *subflow =3D
+> > mptcp_subflow_ctx(ssk);
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct tcp_sock *tp =3D tcp_=
+sk(ssk);
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u32 cwnd =3D tcp_snd_cwnd(tp=
+);
+> > +
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0subflow->penalise =3D false;
+>=20
+> You probably need to check inet_csk(ssk)->icsk_ca_state =3D=3D
+> TCP_CA_Open
+> again here, under the subflow socket lock, just in case it has been
+> modified in between.
+
+Added: mptcp_penalise_cwnd() now re-reads it under the subflow lock and
+bails if it is no longer Open.
+
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0subflow->last_penalise =3D t=
+cp_jiffies32;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0tcp_snd_cwnd_set(tp, max_t(u=
+32, cwnd >> 1, 2));
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (cwnd >=3D tp->snd_ssthre=
+sh)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0tp->snd_ssthresh =3D max_t(u32, tp->snd_ssthresh >>
+> > 1, 2);
+> > +}
+> > +
+> > =C2=A0/* implement the mptcp packet scheduler;
+> > =C2=A0 * returns the subflow that will transmit the next DSS
+> > =C2=A0 * additionally updates the rtx timeout
+> > @@ -1565,9 +1603,9 @@ struct sock *mptcp_subflow_get_send(struct
+> > mptcp_sock *msk)
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct subflow_send_inf=
+o send_info[SSK_MODE_MAX];
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct mptcp_subflow_co=
+ntext *subflow;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct sock *sk =3D (st=
+ruct sock *)msk;
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u32 pace, burst, wmem;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u32 pace, burst, wmem, max_p=
+ace =3D 0;
+>=20
+> Sashiko is (rightly I think) mentioning that the size of these
+> variables
+> are wrong. I guess a separate fix is needed to change "pace" to
+> "unsigned long" is required. "max_pace" will get this type too then.
+>=20
+
+I am splitting that into its own patch (1/4, Fixes: 3ce0852c86b9).
+
+> > =C2=A0
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Flag the chosen subflow f=
+or cwnd halving (applied in the
+> > push path)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * when its delivery rate is=
+ a small fraction of the
+> > fastest path's and
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * that fast path is saturat=
+ed (cwnd-limited), so moving
+> > load off the
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * slow path is worthwhile. =
+Only penalise a path in
+> > TCP_CA_Open, one
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * whose cwnd is not already=
+ being shrunk by loss recovery,
+> > and at most
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * once per RTT.
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+>=20
+> Same here. Maybe a comment is not needed, or limited?
+>=20
+
+Ack'ed.
+
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0subflow =3D mptcp_subflow_ct=
+x(ssk);
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0subflow->penalise =3D fastes=
+t && ssk !=3D fastest &&
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 (u64)subflow->avg_pacing_rate *
+> > MPTCP_PENALISE_RATE_RATIO < max_pace &&
+>=20
+> (or divide max_pace once before?)
+>=20
+
+Changed to avg_pacing_rate < max_pace / MPTCP_PENALISE_RATE_RATIO.
+
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 inet_csk(ssk)->icsk_ca_state =3D=3D
+> > TCP_CA_Open &&
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 tcp_is_cwnd_limited(fastest) &&
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 mptcp_penalise_throttle_ok(subflow);
+> > +
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0burst =3D min(MPTCP_SEN=
+D_BURST_SIZE, mptcp_wnd_end(msk) -
+> > msk->snd_nxt);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0wmem =3D READ_ONCE(ssk-=
+>sk_wmem_queued);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!burst)
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0return ssk;
+> > =C2=A0
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0subflow =3D mptcp_subflow_ct=
+x(ssk);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0subflow->avg_pacing_rat=
+e =3D div_u64((u64)subflow-
+> > >avg_pacing_rate * wmem +
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> > ./mptcp_sched_penalise.sh
-> > =C2=A0 SCENARIO=3Dunbounded=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 READ_ONCE(ssk-
+> > >sk_pacing_rate) * burst,
+>=20
+> (here as well, it looks like there is an existing bug, and a cast to
+> u64
+> is probably needed for 32-bit system, as pointed by Sashiko)
+>=20
+
+Added in the same fix as the issue reported above.
+
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> > ./mptcp_sched_penalise.sh
-> > =C2=A0 SCENARIO=3Drwnd=C2=A0=C2=A0=C2=A0 RCVBUF=3D262144=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> > ./mptcp_sched_penalise.sh
-> > =C2=A0 SCENARIO=3Dsndbuf=C2=A0 SNDBUF=3D65536=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> > ./mptcp_sched_penalise.sh
-> > =C2=A0 SCENARIO=3Dboth=C2=A0=C2=A0=C2=A0 RCVBUF=3D262144 SNDBUF=3D65536
-> > ./mptcp_sched_penalise.sh
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 burst + wmem);
+> > @@ -1685,6 +1744,9 @@ static int __subflow_push_pending(struct sock
+> > *sk, struct sock *ssk,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct mptcp_data_frag =
+*dfrag;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int len, copied =3D 0, =
+err =3D 0;
+> > =C2=A0
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (mptcp_subflow_ctx(ssk)->=
+penalise)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0mptcp_penalise_cwnd(ssk);
+> > +
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0while ((dfrag =3D mptcp=
+_send_head(sk))) {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0info->sent =3D dfrag->already_sent;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0info->limit =3D dfrag->data_len;
+> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> > index da40c6f3705f..2bf801292563 100644
+> > --- a/net/mptcp/protocol.h
+> > +++ b/net/mptcp/protocol.h
+> > @@ -587,6 +587,7 @@ struct mptcp_subflow_context {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0__unused : 8;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0bool=C2=A0=C2=A0=C2=A0=
+=C2=A0data_avail;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0bool=C2=A0=C2=A0=C2=A0=
+=C2=A0scheduled;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0bool=C2=A0=C2=A0=C2=A0=C2=A0=
+penalise;=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* sc=
+heduler flagged this
+> > subflow for cwnd halving */
 >=20
-> Sounds good! Did you check with a fixed sndbuf higher than the rcv
-> one?
->=20
-
-Yes (SNDBUF 256K, RCVBUF 128K). The guard correctly suppresses the
-penalty there: the receiver is genuinely at a zero window (receive-
-window-limited, not congestion-limited), and it is not slower than
-baseline.
-
-> Also, be careful that with netem, the limits you give to run_test()
-> can
-> influence a lot the bufferbloat. Did you monitor the RTTs during
-> these
-> transfers?
->=20
-
-I do now. The harness samples the subflows' srtt, and it confirms your
-point: the netem queue length drives it (srtt max is about 40 ms with
-the fast path alone, rising to several seconds on a bufferbloated
-path).
-
-> On the other hand, it would be good to validate this with one path
-> having bufferbloat. These patches should also help to improve the
-> situation. (And issue #332 should help even more)
->=20
-
-I added a bufferbloated-slow-path case, but it was too noisy to draw a
-firm conclusion: the completion times swung widely, and the same swing
-was on the baseline kernel, so my setup is not measuring the effect
-cleanly. I would build a more controlled bufferbloat case (a moderate,
-stable queue, and a latency metric rather than completion time). I
-agree #332 is likely the bigger lever there.
-
-> > For the rwnd/sndbuf/both scenarios the simult_flows pass/fail bound
-> > is not
-> > meaningful (it assumes both paths are fully used): read the printed
-> > runtime
-> > and out-of-order counts, not OK/FAIL. The "both" case also
-> > occasionally fails
-> > to bring up the second subflow with the very small SO_SNDBUF; just
-> > rerun it if
-> > you see a single-subflow run.
->=20
-> I see, yes. I think what is important here for #345, is that when the
-> transfer is buffer limited, the slow subflow impact should be
-> reduced.
-> At least not to cause the transfer to be worse than without this slow
-> subflow.
+> (If you don't need to read this locklessly, then you can probably use
+> one unused bit.)
 >=20
 
-Using that as the bar: when send-buffer-limited, the penalised two-path
-transfer beats the fast path alone (about 11.3 s against 14.4 s), with
-roughly 15 to 20% less out-of-order data, so the slow subflow helps.
-When it is bufferbloated, it comes out about even with the fast path
-alone.
-
-
-I have all of these changes ready in my tree. I would rather settle
-whether patch 2 stays (above) and the counters question on 3/3 before I
-post v2, but I am glad to send v2 now if you would prefer to look at
-the code directly.
+It is written under two locks (set in the scheduler under the msk lock,
+cleared in the push path under the subflow lock), so a shared bitfield
+word would race on the read-modify-write, and I kept it a bool for that
+reason. If you see a single-lock way to do it, I am glad to move it to
+a bit.
 
 Thanks,
 Shardul
