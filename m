@@ -1,132 +1,127 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13F415A86D
-	for <mptcp@lists.linux.dev>; Sat,  8 Aug 2026 04:51:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A88280331;
+	Sat,  8 Aug 2026 06:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786164715; cv=none; b=lkw/os3jPJE6OWtt1qXqhnK7thsX+kJgyWZWYizQELTePYtIDEJr+wCJCPpe1OtiWq3EYXNftt6avEnV8LfwgPfaTyiFcXa6dChhWG0r9K/VMi8Iqf/wEzy7gEuqQjzrG8pqWmqVs/P+LvQSzakDhVzON6SadlJCDDS5nwbD8Eg=
+	t=1786172164; cv=none; b=VueTLJbQRu6QsDa2E7DSdz6urteWBlQshx9WL2JGxJ6PtRL2TjLaiHY2CVLn5OjFXdt7LEZpRjbEG1v4y9DOzFUhlfVa/1/mQaoAhAG8TSOFyVCuq61NCLuz8M49wXuCiYIbEgrzL1aJ2vFNI4XftwGWhQftppLY75ZOaVnrNm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786164715; c=relaxed/simple;
-	bh=vkGko7RzYVWtbCOC3kUbv4YiBpZJJZAD0hHWMjR5pmI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=SI7FtSgaoXh37QFoVSQa+ApG/p89vNx3tJEYsdqjVaPmLYCat8JPH3WHVAFt/UdVwje6hbYlb/dhr0z9R9njuiWHLApHUCxXE+SO/3UezcAj7nLcoeAy9Zz4EPTK32fqXneeVdins6x4kAYrZ2nkTR2THntRkJ1PD6eEnLO4SyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eoNjffLL; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1786172164; c=relaxed/simple;
+	bh=mh1sJkeeedZXQLRhRsqDCU/oMbyiEL7p5BsIhFky1w8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PdO3KBTqO2YAB2BuywbJJZqfve7V0aH6BFrtaz+GTniivdsM1Nb8di5cN2JggEuVn450QDj/h+P+xa5uul//+k6j3fEEJhc/l11IcIyLJnuVJBB+EfrpTiHAqQ3aXhiDDjpGYsKnMsjfIXkajaDyy1eRKNpi78dw5GjyEk/jwu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gWVtOcXM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eoNjffLL"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-8143daf89c7so1890017b3.1
-        for <mptcp@lists.linux.dev>; Fri, 07 Aug 2026 21:51:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786164713; x=1786769513; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=xSgwilliFj/GesTvnvEiyLtniqGsVbGSIUL8e8ykhCk=;
-        b=eoNjffLLyCfT1O2cRu36UVP0Re75ZgpzaCnsGJqB6/dltj0BNAmAiGCVVrrhbZ9Ldt
-         p2E0YCFgEiRbBt3Buf9areskzq6VsrU9vAlQiZ5UqetN2wr515hmXkGhSNaVZfSSolOY
-         n6PkVfGxWTM1BNIgjqT5nrCIZ9XV5/5GOnl2PIuQSuQB6fUBkVdImPr/mJxE/kqf079Z
-         I6UaLG12CR8iVfXP+Nne2luChdZ6qU0qWmqnfTjmYSD8uDqOCcyLw5JS/qXhZYzWNors
-         3S81UJMzgaAeMF8IM160N5HR110MOcV2PvlXb0+BEO7tMdjhj5vXJ+cQBSodRHKpkHqe
-         Pyuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786164713; x=1786769513;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=xSgwilliFj/GesTvnvEiyLtniqGsVbGSIUL8e8ykhCk=;
-        b=bXwH/YYL+YCXk5vYNIF/HSxVxhqRdt/7AhGiRNyDpjE0+JZiY9h9zBGDZe6pqU6yDb
-         gdPSX8pl0SNo3YWKfnKNgofWjesSZ1xEDq/R/alhHEmSmKHVOSxOYq3KTgvq1h+I9ahE
-         1VbTlku84d9q2Ggrh4HKy/hRmJxZeCbjcX2nO3Z1lrJYXYY+WwueqkFXCfc/Zu1j5RKV
-         gzlv9ckbTTEcVf189VKlt0CrAvboJJfy8KUcGjC9bqqoaGZI2YGCdyxa+EY+NP0WWoLA
-         Rnhp810ytVAQf8VskWFlL9qpXN2dRePyP+hYHHplXC9Dvjbv+UX8PxVwf5hBbRvZEqVS
-         KZ4w==
-X-Gm-Message-State: AOJu0YyFmXH5vYeTtHmQXQ8jj+Bi0kBI0WrBrpiFS6cx9mri1iD0df8f
-	Wmeegr5VUo0tjFzX257qJqGQ9z54Pma/vDRsLhKvoYXSPsSrFZ/WUY+cS3bK
-X-Gm-Gg: AR+sD10Op/qH0cM/ZZEy1cO+TE1zQ8FodJJNh7OMiKYNm/v1NrkOt1SGRVP9JPacAyp
-	rGg8PuAz4pxJY5GmVNXdHMQkPLhl8jnsi1ZZDTiK6f0KDTbehsLKEJH+96b7ngPH7TGB1uWM71K
-	d797u/T+dQwLxdIo/0xNxkbKwK5XHbpmuRO4vZrC++6j5FDw0B4/wAiBlIQ6k7hfQcdrzDcLCzA
-	tTDrpmpsTnHYDH1TGbPem36wIrGv0K0gQfAll+5ufSoLCwCVHvHiw4vvKFQWVCzIHqqcCohVosw
-	0KY0PXL/7g377pp65sOklB/8xZBW7TO/mhdXw0xiisYyH7Z6gj6vfWdzHMKXvmCH9MJG9C/YXDo
-	WM6bOvdh3vwrG0ctgv1olBxuVROqszHgceznX7zNO0801os6YlRztEprjaE1/7+uULx723v6veT
-	T3TgVWOAijw6hfiQ02sS+JF39bPEnJYDySsJKdEW8VFfP7NmyMcR3c0Opuf107GZigpmlZyNCZB
-	Wg=
-X-Received: by 2002:a05:690c:a94:b0:7f2:9d64:9943 with SMTP id 00721157ae682-8225ba2bf7emr82595357b3.23.1786164712818;
-        Fri, 07 Aug 2026 21:51:52 -0700 (PDT)
-Received: from [127.0.0.1] ([64.236.140.182])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-823f6a0f824sm21419197b3.42.2026.08.07.21.51.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2026 21:51:52 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1786159812.git.tanggeliang@kylinos.cn>
-References: <cover.1786159812.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v5 00/11] Fix socket options used by NVMe
- over MPTCP
-Message-ID: <e1ecd957-8baf-cfdd-41ec-164972e8ddb3@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 08 Aug 2026 04:51:51 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gWVtOcXM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 568DE1F000E9;
+	Sat,  8 Aug 2026 06:55:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786172162;
+	bh=RQXi3ucLUQ3/i/PzsOd0/dubewVrVUJmLRg32xggvMA=;
+	h=From:To:Cc:Subject:Date;
+	b=gWVtOcXMgj5zP3MmaWsGpUlhDNNkHlGy+Qfc9LNAkA5MT6KidPEbGhbV9iF+TvWxp
+	 Qjt2vMW7lLn2D2kAd39EOvTIFd/jvbkKWT4BukhIPnfbIXedE8bHkzlF1TdhWGqw6d
+	 s/MhILIpSNRdd6UkPehqjoLT2wAfcj55scV8Ijuhi/oCOcUkLR3xOzIZFfr52njlp5
+	 Jb9eUX7ps9Vk4nZlSQrGenCOv+0HMgug0I+lpzMAfiRFqn60XAhUJbMYWCYWtXW9Q8
+	 jKzBuLXh9YLKIHYPfVcyC3bhbAgdXe1Yx/gu7Pc84PLTwselFYVp0JamxEmPyj9xLJ
+	 lOqD5cEANOOsA==
+From: Geliang Tang <geliang@kernel.org>
+To: Keith Busch <kbusch@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	David Ahern <dsahern@kernel.org>,
+	Ido Schimmel <idosch@nvidia.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Hannes Reinecke <hare@suse.de>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	linux-nvme@lists.infradead.org,
+	netdev@vger.kernel.org,
+	mptcp@lists.linux.dev
+Subject: [PATCH v2 0/3] nvme-tcp: add IPv6 traffic class support
+Date: Sat,  8 Aug 2026 14:54:58 +0800
+Message-ID: <cover.1786171863.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Thank you for your modifications, that's great!
+This series adds IPv6 traffic class (tclass) support to the NVMe/TCP
+fabrics stack, mirroring the existing IPv4 TOS configuration.
 
-Our CI did some validations and here is its report:
+The current code path only handles IPv4: nvme-fabrics exposes a 'tos'
+option, the host (nvme-tcp) applies IP_TOS to each queue socket, and
+the target (nvmet-tcp) reflects the value received on the wire. This
+leaves no way to control or observe the IPv6 traffic class for NVMe/TCP
+connections, which is a real gap for deployments running over IPv6 or
+MPTCP subflows that need a non-default tclass.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/312384=
-27573
+The series is split into three patches following the natural
+fabrics/host/target layering:
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/b9ff91daca52
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1142524
+1. nvme-fabrics: add IPv6 traffic class option
+   Parse the new 'tclass' option in nvmf_parse_options(), validate
+   that it is in the 0-255 range, and store it in
+   struct nvmf_ctrl_options. Use -1 to mean "transport default",
+   matching the existing tos handling.
 
+2. nvme-tcp: support IPv6 traffic class
+   Advertise NVMF_OPT_TCLASS in the nvme_tcp transport and, when a
+   tclass was provided, set IPV6_TCLASS on each queue socket. The
+   existing IP_TOS path is left untouched so IPv4 behaviour is
+   unchanged.
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+3. nvmet-tcp: support IPv6 traffic class
+   On the target side, differentiate the socket family: for AF_INET
+   keep the existing TOS handling, and for AF_INET6 read the traffic
+   class from the incoming socket and apply it via IPV6_TCLASS.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Follow-up changes outside of this series expose the same option
+through libnvme and the nvme-cli, so the new tclass can be selected
+from the user-facing command line; those patches will be sent in a
+separate series.
 
-For more details:
+This was tested with the selftests mptcp_nvme.sh [1], extended in
+"nvme: add tclass support" to pass "--tclass" on the host side and
+validate that the value is reflected on the wire by the target.
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+v2:
+ - Export and use the ip6_sock_set_tclass() helper in both target and host
+   paths, aligning with the existing ip_sock_set_tos() usage.
+ - Add CONFIG_IPV6 and AF_INET6 guards to avoid build failures when IPv6
+   is disabled.
+ - Use rcv_flowinfo from the target socket instead of np->tclass.
 
+v1:
+ - https://patchwork.kernel.org/project/linux-nvme/cover/cover.1785122120.git.tanggeliang@kylinos.cn/
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+[1]
+https://patchwork.kernel.org/project/linux-nvme/cover/cover.1779934709.git.tanggeliang@kylinos.cn/
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Geliang Tang (3):
+  ipv6: extract and export ip6_sock_set_tclass helpers
+  nvme-tcp: support IPv6 traffic class
+  nvmet-tcp: support IPv6 traffic class
+
+ drivers/nvme/host/fabrics.c | 18 ++++++++++++++++++
+ drivers/nvme/host/fabrics.h |  3 +++
+ drivers/nvme/host/tcp.c     |  8 +++++++-
+ drivers/nvme/target/tcp.c   |  8 ++++++++
+ include/net/ipv6.h          |  3 +++
+ net/ipv6/ipv6_sockglue.c    | 31 +++++++++++++++++++++++--------
+ 6 files changed, 62 insertions(+), 9 deletions(-)
+
+-- 
+2.53.0
+
