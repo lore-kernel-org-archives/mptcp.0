@@ -1,116 +1,131 @@
-Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1657B351C20
-	for <mptcp@lists.linux.dev>; Sun,  9 Aug 2026 09:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B733BD63C
+	for <mptcp@lists.linux.dev>; Sun,  9 Aug 2026 10:24:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786267209; cv=none; b=pyC6u+VEsGgSQrPbJKmDqL7oY3M5beCo71D8/DGXKH7NqKUJK590sdaNp1i2tofE4iw2zIlBMwETLtRzTz2Cln2ks7TWihAGdYymNjYOtUM5YkLv4YixLchWJvW06gADH0RoJ/IiG/OW5wGxl1YO/HV9CjJKwjV3rEknUEfYsfg=
+	t=1786271087; cv=none; b=mfLu5GiiQyPsN+Tl6Gk86N51e1TQGmgUZIo43rE8puBrDbUnTTZE9u0X/ilv/hhd1v6jwQfD2u/YplPK3OJwzv8xWcafwPtI6F3WjbPwK5i0tdkuWFYTjI33xwZlN/0REI0VP3mz+lsF8bIYF/5k/96b8hsYnDJ5v0RhGnLFdvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786267209; c=relaxed/simple;
-	bh=/No38Ra+3pG/453CTZE6d/h8bvZ2aQUcbwyRnr9L1Jw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Uw371MftG5EZTBjFyBE/YoYKFzKH7RKZoyep3Tjx9gkTEYjQqji9JGg7DiKKAAwFo5MAm6r0MpqlD39LO93/YGqAeWLkkKaVgavh57ENikJWJPFGk1XX7CQEI0ExEYPtGHqhNVCrIOh/tO1dvWwk5E6j1EfE+OQVfVvo75Bynmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn; spf=pass smtp.mailfrom=seu.edu.cn; dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b=kBret1gs; arc=none smtp.client-ip=101.71.155.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seu.edu.cn
+	s=arc-20240116; t=1786271087; c=relaxed/simple;
+	bh=AuMnaGdwgDUunu+YHJxk8GyKYHg3yr6c/U0tacURExk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=XHxeIrFtYbZPq4cs32OVPXH5VuzKSKkU2IsyWuGb9PQ373Ql40Np5uyjqVLgUbnWoLH27C2m34dFUX3OeFKrsrnCsd4/JFtf+AnBYzKc2Mb1G0+r/oMqIFLiL7At8csggEqekOECSEMAu/FlpvWAkAKUdvo/jtFFV/3MW8e976w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uz/Z7zuC; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b="kBret1gs"
-Received: from PC-202605011814.localdomain (unknown [223.112.146.162])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 494c179ed;
-	Sun, 9 Aug 2026 17:19:55 +0800 (GMT+08:00)
-From: Runyu Xiao <runyu.xiao@seu.edu.cn>
-To: Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>
-Cc: Geliang Tang <geliang@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	mptcp@lists.linux.dev,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	runyu.xiao@seu.edu.cn,
-	jianhao.xu@seu.edu.cn,
-	stable@vger.kernel.org
-Subject: [PATCH net] mptcp: upgrade network refcount before socket lock
-Date: Sun,  9 Aug 2026 17:19:49 +0800
-Message-Id: <20260809091949.3618191-1-runyu.xiao@seu.edu.cn>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uz/Z7zuC"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-517dc520840so7656741cf.3
+        for <mptcp@lists.linux.dev>; Sun, 09 Aug 2026 03:24:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786271085; x=1786875885; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=kG9d3XfdDWRQEqHE5czAIKzGB+pmay3BwklnIjJ8FOE=;
+        b=Uz/Z7zuCn6xJ4mJRPYQ09Ui02QYlgV7GKVy60yeXBGkB9Tmex7vHcxTJ137W71L/WP
+         gqAv6nVJ14jMbaEgvN1gcWb0xKffh3yFCxgfSnsnPZgsw/ZgEHq130LggWRo4c2OGmpH
+         7PvLFlgGhbyQ+y1CC/3fap3omAY/cMxNMES40TzmJU2Ja+dVqI9nNlnV3aLGhM2mOCf0
+         0SGuyoskUQjpKVXgNzr8WL92xUXMdvOg1z+j7pW6mTmHzMAwIbZiaDzoM/Hnn8Y2nHg/
+         fFMD0zYzG4L+jSPim2b7edvWLQEQofpNVDccimcdnjqZZWI7g6kXHk8yJPAQOjSwIuBK
+         DkNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786271085; x=1786875885;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=kG9d3XfdDWRQEqHE5czAIKzGB+pmay3BwklnIjJ8FOE=;
+        b=MpeXBc6Uo3DKOZx8r6UjWyFYrEC4ADlAp+HzwL8M+VfifLLL7UOPZ+sbdxmrREUCqd
+         g+tkVgv1pqBEEOW31mMDISoCD8BF+naHLhlKhCc2GfX8Mtmiu9JRU4T2S01RKP44X0NW
+         PbGZyPiYVHkGZepc3PITszMeMYH2yCd0xqumcmGrb7zWMC8TbiGPf7AKD5MN2xlVtboR
+         5fVz6pUrriJUE7xDAyxgdV+2Yf2I4IxtB0DX+tSsNoX8Yq2ex8mPCM4hGcZOqrz7sthn
+         4NSp121a4DT0Yc12pwwXkwhURb9W5CZN2epGWycBROmcSthyGejY2tjS1o31YIf7aan5
+         4PwA==
+X-Gm-Message-State: AOJu0YwLcDa9wS72MBmJS+YDk9Y9M0lOJZzDUNlPKiuNsD0a/1bDt06z
+	AFsbQuZ31WoQiF49hZao9yE4rr6c1sOlxSmS3Ni6G4TNmZzN3Msf4ls=
+X-Gm-Gg: AR+sD107mXZc9puwRTbekDAPUBQKhehzMnJWkSMKOaExK5voPNVuOENfGFyYy8F8LLI
+	WmDAW+6dHPllVQpOwSls/ff4c2qsBzT84Oo8TWoxsjqYwATCf4MuOw6YRKUuhlJH2Jt4LuAwlbA
+	ekpRNx2FtzE0g6zm3XsfdIqDKBxkHn0QsCFaPH/X9cevz8aNh7l0zPXdn+byyCM7q8F1J8+3eEK
+	GWLZzysHLSvgpZWcNTcTgCDkb4vmVtEfX38sjtU1z3m+9WFAXF0ibeZ2KRzshOjBop2XChR806m
+	AzXBZ9scckNJtE6h9pqOqO+SCEiyPr4fqVMcgujEB+zcu0nzbjHAxIjX5rnCqk6oEtdN/MqRIyi
+	tDD8+V/VujZIeShgmnKA6OZtgrxZpULJECxzoCrQpBvdxjj4LafSPNz3V/CcbPG5dhUx2g0iKBT
+	clAxA+MnfrVVen/ozCAzegGJmHu0nWCaYhovT+pL+X5Ve1E5/tlfnu7cdyBRcgg5DPkytJ1YW7r
+	A==
+X-Received: by 2002:a05:622a:4c16:b0:517:a9ef:ce30 with SMTP id d75a77b69052e-52d2095eb8fmr143070991cf.17.1786271084580;
+        Sun, 09 Aug 2026 03:24:44 -0700 (PDT)
+Received: from [127.0.0.1] ([20.55.126.243])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-52d165e9353sm48670461cf.23.2026.08.09.03.24.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Aug 2026 03:24:43 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Runyu Xiao <runyu.xiao@seu.edu.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260809091949.3618191-1-runyu.xiao@seu.edu.cn>
+References: <20260809091949.3618191-1-runyu.xiao@seu.edu.cn>
+Subject: Re: [PATCH net] mptcp: upgrade network refcount before socket lock
+Message-ID: <2077ce2a-dd5c-20d2-8bc6-7b4723f5b1ae@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 09 Aug 2026 10:24:42 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9fe5d2584c03a1kunm46e7b7ba7c1df
-X-HM-MType: 10
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWRgWCB1ZQUpXWS1ZQUlXWQ8JGhUIEh9ZQVkaSx4eVk5PSBhMGEkdGE9LSlYeHw
-	5VEwETFhoSFyQUDg9ZV1kYEgtZQVlJSUhVSkpJVUpPTVVKTUlZV1kWGg8SFR0UWUFZT0tIVUpLSE
-	pPSExVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=kBret1gsjsemOBWJ4jcyX3xdnvJLiSf4Q21YdTfV1r5y0C0mI8FafW3R+Zdl2QnKvseYtG/4njoicMHNsv7h9icwhVxovjca+rXAqzFeJBxZmNcdHaQhZf9xu4jPmiSscH/+Gp7PxLu1VDY2hNqyRLv6A/xV/REQl8YG2qFDTzU=; s=default; c=relaxed/relaxed; d=seu.edu.cn; v=1;
-	bh=99FXYjG0C4YFsFDm5Y4zJl930m5GBw7Mg6F1ozywC2w=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset=utf-8
 
-sk_net_refcnt_upgrade() calls get_net_track() with GFP_KERNEL and can enter
-direct reclaim. Calling it while holding the newly created subflow socket
-lock can create a reclaim-to-socket-lock dependency cycle.
+Hi Runyu,
 
-Upgrade the network reference before taking the socket lock. The socket is
-newly created and has not been exposed to other code at this point, so the
-fields changed by sk_net_refcnt_upgrade() are not accessed concurrently.
-The error path still releases the socket normally after the upgrade.
+Thank you for your modifications, that's great!
 
-The PatchProof static-analysis tool detected a GFP_KERNEL allocation while
-the socket lock is held. Manual source review of v7.1.5 and current
-mainline confirmed the lock and allocation ordering.
+Our CI did some validations and here is its report:
 
-A source-level check found `sk_net_refcnt_upgrade()` after
-`lock_sock_nested()` in the original function and before it after this
-change. A POSIX-thread lock-order model made the reclaim lock unavailable
-while the socket lock was held, observed `EBUSY` for the reclaim lock, and
-then completed with the reclaim-first order. The model checks the ordering
-invariant only; it does not execute the kernel MPTCP path. No live lockdep
-MPTCP test or reclaim fault injection was run.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/313064=
+13386
 
-Fixes: 1d2f3d3c6268 ("mptcp: adjust to use netns refcount tracker")
-Cc: stable@vger.kernel.org
-Signed-off-by: Runyu Xiao <runyu.xiao@seu.edu.cn>
----
- net/mptcp/subflow.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/08ac228c62fe
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1142867
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index e1f20ff8fdb4..a9f951cc6a0e 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1786,6 +1786,12 @@ int mptcp_subflow_create_socket(struct sock *sk, unsigned short family,
- 	if (err)
- 		return err;
- 
-+	/* kernel sockets do not by default acquire net ref, but TCP timer
-+	 * needs it.
-+	 * Update ns_tracker to current stack trace and refcounted tracker.
-+	 */
-+	sk_net_refcnt_upgrade(sf->sk);
-+
- 	lock_sock_nested(sf->sk, SINGLE_DEPTH_NESTING);
- 
- 	err = security_mptcp_add_subflow(sk, sf->sk);
-@@ -1795,11 +1801,6 @@ int mptcp_subflow_create_socket(struct sock *sk, unsigned short family,
- 	/* the newly created socket has to be in the same cgroup as its parent */
- 	mptcp_attach_cgroup(sk, sf->sk);
- 
--	/* kernel sockets do not by default acquire net ref, but TCP timer
--	 * needs it.
--	 * Update ns_tracker to current stack trace and refcounted tracker.
--	 */
--	sk_net_refcnt_upgrade(sf->sk);
- 	err = tcp_set_ulp(sf->sk, "mptcp");
- 	if (err)
- 		goto err_free;
--- 
-2.34.1
+
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
