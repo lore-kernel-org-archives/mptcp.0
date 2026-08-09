@@ -1,51 +1,42 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0671DF248;
-	Sun,  9 Aug 2026 00:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1657B351C20
+	for <mptcp@lists.linux.dev>; Sun,  9 Aug 2026 09:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786235481; cv=none; b=TP6LZ/RYMdzCWgRoNd01oYE6pwSgZjvZA6MpyCw9/EdfqCZcXEp5NjNiHZ40r0wONrHuhEX7R5F9aea0cSDE1tXqAZW/wshrysNN6dGW0764s6z6ckXal6yqPTj/XjrVkzll/w8or52iqIt2DFz+kqZqeP69UvBUE50diCAPOlA=
+	t=1786267209; cv=none; b=pyC6u+VEsGgSQrPbJKmDqL7oY3M5beCo71D8/DGXKH7NqKUJK590sdaNp1i2tofE4iw2zIlBMwETLtRzTz2Cln2ks7TWihAGdYymNjYOtUM5YkLv4YixLchWJvW06gADH0RoJ/IiG/OW5wGxl1YO/HV9CjJKwjV3rEknUEfYsfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786235481; c=relaxed/simple;
-	bh=j9VO9pL2Wh87Sq/Iox2bltf8YkRzoI/6sv4U0BuBxno=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Enwcq2DgMKhNeaFMTCBCLaa4MpEcuiMXGIxcAf+QBRu6WAFrlJkuIxf5dsnjzPrZyj+wyBgwB77w0hc+in4sDIcNuQMIC3EhGZJFWUj1DLAMFNgNHkV//pyz8tijveO8ujpJUbwkIAwfEr2kFEhjHUYRvBckMTOIOa0hUeO8DC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GCX7kmXL; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786267209; c=relaxed/simple;
+	bh=/No38Ra+3pG/453CTZE6d/h8bvZ2aQUcbwyRnr9L1Jw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Uw371MftG5EZTBjFyBE/YoYKFzKH7RKZoyep3Tjx9gkTEYjQqji9JGg7DiKKAAwFo5MAm6r0MpqlD39LO93/YGqAeWLkkKaVgavh57ENikJWJPFGk1XX7CQEI0ExEYPtGHqhNVCrIOh/tO1dvWwk5E6j1EfE+OQVfVvo75Bynmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn; spf=pass smtp.mailfrom=seu.edu.cn; dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b=kBret1gs; arc=none smtp.client-ip=101.71.155.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seu.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GCX7kmXL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC4DA1F000E9;
-	Sun,  9 Aug 2026 00:31:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786235480;
-	bh=9kOGCyCVawuLvRZ8C4laxzSUB0WsWqsicvOU4WoPl+w=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=GCX7kmXLoQxkDQKSmgdykjXBkLEmQQMFNiZrRBbbMLY+cyBy9sVqqu7a9xT4w7bV3
-	 Gdw2wJtPHTxaoAXSZr+ea9v4bqLjQaT5SbAzvJinUcTezodzfOcM9fwfrZv6CVCeXZ
-	 LKlRY2Sug4/kEiLgLdibGs8WoifD/jgqcPxKfXRzmVj+kqS1OhRuQtXRiYQzKj72+E
-	 ksWe3LdAkrZAhChgOXwT/7nv/2fJb+YBSNcKRBhYl9atwJHu5yN4UYC13VKLHM6tWe
-	 +T1dy8yB3woMmqNmURRVmn6Fmpi38tKeDed2LfxAyIxpXCD2hrO+S5ZXqa/MDgrjze
-	 6b8+mpwpgAJuA==
-Message-ID: <33e7a2b83f7de3651a3ab77732c869d15408c00f.camel@kernel.org>
-Subject: Re: [PATCH v2 1/3] ipv6: extract and export ip6_sock_set_tclass
- helpers
-From: Geliang Tang <geliang@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Christoph
- Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni
- <kch@nvidia.com>,  David Ahern <dsahern@kernel.org>, Ido Schimmel
- <idosch@nvidia.com>, "David S. Miller" <davem@davemloft.net>,  Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
- <horms@kernel.org>,  Hannes Reinecke	 <hare@suse.de>, Geliang Tang
- <tanggeliang@kylinos.cn>, 	linux-nvme@lists.infradead.org,
- netdev@vger.kernel.org, mptcp@lists.linux.dev
-Date: Sun, 09 Aug 2026 08:31:12 +0800
-In-Reply-To: <20260808125953.1e8488e3@kernel.org>
-References: <cover.1786171863.git.tanggeliang@kylinos.cn>
-		<d06402e4fa9e1c879296dfb8ca5a73e34d4b13d2.1786171863.git.tanggeliang@kylinos.cn>
-	 <20260808125953.1e8488e3@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.2-9 
+	dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b="kBret1gs"
+Received: from PC-202605011814.localdomain (unknown [223.112.146.162])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 494c179ed;
+	Sun, 9 Aug 2026 17:19:55 +0800 (GMT+08:00)
+From: Runyu Xiao <runyu.xiao@seu.edu.cn>
+To: Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>
+Cc: Geliang Tang <geliang@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	mptcp@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	runyu.xiao@seu.edu.cn,
+	jianhao.xu@seu.edu.cn,
+	stable@vger.kernel.org
+Subject: [PATCH net] mptcp: upgrade network refcount before socket lock
+Date: Sun,  9 Aug 2026 17:19:49 +0800
+Message-Id: <20260809091949.3618191-1-runyu.xiao@seu.edu.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -53,61 +44,73 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a9fe5d2584c03a1kunm46e7b7ba7c1df
+X-HM-MType: 10
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWRgWCB1ZQUpXWS1ZQUlXWQ8JGhUIEh9ZQVkaSx4eVk5PSBhMGEkdGE9LSlYeHw
+	5VEwETFhoSFyQUDg9ZV1kYEgtZQVlJSUhVSkpJVUpPTVVKTUlZV1kWGg8SFR0UWUFZT0tIVUpLSE
+	pPSExVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=kBret1gsjsemOBWJ4jcyX3xdnvJLiSf4Q21YdTfV1r5y0C0mI8FafW3R+Zdl2QnKvseYtG/4njoicMHNsv7h9icwhVxovjca+rXAqzFeJBxZmNcdHaQhZf9xu4jPmiSscH/+Gp7PxLu1VDY2hNqyRLv6A/xV/REQl8YG2qFDTzU=; s=default; c=relaxed/relaxed; d=seu.edu.cn; v=1;
+	bh=99FXYjG0C4YFsFDm5Y4zJl930m5GBw7Mg6F1ozywC2w=;
+	h=date:mime-version:subject:message-id:from;
 
-Hi Jakub,
+sk_net_refcnt_upgrade() calls get_net_track() with GFP_KERNEL and can enter
+direct reclaim. Calling it while holding the newly created subflow socket
+lock can create a reclaim-to-socket-lock dependency cycle.
 
-On Sat, 2026-08-08 at 12:59 -0700, Jakub Kicinski wrote:
-> On Sat,  8 Aug 2026 14:54:59 +0800 Geliang Tang wrote:
-> > IPV6_TCLASS handling in do_ipv6_setsockopt() inlines the same ECN
-> > mask
-> > logic and inet6_sk(sk)->tclass write that callers need when
-> > propagating
-> > a tclass value onto a newly created socket.
-> > 
-> > Pull this into small helpers
-> > __ip6_sock_set_tclass()/ip6_sock_set_tclass()
-> > exported via <net/ipv6.h>, so external modules can apply
-> > IPV6_TCLASS
-> > without duplicating the ECN handling.
-> > 
-> > __ip6_sock_set_tclass() will be used by MPTCP's sockopt
-> > implementation
-> > (similar to __ip_sock_set_tos),
-> 
-> not part of this series
+Upgrade the network reference before taking the socket lock. The socket is
+newly created and has not been exposed to other code at this point, so the
+fields changed by sk_net_refcnt_upgrade() are not accessed concurrently.
+The error path still releases the socket normally after the upgrade.
 
-Exactly. The export of __ip6_sock_set_tclass() is not part of this
-series, it belongs to the MPTCP series that adds IPV6_TCLASS support. I
-will move this export to that series instead.
+The PatchProof static-analysis tool detected a GFP_KERNEL allocation while
+the socket lock is held. Manual source review of v7.1.5 and current
+mainline confirmed the lock and allocation ordering.
 
-> 
-> > while ip6_sock_set_tclass() will be used
-> > by nvme-tcp (similar to ip_sock_set_tos).
-> 
-> setsockopt already supports generic kernel callers, sth like:
-> 
->    do_sock_setsockopt(sock, false, SOL_IPV6, IPV6_TCLASS,
->   		      KERNEL_SOCKPTR(&val), sizeof(val));
-> 
-> ? Please don't export helpers for every single sockopt.
+A source-level check found `sk_net_refcnt_upgrade()` after
+`lock_sock_nested()` in the original function and before it after this
+change. A POSIX-thread lock-order model made the reclaim lock unavailable
+while the socket lock was held, observed `EBUSY` for the reclaim lock, and
+then completed with the reclaim-first order. The model checks the ordering
+invariant only; it does not execute the kernel MPTCP path. No live lockdep
+MPTCP test or reclaim fault injection was run.
 
-That is exactly what I planned to do in a follow-up patch - please see
-my reply to [1].
+Fixes: 1d2f3d3c6268 ("mptcp: adjust to use netns refcount tracker")
+Cc: stable@vger.kernel.org
+Signed-off-by: Runyu Xiao <runyu.xiao@seu.edu.cn>
+---
+ net/mptcp/subflow.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-The goal is to make NVMe work with both TCP and MPTCP going forward. To
-achieve that, all sockopt calls in NVMe need to be switched to use
-do_sock_setsockopt() instead of calling individual sockopt helpers.
-This approach abstracts away the protocol differences, so NVMe no
-longer needs to care whether it is dealing with TCP or MPTCP.
-
-Even when MPTCP is not involved, switching to do_sock_setsockopt()
-provides a general improvement to the code. I will include this "switch
-NVMe to do_sock_setsockopt" patch in v3 of this series.
-
-Thanks,
--Geliang
-
-[1]https://patchwork.kernel.org/project/linux-nvme/patch/a1fa5dd3ebb0cafe1bf7948bf2a96436e9452e19.1779934709.git.tanggeliang@kylinos.cn/
-
-
-
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index e1f20ff8fdb4..a9f951cc6a0e 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1786,6 +1786,12 @@ int mptcp_subflow_create_socket(struct sock *sk, unsigned short family,
+ 	if (err)
+ 		return err;
+ 
++	/* kernel sockets do not by default acquire net ref, but TCP timer
++	 * needs it.
++	 * Update ns_tracker to current stack trace and refcounted tracker.
++	 */
++	sk_net_refcnt_upgrade(sf->sk);
++
+ 	lock_sock_nested(sf->sk, SINGLE_DEPTH_NESTING);
+ 
+ 	err = security_mptcp_add_subflow(sk, sf->sk);
+@@ -1795,11 +1801,6 @@ int mptcp_subflow_create_socket(struct sock *sk, unsigned short family,
+ 	/* the newly created socket has to be in the same cgroup as its parent */
+ 	mptcp_attach_cgroup(sk, sf->sk);
+ 
+-	/* kernel sockets do not by default acquire net ref, but TCP timer
+-	 * needs it.
+-	 * Update ns_tracker to current stack trace and refcounted tracker.
+-	 */
+-	sk_net_refcnt_upgrade(sf->sk);
+ 	err = tcp_set_ulp(sf->sk, "mptcp");
+ 	if (err)
+ 		goto err_free;
+-- 
+2.34.1
