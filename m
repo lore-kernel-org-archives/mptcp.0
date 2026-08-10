@@ -1,135 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A64369D63;
-	Mon, 10 Aug 2026 10:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5833BBFC5
+	for <mptcp@lists.linux.dev>; Mon, 10 Aug 2026 10:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786356116; cv=none; b=qeQdReHnzHRzRRfpZg7jpGj0EZMyluIl5BxM6Z9/MiG/l2GxreuX17WivEY7VMoo7JPhHN2c2F3PAapHxXgI3XVwmlwMPIW0fDnGO88vymterFDE1GRs6qBaOITbaAGObuDGkYQeUvmW5tau8F8QpP7ptmor74zU1po296fWRlg=
+	t=1786358874; cv=none; b=YOt4l5GxbJDuxNrKPdGPIOilIWGo/j582neg05Ynr4RvMezGa0p6AYcKpUpNRosACHIucpIjW2abYGAReZg07UA8l2T7bo85J4nLs0nIlEg3IlIjhMXUyveggzfpAiYflV4pwDYud4xl6nvpUCXEGyGmoiIfBH54tQ1pqowLAQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786356116; c=relaxed/simple;
-	bh=2u7WR45fdwk7K/czlnqoUIfX37QB1Gg2xz8pc35hIU8=;
+	s=arc-20240116; t=1786358874; c=relaxed/simple;
+	bh=meNf7+x8ONkI1UHgZWbnslFcjB9GTa13B68C9HYYvH8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KrseMG5UDCx7QQ8NwWnToHqPZWGO3E3C1JM+0+XGhw8VTKzZI7ubrFNxdRpxJAq+hB763FpnrrKFucVwqQXzJOSLJnXYkT/A2AHxROsSN0pbGVTCLlen13/2I+wHeEPwXCJapwzqJTEWNQYlBZGo15z8CKfi+yDmrh3A/0rRahE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iOBl2NVz; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=uxnsMApp76nS50v4RynMhLstl0Sgtk0QMpWTOaM8IvYVPbGEFJMVWMwaTXkyKARtex+KPXvTimukPgdTBU87MQYVmuGd9w3HGdPwNln4LYRmg3nwqLHojaYuobyP0SDIOVyntCxOQWwmwx2qAHvYDLMHZoN+mzrZhirXHXp2ZrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PF9GLfCP; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iOBl2NVz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFCE31F000E9;
-	Mon, 10 Aug 2026 10:01:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786356114;
-	bh=HW3GX6I3wLPnT6+ysjemWmbbHJD7ingYVdNWRjY+rhA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=iOBl2NVzxlO09qwfYE3kn2bUuIVS9Y4zppQAYDx8oB2rgRp2Tbgk+xphWyERzl9WE
-	 Yybk277qlZbSdmIeb1m4DrpLQx4S21iBARl4mVG5Trn1wVAzHKOisIn48UcNzdvBMl
-	 pUcYWy2EAJmCY6TzQDi7lYBuKz7pzdPZODl2XoSzTu3wJeiMocMrcm3UMzUBSKW4+f
-	 uBa9DC8RMyB7MqhGLcmjYArk2U6VngwuKIoV6q8bRZDr5Ux+cgE64MY5YXr8+9u4yi
-	 bt772TXdY2m98ViwsnHhO3kZ5tCK3fcptPOR00m1wlcZXZZcfzOQn/lzLLFNN7/B7f
-	 KwGa5Vayjb1CQ==
-Message-ID: <8d1f2ccc-df93-41b0-9873-a159aca7c03c@kernel.org>
-Date: Mon, 10 Aug 2026 12:01:47 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PF9GLfCP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1786358872;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CoeY0NwHkX1PzwAI0P/PD5TTdIj3G9cAX1yqmI1hONs=;
+	b=PF9GLfCPi5OoSLr8tcWy7QtxuDIPmyOWYpb+DUpBe1MBcQfUUi4c3wFfFVcCE1UPUx9SwU
+	gjz9BR0e5tiUMGOQwrnSn6l7obONeYNsn1aGHEfhTPpL+huoI3v2IVlQol00HRuviiocpE
+	JkzSlXj6Ihdrz2JrDtn6Hko4+ToPP90=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-549-nWfZ58xEP_GeDZwRp90zDQ-1; Mon, 10 Aug 2026 06:47:50 -0400
+X-MC-Unique: nWfZ58xEP_GeDZwRp90zDQ-1
+X-Mimecast-MFC-AGG-ID: nWfZ58xEP_GeDZwRp90zDQ_1786358869
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-495569acf8dso10449915e9.1
+        for <mptcp@lists.linux.dev>; Mon, 10 Aug 2026 03:47:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786358869; x=1786963669;
+        h=content-transfer-encoding:content-type:in-reply-to:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=CoeY0NwHkX1PzwAI0P/PD5TTdIj3G9cAX1yqmI1hONs=;
+        b=UEc2dPdxAzZZM0Uidbsr5IMjTlVrnw4sSoCccvFjBqvtu4iUUp5Jv3ox52RFFXMeaN
+         6LThyeCUN/JEGEud+HZW12/gYq6an5LHiTWBYljKSxxiXICw4wzTtwP78CIm5h8r4HZh
+         AgMMR1JKyz05zVDy6hsS2vUutxKlRJWAKzXa9IrHsWSatmIh7OXnQbgdRfVUwxJrL2G0
+         TMsERth8ZAuAKgOm/MUFtZVzB5+YgXtmXtbVUE+yWtEp3YzI7rKbUdwYQTR1STYtGQfV
+         O5lnwnk6UB7maKcPrH1lK1/ESvfTjJRZLNePyPun7dSVQWVwFvY2zTnAndbgIbSyTuKq
+         HgXw==
+X-Gm-Message-State: AOJu0Yxc2g6Pm3+ArYBoFQE6A+a51KgSStwdoUwjR5kQc8AfwZs2cr1J
+	asYEUiwnqZ/3laGsUf0oR9zKc0JrFUEgiF29EavcOy9C/sDRNUppu05mVG94A21m4wBuE3JqbGY
+	DWOjI4RAZKmKQBaKi2VjKG8AlnvPxIZCM11bFEwaGnTenIBGmPy680xx1
+X-Gm-Gg: AR+sD12RnE9rIXwVvDiSO5cTiwFw65xvId7xSCaAeEB/Z+4aiQ8T58r3qDqfRXN97O7
+	8Vd2yZBy9WPOlZ8SVjqX7SmTO6qLtDmCNRIHg5OroZdPUREjbfOtkn59Uy6QB8xjL2qcm/Rz+5a
+	1QRdwBKjp9Ig9vWRaY7RopDe2JHyOj1baAsLLQnNcePgTuTsjd0NG9WhRMCSqSNodrwvDFP3vAs
+	sY96SU4mEsAGyrPWmksh8pmwHoYDBWOnElUIOO25nLBPEHIFlyNhHBedciRfSCTeSzUEUkgJ2d2
+	NLen5O0MwEgd5bCyNDLLQwYNfgmgQu1Gj1ivB6x9/GlbD1h90RqHSHV3TC3dvs/Z1wmqwIgA3VE
+	/2JJcBM7Q8Bnn6WAldP69mTV3rNQ5ZDzRNXmZCCdkN1di6YgUagomNLN1dscp6Hl7TXSbytKk3z
+	U=
+X-Received: by 2002:a05:600c:c043:b0:495:7a5a:d96c with SMTP id 5b1f17b1804b1-4994e7d89cfmr433715515e9.18.1786358869170;
+        Mon, 10 Aug 2026 03:47:49 -0700 (PDT)
+X-Received: by 2002:a05:600c:c043:b0:495:7a5a:d96c with SMTP id 5b1f17b1804b1-4994e7d89cfmr433714915e9.18.1786358868722;
+        Mon, 10 Aug 2026 03:47:48 -0700 (PDT)
+Received: from [192.168.188.103] (ip239-44-231-195.pool-bba.aruba.it. [195.231.44.239])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4995427a244sm411365895e9.10.2026.08.10.03.47.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2026 03:47:48 -0700 (PDT)
+Message-ID: <353d21d0-1820-40cf-8854-a22622f75e09@redhat.com>
+Date: Mon, 10 Aug 2026 12:47:46 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net] mptcp: upgrade network refcount before socket lock
-Content-Language: fr
-To: Runyu Xiao <runyu.xiao@seu.edu.cn>, Mat Martineau <martineau@kernel.org>
-Cc: Geliang Tang <geliang@kernel.org>, "David S . Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, mptcp@lists.linux.dev,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, jianhao.xu@seu.edu.cn,
- stable@vger.kernel.org
-References: <20260809091949.3618191-1-runyu.xiao@seu.edu.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
- YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
- c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
- WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
- CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
- nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
- TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
- nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
- VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
- 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
- YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
- AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
- EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
- /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
- MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
- cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
- iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
- jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
- 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
- VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
- BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
- ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
- 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
- 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
- 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
- mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
- Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
- Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
- Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
- x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
- V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
- Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
- HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
- 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
- Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
- voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
- KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
- UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
- vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
- mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
- JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20260809091949.3618191-1-runyu.xiao@seu.edu.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 mptcp-next 7/7] mptcp: implemented OoO queue pruning
+To: Matthieu Baerts <matttbe@kernel.org>, Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <cover.1786026372.git.pabeni@redhat.com>
+ <be9dcbef291a424fdd54d19fc72f9f28fb239b81.1786026372.git.pabeni@redhat.com>
+ <80572775-6e76-4c79-83e2-efdedbd3f3b8@redhat.com>
+ <b0d961b3-7a06-4237-92b2-67d8ab2ff28b@kernel.org>
+ <a8cf012f365d1885f773d5959829cb42298477bb.camel@kernel.org>
+ <eb437699-4e3a-422d-93fa-3efde2985189@kernel.org>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <eb437699-4e3a-422d-93fa-3efde2985189@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: a0yWkXlaTs1S8zPebTesPrwxjS6igeVEMEGKO3UinvI_1786358869
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Runyu,
-
-On 09/08/2026 11:19, Runyu Xiao wrote:
-> sk_net_refcnt_upgrade() calls get_net_track() with GFP_KERNEL and can enter
-> direct reclaim. Calling it while holding the newly created subflow socket
-> lock can create a reclaim-to-socket-lock dependency cycle.
+On 8/8/26 6:34 PM, Matthieu Baerts wrote:
+> On 08/08/2026 04:31, Geliang Tang wrote:
+>> It seems you forgot to update this on the export branch.
 > 
-> Upgrade the network reference before taking the socket lock. The socket is
-> newly created and has not been exposed to other code at this point, so the
-> fields changed by sk_net_refcnt_upgrade() are not accessed concurrently.
-> The error path still releases the socket normally after the upgrade.
-
-Thank you for the patch! Even if I agree with Gang that the commit
-message could be improved, the code looks good to me, and probably best
-not to increase the traffic on the netdev list. So it looks good to me:
-
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
-@Net maintainers: this patch can be applied to net directly.
-
-> The PatchProof static-analysis tool detected a GFP_KERNEL allocation while
-> the socket lock is held. Manual source review of v7.1.5 and current
-> mainline confirmed the lock and allocation ordering.
+> Arf, indeed I did, my bad... good catch!
 > 
-> A source-level check found `sk_net_refcnt_upgrade()` after
-> `lock_sock_nested()` in the original function and before it after this
-> change. A POSIX-thread lock-order model made the reclaim lock unavailable
-> while the socket lock was held, observed `EBUSY` for the reclaim lock, and
-> then completed with the reclaim-first order. The model checks the ordering
-> invariant only; it does not execute the kernel MPTCP path. No live lockdep
-> MPTCP test or reclaim fault injection was run.
+> I just fixed it in our tree (and the alignment of the next line), but I
+> will wait for Paolo's feedback to know if he judges that a new version
+> is needed for upstream, or if that can be done in follow-up patches.
+> 
+> Maybe only the comments on the last patch actually requires
+> modifications? (but maybe can be done in a follow-up patch?)
+> 
+> https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20260807-net-next-mptcp-oooq-pruning-v3-0-dbc1eb853cc3%40kernel.org
+I commented on the netdev thread. I would like to opt for the follow-up
+strategy. I confirm opus-5 is too good for me. I'll try to cook and send
+the series ASAP, but I suggest not rushing them to netdev, can go via
+the net tree after the PR.
 
-Interesting. By chance, any reproducer to share?
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+/P
 
