@@ -1,174 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D861A9F97;
-	Sun,  9 Aug 2026 18:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9CF312836
+	for <mptcp@lists.linux.dev>; Mon, 10 Aug 2026 01:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786298621; cv=none; b=PQLpWrcUdtssBqcKT9EXwD3SmAEvZKZBk2vo5hYDiUt+7ymfQnOfdaJNK/QcKHzuhGcPjl34AHb1hrRSP8mp6HQDcE1vvD46QPMGK4SQRxPkuh0qQL9m5uTQsco8gOIvAqY//Xpr3mhPbAObOB5DYxdRwR8AUq7kNC2E1hSq64c=
+	t=1786327174; cv=none; b=jox9wSfZ91GX5NEPna9f/uNOk/qXLEpQTn71hE1cgI/AzvqQs5bZBp1S2dOlbVfV0Ubx7k0bhwx1mzwG0pRDb0XBZtoUB80KBM6GFwNoYtmxIDCFu95dcxIr7SLXQCIX4c+Y/cZzAKUA34hdSW58dV+kGWBd61UIDlc0PBWKTcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786298621; c=relaxed/simple;
-	bh=a/EftZtQS7ASezEqXYlNIwKxlARantvOPOdduisv4+g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T33mEbkO9b7/8bdCp2v/xcen7XezDllKggp8Y2K16gpg/gWlnmRdFJglUzkPSkwD/6lYbdFevv+C5j5+SgvLRw8z0o80dnYfyf18z7TwCWfhSQJd/3kC46z7DQ5kYedNXDETiVl9rhHO5Vk4g2hd/V78mVebfgG1pwL+7jVN1I4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hii7hPjp; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786327174; c=relaxed/simple;
+	bh=/OvbaL8KTP3ySpTWRBsx162Pho9Kv/QSjRAlqlRYHdU=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=FU1Yj56CaojUbHu8ThrBeUUk9zImpEdkOuJl81oTuBh02kikwOyxrDA6CylUs580jJXTg9Fe2fr62o5HQOe6GvQ0wm+mE/ic3mzLHgslLiL9Ea76w/M1zD+2AoUm2htzFQBcKBIK/dJHepoYtn/PI11UOwzXm4ei3NwTZcO6npc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LU5JD8n9; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hii7hPjp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A0E41F000E9;
-	Sun,  9 Aug 2026 18:03:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786298619;
-	bh=61cs1Wdrbr0AZr0ie9jpePC83AtXC1J7PEfOU0Q2Jnk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Hii7hPjpXFAbBtDs0FtOyGAsqGtqI8MkZqXaK/mz0iwM09wQ53RsN93zUfWZLx/Hy
-	 JNh89DbHT/P8pTsm/SPs6b3yKML8jE1B1iTCBfWAr6BTIcs4SmgyG+6i10ZokC9mh/
-	 VQgcxjboCkvmWccduJK3csEkmRrxhFtxWYVol0t9VO6m+ofx9pZV3L9rt8vT6wsJVx
-	 ytHTowm+za+T1pVEy7cy61kiCyinnMBhfdVvEy9iopIHruJi7ZNZS0NVyv5DYBOGrk
-	 4FgI08bZ07uOd8vQPEx0Z5e7cPn21yzmSmP9/XYYB5SfXe3S7lzZ6aAYJs3wSxdNFB
-	 PAseBB/6ivxdQ==
-Message-ID: <5ac3773c-4a6f-4796-a43f-545c3c42271c@kernel.org>
-Date: Sun, 9 Aug 2026 20:03:31 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LU5JD8n9"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net v3 2/2] mptcp: fix MP_CAPABLE token migration when
- cloning reqsk
-Content-Language: fr
-To: Ren Wei <weir@nebusec.ai>, netdev@vger.kernel.org, mptcp@lists.linux.dev
-Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- ncardwell@google.com, kuniyu@google.com, daniel@iogearbox.net, kafai@fb.com,
- kylebot@openai.com, david.lee@trailofbits.com, vega@nebusec.ai,
- caoruide123@gmail.com, sashiko-bot@kernel.org
-References: <cover.1785995291.git.caoruide123@gmail.com>
- <a12d76b7f2305b5a8d64c3d6c3585e39684ff792.1785995291.git.caoruide123@gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <a12d76b7f2305b5a8d64c3d6c3585e39684ff792.1785995291.git.caoruide123@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1786327171;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yhKBG07NgjbV88z5PyXBU/EsEEP+BqBeiN00w24gQvQ=;
+	b=LU5JD8n994QqhU8jAs0wc13L36UNwvy80gs6mWrOrmD3h/ZwPh6UICoSJXn0dqF/7vq2u0
+	C38yml6cmr74UMU0QWTDyhYs0Vh0Vo5N0y3v+jxXjmBf1ffNDZ+i1XwJVd10b9LEkt4lIp
+	BUhpnzwrlv1Y0Krtd1etQ5OAlNLtO0k=
+Date: Mon, 10 Aug 2026 01:59:28 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: gang.yan@linux.dev
+Message-ID: <4e57509daf45aa8968140e7a7279ad0699249bf6@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH net] mptcp: upgrade network refcount before socket lock
+To: "Runyu Xiao" <runyu.xiao@seu.edu.cn>, "Matthieu Baerts"
+ <matttbe@kernel.org>, "Mat Martineau" <martineau@kernel.org>
+Cc: "Geliang Tang" <geliang@kernel.org>, "David S . Miller"
+ <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
+ Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Simon
+ Horman" <horms@kernel.org>, mptcp@lists.linux.dev,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ runyu.xiao@seu.edu.cn, jianhao.xu@seu.edu.cn, stable@vger.kernel.org
+In-Reply-To: <20260809091949.3618191-1-runyu.xiao@seu.edu.cn>
+References: <20260809091949.3618191-1-runyu.xiao@seu.edu.cn>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Ren, Ruide,
+August 9, 2026 at 5:19 PM, "Runyu Xiao" <runyu.xiao@seu.edu.cn mailto:run=
+yu.xiao@seu.edu.cn?to=3D%22Runyu%20Xiao%22%20%3Crunyu.xiao%40seu.edu.cn%3=
+E > wrote:
 
-On 06/08/2026 13:14, Ren Wei wrote:
-> From: Ruide Cao <caoruide123@gmail.com>
-> 
-> TCP request migration clones pending request sockets with
-> inet_reqsk_clone().  For MPTCP MP_CAPABLE requests this byte-copies the
-> token_node hlist state into the clone even though the token table still
-> names the original request.
-> 
-> Moving the token only after inet_ehash_insert() succeeds leaves a window
-> where the cloned request is already globally visible from the ehash but
-> the token table still points at the original request.  Reordering the
-> move after clone but before ehash exposure closes that window, but
-> concurrent RX can still race on the old request and observe that the
-> token was already moved.
-> 
-> Move MP_CAPABLE token request ownership during MPTCP request cloning
-> under the token bucket lock.  Make mptcp_token_accept() and
-> mptcp_token_destroy_request() re-check token_node under the same lock and
-> treat an already moved or removed request as a normal race instead of
-> warning.
-> 
-> If the passive MP_CAPABLE socket cannot claim the token, fail
-> mptcp_sk_clone_init() and let the subflow fall back instead of
-> installing a socket with mismatched token ownership.
+Hi,
 
-Thank you for the new version!
+Thanks for your patch.
 
-I have one major comment, please see below:
-> Fixes: c905dee62232 ("tcp: Migrate TCP_NEW_SYN_RECV requests at retransmitting SYN+ACKs.")
+>=20
+>=20sk_net_refcnt_upgrade() calls get_net_track() with GFP_KERNEL and can=
+ enter
+> direct reclaim. Calling it while holding the newly created subflow sock=
+et
+> lock can create a reclaim-to-socket-lock dependency cycle.
+>=20
+>=20Upgrade the network reference before taking the socket lock. The sock=
+et is
+> newly created and has not been exposed to other code at this point, so =
+the
+> fields changed by sk_net_refcnt_upgrade() are not accessed concurrently=
+.
+> The error path still releases the socket normally after the upgrade.
+>=20
+>=20The PatchProof static-analysis tool detected a GFP_KERNEL allocation =
+while
+> the socket lock is held. Manual source review of v7.1.5 and current
+> mainline confirmed the lock and allocation ordering.
+>=20
+>=20A source-level check found `sk_net_refcnt_upgrade()` after
+> `lock_sock_nested()` in the original function and before it after this
+> change. A POSIX-thread lock-order model made the reclaim lock unavailab=
+le
+> while the socket lock was held, observed `EBUSY` for the reclaim lock, =
+and
+> then completed with the reclaim-first order. The model checks the order=
+ing
+> invariant only; it does not execute the kernel MPTCP path. No live lock=
+dep
+> MPTCP test or reclaim fault injection was run.
+>=20
+
+Maybe=20the commit message seems too long. Could you please send a v2 wit=
+h a more
+concise commit message? For your reference, here is a suggested simplifie=
+d version:
+
+'''
+sk_net_refcnt_upgrade() performs a GFP_KERNEL allocation (via get_net_tra=
+ck()
+=E2=86=92 ref_tracker_alloc()), which can enter direct reclaim and establ=
+ish a
+socket_lock =E2=86=92 fs_reclaim dependency. Move it before lock_sock_nes=
+ted(), mirroring
+the convention documented in net/rds/tcp.c:rds_tcp_tune().=20
+
+The=20socket is freshly created and unpublished at this point, so sk_net_=
+refcnt/
+ns_tracker are not touched by any concurrent path; the error path still r=
+eleases
+via sock_release() which handles both refcounted and non-refcounted track=
+ers.
+'''
+
+Please note that this suggested text is generated by AI, so please review=
+ it
+carefully before adopting it. Also, the next patch can only be sent to mp=
+tcp@lists.linux.dev,
+no need to cc to others.
+
+
+> Fixes: 1d2f3d3c6268 ("mptcp: adjust to use netns refcount tracker")
 > Cc: stable@vger.kernel.org
-> Reported-by: Vega <vega@nebusec.ai>
-> Assisted-by: Codex:gpt-5.4
-> Reported-by: Sashiko <sashiko-bot@kernel.org>
-> Closes: https://sashiko.dev/#/patchset/86e2514b533bf4d55d4aa2fdbf1404022e8c9430.1776149210.git.caoruide123%40gmail.com
-> Signed-off-by: Ruide Cao <caoruide123@gmail.com>
-> Signed-off-by: Ren Wei <weir@nebusec.ai>
+> Signed-off-by: Runyu Xiao <runyu.xiao@seu.edu.cn>
 > ---
->  net/mptcp/protocol.c   | 12 +++++----
->  net/mptcp/protocol.h   |  4 ++-
->  net/mptcp/subflow.c    |  2 ++
->  net/mptcp/token.c      | 61 +++++++++++++++++++++++++++++++++++++-----
->  net/mptcp/token_test.c |  4 +--
->  5 files changed, 68 insertions(+), 15 deletions(-)
-> 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index ca644ec53eed..07eaa6858d05 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -3608,17 +3608,19 @@ struct sock *mptcp_sk_clone_init(const struct sock *sk,
->  	 */
->  	mptcp_set_state(nsk, TCP_ESTABLISHED);
->  
-> +	if (!mptcp_token_accept(subflow_req, msk)) {
-> +		mptcp_release_sched(msk);
-> +		inet_csk_prepare_forced_close(nsk);
-> +		tcp_done(nsk);
+>  net/mptcp/subflow.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+>=20
+>=20diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index e1f20ff8fdb4..a9f951cc6a0e 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1786,6 +1786,12 @@ int mptcp_subflow_create_socket(struct sock *sk,=
+ unsigned short family,
+>  if (err)
+>  return err;
+>=20=20
+>=20+ /* kernel sockets do not by default acquire net ref, but TCP timer
+> + * needs it.
+> + * Update ns_tracker to current stack trace and refcounted tracker.
+> + */
+> + sk_net_refcnt_upgrade(sf->sk);
+> +
+>  lock_sock_nested(sf->sk, SINGLE_DEPTH_NESTING);
+>=20
+>=20 err =3D security_mptcp_add_subflow(sk, sf->sk);
+> @@ -1795,11 +1801,6 @@ int mptcp_subflow_create_socket(struct sock *sk,=
+ unsigned short family,
+>  /* the newly created socket has to be in the same cgroup as its parent=
+ */
+>  mptcp_attach_cgroup(sk, sf->sk);
+>=20=20
+>=20- /* kernel sockets do not by default acquire net ref, but TCP timer
+> - * needs it.
+> - * Update ns_tracker to current stack trace and refcounted tracker.
+> - */
+> - sk_net_refcnt_upgrade(sf->sk);
+>  err =3D tcp_set_ulp(sf->sk, "mptcp");
+>  if (err)
+>  goto err_free;
 
-Here, you cannot call tcp_done(nsk): nsk is an MPTCP socket, not a TCP
-one. You probably want to destroy the msk instead.
+LKGM!
+You can add 'Acked-by: Gang Yan <gang.yan@linux.dev>' in your next patch.
 
-(In theory, your reproducer launched on a kernel with your patches
-applied on top of MPTCP's export branch [1] should produce a warning)
+Thanks
+Gang
 
-Apart from that, Clashiko has a few comments. Do you mind checking them
-and reply to each comment here, before sending a new version, whether
-you agree/disagree or if it is unclear, please?
-
-[1] https://github.com/multipath-tcp/mptcp_net-next/
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-pw-bot: cr
-
+> --=20
+>=202.34.1
+>
