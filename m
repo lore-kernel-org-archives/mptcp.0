@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297D2431484
-	for <mptcp@lists.linux.dev>; Mon, 10 Aug 2026 17:39:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C58B242D65
+	for <mptcp@lists.linux.dev>; Mon, 10 Aug 2026 18:26:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786383599; cv=none; b=XT6yWLfdl/L5GODuRMMoZCw77XDNRVGlTTHex+ugQF3I5POg7biYjWR8vz14jrsuIbKm+eGqpAOXdFC8thCtE1OUGvPVbdAWZf4ERZVmn6u/4iFqpn7Rf9rwfmfHSl1Eo9TFsZc/JFdwJILcd7rsEa+98hS2aNjvRVRvJThGXUo=
+	t=1786386395; cv=none; b=HGFsqhwTFhRt+4CU9KzPxRguclLhX1u/7xz90WRzFCCySEPLrSPezuMDx0ORs3sakb1C3MZtP5uJEBDJTaUlTegFq0wPk2zi6zZjoucZZHbJRM7ZhC4044mmk4SjmCTgNlAiM6zYFZbRgtlhPTxE8zVh0qt6XKNDjafugthiMjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786383599; c=relaxed/simple;
-	bh=m0HuI9k8dTTkyPYsV8F6wzFlY+vpExjE37g+DmQedIo=;
+	s=arc-20240116; t=1786386395; c=relaxed/simple;
+	bh=4omNLJ7CBQ8iyV8IPKVaDLQtN74ldcEj/ufJycZxoh0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FcFZrzHiOsaynDR1uudcJo+XfgckZKYi0R5bOMqiJk69CECCABt/yhxuGc0SdNErU5bl60DXdkpx+k2liugMVcKP0Wh9muxyqVFAbc1fQlmn4jYDxgwpH1mlaEvCY4CBKg4UvAcHGDrpUQaeIa0GsbzevArbEIz5zo2pT3AEdgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vi2U1oUn; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=UOUG2rlTnGkxFc99b+RedsnWL1vQPv7hFABEG/2CenZFB6jsXWEYSPGOWB7jmXKHOfdCX88/fBG7QPFgbsqKROc28XC4AoUkFjlQtnx4FcjfXJ0LCuzl6V/K24W+hxRPME0QkCkSzdoA2eeqmQ1DwJQl3YnX14i2f1TJ7Fw5bWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L+4lUth3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vi2U1oUn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D8D51F000E9;
-	Mon, 10 Aug 2026 17:39:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L+4lUth3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19D711F000E9;
+	Mon, 10 Aug 2026 18:26:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786383598;
-	bh=R10Dq4Mnt3UkadX2F5m9HK9FF5TCYXf2tHXFxOJjXIU=;
+	s=k20260515; t=1786386393;
+	bh=ocnQkC/tXPV9qQW4FAwCuhXI2fmdsqpfGb7GxjPQUjY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Vi2U1oUnsB0MfMYo2p1oSLNz7rqB2IsSOEs9X7dh10gEoMT64GaL0qGSXRXWX/yYr
-	 cHR3gP5MfzwKv+J8OPUPgLa/8aSU7HaDDPqFRVzEvWtFayJIdhytp+MS4ykjaY6UER
-	 D6QFG4LaLpVoVKUDjGC/6vH+WpTFsQCm5S4OQkdJChkNE9a/SGRSHmUiqHJeF/opQ5
-	 Hoa6AwmcSgzWp8GW9I4xgN7e0bs+BsGR1Ic7j2hj8cPqw/ACA/TSkPPKdfz2qbR/7o
-	 ljE2XplglcaZyiplztQed1SkciCCf04XGqiQpiY/evmRYtRKO42iok4oSOX3x/J/GY
-	 zB4fsxg3jpsSw==
-Message-ID: <05693030-fe2c-4eed-8ed1-fb60da3273f7@kernel.org>
-Date: Mon, 10 Aug 2026 19:39:55 +0200
+	b=L+4lUth3k5bvBAFJUQ2rB/qRcJ5SV40ngZT+chyvc5W5XpyKPet+buye5YmrfKjOA
+	 cCvthXNafWQolrXIEFU9px5JQxcoeNVTjVuOruV86QKTubWemLnx6hmy5yO7bJNypf
+	 foW8gD5Qk6sxUwYqFHwyFqvYy9jiUq9bS+dxhWOXZVKRf56AE5UW3L2ni2GtM9nXjK
+	 BLClonucMu0lNd5lGRCEZKm93bRFqeqmsmZeA8djkcD+407FTjTXhxsSh1+TVn4ENi
+	 rja0IAcQcPNS+h9dlOM8O6b+KW2tTY7DNLjivWjBbjs0b8LZCxkfYEbeKIFOYxrgZA
+	 H9gYyHT+4aFag==
+Message-ID: <738bee18-3404-4a51-9393-e32cee609f66@kernel.org>
+Date: Mon, 10 Aug 2026 20:26:31 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v3] mptcp: pm: userspace: unify entry free path
- via RCU callback
+Subject: Re: [PATCH mptcp-net v2 0/3] mptcp: fix TCP fallback on
+ single-subflow MP_FAIL
 Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>, Mat Martineau <martineau@kernel.org>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, mptcp@lists.linux.dev
-References: <de8555fcb235d0e93c02c20bf47231846d30841d.1782886142.git.tanggeliang@kylinos.cn>
+To: Chenguang Zhao <chenguang.zhao@linux.dev>, mptcp@lists.linux.dev
+Cc: Chenguang Zhao <zhaochenguang@kylinos.cn>
+References: <20260715061830.1057851-1-chenguang.zhao@linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,54 +86,36 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <de8555fcb235d0e93c02c20bf47231846d30841d.1782886142.git.tanggeliang@kylinos.cn>
+In-Reply-To: <20260715061830.1057851-1-chenguang.zhao@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang, Mat,
+Hi Chenguang,
 
-On 01/07/2026 08:11, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 15/07/2026 08:18, Chenguang Zhao wrote:
+> From: Chenguang Zhao <zhaochenguang@kylinos.cn>
 > 
-> In mptcp_pm_nl_remove_doit(), sk_omem_alloc is decremented immediately
-> but the memory is freed later via kfree_rcu(). This allows a CAP_NET_ADMIN
-> user to bypass the socket memory quota and exhaust kernel memory by
-> accumulating RCU callbacks.
+> When a valid MP_FAIL is received and infinite fallback is still allowed
+> (single contiguous subflow), RFC8684 section 3.7 requires leaving MPTCP
+> mode. Today the stack only clears allow_subflows and defers the real
+> fallback to the later infinite-map transmit path. If no data is sent in
+> between, the peer can still complete the 4th ACK as MPTCP and keep using
+> MPTCP options.
 > 
-> Fix by using call_rcu() with a custom callback that uses sock_kfree_s()
-> to free the entry and decrement sk_omem_alloc atomically. To ensure the
-> socket remains valid until the callback runs, take a reference with
-> sock_hold() when storing the socket pointer in the entry, and release it
-> with sock_put() in the callback.
+> This series falls back immediately after the MP_FAIL response, rejects
+> later joins via mptcp_is_fully_established(), annotates allow_subflows
+> with READ/WRITE_ONCE, and adds an MPFailFallback MIB while switching to
+> mptcp_try_fallback().
 > 
-> Convert the synchronous freeing paths in free_local_addr_list() and
-> delete_local_addr() to use the same RCU callback, ensuring the socket
-> reference is properly released.
-> 
-> Additionally, mptcp_userspace_pm_append_new_local_addr() now checks
-> SOCK_DEAD under the spinlock before allocating. A SYN+JOIN handler
-> holding an msk reference from mptcp_token_get_sock() could otherwise
-> race with __mptcp_destroy_sock() - sock_orphan() sets SOCK_DEAD and
-> then mptcp_userspace_pm_release() clears the list, so a new entry
-> allocated after that point would never be freed and its sock_hold()
-> would leak the msk permanently.
+> Patch 1 fixes the fallback behaviour.
+> Patch 2 annotates allow_subflows accesses.
+> Patch 3 adds the dedicated MIB and uses the common fallback helper.
+Thank you for this series and your patience. It looks like the CI didn't
+manage to validate this. Do you mind rebasing it on top of the 'export'
+(or 'for-review') branch please?
 
-Thank you for this patch, and your patience!
-
-It looks OK to me, but TBH, I'm not confident enough to judge if this is
-the best way to address this issue, plus if this issue mentioned by
-Sashiko [1] can really be observed. By chance, do you have any
-reproducer for the original issue?
-
-@Mat: WDYT?
-
-Also, after "mptcp: pm: userspace: properly handle the ID0 case" [2], I
-guess we will need a sock_hold() in mptcp_pm_userspace_created as well.
-
-[1]
-https://sashiko.dev/#/patchset/cover.1782457962.git.tanggeliang@kylinos.cn
-[2]
-https://lore.kernel.org/20260807-mptcp-pm-userspace-id0-case-v3-1-de9088549924@kernel.org
+I also have a couple of comments/questions on the different patches if
+you don't mind.
 
 Cheers,
 Matt
