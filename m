@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C58B242D65
-	for <mptcp@lists.linux.dev>; Mon, 10 Aug 2026 18:26:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02BB431E73
+	for <mptcp@lists.linux.dev>; Mon, 10 Aug 2026 18:26:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786386395; cv=none; b=HGFsqhwTFhRt+4CU9KzPxRguclLhX1u/7xz90WRzFCCySEPLrSPezuMDx0ORs3sakb1C3MZtP5uJEBDJTaUlTegFq0wPk2zi6zZjoucZZHbJRM7ZhC4044mmk4SjmCTgNlAiM6zYFZbRgtlhPTxE8zVh0qt6XKNDjafugthiMjA=
+	t=1786386399; cv=none; b=qwyEICairD9zsyt01LH0wcol8z9+8RsVSwV5gW9y3YBv8/p9+7AVXmCPp7l5pSRfK8p6rw1EgWSKxKsdMCJSIVRDhwvWqOYOJWml0ODzzjTbroxryA/ilGhmPkoJLwAOuC3yL2zo6sgFCl/4xbEehCflPA8+C4/l+jd0SUM3tYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786386395; c=relaxed/simple;
-	bh=4omNLJ7CBQ8iyV8IPKVaDLQtN74ldcEj/ufJycZxoh0=;
+	s=arc-20240116; t=1786386399; c=relaxed/simple;
+	bh=+gvuKVo2PAgdZNIxtIXqNQEe2imo8jDX/IRrkv7yQYg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UOUG2rlTnGkxFc99b+RedsnWL1vQPv7hFABEG/2CenZFB6jsXWEYSPGOWB7jmXKHOfdCX88/fBG7QPFgbsqKROc28XC4AoUkFjlQtnx4FcjfXJ0LCuzl6V/K24W+hxRPME0QkCkSzdoA2eeqmQ1DwJQl3YnX14i2f1TJ7Fw5bWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L+4lUth3; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=mQrDROb+N627fV1qDpYu5B0F82k0dY96VjIqqBS1qPFT7zSvOsgk8R5MdVYK95pVSlGE6Yn7itmL/V/lAKYJ77a/fbpVhoVQNCHeDcJvgzKKU6GI9MP5h1emJKGaVkSMQt2uyy9hLc+7Ou4q/qn3dFxAfMhpnq0NnPtJ8X6EeJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AWMPosDS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L+4lUth3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19D711F000E9;
-	Mon, 10 Aug 2026 18:26:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AWMPosDS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 243AA1F000E9;
+	Mon, 10 Aug 2026 18:26:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786386393;
-	bh=ocnQkC/tXPV9qQW4FAwCuhXI2fmdsqpfGb7GxjPQUjY=;
+	s=k20260515; t=1786386397;
+	bh=0wP74IlmN7bEwG2Wm/PaL6JBgMz5DPAUIh422il7wYA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=L+4lUth3k5bvBAFJUQ2rB/qRcJ5SV40ngZT+chyvc5W5XpyKPet+buye5YmrfKjOA
-	 cCvthXNafWQolrXIEFU9px5JQxcoeNVTjVuOruV86QKTubWemLnx6hmy5yO7bJNypf
-	 foW8gD5Qk6sxUwYqFHwyFqvYy9jiUq9bS+dxhWOXZVKRf56AE5UW3L2ni2GtM9nXjK
-	 BLClonucMu0lNd5lGRCEZKm93bRFqeqmsmZeA8djkcD+407FTjTXhxsSh1+TVn4ENi
-	 rja0IAcQcPNS+h9dlOM8O6b+KW2tTY7DNLjivWjBbjs0b8LZCxkfYEbeKIFOYxrgZA
-	 H9gYyHT+4aFag==
-Message-ID: <738bee18-3404-4a51-9393-e32cee609f66@kernel.org>
-Date: Mon, 10 Aug 2026 20:26:31 +0200
+	b=AWMPosDSnEsGhX2EmuYyWpDa/KhcIprKtno7Wjz0a8a6wsPXZiScVEg15uuhbakNs
+	 K/RG1xq8SY44o2ryUiduvaIw0/KQis0xQfrGY8zWD/CwJeQpylqM8tLbcHz/6NRxuD
+	 7jspBUnqaltXPiJuf9fIo1ptRQy6PLnBJlpGcF50lURvJ8NbpoL6u5BDH4jaqHdOb4
+	 xKLrAgwgRAfytFNRx+UQaPCE9efHX/l8c/26qKPSCEEwypF7tZfZZswj9neCm3IUej
+	 GDEe9WevSvjotWF+j+IiwrzxmS2mYHKCyN6jgLMXdXAc6Nt6exl5c3cwJwJvgeaF26
+	 1z0hqzUFED/Uw==
+Message-ID: <b2828798-945d-4dbf-80c3-3d77a293a5e2@kernel.org>
+Date: Mon, 10 Aug 2026 20:26:35 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 0/3] mptcp: fix TCP fallback on
- single-subflow MP_FAIL
+Subject: Re: [PATCH mptcp-net v2 1/3] mptcp: fallback to TCP on MP_FAIL with a
+ single subflow
 Content-Language: fr
 To: Chenguang Zhao <chenguang.zhao@linux.dev>, mptcp@lists.linux.dev
 Cc: Chenguang Zhao <zhaochenguang@kylinos.cn>
 References: <20260715061830.1057851-1-chenguang.zhao@linux.dev>
+ <20260715061830.1057851-2-chenguang.zhao@linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,9 +87,9 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260715061830.1057851-1-chenguang.zhao@linux.dev>
+In-Reply-To: <20260715061830.1057851-2-chenguang.zhao@linux.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Chenguang,
 
@@ -96,26 +97,216 @@ On 15/07/2026 08:18, Chenguang Zhao wrote:
 > From: Chenguang Zhao <zhaochenguang@kylinos.cn>
 > 
 > When a valid MP_FAIL is received and infinite fallback is still allowed
-> (single contiguous subflow), RFC8684 section 3.7 requires leaving MPTCP
-> mode. Today the stack only clears allow_subflows and defers the real
-> fallback to the later infinite-map transmit path. If no data is sent in
-> between, the peer can still complete the 4th ACK as MPTCP and keep using
-> MPTCP options.
+> (single contiguous subflow), RFC8684 §3.7 requires leaving MPTCP mode.
+> The stack only cleared allow_subflows and deferred the real fallback to
+> the later infinite-map transmit path. Before any data is sent, a peer
+> could still complete the 4th ACK as MPTCP and keep using MPTCP options.
 > 
-> This series falls back immediately after the MP_FAIL response, rejects
-> later joins via mptcp_is_fully_established(), annotates allow_subflows
-> with READ/WRITE_ONCE, and adds an MPFailFallback MIB while switching to
-> mptcp_try_fallback().
+> Fall back immediately after sending the MP_FAIL response, and teach
+> mptcp_is_fully_established() to reject joins after fallback or when
+> subflows are disallowed. If the out-of-order queue is non-empty, reset
+> the subflow instead of leaving a half-fallback state.
 > 
-> Patch 1 fixes the fallback behaviour.
-> Patch 2 annotates allow_subflows accesses.
-> Patch 3 adds the dedicated MIB and uses the common fallback helper.
-Thank you for this series and your patience. It looks like the CI didn't
-manage to validate this. Do you mind rebasing it on top of the 'export'
-(or 'for-review') branch please?
+> Fixes: 1e39e5a32ad7 ("mptcp: infinite mapping sending")
 
-I also have a couple of comments/questions on the different patches if
-you don't mind.
+Thank you for this fix. However, it is a bit big, and it might be
+difficult to backport.
+
+> Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
+> ---
+>  net/mptcp/pm.c       | 51 +++++++++++++++++++++++++++++++++++++++++++-
+>  net/mptcp/protocol.c |  7 +++++-
+>  net/mptcp/protocol.h | 18 ++++++++++------
+>  3 files changed, 67 insertions(+), 9 deletions(-)
+> 
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 6afd39aea110..c1f5c3ced4ee 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -870,7 +870,15 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
+>  
+>  	pr_debug("fail_seq=%llu\n", fail_seq);
+>  
+> -	/* After accepting the fail, we can't create any other subflows */
+> +	/* MP_FAIL on a single contiguous subflow: fall back to TCP.
+> +	 * allow_infinite_fallback is cleared once other subflows join or
+> +	 * non-contiguous data is retransmitted; in that case ignore MP_FAIL
+> +	 * here (the peer should reset the failing subflow instead).
+> +	 *
+> +	 * Send the MP_FAIL (+ DSS) response before setting FALLBACK_DONE,
+> +	 * otherwise mptcp_established_options() would drop all MPTCP options
+> +	 * on this ACK. InfiniteMapTx is accounted later when the map is sent.
+> +	 */
+>  	spin_lock_bh(&msk->fallback_lock);
+>  	if (!msk->allow_infinite_fallback) {
+>  		spin_unlock_bh(&msk->fallback_lock);
+> @@ -882,9 +890,50 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
+>  	if (!subflow->fail_tout) {
+>  		pr_debug("send MP_FAIL response and infinite map\n");
+>  
+> +		/* Infinite mapping requires contiguous data. With OoO still
+> +		 * queued, do not leave allow_subflows=false without
+> +		 * FALLBACK_DONE; tear the subflow down instead (RFC8684 §3.7).
+> +		 */
+
+Maybe enough to just say:
+
+ /* RFC8684 §3.7: Infinite mapping requires contiguous data */
+> +		if (!RB_EMPTY_ROOT(&msk->out_of_order_queue)) {
+> +			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_FALLBACKFAILED);
+> +			subflow->send_mp_fail = 1;
+
+I didn't check the reason, by why do you need to set this before the reset?
+
+> +			mptcp_subflow_reset(sk);
+> +			return;
+> +		}
+
+This could maybe go in a dedicated commit? Easier to explain and
+backport, no? Also, it is different from "fallback to TCP on MP_FAIL
+with a single subflow".
+
+Also, out_of_order_queue() is checked in mptcp_try_fallback(), maybe
+this part is not needed? I guess it is still needed because we don't
+want to send an MP_FAIL here. But do we want to send an MP_FAIL also in
+case of fallback with a single subflow?
+Note: maybe we do, I didn't check the RFC about this specific case, but
+if it is not clear about that, maybe easier to check for fallback before
+sending the MP_FAIL → in theory, we shouldn't get an MP_FAIL with a
+single subflow, except with checksum IIRC, so let's use the simplest
+path for this unlikely case. WDYT?
+
+>  		subflow->send_mp_fail = 1;
+>  		subflow->send_infinite_map = 1;
+>  		tcp_send_ack(sk);
+> +
+> +		/* RFC8684 §3.7: after accepting MP_FAIL with a single
+> +		 * subflow, leave MPTCP mode and never revert. No dedicated
+> +		 * fallback MIB yet; InfiniteMapTx is counted when the map
+> +		 * is transmitted. Handle pending DATA_FIN like
+> +		 * mptcp_try_fallback().
+> +		 */
+
+Maybe just:
+
+  /* RFC8684 §3.7: fallback with a single subflow */
+
+
+> +		spin_lock_bh(&msk->fallback_lock);
+> +		if (__mptcp_check_fallback(msk)) {
+> +			spin_unlock_bh(&msk->fallback_lock);
+> +			return;
+> +		}
+> +		if (!msk->allow_infinite_fallback) {
+> +			spin_unlock_bh(&msk->fallback_lock);
+> +			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_FALLBACKFAILED);
+> +			mptcp_subflow_reset(sk);
+> +			return;
+> +		}
+> +		set_bit(MPTCP_FALLBACK_DONE, &msk->flags);
+> +		spin_unlock_bh(&msk->fallback_lock);
+> +
+> +		if (READ_ONCE(msk->snd_data_fin_enable) &&
+> +		    !(sk->sk_shutdown & SEND_SHUTDOWN)) {
+> +			gfp_t saved_allocation = sk->sk_allocation;
+> +
+> +			sk->sk_allocation = GFP_ATOMIC;
+> +			sk->sk_shutdown |= SEND_SHUTDOWN;
+> +			tcp_shutdown(sk, SEND_SHUTDOWN);
+> +			sk->sk_allocation = saved_allocation;
+> +		}
+
+Quite a bit of duplicated code. I think it would be better to introduce
+patch 3 first, with the following tag, then use mptcp_try_fallback() here:
+
+  Fixes: c65c2e3bae69 ("mptcp: track fallbacks accurately via mibs")
+
+(or use another MIB counter, and change it in -next? I don't think
+that's better)
+
+WDYT?
+
+>  	} else {
+>  		pr_debug("MP_FAIL response received\n");
+>  		WRITE_ONCE(subflow->fail_tout, 0);
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index cb9515f505aa..5b9522caaf43 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1299,7 +1299,12 @@ static void mptcp_update_infinite_map(struct mptcp_sock *msk,
+>  	mpext->infinite_map = 1;
+>  	mpext->data_len = 0;
+>  
+> -	if (!mptcp_try_fallback(ssk, MPTCP_MIB_INFINITEMAPTX)) {
+> +	/* Fallback may already have been completed on MP_FAIL reception;
+> +	 * still account for the infinite mapping being transmitted.
+> +	 */
+> +	if (__mptcp_check_fallback(msk)) {
+> +		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPTX);
+> +	} else if (!mptcp_try_fallback(ssk, MPTCP_MIB_INFINITEMAPTX)) {
+>  		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_FALLBACKFAILED);
+>  		mptcp_subflow_reset(ssk);
+>  		return;
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 4a2d40cd7b13..03f0b33694d7 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -369,7 +369,7 @@ struct mptcp_sock {
+>  
+>  	spinlock_t	fallback_lock;	/* protects fallback,
+>  					 * allow_infinite_fallback and
+> -					 * allow_join
+> +					 * allow_subflows
+
+Probably best to fix that only on -next: this will cause issues during
+the backport, just to fix a comment introduced by another commit.
+
+>  					 */
+>  
+>  	struct list_head backlog_list;	/* protected by the data lock */
+> @@ -947,12 +947,6 @@ static inline void mptcp_start_tout_timer(struct sock *sk)
+>  	mptcp_reset_tout_timer(mptcp_sk(sk), 0);
+>  }
+>  
+> -static inline bool mptcp_is_fully_established(struct sock *sk)
+> -{
+> -	return inet_sk_state_load(sk) == TCP_ESTABLISHED &&
+> -	       READ_ONCE(mptcp_sk(sk)->fully_established);
+> -}
+> -
+>  static inline u64 mptcp_stamp(void)
+>  {
+>  	return div_u64(tcp_clock_ns(), NSEC_PER_USEC);
+> @@ -1290,6 +1284,16 @@ static inline bool mptcp_check_fallback(const struct sock *sk)
+>  	return __mptcp_check_fallback(msk);
+>  }
+>  
+> +static inline bool mptcp_is_fully_established(struct sock *sk)
+> +{
+> +	struct mptcp_sock *msk = mptcp_sk(sk);
+> +
+> +	return inet_sk_state_load(sk) == TCP_ESTABLISHED &&
+> +	       READ_ONCE(msk->fully_established) &&
+> +	       !__mptcp_check_fallback(msk) &&
+> +	       msk->allow_subflows;
+> +}
+
+I wonder if this modification shouldn't be split to a dedicated commit:
+that part is important to avoid the kernel to "ignore" the MP_FAIL
+received before being fully established.
+
+Also, when thinking about that (but not checking the code), is the
+modification you did above to fallback directly when an MP_FAIL is
+received not enough?
+
+Or maybe only __mptcp_check_fallback() should be added, and no need to
+look at allow_subflows? (then patch 2/3 is not needed).
+
+WDYT?
+
+>  static inline bool __mptcp_has_initial_subflow(const struct mptcp_sock *msk)
+>  {
+>  	struct sock *ssk = READ_ONCE(msk->first);
 
 Cheers,
 Matt
