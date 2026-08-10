@@ -1,173 +1,119 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9CF312836
-	for <mptcp@lists.linux.dev>; Mon, 10 Aug 2026 01:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B4D397937
+	for <mptcp@lists.linux.dev>; Mon, 10 Aug 2026 09:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786327174; cv=none; b=jox9wSfZ91GX5NEPna9f/uNOk/qXLEpQTn71hE1cgI/AzvqQs5bZBp1S2dOlbVfV0Ubx7k0bhwx1mzwG0pRDb0XBZtoUB80KBM6GFwNoYtmxIDCFu95dcxIr7SLXQCIX4c+Y/cZzAKUA34hdSW58dV+kGWBd61UIDlc0PBWKTcw=
+	t=1786355645; cv=none; b=VMx+zNc69TVPf5mGOGLAQvNfeF0PEby7V75YoFrl0zTy8yCsnRtBq0KGCDP2qlFees9mg8KvYEyFo5cmp6stUNkESCREs9NfrjCMKPBYWDJZ6cedyowGH0KispbV1z6UVXz8KRp+VG3z0J5uUwiy0CzcUV6aeBNMS7xypOwtvMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786327174; c=relaxed/simple;
-	bh=/OvbaL8KTP3ySpTWRBsx162Pho9Kv/QSjRAlqlRYHdU=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=FU1Yj56CaojUbHu8ThrBeUUk9zImpEdkOuJl81oTuBh02kikwOyxrDA6CylUs580jJXTg9Fe2fr62o5HQOe6GvQ0wm+mE/ic3mzLHgslLiL9Ea76w/M1zD+2AoUm2htzFQBcKBIK/dJHepoYtn/PI11UOwzXm4ei3NwTZcO6npc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LU5JD8n9; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1786355645; c=relaxed/simple;
+	bh=Mb4lvJxt8iKQt1y/jBs2g60GBPvMmVnC/pCTUP5gl4s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rupAa6KCgEMmoXV6i1RsFhsnM8kqvhDUK1EfklKuYr53baqq0p+6LnXLOabRozl4RP18MsNDO5yJY3j30mRfzBHtyWtlbZjuxs0Qtnys8HmY3VynbPxczPbaD5mvTsTxySyJFBM1Irm+RBgvBS4IsmYEvWp3PKaf77ihT9aqY0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P6DpxqXe; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LU5JD8n9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P6DpxqXe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1786355642;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kJJrhudqMOZrjDcA0TeIkS5YE0ogalmKFNSGe7iwfdE=;
+	b=P6DpxqXevK+SOqijSFJEGg+xXFPR6E+HQ6aHXmF+5VnGvvQJFN9C8WDERbGLXDuCc+AEGW
+	sn7NrMFV72ttjwhZf1PPQ9IA0VqPKQ1KNRlluEbPLjMmwu7TZ8MPr8inFCd3oVZ6EMwXcA
+	dDFttYkHWoNE0j/pCeMuAusDE5500CM=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-688-Klcm8wfXPm-DhC4erfuTow-1; Mon, 10 Aug 2026 05:54:01 -0400
+X-MC-Unique: Klcm8wfXPm-DhC4erfuTow-1
+X-Mimecast-MFC-AGG-ID: Klcm8wfXPm-DhC4erfuTow_1786355640
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-493fa6e28a7so17788835e9.1
+        for <mptcp@lists.linux.dev>; Mon, 10 Aug 2026 02:54:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786355640; x=1786960440;
+        h=content-transfer-encoding:content-type:in-reply-to:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=kJJrhudqMOZrjDcA0TeIkS5YE0ogalmKFNSGe7iwfdE=;
+        b=Cfd5Y+5hK4dNsRcEMOcps5ZvygOunN7yiYDYxFFagoEGdbieA+SUlkMRVm5MmjkDUg
+         Ipa05b7WssyqUJbPGzKcXSvDVMi7IFDY0GsEKtZfVfgqjBq90qzzDNDueqhFKN6mWlVE
+         eWAegfJVOeanSqqdr5YDL1RFJnAtJOa4PDh1XvY2ckKpkq2KxK9ZQJPKVG/ZOKnbPi+4
+         NixjHdqbh3V+J0wLsxPRkLu8u1VJei4UzB6RPWXUwcUb7UFdmZYZDKW4P/dEShdxM/nd
+         0TEITezrfATKfmt9Grn5fljG461SAt6QMcEfOte3w3VNJrFhxPBIdASNH30+o18LI2WW
+         sJEg==
+X-Forwarded-Encrypted: i=1; AHgh+Rqa68RHUecI5E4IfcRvrj6uWS48m0qIRHE36qkcsg2CKC4+5dLwduZqcVMOC7aBy8hEO2gTgw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzDb2XHX+x2rTRgDouVpjSzax/BjMubqvkbgwvrq9DhMAi9ZrCz
+	9mP5IDMoP+wlmxYP5z1WkBnL69RYjHUdKbWodOeLTQC/rM/GS3wVd8G1FdiTIATH7jSuM2ri0XI
+	2/bGTolSq8y/wjf9SumqeemICRcnQds9xm4UI2QwuIqI4sIMBZMGUpxKh
+X-Gm-Gg: AR+sD111ZCe2lXgRJDXtNVuiur/ZvODRZXk6AeVLsF5TH+VBsoX3X/SMYI8gjMRDz2H
+	i/WWlGE6uFmaJiALlfb96bZx5KE8esGrj9HNH5/ErTv85uOJnOEpaPmHh41d1KlW+jstTH/PFto
+	RgUNEfnEYXqFBeZKkIWuwDB+mQ4NbbZPToZye5nayikhtX4yIdQB03mczu1LUcM0aDpZKEaRxuc
+	jcX5yQtijG8n9YWnbLj0ARMNrgvpIsxrLlQHAYHvEOzLTsXzFQtvRVEzP7SZpi0n2vnjya9n24N
+	x1X0+vqt79cBubdc8C1LgMySxskWtk0dhXEUp71XneSQDK7TjBHey9o/t+982Fuh6W1hrmkZuxc
+	vNiwlaRbBUxRXinQK+KueamgDwL9MErT8Ad6h7oO84p0+mnd/nIgDFhP6DXwJBmwZ+YZv4QeUCr
+	E=
+X-Received: by 2002:a05:600c:530d:b0:495:52db:7e8 with SMTP id 5b1f17b1804b1-499727fd550mr7974355e9.19.1786355640066;
+        Mon, 10 Aug 2026 02:54:00 -0700 (PDT)
+X-Received: by 2002:a05:600c:530d:b0:495:52db:7e8 with SMTP id 5b1f17b1804b1-499727fd550mr7973505e9.19.1786355639597;
+        Mon, 10 Aug 2026 02:53:59 -0700 (PDT)
+Received: from [192.168.188.103] (ip239-44-231-195.pool-bba.aruba.it. [195.231.44.239])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4995c69c777sm295239355e9.2.2026.08.10.02.53.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2026 02:53:58 -0700 (PDT)
+Message-ID: <9f7f0fa7-52e9-4640-9264-13c98ed4d602@redhat.com>
+Date: Mon, 10 Aug 2026 11:53:57 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1786327171;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yhKBG07NgjbV88z5PyXBU/EsEEP+BqBeiN00w24gQvQ=;
-	b=LU5JD8n994QqhU8jAs0wc13L36UNwvy80gs6mWrOrmD3h/ZwPh6UICoSJXn0dqF/7vq2u0
-	C38yml6cmr74UMU0QWTDyhYs0Vh0Vo5N0y3v+jxXjmBf1ffNDZ+i1XwJVd10b9LEkt4lIp
-	BUhpnzwrlv1Y0Krtd1etQ5OAlNLtO0k=
-Date: Mon, 10 Aug 2026 01:59:28 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: gang.yan@linux.dev
-Message-ID: <4e57509daf45aa8968140e7a7279ad0699249bf6@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH net] mptcp: upgrade network refcount before socket lock
-To: "Runyu Xiao" <runyu.xiao@seu.edu.cn>, "Matthieu Baerts"
- <matttbe@kernel.org>, "Mat Martineau" <martineau@kernel.org>
-Cc: "Geliang Tang" <geliang@kernel.org>, "David S . Miller"
- <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Simon
- Horman" <horms@kernel.org>, mptcp@lists.linux.dev,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- runyu.xiao@seu.edu.cn, jianhao.xu@seu.edu.cn, stable@vger.kernel.org
-In-Reply-To: <20260809091949.3618191-1-runyu.xiao@seu.edu.cn>
-References: <20260809091949.3618191-1-runyu.xiao@seu.edu.cn>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v3 0/7] mptcp: out-of-order queue pruning
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Gang Yan <yangang@kylinos.cn>
+References: <20260807-net-next-mptcp-oooq-pruning-v3-0-dbc1eb853cc3@kernel.org>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20260807-net-next-mptcp-oooq-pruning-v3-0-dbc1eb853cc3@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: y9lfTrr60FRO3FTdnopGzkFBgSX10UmARXa5e6vCiXc_1786355640
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-August 9, 2026 at 5:19 PM, "Runyu Xiao" <runyu.xiao@seu.edu.cn mailto:run=
-yu.xiao@seu.edu.cn?to=3D%22Runyu%20Xiao%22%20%3Crunyu.xiao%40seu.edu.cn%3=
-E > wrote:
+On 8/7/26 3:49 PM, Matthieu Baerts (NGI0) wrote:
+> Under memory pressure, a pruning of the MPTCP-level OoO queue might be
+> required as last resort, to avoid too long recoveries, or even stalls.
+> Geliang and Gang managed to reproduce this behaviour, and Paolo
+> improved the situation thanks to the following patches:
+> 
+> - Patches 1-3: improve the MPTCP-level retransmission schema to make
+>   recoveries from memory pressure/after MPTCP-level drop significantly
+>   faster.
+> 
+> - Patches 4-5: make the admission check way stricter for incoming
+>   packets exceeding the memory limits, with some exceptions for fallback
+>   sockets.
+> 
+> - Patches 6-7: implement OoO queue pruning for MPTCP.
+> 
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Sashiko has a few comments on this series, but IMHO only patches 2 and 7
+really need some adjustment, and changes there (fix the stale/retrans
+race, wrong unlikely, and too early OoO prune) should be handled as
+follow-ups.
 
-Hi,
-
-Thanks for your patch.
-
->=20
->=20sk_net_refcnt_upgrade() calls get_net_track() with GFP_KERNEL and can=
- enter
-> direct reclaim. Calling it while holding the newly created subflow sock=
-et
-> lock can create a reclaim-to-socket-lock dependency cycle.
->=20
->=20Upgrade the network reference before taking the socket lock. The sock=
-et is
-> newly created and has not been exposed to other code at this point, so =
-the
-> fields changed by sk_net_refcnt_upgrade() are not accessed concurrently=
-.
-> The error path still releases the socket normally after the upgrade.
->=20
->=20The PatchProof static-analysis tool detected a GFP_KERNEL allocation =
-while
-> the socket lock is held. Manual source review of v7.1.5 and current
-> mainline confirmed the lock and allocation ordering.
->=20
->=20A source-level check found `sk_net_refcnt_upgrade()` after
-> `lock_sock_nested()` in the original function and before it after this
-> change. A POSIX-thread lock-order model made the reclaim lock unavailab=
-le
-> while the socket lock was held, observed `EBUSY` for the reclaim lock, =
-and
-> then completed with the reclaim-first order. The model checks the order=
-ing
-> invariant only; it does not execute the kernel MPTCP path. No live lock=
-dep
-> MPTCP test or reclaim fault injection was run.
->=20
-
-Maybe=20the commit message seems too long. Could you please send a v2 wit=
-h a more
-concise commit message? For your reference, here is a suggested simplifie=
-d version:
-
-'''
-sk_net_refcnt_upgrade() performs a GFP_KERNEL allocation (via get_net_tra=
-ck()
-=E2=86=92 ref_tracker_alloc()), which can enter direct reclaim and establ=
-ish a
-socket_lock =E2=86=92 fs_reclaim dependency. Move it before lock_sock_nes=
-ted(), mirroring
-the convention documented in net/rds/tcp.c:rds_tcp_tune().=20
-
-The=20socket is freshly created and unpublished at this point, so sk_net_=
-refcnt/
-ns_tracker are not touched by any concurrent path; the error path still r=
-eleases
-via sock_release() which handles both refcounted and non-refcounted track=
-ers.
-'''
-
-Please note that this suggested text is generated by AI, so please review=
- it
-carefully before adopting it. Also, the next patch can only be sent to mp=
-tcp@lists.linux.dev,
-no need to cc to others.
+/P
 
 
-> Fixes: 1d2f3d3c6268 ("mptcp: adjust to use netns refcount tracker")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Runyu Xiao <runyu.xiao@seu.edu.cn>
-> ---
->  net/mptcp/subflow.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
->=20
->=20diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index e1f20ff8fdb4..a9f951cc6a0e 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1786,6 +1786,12 @@ int mptcp_subflow_create_socket(struct sock *sk,=
- unsigned short family,
->  if (err)
->  return err;
->=20=20
->=20+ /* kernel sockets do not by default acquire net ref, but TCP timer
-> + * needs it.
-> + * Update ns_tracker to current stack trace and refcounted tracker.
-> + */
-> + sk_net_refcnt_upgrade(sf->sk);
-> +
->  lock_sock_nested(sf->sk, SINGLE_DEPTH_NESTING);
->=20
->=20 err =3D security_mptcp_add_subflow(sk, sf->sk);
-> @@ -1795,11 +1801,6 @@ int mptcp_subflow_create_socket(struct sock *sk,=
- unsigned short family,
->  /* the newly created socket has to be in the same cgroup as its parent=
- */
->  mptcp_attach_cgroup(sk, sf->sk);
->=20=20
->=20- /* kernel sockets do not by default acquire net ref, but TCP timer
-> - * needs it.
-> - * Update ns_tracker to current stack trace and refcounted tracker.
-> - */
-> - sk_net_refcnt_upgrade(sf->sk);
->  err =3D tcp_set_ulp(sf->sk, "mptcp");
->  if (err)
->  goto err_free;
-
-LKGM!
-You can add 'Acked-by: Gang Yan <gang.yan@linux.dev>' in your next patch.
-
-Thanks
-Gang
-
-> --=20
->=202.34.1
->
