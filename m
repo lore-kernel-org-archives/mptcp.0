@@ -1,132 +1,224 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A642F0C62
-	for <mptcp@lists.linux.dev>; Tue, 11 Aug 2026 14:43:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786459412; cv=none; b=AnrqjEV7n2aU3WNSdPqIwd1al/plqbvkGBfwJprAAkcRR0LbYGbfvfHJvq9SznLJojPkKtp0MxhMlQ7I+zspI7Magad3QHGTeW8tZGasuA4L3U9vLXsckV42UWE164NedRv5lYLEVHDab7hi5NZVkYmgq6wmmtxQaoINwy29z1k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786459412; c=relaxed/simple;
-	bh=H9e47jSfdvIVv172LYK84Lz9zZ29UqfvdZIq66Ox+sM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=j7SmA9D3gNnCqUVkV9iHHYuH38xaFvmqHwFfK8JwGOxXt7mdYcN/DpsZvimAwEsEX39GOVjjbad2Ota8OHVPtmzGsycGoZNg6dMJ91EQiVRedroQHNx0+Fh0kJNngvKy8MbljCfF0oJf+GBv8Pfx+h/znb9g3r123gI1ddozLW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c5OroPY8; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FDE83AD528
+	for <mptcp@lists.linux.dev>; Tue, 11 Aug 2026 19:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.181
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786475167; cv=pass; b=LWvD+EYErN8mt5/ZrLcX7pT0NCDQoMpfaOpu9KSMQ4t2rVDlYSOVYq1v/ErsQTjdvYGcQao6HCFZrzCWO+7+sndRVNxU8PrPVzN5BgXpyBHj1zqltakI8GskXMng7B6UZIsKtL6Ao7LcgbKTLsNjr1LzdSrYRMhStWv56rGh5Po=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786475167; c=relaxed/simple;
+	bh=rKjUe8l12laQaYCR2nsnMV+NraIoKfBe+/vXRLFKb04=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ePKYPq+7B5Mxh04DZjwLy7wXsLAElzzVvx2DK83/1fPl/S5mg3LEC/BRS5cW0cSXPawZSPSi984gH5yQfy0iS6Cau+zfdS3VNX7UJAlm3h1G/vxtYoCryJ6aVS0jsUXKnjOE8B1+c/IGbF9rjMZkjdiHDNovqFCtrdHdlllp6IU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FFV0DKEY; arc=pass smtp.client-ip=209.85.160.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c5OroPY8"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-821106b5b64so20201877b3.1
-        for <mptcp@lists.linux.dev>; Tue, 11 Aug 2026 07:43:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FFV0DKEY"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-51c2a449c57so2053241cf.1
+        for <mptcp@lists.linux.dev>; Tue, 11 Aug 2026 12:06:06 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786475165; cv=none;
+        d=google.com; s=arc-20260327;
+        b=resmLe0eaXm+ZO+uNx0R+m+6kzDZ6b8rk7FRInfQcqD9hbMvwgaEYa39fF8Ab/onKO
+         mYtvkbEer4tRkrt+fEkBngk7mKy0/wLzt0T5HsuhSVcN0bGNXDwLZrn9hgGzDiWdZ2pK
+         97lJ7Bx+Rl9wl91piZ6DSX/JeDWu5q0MeAxUbbFqvEkqYeJ7Za3J3jBwn+/fl8JswmLo
+         YNjd2N1zmZ5zyA40QlDC1utyFfVL+OvCBktCSDnVPRTfHoH+f7YVM4iInSrWWC0x8t1K
+         5cH6HIrIyeLCU654yV7chxjwIEJkiD5K8PNQ63cDNeWq4H3eqRZZk9hBstfziSP+IKi/
+         K+sA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=enZbBxN3Oyyjq7G1ENN3d+tcDx1SrKg3URWD8Mv+loA=;
+        fh=BP+rJXqV0TXfVBcgKX0HmrwRZ2a6eicHFa4SBosrIHA=;
+        b=HxNmiqhuWTGY/6y4k0GG2C6uvcDhex79fQaAowb11V8r1o9kvAH1YGEVeL0vT24uik
+         VxpnnQk6UEEiw+DEgh+Bm3xU7XQ8LIO+HY4FK7uELIV/MK1Cewkru4jT58j3JXx6R+7f
+         mYn3s769Q5P22gt6TrVriefzvAmMl/n581lu/wFOead4AuV6MblkOGfIHF+4zWwDcdco
+         hqkUa1UFgLOrQWQDUXBJ/oFRrXCJOXUQmWf5kxs02qbyooZ9FOfFuNF1OsJ+c5K2HPMk
+         et8lh0lfauD6yaZSD5oW+Wst6jRGkkJxpDxbJKXwuTqBS57TaOOfWxaq2cWSNNXL+oCn
+         92Qg==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786459410; x=1787064210; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=qHdsA7jQy/FeFZOEJUzcdQHf4kSWcmftyRy/tVCTCD8=;
-        b=c5OroPY8NHxjyBpMV4hJ9F5AahEPqOnXbtuJkq3x1e/sazffOil+2y4Q9JpATxLj9I
-         UpbkSsdotbAasUYaGceN39i1ySHu1Xrt7hYDU3JaplBGEvXHNk0yUEGwYNv8S3UseY3F
-         TUgbA31pe6txiz2k820BGb3Mt2aLbuTirjDcaAjifM3p1U/P4R3tCCuIRDz18rR1v6mn
-         h6SI8ccU0wmaqKyxx0cljHWvvm6sxTe+AN1i/MA1AF8xsJwR+8u18CH6hhtJ0Qj8GO+i
-         YyLTdivF9TTLyRUjO8WU1OGWPbNl749ieXBRUh443m99WqMm2+E+C0CU7OkAoKoub2xP
-         eUtg==
+        d=gmail.com; s=20251104; t=1786475165; x=1787079965; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=enZbBxN3Oyyjq7G1ENN3d+tcDx1SrKg3URWD8Mv+loA=;
+        b=FFV0DKEYq6/yZeKTapc/qUC5HQHCqEQk6eMoV36J45z5v3xpKejMXyFfbd2hs0UwwK
+         5P2pbt+R+VE8CgfHUDUHP24veHtY/pjEhzWFTAO6E3ZlyfGgDr3Wk8aCM9V2rARXNO2v
+         qsVbAAdUOp7o5csvygJLFgFPqwr2qY0jsWdwgK0m+Xc5PT8S0cpmQGW8Thp+Kc+t4Ube
+         GtuLOSejSq8+TzMhHn73M+JJppm0jvqq/1VQLWF0RYHLlsmsv8HU3cGbTYocd4k4Wf0c
+         coL5+K36hrPLEM3lB3T0wZIwjCurS2HvE2vPKlVP3jIDHZRvW3qoe53GADCTLkmJx7f1
+         wKWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786459410; x=1787064210;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+        d=1e100.net; s=20251104; t=1786475165; x=1787079965;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=qHdsA7jQy/FeFZOEJUzcdQHf4kSWcmftyRy/tVCTCD8=;
-        b=HVJ9awxMpBsmi3FGBvwpMDyDHY9rk+C0F0P9pHguXEUahM0WqS+s2rBHr84OzmyfUc
-         o6yqhmtjQdNx1BuY8qxGIDYrarG5SKSPzIew4PBFXKzrXbCmsYvF3H+g2DEw7+r7y4pk
-         a64oQHXo6RSl8UPL8B6RicORnmc9lzem2xJdYY9ffdyluD/pACEIWm7gZzE3AblClWjT
-         8Q8dhRIXcg0se8ga7yff/T8nPL6e+yxNZNCRbIGIgetMGKJtcv0GQitz8K0rYJ6m/xR2
-         ekVJgofUSKP07uW3NsSLcFlVn3QEWO4tIL2Uerv5nMNeLq0v2pljSA1U0KqDApCojS9Q
-         KNRw==
-X-Gm-Message-State: AOJu0Yx0F5Zb4RY2OPEYblb7iBpOcKTr3NxQtvDsKZUw1Qhr+5OSSApV
-	59oWMv2mLKGBPbopY7vivFs62Gx4+R4fexXPrvk3DtV4JydIynIVOfc=
-X-Gm-Gg: AR+sD12jiLNOR2osuZmsYy/dHDaCvKgmjbJM6FEMApJ4az1W9fBqh9yJHSc+VDJC056
-	xIzXO05Bh68TwTX5tfBBJMgGhodFeOYM4uJ3Oin5Rq+ojZglgaKv2v47rue49d/DPWW+TP5is3z
-	K0ArRsRDK3rucqX6Hzj0f08IAvFYYDt+4aNF6Wc4IaKN8BZLLnLLLQQTZEZ6ibAJBYU/Q7TtjP0
-	vRZuxnMXKUubX/AoUWuZFcmSErXMajctYpUtBxPAF/SUgb1S4htX73SZszWJheUWcZD1JR7oEt3
-	jy27GIzYxI3BxbgUcFQhNpXn7mpYApx0VYZm/gqoWv0aOb3fIAtLHoRAxrQZIsSjfMiyq8F9vY9
-	9SPLDcr0BIte00j1Ap9kEZMc1HI4It5UqrJbgoJ209Iox0zq6ssTQsn8ZS1SmoRpxNs6es/UMx2
-	wqZctQIi0Vr5BN0qz7wTcUaTxJGcjJQ+J007fycmb7/Lr9GnEoTV2gYvxzX0ijRlrfvfcYdQXPe
-	V8=
-X-Received: by 2002:a05:690c:c355:b0:81e:4acb:c0a with SMTP id 00721157ae682-8304dd1e34dmr3710247b3.2.1786459409677;
-        Tue, 11 Aug 2026 07:43:29 -0700 (PDT)
-Received: from [127.0.0.1] ([64.236.134.166])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-82eb5fb7a22sm11870427b3.0.2026.08.11.07.43.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2026 07:43:28 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1786445142.git.tanggeliang@kylinos.cn>
-References: <cover.1786445142.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v3 0/7] Reduce the differences between TCP
- and MPTCP for TLS usage
-Message-ID: <94bbd3cb-4ca8-1002-5456-81fcae695484@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 11 Aug 2026 14:43:27 +0000
+        bh=enZbBxN3Oyyjq7G1ENN3d+tcDx1SrKg3URWD8Mv+loA=;
+        b=PDATkj+x9Al5KsKMDHuls/1s3FZDU1lICbVR/ihWbStJuPJLR/fiUnV35ILYxo3Jit
+         lSZ3iEA+AqFBKjbvvVgnNnEhb76wdT/eCTIS6Sy4wmqpDDkKi+Tc6SOnj3E6+Sk1azkK
+         eADZDQJcmVXE4D+DeNvO+Ayg/VzH6uqLOqE/hJvlkWpktQTpkrzHAKis04xSxkgcvYuS
+         L31byCMh1Ruoks5X20nYimMOpZpoITeErf9gyv8d7X7lQoh8UFjT46CpU/J3oLcGOr47
+         FtRHNJWkSzsZKoa/Q2sQoGPN5KP4r5piA2bAbFCVe5snAQkFK+AxKisJHosnBpMgcYAJ
+         iWBQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rquktl6PI7T9NpERRpMccw0P4+Wi/mDugTydCIcqTh3gUm986L5djipf5COZgwpdKcsenB/RQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzDDZPUuYb4EmGSURLp7gDI7OvJ03TblKMDZSxr9CKFaaXHk3hD
+	91BcjL6YJ6xYzfvwZwgbEmEtvhbwsG/YpIlUKhEtHEH7PTba5bMANzY6cri9Nml5Af+0iAf8hFW
+	Lj9Po3kDhwAjWclZlSLhRmDcU57AjlZg=
+X-Gm-Gg: AR+sD11dfy5CHUeQmlzG8ByWSH3WZQhSytT/evNhymq6iG+Wh//sAuxgrIqcGvYMDB7
+	zsRCm9Bo6N1SUI5nrYofhojg+o/qk/5yZfy9NmGntLlaLzFFer4w8GGWTzvnz57EYAD21H/19NU
+	N2IRY68IUG1piIu+SHodMTZr0uF61t/9MfQi9+nnHYj+LVxUqRS3qXMRu39EwXaKZXrnplBbhzf
+	bFzN9IunoLpT3SohIm7n8Oc5aZHOeqjVe5S1ngg073teH8fCaySgWGN5x+x7PqJMsGbAB8byT6X
+	swR9hSKvnNQ97y6Wi6V1W1LLfrVFuarFcsZ/2VMTIw==
+X-Received: by 2002:a05:622a:4e9b:b0:517:6d6c:187f with SMTP id
+ d75a77b69052e-52d600f6931mr26600781cf.14.1786475164759; Tue, 11 Aug 2026
+ 12:06:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <cover.1785995291.git.caoruide123@gmail.com> <a12d76b7f2305b5a8d64c3d6c3585e39684ff792.1785995291.git.caoruide123@gmail.com>
+ <5ac3773c-4a6f-4796-a43f-545c3c42271c@kernel.org>
+In-Reply-To: <5ac3773c-4a6f-4796-a43f-545c3c42271c@kernel.org>
+From: Ryder Grass <caoruide123@gmail.com>
+Date: Wed, 12 Aug 2026 03:05:54 +0800
+X-Gm-Features: AUfX_mycIscTqbCmmYibXLk6WZz8k7CRi-SgcT9cJyOuNj-7U0yDo1zelPV2cj0
+Message-ID: <CACveakTyaFu-KSuPU7xHGC-_y4AMZTL4E2qFwMmF208d0j_GbA@mail.gmail.com>
+Subject: Re: [PATCH net v3 2/2] mptcp: fix MP_CAPABLE token migration when
+ cloning reqsk
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Ren Wei <weir@nebusec.ai>, netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+	martineau@kernel.org, geliang@kernel.org, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, 
+	ncardwell@google.com, kuniyu@google.com, daniel@iogearbox.net, kafai@fb.com, 
+	kylebot@openai.com, david.lee@trailofbits.com, vega@nebusec.ai, 
+	sashiko-bot@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+Hi Matt,
 
-Thank you for your modifications, that's great!
+Thank you for your comment. We are adding a
+mptcp_sk_clone_destroy(nsk) in our v4.
 
-Our CI did some validations and here is its report:
+Regarding the comments from Clashiko, my reply is as follows:
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/314985=
-91634
+Comment 1:
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/8f859f4196fb
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1144100
+> This isn't a bug introduced by this patch, but does this clone helper als=
+o
+> need to migrate the MPTCP token_node for MP_CAPABLE requests?
 
+I agree. Patch 1 only fixes the MP_JOIN msk reference ownership problem, bu=
+t
+the same request clone helper also needs to handle MP_CAPABLE token_node
+ownership.
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+Comment 2:
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+> Is it ok to pass an MPTCP socket to tcp_done() in this failure path?
 
-For more details:
+I agree that passing nsk to tcp_done() was wrong. nsk is an MPTCP master
+socket, not a TCP socket. tcp_done() and inet_csk_prepare_forced_close() ar=
+e
+TCP-only here because they use tcp_sk(), so they can interpret the private
+MPTCP socket layout as struct tcp_sock after the shared inet_connection_soc=
+k
+header.
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+We are reviewing v4, and will send it out soon.
+
+Best,
+Ruide
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matthieu Baerts <matttbe@kernel.org> =E4=BA=8E2026=E5=B9=B48=E6=9C=8810=E6=
+=97=A5=E5=91=A8=E4=B8=80 02:03=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Hi Ren, Ruide,
+>
+> On 06/08/2026 13:14, Ren Wei wrote:
+> > From: Ruide Cao <caoruide123@gmail.com>
+> >
+> > TCP request migration clones pending request sockets with
+> > inet_reqsk_clone().  For MPTCP MP_CAPABLE requests this byte-copies the
+> > token_node hlist state into the clone even though the token table still
+> > names the original request.
+> >
+> > Moving the token only after inet_ehash_insert() succeeds leaves a windo=
+w
+> > where the cloned request is already globally visible from the ehash but
+> > the token table still points at the original request.  Reordering the
+> > move after clone but before ehash exposure closes that window, but
+> > concurrent RX can still race on the old request and observe that the
+> > token was already moved.
+> >
+> > Move MP_CAPABLE token request ownership during MPTCP request cloning
+> > under the token bucket lock.  Make mptcp_token_accept() and
+> > mptcp_token_destroy_request() re-check token_node under the same lock a=
+nd
+> > treat an already moved or removed request as a normal race instead of
+> > warning.
+> >
+> > If the passive MP_CAPABLE socket cannot claim the token, fail
+> > mptcp_sk_clone_init() and let the subflow fall back instead of
+> > installing a socket with mismatched token ownership.
+>
+> Thank you for the new version!
+>
+> I have one major comment, please see below:
+> > Fixes: c905dee62232 ("tcp: Migrate TCP_NEW_SYN_RECV requests at retrans=
+mitting SYN+ACKs.")
+> > Cc: stable@vger.kernel.org
+> > Reported-by: Vega <vega@nebusec.ai>
+> > Assisted-by: Codex:gpt-5.4
+> > Reported-by: Sashiko <sashiko-bot@kernel.org>
+> > Closes: https://sashiko.dev/#/patchset/86e2514b533bf4d55d4aa2fdbf140402=
+2e8c9430.1776149210.git.caoruide123%40gmail.com
+> > Signed-off-by: Ruide Cao <caoruide123@gmail.com>
+> > Signed-off-by: Ren Wei <weir@nebusec.ai>
+> > ---
+> >  net/mptcp/protocol.c   | 12 +++++----
+> >  net/mptcp/protocol.h   |  4 ++-
+> >  net/mptcp/subflow.c    |  2 ++
+> >  net/mptcp/token.c      | 61 +++++++++++++++++++++++++++++++++++++-----
+> >  net/mptcp/token_test.c |  4 +--
+> >  5 files changed, 68 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > index ca644ec53eed..07eaa6858d05 100644
+> > --- a/net/mptcp/protocol.c
+> > +++ b/net/mptcp/protocol.c
+> > @@ -3608,17 +3608,19 @@ struct sock *mptcp_sk_clone_init(const struct s=
+ock *sk,
+> >        */
+> >       mptcp_set_state(nsk, TCP_ESTABLISHED);
+> >
+> > +     if (!mptcp_token_accept(subflow_req, msk)) {
+> > +             mptcp_release_sched(msk);
+> > +             inet_csk_prepare_forced_close(nsk);
+> > +             tcp_done(nsk);
+>
+> Here, you cannot call tcp_done(nsk): nsk is an MPTCP socket, not a TCP
+> one. You probably want to destroy the msk instead.
+>
+> (In theory, your reproducer launched on a kernel with your patches
+> applied on top of MPTCP's export branch [1] should produce a warning)
+>
+> Apart from that, Clashiko has a few comments. Do you mind checking them
+> and reply to each comment here, before sending a new version, whether
+> you agree/disagree or if it is unclear, please?
+>
+> [1] https://github.com/multipath-tcp/mptcp_net-next/
+>
+> Cheers,
+> Matt
+> --
+> Sponsored by the NGI0 Core fund.
+> pw-bot: cr
+>
