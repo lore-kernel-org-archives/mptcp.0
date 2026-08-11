@@ -1,37 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9EDC25B088
-	for <mptcp@lists.linux.dev>; Tue, 11 Aug 2026 13:18:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E20625B088
+	for <mptcp@lists.linux.dev>; Tue, 11 Aug 2026 13:18:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786454330; cv=none; b=As+d++4NaVT7PPMmIjloFwSX9cSNTKR/lQgH9tarcEBU9oxluwN1YvebvSjf2ZpVRj1bpFHU1dFdeDGBT1dG8lX2GJWGBO/tIzCmyY2qbxS8rohvcTfTvPsdT2KNLn9XzUS8E0Q7Bwixdtlf+Ebu0nAvqQk0cLGjDhshwfVwqKk=
+	t=1786454331; cv=none; b=CmQLQ5L3njv6y2baznVt1yhqCUeY/UYJ0Pcp4RjbNqqE9VMdWoX2L6aVUrXTgFMP6/Q4bqZoLok5VHRqzYA2AP8hmxnFjee9QmwKhUaUkylJx5Z2o/fO4EYn6EIadKcWri2iTGIQWUpno0wNqZLHPSmHQy/0lbAvxIgaDfA+AzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786454330; c=relaxed/simple;
-	bh=PNlXdj1WZq1nWNqd/Ojmx2fAFayig6wNWaNoNRELoi0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hjFpJex4ZJXDD0dKoVvtPFliGpl4rR/NkXATrpTFKm8v+NYGLwsyov0srOoBocFSWYuM4b4/onp+5fNC+ld30Tm1VNnp1SDf0WcrX3iy0Y+vZ6z1sPmU7Fu7yrXcTkEAtKpoW9pSaQfGez2TDMpEyIggvZxrF13YFqGULYJzmeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TzbRQEIz; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786454331; c=relaxed/simple;
+	bh=WmgV53IRD9WdMCFNslLMM4DOxYZnidPGFchiSQGxR4U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=b3Y1cE2IMRbHqTHgT4V6s3nylBvr2CaHujjylf9DTsGudMyOzm2VFZbNKpaMD2ulxBDkUxbHLArAIDjAdmL0HADF2tRJ1Tl2XuhtsYS78/TEzROSWwNdh7Oo3u0f5gJDmVG5X78NkjhwnmU48iMwyOGTRcCFQaeN9R9cvyOSKI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yhuf7imh; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TzbRQEIz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8737C1F000E9;
-	Tue, 11 Aug 2026 13:18:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yhuf7imh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15C191F00A3A;
+	Tue, 11 Aug 2026 13:18:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786454328;
-	bh=QvHNY9aAxI2eAWKbOmD+K9S3NFdjsjHBi7i/m1QQJiA=;
-	h=From:To:Cc:Subject:Date;
-	b=TzbRQEIzkyx3eoUVL3ePXnq+wyIjWSHRArOwuG577b0YI6QY8U5OlQesMaYluRNLO
-	 jxtLvA5+r3n+vDMGiswBkrHHSv8hsVecNXBvFk1AbiFrKwM/9wS4lc/oCUw+E9dgNh
-	 QzNz1TGDVtYWlI5HnLJGJxQxZ/nYOYwjS7azETVw5nqicpbTxwQzNDpslLDDGNjUNF
-	 gNY5vlFA97JpEItdkEwXkTKaEBepA/le7Yb9vKqsUKbLdFU7NZLbS9ghJ96igT/g2o
-	 x9JShRJddWEdaU5kGXjUwBNlmXFP3g0SLPHUAFM+eVdEvwXX6pFDrcaSjc5lMX+xEN
-	 Q8aBcNnwacFUA==
+	s=k20260515; t=1786454330;
+	bh=nBsqZ4Ndl2uKTpwURFa38r7Fb//z0rhTnUUQ1HEvSvI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Yhuf7imhIcJWA+Y5uz9MK3s9WECeC5RmaTetdXejt6FK3IYZ7k1ay3cH2REh4oFci
+	 e1nqdIy8qeW30C9ryM2jyLPh1ZOsqmlo4DETri8xlLZp2chf4XBiCCG2dKGS4l/0gL
+	 VYA1j41DBeGEpFeVhUiP7t+Ng5ruWDAVSJnNlR2A2402fnQqRGx/g5eeNym9y2SO9z
+	 cVj8FAfhv+c2BhRjghTSFAwW/Zc7dj5wT0aD1ndgttV/gj+RWMt7AILsWp2cydPxwE
+	 LAJmctOccoAnotHM++4H1bpm18V5tqT+kBBbkXvGTPwkmZC8BtR96NEUBvnBQtHu1k
+	 cZAn6iQUG1mNQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v3 0/7] Reduce the differences between TCP and MPTCP for TLS usage
-Date: Tue, 11 Aug 2026 21:18:19 +0800
-Message-ID: <cover.1786445142.git.tanggeliang@kylinos.cn>
+Cc: Paolo Abeni <pabeni@redhat.com>,
+	Geliang Tang <geliang@kernel.org>
+Subject: [PATCH mptcp-next v3 1/7] mptcp: drop the mptcp_ooo_try_coalesce() helper
+Date: Tue, 11 Aug 2026 21:18:20 +0800
+Message-ID: <cc996232dd8007563f90fddb33a458846e26d094.1786445142.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <cover.1786445142.git.tanggeliang@kylinos.cn>
+References: <cover.1786445142.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -40,117 +44,87 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+From: Paolo Abeni <pabeni@redhat.com>
 
-v3:
- - Patch 2, handle "offset" in __mptcp_sync_rcv_sequence().
- - Patch 3, update __mptcp_move_skb() in response to Sashiko comments:
+It's used to save an additional comparison for in-order skbs, but is
+also a barrier to remove CB offset. Remove the helper, let
+__mptcp_try_coalesce() always perform the sequence check and remove
+duplicate checks from the callers.
 
- 	if (__test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags))
-		msk->copied_seq += mptcp_iasn(msk);
+Co-developed-by: Geliang Tang <geliang@kernel.org>
+Signed-off-by: Geliang Tang <geliang@kernel.org>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/protocol.c | 21 ++++++---------------
+ 1 file changed, 6 insertions(+), 15 deletions(-)
 
- - Patch 4, replace after64() to after() in mptcp_prune_ofo_queue(). The
-   pre-existing issue raised by Sashiko regarding changing the type of
-   ack_seq to atomic64_t is not addressed in this series.
-
-v2:
- - Patch 3, updated in response to Sashiko comments:
-
-        if (unlikely(msk->rcvd_dummy_seq)) {
-                msk->copied_seq += mptcp_iasn(msk);
-                __mptcp_sync_rcv_sequence(sk);
-                /* Release cb() would otherwise re-base copied_seq
-                 * again.
-                 */
-                test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags);
-        }
-
-        /* Skip the already peeked data. */
-        if (offset >= skb->len) {
-                *last = skb;
-                continue;
-        }
- - Patch 5, replaced with Paolo's patch.
- - Patch 6, 7, new patches addressing app-limited conditions.
- - The patch "trim the duplicated skb head at receive enqueue" has been
-   dropped, as it is no longer needed after Paolo updated the "mptcp:
-   out-of-order queue pruning" series.
- - https://patchwork.kernel.org/project/mptcp/cover/cover.1786158416.git.tanggeliang@kylinos.cn/
-
-v1:
- - https://patchwork.kernel.org/project/mptcp/cover/cover.1785150300.git.tanggeliang@kylinos.cn/
-
-The goal of this series is to reduce the differences between TCP and MPTCP
-for TLS usage, in preparation for adding TLS over MPTCP support in the
-future.
-
-In previous versions [1], a struct tls_prot_ops was defined to represent
-the interface differences between TCP and MPTCP, which contained the
-following callbacks:
-
-	struct sk_buff *(*recv_skb)(struct sock *sk, u32 *off);
-	bool (*lock_is_held)(struct sock *sk);
-	void (*read_done)(struct sock *sk, size_t len);
-	u32 (*get_skb_seq)(struct sk_buff *skb);
-	int (*skb_get_header)(const struct sk_buff *skb, int offset,
-	                      void *to, int len);
-	bool (*epollin_ready)(const struct sock *sk);
-	void (*check_app_limited)(struct sock *sk);
-
-In reality, some of these callbacks are unnecessary. This series aims to
-eliminate the get_skb_seq(), skb_get_header(), and lock_is_held()
-callbacks.
-
-The first four patches come from Paolo's "mptcp: address stall under memory
-pressure" series v5 [2], with only minor cleanup from my side.
-
-They remove the CB offset field and sync the MPTCP skb CB layout with the
-TCP one, so that we can obtain the TCP or MPTCP sequence number in a
-unified way, e.g.:
-
-	struct tls_skb_cb {
-	    u32 seq;
-	};
-
-	#define TLS_SKB_CB(__skb) ((struct tls_skb_cb *)&((__skb)->cb[0]))
-
-This eliminates the need for a separate get_skb_seq() callback.
-
-Building on the removal of the CB offset field, I also added patch 5 that
-trims the duplicated skb head at receive enqueue. With that in place, KTLS
-can retrieve the record header via skb_copy_bits() directly, so there is no
-longer any need for a dedicated MPTCP helper like mptcp_skb_get_header().
-The skb_get_header() callback can thus be removed.
-
-Patch 6 defers sk_data_ready to the worker, which avoids recursive locking
-when TLS calls back into MPTCP under mptcp_data_lock(). With this change,
-the lock_is_held() callback is no longer needed and can be removed.
-
-[1]
-https://patchwork.kernel.org/project/mptcp/cover/cover.1782123118.git.tanggeliang@kylinos.cn/
-[2]
-https://patchwork.kernel.org/project/mptcp/cover/cover.1778446731.git.pabeni@redhat.com/
-
-Geliang Tang (2):
-  mptcp: track app-limited state in mptcp_sendmsg
-  selftests: mptcp: sockopt: check app_limited
-
-Paolo Abeni (5):
-  mptcp: drop the mptcp_ooo_try_coalesce() helper
-  mptcp: drop the cant_coalesce CB field
-  mptcp: remove CB offset field
-  mptcp: sync mptcp skb cb layout with tcp one
-  mptcp: defer read_sock cleanup to mptcp_worker
-
- include/net/tcp.h                             |   1 +
- net/ipv4/tcp.c                                |   9 +-
- net/mptcp/fastopen.c                          |  17 +-
- net/mptcp/protocol.c                          | 263 +++++++++++-------
- net/mptcp/protocol.h                          |  21 +-
- net/mptcp/subflow.c                           |  10 +
- .../selftests/net/mptcp/mptcp_sockopt.c       |   1 +
- 7 files changed, 209 insertions(+), 113 deletions(-)
-
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index f879b1061f2d..5ec8149c87cd 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -166,7 +166,8 @@ static bool __mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
+ {
+ 	int limit = READ_ONCE(sk->sk_rcvbuf);
+ 
+-	if (unlikely(MPTCP_SKB_CB(to)->cant_coalesce) ||
++	if (MPTCP_SKB_CB(from)->map_seq != MPTCP_SKB_CB(to)->end_seq ||
++	    unlikely(MPTCP_SKB_CB(to)->cant_coalesce) ||
+ 	    MPTCP_SKB_CB(from)->offset ||
+ 	    ((to->len + from->len) > (limit >> 3)) ||
+ 	    !skb_try_coalesce(to, from, fragstolen, delta))
+@@ -199,15 +200,6 @@ static bool mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
+ 	return true;
+ }
+ 
+-static bool mptcp_ooo_try_coalesce(struct mptcp_sock *msk, struct sk_buff *to,
+-				   struct sk_buff *from)
+-{
+-	if (MPTCP_SKB_CB(from)->map_seq != MPTCP_SKB_CB(to)->end_seq)
+-		return false;
+-
+-	return mptcp_try_coalesce((struct sock *)msk, to, from);
+-}
+-
+ /* "inspired" by tcp_rcvbuf_grow(), main difference:
+  * - mptcp does not maintain a msk-level window clamp
+  * - returns true when  the receive buffer is actually updated
+@@ -347,7 +339,7 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
+ 	/* with 2 subflows, adding at end of ooo queue is quite likely
+ 	 * Use of ooo_last_skb avoids the O(Log(N)) rbtree lookup.
+ 	 */
+-	if (mptcp_ooo_try_coalesce(msk, msk->ooo_last_skb, skb)) {
++	if (mptcp_try_coalesce(sk, msk->ooo_last_skb, skb)) {
+ 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_OFOMERGE);
+ 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_OFOQUEUETAIL);
+ 		return;
+@@ -393,7 +385,7 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
+ 				MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_DUPDATA);
+ 				goto merge_right;
+ 			}
+-		} else if (mptcp_ooo_try_coalesce(msk, skb1, skb)) {
++		} else if (mptcp_try_coalesce(sk, skb1, skb)) {
+ 			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_OFOMERGE);
+ 			return;
+ 		}
+@@ -776,8 +768,7 @@ static void __mptcp_add_backlog(struct sock *sk,
+ 	if (!list_empty(&msk->backlog_list))
+ 		tail = list_last_entry(&msk->backlog_list, struct sk_buff, list);
+ 
+-	if (tail && MPTCP_SKB_CB(skb)->map_seq == MPTCP_SKB_CB(tail)->end_seq &&
+-	    ssk == tail->sk &&
++	if (tail && ssk == tail->sk &&
+ 	    __mptcp_try_coalesce(sk, tail, skb, &fragstolen, &delta)) {
+ 		skb->truesize -= delta;
+ 		kfree_skb_partial(skb, fragstolen);
+@@ -901,7 +892,7 @@ static bool __mptcp_ofo_queue(struct mptcp_sock *msk)
+ 
+ 		end_seq = MPTCP_SKB_CB(skb)->end_seq;
+ 		tail = skb_peek_tail(&sk->sk_receive_queue);
+-		if (!tail || !mptcp_ooo_try_coalesce(msk, tail, skb)) {
++		if (!tail || !mptcp_try_coalesce(sk, tail, skb)) {
+ 			int delta = msk->ack_seq - MPTCP_SKB_CB(skb)->map_seq;
+ 
+ 			/* skip overlapping data, if any */
 -- 
 2.53.0
 
