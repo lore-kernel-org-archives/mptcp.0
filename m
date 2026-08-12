@@ -1,89 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CDF71EB5E3
-	for <mptcp@lists.linux.dev>; Wed, 12 Aug 2026 17:08:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89EA330301;
+	Wed, 12 Aug 2026 18:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786554518; cv=none; b=usyODdUPah/LTwEbwnmS8TjLGXFkhXU6Rumn+BSCqGhupnfaEtkXOuLDzQdGS/kf5fRn1KscjgM8zE7wsysJMUX6acwIg5Zx+6Bi8oPiAzxALWuAzxL5W6/+npntCcCDbz/cJ+YZam9pnJrd6PFEl89CCBUOkDcmIbheBPGnt9c=
+	t=1786561079; cv=none; b=pwAAfXDeqAnuo6U/Lp0bP692C6neT7G/km6DHr+09lMJ1YDms3IWypi9lodUuWtDAVpo/DQ/HDLccXbAdgaH3QAG1OSmeFi/FYUPQ7cFrg8oqo5jfrTtuyrN5sJ8f+C6Y25poVKO3nYvs6EhZpk8SZNUC4/ODeWnc0ENBrZYP7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786554518; c=relaxed/simple;
-	bh=d8cwGVFd84R3sRf3QGbL+ZTKVfllRBG/KvtEndzphiQ=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=eNNBORe0Di6xb95fa9XsO4W8Wvxo9xUZ7iC1sOcD2ICs/fcc1LgIAN8KJARpPGmcaV17XpMMxGD2cv3yT5fEN+kh01rVT3vExohB8JjqOT4s/s+SSnhIpmRELDwsI+AAwaUGNP9ylhzOoaT8GRj3TxciQ4B0acTcJgu+s0KAHqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LI6WJbh1; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1786561079; c=relaxed/simple;
+	bh=1PuX2Ni0G96E6mwRXmHaZj3HW1Z6v6XNwlAv14mSHnU=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=jKMXq0d817BXEMSOzbOg58FF6aXS36HRu7ugh52kEFDm9U4EA1b2YoRONbhbFmKEvmhfWtR0Pxt5FD8AKQIDTwH4Xh3/qJdnK4qf1CLNJBUJ0pyB3znqH7tV1sxcSM8wCH4rKR8JC7/O+slQI8hqFHlieK4y3yo2OuvtBeiD4gY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PREYq6xH; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LI6WJbh1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1786554516;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PeKsFUb8JjkoQLAxa0Oj/id2+piQDNFZVZMf9yiNSII=;
-	b=LI6WJbh1b3yXOKf4LOWVQdNX3ksSTzv1QeBXOAOG+4MUoD6Jh8nTFCs1arlM0MP8S0GWUK
-	W2osjmznAtBRJlishnJQH2NV3PP0rL2nTteNFEs5XIFgodAFndxTStEV8Yc404qTF8nDf3
-	Lovl26VMPArt53Hf9deg6JG4lOqUkck=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-148--W_Hb74HNLO8Wf9p2M0RTQ-1; Wed,
- 12 Aug 2026 13:08:25 -0400
-X-MC-Unique: -W_Hb74HNLO8Wf9p2M0RTQ-1
-X-Mimecast-MFC-AGG-ID: -W_Hb74HNLO8Wf9p2M0RTQ_1786554504
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 705DA1956095
-	for <mptcp@lists.linux.dev>; Wed, 12 Aug 2026 17:08:24 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.44.32.162])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A6A8A18005BC
-	for <mptcp@lists.linux.dev>; Wed, 12 Aug 2026 17:08:23 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net 1/4] mptcp: being below memory limit is a likely() condition
-Date: Wed, 12 Aug 2026 19:08:13 +0200
-Message-ID: <93777494d7c03ae68a72357e95b4f54c49addb46.1786553006.git.pabeni@redhat.com>
-In-Reply-To: <cover.1786553006.git.pabeni@redhat.com>
-References: <cover.1786553006.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PREYq6xH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786561078; x=1818097078;
+  h=date:from:to:cc:subject:message-id;
+  bh=1PuX2Ni0G96E6mwRXmHaZj3HW1Z6v6XNwlAv14mSHnU=;
+  b=PREYq6xHrHdP2uj6v8YoNYTHDrnuhPgI7j7FXPrPEIr9yKNQ7ODVc2Ix
+   eq+bnuXls5t4ThR1iDRiWe4wEWuN8aXbZwQVct7O5T9VA8wGZpJ5HkpKW
+   oKZd+m7j9vG1VlUWypxb+KLjFHJxRCxCxQ+FWwBEqbgZWAaEKb/rWgm8l
+   veQ5pZ3Id8kWoFy/LpeWObdvku/R6otDgBX13XTQs3Nc61tC2Rw6gR4Yc
+   2p/yurh36NEka1kEsxp2x/DNZHleabhIPnhMGpqdmf+6Gr7cniohXLeDC
+   C3J2YPZVMzCX9v2+4ygMzECO6XHI3qwcQa1uEO2p6F1TDM0h6rVkRMcrX
+   Q==;
+X-CSE-ConnectionGUID: H9ozD5UxSeyTN0TPiEhaLA==
+X-CSE-MsgGUID: liSrC1l3TjW4qWjc2vOqbw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11873"; a="98278125"
+X-IronPort-AV: E=Sophos;i="6.25,219,1779174000"; 
+   d="scan'208";a="98278125"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2026 11:57:57 -0700
+X-CSE-ConnectionGUID: EWFuwmDCSoakxQ6Rw0DOUw==
+X-CSE-MsgGUID: zMucTC0STlSKXPWSUfJW1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,219,1779174000"; 
+   d="scan'208";a="267583451"
+Received: from lkp-server01.sh.intel.com (HELO 6eda058d650d) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 12 Aug 2026 11:57:55 -0700
+Received: from kbuild by 6eda058d650d with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wuE9A-00000000ROU-3CZy;
+	Wed, 12 Aug 2026 18:57:52 +0000
+Date: Thu, 13 Aug 2026 02:57:00 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, mptcp@lists.linux.dev
+Subject: [mptcp:export-net 1/10] .git_markup: warning: ignored by one
+ of the .gitignore files
+Message-ID: <202608130227.3MeLtJJN-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: KXULbzrvIa3HeWPgXhcEWPWk_9M9JDBXToNiRwjBvao_1786554504
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
 
-The current compiler hint annotation is wrong, due to inverted
-logic in the previous revision of the relevant code.
+tree:   https://github.com/multipath-tcp/mptcp_net-next.git export-net
+head:   657b4fd08508eff8e7854f3815f8dd1a5b95469f
+commit: caf6f85037bb1349482662a511afae7882a5f91c [1/10] DO-NOT-MERGE: git markup: net
+config: x86_64-buildonly-randconfig-004-20260812 (https://download.01.org/0day-ci/archive/20260813/202608130227.3MeLtJJN-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260813/202608130227.3MeLtJJN-lkp@intel.com/reproduce)
 
-Fixes: e468d371180d ("mptcp: implemented OoO queue pruning")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202608130227.3MeLtJJN-lkp@intel.com/
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 68d766c0206e..f879b1061f2d 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -289,7 +289,7 @@ static void mptcp_prune_ofo_queue(struct sock *sk,
-  */
- static bool mptcp_can_ingest(const struct sock *sk)
- {
--	return unlikely(sk_rmem_alloc_get(sk) <= READ_ONCE(sk->sk_rcvbuf)) ||
-+	return likely(sk_rmem_alloc_get(sk) <= READ_ONCE(sk->sk_rcvbuf)) ||
- 	       __mptcp_check_fallback(mptcp_sk(sk));
- }
- 
--- 
-2.55.0
+All warnings (new ones prefixed by >>):
 
+   .b4-config: warning: ignored by one of the .gitignore files
+>> .git_markup: warning: ignored by one of the .gitignore files
+   Documentation/.renames.txt: warning: ignored by one of the .gitignore files
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
