@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978B8468C22;
-	Wed, 12 Aug 2026 14:56:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC4346F497;
+	Wed, 12 Aug 2026 14:56:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786546578; cv=none; b=UNZQJzdTDWaPTz1sPhdkf9vI1yX9EYdNNtNxwX+d2zHBJZdEndqikq+HKikboq1xwKMcee5sG2IsRwNN9H39IquHHY3SadXx4iREPR7y+HroTuGoHrQdVqRZ3xFX4iVtV71u4uB0/2rN9yl/wPYD9Q2YzdJKpHRmYGeQ7i6iGIw=
+	t=1786546584; cv=none; b=r3aIIjDRAvqomk7FL8MLrnVTjDOndfmMqS1pk3A0WSlfUrdMT55V23Ts1Z6Kl/HqepPLWCUSIxdktfxAhjwHYTw5hYf84NhsvXnTGnwQGxeNf7cDB4E+P6l7yeEYGDkDD+LvZnRJSM+l49s2Qt7IkI29tWq0dj0aIjuJwlnP/Nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786546578; c=relaxed/simple;
-	bh=1isvdAJraf3vPmJlBFNMJRSfcEoMPYoKAsSef2MxevY=;
+	s=arc-20240116; t=1786546584; c=relaxed/simple;
+	bh=4kSczDUhvB9wLi/CRABdJe2PoFsIOzsbTEk5ItzPShc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=k8k8BVgtDZLf+OWkpcdBtx7rwyGkaA5hmUpw2HtlqH90lrgbWumNyo7u22g/THeDXQ1ev55M+pdsmN/SY8k847OBx1PkCBtfsTzt0QIgCyjfwxbJh8zbApsVR3gY4cg+ryKLS/dSPUN9TlGV+WD3baPAJV9zSMNOwME1zRtTBCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T07DeVzL; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=FWfUNC3OZ4U5NDkcUstnsj/ywzMowiyLtuZzy7hAbmMuCrsf7sP0GZ+K2oqFPEaipFzqa02/BgK/HM70s2n92SvH9exVZX58zyLIEAATBJVxm6euIO/34QjatJeovgJrBKP72q7ug/3RQXXm61Xue7UkpFveVDvkxKnceAFiwB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W6rkKXv4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T07DeVzL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71A1F1F00AC4;
-	Wed, 12 Aug 2026 14:56:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W6rkKXv4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C756B1F00ADF;
+	Wed, 12 Aug 2026 14:56:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786546567;
-	bh=N7N7M4T1qNAFQiNc7NOoy3Cg9WmfPmpVq/vTG0+7lE8=;
+	s=k20260515; t=1786546569;
+	bh=lMyDW4Svbsmjj2oiSKAYU2dmKW+H0HSJMp0JMFoBmmQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=T07DeVzL1cudML35F08jZuENeALvsrjldXyh1qWWMT7QsdYMduI0rdvPVOWNi3pTH
-	 6PDRo0z5Pd0zNGbCavFWnjFM0358nJ0663poFFEH9h6s5Hy5ISW9jLGERizriAjhxh
-	 e5PVJVeI1Pj4U1X/qzkGjlcDJp76kqm2grJyiAHFvIjK/ZbssTO9d1/jKDDE9jXaF8
-	 Bhap5xa2FCrQA6XUPCkKGN/B9O3KLs2PCtz2wNbWvi8cwUcUZOzJj1dXx18wudaaRJ
-	 vPp+Y3Wsbud7dNigmrCRdD/Yg25mYe3JZv7cT6zd0x8u0DZmXKo/GKdr0i+qgd3siL
-	 1lj5EfmBP14QQ==
+	b=W6rkKXv4Jqt2WC9rhNiuyFTszCyQ+NU/CUri4bfVD74l8RW/TytI+4MPgefqCCnYK
+	 /KBv+B2+gDIuLLD1mj46SS02Sf55V4ZdXXq8EgXRPbCR3d4nX1mZeziZrqM5KXlf7C
+	 f4ZZGEvTjza5TjNtXcmJ2hinmldjQeV9vrd5OyHPEOoY3Z9yo236IeCjFVMKhk+L9L
+	 0rI26WUxq7WLJAVqbgPKBOn2Slzr7xdcNZsCjnDAkcWST2rNh99LZsZeQXbI+y0pQJ
+	 xW1wGI7y9DYOXOJy71rOakneZxcBqpSdQihlOIbusL0zmIvr8RT/TvCz/EDQECMbCg
+	 RsZPA1TevUcRw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 12 Aug 2026 16:55:39 +0200
-Subject: [PATCH net-next 04/11] mptcp: honour configured min/max RTO in
- retransmit paths
+Date: Wed, 12 Aug 2026 16:55:40 +0200
+Subject: [PATCH net-next 05/11] mptcp: add per-event MIB counters for
+ MPTCP_RST_EMPTCP resets
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260812-net-next-mptcp-misc-feat-7-3-v1-4-1905a818f6cb@kernel.org>
+Message-Id: <20260812-net-next-mptcp-misc-feat-7-3-v1-5-1905a818f6cb@kernel.org>
 References: <20260812-net-next-mptcp-misc-feat-7-3-v1-0-1905a818f6cb@kernel.org>
 In-Reply-To: <20260812-net-next-mptcp-misc-feat-7-3-v1-0-1905a818f6cb@kernel.org>
 To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
@@ -47,113 +47,187 @@ To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
  Simon Horman <horms@kernel.org>
 Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
  linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+ Shardul Bankar <shardul.b@mpiricsoftware.com>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3975; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=b0s9mRuMHSIrzFAad1zYGyC0Q9A3Qoyr3eB8zA1JMwc=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJqOkv/7ElwWeV+1Klx596s9Jq7pc2Li97YS/JMMvm2/
- 8A6XuHijlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIlMOcrIcPzEd49p3KKVc/if
- aTEmTEm5l5UquvjxtR/JRfsV1z01CGf4K8txyeGE/FPDrc0VT2//2H7hhVYmU4yVhc28208v+E5
- R4wUA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8430; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=oYBRE8x4vk82CdDziw0Cszl4jI9sHyflRIR5mdcApcU=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJqOkv3prCqfgt25uvPFv8ufEQ37P28i/cfHTrz7A9nV
+ tfmX7/FOkpZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACZyV4fhn5Xiu8Nd9x7ZnEqf
+ vv2QOE/Fa56Lj/euOnc25831mDAF6xSGP7z7ZmtUMKxU2RZvtOnlxqe3Sy/1s/tzchu43uRoilr
+ myQ4A
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+From: Shardul Bankar <shardul.b@mpiricsoftware.com>
 
-The MPTCP-level retransmit timers (DATA_FIN retransmissions and the
-fallback timeout) used the hard-coded TCP_RTO_MIN / TCP_RTO_MAX
-constants, ignoring the tcp_rto_min_us and tcp_rto_max_ms sysctls.
+MPTCP_RST_EMPTCP (reset reason 1) is used as a catch-all for several
+distinct error conditions across subflow setup, authentication, and
+data-path validation.  The existing MPRstTx/MPRstRx counters only
+track aggregate reset volume, making it difficult to diagnose which
+code path is triggering subflow resets in production.
 
-Make them follow the sysctls instead: seed icsk_rto_min / icsk_rto_max
-on the MPTCP socket from the per-netns sysctls in __mptcp_init_sock()
--- the msk does not go through tcp_init_sock(), so these fields would
-otherwise stay zero -- and read them directly where the constants were
-used:
+Add per-event MIB counters covering each MPTCP_RST_EMPTCP use site
+that is not already covered by an existing counter, named after the
+underlying event or condition rather than the reset action:
 
-- mptcp_set_datafin_timeout(): both the backoff cap computation and
-  the resulting timer_ival. The two sysctls are validated
-  independently, so rto_min > rto_max is a valid configuration; keep
-  a max_t() guard so ilog2() is never called with 0.
+  MD5SigReset           MD5SIG enabled on listener (incompatible)
+  MPJoinSynAckNoMPJoin  SYN/ACK missing MP_JOIN option
+  MPJoinAckNoMPJoin     server-side ACK missing MP_JOIN option
+                          (fallback path, MPJoin required)
+  MPJoinAckNoCtx        server-side ACK with no subflow context
+  MPJoinNoIdFound       MP_JOIN with a valid token but no PM local ID
+  DssReset              data mapping invalid (also fires on
+                          MAPPING_NODSS / EMIDDLEBOX path)
+  MPJoinNotEstablished  JOIN attempted on a not-fully-established msk
 
-- __mptcp_set_timeout(): the fallback when no subflow timeout is
-  available.
+MPJoinNoIdFound covers the second half of the no-msk MP_JOIN reset:
+the existing MPJoinNoTokenFound (MPTCP_MIB_JOINNOTOKEN) only counts the
+missing-token case in subflow_token_join_request(), while a JOIN that
+carries a valid token but for which the path manager returns no local
+id reaches the same MPTCP_RST_EMPTCP in subflow_check_req() uncounted.
 
-The icsk fields are read directly instead of using the
-tcp_rto_min()/tcp_rto_max() helpers: the MPTCP socket does not perform
-routing lookups in these paths, so the rto_min route metric checked by
-tcp_rto_min() can never apply here. The TCP_RTO_MIN_US /
-TCP_RTO_MAX_MS socket options are not supported by MPTCP setsockopt()
-either; this can be revisited if they get supported on MPTCP sockets.
+The aggregate MPRstTx/MPRstRx counters are unchanged.
 
-The remaining uses of TCP_RTO_MAX in net/mptcp/ctrl.c (default
-add_addr_timeout) and net/mptcp/subflow.c (MP_FAIL timeout) are
-intentionally left unchanged: they use the constant as a default
-duration, not as an RTO bound on a retransmit timer.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/618
-Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/511
+Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
 Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/protocol.c | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+ net/mptcp/mib.c      |  7 +++++++
+ net/mptcp/mib.h      |  7 +++++++
+ net/mptcp/protocol.c |  1 +
+ net/mptcp/subflow.c  | 10 ++++++++++
+ 4 files changed, 25 insertions(+)
 
+diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+index 2569385bab7c..608cb568897c 100644
+--- a/net/mptcp/mib.c
++++ b/net/mptcp/mib.c
+@@ -21,14 +21,19 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+ 	SNMP_MIB_ITEM("MPFallbackTokenInit", MPTCP_MIB_TOKENFALLBACKINIT),
+ 	SNMP_MIB_ITEM("MPTCPRetrans", MPTCP_MIB_RETRANSSEGS),
+ 	SNMP_MIB_ITEM("MPJoinNoTokenFound", MPTCP_MIB_JOINNOTOKEN),
++	SNMP_MIB_ITEM("MPJoinNoIdFound", MPTCP_MIB_MPJOINNOIDFOUND),
+ 	SNMP_MIB_ITEM("MPJoinSynRx", MPTCP_MIB_JOINSYNRX),
+ 	SNMP_MIB_ITEM("MPJoinSynBackupRx", MPTCP_MIB_JOINSYNBACKUPRX),
+ 	SNMP_MIB_ITEM("MPJoinSynAckRx", MPTCP_MIB_JOINSYNACKRX),
+ 	SNMP_MIB_ITEM("MPJoinSynAckBackupRx", MPTCP_MIB_JOINSYNACKBACKUPRX),
+ 	SNMP_MIB_ITEM("MPJoinSynAckHMacFailure", MPTCP_MIB_JOINSYNACKMAC),
++	SNMP_MIB_ITEM("MPJoinSynAckNoMPJoin", MPTCP_MIB_MPJOINSYNACKNOMPJOIN),
+ 	SNMP_MIB_ITEM("MPJoinAckRx", MPTCP_MIB_JOINACKRX),
+ 	SNMP_MIB_ITEM("MPJoinAckHMacFailure", MPTCP_MIB_JOINACKMAC),
++	SNMP_MIB_ITEM("MPJoinAckNoMPJoin", MPTCP_MIB_MPJOINACKNOMPJOIN),
++	SNMP_MIB_ITEM("MPJoinAckNoCtx", MPTCP_MIB_MPJOINACKNOCTX),
+ 	SNMP_MIB_ITEM("MPJoinRejected", MPTCP_MIB_JOINREJECTED),
++	SNMP_MIB_ITEM("MPJoinNotEstablished", MPTCP_MIB_MPJOINNOTESTABLISHED),
+ 	SNMP_MIB_ITEM("MPJoinSynTx", MPTCP_MIB_JOINSYNTX),
+ 	SNMP_MIB_ITEM("MPJoinSynTxCreatSkErr", MPTCP_MIB_JOINSYNTXCREATSKERR),
+ 	SNMP_MIB_ITEM("MPJoinSynTxBindErr", MPTCP_MIB_JOINSYNTXBINDERR),
+@@ -81,7 +86,9 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+ 	SNMP_MIB_ITEM("Blackhole", MPTCP_MIB_BLACKHOLE),
+ 	SNMP_MIB_ITEM("MPCapableDataFallback", MPTCP_MIB_MPCAPABLEDATAFALLBACK),
+ 	SNMP_MIB_ITEM("MD5SigFallback", MPTCP_MIB_MD5SIGFALLBACK),
++	SNMP_MIB_ITEM("MD5SigReset", MPTCP_MIB_MD5SIGRESET),
+ 	SNMP_MIB_ITEM("DssFallback", MPTCP_MIB_DSSFALLBACK),
++	SNMP_MIB_ITEM("DssReset", MPTCP_MIB_DSSRESET),
+ 	SNMP_MIB_ITEM("SimultConnectFallback", MPTCP_MIB_SIMULTCONNFALLBACK),
+ 	SNMP_MIB_ITEM("FallbackFailed", MPTCP_MIB_FALLBACKFAILED),
+ 	SNMP_MIB_ITEM("WinProbe", MPTCP_MIB_WINPROBE),
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index 3a3425e258a7..1ebdb55e9534 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -16,14 +16,19 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_TOKENFALLBACKINIT,	/* Could not init/allocate token */
+ 	MPTCP_MIB_RETRANSSEGS,		/* Segments retransmitted at the MPTCP-level */
+ 	MPTCP_MIB_JOINNOTOKEN,		/* Received MP_JOIN but the token was not found */
++	MPTCP_MIB_MPJOINNOIDFOUND,	/* Received MP_JOIN but no local ID was found */
+ 	MPTCP_MIB_JOINSYNRX,		/* Received a SYN + MP_JOIN */
+ 	MPTCP_MIB_JOINSYNBACKUPRX,	/* Received a SYN + MP_JOIN + backup flag */
+ 	MPTCP_MIB_JOINSYNACKRX,		/* Received a SYN/ACK + MP_JOIN */
+ 	MPTCP_MIB_JOINSYNACKBACKUPRX,	/* Received a SYN/ACK + MP_JOIN + backup flag */
+ 	MPTCP_MIB_JOINSYNACKMAC,	/* HMAC was wrong on SYN/ACK + MP_JOIN */
++	MPTCP_MIB_MPJOINSYNACKNOMPJOIN,	/* MP_RST: missing MP_JOIN in SYN/ACK */
+ 	MPTCP_MIB_JOINACKRX,		/* Received an ACK + MP_JOIN */
+ 	MPTCP_MIB_JOINACKMAC,		/* HMAC was wrong on ACK + MP_JOIN */
++	MPTCP_MIB_MPJOINACKNOMPJOIN,	/* MP_RST: missing MP_JOIN in ACK */
++	MPTCP_MIB_MPJOINACKNOCTX,	/* MP_RST: no subflow context on ACK */
+ 	MPTCP_MIB_JOINREJECTED,		/* The PM rejected the JOIN request */
++	MPTCP_MIB_MPJOINNOTESTABLISHED,	/* MP_RST: JOIN on not-fully-established msk */
+ 	MPTCP_MIB_JOINSYNTX,		/* Sending a SYN + MP_JOIN */
+ 	MPTCP_MIB_JOINSYNTXCREATSKERR,	/* Not able to create a socket when sending a SYN + MP_JOIN */
+ 	MPTCP_MIB_JOINSYNTXBINDERR,	/* Not able to bind() the address when sending a SYN + MP_JOIN */
+@@ -84,7 +89,9 @@ enum linux_mptcp_mib_field {
+ 					 * established packet
+ 					 */
+ 	MPTCP_MIB_MD5SIGFALLBACK,	/* Conflicting TCP option enabled */
++	MPTCP_MIB_MD5SIGRESET,		/* MP_RST: MD5SIG enabled on listener */
+ 	MPTCP_MIB_DSSFALLBACK,		/* Bad or missing DSS */
++	MPTCP_MIB_DSSRESET,		/* MP_RST: bad data mapping */
+ 	MPTCP_MIB_SIMULTCONNFALLBACK,	/* Simultaneous connect */
+ 	MPTCP_MIB_FALLBACKFAILED,	/* Can't fallback due to msk status */
+ 	MPTCP_MIB_WINPROBE,		/* MPTCP-level zero window probe */
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index ec874d2ead6a..8f074d757743 100644
+index 8f074d757743..b474d03620a7 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -581,17 +581,23 @@ static bool mptcp_pending_data_fin(struct sock *sk, u64 *seq)
- static void mptcp_set_datafin_timeout(struct sock *sk)
- {
- 	struct inet_connection_sock *icsk = inet_csk(sk);
-+	u32 rto_min = READ_ONCE(icsk->icsk_rto_min);
-+	u32 rto_max = READ_ONCE(icsk->icsk_rto_max);
- 	u32 retransmits;
+@@ -4002,6 +4002,7 @@ bool mptcp_finish_join(struct sock *ssk)
  
-+	/* The sysctls are validated independently: rto_min > rto_max is
-+	 * possible, guard against ilog2(0).
-+	 */
- 	retransmits = min_t(u32, icsk->icsk_retransmits,
--			    ilog2(TCP_RTO_MAX / TCP_RTO_MIN));
-+			    ilog2(max_t(u32, rto_max / rto_min, 1)));
+ 	/* mptcp socket already closing? */
+ 	if (!mptcp_is_fully_established(parent)) {
++		MPTCP_INC_STATS(sock_net(parent), MPTCP_MIB_MPJOINNOTESTABLISHED);
+ 		subflow->reset_reason = MPTCP_RST_EMPTCP;
+ 		return false;
+ 	}
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index e1f20ff8fdb4..af81ad5e699d 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -96,6 +96,7 @@ static struct mptcp_sock *subflow_token_join_request(struct request_sock *req)
  
--	mptcp_sk(sk)->timer_ival = TCP_RTO_MIN << retransmits;
-+	mptcp_sk(sk)->timer_ival = rto_min << retransmits;
- }
+ 	local_id = mptcp_pm_get_local_id(msk, (struct sock_common *)req);
+ 	if (local_id < 0) {
++		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MPJOINNOIDFOUND);
+ 		sock_put((struct sock *)msk);
+ 		return NULL;
+ 	}
+@@ -160,6 +161,7 @@ static int subflow_check_req(struct request_sock *req,
+ 	 * TCP option space.
+ 	 */
+ 	if (rcu_access_pointer(tcp_sk(sk_listener)->md5sig_info)) {
++		MPTCP_INC_STATS(sock_net(sk_listener), MPTCP_MIB_MD5SIGRESET);
+ 		subflow_add_reset_reason(skb, MPTCP_RST_EMPTCP);
+ 		return -EINVAL;
+ 	}
+@@ -563,6 +565,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
+ 		u8 hmac[SHA256_DIGEST_SIZE];
  
- static void __mptcp_set_timeout(struct sock *sk, long tout)
- {
--	mptcp_sk(sk)->timer_ival = tout > 0 ? tout : TCP_RTO_MIN;
-+	mptcp_sk(sk)->timer_ival = tout > 0 ? tout :
-+				   READ_ONCE(inet_csk(sk)->icsk_rto_min);
- }
- 
- static long mptcp_timeout_from_subflow(const struct mptcp_subflow_context *subflow)
-@@ -3161,7 +3167,9 @@ static void mptcp_worker(struct work_struct *work)
- 
- static void __mptcp_init_sock(struct sock *sk)
- {
-+	struct inet_connection_sock *icsk = inet_csk(sk);
- 	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct net *net = sock_net(sk);
- 
- 	INIT_LIST_HEAD(&msk->conn_list);
- 	INIT_LIST_HEAD(&msk->join_list);
-@@ -3170,7 +3178,13 @@ static void __mptcp_init_sock(struct sock *sk)
- 	INIT_WORK(&msk->work, mptcp_worker);
- 	msk->out_of_order_queue = RB_ROOT;
- 	msk->first_pending = NULL;
--	msk->timer_ival = TCP_RTO_MIN;
-+
-+	/* msk does not go through tcp_init_sock(); seed RTO bounds. */
-+	icsk->icsk_rto_min =
-+		usecs_to_jiffies(READ_ONCE(net->ipv4.sysctl_tcp_rto_min_us));
-+	icsk->icsk_rto_max =
-+		msecs_to_jiffies(READ_ONCE(net->ipv4.sysctl_tcp_rto_max_ms));
-+	msk->timer_ival = icsk->icsk_rto_min;
- 	msk->scaling_ratio = TCP_DEFAULT_SCALING_RATIO;
- 	msk->backlog_len = 0;
- 	mptcp_init_rtt_est(msk);
+ 		if (!(mp_opt.suboptions & OPTION_MPTCP_MPJ_SYNACK)) {
++			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPJOINSYNACKNOMPJOIN);
+ 			subflow->reset_reason = MPTCP_RST_EMPTCP;
+ 			goto do_reset;
+ 		}
+@@ -865,6 +868,12 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+ 		 */
+ 		if (!ctx || fallback) {
+ 			if (fallback_is_fatal) {
++				if (!ctx)
++					MPTCP_INC_STATS(sock_net(sk),
++							MPTCP_MIB_MPJOINACKNOCTX);
++				else
++					MPTCP_INC_STATS(sock_net(sk),
++							MPTCP_MIB_MPJOINACKNOMPJOIN);
+ 				subflow_add_reset_reason(skb, MPTCP_RST_EMPTCP);
+ 				goto dispose_child;
+ 			}
+@@ -1416,6 +1425,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 			 * subflow_error_report() will introduce the appropriate barriers
+ 			 */
+ 			subflow->reset_transient = 0;
++			MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSRESET);
+ 			subflow->reset_reason = status == MAPPING_NODSS ?
+ 						MPTCP_RST_EMIDDLEBOX :
+ 						MPTCP_RST_EMPTCP;
 
 -- 
 2.53.0
