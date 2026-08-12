@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44EB74746BE
-	for <mptcp@lists.linux.dev>; Wed, 12 Aug 2026 15:32:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B090847F786
+	for <mptcp@lists.linux.dev>; Wed, 12 Aug 2026 15:37:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786548754; cv=none; b=glykHah7Q4p+MkV20FdsuOQS7nUmMQYjSFQC5mzzOtfJ7Flog7Qn756IXBnmCbKGo1WeC4rrmasKZc39folyC09tbI6Zx6M66ufDcslE1AY8/UcBVyDqCRvdKmLwbugp/zOyFpputdSIXLfoelyZLiQO7r4O5kObR1V4+B+D77E=
+	t=1786549071; cv=none; b=Z0QkaT+vlE5k44YhrX6BO5rnVQn6PG++Pp6PNWjS98t72McbzT0eywjJSUXRXprMIkdvFh/TBBcWHXLSMYJnaEQJ1AV92G08ov3G98mtRfrF2oSDQ5ASrofv+mvXnLWzLYXVmG7M5/BvhL+kkgKYlQ/9vkzoxO+pLkrRme4d9xY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786548754; c=relaxed/simple;
-	bh=jhr1nRmKKSUafi1Fq+WoM8rnnyPERpHT3v9mB7icMCU=;
+	s=arc-20240116; t=1786549071; c=relaxed/simple;
+	bh=waGxua2xApfvPoUayiCDnxHjNzXplmcc9yCIQKnTRTQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AoZR9lvD7UTqILA/FaN4vty3PVrd0O3alEcgPp0FVc2db6++Qt3GbZJZIG7TY8BTWaJW1HvcHSULUfw0FjJIVkOhZPU4OmH1SsD1KospNa7XvZxCOyDLuM83OwgF2p+GGUoVsWbkg/0fktIIYCIXKThtStIDvnYz5gQSaBW4vps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dUtxxpxz; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=U49Nzh75749rYjKaXZ7x2OXK0LEmWHsqvIlHClBngkK7itlmeXIvoLNYbFI+25yYTUanWpaeiWLBYjRgbLSXPZ9Ft9yDHqOalFc77sapPPVibIRD6YShXreB20bnaIlKTPkdn74jQgmhBsnYTcKABE22iS+945erHEhgC46mIjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nB+P+5Gd; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dUtxxpxz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF2491F000E9;
-	Wed, 12 Aug 2026 15:32:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nB+P+5Gd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15D211F0155A;
+	Wed, 12 Aug 2026 15:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786548743;
-	bh=Q0IGxxB0TfVEauRh+67tFMZVgrJ/a/eNcPicZOY1ORE=;
+	s=k20260515; t=1786549056;
+	bh=/x6vU+NPcg+wHDtF2NYqCV0oSAtaAAEmryxqzGYtUzE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=dUtxxpxzR39MswWSWirRobzAWG2OWnuKmsBrTmTFDU8h9aef4GN89ARzl30VmF2e2
-	 RgUamHRPLv39Z4xRSI8fP2JT9G3PyXpM0soHgfs3rvKAH4ykBiYarFKfw6fGwb+B4M
-	 q+DwB1wmeQfD1x4nmnbnIUClkzTB6NU5HS42DIiyXh5ySudQ/Cvx90zPWkD108osTY
-	 y327l081Ba53A7ITAc9xmmT1Z8PeXkffm7D4zl/lXtTmqUooEoKudM/dbW9Iz5to5e
-	 TdRZrLvrIBtBz010gs6MK4pUXcYSnQEK8vt4S5aHi6iL0Mne9P30nvRa5xVNmLMtd5
-	 PXAIsBOqPko+A==
-Message-ID: <41078a8c-00c7-4cb1-8e57-237b4ea6c2f0@kernel.org>
-Date: Wed, 12 Aug 2026 17:32:21 +0200
+	b=nB+P+5GdBMLYlX450TeXnMKPBbtOQr85TiKX1SIuUvE0M3cUMtTSaohqeYsIorfkp
+	 ILonwOVewDgZ+9OTRvAioWLVd2PdldRaIyFhrI9g4pxOrZl7S/a/LBst4VJqtNeJln
+	 oZ4lNLnksCCpIYWm7OQcU21sQk8rRUgBOov1PKWoYym+yWrDy21cf43ihHhE9tipFl
+	 voOcFslf6psO7fcLg8g4t3Ivh5GnlqxFgcVWYJ2nPXzWHNZlZ4OprKleh+DCqJ2KY2
+	 JTA0bhAxc/gPtp00OLHmrDZdPdJwEUUIziHpU3SOwzPiYHOMbXHvqfhL3GFc1zkfvI
+	 wtB77taD7p9WA==
+Message-ID: <bd156a3c-2ec9-40db-b929-8f40dd9eb0aa@kernel.org>
+Date: Wed, 12 Aug 2026 17:37:34 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,17 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH export v3 2/4] mptcp: reject joins after fallback in
- mptcp_is_fully_established
+Subject: Re: [PATCH v2 mptcp-next 7/7] mptcp: implemented OoO queue pruning
 Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>, Chenguang Zhao
- <chenguang.zhao@linux.dev>, mptcp@lists.linux.dev
-Cc: Chenguang Zhao <zhaochenguang@kylinos.cn>
-References: <20260812054653.43799-1-chenguang.zhao@linux.dev>
- <20260812054653.43799-3-chenguang.zhao@linux.dev>
- <1d7c56b9-00c1-4550-a403-c3d704259267@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>, Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <cover.1786026372.git.pabeni@redhat.com>
+ <be9dcbef291a424fdd54d19fc72f9f28fb239b81.1786026372.git.pabeni@redhat.com>
+ <80572775-6e76-4c79-83e2-efdedbd3f3b8@redhat.com>
+ <b0d961b3-7a06-4237-92b2-67d8ab2ff28b@kernel.org>
+ <a8cf012f365d1885f773d5959829cb42298477bb.camel@kernel.org>
+ <eb437699-4e3a-422d-93fa-3efde2985189@kernel.org>
+ <b268a8d3-aa21-48e4-a6ea-92e98fa506c0@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,66 +91,31 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <1d7c56b9-00c1-4550-a403-c3d704259267@redhat.com>
+In-Reply-To: <b268a8d3-aa21-48e4-a6ea-92e98fa506c0@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo, Chenguang,
+Hi Paolo,
 
-On 12/08/2026 11:45, Paolo Abeni wrote:
-> On 8/12/26 7:46 AM, Chenguang Zhao wrote:
->> From: Chenguang Zhao <zhaochenguang@kylinos.cn>
+On 12/08/2026 13:28, Paolo Abeni wrote:
+> On 8/8/26 6:34 PM, Matthieu Baerts wrote:
+>> On 08/08/2026 04:31, Geliang Tang wrote:
+>>> It seems you forgot to update this on the export branch.
 >>
->> After fallback, treat the connection as not fully established so later
->> MP_JOIN attempts are rejected.
-
-@Chenguang: please first reply to the questions and comments from the
-previous versions, then only send a new version when the discussions are
-over.
-
->> Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
->> ---
->>  net/mptcp/protocol.h | 5 ++++-
->>  1 file changed, 4 insertions(+), 1 deletion(-)
+>> Arf, indeed I did, my bad... good catch!
 >>
->> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
->> index 7e168e450fb0..bf2483a7ed92 100644
->> --- a/net/mptcp/protocol.h
->> +++ b/net/mptcp/protocol.h
->> @@ -957,8 +957,11 @@ static inline void mptcp_start_tout_timer(struct sock *sk)
->>  
->>  static inline bool mptcp_is_fully_established(struct sock *sk)
->>  {
->> +	struct mptcp_sock *msk = mptcp_sk(sk);
->> +
->>  	return inet_sk_state_load(sk) == TCP_ESTABLISHED &&
->> -	       READ_ONCE(mptcp_sk(sk)->fully_established);
->> +	       READ_ONCE(msk->fully_established) &&
->> +	       !test_bit(MPTCP_FALLBACK_DONE, &msk->flags);
-> 
-> Does the above improve actually anything? The test is inherently racy,
-> as lack the fallback_lock, and AFAICS all critical paths have already
-> explicit checks under such lock, see i.e.  mptcp_finish_join().
+>> I just fixed it in our tree (and the alignment of the next line), but I
+>> will wait for Paolo's feedback to know if he judges that a new version
+>> is needed for upstream, or if that can be done in follow-up patches.
+> Could you please revert the export branch to match upstream, so I can
+> send follow-up patches?
+Sorry, I wasn't available this morning, and the auto-sync job failed
+because it got confused by the "Can't drop packets for fallback socket
+this late, or the stream" chunk introduced in patch 4/7, but dropped in
+7/7 :)
 
-Indeed, the fallback lock is missing.
+Just fixed.
 
-Note: Chenguang is looking at a bug where, when an MP_FAIL is received
-before being in fully_established, the kernel accept going to fully
-established, and creating new subflows, then reject them once done.
-
-Same when receiving a 4th packet without MPTCP options.
-
-I think the MP_FAIL should do a fallback if possible, but it is probably
-also required to check the fallback status or something similar when
-receiving an MPJ.
-
-> I would prefer avoiding additional conditionals, if not well reasoned.
-
-Agreed, the commit messages in this series are not explaining (enough)
-the reason and the context.
-
-BTW, Chenguang, please use 'mptcp-net' for fixes (and mptcp-next for
-features). Also fixes should have a Fixes tag.
 
 Cheers,
 Matt
