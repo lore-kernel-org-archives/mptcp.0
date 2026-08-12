@@ -1,93 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CFD436C9C2;
-	Wed, 12 Aug 2026 01:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20093264F9
+	for <mptcp@lists.linux.dev>; Wed, 12 Aug 2026 05:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786498887; cv=none; b=g66QY8hT53Ism47IDtPc2Co+CYf+SWYx5g303rgqWyDgPwQ3GZaj2e7q/DsBJ/c3qpU3QVMGdptSs31Jq7P4IjxREO6PZQGHFxlMS4YRiQ7j6P421h7R+D7HFRMyGAlD+7tFCFTCgNgr5Vc6upDqdwboCYKsciOTNFG0T9cUOpM=
+	t=1786513616; cv=none; b=LLUOHbaTwJdkEcqwRjMNVtWXoOXMg1FKWuxurb6V9963wcT+7C2tda24/SUCuDPDMzWrkZFcuMpOLEMY4RGuLzSndH1cTHNhyjCU2f+2VLxCwxzq86EFTxmxby6TixiSaIVRkeT8y6aeRpz0rsyuC12OevfwbXhVDtlIRzcFlWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786498887; c=relaxed/simple;
-	bh=dZeE+jyBKiUzaxYFgm2s0HuLbu6gB9T8dW3v0Z6rzbA=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=hMWAUu8q307rx71Wbo0Yj6ApQ9t2qyxHeQypVu7/0mtsRUJNQcHMMieZmUW8WEJ5ZpwP79vvWylpF+9rxeGdblp4ZFYJ2+bdTmyazA0axHfcAQwc3pv4CeY4EwX7zDB2jYD/7PCp7QqTqs1MTZCkTZ6KlP09pF7mSydS4MbSqHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N9b3T+oZ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786513616; c=relaxed/simple;
+	bh=UgcEtHRVOEWDMfvilLxU5AYke0R4rocUQKHzqWRYVx4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=B2XkurwXbhEmTJyWq1NIu8iUiX/ooL86qTN8X9bICiBADc63dwlB8HTf3scqn8YWv+X4M38+2s71WVmFqJ4F/WrO+PU2FHYNkQ6MCyH5pSwLbfULsRGydLJ2DffTDuY9boJ1dq/KNvSXsbABUHIydHWqrwrwkQlpylAoVaxUw20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nr0ThdBC; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N9b3T+oZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 141A01F000E9;
-	Wed, 12 Aug 2026 01:41:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786498886;
-	bh=DMNa9VbXFgT+88cJzFRA4WPgYfBh4UlIJlaRgPKrJ5Q=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=N9b3T+oZPqSBCzRSJY7B+7WutMc2TKHsk9fhmBlJ1YZHtffUqcoqxAtSxKdbU1jy7
-	 d5v9sdgD0ayy9AaHiQ9HE9sFzvGEw0lD6L3lckCuLYw34hdkzxLQeHjr1WbhobB1fa
-	 2W9kCh0iotUuRFIt1fyRhhQ9+tR+N96dJzhuBgJ0tLDLd4b9hZpZYNyxerHHBNOBb4
-	 Ffg691PAtU9Zz1E05tqPiNWOdl44zWIKfkRPLHR2e9OHrxnB25Snb5kT36Swd1dVC+
-	 R1YcVQJGbj3Ob6xq/G4KpUkDmNYMWPSq7w+N2Rj6jTmEmC+E71ZdbnYKp5WdJRV/9r
-	 ZMp85ENN1VMGg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 19A053809A3C;
-	Wed, 12 Aug 2026 01:40:43 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nr0ThdBC"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1786513612;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=MoNMaG7DckOAnBrweN6hRWALFxxNgmb+2Mru02m0xCI=;
+	b=nr0ThdBCkWVFWIfAdk+CoZfZ9KblMpg2yx63YQCbkx7UWSnR3N9wUour0UenvWbpiD7bKe
+	jFzDWTPWjiXuWOGG7j5vLJbn+nl2nGTnh378oIUEaqeiVO1lTH2gjKglq3EHTWYyAFoOo7
+	JMy84a6/eXNEf278bEXuc7XDsl7/UFM=
+From: Chenguang Zhao <chenguang.zhao@linux.dev>
+To: mptcp@lists.linux.dev
+Cc: chenguang.zhao@linux.dev,
+	Chenguang Zhao <zhaochenguang@kylinos.cn>
+Subject: [PATCH export v3 0/4] mptcp: fix TCP fallback on single-subflow MP_FAIL
+Date: Wed, 12 Aug 2026 13:46:49 +0800
+Message-Id: <20260812054653.43799-1-chenguang.zhao@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v3 0/7] mptcp: out-of-order queue pruning
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <178649884163.1230679.9378736754022898187.git-patchwork-notify@kernel.org>
-Date: Wed, 12 Aug 2026 01:40:41 +0000
-References: 
- <20260807-net-next-mptcp-oooq-pruning-v3-0-dbc1eb853cc3@kernel.org>
-In-Reply-To: 
- <20260807-net-next-mptcp-oooq-pruning-v3-0-dbc1eb853cc3@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- yangang@kylinos.cn
+X-Migadu-Flow: FLOW_OUT
 
-Hello:
+From: Chenguang Zhao <zhaochenguang@kylinos.cn>
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+When a valid MP_FAIL is received and infinite fallback is still allowed
+(single contiguous subflow), RFC8684 section 3.7 requires leaving MPTCP
+mode. Today the stack only clears allow_subflows and defers the real
+fallback to the later infinite-map transmit path. If no data is sent in
+between, the peer can still complete the 4th ACK as MPTCP and keep using
+MPTCP options.
 
-On Fri, 07 Aug 2026 15:49:00 +0200 you wrote:
-> Under memory pressure, a pruning of the MPTCP-level OoO queue might be
-> required as last resort, to avoid too long recoveries, or even stalls.
-> Geliang and Gang managed to reproduce this behaviour, and Paolo
-> improved the situation thanks to the following patches:
-> 
-> - Patches 1-3: improve the MPTCP-level retransmission schema to make
->   recoveries from memory pressure/after MPTCP-level drop significantly
->   faster.
-> 
-> [...]
+This series adds a dedicated MPFailFallback MIB, rejects joins after
+fallback via mptcp_is_fully_established(), resets when the OoO queue
+blocks infinite mapping, and falls back immediately after the MP_FAIL
+response through mptcp_try_fallback().
 
-Here is the summary with links:
-  - [net-next,v3,1/7] mptcp: move the retrans loop to a separate helper
-    https://git.kernel.org/netdev/net-next/c/789e6a844b51
-  - [net-next,v3,2/7] mptcp: move the stale logic out of retrans scheduler
-    https://git.kernel.org/netdev/net-next/c/6cafe51e0f98
-  - [net-next,v3,3/7] mptcp: let the retrans scheduler do its job
-    https://git.kernel.org/netdev/net-next/c/96d846e3e2a7
-  - [net-next,v3,4/7] mptcp: explicitly drop over memory limits
-    https://git.kernel.org/netdev/net-next/c/e0e4d56b0505
-  - [net-next,v3,5/7] mptcp: enforce hard limit on backlog flushing
-    https://git.kernel.org/netdev/net-next/c/b1224c4b40f6
-  - [net-next,v3,6/7] mptcp: avoid code duplication in __mptcp_move_skb()
-    https://git.kernel.org/netdev/net-next/c/996643574cc8
-  - [net-next,v3,7/7] mptcp: implemented OoO queue pruning
-    https://git.kernel.org/netdev/net-next/c/e468d371180d
+Patch 1 adds the MPFailFallback MIB.
+Patch 2 rejects joins once fallback has completed.
+Patch 3 resets on MP_FAIL when the OoO queue is non-empty.
+Patch 4 falls back to TCP after sending the MP_FAIL response.
 
-You are awesome, thank you!
+v3:
+- Address Matthieu Baerts' review
+
+- Introduce the MIB first (Fixes: c65c2e3bae69) and reuse
+  mptcp_try_fallback() in the functional fix
+
+- Split mptcp_is_fully_established() and OoO handling into dedicated
+  commits for easier backport
+
+- Check FALLBACK_DONE via test_bit()
+
+- Drop allow_subflows from mptcp_is_fully_established() (and the
+  READ/WRITE_ONCE follow-up)
+
+- On OoO failure, reset without sending MP_FAIL
+
+- This patch series is based on the export branch, The git repository
+  is: git://git.kernel.org/pub/scm/linux/kernel/git/mptcp/linux.git
+
+Chenguang Zhao (4):
+  mptcp: add MPFailFallback MIB
+  mptcp: reject joins after fallback in mptcp_is_fully_established
+  mptcp: reset subflow on MP_FAIL when OoO queue is non-empty
+  mptcp: fallback to TCP on MP_FAIL with a single subflow
+
+ net/mptcp/mib.c      |  1 +
+ net/mptcp/mib.h      |  1 +
+ net/mptcp/pm.c       | 17 +++++++++++++++--
+ net/mptcp/protocol.c |  4 +++-
+ net/mptcp/protocol.h |  5 ++++-
+ 5 files changed, 24 insertions(+), 4 deletions(-)
+
+---
+v2:
+ https://lore.kernel.org/all/20260715061830.1057851-1-chenguang.zhao@linux.dev/
+
+v1:
+ https://lore.kernel.org/all/20260713064134.914507-1-chenguang.zhao@linux.dev/
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.25.1
 
