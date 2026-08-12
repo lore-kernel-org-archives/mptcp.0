@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022BA46EC69;
-	Wed, 12 Aug 2026 14:56:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978B8468C22;
+	Wed, 12 Aug 2026 14:56:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786546575; cv=none; b=llI1WSe7H+7/+KVO8xcpJz3eUb/W3VPZ2Z5s9bLE2XU1DnfgTKv8QffM6NKzhwAicY1VcJc+Ont1lQx639iTxuTHAxuQHff+7+QdKk30PLhEvukAO8831omNPLwSKcGoLyhWtOL/AeP+SsW7FfmxGMqvyEZZmmHLkLJQOG+MPqw=
+	t=1786546578; cv=none; b=UNZQJzdTDWaPTz1sPhdkf9vI1yX9EYdNNtNxwX+d2zHBJZdEndqikq+HKikboq1xwKMcee5sG2IsRwNN9H39IquHHY3SadXx4iREPR7y+HroTuGoHrQdVqRZ3xFX4iVtV71u4uB0/2rN9yl/wPYD9Q2YzdJKpHRmYGeQ7i6iGIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786546575; c=relaxed/simple;
-	bh=2QzIb/jNE1OcHLnHPrfA7nX9AqIAo1yYkGQwq3UFsGw=;
+	s=arc-20240116; t=1786546578; c=relaxed/simple;
+	bh=1isvdAJraf3vPmJlBFNMJRSfcEoMPYoKAsSef2MxevY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iuJ1nC91ouaojpuYF4yn02Nn5NlETovDgcwfnPKTA0fTFonq36RTu46i2xfOW4WVfSzdRjxplT2zs/2sY4BgPu9Us5bfPX02dmN9QVSbnRe86+usJ7NO1Iwz66BKBKLzD6tolIk7DD8WMfogg0LLBCJIirXTVupNXmzEIcFIzZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dcF2Ntme; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=k8k8BVgtDZLf+OWkpcdBtx7rwyGkaA5hmUpw2HtlqH90lrgbWumNyo7u22g/THeDXQ1ev55M+pdsmN/SY8k847OBx1PkCBtfsTzt0QIgCyjfwxbJh8zbApsVR3gY4cg+ryKLS/dSPUN9TlGV+WD3baPAJV9zSMNOwME1zRtTBCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T07DeVzL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dcF2Ntme"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 688EC1F00ADB;
-	Wed, 12 Aug 2026 14:56:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T07DeVzL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71A1F1F00AC4;
+	Wed, 12 Aug 2026 14:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786546562;
-	bh=qLUPtfFf9FhflLXSbkntjMYPfWGrc/D4NeOfLtwZGug=;
+	s=k20260515; t=1786546567;
+	bh=N7N7M4T1qNAFQiNc7NOoy3Cg9WmfPmpVq/vTG0+7lE8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=dcF2Ntmel4kXMZdYiAKCeCcveNaojBLGqs+0ejME4vXB2rVSXG9vmfmw04sLsBKpv
-	 dMbdTOWIIVjrgAdc2Tms2FMD+lBFeEJv5C82y8ihri7kvwzrhGGccnMhH6AHi/7Vf/
-	 CwPuThUUhTm7zhQgluWexA193uec/4RGf9UZv+osFMECN8bFg8wXlKb7LIe2hV86f0
-	 wzi1kKduR0FAVOxwuZfcQWckjltXMwrY65SC1uyGiLM6lWcEabHuTZgaQm8fqBhvwd
-	 e2sOzJkKub2BmPLW9fpN5h4zrVEe0jaX/rzbcmUTYQ+ubLbeguEZMzDDd+pD9ZuUPr
-	 td8hdHsAreIlg==
+	b=T07DeVzL1cudML35F08jZuENeALvsrjldXyh1qWWMT7QsdYMduI0rdvPVOWNi3pTH
+	 6PDRo0z5Pd0zNGbCavFWnjFM0358nJ0663poFFEH9h6s5Hy5ISW9jLGERizriAjhxh
+	 e5PVJVeI1Pj4U1X/qzkGjlcDJp76kqm2grJyiAHFvIjK/ZbssTO9d1/jKDDE9jXaF8
+	 Bhap5xa2FCrQA6XUPCkKGN/B9O3KLs2PCtz2wNbWvi8cwUcUZOzJj1dXx18wudaaRJ
+	 vPp+Y3Wsbud7dNigmrCRdD/Yg25mYe3JZv7cT6zd0x8u0DZmXKo/GKdr0i+qgd3siL
+	 1lj5EfmBP14QQ==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 12 Aug 2026 16:55:37 +0200
-Subject: [PATCH net-next 02/11] mptcp: remove unused data_ack from struct
- mptcp_ext
+Date: Wed, 12 Aug 2026 16:55:39 +0200
+Subject: [PATCH net-next 04/11] mptcp: honour configured min/max RTO in
+ retransmit paths
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260812-net-next-mptcp-misc-feat-7-3-v1-2-1905a818f6cb@kernel.org>
+Message-Id: <20260812-net-next-mptcp-misc-feat-7-3-v1-4-1905a818f6cb@kernel.org>
 References: <20260812-net-next-mptcp-misc-feat-7-3-v1-0-1905a818f6cb@kernel.org>
 In-Reply-To: <20260812-net-next-mptcp-misc-feat-7-3-v1-0-1905a818f6cb@kernel.org>
 To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
@@ -47,86 +47,113 @@ To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
  Simon Horman <horms@kernel.org>
 Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
  linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- linux-trace-kernel@vger.kernel.org, Geliang Tang <geliang@kernel.org>
+ Kalpan Jani <kalpan.jani@mpiricsoftware.com>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2561; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=RWzRcFuSIbEV/td2eQo1OegNXZesOq80bWBdbOKhYO0=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJqOov3Mpj1NBjUSfnKruS1naLm/v7QtanrPt34NiFth
- ZTYVE3njlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgInwtTD8U3/M1xHT3HXvu6PS
- h8vTbtbO9Xhy1I07a9l1s5frnU6aizD8s3kglflj3aHFS55v6GI2jEjfcv+TUExlrPS3yVc/3Jk
- uxAoA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3975; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=b0s9mRuMHSIrzFAad1zYGyC0Q9A3Qoyr3eB8zA1JMwc=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJqOkv/7ElwWeV+1Klx596s9Jq7pc2Li97YS/JMMvm2/
+ 8A6XuHijlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIlMOcrIcPzEd49p3KKVc/if
+ aTEmTEm5l5UquvjxtR/JRfsV1z01CGf4K8txyeGE/FPDrc0VT2//2H7hhVYmU4yVhc28208v+E5
+ R4wUA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
 
-The data_ack and data_ack32 fields in struct mptcp_ext are no longer used
-anywhere. Remove them from the structure and update mptcp_dump_mpext()
-trace helper accordingly. Drop the data_ack field from the trace entry
-and the corresponding output in TP_printk().
+The MPTCP-level retransmit timers (DATA_FIN retransmissions and the
+fallback timeout) used the hard-coded TCP_RTO_MIN / TCP_RTO_MAX
+constants, ignoring the tcp_rto_min_us and tcp_rto_max_ms sysctls.
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+Make them follow the sysctls instead: seed icsk_rto_min / icsk_rto_max
+on the MPTCP socket from the per-netns sysctls in __mptcp_init_sock()
+-- the msk does not go through tcp_init_sock(), so these fields would
+otherwise stay zero -- and read them directly where the constants were
+used:
+
+- mptcp_set_datafin_timeout(): both the backoff cap computation and
+  the resulting timer_ival. The two sysctls are validated
+  independently, so rto_min > rto_max is a valid configuration; keep
+  a max_t() guard so ilog2() is never called with 0.
+
+- __mptcp_set_timeout(): the fallback when no subflow timeout is
+  available.
+
+The icsk fields are read directly instead of using the
+tcp_rto_min()/tcp_rto_max() helpers: the MPTCP socket does not perform
+routing lookups in these paths, so the rto_min route metric checked by
+tcp_rto_min() can never apply here. The TCP_RTO_MIN_US /
+TCP_RTO_MAX_MS socket options are not supported by MPTCP setsockopt()
+either; this can be revisited if they get supported on MPTCP sockets.
+
+The remaining uses of TCP_RTO_MAX in net/mptcp/ctrl.c (default
+add_addr_timeout) and net/mptcp/subflow.c (MP_FAIL timeout) are
+intentionally left unchanged: they use the constant as a default
+duration, not as an RTO bound on a retransmit timer.
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/618
+Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
 Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-To: Steven Rostedt <rostedt@goodmis.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-trace-kernel@vger.kernel.org
----
- include/net/mptcp.h          | 4 ----
- include/trace/events/mptcp.h | 6 ++----
- 2 files changed, 2 insertions(+), 8 deletions(-)
+ net/mptcp/protocol.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 71b9fc5a5796..485d55b66ea6 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -19,10 +19,6 @@ struct seq_file;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index ec874d2ead6a..8f074d757743 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -581,17 +581,23 @@ static bool mptcp_pending_data_fin(struct sock *sk, u64 *seq)
+ static void mptcp_set_datafin_timeout(struct sock *sk)
+ {
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
++	u32 rto_min = READ_ONCE(icsk->icsk_rto_min);
++	u32 rto_max = READ_ONCE(icsk->icsk_rto_max);
+ 	u32 retransmits;
  
- /* MPTCP sk_buff extension data */
- struct mptcp_ext {
--	union {
--		u64	data_ack;
--		u32	data_ack32;
--	};
- 	u64		data_seq;
- 	u32		subflow_seq;
- 	u16		data_len;
-diff --git a/include/trace/events/mptcp.h b/include/trace/events/mptcp.h
-index 04521acba483..22882bd03459 100644
---- a/include/trace/events/mptcp.h
-+++ b/include/trace/events/mptcp.h
-@@ -75,7 +75,6 @@ DECLARE_EVENT_CLASS(mptcp_dump_mpext,
- 	TP_ARGS(mpext),
++	/* The sysctls are validated independently: rto_min > rto_max is
++	 * possible, guard against ilog2(0).
++	 */
+ 	retransmits = min_t(u32, icsk->icsk_retransmits,
+-			    ilog2(TCP_RTO_MAX / TCP_RTO_MIN));
++			    ilog2(max_t(u32, rto_max / rto_min, 1)));
  
- 	TP_STRUCT__entry(
--		__field(u64, data_ack)
- 		__field(u64, data_seq)
- 		__field(u32, subflow_seq)
- 		__field(u16, data_len)
-@@ -94,7 +93,6 @@ DECLARE_EVENT_CLASS(mptcp_dump_mpext,
- 	),
+-	mptcp_sk(sk)->timer_ival = TCP_RTO_MIN << retransmits;
++	mptcp_sk(sk)->timer_ival = rto_min << retransmits;
+ }
  
- 	TP_fast_assign(
--		__entry->data_ack = mpext->ack64 ? mpext->data_ack : mpext->data_ack32;
- 		__entry->data_seq = mpext->data_seq;
- 		__entry->subflow_seq = mpext->subflow_seq;
- 		__entry->data_len = mpext->data_len;
-@@ -112,8 +110,8 @@ DECLARE_EVENT_CLASS(mptcp_dump_mpext,
- 		__entry->infinite_map = mpext->infinite_map;
- 	),
+ static void __mptcp_set_timeout(struct sock *sk, long tout)
+ {
+-	mptcp_sk(sk)->timer_ival = tout > 0 ? tout : TCP_RTO_MIN;
++	mptcp_sk(sk)->timer_ival = tout > 0 ? tout :
++				   READ_ONCE(inet_csk(sk)->icsk_rto_min);
+ }
  
--	TP_printk("data_ack=%llu data_seq=%llu subflow_seq=%u data_len=%u csum=%x use_map=%u dsn64=%u data_fin=%u use_ack=%u ack64=%u mpc_map=%u frozen=%u reset_transient=%u reset_reason=%u csum_reqd=%u infinite_map=%u",
--		  __entry->data_ack, __entry->data_seq,
-+	TP_printk("data_seq=%llu subflow_seq=%u data_len=%u csum=%x use_map=%u dsn64=%u data_fin=%u use_ack=%u ack64=%u mpc_map=%u frozen=%u reset_transient=%u reset_reason=%u csum_reqd=%u infinite_map=%u",
-+		  __entry->data_seq,
- 		  __entry->subflow_seq, __entry->data_len,
- 		  __entry->csum, __entry->use_map,
- 		  __entry->dsn64, __entry->data_fin,
+ static long mptcp_timeout_from_subflow(const struct mptcp_subflow_context *subflow)
+@@ -3161,7 +3167,9 @@ static void mptcp_worker(struct work_struct *work)
+ 
+ static void __mptcp_init_sock(struct sock *sk)
+ {
++	struct inet_connection_sock *icsk = inet_csk(sk);
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
++	struct net *net = sock_net(sk);
+ 
+ 	INIT_LIST_HEAD(&msk->conn_list);
+ 	INIT_LIST_HEAD(&msk->join_list);
+@@ -3170,7 +3178,13 @@ static void __mptcp_init_sock(struct sock *sk)
+ 	INIT_WORK(&msk->work, mptcp_worker);
+ 	msk->out_of_order_queue = RB_ROOT;
+ 	msk->first_pending = NULL;
+-	msk->timer_ival = TCP_RTO_MIN;
++
++	/* msk does not go through tcp_init_sock(); seed RTO bounds. */
++	icsk->icsk_rto_min =
++		usecs_to_jiffies(READ_ONCE(net->ipv4.sysctl_tcp_rto_min_us));
++	icsk->icsk_rto_max =
++		msecs_to_jiffies(READ_ONCE(net->ipv4.sysctl_tcp_rto_max_ms));
++	msk->timer_ival = icsk->icsk_rto_min;
+ 	msk->scaling_ratio = TCP_DEFAULT_SCALING_RATIO;
+ 	msk->backlog_len = 0;
+ 	mptcp_init_rtt_est(msk);
 
 -- 
 2.53.0
