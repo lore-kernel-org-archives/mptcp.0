@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8DB45A28C
-	for <mptcp@lists.linux.dev>; Wed, 12 Aug 2026 15:03:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44EB74746BE
+	for <mptcp@lists.linux.dev>; Wed, 12 Aug 2026 15:32:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786547011; cv=none; b=hpOqUSWL5Ub2WOgAxajwAd31NiuDiauXFlicsDzEER16n82wAKzMVnvilZhPRaKfcIERbS+siW1qoBQIyMHrsc7l9iGjFtkgM+bQzNH3fYzRI0lC4d9lI2tzkKYfXxAyQdfeCP6Fd/TtW9MDPYmjnfqILPGY7KwvHGjSYEHS1nc=
+	t=1786548754; cv=none; b=glykHah7Q4p+MkV20FdsuOQS7nUmMQYjSFQC5mzzOtfJ7Flog7Qn756IXBnmCbKGo1WeC4rrmasKZc39folyC09tbI6Zx6M66ufDcslE1AY8/UcBVyDqCRvdKmLwbugp/zOyFpputdSIXLfoelyZLiQO7r4O5kObR1V4+B+D77E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786547011; c=relaxed/simple;
-	bh=6kkNIgf6NYDmzWuTuoRBmit3NprP05qoJCL6f6x5b4Y=;
+	s=arc-20240116; t=1786548754; c=relaxed/simple;
+	bh=jhr1nRmKKSUafi1Fq+WoM8rnnyPERpHT3v9mB7icMCU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m2iCKAf8JUw5e/XuKQV9jD0kRz99Lo2wiGi1gMaDAY/ty2vtvYvV9eMgyiWxWU4rDj1lNE3MH65uPtVM61wpQS/TMiyG2qgyhizsVT1VcVQPXAi7O8qI+4kfgXPtmZKF7qSYFkO+QRvvCNPna0AlqhtflMMaXCIbMuxLILBqph4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lSHEuiOf; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=AoZR9lvD7UTqILA/FaN4vty3PVrd0O3alEcgPp0FVc2db6++Qt3GbZJZIG7TY8BTWaJW1HvcHSULUfw0FjJIVkOhZPU4OmH1SsD1KospNa7XvZxCOyDLuM83OwgF2p+GGUoVsWbkg/0fktIIYCIXKThtStIDvnYz5gQSaBW4vps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dUtxxpxz; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lSHEuiOf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63FA11F000E9;
-	Wed, 12 Aug 2026 15:03:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dUtxxpxz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF2491F000E9;
+	Wed, 12 Aug 2026 15:32:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786547004;
-	bh=GA2NJUaSv6HxX6VQHWh4kfpug83P3Shn7mItuJfthPA=;
+	s=k20260515; t=1786548743;
+	bh=Q0IGxxB0TfVEauRh+67tFMZVgrJ/a/eNcPicZOY1ORE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=lSHEuiOfo6/F5m0ps+GqrlTH031bAU9xfEJvTwPISqU2x2SVhoQy0qMx1ozv/OuqX
-	 PJjehEcGk8SyKQ9R5Rl8mv/PlKlCznsgnEuJwq71yNXopVx3jXbAZhJLDWOnRL4CWQ
-	 gs5kMQRO386HTNkiX6YXPXgSE4Wzj1K61PPDsZZbbAzrYrd8E/2EWXg+yunmznvaAp
-	 fhf+Suy/ySo/FtuxPJMRDfVGE+22eOelGeqFZ2hpmZTfY44U2JaX85rb7CqtGN3PMU
-	 0qJwBg27BruA7sE8xyrgraD7ngTXThIEkyHkCsUW7vVpm2Q/x4JcPCJewfFTw5+msE
-	 joizTm5/Ywjkw==
-Message-ID: <d5ac123f-51f0-45c1-856c-c4693fc17a33@kernel.org>
-Date: Wed, 12 Aug 2026 17:03:21 +0200
+	b=dUtxxpxzR39MswWSWirRobzAWG2OWnuKmsBrTmTFDU8h9aef4GN89ARzl30VmF2e2
+	 RgUamHRPLv39Z4xRSI8fP2JT9G3PyXpM0soHgfs3rvKAH4ykBiYarFKfw6fGwb+B4M
+	 q+DwB1wmeQfD1x4nmnbnIUClkzTB6NU5HS42DIiyXh5ySudQ/Cvx90zPWkD108osTY
+	 y327l081Ba53A7ITAc9xmmT1Z8PeXkffm7D4zl/lXtTmqUooEoKudM/dbW9Iz5to5e
+	 TdRZrLvrIBtBz010gs6MK4pUXcYSnQEK8vt4S5aHi6iL0Mne9P30nvRa5xVNmLMtd5
+	 PXAIsBOqPko+A==
+Message-ID: <41078a8c-00c7-4cb1-8e57-237b4ea6c2f0@kernel.org>
+Date: Wed, 12 Aug 2026 17:32:21 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 0/2] mptcp: MIB counter for invalid option
+Subject: Re: [PATCH export v3 2/4] mptcp: reject joins after fallback in
+ mptcp_is_fully_established
 Content-Language: fr
-To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>
-References: <20260812100550.148670-1-gang.yan@linux.dev>
+To: Paolo Abeni <pabeni@redhat.com>, Chenguang Zhao
+ <chenguang.zhao@linux.dev>, mptcp@lists.linux.dev
+Cc: Chenguang Zhao <zhaochenguang@kylinos.cn>
+References: <20260812054653.43799-1-chenguang.zhao@linux.dev>
+ <20260812054653.43799-3-chenguang.zhao@linux.dev>
+ <1d7c56b9-00c1-4550-a403-c3d704259267@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,87 +89,66 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260812100550.148670-1-gang.yan@linux.dev>
+In-Reply-To: <1d7c56b9-00c1-4550-a403-c3d704259267@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Gang,
+Hi Paolo, Chenguang,
 
-On 12/08/2026 12:05, Gang Yan wrote:
-> From: Gang Yan <yangang@kylinos.cn>
+On 12/08/2026 11:45, Paolo Abeni wrote:
+> On 8/12/26 7:46 AM, Chenguang Zhao wrote:
+>> From: Chenguang Zhao <zhaochenguang@kylinos.cn>
+>>
+>> After fallback, treat the connection as not fully established so later
+>> MP_JOIN attempts are rejected.
+
+@Chenguang: please first reply to the questions and comments from the
+previous versions, then only send a new version when the discussions are
+over.
+
+>> Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
+>> ---
+>>  net/mptcp/protocol.h | 5 ++++-
+>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+>> index 7e168e450fb0..bf2483a7ed92 100644
+>> --- a/net/mptcp/protocol.h
+>> +++ b/net/mptcp/protocol.h
+>> @@ -957,8 +957,11 @@ static inline void mptcp_start_tout_timer(struct sock *sk)
+>>  
+>>  static inline bool mptcp_is_fully_established(struct sock *sk)
+>>  {
+>> +	struct mptcp_sock *msk = mptcp_sk(sk);
+>> +
+>>  	return inet_sk_state_load(sk) == TCP_ESTABLISHED &&
+>> -	       READ_ONCE(mptcp_sk(sk)->fully_established);
+>> +	       READ_ONCE(msk->fully_established) &&
+>> +	       !test_bit(MPTCP_FALLBACK_DONE, &msk->flags);
 > 
-> This series is designed for [1].
-> 
-> Patch 1 passes the 'net' to options parser, I used to use
-> dev_net(skb->dev) for MIB counters, but the AI reported it is not
-> suitable for this. This patch has no functional change.
-> 
-> Patch 2 adds the InvalidOptionRx counter, and increments it when
-> receive the invalid options.
-> 
-> The packetdill testcase is submitted, and can be reviewed in [2].
-> 
-> [1] https://github.com/multipath-tcp/mptcp_net-next/issues/628
-Thank you for the patches. Please next time add a comment on the GitHub
-ticket: I already have the patches ready, but I had to wait (for
-administration purposes) before sending them:
+> Does the above improve actually anything? The test is inherently racy,
+> as lack the fallback_lock, and AFAICS all critical paths have already
+> explicit checks under such lock, see i.e.  mptcp_finish_join().
 
-============
+Indeed, the fallback lock is missing.
 
-commit 8173df5a467cac6ed421bb832ac3ee675b490fa6 (b4/mptcp-mib-inval-opt)
-Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Date:   Fri Jul 31 14:10:38 2026 +0200
+Note: Chenguang is looking at a bug where, when an MP_FAIL is received
+before being in fully_established, the kernel accept going to fully
+established, and creating new subflows, then reject them once done.
 
-    mptcp: options: reset parsing in case of invalidity
+Same when receiving a 4th packet without MPTCP options.
 
-    When an invalid option is detected -- any unexpected suboptions
-    combinations or use of invalid sizes -- the current behaviour is to
-    ignore the currently parsed option.
+I think the MP_FAIL should do a fallback if possible, but it is probably
+also required to check the fallback status or something similar when
+receiving an MPJ.
 
-    Receiving such invalid options is suspicious: either this is coming from
-    a buggy host, or an attacker. In this case, it seems safer to drop any
-    previously parsed MPTCP option from such packet.
+> I would prefer avoiding additional conditionals, if not well reasoned.
 
-    Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Agreed, the commit messages in this series are not explaining (enough)
+the reason and the context.
 
-commit be5492962195d2988a9c508bc8ce4d3f55ac1da7
-Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Date:   Wed Jul 29 20:01:45 2026 +0200
-
-    mptcp: options: track invalid ones
-
-    Any unexpected suboptions combinations or use of invalid sizes are
-    suspicious: either it is coming from a buggy host, or an attacker.
-
-    Better to track that with a new MIB counter.
-
-    Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
-commit 684c6244b5b76d30aaf30d62597247485b89cdb3
-Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Date:   Mon Aug 3 20:24:02 2026 +0200
-
-    mptcp: options: use a dedicated bit for csum reqd
-
-    Instead of mixing that with suboptions: that's the only non-suboptions
-    that is present in the 'suboptions' field.
-
-    This even cause a workaround with OPTIONS_MPTCP_DSS to exclude this
-    non-suboptions when checking which other ones are set.
-
-    Move it to a dedicated free bit, and adapt the corresponding code.
-
-    This is clearer like that.
-
-    Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
-=========
-
-In your version, I see that you increment the counter even when the
-suboption is not invalid, e.g. the version or the hmac is not supported.
-I don't think we should do that.
-
-If that's OK for you, I can add a co-dev by on my patches.
+BTW, Chenguang, please use 'mptcp-net' for fixes (and mptcp-next for
+features). Also fixes should have a Fixes tag.
 
 Cheers,
 Matt
