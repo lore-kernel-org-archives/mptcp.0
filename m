@@ -1,70 +1,36 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-100.mta1.migadu.com [95.215.58.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A44340D90
-	for <mptcp@lists.linux.dev>; Thu, 13 Aug 2026 07:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25C43A1E8C
+	for <mptcp@lists.linux.dev>; Thu, 13 Aug 2026 08:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786607850; cv=none; b=Jx2cYCxFtX1cD7Hkn7B6sXSZmyAmmrIKa+nEEWLfHtzYJ7SgOysZpvPWryN1VBEjBw8dBm7Uq/fbmkFqRgwFA1RfYo+iyB7IB8Vg2kDLYuwwGjcl4MBt6Za65JZY6wYiZDZ+VCJs4n2o1pZeNzDhSTAjaXOn1WLSz7qiCS4x/WY=
+	t=1786610696; cv=none; b=R3eRlj1r9rkfSkTxTsILAWQt2p7PAZkkVc1+TwMLZWdVhrwsBExnItr0dDzPQ8HA8z9S1P2JmNlBAr0/mrhx+jXuifY396aCcRlmlCPCaTBBgKhb+rK/XRZzo2lHZud2LBEPBjG3a0s+DtBRKeWi2XsUAfeYbRJks6AayyojpUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786607850; c=relaxed/simple;
-	bh=P2DJnPpKroW3/16KWe05s709vplzJYt7drZdbRT9An4=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=sWv2FCKPGdDvT+IKhvANzpJseGiKiQ1mX+uYLSrYpU5d8CwTKJT5eCvsPn/+13i9a0UQUP0cRKp7+nxOBog1EiXBjsknsVncyZLU6BW4KQWHvD33qCMv/CGyIGAyepmo2TrzDy/Dzn5LUxSX6Y4BZHGjvVTTxKFCIV1W0oMBG1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fVHJPWOr; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1786610696; c=relaxed/simple;
+	bh=+hz4oaT7vzYvds2gUn+6IOmnFJLfMzVUKUW0q4t0Dro=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PnJloNgbi/HODKcWe2d2fR3Nud3ehp/mtWZK7N7h98UzFhWSiXcp8rgqSAeU8v6a6PhVJsql15sWiL+iCBNjpL8x/P18fFvyjy0Ta7NoXs3fSe1a+V2oFptAW92QWkC0hyoO7P7FULwvROh2YUk0Lb5PaQcXNKMijQkJyQGvmXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=W6LDdBoW; arc=none smtp.client-ip=95.215.58.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fVHJPWOr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1786607847;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=P2DJnPpKroW3/16KWe05s709vplzJYt7drZdbRT9An4=;
-	b=fVHJPWOrKZRicC1D9A3eCukiO0FZYeiL4hLEhmG1pQfFvav4Tz2k0IlO/1I3W/8A+PDBZJ
-	K3pntkvjBvFq0vG6DdG9d0HIxaRjHg2GK2nLx1IHGznvj+yGBKXDom1ipkswIOrsG/7Fzx
-	Z5g0jE0RPMA/cIOIIGUqBsN7zI0cDy8=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-436-I5kE5rSdPqS8l2Ze-gGD7w-1; Thu, 13 Aug 2026 03:57:26 -0400
-X-MC-Unique: I5kE5rSdPqS8l2Ze-gGD7w-1
-X-Mimecast-MFC-AGG-ID: I5kE5rSdPqS8l2Ze-gGD7w_1786607845
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-496c06ba017so4495335e9.0
-        for <mptcp@lists.linux.dev>; Thu, 13 Aug 2026 00:57:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786607845; x=1787212645;
-        h=content-transfer-encoding:content-type:subject:cc:to:from
-         :content-language:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=P2DJnPpKroW3/16KWe05s709vplzJYt7drZdbRT9An4=;
-        b=gsh5+WxQJ2khhpewqKRzXlPJ2trpPSihCEcKnb7+wYjfgx96JSwynXlc/EbH2pYSJR
-         asQv1adqaTuItluwdgbt2D7J50YEcM4aNdnTA13pfoZ9S2xCYk79IO1o4lNCaaQo2gvp
-         9I483psyLLCEpPnSE4C4DeLBXsljDRZAY7T0UacEQ/ScFWX4vvR5CW29m5Z+mEhp1Gq/
-         NPV9w5c9rJBkOeeGmJbmLR2he4U7hscZaC+WFUMWg2ynF9/RShq6yVaKDHVfhS+Ka+6l
-         lF/rK4TeTtQvoTtGo79dUUOBZpnI1e9/kIdSOqRVB9G261SvSd+697pQJdUXZbtzMmqq
-         mHFQ==
-X-Gm-Message-State: AOJu0YyyKrcwG+M2a25Jql32HwcpjTdXg/+5fRZv/UoS0oK08HyHBR1/
-	ztz8aF72uQhRxAoCKVLYDVf39SQXhYKWW+uUu5mEdM7mbTAh1AFjmf30iJQ7H7dSRte0xOpcS2E
-	U2SLSbKDX4FpcBKYauBpbK4ZNNvJlm/S9s6trkkPPzBGl/xlSGoVxN26KCPj3ZQvg
-X-Gm-Gg: AR+sD12/SfCRkfPEjVncCwzfUYO2q+6JEtpEBflHXVwfLd/CV9CP0Huih+Ny8llgY/h
-	A/5uccgjvGdNmYS32tKEA+S6LWrtOrDv1lVojZLZSbt4xCP1R3LhG+CazVD91s3fps6q9R36vHq
-	q5ktdZ9Eh/mnlw7e3qDN0bQQhQsxUcaXPJTFKrxUJKjXRhrXoQS+pJtpIcwEjM/QxMxnEa1Z9Bi
-	hZgmIM9N9U8AcfZu+i3AMu7rJYBVaaOq58CYYrBbQoCErNiDzkMx2qW2RUUELApFj8KgDyu0Dh9
-	uvXrlV6k2dAb80DhMXudbjehLVT9sFd6T2taZFzc5Ww3yhEdTeIRchZqyrnDe/jtbu3fBVXe/qN
-	Xoyk0OHg36RBEHaiVUaWScXF6iPpFdG7ZYnzfnuSCnTFJxUVeNDds+GqiC8+lE7gualB7K+Umaq
-	I=
-X-Received: by 2002:a05:600c:138c:b0:493:f783:c46a with SMTP id 5b1f17b1804b1-4998220750bmr35344895e9.6.1786607844802;
-        Thu, 13 Aug 2026 00:57:24 -0700 (PDT)
-X-Received: by 2002:a05:600c:138c:b0:493:f783:c46a with SMTP id 5b1f17b1804b1-4998220750bmr35344425e9.6.1786607844360;
-        Thu, 13 Aug 2026 00:57:24 -0700 (PDT)
-Received: from [192.168.188.103] (ip239-44-231-195.pool-bba.aruba.it. [195.231.44.239])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4815a5b6e3asm3919505f8f.28.2026.08.13.00.57.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Aug 2026 00:57:23 -0700 (PDT)
-Message-ID: <02830f64-bb5f-41fc-8211-5f7aa36b828e@redhat.com>
-Date: Thu, 13 Aug 2026 09:57:23 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="W6LDdBoW"
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=+hz4oaT7vzYvds2gUn+6IOmnFJLfMzVUKUW0q4t0Dro=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1786610692; v=1; x=1787215492;
+ b=W6LDdBoWW1hzSsmJiUBep1GVzzN8Rl1ugRtzYwDdQg+5qqQLTEEfivbH0ppvP2MY7ZbxiJkm
+ +apKEusyaZ9RO3/oZFm6MfJJchaWMMJqhXQDEjtRNFWa268XjLoZwPCiAI2OnUfkBJ0ty2AZ863
+ j7tMjYCOh8wZzV/FUdy6ITyo=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: from [192.168.109.30] (223.70.159.239)
+	by smtp.migadu.com with ESMTPS id e5696dfefdcb8984;
+	Thu, 13 Aug 2026 08:44:52 +0000
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <91381212-7d87-438b-a04b-50a3be4c5388@linux.dev>
+Date: Thu, 13 Aug 2026 16:45:01 +0800
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -72,40 +38,63 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Paolo Abeni <pabeni@redhat.com>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>
-Subject: CI failures on nipa
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: c_pO947a0UK0_zyUjoc0_IUcPqD16_PgQdDgPX60LsA_1786607845
-X-Mimecast-Originator: redhat.com
+Subject: Re: [PATCH export v3 2/4] mptcp: reject joins after fallback in
+ mptcp_is_fully_established
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: Chenguang Zhao <zhaochenguang@kylinos.cn>
+References: <20260812054653.43799-1-chenguang.zhao@linux.dev>
+ <20260812054653.43799-3-chenguang.zhao@linux.dev>
+ <1d7c56b9-00c1-4550-a403-c3d704259267@redhat.com>
 Content-Language: en-US
+From: Chenguang Zhao <chenguang.zhao@linux.dev>
+In-Reply-To: <1d7c56b9-00c1-4550-a403-c3d704259267@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
 
-I'm looking at this one:
+在 2026/8/12 17:45, Paolo Abeni 写道:
+> On 8/12/26 7:46 AM, Chenguang Zhao wrote:
+>> From: Chenguang Zhao <zhaochenguang@kylinos.cn>
+>>
+>> After fallback, treat the connection as not fully established so later
+>> MP_JOIN attempts are rejected.
+>>
+>> Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
+>> ---
+>>  net/mptcp/protocol.h | 5 ++++-
+>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+>> index 7e168e450fb0..bf2483a7ed92 100644
+>> --- a/net/mptcp/protocol.h
+>> +++ b/net/mptcp/protocol.h
+>> @@ -957,8 +957,11 @@ static inline void mptcp_start_tout_timer(struct sock *sk)
+>>  
+>>  static inline bool mptcp_is_fully_established(struct sock *sk)
+>>  {
+>> +	struct mptcp_sock *msk = mptcp_sk(sk);
+>> +
+>>  	return inet_sk_state_load(sk) == TCP_ESTABLISHED &&
+>> -	       READ_ONCE(mptcp_sk(sk)->fully_established);
+>> +	       READ_ONCE(msk->fully_established) &&
+>> +	       !test_bit(MPTCP_FALLBACK_DONE, &msk->flags);
+> Does the above improve actually anything? The test is inherently racy,
+> as lack the fallback_lock, and AFAICS all critical paths have already
+> explicit checks under such lock, see i.e.  mptcp_finish_join().
+>
+> I would prefer avoiding additional conditionals, if not well reasoned.
+>
+> /P
+>
+Hi Paolo
 
-https://netdev-ctrl.bots.linux.dev/logs/vmksft/mptcp/results/776501/6-mptcp-connect-sh/
+You are right: the extra FALLBACK_DONE check in
+mptcp_is_fully_established() does not actually improve anything.
+It is read without fallback_lock, so it is racy. The paths that must
+not complete a join after MP_FAIL already reject it under that lock
+via allow_subflows, e.g. mptcp_finish_join() / __mptcp_finish_join().
+I will drop this patch in the next revision and leave
+mptcp_is_fully_established() unchanged.
 
-the output is strange:
-
-https://netdev-ctrl.bots.linux.dev/logview.html?f=/logs/vmksft/mptcp/results/776501/6-mptcp-connect-sh/stdout#L114
-
-the first nstat dump includes apparently the counters from all the
-previous runs, which is unexpected: the nstat_init/nstat_get/pr_nstat
-dance should allow showing the data from current run only right?
-
-Also I think mptcp_lib_wait_timeout completes too late (after ~60 secs),
-when the listener already bailed out due to accept timeout (after ~30
-secs), so it does not show any info on the listener side. I fear it may
-also race with the actuall `timeout` command completion showing socket
-states after the user-space program completion.
-
-Judging on the final status, I *think*/*guess* the (re)connect is
-hanged, possibly due to bad remote address?!? It could be useful to
-print out on stderr the reconnect destination address.
-
-/P
-
+Thanks,
+Chenguang
