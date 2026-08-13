@@ -1,132 +1,127 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D16470100
-	for <mptcp@lists.linux.dev>; Thu, 13 Aug 2026 11:41:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63C013B5B3
+	for <mptcp@lists.linux.dev>; Thu, 13 Aug 2026 11:49:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786621275; cv=none; b=RxcMJMmhhAA++V7Ygtypnrk2eCH9RUSgtmKVpfcNYNg52i+3BfZQlfyQksMaglYs22DpUePRag2Og3OnRdm4KtXR3v+Ck5cJk5GHzV6IdHRMeFeFCkT9UzPXOp8LQIdw/83nid3o8aAq5e2+sRiQrY3oyqPUTERcsZDfWclhpMY=
+	t=1786621751; cv=none; b=eH82bfD4NLVA3t4EvVlsUKaxvfP3XVmZ+XBDlZqvT2/eNl5c3d309zzbANtyvKH0/9kVNnFHLOHMoVrCYyauSYQRGAOaIApQi15prJbNXLONyt1WrPQAZ3dNKFoQX5p2Uo61CMP/YXKbyOsZqKed5oz18ncsvrjgJquC+6I07oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786621275; c=relaxed/simple;
-	bh=hrbpVviD8L2hg9wJU7BdVdaHs3SNO54N/5cswWpP6cA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=ZMhU89GKpEtZosYeOqSI+WaYWT3FOsUQTW4sn+OQjoBOr7xdLREF6ci21bvok5tw7JkRPx4vE+0zzYKrXfe8x41tOq0hsW2ULYsmt+7J1s0q0YSbM+IF4pXrVjWBkiO1xThx7edwoH8ULK4TCA5Uq+4uxZTp94yEmO6fj8gjXtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Paq+P/Sn; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1786621751; c=relaxed/simple;
+	bh=/tjymOHJR1MfdLumJjCKzf/9pA88wjNr8XSMwxhmTbM=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=gnt5XJKfWMsEwlOYO4n7egtgdsjhVJxr8gHwEMFd7JJ7Yxu0lz6d99VPQ4j5DePKBcaQCz+q3x1nuAl3fEjIcvIkIG0ogUnGqVdJdInupk/QhL9lwN+1/NuQMqykIYWHmSB6e5HOv9Cp2yhL7MLO120PIaY3kIqx04kv0mRldkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iwWPLl22; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Paq+P/Sn"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-930f618435cso28581685a.3
-        for <mptcp@lists.linux.dev>; Thu, 13 Aug 2026 04:41:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786621271; x=1787226071; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=jiPePvhFwb/7ivGWz6tcb+MysU+zHeKuabHOrGPLpjo=;
-        b=Paq+P/SnBRYooyICWR5Z0h7Xs2E7bUEVdogCham+hG0d4/yGjUgcLQMRZISwX77Mp2
-         hHJnMMra7LL8QdzDVB/am5uO9XSeKhs4+s4eUBFAn3ukMLDybRcJMjXr3vuSb0zogaEg
-         3Cz2TMD6gWfnPNV6dNBHRFi//ptEkFOTW97pIiM2A/ssnQ7wUSEs0gEZqGb0FzuwNCWq
-         SaMxSV9brYGTlQK4hAT+mfVYyX/1yfJi2A1TKexv1Tpfr9YRlUkBPcrFA6es91JlOTUC
-         J/0cUBxDJzeB8y3Cqc8nPPfFm8Eg3opgaatGWtXFzICstvIDjCGWSQcQVzYqEuySKQxr
-         sa+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786621271; x=1787226071;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=jiPePvhFwb/7ivGWz6tcb+MysU+zHeKuabHOrGPLpjo=;
-        b=cX1A4MMQnrfQjZ3+JimkQW1NVgeQFB80JOV9IVLcwIzXu691bmicyu76wUwkKGojGf
-         oY1GrttQLnQqyud4q+oXgjJ48J54tu7mmAqzqM3QmZLDe3snbbwUz7LLMtFl/gNvWZUe
-         QawmOaGd3p6yWxV6vbpojiZxUU9cL1eR0CGn/EL/FJ7xGbB+PGi/x6MzP5gFFYvOj1nJ
-         ZYreUU7mdAaUW4/0zyYgdTY8HzlN+fJ+vhOJdjcV27KVLU2nuvFMSh37QYzdVuctkWAU
-         NJ+L+Tr0bZ26Zgt4YQ+3bVlJeLT1No2m5ImAxRpSUSIi2QUrB9d8S9UirPPs6TaxdhJO
-         BqiQ==
-X-Gm-Message-State: AOJu0YylG0Z3PeOBNzzdTHgstQkozu42DWSLn7+Y830/1HRkPimieKCt
-	e97wOJV3biTGqIc9EGS64yP0bTwSE7WP371u9FllXBXIJjKJxZPaT4A=
-X-Gm-Gg: AR+sD10vo5VdWiQil+yrFmdwblSFCrqB3FfyXz5hdjNGe+VzpnhRSwrv9tTp4z/19iO
-	I8G95JT2jqG5l+LoUjaNWX52FF0O57SNYTcBRJ1p1dbIuCQAPngnnfmgexoJ2nlXMhLjDMq8eZT
-	BwxFyDjZbu0jpJBTaH+i5/HqR1U+fTaNF3fbR8pQj+tTZofMzmpwdD2T3zgutPbgZhTseNpH6Ff
-	3f8B6+hqtZ3ydW2c1GwlG9P87KalrT2DUIn4NhZXUEjXNMguYGH/Jkx/YRsMXSkkpTUOBFrB/C3
-	gemq0VDag+tbAi/Jt1nMyYPRJWvTIE+AOEzmpPSYG8cndbqcSKHFAxWk8chCMFadAcQqsqrzCpG
-	Jn3uWZGdWzyYHkdZoVy5LqQSsrr2djXG6eYv9FhavChVAvR3BO7LMnR+t7i+H4JRCb34JFWXPh2
-	hfIQAyz3LH6/92GAF67gd1LWb+0DXFlDRCAC34mDhlEIwE2Cf4m/XIJ/L+pMUgjpl0FDCIZfwAh
-	4A=
-X-Received: by 2002:a05:620a:44d4:b0:936:ad4e:9243 with SMTP id af79cd13be357-936bfad4f7fmr506113785a.40.1786621270866;
-        Thu, 13 Aug 2026 04:41:10 -0700 (PDT)
-Received: from [127.0.0.1] ([172.214.45.201])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-936c1912b42sm128910585a.3.2026.08.13.04.41.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2026 04:41:10 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iwWPLl22"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEF721F000E9;
+	Thu, 13 Aug 2026 11:49:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786621750;
+	bh=f7UhFy+v6+jSpvDOZzUqqzqmygG5ZMX2xK3DwLEiE48=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=iwWPLl22b8NBOhQtVSGWRhLRG+A+CNDvPUDcNt2IKPvKozNIGh9SxhTYawu9M/ubH
+	 LzjqnF79/aqIkhOuu5dRsixBHUbvZkBb2MpscpIPc6/+CFwhYm5yA7Tb6KJpGKHJhS
+	 InAbvUiPUKrOPlx4Z6wRgY4Rk4qlg+xfwobSwBLmvmEGaSKhkK87x5rp056vEgCfAv
+	 0ty+mCvCfRtFLNgQv92cCrSoz1eOwzsFK4YF9lQ97L0OE4SdP8mV/I9x8UzTu/SyCz
+	 +Ks2gDymortArfpgWDopvWLBzfaOYZTM0FqfVNTr5Uct7oOg3HEUMAqYhIjsOF/+0P
+	 wjJg3DKj9JgtQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH mptcp-next] mptcp: fix add_addr_accepted accounting on
+ subflow close
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Akshit Patadiya" <akshit@mpiricsoftware.com>
 Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260813-sft-mptcp-nstat-hist-v1-0-5bb96bae7ef6@kernel.org>
-References: <20260813-sft-mptcp-nstat-hist-v1-0-5bb96bae7ef6@kernel.org>
-Subject: Re: [PATCH mptcp-net 0/2] selftests: mptcp: lib: get MIB counters
- for the right test
-Message-ID: <58a6d0bd-e3b2-3258-593d-0e8c14844af1@gmail.com>
+In-Reply-To: <20260813113208.3809139-1-akshit@mpiricsoftware.com>
+References: <20260813113208.3809139-1-akshit@mpiricsoftware.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 13 Aug 2026 11:41:09 +0000
+Date: Thu, 13 Aug 2026 11:49:09 +0000
+Message-Id: <20260813114909.EEF721F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 
-Hi Matthieu,
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-Thank you for your modifications, that's great!
+Pre-existing issues:
+- [High] Concurrent updates to msk->pm.rm_list_rx can cause RM_ADDR IDs to =
+be silently skipped, resulting in leaked subflows.
+--
 
-Our CI did some validations and here is its report:
+--- Patch [1]: [PATCH mptcp-next] mptcp: fix add_addr_accepted accounting o=
+n subflow close ---
+commit 09eae8ab35dfee45655629d4bbc00b4a93d797f3
+Author: Akshit Patadiya <akshit@mpiricsoftware.com>
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/316931=
-94883
+mptcp: fix add_addr_accepted accounting on subflow close
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/1737d20f1a46
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1145356
+When an accepted remote address is used by a subflow that is closed before
+the corresponding RM_ADDR is received, the add_addr_accepted counter is not
+decremented. This commit releases the accepted-address slot when the subflow
+closes, allowing subsequent ADD_ADDR requests to reuse the budget.
 
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/498
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+[ ... ]
+> @@ -786,7 +788,6 @@ static void mptcp_pm_rm_addr_or_subflow(struct mptcp_=
+sock *msk,
+> =20
+>  	for (i =3D 0; i < rm_list->nr; i++) {
+>  		u8 rm_id =3D rm_list->ids[i];
+> -		bool removed =3D false;
+> =20
+>  		mptcp_for_each_subflow_safe(msk, subflow, tmp) {
+>  			struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+> @@ -807,7 +808,6 @@ static void mptcp_pm_rm_addr_or_subflow(struct mptcp_=
+sock *msk,
+>  				 i, rm_id, id, remote_id, msk->mpc_endpoint_id);
+>  			spin_unlock_bh(&msk->pm.lock);
+>  			mptcp_subflow_shutdown(sk, ssk, how);
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+[Severity: High]
+This isn't a bug introduced by this patch, but could this loop miss RM_ADDR=
+=20
+IDs and leak subflows due to concurrent list updates?
 
-For more details:
+In mptcp_pm_rm_addr_or_subflow(), this loop iterates over the rm_list (whic=
+h=20
+is passed as &msk->pm.rm_list_rx) and temporarily drops pm->lock around=20
+mptcp_subflow_shutdown().
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+If a remote peer sends multiple RM_ADDR options in rapid succession, softir=
+q=20
+context can call mptcp_pm_rm_addr_received(), which unconditionally overwri=
+tes=20
+pm->rm_list_rx while scheduling work:
 
+net/mptcp/pm.c:mptcp_pm_rm_addr_received() {
+    ...
+    if (mptcp_pm_schedule_work(msk, MPTCP_PM_RM_ADDR_RECEIVED))
+        pm->rm_list_rx =3D *rm_list;
+    ...
+}
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+If pm->rm_list_rx is overwritten mid-iteration while the worker thread drop=
+ped=20
+pm->lock, wouldn't the loop in mptcp_pm_rm_addr_or_subflow() either termina=
+te=20
+early or read incorrect indices from the new list, silently skipping unhand=
+led=20
+IDs from the original list and leaking the associated resources?
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+> -			removed |=3D subflow->request_join;
+> =20
+>  			/* the following takes care of updating the subflows counter */
+>  			mptcp_close_ssk(sk, ssk, subflow);
+[ ... ]
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260813113208.3809=
+139-1-akshit@mpiricsoftware.com?part=3D1
