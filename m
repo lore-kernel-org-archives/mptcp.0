@@ -1,82 +1,105 @@
-Received: from mta0.migadu.com (out-109.mta0.migadu.com [91.218.175.109])
+Received: from mta1.migadu.com (out-54.mta1.migadu.com [95.215.58.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A012237F727
-	for <mptcp@lists.linux.dev>; Thu, 13 Aug 2026 08:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.109
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A66B444706
+	for <mptcp@lists.linux.dev>; Thu, 13 Aug 2026 08:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786610997; cv=none; b=qxB6Bb81oG8sB8FCIckbkMFee4otnpDYccPgyAHUUu4KGcp36vrL5NqU3NZ7ij2hEvcnipnzB1xsQtkSeIcpfsXkmnN9EJQPewzw0rPmw7Uwh2H6RGIXelw6TtRbpYbrKRUVYTQ6RRscsf4N4zTKSnkgzWpdgv/dsK6Z4GvyBJA=
+	t=1786611597; cv=none; b=QaTrwkE4B/T7hjhwafyzvtcfvbtnpJMIS7q6gXD/mYEZuDZ3kr5pQxqmYF8ThSsrpbtWyCG9YLb3hDwCC6WHqAIyTOdM0OV4koIJiqRxUwyUTAmrGgLiHNalV2322hN6c+FnE0hUBpI/CBZx56URAQGiDWAhzCwPNZb6/hGhhlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786610997; c=relaxed/simple;
-	bh=G5YjIweiS9XXUhSWSx9n6pTD6nW4PM+Yid2m9QScxs8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hT9XivIZGRUGLXh4F+9urh/EkCJJNrMavHKc5YeP9N3dbkHmRTFXwPnN3Hig6CInNq3qOAWAOYxec6o+17F4SU8ieNUOupMxDgsulMXzEDbgxDtJtHUlhZMV0EkA89rMP8uPFpjCniS3frbDjk2ITrW+ENvI8b4ANQIJHvEtL28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=n3wneHCQ; arc=none smtp.client-ip=91.218.175.109
+	s=arc-20240116; t=1786611597; c=relaxed/simple;
+	bh=hG4pUdWhtROAMwC1od4LU9pTb79XD6nACi/4QO1q0FM=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=HGaJ3loEpsQEPeAXM//qnO+DOivyHwsmC3ifW/Xelo4ytUJgmP8HCXx19jnYW7i64mXxQw+xixH83xmkD7mdZBavnEPffIbq/hID1QSizpjsQ1gW2DYoJhKcPmA2f7LytM/sCitRIjai/hFJlFDTMf6OXbLewha112mWO73aVKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JuZIvylu; arc=none smtp.client-ip=95.215.58.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="n3wneHCQ"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JuZIvylu"
 X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=G5YjIweiS9XXUhSWSx9n6pTD6nW4PM+Yid2m9QScxs8=;
+DKIM-Signature: a=rsa-sha256; bh=hG4pUdWhtROAMwC1od4LU9pTb79XD6nACi/4QO1q0FM=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1786610993; v=1; x=1787215793;
- b=n3wneHCQZg3pdJH053NfID7HKhQlXdLuHsWdL9kub34w77XIqF6FKMDsmQVXEWnPT5U6b5jl
- nbnEE8cO1JgEtnlomuDBK5cRKDwcKbvLKVx6F6GP+HAuFDS0ejpzIzn5p+0DdsvxuMsSpGapKZA
- tCHdasmMekUuuGXCw/xu45Vw=
+ t=1786611591; v=1; x=1787216391;
+ b=JuZIvyluCroKEPO69pZET5ISDaQv6wC0dlyXWlo/0zD2FLR66oFrDPJA9jPAZLrbqzzpTb56
+ sWHoqYQE6zQAnhm7uCU6MhmUACaJqaSpOHK0CDlhG2QXcPY0dFtpUHMkNUwlMreGs+/f9WAU/un
+ 2tZmXK4sMMsEQGrZ5qRXaETE=
 X-Envelope-To: mptcp@lists.linux.dev
-Received: from [192.168.109.30] (223.70.159.239)
-	by smtp.migadu.com with ESMTPS id 2f3656aaa98b4769;
-	Thu, 13 Aug 2026 08:49:52 +0000
+Received: from webmail.migadu.com (2001:41d0:303:fc7a::)
+	by mta12.migadu.com with ESMTPS id 8f21aac798889bf4;
+	Thu, 13 Aug 2026 08:59:50 +0000
 X-Migadu-Flow: FLOW_OUT
-Message-ID: <17b95ca7-c616-426a-a321-dd6bf62f88dc@linux.dev>
-Date: Thu, 13 Aug 2026 16:50:01 +0800
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH export v3 4/4] mptcp: fallback to TCP on MP_FAIL with a
- single subflow
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Chenguang Zhao <zhaochenguang@kylinos.cn>
-References: <20260812054653.43799-1-chenguang.zhao@linux.dev>
- <20260812054653.43799-5-chenguang.zhao@linux.dev>
- <e9082cf3-6889-44b6-9e81-c2a2a21e8e9f@redhat.com>
-Content-Language: en-US
-From: Chenguang Zhao <chenguang.zhao@linux.dev>
-In-Reply-To: <e9082cf3-6889-44b6-9e81-c2a2a21e8e9f@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Date: Thu, 13 Aug 2026 08:59:50 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+From: gang.yan@linux.dev
+Message-ID: <9db96388a1c72d264d0576e0a58f4944560e93a7@linux.dev>
+TLS-Required: No
+Subject: Re: CI failures on nipa
+To: "Paolo Abeni" <pabeni@redhat.com>, "Matthieu Baerts (NGI0)"
+ <matttbe@kernel.org>
+Cc: "MPTCP Linux" <mptcp@lists.linux.dev>
+In-Reply-To: <02830f64-bb5f-41fc-8211-5f7aa36b828e@redhat.com>
+References: <02830f64-bb5f-41fc-8211-5f7aa36b828e@redhat.com>
+
+August 13, 2026 at 3:57 PM, "Paolo Abeni" <pabeni@redhat.com mailto:paben=
+i@redhat.com?to=3D%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > wrote=
+:
 
 
-在 2026/8/12 18:47, Paolo Abeni 写道:
-> On 8/12/26 7:46 AM, Chenguang Zhao wrote:
->> @@ -901,6 +898,12 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
->>  		subflow->send_mp_fail = 1;
->>  		subflow->send_infinite_map = 1;
->>  		tcp_send_ack(sk);
-> Slightly unrelated... AFAICS the current code sends the mp_fail reply
-> immediatally, and will send the infinite mapping with the later data
-> send, if any.
->
-> I *think* it will be better to send MP_FAIL and infinite mapping
-> together. It should remove a little bit of complexity on the xmit path
-> and will be IMHO closer to the RFC specs.
->
-> /P
->
-To keep both MPTCP options on the same packet, that packet would have
-to be sent before FALLBACK_DONE: once fallback is done,
-mptcp_established_options() drops MPTCP options unless the skb
-already carries an infinite mapping.
+>=20
+>=20Hi,
+>=20
+>=20I'm looking at this one:
+>=20
+>=20https://netdev-ctrl.bots.linux.dev/logs/vmksft/mptcp/results/776501/6=
+-mptcp-connect-sh/
+>=20
+>=20the output is strange:
+>=20
+>=20https://netdev-ctrl.bots.linux.dev/logview.html?f=3D/logs/vmksft/mptc=
+p/results/776501/6-mptcp-connect-sh/stdout#L114
+>=20
+>=20the first nstat dump includes apparently the counters from all the
+> previous runs, which is unexpected: the nstat_init/nstat_get/pr_nstat
+> dance should allow showing the data from current run only right?
+>=20
+>=20Also I think mptcp_lib_wait_timeout completes too late (after ~60 sec=
+s),
+> when the listener already bailed out due to accept timeout (after ~30
+> secs), so it does not show any info on the listener side. I fear it may
+> also race with the actuall `timeout` command completion showing socket
+> states after the user-space program completion.
+>=20
+>=20Judging on the final status, I *think*/*guess* the (re)connect is
+> hanged, possibly due to bad remote address?!? It could be useful to
+> print out on stderr the reconnect destination address.
 
-tcp_send_ack() builds a plain ACK with no mpext->infinite_map, so it
-can include MP_FAIL but not the infinite mapping. The infinite
-mapping is filled in later on a data skb in mptcp_sendmsg_frag().
-With the current xmit path those two options therefore cannot go out
-on the same packet. Sending them together would need a dedicated
-transmit helper that builds a skb carrying both, rather than reusing
-tcp_send_ack().
+Hi Paolo,
+
+That reminds me of an issue when I was reading mptcp_connect.c a long
+time ago:
+
+At the end of 'sock_connect_mptcp()', it calls 'freeaddrinfo(addr)',
+the 'peer' pointer (which points into 'addr') remains. Later, the main lo=
+op
+uses this peer pointer for reconnection attempts. If the memory has been =
+freed
+and reused, the address data could be overwritten, resulting in an invali=
+d
+remote address.
+
+That might cause the hangs or failures you are seeing, right?
+
+Thanks
+Gang
+
+>=20
+>=20/P
+>
