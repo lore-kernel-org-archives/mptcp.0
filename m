@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB313A759C
-	for <mptcp@lists.linux.dev>; Thu, 13 Aug 2026 09:15:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2252F39C2
+	for <mptcp@lists.linux.dev>; Thu, 13 Aug 2026 09:20:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786612558; cv=none; b=bGH2p6bf4jIq2FpSLasugu2VYbG2+nF5EeYIyyPDzrTNV5/KakWBwkc0lAdZBlrmCy29qxAthDGHXq/c6iAEOUYDcrqh6TkWZtAta/2K2shclNHk75qcbCcqUlTLwLVFSU5N39Xlw05msu9v3GRFOMOdD9XYVd1VVJ5AdF1/aPA=
+	t=1786612808; cv=none; b=hRGRD97LpdC9lAjkhqEcnrYNxeIOxyyDKl1gtSe8/Ek6pclgcT+aJ6lJ+xihJRszR0eUxY5yGWY7NgKrdqg+Y51l6bDABY2vWpi1GXgfWcj3fSPbxcmEeuifu/chVL49Chvf29hoawcSfx/+pzCRayVNI0TlonNMLyejBUCFC7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786612558; c=relaxed/simple;
-	bh=iXj36C3nDSZbBDU0170HFPEWNw3VQ6K0v3nX0x1WUHY=;
+	s=arc-20240116; t=1786612808; c=relaxed/simple;
+	bh=bif14L1QA11yZ/XtbHCmNW3Xbbyxu227v8NhnWVDDmA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NjbKTYD2xUIMrhYKhSdQB+nli7mUnKd+t0FKT+lUA1G/t7KHL5RJOOmSFyyhMjUy273rIIW06tKPUCzU4WFKtF3K6i/U+2fueVKjKjFYt0hQxWI7/pAQMQ5Uhy5Wcz5bQdM1q7C5476Q9rB0jmB1cSUsJOX31aMzAEoNujzX1jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iEfvhaSL; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=OQDcOUg5b28AZf+0y46a0d4DcQ6tw3+9wFvxVtpd5vKZr6fRZ6lD02XAh0luawDRdV22gZaMvkXv3rYXL/xyV3phA9DszijM3xRIbGq4OuX7rEuFSqS9yn620vyjeQRFebcMf1KgybNptt4jNqAlfPsVjBOiPJvdf4dTcG/u4EM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ch+OqxLp; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iEfvhaSL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AE781F000E9;
-	Thu, 13 Aug 2026 09:15:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ch+OqxLp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1ADA1F00A3A;
+	Thu, 13 Aug 2026 09:20:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786612557;
-	bh=3yWufI2NJGOkwnG5kUpaiaws3gp94ADBqbK7rKIDwyU=;
+	s=k20260515; t=1786612806;
+	bh=7HagUwVEKJ2eYFP6BjDmaFXsO4FKaQpTUpaZ+HZIxF8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=iEfvhaSLsCj43cG68mdvTZ5rzxbEz7zwqEaxXcxuX1UjBFole85dXCqIrcAdxdoUe
-	 o+UOWIiVE1dUc8nA5b8NnKfYffdDVEr2/IR5oAzkV0z4mP9eaZHg6q3FHAqvh7LwCp
-	 J0ihELn9cnr0myccTuf5wAyhuQVjkYv4apqY8+KCf7mNijbstYVHIivld7aeCbN9eq
-	 3i5Iix9ufenWnO7yW6rt+02yyH328tCOaJyV0z5O7Rx6hBuwr58BuNXVAzw2EDYkdH
-	 Vce9EjOjt+wKoN7F0Jo2B+mRrVSjPKa3a+Dss/UDAztDUtP+b7qkb5XXdN7vW990F7
-	 cotZ+nvSQXOXg==
-Message-ID: <07b78c7e-f628-4f0f-b351-89064c6218d2@kernel.org>
-Date: Thu, 13 Aug 2026 11:15:53 +0200
+	b=Ch+OqxLppVLlEI2ic/6yYTpw9e1QlIseO/+dlim6dCD0hLhk54+7zUfuUcxNZ35aS
+	 D5LVVtIRvEl2v9BKeUrHfyxzbfatcFRR0oqGgVh/A1q0AaPasw9UfAYNRsDCLI6tqC
+	 DNPIvsfPOXw9GGNqguIsApnBcnS+1ecO2IcAYm/dZqmeQqIzmfNv/4NKMHmMdGTWxj
+	 O5/KN9Wht7F2Z8I0WHfxCVFU3XfMHaNHT3pruHSDDRHZnodRV8cMjYeQueVqSWHcb6
+	 HAjsBlMwP7GzT1ZcDiiBruOr1WO0y61SoV1vfGuzSgnTVzfBceQi4x2w1VYbpsBnaY
+	 YM4a6Oe3p/N3g==
+Message-ID: <be3d9d4d-2a4c-4ed6-a341-f184d85cc664@kernel.org>
+Date: Thu, 13 Aug 2026 11:20:03 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -36,11 +36,12 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
 Subject: Re: CI failures on nipa
-To: Paolo Abeni <pabeni@redhat.com>
+Content-Language: fr
+To: gang.yan@linux.dev, Paolo Abeni <pabeni@redhat.com>
 Cc: MPTCP Linux <mptcp@lists.linux.dev>
 References: <02830f64-bb5f-41fc-8211-5f7aa36b828e@redhat.com>
+ <9db96388a1c72d264d0576e0a58f4944560e93a7@linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
-Content-Language: fr
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -85,57 +86,39 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <02830f64-bb5f-41fc-8211-5f7aa36b828e@redhat.com>
+In-Reply-To: <9db96388a1c72d264d0576e0a58f4944560e93a7@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Gang,
 
-On 13/08/2026 09:57, Paolo Abeni wrote:
-> I'm looking at this one:
+On 13/08/2026 10:59, gang.yan@linux.dev wrote:
+> August 13, 2026 at 3:57 PM, "Paolo Abeni" <pabeni@redhat.com mailto:pabeni@redhat.com?to=%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > wrote:
+
+(...)
+
+>> Judging on the final status, I *think*/*guess* the (re)connect is
+>> hanged, possibly due to bad remote address?!? It could be useful to
+>> print out on stderr the reconnect destination address.
 > 
-> https://netdev-ctrl.bots.linux.dev/logs/vmksft/mptcp/results/776501/6-mptcp-connect-sh/
-
-I was looking at that too, last night between two mosquitoes :)
-> the output is strange:
+> Hi Paolo,
 > 
-> https://netdev-ctrl.bots.linux.dev/logview.html?f=/logs/vmksft/mptcp/results/776501/6-mptcp-connect-sh/stdout#L114
+> That reminds me of an issue when I was reading mptcp_connect.c a long
+> time ago:
 > 
-> the first nstat dump includes apparently the counters from all the
-> previous runs, which is unexpected: the nstat_init/nstat_get/pr_nstat
-> dance should allow showing the data from current run only right?
+> At the end of 'sock_connect_mptcp()', it calls 'freeaddrinfo(addr)',
+> the 'peer' pointer (which points into 'addr') remains. Later, the main loop
+> uses this peer pointer for reconnection attempts. If the memory has been freed
+> and reused, the address data could be overwritten, resulting in an invalid
+> remote address.
+> 
+> That might cause the hangs or failures you are seeing, right?
 
-Ah yes, indeed. mptcp_lib_pr_nstat() is not looking at the nstat
-history, taking data from the beginning instead of the last time
-nstat_init was executed (same for mptcp_lib_get_counter()).
+Good catch!
 
-I can send a fix for that.
-
-> Also I think mptcp_lib_wait_timeout completes too late (after ~60 secs),
-> when the listener already bailed out due to accept timeout (after ~30
-> secs), so it does not show any info on the listener side. I fear it may
-> also race with the actuall `timeout` command completion showing socket
-> states after the user-space program completion.
-
-Do you mean you would like to have mptcp_lib_wait_timeout wait for less
-than the accept timeout?
-
-mptcp_lib_wait_timeout has been introduced to dump the counters when
-mptcp_connect stalls, and even the poll timeout didn't help.
-
-What about modifying mptcp_connect.c to dump counters -- only for its
-netns -- before exiting in case of timeout?
-
-> Judging on the final status, I *think*/*guess* the (re)connect is
-> hanged, possibly due to bad remote address?!? It could be useful to
-> print out on stderr the reconnect destination address.
-Strange why would it be only visible now? But yes, as Gang said, it
-looks like a free is done on the addresses in between.
-
-(When I checked last night, I was initially thinking about an issue with
-a Netdev pending patch -- maybe even one related to TCP as it was
-visible even with connections from TCP to MPTCP -- because this wasn't
-visible on our CI, but maybe not.)
+Are you working on a fix for that? I guess we should copy the content,
+not just the pointer. Or maybe we don't need to do this copy:
+getaddrinfo() should return the same thing, no?
 
 Cheers,
 Matt
