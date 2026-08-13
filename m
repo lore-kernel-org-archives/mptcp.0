@@ -1,132 +1,119 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CDD9440A0B
-	for <mptcp@lists.linux.dev>; Thu, 13 Aug 2026 13:53:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30127483BEB;
+	Thu, 13 Aug 2026 14:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786629183; cv=none; b=GF/eCBQuaQulonZhMoq1Qk0D6rRW66vBLduYFWXK1Szi8GZ+A/KsV6BztmJZUXgZAYWjo2D0QUkaYny03fx3Yi1eppiXfWlgXbnqltHCvMsSYldqhRhYgHEAmMoiB1aynL6rDMHoMFRAy+dBP7GeS4FAXC5kVCB2+opB+nC4uHg=
+	t=1786633000; cv=none; b=kjbGZlWSNHgJBtzTR652DTGodX7EfZdFO/oE1ffNDTkbaePu9tzUSV7HJ3DhULDUotbtx32Utc8JX2G+W/KBjT30Z2MypFHfAeMR7XRcwVnQzOxkRUzFOsFZAxl1NEMu84Gcquc94/uEGUkI+JHGWrWhIIc2J+25XoDpZH8uQgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786629183; c=relaxed/simple;
-	bh=b+Z+r4EbIi9a84Sykh3VzFyqEZ9MGdHiRSkinQRtvQo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=HFrGt4rZCukKr0LeC6iqZ1TFGlNSlAm+AuXTBJSWcCywwFRjrZ5kaoG/3+sN0nC2nsrenv04HeeAcHPMlIwl4jCUJx495lDpfuJGqLlsWZ7c/dbiQt/RVNQHUfxL/8vzaZeg0gDb4Em6qSK68KV/KkJnvAimYeQ2gIfainow364=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nuAe44in; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1786633000; c=relaxed/simple;
+	bh=T0MK+X8oh21PIx12UhYCVcG2dVBqeWP54jxkuP2hZX8=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=gc+MpX1EHpSEWsyLmgJYGW7FV5v32YQA36EavDBRG2rE51uPoOkcXxqVgGEiH3GbMUFUbJttXiK8KuizvbCxzyaFVCwX6KhTNY5df01aEz9bX1aPo+9wXl6tWukziPFeIagKYONoP8Ulsi+wtXOQNgR39M8edXjsiJr5SqftryY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kk2znR0e; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nuAe44in"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-92e7c6ec9dbso91599385a.0
-        for <mptcp@lists.linux.dev>; Thu, 13 Aug 2026 06:53:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786629181; x=1787233981; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=ujkON8n4ksK4erN5u75qnQxKwnR0wbeX0QAj9QP/ecw=;
-        b=nuAe44incLsEIHa2vrwfRxa7MDHr6Hv8PDzXyxm1SZtuxrv1DiHCzHd0ibMNVQcrf5
-         rhsTNGuv+276RoqL0PxhLhFj+gLVqBV7DzqztKdiNVpJthWX+HdRjvmemFHg4hbShcNG
-         TS2DCV9J4qVhqmsNKbv/0CWFfbX7NDnPicYWEDPW1hQZyXzz1CpSgPkLeoaLVTjBmnXQ
-         Ea5QMPqVFQELcV3l1h/y+NowLXPHUDQ3U4LEU0Ai0s0WoOT2RTKleVOTHm/5qz0xmfvw
-         Hb18du1CrqxiFhlvvTMAYUf9WNzeAAJVcAEY+NWjKVcOoLzluXDJW0ZiDcVpeLHSpZAf
-         RP5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786629181; x=1787233981;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ujkON8n4ksK4erN5u75qnQxKwnR0wbeX0QAj9QP/ecw=;
-        b=M1AxQ/GVDNSde0faACEUW2rpz9kBWA5OjwugpNhIGMYTSDp0mqTDXpYXw49kHmQ9b7
-         8wTKy1jdRGwuLd+UrYFwzKZMqQpKoFd3omPjVtM4SXn3Lr7CVWtHNffzFqc/HV1ZE6Mu
-         s4BVjcyWjEj+Eb76wcH0CvQ/gVLR600M+JAVDIIfcdNYxWB0LmaTtnZ/No7gDHoj7CVi
-         tEvRqfeltoQXz7vYyyOVr8assU2NrhDbErW5lC9kUliLgsIz4Gn2ZbU2IrNe4duMIsiO
-         2Um1XRtaWGC/QHHpsMvAqt3bPFMn32WXbAwvdUgqt9VjWxn7mjxNldAuve+rocMWpig6
-         xhRw==
-X-Gm-Message-State: AOJu0YxIYOQrzIvHSXh+NiCtkTmna0DxJBURH9Zm3B/eUZpvmHKEgfT+
-	oJq3a33VCb5rZmOZCWBdhpuAKy/1G3J8yKr0iBaoTr8MrewjPnRUdmpiE0gv
-X-Gm-Gg: AR+sD11COKoW2QHQgKGri68HIcoLsZuPCLBFwvLAhwV5sDGQ56J5y3xl81CRS8iayax
-	VtlGth8bnsm0XMiURCm6Gk8ffKj/irHC6k6eUaVrKJPXcIUD32Ks8P5mu9w3o5zhXl6PmMhX1Lf
-	5muFo/nST7RGUZjlCYM0Tk2yP8F8zKaLyBuWzkeOK1HsM4QZRwXAD/hELdyaBRf58FE2as2JYKx
-	DjBc6xOEQod1mazA64H+S1QwdAqfuDNdz1kcs/DfZP7+ey64okCEnA3jDL4NF/6BzG/h+Ex72+j
-	/d+HPY0OcHmvFQgCqTIjc4wtHvkesa4vRrxwmACYSL9rHJeZdi6nvVdYgO370tyLA9zDSrwwsVS
-	9++roKGCyHX9ebj3E0dGppMW5Cqv4b9UNMYBXbKsr6vr8lLfBPYPKG/pt4QJekOF3Kk1pkVCffT
-	EGUcD8ZCNDQHlwAehYlHU85to0tf/V18Efau6Qg0ln+mAq+9TFpOJDp+bAHmD9GrGG01oPEP3cY
-	g==
-X-Received: by 2002:a05:620a:900b:b0:92e:f3ca:2ec9 with SMTP id af79cd13be357-936bfad3be0mr383872285a.40.1786629181255;
-        Thu, 13 Aug 2026 06:53:01 -0700 (PDT)
-Received: from [127.0.0.1] ([74.235.126.87])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-936c1b1290fsm149015185a.31.2026.08.13.06.53.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2026 06:53:00 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Akshit Patadiya <akshit@mpiricsoftware.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260813123754.4095492-1-akshit@mpiricsoftware.com>
-References: <20260813123754.4095492-1-akshit@mpiricsoftware.com>
-Subject: Re: [PATCH mptcp-next] mptcp: fix add_addr_accepted accounting on
- subflow close
-Message-ID: <64517ba3-2c94-2f36-d8f8-1d5bdb9f3ee5@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kk2znR0e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20BB31F000E9;
+	Thu, 13 Aug 2026 14:56:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786632994;
+	bh=COvl6ITeCs6Aiy+cyG4VLkbZethQIP3a/feOqbjCzEE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=kk2znR0e8TXC+WU4H1KiwS8fpHZNSaR5KesKpUa6aINw+tYPDWI/5ZdTu0s3DDe9F
+	 0jajjCflXLAXCXm1hyMckAOInwtd66tiAbg924rJeOhKVGu/sYDlyM+DeyZhGemCTG
+	 d+qa6liuTr+8bAWZti9faj8ZNfqA0en4ggtxVvQHPK+oDnsRP8qK1MvRW6UZjNBdZc
+	 HxvBGV6QZSxUsL8ShAxFLtSeQ7zAvCu0VxcepSmtCECqwUTqTXuh9vxelXz22GhcrR
+	 KoVkVxJtT1kFtg/rrl4/xGxErvKcofU1fH53ZpkTTQnQhMXyeTlz6zNyXOLIC+6Oug
+	 QyGfSTOdBpqTw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH net-next 02/11] mptcp: remove unused data_ack from
+ struct mptcp_ext
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260812-net-next-mptcp-misc-feat-7-3-v1-2-1905a818f6cb@kernel.org>
+References: <20260812-net-next-mptcp-misc-feat-7-3-v1-0-1905a818f6cb@kernel.org>
+ <20260812-net-next-mptcp-misc-feat-7-3-v1-2-1905a818f6cb@kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 13 Aug 2026 13:52:59 +0000
+Date: Thu, 13 Aug 2026 14:56:33 +0000
+Message-Id: <20260813145634.20BB31F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 
-Hi Akshit,
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-Thank you for your modifications, that's great!
+Pre-existing issues:
+- [Medium] When transmitting an MPTCP DATA_FIN DSS option without a data pa=
+yload (e.g., on a pure ACK), the stack-allocated `opts.mptcp.ext_copy.csum`=
+ is left uninitialized. If MPTCP checksums are enabled, this uninitialized =
+memory is written to the TCP header, leaking 2 bytes of kernel stack memory=
+ over the network.
+--
 
-Our CI did some validations and here is its report:
+--- Patch [2]: [PATCH net-next 02/11] mptcp: remove unused data_ack from st=
+ruct mptcp_ext ---
+commit 5596db7582bd748ad6320aef70bbdd448c28de36
+Author: Geliang Tang <geliang@kernel.org>
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/317032=
-46069
+mptcp: remove unused data_ack from struct mptcp_ext
+   =20
+The data_ack and data_ack32 fields in struct mptcp_ext are no longer used
+anywhere. Remove them from the structure and update mptcp_dump_mpext()
+trace helper accordingly. Drop the data_ack field from the trace entry
+and the corresponding output in TP_printk().
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/a42cb09aedcb
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1145437
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index 71b9fc5a57963..485d55b66ea67 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -19,10 +19,6 @@ struct seq_file;
+> =20
+>  /* MPTCP sk_buff extension data */
+>  struct mptcp_ext {
+> -	union {
+> -		u64	data_ack;
+> -		u32	data_ack32;
+> -	};
+>  	u64		data_seq;
+>  	u32		subflow_seq;
+>  	u16		data_len;
 
+[Severity: Medium]
+This is a pre-existing issue, but does this structure leave the csum field
+uninitialized on the stack under certain conditions?
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+When transmitting an MPTCP DATA_FIN DSS option without a data payload (e.g.,
+on a pure ACK), the stack-allocated opts structure in=20
+net/ipv4/tcp_output.c:__tcp_transmit_skb() is not fully zeroed:
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+    struct tcp_out_options opts;
 
-For more details:
+If mpext is NULL, net/mptcp/options.c:mptcp_established_options_dss() only
+clears the bitfield flags:
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+    /* Zero `use_ack` and `use_map` flags with one shot. */
+    memset(&opts->ext_copy.flags, 0, sizeof(opts->ext_copy.flags));
 
+This leaves opts->ext_copy.csum uninitialized. The code then passes this to
+net/mptcp/options.c:mptcp_write_data_fin(), which populates fields like
+data_fin and data_seq but fails to initialize the csum field.
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Finally, in net/mptcp/options.c:mptcp_write_options(), it reads the
+uninitialized csum when writing the TCP header:
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+    put_len_csum(mpext->data_len,
+                 (mpext->data_len ? mptcp_make_csum(mpext) : 0),
+                 ptr);
+
+Could this uninitialized struct memory result in leaking 2 bytes of kernel
+stack memory over the network when MPTCP checksums are enabled?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260812-net-next-m=
+ptcp-misc-feat-7-3-v1-0-1905a818f6cb@kernel.org?part=3D2
