@@ -1,160 +1,142 @@
-Received: from mta0.migadu.com (out-87.mta0.migadu.com [91.218.175.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D211321F2D
-	for <mptcp@lists.linux.dev>; Thu, 13 Aug 2026 01:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7BC037E5C0
+	for <mptcp@lists.linux.dev>; Thu, 13 Aug 2026 06:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786584624; cv=none; b=ZOhacpEHJ03Av6MIipsQhA0O7+AXyOoIVULNJNqMNyc6+xQYI39X+PuJns8pwt3CiQ6AiZZ7VEhcyzHSHtm0WiKSHGyADMcfTqJX7ppqM1Z4wyjHMFyiasRCu90tgFozMzFeYO6ATD45Ij9rIEbVnWDZrc82N9Ve2V1DEsGBqdE=
+	t=1786602889; cv=none; b=thRdr6TXCKj0+cgg++2sMcXKuKiivEC2TUuNgZhSX19umaWbQmCwcVQoSujhPk8GqJb3aI5IBNQaDlC8djyCX1ItXn0VHyzhzPqZJ8K1agvIhe3ROSgkDAy01udW7s1kjAsnOlph5is8zWPyER/lAh3kYvG9IiYxWKxGaEn3Xkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786584624; c=relaxed/simple;
-	bh=yPsIrS66rVzwaPzrANnI/SAyS6c/o8cnS5525QfKbvw=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=X+QGyQ5XqyOaW8pZdyimTO5P2Xeg86tma4abSwcCArSRCY84yFLDEyC8/l9EmJcdA0nDVpFcw3u2zscUtErHmhI6lKGOG2ElLQuKzsfm+K8vEM/a3MBWhEAB4a4abFJGIwe6GTV56NFg9B60kLJWAjYek8BSZfemsheblkqC+NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YusbEm/A; arc=none smtp.client-ip=91.218.175.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1786602889; c=relaxed/simple;
+	bh=loFcgkWToyXwKy04k58v0ncEHhAAjmUVUIiINRU79Ig=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pUqPOhJe1h9qpt0y9kkc4GZ3vHPFeTeIazWEmLTGR8muzYN8NG32BMTTBf4SaOXEGJ/aa6sYZROPyiRoM3+N3Hrzv6QwY26/QmUqNuEHrftf60f8X+S0qJWiSD532hM75QBjn3EY/PHBInKOOTWyiHFrMLskAgB4nVKhpyizqU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SMftEyFf; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YusbEm/A"
-X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=yPsIrS66rVzwaPzrANnI/SAyS6c/o8cnS5525QfKbvw=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1786584619; v=1; x=1787189419;
- b=YusbEm/A6h+hmW/+9r26uxzxKpkiPHk+0uYfUCS5nH1bWm2tuojMboE8OqpLnEhFT5J5GpBQ
- zXHGXJexwTaXGbn3BCe3y4Ge+NtXwAhs7692Ykrf6xUToHo02QphhdfSaTJYxySL3SjRSGLH4Kb
- Ljg/0KGEfJRgHz/XJP/jgYEI=
-X-Envelope-To: mptcp@lists.linux.dev
-Received: from webmail.migadu.com (2001:41d0:303:fc7a::)
-	by mta12.migadu.com with ESMTPS id fc314fd4071e681f;
-	Thu, 13 Aug 2026 01:30:09 +0000
-X-Migadu-Flow: FLOW_OUT
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SMftEyFf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1786602886;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0y0bv1ZKYWccbNlj+GApUAI+HjVyf+3rD/nzLYuawsM=;
+	b=SMftEyFfymJYyZ/yKVZfElfBwHrMM5bn/fa07k8T994XcEnh0631m7OcXb8lnKeElLXvq4
+	fmdNdP/4oOjHPzw7xFSKTCWP1CBqDO4kAJaqBwoX0w68iHZ/HhtNFgIgmyW/uI5KnGESE8
+	3sax1K3VRnIwfGNRT8Fq9BYretDz6to=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-572-xVNvbqW6M_myAKVwzrbQLg-1; Thu, 13 Aug 2026 02:34:40 -0400
+X-MC-Unique: xVNvbqW6M_myAKVwzrbQLg-1
+X-Mimecast-MFC-AGG-ID: xVNvbqW6M_myAKVwzrbQLg_1786602879
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-492488f8583so13831065e9.2
+        for <mptcp@lists.linux.dev>; Wed, 12 Aug 2026 23:34:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786602879; x=1787207679;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=0y0bv1ZKYWccbNlj+GApUAI+HjVyf+3rD/nzLYuawsM=;
+        b=tZbeWRnMT3PcRI+7ueJyIVVqI06fTVcrV3c+m+5hDsugvW5ib4NqX+nwzCD0CLqBhV
+         4BdfAvZSBXGy6569S3tQC61Wz41egkQf+JEGNj9yYeKlkc5Uz4zdBlnU2nan2b2/n5WG
+         PB3exvPtsuBy6HJZcJbS1Eo6shBLGok2uEXeyKUnfzoY9ElepYgxY/bZyrIr9BZJSNrV
+         ksMQHARO6Is2GlV8br0fDi6wF8GWsfS9EgWoI5lJ6y2Qvrh9Psx1+DLjI3FKO5NhkNlH
+         5pUOkKGu6rG2TyaZUyuhZjETd/3vN3wohrq7DqkTu52m97RfUyIoj+7R15VKjKkPH8pO
+         oMaA==
+X-Gm-Message-State: AOJu0Ywgs20g3eXSbawxSVk9GmlZnYWLB9trslIcKPfIcBxjnE+XMBcO
+	aCsECAvYmwGvDthMUHqmxS7Qs+ztLzRUgZaOYjq/jilJ9iDojm09vSQbzC3ywNEDnWBDjKavIqv
+	S2vnsxyq0FhkSegQe8qWUdkuNNpjn//1GeiCPectks6bp2I7JgH0fOeRfeWmv49SD
+X-Gm-Gg: AR+sD11efUWrdifS1FUruuZY1rbJYq6fNPxtTQKj2Y1XrtAWACAHevjbPxyHDE6lC1U
+	ce2AgP//mBXAw0cU22AnbswiMxOA5TjuD5IU6SaiFddLlWveC5WTwWkzZt51I5WoTl7Pi1mwA7D
+	OnUhyBVI2cGVr3FwfX29yF9EQDyy6P8KxHbwu5L5WC2cK3jcn8knClQYMuAWiTTwam45N9lBAVD
+	SRbZxzHDyUgPGVb18/CQ4aDatUY89CWucpp9EfFRmn1UiAqGrIGxrMSa2A0SApi8yMPYZ8x6wqn
+	tPhoRELacW7cmIFf95KOCjz3VOIL/b1ZCKE+adoipfoueIF8aLj4RaC9/PNWZpg7BAKqTTAD2/F
+	fwuPDAEjCJhgVFe/5CtOUXixp9ETvkQ+p0NMZCf8YHBrt/fGQk4d2kKo6ScvE1QTVmyWaaz+oD5
+	g=
+X-Received: by 2002:a05:600c:c054:b0:499:7aa7:eaa7 with SMTP id 5b1f17b1804b1-499821fa293mr23177665e9.15.1786602879281;
+        Wed, 12 Aug 2026 23:34:39 -0700 (PDT)
+X-Received: by 2002:a05:600c:c054:b0:499:7aa7:eaa7 with SMTP id 5b1f17b1804b1-499821fa293mr23177175e9.15.1786602878819;
+        Wed, 12 Aug 2026 23:34:38 -0700 (PDT)
+Received: from [192.168.188.103] (ip239-44-231-195.pool-bba.aruba.it. [195.231.44.239])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4815a569c2bsm3877335f8f.12.2026.08.12.23.34.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Aug 2026 23:34:38 -0700 (PDT)
+Message-ID: <0858d963-e20e-474a-9f03-ae5d323ff6d1@redhat.com>
+Date: Thu, 13 Aug 2026 08:34:37 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Thu, 13 Aug 2026 01:30:08 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-From: gang.yan@linux.dev
-Message-ID: <42782d2aaa30cf1328bfea950c5f430eb9c98bd3@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH mptcp-next 0/2] mptcp: MIB counter for invalid option
-To: "Matthieu Baerts" <matttbe@kernel.org>, mptcp@lists.linux.dev
-Cc: "Gang Yan" <yangang@kylinos.cn>
-In-Reply-To: <d5ac123f-51f0-45c1-856c-c4693fc17a33@kernel.org>
-References: <20260812100550.148670-1-gang.yan@linux.dev>
- <d5ac123f-51f0-45c1-856c-c4693fc17a33@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-net 0/4] mptcp: a few fixes
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <cover.1786553006.git.pabeni@redhat.com>
+ <cbdf8539-65c0-4bf2-ab43-bf3481b0971f@kernel.org>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <cbdf8539-65c0-4bf2-ab43-bf3481b0971f@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: pZlXYA5ijO_E9jeeyc0gO0HAj930k9RBUiU6N3OoluM_1786602879
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-August 12, 2026 at 11:03 PM, "Matthieu Baerts" <matttbe@kernel.org mailto=
-:matttbe@kernel.org?to=3D%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.or=
-g%3E > wrote:
+On 8/12/26 10:54 PM, Matthieu Baerts wrote:
+> 12 Aug 2026 19:08:30 Paolo Abeni <pabeni@redhat.com>:
+> 
+>> This is mostly a follow-up to the recent OoO queue pruning series.
+>> Explicitly targeting net as we have already a lot of patches pending for
+>> net-next, and no need to rush IMHO.
+> 
+> (I hope it was OK for me to send a few small cleanup patches)
 
+ATM I haven't checked yet if you already did... but pw says ~400 patches to
+be processed before EoW, I would love if such count is not going to increase:)
 
->=20
->=20Hi Gang,
->=20
->=20On 12/08/2026 12:05, Gang Yan wrote:
->=20
->=20>=20
->=20> From: Gang Yan <yangang@kylinos.cn>
-> >=20=20
->=20>  This series is designed for [1].
-> >=20=20
->=20>  Patch 1 passes the 'net' to options parser, I used to use
-> >  dev_net(skb->dev) for MIB counters, but the AI reported it is not
-> >  suitable for this. This patch has no functional change.
-> >=20=20
->=20>  Patch 2 adds the InvalidOptionRx counter, and increments it when
-> >  receive the invalid options.
-> >=20=20
->=20>  The packetdill testcase is submitted, and can be reviewed in [2].
-> >=20=20
->=20>  [1] https://github.com/multipath-tcp/mptcp_net-next/issues/628
-> >=20
+>> First 2 patches addresses explicit comments from sashiko, 3rd one is a
+>> somewhat unrelated cleanup I stumbled upon while implementing patch 4.
+>>
+>> The last patch fixes another thing implided by sashiko while reviewing
+>> the mentioned series.
+> 
+> When reading this, it sounds like there should be 5 patches but only 4
+> have been shared. Just to be sure: is everything there?
+Yes, patch 4 == last patch.
 
-Hi=20Matt
+Also patch 4 is the one I think opus 5 could raise some concern on. A safer 
+alternative would be replacing it with the following, which is simpler, but I'm
+not fancy of adding another conditional.
 
-> Thank you for the patches. Please next time add a comment on the GitHub
-> ticket: I already have the patches ready, but I had to wait (for
-> administration purposes) before sending them:
->=20
+Staging the series a little bit in the export branch will give some time
+to ponder about a better solution.
 
-Sorry=20for that, no offense intended. And thanks for the review and for
-the process reminder.
+---
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index ca644ec53eed..45d627981f15 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -995,13 +995,15 @@ static bool mptcp_rtx_timer_pending(struct sock *sk)
+ 
+ static void mptcp_reset_rtx_timer(struct sock *sk)
+ {
++	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	unsigned long tout;
+ 
+ 	/* prevent rescheduling on close */
+-	if (unlikely(inet_sk_state_load(sk) == TCP_CLOSE))
++	if (unlikely(inet_sk_state_load(sk) == TCP_CLOSE) ||
++	    test_bit(MPTCP_FALLBACK_DONE, msk->flags))
+ 		return;
+ 
+-	tout = mptcp_sk(sk)->timer_ival;
++	tout = msk->timer_ival;
+ 	sk_reset_timer(sk, &sk->mptcp_retransmit_timer, jiffies + tout);
+ }
 
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
->=20commit 8173df5a467cac6ed421bb832ac3ee675b490fa6 (b4/mptcp-mib-inval-o=
-pt)
-> Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> Date: Fri Jul 31 14:10:38 2026 +0200
->=20
->=20 mptcp: options: reset parsing in case of invalidity
->=20
->=20 When an invalid option is detected -- any unexpected suboptions
->  combinations or use of invalid sizes -- the current behaviour is to
->  ignore the currently parsed option.
->=20
->=20 Receiving such invalid options is suspicious: either this is coming =
-from
->  a buggy host, or an attacker. In this case, it seems safer to drop any
->  previously parsed MPTCP option from such packet.
->=20
->=20 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->=20
->=20commit be5492962195d2988a9c508bc8ce4d3f55ac1da7
-> Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> Date: Wed Jul 29 20:01:45 2026 +0200
->=20
->=20 mptcp: options: track invalid ones
->=20
->=20 Any unexpected suboptions combinations or use of invalid sizes are
->  suspicious: either it is coming from a buggy host, or an attacker.
->=20
->=20 Better to track that with a new MIB counter.
->=20
->=20 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->=20
->=20commit 684c6244b5b76d30aaf30d62597247485b89cdb3
-> Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> Date: Mon Aug 3 20:24:02 2026 +0200
->=20
->=20 mptcp: options: use a dedicated bit for csum reqd
->=20
->=20 Instead of mixing that with suboptions: that's the only non-suboptio=
-ns
->  that is present in the 'suboptions' field.
->=20
->=20 This even cause a workaround with OPTIONS_MPTCP_DSS to exclude this
->  non-suboptions when checking which other ones are set.
->=20
->=20 Move it to a dedicated free bit, and adapt the corresponding code.
->=20
->=20 This is clearer like that.
->=20
->=20 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->=20
->=20=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
->=20In your version, I see that you increment the counter even when the
-> suboption is not invalid, e.g. the version or the hmac is not supported=
-.
-> I don't think we should do that.
->=20
->=20If that's OK for you, I can add a co-dev by on my patches.
-
-Thank you, that=E2=80=99s fine with me
-
-
-Thanks
-Gang
-
->=20
->=20Cheers,
-> Matt
-> --=20
->=20Sponsored by the NGI0 Core fund.
->
