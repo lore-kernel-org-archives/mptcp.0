@@ -1,127 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-65.mta1.migadu.com [95.215.58.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2252F39C2
-	for <mptcp@lists.linux.dev>; Thu, 13 Aug 2026 09:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E7C30F924
+	for <mptcp@lists.linux.dev>; Thu, 13 Aug 2026 09:32:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786612808; cv=none; b=hRGRD97LpdC9lAjkhqEcnrYNxeIOxyyDKl1gtSe8/Ek6pclgcT+aJ6lJ+xihJRszR0eUxY5yGWY7NgKrdqg+Y51l6bDABY2vWpi1GXgfWcj3fSPbxcmEeuifu/chVL49Chvf29hoawcSfx/+pzCRayVNI0TlonNMLyejBUCFC7M=
+	t=1786613578; cv=none; b=dAGr2Dv7kYhizwM+IbVGG3DiVfAV0j4cdMmvt/cY9IO0FmLiYDvj61zV9TD3zl55K7L5AKRmKihqV08Mgl479YfoU2HOfsILP8CR0927JXQhd7eSoGqeQsFWQb4hs9604PmvYDq8mONJWLD9t0wP0ZzMb0rQYy61+cnGJHIxYz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786612808; c=relaxed/simple;
-	bh=bif14L1QA11yZ/XtbHCmNW3Xbbyxu227v8NhnWVDDmA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OQDcOUg5b28AZf+0y46a0d4DcQ6tw3+9wFvxVtpd5vKZr6fRZ6lD02XAh0luawDRdV22gZaMvkXv3rYXL/xyV3phA9DszijM3xRIbGq4OuX7rEuFSqS9yn620vyjeQRFebcMf1KgybNptt4jNqAlfPsVjBOiPJvdf4dTcG/u4EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ch+OqxLp; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786613578; c=relaxed/simple;
+	bh=DmleVpQVLeTu43U8q5DTVCb0bGggiFx707RffKIEaLc=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=RnGaALvTvzgWHGQKoFVCLVzRd3lUp+H8WY1c1M0VQj8wsXvPv1ufZFDvo+Hf/otJiL5Lbt5lCrg6QODNKYNtAcJPfOIcXKzgnipncBI7azM90yC4aMLPjY+dBzloBnJZQK62s/tLKXHkULo/llEcj0kD2Q4mY05UYrhe+7uLrCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Gl2Uwx+U; arc=none smtp.client-ip=95.215.58.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ch+OqxLp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1ADA1F00A3A;
-	Thu, 13 Aug 2026 09:20:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786612806;
-	bh=7HagUwVEKJ2eYFP6BjDmaFXsO4FKaQpTUpaZ+HZIxF8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Ch+OqxLppVLlEI2ic/6yYTpw9e1QlIseO/+dlim6dCD0hLhk54+7zUfuUcxNZ35aS
-	 D5LVVtIRvEl2v9BKeUrHfyxzbfatcFRR0oqGgVh/A1q0AaPasw9UfAYNRsDCLI6tqC
-	 DNPIvsfPOXw9GGNqguIsApnBcnS+1ecO2IcAYm/dZqmeQqIzmfNv/4NKMHmMdGTWxj
-	 O5/KN9Wht7F2Z8I0WHfxCVFU3XfMHaNHT3pruHSDDRHZnodRV8cMjYeQueVqSWHcb6
-	 HAjsBlMwP7GzT1ZcDiiBruOr1WO0y61SoV1vfGuzSgnTVzfBceQi4x2w1VYbpsBnaY
-	 YM4a6Oe3p/N3g==
-Message-ID: <be3d9d4d-2a4c-4ed6-a341-f184d85cc664@kernel.org>
-Date: Thu, 13 Aug 2026 11:20:03 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Gl2Uwx+U"
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=DmleVpQVLeTu43U8q5DTVCb0bGggiFx707RffKIEaLc=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1786613573; v=1; x=1787218373;
+ b=Gl2Uwx+Uo6v5Mq0fQ05vxN6fZW8IBXdS6H2GCAD4k6ZpGNX3mjtznYedIRKyyon3EhDiEfKM
+ 9Gb40pVKSwYJYRyZp/AX+zje71zUSW9OJtCd9x58KNSDuJ5lT8ujSTNbcurzUhJI4j7BPcQwJh2
+ ONPnV7+E11hsS3XleuQ8/Lfk=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: from webmail.migadu.com (2001:41d0:303:fc7a::)
+	by mta12.migadu.com with ESMTPS id cef5bd278c7ffc0f;
+	Thu, 13 Aug 2026 09:32:53 +0000
+X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: CI failures on nipa
-Content-Language: fr
-To: gang.yan@linux.dev, Paolo Abeni <pabeni@redhat.com>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>
-References: <02830f64-bb5f-41fc-8211-5f7aa36b828e@redhat.com>
- <9db96388a1c72d264d0576e0a58f4944560e93a7@linux.dev>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <9db96388a1c72d264d0576e0a58f4944560e93a7@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Thu, 13 Aug 2026 09:32:53 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+From: gang.yan@linux.dev
+Message-ID: <564cb027be5e7972fc8f6f976707628ee32f38aa@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH export v3 2/4] mptcp: reject joins after fallback in
+ mptcp_is_fully_established
+To: "Matthieu Baerts" <matttbe@kernel.org>, "Paolo Abeni"
+ <pabeni@redhat.com>, "Chenguang Zhao" <chenguang.zhao@linux.dev>,
+ mptcp@lists.linux.dev
+Cc: "Chenguang Zhao" <zhaochenguang@kylinos.cn>
+In-Reply-To: <41078a8c-00c7-4cb1-8e57-237b4ea6c2f0@kernel.org>
+References: <20260812054653.43799-1-chenguang.zhao@linux.dev>
+ <20260812054653.43799-3-chenguang.zhao@linux.dev>
+ <1d7c56b9-00c1-4550-a403-c3d704259267@redhat.com>
+ <41078a8c-00c7-4cb1-8e57-237b4ea6c2f0@kernel.org>
 
-Hi Gang,
+August 12, 2026 at 11:32 PM, "Matthieu Baerts" <matttbe@kernel.org mailto=
+:matttbe@kernel.org?to=3D%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.or=
+g%3E > wrote:
 
-On 13/08/2026 10:59, gang.yan@linux.dev wrote:
-> August 13, 2026 at 3:57 PM, "Paolo Abeni" <pabeni@redhat.com mailto:pabeni@redhat.com?to=%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > wrote:
 
-(...)
+>=20
+>=20Note: Chenguang is looking at a bug where, when an MP_FAIL is receive=
+d
+> before being in fully_established, the kernel accept going to fully
+> established, and creating new subflows, then reject them once done.
+>=20
+>=20Same when receiving a 4th packet without MPTCP options.
+>=20
+>=20I think the MP_FAIL should do a fallback if possible, but it is proba=
+bly
+> also required to check the fallback status or something similar when
+> receiving an MPJ.
 
->> Judging on the final status, I *think*/*guess* the (re)connect is
->> hanged, possibly due to bad remote address?!? It could be useful to
->> print out on stderr the reconnect destination address.
-> 
-> Hi Paolo,
-> 
-> That reminds me of an issue when I was reading mptcp_connect.c a long
-> time ago:
-> 
-> At the end of 'sock_connect_mptcp()', it calls 'freeaddrinfo(addr)',
-> the 'peer' pointer (which points into 'addr') remains. Later, the main loop
-> uses this peer pointer for reconnection attempts. If the memory has been freed
-> and reused, the address data could be overwritten, resulting in an invalid
-> remote address.
-> 
-> That might cause the hangs or failures you are seeing, right?
+Hi, Matt
 
-Good catch!
+Sorry, I'm not very familiar with the details of this patch.
 
-Are you working on a fix for that? I guess we should copy the content,
-not just the pointer. Or maybe we don't need to do this copy:
-getaddrinfo() should return the same thing, no?
+No offense intended, I just have a question I'd like to ask based on my
+understanding and the RFC documentation: Should MP_FAIL trigger a fallbac=
+k?
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+For the multiple=E2=80=91subflow case, if one subflow encounters an MP_FA=
+IL, it should
+be closed with a RST, and the data will be retransmitted over the other h=
+ealthy
+subflows. This should not cause the entire MPTCP connection to fallback t=
+o regular
+TCP, right?
+RFC8684's contents:
+'''
+The receiver of this option MUST discard all data following the data sequ=
+ence number
+specified. Failed data MUST NOT be DATA_ACKed and so will be retransmitte=
+d on other subflows.
+'''
 
+
+For the single=E2=80=91subflow case, according to the RFC, MP_FAIL should=
+ subsequently
+lead to a fallback under the infinite mapping (INFINITEMAP) situation, sh=
+ouldn't it?
+RFC 8684's contents:
+'''
+A special case is when there is a single subflow and it fails with a chec=
+ksum error.
+If it is known that all unacknowledged data in flight is contiguous (whic=
+h will usually
+be the case with a single subflow), an infinite mapping can be applied to=
+ the subflow
+without the need to close it first, essentially turning off all further M=
+PTCP signaling.
+'''
+
+Thanks
+Gang
+
+
+>=20
+>=20>=20
+>=20> I would prefer avoiding additional conditionals, if not well reason=
+ed.
+> >=20
+>=20Agreed, the commit messages in this series are not explaining (enough=
+)
+> the reason and the context.
+>=20
+>=20BTW, Chenguang, please use 'mptcp-net' for fixes (and mptcp-next for
+> features). Also fixes should have a Fixes tag.
+>=20
+>=20Cheers,
+> Matt
+> --=20
+>=20Sponsored by the NGI0 Core fund.
+>
