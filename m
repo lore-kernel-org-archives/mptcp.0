@@ -1,181 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443FA486BB6
-	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 15:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61DCB3CFF65
+	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 16:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786722307; cv=none; b=AVpRwluwxCCRsOl5860ZvDq5LNmcIcAATFrbAyyFQXSSvEyfw33ySECJ54YK2tB8Fy80a5dolX00hJ2LI14n155JDFY27p5U4RtmzxKxlqmgOp4slq8304qsj9RGuNjx4owx270/fAi7LH0brBXhhaUaTdXpihe6r0FAVgbuYc8=
+	t=1786725230; cv=none; b=WK9OF0o+FEWdeuvUb9XlXI6iwQcYYtWOHOehAClEUqCa0/XsZ8duBnSKQWP7GgPXhZnW5R0HV9Jb93dPg4kXIBR5i2MUiNjtCvGRI+u3GhESFUZx1RzNgCovA7BIvPOJMoHZbZbGBUDQD8zeLAVY7NNJ3UnCXA3yutSEcf9rPUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786722307; c=relaxed/simple;
-	bh=3oZKPxVkfqHyZI1xsUFa66BDKee+lspIGOHGCN8QPcQ=;
+	s=arc-20240116; t=1786725230; c=relaxed/simple;
+	bh=pyHrc9bBxEomdl5XM9q/B52XkX59HhJnj27Srg6oQo4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cZiMvAYcM7ujzgTkY7EgRXr0zMx0kAudc8p0OUeIveoGPI25nhJU5ULbBI0nQ8Qv0GoVhmVBrq/eGBXCZZdN+UKPGxXnsHWPyBmvvvlNKTU66WAuIc9xYpm/6GC+0oM5wGPuuOWFEp1bQrr45mNsKyCms90uLxzKl0X5aD9wJhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/jlrlZK; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=JPxAjwS3dP0NmCNpkccqdLQaQEey4ldHiqiDGjM5LAX59Zs0tSWNdEX1EFNoen+wDH4QSS2p3NqHzreP/ZGg/Ug6yoDy4y1fLN85Dhn9DXj0OLmz5V/umot+2qdcrzGeRslIyjZok9vKRPUYxsk055tyTlKGD2Ox0/oFppbzslU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IB8A09tO; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/jlrlZK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C92601F000E9;
-	Fri, 14 Aug 2026 15:45:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786722306;
-	bh=FnOe67U8og0dl9CYAoIlwFSvMxiRB/6xC5CBfBWbuMM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=k/jlrlZKO9xc7BQyQS4s0pSH83wZYk7Cupw7rD+rrOjX4/kfmjOYbGT6bEObSqh9B
-	 L9+DAPKP8eYmdvGlH7WNCuGHmJG7JFpUWEWdUgEetZ90uVcZzBdNcDkgCePaPWvWU1
-	 ARC6hYsCP0nWgLP6v7yIYDnnnxLNfkKu1Z6mn8xcG3KzVqkTbfHEbNm1Fs/v6Z/496
-	 Hrrw3Dye67BRgMLtpFeptkQ5uOoUkYgjcQTbuT2RqMmiKyMJf5+V6zjoTocFkIL5Kz
-	 owip0hgMH41Ct0U+N8ELXSpIzYY2zUm4ZiwMgdKDg01r1bWJWBnp0XRyNa5r+wMMin
-	 6eYP0LolphIbA==
-Message-ID: <4bc4a5c1-c6ca-4384-a355-ca709cd52f48@kernel.org>
-Date: Fri, 14 Aug 2026 17:45:02 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IB8A09tO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1786725227;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8WV9Wj4SCHBYhAbyzgDfM0gpgoEghIbZbNF8uqhfCQc=;
+	b=IB8A09tOsV0UZrnRHoR3O+VvsuTnpuelmyTugqPlbmrib70DTQX9vK4kGA5f484wilgQB3
+	1veMGr775/Q1LJoRmjCjR+R2rAUqxK6AtsvJhqRZMaXPvzhoaDlzlhOviGV4tJ2jf5Tivw
+	tnkBeMmJisjEyQUUe6t9kqG+ctI9Q+k=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-479-7lT_R_S9NDGDd4hth9i7ZA-1; Fri, 14 Aug 2026 12:33:45 -0400
+X-MC-Unique: 7lT_R_S9NDGDd4hth9i7ZA-1
+X-Mimecast-MFC-AGG-ID: 7lT_R_S9NDGDd4hth9i7ZA_1786725225
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-47407691804so692570f8f.1
+        for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 09:33:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786725225; x=1787330025;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=8WV9Wj4SCHBYhAbyzgDfM0gpgoEghIbZbNF8uqhfCQc=;
+        b=aTHby67u2qsQBTJuWNg2MvRtBzQn0cGDJMEoopBMcac0618mLBnjTm1SYL17Jck0EE
+         WAT5N7rcYYQjGFuAL1jbwsUmipcw1svaVHqKdAHVZatGrFoMJmulT9IK8ns7Vbf/cETn
+         UVxBTNfHEN7yssLkW2CHv3zT0GbvEv8Zy4R0997QVjHfHTP9nmK+gBWGNaIAPTTgcUUZ
+         6cCWcEvuPoFGuZk0H/LFNBLHJeWgOK9ZFHDfMeiKKkvMGXJnLrR6BqvXb7YPYf3okpuC
+         A6AwaKMkJz1c9O1xEPh3zEi8WTEKFktdLYlhS78UiCGfl9tgFLuCsmq9VTiIIfQmWQEF
+         CFtw==
+X-Gm-Message-State: AOJu0YwZyI0TkwNmj3qPDOWS92yZPcFp7rgasNycu4G/djz2Eo67nFxw
+	tpaBI4++3IWbRZHN2bhoyF1MRUo/kf/LjmAmbb5u3fTHvvNg2sxJqfJ+UqS+5+iqOpdo7Q34qx2
+	gW72RPcTgQwMom8dlyDLSIGRkWlqkty0iDIQ8YcJSRfILdPph+M/IVgAI
+X-Gm-Gg: AR+sD13GBHk8QeeWPDPQpWX8/tErmUjybiJQuO8kmcR0MTj9ATolIck2uizWTlSRbt5
+	ujsawWqdDX9KGxxcFRm9ccPwCBTjG96GI1NLnpbKieu1cP4pBrrvoms7+E4mSdr9xi4xjaEOat+
+	KFJAOZm+U5T91liltcTzA9a2/KqIT9tPR3dcjKRusbF7EzZx1ZGxQdXtUJhatkbaQVRCBkWw9/r
+	ZELURUxTCYgyaApPeme95xZb+vOp4Z0Oq2y/ZzVSF8qHwJKaPHeXND7M3kENpkt09mOsu2ukoq4
+	EcXhB52H+hsBoGKtXc/8gCdNSAi8cESdKiqwad0eYDXZqKgk2n69fG8XUXQ8WWn8ghzkfLTB/2P
+	4GJoMd5H+o87Xasw5dyW/6xLAMXVqL9qWP0jFmRu1EqdfG3c+O5EeGbIvPnQYt6l4J3D9a9UkRG
+	E=
+X-Received: by 2002:a05:600c:1395:b0:499:872b:abd4 with SMTP id 5b1f17b1804b1-4998797684cmr87803725e9.6.1786725224676;
+        Fri, 14 Aug 2026 09:33:44 -0700 (PDT)
+X-Received: by 2002:a05:600c:1395:b0:499:872b:abd4 with SMTP id 5b1f17b1804b1-4998797684cmr87803265e9.6.1786725224244;
+        Fri, 14 Aug 2026 09:33:44 -0700 (PDT)
+Received: from [192.168.188.103] (ip239-44-231-195.pool-bba.aruba.it. [195.231.44.239])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-499899753ccsm45933325e9.0.2026.08.14.09.33.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Aug 2026 09:33:43 -0700 (PDT)
+Message-ID: <aa683b2d-264e-43bc-b98f-0b8728ad11e0@redhat.com>
+Date: Fri, 14 Aug 2026 18:33:42 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH export v3 2/4] mptcp: reject joins after fallback in
- mptcp_is_fully_established
-Content-Language: fr
-To: gang.yan@linux.dev, Paolo Abeni <pabeni@redhat.com>,
- Chenguang Zhao <chenguang.zhao@linux.dev>, mptcp@lists.linux.dev
-Cc: Chenguang Zhao <zhaochenguang@kylinos.cn>
-References: <20260812054653.43799-1-chenguang.zhao@linux.dev>
- <20260812054653.43799-3-chenguang.zhao@linux.dev>
- <1d7c56b9-00c1-4550-a403-c3d704259267@redhat.com>
- <41078a8c-00c7-4cb1-8e57-237b4ea6c2f0@kernel.org>
- <564cb027be5e7972fc8f6f976707628ee32f38aa@linux.dev>
- <db6bd87f-f7cd-4b02-a471-db549cbca384@kernel.org>
- <3c9241d11965180046042f4c6079ebb1e38b54dd@linux.dev>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
- YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
- c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
- WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
- CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
- nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
- TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
- nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
- VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
- 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
- YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
- AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
- EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
- /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
- MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
- cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
- iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
- jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
- 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
- VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
- BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
- ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
- 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
- 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
- 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
- mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
- Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
- Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
- Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
- x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
- V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
- Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
- HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
- 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
- Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
- voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
- KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
- UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
- vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
- mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
- JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <3c9241d11965180046042f4c6079ebb1e38b54dd@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH resend mptcp-net 4/4] mptcp: do not reschedule the RTX
+ timer for fallback sockets
+To: sashiko-reviews@lists.linux.dev
+Cc: mptcp@lists.linux.dev
+References: <cover.1786713351.git.pabeni@redhat.com>
+ <59c6c4dd41bb72b7aef984b14a0c6ad0881f6a4c.1786713351.git.pabeni@redhat.com>
+ <20260814140334.39D5B1F000E9@smtp.kernel.org>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20260814140334.39D5B1F000E9@smtp.kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: JzAeGqyZOjvEGmlTZgkOQ03gsKyr7Tv28O67c_lnE7k_1786725225
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Gang,
-
-On 14/08/2026 05:02, gang.yan@linux.dev wrote:
-> August 14, 2026 at 1:42 AM, "Matthieu Baerts" <matttbe@kernel.org mailto:matttbe@kernel.org?to=%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org%3E > wrote:
->>
->> In addition, in the case we are trying to fix here, the MP_FAIL is
->> received before switching to fully established: the RFC doesn't explain
->> this particular case, but it sounds like there is no need to send the
->> infinite mapping, and a fallback can be done directly *I think*. The
->> thing is this situation shouldn't happen: we are not supposed to receive
->> an MP_FAIL at that stage, no data has been exchanged at the MPTCP level,
->> so let's do the minimal -- i.e. just a fallback -- to avoid issues and
->> reduce the complexity, no?
->>
+On 8/14/26 4:03 PM, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [High] The MPTCP_RTX_DISABLED flag makes the TCP_CLOSE state sticky for the RTX timer, permanently disabling retransmissions on reused connections and their accepted children.
+> --
 > 
-> Hi Matt, 
+> --- Patch [4]: [PATCH resend mptcp-net 4/4] mptcp: do not reschedule the RTX timer for fallback sockets ---
+> commit 227375cb381dd3864273cd7170dd28e0f079ff8b
+> Author: Paolo Abeni <pabeni@redhat.com>
 > 
-> Thanks for your explanation. I have a quick thought:
+> mptcp: do not reschedule the RTX timer for fallback sockets
+>     
+> This patch introduces the MPTCP_RTX_DISABLED flag to prevent the RTX timer
+> from being rescheduled on fallback sockets and when the socket state is
+> TCP_CLOSE.
 > 
-> Can we check the 'subflow->send_mp_fail' in 'subflow_finish_connect'? like:
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index b311fe30c7855..f22d64ab1c53b 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+> [ ... ]
+>> @@ -1121,13 +1122,14 @@ static bool mptcp_rtx_timer_pending(struct sock *sk)
+>>  
+>>  static void mptcp_reset_rtx_timer(struct sock *sk)
+>>  {
+>> +	struct mptcp_sock *msk = mptcp_sk(sk);
+>>  	unsigned long tout;
+>>  
+>> -	/* prevent rescheduling on close */
+>> -	if (unlikely(inet_sk_state_load(sk) == TCP_CLOSE))
+>> +	/* Prevent rescheduling on close and in case of fallback. */
+>> +	if (test_bit(MPTCP_RTX_DISABLED, &msk->flags))
+>>  		return;
 > 
-> '''
-> ...
->  543         if (subflow->request_mptcp) {
->  544                 if (!(mp_opt.suboptions & OPTION_MPTCP_MPC_SYNACK)) {
->  545                         if (!mptcp_try_fallback(sk,
->  546                                                 MPTCP_MIB_MPCAPABLEACTIVEFALLBACK)) {
->  547                                 MPTCP_INC_STATS(sock_net(sk),
->  548                                                 MPTCP_MIB_FALLBACKFAILED);
->  549                                 goto do_reset;
->  550                         }
->  551 
->  552                         goto fallback;
->  553                 }
->              if (subflow->send_mp_fail)
->                              goto fallback;
->  554 
-> ...
-> '''
+> [Severity: High]
+> Since this flag is checked here to prevent rescheduling, will the timer be
+> permanently disabled if the flag is never cleared?
+> 
+> [ ... ]
+>> @@ -3360,6 +3362,9 @@ void mptcp_set_state(struct sock *sk, int state)
+>>  		 * transition from TCP_SYN_RECV to TCP_CLOSE_WAIT.
+>>  		 */
+>>  		break;
+>> +	case TCP_CLOSE:
+>> +		set_bit(MPTCP_RTX_DISABLED, &mptcp_sk(sk)->flags);
+>> +		fallthrough;
+>>  	default:
+> 
+> [Severity: High]
+> Does setting MPTCP_RTX_DISABLED here without a corresponding clear logic make
+> the TCP_CLOSE state sticky for the RTX timer? 
+> 
+> If an MPTCP socket transitions to TCP_CLOSE (like a failed connect() attempt
+> or an explicit disconnect()), and the application then reuses the socket to 
+> connect() again, it appears the flag will remain set.
+> 
+> Furthermore, if listen() is called on such a reused socket, would
+> sk_clone_lock() copy the flags to all child sockets? This could cause every
+> accepted connection to inherit the MPTCP_RTX_DISABLED flag, permanently
+> breaking MPTCP-level retransmissions for all clients.
 
-I don't know: it doesn't feel right to check this field there. Sending
-the MP_FAIL reply and the infinite mapping in the same ACK, as you
-suggested, seems better.
+On nice, I did not read an hallucination this allucinated since a while...
 
-> Or, check msk->fully_established in pm_fail_received like this:
-> '''
-> @@ -901,6 +898,12 @@  void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
->  		subflow->send_mp_fail = 1;
->  		subflow->send_infinite_map = 1;
->  		tcp_send_ack(sk);
-> +
-> +		if (!msk->fully_established && !mptcp_try_fallback(sk, MPTCP_MIB_MPFAILFALLBACK)) {
-> +			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_FALLBACKFAILED);
-> +			mptcp_subflow_reset(sk);
-> +		}
-> ''' 
+without disconnect() a closed socket can not transition to other non
+closed states, because the network-level ops check the 'struct socket'
+state, which in turn is cleared only by disconnect().
 
-Paolo noticed (in another email from this thread) this will not cover
-the case we are trying to fix as we were already in fully_established.
+mptcp_disconnect() explicitly clears msk->flags.
 
-But maybe we could try to fallback if that's possible, and if checksum
-was not being used? I didn't check if it would be a good solution.
+No real issues above.
 
-> Because the MP_FAIL specified in the RFC does not seem to actively trigger a fallback
-> on its own; instead, it is triggered via the infinite mapping. If we modify the
-> behavior of MP_FAIL in the regular path, I think it might be over-design and could
-> introduce additional risks. What do you think?
-
-Yes, but here, I'm only proposing doing a fallback for the cases not
-covered by the RFC, i.e. single subflow, no checksum.
-
-I think the simplest solution should be picked for this use-case that
-shouldn't happen. Bounding MP_FAIL reply and infinite mapping in the
-same ack seems interesting, and not just for this case, but it might be
-"hacky" as you don't have an mpext in this case, no? Maybe a fallback is
-"cleaner"?
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+/P
 
