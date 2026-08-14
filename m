@@ -1,120 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5583C3B47C4
-	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 14:07:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2743630A5
+	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 14:08:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786716436; cv=none; b=M3UTss13cPSkTcYAKZjGd0/Wql/Wfzore4PG1nXCfuDH4M6ERrm2qYAcHDqn+B8ZBR4C8vqddWcXfjdAxAclXz3Hsc760jfQA8lzX5bibcaAkTZUs+mABoYWC9owiBRFTbaNrefVxAAC4jp4tFvtQlR0OnW6p64F4av2LdWTydE=
+	t=1786716489; cv=none; b=OgcNy64EW4NnMNnehEPQzpTwnMFeTG6rDzKGB+bYdakab+o/zKI5pTXtOwflhUZHIVeOYPPGVepBViSa9sgqVuWuWTiEP4EVs63nHriD6seYZ2ZYr/yO+m42GJr0DuWa/RaNN1Gqn998isykCXhpPAPDfoq26vcgGs+DdeTRFIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786716436; c=relaxed/simple;
-	bh=toCecSLF2ZADhnkOslIogcVk7OM7pfRteqYvOyF7qQ8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=jTLQZ63QE73UL4raDaq3TQxlP0ow6mz6tckE0uIcRNAtbRnCz+NRZue4QSeh+PHgZtyc2rm4UJJ2U3TfrGiFDIIojrq8tkYwoeMAof4liQmZq6P+UulaUsGYEX3j6YbiOC1HXK2DivKMoJWVrtuK214mz8IXwGnRO+GLKBJBVeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b//usPs7; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786716489; c=relaxed/simple;
+	bh=NxodzTYvP5mksEAS/0XQRI+vYDh1ju0mzAHhn7rVzLM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t8vVZDKF+bEjUCcwa9T7NXUx/Trbr34wFNaWKNrnIx4C5PyyY5HKqvbiSPgRARPdYP6y24parQKwdXY/hYivRzWXgklPrbs46WD5tvWXsgOlakiemcVXrvDspSLx93q5YYn3EZcEMY8QghxKMqKqgQK85YE4ra51XNR0o5w72yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WH5Qgj8c; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b//usPs7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0B9C1F000E9;
-	Fri, 14 Aug 2026 14:07:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WH5Qgj8c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6DA41F000E9;
+	Fri, 14 Aug 2026 14:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786716432;
-	bh=rIqrCstTL+7fUpSGuFyT5UZQnqlQVv8XWBTnNrtY0zs=;
-	h=From:Date:Subject:To:Cc;
-	b=b//usPs7hyNfZb6pBEIja4uz03zr2KB36PA5oJS28keViPdH3Giff7lFvRENfhBZK
-	 I2KmT5SjNeX7mfVaayM34MtINN4gsNPFt+xOHVft5vor/BOdMOKUrkIuZxKELG2Rkj
-	 wWxYzEeyERXfDpUZzBpcdM5qolD5CJJzBAXqAlt7u8vj73fRypSc0F/mRHlRtLZ0e5
-	 UYOFeiQAASZLo/Vh1A3bUX79XycDlNWUOVWDVl5cZBwkQQrUCr2lSjLf5h4qMCU6Hh
-	 URvulooFu5wcgmQe+EaSYeOp4wEHuofHzx38hnkAFymGRDfGiFosKUVbwHQdF/rEG+
-	 hbp5CExndIQSA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 14 Aug 2026 16:07:01 +0200
-Subject: [PATCH mptcp-next] selftests: mptcp: print stats before socket
- closure
+	s=k20260515; t=1786716485;
+	bh=GQjJqt1V7psBzSfsK/M/JjbxQEmE0bqYPZUA1/d+ZlI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=WH5Qgj8cxpRtacZE/NzSn/zzxeDNziQO0Tjd/4oHzufVnzBFtN3nl1+0SI6RfSByj
+	 o0DMdF9HEGc/H/VqVJ03g5sPH0MuM02YZlQgGP5zosvafRonPNE/+11m6wBJtGxGyn
+	 v7rzWITx9T5kEQY8ZD5NpEOKpyGjVUx2D0aNk+SInobhzLah6rJFiWaBl/2a4639qn
+	 JjhukvTBUVuG/W1hG4JrY4YC7xxE0FBd55NT1xpJZMpdelDidwilfJNxIJ/3f8zqt0
+	 OBCLiLSlda5Ig8l6/C6rbMQJ6LW3mu/hqQRgf6IeP77BmOFMneWoI1LmMqYLV1g6Sg
+	 ZpYFIQ0Bv1dSg==
+Message-ID: <28af8e56-9cc7-4122-8150-a7cb9717fc77@kernel.org>
+Date: Fri, 14 Aug 2026 16:08:02 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: CI failures on nipa
+Content-Language: fr
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>, Gang Yan <gang.yan@linux.dev>
+References: <02830f64-bb5f-41fc-8211-5f7aa36b828e@redhat.com>
+ <07b78c7e-f628-4f0f-b351-89064c6218d2@kernel.org>
+ <dab17176-51d7-40be-ae95-bfed9ab6691a@redhat.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <dab17176-51d7-40be-ae95-bfed9ab6691a@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260814-sft-mptcp-stats-b4-close-v1-1-2945a591be7e@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMQQrCMBAAv1L27EIaQlC/Ih6SuNEVTUN2K4XSv
- xvtcRhmVhBqTALnYYVGHxaeSofxMEB6hHIn5FtnsMZ6cxwdSlZ8V00VRYMKRofpNQmhNSfvcvb
- BxwA9r40yL//1Bfai0KJw3Z3M8UlJf2/Yti8XkfvbiAAAAA==
-X-Change-ID: 20260814-sft-mptcp-stats-b4-close-20964ff6a6ba
-To: MPTCP Linux <mptcp@lists.linux.dev>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2021; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=toCecSLF2ZADhnkOslIogcVk7OM7pfRteqYvOyF7qQ8=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLqFfkv3L1y5tmm6+eOs1uyalxn2iPeuD4+oJD1sJnyh
- b1nTdyZO0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACYyMZrhn63xsvlcgWZ5m10W
- piowOTdNL52wSZh3x+pnrNfTTv1ZlsnwPyP4vrzWjfaypy+23VywLO1HxRMTwa9tpZaXOh3aKwX
- WswMA
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-In case of poll timeout, it might be too late to print the stats after
-the socket closure.
+On 14/08/2026 13:33, Paolo Abeni wrote:
+> On 8/13/26 11:15 AM, Matthieu Baerts wrote:
+>> On 13/08/2026 09:57, Paolo Abeni wrote:
+>>> Also I think mptcp_lib_wait_timeout completes too late (after ~60 secs),
+>>> when the listener already bailed out due to accept timeout (after ~30
+>>> secs), so it does not show any info on the listener side. I fear it may
+>>> also race with the actuall `timeout` command completion showing socket
+>>> states after the user-space program completion.
+>>
+>> Do you mean you would like to have mptcp_lib_wait_timeout wait for less
+>> than the accept timeout?
+> 
+> Ideally yes, but I'm not sure which time would be ideal...
+What about the following "workaround" I just sent?
 
-Now, in case of poll timeout, 'ss' and 'nstat' are invoked from
-mptcp_connect to print the stats before exiting. This should help
-debugging poll timeout issues.
+https://lore.kernel.org/20260814-sft-mptcp-stats-b4-close-v1-1-2945a591be7e@kernel.org
 
-Note: for this "workaround", system() is used for debugging purposes
-only. The returned result can then be safely ignored.
-
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index ea4cb6c1bd5e..842c0eb99aa9 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -210,6 +210,19 @@ static void xgetaddrinfo(const char *node, const char *service,
- 	}
- }
- 
-+static void print_err_stats(void)
-+{
-+	char cmd[128];
-+
-+	snprintf(cmd, sizeof(cmd), "ss -Menitam -o '%cport = :%s' >&2",
-+		 listen_mode ? 's' : 'd', cfg_port);
-+
-+	fprintf(stderr, "socket stats before socket closure:\n");
-+	(void)!system(cmd);
-+	(void)!system("NSTAT_HISTORY='/tmp/$(ip netns id).nstat' nstat -s | "
-+		      "grep Tcp >&2");
-+}
-+
- static void set_rcvbuf(int fd, unsigned int size)
- {
- 	int err;
-@@ -656,6 +669,7 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
- 			fprintf(stderr, "%s: poll timed out (events: "
- 				"POLLIN %u, POLLOUT %u)\n", __func__,
- 				fds.events & POLLIN, fds.events & POLLOUT);
-+			print_err_stats();
- 			return 2;
- 		}
- 
-@@ -1194,6 +1208,7 @@ int main_loop_s(int listensock)
- 		return 1;
- 	case 0:
- 		fprintf(stderr, "%s: timed out\n", __func__);
-+		print_err_stats();
- 		close(listensock);
- 		return 2;
- 	}
-
----
-base-commit: d536472a82d18356d323227213acb5603bb9050c
-change-id: 20260814-sft-mptcp-stats-b4-close-20964ff6a6ba
-
-Best regards,
---  
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
