@@ -1,172 +1,135 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F09330B30;
-	Fri, 14 Aug 2026 22:21:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376853624D3
+	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 22:28:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786746097; cv=none; b=BmGeKcMuTaaLe32EaLhL/vxHhE7ClbKcu/zmUujTCJtNaKbAo3C8v6hxf5XEomWNgkzypBsZAWb6ivVpMr/TYpPdl7I0ih5lo7uOpaZmzCJy23LzFvmXjSkbpLNC2zJIDFo8ylDrRoKtaZBxn+6hDKLrmL8YfiuzuVrJzU+uLkk=
+	t=1786746534; cv=none; b=EsDRwsizhtjS0LHkxezXoJZFGU65gOqY9UH67duV6q6mjzgV3yboFSZ/CsEGmYWJQhEJFQTBZlxCxHITH0luHtxQvB8MxwJfAjPeOHj+mwpMO/nD57K5TyIvj+rRrDzhGsGQBmACeemF6LmHjxsJT0/YthQl6rCFPW9EwCmAG3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786746097; c=relaxed/simple;
-	bh=tCQ4PNzLmAGrmZIrmzJuoExL85TvaHVSD7oxsnQvBNY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YGxysN0/AlsDYrCNZVq0z0scgDxyTKDWz1gyerupEJxqsAKEFGI2QC4xGGd0dSqK133/7A+zmdZcBI3sI3vnymyfb3r3uUmYQaUwuL73W5ywOidvgILNfp8gjvjQgqrsgV0pZqeevLckuNIj9ybGZPBwNp5vDDT0ly0EglGcozo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hAnkxS84; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786746534; c=relaxed/simple;
+	bh=5iHRJnGlVAtMQB4Y1+ODVQcpfdQ6sF0erYkqKkIVtY4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YPHcxJvqpUauuLRJ0BrV+awe0ICcbv/4S2bydgGshwn2FrdBusGk8iXIus8iocPaBL+16vxf8BjWx4GQ3p7j9wRYSddy0uD/hQeSszUkXQ4U3++CgZW5CraKE2m7hu/imd4yELqAcRS4gqnnuEwpehqrWZwgUHizoeK2b0ZN3jA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EtBdrW3e; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hAnkxS84"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59E941F000E9;
-	Fri, 14 Aug 2026 22:21:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EtBdrW3e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 535C61F000E9;
+	Fri, 14 Aug 2026 22:28:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786746096;
-	bh=44n4rDZVdfXt3y2cJYpgTidsC0pNUuMsU/QAeyEupkM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=hAnkxS84QNeiPV6EmTAJkCJh7W0BA/Brf7t0liyqLXVzmT61WdMo7BWtdt0g0jgc5
-	 F8WEzCCIYy2dBjVeLWlasjq4S+ytYAUO2sgWqS5pkcA8i3aCMxaXtNFnIXVIoE0e/W
-	 8Smjw9RIVH8uwCJqhj8gRaXwL9FYcXc/W1QEbXDyjzxKSjnzJcgd0RB2l39ESBuRRZ
-	 UqDa19SbxSKYjB43jqY9X8T16HlIQ/Cv+OGYoPYAdpQPPjx7tOCRUveNkefXN47Fgd
-	 VP+hy7bIjTPSTL1M9l7V/HP1sX5kkjgSA+s062WJLTcaR/f4ASIcNMlqIt6wUoG6y3
-	 To+EpTJWsbtsQ==
-Message-ID: <fc1945ea-e63c-40f7-b8e3-6fef832cc595@kernel.org>
-Date: Sat, 15 Aug 2026 00:21:28 +0200
+	s=k20260515; t=1786746532;
+	bh=wOlVjlFfwJEniF+byrodibMbjmc+BDBGyK+RfHffVz4=;
+	h=From:Date:Subject:To:Cc;
+	b=EtBdrW3eWJqPINn0/KwwmuZDb6e4+uRwiGvrgpKTQwugWsbn4FQ44NvHxQ2WyPRH2
+	 0Ug173n62Y62NpoOM7H30osqCDAw+77SYQMKF8V60Qt6IoXbSJKUV7cC4o5Zg9rrdb
+	 bWGXQfnFZ17DP4aK7YtgkLmDw0liNZ+cEdudHE3Rlq19WvkkTwXskgB/oWB5XbDlJL
+	 rzjXfEMYoevkS20o9LD9IWO2MeLwNFwK0LF2CJ2sgkwdvEQREdcNmePRTJ3Rj0/2yP
+	 j/+LmrnydmWEB0TgSBC9mwBAFC9s+c2j0DeEP8B0ZjFXGXkMgEM+6VlqeL3tCFNLVA
+	 jy0zw+lgMaK4Q==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Sat, 15 Aug 2026 00:28:48 +0200
+Subject: [PATCH mptcp-next v3] selftests: mptcp: print stats before socket
+ closure
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next 00/11] mptcp: misc. features for v7.3
-Content-Language: fr
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, Tao Cui <cuitao@kylinos.cn>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org,
- Kalpan Jani <kalpan.jani@mpiricsoftware.com>,
- Shardul Bankar <shardul.b@mpiricsoftware.com>, Shuah Khan
- <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
- Jiangshan Yi <yijiangshan@kylinos.cn>
-References: <20260812-net-next-mptcp-misc-feat-7-3-v1-0-1905a818f6cb@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20260812-net-next-mptcp-misc-feat-7-3-v1-0-1905a818f6cb@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260815-sft-mptcp-stats-b4-close-v3-1-ccd9af14cf73@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/42Oyw6CMBBFf4V07Rha3q78D+OihUGqWEinNhjCv
+ wtl5UqXN3fOuTMzQquR2CmamUWvSQ9mDckhYnUnzQ1BN2tmIhZ5XPIUqHXwHF09AjnpCFQKdT8
+ QgoirPG3bXOZKshUfLbZ6CuoL2wmDk2PXvaOXumPtNvd23Wlyg32HPzwPzO9Jz4GDqNJMZhVXW
+ OD5gdZgfxzsLex48a9JrCZVyFKqpGkkll+mZVk+HJGx9SkBAAA=
+X-Change-ID: 20260814-sft-mptcp-stats-b4-close-20964ff6a6ba
+To: MPTCP Linux <mptcp@lists.linux.dev>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2633; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=5iHRJnGlVAtMQB4Y1+ODVQcpfdQ6sF0erYkqKkIVtY4=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLqpy223/N4Rcyt5XqCj5paAgpv311p18C198D7lO2MR
+ ZxHpx7g7ChlYRDjYpAVU2SRbovMn/m8irfEy88CZg4rE8gQBi5OAZjIbA6Gv5Ja2QcjXx5OFYqK
+ mvs7J+T3h8TSIxxBqq3bTXrjVHfkvmNkeGo94RPrwjCTRykCXwqVzpYZnLmQvOQMryuX4pvHa7r
+ OcwIA
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hello,
+In case of poll timeout, it might be too late to print the stats after
+the socket closure.
 
-On 12/08/2026 16:55, Matthieu Baerts (NGI0) wrote:
-> This series contains a few independent new features, and small fixes for
-> net-next:
+Now, in case of poll timeout, 'ss' and 'nstat' are invoked from
+mptcp_connect to print the stats before exiting. This should help
+debugging poll timeout issues.
 
-I checked Sashiko [1] and Clashiko [2] reviews, and here below is a
-brief summary. TL;DR: I don't think a v2 is needed, and follow-up
-patches fixing pre-existing issues will be sent separately.
+Note: for this "workaround", system() is used for debugging purposes
+only. The returned result can then be safely ignored, hence the (void)!
+to avoid unused-result warnings.
 
-[1]
-https://sashiko.dev/#/patchset/20260812-net-next-mptcp-misc-feat-7-3-v1-0-1905a818f6cb@kernel.org
-[2]
-https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20260812-net-next-mptcp-misc-feat-7-3-v1-0-1905a818f6cb@kernel.org
-> - Patch 1: Add WARN_ON_ONCE guards around extra_subflows to catch issues
->   with this counter, similar to what is done with other PM counters.
+Also, 'nstat *Tcp*' will print '#kernel' at the top, but that's OK, and
+it seems better to avoid using a pipe here.
 
-Pre-existing issues: fixes will be sent to net.
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v3:
+- use double quotes instead of single ones (Sashiko)
+- Link to v2: https://patch.msgid.link/20260814-sft-mptcp-stats-b4-close-v2-1-b7a8ab3ddae8@kernel.org
 
-> - Patches 2-3: Follow-up patches to remove data_ack field from struct
->   mptcp_ext -- now unused after recent fixes -- and makes a userspace PM
->   helper static.
+Changes in v2:
+- use 'ip netns identify' to avoid a warning from AI reviews
+- use 'nstat -s *Tcp*' instead of using grep
+- add a note about (void)!
+- Link to v1: https://patch.msgid.link/20260814-sft-mptcp-stats-b4-close-v1-1-2945a591be7e@kernel.org
+---
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-Pre-existing issue: a fix will be sent to net.
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index ea4cb6c1bd5e..d6c2237bdba0 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -210,6 +210,19 @@ static void xgetaddrinfo(const char *node, const char *service,
+ 	}
+ }
+ 
++static void print_err_stats(void)
++{
++	char cmd[128];
++
++	snprintf(cmd, sizeof(cmd), "ss -Menitam -o '%cport = :%s' >&2",
++		 listen_mode ? 's' : 'd', cfg_port);
++
++	fprintf(stderr, "socket stats before socket closure:\n");
++	(void)!system(cmd);
++	(void)!system("NSTAT_HISTORY=\"/tmp/$(ip netns identify).nstat\" "
++		      "nstat -s '*Tcp*' >&2");
++}
++
+ static void set_rcvbuf(int fd, unsigned int size)
+ {
+ 	int err;
+@@ -656,6 +669,7 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
+ 			fprintf(stderr, "%s: poll timed out (events: "
+ 				"POLLIN %u, POLLOUT %u)\n", __func__,
+ 				fds.events & POLLIN, fds.events & POLLOUT);
++			print_err_stats();
+ 			return 2;
+ 		}
+ 
+@@ -1194,6 +1208,7 @@ int main_loop_s(int listensock)
+ 		return 1;
+ 	case 0:
+ 		fprintf(stderr, "%s: timed out\n", __func__);
++		print_err_stats();
+ 		close(listensock);
+ 		return 2;
+ 	}
 
-> - Patch 4: Honour tcp_rto_{min_us,max_ms} sysctls for MPTCP-level
->   retransmit timers like with DATA_FIN's and fallback timeout.
+---
+base-commit: d536472a82d18356d323227213acb5603bb9050c
+change-id: 20260814-sft-mptcp-stats-b4-close-20964ff6a6ba
 
-Not needed: suggesting adding extra checks if the TCP RTO max and min
-sysctl are misconfigured (min > max). There is already a check in the
-code to avoid a division by 0. The rest is similar to TCP.
-
-> - Patches 5-6: Add per-event MIB counters for MPTCP_RST_EMPTCP resets to
->   help to spot such situations in production.
-
-Patch 5: some imprecisions in the commit message, not worth a respin I
-think. Plus a suggestion of adding an extra increment, but it is for a
-different case, so no.
-
-Patch 6: no need to handle the only test where the server initiates the
-subflow → the goal is to check that globally these counters are not
-unexpetedly incremented. Maybe MPJoinNotEstablished could be checked on
-the other side as well, but this shouldn't happen with the current
-selftests, and this addition can come in a follow-up patch.
-
-> - Patches 7-9: Small pcap-related improvements in the selftests.
-
-Patch 7: no need to differenciate the mptcp_connect_*.sh which are only
-there for the CI. Someone doing the debugging and asking for pcaps will
-use mptcp_connect.sh
-
-> - Patch 10: Fix compiler warning in the selftests.
-
-pre-existing, and not really an issue: the selftests don't try to trick
-mptcp_connect
-
-> - Patch 11: Avoid a buffer overflow when misusing the mptcp_diag tool
->   from the selftests.
-
-Small typo in the commit message, not worth a respin I think. Plus yes
-it is a fix, but not worth being backported: can be a bug when this tool
-designed for the selftest is used manually with a wrong address (which
-is written in the commit message). Plus pre-existing issues that are not
-worth fixing in a follow-up patch for this selftest tool.
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
