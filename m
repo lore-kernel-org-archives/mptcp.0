@@ -1,115 +1,131 @@
-Received: from mta0.migadu.com (out-253.mta0.migadu.com [91.218.175.253])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A89FE4307A0
-	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 09:20:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.253
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2237F377AB6
+	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 09:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786699246; cv=none; b=ndPWHtl241ayuFiES6PIORBA22TeHDDi+L1apbXlE2Fo89H25BZlCWr4hwdet9WPB/dDjAPJIc29wo+FuCR5uIgGFRECAvxQtb62boGk8ZoKmJXYvlaJI2WB7tSL6ANKQzNI1wjettU7Ahx0ZLRXzc6OO4CL1lUDW/QP6xV+DTw=
+	t=1786700150; cv=none; b=tcdi6Ot3+AufqXA/6VMMGtOCAjGs6clK8O+jSvqYj1gS/xbsRFij6YOlrf/BquyUxrAdbbh1pmdwwrrneUsz+oOHNtfWywJSh9KtTzD1ulVAmIF6Q8K+4evSNDstspFIB58l2pi4Pwhf/OWoUvTAcZofec4D3BZB+OhqC+YtwqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786699246; c=relaxed/simple;
-	bh=ZppP5N/ADTaijTfUkeSNUTGiE4aKH2ZiPCnR/9sOwQs=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=oyoQ7Ln3yYkFjZxnQMJtpYker61OGFciZF9vknUcRzNpjZJmcdFx23Bd18R2Gj/TyRVGtFq6vh52bRLml06cv7a77WELirXFXlfiUSvt/3Lsw8YC2mIgQcA+qavFqs3ag8hjEkoXzghHIHHvsWTdSeMUjWvWuG2onsf6znha610=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HowRnv38; arc=none smtp.client-ip=91.218.175.253
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1786700150; c=relaxed/simple;
+	bh=oVK3gBHodAwrzp6+29E23gGAeqReFZvU1EPKNMAMHSE=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=BgXTVLfCvHZGbK/GBH0blkMyzgmpiQoACHqsjz0fDqy7DwmXM14y/l4Ei0tRuFgtO7B0HbRxdqXaKc1x8/nw7x/Mt2opXcOK5lfVeEDTukoHz+uFTYiqDtNPljfLA+GdFewFw+nq8dcDQhiAlxzrLdvND7avzspMkGu44LxWbpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h2NM7Ki/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HowRnv38"
-X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=ZppP5N/ADTaijTfUkeSNUTGiE4aKH2ZiPCnR/9sOwQs=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1786699242; v=1; x=1787304042;
- b=HowRnv38g2vuWkm7GcHlcCeiQijF/ohS5RUXA1Fewoj4wSR0rmNiJBU3KD0r2yxU6ZLgEtvC
- o3WzZNFkK76QFCBmHPJ8yaoCsEG2YeVj7LkAv3FNkErIAP9ykBsMjaoHtuoaNz9exxuIYKMwtsl
- /PK4gB7nuuiagkklpFl1Hwdc=
-X-Envelope-To: mptcp@lists.linux.dev
-Received: from webmail.migadu.com (2001:41d0:303:fc7a::)
-	by mta12.migadu.com with ESMTPS id e9895be0d6c14b85;
-	Fri, 14 Aug 2026 09:20:41 +0000
-X-Migadu-Flow: FLOW_OUT
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h2NM7Ki/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DA6E1F000E9;
+	Fri, 14 Aug 2026 09:35:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786700146;
+	bh=oVK3gBHodAwrzp6+29E23gGAeqReFZvU1EPKNMAMHSE=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=h2NM7Ki/KID2ozwmL7EhHhCTJduXyFKsxUF8IbLiD60fXy//AEjomgtzkqFC/7MyD
+	 1wIUbSAmuzbm57y4Nw08xfkLCjqhxbuCar+iKuLfBnx34ncxVASXqOan/yJkFXkQNV
+	 nB6+SksUL0lvQBedacVi78R6ud0qxQU0+FvchGD5aZ/jiiQYryX+z2Cq/wC8yjEx7H
+	 8INK6jo4ZqhTxok3rRpgKsVaK4gghdi0Ko47SZH5VuZDOACOWpxfznB7GX0teEsMf1
+	 18vSTjfhlUlQKiOsoZjn95ws6NE132oTTIl1O+SBSNOK+VWnycg4bDuvGbAQm+7puW
+	 7kPAPesYMiQOA==
+Date: Fri, 14 Aug 2026 11:35:39 +0200
+From: Matthieu Baerts <matttbe@kernel.org>
+To: gang.yan@linux.dev
+Cc: mptcp@lists.linux.dev, Gang Yan <yangang@kylinos.cn>
+Message-ID: <4b101a1c-7d53-44a7-b2c8-9ec74d5e52a0@kernel.org>
+In-Reply-To: <42532178906ea8ce9bd4b8550144719356c69671@linux.dev>
+References: <20260814050625.80231-1-gang.yan@linux.dev> <0ce89b909d078e40f8f560255ad44ae8e2cfff00@linux.dev> <90d727ed-9c4c-4107-a283-1e9a0245d09b@kernel.org> <42532178906ea8ce9bd4b8550144719356c69671@linux.dev>
+Subject: Re: [PATCH mptcp-net] selftests: mptcp: fix an UAF in
+ mptcp_connect.c
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Fri, 14 Aug 2026 09:20:41 +0000
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-From: gang.yan@linux.dev
-Message-ID: <42532178906ea8ce9bd4b8550144719356c69671@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH mptcp-net] selftests: mptcp: fix an UAF in
- mptcp_connect.c
-To: "Matthieu Baerts" <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, "Gang Yan" <yangang@kylinos.cn>
-In-Reply-To: <90d727ed-9c4c-4107-a283-1e9a0245d09b@kernel.org>
-References: <20260814050625.80231-1-gang.yan@linux.dev>
- <0ce89b909d078e40f8f560255ad44ae8e2cfff00@linux.dev>
- <90d727ed-9c4c-4107-a283-1e9a0245d09b@kernel.org>
+X-Correlation-ID: <4b101a1c-7d53-44a7-b2c8-9ec74d5e52a0@kernel.org>
 
-August 14, 2026 at 4:54 PM, "Matthieu Baerts" <matttbe@kernel.org mailto:=
-matttbe@kernel.org?to=3D%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org=
-%3E > wrote:
+14 Aug 2026 11:20:47 gang.yan@linux.dev:
 
+> August 14, 2026 at 4:54 PM, "Matthieu Baerts" <matttbe@kernel.org mailto:=
+matttbe@kernel.org?to=3D%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org%3=
+E > wrote:
+>
+>
+>
+>>>
+>> This assumes peer =3D=3D addr. It is certainly the case but it looks wro=
+ng,
+>> and I guess sashiko will complain like it did here.
+>>
+>> We could add something on the commit message to say that it is always an=
+ IP address that is given, but maybe we should also just
+>> handle that correctly: either peer here is not a pointer, and the conten=
+t
+>> is copied,
+>
+> I prefer this, because it is smaller, like:
+>
+> '''
+> static int sock_connect_mptcp(const char * const remoteaddr,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const char * const port, int proto,
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 struct addrinfo **peer,
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 struct sockaddr_storage *peer, socklen_t *peer_len=
+,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int infd, struct wstate *winfo)
+> {
+> ...
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 *peer =3D a;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 break;
+> ...
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 *peer =3D a;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 break;
+> ...
+> +=C2=A0=C2=A0 if (sock !=3D -1) {
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 memcpy(peer, a->ai_addr, a->ai_addr=
+len);
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *peer_len =3D a->ai_addrlen;
+> +=C2=A0=C2=A0 }
+> =C2=A0=C2=A0=C2=A0 freeaddrinfo(addr);
+> ...
+>
+> -=C2=A0=C2=A0 struct addrinfo *peer =3D NULL;
+> +=C2=A0=C2=A0 struct sockaddr_storage peer;
+> +=C2=A0=C2=A0 socklen_t peer_len;
+> ...
+> -=C2=A0=C2=A0 fd =3D sock_connect_mptcp(..., &peer, fd_in, &winfo);
+> +=C2=A0=C2=A0 fd =3D sock_connect_mptcp(..., &peer, &peer_len, fd_in, &wi=
+nfo);
+> ...
+> -=C2=A0=C2=A0 if (connect(fd, peer->ai_addr, peer->ai_addrlen))
+> +=C2=A0=C2=A0 if (connect(fd, (struct sockaddr *)&peer, peer_len))
+> '''
 
+It looks OK but there are some modifications a bit everywhere.
 
-> >=20
->=20This assumes peer =3D=3D addr. It is certainly the case but it looks =
-wrong,
-> and I guess sashiko will complain like it did here.
->=20
->=20We could add something on the commit message to say that it is always=
- an IP address that is given, but maybe we should also just
-> handle that correctly: either peer here is not a pointer, and the conte=
-nt
-> is copied,=20
-
-I=20prefer this, because it is smaller, like:
-
-'''
- static int sock_connect_mptcp(const char * const remoteaddr,
- 			      const char * const port, int proto,
--			      struct addrinfo **peer,
-+			      struct sockaddr_storage *peer, socklen_t *peer_len,
- 			      int infd, struct wstate *winfo)
- {
- ...
--				*peer =3D a;
- 				break;
-...
--				*peer =3D a;
- 				break;
-...
-+	if (sock !=3D -1) {
-+		memcpy(peer, a->ai_addr, a->ai_addrlen);
-+		*peer_len =3D a->ai_addrlen;
-+	}
- 	freeaddrinfo(addr);
-...
-
--	struct addrinfo *peer =3D NULL;
-+	struct sockaddr_storage peer;
-+	socklen_t peer_len;
-...
--	fd =3D sock_connect_mptcp(..., &peer, fd_in, &winfo);
-+	fd =3D sock_connect_mptcp(..., &peer, &peer_len, fd_in, &winfo);
-...
--	if (connect(fd, peer->ai_addr, peer->ai_addrlen))
-+	if (connect(fd, (struct sockaddr *)&peer, peer_len))
-'''
-
-> or you pass &addr to sock_connect_mptcp, and you do the free here.
-
-This needs a refactor of sock_connect_mptcp =E2=80=93 I used to do it tha=
+>> or you pass &addr to sock_connect_mptcp, and you do the free here.
+>
+> This needs a refactor of sock_connect_mptcp =E2=80=93 I used to do it tha=
 t way. But I
-worry that backporting could be tricky. If you're fine with it, I'm okay =
+> worry that backporting could be tricky. If you're fine with it, I'm okay =
 with this plan
-as well.
+> as well.
 
-WDYT?
+I didn't check in details, but it seems like it would be shorter: just need=
+ to pass &addr to sock_connect_mptcp(... =E2=80=A2=E2=80=A2addr, ...) and u=
+se *addr
+instead of addr in two places + moving the declaration and free to the
+parent function. No?
 
-Thanks
-Gang
+If I'm missing something, the copy is fine.
+
+Cheers,
+Matt
