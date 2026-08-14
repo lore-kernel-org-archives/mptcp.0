@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74CFA3A9615
-	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 16:49:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03588355057
+	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 17:15:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786726155; cv=none; b=cAfL7piuGUD6EG7KC8Q6XFgdDfhe93MguHdnG5r/6pjP+sZHEzi2OtI4cwcs+S0c7rpBXLNR64dRT4HoPRlsRcm6dSOeUot7fbl+sAa9MTxU+b+73yCP8sYqhDLCGZ8VHaFcuDxyskfByde/f6FN6mBCK76Ltj5+fJ4T3Rm4YEc=
+	t=1786727735; cv=none; b=I6T5/Mfi/alHsx2v1qHzjgUFRCuQ/8UGadMGiEpxmP9G+oVjbzjEiBFAsxvsjYD0t3unucS5OCcrVVdEZC6nhXHXDGQNK7OMUnCCwe2PpWM54INyKtcsBzEGFxouKeV+MHvWnMHvXJXdGvELF+5Oyq1Z91btMbecuVyBYRT1EtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786726155; c=relaxed/simple;
-	bh=c31JOtt1SXGmmxjIkXrQF033r3l9GPEMDviNnxFfmRc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m+ZEJ7rdEWbYuYvNzQAxui5u4HYXBCs9b3fBazED4Pkq/ZekgGw9zdoSm2fYI/eZbxzlOczVCsf2K/0KP18CYw2XBvpDkcVXHxz3JMAc01mRbxEaXAuRIvVR2fA2EpDGNXFu5qMQms0mA//jhxGeZbJ7+Gv9QtjSfkEm52w48uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g1lApEZD; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786727735; c=relaxed/simple;
+	bh=FdBmJBZsQ6t3ngL13iEaqXZjNorYoJSL9OEM4AeNFVc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=BEOql/os8ZYPcr+hH1hTfq/cTejIhxTdFgVy42VYtlq9jjN3gaRBrbipzJEmbZ1ODUiKdFo6o/CNcXhjVcZxCKMXFGQPxWNJ5Q4izjnhcbB7Ltzyd+yfptrIdWqYMa0Sv8DkGCEQlwGCQSwBHhNaublq+Ym9jYGSSHK1GUFZ8A8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xyjybu7S; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g1lApEZD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63C8C1F000E9;
-	Fri, 14 Aug 2026 16:49:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xyjybu7S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D20601F000E9;
+	Fri, 14 Aug 2026 17:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786726154;
-	bh=5i8pRqkQ4OS2Xbk6Fgv+lxQP+TJ49T/ALTZrxsznMHE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=g1lApEZDLNSUOfKzxvaLCDQaJKLRG1sNpcXtsa95GUnjBVQfhcf8znKvu7Qed7OGB
-	 F0cRuVJMDRUAO/HTHJywmiCblqR9Zi/8z9CHH/uJXRsGce/4Mw+uAm7De5vVKqxTgC
-	 M28LvVc6VD4/hnOsEEV9aiRTeZN1gykJGlHfFXJVRRx7p5YfEzdLLpDzWJ31Td1PEc
-	 YeWpAeFPlOnno3yg5sCBQzjRLrWtDjp2zOrToCfhmDnm8YWQN8Z6td0I5Oy495UMYD
-	 H8rDDIws8xJfOgxDylKfZvwHL1MWoWwBsEE7ubkITOoiNYTgiT0ys8u3vylZ1aLKer
-	 ngQYEUMHpmVwQ==
-Message-ID: <0146a9b7-f2aa-4412-8cc4-0cdbdd41a40e@kernel.org>
-Date: Fri, 14 Aug 2026 18:49:09 +0200
+	s=k20260515; t=1786727733;
+	bh=rMfMnrs3dGdZByoH9DheEmdTfKGxHZpki+3DZ9HFazI=;
+	h=Date:Subject:To:References:From:In-Reply-To;
+	b=Xyjybu7SBR5rVDYi5GNnmH9bHIR+i5K30l3fDWY+WZcGkeD9QbN1QzPQAW/pa8PEM
+	 NPJP5RxRGF23xIkwdBkECjejTCAQdehf5bOvvxzJZ9+brgxK6Q7jZ/MkqmwiE6d61C
+	 FrtEqXHbq53fS95ZcJfhD5p4KXPS78RFhTNzNNsAZ6gT9/dVcjlQIkfxXzT4EEdRHy
+	 vX6H7kp737utv1M8aTOKOZ8r4pO/vOhvdZmQmz9Be3DFqH0aBnOYydmGuCzMFEwx1/
+	 x3O6hBpUGyywmAW3RoJ4zAqv2Fv3MEiksPjtvlif5M1lBPcvDmzXUYW0EDs7oCEJlY
+	 +AW+pAl8JFfPA==
+Message-ID: <a11eca34-7a65-4023-94a3-9ca9f5cb8490@kernel.org>
+Date: Fri, 14 Aug 2026 19:15:30 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,19 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH export v3 2/4] mptcp: reject joins after fallback in
- mptcp_is_fully_established
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: print stats before socket
+ closure
 Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Chenguang Zhao <chenguang.zhao@linux.dev>, mptcp@lists.linux.dev,
- Chenguang Zhao <zhaochenguang@kylinos.cn>
-References: <20260812054653.43799-1-chenguang.zhao@linux.dev>
- <20260812054653.43799-3-chenguang.zhao@linux.dev>
- <1d7c56b9-00c1-4550-a403-c3d704259267@redhat.com>
- <41078a8c-00c7-4cb1-8e57-237b4ea6c2f0@kernel.org>
- <643936d9-5da2-45cc-b108-f7c2e7785044@redhat.com>
- <a52da320-e6f2-4ccb-92ca-7ad28ebd49f2@kernel.org>
- <8f69b636-57ff-4f1b-a562-826306ab23d3@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>, MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260814-sft-mptcp-stats-b4-close-v1-1-2945a591be7e@kernel.org>
+ <b8ac43a1-d5f1-4498-8aae-dc87c2e3b437@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -93,67 +86,67 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <8f69b636-57ff-4f1b-a562-826306ab23d3@redhat.com>
+In-Reply-To: <b8ac43a1-d5f1-4498-8aae-dc87c2e3b437@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 14/08/2026 13:06, Paolo Abeni wrote:
-> On 8/14/26 11:09 AM, Matthieu Baerts wrote:
->> 14 Aug 2026 10:43:41 Paolo Abeni <pabeni@redhat.com>:
->>> It's not clear to me what actually goes wrong and how. Do you have handy
->>> a event sequence or stack trace demonstrating the critical scenario?
+On 14/08/2026 18:44, Paolo Abeni wrote:
+> On 8/14/26 4:07 PM, Matthieu Baerts (NGI0) wrote:
+>> In case of poll timeout, it might be too late to print the stats after
+>> the socket closure.
 >>
->> Indeed, better with packetdrill scripts:
+>> Now, in case of poll timeout, 'ss' and 'nstat' are invoked from
+>> mptcp_connect to print the stats before exiting. This should help
+>> debugging poll timeout issues.
 >>
->> https://github.com/chrisocean716-star/packetdrill/blob/bf9be7a7bee3687500444b284a9db2a0009a5252/gtests/net/mptcp/dss/dss_drop_after_data_fallback_server.pkt
+>> Note: for this "workaround", system() is used for debugging purposes
+>> only. The returned result can then be safely ignored.
 >>
->> => A fallback is done, a subflow can be initiated, then rejected.
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>>  tools/testing/selftests/net/mptcp/mptcp_connect.c | 15 +++++++++++++++
+>>  1 file changed, 15 insertions(+)
 >>
->>
->> https://github.com/chrisocean716-star/packetdrill/blob/fed57fab92c407eb433acdb8c8ce72bd8e3e2f37/gtests/net/mptcp/mp_join/mp_join_server_after_fallback.pkt
->>
->> => The MP_FAIL is partially ignored if received before being in fully
->> established state.
+>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+>> index ea4cb6c1bd5e..842c0eb99aa9 100644
+>> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+>> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+>> @@ -210,6 +210,19 @@ static void xgetaddrinfo(const char *node, const char *service,
+>>  	}
+>>  }
+>>  
+>> +static void print_err_stats(void)
+>> +{
+>> +	char cmd[128];
+>> +
+>> +	snprintf(cmd, sizeof(cmd), "ss -Menitam -o '%cport = :%s' >&2",
+>> +		 listen_mode ? 's' : 'd', cfg_port);
+>> +
+>> +	fprintf(stderr, "socket stats before socket closure:\n");
+>> +	(void)!system(cmd);
+>> +	(void)!system("NSTAT_HISTORY='/tmp/$(ip netns id).nstat' nstat -s | "
+>> +		      "grep Tcp >&2");
 > 
-> Thanks!
-> 
-> I'm pretty sure there is a miss-intepretation of the 2nd case.
+> Overall LGTM. I tried something similar in the past, but the correct
+> redirection always fouled me. A couple of questions:
 
 Thank you for having checked!
 
-> The problem is not with `msk->fully_established`. AFAICS
-> msk->fully_established is true when the MP_FAIL is receive.
-> 
-> The passive msk socket sets it at MPC ACK reception.
+> - Is the '!' operator needed?
 
-Indeed, I should have checked the code instead of only reading the
-comments from this test :)
+Yes, to avoid a warning because the results are unused. Only using
+(void) is not enough from what I saw.
 
-> The problem is that, at MP_FAIL reception, the infinite mapping is not
-> sent immediately, but it's scheduled with the next xmit, and until such
-> point the msk does not perform the fallback.
-> 
-> I think a proper solution would be bounding MP_FAIL (reply) and infinite
-> mapping in the same ack.
-> 
-> As noted by Gang, it may require a new helper (build on top of the
-> tcp_send_ack).
-Sounds good to me!
+> - Can we avoid the pipe? with something alike the following:
+> 	(void)system("NSTAT_HISTORY='/tmp/$(ip netns id).nstat' nstat -s *Tcp*
 
-What about the 1st case (fallback)?
+Oh nice, I didn't think about that. Yes it works except it keeps the
+header (#kernel). Maybe fine here, but we don't change that in the .sh
+scripts?
 
-Would it help to reset msk->fully_established in
-__mptcp_try_fallback()?(while holding the data_lock? not even sure it is
-needed at that stage)
-But here, we will also need to update subflow_token_join_request() to
-check mptcp_is_fully_established, or even mptcp_can_accept_new_subflow.
-(I can send a quick RFC patch)
-
-It would also benefit to the in-kernel PM and others places using
-mptcp_is_fully_established(). subflow->fully_established doesn't need to
-be reset.
+I can send a v2 with that and an extra explanation.
 
 Cheers,
 Matt
