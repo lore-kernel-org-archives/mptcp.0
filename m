@@ -1,73 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63CB41D104
-	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 07:49:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CF24192EF
+	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 08:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786693779; cv=none; b=alPoBEogAhxx1b2UTq0jJ7V5pXQBnY3p3wRInh3ufeRiJE3n9k22yg7HHRsimDORQ3EVuIzMb5GVCwTbm3FReZ8tGyHqsmBxaq4UX7uGBQUhIjEmbe+svBd2iGmwgqFdQRzu2jpfIHb8Ffj8kkX2654atrFxgFZJEfjZoSILH1Y=
+	t=1786694569; cv=none; b=bit++3RfVXcWThrJvKM6Uv7g2GQXt0JHVgP5lN6j3c1WecPeObZsW9DMEa8y9MME5POZJYG+Bz3PcIE2uh9ejagX7gU3EeCf6sp1L6L5XpivU30+peqMfDEXJtnVPt7kVa/iw32iCMOcxndV+Fiy0VwYLEK+gjBrvXSnTPMX21c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786693779; c=relaxed/simple;
-	bh=l8NMWgeK+aObgQnBLCwwZ39bxDxP+CW033R8NKfQ+JY=;
+	s=arc-20240116; t=1786694569; c=relaxed/simple;
+	bh=L8KCXFXuLdsozsNqKqCpOIh895yoHYeyMGAl9+gzScI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Un/MaH5maguJ6syaHo9JXrFiTtFmkPjXBn21rdsLMNSnQc3RjD4w03wHSW91r1PX395vICik7PS0tj6zjypPGEFwz+IEJTJCDgiMJ9JdH0OU+L1RFuluwBNF9b1qD0L52u8toVubNg12spgtKqxTmeRSx3NGtPSDiWn4LCBdyUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X20jjcYG; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=C8iOqYemeYaunWDqMoj2/MJdx2AxAZuuh+v3OiWeRK/LbCmWujR4QLWihgYfYlSeYSEZdHlZY94DrS8vkvzE2uk1s4W7JrNdt5HLogUAxqfeZxX4ZS24frATRxfWie5GBir1f8Lm2cINdqTVgItu6OQimcNBaTVaULs58voy8/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BSkK9xJ0; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X20jjcYG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BSkK9xJ0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1786693772;
+	s=mimecast20190719; t=1786694566;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xL0SPRjMSSQznv5rLFncff5bp35rpu9P3ikchBKuyig=;
-	b=X20jjcYG4RySKwP6F0A1zFLFKHeENp1r6Wuu4VnL+GiRhE5DKTzCxPKq1vGtxcPU92vXEg
-	90NMle5ntcfufoDvdSB38RIgiqp5WK3WecVAjkW6g5QnAAiMUPEe5fLgBAcwteepOVX075
-	KVDBvIDHNHL8L0hCugA/7+en4a8PY2A=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=nLpMGj0pQGhJ1cyaYBf6c5UqVZN5Sm2Ptah1UzyzRUE=;
+	b=BSkK9xJ0v35TIFknAi7dQiXZz7uplBbce8uXJeS5H25xT2blY+aDw+OeuzCTgCNUH8Vyaw
+	COxv6uog8WPP6mIvev9F8oVU6LdgU/iLrEDUzHtTIQTvooOx0LmvEc8CBt+GPDHIrOdgrF
+	kRXDbuucHQ3zJlxSVfpkT7ZchH6cktE=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-522-FT5LRhZtP0KUj-W-aNFjsQ-1; Fri, 14 Aug 2026 03:49:31 -0400
-X-MC-Unique: FT5LRhZtP0KUj-W-aNFjsQ-1
-X-Mimecast-MFC-AGG-ID: FT5LRhZtP0KUj-W-aNFjsQ_1786693770
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-47f726186c4so367117f8f.2
-        for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 00:49:31 -0700 (PDT)
+ us-mta-411-D0L8eT-zMPa1wU77Pk8RKQ-1; Fri, 14 Aug 2026 04:02:43 -0400
+X-MC-Unique: D0L8eT-zMPa1wU77Pk8RKQ-1
+X-Mimecast-MFC-AGG-ID: D0L8eT-zMPa1wU77Pk8RKQ_1786694562
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-490a767b782so5536425e9.2
+        for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 01:02:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786693770; x=1787298570;
+        d=1e100.net; s=20251104; t=1786694562; x=1787299362;
         h=content-transfer-encoding:content-type:in-reply-to:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=xL0SPRjMSSQznv5rLFncff5bp35rpu9P3ikchBKuyig=;
-        b=hqLvMyt688bsODBvln1o1CvyscGp03iq+CfIq25VyY8m1+CUQkhHvaevBljdptuGDd
-         b8qUFSdPJ0C+EVv0eJTwSalJzZPyIloeQ5Qz7/mNAFCVyD/JEDohGMXblliKDDOjyN1w
-         R2sSmQaHjMQQoEm9LN3ZjjAIqxcVGskGmlAmUp/T+A2qe9K2c78ZsfHho7kia2jdwhQu
-         pMCr4H0VKzsx1/f9hIpbr2ViGr0MPxD03v4ILE2RmmTPgbMseola9+YHdJ3GBDpThNwk
-         o5FLASnMtvN96egzL3M4P08vnkRoafQQ0mCPiRFwLbYAEdJ0tqeT9UcxGA8+rDNKA1T3
-         FZWA==
-X-Forwarded-Encrypted: i=1; AHgh+Ro0a6KQcgrbfbjISqimdgjysybVRsz52FsYpkuNxxI+FCaaS+y5RN99WxId4dx8mDlxrAm4Sw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz7I8sciM2qtyIwoD3d6zGCJE789LDQLkRhVoPZgKz4P+5//ZRP
-	rf6n2oxGcl2ULcre3xaT9X0PTJf12gRXwTGypvSpc/e1t4wqmYQmV9bEXQ5M/5msgEEGVuLX69H
-	gZTWEuNxZQxwizzcZZkpfoXXzrFbdq+kApsOyp8uhdHMjusp0BoKIgX8d
-X-Gm-Gg: AR+sD131iUP042IA0qb0/CoT5RgHXNwa1EzFWR+7NW8dkAIuI1n7DtMp7yK6GlIbof6
-	wFFGMxdafNX2MZ48mjBMpF0ufC4nNMAO9dfdMDeAl/e4TLz9Zn6B+nFpkfHTDfXqOCaKvcYjuVc
-	CyBpkBaa+4FkR6i0Bx/nH7+kacv7xQwwXiIriLhjudTieGk8hvcqn0bT16FWAOs9OQf+1/wrdhi
-	r+ZnEa3TMGN9DqyPpCTH4QyxOqHTC/K8XdoxrgF299XFcWyFPf1Rd8lu5rdkneRk76jxfrLHIWM
-	fKcxqMcV/pdzbl+F5wqPGx9zMtBA/D7m4jIdyuOXF22Q+Jr5JSRwXvjAANtaWhdlpvwK5sp3RIo
-	ieBSTnXd/9ckXUNulzcfgaNp4pcO3aIKFY95lARbd4PKxOEzmvKxb0l+psEx5DkNHJcjPqkrzmT
-	U=
-X-Received: by 2002:a05:6000:4915:b0:47f:f828:9f32 with SMTP id ffacd0b85a97d-48160786ba2mr5928618f8f.27.1786693770225;
-        Fri, 14 Aug 2026 00:49:30 -0700 (PDT)
-X-Received: by 2002:a05:6000:4915:b0:47f:f828:9f32 with SMTP id ffacd0b85a97d-48160786ba2mr5928538f8f.27.1786693769817;
-        Fri, 14 Aug 2026 00:49:29 -0700 (PDT)
+        bh=nLpMGj0pQGhJ1cyaYBf6c5UqVZN5Sm2Ptah1UzyzRUE=;
+        b=jM7zrd0TBg6CKSXNvEXFNvcbE9UU4F6JN+32r1LRTZ9cK6uC3k7fMHU+a5bnColHnZ
+         B3ws0GODE6PcJkJAv3Jegg8vHtfyNnlsissYqs21w1A7H87G9TT27GnhPpzhVCG5ca6u
+         0wyCmhTJsANiRoQQnTGTvElEt1EQHlBl8B4TZ5tbFtE7dP0d6BaDa2hkwfVoSIP0sujz
+         1gKVF1ikF5TuwwPL8iahPBBuetHYuW1VcYogU7M2zC3o8hhCjdYNuQa3hiFmZoZYhO0I
+         6sbC/4cpU344VcWZyHnKVCiNm9vrx0sARzS3az02nwh6A6etMVFUXk2+ywW8Nbo16LuN
+         +TzQ==
+X-Forwarded-Encrypted: i=1; AHgh+RouWaRljhgREB/vzd03cXNo+2sLP2jQO3jk9EE/wTyt2r2/XWSsvdvcDb7DHVMwwPJiDdcTpg==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzj1ZT2Hc5UJU4kitnfQJkpMTScTMO3KeJJlEfXUFls0X0ci/T/
+	C6Q1GYDHOUGchBVOvIwQE6I+bQquX/Q6rUIHktGF9QeEO4D8FaXcmnCh7C0Hb1cSnYj1qaKOh7I
+	DnKrkIYJBGxxZqVUf9uy1EjBtNA9Nxiw71X6IpDTeYS1SNe/ruGRiRhQF
+X-Gm-Gg: AR+sD11LE9bapraOoNWoiz92M3ia/dgdzHS0aIPAjyfr149joN+9EJ+daPW9j6vQIPM
+	6bPrLPuNQtUACFqg01NwUUgcqS3JGE4go+2nUBx7Mog8ifeKUImAtarI9KzBiHPYui8HOwkpBZi
+	9fiSZLXOmVxo17AYXL4RiUgvW5JcLdjzZZYdqL6NLQzyj3n+aA6WeOa5Zau2XwijEFp74uUCd98
+	Hp5zfFJKj3qw1N+6gHUOD2z0vLn2U7EjU7+PaKfOFJirvAzng3T/uLIQREZ3dpgKyJCzLo8VdEJ
+	5VwJt06A2QbOaUDybZqLSbe9YKMeNY9Tt/VablQ2bh3M9QHeaazuHNrP81wnBQ+fVtLTDrlRH9R
+	J5n1tbtqEuHfP4VVqFQuq1Hp1gqIcGH/nSppc2zYYzd1wnr3sEVOEDZ/0dfpNOlZeyy8kBdmJ0X
+	c=
+X-Received: by 2002:a05:600c:4003:b0:495:3de8:33a6 with SMTP id 5b1f17b1804b1-4998798db40mr41763655e9.16.1786694561629;
+        Fri, 14 Aug 2026 01:02:41 -0700 (PDT)
+X-Received: by 2002:a05:600c:4003:b0:495:3de8:33a6 with SMTP id 5b1f17b1804b1-4998798db40mr41762845e9.16.1786694561180;
+        Fri, 14 Aug 2026 01:02:41 -0700 (PDT)
 Received: from [192.168.188.103] (ip239-44-231-195.pool-bba.aruba.it. [195.231.44.239])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4815f2c6115sm5904632f8f.32.2026.08.14.00.49.28
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49988b25625sm31696485e9.13.2026.08.14.01.02.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Aug 2026 00:49:29 -0700 (PDT)
-Message-ID: <74e1a388-2d49-4dea-96d1-4a7844a63b08@redhat.com>
-Date: Fri, 14 Aug 2026 09:49:28 +0200
+        Fri, 14 Aug 2026 01:02:40 -0700 (PDT)
+Message-ID: <e039e866-fe7e-41ef-ad41-92a76a123713@redhat.com>
+Date: Fri, 14 Aug 2026 10:02:39 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -75,69 +75,79 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 0/2] mptcp: sched: let schedulers mark a
- subflow to avoid
-To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>, mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net v3] mptcp: bpf: fix NULL deref and UAF in
+ bpf_mptcp_sock_from_subflow()
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>, mptcp@lists.linux.dev,
+ Geliang Tang <geliang@kernel.org>
 Cc: matttbe@kernel.org, martineau@kernel.org, shardul.b@mpiricsoftware.com,
- janak@mpiric.us, kalpanjani009@gmail.com, akshit@mpiricsoftware.com
-References: <20260715101148.2601045-1-kalpan.jani@mpiricsoftware.com>
+ janak@mpiric.us, kalpanjani009@gmail.com, shardulsb08@gmail.com,
+ akshit@mpiricsoftware.com
+References: <20260629105020.1670781-1-kalpan.jani@mpiricsoftware.com>
 From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20260715101148.2601045-1-kalpan.jani@mpiricsoftware.com>
+In-Reply-To: <20260629105020.1670781-1-kalpan.jani@mpiricsoftware.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 3sHg13Fx2Ndh8t8zILSfgbwr-EPlMwGTginPrh8eN_4_1786693770
+X-Mimecast-MFC-PROC-ID: an0slW-tnXhok3RFhgZWtv5MMYl9_QZ3U-7CkBPurQc_1786694562
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 7/15/26 12:11 PM, Kalpan Jani wrote:
-> The core benches a subflow via the "stale" bit after
-> net.mptcp.stale_loss_cnt retransmission intervals without progress. That
-> bit is owned by the core and tightly coupled to the RTO: it is cleared as
-> soon as a packet is acked on the subflow, in mptcp_subflow_active(). A
-> packet scheduler therefore cannot repurpose it to bench a subflow for its
-> own reasons (too high latency, too unstable) and keep it benched: the core
-> would clear it on the next ack, unrelated to the scheduler's intent.
+On 6/29/26 12:50 PM, Kalpan Jani wrote:
+> bpf_mptcp_sock_from_subflow() is reachable from tracing BPF programs via
+> bpf_skc_to_mptcp_sock() on an arbitrary socket, without the subflow
+> socket lock held. It assumes sk_is_mptcp(sk) implies a valid subflow
+> context whose ->conn points to a live parent mptcp_sock. That invariant
+> does not hold in several windows:
 > 
-> Add a separate, scheduler-owned "avoid" flag on the subflow context, set
-> and cleared only through mptcp_subflow_set_avoid(), exposed to BPF
-> struct_ops schedulers as a kfunc (same registration and filter as
-> mptcp_subflow_set_scheduled(), so only schedulers can call it). The flag is
-> scheduler-local state: the scheduler sets it to remember a subflow should
-> be skipped and consults it when picking a subflow to send on. It lives in
-> the struct_group(reset) block, so it is cleared on subflow reset and a
-> re-established path is re-evaluated. The core send and retransmit paths are
-> left unchanged.
+> - Fallback: subflow_ulp_fallback() clears icsk_ulp_data before clearing
+>   tcp_sk(sk)->is_mptcp, so a reader can observe is_mptcp == 1 with a NULL
+>   context and dereference mptcp_subflow_ctx(sk)->conn through NULL.
 > 
-> This is the "manage a new bit" option from issue #349, kept independent of
-> the RTO-driven stale bit as that issue requests. Regular probing of an
-> avoided subflow (#348) and any core-side consumption of the flag are left
-> for follow-up.
+> - Init: subflow_ulp_init() sets is_mptcp = 1 while ->conn is still NULL;
+>   on CONFIG_DEBUG_NET, mptcp_sk() dereferences its argument in a
+>   WARN_ON(), so mptcp_sk(NULL) faults.
 > 
-> Patch 1 adds the flag, the setter and the kfunc. Patch 2 adds a BPF
-> struct_ops scheduler selftest that marks all but the first subflow avoided,
-> reads the flag back, and schedules only a non-avoided subflow; the existing
-> harness confirms the avoided path carries no data, exercising the kfunc
-> round-trip from eBPF.
+> - Publish: the passive MPC path in subflow_syn_recv_sock() stored the
+>   freshly cloned parent into ->conn with a plain assignment, on a child
+>   that is already hashed and globally visible. A lockless reader could
+>   observe a non-NULL ->conn before the stores initialising the new
+>   mptcp_sock were visible.
 > 
-> Tested with the mptcp-upstream-virtme-docker CI (auto-normal and auto-btf):
-> all selftests, packetdrill and BPF tests pass, including the new avoid
-> subtest.
-> 
-> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/349
+> - Teardown: subflow_ulp_release() and mptcp_subflow_drop_ctx() dropped
+>   the subflow-owned parent reference with sock_put() without clearing
+>   ->conn, and the established parent msk was not SOCK_RCU_FREE, so a
+>   lockless reader could dereference a freed parent: a use-after-free.
 
-Please note that the above issue was filed before the introduction of
-the 'scheduled' flag.
+I think we should expose to tracing program arbitrary socket state
+locklessly.
 
-I don't see the `avoid` bool adding more capabilities on top of the
-other field, and without any usage from the core I think this change
-misses a relevant point from the linked issue.
+@Geliang: what about just removing such possibily? Something alike the 
+following (completely untested).
 
-Finally the proposed patch creates a 4 bytes hole in the subflow struct,
-possibly a better location is available.
+If a tracing bpf program needs to access the msk, it should do just:
 
-More importantly you need to provide a meaningful working scenario
-demonstrating a relevant use-case not covered by the `scheduled` bit.
+	mptcp_sk(sk)
+
+on the main socket, via a new, to be defined/implemented helper, and
+_non_ starting form a subflow.
+
+AFAICS all the other accessors using from tracing are simple casts,
+like the above, and do not traverse the rather risky ulp layer.
 
 /P
+---
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 75495a5c3507..ad4b8d04b190 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1745,8 +1745,6 @@ tracing_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_skc_to_udp6_sock_proto;
+ 	case BPF_FUNC_skc_to_unix_sock:
+ 		return &bpf_skc_to_unix_sock_proto;
+-	case BPF_FUNC_skc_to_mptcp_sock:
+-		return &bpf_skc_to_mptcp_sock_proto;
+ 	case BPF_FUNC_sk_storage_get:
+ 		return &bpf_sk_storage_get_tracing_proto;
+ 	case BPF_FUNC_sk_storage_delete:
+
 
