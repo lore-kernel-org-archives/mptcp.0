@@ -1,115 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2743630A5
-	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 14:08:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E38349B19
+	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 14:15:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786716489; cv=none; b=OgcNy64EW4NnMNnehEPQzpTwnMFeTG6rDzKGB+bYdakab+o/zKI5pTXtOwflhUZHIVeOYPPGVepBViSa9sgqVuWuWTiEP4EVs63nHriD6seYZ2ZYr/yO+m42GJr0DuWa/RaNN1Gqn998isykCXhpPAPDfoq26vcgGs+DdeTRFIA=
+	t=1786716918; cv=none; b=Kvw4hfxVLTHtOFYc3ZFNRIy21qlBE28qgYly1O97G7z4g10kxiQoNT9F83L5qPh5h4rdsLy5+PC89EKzkBvb8tfWFfxdkEooA+Yy3yRdpFrV2B/F0tnxY52Pc2cROv+lK31mI41usYtW0/bsyZyhUIhO037cqwPrcQC0L/zE88E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786716489; c=relaxed/simple;
-	bh=NxodzTYvP5mksEAS/0XQRI+vYDh1ju0mzAHhn7rVzLM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t8vVZDKF+bEjUCcwa9T7NXUx/Trbr34wFNaWKNrnIx4C5PyyY5HKqvbiSPgRARPdYP6y24parQKwdXY/hYivRzWXgklPrbs46WD5tvWXsgOlakiemcVXrvDspSLx93q5YYn3EZcEMY8QghxKMqKqgQK85YE4ra51XNR0o5w72yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WH5Qgj8c; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786716918; c=relaxed/simple;
+	bh=Zx87GyLb6+rIvN1lbUzVzdB9q3F5Rl/HTw3hTs1h50c=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=lXJ5Lj8epgLB2aaKSXMe+2FPbGoJaO712m9ugCwzKuh25Q9Lv5yY+vwhvvGkQ5Uxq0PSYP9SdE/uh0XcVYrcq35JYtBk8v8/C22vMUF7EmfIqHoKb4F1tRuEI/i1uwSnLBrW9jCFZd9Z/LF3Ah1FUrQ6w5ynTBOqylpO9oYg9LY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hQaJTBk3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WH5Qgj8c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6DA41F000E9;
-	Fri, 14 Aug 2026 14:08:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hQaJTBk3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A19A11F000E9;
+	Fri, 14 Aug 2026 14:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786716485;
-	bh=GQjJqt1V7psBzSfsK/M/JjbxQEmE0bqYPZUA1/d+ZlI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=WH5Qgj8cxpRtacZE/NzSn/zzxeDNziQO0Tjd/4oHzufVnzBFtN3nl1+0SI6RfSByj
-	 o0DMdF9HEGc/H/VqVJ03g5sPH0MuM02YZlQgGP5zosvafRonPNE/+11m6wBJtGxGyn
-	 v7rzWITx9T5kEQY8ZD5NpEOKpyGjVUx2D0aNk+SInobhzLah6rJFiWaBl/2a4639qn
-	 JjhukvTBUVuG/W1hG4JrY4YC7xxE0FBd55NT1xpJZMpdelDidwilfJNxIJ/3f8zqt0
-	 OBCLiLSlda5Ig8l6/C6rbMQJ6LW3mu/hqQRgf6IeP77BmOFMneWoI1LmMqYLV1g6Sg
-	 ZpYFIQ0Bv1dSg==
-Message-ID: <28af8e56-9cc7-4122-8150-a7cb9717fc77@kernel.org>
-Date: Fri, 14 Aug 2026 16:08:02 +0200
+	s=k20260515; t=1786716900;
+	bh=WcfWUJNuKnVyvS/DyqnoZlEV8jrsDo5eIGAmz3IinGM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=hQaJTBk33xCCdTtT2l/DCjb37phRz1d1puHdVIv5bBlSx8VvsTQZdSCg8CBx/0R5X
+	 hBTP49P+5geQZsikPnGWxCz4X4HECmJCKYdnZELKc4PBlgGhdl42yhU4up+1wIlC56
+	 H2I+WeSv91AfIwfd77V/wpOr7gNGcPvxBJF61fah5HD55EahjVHqeOEv9DwmEW2yC4
+	 0gcaYc50E2/ZJF7mW1uSEpazP434ift1IHNg02NADqnWtH9+c8vUSQWpX0Xh41FMAR
+	 H8+LyGTA4GT4k6aq4rL8ajr8DjafT6UiWBp8ECTxdZM6MDEl6RZexXkNk25ICid55T
+	 /BVlOO2kwtNyw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: print stats before socket
+ closure
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <20260814-sft-mptcp-stats-b4-close-v1-1-2945a591be7e@kernel.org>
+References: <20260814-sft-mptcp-stats-b4-close-v1-1-2945a591be7e@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 14 Aug 2026 14:15:00 +0000
+Message-Id: <20260814141500.A19A11F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: CI failures on nipa
-Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>, Gang Yan <gang.yan@linux.dev>
-References: <02830f64-bb5f-41fc-8211-5f7aa36b828e@redhat.com>
- <07b78c7e-f628-4f0f-b351-89064c6218d2@kernel.org>
- <dab17176-51d7-40be-ae95-bfed9ab6691a@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <dab17176-51d7-40be-ae95-bfed9ab6691a@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 14/08/2026 13:33, Paolo Abeni wrote:
-> On 8/13/26 11:15 AM, Matthieu Baerts wrote:
->> On 13/08/2026 09:57, Paolo Abeni wrote:
->>> Also I think mptcp_lib_wait_timeout completes too late (after ~60 secs),
->>> when the listener already bailed out due to accept timeout (after ~30
->>> secs), so it does not show any info on the listener side. I fear it may
->>> also race with the actuall `timeout` command completion showing socket
->>> states after the user-space program completion.
->>
->> Do you mean you would like to have mptcp_lib_wait_timeout wait for less
->> than the accept timeout?
-> 
-> Ideally yes, but I'm not sure which time would be ideal...
-What about the following "workaround" I just sent?
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Invalid iproute2 command `ip netns id` causes an error message a=
+nd incorrect NSTAT_HISTORY file path.
+--
 
-https://lore.kernel.org/20260814-sft-mptcp-stats-b4-close-v1-1-2945a591be7e@kernel.org
+--- Patch [1]: [PATCH mptcp-next] selftests: mptcp: print stats before sock=
+et closure ---
+commit 0e02bc2b403cc7ef4929da44802ea29557081b60
+Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+selftests: mptcp: print stats before socket closure
 
+This commit adds a mechanism to dump socket statistics via ss and nstat
+just before socket closure when a poll timeout occurs. This helps debug
+timeout issues in the mptcp_connect test.
+
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/te=
+sting/selftests/net/mptcp/mptcp_connect.c
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+[ ... ]
+> @@ -210,6 +210,19 @@ static void xgetaddrinfo(const char *node, const cha=
+r *service,
+>  	}
+>  }
+> =20
+> +static void print_err_stats(void)
+> +{
+> +	char cmd[128];
+> +
+> +	snprintf(cmd, sizeof(cmd), "ss -Menitam -o '%cport =3D :%s' >&2",
+> +		 listen_mode ? 's' : 'd', cfg_port);
+> +
+> +	fprintf(stderr, "socket stats before socket closure:\n");
+> +	(void)!system(cmd);
+> +	(void)!system("NSTAT_HISTORY=3D'/tmp/$(ip netns id).nstat' nstat -s | "
+[Severity: Medium]
+Will this ip netns id command fail and cause an iproute2 error during the
+test?
+
+It appears ip netns id is an invalid command, and should likely be
+ip netns identify.
+
+If it fails, ip netns id will log an error message instead of outputting
+the namespace name, which causes the NSTAT_HISTORY environment variable to
+fall back to /tmp/.nstat.
+
+Because this fallback file path isn't isolated per namespace, concurrent
+test runs might share it, potentially resulting in garbled network
+statistics in the debug logs when a timeout occurs.
+
+> +		      "grep Tcp >&2");
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260814-sft-mptcp-=
+stats-b4-close-v1-1-2945a591be7e@kernel.org?part=3D1
