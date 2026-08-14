@@ -1,73 +1,72 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC32E44AB70
-	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 11:07:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A625D1E5207
+	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 11:33:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786705629; cv=none; b=QQPr4wOrR6Bg7uHxkZ/zvU3zgA592a2ccclutESywqj8ATuCTIRLx0Esx+yJWbiwkM6rYVmYIxsm5pcM3p98aEPaEDd92WxMUAn8BSELQwtqDHm3A8Xi4cPZ2e1RSsrdjn6Ie73Brkkl7t72JzCktQFpiVK5PQxOW3AEgeD/cgY=
+	t=1786707223; cv=none; b=LzYxJ8wQHf/a+v3tjzeJk/nK7ujLnWM4FtHO0rrHZUuWzQz7jXMs//Xuf5S8hPSm3QxatVUKpLGNJgA4NQjYFC3hezMA8C9z6kr4AmZJsoKHPIvL/0rGCsUyv1WoBrdY85FIhddnr2kBWBtsJb6vz6GfGHk1lzpymf2GeptUY6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786705629; c=relaxed/simple;
-	bh=x0HqK0iDFKTS6zM6ODp8XlFr7wYyxoWPhPNMUuLvEb4=;
+	s=arc-20240116; t=1786707223; c=relaxed/simple;
+	bh=c6gXXrRT214m5ieMxMOpXYT6AvqfgHozcfbOJIkL5Ys=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QkKqLWgspW4C+LQBvciNiVUk0OateZB1gXV1qHQv6WepexHUjcw0PxPeqPynbqZoPIkpU4ktYLqWpUkJWR9jUpxqtV6emj2bGCnuvOoDJm/D65AdliOVhNmPFVfWchK/Ws+rweLcEzM/IrFUGdjo5m8rmevwYTSo7tZ3KStY3Q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PQIzCZtW; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=shX/UW6Qudgk6CgEsiVxuza6HFvlSKFD+dz8bBmq3kNg7mQ752yMQHCRULoQ+4Ch+FCdh6YbXiIZBSbIPIrGXEGHQtu3q431MWfxxYb9jF8TOEzIVAO7MJ5oSoMqjFCwvPrpYcuCI6FBsja1YzNPgaxQSfpQrAl9DLEtsaDb4C0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rs6IDeLn; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PQIzCZtW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rs6IDeLn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1786705617;
+	s=mimecast20190719; t=1786707219;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=szCD2wEJqr3QFsnYzhlgVK3W/w6IENGU1GBA3BW14mc=;
-	b=PQIzCZtWwdIErtvlCMtDcu4M6xwTVBQjjNNZ+T2zM91+mlz3Wf3TouN1b1s+Upzzbcvs0T
-	gUIfVHfkOMbJMAV8nILMXB3bUOruWMwDMdJVQ/e3Zxq3Oh89J2RlGgnKklD2T/2+DaMcbR
-	rbvhr5+Jtw1kOX2VIWtu1Q5U2Zk6nx8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=7Nuud+GDfUjhf/1c81hPf2Va1K/CzT0BQCNz43df8/s=;
+	b=Rs6IDeLnm8eRgdSV/gxo2KVpqgLB1WuV6b3cbCxNxIR4i6sjeIyMiGZnEXUKshVgJU+vuG
+	ISQm86aASd+XPl91kwJxtqv9jb3fvLshKMS0B5lmHD3gKV+7JYymgglMiYkRgp4O/tD76O
+	ZzoRBHvLR4X4l7xY0QwY7avaAK3XiKA=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-287-6WbPG6YGMdiAggkl9m_iEQ-1; Fri, 14 Aug 2026 07:06:49 -0400
-X-MC-Unique: 6WbPG6YGMdiAggkl9m_iEQ-1
-X-Mimecast-MFC-AGG-ID: 6WbPG6YGMdiAggkl9m_iEQ_1786705608
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4957287363bso5217665e9.0
-        for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 04:06:49 -0700 (PDT)
+ us-mta-652-rADHNR6TPwOw_21bjEJwmg-1; Fri, 14 Aug 2026 07:33:38 -0400
+X-MC-Unique: rADHNR6TPwOw_21bjEJwmg-1
+X-Mimecast-MFC-AGG-ID: rADHNR6TPwOw_21bjEJwmg_1786707217
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-47f84ac1990so539594f8f.2
+        for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 04:33:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786705608; x=1787310408;
-        h=content-transfer-encoding:content-type:in-reply-to:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20251104; t=1786707217; x=1787312017;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=szCD2wEJqr3QFsnYzhlgVK3W/w6IENGU1GBA3BW14mc=;
-        b=UgQNDox6JWpxrjgu+LGMq0oqSr2Al4unWvCMnQjRMH7Vinz1NZM4CEZgG4yJmpxaRt
-         sArXZTm0ZMku81wL3E/0GKn4Al+sYHMfPAhqzYhYDBJsdKK94jCxELfRUFWbGHMxwIAf
-         EpvDQobMnoEaDhMChM0ZCv75HPMhS9XAuWvAtApRF1+PJa8PyJccqLlrRMTzZFXNJ8RA
-         KFGqboJjz1STkHyWDuCmJdb60jS+LS7LZiZZjpTnTPbnnDKpOdVM7Lx0eCCe7i4aZNiI
-         qH6WX5+/8vBbt/YFciLMJKZUYTrtbw8yjizyNYq0Gxz2aUC4ZHls9HKVxhyniAhoASra
-         Ve0A==
-X-Forwarded-Encrypted: i=1; AHgh+RoJVOJ98s3Dy4Xm6ja1qlujS5qcmsjqiP/1rkMD7rPH0UQrzxSPkF7Lo/SwlAX8+/Nrv8/9bQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx9twcx85MWP2iiDOHUCJQjFTu+wuxQ5b9fsgFDJ71V3HOY0/O8
-	8kTnAs/sl4EVf7gMzMzDM9/nTSeZHMj3gVLGplwXA6sbuNoy5b6GFb79vGwsOSZC8xxRPA5DrB9
-	E6zPQMm+pSXf2PEj4T1naSjbsicm4Ko91J1d1/IU4Cxbui4/3pULA1r/N
-X-Gm-Gg: AR+sD12qPzCltajiExoWgNUzk8u5ukAWGEkjMeea3uwiSu9kldRcic8495IDuzSwpVr
-	+/H4TxayptglG+3ru/Hi5mPdgOZGqyRX6Pgkzf6DAuLgbFTi8vFKM5Z7ogmcaCZH3tkzQRrxBJV
-	gc6ag/4kGqNeTekwy3Bwuv/A0dgXRB2AhSdDM3QVxKRsShD/39b61n9w8zPtVNxI0tpnbuWZ3bZ
-	q/QUo/wF8EJWTZ/1g+EI5D6i9QZm44jrPdYciXOofft9msqfx7Ur0yPzgeWTVPPjIlM45xAQKN9
-	ASR2Y5LBLu+l+oE7c/gh90kwKkYnkmrm/2Jy4M4fk+aLokju18gonr/RPXMdvLOTckcEHPub9Rk
-	zyjN6bzor7QkEH+jWZEaWvA+8Kq6Zh2bFmkbmGh9+IY19PA9BbXmv9Ii+GO+hfUgKfm00gCnH3m
-	s=
-X-Received: by 2002:a05:600c:698d:b0:493:aa0a:45ad with SMTP id 5b1f17b1804b1-4998792e4f3mr72289075e9.2.1786705608371;
-        Fri, 14 Aug 2026 04:06:48 -0700 (PDT)
-X-Received: by 2002:a05:600c:698d:b0:493:aa0a:45ad with SMTP id 5b1f17b1804b1-4998792e4f3mr72288185e9.2.1786705607839;
-        Fri, 14 Aug 2026 04:06:47 -0700 (PDT)
+        bh=7Nuud+GDfUjhf/1c81hPf2Va1K/CzT0BQCNz43df8/s=;
+        b=XcRstq+XH1aDlzmctHUlNHPZJ1+RB0r2bDiuk5NkVVSKXeNGXCybOsjdWnBFE3Yg0z
+         /jaT8YnroTOmFIbCnpuqAk0tDUlwHMPb2YKHeqDKNWpvneSAZblbyFohzT0ygL8hIQue
+         LOzpspF7J6orb+q8CcwGdsVvUujB2YqjXk455fvaNMk0liwkQI4RPGdhVOA3njkBQWWS
+         +1fWSGIUOBcRoB64J/YmiQDbwCBAom1w7XMNqw+XFdbPCBPpmW+GkzvlOHkIwP98YxPI
+         DiPehJdDGMNfF2uQm3Qiw8/tKIhHxy6F8yGSyLHQIVb8PFScSplZjw1n88ss2tJkK9y5
+         L38A==
+X-Gm-Message-State: AOJu0YzPwMQEsOOqeMRUuxcuBYsmrH7sAnVadUs4/AzzONT7hGLnANYe
+	PyAAxoEqeEByWpEQTZemsjZpcfdKLz9H/GRiEKztqj1NKahBm+3KOViW8/c5dTnU78pyKPwttvk
+	TYlegIVjN1B8uyacJiBqIMgBXXknO7Uz1op8DiSTqGAKppSrCY6drFGTy
+X-Gm-Gg: AR+sD12jZoWrLSogUxwuc3AOQhO/NdnYHJYgZcT3an6tD3/n9hwUCaspQnAhs3txysI
+	0twkwg3rEQeZrCaBmcAEbdcDKLbioAX4I99WkefX/RWbk7RpdStVtcCYzMP8J1xpiKldf5nr1ZZ
+	rVO1y+hzOT6qhnCX4QtdmhW4OSAmd861EA9eIDHd9uqZpiVafirj6YewFxJygLhylhvT3xDzFrG
+	6P1BfNYwcsSaXzeZHDf4017kEfi7WIF/YLx+ODKPWy00TNl2YpkSGxZEMX/cNpefhyorfonKyXi
+	pTh1o1FsQfW2xEIWnVSA7yFDBz1hiASYeoN7Z/Ajxyutafa86GiWbwWuS4a1VcNPppiYehWBaLw
+	Fw4DC2Bg2xwbwCiDPGOeYH4EnTpFsDZ41nsYQQ5VbcClWACZoSExBlNLXsKI4wTyPUO8pCqGgP9
+	g=
+X-Received: by 2002:a05:6000:2903:b0:47f:cb30:8591 with SMTP id ffacd0b85a97d-48160723c0bmr8352681f8f.6.1786707216767;
+        Fri, 14 Aug 2026 04:33:36 -0700 (PDT)
+X-Received: by 2002:a05:6000:2903:b0:47f:cb30:8591 with SMTP id ffacd0b85a97d-48160723c0bmr8352624f8f.6.1786707216280;
+        Fri, 14 Aug 2026 04:33:36 -0700 (PDT)
 Received: from [192.168.188.103] (ip239-44-231-195.pool-bba.aruba.it. [195.231.44.239])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-499899b5f86sm21728715e9.5.2026.08.14.04.06.46
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4815f2c1307sm7713704f8f.27.2026.08.14.04.33.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Aug 2026 04:06:46 -0700 (PDT)
-Message-ID: <8f69b636-57ff-4f1b-a562-826306ab23d3@redhat.com>
-Date: Fri, 14 Aug 2026 13:06:46 +0200
+        Fri, 14 Aug 2026 04:33:35 -0700 (PDT)
+Message-ID: <dab17176-51d7-40be-ae95-bfed9ab6691a@redhat.com>
+Date: Fri, 14 Aug 2026 13:33:34 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -75,60 +74,35 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH export v3 2/4] mptcp: reject joins after fallback in
- mptcp_is_fully_established
+Subject: Re: CI failures on nipa
 To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Chenguang Zhao <chenguang.zhao@linux.dev>, mptcp@lists.linux.dev,
- Chenguang Zhao <zhaochenguang@kylinos.cn>
-References: <20260812054653.43799-1-chenguang.zhao@linux.dev>
- <20260812054653.43799-3-chenguang.zhao@linux.dev>
- <1d7c56b9-00c1-4550-a403-c3d704259267@redhat.com>
- <41078a8c-00c7-4cb1-8e57-237b4ea6c2f0@kernel.org>
- <643936d9-5da2-45cc-b108-f7c2e7785044@redhat.com>
- <a52da320-e6f2-4ccb-92ca-7ad28ebd49f2@kernel.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>, Gang Yan <gang.yan@linux.dev>
+References: <02830f64-bb5f-41fc-8211-5f7aa36b828e@redhat.com>
+ <07b78c7e-f628-4f0f-b351-89064c6218d2@kernel.org>
 From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <a52da320-e6f2-4ccb-92ca-7ad28ebd49f2@kernel.org>
+In-Reply-To: <07b78c7e-f628-4f0f-b351-89064c6218d2@kernel.org>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 3Nu-Tet6QKWO852Va2LBM87ORjMm5gpkW6IMbZ2Gb-0_1786705608
+X-Mimecast-MFC-PROC-ID: Qlj9A6L7rPTjaTrO9K3ghvp50nmFGbfEz799k1yZoiE_1786707217
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 8/14/26 11:09 AM, Matthieu Baerts wrote:
-> 14 Aug 2026 10:43:41 Paolo Abeni <pabeni@redhat.com>:
->> It's not clear to me what actually goes wrong and how. Do you have handy
->> a event sequence or stack trace demonstrating the critical scenario?
+On 8/13/26 11:15 AM, Matthieu Baerts wrote:
+> On 13/08/2026 09:57, Paolo Abeni wrote:
+>> Also I think mptcp_lib_wait_timeout completes too late (after ~60 secs),
+>> when the listener already bailed out due to accept timeout (after ~30
+>> secs), so it does not show any info on the listener side. I fear it may
+>> also race with the actuall `timeout` command completion showing socket
+>> states after the user-space program completion.
 > 
-> Indeed, better with packetdrill scripts:
-> 
-> https://github.com/chrisocean716-star/packetdrill/blob/bf9be7a7bee3687500444b284a9db2a0009a5252/gtests/net/mptcp/dss/dss_drop_after_data_fallback_server.pkt
-> 
-> => A fallback is done, a subflow can be initiated, then rejected.
-> 
-> 
-> https://github.com/chrisocean716-star/packetdrill/blob/fed57fab92c407eb433acdb8c8ce72bd8e3e2f37/gtests/net/mptcp/mp_join/mp_join_server_after_fallback.pkt
-> 
-> => The MP_FAIL is partially ignored if received before being in fully
-> established state.
+> Do you mean you would like to have mptcp_lib_wait_timeout wait for less
+> than the accept timeout?
 
-Thanks!
+Ideally yes, but I'm not sure which time would be ideal...
 
-I'm pretty sure there is a miss-intepretation of the 2nd case. The
-problem is not with `msk->fully_established`. AFAICS
-msk->fully_established is true when the MP_FAIL is receive.
-
-The passive msk socket sets it at MPC ACK reception.
-
-The problem is that, at MP_FAIL reception, the infinite mapping is not
-sent immediately, but it's scheduled with the next xmit, and until such
-point the msk does not perform the fallback.
-
-I think a proper solution would be bounding MP_FAIL (reply) and infinite
-mapping in the same ack.
-
-As noted by Gang, it may require a new helper (build on top of the
-tcp_send_ack).
+ATM likely it's better not applying changes there. I also agree Gang's
+patch (good catch! many thanks!) should fix the issue.
 
 /P
 
