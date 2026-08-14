@@ -1,97 +1,135 @@
-Received: from mta0.migadu.com (out-69.mta0.migadu.com [91.218.175.69])
+Received: from mta1.migadu.com (out-146.mta1.migadu.com [95.215.58.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9643BFE50
-	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 14:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923CC33F59E
+	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 14:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786716972; cv=none; b=CcC6Jy6EDUzp3Sls7b9IARqjmbwEG8TnrzSuCrXaXVzwEJH9v51upgeb7nZbu0vMcfaFiT07VFx5LYE8Lt26cEjC4TVYqm/A6KZEpaAd4Gwh2BnVqxrvKFxvM5efYjBagjGJrWCo/8m8pXCtSh5fSs9Q266vggxwc6QWQZtDV/Q=
+	t=1786717240; cv=none; b=Y6fSPoU/vV/YdLMOtPcU6f+YTUMSmMuW3Bm+1Iki1TU5psytgwNf6PBHbyiW89S36k2nhrhFkWX5ABm/ml5w6rJvqKNMWHJ/5KBOOw4PbDJSw2e91tphaMXJ7BCMaWxpHF2UKNWrmX1gV578AWaBfWrBbPyVJ0sHU5kaGLID4Vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786716972; c=relaxed/simple;
-	bh=UAGdCuQRUNYTmz8p/J9/HTQcXYdW2EeNXSXkahTq3to=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YnpUpTbVLL0RAg1gYKxrsKlEF7Pb6wK/l1h1f9mhu/rmyidr1rvHhEeDv38RKTyZlZ/5gXrWAIFYzenbg2ho1dbNDj2QM25Nq2rFBqm0k9ZYkXLR7lGXYv0Fz5sCeDr1q0+ehTxFHu+6C9rJv6kD1Tnmbf7Sbd9OH9NoxgKFcWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Gd8r885M; arc=none smtp.client-ip=91.218.175.69
+	s=arc-20240116; t=1786717240; c=relaxed/simple;
+	bh=2dKW6NoaYvtpqbH21ODCC5DhJ4G4DF2uLauXzTwYAp0=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=f1KLeMFBzk+rKQ23u9aIOMpmo75uec9GejtWmHQk/nAsv4aFbi7YNxC415fwoxcdhvB0OeTY2PfjpqcOgx3g9NNM6sdCFoOwJtXHQweHvdmiNxrferOMFmGOd0jN1Fm8j0sxAb6Z97ovQ1go0liVrZeDKxEMiQsIFiWIWi6WWYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VmbXeSCi; arc=none smtp.client-ip=95.215.58.146
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Gd8r885M"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VmbXeSCi"
 X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=UAGdCuQRUNYTmz8p/J9/HTQcXYdW2EeNXSXkahTq3to=;
+DKIM-Signature: a=rsa-sha256; bh=2dKW6NoaYvtpqbH21ODCC5DhJ4G4DF2uLauXzTwYAp0=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1786716958; v=1; x=1787321758;
- b=Gd8r885M2gZGXvYZ6kPlP9epdca/5Z+QToGvpT1QKssTeUhdHxltEislIQMrGlvVEruTEs40
- rzeszSdtaQkHDoIMWKP97FkQKhx92quxTTwx10EXSsfRcZbuN8ykXH6jkUazbDiRkhc9vtqzaWS
- v36l79OrBqXKXAkUVBYphWUM=
+ t=1786717212; v=1; x=1787322012;
+ b=VmbXeSCiIIZtE10Kl9RrUXJ4ilZi0xh1WHNflfFVn1uWSTNRAR7NEjXZiMM2vQuMjmhQyqrm
+ 6yMY7a4khov0PFW8uDqN0NEgLCAPpAfHDgH2yUbjXSw3r2QIxKn/EOp0fNghyL8fJl/M1hs1sKy
+ sX47zIY75BmWDHWD0ur93lEU=
 X-Envelope-To: mptcp@lists.linux.dev
-Received: from thinkbook16p.. (120.244.49.214)
-	by smtp.migadu.com with ESMTPS id 9a1eeb0d806fa9f8;
-	Fri, 14 Aug 2026 14:15:58 +0000
+Received: from webmail.migadu.com (2001:41d0:303:fc7a::)
+	by mta12.migadu.com with ESMTPS id b435a56344732745;
+	Fri, 14 Aug 2026 14:20:12 +0000
 X-Migadu-Flow: FLOW_OUT
-From: Gang Yan <gang.yan@linux.dev>
-To: mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH mptcp-net v2] selftests: mptcp: fix an UAF in mptcp_connect.c
-Date: Fri, 14 Aug 2026 22:15:30 +0800
-Message-ID: <20260814141530.102099-1-gang.yan@linux.dev>
-X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Fri, 14 Aug 2026 14:20:12 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+From: gang.yan@linux.dev
+Message-ID: <cbd1c616b7ade068ce1d432270f27ff18f86520c@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH mptcp-net] selftests: mptcp: fix an UAF in
+ mptcp_connect.c
+To: "Paolo Abeni" <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: "Gang Yan" <yangang@kylinos.cn>
+In-Reply-To: <a4d66633-1340-4a56-9dd2-18cdeff7629e@redhat.com>
+References: <20260814050625.80231-1-gang.yan@linux.dev>
+ <0ce89b909d078e40f8f560255ad44ae8e2cfff00@linux.dev>
+ <a4d66633-1340-4a56-9dd2-18cdeff7629e@redhat.com>
 
-From: Gang Yan <yangang@kylinos.cn>
+August 14, 2026 at 6:50 PM, "Paolo Abeni" <pabeni@redhat.com mailto:paben=
+i@redhat.com?to=3D%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > wrote=
+:
 
-At the end of 'sock_connect_mptcp()', it calls 'freeaddrinfo(addr)',
-the 'peer' pointer (which points into 'addr') remains. Later, the main
-loop uses this peer pointer for reconnection attempts. If the memory has
-been freed and reused, the address data could be overwritten, resulting
-in an invalid remote address.
 
-This patch keeps the addrinfo list allocated for the whole process
-lifetime so "peer" remains valid across reconnects; the memory will be
-released at exit() time.
+>=20
+>=20Hi,
+>=20
+>=20On 8/14/26 8:42 AM, gang.yan@linux.dev wrote:
+>=20
+>=20>=20
+>=20> Sorry for this, after reviewing sashiko's comment, I think this mod=
+ification
+> >  below should be better:
+> >=20=20
+>=20>  diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/t=
+ools/testing/selftests/net/mptcp/mptcp_connect.c
+> >  index ea4cb6c1bd5e..c81ec4400bef 100644
+> >  --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> >  +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> >  @@ -421,7 +421,8 @@ static int sock_connect_mptcp(const char * const=
+ remoteaddr,
+> >  sock =3D -1;
+> >  }
+> >=20=20
+>=20>  - freeaddrinfo(addr);
+> >  + if (sock =3D=3D -1)
+> >  + freeaddrinfo(addr);
+> >  if (sock !=3D -1)
+> >  SOCK_TEST_TCPULP(sock, proto);
+> >  return sock;
+> >  @@ -1424,6 +1425,7 @@ int main_loop(void)
+> >  }
+> >=20=20
+>=20>  out:
+> >  + freeaddrinfo(peer);
+> >  if (cfg_input)
+> >  close(fd_in);
+> >=20=20
+>=20>  If you think it's OK, I can send v2 immediately.
+> >=20
+>=20I'm sorry for being in late.
+>=20
 
-Fixes: 05be5e273c84 ("selftests: mptcp: add disconnect tests")
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
----
-Changelog:
-v2:
-  - make fix as paolo suggested, and using AI to simplify the comment.
-v1:
-  Link: https://patchwork.kernel.org/project/mptcp/patch/20260814050625.80231-1-gang.yan@linux.dev/
+Hi=20Paolo,
 
----
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+So nice to get your reply.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index ea4cb6c1bd5e..178d98d91fea 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -381,6 +381,9 @@ static int sock_connect_mptcp(const char * const remoteaddr,
- 
- 	hints.ai_family = pf;
- 
-+	/* Keep the resolved address alive for the whole execution: it is
-+	 * used again when reconnecting, and will be released at exit time.
-+	 */
- 	xgetaddrinfo(remoteaddr, port, &hints, &addr);
- 	for (a = addr; a; a = a->ai_next) {
- 		sock = socket(a->ai_family, a->ai_socktype, proto);
-@@ -421,7 +424,6 @@ static int sock_connect_mptcp(const char * const remoteaddr,
- 		sock = -1;
- 	}
- 
--	freeaddrinfo(addr);
- 	if (sock != -1)
- 		SOCK_TEST_TCPULP(sock, proto);
- 	return sock;
--- 
-2.43.0
+> This is in a better direction but still will be not fully correct:
+> freeaddrinfo() must be called on the argument returned by getaddrinfo()
+> - in this case: `addr`.
+>=20
+>=20Otherwise some addresses will not be freed.
+>=20
+>=20Since sock_connect_mptcp() is invoked only once per program execution=
+,
+> and not-freed memory will _not_ be leaked at process exit time, I think
+> the easier solution is to remove the:
+>=20
+>=20 freeaddrinfo(addr);
 
+Sounds great!
+
+>=20
+>=20statement, adding a comment alike:
+>=20
+>=20 /* All the allocated memory is released at exit() time, this
+>  * is executed only once and ownership of a single address has
+>  * to be transferred to the caller. Keep it simple and avoid
+>  * later freeaddrinfo() entirely.
+>  */
+
+I've just send the v2 and using AI to simplify the comment =E2=80=94=E2=
+=80=94 hope you
+don=E2=80=99t mind.
+
+Thanks
+Gang
+
+>  xgetaddrinfo(listenaddr, port, &hints, &addr);
+>=20
+>=20/P
+>
