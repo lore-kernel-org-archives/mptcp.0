@@ -1,132 +1,145 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mta1.migadu.com (out-27.mta1.migadu.com [95.215.58.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F36346798
-	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 04:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8433B18FDDE
+	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 05:06:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786681898; cv=none; b=qh68FBwcjx+Ra7n7YG23MwABMPpu7yejcbyM46x6AKi1vRbV+zMT9JQphGXVgW78jlwoEGT3OZp+BhsCmuw83rUlkP4Ig7JGyuAq6bWflGHoMA8HRJs9X9rFbD9EqyyTbnIPm8nJhXNITtlVjmbzbOyVfsMDQJqKxfdxO997Xko=
+	t=1786683997; cv=none; b=G8sBnxIw0ic2B2k+SOPYasroFWzumXT65Qnk1GNkuxXMLhIY+49O6Guz1loqCD5Pu2SX4rvXmxrBb0PAvyPzQd8a4fcCTh8MDhbdlHUXtOHx+TSf8TgdNkGlipaM4hzfw7+bXeOihM2oIogaoGiuz7XfI1Cdi14XZcH49RCDT0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786681898; c=relaxed/simple;
-	bh=+gJopHk0R4DdHkhHVm7ZnULtwWykntkwCgoVu/5///4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=QmSZTP3jFuaM11cvM1AECQSZ9cLnfABSl0uUtvC4+VQsUp++jHS2rYIASuS3mqhO71ABoBWj8JpAYfVYYTA6zCBF17fTY05sVe0vkx4MwP+B6O+F3gc9KM2YenIPsLQhG3YPNXPA/Tffok6i2DzTC/b1fG39vrmn0Ks+C5HNgcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZHEHrEqk; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1786683997; c=relaxed/simple;
+	bh=Sdu5Yt8DiJRtT5p+rS8VMOI8mXNXrCreT3vaZD6/Tps=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dAp5fI0bwR+sr5xBS3YeCgMs7InVEycwWDvjM+1PQi1OkKQNFyGLl3pQ/XtbTGDpO4GUXb8p4y0/yqgoL58aSyQdbh1SGRnqJ3VLRuhnS6KVJctcy6d+8Hsi5UFY6KHpKLS01tutKSl2dReV6MprDZfoDXR0jaRD77KhHzdLqkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qlW4vI2u; arc=none smtp.client-ip=95.215.58.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZHEHrEqk"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-38e7109321dso427879a91.3
-        for <mptcp@lists.linux.dev>; Thu, 13 Aug 2026 21:31:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786681896; x=1787286696; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=+2S69FiLRxj427VWDpegsLao0D5cyhMNx7+rQgHtgik=;
-        b=ZHEHrEqkGgev/ppGOHszPCHTRSeveW7cyew7TjDMT7p4XZ1NxpFu7ypKPEhmx7+tIu
-         Vti6VQsBUnjTsYD2pR439QECN89kVywx4EmtjDwG24MoBHg8nnSZoCW91b3TxBmwati7
-         VHmwj3jpko64pySiJcQGV7vtUwepVjtBoOtHEcF3++W2XT2Z5MlZuENKPmlt4EE+AqSq
-         2GjhSt98Hk/Ebl5GjVxI0a1zKjkj8Og1qGFT2ipSlWa17/ZdW7w/ypFC+p1tA4fIlc94
-         sj/n5wtGOr5QqV29pob2+UNm6Kfg96tyjWjf314w7idqx+CIL683yw7izNW5tS6wCLOv
-         2R7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786681896; x=1787286696;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=+2S69FiLRxj427VWDpegsLao0D5cyhMNx7+rQgHtgik=;
-        b=Amyc5hBf8+txJl0tX/D1Ttrc8nBMZ2dIIuZk7erpoOHCKW/NQlsawetKrPOfWXNIPz
-         t8UrxUh3JaEYfoDk2pxixRax88kSZ6qY9+q8Yp+1qKVBjOh095iJ/bWU3z5lI3K8OhTa
-         TV/KDHK5JP3T32eY/BCGmKejpTDIIoXx9a5IFxd6Zsic5kufEejhtWbMTpjNYcwoyC8b
-         82gU5sMOdf/oVhPEoX1vHfD3DZCjBxgMlbuuVhZwvNwEn82/vhnrpKBCHeFE5/Gt/kI1
-         mlSk8Qa/14cSPCd/wmNTUhCRCBmNj3x3UVGcTviiWs8QemfHJaFoW3G0p7Dzhdl73W68
-         1pMA==
-X-Gm-Message-State: AOJu0YxEgAKDWbCQnLdMmaebSTOwla5bfu/aO+VygQbtfwzvfD2lUliO
-	ehgIHTkbJqXYQl6WBNF5Nnz0z5a8pwxu2Ow8boBooAlTdlvSuu6Ad0HfXzfmBAI=
-X-Gm-Gg: AR+sD11tad9QRbBZMLn3smDLzuKyqj+Ge6xGSu4l6zt75FCV2/t2oEHRKuJgJdXRsyk
-	2wvAJpW+gfbHYzkbcxEfFi/KLVivXFOJEUud9wqfhnLOLjRYJTRyxOoBwWJadP1crFACzP3MA6u
-	TK5oCJQvXYUSih/RXnGrbb5M2mTZlL/QOIlo3g7+V5mOUGSELwJJ/LWI1ewEZJ0i535S2MnmLWH
-	y5zDwtQuNTf9ljGGShdT7gB/oW9x5Y7m/BJl0Dqmh8LLSPjfVfiHlk+R1FVdYIuKAxhvNMyWOg7
-	2/d5zdxiyuKgRxwpKXkSJyu1HI6Id3im/0kJP1+FLOlMDyEnnm33oTOtAWqx7JpvzItgO2DiLzE
-	vgtYNXpYEE53eUsdaHLei3DCUtSZcy0Wos/x2UeKUcOc0vO/s9ms6ovwZwfBUc4vro+oV03Pm2H
-	JXqkF3j2FCyjal6HFAhNtOqaNZbnedwH/1cKt+JKNAVulI3qsw5DLmVPCWV+dQO4njq03hSzqUJ
-	ZMS7IjXnpPf
-X-Received: by 2002:a17:90b:510a:b0:38e:9ef9:eb97 with SMTP id 98e67ed59e1d1-3933ba87422mr3179181a91.16.1786681896178;
-        Thu, 13 Aug 2026 21:31:36 -0700 (PDT)
-Received: from [127.0.0.1] ([20.168.117.145])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1413889bca5sm5753641c88.12.2026.08.13.21.31.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2026 21:31:35 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Tao Cui <cuitao@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260814032749.2222975-1-cui.tao@linux.dev>
-References: <20260814032749.2222975-1-cui.tao@linux.dev>
-Subject: Re: [RFC PATCH mptcp-next] mptcp: annotate data-races around
- sysctl reads
-Message-ID: <ee6f5a76-02a8-b77b-75db-d21dcc1bec76@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 14 Aug 2026 04:31:35 +0000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qlW4vI2u"
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=Sdu5Yt8DiJRtT5p+rS8VMOI8mXNXrCreT3vaZD6/Tps=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1786683992; v=1; x=1787288792;
+ b=qlW4vI2ubMkb07YH6Ey+KVqhj9r2YN9k8ds4F8fvFTMWbY7RxPg/FXGy8Ru43kFSbeirkwG9
+ LlAmTFgWG74c/H6vNWWu7ZqbeLuElgYPvMmOjRRG7PM89h9Nhg2BhJlJikFAtr5x76oVjHD2WlU
+ AbvsS1LUOVFhOGhgNL+jrKWo=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: from thinkbook16p.. (223.70.160.239)
+	by smtp.migadu.com with ESMTPS id 650afce5065ef3b9;
+	Fri, 14 Aug 2026 05:06:32 +0000
+X-Migadu-Flow: FLOW_OUT
+From: Gang Yan <gang.yan@linux.dev>
+To: mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+Subject: [PATCH mptcp-net] selftests: mptcp: fix an UAF in mptcp_connect.c
+Date: Fri, 14 Aug 2026 13:06:25 +0800
+Message-ID: <20260814050625.80231-1-gang.yan@linux.dev>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-Hi Tao,
+From: Gang Yan <yangang@kylinos.cn>
 
-Thank you for your modifications, that's great!
+At the end of 'sock_connect_mptcp()', it calls 'freeaddrinfo(addr)',
+the 'peer' pointer (which points into 'addr') remains. Later, the main
+loop uses this peer pointer for reconnection attempts. If the memory has
+been freed and reused, the address data could be overwritten, resulting
+in an invalid remote address.
 
-Our CI did some validations and here is its report:
+This patch removes the '**peer' out-parameter entirely and adds a
+sock_reconnect() helper that resolves the address and connects in a
+self-contained scope, so no pointer to freed memory escapes.
+Also prints the reconnect destination address on stderr as suggested by
+Paolo.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/317678=
-14900
+Assisted-by: Codex:GLM5.2
+Fixes: 05be5e273c84 ("selftests: mptcp: add disconnect tests")
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
+---
+ .../selftests/net/mptcp/mptcp_connect.c       | 25 ++++++++++++++-----
+ 1 file changed, 19 insertions(+), 6 deletions(-)
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/fa3baeab64f6
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1145806
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index ea4cb6c1bd5e..9c083038c400 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -368,7 +368,6 @@ static int sock_listen_mptcp(const char * const listenaddr,
+ 
+ static int sock_connect_mptcp(const char * const remoteaddr,
+ 			      const char * const port, int proto,
+-			      struct addrinfo **peer,
+ 			      int infd, struct wstate *winfo)
+ {
+ 	struct addrinfo hints = {
+@@ -404,13 +403,11 @@ static int sock_connect_mptcp(const char * const remoteaddr,
+ 			if (syn_copied >= 0) {
+ 				winfo->off = syn_copied;
+ 				winfo->len -= syn_copied;
+-				*peer = a;
+ 				break; /* success */
+ 			}
+ 			perror("sendto()");
+ 		} else {
+ 			if (connect(sock, a->ai_addr, a->ai_addrlen) == 0) {
+-				*peer = a;
+ 				break; /* success */
+ 			}
+ 			perror("connect()");
+@@ -427,6 +424,22 @@ static int sock_connect_mptcp(const char * const remoteaddr,
+ 	return sock;
+ }
+ 
++static int sock_reconnect(const char *host, const char *port, int fd)
++{
++	struct addrinfo hints = {
++		.ai_socktype = SOCK_STREAM,
++		.ai_family = pf,
++	};
++	struct addrinfo *addr;
++	int ret;
++
++	xgetaddrinfo(host, port, &hints, &addr);
++	ret = connect(fd, addr->ai_addr, addr->ai_addrlen);
++	freeaddrinfo(addr);
++
++	return ret;
++}
++
+ static size_t do_rnd_write(const int fd, char *buf, const size_t len)
+ {
+ 	static bool first = true;
+@@ -1367,7 +1380,6 @@ void xdisconnect(int fd)
+ 
+ int main_loop(void)
+ {
+-	struct addrinfo *peer = NULL;
+ 	int fd = 0, ret, fd_in = 0;
+ 	struct wstate winfo;
+ 
+@@ -1378,7 +1390,7 @@ int main_loop(void)
+ 	}
+ 
+ 	memset(&winfo, 0, sizeof(winfo));
+-	fd = sock_connect_mptcp(cfg_host, cfg_port, cfg_sock_proto, &peer, fd_in, &winfo);
++	fd = sock_connect_mptcp(cfg_host, cfg_port, cfg_sock_proto, fd_in, &winfo);
+ 	if (fd < 0)
+ 		return 2;
+ 
+@@ -1413,7 +1425,8 @@ int main_loop(void)
+ 		 * connect to be blocking
+ 		 */
+ 		set_nonblock(fd, false);
+-		if (connect(fd, peer->ai_addr, peer->ai_addrlen))
++		fprintf(stderr, "reconnecting to %s:%s\n", cfg_host, cfg_port);
++		if (sock_reconnect(cfg_host, cfg_port, fd))
+ 			xerror("can't reconnect: %d", errno);
+ 		if (cfg_input)
+ 			close(fd_in);
+-- 
+2.43.0
 
-
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
