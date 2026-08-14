@@ -1,132 +1,181 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AF2431F99B
-	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 15:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443FA486BB6
+	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 15:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786720955; cv=none; b=b/eoeQPFZKPYozHuDEBojSvQ2PCLBBcUEq/wBx+PpcUg5gY9sFMGXuKQ23cAy6bpUjfAo6fvFXPul0Elwz7jzsclP3MXLufjcKzVwozsI6WrnBvPGz+0M57ydE4qy2F9ZbIFmOkvvijeqCYgys/Md4TCmQ/H/wRDCd3a0yrWMzQ=
+	t=1786722307; cv=none; b=AVpRwluwxCCRsOl5860ZvDq5LNmcIcAATFrbAyyFQXSSvEyfw33ySECJ54YK2tB8Fy80a5dolX00hJ2LI14n155JDFY27p5U4RtmzxKxlqmgOp4slq8304qsj9RGuNjx4owx270/fAi7LH0brBXhhaUaTdXpihe6r0FAVgbuYc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786720955; c=relaxed/simple;
-	bh=NnFM+xDeQlOalsu3SywL5l8hASC1Tjt8rIoP6qPMo4M=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=TFi0G65FJnDYkrM1agXaT3NujBxirEMlobQRnwey8fAWSTGD1X4YnBUdw28SZWT2hz9Cxx06Jy3Ynd/3wq2gTtYkM7R3sSxMqlsQvIbViPXcXrzsKKtEiDjw3jcP/KVmtEVFT2NceZenfFXO4gsFs7b60P4gdTWd4ms9ejHMhd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jBXiPxjG; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1786722307; c=relaxed/simple;
+	bh=3oZKPxVkfqHyZI1xsUFa66BDKee+lspIGOHGCN8QPcQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cZiMvAYcM7ujzgTkY7EgRXr0zMx0kAudc8p0OUeIveoGPI25nhJU5ULbBI0nQ8Qv0GoVhmVBrq/eGBXCZZdN+UKPGxXnsHWPyBmvvvlNKTU66WAuIc9xYpm/6GC+0oM5wGPuuOWFEp1bQrr45mNsKyCms90uLxzKl0X5aD9wJhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/jlrlZK; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jBXiPxjG"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2caced6038eso13435305ad.0
-        for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 08:22:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786720954; x=1787325754; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=Mt/SVcJZ/ErNFulh3CwpffYf2h2XSfSU3o9yR9PDq38=;
-        b=jBXiPxjGsPHCLEE8R9S7dvWqCY7CMgE6fLPoiYFNEi7tO+keyRzMlQ6LX4ORBBaOry
-         r/GzDKFVlE2UR6YSMeEV6xYZ9Ic7RF7jwK6KpGpDO69iQcZOCAk/QTrKkRndqIIkY4vQ
-         4DZBPOdPU7t3jlngF5iOFy7iX2Qov3i0lRbRwERiaJOSh3GDhuzEGf7iwEiMAXMpkivy
-         UE1DwxZlKJV4+VEXB7ezp8RcX5FRxpPcphXbFFf7rmbXsXVfqcPrF4SVCcEsYzxYWBE0
-         pPBcAtAfvUrXckWivK14LqU/Dv6lyef5anWJ0thRuhmPmoxYqgjZ5GpnB0FKcHqlib0Z
-         YrzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786720954; x=1787325754;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Mt/SVcJZ/ErNFulh3CwpffYf2h2XSfSU3o9yR9PDq38=;
-        b=rYI6nkwbmqRiFV7I8SUmtvi7YSC8calDbrcz+ASa6S9psfqK+7rHASSJOEZL8EmPrW
-         dNHBZgBhqMSY3jofDlt9DQTAYj7nlXauCQQl29Mb3YZA4crSsgxes/cU7o5x2M9vPoo/
-         7bfqe9SV3GDQUqcddwBIidEKtB1mJrrEnYWJC6zySLK8rhF+Ndh2avwsEwRXNU77nqpZ
-         mCQ54EkC1NQWGcRaU3F5p8Vmrv2Itvoa85jMCjS9E/zA3s2drIfFa6E0iub/InA+MXvC
-         bH9mir3doMoyKVUEKiivQH/xug6scIk25pqdiVuOdrl3/AYqhw5v1uM0lCN6KudEWR4m
-         D1ag==
-X-Gm-Message-State: AOJu0YzDxvIFdc8VVUVeNzK2D7V3yG/sAXIK3Dm+1c6PzBjeiZ0yXjZj
-	pzAgDvxhJZ/qFPZ0a8uzV0vtR1LeLPB3a5pzyZYp+WJmJFCA896BQ/dgZbZl
-X-Gm-Gg: AR+sD10zBDeFXOr5eSLSUIHGozy+Xl90Watr9Iy0oP412Ce/M8Ue+M4vCAah1t2ZOLv
-	294MZX0t242Tfmj3WESbgoTtfSJ1iy+hQff7jzFXQUtGgq2Bv2vURTv/mT0HNAGnDCDeJpLGmx5
-	LqbiAnNQO+7Zh7tJPd8tXJxg6HWi8popFYj2HkVOfnhuWxJ6+csQSSpsOn3o9+hcpmyWQR9NFZM
-	zhTL1Vf8QggGSlB63Ojz4qe70xPg9IQv9vU8gU5li+Y3g6WIfGfUXWRtVvxx/KepC9/FkJ39d6W
-	U0Yd8oHVlte2OnGIp6ynbKoyujS/R70cdSUpSwv/rvVmo20WVl6rc0ajIC2qdAOtpIsvMMmrUX6
-	ESe0JL10B7h4IlFslepJEWD85sqGf111Gk6OfJWcOdSj4nwUutmnBojvROigZDgAEnGTHWcsaHM
-	gbxreLScNYjs/MB+I/gbm3PW4jwCLBSUMzUgixvztMrRIwULT/5tb2lrgoIiO4VG/nJkcGI3GIw
-	zY4JNH8R5xmhg==
-X-Received: by 2002:a17:903:37c8:b0:2c6:8d95:fd7e with SMTP id d9443c01a7336-2d37f651b22mr150325795ad.6.1786720953532;
-        Fri, 14 Aug 2026 08:22:33 -0700 (PDT)
-Received: from [127.0.0.1] ([57.151.128.82])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-320ea8fe3cdsm5740229eec.28.2026.08.14.08.22.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2026 08:22:33 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Gang Yan <yangang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260814141530.102099-1-gang.yan@linux.dev>
-References: <20260814141530.102099-1-gang.yan@linux.dev>
-Subject: Re: [PATCH mptcp-net v2] selftests: mptcp: fix an UAF in
- mptcp_connect.c
-Message-ID: <ad3a6ae1-12c8-cce1-bd46-72ec02bc3651@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 14 Aug 2026 15:22:32 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/jlrlZK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C92601F000E9;
+	Fri, 14 Aug 2026 15:45:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786722306;
+	bh=FnOe67U8og0dl9CYAoIlwFSvMxiRB/6xC5CBfBWbuMM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=k/jlrlZKO9xc7BQyQS4s0pSH83wZYk7Cupw7rD+rrOjX4/kfmjOYbGT6bEObSqh9B
+	 L9+DAPKP8eYmdvGlH7WNCuGHmJG7JFpUWEWdUgEetZ90uVcZzBdNcDkgCePaPWvWU1
+	 ARC6hYsCP0nWgLP6v7yIYDnnnxLNfkKu1Z6mn8xcG3KzVqkTbfHEbNm1Fs/v6Z/496
+	 Hrrw3Dye67BRgMLtpFeptkQ5uOoUkYgjcQTbuT2RqMmiKyMJf5+V6zjoTocFkIL5Kz
+	 owip0hgMH41Ct0U+N8ELXSpIzYY2zUm4ZiwMgdKDg01r1bWJWBnp0XRyNa5r+wMMin
+	 6eYP0LolphIbA==
+Message-ID: <4bc4a5c1-c6ca-4384-a355-ca709cd52f48@kernel.org>
+Date: Fri, 14 Aug 2026 17:45:02 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH export v3 2/4] mptcp: reject joins after fallback in
+ mptcp_is_fully_established
+Content-Language: fr
+To: gang.yan@linux.dev, Paolo Abeni <pabeni@redhat.com>,
+ Chenguang Zhao <chenguang.zhao@linux.dev>, mptcp@lists.linux.dev
+Cc: Chenguang Zhao <zhaochenguang@kylinos.cn>
+References: <20260812054653.43799-1-chenguang.zhao@linux.dev>
+ <20260812054653.43799-3-chenguang.zhao@linux.dev>
+ <1d7c56b9-00c1-4550-a403-c3d704259267@redhat.com>
+ <41078a8c-00c7-4cb1-8e57-237b4ea6c2f0@kernel.org>
+ <564cb027be5e7972fc8f6f976707628ee32f38aa@linux.dev>
+ <db6bd87f-f7cd-4b02-a471-db549cbca384@kernel.org>
+ <3c9241d11965180046042f4c6079ebb1e38b54dd@linux.dev>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
+ YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
+ c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
+ WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
+ CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
+ nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
+ TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
+ nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
+ VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
+ 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
+ YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
+ AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
+ EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
+ /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
+ MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
+ cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
+ iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
+ jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
+ 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
+ VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
+ BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
+ ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
+ 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
+ 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
+ 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
+ mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
+ Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
+ Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
+ Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
+ x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
+ V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
+ Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
+ HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
+ 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
+ Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
+ voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
+ KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
+ UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
+ vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
+ mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
+ JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <3c9241d11965180046042f4c6079ebb1e38b54dd@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi Gang,
 
-Thank you for your modifications, that's great!
+On 14/08/2026 05:02, gang.yan@linux.dev wrote:
+> August 14, 2026 at 1:42 AM, "Matthieu Baerts" <matttbe@kernel.org mailto:matttbe@kernel.org?to=%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org%3E > wrote:
+>>
+>> In addition, in the case we are trying to fix here, the MP_FAIL is
+>> received before switching to fully established: the RFC doesn't explain
+>> this particular case, but it sounds like there is no need to send the
+>> infinite mapping, and a fallback can be done directly *I think*. The
+>> thing is this situation shouldn't happen: we are not supposed to receive
+>> an MP_FAIL at that stage, no data has been exchanged at the MPTCP level,
+>> so let's do the minimal -- i.e. just a fallback -- to avoid issues and
+>> reduce the complexity, no?
+>>
+> 
+> Hi Matt, 
+> 
+> Thanks for your explanation. I have a quick thought:
+> 
+> Can we check the 'subflow->send_mp_fail' in 'subflow_finish_connect'? like:
+> 
+> '''
+> ...
+>  543         if (subflow->request_mptcp) {
+>  544                 if (!(mp_opt.suboptions & OPTION_MPTCP_MPC_SYNACK)) {
+>  545                         if (!mptcp_try_fallback(sk,
+>  546                                                 MPTCP_MIB_MPCAPABLEACTIVEFALLBACK)) {
+>  547                                 MPTCP_INC_STATS(sock_net(sk),
+>  548                                                 MPTCP_MIB_FALLBACKFAILED);
+>  549                                 goto do_reset;
+>  550                         }
+>  551 
+>  552                         goto fallback;
+>  553                 }
+>              if (subflow->send_mp_fail)
+>                              goto fallback;
+>  554 
+> ...
+> '''
 
-Our CI did some validations and here is its report:
+I don't know: it doesn't feel right to check this field there. Sending
+the MP_FAIL reply and the infinite mapping in the same ACK, as you
+suggested, seems better.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/318095=
-07652
+> Or, check msk->fully_established in pm_fail_received like this:
+> '''
+> @@ -901,6 +898,12 @@  void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
+>  		subflow->send_mp_fail = 1;
+>  		subflow->send_infinite_map = 1;
+>  		tcp_send_ack(sk);
+> +
+> +		if (!msk->fully_established && !mptcp_try_fallback(sk, MPTCP_MIB_MPFAILFALLBACK)) {
+> +			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_FALLBACKFAILED);
+> +			mptcp_subflow_reset(sk);
+> +		}
+> ''' 
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/6a08e6ae9794
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1146131
+Paolo noticed (in another email from this thread) this will not cover
+the case we are trying to fix as we were already in fully_established.
 
+But maybe we could try to fallback if that's possible, and if checksum
+was not being used? I didn't check if it would be a good solution.
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+> Because the MP_FAIL specified in the RFC does not seem to actively trigger a fallback
+> on its own; instead, it is triggered via the infinite mapping. If we modify the
+> behavior of MP_FAIL in the regular path, I think it might be over-design and could
+> introduce additional risks. What do you think?
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Yes, but here, I'm only proposing doing a fallback for the cases not
+covered by the RFC, i.e. single subflow, no checksum.
 
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+I think the simplest solution should be picked for this use-case that
+shouldn't happen. Bounding MP_FAIL reply and infinite mapping in the
+same ack seems interesting, and not just for this case, but it might be
+"hacky" as you don't have an mpext in this case, no? Maybe a fallback is
+"cleaner"?
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
