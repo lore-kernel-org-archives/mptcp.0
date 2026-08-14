@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9FC12E739D
-	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 18:32:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93445322A1C
+	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 18:32:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786732323; cv=none; b=Lm7cTZpP57RDyxSqHh7qej2TvV1uZmjM8ASULd0YlHm10O41jUvZX4dEqs9ePo94mJH5RX7MQTMoy31QvLIntTTfqvQDju0ykT7cOaktPapk3dexSzRowEDnswlB6jtAiX8kvk9GwanDAayXKTwLRLaXWtRdpq0DJlaZMGwZ9Wk=
+	t=1786732324; cv=none; b=k1i2fNldkkWT1SbMSVCx0UuQmWYp9FdGonVhgcT5PrFfwbKWMzfehb3iG76Q1zwlp4ZmLGf6bMv5ct/XWa6ig+gdjFy0xh0bM4EwU8aZTOOd/txMEdB9BRujIaJ7LuVf2ExckFCei7lXvcq9Bcja0c7HbG+dIAhkrLashf1eJYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786732323; c=relaxed/simple;
-	bh=6GMPT6SJLHpHrvFsJ4Z/vVSp4NxCLpgqBghOY+mj9Jk=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=mfB/1p1o431J4D93sUW3qpEvnpi7YTfj7JP7igj2moH1qSc+M+Ms0fcbmDlZBWD4IW1AzQKs5b1dXEFmxJXuPJdDgL8cwG37ntdLq+sY0Rceasnr41jaA93HqNIprt1/hMwJn26pdtFeSz7lBMW2YSwlVKwgsSdNvNgnp4uIK98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WsGzZAkR; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786732324; c=relaxed/simple;
+	bh=JKSi61PYq6btF0W61cpn1wOtOhT9dBCpQWrKPKd0TnE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=jfh7KPeMSMW/5++Nl6nSkInK0VATATjpsDpqenL/qGV5jy3Cs1FD2Rwygsc8fxjOM9b7uxY4ApI3O3zGvUvFNcNWDTT+tgEVAcpkWW6mwNH7FUv//4mECIQqRF8wojF3VeverZuJAIAG/QpQ1CBuP0A3Oy/y1hqeVjv7MhWQ1DQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GtSOv5Xc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WsGzZAkR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ED881F000E9;
-	Fri, 14 Aug 2026 18:32:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GtSOv5Xc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 985281F00A3A;
+	Fri, 14 Aug 2026 18:32:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786732322;
-	bh=H8Zpys+4SMGWx/b5aaLknh1hZgr5BpzgB4LDu/0JQuY=;
-	h=From:Subject:Date:To:Cc;
-	b=WsGzZAkRrv/SnNJvrXmkvUZxxGlc7DJn2rXNBVDLcK3oNFz5AhA7N6VO6Gv8Un3fr
-	 zj12j5jDMTsQal3lgNWtPD+rgZPJM/ouSU+EUDqtHdZWx/fhM2qCAu5PF0GWsac/2m
-	 wS/ziQRV/mFFtqH01ZNLRf2Vexn5HhhBjdLeQNWZkm+8zY0tlYik/9t6EqXvnXqG21
-	 C9Go+nvv3GG3Ks9HT+sAQGJm4X3Ly4hICnW3SWscU1HWLlKE0y/wJJY6zv6BT60wHG
-	 vMydZYmxTTjSkf0WknO8ig4n3j3cKtfL9ADH+zGQ8bsX5ByUW+BGq9TLxviACQdG2H
-	 i/VENfsWh+icw==
+	s=k20260515; t=1786732323;
+	bh=SQzSHeEXcc2QMbJDhMOy02q3kXDY70jUfQSwMClm+L8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=GtSOv5XcdGUyZQ03gKJuawbYjBwrc71NaQNSkaTRIVvZ9F/GsOCSX/SzIwDwtqhHA
+	 LA7DrmAZeUP0QQIMqtjdGOzoGqSMar34e7fd3nK/IMYXjrvqJFKADBA3lyfaYzKIH9
+	 mwbZjdnhOsnhUpaHJob1c7D89/boPCchaPc9LTF7lkDIMautI7U0J4o8GXpUN0sl4K
+	 7BgK1WYCQkVDCPT7aYsUQJSrsP3ldVmmYgYfofzPoc8geWS9I0WL5UU7H909umSHg1
+	 BkYPIUSxFIQjV8GhzIZRtXpRScO11hkZpFnq7ET3VgoAbXA2gNHFHdOiS4bmBdZVUE
+	 N/Flru9c4jc7Q==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH mptcp-next RFC 0/3] mptcp: reset fully_estab after fallback
- & reject MPJ earlier
-Date: Fri, 14 Aug 2026 20:31:53 +0200
-Message-Id: <20260814-mptcp-reset-mpj-early-v1-0-3ca3260f9474@kernel.org>
+Date: Fri, 14 Aug 2026 20:31:54 +0200
+Subject: [PATCH mptcp-next RFC 1/3] mptcp: no longer fully_established
+ after a fallback
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,57 +38,51 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMwQrCQAxEf6XkbKBdilqvgh/gVTzUbKopul2SV
- Sql/+7W3uYx82YCYxU2OBQTKH/EZAgZqk0B9GjDnVF8ZnCl25b7qsZXTBRR2Tjl3CO3+vyiJ9r
- 52jfOdw1kNyp3Mv5/L7Aqgce0VOfTEa7rxN63nikt/zDPPxrYdK6MAAAA
-X-Change-ID: 20260814-mptcp-reset-mpj-early-dcc7d4d92df9
+Message-Id: <20260814-mptcp-reset-mpj-early-v1-1-3ca3260f9474@kernel.org>
+References: <20260814-mptcp-reset-mpj-early-v1-0-3ca3260f9474@kernel.org>
+In-Reply-To: <20260814-mptcp-reset-mpj-early-v1-0-3ca3260f9474@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: Paolo Abeni <pabeni@redhat.com>, 
  Chenguang Zhao <chenguang.zhao@linux.dev>, gang.yan@linux.dev, 
  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1399; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=6GMPT6SJLHpHrvFsJ4Z/vVSp4NxCLpgqBghOY+mj9Jk=;
- b=kA0DAAoWfCLwwvNHCpcByyZiAGp/Xx6jQRuccMl8EM4ffgVe23fAVNBn73hfkB3WjxKg6+9uJ
- Yh1BAAWCgAdFiEEG4ZZb5nneg10Sk44fCLwwvNHCpcFAmp/Xx4ACgkQfCLwwvNHCpeYnwD/VXXI
- RSqR/WTiGposmXn8qgJoJBeGG4ZaTuPUmGRMYv8BAN6NAoFjAjpSDroqIQ6JU4yMWNGY3cY8aou
- NgNjeIo8K
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1020; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=JKSi61PYq6btF0W61cpn1wOtOhT9dBCpQWrKPKd0TnE=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLq4+VidzcwM82sDZ35lGXmbTce/s1TlgrFKe4Rf++x4
+ oPBvLLqjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIkcDmBkmNAr5/Dt0Hn17tI/
+ hTHZJgU1DbXlM6ZzRT7Ze1xm24FLmYwMZz52zp2c9u3Q5kUaoUwHd73TPHM84xrLgQ5/AdFzOz6
+ k8gAA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Here is a small RFC series to present my idea: it seems better with some
-code than describing it.
+When a fallback is done, the MPTCP_FALLBACK_DONE bit is set, which is
+protected by the fallback lock. That's good, but while at it, the msk
+fully established state can also be reset, to easily prevent some
+operations.
 
-I suggest bailing out early when we can: reset the fully established
-when a fallback is done, then reject the MPJ earlier, and finally stop
-processing connections early with the in-kernel PM.
-
-I didn't check if any of those should be backported, probably not.
-
-Only very lightly tested.
-
-@Chenguang / @Gang: feel free to take over this series if you want to
-extend it, or if fixes are needed.
+This is just an optimisation to bail early in some situations: with the
+PM, or when receiving an MP_JOIN. This is not a protection that requires
+locks to avoid races: the fallback lock and other variables are there
+for that.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Matthieu Baerts (NGI0) (3):
-      mptcp: no longer fully_established after a fallback
-      mptcp: reject MP_JOIN earlier
-      mptcp: pm: kernel: skip operating on closing connections
+ net/mptcp/protocol.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- net/mptcp/mib.c                                 |  1 +
- net/mptcp/mib.h                                 |  1 +
- net/mptcp/pm_kernel.c                           | 16 +++++++++++-----
- net/mptcp/protocol.c                            |  1 +
- net/mptcp/subflow.c                             | 19 ++++++++++++++++---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 25 +++++++++++++++++--------
- 6 files changed, 47 insertions(+), 16 deletions(-)
----
-base-commit: d536472a82d18356d323227213acb5603bb9050c
-change-id: 20260814-mptcp-reset-mpj-early-dcc7d4d92df9
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index c2762d74f29d..a3982e4ed553 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -94,6 +94,7 @@ bool __mptcp_try_fallback(struct mptcp_sock *msk, int fb_mib)
+ 		return false;
+ 	}
+ 
++	WRITE_ONCE(msk->fully_established, false);
+ 	msk->allow_subflows = false;
+ 	set_bit(MPTCP_FALLBACK_DONE, &msk->flags);
+ 	__MPTCP_INC_STATS(net, fb_mib);
 
-Best regards,
---  
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+-- 
+2.53.0
 
