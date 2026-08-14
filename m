@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F354296BC8
-	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 01:22:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C42D31F98E
+	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 01:48:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786670549; cv=none; b=u2tuIraOOHoc28IVyjNwm+60UnVo9bjzeGzN31Z2vkeXpAiSGitStlqHlTiv9HLrbSJ1J8iF0EOO9zcZO81ov+X1y9xFUXc+eodZl01KA3KS9PvSowz9AEafXdbr1wgHd/k9Nu6H/NUm7lL52vgiVgeQNzQuqg3mv8hRtCSukw0=
+	t=1786672085; cv=none; b=Fle5USYsijAxZ2Rpl/ztO3xw0p5Utw8p+kid2txsa3FkGObqklh1BK1sKBiVnhF4j7+7JmLxHgaK1E6evnnkgc0htFnSzMy9zjk1LsiLFjoBVzWHQ//oLL2eKeIC91jCuSa7m4QRGeyGRbVeaSkjL/vMQVZCFf5sK9aJ5drtycg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786670549; c=relaxed/simple;
-	bh=w2Rm4Z5jAYFRcyhstEin3RaoaAmmD2xBkhjMGrneuFE=;
+	s=arc-20240116; t=1786672085; c=relaxed/simple;
+	bh=jbesiX7U93dOUZMW7NAXaqpbdayV8W8EbQDoctvs4J4=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=MOcVD5mjzMDYo0sVWfxeKRhgps0aRxUJBL/jD+4nsAY5NwyU7OD7lcqz5TpV29w0XGJP+Omo0UPQERwexVGECwfd2smClQ+KSqnRuJL0DG17T3KZHjhrne5xFnearZM0Wui0d9/JSyEICyDunpVcv5gQkQ8JTon8rB4kx90p+w0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YNNJ3YUq; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=IrBnHC1DzzSVb0KgpG7F4CM9S0r/E5eLfLbnid2f9ICpjzDrTLbxTeFGc8jLGaal1P37ozuJSBInZlG+z91d8kPnZ9/xjraGcqn+1/2Xl7Bfbr3wa+zV/T0qRsoKldAVhv+487o5701ZqEA9WZsRl8I1H3UHuQDPNM6TMykibOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GmlAQAOx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YNNJ3YUq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24BE01F000E9;
-	Fri, 14 Aug 2026 01:22:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GmlAQAOx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31BFC1F000E9;
+	Fri, 14 Aug 2026 01:48:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786670548;
-	bh=HFER4ltEfcVY+aKxCL4RxcNiiTx5JgKRfYEYUDcNG3M=;
+	s=k20260515; t=1786672084;
+	bh=3VOoWPO8FoL2kBeSPr7I2SCFgKsLmcKzgJGAU40WwPY=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References;
-	b=YNNJ3YUqQsp99B4QI7CVDG6tQEAnR14kePId3idotnaLCqkAeOIWE5zbwWrlRYsSU
-	 4rQWl+l6xcMDVjGO8CVoEX9nxwBW2u9sWWt9pgBYjK3491gPeXeW2B9knh5R/LMqKv
-	 cylejt1/juMkoDp9QeM+787VJnYgqU3cOwcuWYuriaeMntXIhMZrdPdAMQstHgZpq3
-	 JxJgeK3Yp+nkuF2pZQl/ntMSbh35AXJC+AKQxFS6GOulqCtO9wzjJetPJzQWTFn0FN
-	 BsNKERTfd2J7SY6xzPfqDS73ABvmhVliQ9po0S+91huVPffinAUev6U/I5PAXuOnQS
-	 5WMj+uM0SfIiw==
-Date: Thu, 13 Aug 2026 18:22:27 -0700 (PDT)
+	b=GmlAQAOxpcuMdlcnKExaMtw7e8yyRWVRnBdZck6hVbWN589nvroOG6e9GiQsfdf36
+	 D/v+6dnfbmOcziyZoHpvLyIOMRFKmStPwmDuWJ760Vk7Kv4h/LFU5yssh++omPqGHP
+	 e76m24cfsQhTuNuKGdJKUJc+Fi20LwyvWyVzwqWLyEnHNvhEoa66zUjvl/fO9/HlFu
+	 pDpON7UqPfGxxbogMROdSdoPpNPXBA+2nFZIsdYQzE/Bnj3lnGPpGv3urzIyahCqOQ
+	 UApXGtuMJ4kgMbEdJZV4Tr69MR4tkrdkXSNZQByg6oXmU9vTBSgKF5Hj8wBJ70SeEr
+	 ZpE/ucM6Xe1Zw==
+Date: Thu, 13 Aug 2026 18:48:03 -0700 (PDT)
 From: Mat Martineau <martineau@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 cc: MPTCP Linux <mptcp@lists.linux.dev>
-Subject: Re: [PATCH mptcp-net] mptcp: pm: reset retrans_time when ADD_ADDR
- entry is reused
-In-Reply-To: <20260805-mptcp-pm-reset-retrans_time-v1-1-19efbe17046d@kernel.org>
-Message-ID: <caa3dce5-940c-8068-8069-93bc3ac7896a@kernel.org>
-References: <20260805-mptcp-pm-reset-retrans_time-v1-1-19efbe17046d@kernel.org>
+Subject: Re: [PATCH mptcp-net v2] mptcp: options: handle MPC data + csum reqd
+ + no csum
+In-Reply-To: <20260805-mptcp-opt-mpc-csumreqd-no-csum-v2-1-dbb52e01a36d@kernel.org>
+Message-ID: <20f3ef05-aebd-84b0-55a6-8ed35c79d07b@kernel.org>
+References: <20260805-mptcp-opt-mpc-csumreqd-no-csum-v2-1-dbb52e01a36d@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -45,43 +45,63 @@ Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Wed, 5 Aug 2026, Matthieu Baerts (NGI0) wrote:
 
-> When an ADD_ADDR entry is reused, the timer is re-armed, because the
-> goal is to re-announce an ADD_ADDR, and eventually retransmit it if
-> needed.
+> Before this modification, a remote peer could send an MP_CAPABLE with
+> data, with the checksum flag set, but without adding the actual 2 bytes
+> of checksum. As a result, uninitialised bytes could be used for the
+> 'csum' field.
 >
-> In this case, the retransmission counter should be reset as well, so the
-> re-announced address gets its retransmissions back instead of relying on
-> what was left before, and possibly not being able to retransmit it.
+> That was not a critical issue, because this 'csum' field is only used to
+> compare with the expected one, if previously negotiated in the 3WHS.
+> Worst case, the checksum is likely wrong, a fallback is done without a
+> reject if the negotiation was done earlier. That's OK.
 >
-> Fixes: 304ab97f4c7c ("mptcp: allow ADD_ADDR reissuance by userspace PMs")
-> Link: https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20260803-net-mptcp-misc-fixes-7-2-rc6-v2-0-b8f496d71664%40kernel.org?part=4
+> Yet, better to take the expected path with this case: only look at the
+> checksum flag for MP_CAPABLEs not carrying a data-len.
+>
+> Such packet can be seen as a 3rd or 4th ACK. The RFC8684 mentions [1]
+> that the 3rd packet should have the checksum flag set. When an MPC + ACK
+> contains data, the checksum flag is redundant with the checksum field.
+> It is not clear what should be done for the 4th ACK, nor if the flag has
+> to be set if the checksum field is set.
+>
+> Therefore, it seems fine to only look at the presence of the checksum
+> field, not to break the interaction with stacks that were not setting
+> both.
+>
+> Fixes: 208e8f66926c ("mptcp: receive checksum for MP_CAPABLE with data")
+> Link: https://datatracker.ietf.org/doc/html/rfc8684#section-3.1-23 [1]
+> Closes: https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20260803-net-mptcp-misc-fixes-7-2-rc6-v2-0-b8f496d71664%40kernel.org?part=1
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > ---
-> net/mptcp/pm.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
+> Changes in v2:
+> - back to my pre-version, only set CSUMREQD for non MPC + ACK + DATA
+>  with a longer explanation about why it is OK. (Sashiko)
+> - Link to v1: https://patch.msgid.link/20260805-mptcp-opt-mpc-csumreqd-no-csum-v1-1-cb2ad0b9feac@kernel.org
+> ---
+> net/mptcp/options.c | 3 ++-
+> 1 file changed, 2 insertions(+), 1 deletion(-)
 >
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 5e499ec1c50a..e46abbda7d27 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -462,10 +462,10 @@ bool mptcp_pm_announced_alloc(struct mptcp_sock *msk,
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index e1b38fe5faf8..73cec164d8bd 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -93,7 +93,8 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+> 		 * In other words, the only way for checksums not to be used
+> 		 * is if both hosts in their SYNs set A=0."
+> 		 */
+> -		if (flags & MPTCP_CAP_CHECKSUM_REQD)
+> +		if ((flags & MPTCP_CAP_CHECKSUM_REQD) &&
+> +		    opsize < TCPOLEN_MPTCP_MPC_ACK_DATA)
+> 			mp_opt->suboptions |= OPTION_MPTCP_CSUMREQD;
 >
-> 	add_entry->addr = *addr;
-> 	add_entry->sock = msk;
-> -	add_entry->retrans_times = 0;
->
-> 	timer_setup(&add_entry->timer, mptcp_pm_add_addr_timer, 0);
-> reset_timer:
-> +	add_entry->retrans_times = 0;
-> 	add_entry->timer_done = false;
-> 	timeout = mptcp_adjust_add_addr_timeout(msk);
-> 	if (timeout)
+> 		mp_opt->deny_join_id0 = !!(flags & MPTCP_CAP_DENY_JOIN_ID0);
 >
 > ---
-> base-commit: 0715f5ba093a581def25b88da61c987b1719bc6d
-> change-id: 20260805-mptcp-pm-reset-retrans_time-8894830b0bd7
+> base-commit: 064fb643fcfcdddbad6da71da8f1ab206f018af7
+> change-id: 20260805-mptcp-opt-mpc-csumreqd-no-csum-3f145fa19c4d
+>
 
-Looks good to me, thanks for the fix.
+Yes, this looks like a good tradeoff between not breaking interaction with 
+other stacks while avoiding an invalid checksum.
 
 Reviewed-by: Mat Martineau <martineau@kernel.org>
-
