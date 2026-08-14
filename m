@@ -1,72 +1,73 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61DCB3CFF65
-	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 16:33:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6CF36B909
+	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 16:44:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786725230; cv=none; b=WK9OF0o+FEWdeuvUb9XlXI6iwQcYYtWOHOehAClEUqCa0/XsZ8duBnSKQWP7GgPXhZnW5R0HV9Jb93dPg4kXIBR5i2MUiNjtCvGRI+u3GhESFUZx1RzNgCovA7BIvPOJMoHZbZbGBUDQD8zeLAVY7NNJ3UnCXA3yutSEcf9rPUY=
+	t=1786725867; cv=none; b=MHd8eVX+eBoFhW7e4/rHYSIj7EFSJRV7DofrpB5exdHHferOjpuhAzVzbjsXmsp5yg0SHZv9q+gKaenzuUJs4FRca09PeLfhuoZYz6GWFxWOsSKu1OXEhJ8rPzFPioqK6MrlOL9pu9hptVgjlRuJzfY7eFXc+oeLORQHA6jYjHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786725230; c=relaxed/simple;
-	bh=pyHrc9bBxEomdl5XM9q/B52XkX59HhJnj27Srg6oQo4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JPxAjwS3dP0NmCNpkccqdLQaQEey4ldHiqiDGjM5LAX59Zs0tSWNdEX1EFNoen+wDH4QSS2p3NqHzreP/ZGg/Ug6yoDy4y1fLN85Dhn9DXj0OLmz5V/umot+2qdcrzGeRslIyjZok9vKRPUYxsk055tyTlKGD2Ox0/oFppbzslU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IB8A09tO; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1786725867; c=relaxed/simple;
+	bh=2qdD8Hz8W86PoPH7GKdCo3XU354V2bS0YSZBLNn4yWM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=E7BC+gFtlHwjvfRbVOMTWy/SOnOVEO4vvcMG4BAi8mWyYhRMnL1Wkdj28Ey5F44gly9xio1MduoIUJYcfSW5TB9RgniOuzaMHK4zupl23fc1NLOhlt5NaOq0qO9SLRv40IrA8GB2x3iAI8zGZbQLhX4NySqweSqyZPJQz/nMjGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HRSvyDH3; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IB8A09tO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HRSvyDH3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1786725227;
+	s=mimecast20190719; t=1786725864;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8WV9Wj4SCHBYhAbyzgDfM0gpgoEghIbZbNF8uqhfCQc=;
-	b=IB8A09tOsV0UZrnRHoR3O+VvsuTnpuelmyTugqPlbmrib70DTQX9vK4kGA5f484wilgQB3
-	1veMGr775/Q1LJoRmjCjR+R2rAUqxK6AtsvJhqRZMaXPvzhoaDlzlhOviGV4tJ2jf5Tivw
-	tnkBeMmJisjEyQUUe6t9kqG+ctI9Q+k=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=AEwT6bKeR3y4PmtycixGIkN4fzQk1HukSm3tdNuDY7I=;
+	b=HRSvyDH35uBZNRqh1mWK9BT9PNAa6m3lnjz7ZkP12XNV+A1Z/Q5H2ZFq5kzHKZXckHaJ+D
+	5tjJqWeQFIpHZGse8PtsQ4/0amXTR2UyOKQ5FlnRn/yfxcPv78vJRRezCXR6C9oSFmL8Uo
+	lnHmn0/9VvxXWzzzPLx2Dn4p5r9xFY4=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-479-7lT_R_S9NDGDd4hth9i7ZA-1; Fri, 14 Aug 2026 12:33:45 -0400
-X-MC-Unique: 7lT_R_S9NDGDd4hth9i7ZA-1
-X-Mimecast-MFC-AGG-ID: 7lT_R_S9NDGDd4hth9i7ZA_1786725225
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-47407691804so692570f8f.1
-        for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 09:33:45 -0700 (PDT)
+ us-mta-491-EwY1yTNWORK48dy9jGjZDA-1; Fri, 14 Aug 2026 12:44:23 -0400
+X-MC-Unique: EwY1yTNWORK48dy9jGjZDA-1
+X-Mimecast-MFC-AGG-ID: EwY1yTNWORK48dy9jGjZDA_1786725862
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4955843c6cdso10831115e9.1
+        for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 09:44:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786725225; x=1787330025;
+        d=1e100.net; s=20251104; t=1786725862; x=1787330662;
         h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=8WV9Wj4SCHBYhAbyzgDfM0gpgoEghIbZbNF8uqhfCQc=;
-        b=aTHby67u2qsQBTJuWNg2MvRtBzQn0cGDJMEoopBMcac0618mLBnjTm1SYL17Jck0EE
-         WAT5N7rcYYQjGFuAL1jbwsUmipcw1svaVHqKdAHVZatGrFoMJmulT9IK8ns7Vbf/cETn
-         UVxBTNfHEN7yssLkW2CHv3zT0GbvEv8Zy4R0997QVjHfHTP9nmK+gBWGNaIAPTTgcUUZ
-         6cCWcEvuPoFGuZk0H/LFNBLHJeWgOK9ZFHDfMeiKKkvMGXJnLrR6BqvXb7YPYf3okpuC
-         A6AwaKMkJz1c9O1xEPh3zEi8WTEKFktdLYlhS78UiCGfl9tgFLuCsmq9VTiIIfQmWQEF
-         CFtw==
-X-Gm-Message-State: AOJu0YwZyI0TkwNmj3qPDOWS92yZPcFp7rgasNycu4G/djz2Eo67nFxw
-	tpaBI4++3IWbRZHN2bhoyF1MRUo/kf/LjmAmbb5u3fTHvvNg2sxJqfJ+UqS+5+iqOpdo7Q34qx2
-	gW72RPcTgQwMom8dlyDLSIGRkWlqkty0iDIQ8YcJSRfILdPph+M/IVgAI
-X-Gm-Gg: AR+sD13GBHk8QeeWPDPQpWX8/tErmUjybiJQuO8kmcR0MTj9ATolIck2uizWTlSRbt5
-	ujsawWqdDX9KGxxcFRm9ccPwCBTjG96GI1NLnpbKieu1cP4pBrrvoms7+E4mSdr9xi4xjaEOat+
-	KFJAOZm+U5T91liltcTzA9a2/KqIT9tPR3dcjKRusbF7EzZx1ZGxQdXtUJhatkbaQVRCBkWw9/r
-	ZELURUxTCYgyaApPeme95xZb+vOp4Z0Oq2y/ZzVSF8qHwJKaPHeXND7M3kENpkt09mOsu2ukoq4
-	EcXhB52H+hsBoGKtXc/8gCdNSAi8cESdKiqwad0eYDXZqKgk2n69fG8XUXQ8WWn8ghzkfLTB/2P
-	4GJoMd5H+o87Xasw5dyW/6xLAMXVqL9qWP0jFmRu1EqdfG3c+O5EeGbIvPnQYt6l4J3D9a9UkRG
-	E=
-X-Received: by 2002:a05:600c:1395:b0:499:872b:abd4 with SMTP id 5b1f17b1804b1-4998797684cmr87803725e9.6.1786725224676;
-        Fri, 14 Aug 2026 09:33:44 -0700 (PDT)
-X-Received: by 2002:a05:600c:1395:b0:499:872b:abd4 with SMTP id 5b1f17b1804b1-4998797684cmr87803265e9.6.1786725224244;
-        Fri, 14 Aug 2026 09:33:44 -0700 (PDT)
+        bh=AEwT6bKeR3y4PmtycixGIkN4fzQk1HukSm3tdNuDY7I=;
+        b=EZUj075YXKZcx7GKlILv2OjpxvwQr/53Pt1qlsCjXPwjdWQaQfVyx+Ta1/t72kfZvC
+         /sjA6u0nJWeMmyKWN0vCFMwMgc5qBnzBQ0Ywj2PUmWMcKDbInDJlqVUrmNJPgnJNNQc8
+         cX5adKv63X9KEPyp8ZqFF8CuyFgR6M6A1+t3TjvOs1Ji5Mzti8k+ouzxvjL9b2NbBcVy
+         dkg8fmm2aZzoMNnptN6csy1thpeulJxwDaUcT/9s5qIuFIZyuaHp5VkiKs8qHOA1FzVA
+         x4l2SLMYygr6ill14vvji929kFmT+HESnabd5NzG6BJ2JS5o1/WTOLiwk6ofX40oRgyq
+         fDJQ==
+X-Forwarded-Encrypted: i=1; AHgh+RrPRkhgeLnE1X6XTfh1jkBvr1r4nagwHPuq2vb4imNkuGXAOoD8/8P4UQdLjgzXY3fUJD5iPw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyysfyZsbdvMgKw7s5YKzSSx18fz7C5zDoE0e7ceyiHF2FZBycH
+	34QLIMg9k7F6tCV1e/WlHF6lXHiJcQhTxHv5mCxHMZq0C7FXhgTxzTxX6aFvX5td5fvCx+Sr7pv
+	d6I6JBQqp8DraRk0io0wawxEpVnJFzYHBYI6lueQhW6cR+L5Ln6tfMD+2KVx4V4gr
+X-Gm-Gg: AR+sD10Fla57BrZMeHCWkFjAQvGeu8gnum8NAlwh5SUglUOsXEASdmckNC8mbpWEIBi
+	NH7AXirkbEZ2IVQUXtRAor+Pfdp4NIVi8/nbbJAeFyX+DQr4xcTA/Hy3tKYrvEBfvJgyI3r3t71
+	DCdCg8FsGx39ueWjWgo/R9mW4MZCEzG3DnH8df+kPiuK1MshMrQtHyfnJPQaSDdLYBCjFNQAdUl
+	zMgDz6e7dRHKJEVutaAkSCmoecZbYHFzahr0gah9ArViXJLx9UbzDtuxi6F5x/FshZB28VXMtv7
+	wg6zHkHDojFGRgHKQqFT0m6kr3Pg6QVnueWpK7rv+UJd9r5pCkeAjxd9yU4xA8xJqacVJ8DMBxj
+	ztm095Jr32ohvv5uoMT02GnArJOQ3+hZx3XK+wKFUQPMA9Q93TycJIwzVFMcnvaEoW3hyLx6dP+
+	o=
+X-Received: by 2002:a05:600c:8107:b0:499:60bf:c6f7 with SMTP id 5b1f17b1804b1-499879665ffmr116026535e9.13.1786725862295;
+        Fri, 14 Aug 2026 09:44:22 -0700 (PDT)
+X-Received: by 2002:a05:600c:8107:b0:499:60bf:c6f7 with SMTP id 5b1f17b1804b1-499879665ffmr116025915e9.13.1786725861899;
+        Fri, 14 Aug 2026 09:44:21 -0700 (PDT)
 Received: from [192.168.188.103] (ip239-44-231-195.pool-bba.aruba.it. [195.231.44.239])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-499899753ccsm45933325e9.0.2026.08.14.09.33.43
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-499899afa63sm43922225e9.1.2026.08.14.09.44.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Aug 2026 09:33:43 -0700 (PDT)
-Message-ID: <aa683b2d-264e-43bc-b98f-0b8728ad11e0@redhat.com>
-Date: Fri, 14 Aug 2026 18:33:42 +0200
+        Fri, 14 Aug 2026 09:44:21 -0700 (PDT)
+Message-ID: <b8ac43a1-d5f1-4498-8aae-dc87c2e3b437@redhat.com>
+Date: Fri, 14 Aug 2026 18:44:20 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -74,91 +75,62 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH resend mptcp-net 4/4] mptcp: do not reschedule the RTX
- timer for fallback sockets
-To: sashiko-reviews@lists.linux.dev
-Cc: mptcp@lists.linux.dev
-References: <cover.1786713351.git.pabeni@redhat.com>
- <59c6c4dd41bb72b7aef984b14a0c6ad0881f6a4c.1786713351.git.pabeni@redhat.com>
- <20260814140334.39D5B1F000E9@smtp.kernel.org>
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: print stats before socket
+ closure
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
+ MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260814-sft-mptcp-stats-b4-close-v1-1-2945a591be7e@kernel.org>
 From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20260814140334.39D5B1F000E9@smtp.kernel.org>
+In-Reply-To: <20260814-sft-mptcp-stats-b4-close-v1-1-2945a591be7e@kernel.org>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: JzAeGqyZOjvEGmlTZgkOQ03gsKyr7Tv28O67c_lnE7k_1786725225
+X-Mimecast-MFC-PROC-ID: h2NFBAxEit948MOY56ORBPTLHWMy3pHHcXIe6l0ZoO0_1786725862
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 8/14/26 4:03 PM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] The MPTCP_RTX_DISABLED flag makes the TCP_CLOSE state sticky for the RTX timer, permanently disabling retransmissions on reused connections and their accepted children.
-> --
+On 8/14/26 4:07 PM, Matthieu Baerts (NGI0) wrote:
+> In case of poll timeout, it might be too late to print the stats after
+> the socket closure.
 > 
-> --- Patch [4]: [PATCH resend mptcp-net 4/4] mptcp: do not reschedule the RTX timer for fallback sockets ---
-> commit 227375cb381dd3864273cd7170dd28e0f079ff8b
-> Author: Paolo Abeni <pabeni@redhat.com>
+> Now, in case of poll timeout, 'ss' and 'nstat' are invoked from
+> mptcp_connect to print the stats before exiting. This should help
+> debugging poll timeout issues.
 > 
-> mptcp: do not reschedule the RTX timer for fallback sockets
->     
-> This patch introduces the MPTCP_RTX_DISABLED flag to prevent the RTX timer
-> from being rescheduled on fallback sockets and when the socket state is
-> TCP_CLOSE.
+> Note: for this "workaround", system() is used for debugging purposes
+> only. The returned result can then be safely ignored.
 > 
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index b311fe30c7855..f22d64ab1c53b 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
-> [ ... ]
->> @@ -1121,13 +1122,14 @@ static bool mptcp_rtx_timer_pending(struct sock *sk)
->>  
->>  static void mptcp_reset_rtx_timer(struct sock *sk)
->>  {
->> +	struct mptcp_sock *msk = mptcp_sk(sk);
->>  	unsigned long tout;
->>  
->> -	/* prevent rescheduling on close */
->> -	if (unlikely(inet_sk_state_load(sk) == TCP_CLOSE))
->> +	/* Prevent rescheduling on close and in case of fallback. */
->> +	if (test_bit(MPTCP_RTX_DISABLED, &msk->flags))
->>  		return;
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+>  tools/testing/selftests/net/mptcp/mptcp_connect.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 > 
-> [Severity: High]
-> Since this flag is checked here to prevent rescheduling, will the timer be
-> permanently disabled if the flag is never cleared?
-> 
-> [ ... ]
->> @@ -3360,6 +3362,9 @@ void mptcp_set_state(struct sock *sk, int state)
->>  		 * transition from TCP_SYN_RECV to TCP_CLOSE_WAIT.
->>  		 */
->>  		break;
->> +	case TCP_CLOSE:
->> +		set_bit(MPTCP_RTX_DISABLED, &mptcp_sk(sk)->flags);
->> +		fallthrough;
->>  	default:
-> 
-> [Severity: High]
-> Does setting MPTCP_RTX_DISABLED here without a corresponding clear logic make
-> the TCP_CLOSE state sticky for the RTX timer? 
-> 
-> If an MPTCP socket transitions to TCP_CLOSE (like a failed connect() attempt
-> or an explicit disconnect()), and the application then reuses the socket to 
-> connect() again, it appears the flag will remain set.
-> 
-> Furthermore, if listen() is called on such a reused socket, would
-> sk_clone_lock() copy the flags to all child sockets? This could cause every
-> accepted connection to inherit the MPTCP_RTX_DISABLED flag, permanently
-> breaking MPTCP-level retransmissions for all clients.
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> index ea4cb6c1bd5e..842c0eb99aa9 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> @@ -210,6 +210,19 @@ static void xgetaddrinfo(const char *node, const char *service,
+>  	}
+>  }
+>  
+> +static void print_err_stats(void)
+> +{
+> +	char cmd[128];
+> +
+> +	snprintf(cmd, sizeof(cmd), "ss -Menitam -o '%cport = :%s' >&2",
+> +		 listen_mode ? 's' : 'd', cfg_port);
+> +
+> +	fprintf(stderr, "socket stats before socket closure:\n");
+> +	(void)!system(cmd);
+> +	(void)!system("NSTAT_HISTORY='/tmp/$(ip netns id).nstat' nstat -s | "
+> +		      "grep Tcp >&2");
 
-On nice, I did not read an hallucination this allucinated since a while...
-
-without disconnect() a closed socket can not transition to other non
-closed states, because the network-level ops check the 'struct socket'
-state, which in turn is cleared only by disconnect().
-
-mptcp_disconnect() explicitly clears msk->flags.
-
-No real issues above.
+Overall LGTM. I tried something similar in the past, but the correct
+redirection always fouled me. A couple of questions:
+- Is the '!' operator needed?
+- Can we avoid the pipe? with something alike the following:
+	(void)system("NSTAT_HISTORY='/tmp/$(ip netns id).nstat' nstat -s *Tcp*
+>&2");
 
 /P
 
