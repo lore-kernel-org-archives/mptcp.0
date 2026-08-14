@@ -1,107 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-216.mta1.migadu.com [95.215.58.216])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C42D31F98E
-	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 01:48:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47C71A9B24
+	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 03:02:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786672085; cv=none; b=Fle5USYsijAxZ2Rpl/ztO3xw0p5Utw8p+kid2txsa3FkGObqklh1BK1sKBiVnhF4j7+7JmLxHgaK1E6evnnkgc0htFnSzMy9zjk1LsiLFjoBVzWHQ//oLL2eKeIC91jCuSa7m4QRGeyGRbVeaSkjL/vMQVZCFf5sK9aJ5drtycg=
+	t=1786676546; cv=none; b=Q7suWKo+7ViK3nIzx7vG3jC5VjNOGlvKE88RSECwNQoFG4zG6tKuvH8PmX198ZaKhYaL4FILFb/7hH7WtLQ8uacj6do8txL9fJSRo26NYcSeypUJU11xop2qiyOWeS8EXNeeQiG8M7QGMbQzl8OseKCeYxeTPw2IX4cRFhvIGfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786672085; c=relaxed/simple;
-	bh=jbesiX7U93dOUZMW7NAXaqpbdayV8W8EbQDoctvs4J4=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=IrBnHC1DzzSVb0KgpG7F4CM9S0r/E5eLfLbnid2f9ICpjzDrTLbxTeFGc8jLGaal1P37ozuJSBInZlG+z91d8kPnZ9/xjraGcqn+1/2Xl7Bfbr3wa+zV/T0qRsoKldAVhv+487o5701ZqEA9WZsRl8I1H3UHuQDPNM6TMykibOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GmlAQAOx; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786676546; c=relaxed/simple;
+	bh=f5sZGFFv2NWqExHF887sPqI07rG9Sz2t1paDnl8nuWw=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=mFRmuV/Mu1w7cv9KWvhp98YMT5jsJDqTHw9YJVHB6nffDFYqwKlKksCz8Dd+Xpx7S4jaYeJX1SBvfUlrjyh6M3klgmuQcP5DKPjOFPL4KSJQrUwHlG9/b7789XDV6lozS30n0890YFFzxmaqvBgaK2GGk43R4P1NaNOYtoPqzrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QPa87MV6; arc=none smtp.client-ip=95.215.58.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GmlAQAOx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31BFC1F000E9;
-	Fri, 14 Aug 2026 01:48:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786672084;
-	bh=3VOoWPO8FoL2kBeSPr7I2SCFgKsLmcKzgJGAU40WwPY=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References;
-	b=GmlAQAOxpcuMdlcnKExaMtw7e8yyRWVRnBdZck6hVbWN589nvroOG6e9GiQsfdf36
-	 D/v+6dnfbmOcziyZoHpvLyIOMRFKmStPwmDuWJ760Vk7Kv4h/LFU5yssh++omPqGHP
-	 e76m24cfsQhTuNuKGdJKUJc+Fi20LwyvWyVzwqWLyEnHNvhEoa66zUjvl/fO9/HlFu
-	 pDpON7UqPfGxxbogMROdSdoPpNPXBA+2nFZIsdYQzE/Bnj3lnGPpGv3urzIyahCqOQ
-	 UApXGtuMJ4kgMbEdJZV4Tr69MR4tkrdkXSNZQByg6oXmU9vTBSgKF5Hj8wBJ70SeEr
-	 ZpE/ucM6Xe1Zw==
-Date: Thu, 13 Aug 2026 18:48:03 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-cc: MPTCP Linux <mptcp@lists.linux.dev>
-Subject: Re: [PATCH mptcp-net v2] mptcp: options: handle MPC data + csum reqd
- + no csum
-In-Reply-To: <20260805-mptcp-opt-mpc-csumreqd-no-csum-v2-1-dbb52e01a36d@kernel.org>
-Message-ID: <20f3ef05-aebd-84b0-55a6-8ed35c79d07b@kernel.org>
-References: <20260805-mptcp-opt-mpc-csumreqd-no-csum-v2-1-dbb52e01a36d@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QPa87MV6"
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=f5sZGFFv2NWqExHF887sPqI07rG9Sz2t1paDnl8nuWw=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1786676541; v=1; x=1787281341;
+ b=QPa87MV66oEVPXh4frvYIrzGiCYI5iRR4blh094pkFkYOYdktFR6TVgh8mGWQKy6xnyTKLKK
+ NssmkCqDI4vJjQUWICFHp/1OYyippwa1IzIV732GM9x4BYxXAw6aZyDGtvfSC7UHJOr1rCeW8c9
+ A/+xOvJnaRG7hJQanN0JpGG0=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: from webmail.migadu.com (2001:41d0:303:fc7a::)
+	by mta12.migadu.com with ESMTPS id a3ea009933ca1d90;
+	Fri, 14 Aug 2026 03:02:21 +0000
+X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Date: Fri, 14 Aug 2026 03:02:21 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+From: gang.yan@linux.dev
+Message-ID: <3c9241d11965180046042f4c6079ebb1e38b54dd@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH export v3 2/4] mptcp: reject joins after fallback in
+ mptcp_is_fully_established
+To: "Matthieu Baerts" <matttbe@kernel.org>, "Paolo Abeni"
+ <pabeni@redhat.com>, "Chenguang Zhao" <chenguang.zhao@linux.dev>,
+ mptcp@lists.linux.dev
+Cc: "Chenguang Zhao" <zhaochenguang@kylinos.cn>
+In-Reply-To: <db6bd87f-f7cd-4b02-a471-db549cbca384@kernel.org>
+References: <20260812054653.43799-1-chenguang.zhao@linux.dev>
+ <20260812054653.43799-3-chenguang.zhao@linux.dev>
+ <1d7c56b9-00c1-4550-a403-c3d704259267@redhat.com>
+ <41078a8c-00c7-4cb1-8e57-237b4ea6c2f0@kernel.org>
+ <564cb027be5e7972fc8f6f976707628ee32f38aa@linux.dev>
+ <db6bd87f-f7cd-4b02-a471-db549cbca384@kernel.org>
 
-On Wed, 5 Aug 2026, Matthieu Baerts (NGI0) wrote:
+August 14, 2026 at 1:42 AM, "Matthieu Baerts" <matttbe@kernel.org mailto:=
+matttbe@kernel.org?to=3D%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org=
+%3E > wrote:
+>=20
+>=20In addition, in the case we are trying to fix here, the MP_FAIL is
+> received before switching to fully established: the RFC doesn't explain
+> this particular case, but it sounds like there is no need to send the
+> infinite mapping, and a fallback can be done directly *I think*. The
+> thing is this situation shouldn't happen: we are not supposed to receiv=
+e
+> an MP_FAIL at that stage, no data has been exchanged at the MPTCP level=
+,
+> so let's do the minimal -- i.e. just a fallback -- to avoid issues and
+> reduce the complexity, no?
+>=20
 
-> Before this modification, a remote peer could send an MP_CAPABLE with
-> data, with the checksum flag set, but without adding the actual 2 bytes
-> of checksum. As a result, uninitialised bytes could be used for the
-> 'csum' field.
->
-> That was not a critical issue, because this 'csum' field is only used to
-> compare with the expected one, if previously negotiated in the 3WHS.
-> Worst case, the checksum is likely wrong, a fallback is done without a
-> reject if the negotiation was done earlier. That's OK.
->
-> Yet, better to take the expected path with this case: only look at the
-> checksum flag for MP_CAPABLEs not carrying a data-len.
->
-> Such packet can be seen as a 3rd or 4th ACK. The RFC8684 mentions [1]
-> that the 3rd packet should have the checksum flag set. When an MPC + ACK
-> contains data, the checksum flag is redundant with the checksum field.
-> It is not clear what should be done for the 4th ACK, nor if the flag has
-> to be set if the checksum field is set.
->
-> Therefore, it seems fine to only look at the presence of the checksum
-> field, not to break the interaction with stacks that were not setting
-> both.
->
-> Fixes: 208e8f66926c ("mptcp: receive checksum for MP_CAPABLE with data")
-> Link: https://datatracker.ietf.org/doc/html/rfc8684#section-3.1-23 [1]
-> Closes: https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20260803-net-mptcp-misc-fixes-7-2-rc6-v2-0-b8f496d71664%40kernel.org?part=1
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> Changes in v2:
-> - back to my pre-version, only set CSUMREQD for non MPC + ACK + DATA
->  with a longer explanation about why it is OK. (Sashiko)
-> - Link to v1: https://patch.msgid.link/20260805-mptcp-opt-mpc-csumreqd-no-csum-v1-1-cb2ad0b9feac@kernel.org
-> ---
-> net/mptcp/options.c | 3 ++-
-> 1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index e1b38fe5faf8..73cec164d8bd 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -93,7 +93,8 @@ static void mptcp_parse_option(const struct sk_buff *skb,
-> 		 * In other words, the only way for checksums not to be used
-> 		 * is if both hosts in their SYNs set A=0."
-> 		 */
-> -		if (flags & MPTCP_CAP_CHECKSUM_REQD)
-> +		if ((flags & MPTCP_CAP_CHECKSUM_REQD) &&
-> +		    opsize < TCPOLEN_MPTCP_MPC_ACK_DATA)
-> 			mp_opt->suboptions |= OPTION_MPTCP_CSUMREQD;
->
-> 		mp_opt->deny_join_id0 = !!(flags & MPTCP_CAP_DENY_JOIN_ID0);
->
-> ---
-> base-commit: 064fb643fcfcdddbad6da71da8f1ab206f018af7
-> change-id: 20260805-mptcp-opt-mpc-csumreqd-no-csum-3f145fa19c4d
->
+Hi=20Matt,=20
 
-Yes, this looks like a good tradeoff between not breaking interaction with 
-other stacks while avoiding an invalid checksum.
+Thanks=20for your explanation. I have a quick thought:
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+Can we check the 'subflow->send_mp_fail' in 'subflow_finish_connect'? lik=
+e:
+
+'''
+...
+ 543         if (subflow->request_mptcp) {
+ 544                 if (!(mp_opt.suboptions & OPTION_MPTCP_MPC_SYNACK)) =
+{
+ 545                         if (!mptcp_try_fallback(sk,
+ 546                                                 MPTCP_MIB_MPCAPABLEA=
+CTIVEFALLBACK)) {
+ 547                                 MPTCP_INC_STATS(sock_net(sk),
+ 548                                                 MPTCP_MIB_FALLBACKFA=
+ILED);
+ 549                                 goto do_reset;
+ 550                         }
+ 551=20
+=20552                         goto fallback;
+ 553                 }
+             if (subflow->send_mp_fail)
+                             goto fallback;
+ 554=20
+...
+'''
+
+Or,=20check msk->fully_established in pm_fail_received like this:
+'''
+@@ -901,6 +898,12 @@  void mptcp_pm_mp_fail_received(struct sock *sk, u64=
+ fail_seq)
+ 		subflow->send_mp_fail =3D 1;
+ 		subflow->send_infinite_map =3D 1;
+ 		tcp_send_ack(sk);
++
++		if (!msk->fully_established && !mptcp_try_fallback(sk, MPTCP_MIB_MPFAI=
+LFALLBACK)) {
++			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_FALLBACKFAILED);
++			mptcp_subflow_reset(sk);
++		}
+'''=20
+
+Because=20the MP_FAIL specified in the RFC does not seem to actively trig=
+ger a fallback
+on its own; instead, it is triggered via the infinite mapping. If we modi=
+fy the
+behavior of MP_FAIL in the regular path, I think it might be over-design =
+and could
+introduce additional risks. What do you think?
+
+Thanks
+Gang
+
+> Cheers,
+> Matt
+> --=20
+>=20Sponsored by the NGI0 Core fund.
+>
