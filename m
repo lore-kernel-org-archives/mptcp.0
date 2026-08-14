@@ -1,73 +1,73 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CF24192EF
-	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 08:02:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B618296BBC
+	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 08:43:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786694569; cv=none; b=bit++3RfVXcWThrJvKM6Uv7g2GQXt0JHVgP5lN6j3c1WecPeObZsW9DMEa8y9MME5POZJYG+Bz3PcIE2uh9ejagX7gU3EeCf6sp1L6L5XpivU30+peqMfDEXJtnVPt7kVa/iw32iCMOcxndV+Fiy0VwYLEK+gjBrvXSnTPMX21c=
+	t=1786697020; cv=none; b=sda6JWohhve0Z6eFXDWvJbvW6WVYgMToHqYlIEc8dVStQR3fpA/tHkVn/iimzlYsYnfUCgjgM89eDbzs567v4N8mq7L5DzJ1UMVTtZjz8NGi7Hl/juToPnlvw9MdxlLXu+nLK+60AOQbm4yhBihYYXALTjcwsYgePZPVKYcsSAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786694569; c=relaxed/simple;
-	bh=L8KCXFXuLdsozsNqKqCpOIh895yoHYeyMGAl9+gzScI=;
+	s=arc-20240116; t=1786697020; c=relaxed/simple;
+	bh=RbB7FAPSPw78GnduUkMavqnXRtg5PUeU+EfUAgiTVgs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C8iOqYemeYaunWDqMoj2/MJdx2AxAZuuh+v3OiWeRK/LbCmWujR4QLWihgYfYlSeYSEZdHlZY94DrS8vkvzE2uk1s4W7JrNdt5HLogUAxqfeZxX4ZS24frATRxfWie5GBir1f8Lm2cINdqTVgItu6OQimcNBaTVaULs58voy8/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BSkK9xJ0; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=AYyZRhczOYNRLionhhqyqSHepbsErwHDO9CTi1Dz6xYRDD57tX6XjHZ4d0+QCrm17s4gjIo53/WpSTTOex42zORpR3cP+GlPebm2wglOCczgDi/1L2qFczozXRSCXHe7MoZfK+t763PMUjRw6r5w7MHbkWUTvrvajrCNS1pAg1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LybZe6y+; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BSkK9xJ0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LybZe6y+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1786694566;
+	s=mimecast20190719; t=1786697014;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nLpMGj0pQGhJ1cyaYBf6c5UqVZN5Sm2Ptah1UzyzRUE=;
-	b=BSkK9xJ0v35TIFknAi7dQiXZz7uplBbce8uXJeS5H25xT2blY+aDw+OeuzCTgCNUH8Vyaw
-	COxv6uog8WPP6mIvev9F8oVU6LdgU/iLrEDUzHtTIQTvooOx0LmvEc8CBt+GPDHIrOdgrF
-	kRXDbuucHQ3zJlxSVfpkT7ZchH6cktE=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=csqBPbWTydWprTHrOJsU75P5NUCC31Pg/DaVYG9ciHA=;
+	b=LybZe6y+0nT8CAhB4jrx29qTE+9LVTUrKb+mDDLFR0rMOblNyhWZQ1DI2sMXmsVRQmfZV0
+	v/A0ZsQGVHLpLM1wlEJqS4TQmj6EaMwVsnTl08al0qZioV8XZ23G9LK/cq/YMfl9NIp5z+
+	SGhGPjky6+YZYFBcjkVnNDVOoTwgEus=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-411-D0L8eT-zMPa1wU77Pk8RKQ-1; Fri, 14 Aug 2026 04:02:43 -0400
-X-MC-Unique: D0L8eT-zMPa1wU77Pk8RKQ-1
-X-Mimecast-MFC-AGG-ID: D0L8eT-zMPa1wU77Pk8RKQ_1786694562
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-490a767b782so5536425e9.2
-        for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 01:02:42 -0700 (PDT)
+ us-mta-639-aRvH5zPyPkuhGBDvtOXfdA-1; Fri, 14 Aug 2026 04:43:27 -0400
+X-MC-Unique: aRvH5zPyPkuhGBDvtOXfdA-1
+X-Mimecast-MFC-AGG-ID: aRvH5zPyPkuhGBDvtOXfdA_1786697007
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-47faa02f707so478274f8f.1
+        for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 01:43:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786694562; x=1787299362;
+        d=1e100.net; s=20251104; t=1786697006; x=1787301806;
         h=content-transfer-encoding:content-type:in-reply-to:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=nLpMGj0pQGhJ1cyaYBf6c5UqVZN5Sm2Ptah1UzyzRUE=;
-        b=jM7zrd0TBg6CKSXNvEXFNvcbE9UU4F6JN+32r1LRTZ9cK6uC3k7fMHU+a5bnColHnZ
-         B3ws0GODE6PcJkJAv3Jegg8vHtfyNnlsissYqs21w1A7H87G9TT27GnhPpzhVCG5ca6u
-         0wyCmhTJsANiRoQQnTGTvElEt1EQHlBl8B4TZ5tbFtE7dP0d6BaDa2hkwfVoSIP0sujz
-         1gKVF1ikF5TuwwPL8iahPBBuetHYuW1VcYogU7M2zC3o8hhCjdYNuQa3hiFmZoZYhO0I
-         6sbC/4cpU344VcWZyHnKVCiNm9vrx0sARzS3az02nwh6A6etMVFUXk2+ywW8Nbo16LuN
-         +TzQ==
-X-Forwarded-Encrypted: i=1; AHgh+RouWaRljhgREB/vzd03cXNo+2sLP2jQO3jk9EE/wTyt2r2/XWSsvdvcDb7DHVMwwPJiDdcTpg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzj1ZT2Hc5UJU4kitnfQJkpMTScTMO3KeJJlEfXUFls0X0ci/T/
-	C6Q1GYDHOUGchBVOvIwQE6I+bQquX/Q6rUIHktGF9QeEO4D8FaXcmnCh7C0Hb1cSnYj1qaKOh7I
-	DnKrkIYJBGxxZqVUf9uy1EjBtNA9Nxiw71X6IpDTeYS1SNe/ruGRiRhQF
-X-Gm-Gg: AR+sD11LE9bapraOoNWoiz92M3ia/dgdzHS0aIPAjyfr149joN+9EJ+daPW9j6vQIPM
-	6bPrLPuNQtUACFqg01NwUUgcqS3JGE4go+2nUBx7Mog8ifeKUImAtarI9KzBiHPYui8HOwkpBZi
-	9fiSZLXOmVxo17AYXL4RiUgvW5JcLdjzZZYdqL6NLQzyj3n+aA6WeOa5Zau2XwijEFp74uUCd98
-	Hp5zfFJKj3qw1N+6gHUOD2z0vLn2U7EjU7+PaKfOFJirvAzng3T/uLIQREZ3dpgKyJCzLo8VdEJ
-	5VwJt06A2QbOaUDybZqLSbe9YKMeNY9Tt/VablQ2bh3M9QHeaazuHNrP81wnBQ+fVtLTDrlRH9R
-	J5n1tbtqEuHfP4VVqFQuq1Hp1gqIcGH/nSppc2zYYzd1wnr3sEVOEDZ/0dfpNOlZeyy8kBdmJ0X
-	c=
-X-Received: by 2002:a05:600c:4003:b0:495:3de8:33a6 with SMTP id 5b1f17b1804b1-4998798db40mr41763655e9.16.1786694561629;
-        Fri, 14 Aug 2026 01:02:41 -0700 (PDT)
-X-Received: by 2002:a05:600c:4003:b0:495:3de8:33a6 with SMTP id 5b1f17b1804b1-4998798db40mr41762845e9.16.1786694561180;
-        Fri, 14 Aug 2026 01:02:41 -0700 (PDT)
+        bh=csqBPbWTydWprTHrOJsU75P5NUCC31Pg/DaVYG9ciHA=;
+        b=Iu9CH1vO3aA8U5edsY478CkTbf0kkvuIC5HlWynv3Mle6Akx+kTfy1GLH7LtyJdOwk
+         m5NUtqcn4jf4EJfE2xXgNRvHyVGoriH73LUjJXtcQWQni2Bd6oGEZL6sJcAqlrz99EvT
+         i1Px+Wc0+SNhouMjcVComlPw3NImsy5x0Jf+o3Z4YsBBBVxt4NQoI/xixgiwm5SX+MkK
+         lprcrJ1ilNdsrhVv3i7xkijOBaGLyNRwMC0P65le11JU9siYaUGg0QAl62q4LklXLnZ6
+         H+FizoVt9y7tq+C4n6Zls/uXaIlj3qOl1pedk3rn2H5Gq6V5I1xhtFKDSIx2xQ9ExvQ6
+         EHRw==
+X-Forwarded-Encrypted: i=1; AHgh+RpanmpQC7884kJc141KheT5ZHrQ8ApDEIEe9PXaAMUTg/ympv1J/HjfP0BGggHj1IuDjVDaZQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx/1IVBIts/UNavjLXOuLaS7PLs55iLaCRVmVrZnwXKy4FzsZug
+	oGciPazFkUy+OF/kh3jKm1lAcJwIR80wf8DmsqO+FNfebZ2yVjTgJM0cYEUHRYkloEGuMMNcrbn
+	dq6O27eo/wQNX6lnWpFxlYGnhQfpUV+gyualcN8YFzG3Rd8pbkmEMPvbA9ABTIdV5
+X-Gm-Gg: AR+sD12GnoOmaGIZqmoVZmyuW4q1HFNEXpdBs0yNRMTL1OyMvkPloJtWi4FJP6G+PXv
+	b4DEUU+Z2Td2/thHApJJv+3Us4+T1Sz0uY8jlgLzkHf0AhvrsSUe5W+jKcLHXA6NVZCik0i0w/A
+	H0Q7LxJC44u0zh1uI8t8C184v8Q62o8EcGcPFZ2dTqLXz59SqXdTUGCbbDbw0fhf3I2mqn37d/u
+	pvEQfyLu/Lbvwg4guQi8+DAE62iys25q/IRUariMs0RFSVcLU26KF7JuWCLLG/oSy5mOwAMoraE
+	Xwess6ixDPE8rwojp9vuQY4A3pqquCDN55OYFLTboz2WYMdB4pfXExOGEEE1cjtMOSydDeKy4Fd
+	zRgsI9wM22G1YqkKtOGWUSbm2tE4C8Ld9+9zYhy/zNoI6y8a/ZyG/EKNYfNHYLqSNVp57LfjH8O
+	M=
+X-Received: by 2002:a05:6000:4006:b0:47f:8fda:1af0 with SMTP id ffacd0b85a97d-4815a4e7281mr16710408f8f.4.1786697006580;
+        Fri, 14 Aug 2026 01:43:26 -0700 (PDT)
+X-Received: by 2002:a05:6000:4006:b0:47f:8fda:1af0 with SMTP id ffacd0b85a97d-4815a4e7281mr16710338f8f.4.1786697006112;
+        Fri, 14 Aug 2026 01:43:26 -0700 (PDT)
 Received: from [192.168.188.103] (ip239-44-231-195.pool-bba.aruba.it. [195.231.44.239])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49988b25625sm31696485e9.13.2026.08.14.01.02.40
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4815f2c1307sm6513373f8f.27.2026.08.14.01.43.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Aug 2026 01:02:40 -0700 (PDT)
-Message-ID: <e039e866-fe7e-41ef-ad41-92a76a123713@redhat.com>
-Date: Fri, 14 Aug 2026 10:02:39 +0200
+        Fri, 14 Aug 2026 01:43:25 -0700 (PDT)
+Message-ID: <643936d9-5da2-45cc-b108-f7c2e7785044@redhat.com>
+Date: Fri, 14 Aug 2026 10:43:24 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -75,79 +75,82 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net v3] mptcp: bpf: fix NULL deref and UAF in
- bpf_mptcp_sock_from_subflow()
-To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>, mptcp@lists.linux.dev,
- Geliang Tang <geliang@kernel.org>
-Cc: matttbe@kernel.org, martineau@kernel.org, shardul.b@mpiricsoftware.com,
- janak@mpiric.us, kalpanjani009@gmail.com, shardulsb08@gmail.com,
- akshit@mpiricsoftware.com
-References: <20260629105020.1670781-1-kalpan.jani@mpiricsoftware.com>
+Subject: Re: [PATCH export v3 2/4] mptcp: reject joins after fallback in
+ mptcp_is_fully_established
+To: Matthieu Baerts <matttbe@kernel.org>,
+ Chenguang Zhao <chenguang.zhao@linux.dev>, mptcp@lists.linux.dev
+Cc: Chenguang Zhao <zhaochenguang@kylinos.cn>
+References: <20260812054653.43799-1-chenguang.zhao@linux.dev>
+ <20260812054653.43799-3-chenguang.zhao@linux.dev>
+ <1d7c56b9-00c1-4550-a403-c3d704259267@redhat.com>
+ <41078a8c-00c7-4cb1-8e57-237b4ea6c2f0@kernel.org>
 From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20260629105020.1670781-1-kalpan.jani@mpiricsoftware.com>
+In-Reply-To: <41078a8c-00c7-4cb1-8e57-237b4ea6c2f0@kernel.org>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: an0slW-tnXhok3RFhgZWtv5MMYl9_QZ3U-7CkBPurQc_1786694562
+X-Mimecast-MFC-PROC-ID: HT-zVoqQRIliTq3Cli1Vm9uu_TojPh0qj2_zOw0NjBo_1786697007
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 6/29/26 12:50 PM, Kalpan Jani wrote:
-> bpf_mptcp_sock_from_subflow() is reachable from tracing BPF programs via
-> bpf_skc_to_mptcp_sock() on an arbitrary socket, without the subflow
-> socket lock held. It assumes sk_is_mptcp(sk) implies a valid subflow
-> context whose ->conn points to a live parent mptcp_sock. That invariant
-> does not hold in several windows:
+
+
+On 8/12/26 5:32 PM, Matthieu Baerts wrote:
+> Hi Paolo, Chenguang,
 > 
-> - Fallback: subflow_ulp_fallback() clears icsk_ulp_data before clearing
->   tcp_sk(sk)->is_mptcp, so a reader can observe is_mptcp == 1 with a NULL
->   context and dereference mptcp_subflow_ctx(sk)->conn through NULL.
+> On 12/08/2026 11:45, Paolo Abeni wrote:
+>> On 8/12/26 7:46 AM, Chenguang Zhao wrote:
+>>> From: Chenguang Zhao <zhaochenguang@kylinos.cn>
+>>>
+>>> After fallback, treat the connection as not fully established so later
+>>> MP_JOIN attempts are rejected.
 > 
-> - Init: subflow_ulp_init() sets is_mptcp = 1 while ->conn is still NULL;
->   on CONFIG_DEBUG_NET, mptcp_sk() dereferences its argument in a
->   WARN_ON(), so mptcp_sk(NULL) faults.
+> @Chenguang: please first reply to the questions and comments from the
+> previous versions, then only send a new version when the discussions are
+> over.
 > 
-> - Publish: the passive MPC path in subflow_syn_recv_sock() stored the
->   freshly cloned parent into ->conn with a plain assignment, on a child
->   that is already hashed and globally visible. A lockless reader could
->   observe a non-NULL ->conn before the stores initialising the new
->   mptcp_sock were visible.
+>>> Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
+>>> ---
+>>>  net/mptcp/protocol.h | 5 ++++-
+>>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+>>> index 7e168e450fb0..bf2483a7ed92 100644
+>>> --- a/net/mptcp/protocol.h
+>>> +++ b/net/mptcp/protocol.h
+>>> @@ -957,8 +957,11 @@ static inline void mptcp_start_tout_timer(struct sock *sk)
+>>>  
+>>>  static inline bool mptcp_is_fully_established(struct sock *sk)
+>>>  {
+>>> +	struct mptcp_sock *msk = mptcp_sk(sk);
+>>> +
+>>>  	return inet_sk_state_load(sk) == TCP_ESTABLISHED &&
+>>> -	       READ_ONCE(mptcp_sk(sk)->fully_established);
+>>> +	       READ_ONCE(msk->fully_established) &&
+>>> +	       !test_bit(MPTCP_FALLBACK_DONE, &msk->flags);
+>>
+>> Does the above improve actually anything? The test is inherently racy,
+>> as lack the fallback_lock, and AFAICS all critical paths have already
+>> explicit checks under such lock, see i.e.  mptcp_finish_join().
 > 
-> - Teardown: subflow_ulp_release() and mptcp_subflow_drop_ctx() dropped
->   the subflow-owned parent reference with sock_put() without clearing
->   ->conn, and the established parent msk was not SOCK_RCU_FREE, so a
->   lockless reader could dereference a freed parent: a use-after-free.
+> Indeed, the fallback lock is missing.
+> 
+> Note: Chenguang is looking at a bug where, when an MP_FAIL is received
+> before being in fully_established, the kernel accept going to fully
+> established, and creating new subflows, then reject them once done.
+> 
+> Same when receiving a 4th packet without MPTCP options.
 
-I think we should expose to tracing program arbitrary socket state
-locklessly.
+It's not clear to me what actually goes wrong and how. Do you have handy
+a event sequence or stack trace demonstrating the critical scenario?
 
-@Geliang: what about just removing such possibily? Something alike the 
-following (completely untested).
+Both the above look like bugs in check_fully_established(), or
+incorrect/later check of fallback status/fallback_lock.
 
-If a tracing bpf program needs to access the msk, it should do just:
-
-	mptcp_sk(sk)
-
-on the main socket, via a new, to be defined/implemented helper, and
-_non_ starting form a subflow.
-
-AFAICS all the other accessors using from tracing are simple casts,
-like the above, and do not traverse the rather risky ulp layer.
+i.e. AFAICS active subflows are created and added to the conn_list
+without checking the fallback status/fallback_lock, but the later join
+correctly rejects the subflow finalization, so there should any real
+problems beyond some noise.
 
 /P
----
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 75495a5c3507..ad4b8d04b190 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1745,8 +1745,6 @@ tracing_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_skc_to_udp6_sock_proto;
- 	case BPF_FUNC_skc_to_unix_sock:
- 		return &bpf_skc_to_unix_sock_proto;
--	case BPF_FUNC_skc_to_mptcp_sock:
--		return &bpf_skc_to_mptcp_sock_proto;
- 	case BPF_FUNC_sk_storage_get:
- 		return &bpf_sk_storage_get_tracing_proto;
- 	case BPF_FUNC_sk_storage_delete:
-
 
