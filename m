@@ -1,131 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2237F377AB6
-	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 09:35:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950AD3382F4
+	for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 10:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786700150; cv=none; b=tcdi6Ot3+AufqXA/6VMMGtOCAjGs6clK8O+jSvqYj1gS/xbsRFij6YOlrf/BquyUxrAdbbh1pmdwwrrneUsz+oOHNtfWywJSh9KtTzD1ulVAmIF6Q8K+4evSNDstspFIB58l2pi4Pwhf/OWoUvTAcZofec4D3BZB+OhqC+YtwqM=
+	t=1786704620; cv=none; b=HfKbZYHwO1MCmgTK7/zQG6ccydImNBrxRtcL9nwwqlwIxVMVLlkzWVIuTXDnwZw3Ob21biU21eiM0x3rKOb7V/CYL6yUJsxclFGM7pxQLVrio5bWg+fNRkg+2KS38OUeRBAe5c+51o5d++k6qvqwW7KR9wArrzxb7vlJtIeLgjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786700150; c=relaxed/simple;
-	bh=oVK3gBHodAwrzp6+29E23gGAeqReFZvU1EPKNMAMHSE=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=BgXTVLfCvHZGbK/GBH0blkMyzgmpiQoACHqsjz0fDqy7DwmXM14y/l4Ei0tRuFgtO7B0HbRxdqXaKc1x8/nw7x/Mt2opXcOK5lfVeEDTukoHz+uFTYiqDtNPljfLA+GdFewFw+nq8dcDQhiAlxzrLdvND7avzspMkGu44LxWbpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h2NM7Ki/; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786704620; c=relaxed/simple;
+	bh=brE5PsMDvz1ds7vdKb915DUqNmKHS2M9356iNLHaBdM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MPKENPhLs4nA83ADoc+jZWwUt3OeNCNvW3W7lOrE9IUOfFlSt8K8vcd5xJr1ejRb1dsF4zskLruBwMjkGdNjRy+BpVMOcForFk9d9/P+42vNc0T+UAJFCS0SRV1KV2vS8r2ZxD9pxXlL2G4tFgSMldHYVnrA2Qy1eCRs1294jrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UMnRJVhs; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h2NM7Ki/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DA6E1F000E9;
-	Fri, 14 Aug 2026 09:35:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786700146;
-	bh=oVK3gBHodAwrzp6+29E23gGAeqReFZvU1EPKNMAMHSE=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=h2NM7Ki/KID2ozwmL7EhHhCTJduXyFKsxUF8IbLiD60fXy//AEjomgtzkqFC/7MyD
-	 1wIUbSAmuzbm57y4Nw08xfkLCjqhxbuCar+iKuLfBnx34ncxVASXqOan/yJkFXkQNV
-	 nB6+SksUL0lvQBedacVi78R6ud0qxQU0+FvchGD5aZ/jiiQYryX+z2Cq/wC8yjEx7H
-	 8INK6jo4ZqhTxok3rRpgKsVaK4gghdi0Ko47SZH5VuZDOACOWpxfznB7GX0teEsMf1
-	 18vSTjfhlUlQKiOsoZjn95ws6NE132oTTIl1O+SBSNOK+VWnycg4bDuvGbAQm+7puW
-	 7kPAPesYMiQOA==
-Date: Fri, 14 Aug 2026 11:35:39 +0200
-From: Matthieu Baerts <matttbe@kernel.org>
-To: gang.yan@linux.dev
-Cc: mptcp@lists.linux.dev, Gang Yan <yangang@kylinos.cn>
-Message-ID: <4b101a1c-7d53-44a7-b2c8-9ec74d5e52a0@kernel.org>
-In-Reply-To: <42532178906ea8ce9bd4b8550144719356c69671@linux.dev>
-References: <20260814050625.80231-1-gang.yan@linux.dev> <0ce89b909d078e40f8f560255ad44ae8e2cfff00@linux.dev> <90d727ed-9c4c-4107-a283-1e9a0245d09b@kernel.org> <42532178906ea8ce9bd4b8550144719356c69671@linux.dev>
-Subject: Re: [PATCH mptcp-net] selftests: mptcp: fix an UAF in
- mptcp_connect.c
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UMnRJVhs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1786704613;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0NNoSWPmHYUSj94AY1Jp2arW3HdgturLx9FcbXnpDbw=;
+	b=UMnRJVhsPu4L5yniamhktq0I0El7uXepayDZqrzmHb8uJkcIeQQUO0RCxvdeASfisvDJsS
+	z+VoOnN/feLMPNkESXxPXXKwP06bnqJWtrRvqs6HHWZoWeUcbev66szF0Iak7v0kG0ccXk
+	3BJgsm66LjrHmAWITJ7VQj40NwUOMgU=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-612-zaR0mxq6M2eWSb9alsg7XQ-1; Fri, 14 Aug 2026 06:50:12 -0400
+X-MC-Unique: zaR0mxq6M2eWSb9alsg7XQ-1
+X-Mimecast-MFC-AGG-ID: zaR0mxq6M2eWSb9alsg7XQ_1786704611
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-47f83450a8eso699453f8f.0
+        for <mptcp@lists.linux.dev>; Fri, 14 Aug 2026 03:50:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786704611; x=1787309411;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=0NNoSWPmHYUSj94AY1Jp2arW3HdgturLx9FcbXnpDbw=;
+        b=n7gikW/INr+tfo2wEHq2HQjHuCVam7B96UVsQ/wg/AoloT9FTttm57iNhARwukK28M
+         HPrIK0qX+CFK44am1DYRV7+94gln8TLFt/CodBHXfevfwmUdhiK7wsX23/Q2b1EcN1XK
+         neZqoBRWMqhxzG/nCvncQdo60S0ukqIwXx1JLj6K3uj8Bt7x+bP4jEM6E2wAifwsGOQi
+         sT7oBFnuw3VXEk4rSdCUGrf1J6PS3bqi+3ImK49LlNTXUbAs5LLTPpMQAFIISBhE7DIL
+         0dIjLVfiZhqpiCz5dIpQ6LF+pxjxPNoAWLTwhBnMpW5Eo3+GDgohnlyfORwWD8Bcz47R
+         Mt8w==
+X-Forwarded-Encrypted: i=1; AHgh+RoVd/9Wvz9AGnjQTexJEFPBd3gtMLR3D0s/MTUmavwsDVgfnGZ1867vTBY0PGiD69gpLWShyw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzhCHN89oEtL5T6aKRbrRmazeqaaCsXHvkzSUgySaR6TAU6KPtx
+	PYTlcm/JdQCwHL3tGVhMGpH/tmgHF1BGO+YGBfhDxdlhVZoPdCOY9QhZ1ZmpzLXMvPTMKk9zNgG
+	5BONpv8s07oDbG56Zt1BpOp59/M72cmZSQpazD3Veuooz9c29iCS9my1MmlGKsqdw
+X-Gm-Gg: AR+sD13TMbcJSkZTtVIEj3dIOzti+MZllbnMz5IGoy14uWp9LQlLh9knd4KCwzDdwwJ
+	Y0P/Z915egyqaxF/bTF+t3KP98qirIyHpiKx/i00/5ILngDDUzMQReaBei0gTC8/j0S0wX+LJH8
+	4QrNFGidWqkujC2ClF/eP31GoUzF/hFR27v+0RUulCu8tqYzTjOyJYQgois+Ul/RVunOGFI74m+
+	niNlg8rpaca+aTOjUIPl6++5E24LftCR/fFN9Ke4XVvAR37oWjnrIVY4nSPo0tlFKrLuug6JZXb
+	7rJuGgpduanqc0SN7UleIrP1w1SMWSl7cn0rZavN/pJL6SvV6533sBkf6qGt8XXdKQjUQXgEfvS
+	mNOO5R11CinFWSpPnb3DoRO0p+6AP2r7J7lF6F5h67vnas49w+PoW2x2zRybYym8n1BrEDyrTo2
+	Q=
+X-Received: by 2002:a05:6000:41ef:b0:47f:9283:1fbe with SMTP id ffacd0b85a97d-4816069d0ccmr7428334f8f.0.1786704611258;
+        Fri, 14 Aug 2026 03:50:11 -0700 (PDT)
+X-Received: by 2002:a05:6000:41ef:b0:47f:9283:1fbe with SMTP id ffacd0b85a97d-4816069d0ccmr7428271f8f.0.1786704610821;
+        Fri, 14 Aug 2026 03:50:10 -0700 (PDT)
+Received: from [192.168.188.103] (ip239-44-231-195.pool-bba.aruba.it. [195.231.44.239])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4815f2b1a91sm6808993f8f.21.2026.08.14.03.50.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Aug 2026 03:50:10 -0700 (PDT)
+Message-ID: <a4d66633-1340-4a56-9dd2-18cdeff7629e@redhat.com>
+Date: Fri, 14 Aug 2026 12:50:09 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-net] selftests: mptcp: fix an UAF in mptcp_connect.c
+To: gang.yan@linux.dev, mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+References: <20260814050625.80231-1-gang.yan@linux.dev>
+ <0ce89b909d078e40f8f560255ad44ae8e2cfff00@linux.dev>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <0ce89b909d078e40f8f560255ad44ae8e2cfff00@linux.dev>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: ujywAig3dEGg-TFSzuTfWxNUfeEEMFnmqLybZcRza_w_1786704611
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Correlation-ID: <4b101a1c-7d53-44a7-b2c8-9ec74d5e52a0@kernel.org>
+Content-Transfer-Encoding: 7bit
 
-14 Aug 2026 11:20:47 gang.yan@linux.dev:
+Hi,
 
-> August 14, 2026 at 4:54 PM, "Matthieu Baerts" <matttbe@kernel.org mailto:=
-matttbe@kernel.org?to=3D%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org%3=
-E > wrote:
->
->
->
->>>
->> This assumes peer =3D=3D addr. It is certainly the case but it looks wro=
-ng,
->> and I guess sashiko will complain like it did here.
->>
->> We could add something on the commit message to say that it is always an=
- IP address that is given, but maybe we should also just
->> handle that correctly: either peer here is not a pointer, and the conten=
-t
->> is copied,
->
-> I prefer this, because it is smaller, like:
->
-> '''
-> static int sock_connect_mptcp(const char * const remoteaddr,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const char * const port, int proto,
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 struct addrinfo **peer,
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 struct sockaddr_storage *peer, socklen_t *peer_len=
-,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int infd, struct wstate *winfo)
-> {
-> ...
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 *peer =3D a;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 break;
-> ...
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 *peer =3D a;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 break;
-> ...
-> +=C2=A0=C2=A0 if (sock !=3D -1) {
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 memcpy(peer, a->ai_addr, a->ai_addr=
-len);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *peer_len =3D a->ai_addrlen;
-> +=C2=A0=C2=A0 }
-> =C2=A0=C2=A0=C2=A0 freeaddrinfo(addr);
-> ...
->
-> -=C2=A0=C2=A0 struct addrinfo *peer =3D NULL;
-> +=C2=A0=C2=A0 struct sockaddr_storage peer;
-> +=C2=A0=C2=A0 socklen_t peer_len;
-> ...
-> -=C2=A0=C2=A0 fd =3D sock_connect_mptcp(..., &peer, fd_in, &winfo);
-> +=C2=A0=C2=A0 fd =3D sock_connect_mptcp(..., &peer, &peer_len, fd_in, &wi=
-nfo);
-> ...
-> -=C2=A0=C2=A0 if (connect(fd, peer->ai_addr, peer->ai_addrlen))
-> +=C2=A0=C2=A0 if (connect(fd, (struct sockaddr *)&peer, peer_len))
-> '''
+On 8/14/26 8:42 AM, gang.yan@linux.dev wrote:
+> Sorry for this, after reviewing sashiko's comment, I think this modification
+> below should be better:
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> index ea4cb6c1bd5e..c81ec4400bef 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> @@ -421,7 +421,8 @@ static int sock_connect_mptcp(const char * const remoteaddr,
+>                 sock = -1;
+>         }
+>  
+> -       freeaddrinfo(addr);
+> +       if (sock == -1)
+> +               freeaddrinfo(addr);
+>         if (sock != -1)
+>                 SOCK_TEST_TCPULP(sock, proto);
+>         return sock;
+> @@ -1424,6 +1425,7 @@ int main_loop(void)
+>         }
+>  
+>  out:
+> +       freeaddrinfo(peer);
+>         if (cfg_input)
+>                 close(fd_in);
+> 
+> If you think it's OK, I can send v2 immediately.
+I'm sorry for being in late.
 
-It looks OK but there are some modifications a bit everywhere.
+This is in a better direction but still will be not fully correct:
+freeaddrinfo() must be called on the argument returned by getaddrinfo()
+- in this case: `addr`.
 
->> or you pass &addr to sock_connect_mptcp, and you do the free here.
->
-> This needs a refactor of sock_connect_mptcp =E2=80=93 I used to do it tha=
-t way. But I
-> worry that backporting could be tricky. If you're fine with it, I'm okay =
-with this plan
-> as well.
+Otherwise some addresses will not be freed.
 
-I didn't check in details, but it seems like it would be shorter: just need=
- to pass &addr to sock_connect_mptcp(... =E2=80=A2=E2=80=A2addr, ...) and u=
-se *addr
-instead of addr in two places + moving the declaration and free to the
-parent function. No?
+Since sock_connect_mptcp() is invoked only once per program execution,
+and not-freed memory will _not_ be leaked at process exit time, I think
+the easier solution is to remove the:
 
-If I'm missing something, the copy is fine.
+	freeaddrinfo(addr);
 
-Cheers,
-Matt
+statement, adding a comment alike:
+
+	/* All the allocated memory is released at exit() time, this
+	 * is executed only once and ownership of a single address has
+	 * to be transferred to the caller. Keep it simple and avoid
+	 * later freeaddrinfo() entirely.
+	 */
+	xgetaddrinfo(listenaddr, port, &hints, &addr);
+
+/P
+
