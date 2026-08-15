@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9722D8370
-	for <mptcp@lists.linux.dev>; Sat, 15 Aug 2026 17:29:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF73E1A6817
+	for <mptcp@lists.linux.dev>; Sat, 15 Aug 2026 17:33:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786814966; cv=none; b=tcUYWgEQNgz+JcBRNy6nqDfMzw1Rlp4nu7Jtl85wCrB1anKzc/ZdM1mi5LDTYctltDOSj3E3pyLIexhRRuJWIIwiB1NSYGdqVaXfievRy+yYEowciMhLV4w2EKEJudwAT7VGQdb9qG5BAXkwEinO/dZ1ylXHYis40EzqXXaIk24=
+	t=1786815239; cv=none; b=tiGOuOfiL8/C+7bSDjRxvJdeOCqPplgGZOz1GAl4gy/OnDd+hTHYj+k5FhnGVLtQpZK5LBS1+psOaLeAuh/i9rfF8E7UgMkVL59452avJWnPLYdR88TMus7BXvJ/pwhm86x0VCWzX9I1MSuOK1ni9HO1Yfg8NRzwEMelLMlo4TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786814966; c=relaxed/simple;
-	bh=XYEkY4uRbwjqH9UvmZrx7rC+d4S83jBGr+CiFiy6CDQ=;
+	s=arc-20240116; t=1786815239; c=relaxed/simple;
+	bh=qCIXgN/sz4+5BNl4tGyt7J9AkeQLtyZQKIVYgecELg0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CFr85jIRRvgVZYR5xgfO71BWbL488WppTi8GKi+dQJ4D+uJXaoAL23IvOjO3eH/SynXkAKVRaDrM9HOwyjzd/+r2Oi7FDv/SPqFw9/myV7Q/oNqYhbIuhik6elv9BbRXvupgdCkBkZGXiE5lp55DFNWvtZeTWszrnR/y66kTAck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LLgzblIv; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=fmSVJSxoUVmfxbF6CSUV7c3B/KqBz2kb4PEDJItm1ViT//bVytouBb8p9R3XtGzPHcIkONaXU/sU+lFw5eQs9527xa03Ap3gwKknKEjIhf1mdc402CiIKh2pIxCuRKY9Ml9QcX9kCFAU+Dq8zd7amz+gQbX3/nwbP1hOiH6KX7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jdjll0oD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LLgzblIv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60F671F000E9;
-	Sat, 15 Aug 2026 17:29:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jdjll0oD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1B541F000E9;
+	Sat, 15 Aug 2026 17:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786814965;
-	bh=RkAjSaFTIWg7Au2g4fle/9lsxiOXr0FfOZK87xXAu6c=;
+	s=k20260515; t=1786815238;
+	bh=V+bIDFmk2Z4lg/IqhDPJxUuA2HyU0n9snpV86UU2hIk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=LLgzblIvl0+Frh0u1L7sTy/npNKUp9TiiinNQB/YD3aBDla4otRgSQ5ahdp32v5tq
-	 zv3ofTm05OkH7UHJTUubgLVDBeDl0n4odCl8zfuD8l2iToKCvzx6ezKBJvbxRjUzH+
-	 Sql8WMrvdqUo+7RArSXZz0r0D+aZcSotl56nhaezLarh3qUTqfA/pJc8xuway0m+NQ
-	 vhlh8Pgd+CPDNNpWK1yaSlMHI5ujpVSggsR5/D2+xItfg3hGsmH1etW3XSikWeO/QN
-	 dQl2HCOmcodrw7RmAf7frbRiOHmhsDForKRVZT6MoQk6dIVWfd+CNr99vOjaw8RcqR
-	 X9z9k/Y2tIqlA==
-Message-ID: <ffb6d0ba-172b-4227-b13d-73b532928890@kernel.org>
-Date: Sat, 15 Aug 2026 19:29:22 +0200
+	b=Jdjll0oDdyaGlC7OC2vlMOfNVi328iYf7XZphrFXmBgw9FGoUtLbN/Tamps93uDTs
+	 G58uoR0IRMztV9SGasZyRZzSgpgs3Od7Ups1at4pXQbedrWDiQwTILWGBlEokZcj14
+	 5dG8FsjBA0lF5oIpycC4smzgd84WkjoYP3m2uZU0GnT00eTEfJF1OIzYe8lRJP0BFj
+	 /Zdo5hJiiAC5yr7U5mbAQHu3kOryCaKSpXyA94CL2A79sGOYpPytkFnz8YrSHTmwOU
+	 ZgDT9zDf5WQXhEVk0bV0NO9IxCQexPYyWhLakJGKfuOrl6aBdjQZTaiGKmnagbGAC3
+	 JG2+uZcKXPAnA==
+Message-ID: <29304df9-a7e7-4585-aecb-b3ae701ee5bb@kernel.org>
+Date: Sat, 15 Aug 2026 19:33:56 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: pm: reset retrans_time when ADD_ADDR
- entry is reused
+Subject: Re: [PATCH mptcp-net v2] mptcp: options: handle MPC data + csum reqd
+ + no csum
 Content-Language: fr
 To: Mat Martineau <martineau@kernel.org>
 Cc: MPTCP Linux <mptcp@lists.linux.dev>
-References: <20260805-mptcp-pm-reset-retrans_time-v1-1-19efbe17046d@kernel.org>
- <caa3dce5-940c-8068-8069-93bc3ac7896a@kernel.org>
+References: <20260805-mptcp-opt-mpc-csumreqd-no-csum-v2-1-dbb52e01a36d@kernel.org>
+ <20f3ef05-aebd-84b0-55a6-8ed35c79d07b@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,41 +87,56 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <caa3dce5-940c-8068-8069-93bc3ac7896a@kernel.org>
+In-Reply-To: <20f3ef05-aebd-84b0-55a6-8ed35c79d07b@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Mat,
 
-On 14/08/2026 03:22, Mat Martineau wrote:
+On 14/08/2026 03:48, Mat Martineau wrote:
 > On Wed, 5 Aug 2026, Matthieu Baerts (NGI0) wrote:
 > 
->> When an ADD_ADDR entry is reused, the timer is re-armed, because the
->> goal is to re-announce an ADD_ADDR, and eventually retransmit it if
->> needed.
+>> Before this modification, a remote peer could send an MP_CAPABLE with
+>> data, with the checksum flag set, but without adding the actual 2 bytes
+>> of checksum. As a result, uninitialised bytes could be used for the
+>> 'csum' field.
 >>
->> In this case, the retransmission counter should be reset as well, so the
->> re-announced address gets its retransmissions back instead of relying on
->> what was left before, and possibly not being able to retransmit it.
+>> That was not a critical issue, because this 'csum' field is only used to
+>> compare with the expected one, if previously negotiated in the 3WHS.
+>> Worst case, the checksum is likely wrong, a fallback is done without a
+>> reject if the negotiation was done earlier. That's OK.
+>>
+>> Yet, better to take the expected path with this case: only look at the
+>> checksum flag for MP_CAPABLEs not carrying a data-len.
+>>
+>> Such packet can be seen as a 3rd or 4th ACK. The RFC8684 mentions [1]
+>> that the 3rd packet should have the checksum flag set. When an MPC + ACK
+>> contains data, the checksum flag is redundant with the checksum field.
+>> It is not clear what should be done for the 4th ACK, nor if the flag has
+>> to be set if the checksum field is set.
+>>
+>> Therefore, it seems fine to only look at the presence of the checksum
+>> field, not to break the interaction with stacks that were not setting
+>> both.
 
 (...)
 
-> Looks good to me, thanks for the fix.
+> Yes, this looks like a good tradeoff between not breaking interaction
+> with other stacks while avoiding an invalid checksum.
+
 Thank you for the review!
 
-Now in our tree:
-
 New patches for t/upstream-net and t/upstream:
-- f9ff581a97d0: mptcp: pm: reset retrans_time when ADD_ADDR entry is reused
-- Results: 745049d83503..79d7297194ac (export-net)
-- Results: d536472a82d1..199ed983c1f7 (export)
+- aa590201e5a8: mptcp: options: handle MPC data + csum reqd + no csum
+- Results: 79d7297194ac..52bf6f574345 (export-net)
+- Results: 199ed983c1f7..55a0274d38e1 (export)
 
 Tests are now in progress:
 
 - export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/9bf507e411f4bc32904bdf34fdbe9e9406e9d025/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/f77d0f8990780a8dc74e236f213b46a0d9b72391/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/ba6afbce3cb1ec026c104c44bfebe101bbd2ef35/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/84c282b44c231fa96cdec0e7f0fd99be9af9d82f/checks
 
 Cheers,
 Matt
