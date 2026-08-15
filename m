@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0463420125F
-	for <mptcp@lists.linux.dev>; Sat, 15 Aug 2026 17:19:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9722D8370
+	for <mptcp@lists.linux.dev>; Sat, 15 Aug 2026 17:29:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786814360; cv=none; b=Z8M8cU7j7x7cq6cmkefCVC9Ppc0vMefT8FSLSlRlyrkorhvQGOQJ0+fxPm4vTCjG4byELl1AS5ZPGZKbQssZE4lSdlagqgvVIu8XTJy09f9HNblQ/J1qtUWMu7XrTvagezG7zuP1JorVPhGu0hMuh0VwODM6gHAt56N0B9UoERs=
+	t=1786814966; cv=none; b=tcUYWgEQNgz+JcBRNy6nqDfMzw1Rlp4nu7Jtl85wCrB1anKzc/ZdM1mi5LDTYctltDOSj3E3pyLIexhRRuJWIIwiB1NSYGdqVaXfievRy+yYEowciMhLV4w2EKEJudwAT7VGQdb9qG5BAXkwEinO/dZ1ylXHYis40EzqXXaIk24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786814360; c=relaxed/simple;
-	bh=ipZ+l2SNVPcG77H+G+W+BZgexzB3CCiajIwAHldplq4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=GukPsN2+KGHjS1y8SsE5WJ58ID/3EwnzlHJaAYZcpN+Lj7Zm39p71aIcfvpS/xlmnewSWFFN2FXuxq1I6FrqYQEYgYRh1cGAM6dGoZBdtlFzX2WIGEJvYE4s/DMJeQeQtyD3UOnQA2GJzfjEsM1frxeBaHZbmTbX7w4OKHd5DfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YK24lUT/; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786814966; c=relaxed/simple;
+	bh=XYEkY4uRbwjqH9UvmZrx7rC+d4S83jBGr+CiFiy6CDQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CFr85jIRRvgVZYR5xgfO71BWbL488WppTi8GKi+dQJ4D+uJXaoAL23IvOjO3eH/SynXkAKVRaDrM9HOwyjzd/+r2Oi7FDv/SPqFw9/myV7Q/oNqYhbIuhik6elv9BbRXvupgdCkBkZGXiE5lp55DFNWvtZeTWszrnR/y66kTAck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LLgzblIv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YK24lUT/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1305B1F000E9;
-	Sat, 15 Aug 2026 17:19:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LLgzblIv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60F671F000E9;
+	Sat, 15 Aug 2026 17:29:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786814358;
-	bh=sXe1ey9wuYDqNrzHXXZ5IRWmjic7wrX37bPob7CWVKI=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=YK24lUT/eCWvdH/JaM/5COnvlbH1npFHpxbfimKuEcTM++xpovoeSwdVdha31Buur
-	 rvYjR3Zssymd9sQqDfMcUer2FlhPC36GnlsDXzwJOFPxvZ1LUAjqkaZq2iClDeheqh
-	 PUbdkMIvV4PAvqbudvkeWbBBguAS0+HqeUmw/t4DEM4t2phme8EqVskV3Uf5O9epNi
-	 XTb4kbXdKYLz2Z8/+bVb/itFxgfysqTt6ADGX0NRtZ0KxtKtqNlAtSIxfgf0P6e8ca
-	 igV229nPt8fm99wF8t/gBHX40yUyjFqzfwKCmxl3QvfjXyq5E/Zv1mV2k0CeRvlZr3
-	 5zyqRAE2YOK9g==
-Message-ID: <ccf9480a-712d-4d37-80f1-3db80b7a4409@kernel.org>
-Date: Sat, 15 Aug 2026 19:19:15 +0200
+	s=k20260515; t=1786814965;
+	bh=RkAjSaFTIWg7Au2g4fle/9lsxiOXr0FfOZK87xXAu6c=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=LLgzblIvl0+Frh0u1L7sTy/npNKUp9TiiinNQB/YD3aBDla4otRgSQ5ahdp32v5tq
+	 zv3ofTm05OkH7UHJTUubgLVDBeDl0n4odCl8zfuD8l2iToKCvzx6ezKBJvbxRjUzH+
+	 Sql8WMrvdqUo+7RArSXZz0r0D+aZcSotl56nhaezLarh3qUTqfA/pJc8xuway0m+NQ
+	 vhlh8Pgd+CPDNNpWK1yaSlMHI5ujpVSggsR5/D2+xItfg3hGsmH1etW3XSikWeO/QN
+	 dQl2HCOmcodrw7RmAf7frbRiOHmhsDForKRVZT6MoQk6dIVWfd+CNr99vOjaw8RcqR
+	 X9z9k/Y2tIqlA==
+Message-ID: <ffb6d0ba-172b-4227-b13d-73b532928890@kernel.org>
+Date: Sat, 15 Aug 2026 19:29:22 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,10 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH resend mptcp-net 0/4] mptcp: a few fixes
+Subject: Re: [PATCH mptcp-net] mptcp: pm: reset retrans_time when ADD_ADDR
+ entry is reused
 Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1786713351.git.pabeni@redhat.com>
+To: Mat Martineau <martineau@kernel.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260805-mptcp-pm-reset-retrans_time-v1-1-19efbe17046d@kernel.org>
+ <caa3dce5-940c-8068-8069-93bc3ac7896a@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -84,28 +87,41 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1786713351.git.pabeni@redhat.com>
+In-Reply-To: <caa3dce5-940c-8068-8069-93bc3ac7896a@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Mat,
 
-On 14/08/2026 15:38, Paolo Abeni wrote:
-> This is mostly a follow-up to the recent OoO queue pruning series.
-> Explicitly targeting net as we have already a lot of patches pending for
-> net-next, and no need to rush IMHO.
+On 14/08/2026 03:22, Mat Martineau wrote:
+> On Wed, 5 Aug 2026, Matthieu Baerts (NGI0) wrote:
 > 
-> First 2 patches addresses explicit comments from sashiko, 3rd one is a
-> somewhat unrelated cleanup I stumbled upon while implementing patch 4.
-> 
-> The last patch fixes another thing implided by sashiko while reviewing
-> the mentioned series.
+>> When an ADD_ADDR entry is reused, the timer is re-armed, because the
+>> goal is to re-announce an ADD_ADDR, and eventually retransmit it if
+>> needed.
+>>
+>> In this case, the retransmission counter should be reset as well, so the
+>> re-announced address gets its retransmissions back instead of relying on
+>> what was left before, and possibly not being able to retransmit it.
 
-Thank you for this series, it looks good to me:
+(...)
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Looks good to me, thanks for the fix.
+Thank you for the review!
 
-I will wait for the net-next → net merge to apply them to export-net.
+Now in our tree:
+
+New patches for t/upstream-net and t/upstream:
+- f9ff581a97d0: mptcp: pm: reset retrans_time when ADD_ADDR entry is reused
+- Results: 745049d83503..79d7297194ac (export-net)
+- Results: d536472a82d1..199ed983c1f7 (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/9bf507e411f4bc32904bdf34fdbe9e9406e9d025/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/ba6afbce3cb1ec026c104c44bfebe101bbd2ef35/checks
 
 Cheers,
 Matt
