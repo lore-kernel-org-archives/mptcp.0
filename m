@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF73E1A6817
-	for <mptcp@lists.linux.dev>; Sat, 15 Aug 2026 17:33:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52375F9C0
+	for <mptcp@lists.linux.dev>; Sat, 15 Aug 2026 17:46:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786815239; cv=none; b=tiGOuOfiL8/C+7bSDjRxvJdeOCqPplgGZOz1GAl4gy/OnDd+hTHYj+k5FhnGVLtQpZK5LBS1+psOaLeAuh/i9rfF8E7UgMkVL59452avJWnPLYdR88TMus7BXvJ/pwhm86x0VCWzX9I1MSuOK1ni9HO1Yfg8NRzwEMelLMlo4TQ=
+	t=1786816005; cv=none; b=oF9j7s7Q8IpqxtOurBzni/YTPBtY/McoKy/OF9uuOcCZ6ed4bIpfuWLSQHs4LuI0TBrBuTdz6FIk6jAf8Qu7JP4AwIROT+jA3MgQbn3lq8/tlk/vbce1a2njIjRaOkWq1bElkWbBimoW859FbqABuKUor/buqL7cSM6UYoqFYJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786815239; c=relaxed/simple;
-	bh=qCIXgN/sz4+5BNl4tGyt7J9AkeQLtyZQKIVYgecELg0=;
+	s=arc-20240116; t=1786816005; c=relaxed/simple;
+	bh=eRqmkRYnlFvyc3GS1fjYI9d4J8V0Rb4VmYY8B1XHzjI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fmSVJSxoUVmfxbF6CSUV7c3B/KqBz2kb4PEDJItm1ViT//bVytouBb8p9R3XtGzPHcIkONaXU/sU+lFw5eQs9527xa03Ap3gwKknKEjIhf1mdc402CiIKh2pIxCuRKY9Ml9QcX9kCFAU+Dq8zd7amz+gQbX3/nwbP1hOiH6KX7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jdjll0oD; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=rMSxLC0p/Dr1BSxMilQVazzEaF88vnrpznYOcOO0iYN9z8rPoLZ4ayzF5Y2rtLw+5Y76EmrKe0v27QvanwewHPXOD1JNMY8+maV2T5z98T/j2rqN4NTT/QsRBZDsWKlx+QIkIWxlMAFuhPyipeT4OAWmB1cK/jhEzZRffoU0xZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PI6fn+YX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jdjll0oD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1B541F000E9;
-	Sat, 15 Aug 2026 17:33:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PI6fn+YX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08A581F000E9;
+	Sat, 15 Aug 2026 17:46:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786815238;
-	bh=V+bIDFmk2Z4lg/IqhDPJxUuA2HyU0n9snpV86UU2hIk=;
+	s=k20260515; t=1786816004;
+	bh=uheFsWczirwfCXRT28hQ5gU5FF8UkTcEtf90cGRwAUY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Jdjll0oDdyaGlC7OC2vlMOfNVi328iYf7XZphrFXmBgw9FGoUtLbN/Tamps93uDTs
-	 G58uoR0IRMztV9SGasZyRZzSgpgs3Od7Ups1at4pXQbedrWDiQwTILWGBlEokZcj14
-	 5dG8FsjBA0lF5oIpycC4smzgd84WkjoYP3m2uZU0GnT00eTEfJF1OIzYe8lRJP0BFj
-	 /Zdo5hJiiAC5yr7U5mbAQHu3kOryCaKSpXyA94CL2A79sGOYpPytkFnz8YrSHTmwOU
-	 ZgDT9zDf5WQXhEVk0bV0NO9IxCQexPYyWhLakJGKfuOrl6aBdjQZTaiGKmnagbGAC3
-	 JG2+uZcKXPAnA==
-Message-ID: <29304df9-a7e7-4585-aecb-b3ae701ee5bb@kernel.org>
-Date: Sat, 15 Aug 2026 19:33:56 +0200
+	b=PI6fn+YX/f10l1quqcej1Zqdns5FTQUivVCPYmS3grvJ72FcqjCrQvx4cWJM7fdue
+	 zoOvE8A14AR+hMhHqL/qtDare/OcJLWeNJ7DW6ygiA5wK0lZX2QRQEzgdD477/thO+
+	 hh/X7DtqnZyWMtz3ztheSJ/ek3qM2053yQa+fiRASsH3tvGIbZ2iHRnqOh+jSbwrGz
+	 xZK9S8fuLCTK/DB8f/WozkEN5IZHjq15x1+qV52MfpLImgGNVkhNFdQ8BcflWG/dWY
+	 hClV8TN48EhH44ppLo7WFBHRVCq2PejgR2iFbtblWFbR6Nzoo7m6lpTo/gQEQfLuuj
+	 u5BCNE3fGSgzg==
+Message-ID: <c17bbe71-e267-41ea-bb6e-78f5439df30f@kernel.org>
+Date: Sat, 15 Aug 2026 19:46:41 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2] mptcp: options: handle MPC data + csum reqd
- + no csum
+Subject: Re: [PATCH mptcp-net v2] selftests: mptcp: fix an UAF in
+ mptcp_connect.c
 Content-Language: fr
-To: Mat Martineau <martineau@kernel.org>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>
-References: <20260805-mptcp-opt-mpc-csumreqd-no-csum-v2-1-dbb52e01a36d@kernel.org>
- <20f3ef05-aebd-84b0-55a6-8ed35c79d07b@kernel.org>
+To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>, Paolo Abeni <pabeni@redhat.com>
+References: <20260814141530.102099-1-gang.yan@linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,56 +86,39 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20f3ef05-aebd-84b0-55a6-8ed35c79d07b@kernel.org>
+In-Reply-To: <20260814141530.102099-1-gang.yan@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Mat,
+Hi Gang,
 
-On 14/08/2026 03:48, Mat Martineau wrote:
-> On Wed, 5 Aug 2026, Matthieu Baerts (NGI0) wrote:
+On 14/08/2026 16:15, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
 > 
->> Before this modification, a remote peer could send an MP_CAPABLE with
->> data, with the checksum flag set, but without adding the actual 2 bytes
->> of checksum. As a result, uninitialised bytes could be used for the
->> 'csum' field.
->>
->> That was not a critical issue, because this 'csum' field is only used to
->> compare with the expected one, if previously negotiated in the 3WHS.
->> Worst case, the checksum is likely wrong, a fallback is done without a
->> reject if the negotiation was done earlier. That's OK.
->>
->> Yet, better to take the expected path with this case: only look at the
->> checksum flag for MP_CAPABLEs not carrying a data-len.
->>
->> Such packet can be seen as a 3rd or 4th ACK. The RFC8684 mentions [1]
->> that the 3rd packet should have the checksum flag set. When an MPC + ACK
->> contains data, the checksum flag is redundant with the checksum field.
->> It is not clear what should be done for the 4th ACK, nor if the flag has
->> to be set if the checksum field is set.
->>
->> Therefore, it seems fine to only look at the presence of the checksum
->> field, not to break the interaction with stacks that were not setting
->> both.
+> At the end of 'sock_connect_mptcp()', it calls 'freeaddrinfo(addr)',
+> the 'peer' pointer (which points into 'addr') remains. Later, the main
+> loop uses this peer pointer for reconnection attempts. If the memory has
+> been freed and reused, the address data could be overwritten, resulting
+> in an invalid remote address.
+> 
+> This patch keeps the addrinfo list allocated for the whole process
+> lifetime so "peer" remains valid across reconnects; the memory will be
+> released at exit() time.
+Thank you for this fix!
 
-(...)
-
-> Yes, this looks like a good tradeoff between not breaking interaction
-> with other stacks while avoiding an invalid checksum.
-
-Thank you for the review!
+Now in our tree:
 
 New patches for t/upstream-net and t/upstream:
-- aa590201e5a8: mptcp: options: handle MPC data + csum reqd + no csum
-- Results: 79d7297194ac..52bf6f574345 (export-net)
-- Results: 199ed983c1f7..55a0274d38e1 (export)
+- 2596006d5efd: selftests: mptcp: fix an UAF in mptcp_connect.c
+- Results: 52bf6f574345..e717f03d4d29 (export-net)
+- Results: 55a0274d38e1..9262805f6805 (export)
 
 Tests are now in progress:
 
 - export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/f77d0f8990780a8dc74e236f213b46a0d9b72391/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/dd8ec2cb0769c4609f78e605a00117448970247c/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/84c282b44c231fa96cdec0e7f0fd99be9af9d82f/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/19c6bf13fd58c0d98668764de2f3d68d975685c9/checks
 
 Cheers,
 Matt
