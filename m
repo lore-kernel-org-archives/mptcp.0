@@ -1,45 +1,45 @@
-Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
+Received: from sender6-of-o52.zoho.com (sender6-of-o52.zoho.com [165.173.180.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F0BA424D72
-	for <mptcp@lists.linux.dev>; Sat, 15 Aug 2026 14:47:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F261423EB7
+	for <mptcp@lists.linux.dev>; Sat, 15 Aug 2026 14:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=165.173.180.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786805282; cv=pass; b=cTdia9WkyR3FW8C8042G13iF4Ly3FLiqYSLAoUJvLXS4K01fOdcUfOf9OOcBk6Cj0OLR5lffopSBKMuM9hPxz4h0PAav28e3BisdjEwHKXNjDazRBmCuLp8A1VHlCQkjTfxopwjwQp7m59hpVaIzxc/Dc/kLD+wWd+buUEDGZ7M=
+	t=1786805298; cv=pass; b=TzwAFh1fDKahZyRIHOuxZqTJhzflZQG1HYENmM6l7QVZ1MgJVji7oihMS6s5CAUdECHIdqKL/N/6KikF8ceJttrYakk/5BftNexApGOZpiXqxlXagLWPqaLBbZVip/qXrRBwSq8yu/utn/B272iRRtoTL/9YGwzuFJ1rbTKXkxQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786805282; c=relaxed/simple;
-	bh=0tAX1/EjDPui5oDCnluljlkfvf8LhEn5/iSxT7jGxh4=;
+	s=arc-20240116; t=1786805298; c=relaxed/simple;
+	bh=t4JpLva6E6l2BnwRPzP2IlLO5OtEFujlYYzI0JPwZAM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cga+6KldEuyqRvbk7B/lHAvEd0YwI71+cah6B5tSukYjtxbgChWsbuvggylv1ivwb2Fn3S5LffGV1lLcOh3Z6Mpc3TuS1xd7ZirGF2lDKfsZGSkz0fN4Q9Ui1xXXiR5rp1BieBMEfEHpMIoXyS09dvbguLAmXs+FTyqWLj57gME=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=nkduTtFZ reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.52
+	 In-Reply-To:To:Cc; b=UYHMTutBtDyvUs7o3yPJHTIGk5G0i1V5fIV8kz8bL94EZW9oI8Cab2khWsi8Y8y6H+hHG4X+bcmpZNj4fpxT42G7GWnmi73RxdbWSqrF9mRRe2nW98NIeUyshwsUoITuxF5r+HBkr459rGih3zWLsQpkiZMoLbfuio8qLViBzXY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=Ko2A2C8N reason="key not found in DNS"; arc=pass smtp.client-ip=165.173.180.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="nkduTtFZ"
-ARC-Seal: i=1; a=rsa-sha256; t=1786805241; cv=none; 
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="Ko2A2C8N"
+ARC-Seal: i=1; a=rsa-sha256; t=1786805243; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=BL53r9iq8p7bkH9BKpXz8JqDcGL0J6cn9PYjsF/2aHsXs+D/xgJKQf7ilswwOXCo1t/vzcPVzWSEVFnLBnn896pwlCDsGYzLw5DkatZ5t546V2Ixq1hXUcodmY8qe77gJjviX1txlGs0GZhmVYoaa8jXwZVxc5kVBQ3bdWzKJJI=
+	b=HqO6cCkgTK8igH7hWyOJ+bmEdLBhaMmF1a4JQp0UAgO8IIuwjEufaTu5fRqD3ZslktrB0kFeh18EinQDF39j0bwrkDP/1UB+/wb7DhnkHnyISf4aJicUNuKjeEmo/vRwzBgmx1azRS437fNPszBAYkkn6+dmCrcnwdTvugakdf4=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1786805241; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=IrVC3zH71eVCMp/ikREEGvlw10mSjXgnJQASjKw0nb4=; 
-	b=aHUf90FPT/l+acOVVLPlCMsAPCK9d3c5puYnsnJsp0hrcFhJ9a5JGSoClsxz9vRERxiyVUpowByjENzzuvLH7Q0bnuRvMD3UCRuKpeZpDX9BSeq5QNkbmvYRGrpAhK4tD6Qxz+3Hh0UZAivsCU/s1olBTIp5DoY6hGkQ6mYJPWw=
+	t=1786805243; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=qWdhoWKR7tU5pg6MP7NlJrmFtlYl5a3eVxPTsQcJsUY=; 
+	b=S5xG6uB8IMV3IP7LlOqSLP1SS0A/YtS4om2UiQ4Bs8tZjcNdiFOHMPWfcFErGhpskmG08/kTcSilRUKKpnoAs6J0gekG+kGtMZR4AOQGK9i5dP712xV9bbLXgIB1P9KoVWwWZzhnvvY3+Bzm3cdMoI0dB0/a2lW9PoFTRA/CkzY=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=mpiricsoftware.com;
 	spf=pass  smtp.mailfrom=shardul.b@mpiricsoftware.com;
 	dmarc=pass header.from=<shardul.b@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1786805241;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1786805243;
 	s=mpiric; d=mpiricsoftware.com; i=shardul.b@mpiricsoftware.com;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=IrVC3zH71eVCMp/ikREEGvlw10mSjXgnJQASjKw0nb4=;
-	b=nkduTtFZiqpeBO7+MGTxdnsoPDKq1rGIgwLZsu/NXXtH09aEWKxPIkhtr3QjfUP8
-	lL8ts9J3Ufg5V5ock8rcROamPejnWUgTWxoR0L3F84s6md6oU5al84yBR0gWaZG1Jni
-	mfedlcVJs9HzsDDv6vDmJ/yY0wel6myFUQvbEZlE=
-Received: by mx.zohomail.com with SMTPS id 1786805238754302.3452029794872;
-	Sat, 15 Aug 2026 07:47:18 -0700 (PDT)
+	bh=qWdhoWKR7tU5pg6MP7NlJrmFtlYl5a3eVxPTsQcJsUY=;
+	b=Ko2A2C8NhIoCYe9Wrzj0wH4Rv236KA4aq3Ny+CrhWX0F7ffk/cqknjtNrvy1o2gU
+	jo0jzTtd4FO+uciNf5m60USdCqNACNZy/Bb64LqbehTDD6e+kOrUUhHM8dVV5cL4XsW
+	w/kkg4b5CliFU8CjfMiL2l5qj1K9LMDnXSKpFb1s=
+Received: by mx.zohomail.com with SMTPS id 1786805241454889.9099580751931;
+	Sat, 15 Aug 2026 07:47:21 -0700 (PDT)
 From: Shardul Bankar <shardul.b@mpiricsoftware.com>
-Date: Sat, 15 Aug 2026 20:10:15 +0530
-Subject: [PATCH RFC mptcp-next v2 2/4] mptcp: sched: penalise a slow
- subflow by halving its cwnd
+Date: Sat, 15 Aug 2026 20:10:16 +0530
+Subject: [PATCH RFC mptcp-next v2 3/4] mptcp: sched: do not penalise when
+ receive-window-limited
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,7 +48,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260815-mptcp_penalise_send_v2-v2-2-3e5049a73681@mpiricsoftware.com>
+Message-Id: <20260815-mptcp_penalise_send_v2-v2-3-3e5049a73681@mpiricsoftware.com>
 References: <20260815-mptcp_penalise_send_v2-v2-0-3e5049a73681@mpiricsoftware.com>
 In-Reply-To: <20260815-mptcp_penalise_send_v2-v2-0-3e5049a73681@mpiricsoftware.com>
 To: mptcp@lists.linux.dev
@@ -59,170 +59,54 @@ Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
 X-Mailer: b4 0.15.2
 X-ZohoMailClient: External
 
-A poorly-performing but usable subflow (high latency, loss, bufferbloat)
-can soak up connection resources and cause head-of-line blocking of the
-aggregate stream. Give the default packet scheduler a way to send less
-than such a subflow's full congestion window.
+The penalty in the previous patch shifts load off a slow subflow onto the
+fastest one, which only helps if the fastest path can absorb it. When the
+connection is receive-window-limited (the receiver's advertised window,
+not our congestion window, is the bottleneck), the fastest path is capped
+by that shared window too and cannot send more, so halving the slow path's
+cwnd just sheds its throughput. In a receive-window-limited transfer this
+was measured roughly 2x slower than baseline.
 
-Once a subflow has been picked for transmission, flag it for penalisation
-when:
-- its smoothed delivery rate (avg_pacing_rate) is below half that of the
-  fastest path, keying on rate, not RTT, so a slow-but-high-throughput
-  path is left alone;
-- the fastest path is cwnd-limited (saturated), so shifting load off the
-  slow path is worthwhile;
-- the subflow is in TCP_CA_Open, so its cwnd is not already being reduced
-  by loss recovery;
-- its cwnd is still above MPTCP_PENALISE_MIN_CWND, so a subflow already at
-  the floor is left to recover instead of being churned by a halving that
-  can no longer reduce it;
-- it has not been penalised in the last RTT.
+Gate on the application's queued data fitting within the send window:
+penalise only while write_seq <= wnd_end. If the application has queued
+past the window edge the receive window is the binding constraint, so skip
+the penalty. Neither write_seq (application demand) nor wnd_end (peer
+window) is derived from cwnd, so the test is not made circular by the
+window itself suppressing cwnd.
 
-The reduction halves tcp_snd_cwnd, floored at MPTCP_PENALISE_MIN_CWND, and
-ssthresh if cwnd is past it. It is applied in the push path under the
-subflow socket lock, which protects snd_cwnd (the scheduler runs under the
-msk lock). The congestion control grows the window back, ACK-clocked; that
-regrowth is the built-in probe, so no explicit MPTCP-side probing is
-needed.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/345
 Co-developed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
 ---
- net/mptcp/protocol.c | 65 ++++++++++++++++++++++++++++++++++++++++++++++++----
- net/mptcp/protocol.h |  2 ++
- 2 files changed, 63 insertions(+), 4 deletions(-)
+ net/mptcp/protocol.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index c04b73123d27..075d468d0e14 100644
+index 075d468d0e14..e6c10816df8d 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1617,6 +1617,41 @@ bool mptcp_subflow_active(struct mptcp_subflow_context *subflow)
- #define SSK_MODE_BACKUP	1
- #define SSK_MODE_MAX	2
+@@ -1635,6 +1635,14 @@ static bool mptcp_penalise_throttle_ok(struct mptcp_subflow_context *subflow)
+ 	return tcp_jiffies32 - subflow->last_penalise >= max_t(u32, rtt, 1);
+ }
  
-+/* Penalise a subflow pacing below the fastest path's rate / this ratio */
-+#define MPTCP_PENALISE_RATE_RATIO	2
-+/* cwnd floor for the penalty: skip a subflow already there, and never reduce
-+ * below it (halving at the floor only churns congestion control).
++/* Like tcp_snd_wnd_test() but without an skb: true while queued data still fits
++ * the send window, i.e. not receive-window-limited.
 + */
-+#define MPTCP_PENALISE_MIN_CWND		2
-+
-+/* Rate-limit the penalty to at most once per subflow RTT, so the congestion
-+ * control can grow the window back between reductions.
-+ */
-+static bool mptcp_penalise_throttle_ok(struct mptcp_subflow_context *subflow)
++static bool mptcp_snd_wnd_test(const struct mptcp_sock *msk)
 +{
-+	struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+	u32 rtt = usecs_to_jiffies(READ_ONCE(tcp_sk(ssk)->srtt_us) >> 3);
-+
-+	return tcp_jiffies32 - subflow->last_penalise >= max_t(u32, rtt, 1);
++	return !after64(msk->write_seq, mptcp_wnd_end(msk));
 +}
 +
-+/* Halve cwnd (and ssthresh if past it) under the subflow socket lock. */
-+static void mptcp_penalise_cwnd(struct sock *ssk)
-+{
-+	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-+	struct tcp_sock *tp = tcp_sk(ssk);
-+	u32 cwnd = tcp_snd_cwnd(tp);
-+
-+	subflow->penalise = false;
-+	/* CA state may have left TCP_CA_Open since get_send flagged this */
-+	if (inet_csk(ssk)->icsk_ca_state != TCP_CA_Open)
-+		return;
-+	subflow->last_penalise = tcp_jiffies32;
-+	tcp_snd_cwnd_set(tp, max_t(u32, cwnd >> 1, MPTCP_PENALISE_MIN_CWND));
-+	if (cwnd >= tp->snd_ssthresh)
-+		tp->snd_ssthresh = max_t(u32, tp->snd_ssthresh >> 1, 2);
-+}
-+
- /* implement the mptcp packet scheduler;
-  * returns the subflow that will transmit the next DSS
-  * additionally updates the rtx timeout
-@@ -1626,10 +1661,11 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 	struct subflow_send_info send_info[SSK_MODE_MAX];
- 	struct mptcp_subflow_context *subflow;
- 	struct sock *sk = (struct sock *)msk;
--	unsigned long pace;
-+	unsigned long pace, max_pace = 0;
- 	u32 burst, wmem;
-+	bool penal_cand;
- 	int i, nr_active = 0;
--	struct sock *ssk;
-+	struct sock *ssk, *fastest = NULL;
- 	u64 linger_time;
- 	long tout = 0;
+ /* Halve cwnd (and ssthresh if past it) under the subflow socket lock. */
+ static void mptcp_penalise_cwnd(struct sock *ssk)
+ {
+@@ -1735,6 +1743,7 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+ 			    tcp_snd_cwnd(tcp_sk(ssk)) > MPTCP_PENALISE_MIN_CWND &&
+ 			    inet_csk(ssk)->icsk_ca_state == TCP_CA_Open &&
+ 			    tcp_is_cwnd_limited(fastest) &&
++			    mptcp_snd_wnd_test(msk) &&
+ 			    mptcp_penalise_throttle_ok(subflow);
  
-@@ -1658,6 +1694,12 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 				continue;
- 		}
- 
-+		/* track the fastest path; slower ones get throttled below */
-+		if (pace > max_pace) {
-+			max_pace = pace;
-+			fastest = ssk;
-+		}
-+
- 		linger_time = div64_u64((u64)READ_ONCE(ssk->sk_wmem_queued) << 32, pace);
- 		if (linger_time < send_info[backup].linger_time) {
- 			send_info[backup].ssk = ssk;
-@@ -1685,12 +1727,24 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 	if (!ssk || !sk_stream_memory_free(ssk))
- 		return NULL;
- 
-+	/* Flag a slow subflow for cwnd halving, applied in the push path */
-+	subflow = mptcp_subflow_ctx(ssk);
-+	penal_cand = fastest && ssk != fastest &&
-+		     subflow->avg_pacing_rate < max_pace / MPTCP_PENALISE_RATE_RATIO;
-+	subflow->penalise = penal_cand &&
-+			    tcp_snd_cwnd(tcp_sk(ssk)) > MPTCP_PENALISE_MIN_CWND &&
-+			    inet_csk(ssk)->icsk_ca_state == TCP_CA_Open &&
-+			    tcp_is_cwnd_limited(fastest) &&
-+			    mptcp_penalise_throttle_ok(subflow);
-+
  	burst = min(MPTCP_SEND_BURST_SIZE, mptcp_wnd_end(msk) - msk->snd_nxt);
- 	wmem = READ_ONCE(ssk->sk_wmem_queued);
--	if (!burst)
-+	if (!burst) {
-+		/* no window room to send; skip the penalty */
-+		subflow->penalise = false;
- 		return ssk;
-+	}
- 
--	subflow = mptcp_subflow_ctx(ssk);
- 	subflow->avg_pacing_rate = div_u64((u64)subflow->avg_pacing_rate * wmem +
- 					   (u64)READ_ONCE(ssk->sk_pacing_rate) * burst,
- 					   burst + wmem);
-@@ -1747,6 +1801,9 @@ static int __subflow_push_pending(struct sock *sk, struct sock *ssk,
- 	struct mptcp_data_frag *dfrag;
- 	int len, copied = 0, err = 0;
- 
-+	if (mptcp_subflow_ctx(ssk)->penalise)
-+		mptcp_penalise_cwnd(ssk);
-+
- 	while ((dfrag = mptcp_send_head(sk))) {
- 		info->sent = dfrag->already_sent;
- 		info->limit = dfrag->data_len;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 7e168e450fb0..ab9ba6699ccd 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -588,6 +588,7 @@ struct mptcp_subflow_context {
- 		__unused : 9;
- 	bool	data_avail;
- 	bool	scheduled;
-+	bool	penalise;	    /* scheduler flagged this subflow for cwnd halving */
- 	bool	pm_listener;	    /* a listener managed by the kernel PM? */
- 	bool	fully_established;  /* path validated */
- 	u32	lent_mem_frag;
-@@ -611,6 +612,7 @@ struct mptcp_subflow_context {
- 				     */
- 
- 	u32	subflow_id;
-+	u32	last_penalise;	    /* tcp_jiffies32 of the last cwnd penalty */
- 
- 	long	delegated_status;
- 	unsigned long	fail_tout;
 
 -- 
 2.34.1
