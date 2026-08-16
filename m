@@ -1,127 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52375F9C0
-	for <mptcp@lists.linux.dev>; Sat, 15 Aug 2026 17:46:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69351381C4;
+	Sun, 16 Aug 2026 01:00:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786816005; cv=none; b=oF9j7s7Q8IpqxtOurBzni/YTPBtY/McoKy/OF9uuOcCZ6ed4bIpfuWLSQHs4LuI0TBrBuTdz6FIk6jAf8Qu7JP4AwIROT+jA3MgQbn3lq8/tlk/vbce1a2njIjRaOkWq1bElkWbBimoW859FbqABuKUor/buqL7cSM6UYoqFYJo=
+	t=1786842035; cv=none; b=PAAOf/8/yAOUOp5f+y7OQeyVFmVjiG2e5u8tIKrJUP8HV+UAdtFZ0+CXLYyCKnyh4xBAu8ZExLTP13NXXW8G4Z21CMfiSPTgqsXa/K86lDXOMQz91AlcftaDYljW/hgsE2pLb+UyGD81QsJGauGHTa4zW1bJY2aHsdWqhtAF328=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786816005; c=relaxed/simple;
-	bh=eRqmkRYnlFvyc3GS1fjYI9d4J8V0Rb4VmYY8B1XHzjI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rMSxLC0p/Dr1BSxMilQVazzEaF88vnrpznYOcOO0iYN9z8rPoLZ4ayzF5Y2rtLw+5Y76EmrKe0v27QvanwewHPXOD1JNMY8+maV2T5z98T/j2rqN4NTT/QsRBZDsWKlx+QIkIWxlMAFuhPyipeT4OAWmB1cK/jhEzZRffoU0xZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PI6fn+YX; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786842035; c=relaxed/simple;
+	bh=ypzMXirwAb0w92J0pjQusLgCDNlv0D2tKTCujBQl9vo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KSO1oW6RWi0ESDGz3RQ7C+7hM6+jGxez7pP8777+sUdx+qjmSUc4QzUGBrTxDbdwY8Whs4YWwJwd5/gcx9aNC5M0ek7RqZbBZj9ekDW2k7+SeaRJ5g+nwJVEIgIuAnmlCtWiX/vXpPDcLR36SVY04ytAurin5bAE2YlF/szgu/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P8WKgyc+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PI6fn+YX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08A581F000E9;
-	Sat, 15 Aug 2026 17:46:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P8WKgyc+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DD571F000E9;
+	Sun, 16 Aug 2026 01:00:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786816004;
-	bh=uheFsWczirwfCXRT28hQ5gU5FF8UkTcEtf90cGRwAUY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=PI6fn+YX/f10l1quqcej1Zqdns5FTQUivVCPYmS3grvJ72FcqjCrQvx4cWJM7fdue
-	 zoOvE8A14AR+hMhHqL/qtDare/OcJLWeNJ7DW6ygiA5wK0lZX2QRQEzgdD477/thO+
-	 hh/X7DtqnZyWMtz3ztheSJ/ek3qM2053yQa+fiRASsH3tvGIbZ2iHRnqOh+jSbwrGz
-	 xZK9S8fuLCTK/DB8f/WozkEN5IZHjq15x1+qV52MfpLImgGNVkhNFdQ8BcflWG/dWY
-	 hClV8TN48EhH44ppLo7WFBHRVCq2PejgR2iFbtblWFbR6Nzoo7m6lpTo/gQEQfLuuj
-	 u5BCNE3fGSgzg==
-Message-ID: <c17bbe71-e267-41ea-bb6e-78f5439df30f@kernel.org>
-Date: Sat, 15 Aug 2026 19:46:41 +0200
+	s=k20260515; t=1786842034;
+	bh=MY/sIL9Y1jnzsucHK8wlt+7uuZuywIJOs+Wptlau6mo=;
+	h=From:To:Cc:Subject:Date;
+	b=P8WKgyc+GhEdG+N8ebNW/5hE6ZmuJmANuT6mzKa/UMhd3y1jRSKc4K8v9+5Ivewxt
+	 B9FqPl+MKYd4kTJtZwV31qir4dhd1UIWV4uokmYCRDFAzfE/u0u0xs09FdrJTbaOay
+	 +Vwd99dERCSDve1O9rKUrhP5+8NbuCH/OypgBUp6958ac6VVOtit236Fu/XdmioYMc
+	 pl3b8M9DSO7aCIjchdpv9Q/YcbyPalQ0E/u8+YbYGfbXYwi4Q+NmJUouDJC5EyXE4A
+	 KEEdWGf/w4jBEs3KOtfyPpLRugHLqXRYxnNhKENYFXcMfJZFCrhE+1OMMgjV5RkN0Z
+	 dgrYv2jv5kg0w==
+From: Geliang Tang <geliang@kernel.org>
+To: Keith Busch <kbusch@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	David Ahern <dsahern@kernel.org>,
+	Ido Schimmel <idosch@nvidia.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Hannes Reinecke <hare@suse.de>,
+	Stanislav Fomichev <sdf@fomichev.me>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	linux-nvme@lists.infradead.org,
+	netdev@vger.kernel.org,
+	mptcp@lists.linux.dev
+Subject: [PATCH v3 0/4] nvme-tcp: add IPv6 traffic class support
+Date: Sun, 16 Aug 2026 08:59:56 +0800
+Message-ID: <cover.1786841319.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2] selftests: mptcp: fix an UAF in
- mptcp_connect.c
-Content-Language: fr
-To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>, Paolo Abeni <pabeni@redhat.com>
-References: <20260814141530.102099-1-gang.yan@linux.dev>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
- YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
- c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
- WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
- CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
- nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
- TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
- nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
- VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
- 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
- YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
- AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
- EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
- /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
- MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
- cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
- iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
- jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
- 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
- VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
- BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
- ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
- 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
- 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
- 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
- mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
- Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
- Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
- Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
- x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
- V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
- Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
- HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
- 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
- Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
- voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
- KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
- UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
- vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
- mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
- JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20260814141530.102099-1-gang.yan@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Gang,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-On 14/08/2026 16:15, Gang Yan wrote:
-> From: Gang Yan <yangang@kylinos.cn>
-> 
-> At the end of 'sock_connect_mptcp()', it calls 'freeaddrinfo(addr)',
-> the 'peer' pointer (which points into 'addr') remains. Later, the main
-> loop uses this peer pointer for reconnection attempts. If the memory has
-> been freed and reused, the address data could be overwritten, resulting
-> in an invalid remote address.
-> 
-> This patch keeps the addrinfo list allocated for the whole process
-> lifetime so "peer" remains valid across reconnects; the memory will be
-> released at exit() time.
-Thank you for this fix!
+This series adds IPv6 traffic class (tclass) support to the NVMe/TCP
+fabrics stack, mirroring the existing IPv4 TOS configuration.
 
-Now in our tree:
+The current code path only handles IPv4: nvme-fabrics exposes a 'tos'
+option, the host (nvme-tcp) applies IP_TOS to each queue socket, and
+the target (nvmet-tcp) reflects the value received on the wire. This
+leaves no way to control or observe the IPv6 traffic class for NVMe/TCP
+connections, which is a real gap for deployments running over IPv6 that
+need a non-default tclass.
 
-New patches for t/upstream-net and t/upstream:
-- 2596006d5efd: selftests: mptcp: fix an UAF in mptcp_connect.c
-- Results: 52bf6f574345..e717f03d4d29 (export-net)
-- Results: 55a0274d38e1..9262805f6805 (export)
+The series also refactors the socket option configuration on both host
+and target sides to use the generic do_sock_setsockopt() helper. This
+change eliminates the need for protocol-specific helpers and decouples
+the configuration from the underlying transport protocol, laying the
+groundwork for future protocol extensions such as MPTCP.
 
-Tests are now in progress:
+The series is split into two logical parts: the do_sock_setsockopt
+refactoring (patches 1-2) and the IPv6 traffic class support (patches
+3-4), following the natural host/target layering.
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/dd8ec2cb0769c4609f78e605a00117448970247c/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/19c6bf13fd58c0d98668764de2f3d68d975685c9/checks
+This was tested with the selftests mptcp_nvme.sh [1] to pass "--tos"
+on the host side and validate that the value is reflected on the wire
+by the target.
 
-Cheers,
-Matt
+[1]
+https://patchwork.kernel.org/project/linux-nvme/cover/cover.1779934709.git.tanggeliang@kylinos.cn/
+
+v3:
+ - add two patches to unify socket option configuration using
+   do_sock_setsockopt on both host and target sides.
+ - use do_sock_setsockopt for IPV6_TCLASS rather than exporting and
+   calling ip6_sock_set_tclass, as suggested by Jakub.
+ - reuse the existing NVMF_OPT_TOS for IPv6 sockets instead of adding
+   a new NVMF_OPT_TCLASS option, as suggested by Stanislav.
+
+v2:
+ - Export and use the ip6_sock_set_tclass() helper in both target and host
+   paths, aligning with the existing ip_sock_set_tos() usage.
+ - Add CONFIG_IPV6 and AF_INET6 guards to avoid build failures when IPv6
+   is disabled.
+ - Use rcv_flowinfo from the target socket instead of np->tclass.
+ - https://patchwork.kernel.org/project/linux-nvme/cover/cover.1786171863.git.tanggeliang@kylinos.cn/
+
+v1:
+ - https://patchwork.kernel.org/project/linux-nvme/cover/cover.1785122120.git.tanggeliang@kylinos.cn/
+
+Geliang Tang (4):
+  nvmet-tcp: unify sockopt with do_sock_setsockopt
+  nvme-tcp: unify sockopt with do_sock_setsockopt
+  nvmet-tcp: support IPv6 traffic class
+  nvme-tcp: support IPv6 traffic class
+
+ drivers/nvme/host/tcp.c   | 68 +++++++++++++++++++++++++++++++++------
+ drivers/nvme/target/tcp.c | 68 ++++++++++++++++++++++++++++++++++-----
+ 2 files changed, 119 insertions(+), 17 deletions(-)
+
 -- 
-Sponsored by the NGI0 Core fund.
+2.53.0
 
