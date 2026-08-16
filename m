@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1CF33E355
-	for <mptcp@lists.linux.dev>; Sun, 16 Aug 2026 14:15:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD7E346E75
+	for <mptcp@lists.linux.dev>; Sun, 16 Aug 2026 16:12:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786889719; cv=none; b=un4vYwwbKhqYb9fpmJUGqEKHqXga3VgMKXzPxEAnvWpjaGz4osvOG+M+jXCJpQLpXGiZUqg+shbxdFgREw/GXtC+a+B0iEw4Rg8dWxZQZZugorXE/vCctSPtr7KRG4jhrOFa+r8v4xPKusH4mWw6/lWZlSjPMcen+Avo/thgUeU=
+	t=1786896750; cv=none; b=uT84afvliUDmL9iAdHJm7DuSx5N907+lU3QuWdIcjqoWthEaE+jaxiyBYzV/OSbmSHmRGVqnZSlUYWhwZdgF5vw77TN2tb/TtTUFJ3gDEFyKpFiYYgp6fo1O1XVW7JdRv8TgRz0iyGngkyb78Hi5OQJg9/Su8t3stmUD5NY79vY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786889719; c=relaxed/simple;
-	bh=msz8yudL5b+c+nPwhoMaek5qJRHc3/3YwJ2y4Nw7q1E=;
+	s=arc-20240116; t=1786896750; c=relaxed/simple;
+	bh=Zz2GFz+Ku/4c64lVKr+crqrnl++Fl9gMWIRKbr3XP2k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h+Ma/dRTvCaX2lYTGfSnI3u4DfBBFufKYczG8cbgqcJWzfNBI8bqIYRsKT8V3rc4/74cR6htfQO5o1qkAFCn0B7PyNY5nihKeQwseCl7FVePHPi3a2Cpg+ZPXtaVp6ZYFfRIG9XI6+9mw/lvChwKfhBtv67QIr5kTVkRX9jTS0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JZmEynw3; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=I8V13JGvZZUGHHmT5K4OB9iRy8E8I76pB66VnX6Xbf7SZPzrfSUJkzvuwOryw81vdDRqDeunmNGvEnWYDxgFKzdnxIUJB+ELe2ekMg3cPV1RUNnSevCPsxSUygRPxMNLcASeShi2JHtTYbO6pHhYxTAvcMnbYPPEVTLduCGgkKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n5F0BVtW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JZmEynw3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17E9D1F000E9;
-	Sun, 16 Aug 2026 14:15:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n5F0BVtW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 480811F000E9;
+	Sun, 16 Aug 2026 16:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786889717;
-	bh=PA/kw3irgwsQtz3O0LYO0ncvimi6hO54e/H97g3tdOA=;
+	s=k20260515; t=1786896749;
+	bh=hT49ysomEbTWJK78ajs/M3cDOcYz8UzpEOwwb/kOFj8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=JZmEynw38tw3LvRua6VU9VVx4+u4fRdYq46tx6b/QgsKkhXImp2a4ym7ZrYIoxAgF
-	 COAZX6F+oHCLltlKHMLWRB83d+aI/ietZuiOivMWWtjDDjISYRjRGJGoK9zMd4Fapn
-	 gXm8MOEPJ48k2oRYScGQi4b1kKBc4gVCLAbZ9voCrSn0LcgBng8TjpbgjBT+TET9eE
-	 2f7GYRP4xvbL7qcWcX8yDel01qFar/FoQOhoq9lko7iSaz0/6EOXwBbdwm8fxNpDdD
-	 0Qso7CzcRzhmzgfGghsRTPHnPkGlpFKplsfy9Tcn3FQ4qST2nlJm0jlf6Z79jqCtTV
-	 p4Y+bKtTUmuNw==
-Message-ID: <bf0fd380-8b2f-479c-a00d-02827986459f@kernel.org>
-Date: Sun, 16 Aug 2026 16:15:14 +0200
+	b=n5F0BVtWteA+Kz/ZokscDlauiw4+iBTXdVkLpVF1K7xGqqh9VmA34pCHQtnenclT4
+	 LjNdjPLA7fIaLPQVvrwOjP8uPYnB3vEkkHLx3JTLvEWPD/PKAB1Hr8F+hnT3fKt819
+	 O4GeX0qendQ4Zv9dTJyHoMEBBWJ0toZ6WcNG5N78p66CfRwl4w/QFzx4wz+4USNLIe
+	 8+0ul8D5fj7cEPZ8YkSir/s4CPxcYCwn+DQh+hWKLTInZ5eme83+L7bXMJaT85uwv2
+	 GijbOc/FTYuoExVTF+bDLvpej+w1pVau1gfXJCLNJAjuXggF70Xy423kILKClu08bc
+	 sgbXtBJP2x4Ww==
+Message-ID: <687bd2da-28b5-4753-b942-d18cb53d9239@kernel.org>
+Date: Sun, 16 Aug 2026 18:12:26 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH RFC mptcp-next v2 0/4] mptcp: sched: penalise a slow
- subflow
+Subject: Re: [PATCH mptcp-next RFC 2/3] mptcp: reject MP_JOIN earlier
 Content-Language: fr
-To: Shardul Bankar <shardul.b@mpiricsoftware.com>, mptcp@lists.linux.dev
-Cc: Janak Patel <janak@mpiric.us>,
- Kalpan Jani <kalpan.jani@mpiricsoftware.com>,
- Shardul Bankar <shardulsb08@gmail.com>
-References: <20260815-mptcp_penalise_send_v2-v2-0-3e5049a73681@mpiricsoftware.com>
+To: MPTCP Linux <mptcp@lists.linux.dev>
+Cc: Paolo Abeni <pabeni@redhat.com>, Chenguang Zhao
+ <chenguang.zhao@linux.dev>, gang.yan@linux.dev
+References: <20260814-mptcp-reset-mpj-early-v1-0-3ca3260f9474@kernel.org>
+ <20260814-mptcp-reset-mpj-early-v1-2-3ca3260f9474@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,27 +87,53 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260815-mptcp_penalise_send_v2-v2-0-3e5049a73681@mpiricsoftware.com>
+In-Reply-To: <20260814-mptcp-reset-mpj-early-v1-2-3ca3260f9474@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Shardul,
+Hello,
 
-On 15/08/2026 16:40, Shardul Bankar wrote:
-> A subflow that is slow relative to the others can soak up connection
-> resources and head-of-line-block the aggregate stream. This series lets the
-> packet scheduler send less than such a subflow's congestion window by halving
-> it, and leaves the congestion control to grow it back. It implements 
-> issue #345 [1]. This is a deliberately simple first form; please treat it
-> as an RFC.
-Thank you for this v2. I didn't check in details, but I *think* this
-simple first form is acceptable, and you can remove the RFC.
+On 14/08/2026 20:31, Matthieu Baerts (NGI0) wrote:
+> When a SYN + MP_JOIN is received, it is good to check directly if the
+> MP_JOIN is allowed, then checking that later at the establishment of the
+> new subflow.
+> 
+> This avoids situations where the 3WHS is done, then the joined subflow
+> is rejected.
+> 
+> This changes the behaviour, and the new behaviour is tracked with the
+> MPJoinDisallow MIB counter.
+> 
+> TODO: adapt the selftests to be able to run on older kernels: if the new
+> counter is not available, increment syn_ack and syn_rej instead.
 
-It looks like Sashiko didn't manage to validate it for some unclear
-reasons [1]. Do you mind resending it (without the RFC), please?
+(...)
 
-[1]
-https://sashiko.dev/#/patchset/20260815-mptcp_penalise_send_v2-v2-0-3e5049a73681%40mpiricsoftware.com
+> @@ -217,17 +228,19 @@ static int subflow_check_req(struct request_sock *req,
+>  			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_TOKENFALLBACKINIT);
+>  
+>  	} else if (opt_mp_join && listener->request_mptcp) {
+> +		u8 reason;
+> +
+>  		subflow_req->ssn_offset = TCP_SKB_CB(skb)->seq;
+>  		subflow_req->mp_join = 1;
+>  		subflow_req->backup = mp_opt.backup;
+>  		subflow_req->remote_id = mp_opt.join_id;
+>  		subflow_req->token = mp_opt.token;
+>  		subflow_req->remote_nonce = mp_opt.nonce;
+> -		subflow_req->msk = subflow_token_join_request(req);
+> +		subflow_req->msk = subflow_token_join_request(req, &reason);
+>  
+>  		/* Can't fall back to TCP in this case. */
+>  		if (!subflow_req->msk) {
+> -			subflow_add_reset_reason(skb, MPTCP_RST_EMPTCP);
+> +			subflow_add_reset_reason(skb, reason);
+>  			return -EPERM;
+>  		}
+
+Note: the call to mptcp_can_accept_new_subflow() here below, when
+handling req->syncookies, is no longer needed as it is now done earlier
+for all cases, in subflow_token_join_request().
 
 Cheers,
 Matt
