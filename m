@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 285A42472AE
-	for <mptcp@lists.linux.dev>; Sun, 16 Aug 2026 14:08:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1CF33E355
+	for <mptcp@lists.linux.dev>; Sun, 16 Aug 2026 14:15:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786889301; cv=none; b=GnyN1gCr58GMTonMF38yFDXpSgCLgW5WGNd2ZPAVFhTvZfazzg30F/gpHCH206A/4PAoMLBQsKcwHhq1cnDMIiRpljr2q7lBQn8z067RrgNQ9aIU4HLHfVN/8lRmU22/owp/IYFVByNzXp+jkmsxffmO1mz3nvYw1JxuNlNjlsU=
+	t=1786889719; cv=none; b=un4vYwwbKhqYb9fpmJUGqEKHqXga3VgMKXzPxEAnvWpjaGz4osvOG+M+jXCJpQLpXGiZUqg+shbxdFgREw/GXtC+a+B0iEw4Rg8dWxZQZZugorXE/vCctSPtr7KRG4jhrOFa+r8v4xPKusH4mWw6/lWZlSjPMcen+Avo/thgUeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786889301; c=relaxed/simple;
-	bh=jmqgKmQC7xGfGCTk3pIuAcCXA7A5WafRWju0t4y7AGc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=mhYRUR9imlXl6CaMcnxAIkLl2Nf/d+NoO/3Oe3Zgs6iSKRoi18hNLY3Zms9Gkc6tP0GfnrjZYBCur+TaKTYTL+XksPY506sDr/aYXiNNPK52xN9sU5//A+/gEv5iFhlgzXhJwig1inyeZSvbQ7g/ik0UM7M6F+r7IJrq3dMsLuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BGUvniKp; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786889719; c=relaxed/simple;
+	bh=msz8yudL5b+c+nPwhoMaek5qJRHc3/3YwJ2y4Nw7q1E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h+Ma/dRTvCaX2lYTGfSnI3u4DfBBFufKYczG8cbgqcJWzfNBI8bqIYRsKT8V3rc4/74cR6htfQO5o1qkAFCn0B7PyNY5nihKeQwseCl7FVePHPi3a2Cpg+ZPXtaVp6ZYFfRIG9XI6+9mw/lvChwKfhBtv67QIr5kTVkRX9jTS0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JZmEynw3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BGUvniKp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7DBD1F000E9;
-	Sun, 16 Aug 2026 14:08:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JZmEynw3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17E9D1F000E9;
+	Sun, 16 Aug 2026 14:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786889299;
-	bh=WQEy37J0wnH5nTXYZD1psL4v6+w46i8DLQgA9p4oftk=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=BGUvniKpfQ6eDePaD0zwMlJn+2xR+i49ZUtZ6UBarPvH7VdV/TNp34bN32TCRw5DD
-	 5lyVuNZpFY9agJRG0d7siDliXxaUgvmNT3co5JUgyrOf++HLou31NIVeJ2mnAR6wOl
-	 I5tY2GSDAJ05jqbNiRYVSpgwKOc9LpUOkWwlKdNhCTi6qVYXCl+pMbeqgbs0NeQKYr
-	 +zpbndIRLAfpGDz/9qqrY++YsgJxn1itrcMFDkhg5kbHzEhOiNocTEoAAeNSekxCzX
-	 YtJ0PuggauKP2vzhft7pWYKCWkN73C0AK5/PvDq+88KnL0LGssUqR1i4Wu+HLFFVGa
-	 6qwi4kSIPER4A==
-Message-ID: <39bf35ef-85d0-4d02-ba54-689260316124@kernel.org>
-Date: Sun, 16 Aug 2026 16:08:16 +0200
+	s=k20260515; t=1786889717;
+	bh=PA/kw3irgwsQtz3O0LYO0ncvimi6hO54e/H97g3tdOA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=JZmEynw38tw3LvRua6VU9VVx4+u4fRdYq46tx6b/QgsKkhXImp2a4ym7ZrYIoxAgF
+	 COAZX6F+oHCLltlKHMLWRB83d+aI/ietZuiOivMWWtjDDjISYRjRGJGoK9zMd4Fapn
+	 gXm8MOEPJ48k2oRYScGQi4b1kKBc4gVCLAbZ9voCrSn0LcgBng8TjpbgjBT+TET9eE
+	 2f7GYRP4xvbL7qcWcX8yDel01qFar/FoQOhoq9lko7iSaz0/6EOXwBbdwm8fxNpDdD
+	 0Qso7CzcRzhmzgfGghsRTPHnPkGlpFKplsfy9Tcn3FQ4qST2nlJm0jlf6Z79jqCtTV
+	 p4Y+bKtTUmuNw==
+Message-ID: <bf0fd380-8b2f-479c-a00d-02827986459f@kernel.org>
+Date: Sun, 16 Aug 2026 16:15:14 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 0/7] Reduce the differences between TCP and
- MPTCP for TLS usage
+Subject: Re: [PATCH RFC mptcp-next v2 0/4] mptcp: sched: penalise a slow
+ subflow
 Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev,
- Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1786445142.git.tanggeliang@kylinos.cn>
- <94bbd3cb-4ca8-1002-5456-81fcae695484@gmail.com>
- <73f3308128089e62966a82b807fb872683a4a6f3.camel@kernel.org>
+To: Shardul Bankar <shardul.b@mpiricsoftware.com>, mptcp@lists.linux.dev
+Cc: Janak Patel <janak@mpiric.us>,
+ Kalpan Jani <kalpan.jani@mpiricsoftware.com>,
+ Shardul Bankar <shardulsb08@gmail.com>
+References: <20260815-mptcp_penalise_send_v2-v2-0-3e5049a73681@mpiricsoftware.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,41 +88,27 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <73f3308128089e62966a82b807fb872683a4a6f3.camel@kernel.org>
+In-Reply-To: <20260815-mptcp_penalise_send_v2-v2-0-3e5049a73681@mpiricsoftware.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Shardul,
 
-On 16/08/2026 11:16, Geliang Tang wrote:
-> Hi Matt,
-> 
-> On Tue, 2026-08-11 at 14:43 +0000, MPTCP CI wrote:
->> Hi Geliang,
->>
->> Thank you for your modifications, that's great!
->>
->> Our CI did some validations and here is its report:
->>
->> - KVM Validation: normal (except selftest_mptcp_join): Success! ✅
->> - KVM Validation: normal (only selftest_mptcp_join): Success! ✅
->> - KVM Validation: debug (except selftest_mptcp_join): Success! ✅
->> - KVM Validation: debug (only selftest_mptcp_join): Success! ✅
->> - KVM Validation: btf-normal (only bpftest_all): Success! ✅
->> - KVM Validation: btf-debug (only bpftest_all): Success! ✅
-> 
-> I noticed that this patchset has not triggered a review from Sashiko.
-> Could you please help trigger it, or let me know if I need to resend
-> this series?
+On 15/08/2026 16:40, Shardul Bankar wrote:
+> A subflow that is slow relative to the others can soak up connection
+> resources and head-of-line-block the aggregate stream. This series lets the
+> packet scheduler send less than such a subflow's congestion window by halving
+> it, and leaves the congestion control to grow it back. It implements 
+> issue #345 [1]. This is a deliberately simple first form; please treat it
+> as an RFC.
+Thank you for this v2. I didn't check in details, but I *think* this
+simple first form is acceptable, and you can remove the RFC.
 
-Apparently, it did:
+It looks like Sashiko didn't manage to validate it for some unclear
+reasons [1]. Do you mind resending it (without the RFC), please?
 
-https://sashiko.dev/#/patchset/cover.1786445142.git.tanggeliang%40kylinos.cn
-
-I guess you were unlucky to send it just when there was an email (and
-patchwork) outage on Sashiko side:
-
-https://lore.kernel.org/F8DBAB6F-7A3A-452F-A21B-3B8E56FD85E0@linux.dev
+[1]
+https://sashiko.dev/#/patchset/20260815-mptcp_penalise_send_v2-v2-0-3e5049a73681%40mpiricsoftware.com
 
 Cheers,
 Matt
