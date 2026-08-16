@@ -1,106 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24FC12F83B5
-	for <mptcp@lists.linux.dev>; Sun, 16 Aug 2026 09:16:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83692282F30
+	for <mptcp@lists.linux.dev>; Sun, 16 Aug 2026 11:52:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786871793; cv=none; b=YEmekGQyKxgpDjFsG/qcq7LvZGDIt323KMdSy7e+uP1Ut3E8WucrgU3SpLI0JJxj4RwLqB3E0Vor2sOlcikqByEfFx+S85C/xRwV4JGXqA7oUgnGyYzENQLTnsdMA+UUustsTpnpzspUFczZw4TRd/SoVAYs3ernLKgwfRJ/EEE=
+	t=1786881149; cv=none; b=f9SYpiOzP4pf4xftgSTnOLUGvafWdTHO2KG8QgGucMQM+OFRvxJGDkoPUvkSOtqemmZBDzQnkMT4+o4H6ffiDFmS1JZypnEtaLpKAn0jV8D3jEybyi9uKlK68hK/dGwC2tllW7NWUHUxIatbfkn4osD9hK3VrcmzQjlWA0nOjjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786871793; c=relaxed/simple;
-	bh=4Spu05fNpoVEVDu2sI1GtNaRuA4PQNoxK6PhFLtYJ40=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sSyxRU14D6NDClKpi24tfwuJNaE6Pn/rbZaAPNyWDwoap+c2ECoAbSRnkHRpfLsweK0Dpt0zy9xjs383WB75En1qrOYgaeIv7+PwvTN+UH+wrd895vHsuKcloK1Mt3j52z7MW6Ugz5YRxOIUsXTG2aqjH/aFXGScd5VFC+cNhw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NwyQGSNA; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786881149; c=relaxed/simple;
+	bh=9nap7RaGzamxMYl54TxABPeSmandh045p32/lNFwFQ4=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Mw/NFtq5C3e8P6YBLloKbHsMks+ol59X5/r4UerFHJy4s+XtB992I9vUDroF+Lb4jLmkoPe32tvPEG36qGEfINmax3d3CrAlHQqtDlO06/qgjK/GZcVbBrzTrCEXVhdQTfuKtNCBqgoXWsAFcp2s7xvfAPTxF4Vj/tVECQ4oWsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lne8IyWB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NwyQGSNA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B16B1F000E9;
-	Sun, 16 Aug 2026 09:16:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lne8IyWB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04C361F000E9;
+	Sun, 16 Aug 2026 11:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786871791;
-	bh=d7NEFauAn9p8qN9C8eDidwIMuDC7D3wZl5ic6Kyj+vQ=;
-	h=Subject:From:To:Date:In-Reply-To:References;
-	b=NwyQGSNAwP9UXRg2JNHFBUOG6GnWbjiSrpLySGbn7DG7HGrdkcq7emJn7EbeJpzeL
-	 83QvGF57IuQR8grNlOrE1zFSZ75Q9uyDYe4crEnO2I8GTL++AT2bNo4OsGkcZg/e9q
-	 72xjpokYn0bM7tO3pNLuC1mw8n6Ah6buQo3a8bOsRMwCSHMP83esgF8/Z2xS+N2YId
-	 Qu9XbScjv1Y7YYAsbe404kbmN8NfpeDHyJkjFdZLeN8YLyFtXrGYFSWKA3VbAzchL+
-	 jAAYgPDJdZsdrgFDGIc94l6+JC4YpL3r8b9VjnBVQoVK0qRpG8dr74lBjjRWrKR4QK
-	 Mc4god7aMbntw==
-Message-ID: <73f3308128089e62966a82b807fb872683a4a6f3.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v3 0/7] Reduce the differences between TCP
- and MPTCP for TLS usage
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Date: Sun, 16 Aug 2026 17:16:29 +0800
-In-Reply-To: <94bbd3cb-4ca8-1002-5456-81fcae695484@gmail.com>
-References: <cover.1786445142.git.tanggeliang@kylinos.cn>
-	 <94bbd3cb-4ca8-1002-5456-81fcae695484@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.2-9 
+	s=k20260515; t=1786881148;
+	bh=/Xma5gFNT5+wC6fcPhjpPIA+H4w7gIU5X9LWsxVIxDE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Lne8IyWBXNKK3evlYiY3B604Zzu0CmEtK2AqPd9fiCGT8UglrhQ7W9ACDObV/E5EF
+	 ZTChWxKJ5y8RyDTNurTvqYo8Q9SAZ99puRzj+g4VeLVYXrGCCjV+pCF2/I+MHZ4ege
+	 5VepjHOcuVAQjsFOyRqZsvVVmxz/d96Ly6hIA1Vn19fS9+wJRFfhn/fz19w76Eu+5I
+	 ZYTZD7Oqe0cbLQrfzyuU99CLiG8A2zjWrMBQJm3RB/OKg9ZhUKcwfSm9iqVoCRccjp
+	 3v+KvCwXLv2iRsClrkxxERS17ZC9KX8y5lUS14r0ShAcQIC5VYgQL/aDIr5r8sltf3
+	 hKWctLPVvnrwg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH net] mptcp: fix uninitialized local_id in syncookie
+ MP_JOIN reconstruction
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Harshit Varu" <harshitvaru666@gmail.com>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <20260815115205.197151-1-harshitvaru666@gmail.com>
+References: <20260815115205.197151-1-harshitvaru666@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 16 Aug 2026 11:52:27 +0000
+Message-Id: <20260816115228.04C361F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Hi Matt,
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-On Tue, 2026-08-11 at 14:43 +0000, MPTCP CI wrote:
-> Hi Geliang,
-> 
-> Thank you for your modifications, that's great!
-> 
-> Our CI did some validations and here is its report:
-> 
-> - KVM Validation: normal (except selftest_mptcp_join): Success! ✅
-> - KVM Validation: normal (only selftest_mptcp_join): Success! ✅
-> - KVM Validation: debug (except selftest_mptcp_join): Success! ✅
-> - KVM Validation: debug (only selftest_mptcp_join): Success! ✅
-> - KVM Validation: btf-normal (only bpftest_all): Success! ✅
-> - KVM Validation: btf-debug (only bpftest_all): Success! ✅
+Pre-existing issues:
+- [High] The `request_bkup` bitfield in `mptcp_subflow_request_sock` is lef=
+t uninitialized during syncookie MP_JOIN reconstruction, causing stale data=
+ to dictate the subflow backup state.
+--
 
-I noticed that this patchset has not triggered a review from Sashiko.
-Could you please help trigger it, or let me know if I need to resend
-this series?
+--- Patch [1]: [PATCH net] mptcp: fix uninitialized local_id in syncookie M=
+P_JOIN reconstruction ---
+commit ac471f0880c8ac59556dc5bd33e8a83b1849726c
+Author: Harshit Varu <harshitvaru666@gmail.com>
 
-Thanks,
--Geliang
+mptcp: fix uninitialized local_id in syncookie MP_JOIN reconstruction
 
-> - Task:
-> https://github.com/multipath-tcp/mptcp_net-next/actions/runs/31498591634
-> 
-> Initiator: Patchew Applier
-> Commits:
-> https://github.com/multipath-tcp/mptcp_net-next/commits/8f859f4196fb
-> Patchwork:
-> https://patchwork.kernel.org/project/mptcp/list/?series=1144100
-> 
-> 
-> If there are some issues, you can reproduce them using the same
-> environment as
-> the one used by the CI thanks to a docker image, e.g.:
-> 
->     $ cd [kernel source code]
->     $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm
-> -it \
->         --pull always mptcp/mptcp-upstream-virtme-docker:latest \
->         auto-normal
-> 
-> For more details:
-> 
->     https://github.com/multipath-tcp/mptcp-upstream-virtme-docker
-> 
-> 
-> Please note that despite all the efforts that have been already done
-> to have a
-> stable tests suite when executed on a public CI like here, it is
-> possible some
-> reported issues are not due to your modifications. Still, do not
-> hesitate to
-> help us improve that ;-)
-> 
-> Cheers,
-> MPTCP GH Action bot
-> Bot operated by Matthieu Baerts (NGI0 Core)
+This commit restores the local_id field from the saved cookie entry when
+rebuilding the request socket for an MP_JOIN 4th-ACK handled under SYN
+cookies. This prevents the subflow from using stale slab memory as its
+address-ID, protecting the path manager's bookkeeping.
+
+> diff --git a/net/mptcp/syncookies.c b/net/mptcp/syncookies.c
+> index 7f22526346a7e..b5cac57011221 100644
+> --- a/net/mptcp/syncookies.c
+> +++ b/net/mptcp/syncookies.c
+> @@ -118,6 +118,7 @@ bool mptcp_token_join_cookie_init_state(struct mptcp_=
+subflow_request_sock *subfl
+>  	subflow_req->local_nonce =3D e->local_nonce;
+>  	subflow_req->backup =3D e->backup;
+>  	subflow_req->remote_id =3D e->join_id;
+> +	subflow_req->local_id =3D e->local_id;
+
+[Severity: High]
+This is a pre-existing issue, but does this code also leave the request_bkup
+bitfield uninitialized during syncookie reconstruction?
+
+While this commit fixes local_id, the request_bkup bitfield in
+mptcp_subflow_request_sock doesn't appear to be saved in
+mptcp_join_store_state() or restored here.
+
+Since the request_sock slab is SLAB_TYPESAFE_BY_RCU and memory isn't zeroed
+on allocation, subflow_init_req() zeroes some adjacent bitfields but misses
+request_bkup:
+
+net/mptcp/subflow.c:subflow_init_req() {
+    ...
+    subflow_req->mp_capable =3D 0;
+    subflow_req->mp_join =3D 0;
+    subflow_req->csum_reqd =3D mptcp_is_checksum_enabled(sock_net(sk_listen=
+er));
+    ...
+}
+
+When the final subflow context is cloned, it copies this uninitialized state
+directly from the request socket:
+
+net/mptcp/subflow.c:subflow_ulp_clone() {
+    ...
+    new_ctx->backup =3D subflow_req->backup;
+    new_ctx->request_bkup =3D subflow_req->request_bkup;
+    ...
+}
+
+Could this stale memory cause the MPTCP stack to erroneously treat primary
+paths as backup paths (or vice versa)?
+
+>  	subflow_req->token =3D e->token;
+>  	subflow_req->msk =3D msk;
+>  	spin_unlock_bh(&join_entry_locks[i]);
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260815115205.1971=
+51-1-harshitvaru666@gmail.com?part=3D1
