@@ -1,129 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706F73A1686
-	for <mptcp@lists.linux.dev>; Sun, 16 Aug 2026 01:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67DF8233924
+	for <mptcp@lists.linux.dev>; Sun, 16 Aug 2026 02:13:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786842995; cv=none; b=hKHI0zyH8wkamjqD8k1GK+88TXPi6mk1FPwsiOD3ZAWQpeRAc0qD9GdLzi2KfcO9UN8cMAtHfC3p+YrOpF+MSlIWQR/GndWX0vrrlB2JWD1CKKd7JQWlqHEXto6l3DZNZMSe1/181yiV50ZfsJYrEroqXK0vOT61+bLchiLyCuE=
+	t=1786846401; cv=none; b=VmulafEBrrj4RcIgyBZq9SZ3AQK3IlbvVXW1LoIurvo3q1gkdri9sjQL6ggsA3Gc3MhPSn15vBmmxGfgIEd3xoV4f/h2XoAsP1lfHxNVR8FaWsA4xIkBFY7j9YNioM/voz/3BvzuUUA6us0DW+gcKmm8+x5/vlZI+A2pPilrtcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786842995; c=relaxed/simple;
-	bh=kMSADCFHfefzc2UkBgUKFQD09y4XWULYVdnLfgUD7zg=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=AQQPqgbV+X+j1lzA3jZQ5rMzrzSNIlBKtvl7nHF7diFXlX6HfimyEjOaIK/RB/LmptD+vOton7sOwALbpMdolG6L15deWQPiaIcsOT6GeUaainhXxZIh0H7oF+j/8zuDNdZS0OzKWovE1XMPRpR+4pXQIRLfxSs0kyMdIvkBSzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cyZZtBPE; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786846401; c=relaxed/simple;
+	bh=7gSJ1uF/q6wOybWgZnqwGpJyNjGJsuhrZjhfN+hQj6M=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=YCRf6ijJMxAO9QFOKW2LLYEPiu7H5APgXF8/2D70rOVvwlzTwXEL6mfe7GDoxAsSPHbRkvaunDgvZNQ3WdA1FjkDl+rxowH3YpQd/Xs9n44XW/DwP/z7vuNrP1v2ls24txE0Rtx4gzVfIzJCMoef6gBRmNy5E4F3twOG1KmDa50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=oF41wNRH; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cyZZtBPE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D31A41F000E9;
-	Sun, 16 Aug 2026 01:16:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786842994;
-	bh=T1Ys28QsUOEilbFW7OcCQyEAXbllW8CrGb4ps+2rUM8=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=cyZZtBPEkA+IYRo0aKpjrRZHXi+xktetXnzIiTUaQ+XtAcnmQhLcpNkTZsToK/tAZ
-	 vfBimOe4yWPz1tonpH9ufrBhLA5xp4MSS/abur32oB+fEP5jRxiFQF29bYTRI6jiYk
-	 S5BPFtPGJhh4Qr8pqlrJm849Wj9qdoqHndBnwud7l/IqdPPKoTTSv6iZf7a2HkYL4D
-	 JJXcJ/tLRxM4T8sSJbVVLC8Ut776SVrLc5077spfZnt6RP5qqR8pVGH3MM7Z31+2G8
-	 iW4Z8zQtuowTmtcgVkeuptMsYJLvpdBzinJl65guSfvQKYOe8XtN5UrcbGJz+PZ+FV
-	 bgwe+TP4tuSbQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 2/4] nvme-tcp: unify sockopt with do_sock_setsockopt
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Geliang Tang" <geliang@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oF41wNRH"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-8485ef63b68so1560806b3a.1
+        for <mptcp@lists.linux.dev>; Sat, 15 Aug 2026 19:13:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786846400; x=1787451200; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=QeAhjf1at4eLBj9kUxVcAONFJJGuE8ggS7XMPdahnhA=;
+        b=oF41wNRHyptb90moPQBTupRvaqehuy3FCKPH3F1T4MjpRSxuHrav0ebCHfGg0pDWAH
+         B7C8Us1bf8XWzEgtL3SyXhX8VcfYgwnXCBRyR35jF8Ud0x1TQBLQz/ALzlCf1Bliaots
+         vjmc8m4OkvPEEntnMcCZnqrZnkUyg0i3FYK7kifVLWSHoCck13nWv4hePYqhz992naSP
+         WL+tFU5WKCnbRugOwv0z2k0fZEvijgC1c4Hp/4LhmCKmMDV4DePQCTKEeJ4IDmnAdXqv
+         wtBs9+TQyKGM4h17bUVereTA7xVSvJ0WHcALifhnW1qmyzLb9aTEKOacXe0rd+DSxlVh
+         xp6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786846400; x=1787451200;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=QeAhjf1at4eLBj9kUxVcAONFJJGuE8ggS7XMPdahnhA=;
+        b=W55E5eZ2R8j6rkgwtISxXrCmYnagwT5PBjcKWAohQ34keJV/WNsGCwPArWuG2T62kM
+         cgQakm0KoTd2ZR1a36mDLhZC4JiSbfb9YuBl/mR8UVQi/QVj4FwlNSJqSW+1Hj1ar+Qy
+         r4NAGNOD0BHSogrqBG4BxeIZV+/SNDDC4ausJPQ6ZUfEKfy+Llcf9lQq4YdyOUgRmDCX
+         NPWZHevdKpUoZIOwr/KuT3teeA1CAL/oftEIhzYgQpktAvoJ5GWKHIg3sQQXL6++LvBF
+         WCQjPFUAJsrM3HIa1Ue6QCnEMEXTydPscYphTYaUDH4BWNSZ8J6+AzpJtL0fkrnrrFu/
+         AGag==
+X-Gm-Message-State: AOJu0YyImGCWRl2zHnS6Vk6UJngOPQE+5dEXGACp50TORH7ikGQOAn8C
+	tUMTh5byN0nU742Zk+yjf1kLYKoKNaolXbQ4H+aMPkXF5b2Oli7gUc70JngQ
+X-Gm-Gg: AR+sD12YKl3+yTgVeq0nK97C+tcXlc0R6YVwnUDQ25po+Nfrj9M41Le+6551AJVZNVK
+	v1s59Zgv51XDssNqGevTIG1VaW6s6T4oVunHpLDtk9bmKSj6Ysjeb7spueHRAjaLLxqM8DZe5go
+	JQnx86fgT6h6aOFqRtS3/JIxdNGzRE6uBQAnkGIeoJd87EdT/9inLTUxAl7Y+AOfS2IVjDlbbPM
+	rAvd+yDeHu+4+0bx+fHF2fiPNwzHRVgmvpAoF+k0xMC6hVBKBojteKq5SL2Ti7l9aMepF+qOLvw
+	+wb8hKxVQJl/8h3SX4lEnz0H2eHrXbzNWSw6md6LIQ8OUpNE2c/GX677g6M4qVwWCXpBMgKo8xI
+	FEO65OsyXdiYgeK5f1TaMfKt1aMFDGxK5g8tD0ltPw9gpr3XEqO8f+g9WdnwOFdxH7sU/1e9fRY
+	vw24C9i037sZ1803UKLNO2w35y3LvIZ1feLasU2+uycvdcGUj3fhUTHQLOqe3t/H4TZ5bWRkP4S
+	L0IUinEEQks
+X-Received: by 2002:a05:6a20:939f:b0:3c3:a1ed:3c36 with SMTP id adf61e73a8af0-3cc71cef032mr19840313637.24.1786846399408;
+        Sat, 15 Aug 2026 19:13:19 -0700 (PDT)
+Received: from [127.0.0.1] ([128.24.160.225])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-141387c56aesm23932331c88.4.2026.08.15.19.13.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Aug 2026 19:13:18 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
 Cc: mptcp@lists.linux.dev
-In-Reply-To: <97e667df6c3755d1f9e2e709dfa1dc64903317e1.1786841319.git.tanggeliang@kylinos.cn>
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1786841319.git.tanggeliang@kylinos.cn>
 References: <cover.1786841319.git.tanggeliang@kylinos.cn>
- <97e667df6c3755d1f9e2e709dfa1dc64903317e1.1786841319.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=utf-8
+Subject: Re: [PATCH v3 0/4] nvme-tcp: add IPv6 traffic class support
+Message-ID: <102efbee-9e6f-1811-2d27-71940e884bf4@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 16 Aug 2026 01:16:33 +0000
-Message-Id: <20260816011633.D31A41F000E9@smtp.kernel.org>
+Date: Sun, 16 Aug 2026 02:13:17 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] Routing internal kernel socket configuration through user-facing d=
-o_sock_setsockopt() ignores return values and subjects critical NVMe settin=
-gs to userspace BPF hooks.
---
+Hi Geliang,
 
---- Patch [2]: [PATCH v3 2/4] nvme-tcp: unify sockopt with do_sock_setsocko=
-pt ---
-commit 2f6cd2b103bf52f5964e62f02552a246d7faa461
-Author: Geliang Tang <geliang@kernel.org>
+Thank you for your modifications, that's great!
 
-nvme-tcp: unify sockopt with do_sock_setsockopt
+Our CI did some validations and here is its report:
 
-This patch consolidates socket option settings in nvme-tcp by utilizing
-the generic do_sock_setsockopt() helper. It converts several direct socket
-configuration calls to this unified mechanism.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/319193=
+77372
 
-> diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-> index ce03a0ea4ded7..3bc41a4735d94 100644
-> --- a/drivers/nvme/host/tcp.c
-> +++ b/drivers/nvme/host/tcp.c
-> @@ -1774,6 +1774,47 @@ static int nvme_tcp_start_tls(struct nvme_ctrl *nc=
-trl,
->  	return ret;
->  }
-> =20
-> +static void nvme_tcp_sock_no_linger(struct sock *sk)
-> +{
-> +	struct linger ling =3D { .l_onoff =3D 1, .l_linger =3D 0 };
-> +
-> +	do_sock_setsockopt(sk->sk_socket, false, SOL_SOCKET, SO_LINGER,
-> +			   KERNEL_SOCKPTR(&ling), sizeof(ling));
-> +}
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/58af0bc691a8
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1146638
 
-[Severity: High]
-Does routing internal socket configuration through do_sock_setsockopt() exp=
-ose
-these settings to userspace BPF hooks and LSMs?
 
-Since the kernel socket inherits the calling process's cgroup, a=20
-BPF_CGROUP_SETSOCKOPT hook or LSM rule could intercept and deny the=20
-operation. Because the return value is ignored here, would this silently=20
-fail to apply SO_LINGER?
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-[ ... ]
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-> +static void nvme_tcp_sock_set_nodelay(struct sock *sk)
-> +{
-> +	int val =3D 1;
-> +
-> +	do_sock_setsockopt(sk->sk_socket, false, SOL_TCP, TCP_NODELAY,
-> +			   KERNEL_SOCKPTR(&val), sizeof(val));
-> +}
+For more details:
 
-[Severity: High]
-If do_sock_setsockopt() is intercepted or fails, this also ignores the retu=
-rn
-value. Could this leave Nagle's algorithm enabled on a storage protocol,
-leading to severe performance regressions?
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-[ ... ]
 
-> @@ -1819,24 +1860,24 @@ static int nvme_tcp_alloc_queue(struct nvme_ctrl =
-*nctrl, int qid,
->  #endif
-> =20
->  	/* Single syn retry */
-> -	tcp_sock_set_syncnt(queue->sock->sk, 1);
-> +	nvme_tcp_sock_set_syncnt(queue->sock->sk, 1);
-> =20
->  	/* Set TCP no delay */
-> -	tcp_sock_set_nodelay(queue->sock->sk);
-> +	nvme_tcp_sock_set_nodelay(queue->sock->sk);
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-[Severity: High]
-Executing these wrappers in sequence without checking for errors means that
-failures are silently ignored. Can this result in an incorrectly configured
-socket being used for NVMe over TCP connections?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1786841319.gi=
-t.tanggeliang@kylinos.cn?part=3D2
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
