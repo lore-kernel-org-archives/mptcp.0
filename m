@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD7E346E75
-	for <mptcp@lists.linux.dev>; Sun, 16 Aug 2026 16:12:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 159CF3BBFDD
+	for <mptcp@lists.linux.dev>; Sun, 16 Aug 2026 16:13:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786896750; cv=none; b=uT84afvliUDmL9iAdHJm7DuSx5N907+lU3QuWdIcjqoWthEaE+jaxiyBYzV/OSbmSHmRGVqnZSlUYWhwZdgF5vw77TN2tb/TtTUFJ3gDEFyKpFiYYgp6fo1O1XVW7JdRv8TgRz0iyGngkyb78Hi5OQJg9/Su8t3stmUD5NY79vY=
+	t=1786896800; cv=none; b=lZvnn9+zt1DR/c8QNwDJQsf/otWlXPMZg2EvIjP+xzL3BuDd0/ZfnDXXh6gTiDxNNz9mLvONWXMANsxd/QAG/tDGEbIGD9S+jx6BGZyyjnZqUXyKAOmnihYFxZYaBeQm4x41QBybZyQg8jmmu4EK7rk15YppEW2ewEy5vJxD6Io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786896750; c=relaxed/simple;
-	bh=Zz2GFz+Ku/4c64lVKr+crqrnl++Fl9gMWIRKbr3XP2k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I8V13JGvZZUGHHmT5K4OB9iRy8E8I76pB66VnX6Xbf7SZPzrfSUJkzvuwOryw81vdDRqDeunmNGvEnWYDxgFKzdnxIUJB+ELe2ekMg3cPV1RUNnSevCPsxSUygRPxMNLcASeShi2JHtTYbO6pHhYxTAvcMnbYPPEVTLduCGgkKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n5F0BVtW; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786896800; c=relaxed/simple;
+	bh=BP8Yv6Aq91krJEF2L+rJite63A2g99xfAyUlt7wvZhM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=n6EJgqKiffkAthcsrwRiqMtxE3jOUFlpGH5IXXL6qHjb0S/xf+EXn3+ShtQOg+4GbYA8DGNH77S+2buS42PW29R6QcFPhEA6n9jRW1fkQIgFJ2Y4fWSWYxXVib0XeVawILTWIYljWHdkA7PBzgZj/l/+g81mTZVL6alheJSO/8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NyYqYZ6S; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n5F0BVtW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 480811F000E9;
-	Sun, 16 Aug 2026 16:12:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NyYqYZ6S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19D501F000E9;
+	Sun, 16 Aug 2026 16:13:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786896749;
-	bh=hT49ysomEbTWJK78ajs/M3cDOcYz8UzpEOwwb/kOFj8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=n5F0BVtWteA+Kz/ZokscDlauiw4+iBTXdVkLpVF1K7xGqqh9VmA34pCHQtnenclT4
-	 LjNdjPLA7fIaLPQVvrwOjP8uPYnB3vEkkHLx3JTLvEWPD/PKAB1Hr8F+hnT3fKt819
-	 O4GeX0qendQ4Zv9dTJyHoMEBBWJ0toZ6WcNG5N78p66CfRwl4w/QFzx4wz+4USNLIe
-	 8+0ul8D5fj7cEPZ8YkSir/s4CPxcYCwn+DQh+hWKLTInZ5eme83+L7bXMJaT85uwv2
-	 GijbOc/FTYuoExVTF+bDLvpej+w1pVau1gfXJCLNJAjuXggF70Xy423kILKClu08bc
-	 sgbXtBJP2x4Ww==
-Message-ID: <687bd2da-28b5-4753-b942-d18cb53d9239@kernel.org>
-Date: Sun, 16 Aug 2026 18:12:26 +0200
+	s=k20260515; t=1786896799;
+	bh=cZVxSj1GpogDtipFjK8j1msanPORFnfR8t1+bjDl1ZE=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To;
+	b=NyYqYZ6SCGKCNYkY/g9kbx5Qp6k89CN+kLm7p4xVKgDUmdS+HZBdzs3EGU4UX6cN6
+	 gG970UIUtSDIZkBTHfwWJJBPAYbqdI0wDozCjQwMc5ITjzmXBdJac2zevZ6bY/mfqx
+	 qx3NAmwIyXCr0Ql+apjEjoHguJ7CxR1mmul7qg6A7erPQafQR9Scj/i1NGtM/o95HX
+	 oTm1ZwLlsfL29osJP/fEEZMc56JYhrajhYd4D05OQO8Mz/OH49lUF4AxZrGNf+73nb
+	 xEatedgMqMgOn3mv8TIJtAULcsQHlrilIE6worCVcrmHh2G8mxnMhmGOBH5eaGduc2
+	 Xc/gcnwpYMdDg==
+Message-ID: <68ead427-6c15-49f3-8ed6-64383fdda680@kernel.org>
+Date: Sun, 16 Aug 2026 18:13:16 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,12 +37,13 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-next RFC 2/3] mptcp: reject MP_JOIN earlier
 Content-Language: fr
+From: Matthieu Baerts <matttbe@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: Paolo Abeni <pabeni@redhat.com>, Chenguang Zhao
  <chenguang.zhao@linux.dev>, gang.yan@linux.dev
 References: <20260814-mptcp-reset-mpj-early-v1-0-3ca3260f9474@kernel.org>
  <20260814-mptcp-reset-mpj-early-v1-2-3ca3260f9474@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <687bd2da-28b5-4753-b942-d18cb53d9239@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,53 +88,78 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260814-mptcp-reset-mpj-early-v1-2-3ca3260f9474@kernel.org>
+In-Reply-To: <687bd2da-28b5-4753-b942-d18cb53d9239@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
-
-On 14/08/2026 20:31, Matthieu Baerts (NGI0) wrote:
-> When a SYN + MP_JOIN is received, it is good to check directly if the
-> MP_JOIN is allowed, then checking that later at the establishment of the
-> new subflow.
+On 16/08/2026 18:12, Matthieu Baerts wrote:
+> Hello,
 > 
-> This avoids situations where the 3WHS is done, then the joined subflow
-> is rejected.
+> On 14/08/2026 20:31, Matthieu Baerts (NGI0) wrote:
+>> When a SYN + MP_JOIN is received, it is good to check directly if the
+>> MP_JOIN is allowed, then checking that later at the establishment of the
+>> new subflow.
+>>
+>> This avoids situations where the 3WHS is done, then the joined subflow
+>> is rejected.
+>>
+>> This changes the behaviour, and the new behaviour is tracked with the
+>> MPJoinDisallow MIB counter.
+>>
+>> TODO: adapt the selftests to be able to run on older kernels: if the new
+>> counter is not available, increment syn_ack and syn_rej instead.
 > 
-> This changes the behaviour, and the new behaviour is tracked with the
-> MPJoinDisallow MIB counter.
+> (...)
 > 
-> TODO: adapt the selftests to be able to run on older kernels: if the new
-> counter is not available, increment syn_ack and syn_rej instead.
+>> @@ -217,17 +228,19 @@ static int subflow_check_req(struct request_sock *req,
+>>  			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_TOKENFALLBACKINIT);
+>>  
+>>  	} else if (opt_mp_join && listener->request_mptcp) {
+>> +		u8 reason;
+>> +
+>>  		subflow_req->ssn_offset = TCP_SKB_CB(skb)->seq;
+>>  		subflow_req->mp_join = 1;
+>>  		subflow_req->backup = mp_opt.backup;
+>>  		subflow_req->remote_id = mp_opt.join_id;
+>>  		subflow_req->token = mp_opt.token;
+>>  		subflow_req->remote_nonce = mp_opt.nonce;
+>> -		subflow_req->msk = subflow_token_join_request(req);
+>> +		subflow_req->msk = subflow_token_join_request(req, &reason);
+>>  
+>>  		/* Can't fall back to TCP in this case. */
+>>  		if (!subflow_req->msk) {
+>> -			subflow_add_reset_reason(skb, MPTCP_RST_EMPTCP);
+>> +			subflow_add_reset_reason(skb, reason);
+>>  			return -EPERM;
+>>  		}
+> 
+> Note: the call to mptcp_can_accept_new_subflow() here below, when
+> handling req->syncookies, is no longer needed as it is now done earlier
+> for all cases, in subflow_token_join_request().
+I meant to add the diff:
 
-(...)
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 7552abf4c333..c629bcce6ecc 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -258,15 +258,8 @@ static int subflow_check_req(struct request_sock *req,
+ 
+ 		subflow_req_create_thmac(subflow_req);
+ 
+-		if (unlikely(req->syncookie)) {
+-			if (!mptcp_can_accept_new_subflow(subflow_req->msk)) {
+-				SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINREJECTED);
+-				subflow_add_reset_reason(skb, MPTCP_RST_EPROHIBIT);
+-				return -EPERM;
+-			}
+-
++		if (unlikely(req->syncookie))
+ 			subflow_init_req_cookie_join_save(subflow_req, skb);
+-		}
+ 
+ 		pr_debug("token=%u, remote_nonce=%u msk=%p\n", subflow_req->token,
+ 			 subflow_req->remote_nonce, subflow_req->msk);
 
-> @@ -217,17 +228,19 @@ static int subflow_check_req(struct request_sock *req,
->  			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_TOKENFALLBACKINIT);
->  
->  	} else if (opt_mp_join && listener->request_mptcp) {
-> +		u8 reason;
-> +
->  		subflow_req->ssn_offset = TCP_SKB_CB(skb)->seq;
->  		subflow_req->mp_join = 1;
->  		subflow_req->backup = mp_opt.backup;
->  		subflow_req->remote_id = mp_opt.join_id;
->  		subflow_req->token = mp_opt.token;
->  		subflow_req->remote_nonce = mp_opt.nonce;
-> -		subflow_req->msk = subflow_token_join_request(req);
-> +		subflow_req->msk = subflow_token_join_request(req, &reason);
->  
->  		/* Can't fall back to TCP in this case. */
->  		if (!subflow_req->msk) {
-> -			subflow_add_reset_reason(skb, MPTCP_RST_EMPTCP);
-> +			subflow_add_reset_reason(skb, reason);
->  			return -EPERM;
->  		}
-
-Note: the call to mptcp_can_accept_new_subflow() here below, when
-handling req->syncookies, is no longer needed as it is now done earlier
-for all cases, in subflow_token_join_request().
 
 Cheers,
 Matt
