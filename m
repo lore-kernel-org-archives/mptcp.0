@@ -1,108 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FEC1277C88
-	for <mptcp@lists.linux.dev>; Mon, 17 Aug 2026 15:40:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1536142D75B
+	for <mptcp@lists.linux.dev>; Mon, 17 Aug 2026 17:43:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786981206; cv=none; b=SgABAzUa3yRw1iaX/CcvmcXmEFVNPzacBc0CboX4YCI+maq8oHOs4n+/2U+Cy4PNecixo/QrMmPwSx8jYfwoRL2HPzTBMoJEiToeFeynmkQHhGTovgzgNGDwHmnjknls9hVDCDLW6QNl01sgW0920YvPGYyg7AsX97o1PNXGGVU=
+	t=1786988596; cv=none; b=Oy5dGg+lTjWLoUJSx/HhmIESLaQ+fjf5rG4NdNVBra+lBL1S1/aupOi9Udrm/VuVJg2lJS6s+hJvm0sE9ivQqnV20fm+GRa+S+A94xboIUWV/z+PEN5QYJwDn+ia2xEh4TO/nGsoKujbPvDN8M6kfc5a+ikJPBUwWwsW5SeUtds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786981206; c=relaxed/simple;
-	bh=sjPx93vcI5fJffm81MfLi1HKYsukkhehasDwG5+ldKQ=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=GsAMx13efweLVnB1VFZj9/LxR73QsXBE85am/aSYevqT9t1g3L0FL9X4qnoFkI8jUI0ASN89jMrUfUaE9RaDMLAEiJ5AiGja+lbix66f/DtkWqZObN/hP3w+Nc4Cq5TKObQ4SsYGEUL+SPqmg9b07+ws/R3KLZZUixiO+/Q2+qA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jmusk3Zq; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786988596; c=relaxed/simple;
+	bh=IH4oixgQhrHtZya4v6lgVJ6/KJBqYZq4MZ/b4WHMRQg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZR+ogCs7pMhlQuiF/2HGq93sTzkVD4e1QNrSG9LpLJjBXbw68eW48i8+JyI7R7uq14Humbown7FZJTL9CSoA24zH5qxs5LKlK4OasD8TeAIQlRdWhfEI73V8OsAtwwhILDx5A8G5wmwl2jRziNal2CAHYjtsVZ6oKI35Xonhw9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n8iI5ILi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jmusk3Zq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E1591F000E9;
-	Mon, 17 Aug 2026 15:40:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n8iI5ILi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4D5E1F000E9;
+	Mon, 17 Aug 2026 17:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786981205;
-	bh=+dIwt/AHOuyi2u41v7y0kSZkQ/kESmzA3+YqEULW7TY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Jmusk3ZqDjWXslGzrwi0xFiqt4a314qPPLc4rFyFbNnSugz8Aaw3daY5yO1S1sPea
-	 m+J4BYTuEIg+6q0ZUUXU/jJImbuDVYhnTB133Ciftf1tFyWgOVJ7wr7n/lmOp7xEVm
-	 ooFVEqLPR8YCNanA6h4A1gnKwalMesJjaEJOQQEV+oPFXwCaEB74Ru+PT8t9l6vIge
-	 N43crgCiAaJgscxXuAAFdoay2I4cwTSQVdcJqBVCXtT3+i2fE/fUY+SDi7xHogc2Kl
-	 CKzm05duuGbH4Jqlp9rxgV4EcP28Jk2LHjyzDzru3OykA63sqLqz3EAoBldIRIOOOw
-	 +ybsK7do3UxEA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v3 1/4] mptcp: sched: avoid truncating the
- pacing rate in the scheduler
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Shardul Bankar" <shardul.b@mpiricsoftware.com>
-Cc: mptcp@lists.linux.dev
-In-Reply-To: <20260817-mptcp_penalise_send_v2-v3-1-e6a2ad2f1b82@mpiricsoftware.com>
-References: <20260817-mptcp_penalise_send_v2-v3-0-e6a2ad2f1b82@mpiricsoftware.com>
- <20260817-mptcp_penalise_send_v2-v3-1-e6a2ad2f1b82@mpiricsoftware.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 17 Aug 2026 15:40:04 +0000
-Message-Id: <20260817154005.1E1591F000E9@smtp.kernel.org>
+	s=k20260515; t=1786988594;
+	bh=wJqlJukd3gCbHwAYMqZAtxHWg3uqZW6mAfP9whjlCic=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=n8iI5ILimODaxb6EZPgKexrWo2ep01NOTX5mXCQ6rHTHYOH+tLQqYP4Wo42zUlFU+
+	 ArSMJ/NUja5SITP9WJFn8LWLMy1SrDST+Z3+X0eVODZDcry3Jsasb1h+pZA/5BOLjR
+	 S5jk1TJiX/W3nZVD8DFWKdjnlYTzsoJT3G+9Vsa2pjpZihVIpapKMhYeqzTUIX3y8s
+	 +SeoUoVi6SYAWpZJELJcw9+oSGGR4k9d30RWjwHgS56d1QObIan8vzGPn4iTDEVvx6
+	 s4Z8r6muiwmMoCZd1mbLhNSg5Ld2vHQPZFQEsJe9X7vmsCRN80L7F5Z8fTkWQoa5Lh
+	 D5E6jdyGMM1Pw==
+Message-ID: <1a8f1b2a-df80-4257-ae67-5403f93f0a67@kernel.org>
+Date: Mon, 17 Aug 2026 19:43:11 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next 0/3] mptcp: avoid data-races around the sysctls
+Content-Language: fr
+To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+References: <20260817012452.7519-1-gang.yan@linux.dev>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260817012452.7519-1-gang.yan@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+Hi Gang Yan,
 
-Pre-existing issues:
-- [High] The weighted average pacing rate computation silently overflows `u=
-64` on high-speed networks with large send buffers, artificially clamping t=
-he calculated rate.
---
+On 17/08/2026 03:24, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
+> 
+> Hi,
+> 
+> As decribed in [1], this series is for addressing the KCSAN issues in
+> sysctls.
+> 
+> Following the tcp_congestion_control() model, patch 1 and 2 now store
+> pointers to the immutable ops and swap them atomically via xchg().
+> 
+> Patch 3 (from Matthieu) covers the remaining scalar sysctls with READ_ONCE().
+> 
+> [1] https://github.com/multipath-tcp/mptcp_net-next/issues/626
 
---- Patch [1]: [PATCH mptcp-next v3 1/4] mptcp: sched: avoid truncating the=
- pacing rate in the scheduler ---
-commit b2e45abf072b6d7db21560b1c0ae59fd43742be5
-Author: Shardul Bankar <shardul.b@mpiricsoftware.com>
+Thank you for looking at that with Tao Cui.
 
-mptcp: sched: avoid truncating the pacing rate in the scheduler
+Globally, it looks good to me, but I have a few small requests:
 
-This commit addresses truncation and overflow issues in the MPTCP
-scheduler's pacing rate computations. It widens the pace variable to
-unsigned long and casts the pacing-rate average product to u64 to
-prevent 32-bit integer overflow. It also uses div64_u64 for the linger
-time calculation.
+- Do you mind resending this series, please: for some unknown reasons,
+  Sashiko didn't get it. But before: ↓
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index c2762d74f29d7..46a49ec75e784 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
+- Can you not add Eric in Cc of the 3rd patch? Better not to spam him
+for dev work → b4 send --no-trailer-to-cc ; or: git send-email
+--suppress-cc=misc-by
 
-[ ... ]
+- Could you split the code around bpf module support? I guess these
+patches will be sent before adding BPF PM/sched support. In this case,
+you would have squash-to patches for the BPF parts at the end of the series.
 
-> @@ -1691,7 +1692,7 @@ struct sock *mptcp_subflow_get_send(struct mptcp_so=
-ck *msk)
-> =20
->  	subflow =3D mptcp_subflow_ctx(ssk);
->  	subflow->avg_pacing_rate =3D div_u64((u64)subflow->avg_pacing_rate * wm=
-em +
-> -					   READ_ONCE(ssk->sk_pacing_rate) * burst,
-> +					   (u64)READ_ONCE(ssk->sk_pacing_rate) * burst,
->  					   burst + wmem);
+- I think you can move the WRITE_ONCE(pernet->pm_type, pm_type); from
+  current patch 2 to 3, with Tao Cui's Co-dev.
 
-[Severity: High]
-This is a pre-existing issue, but is it possible for the weighted average
-pacing rate computation to still silently overflow a u64 on high-speed
-networks with large send buffers?
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-If mptcp_subflow_get_send() computes the moving average of the pacing rate
-for a connection with a large send buffer (e.g., 2 GB) combined with a high
-or unlimited pacing rate, the numerator ((u64)subflow->avg_pacing_rate *
-wmem + (u64)READ_ONCE(ssk->sk_pacing_rate) * burst) can exceed 64 bits
-before division.
-
-This could artificially clamp the calculated rate, drastically reducing it.
-For example, an unlimited pacing rate (~0UL) with a 2 GB send buffer might
-be incorrectly throttled to ~73 Gbps, and a 100 Gbps paced connection with
-a 2 GB send buffer could be throttled to ~26 Gbps.
-
->  	msk->snd_burst =3D burst;
->  	return ssk;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260817-mptcp_pena=
-lise_send_v2-v3-0-e6a2ad2f1b82@mpiricsoftware.com?part=3D1
