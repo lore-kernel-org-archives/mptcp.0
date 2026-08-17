@@ -1,87 +1,113 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB67A39CD13
-	for <mptcp@lists.linux.dev>; Mon, 17 Aug 2026 06:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB7E2DEA93
+	for <mptcp@lists.linux.dev>; Mon, 17 Aug 2026 07:27:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786947298; cv=none; b=rhyyeRxf0Lo0wXsC/AY6tj+5EYbVrUgUkZvL4ziiCjQCbwfhtRAIbkdy9JbdXCpfiBJMjhDzrfkrYOdb67a+Vgf43pDZHRZOV8S93YGP2YaCsn21Mxhl1iLkwZ/tBzqJZ1+zp4BxZzix9kasiJmRWWJsWnYcvLMO+UZaYGO6oWg=
+	t=1786951674; cv=none; b=PkJbrL3rxhOMxuwmIIzKbT3/zTt1gDUGUb4c3r3QA9EaOxT2CHpWek/kcwi0TWyeNxgTMedU8VBPXVD6jAfXuwjLK8ssU2l/3V6eq3uEmXxO49pRS/PBNg1JvcdNGT7fBG/ws3P5x65+us0DI1iy5UDBUE/a6ktgZYIOZ0HEAjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786947298; c=relaxed/simple;
-	bh=cHysO5AyRFhVYcEymhpMDhW9PRDdYMYzViNhf9WLVVE=;
-	h=Date:From:To:Message-ID:Subject:MIME-Version:Content-Type; b=PxvnsyAfilFa/UWubNdly4SeRk6bUdSF/31wZCnxUOrnix3SKrMxu2V119NSqxQl9NX9GQAIYeFNPkS2xnVGgVz3R4Khs+5Yc/DgqAZm8rrlIFYVnxmCmth+itWU3/aSlYf6SyUj1CJhwGeQIMgny8Eg4CL4uudn45xK35++TQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZG3A0on2; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1786951674; c=relaxed/simple;
+	bh=Di6zLyjW4X2c7MCC8NF1iV8REhETE9iAPVp6145lobI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nrhKby0VHFGxfuvN54gpllA4k3X74R8hfi/KR2yrQCvvY+eAcAx84/IiQ6gNt7cPx7HA7wGiGWcfcspLILM4OgoCijC2QjfCJ9AdAEzaLJjvwiq6zF95bISZGmZr/w5HEBxhBoqtZXocFX4XkiQMm2KnffPFlP0OErlFc4j2+E0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b1U9LEDr; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZG3A0on2"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-c966b9ee9cbso1874394a12.1
-        for <mptcp@lists.linux.dev>; Sun, 16 Aug 2026 23:14:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786947296; x=1787552096; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:mime-version:subject
-         :message-id:to:from:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=cHysO5AyRFhVYcEymhpMDhW9PRDdYMYzViNhf9WLVVE=;
-        b=ZG3A0on2zfhW8uXojB+UIBD4AZfaV00agkub48E2EvcQzAHFuJAgNM7zgk9UJKRBlA
-         dM7ewKr768NzdFS8REAo3fpwij4DfrttEcf5zqvVS9ySyA8z+ILtoasKYN1/WW/Z2bdG
-         +N5GcFtIMdEGBtIRrH8lnb2bZ/+PmAd2tnnaT4Xu0PJht6LMAX7Pu+eGYG+JResLoVdD
-         hQ28F1Bgnc5RBHJFWTYGKw4X33s+pG54XneVqOAfw6cj9S3QLHSNiIU07m5J/2NcF9QV
-         hBxipLERiM3gmy98X5Wa0RGn3yCFJScuZY1nYzQUhlQsiqVrJxatu0PpOdUQNJRs1Xs2
-         dUOg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b1U9LEDr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1786951671;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yrVofAtgfUfixx+BbKkuuBQzK0gr154ob0BQ1R4yIIE=;
+	b=b1U9LEDr/zS8vikl0dp91hO51qF93Vle5+vJaOpI+gmQQxwrdPiq2CWPoB5r7fU/ZIgPZa
+	90b4vR4Dkcr0TjotaNqe/8FVpGoG0EfMG17/hhCVCjFAVZ16Jt9K5qqc0YIAWwmCvihk4I
+	rpn0v63BLZszGP1n+hLZCTMAQSwM0f4=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-678-t8ZHpECyOMqaazsos63xzw-1; Mon, 17 Aug 2026 03:27:49 -0400
+X-MC-Unique: t8ZHpECyOMqaazsos63xzw-1
+X-Mimecast-MFC-AGG-ID: t8ZHpECyOMqaazsos63xzw_1786951668
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-49955a9dbcdso19648995e9.1
+        for <mptcp@lists.linux.dev>; Mon, 17 Aug 2026 00:27:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786947296; x=1787552096;
-        h=content-transfer-encoding:content-type:mime-version:subject
-         :message-id:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=cHysO5AyRFhVYcEymhpMDhW9PRDdYMYzViNhf9WLVVE=;
-        b=WW4h0O9ir6fXRfGTKSlGIv6QnDHbNUpiuF361OT0rpMAI5n0hPikHSKV80aRo/+3zx
-         LD+qaBNXkjAYxML4q2HlI5inHdB74iUITZ3iciRcqZWFMYukDVZjREa5a2PFKgBi3SeN
-         25dB6pRjQL71fD6P98H+Bu+1uFKQYDyYrPvAtBnkfgNtSvZVAnqQFkFq8w3H+tyxWmxO
-         467G23rOTQ29/lli1lSkNV45bpEJ604oNHpYYscUfPQAM0fLubVr3PwJtj6OxPXd2kcB
-         JFOzV47Mic3U/WBA3Hlz1vnma4GvhBPeNOofq+8HSTV7d5k/Puj6OoPKQNVfQQBp99NM
-         IL3w==
-X-Gm-Message-State: AOJu0YywF7oZc6XjIvauqnT1DB2tqgH5N503VeZzTnM8wJOuojXKajBi
-	JQJQY+ptsFdkRlSl99HwrP9JmTF9fOs1+NyFlrHAgSck/HWSIgwHdfw6qhc0OGp/ztg/
-X-Gm-Gg: AR+sD12lldXw6EdA8xy4lddaVFKpZ8b8iOp/OfwM0vu8TFs4vvKVvBv8MKn53rntn23
-	F9Gllgj8BJwzqaGkWh3b/pK1KQe5KfogxAEqFh25eTEpPwWATDT6dg7AKXi2z63moVbPHDr/tOy
-	MfLWCCAJsTVb0BcDzV0BmtDjuz3tkNtHm+Zope6D5JCLbBYuzJc1V+ieO4Br6I48W4ICq9WkGJ2
-	75GIu6QSU34iYv7Etbj4kqDYUQZXqvFiUcYWHZ/UkARV+PRN/lbmUpXI2kYz5S6rY4TyqkUk9+P
-	Uz5hjptoNwWYMK1n5Q+bZe415yYKBn6oulrLermipKanZgiaTJIb2nr5XO+4xQGhyguVMxf/dBk
-	dx/7r87cMtam0SooxEPlUoypgSMCdED/JBBemdXZ+3SrqEzjI1KKdnaE3FqKbt26O8xdPUtDK4f
-	laEKz972ZKL1aGUPhkEhymFbBRCUN9APubUsoRKYRH9biGmjgD1fd9UxHgIX+mzSNt
-X-Received: by 2002:a05:6a00:950f:b0:84c:4b58:2cec with SMTP id d2e1a72fcca58-84fde3dcf0amr23234822b3a.15.1786947295856;
-        Sun, 16 Aug 2026 23:14:55 -0700 (PDT)
-Received: from 192.168.1.200 ([182.46.50.210])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8517d248b8fsm2154865b3a.44.2026.08.16.23.14.54
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 16 Aug 2026 23:14:55 -0700 (PDT)
-Date: Mon, 17 Aug 2026 14:14:51 +0800 (CST)
-From: leimingyun11@gmail.com
-To: mptcp@lists.linux.dev
-Message-ID: <421567758.235.1786947291466@[192.168.1.200]>
-Subject: Regarding potential resource exchange collaboration for the
- Multipath TCP project
+        d=1e100.net; s=20251104; t=1786951668; x=1787556468;
+        h=content-transfer-encoding:content-type:in-reply-to:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=yrVofAtgfUfixx+BbKkuuBQzK0gr154ob0BQ1R4yIIE=;
+        b=hXU/MjcJTySR5zBLHVLeAo/IJieguNFa+cvHaeV0c5CDvW40CbNaJorEgCXvO2NGit
+         +7HMUOEt5XZtvGrBGoBowdeiWx/JDJoQmEmcM5L36ujOeixEm8z1ZC8xFQsOz5mCvYtp
+         CTLlZgxdfPWqZdbqIs743mWjIg2nlfUu645zTBXoATBSvqIt8UVsiyLd9Pt6CkJB+sC8
+         I461AB6hgoc/jVIKDqdVsjcYWEe/LXgjbYVTTwq6n9uIeLL8+87ify6aA9/kL14HtM/H
+         nGtY5eHzu9EA1ZmCiQ5ywwdVY5OW7Aa2/Ys/VNJ4uzNdX/qE22/3EvPxKSVHYz/R24mK
+         T+hA==
+X-Forwarded-Encrypted: i=1; AHgh+RqIEB9HQhbxkdaLP8HiDlZ7muYAA0CXQlXno1UWPmLlpTd6ipxp/AC/MHzbYn/hGBsKQqDt/A==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz0DNkD+d0xgIcwwsAYsPFko2S7P3mfMI0YwZAizMgM1DklUR3R
+	b717Gt9Iedi5e6BHcFMtakiWkW9QtURBHCd6fhTyPI8XN9pkirzM4r95IsoThIMdiMI2iXOn5xo
+	WwsaPrrPOsDlMvMJrnMsqIgRo6ZEGpX8encJ7IdpBpwc0svWCLMXRG/rF
+X-Gm-Gg: AR+sD10wb7AMs+wj4u49A30ubGnhAcfwklBzs5waYwPsYOGQHH1oK2eLLIb4aiVEvNe
+	r53l7ijgyXlnjUwWXpUWC4jG6NIjz7JMYX20GUwcMHQz7zz9ir7HJzfncg0Yw1zcrEdRwI76hYA
+	AmIFmyeEFqDoz/IBhIzOdLOVIgxqXP7yw1r75vy0hgSDUcH3Xbb6Bh2KGUxZmMKSaZ3ctAyroVn
+	dNQ/m5N/KpsHrbzl9sNSfgFz+y0WO89BHNLjNei2ST2H2YNyhlYwkiO3ziwm43mN8x36XFa3x1S
+	TIhAbWdmH0xzNrV8sPF8YgdPBWQ3JvTlxRj/u1lZBegUWV5WYzYAc2qkZY1hjyZE8y6ZtMSUZuE
+	lJlPFAEtTcX8uTNZ0j5o9ZdUV4oKOh5OJ+rpJO9+sZiz56HnZ5546f3yfmkml2v6WcYqQFgirpM
+	w=
+X-Received: by 2002:a05:600c:a45:b0:499:5b04:6920 with SMTP id 5b1f17b1804b1-49987990f37mr330583535e9.16.1786951668426;
+        Mon, 17 Aug 2026 00:27:48 -0700 (PDT)
+X-Received: by 2002:a05:600c:a45:b0:499:5b04:6920 with SMTP id 5b1f17b1804b1-49987990f37mr330582935e9.16.1786951668024;
+        Mon, 17 Aug 2026 00:27:48 -0700 (PDT)
+Received: from [192.168.188.103] (ip239-44-231-195.pool-bba.aruba.it. [195.231.44.239])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-499877d7974sm177410715e9.1.2026.08.17.00.27.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Aug 2026 00:27:46 -0700 (PDT)
+Message-ID: <e277308e-87b5-4c1c-b976-ff73cf4286a1@redhat.com>
+Date: Mon, 17 Aug 2026 09:27:45 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next RFC 2/3] mptcp: reject MP_JOIN earlier
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
+ MPTCP Linux <mptcp@lists.linux.dev>
+Cc: Chenguang Zhao <chenguang.zhao@linux.dev>, gang.yan@linux.dev
+References: <20260814-mptcp-reset-mpj-early-v1-0-3ca3260f9474@kernel.org>
+ <20260814-mptcp-reset-mpj-early-v1-2-3ca3260f9474@kernel.org>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20260814-mptcp-reset-mpj-early-v1-2-3ca3260f9474@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: ezjEdMgmP7DqO1d_WCHNrFZndnl5J0ObC6ubv7ZMVUo_1786951668
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Multipath TCP team, the Linux Kernel subsystem projects you maintain on Git=
-Hub are highly professional.
+On 8/14/26 8:31 PM, Matthieu Baerts (NGI0) wrote:
+> @@ -91,12 +92,22 @@ static struct mptcp_sock *subflow_token_join_request(struct request_sock *req)
+>  	msk = mptcp_token_get_sock(sock_net(req_to_sk(req)), subflow_req->token);
+>  	if (!msk) {
+>  		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINNOTOKEN);
+> +		*reason = MPTCP_RST_EMPTCP;
+> +		return NULL;
+> +	}
+> +
+> +	/* Stop it early if the subflow cannot be accepted */
+> +	if (!mptcp_can_accept_new_subflow(msk)) {
 
- Our company focuses on the automated promotion in the technical field; we =
-currently have an independent software system that can automatically identi=
-fy target audiences for communication based on specific requirements. We ha=
-ve envisioned a collaborative model for resource exchange, through which re=
-levant links are added to the project=E2=80=99s README file in order to hel=
-p the project reach more system developers or network engineers.
+Side note: the above is inherently racy, the consistency safeguard is
+given by the fallback check at finish_join time.
 
- I=E2=80=99m not sure whether this type of cooperative arrangement for reso=
-urce exchange is suitable for further confirmation with you or for referral=
- to the relevant responsible persons
+Minor nit: I'm not sure this check belongs here or in
+subflow_check_req(). The latter option would avoid the additional
+argument and possibly produce a smaller diff (and smaller code).
+
+/P
+
