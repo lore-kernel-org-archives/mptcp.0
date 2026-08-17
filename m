@@ -1,132 +1,133 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5530926ED3C
-	for <mptcp@lists.linux.dev>; Mon, 17 Aug 2026 02:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57AD32472AF
+	for <mptcp@lists.linux.dev>; Mon, 17 Aug 2026 03:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786933912; cv=none; b=T4G9SRf7FqwXZNfctZh68npMzCVSxCMN+TjSnyVRb78OPKVL+3atbhlevki6pOqtd49hk3a39E3VfvnhCqE4zVDGyxntvIZAtM29mQdPYu5rFcq4Sc8hcl7RpSJUWwy+7t+GZq2XWy19CCmXogwHgCLE2hccIp1RdsBYjdnxQac=
+	t=1786939041; cv=none; b=YaJ7m4tEosoTNLm42k3qFh3Hoe7FR0qll73occCzaE5OL0zZDhIawmsww4FTvIln9tvtxtmu+gtFzWJ2RDdXec6nGHSdADRfYTs8NodMaSFIMvVDJkog0JmjvfjwU02b0CTbWvJ/LcKKpUwbLsD8ADZJjexWvy8cAUPPtOoYmLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786933912; c=relaxed/simple;
-	bh=gJ63hVa98Ozskao+8FbCcpT2gvOn1h1Nh5R7w2qnYx8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=DwvuAyrWcOP23eovmm0o+wylT1W5DG0oDWkfaXgDDQmle2wdK0xAdJIEqojP7B0h7A4SKruP5VAuGpwV8utipsnqDwtPN3E4K/WM51ZQIFOH0TrdVHe3ukJ0F28eGum2cW6+rr4H7repKc4C6dZDNCKS9UBxiWuRnkMxj+y14hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i0fG61is; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1786939041; c=relaxed/simple;
+	bh=cuDtaPx5hBwggxfa3/ZKusoUVPWehwG4nikowWpU8zs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KrbMM7CGRWd7KOU5hk56guvMbF01Xh9CTFgjXPNN/teJQNLS1o4P1W4MnQJg7UWG/MJj47PRd7VtKewhD480IY+Q3NkdTT4ioW7TO2oM6zUs1YPf+0Can5H/jiU2uWIRIqRS0z8XRc7ZAMtXFcaCIusrBMiUqcV2e1jiYBym8Lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F76oDBr4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i0fG61is"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2cc7ef7ec27so36388355ad.1
-        for <mptcp@lists.linux.dev>; Sun, 16 Aug 2026 19:31:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786933911; x=1787538711; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=nmzT/TazK4WV8GHg4wchuxt2/5E6+3Fnj4VDeWFpAyo=;
-        b=i0fG61isnp9LYzcgoM78fYcMnZxCUBHVTtHDU1vW4JIgUIHv9j6qyN7JAE59PJ6vqz
-         24gc3gP/RpbxvFMzGO5BrTl0mF9f0tV292NoL+Y4gCaqM3n/TdqzHlk2m4Pn1b05Bspa
-         bWQRfTKValOaTegpzUYWF/x2lJmb5RSfvPG7rOHtHdP3tNhljsJlRX0uoJ57vbmzSsMS
-         zmeDCBL/RUSrGiaHlR93rwKZDNoI7DEF+J/lvilwZKMQ7v/RWYWhKlE73HZdhJRDH9PD
-         Bnr3f8jh3HkbIrsRUOUGwWQmSsX7nuaIoWxq8bz564XpIzBnaKF7XagJ9wESxKLjuxti
-         z93A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786933911; x=1787538711;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=nmzT/TazK4WV8GHg4wchuxt2/5E6+3Fnj4VDeWFpAyo=;
-        b=N7EZmEkhkXdLfBe+0Vf/324lpJ3JSvjFQEHWW4v3j3uFFBVstYC+yooEY9shmpAASL
-         w8uBI1eXDJ/7jWlRj2xC/J8enMa2Vx29ugcxxNPWOHGTpWDAnaB3TYdu5KYAe1U8DXry
-         voXc2BL7zSRQ6ENcq2h96vV9A28BHTse1qIOlDOno5XTcJNNtRtlmrgeDWKiYUV+UBE8
-         6BDdbgV/LsAxy18k0tK5ahj5Ettx4agrXp9sRja2ln1G9bo8CMwKlbrC/twtiDuGMQfl
-         t/4SnyY5MhGVTpdOdCdbnYYJsfUEuvfUjnuwByYIt8BP8uIAcNZUhZNKjYYkPVsro7+E
-         /1vA==
-X-Gm-Message-State: AOJu0Yyozcd6LeP+3hHdkg+Q02RNbvHDFzQlT593o7ewxXxkQq/zfwJW
-	nQ6DX9z61eQ4iExb1WHTcTE41QD2DEureQpQdproksegRzl3GLL/mKsjF+fr
-X-Gm-Gg: AR+sD11dKa660gER3NlL0zxnixhKLtYmMCIcy7DOsCnuF+Yq/vSZSqEa+GcogiFS/s4
-	8bsL2kD6OuAb1a3t84232ilzLj9jmFb9eSJDyf5kl2FW8Hc9OImXuwJpa9nvfjycbNxUxnW3uQ/
-	1LYiRGkI80or4SVhclcgiWplSdPe2Gmoe3VPOubE+W6ho44Jz3XhXkusON/tn4WbqohWfwZv7Oj
-	aO3M3KCsVPPrsqpcPikbKIXRlqJ7J2+Mj+R5YIsLEburT1izB9bnJk+upXQ70xvcrI5plSW1JsL
-	QEBNWARKYFl8wjDU8G6eegIniuhMc36hEZCtaWPkSa9qbRxnIIzYVZsS0DW3keyzNmsaQmae6FM
-	3p0Lz6MF8MkqLRwyup4yFlE9huw1LgiMcvZ3paqNizpH+CABMOVBxWpQ1vIBE++q6YK09miQ2R6
-	TVvTjL3DALf6EXFL56IBB4kOkHI4TSvbwlUUU9cVzkolekAvXqvRSK8GPkUgeT4tfemPadRx7yA
-	QY=
-X-Received: by 2002:a17:902:ebc5:b0:2ce:93a3:c16c with SMTP id d9443c01a7336-2d3b0c67d8fmr265315195ad.12.1786933910544;
-        Sun, 16 Aug 2026 19:31:50 -0700 (PDT)
-Received: from [127.0.0.1] ([128.85.44.229])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d3ae50bef1sm28195785ad.0.2026.08.16.19.31.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Aug 2026 19:31:49 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260817012452.7519-1-gang.yan@linux.dev>
-References: <20260817012452.7519-1-gang.yan@linux.dev>
-Subject: Re: [PATCH mptcp-next 0/3] mptcp: avoid data-races around the
- sysctls
-Message-ID: <955ed682-e1b5-0579-300c-e147565ec711@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 17 Aug 2026 02:31:49 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F76oDBr4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 417661F00A3A;
+	Mon, 17 Aug 2026 03:57:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786939040;
+	bh=1FU1R6ct4S7br5YNyVjxKrD8Yt1sUVus+boHrHAAVQ8=;
+	h=From:To:Cc:Subject:Date;
+	b=F76oDBr4QP+8xt2IDrvbtQawQyDF+XiiAz6i997MujHpK4PUoCcHlZte3UV45KEQU
+	 e0qB6bG0k0IL+VjQICnSrwMMMn/D38OUpt9ugnJ+L3+xYwUIpHoXFY4rPfKebuCWzu
+	 BqzF3BlN5h/ikcQOD8azOQwLSEjFc/Hho0/cNN2pqmGzc7DfJICffYIkI54ASA3asd
+	 uFuyulCXw9q64jbI5OP1EHe5UwMzSy0akI68/u0WZRf9DfQ5OQ60z6G0FnemTXlOLE
+	 SOLQzSClZfIva7SgijuqMa0tlduyTFK3254lwxOAZoKePc3MbRdoeDGQJVXiq/Md0q
+	 5/9gYBk1O+fOA==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v6 0/6] Fix socket options used by NVMe over MPTCP
+Date: Mon, 17 Aug 2026 11:57:07 +0800
+Message-ID: <cover.1786938892.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-Hi Matthieu,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Thank you for your modifications, that's great!
+NVMe over MPTCP relies on SO_LINGER, SO_PRIORITY, SO_REUSEADDR, TCP_SYNCNT,
+TCP_NODELAY, IP_TOS, and SO_BINDTODEVICE. This series contains fixes to
+make all of them work correctly, and adds tclass support for it.
 
-Our CI did some validations and here is its report:
+v6:
+ - Remove NVMe patches from this series.
+ - Remove v4-mapped address patches from this series.
+ - Squash "ipv6: extract and export ip6_sock_set_tclass helper" into
+   "mptcp: sockopt: implement IPV6_TCLASS".
+ - Patch 4: move tcp_sock_set_syncnt before __mptcp_setsockopt_set_val.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/319860=
-48689
+v5:
+ - Include Gang Yan's TCP_MAXSEG cleanup.
+ - Include two v4-mapped addr fixes.
+ - Patch 9, set rcv_flowinfo to 0 for v4-mapped addr.
+ - Patch 11, use rcv_flowinfo instead of np->tclass.
+ - All comments from Sashiko on v4 regarding "CONFIG_IPV6=m" are false
+   positives.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1786159812.git.tanggeliang@kylinos.cn/
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/fa35ee6d384f
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1146872
+v4:
+ - patch 1: skip ssk->sk_bound_dev_if = local->ifindex when local->ifindex
+   is 0, so __mptcp_subflow_connect() doesn't overwrite the inherited
+   SO_BINDTODEVICE binding.
+ - patch 4: assign tcp_sock_set_syncnt()'s return to ret so an invalid
+   TCP_SYNCNT is propagated, not silently dropped.
+ - patch 6: skip IPV6_TCLASS setsockopt/getsockopt paths on AF_INET
+   sockets/subflows (inet6_sk is NULL there).
+ - patch 7: treat IPv4-mapped IPv6 as AF_INET for the TOS/tclass path.
+ - patch 9: gate ip6_sock_set_tclass() behind sk_family == AF_INET6 and
+   IS_ENABLED(CONFIG_IPV6) to avoid IPv4 NULL-deref and link failure when
+   CONFIG_IPV6 is off.
+ - patch 10: gate tclass on sk_family, skip IPv6 branch for IPv4-mapped
+   connections, wrap IPv6 in CONFIG_IPV6.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1785378180.git.tanggeliang@kylinos.cn/
 
+v3:
+ - include tclass patches.
+ - I also included three NVMe patches here because they have dependencies.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1785238723.git.tanggeliang@kylinos.cn/
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+v2:
+ - Drop "mptcp: don't reset dst when setting default 0 tos"
+   and "selftests: mptcp: sockopt: cover LINGER, REUSEADDR,
+   PRIORITY, NODELAY, SYNCNT": the 'if (val > 0)' guard
+   blocked the legitimate "reset to 0" path, and the test
+   only ran val_in=1, missing the SK_CAN_REUSE "any non-zero
+   -> 1" normalization.
+ - mptcp: bump setsockopt_seq for subflow-only socket options,
+   so secondary subflows created via MP_JOIN re-sync
+   sk_reuse / sk_reuseport / sk_bound_dev_if from msk.
+ - mptcp: copy the subflow's TOS to the msk on accept
+   (alongside the existing ssk->rcv_tos copy), so MP_JOIN'd
+   subflows inherit the reflected outgoing TOS.
+ - mptcp: propagate sk_reuseport to subflows via
+   sync_socket_options, so secondary subflows inherit
+   SO_REUSEPORT, not just SO_REUSEADDR.
+ - mptcp: tighten TCP_SYNCNT bounds check
+   ('val < 1 || val > MAX_TCP_SYNCNT'), so out-of-bounds
+   values are rejected even when msk has no subflows yet
+   (where __mptcp_setsockopt_set_val would otherwise return 0
+   without invoking the set_val callback).
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1785054808.git.tanggeliang@kylinos.cn/
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+v1:
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1784985085.git.tanggeliang@kylinos.cn/
 
-For more details:
+David 'equinox' Lamparter (1):
+  mptcp: sockopt: implement IPV6_TCLASS
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+Gang Yan (1):
+  mptcp: take TCP_MAXSEG handling into setsockopt_set_val
 
+Geliang Tang (4):
+  mptcp: handle TCP_MAXSEG getsockopt in common case
+  mptcp: inherit sk_reuse and fix dev bind override
+  mptcp: add TCP_SYNCNT setsockopt/getsockopt
+  mptcp: copy subflow's tos/tclass to msk on accept
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+ include/net/ipv6.h       |  2 +
+ net/ipv6/ipv6_sockglue.c | 23 +++++++----
+ net/mptcp/protocol.c     | 16 ++++++++
+ net/mptcp/sockopt.c      | 82 +++++++++++++++++++++++++++++++++++++---
+ net/mptcp/subflow.c      |  4 +-
+ 5 files changed, 112 insertions(+), 15 deletions(-)
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+-- 
+2.53.0
+
