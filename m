@@ -1,190 +1,190 @@
-Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9FC44457A3
-	for <mptcp@lists.linux.dev>; Mon, 17 Aug 2026 15:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786980313; cv=pass; b=tNuC6cVVzP+zOZEtC55qohDFoAY8hjHrlSzNdya48M6dF2qVKj8OwcZEdfctOTK62izPu7mEOwSs7XeOVqzCue3NjTZM1Vhm+2ylrjPgr2tQe0TfdysbmRGovfnbPnlKjE9KpZU7AhA7QnTnbOEmH1bLgvx6f+peWWk3XkpizRs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786980313; c=relaxed/simple;
-	bh=5Xlx2BdGhALhfgav/kNpUyUqqOfTNacfISs5LAHPIeE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TnxQ7sGcBoL2y+gqmc24fFKdiKV6sD+GihLk+nKzkuNTBZ4LD0UwcV3tvYMkYNzYGHxbIg3yJF83cjUVfTqgR7uEIxh6PXYt53RsFWZWBiF5JJWuLBXb+auYy4doHNFn/I2/ZZ80sE0lDK/9Xo4wR+V+3iEJlENIF1noovEo/gE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=S9Zn4ugV reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F66427FA1
+	for <mptcp@lists.linux.dev>; Mon, 17 Aug 2026 15:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786980750; cv=none; b=LkdSkH9kXyrGHJkWAkDNXMUL9OcPQTtIseGVaqjmdpkZ9IwphXHqXj3owgVNqyqe0GoXm9i/ETZbmnrfd/mJ+z0F/dabjTdOQc1Tf3GEIIe/KDXEZ3ssxjdc1k7SIQejb9mTxhGxlzzr7SpA6ydQBgCyMNjzQH0bHASaZ3CtQFQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786980750; c=relaxed/simple;
+	bh=Rv2EJ6v8FtRjZ7BP1/spXiooAQVOc8ZrcgJGcgRC+v0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IUnH9/vsABIaGLdxy1FPiPxf/HgZvfWZBBqRjF1ODJklpU5TiU9L5gVK+Ymh7w4EtHOltf6RsCZpAWJWbndmcujGudchNoLfIQ8wA4993wChLvp7emTxNaSD65fapNZIBuNhs30IuELY2biy8c3V/qvnTRYAMd73SsFcGcPunzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dDbQJnn/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="S9Zn4ugV"
-ARC-Seal: i=1; a=rsa-sha256; t=1786980284; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Mn/N1mEkh8KD5K7gjHcpTJFi11LAZdJyuyFNwLxouoIN9cU/w1AjYXrouLboTd7VIN/cv8ili5w70bRBLeA9BMCkF09irCdOuudNvyhKrorTuZguYUsqLFIEGwIrOxK0jsxv19e9LW/e0t37XDaB5OY56pmwdy2H/bck8NsR4gU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1786980284; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=y7QMjbRHXPk2m/YiLplTnKNPyWF4VNjbA8T2fHagA6E=; 
-	b=h9f4mzwYnzTU8LF1M62SoGpGrqc0STWfa8tX9mKh967O2N5B1C86qlTbO+atS6oafjm9V+RDNjE2noxRFyvQ+6EtN9CZP2iKmFYUSA2si65V4g5sskF/jqO3k2C2KqKQsbCF0qELwD0OMAxl7YGD4u/+Zkh+Jq4SHxHDbSeQSL0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=mpiricsoftware.com;
-	spf=pass  smtp.mailfrom=shardul.b@mpiricsoftware.com;
-	dmarc=pass header.from=<shardul.b@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1786980284;
-	s=mpiric; d=mpiricsoftware.com; i=shardul.b@mpiricsoftware.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=y7QMjbRHXPk2m/YiLplTnKNPyWF4VNjbA8T2fHagA6E=;
-	b=S9Zn4ugVwCiolsWtCbe9b7krhYd/6cqaGADRsrxRP5gt3PG3wZAILKk4oS3sqVwP
-	I0iuusGYhAKhVDbjXKaOdlgsHCHfowbCtmHyDEETNK9fgKY5V7nchD6o5sgrqZnvCe1
-	mG/IP2lqUMXgxxaED8Z8EwEaBfzDMOz1ykwksYWw=
-Received: by mx.zohomail.com with SMTPS id 1786980281520509.3735642146253;
-	Mon, 17 Aug 2026 08:24:41 -0700 (PDT)
-From: Shardul Bankar <shardul.b@mpiricsoftware.com>
-Date: Mon, 17 Aug 2026 20:54:17 +0530
-Subject: [PATCH mptcp-next v3 4/4] mptcp: sched: add penalise counters and
- tracepoint
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dDbQJnn/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C623A1F000E9;
+	Mon, 17 Aug 2026 15:32:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786980748;
+	bh=ULiR9uoCkdZRA1ABfuzlhACiuALh8ACJSElS2eeBVM0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=dDbQJnn/B8ZANTleq7h+aInc1Tc1H6fpmi/QXtmeL6W4LbaF/YS0rQCkPz2YDAE3S
+	 1Y5EbMjcKH9TOvuDVYhftQs8JCtXrVDNWxzcOtVAzTLq2q+bIs8aObIp31Hh5MpKSF
+	 D2VWLxjs6javiXdVfQahr8xOsYwJ7CvzrwSWkgtsKEWInlETwPfyP8JtIl2DvOKzLX
+	 SYFafOlgU2E5CWSshpchl8Jl9CWuSZzUKlxBNvnUQwa98EGSG//zUQnlgbHHi6ISf9
+	 CVQFyGYDu7Zjja0wE3Fzsq9V5jj0c16YX2MPfy5rFOlUEnCKXs9S5WjJKYWJ+7NfLd
+	 I/fhG/55OznKw==
+Message-ID: <58c90e83-2cf1-44f2-80fb-1803a9d1af1c@kernel.org>
+Date: Mon, 17 Aug 2026 17:32:25 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next RFC 3/3] mptcp: pm: kernel: skip operating on
+ closing connections
+Content-Language: fr
+To: Paolo Abeni <pabeni@redhat.com>, MPTCP Linux <mptcp@lists.linux.dev>
+Cc: Chenguang Zhao <chenguang.zhao@linux.dev>, gang.yan@linux.dev
+References: <20260814-mptcp-reset-mpj-early-v1-0-3ca3260f9474@kernel.org>
+ <20260814-mptcp-reset-mpj-early-v1-3-3ca3260f9474@kernel.org>
+ <d1a6a67f-41c0-4650-b62e-6a4476bab86b@redhat.com>
+ <2e2b6eff-0d2c-40b9-b66c-f650bb5d1104@kernel.org>
+ <d8a12a12-de80-4283-937f-b3ae49171d66@redhat.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <d8a12a12-de80-4283-937f-b3ae49171d66@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260817-mptcp_penalise_send_v2-v3-4-e6a2ad2f1b82@mpiricsoftware.com>
-References: <20260817-mptcp_penalise_send_v2-v3-0-e6a2ad2f1b82@mpiricsoftware.com>
-In-Reply-To: <20260817-mptcp_penalise_send_v2-v3-0-e6a2ad2f1b82@mpiricsoftware.com>
-To: mptcp@lists.linux.dev
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Janak Patel <janak@mpiric.us>, Kalpan Jani <kalpan.jani@mpiricsoftware.com>, 
- Shardul Bankar <shardulsb08@gmail.com>, 
- Shardul Bankar <shardul.b@mpiricsoftware.com>
-X-Mailer: b4 0.15.2
-X-ZohoMailClient: External
 
-Add observability for the cwnd-halving penalty introduced in the previous
-patches.
+On 17/08/2026 15:09, Paolo Abeni wrote:
+> On 8/17/26 1:07 PM, Matthieu Baerts wrote:
+>> On 17/08/2026 09:39, Paolo Abeni wrote:
+>>> On 8/14/26 8:31 PM, Matthieu Baerts (NGI0) wrote:
+>>>> When iterating over each MPTCP connection after having manipulated MPTCP
+>>>> endpoints, there is no need to operate on closing (or not ready)
+>>>> connections.
+>>>>
+>>>> We can then safely skip those.
+>>>>
+>>>> Note that mptcp_nl_add_subflow_or_signal_addr() was already checking the
+>>>> fully_established state, but it is better to check the connection state,
+>>>> which is what mptcp_is_fully_established() is doing.
+>>>>
+>>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>>> ---
+>>>>  net/mptcp/pm_kernel.c | 16 +++++++++++-----
+>>>>  1 file changed, 11 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+>>>> index d3014bf57bf3..c185e53fe42b 100644
+>>>> --- a/net/mptcp/pm_kernel.c
+>>>> +++ b/net/mptcp/pm_kernel.c
+>>>> @@ -969,7 +969,7 @@ static int mptcp_nl_add_subflow_or_signal_addr(struct net *net,
+>>>>  		struct sock *sk = (struct sock *)msk;
+>>>>  		struct mptcp_addr_info mpc_addr;
+>>>>  
+>>>> -		if (!READ_ONCE(msk->fully_established) ||
+>>>> +		if (!mptcp_is_fully_established(sk) ||
+>>>>  		    mptcp_pm_is_userspace(msk))
+>>>>  			goto next;
+>>>
+>>> I'm a little double-minded here.
+>>>
+>>> The add/removal operations are issued by the user space to update
+>>> subflows, as a consequence of endpoint addition/removal.
+>>>
+>>> Possibly removing the subflow even for not fully established connections
+>>> could be the right thing to do, I'm not 110% sure either way. Possibly
+>>> worth to call this out with a comment?
+>>
+>> Indeed, I'm also not sure. Initially, I only converted this
+>> READ_ONCE(msk->fully_established), also because later in
+>> mptcp_pm_create_subflow_or_signal_addr(), mptcp_is_fully_established()
+>> is used.
+>>
+>> Probably best to stick to this one.
+>>
+>> On the other hand, I just noticed that there is no check for "fallback
+>> done" here: so the operations leading to a notification (ADD_ADDR,
+>> RM_ADDR) will send a dup-ACK (pure ACK without MPTCP options), and
+>> adding an MPTCP endpoint will lead to... the creation of a new subflow,
+>> even after a fallback, e.g.
+> 
+> Sorry, I was not clear enough. I'm specifically doubtful WRT the remove
+> operations (i.e. mptcp_nl_flush_addrs_list,
+> mptcp_nl_remove_id_zero_address,
+> mptcp_nl_remove_subflow_and_signal_addr) and _not_ vs the 'add' one
+> (mptcp_nl_add_subflow_or_signal_addr). I'm fine with the check change there.
 
-Two MPTcpExt SNMP counters:
-- CwndPenalised: times a subflow cwnd was actually halved;
-- PenalCandidate: times the rate trigger picked a slow subflow.
+Sorry, I think it was me not being clear enough:
 
-The two show whether the rate trigger fired at all and how many of those
-candidates were actually halved; the gap reflects the gates and the
-once-per-RTT limiter collectively, not any single condition.
+- In mptcp_nl_add_subflow_or_signal_addr: use mptcp_is_fully_established
+- In the others (flush, 2 remove): check only msk->fully_established
 
-Add a mptcp_subflow_penalise tracepoint. The penalise verdict is decided
-after the subflow-selection loop, once the fastest path is known, so it is
-exposed through a dedicated tracepoint rather than the per-candidate
-mptcp_subflow_get_send emit. It reports the selected subflow's pace, the
-fastest path's pace and its cwnd alongside the verdict, so a slow-but-gated
-subflow and its window can be watched from a single line.
+To avoid acting on fallback MPTCP connections, should we target patch 1
+(reset fully_estab after a fallback) and this one here for -net?
+Or only patch 1?
 
-Co-developed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
----
- include/trace/events/mptcp.h | 30 ++++++++++++++++++++++++++++++
- net/mptcp/mib.c              |  2 ++
- net/mptcp/mib.h              |  2 ++
- net/mptcp/protocol.c         |  6 ++++++
- 4 files changed, 40 insertions(+)
+>>> Also the asymmetry with the user-space PM is a bit strange. I can't
+>>> recall why it was needed in the first place?!?
+>>
+>> Are you talking about all the mptcp_pm_is_userspace() checks? If yes,
+>> they are required because the pm_type sysctl could be changed, and we
+>> could end-up with a mix of msk handled by different PMs in the same
+>> netns.
+>>
+>> It would be better to do the opposite I guess:
+>>
+>>   if (!mptcp_pm_is_kernel(msk))
+>>       goto next;
+> Yup, I prefer the check this way more.
+> 
+> My doubt is that user-space will allow creating subflow even for not
+> established msk.
 
-diff --git a/include/trace/events/mptcp.h b/include/trace/events/mptcp.h
-index 22882bd03459..fe13f0c8a34d 100644
---- a/include/trace/events/mptcp.h
-+++ b/include/trace/events/mptcp.h
-@@ -68,6 +68,36 @@ TRACE_EVENT(mptcp_subflow_get_send,
- 		  __entry->backup, __entry->ratio)
- );
- 
-+TRACE_EVENT(mptcp_subflow_penalise,
-+
-+	TP_PROTO(struct mptcp_subflow_context *subflow, unsigned long max_pace),
-+
-+	TP_ARGS(subflow, max_pace),
-+
-+	TP_STRUCT__entry(
-+		__field(u64, pace)
-+		__field(u64, max_pace)
-+		__field(u32, cwnd)
-+		__field(bool, penalise)
-+	),
-+
-+	TP_fast_assign(
-+		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+
-+		__entry->pace = subflow->avg_pacing_rate;
-+		__entry->max_pace = max_pace;
-+		if (ssk && sk_fullsock(ssk))
-+			__entry->cwnd = tcp_snd_cwnd(tcp_sk(ssk));
-+		else
-+			__entry->cwnd = 0;
-+		__entry->penalise = subflow->penalise;
-+	),
-+
-+	TP_printk("pace=%llu max_pace=%llu cwnd=%u penalise=%d",
-+		  __entry->pace, __entry->max_pace,
-+		  __entry->cwnd, __entry->penalise)
-+);
-+
- DECLARE_EVENT_CLASS(mptcp_dump_mpext,
- 
- 	TP_PROTO(struct mptcp_ext *mpext),
-diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-index 608cb568897c..b39b5511345d 100644
---- a/net/mptcp/mib.c
-+++ b/net/mptcp/mib.c
-@@ -95,6 +95,8 @@ static const struct snmp_mib mptcp_snmp_list[] = {
- 	SNMP_MIB_ITEM("BacklogDrop", MPTCP_MIB_BACKLOGDROP),
- 	SNMP_MIB_ITEM("RcvPruned", MPTCP_MIB_RCVPRUNED),
- 	SNMP_MIB_ITEM("OFOPruned", MPTCP_MIB_OFOPRUNED),
-+	SNMP_MIB_ITEM("CwndPenalised", MPTCP_MIB_CWNDPENALISED),
-+	SNMP_MIB_ITEM("PenalCandidate", MPTCP_MIB_PENALCAND),
- };
- 
- /* mptcp_mib_alloc - allocate percpu mib counters
-diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-index 1ebdb55e9534..a7b5bf684af7 100644
---- a/net/mptcp/mib.h
-+++ b/net/mptcp/mib.h
-@@ -98,6 +98,8 @@ enum linux_mptcp_mib_field {
- 	MPTCP_MIB_BACKLOGDROP,		/* Backlog over memory limit */
- 	MPTCP_MIB_RCVPRUNED,		/* Dropped due to memory constraints */
- 	MPTCP_MIB_OFOPRUNED,		/* MPTCP-level OoO queue pruned */
-+	MPTCP_MIB_CWNDPENALISED,	/* subflow cwnd halved by the scheduler */
-+	MPTCP_MIB_PENALCAND,		/* scheduler picked a slow (low-rate) subflow */
- 	__MPTCP_MIB_MAX
- };
- 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index e4d26c2dce1e..0cd18705ab40 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1656,6 +1656,7 @@ static void mptcp_penalise_cwnd(struct sock *ssk)
- 		return;
- 	subflow->last_penalise = tcp_jiffies32;
- 	tcp_snd_cwnd_set(tp, max_t(u32, cwnd >> 1, MPTCP_PENALISE_MIN_CWND));
-+	MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_CWNDPENALISED);
- 	if (cwnd >= tp->snd_ssthresh)
- 		tp->snd_ssthresh = max_t(u32, tp->snd_ssthresh >> 1, 2);
- }
-@@ -1739,6 +1740,8 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 	subflow = mptcp_subflow_ctx(ssk);
- 	penal_cand = fastest && ssk != fastest &&
- 		     subflow->avg_pacing_rate < max_pace / MPTCP_PENALISE_RATE_RATIO;
-+	if (penal_cand)
-+		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_PENALCAND);
- 	subflow->penalise = penal_cand &&
- 			    tcp_snd_cwnd(tcp_sk(ssk)) > MPTCP_PENALISE_MIN_CWND &&
- 			    inet_csk(ssk)->icsk_ca_state == TCP_CA_Open &&
-@@ -1746,6 +1749,9 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 			    mptcp_snd_wnd_test(msk) &&
- 			    mptcp_penalise_throttle_ok(subflow);
- 
-+	/* trace the penalise verdict, decided here after the selection loop */
-+	trace_mptcp_subflow_penalise(subflow, max_pace);
-+
- 	burst = min(MPTCP_SEND_BURST_SIZE, mptcp_wnd_end(msk) - msk->snd_nxt);
- 	wmem = READ_ONCE(ssk->sk_wmem_queued);
- 	if (!burst) {
+It shouldn't: in __mptcp_subflow_connect(), it will return early if
+mptcp_is_fully_established() is false.
 
+Cheers,
+Matt
 -- 
-2.34.1
+Sponsored by the NGI0 Core fund.
 
