@@ -1,136 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD18222597
-	for <mptcp@lists.linux.dev>; Mon, 17 Aug 2026 15:34:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEDC230594E
+	for <mptcp@lists.linux.dev>; Mon, 17 Aug 2026 15:36:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786980882; cv=none; b=CpvJGp4jTic4ZFz5gwxUIIan4r9foUo+q0OGRBYbXkdCq5zCfv1yzN1ckVcj+XoxPNzq7fWLdEdx6W14KRLUAUrDi7pTsQZS5Ml1WxG/QfIhjU/vyZ7aa2RAT93IsV2fIRKSsl3qBjm2Tie0ZLlVDzQqJooc0xDHFUv+Y5VZgBM=
+	t=1786981014; cv=none; b=IOQt+JW/rUR907hZ37FuVJLG+AQtg4cy9SCaScC7fWwU4qEpB8xTRiLbMobqUW8MLD5xJP0CKIPBXcBqvJgm2bJPQhinIsXAZkBIjbyHCl6hxHznKT0B2MSt4nXdmEMHccO0HNVJ7PbJ2ik3xBbMuLL57W/LRm3Icq5F18dpMZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786980882; c=relaxed/simple;
-	bh=ciMs7Ag0c4Q+4w0V4ajwiMZe5HqttUulmQkJC1Fwhyk=;
+	s=arc-20240116; t=1786981014; c=relaxed/simple;
+	bh=Anl67Kl3lo/XBfsQvR8pVkP1ZH/uxYLLoHMb8JnCFuE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Lm2sCA/dPt9KF9SUgIZH4tvHDQGcOk53CMVFNmksZVfyWQJn94u68KBSUBk5rM3kB0OEeTyxubw6k79XGee4c5P8tJ8KmAFlmle9Cz7j5HK89atAkIKmmIP4/IiaITB2jZWzA0p3ICxgbiW/JsUPtdRaV+W7wS1qGS8jv2l6GTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oLYTaky2; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=fHPg9jcFEyt4f2qLc3XelcQw9aadVArUI+yuWYSZhrt4jTR467576L3ngiYaBNPPZALnHIXQOofpO6obQEBe/SIin7BgujUwN6dy2XhDTnki/vpIPekdYgTxSk5tstnxpgSLAL1kJlLz7uTkD5QoqXY27jqcIZGxXBoo1R7Rnw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=noyAxelN; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oLYTaky2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F7001F00A3A;
-	Mon, 17 Aug 2026 15:34:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="noyAxelN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73C8A1F00A3A;
+	Mon, 17 Aug 2026 15:36:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786980881;
-	bh=KMVJ52FsX3BKBqZ9FXZ3i8C4Gnylkq/1xkM6EkS4m2M=;
+	s=k20260515; t=1786981013;
+	bh=2iS9zLges3RidrEGb2El0aJ2gnZmSsh7uFOqcV75S8s=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=oLYTaky2N8z5UCSrLm7JpIaZfjLzKPK4mYlOXeHEGuQJBYWRiljMn0Y/xSjEOl8gc
-	 3Q9hR+z/QQ3z+5TpXxMyvdCdQc+u8HrpDKPlcUeKFvcrZpqdUc3DjstHETxbfKgCqQ
-	 xzW2HRLUB6VTKtMjrLgO4KCsWMJswq/nltbKeqK8i/3bkZKhf2cR/uXn85/v4lycMX
-	 MlDlv0GmYUpDFzEokKatQxBdDKii02KVKLS0YW7nTMyRELrYxB7KCv/zv5GcK/bCsj
-	 6UGwcFxNys1Px3S0VJTZHyXZLYczhzAM/riB8f4kJPYZfFie7V7K19iCODYgknoQyg
-	 OOpDKui3W/u7g==
+	b=noyAxelNxUQHjkGkiPNFvY+8OH6P1bk93wmHLcNtBWBhcU+w3k1yLIvycOz7y6Bu3
+	 Z9gefhNInWBgcN6sXWbpgNlR1+evKoSLXwp9H7buJLTqp1dnPZiy6QB6WunQnwridK
+	 b9c7Qe/DtTD8nFmh0hhbLX21caeFWMCfqvp8UFpoajDef0NOd+93ZNZhphGtVh5NgM
+	 k4klDZtCTTXErwPD5AeklJ8BGO0razvlFO7bcgwGEHjmcv4Co8vDILzHqAv/Br1+Fx
+	 Z9JGiGyJFAKUbnhB3EXrpL3L22cXbzcNCeEjsTGtf5UcvRqI9HyX2doRCK6oojzLSf
+	 SAiFzpn306piA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v3 4/4] mptcp: sched: add penalise counters
- and tracepoint
+Subject: Re: [PATCH mptcp-next v3 3/4] mptcp: sched: do not penalise when
+ receive-window-limited
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Shardul Bankar" <shardul.b@mpiricsoftware.com>
 Cc: mptcp@lists.linux.dev
-In-Reply-To: <20260817-mptcp_penalise_send_v2-v3-4-e6a2ad2f1b82@mpiricsoftware.com>
+In-Reply-To: <20260817-mptcp_penalise_send_v2-v3-3-e6a2ad2f1b82@mpiricsoftware.com>
 References: <20260817-mptcp_penalise_send_v2-v3-0-e6a2ad2f1b82@mpiricsoftware.com>
- <20260817-mptcp_penalise_send_v2-v3-4-e6a2ad2f1b82@mpiricsoftware.com>
+ <20260817-mptcp_penalise_send_v2-v3-3-e6a2ad2f1b82@mpiricsoftware.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 17 Aug 2026 15:34:40 +0000
-Message-Id: <20260817153441.3F7001F00A3A@smtp.kernel.org>
+Date: Mon, 17 Aug 2026 15:36:53 +0000
+Message-Id: <20260817153653.73C8A1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] The `mptcp_subflow_penalise` tracepoint logs an inaccurate verdi=
-ct because it is emitted before the scheduler finalizes the decision to pen=
-alize a subflow.
-- [Medium] Unprotected lockless plain reads and writes of TCP and subflow s=
-tate violate concurrency rules, which will trigger KCSAN warnings.
+- [High] The `mptcp_snd_wnd_test()` heuristic incorrectly disables the slow=
+-subflow penalty for standard bulk transfers by equating application queue =
+depth with receive-window limitation.
 --
 
---- Patch [4]: [PATCH mptcp-next v3 4/4] mptcp: sched: add penalise counter=
-s and tracepoint ---
-commit 5337879700eb732d117ee91fe901b615a12833e3
+--- Patch [3]: [PATCH mptcp-next v3 3/4] mptcp: sched: do not penalise when=
+ receive-window-limited ---
+commit 97d5176c170e6dd87e10d2ec2eefd7e6a38340c4
 Author: Shardul Bankar <shardul.b@mpiricsoftware.com>
 
-mptcp: sched: add penalise counters and tracepoint
+mptcp: sched: do not penalise when receive-window-limited
 
-Add observability for the cwnd-halving penalty introduced in the previous
-patches. It adds MPTcpExt SNMP counters and an mptcp_subflow_penalise
-tracepoint.
+This commit disables the slow-subflow cwnd penalty when the connection
+is receive-window limited. It introduces mptcp_snd_wnd_test to skip the
+penalty if the application has queued past the window edge.
 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index e4d26c2dce1ee..0cd18705ab404 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -1656,6 +1656,7 @@ static void mptcp_penalise_cwnd(struct sock *ssk)
->  		return;
->  	subflow->last_penalise =3D tcp_jiffies32;
-
-[Severity: Medium]
-Is this unprotected write safe from load tearing?
-
-Since subflow->last_penalise is concurrently read locklessly in
-mptcp_penalise_throttle_ok(), should this be updated using WRITE_ONCE()
-to avoid KCSAN warnings?
-
-> +	MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_CWNDPENALISED);
->  	if (cwnd >=3D tp->snd_ssthresh)
->  		tp->snd_ssthresh =3D max_t(u32, tp->snd_ssthresh >> 1, 2);
+> @@ -1635,6 +1635,14 @@ static bool mptcp_penalise_throttle_ok(struct mptc=
+p_subflow_context *subflow)
+>  	return tcp_jiffies32 - subflow->last_penalise >=3D max_t(u32, rtt, 1);
 >  }
+> =20
+> +/* Like tcp_snd_wnd_test() but without an skb: true while queued data st=
+ill fits
+> + * the send window, i.e. not receive-window-limited.
+> + */
+> +static bool mptcp_snd_wnd_test(const struct mptcp_sock *msk)
+> +{
+> +	return !after64(msk->write_seq, mptcp_wnd_end(msk));
+
+[Severity: High]
+During a standard bulk data transfer, the application typically pushes data
+into the socket buffer up to sk_sndbuf, which is often much larger than the
+peer's advertised receive window.
+
+Because of this, won't msk->write_seq naturally exceed mptcp_wnd_end(msk),
+causing this test to return false even when the network is bottlenecked by
+a small congestion window rather than the receive window?
+
+If this evaluates to false during bulk transfers, doesn't it unconditionally
+disable the slow-subflow penalty and prevent the intended shift of load to
+faster subflows?
+
+> +}
+> +
+>  /* Halve cwnd (and ssthresh if past it) under the subflow socket lock. */
+>  static void mptcp_penalise_cwnd(struct sock *ssk)
 
 [ ... ]
 
-> @@ -1739,6 +1740,8 @@ struct sock *mptcp_subflow_get_send(struct mptcp_so=
-ck *msk)
->  	subflow =3D mptcp_subflow_ctx(ssk);
->  	penal_cand =3D fastest && ssk !=3D fastest &&
->  		     subflow->avg_pacing_rate < max_pace / MPTCP_PENALISE_RATE_RATIO;
-> +	if (penal_cand)
-> +		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_PENALCAND);
-
-[Severity: Medium]
-Does this block trigger KCSAN data race warnings?
-
-These lockless plain reads of TCP socket fields (tcp_snd_cwnd, icsk_ca_stat=
-e,
-tcp_is_cwnd_limited) execute under the MPTCP connection lock, while softirqs
-may concurrently process incoming ACKs and update the states.
-
-Do these need data_race() or READ_ONCE() annotations to meet kernel
-concurrency standards?
-
->  	subflow->penalise =3D penal_cand &&
->  			    tcp_snd_cwnd(tcp_sk(ssk)) > MPTCP_PENALISE_MIN_CWND &&
->  			    inet_csk(ssk)->icsk_ca_state =3D=3D TCP_CA_Open &&
-> @@ -1746,6 +1749,9 @@ struct sock *mptcp_subflow_get_send(struct mptcp_so=
-ck *msk)
->  			    mptcp_snd_wnd_test(msk) &&
->  			    mptcp_penalise_throttle_ok(subflow);
-> =20
-> +	/* trace the penalise verdict, decided here after the selection loop */
-> +	trace_mptcp_subflow_penalise(subflow, max_pace);
-> +
-
-[Severity: Medium]
-Will this tracepoint log an inaccurate verdict?
-
-If there is no window room to send (!burst), the code immediately below
-sets subflow->penalise =3D false.
-
-Since the tracepoint is emitted before this window limitation check, could
-it log penalise=3D1 even when the penalty is later canceled?
-
->  	burst =3D min(MPTCP_SEND_BURST_SIZE, mptcp_wnd_end(msk) - msk->snd_nxt);
->  	wmem =3D READ_ONCE(ssk->sk_wmem_queued);
->  	if (!burst) {
-
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260817-mptcp_pena=
-lise_send_v2-v3-0-e6a2ad2f1b82@mpiricsoftware.com?part=3D4
+lise_send_v2-v3-0-e6a2ad2f1b82@mpiricsoftware.com?part=3D3
