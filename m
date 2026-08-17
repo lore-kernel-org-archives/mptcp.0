@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F143CB56B
-	for <mptcp@lists.linux.dev>; Mon, 17 Aug 2026 09:49:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 290F53BCD15
+	for <mptcp@lists.linux.dev>; Mon, 17 Aug 2026 11:07:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786960178; cv=none; b=g4tHSU5tj5b6Yv48Eg7lCvdkASZPDQBSLF3fRmhXDVG+4ZA+bOdeZ67Ak8MEB22OdsgZOgsWrkuDUxCwLw7vwEqHVeE/xdZ6PJLoC9ERM7ckEfkgjz411luRMbynR1k5P8zbsUQV/Q/g6dBKiU3gYhdkmgSi/b9DHgsfhsUK6PU=
+	t=1786964847; cv=none; b=fUIPgC90ZSsvYYrP/V0fFJvUqwXnCInJv+yABqCm/hfA2qk1lwIloAZL9MYF6U8w3AUY2MLqFSOm73tQ8+vZYPa5C/xLzsFESWetyHB5HInsZp3fhm6EiigSWksGcy2xPn4DLf7lNKFYpFtrbWQl+nTEehdt0H/WUWkVoURW92I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786960178; c=relaxed/simple;
-	bh=Ix2SgEARPQBEAdCdToVI4IDjp8QSucpIyOiSEGXbp5I=;
+	s=arc-20240116; t=1786964847; c=relaxed/simple;
+	bh=zrVyvn/mCM1Qm17BIcTtC3cEaZe46WXOncuAwXpj+FM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qi/nDr6bbiyKVmIxunpygLyXwFwUk3YgMAKnvT125yqkc7Z5NncNRj11L6X7exbAjNisOOFiPoNCZvoh+Q5ggvx429HikEpzDDZKSR66uXEnACP0Nqa2tnnYUT60tM985yPRyTnOV8u1FYh9n5kroor5t+fBsMsOw6KaCp1zNb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l15aKQnW; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=uki5Beebsvd+TCxJx/1ZjGme0HzDUdOYVgooGxYlHOO/wMQh4chbUUJcMCoEjSHtG7oHIQQ8L+YP0ezxHOuwid8RZz3W4GcwG+v0pDnFHhfaHuW/xZZgBqkeO/krnxH6AMWOYCEikOMhPK9ALYHePiWw4LPg0GVLar8xlEX73gY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mM0yFF00; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l15aKQnW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4456A1F000E9;
-	Mon, 17 Aug 2026 09:49:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mM0yFF00"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDDA91F000E9;
+	Mon, 17 Aug 2026 11:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786960177;
-	bh=a2bv8mQc0pX/e6tC2s1i4kQh/q7goWXQ5gx6yhhKdIc=;
+	s=k20260515; t=1786964846;
+	bh=pEB9/e/jLaToIpAulcetkdxTBJa0VX6kc/CDit1TTwQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=l15aKQnWwynVG1G8mQ3SXFAMEvfV+iG5+hLlsMIuvb+GiCCYkMcIZEePcJO4EX2Cc
-	 KaPRCP6JwBmWDXDWaxiwX7I5JUQyV5MZRsUBwXTRBG+syPrS5zvGdfi+ThOmG9VQzo
-	 +AqjYSZ84OjPqQ0sBWwIeZzg/jMvnXlKJPt6ehU7737i0838iyKnzKmB0Z4Sw3neOF
-	 9SQ1I1/H1Ltb7mGDC0395bunsw4Ema8ydShJMT/cObZ8lM6PgJE2x+Bx7dOrb1uZB/
-	 sgsC6U5cwVVhD/YB82rJZUqbxcPVkAlaTVP/Ja9ywBDLFBGiQiXDtnJKeXr/eMSvxJ
-	 yQYbn8Dq2/k7w==
-Message-ID: <f5ba94b7-449f-45d1-b98e-c997faefa4ee@kernel.org>
-Date: Mon, 17 Aug 2026 11:49:34 +0200
+	b=mM0yFF00AF2gWDBLynmr2c7Q0+LiJBHObQqvbu6c3KJSutkjdq0dg2lyvABjNtkc1
+	 HYeUre95UG1myNwFcp6Jw+1Dfqxna8bkN8+7dkKaa7vw6rY9dzA2+3bnqyTTvzVbvK
+	 iquFssEJiS5Q4xBuAiLc52OLK7eRcLY0owlN6/Pn22LW1XK7tz1MSlEDDijUwR3fVs
+	 k2Vh/M8gWig9aIQ8Xu2Y2sWx1j3YfrGiTzIPs+xlkzYgcQtXcr2Kawz64p/tGOeWKi
+	 WjSHk+HTJ3vISUgj9tc9ycxoEbgChHM1SFhZ9t9axJQfYc/DxHFqyZPNEeTlP8gR9M
+	 WO2tZ86l63RPQ==
+Message-ID: <2e2b6eff-0d2c-40b9-b66c-f650bb5d1104@kernel.org>
+Date: Mon, 17 Aug 2026 13:07:22 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next RFC 2/3] mptcp: reject MP_JOIN earlier
+Subject: Re: [PATCH mptcp-next RFC 3/3] mptcp: pm: kernel: skip operating on
+ closing connections
 Content-Language: fr
 To: Paolo Abeni <pabeni@redhat.com>, MPTCP Linux <mptcp@lists.linux.dev>
 Cc: Chenguang Zhao <chenguang.zhao@linux.dev>, gang.yan@linux.dev
 References: <20260814-mptcp-reset-mpj-early-v1-0-3ca3260f9474@kernel.org>
- <20260814-mptcp-reset-mpj-early-v1-2-3ca3260f9474@kernel.org>
- <e277308e-87b5-4c1c-b976-ff73cf4286a1@redhat.com>
+ <20260814-mptcp-reset-mpj-early-v1-3-3ca3260f9474@kernel.org>
+ <d1a6a67f-41c0-4650-b62e-6a4476bab86b@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,47 +88,106 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <e277308e-87b5-4c1c-b976-ff73cf4286a1@redhat.com>
+In-Reply-To: <d1a6a67f-41c0-4650-b62e-6a4476bab86b@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Paolo,
 
-Thank you for having looked at this!
-
-On 17/08/2026 09:27, Paolo Abeni wrote:
+On 17/08/2026 09:39, Paolo Abeni wrote:
 > On 8/14/26 8:31 PM, Matthieu Baerts (NGI0) wrote:
->> @@ -91,12 +92,22 @@ static struct mptcp_sock *subflow_token_join_request(struct request_sock *req)
->>  	msk = mptcp_token_get_sock(sock_net(req_to_sk(req)), subflow_req->token);
->>  	if (!msk) {
->>  		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINNOTOKEN);
->> +		*reason = MPTCP_RST_EMPTCP;
->> +		return NULL;
->> +	}
->> +
->> +	/* Stop it early if the subflow cannot be accepted */
->> +	if (!mptcp_can_accept_new_subflow(msk)) {
+>> When iterating over each MPTCP connection after having manipulated MPTCP
+>> endpoints, there is no need to operate on closing (or not ready)
+>> connections.
+>>
+>> We can then safely skip those.
+>>
+>> Note that mptcp_nl_add_subflow_or_signal_addr() was already checking the
+>> fully_established state, but it is better to check the connection state,
+>> which is what mptcp_is_fully_established() is doing.
+>>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>>  net/mptcp/pm_kernel.c | 16 +++++++++++-----
+>>  1 file changed, 11 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+>> index d3014bf57bf3..c185e53fe42b 100644
+>> --- a/net/mptcp/pm_kernel.c
+>> +++ b/net/mptcp/pm_kernel.c
+>> @@ -969,7 +969,7 @@ static int mptcp_nl_add_subflow_or_signal_addr(struct net *net,
+>>  		struct sock *sk = (struct sock *)msk;
+>>  		struct mptcp_addr_info mpc_addr;
+>>  
+>> -		if (!READ_ONCE(msk->fully_established) ||
+>> +		if (!mptcp_is_fully_established(sk) ||
+>>  		    mptcp_pm_is_userspace(msk))
+>>  			goto next;
 > 
-> Side note: the above is inherently racy, the consistency safeguard is
-> given by the fallback check at finish_join time.
+> I'm a little double-minded here.
+> 
+> The add/removal operations are issued by the user space to update
+> subflows, as a consequence of endpoint addition/removal.
+> 
+> Possibly removing the subflow even for not fully established connections
+> could be the right thing to do, I'm not 110% sure either way. Possibly
+> worth to call this out with a comment?
 
-Just to be sure: even if it is racy, is it OK to use it here but
-continuing having the safe check at finish_join time?
+Indeed, I'm also not sure. Initially, I only converted this
+READ_ONCE(msk->fully_established), also because later in
+mptcp_pm_create_subflow_or_signal_addr(), mptcp_is_fully_established()
+is used.
 
-In other words, having such a comment is enough?
+Probably best to stick to this one.
 
-  /* Stop it early if the subflow cannot be accepted.
-   * This check is inherently racy, the consistency safeguard is
-   * given by the fallback check at finish_join time.
-   */
+On the other hand, I just noticed that there is no check for "fallback
+done" here: so the operations leading to a notification (ADD_ADDR,
+RM_ADDR) will send a dup-ACK (pure ACK without MPTCP options), and
+adding an MPTCP endpoint will lead to... the creation of a new subflow,
+even after a fallback, e.g.
 
-> Minor nit: I'm not sure this check belongs here or in
-> subflow_check_req(). The latter option would avoid the additional
-> argument and possibly produce a smaller diff (and smaller code).
+-------------------------- 8< --------------------------
+C > S: Flags [S], seq 0, win 65535, options [mss 1460,sackOK,nop,nop,nop,wscale 6,mptcp 4 capable v1], length 0
+S > C: Flags [S.], seq 2252073282, ack 1, win 65535, options [mss 1460,nop,nop,sackOK,nop,wscale 8,mptcp 12 capable v1 {0xb80fe7957527e1f7}], length 0
+C > S: Flags [.], ack 1, win 2048, options [mptcp 20 capable v1 {0x200000000000000,0xb80fe7957527e1f7}], length 0
+C > S: Flags [P.], seq 1:501, ack 1, win 2048, options [mptcp 22 capable v1 {0xb80fe7957527e1f7,0x200000000000000},nop,nop], length 500: HTTP
+S > C: Flags [.], ack 501, win 1049, options [mptcp 12 dss ack 13263177308786789273], length 0
 
-After re-looking at this code yesterday, I agree with you. Also, I think
-subflow_token_join_request() should only return the msk, and not
-changing anything else from subflow_req.
+// Here, the client receives the ACK without MPTCP options due to middleboxes → fallback
+
+S > C: Flags [P.], seq 1:101, ack 501, win 1049, options [mptcp 26 dss ack 13263177308786789273 seq 14591534807969507511 subseq 1 len 100,nop,nop], length 100: HTTP
+C > S: Flags [.], ack 101, win 2048, length 0
+
+// fallback on the server side
+
+C > S: Flags [P.], seq 501:601, ack 101, win 2048, length 100: HTTP
+S > C: Flags [.], ack 601, win 1049, length 0
+
+// Data OK
+// Adding a new subflow endpoint now:
+
+S2 > C: Flags [S], seq 618398320, win 65535, options [mss 1460,sackOK,TS val 3041525989 ecr 0,nop,wscale 8,mptcp 12 join id 1 token 0xd86e8112 nonce 0x6cca79f5], length 0
+-------------------------- 8< --------------------------
+
+Oops. Still, not a big deal, but probably better and safer to avoid
+that, no?
+
+Maybe patch 1 (reset fully_estab after a fallback) and this patch here
+but only looking at READ_ONCE(msk->fully_established) is enough?
+Patch 2 would be for -next.
+
+> Also the asymmetry with the user-space PM is a bit strange. I can't
+> recall why it was needed in the first place?!?
+
+Are you talking about all the mptcp_pm_is_userspace() checks? If yes,
+they are required because the pm_type sysctl could be changed, and we
+could end-up with a mix of msk handled by different PMs in the same
+netns.
+
+It would be better to do the opposite I guess:
+
+  if (!mptcp_pm_is_kernel(msk))
+      goto next;
 
 Cheers,
 Matt
