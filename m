@@ -1,153 +1,91 @@
-Received: from mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C2B39D3EB
-	for <mptcp@lists.linux.dev>; Tue, 18 Aug 2026 09:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55CA236F429
+	for <mptcp@lists.linux.dev>; Tue, 18 Aug 2026 09:24:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787044472; cv=none; b=ETd8J0cofRDTHtkQ2hw0USU+p6VL3PDbFYIW5vKxuS0BW76luh352wu/2ZOPHCht4n1ukUt4V17Ww1iub2sJj2NqHa2ZQ7rcwehAwWtlvRttqfvVHETexCi9Q3GYxe5zyIltZ7f+fsIso76UQX60Qo9vExfzDEI7jcnPq2dTYRw=
+	t=1787045056; cv=none; b=GQCfoPjEp3j50Xb7pGU1msy6Fj92ipmcsf2DmU+IbSHZRt13Bnk00hr2jQJlmBxuMEeSlE0HbQ/1Qr9QBxhYaukRjjDT1WRN8RE7K0lCdB3mUoXcpmUKMqnBGKsODLcZiPA4mGonfFRZnm2HrrG9mBuIYG+V0BTN3RCePcraeDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787044472; c=relaxed/simple;
-	bh=MPmouoFMWLVmbLhDNE3+RuQC16P2tCoqBytFnr2sTxQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E6lKzwplI/il3EGLmvtHu+rCXHegIq4Cd2KlA6AiUE+2dT3B4i7OVvhbYI4lPVoWkjJjuT3Yrp/z6a+EWZgnEpBmu7LXwPJQuf+OHzz0EE0FssUrsZ+mMglhW0LuO2B8C4CTxQc6lfURWQX/g8XWKJUsAFNagG0vip1/hXd1ffo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=N8Slf/0x; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1787045056; c=relaxed/simple;
+	bh=HIEJnKHJ/6VHLp43d2R+JbqDceU32OqW8vSdFdBPFIo=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=n1HKI1Ugca7U6As/jrp8UqCQKytM7A3MY4T6ZTp3abZZ40h+rtzrJzYD7zzkkxjf7K2auR/Fs3C7rPBiuGg8L8UtkKyRboq+gUhofKoC498+vIV0ZoOSc73zdbpcnbb1wKmZqys8gcSLGdDaOvmURJNv7BAL1c5u/frGLBVLvkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fdxwbEsQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="N8Slf/0x"
-X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=MPmouoFMWLVmbLhDNE3+RuQC16P2tCoqBytFnr2sTxQ=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1787044468; v=1; x=1787649268;
- b=N8Slf/0xG2EpQW9xO48YMhsxpJf/FTQGqiARUnZ8KFAQ8wM2Znv3sP+AAA3u6YooRRYeLUtJ
- btjXoiP6R3ouBMWSV9elR0UbgUudw4jMx7CW8BASbVeTWCgonM5gKpi6Qun5NGLJF5CeoIRzIEW
- oUeY58vDMa/wmge94H4u8qqo=
-X-Envelope-To: mptcp@lists.linux.dev
-Received: from localhost.localdomain (240a:4281:fe00:1ace:7fcd:c486:d361:c952)
-	by smtp.migadu.com with ESMTPS id 3a08fa730a291e0e;
-	Tue, 18 Aug 2026 09:14:28 +0000
-X-Migadu-Flow: FLOW_OUT
-From: Chenguang Zhao <chenguang.zhao@linux.dev>
-To: mptcp@lists.linux.dev
-Cc: chenguang.zhao@linux.dev,
-	Chenguang Zhao <zhaochenguang@kylinos.cn>
-Subject: [PATCH mptcp-next RFC v4 2/2] mptcp: send MP_FAIL and infinite mapping on the same ACK
-Date: Tue, 18 Aug 2026 17:14:17 +0800
-Message-Id: <20260818091417.2200986-3-chenguang.zhao@linux.dev>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20260818091417.2200986-1-chenguang.zhao@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fdxwbEsQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB9F81F000E9;
+	Tue, 18 Aug 2026 09:24:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787045054;
+	bh=Qrulf9P++V2Fd+OzhXoQazlEjdDZfV0d958yaoA2jPM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=fdxwbEsQaYck0r/Kz5oUWMLRoBuRIopgVi0PDQMMQxPX6IVe1z2iz0W2iwfQF7UxU
+	 tBDkSo0EivIQktgcUu4diD6wF1dB0vx9ctSLArOxIc51O2cWNNUFb2PzY4aaf3t7I8
+	 Qvc0qwJ7ZFDxQaybVCM+2+PPYeEaJ1UKkSFKG3Bz57rx8cG8kX0nLKaOOPMniEnCYw
+	 YEvvM04pRPo9SVexc0YXAQnKkQzU9/nnf6jFVas0lLLqiC13EmAPZ1aTA5nn0b4bct
+	 C57Vot0mqc2XwhwERAJj/A04u/+YAF+/9chlrp7ZRLODd49ScAxBgTR3hrZ8r1m/zh
+	 mC2t1K0zdfEbg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH mptcp-next RFC v4 1/2] mptcp: add MPFailFallback MIB
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Chenguang Zhao" <chenguang.zhao@linux.dev>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <20260818091417.2200986-2-chenguang.zhao@linux.dev>
 References: <20260818091417.2200986-1-chenguang.zhao@linux.dev>
+ <20260818091417.2200986-2-chenguang.zhao@linux.dev>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 18 Aug 2026 09:24:14 +0000
+Message-Id: <20260818092414.BB9F81F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-From: Chenguang Zhao <zhaochenguang@kylinos.cn>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] The newly added MIB counter `MPTCP_MIB_MPFAILFALLBACK` is define=
+d and exposed to userspace but never incremented anywhere in the codebase.
+--
 
-On a single subflow, accepting MP_FAIL must leave MPTCP mode at once
-(RFC8684 §3.7). Emit the infinite mapping on the MP_FAIL reply ACK,
-then call mptcp_try_fallback() immediately after.
-
-Fixes: 1e39e5a32ad7 ("mptcp: infinite mapping sending")
-Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
+--- Patch [1]: [PATCH mptcp-next RFC v4 1/2] mptcp: add MPFailFallback MIB =
 ---
- net/mptcp/options.c  | 33 ++++++++++++++++++++++++++++++++-
- net/mptcp/pm.c       |  5 +++++
- net/mptcp/protocol.c |  8 +-------
- 3 files changed, 38 insertions(+), 8 deletions(-)
+commit da81a414aec944549813cb91e3dbd055d9e87a03
+Author: Chenguang Zhao <zhaochenguang@kylinos.cn>
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 97da22668dbe..ecf77e77d2de 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -638,7 +638,29 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
- 	opts->csum_reqd = READ_ONCE(msk->csum_enabled);
- 	mpext = skb ? mptcp_get_ext(skb) : NULL;
- 
--	if (!skb || (mpext && mpext->use_map) || snd_data_fin_enable) {
-+	if (unlikely(subflow->send_infinite_map)) {
-+		unsigned int map_size = TCPOLEN_MPTCP_DSS_BASE + TCPOLEN_MPTCP_DSS_MAP64;
-+
-+		if (opts->csum_reqd)
-+			map_size += TCPOLEN_MPTCP_DSS_CHECKSUM;
-+
-+		if (mpext) {
-+			opts->ext_copy = *mpext;
-+			opts->ext_copy.infinite_map = 1;
-+			opts->ext_copy.data_len = 0;
-+		} else {
-+			opts->ext_copy.use_map = 1;
-+			opts->ext_copy.dsn64 = 1;
-+			opts->ext_copy.infinite_map = 1;
-+			opts->ext_copy.data_len = 0;
-+			opts->ext_copy.data_seq = READ_ONCE(msk->snd_nxt);
-+			opts->ext_copy.subflow_seq = subflow->rel_write_seq;
-+		}
-+
-+		dss_size = map_size;
-+		opts->suboptions = OPTION_MPTCP_DSS;
-+		ret = true;
-+	} else if (!skb || (mpext && mpext->use_map) || snd_data_fin_enable) {
- 		unsigned int map_size = TCPOLEN_MPTCP_DSS_BASE + TCPOLEN_MPTCP_DSS_MAP64;
- 
- 		if (mpext) {
-@@ -1566,6 +1588,15 @@ void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
- 						   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
- 			}
- 			ptr += 1;
-+
-+			if (unlikely(mpext->infinite_map)) {
-+				subflow = mptcp_subflow_ctx(ssk);
-+				if (subflow->send_infinite_map) {
-+					subflow->send_infinite_map = 0;
-+					MPTCP_INC_STATS(sock_net(ssk),
-+							MPTCP_MIB_INFINITEMAPTX);
-+				}
-+			}
- 		}
- 
- 		/* We might need to add MP_FAIL options in rare cases */
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index ba7c6f80a183..69701ac7e436 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -895,6 +895,11 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
- 		pr_debug("MP_FAIL response received\n");
- 		WRITE_ONCE(subflow->fail_tout, 0);
- 	}
-+
-+	if (!mptcp_try_fallback(sk, MPTCP_MIB_MPFAILFALLBACK)) {
-+		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_FALLBACKFAILED);
-+		mptcp_subflow_reset(sk);
-+	}
- }
- 
- static int mptcp_add_addr_len(int family, bool echo, bool port)
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index f879b1061f2d..abe45a31ca5f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1417,13 +1417,7 @@ static void mptcp_update_infinite_map(struct mptcp_sock *msk,
- 
- 	mpext->infinite_map = 1;
- 	mpext->data_len = 0;
--
--	if (!mptcp_try_fallback(ssk, MPTCP_MIB_INFINITEMAPTX)) {
--		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_FALLBACKFAILED);
--		mptcp_subflow_reset(ssk);
--		return;
--	}
--
-+	MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPTX);
- 	mptcp_subflow_ctx(ssk)->send_infinite_map = 0;
- }
- 
--- 
-2.25.1
+mptcp: add MPFailFallback MIB
 
+This commit adds a new MIB counter for tracking TCP fallback after accepting
+MP_FAIL.
+
+> diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+> index 608cb568897cf..648d4dbca7646 100644
+> --- a/net/mptcp/mib.c
+> +++ b/net/mptcp/mib.c
+[ ... ]
+> @@ -88,6 +88,7 @@ static const struct snmp_mib mptcp_snmp_list[] =3D {
+>  	SNMP_MIB_ITEM("MD5SigFallback", MPTCP_MIB_MD5SIGFALLBACK),
+>  	SNMP_MIB_ITEM("MD5SigReset", MPTCP_MIB_MD5SIGRESET),
+>  	SNMP_MIB_ITEM("DssFallback", MPTCP_MIB_DSSFALLBACK),
+> +	SNMP_MIB_ITEM("MPFailFallback", MPTCP_MIB_MPFAILFALLBACK),
+
+[Severity: Medium]
+Is this counter actually incremented anywhere in the codebase?
+
+It appears that MPTCP_MIB_MPFAILFALLBACK is defined and exposed here, but it
+is never passed to MPTCP_INC_STATS() or used in tracking functions like
+mptcp_try_fallback() within this patch.
+
+Without being incremented when a fallback actually occurs, won't this count=
+er
+just permanently read zero when queried by userspace?
+
+>  	SNMP_MIB_ITEM("DssReset", MPTCP_MIB_DSSRESET),
+>  	SNMP_MIB_ITEM("SimultConnectFallback", MPTCP_MIB_SIMULTCONNFALLBACK),
+>  	SNMP_MIB_ITEM("FallbackFailed", MPTCP_MIB_FALLBACKFAILED),
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260818091417.2200=
+986-1-chenguang.zhao@linux.dev?part=3D1
