@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F6C3D0BE5
-	for <mptcp@lists.linux.dev>; Tue, 18 Aug 2026 07:52:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7472639A7EF
+	for <mptcp@lists.linux.dev>; Tue, 18 Aug 2026 08:23:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787039574; cv=none; b=hCPfbivaW61kGXVWdJpWBKsSdKowwPFodzVsHOHJkjxo72PEF8CpvfEyARdQywn0C7at+2yMbk1RRJKfP5OA9f3FvJR/VAHXv55SP1sY6MDajeeWxGJuEq8BaZFTQWQ25Rcsx44mFATCwqJ3wNXPxVwbmVbTKfu3DxFt7kLVN0M=
+	t=1787041391; cv=none; b=caXXyOgHfsMoMqLnfRFYpzbymCFFSZr5LuX8KrUtB6zlECo816KARBkzmYnqQyLH3RB47Jvy2A0mmfW0kVrD06mv27jwtb/ljRwLmvnqNJcmVPizCXiDNCKZQx0H55XmzIB8cU2FNiKsc+nXgmLiamNEYgMbD1lbIrvJrHQTl1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787039574; c=relaxed/simple;
-	bh=M7SSfqKh356DEGs0gz2uwoFAHM45/yVX54xnxdRrC/o=;
+	s=arc-20240116; t=1787041391; c=relaxed/simple;
+	bh=63fjq9YfrVnP4mrOjEF/7G8AWkh1mgn73u7+5QfGPDA=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lW21Mfk57gUQOmYLw4u4RFq1//JJVeo55nhYaKv6OB6DgURO9//y1vCkZo0mbUbzcgps3u2/lXoj+skTm2125WsP0zYi8KGL4LiNpRNIja8AvWlDBJ+wsSLWa6itOUok1kIPP8tqlFDW/6YR8bCx95WZPpS+blp1913erIL9+jA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ivywm5DL; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:MIME-Version; b=pSMVTWwlVojSGBdi7IiLtbl944gGWpqVH/0vBei2htVU91PmXZVz7+nJ7439gLDD9e4eM5Y9L9cFgqm/8qAzdXPWgIxMlbHQ3nW6IeF6NZnWRKeubt5H89Glx6bLJ+sZo3tVBHXb3nxRppA7q9NuP1g9HdUmMlRSObN288R4FB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GvqGSKlL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ivywm5DL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 378C51F000E9;
-	Tue, 18 Aug 2026 07:52:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GvqGSKlL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40FF01F000E9;
+	Tue, 18 Aug 2026 08:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787039573;
-	bh=CEWFh+Eo4PuRoSIm+eJ7coPCUzN9NBC5eXBRhy95bcg=;
+	s=k20260515; t=1787041390;
+	bh=9Ct5u1ggbp/Q7gSbTIV5/Xx2iAruA5EGLPE6Ql+hwko=;
 	h=Subject:From:To:Date:In-Reply-To:References;
-	b=ivywm5DLaAOFYfGjXKIMUxI0lTMWPtjisFoY9A+UVXSmvHEv73zojVSo/x3Eqw2ZY
-	 HSoEr6NJdVMu+dvOCnMDVGaHZe8dHQbMv5F6OvrKGlQPQjuemhWe85YDceL2ei+lue
-	 354mEpgtjMSThiUu0CBuzDEmP2oea33TlSoSZzwKlkwzQnELtOI8rOm76cfTtjE4R1
-	 U61zEiD3VYX7ox42uEOG5shqpAtdQ7R1KIiHQcv7yY2J9zT5lx/cC+hyEPEUfDyO3d
-	 83BkOthI6GeuNtQfDp7UmZsdlZOfAE4bFkNIdR/6GWWY1SKWANY7N+he6W2dgEeYqO
-	 vicoTPvXUYU/A==
-Message-ID: <2a74fda9614c9a11b8789a33dcda21378660534c.camel@kernel.org>
-Subject: Re: [PATCH resend mptcp-net 0/4] mptcp: a few fixes
+	b=GvqGSKlLq3FkjEFOWx1I2L0/6uo1qrvEzvda7IEkdtONnShL2ayXuhHu+GbIkhv9/
+	 aGFE9ECGvRcxF1JIJT6uERbJox2ZuT7JIWWsRbNv7EAAO0y32nz1CcByV+R+tzvSep
+	 8+xUO2pyzsUcFSWzedqCZYdKcNigStsjhDS92WefbvT1dmYEA/joEGFjZfco/MdTWB
+	 SD8M3kRddu6X9wtCNTcJkh0CMAV05abvJWcXZx1cj+wcsUCm+oyNi3Y/YsgrVgtBfM
+	 79gWgVN/ch/13eWKRv/Vik2b+kduDzYqN2X9O3+GDtwPdqL/liSrF4TLU9hRU4FDx+
+	 ZduCYbQIYpI5w==
+Message-ID: <4a4ce805c08bf5a8c2f34e0fa371b81317af795e.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v6 0/6] Fix socket options used by NVMe over
+ MPTCP
 From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	mptcp@lists.linux.dev
-Date: Tue, 18 Aug 2026 15:52:48 +0800
-In-Reply-To: <ccf9480a-712d-4d37-80f1-3db80b7a4409@kernel.org>
-References: <cover.1786713351.git.pabeni@redhat.com>
-	 <ccf9480a-712d-4d37-80f1-3db80b7a4409@kernel.org>
+To: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Date: Tue, 18 Aug 2026 16:23:04 +0800
+In-Reply-To: <cddcbdb5-b4ab-b99f-54ae-ee6cf8fd8cc5@gmail.com>
+References: <cover.1786938892.git.tanggeliang@kylinos.cn>
+	 <cddcbdb5-b4ab-b99f-54ae-ee6cf8fd8cc5@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.2-9 
 Precedence: bulk
@@ -47,38 +47,59 @@ Content-Transfer-Encoding: 8bit
 
 Hi Matt,
 
-On Sat, 2026-08-15 at 19:19 +0200, Matthieu Baerts wrote:
-> Hi Paolo,
+On Mon, 2026-08-17 at 05:11 +0000, MPTCP CI wrote:
+> Hi Geliang,
 > 
-> On 14/08/2026 15:38, Paolo Abeni wrote:
-> > This is mostly a follow-up to the recent OoO queue pruning series.
-> > Explicitly targeting net as we have already a lot of patches
-> > pending for
-> > net-next, and no need to rush IMHO.
-> > 
-> > First 2 patches addresses explicit comments from sashiko, 3rd one
-> > is a
-> > somewhat unrelated cleanup I stumbled upon while implementing patch
-> > 4.
-> > 
-> > The last patch fixes another thing implided by sashiko while
-> > reviewing
-> > the mentioned series.
+> Thank you for your modifications, that's great!
 > 
-> Thank you for this series, it looks good to me:
+> Our CI did some validations and here is its report:
 > 
-> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> 
-> I will wait for the net-next → net merge to apply them to export-net.
+> - KVM Validation: normal (except selftest_mptcp_join): Success! ✅
+> - KVM Validation: normal (only selftest_mptcp_join): Success! ✅
+> - KVM Validation: debug (except selftest_mptcp_join): Success! ✅
+> - KVM Validation: debug (only selftest_mptcp_join): Success! ✅
+> - KVM Validation: btf-normal (only bpftest_all): Success! ✅
+> - KVM Validation: btf-debug (only bpftest_all): Success! ✅
 
-If you have time, could you please merge this series into the export
-branch at your earliest convenience? My ongoing series, "Reduce the
-differences between TCP and MPTCP for TLS usage", conflicts with this
-one.
+Sashiko has already reviewed this v6 and has no further comments. If
+you have time, could you please take a look and review it as well?
 
 Thanks,
 -Geliang
 
+> - Task:
+> https://github.com/multipath-tcp/mptcp_net-next/actions/runs/31994206151
+> 
+> Initiator: Patchew Applier
+> Commits:
+> https://github.com/multipath-tcp/mptcp_net-next/commits/f3f2396df333
+> Patchwork:
+> https://patchwork.kernel.org/project/mptcp/list/?series=1146924
+> 
+> 
+> If there are some issues, you can reproduce them using the same
+> environment as
+> the one used by the CI thanks to a docker image, e.g.:
+> 
+>     $ cd [kernel source code]
+>     $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm
+> -it \
+>         --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+>         auto-normal
+> 
+> For more details:
+> 
+>     https://github.com/multipath-tcp/mptcp-upstream-virtme-docker
+> 
+> 
+> Please note that despite all the efforts that have been already done
+> to have a
+> stable tests suite when executed on a public CI like here, it is
+> possible some
+> reported issues are not due to your modifications. Still, do not
+> hesitate to
+> help us improve that ;-)
 > 
 > Cheers,
-> Matt
+> MPTCP GH Action bot
+> Bot operated by Matthieu Baerts (NGI0 Core)
