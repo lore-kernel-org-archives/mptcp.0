@@ -1,103 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977BF3BED01
-	for <mptcp@lists.linux.dev>; Tue, 18 Aug 2026 10:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2AB2BDC28
+	for <mptcp@lists.linux.dev>; Tue, 18 Aug 2026 10:21:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787047429; cv=none; b=dzOcUleTwFCYAT/Qa4zjrgzUNlSXmaVtclP6KKb48vsjLkx/s07EgjcfklAYQDc+ixjMcl/DnvreAjHBcYuEQQb5u+yhuMGdG4+ShirOP+Ed2fuxaV90pk5grSFUxtTihaNcc0f6/NiL7I754oeeljsgTt5yavLBDD0tC1cY32E=
+	t=1787048507; cv=none; b=iKGd6JFZGiEhuWZit9S1BtX6DORCZ94qsOb5INsf9P4bLS5mHNxadBjlFguiZF0wCU3tqk9jUpWhqn79NdQvkwp6o774ONftmC/NOAkJqcCGGhDYnpCnwPwqoBA6+FZML0p7a+MuKUvOWAupa6s+Rb81OmTVCR0zFWDHez1Y7BI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787047429; c=relaxed/simple;
-	bh=dX8emH89BZ8p/qJ5OnE5chktEIH4Tsgf2OESUCVVL8E=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=f6YKc6V0sSY7jVpBy0wHk0jrK0eV81Mmi4Gj3eXuaXEOGllg6mRhj60LtQ/GhK2DJX6jDvGCBYmRz2+OKDW8QZU01rbSYLHuF9te0G3wT4XOsOhA5xficqYLbWrOYLLc/Wyr7/UpOY8e/wsTPDDCCwrUIuSBqcUb1HUyzsvAmjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dJboFA6c; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787048507; c=relaxed/simple;
+	bh=/Xf2kI13fzIwYytqhusc1sTNa6ce1cY4DrldUZUybPU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=ssOEUMAc57npsIvl0pXVm0gMRba+7lwJ13McHdEHU/cK8PZyE3O0z/61kygctSucH9zqrBHBU46hxD9FKmqM1yAVbY73dHndj0tNv6gCl35zSpOtnpJ8JA1iUHa1p+QVw//QaxGbJmL8XHxns6Rnf/KBazfOesxbOtU/3HWXiUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bUXv7+6j; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dJboFA6c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DA631F000E9;
-	Tue, 18 Aug 2026 10:03:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787047425;
-	bh=sLytcBEbcPmJ1lEO58RMvDBQWGInfLyu7FrmC0CS9ek=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=dJboFA6cqNzPX/mlYSDpIS5vwKos6P8hY38Fa4lrZNYVrSmRTZeJzpJhQme60zXnO
-	 nBYTuP80c+4/7ExVydOuMngI1caqdq9SEER428eVST9GYM+a+dyhVh/wiDgVZrLHvn
-	 IWaRhPFGiqHljsAIqbMrDpLGul7nGYDX9utui9vKgZb6rj5SiXEcc15RAVAI7bsRpn
-	 3f/cHvD9DSUiwXRUiiNgjzlHd/HXrjGcj9/FpG32QLkHR4Nr7iLW9KCMQL3l196GeZ
-	 2pXdA4ezLc4DpoThxxX6g8BLslIgSnsYs7Jzg7As1uP6kSyvKldbgDOZPVquNht/zG
-	 yodydI7YIgPBQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v2 4/5] Squash to "mptcp: pm: init and
- release mptcp_pm_ops"
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Gang Yan" <gang.yan@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bUXv7+6j"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-934944f2d22so244729685a.0
+        for <mptcp@lists.linux.dev>; Tue, 18 Aug 2026 03:21:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787048505; x=1787653305; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=JHN2/ACk7uZjxZo/ZRa9EEq/fNGV+J5PhdHFgT21iZU=;
+        b=bUXv7+6jefW83eYnlfJLPMDIhbAnr3g/BkvGHHOZNIku2DbTi2QqyvR/VRxQLVJK3m
+         EKNkMkXJG3sc5YvO1YBVoGp45dW8V12ufSvvaepAeDtau+xLVrnzw57Ct9DXNbYiHc/Y
+         e/jTNwhxGdlqofi8b+d8bXxLnw1Xii0Zam3vO9zwTAsjZEnBNej5vE3wn5qASJG3oaHH
+         HVR0wCRievJTdm/kPim53RRwDw2gFXYFsaKVFw817ZMLy+EICBkX7ow7ZWLWV8xQvV1r
+         hmRhEkVY3c4uhfLcxwbmAvNDGgikW5Hh/8mWHRFpHOEan9HJ2rh3ViGN8ENrRP88P7i2
+         0eEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787048505; x=1787653305;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=JHN2/ACk7uZjxZo/ZRa9EEq/fNGV+J5PhdHFgT21iZU=;
+        b=eMOHeJlqu/mFIiUyVOJFuJ38y3G2mzeCQtN5UJ7emjp2UrPWSNTaTsU6gR23xdgv6V
+         2O55e8UCmdRGLG9XbSv+k+v/DIziEzYR2Imq5xe2ATqTdbh2BChElyLW45+5Kr+qoP8z
+         oKMgfTFK7lz4iQkNDiAqLwCaVwxvQam2n8nmhwXn5Q+eVh8eXuiiM6Hq7/BTDZ7y+FU2
+         JeQ77AE4b53XVfT5ee2zi1X8IcYF7pBbHp0tgClc1/E4PYqpsB4W/dd/HJfWW1hy3B2j
+         pZ947bLFdfU2WU382SpaFAtRzlaDHW9c9rVCSX9Fb3oJeGXnKDfLu1H6ucLFATNx1Y9o
+         xNzg==
+X-Gm-Message-State: AOJu0YyGF54UES7nvUjixOGh2aJzkIWkW2cFm6ssyOe9Uz9xicRgB7w5
+	9jHZ8nuuUuzT5XbQ4z4cY781M6c5rDq9x6il2re4Nax0IzEFG0fSjLOvm+5e
+X-Gm-Gg: AR+sD12xExc8igATpwOgjFYVmN8h1n5opVP8kkKeDGhfi7l8jT46MdBCbZvPd3YJ5pP
+	pUR8KkD8w5u/AMjES6jp7Zu1wttBrLc+XsFsd3ZWY0RMtC3QqQOn80uCvTxZcats+1LsU1KgO4m
+	WdYVlwayd9v3jv1KluYfHXU6sQGM9Cl933cnuWTm5FGHBXsrGa6Xs1sZOi1WD5yQw32pAltRpoQ
+	NWcnkgyl6oF6xnmwrFSeK1NUfkJuJ+ikmHoBk5NsBUGWYLugSIkfdptEbT8NjOofdKpeXNIgBoV
+	Mq3kYTJYclSJmYoyZobLLuOa+NUK+V1+0zEa34W28X+nfcQAkKbiMmT691xdrqUgPchY1xUmq9Q
+	/JBI5vp5NcSAGHplXXSo0YqOOwMe+gTPRKm9Hy+PY86auxDWc3UOT+4cAENkTSm1tjMDvWQfoRq
+	A+vKtfEJuKApLgPLgwOtQnqfT4cfD/qisEWGfJ6XebVNoEwxPoFUAxswIPlMWoRaQ3RhYUd8mjd
+	8QxIar8Oj+Cqg==
+X-Received: by 2002:a05:620a:1713:b0:930:b068:8c03 with SMTP id af79cd13be357-93704bbfa1amr605488185a.34.1787048504589;
+        Tue, 18 Aug 2026 03:21:44 -0700 (PDT)
+Received: from [127.0.0.1] ([52.152.180.193])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-937010efb6esm306728785a.21.2026.08.18.03.21.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2026 03:21:44 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Chenguang Zhao <zhaochenguang@kylinos.cn>
 Cc: mptcp@lists.linux.dev
-In-Reply-To: <20260818094825.48446-5-gang.yan@linux.dev>
-References: <20260818094825.48446-1-gang.yan@linux.dev>
- <20260818094825.48446-5-gang.yan@linux.dev>
-Content-Type: text/plain; charset=utf-8
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260818091417.2200986-1-chenguang.zhao@linux.dev>
+References: <20260818091417.2200986-1-chenguang.zhao@linux.dev>
+Subject: Re: [PATCH mptcp-next RFC v4 0/2] mptcp: fallback to TCP on
+ MP_FAIL with a single subflow
+Message-ID: <c8fd9e42-aa87-c6a0-eff8-ad6f284818c6@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 18 Aug 2026 10:03:45 +0000
-Message-Id: <20260818100345.8DA631F000E9@smtp.kernel.org>
+Date: Tue, 18 Aug 2026 10:21:43 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Resource Leak on Error Path in `mptcp_net_init`
---
+Hi Chenguang,
 
---- Patch [4]: [PATCH mptcp-next v2 4/5] Squash to "mptcp: pm: init and rel=
-ease mptcp_pm_ops" ---
-commit b8f493287a2fef63b437fe19fc22666b77c1c08b
-Author: Gang Yan <yangang@kylinos.cn>
+Thank you for your modifications, that's great!
 
-Squash to "mptcp: pm: init and release mptcp_pm_ops"
+Our CI did some validations and here is its report:
 
-This commit introduces lifetime handling for mptcp_pm_ops at the pernet
-level. It pins the default mptcp_pm_kernel by taking a module reference
-during pernet defaults initialization and releases it during network
-namespace exit.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/321223=
+51648
 
-> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-> index 733706f06f1b1..32268aa260976 100644
-> --- a/net/mptcp/ctrl.c
-> +++ b/net/mptcp/ctrl.c
-> @@ -124,7 +124,9 @@ static void mptcp_pernet_set_defaults(struct mptcp_pe=
-rnet *pernet)
->  	pernet->pm_type =3D MPTCP_PM_TYPE_KERNEL;
-> =20
->  	RCU_INIT_POINTER(pernet->scheduler, &mptcp_sched_default);
-> -	RCU_INIT_POINTER(pernet->path_manager, &mptcp_pm_kernel);
-> +
-> +	if (bpf_try_module_get(&mptcp_pm_kernel, mptcp_pm_kernel.owner))
-> +		RCU_INIT_POINTER(pernet->path_manager, &mptcp_pm_kernel);
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/02ed8cd94c7c
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1147672
 
-[Severity: Medium]
-Does this introduce a module reference leak regression on the error path
-during network namespace initialization?
 
-When mptcp_pernet_set_defaults() takes this module reference, it is called
-from mptcp_net_init() right before mptcp_pernet_new_table():
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-mptcp_net_init() {
-    mptcp_pernet_set_defaults(pernet);
-    return mptcp_pernet_new_table(net, pernet);
-}
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-If mptcp_pernet_new_table() fails and returns an error, the error is
-propagated without releasing the module reference acquired here. Because the
-initialization failed, the core network namespace code will not call the
-corresponding exit function mptcp_net_exit() to release it.
+For more details:
 
-Should mptcp_net_init() clean up the reference if mptcp_pernet_new_table()
-fails?
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-[ ... ]
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260818094825.4844=
-6-1-gang.yan@linux.dev?part=3D4
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
