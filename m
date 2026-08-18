@@ -1,133 +1,121 @@
-Received: from mta1.migadu.com (out-61.mta1.migadu.com [95.215.58.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7DED43F4AA
-	for <mptcp@lists.linux.dev>; Tue, 18 Aug 2026 09:48:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29B3417BE9
+	for <mptcp@lists.linux.dev>; Tue, 18 Aug 2026 09:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787046537; cv=none; b=nT2MfHdceCuEScMyj3IdwGQZECJVAD9d6lX1rYGonoUjzLwsg0KYV74f/1uBO66OtqZ0SxIFl+ug1jKJUdrXqh2QzKW+jfZZoVcRWlc3WV+9gvlaUwO5MXCdQ7Tsw6wgWaLV1NaR+6PtVQE7A3owulX80t8c9f05MPPgJroUsSQ=
+	t=1787047197; cv=none; b=SgnI7wiuXX2EZVmvOt8lhtdtB1wbBijzeRkOaSKPzDlWJ1bGydhjpnha9v+jcb/3Ig/Oi88fOnT6/7aESYj89Ha7IL8YHEj07pobx5cvtiQfd0ao9uFcjzxgMgqbSgfOr3olmj4DATxLDOqVAHf9+BUG26Jei6hoRyqPFHFk7ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787046537; c=relaxed/simple;
-	bh=NSdLMyuCUdqkBCf9KMVvSC32qRaTcLIIV7XjRyKfEl8=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nXUi9azN6Ph4r0VEAa7xMXPT+qJJ9wZ44QhYkaKw32i9tWkxA4TdDtasscqnfQ16dj84tGT4L/FI2qZPJN+JMfRk4CbDts/YoV+7Hpo6FNsoFIKcZisX2j5LqEI2hzUtXw8YRhGxuLXAGghTBA2agfJrix4k0CfApssxzmkdVgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Cei67Gh6; arc=none smtp.client-ip=95.215.58.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1787047197; c=relaxed/simple;
+	bh=vCdzBAe88KEPVpz/8qyzVsxSem2B9iKVNU29Eb4a1dg=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=rdri4mLXrO3vU/KqAcGHSiSNPnNQvaa0DMqdAMexefwhRg158jpIX6r9N+hKJSvdejGh+Vg5goV+JKRmanfa94/w3SPj7abOzXWlk64gRkIu6Cb780zLwk2Tbswuop/5ZyIebifZnDvqcx7IrhZLLvnWpjWar/IlnkQ0TOwgo3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N37u9TOr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Cei67Gh6"
-X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=NSdLMyuCUdqkBCf9KMVvSC32qRaTcLIIV7XjRyKfEl8=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1787046533; v=1; x=1787651333;
- b=Cei67Gh6vWijeuY1n8jG4rVleuDQm3u2Xvr7ocv5HPrFALhGU0ZfhFH17VSztMFFFc9O9p4O
- ODW8Xhl1kHPLW04QVOWvQIMaEJDrkNhM17LhN1H5WBM0s8zwq2wHnDJV+54BH2FOs3eC8atxk8N
- tduhuXXiDXrVo62yniuG7Zos=
-X-Envelope-To: mptcp@lists.linux.dev
-Received: from thinkbook16p.. (223.70.159.239)
-	by smtp.migadu.com with ESMTPS id d1dccfa21b7bc23d;
-	Tue, 18 Aug 2026 09:48:53 +0000
-X-Migadu-Flow: FLOW_OUT
-From: Gang Yan <gang.yan@linux.dev>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v2 5/5] Squash to "bpf: Add mptcp packet scheduler struct_ops"
-Date: Tue, 18 Aug 2026 17:48:25 +0800
-Message-ID: <20260818094825.48446-6-gang.yan@linux.dev>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260818094825.48446-1-gang.yan@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N37u9TOr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6892E1F000E9;
+	Tue, 18 Aug 2026 09:59:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787047195;
+	bh=bKvNZR8lPQjY4ACBaHY6n4h8+06coclO3IrM1rte0bE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=N37u9TOr+TDtl8p6hzIRcyM4rcVvUme2NjGuzemgDbZU2egtJCNZo43DWL1EF3fmW
+	 SVVWJhhy1eNDrh/x9voYaZy81cFaLoseDsx7G4vXdBEZzluoU9XPBEs6sdfCcc4sWT
+	 8XzJoYymDoL7MXpiPJ9hFpMpbWIlvJwLHSraEI2ORvj6cLGW2s81AOL/fvzcxvQi0s
+	 04VeMWituaOvcgvsQ7DTe895QX8YVdaxECVmM6mOrrgcgcn/2NF9IxcoArpywU8wEj
+	 k8V+O/xqZRm+bPRunUS3+PiD+s9ccDrIiQA5OUTLqiSj8Neojo13N8OnUy6+HhESAm
+	 PrnqOlB5sbAWg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH mptcp-next v2 1/5] mptcp: sched: change scheduler sysctl
+ atomically
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Gang Yan" <gang.yan@linux.dev>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <20260818094825.48446-2-gang.yan@linux.dev>
 References: <20260818094825.48446-1-gang.yan@linux.dev>
+ <20260818094825.48446-2-gang.yan@linux.dev>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 18 Aug 2026 09:59:54 +0000
+Message-Id: <20260818095955.6892E1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Gang Yan <yangang@kylinos.cn>
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [High] Use-After-Free and module reference leak due to missing reference =
+counting when setting the default MPTCP scheduler
+- [Medium] Redundant scheduler list traversal during socket initialization =
+defeats pointer caching
+--
 
-The pernet sysctl patches in this series swap the scheduler pointer
-with xchg() without taking any module reference: this is fine while
-ops can only be registered from built-in code.
+--- Patch [1]: [PATCH mptcp-next v2 1/5] mptcp: sched: change scheduler sys=
+ctl atomically ---
+commit d5b1780c033b9909a1b30fbd814812af5c25ed2f
+Author: Gang Yan <yangang@kylinos.cn>
 
-This commit is what makes BPF schedulers registerable, i.e. the first
-one whose ops can be unloaded while a pernet still stores them. Take
-the reference accordingly:
+mptcp: sched: change scheduler sysctl atomically
 
-  - mptcp_pernet_set_defaults() pins &mptcp_sched_default, mirroring
-    tcp_sk_init() pinning &tcp_reno;
-  - mptcp_set_scheduler() takes a reference on the new ops and
-    releases the one held on the ops it replaces, mirroring
-    tcp_set_default_congestion_control();
-  - mptcp_net_exit() releases the last reference, mirroring
-    tcp_sk_exit().
+This commit changes the per-netns scheduler storage from an inline string
+to an RCU-protected pointer to an mptcp_sched_ops struct. It updates the
+sysctl read/write paths and socket initialization to use this pointer,
+aiming to prevent concurrent readers from observing half-written names.
 
-Assisted-by: Claude:GLM5.2
-Co-developed-by: Tao Cui <cuitao@kylinos.cn>
-Signed-off-by: Tao Cui <cuitao@kylinos.cn>
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
----
- net/mptcp/ctrl.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/626
 
-diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-index 32268aa26097..309bbb2a4eb0 100644
---- a/net/mptcp/ctrl.c
-+++ b/net/mptcp/ctrl.c
-@@ -123,7 +123,8 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
- 	pernet->stale_loss_cnt = 4;
- 	pernet->pm_type = MPTCP_PM_TYPE_KERNEL;
- 
--	RCU_INIT_POINTER(pernet->scheduler, &mptcp_sched_default);
-+	if (bpf_try_module_get(&mptcp_sched_default, mptcp_sched_default.owner))
-+		RCU_INIT_POINTER(pernet->scheduler, &mptcp_sched_default);
- 
- 	if (bpf_try_module_get(&mptcp_pm_kernel, mptcp_pm_kernel.owner))
- 		RCU_INIT_POINTER(pernet->path_manager, &mptcp_pm_kernel);
-@@ -134,15 +135,22 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
- #ifdef CONFIG_SYSCTL
- static int mptcp_set_scheduler(struct mptcp_pernet *pernet, const char *name)
- {
--	struct mptcp_sched_ops *sched;
-+	struct mptcp_sched_ops *sched, *prev;
- 	int ret = 0;
- 
- 	rcu_read_lock();
- 	sched = mptcp_sched_find(name);
--	if (sched)
--		xchg(&pernet->scheduler, sched);
--	else
-+	if (sched) {
-+		if (bpf_try_module_get(sched, sched->owner)) {
-+			prev = xchg(&pernet->scheduler, sched);
-+			if (prev)
-+				bpf_module_put(prev, prev->owner);
-+		} else {
-+			ret = -EBUSY;
-+		}
-+	} else {
- 		ret = -ENOENT;
-+	}
- 	rcu_read_unlock();
- 
- 	return ret;
-@@ -603,10 +611,15 @@ static int __net_init mptcp_net_init(struct net *net)
- static void __net_exit mptcp_net_exit(struct net *net)
- {
- 	struct mptcp_pernet *pernet = mptcp_get_pernet(net);
-+	struct mptcp_sched_ops *sched;
- 	struct mptcp_pm_ops *pm;
- 
- 	mptcp_pernet_del_table(pernet);
- 
-+	sched = rcu_dereference_protected(pernet->scheduler, true);
-+	if (sched)
-+		bpf_module_put(sched, sched->owner);
-+
- 	pm = rcu_dereference_protected(pernet->path_manager, true);
- 	if (pm)
- 		bpf_module_put(pm, pm->owner);
--- 
-2.43.0
+> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+> index 63c5747f0f63c..479b31eb30079 100644
+> --- a/net/mptcp/ctrl.c
+> +++ b/net/mptcp/ctrl.c
+[ ... ]
+> @@ -126,7 +133,7 @@ static int mptcp_set_scheduler(char *scheduler, const=
+ char *name)
+>  	rcu_read_lock();
+>  	sched =3D mptcp_sched_find(name);
+>  	if (sched)
+> -		strscpy(scheduler, name, MPTCP_SCHED_NAME_MAX);
+> +		xchg(&pernet->scheduler, sched);
 
+[Severity: High]
+When replacing the scheduler pointer here with xchg(), does this leak the
+module reference for the previous scheduler returned by xchg()?
+
+Also, do we need to acquire a module reference for the newly assigned sched
+via bpf_try_module_get() before storing it? Without a reference, could the
+module be unloaded, leaving pernet->scheduler pointing to freed memory that
+would trigger a use-after-free when dereferenced by a concurrent reader in
+proc_scheduler()?
+
+[ ... ]
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index c2762d74f29d7..82df0400d0f94 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+[ ... ]
+> @@ -3271,8 +3272,8 @@ static int mptcp_init_sock(struct sock *sk)
+>  		return -ENOMEM;
+> =20
+>  	rcu_read_lock();
+> -	ret =3D mptcp_init_sched(mptcp_sk(sk),
+> -			       mptcp_sched_find(mptcp_get_scheduler(net)));
+> +	mptcp_get_scheduler(net, sched_name);
+> +	ret =3D mptcp_init_sched(mptcp_sk(sk), mptcp_sched_find(sched_name));
+
+[Severity: Medium]
+Since pernet->scheduler now stores the mptcp_sched_ops pointer directly,
+could we retrieve and use that pointer here directly? Extracting the name
+via mptcp_get_scheduler() just to perform a redundant list traversal with
+mptcp_sched_find() seems to defeat the purpose of caching the operations
+pointer.
+
+>  	rcu_read_unlock();
+>  	if (ret)
+>  		return ret;
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260818094825.4844=
+6-1-gang.yan@linux.dev?part=3D1
