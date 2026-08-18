@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2ED3BAD89;
-	Tue, 18 Aug 2026 15:52:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF14736A02F;
+	Tue, 18 Aug 2026 15:57:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787068378; cv=none; b=G07Gw//Xd7/btnkl7B02ZSF8dbMYmQOi9cefq/TyD2aNse1uCZBMqkyn07EdTRzEYtAvwqgeVLfF4QSFsMnUXEPmveyjzoAIZ01y567dMKUIHlOAz/I/mQShzs9Y3OZl12mK8g37gy0m+o9BZdo8PgIyImoieNyWrHUOVPXzgi0=
+	t=1787068670; cv=none; b=i8rbvK0AcmnBsjc8rYkqB3GTvGkx2PhmTLBUYxtDN3Rv+F4SZxQZ6KMaxduxbbhlKSkF0T8SEU0OOccJW5rDk83zbKEXtn8DMzqM0XfLNjT9WpmOAJO0NJc1Usn2vBRC4lVmZfDgUoXv45khgh1tjgbWk1v//CqB19qUQeF7qT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787068378; c=relaxed/simple;
-	bh=XTOFaFi4xYD4CaFzD4sLKVNGPTigu7vFsc2RH5DFv+g=;
+	s=arc-20240116; t=1787068670; c=relaxed/simple;
+	bh=wyCAOLzM8d4C2doylHsj51aWQa1LeQmbwpKGp3KeGMg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tFKHJJkPq4cuW3k98XlsbDUq82Huy1r8ozAXt/NGkUyD07+Kw8svaGbob0WdHHhQTtGJtkgh+okgNe/zlOnImg/Xc/Q4uXDOOnTLCGTVX3Gwu+OxrlO4QR5PKu3Uhgod6t3PCTpCGD0MO7C5Xu2NoaBwn2sTmEw7MWXL35+u1Is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=McXzxDTK; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=OZhLm9xxAq+4faJELCHcUMcSSIwF+4fdpVUiGxpm9+efWRSwz5XU2R+XPUR0VpjjAKqnLTKdV6lu1qwmTFpliTZr4FiJQ0mlkg0jS6+Vfv+CIiaM5Qj1NoWWZAINX7Qfgtm19SksszmX3dUa+k1Ieon1oeG/MgHtc5Gfv2f+5Ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XeGpRteH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="McXzxDTK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B6E31F000E9;
-	Tue, 18 Aug 2026 15:52:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XeGpRteH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B37BB1F000E9;
+	Tue, 18 Aug 2026 15:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787068377;
-	bh=/AjhgDgUVgNfIqFnDumYylexfhjzpat9zaXCO+0e77Y=;
+	s=k20260515; t=1787068668;
+	bh=Yw2PJnKUma43a2n/lx8z8mSyCWYBg71MGUhxKOEG8Ac=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=McXzxDTKYkBp+clBosU6RMR9OA2+NjKV7+Jks2ooK8VEtvjszK/ap85zoQs/mBGTr
-	 1x/iyYe/Uck4aoiOzVUJP7AAq7lksdEhtzRun3aHvJqRz8hoZec4nPlMVLZ7iXybYw
-	 pERlKVIph3A4rSSy7TEzR8R8E1PhuHIMRZ3ij9a5kuYR2cQi2GsUKvNTuYxkyDjU2g
-	 RuGKFQGtf/fBM1AHZT7h5EFa8jFwbGhk2illFzZX3adG/yXzJOdo2fuOpHb93g4SCR
-	 ZLJOP3fDgyf5dhNgg5fRNHmoDljEjBT/h3GbzJ8LfcFHsoniHqxE1w183YOoNaTLMR
-	 64zI5+oQmShJQ==
-Message-ID: <c95396e8-1fa1-45d0-9229-5dee4613ddaf@kernel.org>
-Date: Tue, 18 Aug 2026 17:52:54 +0200
+	b=XeGpRteHqTAOHNK+TGL+T6yhQa1UCaX1VuRaB/tBV2jTVvdTpI4W/B3XgLuh4v7hM
+	 5sfHGJFGaP7xMn9E/MX2iixOBPTkbYLGWgsBoyipIUpkxlztjEKmyAyz7GMKTcOlIs
+	 F5s/Z3/zWrAPm7dbGZ/jqV+wBnmFxmCkBB23RL7q8tKn80gQlVia1HGTbE1nrsx07e
+	 zEl9wfgJm+7OfjkWcTKUq3pJQDeIQv2kQdIbDwxbinNgw734wv9AR54hbVWdBuddA0
+	 i6qAoBfU85piFZHOJ4hO3mG4Nlt2nnHD9hyowWwCiRMFRZXhLbivweIe1/galrfSS2
+	 gAZ8w16PhbmKw==
+Message-ID: <a59df372-85d3-41fc-8897-7c07b2a809fd@kernel.org>
+Date: Tue, 18 Aug 2026 17:57:44 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 2/5] mptcp: pm: change path_manager sysctl
- atomically
+Subject: Re: [PATCH mptcp-next v2 3/5] mptcp: use READ_ONCE() over sysctls
 Content-Language: fr
 To: gang.yan@linux.dev, sashiko-reviews@lists.linux.dev
 Cc: mptcp@lists.linux.dev
 References: <20260818094825.48446-1-gang.yan@linux.dev>
- <20260818094825.48446-3-gang.yan@linux.dev>
- <20260818100051.2A1BE1F000E9@smtp.kernel.org>
- <6699d1f7ea653cd3658d77a63c7f92da9134ae8f@linux.dev>
+ <20260818094825.48446-4-gang.yan@linux.dev>
+ <20260818100151.DD70A1F00A3E@smtp.kernel.org>
+ <e0cd265f7d15246668d06c865adacf36943cc6c3@linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,33 +88,88 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <6699d1f7ea653cd3658d77a63c7f92da9134ae8f@linux.dev>
+In-Reply-To: <e0cd265f7d15246668d06c865adacf36943cc6c3@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Gang,
 
-On 18/08/2026 14:57, gang.yan@linux.dev wrote:
-> August 18, 2026 at 6:00 PM, sashiko-bot@kernel.org mailto:sashiko-bot@kernel.org  wrote:
+On 18/08/2026 15:02, gang.yan@linux.dev wrote:
+> August 18, 2026 at 6:01 PM, sashiko-bot@kernel.org mailto:sashiko-bot@kernel.org  wrote:
 > 
 > 
 >>
->> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
->> - [High] Missing module reference counting when setting the path manager sysctl leads to a Use-After-Free.
->> - [High] Missing module reference counting when setting the scheduler sysctl leads to a Use-After-Free.
+>> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+>>
+>> Pre-existing issues:
+>> - [High] Concurrent sysctl writes or sysctl updates racing with socket creation can leave the socket's `pm_type` and `ops` mismatched, breaking MPTCP path management.
 >> --
+>>
+>> --- Patch [3]: [PATCH mptcp-next v2 3/5] mptcp: use READ_ONCE() over sysctls ---
+>> commit 77c9e4aa4cdd5f6c57cc4cab253d46fd0cf2dfb2
+>> Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>
+>> mptcp: use READ_ONCE() over sysctls
+>>
+>> This commit adds READ_ONCE() and WRITE_ONCE() macros around sysctl
+>> variables in the MPTCP networking code to avoid KCSAN issues. It also
+>> ensures the pm_type is written with WRITE_ONCE() in proc_path_manager().
+>>
+>> Closes: https://lore.kernel.org/CANn89iL=os-60kDKqMDdyiXuPF5CG=eejS0vmthwpDGXz_Bp8A@mail.gmail.com
+>>
+>>>
+>>> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+>>>  index c0481b09c1a17..733706f06f1b1 100644
+>>>  --- a/net/mptcp/ctrl.c
+>>>  +++ b/net/mptcp/ctrl.c
+>>>
+>> [ ... ]
+>>
+>>>
+>>> @@ -251,7 +251,7 @@ static int proc_path_manager(const struct ctl_table *ctl, int write,
+>>>  pm_type = MPTCP_PM_TYPE_KERNEL;
+>>>  else if (strncmp(pm_name, "userspace", MPTCP_PM_NAME_MAX) == 0)
+>>>  pm_type = MPTCP_PM_TYPE_USERSPACE;
+>>>  - pernet->pm_type = pm_type;
+>>>  + WRITE_ONCE(pernet->pm_type, pm_type);
+>>>
+>> [Severity: High]
+>> This is a pre-existing issue, but can this sequential update race with socket
+>> creation and leave the socket's pm_type and ops mismatched?
+>>
+>> If an administrator writes to the sysctl while a new socket is being created,
+>> could mptcp_pm_data_reset() in net/mptcp/pm.c interleave like this:
+>>
+>> CPU1 (sysctl write)
+>> proc_path_manager()
+>>  mptcp_set_path_manager(pernet, pm_name); // Updates pernet->path_manager
+>>
+>> CPU2 (socket creation)
+>> mptcp_pm_data_reset()
+>>  pm_type = mptcp_get_pm_type(net); // Reads old pm_type
+>>  ...
+>>  mptcp_get_path_manager(net, pm_name); // Reads new path_manager
+>>
+>> CPU1 (sysctl write resumes)
+>> proc_path_manager()
+>>  WRITE_ONCE(pernet->pm_type, pm_type); // Updates pernet->pm_type
+>>
+>> Would this leave the new socket corrupted with a contradictory path manager
+>> state, breaking MPTCP path management logic?
 > 
-> Hi, Matt
+> Hi,
 > 
-> As described in [1], it is safe for now.
+> I think that may happen. Maybe need anothor patch to fix this.
 > 
-> Do you have some suggestions here? Or we can ignore these.
+> When I have time, I'll look this.
+Indeed, that's for another patch, probably a fix for -net.
 
-We can indeed ignore.
-
-Do you mind adding a comment in the commit message in your v3 to tell
-Sashiko that the module reference counting is done in patch X of this
-series? Just to see if it helps Sashiko to avoid such messages.
+But it feels like you would need a lock to handle that properly. If it
+starts to be too complex, we could also say that the net.mptcp.pm_type
+sysctl knob is deprecated, and that's a known issue. In this case, it
+might be good to add a comment above this WRITE_ONCE(). Then, this could
+be done in a dedicated patch I think to explain why. This "mptcp: use
+READ_ONCE() over sysctls" would then be only about ... READ_ONCE() :)
 
 Cheers,
 Matt
