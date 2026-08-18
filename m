@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A822363081;
-	Tue, 18 Aug 2026 15:50:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2ED3BAD89;
+	Tue, 18 Aug 2026 15:52:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787068226; cv=none; b=CeYqHi/O7/s1rKOHXkaWnr8vpOITslUiryIEZVZl/ftXHrcK2rZDlkT4FtVjQUnvH6QVA2HiMTqEkKiBXeMT6/RZLgTP+EJup/4gD/2oJhwEW5bajluQoapA6/B3uX/B7VJPV5fqSrR4Qxi5iZ7FCYhPeOXKsSVE1CEbfVbFiZU=
+	t=1787068378; cv=none; b=G07Gw//Xd7/btnkl7B02ZSF8dbMYmQOi9cefq/TyD2aNse1uCZBMqkyn07EdTRzEYtAvwqgeVLfF4QSFsMnUXEPmveyjzoAIZ01y567dMKUIHlOAz/I/mQShzs9Y3OZl12mK8g37gy0m+o9BZdo8PgIyImoieNyWrHUOVPXzgi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787068226; c=relaxed/simple;
-	bh=nlp08hHGiLccYDf+/XVoWlrGj7xR3CL2bOzNqCOBPcE=;
+	s=arc-20240116; t=1787068378; c=relaxed/simple;
+	bh=XTOFaFi4xYD4CaFzD4sLKVNGPTigu7vFsc2RH5DFv+g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UINsMhOC0aAhKLP7lBTbedZLgMpI/UyFtif73xZvtXkg3P0qVWnGlEcVLK4cMpAvy6lnaTLknOjqtRQwewHMyrPyyd2sjMEEQVJk3d4Qz7lozgAnLMhuWKs0zqsRhTP6R/jnbj69i8RGOFMfVuZPpFtlUhYB+sKJHO1MjKvSjys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GUUn+o8Y; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=tFKHJJkPq4cuW3k98XlsbDUq82Huy1r8ozAXt/NGkUyD07+Kw8svaGbob0WdHHhQTtGJtkgh+okgNe/zlOnImg/Xc/Q4uXDOOnTLCGTVX3Gwu+OxrlO4QR5PKu3Uhgod6t3PCTpCGD0MO7C5Xu2NoaBwn2sTmEw7MWXL35+u1Is=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=McXzxDTK; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GUUn+o8Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7187D1F000E9;
-	Tue, 18 Aug 2026 15:50:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="McXzxDTK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B6E31F000E9;
+	Tue, 18 Aug 2026 15:52:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787068225;
-	bh=fGoucq703kpQy1vL6rg4U4eLvWWv4LLJ5Mwz/r7MHdM=;
+	s=k20260515; t=1787068377;
+	bh=/AjhgDgUVgNfIqFnDumYylexfhjzpat9zaXCO+0e77Y=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=GUUn+o8YfLndQshOnVo/EoBsAZy7ZWyNkxpUo6O4dzPCgQIROeK+o+8W/77hLUhJT
-	 bvT7roxyeEJh34ljNR/GbUBPa8spjcOYF3GiLoGo0WV36E1Q/V/QWj2I5MreTaiWqj
-	 HYGyPn3hZsAzwgXL0m4YQXhXP4ISFHK8On/B3SoK9VRqVF+D1sj+08c2ONXoJAQj7g
-	 Q4Kh6OsmIuBI5myWf20R741aPLBx9+aqJmJIl8UA39lw/Ay8w3ZbmSekOqB8btlq5f
-	 DVJxKU/4oml7JWnE1z5fCaaHFy1O4w3s6tYbg+9d51h5vsz/wT9+ysWqGQEieuWC8h
-	 +ZqnbzNRSNkfA==
-Message-ID: <be72266a-a2a2-49f7-9be8-36eeb09750df@kernel.org>
-Date: Tue, 18 Aug 2026 17:50:21 +0200
+	b=McXzxDTKYkBp+clBosU6RMR9OA2+NjKV7+Jks2ooK8VEtvjszK/ap85zoQs/mBGTr
+	 1x/iyYe/Uck4aoiOzVUJP7AAq7lksdEhtzRun3aHvJqRz8hoZec4nPlMVLZ7iXybYw
+	 pERlKVIph3A4rSSy7TEzR8R8E1PhuHIMRZ3ij9a5kuYR2cQi2GsUKvNTuYxkyDjU2g
+	 RuGKFQGtf/fBM1AHZT7h5EFa8jFwbGhk2illFzZX3adG/yXzJOdo2fuOpHb93g4SCR
+	 ZLJOP3fDgyf5dhNgg5fRNHmoDljEjBT/h3GbzJ8LfcFHsoniHqxE1w183YOoNaTLMR
+	 64zI5+oQmShJQ==
+Message-ID: <c95396e8-1fa1-45d0-9229-5dee4613ddaf@kernel.org>
+Date: Tue, 18 Aug 2026 17:52:54 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 1/5] mptcp: sched: change scheduler sysctl
+Subject: Re: [PATCH mptcp-next v2 2/5] mptcp: pm: change path_manager sysctl
  atomically
 Content-Language: fr
 To: gang.yan@linux.dev, sashiko-reviews@lists.linux.dev
 Cc: mptcp@lists.linux.dev
 References: <20260818094825.48446-1-gang.yan@linux.dev>
- <20260818094825.48446-2-gang.yan@linux.dev>
- <20260818095955.6892E1F000E9@smtp.kernel.org>
- <a9ef03bb12d3087e8f4af51d6d7dcd9967810942@linux.dev>
+ <20260818094825.48446-3-gang.yan@linux.dev>
+ <20260818100051.2A1BE1F000E9@smtp.kernel.org>
+ <6699d1f7ea653cd3658d77a63c7f92da9134ae8f@linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,83 +89,33 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <a9ef03bb12d3087e8f4af51d6d7dcd9967810942@linux.dev>
+In-Reply-To: <6699d1f7ea653cd3658d77a63c7f92da9134ae8f@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Gang,
 
-On 18/08/2026 14:56, gang.yan@linux.dev wrote:
-> August 18, 2026 at 5:59 PM, sashiko-bot@kernel.org mailto:sashiko-bot@kernel.org  wrote:
+On 18/08/2026 14:57, gang.yan@linux.dev wrote:
+> August 18, 2026 at 6:00 PM, sashiko-bot@kernel.org mailto:sashiko-bot@kernel.org  wrote:
 > 
 > 
 >>
 >> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
->> - [High] Use-After-Free and module reference leak due to missing reference counting when setting the default MPTCP scheduler
->> - [Medium] Redundant scheduler list traversal during socket initialization defeats pointer caching
+>> - [High] Missing module reference counting when setting the path manager sysctl leads to a Use-After-Free.
+>> - [High] Missing module reference counting when setting the scheduler sysctl leads to a Use-After-Free.
 >> --
->>
->> --- Patch [1]: [PATCH mptcp-next v2 1/5] mptcp: sched: change scheduler sysctl atomically ---
->> commit d5b1780c033b9909a1b30fbd814812af5c25ed2f
->> Author: Gang Yan <yangang@kylinos.cn>
->>
->> mptcp: sched: change scheduler sysctl atomically
->>
->> This commit changes the per-netns scheduler storage from an inline string
->> to an RCU-protected pointer to an mptcp_sched_ops struct. It updates the
->> sysctl read/write paths and socket initialization to use this pointer,
->> aiming to prevent concurrent readers from observing half-written names.
->>
->> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/626
->>
->>>
->>> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
->>>  index 63c5747f0f63c..479b31eb30079 100644
->>>  --- a/net/mptcp/ctrl.c
->>>  +++ b/net/mptcp/ctrl.c
->>>
->> [ ... ]
->>
->>>
->>> @@ -126,7 +133,7 @@ static int mptcp_set_scheduler(char *scheduler, const char *name)
->>>  rcu_read_lock();
->>>  sched = mptcp_sched_find(name);
->>>  if (sched)
->>>  - strscpy(scheduler, name, MPTCP_SCHED_NAME_MAX);
->>>  + xchg(&pernet->scheduler, sched);
->>>
->> [Severity: High]
->> When replacing the scheduler pointer here with xchg(), does this leak the
->> module reference for the previous scheduler returned by xchg()?
->>
->> Also, do we need to acquire a module reference for the newly assigned sched
->> via bpf_try_module_get() before storing it? Without a reference, could the
->> module be unloaded, leaving pernet->scheduler pointing to freed memory that
->> would trigger a use-after-free when dereferenced by a concurrent reader in
->> proc_scheduler()?
 > 
-> Hi Matt,
+> Hi, Matt
+> 
+> As described in [1], it is safe for now.
+> 
+> Do you have some suggestions here? Or we can ignore these.
 
-(you can address such email to the list, I'm not the only one here ;) )
+We can indeed ignore.
 
-> As far as I know, for linux-master branch, the sched ops cannot be torndown, and
-> the only static default scheduler is used, so no reference counting is needed.
-
-Thank you for replying to these emails from Sashiko, that's the right
-way to do!
-
-> It is safe for now, the pm is as the same. Right?
-
-Oh, sorry, I just realised the BPF module part for the scheduler is
-already in Linux mainstream [1], but not the PM one [2]:
-
-[1] https://elixir.bootlin.com/linux/v7.2/source/net/mptcp/sched.c#L130-L160
-[2] https://elixir.bootlin.com/linux/v7.2/source/net/mptcp/pm.c#L1225-L1254
-
-Sorry for the confusion, but then I guess the split is only needed for
-the PM side. In fact patch 1/3 from the v1 can apply on net-next
-directly. So in terms of split, the sched part from v1 was OK (no
-split), but for the PM, we need the split from v2.
+Do you mind adding a comment in the commit message in your v3 to tell
+Sashiko that the module reference counting is done in patch X of this
+series? Just to see if it helps Sashiko to avoid such messages.
 
 Cheers,
 Matt
