@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF14736A02F;
-	Tue, 18 Aug 2026 15:57:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A702547CA80
+	for <mptcp@lists.linux.dev>; Tue, 18 Aug 2026 16:19:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787068670; cv=none; b=i8rbvK0AcmnBsjc8rYkqB3GTvGkx2PhmTLBUYxtDN3Rv+F4SZxQZ6KMaxduxbbhlKSkF0T8SEU0OOccJW5rDk83zbKEXtn8DMzqM0XfLNjT9WpmOAJO0NJc1Usn2vBRC4lVmZfDgUoXv45khgh1tjgbWk1v//CqB19qUQeF7qT4=
+	t=1787069991; cv=none; b=avbX/3Hxi20MrTwaMjWnQ89l4WqgKr8P8Znjh7vkd8obHAMtn3rcLNCRN9ITVfo6IbuT9bKvR2dhQ2EJA9t7XB1MZbmP48T1KdJGhwVE/c6nobF3za+/16jFjj6dYePZ+eKVuttiRNmO3ui0BXD4wq9MU65UIaqE58t2x70gYzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787068670; c=relaxed/simple;
-	bh=wyCAOLzM8d4C2doylHsj51aWQa1LeQmbwpKGp3KeGMg=;
+	s=arc-20240116; t=1787069991; c=relaxed/simple;
+	bh=WY7m0uVjGu44sh593QNM/IcV1AZfA5FgZPsDu+hrWnM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OZhLm9xxAq+4faJELCHcUMcSSIwF+4fdpVUiGxpm9+efWRSwz5XU2R+XPUR0VpjjAKqnLTKdV6lu1qwmTFpliTZr4FiJQ0mlkg0jS6+Vfv+CIiaM5Qj1NoWWZAINX7Qfgtm19SksszmX3dUa+k1Ieon1oeG/MgHtc5Gfv2f+5Ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XeGpRteH; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=u/kKUs4h9qJXLQYiLohscrBQPcmfU9C8LQi+uQtjpXgo8aTBbc/g6fHHZJii3KDGppij+l82OSn86TGPg2fif/rNZYMsV4OMvYRa740O/69CgAEwjlSBcXUUOZz6nNiGBFwO9PY2TcbvGq2PVPH6k/lAmWeULDTvK01pVeHhd/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V7JlKrQ4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XeGpRteH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B37BB1F000E9;
-	Tue, 18 Aug 2026 15:57:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V7JlKrQ4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C3971F000E9;
+	Tue, 18 Aug 2026 16:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787068668;
-	bh=Yw2PJnKUma43a2n/lx8z8mSyCWYBg71MGUhxKOEG8Ac=;
+	s=k20260515; t=1787069990;
+	bh=mJijs80dwZwNAgQzNaJWFi8oGTxb37UB8cS+kRBHPTI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=XeGpRteHqTAOHNK+TGL+T6yhQa1UCaX1VuRaB/tBV2jTVvdTpI4W/B3XgLuh4v7hM
-	 5sfHGJFGaP7xMn9E/MX2iixOBPTkbYLGWgsBoyipIUpkxlztjEKmyAyz7GMKTcOlIs
-	 F5s/Z3/zWrAPm7dbGZ/jqV+wBnmFxmCkBB23RL7q8tKn80gQlVia1HGTbE1nrsx07e
-	 zEl9wfgJm+7OfjkWcTKUq3pJQDeIQv2kQdIbDwxbinNgw734wv9AR54hbVWdBuddA0
-	 i6qAoBfU85piFZHOJ4hO3mG4Nlt2nnHD9hyowWwCiRMFRZXhLbivweIe1/galrfSS2
-	 gAZ8w16PhbmKw==
-Message-ID: <a59df372-85d3-41fc-8897-7c07b2a809fd@kernel.org>
-Date: Tue, 18 Aug 2026 17:57:44 +0200
+	b=V7JlKrQ4KpY4RShtqJYnt6vJSkpvhAMF5zcbyrLIEO8C2yiidf7WcMnYIZcMJhAKa
+	 85IZi7XCNslXhEZKR5k/j0msF/rG1cMtlONu3G6jxHJoMf5a6f9gBDHKwNXbRlVGPP
+	 B77LZJko3T/etHjCeUzadGXhD0L1ySx4JfBTOaMA41UQv6qSbWzgNFQzckAZ1jw9+I
+	 6ZmA5yYaNzKxxVh2iqrP6XUGfMMxTETky25m6NXSa+Zgu3Xbjq7eEuPio+fIOpN6MD
+	 R4TJh/nQJSAIxdarJ6ZEU4jh+0mf7TqZhewy3aXwRvXkt486Nt3gi1MxxtCAEuplfH
+	 MD4Nn6DB4a7Sw==
+Message-ID: <68791a9e-9310-4368-854e-d379ce0b416c@kernel.org>
+Date: Tue, 18 Aug 2026 18:19:46 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 3/5] mptcp: use READ_ONCE() over sysctls
+Subject: Re: [PATCH mptcp-next RFC v4 2/2] mptcp: send MP_FAIL and infinite
+ mapping on the same ACK
 Content-Language: fr
-To: gang.yan@linux.dev, sashiko-reviews@lists.linux.dev
-Cc: mptcp@lists.linux.dev
-References: <20260818094825.48446-1-gang.yan@linux.dev>
- <20260818094825.48446-4-gang.yan@linux.dev>
- <20260818100151.DD70A1F00A3E@smtp.kernel.org>
- <e0cd265f7d15246668d06c865adacf36943cc6c3@linux.dev>
+To: Chenguang Zhao <chenguang.zhao@linux.dev>, mptcp@lists.linux.dev
+Cc: Chenguang Zhao <zhaochenguang@kylinos.cn>
+References: <20260818091417.2200986-1-chenguang.zhao@linux.dev>
+ <20260818091417.2200986-3-chenguang.zhao@linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,88 +87,77 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <e0cd265f7d15246668d06c865adacf36943cc6c3@linux.dev>
+In-Reply-To: <20260818091417.2200986-3-chenguang.zhao@linux.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Gang,
+Hi Chenguang,
 
-On 18/08/2026 15:02, gang.yan@linux.dev wrote:
-> August 18, 2026 at 6:01 PM, sashiko-bot@kernel.org mailto:sashiko-bot@kernel.org  wrote:
+On 18/08/2026 11:14, Chenguang Zhao wrote:
+> From: Chenguang Zhao <zhaochenguang@kylinos.cn>
 > 
-> 
->>
->> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
->>
->> Pre-existing issues:
->> - [High] Concurrent sysctl writes or sysctl updates racing with socket creation can leave the socket's `pm_type` and `ops` mismatched, breaking MPTCP path management.
->> --
->>
->> --- Patch [3]: [PATCH mptcp-next v2 3/5] mptcp: use READ_ONCE() over sysctls ---
->> commit 77c9e4aa4cdd5f6c57cc4cab253d46fd0cf2dfb2
->> Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->>
->> mptcp: use READ_ONCE() over sysctls
->>
->> This commit adds READ_ONCE() and WRITE_ONCE() macros around sysctl
->> variables in the MPTCP networking code to avoid KCSAN issues. It also
->> ensures the pm_type is written with WRITE_ONCE() in proc_path_manager().
->>
->> Closes: https://lore.kernel.org/CANn89iL=os-60kDKqMDdyiXuPF5CG=eejS0vmthwpDGXz_Bp8A@mail.gmail.com
->>
->>>
->>> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
->>>  index c0481b09c1a17..733706f06f1b1 100644
->>>  --- a/net/mptcp/ctrl.c
->>>  +++ b/net/mptcp/ctrl.c
->>>
->> [ ... ]
->>
->>>
->>> @@ -251,7 +251,7 @@ static int proc_path_manager(const struct ctl_table *ctl, int write,
->>>  pm_type = MPTCP_PM_TYPE_KERNEL;
->>>  else if (strncmp(pm_name, "userspace", MPTCP_PM_NAME_MAX) == 0)
->>>  pm_type = MPTCP_PM_TYPE_USERSPACE;
->>>  - pernet->pm_type = pm_type;
->>>  + WRITE_ONCE(pernet->pm_type, pm_type);
->>>
->> [Severity: High]
->> This is a pre-existing issue, but can this sequential update race with socket
->> creation and leave the socket's pm_type and ops mismatched?
->>
->> If an administrator writes to the sysctl while a new socket is being created,
->> could mptcp_pm_data_reset() in net/mptcp/pm.c interleave like this:
->>
->> CPU1 (sysctl write)
->> proc_path_manager()
->>  mptcp_set_path_manager(pernet, pm_name); // Updates pernet->path_manager
->>
->> CPU2 (socket creation)
->> mptcp_pm_data_reset()
->>  pm_type = mptcp_get_pm_type(net); // Reads old pm_type
->>  ...
->>  mptcp_get_path_manager(net, pm_name); // Reads new path_manager
->>
->> CPU1 (sysctl write resumes)
->> proc_path_manager()
->>  WRITE_ONCE(pernet->pm_type, pm_type); // Updates pernet->pm_type
->>
->> Would this leave the new socket corrupted with a contradictory path manager
->> state, breaking MPTCP path management logic?
-> 
-> Hi,
-> 
-> I think that may happen. Maybe need anothor patch to fix this.
-> 
-> When I have time, I'll look this.
-Indeed, that's for another patch, probably a fix for -net.
+> On a single subflow, accepting MP_FAIL must leave MPTCP mode at once
+> (RFC8684 §3.7). Emit the infinite mapping on the MP_FAIL reply ACK,
+> then call mptcp_try_fallback() immediately after.
 
-But it feels like you would need a lock to handle that properly. If it
-starts to be too complex, we could also say that the net.mptcp.pm_type
-sysctl knob is deprecated, and that's a known issue. In this case, it
-might be good to add a comment above this WRITE_ONCE(). Then, this could
-be done in a dedicated patch I think to explain why. This "mptcp: use
-READ_ONCE() over sysctls" would then be only about ... READ_ONCE() :)
+I think Sashiko is right about the issue of lacking option space to have
+both the MP_FAIL and the infinite mapping sent together.
+
+Please also note this from RFC 8684 §3.7.11 [1]:
+
+> This infinite mapping will be a DSS option (Section 3.3) on the first
+> new packet, containing a Data Sequence Mapping that acts retroactively
+
+The "on the first new packet" seems to suggest the infinite mapping
+shouldn't be attached to the MP_FAIL.
+
+[1] https://datatracker.ietf.org/doc/html/rfc8684#section-3.7-11
+
+
+Maybe a fallback for the single subflow without csum is enough? Or maybe
+nothing needs to be done? Or maybe this fallback is just an
+optimisation, and can be done in net-next (and both commits can be
+combined)? WDYT?
+
+> Fixes: 1e39e5a32ad7 ("mptcp: infinite mapping sending")
+> Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
+> ---
+>  net/mptcp/options.c  | 33 ++++++++++++++++++++++++++++++++-
+>  net/mptcp/pm.c       |  5 +++++
+>  net/mptcp/protocol.c |  8 +-------
+>  3 files changed, 38 insertions(+), 8 deletions(-)
+> 
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 97da22668dbe..ecf77e77d2de 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -638,7 +638,29 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
+>  	opts->csum_reqd = READ_ONCE(msk->csum_enabled);
+>  	mpext = skb ? mptcp_get_ext(skb) : NULL;
+>  
+> -	if (!skb || (mpext && mpext->use_map) || snd_data_fin_enable) {
+> +	if (unlikely(subflow->send_infinite_map)) {
+> +		unsigned int map_size = TCPOLEN_MPTCP_DSS_BASE + TCPOLEN_MPTCP_DSS_MAP64;
+> +
+> +		if (opts->csum_reqd)
+> +			map_size += TCPOLEN_MPTCP_DSS_CHECKSUM;
+> +
+> +		if (mpext) {
+> +			opts->ext_copy = *mpext;
+> +			opts->ext_copy.infinite_map = 1;
+> +			opts->ext_copy.data_len = 0;
+> +		} else {
+> +			opts->ext_copy.use_map = 1;
+> +			opts->ext_copy.dsn64 = 1;> +			opts->ext_copy.infinite_map = 1;
+> +			opts->ext_copy.data_len = 0;
+> +			opts->ext_copy.data_seq = READ_ONCE(msk->snd_nxt);
+> +			opts->ext_copy.subflow_seq = subflow->rel_write_seq;
+> +		}
+
+You probably also need to reset "csum". Note that common fields
+(infinite_map and data_len) can also be set once here.
+
+(...)
 
 Cheers,
 Matt
