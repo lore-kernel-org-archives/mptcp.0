@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB75218B0A;
-	Tue, 18 Aug 2026 06:03:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFE03890EE;
+	Tue, 18 Aug 2026 06:03:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787033026; cv=none; b=MrIUldFAk4aKNS7fsskd8BxJmas5nB2LBErUfZSUBKGhcQm9n8TM06skI+2TYroDcrv2nyyZ5MGFAtrVSsJrLLRBuDprJYCJb8T3tUXxJiRHrYO7AhmvvPqBRAL1TQJxwRgDDfxafpkW9S/E7T1IoPB2DI44HHn5X5aP26XtiXU=
+	t=1787033035; cv=none; b=kTbrTS+LDSGD8jhYJeHyBfBUUxVRNLTf4mIZ6Poc/Cceix5FqjWzANmcVO5UyAQkfkLgQqcz2h67brocZB9yiEzg8WCc0LLMqdeBprfrlKgPHpOA4CWyxQysaylvzbmzlLOM0n0B9o3PkFsOlrfOLwqaho8KtFpCXxh8wYsGxjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787033026; c=relaxed/simple;
-	bh=Qq64n4tLRPSTw6ELD6YkUu6/mLx0g+C2oHXtJpaqH/s=;
+	s=arc-20240116; t=1787033035; c=relaxed/simple;
+	bh=kKPJGW/oiaUn0VowSlJHbCgeZO9HPFHZc7oXkGBj39w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SEUw6g/QBZI9u2khiFbE7UX4MNLvnAg5I/KZLyso4hiXHVl7dOwYe3Wmf4kuHV9YVlXhy/a581C3B0gxyKlMWeeXl0ldSMn1tm7mOnSdlEhSofTsfxetNVkFxV5cSM9ymjSkfgu0d822iqz0fDrb4aRBy4Pk7x10q/NWgaH8Ib0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a5xYytDT; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=uNKG9ilZ1jEsOB68xrJDW3Kp/xe2jey9jB+1w0HQKoHHkbfiN/jrZF4qgFxCsQY9SdC1rcbCT0M+weMmIgc8N5oqnlM2z/Zds+8ZZdYcw6TsCfO83Sz3Cw5mO7IwSXG3N2/jm3hpcmeGgPh1qmnuu+auH4rUozP2Ohtlb4frsMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A2UdzNx5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a5xYytDT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 191A01F00A3E;
-	Tue, 18 Aug 2026 06:03:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A2UdzNx5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56A441F000E9;
+	Tue, 18 Aug 2026 06:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787033024;
-	bh=bVkuvMHFLexS/2qWy9M58HdBBKwviyPo8XyjkbRCihA=;
+	s=k20260515; t=1787033033;
+	bh=Nis9dfnj0IQkbN06JcjcoUd3EWxyn7iXPcVuP3vmsVY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=a5xYytDTVyISZUZxjM7M60SlySDlqJoHK1wUwvYsbsWMK/COfvRZ1ttlp+V9lutq7
-	 Aijd9f7eNt/QWOUR27Y3VdTj3L9ivz2O9umGUipBouRt6qGlmcVbKU48G0PHGbEryu
-	 uHIltNQySmPYbCugrygpF6UhyZQAmb622M1mTrTUYvYR33zOa0dvdHVm+OmdwB0roN
-	 5legOzmGFKhJYZlNjvn2uhsEsvSq0uBZEculz9GvYASUVOoehe9pQFq/pmrOtIcmuy
-	 mF9xaF44zNRLR/0U6H1FNuVQcuS846xSg5FW4sLxo4VOA/5ovqDYTlXvV0kWJM/Hkh
-	 aL24FIA84z+pQ==
+	b=A2UdzNx5HptTFp1gQu4gHG08W2f7E9uDmm+H84rYpZ/MMKbb035eG6R2U3tweQxiz
+	 bYwDEhkzx7I6kqFz+0t3tH2Xs74YWxY+uz00woRJt4BQTEtcfhzEfrncajoy6IN4/E
+	 1YxfoCTxEQVL0CDJeDaX/GRBHZL/xcpZK3RHLhkFuALkNJchkNObRyl6Ld0qj/Ip/A
+	 9tKkD2jh+sLGuWieQCxKqoZW2mbsOXDHEhvAFMPbD9zf4Y3m7efbMH1Bhma2GmlmI2
+	 4IH618bfievO8blR167r2NuPqm9yfl30vTAb7nA/F3YUjnARjMGOhjsURM7/ysvvB8
+	 IfiT8d1iQc6lg==
 From: Geliang Tang <geliang@kernel.org>
 To: Keith Busch <kbusch@kernel.org>,
 	Jens Axboe <axboe@kernel.dk>,
@@ -45,9 +45,9 @@ Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	linux-nvme@lists.infradead.org,
 	netdev@vger.kernel.org,
 	mptcp@lists.linux.dev
-Subject: [PATCH v4 2/4] nvme-tcp: unify sockopt with do_sock_setsockopt
-Date: Tue, 18 Aug 2026 14:03:01 +0800
-Message-ID: <5d77334ae43750d8c12923148d71077301242c89.1786947923.git.tanggeliang@kylinos.cn>
+Subject: [PATCH v4 3/4] nvmet-tcp: support IPv6 traffic class
+Date: Tue, 18 Aug 2026 14:03:02 +0800
+Message-ID: <bb4e028580bd0198f1dfd63dbd5608c5656cbe26.1786947923.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1786947923.git.tanggeliang@kylinos.cn>
 References: <cover.1786947923.git.tanggeliang@kylinos.cn>
@@ -61,148 +61,56 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch consolidates socket option settings in nvme-tcp by utilizing
-the generic do_sock_setsockopt() helper for options including SO_LINGER,
-SO_PRIORITY, TCP_NODELAY, IP_TOS, SO_BINDTODEVICE, and TCP_SYNCNT.
+Currently, nvmet-tcp only applies the received IPv4 TOS value when setting
+up a queue socket, but does not handle the IPv6 traffic class.
 
-Compared to the target-side implementation, this patch additionally
-converts SO_BINDTODEVICE and TCP_SYNCNT to use the same unified mechanism.
-This change eliminates the need to export and use specialized helpers for
-each individual socket option.
+Extend the queue socket setup to handle AF_INET6 sockets. Obtain the
+traffic class from the IPv6 socket's rcv_flowinfo and apply it through
+IPV6_TCLASS using do_sock_setsockopt().
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- drivers/nvme/host/tcp.c | 91 ++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 81 insertions(+), 10 deletions(-)
+ drivers/nvme/target/tcp.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index ba5c7b3e2a7c..025cade370b2 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -1774,6 +1774,47 @@ static int nvme_tcp_start_tls(struct nvme_ctrl *nctrl,
- 	return ret;
+diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
+index 38b0c446ae89..ed413aa5601c 100644
+--- a/drivers/nvme/target/tcp.c
++++ b/drivers/nvme/target/tcp.c
+@@ -1737,6 +1737,22 @@ static int nvmet_tcp_sock_set_tos(struct sock *sk)
+ 	return 0;
  }
  
-+static int nvme_tcp_sock_no_linger(struct sock *sk)
++static int nvmet_tcp_sock_set_tclass(struct sock *sk)
 +{
-+	struct linger ling = { .l_onoff = 1, .l_linger = 0 };
++#if IS_ENABLED(CONFIG_IPV6)
++	if (sk->sk_family == AF_INET6) {
++		int tclass = ip6_tclass(inet6_sk(sk)->rcv_flowinfo);
 +
-+	return do_sock_setsockopt(sk->sk_socket, false, SOL_SOCKET, SO_LINGER,
-+				  KERNEL_SOCKPTR(&ling), sizeof(ling));
++		if (tclass > 0)
++			return do_sock_setsockopt(sk->sk_socket, false,
++						  SOL_IPV6, IPV6_TCLASS,
++						  KERNEL_SOCKPTR(&tclass),
++						  sizeof(tclass));
++	}
++#endif
++	return 0;
 +}
 +
-+static int nvme_tcp_sock_set_priority(struct sock *sk, u32 priority)
-+{
-+	return do_sock_setsockopt(sk->sk_socket, false, SOL_SOCKET, SO_PRIORITY,
-+				  KERNEL_SOCKPTR(&priority), sizeof(priority));
-+}
-+
-+static int nvme_tcp_sock_set_bindtodevice(struct sock *sk, char *iface)
-+{
-+	return do_sock_setsockopt(sk->sk_socket, false, SOL_SOCKET,
-+				  SO_BINDTODEVICE, KERNEL_SOCKPTR(iface),
-+				  strlen(iface));
-+}
-+
-+static int nvme_tcp_sock_set_nodelay(struct sock *sk)
-+{
-+	int val = 1;
-+
-+	return do_sock_setsockopt(sk->sk_socket, false, SOL_TCP, TCP_NODELAY,
-+				  KERNEL_SOCKPTR(&val), sizeof(val));
-+}
-+
-+static int nvme_tcp_sock_set_syncnt(struct sock *sk, int val)
-+{
-+	return do_sock_setsockopt(sk->sk_socket, false, SOL_TCP, TCP_SYNCNT,
-+				  KERNEL_SOCKPTR(&val), sizeof(val));
-+}
-+
-+static int nvme_tcp_sock_set_tos(struct sock *sk, int tos)
-+{
-+	return do_sock_setsockopt(sk->sk_socket, false, SOL_IP, IP_TOS,
-+				  KERNEL_SOCKPTR(&tos), sizeof(tos));
-+}
-+
- static int nvme_tcp_alloc_queue(struct nvme_ctrl *nctrl, int qid,
- 				key_serial_t pskid)
+ static int nvmet_tcp_set_queue_sock(struct nvmet_tcp_queue *queue)
  {
-@@ -1819,24 +1860,56 @@ static int nvme_tcp_alloc_queue(struct nvme_ctrl *nctrl, int qid,
- #endif
+ 	struct socket *sock = queue->sock;
+@@ -1772,6 +1788,10 @@ static int nvmet_tcp_set_queue_sock(struct nvmet_tcp_queue *queue)
+ 	if (ret)
+ 		return ret;
  
- 	/* Single syn retry */
--	tcp_sock_set_syncnt(queue->sock->sk, 1);
-+	ret = nvme_tcp_sock_set_syncnt(queue->sock->sk, 1);
-+	if (ret) {
-+		dev_err(nctrl->device,
-+			"failed to set TCP_SYNCNT on queue %d err %d\n",
-+			qid, ret);
-+		goto err_sock;
-+	}
- 
- 	/* Set TCP no delay */
--	tcp_sock_set_nodelay(queue->sock->sk);
-+	ret = nvme_tcp_sock_set_nodelay(queue->sock->sk);
-+	if (ret) {
-+		dev_err(nctrl->device,
-+			"failed to set TCP_NODELAY on queue %d err %d\n",
-+			qid, ret);
-+		goto err_sock;
-+	}
- 
- 	/*
- 	 * Cleanup whatever is sitting in the TCP transmit queue on socket
- 	 * close. This is done to prevent stale data from being sent should
- 	 * the network connection be restored before TCP times out.
- 	 */
--	sock_no_linger(queue->sock->sk);
-+	ret = nvme_tcp_sock_no_linger(queue->sock->sk);
-+	if (ret) {
-+		dev_err(nctrl->device,
-+			"failed to set SO_LINGER on queue %d err %d\n",
-+			qid, ret);
-+		goto err_sock;
-+	}
- 
--	if (so_priority > 0)
--		sock_set_priority(queue->sock->sk, so_priority);
-+	if (so_priority > 0) {
-+		ret = nvme_tcp_sock_set_priority(queue->sock->sk, so_priority);
-+		if (ret) {
-+			dev_err(nctrl->device,
-+				"failed to set SO_PRIORITY on queue %d err %d\n",
-+				qid, ret);
-+			goto err_sock;
-+		}
-+	}
- 
- 	/* Set socket type of service */
--	if (nctrl->opts->tos >= 0)
--		ip_sock_set_tos(queue->sock->sk, nctrl->opts->tos);
-+	if (nctrl->opts->tos >= 0) {
-+		ret = nvme_tcp_sock_set_tos(queue->sock->sk, nctrl->opts->tos);
-+		if (ret) {
-+			dev_err(nctrl->device,
-+				"failed to set IP_TOS on queue %d err %d\n",
-+				qid, ret);
-+			goto err_sock;
-+		}
-+	}
- 
- 	/* Set 10 seconds timeout for icresp recvmsg */
- 	queue->sock->sk->sk_rcvtimeo = 10 * HZ;
-@@ -1864,10 +1937,8 @@ static int nvme_tcp_alloc_queue(struct nvme_ctrl *nctrl, int qid,
- 
- 	if (nctrl->opts->mask & NVMF_OPT_HOST_IFACE) {
- 		char *iface = nctrl->opts->host_iface;
--		sockptr_t optval = KERNEL_SOCKPTR(iface);
- 
--		ret = sock_setsockopt(queue->sock, SOL_SOCKET, SO_BINDTODEVICE,
--				      optval, strlen(iface));
-+		ret = nvme_tcp_sock_set_bindtodevice(queue->sock->sk, iface);
- 		if (ret) {
- 			dev_err(nctrl->device,
- 			  "failed to bind to interface %s queue %d err %d\n",
++	ret = nvmet_tcp_sock_set_tclass(sock->sk);
++	if (ret)
++		return ret;
++
+ 	ret = 0;
+ 	write_lock_bh(&sock->sk->sk_callback_lock);
+ 	if (sock->sk->sk_state != TCP_ESTABLISHED) {
 -- 
 2.53.0
 
