@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A702547CA80
-	for <mptcp@lists.linux.dev>; Tue, 18 Aug 2026 16:19:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7273AB5C3
+	for <mptcp@lists.linux.dev>; Tue, 18 Aug 2026 16:26:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787069991; cv=none; b=avbX/3Hxi20MrTwaMjWnQ89l4WqgKr8P8Znjh7vkd8obHAMtn3rcLNCRN9ITVfo6IbuT9bKvR2dhQ2EJA9t7XB1MZbmP48T1KdJGhwVE/c6nobF3za+/16jFjj6dYePZ+eKVuttiRNmO3ui0BXD4wq9MU65UIaqE58t2x70gYzg=
+	t=1787070408; cv=none; b=D7FknV1DtL7OkORGVFfU+VVqkeyDn3WXrQsGicpXpURC2UjqcTz6emiwX4Az/kujJe9FzW5PR3X+lAfXwt99ggFalwVY4APcRE6GVA64gEKpNTbCAmwRMUv30UJFfpc1AZjQj450g6uMSMpL6MfxgtuMbIbm3NugekYEryJ26vQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787069991; c=relaxed/simple;
-	bh=WY7m0uVjGu44sh593QNM/IcV1AZfA5FgZPsDu+hrWnM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u/kKUs4h9qJXLQYiLohscrBQPcmfU9C8LQi+uQtjpXgo8aTBbc/g6fHHZJii3KDGppij+l82OSn86TGPg2fif/rNZYMsV4OMvYRa740O/69CgAEwjlSBcXUUOZz6nNiGBFwO9PY2TcbvGq2PVPH6k/lAmWeULDTvK01pVeHhd/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V7JlKrQ4; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787070408; c=relaxed/simple;
+	bh=EuDxQGMhjQMI+xF+oDLjj9zBmUQpymtbCGmkO/KmCEA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=tSuutiVXBhWpF6wy0PrqGVDJm47cUGjl0rHNsCYQ2fajLaOHunRuWSz/MjLnbTj+etmJ8XY+b/HJMShyt5WWajq/FoCJL8PS7zC8jvZJ7GlLP670vUMia2+bgBpCgO29iZKR69mhSjA6LBNW5Fo9E8TILcciu66vc26b8DYDJl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IyI4iWCH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V7JlKrQ4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C3971F000E9;
-	Tue, 18 Aug 2026 16:19:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IyI4iWCH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8E941F000E9;
+	Tue, 18 Aug 2026 16:26:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787069990;
-	bh=mJijs80dwZwNAgQzNaJWFi8oGTxb37UB8cS+kRBHPTI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=V7JlKrQ4KpY4RShtqJYnt6vJSkpvhAMF5zcbyrLIEO8C2yiidf7WcMnYIZcMJhAKa
-	 85IZi7XCNslXhEZKR5k/j0msF/rG1cMtlONu3G6jxHJoMf5a6f9gBDHKwNXbRlVGPP
-	 B77LZJko3T/etHjCeUzadGXhD0L1ySx4JfBTOaMA41UQv6qSbWzgNFQzckAZ1jw9+I
-	 6ZmA5yYaNzKxxVh2iqrP6XUGfMMxTETky25m6NXSa+Zgu3Xbjq7eEuPio+fIOpN6MD
-	 R4TJh/nQJSAIxdarJ6ZEU4jh+0mf7TqZhewy3aXwRvXkt486Nt3gi1MxxtCAEuplfH
-	 MD4Nn6DB4a7Sw==
-Message-ID: <68791a9e-9310-4368-854e-d379ce0b416c@kernel.org>
-Date: Tue, 18 Aug 2026 18:19:46 +0200
+	s=k20260515; t=1787070407;
+	bh=v3yfPc3EnDOKMLW3dCOmB1yGpGv42eUCURVNAxWK2/0=;
+	h=Date:Subject:To:References:From:In-Reply-To;
+	b=IyI4iWCH/N3rjp5shYV/apiojHhY1HgCyhldzMshygjTFAA1TpolEEMj+6DjMxYVP
+	 bK0LGkSHv/+z63iUn2rx0WSe5GPX7Sc0ZgIOxJ+GFcBznQLmWYE4noj9dvN5qAo94/
+	 1PXq4/iU/YMz1rw3cqvSYutFYk4YpcY942IfPhAh9hlK3mZp6zx1n7Q+ruhRB9zuEA
+	 LjPMvhpTEle6b3A8j1jhyJrz7hYURklg/3pewWhiIFA2HxN8w42UpcNbu9qpZl53ij
+	 N5egI1/eh/4uBrfxRRyCVKLlblePd40ocGQiS2GpNc/fhEPbku6tHnuEybuRzEsDok
+	 FSdkoP5XqhiPg==
+Message-ID: <6059ccd9-e28f-42f9-90cf-267d3d645a3f@kernel.org>
+Date: Tue, 18 Aug 2026 18:26:45 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next RFC v4 2/2] mptcp: send MP_FAIL and infinite
- mapping on the same ACK
+Subject: Re: [PATCH resend mptcp-net 0/4] mptcp: a few fixes
 Content-Language: fr
-To: Chenguang Zhao <chenguang.zhao@linux.dev>, mptcp@lists.linux.dev
-Cc: Chenguang Zhao <zhaochenguang@kylinos.cn>
-References: <20260818091417.2200986-1-chenguang.zhao@linux.dev>
- <20260818091417.2200986-3-chenguang.zhao@linux.dev>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+References: <cover.1786713351.git.pabeni@redhat.com>
+ <ccf9480a-712d-4d37-80f1-3db80b7a4409@kernel.org>
+ <2a74fda9614c9a11b8789a33dcda21378660534c.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,77 +86,45 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260818091417.2200986-3-chenguang.zhao@linux.dev>
+In-Reply-To: <2a74fda9614c9a11b8789a33dcda21378660534c.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Chenguang,
+Hi Geliang,
 
-On 18/08/2026 11:14, Chenguang Zhao wrote:
-> From: Chenguang Zhao <zhaochenguang@kylinos.cn>
+On 18/08/2026 09:52, Geliang Tang wrote:
+> Hi Matt,
 > 
-> On a single subflow, accepting MP_FAIL must leave MPTCP mode at once
-> (RFC8684 §3.7). Emit the infinite mapping on the MP_FAIL reply ACK,
-> then call mptcp_try_fallback() immediately after.
-
-I think Sashiko is right about the issue of lacking option space to have
-both the MP_FAIL and the infinite mapping sent together.
-
-Please also note this from RFC 8684 §3.7.11 [1]:
-
-> This infinite mapping will be a DSS option (Section 3.3) on the first
-> new packet, containing a Data Sequence Mapping that acts retroactively
-
-The "on the first new packet" seems to suggest the infinite mapping
-shouldn't be attached to the MP_FAIL.
-
-[1] https://datatracker.ietf.org/doc/html/rfc8684#section-3.7-11
-
-
-Maybe a fallback for the single subflow without csum is enough? Or maybe
-nothing needs to be done? Or maybe this fallback is just an
-optimisation, and can be done in net-next (and both commits can be
-combined)? WDYT?
-
-> Fixes: 1e39e5a32ad7 ("mptcp: infinite mapping sending")
-> Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
-> ---
->  net/mptcp/options.c  | 33 ++++++++++++++++++++++++++++++++-
->  net/mptcp/pm.c       |  5 +++++
->  net/mptcp/protocol.c |  8 +-------
->  3 files changed, 38 insertions(+), 8 deletions(-)
+> On Sat, 2026-08-15 at 19:19 +0200, Matthieu Baerts wrote:
+>> Hi Paolo,
+>>
+>> On 14/08/2026 15:38, Paolo Abeni wrote:
+>>> This is mostly a follow-up to the recent OoO queue pruning series.
+>>> Explicitly targeting net as we have already a lot of patches
+>>> pending for
+>>> net-next, and no need to rush IMHO.
+>>>
+>>> First 2 patches addresses explicit comments from sashiko, 3rd one
+>>> is a
+>>> somewhat unrelated cleanup I stumbled upon while implementing patch
+>>> 4.
+>>>
+>>> The last patch fixes another thing implided by sashiko while
+>>> reviewing
+>>> the mentioned series.
+>>
+>> Thank you for this series, it looks good to me:
+>>
+>> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>
+>> I will wait for the net-next → net merge to apply them to export-net.
 > 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 97da22668dbe..ecf77e77d2de 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -638,7 +638,29 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
->  	opts->csum_reqd = READ_ONCE(msk->csum_enabled);
->  	mpext = skb ? mptcp_get_ext(skb) : NULL;
->  
-> -	if (!skb || (mpext && mpext->use_map) || snd_data_fin_enable) {
-> +	if (unlikely(subflow->send_infinite_map)) {
-> +		unsigned int map_size = TCPOLEN_MPTCP_DSS_BASE + TCPOLEN_MPTCP_DSS_MAP64;
-> +
-> +		if (opts->csum_reqd)
-> +			map_size += TCPOLEN_MPTCP_DSS_CHECKSUM;
-> +
-> +		if (mpext) {
-> +			opts->ext_copy = *mpext;
-> +			opts->ext_copy.infinite_map = 1;
-> +			opts->ext_copy.data_len = 0;
-> +		} else {
-> +			opts->ext_copy.use_map = 1;
-> +			opts->ext_copy.dsn64 = 1;> +			opts->ext_copy.infinite_map = 1;
-> +			opts->ext_copy.data_len = 0;
-> +			opts->ext_copy.data_seq = READ_ONCE(msk->snd_nxt);
-> +			opts->ext_copy.subflow_seq = subflow->rel_write_seq;
-> +		}
-
-You probably also need to reset "csum". Note that common fields
-(infinite_map and data_len) can also be set once here.
-
-(...)
+> If you have time, could you please merge this series into the export
+> branch at your earliest convenience? My ongoing series, "Reduce the
+> differences between TCP and MPTCP for TLS usage", conflicts with this
+> one.
+If that's OK, I will wait for the Net maintainers to send their PR to
+Linus, which should be done in a day or two I suppose. Is that OK?
 
 Cheers,
 Matt
