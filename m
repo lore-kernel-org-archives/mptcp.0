@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266193E00B8
-	for <mptcp@lists.linux.dev>; Wed, 19 Aug 2026 09:09:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8161C42F6E9
+	for <mptcp@lists.linux.dev>; Wed, 19 Aug 2026 09:18:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787130583; cv=none; b=hz6QVXf+Km7sedegygkw6UKFGFhzUHxpZiHuiKIYPo1UFaXHR721NI+RAl/iwhQhbAGhFJq8JkUlfKyo0sAGG5OorR+6lxA3E34gusKX2yZYyTLtLnZ++cj1iYcpNvRsFPvVnn1fZeXKUe+JJimBC9cohf75kC0tj59l+KzX4j8=
+	t=1787131131; cv=none; b=e4tDcs6AztD0lWSriP9taa0yymUahsW31njHiTSFtRhD8ItTJRvPb1ahPKiJ3+M/4mYq4Me7ZiJFQfykrMfMWOeTwf5suulUDXwdpkDChXMkysuAakMFCifgIyA9knVZIQ1OzQXFxTzkvWlktlPIawUbbrwwE7zL13Kvu11xYvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787130583; c=relaxed/simple;
-	bh=1JJNjkpzzvoKjnToEbDNBDktC0k0c9ki+h9ZLgWSITE=;
+	s=arc-20240116; t=1787131131; c=relaxed/simple;
+	bh=2c2fZCGv+sMle6CFx0vCHkTzZfZw4Wy2zxp6bNxRYZM=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KOmx2ayvDW2XW/86Dld6N+m0nYRNdUbSRDESQXlcS2iAGTGDSTnwQ3CARmsI9dL2lBfhTwDi8z/GXNpb2JImLOPLAZbX67NcJ4Vrk8PWB1iTr1ASd4NP+e56K0cvshO80KKSFDRQiUSllbzOdSil9ozj64W1LKp2H9iVV+ttWRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V422oCym; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:MIME-Version; b=IhpuLuQ+XTZ72Z2XOAE+gWyX9lMFUS/dRfF4JMLGzXrXuC1EMsP9bLp+Qst0UIImOLoICJHzNuelYqUBuV02n/6XRSzjvtjoMHAXeetCzBFcK0zvQY95p+hv2E0cHfUZTgA2Bztz7IAUZ29xEgCHr7kAA+tkcKnKW6Lej90nbTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iz8L/cg+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V422oCym"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 551741F000E9;
-	Wed, 19 Aug 2026 09:09:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iz8L/cg+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61E5F1F000E9;
+	Wed, 19 Aug 2026 09:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787130582;
-	bh=fRsHonOR0pnszOm+BcCN6EZPzBv5ZbT4noezKt7OCCw=;
+	s=k20260515; t=1787131123;
+	bh=nsvbK5ouMt40YxqX9gvuoOycbUMuv+BP1uxWrguyAkc=;
 	h=Subject:From:To:Date:In-Reply-To:References;
-	b=V422oCymSbKoelGzsraPOtZTOFqgBOGo8YZSTgxeeq6guTuGbTK6hUbKt/xAyDqgz
-	 Qw6a0LdcG0zfkiRBa6EjaY/Ofz28rzQs/uV6N9Gq4rkRk6QcOq3SwcseIBk3LJNWib
-	 WULEk7zYh+GzrOVXfjGU4l53EcC2AwsGRmcaBBcVDhbeopHWvZrHOzxts7EGj2fa4H
-	 +kyhm/q08Z4HdQ9l7C6bFmixN675nHIPRdgz7VCE8pjIVuoyil+03c5KhWrWrkV19g
-	 L+w8B1qyh0TbtzDj4uwPtOwJ00JLFaHmhrn9HFs7nGCAXE8b37TcfbXHZC+9TOXkE9
-	 +0fzF49MzJz4A==
-Message-ID: <0680b4cbbcb963684af9101936825fa09b71a335.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net] mptcp: options: fix uninit-value in
- mptcp_write_data_fin
+	b=iz8L/cg+bkBUyKwEkU8cTfe39j63hrxJtVxOxDuBrnMUzvpotw8aUZ6ZyEqso5TC2
+	 nVsZqXPUiy+XJbhehmEUqc3vvl9ANIHLTvZTEKkh+oldDJRbfCEk5eBsPV/XYbOMeH
+	 YiWsPoo3Cke2VUpHKISFJgIHAES/14kepo1y8OgZ4NEI4jFFw/iJXPCj+FRwNXuARq
+	 OmIqK/0ispwEis41oiRVUUPNfmcNWqYtfwlnIACROZ9MHPlvLY9co1DNjpBI6e7zg7
+	 2344TOlKnPjttwnOsfY8LcwhdOIm+jjsGRs9ZvXfs+9sXe7Hv/eDYIKJpbKXFAVvYU
+	 m3tt7/YyW+cQQ==
+Message-ID: <ca3835771c68837d6760657bfabc5cdb9c918d86.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net 2/2] selftests: mptcp: lib: get counters for
+ the right test
 From: Geliang Tang <geliang@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, MPTCP Linux
-	 <mptcp@lists.linux.dev>
-Date: Wed, 19 Aug 2026 17:09:37 +0800
-In-Reply-To: <20260814-mptcp-dfin-csum-v1-1-08d0b9b86bb7@kernel.org>
-References: <20260814-mptcp-dfin-csum-v1-1-08d0b9b86bb7@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>, MPTCP Linux <mptcp@lists.linux.dev>
+Date: Wed, 19 Aug 2026 17:18:39 +0800
+In-Reply-To: <3e2f5944-2c0f-4bee-ac18-16835b19c4e2@kernel.org>
+References: <20260813-sft-mptcp-nstat-hist-v1-0-5bb96bae7ef6@kernel.org>
+	 <20260813-sft-mptcp-nstat-hist-v1-2-5bb96bae7ef6@kernel.org>
+	 <001a333947659c88e41d9fc7847ce35778ea821c.camel@kernel.org>
+	 <3e2f5944-2c0f-4bee-ac18-16835b19c4e2@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.2-9 
 Precedence: bulk
@@ -45,82 +47,145 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Matt,
-
-On Fri, 2026-08-14 at 23:38 +0200, Matthieu Baerts (NGI0) wrote:
-> When sending a DATA_FIN without data, and because the DATA_FIN
-> occupies
-> 1 octet of the connection-level sequence space [1], it is then
-> required
-> to add a DSS mapping with specific values.
+On Wed, 2026-08-19 at 11:02 +0200, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> If the checksum has been negotiated, it also needs to be computed,
-> and
-> included in the outgoing packet, and thus the initial csum data needs
-> to
-> be reset to 0 as well. This is no longer the case since commit
-> cfcceb7a39fc ("tcp: shrink per-packet memset in
-> __tcp_transmit_skb()"),
-> because the whole ext_copy structure is no longer zeroed by default.
+> On 19/08/2026 10:34, Geliang Tang wrote:
+> > Hi Matt,
+> > 
+> > On Thu, 2026-08-13 at 12:29 +0200, Matthieu Baerts (NGI0) wrote:
+> > > When the value for a MIB counter is required,
+> > > mptcp_lib_get_counter
+> > > is
+> > > called. It tries to use the cache, if available. If not it falls
+> > > back
+> > > to
+> > > calling 'nstat' directly by looking at the absolute counters.
+> > > 
+> > > That's an issue for tests that don't recreate the netns for each
+> > > subtest. In this case, 'nstat -a' will look at the counters for
+> > > the
+> > > netns.
+> > > 
+> > > Instead, it should look at the increment for the current test, by
+> > > using
+> > > the history recorded in /tmp/<ns>.nstat, if available, and not
+> > > using
+> > > '-a' which was dumping the absolute values.
+> > > 
+> > > While at it, rename the previous 'hist' variable to 'cache' as it
+> > > was
+> > > used to look at the cache, not the nstat history.
+> > > 
+> > > Fixes: 71388a9f331d ("selftests: mptcp: lib: get counters from
+> > > nstat
+> > > history")
+> > > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> > > ---
+> > >  tools/testing/selftests/net/mptcp/mptcp_lib.sh | 16 +++++++++---
+> > > ----
+> > >  1 file changed, 9 insertions(+), 7 deletions(-)
+> > > 
+> > > diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> > > b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> > > index da1da414c30f..b9d14647f401 100644
+> > > --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> > > +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> > > @@ -416,19 +416,21 @@ mptcp_lib_nstat_get() {
+> > >  }
+> > >  
+> > >  # $1: ns, $2: MIB counter
+> > > -# Get the counter from the history
+> > > (mptcp_lib_nstat_{init,get}()) if
+> > > available.
+> > > -# If not, get the counter from nstat ignoring any history.
+> > > +# Get the counter from the cache (mptcp_lib_nstat_{init,get}())
+> > > if
+> > > available.
+> > > +# If not, get the counter from nstat ignoring any cache, but
+> > > using
+> > > the history.
+> > >  mptcp_lib_get_counter() {
+> > >  	local ns="${1}"
+> > >  	local counter="${2}"
+> > > -	local hist="/tmp/${ns}.out"
+> > > +	local cache="/tmp/${ns}.out"
+> > > +	local hist="/tmp/${ns}.nstat"
+> > >  	local count
+> > >  
+> > > -	if [[ -s "${hist}" && "${counter}" == *"Tcp"* ]]; then
+> > > -		count=$(awk "/^${counter} / {print \$2; exit}"
+> > > "${hist}")
+> > > +	if [[ -s "${cache}" && "${counter}" == *"Tcp"* ]]; then
+> > > +		count=$(awk "/^${counter} / {print \$2; exit}"
+> > > "${cache}")
+> > >  	else
+> > > -		count=$(ip netns exec "${ns}" nstat -asz
+> > > "${counter}" |
+> > > -			awk 'NR==1 {next} {print $2}')
+> > > +		count=$(NSTAT_HISTORY="${hist}" ip netns exec
+> > > "${ns}" \
+> > > +			nstat -sz "${counter}" |
+> > > +				awk 'NR==1 {next} {print $2}')
+> > >  	fi
+> > >  	if [ -z "${count}" ]; then
+> > >  		mptcp_lib_fail_if_expected_feature "${counter}
+> > > counter"
+> > 
+> > I noticed that the code being modified in mptcp_lib_pr_nstat and
+> > mptcp_lib_get_counter is duplicated. I'm wondering if we could
+> > remove
+> > this redundancy - for example, by creating a new helper for this
+> > logic.
 > 
-> This seems to be the only case where use_map is changed and set
-> afterwards, so initialising the csum field only in this case, along
-> with
-> other fields for this specific case.
+> Thank you for the review and suggestion.
+> 
+> > # $1: ns ; $@: nstat arguments
+> > # If cache exists, return it; otherwise run nstat.
+> > mptcp_lib_nstat_cmd() {
+> >     local ns="${1}"
+> >     local cache="/tmp/${ns}.out"
+> >     local hist="/tmp/${ns}.nstat"
+> > 
+> >     if [ -s "${cache}" ]; then
+> >         cat "${cache}"
+> >     else
+> >         NSTAT_HISTORY="${hist}" ip netns exec "${ns}" nstat -sz
+> > "${@}"
+> >     fi
+> > }
+> > 
+> > Then mptcp_lib_pr_nstat can be simplified to:
+> > 
+> > mptcp_lib_pr_nstat() {
+> >     local ns="${1}"
+> > 
+> >     mptcp_lib_nstat_cmd "${ns}" |
+> >             awk '/Tcp/ { print "  "$0 }'
+> > }
+> > 
+> > And mptcp_lib_get_counter can be simplified to:
+> > 
+> > mptcp_lib_get_counter() {
+> >     local ns="${1}"
+> >     local counter="${2}"
+> >     local count
+> > 
+> >     count=$(mptcp_lib_nstat_cmd "${ns}" "${counter}" |
+> >             awk -v c="${counter}" '$1 == c {print $2; exit}')
+> 
+> The cache cannot be used to check non-Tcp counters because it only
+> contains *Tcp* counters. Then that makes this code adding extra
+> conditions, and I'm not sure the new helper is worth it. WDYT?
+> 
+> Maybe it could be added if other modifications are needed around
+> these
+> helpers, but here, I wouldn't do that in a series targeting -net.
 
-Initially, I was wondering if we could skip calling mptcp_make_csum()
-for data_fin in mptcp_write_options(), similar to how we skip it for
-the infinite mapping:
-
-        /* data_len == 0 is reserved for the infinite mapping,
-         * the checksum will also be set to 0.
-         */
-        put_len_csum(mpext->data_len,
-                     (mpext->data_len ? mptcp_make_csum(mpext) : 0),
-                     ptr);
-
-But I realized that your modification is more straightforward.
+Sure. I can also send a follow-up patch later. I have no other comments
+on this series - I'll reply to the cover letter with my Reviewed-by tag
+shortly.
 
 > 
-> Fixes: cfcceb7a39fc ("tcp: shrink per-packet memset in
-> __tcp_transmit_skb()")
-> Link: https://datatracker.ietf.org/doc/html/rfc8684#section-3.3.3 [1]
-> Link:
-> https://sashiko.dev/#/patchset/20260812-net-next-mptcp-misc-feat-7-3-v1-0-1905a818f6cb%40kernel.org?part=2
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
-Looks good to me!
-
-    Reviewed-by: Geliang Tang <geliang@kernel.org>
-
-Thanks,
--Geliang
-
-> ---
->  net/mptcp/options.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 1bb486daf56a..9f6b4358e564 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -611,6 +611,7 @@ static void mptcp_write_data_fin(struct
-> mptcp_subflow_context *subflow,
->  		ext->data_seq = data_fin_tx_seq;
->  		ext->subflow_seq = 0;
->  		ext->data_len = 1;
-> +		ext->csum = 0;
->  	} else if (ext->data_seq + ext->data_len == data_fin_tx_seq)
-> {
->  		/* If there's an existing DSS mapping and it is the
->  		 * final mapping, DATA_FIN consumes 1 additional
-> byte of
-> 
-> ---
-> base-commit: ab76ed72e0bed8352d3b8e2b4d1be7c823e5fba3
-> change-id: 20260814-mptcp-dfin-csum-d39bce4e9eb7
-> 
-> Best regards,
-> --  
-> Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> 
+> Cheers,
+> Matt
