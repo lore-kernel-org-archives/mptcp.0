@@ -1,133 +1,88 @@
-Received: from mta1.migadu.com (out-67.mta1.migadu.com [95.215.58.67])
+Received: from mta1.migadu.com (out-139.mta1.migadu.com [95.215.58.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9A7383C99
-	for <mptcp@lists.linux.dev>; Wed, 19 Aug 2026 11:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F3D381AE4
+	for <mptcp@lists.linux.dev>; Wed, 19 Aug 2026 11:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787138184; cv=none; b=Sre6iaz9EdQRgQF8hs8+/4qyDCGFKH5aTBZgggVOImsaHyabQQPDO8xG2hXymxYuL3DLDF2vh0eKB2KFBwsKhMGdVfEacj5YU36THP9DFFmG6Ha8xDTzJzZcVmQyCL93cSfu7uwHlHemyiSS3NGcPatK9F7MNIN2DCvaWNMbs8s=
+	t=1787138467; cv=none; b=VyhCU0FEkrQ6mn/vKvwvl7mUHqveMiYFavYINmvxK48X/ZWqk4iwS+K4dmvkAz5nz8A7C8IC+QUcA1msq/bhBEcicYfyS4s3BMi04KrX0ECGlahjbOlQ+7midB1fYxHCO6vdVt5N7apcc0oV34puyEfjyuamjbL42l4n+1nlbM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787138184; c=relaxed/simple;
-	bh=8fwLqMUm+W98Aoyc3lgDaWsyr3vQPnL4nVcOJUzKoMw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cyrsyi/lsEyEIlmPM/vit8ExVNmCL+qCYe+sZ79JoOTY7O+KyLsnG7BD/PKJsHgLt0XRHI7s0ckWTLgHNbnM+yuIT0UjBBHV+kNE4y48lNWW0dDyZmY/eZEzwu/unJOSFgB73j9N1CLhScqRJY5B10YCmakRsLaZfqR3WAc5kug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VB5KLvNq; arc=none smtp.client-ip=95.215.58.67
+	s=arc-20240116; t=1787138467; c=relaxed/simple;
+	bh=K9SYtSYrcUUzhStkIn9dcSaf8Rrq6ewmhBK2ChNSrnM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pZcXynK7wLz92oq742a7oNnOsJ08B8zcr8c4A0ExAIxp7rJ46EOJm8G2lA0cTAV399wHadbEMqHctuGWmjKOEcmGYb/tBLEPWKFNdl3bDGCHaNmV+K8CE5QN2eJTrVuE2DfI5uf5fXlqrorfRZeLU/WNMZPc9FBVYPs8dH29oMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Qyk9a658; arc=none smtp.client-ip=95.215.58.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VB5KLvNq"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Qyk9a658"
 X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=8fwLqMUm+W98Aoyc3lgDaWsyr3vQPnL4nVcOJUzKoMw=;
+DKIM-Signature: a=rsa-sha256; bh=K9SYtSYrcUUzhStkIn9dcSaf8Rrq6ewmhBK2ChNSrnM=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1787138179; v=1; x=1787742979;
- b=VB5KLvNqJlHXxr0xSvdYeYGUunLLNCw+AZLZNujeENNb2grx81QWYvq7OaRezSind5tr+PHz
- P9DPnfcAPL+4CdR7Z6JjBEYNNYu2sK0Z1mtJHtsqK4aw7IglWkCxaItwrjMJObqi7t01OPWOdVj
- oVFJa2d6Xyd+qzg7jpWnMXt4=
+ t=1787138461; v=1; x=1787743261;
+ b=Qyk9a658o8nmdUb1Xn7ezym8LTW5Pi4QlIdV8B16bEwKLLl89MZb22sQin6Pyinmi9m6n3GA
+ Logma+0RODO8X2MW0hoiz8xikVyMi4uTdzSPxu6i1CbSuppvC2oBS0TuniaBPAvms+4lNufzdWS
+ XbMvDtPrYiZmiqZ3afXoccrA=
 X-Envelope-To: mptcp@lists.linux.dev
-Received: from [192.168.109.30] (223.70.159.239)
-	by smtp.migadu.com with ESMTPS id a59c95efca6e53fc;
-	Wed, 19 Aug 2026 11:16:09 +0000
+Received: from localhost.localdomain (223.70.159.239)
+	by smtp.migadu.com with ESMTPS id ff202aea241f8031;
+	Wed, 19 Aug 2026 11:21:01 +0000
 X-Migadu-Flow: FLOW_OUT
-Message-ID: <691b982a-7825-490c-b516-ac23b601c64a@linux.dev>
-Date: Wed, 19 Aug 2026 19:16:21 +0800
+From: Chenguang Zhao <chenguang.zhao@linux.dev>
+To: mptcp@lists.linux.dev
+Cc: chenguang.zhao@linux.dev,
+	Chenguang Zhao <zhaochenguang@kylinos.cn>
+Subject: [PATCH mptcp-next RFC v5 0/3] mptcp: fallback to TCP on MP_FAIL with a single subflow
+Date: Wed, 19 Aug 2026 19:21:09 +0800
+Message-Id: <20260819112112.1985121-1-chenguang.zhao@linux.dev>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next RFC v4 2/2] mptcp: send MP_FAIL and infinite
- mapping on the same ACK
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Cc: Chenguang Zhao <zhaochenguang@kylinos.cn>
-References: <20260818091417.2200986-1-chenguang.zhao@linux.dev>
- <20260818091417.2200986-3-chenguang.zhao@linux.dev>
- <68791a9e-9310-4368-854e-d379ce0b416c@kernel.org>
-Content-Language: en-US
-From: Chenguang Zhao <chenguang.zhao@linux.dev>
-In-Reply-To: <68791a9e-9310-4368-854e-d379ce0b416c@kernel.org>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+From: Chenguang Zhao <zhaochenguang@kylinos.cn>
 
-在 2026/8/19 00:19, Matthieu Baerts 写道:
-> Hi Chenguang,
->
-> On 18/08/2026 11:14, Chenguang Zhao wrote:
->> From: Chenguang Zhao <zhaochenguang@kylinos.cn>
->>
->> On a single subflow, accepting MP_FAIL must leave MPTCP mode at once
->> (RFC8684 §3.7). Emit the infinite mapping on the MP_FAIL reply ACK,
->> then call mptcp_try_fallback() immediately after.
-> I think Sashiko is right about the issue of lacking option space to have
-> both the MP_FAIL and the infinite mapping sent together.
-Yes, Sashiko is right, I did not consider all the aspects.
-> Please also note this from RFC 8684 §3.7.11 [1]:
->
->> This infinite mapping will be a DSS option (Section 3.3) on the first
->> new packet, containing a Data Sequence Mapping that acts retroactively
-> The "on the first new packet" seems to suggest the infinite mapping
-> shouldn't be attached to the MP_FAIL.
->
-> [1] https://datatracker.ietf.org/doc/html/rfc8684#section-3.7-11
->
->
-> Maybe a fallback for the single subflow without csum is enough? Or maybe
-> nothing needs to be done? Or maybe this fallback is just an
-> optimisation, and can be done in net-next (and both commits can be
-> combined)? WDYT?
+Patch1:
+ Add MPFailFallback MIB counter
 
-Hi Matthieu
+Patch2:
+ Move the FALLBACK_DONE flag setting to right after MP_FAIL is received.
 
-I am getting a bit confused, so let me summarize my current understanding to verify if I got this right.
-In the existing kernel code, fallback will be triggered upon receiving MP_FAIL. However, the FALLBACK_DONE
-flag is currently set inside mptcp_update_infinite_map(), which only gets invoked when transmitting a data packet.
-This creates a timing window between receiving MP_FAIL and sending the first subsequent packet, resulting in this minor bug.
-Our goal is to close this timing window: set the FALLBACK_DONE flag immediately after MP_FAIL is received.
-Besides, add a __mptcp_check_fallback() check within mptcp_can_accept_new_subflow() to reject MP_JOIN requests ahead of time.
+Patch3:
+ Add a __mptcp_check_fallback() check inside mptcp_can_accept_new_subflow()
+ to reject MP_JOIN requests earlier.
 
-Is my understanding correct? I will send out a v5 RFC based on the above ideas.      
+I have tested with the script from the linked URL, and the kernel is now
+able to reject MP_JOIN requests early.
+ https://github.com/chrisocean716-star/packetdrill/blob/fed57fab92c407eb433acdb8c8ce72bd8e3e2f37/gtests/net/mptcp/mp_join/mp_join_server_after_fallback.pkt
 
->> Fixes: 1e39e5a32ad7 ("mptcp: infinite mapping sending")
->> Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
->> ---
->>  net/mptcp/options.c  | 33 ++++++++++++++++++++++++++++++++-
->>  net/mptcp/pm.c       |  5 +++++
->>  net/mptcp/protocol.c |  8 +-------
->>  3 files changed, 38 insertions(+), 8 deletions(-)
->>
->> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
->> index 97da22668dbe..ecf77e77d2de 100644
->> --- a/net/mptcp/options.c
->> +++ b/net/mptcp/options.c
->> @@ -638,7 +638,29 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
->>  	opts->csum_reqd = READ_ONCE(msk->csum_enabled);
->>  	mpext = skb ? mptcp_get_ext(skb) : NULL;
->>  
->> -	if (!skb || (mpext && mpext->use_map) || snd_data_fin_enable) {
->> +	if (unlikely(subflow->send_infinite_map)) {
->> +		unsigned int map_size = TCPOLEN_MPTCP_DSS_BASE + TCPOLEN_MPTCP_DSS_MAP64;
->> +
->> +		if (opts->csum_reqd)
->> +			map_size += TCPOLEN_MPTCP_DSS_CHECKSUM;
->> +
->> +		if (mpext) {
->> +			opts->ext_copy = *mpext;
->> +			opts->ext_copy.infinite_map = 1;
->> +			opts->ext_copy.data_len = 0;
->> +		} else {
->> +			opts->ext_copy.use_map = 1;
->> +			opts->ext_copy.dsn64 = 1;> +			opts->ext_copy.infinite_map = 1;
->> +			opts->ext_copy.data_len = 0;
->> +			opts->ext_copy.data_seq = READ_ONCE(msk->snd_nxt);
->> +			opts->ext_copy.subflow_seq = subflow->rel_write_seq;
->> +		}
-> You probably also need to reset "csum". Note that common fields
-> (infinite_map and data_len) can also be set once here.
->
-> (...)
->
-> Cheers,
-> Matt
+Chenguang Zhao (3):
+  mptcp: add MPFailFallback MIB counter
+  mptcp: fallback immediately on MP_FAIL reception
+  mptcp: reject new subflows after fallback
+
+ net/mptcp/mib.c      | 1 +
+ net/mptcp/mib.h      | 1 +
+ net/mptcp/pm.c       | 5 +++++
+ net/mptcp/protocol.c | 8 +-------
+ net/mptcp/subflow.c  | 1 +
+ 5 files changed, 9 insertions(+), 7 deletions(-)
+
+v4:
+ https://lore.kernel.org/all/20260818091417.2200986-1-chenguang.zhao@linux.dev/
+
+v3:
+ https://lore.kernel.org/all/20260812054653.43799-1-chenguang.zhao@linux.dev/
+
+v2:
+ https://lore.kernel.org/all/20260715061830.1057851-1-chenguang.zhao@linux.dev/
+
+v1:
+ https://lore.kernel.org/all/20260713064134.914507-1-chenguang.zhao@linux.dev/
+-- 
+2.25.1
+
