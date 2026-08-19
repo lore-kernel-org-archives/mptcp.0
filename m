@@ -1,125 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta0.migadu.com (out-231.mta0.migadu.com [91.218.175.231])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896984657F5
-	for <mptcp@lists.linux.dev>; Wed, 19 Aug 2026 11:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91FC3101D4
+	for <mptcp@lists.linux.dev>; Wed, 19 Aug 2026 12:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787139805; cv=none; b=MBqfBGxFEF+BvxO8/xqKzt2PgEilwMRR+z02H9wz83BYK/1j1Wyqvg9wOXcud2sb2KQSZ4b72+DfimjEPcN4bEEfRLGkFZQ/4woZFKEnMZl6sYJi9Mi+ZSKtqCyAJlLgY3OYyFDDtWM8zAMPwXiOHWsDJv6NcZ8daOJ3xuT+YYA=
+	t=1787144199; cv=none; b=glgCkUKzuvJA12aM0prMDQ/Kd5jEZmHPsep9pQaaG6XzqFzUGyWltFRTRSDR/72nvznx+bA6U1smFtcoNgUnAbCko/sutyS7Yr9qyyiFNyydVP34HOSaSmu2gSRE21XrPIgVTDHTWuhq6jsbbl+15gmU8yXuy3oo+/R+Kx7dJLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787139805; c=relaxed/simple;
-	bh=N+5XtOzIgeeWPlRc+/c9d6sWeA1tzOjEd/Skvyh3ORc=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=G6QXVaXHeQA4whG7mxECNegCB0EJ/VmN47M6CFt78JIm1kGuakLPiRwnTSapKjgWVLWtHfaNwasijA4PPsenKQvByE/NWGpQxy6SPTAbMVW+yc/C9+FzoEMK7yJnV9xPUgJedwRIAzN9sm0+x8NZ2U3sObBCQmx9moRizskJ3nY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bYNJZ72w; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787144199; c=relaxed/simple;
+	bh=c5WQ2fNdRmd8yYO4TOzGyI9JL9nGIgWc7Q1XQKpOpgw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=JyhKtFM934SR5n0AyI4ibHVScR1zKj6snCrJ5Ef9aduILG059TX+XPpvoRmyA5q/MqvQX8YhTIImocIxPfFxPYq4sSYQ59CadZJDV0hk/EAi5g2KYMVY6JNUzddBUyBoKpbQKRE3SdnZR1AEG2JAZtmZh/VBDKWjcMKIdm90Dlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ai1eQK/G; arc=none smtp.client-ip=91.218.175.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bYNJZ72w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0334F1F000E9;
-	Wed, 19 Aug 2026 11:43:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787139797;
-	bh=BDZTNUwiuvVXsTdpOcXN5QI6b4OelFET4Cg2OvjS6FE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=bYNJZ72wWGL+TUHVTgjV50zPzvtvi7vmkYaHMiROXmM78w4+2tJFKNRUHB3jTysms
-	 PrMV8pWkXVqeSOpN8sisyyDuItcauQXW2fBj88ZkTbSiVlXDOvFJ3wRcxQ4BW5NXqp
-	 e3ReLp+WmZc7N811BvOCjBeuo2DbrP7p9BIZeR5vBv0AAVahLTtG4ME4ag5eqXH7d4
-	 OtQ1pN6XC6ziop7xwsJAhf7wKS8D+IGBJ0I2p71buJfEadKaObbR0LZHdPg8wGT5Bm
-	 ZyzXzfQfjsFWnkahtbrtrgNzYhXRHXYYcabiDgSpsuGvbL3zpxeg54qj5K+9gGuqKC
-	 bqYdQTETPMdEw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next RFC v5 2/3] mptcp: fallback immediately on
- MP_FAIL reception
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Chenguang Zhao" <chenguang.zhao@linux.dev>
-Cc: mptcp@lists.linux.dev
-In-Reply-To: <20260819112112.1985121-3-chenguang.zhao@linux.dev>
-References: <20260819112112.1985121-1-chenguang.zhao@linux.dev>
- <20260819112112.1985121-3-chenguang.zhao@linux.dev>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 19 Aug 2026 11:43:16 +0000
-Message-Id: <20260819114317.0334F1F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ai1eQK/G"
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=c5WQ2fNdRmd8yYO4TOzGyI9JL9nGIgWc7Q1XQKpOpgw=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1787144195; v=1; x=1787748995;
+ b=Ai1eQK/GCqNmj28mJ93BLwluA6qFwDq1tpeYx7Lok15TY8avcLYFDtoB2nQQ9TMSo8SOsceE
+ RSf7+Lo/JFjQUrtPoHdzyV6gA/pM8b4jYAI9X2Zet6BSbaePbWqktRgZFluULjcAQ+88qCz/IdA
+ ukMVjVnYumnHP2SN5sZZY3u8=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: from thinkbook16p.. (223.70.160.239)
+	by smtp.migadu.com with ESMTPS id 198d029caa64f094;
+	Wed, 19 Aug 2026 12:56:35 +0000
+X-Migadu-Flow: FLOW_OUT
+From: Gang Yan <gang.yan@linux.dev>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next v3 0/5] mptcp: avoid data-races around the sysctls
+Date: Wed, 19 Aug 2026 20:56:24 +0800
+Message-ID: <20260819125629.49823-1-gang.yan@linux.dev>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] State Machine Violation: Executing receive logic and queueing data=
- on a closed socket
-- [High] Logic Bug: Premature fallback evaluation uses stale MPTCP queue st=
-ate
---
+From: Gang Yan <yangang@kylinos.cn>
 
---- Patch [2]: [PATCH mptcp-next RFC v5 2/3] mptcp: fallback immediately on=
- MP_FAIL reception ---
-commit 293c264f04a7af047f95b678acf86f3fe06f4d7d
-Author: Chenguang Zhao <zhaochenguang@kylinos.cn>
+Changelog:
+v3:
+  Patch 1:
+    - Carries the full module refcount handling that was previously
+      deferred to a squash-to patch.
+    - mptcp_get_scheduler now returns the ops pointer directly instead
+      of copying the name, so mptcp_init_sock() no longer goes through a
+      redundant mptcp_sched_find() list walk.
+    - A new pernet-level helper 'mptcp_pernet_sched' is shared with
+      proc_scheduler().
+    - mptcp_net_init releases the default reference on the
+      mptcp_pernet_new_table error path.
+    - Simplify the commit message.
 
-mptcp: fallback immediately on MP_FAIL reception
-   =20
-Call mptcp_try_fallback() right after the MP_FAIL response
-ACK, and simplify mptcp_update_infinite_map() accordingly.
+  Patch 2:
+    - Introduce the pernet-level helper mptcp_pernet_pm, like sched
+      does.
+    - Commit message shows why no moudule reference is taken here for
+      addressing sashiko's comments.
 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index d7c5b50b34cc9..351f9c998d7b6 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -895,6 +895,11 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 =
-fail_seq)
->  		pr_debug("MP_FAIL response received\n");
->  		WRITE_ONCE(subflow->fail_tout, 0);
->  	}
-> +
-> +	if (!mptcp_try_fallback(sk, MPTCP_MIB_MPFAILFALLBACK)) {
-> +		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_FALLBACKFAILED);
-> +		mptcp_subflow_reset(sk);
+  Patch 3:
+    - Remove the WRITE_ONCE() part and the tag of Tao Cui.
 
-[Severity: High]
-Does this synchronously reset the socket to TCP_CLOSE during the RX path?
+  Patch 4:
+    - It is new in this seires. Followed by Matt's suggestions, add
+      comments before pm_type was changes.
 
-If mptcp_try_fallback() fails, we call mptcp_subflow_reset() which sets
-the socket state to TCP_CLOSE. However, this is called from
-mptcp_incoming_options() when parsing the MP_FAIL option:
+  Patch 5:
+    - Release the PM reference on the mptcp_net_init errpr path as sched
+      does.
+    - mptcp_pm_ops_init() now takes the ops pointer directly instead of
+      the name, and mptcp_get_path_manager() returns the ops pointer:
+      the redundant mptcp_pm_find() list walk from the name is avoided,
+      mirroring the scheduler side earlier in this series. 
 
-net/mptcp/options.c:mptcp_incoming_options() {
-    ...
-		if (mp_opt.suboptions & OPTION_MPTCP_FAIL) {
-			mptcp_pm_mp_fail_received(sk, mp_opt.fail_seq);
-			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPFAILRX);
-		}
-    ...
-		if (!(mp_opt.suboptions & OPTION_MPTCP_DSS))
-			return true;
-}
+v2:
+  - Split the code around bpf to patch 4 and patch 5.
+  - Put WRITE_ONCE(pernet->pm_type, pm_type) into patch 3 and add
+    tag of Tao Cui.
+  Link: https://patchwork.kernel.org/project/mptcp/cover/20260818094825.48446-1-gang.yan@linux.dev/
+v1:
+  Link: https://patchwork.kernel.org/project/mptcp/cover/20260817012452.7519-1-gang.yan@linux.dev/
 
-If mptcp_incoming_options() then returns true without checking if the socket
-was closed, won't the TCP stack continue normal packet processing? This cou=
-ld
-cause tcp_data_queue() to queue the packet's payload onto the closed socket,
-and tcp_rcv_established() to proceed with an invalid state.
+Gang Yan (4):
+  mptcp: sched: change scheduler sysctl atomically
+  mptcp: pm: change path_manager sysctl atomically
+  mptcp: pm: use WRITE_ONCE() for the pm_type sysctl
+  Squash to "mptcp: pm: init and release mptcp_pm_ops"
 
-[Severity: High]
-Does premature fallback evaluation here use stale MPTCP queue state?
+Matthieu Baerts (NGI0) (1):
+  mptcp: use READ_ONCE() over sysctls
 
-Evaluating mptcp_try_fallback() synchronously in the softirq receive path
-creates a race condition with the asynchronous MPTCP worker.
-mptcp_try_fallback() checks if msk->out_of_order_queue is empty, but because
-MPTCP queues are populated asynchronously by the MPTCP worker, this state is
-inherently stale.
+ net/mptcp/ctrl.c     | 141 ++++++++++++++++++++++++++++++++-----------
+ net/mptcp/pm.c       |  11 ++--
+ net/mptcp/protocol.c |   3 +-
+ net/mptcp/protocol.h |   6 +-
+ net/mptcp/sched.c    |   2 +-
+ 5 files changed, 115 insertions(+), 48 deletions(-)
 
-Since the current packet hasn't even been added to the TCP receive queue
-yet, couldn't a gap be correctly filled by data sitting in the subflow's TCP
-queue that hasn't been pulled into the MPTCP queue yet? This would cause
-fallback to erroneously fail and lead to unwarranted subflow resets.
+-- 
+2.43.0
 
-> +	}
->  }
-
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260819112112.1985=
-121-1-chenguang.zhao@linux.dev?part=3D2
