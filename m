@@ -1,142 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF9EB29B776;
-	Wed, 19 Aug 2026 10:22:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5F145DF47;
+	Wed, 19 Aug 2026 11:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787134944; cv=none; b=N0ao5Je/vVFDembhkOEAwmllDq2U1tOaAQHOhNEYyqsZERAt1JUREWhR4K5TlISbnXJ0pgZxAn4OsEOLrSs+wegBda03PJLs7+FZiyGr+Q25JpRwC+FNaLg/QAo7VoS5i7wKcjKIWTshUp5G7zNis8OaLu8ba3SzLRJXQlKVYFA=
+	t=1787137530; cv=none; b=gsIgRDaIxT69p+7xUb2XAkBi0SDrrL9TvlMps8seWWjE2MlLvRrDKrVzGO3vVPOCtcdLwTlr0IGDjogGD2NazgYIppc58+ls/u3Pt0szvYKOIz0fwFm4/xhvMbwseXQQyMXIefY/MDFvPMoY3Uh+czy56Md7dm4gvWzr0Ad8fS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787134944; c=relaxed/simple;
-	bh=3SSlOy8BmzwUDYpYshZoqNIQUPjH5Sf5o7J9A2n3VOw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JxVUNdpY/n5zrSs5yekk+WZHyvhe/ncRNfdRYjr7RZrpG4mZw/OqQ+0mA+ua4TusKqWUPxdTl66CoZqlVIJMJjO2UwV6O1yHxwKSGl7PMUZSjusA5AkiZeGWZ8mvaA1o8Cpps0z+CUA17pnelxAL0w9pc6HGU92HBmnnLVsdEyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OKB0k6lL; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787137530; c=relaxed/simple;
+	bh=Ra4r9/Sw7plykzbCErUdiwdxtSPs35M+718+8RzV4Q0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B7R+XJfxImCNN9AaXQUN9T9QI2J+KvXVP8DQwkpCtShVt+6CdHcne+uQaiX/iPXo8BuTksqp2GRcpT08Qd5fAX9OnaNzaqD06A7RUzIk91BQmvLY/zIEXBlx5ajR4mWEqS1TZT2U6+7w/dVkpvujJOvjmpDOrg6Zac6INWCa5mw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=PEQf05DS; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OKB0k6lL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C5171F000E9;
-	Wed, 19 Aug 2026 10:22:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787134942;
-	bh=xRAgWfvJ3FcOivqoE0OkBl00Ae4a9noe5/d6PPorNbE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=OKB0k6lLj8LHUXuRafEmN9Y6CM9/YkxO8QRuU1PuoupLUjmR0q9V7z7ke4n2OosLZ
-	 HiS7g1RiP2Lkf5fMgfRVOdvC3sNNagM2DrdiZVon3+PpkBMcPzU7WSDDNMz5VbI/Rh
-	 QH8QmKjQTpbvBxeWMk06gEccBdvj6TdEcnrrKBcIk/lpyvNPUAZJJ1aKpqM99GAT4G
-	 fOnb9wEyuVNhZPvcH+tOQlfSv38tWOaEdTi9dp5pNcCNZaiNuSQB4J8SBljQ69abuA
-	 3P+bg0bxBQeMb9XZ7VbFAdblpr48EEMAkIQbgoz/3vJSCp9V7dOBlIIKbDx+Gq2odZ
-	 1wrPzb3FGy3tg==
-Message-ID: <bf25121c-72cf-40a7-bbaf-5db85aee7f59@kernel.org>
-Date: Wed, 19 Aug 2026 12:22:18 +0200
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="PEQf05DS"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=/lYfeP9WUbHszkMtgoDUYiluPRe4QGeEextrg7r7ra8=; b=PEQf05DSRjDo4BBdNUv0Rp6rve
+	rD4sIBMLADaFrm/XAn+y8Ib+WIF7vy8SN8Qjv7MxMnO0KZa+s/ty/kxIosVZ/+Z9EJcdZrUnB6hEo
+	ztQYhJQviOzks61njhVECfKSw70h7RGlWbnW08RqJhaVrcr+F/yE62napF+HbUvmk6LI3bMeK6mAu
+	ynk/IzA7CXDpWOD6d3yTlV7h6eZ7QENc+tDi8l7zsoqjyE2TJJPCw+2tf/Rt3Mf70rsOaraNfkdGj
+	qoBn4pML0Ce8C+caRtDp7F8eC2aeS9iZC8r1YCzneNtJn1aQRKqnBngULEUxkMMrVxoA1pWw6js4a
+	srMgX6XA==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wwe6K-009kMp-1B;
+	Wed, 19 Aug 2026 11:04:56 +0000
+Date: Wed, 19 Aug 2026 04:04:51 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Geliang Tang <geliang@kernel.org>, Keith Busch <kbusch@kernel.org>, 
+	Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>, 
+	Chaitanya Kulkarni <kch@nvidia.com>, David Ahern <dsahern@kernel.org>, 
+	Ido Schimmel <idosch@nvidia.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Hannes Reinecke <hare@suse.de>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Geliang Tang <tanggeliang@kylinos.cn>, 
+	linux-nvme@lists.infradead.org, netdev@vger.kernel.org, mptcp@lists.linux.dev
+Subject: Re: [PATCH v4 1/4] nvmet-tcp: unify sockopt with do_sock_setsockopt
+Message-ID: <aoWNmG2X0aylHDFd@gmail.com>
+References: <cover.1786947923.git.tanggeliang@kylinos.cn>
+ <010e6810cc4c10b30237c964b2bb9dfa7a3c740c.1786947923.git.tanggeliang@kylinos.cn>
+ <20260819090439.GB9267@lst.de>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net] mptcp: fix use-after-free of the subflow context on
- the delegated list
-Content-Language: fr
-To: Hyunwoo Kim <imv4bel@gmail.com>, martineau@kernel.org,
- geliang@kernel.org, pabeni@redhat.com
-Cc: mptcp@lists.linux.dev, netdev@vger.kernel.org
-References: <aoWBrkNwebJe-koh@v4bel>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <aoWBrkNwebJe-koh@v4bel>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260819090439.GB9267@lst.de>
+X-Debian-User: leitao
 
-Hi Hyunwoo,
+On Wed, Aug 19, 2026 at 11:04:39AM +0200, Christoph Hellwig wrote:
+> On Tue, Aug 18, 2026 at 02:03:00PM +0800, Geliang Tang wrote:
+> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > 
+> > This patch consolidates socket option settings in nvmet-tcp by utilizing
+> > the generic do_sock_setsockopt() helper for options including SO_LINGER,
+> > SO_PRIORITY, SO_REUSEADDR, TCP_NODELAY, and IP_TOS. This change eliminates
+> > the need to export and use specialized helpers for each individual socket
+> > option.
+> 
+> Hmm.  I see that do_sock_setsockopt is exported, but it really should
+> not be.  It's really just an internal helper exposed for io_uring
+> and no modular code should be using it (never mind the non-GPL export).
 
-On 19/08/2026 12:13, Hyunwoo Kim wrote:
-> mptcp_subflow_delegate() links the subflow context into a per-CPU napi
-> list and takes a reference on the subflow socket. The context is a
-> separate allocation, reached through icsk_ulp_data, and the list holds
-> no reference to it.
-> 
-> inet_csk_destroy_sock() runs sk_prot->destroy() regardless of the
-> outstanding references. That path ends in tcp_cleanup_ulp(), which calls
-> subflow_ulp_release(). subflow_ulp_release() frees the context with
-> kfree_rcu() but does not remove it from the list. Once the grace period
-> elapses and the context is actually freed, the next mptcp_napi_poll()
-> dequeues that entry and mptcp_subflow_delegated_next() writes to the
-> freed context with list_del_init(). That is the use-after-free.
-> 
-> The freeing path cannot dequeue the entry itself: the list is per-CPU
-> and only the CPU that queued the subflow may touch it, as
-> tcp_release_cb_override() already notes.
-> 
-> Delay the free instead. Add MPTCP_DELEGATE_DEAD.
-> mptcp_subflow_free_ctx() sets it and frees the context only if the
-> subflow is not scheduled, while mptcp_napi_poll() frees it if the dead
-> bit is set when it clears the scheduled bit. Either
-> mptcp_subflow_free_ctx() gets there first, sees the scheduled bit and
-> leaves the free to mptcp_napi_poll(), or mptcp_napi_poll() gets there
-> first, does not see the dead bit and mptcp_subflow_free_ctx() does the
-> free.
-> 
-> Also skip mptcp_subflow_process_delegated() once the dead bit is set.
-> subflow_ulp_release() has already dropped the msk reference by then, so
-> the pending actions must not run.
-> 
-> Finally, move delegated_status out of struct_group(reset).
-> mptcp_subflow_ctx_reset() clears that group on disconnect, and clearing
-> the scheduled bit while the entry is still queued would let
-> mptcp_subflow_free_ctx() free a context the napi list still points to.
-> delegated_node is already outside the group.
-Thank you for looking at this. Do you have more context about how the
-bug was discovered? Do you have a reproducer and/or a KASAN calltrace or
-similar?
-
-Having this would help the reviewers.
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+Agreed. I am happy to remove the export, given it was introduced by my
+change in commit 1406245c2945 ("net/socket: Break down
+__sys_setsockopt")
