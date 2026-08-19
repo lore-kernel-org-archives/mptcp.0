@@ -1,132 +1,161 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BDAC4503B
-	for <mptcp@lists.linux.dev>; Tue, 18 Aug 2026 19:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BEE1350285;
+	Wed, 19 Aug 2026 02:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787080822; cv=none; b=iAM78UqSFI6jN4UdJolX7qJ60N9dqeQySWBvqQ3hL+O+3v+49BmZ4L93T9viAcQl+HNqmYVho0fUPXdwWTxYUpSggXXqjNgofANQAR+emqUwAEGMg1Td55SVBvLbe0rNKoEm6Y032Yv3sgWwPKJEDnxjgFifbCady+ZmMEG93qg=
+	t=1787106552; cv=none; b=rr6KSn/XVCLpGk9c18lEkjXzRUyIGr0XAQ4CzFa+W3xYcow9zbinH40WnSWUmYmmnOBrc/IcInV7LA0PaTo3LuHWuPRLxFIQOBbvSbhjflUAFZfKnAZA8OzbMM2lXrnh0V1un8vOA/YxITqC4W62FEdYlzrrmhqsOZr5nFn1ofE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787080822; c=relaxed/simple;
-	bh=0qg1NZD3USSjan2hjC9Ocj2XRDHkkevHh0dAMvV7HeM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=roggMdIQ5sMS3Lz0REGWqZIHIubhenVMPKHkdCir40H73K9+q+ne3WTa7inwVoOjeaSZM0kXcav/jxL4+roPl+dl9IcOVu3XmbwzpsQFciesuqjh/S60cderHRxso6djoBjAVeU6/ugIwbpo5d685JAVU034rg3F9IlY7ajqFDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wct/LFrT; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787106552; c=relaxed/simple;
+	bh=hSDaHlp+AtiPrqNRHKQvKu/6PNks2N1dJWDbN7fuL1I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=M3obCYh3yuV3cLmZLquVY2dZPjBiW1NRdl9M6VCITfSdhHphNAxMcyx29s7CRPvqKBa0ZTUGYG2V8bDMpa//O6zS2EZvmJ28jiYC0UrDzRQSj+Op6VXElFgsEyrrQO3ONauN7G9osrwf9s7ec77g9KF2tJn2nTYQsuSjs4GH4xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=n2z84/Bk; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wct/LFrT"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3856d6fbcb3so309289a91.2
-        for <mptcp@lists.linux.dev>; Tue, 18 Aug 2026 12:20:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787080821; x=1787685621; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=0nrcA2tAP7jh6JDDYqBUe1hzN1o8rzuyAQactFv7akI=;
-        b=Wct/LFrTkPv+hMQSna2HRYkwPMZ8Wtlw45df5Ut/a4ALT1P0Oqr7aZ5i0xTuQpf+i3
-         i+9LrCfmMBQutNMdiIdBgQl9LW/ukpZZ/vwdHInnmLoubdL7GkjVRIFhA0KjUrHAPw/I
-         3thY3VmVED7J1GVCwmjA4ibCrF0jvykRBfiaZNrf5XVL2vjIY5+c5+ueWb/wmQbVUHSC
-         h6jN7WmM5n7/t2jKTok3iHPbl5qqHU+2syigvpULCLg/0opaThAfJxm1YEbCxg1fbt9k
-         lbVLB6pYIlirHM6gDcmrN9gB7L3aRXa7izWyqYns1lp7iZvrBUwcManfff7i5yJcZoyR
-         ySOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787080821; x=1787685621;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=0nrcA2tAP7jh6JDDYqBUe1hzN1o8rzuyAQactFv7akI=;
-        b=Am+LNOiWZPV9Tf5z1WCeAzJBbCkcJ7wgKso/yGSzscistFGgm/JkfuVbElvHIYSEli
-         Ip3XNg1kOtdyUiOARdsrogcuPRECZlfLn3uY2REAA+H9pjvQ8pE6jyLjdluCABX7burm
-         hQsRp/aLnvpwN15w6PaDbzXmb9wGEDXOy7hRpY8nA2IiHIn7eY2HGkkU3jd2ayu8g0zf
-         PE13PMuSXX8BbVj+cxQUEs/EQpZZnx1aTfJii9SAaRDs4zecaBXDvryNFVOYk8y63vUX
-         ZJXKSeUUQEJemftCS0lFuUXZjZ9JY1IMKkNY7/IzBKl1CX7APhAVG1OGG33yrtbr+dER
-         eFUg==
-X-Gm-Message-State: AOJu0YyHdPohRltdDoTTJZWbtPlEWKgUjHrAcUvF421cR6iO9bimWC/Q
-	4x18EgEIcXg5WX2R2tx+AJWGaiRjM9lh9HuGxHK/4LKJvP3zT4hw6we9mU9k
-X-Gm-Gg: AR+sD12ezcLGVBu1jDJo3MGeY0ruN1yHv7IFq5FVPL7bgWm20l7NO6EM8W0JCkw6r0/
-	z+N9X363Xqc9WqO7DR0TreoZsC/y8DOOkzcS+p0m7lsPtKuYbPP9yXx4kDGQ7bApqXvcOFuMacw
-	oWlCk/n7cSMp1mD5rJ2CgxQSmCRzuUBq/7t2rGFiH+SWixBZgZO/6jPX68knr4I/HFfohXkV0Fj
-	BCcawJz8lTmCpuyjyGq0LzVQdx7i4+zOqiESJidWdYkHTeL9Vs4hZBzYYJpTqLQDDfPJliHuhQo
-	UA3IPvw5xE1Kib/IF6uVaBee6zPK9Do8MzkdQaaYnfj7hA4PeAW7A3bFT53U8Az8cWlvpEUhCPe
-	dfqa7deXIZc6NTXnnYxJRAMl+O4NeD1TO9zxRcDVmDO2Atino9OvHe6zMjBZbcWWujm7oLum1OU
-	T3ovYyWFzU/5A2m7NC0GbILiRs8uNaq1kDRTCirATmt7acunJ/NBDEhDcpxodwWeHWkE3u3YMAD
-	w==
-X-Received: by 2002:a17:90b:4fc6:b0:395:5f43:4ec4 with SMTP id 98e67ed59e1d1-3957b05de69mr173956a91.0.1787080820673;
-        Tue, 18 Aug 2026 12:20:20 -0700 (PDT)
-Received: from [127.0.0.1] ([20.168.128.85])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-141530793ccsm20247812c88.8.2026.08.18.12.20.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2026 12:20:20 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260818-mptcp-cook-reqb-v1-0-052dea9a7f20@kernel.org>
-References: <20260818-mptcp-cook-reqb-v1-0-052dea9a7f20@kernel.org>
-Subject: Re: [PATCH mptcp-net 0/3] mptcp: avoid uninitialised read with MPJ
- with SYN cookies
-Message-ID: <e9ea4afd-f549-1fa5-3eac-910b12ad7e4d@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 18 Aug 2026 19:20:19 +0000
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="n2z84/Bk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Cc:To:Message-Id:Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Subject:Date:From:From:Reply-To;
+	bh=gXUB1QrnxsrjbOi4xhXBQHCEC2KmzTwW0NuAmy9Ikto=; b=n2z84/Bkg38wflHDu1N8jwEOo2
+	ZhL3oGXbc/uFEJNt0XoVhkQqsRre2N2fOyTCQuNQcmupM5U4xH/zfSaLtYI1aRIDo/YO0g1gqt4Ju
+	7p9NoN2QQbxE+l00ISPoz7HIP+7oCZcG92EJgUl3QzGaqJjQh9auxNr8bS4ZA9nATHJaFhzpDvRmO
+	UlKyIzG3ehc7I51bRyD7vFd+x0m4H27sXkgltjUagvY3qf8XeMChZzB0feZbvbrgL7xapazL7ucBq
+	NhoOXUbeOhAb812rK3zQurHa3LPJNqJjitOwEpKMCimzS3v+RLDXhGMeQuH+MLoIeR1UI6irvfMur
+	sXWvDxfA==;
+Received: from 186-249-144-28.shared.desktop.com.br ([186.249.144.28] helo=[127.0.1.1])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1wwW39-005tfG-1g; Wed, 19 Aug 2026 04:29:07 +0200
+From: Mauricio Faria de Oliveira <mfo@igalia.com>
+Date: Tue, 18 Aug 2026 23:28:00 -0300
+Subject: [PATCH RFC v2 01/13] keys, pidns, fs/verity, riscv/vector: reorder
+ '#include <linux/sysctl.h>'
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20260818-sysctl-module-aliases-v2-1-d5a69dae5798@igalia.com>
+References: <20260818-sysctl-module-aliases-v2-0-d5a69dae5798@igalia.com>
+In-Reply-To: <20260818-sysctl-module-aliases-v2-0-d5a69dae5798@igalia.com>
+To: Kees Cook <kees@kernel.org>, Joel Granados <joel.granados@kernel.org>, 
+ Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>
+Cc: kernel-dev@igalia.com, linux-riscv@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, fsverity@lists.linux.dev, 
+ keyrings@vger.kernel.org, bpf@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+ netdev@vger.kernel.org, linux-wpan@vger.kernel.org, 
+ lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org, 
+ coreteam@netfilter.org, linux-sctp@vger.kernel.org, 
+ linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org, 
+ bridge@lists.linux.dev, mptcp@lists.linux.dev, rds-devel@oss.oracle.com, 
+ virtualization@lists.linux.dev, Mauricio Faria de Oliveira <mfo@igalia.com>
+X-Mailer: b4 0.14.2
 
-Hi Matthieu,
+Fix an include loop error in preparation for sysctl.h to include module.h:
 
-Thank you for your modifications, that's great!
+    CC [M]  arch/x86/events/amd/uncore.o
+  In file included from .../include/linux/fs.h:44,         <<<
+                   from .../include/linux/compat.h:17,
+                   from .../arch/x86/include/asm/ia32.h:7,
+                   from .../arch/x86/include/asm/elf.h:10,
+                   from .../include/linux/elf.h:6,
+                   from .../include/linux/module.h:20,     <<<
+                   from .../include/linux/sysctl.h:245,    <<<
+                   from .../include/linux/key.h:17,        <<<
+                   from .../include/linux/cred.h:13,       <<<
+                   from .../include/linux/sched/signal.h:10,
+                   from .../include/linux/ptrace.h:7,
+                   from .../include/uapi/asm-generic/bpf_perf_event.h:4,
+                   from ./arch/x86/include/generated/uapi/asm/
+                        bpf_perf_event.h:1,
+                   from .../include/uapi/linux/bpf_perf_event.h:11,
+                   from .../include/linux/perf_event.h:18,
+                   from .../arch/x86/events/amd/uncore.c:8:
+  .../include/linux/mnt_idmapping.h: In function ‘mapped_fsuid’:
+  .../include/linux/mnt_idmapping.h:231:59: error: implicit declaration
+    of function ‘current_fsuid’ [-Wimplicit-function-declaration]
 
-Our CI did some validations and here is its report:
+Reason:
+ - cred.h includes key.h *before* defining current_fsuid();
+ - key.h includes sysctl.h;
+ - sysctl.h includes module.h;
+ - module.h includes fs.h via elf.h > asm/elf.h > asm/ia32.h > compat.h;
+ - fs.h includes mnt_idmapping.h, which uses *undefined* current_fsuid().
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Unstable: 1 failed =
-test(s): selftest_mptcp_join =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: =
-btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: =
-btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/32171215149
+Note that fs.h does include cred.h (which defines current_fsuid()) right
+before mnt_idmapping.h (which uses it), but it is not parsed because the
+include guard of cred.h is defined earlier.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/4172949dd486
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1148008
+Address this by removing sysctl.h from key.h, which does not need it,
+and adding it to files that actually need it.
 
+Signed-off-by: Mauricio Faria de Oliveira <mfo@igalia.com>
+---
+ arch/riscv/kernel/vector.c    | 1 +
+ fs/verity/init.c              | 1 +
+ include/linux/key.h           | 1 -
+ include/linux/pid_namespace.h | 1 +
+ 4 files changed, 3 insertions(+), 1 deletion(-)
 
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
+diff --git a/arch/riscv/kernel/vector.c b/arch/riscv/kernel/vector.c
+index b112166d51e9f584f84c52d0f84feb92ccd60df1..9eac47c99f114304521fdc539018f3f84507e75f 100644
+--- a/arch/riscv/kernel/vector.c
++++ b/arch/riscv/kernel/vector.c
+@@ -10,6 +10,7 @@
+ #include <linux/sched.h>
+ #include <linux/uaccess.h>
+ #include <linux/prctl.h>
++#include <linux/sysctl.h>
+ 
+ #include <asm/thread_info.h>
+ #include <asm/processor.h>
+diff --git a/fs/verity/init.c b/fs/verity/init.c
+index 3aa55dec88fc919792a2cb4be476f8481ef78a9e..d460eef74fcfe49f6cf69974a8194a65de486819 100644
+--- a/fs/verity/init.c
++++ b/fs/verity/init.c
+@@ -9,6 +9,7 @@
+ #include "fsverity_private.h"
+ 
+ #include <linux/ratelimit.h>
++#include <linux/sysctl.h>
+ 
+ #ifdef CONFIG_SYSCTL
+ static const struct ctl_table fsverity_sysctl_table[] = {
+diff --git a/include/linux/key.h b/include/linux/key.h
+index 81b8f05c68985c6f0a5c5bbe0f1fd6661912c618..a74f8f1b7936d6ede584c0a8cd520f858f6a9758 100644
+--- a/include/linux/key.h
++++ b/include/linux/key.h
+@@ -14,7 +14,6 @@
+ #include <linux/list.h>
+ #include <linux/rbtree.h>
+ #include <linux/rcupdate.h>
+-#include <linux/sysctl.h>
+ #include <linux/rwsem.h>
+ #include <linux/atomic.h>
+ #include <linux/assoc_array.h>
+diff --git a/include/linux/pid_namespace.h b/include/linux/pid_namespace.h
+index b20baaa7e62b755e7e561fcd8018e2b61213503e..94b23471c7dec135e24c4c0c1fdbf841cea2e5de 100644
+--- a/include/linux/pid_namespace.h
++++ b/include/linux/pid_namespace.h
+@@ -10,6 +10,7 @@
+ #include <linux/nsproxy.h>
+ #include <linux/ns_common.h>
+ #include <linux/idr.h>
++#include <linux/sysctl.h>
+ 
+ /* MAX_PID_NS_LEVEL is needed for limiting size of 'struct pid' */
+ #define MAX_PID_NS_LEVEL 32
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+-- 
+2.47.3
 
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
