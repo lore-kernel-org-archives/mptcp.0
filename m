@@ -1,133 +1,82 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599DA3C7DF1
-	for <mptcp@lists.linux.dev>; Thu, 20 Aug 2026 07:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDE101AF0BB;
+	Thu, 20 Aug 2026 08:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787212595; cv=none; b=cu9dWG3aqQYg6pSQZKyOxom1qQgbgeq+wBHfyXoLxck0FwcJ+5BkPsR1mrCbvm1R25NhpCAOaiZb0EjM5FhmU2PfhTqWmfMF0zt1bg6I8JteULwNJKWpvQ7lFmOkG7ab+xwww70jF10RcVqtkZJOPgoR9Q8GNMPsQMmiSrUjKIk=
+	t=1787215525; cv=none; b=EVQOM/c9hTjxJIZe2O8SL8A2HSab9WmXyXDcxUJGpxndl+KapAjeFYpaMkY/SLfnJ9Vt4VF6PuRpdCbN9q2hPgJF5nEKC9O8b1WITwPWqcvM4GrYBopWzOWLNotdovY0WaETUJISF5vME/VGkGhCVW0wm/g40vzMN4pbjsAsq20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787212595; c=relaxed/simple;
-	bh=8nwe6f9UbMA2Raao+HmQ8beQer6gwt49KvEFD3EaYf8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=ITt+E/VlVjW4P/y3Ns08YNp+0FmoxNO7ZuA+fqUB438NRU5r2gJfLU5QdrEg0jERk8BW1XUC1fcz0Azib35u0NavZP01TPTAgIjC5fvaL4NMyiv3OvVOf450NGgprkJIwGaInS46S1QiHnBDvzJ1OUmEi4fp6Gfux4UYJ4a+6Ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V6vBfyAN; arc=none smtp.client-ip=209.85.167.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787215525; c=relaxed/simple;
+	bh=Wp6MhId/Ti7e81JmPYijG9mb6dRjS0icNUgqibA4fBU=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=GFUunwAndGkmhmuys1P0Kmrloi3+9gjB8HdcQcL//ZsBnWkjThG5UQCnJkqVP8TgE4cdL+7WykQyHR1Y092zV1ijz7CDQshsY8V67qaxeKXn7rjV2pwBsOhqXmdjL6AbTrpZ2p244MgzkhumY2DYV0hZhjOt7IiJ5XvcytbGI4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hISVGe5C; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V6vBfyAN"
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-4b28df1f600so1465429b6e.2
-        for <mptcp@lists.linux.dev>; Thu, 20 Aug 2026 00:56:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787212593; x=1787817393; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=YBWfXrAtUJm/HpzLzPyZACtBgkMIykA9/uyMrFZEVjs=;
-        b=V6vBfyANmx/kyMIu+lkfZxmGEpn6W+v2ePtqYGfn8UifNkcrR1DrN2LlT6f192+E4e
-         NZeWzyo8Y2F/gsJuJ67QfsKM9uzCDwRXJ4A3ZE5SFhHCpvevnA5+JcjuPwvAVrzRQP98
-         SmWMqOGW3tB7drg53XwQXaYche/pu1QhpK4onEWEzFeE9ZOB/ehF6dUtWE5480br7Xmw
-         amJWhLqllGC72J0pdueJCf8IjCBhBP0bJ6i7kT34Q869aZvDEzzCzmo+2zYWFMASFVq9
-         dEhFOV4OcjLrbVxbiqjQX0oHz80ugM2cS9fanhvay5xPlAMqhx6FV09U/FQI3kRBuYTS
-         E7Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787212593; x=1787817393;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=YBWfXrAtUJm/HpzLzPyZACtBgkMIykA9/uyMrFZEVjs=;
-        b=FbkUQbFr5uTeVEhFly7RPQtTdpW8tx4Hf5sohieO43J3H8SH8CqKdhgpDGqhEpd3p1
-         FQzA/ekt+mGSjhG4/jNRXYI6069ikL+KATlJUIvS5AKZU4PMeI3EwLJmTnsQJy/8l7am
-         s5t8MUu8fbQLvbeHF+Fng+8UwMFGhBMcqLMqckOjIyRtr24+tecyPW1aJykYgHXmBXAT
-         w7dc179sO/FMSl79bjsi/o8KqgGkERZ0gujpFfNkFZxMztjckB1OvboQZGdnyax9atBy
-         rR6zLY3b2mMIxDS2G98PhJx2HcHela8xIWHq4qOsy/lyH8wbyHQFqTzcYWN6kQrgieis
-         u0aQ==
-X-Gm-Message-State: AOJu0YzQbkCCKDzt1dT1PMED3PuLQ7pGExFPQvCq1o0UKwf8oeRiTNJX
-	RwVTCHx5228LZX8M75ZLxl2KCa/KEna2xeGzJvBR3EZoc/invGwxDQjG5meZ
-X-Gm-Gg: AR+sD11waAgiGeIpBDdSYBEYq/+Wfh8JdBsAX4aEvInLGJRjV1lHtASWVOKYhVXyrTn
-	N/wDyTqKSSlAxR/14f1JEpTgEGxkojplO9KAsCX/3+eQ3IJEGioJ9GxDYzKEUgkzme0QZzGmLRY
-	pDMYwEjPxluFh5h67xxLOaaTVTgLkjMyqCc2hUjG7hMBEtIo0OssQBmqPjvPl67cLM5yAYPim5Z
-	28y/4Fuo5HU2JZkYu+P2rBYYBZZLzovEYV71iscFvnsXe1SEmS/gAjVgLlm1DtTutWw3/QVT6v/
-	qNGFBdAkolZuV+vk6XWVCnOVEWCDBkVSNkpWAH6WemgdMnspbqrn4ihtXgYchWSzLx02u16nOPj
-	1QcNDnkLsQeb+wfqcNZmML207u5wgJFObc4sQf6JacuA58A2V/bAX1Y+NYZZwtYe/+79qziNeYo
-	S7rKX0qU5Ve07K3VAqr7I4mJceADA6yaAc+0aVtBJhEKLvTS92LIZaC3BmiA67EYhHN5tX9YVSg
-	rw=
-X-Received: by 2002:a05:6808:2395:b0:4a4:934:b316 with SMTP id 5614622812f47-4b2bcb4eaf7mr9559849b6e.21.1787212593082;
-        Thu, 20 Aug 2026 00:56:33 -0700 (PDT)
-Received: from [127.0.0.1] ([172.183.94.164])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-4b2d6d37c02sm1115914b6e.14.2026.08.20.00.56.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2026 00:56:30 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Gang Yan <yangang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260819125629.49823-1-gang.yan@linux.dev>
-References: <20260819125629.49823-1-gang.yan@linux.dev>
-Subject: Re: [PATCH mptcp-next v3 0/5] mptcp: avoid data-races around the
- sysctls
-Message-ID: <c203264e-7987-1831-83c1-4e69563c0039@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 20 Aug 2026 07:56:29 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hISVGe5C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787215525; x=1818751525;
+  h=date:from:to:cc:subject:message-id;
+  bh=Wp6MhId/Ti7e81JmPYijG9mb6dRjS0icNUgqibA4fBU=;
+  b=hISVGe5CE6wokYqciy8x3GAhW3jB6HHb7McIg0NfbxLj1QWJlINfJn8V
+   1c/VkKVRP+WdOX8JcrOit56O3u0MqHvtD3Zs3aP5ngiUSLe03UbJDimEA
+   w4SArTaGBmjUtpk6XkY3pPifedG8c2jrMvnTJhGH1DZURATzRsNBObdUU
+   YKTaZ7N02ljYUavBf9DmL3HM1yb6ZyifdaGfAOmPZ55IoOH0jmMSzQSeK
+   txAYr9n4ydLDW4lKYmLa8fXOkp54iO3JHGGz1T2HusGfV+JnaaOc1rQtz
+   v48FE3gd7vrxAd6dcfgZoZkAUThibDW+COh+n0xS9/WNCmCGvQtEeCQjZ
+   Q==;
+X-CSE-ConnectionGUID: zJXCllV9ThOUwC1eYGq9ow==
+X-CSE-MsgGUID: W9FU2E/FTDeQ/dIyuXBU7w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11880"; a="91617449"
+X-IronPort-AV: E=Sophos;i="6.25,232,1779174000"; 
+   d="scan'208";a="91617449"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2026 01:45:24 -0700
+X-CSE-ConnectionGUID: kz6EYbUrTR6Ee9CJrUNrgQ==
+X-CSE-MsgGUID: d7fIkmWGR8qLAIM2P4HmIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,232,1779174000"; 
+   d="scan'208";a="290742912"
+Received: from lkp-server01.sh.intel.com (HELO 6eda058d650d) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 20 Aug 2026 01:45:21 -0700
+Received: from kbuild by 6eda058d650d with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wwyOl-00000000iQn-1rsn;
+	Thu, 20 Aug 2026 08:45:19 +0000
+Date: Thu, 20 Aug 2026 16:45:00 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, mptcp@lists.linux.dev
+Subject: [mptcp:export-net 2/11] .b4-config: warning: ignored by one
+ of the .gitignore files
+Message-ID: <202608201656.CcN7GkHj-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 
-Hi Gang,
+tree:   https://github.com/multipath-tcp/mptcp_net-next.git export-net
+head:   397bbb2919258dde0b58a688771928fa3d0f69d8
+commit: 55d5d98b7729cf2603949e4cf5098aa570aae9f2 [2/11] DO-NOT-MERGE: git markup: net
+config: x86_64-rhel-9.4 (https://download.01.org/0day-ci/archive/20260820/202608201656.CcN7GkHj-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260820/202608201656.CcN7GkHj-lkp@intel.com/reproduce)
 
-Thank you for your modifications, that's great!
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202608201656.CcN7GkHj-lkp@intel.com/
 
-Our CI did some validations and here is its report:
+All warnings (new ones prefixed by >>):
 
-- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): selftest_simult_flows =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/323425=
-98821
+>> .b4-config: warning: ignored by one of the .gitignore files
+   .git_markup: warning: ignored by one of the .gitignore files
+   Documentation/.renames.txt: warning: ignored by one of the .gitignore files
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/892be88bad84
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1148469
-
-
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
