@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9990147ACC5
-	for <mptcp@lists.linux.dev>; Thu, 20 Aug 2026 16:03:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4518C258EE9
+	for <mptcp@lists.linux.dev>; Thu, 20 Aug 2026 16:08:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787241841; cv=none; b=QjIykbSJqJrMtXPHiOSY7kpunU7mnU4bMkw+GA0baSuiaW1ALdloQkz415Js3GtxhnqWgVfBYcy+MdAkIQz9QqUXRKLsjxIja656spn8Ao5e9G8zcrhEYMIqbc4HUdkk0z/Oea83gq9xfHi2YFlV6zz3l1iR8BFZabKZaA1qY/I=
+	t=1787242082; cv=none; b=sEDxs9V9LZ4anHWO8pD7XP+HLaSX7PNXOZTWBpIgHwUR5m2ZOJpojBqQB05Ae+KWpepH3koye0efgIzb1elvQnKKHuU0/70UtHwIqNGqxoHgWMSaJQ/JNRuXl2mK0l0RI5yjrIcAXsKiuYjVQbYeqoTZ3GSUgl3MI3qtZinT/h4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787241841; c=relaxed/simple;
-	bh=gQhSMy9VM9ZBiuqB3pME/3XeXjsNEKPI7hNykgtF6gc=;
+	s=arc-20240116; t=1787242082; c=relaxed/simple;
+	bh=qIQfmruh20jsD6b2anGC2B5Nhj/qU/EI7TUd2bakaYE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=gko3beAPY3wM3CUfKTkYu/rUGDOEKyd754NdWwFHrfk7SoSHB2Va3MTMm02EMiBB7PCNaDuPuiNx0OBZtakP7PFnovWjEx3M08GvjBsw1/IPw7D/WEwr6aa0ctpu0a/ChRRNjUpccSOEqDU4NLC3lxCybUmWmQReuRERzZjJ3Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fmc5jzT2; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=hK0srX4R6iLYbEYMZbWod557/WBUbqUPVZ6CWLzjhB+KQ6nDN+tgEomNVlcxGJAngp03xANC3l0bVBilYcjlzu5jSvsfdRX8BF+HXy9O0r1CJ28DyxhF93kAgBJQpGUIxXIvXpRCCGTTVLi2ocbhcryw+INvGyOzks00FPeO53U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ANmqeFRi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fmc5jzT2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF37C1F000E9;
-	Thu, 20 Aug 2026 16:03:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ANmqeFRi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 540ED1F000E9;
+	Thu, 20 Aug 2026 16:08:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787241839;
-	bh=Juiu+jZnExXFp5Y3thLZE3HHicJVl/CLH4Pg4WYN5X8=;
+	s=k20260515; t=1787242081;
+	bh=zuf1oiuudkEyqfnx6k2pFhnMmpyDbio9ZbxHMNIq+ho=;
 	h=Date:Subject:To:References:From:In-Reply-To;
-	b=Fmc5jzT2K2oUIZTijbqE4rLDM4ZtpPp3stlOZ8lwwOqa4/zvfkm7FsTn6AHcxFvsE
-	 DXwF1Td8+wHp5ioihuLgNn4yXlcUjtT5WdZ2ST/3ywRhK1WQDiYSx7V8XwI+Uf84MG
-	 Hm9kBE5nobX/iArohdMlwvshbQa/7E1rR1c7xWqob7tnst7c/sdL4gxOmIOFQZeIRI
-	 EbOkuEaXsFGaYM0K3YvI8qYQF7ttRAi7n2/JYGRwjN1L+ouEq4WKhF1i2HKPW2Jde3
-	 hBr7CeTT7rqFOez3oc5eUEU+d9x1BCmVRSEJtLFpXGlpwAnvRCzhbnfJqEgo90KUUP
-	 8XKksjkkQMSxA==
-Message-ID: <ed014fca-ce98-4ea9-bf69-5fa328000877@kernel.org>
-Date: Thu, 20 Aug 2026 18:03:57 +0200
+	b=ANmqeFRihfH6ozZHUz10YDQaGpmSojdydeJSySxCeohmNaonY6FI6Y6y2oDUdwqgv
+	 jds7dIL+JkqMadYGHq3za5eS6iVe7c61HO9pyYCbugDxDCRw3L+T1x8JyJHdekkxyb
+	 WCdhnJ8XMfarBTv4bcgtNrCKk3xmySK1hf4FG6r45MgjRqO0OJatirF4SUgQkCpVGt
+	 Ag0TE08ikt+PNQ8R/jxV+xVBhoAQFwV06yMvEEi8dXvWu64hF3idrla7F/dM+zir/n
+	 aZPORSGV7sGTyPV331g1nxKm6vvl8TT1hRlFGLRFXvNvtGjuuOSQSKQAlRA5Pm/8pb
+	 ilVZt1eynkrGw==
+Message-ID: <d14b4126-c3f4-49bc-bbfb-2d0762f0fa72@kernel.org>
+Date: Thu, 20 Aug 2026 18:07:58 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: options: fix uninit-value in
- mptcp_write_data_fin
+Subject: Re: [PATCH mptcp-net 0/2] selftests: mptcp: lib: get MIB counters for
+ the right test
 Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>, MPTCP Linux <mptcp@lists.linux.dev>
-References: <20260814-mptcp-dfin-csum-v1-1-08d0b9b86bb7@kernel.org>
- <0680b4cbbcb963684af9101936825fa09b71a335.camel@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+References: <20260813-sft-mptcp-nstat-hist-v1-0-5bb96bae7ef6@kernel.org>
+ <58a6d0bd-e3b2-3258-593d-0e8c14844af1@gmail.com>
+ <8e2f92a8918ee5cf7b1a7e86f5bcf64f38030c5d.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,74 +87,45 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <0680b4cbbcb963684af9101936825fa09b71a335.camel@kernel.org>
+In-Reply-To: <8e2f92a8918ee5cf7b1a7e86f5bcf64f38030c5d.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-On 19/08/2026 11:09, Geliang Tang wrote:
+On 19/08/2026 11:22, Geliang Tang wrote:
 > Hi Matt,
 > 
-> On Fri, 2026-08-14 at 23:38 +0200, Matthieu Baerts (NGI0) wrote:
->> When sending a DATA_FIN without data, and because the DATA_FIN
->> occupies
->> 1 octet of the connection-level sequence space [1], it is then
->> required
->> to add a DSS mapping with specific values.
+> On Thu, 2026-08-13 at 11:41 +0000, MPTCP CI wrote:
+>> Hi Matthieu,
 >>
->> If the checksum has been negotiated, it also needs to be computed,
->> and
->> included in the outgoing packet, and thus the initial csum data needs
->> to
->> be reset to 0 as well. This is no longer the case since commit
->> cfcceb7a39fc ("tcp: shrink per-packet memset in
->> __tcp_transmit_skb()"),
->> because the whole ext_copy structure is no longer zeroed by default.
+>> Thank you for your modifications, that's great!
 >>
->> This seems to be the only case where use_map is changed and set
->> afterwards, so initialising the csum field only in this case, along
->> with
->> other fields for this specific case.
-> 
-> Initially, I was wondering if we could skip calling mptcp_make_csum()
-> for data_fin in mptcp_write_options(), similar to how we skip it for
-> the infinite mapping:
-> 
->         /* data_len == 0 is reserved for the infinite mapping,
->          * the checksum will also be set to 0.
->          */
->         put_len_csum(mpext->data_len,
->                      (mpext->data_len ? mptcp_make_csum(mpext) : 0),
->                      ptr);
-> 
-> But I realized that your modification is more straightforward.
-> 
+>> Our CI did some validations and here is its report:
 >>
->> Fixes: cfcceb7a39fc ("tcp: shrink per-packet memset in
->> __tcp_transmit_skb()")
->> Link: https://datatracker.ietf.org/doc/html/rfc8684#section-3.3.3 [1]
->> Link:
->> https://sashiko.dev/#/patchset/20260812-net-next-mptcp-misc-feat-7-3-v1-0-1905a818f6cb%40kernel.org?part=2
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> - KVM Validation: normal (except selftest_mptcp_join): Success! ✅
+>> - KVM Validation: normal (only selftest_mptcp_join): Success! ✅
+>> - KVM Validation: debug (except selftest_mptcp_join): Success! ✅
+>> - KVM Validation: debug (only selftest_mptcp_join): Success! ✅
+>> - KVM Validation: btf-normal (only bpftest_all): Success! ✅
+>> - KVM Validation: btf-debug (only bpftest_all): Success! ✅
 > 
-> Looks good to me!
-> 
->     Reviewed-by: Geliang Tang <geliang@kernel.org>
+> This series looks good to me!
 
 Thank you for the review!
 
 New patches for t/upstream-net and t/upstream:
-- fbdc41264992: mptcp: options: fix uninit-value in mptcp_write_data_fin
-- Results: e9b9aadd7dfb..d251bdc7d65e (export-net)
-- Results: 8cefef708ced..77661003be12 (export)
+- 2f2caaafc5d7: selftests: mptcp: lib: dump nstat for the right test
+- 012008e8fee2: selftests: mptcp: lib: get counters for the right test
+- Results: d251bdc7d65e..5d79f315b7d9 (export-net)
+- Results: 77661003be12..62720ef2600c (export)
 
 Tests are now in progress:
 
 - export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/439ace86ec3085a503e16283cf2719876d9a9d7e/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/68d3c4c19015394240f5eecbe2329ae4cdd933ad/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/7c1c363f2cd4fb1dbd7edb83dc2d57313289d200/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/7900a5c017041f34876f1fd033b88cf994aed099/checks
 
 Cheers,
 Matt
