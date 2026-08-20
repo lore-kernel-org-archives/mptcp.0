@@ -1,310 +1,162 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51DF53B71B0;
-	Thu, 20 Aug 2026 12:51:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9990147ACC5
+	for <mptcp@lists.linux.dev>; Thu, 20 Aug 2026 16:03:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787230280; cv=none; b=jjadXVcvAAbjWeMIGIRu2vj6csW84+itzZPeWNLe428dXXppBYmX42ID9IJsNhiZ42TCNgLFOD5ZcveKwtIinzq3lsWO+aNeU9nUsAMd8WaxLfJpUHy4juaaACbUJZO5LCh+XVY3O//jvMLR+MiRjnaC+HKo3V/2ebOPMKITWjE=
+	t=1787241841; cv=none; b=QjIykbSJqJrMtXPHiOSY7kpunU7mnU4bMkw+GA0baSuiaW1ALdloQkz415Js3GtxhnqWgVfBYcy+MdAkIQz9QqUXRKLsjxIja656spn8Ao5e9G8zcrhEYMIqbc4HUdkk0z/Oea83gq9xfHi2YFlV6zz3l1iR8BFZabKZaA1qY/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787230280; c=relaxed/simple;
-	bh=+NwI7DnwDdTsowchvimqS/YkH1pK80UzasLtbzB4IKk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uam5zmFTh4VWnLfbwX5RNpH495OBTEYuK+61WaYOpomcs5R/CKBu7retcygUYsq5XaMYdNZbd+XhKna7CFp4N3hGo3vH0eii7ORK6tYGIUvxxH1Gc978qWmScfUahk9ji6+snPMTHyN8UwEF+1uTG6xEunWMDw7N6Iw9wbTlLuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mgPgh60B; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787241841; c=relaxed/simple;
+	bh=gQhSMy9VM9ZBiuqB3pME/3XeXjsNEKPI7hNykgtF6gc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=gko3beAPY3wM3CUfKTkYu/rUGDOEKyd754NdWwFHrfk7SoSHB2Va3MTMm02EMiBB7PCNaDuPuiNx0OBZtakP7PFnovWjEx3M08GvjBsw1/IPw7D/WEwr6aa0ctpu0a/ChRRNjUpccSOEqDU4NLC3lxCybUmWmQReuRERzZjJ3Pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fmc5jzT2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mgPgh60B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A92C1F00A3A;
-	Thu, 20 Aug 2026 12:51:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fmc5jzT2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF37C1F000E9;
+	Thu, 20 Aug 2026 16:03:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787230278;
-	bh=dAVoYnB5WFPNY5isnPlH4ce36KYRKmD4kl/YEQC1mAY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=mgPgh60BEcNbFO4U1gRCt9kcXAEhf35i+NR7lVlBIJfL1JrKFx8tZSR2qz91zSrlz
-	 z9lWyjXulNRc788+A/flCzJSMEvOTbqaErTUClDB/Pwf2BHH9kGuE/jQt4VJXeD9W0
-	 aPZYoxKP547bHPpxHi6RvVMcfQFLgiymPSuPUWifcNjpsHodGXHMfRcn71+lqY1iZs
-	 W3NkS6xQCc7i2QT3WxbtlnkVYMhF0msyNhGdfVmSkuKJAImGyyzO/PdZpoHd80Sx6a
-	 kOEvHUrTKfcuaq12LUBuDii7XCYfFDDAel9Royb7P0CD21Kj/xsRXikwNpZ7EhK9tK
-	 UY4XPo9KHgERw==
-Date: Thu, 20 Aug 2026 14:51:13 +0200
-From: Joel Granados <joel.granados@kernel.org>
-To: Mauricio Faria de Oliveira <mfo@igalia.com>
-Cc: Kees Cook <kees@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nsc@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, kernel-dev@igalia.com, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, fsverity@lists.linux.dev, 
-	keyrings@vger.kernel.org, bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, netdev@vger.kernel.org, linux-wpan@vger.kernel.org, 
-	lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org, coreteam@netfilter.org, 
-	linux-sctp@vger.kernel.org, linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org, 
-	bridge@lists.linux.dev, mptcp@lists.linux.dev, rds-devel@oss.oracle.com, 
-	virtualization@lists.linux.dev
-Subject: Re: [PATCH RFC v3 00/13] sysctl: add module aliases
-Message-ID: <bpnqwggtidgiec5akns3fa5edbsvl7xf55dxabtwng2xspy4pn@ue554aii2ngk>
-References: <20260819-sysctl-module-aliases-v3-0-aab90569365d@igalia.com>
+	s=k20260515; t=1787241839;
+	bh=Juiu+jZnExXFp5Y3thLZE3HHicJVl/CLH4Pg4WYN5X8=;
+	h=Date:Subject:To:References:From:In-Reply-To;
+	b=Fmc5jzT2K2oUIZTijbqE4rLDM4ZtpPp3stlOZ8lwwOqa4/zvfkm7FsTn6AHcxFvsE
+	 DXwF1Td8+wHp5ioihuLgNn4yXlcUjtT5WdZ2ST/3ywRhK1WQDiYSx7V8XwI+Uf84MG
+	 Hm9kBE5nobX/iArohdMlwvshbQa/7E1rR1c7xWqob7tnst7c/sdL4gxOmIOFQZeIRI
+	 EbOkuEaXsFGaYM0K3YvI8qYQF7ttRAi7n2/JYGRwjN1L+ouEq4WKhF1i2HKPW2Jde3
+	 hBr7CeTT7rqFOez3oc5eUEU+d9x1BCmVRSEJtLFpXGlpwAnvRCzhbnfJqEgo90KUUP
+	 8XKksjkkQMSxA==
+Message-ID: <ed014fca-ce98-4ea9-bf69-5fa328000877@kernel.org>
+Date: Thu, 20 Aug 2026 18:03:57 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="llmpbpsieq7v5rwe"
-Content-Disposition: inline
-In-Reply-To: <20260819-sysctl-module-aliases-v3-0-aab90569365d@igalia.com>
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net] mptcp: options: fix uninit-value in
+ mptcp_write_data_fin
+Content-Language: fr
+To: Geliang Tang <geliang@kernel.org>, MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260814-mptcp-dfin-csum-v1-1-08d0b9b86bb7@kernel.org>
+ <0680b4cbbcb963684af9101936825fa09b71a335.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <0680b4cbbcb963684af9101936825fa09b71a335.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+Hi Geliang,
 
---llmpbpsieq7v5rwe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 19/08/2026 11:09, Geliang Tang wrote:
+> Hi Matt,
+> 
+> On Fri, 2026-08-14 at 23:38 +0200, Matthieu Baerts (NGI0) wrote:
+>> When sending a DATA_FIN without data, and because the DATA_FIN
+>> occupies
+>> 1 octet of the connection-level sequence space [1], it is then
+>> required
+>> to add a DSS mapping with specific values.
+>>
+>> If the checksum has been negotiated, it also needs to be computed,
+>> and
+>> included in the outgoing packet, and thus the initial csum data needs
+>> to
+>> be reset to 0 as well. This is no longer the case since commit
+>> cfcceb7a39fc ("tcp: shrink per-packet memset in
+>> __tcp_transmit_skb()"),
+>> because the whole ext_copy structure is no longer zeroed by default.
+>>
+>> This seems to be the only case where use_map is changed and set
+>> afterwards, so initialising the csum field only in this case, along
+>> with
+>> other fields for this specific case.
+> 
+> Initially, I was wondering if we could skip calling mptcp_make_csum()
+> for data_fin in mptcp_write_options(), similar to how we skip it for
+> the infinite mapping:
+> 
+>         /* data_len == 0 is reserved for the infinite mapping,
+>          * the checksum will also be set to 0.
+>          */
+>         put_len_csum(mpext->data_len,
+>                      (mpext->data_len ? mptcp_make_csum(mpext) : 0),
+>                      ptr);
+> 
+> But I realized that your modification is more straightforward.
+> 
+>>
+>> Fixes: cfcceb7a39fc ("tcp: shrink per-packet memset in
+>> __tcp_transmit_skb()")
+>> Link: https://datatracker.ietf.org/doc/html/rfc8684#section-3.3.3 [1]
+>> Link:
+>> https://sashiko.dev/#/patchset/20260812-net-next-mptcp-misc-feat-7-3-v1-0-1905a818f6cb%40kernel.org?part=2
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 
+> Looks good to me!
+> 
+>     Reviewed-by: Geliang Tang <geliang@kernel.org>
 
-On Wed, Aug 19, 2026 at 03:16:13PM -0300, Mauricio Faria de Oliveira wrote:
-> This series adds 'sysctl:' aliases to modules that register sysctl tables=
-; e.g.:
->=20
->         $ modinfo ./mpls_router.ko  | grep sysctl:
->         alias:          sysctl:*/net/mpls/conf/*/input
->         alias:          sysctl:*/net/mpls/default_ttl
->         alias:          sysctl:*/net/mpls/ip_ttl_propagate
->         alias:          sysctl:*/net/mpls/platform_labels
->=20
-> It provides a trivial way to map /proc/sys files to modules (not trivial =
-today),
-> and for userspace to handle nonexistent /proc/sys files (e.g., procps's s=
-ysctl
-> and systemd-sysctl applying tunables) with "modprobe sysctl:<...>" and a =
-retry.
->=20
-> This is done almost automatically with register_sysctl(), register_net_sy=
-sctl()
-> and friends as wrappers of MODULE_SYSCTL_TABLE (similar to MODULE_DEVICE_=
-TABLE),
-> which emits symbols for file2alias/modpost to find and parse the sysctl t=
-ables.
->=20
-> The big exception to 'almost' are sysctl tables and paths allocated or de=
-fined
-> at runtime (e.g., per-namespace or per-device), as all information is req=
-uired
-> at build-time. Fortunately, such tables and paths are often based on 'tem=
-plates'
-> which are static and can be used.
->=20
-> This is done by plumbing the template table/path as optional arguments (m=
-acros
-> with default values as default_gfp()), so not to create functions for all=
- cases:
->=20
->         register_sysctl(path, table [, table_tmpl [, path_tmpl]]);
->         register_net_sysctl(net, path, table [, table_tmpl[, path_tmpl]]);
->         register_net_sysctl_sz(net, path, table, size [, table_tmpl[, pat=
-h_tmpl]]);
+Thank you for the review!
 
-The "what" is described but I'm missing more clarity on the "why". Why
-does this need to be trivial? Where is it that you will know the sysctl
-file path of a module and not the module name or alias?
+New patches for t/upstream-net and t/upstream:
+- fbdc41264992: mptcp: options: fix uninit-value in mptcp_write_data_fin
+- Results: e9b9aadd7dfb..d251bdc7d65e (export-net)
+- Results: 8cefef708ced..77661003be12 (export)
 
-Additionally, sysctls are not module specific; they are a way to
-read/write kernel variables. Putting a module specific aspect in the
-function arguments (that needs to be ignored in non-module cases) seems
-wrong. Why not use the module subsys to add sysctl alias instead of the
-sysctl subsys?
+Tests are now in progress:
 
->=20
-> In this series:
-> - Patch 1 prevents a build error later.
-> - Patch 2 adds CONFIG_SYSCTL_MODULE_ALIASES.
-> - Patch 3 adds MODULE_SYSCTL_TABLE().
-> - Patches 4-5 add register_sysctl() wrapper and update some callers.
-> - Patches 6-10 add register_net_sysctl[_sz]() wrappers and update some ca=
-llers.
-> - Patches 11-13 add file2alias support.
->=20
-> Not all maintainers/reviewers (specially for the many changes in net/) are
-> in To/Cc in respect of their time, as this RFC probably needs more general
-> and earlier feedback before settling on specific changes for their review.
-> All lists are included for visibility, though.
->=20
-> Example
-> =3D=3D=3D=3D=3D=3D=3D
->=20
-> To put it all together, 'mpls_router.ko' (used above) from 'net/mpls/af_m=
-pls.c':
->        =20
-> - Tables:
->=20
->         static const struct ctl_table mpls_table[] =3D {
->                 {
->                         .procname       =3D "platform_labels",
->                 ...
->                         .procname       =3D "ip_ttl_propagate",
->                 ...
->                         .procname       =3D "default_ttl",
->                 },
->         };
-<... snip ...>
->=20
-> - Per-file:
->=20
->   Use '#define SYSCTL_MODULE_ALIASES_DISABLE'.
->=20
-> - System-wide:
->=20
->   Maybe something along these lines:
->=20
->         # cat /etc/modprobe.d/no-sysctl.conf
->         alias sysctl:* no-sysctl
->         install no-sysctl /bin/false
->=20
->         # modinfo -F name sysctl:/proc/net/mpls/default_ttl
->         mpls_router
->=20
->         # modprobe sysctl:/proc/net/mpls/default_ttl
->         modprobe: ERROR: Error running install command '/bin/false' for m=
-odule no_sysctl: retcode 1
->         modprobe: ERROR: could not insert 'no_sysctl': Invalid argument
->=20
-> P.S.
-> =3D=3D=3D=3D
->=20
-> I wrote proof-of-concept patches for procps sysctl and systemd-sysctl som=
-e time
-> ago, which worked as expected, i.e., successfully set sysctl tunables whi=
-ch did
-> not exist in /proc/sys, by running 'modprobe sysctl:/proc/sys/...' and re=
-trying.
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/439ace86ec3085a503e16283cf2719876d9a9d7e/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/7c1c363f2cd4fb1dbd7edb83dc2d57313289d200/checks
 
-Do you have links to this? To the old one, not necessarily a new
-version.
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-Best
->=20
-> Should this series eventually be merged, the patches will be submitted up=
-stream
-> as well, for userspace to start consuming it.
->=20
-> Signed-off-by: Mauricio Faria de Oliveira <mfo@igalia.com>
->=20
-> Changes in v3:
-> - All issues were reported by sashiko-bot@kernel.org.
-> - Tested allmodconfig with option enabled on x86_64.
-> - Patch 2:
->   - Fix typo ('s/options/option/').
-> - Patch 3:
->   - Fix usage of __UNIQUE_ID().
->   - Add __must_be_array() in MODULE_SYSCTL_TABLE().
-> - Patch 4:
->   - Remove trailing backslash in register_sysctl().
-> - Patch 6:
->   - Fix missing __register_net_sysctl_sz() in !CONFIG_SYSCTL.
-> - Patch 13:
->   - Fix potential out-of-bounds read in do_sysctl_entry().
->   - Add check for entry size of zero.
-> - Link to v2: https://lore.kernel.org/r/20260818-sysctl-module-aliases-v2=
--0-d5a69dae5798@igalia.com
->=20
-> Changes in v2:
-> - This is based on the series submitted 4 years ago,
->   with Originally-by: tags added in related patches.
-> - Link to v1: https://lore.kernel.org/linux-fsdevel/20220722022416.137548=
--1-mfo@canonical.com/
->=20
-> ---
-> Mauricio Faria de Oliveira (13):
->       keys, pidns, fs/verity, riscv/vector: reorder '#include <linux/sysc=
-tl.h>'
->       proc: add config option SYSCTL_MODULE_ALIASES
->       sysctl, mod_devicetable: add macro MODULE_SYSCTL_TABLE
->       sysctl: add register_sysctl() wrapper for MODULE_SYSCTL_TABLE
->       sysctl, parport: update register_sysctl() callers with template arg=
-uments
->       sysctl, net: add register_net_sysctl{_sz}() wrappers for MODULE_SYS=
-CTL_TABLE
->       sysctl, net: update register_net_sysctl{_sz}() callers with templat=
-e arguments
->       sysctl, net: update register_net_sysctl_sz(ARRAY_SIZE(table_tmpl)) =
-with template arguments
->       sysctl, ipv6: update register_net_sysctl{_sz}() callers with templa=
-te arguments
->       sysctl, net: update register_net_sysctl_sz() edge case
->       sysctl: unrandomize struct ctl_table.procname
->       modpost: move addend_*_rel() calls into addend_rel()
->       modpost: handle MODULE_SYSCTL_TABLE symbols
->=20
->  arch/riscv/kernel/vector.c              |   1 +
->  drivers/net/vrf.c                       |   3 +-
->  drivers/parport/procfs.c                |  26 +++-
->  fs/proc/Kconfig                         |  13 ++
->  fs/verity/init.c                        |   1 +
->  include/linux/key.h                     |   1 -
->  include/linux/mod_devicetable.h         |   7 +
->  include/linux/pid_namespace.h           |   1 +
->  include/linux/sysctl.h                  | 110 ++++++++++++++-
->  include/net/ipv6.h                      |   6 +-
->  include/net/net_namespace.h             |  47 ++++++-
->  net/bridge/br_netfilter_hooks.c         |   3 +-
->  net/core/neighbour.c                    |  11 +-
->  net/core/sysctl_net_core.c              |   3 +-
->  net/ieee802154/6lowpan/reassembly.c     |   2 +-
->  net/ipv4/devinet.c                      |  12 +-
->  net/ipv4/ip_fragment.c                  |   3 +-
->  net/ipv4/route.c                        |   3 +-
->  net/ipv4/sysctl_net_ipv4.c              |   2 +-
->  net/ipv4/xfrm4_policy.c                 |   3 +-
->  net/ipv6/addrconf.c                     |   7 +-
->  net/ipv6/icmp.c                         |   6 +-
->  net/ipv6/netfilter/nf_conntrack_reasm.c |   4 +-
->  net/ipv6/reassembly.c                   |   3 +-
->  net/ipv6/route.c                        |  10 +-
->  net/ipv6/sysctl_net_ipv6.c              |  13 +-
->  net/ipv6/xfrm6_policy.c                 |   3 +-
->  net/mpls/af_mpls.c                      |   9 +-
->  net/mptcp/ctrl.c                        |   3 +-
->  net/netfilter/ipvs/ip_vs_ctl.c          |   4 +-
->  net/netfilter/ipvs/ip_vs_lblc.c         |   3 +-
->  net/netfilter/ipvs/ip_vs_lblcr.c        |   3 +-
->  net/netfilter/nf_conntrack_standalone.c |   5 +-
->  net/netfilter/nf_log.c                  |   9 +-
->  net/rds/tcp.c                           |   4 +-
->  net/sctp/sysctl.c                       |   3 +-
->  net/smc/smc_sysctl.c                    |   2 +-
->  net/sysctl_net.c                        |  10 +-
->  net/unix/sysctl_net_unix.c              |   3 +-
->  net/vmw_vsock/af_vsock.c                |   4 +-
->  net/xfrm/xfrm_sysctl.c                  |   2 +-
->  scripts/mod/devicetable-offsets.c       |   6 +
->  scripts/mod/file2alias.c                | 237 ++++++++++++++++++++++++++=
-++++++
->  scripts/mod/modpost.c                   |  46 ++++---
->  scripts/mod/modpost.h                   |  25 ++++
->  45 files changed, 575 insertions(+), 107 deletions(-)
-> ---
-> base-commit: 2697ef8943c9985c14708a6429e21812693857b2
-> change-id: 20260818-sysctl-module-aliases-2f5801b1eb71
->=20
-> Best regards,
-> --=20
-> Mauricio Faria de Oliveira <mfo@igalia.com>
->=20
-
---llmpbpsieq7v5rwe
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmqG+DkACgkQupfNUreW
-QU9KzQwAhnJv61O/aMHJoyHWwD3V+aqe2io3c+exriyswf+YGkguC5yyn032XIx6
-Ibx+W62lH2/mPJSnsg/YyCksI/isYesqXra6cysOt8n8IVaZbkJp5izyWqjxpPKI
-AMrrhalbZPm1CuhneeQl9RPWYZi3byxOz9XrAaJW3ub+9aT7qMsqdRr2nKeBDKNb
-arfqwZhcigESQ05YkHEDbccIUTNOjk639/fLlILoYDVhpXhUl2p2Th8kZwXf3nAJ
-paRh9FhTA52dNDIA8rakiMk5GFctCcKw4dxujLjdRCjaCcyU1bkhZOhvPGhySCHL
-C6v5ixdwhitvddzp6plBXGEVHohgh9n0WjRJ+eRzZiqK7GA63wM7145k1FSk2Ejr
-ofvPKQQcY1f5O44JM7EhJjzrNUU3rMdxQUXz0iZP6YnYmCym4mZxIXzRxd4uneQT
-jvy6cExOstetUU0qCj9qwQSvTJR8ibnMFDG/d845/FSBYC/vZyotBtkzOh/Eenj9
-K+vFLC58
-=87kF
------END PGP SIGNATURE-----
-
---llmpbpsieq7v5rwe--
