@@ -1,240 +1,205 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-21.mta1.migadu.com [95.215.58.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6541837E5D0;
-	Wed, 19 Aug 2026 18:35:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55313B1008
+	for <mptcp@lists.linux.dev>; Thu, 20 Aug 2026 06:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787164524; cv=none; b=eVMzMgL0vs9HNU0hx1Ji0dlZGqZcqrKTkMKmRSW+S12aYwuaXbYQ+AHgK/VCf6hC7TAvDt6tzcCWPFA27EkRm4JzE0AA2WNrPSYrlMygK0xs+N79dHhV8njmphRtHgprXkvbTzZawyBA0KDQDsPRK5Z9WSYQALk5mvj3OL7guDE=
+	t=1787207788; cv=none; b=gRpdBOxhOHVqm5XlqUaic8YU0ABiOdRq+GGNaFAFYDbzmLfZ+qy3WahQ8ZX6ZgeMm8LJme3cyvDnRI2s+EBg1rUeCGhQV1C96IxtrzxOcohFXTjjOXxSMwb0X7nuOBupq40foo2GyHjnocP6ae2NpQuEsYzazkSkKso/NFSxiEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787164524; c=relaxed/simple;
-	bh=8MhMl8X4jc9W9ZxtdAKGtyoagG1gu9HzjG3UU342WPQ=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=nSms9xjywU6dNP2tCbd5kmlH6raGCY48KPm9053Ah+k4nmRh2dPQ45daahcnZ/jZF+0rw6q2P9onWTbEehvPqlkDUmCpR/L3PetWGEvHI0nnoDBu6pi+65Mixm9RfRHO3f3Rg7O9Sh+Dt+JxBFgtQ1nB01MUoJImoVlQY5kEGO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dBuprqwW; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787207788; c=relaxed/simple;
+	bh=zl4m3TH5c31mEN7uxesWzJFt4/YXRA+Gmugnd1W+xTc=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=EttwcMqbphUAh4plkc1ZX/06w8ioZksfpBNUj03vy433DKOs1szGE72LRdP3UTZZNXYnIe91LI9kJJhUvZWxFDT4hLmo+PacGX49P5r/HseQEWn6+1S6RGO92oczSGdhJ8hw7S24hPkNHYyOgNyY9uqGQCs4+r7iosQuY5+YLfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=i1W1/Gtc; arc=none smtp.client-ip=95.215.58.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dBuprqwW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDC311F000E9;
-	Wed, 19 Aug 2026 18:35:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787164523;
-	bh=esSxMZohsTgFLd7iRjr7PDgvBZTG6p3cNP7Cbpt903U=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=dBuprqwWUPpXbbNR6fbjq43/qZPp07JDBPIb7jZdFFn2TP61MVZw0wS/2IIl1n/iB
-	 elZuEt6qf2p+EnhQ+6H4N7zS7Gnsj6/LRZsIShPX3cVMnZSkNHdqbCZFvAaxFo7VvS
-	 Ld+ui/5ObwFlAi+QUFhucFjOEmo+xzIfZfeye6dP1rGjMY7vRGFpF6JMPnpGtbAn39
-	 BZEXCwy2MlAyXOIfJn5GbAw5KBShPwhjUjl3QAS279zM1lCklV5JnGJnYOpYE9vyW1
-	 mtxYI7unVCsfVzTDAh7niMLwkEoaA6ZctwAPMEnKaJt7YZxmbfd2L5/yOqo95BaftD
-	 f8BVDcJH5aDlw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC v3 13/13] modpost: handle MODULE_SYSCTL_TABLE
- symbols
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Mauricio Faria de Oliveira" <mfo@igalia.com>
-Cc: mptcp@lists.linux.dev, bpf@vger.kernel.org, linux-s390@vger.kernel.org, "Alexander
- Gordeev" <agordeev@linux.ibm.com>, "Heiko Carstens" <hca@linux.ibm.com>, "Vasily
- Gorbik" <gor@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20260819-sysctl-module-aliases-v3-13-aab90569365d@igalia.com>
-References: <20260819-sysctl-module-aliases-v3-0-aab90569365d@igalia.com>
- <20260819-sysctl-module-aliases-v3-13-aab90569365d@igalia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 19 Aug 2026 18:35:22 +0000
-Message-Id: <20260819183522.DDC311F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="i1W1/Gtc"
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=zl4m3TH5c31mEN7uxesWzJFt4/YXRA+Gmugnd1W+xTc=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1787207780; v=1; x=1787812580;
+ b=i1W1/Gtcz1I7g4RhILkdfPsIF1sUe9Lfeal8zrdlCt1cMIMRn0UjT+LF+zra+IuLu++kynjR
+ jjZU2S0EveC5FVu0i3UY/u4jyj+WG0hQ4V23S7jTxAdynsIVLa74DnrEi4DrjKqSMWni9v/kuBx
+ FP9Cj13kC2b+2laaczYBHIy0=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: from webmail.migadu.com (2001:41d0:303:fc7a::)
+	by smtp.migadu.com with ESMTPS id ea843c083ba60cad;
+	Thu, 20 Aug 2026 06:36:20 +0000
+X-Mizu-Trace-ID: ea843c083ba60cad
+X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Date: Thu, 20 Aug 2026 06:36:20 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+From: gang.yan@linux.dev
+Message-ID: <7b85c6e1e4e270bd368fb7dc6d24279c1c20c3b2@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH mptcp-next v3 5/5] Squash to "mptcp: pm: init and release
+ mptcp_pm_ops"
+To: sashiko-reviews@lists.linux.dev
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <20260819131205.3A0201F000E9@smtp.kernel.org>
+References: <20260819125629.49823-1-gang.yan@linux.dev>
+ <20260819125629.49823-6-gang.yan@linux.dev>
+ <20260819131205.3A0201F000E9@smtp.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
-- [High] Double addition of `st_value` when calculating relocation offsets =
-for `SHT_REL` sections.
-- [High] `get_reloc_secindex()` overly restricts relocation sections by man=
-dating the `SHF_INFO_LINK` flag, risking build failures on older toolchains.
-- [High] Unvalidated symbol indices when resolving `.path` and `.procname` =
-pointers can lead to out-of-bounds reads and garbage alias generation.
-- [Medium] `do_sysctl_entries` assumes ELF relocation entries are sorted by=
- `r_offset`, which can prematurely abort the loop and miss sysctl aliases.
---
+August 19, 2026 at 9:12 PM, sashiko-bot@kernel.org mailto:sashiko-bot@ker=
+nel.org  wrote:
 
---- Patch [13]: [PATCH RFC v3 13/13] modpost: handle MODULE_SYSCTL_TABLE sy=
-mbols ---
-commit c9abe55361fd772a202db345bc7ccf9707457699
-Author: Mauricio Faria de Oliveira <mfo@igalia.com>
+> [Severity: Critical]
+> Since this series introduces mptcp_pm_ops lifetime handling and module
+> references, is there a race condition with concurrent MP_JOIN requests?
+>=20
+>=20When an incoming MP_JOIN request is processed in softirq context,
+> subflow_token_join_request() gets the socket via mptcp_token_get_sock()=
+,
+> which doesn't hold lock_sock() or RCU. It then calls:
+>=20
+>=20net/mptcp/pm.c:mptcp_pm_get_local_id() {
+>  ...
+>  return msk->pm.ops->get_local_id(msk, &skc_local);
+> }
+>=20
+>=20Concurrently, if a local user closes the socket and triggers
+> mptcp_disconnect(msk), it calls mptcp_pm_ops_release() which clears the=
+ ops
+> and drops the module reference:
+>=20
+>=20net/mptcp/pm.c:mptcp_pm_ops_release() {
+>  ...
+>  msk->pm.ops =3D NULL;
+>  ...
+>  bpf_module_put(pm_ops, pm_ops->owner);
+> }
+>=20
+>=20Could this lead to a NULL pointer dereference or executing freed modu=
+le code
+> if subflow_token_join_request() executes concurrently with a socket
+> disconnect?
+>=20
 
-modpost: handle MODULE_SYSCTL_TABLE symbols
+Hi=20Matt, Geliang
 
-This commit updates file2alias.c to handle mod_devicetable symbols with
-type sysctl. It introduces helpers to iterate over relocation entries,
-extracting the path and procname fields to generate sysctl module aliases.
+@Matt, Could you help me to trigger the CI?
 
-> diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
-> index 8d36c74dec2d5..abf6ce69831e2 100644
-> --- a/scripts/mod/file2alias.c
-> +++ b/scripts/mod/file2alias.c
-[ ... ]
-> +static bool do_sysctl_entries(struct elf_info *elf, Elf_Shdr *sechdr, El=
-f_Sym *sym,
-> +			      Elf_Addr r_offset, Elf_Addr r_addend, void *data)
-> +{
-> +	struct sysctl_entries *sysctl_entries =3D (struct sysctl_entries *) dat=
-a;
-> +
-> +	/* Skip until .table starts */
-> +	if (r_offset < sysctl_entries->table_offset)
-> +		return false;
-> +
-> +	/* Stop after .table ends */
-> +	if (r_offset >=3D sysctl_entries->table_offset + sysctl_entries->table_=
-size)
-> +		return true;
+And I think it is a pre-existing bug:=20
 
-[Severity: Medium]
-Does this code assume relocation entries are strictly sorted by r_offset?
-The ELF specification does not guarantee that relocation entries are sorted.
-If a compiler emits a relocation for a different variable earlier in the
-section, could this prematurely abort the loop and miss valid sysctl aliase=
-s?
+When=20it calls msk->pm.ops->get_local_id(msk, &skc_local) between
+'mptcp_distroy_common' (which calls mptcp_pm_ops_release) and
+'mptcp_pm_data_reset'. The pm.ops will be NULL and cause a NULL deref, ri=
+ght?
 
-> +
-> +	/* Check for alignment with an array entry (.procname at offset zero) */
-> +	if ((r_offset - sysctl_entries->table_offset) % sysctl_entries->entry_s=
-ize =3D=3D 0) {
-> +
-> +		/* The symbol for .procname points to a string */
-> +		const char *procname =3D (const char *)
-> +				       sym_get_data_addend(elf, sym, r_addend);
+If I'm right, I think we can using rcu to solve this based on this series=
+, like:
 
-[Severity: High]
-Could this read out-of-bounds memory or garbage data if the procname pointer
-references an external string?
+  - Add a helper to get pm.ops, and then call the get_local_id/get_priori=
+ty under rcu_lock:
+'''
++static struct mptcp_pm_ops *mptcp_pm_deref(struct mptcp_sock *msk)
++{
++       struct mptcp_pm_ops *pm_ops;
++
++       pm_ops =3D rcu_dereference(msk->pm.ops);
++       return pm_ops ? pm_ops : &mptcp_pm_kernel;
++}
++
 
-If the symbol section index is SHN_UNDEF or SHN_ABS, sym_get_data_by_offset=
-()
-might read from offset 0 (the ELF header) or an index far outside the bounds
-of the section headers array. Should the symbol's section index be validated
-before fetching the data?
+bool mptcp_pm_is_backup(struct mptcp_sock *msk, struct sock_common *skc)
+=20
+=20       mptcp_local_address((struct sock_common *)skc, &skc_local);
+=20
+-=20      return msk->pm.ops->get_priority(msk, &skc_local);
++       return mptcp_pm_deref(msk)->get_priority(msk, &skc_local);
+ }
+=20
+So=20does the mptcp_pm_get_local_id like this.
 
-> +
-> +		if (!procname) {
-> +			warn("%s [%s] found entry with NULL .procname (skip)\n",
-> +			     sysctl_entries->modsymname, sysctl_entries->mod->name);
-> +			return false;
-> +		}
-> +
-> +		do_sysctl_entry(procname, sysctl_entries->path, sysctl_entries->mod);
-> +	}
-> +
-> +	/* Continue at next entry */
-> +	return false;
-> +}
-[ ... ]
-> +static void do_sysctl_table(const char *modsymname, void *modsymval,
-> +			    Elf_Sym *modsym, struct module *mod,
-> +			    struct elf_info *info)
-> +{
-[ ... ]
-> +	/* The .path symbol can be read directly. */
-> +	sysctl_entries.path =3D (const char *)
-> +			   sym_get_data_addend(info, sysctl_pointers.path_sym,
-> +						sysctl_pointers.path_r_addend);
+static struct mptcp_sock *subflow_token_join_request(struct request_sock =
+*req)
+                return NULL;
+        }
+=20
++=20      rcu_read_lock();
+        local_id =3D mptcp_pm_get_local_id(msk, (struct sock_common *)req=
+);
+        if (local_id < 0) {
+                SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MPJOINNOIDFOUND);
++               rcu_read_unlock();
+                sock_put((struct sock *)msk);
+                return NULL;
+        }
+        subflow_req->local_id =3D local_id;
+        subflow_req->request_bkup =3D mptcp_pm_is_backup(msk, (struct soc=
+k_common *)req);
++       rcu_read_unlock();
+=20
+'''
 
-[Severity: High]
-Similarly to the procname symbol above, is it possible for path_sym to be
-SHN_UNDEF or SHN_ABS? Reading it without validating the section index could
-cause modpost to crash or embed garbage aliases.
+=20 - Refactor the mptcp_pm_ops_init to support reuse socket, and put the
+    mptcp_pm_ops_release into mptcp_destroy:
+'''
+ static void mptcp_pm_ops_init(struct mptcp_sock *msk,
+                              struct mptcp_pm_ops *pm_ops)
+ {
++       struct mptcp_pm_ops *old =3D msk->pm.ops;
++
+        if (!pm_ops || !bpf_try_module_get(pm_ops, pm_ops->owner)) {
+                pr_warn_once("pm %s fails, fallback to default pm", pm_op=
+s->name);
+                pm_ops =3D &mptcp_pm_kernel;
+        }
+=20
+-=20      msk->pm.ops =3D pm_ops;
++       if (old) {
++               if (old =3D=3D pm_ops) {
++                       mptcp_pm_ops_release(msk);
++               } else {
++                       rcu_assign_pointer(msk->pm.ops, pm_ops);
++                       synchronize_rcu();
++                       bpf_module_put(old, old->owner);
++               }
++       } else {
++               rcu_assign_pointer(msk->pm.ops, pm_ops);
++       }
++
+        if (msk->pm.ops->init)
+                msk->pm.ops->init(msk);
+=20
+-=20      pr_debug("pm %s initialized\n", pm_ops->name);
++       pr_debug("pm %s initialized\n", msk->pm.ops->name);
+ }
+=20
 
-> +
-> +	/* The .table symbol is the struct ctl_table array. */
-> +	sysctl_entries.table_offset =3D sysctl_pointers.table_sym->st_value +
-> +				   sysctl_pointers.table_r_addend;
-> +
-> +	/* The .entry_size value must not be zero. */
-> +	if (sysctl_entries.entry_size =3D=3D 0) {
-> +		error("%s [%s.ko] invalid entry size (zero)\n",
-> +		      modsymname, mod->name);
-> +		return;
-> +	}
-> +
-> +	/* Add module aliases for entries in the struct ctl_table array. */
-> +	for_each_reloc(info, shndx, do_sysctl_entries, &sysctl_entries);
-> +}
-[ ... ]
-> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-> index d18a87b882a67..10eb7273cdd81 100644
-> --- a/scripts/mod/modpost.c
-> +++ b/scripts/mod/modpost.c
-> @@ -340,6 +340,13 @@ void *sym_get_data(const struct elf_info *info, cons=
-t Elf_Sym *sym)
->  				      sym->st_value);
->  }
-> =20
-> +void *sym_get_data_addend(const struct elf_info *info, const Elf_Sym *sy=
-m,
-> +			  Elf_Addr r_addend)
-> +{
-> +	return sym_get_data_by_offset(info, get_secindex(info, sym),
-> +				      sym->st_value + r_addend);
-> +}
 
-[Severity: High]
-Will this result in a double-addition of st_value for SHT_REL sections?
+static=20void mptcp_destroy(struct sock *sk)
+        /* allow the following to close even the initial subflow */
+        msk->free_first =3D 1;
+        mptcp_destroy_common(msk);
++       mptcp_pm_ops_release(msk);
+        sk_sockets_allocated_dec(sk);
+ }
 
-In for_each_reloc(), addend_rel() is called for SHT_REL sections, which
-already adds sym->st_value to the addend. Adding it again here computes
-the offset as 2 * st_value + addend, which could read from the wrong offset
-or cause an out-of-bounds access.
+'''
 
-> +
->  static const char *sech_name(const struct elf_info *info, Elf_Shdr *sech=
-dr)
->  {
->  	return sym_get_data_by_offset(info, info->secindex_strings,
-[ ... ]
-> diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
-> index a98811552bd29..409fdfc844c4b 100644
-> --- a/scripts/mod/modpost.h
-> +++ b/scripts/mod/modpost.h
-> @@ -186,6 +186,25 @@ static inline unsigned int get_secindex(const struct=
- elf_info *info,
->  	return index;
->  }
-> =20
-> +/* Find the relocation section for the section of a symbol */
-> +static inline unsigned int get_reloc_secindex(const struct elf_info *inf=
-o,
-> +					      const Elf_Sym *sym)
-> +{
-> +	unsigned int sym_secindex =3D get_secindex(info, sym);
-> +	unsigned int secindex;
-> +
-> +	for (secindex =3D 0; secindex < info->num_sections; secindex++) {
-> +		Elf_Shdr *shdr =3D &info->sechdrs[secindex];
-> +
-> +		if ((shdr->sh_type =3D=3D SHT_RELA || shdr->sh_type =3D=3D SHT_REL) &&
-> +		    (shdr->sh_flags & SHF_INFO_LINK) &&
-> +		    shdr->sh_info =3D=3D sym_secindex)
-> +			return secindex;
-> +	}
+But I think it is a large fix, do you have any idea?
 
-[Severity: High]
-Is it safe to mandate the SHF_INFO_LINK flag for relocation sections?
+And as I said at the beginning, it seeems like not a issue attached to th=
+is issue,
+could you review the v3 code with ignoring it ?
 
-Older toolchains or alternative linkers might omit this flag even when
-sh_info is correctly populated. If this returns SHN_UNDEF, the build will
-fail unconditionally due to the error() call in do_sysctl_table().
+Thanks
+Gang
 
-> +
-> +	return SHN_UNDEF;
-> +}
-> +
->  /*
->   * If there's no name there, ignore it; likewise, ignore it if it's
->   * one of the magic symbols emitted used by current tools.
-[ ... ]
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260819-sysctl-mod=
-ule-aliases-v3-0-aab90569365d@igalia.com?part=3D13
+> --=20
+>=20Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/2026081912562=
+9.49823-1-gang.yan@linux.dev?part=3D5
+>
