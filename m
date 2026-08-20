@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61BC53E3D95;
-	Thu, 20 Aug 2026 11:06:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E973425892;
+	Thu, 20 Aug 2026 11:18:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787223987; cv=none; b=ApwS2eIFN2HK6OS9uYaNqemnRKA6+p4bQaUrRrvWcKP3o+f1+Gaoly4RbQxNENobnV8mX5Te4HzkgcqoWjGr5ZuygFB3eAjT4OJGjNvT7abuIwb8qMMG9Xx790V+/UK+2cUhlZSOXIbiYXWHBlU6sgDNxwoAKobTuYO6jgGze3A=
+	t=1787224694; cv=none; b=FaV9x2PP+OnbWccqGh/8IW3X3CU0WbHlnIK3g9KFEor3KtofkXNG4pw6Cv+3qPXDhzMsjY4uyNxKKiDx3O51cojadFwHB6z1hcSJAODNSaYpXcsw4TUlXE2Nvo7WG25dK404jdbUWxz6VTDhjoGOi2DlEAB1RJeUPrDnJisRDAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787223987; c=relaxed/simple;
-	bh=f2FdYqKKiYNChib1cHpBpuIV9SFOoggSwnxewz4A31M=;
+	s=arc-20240116; t=1787224694; c=relaxed/simple;
+	bh=sLTaeZfP0SG2jq+VzwAPPjwq/xPY7NET5HHO3jIHyZ4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s5QpBuq5Vt4NHYROtXFeQfHZFQBc9xySFn39723pA8ByHfK8L6c1vqIRpdzl4LgQVbKRctmdF5OeDbk5gZfxpHk4FW4XaBQa9cl4XUT3pVumUNBf2FHVw5w/bPxQ2OANmGNeniIPZ7LSNDdOU/9rEth9sO52cF0b4ecD5a+Isqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WcwvmnG4; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=KYVuDW3bwe7C/BgYak4IsTPxN0WM1+G75jVcOFeKp8TCJ0r/WHbXHfS1lDTNxbH2uctu6pHWMKdKpqzbvfTZjSH3QCpXoAvyYiDrYeXJd295JG8ExjRHfraDerMUaPpugYGYnmWSIEYnrdrXJZTXnd36iMM8aBQW6mQ20aZnug4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WMGQLara; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WcwvmnG4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAF521F00A3A;
-	Thu, 20 Aug 2026 11:06:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WMGQLara"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 723001F00A3A;
+	Thu, 20 Aug 2026 11:18:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787223985;
-	bh=3+6mlSi2lY6fi+GLOAuc57eBU64IlSnWMGCsUDAH6/I=;
+	s=k20260515; t=1787224690;
+	bh=bCrsoBXRJVNNKyFZtLbvL/RvGlM5V+pKLgvQiK3QdJ0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=WcwvmnG4ccL7UK1rc+3aSQlG+bmCg/OxsJDKA+3cmDrcwyy2pxDdWRblL40Ce6wFe
-	 tdeYUqhlSlPLO3xarPjZzeS9tjHdegibV5+My3ySvOC+fWaMPkqUcGeNIl2pFaei2A
-	 RVWt7/ZSQlbqm/Kwn2nWSJTg4n0sfh8J+YydxmKI9M0SUx836Mx/YjcjfdLMFjZ7im
-	 bJngLHpTNHNJ3gcRcAQz3n2zrnXEXywgNYuwR2e7fY1q85p1wrYkjfnAPrPIaQft2T
-	 elveuHJrEpJV1IawQC9WNcMz/NsaHJZ6MzLFky5dzkBIWgYqvyNufFm/f5es04L08V
-	 C2tmB+u0k+nGA==
-Message-ID: <1e62d538-721f-486b-bb91-64864b3c5c8d@kernel.org>
-Date: Thu, 20 Aug 2026 13:06:22 +0200
+	b=WMGQLaraXwhvQ6ctmEWK4O6l2q7qX+JWZDFGCUZdSwjzm46WHuRlDdoh9mj6LAELI
+	 iDBi2E9kHBCCQRNtZAOVELk4i1dockWYMTvndCDuZ2Frz97FtnXEmvoNFEaaeSnAIF
+	 tZSROEAmyTRyPzw45WMbYoWQDPl8GQ6v/oGb3pq8YrVagDIhpzFOlvCcg815YqcJBd
+	 2d9ttK5bPcw8hlIqpLU2k5d8cH3Myda6rQLn8TstKzquz1rATMGd+0pun4rCSzhZKT
+	 zYayIVZqqRrr0s8NyA/TzUkhdPCG4rjGA6XToXFiEhd06CM5S2J0jBhcnm5Sfwl4CH
+	 42EqEd+DTDoZA==
+Message-ID: <21819722-39c1-4a69-abc7-98ec0f06fafd@kernel.org>
+Date: Thu, 20 Aug 2026 13:18:07 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,17 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 5/5] Squash to "mptcp: pm: init and release
- mptcp_pm_ops"
+Subject: Re: [PATCH net v4 1/2] mptcp: hold MP_JOIN msk ref when cloning reqsk
 Content-Language: fr
-To: gang.yan@linux.dev, sashiko-reviews@lists.linux.dev
-Cc: mptcp@lists.linux.dev
-References: <20260819125629.49823-1-gang.yan@linux.dev>
- <20260819125629.49823-6-gang.yan@linux.dev>
- <20260819131205.3A0201F000E9@smtp.kernel.org>
- <7b85c6e1e4e270bd368fb7dc6d24279c1c20c3b2@linux.dev>
- <f9fe2eb6-e9ef-42d0-8a24-8f5c550f0c78@kernel.org>
- <74e63e9935103e9fab16ea81e0ea7480f9c7d736@linux.dev>
+To: Wei Ren <weir@nebusec.ai>, sashiko-reviews@lists.linux.dev
+Cc: mptcp@lists.linux.dev, netdev@vger.kernel.org
+References: <cover.1786497414.git.yuantan098@gmail.com>
+ <e3aeafa4dc2afb7ea36143eae163635eee23395c.1786497414.git.yuantan098@gmail.com>
+ <20260813065630.908AC1F000E9@smtp.kernel.org>
+ <CADfOeh6F-PngQB-F4dYds2CpqBCTfJHpBYLD+0ZhcWNiBtPOeA@mail.gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -91,49 +88,178 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <74e63e9935103e9fab16ea81e0ea7480f9c7d736@linux.dev>
+In-Reply-To: <CADfOeh6F-PngQB-F4dYds2CpqBCTfJHpBYLD+0ZhcWNiBtPOeA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 20/08/2026 12:16, gang.yan@linux.dev wrote:
-> August 20, 2026 at 5:07 PM, "Matthieu Baerts" <matttbe@kernel.org mailto:matttbe@kernel.org?to=%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org%3E > wrote:
+Hi Ruide,
+
+(+cc netdev ML)
+
+Thank you for having replied to Sashiko's review.
+
+On 20/08/2026 12:58, Wei Ren wrote:
+> On Thu, Aug 13, 2026 at 06:56:30AM +0000, sashiko-bot@kernel.org wrote:
+>> This is a pre-existing issue, but does this clone helper also need to
+>> handle the migration of token_node for MP_CAPABLE requests?
 > 
->> Can you first check if this can happen? I thought that
->> mptcp_destroy_common would first close all subflows, remove the token,
->> then release everything linked to the PM → so the PM will no longer be
->> called at that point for this msk, right? (I didn't check)
->>
-> 
-> Hi Matt,
-> 
-> Thans for looking at this and kindly remind.
-> Yes, I just checked the order you described is right, but I thought it
-> could happen in such order:
-> 
-> CPU A (softirq)                                 CPU B(disconnect)
-> ->subflow_token_join_request          
-> ->mptcp_token_get_sock()
->                                               ->mptcp_destroy_common()
->                                               ->pm_ops_release
-> ->mptcp_pm_get_local_id():
->   msk->pm.ops->get_local_id()   <- NULL deref
+> That is what patch 2/2 of this series does:
+Indeed, Sashiko Gemini didn't look at the next patch. Maybe adding a
+note in the commit message to say that a similar issue is visible with
+MP_CAPABLE and addressed in the next patch? Still, that doesn't feel
+natural to add that...
 
-Ah yes, indeed, subflow_token_join_request doesn't hold the msk lock.
+Do you mind also looking at Clashiko's review, please? The suggestion of
+replacing sock_hold() by refcount_inc_not_zero() might be valid (to be
+double checked):
 
-> WDYT?  And, I think the window seems too narrow, we may not see it in practice,
-> maybe a NULL check is enough? 
+https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1786497414.git.yuantan098%40gmail.com
 
-Would it be safe to have a NULL check? Could you have something like this?
+------------------------------ 8< ---------------------------------
+> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+> index 6257459bcee2..896f472dcba2 100644
+> --- a/net/ipv4/inet_connection_sock.c
+> +++ b/net/ipv4/inet_connection_sock.c
 
-CPU A                              CPU B
--> if (ops)
-                                    -> mptcp_destroy_common()
-                                    -> pm_ops_release()
-->     msk->pm.ops->get_local_id()
+[ ... ]
 
-The BPF module might have been unloaded.
+> @@ -961,6 +962,9 @@ static struct request_sock *inet_reqsk_clone(struct request_sock *req,
+>  		rcu_assign_pointer(tcp_sk(nreq->sk)->fastopen_rsk, nreq);
+>  	}
+>  
+> +	if (rsk_is_mptcp(req))
+> +		mptcp_subflow_reqsk_clone(req, nreq);
+> +
+>  	return nreq;
+>  }
+>  
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index e1f20ff8fdb4..8f8e1229766d 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -47,6 +47,17 @@ static void subflow_req_destructor(struct request_sock *req)
+>  	mptcp_token_destroy_request(req);
+>  }
+>  
+> +void mptcp_subflow_reqsk_clone(struct request_sock *req,
+> +			       struct request_sock *new_req)
+> +{
+> +	struct mptcp_subflow_request_sock *subflow_req;
+> +
+> +	subflow_req = mptcp_subflow_rsk(new_req);
+> +
+> +	if (subflow_req->msk)
+> +		sock_hold((struct sock *)subflow_req->msk);
+> +}
 
-(Again, I didn't check in details, only looking at your reply.)
+Discovered by: gpt-5-6-sol, opus-5 · Missed by: opus-4-7, sashiko-gemini
+
+Can the sock_hold() here run on an msk whose last reference has already
+been dropped?
+
+The pointer being held was snapshotted by the plain (unsafe_)memcpy() in
+inet_reqsk_clone(), and the cloning CPU owns no reference to that msk at
+this point.  The clone happens optimistically in reqsk_timer_handler()
+before any ownership arbitration:
+
+net/ipv4/inet_connection_sock.c:reqsk_timer_handler() {
+	...
+	nreq = inet_reqsk_clone(req, nsk);
+	if (!nreq)
+		goto drop;
+	...
+	/* Even if we can clone the req, we may need not retransmit any more
+	 * SYN+ACKs (nreq->num_timeout > max_syn_ack_retries, etc), or another
+	 * CPU may win the "own_req" race so that inet_ehash_insert() fails.
+	 */
+}
+
+So the third-ACK path can be running on the same request concurrently.
+There, the request's msk reference is handed to the child and can then be
+released synchronously:
+
+net/mptcp/subflow.c:subflow_syn_recv_sock() {
+	...
+		/* move the msk reference ownership to the subflow */
+		subflow_req->msk = NULL;
+		ctx->conn = (struct sock *)owner;
+
+		if (subflow_use_different_sport(owner, sk)) {
+			...
+			if (!mptcp_pm_announced_has_ssk(owner, sk)) {
+				...
+				goto dispose_child;
+			}
+		}
+
+		if (!mptcp_finish_join(child)) {
+			...
+			goto dispose_child;
+		}
+}
+
+and dispose_child reaches mptcp_subflow_drop_ctx():
+
+	if (ctx->conn)
+		sock_put(ctx->conn);
+
+If that put (or a later teardown of the joined subflow) is the last
+reference, for example because userspace closed the MPTCP connection
+concurrently, then the refcount_inc() in sock_hold() lands on freed memory
+and on a zero refcount, which is the refcount_warn_saturate() "addition on
+0; use-after-free" case.
+
+The window between the memcpy() snapshot and this sock_hold() is not
+bounded either: in the TFO branch of inet_reqsk_clone() it even contains
+spin_lock_bh(&fastopenq->lock).
+
+Would refcount_inc_not_zero() be more appropriate here, with
+new_req->msk cleared when it fails so subflow_req_destructor() does not put
+a reference that was never taken?  Alternatively, could the hold be taken
+under the same exclusion that performs the ownership transfer in
+subflow_syn_recv_sock()?
+
+Also, the helper takes req but never uses it, so the original request is
+not re-validated at all.  Is the req argument intended to be used?
+
+
+Discovered by: opus-5 · Missed by: opus-4-7, gpt-5-6-sol, sashiko-gemini · Confirmed by: gpt-5-6-sol
+
+This is a pre-existing issue and is not introduced by this patch, but as
+long as this hook is the designated fixup point for cloned subflow
+requests: inet_reqsk_clone() also byte-copies subflow_req->token_node, the
+hlist_nulls node that mptcp_token_new_request() linked into the MPTCP token
+bucket for MP_CAPABLE requests, and this version of the helper repairs only
+->msk.
+
+The generic detach helper does not cover it either:
+
+net/ipv4/inet_connection_sock.c:reqsk_migrate_reset() {
+	req->saved_syn = NULL;
+	...
+}
+
+With only this patch applied, the clone's token_node looks hashed while it
+is not reachable from the bucket chain, so after a successful migration the
+surviving clone trips the pedantic check in mptcp_token_accept():
+
+net/mptcp/token.c:mptcp_token_accept() {
+	...
+	/* pedantic lookup check for the moved token */
+	pos = __token_lookup_req(bucket, req->token);
+	if (!WARN_ON_ONCE(pos != req))
+		hlist_nulls_del_init_rcu(&req->token_node);
+}
+
+and the token ends up no longer reserved.
+
+This is resolved later in the same series: the following patch, "mptcp: fix
+MP_CAPABLE token migration when cloning reqsk", adds
+mptcp_token_move_request() and calls it from mptcp_subflow_reqsk_clone(),
+so the state does not exist at the end of the series.  Would it be worth
+noting the ordering dependency between the two patches in the changelog,
+given the Cc: stable tag on this one?
+------------------------------ 8< ------------------------------
 
 Cheers,
 Matt
