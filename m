@@ -1,237 +1,142 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2606418A46
-	for <mptcp@lists.linux.dev>; Thu, 20 Aug 2026 10:58:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.170
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787223532; cv=pass; b=OY2ZTfrXUg5TPXIpGmB4Xuq4Qbi+eVnubDHXOFhaxCfFSTcfxttGd7FKYsDEfCeLQb8IrcQ9JEyf48Ku+GoJ9JHsjGBiLLziqMR/JeA8guD/bZvUrsaffrDhe3f9UYDUMmDFPANk11D4ZH7uXE/BLM5bKlYqV02NzILZPeRtMSE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787223532; c=relaxed/simple;
-	bh=P2lCZ64G1tHsyCUN9IGEtfoznMOL0waPTppEGNX4G6o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ryHKdcLdFi0/iLhpaDSs3wacP2YQO9L4kiBL9FQhOYVwh5nBy/h6u0zd+IsPT/mbQJAyBOrz871GDJhX8TJlGqKWP+9z9N2TcscMUmqqFqXJYuBaD7NLvqjnJEeHB7+OBv83thG42lf50FEwXdBokL4RYxSp78KECyAiDtV7x3Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nebusec.ai; spf=pass smtp.mailfrom=nebusec.ai; dkim=pass (2048-bit key) header.d=nebusec.ai header.i=@nebusec.ai header.b=b0echz2l; arc=pass smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nebusec.ai
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nebusec.ai
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61BC53E3D95;
+	Thu, 20 Aug 2026 11:06:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787223987; cv=none; b=ApwS2eIFN2HK6OS9uYaNqemnRKA6+p4bQaUrRrvWcKP3o+f1+Gaoly4RbQxNENobnV8mX5Te4HzkgcqoWjGr5ZuygFB3eAjT4OJGjNvT7abuIwb8qMMG9Xx790V+/UK+2cUhlZSOXIbiYXWHBlU6sgDNxwoAKobTuYO6jgGze3A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787223987; c=relaxed/simple;
+	bh=f2FdYqKKiYNChib1cHpBpuIV9SFOoggSwnxewz4A31M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s5QpBuq5Vt4NHYROtXFeQfHZFQBc9xySFn39723pA8ByHfK8L6c1vqIRpdzl4LgQVbKRctmdF5OeDbk5gZfxpHk4FW4XaBQa9cl4XUT3pVumUNBf2FHVw5w/bPxQ2OANmGNeniIPZ7LSNDdOU/9rEth9sO52cF0b4ecD5a+Isqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WcwvmnG4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nebusec.ai header.i=@nebusec.ai header.b="b0echz2l"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2cfbbdfa60bso15380295ad.3
-        for <mptcp@lists.linux.dev>; Thu, 20 Aug 2026 03:58:44 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787223523; cv=none;
-        d=google.com; s=arc-20260327;
-        b=XMUYiZ9xDCsQt38bi50kBm3Dh7gKjj2tS3GUCbSOT8/R5H3Gy2f8mEEEp/jUYQrCIS
-         co3ZbePi6y5UFjR5DKqLJhxSeWNCEUvD98IYS5PphCFpFIZvVoRazyUBeqgr0QOgXdV5
-         9ks/Xq+jqF6uP/XEY1criM2ymRdx6ACvLkf88E+w35CNe7H/fkGpP2Xt8Fu+vce60OTX
-         vIZI5by2GLjPOLviDUD5fdsnUVxkywM/YEp8b8h20zd3O8k4xtbYfB53VX+0paPSCO1R
-         xtvd2n6kaVw5CX71CVhxzCQDrFkBPmXv401A7pqHperoyQD+y8mMYkqARJVbnj6Awaau
-         4v0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Cw0p0Zs17OGqL0CpVaUylVnGrKO85tM788BbVvkohK0=;
-        fh=CB5UpkY+O88awVVzOZ6u9gwGodJr4E7oL8gDALqWdIs=;
-        b=PbOX+Ef5lfj/SlcMtsS36u22jiBEJ6kXN0xabm/zJlgFLTqc0Jxni/jEEZOnTuSRp5
-         m8oDOfZRAV0VDK0srUtBIEPV70YtFtrHIWJ0TBPdPL6wt40Ectc0Qw2uavza0jCExtej
-         kwi9+iesxb6SnhbhcBWC6NYPody8rsthQQiUv6IQUdawJWhVts4rKXdHnPLQEWa4dcMZ
-         bNIsrl3Da08DzGM5YujYb6TzVwkfckGd0dFI+jZQM2pZ5lQHZDqAijARDfnCfgDnLMlm
-         8w7voM1Q7qfwlYERZ99r/YBEBua+dlEkujapNh7H9BQhYzMdlGIo7gHW7fbn+EGjGDEc
-         ZGMg==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=nebusec.ai; s=google; t=1787223523; x=1787828323; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Cw0p0Zs17OGqL0CpVaUylVnGrKO85tM788BbVvkohK0=;
-        b=b0echz2lLVH4TW9txjCi+FUzheZOOcTe0eUvAW2+cVBXU+hAZZNHwjxpPWagu04s3Q
-         krj8nbA9ekKTvjk5pv5GdHJtdKMUif+aqloTZNZ0vNvXJw5FukNYO4zBNjVmOFtewqdA
-         gzJsG5OUS70kex2z/K2Wkg0RCLocZP8YJoT4M+d+Ba39Xq8QvNTzS/QNLsj7IyYkksri
-         IefLapBs0WB8qaWS2p/syWMXGXgptxTpQiEAJKCobbDYvbJVawvNl+bR/k2p0JL/E3Kz
-         AXLaRVXiNa/krI6qyfaU5gh4Psiq/tOYgneZnF9NtkL340VA8wutDW+AUhhR7KBUfP+O
-         5tPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787223523; x=1787828323;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Cw0p0Zs17OGqL0CpVaUylVnGrKO85tM788BbVvkohK0=;
-        b=e9GxMWRy/3W7JzX3KMujsQqmtN3t0gKFXLJsdeeU2sK5MDV7ATW3PqPNozXYBVTmSD
-         iFEWBj8osXgWwdzZ2pfvAdE6lGa+tTLW4AJQ21MDtvxG06YvR76z/wx8Roov9Cvsbx+f
-         oPWEvqMu9qEdINZGySFwgqpL76SO9wbddZUweA3ojNLwck4jpIikS1QwdM+ppJnampn6
-         Z8A0ixJooyZ87vbURPBh5h6YZpFIPp1cuAgh27MY+q8uCGwe//OQT23mERg4OuPA6Dxw
-         MB+vwIlpaaxEJZr6xd7xGScapmyMsCLiBzwXC36JdXnfZSex56o7mae+Rs2JXDMd/TQ3
-         E97g==
-X-Gm-Message-State: AFuF++nyLFEVYTC8kdUWiNiBCoD7BkIAkRSoY2tgjaAL02IEMHyJhGf8
-	FRptm8neX2cEM7CSRIIOyYvpO2JLGJOWVAox/lqjIX8Y9fHZzOdaZmFqOWML7Uqh2Ovx4BArXCF
-	d3JHel2C+dwtSId+Bn2opzL8sMKQtdn/Ws+okkd2WkjE=
-X-Gm-Gg: AR+sD10B2dcgTgRrZ3PZhF7CiM6tpamaTM+MNGjG1IwyEEd6vdZSnEP8ggW/hml+Fis
-	ZBH9bIzuD1Ty0dO/k+tdiSdZMPu7yfwxKnvOx+sYbmKoinusTmojOSn8xUTPliBt8E4A3Xl8Lp9
-	28HFVSasamBLOz8RCvq1BJUwJJ5FuCs5BbUo8/MZn89vyi+Fl9J7uEWveasg3QQ6+MOnBdOQoj1
-	aUXy379oN/ZTDb1fuRh5JKTve/ZVcGJQqdSOAPl4A6qTBDujaFF7+swMKhL1/YaYz22h1y4FoZs
-	T4nmu71VkXMaheHsSZOdqbrajERLQTQdoOoRv13EWXla
-X-Received: by 2002:a17:902:f706:b0:2ca:1b97:70c5 with SMTP id
- d9443c01a7336-2d5fd5e5d4fmr224168925ad.4.1787223522392; Thu, 20 Aug 2026
- 03:58:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WcwvmnG4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAF521F00A3A;
+	Thu, 20 Aug 2026 11:06:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787223985;
+	bh=3+6mlSi2lY6fi+GLOAuc57eBU64IlSnWMGCsUDAH6/I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=WcwvmnG4ccL7UK1rc+3aSQlG+bmCg/OxsJDKA+3cmDrcwyy2pxDdWRblL40Ce6wFe
+	 tdeYUqhlSlPLO3xarPjZzeS9tjHdegibV5+My3ySvOC+fWaMPkqUcGeNIl2pFaei2A
+	 RVWt7/ZSQlbqm/Kwn2nWSJTg4n0sfh8J+YydxmKI9M0SUx836Mx/YjcjfdLMFjZ7im
+	 bJngLHpTNHNJ3gcRcAQz3n2zrnXEXywgNYuwR2e7fY1q85p1wrYkjfnAPrPIaQft2T
+	 elveuHJrEpJV1IawQC9WNcMz/NsaHJZ6MzLFky5dzkBIWgYqvyNufFm/f5es04L08V
+	 C2tmB+u0k+nGA==
+Message-ID: <1e62d538-721f-486b-bb91-64864b3c5c8d@kernel.org>
+Date: Thu, 20 Aug 2026 13:06:22 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1786497414.git.yuantan098@gmail.com> <e3aeafa4dc2afb7ea36143eae163635eee23395c.1786497414.git.yuantan098@gmail.com>
- <20260813065630.908AC1F000E9@smtp.kernel.org>
-In-Reply-To: <20260813065630.908AC1F000E9@smtp.kernel.org>
-From: Wei Ren <weir@nebusec.ai>
-Date: Thu, 20 Aug 2026 18:58:50 +0800
-X-Gm-Features: AcwNN1WYyW-8z_95osKXmxJZNbMRNkNVWcxZ23BokIsMPC8k01UieylBReKqe-Q
-Message-ID: <CADfOeh6F-PngQB-F4dYds2CpqBCTfJHpBYLD+0ZhcWNiBtPOeA@mail.gmail.com>
-Subject: Re: [PATCH net v4 1/2] mptcp: hold MP_JOIN msk ref when cloning reqsk
-To: sashiko-reviews@lists.linux.dev
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v3 5/5] Squash to "mptcp: pm: init and release
+ mptcp_pm_ops"
+Content-Language: fr
+To: gang.yan@linux.dev, sashiko-reviews@lists.linux.dev
 Cc: mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <20260819125629.49823-1-gang.yan@linux.dev>
+ <20260819125629.49823-6-gang.yan@linux.dev>
+ <20260819131205.3A0201F000E9@smtp.kernel.org>
+ <7b85c6e1e4e270bd368fb7dc6d24279c1c20c3b2@linux.dev>
+ <f9fe2eb6-e9ef-42d0-8a24-8f5c550f0c78@kernel.org>
+ <74e63e9935103e9fab16ea81e0ea7480f9c7d736@linux.dev>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <74e63e9935103e9fab16ea81e0ea7480f9c7d736@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Aug 13, 2026 at 06:56:30AM +0000, sashiko-bot@kernel.org wrote:
-> This is a pre-existing issue, but does this clone helper also need to
-> handle the migration of token_node for MP_CAPABLE requests?
+On 20/08/2026 12:16, gang.yan@linux.dev wrote:
+> August 20, 2026 at 5:07 PM, "Matthieu Baerts" <matttbe@kernel.org mailto:matttbe@kernel.org?to=%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org%3E > wrote:
+> 
+>> Can you first check if this can happen? I thought that
+>> mptcp_destroy_common would first close all subflows, remove the token,
+>> then release everything linked to the PM → so the PM will no longer be
+>> called at that point for this msk, right? (I didn't check)
+>>
+> 
+> Hi Matt,
+> 
+> Thans for looking at this and kindly remind.
+> Yes, I just checked the order you described is right, but I thought it
+> could happen in such order:
+> 
+> CPU A (softirq)                                 CPU B(disconnect)
+> ->subflow_token_join_request          
+> ->mptcp_token_get_sock()
+>                                               ->mptcp_destroy_common()
+>                                               ->pm_ops_release
+> ->mptcp_pm_get_local_id():
+>   msk->pm.ops->get_local_id()   <- NULL deref
 
-That is what patch 2/2 of this series does:
+Ah yes, indeed, subflow_token_join_request doesn't hold the msk lock.
 
-  https://lore.kernel.org/all/6abadc83940143e099fa3b54ec6dea2fb95da090.1786=
-497414.git.yuantan098@gmail.com/
+> WDYT?  And, I think the window seems too narrow, we may not see it in practice,
+> maybe a NULL check is enough? 
 
-It extends this helper with mptcp_token_move_request(), which re-hashes
-the token node onto the clone with hlist_nulls_replace_init_rcu() under
-the token bucket lock, so the clone becomes the single token-table owner
-and the original is left unhashed.  mptcp_token_accept() and
-mptcp_token_destroy_request() re-check ownership under the same lock.
+Would it be safe to have a NULL check? Could you have something like this?
 
-The same question was raised on v3, and v4 was restructured to answer it.
-Reviewing 1/2 in isolation makes it read as an unfixed issue.
+CPU A                              CPU B
+-> if (ops)
+                                    -> mptcp_destroy_common()
+                                    -> pm_ops_release()
+->     msk->pm.ops->get_local_id()
 
-Two details of the analysis are inaccurate, for the archive:
+The BPF module might have been unloaded.
 
-> ... leading to hash list corruption and a reliable kernel warning
+(Again, I didn't check in details, only looking at your reply.)
 
-There is no list corruption.  Nothing in the bucket chain points at the
-clone's copied token_node, so __token_lookup_req() can never return it,
-and both list mutations are gated on "pos =3D=3D subflow_req".  The stale
-node is never passed to hlist_nulls_del_init_rcu().  The splat is the
-only observable effect: the panic_on_warn DoS holds, the corruption does
-not.
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-> permanently lose the MP_CAPABLE token from the hash table, breaking
-> subsequent MP_JOIN requests for that connection.
-
-The msk insertion sits outside the WARN_ON_ONCE() guard:
-
-if (!WARN_ON_ONCE(pos !=3D req))
-hlist_nulls_del_init_rcu(&req->token_node);
-__sk_nulls_add_node_rcu((struct sock *)msk, &bucket->msk_chain);
-
-so the msk still enters msk_chain, mptcp_token_get_sock() keeps finding
-it, and MP_JOIN for that connection keeps working.  What does drift is
-bucket->chain_len: a net -1 per migrated connection that completes the
-handshake.  It is a signed int, so it goes negative and
-__token_bucket_busy()'s TOKEN_MAX_CHAIN_LEN cap stops limiting that
-bucket.  Patch 2/2 fixes that as well.
-
-Thanks,
-Ruide
-
-
-<sashiko-bot@kernel.org> =E4=BA=8E2026=E5=B9=B48=E6=9C=8813=E6=97=A5=E5=91=
-=A8=E5=9B=9B 14:56=E5=86=99=E9=81=93=EF=BC=9A
->
-> Thank you for your contribution! Sashiko AI review found 1 potential issu=
-e(s) to consider:
->
-> Pre-existing issues:
-> - [High] TCP request migration clones MPTCP request sockets without updat=
-ing or re-hashing the `token_node` list pointers for MP_CAPABLE requests, l=
-eading to hash list corruption and a reliable kernel warning (`WARN_ON_ONCE=
-`) that can cause a Denial of Service.
-> --
->
-> --- Patch [1]: [PATCH net v4 1/2] mptcp: hold MP_JOIN msk ref when clonin=
-g reqsk ---
-> commit 2b2ebcd4a3ea728b0d1c8d74d1e09d5e75f65848
-> Author: Ruide Cao <caoruide123@gmail.com>
->
-> mptcp: hold MP_JOIN msk ref when cloning reqsk
->
-> TCP request migration clones pending request sockets with
-> inet_reqsk_clone(). For MPTCP MP_JOIN requests this byte-copies
-> subflow_req->msk, but the clone does not take its own reference.
->
-> Closes: https://lore.kernel.org/all/20260804095051.715355-1-david.lee@tra=
-ilofbits.com/
->
-> > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> > index e1f20ff8fdb42..8f8e1229766d4 100644
-> > --- a/net/mptcp/subflow.c
-> > +++ b/net/mptcp/subflow.c
-> > @@ -47,6 +47,17 @@ static void subflow_req_destructor(struct request_so=
-ck *req)
-> >       mptcp_token_destroy_request(req);
-> >  }
-> >
-> > +void mptcp_subflow_reqsk_clone(struct request_sock *req,
-> > +                            struct request_sock *new_req)
-> > +{
-> > +     struct mptcp_subflow_request_sock *subflow_req;
-> > +
-> > +     subflow_req =3D mptcp_subflow_rsk(new_req);
-> > +
-> > +     if (subflow_req->msk)
-> > +             sock_hold((struct sock *)subflow_req->msk);
-> > +}
->
-> [Severity: High]
-> This is a pre-existing issue, but does this clone helper also need to
-> handle the migration of token_node for MP_CAPABLE requests?
->
-> When inet_reqsk_clone() performs a byte-copy of the request socket, it
-> copies the token_node list pointers (pprev and next) as-is:
->
-> net/ipv4/inet_connection_sock.c:inet_reqsk_clone() {
->     ...
->         unsafe_memcpy(&nreq_sk->sk_dontcopy_end, &req_sk->sk_dontcopy_end=
-,
->                       req->rsk_ops->obj_size - offsetof(struct sock, sk_d=
-ontcopy_end),
->                       /* alloc is larger than struct, see above */);
->     ...
-> }
->
-> Because the list pointers are copied without re-hashing or updating them,
-> the original request is destroyed and removes itself from the token hash
-> table, leaving the clone with a stale pprev pointer.
->
-> When the cloned request is eventually destroyed,
-> mptcp_token_destroy_request() checks hlist_nulls_unhashed(), which return=
-s
-> false due to the stale pointer. It then fails to find the token in the
-> bucket, which triggers a WARN_ON_ONCE:
->
-> net/mptcp/token.c:mptcp_token_destroy_request() {
->     ...
->         pos =3D __token_lookup_req(bucket, subflow_req->token);
->         if (!WARN_ON_ONCE(pos !=3D subflow_req)) {
->                 hlist_nulls_del_init_rcu(&pos->token_node);
->                 bucket->chain_len--;
->         }
->     ...
-> }
->
-> This could cause a kernel panic on systems with panic_on_warn enabled, an=
-d
-> permanently lose the MP_CAPABLE token from the hash table, breaking
-> subsequent MP_JOIN requests for that connection.
->
-> --
-> Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1786497414.=
-git.yuantan098@gmail.com?part=3D1
