@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9B2375ABE
-	for <mptcp@lists.linux.dev>; Fri, 21 Aug 2026 06:32:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8773749FE
+	for <mptcp@lists.linux.dev>; Fri, 21 Aug 2026 06:42:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787293931; cv=none; b=uFh1M8BU1YWoji47clOZk0E6QiEp9ZkBvMWNplbTD9ibPwVIg1+Vj94wriaOzfNILEBoV4/it/KuVob8uvAsFiUe3qL4t46lwT8maieifuaurOuIJIEsBGpDWTmbsf7KJkcNqo13aoEIzJNREFdxT33uY+LbVEVj3y5lkH7FqDo=
+	t=1787294539; cv=none; b=Zfk3hs8wdNA1t0M9JlKFzItZituUAqd4d4awxsaZoj8eaoJFR88gge56utsX32NY+8UEDuB0UOSXkWuZGJ7FNPTnbDMXdTwTALeyBmU9+igI0sj+EIoy6sZ9q9f7u2BJ2IfpuqoospUEu8SSl96YIlwYZrh/XinfERwnQg/fw8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787293931; c=relaxed/simple;
-	bh=f0H6LZOlDbu9A6PRvCA4nQ6KiBemt/gzSdpf8yZp6G8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Ej193vK+qzUjy/23kAfAgZl/0smTvGV7TLu0+U5ENxsryBXf+yjPEH/ELokXzuDnn7DwHssCa10VthoQP0dExrvgW8FzwP95iN/0wRpow9orRCji6/jeoGCtZinvbgplX9XduE8cbleii/Vft44PP0t1TzxhV2uag9eTbBW/SXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ei2n5hlC; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787294539; c=relaxed/simple;
+	bh=Az/OQf0nHjHjUtKVlfAUKWa6QwJcBP0GXfg2EeXn9p8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=mrGnxRySMILfYZSkvDKiq1JDpmW5+IL4ceCjJk5gWNkEWj3Me+ravPd3dTuoPbIHy3fXEQxGb2FEpJAes9K009cgmSgsyQCL+JodVhDzyfhXO1wJHTIvgpdQLgwa8xVB35rttsqd3wTW3Djuh7Cmet/zUqINKC20DCTbId2+JE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kxliEO+I; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ei2n5hlC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E01C71F000E9;
-	Fri, 21 Aug 2026 06:32:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kxliEO+I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCD531F000E9;
+	Fri, 21 Aug 2026 06:42:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787293928;
-	bh=8qVy6KnSUYM25Iz4GMiZeO2CFKr482CEvuqy7OC0pc0=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=Ei2n5hlCZtGTb6cQkVBE05h+QLRp3D4AnGrSL6I/UQuD+WBmAipZKAI3pIL4SWrI1
-	 4gYvc2Cw58hYm7a2Gs9DrOZ0VjN9wUcqEplqwZuwR4QJ/cQede7CTSBVIiULzijjEG
-	 5IGyTLxHojgWM09O8Ur3QkpXEEUihD7QaZcoULUxNNRJ907DMTnbTkDP6X8AAxV6Gu
-	 iibWbMVP4QcJEC3HOBMITigw4Ofu9lRNKVA0nmH9WBM/CgkMD16OxDbIcG54CBluR/
-	 blufOfcQ43LeHLzroCgaoOtl2qc4Dv9GrCVKljs5lx3iYTEZfUuS5zMq197eXJPTa9
-	 kdxSTuMB1sfzg==
-Message-ID: <4a6a4ef8-4b3e-4717-9dfe-4f6d7fc14b77@kernel.org>
-Date: Fri, 21 Aug 2026 08:32:05 +0200
+	s=k20260515; t=1787294537;
+	bh=vaiGnu9fOsoWvREvZKM8rHbNpCh+mFChmsQGjo3fcZ8=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To;
+	b=kxliEO+IglSiFGIRAht3CpuGNzBGlX4csny141ysD/Y31V1MRzL73MDqF+w/o9ocs
+	 arBMfGV3AJWxS57XL2HAzIWwR7RneIXB1sWroAEUFfcQ8j50gxUVrufOppVGdMZbDG
+	 VcV8qZNyWL2BHTRrdcodaB4f+ktRS25IuTHiNszX1Prx80YSONcVZhVPIUCKqQIQLx
+	 qkDyzjKsj6pPOx1oJ5TKFkPKZC+oNJhsNxUVvykRCYlTf0rN8keD9ofpDstB6wwbSz
+	 xmfMRFhSHoAkPjexGRHu3/uZWLdKwjAsPXFBn6T1+N7Z/K8Q/8WTkZ55yJaL0S/caz
+	 OrFqhD/MwvDLg==
+Message-ID: <54694029-fa40-4596-8fff-87939d982bbe@kernel.org>
+Date: Fri, 21 Aug 2026 08:42:15 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 0/3] mptcp: avoid uninitialised read with MPJ
- with SYN cookies
-Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-References: <20260818-mptcp-cook-reqb-v1-0-052dea9a7f20@kernel.org>
- <e9ea4afd-f549-1fa5-3eac-910b12ad7e4d@gmail.com>
- <0234c8e501a033d22733138b77ce19270fed7401.camel@kernel.org>
+Subject: Re: [PATCH resend mptcp-net 0/4] mptcp: a few fixes
+To: Paolo Abeni <pabeni@redhat.com>, Geliang Tang <geliang@kernel.org>
+References: <cover.1786713351.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
+Content-Language: fr
+Cc: mptcp@lists.linux.dev
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,57 +85,38 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <0234c8e501a033d22733138b77ce19270fed7401.camel@kernel.org>
+In-Reply-To: <cover.1786713351.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Paolo, Geliang,
 
-On 21/08/2026 07:37, Geliang Tang wrote:
-> Hi Matt,
+On 14/08/2026 15:38, Paolo Abeni wrote:
+> This is mostly a follow-up to the recent OoO queue pruning series.
+> Explicitly targeting net as we have already a lot of patches pending for
+> net-next, and no need to rush IMHO.
 > 
-> On Tue, 2026-08-18 at 19:20 +0000, MPTCP CI wrote:
->> Hi Matthieu,
->>
->> Thank you for your modifications, that's great!
->>
->> Our CI did some validations and here is its report:
->>
->> - KVM Validation: normal (except selftest_mptcp_join): Success! ✅
->> - KVM Validation: normal (only selftest_mptcp_join): Success! ✅
->> - KVM Validation: debug (except selftest_mptcp_join): Success! ✅
->> - KVM Validation: debug (only selftest_mptcp_join): Unstable: 1
->> failed test(s): selftest_mptcp_join ⚠️ 
->> - KVM Validation: btf-normal (only bpftest_all): Success! ✅
->> - KVM Validation: btf-debug (only bpftest_all): Success! ✅
+> First 2 patches addresses explicit comments from sashiko, 3rd one is a
+> somewhat unrelated cleanup I stumbled upon while implementing patch 4.
 > 
-> This series looks good to me!
-
-Thank you for the review!
+> The last patch fixes another thing implided by sashiko while reviewing
+> the mentioned series.
+Now in our tree:
 
 New patches for t/upstream-net and t/upstream:
-- cba636a2dcab: mptcp: syncookies: remember the request backup flag
-- 413a21edd334: mptcp: subflow: no need to copy thmac during ulp_clone
-- Results: eeb8d1d44a74..6bb246941708 (export-net)
-- Results: 41733b9765ba..aa4bae9bfb46 (export)
+- 6280287c0ef2: mptcp: being below memory limit is a likely() condition
+- e66f97348c99: mptcp: avoid pruning for OoW data
+- cdd6976ab76f: mptcp: remove unneeded READ_ONCE() annotation
+- 285d84ee4b60: mptcp: do not reschedule the RTX timer for fallback sockets
+- Results: 6bb246941708..70d6bffa3696 (export-net)
+- Results: 2f5abecdd265..0afd98c500bf (export)
 
 Tests are now in progress:
 
 - export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/d9e7fa174e7b3c63fafb99573c8c7e1a8ce53b06/checks
-
-New patches for t/upstream:
-- 631307ac3350: mptcp: remove thmac from subflow ctx
-- Results: aa4bae9bfb46..2f5abecdd265 (export)
-
-Tests are now in progress:
-
+https://github.com/multipath-tcp/mptcp_net-next/commit/71a020c17359779f858419627d7933171dafee9a/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/c2aae803b2f7c409357b41bf3e0dbd7eda58a4ee/checks
-
-> nit: You could squash patch 2 into patch 3 if you want, but totally up
-> to you.
-I didn't: the 2nd patch is -net material, while the 3rd one is for -next.
+https://github.com/multipath-tcp/mptcp_net-next/commit/8ff26825a673fb98ff86413940a0254088cf0bd3/checks
 
 Cheers,
 Matt
