@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810573769EC
-	for <mptcp@lists.linux.dev>; Fri, 21 Aug 2026 06:06:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9B2375ABE
+	for <mptcp@lists.linux.dev>; Fri, 21 Aug 2026 06:32:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787292379; cv=none; b=dxCP74/zQ2E9pgCpS76RAq1Y3D03TzJRlf9znq39MsRSbG201QF2aNlaQ4wttv0t7Voc1Xa32qL9FTZ4hn/cRUT47uQqtMUF9RnLuiRuJul7kkN6gOaieHhTZ/iFUjJQuoTUNIs8c3IG0yoKHcb8zdk3jkA5ocQV31Ui/v1Yas4=
+	t=1787293931; cv=none; b=uFh1M8BU1YWoji47clOZk0E6QiEp9ZkBvMWNplbTD9ibPwVIg1+Vj94wriaOzfNILEBoV4/it/KuVob8uvAsFiUe3qL4t46lwT8maieifuaurOuIJIEsBGpDWTmbsf7KJkcNqo13aoEIzJNREFdxT33uY+LbVEVj3y5lkH7FqDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787292379; c=relaxed/simple;
-	bh=cfY7piX0gVQySYnoJfrUVt886KEcSs/ZZfzVuYjotNA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=rNlFRGdx4A7ZtuyJAtAUHRDqOBzld6Nf36NnvVM2cFzJz+JPD3O6p0VwIYQd5EOPz6GPn7p++4UTrddk9QxQwieJbSNJmRZN8PlbiCxjsdPxWuAzrXHIYaHQk5TwVfCgSrxkuWIfSHz4S6wfUsgY1M77v0enna8qbzmhx6cZp8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=esEHPvPW; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787293931; c=relaxed/simple;
+	bh=f0H6LZOlDbu9A6PRvCA4nQ6KiBemt/gzSdpf8yZp6G8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Ej193vK+qzUjy/23kAfAgZl/0smTvGV7TLu0+U5ENxsryBXf+yjPEH/ELokXzuDnn7DwHssCa10VthoQP0dExrvgW8FzwP95iN/0wRpow9orRCji6/jeoGCtZinvbgplX9XduE8cbleii/Vft44PP0t1TzxhV2uag9eTbBW/SXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ei2n5hlC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="esEHPvPW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B06931F00A3A
-	for <mptcp@lists.linux.dev>; Fri, 21 Aug 2026 06:06:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ei2n5hlC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E01C71F000E9;
+	Fri, 21 Aug 2026 06:32:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787292378;
-	bh=zAUGEETDJT81QD+KzmhGmxr42GzaWIleSZotKx100Uc=;
-	h=Date:Subject:From:To:References:In-Reply-To;
-	b=esEHPvPWJTuKw78pzbt0WwAAY92R4OZR98I9OhDYO6eulKcEEmiF/7ea4uo7Dd9c8
-	 Kq9RtQEZkYJVK+QlUwydc68ED5sVZKXNTB/T7b1ihbN+P8oVn+9Om01+fYCkji7qBC
-	 K/i33bBsPcZ6bUc1z/Lst3rhmUCMlHcFZznq8hKDJ4XQOqIOgNw5m3l6qTuq0s8jXG
-	 HYW63f9kayoshszGJIY66JB4XvdZ3OTuVKmEbeZywMnJFk1PIiHoF3Oh3kUkgY+Mhh
-	 muhFM08zVQaaNhjmtERkp8/B9w7mAQPoKOH+0W53Xk4xR9loQSP3DNRxX+y5toFgnz
-	 SpcvSJ4ytsvlQ==
-Message-ID: <36dd824a-aaac-4302-87dc-11f83c91082e@kernel.org>
-Date: Fri, 21 Aug 2026 08:06:16 +0200
+	s=k20260515; t=1787293928;
+	bh=8qVy6KnSUYM25Iz4GMiZeO2CFKr482CEvuqy7OC0pc0=;
+	h=Date:Subject:To:References:From:In-Reply-To;
+	b=Ei2n5hlCZtGTb6cQkVBE05h+QLRp3D4AnGrSL6I/UQuD+WBmAipZKAI3pIL4SWrI1
+	 4gYvc2Cw58hYm7a2Gs9DrOZ0VjN9wUcqEplqwZuwR4QJ/cQede7CTSBVIiULzijjEG
+	 5IGyTLxHojgWM09O8Ur3QkpXEEUihD7QaZcoULUxNNRJ907DMTnbTkDP6X8AAxV6Gu
+	 iibWbMVP4QcJEC3HOBMITigw4Ofu9lRNKVA0nmH9WBM/CgkMD16OxDbIcG54CBluR/
+	 blufOfcQ43LeHLzroCgaoOtl2qc4Dv9GrCVKljs5lx3iYTEZfUuS5zMq197eXJPTa9
+	 kdxSTuMB1sfzg==
+Message-ID: <4a6a4ef8-4b3e-4717-9dfe-4f6d7fc14b77@kernel.org>
+Date: Fri, 21 Aug 2026 08:32:05 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 2/3] mptcp: subflow: no need to copy thmac
- during ulp_clone
+Subject: Re: [PATCH mptcp-net 0/3] mptcp: avoid uninitialised read with MPJ
+ with SYN cookies
 Content-Language: fr
-From: Matthieu Baerts <matttbe@kernel.org>
-To: MPTCP Linux <mptcp@lists.linux.dev>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 References: <20260818-mptcp-cook-reqb-v1-0-052dea9a7f20@kernel.org>
- <20260818-mptcp-cook-reqb-v1-2-052dea9a7f20@kernel.org>
- <ca872631-015b-48d2-a4f3-6803e9a46008@kernel.org>
+ <e9ea4afd-f549-1fa5-3eac-910b12ad7e4d@gmail.com>
+ <0234c8e501a033d22733138b77ce19270fed7401.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,31 +87,57 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <ca872631-015b-48d2-a4f3-6803e9a46008@kernel.org>
+In-Reply-To: <0234c8e501a033d22733138b77ce19270fed7401.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 21/08/2026 08:03, Matthieu Baerts wrote:
-> Hello,
-> 
-> On 18/08/2026 19:55, Matthieu Baerts (NGI0) wrote:
->> 'thmac' is not used after that point.
->>
->> Indeed, subflow_ulp_clone() is called when the request on the passive
->> side is over, so when the truncated HMAC is no longer needed.
->>
->> Note that in case of SYN cookies, thmac will not be initialised. So
->> better to remove it to avoid a warning for reading uninitialised data.
-> 
-> Note that this modification is harmful in production, and that's why I
-> didn't add a Fixes tag initially. But it is still important to have it
-> to prevent warnings about reading uninitialised data. In this case, I
-> think it is still good to add a Fixes tag not to have reports on stable.
-> 
-> Fixes: 263e1201a2c3 ("mptcp: consolidate synack processing.")
-Or even from the beginning in fact:
+Hi Geliang,
 
-Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
+On 21/08/2026 07:37, Geliang Tang wrote:
+> Hi Matt,
+> 
+> On Tue, 2026-08-18 at 19:20 +0000, MPTCP CI wrote:
+>> Hi Matthieu,
+>>
+>> Thank you for your modifications, that's great!
+>>
+>> Our CI did some validations and here is its report:
+>>
+>> - KVM Validation: normal (except selftest_mptcp_join): Success! ✅
+>> - KVM Validation: normal (only selftest_mptcp_join): Success! ✅
+>> - KVM Validation: debug (except selftest_mptcp_join): Success! ✅
+>> - KVM Validation: debug (only selftest_mptcp_join): Unstable: 1
+>> failed test(s): selftest_mptcp_join ⚠️ 
+>> - KVM Validation: btf-normal (only bpftest_all): Success! ✅
+>> - KVM Validation: btf-debug (only bpftest_all): Success! ✅
+> 
+> This series looks good to me!
+
+Thank you for the review!
+
+New patches for t/upstream-net and t/upstream:
+- cba636a2dcab: mptcp: syncookies: remember the request backup flag
+- 413a21edd334: mptcp: subflow: no need to copy thmac during ulp_clone
+- Results: eeb8d1d44a74..6bb246941708 (export-net)
+- Results: 41733b9765ba..aa4bae9bfb46 (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/d9e7fa174e7b3c63fafb99573c8c7e1a8ce53b06/checks
+
+New patches for t/upstream:
+- 631307ac3350: mptcp: remove thmac from subflow ctx
+- Results: aa4bae9bfb46..2f5abecdd265 (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/c2aae803b2f7c409357b41bf3e0dbd7eda58a4ee/checks
+
+> nit: You could squash patch 2 into patch 3 if you want, but totally up
+> to you.
+I didn't: the 2nd patch is -net material, while the 3rd one is for -next.
 
 Cheers,
 Matt
