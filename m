@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C15A025228C
-	for <mptcp@lists.linux.dev>; Fri, 21 Aug 2026 06:03:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810573769EC
+	for <mptcp@lists.linux.dev>; Fri, 21 Aug 2026 06:06:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787292207; cv=none; b=ENUCNVYUmTeO8sm+RRgLDBWycwGoAGFyMGHH03ycryFF3e5zqaEAJg4tEChfXgSbX2MeoD2tX88HApLUNpsfadr5Yx4Dv4CMlSYUdfcnXfNYxxcDor4Fka9/R4vmRT8sWx2MDVA225Ta0rrPU77IoE29/Lg1T6kEo76qVlWJNLg=
+	t=1787292379; cv=none; b=dxCP74/zQ2E9pgCpS76RAq1Y3D03TzJRlf9znq39MsRSbG201QF2aNlaQ4wttv0t7Voc1Xa32qL9FTZ4hn/cRUT47uQqtMUF9RnLuiRuJul7kkN6gOaieHhTZ/iFUjJQuoTUNIs8c3IG0yoKHcb8zdk3jkA5ocQV31Ui/v1Yas4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787292207; c=relaxed/simple;
-	bh=dvFVMTjiyBivvMZQCAUvHXSJM1QN3Uwt75drJh4n6A4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=MswSl/0R8SO3EpljCMWrnqxZHpJSI8MLAsubQqoaRDdKioqo/CpKC/2pT4psimJZ2NpFU0OQYB4W7qSpCG75gZlkHAN7hv9SbNJjHF6oY2raY9NEdsNJsTqocIlRVzPK5iGgd42wdkqDctVVC6IACqqZcCWiGOD2eoH8LTkPY+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZlUQk3mQ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787292379; c=relaxed/simple;
+	bh=cfY7piX0gVQySYnoJfrUVt886KEcSs/ZZfzVuYjotNA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=rNlFRGdx4A7ZtuyJAtAUHRDqOBzld6Nf36NnvVM2cFzJz+JPD3O6p0VwIYQd5EOPz6GPn7p++4UTrddk9QxQwieJbSNJmRZN8PlbiCxjsdPxWuAzrXHIYaHQk5TwVfCgSrxkuWIfSHz4S6wfUsgY1M77v0enna8qbzmhx6cZp8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=esEHPvPW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZlUQk3mQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E88A71F000E9
-	for <mptcp@lists.linux.dev>; Fri, 21 Aug 2026 06:03:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="esEHPvPW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B06931F00A3A
+	for <mptcp@lists.linux.dev>; Fri, 21 Aug 2026 06:06:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787292206;
-	bh=TC8I/Jf1A0tJ2FEAcjU7BbGepBsuK6G16w+Tqw048Xk=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=ZlUQk3mQDin2U/yuH4DlBhKb2YnREpx/Ya9kjS25/8xsNznvzLzvxmBaf2DD/YQ2+
-	 5i7H1NkNiiah3+qOFHvdMmm3M7m93vHju1a7b+jPiiCadUqYVNHnoV+hYtNPbWos0b
-	 ZfEb1J6yqEFuTUWTAW4K1uT4Z5meRZfrd1o6Mz2Ge0JBx/F35L0IWXXK9YWqskSyCn
-	 NXHt+HOrYjQcW8JoogbIGKU+GNxa29isYWSMROCZw1NGIabPtSvBymUfPr3CDJRCq1
-	 BTLc7couQRfRjSIqsSVhpOEUBA38uCcBzJ/PayqoLYEzZrF1VAZNEqRWEv1WOcXiR4
-	 oHVPtTO2gfTqw==
-Message-ID: <ca872631-015b-48d2-a4f3-6803e9a46008@kernel.org>
-Date: Fri, 21 Aug 2026 08:03:23 +0200
+	s=k20260515; t=1787292378;
+	bh=zAUGEETDJT81QD+KzmhGmxr42GzaWIleSZotKx100Uc=;
+	h=Date:Subject:From:To:References:In-Reply-To;
+	b=esEHPvPWJTuKw78pzbt0WwAAY92R4OZR98I9OhDYO6eulKcEEmiF/7ea4uo7Dd9c8
+	 Kq9RtQEZkYJVK+QlUwydc68ED5sVZKXNTB/T7b1ihbN+P8oVn+9Om01+fYCkji7qBC
+	 K/i33bBsPcZ6bUc1z/Lst3rhmUCMlHcFZznq8hKDJ4XQOqIOgNw5m3l6qTuq0s8jXG
+	 HYW63f9kayoshszGJIY66JB4XvdZ3OTuVKmEbeZywMnJFk1PIiHoF3Oh3kUkgY+Mhh
+	 muhFM08zVQaaNhjmtERkp8/B9w7mAQPoKOH+0W53Xk4xR9loQSP3DNRxX+y5toFgnz
+	 SpcvSJ4ytsvlQ==
+Message-ID: <36dd824a-aaac-4302-87dc-11f83c91082e@kernel.org>
+Date: Fri, 21 Aug 2026 08:06:16 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,10 +38,11 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-net 2/3] mptcp: subflow: no need to copy thmac
  during ulp_clone
 Content-Language: fr
+From: Matthieu Baerts <matttbe@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 References: <20260818-mptcp-cook-reqb-v1-0-052dea9a7f20@kernel.org>
  <20260818-mptcp-cook-reqb-v1-2-052dea9a7f20@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <ca872631-015b-48d2-a4f3-6803e9a46008@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,27 +87,31 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260818-mptcp-cook-reqb-v1-2-052dea9a7f20@kernel.org>
+In-Reply-To: <ca872631-015b-48d2-a4f3-6803e9a46008@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
-
-On 18/08/2026 19:55, Matthieu Baerts (NGI0) wrote:
-> 'thmac' is not used after that point.
+On 21/08/2026 08:03, Matthieu Baerts wrote:
+> Hello,
 > 
-> Indeed, subflow_ulp_clone() is called when the request on the passive
-> side is over, so when the truncated HMAC is no longer needed.
+> On 18/08/2026 19:55, Matthieu Baerts (NGI0) wrote:
+>> 'thmac' is not used after that point.
+>>
+>> Indeed, subflow_ulp_clone() is called when the request on the passive
+>> side is over, so when the truncated HMAC is no longer needed.
+>>
+>> Note that in case of SYN cookies, thmac will not be initialised. So
+>> better to remove it to avoid a warning for reading uninitialised data.
 > 
-> Note that in case of SYN cookies, thmac will not be initialised. So
-> better to remove it to avoid a warning for reading uninitialised data.
+> Note that this modification is harmful in production, and that's why I
+> didn't add a Fixes tag initially. But it is still important to have it
+> to prevent warnings about reading uninitialised data. In this case, I
+> think it is still good to add a Fixes tag not to have reports on stable.
+> 
+> Fixes: 263e1201a2c3 ("mptcp: consolidate synack processing.")
+Or even from the beginning in fact:
 
-Note that this modification is harmful in production, and that's why I
-didn't add a Fixes tag initially. But it is still important to have it
-to prevent warnings about reading uninitialised data. In this case, I
-think it is still good to add a Fixes tag not to have reports on stable.
-
-Fixes: 263e1201a2c3 ("mptcp: consolidate synack processing.")
+Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
 
 Cheers,
 Matt
