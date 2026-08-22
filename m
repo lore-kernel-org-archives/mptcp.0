@@ -1,125 +1,125 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD84A3AD524;
-	Sat, 22 Aug 2026 16:57:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A3F33AD9B
+	for <mptcp@lists.linux.dev>; Sat, 22 Aug 2026 22:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787417877; cv=none; b=PWZICcON09mlh5yYX/YH6fC62fZRhJtCWPtdvTy44GHSe1jyAaEBJg1ci3BLCBE9fdahUicl7fXZMCuFoto6zifmgPZDEX38vqKFRaOCqhHiqUU92trMf3l93bcCoHOObgOgBpNKmDG613M70t99z/L0chXIoAaeeaD1SLlBeas=
+	t=1787437184; cv=none; b=GYTS4mdjAs6ixYNFpus76cOX2LgnBtrLrx489rWIJ0cdFFNs+/Gklxf4nAauqfpUnQLibenjOFRfAR1p9ba3FJVtWxw0HlTq8V71nowJn+ayyFdU21tTGxfIZFjC6y3eRQHR12/qYoDDVcIhsaUxUuCYBxfou6IRq5QGsbS8kgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787417877; c=relaxed/simple;
-	bh=ZyUMEwGyn3c46u0NkjvE6TPVTBK/Rka0z+HlcRnaztA=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=qLYInuKIw+SQfQQdUEA6QJ5BE9lNUnohz34zWlmlq6GoA+Ss2Ip8jEdG+6MV+qa4FuG6nZ/t5rSgIsVxGFCr7v8zekAjK6GxXLVbL32Ftv72AZp8uf+YK6K/dKQ3RqGrH/ut64Nho4GM7YWorUyfW7ZZU4yLtlIXAyo4N+SXkgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=ZbJz80fF; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="ZbJz80fF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:Message-ID:Subject:Cc:To
-	:From:Date:MIME-Version:From:Reply-To;
-	bh=yYKcqboW2hgBCm128jlsW+fEFCrg/+/6fC0pPe2118M=; b=ZbJz80fFfEN7nkrQcV8gZZ+oUE
-	hK4b5lCtnutJj1yjrMLG1BeMt0eRSLfkdrmKM4eHnKGLezlJuWTp5PE4Yk5I8WwkhFUD/NLwoWW4n
-	Kgoi6umxhGYQrdvfuOl1eQJfSB2LqC2y7kE7ojq4xPJnthVMSJ1B/QHaWoEf/g77lioyDCXJrLvb/
-	oQl5Mf6I5KIUU5NF4+0OK4F/1HCTyG3AyKjVGEAWQTKkqOyLofBPXDv5TiWlXFVXOhetvM/QCUWOj
-	m7wOT9QmpBgbf2IXG+RYeBlApw4DIxLHSB8HUlP5n8fh+hpB0Atv0lItGBl1gr+NsfEKmAfTF0dcm
-	tc6UfpYw==;
-Received: from maestria.local.igalia.com ([192.168.10.14] helo=mail.igalia.com)
-	by fanzine2.igalia.com with esmtps 
-	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1wxp25-007Utx-Ae; Sat, 22 Aug 2026 18:57:25 +0200
-Received: from webmail.service.igalia.com ([192.168.21.45])
-	by mail.igalia.com with esmtp (Exim)
-	id 1wxp24-0013TF-9m; Sat, 22 Aug 2026 18:57:25 +0200
-Received: from localhost ([127.0.0.1] helo=webmail.igalia.com)
-	by webmail.service.igalia.com with esmtp (Exim 4.98.2)
-	(envelope-from <mfo@igalia.com>)
-	id 1wxp24-00000002uHU-0yE7;
-	Sat, 22 Aug 2026 18:57:24 +0200
+	s=arc-20240116; t=1787437184; c=relaxed/simple;
+	bh=2IFIrXXQx/YTLSk7qgjW+/GYCEMiGGrTEdWZJHI1F3M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PDf4AazOGK2ZtDcdJhMosvNVj4X8ZfdfT3BgHOCErwI1tcrwxnBj0f5I/Ld1LjYXyoHu+JlMB/CchZAz0YLWThNrC5wCFg2VJIQtal4AedRdIfVKTRvf0mVLWRm9B670+LFR2JxsH2o1XfOEm1euf6fTZ9oDISWXvjVqE1MaHd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-c15e2dab83eso425040566b.1
+        for <mptcp@lists.linux.dev>; Sat, 22 Aug 2026 15:19:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787437181; x=1788041981;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=HeO8qz7gI/PQdjAfS1WIWNrGC+sH7zaBOZAEPxSZsz0=;
+        b=ovrkIxd5UdbsNE4V31eeLYjJio1S1VohwCe+yhx95h0TIAPlTAeqc/gxcdRf8DhgTU
+         EGYAXd7ASe6lGjTvz2P8LEcWyFH4SZGCKH3v52yfMj+wf+7Am9oeMrj81TYAnxcZjgeL
+         XIqpoFjrNoas7SJ/Sqqbne7L4BroWKG51tioqrdQeHd9Kfthb4o8cDZcuOeSCkJ5CUlP
+         KKv3mpumU1iGXgdCzYMIfwqc22Vnoc97JQNqHHuDD8r46u1p3ZoByPfahIvD1lZmxo40
+         dZmKDk8iW5m7c7ULLgUSLnTXXT86x0xsL6etIDzvclZoHjPANhU0If7O10n9J8X3LfiM
+         mr8A==
+X-Forwarded-Encrypted: i=1; AHgh+RogKuN9Zdw3mwnV9I3kxhwF3o0915ibxqqIXqj0FiwDyFcdq1Go2l9ziiuMdf2DO3Ga5YBkEg==@lists.linux.dev
+X-Gm-Message-State: AFuF++leJKyQWrXKQj+KOuDi48AA6O84UbstLX9lbAhQriZ/mR1sgfIz
+	T1YqBhTnFNIul6T08iTOteTDnhPHpCxwMqibRH9Sutd1YzzF+oIE+ss9
+X-Gm-Gg: AR+sD11VOoli5xySy/hQubGAv0e/Jy856gUoAdvuDM1HMVvu/XYdsaCR786bdYcDi4c
+	eISZS8alBnULRDlIl7tYZRPoJOXSUXVsft1P8tJ/noAO7rdIZ8zybpGZsac/W8357wHGWguP/6e
+	paqP3cko/uoPzeA778miNLDeXiUCj1dHc3unTzLzNCmZT5cvDy4kvnmZcROgs+9MZkP+NZiULf8
+	lTEUpFXkJ200Vu24EVQYnWkrMwiuzCcTp6/ZjV3hSUlSF5rviC5bUWChuD8HMnXRl9jX8rA/Orn
+	24Ye5x9EtxwfTJEz2OBxjEScqZweFQ1BdBEe01ICSuc9zTgbRYXL8npNsHLm78QiHOiwgRcqHMj
+	TDTRfYmUjJnbqxO0chLlKjqVCDKG0nS+0tEhjqaE5e7R/hcTxtIlPRwb4THGgx1oYBv5jlz2IEk
+	5ECuxB7Yl/rj0SXa/yRrFSpx2hiM51aeHBPBk+ukZ0DE2Fy5gHAbVuDxZUg336hOgZ5AqV6I7c6
+	msst0mJCLs3J+IGoDn4e14=
+X-Received: by 2002:a17:906:fe49:b0:c24:b11c:6bf9 with SMTP id a640c23a62f3a-c24b11c6d84mr220160966b.6.1787437180599;
+        Sat, 22 Aug 2026 15:19:40 -0700 (PDT)
+Received: from [10.100.102.74] (89-138-65-240.bb.netvision.net.il. [89.138.65.240])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c24967383e5sm483628966b.45.2026.08.22.15.19.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 22 Aug 2026 15:19:40 -0700 (PDT)
+Message-ID: <904ec61e-17e1-42f6-8215-63a806aeca76@grimberg.me>
+Date: Sun, 23 Aug 2026 01:19:38 +0300
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Sat, 22 Aug 2026 13:57:24 -0300
-From: Mauricio Faria de Oliveira <mfo@igalia.com>
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Kees Cook <kees@kernel.org>, Joel Granados <joel.granados@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon
- Horman <horms@kernel.org>, kernel-dev@igalia.com,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- fsverity@lists.linux.dev, keyrings@vger.kernel.org, bpf@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
- netdev@vger.kernel.org, linux-wpan@vger.kernel.org,
- lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org, linux-sctp@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
- bridge@lists.linux.dev, mptcp@lists.linux.dev, rds-devel@oss.oracle.com,
- virtualization@lists.linux.dev
-Subject: Re: [PATCH RFC v3 03/13] sysctl, mod_devicetable: add macro
- MODULE_SYSCTL_TABLE
-In-Reply-To: <aomlfGJM61qZKxx2@monoceros>
-References: <20260819-sysctl-module-aliases-v3-0-aab90569365d@igalia.com>
- <20260819-sysctl-module-aliases-v3-3-aab90569365d@igalia.com>
- <aomlfGJM61qZKxx2@monoceros>
-Message-ID: <4e3eaf1d3419e808be046035f114bf6c@igalia.com>
-X-Sender: mfo@igalia.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Report: NO, Score=-2.1, Tests=ALL_TRUSTED=-3,BAYES_50=0.8,KAM_DMARC_NONE=0.125,KAM_DMARC_STATUS=0.005
-X-Spam-Score: -20
-X-Spam-Bar: --
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/4] nvme-tcp: support IPv6 traffic class
+To: Geliang Tang <geliang@kernel.org>, Keith Busch <kbusch@kernel.org>,
+ Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+ Chaitanya Kulkarni <kch@nvidia.com>, David Ahern <dsahern@kernel.org>,
+ Ido Schimmel <idosch@nvidia.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Hannes Reinecke <hare@suse.de>, Stanislav Fomichev <sdf@fomichev.me>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, linux-nvme@lists.infradead.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev
+References: <cover.1786947923.git.tanggeliang@kylinos.cn>
+ <d6095cd3809af7addc44ed162d70d6327dc237ac.1786947923.git.tanggeliang@kylinos.cn>
+Content-Language: en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <d6095cd3809af7addc44ed162d70d6327dc237ac.1786947923.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 2026-08-22 10:41, Uwe Kleine-König wrote:
-> Hello,
 
-Hey,
 
-> 
-> On Wed, Aug 19, 2026 at 03:16:16PM -0300, Mauricio Faria de Oliveira wrote:
->> The MODULE_SYSCTL_TABLE macro emits a struct module_sysctl_table variable
->> with pointers to a sysctl table's path and entries, and table/entry sizes.
-> 
-> That new struct doesn't seem to contain any pointer?
+On 18/08/2026 9:03, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+>
+> Currently, nvme-tcp host only supports setting the IPv4 TOS value when a
+> TOS is specified, but does not handle the IPv6 traffic class.
+>
+> Extend the queue socket setup to handle AF_INET6 sockets by applying the
+> TOS value to both IPv4 and IPv6 sockets. For IPv6, the TOS value is set
+> as the IPv6 traffic class via IPV6_TCLASS using do_sock_setsockopt().
+>
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>   drivers/nvme/host/tcp.c | 20 ++++++++++++++++++++
+>   1 file changed, 20 insertions(+)
+>
+> diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+> index 025cade370b2..5f30be04a9dd 100644
+> --- a/drivers/nvme/host/tcp.c
+> +++ b/drivers/nvme/host/tcp.c
+> @@ -1815,6 +1815,17 @@ static int nvme_tcp_sock_set_tos(struct sock *sk, int tos)
+>   				  KERNEL_SOCKPTR(&tos), sizeof(tos));
+>   }
+>   
+> +static int nvme_tcp_sock_set_tclass(struct sock *sk, int tclass)
+> +{
+> +#if IS_ENABLED(CONFIG_IPV6)
+> +	if (sk->sk_family == AF_INET6)
+> +		return do_sock_setsockopt(sk->sk_socket, false, SOL_IPV6,
+> +					  IPV6_TCLASS, KERNEL_SOCKPTR(&tclass),
+> +					  sizeof(tclass));
+> +#endif
+> +	return 0;
+> +}
+> +
+>   static int nvme_tcp_alloc_queue(struct nvme_ctrl *nctrl, int qid,
+>   				key_serial_t pskid)
+>   {
+> @@ -1909,6 +1920,15 @@ static int nvme_tcp_alloc_queue(struct nvme_ctrl *nctrl, int qid,
+>   				qid, ret);
+>   			goto err_sock;
+>   		}
+> +
+> +		ret = nvme_tcp_sock_set_tclass(queue->sock->sk,
+> +					       nctrl->opts->tos);
 
-The struct module_sysctl_table fields .path and .table are pointers,
-although with kernel_ulong_t type so that the same 32/64-bit size is
-used in file2alias.c based on KERNEL_ELFCLASS (and not on the host,
-which might differ with CROSS_COMPILE).
-
-> 
->> That symbol will be handled by file2alias.c (modpost) with the changes in
->> mod_devicetable.h and devicetable-offsets.c.
->> 
->> The option macros MODULE_SYSCTL_TABLE_{DISABLE,UNIQUE_ID} can be used on
->> a per-file basis to disable the macro and change the symbol name pattern.
->> 
->> Signed-off-by: Mauricio Faria de Oliveira <mfo@igalia.com>
->> ---
->>  include/linux/mod_devicetable.h   |  7 +++++++
->>  include/linux/sysctl.h            | 42 +++++++++++++++++++++++++++++++++++++++
->>  scripts/mod/devicetable-offsets.c |  6 ++++++
->>  3 files changed, 55 insertions(+)
-> 
-> Please put the new struct in a separate header. Apart from not being
-> about a device table, I'm currently work on removing
-> <linux/mod_devicetable.h>. See commit
-> ad428f5811bd7fb3d91fa002174de533f9da94d7 for more details.
-
-Sure; I looked at that earlier (thanks for the instructive commit
-message, by the way) and found the new struct to be similar to "struct
-cpu_feature isn't really a device_id struct" (not moved), but apparently
-missed the trailing "fow now", which is clearer now. Fixed for v4.
-
-Thank you,
-
-> 
-> Best regards
-> Uwe
-
--- 
-Mauricio
+Won't it just be cleaner to add a generic ip_sock_set_tclass() that 
+hides the IS_ENABLED(CONFIG_IPV6) ifdef? Why do we need to wrap all 
+these generic helpers?
