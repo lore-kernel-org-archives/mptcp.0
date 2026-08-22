@@ -1,132 +1,146 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C1C2C0296
-	for <mptcp@lists.linux.dev>; Sat, 22 Aug 2026 04:33:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0013A380F
+	for <mptcp@lists.linux.dev>; Sat, 22 Aug 2026 13:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787373194; cv=none; b=Zkw/Hym62LCfHBEzNKEzGV6Yl47vOsWWBld7aFI2wl6eVHBDNRoJBctesjGWgku72KbnOoQWH7CXsGIKrqx6dP57AiY4So77Zmm+d9xI233mgDol0aZb4js//3qgbe/6P8BWhAfDPwSEWx1R5nNzpjxiaJGW4vjguq1cvZM1c6I=
+	t=1787406119; cv=none; b=j1Ts++UXwnwLNuYHMqAafNQSb3GxCqvSaLgbBW45CyIyYgg3z9I8KqrzV+5d5LeS8uVtG6FCQKJG+nxd2h9cpPIzAhK+jZShUKepZMxErVZmgsxSIQCIz2AMP/OYT7uq0e0xVRAC/LZI6mFVMAPSKyWxKKcm6fX3x0UMpSg+bRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787373194; c=relaxed/simple;
-	bh=oeOfry6h6ZC5RHmVjhjjDq6oRINYKOa0uWk/4BHJVkk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=M1gQHBQR2fu8haScr+KESF0MR//dQU7zNhYCYFYaPMyPFLjomFH1bl35clTFcMWz26xOJFKdNwGS9UKv3j2IcscE2McF7nmVHtRaEqY/W+apCUeVR7F1udDC5iY9G3UD+tAt3k8xDR8Kn2jobYjX6raC74PkgeVf6D0i0/0t31k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wmjpwn2L; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787406119; c=relaxed/simple;
+	bh=ShtTkIU3ezbFJIydaBLYCMvhC/wGsulze2uz5bQe5G4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fqDGkBcvOV4xbBLMGAdU9fQ/H4OYs+AUyAr5vrXzmzHlJh6M3cM3CnGETa4CKEGlmqOPRQHCA5iklS+YDBwu5uV259R72NbUwG40arytROg8JR2kTc5KBXKjXq7kPfyKIRsTYEV/uFHZsUx6GidjKkOBNPIK3P2tIF+1ucutFFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=m7ARVDz0; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wmjpwn2L"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-c9cf07d2df6so1096196a12.2
-        for <mptcp@lists.linux.dev>; Fri, 21 Aug 2026 21:33:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="m7ARVDz0"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-c15e592da74so276642066b.1
+        for <mptcp@lists.linux.dev>; Sat, 22 Aug 2026 06:41:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787373193; x=1787977993; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=Qdwn7o+Psw+N65WWo7yf+HbZUmmfNWJNVHBP1XBjc/Y=;
-        b=Wmjpwn2LxvTQBTdPI2JBdprH+Gj7xkmt1qRbmLYhp8EH3Hxzgp2hRVOHVs8dBN9edu
-         0jsLZ0mKtWhC1qz+JRqUQzJ0121cyl3O9LFhjWLQrd9xLxGLa3Oi5xk8d2kS6RDjZZju
-         DS+1M59VJSkwkkrXnd4ZFTKdmszQRp+mujqw0hKHA0RbNQzuXO60gH2au+e2bVD4Zunu
-         iedTCTd6b6Edoi4tEn26UApGREWTy/RQAGoTWVxnz7c0mU8D6weaeOlKdoMr+qxZqWNY
-         H4qN7iyh2cVi7wkdliqJLkF60IiOhniQ2a2EGcD/8evnoxbmoHTC7Z/rBTd7Ctujs82z
-         gqRA==
+        d=baylibre.com; s=google; t=1787406114; x=1788010914; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Aj3ZYubTvLgnR11pZYHVat4EVUJdKX6AnHgTVge4+Wc=;
+        b=m7ARVDz0+tsAgVTJG5RARAOMnpQnZzJ1TOPyGGj10sNI7L0waOq//ywaRJV4NQRxif
+         8tnHfjm+tphsuEqmxX0rrvT5AeZTcbFEuZ/fyqyHL7q2gZdJ+8Wv9m5JAO7yhdZtOGuS
+         I2Y/+cSIW1S+zvXmvh+M8a8ExdKlcqgxY54Nn4au83qia4qDGfHfwte/fImIy0QQI6Yz
+         BFTtyWEH3b19yLryO+W/F62RCL1KFgDhKs90rRdVFZ/qI0BBfQRWZadjDpzbZ0LXVcpK
+         daleagdCmdZFumcLMJOyi6Ff20WlWyYPAFkrl6yALoLlY6tKS9yFIW5A+vgW4wCfun8Q
+         Vf0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787373193; x=1787977993;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+        d=1e100.net; s=20251104; t=1787406114; x=1788010914;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Qdwn7o+Psw+N65WWo7yf+HbZUmmfNWJNVHBP1XBjc/Y=;
-        b=BMFI5UCuVxCX8eayKNCGi2er1/iGs9v4WXek6g/YvdFkCjWb78VeZPmsVjpV999u2y
-         aaK5q/MKt1+90TNo+Tjq5T/qdXqUkWxUXCbxQH9Mf6HAOZYok6axlM6+H9u9gO7r0YaS
-         D0RiNAUdB94ZIOcyxr66GxN42SvTdZcqfgTkrz/XPCpMWNuacf8Gd51cxjmgHJ/93yuJ
-         gftBMR8oNMP8hXYZGMWSHlnoxMMgSCdyw1ZI6H1SQ/+XuQwQyKw/2mDidrKuvSket1v4
-         dntLx/LyfCtYL1Qa+WZBru4zyv7nM0naPU98QRhYng4CKtFuMoD12URPZQLGILvvuSy6
-         /Lew==
-X-Gm-Message-State: AFuF++kcvPtMr7jMjW1RkMWTjqOmOJxh1pkXe07lqo6EVk7Zit6etQbe
-	UkrNwKGtAIOPWSCO7J9X8mjbLfhhOiuTc1IQPys7uQiEsE3eXb6nVw9Wi2ilO28=
-X-Gm-Gg: AR+sD12tDyoLILJHaU1WagJ0xArPw2uGz6MKSZTV5T7xpd9/9MPKmhPWTfWEJIPBbK/
-	bj0n8+fWelaqxSvee+WGqcgihv5I09ZbPiCfItVJjc66hY3tOIEbPCeFYRavnV+1A+cO5wlFyKQ
-	08N1wmOmTgVBzt4t1DFo+xS/iONBXgl1VTsxVJ60HkDxhGA9KCohTde3VFXAj0EfQ89wtjdr25q
-	O0ts9sO/t/X+enQMjYTM+HOKowEcThwCh/frgwFgd2C3Ts1lNOJY6q+t3BmBtG8xahzYKxBfSzP
-	crhFedcbsDWsX2XRbmd848XCBwC9Rhy9uZ+f+Te9j8Jf8N2fWwT645D/uF6hW1fCakhCVgJsUL0
-	G+83zvHwJSW8+t4WtwkXVkfCqBZ5xcd0Aj8io5ObPIZgLs5xiaTxfG9DmeYATG2L0hYrF7UiIPY
-	/Ks9FHYXNH1yMm9SLsvDhU3Nj13iHEsjcnogcyk9fMJNcEiiJ3/C6GY3czFMOzOKrrkocEkUzZe
-	Fw=
-X-Received: by 2002:a17:90b:4986:b0:38e:e9b:ffa4 with SMTP id 98e67ed59e1d1-395c33cf295mr21013783a91.6.1787373192610;
-        Fri, 21 Aug 2026 21:33:12 -0700 (PDT)
-Received: from [127.0.0.1] ([172.182.243.242])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-141860ef75esm3432009c88.7.2026.08.21.21.33.11
+        bh=Aj3ZYubTvLgnR11pZYHVat4EVUJdKX6AnHgTVge4+Wc=;
+        b=hJ7EVz+hmqyNqXEQ1TdBGv1B02KA6euaiM0sByfOX/JvlCqYASQQ4Fozk68sRxbQfr
+         hJIqaPAyt+tCHN0CxwOZNuX/1LKiDyRSl+ylpcJ4VtkzLHpckNBC3lrEGgY6UuQ/vhka
+         aLac4NBBo/y1/aZWpt4+FGK0H/WixdJV98By+/SrdrZXoPmJaSx/Xddo6RME56RP9UN6
+         UNKHhL8YpDGS8ij5TpDZyXVjuBn7TsiM35BWXRIHJrsCUhUgy6kgF9RS0zO8/xFLjrwT
+         nVqPsxEcAN0+4iany5ppMkvQnyY/Ny14qf4J1Jit2AFN1icDsyP3ulfigDKcuDCGxlzG
+         5t6g==
+X-Forwarded-Encrypted: i=1; AHgh+RqpkakXKdj9O7w3eOzAoHAPjhu4zao23G/VnnkcPUWLDa9/7nCdvUdBmjSpx2LGtmLzYDZR7A==@lists.linux.dev
+X-Gm-Message-State: AFuF++nqKcxMSjeQRw9Nw0YdOotuLxIya5eLLAZmLY/xYg5zfkYlDPkm
+	E0QWVjXLcGfKBSkwFtw1mgv32ecsEOEkZCK0GhUEgqqSztZYtuXGoNeS9hKVodTx8QI=
+X-Gm-Gg: AR+sD12RyiZc4Rm5ZxIcaic8M4i+nxUbW3wcfN19GvyNfsmYXZ4pAG93rFe5jKfn2hO
+	j+WbJmeXr4Yoc9hrRzno3i1+BLtC0Txoiz3ZLDlLo9PSVVMKP2lqMKz8oYZEhWfk7DHM8Iy8u1M
+	1R1zPpl8dMfCcfFuiagIb2MK4spJtgge88K2JcpUV0cFBolTXTI/zG6aogdD/Fa+Jojfj3XRvyn
+	FEDJcMfyY822O3WBFl4epRUma/h56C9UsU3EXGnk4eGG87brYa2ofMLz4AZk72UksaVIcwke25c
+	ea3NWVwZ9gqoomCQS8+e9/+ayZwsEmFpN1LrpFGiVCP8mjh8IK6opPG6mh+jlaO734No0ID+LgX
+	Mlci7h1+MjEA+q8y/ifTaC/X+dI5wyA3eoN5H7vYd+v8fCG8OareH3p39r9tGmPL+ynDYgLTdDQ
+	YnKl8xO1DThOO1gA7ChwtG+Fdqzx7/KuWAZZzI3sXA7kxiWcDWQVVx1asRwupM4bixrg==
+X-Received: by 2002:a17:907:8908:b0:c21:35d0:f435 with SMTP id a640c23a62f3a-c24924db408mr547750766b.10.1787406113365;
+        Sat, 22 Aug 2026 06:41:53 -0700 (PDT)
+Received: from localhost ([2a02:8071:56d1:2de0:1d24:d58d:2b65:c291])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-c249606a8fasm387614266b.8.2026.08.22.06.41.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2026 21:33:12 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1787368526.git.tanggeliang@kylinos.cn>
-References: <cover.1787368526.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v5 0/7] Reduce the differences between TCP
- and MPTCP for TLS usage
-Message-ID: <f1861358-99e7-6237-625b-ca0f06459332@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 22 Aug 2026 04:33:11 +0000
+        Sat, 22 Aug 2026 06:41:52 -0700 (PDT)
+Date: Sat, 22 Aug 2026 15:41:50 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Mauricio Faria de Oliveira <mfo@igalia.com>
+Cc: Kees Cook <kees@kernel.org>, Joel Granados <joel.granados@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	kernel-dev@igalia.com, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	fsverity@lists.linux.dev, keyrings@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-wpan@vger.kernel.org, lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org, 
+	coreteam@netfilter.org, linux-sctp@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	linux-s390@vger.kernel.org, bridge@lists.linux.dev, mptcp@lists.linux.dev, 
+	rds-devel@oss.oracle.com, virtualization@lists.linux.dev
+Subject: Re: [PATCH RFC v3 03/13] sysctl, mod_devicetable: add macro
+ MODULE_SYSCTL_TABLE
+Message-ID: <aomlfGJM61qZKxx2@monoceros>
+References: <20260819-sysctl-module-aliases-v3-0-aab90569365d@igalia.com>
+ <20260819-sysctl-module-aliases-v3-3-aab90569365d@igalia.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-
-Hi Geliang,
-
-Thank you for your modifications, that's great!
-
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/325496=
-84249
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/5e7e80d605ec
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1150080
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="akn7oxv4v2qk2wdq"
+Content-Disposition: inline
+In-Reply-To: <20260819-sysctl-module-aliases-v3-3-aab90569365d@igalia.com>
 
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+--akn7oxv4v2qk2wdq
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH RFC v3 03/13] sysctl, mod_devicetable: add macro
+ MODULE_SYSCTL_TABLE
+MIME-Version: 1.0
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Hello,
 
-For more details:
+On Wed, Aug 19, 2026 at 03:16:16PM -0300, Mauricio Faria de Oliveira wrote:
+> The MODULE_SYSCTL_TABLE macro emits a struct module_sysctl_table variable
+> with pointers to a sysctl table's path and entries, and table/entry sizes.
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+That new struct doesn't seem to contain any pointer?
 
+> That symbol will be handled by file2alias.c (modpost) with the changes in
+> mod_devicetable.h and devicetable-offsets.c.
+>=20
+> The option macros MODULE_SYSCTL_TABLE_{DISABLE,UNIQUE_ID} can be used on
+> a per-file basis to disable the macro and change the symbol name pattern.
+>=20
+> Signed-off-by: Mauricio Faria de Oliveira <mfo@igalia.com>
+> ---
+>  include/linux/mod_devicetable.h   |  7 +++++++
+>  include/linux/sysctl.h            | 42 +++++++++++++++++++++++++++++++++=
+++++++
+>  scripts/mod/devicetable-offsets.c |  6 ++++++
+>  3 files changed, 55 insertions(+)
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Please put the new struct in a separate header. Apart from not being
+about a device table, I'm currently work on removing
+<linux/mod_devicetable.h>. See commit
+ad428f5811bd7fb3d91fa002174de533f9da94d7 for more details.
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Best regards
+Uwe
+
+--akn7oxv4v2qk2wdq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmqJpxsACgkQj4D7WH0S
+/k5bfgf9HJoNnVEr9RCdAghOTP5QqFmH5ae7Kbmnodv6c6Pi9JGIjjGbeT5eKw3e
+JkSKqdEnlVMrLoKrhneRsxwTDGPrZvrLZrPLdZwJmPWZn5Fg+kkOO9yFAGPeMsPX
+S6UP1NY9kaCiBtlcsGT9EvMWz0jWVAWX1xb7Y2WcVZJsCWdcPhvWc3/lIbw3E4o7
+PqLtSFblkQmtGl2OL4WkP6xhEPH6qQO9BAmhLVKKZwFW5/l4sHmXRrpgSJlroR3b
+iH3liIeS6wxFp/fMYuFRryGHNMXn6gC447OnOCTmGNEj7+7Y3COwSGivgubcRIzI
+RkmxkMf2Iuntnwp4oQzCbipE5EiKGA==
+=SPY4
+-----END PGP SIGNATURE-----
+
+--akn7oxv4v2qk2wdq--
