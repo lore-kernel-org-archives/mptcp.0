@@ -1,124 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC05F2417D9
-	for <mptcp@lists.linux.dev>; Sat, 22 Aug 2026 03:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C1C2C0296
+	for <mptcp@lists.linux.dev>; Sat, 22 Aug 2026 04:33:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787369816; cv=none; b=kACtZKiGPWGH3ceUfhuqAWnwaDsGZj/Hv4i01S//3NfodVtQl2O/RwXNzOQ17qen7Ph8+8e5FlxJTNdf1H/rtVpN9jsa300QjZNRFDCVTZBUhrEwTL7l3T/TgNYocaB3eanPFbcfcp9Om7rHd2BsrlZZ7ijZ4NeEsy80vSBQedo=
+	t=1787373194; cv=none; b=Zkw/Hym62LCfHBEzNKEzGV6Yl47vOsWWBld7aFI2wl6eVHBDNRoJBctesjGWgku72KbnOoQWH7CXsGIKrqx6dP57AiY4So77Zmm+d9xI233mgDol0aZb4js//3qgbe/6P8BWhAfDPwSEWx1R5nNzpjxiaJGW4vjguq1cvZM1c6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787369816; c=relaxed/simple;
-	bh=KALsMd3lyK2bWChalZXg5lifrM9nlj8aj8WR9roPMRg=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=fu/st58vgThR2ENlKYMv0m3SnSTNybNx5HOFLIkRf64nk6QUV7+ZvN5QQ0P08TJE7wYu+1z0AkLiMhZ21mUZ/5iWNANTLm3bxXgbl5dzKs8UzieachvLn1bRA1X2XcW2jytUfpvO9Qwh2yifbCuPnfA73Cm0a9boe2gCPeQBtNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kBA0G1t+; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787373194; c=relaxed/simple;
+	bh=oeOfry6h6ZC5RHmVjhjjDq6oRINYKOa0uWk/4BHJVkk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=M1gQHBQR2fu8haScr+KESF0MR//dQU7zNhYCYFYaPMyPFLjomFH1bl35clTFcMWz26xOJFKdNwGS9UKv3j2IcscE2McF7nmVHtRaEqY/W+apCUeVR7F1udDC5iY9G3UD+tAt3k8xDR8Kn2jobYjX6raC74PkgeVf6D0i0/0t31k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wmjpwn2L; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kBA0G1t+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35ED61F000E9;
-	Sat, 22 Aug 2026 03:36:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787369815;
-	bh=SQ8GAkoqq/y+uZlLoIwWJTBRliN82WJNLn+I4sSvdYQ=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=kBA0G1t+OjyGFGN0Sifybw1BasS53NIeMDHXHOvmYpMfz4KcZnJFzWIgFQ42lCNeW
-	 jHm+OiB15CfrbLlUZsNp9pnAHpqI4Co0l6n5kv9iFM0a85TC/ZvmM7LCGGZX1JQxrv
-	 +ME+I7al2SG175g5Dvh+d8B/HDFkUIaw+ugU8N3sEUbGnuh0a1XkITmRTIRivxSWVS
-	 iq80/DxAQBPXBdsmyF8cb4cajucaJncnJUB9UduEEI0KIK0zQe2bT0WSEJlqFSwjRP
-	 ns3I8Dl4V0eG+vJbintraVyEwDm39uZu7OCyvy0bmf4fhWIevZVeA//ZfTt9tm6t3s
-	 L6O2Me0Vndl1A==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v5 5/7] mptcp: defer read_sock cleanup to
- mptcp_worker
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Geliang Tang" <geliang@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wmjpwn2L"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-c9cf07d2df6so1096196a12.2
+        for <mptcp@lists.linux.dev>; Fri, 21 Aug 2026 21:33:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787373193; x=1787977993; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=Qdwn7o+Psw+N65WWo7yf+HbZUmmfNWJNVHBP1XBjc/Y=;
+        b=Wmjpwn2LxvTQBTdPI2JBdprH+Gj7xkmt1qRbmLYhp8EH3Hxzgp2hRVOHVs8dBN9edu
+         0jsLZ0mKtWhC1qz+JRqUQzJ0121cyl3O9LFhjWLQrd9xLxGLa3Oi5xk8d2kS6RDjZZju
+         DS+1M59VJSkwkkrXnd4ZFTKdmszQRp+mujqw0hKHA0RbNQzuXO60gH2au+e2bVD4Zunu
+         iedTCTd6b6Edoi4tEn26UApGREWTy/RQAGoTWVxnz7c0mU8D6weaeOlKdoMr+qxZqWNY
+         H4qN7iyh2cVi7wkdliqJLkF60IiOhniQ2a2EGcD/8evnoxbmoHTC7Z/rBTd7Ctujs82z
+         gqRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787373193; x=1787977993;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Qdwn7o+Psw+N65WWo7yf+HbZUmmfNWJNVHBP1XBjc/Y=;
+        b=BMFI5UCuVxCX8eayKNCGi2er1/iGs9v4WXek6g/YvdFkCjWb78VeZPmsVjpV999u2y
+         aaK5q/MKt1+90TNo+Tjq5T/qdXqUkWxUXCbxQH9Mf6HAOZYok6axlM6+H9u9gO7r0YaS
+         D0RiNAUdB94ZIOcyxr66GxN42SvTdZcqfgTkrz/XPCpMWNuacf8Gd51cxjmgHJ/93yuJ
+         gftBMR8oNMP8hXYZGMWSHlnoxMMgSCdyw1ZI6H1SQ/+XuQwQyKw/2mDidrKuvSket1v4
+         dntLx/LyfCtYL1Qa+WZBru4zyv7nM0naPU98QRhYng4CKtFuMoD12URPZQLGILvvuSy6
+         /Lew==
+X-Gm-Message-State: AFuF++kcvPtMr7jMjW1RkMWTjqOmOJxh1pkXe07lqo6EVk7Zit6etQbe
+	UkrNwKGtAIOPWSCO7J9X8mjbLfhhOiuTc1IQPys7uQiEsE3eXb6nVw9Wi2ilO28=
+X-Gm-Gg: AR+sD12tDyoLILJHaU1WagJ0xArPw2uGz6MKSZTV5T7xpd9/9MPKmhPWTfWEJIPBbK/
+	bj0n8+fWelaqxSvee+WGqcgihv5I09ZbPiCfItVJjc66hY3tOIEbPCeFYRavnV+1A+cO5wlFyKQ
+	08N1wmOmTgVBzt4t1DFo+xS/iONBXgl1VTsxVJ60HkDxhGA9KCohTde3VFXAj0EfQ89wtjdr25q
+	O0ts9sO/t/X+enQMjYTM+HOKowEcThwCh/frgwFgd2C3Ts1lNOJY6q+t3BmBtG8xahzYKxBfSzP
+	crhFedcbsDWsX2XRbmd848XCBwC9Rhy9uZ+f+Te9j8Jf8N2fWwT645D/uF6hW1fCakhCVgJsUL0
+	G+83zvHwJSW8+t4WtwkXVkfCqBZ5xcd0Aj8io5ObPIZgLs5xiaTxfG9DmeYATG2L0hYrF7UiIPY
+	/Ks9FHYXNH1yMm9SLsvDhU3Nj13iHEsjcnogcyk9fMJNcEiiJ3/C6GY3czFMOzOKrrkocEkUzZe
+	Fw=
+X-Received: by 2002:a17:90b:4986:b0:38e:e9b:ffa4 with SMTP id 98e67ed59e1d1-395c33cf295mr21013783a91.6.1787373192610;
+        Fri, 21 Aug 2026 21:33:12 -0700 (PDT)
+Received: from [127.0.0.1] ([172.182.243.242])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-141860ef75esm3432009c88.7.2026.08.21.21.33.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2026 21:33:12 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
 Cc: mptcp@lists.linux.dev
-In-Reply-To: <7aedfbb77f40f047f2c7724c481220a8322b7ad2.1787368526.git.tanggeliang@kylinos.cn>
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1787368526.git.tanggeliang@kylinos.cn>
 References: <cover.1787368526.git.tanggeliang@kylinos.cn>
- <7aedfbb77f40f047f2c7724c481220a8322b7ad2.1787368526.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=utf-8
+Subject: Re: [PATCH mptcp-next v5 0/7] Reduce the differences between TCP
+ and MPTCP for TLS usage
+Message-ID: <f1861358-99e7-6237-625b-ca0f06459332@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 22 Aug 2026 03:36:54 +0000
-Message-Id: <20260822033655.35ED61F000E9@smtp.kernel.org>
+Date: Sat, 22 Aug 2026 04:33:11 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Inverted order of `mptcp_cleanup_rbuf()` and `mptcp_rcv_space_ad=
-just()` causes delayed receive window expansion.
---
+Hi Geliang,
 
---- Patch [5]: [PATCH mptcp-next v5 5/7] mptcp: defer read_sock cleanup to =
-mptcp_worker ---
-commit 7c6cfb1e14c2505035ad95612907c5f1c34d25e5
-Author: Paolo Abeni <pabeni@redhat.com>
+Thank you for your modifications, that's great!
 
-mptcp: defer read_sock cleanup to mptcp_worker
+Our CI did some validations and here is its report:
 
-This commit defers sk->sk_data_ready(sk) cleanup tasks to the MPTCP worker
-using a new MPTCP_WORK_READ_COMPLETE flag. This avoids locking recursions a=
-nd
-context-related issues when MPTCP carries TLS.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/325496=
+84249
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 6006193388f12..648eba89278f6 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -3133,6 +3133,15 @@ static void mptcp_backlog_purge(struct sock *sk)
->  	sk_mem_reclaim(sk);
->  }
-> =20
-> +static void mptcp_read_complete(struct sock *sk)
-> +{
-> +	struct mptcp_sock *msk =3D mptcp_sk(sk);
-> +
-> +	mptcp_cleanup_rbuf(msk, msk->read_copied);
-> +	mptcp_rcv_space_adjust(msk, msk->read_copied);
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/5e7e80d605ec
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1150080
 
-[Severity: Medium]
-Does the inverted order of these function calls delay receive window expans=
-ion?
 
-Before this patch in __mptcp_read_sock(), mptcp_rcv_space_adjust() was call=
-ed
-before mptcp_cleanup_rbuf(). Because mptcp_cleanup_rbuf() evaluates the
-current socket receive buffer capacity to decide whether to send a window
-update ACK, calling mptcp_rcv_space_adjust() afterward means the buffer
-capacity is expanded after the cleanup check has already run.
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-Could this cause the ACK sent to advertise the old, smaller window size,
-delaying the expanded window advertisement until the next cycle?
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-> +	msk->read_copied =3D 0;
-> +}
-> +
->  static void mptcp_do_fastclose(struct sock *sk)
+For more details:
 
-[ ... ]
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-> @@ -4641,11 +4651,14 @@ static int __mptcp_read_sock(struct sock *sk, rea=
-d_descriptor_t *desc,
->  	if (noack)
->  		goto out;
-> =20
-> -	mptcp_rcv_space_adjust(msk, copied);
-> -
-> +	/* The backlog flushing is only needed when some data is actually
-> +	 * moved and will take place in the workers's release callback.
-> +	 */
->  	if (copied > 0) {
->  		mptcp_recv_skb(sk, &offset);
-> -		mptcp_cleanup_rbuf(msk, copied);
-> +		msk->read_copied +=3D copied;
-> +		set_bit(MPTCP_WORK_READ_COMPLETE, &msk->flags);
-> +		mptcp_schedule_work(sk);
->  	}
->  out:
->  	return copied;
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1787368526.gi=
-t.tanggeliang@kylinos.cn?part=3D5
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
