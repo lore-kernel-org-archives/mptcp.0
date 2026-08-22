@@ -1,132 +1,188 @@
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6AA3A7597
-	for <mptcp@lists.linux.dev>; Fri, 21 Aug 2026 08:34:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4CF136672
+	for <mptcp@lists.linux.dev>; Sat, 22 Aug 2026 03:19:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787301242; cv=none; b=U+WEYxeUOrAzNLftZJp/2JxEeecMcAKy4OiMXx+5vILsIFvJ3v2YJDw9MBV5hIn3BkpDnPWu77XVjBQ3LYz34TzZGWf3I06NNT6SETz3sdpIzqXYFo9WhTbPNSCkBfFU2uzlxedj4As2xxllW4a6/Q5jluZP4gn6nqvdI+eWpfc=
+	t=1787368776; cv=none; b=Ew1HZ3QWgxnyea0PBdTVFraFHFvM+ODcmruV3NF2teKXWj75Yi9hoj7zGqWpfsOWWBNMjSxiBdNg+jNyF3Z3WCzDLi6uxcX/33akB2gzZGaNOqwQshU0iPrGge702BGxpRsWXKKsfB8KycYae88al71q7M9JKuzYTQrNpGvpNjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787301242; c=relaxed/simple;
-	bh=uhME1zCVkpi9Vc0qdJY/IpcaXupCuSEI15bbY4kQmgA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=XZDbeM+wcPSVPUaqs+9Vx7SfULLP3T2IpHF5ryoDLoHR336n77OJN5vFHIWGfaOXjBgGMtIQbyhPuS4jyYXj+wk24YAeITKS11xvcsekTVkCCYsdSLilItj0guGRCoABii7MciKogq5npZDUhNo3xxF0mXEFyx0G24UbDwx5w1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tFK2VnOn; arc=none smtp.client-ip=209.85.210.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787368776; c=relaxed/simple;
+	bh=7IVzHg+KwmktiIgjzDTA7YeHLP4/fLq+zPCX8+ic84Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZxyWznpBiCQptgY8NjGhxcU4g9LuQ2wKKewVhwrCpv+1Ll6w1Y1l08ZqTARr/qmGZXTisVTqd0M2SaMsJ/KSqDCNhhqhrQ73qGMmXWGsxrODyDl+lnjos8i0sUjTLsvaDxu3ya22W5fDItQxWpJ2Zp4kYBViuC4ZFUl+XgWtLXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJdFtkb5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tFK2VnOn"
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-7eb63dbd229so615812a34.1
-        for <mptcp@lists.linux.dev>; Fri, 21 Aug 2026 01:34:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787301240; x=1787906040; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=GVAe+Bv7tneynUt78xwU8vjnM56w/tiVdA9x+yIjLsY=;
-        b=tFK2VnOnC1m/yT8XFKn30O+0e6xzHDnMXUYpyhYDs69fC9WJGJYAMvRMjmOcLH0XUE
-         v7m2USMUcgfi0mFBw+2m1iMLaa9WJc93FRbyml74BJ54PiFwWk/ZivzF9nxRoVxgxc4u
-         2B77jdO2mJO0MA4zVA+MjtMgBrahi0sCthgHZKbUrwKOlt3OcnJyqwDMZ8Wun4MJ9BWH
-         Dveu+mZhWrQAx6lJjEDZTa1RFI7YJQ+bFA/1IwmKTrg6FO1uJy01nilZ40+2pyyWWCHf
-         FzAS6eBCOs5vMh0QoSRUjgLaBuNiNDynt+bTbce4PqxSl6tFde2l2TXgRVlKuKMC8iiM
-         DEAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787301240; x=1787906040;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=GVAe+Bv7tneynUt78xwU8vjnM56w/tiVdA9x+yIjLsY=;
-        b=B/eO0v6qONJyUeLM5zVxtLHiE4FbEcB1ovlpykt2rRKmCqhvUl1drgqAkL8AFnX9MZ
-         yEEcs80SOiv9b/Zy8j/Rj0yqX5J4slb7k638HJg0QGkoeaw3RlIYxM/79XoCk7HHoM/G
-         wOvgVjZHRVdfC6Yn9voRNKOMh6+VFVgQ9Rfag+70pc0DMx17gLgiuxrdwdtZLzwkgGZH
-         MMeN1c22kkSNjGHZ23m/pxXTBl5mAyEa/qPkWpGfj7ombbDHajhVdQWMMtJ3QKvJieVm
-         YfH79sEET1ndqRcgqDS4Rt5vigyGcbg9ZKve4O7/ZavvL3IcMRmeOvfSx5J5adU83hK9
-         2X+w==
-X-Gm-Message-State: AOJu0YzzwXojQ+mHFHlxQpv79fpWUN2bahddKUrz57PYzTkzXit7ZQc/
-	zlAlX37Exkb/ZfrNXHyaJhSkt/Vsl4gADFj90PYQeBeJO4FNrBg6ufdMv67d
-X-Gm-Gg: AR+sD10XetRfh1prAUOp3qkphxq1JanUf9VO/kF3hOC605qbNpU8wZmn2gzUg97oFl0
-	cC67nABIc4FFYR610WH6sS/FiHqcOhd15R4wvKhYeo8ehaRKPgXjVM2NnW8E2orgS0nvkl7u70Q
-	didBvnPJOTKI75TqoLHH7p+51zMBEPHNyW50vgpigEWGPKhFACdXDC8SL6pJOksZ/kizDGWQhm8
-	lRyiQ9bbd2o8abW5L6pnHezHTFS81qw0mZ0XXwcK+W2lqrx2vkfY0+3Zvw3V9tjfQQIUcjgSmq9
-	kVszXDh8ZktW65Q1uUkz2dlnO7Rk7eFAkmdlIXEesMBIr+qJ1Yp11aePo8gAfrFfxy+R00pqvtz
-	nh1BiWcJEVN5g50Rf2yH0M8lr0gP1VDI+DeiUMGsB3byaKq4bfb3/K97KuIiDf5rs+0pvTmP/II
-	79OJmyn7uw6gvern/kbAj6AYsdi3uJdiXO7VI8T/WgadnzMvj8lImuszRlObxfMxhCy22w5d+nb
-	kwS
-X-Received: by 2002:a05:6830:498a:b0:7e9:e19c:75f3 with SMTP id 46e09a7af769-7f46271366dmr4376873a34.2.1787301239609;
-        Fri, 21 Aug 2026 01:33:59 -0700 (PDT)
-Received: from [127.0.0.1] ([135.232.208.148])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7f440023036sm7257692a34.16.2026.08.21.01.33.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2026 01:33:58 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1787295147.git.tanggeliang@kylinos.cn>
-References: <cover.1787295147.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v4 0/7] Reduce the differences between TCP
- and MPTCP for TLS usage
-Message-ID: <eb08e06b-7485-d93d-b864-37916dd03445@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 21 Aug 2026 08:33:58 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJdFtkb5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 276881F000E9;
+	Sat, 22 Aug 2026 03:19:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787368774;
+	bh=RUEwuqNYvdn+/brtUD24qpnJbVW7Z7PbKTQ7ZtTF9Tk=;
+	h=From:To:Cc:Subject:Date;
+	b=gJdFtkb5XK7wOZfY28oxZ4c3YBvEqoxy3VB+FMjg5U/FINCUGbZbELpVFmDAQk3FA
+	 wSuTZ7IGWGrs4/S+3XvFsN1Yx3+RXIN467nJX0BGzkfmUfqppM2++RGQHWAHFkoi6T
+	 kcde7cLkxTyeai553PUk0ddm2ow50XGLsicGauDQKU/4Gj2qcsyCKrRaOeES7wEkze
+	 2C4aLhUEEu5dZ2J+8hZxzT1xU5Od7t4XDnNtacdFnp6Ykb5bhJESCN9KY3RFEsY63x
+	 du6nMKoWl24Dzw7rmwhk+1F/CeKFOgyFQ2vT4PWhGy+uIRKhNTxRcJLUR5dfeOj0Rx
+	 R6QMS4KM2pj1Q==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v5 0/7] Reduce the differences between TCP and MPTCP for TLS usage
+Date: Sat, 22 Aug 2026 11:19:00 +0800
+Message-ID: <cover.1787368526.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Thank you for your modifications, that's great!
+v5:
+ - only patch 3 changed.
+ - Fallback offset underflow: Initialize MPTCP sequence space to 0 in
+   mptcp_propagate_state() when mp_opt == NULL, ensuring SKB's map_seq
+   starts from 0 to match msk->copied_seq and prevent offset calculation
+   underflow in fallback mode.
+ - Stale peek_seq: Move peek_seq recomputation into the mptcp_move_skbs()
+   continue path and add another recomputation after sk_wait_data(),
+   ensuring peek_seq stays synchronized with msk->copied_seq updates from
+   MPTCP_SYNC_SEQ processing in both paths.
 
-Our CI did some validations and here is its report:
+v4:
+ - mptcp_recvmsg: move the peek_seq recompute from after sk_wait_data()
+   to before the mptcp_move_skbs() continue check.
+   mptcp_move_skbs() -> __mptcp_move_skb() may shift the head skb's
+   map_seq to the IASN frame via __mptcp_sync_rcv_sequence(); if
+   'continue' then exits the loop, the recompute is skipped, and the
+   next __mptcp_recvmsg_mskq() computes offset with peek_seq in the old
+   frame minus map_seq in the new frame. The underflow makes the offset
+   test fail and the skb is skipped (and mptcp_recv_skb() actually frees
+   the TFO skb via mptcp_eat_recv_skb()).
+ - Make all three MPTCP_SYNC_SEQ bit accesses atomic:
+   - subflow_set_remote_key:   __set_bit            -> set_bit
+   - __mptcp_move_skb:         __test_and_clear_bit -> test_and_clear_bit
+   - mptcp_release_cb:         __test_and_clear_bit -> test_and_clear_bit
+   The flag is set in BH under mptcp_data_lock() (msk slock held) and
+   cleared in user context under lock_sock() slow path (only owned=1,
+   slock not held). The non-atomic RMW on the two sides races, which can
+   lose the IASN sync.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787295147.git.tanggeliang@kylinos.cn/
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/324593=
-67353
+v3:
+ - Patch 2, handle "offset" in __mptcp_sync_rcv_sequence().
+ - Patch 3, update __mptcp_move_skb() in response to Sashiko comments:
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/a26624708a87
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1149510
+ 	if (__test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags))
+		msk->copied_seq += mptcp_iasn(msk);
 
+ - Patch 4, replace after64() to after() in mptcp_prune_ofo_queue(). The
+   pre-existing issue raised by Sashiko regarding changing the type of
+   ack_seq to atomic64_t is not addressed in this series.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1786445142.git.tanggeliang@kylinos.cn/
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+v2:
+ - Patch 3, updated in response to Sashiko comments:
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+        if (unlikely(msk->rcvd_dummy_seq)) {
+                msk->copied_seq += mptcp_iasn(msk);
+                __mptcp_sync_rcv_sequence(sk);
+                /* Release cb() would otherwise re-base copied_seq
+                 * again.
+                 */
+                test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags);
+        }
 
-For more details:
+        /* Skip the already peeked data. */
+        if (offset >= skb->len) {
+                *last = skb;
+                continue;
+        }
+ - Patch 5, replaced with Paolo's patch.
+ - Patch 6, 7, new patches addressing app-limited conditions.
+ - The patch "trim the duplicated skb head at receive enqueue" has been
+   dropped, as it is no longer needed after Paolo updated the "mptcp:
+   out-of-order queue pruning" series.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1786158416.git.tanggeliang@kylinos.cn/
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+v1:
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1785150300.git.tanggeliang@kylinos.cn/
 
+The goal of this series is to reduce the differences between TCP and MPTCP
+for TLS usage, in preparation for adding TLS over MPTCP support in the
+future.
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+In previous versions [1], a struct tls_prot_ops was defined to represent
+the interface differences between TCP and MPTCP, which contained the
+following callbacks:
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+	struct sk_buff *(*recv_skb)(struct sock *sk, u32 *off);
+	bool (*lock_is_held)(struct sock *sk);
+	void (*read_done)(struct sock *sk, size_t len);
+	u32 (*get_skb_seq)(struct sk_buff *skb);
+	int (*skb_get_header)(const struct sk_buff *skb, int offset,
+	                      void *to, int len);
+	bool (*epollin_ready)(const struct sock *sk);
+	void (*check_app_limited)(struct sock *sk);
+
+In reality, some of these callbacks are unnecessary. This series aims to
+eliminate the get_skb_seq(), skb_get_header(), and lock_is_held()
+callbacks.
+
+The first four patches come from Paolo's "mptcp: address stall under memory
+pressure" series v5 [2], with only minor cleanup from my side.
+
+They remove the CB offset field and sync the MPTCP skb CB layout with the
+TCP one, so that we can obtain the TCP or MPTCP sequence number in a
+unified way, e.g.:
+
+	struct tls_skb_cb {
+	    u32 seq;
+	};
+
+	#define TLS_SKB_CB(__skb) ((struct tls_skb_cb *)&((__skb)->cb[0]))
+
+This eliminates the need for a separate get_skb_seq() callback.
+
+Building on the removal of the CB offset field, I also added patch 5 that
+trims the duplicated skb head at receive enqueue. With that in place, KTLS
+can retrieve the record header via skb_copy_bits() directly, so there is no
+longer any need for a dedicated MPTCP helper like mptcp_skb_get_header().
+The skb_get_header() callback can thus be removed.
+
+Patch 6 defers sk_data_ready to the worker, which avoids recursive locking
+when TLS calls back into MPTCP under mptcp_data_lock(). With this change,
+the lock_is_held() callback is no longer needed and can be removed.
+
+[1]
+https://patchwork.kernel.org/project/mptcp/cover/cover.1782123118.git.tanggeliang@kylinos.cn/
+[2]
+https://patchwork.kernel.org/project/mptcp/cover/cover.1778446731.git.pabeni@redhat.com/
+
+Geliang Tang (2):
+  mptcp: track app-limited state in mptcp_sendmsg
+  selftests: mptcp: sockopt: check app_limited
+
+Paolo Abeni (5):
+  mptcp: drop the mptcp_ooo_try_coalesce() helper
+  mptcp: drop the cant_coalesce CB field
+  mptcp: remove CB offset field
+  mptcp: sync mptcp skb cb layout with tcp one
+  mptcp: defer read_sock cleanup to mptcp_worker
+
+ include/net/tcp.h                             |   1 +
+ net/ipv4/tcp.c                                |   9 +-
+ net/mptcp/fastopen.c                          |  17 +-
+ net/mptcp/protocol.c                          | 268 +++++++++++-------
+ net/mptcp/protocol.h                          |  21 +-
+ net/mptcp/subflow.c                           |  17 ++
+ .../selftests/net/mptcp/mptcp_sockopt.c       |   1 +
+ 7 files changed, 220 insertions(+), 114 deletions(-)
+
+-- 
+2.53.0
+
