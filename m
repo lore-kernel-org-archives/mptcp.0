@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD943769E6
-	for <mptcp@lists.linux.dev>; Sun, 23 Aug 2026 01:15:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B5001A23A6
+	for <mptcp@lists.linux.dev>; Sun, 23 Aug 2026 01:24:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787447715; cv=none; b=WIyU6LcsbZM/4yg/aUhYFrpwfKJSCEeyOcFS2K0TxKBW1MxXayf3Sb1nCVZbV1Eq80Hka9/BA5gvIn+uH9qCLx/aEqtEq7KCmh2nmqdhWRiqSV1Yku21FRXJmhsNhZJKQs2miVJH0quLW0WXsC6pWsEqj+L/TawcdhqxWiTBQOM=
+	t=1787448265; cv=none; b=K1HtAZQySF68w6Be3sohNqfWRXU0uEs8TYKMQECVyOTQ/QM0j/o39ShyueYVTCdY1onTfNozYTUAVWvLCzFe/vIUFSVatlGMUN5QcSLkIirkL6OCv0TIiWEI+Pvuty1a8H/skSznO/PAFhyOh43lq2XAVAks3gy/MFlaQNGS4js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787447715; c=relaxed/simple;
-	bh=RTU0Oxc6f932b6b0iyfPAACy/l2RKHGyIph30ngBrGQ=;
+	s=arc-20240116; t=1787448265; c=relaxed/simple;
+	bh=KgNDkZSJl8Pz6oyGClhSrhjqu8Fgh5A31G2USalB6Zg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=I6b7gVC/uUC26ZOUpR/MktV+W6VzAmUqZmU1FHwqknsYJEaFStTdzck1Y8VfXoFfgjDsyW2RSSIPXyNWc1UbZiBPIIcR4u/qu58dyVJbcTL8i+uY73CoDrHFb4eeJUjp8kMotJ1rwO0nub8Vs5TMxTTnWhSuoTc1qnVsAGpJtMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SWbRpSoS; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=EMMu2WzOwBH9DGHzg582jK8YMq2Z+cj9cAPfRh6Rf1zACoPx9cDT3k1nwj8QZ2HCYnCAi9uMINV6h1w9NUp6xEabYOfvcACc41qxmvCDEy5URjrLWx1ymqXH3KN1jHAxQL+jm1WDYi6ZuyqfdPsR8A1WptxNm2GzyA7V+gJ3Y/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lcoKhTkI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SWbRpSoS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE1BF1F000E9;
-	Sun, 23 Aug 2026 01:15:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lcoKhTkI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F5E21F000E9;
+	Sun, 23 Aug 2026 01:24:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787447714;
-	bh=UzhT3ziCY7duNDK8ZK+depiz6uWyppaC8hU3qxJYcX4=;
+	s=k20260515; t=1787448263;
+	bh=KMTKrbeGBFiykdPtuAA/h20dE09hJpnyabG9uGrcLG4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=SWbRpSoSq7hvmRH5C0u8D/etqxOTVPzBfJjP8HP9xXuzp/aW+vkYCpbDvSbg8Z3WP
-	 KCYE8nPEvsyPQDzY0XqFTuVD658OnSd41noWT7JYBSw5WJ4UEtcAPVS8EY1ARKDSt4
-	 lt6CqCoXyg+y08nZCM39Zlt8cMYBdXJRFEoFKTb6BVLLXLAf4Bu6F2KOK5sABizz8B
-	 +XVCWEHmDiZLdqD0J5P/Ym1axPuRxZ9Q842UMYbyivqdpQNTkgHEnWeDAWIStH0TbW
-	 BGUpmjGQAHVy4jRGiYtmYUFyo+8rzsz1IOsGKbLqyGZyv5pMEnz+W1iRJ4jkVY6Jwd
-	 +iK9DfclrzFcw==
+	b=lcoKhTkIOtd5op/oZRdbpgIZUAEYprnGfbOrJZ9fDadZIcj0413IqIousBzS/3KOI
+	 GPm0IDXwXtUxebvPmtzvi7vWte1nC2s+6d+G5a2eRKDrj6W75Bqrqkzno7lD8ITxQ7
+	 GKo1Ck+fl0/PEbtw7absxq4s35cB/mmh+1y/il/tf8UtCVisFhsU7FsT4v0KTqJnJt
+	 ERCeOUEwdxhDVmLTjlKfzqOymCvrig2gSXPrGH34U4EwkAwAU6drPCwAyRH8lYQtz2
+	 PmfTce783dFpBij446fcOAgDydAnA5UMImtDdO7hu6XXfO7zQHhlzQgfnz/MP1irgu
+	 8XqQ4Rb/C1muQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v6 4/7] mptcp: sync mptcp skb cb layout with
- tcp one
+Subject: Re: [PATCH mptcp-next v6 3/7] mptcp: remove CB offset field
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Geliang Tang" <geliang@kernel.org>
 Cc: mptcp@lists.linux.dev
-In-Reply-To: <a853bdf73cee05be30ba12f51cfaa3897d56930f.1787446274.git.tanggeliang@kylinos.cn>
+In-Reply-To: <95f5d91022661e9783da7a08c369659b3a14f802.1787446274.git.tanggeliang@kylinos.cn>
 References: <cover.1787446274.git.tanggeliang@kylinos.cn>
- <a853bdf73cee05be30ba12f51cfaa3897d56930f.1787446274.git.tanggeliang@kylinos.cn>
+ <95f5d91022661e9783da7a08c369659b3a14f802.1787446274.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 23 Aug 2026 01:15:13 +0000
-Message-Id: <20260823011513.CE1BF1F000E9@smtp.kernel.org>
+Date: Sun, 23 Aug 2026 01:24:23 +0000
+Message-Id: <20260823012423.7F5E21F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,65 +46,52 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [High] Torn read/write of 64-bit `msk->ack_seq` on 32-bit architectures, =
-leading to corrupted MPTCP Data ACKs.
+- [High] Incorrect initialization of `subflow->map_subflow_seq` in `mptcp_p=
+ropagate_state` completely breaks data reception when falling back to TCP.
 --
 
---- Patch [4]: [PATCH mptcp-next v6 4/7] mptcp: sync mptcp skb cb layout wi=
-th tcp one ---
-commit d6240ab2e98090a0998cc27a5a2729d562ab8ffd
+--- Patch [3]: [PATCH mptcp-next v6 3/7] mptcp: remove CB offset field ---
+commit 8a2d837eb49f2826870e0f275e0beb7da32784d7
 Author: Paolo Abeni <pabeni@redhat.com>
 
-mptcp: sync mptcp skb cb layout with tcp one
+mptcp: remove CB offset field
 
-This commit limits the MPTCP-level sequence number to 32 bits after
-validating against the receive window. This allows the MPTCP CB layout
-to align with TCP-level fields inside the control buffer, and adds
-build time checks to enforce this invariant.
+This commit replaces the SKB CB offset field with a new socket-level
+copied_seq field to track bytes already consumed. Sequence number tracking
+is updated to synchronize with IASN, and MPTCP sequence space is initialized
+to 0 in fallback mode.
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 0700cdab7f2ed..2e0e8e85b4d0f 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-[ ... ]
-> @@ -892,40 +899,40 @@ static bool __mptcp_ofo_queue(struct mptcp_sock *ms=
-k)
->  {
-[ ... ]
-> -		msk->bytes_received +=3D end_seq - msk->ack_seq;
-> -		WRITE_ONCE(msk->ack_seq, end_seq);
-> +		msk->bytes_received +=3D seq_delta;
-> +		WRITE_ONCE(msk->ack_seq, msk->ack_seq + seq_delta);
->  		moved =3D true;
->  	}
->  	return moved;
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index ed3a48cf9c973..6bffa02c69626 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -520,6 +522,13 @@ static void mptcp_propagate_state(struct sock *sk, s=
+truct sock *ssk,
+>  		WRITE_ONCE(msk->snd_una, subflow->idsn + 1);
+>  		WRITE_ONCE(msk->wnd_end, subflow->idsn + 1 + tcp_sk(ssk)->snd_wnd);
+>  		subflow_set_remote_key(msk, subflow, mp_opt);
+> +	} else {
+> +		/* Fallback: initialize sequence space to 0 (no remote key) */
+> +		subflow->map_seq =3D 0;
+> +		/* ensure mptcp_subflow_get_map_offset() returns 0 */
+> +		subflow->map_subflow_seq =3D subflow->ssn_offset +
+> +					   tcp_sk(ssk)->copied_seq;
 
 [Severity: High]
-This is a pre-existing issue, but can this lead to torn reads on 32-bit
-architectures?
+Does this code incorrectly initialize map_subflow_seq during TCP fallback?
 
-Because msk->ack_seq is a 64-bit value, updating it with WRITE_ONCE() in
-process context here (and similarly in __mptcp_move_skb()) without holding
-mptcp_data_lock(msk) might race with concurrent softirq readers.
+The comment says this should ensure mptcp_subflow_get_map_offset() returns
+0, but the offset and copied_seq are added rather than subtracted.
 
-If incoming subflow packets are processed on another CPU, they generate
-TCP ACKs via:
+Because mptcp_subflow_get_map_offset() evaluates
+copied_seq - ssn_offset - map_subflow_seq, adding the terms here causes the
+offset to evaluate to -2 * ISN.
 
-tcp_transmit_skb()
-  mptcp_established_options()
-    ack_seq =3D READ_ONCE(msk->ack_seq);
-
-Since this read only holds the subflow lock (bh_lock_sock(ssk)) and not the
-parent MPTCP socket lock, a concurrent 64-bit WRITE_ONCE() on 32-bit systems
-compiles into a non-atomic dual 32-bit memory access.
-
-Could this torn read result in sending a corrupted MPTCP Data ACK to the
-peer? If the sequence number jumps forward or backward unexpectedly, might
-the peer incorrectly assume data was successfully received or have its
-connection state disrupted?
+When falling back to standard TCP, this miscalculation will cause incoming
+packets to fail sequence bounds checks against msk->ack_seq, resulting in
+data reception failures as packets are either dropped or permanently stuck
+in the out-of-order queue.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1787446274.gi=
-t.tanggeliang@kylinos.cn?part=3D4
+t.tanggeliang@kylinos.cn?part=3D3
