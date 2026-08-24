@@ -1,132 +1,227 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA1F339363
-	for <mptcp@lists.linux.dev>; Mon, 24 Aug 2026 08:49:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C884C36E47A
+	for <mptcp@lists.linux.dev>; Mon, 24 Aug 2026 09:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787561351; cv=none; b=jkweLltc4aKAvB+89cxJFsWFLlcRyK/X59nA0anhUEBfvYwBTX93k8JGavGi4jUD1OATIOUJSueu3rBzFxWk6KmVQH5j+e4sFgExSpDf6yGVouBwTpHKgmeiBRbx7nyOTpGHwiXotMJUkzS0loE0bMhtdQGwPlkeXn5nRTTluvA=
+	t=1787563304; cv=none; b=PHrWUWJmMHM0UShc2hQuZ4Vv5raxwLXg0L8N6kzGnRRKBJSIuEh2LtIYOPX9wAoO/k9VQdaGiL4xFKcpvc3cBxO4ioBOOpzIuSM9gBdIsPacg/VKjzoVKog+S6pDAgXdlBrSYwsbXHC0uvEHt4CRURtpSrD9Sqn2gy7TVC19rUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787561351; c=relaxed/simple;
-	bh=fRxcMtijkAD9fD0jS5yMh5EJrnkC2BiFvBENhiRTcXw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=IxNcUhL0idcTUVqRgyexiOd9ZjIt8cPOUeSWEs/K19G/nQuT1ybiy9ruDRBCHeBkocogwXVDLJw8gvg9fiqNHelCgTl2ShfyhHfFh/ak92gih4jyK/FdSgyRZSs3MZcIux7HhSoPz220BUno3wYh4zYBrp/P+nsPkx9+NJpnjKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LAc8Yib9; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787563304; c=relaxed/simple;
+	bh=xELYEE5DKokB6QO0xi/+HN7EOh2mQhDD090KyMKYPfg=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=uFdUsysmxhXcESU4bjGPhBdaiv26jvPi2BbnGOvI8OGdSETAn3uEZebRP2dm4sMmPuvUFvyKLRIjJJoOMUeoRj37gESuiIkuGlhZWSGmFqfqVlWfaz3UBLWKb3yATs7UQ0/6n2QH8LnrXCpPD2+mNKoXVfMisp6lo4h0tIKdD9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bGDr1mDA; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LAc8Yib9"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-38dfe910e9dso3539228a91.3
-        for <mptcp@lists.linux.dev>; Mon, 24 Aug 2026 01:49:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787561349; x=1788166149; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=kReUh3P6lbr9HO8iaDEoBrV6AkJyTonRZvrS6PQ/8Oo=;
-        b=LAc8Yib9BNML+EH+bh2GUJ9X+lmbOFQnB53ZNfYOu5aMgIOy2/fdx7p5ROm0NpCKVk
-         EA5YbyW53brRttC70tKLw8rw1I6HuVnVUkyHcDzmiQqLMjuqs234/mbWkLywIwU8G+5P
-         aKzDEK5ByMqn7w+aJhynSvYBMJlnJ8bftW89ttBcE2SfwrA/jelBb2qnid7OB+kSmIDR
-         MmCWo/cwhfqpNzxp3ZAqDxWXTro6mBNtG3CkTO+cFAFFb/ZdG3m6FakzzAaUgJnBphCh
-         E9om9Nb524m18VFyVpfmWfsFdobE4qTMq1MDrV2u4wGnLE80fKJG3O1nuUoz9boNCWHX
-         k9oA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787561349; x=1788166149;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=kReUh3P6lbr9HO8iaDEoBrV6AkJyTonRZvrS6PQ/8Oo=;
-        b=odSJYEwEHu6UfkiGVWvrbrEL1IbOcXZKzZfupq/7iHJ9hcoglnxPYNEt1xYpzs68gv
-         xLIRFkUfjtLZg6Br/qnaqJUgX6GuB8Fpy0xLMJ6yOFrxX6Q7J2XCYx0J652kSqyU6Xt8
-         Hb7miCe9jYZdlmRze827DjWRCqqs6SjQ5WJhPF04rmlhyQt+ZByskYSqWKW/tnZkNpgT
-         gJ1lg1ZsVPXTaJR5U0EccMV2Oy4xR7Vl+jaHJe26T0ZqG0V/K1bTKd8LeA5KYXznydHT
-         vGlMcK6W89gCCtX7LFWLchJ4TfCdrt8vN3LvnNgG5yVIEACDJYXw155E+Nh43zQMtI7M
-         RMpg==
-X-Gm-Message-State: AFuF++kpzvnKg80MknCl2LG4AKou8mKA22ymV1KuXAeddg8M649t67sQ
-	fll0BVH+cPItnfgOSscXAKAhXBnxRBzK44mnDGWKX/eo95CclSDT7nIan8YY
-X-Gm-Gg: AR+sD13BZf+LkHJJ/FcU+5Vo+8DbU43OrJS/fZVv9Tvk+3df19konAC6qhz4bjz2iJJ
-	Ui+E5VBcpMEAKAeJXJbJ64NZUwLlKBM9gPoQAq/MSpfWIPFLqlQ93K4Rw06HXqeXk5Lr9E78Uim
-	DTrNT9NGqh7iwBlU3g202bY9apgRJ81tDnk/GPkL6eeWPBkQa5T1B2WhG8EetDT+PayQtQkr2an
-	+uKwGaZCMcTbmQGhFGVty2TsuPEhfYitIvgPN9secPcDC2o5bxzBelcG8v15enNLmjXx5AWr/3n
-	dK03Gq3msXXiTwZDCBiw6yBlbS0xHSE/qMPCEzwWpH/VKUj/b9GQhNF/tBPEQxxwZgUvCgQN2Gp
-	cwLhbCJXdGNNeY+dcJwCT93IbAfO+KKUtXvq8nSEV0bF9BjUa7OlgyXThDFSQAzKfVoNJAnBn8m
-	yc1hfGJwyG2Ye/6K/PsJOPjENnRDnpUGYksljmpXOxCKB1wE5P9G54kggkkUu0InwuqpZG3ChjW
-	Q==
-X-Received: by 2002:a17:90a:ec8e:b0:38e:c7b0:84ad with SMTP id 98e67ed59e1d1-395c2f2a10bmr44794519a91.0.1787561349066;
-        Mon, 24 Aug 2026 01:49:09 -0700 (PDT)
-Received: from [127.0.0.1] ([20.171.125.133])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-327f923f2c0sm36313782eec.30.2026.08.24.01.49.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2026 01:49:08 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Gang Yan <yangang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260824073625.57471-1-gang.yan@linux.dev>
-References: <20260824073625.57471-1-gang.yan@linux.dev>
-Subject: Re: [PATCH mptcp-next v4 0/6] mptcp: avoid data-races around the
- sysctls
-Message-ID: <6d623e9f-e350-d458-2b90-cef7b48560a2@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 24 Aug 2026 08:49:07 +0000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bGDr1mDA"
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=xELYEE5DKokB6QO0xi/+HN7EOh2mQhDD090KyMKYPfg=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1787563296; v=1; x=1788168096;
+ b=bGDr1mDAtOf0NwCflJmCF5rA3oBIc1Iu/DI1yd1Z83n8U22BXivv6ha6F8/7nuh4YeGcoWWR
+ iZqxG1rvOLdpOlOxLH7AxUovYVJ4ZbZ2L+mqyJR+vBLjRQCBz9D3OpuujzSHYcS3czzGIR9v9mr
+ YXzgQg5Mcqsqrld+jaNIA6+c=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: from webmail.migadu.com (2001:41d0:303:fc7a::)
+	by smtp.migadu.com with ESMTPS id 65145cb9ef89b3bc;
+	Mon, 24 Aug 2026 09:21:36 +0000
+X-Mizu-Trace-ID: 65145cb9ef89b3bc
+X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Date: Mon, 24 Aug 2026 09:21:31 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+From: gang.yan@linux.dev
+Message-ID: <412ac8f7acf27006301bde880d20d542986bf565@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH mptcp-next v4 6/6] Squash to previous one
+To: sashiko-reviews@lists.linux.dev
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <20260824075853.B44DA1F000E9@smtp.kernel.org>
+References: <20260824073625.57471-1-gang.yan@linux.dev>
+ <20260824073625.57471-7-gang.yan@linux.dev>
+ <20260824075853.B44DA1F000E9@smtp.kernel.org>
 
-Hi Gang,
+August 24, 2026 at 3:58 PM, sashiko-bot@kernel.org mailto:sashiko-bot@ker=
+nel.org  wrote:
 
-Thank you for your modifications, that's great!
+> >  + struct mptcp_pm_ops *old;
+> >  + bool need_sync =3D false;
+> >  +
+> >  if (!pm_ops || !bpf_try_module_get(pm_ops, pm_ops->owner)) {
+> >  pr_warn_once("pm %s fails, fallback to default pm", pm_ops->name);
+> >  pm_ops =3D &mptcp_pm_kernel;
+> >  }
+> >=20=20
+>=20>  - msk->pm.ops =3D pm_ops;
+> >  - if (msk->pm.ops->init)
+> >  - msk->pm.ops->init(msk);
+> >  + spin_lock_bh(&msk->pm.lock);
+> >  + old =3D rcu_dereference_protected(msk->pm.ops,
+> >  + lockdep_is_held(&msk->pm.lock));
+> >  + if (old =3D=3D pm_ops) {
+> >  + need_sync =3D false;
+> >  + } else {
+> >  + rcu_assign_pointer(msk->pm.ops, pm_ops);
+> >=20
+>=20[Severity: High]
+> Does this publish the new pm_ops pointer before it is fully initialized=
+?
+>=20
+>=20The rcu_assign_pointer() call exposes pm_ops to concurrent readers be=
+fore
+> pm_ops->init(msk) is called. Could concurrent access during the grace p=
+eriod
+> execute callbacks on a partially initialized state?
+>=20
 
-Our CI did some validations and here is its report:
+Hi
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/327040=
-90606
+The=20ordering is safe, because what pm_ops->init() initialises is the pe=
+r-socket
+PM state (msk->pm.*), not the ops themselves.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/53301540be29
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1150683
+The ops are statically registered and unchangeable -- their callbacks are=
+ valid
+from registration, so the published pointer never refers to a half-initia=
+lised
+object.
 
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+> >=20
+>=20> + need_sync =3D !!old;
+> >  + }
+> >  + spin_unlock_bh(&msk->pm.lock);
+> >  +
+> >  + if (need_sync)
+> >  + synchronize_rcu();
+> >  + if (old)
+> >  + bpf_module_put(old, old->owner);
+> >  +
+> >  + if (pm_ops->init)
+> >  + pm_ops->init(msk);
+> >=20
+>=20[Severity: High]
+> When replacing an existing path manager, does this code leak the old re=
+sources?
+>=20
+>=20The code calls bpf_module_put(old, old->owner) but doesn't seem to ca=
+ll
+> old->release(msk) to free the actual path manager resources.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+On the missing old->release(): on the disconnect path the per-socket
+PM resources are already freed before we get there --
+mptcp_pm_destroy() unconditionally calls
+mptcp_userspace_pm_free_local_addr_list() (and the announced list)
+from mptcp_destroy_common(), so by the time mptcp_pm_data_reset()
+swaps the ops there is nothing left for old->release() to free. The
+kernel PM has no per-socket resources and no release callback today,
+and the userspace PM's release only frees the local address list,
+which is covered by the above.
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+>=20
+>=20Also, if old =3D=3D pm_ops, we still reach pm_ops->init(msk) here. Wi=
+ll
+> unconditionally calling init() on unchanged ops cause a double-allocati=
+on?
+>=20
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+that=20is the pre-existing behaviour -- the socket was just torn down by
+disconnect() and the PM flags (work_pending, accept_addr, ...) need to be
+rebuilt from the current sysctl values. mptcp_pm_kernel_init() only sets
+those flags, it does not allocate, so re-running it is an idempotent
+reset, not a double allocation.
+
+
+> >=20
+>=20> pr_debug("pm %s initialized\n", pm_ops->name);
+> >  }
+> >=20
+>=20[ ... ]
+>=20
+>=20>=20
+>=20> @@ -1204,6 +1233,7 @@ void mptcp_pm_data_reset(struct mptcp_sock *m=
+sk)
+> >  const struct net *net =3D sock_net((struct sock *)msk);
+> >  u8 pm_type =3D mptcp_get_pm_type(net);
+> >  struct mptcp_pm_data *pm =3D &msk->pm;
+> >  + struct mptcp_pm_ops *pm_ops;
+> >=20=20
+>=20>  memset(&pm->reset, 0, sizeof(pm->reset));
+> >  pm->rm_list_tx.nr =3D 0;
+> >  @@ -1211,8 +1241,10 @@ void mptcp_pm_data_reset(struct mptcp_sock *m=
+sk)
+> >  WRITE_ONCE(pm->pm_type, pm_type);
+> >=20=20
+>=20>  rcu_read_lock();
+> >  - mptcp_pm_ops_init(msk, mptcp_get_path_manager(net));
+> >  + pm_ops =3D mptcp_get_path_manager(net);
+> >  rcu_read_unlock();
+> >  +
+> >  + mptcp_pm_ops_init(msk, pm_ops);
+> >  }
+> >=20
+>=20[Severity: High]
+> Can dropping the RCU read lock here lead to a use-after-free?
+>=20
+>=20The rcu_read_unlock() invalidates the pm_ops pointer before it is pas=
+sed to
+> mptcp_pm_ops_init(), which then dereferences it (via pm_ops->owner) in
+> bpf_try_module_get().=20
+>=20
+> Should the lock be held across the initialization, or should the module
+> reference be taken before dropping the read lock?
+
+Yes, and I think it can be fixed through this:
+
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index ae75e68bc662..769b084ed9cd 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -1169,11 +1169,6 @@ static void mptcp_pm_ops_init(struct mptcp_sock *m=
+sk,
+        struct mptcp_pm_ops *old;
+        bool need_sync =3D false;
+=20
+-=20      if (!pm_ops || !bpf_try_module_get(pm_ops, pm_ops->owner)) {
+-               pr_warn_once("pm %s fails, fallback to default pm", pm_op=
+s->name);
+-               pm_ops =3D &mptcp_pm_kernel;
+-       }
+-
+        spin_lock_bh(&msk->pm.lock);
+        old =3D rcu_dereference_protected(msk->pm.ops,
+                                        lockdep_is_held(&msk->pm.lock));
+@@ -1242,6 +1237,11 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
+=20
+=20       rcu_read_lock();
+        pm_ops =3D mptcp_get_path_manager(net);
++       if (!pm_ops || !bpf_try_module_get(pm_ops, pm_ops->owner)) {
++               pr_warn_once("pm %s fails, fallback to default pm",
++                            pm_ops ? pm_ops->name : NULL);
++               pm_ops =3D &mptcp_pm_kernel;
++       }
+        rcu_read_unlock();
+=20
+=20       mptcp_pm_ops_init(msk, pm_ops);
+
+
+WDYT? @Maintainers. If yes, it can be will done in v5.
+
+Thanks
+Gang
+
+>=20
+>=20--=20
+>=20Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/2026082407362=
+5.57471-1-gang.yan@linux.dev?part=3D6
+>
