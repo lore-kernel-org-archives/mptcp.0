@@ -1,146 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta0.migadu.com (out-34.mta0.migadu.com [91.218.175.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F6B27A91D
-	for <mptcp@lists.linux.dev>; Mon, 24 Aug 2026 07:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDCFF396B8C
+	for <mptcp@lists.linux.dev>; Mon, 24 Aug 2026 07:36:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787556769; cv=none; b=ZzENng96pyGGXvi3h9kOqfrW73eFXh2cOxwrfHNICEFw2HTXloeYa7atucJfYIYWM9AdeijjxK5x1r4XGCjeTe1sVR4tu/d6xMm8DHnoxS4fuui+5WOmAng6Z+y461jKxx9ZYPxcGVfcqV9zMraNUoVOVWqa09HtzZtR1OZ9rxs=
+	t=1787556994; cv=none; b=THRKMCLrQl+4ixDQtXzmOWaKTc4SnjZSlos35tghDwCsaZ9tEH8KtVXQ64yXUJthV4c3/Cahv4dAlqddWFBMjOOfGLtZmPdlQoTAoJobUQ41Iw2trjtG30x0TbKQH6q/Oaz89hsm8vBPTou2CMMqZ4heDOGBw61oCd1fSbss4Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787556769; c=relaxed/simple;
-	bh=8/A0e4o0k7RvBEWkhvcO7iUtOuQZmM6vQLlnaqWZrw8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=h7hVlCsig6YgYsKidIcn5D8txcBMgdAjFT95sj7YivxPqo7RnnO72IiZsqvkJ3xFIJgzkRsT8uCjXyjbDNHcFhi2fk8TAww58OinCdRztYqOWjktZB403e/hR7pNvm4ZM3BDZwFmgXu1wItYd9v0GNQ9q6NHRo073bH+/IIp0vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AunC09y3; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787556994; c=relaxed/simple;
+	bh=YbuCnCKQVk35+um1Lmfjg/Wafw6glJPxZ1nx+27EyUw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=kt8YDx0SZ1qJSMdEQ6jkUj0/nsAB7liKpSMQDIu+c6LXtx1+NZzd/bDAp8RMkOJE1f9Ol+cfYDwjGId/dz/72SSQ/izAeDzqriZzbA99w9vqt53nABg2hriCukWfT/RXk9rHprCIfcB8DrcdiJsne7/riekTMiWYAQi/SgQHuEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AP6yxIq2; arc=none smtp.client-ip=91.218.175.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AunC09y3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAB871F000E9;
-	Mon, 24 Aug 2026 07:32:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787556767;
-	bh=TVkjkiwOUH55+uxez8uRVaQhlGVG05VaG4Gc/mT8OuQ=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=AunC09y3htnip7ZBDPaR4MI67WUjhc1CY4qUDkJ8lvR9octim5QvgoZtKSu0ftmf4
-	 ULXuW4iALKeLjaqyLvD8oDauS6C1mwbdn21UPrIl6DWKbZpKeVfky2SM5Srgsv1FpP
-	 6Hnc7L94fGY5bHyGQvqnSZCJaP6O3t/133Vgs6YzZDbTNskTBtm5IOK0IxPGEUCrNS
-	 4RS0QiKQJdFYaJIdCB1DqP4Vrau+gzMPFLfTQOTvkSVGdzud+2tu8G2R4gUGzhfbMG
-	 TAZ9bLVzbS6dyJGXYLNH7nV44/SqCS6vQn/HVX15P3ITfLE7rpRyyLbUmgLpuEDGZO
-	 QHTc124p7phXA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v4 4/5] mptcp: implement psock_update_sk_prot
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Geliang Tang" <geliang@kernel.org>
-Cc: mptcp@lists.linux.dev
-In-Reply-To: <7b7000bec51e276ef4cdb575f02ac5913656b325.1787554581.git.tanggeliang@kylinos.cn>
-References: <cover.1787554581.git.tanggeliang@kylinos.cn>
- <7b7000bec51e276ef4cdb575f02ac5913656b325.1787554581.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 24 Aug 2026 07:32:47 +0000
-Message-Id: <20260824073247.AAB871F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AP6yxIq2"
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=YbuCnCKQVk35+um1Lmfjg/Wafw6glJPxZ1nx+27EyUw=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1787556989; v=1; x=1788161789;
+ b=AP6yxIq2DEOFAmB3WoutidH3zmB2y7cgrYcuPzw05LIVL8Accd9Ys5jK8SNHVZsQrQ/lUvbP
+ edG6tJNYkm8lB8rZM4CyLztEyYSWxwHNSzlVSBgwXk4pp/MsQL5HwQxqgTecsW7S0LNCyoFfYPj
+ xYeS33835kUDZaRBtNQt9WNI=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: from thinkbook16p.. (223.70.159.239)
+	by smtp.migadu.com with ESMTPS id 7275e63edcd591cf;
+	Mon, 24 Aug 2026 07:36:29 +0000
+X-Mizu-Trace-ID: 7275e63edcd591cf
+X-Migadu-Flow: FLOW_OUT
+From: Gang Yan <gang.yan@linux.dev>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next v4 0/6] mptcp: avoid data-races around the sysctls
+Date: Mon, 24 Aug 2026 15:36:19 +0800
+Message-ID: <20260824073625.57471-1-gang.yan@linux.dev>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [Critical] Infinite kernel loop in `sock_map_close` and `sock_map_destroy=
-` when a listening MPTCP socket in a sockmap accepts a new connection.
-- [High] Missing `recvmsg` override for MPTCP BPF sockets causes packets re=
-directed via SK_PASS or SK_REDIRECT to be permanently leaked.
-- [Medium] Attaching a `msg_parser` (`sk_msg`) program to an MPTCP socket s=
-ilently succeeds but is never executed due to missing `sendmsg` override.
---
+From: Gang Yan <yangang@kylinos.cn>
 
---- Patch [4]: [PATCH mptcp-next v4 4/5] mptcp: implement psock_update_sk_p=
-rot ---
-commit b125c7aa25aed0ed03598733bc75a385728067e7
-Author: Geliang Tang <geliang@kernel.org>
-Subject: mptcp: implement psock_update_sk_prot
+Changelog:
+v4:
+ - Patch 6 is new to this series, for addressing the sashiko's comments
+   in [1] using rcu. Please note it should also be squashed to "mptcp:
+   pm: init and release mptcp_pm_ops", but spilting it may ease the
+   review.
 
-This patch adds basic MPTCP support for BPF sockmap by implementing the
-psock_update_sk_prot callback. This enables MPTCP sockets to be added to
-sockmap and supports the sk_skb stream_verdict redirect path.
+v3:
+ Link: https://patchwork.kernel.org/project/mptcp/cover/20260819125629.49823-1-gang.yan@linux.dev/
 
-Link: https://lore.kernel.org/oe-kbuild-all/202512261144.DxrvwMS3-lkp@intel=
-.com/
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/521
+v2:
+ Link: https://patchwork.kernel.org/project/mptcp/cover/20260818094825.48446-1-gang.yan@linux.dev/
 
-> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-> index 82b0ad25f7001..df41f72603c0f 100644
-> --- a/net/mptcp/bpf.c
-> +++ b/net/mptcp/bpf.c
+v2:
+ Link: https://patchwork.kernel.org/project/mptcp/cover/20260817012452.7519-1-gang.yan@linux.dev/
 
-[ ... ]
+[1] https://sashiko.dev/#/patchset/20260819125629.49823-1-gang.yan@linux.dev?part=5
+Gang Yan (5):
+  mptcp: sched: change scheduler sysctl atomically
+  mptcp: pm: change path_manager sysctl atomically
+  mptcp: pm: use WRITE_ONCE() for the pm_type sysctl
+  Squash-to "mptcp: pm: init and release mptcp_pm_ops"
+  Squash to previous one
 
-> +static void mptcp_bpf_rebuild_protos(struct proto prot[MPTCP_BPF_NUM_CFG=
-S],
-> +				     struct proto *base)
-> +{
-> +	prot[MPTCP_BPF_BASE]			=3D *base;
-> +	prot[MPTCP_BPF_BASE].destroy		=3D sock_map_destroy;
-> +	prot[MPTCP_BPF_BASE].close		=3D sock_map_close;
+Matthieu Baerts (NGI0) (1):
+  mptcp: use READ_ONCE() over sysctls
 
-[Severity: Critical]
-Does accepting a connection on a listening MPTCP socket in a sockmap lead to
-an infinite loop here?
+ net/mptcp/ctrl.c     | 141 ++++++++++++++++++++++++++++++++-----------
+ net/mptcp/pm.c       |  61 ++++++++++++++-----
+ net/mptcp/protocol.c |   7 ++-
+ net/mptcp/protocol.h |   9 +--
+ net/mptcp/sched.c    |   2 +-
+ net/mptcp/subflow.c  |   9 ++-
+ 6 files changed, 170 insertions(+), 59 deletions(-)
 
-When an incoming connection is accepted, the socket is cloned and the child
-socket inherits mptcp_bpf_prots. Because sk_user_data (the psock) is cleared
-for the child socket, sock_map_close() will find a NULL psock and attempt to
-call the original sk_prot->close.
+-- 
+2.43.0
 
-Since MPTCP lacks an equivalent to tcp_bpf_clone() to restore the original
-protocol on cloned sockets, sk_prot->close resolves back to sock_map_close()
-itself, triggering an infinite goto retry loop.
-
-> +	prot[MPTCP_BPF_BASE].sock_is_readable	=3D sk_msg_is_readable;
-> +
-> +	prot[MPTCP_BPF_TX]			=3D prot[MPTCP_BPF_BASE];
-> +	prot[MPTCP_BPF_RX]			=3D prot[MPTCP_BPF_BASE];
-> +	prot[MPTCP_BPF_TXRX]			=3D prot[MPTCP_BPF_BASE];
-> +}
-
-[Severity: High]
-Does this cause redirected packets to be permanently leaked?
-
-If a stream_verdict program returns SK_PASS (the default behavior to allow
-packets) or another BPF program redirects to this MPTCP socket via
-SK_REDIRECT, the data is placed into the BPF ingress_msg queue.
-
-Because this patch explicitly does not override recvmsg(), mptcp_recvmsg()
-only reads from sk_receive_queue and never checks the BPF ingress queues.
-The data appears to be permanently blackholed, and since mptcp_poll() checks
-only MPTCP-level data, EPOLLIN is broken as well.
-
-[ ... ]
-
-> +int mptcp_bpf_update_proto(struct sock *sk, struct sk_psock *psock,
-> +			   bool restore)
-> +{
-> +	int family =3D sk->sk_family =3D=3D AF_INET6 ? MPTCP_BPF_IPV6 :
-> +						 MPTCP_BPF_IPV4;
-> +	int config =3D psock->progs.msg_parser   ? MPTCP_BPF_TX   :
-> +						 MPTCP_BPF_BASE;
-
-[Severity: Medium]
-Should attaching a msg_parser program return an error like -EOPNOTSUPP
-instead of silently succeeding?
-
-If a msg_parser program is attached, the configuration is set to MPTCP_BPF_=
-TX.
-However, mptcp_bpf_rebuild_protos() maps MPTCP_BPF_TX back to MPTCP_BPF_BAS=
-E,
-which does not override sendmsg(). As a result, the attachment succeeds but
-outgoing packets will bypass the BPF program entirely.
-
-> +
-> +	if (psock->progs.stream_verdict || psock->progs.skb_verdict)
-> +		config =3D (config =3D=3D MPTCP_BPF_TX) ? MPTCP_BPF_TXRX :
-> +						    MPTCP_BPF_RX;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1787554581.gi=
-t.tanggeliang@kylinos.cn?part=3D4
