@@ -1,187 +1,216 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235FD3B058E
-	for <mptcp@lists.linux.dev>; Sun, 23 Aug 2026 22:12:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A4131E824
+	for <mptcp@lists.linux.dev>; Mon, 24 Aug 2026 02:20:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787523166; cv=none; b=LtyzSh71NVBJU05J4MJCLMwp2inG1LvQGW/3ZFnUDvpoce/crkKOt3naJUSwRkeGyrRWHP5IoapL/YJjBfmIb/Ig9UirdfQziWUh5OVUAsBfqePkrDkuMtmcE43FtILzr4Sa5CYIQMuqQzjAI0sdaBpae6Yz1XrJrgxc+vughs0=
+	t=1787538060; cv=none; b=DHoLoBOU4ay2Ap9VLxXq/0sQxrD4ts8S1td2ymyFsGMWODfXeJ24r0HVeG2wn76nnJgov+v6Kq4OUQPh4ce+N8Sfd3bNR/lvoOtL/LLdEf4m3l3CooMSmC0jSc4Wyy5lOBI3sPcO225zn0Y5o0TwvVfhVfANjeyZhLIY8Sn3ErA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787523166; c=relaxed/simple;
-	bh=GqPg7liRNMqrm8j4qggfPJWb6w6iifsnP6+v+SgJcSk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tktkz8hN48s+x/SYH6gt1WgyQW13pnCJIXiCAYHqqh6EpBLjxbBIBSUeBXaHmVEaunLoZl3+1bC5N4ewd6lRKNRm+esywWl7Mpvou7Pw+MT/IpJKEHqUOcdCX56Fnjny2lolgmcmuUb4jncF0/EB4dR8RTH1zsNk7n4o0e3lfgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=FPfqc06J; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1787538060; c=relaxed/simple;
+	bh=y5Vobe0JTjWrB+PB6Kssx6dy/IoypdMmQryJVZ8E90M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V3pWLiQSGN9xAROzZyf22BFfY84P1hSVxYjUJ8fxzGuI98JqV0bKvfyfslWTPGbnQ3XJIB4RZk/UO30tDRW4gLRaCk5PGhjvcPVCfi7RSghAagYxrIPxOeNvmN6WbC7qjMJOYVCU+bJHCyq4BNlmz2izJMaDtneOdeRl8DlfnH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YnQVQqAA; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="FPfqc06J"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6a378f90555so4621431a12.3
-        for <mptcp@lists.linux.dev>; Sun, 23 Aug 2026 15:12:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1787523160; x=1788127960; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=//7iEXuM0dwaErrYwlxiIsbco7Xb10BSWAJJRQqIeEQ=;
-        b=FPfqc06Jb3ITFgV1DG3qV2CPOcxOxTNhFSrjBwOPkCMCz17ZRp2+6V4ZbQ7XLsPcTO
-         R9V+oRekps23w4ZcqeUA/y9rlEwc3KNa9ansJxDTz07/jmKAI8p+Nn0iMZ+DLU5KvqaS
-         taIQxLGjXIJfNOK9CX40J4vLOtu6zKpzgO0RMTbjZCQMBdk1Lsae7fP3EMqgTxu/ggju
-         E2Q2vtWA5pqCjAt3KkpzWycNCJqqwIDrur4h4E7Z2+3n1n3X0uF6TUFmCl/FDYiV34iz
-         KGpEShIqs4vS7RNaGkqwNTjm1V5otMFKFYo0df0tl3zH2/l7yzYKHt/Ftv8hxAMFG9R5
-         kICw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787523160; x=1788127960;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=//7iEXuM0dwaErrYwlxiIsbco7Xb10BSWAJJRQqIeEQ=;
-        b=bxxIFptiMlZ7Iafv5GjxXXARu0IetONnsbj4i/fJkU3AcsNvBSRK8qAtoW7dr4rHfW
-         istTIGjhFKZ9I62Z6JRjtYEAxTezDsm8AP6JU9QV2ljaVD9wojL0jAy5B14oy/H9nE85
-         8aAS9kUqrV+RkotpknIEbWCDaDUhfqIzDjiYzbQ+ZWjpFYe8IucaPDobZdH7gy8EhCfV
-         WAR/taYW/09Gp6joM+zmLfR93C2oReXB2znqYriCVNYKOcpQHQEVJd8rh5h+XmVFlNHG
-         7LHPXAMkREi27L84787BXiuENmc5PPxnvRcMF/QsVvxf6bsKAZpR2rICO/YIA4UBfF//
-         vJtA==
-X-Forwarded-Encrypted: i=1; AHgh+RrfhB/CSnQlBG5g52gKKv3xLkYUgYUL4y/WigI98BOC9ip4/55qfxWeXgxKpFFuPtg9jyqiFA==@lists.linux.dev
-X-Gm-Message-State: AFuF++mQuifdaqck7gfnTmHanKj9K1D7VPP+hg4Vza7IlXjzXruWE+IP
-	c1FVdt7LKsQnMv/6Kz+hZS0P2z6bCJoJbK0jl+JYfrv/UFsOjU1Jp45kPtTZte5YoIw=
-X-Gm-Gg: AR+sD100FvvVMT9Oz8Eb1DsAQP5pxo4+caN4+cW0dmo+y5wGulr2qBiayLeVlCpn9yP
-	PIZ7GwAkh6hkn2sfTBA5HVqBn2ntjayrGvYTw34X+cfMOFTywUJBZmogQJOqYllekpAhXjooMaO
-	JTXT+tjyb5p5856BGyFlu2lCAqh4Qjpyiji1DRBAmAllrSCmWP6DIYIeYLUzxNoTlo4YyGU8vzZ
-	A6qRemvmtvltYl5M5JiEolwDAT4sFmxfBLnL6FxVKKmKJeKTuZ6D5PeOpGL3cp9MH9sYrBSSZq2
-	jYIZzPh6A+/KjhfFmsxFIpPIdZhLMcDKvUyAvwiWwBqKZMhq9B3k8b1EQolfufqo3iq1va/wYBV
-	QNIssVfjjCYVsVkpXZFvGZW15NM2nZ07nmWVUaR1eiClHa3rIHozd0Ef9a8QAhzu1CcBOc6uxTy
-	CwQDF/oAJslaDDCj6P06RLiRIuvohch3H+BHZZ2mIjI1x4MXlvj25ZeEyK3g00wQ3sVOceva19g
-	sI8
-X-Received: by 2002:a05:6402:505b:b0:69c:811f:8f5 with SMTP id 4fb4d7f45d1cf-6a42f1b9325mr25356134a12.6.1787523160405;
-        Sun, 23 Aug 2026 15:12:40 -0700 (PDT)
-Received: from localhost ([2a02:8071:56d1:2de0:1d24:d58d:2b65:c291])
-        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-6a59e00108asm7547158a12.2.2026.08.23.15.12.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Aug 2026 15:12:39 -0700 (PDT)
-Date: Mon, 24 Aug 2026 00:12:38 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Mauricio Faria de Oliveira <mfo@igalia.com>
-Cc: Kees Cook <kees@kernel.org>, Joel Granados <joel.granados@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	kernel-dev@igalia.com, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	fsverity@lists.linux.dev, keyrings@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-wpan@vger.kernel.org, lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org, 
-	coreteam@netfilter.org, linux-sctp@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-s390@vger.kernel.org, bridge@lists.linux.dev, mptcp@lists.linux.dev, 
-	rds-devel@oss.oracle.com, virtualization@lists.linux.dev
-Subject: Re: [PATCH RFC v3 03/13] sysctl, mod_devicetable: add macro
- MODULE_SYSCTL_TABLE
-Message-ID: <aotteDcc588iwC6g@monoceros>
-References: <20260819-sysctl-module-aliases-v3-0-aab90569365d@igalia.com>
- <20260819-sysctl-module-aliases-v3-3-aab90569365d@igalia.com>
- <aomlfGJM61qZKxx2@monoceros>
- <4e3eaf1d3419e808be046035f114bf6c@igalia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YnQVQqAA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 350E01F00ACA;
+	Mon, 24 Aug 2026 02:20:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787538058;
+	bh=f0ckJ9z6JH1PIwiANM6GLJNJKBX9xdFtBO+VCGo9v3s=;
+	h=From:To:Cc:Subject:Date;
+	b=YnQVQqAAjj9bJbanRPYH4riKrXSdO5HyTsrY1mbshRiWjuvT0gGNmjPLgnXtPTu+F
+	 i4F8BR1YKy46DMJk4OSFt6AAjhwFBt7/+xduSNVmeHggzyzafI4Hy5OWMGV8M/DsnZ
+	 2f7blcQ/5PoiHaAwdDZNzecDRaICYykfzY+6atdQmN1NNC9+h5onJNZQstfD+yv7xV
+	 WXWPTa7VWBRry1WWQw/+q1hgdovFIB7Ome/u/rWgkELr2plCVD2olmPfrtYHIu3/Am
+	 wygUCUGkfbzsqiRx2xwlaEQ5XY6d1lMDsr2vbi0hSzVvGzgUArY0j/2jR1k0mvq8E8
+	 2WQryGresfJNg==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v7 0/8] Reduce the differences between TCP and MPTCP for TLS usage
+Date: Mon, 24 Aug 2026 10:20:35 +0800
+Message-ID: <cover.1787537436.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6dsww6grbwx7uy7i"
-Content-Disposition: inline
-In-Reply-To: <4e3eaf1d3419e808be046035f114bf6c@igalia.com>
+Content-Transfer-Encoding: 8bit
 
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
---6dsww6grbwx7uy7i
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH RFC v3 03/13] sysctl, mod_devicetable: add macro
- MODULE_SYSCTL_TABLE
-MIME-Version: 1.0
+v7:
+ - Patch 1 is a new one to fix the existing issue Sashiko mentioned -
+   using atomic64_t for msk->ack_seq.
+ - Fix the map_subflow_seq setting in fallback mode in patch 4.
 
-Hello Mauricio,
+v6:
+ - Memory ordering for MPTCP_SYNC_SEQ: Add smp_wmb() before set_bit() in
+   subflow_set_remote_key() and smp_rmb() after test_and_clear_bit() in
+   __mptcp_move_skb() and mptcp_release_cb() to prevent data races on
+   weakly-ordered architectures, ensuring ack_seq updates are visible
+   before the flag is set and readers see the updated sequence after
+   observing the flag.
+ - Lockdep nested locking: Use lock_sock_fast_nested(ssk) instead of
+   lock_sock_fast(ssk) in mptcp_sock_rate_check_app_limited() to suppress
+   false positive recursive locking warnings when acquiring subflow socket
+   locks while holding the parent MPTCP socket lock.
+ - Receive window advertisement order: Swap mptcp_rcv_space_adjust() and
+   mptcp_cleanup_rbuf() in mptcp_read_complete() to expand the receive
+   buffer before evaluating window updates, ensuring ACKs advertise the
+   new (larger) window size instead of delaying the advertisement until
+   the next cycle.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787446274.git.tanggeliang@kylinos.cn/
 
-On Sat, Aug 22, 2026 at 01:57:24PM -0300, Mauricio Faria de Oliveira wrote:
-> On 2026-08-22 10:41, Uwe Kleine-K=F6nig wrote:
-> > On Wed, Aug 19, 2026 at 03:16:16PM -0300, Mauricio Faria de Oliveira wr=
-ote:
-> >> The MODULE_SYSCTL_TABLE macro emits a struct module_sysctl_table varia=
-ble
-> >> with pointers to a sysctl table's path and entries, and table/entry si=
-zes.
-> >=20
-> > That new struct doesn't seem to contain any pointer?
->=20
-> The struct module_sysctl_table fields .path and .table are pointers,
-> although with kernel_ulong_t type so that the same 32/64-bit size is
-> used in file2alias.c based on KERNEL_ELFCLASS (and not on the host,
-> which might differ with CROSS_COMPILE).
+v5:
+ - only patch 3 changed.
+ - Fallback offset underflow: Initialize MPTCP sequence space to 0 in
+   mptcp_propagate_state() when mp_opt == NULL, ensuring SKB's map_seq
+   starts from 0 to match msk->copied_seq and prevent offset calculation
+   underflow in fallback mode.
+ - Stale peek_seq: Move peek_seq recomputation into the mptcp_move_skbs()
+   continue path and add another recomputation after sk_wait_data(),
+   ensuring peek_seq stays synchronized with msk->copied_seq updates from
+   MPTCP_SYNC_SEQ processing in both paths.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787368526.git.tanggeliang@kylinos.cn/
 
-Cross compilation isn't an issue for the already existing device id
-structures; many of them also contain pointers.
-(While modpost doesn't use the pointers, the size of the structures must
-be known to correctly interpret the arrays.)
-Also sizeof(long) differs between architectures and I can compile for
-arm(32) just fine on amd64.
+v4:
+ - mptcp_recvmsg: move the peek_seq recompute from after sk_wait_data()
+   to before the mptcp_move_skbs() continue check.
+   mptcp_move_skbs() -> __mptcp_move_skb() may shift the head skb's
+   map_seq to the IASN frame via __mptcp_sync_rcv_sequence(); if
+   'continue' then exits the loop, the recompute is skipped, and the
+   next __mptcp_recvmsg_mskq() computes offset with peek_seq in the old
+   frame minus map_seq in the new frame. The underflow makes the offset
+   test fail and the skb is skipped (and mptcp_recv_skb() actually frees
+   the TFO skb via mptcp_eat_recv_skb()).
+ - Make all three MPTCP_SYNC_SEQ bit accesses atomic:
+   - subflow_set_remote_key:   __set_bit            -> set_bit
+   - __mptcp_move_skb:         __test_and_clear_bit -> test_and_clear_bit
+   - mptcp_release_cb:         __test_and_clear_bit -> test_and_clear_bit
+   The flag is set in BH under mptcp_data_lock() (msk slock held) and
+   cleared in user context under lock_sock() slow path (only owned=1,
+   slock not held). The non-atomic RMW on the two sides races, which can
+   lose the IASN sync.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787295147.git.tanggeliang@kylinos.cn/
 
-Additionally there is hardware out there that has sizeof(void *) =3D 16
-but sizeof(long) =3D 8. Up until recently I worked on mainlining that (and
-it has business reasons only I stopped, so I guess and hope I will
-continue at some point in the future). See
-https://lwn.net/Articles/1037974/ for some details if you're interested.
+v3:
+ - Patch 2, handle "offset" in __mptcp_sync_rcv_sequence().
+ - Patch 3, update __mptcp_move_skb() in response to Sashiko comments:
 
-I would be great if your series didn't introduce a new obstacle for
-that.
+ 	if (__test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags))
+		msk->copied_seq += mptcp_iasn(msk);
 
-> >> That symbol will be handled by file2alias.c (modpost) with the changes=
- in
-> >> mod_devicetable.h and devicetable-offsets.c.
-> >>=20
-> >> The option macros MODULE_SYSCTL_TABLE_{DISABLE,UNIQUE_ID} can be used =
-on
-> >> a per-file basis to disable the macro and change the symbol name patte=
-rn.
-> >>=20
-> >> Signed-off-by: Mauricio Faria de Oliveira <mfo@igalia.com>
-> >> ---
-> >>  include/linux/mod_devicetable.h   |  7 +++++++
-> >>  include/linux/sysctl.h            | 42 ++++++++++++++++++++++++++++++=
-+++++++++
-> >>  scripts/mod/devicetable-offsets.c |  6 ++++++
-> >>  3 files changed, 55 insertions(+)
-> >=20
-> > Please put the new struct in a separate header. Apart from not being
-> > about a device table, I'm currently work on removing
-> > <linux/mod_devicetable.h>. See commit
-> > ad428f5811bd7fb3d91fa002174de533f9da94d7 for more details.
->=20
-> Sure; I looked at that earlier (thanks for the instructive commit
-> message, by the way) and found the new struct to be similar to "struct
-> cpu_feature isn't really a device_id struct" (not moved), but apparently
-> missed the trailing "fow now", which is clearer now. Fixed for v4.
+ - Patch 4, replace after64() to after() in mptcp_prune_ofo_queue(). The
+   pre-existing issue raised by Sashiko regarding changing the type of
+   ack_seq to atomic64_t is not addressed in this series.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1786445142.git.tanggeliang@kylinos.cn/
 
-Yeah, I didn't move that because it was an outlier in the header as it's
-not a device id. IMHO it should go to something like
-include/linux/cpu_feature.h.
+v2:
+ - Patch 3, updated in response to Sashiko comments:
 
-Best regards
-Uwe
+        if (unlikely(msk->rcvd_dummy_seq)) {
+                msk->copied_seq += mptcp_iasn(msk);
+                __mptcp_sync_rcv_sequence(sk);
+                /* Release cb() would otherwise re-base copied_seq
+                 * again.
+                 */
+                test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags);
+        }
 
---6dsww6grbwx7uy7i
-Content-Type: application/pgp-signature; name="signature.asc"
+        /* Skip the already peeked data. */
+        if (offset >= skb->len) {
+                *last = skb;
+                continue;
+        }
+ - Patch 5, replaced with Paolo's patch.
+ - Patch 6, 7, new patches addressing app-limited conditions.
+ - The patch "trim the duplicated skb head at receive enqueue" has been
+   dropped, as it is no longer needed after Paolo updated the "mptcp:
+   out-of-order queue pruning" series.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1786158416.git.tanggeliang@kylinos.cn/
 
------BEGIN PGP SIGNATURE-----
+v1:
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1785150300.git.tanggeliang@kylinos.cn/
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmqLcFMACgkQj4D7WH0S
-/k74fgf+L2E+C5s7/Uv60MggM8SluqqYOIYVRQMrJ0YZ292Po2lSpcrxuhUuQU2B
-oXhO4fsc1HgZsK331x/O/bMuTOPLltQaKOsxLiMi24UglNQqmujyzSUFLnsr9NlL
-1xjI1icd6tMaie8k1PK7ynotnvtfYE9Fbl/52MAUgNFbTbWqnaXhNv+fzm/C72Cc
-xjp+GuDi0DimbriiFBYP3aUccUEUCgsrwh3Zwss3iQSaV2gZ3Y+jYlUBB3YlBSZQ
-+m5a8ZWC4FeqCD+8NXyqc01adbOF9gkilqmoa2KsUhRY9+jPqn0pQhpfPxEl6Lf9
-/YNG96sk855Er0BHcQ1R8Pg+AcsRrg==
-=t37g
------END PGP SIGNATURE-----
+The goal of this series is to reduce the differences between TCP and MPTCP
+for TLS usage, in preparation for adding TLS over MPTCP support in the
+future.
 
---6dsww6grbwx7uy7i--
+In previous versions [1], a struct tls_prot_ops was defined to represent
+the interface differences between TCP and MPTCP, which contained the
+following callbacks:
+
+	struct sk_buff *(*recv_skb)(struct sock *sk, u32 *off);
+	bool (*lock_is_held)(struct sock *sk);
+	void (*read_done)(struct sock *sk, size_t len);
+	u32 (*get_skb_seq)(struct sk_buff *skb);
+	int (*skb_get_header)(const struct sk_buff *skb, int offset,
+	                      void *to, int len);
+	bool (*epollin_ready)(const struct sock *sk);
+	void (*check_app_limited)(struct sock *sk);
+
+In reality, some of these callbacks are unnecessary. This series aims to
+eliminate the get_skb_seq(), skb_get_header(), and lock_is_held()
+callbacks.
+
+The first four patches come from Paolo's "mptcp: address stall under memory
+pressure" series v5 [2], with only minor cleanup from my side.
+
+They remove the CB offset field and sync the MPTCP skb CB layout with the
+TCP one, so that we can obtain the TCP or MPTCP sequence number in a
+unified way, e.g.:
+
+	struct tls_skb_cb {
+	    u32 seq;
+	};
+
+	#define TLS_SKB_CB(__skb) ((struct tls_skb_cb *)&((__skb)->cb[0]))
+
+This eliminates the need for a separate get_skb_seq() callback.
+
+Building on the removal of the CB offset field, I also added patch 5 that
+trims the duplicated skb head at receive enqueue. With that in place, KTLS
+can retrieve the record header via skb_copy_bits() directly, so there is no
+longer any need for a dedicated MPTCP helper like mptcp_skb_get_header().
+The skb_get_header() callback can thus be removed.
+
+Patch 6 defers sk_data_ready to the worker, which avoids recursive locking
+when TLS calls back into MPTCP under mptcp_data_lock(). With this change,
+the lock_is_held() callback is no longer needed and can be removed.
+
+[1]
+https://patchwork.kernel.org/project/mptcp/cover/cover.1782123118.git.tanggeliang@kylinos.cn/
+[2]
+https://patchwork.kernel.org/project/mptcp/cover/cover.1778446731.git.pabeni@redhat.com/
+
+Geliang Tang (3):
+  mptcp: use atomic64_t for msk->ack_seq
+  mptcp: track app-limited state in mptcp_sendmsg
+  selftests: mptcp: sockopt: check app_limited
+
+Paolo Abeni (5):
+  mptcp: drop the mptcp_ooo_try_coalesce() helper
+  mptcp: drop the cant_coalesce CB field
+  mptcp: remove CB offset field
+  mptcp: sync mptcp skb cb layout with tcp one
+  mptcp: defer read_sock cleanup to mptcp_worker
+
+ include/net/tcp.h                             |   1 +
+ include/trace/events/mptcp.h                  |   4 +-
+ net/ipv4/tcp.c                                |   9 +-
+ net/mptcp/fastopen.c                          |  17 +-
+ net/mptcp/options.c                           |   5 +-
+ net/mptcp/protocol.c                          | 287 +++++++++++-------
+ net/mptcp/protocol.h                          |  24 +-
+ net/mptcp/sockopt.c                           |   2 +-
+ net/mptcp/subflow.c                           |  26 +-
+ .../selftests/net/mptcp/mptcp_sockopt.c       |   1 +
+ 10 files changed, 248 insertions(+), 128 deletions(-)
+
+-- 
+2.53.0
+
