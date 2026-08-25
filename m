@@ -1,166 +1,156 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta0.migadu.com (out-88.mta0.migadu.com [91.218.175.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CDB38E8A7;
-	Mon, 24 Aug 2026 21:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC06A2DB7BF
+	for <mptcp@lists.linux.dev>; Tue, 25 Aug 2026 06:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787605474; cv=none; b=KMisXyDPE8iQzJgKO4IoXM/RU4TcrkRtJe/1ibppRWAUh3lGF+GVJGFJAQbOIIkJs85X1ZgZ1pL1nkyWzy8QcpPmpiuG9QX2Xn5eb5JOPHbUdNiN3ivkhuEM3ycqQXF3FS4CHvY3O007CYHZ0Q+FN5tWaehWbVY/HmZNF0VHl/4=
+	t=1787639584; cv=none; b=CTGfTlsG5FzGLJawTqmBvEbWjJAtbCwi1gXSSg8NUEK89IjUV5JN1Mxm9Aw1AApRmHCMBWpnSJKRw3mcrfJKbW9+rYuLcZV38MP8kpUsymaSaGzmcOnwlIyvfEEnr9U5/Nwnd4vC7GwCDxB8MUeto/5M+2FTMlxZO6SaC5sbSYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787605474; c=relaxed/simple;
-	bh=lxWgaRS9cMBj7nzIKwYlcYTMb1BOWwOR02+GTkayrjs=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=tOJcsLmxSt32AlM8oGbzxW3CAcfdRTAb+tn11139PffJiCr5hehlx8+2AVFXu30urmDTAvjcAotF+sKrJBLl0x4CiDhdqiuJOBB85wCO54imV5b9COHMGuTK43tM6l2tksifIbWRaBa2PB9gzdd1VLOBn9S1qql6YVhPMuhEsO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=iN4IZpg9; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1787639584; c=relaxed/simple;
+	bh=NepQZFMEkgbKW2Td+KNj9BmwtHLEWh/pfV1gTvPmN8o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YnPABiv9OAUSv2Hx9JK+25tV4MpBQXJILgJhdbBQSP5/Xtzk9muGHRL4rjnhd0M/0wnSIbfHhQVrcJYUUzYxGBUSX8K8IJ6pi14kjJ8HabucxfE7b08wBBhz5yW8hgAUFgNlBEqRwBdOXInCfqXGe0+zLJaAUKbeCPffLYf6IDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cVvpXfa6; arc=none smtp.client-ip=91.218.175.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="iN4IZpg9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:Message-ID:Subject:Cc:To
-	:From:Date:MIME-Version:From:Reply-To;
-	bh=8Sz3WqkTSXrjfECQs9syX3OabIkTQfaoXng/2r3y3YI=; b=iN4IZpg94uQW7Qq71fa8RM3vEW
-	kYkZAE7Go3UMAHPCbMam59vi5F2G4bm4hWXaQvDe+IlXyYEvE3ysOyCUtZqscnptJn7q2InbNaFyu
-	soOubYTTGaNo34QYmi9ty2VVZJpRy9sTLLWPw/LK3yUGKpUbS/U50cLhVIERjuM4Ft+aoWfPy9dJE
-	gK9eUfYGXhRTBPX+kELcjgSnMYflg6ghgE0MkoYvLv42MzvqNcu61ANFS228b1Ien6EVqp3z8FXTb
-	NuEjADHZt8gwoX1gXWGgh+2+Dm/yjJ9PlQHQ27wXDkIEUhwmsrSPlTWDbQQk59YiDr1KX9MY2E47t
-	G2P9q0Eg==;
-Received: from maestria.local.igalia.com ([192.168.10.14] helo=mail.igalia.com)
-	by fanzine2.igalia.com with esmtps 
-	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1wybpt-008hfh-DY; Mon, 24 Aug 2026 23:04:05 +0200
-Received: from webmail.service.igalia.com ([192.168.21.45])
-	by mail.igalia.com with esmtp (Exim)
-	id 1wybps-003b3A-2i; Mon, 24 Aug 2026 23:04:05 +0200
-Received: from localhost ([127.0.0.1] helo=webmail.igalia.com)
-	by webmail.service.igalia.com with esmtp (Exim 4.98.2)
-	(envelope-from <mfo@igalia.com>)
-	id 1wybps-00000003RKa-04eN;
-	Mon, 24 Aug 2026 23:04:03 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cVvpXfa6"
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=NepQZFMEkgbKW2Td+KNj9BmwtHLEWh/pfV1gTvPmN8o=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1787639580; v=1; x=1788244380;
+ b=cVvpXfa63kIZrFK5hZOohhJgr1tCMh4IxvfJTveewogj5waXa+MOAj0Lcd+7HjvJ1WF4SUss
+ /Q8geL9KJ8KUMBhsgDvhjTkE7HVY03DrXEUViXzD/0cGS289OE41hMwekCk0hQvE0tjkT1oxAke
+ AvPmLPucUCKXmyr5byL5VW9Q=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: from [192.168.109.30] (223.70.159.239)
+	by smtp.migadu.com with ESMTPS id a4f40c3faa83ce25;
+	Tue, 25 Aug 2026 06:32:59 +0000
+X-Mizu-Trace-ID: a4f40c3faa83ce25
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <8223f1d4-5050-439e-8c00-707ac6b51c5f@linux.dev>
+Date: Tue, 25 Aug 2026 14:33:20 +0800
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Mon, 24 Aug 2026 18:04:03 -0300
-From: Mauricio Faria de Oliveira <mfo@igalia.com>
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Kees Cook <kees@kernel.org>, Joel Granados <joel.granados@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon
- Horman <horms@kernel.org>, kernel-dev@igalia.com,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- fsverity@lists.linux.dev, keyrings@vger.kernel.org, bpf@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
- netdev@vger.kernel.org, linux-wpan@vger.kernel.org,
- lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org, linux-sctp@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
- bridge@lists.linux.dev, mptcp@lists.linux.dev, rds-devel@oss.oracle.com,
- virtualization@lists.linux.dev
-Subject: Re: [PATCH RFC v3 03/13] sysctl, mod_devicetable: add macro
- MODULE_SYSCTL_TABLE
-In-Reply-To: <aotteDcc588iwC6g@monoceros>
-References: <20260819-sysctl-module-aliases-v3-0-aab90569365d@igalia.com>
- <20260819-sysctl-module-aliases-v3-3-aab90569365d@igalia.com>
- <aomlfGJM61qZKxx2@monoceros> <4e3eaf1d3419e808be046035f114bf6c@igalia.com>
- <aotteDcc588iwC6g@monoceros>
-Message-ID: <4aa22e41e8ff4bab6638cf0baaa9d07b@igalia.com>
-X-Sender: mfo@igalia.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next RFC v4 2/2] mptcp: send MP_FAIL and infinite
+ mapping on the same ACK
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
+Cc: Chenguang Zhao <zhaochenguang@kylinos.cn>
+References: <20260818091417.2200986-1-chenguang.zhao@linux.dev>
+ <20260818091417.2200986-3-chenguang.zhao@linux.dev>
+ <68791a9e-9310-4368-854e-d379ce0b416c@kernel.org>
+ <691b982a-7825-490c-b516-ac23b601c64a@linux.dev>
+ <2ab65503-c388-43f8-90f2-ef676205043b@kernel.org>
+Content-Language: en-US
+From: Chenguang Zhao <chenguang.zhao@linux.dev>
+In-Reply-To: <2ab65503-c388-43f8-90f2-ef676205043b@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Report: NO, Score=-2.1, Tests=ALL_TRUSTED=-3,BAYES_50=0.8,KAM_DMARC_NONE=0.125,KAM_DMARC_STATUS=0.005,KAM_SHORT=0.001
-X-Spam-Score: -20
-X-Spam-Bar: --
 
-On 2026-08-23 19:12, Uwe Kleine-König wrote:
-> Hello Mauricio,
-> 
-> On Sat, Aug 22, 2026 at 01:57:24PM -0300, Mauricio Faria de Oliveira wrote:
->> On 2026-08-22 10:41, Uwe Kleine-König wrote:
->> > On Wed, Aug 19, 2026 at 03:16:16PM -0300, Mauricio Faria de Oliveira wrote:
->> >> The MODULE_SYSCTL_TABLE macro emits a struct module_sysctl_table variable
->> >> with pointers to a sysctl table's path and entries, and table/entry sizes.
->> > 
->> > That new struct doesn't seem to contain any pointer?
->> 
->> The struct module_sysctl_table fields .path and .table are pointers,
->> although with kernel_ulong_t type so that the same 32/64-bit size is
->> used in file2alias.c based on KERNEL_ELFCLASS (and not on the host,
->> which might differ with CROSS_COMPILE).
-> 
-> Cross compilation isn't an issue for the already existing device id
-> structures; many of them also contain pointers.
-> (While modpost doesn't use the pointers, the size of the structures must
-> be known to correctly interpret the arrays.)
 
-Indeed. I missed some device_id structures with pointers, and that
-devicetable-offsets.c is cross-compiled to generate
-devicetable-offsets.h for file2alias.c to use offsets and sizes of the
-target architecture.
+在 2026/8/20 00:06, Matthieu Baerts 写道:
+> Hi Chenguang,
+>
+> On 19/08/2026 13:16, Chenguang Zhao wrote:
+>> 在 2026/8/19 00:19, Matthieu Baerts 写道:
+>>> Hi Chenguang,
+>>>
+>>> On 18/08/2026 11:14, Chenguang Zhao wrote:
+>>>> From: Chenguang Zhao <zhaochenguang@kylinos.cn>
+>>>>
+>>>> On a single subflow, accepting MP_FAIL must leave MPTCP mode at once
+>>>> (RFC8684 §3.7). Emit the infinite mapping on the MP_FAIL reply ACK,
+>>>> then call mptcp_try_fallback() immediately after.
+>>> I think Sashiko is right about the issue of lacking option space to have
+>>> both the MP_FAIL and the infinite mapping sent together.
+>> Yes, Sashiko is right, I did not consider all the aspects.
+>>> Please also note this from RFC 8684 §3.7.11 [1]:
+>>>
+>>>> This infinite mapping will be a DSS option (Section 3.3) on the first
+>>>> new packet, containing a Data Sequence Mapping that acts retroactively
+>>> The "on the first new packet" seems to suggest the infinite mapping
+>>> shouldn't be attached to the MP_FAIL.
+>>>
+>>> [1] https://datatracker.ietf.org/doc/html/rfc8684#section-3.7-11
+>>>
+>>>
+>>> Maybe a fallback for the single subflow without csum is enough? Or maybe
+>>> nothing needs to be done? Or maybe this fallback is just an
+>>> optimisation, and can be done in net-next (and both commits can be
+>>> combined)? WDYT?
+>> Hi Matthieu
+>>
+>> I am getting a bit confused, so let me summarize my current understanding to verify if I got this right.
+>> In the existing kernel code, fallback will be triggered upon receiving MP_FAIL. However, the FALLBACK_DONE
+>> flag is currently set inside mptcp_update_infinite_map(), which only gets invoked when transmitting a data packet.
+>> This creates a timing window between receiving MP_FAIL and sending the first subsequent packet, resulting in this minor bug.
+>> Our goal is to close this timing window: set the FALLBACK_DONE flag immediately after MP_FAIL is received.
+>> Besides, add a __mptcp_check_fallback() check within mptcp_can_accept_new_subflow() to reject MP_JOIN requests ahead of time.
+>>
+>> Is my understanding correct? I will send out a v5 RFC based on the above ideas.      
+> I'm not sure that it can work: if there is a fallback, no MPTCP options
+> are supposed to be sent after that point. That's why the fallback should
+> be done after having sent the infinite mapping.
+>
+> I didn't check in the details: *maybe* the fully_established bit could
+> be reset earlier in some cases, but it feels like it can only be done
+> when a fallback can be done, so never had extra subflows or reinjection,
+> and no checksum. But then again, in this case, we are not supposed to
+> receive an MP_FAIL. Then why bother and not simply fallback, and that's
+> it, no?
+>
+> Cheers,
+> Matt
 
-I'll change .path and .table to pointers in the next version.
+Hi Matt,
 
-> Also sizeof(long) differs between architectures and I can compile for
-> arm(32) just fine on amd64.
-> 
-> Additionally there is hardware out there that has sizeof(void *) = 16
-> but sizeof(long) = 8. Up until recently I worked on mainlining that (and
-> it has business reasons only I stopped, so I guess and hope I will
-> continue at some point in the future). See
-> https://lwn.net/Articles/1037974/ for some details if you're interested.
+Thanks for your feedback. I'd like to share some thoughts on the
 
-Cool.
+practical impact of the extra_subflow window.While looking into this, 
 
-> 
-> I would be great if your series didn't introduce a new obstacle for
-> that.
+I realized that the window where the leak can occur is actually quite
 
-Absolutely. I'll be happy to adjust the series and testing for that.
+narrow in practice:
 
-Could you please confirm one should just follow [1], which uses [2] to
-build the LLVM toolchain, and use it to build the kernel [3]?
+	1. MP_FAIL itself is rare — it requires a checksum validation failure,
 
-[1] https://github.com/cheri-linux#building-and-running
-[2] https://github.com/cheri-linux/buildroot
-[3] https://github.com/CHERI-Alliance/linux/tree/codasip-cheri-riscv-7.1
+	   which typically only happens when a middlebox corrupts in-flight
 
->> >> That symbol will be handled by file2alias.c (modpost) with the changes in
->> >> mod_devicetable.h and devicetable-offsets.c.
->> >> 
->> >> The option macros MODULE_SYSCTL_TABLE_{DISABLE,UNIQUE_ID} can be used on
->> >> a per-file basis to disable the macro and change the symbol name pattern.
->> >> 
->> >> Signed-off-by: Mauricio Faria de Oliveira <mfo@igalia.com>
->> >> ---
->> >>  include/linux/mod_devicetable.h   |  7 +++++++
->> >>  include/linux/sysctl.h            | 42 +++++++++++++++++++++++++++++++++++++++
->> >>  scripts/mod/devicetable-offsets.c |  6 ++++++
->> >>  3 files changed, 55 insertions(+)
->> > 
->> > Please put the new struct in a separate header. Apart from not being
->> > about a device table, I'm currently work on removing
->> > <linux/mod_devicetable.h>. See commit
->> > ad428f5811bd7fb3d91fa002174de533f9da94d7 for more details.
->> 
->> Sure; I looked at that earlier (thanks for the instructive commit
->> message, by the way) and found the new struct to be similar to "struct
->> cpu_feature isn't really a device_id struct" (not moved), but apparently
->> missed the trailing "fow now", which is clearer now. Fixed for v4.
-> 
-> Yeah, I didn't move that because it was an outlier in the header as it's
-> not a device id. IMHO it should go to something like
-> include/linux/cpu_feature.h.
+	   data.
 
-Ack.
+	2. It only applies to single-subflow connections — for multi-subflow
 
-cheers,
+	   connections, allow_infinite_fallback is cleared by
 
-> 
-> Best regards
-> Uwe
+	   mptcp_subflow_joined() when the second subflow joins, so the
 
--- 
-Mauricio
+	   fallback path in mptcp_pm_mp_fail_received() is never reached.
+
+	3. The window is very short — it spans from the MP_FAIL ACK to the
+
+	   first data packet carrying the infinite mapping, which is on the
+
+	   order of microseconds under normal conditions.
+	
+	4. Even deferring the fallback to the first data packet (as the
+	   original code does) does not appear to cause issues in practice,
+	   since the infinite mapping is still sent correctly and the
+	   connection eventually transitions to TCP.
+
+Given the above, I'm inclined to put this issue on hold for now and
+
+revisit it if a concrete need arises. I'd appreciate your thoughts on
+
+whether that makes sense.
+
+Best regards,
+
+Chenguang
+
