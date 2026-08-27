@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4229943BDD5
-	for <mptcp@lists.linux.dev>; Thu, 27 Aug 2026 10:58:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E17444210C
+	for <mptcp@lists.linux.dev>; Thu, 27 Aug 2026 10:58:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787828286; cv=none; b=IYo9ffHSazfBARHEa2YCQj87vc4rVJVIikBTugg97fN3SWTWrG1oSTaRNrTP21MPGwQQwGEYfXKM+Ibuafph8pt1w5uscrkJbsqX+G8N8zOie6U1ERdldAWVgmwHVSLHwASlpvUNfgrxCmXtM8kGuUduGkW9M+zg1hOiPbTokfE=
+	t=1787828288; cv=none; b=QicSW2Z9c7wyp8CSgpNqeMRY+smDDq+ERIBkFqpdcOyBaiNgAJBqfLA5jGxz4VFI75BlUh2VWrAATk2YTqZJQ0dRshM865rrqQn9Ce8xwP4aKjO/++Z5fH+Efr2OWEFWmJb4T0f0ip9zNHD0UHlzyxIWlKRlcKpuSviqfN2amY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787828286; c=relaxed/simple;
-	bh=MVRqr5eduyTbgZGv4DSFYcxgu+x0eNZjRcvAgfGQw90=;
+	s=arc-20240116; t=1787828288; c=relaxed/simple;
+	bh=JxT3qeiSHuBS12KtGnTPLFRzVxKd0fvCXwqrRkI3nnM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NFAyd9IUPu1iHMyPqfUryBS/wOyvSlLTem4Uhs932sDDf1cU+3qPoVymzqndnmDvCSPhtUiA4kPTIeJAhPnWTXPS0yZtAaFWZtWI61J6kTTee05rLzm7RevrBEjL0+kA7Vnm9KjjGTIE6K9kC1j5o96x73qB+q9AxZznZUOWzc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TNX2zOZ1; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=hwn67cN3IZMrPYx03QhtIeHNUiuSgDKn6RPKG2xDruSegDYWNzr9b8mlodNRYHyYXFSn/TWL2C0sUhCiK0X9RWK+IY1wLRnnpCSsYX113unQH50JNnDiaPl4aGfJmDXx3bzf6+6Oyo2RMy5+HqCFYdL4nAQ4B/SvDVmPTsnGQCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fRYZ5EG0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TNX2zOZ1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38E371F00A3A;
-	Thu, 27 Aug 2026 10:58:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fRYZ5EG0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 137121F00A3E;
+	Thu, 27 Aug 2026 10:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787828283;
-	bh=ioVkv3Eb2ZRoN7SZ+xBomX/eln2v1t7zTfZHwSwnWQo=;
+	s=k20260515; t=1787828284;
+	bh=xNNDwMcimuhvgxiiYj/oGzahS6NB1VtBfCB7+LyvfjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=TNX2zOZ18UFZughCC2IMKdmIBvmKeqEbmcw4owRfHEcQrVgxLRIP7gWbjG4Pttk5e
-	 zLAZF5ro2Lq8GEHrdo37hBsvjfxBuWlt24LL24CFgeNamFzPHF6ogy/SZ6gYk0DjOX
-	 HycbCRywnaQ/CWdWhgMixFkRhL/BNZvUgqtZlVvAoXHFZErHGMDn45013BCeM4tiet
-	 RERXH7xSDIQYkqafAxA1ikG+FQ+70Cfet502xBZQkyCGGbkSflzqNV8DKT6lm4PQ22
-	 iyjtrn9VQY1/IpN9q/OJCn6Bo5X3R/9nn1Zwr2Q1IQZYtTq+/lRtQXesHY1qi1aBO8
-	 ZKVjjdRC1EOHQ==
+	b=fRYZ5EG0qIBY7qHaAGJ94pTrb8VBdrt1eXhpaOD2uY2WiJusMjFn8W6SpFjEA/t94
+	 QgKyoBrLkuhnEASPIPnSO/PDQoUIJxX5yDExlqRA3mlv7gMyo7JMSIs5yXw8S3rHUG
+	 Qs8DsNkbYe9T7UxFByKOVdVmeikm58bkSQw9MkRuwYJBdK292c8AfXIGhTQPcmtaD3
+	 eOIzgZsfynZ+8FceNvUoRcYnaBazYLXyj8ppCB9n+rNRr1D3Qn50oyDN6Dk2g3iRMm
+	 ybBHKBfYWU0Grg/AMcTPM9ohRI7guU0JHAPRUZcSs6Esf8gKNGGInKJfyJSlRPWObQ
+	 svw7Up+Fm3RCA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v9 09/11] mptcp: track app-limited state in mptcp_sendmsg
-Date: Thu, 27 Aug 2026 18:57:33 +0800
-Message-ID: <d13e1d8e76d5857d10872406d328c94966a3006e.1787827525.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v9 10/11] selftests: mptcp: sockopt: check app_limited
+Date: Thu, 27 Aug 2026 18:57:34 +0800
+Message-ID: <c0fcce42a156e7da7c2cf6a710d140e8fe04749e.1787827525.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1787827525.git.tanggeliang@kylinos.cn>
 References: <cover.1787827525.git.tanggeliang@kylinos.cn>
@@ -45,110 +45,36 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The application-limited accounting in TCP is updated by
-tcp_rate_check_app_limited(), which currently takes a struct sock * and
-internally calls tcp_sk(). MPTCP needs to apply the same accounting to
-each subflow individually - every subflow is an independent TCP socket
-with its own tp->app_limited / delivered state - so wrapping the call as
-a struct sock * -> tcp_sk() helper is awkward at the call site.
+connect_one_server() in mptcp_sockopt exchanges only a few packets between
+the client and server, then closes the socket. After such a small transfer
+the application has nothing further to send, so the connection is, by
+definition, application-limited.
 
-Split the existing function: keep the logic as
-tcp_sock_rate_check_app_limited(struct tcp_sock *tp), and turn
-tcp_rate_check_app_limited(struct sock *) into a thin wrapper so the
-exported API is unchanged for other TCP users.
+Extend the TCP_INFO readback at the end of the function to assert
+s.tcp_info.tcpi_delivery_rate_app_limited == 1.
 
-Then add mptcp_sock_rate_check_app_limited() that walks every subflow of
-the mptcp_sock and runs tcp_sock_rate_check_app_limited() under each
-subflow's socket lock. Invoke it from mptcp_sendmsg() right after the
-send-side setup, so the delivery-rate app_limited state stays in sync
-with what the application actually has to send across each subflow.
-
-With this in place, TCP_INFO.tcpi_delivery_rate_app_limited is reported
-correctly for MPTCP connections instead of being left at 0.
+Without the preceding commit, mptcp_sendmsg() never updates the per-subflow
+app-limited state, and this field stays at 0 - the assertion would fail.
+With it in place, the value is forced to 1, turning this into a regression
+guard for the subflow-side application-limited accounting.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- include/net/tcp.h    |  1 +
- net/ipv4/tcp.c       |  9 +++++++--
- net/mptcp/protocol.c | 18 ++++++++++++++++++
- 3 files changed, 26 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 670c20876f26..f5cbb5a8a288 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -849,6 +849,7 @@ static inline int tcp_bound_to_half_wnd(struct tcp_sock *tp, int pktsize)
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+index d68515b7903b..8d712bdb4325 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+@@ -640,6 +640,7 @@ static void connect_one_server(int fd, int pipefd)
+ 		total += 1; /* sequence advances due to FIN */
  
- /* tcp.c */
- void tcp_get_info(struct sock *, struct tcp_info *);
-+void tcp_sock_rate_check_app_limited(struct tcp_sock *tp);
- void tcp_rate_check_app_limited(struct sock *sk);
- 
- /* Read 'sendfile()'-style from a TCP socket */
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 1452c40e22d4..f0f843fd1897 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -1096,9 +1096,9 @@ int tcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg, int *copied,
+ 	assert(s.mptcpi_rcv_delta == (uint64_t)total);
++	assert(s.tcp_info.tcpi_delivery_rate_app_limited == 1);
+ 	close(fd);
  }
  
- /* If a gap is detected between sends, mark the socket application-limited. */
--void tcp_rate_check_app_limited(struct sock *sk)
-+void tcp_sock_rate_check_app_limited(struct tcp_sock *tp)
- {
--	struct tcp_sock *tp = tcp_sk(sk);
-+	struct sock *sk = (struct sock *)tp;
- 
- 	if (/* We have less than one packet to send. */
- 	    tp->write_seq - tp->snd_nxt < tp->mss_cache &&
-@@ -1111,6 +1111,11 @@ void tcp_rate_check_app_limited(struct sock *sk)
- 		tp->app_limited =
- 			(tp->delivered + tcp_packets_in_flight(tp)) ? : 1;
- }
-+
-+void tcp_rate_check_app_limited(struct sock *sk)
-+{
-+	tcp_sock_rate_check_app_limited(tcp_sk(sk));
-+}
- EXPORT_SYMBOL_GPL(tcp_rate_check_app_limited);
- 
- int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 98a1bfdfbdc4..07813765eeaa 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2056,6 +2056,21 @@ static void mptcp_rps_record_subflows(const struct mptcp_sock *msk)
- 	}
- }
- 
-+static void mptcp_rate_check_app_limited(struct sock *sk)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct mptcp_subflow_context *subflow;
-+
-+	mptcp_for_each_subflow(msk, subflow) {
-+		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+		bool slow;
-+
-+		slow = lock_sock_fast_nested(ssk);
-+		tcp_sock_rate_check_app_limited(tcp_sk(ssk));
-+		unlock_sock_fast(ssk, slow);
-+	}
-+}
-+
- static int mptcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t len)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
-@@ -2084,6 +2099,9 @@ static int mptcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t len)
- 
- 	timeo = sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
- 
-+	/* is sending application-limited? */
-+	mptcp_rate_check_app_limited(sk);
-+
- 	if ((1 << sk->sk_state) & ~(TCPF_ESTABLISHED | TCPF_CLOSE_WAIT)) {
- 		ret = sk_stream_wait_connect(sk, &timeo);
- 		if (ret)
 -- 
 2.53.0
 
