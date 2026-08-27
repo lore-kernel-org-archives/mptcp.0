@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE53440A34
-	for <mptcp@lists.linux.dev>; Thu, 27 Aug 2026 10:57:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96B6440632
+	for <mptcp@lists.linux.dev>; Thu, 27 Aug 2026 10:58:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787828281; cv=none; b=qVwhcflmzZpN5nl+nkHvUMP8nIXjUA7zciRc988p3Co+VYnutQu6lF+p+C+cslysSnQ+VaJOceBhfqblx826xUKIxq/k4SQDgthx+B+eMfFMndrQP9FL7+LImiz/303mKliKIQbTlQ7VYuvGS5gxjAgobz75P+xQ/BhMWr59e/I=
+	t=1787828284; cv=none; b=ihCVd4zAKxNqNvtDvhL25REbtwFIY5hHN5G2Su0273y9pIWSGTCHXpdULrRhYa6sSHiT537YMAobDXlMrPnymrXLy3S94uRqJuWTIy0xyA4flZzCqeFbShINE3F0GAfAXkHrwWpjjM2HAOVdR5eeLIfajFqIu9y6gubk7sYNRd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787828281; c=relaxed/simple;
-	bh=kTIAWMYmgZQuZKpy92L8BrEPFK9GQP8ozo1mL4kZi84=;
+	s=arc-20240116; t=1787828284; c=relaxed/simple;
+	bh=UsnK80bQxJ5CTpgzxMEMVTC0aOwOh0VuJFR5BF0el7M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jWMX2Kevm2uaqJJxrb+uPv1GCt3wCni7OoKEbNNEx7sPsB1ChCuGV1AmuAVBMHPWZRpfO6dIWYqQn7+lbzwbt/uLKycqmtqkpRE/HQLQ9ns16AGkwU+JCxGSZNKYnUNPIeyIlOJpI5HCBZmKAp1mkKKUIcKNWzNsAmK6lb1IK6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LJCc/+LY; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=KFkX0EPvHU+bcOMZ4n+zJ8p5jYjOHMEBH1EzM8tJldO9PxDQwFIUPA3hBLksf0wctc1qwPpekQJkiAkTTZ55tHEahlYLU/nwZ+A5d6d+knhzENwbR0mM/dg1pEV7q/3VirkG7PGSUbMDgIWXv5zzkDApH/F+Zc+pqB+3AB1se7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qb1aqV+s; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LJCc/+LY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D482A1F00A3A;
-	Thu, 27 Aug 2026 10:57:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qb1aqV+s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6588E1F00A3D;
+	Thu, 27 Aug 2026 10:57:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787828278;
-	bh=O7JRFCDK2Tx4J9hn11m7LRj3/T0wp7HB6ghdCYDOM+Q=;
+	s=k20260515; t=1787828280;
+	bh=2QuhRmcTFWU1G0kzMePFR7sqAlX1+wct/Qya/fxafxk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=LJCc/+LYwxVLD0Ot3DqvXUwqs53bhT2Q/VW3aJn5D6hbZQvDuz2dLfPEkqUjkHpa9
-	 VvQhxG+YVehtZxpRUUKscGN/hmMbZyfQjvKP5HeHGiDRpCwb112YqSA5XqAfocXMsy
-	 L92m6hBq82erj0AqVFurMvDHnAjC8woAxvTI6kvW7rz3sE84cITWRLCdS7Vk78gOFg
-	 hrm2ZyzX7Q69tKi0J65ihzad1o7XCJ9DznpmQ4Wqzc83m/47VdCGDKbQIJ+c/MtsSi
-	 2XE2tNuhAG9GrA15ELe2A7N+Tv79xvGiLq+DVxiISY7oaEihHDx5qe8GKj/bU9BMym
-	 s3Mj2UopRfmYA==
+	b=Qb1aqV+sOk0GG2UNXpiIcvaiFEGIGCfg6w9fWkt7PhEGgx3Afxf9NjKha6tViB5H8
+	 YC0f9AU5gjzciTEn3Oog7gRrNfcqGlAcdP3wZB51y9Q/yV/zdIoMq/HIAGGp4tVELA
+	 g9yVHqTsmKPiMbCFDczKlxFB59+673XBawzDTJOie2AkFwoGXMQ9Fs4bqHNEOvk4/H
+	 dlvNLKS6K5igIM5a3eJ6bcULcAwBAnrR3CuYRH0lRBe1acBX5kAlsZI9G3JaceTPmB
+	 5TS/p/yP5DUIyiLeRZ01JTXnorBI3/ohUfKGvMmYEve9h8DVP2X0+YzJbIYzjvUZU6
+	 vv2hbcwP1CL8w==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	Geliang Tang <geliang@kernel.org>
-Subject: [PATCH mptcp-next v9 06/11] mptcp: defer read_sock cleanup to mptcp_worker
-Date: Thu, 27 Aug 2026 18:57:30 +0800
-Message-ID: <d87491208a8e7312d7fd25917b55ca1f1aa3ce87.1787827525.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v9 07/11] mptcp: implement peek_len for proto_ops
+Date: Thu, 27 Aug 2026 18:57:31 +0800
+Message-ID: <72dfb12c36ea32e58f8f85f55c94101fca02702e.1787827525.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1787827525.git.tanggeliang@kylinos.cn>
 References: <cover.1787827525.git.tanggeliang@kylinos.cn>
@@ -44,133 +43,83 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-When MPTCP carries TLS, the data path runs under mptcp_data_lock().
-Reaching sk->sk_data_ready(sk) synchronously ends up at
-tls_strp_check_rcv() -> mptcp_recv_skb() -> mptcp_move_skbs(), which
-calls mptcp_data_lock() on the same sk and recurses on sk_lock.slock.
+Add mptcp_inq() to compute the number of readable bytes at the MPTCP
+level. It derives the count from mptcp_inq_hint(), returns 0 while
+the connection is still handshaking (TCP_SYN_SENT/TCP_SYN_RECV), and
+subtracts 1 once a FIN has been received, since the FIN consumes a
+sequence number but carries no data. This keeps the reported count in
+sync with the bytes actually queued, preventing upper layers from
+trying to read data that has not yet arrived.
 
-The TLS path is not the only constraint: before the mptcp_recv_skb()
-calls, the TLS code would also reach __mptcp_read_sock(), which calls
-mptcp_rcv_space_adjust() and mptcp_cleanup_rbuf(). Both require holding
-the msk socket lock in process context, while the mptcp/TLS caller is
-in BH scope.
+Wire mptcp_inq() into mptcp_peek_len() and assign .peek_len in both
+mptcp_stream_ops and mptcp_v6_stream_ops, so upper layers get the
+correct in-queue byte count for MPTCP connections.
 
-Fix this by deferring sk->sk_data_ready(sk) to mptcp_worker() via a new
-MPTCP_WORK_READ_COMPLETE bit, reusing the existing mptcp_schedule_work()/
-mptcp_cancel_work() infrastructure. The wakeup bit is consumed after the
-SOCK_DEAD && TCP_CLOSE destroy branch, so a socket that reaches the destroy
-path drops the pending wakeup rather than running it post-free.
-
-Co-developed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 32 ++++++++++++++++++++++++--------
- net/mptcp/protocol.h |  2 ++
- 2 files changed, 26 insertions(+), 8 deletions(-)
+ net/mptcp/protocol.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index e53d5c184065..cc8747162cca 100644
+index cc8747162cca..9b9ace7cb977 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -3149,6 +3149,20 @@ static void mptcp_backlog_purge(struct sock *sk)
- 	sk_mem_reclaim(sk);
+@@ -4814,6 +4814,37 @@ static ssize_t mptcp_splice_read(struct socket *sock, loff_t *ppos,
+ 	return ret;
  }
  
-+static void mptcp_read_complete(struct sock *sk)
++static int mptcp_inq(struct sock *sk)
 +{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	int read_copied;
++	const struct mptcp_sock *msk = mptcp_sk(sk);
++	int answ;
 +
-+	mptcp_data_lock(sk);
-+	read_copied = msk->read_copied;
-+	msk->read_copied = 0;
-+	mptcp_data_unlock(sk);
++	if ((1 << sk->sk_state) & (TCPF_SYN_SENT | TCPF_SYN_RECV)) {
++		answ = 0;
++	} else if (test_bit(MPTCP_SYNC_SEQ, &msk->cb_flags)) {
++		answ = 0;
++	} else {
++		u64 hint_val;
 +
-+	mptcp_rcv_space_adjust(msk, read_copied);
-+	mptcp_cleanup_rbuf(msk, read_copied);
++		hint_val = atomic64_read(&msk->ack_seq) - msk->copied_seq;
++		if (hint_val >= INT_MAX)
++			hint_val = INT_MAX;
++
++		answ = (unsigned int)hint_val;
++		if (answ &&
++		    (sk->sk_state == TCP_CLOSE ||
++		     (sk->sk_shutdown & RCV_SHUTDOWN)))
++			answ--;
++	}
++
++	return answ;
 +}
 +
- static void mptcp_do_fastclose(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow, *tmp;
-@@ -3225,6 +3239,9 @@ static void mptcp_worker(struct work_struct *work)
- 	if (test_and_clear_bit(MPTCP_WORK_RTX, &msk->flags))
- 		__mptcp_retrans(sk);
- 
-+	if (test_and_clear_bit(MPTCP_WORK_READ_COMPLETE, &msk->flags))
-+		mptcp_read_complete(sk);
++static int mptcp_peek_len(struct socket *sock)
++{
++	return mptcp_inq(sock->sk);
++}
 +
- 	fail_tout = msk->first ? READ_ONCE(mptcp_subflow_ctx(msk->first)->fail_tout) : 0;
- 	if (fail_tout && time_after(jiffies, fail_tout))
- 		mptcp_mp_fail_no_response(msk);
-@@ -4611,9 +4628,6 @@ static struct sk_buff *mptcp_recv_skb(struct sock *sk, u32 *off)
- 	struct sk_buff *skb;
- 	u32 offset;
+ static const struct proto_ops mptcp_stream_ops = {
+ 	.family		   = PF_INET,
+ 	.owner		   = THIS_MODULE,
+@@ -4836,6 +4867,7 @@ static const struct proto_ops mptcp_stream_ops = {
+ 	.set_rcvlowat	   = mptcp_set_rcvlowat,
+ 	.read_sock	   = mptcp_read_sock,
+ 	.splice_read	   = mptcp_splice_read,
++	.peek_len	   = mptcp_peek_len,
+ };
  
--	if (!list_empty(&msk->backlog_list))
--		mptcp_move_skbs(sk);
--
- 	while ((skb = skb_peek(&sk->sk_receive_queue)) != NULL) {
- 		offset = (u32)msk->copied_seq - MPTCP_SKB_CB(skb)->map_seq;
- 		if (offset < skb->len) {
-@@ -4628,6 +4642,7 @@ static struct sk_buff *mptcp_recv_skb(struct sock *sk, u32 *off)
- /*
-  * Note:
-  *	- It is assumed that the socket was locked by the caller.
-+ *	- Can be invoked in BH scope.
-  */
- static int __mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
- 			     sk_read_actor_t recv_actor, bool noack)
-@@ -4637,8 +4652,6 @@ static int __mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
- 	int copied = 0;
- 	u32 offset;
+ static struct inet_protosw mptcp_protosw = {
+@@ -4960,6 +4992,7 @@ static const struct proto_ops mptcp_v6_stream_ops = {
+ 	.set_rcvlowat	   = mptcp_set_rcvlowat,
+ 	.read_sock	   = mptcp_read_sock,
+ 	.splice_read	   = mptcp_splice_read,
++	.peek_len	   = mptcp_peek_len,
+ };
  
--	msk_owned_by_me(msk);
--
- 	if (sk->sk_state == TCP_LISTEN)
- 		return -ENOTCONN;
- 	while ((skb = mptcp_recv_skb(sk, &offset)) != NULL) {
-@@ -4669,11 +4682,14 @@ static int __mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
- 	if (noack)
- 		goto out;
- 
--	mptcp_rcv_space_adjust(msk, copied);
--
-+	/* The backlog flushing is only needed when some data is actually
-+	 * moved and will take place in the workers's release callback.
-+	 */
- 	if (copied > 0) {
- 		mptcp_recv_skb(sk, &offset);
--		mptcp_cleanup_rbuf(msk, copied);
-+		msk->read_copied += copied;
-+		set_bit(MPTCP_WORK_READ_COMPLETE, &msk->flags);
-+		mptcp_schedule_work(sk);
- 	}
- out:
- 	return copied;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index a00cf6898463..06fddbe742c8 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -117,6 +117,7 @@
- #define MPTCP_FALLBACK_DONE	2
- #define MPTCP_WORK_CLOSE_SUBFLOW 3
- #define MPTCP_RTX_DISABLED	4
-+#define MPTCP_WORK_READ_COMPLETE 5
- 
- /* MPTCP socket release cb flags */
- #define MPTCP_PUSH_PENDING	1
-@@ -312,6 +313,7 @@ struct mptcp_sock {
- 	u32		last_data_sent;
- 	u32		last_data_recv;
- 	u32		last_ack_recv;
-+	int		read_copied;
- 	unsigned long	timer_ival;
- 	u32		token;
- 	u32		tfo_skb_len;
+ static struct proto mptcp_v6_prot;
 -- 
 2.53.0
 
