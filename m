@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752FA2C11C4
-	for <mptcp@lists.linux.dev>; Fri, 28 Aug 2026 04:10:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 116A8232395
+	for <mptcp@lists.linux.dev>; Fri, 28 Aug 2026 04:18:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787890214; cv=none; b=q/x4NoGdhtfFEA2HG7LZ+4TB2/23uCne0FNQoXgsXO8T7I3lah5UgV9wwuykmmo895jQap1/DGt6TpWF5WQd6vN4ktp07V71EkkFlLSsGUptD5c1O/umqUtWiYd9Vwf+NipCLGSzNmpEjG/23LEhkgywdRuEgO4ILO/0anh1oa8=
+	t=1787890718; cv=none; b=lSxAGaN2IwjKdY2/VkInHrK8/nQ+tjM1ufoaZdS4Z575z4vHoCZ31IY9/f+AyGG7v9k31FfL/gRhDXkZtXkFPkyhQ1/6bpE/O1KFb/vLsfN7GUeL0NHdoenjynUMs4z87z8VTWxNrqjQ+k9BlsFAEgOBhMSXk2ZjLX1Zi1t1BgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787890214; c=relaxed/simple;
-	bh=hi3uOR4r4E1KRouqEP3vtFyA1T3+LO4oVZijPJq2UCg=;
+	s=arc-20240116; t=1787890718; c=relaxed/simple;
+	bh=1uvI92t8mUN9TrFUVSWv5CrwtqcjyRMZIggnEtqW7Ws=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=rl0rhalkLIF8V/X1LZwOnfavSv6hA3cpTzDka7VAYUoMi/s8RpRry0Fh0/XlMvGzzkkdFW8nS8tER1+YtNP99P4/gLIbtIIBgQsduOzBBKTbv0mbCqie3mQjWaTlFXqedldwYDnnX0yJ8wuw4K6MEvuX/EFZ5r34xwTzls7Mj8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V7x7zrch; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=b/eYx9V4f2OVOe3vXwh8ZagcJgtQoAAEnVxZ8pSoqYbbLGvnARgn8gGD1wATc/Ah6v/S4wrYaECwCkRk9VoAdoVM/CDC1hWN/1O7TC7yeKachZtv44bk/qruNkxH+DhQ/Vutw0Bg5dGbKa6M6ruMpuDKvBbIXKMzp+eL8Fw8faM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XHko5+S6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V7x7zrch"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C714C1F000E9;
-	Fri, 28 Aug 2026 04:10:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XHko5+S6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 736CE1F000E9;
+	Fri, 28 Aug 2026 04:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787890213;
-	bh=IcfaYMx/87oUPtzxYubFTGEVFb05dnPzDBnZgmwVnMY=;
+	s=k20260515; t=1787890716;
+	bh=Tmy28aWd1rucuQvwAFaCS76WiPm7tIHBib8XcZmjuO8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=V7x7zrchAQQAl6ZtVUhm1RBEWzlDyC5p8uR1ulsdGotvMSjqZve5OD/Uzrp+4N1lE
-	 M1c3YtU+AAvBltCQTfLXY53skW7gupj9XkFxi8+08wvTURoSx3P5pTrkjwx/bJfsUw
-	 uxihRq/ZlVZVt+hosAYgNpkGmsX5lwvBk9l8hy/dPYvjuWMOdKI9HzLq6bauJFMSR9
-	 4ug7W7w5Z1z5FxZDHKQr9BEYV0OOwALrrXCnXisH0AcjpPd0DQ90lw72LAP51Mr12O
-	 aI/9Tn6zzM8tmPGKO/MQT+l7wCompGdyV5N1TUyhF7F02LnoUG1SDn4gv3lSlAvNeE
-	 mB2EQg9EmrDFA==
+	b=XHko5+S6s6m+0CukBbAYUkU8a0unxfiRfJXANoItYytvVEm4PzRkGDKum1IiS0+Wo
+	 2hGLKcIHQJE9Iz44rzOUn4YKHTdO4hHfosR5Nhee3ZAZ+k+ex8ng6OJ1TM+hqNCtTt
+	 sM3cfq+GzRESIcOvzEpfeteeHSkJFjSWrObarnKU6lRYSSTwr21G7CYhxqCDC58KQo
+	 1QzYLDhHlEmVcxALALLaZm0SXxRe9vnNjkkw72/7OzfZ7ilNnxp3qhBRrupwhRDzFM
+	 kdgIJdqJTQS0IYX82ohoKp4sC0imBfDAanEJdAO6MbjMv8Oj6DY+ICuLu+wKxSxxH8
+	 6Er729Q5d0B5w==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v10 6/9] mptcp: implement peek_len for
- proto_ops
+Subject: Re: [PATCH mptcp-next v10 2/9] mptcp: drop the cant_coalesce CB
+ field
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Geliang Tang" <geliang@kernel.org>
 Cc: mptcp@lists.linux.dev
-In-Reply-To: <7b1fabcac57f36b0723d6ec1cac7b20dab1bbf86.1787888115.git.tanggeliang@kylinos.cn>
+In-Reply-To: <e444cb860c2b880a1db6cdea3ddfa98a55163760.1787888115.git.tanggeliang@kylinos.cn>
 References: <cover.1787888115.git.tanggeliang@kylinos.cn>
- <7b1fabcac57f36b0723d6ec1cac7b20dab1bbf86.1787888115.git.tanggeliang@kylinos.cn>
+ <e444cb860c2b880a1db6cdea3ddfa98a55163760.1787888115.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 28 Aug 2026 04:10:12 +0000
-Message-Id: <20260828041012.C714C1F000E9@smtp.kernel.org>
+Date: Fri, 28 Aug 2026 04:18:35 +0000
+Message-Id: <20260828041836.736CE1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,74 +47,79 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] mptcp_inq() erroneously subtracts 1 from the available data count =
-when the socket is locally shut down (SHUT_RD) or closed (TCP_CLOSE) withou=
-t receiving a remote DATA_FIN.
+- [High] A race condition in `__mptcp_move_skb` causes premature consumptio=
+n of the `rcvd_dummy_seq` flag and a stale read of `msk->ack_seq`, permanen=
+tly corrupting the fastopen SKB sequence mapping.
 --
 
-commit ca4f6417172a744b76ad119fab38d5b6d5931a48
-Author: Geliang Tang <geliang@kernel.org>
+commit 4b77d7da2be72a2e1f480d6176376b2e639e2faa
+Author: Paolo Abeni <pabeni@redhat.com>
 
-mptcp: implement peek_len for proto_ops
+mptcp: drop the cant_coalesce CB field
 
-This commit adds mptcp_inq() to compute readable bytes at the MPTCP level
-by calculating the difference between ack_seq and copied_seq. It also
-wires this calculation into the .peek_len stream operations so upper layers
-can accurately query the in-queue byte count.
+This patch removes the cant_coalesce field from the MPTCP SKB control block.
+It replaces synchronous updates at 3rd ACK time by synchronizing the fastop=
+en
+skb sequence when the IASN becomes available, before the next segment enters
+the msk receive queue.
 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index fce85967b90ee..639122b7845a6 100644
+> index 7421b44934f05..0a90bed02b412 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
 [ ... ]
-> @@ -4797,6 +4797,39 @@ static ssize_t mptcp_splice_read(struct socket *so=
-ck, loff_t *ppos,
->  	return ret;
->  }
+> @@ -446,6 +464,12 @@ static bool __mptcp_move_skb(struct sock *sk, struct=
+ sk_buff *skb)
 > =20
-> +static int mptcp_inq(struct sock *sk)
-> +{
-> +	const struct mptcp_sock *msk =3D mptcp_sk(sk);
-> +	int answ;
+>  	mptcp_borrow_fwdmem(sk, skb);
+> =20
+> +	/* Be sure to sync the eventual fastopen dummy mapping before any other
+> +	 * skb lands into the msk.
+> +	 */
+> +	if (unlikely(msk->rcvd_dummy_seq))
+> +		__mptcp_sync_rcv_sequence(sk);
 > +
-> +	if ((1 << sk->sk_state) & (TCPF_SYN_SENT | TCPF_SYN_RECV)) {
-> +		answ =3D 0;
-> +	} else if (test_bit(MPTCP_SYNC_SEQ, &msk->cb_flags)) {
-> +		answ =3D 0;
-> +	} else {
-> +		u64 hint_val;
-> +
-> +		hint_val =3D READ_ONCE(msk->ack_seq) - READ_ONCE(msk->copied_seq);
-> +		if (hint_val >=3D INT_MAX)
-> +			hint_val =3D INT_MAX;
-> +
-> +		answ =3D (unsigned int)hint_val;
-> +
-> +		/* Subtract 1, if FIN was received. Mirror tcp_inq() */
-> +		if (answ &&
-> +		    (sk->sk_state =3D=3D TCP_CLOSE ||
-> +		     (sk->sk_shutdown & RCV_SHUTDOWN)))
-> +			answ--;
+>  	if (MPTCP_SKB_CB(skb)->map_seq =3D=3D msk->ack_seq) {
 
 [Severity: High]
-Does this logic correctly handle local shutdowns or connections reset via R=
-ST?
+Does this execute the sync logic unconditionally without waiting for the
+MPTCP_SYNC_SEQ flag or a memory barrier?=20
 
-If an MPTCP socket has 1 byte of unread data and a local application calls
-shutdown(fd, SHUT_RD), it sets RCV_SHUTDOWN without incrementing ack_seq
-because no remote DATA_FIN was received.
+If a concurrent mptcp_release_cb() processes the backlog while the 3rd ACK
+is being processed, could this lead to a stale read of msk->ack_seq?
 
-Since this subtracts 1 from the answer, it would return 0. Could this cause
-kernel consumers of .peek_len() (like KTLS/BPF strparser) to falsely assume
-no data is available and hang indefinitely waiting for data that will never
-arrive on the shut down socket?
+Since __mptcp_sync_rcv_sequence() reads the uninitialized ack_seq and clears
+rcvd_dummy_seq, it appears this might permanently corrupt the fastopen SKB
+sequence mapping, leading to data loss or connection stall during TCP Fast
+Open.
 
-> +	}
-> +
-> +	return answ;
-> +}
+Could this be triggered remotely by sending an MP_JOIN SYN and data before
+the 3rd ACK of the initial MPC connection?
+
 [ ... ]
+> @@ -3895,6 +3919,13 @@ static void mptcp_release_cb(struct sock *sk)
+>  			__mptcp_error_report(sk);
+>  		if (__test_and_clear_bit(MPTCP_SYNC_SNDBUF, &msk->cb_flags))
+>  			__mptcp_sync_sndbuf(sk);
+> +		if (test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags)) {
+> +			/* Ensure we see the updated ack_seq after seeing
+> +			 * the flag
+> +			 */
+> +			smp_rmb();
+> +			__mptcp_sync_rcv_sequence(sk);
+> +		}
+>  	}
+>  }
+
+[Severity: High]
+While the correct synchronization with the memory barrier is placed here,
+is it rendered ineffective because the rcvd_dummy_seq flag was already
+prematurely consumed by the unguarded call in __mptcp_move_skb()?
+
+Since __mptcp_sync_rcv_sequence() skips processing if rcvd_dummy_seq is
+false, the proper sequence mapping might never occur if the flag is cleared
+early.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1787888115.gi=
-t.tanggeliang@kylinos.cn?part=3D6
+t.tanggeliang@kylinos.cn?part=3D2
