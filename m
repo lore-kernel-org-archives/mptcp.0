@@ -1,110 +1,74 @@
-Received: from mail-yx1-f43.google.com (mail-yx1-f43.google.com [74.125.224.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58779221DB6
-	for <mptcp@lists.linux.dev>; Fri, 28 Aug 2026 13:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB9D30F7EB;
+	Fri, 28 Aug 2026 14:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787922136; cv=none; b=jxb07s6Jgr6fCH8fc/B6KFMxvAr2IqnPJ8+Qx06yXj4nztAc7VESeuUPuFTdBToUYPExdQ1uZfFYZshNQFKYflHwzvV+FxrBI4sNfR/514BAAZbG1dR5V28WskBpr76hvmPjOb0haOV+9+gPXCZr/OLwra9orgzUxyTJTIc8Hl4=
+	t=1787926645; cv=none; b=FBnkJ0DcQGYJxLteQiY56RSjHpuJOWVxZfF889tEw7zVz0+ip1YfbpIj9eq+i37cujqBg7jv9jmmVMRpuLEU+6mOF83K0E2a1bsG045BwmvGX3oQI04fDSu9GBUW4TB3s4vwjsxctQd+hqx3fqRQ4OeaYZm1HWTbKlstyDeuWH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787922136; c=relaxed/simple;
-	bh=QqzBBu7p8nODo/RmFJm1kAQ41J+L+8YvaBuNF7HBWYk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z0CEHacp5ZOLiw0Dq37ccDMSnmY17383OAh5Kn6hUgi2xmyMWCwd9yAvuofqLhG1ML1pzZxdJJvbON+szgJG2R3qjt3EEPgf0bRYrsuZ6osyM/NnoMxPrTGA/RrC1cWtP3js2kzhdJWHx23P1/qbffYEkHDHeWPj2IzfO2At2ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iYL/Fyb6; arc=none smtp.client-ip=74.125.224.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787926645; c=relaxed/simple;
+	bh=Ih2dmJ5lzPl5QMQGbFCQ7a0yL50W+Kc7BUwnje3ppkk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uXZEgicgw7bq2lDSU6WIGPR7nsUXQ5+EiMFS3GpG/cNaL3Or5I8alUg+g4OCvjhvpRJzQF8d6EplZ5DZJ3+v7RcZ8M25lVOUHbbb4LGmJogoeifcmrKttx3p4BUD9/D/o2zwO97L3iw+xBWiB9iyhFlVRSG2V3QWZO9mfyvLWO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=iEtTRLjL; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iYL/Fyb6"
-Received: by mail-yx1-f43.google.com with SMTP id 956f58d0204a3-66c4e9769bdso1391681d50.0
-        for <mptcp@lists.linux.dev>; Fri, 28 Aug 2026 06:02:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787922134; x=1788526934; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=QqzBBu7p8nODo/RmFJm1kAQ41J+L+8YvaBuNF7HBWYk=;
-        b=iYL/Fyb65r9EGrPa28JoBo7bQ5OzGW16E2n8WqaPXvumKJlR3fh4SGblaRDlfmuSDk
-         zKOgv3jswh44kAqretbD+O/EpdoUB/+xX6bCM+8ZGQozpX56cCS3oBsJ8jURSTu32NCh
-         ioasSZg7HWDaKWu969ZhmwN+IXCOLKWO5lv2IdSHq+fNhcJFSMAaX3inpWj1LkHypZQx
-         o2KROHFgj4dEC2shMIb2fQN7bra9Zne9E0tF03OuiCuTlBv4hyKF96vUOMSuxxl+WqHf
-         8iM97AUkAn71LpPHMDiuiHmWUAekndagZTF9g5wJEEPP2EJFiw7CaCupw1/FQOX0/l3g
-         E1aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787922134; x=1788526934;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=QqzBBu7p8nODo/RmFJm1kAQ41J+L+8YvaBuNF7HBWYk=;
-        b=Cb1XqegBHU7Pzf9fRvKW5zxjEuAdMKYKfrH/urS1i5kMvqiwLcGCr1wp/M1dD23Biv
-         w/c/iI9s4JqGsLaiRh2+YPT+fZOhf8Vw83JvFYQmYH05FI3CAcvVoSKaYQsUWbTA890N
-         5SwxBrz1nY8p4RmbFkP036XxQCXyfpuP17sOia4VcMazBBWM/XKnyylGxFqzORzhjsNe
-         pn9/GtgbTE6wH0zi9KK+N2RaFZkvoodqjuFzx8XwKanOGB7NFdyPZG38avfTRi+pg30z
-         XgWNRDbjQitz+fc5GsnKn5mg+HE1HrXq8MR0H+yOmJyk/OO0Xrbg/YN5DWrJ+WC6uLyP
-         jNlw==
-X-Forwarded-Encrypted: i=1; AKwUvBzKOJXOguHQ/akA0Qc5M/sdxXRHEM3ulsFegI8lSnphqZsyUW8zGhS7i8V13qJtnEqkDGMWiw==@lists.linux.dev
-X-Gm-Message-State: AFuF++louWQmT75ZhBmYqU47deq2/r3Y3sorsccQG3YOzdAeM3FP1vxp
-	gao8jPhJmATsSZE5rrmaDmovoxbhl2mj6S8r6KL43tR5JOJHiRzcAxlX
-X-Gm-Gg: AYBFou0ZEpswi9R88b9aQWIUcgKIc6faokF8fzv/i/VHW4mbeb9pV2jhU8QlEHtFjGX
-	PNmMdEMOH1Z840IA+cIeqz5xXdQ5B9MHAXAGRF+Z7JqSVIStUNIxBTj2AINmi5lTmN19uhwlrm1
-	NDn9sT8doSxBM/5LYfMWnHpngMejBcbspCJLpYxCD5FqRnwpmd0pUKyce3FZsAIs4MhbFRjvg7Q
-	023HTAgOr0lNlMxvTUw5HBmMGZxEJEK5g2xbV3rne/nYbzUdV4SwzGooOGReudArxEurXysM5VO
-	SenuHN05+EgfR2tVSw6l2n2oQTrv06fh/Fgr9ktK2blc2obmUUBPxXnfHXy6slW1nXfDv3YCVRa
-	9dMN+pqcclZUCaHexhGQRE9qIHXy4ox74qzOCR58KelfNVq+3scOaHC6aS2nvQd7Vw/udLFvA4j
-	NMK5OktJIKRYAJFS63BIPd0rvpbzOCmFGWmlHoDinrqrv81V1WTNO4xkNgOgNqYthK7iLWkZN5A
-	+SBng==
-X-Received: by 2002:a53:c550:0:b0:66d:264e:88f2 with SMTP id 956f58d0204a3-66e4c6eb8f4mr1512029d50.16.1787922134170;
-        Fri, 28 Aug 2026 06:02:14 -0700 (PDT)
-Received: from mac.lan ([136.55.173.105])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-66e4ed39d4csm770568d50.21.2026.08.28.06.02.13
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 28 Aug 2026 06:02:13 -0700 (PDT)
-From: "Cen Zhang (Microsoft)" <blbllhy@gmail.com>
-To: leitao@debian.org
-Cc: AutonomousCodeSecurity@microsoft.com,
-	andriin@fb.com,
-	ast@kernel.org,
-	blbllhy@gmail.com,
-	bpf@vger.kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	geliang@kernel.org,
-	horms@kernel.org,
-	kafai@fb.com,
-	kuba@kernel.org,
-	kuniyu@google.com,
-	kys@microsoft.com,
-	linux-kernel@vger.kernel.org,
-	martineau@kernel.org,
-	matttbe@kernel.org,
-	mptcp@lists.linux.dev,
-	ncardwell@google.com,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	stable@vger.kernel.org,
-	tgopinath@linux.microsoft.com,
-	xmei5@asu.edu,
-	yhs@fb.com
-Subject: Re: [PATCH net v3 1/2] tcp: fix use-after-free in do_tcp_getsockopt(TCP_CONGESTION)
-Date: Fri, 28 Aug 2026 09:02:12 -0400
-Message-ID: <20260828130212.32968-1-blbllhy@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <apGBE3XHKeNohHF1@gmail.com>
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="iEtTRLjL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=RbCDDoVeBxlRx6HSyQuSlbHEivxBWQB6WL29vZKcHcE=; b=iEtTRLjLG5nsn8nxwskhv4eH+l
+	FqwYItiaB/av6OxrXi32l2iDxtKoA0Ghl7UKzjXAYxGQ3dGZZhUBveAxDQ7dNw0BwdVzvvUVO0sxU
+	47k2jvvxnCXL/mZjNw+yhY5B1bIRRX4kWDFZTLLfQ8AyyE96+8Ix9oUhMiqnaWjEkdyit3oAY0xZ3
+	4B+LML5lamZpMiaNTXPCdQU18TgB6+yZ10sAt6Ram0rWqLjj0LOUsmczg3JR8uUyi7LsoASWmDZHi
+	91Ixa6kMKLVvw+NACI5dB+NlGfH2BPqYrBx1vEjYHzLfpFX0iLW/Qsus6fW2dvrjJ/t+oLGz3h/Ya
+	BR7UJMKw==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wzxOM-00Gpb7-0q;
+	Fri, 28 Aug 2026 14:17:14 +0000
+Date: Fri, 28 Aug 2026 07:17:07 -0700
+From: Breno Leitao <leitao@debian.org>
+To: "Cen Zhang (Microsoft)" <blbllhy@gmail.com>
+Cc: AutonomousCodeSecurity@microsoft.com, andriin@fb.com, ast@kernel.org, 
+	bpf@vger.kernel.org, davem@davemloft.net, edumazet@google.com, geliang@kernel.org, 
+	horms@kernel.org, kafai@fb.com, kuba@kernel.org, kuniyu@google.com, 
+	kys@microsoft.com, linux-kernel@vger.kernel.org, martineau@kernel.org, 
+	matttbe@kernel.org, mptcp@lists.linux.dev, ncardwell@google.com, 
+	netdev@vger.kernel.org, pabeni@redhat.com, stable@vger.kernel.org, 
+	tgopinath@linux.microsoft.com, xmei5@asu.edu, yhs@fb.com
+Subject: Re: [PATCH net v3 1/2] tcp: fix use-after-free in
+ do_tcp_getsockopt(TCP_CONGESTION)
+Message-ID: <apGQkAXE7ZkLkqBi@gmail.com>
 References: <apGBE3XHKeNohHF1@gmail.com>
+ <20260828130212.32968-1-blbllhy@gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260828130212.32968-1-blbllhy@gmail.com>
+X-Debian-User: leitao
 
-> nit: Do you need to zero this string? It will be safely overwritten
-> below, no?
+On Fri, Aug 28, 2026 at 09:02:12AM -0400, Cen Zhang (Microsoft) wrote:
+> > nit: Do you need to zero this string? It will be safely overwritten
+> > below, no?
+> 
+> Thanks for catching this. That initialization is unnecessary. Would
+> you prefer a new version for this, or are you okay with keeping it
+> as-is? I may need a few days before I can send a new version due to an
+> ongoing email account approval process.
 
-Thanks for catching this. That initialization is unnecessary. Would
-you prefer a new version for this, or are you okay with keeping it
-as-is? I may need a few days before I can send a new version due to an
-ongoing email account approval process.
+Right, this is just a nit, as I noted above.
 
-Cen
+We could leave it for the netdev maintainers to flag, but given how
+strict netdev's review process is, I wouldn't be surprised if they
+still ask for it to be cleaned up.
