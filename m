@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E896377555
-	for <mptcp@lists.linux.dev>; Fri, 28 Aug 2026 09:14:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85DC3B38B0;
+	Fri, 28 Aug 2026 09:41:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787908469; cv=none; b=pxZK82oIF1OvKbaFej0zhtjyIrcO7ahwFf6kKK+XslMJAEZhYR56y+F2bhSPYPaN/MeenIv0CfPtFHaI2FQm8Maks2cJopVw2y3DdWm+5nHRo8YTEAdsu+GfX8Yh+0JxoN6ck7gzsXbTtDaLCsn91GaAnEeKMiXr9i3Vnht9Des=
+	t=1787910118; cv=none; b=CqIj9VO0tnExY3IizoRxwhDumJRz6UskKN1P6jNEXm7UQ9a1RXPyccm27T7mHZ87sePe0JuL4BYuK4d0/4hmCCEilnw8I49lurULfrspVjh6VqmRt/Qoe3Fnq9EBJazH32/2J9aTJkdzRlrm3eSKqabSz6qDF6dZrrQ/9TSYJBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787908469; c=relaxed/simple;
-	bh=ahQsN5JrEdQ1KmKOXaQ9VTAnLsOH6U7bIAVnNmPgrv0=;
+	s=arc-20240116; t=1787910118; c=relaxed/simple;
+	bh=3OEuy4BD1dsHy197xzLSBLtBnyzQJ4BNrMV6jDbgf8g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AP9aDfRPiRng1GIFWeHWxp9rljisYBfYYOim0cTmNjFjEa7v+NfODWeRPBXs77miwNzTG6xBRaINPWxX3/E5p4w8XBt3+i2MN0cjN90o8uZJtjbL3KLSho5fjvuu9j4ZMHEdCnYar9kGH4E9dsUDFZEaUOth7NZr0wzEMZ6zNsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iddRhJ4l; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=MrtASGPu0i2jeWxvt2XpgCjcyOXvJcqN82JQE09ZCvgz+DoYPUth3MOML01pJJz41YFilrvHLwjca4RDqFi48vj8x3RnNoSIYpX7Zj9Q7qkWMasd4FtFeZy7YUD+Osq6nvLiHQUyGBy+gxVSmfX2AUo6iZTp95vqDxowC5VwP1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iQipGGLc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iddRhJ4l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6AB61F000E9;
-	Fri, 28 Aug 2026 09:14:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iQipGGLc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E19981F000E9;
+	Fri, 28 Aug 2026 09:41:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787908467;
-	bh=Lc8CQjxdnDK0VttkKdh5VUBLqQbLXWvp7ZZa4U2Nz6E=;
+	s=k20260515; t=1787910117;
+	bh=LPr7Cgdghm1Kz2vcUzEZZn5UouwztW/+50mQHoKvomA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=iddRhJ4lu1NUxOZ5rlmtoLpMSEqRabMPnx5k1jSImao1DTr9rTNl2h9PfWdyVmgcI
-	 MV42wjNLP6EHTkvv/qsRGPBt27NAFw1s5M8fUDzpofINR9FY5GfKDu0lbxXRkvR9kp
-	 kb4jw5v3okv5O7X+zoNZC0h7K7bj0k3R0svgOpYvAxxDEd5B9K3QPeVf7QZcTfKbGG
-	 BSuLJ+2d+sPCZ9Dp9Da+p3g0kQ37lDLRwX0kuLBl+IKgAYdI2b6ZX5QqoG+ReN0T5y
-	 GzLVCclOgs8XQFzW/AqYPwVYmygjPetJU7pj+iC3S6woNeNUlTWPscPZh4Z/yc2yuF
-	 9xv8CP3Wfm3bQ==
-Message-ID: <9de4df76-3ee2-45c4-b0f5-1afa968c098c@kernel.org>
-Date: Fri, 28 Aug 2026 11:14:24 +0200
+	b=iQipGGLc7zqwEKjY4rWswUBu1HBNTwly6FGF0zyFghS2j+cgmvVf6hgdZIcboHM//
+	 EPtlXIV6dfyElr0U3yvBij0FoZtl5eluuNA283pXk/WKV9IxQccyKpMhFX3qlTFr3O
+	 uzVsbth6cw+h/Q4e/oF/Hf7NfJH0nNZkPKT1wPvwPhXpI828SzOmIns5LDvxtgLeuc
+	 ZLe4M/lvIGhc018PEbDw4V87Ti/Edzp3i/qJhvJm2UAGSRbkwqCA5rg/witGBk1ja+
+	 cmzTj/ZeFArBwDg1qSkbFQaq+S8oT/XYGCmKerfeZb6Q0n+P2oDlZBLl063F0lhA5F
+	 XvvifETVZg9Yw==
+Message-ID: <d5eac10c-48f1-4c09-b871-b946c6417399@kernel.org>
+Date: Fri, 28 Aug 2026 11:41:49 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,19 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next 01/11] mptcp: pm: add WARN_ON_ONCE guards on
- extra_subflows underflow
+Subject: Re: [PATCH net v3 1/2] tcp: fix use-after-free in
+ do_tcp_getsockopt(TCP_CONGESTION)
 Content-Language: fr
-To: Tao Cui <cui.tao@linux.dev>
-Cc: cuitao@kylinos.cn, geliang@kernel.org, mptcp@lists.linux.dev
-References: <5eeb6f1e-3444-4737-a310-dfc0b6b644cd@kernel.org>
- <20260828083352.292492-1-cui.tao@linux.dev>
+To: "Cen Zhang (Microsoft)" <blbllhy@gmail.com>, edumazet@google.com,
+ ncardwell@google.com, davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com
+Cc: kuniyu@google.com, horms@kernel.org, martineau@kernel.org,
+ geliang@kernel.org, yhs@fb.com, kafai@fb.com, andriin@fb.com,
+ ast@kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ AutonomousCodeSecurity@microsoft.com, xmei5@asu.edu,
+ tgopinath@linux.microsoft.com, kys@microsoft.com, stable@vger.kernel.org
+References: <cover.1787870710.git.blbllhy@gmail.com>
+ <d3f97f1acbf0010898148be6e6406e4b8b4a5c84.1787870710.git.blbllhy@gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,68 +93,33 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260828083352.292492-1-cui.tao@linux.dev>
+In-Reply-To: <d3f97f1acbf0010898148be6e6406e4b8b4a5c84.1787870710.git.blbllhy@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Tao,
+On 28/08/2026 01:55, Cen Zhang (Microsoft) wrote:
+> From: "Cen Zhang (Microsoft Security FORGE Labs)" <blbllhy@gmail.com>
+> 
+> do_tcp_getsockopt() reads icsk->icsk_ca_ops->name without holding
+> rcu_read_lock(). Since commit 0baf26b0fcd7 ("bpf: tcp: Support
+> tcp_congestion_ops in bpf"), icsk_ca_ops can point to dynamically
+> allocated BPF struct_ops memory that may be freed concurrently via
+> setsockopt(TCP_CONGESTION), leading to a use-after-free.
+> 
+>   BUG: KASAN: slab-use-after-free in _copy_to_user+0x37/0x60
+>   Read of size 16 at addr ffff888013505260 by task exploit/149
+>    _copy_to_user+0x37/0x60
+>    do_tcp_getsockopt+0x158a/0x2460 (net/ipv4/tcp.c:4585)
+>    tcp_getsockopt+0x91/0xf0
+>    __sys_getsockopt+0xf7/0x170
+> 
+> Fix this by holding rcu_read_lock() around the ca_ops->name access,
+> using READ_ONCE() to load icsk_ca_ops, and copying the name to a
+> stack buffer before releasing the lock. Also annotate the relevant
+> icsk_ca_ops stores with WRITE_ONCE() to fix the accompanying KCSAN
+> data-race issue.
 
-On 28/08/2026 10:33, Tao Cui wrote:
-> From: Tao Cui <cuitao@kylinos.cn>
-> 
-> Hi Matt,
-> 
->> On 22/05/2026 10:50, Tao Cui wrote:
->>> extra_subflows is a u8 counter that can underflow if a decrement races
->>> with or precedes an increment. While the recently fixed userspace PM
->>> subflow creation path eliminated the primary cause, add defensive
->>> WARN_ON_ONCE guards at both decrement sites to catch any remaining edge
->>> cases rather than silently wrapping to 255.
->>
->> FYI, Clashiko found some existing issues linked to this patch:
->>
->> https://github.com/multipath-tcp/mptcp_net-next/issues/629
->>
->> I don't know if it impacts your case, but just to avoid having multiple
->> people looking at it, do you plan to address Clashiko's comments?
-> 
-> Thanks for the pointer, I had missed that issue.
-> 
-> I had another look and yes, I'll take care of it. Both findings look
-> real to me:
-> 
-> The disconnect() race is the nasty one. The MP_JOIN softirq bumps the
-> counter under pm->lock and defers the subflow to the join list, then
-> mptcp_pm_data_reset() zeroes it with only the socket lock held, and
-> the subflow gets closed later at release_sock() time when the join
-> list is flushed. So we hit the new warn with the counter already at 0.
-> With panic_on_warn that's a remotely triggerable panic, which is
-> arguably worse than the silent wrap we had before.
-> 
-> The unbounded increment on the userspace PM side is pre-existing, but
-> now the wrap also lands on the warn instead of just corrupting
-> mptcpi_subflows_total.
-> 
-> I don't think we want to keep WARN_ON_ONCE() on paths we know are
-> reachable. My plan for a fix series:
-> 
-> - refuse new MP_JOINs on the userspace PM once extra_subflows is at
->   U8_MAX, so the counter can't wrap anymore
-> - sort out the accounting across disconnect (reset vs join list
->   drain) and downgrade the warn to a clamp, maybe with a
->   pr_warn_ratelimited() to keep some trace of it
-> 
-> I'll follow up in the issue once I have patches. No strong opinion
-> between clamping and refusing admission at the limit, happy to go
-> with whatever you prefer.
-Thank you for having checked and looking at fixes!
-
-Note that for the disconnect part, maybe other variables could be
-checked before looking at decrementing the PM counters? e.g. the msk
-state? Would that work?
-
-Note that I think we would prefer a pr_warn_ratelimited over a complex
-fix involving more locks.
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 Cheers,
 Matt
