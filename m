@@ -1,168 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06153E5598
-	for <mptcp@lists.linux.dev>; Fri, 28 Aug 2026 10:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5CF63DAAA6
+	for <mptcp@lists.linux.dev>; Fri, 28 Aug 2026 11:22:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787912305; cv=none; b=CJ0CJL/FF79146FYrboiQTpRcvarRd/sffNFKg8mzTbySGHIhTw105RAqNWmKxDs1jUB8XMP3NivYLQNMVSD7dnsNaKeFUgU0TP+zs0HDvwsJGnVz9GL0y/EaDnJfcHuCK6USToRx6pySysKX0qOljdTWJiuKOgfQ/wrsbsdfPc=
+	t=1787916134; cv=none; b=lmMx6QSyC7CGLe98EySF5BlaVd1ANAIZ2mfpIhynihLuCKjmS/h4W1MwF2U2RtWLsxUM2p3Dsh7/QJhXOkFsQyAfyorO1bQbH12Vf6/OF+ybeL7jdHyisUygYppyxDGH4cxDKKReBgFdFDYkNvS8QCmGvZahUcGqhn44aJRGdGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787912305; c=relaxed/simple;
-	bh=wWkmHEZF0pc+fXcQSL8EYCoH/0PecPjJp07eqIJ9B9E=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=r9skCXyR5fcJQpEWMeLfq8787V2RBaJAX7uc9aqNGVB2+tzouGY+27MI/LXJTYQ4OX1FE1kJv5dAuEohCmUfbBI9TDi3ACxacwTs+LO2f+U+K49GsNsfUwVL4foSPG8SD23SyOko8XTjafvCWH+uBYSjKXFmOT04ezQ9CEeWUI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EZVGelJf; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1787916134; c=relaxed/simple;
+	bh=2eOeECl+QnHCljVa4j5fZrBX77s4CTBm8WffH1bsvrs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=RG9+zi5KLx1M9U690g8h783HTI0HqCIp7i2zb40H2AhVx0O7bACzD38JjP+Ll+mMseRNtAb1dNmlP6annHrHo4NpkDFrp9H8Va7hfz03Kcl+G41uw0c0vFWyGmDfhuU9f8buiUgMdhPYK1sYD2oEeZ7ONo5uRZsj4d7iwCCa+bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nofiqXJ3; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EZVGelJf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1787912300;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RQwKfd6jIJ8KE3EPtGle4t17zrsYhCY8X3uL40KvQ0c=;
-	b=EZVGelJf11/Uu3IyPA50amAjPSLSCo5KdLOiU0zaXepclQVIyke4yWu1+zVeaaBCgMfEWg
-	jPBtdvlWGUoOQmf7W+fgAXmbum2oc3beqR5hSTiVUqBrQcx+OSmvjBtBvKwUFgV0WDNy/u
-	Nyw5UIs5HX5lnRd096AD0elbHNB+lbc=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-442-IX_ccPhvNRerYnBkwV4Ssw-1; Fri,
- 28 Aug 2026 06:18:19 -0400
-X-MC-Unique: IX_ccPhvNRerYnBkwV4Ssw-1
-X-Mimecast-MFC-AGG-ID: IX_ccPhvNRerYnBkwV4Ssw_1787912298
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3315C185FD81
-	for <mptcp@lists.linux.dev>; Fri, 28 Aug 2026 10:18:18 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.44.48.20])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5CDF93001D37
-	for <mptcp@lists.linux.dev>; Fri, 28 Aug 2026 10:18:17 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net v3 2/2] Squash-to: "mptcp: do not reschedule the RTX timer for fallback sockets"
-Date: Fri, 28 Aug 2026 12:17:14 +0200
-Message-ID: <18efc48d4288baa509ab8305e24c1c8b10d78b16.1787911017.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nofiqXJ3"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-cc11a905ba5so649816a12.2
+        for <mptcp@lists.linux.dev>; Fri, 28 Aug 2026 04:22:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787916132; x=1788520932; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=p83ZnWe87VhYZMef3OPsmM6svXD9aZK43xbMWSK5xhM=;
+        b=nofiqXJ3OZ56xTt349TWpNxvwmQ2z4Skuf8AK9EK67ucJnaeu4oU+C/E3MT8AB9Wyv
+         3hTpeutpqxy+8BqbnA9Z2FEbJlJaQ1J5Dd8M7qHg80RWcRKsJ1dYLMDLdrZ9Iu1geF2l
+         e2jBuiISHnli2+r/IlqcQIC1hETrqy4Ce2JXVS/JLbZ7O4oSQjCObCiffUgsHOv3VhdT
+         96oSxUqZXWWN/AVGZpxsZMtdmlSBO4LxYjT4guyCFKEV62ZMhj1SK6YiTHmvbo0Ox9NY
+         8Qiqw97JIMjEdlwCyGhmLwo6ny2gXDD1PD66q2E5fkfPLvKnj1ci10e7p3lReA/xgR23
+         v5rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787916132; x=1788520932;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=p83ZnWe87VhYZMef3OPsmM6svXD9aZK43xbMWSK5xhM=;
+        b=l6wXAo9jLb7fx40UTKWr9oaqnLtWpA19gw5s9iVLwy/Qh7z9kfDUGr+2Gf3f3K52hn
+         X37fmtdyGpODB8jNeHs2z8oFH7AfkX4Z9qyst2iv/qqbAI1MkfDf3iW1qjRtaCfq/P2M
+         J6v/IkL+bDL1+JSUM3rAI9W6CqeLhKDmvQCKpqhFt1Q9U41EglfHR1s5vvdQWQulLxuP
+         NMUkUyadX4wjsmw7ps32rurQQ2+6oBt5Qz0okwaHcQ/oYBSqQoOmZqzIehvimqe8Wo/H
+         ULtJUKlfmhGsq3xExsy7wqQRePfV+q1DNlkCGXN/qkIdOJz9hFkClFBajJvVVpiAUAYL
+         WvKw==
+X-Gm-Message-State: AFuF++nhKWucf+9BAlxmjc9aZqI4SRA5lR3O9Kaw3E+fLTwEvy4Uu0ug
+	9Ea/Zfif4/8YNcvSAzngPTBUa5bXjkq+M/PWZgIGnrhliAEVzXIZeG0=
+X-Gm-Gg: AR+sD133emSMegfDKmsgfV0AtMUH3m5hLH3MKmFB/3wJu5GWcGAOt9TrmF5QUOSqfYb
+	dBk1Y0aI8j5oV+0H2P5n4Alacq3bNy7j8UUGK1HnXcX95oQet0zfdiJvSZhRhNANmeT4E7StvPV
+	9if++EvroW1uGOS0bFllzu2+ysVBUQspkRYt2t/wasNVL5tHY8Js7MMLWqagUNdhfLj/r7ahucU
+	BqeR/7ynU7WDXbZmO9h2WIEj3GBnIlT7b7k192zILIBzT7reJkx1v5g17rnmXJ2r0w6dKOvNpYB
+	QIYmTwLa0ADM9OCtyXHUbZtOi4t/GYIwCJM0eKiTBW1clFjMItfXghkT0lzV/cQqYD8CVbURVuW
+	yKTAesE22RUwrWBVs7SfKm9BMyh2y12vsZ7pLSuRr+WmvzO9UqyxPPGb3/CrpJp2KRtdk5TnwgH
+	nuub0TmNBZzfNUe0lHbjQ0r3oWQxRN385/a52cAd2iaFsH1gWyvEGZ4BskUh+1z+XUHC6zASp1Q
+	/E=
+X-Received: by 2002:a17:90b:3c08:b0:38e:485c:ebd3 with SMTP id 98e67ed59e1d1-396d0f9ad1fmr13366769a91.15.1787916131952;
+        Fri, 28 Aug 2026 04:22:11 -0700 (PDT)
+Received: from [127.0.0.1] ([52.159.245.164])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-142e0d1b38esm5008573c88.3.2026.08.28.04.22.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2026 04:22:11 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
 In-Reply-To: <cover.1787911017.git.pabeni@redhat.com>
 References: <cover.1787911017.git.pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-net v3 0/2] mptcp: more cleanups
+Message-ID: <27599b15-bfea-a6b8-a83f-3142dc7a47b8@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 28 Aug 2026 11:22:10 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 4FhDCoYKmcxACMomlcUTLWLqH7r9_MF4BrcBYtldVN0_1787912298
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=utf-8
 
-Sashiko noted that the 'RTX disabled' status is carried over
-across connect() failures, potentially to subsequent successful connect()
-or listen().
+Hi Paolo,
 
-Explicitly control the RTX enabling status across the whole msk life-cycle.
-To make the code more straight forward switch the newly introduced flag
-semantic.
+Thank you for your modifications, that's great!
 
-To be appended to the squash-to commit message:
+Our CI did some validations and here is its report:
 
-"""
-The RTX enable bit is clear at close time and set before the msk could
-start retransmitting, with a couple of caveats:
-- passive sockets inherit the bit from the listener msk; set the bit on
-  such socket to avoid flipping it in the fast-path, even if the listener
-  will obviously never retransmit.
-- while fastopening, mptcp_sendmsg_fastopen still ends-up calling
-  mptcp_connect via tcp_sendmsg_fastopen ->
-  __inet_stream_connect(ssk->sk_socket), and the first subflow sk_socket
-  points to the msk one.
-"""
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/331640=
+19952
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/bce912e922bd
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1153165
 
-v2 -> v3:
-  - roll back to v1, sashiko review was wrong and I should have noticed :(
-    hopefully the update changelog should guide sashiko review to avoid
-    repeating the sloop, in any case the issue reported here:
 
-https://sashiko.dev/#/patchset/f1e8ffe44c3756195391a25ecf60e56e02e0f34f.1787739122.git.pabeni%40redhat.com
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-    is a false positive (see the above changelog).
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-v1 -> v2:
-  - consolidate enable, fix missing enable for fastopen
----
- net/mptcp/protocol.c | 8 +++++---
- net/mptcp/protocol.h | 2 +-
- 2 files changed, 6 insertions(+), 4 deletions(-)
+For more details:
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 1e7e59d497c5..08e06511cd6f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -96,7 +96,7 @@ bool __mptcp_try_fallback(struct mptcp_sock *msk, int fb_mib)
- 
- 	msk->allow_subflows = false;
- 	set_bit(MPTCP_FALLBACK_DONE, &msk->flags);
--	set_bit(MPTCP_RTX_DISABLED, &msk->flags);
-+	clear_bit(MPTCP_RTX_ENABLED, &msk->flags);
- 	__MPTCP_INC_STATS(net, fb_mib);
- 	spin_unlock_bh(&msk->fallback_lock);
- 	return true;
-@@ -1126,7 +1126,7 @@ static void mptcp_reset_rtx_timer(struct sock *sk)
- 	unsigned long tout;
- 
- 	/* Prevent rescheduling on close and in case of fallback. */
--	if (test_bit(MPTCP_RTX_DISABLED, &msk->flags))
-+	if (!test_bit(MPTCP_RTX_ENABLED, &msk->flags))
- 		return;
- 
- 	tout = msk->timer_ival;
-@@ -3363,7 +3363,7 @@ void mptcp_set_state(struct sock *sk, int state)
- 		 */
- 		break;
- 	case TCP_CLOSE:
--		set_bit(MPTCP_RTX_DISABLED, &mptcp_sk(sk)->flags);
-+		clear_bit(MPTCP_RTX_ENABLED, &mptcp_sk(sk)->flags);
- 		fallthrough;
- 	default:
- 		if (oldstate == TCP_ESTABLISHED || oldstate == TCP_CLOSE_WAIT)
-@@ -4189,6 +4189,7 @@ static int mptcp_connect(struct sock *sk, struct sockaddr_unsized *uaddr,
- 	if (IS_ERR(ssk))
- 		return PTR_ERR(ssk);
- 
-+	set_bit(MPTCP_RTX_ENABLED, &msk->flags);
- 	mptcp_set_state(sk, TCP_SYN_SENT);
- 	subflow = mptcp_subflow_ctx(ssk);
- #ifdef CONFIG_TCP_MD5SIG
-@@ -4336,6 +4337,7 @@ static int mptcp_listen(struct socket *sock, int backlog)
- 		goto unlock;
- 	}
- 
-+	set_bit(MPTCP_RTX_ENABLED, &msk->flags);
- 	mptcp_set_state(sk, TCP_LISTEN);
- 	sock_set_flag(sk, SOCK_RCU_FREE);
- 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 3d250e8204d5..482d4a549881 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -116,7 +116,7 @@
- #define MPTCP_WORK_RTX		1
- #define MPTCP_FALLBACK_DONE	2
- #define MPTCP_WORK_CLOSE_SUBFLOW 3
--#define MPTCP_RTX_DISABLED	4
-+#define MPTCP_RTX_ENABLED	4
- 
- /* MPTCP socket release cb flags */
- #define MPTCP_PUSH_PENDING	1
--- 
-2.55.0
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
