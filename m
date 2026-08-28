@@ -1,133 +1,104 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+Received: from mta0.migadu.com (out-126.mta0.migadu.com [91.218.175.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F673A4F4B
-	for <mptcp@lists.linux.dev>; Fri, 28 Aug 2026 07:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5533D18E025
+	for <mptcp@lists.linux.dev>; Fri, 28 Aug 2026 08:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.126
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787901272; cv=none; b=KRCIK6Tr5U8ByfOE9ZWuvio1V6uDpRyBC14VdMXQvtnmWzSDtZx0EFoJAjj++qaKb6HzTfDNqphYddvNvU6QEpgspuRUe6JpLxZwTR/taeJtP80uFuCDkxknA2OCz+uFg/Tpjm3moGDHvqz1hHdhIvjp2ImCDB51Ec1beVR6wJY=
+	t=1787906062; cv=none; b=uoZjTySrHjNk01/oAay1T4InAWteaK9B+rlqgbfyZ+83WvatHt+sYS+Im8sNfGBx3aUWp2DDDLHm7DS6rRLPMWyJnNAfwLe94BP1KzUkiTHiyUGgfLjkDHdLDt5LLrvolHAEY/5Yz7twpvplM7+2l2ry8FZJrc5fVZNNU6aBJeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787901272; c=relaxed/simple;
-	bh=lnvPWIwgc7R6ipY/hRZMbOdkwgj3FnBmel8PSKe55So=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=sQFQNifwCoPfiOgmxzmzpFmTetbLZXuGkXe5DwynJxojTEbcFdXhI+ThWJZ5XD24V7HmLu4s9zCL3D5c9dLUuuGyynGTeqM8/92jwNdaUlccivlOOWjfORAsjYT8nzB1k8RtEab+rh52QtvaUcNPBqvSnxdeP8VvtR2oPdCK9/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WoBMaUCa; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787906062; c=relaxed/simple;
+	bh=9hMdHeIR+IN8aJLQLUXcpLYHqx8scuYNCQoEyPUlL4g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hZxHwYzW2mScpMdIbwB/T8nqO3W36QK9/itUAeIFWQp/+HbeRP50tc8wCZBEAb/BWPDVY5HxkSwXzgQvbuHsmBjD3SMMOwiNpjjwqIOZgt4PQsf+0Z7MTnTtNN7M+g0dA1OOvmsAZRvVFiaSV17yTNWONkD6Kpan8yzqPpJFJKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=C2mPAMFf; arc=none smtp.client-ip=91.218.175.126
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WoBMaUCa"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-92e6a434cabso30114985a.1
-        for <mptcp@lists.linux.dev>; Fri, 28 Aug 2026 00:14:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787901267; x=1788506067; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=YVSSGomYsdhsYHiMSOLZZz+9l52QvNFwPvbk83R/ZKQ=;
-        b=WoBMaUCaPFuouZwxkGAR6638dEaMBDeUs2DEHLKJ8KtB/VY2YeqCM0N/vis43rQV9M
-         scu3xIPzqlT6HBa3HLhOeO2wmt56Em9xfUNNIGoX8rFt3VWn95Rix/yRUXKF0dItho5l
-         DzVe0JKb6+GF0omMRDGsWtkI84Qd6nXjTl0YWESHKhkD4NKiFKIsMD2VqyOhPwTrdzjV
-         5pJnz/8N5H9QFXIkehedA5lPp/BWi8nuB2jk1Zay8B7YxvcmqK6Ru83iPzGi+W3c94wG
-         BuxbYSk+tD9iJ3k94SbtWGH/e8nIpCzNjboj6iHO7tM6fIm8JlhEO4Wr52M1YsEt5Ner
-         rvAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787901267; x=1788506067;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=YVSSGomYsdhsYHiMSOLZZz+9l52QvNFwPvbk83R/ZKQ=;
-        b=Rct3ZwzlUYBlfJ+l2qGbSkIsqNf4RaZlHhHsoY2u3ACA15IZirukIMKQKarYbskFhd
-         +4fgZmprMQ8otUtHtaJVAoANLg4vx6kc2RU6LXteOB8Ge4bjMRBNcXtb2pdqzjJrNjAE
-         z1PHcpAcobObKB85w2t1ymolW9oM5Tx9K5FZthCz9kpz+X87z5crEz9f+QxQS71U5Tk5
-         F48TiWcD1wyNzGJSJEwE+qY0mF0hnJhC4us9ongsHAh8YM/2HntWKMPfcmGrY9cHZXRD
-         2W8TptCCbP6uk4lZ2YyUrvqULURs5MSekZPuoxnZtlHwueKlKA6ljrLcvBFqArouo/lc
-         Hjiw==
-X-Gm-Message-State: AFuF++nv8ThcWWEGQ0/N/by4FdrhBlT9q9f4TucErhcbQ1GogIs0N3xD
-	8gUbntDND2wY6ePOQjl9FPX9gc60OuXrwFgNs7q4QOFe43hn7pRI/u9BoQjb
-X-Gm-Gg: AR+sD10A5H84y/Wh8vJ+EiDaP4L9rJXBiMiPBVFaAleIEiDx8K98m8F0opPJzAJZzxV
-	vM3oP2me2seUPzNyLGwSbuRxQ/ap/cBza9z4uxAQTKEI/4kvs4ZYpnRVop6p/MMfUWblcPsXQAQ
-	5Hs998ieGUieq9dSfI4FPLA61p0msmkajBskTm4zJq7Ms2nC+u7Sf4TKzRq9ahrt17E1RW44vJt
-	QyhdSoKKNu6/Z8Vs6BiOnyaX49Fy9MXRwMSpuFnakeGczIT2Q4Crq7hQ9XVYCzIrSzdFAJrNsxc
-	FzPNmMrgULsdRKWjBEm+xYkmxxYrs+BfuH+2h4PihkuF7EOVE/rz24MmTO/7WY34QDUjpxayrtB
-	1l3xzicj1dgq4aVPm7D40i7WMfJvUzugbGiTBME4w36RVr6w4fAKasbhEn1KoeS4Wo+q+1hghtr
-	d47vmDRPvGImzOv2eBDlqgqXwVkMnFbzQfO3JgzhBgyN2Kac3eDvhbc8RUjPTn7od2UjvLTN5X4
-	g==
-X-Received: by 2002:a05:620a:2907:b0:939:df7:6ce3 with SMTP id af79cd13be357-9391390b4c1mr397871785a.26.1787901266844;
-        Fri, 28 Aug 2026 00:14:26 -0700 (PDT)
-Received: from [127.0.0.1] ([20.161.30.240])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-939173f2758sm82824385a.37.2026.08.28.00.14.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2026 00:14:25 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Gang Yan <yangang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260828060643.14397-1-gang.yan@linux.dev>
-References: <20260828060643.14397-1-gang.yan@linux.dev>
-Subject: Re: [PATCH mptcp-next v5 0/6] mptcp: avoid data-races around the
- sysctls
-Message-ID: <a8b0eb8d-adcb-4a50-8118-47ad5ed99f8f@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 28 Aug 2026 07:14:25 +0000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="C2mPAMFf"
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=9hMdHeIR+IN8aJLQLUXcpLYHqx8scuYNCQoEyPUlL4g=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1787906057; v=1; x=1788510857;
+ b=C2mPAMFfqG+R62hNS32hQro+SaNtLrrpQy3YMMbd16MeP5J4jmh7PtUUwug2avd9lbGF3zOr
+ QNqWYV0a7lCXk2oXWJNTbxa9GZKklMaeN40uEYo/rRlh/tweyirw0V8g42CkSSaGjqvn5jVTxDA
+ z74bGm0nYARwn7CRfIVljEdI=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 3fca9118684d59aa;
+	Fri, 28 Aug 2026 08:34:17 +0000
+X-Mizu-Trace-ID: 3fca9118684d59aa
+X-Migadu-Flow: FLOW_OUT
+From: Tao Cui <cui.tao@linux.dev>
+To: matttbe@kernel.org
+Cc: cuitao@kylinos.cn,
+	geliang@kernel.org,
+	mptcp@lists.linux.dev,
+	cui.tao@linux.dev
+Subject: Re: [PATCH net-next 01/11] mptcp: pm: add WARN_ON_ONCE guards on extra_subflows underflow
+Date: Fri, 28 Aug 2026 16:33:52 +0800
+Message-ID: <20260828083352.292492-1-cui.tao@linux.dev>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <5eeb6f1e-3444-4737-a310-dfc0b6b644cd@kernel.org>
+References: <5eeb6f1e-3444-4737-a310-dfc0b6b644cd@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Gang,
+From: Tao Cui <cuitao@kylinos.cn>
 
-Thank you for your modifications, that's great!
+Hi Matt,
 
-Our CI did some validations and here is its report:
+> On 22/05/2026 10:50, Tao Cui wrote:
+>> extra_subflows is a u8 counter that can underflow if a decrement races
+>> with or precedes an increment. While the recently fixed userspace PM
+>> subflow creation path eliminated the primary cause, add defensive
+>> WARN_ON_ONCE guards at both decrement sites to catch any remaining edge
+>> cases rather than silently wrapping to 255.
+> 
+> FYI, Clashiko found some existing issues linked to this patch:
+> 
+> https://github.com/multipath-tcp/mptcp_net-next/issues/629
+> 
+> I don't know if it impacts your case, but just to avoid having multiple
+> people looking at it, do you plan to address Clashiko's comments?
 
-- KVM Validation: normal (except selftest_mptcp_join): Unstable: 2 failed =
-test(s): packetdrill_add_addr selftest_simult_flows =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/331477=
-52173
+Thanks for the pointer, I had missed that issue.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/12973af4fb8e
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1152984
+I had another look and yes, I'll take care of it. Both findings look
+real to me:
 
+The disconnect() race is the nasty one. The MP_JOIN softirq bumps the
+counter under pm->lock and defers the subflow to the join list, then
+mptcp_pm_data_reset() zeroes it with only the socket lock held, and
+the subflow gets closed later at release_sock() time when the join
+list is flushed. So we hit the new warn with the counter already at 0.
+With panic_on_warn that's a remotely triggerable panic, which is
+arguably worse than the silent wrap we had before.
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+The unbounded increment on the userspace PM side is pre-existing, but
+now the wrap also lands on the warn instead of just corrupting
+mptcpi_subflows_total.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+I don't think we want to keep WARN_ON_ONCE() on paths we know are
+reachable. My plan for a fix series:
 
-For more details:
+- refuse new MP_JOINs on the userspace PM once extra_subflows is at
+  U8_MAX, so the counter can't wrap anymore
+- sort out the accounting across disconnect (reset vs join list
+  drain) and downgrade the warn to a clamp, maybe with a
+  pr_warn_ratelimited() to keep some trace of it
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+I'll follow up in the issue once I have patches. No strong opinion
+between clamping and refusing admission at the limit, happy to go
+with whatever you prefer.
 
+Thanks,
+Tao
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+https://github.com/multipath-tcp/mptcp_net-next/issues/629
