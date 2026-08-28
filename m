@@ -1,39 +1,39 @@
-Received: from mta0.migadu.com (out-232.mta0.migadu.com [91.218.175.232])
+Received: from mta1.migadu.com (out-26.mta1.migadu.com [95.215.58.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D6319CD0A
-	for <mptcp@lists.linux.dev>; Fri, 28 Aug 2026 06:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917B719CD0A
+	for <mptcp@lists.linux.dev>; Fri, 28 Aug 2026 06:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787897222; cv=none; b=B61f5JsdLCmKmvH/3cKo6hcSqN2IwSM+wa9LRqlz/6pMdnkOwE32sWw97M6Dj7njAXczPn5E5UuZPZFM8bJiCTmFfzu8DaJ4hQ339qI9gkmEXlVxweoku8j1b1EklLhY3tOKvDAnokh5WX7TeXRB5v+AihcrQTsbuRIrIng4ros=
+	t=1787897227; cv=none; b=bPPezIAcAdUverLIoc9RGJxBVWf4gCTaH/a+ciGodZmlttq64zP7pulJOGfR4OFB/plnx3QVAkVRzzTbD6LtdHWNDfiGyBgFHV+coT+BWuL1CV/vTEvZ5uV0fzkjXnzQN50r2UKkhssNqNSV7r+4wa7Rt8kxF4lqYoc/nr1AMb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787897222; c=relaxed/simple;
-	bh=36NLF5dpC6DDbPWN0lKVljYyTFyoh+K2EZQVHZtfoxk=;
+	s=arc-20240116; t=1787897227; c=relaxed/simple;
+	bh=f8tgCjT83aIcTUbhHk9sOl+jqy/sFiMJokips0njS/M=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t3NQrDV/WpmCH+lTqKoFEDETk5GkQWqmONipESQqPk3NXBqPLPBXQfJOZ/fPTVEXvEMntKpygex1/HN17yDOrmCasekfkVKXBH1IqnBFVaMYJFkNq9BekNxWmVCs8OtLynfWoaTnXtL1xB0dK6o9Uy6akr800N2gWKPDji7vfNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BTLz8WG9; arc=none smtp.client-ip=91.218.175.232
+	 MIME-Version; b=fnTM7eH4wW/qG7BqA4AywxEccFhbTKR7EViySRf8TaSQROOwM21Edb/fzHw0E3dijFHk6A+uycWQyp+mPxKMQHLJuAhnhjjcbX6RuRAHoidcNMXGLQ6rjj8QS7aK7/VyY5aOEdlQWZ8840+YiNs2Y5GuP8PJ2jlwH2Kl8Cr+1lQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=joryYsn/; arc=none smtp.client-ip=95.215.58.26
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BTLz8WG9"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="joryYsn/"
 X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=36NLF5dpC6DDbPWN0lKVljYyTFyoh+K2EZQVHZtfoxk=;
+DKIM-Signature: a=rsa-sha256; bh=f8tgCjT83aIcTUbhHk9sOl+jqy/sFiMJokips0njS/M=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1787897218; v=1; x=1788502018;
- b=BTLz8WG9SLFtONWtDl40zMNB9osZYUF7DSk2TkOD2jS938IkhpNQsOaWfA4/1l+EmpI8h16Q
- KlTdaJJeJZfr13d87nR4LGuW9JxJcCXA7ArAVlRJzaGKUQ7hfxuvFuE9ZDuK480tdjKHJcLrzyR
- rGTJqHgvQruLyGF/h+vwy/QM=
+ t=1787897223; v=1; x=1788502023;
+ b=joryYsn/JG5jPUFBKsSqTbl8yznmiJWntdpuVNzo3CaBGrtEQ89I8KuKbyDF4GNxPpahO1RI
+ 1NHK4PIEJfDgqRoCgpLc5DJx5kiwnCK8SW5PO9mhm8DZDvOVLAbYQV38Ue9+8y2ub6hFFQCl+uL
+ YgfliGoNji6jK4gomCRdP7uA=
 X-Envelope-To: mptcp@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 42eed82649dfd5ba;
-	Fri, 28 Aug 2026 06:06:58 +0000
-X-Mizu-Trace-ID: 42eed82649dfd5ba
+Received: by smtp.migadu.com with ESMTPS id de5ca9ab7c3fe688;
+	Fri, 28 Aug 2026 06:07:03 +0000
+X-Mizu-Trace-ID: de5ca9ab7c3fe688
 X-Migadu-Flow: FLOW_OUT
 From: Gang Yan <gang.yan@linux.dev>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v5 2/6] mptcp: pm: change path_manager sysctl atomically
-Date: Fri, 28 Aug 2026 14:06:39 +0800
-Message-ID: <20260828060643.14397-3-gang.yan@linux.dev>
+Subject: [PATCH mptcp-next v5 3/6] mptcp: use READ_ONCE() over sysctls
+Date: Fri, 28 Aug 2026 14:06:40 +0800
+Message-ID: <20260828060643.14397-4-gang.yan@linux.dev>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260828060643.14397-1-gang.yan@linux.dev>
 References: <20260828060643.14397-1-gang.yan@linux.dev>
@@ -45,172 +45,85 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Gang Yan <yangang@kylinos.cn>
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 
-The per-netns path manager name is stored as an inline char[] buffer and
-updated via strscpy() from the sysctl handler. A concurrent reader can
-observe a half-written name (KCSAN), which READ_ONCE() cannot fix for a
-multi-byte string.
+To avoid KCSAN issues.
 
-Following the tcp_congestion_control() model (and the scheduler change
-in the previous patch), store a pointer to the immutable
-struct mptcp_pm_ops instead of the name string.
+This patch is in theory for -net, and will need to be split in multiple
+patches, with different Fixes tags. But I prefer to wait for Eric's
+patches, as I noticed he already started to modify mptcp_is_enabled:
 
-No module reference is taken on the path manager ops for now, as they
-can only be registered from built-in code on one side, and on the other
-side the reference counting will be introduced by the last patch of
-this series, together with the BPF path manager support.
+  https://lore.kernel.org/CANn89iLdwhhwLyO6zRjWMEY3t9g60ZE8ZhOVx33ucg_uRETbmQ@mail.gmail.com
 
-Assisted-by: Claude:GLM5.2
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/626
-Co-developed-by: Tao Cui <cuitao@kylinos.cn>
-Signed-off-by: Tao Cui <cuitao@kylinos.cn>
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
+Still, keeping this patch in this series, not to forget about it.
+
+Reported-by: Eric Dumazet <edumazet@google.com>
+Closes: https://lore.kernel.org/CANn89iL=os-60kDKqMDdyiXuPF5CG=eejS0vmthwpDGXz_Bp8A@mail.gmail.com
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/ctrl.c     | 33 +++++++++++++++++++++++----------
- net/mptcp/pm.c       |  3 ++-
- net/mptcp/protocol.h |  3 +--
- 3 files changed, 26 insertions(+), 13 deletions(-)
+ net/mptcp/ctrl.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-index 7d0f3421bd04..76ff2a41ba38 100644
+index 76ff2a41ba38..5a75f9b76d15 100644
 --- a/net/mptcp/ctrl.c
 +++ b/net/mptcp/ctrl.c
-@@ -40,7 +40,7 @@ struct mptcp_pernet {
- 	u8 pm_type;
- 	u8 add_addr_v6_port_drop_ts;
- 	struct mptcp_sched_ops __rcu *scheduler;
--	char path_manager[MPTCP_PM_NAME_MAX];
-+	struct mptcp_pm_ops __rcu *path_manager;
- };
+@@ -50,39 +50,39 @@ static struct mptcp_pernet *mptcp_get_pernet(const struct net *net)
  
- static struct mptcp_pernet *mptcp_get_pernet(const struct net *net)
-@@ -85,9 +85,20 @@ int mptcp_get_pm_type(const struct net *net)
- 	return mptcp_get_pernet(net)->pm_type;
- }
- 
--const char *mptcp_get_path_manager(const struct net *net)
-+static struct mptcp_pm_ops *mptcp_pernet_pm(struct mptcp_pernet *pernet)
+ int mptcp_is_enabled(const struct net *net)
  {
--	return mptcp_get_pernet(net)->path_manager;
-+	struct mptcp_pm_ops *pm_ops;
-+
-+	pm_ops = rcu_dereference(pernet->path_manager);
-+	return pm_ops ? pm_ops : &mptcp_pm_kernel;
-+}
-+
-+void mptcp_get_path_manager(const struct net *net, char *name)
-+{
-+	rcu_read_lock();
-+	strscpy(name, mptcp_pernet_pm(mptcp_get_pernet(net))->name,
-+		MPTCP_PM_NAME_MAX);
-+	rcu_read_unlock();
+-	return mptcp_get_pernet(net)->mptcp_enabled;
++	return READ_ONCE(mptcp_get_pernet(net)->mptcp_enabled);
  }
  
- static struct mptcp_sched_ops *mptcp_pernet_sched(struct mptcp_pernet *pernet)
-@@ -124,7 +135,8 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
- 	if (bpf_try_module_get(&mptcp_sched_default, mptcp_sched_default.owner))
- 		RCU_INIT_POINTER(pernet->scheduler, &mptcp_sched_default);
- 
--	strscpy(pernet->path_manager, "kernel", sizeof(pernet->path_manager));
-+	RCU_INIT_POINTER(pernet->path_manager, &mptcp_pm_kernel);
-+
- 	pernet->add_addr_v6_port_drop_ts = 1;
- }
- 
-@@ -210,7 +222,7 @@ static int proc_blackhole_detect_timeout(const struct ctl_table *table,
- 	return ret;
- }
- 
--static int mptcp_set_path_manager(char *path_manager, const char *name)
-+static int mptcp_set_path_manager(struct mptcp_pernet *pernet, const char *name)
+ unsigned int mptcp_get_add_addr_timeout(const struct net *net)
  {
- 	struct mptcp_pm_ops *pm_ops;
- 	int ret = 0;
-@@ -218,7 +230,7 @@ static int mptcp_set_path_manager(char *path_manager, const char *name)
- 	rcu_read_lock();
- 	pm_ops = mptcp_pm_find(name);
- 	if (pm_ops)
--		strscpy(path_manager, name, MPTCP_PM_NAME_MAX);
-+		xchg(&pernet->path_manager, pm_ops);
- 	else
- 		ret = -ENOENT;
- 	rcu_read_unlock();
-@@ -232,7 +244,6 @@ static int proc_path_manager(const struct ctl_table *ctl, int write,
- 	struct mptcp_pernet *pernet = container_of(ctl->data,
- 						   struct mptcp_pernet,
- 						   path_manager);
--	char (*path_manager)[MPTCP_PM_NAME_MAX] = ctl->data;
- 	char pm_name[MPTCP_PM_NAME_MAX];
- 	const struct ctl_table tbl = {
- 		.data = pm_name,
-@@ -240,11 +251,13 @@ static int proc_path_manager(const struct ctl_table *ctl, int write,
- 	};
- 	int ret;
+-	return mptcp_get_pernet(net)->add_addr_timeout;
++	return READ_ONCE(mptcp_get_pernet(net)->add_addr_timeout);
+ }
  
--	strscpy(pm_name, *path_manager, MPTCP_PM_NAME_MAX);
-+	rcu_read_lock();
-+	strscpy(pm_name, mptcp_pernet_pm(pernet)->name, MPTCP_PM_NAME_MAX);
-+	rcu_read_unlock();
- 
- 	ret = proc_dostring(&tbl, write, buffer, lenp, ppos);
- 	if (write && ret == 0) {
--		ret = mptcp_set_path_manager(*path_manager, pm_name);
-+		ret = mptcp_set_path_manager(pernet, pm_name);
- 		if (ret == 0) {
- 			u8 pm_type = __MPTCP_PM_TYPE_NR;
- 
-@@ -276,7 +289,7 @@ static int proc_pm_type(const struct ctl_table *ctl, int write,
- 			pm_name = "kernel";
- 		else if (pm_type == MPTCP_PM_TYPE_USERSPACE)
- 			pm_name = "userspace";
--		mptcp_set_path_manager(pernet->path_manager, pm_name);
-+		mptcp_set_path_manager(pernet, pm_name);
- 	}
- 
- 	return ret;
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index d7c5b50b34cc..69a38cb48977 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -1204,7 +1204,7 @@ void mptcp_pm_destroy(struct mptcp_sock *msk)
- void mptcp_pm_data_reset(struct mptcp_sock *msk)
+ int mptcp_is_checksum_enabled(const struct net *net)
  {
- 	const struct net *net = sock_net((struct sock *)msk);
--	const char *pm_name = mptcp_get_path_manager(net);
-+	char pm_name[MPTCP_PM_NAME_MAX];
- 	u8 pm_type = mptcp_get_pm_type(net);
- 	struct mptcp_pm_data *pm = &msk->pm;
+-	return mptcp_get_pernet(net)->checksum_enabled;
++	return READ_ONCE(mptcp_get_pernet(net)->checksum_enabled);
+ }
  
-@@ -1213,6 +1213,7 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
- 	pm->rm_list_rx.nr = 0;
- 	WRITE_ONCE(pm->pm_type, pm_type);
+ int mptcp_allow_join_id0(const struct net *net)
+ {
+-	return mptcp_get_pernet(net)->allow_join_initial_addr_port;
++	return READ_ONCE(mptcp_get_pernet(net)->allow_join_initial_addr_port);
+ }
  
-+	mptcp_get_path_manager(net, pm_name);
- 	rcu_read_lock();
- 	mptcp_pm_ops_init(msk, pm_name);
- 	rcu_read_unlock();
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 3b13d507433b..c15c96f410f1 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -802,7 +802,7 @@ int mptcp_allow_join_id0(const struct net *net);
- unsigned int mptcp_stale_loss_cnt(const struct net *net);
- unsigned int mptcp_close_timeout(const struct sock *sk);
- int mptcp_get_pm_type(const struct net *net);
--const char *mptcp_get_path_manager(const struct net *net);
-+void mptcp_get_path_manager(const struct net *net, char *name);
- struct mptcp_sched_ops *mptcp_get_scheduler(const struct net *net);
- unsigned int mptcp_add_addr_v6_port_drop_ts(const struct net *net);
+ unsigned int mptcp_stale_loss_cnt(const struct net *net)
+ {
+-	return mptcp_get_pernet(net)->stale_loss_cnt;
++	return READ_ONCE(mptcp_get_pernet(net)->stale_loss_cnt);
+ }
  
-@@ -1153,7 +1153,6 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
- 			   bool echo);
- int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_list *rm_list);
+ unsigned int mptcp_close_timeout(const struct sock *sk)
+ {
+ 	if (sock_flag(sk, SOCK_DEAD))
+ 		return TCP_TIMEWAIT_LEN;
+-	return mptcp_get_pernet(sock_net(sk))->close_timeout;
++	return READ_ONCE(mptcp_get_pernet(sock_net(sk))->close_timeout);
+ }
  
--/* the default path manager, used in mptcp_pm_unregister */
- extern struct mptcp_pm_ops mptcp_pm_kernel;
- extern struct mptcp_sched_ops mptcp_sched_default;
+ int mptcp_get_pm_type(const struct net *net)
+ {
+-	return mptcp_get_pernet(net)->pm_type;
++	return READ_ONCE(mptcp_get_pernet(net)->pm_type);
+ }
  
+ static struct mptcp_pm_ops *mptcp_pernet_pm(struct mptcp_pernet *pernet)
+@@ -586,7 +586,7 @@ void mptcp_active_detect_blackhole(struct sock *ssk, bool expired)
+ 
+ 	net = sock_net(ssk);
+ 	timeouts = inet_csk(ssk)->icsk_retransmits;
+-	to_max = mptcp_get_pernet(net)->syn_retrans_before_tcp_fallback;
++	to_max = READ_ONCE(mptcp_get_pernet(net)->syn_retrans_before_tcp_fallback);
+ 
+ 	if (timeouts == to_max || (timeouts < to_max && expired)) {
+ 		subflow->mpc_drop = 1;
 -- 
 2.43.0
 
