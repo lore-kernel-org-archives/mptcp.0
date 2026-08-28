@@ -1,125 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 116A8232395
-	for <mptcp@lists.linux.dev>; Fri, 28 Aug 2026 04:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835632D8385
+	for <mptcp@lists.linux.dev>; Fri, 28 Aug 2026 05:02:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787890718; cv=none; b=lSxAGaN2IwjKdY2/VkInHrK8/nQ+tjM1ufoaZdS4Z575z4vHoCZ31IY9/f+AyGG7v9k31FfL/gRhDXkZtXkFPkyhQ1/6bpE/O1KFb/vLsfN7GUeL0NHdoenjynUMs4z87z8VTWxNrqjQ+k9BlsFAEgOBhMSXk2ZjLX1Zi1t1BgI=
+	t=1787893324; cv=none; b=GKWo2kb/yQZYFlcKEdlOdlHUW9P9JWv0INC2JwJ53sy1u7vYGkPbNG35imaBXkXwHHdvseT3H1K7wBe4RwBuxyD9w4laewKQL4CmVmK5a4+Cd6HNP+2hMSA1j1WrDffAeL3EwyjRMOnZbKqOxux9VPBNY+bA42EiqtfQct8FRmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787890718; c=relaxed/simple;
-	bh=1uvI92t8mUN9TrFUVSWv5CrwtqcjyRMZIggnEtqW7Ws=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=b/eYx9V4f2OVOe3vXwh8ZagcJgtQoAAEnVxZ8pSoqYbbLGvnARgn8gGD1wATc/Ah6v/S4wrYaECwCkRk9VoAdoVM/CDC1hWN/1O7TC7yeKachZtv44bk/qruNkxH+DhQ/Vutw0Bg5dGbKa6M6ruMpuDKvBbIXKMzp+eL8Fw8faM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XHko5+S6; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787893324; c=relaxed/simple;
+	bh=R30fZFfGtuKTNKPJtmTj3KQ4wYi1YllIMXvBf47XcBQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=PcxvGP3/wja7AxS90e8+vtDjsZgHp/kayx24pcEnuk/apFDEVPYqFi0FvjfjNgWV1kKgCqjHXTQ4piRjvZ0zOV1ooItTdGXnSxy2bw7cuw1T0HkTrVUoESVEeEVWx1igPllISKGNpzAPkvjKVC1Dgk3+EWY2wD/kbXnc7A6GWr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rZ8BGdS4; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XHko5+S6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 736CE1F000E9;
-	Fri, 28 Aug 2026 04:18:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787890716;
-	bh=Tmy28aWd1rucuQvwAFaCS76WiPm7tIHBib8XcZmjuO8=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=XHko5+S6s6m+0CukBbAYUkU8a0unxfiRfJXANoItYytvVEm4PzRkGDKum1IiS0+Wo
-	 2hGLKcIHQJE9Iz44rzOUn4YKHTdO4hHfosR5Nhee3ZAZ+k+ex8ng6OJ1TM+hqNCtTt
-	 sM3cfq+GzRESIcOvzEpfeteeHSkJFjSWrObarnKU6lRYSSTwr21G7CYhxqCDC58KQo
-	 1QzYLDhHlEmVcxALALLaZm0SXxRe9vnNjkkw72/7OzfZ7ilNnxp3qhBRrupwhRDzFM
-	 kdgIJdqJTQS0IYX82ohoKp4sC0imBfDAanEJdAO6MbjMv8Oj6DY+ICuLu+wKxSxxH8
-	 6Er729Q5d0B5w==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v10 2/9] mptcp: drop the cant_coalesce CB
- field
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Geliang Tang" <geliang@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rZ8BGdS4"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-851cbd64814so65776b3a.1
+        for <mptcp@lists.linux.dev>; Thu, 27 Aug 2026 22:02:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787893323; x=1788498123; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=+iKLYtGr5pOf7nfSLgPRIqBOX/3BJxzAi/X2xFUB0QQ=;
+        b=rZ8BGdS4wHB0/KlUT+fOAdfMb4gDbpohlyFPkTFJKP441p55Rwu/pT+WSmK5w2HIRy
+         fkYd+x7EUDE5vfMjSOY/iUBwRKcca/GWQ7+Tt/qE/5j33zujIO1avX2sumNa0UDuZAWS
+         tCgjhCHeY/OB9YNtmNhOySN+NlY3E4kKmmjSjB5KKJtvZ8vbwK8vvvEl/Ns2pgyWf+Vx
+         22rXXo668AlMXWPQdOjQEz03KQnCGERTxu21pVXp6NRM7EFJvHeHcW7BKIl6C3ZG4QRX
+         ffngBrfdDJvGef5ZG3b1UWctyNrcA8gNN03meIqzYcUgSr/8KT8ZFXmQJOXF6TAvgPXt
+         3Hww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787893323; x=1788498123;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=+iKLYtGr5pOf7nfSLgPRIqBOX/3BJxzAi/X2xFUB0QQ=;
+        b=aNnodm6ykZar17qy+mwLKlnerya9AlRkQgbCcZMmK4ltTr/ASLB4F8p42eorZKJVM6
+         NsyYhrDzMULIprVgn7OEbdGayQ6JUVXGeejNTXO5fVhR7hsY5Tt6wC3zmNeH6bhbr2OH
+         1IFYzVm3GL+v7U6sckwZ5VKKrd257fV50VPg6vEYs86nDyucPEsYZzSiRCd1i6HZ9MbZ
+         aM5h3e7ttOkm6fVTKNkQvi1NovB1/tzE069RA9zfPAiTXu/91SxBFp8hoMEzoS3oI5B1
+         Jb481Cu/yW6fqfmIAafWeQlZ4hvDJPj2IVxxphhqfnNj/U5NmF054SrlzmyCoZCD40tQ
+         EMUQ==
+X-Gm-Message-State: AFuF++lqiEDPJL9gPA2DK4m7Dx6KFV24jG8eAWrlDhNRwxOTaDvsXfhM
+	YUB6PfTeYnEwm79AP7AX/2DVnNuiZldW0Sseg6V/qjYNUbXSCrJUQ3Rivi02wyY=
+X-Gm-Gg: AR+sD12XkwBrxrVRHWfOr8kU9bbgJqfkJbjMnQSlXOdZYnzmAzFB11QRB2ODwO9lRer
+	jJkgGudm8iZCKmPVqaLvw5VSq9S3LLGuJtmSpsRgvL3JgRbq4QpU0NChqzopJBCbbkxrgZHBqaK
+	KFAJ0y4Dey9/H82fG1DScxbEqhg3b2IvMrVtSBkw6pyj1IANbm6GLHpLMTVLYLLlfk2DnVJxO8o
+	esXlY1NF+YkJOPr2lzPBybQa1nBmgEa93IZgMwwT11WUWg0S6irmNmIQ+5s5nldw+aD44HtnPyp
+	TaOTgzr7k3FNRMtBDrw2HplcWCxjQPJn8k4No4IhPypelfz9KO0rxxMWR6GeRMGcCGf+j4G0+BO
+	QHd/V0/aXf+zY/B49lAaIgj4hyghUsp1nVYMZWKR3ltWSZ2vlq0G3xWjWR+2Gwn++Q8mGj6n9Ux
+	wJ34O8XtA3o/7dj5hHZKYgBEYRs3/WoT2r/ZRV7JHZD/irdQZWG9EFvgyHETbQfv/5f4VL2QUU0
+	A==
+X-Received: by 2002:a05:6a00:17a3:b0:842:5b66:3c7f with SMTP id d2e1a72fcca58-85625842e10mr8436527b3a.0.1787893322774;
+        Thu, 27 Aug 2026 22:02:02 -0700 (PDT)
+Received: from [127.0.0.1] ([4.154.236.227])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-856a2ea6faesm197759b3a.31.2026.08.27.22.02.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2026 22:02:01 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
 Cc: mptcp@lists.linux.dev
-In-Reply-To: <e444cb860c2b880a1db6cdea3ddfa98a55163760.1787888115.git.tanggeliang@kylinos.cn>
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1787888115.git.tanggeliang@kylinos.cn>
 References: <cover.1787888115.git.tanggeliang@kylinos.cn>
- <e444cb860c2b880a1db6cdea3ddfa98a55163760.1787888115.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=utf-8
+Subject: Re: [PATCH mptcp-next v10 0/9] Reduce the differences between TCP
+ and MPTCP for TLS usage
+Message-ID: <6c8f83ea-a3a7-0410-0311-51933acb9b7f@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 28 Aug 2026 04:18:35 +0000
-Message-Id: <20260828041836.736CE1F000E9@smtp.kernel.org>
+Date: Fri, 28 Aug 2026 05:02:00 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] A race condition in `__mptcp_move_skb` causes premature consumptio=
-n of the `rcvd_dummy_seq` flag and a stale read of `msk->ack_seq`, permanen=
-tly corrupting the fastopen SKB sequence mapping.
---
+Hi Geliang,
 
-commit 4b77d7da2be72a2e1f480d6176376b2e639e2faa
-Author: Paolo Abeni <pabeni@redhat.com>
+Thank you for your modifications, that's great!
 
-mptcp: drop the cant_coalesce CB field
+Our CI did some validations and here is its report:
 
-This patch removes the cant_coalesce field from the MPTCP SKB control block.
-It replaces synchronous updates at 3rd ACK time by synchronizing the fastop=
-en
-skb sequence when the IASN becomes available, before the next segment enters
-the msk receive queue.
+- KVM Validation: normal (except selftest_mptcp_join): Unstable: 2 failed =
+test(s): packetdrill_add_addr selftest_simult_flows =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/331411=
+05527
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 7421b44934f05..0a90bed02b412 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-[ ... ]
-> @@ -446,6 +464,12 @@ static bool __mptcp_move_skb(struct sock *sk, struct=
- sk_buff *skb)
-> =20
->  	mptcp_borrow_fwdmem(sk, skb);
-> =20
-> +	/* Be sure to sync the eventual fastopen dummy mapping before any other
-> +	 * skb lands into the msk.
-> +	 */
-> +	if (unlikely(msk->rcvd_dummy_seq))
-> +		__mptcp_sync_rcv_sequence(sk);
-> +
->  	if (MPTCP_SKB_CB(skb)->map_seq =3D=3D msk->ack_seq) {
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/d876351d240e
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1152948
 
-[Severity: High]
-Does this execute the sync logic unconditionally without waiting for the
-MPTCP_SYNC_SEQ flag or a memory barrier?=20
 
-If a concurrent mptcp_release_cb() processes the backlog while the 3rd ACK
-is being processed, could this lead to a stale read of msk->ack_seq?
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-Since __mptcp_sync_rcv_sequence() reads the uninitialized ack_seq and clears
-rcvd_dummy_seq, it appears this might permanently corrupt the fastopen SKB
-sequence mapping, leading to data loss or connection stall during TCP Fast
-Open.
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-Could this be triggered remotely by sending an MP_JOIN SYN and data before
-the 3rd ACK of the initial MPC connection?
+For more details:
 
-[ ... ]
-> @@ -3895,6 +3919,13 @@ static void mptcp_release_cb(struct sock *sk)
->  			__mptcp_error_report(sk);
->  		if (__test_and_clear_bit(MPTCP_SYNC_SNDBUF, &msk->cb_flags))
->  			__mptcp_sync_sndbuf(sk);
-> +		if (test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags)) {
-> +			/* Ensure we see the updated ack_seq after seeing
-> +			 * the flag
-> +			 */
-> +			smp_rmb();
-> +			__mptcp_sync_rcv_sequence(sk);
-> +		}
->  	}
->  }
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-[Severity: High]
-While the correct synchronization with the memory barrier is placed here,
-is it rendered ineffective because the rcvd_dummy_seq flag was already
-prematurely consumed by the unguarded call in __mptcp_move_skb()?
 
-Since __mptcp_sync_rcv_sequence() skips processing if rcvd_dummy_seq is
-false, the proper sequence mapping might never occur if the flag is cleared
-early.
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1787888115.gi=
-t.tanggeliang@kylinos.cn?part=3D2
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
