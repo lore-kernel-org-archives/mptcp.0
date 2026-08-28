@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B403B42D6;
-	Fri, 28 Aug 2026 09:42:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0A13783B4;
+	Fri, 28 Aug 2026 09:59:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787910132; cv=none; b=vCAiVKueubVFFGCI06Tew0IiFcdVSVgK21zXNWUz6duaT41shtkMNvgEy+rmopXp+wGtIepMrBrx/vhM/8VRUQEousGsZRkHggRdvYETZkgZKLoNNBehmRQiP4AIrLFGS8LY+8egpBJuzygV6gpKyDXYTkphftJvL7LUB8XWQt8=
+	t=1787911145; cv=none; b=sAgG5faIykFBMZ/W7wTeVYmsImSbkso4KIiY1NNfi03/7YD9qOHC84nVJyYjcZPM9X1oQOfaVVf5oayghOh/Z2nfGlE9ayNoKsF7ioXBNNah1jY5fbRot7+EEKneSFMEAppJuCG/N7EzctpCjV0vAq1Owjoq6OgwrTDJHoo3rcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787910132; c=relaxed/simple;
-	bh=zcB7UvL7Jhfz5N9lBQILFqJPra6I9cL/Pv3afISp4xw=;
+	s=arc-20240116; t=1787911145; c=relaxed/simple;
+	bh=rh7ydI7GKJqG6nY9dYE/lkWRfceAJLLwblnkmdTBs90=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pwPrfK+c66vPL9EAW6cJbc9jFP5Ramk3r/1l4gkSfcFUmsyYKxJepa3tKRdeBxq4UYAQmCk1y6geQwPuXM1arlU4UYkGCD9d+ewSSGHFFF/IIONtH3agGk41HFE2TEKJYIUzdkb7D15zF64F4yXoGPrc11oTdupcd6/4qlNEkms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WZbKiGhd; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=m+lwJPD4ubHFiOWMjQgXEavrJVmLwSn/dsDLzrPFrwr5AIgnf8IWt75ANSFTF4Fsb4B5P0fuDM8cLIwTp7lqTkE+2fhgLvD0ES04JGCLY0GI0idykXbDDViMG5auUxkaD62YWWrOipvOhq9c8oMtaeW1kkj3OrZStDd0biLMLLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LhfgIKc7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WZbKiGhd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A28CC1F000E9;
-	Fri, 28 Aug 2026 09:42:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LhfgIKc7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06E1E1F000E9;
+	Fri, 28 Aug 2026 09:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787910130;
-	bh=mio8eIoOsTCV6e9ECS4B/zS7+rgQx1V39ySBpk38acA=;
+	s=k20260515; t=1787911143;
+	bh=2+/PLbq9eAr3WZpjlc5dc0ni8rDbxUE+V7YrchB1cDk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=WZbKiGhdYtgEEMLJM1RqM87/2KzUYawbHMtg1+FD51JIg1mFQ1mKh/m4qHNw+sGAB
-	 yUawTKWA9HdhA685Xov55gEqtGOO/qGGqAJuEBaXLBIUj/rmCNoitpGAiO1ufTdAtE
-	 /fMtpOU8whH2lV0YWq5ZLxkrI2A7CUeXGKftxyPqiq+Tk8puQPKuTvTY5/oU2NfeQL
-	 zsqdoNSHB8IdxERsDi54/J4ZI0Pz+Pm+r2hRc+YUFg71sdt0JAnkOrNorzMHx7FVj/
-	 0eZq+A9BzmelkvY62P3JztYr46ILxamB21CEovvEq5zLfxwe2c7+5uA4Wy5lxTef3Q
-	 +dmmM2VjQgUIA==
-Message-ID: <782901a4-1c5a-4d9b-9baa-c8e6c31bf971@kernel.org>
-Date: Fri, 28 Aug 2026 11:42:04 +0200
+	b=LhfgIKc7j1RnY8NAmPSkj953ILT5SymGzndUyAhN2IQmM9nruMTa5dI7q/t/DVrXd
+	 4PWk1+8AUg7TJA9LMDVHeQ/vc/XBFvgc8Wg/4F+ygYZGoUPSbGyx9xbibnd70Y7udR
+	 935JD3KHYzGcOgZ+oGle9Q/wGxayTZC+YsoYIh6pM8gZQfi+7Nfp9qBymjxOC840T5
+	 kePJdh6B+W08eYGhJvpF+X7S3/EyOa+pD0ZT4ne3L/FAeo60E+l+tdk52cW83Bqy4j
+	 DEMC+l+AXPbXbqdFJnYcyKs9JiPqxgPksGCyS1NhHK5pzgvBcwy/sFPVdkDj6nHT6Z
+	 lqwMMfIOK5Aqw==
+Message-ID: <b98464cc-5bb4-4dec-a843-0b0931e506e1@kernel.org>
+Date: Fri, 28 Aug 2026 11:58:58 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,19 +35,16 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net v3 2/2] tcp: fix use-after-free in
- do_tcp_getsockopt(TCP_CC_INFO)
+Subject: Re: [PATCH net 02/14] mptcp: subflow: no need to copy thmac during
+ ulp_clone
 Content-Language: fr
-To: "Cen Zhang (Microsoft)" <blbllhy@gmail.com>, edumazet@google.com,
- ncardwell@google.com, davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com
-Cc: kuniyu@google.com, horms@kernel.org, martineau@kernel.org,
- geliang@kernel.org, yhs@fb.com, kafai@fb.com, andriin@fb.com,
- ast@kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- AutonomousCodeSecurity@microsoft.com, xmei5@asu.edu,
- tgopinath@linux.microsoft.com, kys@microsoft.com, stable@vger.kernel.org
-References: <cover.1787870710.git.blbllhy@gmail.com>
- <65fd3816ed5d541d9edd4bf4fcf97104a2cf907a.1787870710.git.blbllhy@gmail.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
+ edumazet@google.com, pabeni@redhat.com, horms@kernel.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20260824-net-mptcp-misc-fixes-7-3-rc1-v1-2-a92309d121ca@kernel.org>
+ <20260827190725.3998222-1-kuba@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -93,30 +90,109 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <65fd3816ed5d541d9edd4bf4fcf97104a2cf907a.1787870710.git.blbllhy@gmail.com>
+In-Reply-To: <20260827190725.3998222-1-kuba@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 28/08/2026 01:55, Cen Zhang (Microsoft) wrote:
-> From: "Cen Zhang (Microsoft Security FORGE Labs)" <blbllhy@gmail.com>
-> 
-> do_tcp_getsockopt() reads icsk->icsk_ca_ops and dereferences the
-> get_info function pointer without rcu_read_lock(). With BPF struct_ops
-> congestion control, ca_ops can point to dynamically allocated memory
-> that is freed concurrently, resulting in a use-after-free when the
-> kernel dereferences or calls through the stale pointer.
-> 
->   BUG: KASAN: slab-use-after-free in do_tcp_getsockopt+0x2037/0x23e0
->   Read of size 8 at addr ffff888013701258 by task exploit/149
->    do_tcp_getsockopt+0x2037/0x23e0 (net/ipv4/tcp.c:4564)
->    tcp_getsockopt+0x91/0xf0
->    __sys_getsockopt+0xf7/0x170
-> 
-> Fix this by wrapping the ca_ops load and get_info call within
-> rcu_read_lock()/rcu_read_unlock(), and using READ_ONCE() to load
-> the icsk_ca_ops pointer.
+Hi Jakub,
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+On 27/08/2026 21:07, Jakub Kicinski wrote:
+> This is an AI-generated review of your patch. The human sending this
+> email has considered the AI review valid, or at least plausible.
+
+Thank you for having forwarded this, I didn't manage to look at it before.
+
+> ---
+> mptcp: subflow: no need to copy thmac during ulp_clone
+> 
+> This drops the copy of subflow_req->thmac into the new subflow context in
+> subflow_ulp_clone(), since the truncated HMAC is no longer needed once the
+> passive-side request is over.  The commit message notes that thmac is left
+> uninitialised on the SYN cookie path, so removing the copy also avoids a
+> KMSAN uninitialised-read report.
+> 
+> (no Link: tags in the commit header)
+> 
+>> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+>> index af81ad5e699d1..01db7edce18a6 100644
+>> --- a/net/mptcp/subflow.c
+>> +++ b/net/mptcp/subflow.c
+>> @@ -2084,7 +2084,6 @@ static void subflow_ulp_clone(const struct request_sock *req,
+>>  		new_ctx->request_bkup = subflow_req->request_bkup;
+>               ^^^^
+> 
+> [Severity: Medium]
+> This isn't a bug introduced by this patch, but while looking at the
+> neighbouring store: does request_bkup have exactly the same
+> uninitialised-on-SYN-cookies problem that motivated removing the thmac
+> copy here?
+> 
+> subflow_init_req() only clears a subset of the fields:
+> 
+> net/mptcp/subflow.c:subflow_init_req() {
+> 	subflow_req->mp_capable = 0;
+> 	subflow_req->mp_join = 0;
+> 	subflow_req->csum_reqd = mptcp_is_checksum_enabled(sock_net(sk_listener));
+> 	subflow_req->allow_join_id0 = mptcp_allow_join_id0(sock_net(sk_listener));
+> 	subflow_req->msk = NULL;
+> 	mptcp_token_init_request(req);
+> }
+> 
+> and the only assignment of request_bkup for a request sock happens on the
+> SYN, in subflow_token_join_request():
+> 
+> 	subflow_req->local_id = local_id;
+> 	subflow_req->request_bkup = mptcp_pm_is_backup(msk, (struct sock_common *)req);
+> 
+> On the cookie ACK path that function is not called, and the state restore
+> does not cover request_bkup either:
+> 
+> net/mptcp/syncookies.c:mptcp_token_join_cookie_init_state() {
+> 	subflow_req->remote_nonce = e->remote_nonce;
+> 	subflow_req->local_nonce = e->local_nonce;
+> 	subflow_req->backup = e->backup;
+> 	subflow_req->remote_id = e->join_id;
+> 	subflow_req->local_id = e->local_id;
+> 	subflow_req->token = e->token;
+> 	subflow_req->msk = msk;
+> }
+> 
+> struct join_entry has no request_bkup member at this commit, so the bit
+> carries whatever was in the freshly allocated request sock.
+> 
+> Unlike thmac, the copied value is consumed afterwards, for instance in
+> mptcp_subflow_get_send() and mptcp_subflow_get_retrans():
+> 
+> net/mptcp/protocol.c:mptcp_subflow_get_send() {
+> 	bool backup = subflow->backup || subflow->request_bkup;
+> 
+> It is also put on the wire by mptcp_established_options_mp_prio() and
+> exported to userspace by the mptcp diag code.
+> 
+> So when a remote MP_JOIN is accepted while tcp_syncookies is active, can a
+> joined subflow end up randomly flagged as backup and reported that way in
+> diag, along with the same class of KMSAN uninit-value branch report that
+> this patch removes for thmac?
+> 
+> For the record, the next patch in this series, "mptcp: syncookies: remember
+> the request backup flag", adds request_bkup:1 to struct join_entry and
+> stores/restores it, and the store happens after subflow_token_join_request()
+> has set the field (subflow_token_join_request() runs before
+> subflow_init_req_cookie_join_save() in subflow_check_req()), so the field is
+> properly initialised at the end of the series.
+
+All of this to say that it is fixed in the next patch...
+
+> Would it be worth mentioning
+> that dependency here, given this patch carries a Cc: stable tag?
+
+Do we really need to mention that?? This report says "there is a
+pre-existing bug in the code around", then there is no direct
+dependence. Or should we add for each patch: other fixes follow this one?
+
+Note that there is an issue on Sashiko's side to improve that:
+
+https://github.com/sashiko-dev/sashiko/issues/392
 
 Cheers,
 Matt
