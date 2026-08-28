@@ -1,36 +1,36 @@
-Received: from mta0.migadu.com (out-225.mta0.migadu.com [91.218.175.225])
+Received: from mta1.migadu.com (out-108.mta1.migadu.com [95.215.58.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A801397949
-	for <mptcp@lists.linux.dev>; Fri, 28 Aug 2026 03:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2156E25B0BB
+	for <mptcp@lists.linux.dev>; Fri, 28 Aug 2026 03:27:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787886921; cv=none; b=oeiDP7bJ4tvAYZQmCy2yoXhol+kNviJf98VqIrmEUQkCOhdE/A3XLRi54YQBAaCK3xDe+SelHNFc9JacMDWPLBJUDrFmc9ucwu5nLl0C7F3DbtNipn+lgcnb9A7QkhYHHBHmOwy3lCGyxem8wnyqxFVMtKujawSlFgn1MkoLWUo=
+	t=1787887627; cv=none; b=O6kZCtlM+KH49RboRat18SNNAKRZvpbWdDGQcCDc6CcSXFaisVJvARwZONoF/hUolK/3OY+MfGbwn6zf5NR9sUSc8R0Wsp4JMMaUm1dH6ajUBgvpQpQ2CxriPZ0/iafXvMVYjX/aMNkY/sXtNQ3lTIOQL2aj7owOb02nAsB8zt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787886921; c=relaxed/simple;
-	bh=yUa3Hro+MdJZiWBpMPxBnVciF+EbzJuiaZoNiXMvROI=;
+	s=arc-20240116; t=1787887627; c=relaxed/simple;
+	bh=Ts1xVkuWbeJd1rXe3DJ7aP7vZaIUXkgyACVVNVNZJZY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OkkBlSs7olrq/vCjJhiOd8OSFCBFE5aiDQKoTZqUrSa3DMf0Tv1huE3usEQ4L81+oR6oJxKsvOLsN4at1hK2yy0EyTVArlaPn4+1ywu8YyJ+2byp/ym/bzxXK3F7QiVWrbSaP7DFLkGP+F0tSqzUTVmRkoCEQT92fOOqpFM1+oM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kehrhWx3; arc=none smtp.client-ip=91.218.175.225
+	 In-Reply-To:Content-Type; b=OdT/GPc+QW9HhNaFxDPlDfMB5bEGcmIFZ6XClxUzsvpvaKwl7XBhnYb1ir8jWnP0J0Td4MYi9k7PcuAsZexdMxyfgBY/preBCswIUAa9WZ8weBskmrh0ZQHMDgqLcuHWloKJGbb1KqRwzICqy5T6PN4k9/hXccokC6yvenONFpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=p7PYntHp; arc=none smtp.client-ip=95.215.58.108
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kehrhWx3"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="p7PYntHp"
 X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=yUa3Hro+MdJZiWBpMPxBnVciF+EbzJuiaZoNiXMvROI=;
+DKIM-Signature: a=rsa-sha256; bh=Ts1xVkuWbeJd1rXe3DJ7aP7vZaIUXkgyACVVNVNZJZY=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1787886894; v=1; x=1788491694;
- b=kehrhWx3snTYnmhUkHFtA7UTAzfqBqFkqYKzA4DFvGyX6F8pfiQN9TSnPeH4aifbwzrddyjq
- aXktoqeJdS6f1PEwKRLdrmJ6c9xBYLYN3S8CXXm3LgPKoeaFp5hY50VU6XRFxuMEA3avmByR2ST
- 0nkQHRHtZ8b/FZLyikIuSvxA=
+ t=1787887623; v=1; x=1788492423;
+ b=p7PYntHpdYNNzfsaw1FiqRejYWnOnBFksl3igtLgw9R9ufmVN1/AWomEvcb7ON3NWulRQSzi
+ RkbKGbTGAC+/ZIutbi/MX0qC6YhJYYzD+pfd9k7aNqASH70eNr9VxlHc5WUakL1k947KlK96SN1
+ sVVu4isU3dEc8fYt4p2p2+XI=
 X-Envelope-To: mptcp@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id a9c4a572758bbc32;
-	Fri, 28 Aug 2026 03:14:54 +0000
-X-Mizu-Trace-ID: a9c4a572758bbc32
+Received: by smtp.migadu.com with ESMTPS id c5a619796e3bf126;
+	Fri, 28 Aug 2026 03:27:02 +0000
+X-Mizu-Trace-ID: c5a619796e3bf126
 X-Migadu-Flow: FLOW_OUT
-Message-ID: <451c8ea9-dc48-4ec4-a35a-76707c3bd580@linux.dev>
-Date: Fri, 28 Aug 2026 11:14:44 +0800
+Message-ID: <749b6e89-edf8-4478-a003-f10324d60d1b@linux.dev>
+Date: Fri, 28 Aug 2026 11:26:53 +0800
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,8 +38,8 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v3 2/2] tcp: fix use-after-free in
- do_tcp_getsockopt(TCP_CC_INFO)
+Subject: Re: [PATCH net v3 1/2] tcp: fix use-after-free in
+ do_tcp_getsockopt(TCP_CONGESTION)
 To: "Cen Zhang (Microsoft)" <blbllhy@gmail.com>, edumazet@google.com,
  ncardwell@google.com, davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com
 Cc: kuniyu@google.com, horms@kernel.org, matttbe@kernel.org,
@@ -49,34 +49,39 @@ Cc: kuniyu@google.com, horms@kernel.org, matttbe@kernel.org,
  AutonomousCodeSecurity@microsoft.com, xmei5@asu.edu,
  tgopinath@linux.microsoft.com, kys@microsoft.com, stable@vger.kernel.org
 References: <cover.1787870710.git.blbllhy@gmail.com>
- <65fd3816ed5d541d9edd4bf4fcf97104a2cf907a.1787870710.git.blbllhy@gmail.com>
+ <d3f97f1acbf0010898148be6e6406e4b8b4a5c84.1787870710.git.blbllhy@gmail.com>
 From: Jiayuan Chen <jiayuan.chen@linux.dev>
-In-Reply-To: <65fd3816ed5d541d9edd4bf4fcf97104a2cf907a.1787870710.git.blbllhy@gmail.com>
+In-Reply-To: <d3f97f1acbf0010898148be6e6406e4b8b4a5c84.1787870710.git.blbllhy@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
-在 8/28/26 7:55 AM, Cen Zhang (Microsoft) wrote:
+on 8/28/26 7:55 AM, Cen Zhang (Microsoft) wrote:
 > From: "Cen Zhang (Microsoft Security FORGE Labs)" <blbllhy@gmail.com>
 >
-> do_tcp_getsockopt() reads icsk->icsk_ca_ops and dereferences the
-> get_info function pointer without rcu_read_lock(). With BPF struct_ops
-> congestion control, ca_ops can point to dynamically allocated memory
-> that is freed concurrently, resulting in a use-after-free when the
-> kernel dereferences or calls through the stale pointer.
+> do_tcp_getsockopt() reads icsk->icsk_ca_ops->name without holding
+> rcu_read_lock(). Since commit 0baf26b0fcd7 ("bpf: tcp: Support
+> tcp_congestion_ops in bpf"), icsk_ca_ops can point to dynamically
+> allocated BPF struct_ops memory that may be freed concurrently via
+> setsockopt(TCP_CONGESTION), leading to a use-after-free.
 >
->    BUG: KASAN: slab-use-after-free in do_tcp_getsockopt+0x2037/0x23e0
->    Read of size 8 at addr ffff888013701258 by task exploit/149
->     do_tcp_getsockopt+0x2037/0x23e0 (net/ipv4/tcp.c:4564)
+>    BUG: KASAN: slab-use-after-free in _copy_to_user+0x37/0x60
+>    Read of size 16 at addr ffff888013505260 by task exploit/149
+>     _copy_to_user+0x37/0x60
+>     do_tcp_getsockopt+0x158a/0x2460 (net/ipv4/tcp.c:4585)
 >     tcp_getsockopt+0x91/0xf0
 >     __sys_getsockopt+0xf7/0x170
 >
-> Fix this by wrapping the ca_ops load and get_info call within
-> rcu_read_lock()/rcu_read_unlock(), and using READ_ONCE() to load
-> the icsk_ca_ops pointer.
+> Fix this by holding rcu_read_lock() around the ca_ops->name access,
+> using READ_ONCE() to load icsk_ca_ops, and copying the name to a
+> stack buffer before releasing the lock. Also annotate the relevant
+> icsk_ca_ops stores with WRITE_ONCE() to fix the accompanying KCSAN
+> data-race issue.
 >
 > Fixes: 0baf26b0fcd7 ("bpf: tcp: Support tcp_congestion_ops in bpf")
 > Suggested-by: Eric Dumazet <edumazet@google.com>
+> Reported-by: Xiang Mei (Microsoft) <xmei5@asu.edu>
+> Link: https://lore.kernel.org/all/20260821182449.79785-2-blbllhy@gmail.com/
 > Cc: AutonomousCodeSecurity@microsoft.com
 > Cc: stable@vger.kernel.org
 > Assisted-by: GitHub-Copilot:claude-opus-4.6
@@ -85,4 +90,5 @@ Content-Transfer-Encoding: 8bit
 
 
 Reviewed-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+
 
