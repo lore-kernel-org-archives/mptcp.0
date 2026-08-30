@@ -1,138 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E48E11F1537
-	for <mptcp@lists.linux.dev>; Sun, 30 Aug 2026 14:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C962539F191
+	for <mptcp@lists.linux.dev>; Sun, 30 Aug 2026 15:33:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788101408; cv=none; b=RxZaT+qrqJ3kZMapvjv3UU2WocWMNig4GMLqHX9oRjRtnBC532qzYM+5rF1kEBu/5bwKGGrWoenxv67CJoeJVxmSuxuqzyJ+jFnaBSuBXqGvJE4psecaoYfIoUpGOHkU7v37NyOummDMXjV/Vzga2EhGDi3iIjtW3rD4J2zPqwQ=
+	t=1788103992; cv=none; b=JNpewhr9qlEdTyyl7Kdvcs23Jm6oYAd4CvfhXtaf2lD6yTx/r0uzGAS1RQpap2lrIIb6KOF+KFrrcu+7CN3nkfKLh0IJ8ke7+3FciXsPCiKMGBw3va/yBPSstytX7pG5Vj89IhedHqrMHd5Yq0+322EKv0kGRzf2ZgCwtMFfDLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788101408; c=relaxed/simple;
-	bh=8RMt/IppJsb6f7o8qZ7DUquUbhKyFb+w9FjZKgCYhMM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ZszqDltkGuJX7Z1mPqaj+un2lzCEkLLbZNGZfZ+Fk5PJaYmtUW1cXbxOCR+eBv7SDDyCQe989u5MW0mXKrYtiKiO3VLah33d4uizTPULH6SwD7wJFJNzvTI47jKhYPQwGKa3Boh7Z7gUroxQCIN3DRS1PyehF1sRpXirZtP5Q6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B33860Lx; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788103992; c=relaxed/simple;
+	bh=XuRDW8AL+Of5QaWOEyEoAzrSTeFtIqvX9pY5dfPiP1g=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=ilutpXHWwba0bQ2nXT4g4ZyK8Mp5rchG+xbZMBk8HDtKTGl9Td4NgjlkHfSUcDDd5Qq4S2F8niSZAsQJy0P4IyBCaFdCm95DxFXzIDuiBv/ICu4VgtnUGGt+x/yV9KnAiIYbjGh+2+HSI+P24SjqMjlnyhcGopo/NrGlLIaj30M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W4cMagnD; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B33860Lx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A8DD1F000E9;
-	Sun, 30 Aug 2026 14:50:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788101406;
-	bh=T1QGdnNsRpWck6aNhigVQ0BBk3gRXbRsg9LIgRHZE5Q=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=B33860LxXRVed5UCJv0e5kZd04idraUGDjq0BfQQTZ6q1PyAdPXr0rZ1fw03Pfvdd
-	 MXP1OgsU9M5xZw15cXlXv3gT2cwcfHR1jWXu+ChdfGXpe7b4Ud21VJfhJgzNlOCoQu
-	 qss2njdTMcew6LxeWs4CwQUTGkLreLQ9KQv4mcdbYY0eKTS2WKVb/hdDA4zHWOt5zl
-	 ueI4HkHkBeNv+F1/ABs8EuD2ukYamhDCwDOOX73SatrRosC2iV0kRG/rV81crriGzl
-	 CM1/jm1r7EaBrPIgVgurF0XhMUwOmwgj1W713WIJU0/2pmLwYXKUZYfxZZc3JdkCZ9
-	 gw/RhoISgX8CA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v11 07/10] mptcp: implement peek_len for
- proto_ops
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Geliang Tang" <geliang@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W4cMagnD"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-855d2bfae95so2760204b3a.1
+        for <mptcp@lists.linux.dev>; Sun, 30 Aug 2026 08:33:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788103989; x=1788708789; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=SK5veCFOMhdpBz7qJvDvHont1lIv5JbjYDyZvSl4klc=;
+        b=W4cMagnD5YJlTqMYtmLKuySvyxBr86tfPSRrwsZ+bhD8Cehj5Yd+4aDQOK9p7wSMM4
+         5dUmGRyHElfzt3WNNjWGHFb2OCMoIhpqxUDphgX009dpcjEf4FW1vL0vTyNafe3mxg39
+         pgI/wiotsE+HdcCf43gs1AkuV9u15EmdHfN9stimv57WapA4R1scXA275Vh1Dxpby0cZ
+         i0nO9UfXb9Uxk0JnoxqX7hTrek8vwHzINhNN7+IlzS+O8jawo6gN5EBWtPztta+F9PgT
+         ImpzmMPw4oBP4AxPMCrbl2kJU/gDU2FkYgRho58WZeQUXWapHCN424BPztrNcAkiMWd9
+         9CrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788103989; x=1788708789;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=SK5veCFOMhdpBz7qJvDvHont1lIv5JbjYDyZvSl4klc=;
+        b=pAx/kLR4xFWN2U4WqkeIukFtmCi04HkMOb6DY16/Sd5ddsVPROFQkBqHZM1AZmL5dZ
+         wFmYb1w1YWpzD1XYHSn2JgHAnnEvqnOqAR52EX/EcoVn+OP8C/fEhloX0AhdkzTjMysk
+         TrUDJmXU2qlFo5zfFcq9pazuvSLKxSfHnUnv/g6D9Q3QGJ7fT5aCALC4YAbEfcCqZGpX
+         PhWZsmWE3auhcPtRGQuazmseG0Q//ulQgqJRu2CYajijCszSBhnfuJjz23u+hTH13Dgb
+         uZHP9+wy7zHpQQvppFStOsgKeDc+UKlvvnePKhvSnHhF5Who3kRGmz8WU053hXmT4BVZ
+         KLOw==
+X-Gm-Message-State: AFuF++k2AqnfgbzOsmwLmp6vsaRzBGpqTdO83mcQ07asjGdqm1weENx3
+	wQgRFcLkU3L6apnZ0laGdod5OGdtzcOyy79c6+8GbaVjIgzeRKyl2TZ+R6sG
+X-Gm-Gg: AR+sD10ci7GMlAYJTwP5XdighQ42+AmPFnQo5IvUZxgBxNak8XuGl+4qdWNgpVX1aQs
+	Rs2dH8cRUZU9d4s6i6lJmfY2Yy4jCeGqCbdKqwwoBLzS8zTkweIqERvx6IkCzuYss/PPp8w1/Hx
+	zygRMGBePCYlofgdz690ANGNTNdKOXRCGxzaDu7y2XaqbL9aiPRgXVADZySKnc035NRMJo7aRo+
+	ecyN+Lt5+z78Yi8UNBwNRfNnXU/JYRHLlv2/zHxF+hsZzVbK2Sd/OK6+Rd3+Mj8q12TJMHtO404
+	7em4SqsduRcF2edpAMEopWYFNDx2E3Q+q63j/68qugD5ZVS4/uewXufvbMLDmpM3YnvGki6UDwY
+	MDYdXSwmDOjQkvOK03MrcNJITLuVDnXKdZ3u2hxdXNukGPz5S3P8/+GjDXLfIRZ72eL2kXWlzzM
+	j6SIAr6W3sVBivVJMSTVBUdb+gSYvR6l1BBWjoxOE1CbW2y3yfWeAFyCi9C0bCffdnVnV9an5tz
+	Q==
+X-Received: by 2002:a05:6a21:6454:b0:3d3:aed2:6f29 with SMTP id adf61e73a8af0-3d5da1ae4camr1734500637.29.1788103988749;
+        Sun, 30 Aug 2026 08:33:08 -0700 (PDT)
+Received: from [127.0.0.1] ([20.168.117.154])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-142e0d18eaasm24121075c88.1.2026.08.30.08.33.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Aug 2026 08:33:08 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
 Cc: mptcp@lists.linux.dev
-In-Reply-To: <5333db5976d6a9fbfd18fb33eb017d7ab30d0f45.1788099847.git.tanggeliang@kylinos.cn>
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1788099847.git.tanggeliang@kylinos.cn>
 References: <cover.1788099847.git.tanggeliang@kylinos.cn>
- <5333db5976d6a9fbfd18fb33eb017d7ab30d0f45.1788099847.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=utf-8
+Subject: Re: [PATCH mptcp-next v11 00/10] Reduce the differences between
+ TCP and MPTCP for TLS usage
+Message-ID: <fa191475-a2bf-db16-2281-9b7ceed624a8@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 30 Aug 2026 14:50:05 +0000
-Message-Id: <20260830145006.4A8DD1F000E9@smtp.kernel.org>
+Date: Sun, 30 Aug 2026 15:33:07 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] Missing memory barriers between `ack_seq` and `SOCK_DONE` updates =
-in `mptcp_check_data_fin()` and their lockless reads in `mptcp_inq()` allow=
- `mptcp_inq()` to observe `SOCK_DONE` without observing the `ack_seq` incre=
-ment, leading to an under-reporting of available data.
---
+Hi Geliang,
 
-commit 3b3f825ecdc0054e45c6ee37b3404a7c1aeaead3
-Author: Geliang Tang <geliang@kernel.org>
+Thank you for your modifications, that's great!
 
-mptcp: implement peek_len for proto_ops
+Our CI did some validations and here is its report:
 
-This commit introduces mptcp_inq() to compute readable bytes at the MPTCP
-level using ack_seq and copied_seq. It returns 0 during handshakes and
-subtracts 1 if a FIN is received (SOCK_DONE flag is set), mirroring
-tcp_inq(). It is wired up as the .peek_len proto_op.
+- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): packetdrill_dss =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: normal =
+(only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug =
+(except selftest_mptcp_join): Notice: Call Traces at boot time, rebooted =
+and continued =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: debug (only =
+selftest_mptcp_join): Notice: Call Traces at boot time, rebooted and =
+continued =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: btf-normal (only =
+bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only =
+bpftest_all): Notice: Call Traces at boot time, rebooted and continued - =
+Notice: Call Traces at shutdown time, ignored and continued =
+=E2=9A=A0=EF=B8=8F=20
+- Task: https://github.com/multipath-tcp/mptcp_net-ne=
+xt/actions/runs/33317921888
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 2c0822ef4ae3b..81452a2b6fd0c 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-[ ... ]
-> @@ -4809,6 +4809,37 @@ static ssize_t mptcp_splice_read(struct socket *so=
-ck, loff_t *ppos,
->  	return ret;
->  }
-> =20
-> +static int mptcp_inq(struct sock *sk)
-> +{
-> +	const struct mptcp_sock *msk =3D mptcp_sk(sk);
-> +	int answ;
-> +
-> +	if ((1 << sk->sk_state) & (TCPF_SYN_SENT | TCPF_SYN_RECV)) {
-> +		answ =3D 0;
-> +	} else if (test_bit(MPTCP_SYNC_SEQ, &msk->cb_flags)) {
-> +		answ =3D 0;
-> +	} else {
-> +		u64 hint_val;
-> +
-> +		hint_val =3D READ_ONCE(msk->ack_seq) - READ_ONCE(msk->copied_seq);
-> +		if (hint_val >=3D INT_MAX)
-> +			hint_val =3D INT_MAX;
-> +
-> +		answ =3D (unsigned int)hint_val;
-> +
-> +		/* Subtract 1, if FIN was received. Mirror tcp_inq() */
-> +		if (answ && sock_flag(sk, SOCK_DONE))
-> +			answ--;
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/3e4dc4f936=
+bd
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1153916
 
-[Severity: High]
-Could this lockless read observe SOCK_DONE without observing the updated
-ack_seq?
 
-In net/mptcp/protocol.c:mptcp_check_data_fin(), the write side updates
-ack_seq and SOCK_DONE without a separating memory barrier:
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-    WRITE_ONCE(msk->ack_seq, msk->ack_seq + 1);
-    WRITE_ONCE(msk->rcv_data_fin, 0);
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-    WRITE_ONCE(sk->sk_shutdown, sk->sk_shutdown | RCV_SHUTDOWN);
-    sock_set_flag(sk, SOCK_DONE);
-    smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
+For more details:
 
-If mptcp_inq() is called locklessly (e.g., from strp_data_ready) concurrent=
-ly
-with mptcp_check_data_fin(), could the lack of an smp_wmb() on the write si=
-de
-and an smp_rmb() on this read side allow the CPU to reorder operations?
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-If mptcp_inq() reads SOCK_DONE as true but reads the old, un-incremented
-ack_seq, it would calculate the available bytes and erroneously subtract 1.
 
-If only 1 byte of payload remains, returning 1 byte less causes it to return
-0. This could cause the upper layer (like TLS or BPF sockmap/strparser) to
-skip waking up the process, resulting in an infinite wait for data that will
-never arrive. This could be triggered remotely by network traffic (a data F=
-IN
-packet) on an MPTCP socket, leading to a denial of service.
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-Should there be an smp_rmb() added here before checking SOCK_DONE, and an
-smp_wmb() added to mptcp_check_data_fin() after incrementing ack_seq?
-
-> +	}
-> +
-> +	return answ;
-> +}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1788099847.gi=
-t.tanggeliang@kylinos.cn?part=3D7
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
