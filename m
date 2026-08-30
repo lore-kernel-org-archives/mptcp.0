@@ -1,80 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25493B8127
-	for <mptcp@lists.linux.dev>; Sun, 30 Aug 2026 14:33:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D303B8944
+	for <mptcp@lists.linux.dev>; Sun, 30 Aug 2026 14:44:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788100401; cv=none; b=ITCr6vEemKMSks/z26qNiG2tq4h/WbcTCCwQaQykxbbYGSuFfpKsx/w2oE0ix3vduNeDsXWxE0KaQkXTFNKPyENWvFBCcwb1S5u+aCR2VA3ACRZL7n3Rb7SKctSHhs9RgBkJoUDV5luhE4LUujhzuhV0YHXktwsRpEKQsxhxWsA=
+	t=1788101085; cv=none; b=T1A/7qywmpt6GA+djTr+O3ioxdEMaG3Q4amCcqv45XP9C0Dd6iSACYPbei3RtKVd3hNZrCu01hBXbCLe1KQ/In6waA0naCGmwwWGIdaKAmUiAmkE1KSx3xfW49pze1Y6nZfN6cBT5QTmH8x2b8k5Uk/KPDs72AaH57FUDqQgnmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788100401; c=relaxed/simple;
-	bh=JxT3qeiSHuBS12KtGnTPLFRzVxKd0fvCXwqrRkI3nnM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Bl6sFd9djfR8wcS0VHVl1psv5NI9N2zEORBz1QChXOJkV22fIP+P4oAwR78RokGfJNbgwouhyX3j0vyXR3xTAaV8SZzZTOSS3RygPXmOEcXML2fLEI1NPJBAllwJMqZU5v320R2dm8oTqtGq+wdNgal3VNplmwkxGi3Kra6DYHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P8wZ2LaD; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788101085; c=relaxed/simple;
+	bh=9qQahMlf5fRfMx3Fy2oVFvg0IsDMOrh6WMMUm8UetIw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hJsmlhYpLA3tMyUeJ6i9+JpAY1Y+bGKHZ0R6zdfyEFrkty47HLPkBwLv07MtFgjLda4EYmhlDKsnFUzTXj5bef7/1BDaEsU8oqTe5EJ76qbA6KWw71JhuHGMKo9Tq8FhGdOkd9R26HBMFsDnX2Xkriq4jp9TyaRZ+R3MPGhDxK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OdfGhdMf; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P8wZ2LaD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7974C1F000E9;
-	Sun, 30 Aug 2026 14:33:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OdfGhdMf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 994AA1F000E9;
+	Sun, 30 Aug 2026 14:44:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788100400;
-	bh=xNNDwMcimuhvgxiiYj/oGzahS6NB1VtBfCB7+LyvfjA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=P8wZ2LaDLC+ricM5UiIwkqidyKu/7Kx3/JjeYA/Z9NZ571fUs6NFcJ0ROLeT6nDIw
-	 WdRF5X+jHaPNEg+3BBKhE/OX6VAmIW26bI9M6KkEC9JD5EHrFvyxqlh60Cd9Kpwc1a
-	 X9wF8C9zQQ2p0ek7V3G06OYU+/Nn00cgl9H2n7aCPci4tE3Kis7C5MBezL1IVKS6l8
-	 CsE3cpSnq+fVhsMFAC1agjWm5Kkduts/nQ2go3y5IiON6vllRjHZg6QIM6/2WLqd/y
-	 ESDx+iaZiGn1ehN1wE5KytbbgtygJHrGnzzCgdAcFTllzN7GCpnOESsOc700rS7V9C
-	 Epev2M1K27yiQ==
+	s=k20260515; t=1788101084;
+	bh=DwU6kM2XjsMfxkQDvIQc441WeVa5oclMs7b+dOrDphc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=OdfGhdMfYOIg/MTpbWd+UgY5dsU/2/cU+K8eqVqqR2Nt+hwu5q6QDlUjbu0iSDiSf
+	 Xb8GiZOyFsNO1LZhdeYwrfSlkflSSlemvK32Oqki+EaXRW5YPqyUC6WR/QlNX6GZOk
+	 CgwvaZb9fcem71+WHAcnWD5uzIOI8G0nPh7kWIQHd30ShXxo0CSUc/qDhH90B799dQ
+	 PY9/KvS2WDK13GekBTzko4Vgl1YodRd/vzVExutQMtgEaqwff5/CKOZIqNaKgufuLT
+	 jDUCyv2e46a3/SyYUtN7oXUhJsgU6ELgNbQ8TE19vE+Oix8VjUXZaDxiMO4vkhm3yg
+	 btBmdP4Ey70lA==
+Message-ID: <7b0959cdb6001d66f51f171b29b275f12e00f0f8.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next 5/6] mptcp: trim the duplicated skb head at
+ receive enqueue
 From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v11 10/10] selftests: mptcp: sockopt: check app_limited
-Date: Sun, 30 Aug 2026 22:32:53 +0800
-Message-ID: <2cf932de3dc6c68cc8dc562b95657f1134a439be.1788099847.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1788099847.git.tanggeliang@kylinos.cn>
-References: <cover.1788099847.git.tanggeliang@kylinos.cn>
+Date: Sun, 30 Aug 2026 22:44:41 +0800
+In-Reply-To: <0ac1a2d7-1426-4218-968b-deeea450a48c@redhat.com>
+References: <cover.1785150300.git.tanggeliang@kylinos.cn>
+	 <81bd1e2fa9c959927bf0d1cae718a9da72164b5b.1785150300.git.tanggeliang@kylinos.cn>
+	 <15adac30-7d7f-4637-91b7-3310f64cdb13@redhat.com>
+	 <4651fc61637f8be39654decec137010ffcd81991.camel@kernel.org>
+	 <0ac1a2d7-1426-4218-968b-deeea450a48c@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-9 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Paolo,
 
-connect_one_server() in mptcp_sockopt exchanges only a few packets between
-the client and server, then closes the socket. After such a small transfer
-the application has nothing further to send, so the connection is, by
-definition, application-limited.
+On Thu, 2026-07-30 at 17:00 +0200, Paolo Abeni wrote:
+> On 7/30/26 3:15 AM, Geliang Tang wrote:
+> > On Wed, 2026-07-29 at 10:08 +0200, Paolo Abeni wrote:
+> > > On 7/27/26 1:29 PM, Geliang Tang wrote:
+> > > > The linear readers (recvmsg, read_sock, read_done) cope with
+> > > > that
+> > > > by
+> > > > computing a per-skb offset = copied_seq - map_seq and skipping
+> > > > it.
+> > > > But
+> > > > consumers that treat the receive queue as a single contiguous
+> > > > byte
+> > > > stream cannot: the TLS strparser builds an anchor whose
+> > > > frag_list
+> > > > is
+> > > > the receive-queue skbs and reads it with a plain
+> > > > skb_copy_bits(),
+> > > > which
+> > > > has no per-skb offset knowledge. A record spanning such an skb
+> > > > boundary
+> > > > then reads the duplicated prefix and gets corrupted.
+> > > 
+> > > The above raises a question.
+> > > 
+> > > AFAICS, the critical skb layout is also possible with plain TCP -
+> > > possibly is just less likely. How does TLS deal with that? I read
+> > > the
+> > > above as the TLS stream get corrupted, which sounds suspiciously
+> > > too
+> > > fragile to me?!? Or did I miss something?
+> > 
+> > My description was inaccurate. This only occurs in the MPTCP out-
+> > of-
+> > order scenario. It does not happen with TCP.
+> 
+> I mean: even for plain TCP skbs can sits in the receive queue with
+> some
+> heading bytes overlapping with already received ones, and skipped at
+> read time due to `copied_seq`, how comes that TLS has no problem is
+> such
+> a case?
 
-Extend the TCP_INFO readback at the end of the function to assert
-s.tcp_info.tcpi_delivery_rate_app_limited == 1.
+This issue is actually a bug in TLS, which has been fixed upstream by
+commit 9466ef3ec972 ("tls: fix RX desync on overlapping skbs").
 
-Without the preceding commit, mptcp_sendmsg() never updates the per-subflow
-app-limited state, and this field stays at 0 - the assertion would fail.
-With it in place, the value is forced to 1, turning this into a regression
-guard for the subflow-side application-limited accounting.
+As a result, this workaround is no longer needed in MPTCP. The proposed
+patch, as well as .skb_get_header() interface mentioned in the cover
+letter, are now useless and should be considered obsolete.
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 1 +
- 1 file changed, 1 insertion(+)
+Thanks,
+-Geliang
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index d68515b7903b..8d712bdb4325 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -640,6 +640,7 @@ static void connect_one_server(int fd, int pipefd)
- 		total += 1; /* sequence advances due to FIN */
- 
- 	assert(s.mptcpi_rcv_delta == (uint64_t)total);
-+	assert(s.tcp_info.tcpi_delivery_rate_app_limited == 1);
- 	close(fd);
- }
- 
--- 
-2.53.0
-
+> 
+> /P
