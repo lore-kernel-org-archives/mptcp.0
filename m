@@ -1,46 +1,52 @@
-Received: from mta1.migadu.com (out-251.mta1.migadu.com [95.215.58.251])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6AFF3CAA59
-	for <mptcp@lists.linux.dev>; Mon, 31 Aug 2026 09:32:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.251
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788168759; cv=none; b=brSDh9gkcjtlYdPxbz29uEskkEX3mhsYlUut/KIaNnLVMFM+x/1BCn0T9MHp/AIWgsZMHKMmaIv8yDYMNEGhv4lXwD+tlj7kzyZ8JDgZMzELN0F3LzZoOQCn4tGFFQCNRuyEGA7ajmtOzb/rfyWX8Mv4phBcT1HOPsYeyO4tVU8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788168759; c=relaxed/simple;
-	bh=ws/E51gGgS3vg/9PEA6emAwTLsLkVDJZ6mM04VkDJ9s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Xv+1fcZl0J3OMqklRcHRIP+7aKecpHm9m4/TOobWJXsoMlGW+QM13hMUclNeVxEhNl4xWD/z0oefgV2WGx2ppeAiEerZObJsDsLS49gzReLY6kvG2driicHvUXplVlZwxkoFDIUvdul4xB1s/+cx09RbFmEunLU9GBhrMaveTN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YSDUlnCH; arc=none smtp.client-ip=95.215.58.251
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A9B3E0C44
+	for <mptcp@lists.linux.dev>; Mon, 31 Aug 2026 09:47:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788169632; cv=pass; b=TpOn5C08QhGXxc+DXv5lh0evBlIQW+QGVKn9IIeuqWh5VeL6UBX1FIKE4G3aEYOk6EgcxjT9DlE2usopPV2tXqZ74AdF0r3GOXYTu2mpm9wD3+SjTj3Ld4Ivtfz5QMHVkl8knWr0WQaHJX8VfiLce3sJ1a63JY5gKqPLHldYf0Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788169632; c=relaxed/simple;
+	bh=/KREpmDjQPtoo8JqjhwlHIIh72i64c+r3knhD+okFJo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SSg1/A2oUK4bE4aUnzKlzquNq7m94gUoR6Y5qTuPb4D40L8Fkvv78cUqDEFlOSP8zvsPOCFG7XT30Z4hQI29nBocW4UpBK20TKlvzfwGxf+CQvcfp/QhGtOJ3pvaSrCBK4ZNrb5//vL7C7soLBXRL4lsLT625xP6Te7Sc/B6XAY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=hr3805IH reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YSDUlnCH"
-X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=ws/E51gGgS3vg/9PEA6emAwTLsLkVDJZ6mM04VkDJ9s=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1788168755; v=1; x=1788773555;
- b=YSDUlnCHrcBcjDPgp6JxPQ3rqmL1rWdT9dvOAkFcT2x1sMIvn2heDBMZAqA6n5C/EmeHgcsK
- xQ/jQlduBYIiUstHSLz9qW5pA9fBoY+pUlQq1c9E6U3rUwy/DOMipZtRAvpOoTTgrS3vpotlQFE
- JBrc8pZt0zzZQNE1BfBCTmq0=
-X-Envelope-To: mptcp@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 5234ddb29e01091d;
-	Mon, 31 Aug 2026 09:32:35 +0000
-X-Mizu-Trace-ID: 5234ddb29e01091d
-X-Migadu-Flow: FLOW_OUT
-From: Tao Cui <cui.tao@linux.dev>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="hr3805IH"
+ARC-Seal: i=1; a=rsa-sha256; t=1788169621; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ZRp+vPXgZUBd/Y2b9Y7J1r4NUEscwn3bY6I0Ke7lKjbj3I2qAwxvCFYvn31jJvEpIss76Mi7JzsANr/MS1/GkDCXU9bqg5jCi8x6FidxwqlXkBH+6F09nGL+0Z0LmVDERW3FKACOryhJZLcYQ+awPjQGCnRGeUV1cS+P4RaK7XA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1788169621; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=qvu8VFY1brCKJUrJXx40O8s5PijLTT2UBko/0fFG24A=; 
+	b=cieihXT0xJCsGY77qMvHIyGN+9QXa77ovlTnN47tVO2U+w6ow3kE5LXKKB+8ts/RbXwvqZzEjLcaiXwfcB4vfPS+YeLwk6dcHHy76AtqPB/GlMQgraZY8s2seGdqKCaG/IEFEsu9xG6YNgSvwwoL1QjhAck3o7BEip89EPtnVh4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
+	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1788169621;
+	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=qvu8VFY1brCKJUrJXx40O8s5PijLTT2UBko/0fFG24A=;
+	b=hr3805IHVnHljtjLPqlWmDKq7SyCX0BY9Cs4D5fQ+wLwy9H7LkKpb8IX3+4TQ1ku
+	K7JYgm625Jwz95atVs5pTU2BUI+rPO42nJy0H4efctNpuHl3voqr0e22rDOyocGm78r
+	It4m7xWukwWaTG87xUixFTiuz6k6tFymzFWUF+xc=
+Received: by mx.zohomail.com with SMTPS id 1788169619713283.4551359976592;
+	Mon, 31 Aug 2026 02:46:59 -0700 (PDT)
+From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
 To: mptcp@lists.linux.dev
 Cc: matttbe@kernel.org,
-	geliang@kernel.org,
-	cuitao@kylinos.cn,
-	cui.tao@linux.dev
-Subject: [PATCH mptcp-next 2/2] mptcp: pm: skip extra_subflows accounting on disconnected msk
-Date: Mon, 31 Aug 2026 17:32:06 +0800
-Message-ID: <20260831093206.689827-3-cui.tao@linux.dev>
+	martineau@kernel.org,
+	pabeni@redhat.com,
+	shardul.b@mpiricsoftware.com,
+	janak@mpiric.us,
+	kalpanjani009@gmail.com
+Subject: [PATCH mptcp-next v3 0/2] mptcp: sched: add subflow avoid flag
+Date: Mon, 31 Aug 2026 15:16:49 +0530
+Message-ID: <20260831094651.2682660-1-kalpan.jani@mpiricsoftware.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260831093206.689827-1-cui.tao@linux.dev>
-References: <20260831093206.689827-1-cui.tao@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,87 +54,83 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-From: Tao Cui <cuitao@kylinos.cn>
+The core benches a subflow via the "stale" bit after
+net.mptcp.stale_loss_cnt retransmission intervals without progress.
+That bit is core-owned and RTO-coupled -- cleared as soon as a packet
+is acked on the subflow. A scheduler has no way to bench a subflow for
+its own reasons (high latency, instability) independently of ack
+traffic.
 
-The WARN_ON_ONCE() guards added to the extra_subflows decrement sites
-turn out to be reachable:
+"scheduled" doesn't help either: the core clears it after every
+send/retrans pass, so it can't hold a standing "leave this alone"
+decision, and nothing outside the scheduler that set it can see it.
 
-mptcp_pm_data_reset() zeroes the counter with only the msk socket lock
-held, while an MP_JOIN subflow can still sit in msk->join_list, its
-reference already accounted by mptcp_pm_allow_new_subflow() under
-pm->lock. If the socket gets disconnected(AF_UNSPEC) in that window,
-mptcp_pm_data_reset() zeroes the counter, and the join list is flushed
-later at release_sock() time: the leftover subflow then reaches
-mptcp_pm_subflow_check_next() (or __mptcp_pm_close_subflow() for
-kernel PM sockets) with the counter already at 0, firing the warning.
-On panic_on_warn kernels this is a remotely triggerable panic, which
-is worse than the silent wrap the guards replaced.
+Changes since v2:
 
-Skip the PM accounting when the msk is already in TCP_CLOSE: in the
-scenario above the state is set before the counters are cleared, and
-once the msk is closed the accounting is not relevant anymore. Keep a
-clamp and a rate-limited pr_warn() on the decrement sites instead,
-to leave a trace of any imbalance we would still not know about.
+v2 was generated against a stale local snapshot that predated several
+unrelated upstream commits touching the same bitfield region in
+mptcp_subflow_context; applying v2 against the real export tree
+produced a merge conflict in protocol.h. This series is a straight
+rebase onto the current export tree -- no functional change from v2.
+Only two things differ as a result of the rebase itself:
 
-Fixes: e99c1ca89071 ("mptcp: pm: add WARN_ON_ONCE guards on extra_subflows underflow")
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/629
-Suggested-by: Matthieu Baerts <matttbe@kernel.org>
-Signed-off-by: Tao Cui <cuitao@kylinos.cn>
----
- net/mptcp/pm.c       | 11 ++++++++++-
- net/mptcp/protocol.h | 14 ++++++++++++--
- 2 files changed, 22 insertions(+), 3 deletions(-)
+- avoid now leaves __unused:8 instead of __unused:7, since the real
+  tree has 9 unused bits available at this point rather than 8.
+- line offsets throughout protocol.c/protocol.h shifted to match
+  current export.
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 3990f6775723..1760f4c51b62 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -676,9 +676,18 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk,
- 	update_subflows = subflow->request_join || subflow->mp_join;
- 	if (mptcp_pm_is_userspace(msk)) {
- 		if (update_subflows) {
-+			/* The PM counters have already been cleared if the
-+			 * msk got disconnected while this subflow was still
-+			 * queued in the join list
-+			 */
-+			if (inet_sk_state_load(sk) == TCP_CLOSE)
-+				return;
- 			spin_lock_bh(&pm->lock);
--			if (!WARN_ON_ONCE(pm->extra_subflows == 0))
-+			if (likely(pm->extra_subflows))
- 				pm->extra_subflows--;
-+			else
-+				pr_warn_ratelimited("extra_subflows underflow, msk=%p\n",
-+						    msk);
- 			spin_unlock_bh(&pm->lock);
- 		}
- 		return;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 06a107d4e839..f5dbafaf4551 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1252,8 +1252,18 @@ u8 mptcp_pm_get_limit_extra_subflows(const struct mptcp_sock *msk);
- /* called under PM lock */
- static inline void __mptcp_pm_close_subflow(struct mptcp_sock *msk)
- {
--	if (!WARN_ON_ONCE(msk->pm.extra_subflows == 0) &&
--	    --msk->pm.extra_subflows < mptcp_pm_get_limit_extra_subflows(msk))
-+	/* The PM counters have already been cleared if the msk got
-+	 * disconnected while this subflow was still queued in the
-+	 * join list
-+	 */
-+	if (inet_sk_state_load((struct sock *)msk) == TCP_CLOSE)
-+		return;
-+
-+	if (unlikely(msk->pm.extra_subflows == 0)) {
-+		pr_warn_ratelimited("extra_subflows underflow, msk=%p\n", msk);
-+		return;
-+	}
-+	if (--msk->pm.extra_subflows < mptcp_pm_get_limit_extra_subflows(msk))
- 		WRITE_ONCE(msk->pm.accept_subflow, true);
- }
- 
+Changes since v1:
+
+- avoid now lives in the existing __unused bitfield padding instead
+  of its own bool. No struct growth (Paolo).
+- the selftest scheduler sets avoid once, on the first get_send()
+  call, and only reads it back afterward -- proving persistence
+  scheduled can't do, instead of just claiming it. A get_send_calls
+  counter, asserted >1, makes sure multiple rounds actually ran
+  (Paolo).
+- mptcp_subflow_get_send() and mptcp_subflow_get_retrans() -- the
+  default subflow picker, active with or without a custom scheduler
+  -- now skip an avoided subflow next to the existing active-subflow
+  check. avoid is also exposed via MPTCP diag (Paolo).
+- set_avoid() marked __bpf_kfunc: it has no C callers, unlike
+  set_scheduled(), and could be dropped under LTO before
+  resolve_btfids finds it in BTF (review bot).
+- added the missing extern __ksym for mptcp_subflow_active() in the
+  selftest, matching mptcp_bpf_burst.c (review bot).
+- moved the set_avoid extern out of mptcp_bpf.h into
+  mptcp_bpf_avoid.c: checkpatch flags new externs in shared headers,
+  and it has only the one caller.
+
+Probing an avoided subflow to decide when to clear it (issue #348) is
+left out on purpose -- that's scheduler policy, not core mechanism.
+
+Patch 1 adds the flag, the kfunc, default-scheduler enforcement, and
+diag support. Patch 2 reworks the selftest to prove persistence and
+picks up the missing extern.
+
+Ran the full suite through mptcp-upstream-virtme-docker (auto-normal
+and auto-btf) -- selftests, packetdrill, and BPF tests pass, avoid
+subtest included.
+
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/349
+
+Kalpan Jani (2):
+  mptcp: sched: add subflow avoid flag and enforce it in core
+  selftests: mptcp: bpf: exercise the subflow avoid flag across rounds
+
+ include/uapi/linux/mptcp.h                    |  1 +
+ net/mptcp/bpf.c                               |  1 +
+ net/mptcp/diag.c                              |  2 +
+ net/mptcp/protocol.c                          |  4 +-
+ net/mptcp/protocol.h                          |  5 +-
+ net/mptcp/sched.c                             |  6 ++
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 16 +++++
+ .../selftests/bpf/progs/mptcp_bpf_avoid.c     | 70 +++++++++++++++++++
+ 8 files changed, 102 insertions(+), 3 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_avoid.c
+
+base-commit: 21f4dd6665f74afe8fe39591e4abd5971828cf08
 -- 
 2.43.0
-
