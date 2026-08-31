@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88AEA3D3D10
-	for <mptcp@lists.linux.dev>; Mon, 31 Aug 2026 10:07:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35EB3DDB1D
+	for <mptcp@lists.linux.dev>; Mon, 31 Aug 2026 10:11:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788170870; cv=none; b=T8E1aB1Nfm439KFI69AdY416Hy9wCbwJXvCdGiDpwnJ1a7bHp82qmGveswJyLsvChNG0Skalxlv0x7OT/KLUhNwMW9SmMoWLS9sFsaZpBfGy6Htnys7dyj+P7KXv9ZzQFMMvDSz7BvNJpp2z9KBN1nREnj6C1C/+5DOtZBzRkwA=
+	t=1788171090; cv=none; b=LVSOKdvz2RJVF665T5sxcfuTaNE6IZ3/V2W6NoY1lcH+X0jSx0VH3mmHnIa66fc1VAGpcBISGNKzMiZzWCC7NfCCqgMD6wLP6isSwj5rS+K4f9v1eGfc5NObHlFNtnJvMGfuoif5NfRSjVA1BfYrmpHuHBG6mQ73WLxReRLI1pU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788170870; c=relaxed/simple;
-	bh=sp4OyLAF1P8MgJ+iPo7g4mtiMd7/TSbN4xz8Dq5jB8E=;
+	s=arc-20240116; t=1788171090; c=relaxed/simple;
+	bh=PRokuK3i3ifpnwXKwSEZWzL1aaYGHg05zkNaMyZ16tU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Nz0cEII4rbxb62xrQxqfqyvx5SF5kzmTSMJe5iwOjCYu3Yg257Yqb2No33yWFq1FO4/BB/uxS4X6IQbcSyKlw1zGVmYTCK5ahMy5ighufNpF9/vRTQs+ab3m0gwmmF9YQE6cASbVLW1s9tfqe7H+NQTODKeoHUw0osj49MMFOg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OKcATQP6; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=fJrUuqhdHfFbsQosgM1R/8qiCh++BffQvUB/+Sb8WBC+/KfSM7qdpZu36n9KGvEnignG1fbyZBKhPQk+kQO4uhK1G+XlrTrLZjAMlQJVc89qhL7ShBgfIWcJrm5FkJYcutCIYUhPYDJ8XpPhHDxn7A2sLrQZsAQ1p2QLxD2v37M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LSmOJTB5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OKcATQP6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CB581F000E9;
-	Mon, 31 Aug 2026 10:07:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LSmOJTB5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 203081F000E9;
+	Mon, 31 Aug 2026 10:11:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788170869;
-	bh=ff9cHODE85Ho5uzIj0EfbQb2vIpAqf7YAHV2YGrS7lQ=;
+	s=k20260515; t=1788171089;
+	bh=RyqiEm5GKfgMGqbO4f2PWkJUiBOlSvVy74BaLlktv9I=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=OKcATQP6ETW++1ejR/LqZ1v25Ay8PO69l8MlXrNdOq0iBL9FiOnZU8JTOibKHXEJc
-	 nY+gsSOhMhiuwFKESN3hP3IQQmKoCaCj33j1K+psTwLGTP74S1LPeiruNZ50AYoon2
-	 lHyK4eqDDZDHOe+aZoxcmlwWAFEQRnQGsGMD469MxY7IepNtoWfoKTLMDeV2s5JDRR
-	 SeK4r0a9V/mzq2KWerml+EHN5Yy5T2rusLJ7IQI+Fl1ivuKp5XyxFeEG70cmFqpzdV
-	 lNmjcoNvPQpTRaOo9u5YenO4Numh0AtEQZap5P4DwN8VqNRE8GdMmRC/wYXrR94hkR
-	 N7dDVRdw4v1mw==
+	b=LSmOJTB5aH8//vsxGU0mu3H04OzgkIYfuRDHD/7A53M2iMDKDny2LYEjTPqWyjHb+
+	 NjaGrTVRu9G9BGoqE2hjoPo6PRhqcGUE0HFe0V9eDUJMtOH90b27dHepv4qmCbwK+s
+	 FxdSa4Y8UvImwEg0sDqYvOYa9hx4scb7kJLDiBW6Ba/dtAo918lV7iQv3gVR5cLpqc
+	 HqRPVisiiI3sNNtx9hNXjscnSwaiWHVZ4/joYZ7ixYd0QWaJ3ZO7Ad0f8vLua4Hfx8
+	 BhqB7JPWiuik9sPtZQ/EXeduc9Jk6S9HS63G5E5t/wweJwBRd7PcoQc6BvPi73IKhW
+	 O9dzR/0SxhGOw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v3 1/2] mptcp: sched: add subflow avoid flag
- and enforce it in core
+Subject: Re: [PATCH mptcp-next 2/2] mptcp: pm: skip extra_subflows
+ accounting on disconnected msk
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Kalpan Jani" <kalpan.jani@mpiricsoftware.com>
+To: "Tao Cui" <cui.tao@linux.dev>
 Cc: mptcp@lists.linux.dev
-In-Reply-To: <20260831094651.2682660-2-kalpan.jani@mpiricsoftware.com>
-References: <20260831094651.2682660-1-kalpan.jani@mpiricsoftware.com>
- <20260831094651.2682660-2-kalpan.jani@mpiricsoftware.com>
+In-Reply-To: <20260831093206.689827-3-cui.tao@linux.dev>
+References: <20260831093206.689827-1-cui.tao@linux.dev>
+ <20260831093206.689827-3-cui.tao@linux.dev>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 31 Aug 2026 10:07:48 +0000
-Message-Id: <20260831100749.0CB581F000E9@smtp.kernel.org>
+Date: Mon, 31 Aug 2026 10:11:28 +0000
+Message-Id: <20260831101129.203081F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,104 +47,110 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] Concurrent modification of the `mptcp_subflow_context` bitfield ca=
-uses a read-modify-write data race, leading to corrupted critical subflow s=
-tate.
-- [Medium] The `avoid` flag is not enforced by the core when a custom BPF s=
-cheduler is loaded, directly contradicting the commit message's claims.
+
+Pre-existing issues:
+- [High] Subflows in `join_list` can be leaked due to unsynchronized zeroin=
+g of `cb_flags` in `mptcp_disconnect`.
+- [High] Data race on `pm->reset` and `pm->rm_list_*` fields due to missing=
+ `pm->lock` in `mptcp_pm_data_reset()`.
 --
 
-commit 99e88cae3546011d9eecb7fbb324ce6a3cff75f9
-Author: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+commit 179deded54d27540d6b26de1228c24065e1fa9d4
+Author: Tao Cui <cuitao@kylinos.cn>
 
-mptcp: sched: add subflow avoid flag and enforce it in core
+mptcp: pm: skip extra_subflows accounting on disconnected msk
 
-This commit adds a new avoid flag to the MPTCP subflow context to allow
-BPF schedulers to bench subflows. It also modifies the core send and
-retransmit paths to skip subflows marked with this flag.
+This commit addresses a WARN_ON_ONCE crash related to extra_subflows
+underflow by skipping the PM accounting when the mptcp socket is in the
+TCP_CLOSE state. It replaces the warnings with rate-limited prints and
+avoids modifying the counters for disconnected sockets.
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/349
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/629
 
->  - mptcp_subflow_get_send() and mptcp_subflow_get_retrans() -- the
->    default in-kernel subflow picker -- now skip an avoided subflow
->    next to the existing active-subflow check. This runs regardless of
->    whether a custom scheduler is loaded, so the flag has real weight
->    on core selection and isn't only meaningful to whatever BPF
->    program happens to read it back. avoid defaults to false and only
->    an explicit set_avoid() call flips it, so this is a no-op for
->    anyone who doesn't use it;
-
-[Severity: Medium]
-Is this description accurate regarding custom BPF schedulers?
-
-Looking at mptcp_sched_get_send() in net/mptcp/sched.c, if a custom
-BPF scheduler is active (msk->sched !=3D &mptcp_sched_default), the core
-directly returns the result of the custom scheduler's callback:
-
-net/mptcp/sched.c:mptcp_sched_get_send() {
-    ...
-    if (msk->sched =3D=3D &mptcp_sched_default || !msk->sched)
-        return mptcp_sched_default_get_send(msk);
-    return msk->sched->get_send(msk);
-}
-
-This appears to bypass mptcp_subflow_get_send() entirely (which is
-where the avoid check lives) when a custom scheduler is used. Does the
-core provide fallback enforcement elsewhere, or does the flag become a
-no-op unless the custom BPF program manually checks it?
-
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 3d250e8204d52..7768a464ff4e8 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -586,7 +586,8 @@ struct mptcp_subflow_context {
->  		is_mptfo : 1,	    /* subflow is doing TFO */
->  		close_event_done : 1,       /* has done the post-closed part */
->  		mpc_drop : 1,	    /* the MPC option has been dropped in a rtx */
-> -		__unused : 9;
-> +		avoid : 1,	    /* pkt scheduler: skip subflow if possible */
-> +		__unused : 8;
->  	bool	data_avail;
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index b10895606542a..60276eb1ef384 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -676,9 +676,18 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *=
+msk,
+>  	update_subflows =3D subflow->request_join || subflow->mp_join;
+>  	if (mptcp_pm_is_userspace(msk)) {
+>  		if (update_subflows) {
+> +			/* The PM counters have already been cleared if the
+> +			 * msk got disconnected while this subflow was still
+> +			 * queued in the join list
+> +			 */
+> +			if (inet_sk_state_load(sk) =3D=3D TCP_CLOSE)
+> +				return;
 
 [Severity: High]
-Can placing avoid in this shared bitfield lead to data corruption via
-a read-modify-write (RMW) race?
+This is a pre-existing issue, but does mptcp_disconnect() leak subflows when
+zeroing cb_flags non-atomically?
 
-The core network stack modifies other flags in this same 32-bit bitfield
-from the RX softirq path while holding only the TCP subflow socket lock
-(ssk). For example, it clears subflow->map_valid =3D 0 in
-net/mptcp/subflow.c:mptcp_subflow_data_available().
+If a concurrent mptcp_finish_join() receives an MP_JOIN ACK for a subflow
+while the parent socket is being disconnected, it can hit the
+sock_owned_by_user(parent) branch. The subflow is added to msk->join_list
+and MPTCP_FLUSH_JOIN_LIST is set in msk->cb_flags while holding the parent's
+data lock.
 
-Because bitfield assignments compile to non-atomic RMW operations on the
-containing 32-bit word, modifying this new flag from the BPF kfunc under
-the MPTCP socket lock (msk) could race with those softirq updates.
+Simultaneously, mptcp_disconnect() executes msk->cb_flags =3D 0 without hol=
+ding
+the mptcp_data_lock, erasing the MPTCP_FLUSH_JOIN_LIST flag:
+
+net/mptcp/protocol.c:mptcp_disconnect() {
+	...
+	msk->cb_flags =3D 0;
+	...
+}
+
+When the lock is released, release_sock() invokes mptcp_release_cb(), but
+since the flag was erased, it skips the flush:
+
+net/mptcp/protocol.c:mptcp_release_cb() {
+	...
+	if (flags & BIT(MPTCP_FLUSH_JOIN_LIST))
+		__mptcp_flush_join_list(sk, &join_list);
+	...
+}
+
+Can this lead to the sockets in join_list being completely leaked when
+mptcp_destroy_common() later iterates only over conn_list?
+
+[Severity: High]
+This is a pre-existing issue, but is there a data race on pm->reset and
+pm->rm_list_* fields when mptcp_pm_data_reset() is called during disconnect?
+
+When mptcp_disconnect() sets sk->sk_state to TCP_CLOSE, it calls
+mptcp_pm_data_reset(msk), which modifies PM structures without acquiring
+pm->lock:
+
+net/mptcp/pm.c:mptcp_pm_data_reset() {
+	...
+	memset(&pm->reset, 0, sizeof(pm->reset));
+	pm->rm_list_tx.nr =3D 0;
+	pm->rm_list_rx.nr =3D 0;
+	...
+}
+
+At the same time, subflow receive paths can process incoming MP_JOIN or
+RM_ADDR packets in BH context, holding only pm->lock and lock_sock(ssk) rat=
+her
+than lock_sock(msk). For example:
+
+net/mptcp/pm.c:mptcp_pm_allow_new_subflow() {
+	...
+	spin_lock_bh(&pm->lock);
+	if (READ_ONCE(pm->accept_subflow)) {
+		ret =3D pm->extra_subflows < limit_extra_subflows;
+	...
+}
+
+Could this unprotected memset in mptcp_pm_data_reset() cause torn writes and
+corrupted PM state when racing with readers and writers that only hold
+pm->lock?
 
 [ ... ]
 
-> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
-> index 1e59072d478c9..8a448814a11d4 100644
-> --- a/net/mptcp/sched.c
-> +++ b/net/mptcp/sched.c
-> @@ -165,6 +165,12 @@ void mptcp_subflow_set_scheduled(struct mptcp_subflo=
-w_context *subflow,
->  	WRITE_ONCE(subflow->scheduled, scheduled);
->  }
-> =20
-> +__bpf_kfunc void mptcp_subflow_set_avoid(struct mptcp_subflow_context *s=
-ubflow,
-> +					 bool avoid)
-> +{
-> +	subflow->avoid =3D avoid;
-> +}
-
-[Severity: High]
-Does this bitfield assignment risk overwriting concurrent softirq updates?
-
-Since this function executes under the msk lock and not the ssk lock,
-this assignment races with the ssk-locked updates to the same bitfield word
-mentioned above, potentially causing flags like map_valid or mpc_drop
-to be silently dropped.
-
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260831094651.2682=
-660-1-kalpan.jani@mpiricsoftware.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260831093206.6898=
+27-1-cui.tao@linux.dev?part=3D2
