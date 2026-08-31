@@ -1,194 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992E33DD870
-	for <mptcp@lists.linux.dev>; Mon, 31 Aug 2026 10:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2573A3AE185
+	for <mptcp@lists.linux.dev>; Mon, 31 Aug 2026 10:25:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788171543; cv=none; b=pZaxl0mTA/PBv5JrtaQDABqdW3qv/VxF+8c7XCRnhZGM0Wzqt/W29kh4lIruG7DYpL7n7qIiM0zP6H/goJpeQ1RwS440D6zSlhQs6vUL5/D4VWeqolpH/m0ecP8Ce0wa7IAOjjQ0dBZYX4qYe+4K6wA55KI8XobYCnzH6S/lQFI=
+	t=1788171949; cv=none; b=knlW6y3Xj+2wK9DQe1xJeyVijzb0Zfi7agyRCdLD3prDyL67jCONfx2BF7vDyohpQLVI7jiAVMLYNW/Yq/i9Lqr6Rel3hQwolamanw6OjZch6SqX61DyW7u/CfDU9NfKC+pqiNI+jhSiRmMl4Z2SzIddk64RbgrmZYw1uv8tHHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788171543; c=relaxed/simple;
-	bh=3juiurH06JG8Z8xtCI+YeesGl66ErXgm1jy6iX7cKjg=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=SrCpLFBiIZ1I8+DzeplMLYdXz9GWVv+fldIs7j44OS2V6REoSZaXHgp7jiYuFvuKCuDu/8Ohe3+h6xfZqkRY14mGIskXokqsP79dQdKe4cUlBr+ihqylC0S/fzXZudP7MHJXe5z5kFkSV7sbj4rsMtzIwBn7yl1UM6fuvqsOpXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ggnGt6IC; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788171949; c=relaxed/simple;
+	bh=iPB4Erc6jkay6k7PGZrvsuibRAmeDKv2iq3x9WN7L9Q=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=IwAuwfO72fwNy7+l6DCEQtA1BttVmn09QVgcmrdF4/66sR74H7Qfq3O2vcdVR++pQo3Xh7ErhipkJxfd7p2C6a2HyFndKwYMLMaPPZNHIQhKsJv0nh9agWqAUhZE3/vSSipvY/xIfbX9TrAFzchk3kjgAjYmQveMtdsXNyMnBxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=le1QyT/D; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ggnGt6IC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF78F1F000E9;
-	Mon, 31 Aug 2026 10:18:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788171540;
-	bh=o1gXEZZduxdDk8U837u5vEYnfdEe6hRSkbr9g94zpkU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ggnGt6IC4mZgKRxuKqv4COwvDNczNugPYrSvqLXlqmCCG6s8h5CJsRiS63VxAYgaF
-	 H5iLFZUHXeIE+xNrFcla9+2EQNhsAGjic0Vd25kQvHyM1yf2CHz6UhlMIZLxR6WLje
-	 pVLZvtSsWeHL5JYX+9puaAiiw5vkb2SZ2sliaEwRq53b1hZ3XPuhv0kGE6TLFl0ogw
-	 SUlRmwJ9hujTY133udJeY97y40XHo39KI0N78hPMTR+5BAMJqWSSEJB50uqm3Vqka+
-	 Z23IYIvei9cOOuxLNE+HiAYDMNAP4vBtpf5n6Qpc9KYYypLhxQuOV4Iah3123TXSto
-	 LtyKPzKHMhE0g==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v3 2/2] selftests: mptcp: bpf: exercise the
- subflow avoid flag across rounds
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Kalpan Jani" <kalpan.jani@mpiricsoftware.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="le1QyT/D"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-84830c774a0so3558896b3a.1
+        for <mptcp@lists.linux.dev>; Mon, 31 Aug 2026 03:25:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788171947; x=1788776747; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=85RY9ud4ENtk2oBw1uEM313B0HhzPWLEBX5cqFPdjOk=;
+        b=le1QyT/DQdBWRd1SeXb2XhvFw6LSE37rAotf49DMMTYs8DloQACA4DxCw4ZKcvVXbf
+         113rkenRRPxGjB5BFmmkJG8si/HxZ2NeUxBQCJ6ItzPfE2tZsO4DDFgNQJhNek7l/S6K
+         9uW6f9u0gWMgty/LYht6Yg78eoDIX9YqmckfVm/pFvIfHw9891rAPVK+dfaVu2irvgAK
+         iIEAyV1U2SOyC5u5FIRh23P6ZiQvUw6o/EvPNRzDG7lR5m/IkpaAh/geF1qp/iGI5A5e
+         CuumOE/sTeY3ghQmQmAvU3PRoiKTTWF6ia5KBjQHYxwk2fFdu7W0FknXBQMOTpZfgMVv
+         dRZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788171947; x=1788776747;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=85RY9ud4ENtk2oBw1uEM313B0HhzPWLEBX5cqFPdjOk=;
+        b=YNL2QpmGtw1uld3iwN+bvubwIl19yMynL64tZspUyO8K1UiyMYYjGQhwUD7YwKAF+m
+         Ap+1pT1wW3fKuQxu1OQQqTw7FgMata/ASoSs8fxa4w125FZmkkE6W6+P9xNRBHGReOv7
+         895UhkfBL4A+qTMqAVpLkITiUI0dRxTrRwskmD/iE2j4SzXuL4VQ9UW5Li4u5/dXqqOH
+         S1Riyfntw5QAyWQ9azcDhG/TN4fS9L9FsWbLWj/DFPRO7gzDT5oWIcJZCy3Y1escMP25
+         TUFQOIb4HbEjk8v6NM42o1Gj72zRKdh53xrrp6IRAMDo5xiiAR2BA2jU1sz04yiD1m1a
+         JofA==
+X-Gm-Message-State: AFuF++na47pGVvDQg2oPRSk/APRrsVa02zvGimE4mSLNFzHtbpgi2laO
+	stuTjAcuoIHFpKz+vurG0fVzXo8+qOWX7MBJfwshyUdIwjHqOZDDWIYFEHGl+FU=
+X-Gm-Gg: AR+sD13lnXiADdUjpYMFKC3u8wonZl6x6Gl9FPXXqR7WMgQeXlUvsA3EgydnxXLTjlW
+	Tv9p1aLqnc95EKzsGJyrTp7JxLzrymCA3o7bfjD/F6mpycsIOWOeiZFVh4vBK2PnQ8EUlolJXjj
+	bk6yAb5XCvWVgv7T5quwqcg5AEqMaaPpZI1Kg1InuznK15dVRfnG6Q9vMXxDo8izOmYI8mjswaN
+	kyIJIrCwzkBaIhg02Rmk1kGUIE6DO6ZNeHDyR+XrHZRqinYMrxV1khHYLhkGAPX4yUnke69teoO
+	Pt5ydx8LJdxbndCKm5L3OhAXjzeoW7SGCGTzXr2HdIiHLRpJUb6Cb20/oyjuHUEI+wt7u5dXpqG
+	CkSX1LXTW+ifujdCACAXgTP//Q6CtJQ07+N3I6/kZDa4fZVlYvDymTNz06NrpZEb8EU27m7wa59
+	ccQTkx3GP7K2s00T9opVkUVIq6OJG+hhjL/gXrj9bju5N5fEcsSdHyXVQooT2q1Z0Obc0k3ANGz
+	HUACtV2g64=
+X-Received: by 2002:a05:6a20:b7a7:b0:3be:b0b3:3962 with SMTP id adf61e73a8af0-3d268ef9e07mr43171227637.9.1788171947329;
+        Mon, 31 Aug 2026 03:25:47 -0700 (PDT)
+Received: from [127.0.0.1] ([20.163.63.241])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3286f7bf283sm31526546eec.8.2026.08.31.03.25.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2026 03:25:46 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Tao Cui <cuitao@kylinos.cn>
 Cc: mptcp@lists.linux.dev
-In-Reply-To: <20260831094651.2682660-3-kalpan.jani@mpiricsoftware.com>
-References: <20260831094651.2682660-1-kalpan.jani@mpiricsoftware.com>
- <20260831094651.2682660-3-kalpan.jani@mpiricsoftware.com>
-Content-Type: text/plain; charset=utf-8
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260831093206.689827-1-cui.tao@linux.dev>
+References: <20260831093206.689827-1-cui.tao@linux.dev>
+Subject: Re: [PATCH mptcp-next 0/2] mptcp: pm: fix reachable extra_subflows
+ guards
+Message-ID: <7a47c703-60e8-8a91-c848-8613bc778248@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 31 Aug 2026 10:18:59 +0000
-Message-Id: <20260831101859.EF78F1F000E9@smtp.kernel.org>
+Date: Mon, 31 Aug 2026 10:25:46 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] The kfunc mptcp_subflow_set_avoid() modifies the 'avoid' bitfield =
-without holding the TCP socket lock, causing a data race with the TCP recei=
-ve path.
-- [Medium] Global .bss variables are incorrectly used for per-socket state,=
- causing race conditions and test flakiness.
-- [Low] Multi-line comments do not follow the mandatory BPF subsystem moder=
-n kernel comment style.
---
+Hi Tao,
 
-commit 1f082f0309b048cf33dbb4e85b2d29227d5feef3
-Author: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Thank you for your modifications, that's great!
 
-selftests: mptcp: bpf: exercise the subflow avoid flag across rounds
+Our CI did some validations and here is its report:
 
-This commit introduces a new BPF struct_ops scheduler selftest in
-mptcp_bpf_avoid.c to test mptcp_subflow_set_avoid(). It sets the avoid flag
-once on the first scheduling round and verifies that the core preserves this
-state across multiple get_send() invocations.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Notice: Call Traces =
+at boot time, rebooted and continued =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: debug (only selftest_mptcp_join): Notice: Call Traces at =
+boot time, rebooted and continued =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Notice: Call Traces at boot=
+ time, rebooted and continued - Notice: Call Traces at shutdown time, =
+ignored and continued =E2=9A=A0=EF=B8=8F=20
+- Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/33379349810
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/349
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/190a5d9ad47e
+Patchwork: https://patchwork.kernel.=
+org/project/mptcp/list/?series=3D1154350
 
-> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_avoid.c b/tools/=
-testing/selftests/bpf/progs/mptcp_bpf_avoid.c
-> new file mode 100644
-> index 0000000000000..8b22c5967a7a5
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_avoid.c
-> @@ -0,0 +1,70 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2026, MPTCP. */
-> +
-> +#include "mptcp_bpf.h"
-> +#include <bpf/bpf_tracing.h>
-> +
-> +extern bool mptcp_subflow_active(struct mptcp_subflow_context *subflow) =
-__ksym;
-> +extern void mptcp_subflow_set_avoid(struct mptcp_subflow_context *subflo=
-w,
-> +				    bool avoid) __ksym;
-> +
-> +char _license[] SEC("license") =3D "GPL";
-> +
-> +/* set once, on the first scheduling round, never touched again -- this
-> + * is what makes "avoid" different from "scheduled": nothing here
-> + * re-asserts the decision, and the core doesn't clear it either.
-> + */
 
-[Severity: Low]
-Is this multi-line comment following the mandatory BPF subsystem modern ker=
-nel
-comment style?
+If there are some issues, you =
+can reproduce them using the same environment as
+the one used by the CI =
+thanks to a docker image, e.g.:
 
-The BPF subsystem requires multi-line comments to have the opening /* on its
-own line.
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-> +bool avoid_marked;
-> +__u32 get_send_calls;
-> +
-> +SEC("struct_ops")
-> +void BPF_PROG(mptcp_sched_avoid_init, struct mptcp_sock *msk)
-> +{
-> +	avoid_marked =3D false;
-> +	get_send_calls =3D 0;
-> +}
+For more details:
 
-[Severity: Medium]
-Are these global .bss variables safe to use for per-socket state?
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
 
-When client and server sockets run concurrently in the test namespace, the
-server's accept() triggers mptcp_sched_avoid_init(). This will zero out the
-shared .bss variables (avoid_marked and get_send_calls) while the client mi=
-ght
-be concurrently executing bpf_avoid_get_send().
 
-Would it be better to utilize bpf_sk_storage for isolated per-socket state
-instead of global variables to prevent intermittent test failures?
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
-> +
-> +SEC("struct_ops")
-> +void BPF_PROG(mptcp_sched_avoid_release, struct mptcp_sock *msk)
-> +{
-> +}
-> +
-> +SEC("struct_ops")
-> +int BPF_PROG(bpf_avoid_get_send, struct mptcp_sock *msk)
-> +{
-> +	struct mptcp_subflow_context *subflow;
-> +
-> +	get_send_calls++;
-
-[Severity: Medium]
-Will this non-atomic increment race with both the server's init reset and a=
-ny
-concurrent bpf_avoid_get_send() calls from other sockets?
-
-> +
-> +	if (!avoid_marked) {
-> +		int i =3D 0;
-> +
-> +		/* bench every subflow but the first, once */
-> +		bpf_for_each(mptcp_subflow, subflow, (struct sock *)msk) {
-> +			if (i++ > 0)
-> +				mptcp_subflow_set_avoid(subflow, true);
-
-[Severity: High]
-Can calling mptcp_subflow_set_avoid() safely update the bitfield?
-
-The BPF scheduler runs under the MPTCP socket lock, but the underlying kfun=
-c in
-net/mptcp/sched.c executes a non-atomic read-modify-write on the 32-bit
-bitfield word in struct mptcp_subflow_context:
-
-net/mptcp/sched.c:mptcp_subflow_set_avoid() {
-	subflow->avoid =3D avoid;
-}
-
-Concurrently, the TCP receive path (mptcp_subflow_data_available()) modifies
-map_valid (which is in the same bitfield word) under the TCP socket lock.
-
-Could this data race silently corrupt adjacent bitfields and lead to stalled
-connections? Would it be possible to extract avoid into a separate bool byte
-(like scheduled) to prevent bitfield word aliasing?
-
-> +		}
-> +		avoid_marked =3D true;
-> +	}
-> +
-> +	/* every round -- including this one -- just reads back state set
-> +	 * at most once above. no re-assertion, ever.
-> +	 */
-
-[Severity: Low]
-Should this multi-line comment also be updated to place the opening /* on i=
-ts
-own line, conforming to the BPF subsystem comment style?
-
-> +	bpf_for_each(mptcp_subflow, subflow, (struct sock *)msk) {
-> +		if (subflow->avoid)
-> +			continue;
-
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260831094651.2682=
-660-1-kalpan.jani@mpiricsoftware.com?part=3D2
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
