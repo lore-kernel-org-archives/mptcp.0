@@ -1,126 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCCA3346FA0
-	for <mptcp@lists.linux.dev>; Mon, 31 Aug 2026 10:29:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1175353A91
+	for <mptcp@lists.linux.dev>; Mon, 31 Aug 2026 10:53:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788172193; cv=none; b=m7CkpwBw5Y6LBLdNmRzVkfjTb2co3BLYTAbuTHRW6Od1WmPJtCjg5jmCoXSB60OCHVsRifwVty4TaGC92yBmzpsfppVUheOBT4r2YbaACnjsp+7RMoEPhIH1XDzuqpqD7DzXKjkpu0eeYoziesp2eRvRdyTc4JLdpazWVSgRi3w=
+	t=1788173588; cv=none; b=T3fkm6+Wsc+rDmKKFX70nkYfTVp0hHzRYYiFAU89mCAb3CSheNYvvxDOTuKAhR1ZXzfdviFg07TIUiA8HXLmhrmC9p86LCJG+YO9JpOJbB7xdY+QVSdILyO6tjXiNT9P4JAtEXp9SB47Z9NR6vLVIJui3wipOlfDnVou52yeFjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788172193; c=relaxed/simple;
-	bh=0NyAPMwfAQvm599CMOXW6Skqkjaq3n0oV9NNeW9mSmE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SNRxBCv0GWqYkaBWg71S9YpG/dh91ldv60o4rdSvFwuclovGOeL1+o0K0wWNsBL5sMJrz3LWAo99M/NrZAPGDM6IF+dMMUXCExACPrgikXbKzHAarWjsdxt9JpagMhoiaB/EFuXCpBIbtoeRf1C7DQ+7fqKVfqZXYKH6Bi2AI/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UCsVSeoK; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788173588; c=relaxed/simple;
+	bh=PKOePct3Pqs9muACJ2UpGyeK4K00eo777BaHkcGTGxk=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=AsJnQxE0mfTBifl31ozC0JDECseKoOqAMX21MdxhI2RVVmfSDss1bHzhsrX6PYK0iAlCA6yG7fJBneN9f2fbVwPS99Diz7H8aivP4/tJgUdiT5bozQ/ci+QPwUXcYjaGr0AooNAX0ujZBN7dmxaW6oJckxKhuqv/0cViOInUasY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cBdlIy+3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UCsVSeoK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D42161F00A3D;
-	Mon, 31 Aug 2026 10:29:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cBdlIy+3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1459C1F000E9;
+	Mon, 31 Aug 2026 10:53:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788172191;
-	bh=VgH2+F0P1UpLEayf6Qq/hsUfSjtC16be4gdRUW4KHYs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=UCsVSeoK/lB1qrhZvKDDdrSonwvzrKcWYblkv56BBNGpQLkuPFdiJKoGpPOaiMIu2
-	 uRnM97i7OTcUkFNmVrw96JYMz10nFkokdvfiGsOAY3k0sRbosAQvJn5mrDNai+u8Lb
-	 yYJqnSYhBTzDaawllp4hq/fQOaVGLNOukvS9miIUmVU0z90eEpulRFa7hSaArPwdxJ
-	 rRxfLJV0GZso8eCFrrIMS+bOFqo1wdQ3gNR88mCwiqmFzy6r70f+LXX4XKY0XsC0lH
-	 VIpbdp8/ezBTn87161qu1pnjimMpiHbFTqcHGwQL2docmjVrSIM2k7W/4j24XbCs7q
-	 ji10COjbsYweA==
-Message-ID: <f0fabe59-0a2b-4df9-983d-446eab20104c@kernel.org>
-Date: Mon, 31 Aug 2026 12:29:46 +0200
+	s=k20260515; t=1788173587;
+	bh=dDDqfgUCEB0qEHgnZaAMQz4iY7yhQrbAl6DLxL7QZmE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=cBdlIy+3c/AInGdgqWdJYANaxTLXun2IQEGlOv2osrI+Ndx9X20zB6iutJ2Ux77va
+	 zUpnL6lhHeJLrdJCPbiCn53gnpcFVl56fmBR3gZKFSjBo1DeU41LkkE4WDta7h1AP0
+	 pkX0dCHm7lsv/JNyhhs7EgYO/qye+6DaZPhw+r+VAIL33DcGxUyEJtSLKVA3jhOVdV
+	 mo5PSFXyreWk4gFpfJYYxEclqRtvTmmZLYkDDnocwig4TE6UQ/NV8oqr2NnYoesPUz
+	 1zov1U9obVzJPBOL55VyaevbHn5YQ1/Zp1BA27bVUWMpZxKDzf5+2sef1iCQwVsRh4
+	 9QRGpty9fdk+g==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH mptcp-next v12 06/10] mptcp: align FIN handling with TCP
+ via SOCK_DONE
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Geliang Tang" <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <916f17d4a2b1e948fd89634e57552243564a0d59.1788171508.git.tanggeliang@kylinos.cn>
+References: <cover.1788171508.git.tanggeliang@kylinos.cn>
+ <916f17d4a2b1e948fd89634e57552243564a0d59.1788171508.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 31 Aug 2026 10:53:06 +0000
+Message-Id: <20260831105307.1459C1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next v2] mptcp: normalize seq numbers reported in
- mptcp_info
-Content-Language: fr
-To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>, mptcp@lists.linux.dev
-Cc: martineau@kernel.org, pabeni@redhat.com, shardul.b@mpiricsoftware.com,
- janak@mpiric.us, kalpanjani009@gmail.com
-References: <20260827041058.2833707-1-kalpan.jani@mpiricsoftware.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20260827041058.2833707-1-kalpan.jani@mpiricsoftware.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Kalpan,
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] Memory barrier API violation: smp_mb__before_atomic() is used befo=
+re a non-atomic bitwise operation, which fails to emit a hardware memory ba=
+rrier on architectures like LoongArch, allowing store-store reordering and =
+breaking synchronization.
+--
 
-On 27/08/2026 06:10, Kalpan Jani wrote:
-> mptcpi_write_seq, mptcpi_snd_una and mptcpi_rcv_nxt report the raw
-> 64-bit data sequence numbers, seeded from the connection's IDSN/IASN.
-> Since the IDSN/IASN come from mptcp_crypto_key_sha(), these fields
-> carry an effectively random offset and are not useful to userspace as
-> absolute values: a caller has to snapshot two getsockopt(MPTCP_INFO)
-> calls and subtract to get anything meaningful, which is exactly what
-> tools/testing/selftests/net/mptcp/mptcp_sockopt.c already does.
-> 
-> mptcp_info also reports mptcpi_bytes_sent, mptcpi_bytes_received and
-> mptcpi_bytes_acked, which give the same information as a plain byte
-> count starting at 0. The snapshot-and-diff workaround for the seq
-> fields is redundant once those are available.
+commit ed77cdb78ed1ea97ec780c81ea48c8eba994517c
+Author: Geliang Tang <geliang@kernel.org>
+Subject: mptcp: align FIN handling with TCP via SOCK_DONE
 
-Thank you for looking at this!
+This commit aligns MPTCP's FIN handling with TCP by using the SOCK_DONE fla=
+g=20
+to mark FIN reception alongside RCV_SHUTDOWN. It updates mptcp_inq_hint() a=
+nd=20
+mptcp_recvmsg() to check SOCK_DONE, ensuring the FIN handling only triggers=
+=20
+on a real DATA_FIN.
 
-> Cache the local and remote initial sequence numbers on the
-> mptcp_sock the same way ->token already is, and subtract them in
-> mptcp_diag_fill_info(), so mptcpi_write_seq, mptcpi_snd_una and
-> mptcpi_rcv_nxt also start near 0 for a freshly established
-> connection.
-Not to increase msk's size for these fields only used in the diag side
-(under the msk lock I think), couldn't you get the info from the first
-subflow instead? It should always be available (except when being
-disconnected, but the other fields should be 0 in this case, no?)
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 9bcca31501e7d..f970b92429726 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -736,6 +736,7 @@ static void mptcp_check_data_fin(struct sock *sk)
+> =20
+>  		WRITE_ONCE(sk->sk_shutdown, sk->sk_shutdown | RCV_SHUTDOWN);
+>  		smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
+> +		sock_set_flag(sk, SOCK_DONE);
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+[Severity: High]
+Does this memory barrier adequately protect the store to SOCK_DONE on weakly
+ordered architectures?
 
+According to the atomic operations documentation, smp_mb__before_atomic() m=
+ust
+only be used immediately before atomic RMW operations. Since sock_set_flag()
+uses __set_bit() which is non-atomic, the barrier might not emit a hardware
+memory barrier on architectures like LoongArch (where it is defined merely =
+as
+a compiler barrier).
+
+If the CPU reorders the non-atomic stores, SOCK_DONE could become visible
+before the ack_seq update in mptcp_check_data_fin(). A concurrent lockless
+reader in mptcp_inq_hint() executing smp_rmb() might see the new SOCK_DONE
+flag but read a stale ack_seq.
+
+Could this cause hint_val to undercount by 1 byte and potentially hang
+TLS/BPF consumers waiting for the final byte? Would it be safer to use
+smp_wmb() or smp_mb() here to guarantee store-store ordering?
+
+[ ... ]
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1788171508.gi=
+t.tanggeliang@kylinos.cn?part=3D6
