@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C336D32C8B
-	for <mptcp@lists.linux.dev>; Tue,  1 Sep 2026 06:49:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A7436EAAE
+	for <mptcp@lists.linux.dev>; Tue,  1 Sep 2026 06:49:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788245365; cv=none; b=iWtqWEr/065XeExMI2gwGxKpOQYJY9r597KrHmJdUpmRbjLAeHknz3PLvOGdGah86qj2EbolccmpEk6tZYeXzjdqVCWE5axL7ZqI6jQ9xXZSi+Qr90QQ49S6PesABR5S8ZJVPWzPoo0kCmzwpPYoZZl6FBPBfkWkkN/qPVj4jVU=
+	t=1788245367; cv=none; b=iAAkduurnkmV7I6ibCL7TRFNZmUF4xTJYCUsXS+7wd4nXC3GCE22VcR7As3fgZzKNqtBLbf5qRI32DqRz4HwMTjIjnjpQmUPy23PKo/ozQwOKPXuHqRGw0osVNK7vA0UJTjdb56S9efPVbEtS294k5rDEYyDY4/M4fQCzFVElUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788245365; c=relaxed/simple;
-	bh=Pu0H4YoOgtP1vxqDb3nVRZTX7V3SfwPE+YgP27XTeWk=;
+	s=arc-20240116; t=1788245367; c=relaxed/simple;
+	bh=dWfciBFnbFLxCR/Cb8OaHKUIjntSqwGMLlUYKRoL0Xw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HG+bB6p9SPgFeGUvaap1S1CBFXvGUM2QgQJjwu0EF4ceuiIesxnnRBkX++jJy9C3XWEqmonzMarQeh+u1UPva9tqd4sEuhmQM+UiZ4gIPsPFnfujZ/CdVtCD54rOPde3+sPkELbQMVcrwuqe14suRO90TsniBzljwU8ZIK6BSWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IfGud6Cs; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=qbKpB2zdxs2mFH8i5ud/b3v/EDPslc3J492EPoTvBmaeU/CnPZjkzwnJXX385FvN5FKuolOBPUlOPHn5R9ds9pjc9qJN8GPx3BeknN1mkkVPdVOPQ3vCo7hcf6mAVUVZQXkhUqoFEu6IiyBeh3S4h19isuu4kgWvvaGQp9sXR6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iTKh5HEN; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IfGud6Cs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A5191F00A3E;
-	Tue,  1 Sep 2026 06:49:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iTKh5HEN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 581F01F000E9;
+	Tue,  1 Sep 2026 06:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788245364;
-	bh=Qzn1i3/hPBE3pM91RubroaCo6J+LW8UwaACM+5eEKRI=;
+	s=k20260515; t=1788245366;
+	bh=Kn0XXosUmxZlT15rsZYgnCYz5C5ZquIhEFVLPan5W9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=IfGud6Cs6KT09h5lfj182Fy62mOf6cono4GROjaats1gZqZ0EcDVvKpLsqHG9Nh90
-	 06w7p/a6O2IgT30GCQg+JhT7b142Gmvxur8RjzoWNI/jDjTo2iUhdaA5EoJ6nWODnM
-	 uxiKZOgC6hrRKYrWdSJijacXr8QlmWCeplFRwkWxik9IG5FbIPON8sfNf4oQ2YxHgw
-	 Po/3qZUQECQenfhIvjTuePvNJC2Vmmvtj8hw0Fvju88lDerdpgKbJ5Z8T52fjRS7+r
-	 9WdXj3RkTSnP2aN8zNMbA46s5/e/HklV3ZBYC1zo9BYbPJJ9uYAy6UVzGN9TDd+gCV
-	 p0i1cjYTJLC/A==
+	b=iTKh5HENpY97NeDzFqxJIaH2mUqGoh1PyD2UY6yUdBn5WaTUJBqG50BSpKQGEp12E
+	 7VykEWEY0gyqV+YnhzsakOH+vpFhdcZvwWCQ3c1FxrZPiNf0+lzxkFC+8CIGu++Z+C
+	 T2IHufCTKsQujvUlLgao5HT65T/QDzA65HSHieROOixq5jPGVlkWBs1XnCSeWVlRSk
+	 VaD051hz8EEjn05RuJT8OuVM6YcP15UyKb0fn5SQgorNW0nWlrrPJJ4fn+B0i4jZYr
+	 pMMywFAnYgyF/EpsgFSXtIEtwQjkuF0e35pfZJUc6xeFaR6p/EI9gWIRbrEj5PLcWM
+	 r1ru5Pvs17D+g==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v13 08/10] mptcp: add sendmsg_locked to proto_ops
-Date: Tue,  1 Sep 2026 14:49:01 +0800
-Message-ID: <5cb5300425ba59afb6b3a99041659bc3908bdf6a.1788245079.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v13 09/10] mptcp: track app-limited state in mptcp_sendmsg
+Date: Tue,  1 Sep 2026 14:49:02 +0800
+Message-ID: <f5538e9103187ec49da485ed5c965bd2d8a9aa5a.1788245079.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1788245079.git.tanggeliang@kylinos.cn>
 References: <cover.1788245079.git.tanggeliang@kylinos.cn>
@@ -45,86 +45,110 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-MPTCP currently provides a standard sendmsg() implementation which
-acquires and releases the socket lock internally. However, certain
-upper layers need to call the sendmsg method while the socket lock
-is already held.
+The application-limited accounting in TCP is updated by
+tcp_rate_check_app_limited(), which currently takes a struct sock * and
+internally calls tcp_sk(). MPTCP needs to apply the same accounting to
+each subflow individually - every subflow is an independent TCP socket
+with its own tp->app_limited / delivered state - so wrapping the call as
+a struct sock * -> tcp_sk() helper is awkward at the call site.
 
-Split the existing mptcp_sendmsg() into mptcp_sendmsg_locked() which
-assumes the caller holds the socket lock, and a tiny wrapper
-mptcp_sendmsg() that acquires the lock and calls the locked version.
+Split the existing function: keep the logic as
+tcp_sock_rate_check_app_limited(struct tcp_sock *tp), and turn
+tcp_rate_check_app_limited(struct sock *) into a thin wrapper so the
+exported API is unchanged for other TCP users.
 
-Expose .sendmsg_locked in both mptcp_stream_ops and mptcp_v6_stream_ops.
+Then add mptcp_sock_rate_check_app_limited() that walks every subflow of
+the mptcp_sock and runs tcp_sock_rate_check_app_limited() under each
+subflow's socket lock. Invoke it from mptcp_sendmsg() right after the
+send-side setup, so the delivery-rate app_limited state stays in sync
+with what the application actually has to send across each subflow.
+
+With this in place, TCP_INFO.tcpi_delivery_rate_app_limited is reported
+correctly for MPTCP connections instead of being left at 0.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ include/net/tcp.h    |  1 +
+ net/ipv4/tcp.c       |  9 +++++++--
+ net/mptcp/protocol.c | 18 ++++++++++++++++++
+ 3 files changed, 26 insertions(+), 2 deletions(-)
 
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 436495ff2271..6a148c897bbe 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -848,6 +848,7 @@ static inline int tcp_bound_to_half_wnd(struct tcp_sock *tp, int pktsize)
+ 
+ /* tcp.c */
+ void tcp_get_info(struct sock *, struct tcp_info *);
++void tcp_sock_rate_check_app_limited(struct tcp_sock *tp);
+ void tcp_rate_check_app_limited(struct sock *sk);
+ 
+ /* Read 'sendfile()'-style from a TCP socket */
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index c3d8046b552f..02f0d3091610 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -1096,9 +1096,9 @@ int tcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg, int *copied,
+ }
+ 
+ /* If a gap is detected between sends, mark the socket application-limited. */
+-void tcp_rate_check_app_limited(struct sock *sk)
++void tcp_sock_rate_check_app_limited(struct tcp_sock *tp)
+ {
+-	struct tcp_sock *tp = tcp_sk(sk);
++	struct sock *sk = (struct sock *)tp;
+ 
+ 	if (/* We have less than one packet to send. */
+ 	    tp->write_seq - tp->snd_nxt < tp->mss_cache &&
+@@ -1111,6 +1111,11 @@ void tcp_rate_check_app_limited(struct sock *sk)
+ 		tp->app_limited =
+ 			(tp->delivered + tcp_packets_in_flight(tp)) ? : 1;
+ }
++
++void tcp_rate_check_app_limited(struct sock *sk)
++{
++	tcp_sock_rate_check_app_limited(tcp_sk(sk));
++}
+ EXPORT_SYMBOL_GPL(tcp_rate_check_app_limited);
+ 
+ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 45c05f896126..2f8ee18ba6fe 100644
+index 2f8ee18ba6fe..b00390a46eee 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2056,7 +2056,7 @@ static void mptcp_rps_record_subflows(const struct mptcp_sock *msk)
+@@ -2056,6 +2056,21 @@ static void mptcp_rps_record_subflows(const struct mptcp_sock *msk)
  	}
  }
  
--static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-+static int mptcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t len)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	struct page_frag *pfrag;
-@@ -2068,8 +2068,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 	msg->msg_flags &= MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL |
- 			  MSG_FASTOPEN | MSG_EOR;
- 
--	lock_sock(sk);
--
- 	mptcp_rps_record_subflows(msk);
- 
- 	if (unlikely(inet_test_bit(DEFER_CONNECT, sk) ||
-@@ -2185,7 +2183,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 	}
- 
- out:
--	release_sock(sk);
- 	return copied;
- 
- do_error:
-@@ -2196,6 +2193,17 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 	goto out;
- }
- 
-+static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
++static void mptcp_rate_check_app_limited(struct sock *sk)
 +{
-+	int ret;
++	struct mptcp_sock *msk = mptcp_sk(sk);
++	struct mptcp_subflow_context *subflow;
 +
-+	lock_sock(sk);
-+	ret = mptcp_sendmsg_locked(sk, msg, len);
-+	release_sock(sk);
++	mptcp_for_each_subflow(msk, subflow) {
++		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++		bool slow;
 +
-+	return ret;
++		slow = lock_sock_fast_nested(ssk);
++		tcp_sock_rate_check_app_limited(tcp_sk(ssk));
++		unlock_sock_fast(ssk, slow);
++	}
 +}
 +
- static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied);
+ static int mptcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t len)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+@@ -2084,6 +2099,9 @@ static int mptcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t len)
  
- static void mptcp_eat_recv_skb(struct sock *sk, struct sk_buff *skb)
-@@ -4877,6 +4885,7 @@ static const struct proto_ops mptcp_stream_ops = {
- 	.read_sock	   = mptcp_read_sock,
- 	.splice_read	   = mptcp_splice_read,
- 	.peek_len	   = mptcp_peek_len,
-+	.sendmsg_locked	   = mptcp_sendmsg_locked,
- };
+ 	timeo = sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
  
- static struct inet_protosw mptcp_protosw = {
-@@ -5002,6 +5011,7 @@ static const struct proto_ops mptcp_v6_stream_ops = {
- 	.read_sock	   = mptcp_read_sock,
- 	.splice_read	   = mptcp_splice_read,
- 	.peek_len	   = mptcp_peek_len,
-+	.sendmsg_locked	   = mptcp_sendmsg_locked,
- };
- 
- static struct proto mptcp_v6_prot;
++	/* is sending application-limited? */
++	mptcp_rate_check_app_limited(sk);
++
+ 	if ((1 << sk->sk_state) & ~(TCPF_ESTABLISHED | TCPF_CLOSE_WAIT)) {
+ 		ret = sk_stream_wait_connect(sk, &timeo);
+ 		if (ret)
 -- 
 2.53.0
 
