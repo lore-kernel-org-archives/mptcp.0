@@ -1,195 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77EBD2E1EFC
-	for <mptcp@lists.linux.dev>; Tue,  1 Sep 2026 00:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788222031; cv=none; b=eBcvriDDnnNzfqwsbV0ldBB11LZSNPPBcdfs5/sDwPpGdM5MfEorswvO2nAxhG3PsDjwOmOD51jB1t9ZJjU9df6sbGZAo1sf8JjtLwBS9LJWlEF1REsRSfwq1WxosyW85xZB12Be4bAsDa0ON7oyJBN3crHWhY21SMHhiN5AKGI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788222031; c=relaxed/simple;
-	bh=IyCPJEfDuB1dWzo732Tp1QuxbD7/VpmlkCAJFu1Sn6k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CQT4lKw5n0x2QGgLZRvFrwf2PSW83m3y/cwRvLWsYe13bYN22fcEwCY/37Se9BO1VyHHCF7gbCALhK7q5TzpsN2wZVQFvy9q4EwMs+II1kcJQGSS7fce8JVUR78IGPngUBsNEioHw+bN/D0iwP5Vp3x5rcSl0cwQ8nVJ0TlBHYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h2ckqRmL; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B7A2DECA8
+	for <mptcp@lists.linux.dev>; Tue,  1 Sep 2026 05:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788239960; cv=pass; b=Pbn3n6quD1HnBzSBHV97EDDwngfn23c2mlxNepIPG+l/XalNWMZF2X4bT/F+88I10U/WLbBvFPPMVY+sg+tQENt2aao0GAXOGT4wqqptAPo4xLmxmVb2c4o5Tk2AWxCIRTBnMfjyduPIF/WAbl94G524N/xshar5FjnNt9cQekQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788239960; c=relaxed/simple;
+	bh=qHsmng0bq63vA/HIHj/h9HZxK47/EGcIkLBG8BcCzPM=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=PmHIeuGrQv+UJ1GJ3vti0N1vAFLmDA9rN2gi1EyV93f0iZb2NYoeM5zQd++wQVQaOruzp98Wsf+06MzHKodHvhzcYNQKcB6aWcH0X8AQush2FR6flfy+ZaZBQvjHcD80Vz/SAQ/ANrgeg+C0++kK54dBhUCImQz0kSf0kIFHQ98=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=H3k/QrLj reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h2ckqRmL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 845491F000E9;
-	Tue,  1 Sep 2026 00:20:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788222030;
-	bh=Xax6oTeu3mgailVP9mqKzs++jD7qnsvG68JP6cG2oVE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=h2ckqRmLuFi3/qkRClAItuESubMIRkEqKeivbfspO9yD8NF9SXs+dPyF7JrwzQQ76
-	 lemnMBwSnWiXS2arBDKlThcGTCZcGW06HzDlAblrZCdBpRVAOVToG4rgxj3I5JHuQx
-	 nbwUwsm/QxNzYtcpyCaOT/wLBh2Fw85jP4sIztoGIv7JLKXaApAjou33R7E8VFJ7iX
-	 0QfbaAJlVbYZv+zgY2ue5GkOgpkSj76gLEFdKLaCZIFqO+DoSBsDSknI/CY72KCaIa
-	 xxuv2k50F/Ok72ZZ5B/MmyJuC47p1doa134my9BvSwcLOZHANIL7PhWNpsxrccfRHj
-	 3ArEIQa4i6oPA==
-Message-ID: <a6b33dd8-140f-4ae9-8d3a-7a5da5c9e34e@kernel.org>
-Date: Tue, 1 Sep 2026 02:20:27 +0200
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="H3k/QrLj"
+ARC-Seal: i=1; a=rsa-sha256; t=1788239946; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=OAJ+lQ2PvkM4Nmw2hXTSATUitFKqfu1JBjCvWTCFa3nWXDcPF/s1ST5FaBQf+wp0mSK0I/Y1USWp+M5ZGTVqA0dmm2z9mLn+ieR6JwyDpCRd+M0cqcAfqPtqevYgDvO95BZsuMd3yHUMfNh65WR5bToWzEKycYHpLcVgEG/Evg0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1788239946; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=lXVysRehXIJzEIQmRmW4/GF4WBGfdkUE4/u0oxUrPpw=; 
+	b=l2CUUNDtMC/FNR4X8Ijuhd/Ll9TZOdUTs3W0jH8tn2XUreEdRpvHx2aED7nlUbU+zWywZxBTl42/4i5pnH3wkZjyxRrLzwbBOwJaVqERlaIdL6G+B8PUSiNzpACMuoAsslVHlwi4wBjzph9n6KdtWBkXGhwmn3pTmixM6Vj94sQ=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
+	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1788239946;
+	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=lXVysRehXIJzEIQmRmW4/GF4WBGfdkUE4/u0oxUrPpw=;
+	b=H3k/QrLjj8DXNklUtLJ5gmQqwjNPF0s/Fnelsqmli62K9qYpT2CSbmzbEq8ltx1h
+	QaOLBrvQx251f6V4WS7CI1RnoM/6N3Y/IDpKJycw6rutJm8eOXzmRcslOXxDBM5nmhr
+	U26fVh6WsiQo4khPW2p/F453mEuCdakLwdUSaA1c=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1788239945762826.1615361053691; Mon, 31 Aug 2026 22:19:05 -0700 (PDT)
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1788239943639228.3237079795225; Mon, 31 Aug 2026 22:19:03 -0700 (PDT)
+Date: Tue, 01 Sep 2026 10:49:03 +0530
+From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+To: "Matthieu Baerts" <matttbe@kernel.org>
+Cc: "mptcp" <mptcp@lists.linux.dev>, "martineau" <martineau@kernel.org>,
+	"pabeni" <pabeni@redhat.com>,
+	"shardul.b" <shardul.b@mpiricsoftware.com>,
+	"janak" <janak@mpiric.us>, "kalpanjani009" <kalpanjani009@gmail.com>
+Message-ID: <1a05b681764.2d9af68b190464.2524660538561791488@mpiricsoftware.com>
+In-Reply-To: <f0fabe59-0a2b-4df9-983d-446eab20104c@kernel.org>
+References: <20260827041058.2833707-1-kalpan.jani@mpiricsoftware.com> <f0fabe59-0a2b-4df9-983d-446eab20104c@kernel.org>
+Subject: Re: [PATCH net-next v2] mptcp: normalize seq numbers reported in
+ mptcp_info
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v11 00/10] Reduce the differences between TCP
- and MPTCP for TLS usage
-Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <cover.1788099847.git.tanggeliang@kylinos.cn>
- <fa191475-a2bf-db16-2281-9b7ceed624a8@gmail.com>
- <69010109b91ce875a5e037e03faa26ad574e2443.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <69010109b91ce875a5e037e03faa26ad574e2443.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
 
-Hi Geliang,
+Hey Matt,
 
-On 31/08/2026 10:50, Geliang Tang wrote:
-> Hi Matt,
-> 
-> On Sun, 2026-08-30 at 15:33 +0000, MPTCP CI wrote:
->> Hi Geliang,
->>
->> Thank you for your modifications, that's great!
->>
->> Our CI did some validations and here is its report:
->>
->> - KVM Validation: normal (except selftest_mptcp_join): Unstable: 1
->> failed test(s): packetdrill_dss ⚠️ 
->> - KVM Validation: normal (only selftest_mptcp_join): Success! ✅
->> - KVM Validation: debug (except selftest_mptcp_join): Notice: Call
->> Traces at boot time, rebooted and continued ⚠️ 
->> - KVM Validation: debug (only selftest_mptcp_join): Notice: Call
->> Traces at boot time, rebooted and continued ⚠️ 
->> - KVM Validation: btf-normal (only bpftest_all): Success! ✅
->> - KVM Validation: btf-debug (only bpftest_all): Notice: Call Traces
->> at boot time, rebooted and continued - Notice: Call Traces at
->> shutdown time, ignored and continued ⚠️ 
->> - Task:
->> https://github.com/multipath-tcp/mptcp_net-next/actions/runs/33317921888
-> 
-> The latest code triggers a crash when running virtme:
-> 
-> BUG: sleeping function called from invalid context at
-> include/linux/sched/mm.h:322
-> 
-> [    4.595485][    T1] virtme-ng-init: mount devtmpfs -> /dev: EBUSY:
-> Device or resource busy
-> Waiting for the virtme-ng-init to finish
-> [    4.598085][    T1] virtme-ng-init: Setting hostname to mptcpdev...
-> [    4.630121][    T1] virtme-ng-init: running systemd-tmpfiles
-> [    5.434499][   T70] systemd-tmpfile (70) used greatest stack depth:
-> 24904 bytes left
-> [    5.434526][   T70] BUG: sleeping function called from invalid
-> context at include/linux/sched/mm.h:322
-> [    5.434529][   T70] in_atomic(): 1, irqs_disabled(): 1, non_block:
-> 0, pid: 70, name: systemd-tmpfile
-> [    5.434532][   T70] preempt_count: 2, expected: 0
-> [    5.434534][   T70] RCU nest depth: 0, expected: 0
-> [    5.434536][   T70] locks held by systemd-tmpfile/70: 5, last CPU#1:
-> [    5.434539][   T70]  #0: ffffffff84a3d078 (low_water_lock){+.+.}-
-> {3:3}, at: do_exit (include/linux/spinlock.h:347)
-> [    5.434558][   T70]  #1: ffffffff84badda0 (console_lock){+.+.}-
-> {0:0}, at: vprintk_emit (kernel/printk/printk.c:2478)
-> [    5.434569][   T70]  #2: ffffffff84bade18 (console_srcu){....}-
-> {0:0}, at: console_flush_one_record (include/linux/rcupdate.h:314
-> (discriminator 1))
-> [    5.434578][   T70]  #3: ffffffff84acd740 (console_owner){....}-
-> {0:0}, at: console_lock_spinning_enable (kernel/printk/printk.c:1902
-> (discriminator 1))
-> [    5.434587][   T70]  #4: ffffffff84acd640 (printk_legacy_map-wait-
-> type-override){....}-{3:3}, at: console_emit_next_record
-> (kernel/printk/printk.c:3095 (discriminator 1))
-> [    5.434596][   T70] irq event stamp: 273968
-> [    5.434598][   T70] hardirqs last  enabled at (273967):
-> __down_trylock_console_sem (kernel/printk/printk.c:330 (discriminator
-> 5))
-> [    5.434604][   T70] hardirqs last disabled at (273968):
-> console_emit_next_record (kernel/printk/printk.c:3176 (discriminator
-> 7))
-> [    5.434609][   T70] softirqs last  enabled at (273890):
-> handle_softirqs (kernel/softirq.c:491)
-> [    5.434614][   T70] softirqs last disabled at (273865):
-> __irq_exit_rcu (kernel/softirq.c:679)
-> [    5.434619][   T70] Preemption disabled at:
-> 
-> I have already fixed this over the weekend and sent the patch to the
-> virtualization mailing list:
-> 
-> https://lore.kernel.org/virtualization/e084d7ed4c03020da3de5cbe1eb3a0c2055cbbd6.1787966331.git.tanggeliang@kylinos.cn/T/#u
-> 
-> Please consider applying this patch first to avoid CI failures.
-Thank you for this message and for the fix. It looks like the same patch
-has already been sent before on the virtualisation ML. I took the oldest
-one because I guess that's the one which will be applied:
+Thanks for the suggestion. I dug into msk->first before reworking it.
 
-https://lore.kernel.org/20260810-serial-v1-1-abbe51602c13@debian.org
+Turns out it's only ever set once (either connect side or accept side) and never reassigned to a different subflow after that, so at least we don't have to worry about picking up idsn from the wrong one later.
 
-New patches for t/upstream-net and t/upstream:
-- 37d601ecd030: virtio_console: allocate the port_buffer with the
-caller's gfp
-- Results: 55dc409a2258..f53fe5e25d9e (export-net)
-- Results: b301d9e1afdc..edf6a01ba9f7 (export)
+But it does go NULL independent of whether other subflows are still around, and it's not even a rare thing. I added a debug print in __mptcp_close_ssk() and ran mptcp_join.sh, and it happens constantly with other subflows still in the list. I couldn't find anywhere that write_seq/snd_una/ack_seq get reset in that case either, so reading idsn/iasn straight off msk->first in mptcp_diag_fill_info() would need a NULL check, otherwise it'd crash pretty often during normal multi-subflow use.
 
-Tests are now in progress:
+Happy to add that check and go with your approach for v3, just wanted to confirm first since it looked like a common path rather than an edge case.
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/0c164b6dd50adfb4bb924b9030ab3e529a1b48cc/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/52ef5e042a881a7753cad4d5e3c3f5c15676da17/checks
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+Kalpan Jani
+
+
+From: Matthieu Baerts <matttbe@kernel.org>
+To: "Kalpan Jani"<kalpan.jani@mpiricsoftware.com>, <mptcp@lists.linux.dev>
+Cc: <martineau@kernel.org>, <pabeni@redhat.com>, <shardul.b@mpiricsoftware.com>, <janak@mpiric.us>, <kalpanjani009@gmail.com>
+Date: Mon, 31 Aug 2026 15:59:46 +0530
+Subject: Re: [PATCH net-next v2] mptcp: normalize seq numbers reported in mptcp_info
+
+ > Hi Kalpan,
+ > 
+ > On 27/08/2026 06:10, Kalpan Jani wrote:
+ > > mptcpi_write_seq, mptcpi_snd_una and mptcpi_rcv_nxt report the raw
+ > > 64-bit data sequence numbers, seeded from the connection's IDSN/IASN.
+ > > Since the IDSN/IASN come from mptcp_crypto_key_sha(), these fields
+ > > carry an effectively random offset and are not useful to userspace as
+ > > absolute values: a caller has to snapshot two getsockopt(MPTCP_INFO)
+ > > calls and subtract to get anything meaningful, which is exactly what
+ > > tools/testing/selftests/net/mptcp/mptcp_sockopt.c already does.
+ > > 
+ > > mptcp_info also reports mptcpi_bytes_sent, mptcpi_bytes_received and
+ > > mptcpi_bytes_acked, which give the same information as a plain byte
+ > > count starting at 0. The snapshot-and-diff workaround for the seq
+ > > fields is redundant once those are available.
+ > 
+ > Thank you for looking at this!
+ > 
+ > > Cache the local and remote initial sequence numbers on the
+ > > mptcp_sock the same way ->token already is, and subtract them in
+ > > mptcp_diag_fill_info(), so mptcpi_write_seq, mptcpi_snd_una and
+ > > mptcpi_rcv_nxt also start near 0 for a freshly established
+ > > connection.
+ > Not to increase msk's size for these fields only used in the diag side
+ > (under the msk lock I think), couldn't you get the info from the first
+ > subflow instead? It should always be available (except when being
+ > disconnected, but the other fields should be 0 in this case, no?)
+ > 
+ > Cheers,
+ > Matt
+ > -- 
+ > Sponsored by the NGI0 Core fund.
+ > 
+ > 
+
 
