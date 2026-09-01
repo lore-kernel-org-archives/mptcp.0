@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7567F2C0303
-	for <mptcp@lists.linux.dev>; Tue,  1 Sep 2026 06:49:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE1D2C0303
+	for <mptcp@lists.linux.dev>; Tue,  1 Sep 2026 06:49:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788245361; cv=none; b=dxpmPctN/a78Fpsi1J4AgQ3969Cent/ufbbOUlqDMRuZtsz3ICrWhkri08HL7btcJHBaCNaGz9HHhnamotZ7X5d1XOKUhMg5bE+Y+kfAPUZR4EaS/59prO2R8Gg4Y9/WtEpKEZ/Vf7xv6+kUqv5qTxkl89SZcq/j6eAUfiwy0fI=
+	t=1788245365; cv=none; b=JxSYJ517Znv/kyp5KYEZglCq1MCW6tZbH/CHvjTIm67SaR2ilnc8JOPxJ8Qj3scQY8b/Fd7azVYJb6CKATruSrS0XCxRCa2AEqSSXHTlTVHw7CZhkD8+FYY8ozNzIOdap72Ou4Gk3QKkhvSOtxh6FzRbaEI+COZs2nbsEN/Red0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788245361; c=relaxed/simple;
-	bh=wSOM4H+mIT+d4Hl8rHlDo8LVKIUVL3FZtwIaoXCkDIY=;
+	s=arc-20240116; t=1788245365; c=relaxed/simple;
+	bh=61ly/NtZSVe8jUrEZ5W6PUqEc7SHyDrvkUUD0f7w6wc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m87FhRwsZqzvj6vsot2QHyoeqTkr7wpS9uRAKuTfu8JdV0Fj3zLZ32NzKJ2uE5IxCQKFOcp/M/UDnp6vFwy1Rc4H5/aX64asdxQ2mlS4qbPUFA6Gmhe5fsbnGUNifLn/LHpBoH7mrKhoJLWOW/TpwM0YOBygslTJ1ly8N6FamVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TZ7mxkHx; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=Rr7hjzcH/yRozRb6VNL88ETMmBpi78ug5y0flnff6y2RY90ldoQtZAoyfPfddLr1RGH5Sq9cuMS/pxSivjPNNo6agVKvlEd0eIJNnJPypNJRGOOLnmoav1QzV0Q+DupynE2YZUMpGQD2J53PGDUPOmympQSkQ/0vLPAt5NEO0Is=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NauutG5u; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TZ7mxkHx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA14D1F000E9;
-	Tue,  1 Sep 2026 06:49:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NauutG5u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B81091F00A3D;
+	Tue,  1 Sep 2026 06:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788245360;
-	bh=lX9HCP3IvGlxXBluWcBrN7LEtNqKQJ4kwMx9MttjhfM=;
+	s=k20260515; t=1788245362;
+	bh=cSpx4PAOfJB27zRYipeFrX9v4SDJpQo8KvZLe6G46N4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=TZ7mxkHxQmnwgPXi1IKyb/GVhABV957oiHTYXCY50rRa5tfPHIOoFeT31N8qfWUWp
-	 9iK74QOo8LVRJQjJCT0p+ru2E3/0sJZpjaS/QqN7IjcqOdCoua8Sy1cJHxncINIu4Z
-	 KFnFlTzfj6aXPevlb+l/jLXSmuzmtRangZE7sIm3UBQ8T3zFIR9rzeTcaLihX077I+
-	 bNsW8f5QD66DKUl1XphoQ4xsmc/EknkhuBfu2r8eryvs/fOuWY1a9CQ0K5niR8mz6V
-	 FPzkFRs9nqbdteslVJYTCxSAtjrqVhHF+kDN2bSO6NYy3Nkx0aLBYsXOiRC+Efns/k
-	 DiPrJ5t98Zvog==
+	b=NauutG5ueyHetrevL3n+myMV1iHeJ/GvuqjOB80JjI8nFcstnNyql0FR90hSuVCQu
+	 lmf3t8CRpIiiN+HFZV0x4u1hSdyYOPlEdXrWvLZURhVgWNbkt7JlhhP6Ofi32Ge1XU
+	 yB8sjNkcgwKXwcmeyy69ZuHb2Ay4l8/3T9SI9QS5J6xMxLDMCznJDBIMBqzmxJqEy8
+	 W77JdRxksPnmnYRYcR0gpqZSH3avtyJRRMBJA5BfSR7GLcjPFWBzagoFBt62WtPEJ9
+	 CCY9CE1i/ei3+TIRXvpDd92of46yOewYZqnZ54fAUfI1uYWI7ew4KwUvrAGB656dV0
+	 2MUlhtBEpg5wg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	Zqiang <qiang.zhang@linux.dev>
-Subject: [PATCH mptcp-next v13 06/10] mptcp: align FIN handling with TCP via SOCK_DONE
-Date: Tue,  1 Sep 2026 14:48:59 +0800
-Message-ID: <837b36993bdfdeb79518c1b5bc1a919a2f37504c.1788245079.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v13 07/10] mptcp: implement peek_len for proto_ops
+Date: Tue,  1 Sep 2026 14:49:00 +0800
+Message-ID: <14c573054c1427a0cb78cd24290b1c13b74ce9ef.1788245079.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1788245079.git.tanggeliang@kylinos.cn>
 References: <cover.1788245079.git.tanggeliang@kylinos.cn>
@@ -46,92 +46,98 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-TCP uses SOCK_DONE to mark FIN reception because RCV_SHUTDOWN alone is
-ambiguous: it is also set by RST (via SHUTDOWN_MASK) without an ack_seq
-increment. mptcp_inq_hint() used the latter as a proxy for "FIN pending",
-causing over-count and potentially returning 0 to peek_len() on a
-RST-while-data-queued socket, hanging TLS/BPF strparser consumers.
+Add mptcp_inq() to compute the number of readable bytes at the MPTCP
+level. It derives the count from ack_seq - copied_seq, returns 0 while
+the connection is still handshaking (TCP_SYN_SENT/TCP_SYN_RECV), and
+subtracts 1 once a FIN has been received, mirroring tcp_inq().
 
-Mirror tcp_fin()/tcp_disconnect() in MPTCP:
+The subtraction is needed because MPTCP's ack_seq is incremented by 1
+in mptcp_check_data_fin() when the DATA_FIN is processed, consuming a
+sequence number without carrying any payload data. Without subtracting 1,
+peek_len would over-report by one byte, causing upper layers to wait for
+data that will never arrive.
 
-- Set SOCK_DONE in mptcp_check_data_fin() next to RCV_SHUTDOWN, strictly
-tied to the ack_seq +=1 that counts the FIN byte.
-- Test SOCK_DONE in mptcp_inq_hint() and mptcp_recvmsg() so the FIONREAD/
-recvmsg FIN-handling only fires on a real DATA_FIN.
-- Reset SOCK_DONE in mptcp_disconnect() to mirror tcp_disconnect().
+READ_ONCE() is used instead of mptcp_data_lock() for the u64 reads of
+ack_seq and copied_seq because mptcp_inq() will be called from TLS
+contexts with the socket lock held - taking the spinlock would deadlock.
+On 32-bit systems a torn read can produce a wrapped subtraction (close to
+2^64), which is caught by the INT_MAX clamp. TLS callers use mptcp_inq()
+conservatively: over-reporting defers work to the next iteration, where
+recvmsg() provides the actual byte count.
 
-Memory ordering: use smp_mb() in mptcp_check_data_fin() to order the
-SHUTDOWN, rcv_data_fin, and ack_seq writes before the non-atomic
-sock_set_flag(SOCK_DONE) and the subsequent atomic operations in
-mptcp_set_state()/mptcp_close_wake_up(). Pair it with smp_rmb() in
-mptcp_inq_hint() so a reader never sees SOCK_DONE=1 without the matching
-ack_seq +=1. smp_mb() is required (rather than reusing the existing
-smp_mb__before_atomic()) because sock_set_flag() uses __set_bit() which
-is non-atomic: on LoongArch smp_mb__before_atomic() is just a compiler
-fence and a CPU could reorder the SOCK_DONE store past it.
+Wire mptcp_inq() into mptcp_peek_len() and assign .peek_len in both
+mptcp_stream_ops and mptcp_v6_stream_ops, so upper layers get the
+correct in-queue byte count for MPTCP connections.
 
 Co-developed-by: Zqiang <qiang.zhang@linux.dev>
 Signed-off-by: Zqiang <qiang.zhang@linux.dev>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ net/mptcp/protocol.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 794d01afb031..f627270042c5 100644
+index f627270042c5..45c05f896126 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -735,7 +735,8 @@ static void mptcp_check_data_fin(struct sock *sk)
- 		WRITE_ONCE(msk->rcv_data_fin, 0);
- 
- 		WRITE_ONCE(sk->sk_shutdown, sk->sk_shutdown | RCV_SHUTDOWN);
--		smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
-+		smp_mb(); /* Order SHUTDOWN, ack_seq before SOCK_DONE. */
-+		sock_set_flag(sk, SOCK_DONE);
- 
- 		switch (sk->sk_state) {
- 		case TCP_ESTABLISHED:
-@@ -2406,8 +2407,12 @@ static bool mptcp_move_skbs(struct sock *sk)
- static unsigned int mptcp_inq_hint(struct sock *sk)
- {
- 	const struct mptcp_sock *msk = mptcp_sk(sk);
-+	bool sock_done = sock_flag(sk, SOCK_DONE);
- 	u64 hint_val;
- 
-+	/* Pair with smp_mb() in mptcp_check_data_fin(). */
-+	smp_rmb();
-+
- 	/* Avoid races vs ack_seq updates and MPTCP_SYNC_SEQ flag. */
- 	mptcp_data_lock(sk);
- 	if (test_bit(MPTCP_SYNC_SEQ, &msk->cb_flags)) {
-@@ -2419,8 +2424,7 @@ static unsigned int mptcp_inq_hint(struct sock *sk)
- 	if (hint_val >= INT_MAX)
- 		return INT_MAX;
- 
--	if (!hint_val &&
--	    (sk->sk_state == TCP_CLOSE || (sk->sk_shutdown & RCV_SHUTDOWN)))
-+	if (!hint_val && sock_done)
- 		return 1;
- 
- 	return (unsigned int)hint_val;
-@@ -2492,6 +2496,9 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 			    !timeo)
- 				break;
- 		} else {
-+			if (sock_flag(sk, SOCK_DONE))
-+				break;
-+
- 			if (sk->sk_err) {
- 				copied = sock_error(sk);
- 				break;
-@@ -3735,6 +3742,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
- 	msk->copied_seq = 0;
- 
- 	WRITE_ONCE(sk->sk_shutdown, 0);
-+	sock_reset_flag(sk, SOCK_DONE);
- 	sk_error_report(sk);
- 	return 0;
+@@ -4819,6 +4819,41 @@ static ssize_t mptcp_splice_read(struct socket *sock, loff_t *ppos,
+ 	return ret;
  }
+ 
++static int mptcp_inq(struct sock *sk)
++{
++	const struct mptcp_sock *msk = mptcp_sk(sk);
++	int answ;
++
++	if ((1 << sk->sk_state) & (TCPF_SYN_SENT | TCPF_SYN_RECV)) {
++		answ = 0;
++	} else if (test_bit(MPTCP_SYNC_SEQ, &msk->cb_flags)) {
++		answ = 0;
++	} else {
++		bool sock_done = sock_flag(sk, SOCK_DONE);
++		u64 hint_val;
++
++		/* Pair with smp_mb() in mptcp_check_data_fin(). */
++		smp_rmb();
++
++		hint_val = READ_ONCE(msk->ack_seq) - READ_ONCE(msk->copied_seq);
++		if (hint_val >= INT_MAX)
++			hint_val = INT_MAX;
++
++		answ = (unsigned int)hint_val;
++
++		/* Subtract 1, if FIN was received. Mirror tcp_inq() */
++		if (answ && sock_done)
++			answ--;
++	}
++
++	return answ;
++}
++
++static int mptcp_peek_len(struct socket *sock)
++{
++	return mptcp_inq(sock->sk);
++}
++
+ static const struct proto_ops mptcp_stream_ops = {
+ 	.family		   = PF_INET,
+ 	.owner		   = THIS_MODULE,
+@@ -4841,6 +4876,7 @@ static const struct proto_ops mptcp_stream_ops = {
+ 	.set_rcvlowat	   = mptcp_set_rcvlowat,
+ 	.read_sock	   = mptcp_read_sock,
+ 	.splice_read	   = mptcp_splice_read,
++	.peek_len	   = mptcp_peek_len,
+ };
+ 
+ static struct inet_protosw mptcp_protosw = {
+@@ -4965,6 +5001,7 @@ static const struct proto_ops mptcp_v6_stream_ops = {
+ 	.set_rcvlowat	   = mptcp_set_rcvlowat,
+ 	.read_sock	   = mptcp_read_sock,
+ 	.splice_read	   = mptcp_splice_read,
++	.peek_len	   = mptcp_peek_len,
+ };
+ 
+ static struct proto mptcp_v6_prot;
 -- 
 2.53.0
 
