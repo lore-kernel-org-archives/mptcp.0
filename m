@@ -1,106 +1,159 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07287477280
-	for <mptcp@lists.linux.dev>; Tue,  1 Sep 2026 09:15:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6F839021C
+	for <mptcp@lists.linux.dev>; Tue,  1 Sep 2026 09:15:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788254104; cv=none; b=Spyab2U3O5HmP/S/NTkTuZZW9GSJxIEBRqHa1XVKmY6rSpHsPL56ctbv2P7wPwdIiquCgpcQ+QlaG6wO8LPZua2GQB5og3IMQSop1OuXPP62rKiAxJSfdHJ/mwCzs7KyV1BY9qIF+8wglx3GCj0OU6or1S7v+DG2Tj7pslVaxKg=
+	t=1788254129; cv=none; b=RXuSFAnjE2tWTqj3wPzTAJ31WUt+opn8XelSoffWew4aEBeSTjZheE+ZxsS2PP3XutAFm5+FrVz2otzaEA6ZL62FixzO2cqzgjYStH0B7yEDJso851YWIGfCQ9iX5VYHWMYaJnlA65VW3jNtuxA9EZhEz2jHNdJeOXxclE6KK3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788254104; c=relaxed/simple;
-	bh=Ri1POuUbcg+s869+I6CPHsSEaIPZyn8k05AjAvQDpRs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Z/iPxBl01fuLbNtu2jtZ5OfD2aZersylp+Spt9L5czCc8GYi8l3EHc7cUYriT/7kmKj+FtqPxCyTC8YFIDtoCIJjF9YEnt2dWBIeYzPGPI0NOYi7ssW+oZXEdeRF/7hQbTsITjCURUcESnNP4SENikzTqzJTfAWEFtZjU5zBE/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EkKE+THH; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788254129; c=relaxed/simple;
+	bh=uy1pTSnHLGtADZkVrFCq6g6Y0OA7K0/06ImzEIt+R2U=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=dOnUQk6jZeUMeNR62LExWWIFadipqHqBGyP5vTgnvR5Xy2ob07XtY7ejf1dBc/gdfqYfov3Afaaw5XeiQC8LCxHBUKpFVlcIK7SYyNdRRTDhjpqUowK9KoG3VJSegJDSi3CMy6wZVqS80T0qB8QVg12VgUj3DZ/2uel2mBbpIqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nz6dQWXj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EkKE+THH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8B371F000E9;
-	Tue,  1 Sep 2026 09:15:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nz6dQWXj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05C091F00A3D;
+	Tue,  1 Sep 2026 09:15:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788254102;
-	bh=OtDUewMdqSA8eKr/760rrG9gS/axYNndN1cZt2sBEPU=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=EkKE+THH429YM3sxYVGpnYxTOEQkO7W+erQ+GG+x3seXa3fkVXaD4YfvApv6VxdCK
-	 mTM6E/alN3sZ653gV4HEvMU8O4T0LwAERGSCF9Xv6mJz9J+5/bLkdpwtARSnRF8AJD
-	 Boh4RiqmoPTIW7FGfSd5bH3Ydp8fMwg7yOmwQ55sTVhYEQrEikWzpvCwoHEmdQAW5t
-	 YaOC2dLIpA0oEQ47nCWQ2iUkXaNi5LxA3VWLD3JFgVZ9q+inWzJIHQmbZSN7BBJiFj
-	 8zEFIXBHzvrJe97hw5tKK5iTz308oqoCZKyowPQjC9yNLAqiF5Ub9yfyyowT2hdUQf
-	 YTKScbJRrYRHg==
-Message-ID: <5ef1211400852547350e78a70f17a97abcd9ff50.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v13 00/10] Reduce the differences between TCP
- and MPTCP for TLS usage
-From: Geliang Tang <geliang@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>, Matthieu Baerts <matttbe@kernel.org>
+	s=k20260515; t=1788254128;
+	bh=uo2J3ylZ8mytqyu2Bm++/QKYhu/dKwleoHSlsl9WW2o=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Nz6dQWXjHMWc3UVSGehWiE8kD1KE1EBw/LtRP1wYBRbcjyom1g8IQQA4trkhV6qFr
+	 Rs9W+Ryfcu5ZsqhOnNvYCS91xYi5k1V/PWE3+kiPgxmAnAfJlymtv3Krr4LhjViqOk
+	 ZBoNT/ayXn2DyHyibHPoVRMJwqkmvhSGBOBsuIbOcfwu3AhfBY3vQL+VdM3/QeXAHw
+	 JXUzbUu5b0OQMSVZY3Hr2n6ty13gXnqNnqrszBS5uCamJq1Oy88622RAqkE2fyHpHQ
+	 2xYbobcMFzUWuHDLXwkzTp828dubguspmI/lILRxszIbLFL2+ntkVqIcxhd9dzLORk
+	 6y2eaTWxCOPEA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH mptcp-net v2] mptcp: fix skb_ext leak in fallback mode
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Geliang Tang" <geliang@kernel.org>
 Cc: mptcp@lists.linux.dev
-Date: Tue, 01 Sep 2026 17:14:59 +0800
-In-Reply-To: <31b60fae-bc75-6b41-cdf2-2fb3689f1572@gmail.com>
-References: <cover.1788245079.git.tanggeliang@kylinos.cn>
-	 <31b60fae-bc75-6b41-cdf2-2fb3689f1572@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.2-9 
+In-Reply-To: <b67dec47d321886d45fdd2bca1c303314fcdb229.1788252583.git.tanggeliang@kylinos.cn>
+References: <b67dec47d321886d45fdd2bca1c303314fcdb229.1788252583.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 01 Sep 2026 09:15:27 +0000
+Message-Id: <20260901091528.05C091F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Hi Paolo, Matt,
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [High] A TOCTOU (Time-Of-Check to Time-Of-Use) race condition between cac=
+hed fallback state and a dynamic check during SKB allocation leads to a det=
+erministic NULL pointer dereference.
+- [High] Unconditional dereference of `mpext` in `mptcp_sendmsg_frag()` aft=
+er improperly allowing coalescing into SKBs without MPTCP extensions on non=
+-fallback sockets.
+--
 
-On Tue, 2026-09-01 at 08:07 +0000, MPTCP CI wrote:
-> Hi Geliang,
-> 
-> Thank you for your modifications, that's great!
-> 
-> Our CI did some validations and here is its report:
-> 
-> - KVM Validation: normal (except selftest_mptcp_join): Success! ✅
-> - KVM Validation: normal (only selftest_mptcp_join): Success! ✅
-> - KVM Validation: debug (except selftest_mptcp_join): Success! ✅
-> - KVM Validation: debug (only selftest_mptcp_join): Success! ✅
-> - KVM Validation: btf-normal (only bpftest_all): Success! ✅
-> - KVM Validation: btf-debug (only bpftest_all): Success! ✅
+commit 5ed318da20af8ceeb8c86c1e52fb150843792bb6
+Author: Geliang Tang <geliang@kernel.org>
 
-Sashiko has no further review comments on this series. All CI checks
-have also passed. This series is now ready for review.
+mptcp: fix skb_ext leak in fallback mode
 
-Thanks,
--Geliang
+This patch short-circuits __mptcp_add_ext() in fallback mode to avoid
+allocating SKB_EXT_MPTCP and skips DSS bookkeeping in mptcp_sendmsg_frag().
+It also allows coalescing into extension-less SKBs.
 
-> - Task:
-> https://github.com/multipath-tcp/mptcp_net-next/actions/runs/33479921638
-> 
-> Initiator: Patchew Applier
-> Commits:
-> https://github.com/multipath-tcp/mptcp_net-next/commits/02653ba3cbf7
-> Patchwork:
-> https://patchwork.kernel.org/project/mptcp/list/?series=1155065
-> 
-> 
-> If there are some issues, you can reproduce them using the same
-> environment as
-> the one used by the CI thanks to a docker image, e.g.:
-> 
->     $ cd [kernel source code]
->     $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm
-> -it \
->         --pull always mptcp/mptcp-upstream-virtme-docker:latest \
->         auto-normal
-> 
-> For more details:
-> 
->     https://github.com/multipath-tcp/mptcp-upstream-virtme-docker
-> 
-> 
-> Please note that despite all the efforts that have been already done
-> to have a
-> stable tests suite when executed on a public CI like here, it is
-> possible some
-> reported issues are not due to your modifications. Still, do not
-> hesitate to
-> help us improve that ;-)
-> 
-> Cheers,
-> MPTCP GH Action bot
-> Bot operated by Matthieu Baerts (NGI0 Core)
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 0098e28309318..2e92b24c157bb 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1121,10 +1121,13 @@ static bool mptcp_skb_can_collapse_to(u64 write_s=
+eq,
+>  	if (!tcp_skb_can_collapse_to(skb))
+>  		return false;
+> =20
+> +	if (!mpext)
+> +		return true;
+> +
+
+[Severity: High]
+Does this change mistakenly allow coalescing into extension-less SKBs on
+non-fallback sockets?
+
+If an extension-less SKB legitimately exists at the tail of the subflow wri=
+te
+queue (e.g., a SYN-data SKB created by standard TCP Fast Open) and the
+connection is not in fallback mode (fb =3D=3D false):
+
+mptcp_sendmsg_frag() would see mptcp_skb_can_collapse_to() return true, set
+reuse_skb =3D true, and append data.
+
+Because fb is false, the safe fallback routing block is bypassed. Execution
+would fall through to the reuse_skb block, where it unconditionally executes
+mpext->data_len +=3D copy on a NULL mpext pointer.
+
+Could this trigger a NULL pointer dereference?
+
+[ ... ]
+> @@ -1324,7 +1327,8 @@ static struct sk_buff *__mptcp_do_alloc_tx_skb(stru=
+ct sock *sk, gfp_t gfp)
+> =20
+>  	skb =3D alloc_skb_fclone(MAX_TCP_HEADER, gfp);
+>  	if (likely(skb)) {
+> -		if (likely(__mptcp_add_ext(skb, gfp))) {
+> +		if (unlikely(__mptcp_check_fallback(mptcp_sk(sk))) ||
+> +		    likely(__mptcp_add_ext(skb, gfp))) {
+>  			skb_reserve(skb, MAX_TCP_HEADER);
+
+[Severity: High]
+Can a race condition occur between the cached fallback state and this dynam=
+ic
+check?
+
+mptcp_sendmsg_frag() caches the fallback state locally:
+
+	bool fb =3D __mptcp_check_fallback(msk);
+
+If an incoming packet concurrently triggers fallback and sets
+MPTCP_FALLBACK_DONE locklessly via test_and_set_bit(), the dynamic check he=
+re
+in __mptcp_do_alloc_tx_skb() will observe the new state (true). It will then
+omit the SKB extension allocation, leaving mpext as NULL.
+
+Back in mptcp_sendmsg_frag(), because the cached fb is still false, the new=
+ly
+added fallback block is skipped:
+
+	if (unlikely(fb)) {
+		if (mpext)
+			skb_ext_del(skb, SKB_EXT_MPTCP);
+		goto fallback;
+	}
+
+Execution will then fall through and unconditionally dereference the NULL m=
+pext
+pointer (e.g., at memset(mpext, 0, sizeof(*mpext))).
+
+Could this lead to a deterministic NULL pointer dereference?
+
+[ ... ]
+> @@ -1501,6 +1510,15 @@ static int mptcp_sendmsg_frag(struct sock *sk, str=
+uct sock *ssk,
+>  	TCP_SKB_CB(skb)->end_seq +=3D copy;
+>  	tcp_skb_pcount_set(skb, 0);
+> =20
+> +	/* in fallback mode, skip DSS bookkeeping and free the extension
+> +	 * if allocated
+> +	 */
+> +	if (unlikely(fb)) {
+> +		if (mpext)
+> +			skb_ext_del(skb, SKB_EXT_MPTCP);
+> +		goto fallback;
+> +	}
+> +
+>  	/* on skb reuse we just need to update the DSS len */
+>  	if (reuse_skb) {
+>  		TCP_SKB_CB(skb)->tcp_flags &=3D ~TCPHDR_PSH;
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/b67dec47d321886d45f=
+dd2bca1c303314fcdb229.1788252583.git.tanggeliang@kylinos.cn?part=3D1
