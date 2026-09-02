@@ -1,122 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-197.mta1.migadu.com [95.215.58.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA7836B92A
-	for <mptcp@lists.linux.dev>; Wed,  2 Sep 2026 07:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BAF3374E5A
+	for <mptcp@lists.linux.dev>; Wed,  2 Sep 2026 07:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788335205; cv=none; b=Qn4+tSRamzfOke2qhuzqSlVWnBe+V6Cx7UPxFw/mPKZpgezrBIjDuMZP764kHwGszrflhaOYE+ieyWb2XJEpgHiysLFHvznY/6SAqNE+cnTMgOEgXoGNVJnWs6ENkTZJyDgMeAhOKSr6lRRjSo9cx9cR+X0AfuEBXx9iFtIzF3E=
+	t=1788335265; cv=none; b=gqr4/Vmt6T5mLhV+ivSrBtm2QsyEjsL48+Xw4u1stgCk53ePyjXr6bYzHWTIxQeFu7vlOEgfIm47HLqO1AFUm+e7iZ2Ilf7GHPzXJo9YG6zlxaOSJ0oiOAiLeh5RlIftoIWsblsgBvV0T0Xdx1RUUOUQOvF+LVesUE0OvJhMWlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788335205; c=relaxed/simple;
-	bh=czS9ZQdUcWm8yhjaZzWhCNjbiWT/0GAn75jAd05Lr30=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Svh3ZosvPtGzPYd6T2MbwwpD24nm4gL22NhEw8j754vOzQPsX0tpQmxJdI6kPYAdHkZNsVibOubhioR4rUzo//R43ZRlqscaGYJcCPSKUH/TEskLvtvcWjLqSY0arubb4t7o5ri+zx1yXRyD4OPv8Kgmt7DiR2VDRXwv7fmY5Ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZruDaUl2; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788335265; c=relaxed/simple;
+	bh=5T0DDY/LO7po3l5L3kH5jryIHusgdlLonq8DYkyJU0E=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FC6MzSTVU3SHVek4GAUfgvaWt0e4DDylSZap0Zk66bydbOU9V/YGVaRN7DxYm//ZNviAxWx4C0H5ZvttOKzSRtoV7URoB/Tjyt9xLPeLRZRAAn5F41cm1ncYrAyiPp6IZRVkVTaDL+cnQoqYtBIO/prfgfPcnER1VF1W+3qEOxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CkYnsW7f; arc=none smtp.client-ip=95.215.58.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZruDaUl2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C2571F000E9;
-	Wed,  2 Sep 2026 07:46:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788335204;
-	bh=3WkVZASL1HeUNqU++rIfjyfniYK5jwdaDB+61bpu398=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=ZruDaUl2gaM6IPUwD+uQBeWh+gC2Hylyy7S9m3lU36UmAHAbruwbZY4IYHL24aucp
-	 /ZRZyXvm4bniZlTDPLxCezvkMmNB2cpWhzYrt2ZTUrG1LAbhMrbYBelCIrUL3NyvtO
-	 9MUoxLQlnY7t++qCgGb3yNFCtJ1t5P70Taty2HOC5Cz7+SdsvRB3kK2YBnv4rHXGKL
-	 KVKMnGnBLwknuAP+sTXGWREFZjFypyhDLOld6WuV2ZHd6VgwLKy8iUyDJzFYW+8MNu
-	 Z+ST2HkQJ1yF7NpYbaunxkANKbbktlVyTWztWeHIufc80CLppgi7Jr/QbvLyAjekNz
-	 lt+KHloWzqUXQ==
-Message-ID: <c17bc657-e079-482c-9aa1-78327bb651d0@kernel.org>
-Date: Wed, 2 Sep 2026 09:46:39 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CkYnsW7f"
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=5T0DDY/LO7po3l5L3kH5jryIHusgdlLonq8DYkyJU0E=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1788335261; v=1; x=1788940061;
+ b=CkYnsW7f5TbjWgzcsB6L7S8wnN6OCo37WKSFlwuzUaJr8n+mqNRPmlZLE2KvYNUQziyyw/8i
+ VZKCQa46b9PBjNqCLIKUgBtXVmcGLts99TW/PVgd+0LfIZsg0FIAMKwKms8JZ2CPHhmkMCWJjQ7
+ m9JcDzzSWTsTgodswvfSDNyY=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id cb1a297f78c77415;
+	Wed, 02 Sep 2026 07:47:41 +0000
+X-Mizu-Trace-ID: cb1a297f78c77415
+X-Migadu-Flow: FLOW_OUT
+Date: Wed, 2 Sep 2026 15:47:37 +0800
+From: Hangbin Liu <hangbin.liu@linux.dev>
+To: bpf@vger.kernel.org, mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next 1/2] selftests: mptcp: convert iptables to
+ nftables for mptcp_sockopt.sh
+Message-ID: <apfUmU4cEE0uxrSs@fedora>
+References: <20260902-mptcp_nft-v1-0-559caa16f410@kylinos.cn>
+ <20260902-mptcp_nft-v1-1-559caa16f410@kylinos.cn>
+ <20260902070232.4F4851F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next v2] mptcp: normalize seq numbers reported in
- mptcp_info
-To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-Cc: mptcp <mptcp@lists.linux.dev>, "shardul.b"
- <shardul.b@mpiricsoftware.com>, janak <janak@mpiric.us>,
- kalpanjani009 <kalpanjani009@gmail.com>
-References: <20260827041058.2833707-1-kalpan.jani@mpiricsoftware.com>
- <f0fabe59-0a2b-4df9-983d-446eab20104c@kernel.org>
- <1a05b681764.2d9af68b190464.2524660538561791488@mpiricsoftware.com>
- <22e3fc57-a6e7-4a72-a6c1-1d6b3bc39f3d@kernel.org>
- <1a060e0334d.16e6f547114597.2162647064543858742@mpiricsoftware.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Content-Language: fr
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <1a060e0334d.16e6f547114597.2162647064543858742@mpiricsoftware.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260902070232.4F4851F000E9@smtp.kernel.org>
 
-Hi Kalpan,
-
-On 02/09/2026 08:48, Kalpan Jani wrote:
-> Hi Matt,
+On Wed, Sep 02, 2026 at 07:02:31AM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
+> - [Medium] Replacing iptables TCP flag matching with nftables exact matching (`tcp flags rst` and `tcp flags syn`) fails to match packets with multiple flags set, causing spurious test failures.
+> - [Medium] An empty `$drop` variable causes a Bash syntax error during numeric evaluation, which evaluates to false and silently masks test failures.
+> - [Low] Typo in string interpolation for the error message (`IPv{$af}` instead of `IPv${af}`).
+> --
 > 
-> You were right, thanks for pushing back on that. I added msk_state to the same debug print and reran mptcp_join.sh - every single instance of msk->first going NULL shows msk_state=7 (TCP_CLOSE), no exceptions across several hundred hits. So it really is only happening as part of the whole msk already being torn down, like you said, not during a live connection.
+> commit af165781f3fb777bc40bc4de19c7d79cd01f51cc
+> Author: Hangbin Liu <liuhangbin@kylinos.cn>
 > 
-> I'll rework v3 to read idsn/iasn straight off msk->first instead of adding the two new fields, per your suggestion.
+> selftests: mptcp: convert iptables to nftables for mptcp_sockopt.sh
+> 
+> This patch converts the mptcp_sockopt.sh selftest to use nftables instead of
+> iptables. It replaces per-address-family iptables mark rules with an inet
+> table containing drop counting rules for IPv4 and IPv6.
+> 
+> > diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> > index e850a87429b61..4d0af2bf94840 100755
+> > --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> > +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> 
+> [ ... ]
+> 
+> > @@ -49,17 +47,23 @@ add_mark_rules()
+> >  	local ns=$1
+> >  	local m=$2
+> >  
+> > -	local t
+> > -	for t in ${iptables} ${ip6tables}; do
+> > -		# just to debug: check we have multiple subflows connection requests
+> > -		ip netns exec $ns $t -A OUTPUT -p tcp --syn -m mark --mark $m -j ACCEPT
+> > -
+> > -		# RST packets might be handled by a internal dummy socket
+> > -		ip netns exec $ns $t -A OUTPUT -p tcp --tcp-flags RST RST -m mark --mark 0 -j ACCEPT
+> 
+> [ ... ]
+> 
+> > +	# just to debug: check we have multiple subflows connection requests
+> > +	ip netns exec "$ns" nft add rule inet msock_table output \
+> > +		 meta mark "$m" tcp flags syn accept
+> > +	# RST packets might be handled by a internal dummy socket
+> > +	ip netns exec "$ns" nft add rule inet msock_table output \
+> > +		meta mark 0 tcp flags rst accept
+> 
+> [Severity: Medium]
+> In add_mark_rules(), the original iptables rules --tcp-flags RST RST and
+> --syn used bitmasks to allow additional flags like ACK for RST or ECN for
+> SYN. The new nftables rules tcp flags rst and tcp flags syn enforce an
+> exact match on the entire TCP flags byte.
+> 
+> Will these exact matches reject packets with multiple flags set, such as
+> RST+ACK or SYN+ECN, causing them to fall through to the drop rule and fail the
+> test?
 
-Great, thank you for having checked and working on a v3.
+Thanks, I just find a tool iptables-translate and I will recheck each
+translation.
 
-BTW, a "detail", but top-posting is not recommended on (kernel) mailing
-lists:
+> 
+> [ ... ]
+> 
+> > @@ -105,33 +109,23 @@ cleanup()
+> >  
+> >  mptcp_lib_check_mptcp
+> >  mptcp_lib_check_kallsyms
+> > -mptcp_lib_check_tools ip "${iptables}" "${ip6tables}"
+> > +mptcp_lib_check_tools ip nft
+> >  
+> >  check_mark()
+> >  {
+> >  	local ns=$1
+> >  	local af=$2
+> >  
+> > -	local tables=${iptables}
+> > +	drop=$(ip netns exec "$ns" nft list table inet msock_table | \
+> > +		grep "ipv$af.*packets.*drop" | awk '{print $(NF-3)}')
+> >  
+> > -	if [ $af -eq 6 ];then
+> > -		tables=${ip6tables}
+> > +	if [ "$drop" -ne 0 ]; then
+> 
+> [Severity: Medium]
+> If the command extraction for drop fails, or if grep finds no matches,
+> the $drop variable will be empty.
+> 
+> When bash evaluates [ "$drop" -ne 0 ] with an empty string, it triggers a
+> syntax error. This error evaluates to false and skips the failure block.
+> 
+> Does this risk silently masking test failures if the extraction logic ever
+> fails to produce a number?
 
-https://subspace.kernel.org/etiquette.html#do-not-top-post-when-replying
+OK, I will add a regex to check if drop is number or not.
 
-Also, here, no need to include MPTCP people in cc (Paolo, Mat, myself),
-we get such emails via the mailing list.
+> 
+> > +		mptcp_lib_pr_fail "got $drop pkt drops in ns $ns IPv{$af} tables," \
+> 
+> [Severity: Low]
+> Is the string interpolation IPv{$af} a typo?
+> 
+> Bash interpolates the $af variable but leaves the literal braces, printing
+> IPv{4} instead of IPv4. Should this be IPv${af} or IPv$af instead?
+> 
+> > +				  "not 0 - not all expected packets marked"
+> > +		ret=${KSFT_FAIL}
+> > +		return 1
+> >  	fi
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+Thanks, I will fix this.
 
+Hangbin
