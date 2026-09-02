@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAEF84AC15D;
-	Wed,  2 Sep 2026 16:32:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D8F472082;
+	Wed,  2 Sep 2026 16:36:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788366752; cv=none; b=U6Zt1RKLkVNvITP6R9WbCh+jc5quQU+D62anR5zUg4D/83GssqHdq7I6TMhIgsiYhVXdiKKonw48IqdbGRIzTOgvVOdzFfnYiAMaTA4Kn/J9XVfQE3Y6v6VN8j5lLopBgBsnthr7zJUwTo8LJXxyrpDOyq2N7Mgkr/neJ889v0s=
+	t=1788367006; cv=none; b=AORVnb9hHvu3oI0MkPA8Qc7qiYgzsbqcrXsZOh799jEnC0ojSITWnbuiXTU03QiNhCX/nQI1l31dsD7VPitHQGVXL90YlkcRP3Gm3lg+VCGP1Czehc7dFf+Gw3lqRguB7urVojCjCTLFqmaO7FeX3/Rm9AD/TYO0ai4AQOxTPQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788366752; c=relaxed/simple;
-	bh=76lrQqGxA+nAdCyTWcKBRUC0QSPzQSf+hQ/92DkbDHs=;
+	s=arc-20240116; t=1788367006; c=relaxed/simple;
+	bh=Skgi6wMqf1Yk3i5gT1ceyqK6Zc1JmJW1irMTJc2cKt0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jrUXZPHF4TWjzllLi+OOMkKHdDNqR0RnoF20yBL2NTVC2+YEphbFMUwkboYlIf/tGPKwJen1JoCS360o5ec6yZHNQurp+JKWHXEawLz2TALAQoxkTbgab9VZ1leguLj0o9rrHf/1PCp8UscY1tuvhvTRll1N4FDPfItf8u9yCGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z9eyANFM; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=tlrrxmMAiuMTqGGQP2oRkLH378X0D0Xu0oSmUdJFn5IsaG4fiRgAOVorO1ONBWXoPeZ6iWzevPIKwdu9/GkJDym5eyqbylSmEnT91cZdA2KAFETFDy74m8925pyN3mtihV+SptCNpbmveKe8CwUdpTZUBU5yWV38BdI3Fcc0yiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oUYCnbDq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z9eyANFM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 739D71F00A3A;
-	Wed,  2 Sep 2026 16:32:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oUYCnbDq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4728B1F000E9;
+	Wed,  2 Sep 2026 16:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788366751;
-	bh=VcPQLz3YKdeK7G5UGjOBzeSMJfD2Cfb+ojpsx5soPDo=;
+	s=k20260515; t=1788367004;
+	bh=0nTpt0lTM+XqOUsndRhkxCQCE/ZQMJ4MFKcxDZo2BW8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Z9eyANFMVSu0LBIVTOWaxs6pE/VZyFpxf/hGe/b9wsx0ajLwxvVTazYx3yihENmYL
-	 MhUA82iiohqa7PY3reR+Ih7lvy7BIYV/0sbQB5VaYzlHIaBZoAJUgEBk2n0Crx6iDs
-	 6qyWL1FdzswwX7zl2zAxEq9LLbZmxv4KMpznrN/X1ShHNLNmmzfKsF9bolcj0Z1tdy
-	 pblwuL5HrWgL2R/tBjTcyfArEIecwRtSiK4jCzN3Y2y2Wc6SkcBjZItyfcwXVY5Cpi
-	 b9xTpS3qJuDRfzq39moL0QV53rYNjPkOQ5gKiN+kQp4/Yh6EIpz91aGNwWNDqYHgro
-	 u2I0pYj3w4lLQ==
-Message-ID: <f6c30ebb-5c79-4998-bcf5-3b4d95aa0ab8@kernel.org>
-Date: Wed, 2 Sep 2026 18:32:28 +0200
+	b=oUYCnbDqXKDjxuLfVp0k9sJqymeZhzefn8O0uuIeNoibRc7gzcywqUJOAkRLYSDzw
+	 qXRvf8/sTk4f6HHcZnCdBfqhNTfo9zhsYWHpRN1fOZtz1xn4s3edzfR1p8JzQqan6x
+	 1x4yVVJhior7kgWXP7571QuDyAqQsO6SFv9aHIaXL1TKCbU6cDE6f/yUwgaS6vBFiz
+	 aZs3EGQlLyy5u9BEbReG4QNDSbZxMgMbWNyeHFX02pZCU6F6vrlWzizMb2S4MJ4/Cq
+	 dyRZENf9mkfxJJy23QvryAnsVYNFI/T968ybgHWr6PqqIbkRdmiJykhSZgWFFiB617
+	 gVb8j7/Q8Z1vg==
+Message-ID: <5bfa969b-fd91-4797-a0ba-100762233ea6@kernel.org>
+Date: Wed, 2 Sep 2026 18:36:41 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 2/2] mptcp: pm: skip extra_subflows accounting
- on disconnected msk
+Subject: Re: [PATCH mptcp-net] mptcp: pm: cap userspace extra_subflows at
+ U8_MAX
 Content-Language: fr
-To: Tao Cui <cui.tao@linux.dev>, sashiko-reviews@lists.linux.dev
-Cc: mptcp@lists.linux.dev
-References: <20260831093206.689827-1-cui.tao@linux.dev>
- <20260831093206.689827-3-cui.tao@linux.dev>
- <20260831101129.203081F000E9@smtp.kernel.org>
- <739848e0-1d35-4ed7-afd7-4b0609ddb8d0@linux.dev>
+To: quanyeyang@proton.me, MPTCP Linux <mptcp@lists.linux.dev>
+Cc: stable@vger.kernel.org, Tao Cui <cui.tao@linux.dev>
+References: <20260902-mptcp-pm-extra-subflows-v1-1-68540a866e5a@proton.me>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,51 +86,30 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <739848e0-1d35-4ed7-afd7-4b0609ddb8d0@linux.dev>
+In-Reply-To: <20260902-mptcp-pm-extra-subflows-v1-1-68540a866e5a@proton.me>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Tao,
+Hi Quanye,
 
-On 31/08/2026 15:00, Tao Cui wrote:
-> Hi,
++cc Tao
+
+On 02/09/2026 17:39, Quanye Yang via B4 Relay wrote:
+> From: Quanye Yang <quanyeyang@proton.me>
 > 
-> Thanks for the review. 
+> The userspace PM increments extra_subflows with no upper bound. The
+> field is a u8, so the 256th extra subflow wraps the counter to 0 and
+> the next close hits WARN_ON_ONCE().
 > 
-> 在 2026/8/31 18:11, sashiko-bot@kernel.org 写道:
->> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
->>
->> Pre-existing issues:
->> - [High] Subflows in `join_list` can be leaked due to unsynchronized zeroing of `cb_flags` in `mptcp_disconnect`.
->> - [High] Data race on `pm->reset` and `pm->rm_list_*` fields due to missing `pm->lock` in `mptcp_pm_data_reset()`.
-> 
-> Both findings are pre-existing issues rather
-> than regressions from this series, but I had a look at them:
-> 
-> For the join_list leak, I agree it is real. When an MP_JOIN is
-> processed while the parent socket is being disconnected, the subflow
-> is queued in msk->join_list and MPTCP_FLUSH_JOIN_LIST is set under
-> the data lock, but mptcp_disconnect() then clears msk->cb_flags with
-> a plain write. The flag is lost, mptcp_release_cb() never flushes
-> the list, and since mptcp_destroy_common() only iterates conn_list,
-> those subflow sockets are leaked. The plain write also drops flags
-> that were already pending before the disconnect, so taking the data
-> lock around it is not enough. What I have in mind is to keep the
-> flush-related bits across the disconnect and let release_sock()
-> process the join list as originally intended, or to drain it
-> explicitly in the disconnect path, checking the lock nesting
-> commented in mptcp_destroy_common().
-> 
-> For the pm->reset data race, the lasting effect is the counter
-> imbalance this series now clamps and traces, and the other fields
-> are discarded on a closed socket anyway. The direct fix is to take
-> pm->lock around the reset in mptcp_pm_data_reset(), after checking
-> the lock ordering on all callers.
-> 
-> These are two separate bugs with separate Fixes: targets, so I plan
-> to submit them as their own series rather than folding them into
-> this one.
-Thank you! Yes a different series is better.
+> Refuse admission at U8_MAX for incoming MP_JOIN and for the Netlink
+> create path.
+
+Thank you for the patch. It looks like Tao already addresses the same
+issues, see:
+
+https://lore.kernel.org/20260831093206.689827-1-cui.tao@linux.dev
+
+Do you mind syncing with him, please?
 
 Cheers,
 Matt
