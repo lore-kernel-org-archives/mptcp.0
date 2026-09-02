@@ -1,172 +1,141 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556B0258EE9
-	for <mptcp@lists.linux.dev>; Wed,  2 Sep 2026 08:39:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8053F0750;
+	Wed,  2 Sep 2026 09:17:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788338398; cv=none; b=b0Y3H0AWQYHJ7HDdmlFowkvcCEawnY+3CJe8LnZKtkYuvTmNk8EttfWcqjteBWER0ZOLIr2KO71iCncGnv1nvGzY6QMxZM6LlTfhGMB9LPALqiIFJ9IXxuP7wKjPEbG62Wqp/2xmuTsEoCqqnz04ZFYuC1YwMlPJwyMdD3lzWM8=
+	t=1788340676; cv=none; b=dspWDjYMqi/P+xy402pIaFYSvR5i9tokEgJAsONn9QuCgxmMvSTERh+NgOMnp0QjOG1kTGk3BH1CTxzAzHFQe99JpZLoVI+C9h1a9jbjDSQYHHQlRAk5Rhw7rqs9V2JQ3cbwpW4CSwaCR8Y7J6LK+TVt4URZiXt1sBPJvEpS6YU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788338398; c=relaxed/simple;
-	bh=RwTkp6U01ksfXUAu5UVhppTNVInK17nJ5MP4izC5bTA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lzdkfnDh1vbZPggiAMd+fOvB6C6D3QsndaU5pE6GMkCFDivLqS4/aPtdCfn1nwccEwpWDQ1uQF/unmgNURocZfWQWSr4PLt8vD0iVzZrnAyL8Y5vhhH0AwDIH2eIoTqQVjnL55KkgDGsYHUyGA2l9z4oVrGzqZnG33T27jofkWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gb7xKZFC; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788340676; c=relaxed/simple;
+	bh=CM/qVXs/g6awQFiuodLf0sbHY5tOFftFnWTq/OgFTO8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=axbaON2zRTGfE39USrLjW7f6KBQQoGYjVERSYysM37ZkbfA/23bsp9ONuei1o+Pru56FZUgb9TmXq8PeAJ/RubJLk6Qof9OaAYZuYQ7sdo5HqCvGhWfK3uM06XxK5J5sUkZ1XI+rqV0XvIRlTykrKaD2Er8I3qMrTIeubl10s4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=auPbK68e; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gb7xKZFC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB94A1F000E9;
-	Wed,  2 Sep 2026 08:39:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="auPbK68e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06F9C1F000E9;
+	Wed,  2 Sep 2026 09:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788338397;
-	bh=ZythBnuU/OL+9fkdsf/IffLC3rKAiguodbPj9QJHTWo=;
-	h=From:To:Cc:Subject:Date;
-	b=Gb7xKZFCrSlzN4bw35QQmQnOz4PClxGE5LEgmIORzbrz3tPKFyEhzkmWAMC9ducAl
-	 LaI6JbL++12eiargJlpNQHcRjzqNb+1nf9gijRhFVLJv/vTszcxZen+lePDBTyzgmi
-	 n+JvREcHJcH+xLB2JkXDez29JCFP8C4/j7oLJo0Bb7ezknvPRb9bWEW+JKBDqFRzR6
-	 naNGVk7dvSY9HsYsHFcV7RQsYGn3Q92iKNzZu8YjLXap44CgwSdXBFqGAh/hmanl5j
-	 A39Spi2Zk+sB6vYSyfoHitCNRn8WJuxBJcEwg6OQGsZD6DKenqnza6NlGH3YKNNsA4
-	 klParIjnucomw==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v3] mptcp: fix skb_ext leak in fallback mode
-Date: Wed,  2 Sep 2026 16:39:47 +0800
-Message-ID: <6e4266b0dc3eb7e68f0064e16fa9921f46b85319.1788338252.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.53.0
+	s=k20260515; t=1788340675;
+	bh=7UTOR6zJzJj2YGKYWihuyfLr0pZQ3xNY+amKLeTGkPM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=auPbK68eVeWSX7HGiGrRR1Y0nVWHvJ82XolHF/9F/KFQ2/UqAxpW2P74L7tblDLl0
+	 LQDZPk6PDHYXbmIOEXYti9jh/FTMy/qzht7swmoZfzHmrrQLhxo+aO/z5YYcwVPZqV
+	 F5ll+E19jv3pvO70I3UMpEQEoK+lYEIGP8PGOnHWwzKhQVfE5duMPkdT29prqv/FjZ
+	 oVcwbc905F1EqJ/Gl45A2yJsBgMhj2EJByqn+g9dsnnnaeMvOuE8w044qGAIWljFNp
+	 IfUCwwjN7I6Sc/NiyBINIfCfVPccelyCti6XmlkA+hH9Qr2MGwwz6WmhnIoV6pQkwF
+	 aJVuGxSyA7auQ==
+Message-ID: <5b5452db-f03c-4825-b9ae-91ca28bbcf03@kernel.org>
+Date: Wed, 2 Sep 2026 11:17:48 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next 1/2] selftests: mptcp: convert iptables to
+ nftables for mptcp_sockopt.sh
+Content-Language: fr
+To: Hangbin Liu <hangbin.liu@linux.dev>, MPTCP Linux <mptcp@lists.linux.dev>,
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ Hangbin Liu <liuhangbin@kylinos.cn>
+References: <20260902-mptcp_nft-v1-0-559caa16f410@kylinos.cn>
+ <20260902-mptcp_nft-v1-1-559caa16f410@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260902-mptcp_nft-v1-1-559caa16f410@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Hangbin,
 
-In fallback mode, MPTCP sockets behave as plain TCP and should not allocate
-SKB_EXT_MPTCP for transmitted skbs. The current code unconditionally
-allocates the extension, causing memory leaks when skbs are freed without
-releasing it.
+On 02/09/2026 08:52, Hangbin Liu wrote:
+> From: Hangbin Liu <liuhangbin@kylinos.cn>
+> 
+> The per-AF iptables mark rules are replaced with an inet table
+> (msock_table) with separate per-AF counter drop rules for IPv4
+> and IPv6 drop counting.
 
-Fix by short-circuiting __mptcp_add_ext() in fallback mode and skipping all
-DSS bookkeeping in mptcp_sendmsg_frag(). Also allow TCP coalescing when
-mpext is NULL in fallback mode.
+Thank you for looking at that!
 
-This latent bug will be exposed once TLS ULP support is added to fallback
-MPTCP sockets, as each sendmsg via the TLS path would leak one skb_ext
-object.
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> index e850a87429b6..4d0af2bf9484 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
 
-Fixes: 3a54a74a3c5b ("mptcp: allocate TX skbs in msk context")
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
-v3:
- - Free extensions before early returns (fixes memory leak)
- - Use fallback label to skip mpext operations (fixes NULL deref)
- - Allow TCP coalescing when mpext NULL in fallback mode
- - Remove cached fb variable to avoid race conditions (fixes NULL deref)
- - Pass fallback state to mptcp_skb_can_collapse_to() for correct behavior
+(...)
 
-v2:
- - Free extensions before early returns
- - Added fallback label to skip mpext operations
- - Allow TCP coalescing when mpext NULL
- - Cache fallback state in bool fb
- - https://patchwork.kernel.org/project/mptcp/patch/b67dec47d321886d45fdd2bca1c303314fcdb229.1788252583.git.tanggeliang@kylinos.cn/
+> @@ -105,33 +109,23 @@ cleanup()
+>  
+>  mptcp_lib_check_mptcp
+>  mptcp_lib_check_kallsyms
+> -mptcp_lib_check_tools ip "${iptables}" "${ip6tables}"
+> +mptcp_lib_check_tools ip nft
+>  
+>  check_mark()
+>  {
+>  	local ns=$1
+>  	local af=$2
+>  
+> -	local tables=${iptables}
+> +	drop=$(ip netns exec "$ns" nft list table inet msock_table | \
+> +		grep "ipv$af.*packets.*drop" | awk '{print $(NF-3)}')
 
-v1:
- - https://patchwork.kernel.org/project/mptcp/patch/70a7e7e05337faa0547c3759e5d9829763f2bcc5.1788244452.git.tanggeliang@kylinos.cn/
----
- net/mptcp/protocol.c | 29 +++++++++++++++++++++++++----
- 1 file changed, 25 insertions(+), 4 deletions(-)
+Would it not be cleaner to use 'nft -j' and 'jq' to get all the
+(non-zero) drop counters?
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 0b24e0afedfb..7338dc3b70eb 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1153,15 +1153,20 @@ bool mptcp_schedule_work(struct sock *sk)
- 
- static bool mptcp_skb_can_collapse_to(u64 write_seq,
- 				      const struct sk_buff *skb,
--				      const struct mptcp_ext *mpext)
-+				      const struct mptcp_ext *mpext,
-+				      bool fallback)
- {
- 	if (!tcp_skb_can_collapse_to(skb))
- 		return false;
- 
-+	/* In fallback mode, allow coalescing into extension-less SKBs */
-+	if (!mpext)
-+		return fallback;
-+
- 	/* can collapse only if MPTCP level sequence is in order and this
- 	 * mapping has not been xmitted yet
- 	 */
--	return mpext && mpext->data_seq + mpext->data_len == write_seq &&
-+	return mpext->data_seq + mpext->data_len == write_seq &&
- 	       !mpext->frozen;
- }
- 
-@@ -1361,7 +1366,8 @@ static struct sk_buff *__mptcp_do_alloc_tx_skb(struct sock *sk, gfp_t gfp)
- 
- 	skb = alloc_skb_fclone(MAX_TCP_HEADER, gfp);
- 	if (likely(skb)) {
--		if (likely(__mptcp_add_ext(skb, gfp))) {
-+		if (unlikely(__mptcp_check_fallback(mptcp_sk(sk))) ||
-+		    likely(__mptcp_add_ext(skb, gfp))) {
- 			skb_reserve(skb, MAX_TCP_HEADER);
- 			skb->ip_summed = CHECKSUM_PARTIAL;
- 			INIT_LIST_HEAD(&skb->tcp_tsorted_anchor);
-@@ -1471,7 +1477,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 		 * SSN association set here
- 		 */
- 		mpext = mptcp_get_ext(skb);
--		if (!mptcp_skb_can_collapse_to(data_seq, skb, mpext)) {
-+		if (!mptcp_skb_can_collapse_to(data_seq, skb, mpext,
-+					       __mptcp_check_fallback(msk))) {
- 			TCP_SKB_CB(skb)->eor = 1;
- 			tcp_mark_push(tcp_sk(ssk), skb);
- 			goto alloc_skb;
-@@ -1507,6 +1514,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 		 */
- 		if (snd_una != msk->snd_nxt || skb->len ||
- 		    skb != tcp_send_head(ssk)) {
-+			if (unlikely(__mptcp_check_fallback(msk)) && mpext)
-+				skb_ext_del(skb, SKB_EXT_MPTCP);
- 			tcp_remove_empty_skb(ssk);
- 			return 0;
- 		}
-@@ -1518,6 +1527,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 
- 	copy = min_t(size_t, copy, info->limit - info->sent);
- 	if (!sk_wmem_schedule(ssk, copy)) {
-+		if (unlikely(__mptcp_check_fallback(msk)) && mpext)
-+			skb_ext_del(skb, SKB_EXT_MPTCP);
- 		tcp_remove_empty_skb(ssk);
- 		return -ENOMEM;
- 	}
-@@ -1538,6 +1549,15 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	TCP_SKB_CB(skb)->end_seq += copy;
- 	tcp_skb_pcount_set(skb, 0);
- 
-+	/* in fallback mode, skip DSS bookkeeping and free the extension
-+	 * if allocated
-+	 */
-+	if (unlikely(__mptcp_check_fallback(msk))) {
-+		if (mpext)
-+			skb_ext_del(skb, SKB_EXT_MPTCP);
-+		goto fallback;
-+	}
-+
- 	/* on skb reuse we just need to update the DSS len */
- 	if (reuse_skb) {
- 		TCP_SKB_CB(skb)->tcp_flags &= ~TCPHDR_PSH;
-@@ -1571,6 +1591,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	if (mptcp_subflow_ctx(ssk)->send_infinite_map)
- 		mptcp_update_infinite_map(msk, ssk, mpext);
- 	trace_mptcp_sendmsg_frag(mpext);
-+fallback:
- 	mptcp_subflow_ctx(ssk)->rel_write_seq += copy;
- 
- 	/* if this is the last chunk of a dfrag with MSG_EOR set,
+Cheers,
+Matt
 -- 
-2.53.0
+Sponsored by the NGI0 Core fund.
 
