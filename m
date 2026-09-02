@@ -1,130 +1,155 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 722A648BD5E
-	for <mptcp@lists.linux.dev>; Wed,  2 Sep 2026 12:37:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E30C499F08
+	for <mptcp@lists.linux.dev>; Wed,  2 Sep 2026 12:54:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788352683; cv=none; b=rYO/0zUJKhxBr3jOrh8GBEc7h2A8nj9EecQAzkwR4+OaJHnyivoNfjnU/bGLoi9JwLrwjmYfnsspaGv22kV6jISkc74sXvFj0auW4o4Kk6AignseCqkckD5TXQXx2VBV6p2FLlOsbnUPW1LdkPixNM74toozNvHYqUG+0Tf4HAc=
+	t=1788353676; cv=none; b=rLJV5gES3dOMTixcFgh4N2jvQ5FF6usPJvvDK2qZHL4ZAOvckmRUAZ52m8Zd8DiQF1dvGskfdmn7/w4y0v0NUXX+uU1PMnC9D4q5Uudr/gqZucFwMUlxEsWuNT9J6mVT7nrlH/qu0PbgLGg/V2cgTkU8OnB6Gbdm10DWG3U9/RA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788352683; c=relaxed/simple;
-	bh=Ht4/CqyntQFVR9qZaR4A0exSG5+QhETliZ7me9RufMw=;
+	s=arc-20240116; t=1788353676; c=relaxed/simple;
+	bh=it9I/8DpuDYFPKPCOeB47GSBHk4KybmoHRzqAwVN08g=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=NsRY6kb11LiFUmnKN7CH73m2RVblx+T2lTlP1evMA3tT6wqHCogMJj7EKgLuwXKqGZ35xuTSTK31vfR6u2hfJcH9j/IvfYlstcVM7oI/ZKDqX3kCAKlmZMkZw0uz6XWQzofIpvjfh6CusZs0WGCVDojwaxnqMtDMx4kwmKWo+uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ILJoJY9d; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=k0hVXJaimJBMjx+pAcVZI3CPreUPVLt/G2MPGNTM5V18GHk3gbro5D1Y40iXMAIgDSFcVXRgpsAkc/LWxTjVTTiDraq/Gc+31HppOQRddDOjJ4VPLe2hp9rQUpi/4yNdq0zWKgUIJT7NtYsGE2nZHlAXAAgUu+8N1zdvKu6TxgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CAnJ3GLt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ILJoJY9d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5674B1F000E9;
-	Wed,  2 Sep 2026 12:37:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CAnJ3GLt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 820D41F000E9;
+	Wed,  2 Sep 2026 12:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788352679;
-	bh=hzFRw3+BiZqs/1HUEOcDwXSXAnXBvs/qRXeXNuLj6BY=;
+	s=k20260515; t=1788353674;
+	bh=9VSpQ02cjiV+47GWn87PY0sa+XrBkyOj6+r4BuEnhhg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ILJoJY9dlZHSxip+7y4j+qMacBgXWyu1poIR7Cj7XWMbnRQEVghlWbyg20pK6jeyT
-	 Hd0BuGMRjGU+SkUh4oeHkVZIUl9cMLzXr2kiBdoAwlyvP2ErE4O/PgHcEt8bUmdxr9
-	 kukYZlXraBI4CjxmUkNDiB0kCHfeVtKkhcMN0OsytfxlH00pYrGRxmj1he/m6RBEuE
-	 SuY5/IAtJmeujVy35D5a6Eti4oy+xZs8f05tlpNMF/t7VjqIBJBR9uVp04RMJ2SUre
-	 2S3saPGEV0eUWU5R2Q3yRE7ocytq5SW1bEhDe5AAtK4VkhSzWvYoM8hcQHnR07/+RK
-	 4wrqMRvJOJ5dQ==
+	b=CAnJ3GLtdywJThi8VwN6e6QwqTOIkXRCQKczY+Lxgi+d7BOKmtL0kjSg2qGVrx+BN
+	 ETGRyClJ/OtDuqoSmTHjUV9oStJPICys3ByuhNsf59VV0lU6lXjKH4gPxyzkTD1gBz
+	 YxUmUsTRjEVLA8pZ9tsJezJYKWYw8vBaxriABHahiUUfg4WKRx5tSTGjGjq/qTy6IF
+	 2DUFXsNcAdKB+RN5i0L6OQQS3FePdn4tF00C8KwvnHaY3Xl3H5rZV4FdA0isWbgJYw
+	 ecu45XoxoGYWXPAxNY1h0WRYRwqiyH9eMATAad3XIoAkqoAHZhOabHbFhcIe0ny50d
+	 2V08mSoeGsNpg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] tcp: fastopen: check rsk_drop_req() in
- tcp_fastopen_create_child()
+Subject: Re: [PATCH net v2 1/2] tcp: diag: bound bucket lock hold in
+ tcp_diag_dump()
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Yilin Zhang" <yilinzhang@moonshot.ai>
+To: "Zihan Xi" <zihanx@nebusec.ai>
 Cc: mptcp@lists.linux.dev
-In-Reply-To: <20260902121247.3248539-1-yilinzhang@moonshot.ai>
-References: <20260902121247.3248539-1-yilinzhang@moonshot.ai>
+In-Reply-To: <cdc628415cf10721480a51ce14837f846ec778c2.1788248601.git.zihanx@nebusec.ai>
+References: <cover.1788248601.git.zihanx@nebusec.ai>
+ <cdc628415cf10721480a51ce14837f846ec778c2.1788248601.git.zihanx@nebusec.ai>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 02 Sep 2026 12:37:58 +0000
-Message-Id: <20260902123759.5674B1F000E9@smtp.kernel.org>
+Date: Wed, 02 Sep 2026 12:54:34 +0000
+Message-Id: <20260902125434.820D41F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Critical] Missing `bh_unlock_sock(child)` before `sock_put(child)` cause=
-s a locked spinlock and preemption/softirq-disable leak.
-- [High] Returning NULL from `tcp_fastopen_create_child()` fails to abort t=
-he request, causing a rejected MPTCP MP_JOIN request to incorrectly fall ba=
-ck to standard SYN processing, leading to a spurious SYN-ACK and resource w=
-aste.
+- [High] Missing fallback to resume by `s_num` when the dump cursor is inva=
+lidated, causing dump restarts and duplicate socket messages.
 --
 
-commit c3cab231705bf3a0b9db9f8531e40d30d546e830
-Author: Yilin Zhang <yilinzhang@moonshot.ai>
+commit 027317402fdfe4d3580f395cdc040206720287ef
+Author: Zihan Xi <zihanx@nebusec.ai>
 
-tcp: fastopen: check rsk_drop_req() in tcp_fastopen_create_child()
+tcp: diag: bound bucket lock hold in tcp_diag_dump()
 
-This commit addresses a use-after-free vulnerability by checking
-rsk_drop_req(req) in tcp_fastopen_create_child(). If an MPTCP MP_JOIN SYN
-with a valid Fast Open cookie triggers the fatal fallback in
-subflow_syn_recv_sock(), the request and child socket are now dropped.
+This commit limits the time spent under bucket locks in tcp_diag_dump() by
+collecting only a batch of referenced sockets while holding the lock. It
+introduces a cursor mechanism to resume dumps instead of restarting from
+the bucket head.
 
-> diff --git a/net/ipv4/tcp_fastopen.c b/net/ipv4/tcp_fastopen.c
-> index 471c78be55137..b8b3abbee253d 100644
-> --- a/net/ipv4/tcp_fastopen.c
-> +++ b/net/ipv4/tcp_fastopen.c
-> @@ -337,6 +337,11 @@ static struct sock *tcp_fastopen_create_child(struct=
- sock *sk,
->  	if (!child)
->  		return NULL;
-> =20
-> +	if (own_req && rsk_drop_req(req)) {
-> +		sock_put(child);
+Link: https://lore.kernel.org/all/cover.1785307984.git.zihanx@nebusec.ai/
 
-[Severity: Critical]
-Does this code leak the socket lock?
-
-When a child socket is created and returned by syn_recv_sock(), it is
-returned with the socket spinlock held. If we call sock_put(child) here
-without first calling bh_unlock_sock(child), does this leave the spinlock
-locked and softirqs disabled, leading to a soft lockup?
-
-> +		return NULL;
+> diff --git a/net/ipv4/tcp_diag.c b/net/ipv4/tcp_diag.c
+> index ba1fdbe9807fd..842e13ee79e5b 100644
+> --- a/net/ipv4/tcp_diag.c
+> +++ b/net/ipv4/tcp_diag.c
+[ ... ]
+> @@ -344,52 +418,81 @@ static void tcp_diag_dump(struct sk_buff *skb, stru=
+ct netlink_callback *cb,
+>  				continue;
+>  			}
+>  			spin_lock(&ilb->lock);
+> -			sk_nulls_for_each(sk, node, &ilb->nulls_head) {
+> -				struct inet_sock *inet =3D inet_sk(sk);
+[ ... ]
+> +			node =3D use_cursor ? cursor->sk_nulls_node.next :
+> +					    ilb->nulls_head.first;
+> +			if (!use_cursor)
+> +				s_num =3D 0;
+> +			hlist_nulls_for_each_entry_from(sk, node, sk_nulls_node) {
 
 [Severity: High]
-Does returning NULL here cause the dropped request to be incorrectly retain=
-ed?
+If the cursor is invalidated (use_cursor evaluates to false), the iteration
+restarts from the bucket head, but the fallback skip logic:
 
-When NULL is returned, tcp_fastopen_create_child() signals a normal Fast Op=
-en
-failure rather than a hard drop. tcp_conn_request() will then assume Fast O=
-pen
-failed, proceed to the standard SYN processing path, link the dropped reque=
-st
-into the SYN queue, and send a SYN-ACK:
+    if (num < s_num)
+        continue;
 
-net/ipv4/tcp_input.c:tcp_conn_request() {
-    ...
-	} else {
-		tcp_rsk(req)->tfo_listener =3D false;
-		if (!want_cookie &&
-		    unlikely(!inet_csk_reqsk_queue_hash_add(sk, req))) {
-			reqsk_free(req);
-			dst_release(dst);
-			return 0;
-		}
-		af_ops->send_synack(sk, dst, &fl, req, &foc,
-				    !want_cookie ? TCP_SYNACK_NORMAL :
-						   TCP_SYNACK_COOKIE,
-				    skb);
-    ...
-}
+appears to have been completely removed. By explicitly setting s_num to 0,
+does this cause the dump to restart from the beginning of the bucket without
+skipping previously processed sockets?=20
 
-Should this path return an error pointer or use a drop mechanism to ensure =
+If a large bucket has high churn, could this prevent the dump from progress=
+ing
+past the first few batches and lead to an endless stream of duplicate socke=
+ts?
+
+[ ... ]
+> @@ -412,34 +517,46 @@ static void tcp_diag_dump(struct sk_buff *skb, stru=
+ct netlink_callback *cb,
+[ ... ]
+> +			if (!use_cursor)
+> +				s_num =3D 0;
+> +			if (use_cursor) {
+[ ... ]
+> +			} else {
+> +				inet_bind_bucket_for_each(tb2, &ibb->chain) {
+> +					if (tcp_diag_bind_collect_owners(&tb2->owners,
+> +									 sk_arr,
+> +									 num_arr,
+> +									 &accum,
+> +									 &num, s_num))
+> +						goto pause_bind_walk;
+>  				}
+>  			}
+
+[Severity: High]
+Similar to the listen walk, s_num is explicitly zeroed before being passed
+into tcp_diag_bind_collect_owners() when use_cursor is false.=20
+
+Does this break the intended fallback skip mechanism and result in duplicate
+messages or infinite loops if the cursor becomes invalid?
+
+[ ... ]
+> @@ -483,43 +620,35 @@ static void tcp_diag_dump(struct sk_buff *skb, stru=
+ct netlink_callback *cb,
+[ ... ]
+> -		sk_nulls_for_each(sk, node, &head->chain) {
+> -			int state;
+> -
+> -			if (!net_eq(sock_net(sk), net))
+> -				continue;
+> -			if (num < s_num)
+> -				goto next_normal;
+[ ... ]
+> +		node =3D use_cursor ? cursor->sk_nulls_node.next : head->chain.first;
+> +		if (!use_cursor)
+> +			s_num =3D 0;
+> +		hlist_nulls_for_each_entry_from(sk, node, sk_nulls_node) {
+
+[Severity: High]
+Here in the ehash walk, the original check for skipping elements
+(goto next_normal) was removed, and s_num is zeroed if the cursor is missing
+or invalid.=20
+
+Could this lead to the same duplicate dump issue if a socket pointed to by =
 the
-request is completely aborted, rather than triggering the fallback path?
-
-> +	}
-> +
->  	spin_lock(&queue->fastopenq.lock);
->  	queue->fastopenq.qlen++;
->  	spin_unlock(&queue->fastopenq.lock);
+cursor is closed and unhashed between recvmsg() calls?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260902121247.3248=
-539-1-yilinzhang@moonshot.ai?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1788248601.gi=
+t.zihanx@nebusec.ai?part=3D1
