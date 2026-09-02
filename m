@@ -1,133 +1,107 @@
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0733A2C08CF
-	for <mptcp@lists.linux.dev>; Tue,  1 Sep 2026 13:58:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788271093; cv=none; b=RqxW4s+8cBwrESZvOzwL2mpT6293bQTR8JaSvKPdAGWG2pyuWUxAG1M3onkeU3AK2NwsqZwtGD1IgGKgQK6ausz5sh9XWyZ27zkQ0mY1bMVm4qSGlsDzHLD5w36HN94yQlmLDCOCeFn8JS2NM9I65y6enwJuuxvMxBrZkKUzAJE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788271093; c=relaxed/simple;
-	bh=ldxilzk/OSJHCkVe7lGBcfCTbtnJncxJmZiZ9LmaUwI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=TZixjgGbF/c16vJioTLGMn18rFv2N89Vb4XmEPvNcv5Ehoi//Tt9ztAnheb1Zk1eO4/AVQqczHiuXQsDqp/Mijg0tWLrQuIrL/kRs5z+0yq6eej1NqBU4mRTC3wjUp80dopeuQGpheCU8jPTMiXKlGrQlc03h69PAPoiJkQEj2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=oI2/eFir; arc=none smtp.client-ip=209.85.167.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF8939902D
+	for <mptcp@lists.linux.dev>; Wed,  2 Sep 2026 06:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788331710; cv=pass; b=aa/b2p2uCNBrM1T+jfb4XUocAGBX0MZ8H2lJsybbGcjJHs3tQgKeTOSO/jNooH5qQ0+zsG09hdseQ+wNuTOXzNOBBpLkcsWWrQMvj/99E9NYGnxiFyFiEN/k3DT3Jr0IHmpDuL2uoYnC2GVUCLrQjqGmHIt343zWzhFj5aSEHjo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788331710; c=relaxed/simple;
+	bh=cdeFoFYy1OoM8VP2+d7S1FB2dEDDNTiGo7cZqr/QI7M=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=tsq8m5YExiKSFSIXuUSk73KeXroerbGKgyv2uZ2ln5Zd5QKiyJh8umUOV8Oh0WN7gyBPEgef1GZEfMz39eTxlAHiz4pZ58wULgaCPoFzIgpNzhR4tfjui9CaJ3cQER3D3J17mh19XNvp4afHP8d7KrTPgxxIv8r5/5uWrHjOlzc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=jpJm7RvK reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oI2/eFir"
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-4b21f09ec76so540102b6e.0
-        for <mptcp@lists.linux.dev>; Tue, 01 Sep 2026 06:58:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788271091; x=1788875891; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=SbefZNwZaE69oCnMrjIHq2SBvDm2AGxGYP0IaWv4n4g=;
-        b=oI2/eFir3CG//Gb7BK4F6pcysIm7ukiX0wnwNiZk8lB+6opstL2NAw5WtzlSeOMgxn
-         LWUCWghlpMkV/VUoid2+qIfLNcA1CziMjDmY66n/KCL4vQXLKSO8PlFZry2tWo4ZVAHx
-         dimbYI1mgjMJ+YbU6rTB5BH52fcimHKoyLyssvgB/m5GK0aqcjfD2TazaSX9nrkevpsS
-         0pdEQbWSSkB9jJRJEheRsiBTUgNRAd4N4FL2mxK2X/KLXjFSXkWCZuP7pDUfB4x8IoLt
-         3mWCbkwwSYQPRr/6d0sbjD+4DJCKGbsOIV8esvqHRLIQuqCgaFC6Lmsen+k8NMiQSxeM
-         4jhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788271091; x=1788875891;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=SbefZNwZaE69oCnMrjIHq2SBvDm2AGxGYP0IaWv4n4g=;
-        b=LFIh2SP1Mb/HhsDXXYGinEHNYG4vc4CdfBVRCAW+jdq8bDtAs3GBKsVSaGbj12TRXE
-         sI2hgXDPEN+eGo31LLlINpH2IQtQxWF2YAs1R/0cHrG0e4eT9GxyuNGsBwGp7xc06TN9
-         QVib8oH7VDmy+Oiis0snmJe9bpfl8FxYQQDA05Uayr9oRtHF1/9qxbsrXkgC5aa/7fN+
-         ymuQrz2p2jtuo2awhCUvzAjCUnqBt12J0mzPl1IDb1L5X3sTw6pk655+PHB/wgio12SR
-         /Q+Xu1KJNu9WvCvkL7G9yRBCFmKXaNslMNlbX2JsT1DxcZHRHMyzEsVzhHoqJP39psZl
-         eP4w==
-X-Gm-Message-State: AFuF++mFPcPOEqg9yC4O6U3y331Y+TSVWkYPLqZ8KnR1XSOMhoAFmuqJ
-	jCYSFuYynGhl1CkilUQNsrIcfq3Unhpov/qchDv9jibTrfdTsYj+TPyKBZOW
-X-Gm-Gg: AR+sD10i+ansdto44xZcIDoN+XL+ZgUKHHO61PVvbTh9hKxkl2Gb+rWWGnwdRebu072
-	siF4CeVQVE7YJ4qATIdZ3fBhZDXgCtOvq07S8TIaqrRK5YB5gEA6pbtCHj2JG5Fzbf7t0VF+hi2
-	iIu8PR2rUmSRWkFTDmd2qkUWimhu4fF3zLJHriB1IZgSfx5+t8yR9+r7YYvjmo6S/Ufl8jut0lx
-	B6rMSQ3keT5+qygIgqMOLNiUZX+KTKxX/dyl7z5OWeQ3DrHM2m996zIaWpwEI/iBcnT/X3zKXAU
-	0YQotWjENqzB9OuwuHZfRkUQa7bTtabnK5o6qEIkFe3s9ecnk1blN5RJVWhjLpiBPI/KbeRh5nc
-	AwJPULKYLFerxcBDeLQaLhAZAdOHtcztFyFHQIb8k5Ug1/5H6D1XvryRsBQ3CBAaMXZUYy7+sHs
-	Mw4lnXdomY2VMnF8BlFHqrPW6Ar5/nVE4SaRSHT8zG3g9D/zFEd+yhRUkYqUFaykLphgk5RWdhV
-	A==
-X-Received: by 2002:a05:6808:16a7:b0:4ae:f5be:fe30 with SMTP id 5614622812f47-4b3983262abmr31483010b6e.18.1788271090510;
-        Tue, 01 Sep 2026 06:58:10 -0700 (PDT)
-Received: from [127.0.0.1] ([64.236.134.37])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-4b3a1625a1asm11236898b6e.2.2026.09.01.06.58.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2026 06:58:09 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Zihan Xi <zihanx@nebusec.ai>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1788248601.git.zihanx@nebusec.ai>
-References: <cover.1788248601.git.zihanx@nebusec.ai>
-Subject: Re: [PATCH net v2 0/2] tcp: diag: bound bucket lock hold in diag
- dump paths
-Message-ID: <ee35d95a-2bbc-131d-dc30-d2973bbd7213@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 01 Sep 2026 13:58:09 +0000
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="jpJm7RvK"
+ARC-Seal: i=1; a=rsa-sha256; t=1788331703; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=SE6jQJSVOM/8neD9c841HQxyClm8+MFq7446Xe2My2unmeqAnM6971bCxeraFR2X2OC2IxLUX4KfAPotFPlBho6GVYLi1tSjsptwOK8QIJaO7XG5OBhggyr9Es1UxPpC3hzJoOVV+/Uq2/S9Y+KMAyBxPf7IJS5BTlTGuIlh+e8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1788331703; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=A3MI3nokX7AeSe0lTaNPs+1ovIFeBrCUZxPg9d59o5o=; 
+	b=URofL49h+fXcezqrjuleGrhUy8I37Zs4Irhf5/jdHeSuqiHJFM6G1ADbbc1UCbI/54RtFH/Q163MjJtrUWcHb5OYplF4s1pGb4uwLAYz0hDaiaIh33vNfQosCla3Nvc4TdjK/P6+bSy0GOD4GgwIX+OdxT4IfobwaXyLybaUmms=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
+	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1788331703;
+	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=A3MI3nokX7AeSe0lTaNPs+1ovIFeBrCUZxPg9d59o5o=;
+	b=jpJm7RvKTysOEm6dQKCzy/fEBEyVl7dtrMDC58tBPd1azGD7pZYtDI/R8Lx5UXUV
+	EY8oR5oNoKVTsRUV8lOxSygNEY8MKY5G+a2WoGa8GSqnA5UBRKzcAuOp4on3pR8PO+H
+	66B4jpdSwLvt7KXc3z5ALR3N0mqsrYpnRf8Z2pcM=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1788331703446762.702138809904; Tue, 1 Sep 2026 23:48:23 -0700 (PDT)
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1788331701134163.10910533526487; Tue, 1 Sep 2026 23:48:21 -0700 (PDT)
+Date: Wed, 02 Sep 2026 12:18:21 +0530
+From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+To: "Matthieu Baerts" <matttbe@kernel.org>
+Cc: "mptcp" <mptcp@lists.linux.dev>, "martineau" <martineau@kernel.org>,
+	"pabeni" <pabeni@redhat.com>,
+	"shardul.b" <shardul.b@mpiricsoftware.com>,
+	"janak" <janak@mpiric.us>, "kalpanjani009" <kalpanjani009@gmail.com>
+Message-ID: <1a060e0334d.16e6f547114597.2162647064543858742@mpiricsoftware.com>
+In-Reply-To: <22e3fc57-a6e7-4a72-a6c1-1d6b3bc39f3d@kernel.org>
+References: <20260827041058.2833707-1-kalpan.jani@mpiricsoftware.com> <f0fabe59-0a2b-4df9-983d-446eab20104c@kernel.org> <1a05b681764.2d9af68b190464.2524660538561791488@mpiricsoftware.com> <22e3fc57-a6e7-4a72-a6c1-1d6b3bc39f3d@kernel.org>
+Subject: Re: [PATCH net-next v2] mptcp: normalize seq numbers reported in
+ mptcp_info
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
 
-Hi Zihan,
+Hi Matt,
 
-Thank you for your modifications, that's great!
+You were right, thanks for pushing back on that. I added msk_state to the same debug print and reran mptcp_join.sh - every single instance of msk->first going NULL shows msk_state=7 (TCP_CLOSE), no exceptions across several hundred hits. So it really is only happening as part of the whole msk already being torn down, like you said, not during a live connection.
 
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Perf:=20
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/=
-runs/33511506538
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/7e9e4886e6d2
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1155342
-
-
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+I'll rework v3 to read idsn/iasn straight off msk->first instead of adding the two new fields, per your suggestion.
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Kalpan Jani
+
+
+From: Matthieu Baerts <matttbe@kernel.org>
+To: "Kalpan Jani"<kalpan.jani@mpiricsoftware.com>
+Cc: "mptcp"<mptcp@lists.linux.dev>, "martineau"<martineau@kernel.org>, "pabeni"<pabeni@redhat.com>, "shardul.b"<shardul.b@mpiricsoftware.com>, "janak"<janak@mpiric.us>, "kalpanjani009"<kalpanjani009@gmail.com>
+Date: Tue, 01 Sep 2026 11:25:08 +0530
+Subject: Re: [PATCH net-next v2] mptcp: normalize seq numbers reported in mptcp_info
+
+ > Hi Kalpan,
+ > 
+ > 01 Sept 2026 07:19:21 Kalpan Jani <kalpan.jani@mpiricsoftware.com>:
+ > 
+ > > Hey Matt,
+ > >
+ > > Thanks for the suggestion. I dug into msk->first before reworking it.
+ > >
+ > > Turns out it's only ever set once (either connect side or accept side) and never reassigned to a different subflow after that, so at least we don't have to worry about picking up idsn from the wrong one later.
+ > >
+ > > But it does go NULL independent of whether other subflows are still around, and it's not even a rare thing. I added a debug print in __mptcp_close_ssk() and ran mptcp_join.sh, and it happens constantly with other subflows still in the list. I couldn't find anywhere that write_seq/snd_una/ack_seq get reset in that case either, so reading idsn/iasn straight off msk->first in mptcp_diag_fill_info() would need a NULL check, otherwise it'd crash pretty often during normal multi-subflow use.
+ > 
+ > Thank you for having checked.
+ > 
+ > Is it not only set to NULL when the whole msk is being destroyed? So
+ > yes, it could be set to NULL first while closing all the subflows, but is it
+ > an issue at that stage? Maybe you will need to add an extra check to
+ > avoid a crash, but (I didn't check) maybe there are already protections
+ > in place and it cannot race.
+ > 
+ > (Note: I'm not on my laptop, I didn't verify this)
+ > 
+ > Cheers,
+ > Matt
+ > 
+
+
