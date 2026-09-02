@@ -1,130 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from sender5-of-o54.zoho.com (sender5-of-o54.zoho.com [165.173.182.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD553EFD22
-	for <mptcp@lists.linux.dev>; Wed,  2 Sep 2026 10:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788344408; cv=none; b=I9fW6sB3WQuTNKxZEg8jjUVSCOf4fTLua0Ow39xnCOl3YTwVUBPo6F2Vh2uDLKcxzsj3uTCfrn2Jj/weXoTJyZC5OxhE4bXt2hiccQQ/uhv0OjiI3COwNUK80Qq+0IM+noscv9k4yFpWrGOgPyaH8VEK85/UQn1I9lWgaSCAbWA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788344408; c=relaxed/simple;
-	bh=koNzZumTx+nEjgCFQcInNi6PsZeQF1QwnSUpNVUm26c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kM1AynKPeACblaOzOE3sXSIJOJUyU/5apuVMk5xnlBWf8ARaGhE7EiGzz5qhU4BRZMLJPytN0yAHnzaLhmLslxzGEIK8cU8WpAI20sqQ9Hgx9b1j/X+3Vic7sx4l3Sbsj26cIT69T8IOIZbunAtcs+RkGYirJ8Z+VTr+rktLMMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g4RUI5lq; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF0543CE4B
+	for <mptcp@lists.linux.dev>; Wed,  2 Sep 2026 10:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=165.173.182.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788344505; cv=pass; b=U+y2Y7AjnGE+XZtccG3Lep96sgl6rxc5k6PIgArXABhx9zxaSlePMISSJ2LhzGRuRVvEE3BU1mfKZZycDu2K5Tjd4GJQbcj6IISu1AQucFc0G0hDWNiLPMEGXJPhFlJkhUBI/DYR1k1GTsQay+UtfcYIuaUFBfYztzctRIGacGk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788344505; c=relaxed/simple;
+	bh=Y4n+NsHuObBt2t/dtGApMQS84GoRLcxErF8cYWbuzZs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MyPUIZYiGSfR0p81gIcsye587ps4phDkkrzjqkWHt7herA8alPKd2zO18nbsdG9qPVsqou32Xih7QAJxF1bJaFbSTXnwggh1naD4ey31epqtCnC1Wson10/hpVgpH2VJMhi6iQ3+9lSQwP2zx7VQKPR8PiHJBB9V9YNoQPmMiKk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=W5b90Lvk reason="key not found in DNS"; arc=pass smtp.client-ip=165.173.182.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g4RUI5lq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B39051F000E9;
-	Wed,  2 Sep 2026 10:20:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788344406;
-	bh=rodD/1Qzq/0xB46EVh1cuAxzF8N28qRzrkLehYfkQEQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=g4RUI5lq6Y0oTxlhKKlLRTQTibZoJrTTGa5Lz7kVC00bvPkNSkJm3+fXrRbvtMdow
-	 /UerH6Et0GNQHhvtER3+ihwz4zVe94nUGjqpIY9MJXCfiL3CrlXLEZ2JLQSkILCQCe
-	 rFFdfGVhUdoekF9kOiPfqqfsGTv/r845aIFn6hVTDr+UXpbgbubYyTu0QBNGeXSZVa
-	 bUCdKrkTWFCjyWlzyvHIrqNgaIlt3EWGAKp2O5ouGGYSYcVQz0SVNF84Pubk26ptO7
-	 eoiGn3izx6NQbPIMn9dy1/6Wv4ZX+UB/3YCgolPTPNvv9CtK9y2MExN30w83oiPwlN
-	 JnoolD5NKTf9Q==
-Message-ID: <19934016-686b-45f1-91de-8ff29e5a7a06@kernel.org>
-Date: Wed, 2 Sep 2026 12:20:03 +0200
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="W5b90Lvk"
+ARC-Seal: i=1; a=rsa-sha256; t=1788344495; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ZwJnjUlV1SI8ShhTkiRgklZm9cHe4vOnrbf8xYpkN8mZzsIm66YbsTIcv2JZR2sMlgvhAOcuFRTQePmYl6BXenjwLzzpps95KZPxxSoFyMgI76cNZYR1fiKKSsfAS8h5vFqM1Ga5xe8i4zbOeLCY2Q+MhYO3Ut9phM9v4ArvfXk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1788344495; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=KEhnYv/y0K/PZddFbltoXnwBkZsGwPqXRIaVJaPbj+g=; 
+	b=M0bkMrst0agPQKRcJrryfkg+BJ7D6vvPdd1NI/FiO/+r4UwWWDv7MVUADts+kuNkD3saXeTFrjGg5ZcGNxXXyt+xPhQIYmU0EMzSSCQDu37Y9LviTAq4rwBFJGZoWGOZliG7C1JhTOgnqQpt9CgcF5IoHoUsxzyveH7AjgyC4SY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
+	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1788344495;
+	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=KEhnYv/y0K/PZddFbltoXnwBkZsGwPqXRIaVJaPbj+g=;
+	b=W5b90Lvkz/F0qA1o6Ao2smJ730pY+7oH2nf+ysMZWGQeHBkTkcrqXlJd6kqeuKW7
+	FuySRFic9eJXGSg5z+nmLzVKiRiW2D4RonE/teT+cWCtR/A1iEhjzpHmFM28i9fS9xs
+	yy+sh8QoZgp1/SQexhwxmB5aLMvOc8q2LjWIM62A=
+Received: by mx.zohomail.com with SMTPS id 1788344493561554.9517492555292;
+	Wed, 2 Sep 2026 03:21:33 -0700 (PDT)
+From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+To: mptcp@lists.linux.dev
+Cc: shardul.b@mpiricsoftware.com,
+	janak@mpiric.us,
+	kalpanjani009@gmail.com,
+	Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Subject: [PATCH net-next v3] mptcp: normalize seq numbers reported in mptcp_info
+Date: Wed,  2 Sep 2026 15:51:25 +0530
+Message-ID: <20260902102125.2035540-1-kalpan.jani@mpiricsoftware.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3] mptcp: fix skb_ext leak in fallback mode
-Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <6e4266b0dc3eb7e68f0064e16fa9921f46b85319.1788338252.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <6e4266b0dc3eb7e68f0064e16fa9921f46b85319.1788338252.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Hi Geliang,
+mptcpi_write_seq, mptcpi_snd_una and mptcpi_rcv_nxt report the raw
+64-bit data sequence numbers, seeded from the connection's IDSN/IASN.
+Since the IDSN/IASN come from mptcp_crypto_key_sha(), these fields
+carry an effectively random offset and are not useful to userspace as
+absolute values: a caller has to snapshot two getsockopt(MPTCP_INFO)
+calls and subtract to get anything meaningful, which is exactly what
+tools/testing/selftests/net/mptcp/mptcp_sockopt.c already does.
 
-On 02/09/2026 10:39, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> In fallback mode, MPTCP sockets behave as plain TCP and should not allocate
-> SKB_EXT_MPTCP for transmitted skbs. The current code unconditionally
-> allocates the extension, causing memory leaks when skbs are freed without
-> releasing it.
+mptcp_info also reports mptcpi_bytes_sent, mptcpi_bytes_received and
+mptcpi_bytes_acked, which give the same information as a plain byte
+count starting at 0. The snapshot-and-diff workaround for the seq
+fields is redundant once those are available.
 
-I'm surprised by this. Do you have kmemleak reports?
+Normalize mptcpi_write_seq, mptcpi_snd_una and mptcpi_rcv_nxt in
+mptcp_diag_fill_info() by subtracting the local and remote initial
+sequence numbers, read from msk->first's subflow context rather than
+caching them on mptcp_sock, to avoid growing every mptcp_sock for a
+diag-only need.
 
-Or is it linked to this issue?
+msk->first only changes when the whole msk is already in TCP_CLOSE,
+confirmed by testing with a debug print in __mptcp_close_ssk() under
+mptcp_join.sh: every NULL transition observed had msk_state ==
+TCP_CLOSE, none while the connection was still established. So a
+NULL msk->first at diag time just means write_seq/snd_una/ack_seq
+are no longer meaningful anyway, and the subtraction safely no-ops
+to 0 in that case.
 
-  https://github.com/multipath-tcp/mptcp_net-next/issues/583
+subflow->idsn is set once at handshake time and never modified
+afterwards, so it can be read directly. subflow->iasn is incremented
+by one in subflow_set_remote_key() to account for the peer's virtual
+SYN, and ack_seq carries that same increment, so the increment is
+undone here (iasn - 1) to keep rcv_nxt normalized against the same
+baseline write_seq and snd_una use. This mirrors the fix from v2,
+which cached the pre-increment value directly instead.
 
-I'm asking because I would think that such issues would have been caught
-by kmemleak, plus the fix is quite invasive.
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/445
+Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
 
-> Fix by short-circuiting __mptcp_add_ext() in fallback mode and skipping all
-> DSS bookkeeping in mptcp_sendmsg_frag(). Also allow TCP coalescing when
-> mpext is NULL in fallback mode.
-> 
-> This latent bug will be exposed once TLS ULP support is added to fallback
-> MPTCP sockets, as each sendmsg via the TLS path would leak one skb_ext
-> object.
+---
+Changes since v2:
+- Dropped the msk->local_idsn/msk->remote_idsn fields entirely.
+  Read idsn/iasn from msk->first's subflow context in
+  mptcp_diag_fill_info() instead, per Matt's suggestion, to avoid
+  growing mptcp_sock for a diag-only need. Verified msk->first only
+  goes NULL as part of whole-msk teardown, not during a live
+  multi-subflow connection.
 
-Do you mean this bug is only visible with the new feature? If yes, then
-no need to threat it as a fix.
+Changes since v1:
+- Cached msk->remote_idsn before subflow->iasn++ instead of after:
+  the increment accounts for the peer's virtual SYN, and caching
+  remote_idsn post-increment left mptcpi_rcv_nxt starting at 0 while
+  mptcpi_write_seq/mptcpi_snd_una started at 1 for the same
+  connection (reported by Sashiko).
 
-Then, I'm also wondering if this patch shouldn't be specific to this
-case: maybe less code should be modified to deal with fallback sockets
-once this happens? (I'm probably missing context to really help here)
+v1: https://lore.kernel.org/all/20260825113355.3573376-1-kalpan.jani@mpiricsoftware.com/
+v2: https://lore.kernel.org/all/20260827041058.2833707-1-kalpan.jani@mpiricsoftware.com/
 
-Cheers,
-Matt
+---
+ net/mptcp/sockopt.c | 20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
+
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 922f6ae5c80cb..5026ccc55e230 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -1047,6 +1047,7 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
+ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ {
+ 	struct sock *sk = (struct sock *)msk;
++	u64 local_idsn = 0, remote_idsn = 0;
+ 	u32 flags = 0;
+ 	bool slow;
+ 	u32 now;
+@@ -1084,9 +1085,22 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ 	info->mptcpi_flags = flags;
+ 
+ 	slow = lock_sock_fast(sk);
++
++	if (msk->first) {
++		struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(msk->first);
++
++		local_idsn = subflow->idsn;
++		/* subflow->iasn is incremented once in subflow_set_remote_key()
++		 * to account for the peer's virtual SYN; undo that here so
++		 * rcv_nxt normalizes against the same baseline write_seq and
++		 * snd_una use.
++		 */
++		remote_idsn = subflow->remote_key_valid ? subflow->iasn - 1 : 0;
++	}
++
+ 	info->mptcpi_csum_enabled = READ_ONCE(msk->csum_enabled);
+ 	info->mptcpi_token = msk->token;
+-	info->mptcpi_write_seq = msk->write_seq;
++	info->mptcpi_write_seq = msk->write_seq - local_idsn;
+ 	info->mptcpi_retransmits = inet_csk(sk)->icsk_retransmits;
+ 	info->mptcpi_bytes_sent = msk->bytes_sent;
+ 	info->mptcpi_bytes_received = msk->bytes_received;
+@@ -1100,8 +1114,8 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ 
+ 	mptcp_data_lock(sk);
+ 	info->mptcpi_last_ack_recv = jiffies_to_msecs(now - msk->last_ack_recv);
+-	info->mptcpi_snd_una = msk->snd_una;
+-	info->mptcpi_rcv_nxt = msk->ack_seq;
++	info->mptcpi_snd_una = msk->snd_una - local_idsn;
++	info->mptcpi_rcv_nxt = msk->ack_seq - remote_idsn;
+ 	info->mptcpi_bytes_acked = msk->bytes_acked;
+ 	mptcp_data_unlock(sk);
+ }
 -- 
-Sponsored by the NGI0 Core fund.
+2.43.0
 
