@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D8F472082;
-	Wed,  2 Sep 2026 16:36:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC864AA1C3
+	for <mptcp@lists.linux.dev>; Wed,  2 Sep 2026 16:39:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788367006; cv=none; b=AORVnb9hHvu3oI0MkPA8Qc7qiYgzsbqcrXsZOh799jEnC0ojSITWnbuiXTU03QiNhCX/nQI1l31dsD7VPitHQGVXL90YlkcRP3Gm3lg+VCGP1Czehc7dFf+Gw3lqRguB7urVojCjCTLFqmaO7FeX3/Rm9AD/TYO0ai4AQOxTPQI=
+	t=1788367174; cv=none; b=G73ECvr4U3+ClpqV96Xsp4MRNFk+pSEbQwEa+dsPDB4H6zeVJ2jMdZ/MgJjOsqG1Bl9/fWSPQaFpIaluWFyonYTLiFlZVOxJ3FEhLsoRckoLJV7kl1w1x2VWQzhHm+3ibjgvSq/3jpLtWYFs0+KvjfvvHLEbvzqXU1Jq6kZlqjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788367006; c=relaxed/simple;
-	bh=Skgi6wMqf1Yk3i5gT1ceyqK6Zc1JmJW1irMTJc2cKt0=;
+	s=arc-20240116; t=1788367174; c=relaxed/simple;
+	bh=IxH+TcPFr9sHL+530fEBm6z5qUloI3xUMLjzxQ/REZI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tlrrxmMAiuMTqGGQP2oRkLH378X0D0Xu0oSmUdJFn5IsaG4fiRgAOVorO1ONBWXoPeZ6iWzevPIKwdu9/GkJDym5eyqbylSmEnT91cZdA2KAFETFDy74m8925pyN3mtihV+SptCNpbmveKe8CwUdpTZUBU5yWV38BdI3Fcc0yiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oUYCnbDq; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=OXdzanSp72hxSpZIIOdVbfFW/F70LEghNSz+ia9MMqA5nWErosAO13hkILpu5/RuCETUZ7zKhzhBx8vAVOMsS1rkay9jnivZ6ec5jjQc/nUZiw2mlSAf12wKsgfbMqwtCezArfTKVzbqECQTJdwzfgzLZsEsWyO/hioDFn0lv8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=otjR0lMt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oUYCnbDq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4728B1F000E9;
-	Wed,  2 Sep 2026 16:36:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="otjR0lMt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A407B1F000E9;
+	Wed,  2 Sep 2026 16:39:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788367004;
-	bh=0nTpt0lTM+XqOUsndRhkxCQCE/ZQMJ4MFKcxDZo2BW8=;
+	s=k20260515; t=1788367171;
+	bh=7UF9//x9ZInEFdxEVRUB4TF7+NOCSl/CF1dEkXjiuZc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=oUYCnbDqXKDjxuLfVp0k9sJqymeZhzefn8O0uuIeNoibRc7gzcywqUJOAkRLYSDzw
-	 qXRvf8/sTk4f6HHcZnCdBfqhNTfo9zhsYWHpRN1fOZtz1xn4s3edzfR1p8JzQqan6x
-	 1x4yVVJhior7kgWXP7571QuDyAqQsO6SFv9aHIaXL1TKCbU6cDE6f/yUwgaS6vBFiz
-	 aZs3EGQlLyy5u9BEbReG4QNDSbZxMgMbWNyeHFX02pZCU6F6vrlWzizMb2S4MJ4/Cq
-	 dyRZENf9mkfxJJy23QvryAnsVYNFI/T968ybgHWr6PqqIbkRdmiJykhSZgWFFiB617
-	 gVb8j7/Q8Z1vg==
-Message-ID: <5bfa969b-fd91-4797-a0ba-100762233ea6@kernel.org>
-Date: Wed, 2 Sep 2026 18:36:41 +0200
+	b=otjR0lMt7do8vvOOekPt80z/mV7g4owGxRwx0D4Tr9DHofu0FuwW+Jy4M/aO6CNff
+	 T9LCjWy50k2Di3mVxQ5QjbqeaN+Qz5F2dPuhm+up0oAAQokASrcUvZrSUQG1W+wGGI
+	 XIHuV6o3cooNOviplhHwar/R8fh4YPSX3HqX5czyoncC4QJsKyfLY80ldCYtxfUa1b
+	 4n3TTOJEn7SJtPVEKKV4Abwn6tttWxm7aH6o8cKQVSylgSxxXuWSMz3gVjcrGbqfME
+	 FdrD4hgauKILetJmFhtPkLWj5DMTErt5EsAfM4rJcWXL+wrmeEHdERqpLHkgc/P+2D
+	 v5RFxSB1NSTjQ==
+Message-ID: <c8c4f667-5d25-4d94-8627-387d4091c8c4@kernel.org>
+Date: Wed, 2 Sep 2026 18:39:27 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: pm: cap userspace extra_subflows at
- U8_MAX
+Subject: Re: [PATCH mptcp-next 1/2] mptcp: pm: bound extra_subflows admission
+ on userspace PM
 Content-Language: fr
-To: quanyeyang@proton.me, MPTCP Linux <mptcp@lists.linux.dev>
-Cc: stable@vger.kernel.org, Tao Cui <cui.tao@linux.dev>
-References: <20260902-mptcp-pm-extra-subflows-v1-1-68540a866e5a@proton.me>
+To: Tao Cui <cui.tao@linux.dev>, mptcp@lists.linux.dev
+Cc: geliang@kernel.org, cuitao@kylinos.cn, Quanye Yang <quanyeyang@proton.me>
+References: <20260831093206.689827-1-cui.tao@linux.dev>
+ <20260831093206.689827-2-cui.tao@linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,30 +87,71 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260902-mptcp-pm-extra-subflows-v1-1-68540a866e5a@proton.me>
+In-Reply-To: <20260831093206.689827-2-cui.tao@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Quanye,
+Hi Tao,
 
-+cc Tao
++ cc Quanye
 
-On 02/09/2026 17:39, Quanye Yang via B4 Relay wrote:
-> From: Quanye Yang <quanyeyang@proton.me>
+On 31/08/2026 11:32, Tao Cui wrote:
+> From: Tao Cui <cuitao@kylinos.cn>
 > 
-> The userspace PM increments extra_subflows with no upper bound. The
-> field is a u8, so the 256th extra subflow wraps the counter to 0 and
-> the next close hits WARN_ON_ONCE().
+> mptcp_pm_allow_new_subflow() increments the u8 extra_subflows counter
+> for every accepted MP_JOIN on sockets using the userspace PM, without
+> any limit. A peer establishing more than 255 live subflows wraps the
+> counter back to 0, which then makes the underflow guards warn on the
+> next subflow close, and permanently corrupts mptcpi_subflows_total
+> reported to userspace.
 > 
-> Refuse admission at U8_MAX for incoming MP_JOIN and for the Netlink
-> create path.
+> Refuse new MP_JOINs once the counter has reached U8_MAX, so that it
+> cannot wrap anymore.
+> 
+> Fixes: e99c1ca89071 ("mptcp: pm: add WARN_ON_ONCE guards on extra_subflows underflow")
+> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/629
 
-Thank you for the patch. It looks like Tao already addresses the same
-issues, see:
+Do you have a GitHub account? Just to know if we can assign this task to
+you (or just leave a message in the comment section).
 
-https://lore.kernel.org/20260831093206.689827-1-cui.tao@linux.dev
+> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+> ---
+>  net/mptcp/pm.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 8b68868255c5..3990f6775723 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -562,10 +562,17 @@ bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk)
+>  
+>  	if (mptcp_pm_is_userspace(msk)) {
+>  		if (mptcp_userspace_pm_active(msk)) {
+> +			bool allow;
 
-Do you mind syncing with him, please?
+"ret" could be re-used here.
+
+> +
+> +			/* extra_subflows is a u8: don't let a peer wrap it
+> +			 * with more than U8_MAX accepted MP_JOINs
+> +			 */
+
+I don't think this comment is needed, "< U8_MAX" is probably clear enough.
+
+>  			spin_lock_bh(&pm->lock);
+> -			pm->extra_subflows++;
+> +			allow = pm->extra_subflows < U8_MAX;
+> +			if (allow)
+> +				pm->extra_subflows++;
+>  			spin_unlock_bh(&pm->lock);
+> -			return true;
+> +			return allow;
+>  		}
+>  		return false;
+>  	}
+
+So, at the end, we can re-used the same version as Quanye. Would it be
+OK for both of you to have a Co-developed-by tag here?
 
 Cheers,
 Matt
