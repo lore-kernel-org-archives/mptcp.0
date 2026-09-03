@@ -1,322 +1,191 @@
-Received: from sender6-of-o54.zoho.com (sender6-of-o54.zoho.com [165.173.180.54])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373BB463B89
-	for <mptcp@lists.linux.dev>; Thu,  3 Sep 2026 09:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=165.173.180.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788426384; cv=pass; b=o/dIjNXSzAiW7vuZs0ayQwCiEH7njZGUNsVRiHRpUqrG1TILdukeX7N1O5vkOUI9QJaY+A8hLFvejhLJXVT2lDrJn/KgAYWju0AU1BhebdE2Xj6+mGNzXPjYeePPmj37iMmzxxSqXv0FMvFC9PJN+AKvby+98xrE1UCJ9I/LKZY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788426384; c=relaxed/simple;
-	bh=RerHkLmYytFoz/0Hz5mPD767fG086UZG3Gjx5b0MfRQ=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=CMUQfI1u58v6tWd5ZCxJIcqF7HoGy/gBbAMY4aeyg0XRiwcDwej5+RyYcy9bjvDHjr5ywIxP4rdiHaHYYhDNmZ62z0X3bMBROk8gX3DdcsuKH6/JbJhJ/EhLPNiBW1H12df6NIrTbxPI3/NgZMLjpZkjESRhVg6WShqyw2HnQ/g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=akshit@mpiricsoftware.com header.b=ikTzBFkL reason="key not found in DNS"; arc=pass smtp.client-ip=165.173.180.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FEFF349CE8
+	for <mptcp@lists.linux.dev>; Thu,  3 Sep 2026 09:13:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788426830; cv=none; b=Hl5LJA4HZAxjgx8jVrzsUBXnnqkH3sJEFBOYM4Kerr3Ts2yGF4GprEPFa6qDeZsYlwhDWUM64n4sc32jrB7P7sr/eXlTP4W8wRZHtxekG1652PWqAgHF5AidLCtRgp4N6QKyoOLZBj8O78aY6a/X7L/4ecXOgrnTWx3jTIsh+b8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788426830; c=relaxed/simple;
+	bh=HGwZ1PzpXxIXMnwpmynVg5RxiaJr7iGyY9RzYmsi7yY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vm53/b46kZVijmFZaieWcSwFU8LbL73W7FOfNwjrbTaaB3J4DTLKQo4WyxCFx38nmln9W8/xNiFaCF6PhlAQ5sXKL5ahKMA95ySd92fVObI73hNWyjXi0hGpdCTEXJbsJSJo0F+XhCxvlwCSG4cTDb7H1pvspBrdO5x50JB+Ax8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nUWonlzm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=akshit@mpiricsoftware.com header.b="ikTzBFkL"
-ARC-Seal: i=1; a=rsa-sha256; t=1788426380; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=NPQkrBcJalRsLEi3DYwgjHJQTSv1lRYBvPAH67hYi+I+bS+giHGUB/+w0sb7ezJqcRtkiyZ06apNWNb+/SPs7zSGt8bE52eFBwkmsleJEGTDs9PZch7MwsPP4lTyuwGcdN6Y3c3lwyHpesWQx8VtKC8TkMKgPEJeUd/gCnhX6jE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1788426380; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=CvF0+blD5mzqpqmTB/+LQ1x1gnac5N8uMjOkJzKtRnA=; 
-	b=MQh9bTkY285FkxYwmHVT0czvUqbNQwH/xdYaEY7yUhVMYlg+3jcZBEAJWy0WHwuOz6AdSSmBzQV+pn/39twETYLG7H4nAdRoJ9r/qpicNzJyTFXt8pVcM9Sh0krx+DV3OcaQ0BQWRqrYeQAorfceVmVHXNRVCozPY05fvNH16a4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=mpiricsoftware.com;
-	spf=pass  smtp.mailfrom=akshit@mpiricsoftware.com;
-	dmarc=pass header.from=<akshit@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1788426380;
-	s=mpiric; d=mpiricsoftware.com; i=akshit@mpiricsoftware.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=CvF0+blD5mzqpqmTB/+LQ1x1gnac5N8uMjOkJzKtRnA=;
-	b=ikTzBFkL4lnVA2AFz94KX6Xf1gzM6NuhFVqLT1zW+UyQTPl9M+oHGSY1l+oZAXop
-	+M/DI5O/XKX2Nxesohx/5kKfcEhU2NgyxwTz2CWQIuW1v6FtGJP4bA9sWWo4QtsejZ6
-	uhKKDTmMmNdYfDIaQnDzflzoe7ECYuFdpU27hhaU=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1788426379922117.32606594796937; Thu, 3 Sep 2026 02:06:19 -0700 (PDT)
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1788426374602914.4254052288398; Thu, 3 Sep 2026 02:06:14 -0700 (PDT)
-Date: Thu, 03 Sep 2026 14:36:14 +0530
-From: Akshit Patadiya <akshit@mpiricsoftware.com>
-To: "mptcp" <mptcp@lists.linux.dev>
-Cc: "shardul.b" <shardul.b@mpiricsoftware.com>, "janak" <janak@mpiric.us>,
-	"kalpanjani009" <kalpanjani009@gmail.com>,
-	"kalpan.jani" <kalpan.jani@mpiricsoftware.com>,
-	"akshit" <akshit@mpiric.us>,
-	"Akshit Patadiya" <akshit@mpiricsoftware.com>
-Message-ID: <1a06684cdb6.76fab980244194.5937750492835496711@mpiricsoftware.com>
-In-Reply-To: <20260813123754.4095492-1-akshit@mpiricsoftware.com>
-References: <20260813123754.4095492-1-akshit@mpiricsoftware.com>
-Subject: Re: [PATCH mptcp-next] mptcp: fix add_addr_accepted accounting on
- subflow close
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nUWonlzm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A12181F000E9;
+	Thu,  3 Sep 2026 09:13:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788426828;
+	bh=zb3/Bk6eTrqnb1sXe7ZJ9Jh/rQxNjDS34DR7zvR9GUI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=nUWonlzm8INJvIIjj3RkomYHPb6TVnInX7ONpl0ntRV5C30RgNG/BksUXL0tF3y2q
+	 xZJggb1GF0gxfQ+WN97ZHe53eR9iQBZt9IIbusfYNt5BO9N2+1biRYamiuH8792KQn
+	 t+g77WPFLlxqYVgiej0dHNMS8gbR22D1E2mplwiPJet1lC5lfI+R4uzSgYrfkphLBf
+	 Kq5+PPtNo8XpNTTis/wpzB+5MNXb37vdaTBA6xlimSECToM1poEDcu8CIEPXgboCsb
+	 X3UOcEHWGaIdC/nJ0/iTn4c8btpQ6Sc32m501ipm2d5h+jiCiniHa+6Gh2+gPwVf+/
+	 KgLSNt5gdgcRg==
+Message-ID: <549d6a7d-3b89-4eff-a35f-065df75e8d01@kernel.org>
+Date: Thu, 3 Sep 2026 11:13:45 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next 1/2] mptcp: pm: bound extra_subflows admission
+ on userspace PM
+Content-Language: fr
+To: Tao Cui <cui.tao@linux.dev>, mptcp@lists.linux.dev
+Cc: geliang@kernel.org, cuitao@kylinos.cn, Quanye Yang <quanyeyang@proton.me>
+References: <20260831093206.689827-1-cui.tao@linux.dev>
+ <20260831093206.689827-2-cui.tao@linux.dev>
+ <c8c4f667-5d25-4d94-8627-387d4091c8c4@kernel.org>
+ <801d048f-70a3-4b42-8a09-7b81f46d9a22@linux.dev>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <801d048f-70a3-4b42-8a09-7b81f46d9a22@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Aug 13, 2026 at 05:19:09PM +0530, sashiko-bot@kernel.org wrote:
-> [High] Concurrent updates to msk->pm.rm_list_rx can cause RM_ADDR IDs
-> to be silently skipped, resulting in leaked subflows.
->
-> If a remote peer sends multiple RM_ADDR options in rapid succession,
-> softirq context can call mptcp_pm_rm_addr_received(), which
-> unconditionally overwrites pm->rm_list_rx while scheduling work
- 
-Looked into this, it's real. Traced it down:
- 
-mptcp_pm_rm_addr_recv() passes &msk->pm.rm_list_rx straight into
-mptcp_pm_rm_addr_or_subflow() (pm.c:830), and that loop re-reads
-rm_list->nr / rm_list->ids[i] on every iteration. It also drops
-pm.lock mid-loop around mptcp_subflow_shutdown()/mptcp_close_ssk()
-since those can't be called under a spinlock.
- 
-Worse, mptcp_pm_worker() clears the MPTCP_PM_RM_ADDR_RECEIVED bit
-before calling mptcp_pm_rm_addr_recv():
- 
-	if (pm->status & BIT(MPTCP_PM_RM_ADDR_RECEIVED)) {
-		pm->status &= ~BIT(MPTCP_PM_RM_ADDR_RECEIVED);
-		mptcp_pm_rm_addr_recv(msk);
-	}
- 
-so if a second RM_ADDR shows up while the first is still being
-processed, mptcp_pm_schedule_work() sees the bit already clear,
-treats it as new work, and mptcp_pm_rm_addr_received() overwrites
-rm_list_rx right under the loop during one of its unlock windows
-instead of getting coalesced. End result is the outer loop's i /
-rm_list->nr can go stale mid-flight and some IDs from the original
-batch just never get processed.
- 
-This is pre-existing, not something this patch touches (different
-struct, different lock concern than the id_accepted_bitmap stuff
-here), so I'm not folding a fix into this one. Will open a separate
-issue/patch for it, can take it myself if nobody's already on it.
- 
-For #498 itself, this patch should close it as-is. It also looks
-related to #496 per that issue's note - let me know if you want me
-to check whether this covers that one too, or if it's a
-prerequisite.
- 
-Tested against mptcp_join.sh for the close-before-RM_ADDR case,
-fullmesh reuse of the same remote id, and duplicate RM_ADDR - all
-passing.
- 
-Thanks and regards,
-Akshit patadiya
+Hi Tao,
 
+Thank you for your reply!
 
-From: Akshit Patadiya <akshit@mpiricsoftware.com>
-To: <mptcp@lists.linux.dev>
-Cc: <matttbe@kernel.org>, <martineau@kernel.org>, <pabeni@redhat.com>, <shardul.b@mpiricsoftware.com>, <janak@mpiric.us>, <kalpanjani009@gmail.com>, <kalpan.jani@mpiricsoftware.com>, <akshit@mpiric.us>, "Akshit Patadiya"<akshit@mpiricsoftware.com>
-Date: Thu, 13 Aug 2026 18:07:54 +0530
-Subject: [PATCH mptcp-next] mptcp: fix add_addr_accepted accounting on subflow close
+On 03/09/2026 10:55, Tao Cui wrote:
+> Hi Matt,
+> 
+> 在 2026/9/3 00:39, Matthieu Baerts 写道:
+>> Hi Tao,
+>>
+>> + cc Quanye
+>>
+>> On 31/08/2026 11:32, Tao Cui wrote:
+>>> From: Tao Cui <cuitao@kylinos.cn>
+>>>
+>>> mptcp_pm_allow_new_subflow() increments the u8 extra_subflows counter
+>>> for every accepted MP_JOIN on sockets using the userspace PM, without
+>>> any limit. A peer establishing more than 255 live subflows wraps the
+>>> counter back to 0, which then makes the underflow guards warn on the
+>>> next subflow close, and permanently corrupts mptcpi_subflows_total
+>>> reported to userspace.
+>>>
+>>> Refuse new MP_JOINs once the counter has reached U8_MAX, so that it
+>>> cannot wrap anymore.
+>>>
+>>> Fixes: e99c1ca89071 ("mptcp: pm: add WARN_ON_ONCE guards on extra_subflows underflow")
+>>> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/629
+>>
+>> Do you have a GitHub account? Just to know if we can assign this task to
+>> you (or just leave a message in the comment section).
+>>
+>>> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+>>> ---
+>>>  net/mptcp/pm.c | 11 +++++++++--
+>>>  1 file changed, 9 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+>>> index 8b68868255c5..3990f6775723 100644
+>>> --- a/net/mptcp/pm.c
+>>> +++ b/net/mptcp/pm.c
+>>> @@ -562,10 +562,17 @@ bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk)
+>>>  
+>>>  	if (mptcp_pm_is_userspace(msk)) {
+>>>  		if (mptcp_userspace_pm_active(msk)) {
+>>> +			bool allow;
+>>
+>> "ret" could be re-used here.
+>>
+>>> +
+>>> +			/* extra_subflows is a u8: don't let a peer wrap it
+>>> +			 * with more than U8_MAX accepted MP_JOINs
+>>> +			 */
+>>
+>> I don't think this comment is needed, "< U8_MAX" is probably clear enough.
+>>
+>>>  			spin_lock_bh(&pm->lock);
+>>> -			pm->extra_subflows++;
+>>> +			allow = pm->extra_subflows < U8_MAX;
+>>> +			if (allow)
+>>> +				pm->extra_subflows++;
+>>>  			spin_unlock_bh(&pm->lock);
+>>> -			return true;
+>>> +			return allow;
+>>>  		}
+>>>  		return false;
+>>>  	}
+>>
+>> So, at the end, we can re-used the same version as Quanye. Would it be
+>> OK for both of you to have a Co-developed-by tag here?
+>>
+> 
+> Thanks for sorting this out with Quanye.
+> 
+> Sounds good to me. I'll send a v2 taking your two comments into
+> account, reusing "ret" and dropping the comment, with Quanye's
+> Netlink part as a separate patch with him as author, and
+> Co-developed-by tags on the admission patch. I'll switch to
+> "Closes:" for the issue as well.
 
- > When an accepted remote address is used by a subflow that is
- > closed before the corresponding RM_ADDR is received, the
- > add_addr_accepted counter is not decremented when the subflow
- > is removed.
- > 
- > As a result, the accepted-address budget can remain consumed
- > for the lifetime of the MPTCP connection. A subsequent ADD_ADDR
- > is then not acted upon because the peer is considered to have
- > already reached the add_addr_accepted limit.
- > 
- > Track accepted remote address IDs in a bitmap instead of relying
- > on a live subflow to signal removal. Release the accepted-address
- > slot as soon as the subflow using it is closed, instead of
- > depending on a matching RM_ADDR that may never arrive. The same
- > bitmap also guards against double-counting if the same address ID
- > is accepted more than once.
- > 
- > This allows a new MP_JOIN to be created after a previously
- > accepted subflow has been closed and its address has been
- > removed.
- > 
- > Fixes: 1c1f72137598 ("mptcp: pm: only decrement add_addr_accepted for MPJ req")
- > Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/498
- > Signed-off-by: Akshit Patadiya <akshit@mpiricsoftware.com>
- > ---
- >  net/mptcp/pm.c        |  8 +++---
- >  net/mptcp/pm_kernel.c | 63 ++++++++++++++++++++++++++++++++++++-------
- >  net/mptcp/protocol.h  |  3 +++
- >  3 files changed, 60 insertions(+), 14 deletions(-)
- > 
- > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
- > index ba7c6f80a183..b6edb9df3216 100644
- > --- a/net/mptcp/pm.c
- > +++ b/net/mptcp/pm.c
- > @@ -681,8 +681,10 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk,
- >          return;
- >  
- >      spin_lock_bh(&pm->lock);
- > -    if (update_subflows)
- > +    if (update_subflows) {
- >          __mptcp_pm_close_subflow(msk);
- > +        mptcp_pm_nl_close_subflow(msk, subflow);
- > +    }
- >  
- >      /* Even if this subflow is not really established, tell the PM to try
- >       * to pick the next ones, if possible.
- > @@ -786,7 +788,6 @@ static void mptcp_pm_rm_addr_or_subflow(struct mptcp_sock *msk,
- >  
- >      for (i = 0; i < rm_list->nr; i++) {
- >          u8 rm_id = rm_list->ids[i];
- > -        bool removed = false;
- >  
- >          mptcp_for_each_subflow_safe(msk, subflow, tmp) {
- >              struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- > @@ -807,7 +808,6 @@ static void mptcp_pm_rm_addr_or_subflow(struct mptcp_sock *msk,
- >                   i, rm_id, id, remote_id, msk->mpc_endpoint_id);
- >              spin_unlock_bh(&msk->pm.lock);
- >              mptcp_subflow_shutdown(sk, ssk, how);
- > -            removed |= subflow->request_join;
- >  
- >              /* the following takes care of updating the subflows counter */
- >              mptcp_close_ssk(sk, ssk, subflow);
- > @@ -819,7 +819,7 @@ static void mptcp_pm_rm_addr_or_subflow(struct mptcp_sock *msk,
- >  
- >          if (rm_type == MPTCP_MIB_RMADDR) {
- >              __MPTCP_INC_STATS(sock_net(sk), rm_type);
- > -            if (removed && mptcp_pm_is_kernel(msk))
- > +            if (mptcp_pm_is_kernel(msk))
- >                  mptcp_pm_nl_rm_addr(msk, rm_id);
- >          }
- >      }
- > diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
- > index d3014bf57bf3..8b087677a4e7 100644
- > --- a/net/mptcp/pm_kernel.c
- > +++ b/net/mptcp/pm_kernel.c
- > @@ -694,8 +694,13 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- >      spin_lock_bh(&msk->pm.lock);
- >  
- >      if (sf_created) {
- > -        /* add_addr_accepted is not decr for ID 0 */
- > -        if (remote.id)
- > +        /* ID 0 is not accounted: the remote address of the initial
- > +         * subflow is known from the beginning. Remember the other
- > +         * accepted IDs, so the counter can be balanced later on even
- > +         * if the linked subflows are gone by then.
- > +         */
- > +        if (remote.id &&
- > +            !__test_and_set_bit(remote.id, msk->pm.id_accepted_bitmap))
- >              msk->pm.add_addr_accepted++;
- >          if (msk->pm.add_addr_accepted >= limit_add_addr_accepted ||
- >              msk->pm.extra_subflows >= limit_extra_subflows)
- > @@ -705,16 +710,53 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- >  
- >  void mptcp_pm_nl_rm_addr(struct mptcp_sock *msk, u8 rm_id)
- >  {
- > -    if (rm_id && !WARN_ON_ONCE(msk->pm.add_addr_accepted == 0)) {
- > -        u8 limit_add_addr_accepted =
- > -            mptcp_pm_get_limit_add_addr_accepted(msk);
- > +    u8 limit_add_addr_accepted;
- >  
- > -        /* Note: if the subflow has been closed before, this
- > -         * add_addr_accepted counter will not be decremented.
- > -         */
- > -        if (--msk->pm.add_addr_accepted < limit_add_addr_accepted)
- > -            WRITE_ONCE(msk->pm.accept_addr, true);
- > +    /* Only remote addresses that have been accepted by this host are
- > +     * accounted: not ID 0, and not MP_JOIN requests initiated by the peer.
- > +     * The bit, not the presence of a subflow, is what tells them apart, so
- > +     * this works even when the subflows are already closed, and a
- > +     * duplicated RM_ADDR is a no-op.
- > +     */
- > +    if (!rm_id || !__test_and_clear_bit(rm_id, msk->pm.id_accepted_bitmap))
- > +        return;
- > +
- > +    if (WARN_ON_ONCE(msk->pm.add_addr_accepted == 0))
- > +        return;
- > +
- > +    limit_add_addr_accepted = mptcp_pm_get_limit_add_addr_accepted(msk);
- > +    if (--msk->pm.add_addr_accepted < limit_add_addr_accepted)
- > +        WRITE_ONCE(msk->pm.accept_addr, true);
- > +}
- > +
- > +/* Called with the PM lock held, from the subflow close path, before the
- > + * subflow is removed from conn_list.
- > + */
- > +void mptcp_pm_nl_close_subflow(struct mptcp_sock *msk,
- > +                   const struct mptcp_subflow_context *subflow)
- > +{
- > +    u8 remote_id = READ_ONCE(subflow->remote_id);
- > +    struct mptcp_subflow_context *iter;
- > +
- > +    /* Only the subflows this host has created upon an ADD_ADDR reception
- > +     * are accounted, and never the initial one.
- > +     */
- > +    if (!subflow->request_join || !remote_id ||
- > +        !test_bit(remote_id, msk->pm.id_accepted_bitmap))
- > +        return;
- > +
- > +    /* The remote address can still be used by another subflow, e.g. with
- > +     * fullmesh endpoints.
- > +     */
- > +    mptcp_for_each_subflow(msk, iter) {
- > +        if (iter == subflow || iter->close_event_done)
- > +            continue;
- > +        if (iter->request_join &&
- > +            READ_ONCE(iter->remote_id) == remote_id)
- > +            return;
- >      }
- > +
- > +    mptcp_pm_nl_rm_addr(msk, remote_id);
- >  }
- >  
- >  static bool address_use_port(struct mptcp_pm_addr_entry *entry)
- > @@ -1668,6 +1710,7 @@ static void mptcp_pm_kernel_init(struct mptcp_sock *msk)
- >      WRITE_ONCE(pm->accept_subflow, subflows_allowed);
- >  
- >      bitmap_fill(pm->id_avail_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
- > +    bitmap_zero(pm->id_accepted_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
- >  }
- >  
- >  struct mptcp_pm_ops mptcp_pm_kernel = {
- > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
- > index 7e168e450fb0..54663d7aca34 100644
- > --- a/net/mptcp/protocol.h
- > +++ b/net/mptcp/protocol.h
- > @@ -243,6 +243,7 @@ struct mptcp_pm_data {
- >      );
- >  
- >      DECLARE_BITMAP(id_avail_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
- > +    DECLARE_BITMAP(id_accepted_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
- >      struct mptcp_rm_list rm_list_tx;
- >      struct mptcp_rm_list rm_list_rx;
- >  };
- > @@ -1127,6 +1128,8 @@ void mptcp_pm_send_ack(struct mptcp_sock *msk,
- >                 bool prio, bool backup);
- >  void mptcp_pm_addr_send_ack(struct mptcp_sock *msk);
- >  void mptcp_pm_nl_rm_addr(struct mptcp_sock *msk, u8 rm_id);
- > +void mptcp_pm_nl_close_subflow(struct mptcp_sock *msk,
- > +                   const struct mptcp_subflow_context *subflow);
- >  void mptcp_pm_rm_subflow(struct mptcp_sock *msk,
- >               const struct mptcp_rm_list *rm_list);
- >  void mptcp_pm_rm_addr_received(struct mptcp_sock *msk,
- > -- 
- > 2.43.0
- > 
- > 
+Thanks! Please use "Closes" only for the last patch of the series fixing
+the issue. You can use "Link" for the others.
 
+> About the GitHub account: I have one (sharkct235@gmail.com) but
+> honestly I don't use it much because of the captcha checks, so
+> sorry in advance if I'm slow to react there. I've left a comment on
+> the issue, and I'll try to be better at watching it for this kind
+> of thing.
 
+Thanks! I guess there shouldn't be new comments over there, but we
+appreciate comments simply saying "I'm going to look at it".
 
-Akshit Patadiya
- 
-Team Lead & Software developer at Mpiric Software
- 
-View My Digital Business Card
- 
-
-
-
-Disclaimer: This email and any attachments to it may be confidential and are intended solely for the use of the individual to whom it is addressed. Any views or opinions expressed are solely those of the author and do not necessarily represent those of Mpiric Software.
-
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
