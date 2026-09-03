@@ -1,380 +1,132 @@
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-212.mta1.migadu.com [95.215.58.212])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFAC438551D
-	for <mptcp@lists.linux.dev>; Thu,  3 Sep 2026 00:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5FD2F8E87
+	for <mptcp@lists.linux.dev>; Thu,  3 Sep 2026 01:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788393647; cv=none; b=G3lX+sVnf9opRaPRn0ae8hTCTqboYRmIKTMmSsshxiC0OvshLqXna9z5dtbVhgrrJpKaPPFphvetcCtUt9DaHm7UOtgIXkIqZf8j+I4xXc3F/VanlfaxJYY7EqP9vEnu6cp6HQAjNb3BpY5WuX72rJ76V86vv9HRAl4KzeSOFws=
+	t=1788397961; cv=none; b=cFxiqlG4hZjmAxzxo2pnAcmBdm6PDYYrsRbF8eJYPgOOICLtpJhml5k5xYztUwrMZbwVKf9DEkUn/oN3tfLL9J5Wr+vd3NJpl04Z1UAXlF/H7S8wwxpyOHkFVDBrn23uCzdCt1VkYnN4xpaf7FYvAVmps3P+GssViBmYhWPCo/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788393647; c=relaxed/simple;
-	bh=7Cs2JcBlsUcENEaA5rX9NKfgLDcCYhhpRTVybw4gmzM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WU6tFnsHLtDlG9YDN45+DDxsxQ4s35TgJVoqQEazAj1EaiIFJomQ82F7PSLtW4ztTUwyTagVRtQsXgv1DN3SuFR8rjIFkNSBbLjKBnHHR2KU4yCY5fz21ag78F8ahDYc3mKzF20OzjyiyS4ZuGWn/rS7ErvTvSRpK1HHmWoUXoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=U7MGmuec; arc=none smtp.client-ip=192.19.144.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1788397961; c=relaxed/simple;
+	bh=rcSvnwdgysIYaZNX3OhjT56/9EbUy6eEYgqPG+yJFKE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eAvoxDBJZ3Y1UVOBU1u3e39xoQ1Aju4+2i+b5OFxuenHnKHGHjcxIhHZ6kHgbU6ZXH82devcqm4X7rRfy6Y6Hx+cTQzbkXxpmeTcQBYul41xopestRUY2VFAxSkWuKmHdakJIf/wseioKfjp1WvTZaIM/YLsetDgJryXTncrAhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JweijNVR; arc=none smtp.client-ip=95.215.58.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="U7MGmuec"
-Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id AFD0DC0000F1;
-	Wed,  2 Sep 2026 17:00:36 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com AFD0DC0000F1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1788393636;
-	bh=7Cs2JcBlsUcENEaA5rX9NKfgLDcCYhhpRTVybw4gmzM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=U7MGmuectCQEfbVgwkkXnqi/Q5t0fL4L1PQuycg+9BB5g9RiTFkYTKDHsJZeEXCs7
-	 UpQCFwcGo/HommYpEQz+FsDveFddA+oEmeCToWivj4LvY2Pt6ENnjtoaf7roEQblO2
-	 YpWEmUMlmLaIJgiC0GGNYmn4lL7X+1Pzkf3Y2IRs=
-Received: from stbirv-lnx-1.igp.broadcom.net (stbirv-lnx-1.igp.broadcom.net [10.67.48.32])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 51F6AAA5;
-	Wed,  2 Sep 2026 17:00:36 -0700 (PDT)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: stable@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>,
-	syzbot+937b5bbb6a815b3e5d0b@syzkaller.appspotmail.com,
-	Kuniyuki Iwashima <kuniyu@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Neal Cardwell <ncardwell@google.com>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	netdev@vger.kernel.org (open list:NETWORKING [GENERAL]),
-	linux-kernel@vger.kernel.org (open list),
-	mptcp@lists.linux.dev (open list:NETWORKING [MPTCP]),
-	bcm-kernel-feedback-list@broadcom.com
-Subject: [PATCH stable 6.1.y] tcp: fix potential race in tcp_v6_syn_recv_sock()
-Date: Wed,  2 Sep 2026 17:00:28 -0700
-Message-Id: <20260903000029.3508006-3-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260903000029.3508006-1-florian.fainelli@broadcom.com>
-References: <20260903000029.3508006-1-florian.fainelli@broadcom.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JweijNVR"
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=rcSvnwdgysIYaZNX3OhjT56/9EbUy6eEYgqPG+yJFKE=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1788397956; v=1; x=1789002756;
+ b=JweijNVRuyEapt4j5eJ2uuolPk4CyoFEHSRQEQFf0mN2ACiRAR7dxSRFDvhwQ3+0NpsmRUlR
+ C5/K9Op4Q/r4YLW5xG5R/xId0qmoe2xQMuTOJhsUNpP/Lexq22bTBh1CbMSgrfwJiWTN9A1s7/V
+ FZg46uoqBP27o/vZW5EyF1lI=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 729514d5e02325d1;
+	Thu, 03 Sep 2026 01:12:36 +0000
+X-Mizu-Trace-ID: 729514d5e02325d1
+X-Migadu-Flow: FLOW_OUT
+From: Hangbin Liu <hangbin.liu@linux.dev>
+Subject: [PATCH mptcp-next v2 0/2] selftests: mptcp: convert iptables to
+ nftables
+Date: Thu, 03 Sep 2026 09:12:19 +0800
+Message-Id: <20260903-mptcp_nft-v2-0-66283e4b9c3b@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/22NQQrCMBBFr1JmbSQZbG1ceQ8pEuPEDmpakhBaS
+ u9uyNrl4z/e3yBSYIpwaTYIlDny5AvgoQE7Gv8iwc/CgBI7qSWK75zsfPcuiUev8dwjOY0aij8
+ HcrzU1g2qJjwtCYayjRzTFNZ6k1U1/hSzElK0rbbGqM6dlLy+1w/7KR6th2Hf9x+GHWVXrwAAA
+ A==
+X-Change-ID: 20260902-mptcp_nft-b892782ef929
+To: MPTCP Linux <mptcp@lists.linux.dev>, 
+ Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: Hangbin Liu <hangbin.liu@linux.dev>, netdev@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, Hangbin Liu <liuhangbin@kylinos.cn>
+X-Mailer: b4 0.14.3
 
-From: Eric Dumazet <edumazet@google.com>
+iptables has been deprecated for years. The Linux kernel has included
+nftables as the successor to iptables since 2014, and every major
+distribution uses nftables as the default packet filtering framework.
+The iptables command we run on modern systems is actually iptables‑nft,
+a compatibility layer that translates iptables syntax to nftables rules
+behind the scenes.
 
-Code in tcp_v6_syn_recv_sock() after the call to tcp_v4_syn_recv_sock()
-is done too late.
+There are also some features that can be set easily with nft, while we need
+to convert to BPF code under iptables, such as MPTCP add‑addr and
+remove‑addr suboptions. To make future work easier, convert iptables usage
+in mptcp to nftables.
 
-After tcp_v4_syn_recv_sock(), the child socket is already visible
-from TCP ehash table and other cpus might use it.
+Tested with iptables-translate to make sure each nft conversion is the same
+with previous one. e.g. for mptcp_sockopt.sh, the ip6tables shows
 
-Since newinet->pinet6 is still pointing to the listener ipv6_pinfo
-bad things can happen as syzbot found.
+bash-5.3# ip6tables -L
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination
 
-Move the problematic code in tcp_v6_mapped_child_init()
-and call this new helper from tcp_v4_syn_recv_sock() before
-the ehash insertion.
+Chain FORWARD (policy ACCEPT)
+target     prot opt source               destination
 
-This allows the removal of one tcp_sync_mss(), since
-tcp_v4_syn_recv_sock() will call it with the correct
-context.
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination
+ACCEPT     tcp  --  anywhere             anywhere             tcp flags:FIN,SYN,RST,ACK/SYN mark match 0x1
+ACCEPT     tcp  --  anywhere             anywhere             tcp flags:RST/RST mark match 0x0
+ACCEPT     tcp  --  anywhere             anywhere             mark match 0x1
+DROP       tcp  --  anywhere             anywhere             mark match 0x0
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: syzbot+937b5bbb6a815b3e5d0b@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/netdev/69949275.050a0220.2eeac1.0145.GAE@google.com/
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reviewed-by: Kuniyuki Iwashima <kuniyu@google.com>
-Link: https://patch.msgid.link/20260217161205.2079883-1-edumazet@google.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-(cherry picked from commit 858d2a4f67ff69e645a43487ef7ea7f28f06deae)
-[florian:
- - net/ipv6/tcp_ipv6.c:
-   - Set `newnp->ipv6_fl_list = NULL` instead of `newinet->ipv6_fl_list = NULL`,
-     as `ipv6_fl_list` is in `struct ipv6_pinfo`.
-   - Guarded `af_specific` assignment with `#ifdef CONFIG_TCP_MD5SIG` instead
-     of checking `CONFIG_TCP_AO`.
-   - Used `if (tcp_inet6_sk(sk)->repflow)` instead of `inet6_test_bit(REPFLOW, sk)`.]
-Assisted-by: Cursor:gemini-3.7-flash
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+And the backend nft shows like
+
+bash-5.3# nft list tables
+table ip6 filter
+bash-5.3# nft list table ip6 filter
+table ip6 filter {
+        chain OUTPUT {
+                type filter hook output priority filter; policy accept;
+                tcp flags & (fin | syn | rst | ack) == syn meta mark 0x00000001 counter packets 0 bytes 0 accept
+                tcp flags & rst == rst meta mark 0x00000000 counter packets 0 bytes 0 accept
+                meta l4proto tcp meta mark 0x00000001 counter packets 0 bytes 0 accept
+                meta l4proto tcp meta mark 0x00000000 counter packets 0 bytes 0 drop
+        }
+}
+
+Which matches what we change in the script, except the counter.
+
+Signed-off-by: Hangbin Liu <liuhangbin@kylinos.cn>
 ---
- include/net/inet_connection_sock.h |  4 +-
- include/net/tcp.h                  |  4 +-
- net/ipv4/syncookies.c              |  2 +-
- net/ipv4/tcp_fastopen.c            |  2 +-
- net/ipv4/tcp_ipv4.c                |  8 ++-
- net/ipv4/tcp_minisocks.c           |  2 +-
- net/ipv6/tcp_ipv6.c                | 97 +++++++++++++-----------------
- net/mptcp/subflow.c                |  6 +-
- net/smc/af_smc.c                   |  6 +-
- 9 files changed, 66 insertions(+), 65 deletions(-)
+Changes in v2:
+- Fix --sync and --tcp-flags RST convert not match issue (sashiko)
+- make sure drop is a number in check_mark. (sashiko)
+- Other than using one inet table, use ip/ip6 tables to retain the same
+  table and chain names used by the original iptables/ip6tables setup.
+- Link to v1: https://lore.kernel.org/r/20260902-mptcp_nft-v1-0-559caa16f410@kylinos.cn
 
-diff --git a/include/net/inet_connection_sock.h b/include/net/inet_connection_sock.h
-index 7649d4901f0c..3d19420dce51 100644
---- a/include/net/inet_connection_sock.h
-+++ b/include/net/inet_connection_sock.h
-@@ -42,7 +42,9 @@ struct inet_connection_sock_af_ops {
- 				      struct request_sock *req,
- 				      struct dst_entry *dst,
- 				      struct request_sock *req_unhash,
--				      bool *own_req);
-+				      bool *own_req,
-+				      void (*opt_child_init)(struct sock *newsk,
-+							     const struct sock *sk));
- 	u16	    net_header_len;
- 	u16	    net_frag_header_len;
- 	u16	    sockaddr_len;
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 9632ac801e01..b54fd01c5bed 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -468,7 +468,9 @@ struct sock *tcp_v4_syn_recv_sock(const struct sock *sk, struct sk_buff *skb,
- 				  struct request_sock *req,
- 				  struct dst_entry *dst,
- 				  struct request_sock *req_unhash,
--				  bool *own_req);
-+				  bool *own_req,
-+				  void (*opt_child_init)(struct sock *newsk,
-+							 const struct sock *sk));
- int tcp_v4_do_rcv(struct sock *sk, struct sk_buff *skb);
- int tcp_v4_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len);
- int tcp_connect(struct sock *sk);
-diff --git a/net/ipv4/syncookies.c b/net/ipv4/syncookies.c
-index f9514cf87649..d7202f86566a 100644
---- a/net/ipv4/syncookies.c
-+++ b/net/ipv4/syncookies.c
-@@ -199,7 +199,7 @@ struct sock *tcp_get_cookie_sock(struct sock *sk, struct sk_buff *skb,
- 	bool own_req;
- 
- 	child = icsk->icsk_af_ops->syn_recv_sock(sk, skb, req, dst,
--						 NULL, &own_req);
-+						 NULL, &own_req, NULL);
- 	if (child) {
- 		refcount_set(&req->rsk_refcnt, 1);
- 		tcp_sk(child)->tsoffset = tsoff;
-diff --git a/net/ipv4/tcp_fastopen.c b/net/ipv4/tcp_fastopen.c
-index cbce1306bb08..c99f10786c1f 100644
---- a/net/ipv4/tcp_fastopen.c
-+++ b/net/ipv4/tcp_fastopen.c
-@@ -247,7 +247,7 @@ static struct sock *tcp_fastopen_create_child(struct sock *sk,
- 	bool own_req;
- 
- 	child = inet_csk(sk)->icsk_af_ops->syn_recv_sock(sk, skb, req, NULL,
--							 NULL, &own_req);
-+							 NULL, &own_req, NULL);
- 	if (!child)
- 		return NULL;
- 
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index 753a881ce3cd..ec3b0aa0a626 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -1509,7 +1509,9 @@ struct sock *tcp_v4_syn_recv_sock(const struct sock *sk, struct sk_buff *skb,
- 				  struct request_sock *req,
- 				  struct dst_entry *dst,
- 				  struct request_sock *req_unhash,
--				  bool *own_req)
-+				  bool *own_req,
-+				  void (*opt_child_init)(struct sock *newsk,
-+							 const struct sock *sk))
- {
- 	struct inet_request_sock *ireq;
- 	bool found_dup_sk = false;
-@@ -1565,6 +1567,10 @@ struct sock *tcp_v4_syn_recv_sock(const struct sock *sk, struct sk_buff *skb,
- 	}
- 	sk_setup_caps(newsk, dst);
- 
-+#if IS_ENABLED(CONFIG_IPV6)
-+	if (opt_child_init)
-+		opt_child_init(newsk, sk);
-+#endif
- 	tcp_ca_openreq_child(newsk, dst);
- 
- 	tcp_sync_mss(newsk, dst_mtu(dst));
-diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
-index 22b5748a6ee2..67735100f9ac 100644
---- a/net/ipv4/tcp_minisocks.c
-+++ b/net/ipv4/tcp_minisocks.c
-@@ -780,7 +780,7 @@ struct sock *tcp_check_req(struct sock *sk, struct sk_buff *skb,
- 	 * socket is created, wait for troubles.
- 	 */
- 	child = inet_csk(sk)->icsk_af_ops->syn_recv_sock(sk, skb, req, NULL,
--							 req, &own_req);
-+							 req, &own_req, NULL);
- 	if (!child)
- 		goto listen_overflow;
- 
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index 3d909982d818..d3952b058453 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -1191,11 +1191,48 @@ static void tcp_v6_restore_cb(struct sk_buff *skb)
- 		sizeof(struct inet6_skb_parm));
- }
- 
-+/* Called from tcp_v4_syn_recv_sock() for v6_mapped children. */
-+static void tcp_v6_mapped_child_init(struct sock *newsk, const struct sock *sk)
-+{
-+	struct inet_sock *newinet = inet_sk(newsk);
-+	struct ipv6_pinfo *newnp;
-+
-+	newinet->pinet6 = newnp = tcp_inet6_sk(newsk);
-+
-+	memcpy(newnp, tcp_inet6_sk(sk), sizeof(struct ipv6_pinfo));
-+
-+	newnp->saddr = newsk->sk_v6_rcv_saddr;
-+
-+	inet_csk(newsk)->icsk_af_ops = &ipv6_mapped;
-+	if (sk_is_mptcp(newsk))
-+		mptcpv6_handle_mapped(newsk, true);
-+	newsk->sk_backlog_rcv = tcp_v4_do_rcv;
-+#ifdef CONFIG_TCP_MD5SIG
-+	tcp_sk(newsk)->af_specific = &tcp_sock_ipv6_mapped_specific;
-+#endif
-+
-+	newnp->ipv6_mc_list = NULL;
-+	newnp->ipv6_ac_list = NULL;
-+	newnp->ipv6_fl_list = NULL;
-+	newnp->pktoptions  = NULL;
-+	newnp->opt	   = NULL;
-+
-+	/* tcp_v4_syn_recv_sock() has initialized newinet->mc_{index,ttl} */
-+	newnp->mcast_oif   = newinet->mc_index;
-+	newnp->mcast_hops  = newinet->mc_ttl;
-+
-+	newnp->rcv_flowinfo = 0;
-+	if (tcp_inet6_sk(sk)->repflow)
-+		newnp->flow_label = 0;
-+}
-+
- static struct sock *tcp_v6_syn_recv_sock(const struct sock *sk, struct sk_buff *skb,
- 					 struct request_sock *req,
- 					 struct dst_entry *dst,
- 					 struct request_sock *req_unhash,
--					 bool *own_req)
-+					 bool *own_req,
-+					 void (*opt_child_init)(struct sock *newsk,
-+								const struct sock *sk))
- {
- 	struct inet_request_sock *ireq;
- 	struct ipv6_pinfo *newnp;
-@@ -1211,60 +1248,10 @@ static struct sock *tcp_v6_syn_recv_sock(const struct sock *sk, struct sk_buff *
- #endif
- 	struct flowi6 fl6;
- 
--	if (skb->protocol == htons(ETH_P_IP)) {
--		/*
--		 *	v6 mapped
--		 */
--
--		newsk = tcp_v4_syn_recv_sock(sk, skb, req, dst,
--					     req_unhash, own_req);
--
--		if (!newsk)
--			return NULL;
--
--		inet_sk(newsk)->pinet6 = tcp_inet6_sk(newsk);
--
--		newnp = tcp_inet6_sk(newsk);
--		newtp = tcp_sk(newsk);
--
--		memcpy(newnp, np, sizeof(struct ipv6_pinfo));
--
--		newnp->saddr = newsk->sk_v6_rcv_saddr;
--
--		inet_csk(newsk)->icsk_af_ops = &ipv6_mapped;
--		if (sk_is_mptcp(newsk))
--			mptcpv6_handle_mapped(newsk, true);
--		newsk->sk_backlog_rcv = tcp_v4_do_rcv;
--#ifdef CONFIG_TCP_MD5SIG
--		newtp->af_specific = &tcp_sock_ipv6_mapped_specific;
--#endif
--
--		newnp->ipv6_mc_list = NULL;
--		newnp->ipv6_ac_list = NULL;
--		newnp->ipv6_fl_list = NULL;
--		newnp->pktoptions  = NULL;
--		newnp->opt	   = NULL;
--		newnp->mcast_oif   = inet_iif(skb);
--		newnp->mcast_hops  = ip_hdr(skb)->ttl;
--		newnp->rcv_flowinfo = 0;
--		if (np->repflow)
--			newnp->flow_label = 0;
--
--		/*
--		 * No need to charge this sock to the relevant IPv6 refcnt debug socks count
--		 * here, tcp_create_openreq_child now does this for us, see the comment in
--		 * that function for the gory details. -acme
--		 */
--
--		/* It is tricky place. Until this moment IPv4 tcp
--		   worked with IPv6 icsk.icsk_af_ops.
--		   Sync it now.
--		 */
--		tcp_sync_mss(newsk, inet_csk(newsk)->icsk_pmtu_cookie);
--
--		return newsk;
--	}
--
-+	if (skb->protocol == htons(ETH_P_IP))
-+		return tcp_v4_syn_recv_sock(sk, skb, req, dst,
-+					    req_unhash, own_req,
-+					    tcp_v6_mapped_child_init);
- 	ireq = inet_rsk(req);
- 
- 	if (sk_acceptq_is_full(sk))
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index bdf7f439cf2c..d9734bfb7283 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -699,7 +699,9 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 					  struct request_sock *req,
- 					  struct dst_entry *dst,
- 					  struct request_sock *req_unhash,
--					  bool *own_req)
-+					  bool *own_req,
-+					  void (*opt_child_init)(struct sock *newsk,
-+								 const struct sock *sk))
- {
- 	struct mptcp_subflow_context *listener = mptcp_subflow_ctx(sk);
- 	struct mptcp_subflow_request_sock *subflow_req;
-@@ -745,7 +747,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 
- create_child:
- 	child = listener->icsk_af_ops->syn_recv_sock(sk, skb, req, dst,
--						     req_unhash, own_req);
-+						     req_unhash, own_req, opt_child_init);
- 
- 	if (child && *own_req) {
- 		struct mptcp_subflow_context *ctx = mptcp_subflow_ctx(child);
-diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
-index d069e5b156e5..6713296fffd9 100644
---- a/net/smc/af_smc.c
-+++ b/net/smc/af_smc.c
-@@ -118,7 +118,9 @@ static struct sock *smc_tcp_syn_recv_sock(const struct sock *sk,
- 					  struct request_sock *req,
- 					  struct dst_entry *dst,
- 					  struct request_sock *req_unhash,
--					  bool *own_req)
-+					  bool *own_req,
-+					  void (*opt_child_init)(struct sock *newsk,
-+								 const struct sock *sk))
- {
- 	struct smc_sock *smc;
- 	struct sock *child;
-@@ -143,7 +145,7 @@ static struct sock *smc_tcp_syn_recv_sock(const struct sock *sk,
- 
- 	/* passthrough to original syn recv sock fct */
- 	child = smc->ori_af_ops->syn_recv_sock(sk, skb, req, dst, req_unhash,
--					       own_req);
-+					       own_req, opt_child_init);
- 	/* child must not inherit smc or its ops */
- 	if (child) {
- 		rcu_assign_sk_user_data(child, NULL);
+---
+Hangbin Liu (2):
+      selftests: mptcp: convert iptables to nftables for mptcp_sockopt.sh
+      selftests: mptcp: convert iptables to nftables for mptcp_join.sh
+
+ tools/testing/selftests/net/mptcp/config           |   3 +
+ tools/testing/selftests/net/mptcp/mptcp_join.sh    | 142 ++++++++-------------
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh     |   2 +-
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.sh |  51 ++++----
+ 4 files changed, 84 insertions(+), 114 deletions(-)
+---
+base-commit: 8dd2802091fbba563abec55e0455d0e5273c7529
+change-id: 20260902-mptcp_nft-b892782ef929
+
+Best regards,
 -- 
-2.34.1
+Hangbin Liu <liuhangbin@kylinos.cn>
 
