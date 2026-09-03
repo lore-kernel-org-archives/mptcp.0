@@ -1,38 +1,38 @@
-Received: from mta1.migadu.com (out-212.mta1.migadu.com [95.215.58.212])
+Received: from mta1.migadu.com (out-223.mta1.migadu.com [95.215.58.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5FD2F8E87
-	for <mptcp@lists.linux.dev>; Thu,  3 Sep 2026 01:12:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.212
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994F12F7F17
+	for <mptcp@lists.linux.dev>; Thu,  3 Sep 2026 01:12:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788397961; cv=none; b=cFxiqlG4hZjmAxzxo2pnAcmBdm6PDYYrsRbF8eJYPgOOICLtpJhml5k5xYztUwrMZbwVKf9DEkUn/oN3tfLL9J5Wr+vd3NJpl04Z1UAXlF/H7S8wwxpyOHkFVDBrn23uCzdCt1VkYnN4xpaf7FYvAVmps3P+GssViBmYhWPCo/E=
+	t=1788397970; cv=none; b=rbKI6KLuuSU8CsIHQSSd84H5Lpyv2h6N+N04/LebCb4PLgXvwrfEJjxb3KoOJ//VVD4heIqwX/0gYKK1HYbyODi91aDO22qxEQHPnWb5ve21dL0Xt5rQAPmJx6ry1R+hTv0s11qv0u+yClpi7WF1nLBxNhnVFABMBMm62XtvGEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788397961; c=relaxed/simple;
-	bh=rcSvnwdgysIYaZNX3OhjT56/9EbUy6eEYgqPG+yJFKE=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eAvoxDBJZ3Y1UVOBU1u3e39xoQ1Aju4+2i+b5OFxuenHnKHGHjcxIhHZ6kHgbU6ZXH82devcqm4X7rRfy6Y6Hx+cTQzbkXxpmeTcQBYul41xopestRUY2VFAxSkWuKmHdakJIf/wseioKfjp1WvTZaIM/YLsetDgJryXTncrAhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JweijNVR; arc=none smtp.client-ip=95.215.58.212
+	s=arc-20240116; t=1788397970; c=relaxed/simple;
+	bh=39pxQ+8r3RU5eygXIOghhOBqOETu0gPB89a8qb+tmzY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=SYnlI24u1zLUvPz5AFB90fppcVnCTDXE+c2MnBpr1Ar0UR9sL8EoFTEA1wp6hQh4ARBss3fn4RvpJbtDLa6LyaddFxv7zBrWcZv7diC48Bvs2CExb7vGce6ctuaFLafqKVjSgnJVn3SdYOyqBg3KT0rasYtuBTKiRolg7BDuzDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sFx35fMJ; arc=none smtp.client-ip=95.215.58.223
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JweijNVR"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sFx35fMJ"
 X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=rcSvnwdgysIYaZNX3OhjT56/9EbUy6eEYgqPG+yJFKE=;
+DKIM-Signature: a=rsa-sha256; bh=39pxQ+8r3RU5eygXIOghhOBqOETu0gPB89a8qb+tmzY=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1788397956; v=1; x=1789002756;
- b=JweijNVRuyEapt4j5eJ2uuolPk4CyoFEHSRQEQFf0mN2ACiRAR7dxSRFDvhwQ3+0NpsmRUlR
- C5/K9Op4Q/r4YLW5xG5R/xId0qmoe2xQMuTOJhsUNpP/Lexq22bTBh1CbMSgrfwJiWTN9A1s7/V
- FZg46uoqBP27o/vZW5EyF1lI=
+ t=1788397966; v=1; x=1789002766;
+ b=sFx35fMJ2NHFcl2Ytio+Tz22Xp8MYclJhiCIIf2879D9D7dLS5hoMFtuKqCtItP/iSZ/XIIi
+ KkupRpiLeOtmWzF7IQK24uiEl0QiIsWCwywgnmquBbi2/kOM/mSD38neX+4QpS/RyGfNyKbIzX6
+ f6uzykRjVJQKkdNCcpTvzDms=
 X-Envelope-To: mptcp@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 729514d5e02325d1;
-	Thu, 03 Sep 2026 01:12:36 +0000
-X-Mizu-Trace-ID: 729514d5e02325d1
+Received: by smtp.migadu.com with ESMTPS id 4c6741134375e7c5;
+	Thu, 03 Sep 2026 01:12:46 +0000
+X-Mizu-Trace-ID: 4c6741134375e7c5
 X-Migadu-Flow: FLOW_OUT
 From: Hangbin Liu <hangbin.liu@linux.dev>
-Subject: [PATCH mptcp-next v2 0/2] selftests: mptcp: convert iptables to
- nftables
-Date: Thu, 03 Sep 2026 09:12:19 +0800
-Message-Id: <20260903-mptcp_nft-v2-0-66283e4b9c3b@kylinos.cn>
+Date: Thu, 03 Sep 2026 09:12:20 +0800
+Subject: [PATCH mptcp-next v2 1/2] selftests: mptcp: convert iptables to
+ nftables for mptcp_sockopt.sh
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -40,12 +40,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/22NQQrCMBBFr1JmbSQZbG1ceQ8pEuPEDmpakhBaS
- u9uyNrl4z/e3yBSYIpwaTYIlDny5AvgoQE7Gv8iwc/CgBI7qSWK75zsfPcuiUev8dwjOY0aij8
- HcrzU1g2qJjwtCYayjRzTFNZ6k1U1/hSzElK0rbbGqM6dlLy+1w/7KR6th2Hf9x+GHWVXrwAAA
- A==
-X-Change-ID: 20260902-mptcp_nft-b892782ef929
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260903-mptcp_nft-v2-1-66283e4b9c3b@kylinos.cn>
+References: <20260903-mptcp_nft-v2-0-66283e4b9c3b@kylinos.cn>
+In-Reply-To: <20260903-mptcp_nft-v2-0-66283e4b9c3b@kylinos.cn>
 To: MPTCP Linux <mptcp@lists.linux.dev>, 
  Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
  Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
@@ -57,76 +55,123 @@ Cc: Hangbin Liu <hangbin.liu@linux.dev>, netdev@vger.kernel.org,
  bpf@vger.kernel.org, Hangbin Liu <liuhangbin@kylinos.cn>
 X-Mailer: b4 0.14.3
 
-iptables has been deprecated for years. The Linux kernel has included
-nftables as the successor to iptables since 2014, and every major
-distribution uses nftables as the default packet filtering framework.
-The iptables command we run on modern systems is actually iptables‑nft,
-a compatibility layer that translates iptables syntax to nftables rules
-behind the scenes.
+From: Hangbin Liu <liuhangbin@kylinos.cn>
 
-There are also some features that can be set easily with nft, while we need
-to convert to BPF code under iptables, such as MPTCP add‑addr and
-remove‑addr suboptions. To make future work easier, convert iptables usage
-in mptcp to nftables.
-
-Tested with iptables-translate to make sure each nft conversion is the same
-with previous one. e.g. for mptcp_sockopt.sh, the ip6tables shows
-
-bash-5.3# ip6tables -L
-Chain INPUT (policy ACCEPT)
-target     prot opt source               destination
-
-Chain FORWARD (policy ACCEPT)
-target     prot opt source               destination
-
-Chain OUTPUT (policy ACCEPT)
-target     prot opt source               destination
-ACCEPT     tcp  --  anywhere             anywhere             tcp flags:FIN,SYN,RST,ACK/SYN mark match 0x1
-ACCEPT     tcp  --  anywhere             anywhere             tcp flags:RST/RST mark match 0x0
-ACCEPT     tcp  --  anywhere             anywhere             mark match 0x1
-DROP       tcp  --  anywhere             anywhere             mark match 0x0
-
-And the backend nft shows like
-
-bash-5.3# nft list tables
-table ip6 filter
-bash-5.3# nft list table ip6 filter
-table ip6 filter {
-        chain OUTPUT {
-                type filter hook output priority filter; policy accept;
-                tcp flags & (fin | syn | rst | ack) == syn meta mark 0x00000001 counter packets 0 bytes 0 accept
-                tcp flags & rst == rst meta mark 0x00000000 counter packets 0 bytes 0 accept
-                meta l4proto tcp meta mark 0x00000001 counter packets 0 bytes 0 accept
-                meta l4proto tcp meta mark 0x00000000 counter packets 0 bytes 0 drop
-        }
-}
-
-Which matches what we change in the script, except the counter.
+During the conversion, we retain the same filter and chain names previously
+used by iptables/ip6tables. Counters are not added to accept rules because
+the test does not inspect them. After conversion, the generated output
+matches the original iptables/ip6tables behavior.
 
 Signed-off-by: Hangbin Liu <liuhangbin@kylinos.cn>
 ---
-Changes in v2:
-- Fix --sync and --tcp-flags RST convert not match issue (sashiko)
-- make sure drop is a number in check_mark. (sashiko)
-- Other than using one inet table, use ip/ip6 tables to retain the same
-  table and chain names used by the original iptables/ip6tables setup.
-- Link to v1: https://lore.kernel.org/r/20260902-mptcp_nft-v1-0-559caa16f410@kylinos.cn
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh     |  2 +-
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 51 ++++++++++++----------
+ 2 files changed, 29 insertions(+), 24 deletions(-)
 
----
-Hangbin Liu (2):
-      selftests: mptcp: convert iptables to nftables for mptcp_sockopt.sh
-      selftests: mptcp: convert iptables to nftables for mptcp_join.sh
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+index b9d14647f401..41febb1bbbc7 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+@@ -528,7 +528,7 @@ mptcp_lib_check_tools() {
+ 				exit ${KSFT_SKIP}
+ 			fi
+ 			;;
+-		"iptables"* | "ip6tables"*)
++		"iptables"* | "ip6tables"* | "nft"*)
+ 			if ! "${tool}" -V &> /dev/null; then
+ 				mptcp_lib_pr_skip "Could not run all tests without ${tool}"
+ 				exit ${KSFT_SKIP}
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+index e850a87429b6..a2c20483986d 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+@@ -15,8 +15,6 @@ cin=""
+ cout=""
+ timeout_poll=30
+ timeout_test=$((timeout_poll * 2 + 1))
+-iptables="iptables"
+-ip6tables="ip6tables"
+ 
+ ns1=""
+ ns2=""
+@@ -50,15 +48,25 @@ add_mark_rules()
+ 	local m=$2
+ 
+ 	local t
+-	for t in ${iptables} ${ip6tables}; do
++	for t in ip ip6; do
++		ip netns exec "$ns" nft add table "$t" filter
++		ip netns exec "$ns" nft add chain "$t" filter OUTPUT \
++			'{ type filter hook output priority 0; policy accept; }'
++
+ 		# just to debug: check we have multiple subflows connection requests
+-		ip netns exec $ns $t -A OUTPUT -p tcp --syn -m mark --mark $m -j ACCEPT
++		ip netns exec "$ns" nft add rule "$t" filter OUTPUT \
++			tcp flags \& \(fin \| syn \| rst \| ack\) == syn \
++			meta mark "$m" accept
+ 
+ 		# RST packets might be handled by a internal dummy socket
+-		ip netns exec $ns $t -A OUTPUT -p tcp --tcp-flags RST RST -m mark --mark 0 -j ACCEPT
++		ip netns exec "$ns" nft add rule "$t" filter OUTPUT \
++			tcp flags \& rst == rst meta mark 0x0 accept
++
++		ip netns exec "$ns" nft add rule "$t" filter OUTPUT \
++			meta l4proto tcp meta mark "$m" accept
++		ip netns exec "$ns" nft add rule "$t" filter OUTPUT \
++			meta l4proto tcp meta mark 0 counter drop
+ 
+-		ip netns exec $ns $t -A OUTPUT -p tcp -m mark --mark $m -j ACCEPT
+-		ip netns exec $ns $t -A OUTPUT -p tcp -m mark --mark 0 -j DROP
+ 	done
+ }
+ 
+@@ -105,32 +113,29 @@ cleanup()
+ 
+ mptcp_lib_check_mptcp
+ mptcp_lib_check_kallsyms
+-mptcp_lib_check_tools ip "${iptables}" "${ip6tables}"
++mptcp_lib_check_tools ip nft
+ 
+ check_mark()
+ {
+ 	local ns=$1
+ 	local af=$2
+ 
+-	local tables=${iptables}
++	local tables="ip"
+ 
+ 	if [ $af -eq 6 ];then
+-		tables=${ip6tables}
++		tables="ip6"
+ 	fi
+ 
+-	local counters values
+-	counters=$(ip netns exec $ns $tables -v -L OUTPUT | grep DROP)
+-	values=${counters%DROP*}
+-
+-	local v
+-	for v in $values; do
+-		if [ $v -ne 0 ]; then
+-			mptcp_lib_pr_fail "got $tables $values in ns $ns," \
+-					  "not 0 - not all expected packets marked"
+-			ret=${KSFT_FAIL}
+-			return 1
+-		fi
+-	done
++	local values
++	values=$(ip netns exec "$ns" nft list table "$tables" filter | \
++		grep -o "packets.*drop" | awk '{print $2}')
++
++	if [[ ! "$values" =~ ^[0-9]+$ ]] || [ "$values" -ne 0 ]; then
++		mptcp_lib_pr_fail "got $tables $values in ns $ns," \
++				  "not 0 - not all expected packets marked"
++		ret=${KSFT_FAIL}
++		return 1
++	fi
+ 
+ 	return 0
+ }
 
- tools/testing/selftests/net/mptcp/config           |   3 +
- tools/testing/selftests/net/mptcp/mptcp_join.sh    | 142 ++++++++-------------
- tools/testing/selftests/net/mptcp/mptcp_lib.sh     |   2 +-
- tools/testing/selftests/net/mptcp/mptcp_sockopt.sh |  51 ++++----
- 4 files changed, 84 insertions(+), 114 deletions(-)
----
-base-commit: 8dd2802091fbba563abec55e0455d0e5273c7529
-change-id: 20260902-mptcp_nft-b892782ef929
-
-Best regards,
 -- 
-Hangbin Liu <liuhangbin@kylinos.cn>
+2.55.0
 
