@@ -1,137 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581994A5C5A;
-	Thu,  3 Sep 2026 14:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2109C4B66CD
+	for <mptcp@lists.linux.dev>; Thu,  3 Sep 2026 14:21:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788445138; cv=none; b=gRM/5qmmuaCCiZH2zEX+dl02aGBYivBs0ZIF8W8nIii+2w4FXqYzo/3xi/60liS5gDH23kclJD4Ts57xh7KLQ9CGuUVsLfSVm93COQKURsWXa2bpitS5uM5NQ1n7L0o90wJYWs+rlNC3cFESm2gZjZ7EWKz+3xYMRkNkjDC2Ffs=
+	t=1788445308; cv=none; b=mv5Fc3Gd8QxJYLEtTJ75U3hPAIDwP/O4B2Sg+RmEya7gH+K5DalqN0m9R8em3q4LHXhyAaohuCvKmJzos5uw4rnyDVEIfIYMQrb9EnTAqzVMDnri2CapTumygEGzf0ZINAqB9trMDKAxoVBwFsALFssFIf9yVwVNzuIslERw5cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788445138; c=relaxed/simple;
-	bh=Gx75y4ScOA7q8K8CiomJUo2TldES3aJd/4SPikQgWRI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t/gXzaHo9nwOphRaFA7/IDu/Wg2G8WcMPEvzza099+n8/78KYKBDsoatM5mFGThYsxLIzLD1tv7SYlhM1gZGVKXzzTR5Vgu/6AZXMRWJY7uT2hWYY0VRrrvkN+706UxSKZZuWI8ChwLESedI1voNGrG/vaGkZEGbiDilnGP9wGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TH4XBxBv; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788445308; c=relaxed/simple;
+	bh=uJlKQ8lK9o7lk588+UrTKx0BNHU64ji8lItBJElU44s=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=akT0hfVSb9JhC3+3sG7LDnCSeh5rpL/BDWnNrok1QVckcASdKjOzt6QjoCq/7fVVobAoG/9yisLlYyxj1iAByvbl0RfXlDpkl2EhEIU6AqTxdCbliaM0S50ekNWBp4xv1lehKfAHv/6YWUekFfAtZb+TyDcCRo7D4RBWrDzYulM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IMrq3i0V; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TH4XBxBv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 311AC1F00A3F;
-	Thu,  3 Sep 2026 14:18:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788445129;
-	bh=hVwCftVtopKNaXgm6dbtLSWZROH0doX8x2yFaD6FjQU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=TH4XBxBvKhUcnd5DzG3qyJPOVYUIIzZFLDw6cXezJnPJ04WcQXVrJyO9CKo6PemOf
-	 9SEAx9VY4bgUVDdltpVWfoYTZZYcAT2bGdatY17E+iv3plYXA6f6SH6zEy+SWZB2Cg
-	 X0hP9xZZkE3FdkMCI3uzVuxkgT48isZ6AQ3cgNlFPrUbn8Px/7uYtPFi1F9jxlLaKO
-	 eJuUVUCN5t/KxaLKqi3Y8lYbzTJ02vmLK6EFTe2epb/5ZNVpGIk4ynkZrzZYJrLdU6
-	 YgCG7EtUS8j7Vi/F5Vf5t8/pEIGAXBCrccKE95L0K4+99IP2JP1BH+9v6qZfhhBujW
-	 HO4zatrDJ8owQ==
-Message-ID: <32c614b0-b103-4962-8206-4a25ee7cd766@kernel.org>
-Date: Thu, 3 Sep 2026 16:18:47 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IMrq3i0V"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-52de50e77ffso28678451cf.2
+        for <mptcp@lists.linux.dev>; Thu, 03 Sep 2026 07:21:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788445302; x=1789050102; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=wt22fnkJ/bjJ2L4euOdTspmYytWI72nVJ1rM7G1VT7Y=;
+        b=IMrq3i0VwSxOvwyPBtM8EhBgSFuAQvJhFV+tcMfcPMMfPcWOXSHvStcINRnWvKD5hX
+         Uve503IF8/3kIhzQDGlSBp+q9/OT5qfXytrojKay4dgab2d1QdGuonhnNM2YpmuJaAjl
+         dsoyf3YygjFO4sxoD0FsSq2KYMGjJMlOzyEOn8QQXM/qX3b89j54U43sSODSjSgURSMH
+         FtFaRA04MonOIlYiC5171RgN0VAjKYS5/7GvZU2u4gHqlzMAah1LGtI09xWi8G8CPzmw
+         BaapFYQn2M/u1Aj1HBK7X+Aer8jpZmiGeHgajycWwc4svWuf0j/B6kZb/ImeV7h2C6Nh
+         0Uyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788445302; x=1789050102;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=wt22fnkJ/bjJ2L4euOdTspmYytWI72nVJ1rM7G1VT7Y=;
+        b=TAy0EUJu9CgxIcyen21ONer7hNzosgD3gPVpdpnKMfgqdBhfVhcbv1of2BXnH/oZfr
+         eptgLetS0boNtNh3lYgJDkGR/QeMRm1C2PFFail86zHPYKzJY6YRHF9u48ot38/0AI2U
+         7ysO6JCpOQCCyBhQdD+/5A/8cOuUd6qtWxqc8me3//LOp7ir4driG4QUZTFrR5Zk2zBu
+         jZS+NInetY0mwZaTomn7++xU6QasXlBpOYAi72UyLqWQ4cvcowN23hKhxuPG+C3PzFar
+         RMjAXz814Xipe1bnrTrlhtxYpPnYhLQU1v4hHHb93JG5wKjtHf1jsRrDZjTo+ml9KYAX
+         HZGA==
+X-Gm-Message-State: AFuF++mACV3Lzyh/xeUuaALUeiipRXX0ctEp7Ll5PVC1NyyL1+5f9YTI
+	GCPT8OWhXVnPyZiRqTUpYnnLj95nuxTTtb/nxZnbNirfDm9RzsbU6Sg=
+X-Gm-Gg: AYBFou1/buJBVgWIwv7o+Id5ocCngdMrSO1/iUy8PeRIDWPg7ufeYiA7aXF419AG9zz
+	jIgDEveYESjor2tzD2c5E+Sk16+inFdX/hQVtHkI+HSbQt3gcgVA+G2rRkVBDNGm0zrUu1rYEdG
+	DapjQm77Jkg1uIEFO7o88EAIJjOKYscKpJFW8dhgXDQBE5S4u1pROkapSYBjCBXS4r1xux2cljO
+	ZQ/WsXjGI9XqDRgoFdGdCqiazklNGoB0SI1t1cEd26AvH7LoayN8/t3NyS1DnofooYvcVHfvJUq
+	CusfG0z1pJuOorozM7+ZwRL8QpClFbaMe8Se9WlfBWk81JTbp+yroLpY/MBzrZx0ljHLk8NlVO5
+	yTOjyE7p/JEE/7A5OGiGPzIwoRXKSuCQSc0Hzn5OYc8+SD8UIEHFrICTThLmOVf9F4Xr3HvlvXh
+	khhM422Biae+NTITqioQv/RDa0GEf2P+GIWYYZ/1Y0PyZrNkZyvPhcJeqp5806dRVk98fw9yY=
+X-Received: by 2002:a05:622a:3c6:b0:517:9570:c1bd with SMTP id d75a77b69052e-53036cc7af7mr145684301cf.25.1788445296946;
+        Thu, 03 Sep 2026 07:21:36 -0700 (PDT)
+Received: from [127.0.0.1] ([20.25.10.71])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-530331dc460sm43894431cf.18.2026.09.03.07.21.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2026 07:21:36 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Quanye Yang <quanyeyang@proton.me>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260903131416.1112393-1-cui.tao@linux.dev>
+References: <20260903131416.1112393-1-cui.tao@linux.dev>
+Subject: Re: [PATCH mptcp-next v2 0/3] mptcp: pm: fix reachable
+ extra_subflows guards
+Message-ID: <5e6167da-b5c0-3c7a-71de-a2c89cecc477@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 03 Sep 2026 14:21:35 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 3/3] mptcp: options: reset parsing in case of
- invalidity
-Content-Language: fr
-To: sashiko-reviews@lists.linux.dev
-Cc: mptcp@lists.linux.dev
-References: <20260903-mptcp-mib-inval-opt-v1-0-84a553c552b6@kernel.org>
- <20260903-mptcp-mib-inval-opt-v1-3-84a553c552b6@kernel.org>
- <20260903113800.968991F00A3A@smtp.kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20260903113800.968991F00A3A@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 
-On 03/09/2026 13:38, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] The `break` statement inside `mptcp_get_options` incorrectly exits the `switch` statement instead of the `while` loop, causing `length` and `ptr` to become desynchronized, leading to an infinite loop, out-of-bounds reads, and MPTCP option smuggling.
-> --
-> 
-> commit 60e4bc5aa7cfc08049c3062323eeae263a824439
-> Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> 
-> mptcp: options: reset parsing in case of invalidity
-> 
-> When an invalid option is detected, it is safer to drop any previously
-> parsed MPTCP options. This ensures a fallback to TCP or a subflow reject
-> instead of just ignoring the currently parsed option.
-> 
->> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
->> index aaaabcab0f8f9..b6d2e39f8464a 100644
->> --- a/net/mptcp/options.c
->> +++ b/net/mptcp/options.c
-> [ ... ]
->> @@ -461,9 +456,12 @@ void mptcp_get_options(const struct sock *sk, const struct sk_buff *skb,
->>  				return;
->>  			if (opsize > length)
->>  				return;	/* don't parse partial options */
->> -			if (opcode == TCPOPT_MPTCP)
->> -				mptcp_parse_option(sk, skb, ptr, opsize,
->> -						   mp_opt);
->> +			if (opcode == TCPOPT_MPTCP &&
->> +			    !mptcp_parse_option(sk, skb, ptr, opsize, mp_opt)) {
->> +				/* invalid option, drop previously parsed opt */
->> +				*(u32 *)&mp_opt->status = 0;
->> +				break;
-> 
-> [Severity: High]
-> Does this break statement exit the switch rather than the while loop?
+Hi Quanye,
 
-Arf, it was supposed to be a break for the while loop, but I missed the
-switch... Let's use 'return' here, then.
+Thank you for your modifications, that's great!
+
+Our CI did some validations and here is its report:
+
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf:=20
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/=
+runs/33761727542
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/bede3b8689b2
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1157123
+
+
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
