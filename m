@@ -1,195 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8596929ACC5
-	for <mptcp@lists.linux.dev>; Thu,  3 Sep 2026 06:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A2137756F
+	for <mptcp@lists.linux.dev>; Thu,  3 Sep 2026 06:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788415262; cv=none; b=rTMFoiz6BIlydg3RHSDQZdXdfueGTQf7kyzTy7DTAyHzNGnQrFAK2tCqv6H9v51eubp/xqaJotd+oSbQeNZHMqEVxaHL+cFTtbD6+fcdyEyU9dlhi+oSLVpNEFpLjr8KqmBsbmgNbkx7pih3ZG5IfZVoEzOcO68YXCv9MCbd5Ak=
+	t=1788415981; cv=none; b=gPQmgpiBPw1OqBIirdwOPOS6s+bJmUhSSDHTSJ3oiqBuunJx3H5rUfg7Jx0xeNPkBSVEbCLTb9oDcI31WKdQavZLqOJdQpaES9WDx05CjvzSdB8T103KMosX6xlpdfCP2+r0fz4V9IxFh/+UfYkB0CrEMVaCEjOjsFO08k2wIqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788415262; c=relaxed/simple;
-	bh=ie0ewSyb7wgYpz1ElwEHQYJ29pIM4yK49K2pXU4MSHY=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=JjW8QkPEAo5kQhWoXId1b2scxQl3HIzmFlmfkf1j6mr0SEa0KZczXGqPT3xHGYxpd4ipNXJmGq34BMEULTNRSLUsYPbBfqVaV/s2fbnnWy5vV6rrwfxpEZOtILvSoriip/NMgpn1vvFU3fMw2e1BrMesRKkBp2yGStjJ0Y8Y2GQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mNGyy7iA; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788415981; c=relaxed/simple;
+	bh=vo8acPN+MKdT2hP5RKFwCj4cE7JvOmAAM9XqO+/t1lQ=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To; b=VMcnr1ima7tBqDWbLDErGU1PGO3Brp20kkoyiOjP8KvKafQQgYbOKq/7O1LjjzmILRnJhaPVFu8YIFl8NEmHEw8e46rWYE00mnplQAoff2zT2XpcOlSuRRNN9lHYo0VIG5JwK9l4ZXSDK077TI97EUXGIG+pkLIHgq908aGa9NA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LCSl3r3B; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mNGyy7iA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2E361F000E9;
-	Thu,  3 Sep 2026 06:01:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788415260;
-	bh=bEbG0ZKx746sbPkxRb/zbM8PYEqfN6jSRNsk2FXJRqI=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=mNGyy7iAUL++ty85EKPpeDPn/44wLrhCFhCswOZL24CAuKD2HZI5DkT/NjFGUhapQ
-	 W1M5qago30hLMw2xFeh9hGkwGhxS7ptbsrV9SaZpTMW4rdGKVYVHGGxd9z43r9dxv/
-	 Ru3JrkxMy0SjRcqpquHiK5QeJX6k+rf2s69rtRd6I2NaFmA0r5l++EZwYS84pvoeMc
-	 VtJfYZ3cfFWgbkRVQNWurxVJylG+v0n/3GDudJzLC8Dp9N89v/EhlVvZbhlqYN5SxM
-	 mOvlv9XHW6nHnaw+fHLe7JgU838gUMmhPaFXGbpd1RITHeZ0/MVRrBx0b9kPa6XyW5
-	 BzraLKsxmFNLw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH net-next v4] mptcp: normalize seq numbers reported in
- mptcp_info
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Kalpan Jani" <kalpan.jani@mpiricsoftware.com>
-Cc: mptcp@lists.linux.dev
-In-Reply-To: <20260903054853.3400545-1-kalpan.jani@mpiricsoftware.com>
-References: <20260903054853.3400545-1-kalpan.jani@mpiricsoftware.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 03 Sep 2026 06:01:00 +0000
-Message-Id: <20260903060100.B2E361F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LCSl3r3B"
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=vo8acPN+MKdT2hP5RKFwCj4cE7JvOmAAM9XqO+/t1lQ=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1788415976; v=1; x=1789020776;
+ b=LCSl3r3BekhI+lbhdVY0wI3tTo60/jNe/9bN2r3WH20qR4RYBmgHyD6j9mwRWEFr7z9UgLx6
+ iZcNtK49vC5l0Vc/2I4qbe39TI6sOLtSprNQl3Ve8sNhyZptiFz8HdMCRmvmN9fk5n9nfMS/1O1
+ jO+VQSjswiJx5vXbG+pt76JI=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id e545c52cf7e68f0b;
+	Thu, 03 Sep 2026 06:12:56 +0000
+X-Mizu-Trace-ID: e545c52cf7e68f0b
+X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Date: Thu, 03 Sep 2026 06:12:56 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+From: gang.yan@linux.dev
+Message-ID: <b13525eb141d18e1fe326fec4e71b53704cdc291@linux.dev>
+TLS-Required: No
+Subject: [RFC] Mitigating Sashiko-driven iteration noise on the main MPTCP
+ list
+To: mptcp@lists.linux.dev
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [Critical] Changing the semantics of UAPI fields `mptcpi_write_seq`, `mpt=
-cpi_snd_una`, and `mptcpi_rcv_nxt` from absolute MPTCP sequence numbers to =
-relative zero-based offsets breaks userspace tools.
-- [Medium] Unsynchronized access to the 64-bit `subflow->iasn` and bitfield=
- `subflow->remote_key_valid` causes a data race, torn reads, and memory reo=
-rdering bugs.
-- [Medium] A cross-lock Time-of-Check to Time-of-Use (TOCTOU) race between =
-reading `remote_key_valid` and `msk->ack_seq` causes the diagnostic tool to=
- leak the raw, unnormalized sequence number.
---
+Hi all,
 
-commit b74b908d7d9e7114635fdc56f70e62e97e495292
-Author: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Apologies for the extra email, and please don't take this as any criticis=
+m of the current workflow.
 
-mptcp: normalize seq numbers reported in mptcp_info
+I'm writing this email to see if anyone else in the community shares some=
+ confusion I have
+regarding the use of Sashiko=E2=80=94specifically, the multiple rounds of=
+ iteration and the large
+volume of emails generated on the main list.
 
-This commit attempts to normalize sequence numbers reported in mptcp_info by
-subtracting the initial sequence numbers from the raw values. It calculates
-these offsets using the local and remote IDSN from the subflow context.
+Let me explain the problem more clearly.
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/445
+The Problem
 
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index fcf6feb2a9eb5..5bcad54e909d1 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-[ ... ]
-> @@ -1008,9 +1009,29 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, =
-struct mptcp_info *info)
->  	info->mptcpi_flags =3D flags;
-> =20
->  	slow =3D lock_sock_fast(sk);
-> +	/* msk->first is only ever NULL once the whole msk is already in
-> +	 * TCP_CLOSE (see __mptcp_close_ssk()); mptcp_close() holds the same
-> +	 * sk lock this function acquires via lock_sock_fast(), so no caller
-> +	 * can observe that transition mid-flight. If it does happen, the 0
-> +	 * fallback below just leaves write_seq/snd_una/rcv_nxt unnormalized,
-> +	 * which is harmless since the socket is already gone.
-> +	 */
-> +
-> +	if (msk->first) {
-> +		struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(msk->first=
-);
-> +
-> +		local_idsn =3D subflow->idsn;
-> +		/* subflow->iasn is incremented once in subflow_set_remote_key()
-> +		 * to account for the peer's virtual SYN; undo that here so
-> +		 * rcv_nxt normalizes against the same baseline write_seq and
-> +		 * snd_una use.
-> +		 */
-> +		remote_idsn =3D subflow->remote_key_valid ? subflow->iasn - 1 : 0;
+  Since Sashiko was introduced, it has greatly accelerated patch iteratio=
+n for contributors.
+  However, from a human reviewer's perspective, the main mailing list (mp=
+tcp@lists.linux.dev)
+  now carries a significantly increased volume of emails.
 
-[Severity: Medium]
-Could this result in a data race? In mptcp_diag_fill_info(), we are only
-holding the socket lock via lock_sock_fast(). However, the writer in
-subflow_set_remote_key() holds only the data lock.
+  Specifically, Sashiko's comments are almost exclusively directed at the=
+ original contributor,
+  who then submits a new version of the patch addressing those comments. =
+But this process often
+  repeats for several rounds: each new version triggers additional Sashik=
+o feedback, leading to
+  multiple intermediate patch revisions being posted to the main list. Th=
+ese intermediate versions
+  are only relevant to the contributor and the bot=E2=80=94they do not re=
+quire immediate human attention,
+  yet they clutter the inboxes.
 
-On 32-bit systems, a lockless read of the 64-bit subflow->iasn can tear.
-Additionally, since there are no memory barriers (e.g. smp_load_acquire() a=
-nd
-smp_store_release()), the CPU could reorder the reads and observe
-remote_key_valid =3D=3D 1 while iasn is still uninitialized.
+  In other words, the main list is currently used as a live iteration san=
+dbox between Sashiko
+  and the contributor, while human reviewers are forced to watch every st=
+ep of this back=E2=80=91and=E2=80=91forth.
+  That seems not necessary.
 
-Could this happen when getsockopt(MPTCP_INFO) is called concurrently with t=
-he
-softirq processing the remote key via mptcp_propagate_state()?
+My suggestions
 
-> +	}
-> +
->  	info->mptcpi_csum_enabled =3D READ_ONCE(msk->csum_enabled);
->  	info->mptcpi_token =3D msk->token;
-> -	info->mptcpi_write_seq =3D msk->write_seq;
-> +	info->mptcpi_write_seq =3D msk->write_seq - local_idsn;
+  To decouple the machine=E2=80=91driven iteration loop from human=E2=80=
+=91driven review, I would like to propose a
+  split workflow:
 
-[Severity: Critical]
-Does this regression break userspace ABI?=20
+  1. Initial submission (v1): The contributor sends the first version of =
+the patch series to the main
+     list (mptcp@lists.linux.dev). Maintainers can quickly glance at it t=
+o filter out obviously invalid
+     or low=E2=80=91quality patches early.
+  2. Bot=E2=80=91driven iteration (v2, v3, =E2=80=A6): For subsequent ver=
+sions that only address Sashiko's feedback,
+     the contributor posts those revisions to a separate, dedicated list =
+(e.g., mptcp-sashiko@lists.linux.dev).
+     Sashiko watches that list and provides its feedback there. The contr=
+ibutor can iterate as many
+     times as needed without bothering the main list audience.
+  3. Final polished version: Once Sashiko reports no meaningful comments =
+(or only false=E2=80=91positive warnings
+     that the contributor has already handled), the contributor resends t=
+he final, cleaned=E2=80=91up patch to
+     the main list for human review.
 
-By changing the semantics of mptcpi_write_seq, mptcpi_snd_una, and
-mptcpi_rcv_nxt from absolute sequence numbers to relative zero-based offset=
-s,
-existing tools relying on absolute sequence numbers (like tcpdump correlati=
-on)
-might break.
+The Benefits
 
-Furthermore, because the kernel does not expose the local_idsn and remote_i=
-dsn
-offsets in the mptcp_info struct, userspace has no way to reconstruct the
-original absolute values.
+  I believe both sides will benefit clearly if the sashiko process is mit=
+igated:
 
->  	info->mptcpi_retransmits =3D inet_csk(sk)->icsk_retransmits;
->  	info->mptcpi_bytes_sent =3D msk->bytes_sent;
->  	info->mptcpi_bytes_received =3D msk->bytes_received;
-[ ... ]
-> @@ -1024,8 +1045,8 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, s=
-truct mptcp_info *info)
-> =20
->  	mptcp_data_lock(sk);
->  	info->mptcpi_last_ack_recv =3D jiffies_to_msecs(now - msk->last_ack_rec=
-v);
-> -	info->mptcpi_snd_una =3D msk->snd_una;
-> -	info->mptcpi_rcv_nxt =3D msk->ack_seq;
-> +	info->mptcpi_snd_una =3D msk->snd_una - local_idsn;
-> +	info->mptcpi_rcv_nxt =3D msk->ack_seq - remote_idsn;
+  1. For reviewers/maintainers: Their main list inbox will only contain t=
+wo types of patches=E2=80=94brand new
+     submissions (v1) and "mature" patches that have already passed the b=
+ot's checks. This drastically
+     reduces noise and allows them to focus their limited reviewing bandw=
+idth on patches that are truly
+     ready for human scrutiny.
+  2. For contributors: They can iterate as fast and as often as they want=
+ in the sub=E2=80=91list without feeling
+     guilty about flooding the main list. They get a "safe sandbox" to po=
+lish the series until it meets
+     the bot's criteria. When they finally post to the main list, the pat=
+ch is already in a much better
+     state, which should also speed up the human review process.
 
-[Severity: Medium]
-Could this regression leak the raw sequence number due to a Time-of-Check to
-Time-of-Use race?
+I want to stress that this is not a complaint or a demand. I fully respec=
+t the work that has gone into
+Sashiko and the current process.
 
-If mptcp_diag_fill_info() samples remote_key_valid as 0 earlier under
-lock_sock_fast(), remote_idsn will be captured as 0. If
-subflow_set_remote_key() then executes concurrently before we acquire the
-data lock here, it updates msk->ack_seq to the absolute sequence number.
+Looking forward to hearing everyone's thoughts.
 
-When we compute info->mptcpi_rcv_nxt =3D msk->ack_seq - remote_idsn here, it
-will subtract 0 from the raw sequence number, returning the unnormalized
-value and causing a discontinuity for userspace.
-
->  	info->mptcpi_bytes_acked =3D msk->bytes_acked;
->  	mptcp_data_unlock(sk);
->  }
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index af81ad5e699d1..794c6dd9e4150 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-[ ... ]
-> @@ -493,6 +492,9 @@ static void subflow_set_remote_key(struct mptcp_sock =
-*msk,
->  	WRITE_ONCE(msk->ack_seq, subflow->iasn);
->  	WRITE_ONCE(msk->can_ack, true);
->  	atomic64_set(&msk->rcv_wnd_sent, subflow->iasn);
-> +
-> +	/* publish last, once iasn and the fields above are fully populated */
-> +	subflow->remote_key_valid =3D 1;
-
-[Severity: Medium]
-As mentioned earlier in mptcp_diag_fill_info(), writing to this bitfield
-under the data lock without memory barriers means that concurrent lockless
-readers might observe remote_key_valid =3D=3D 1 while iasn is still
-uninitialized.
-
->  }
-> =20
->  static void mptcp_propagate_state(struct sock *sk, struct sock *ssk,
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260903054853.3400=
-545-1-kalpan.jani@mpiricsoftware.com?part=3D1
+Thanks
+Gang
