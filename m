@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94CF54B3382
-	for <mptcp@lists.linux.dev>; Thu,  3 Sep 2026 14:13:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581994A5C5A;
+	Thu,  3 Sep 2026 14:18:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788444798; cv=none; b=ZjdJNCahyVfrFDi8KP6dj3OiRre0mTDM+Zljk1fKE0EQsGdKm1YWUHAyo51sPGTF1IVREnyI866ClInQMIGkiU/fDaBmmN5PnHzJAvXKmMMCx6PWE9ojPo4g8ahzcNCJBrnLmyka80UTzKDe+wwtK8rNRH46hnmQiRPv3wWaisk=
+	t=1788445138; cv=none; b=gRM/5qmmuaCCiZH2zEX+dl02aGBYivBs0ZIF8W8nIii+2w4FXqYzo/3xi/60liS5gDH23kclJD4Ts57xh7KLQ9CGuUVsLfSVm93COQKURsWXa2bpitS5uM5NQ1n7L0o90wJYWs+rlNC3cFESm2gZjZ7EWKz+3xYMRkNkjDC2Ffs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788444798; c=relaxed/simple;
-	bh=zLyKl17DAY502ydfq09Rvs+jvptSVtnuRH4ltx1yX2E=;
+	s=arc-20240116; t=1788445138; c=relaxed/simple;
+	bh=Gx75y4ScOA7q8K8CiomJUo2TldES3aJd/4SPikQgWRI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GPXqjCPAiYlKcxGyVnwau1p+Y+42FZXwwll3c9/Nfw8vhjkiw1ls4CcQ5IUrg2TE/MMUvHi65L/P9TqAB59AXrIYqEtcgcKDnbt1pKXzGMDlvOW4hS7jYKp2/GGj+LD9ZQwWdGUiYDtKTcBuNJ03ckDJVCEARaLyX8NXb3uxA8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CyNMEsjq; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=t/gXzaHo9nwOphRaFA7/IDu/Wg2G8WcMPEvzza099+n8/78KYKBDsoatM5mFGThYsxLIzLD1tv7SYlhM1gZGVKXzzTR5Vgu/6AZXMRWJY7uT2hWYY0VRrrvkN+706UxSKZZuWI8ChwLESedI1voNGrG/vaGkZEGbiDilnGP9wGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TH4XBxBv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CyNMEsjq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 519881F00A3A;
-	Thu,  3 Sep 2026 14:13:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TH4XBxBv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 311AC1F00A3F;
+	Thu,  3 Sep 2026 14:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788444784;
-	bh=ACw6fPO7Q3c0UtFXLT3zNNHxZu+s6UpYc9EkqyC982Q=;
+	s=k20260515; t=1788445129;
+	bh=hVwCftVtopKNaXgm6dbtLSWZROH0doX8x2yFaD6FjQU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=CyNMEsjq+Hlu1CtR74gsAd90X9ByPjRKXxNbBL0zjKK9mcGTp15MaLkjsGq7CKCxy
-	 ehrMAMgSOe2vrg5n+Qbp1UhI7nqWhF/CWqtZzNxmHYn5YZwsD1msuoLhH5Wli0Txay
-	 +1HPvl7Z0HwMRc/ZDgdQW9bsUESQDuPiROZTqZdMO1ZKjl2ZJ5765zh4I7F+EsTm7E
-	 DEElmTGMuOeziVGIPe7fe9f9LCCK7pBgEiaSCdy4yiltfpzrfFBdkC9EgeP1azHQt6
-	 hHV82R8H/dfhYbWVPwv8m2uumxsxSyJRJ35gzfkd68uMD0Kb9G9FgFneODbFQ+cBm2
-	 P1QwKQMVjhwGw==
-Message-ID: <e962d225-caf9-4be6-af80-e7cc0f34a2ec@kernel.org>
-Date: Thu, 3 Sep 2026 16:13:01 +0200
+	b=TH4XBxBvKhUcnd5DzG3qyJPOVYUIIzZFLDw6cXezJnPJ04WcQXVrJyO9CKo6PemOf
+	 9SEAx9VY4bgUVDdltpVWfoYTZZYcAT2bGdatY17E+iv3plYXA6f6SH6zEy+SWZB2Cg
+	 X0hP9xZZkE3FdkMCI3uzVuxkgT48isZ6AQ3cgNlFPrUbn8Px/7uYtPFi1F9jxlLaKO
+	 eJuUVUCN5t/KxaLKqi3Y8lYbzTJ02vmLK6EFTe2epb/5ZNVpGIk4ynkZrzZYJrLdU6
+	 YgCG7EtUS8j7Vi/F5Vf5t8/pEIGAXBCrccKE95L0K4+99IP2JP1BH+9v6qZfhhBujW
+	 HO4zatrDJ8owQ==
+Message-ID: <32c614b0-b103-4962-8206-4a25ee7cd766@kernel.org>
+Date: Thu, 3 Sep 2026 16:18:47 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 3/3] mptcp: pm: userspace: cap
- extra_subflows on Netlink subflow creation
+Subject: Re: [PATCH mptcp-next 3/3] mptcp: options: reset parsing in case of
+ invalidity
 Content-Language: fr
-To: Tao Cui <cui.tao@linux.dev>, mptcp@lists.linux.dev, quanyeyang@proton.me
-Cc: geliang@kernel.org, cuitao@kylinos.cn
-References: <20260903131416.1112393-1-cui.tao@linux.dev>
- <20260903131416.1112393-4-cui.tao@linux.dev>
+To: sashiko-reviews@lists.linux.dev
+Cc: mptcp@lists.linux.dev
+References: <20260903-mptcp-mib-inval-opt-v1-0-84a553c552b6@kernel.org>
+ <20260903-mptcp-mib-inval-opt-v1-3-84a553c552b6@kernel.org>
+ <20260903113800.968991F00A3A@smtp.kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,85 +88,47 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260903131416.1112393-4-cui.tao@linux.dev>
+In-Reply-To: <20260903113800.968991F00A3A@smtp.kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Tao, Quanye,
-
-On 03/09/2026 15:14, Tao Cui wrote:
-> From: Quanye Yang <quanyeyang@proton.me>
+On 03/09/2026 13:38, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [High] The `break` statement inside `mptcp_get_options` incorrectly exits the `switch` statement instead of the `while` loop, causing `length` and `ptr` to become desynchronized, leading to an infinite loop, out-of-bounds reads, and MPTCP option smuggling.
+> --
 > 
-> mptcp_pm_nl_subflow_create_doit() also increments the u8 extra_subflows
-> counter without any limit: a client with CAP_NET_ADMIN can create more
-> than 255 extra subflows via Netlink and wrap the counter back to 0,
-> with the same effects as the MP_JOIN path now bounded separately:
-> the underflow guards warn on the next subflow close, and
-> mptcpi_subflows_total reported to userspace is corrupted.
+> commit 60e4bc5aa7cfc08049c3062323eeae263a824439
+> Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > 
-> Refuse the subflow creation with -ENOSPC once the counter has reached
-> U8_MAX, and clean up the local address entry in that case as well.
+> mptcp: options: reset parsing in case of invalidity
 > 
-> Fixes: 77e4b94a3de6 ("mptcp: update userspace pm infos")
-> Link: https://lore.kernel.org/all/20260902-mptcp-pm-extra-subflows-v1-1-68540a866e5a@proton.me/
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/629
+> When an invalid option is detected, it is safer to drop any previously
+> parsed MPTCP options. This ensures a fallback to TCP or a subflow reject
+> instead of just ignoring the currently parsed option.
 > 
-
-(no empty line here)
-
-> Signed-off-by: Quanye Yang <quanyeyang@proton.me>
-> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
-> ---
->  net/mptcp/pm_userspace.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
+>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+>> index aaaabcab0f8f9..b6d2e39f8464a 100644
+>> --- a/net/mptcp/options.c
+>> +++ b/net/mptcp/options.c
+> [ ... ]
+>> @@ -461,9 +456,12 @@ void mptcp_get_options(const struct sock *sk, const struct sk_buff *skb,
+>>  				return;
+>>  			if (opsize > length)
+>>  				return;	/* don't parse partial options */
+>> -			if (opcode == TCPOPT_MPTCP)
+>> -				mptcp_parse_option(sk, skb, ptr, opsize,
+>> -						   mp_opt);
+>> +			if (opcode == TCPOPT_MPTCP &&
+>> +			    !mptcp_parse_option(sk, skb, ptr, opsize, mp_opt)) {
+>> +				/* invalid option, drop previously parsed opt */
+>> +				*(u32 *)&mp_opt->status = 0;
+>> +				break;
 > 
-> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index b94fbb483bf9..3371e17d01b9 100644
-> --- a/net/mptcp/pm_userspace.c
-> +++ b/net/mptcp/pm_userspace.c
-> @@ -417,6 +417,12 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
->  	local.ifindex = entry.ifindex;
->  
->  	spin_lock_bh(&msk->pm.lock);
-> +	if (msk->pm.extra_subflows == U8_MAX) {
-> +		spin_unlock_bh(&msk->pm.lock);
-> +		GENL_SET_ERR_MSG(info, "too many extra subflows");
-> +		err = -ENOSPC;
-> +		goto delete_addr;
-> +	}
->  	msk->pm.extra_subflows++;
->  	spin_unlock_bh(&msk->pm.lock);
->  
-> @@ -424,9 +430,11 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
->  	err = __mptcp_subflow_connect(sk, &local, &addr_r);
->  	release_sock(sk);
->  
-> -	if (err) {
-> +	if (err)
->  		GENL_SET_ERR_MSG_FMT(info, "connect error: %d", err);
->  
-> +delete_addr:
+> [Severity: High]
+> Does this break statement exit the switch rather than the while loop?
 
-Can you not have the label inside the if-statement?
-
-    if (err) {
-        GENL_SET_ERR_MSG_FMT(info, "connect error: %d", err);
-
-  delete_addr:
-        (...)
-
-> +	if (err) {
->  		spin_lock_bh(&msk->pm.lock);
->  		mptcp_userspace_pm_delete_local_addr(msk, &entry);
-
-Maybe you can add something in the commit message for the reviewers:
-
-  The same error path is followed after
-  mptcp_userspace_pm_append_new_local_addr, which should probably not
-  delete the local address unconditionally, but this is a pre-existing
-  issue that will be addressed separately.
-
->  		spin_unlock_bh(&msk->pm.lock);
+Arf, it was supposed to be a break for the while loop, but I missed the
+switch... Let's use 'return' here, then.
 
 Cheers,
 Matt
