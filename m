@@ -1,33 +1,32 @@
-Received: from mta0.migadu.com (out-7.mta0.migadu.com [91.218.175.7])
+Received: from mta0.migadu.com (out-253.mta0.migadu.com [91.218.175.253])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6442F4A5C5C
-	for <mptcp@lists.linux.dev>; Thu,  3 Sep 2026 13:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9473C4AA587
+	for <mptcp@lists.linux.dev>; Thu,  3 Sep 2026 13:14:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.253
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788441305; cv=none; b=PhbL7IQD95Ju7iMv+iBf+lt06mVC29cdPymn3BLogw+1XmBEAkaj6nR5vqxYXdsJ7tInMX29ooIasJoqBs0GhJkxA9gcDPeQoRWwW8SJmTgsjA7Z658Ak+tMf1b51uyu/Z8JA/06EXC+upITEzIKeratK9ZQ+ajnp1Nx4EYIgGQ=
+	t=1788441305; cv=none; b=Bfw2XU1m3BI5eNI+mvpN/A5YbqaSCY7Qi8GpU4YA1Bdfs6/TFBgUrnyz6Zcue6XKjwLUfkwCTj71qo0l45vXZZCRZUqmj6INIkhTNtSc+OauHR/6vvF540hgiI21nBZXQeYFFKRbi8lp58Z/pxG4mafimBnOgJBkhhiE//kRe6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1788441305; c=relaxed/simple;
-	bh=dQC+vnNQC+XmcfKQspZclbWnmxlFV57/2KbkmRdIpiI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hz59O4/0ySLRBLzQ/6ecauPIaFFlE5kmEdDXeDgWDwK6F5wZMTY58pTrbKYt3bFiwb8EzJPLYqUWeWpxwnZkTqjHt4yKhTx9b4uMt5KPzlpBLVNTFTSeKk8mDJhyhZSsWv7kumcWMN2MvdEZIn2QIk15ut1I+x4c8vAJhRp8jEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=X1qXMeXw; arc=none smtp.client-ip=91.218.175.7
+	bh=XNeW1s8WZHSK09uHazdO+Xpc77PTOKvVHf0VO+XRZqM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uQNeic/ukX64zJUTa898HCeCRccy4x0WI+f0NB2BgR/K9UnZszaUFxBx9MX684J6XZ0m8+mG0/x+7JRLhhR9NL3v382hyOQ6REhLstBHTm7WNf2fanu2yBFeR4WhXF11VZXvve/c0szICCflckSjVZe8inNMguG9KKk+M/FQgFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZiHpbNmL; arc=none smtp.client-ip=91.218.175.253
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="X1qXMeXw"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZiHpbNmL"
 X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=dQC+vnNQC+XmcfKQspZclbWnmxlFV57/2KbkmRdIpiI=;
+DKIM-Signature: a=rsa-sha256; bh=XNeW1s8WZHSK09uHazdO+Xpc77PTOKvVHf0VO+XRZqM=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1788441277; v=1; x=1789046077;
- b=X1qXMeXwwycQOMac/DCgojhGcId721bB+VuEwne47I6UpNPvTLE0X4XhhC6C0kXnVmsXkaan
- KK1h7J5bw/3j7CZnSdKJH5GYMT7j2SW+/tKQP+fkG+X4zgIf4/NeIHEELHGEmQevrYLqNbCNw/7
- knWHyd8a6l92DQjSzXH4YY0M=
+ t=1788441265; v=1; x=1789046065;
+ b=ZiHpbNmL3jcgcHk8JH22hFWzIcuRzIJ62xpaU3iOdZgtTATutHv9GxPZNxRizaqrIXD3TwJU
+ YPjqdC0Vbx3yd40tElVYQ9dmmS3apnM99lR1R9vb3vqOYG9hQxOwV5Z/prkzyAegdMwQljuIESF
+ 0BQxd7EdrzuVR1AUCCGhaIyo=
 X-Envelope-To: mptcp@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 4766c63bffb36d6c;
-	Thu, 03 Sep 2026 13:14:37 +0000
-X-Mizu-Trace-ID: 4766c63bffb36d6c
+Received: by smtp.migadu.com with ESMTPS id 30475ea85cfe1c8d;
+	Thu, 03 Sep 2026 13:14:25 +0000
+X-Mizu-Trace-ID: 30475ea85cfe1c8d
 X-Migadu-Flow: FLOW_OUT
 From: Tao Cui <cui.tao@linux.dev>
 To: mptcp@lists.linux.dev,
@@ -36,12 +35,10 @@ To: mptcp@lists.linux.dev,
 Cc: geliang@kernel.org,
 	cuitao@kylinos.cn,
 	cui.tao@linux.dev
-Subject: [PATCH mptcp-next v2 3/3] mptcp: pm: userspace: cap extra_subflows on Netlink subflow creation
-Date: Thu,  3 Sep 2026 21:14:16 +0800
-Message-ID: <20260903131416.1112393-4-cui.tao@linux.dev>
+Subject: [PATCH mptcp-next v2 0/3] mptcp: pm: fix reachable extra_subflows guards
+Date: Thu,  3 Sep 2026 21:14:13 +0800
+Message-ID: <20260903131416.1112393-1-cui.tao@linux.dev>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260903131416.1112393-1-cui.tao@linux.dev>
-References: <20260903131416.1112393-1-cui.tao@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,58 +47,60 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Quanye Yang <quanyeyang@proton.me>
+From: Tao Cui <cuitao@kylinos.cn>
 
-mptcp_pm_nl_subflow_create_doit() also increments the u8 extra_subflows
-counter without any limit: a client with CAP_NET_ADMIN can create more
-than 255 extra subflows via Netlink and wrap the counter back to 0,
-with the same effects as the MP_JOIN path now bounded separately:
-the underflow guards warn on the next subflow close, and
-mptcpi_subflows_total reported to userspace is corrupted.
+Hi,
 
-Refuse the subflow creation with -ENOSPC once the counter has reached
-U8_MAX, and clean up the local address entry in that case as well.
+Following up on issue #629, here is a fix series for the issues
+reported against e99c1ca871 ("mptcp: pm: add WARN_ON_ONCE guards
+on extra_subflows underflow").
 
-Fixes: 77e4b94a3de6 ("mptcp: update userspace pm infos")
-Link: https://lore.kernel.org/all/20260902-mptcp-pm-extra-subflows-v1-1-68540a866e5a@proton.me/
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/629
+Patch 1 bounds the userspace PM admission at U8_MAX, so the u8 can
+no longer be wrapped by a peer establishing more than 255 subflows.
 
-Signed-off-by: Quanye Yang <quanyeyang@proton.me>
-Signed-off-by: Tao Cui <cuitao@kylinos.cn>
----
+Patch 2 addresses the disconnect() vs MP_JOIN race: as discussed,
+the decrement sites now check the msk state first and skip the
+accounting when the msk is already in TCP_CLOSE, as the state is set
+before mptcp_pm_data_reset() clears the counters, and once the msk
+is closed the accounting is not relevant anymore. No new lock is
+involved. The guards themselves are downgraded to a clamp with a
+rate-limited pr_warn(), as the warn was reachable and turned into a
+remotely triggerable panic on panic_on_warn kernels.
+
+Patch 3, from Quanye, applies the same bound to the Netlink subflow
+creation path, with a goto to the error cleanup as suggested during
+the review.
+
+Changes since v1 [1]:
+
+- Patch 1: re-use "ret" instead of a new variable, drop the
+  comment, Co-developed-by added for Quanye, who sent the same fix
+  independently
+- issue reference: Link: on patches 1 and 2, Closes: on the last one
+- New patch 3 from Quanye for the Netlink path, per the discussion
+  with Matt [2]
+
+Validated with the virtme CI (mptcp selftests), and with a stress
+repro comparing the base kernel and the patched one: on the base
+kernel the server accepts 256 MP_JOINs and the counter wraps to 0,
+with the patches admission stops at 255 and the leftover imbalance
+only shows up as a rate-limited warning.
+
+[1] https://lore.kernel.org/20260831093206.689827-1-cui.tao@linux.dev/
+[2] https://lore.kernel.org/all/c8c4f667-5d25-4d94-8627-387d4091c8c4@kernel.org/
+
+Quanye Yang (1):
+  mptcp: pm: userspace: cap extra_subflows on Netlink subflow creation
+
+Tao Cui (2):
+  mptcp: pm: bound extra_subflows admission on userspace PM
+  mptcp: pm: skip extra_subflows accounting on disconnected msk
+
+ net/mptcp/pm.c           | 17 ++++++++++++++---
  net/mptcp/pm_userspace.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.h     | 14 ++++++++++++--
+ 3 files changed, 35 insertions(+), 6 deletions(-)
 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index b94fbb483bf9..3371e17d01b9 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -417,6 +417,12 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
- 	local.ifindex = entry.ifindex;
- 
- 	spin_lock_bh(&msk->pm.lock);
-+	if (msk->pm.extra_subflows == U8_MAX) {
-+		spin_unlock_bh(&msk->pm.lock);
-+		GENL_SET_ERR_MSG(info, "too many extra subflows");
-+		err = -ENOSPC;
-+		goto delete_addr;
-+	}
- 	msk->pm.extra_subflows++;
- 	spin_unlock_bh(&msk->pm.lock);
- 
-@@ -424,9 +430,11 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
- 	err = __mptcp_subflow_connect(sk, &local, &addr_r);
- 	release_sock(sk);
- 
--	if (err) {
-+	if (err)
- 		GENL_SET_ERR_MSG_FMT(info, "connect error: %d", err);
- 
-+delete_addr:
-+	if (err) {
- 		spin_lock_bh(&msk->pm.lock);
- 		mptcp_userspace_pm_delete_local_addr(msk, &entry);
- 		spin_unlock_bh(&msk->pm.lock);
 -- 
 2.43.0
 
