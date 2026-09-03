@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C7E74B2CBE;
-	Thu,  3 Sep 2026 14:08:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94CF54B3382
+	for <mptcp@lists.linux.dev>; Thu,  3 Sep 2026 14:13:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788444510; cv=none; b=Op8VuLz3nCGqtsXS18s8APwz8j3ngZky2c3rxPXoNIHrL+hyJrfYxYhSMwCzFH75+X/E9vQUh54yYQ4kryLfESCPZQEGzwPgd3LCB/n96Fu5c6xJz4nlwSdRzuGNHnHrQopd6XP9e9fveaFcCz3Y6Rqq9/Ebx/rnVs+zGvheiJk=
+	t=1788444798; cv=none; b=ZjdJNCahyVfrFDi8KP6dj3OiRre0mTDM+Zljk1fKE0EQsGdKm1YWUHAyo51sPGTF1IVREnyI866ClInQMIGkiU/fDaBmmN5PnHzJAvXKmMMCx6PWE9ojPo4g8ahzcNCJBrnLmyka80UTzKDe+wwtK8rNRH46hnmQiRPv3wWaisk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788444510; c=relaxed/simple;
-	bh=HqtucKQs69uqiusNuysC+GtgjKkDe2ZAuZ41UEfxXLg=;
+	s=arc-20240116; t=1788444798; c=relaxed/simple;
+	bh=zLyKl17DAY502ydfq09Rvs+jvptSVtnuRH4ltx1yX2E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LFyuiKwBVLFJoGEZLOeyOHKFCgrrYTpcMeLmxKOLWA2c3CaiaWJoVytWHYr9v2E/RMWtFnNTiU+hI5dnT2o+VSy1tPlfZnuQALcHGs4wyhv1HARPFdS+/GVDeRZzRIwA6hszeLA5VeKODVvtAcsg56/JvEvNH4EV3+EzDOlFQXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WCRSsA/G; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=GPXqjCPAiYlKcxGyVnwau1p+Y+42FZXwwll3c9/Nfw8vhjkiw1ls4CcQ5IUrg2TE/MMUvHi65L/P9TqAB59AXrIYqEtcgcKDnbt1pKXzGMDlvOW4hS7jYKp2/GGj+LD9ZQwWdGUiYDtKTcBuNJ03ckDJVCEARaLyX8NXb3uxA8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CyNMEsjq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WCRSsA/G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 149A31F00A3D;
-	Thu,  3 Sep 2026 14:08:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CyNMEsjq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 519881F00A3A;
+	Thu,  3 Sep 2026 14:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788444498;
-	bh=bswW5OkwpdCoGKq55o4iM/KzpAShp90fQkCwndVvvQY=;
+	s=k20260515; t=1788444784;
+	bh=ACw6fPO7Q3c0UtFXLT3zNNHxZu+s6UpYc9EkqyC982Q=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=WCRSsA/G8YhL+bb0udQ0zge7fD/f+NDTV6TYfQ4+StIogIK+JIYmiOtRyjTaDxgRF
-	 rLZjtoXIZ6c1CwT/DwdCWW5fna2j9IYBaq96YjvoDHjlhg2IW+YHnx2sfzkke54RSv
-	 h36hQ9G4CRQTDbLB1uFn05RAZv4Xj57oCE8eeW3WaH06q/SeHeI7phyB9pJrUbrScH
-	 tEyXmBvSDYiej3KrxNuuBDt+1ZwTRwV0IyFT05yk3VnJBI/EBzrgOSyfHmZy34mzyi
-	 6KzkOmwCb1bSNRtwpbAgm/BlJUax/2TuqqSsXd4C7mKAgixmrahM/Bwbql18zd+TTF
-	 D/RUKOuoNfpmg==
-Message-ID: <37501367-99e7-4ce0-a590-b8d5c1f9be0e@kernel.org>
-Date: Thu, 3 Sep 2026 16:08:16 +0200
+	b=CyNMEsjq+Hlu1CtR74gsAd90X9ByPjRKXxNbBL0zjKK9mcGTp15MaLkjsGq7CKCxy
+	 ehrMAMgSOe2vrg5n+Qbp1UhI7nqWhF/CWqtZzNxmHYn5YZwsD1msuoLhH5Wli0Txay
+	 +1HPvl7Z0HwMRc/ZDgdQW9bsUESQDuPiROZTqZdMO1ZKjl2ZJ5765zh4I7F+EsTm7E
+	 DEElmTGMuOeziVGIPe7fe9f9LCCK7pBgEiaSCdy4yiltfpzrfFBdkC9EgeP1azHQt6
+	 hHV82R8H/dfhYbWVPwv8m2uumxsxSyJRJ35gzfkd68uMD0Kb9G9FgFneODbFQ+cBm2
+	 P1QwKQMVjhwGw==
+Message-ID: <e962d225-caf9-4be6-af80-e7cc0f34a2ec@kernel.org>
+Date: Thu, 3 Sep 2026 16:13:01 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,11 +38,10 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-next v2 3/3] mptcp: pm: userspace: cap
  extra_subflows on Netlink subflow creation
 Content-Language: fr
-To: sashiko-reviews@lists.linux.dev, Tao Cui <cui.tao@linux.dev>
-Cc: mptcp@lists.linux.dev
+To: Tao Cui <cui.tao@linux.dev>, mptcp@lists.linux.dev, quanyeyang@proton.me
+Cc: geliang@kernel.org, cuitao@kylinos.cn
 References: <20260903131416.1112393-1-cui.tao@linux.dev>
  <20260903131416.1112393-4-cui.tao@linux.dev>
- <20260903132757.5A7C11F000E9@smtp.kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,23 +87,14 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260903132757.5A7C11F000E9@smtp.kernel.org>
+In-Reply-To: <20260903131416.1112393-4-cui.tao@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi Tao, Quanye,
 
-On 03/09/2026 15:27, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> 
-> Pre-existing issues:
-> - [High] This problem wasn't introduced by this patch, but the error path unconditionally deletes and frees a local address entry, even if the address was pre-existing and shared among multiple subflows.
-> --
-> 
-> commit 147f86e2aec9bdeead6dcc987672ad229b2286ec
-> Author: Quanye Yang <quanyeyang@proton.me>
-> 
-> mptcp: pm: userspace: cap extra_subflows on Netlink subflow creation
+On 03/09/2026 15:14, Tao Cui wrote:
+> From: Quanye Yang <quanyeyang@proton.me>
 > 
 > mptcp_pm_nl_subflow_create_doit() also increments the u8 extra_subflows
 > counter without any limit: a client with CAP_NET_ADMIN can create more
@@ -113,57 +103,69 @@ On 03/09/2026 15:27, sashiko-bot@kernel.org wrote:
 > the underflow guards warn on the next subflow close, and
 > mptcpi_subflows_total reported to userspace is corrupted.
 > 
+> Refuse the subflow creation with -ENOSPC once the counter has reached
+> U8_MAX, and clean up the local address entry in that case as well.
+> 
+> Fixes: 77e4b94a3de6 ("mptcp: update userspace pm infos")
 > Link: https://lore.kernel.org/all/20260902-mptcp-pm-extra-subflows-v1-1-68540a866e5a@proton.me/
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/629
 > 
->> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
->> index f723a134356f3..bede75a2e2586 100644
->> --- a/net/mptcp/pm_userspace.c
->> +++ b/net/mptcp/pm_userspace.c
->> @@ -427,6 +427,12 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
->>  	local.ifindex = entry.ifindex;
->>  
->>  	spin_lock_bh(&msk->pm.lock);
->> +	if (msk->pm.extra_subflows == U8_MAX) {
->> +		spin_unlock_bh(&msk->pm.lock);
->> +		GENL_SET_ERR_MSG(info, "too many extra subflows");
->> +		err = -ENOSPC;
->> +		goto delete_addr;
->> +	}
->>  	msk->pm.extra_subflows++;
->>  	spin_unlock_bh(&msk->pm.lock);
->>  
->> @@ -434,9 +440,11 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
->>  	err = __mptcp_subflow_connect(sk, &local, &addr_r);
->>  	release_sock(sk);
->>  
->> -	if (err) {
->> +	if (err)
->>  		GENL_SET_ERR_MSG_FMT(info, "connect error: %d", err);
->>  
->> +delete_addr:
->> +	if (err) {
->>  		spin_lock_bh(&msk->pm.lock);
->>  		mptcp_userspace_pm_delete_local_addr(msk, &entry);
-> 
-> [Severity: High]
-> This is a pre-existing issue, but does this error path incorrectly delete a
-> shared local address entry if the address was pre-existing?
-> 
-> When mptcp_userspace_pm_append_new_local_addr() is called earlier in
-> mptcp_pm_nl_subflow_create_doit(), it might match an already existing local
-> address instead of appending a new one.
-> 
-> If the newly added extra_subflows limit is hit (or if
-> __mptcp_subflow_connect() fails), the code jumps to this delete_addr error
-> path.
-> 
-> Because mptcp_userspace_pm_append_new_local_addr() did not allocate a new
-> entry but simply reused the existing one, unconditionally calling
-> mptcp_userspace_pm_delete_local_addr() prematurely frees the shared address
-> and decrements the local_addr_used counter, potentially corrupting the state
-> for other subflows relying on it.
 
-Correct, but there are pending patches from Geliang fixing that.
+(no empty line here)
+
+> Signed-off-by: Quanye Yang <quanyeyang@proton.me>
+> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+> ---
+>  net/mptcp/pm_userspace.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index b94fbb483bf9..3371e17d01b9 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -417,6 +417,12 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+>  	local.ifindex = entry.ifindex;
+>  
+>  	spin_lock_bh(&msk->pm.lock);
+> +	if (msk->pm.extra_subflows == U8_MAX) {
+> +		spin_unlock_bh(&msk->pm.lock);
+> +		GENL_SET_ERR_MSG(info, "too many extra subflows");
+> +		err = -ENOSPC;
+> +		goto delete_addr;
+> +	}
+>  	msk->pm.extra_subflows++;
+>  	spin_unlock_bh(&msk->pm.lock);
+>  
+> @@ -424,9 +430,11 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+>  	err = __mptcp_subflow_connect(sk, &local, &addr_r);
+>  	release_sock(sk);
+>  
+> -	if (err) {
+> +	if (err)
+>  		GENL_SET_ERR_MSG_FMT(info, "connect error: %d", err);
+>  
+> +delete_addr:
+
+Can you not have the label inside the if-statement?
+
+    if (err) {
+        GENL_SET_ERR_MSG_FMT(info, "connect error: %d", err);
+
+  delete_addr:
+        (...)
+
+> +	if (err) {
+>  		spin_lock_bh(&msk->pm.lock);
+>  		mptcp_userspace_pm_delete_local_addr(msk, &entry);
+
+Maybe you can add something in the commit message for the reviewers:
+
+  The same error path is followed after
+  mptcp_userspace_pm_append_new_local_addr, which should probably not
+  delete the local address unconditionally, but this is a pre-existing
+  issue that will be addressed separately.
+
+>  		spin_unlock_bh(&msk->pm.lock);
 
 Cheers,
 Matt
