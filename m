@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FEFF349CE8
-	for <mptcp@lists.linux.dev>; Thu,  3 Sep 2026 09:13:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1FFA37883E
+	for <mptcp@lists.linux.dev>; Thu,  3 Sep 2026 09:28:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788426830; cv=none; b=Hl5LJA4HZAxjgx8jVrzsUBXnnqkH3sJEFBOYM4Kerr3Ts2yGF4GprEPFa6qDeZsYlwhDWUM64n4sc32jrB7P7sr/eXlTP4W8wRZHtxekG1652PWqAgHF5AidLCtRgp4N6QKyoOLZBj8O78aY6a/X7L/4ecXOgrnTWx3jTIsh+b8=
+	t=1788427713; cv=none; b=uQSrgrlij9bBXTJwtIpc4uegrm88zy8gBIpmFZhrFr1E04KvyjVtSBaMi391HOcoEiIVQIGPvGZKZ/RhEzKp4+C64udmflQVB2iKSTWBEcK+pYT6l+rLEeKTN8A3jzcNlmXRkaUc7kL96Rmbk3lB7fh/laUKHMFtT7q84cz2KD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788426830; c=relaxed/simple;
-	bh=HGwZ1PzpXxIXMnwpmynVg5RxiaJr7iGyY9RzYmsi7yY=;
+	s=arc-20240116; t=1788427713; c=relaxed/simple;
+	bh=YMFCrdI2tBYtwrY/hJv8qLECNrgLtSQQvRoxnFkGbCg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Vm53/b46kZVijmFZaieWcSwFU8LbL73W7FOfNwjrbTaaB3J4DTLKQo4WyxCFx38nmln9W8/xNiFaCF6PhlAQ5sXKL5ahKMA95ySd92fVObI73hNWyjXi0hGpdCTEXJbsJSJo0F+XhCxvlwCSG4cTDb7H1pvspBrdO5x50JB+Ax8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nUWonlzm; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=e0lstdVroTFShvwtxnErYcB9E9Q+Wy9AZ97gqyRdn0R7gJuNLr4GBRXzXGStXellHmpHdbPxIHsfLBTioSaBzpp9ZNlWiI1PF43xD8scDiaWhE7TK9gNpAgnfUPk+MYKW2Xq0REvkiaIxSVbi0u/tU9dVsbaRp+uMkdJybAD8p0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gNEoAtP8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nUWonlzm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A12181F000E9;
-	Thu,  3 Sep 2026 09:13:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gNEoAtP8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAF6B1F000E9;
+	Thu,  3 Sep 2026 09:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788426828;
-	bh=zb3/Bk6eTrqnb1sXe7ZJ9Jh/rQxNjDS34DR7zvR9GUI=;
+	s=k20260515; t=1788427711;
+	bh=02glPddpqK9Gv7aBmCe9ANb7gyjJLn4SnCoiJMPs2R8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=nUWonlzm8INJvIIjj3RkomYHPb6TVnInX7ONpl0ntRV5C30RgNG/BksUXL0tF3y2q
-	 xZJggb1GF0gxfQ+WN97ZHe53eR9iQBZt9IIbusfYNt5BO9N2+1biRYamiuH8792KQn
-	 t+g77WPFLlxqYVgiej0dHNMS8gbR22D1E2mplwiPJet1lC5lfI+R4uzSgYrfkphLBf
-	 Kq5+PPtNo8XpNTTis/wpzB+5MNXb37vdaTBA6xlimSECToM1poEDcu8CIEPXgboCsb
-	 X3UOcEHWGaIdC/nJ0/iTn4c8btpQ6Sc32m501ipm2d5h+jiCiniHa+6Gh2+gPwVf+/
-	 KgLSNt5gdgcRg==
-Message-ID: <549d6a7d-3b89-4eff-a35f-065df75e8d01@kernel.org>
-Date: Thu, 3 Sep 2026 11:13:45 +0200
+	b=gNEoAtP8yelrGXs5w3FbsxGULMCg7RA2Qi6RN6wyuyHTczpLbFPrC7XZ/qckgYfvR
+	 OiKtNyL1QRVfQ7dxK+rXB3dou79FyRAwzkNhkGp8HbrHClaLZMspZ2LVTE0RkKml41
+	 XrWFbeen2j3CDuliVKAifsVPP1ln+XN/hyzkB3+th/i2Ia8fn3Cc0eRYbhTp9OHAIo
+	 GZBa0plvpgRaBAT3Oesxz2OA95r2jlRnG+xFCb7DvwvaaFBqO5noEc3y8Ylx8JN8ol
+	 zwMDQJ18HyMd/yFDakQwovIbRLGp0kW6eTDxz9wO4rEwf902MBFBiP+ENk0ogwC/7C
+	 n0UoK4DfML5JQ==
+Message-ID: <6c9dd599-e9d2-470f-bc7f-2af2e9d003b6@kernel.org>
+Date: Thu, 3 Sep 2026 11:28:28 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 1/2] mptcp: pm: bound extra_subflows admission
- on userspace PM
+Subject: Re: [PATCH mptcp-next 2/2] selftests: mptcp: convert iptables to
+ nftables for mptcp_join.sh
 Content-Language: fr
-To: Tao Cui <cui.tao@linux.dev>, mptcp@lists.linux.dev
-Cc: geliang@kernel.org, cuitao@kylinos.cn, Quanye Yang <quanyeyang@proton.me>
-References: <20260831093206.689827-1-cui.tao@linux.dev>
- <20260831093206.689827-2-cui.tao@linux.dev>
- <c8c4f667-5d25-4d94-8627-387d4091c8c4@kernel.org>
- <801d048f-70a3-4b42-8a09-7b81f46d9a22@linux.dev>
+To: Hangbin Liu <hangbin.liu@linux.dev>
+Cc: Hangbin Liu <liuhangbin@kylinos.cn>, MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260902-mptcp_nft-v1-0-559caa16f410@kylinos.cn>
+ <20260902-mptcp_nft-v1-2-559caa16f410@kylinos.cn>
+ <513e6559-a06a-45d8-a8b7-72b3a1a77e71@kernel.org> <apjU-uM8dvxnVcaP@fedora>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,100 +88,75 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <801d048f-70a3-4b42-8a09-7b81f46d9a22@linux.dev>
+In-Reply-To: <apjU-uM8dvxnVcaP@fedora>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Tao,
+Hi Hangbin,
 
-Thank you for your reply!
-
-On 03/09/2026 10:55, Tao Cui wrote:
-> Hi Matt,
+On 03/09/2026 04:02, Hangbin Liu wrote:
+> Hi Matthieu,
 > 
-> 在 2026/9/3 00:39, Matthieu Baerts 写道:
->> Hi Tao,
->>
->> + cc Quanye
->>
->> On 31/08/2026 11:32, Tao Cui wrote:
->>> From: Tao Cui <cuitao@kylinos.cn>
->>>
->>> mptcp_pm_allow_new_subflow() increments the u8 extra_subflows counter
->>> for every accepted MP_JOIN on sockets using the userspace PM, without
->>> any limit. A peer establishing more than 255 live subflows wraps the
->>> counter back to 0, which then makes the underflow guards warn on the
->>> next subflow close, and permanently corrupts mptcpi_subflows_total
->>> reported to userspace.
->>>
->>> Refuse new MP_JOINs once the counter has reached U8_MAX, so that it
->>> cannot wrap anymore.
->>>
->>> Fixes: e99c1ca89071 ("mptcp: pm: add WARN_ON_ONCE guards on extra_subflows underflow")
->>> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/629
->>
->> Do you have a GitHub account? Just to know if we can assign this task to
->> you (or just leave a message in the comment section).
->>
->>> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
->>> ---
->>>  net/mptcp/pm.c | 11 +++++++++--
->>>  1 file changed, 9 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
->>> index 8b68868255c5..3990f6775723 100644
->>> --- a/net/mptcp/pm.c
->>> +++ b/net/mptcp/pm.c
->>> @@ -562,10 +562,17 @@ bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk)
->>>  
->>>  	if (mptcp_pm_is_userspace(msk)) {
->>>  		if (mptcp_userspace_pm_active(msk)) {
->>> +			bool allow;
->>
->> "ret" could be re-used here.
->>
->>> +
->>> +			/* extra_subflows is a u8: don't let a peer wrap it
->>> +			 * with more than U8_MAX accepted MP_JOINs
->>> +			 */
->>
->> I don't think this comment is needed, "< U8_MAX" is probably clear enough.
->>
->>>  			spin_lock_bh(&pm->lock);
->>> -			pm->extra_subflows++;
->>> +			allow = pm->extra_subflows < U8_MAX;
->>> +			if (allow)
->>> +				pm->extra_subflows++;
->>>  			spin_unlock_bh(&pm->lock);
->>> -			return true;
->>> +			return allow;
->>>  		}
->>>  		return false;
->>>  	}
->>
->> So, at the end, we can re-used the same version as Quanye. Would it be
->> OK for both of you to have a Co-developed-by tag here?
->>
+> Sorry, My mbsync has some delays and I post v2 too quick before catching
+> your feedback.
+
+No problem.
+
+Just in case, maybe korgalore can help?
+
+https://people.kernel.org/monsieuricon/tracking-kernel-development-with-korgalore
+
+> I will update the patch with your feed back and re-post tomorrow.
+
+Thanks!
+
+> On Wed, Sep 02, 2026 at 12:00:40PM +0200, Matthieu Baerts wrote:
+
+(...)
+
+>> If you don't need this one (or any set in helpers), don't set it/them,
+>> and don't use a global variable. Or reset it in init_partial, but prefer
+>> using local variable with a limited scope.
 > 
-> Thanks for sorting this out with Quanye.
+> Yes, we don't need the handle in other place, which I will remove them.
+> But for endpoint_tests(), after adding rules in reset_with_tcp_filter,
+> we need to remove the rule outside. I will reset it after each test.
+
+Perhaps you could flush the whole table instead? But if it makes more
+sense to assign this variable, fine by me.
+
+>> Also, maybe clearer to use 'nft -j' with 'jq' to get that (if possible)?
 > 
-> Sounds good to me. I'll send a v2 taking your two comments into
-> account, reusing "ret" and dropping the comment, with Quanye's
-> Netlink part as a separate patch with him as author, and
-> Co-developed-by tags on the admission patch. I'll switch to
-> "Closes:" for the issue as well.
+> I check the output of `nft -j` (paste an example at the end of mail),
+> which looks not each to get the rule handle easily.
 
-Thanks! Please use "Closes" only for the last patch of the series fixing
-the issue. You can use "Link" for the others.
+I just noticed that in nft's latest release, it is possible to set a
+handle when adding the rules. That looks cleaner for our case here, but
+it requires the version released 2 days ago, so no :)
 
-> About the GitHub account: I have one (sharkct235@gmail.com) but
-> honestly I don't use it much because of the captcha checks, so
-> sorry in advance if I'm slow to react there. I've left a comment on
-> the issue, and I'll try to be better at watching it for this kind
-> of thing.
+Probably best to support the version from Debian Stable, 1.1.3, apparently.
 
-Thanks! I guess there shouldn't be new comments over there, but we
-appreciate comments simply saying "I'm going to look at it".
+  https://repology.org/project/nftables/versions
+
+>> One last note: for new features linked to MPTCP that might take multiple
+>> versions to get ready, it might be better to send these patches only to
+>> the MPTCP ML (no need to add anybody else in cc). Then we will apply
+>> them in our tree and send them to netdev when we consider them as
+>> "ready" (and hope for Clashiko not to get back to them days/weeks later,
+>> but that should be a temporally issue :) ).
+> 
+> Thanks for the notes. I used to rely on `b4 auto-to-cc` too much...
+
+Most of the time, that's fine. It's just for some subsubtrees where
+(urgent & simple) fixes can go to the parent tree (netdev here)
+directly, but the rest can go only to the subsubtree ML.
+
+BTW, if you are on top of our export(-net) (or for-review(-net)) branch,
+there is a .b4-config: you just need to use 'b4 send' then :)
+
+> An example of `nft -j` output:
+
+Thanks for the output!
 
 Cheers,
 Matt
