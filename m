@@ -1,114 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta0.migadu.com (out-54.mta0.migadu.com [91.218.175.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A856308F3C
-	for <mptcp@lists.linux.dev>; Fri,  4 Sep 2026 07:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333DB31197C
+	for <mptcp@lists.linux.dev>; Fri,  4 Sep 2026 08:02:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788507728; cv=none; b=DL3klfOp6teCvXqEHaXsoKS8kgjnISfsv+k9PPGggvLQiqR0qxAhECKgY9Qn0XbV6EXTAwXPo4JudyGg0vH1iW1yg2tBPDN8whyyEfo5q2WM8TuaE6aH3NlA5Rnyd+Uyy3zUIULT0COINi7oEq43Ag3rtrVq71CDT0VWT/P9GG8=
+	t=1788508930; cv=none; b=tcaGEDVSh5jZzCEvx/Ax5jwQs1rmuef1VgESPfMazwmGMn1xThgYNNvs5p5446waQDOaRcPM9pGZfLRcFwUubW07IBVpT916MXxhE4faIOvb6oLoSiSAS7oKtUufLR2eE3dCgx/GeHnTSaEMEIn1t8FRMyBx4YlFA6Xo3+pnOt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788507728; c=relaxed/simple;
-	bh=a81HfWUxEza7yOLoyyewUI3JRrO1Hshc1E6T3dPP8E0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=eyP8JP2GYgTyghp4top/pp3A9C4TPH+J9m4PXcXz+58NmmbX1MukT6+FojAD4oxppxQ2e+pKymOaj5NEQRqAA4VlVmC3xFhyKuT5G9kinuglf+YIh8pqf4q29UYnzBto7MfyfHOVcpbtQlbnIRALuVdvG8I7SDGwjpeQaNUkXK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GN82pQfi; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788508930; c=relaxed/simple;
+	bh=LR62VJEKk07W/pgXn6Dgk5a9R3BtoeQgt9lU9tB5xMU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jGnMU6djXKDomsGL71U6haYfBcb1V04rv6Nb9Pfq/N8KhB025bIECOmkJYcH/m/eao7F5cUFCMW80zDGLBDFxyaCJOaZcwNhCkty1f+wlJrZJRIZ5t8PEaWcDuwnjyA4y58dWfvVGTcTXzLRrKdTjkeUAfiuW91Crll/LtVlXWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=el0Xi/lx; arc=none smtp.client-ip=91.218.175.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GN82pQfi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C41951F00A3D;
-	Fri,  4 Sep 2026 07:42:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788507727;
-	bh=3ZDkzO1lwGOPF9PHrSqYBKWXq6pkOOc4iRUoBopAPWA=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=GN82pQfiPqHlaHHu22L/oUWZqHbCbnYI6ikvxI142aW3CgBS22kN9/2CwsxuB12ln
-	 kjGRRINTnacukefhFdcmuiWN65uc6cqHdyv1MujWuXLP7XmojHFleQFwWJPNb43i38
-	 BFOoIK2cgk/R+Thghm5VTPOHyi+IM2iIme0DMFx6NmoWzNapGBkmOS5cAkIJkf7UWo
-	 o2mbA2u+qHDFRd2AJbyztSCT+Jc26/zxdYw40lbHQOda/mO7cZ2Z2kD/06q8vcGRBL
-	 tT7E3YZvfo0Bkh8M8QZC+HA8HwTzJ9pl0M00jC5NkfrP7aHKQ6ol75pmnx+iFWLHH/
-	 wPwEBUU6GUGfQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v3 2/2] selftests: mptcp: convert iptables to
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="el0Xi/lx"
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=LR62VJEKk07W/pgXn6Dgk5a9R3BtoeQgt9lU9tB5xMU=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1788508922; v=1; x=1789113722;
+ b=el0Xi/lx0j+2WhwSartjsYoYY90Q/Rx+HnRdsJ7fceoBh1FkTjsbdLhCF+dfhBfst3GhwysX
+ CMw8WSsVHBTeRSxIaop4yFeqOgpVukjl4YKDOfxg8ml8jRRXWIlu2FgAC4fraARSedeZxY8VVa3
+ wkuF6/TiwRW2pnpQMbJS+rQM=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id c25acbcfaf354676;
+	Fri, 04 Sep 2026 08:02:02 +0000
+X-Mizu-Trace-ID: c25acbcfaf354676
+X-Migadu-Flow: FLOW_OUT
+Date: Fri, 4 Sep 2026 16:01:54 +0800
+From: Hangbin Liu <hangbin.liu@linux.dev>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>
+Subject: Re: [PATCH mptcp-next 2/2] selftests: mptcp: convert iptables to
  nftables for mptcp_join.sh
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Hangbin Liu" <hangbin.liu@linux.dev>
-Cc: mptcp@lists.linux.dev
-In-Reply-To: <20260904-mptcp_nft-v3-2-4abedaf00bf9@kylinos.cn>
-References: <20260904-mptcp_nft-v3-0-4abedaf00bf9@kylinos.cn>
- <20260904-mptcp_nft-v3-2-4abedaf00bf9@kylinos.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 04 Sep 2026 07:42:06 +0000
-Message-Id: <20260904074206.C41951F00A3D@smtp.kernel.org>
+Message-ID: <app68h1_rYkPBpvn@fedora>
+References: <20260902-mptcp_nft-v1-0-559caa16f410@kylinos.cn>
+ <20260902-mptcp_nft-v1-2-559caa16f410@kylinos.cn>
+ <513e6559-a06a-45d8-a8b7-72b3a1a77e71@kernel.org>
+ <apjU-uM8dvxnVcaP@fedora>
+ <6c9dd599-e9d2-470f-bc7f-2af2e9d003b6@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6c9dd599-e9d2-470f-bc7f-2af2e9d003b6@kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Missing 'add' keyword in nftables configuration script causes sy=
-ntax error, silently skipping tests.
---
+On Thu, Sep 03, 2026 at 11:28:28AM +0200, Matthieu Baerts wrote:
+> Hi Hangbin,
+> 
+> On 03/09/2026 04:02, Hangbin Liu wrote:
+> > Hi Matthieu,
+> > 
+> > Sorry, My mbsync has some delays and I post v2 too quick before catching
+> > your feedback.
+> 
+> No problem.
+> 
+> Just in case, maybe korgalore can help?
+> 
+> https://people.kernel.org/monsieuricon/tracking-kernel-development-with-korgalore
 
-commit 45eaf6e2e654e036380de79d25fbc989c2055da7
-Author: Hangbin Liu <liuhangbin@kylinos.cn>
+Thanks, learned a new tool.
 
-selftests: mptcp: convert iptables to nftables for mptcp_join.sh
+> >> If you don't need this one (or any set in helpers), don't set it/them,
+> >> and don't use a global variable. Or reset it in init_partial, but prefer
+> >> using local variable with a limited scope.
+> > 
+> > Yes, we don't need the handle in other place, which I will remove them.
+> > But for endpoint_tests(), after adding rules in reset_with_tcp_filter,
+> > we need to remove the rule outside. I will reset it after each test.
+> 
+> Perhaps you could flush the whole table instead? But if it makes more
+> sense to assign this variable, fine by me.
 
-This commit replaces the iptables/ip6tables setup with nftables in the
-mptcp_join.sh selftest. It introduces a new init_nftables function to setup
-the nft tables using a heredoc rather than configuring them inline.
+Yes, if not in purpose, I feel flush the whole table is dangerous.
+Some rules may still in using in later testing.
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/test=
-ing/selftests/net/mptcp/mptcp_join.sh
-> index 18ce7136a2b0e..835cb92cab1a4 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > Thanks for the notes. I used to rely on `b4 auto-to-cc` too much...
+> 
+> Most of the time, that's fine. It's just for some subsubtrees where
+> (urgent & simple) fixes can go to the parent tree (netdev here)
+> directly, but the rest can go only to the subsubtree ML.
+> 
+> BTW, if you are on top of our export(-net) (or for-review(-net)) branch,
+> there is a .b4-config: you just need to use 'b4 send' then :)
 
-[ ... ]
+Thanks. I am working on top of the export branch. I ran into a small issue
+while using b4. The export branch is not fast‑forwardable. I used
+`git reset --hard` to fall back to the top merge commit, then ran
+`git pull` to fetch the latest changes.
 
-> @@ -184,6 +147,28 @@ init_shapers()
->  	done
->  }
-> =20
-> +init_nftables()
-> +{
-> +	nft_handle=3D""
-> +
-> +	local netns table
-> +	for netns in "$ns1" "$ns2"; do
-> +		for table in ip ip6; do
-> +			ip netns exec "$netns" nft -f - <<-EOF
-> +				add table $table filter
-> +				add chain $table filter INPUT \
-> +					{ type filter hook input priority filter; policy accept; }
-> +				add chain $table filter OUTPUT \
-> +					{ type filter hook output priority filter; policy accept; }
-> +
-> +				table $table mangle
-> +				chain $table mangle OUTPUT \
-                                ^^^^
+However, I cannot perform a reset on the b4 branch, and git rebase also failed.
+These steps have blocked me a little. I have to manually recreate the b4 branch,
+or perhaps avoid using b4 when working on mptcp changes.
 
-[Severity: Medium]
-Are these table and chain declarations missing the "add" keyword?
+> 
+> > An example of `nft -j` output:
+> 
+> Thanks for the output!
 
-The filter table rules above them use "add table" and "add chain", but the
-mangle declarations omit "add". Does this syntax error cause the "nft -f -"
-command to fail and abort the entire transaction, preventing the creation of
-both the filter and mangle tables?
+I have post the new version, which use jq to get the handle now.
 
-If the tables aren't created, subsequent "nft add rule" commands, like those
-in setup_fail_rules() or reset_with_add_addr_timeout(), will fail. This
-appears to cause the affected fault-injection and filtering tests to be
-silently skipped rather than executed.
-
-> +					{ type route hook output priority mangle; policy accept; }
-> +			EOF
-> +		done
-> +	done
-> +}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260904-mptcp_nft-=
-v3-0-4abedaf00bf9@kylinos.cn?part=3D2
+Thanks
+Hangbin
