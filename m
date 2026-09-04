@@ -1,106 +1,131 @@
-Received: from mta1.migadu.com (out-61.mta1.migadu.com [95.215.58.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2D633FE09
-	for <mptcp@lists.linux.dev>; Fri,  4 Sep 2026 05:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48BC626AC3
+	for <mptcp@lists.linux.dev>; Fri,  4 Sep 2026 05:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788498746; cv=none; b=Z34bW6G0GuEyfkjrOfNHRUYSZZVMdfe72/KoGiUmq0YYNLRDmR6OLeYeo4bKWQPrb8NVfvK1TJyutYTJRLhIv6AUoSjW/h+RfrNaGuspTdZuAGHD8Q7vkWqjSbXnyvVjoBqtj5Q0vvsuH59xds4nRnp5NFOusH8UHbhDLSZE0+s=
+	t=1788499734; cv=none; b=D1mk9rLLpsMrrf7DP519iIOoUuKgWvIMlPY24c5hW2aCGmPrbn4Q6r4YUeIZXiwLvXnixBucpxmIHebNyPKPEa2Pq10hdprWlmcxDAz4tQSWhNYYCNLRhDJreGXDAfbzTkTaRc1pgWwFVZL9Iy2i7TWki84LRQ2NSUJo55PceA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788498746; c=relaxed/simple;
-	bh=DbC3/HE5knS49vJbD34u92b2ULeu9ixGwx40BtIZBko=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WCpeBWktW385KCc4Vk5krDXhS8IBSoxRKEDTk2mBp4+MCKQuAUwDxt6E/WrzDhJ1m4NfLovjvE/vX1F5XbRBb6A3HaxJmDHy3hM2VEcmcW1fX24cv/ivpq4L3oafdpMZ44cy/hfTmug2+Thv9w2pqO7S1GnDNyCjIkc8aYbtiS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FH26hqq1; arc=none smtp.client-ip=95.215.58.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1788499734; c=relaxed/simple;
+	bh=axX8dGAHgdImU8FxxueWaFJ/nyLw05faTZcY7rYjl5k=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=PSQMMhuAQs40FLzkXdn4TwLbLIHqMKd9SgjRvaS+lZYiFWprQZi7VMzCmPGVwjZnhU9xMCNDhiDYoGeVED5eIznsVVI3FpeWGiraA0t/vUKDur7yr6Ne8DdA/5ildjbgOQkks0aXLjR08K3lvS1HrfsgVy0j1sKue8ukLcjtkxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cfb+F5zQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FH26hqq1"
-X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=DbC3/HE5knS49vJbD34u92b2ULeu9ixGwx40BtIZBko=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1788498742; v=1; x=1789103542;
- b=FH26hqq1xuq5XFk3LXDIKwHmwWZrXeJL+tacqxXiJkQfNljz8stjYzNYHwDalBwDhIQ70IsR
- TQFs5bqWRdvOBnNCTYKEqIDTnd1F2KMs1MGQk5UXWAoSKoiwcpGO08GCXHbKRNjRaVqcUzcXSZz
- GmIC9UV9qYnbo+CYUJSiL8T0=
-X-Envelope-To: mptcp@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 04a94af7463dd832;
-	Fri, 04 Sep 2026 05:12:22 +0000
-X-Mizu-Trace-ID: 04a94af7463dd832
-X-Migadu-Flow: FLOW_OUT
-From: Tao Cui <cui.tao@linux.dev>
-To: mptcp@lists.linux.dev,
-	matttbe@kernel.org,
-	quanyeyang@proton.me
-Cc: geliang@kernel.org,
-	cuitao@kylinos.cn,
-	cui.tao@linux.dev
-Subject: [PATCH mptcp-next v3 3/3] mptcp: pm: userspace: cap extra_subflows on Netlink subflow creation
-Date: Fri,  4 Sep 2026 13:11:50 +0800
-Message-ID: <20260904051150.1196427-4-cui.tao@linux.dev>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260904051150.1196427-1-cui.tao@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cfb+F5zQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E49251F00A3D;
+	Fri,  4 Sep 2026 05:28:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788499733;
+	bh=9dxFj66cXAgduQtA2iCf6prGnvcrHiaLTjKlbWWlfr4=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Cfb+F5zQWtk4SOID2Lslv6SgFaUE6EJUGhHpOEjOHdHQWLPCH+CLn5qAa156Hv74e
+	 3TtxH0GDbiltcrtKAF97UKv87sELB8RZxcy2Afa6TUVw55VGILMeUF6WjmXDDMFPtr
+	 qzTOVPvo/rScR8k1wn+3jnbfA/vOaUIGTqnhkTiB90K3kZHR2iWCwbBbDQCl+uBkN4
+	 Ak8EWu/NQWEr+Lzxf4Zw8A4gX8AsrZvJ63T9OZ0zD7lc0XbSwiMwd+LDVLoScpUDJJ
+	 q0SW5dI/LZBkgwd78u8KrM/tViUsvWw0UVrVBdyen1ivbsyDPqt2bUTZtveYKpUUiB
+	 ych1wSfAQHKtQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH mptcp-next v3 2/3] mptcp: pm: skip extra_subflows
+ accounting on disconnected msk
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Tao Cui" <cui.tao@linux.dev>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <20260904051150.1196427-3-cui.tao@linux.dev>
 References: <20260904051150.1196427-1-cui.tao@linux.dev>
+ <20260904051150.1196427-3-cui.tao@linux.dev>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 04 Sep 2026 05:28:52 +0000
+Message-Id: <20260904052852.E49251F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Quanye Yang <quanyeyang@proton.me>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-mptcp_pm_nl_subflow_create_doit() also increments the u8 extra_subflows
-counter without any limit: a client with CAP_NET_ADMIN can create more
-than 255 extra subflows via Netlink and wrap the counter back to 0,
-with the same effects as the MP_JOIN path now bounded separately:
-the underflow guards warn on the next subflow close, and
-mptcpi_subflows_total reported to userspace is corrupted.
+Pre-existing issues:
+- [High] Data race in mptcp_pm_data_reset() when clearing the pm->reset str=
+uct group locklessly, causing torn reads/writes with concurrent PM operatio=
+ns.
+--
 
-Refuse the subflow creation with -ENOSPC once the counter has reached
-U8_MAX, and clean up the local address entry in that case as well.
+commit 0c791790f3c719050b1d2004c347405ffb76512f
+Author: Tao Cui <cuitao@kylinos.cn>
 
-The same error path is followed after
-mptcp_userspace_pm_append_new_local_addr, which should probably not
-delete the local address unconditionally, but this is a pre-existing
-issue that will be addressed separately.
+mptcp: pm: skip extra_subflows accounting on disconnected msk
 
-Fixes: 77e4b94a3de6 ("mptcp: update userspace pm infos")
-Link: https://lore.kernel.org/all/20260902-mptcp-pm-extra-subflows-v1-1-68540a866e5a@proton.me/
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/629
-Signed-off-by: Quanye Yang <quanyeyang@proton.me>
-Signed-off-by: Tao Cui <cuitao@kylinos.cn>
----
- net/mptcp/pm_userspace.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+This commit addresses a remotely triggerable panic caused by a WARN_ON_ONCE
+guard on extra_subflows underflow. It skips the PM accounting when the sock=
+et
+is in TCP_CLOSE, as the counters may have already been cleared by
+mptcp_pm_data_reset().
 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index b94fbb483bf9..e7f7d023c246 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -417,6 +417,12 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
- 	local.ifindex = entry.ifindex;
- 
- 	spin_lock_bh(&msk->pm.lock);
-+	if (msk->pm.extra_subflows == U8_MAX) {
-+		spin_unlock_bh(&msk->pm.lock);
-+		GENL_SET_ERR_MSG(info, "too many extra subflows");
-+		err = -ENOSPC;
-+		goto delete_addr;
-+	}
- 	msk->pm.extra_subflows++;
- 	spin_unlock_bh(&msk->pm.lock);
- 
-@@ -427,6 +433,7 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
- 	if (err) {
- 		GENL_SET_ERR_MSG_FMT(info, "connect error: %d", err);
- 
-+delete_addr:
- 		spin_lock_bh(&msk->pm.lock);
- 		mptcp_userspace_pm_delete_local_addr(msk, &entry);
- 		spin_unlock_bh(&msk->pm.lock);
--- 
-2.43.0
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/629
 
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 9881092c16e78..520f0c638e6f7 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -671,9 +671,18 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *=
+msk,
+>  	update_subflows =3D subflow->request_join || subflow->mp_join;
+>  	if (mptcp_pm_is_userspace(msk)) {
+>  		if (update_subflows) {
+> +			/* The PM counters have already been cleared if the
+> +			 * msk got disconnected while this subflow was still
+> +			 * queued in the join list
+> +			 */
+
+[Severity: High]
+This isn't a bug introduced by this patch, but is there a data race when
+clearing the pm->reset struct group locklessly in mptcp_pm_data_reset()?
+
+Looking at net/mptcp/protocol.c:mptcp_disconnect(), it calls
+mptcp_pm_data_reset() on an active, network-exposed socket without acquiring
+pm->lock:
+
+net/mptcp/protocol.c:mptcp_disconnect() {
+    ...
+    mptcp_pm_data_reset(msk);
+    ...
+}
+
+Inside net/mptcp/pm.c:mptcp_pm_data_reset(), the code does a lockless memset
+of the struct group:
+
+net/mptcp/pm.c:mptcp_pm_data_reset() {
+    ...
+    memset(&pm->reset, 0, sizeof(pm->reset));
+    ...
+}
+
+Could this cause torn reads and writes with concurrent PM operations?
+
+For example, mptcp_pm_allow_new_subflow() concurrently modifies the memory
+while holding pm->lock, but without holding the socket lock:
+
+net/mptcp/pm.c:mptcp_pm_allow_new_subflow() {
+    ...
+    pm->extra_subflows++;
+    ...
+}
+
+If a client socket initiates a local disconnect via connect(AF_UNSPEC), and
+concurrently an in-flight SYN-ACK or remote MP_JOIN request is processed in
+softirq context via mptcp_finish_join(), could they interleave?
+
+It seems this might lead to data corruption of the pm->reset struct group
+fields (including extra_subflows, accept_subflow, and addr_signal), which
+could cause PM misbehavior such as permanent rejection of new subflows on a
+reconnected socket.
+
+[ ... ]
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260904051150.1196=
+427-1-cui.tao@linux.dev?part=3D2
