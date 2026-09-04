@@ -1,94 +1,114 @@
-Received: from mta1.migadu.com (out-140.mta1.migadu.com [95.215.58.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565043B42F2
-	for <mptcp@lists.linux.dev>; Fri,  4 Sep 2026 07:33:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A856308F3C
+	for <mptcp@lists.linux.dev>; Fri,  4 Sep 2026 07:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788507217; cv=none; b=cZHfSWh52LIlMjrJxgL8d7+7V3yQYsECdEIQ4NNjaCVHLFPJtbxGPwGiTHHlcoTX4tw27IStlsDez9//hV8wLxSM9v3R3qaAbhmeeyx/QZjCAVyL+swI2xxzGh4gpo4FzyKaVRTEhjGWS1a1FuJme9VlhyQXD/KzjpUAKGsxDtE=
+	t=1788507728; cv=none; b=DL3klfOp6teCvXqEHaXsoKS8kgjnISfsv+k9PPGggvLQiqR0qxAhECKgY9Qn0XbV6EXTAwXPo4JudyGg0vH1iW1yg2tBPDN8whyyEfo5q2WM8TuaE6aH3NlA5Rnyd+Uyy3zUIULT0COINi7oEq43Ag3rtrVq71CDT0VWT/P9GG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788507217; c=relaxed/simple;
-	bh=uqZS/vI+dGF+QJXloOkY0UqwwvW2/THSXcJob7V1dO0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q7ozUGX246Z1VcBOErI1jB2kFc4ESVrpOsHrjOOSbO7Wrn6h0A0QevxFkIUMJ4BrahIFHNjwPGAcmz/Ywnz9FqwBbwy6NvIo4V3UtMxTzHhh45QmGcOYNKdIqNT1ciuDP0T/UXmDqyov0iYV/fcpijcx3PmhvePhl3lOr+8v8/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qTpntxhT; arc=none smtp.client-ip=95.215.58.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1788507728; c=relaxed/simple;
+	bh=a81HfWUxEza7yOLoyyewUI3JRrO1Hshc1E6T3dPP8E0=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=eyP8JP2GYgTyghp4top/pp3A9C4TPH+J9m4PXcXz+58NmmbX1MukT6+FojAD4oxppxQ2e+pKymOaj5NEQRqAA4VlVmC3xFhyKuT5G9kinuglf+YIh8pqf4q29UYnzBto7MfyfHOVcpbtQlbnIRALuVdvG8I7SDGwjpeQaNUkXK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GN82pQfi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qTpntxhT"
-X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=uqZS/vI+dGF+QJXloOkY0UqwwvW2/THSXcJob7V1dO0=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1788507212; v=1; x=1789112012;
- b=qTpntxhTFlmcekI76vU+23pZDI+z2XxgxdJt+MeLODkkCeoEzNhUi+3svJupZjJ4AVr7MMIG
- zza9uFoemXa9uTjJuiWaGJVfVjPGkFDh36zLdq0kcEWAdVlT5rvFcUJwSghR8SDouOG+sbFm9cU
- kFK+MWPZ8GWquVdAV3H2N9SI=
-X-Envelope-To: mptcp@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 9e3e72e5590e5224;
-	Fri, 04 Sep 2026 07:33:32 +0000
-X-Mizu-Trace-ID: 9e3e72e5590e5224
-X-Migadu-Flow: FLOW_OUT
-From: Tao Cui <cui.tao@linux.dev>
-To: mptcp@lists.linux.dev
-Cc: matttbe@kernel.org,
-	geliang@kernel.org,
-	pabeni@redhat.com,
-	cuitao@kylinos.cn,
-	cui.tao@linux.dev
-Subject: [PATCH mptcp-next 2/2] mptcp: pm: take pm->lock in mptcp_pm_data_reset()
-Date: Fri,  4 Sep 2026 15:33:11 +0800
-Message-ID: <20260904073311.1285024-3-cui.tao@linux.dev>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260904073311.1285024-1-cui.tao@linux.dev>
-References: <20260904073311.1285024-1-cui.tao@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GN82pQfi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C41951F00A3D;
+	Fri,  4 Sep 2026 07:42:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788507727;
+	bh=3ZDkzO1lwGOPF9PHrSqYBKWXq6pkOOc4iRUoBopAPWA=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=GN82pQfiPqHlaHHu22L/oUWZqHbCbnYI6ikvxI142aW3CgBS22kN9/2CwsxuB12ln
+	 kjGRRINTnacukefhFdcmuiWN65uc6cqHdyv1MujWuXLP7XmojHFleQFwWJPNb43i38
+	 BFOoIK2cgk/R+Thghm5VTPOHyi+IM2iIme0DMFx6NmoWzNapGBkmOS5cAkIJkf7UWo
+	 o2mbA2u+qHDFRd2AJbyztSCT+Jc26/zxdYw40lbHQOda/mO7cZ2Z2kD/06q8vcGRBL
+	 tT7E3YZvfo0Bkh8M8QZC+HA8HwTzJ9pl0M00jC5NkfrP7aHKQ6ol75pmnx+iFWLHH/
+	 wPwEBUU6GUGfQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH mptcp-next v3 2/2] selftests: mptcp: convert iptables to
+ nftables for mptcp_join.sh
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Hangbin Liu" <hangbin.liu@linux.dev>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <20260904-mptcp_nft-v3-2-4abedaf00bf9@kylinos.cn>
+References: <20260904-mptcp_nft-v3-0-4abedaf00bf9@kylinos.cn>
+ <20260904-mptcp_nft-v3-2-4abedaf00bf9@kylinos.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 04 Sep 2026 07:42:06 +0000
+Message-Id: <20260904074206.C41951F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Tao Cui <cuitao@kylinos.cn>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Missing 'add' keyword in nftables configuration script causes sy=
+ntax error, silently skipping tests.
+--
 
-mptcp_pm_data_reset() clears the PM state with a plain memset while
-the RX path can access the same fields in BH context under pm->lock:
-on a disconnecting socket, mptcp_pm_allow_new_subflow() and friends
-can run concurrently with the reset and see partially cleared data.
+commit 45eaf6e2e654e036380de79d25fbc989c2055da7
+Author: Hangbin Liu <liuhangbin@kylinos.cn>
 
-Take pm->lock around the reset. All the callers hold the socket lock
-at most, so there is no lock inversion.
+selftests: mptcp: convert iptables to nftables for mptcp_join.sh
 
-Fixes: b29fcfb54cd7 ("mptcp: full disconnect implementation")
-Signed-off-by: Tao Cui <cuitao@kylinos.cn>
----
- net/mptcp/pm.c | 5 +++++
- 1 file changed, 5 insertions(+)
+This commit replaces the iptables/ip6tables setup with nftables in the
+mptcp_join.sh selftest. It introduces a new init_nftables function to setup
+the nft tables using a heredoc rather than configuring them inline.
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 8b68868255c50..e224aa6f63dd9 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -1179,6 +1179,10 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
- 	u8 pm_type = mptcp_get_pm_type(sock_net((struct sock *)msk));
- 	struct mptcp_pm_data *pm = &msk->pm;
- 
-+	/* the whole PM data is protected by pm->lock, the reset can
-+	 * race with the RX path on a disconnecting socket
-+	 */
-+	spin_lock_bh(&pm->lock);
- 	memset(&pm->reset, 0, sizeof(pm->reset));
- 	pm->rm_list_tx.nr = 0;
- 	pm->rm_list_rx.nr = 0;
-@@ -1201,6 +1205,7 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
- 
- 		bitmap_fill(pm->id_avail_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
- 	}
-+	spin_unlock_bh(&pm->lock);
- }
- 
- void mptcp_pm_data_init(struct mptcp_sock *msk)
--- 
-2.43.0
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/test=
+ing/selftests/net/mptcp/mptcp_join.sh
+> index 18ce7136a2b0e..835cb92cab1a4 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
 
+[ ... ]
+
+> @@ -184,6 +147,28 @@ init_shapers()
+>  	done
+>  }
+> =20
+> +init_nftables()
+> +{
+> +	nft_handle=3D""
+> +
+> +	local netns table
+> +	for netns in "$ns1" "$ns2"; do
+> +		for table in ip ip6; do
+> +			ip netns exec "$netns" nft -f - <<-EOF
+> +				add table $table filter
+> +				add chain $table filter INPUT \
+> +					{ type filter hook input priority filter; policy accept; }
+> +				add chain $table filter OUTPUT \
+> +					{ type filter hook output priority filter; policy accept; }
+> +
+> +				table $table mangle
+> +				chain $table mangle OUTPUT \
+                                ^^^^
+
+[Severity: Medium]
+Are these table and chain declarations missing the "add" keyword?
+
+The filter table rules above them use "add table" and "add chain", but the
+mangle declarations omit "add". Does this syntax error cause the "nft -f -"
+command to fail and abort the entire transaction, preventing the creation of
+both the filter and mangle tables?
+
+If the tables aren't created, subsequent "nft add rule" commands, like those
+in setup_fail_rules() or reset_with_add_addr_timeout(), will fail. This
+appears to cause the affected fault-injection and filtering tests to be
+silently skipped rather than executed.
+
+> +					{ type route hook output priority mangle; policy accept; }
+> +			EOF
+> +		done
+> +	done
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260904-mptcp_nft-=
+v3-0-4abedaf00bf9@kylinos.cn?part=3D2
