@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3024508EB
-	for <mptcp@lists.linux.dev>; Fri,  4 Sep 2026 10:09:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F7F409624
+	for <mptcp@lists.linux.dev>; Fri,  4 Sep 2026 10:33:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788516599; cv=none; b=ikxUtUu/HKKurkbCzgiMEQCDW1T0exIh/vwAfMsTp5qETqXEFbSF94ud19jFWIk71hvmdQOs8Pc2g959phIcbA3fE5jK9/RlwYvUAgy6IJ2pDJ98vzwGcxRMfD82mBRRX4WJtllQPGTOjmPoizIqq7H/J9W96/sflmBO4Lwmvz0=
+	t=1788517982; cv=none; b=ChTzORJkssp/XXaMqm219KuiQv8/M78dIZAx8wI/B5l233YQCEhZlbgUP6XnJ1g946gIltp5fZNa/A1WB5L5m/sONXMQ+kP2gUT1sxLkyYiwL3g6Y/RDQjTMuvqc9ubWT4CZX/+LmyXTfJoTKuxlRx3esX9S2kLlu/vVAJNsOVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788516599; c=relaxed/simple;
-	bh=8pxuu+jSSv7AvjV17whCM+uGRRZAGldEhJ5YO3xhhmQ=;
+	s=arc-20240116; t=1788517982; c=relaxed/simple;
+	bh=m00vEefmz05QwfUeeuwO4duqFqWLOJE+8zMVTEsQqvw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PA1L+5iSRdwQ6kc7b+g5VViNuwTZfd2dgu/iflsLw3hcfkQKTo+GRtenvgFnR3d8GqjRwyIwKu9780wZ7FZBl3oLkCbUa3KAnZtlH4XSd+O4k/FXBzvtZF6BoYGXVpRL7l+v1I8ulAWFPh58fSq7bPGCmYevFG6IfCXrokVQ1c8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nmEuuOwa; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=cq148HjmRtfO2BAuaLL4mv1JJA8wTwDsUToSqM6DWENUvSRC/VRm4A8B4Hg5eBmfU6wOG3eQUPOCQZd6tK6x+g8rQ6OP6csmP+YFU4pZ4BgiFZXB6incnH5/ow60aJFaOfEyqDSk54RVxbRXjHRwy4GTpU4SqpmaeQFWK67o7Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VOUS+tMt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nmEuuOwa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FB461F00A3E;
-	Fri,  4 Sep 2026 10:09:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VOUS+tMt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 610281F00A3D;
+	Fri,  4 Sep 2026 10:33:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788516590;
-	bh=KAFPYmuji+2R2aacFXZvAslPzcya2SsW8/31lNfGJJw=;
+	s=k20260515; t=1788517981;
+	bh=ajT5eK6lyvnf0oBvkHfYxKO1Zzu/1RwhSTyEoU3SHec=;
 	h=Date:Subject:To:References:From:In-Reply-To;
-	b=nmEuuOwaGjgcmwkQytwrjaNV9lvKthXC9XZ/o3TayyFY4R8PLm15L078wT1sUo0KJ
-	 SuNFU3EW7SnstkJfKCi/YX6/TBnSDZHwR8TclOvopNf2X1jUk3zaCq73dwGz3Kag0m
-	 2pjf+Q9dt7/XRm1pozd4YOwpesrWVtx4ZMZTwPBa4Bt7R/3K6DOCGmUdJElcFWn+li
-	 f9H8csFK0Jse46KvmDutu4qbF9DwfYXy4DR3gasQGPF52iXLy8azKO8vLIR1Ju1Uyz
-	 QMOzRO8gT8GK4yHmThMrgFwy5po3+cNNZywGozQOl8UYwWpMUZOA1wqbrqfwUxZH1x
-	 Om0qBPqBKR2MQ==
-Message-ID: <058fd36e-60a9-4132-bf51-0d76765fa561@kernel.org>
-Date: Fri, 4 Sep 2026 12:09:48 +0200
+	b=VOUS+tMtWlBtOg9e0quHCBmy5SdsqdN9QgTILwrr8P/2YrRXgqIjFBrNfL9sSkWXy
+	 lp07kj4EW+DdblECRpjhnAA5L+7a76xsOVTI4zZ9E8LZ4Qrqkr7KzoYzoX/Rp4Au02
+	 VloUMLMZLJbyfSpQVbl/9py411tt39dID9o6Q0PIOFU8cFcur2rjyRDdGQwN4lIiaT
+	 8lo00o1O3KV0GQ6NfrcAIxBpKTww6/xMwYIfZCwDyyyZM9iEXefgrtVC4GkSHbDAso
+	 Q+xn6As0+KHpb+fVzh/IdP32BE84roR0DnuXJIi4u/s5cf+D3xhE94sFdVwdvMvvB6
+	 38K6PM3CzVlMA==
+Message-ID: <7429a238-6297-4a7c-b18c-47cbcee4ab69@kernel.org>
+Date: Fri, 4 Sep 2026 12:32:58 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,10 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] mptcp: shrink struct mptcp_options_received
+Subject: Re: [RFC] Mitigating Sashiko-driven iteration noise on the main MPTCP
+ list
 Content-Language: fr
-To: quanyeyang@proton.me, MPTCP Linux <mptcp@lists.linux.dev>
-References: <20260904-mptcp-shrink-opt-rx-v1-1-2d87ab9505ff@proton.me>
+To: gang.yan@linux.dev, mptcp@lists.linux.dev
+References: <b13525eb141d18e1fe326fec4e71b53704cdc291@linux.dev>
+ <6f86381a-72d4-4a47-bc7d-1880cc39da64@kernel.org>
+ <3f13f3acd4c329480331cccf5a12411dc01ee721@linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -84,119 +87,41 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260904-mptcp-shrink-opt-rx-v1-1-2d87ab9505ff@proton.me>
+In-Reply-To: <3f13f3acd4c329480331cccf5a12411dc01ee721@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Quanye,
+Hi Gang,
 
-On 04/09/2026 05:08, Quanye Yang via B4 Relay wrote:
-> From: Quanye Yang <quanyeyang@proton.me>
+On 04/09/2026 09:25, gang.yan@linux.dev wrote:
+> September 3, 2026 at 5:52 PM, "Matthieu Baerts" <matttbe@kernel.org mailto:matttbe@kernel.org?to=%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org%3E > wrote:
+
+(...)
+
+>> In conclusion, I don't think we want a "hidden" ML, but we do want to
+>> reduce the traffic on the ML, and the recommended solution is to push
+>> people validating their patches with the same tool (or closed to, if
+>> possible) before any submissions. WDYT?
 > 
-> struct mptcp_options_received is allocated on the stack while parsing
-> incoming MPTCP options.
+> I now see that my idea was probably too naive/overly simplistic :)
 > 
-> The sender key, MP_JOIN fields, ADD_ADDR fields and MP_FAIL sequence
-> number are mutually exclusive, as enforced by mptcp_parse_option().
-> Place them in an anonymous union while keeping the existing field
-> access unchanged.
-> 
-> This reduces the structure size from 136 to 88 bytes on x86_64.
+> I have tried deploying Sashiko locally
 
-Thank you for looking at that.
+Thank you for having done that.
 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/625
-> Signed-off-by: Quanye Yang <quanyeyang@proton.me>
-> ---
->  net/mptcp/protocol.h | 23 +++++++++++++++--------
->  1 file changed, 15 insertions(+), 8 deletions(-)
-> 
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 739f9006c1e1..6646c428dbdf 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -142,7 +142,6 @@ static inline bool before64(__u64 seq1, __u64 seq2)
->  #define after64(seq2, seq1)	before64(seq1, seq2)
->  
->  struct mptcp_options_received {
-> -	u64	sndr_key;
->  	u64	rcvr_key;
+> and noticed that different models can produce quite different review outputs.
 
-Out of curiosity, can we not also move this one with 'sndr_key' to the
-union in a new anonymous struct dedicated to the MP_CAPABLE suboption? I
-see it is used by an MPCAPABLE and FASTCLOSE, but maybe we could have a
-new fc_recv_key field? It might be clearer to have a dedicated one for
-both in the union than re-using this field in two different suboptions, no?
+Yes indeed, and from what I understood, even the same model can produce
+different results. But I think that's fine, and I hope various models
+out there can at least spot "simple" / "important" issues. So even if
+the model(s) you can access to is/are "not as precise/picky" as the
+Google one, that's still good to have a such pre-checks being done to
+reduce the number of iterations.
 
->  	u64	data_ack;
->  	u64	data_seq;
-
-It might be useful to have anonymous struct with a comment to explain
-that a group is linked to a suboption, e.g. here we have the DSS one,
-below we have groups for MPC, MPJ, and ADD_ADDR.
-
-> @@ -166,14 +165,22 @@ struct mptcp_options_received {
->  		    __unused:1;
->  	);
->  	u8	join_id;
-
-Can this be moved to the MPJ group?
-
-> -	u32	token;
-> -	u32	nonce;
-> -	u64	thmac;
-> -	u8	hmac[MPTCPOPT_HMAC_LEN];
-> -	struct mptcp_addr_info addr;
->  	struct mptcp_rm_list rm_list;
-> -	u64	ahmac;
-> -	u64	fail_seq;
-> +	/* Options below are mutually exclusive, see mptcp_parse_option() */
-> +	union {
-> +		u64 sndr_key;
-> +		struct {
-> +			u32 token;
-> +			u32 nonce;
-> +			u64 thmac;
-> +			u8 hmac[MPTCPOPT_HMAC_LEN];
-
-Maybe yet another anonymous union here for thmac and hmac? I don't think
-they can be used at the same time.
-
-> +		};
-> +		struct {
-> +			struct mptcp_addr_info addr;
-> +			u64 ahmac;
-> +		};
-> +		u64 fail_seq;
-> +	};
->  };
-
-Out of curiosity, did you check the other ideas suggested in the ticket?
-If yes, it would be good to add them in the commit message explaining
-that they are not worth it for some reason.
-
->  
->  static inline __be32 mptcp_option(u8 subopt, u8 len, u8 nib, u8 field)
-> 
-> ---
-> base-commit: 10d57dc355c99e071a198e50c45503bce944dd5c
-> change-id: 20260904-mptcp-shrink-opt-rx-ef8581f125df
-> prerequisite-message-id: <20260903-mptcp-mib-inval-opt-v1-0-84a553c552b6@kernel.org>
-> prerequisite-patch-id: 7f8decba16ce568283eaa86b23cd93b183aaa675
-> prerequisite-patch-id: c8fedc4ff2b5997f716dac0c30ec7620ecf11fc0
-> prerequisite-patch-id: 5abea779f2b0af347cd88d6b65bfc3b9eefff405
-It looks like your patch doesn't conflict with my series. Do you mind
-sending the v2 without the dependencies because it looks like both our
-CI and Sashiko were not able to apply your patches. I think that's
-because they use 'git am -3' and they don't find the base.
-
-Note that for our CI, it doesn't support b4 dependencies, but it
-supports the "Based-on" tag:
-
-  https://github.com/multipath-tcp/mptcp_net-next/wiki/CI#base-patches
+Note that Clashiko is running multiple models and doing cross reviews.
+In theory, that sounds good to have less false positives (but then, it
+seems to be very/too picky as well...). So at the end, it seems like a
+good thing to have access to various models to cross checks the reviews.
 
 Cheers,
 Matt
--- 
-Sponsored by the NGI0 Core fund.
-
