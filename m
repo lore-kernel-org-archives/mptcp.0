@@ -1,195 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F75B4746A5
-	for <mptcp@lists.linux.dev>; Fri,  4 Sep 2026 11:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2031F29898F
+	for <mptcp@lists.linux.dev>; Fri,  4 Sep 2026 12:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788520961; cv=none; b=Hw0jK8I5aHDcvaTRGQIhcUxcTz7jjxj2A7yXjGqBBq9+DZmP1kVAv/jIeoKOoYNpKMWYelyF55RfWpqZArAbU0G/jLVQkII5sZ1CfvvDK2dlNuEZJuIGILysW1tyV3d99uuChJKel6zG8XTJw0+eM3e5neMLR2A4SckcWYa66Uc=
+	t=1788525122; cv=none; b=bnC/0xraTpdZk2qHWKL9ZGmJXir+RKINPYW98TItNkclD9bpfjJwa9c+Xwa6xNBKo6wBd+m5OXEOMInq+10YrzmAdbe3F4NeumNsn02MSWFKQ+IeRIEJOvC00Wz10U8pDwd0XOsWSWwt8Deajb1i1EZfV/MRB79vbEXGl3Ih5OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788520961; c=relaxed/simple;
-	bh=YkrtJPTEybNDjrvaJOtlmEmrpDyklinGMzu7uIysU+s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Nyoc/p3dZw3r6JZhKW/EexPh3+ySEZ/gfqdGJp6c0Mo6RFIlwOXEKSOzC3hZY7dCLBN2O0wnL435WIapIRrzu38hJPagK4X+89LneH9OR65PODGPy71506P0gfz1j8B2K5JTZCdDqhfu/hC3ELMd+qEf3pXUK8eyejIownekfvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/labkfo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1788525122; c=relaxed/simple;
+	bh=p/emxKxtj8VOWZgLvdPIgAsAYorEDRu0iOMqJIvOjIY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=gn83kMcLeq1koon7m7hYonhal57aQbxb0btXsAz4IM+aZrIwUt2f23vl3yz/6ujOVSiJeCB06ctJ2ErApUYi/Zc1KenJGGF+dYAwBfgiXOdUzAhZCfMnYLzvrgw/jcwC1Oz6nrkeA6hg72nLUNh8kezB5uYafIWTxp/Cy8EaLbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eM4vOMTt; arc=none smtp.client-ip=209.85.167.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/labkfo"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 91ACBC2BCF5;
-	Fri,  4 Sep 2026 11:22:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1788520960;
-	bh=YkrtJPTEybNDjrvaJOtlmEmrpDyklinGMzu7uIysU+s=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=k/labkfoCSnJ0ks365N7u3ZFhGME8mQGzCaHgoPTmV2U9SojO3ZUu3/PZD+58Fpot
-	 zmZ+d9VT7gQkJnsWJFQI7aCOab1O+2StYEHCJBme4bkOsgwmA05h035DxU3pU8eLHy
-	 MPq3GFdDxGj+Mqb8NZStx32xBu26rngbG/cOvtcMk6FARGUnmG9EvFyyUKivQEZEID
-	 rZTItbvysckBEY7J8uocHFIyx5dOGNaq60Vwpboyf3IPjMshqFcEQAt3yLHGolxBCq
-	 4rNjnvq8TQ+Ih4ZJRTxd9GqY/cK+JNGKtjOCNBNpo365N0ek1a/ZwwpbWMMTNofrIG
-	 T4AWlBqZV4pqg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B230C624DE;
-	Fri,  4 Sep 2026 11:22:40 +0000 (UTC)
-From: Quanye Yang via B4 Relay <devnull+quanyeyang.proton.me@kernel.org>
-Date: Fri, 04 Sep 2026 19:22:39 +0800
-Subject: [PATCH mptcp-next v2] mptcp: shrink struct mptcp_options_received
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eM4vOMTt"
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-4a451915d8aso951978b6e.2
+        for <mptcp@lists.linux.dev>; Fri, 04 Sep 2026 05:32:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788525120; x=1789129920; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=O7BcwgGHdB4ohRKrnBri/fERESUFpnLveDZjwAtTyDE=;
+        b=eM4vOMTtVTEW1c71OhMLb6h+GPdz/cf7643Zzmww3bg2BY7WKYvVD69uq+70EtXMMG
+         MG2PyDgLW/MdquF9S45RlsWRf5H2rQKa6GaeNdcAUvFG1X+79CfpYDA7y5KxgQXZx9aR
+         diVWLg5z/ObOouf73pJP9v6EIJ3p/zuVw5+KLx7/281R/QIZ9C1OkkGrN6LtqqkF9MH7
+         HF2Kh6XZRdPURWMmjBibS2wPtMpZrl83lK2aMgXuIx3FA7B2nlbsR6rly9soSSbEg+jM
+         4b2bqXIbQ71GVtmTKFEfEDvEQKykXeqqw78d3oaiCczpdLBwE8jmyq7BNglRjqhWM1Gt
+         MdnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788525120; x=1789129920;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=O7BcwgGHdB4ohRKrnBri/fERESUFpnLveDZjwAtTyDE=;
+        b=jZQ3NoyykKRmG1ZpXoHocJoIP3xvLNUWPrvLTmxGZA8M4Az5cqrgjM8AaBj2GNm0R2
+         QupCfEBFJYDo/Txat9CewkhJ1kKvwMj74D0XyMFDD6afjV37BxNQyJZPcdd41kWTa7sp
+         8od3f8ot8SdrbZAsJMW35Ab6NY2S/wqmelrS/qRUQOu4iH8BcsTTE2kJva7iNO2ecPCw
+         NJHCGQ/y8lVNGT8RSqpGnYhBKSRQ+OL3JuF5QHl8hCc261w+64qbibroE98LvYLU4t1Y
+         BfG9K9ML58qRLc6+s6SNGHzP0/DXLMBvLjw5U+jm6S7DsTD1dfcmX+9uLKw/ucyKWqmL
+         ycZg==
+X-Gm-Message-State: AFuF++lh/h3HF1HqByfAShJNPlFLIaQnL2SSIUltfGqXqjqP72m5bbtQ
+	3duIwp7QJZ/BCP3wq9hq68a8onJTjTdx54tGTWPVCK9LV5JTDpArZEY=
+X-Gm-Gg: AYBFou14ayouz9tm64VcmMHRUyp19O9NSHJ9QcQo9MDj2yXzsAPAIdrQaYXAzc+gvvc
+	N7Btwten3q1CTI2BTJpVk/Rw4TSwsl9K1y7Gzlsh6RFAENg0qdTJH4I3sbJoy8XQ9pxEeXxV/FM
+	oTlT5UzEgx/pmqCWYFKByeqGND+C7k+gYB87qo4PAV0DXT4Z1plamOUffN+naP5zOalyREyRGtF
+	t+foJc6fUHuBnnz6HVjXxTx4Csh+mQ+BwfX9Ud/X+tXYJNZDaWOvW7QeszRUpkHeH9eP/VhVsWA
+	PdHTT4ijsr42mz9l2phHgEa0bKogb3kpT8oUAvFTjnfWFuxDPLQpTbKKPURvh9+GP/KdivaZxgi
+	F4yq1MLzJlu7lHDw/jfUUulKH49PRGyLt/F4auaKGuy0+6PV630RSiJe0SkleI72y60y6BpxDm3
+	BZJpij79WwHtU8yipI/Ep9beEEduUEkW8bUu1Jv1Y2b7QbaYYf76cp7kDyHcqoJ0Snsml+0NGq7
+	Q==
+X-Received: by 2002:a05:6820:211:b0:6b7:83c5:fdf2 with SMTP id 006d021491bc7-6b783c60319mr1635921eaf.51.1788525119819;
+        Fri, 04 Sep 2026 05:31:59 -0700 (PDT)
+Received: from [127.0.0.1] ([172.208.153.10])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-14324410092sm6253006c88.14.2026.09.04.05.31.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2026 05:31:59 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Quanye Yang <quanyeyang@proton.me>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260904-mptcp-shrink-opt-rx-v2-v2-1-d8662bb18ef2@proton.me>
+References: <20260904-mptcp-shrink-opt-rx-v2-v2-1-d8662bb18ef2@proton.me>
+Subject: Re: [PATCH mptcp-next v2] mptcp: shrink struct
+ mptcp_options_received
+Message-ID: <08ed4a80-2afe-6205-ff45-d1193efcea21@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 04 Sep 2026 12:31:58 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260904-mptcp-shrink-opt-rx-v2-v2-1-d8662bb18ef2@proton.me>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/32OzQ6CMBCEX4Xs2TVtA0g9+R6GA5RFqrFttpVgC
- O8uP3ePk5lvZmaIxJYiXLMZmEYbrXerUKcMzNC4B6HtVg1KqFJokeM7JBMwDmzdC31IyBOOCru
- KhCl1IZXOYYUDU2+nvfgOB+NoSlAfXvy0TzJpa97Sg43J83d/Mcqd+T8oUaLqqkvT6kIUfX8L7
- JN35zdBvSzLD4sFlvnXAAAA
-X-Change-ID: 20260904-mptcp-shrink-opt-rx-v2-d8e0c6951294
-To: MPTCP Linux <mptcp@lists.linux.dev>
-Cc: Quanye Yang <quanyeyang@proton.me>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1788520959; l=4282;
- i=quanyeyang@proton.me; s=20260801; h=from:subject:message-id;
- bh=aVqcS8WPDUb76u1ehRT8vA/YOKHuGD81HPnkyRznza4=;
- b=6iyA+Dpf0azJbDWux0MDyVHRP098n18qkacGvi2qcpnZI0QPBF4LYxlfomzn5YUMO6BrJlt0P
- b7SKOuHE/1KA/7thjJMnXTEqdrwwXp1ZxqVkqRx0GTu6H01W559C+/T
-X-Developer-Key: i=quanyeyang@proton.me; a=ed25519;
- pk=9L9FrcvzMgxPaBRU6XV0EnqTgjDqVO596rQKSZ9qZoY=
-X-Endpoint-Received: by B4 Relay for quanyeyang@proton.me/20260801 with
- auth_id=963
-X-Original-From: Quanye Yang <quanyeyang@proton.me>
-Reply-To: quanyeyang@proton.me
+Content-Type: text/plain; charset=utf-8
 
-From: Quanye Yang <quanyeyang@proton.me>
+Hi Quanye,
 
-struct mptcp_options_received is allocated on the stack while parsing
-incoming MPTCP options. Several suboptions are mutually exclusive, as
-enforced by mptcp_parse_option(), so their payloads can overlap.
+Thank you for your modifications, that's great!
 
-Group fields by suboption and place the mutually exclusive payloads in
-an anonymous union: MP_CAPABLE keys, MP_JOIN, ADD_ADDR, MP_FAIL and
-MP_FASTCLOSE. Keep DSS and rm_list outside the union: they can be
-combined with other suboptions. Split the former shared rcvr_key into
-rcvr_key (MP_CAPABLE) and fc_recv_key (MP_FASTCLOSE). Move join_id into
-the MP_JOIN group, and overlap token, thmac and hmac inside that group.
+Our CI did some validations and here is its report:
 
-Further shrinking would require changing the parser so currently
-coexisting fields (DSS mapping vs ACK, rm_list, status flags) can
-overlap. That adds complexity for little gain, since the outer union is
-already dominated by the MP_JOIN / ADD_ADDR members.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf:=20
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/=
+runs/33869151432
 
-This reduces the structure size from 136 to 72 bytes on x86_64.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/625
-Signed-off-by: Quanye Yang <quanyeyang@proton.me>
----
-Changes in v2:
-- Group fields by suboption and move join_id into the MP_JOIN group
-- Split rcvr_key into rcvr_key (MP_CAPABLE) and fc_recv_key (MP_FASTCLOSE)
-- Overlap MP_JOIN token, thmac and hmac
-- Drop the dependency on the invalid-option series
-- Link to v1: https://patch.msgid.link/20260904-mptcp-shrink-opt-rx-v1-1-2d87ab9505ff@proton.me
----
- net/mptcp/options.c  |  6 +++---
- net/mptcp/protocol.h | 44 +++++++++++++++++++++++++++++---------------
- 2 files changed, 32 insertions(+), 18 deletions(-)
-
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index f87707110c75..943b2b37eaae 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -374,10 +374,10 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 			break;
- 
- 		ptr += 2;
--		mp_opt->rcvr_key = get_unaligned_be64(ptr);
-+		mp_opt->fc_recv_key = get_unaligned_be64(ptr);
- 		ptr += 8;
- 		mp_opt->suboptions |= OPTION_MPTCP_FASTCLOSE;
--		pr_debug("MP_FASTCLOSE: recv_key=%llu\n", mp_opt->rcvr_key);
-+		pr_debug("MP_FASTCLOSE: fc_recv_key=%llu\n", mp_opt->fc_recv_key);
- 		break;
- 
- 	case MPTCPOPT_RST:
-@@ -1259,7 +1259,7 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
- 
- 	if (unlikely(mp_opt.suboptions != OPTION_MPTCP_DSS)) {
- 		if ((mp_opt.suboptions & OPTION_MPTCP_FASTCLOSE) &&
--		    READ_ONCE(msk->local_key) == mp_opt.rcvr_key) {
-+		    READ_ONCE(msk->local_key) == mp_opt.fc_recv_key) {
- 			WRITE_ONCE(msk->rcv_fastclose, true);
- 			mptcp_schedule_work((struct sock *)msk);
- 			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPFASTCLOSERX);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index b3121c8c766b..11adb2d67bb6 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -145,13 +145,13 @@ static inline bool before64(__u64 seq1, __u64 seq2)
- #define after64(seq2, seq1)	before64(seq1, seq2)
- 
- struct mptcp_options_received {
--	u64	sndr_key;
--	u64	rcvr_key;
--	u64	data_ack;
--	u64	data_seq;
--	u32	subflow_seq;
--	u16	data_len;
--	__sum16	csum;
-+	struct { /* DSS, also used by MP_CAPABLE with data */
-+		u64	data_ack;
-+		u64	data_seq;
-+		u32	subflow_seq;
-+		u16	data_len;
-+		__sum16	csum;
-+	};
- 	struct_group(status,
- 		u16 suboptions;
- 		u16 use_map:1,
-@@ -167,15 +167,29 @@ struct mptcp_options_received {
- 		    deny_join_id0:1,
- 		    __unused:2;
- 	);
--	u8	join_id;
--	u32	token;
--	u32	nonce;
--	u64	thmac;
--	u8	hmac[MPTCPOPT_HMAC_LEN];
--	struct mptcp_addr_info addr;
- 	struct mptcp_rm_list rm_list;
--	u64	ahmac;
--	u64	fail_seq;
-+	/* Options below are mutually exclusive, see mptcp_parse_option() */
-+	union {
-+		struct {
-+			u64 sndr_key;
-+			u64 rcvr_key;
-+		};
-+		struct {
-+			u32 nonce;
-+			u8 join_id;
-+			union {
-+				u32 token;
-+				u64 thmac;
-+				u8 hmac[MPTCPOPT_HMAC_LEN];
-+			};
-+		};
-+		struct {
-+			struct mptcp_addr_info addr;
-+			u64 ahmac;
-+		};
-+		u64 fail_seq;
-+		u64 fc_recv_key;
-+	};
- };
- 
- static inline __be32 mptcp_option(u8 subopt, u8 len, u8 nib, u8 field)
-
----
-base-commit: d5a4e55ccfb893614646d0f0e5c440daa92b7467
-change-id: 20260904-mptcp-shrink-opt-rx-v2-d8e0c6951294
-
-Best regards,
---  
-Quanye Yang <quanyeyang@proton.me>
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/a98754ba79b7
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1157920
 
 
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
