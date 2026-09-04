@@ -1,131 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48BC626AC3
-	for <mptcp@lists.linux.dev>; Fri,  4 Sep 2026 05:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88194242910
+	for <mptcp@lists.linux.dev>; Fri,  4 Sep 2026 06:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788499734; cv=none; b=D1mk9rLLpsMrrf7DP519iIOoUuKgWvIMlPY24c5hW2aCGmPrbn4Q6r4YUeIZXiwLvXnixBucpxmIHebNyPKPEa2Pq10hdprWlmcxDAz4tQSWhNYYCNLRhDJreGXDAfbzTkTaRc1pgWwFVZL9Iy2i7TWki84LRQ2NSUJo55PceA4=
+	t=1788503400; cv=none; b=il1pVuwBABV6lDyVYB277C4sB1GiOafpTUgfTk/NjNpsJoScSl4QYy13uQr6ReY+FgLOn9QhLlO+KOMrMKgYTGe9zvFs1mXHaqpDesPw8i3BDOTzGcJ0TDSi+3zgGPmkB5kvuGjsgcWPatj4VXYgau4e7/CRul49MhWAhpG8HeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788499734; c=relaxed/simple;
-	bh=axX8dGAHgdImU8FxxueWaFJ/nyLw05faTZcY7rYjl5k=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=PSQMMhuAQs40FLzkXdn4TwLbLIHqMKd9SgjRvaS+lZYiFWprQZi7VMzCmPGVwjZnhU9xMCNDhiDYoGeVED5eIznsVVI3FpeWGiraA0t/vUKDur7yr6Ne8DdA/5ildjbgOQkks0aXLjR08K3lvS1HrfsgVy0j1sKue8ukLcjtkxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cfb+F5zQ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788503400; c=relaxed/simple;
+	bh=QirwaVPFdIy/vgSxahmCyTmOEbbVQb5X/2f/m3Aypyg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=t6FDUvSGxAlVmcLLmXDYN1ppZpjXw07J83ji3EX8Ad09D4jVSCQ6YkHajmwj5Hh8HgK6nPRj6XHuvhNeqG4E06Y3CBKYPWgV1T+mlW573sGHY7pST/rjc4qKqZBVixMUJtVwLriHMsZUDSBk9cVYQ8RJQYvo9FTWgXO1T0Lvb7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=krBfTvNH; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cfb+F5zQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E49251F00A3D;
-	Fri,  4 Sep 2026 05:28:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788499733;
-	bh=9dxFj66cXAgduQtA2iCf6prGnvcrHiaLTjKlbWWlfr4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Cfb+F5zQWtk4SOID2Lslv6SgFaUE6EJUGhHpOEjOHdHQWLPCH+CLn5qAa156Hv74e
-	 3TtxH0GDbiltcrtKAF97UKv87sELB8RZxcy2Afa6TUVw55VGILMeUF6WjmXDDMFPtr
-	 qzTOVPvo/rScR8k1wn+3jnbfA/vOaUIGTqnhkTiB90K3kZHR2iWCwbBbDQCl+uBkN4
-	 Ak8EWu/NQWEr+Lzxf4Zw8A4gX8AsrZvJ63T9OZ0zD7lc0XbSwiMwd+LDVLoScpUDJJ
-	 q0SW5dI/LZBkgwd78u8KrM/tViUsvWw0UVrVBdyen1ivbsyDPqt2bUTZtveYKpUUiB
-	 ych1wSfAQHKtQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v3 2/3] mptcp: pm: skip extra_subflows
- accounting on disconnected msk
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Tao Cui" <cui.tao@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="krBfTvNH"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-5301db51586so10119301cf.1
+        for <mptcp@lists.linux.dev>; Thu, 03 Sep 2026 23:29:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788503398; x=1789108198; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=VVebxlrCO94IjVYsJhuxMot3gvRudY2aE4rA2nkcJNY=;
+        b=krBfTvNHkGnBt6XZ1wI6n8tkpgOCUD30Yxj54jUlB73h5I2XJ+QIO5b242TiZFN6vB
+         aNt8YoQifww/lxcGR79PWVuqOZt/UxVCOzvZazQt6EHO6DjX1GkzpUwfFM6WQJGasQ0d
+         w1mPrMUbJwzqMUdb+tq6rYb2Di6uZH8qr/d8qtcmP0OqQKW7Fu6R6j0qQ3J3RzVZ6z/I
+         wx+S+Da8RT6+Q8cCelzXMSbzMvrajL1JKSXIHZmc4UNXoRYNylNblKwlY3ZwDkqMAEMk
+         DJ4nHo9bZPaRQnj1fBIlrbKq06WsZWofmj/f/gzAffdogXX692KGfs4YSKR+OH/Zgict
+         U0pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788503398; x=1789108198;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=VVebxlrCO94IjVYsJhuxMot3gvRudY2aE4rA2nkcJNY=;
+        b=ShMVZliRH+TxYd2CFD+y/g8Cm8yOAUdGAUx5OyNmrLiKZslj10wBW/DDl4IowPqs6M
+         6H6MWjxpMHPNIP5+0ftUCfYqzZevf1VGIGKP+x08Zz6EuKXfac8yPEaUg5FHYIVPdv59
+         jM9NN4NDpP7rs4e2/kS8K/PGrAWyjlCoOjItnoYmy6EKRdXeWfkjwKcHEZD8FsByN+M3
+         L0e/k+lR1Hl0yNdc0VmUAwfyT29SUA1c8K/ABfuTLXxP4RWYOPxo4P5NIEX00lX3Bt/R
+         gIIpgpkhqBiKcAXn7855+9yJZpgQ+0i571HzIczyIAVrYUZ5QKPcNji0yCG23Rb5YXmt
+         pRew==
+X-Gm-Message-State: AFuF++lwoWezsrS3qg7C5/E5RiUCCiI6GLyS0dyfnCYr1rQER0jUiGp5
+	ZWlpteZLmZ1gMj9yDy4grzThRwvF+EoeI5d8F+Cyt2mM/rjLgw2PrxU=
+X-Gm-Gg: AYBFou3ySZdk7rc8V7Hqhr7qKpyfCWaj0iaVvVzZPSRD02jsNsN6fKPkqHVTn3A9mRd
+	E9EcCyhC7ri9ZSCuWUfY2QY81+IZb65/1fgBvCPUhOeVpdGhTCtLM230N88+dAkF1NQ2QErZAb3
+	PD0qiMgxzTHL9oyk12J4ub1V7aVd3kgx9HPDUalqc6LN9Fcaz2+bwcOc7BfxdG1tik+8QnUheHZ
+	e/nVFWGmfgQbLKZcjfC8vjBSZSN/vv+evnVdxha6BlKrS00AfiYdo/vmQRI73GhuraZ5wEBZUoi
+	219GedfdpeNmGJr3K12xNC/hWT4Ab9SmhDtxdR8y0O6TwGVDaMEFN8/c0GhuULZ+ZkQP1qJbE70
+	CYUFN5bulQ9uZNn1ky5f32uvl4qgUDbKnBqCya7jnWKdYG6iHkyjaJVfOfWq14k12tWXkCIHlVD
+	rRUyRSDKvPCpJ35GVlH6fCZGSeJV6+7JKKZ44R1+7JMpEWB+hyqRhzBBX14vpdNcLlKbsmLP+/
+X-Received: by 2002:a05:620a:f0f:b0:937:19d3:3fda with SMTP id af79cd13be357-9398042d815mr372141885a.28.1788503398217;
+        Thu, 03 Sep 2026 23:29:58 -0700 (PDT)
+Received: from [127.0.0.1] ([20.55.222.81])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-9397f9f0734sm149931685a.4.2026.09.03.23.29.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2026 23:29:56 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Quanye Yang <quanyeyang@proton.me>
 Cc: mptcp@lists.linux.dev
-In-Reply-To: <20260904051150.1196427-3-cui.tao@linux.dev>
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260904051150.1196427-1-cui.tao@linux.dev>
 References: <20260904051150.1196427-1-cui.tao@linux.dev>
- <20260904051150.1196427-3-cui.tao@linux.dev>
-Content-Type: text/plain; charset=utf-8
+Subject: Re: [PATCH mptcp-next v3 0/3] mptcp: pm: fix reachable
+ extra_subflows guards
+Message-ID: <4877adc8-c838-ac57-bad9-df6dd1c5b416@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 04 Sep 2026 05:28:52 +0000
-Message-Id: <20260904052852.E49251F00A3D@smtp.kernel.org>
+Date: Fri, 04 Sep 2026 06:29:54 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+Hi Quanye,
 
-Pre-existing issues:
-- [High] Data race in mptcp_pm_data_reset() when clearing the pm->reset str=
-uct group locklessly, causing torn reads/writes with concurrent PM operatio=
-ns.
---
+Thank you for your modifications, that's great!
 
-commit 0c791790f3c719050b1d2004c347405ffb76512f
-Author: Tao Cui <cuitao@kylinos.cn>
+Our CI did some validations and here is its report:
 
-mptcp: pm: skip extra_subflows accounting on disconnected msk
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf:=20
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/=
+runs/33840713883
 
-This commit addresses a remotely triggerable panic caused by a WARN_ON_ONCE
-guard on extra_subflows underflow. It skips the PM accounting when the sock=
-et
-is in TCP_CLOSE, as the counters may have already been cleared by
-mptcp_pm_data_reset().
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/2d0e39ea2ca1
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1157585
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/629
 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 9881092c16e78..520f0c638e6f7 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -671,9 +671,18 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *=
-msk,
->  	update_subflows =3D subflow->request_join || subflow->mp_join;
->  	if (mptcp_pm_is_userspace(msk)) {
->  		if (update_subflows) {
-> +			/* The PM counters have already been cleared if the
-> +			 * msk got disconnected while this subflow was still
-> +			 * queued in the join list
-> +			 */
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-[Severity: High]
-This isn't a bug introduced by this patch, but is there a data race when
-clearing the pm->reset struct group locklessly in mptcp_pm_data_reset()?
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-Looking at net/mptcp/protocol.c:mptcp_disconnect(), it calls
-mptcp_pm_data_reset() on an active, network-exposed socket without acquiring
-pm->lock:
+For more details:
 
-net/mptcp/protocol.c:mptcp_disconnect() {
-    ...
-    mptcp_pm_data_reset(msk);
-    ...
-}
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-Inside net/mptcp/pm.c:mptcp_pm_data_reset(), the code does a lockless memset
-of the struct group:
 
-net/mptcp/pm.c:mptcp_pm_data_reset() {
-    ...
-    memset(&pm->reset, 0, sizeof(pm->reset));
-    ...
-}
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-Could this cause torn reads and writes with concurrent PM operations?
-
-For example, mptcp_pm_allow_new_subflow() concurrently modifies the memory
-while holding pm->lock, but without holding the socket lock:
-
-net/mptcp/pm.c:mptcp_pm_allow_new_subflow() {
-    ...
-    pm->extra_subflows++;
-    ...
-}
-
-If a client socket initiates a local disconnect via connect(AF_UNSPEC), and
-concurrently an in-flight SYN-ACK or remote MP_JOIN request is processed in
-softirq context via mptcp_finish_join(), could they interleave?
-
-It seems this might lead to data corruption of the pm->reset struct group
-fields (including extra_subflows, accept_subflow, and addr_signal), which
-could cause PM misbehavior such as permanent rejection of new subflows on a
-reconnected socket.
-
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260904051150.1196=
-427-1-cui.tao@linux.dev?part=3D2
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
