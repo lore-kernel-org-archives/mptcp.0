@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB044D2EDE;
-	Fri,  4 Sep 2026 14:59:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597CA41CB5E
+	for <mptcp@lists.linux.dev>; Fri,  4 Sep 2026 16:40:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788533976; cv=none; b=VouZ50a+JqgVmTpy5WSluCnWWvMvexJwgjvDaayq6xBcS0+9VABi8sR7FZCnOeTIRg+LdgnNeF5z1Nc9uVwh5oO7ZNlEAxnFU4a+usrj9rnGqKgCAWOO4fto8dnyC2m+Vdgn1KoHJNB9QPmKh68OJgQ7tidi773vInkQoBM68/M=
+	t=1788540007; cv=none; b=JTkYq+vuDfyqRQGYH7awoDlMUB2nYMAVgSSpUBFmDwCsFjpQffRUK5B9PD54Atlwh7ZAapdizDtDHBMVGjPSn6kgUYsiTHlBJvX/qygB4JyhanDbGGMBuP5aMilm00SMDR4URX0tA5UH5uj1QwcA9TKr5ErzYF6PKJqZfyKHYDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788533976; c=relaxed/simple;
-	bh=tg+beaFvFWyQqkBNHBB7oc6UW88l9wEu/T1qzRYhjfs=;
+	s=arc-20240116; t=1788540007; c=relaxed/simple;
+	bh=KDKDoia3tZ/8GlEdcnS8kF69qQWCs5q0VtOQXevHuWA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A4O7HEbbmupjbAmk0sx8RQipe1nVsteS0EZXWHBRegxLyUpgQNHGWx7qQON/d0gC+//CbPdmox91dxsZwAyBflCrJVLvfJ4QwX8JHWeQzS1dTet5hZcAFgz0bD31UIeEv1eQJHJIITCGjHF9NeNaX6dqelLOvm0AfyZhNBnnxic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=akKvh57a; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=D8UlrAWQFOy6lrqFv9KK6drI1p3qGwUpNKhPct83/30cx/30h+K5CcPcBDFbWyvIubZkQgu97TCYwv7Ou28iP9zT+B/EwmKg9Vr/4LqiHlSsUi0Twk++sStipa3KWLsOG93ovEx2d6CRZ0mPCdpSd1YaoF9BTKBeIbonIQHhKp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SLwwSUUY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="akKvh57a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 624A11F00A3D;
-	Fri,  4 Sep 2026 14:59:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SLwwSUUY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60A7F1F00A3D;
+	Fri,  4 Sep 2026 16:40:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788533974;
-	bh=Mtmh+EbQEolZ0B+Cu+N77fkNfs3wVAfEnrHoZtaub+4=;
+	s=k20260515; t=1788540006;
+	bh=ZOHofc99W4KM2l71gip6g0XNjCnZuK5U+pykgEU7J74=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=akKvh57agkJAqnqARbiOesO0F3Co6J3xZW04uqfzOIDRqxFZnS/WAs4jLeWdy18dA
-	 asedTgctivCw0JSn15eNH1acIGeFsC1GbtOnJ5giNQGUfdJubfvG6Izb/8g2D9QNtb
-	 YSNZhSIqlfZEMZH7J9/WWd+Y/cSSrkB3WwUaF6MXteZmF30yKb3uAdxp5uLb0WSQoq
-	 9sBIS3ms5v9BDNzzHpaN1zaf0QEE8+JiSAZz+hCfCKJ5Nch+rgCMqru1j5wZpViyku
-	 rTI2mxXQHcdKUTn0US3bpM6bo6Lxumu1LjP81cTWu1HVfykZM2dzAhwaHchB64rsI/
-	 5zgI12L0kJppQ==
-Message-ID: <64106236-9d0d-4f64-b6dd-b1e609fb8c5a@kernel.org>
-Date: Fri, 4 Sep 2026 16:59:28 +0200
+	b=SLwwSUUYypsnSgFP1yBUypXMJ+JGCk9Onvz2UgKDg+/Hy8GU1ROscsMy284RaSxcf
+	 nfuoOz74CjoiOZHUuMRTqEs4chuAWoormEsNJLxAv6pQwgUIbWufN43pU503BosMHm
+	 j71X8HjmmlDafZe5HiAUGB7RDyse1yk3tTzajWvMenimTFSbrIwxfy72AaMaUZWyzF
+	 e0H2KvY7Yf4nXQ2OgESw73WqV7g9K0V1rkrC8DwiMll4VCtZjIydD4rdTjtGcaN5M1
+	 3RMP6Qv9QjEZSVLWHY8BLsWLE20KnGfHRb/kSUHGKH3t1hFVDMxdCrKWi/B8xoSLoV
+	 JFJBRNsWlpMXQ==
+Message-ID: <aa5678f7-7089-4049-9120-6604372667ac@kernel.org>
+Date: Fri, 4 Sep 2026 18:40:02 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,18 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 0/2] selftests: mptcp: convert iptables to
- nftables
+Subject: Re: [PATCH mptcp-next 2/2] selftests: mptcp: convert iptables to
+ nftables for mptcp_join.sh
 Content-Language: fr
-To: Hangbin Liu <hangbin.liu@linux.dev>, MPTCP Linux <mptcp@lists.linux.dev>,
- Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- Hangbin Liu <liuhangbin@kylinos.cn>
-References: <20260903-mptcp_nft-v2-0-66283e4b9c3b@kylinos.cn>
+To: Hangbin Liu <hangbin.liu@linux.dev>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260902-mptcp_nft-v1-0-559caa16f410@kylinos.cn>
+ <20260902-mptcp_nft-v1-2-559caa16f410@kylinos.cn>
+ <513e6559-a06a-45d8-a8b7-72b3a1a77e71@kernel.org> <apjU-uM8dvxnVcaP@fedora>
+ <6c9dd599-e9d2-470f-bc7f-2af2e9d003b6@kernel.org> <app68h1_rYkPBpvn@fedora>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -92,35 +89,90 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260903-mptcp_nft-v2-0-66283e4b9c3b@kylinos.cn>
+In-Reply-To: <app68h1_rYkPBpvn@fedora>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hello,
+Hi Hangbin,
 
-On 03/09/2026 03:12, Hangbin Liu wrote:
-> iptables has been deprecated for years. The Linux kernel has included
-> nftables as the successor to iptables since 2014, and every major
-> distribution uses nftables as the default packet filtering framework.
-> The iptables command we run on modern systems is actually iptables‑nft,
-> a compatibility layer that translates iptables syntax to nftables rules
-> behind the scenes.
+On 04/09/2026 10:01, Hangbin Liu wrote:
+> On Thu, Sep 03, 2026 at 11:28:28AM +0200, Matthieu Baerts wrote:
+>> Hi Hangbin,
+>>
+>> On 03/09/2026 04:02, Hangbin Liu wrote:
+>>> Hi Matthieu,
+>>>
+>>> Sorry, My mbsync has some delays and I post v2 too quick before catching
+>>> your feedback.
+>>
+>> No problem.
+>>
+>> Just in case, maybe korgalore can help?
+>>
+>> https://people.kernel.org/monsieuricon/tracking-kernel-development-with-korgalore
 > 
-> There are also some features that can be set easily with nft, while we need
-> to convert to BPF code under iptables, such as MPTCP add‑addr and
-> remove‑addr suboptions. To make future work easier, convert iptables usage
-> in mptcp to nftables.
+> Thanks, learned a new tool.
 > 
-> Tested with iptables-translate to make sure each nft conversion is the same
-> with previous one. e.g. for mptcp_sockopt.sh, the ip6tables shows
-FYI, Hangbin is working on a new version addressing my comments from v1.
-The new version(s) will be sent to the MPTCP list only, and I will sent
-these patches to Netdev when ready.
+>>>> If you don't need this one (or any set in helpers), don't set it/them,
+>>>> and don't use a global variable. Or reset it in init_partial, but prefer
+>>>> using local variable with a limited scope.
+>>>
+>>> Yes, we don't need the handle in other place, which I will remove them.
+>>> But for endpoint_tests(), after adding rules in reset_with_tcp_filter,
+>>> we need to remove the rule outside. I will reset it after each test.
+>>
+>> Perhaps you could flush the whole table instead? But if it makes more
+>> sense to assign this variable, fine by me.
+> 
+> Yes, if not in purpose, I feel flush the whole table is dangerous.
+> Some rules may still in using in later testing.
 
-Updating here the PW status:
+Indeed. But in our case, each subtest uses a dedicated netns. Plus only
+some tests add Netfilter rules. At the end, it is clearer to delete a
+specific rule, but I think that makes sense only if the nft_handle var
+is set locally, and used a few lines below.
 
-pw-bot: cr
+If a global nft_handle var is used, that doesn't seem clear, and I think
+it would be clearer/easier to:
 
+- either delete a specific rule (but I don't think that's supported)
+
+- get the handle from the test and use it to delete the rule
+
+- or flush the table.
+
+So up to you, but probably best to avoid using nft_handle as global var.
+
+>>> Thanks for the notes. I used to rely on `b4 auto-to-cc` too much...
+>>
+>> Most of the time, that's fine. It's just for some subsubtrees where
+>> (urgent & simple) fixes can go to the parent tree (netdev here)
+>> directly, but the rest can go only to the subsubtree ML.
+>>
+>> BTW, if you are on top of our export(-net) (or for-review(-net)) branch,
+>> there is a .b4-config: you just need to use 'b4 send' then :)
+> 
+> Thanks. I am working on top of the export branch. I ran into a small issue
+> while using b4. The export branch is not fast‑forwardable. I used
+> `git reset --hard` to fall back to the top merge commit, then ran
+> `git pull` to fetch the latest changes.
+> 
+> However, I cannot perform a reset on the b4 branch, and git rebase also failed.
+> These steps have blocked me a little. I have to manually recreate the b4 branch,
+> or perhaps avoid using b4 when working on mptcp changes.
+
+You need to use `|git rebase --onto` instead, e.g.
+
+  git fetch origin  # adapt here and below if needed
+  git rebase --onto origin/export "$(b4 prep --show-info base-commit)"
+
+Can you check if it works for you, please? (so I can update the wiki
+page if needed)
+
+The alternative is to use `for-review`, with a continuous history, see:
+
+  https://github.com/multipath-tcp/mptcp_net-next/wiki/Git-Branches
+|
 Cheers,
 Matt
 -- 
