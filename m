@@ -1,33 +1,33 @@
-Received: from mta0.migadu.com (out-253.mta0.migadu.com [91.218.175.253])
+Received: from mta0.migadu.com (out-2.mta0.migadu.com [91.218.175.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 986D240F75A
-	for <mptcp@lists.linux.dev>; Fri,  4 Sep 2026 05:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.253
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAED433FE09
+	for <mptcp@lists.linux.dev>; Fri,  4 Sep 2026 05:12:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788498731; cv=none; b=cGtyowwDzVGlHTBnPDxNGEnYoTeZocBOSpTMI4c0+S4791yjrqodgZIJs0HJ0A3kC1sj0P4I7Z3T0NEQN8oNc5rGVqSgvbtMEdRQaYAfhJnAgyieA8snwRtKIhLexAa+vG1LjpAfgsFE8ZhZkFX0L6k8TohUfvpaERkG6MWSATY=
+	t=1788498740; cv=none; b=qO4jtCSV2iLDx0Wa5tY/YI6OaX4kTgyr7tPwM+A+XRnxEhLBiWj64pP7JK4l9g6MyVMEhcrS6FPHNfDWVQ+QtrlfZ/T57Go05HdqguVM8+ljy6EZrORRgSSwwJKHGj1Fd6h6xe+KNWFJ4keYyD4EzJONNW81T0xMPthNRou2gcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788498731; c=relaxed/simple;
-	bh=vlz1b+Csbnkwq1bxemxyXf7jitsTYAMetSCARlCcwyc=;
+	s=arc-20240116; t=1788498740; c=relaxed/simple;
+	bh=2nuUgjgidPHLBNI2V9fz+MDWuBGphq9N7I7kryTPoKU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=P0AMT6wqDhnI9lYPci/LiLQJ3qFQuOXyqjtPuHhDihsZQymaF4ATNnf3MbxMR2AkV0jMYWrerEEjjIzRkJdqqQFPrNp59fUI3o1Pq7T6IVcsPQ76ug+luTl1FXw80k/NQGp4mrORS0C6OcECuUwPe5pYevNfFu3FE38Lj7KEE8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=g/+RuDyl; arc=none smtp.client-ip=91.218.175.253
+	 MIME-Version; b=ukVzOatmQbokRnVFmGmw5R5mlW6ZjyPWCLeRO3E4emEDNrV/rkZ+ErZ9roMKzgvOIU2XoNhJ3LAQWsH4lOfy9+dFMT9wFNYcQ8augptKHdPjMTcAZ7Awe0qzT0Kmd8KGy2cnCVU/TJT4rkxiyfkXgab4pSCRgZ3Ld8zxH33htrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=W1dLgfE7; arc=none smtp.client-ip=91.218.175.2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="g/+RuDyl"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="W1dLgfE7"
 X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=vlz1b+Csbnkwq1bxemxyXf7jitsTYAMetSCARlCcwyc=;
+DKIM-Signature: a=rsa-sha256; bh=2nuUgjgidPHLBNI2V9fz+MDWuBGphq9N7I7kryTPoKU=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1788498727; v=1; x=1789103527;
- b=g/+RuDylHRxqn6fCiEyk+R1S91o1AxW3rFDOF1X41G7YCw4Zg6gYHYkxAuaThfmRY2guOSZT
- tRolH40jRGhZW92IzhFST4D+ryVstR904e/uxGDt3Yly3JFNZd3frpiBJHW33ndGuJJmdZfaoRG
- l/r7LNO1BIZ1rpcSk4Y0+vxo=
+ t=1788498735; v=1; x=1789103535;
+ b=W1dLgfE7XYoaVfD1zhBKLPJy6js4S21PS0LURCO+FDBqGUoHBz05N7n1v9PfxVoVZG1kvsA+
+ Kl7imN4E1iAeFap6a85oYMZtB0vDTvf3rc6lA2e9G9qGcjr8w2/noEu0L7HqGUiIqvwm9rUhcEK
+ k/yPpAfwk5tSCP4Jp+j6+SHw=
 X-Envelope-To: mptcp@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 9a802a4186d0bdfc;
-	Fri, 04 Sep 2026 05:12:07 +0000
-X-Mizu-Trace-ID: 9a802a4186d0bdfc
+Received: by smtp.migadu.com with ESMTPS id f2da7dcf11094cb9;
+	Fri, 04 Sep 2026 05:12:15 +0000
+X-Mizu-Trace-ID: f2da7dcf11094cb9
 X-Migadu-Flow: FLOW_OUT
 From: Tao Cui <cui.tao@linux.dev>
 To: mptcp@lists.linux.dev,
@@ -36,9 +36,9 @@ To: mptcp@lists.linux.dev,
 Cc: geliang@kernel.org,
 	cuitao@kylinos.cn,
 	cui.tao@linux.dev
-Subject: [PATCH mptcp-next v3 1/3] mptcp: pm: bound extra_subflows admission on userspace PM
-Date: Fri,  4 Sep 2026 13:11:48 +0800
-Message-ID: <20260904051150.1196427-2-cui.tao@linux.dev>
+Subject: [PATCH mptcp-next v3 2/3] mptcp: pm: skip extra_subflows accounting on disconnected msk
+Date: Fri,  4 Sep 2026 13:11:49 +0800
+Message-ID: <20260904051150.1196427-3-cui.tao@linux.dev>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260904051150.1196427-1-cui.tao@linux.dev>
 References: <20260904051150.1196427-1-cui.tao@linux.dev>
@@ -52,43 +52,84 @@ Content-Transfer-Encoding: 8bit
 
 From: Tao Cui <cuitao@kylinos.cn>
 
-mptcp_pm_allow_new_subflow() increments the u8 extra_subflows counter
-for every accepted MP_JOIN on sockets using the userspace PM, without
-any limit. A peer establishing more than 255 live subflows wraps the
-counter back to 0, which then makes the underflow guards warn on the
-next subflow close, and permanently corrupts mptcpi_subflows_total
-reported to userspace.
+The WARN_ON_ONCE() guards added to the extra_subflows decrement sites
+turn out to be reachable:
 
-Refuse new MP_JOINs once the counter has reached U8_MAX, so that it
-cannot wrap anymore.
+mptcp_pm_data_reset() zeroes the counter with only the msk socket lock
+held, while an MP_JOIN subflow can still sit in msk->join_list, its
+reference already accounted by mptcp_pm_allow_new_subflow() under
+pm->lock. If the socket gets disconnected(AF_UNSPEC) in that window,
+mptcp_pm_data_reset() zeroes the counter, and the join list is flushed
+later at release_sock() time: the leftover subflow then reaches
+mptcp_pm_subflow_check_next() (or __mptcp_pm_close_subflow() for
+kernel PM sockets) with the counter already at 0, firing the warning.
+On panic_on_warn kernels this is a remotely triggerable panic, which
+is worse than the silent wrap the guards replaced.
+
+Skip the PM accounting when the msk is already in TCP_CLOSE: in the
+scenario above the state is set before the counters are cleared, and
+once the msk is closed the accounting is not relevant anymore. Keep a
+clamp and a rate-limited pr_warn() on the decrement sites instead,
+to leave a trace of any imbalance we would still not know about.
 
 Fixes: e99c1ca89071 ("mptcp: pm: add WARN_ON_ONCE guards on extra_subflows underflow")
 Link: https://github.com/multipath-tcp/mptcp_net-next/issues/629
-Co-developed-by: Quanye Yang <quanyeyang@proton.me>
-Signed-off-by: Quanye Yang <quanyeyang@proton.me>
+Suggested-by: Matthieu Baerts <matttbe@kernel.org>
 Signed-off-by: Tao Cui <cuitao@kylinos.cn>
 ---
- net/mptcp/pm.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/mptcp/pm.c       | 11 ++++++++++-
+ net/mptcp/protocol.h | 14 ++++++++++++--
+ 2 files changed, 22 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 8b68868255c5..07cdcdb54b15 100644
+index 07cdcdb54b15..cccf5319cce0 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
-@@ -563,9 +563,11 @@ bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk)
+@@ -671,9 +671,18 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk,
+ 	update_subflows = subflow->request_join || subflow->mp_join;
  	if (mptcp_pm_is_userspace(msk)) {
- 		if (mptcp_userspace_pm_active(msk)) {
+ 		if (update_subflows) {
++			/* The PM counters have already been cleared if the
++			 * msk got disconnected while this subflow was still
++			 * queued in the join list
++			 */
++			if (inet_sk_state_load(sk) == TCP_CLOSE)
++				return;
  			spin_lock_bh(&pm->lock);
--			pm->extra_subflows++;
-+			ret = pm->extra_subflows < U8_MAX;
-+			if (ret)
-+				pm->extra_subflows++;
+-			if (!WARN_ON_ONCE(pm->extra_subflows == 0))
++			if (likely(pm->extra_subflows))
+ 				pm->extra_subflows--;
++			else
++				pr_warn_ratelimited("extra_subflows underflow, msk=%p\n",
++						    msk);
  			spin_unlock_bh(&pm->lock);
--			return true;
-+			return ret;
  		}
- 		return false;
- 	}
+ 		return;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 87ccb84e9927..07821551499c 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -1252,8 +1252,18 @@ u8 mptcp_pm_get_limit_extra_subflows(const struct mptcp_sock *msk);
+ /* called under PM lock */
+ static inline void __mptcp_pm_close_subflow(struct mptcp_sock *msk)
+ {
+-	if (!WARN_ON_ONCE(msk->pm.extra_subflows == 0) &&
+-	    --msk->pm.extra_subflows < mptcp_pm_get_limit_extra_subflows(msk))
++	/* The PM counters have already been cleared if the msk got
++	 * disconnected while this subflow was still queued in the
++	 * join list
++	 */
++	if (inet_sk_state_load((struct sock *)msk) == TCP_CLOSE)
++		return;
++
++	if (unlikely(msk->pm.extra_subflows == 0)) {
++		pr_warn_ratelimited("extra_subflows underflow, msk=%p\n", msk);
++		return;
++	}
++	if (--msk->pm.extra_subflows < mptcp_pm_get_limit_extra_subflows(msk))
+ 		WRITE_ONCE(msk->pm.accept_subflow, true);
+ }
+ 
 -- 
 2.43.0
 
