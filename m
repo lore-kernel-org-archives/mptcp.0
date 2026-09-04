@@ -1,263 +1,174 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F37419CC0F;
-	Fri,  4 Sep 2026 17:45:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1F135E926
+	for <mptcp@lists.linux.dev>; Fri,  4 Sep 2026 17:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788543963; cv=none; b=FtfIgNPdCpF9g2wG3w6wnMRD8M3Vrc2CiDpo6W6jK3AsOaGga3CviFJQX7xclctyggjJtFtpfc+A0zgkDStdBFtk+pS0cQGlGeQfpJp+GWX3ikHer+iI/rZ6DUD5C0zSnjd6rTC3yBWhp8J074JRmIRkBoT45eRaFurBRvvavvY=
+	t=1788544200; cv=none; b=hO63XYfvBDnSKmpTwuFw2ykyF5RsmBn6WTzSZns2rL3CIQZ+pUsi0/DjrVGZgaOB6BYyREcPccVWGgoBTBaqlLWhbPQWzJOMDJnRDcnP8wAvQtdK2GzsArhxxfmt8lEqeVUUVezvJWT5y0AtNKbye+gzskv/eRZNIVyhNyXPRnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788543963; c=relaxed/simple;
-	bh=IpIcXmZ5y3zAPIXH0ITLn7oZOKruZHk0aeMQju5DuzE=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=liIdabv0fHEGSagt+zcALKdoTP26oHgIOD+yqxoMV7dNVVb3KwbEV6Ywr8evNoX6eIuomRnWopowKTrGrmXBu8RkX1G+M2rWr2yLizCR4SIdjktIBMudrSrLPBRVezbkyLnDV1fkMrUqbPHza16Zf5U9GoxxvFZaCM0BM7RSq/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=pMU/YCpY; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1788544200; c=relaxed/simple;
+	bh=y3T7w1Q9zT5pdhytEtCdGKZ2pp0r5/9F5bApwHETQns=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=gCZJwALc4A+9h5xMQua1Rjl8GmyD4ok+uq1F5GVdnYkxGyB2sUqcSbt44p8Jb7TiGNWQhEMu9MYqgZDlg8KBmOeGOt72uJroYJJm5GzKy4Hv/T423syEjGt+6rkcRUjV2fihdoFouxCDAZikGditrg4QVR7oaCOOEiohAGDKXeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TKZdof6L; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="pMU/YCpY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:Message-ID:Subject:Cc:To
-	:From:Date:MIME-Version:From:Reply-To;
-	bh=3kJ7V4qqJDGktsGa6HvFkInxay1XxXTxaazUjY3g2Hg=; b=pMU/YCpYNVsT4y/cw1wUdM7zig
-	6FGELePr69ke+QNUk1G581g+plUqC63/ulntoNIxp4pmbIVxfOia9PckTHSRm7xpUciNq57SZzqVN
-	cbsILUiD8lzSdwcwFXmRLM5CfmP+hPRfm6lYmxFlKNBEyu4prtcCynH9vE1ksDe8NHMM4ChUZakqb
-	g9JR+994Oc+oJQ4Q0AJSntCNDkHoysIvAdma6HpwZmNS1nvN6HQ7sdhdssRvg1w9t7SZEOTJlyvat
-	sUbSdbal24ShKj5UheutEWEXP6HsQ9h5DXMVF9LQie/eE7V27D08mGmnS+RWfYNHD9zmSk/JT0i/e
-	OBepHvZQ==;
-Received: from maestria.local.igalia.com ([192.168.10.14] helo=mail.igalia.com)
-	by fanzine2.igalia.com with esmtps 
-	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1x2Xyg-00Ezrc-2e; Fri, 04 Sep 2026 19:45:26 +0200
-Received: from webmail.service.igalia.com ([192.168.21.45])
-	by mail.igalia.com with esmtp (Exim)
-	id 1x2Xye-001h2m-Ee; Fri, 04 Sep 2026 19:45:25 +0200
-Received: from localhost ([127.0.0.1] helo=webmail.igalia.com)
-	by webmail.service.igalia.com with esmtp (Exim 4.98.2)
-	(envelope-from <mfo@igalia.com>)
-	id 1x2Xye-00000006G3f-1esz;
-	Fri, 04 Sep 2026 19:45:24 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TKZdof6L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15E571F00A3D;
+	Fri,  4 Sep 2026 17:49:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788544199;
+	bh=8bna2NWhWKEzwJHpikBpfgTuhssDAlLHV86ywMsPJcA=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=TKZdof6LXLNzOrtg3NKrLd6jM9clsU2rroXt+9JLfLs+j8dG987KUPGnGSv3Z+liY
+	 UPB5RwuI6Xwuf/+F0/WdNA0HcvmjXp99iW49uZMLaHvG77TDAlsneBa8RCQl9V/Hgb
+	 RiND43M+o/ypynXLoRYaoBiPodVUJgAxFLgL26Vc+fN9kJ20BBfdoCkYmn6O7BAQCU
+	 0PSp9ZrdLlibqCQDwa8SUKZtsfpNLox4RZOMynUQ9e0QA0CnUpCaogZKCHiPD3K9Bb
+	 0fOxCOcR8EZjZer6jA6T9DWMqNrbIuoAM+YcTTAmH7bwVnyvnj+n+2f0IZ73BLBHwb
+	 +ENDvK1zHnBaw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH stable 6.12] tcp: fix potential race in
+ tcp_v6_syn_recv_sock()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Florian Fainelli" <florian.fainelli@broadcom.com>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <20260903174016.689839-1-florian.fainelli@broadcom.com>
+References: <20260903174016.689839-1-florian.fainelli@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 04 Sep 2026 17:49:58 +0000
+Message-Id: <20260904174959.15E571F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Date: Fri, 04 Sep 2026 14:45:23 -0300
-From: Mauricio Faria de Oliveira <mfo@igalia.com>
-To: Joel Granados <joel.granados@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nsc@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- kernel-dev@igalia.com, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, fsverity@lists.linux.dev,
- keyrings@vger.kernel.org, bpf@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
- netdev@vger.kernel.org, linux-wpan@vger.kernel.org,
- lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org, linux-sctp@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
- bridge@lists.linux.dev, mptcp@lists.linux.dev, rds-devel@oss.oracle.com,
- virtualization@lists.linux.dev
-Subject: Re: [PATCH RFC v3 00/13] sysctl: add module aliases
-In-Reply-To: <mokz5pdtwswkyab4byfq7q7m6ac2g6ceoi6jflyxmaszaibzqa@su6m4kamtdpy>
-References: <20260819-sysctl-module-aliases-v3-0-aab90569365d@igalia.com>
- <bpnqwggtidgiec5akns3fa5edbsvl7xf55dxabtwng2xspy4pn@ue554aii2ngk>
- <53155340c897560bfc67e61ba9568fd6@igalia.com>
- <mokz5pdtwswkyab4byfq7q7m6ac2g6ceoi6jflyxmaszaibzqa@su6m4kamtdpy>
-Message-ID: <b1a6cec17e7c828fcebe310ca2a0d25b@igalia.com>
-X-Sender: mfo@igalia.com
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Report: NO, Score=-2.1, Tests=ALL_TRUSTED=-3,BAYES_50=0.8,KAM_DMARC_NONE=0.125,KAM_DMARC_STATUS=0.005
-X-Spam-Score: -20
-X-Spam-Bar: --
 
-On 2026-09-04 10:41, Joel Granados wrote:
-> On Thu, Aug 20, 2026 at 06:22:13PM -0300, Mauricio Faria de Oliveira wrote:
->> On 2026-08-20 09:51, Joel Granados wrote:
->> > On Wed, Aug 19, 2026 at 03:16:13PM -0300, Mauricio Faria de Oliveira wrote:
->> >> This series adds 'sysctl:' aliases to modules that register sysctl tables; e.g.:
->> >> 
->> >>         $ modinfo ./mpls_router.ko  | grep sysctl:
->> >>         alias:          sysctl:*/net/mpls/conf/*/input
->> >>         alias:          sysctl:*/net/mpls/default_ttl
->> >>         alias:          sysctl:*/net/mpls/ip_ttl_propagate
->> >>         alias:          sysctl:*/net/mpls/platform_labels
->> >> 
->> >> It provides a trivial way to map /proc/sys files to modules (not trivial today),
->> >> and for userspace to handle nonexistent /proc/sys files (e.g., procps's sysctl
->> >> and systemd-sysctl applying tunables) with "modprobe sysctl:<...>" and a retry.
->> >> 
->> >> This is done almost automatically with register_sysctl(), register_net_sysctl()
->> >> and friends as wrappers of MODULE_SYSCTL_TABLE (similar to MODULE_DEVICE_TABLE),
->> >> which emits symbols for file2alias/modpost to find and parse the sysctl tables.
->> >> 
->> >> The big exception to 'almost' are sysctl tables and paths allocated or defined
->> >> at runtime (e.g., per-namespace or per-device), as all information is required
->> >> at build-time. Fortunately, such tables and paths are often based on 'templates'
->> >> which are static and can be used.
->> >> 
->> >> This is done by plumbing the template table/path as optional arguments (macros
->> >> with default values as default_gfp()), so not to create functions for all cases:
->> >> 
->> >>         register_sysctl(path, table [, table_tmpl [, path_tmpl]]);
->> >>         register_net_sysctl(net, path, table [, table_tmpl[, path_tmpl]]);
->> >>         register_net_sysctl_sz(net, path, table, size [, table_tmpl[, path_tmpl]]);
->> > 
->> > The "what" is described but I'm missing more clarity on the "why". Why
->> > does this need to be trivial? Where is it that you will know the sysctl
->> > file path of a module and not the module name or alias?
->> 
->> Thanks for looking at this.
->> 
->> The problem this feature addresses is sysctl settings not applied
->> because modules aren't yet loaded when systemd-sysctl/procps's sysctl
->> runs on boot, and the usage of /etc/modules as a workaround.
-> 
-> Sorry for insisting, but is it not possible to set the sysctls after the
-> modules have been loaded? Why is the order to first set the sysctl and
-> then load the module?
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
 
-No worries, and thanks for getting back to this.
+New issues:
+- [Low] Missing updates to DCCP's syn_recv_sock implementations and callers=
+ cause a build failure.
 
-Yes, the former is possible and usually how that happens, but it is not
-guaranteed, thus the latter might happen -- unintentionally.
+Pre-existing issues:
+- [Critical] If `tcp_v4_syn_recv_sock()` hits an error path before `opt_chi=
+ld_init` is called, destroying the child socket will free the listener's `i=
+pv6_pinfo` state, causing a Use-After-Free.
+- [High] The exact ehash insertion race condition patched in TCP remains un=
+fixed in DCCP for IPv4-mapped IPv6 sockets.
+--
 
-For example, a sysctl setting can be configured in /etc/sysctl.d/*.conf,
-which is manually tested and confirmed to apply it correctly. However,
-that might have worked only because its module was inadvertently loaded
-earlier (e.g., for something else by the sysadmin, or by something else
-in the system). The next time the system boots, the module is not
-automatically loaded, thus the sysctl setting fails to be applied when
-the (previously working) /etc/sysctl.d/*.conf is parsed.
+commit bed80c01fd926d5de457cacc1f99f5af86ff3590
+Author: Eric Dumazet <edumazet@google.com>
 
-Also, a sysctl setting may, or may not, be tied to a module; it can be
-built-in. This can change with kernel configuration, e.g., distro.
+    tcp: fix potential race in tcp_v6_syn_recv_sock()
+   =20
+    Code in tcp_v6_syn_recv_sock() after the call to tcp_v4_syn_recv_sock()
+    is done too late.
+   =20
+    After tcp_v4_syn_recv_sock(), the child socket is already visible
+    from TCP ehash table and other cpus might use it.
 
-So, another example: a sysadmin learns of a sysctl setting in
-documentation tested with another distro, which has it built-in. It
-fails to apply on this distro, which has it in a module, because the
-module isn't loaded. (Now the sysadmin is left to figure that out, and
-then which kernel module provides the sysctl setting.) 
+    [ ... ]
 
-Note that both examples can be combined. (And the poor sysadmin is, in a
-reboot happening days/weeks/months later, left to also figure out that
-the sysctl setting is not applied, and whatever effect that caused,
-because that particular module was not loaded on boot, and should be
-added to /etc/modules).
+    Link: https://patch.msgid.link/20260217161205.2079883-1-edumazet@google=
+.com
 
->> This can be addressed with a way for sysctl tools to load the module for
->> a non-existent sysctl file path.
->> For that, the mapping between a sysctl file path (known) and its module
->> (unknown) needs to be trivial.
-> This touches on my question. How is the file path known and the module
-> not known? The module is the one providing the paths, not the other way
-> around. Why choose to just work with sysctl path lists and not include
-> the modules that go with them?
+> diff --git a/include/net/inet_connection_sock.h b/include/net/inet_connec=
+tion_sock.h
+> index c0deaafebfdc0..41e7ab58b211f 100644
+> --- a/include/net/inet_connection_sock.h
+> +++ b/include/net/inet_connection_sock.h
+> @@ -42,7 +42,9 @@ struct inet_connection_sock_af_ops {
+>  				      struct request_sock *req,
+>  				      struct dst_entry *dst,
+>  				      struct request_sock *req_unhash,
+> -				      bool *own_req);
+> +				      bool *own_req,
+> +				      void (*opt_child_init)(struct sock *newsk,
+> +							     const struct sock *sk));
+>  	u16	    net_header_len;
+>  	u16	    sockaddr_len;
+>  	int	    (*setsockopt)(struct sock *sk, int level, int optname,
 
-The sysctl tools and configuration files only know about the file path,
-not the module. The sysctl tools know the file path when parsing the
-configuration files, converting a 'dir.file = value' line into opening
-/proc/sys/dir/value and writing value into it.
+[Severity: Low]
+Does adding the opt_child_init parameter here require updating the DCCP
+subsystem as well?
 
-The format of configuration files only include file paths and values,
-but not modules, per sysctl.conf(5) and sysctl.d(5). This is reasonable,
-as there may, or may not, be a module for the sysctl setting (i.e.,
-module vs. built-in).
+Looking at net/dccp/ipv4.c:dccp_v4_request_recv_sock() and
+net/dccp/ipv6.c:dccp_v6_request_recv_sock(), their signatures still appear
+to use 6 arguments, which would cause a build breakage when assigned to
+icsk_af_ops->syn_recv_sock. Similarly, the caller dccp_check_req() in
+net/dccp/minisocks.c appears to pass 6 arguments.
 
-Maybe I misunderstand the context for your questions; please let me
-know.
-Also, could you please clarify what you mean by 'include the modules
-that go with them' [sysctl path files] ?
+[Severity: High]
+This isn't a bug introduced by this patch, but does the exact ehash
+insertion race condition patched here in TCP remain unfixed in DCCP for
+IPv4-mapped IPv6 sockets?
 
->> It may not seem serious at first, but I've seen this consume significant
->> engineering time and impact production systems, in a previous technical
->> support job.
->> An example: cloud deployments with non-scalable network routing
->> performance due to nf_conntrack_max not applied after reboot or an
->> upgrade because the component which turned out to help with the
->> /etc/modules workaround had its placement changed from network router
->> nodes.
-> This is more understandable to me. The issue is that you loose the
-> relationship between sysctl paths and modules on updates. Are there
-> other cases where the module would not be loaded?
+In net/dccp/ipv4.c:dccp_v4_request_recv_sock(), the child socket is inserted
+into the ehash table:
 
-In general, there is no guarantee that a module is loaded by the time a
-sysctl setting is about to be applied -- during system boot or even
-later.
+	*own_req =3D inet_ehash_nolisten(newsk, req_to_sk(req_unhash), NULL);
 
-The example for system boot is covered previously. An example for
-'later' / after system boot: on network device testing which includes
-module unload/reload and sysctl settings for network performance, one
-might unload the module, and mistakenly first apply sysctl settings then
-reload the module, thus loosing the performance tuning on that one
-testing round.
+But the child socket is initialized later in
+net/dccp/ipv6.c:dccp_v6_request_recv_sock():
 
-> And doesn't it create another problem where you will load modules that
-> you don't expect (on the update)?
+		newdp6 =3D (struct dccp6_sock *)newsk;
+		newinet =3D inet_sk(newsk);
+		newinet->pinet6 =3D &newdp6->inet6;
+		newnp =3D inet6_sk(newsk);
+		memcpy(newnp, np, sizeof(struct ipv6_pinfo));
 
-Sorry, not sure I understand the meaning of 'update' correctly, but yes,
-if there is a hard-coded module load (e.g., /etc/modules or in scripts),
-that happens. However, AFAICT, loading unexpected modules is less of a
-problem than not loading required modules, or may not be a problem.
+This exposes the incompletely initialized DCCP child socket to concurrent
+access while pinet6 still points to the listener.
 
-With an auto-load mechanism in place, hard-coding/force-load is not
-required, and neither problem (loading unexpected modules due to
-hard-coding, and not loading required modules due to lack of
-hard-coding) would happen, IIUIC.
+[ ... ]
 
->> > Additionally, sysctls are not module specific; they are a way to
->> > read/write kernel variables. Putting a module specific aspect in the
->> > function arguments (that needs to be ignored in non-module cases) seems
->> > wrong. Why not use the module subsys to add sysctl alias instead of the
->> > sysctl subsys?
->> 
->> Fair point. The current design has 2 reasons:
->> 
->> 1) Use the 'path' argument (raised in [1]), only available in the
->> register sysctl functions.
->> 2) Use a more implicit/transparent approach, instead of more
->> explicit/declarative approach. 
-> 
-> I get that the data is there and you would be able to do it, but it
-> still seems misplaced. Additionally, are you planning to move all the
-> modules to this scheme? If not, does that mean that some modules would
-> work and some wouldn't? And how would you make sure that modules would
-> use the correct call moving forward?
+> diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+> index 5afe5e57c89b5..550d64babb94e 100644
+> --- a/net/ipv4/tcp_ipv4.c
+> +++ b/net/ipv4/tcp_ipv4.c
+> @@ -1796,6 +1798,10 @@ struct sock *tcp_v4_syn_recv_sock(const struct soc=
+k *sk, struct sk_buff *skb,
+>  	}
+>  	sk_setup_caps(newsk, dst);
+> =20
+> +#if IS_ENABLED(CONFIG_IPV6)
+> +	if (opt_child_init)
+> +		opt_child_init(newsk, sk);
+> +#endif
+>  	tcp_ca_openreq_child(newsk, dst);
+> =20
+>  	tcp_sync_mss(newsk, dst_mtu(dst));
 
-This scheme currently covers all modules, AFAIK, as it is wrapped in the
-functions that register sysctl tables.
+[Severity: Critical]
+This is a pre-existing issue, but does placing opt_child_init() here leave
+the error paths vulnerable to use-after-free and data corruption of the
+listener socket?
 
-On moving forward: usage of such functions in a way that breaks a
-requirement of this series (e.g., failing to specify the template
-table/path parameter(s), or not having constant initializers) hits a
-build error, as the requirements are actually from the compiler.
+If an error like a routing failure occurs earlier in tcp_v4_syn_recv_sock()
+before opt_child_init() is called:
 
->> I guess that a different design could use MODULE_SYSCTL_TABLE() as
->> MODULE_DEVICE_TABLE(), declared per table instead of wrapped into
->> register sysctl functions.
->> However, it seems to require moving the value of the path argument (or
->> its template) into the macro and still referencing it in the function
->> (or its instantiation of the template), which adds obfuscation, to all
->> callers. 
->> 
->> What do you think?
-> It might be that having it inside the module subsys is more work, but I
-> believe that there is the right place to have it. I still don't see that
-> adding a module specific arg to the sysctl register is a good thing.
+	if (!dst) {
+		dst =3D inet_csk_route_child_sock(sk, newsk, req);
+		if (!dst)
+			goto put_and_exit;
 
-Ok, cool. I can work on a different design.
+The error path destroys the child socket:
 
-Please just let me know whether you are OK with the remaining (above),
-and I'll be happy to tackle this.
+put_and_exit:
+	newinet->inet_opt =3D NULL;
+	inet_csk_prepare_forced_close(newsk);
+	tcp_done(newsk);
+	goto exit;
 
-Thanks again,
+Since newinet->pinet6 still points to the listener's ipv6_pinfo at this
+point, would destroying the child socket free and corrupt the listener's
+state? Should the opt_child_init() callback be moved earlier, immediately
+after tcp_create_openreq_child()?
 
-> 
-> 
-> Best
-
--- 
-Mauricio
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260903174016.6898=
+39-1-florian.fainelli@broadcom.com?part=3D1
