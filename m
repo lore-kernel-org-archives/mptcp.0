@@ -1,132 +1,143 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from mta1.migadu.com (out-77.mta1.migadu.com [95.215.58.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88194242910
-	for <mptcp@lists.linux.dev>; Fri,  4 Sep 2026 06:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F2B3AC0EF
+	for <mptcp@lists.linux.dev>; Fri,  4 Sep 2026 07:25:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788503400; cv=none; b=il1pVuwBABV6lDyVYB277C4sB1GiOafpTUgfTk/NjNpsJoScSl4QYy13uQr6ReY+FgLOn9QhLlO+KOMrMKgYTGe9zvFs1mXHaqpDesPw8i3BDOTzGcJ0TDSi+3zgGPmkB5kvuGjsgcWPatj4VXYgau4e7/CRul49MhWAhpG8HeM=
+	t=1788506738; cv=none; b=GuiO92J85dBVdqu0v9b60eqpEszSfc5fDMo4AsgjOYdWpUjGUSKorZTyXBVsNdCNXjSkGIiJ2hwy43MixrfEMiI+/9/60hsId9QffdtlTcW+OUtgnYJrw19/++lCDx4qxpYeMGKAjMiUmoTw5gQtPLKfB99AwOtUqgLdqgaOI/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788503400; c=relaxed/simple;
-	bh=QirwaVPFdIy/vgSxahmCyTmOEbbVQb5X/2f/m3Aypyg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=t6FDUvSGxAlVmcLLmXDYN1ppZpjXw07J83ji3EX8Ad09D4jVSCQ6YkHajmwj5Hh8HgK6nPRj6XHuvhNeqG4E06Y3CBKYPWgV1T+mlW573sGHY7pST/rjc4qKqZBVixMUJtVwLriHMsZUDSBk9cVYQ8RJQYvo9FTWgXO1T0Lvb7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=krBfTvNH; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788506738; c=relaxed/simple;
+	bh=Qjl1GFqDl/olrMEdBVe5JHxcKoIT5aRhCndFd1dqOSc=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:
+	 In-Reply-To:References; b=bPaizp9ML8j+AYbINJL8QDvQ9mPkhcw8fX7Iv8uQEhPgts6E+W1lgrytSuHqVG3PyWFxPUqAAakLuoSYWhjCRPgVbDZcAg3l3bE3ggdDxpHV134WYjIVTjadCaVF41kA2wSn7KsvryVgMvGtQ0lBDYatV3MkAAqCp1Ou6pWPNOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KKF2VxSG; arc=none smtp.client-ip=95.215.58.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="krBfTvNH"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-5301db51586so10119301cf.1
-        for <mptcp@lists.linux.dev>; Thu, 03 Sep 2026 23:29:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788503398; x=1789108198; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=VVebxlrCO94IjVYsJhuxMot3gvRudY2aE4rA2nkcJNY=;
-        b=krBfTvNHkGnBt6XZ1wI6n8tkpgOCUD30Yxj54jUlB73h5I2XJ+QIO5b242TiZFN6vB
-         aNt8YoQifww/lxcGR79PWVuqOZt/UxVCOzvZazQt6EHO6DjX1GkzpUwfFM6WQJGasQ0d
-         w1mPrMUbJwzqMUdb+tq6rYb2Di6uZH8qr/d8qtcmP0OqQKW7Fu6R6j0qQ3J3RzVZ6z/I
-         wx+S+Da8RT6+Q8cCelzXMSbzMvrajL1JKSXIHZmc4UNXoRYNylNblKwlY3ZwDkqMAEMk
-         DJ4nHo9bZPaRQnj1fBIlrbKq06WsZWofmj/f/gzAffdogXX692KGfs4YSKR+OH/Zgict
-         U0pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788503398; x=1789108198;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=VVebxlrCO94IjVYsJhuxMot3gvRudY2aE4rA2nkcJNY=;
-        b=ShMVZliRH+TxYd2CFD+y/g8Cm8yOAUdGAUx5OyNmrLiKZslj10wBW/DDl4IowPqs6M
-         6H6MWjxpMHPNIP5+0ftUCfYqzZevf1VGIGKP+x08Zz6EuKXfac8yPEaUg5FHYIVPdv59
-         jM9NN4NDpP7rs4e2/kS8K/PGrAWyjlCoOjItnoYmy6EKRdXeWfkjwKcHEZD8FsByN+M3
-         L0e/k+lR1Hl0yNdc0VmUAwfyT29SUA1c8K/ABfuTLXxP4RWYOPxo4P5NIEX00lX3Bt/R
-         gIIpgpkhqBiKcAXn7855+9yJZpgQ+0i571HzIczyIAVrYUZ5QKPcNji0yCG23Rb5YXmt
-         pRew==
-X-Gm-Message-State: AFuF++lwoWezsrS3qg7C5/E5RiUCCiI6GLyS0dyfnCYr1rQER0jUiGp5
-	ZWlpteZLmZ1gMj9yDy4grzThRwvF+EoeI5d8F+Cyt2mM/rjLgw2PrxU=
-X-Gm-Gg: AYBFou3ySZdk7rc8V7Hqhr7qKpyfCWaj0iaVvVzZPSRD02jsNsN6fKPkqHVTn3A9mRd
-	E9EcCyhC7ri9ZSCuWUfY2QY81+IZb65/1fgBvCPUhOeVpdGhTCtLM230N88+dAkF1NQ2QErZAb3
-	PD0qiMgxzTHL9oyk12J4ub1V7aVd3kgx9HPDUalqc6LN9Fcaz2+bwcOc7BfxdG1tik+8QnUheHZ
-	e/nVFWGmfgQbLKZcjfC8vjBSZSN/vv+evnVdxha6BlKrS00AfiYdo/vmQRI73GhuraZ5wEBZUoi
-	219GedfdpeNmGJr3K12xNC/hWT4Ab9SmhDtxdR8y0O6TwGVDaMEFN8/c0GhuULZ+ZkQP1qJbE70
-	CYUFN5bulQ9uZNn1ky5f32uvl4qgUDbKnBqCya7jnWKdYG6iHkyjaJVfOfWq14k12tWXkCIHlVD
-	rRUyRSDKvPCpJ35GVlH6fCZGSeJV6+7JKKZ44R1+7JMpEWB+hyqRhzBBX14vpdNcLlKbsmLP+/
-X-Received: by 2002:a05:620a:f0f:b0:937:19d3:3fda with SMTP id af79cd13be357-9398042d815mr372141885a.28.1788503398217;
-        Thu, 03 Sep 2026 23:29:58 -0700 (PDT)
-Received: from [127.0.0.1] ([20.55.222.81])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-9397f9f0734sm149931685a.4.2026.09.03.23.29.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2026 23:29:56 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Quanye Yang <quanyeyang@proton.me>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260904051150.1196427-1-cui.tao@linux.dev>
-References: <20260904051150.1196427-1-cui.tao@linux.dev>
-Subject: Re: [PATCH mptcp-next v3 0/3] mptcp: pm: fix reachable
- extra_subflows guards
-Message-ID: <4877adc8-c838-ac57-bad9-df6dd1c5b416@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 04 Sep 2026 06:29:54 +0000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KKF2VxSG"
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=Qjl1GFqDl/olrMEdBVe5JHxcKoIT5aRhCndFd1dqOSc=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1788506734; v=1; x=1789111534;
+ b=KKF2VxSGVeINTfCmQummGgj3PuV/k96IzgJFRaamuX0ogp7LUTXjGi+FzhG0cVM2oSwPhzNJ
+ c7nql3iAoYUCRjHB7+oK2N+l4lqGwpx96WuoYq0456/lt0vOijnN7p3jNgOPhw/Hn7/CoWkUKNT
+ B/xLTcQt+ZzLs4niUxv9Y8D4=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 20fc282cdf6367eb;
+	Fri, 04 Sep 2026 07:25:33 +0000
+X-Mizu-Trace-ID: 20fc282cdf6367eb
+X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Date: Fri, 04 Sep 2026 07:25:32 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+From: gang.yan@linux.dev
+Message-ID: <3f13f3acd4c329480331cccf5a12411dc01ee721@linux.dev>
+TLS-Required: No
+Subject: Re: [RFC] Mitigating Sashiko-driven iteration noise on the main
+ MPTCP list
+To: "Matthieu Baerts" <matttbe@kernel.org>, mptcp@lists.linux.dev
+In-Reply-To: <6f86381a-72d4-4a47-bc7d-1880cc39da64@kernel.org>
+References: <b13525eb141d18e1fe326fec4e71b53704cdc291@linux.dev>
+ <6f86381a-72d4-4a47-bc7d-1880cc39da64@kernel.org>
 
-Hi Quanye,
+September 3, 2026 at 5:52 PM, "Matthieu Baerts" <matttbe@kernel.org mailt=
+o:matttbe@kernel.org?to=3D%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.o=
+rg%3E > wrote:
 
-Thank you for your modifications, that's great!
+Hi, Matt
 
-Our CI did some validations and here is its report:
+Thanks for your reply and detailed explanation.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Perf:=20
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/=
-runs/33840713883
+> I agree with you here, having to face many iterations is not good for
+> the reviewers, and not for the devs either.
+>=20
+>=20>=20
+>=20> My suggestions
+> >=20=20
+>=20>  To decouple the machine=E2=80=91driven iteration loop from human=
+=E2=80=91driven review, I would like to propose a
+> >  split workflow:
+> >=20=20
+>=20>  1. Initial submission (v1): The contributor sends the first versio=
+n of the patch series to the main
+> >  list (mptcp@lists.linux.dev). Maintainers can quickly glance at it t=
+o filter out obviously invalid
+> >  or low=E2=80=91quality patches early.
+> >  2. Bot=E2=80=91driven iteration (v2, v3, =E2=80=A6): For subsequent =
+versions that only address Sashiko's feedback,
+> >  the contributor posts those revisions to a separate, dedicated list =
+(e.g., mptcp-sashiko@lists.linux.dev).
+> >  Sashiko watches that list and provides its feedback there. The contr=
+ibutor can iterate as many
+> >  times as needed without bothering the main list audience.
+> >  3. Final polished version: Once Sashiko reports no meaningful commen=
+ts (or only false=E2=80=91positive warnings
+> >  that the contributor has already handled), the contributor resends t=
+he final, cleaned=E2=80=91up patch to
+> >  the main list for human review.
+> >=20
+>=20But I cannot support your suggestion :)
+>=20
+>=20Sashiko's usage has a cost: it is useful to have it to flag some
+> potential issues, so we want to continue having it for "legit" patches.
+> If its usage is "abused", then we might lose it for all patches.
+>=20
+>=20At the last netdev, devs got told to run pre-checks locally, includin=
+g
+> selftests but also AI reviews (when it is possible). Many companies are
+> already using LLMs, then their devs should also have their patches
+> tested by a local Sashiko. Sashiko can be easily executed locally, with
+> different models. The project's README explains how to install and use
+> it. In short, it is supposed to be easy: configure the model to use, ru=
+n
+> "sashiko init", then "sashiko review". That's it. Or course, we cannot
+> force people to use it locally. Some refs:
+>=20
+>=20 -
+> https://netdevconf.info/0x1A/docs/netdev-0x1a-paper49-talk-slides/Devic=
+e%20driver%20workshop%20(2).pdf
+>  - https://github.com/linux-netdev/nipa/wiki/Running-Netdev-CI-tests-lo=
+cally
+>=20
+>=20Ideally, authors are expected to reply to Sashiko's emails and review=
+ers
+> can help checking if Sashiko is hallucinating (which still happen
+> frequently...) or is asking to fix issues that cannot happen in real
+> deployments. But the thing is that Sashiko can review and generate a lo=
+t
+> of text that humans -- especially busy reviewers -- might take time to
+> process. So the idea here is not to rush things, and ask questions when
+> something is unclear or look suspicious / wrong.
+>=20
+>=20In conclusion, I don't think we want a "hidden" ML, but we do want to
+> reduce the traffic on the ML, and the recommended solution is to push
+> people validating their patches with the same tool (or closed to, if
+> possible) before any submissions. WDYT?
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/2d0e39ea2ca1
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1157585
+I now see that my idea was probably too naive/overly simplistic :)
 
+I have tried deploying Sashiko locally and noticed that different models =
+can
+produce quite different review outputs. For now, I am willing to defer to=
+ the
+community's existing practice.
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Thanks again for your time.
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Gang
+
+>=20
+>=20Cheers,
+> Matt
+> --=20
+>=20Sponsored by the NGI0 Core fund.
+>
