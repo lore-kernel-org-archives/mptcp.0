@@ -1,147 +1,254 @@
-Received: from mail-vk1-f228.google.com (mail-vk1-f228.google.com [209.85.221.228])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F42A51C326
-	for <mptcp@lists.linux.dev>; Fri,  4 Sep 2026 18:37:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E17A3CB55D
+	for <mptcp@lists.linux.dev>; Sat,  5 Sep 2026 08:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788547073; cv=none; b=NHJdynzEiGLKHBToqz2Gk0Q0yobQRSV2qYfMVlk0Rs0/qB3lzv8LGIlpaxLrFTTwPjAJeVnIU+3JAq1jFGZc8fzxYe2oLlpHJwE6n+eV2CKVzpVZjQRVZG7lvymaZ+tyWQroM5jugPX6JvBff+HDNOPf03QK9l83fWu2sQJiiSY=
+	t=1788596794; cv=none; b=G6zhpQxQu52/rEJiGNI/LY6M8u4dAL28pukdh9ULDgsAAWh8NHyUy71UHNChxT3xdTCA34SWq2euA4nw2docskaG1Ax4K0vCo8eks2gO7SZ6580IzQbK+hvcXMkqy3UNy0iUIuPE2tSuxwkAbezKOP/0vdDyuVGtqPF+VbztwAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788547073; c=relaxed/simple;
-	bh=TQ4n1490RCKrkhHOTSyW5/HY8ZHvQ8HddSTX7aIfSag=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kgNyFwyiRFX8mKkzklwrCyTzmo9jO2KTq5SBCPbUwXA7vct1Dc+vpdRTjc9wbImMu5vhxbZgQGG8ptqittH4oajVDxCrobAbPRulg4UAkQRuUhFcB1T2GPZSwklqQYFOLn0DMr8qSRcIidTH/SdlzR+KJ8UWrBcomAC6WCy+iBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=KAsLFcqM; arc=none smtp.client-ip=209.85.221.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1788596794; c=relaxed/simple;
+	bh=Li9xJ/9qsBLTX+27vr6d1kqRZTMBP6AVehDbn8IB7T4=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=l0oonb+xQFXWCXBBI0B5RMO2INK/3GJQK8Weq9I6gaJ2MtxpyfIrp5hj7wcBmasoXOTeLbwzZCRo8FVOwwaM1YggQrGWa6WCfakVloFUGZCXYcZ0iSvuI1zx3YoEOAH5FRqdjXEwO0Xe1vPCDNjv2HQldud5Sw1ii19ayhv4wzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XjDoPW5X; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="KAsLFcqM"
-Received: by mail-vk1-f228.google.com with SMTP id 71dfb90a1353d-5c65d654c23so563850e0c.3
-        for <mptcp@lists.linux.dev>; Fri, 04 Sep 2026 11:37:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788547070; x=1789151870;
-        h=content-transfer-encoding:content-type:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:dkim-signature:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=S2GxLwSx6EjqP7uQ/lfwQxaK/gh/FTk8wuqSuVhY/wc=;
-        b=kw+ON2oV8EjGmCeGquylHEx6Rmj5xd9gcBGDoWxq/LEyPPzk6CPRuECs8d3zTaBILe
-         O87Fc3AOG6ycBOIoq5/G/Ys8CsiSa0pZ4wxVxxYPMc4VSVCnkdEEujAmwk5SUEaeE7rP
-         pJqDq0RxZZidQPUgOmbKM7UUVw7Ik/BBCEktgQXRjHunEU3EMpDI3PWWB+tD8uA1YOGz
-         +OKxEx3vXKohFTIQQUEXcNImP/PTBvyqdz7KhBePA3VJzKCY5AGUEnEFDVoiw32Q+YkR
-         a8qaxSBB/w/XSmFZstUTBi+r/ysxInHb22rfFQtMtplM+Y8RdYnSSzF1MFsNEBZy1Odq
-         fGuQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxkkEp1Nh2bRalSpWzVAawltoTD+ZFKMf8hGiLF5YkX0Rpg3FUF6sH3Miji4Xu+9KkafoeXmw==@lists.linux.dev
-X-Gm-Message-State: AFuF++nYZBHTkijaECq7/UBnGCQ+Izjqq7La+RTSywPUBa+JImSgGx5O
-	0QYtbOy/csvnioLRMyqmSJ01MqcZJ4Bm/xzQBKL5YpvCEeF/yWE32hQ0cP3o9DRCApYRSCPvFVR
-	o1JeIsVBJeh+JQ0gRrCAPR2WLkvPH21m1fndWP51d6zrEx3Ts2EWbZ8yjOval1z/0u+3eg0ETsB
-	yXuRYZ0m/sXZuIgpdclLyaPhX5mQ20e+nRrrQWL1HGribMlt2qpEtyDxEaDkn2TGDHIHHiM3/Ae
-	+VwOKuchchXi34=
-X-Gm-Gg: AYBFou3wkp3kn6LvWpO7tTqqwa+vKhCFRvGhOh7sj11KRsIQRhf8xNy+UkCnhict38h
-	fFDIzvSZdRWJraL/5qVXdpyNsGO6qhE4h95CUcoWfLvE1nRciRVsXq1iBiEUEBHAsGrPsH5lOUe
-	7TNM/alWD6g6M6ecDTTDqL1j0/5KhqljeoM4DDrR2+lcGpk3ZEIB2q1io0DsjcGvxOuJ50raTn3
-	EShFjzLy9utV6M/4aSrA2ssU8xNnPHlB2i1dBQmLFQkuXxMm0TnFesshVI+kkpN3SJmeB9L55xT
-	I7m/nge7VG7h1NNZihWE6Pimn66ApPhqnDgTqB8+7i4ZnRgr/+P1GGnmh+MDXNIq18UVswFpExm
-	rDG1h7na5rkt1l1coXab69yLpiI0YZAQZ+0ITRc6Rqla7uPwgCmqKY51f1r/nYxamFPrJ0Sp5fJ
-	7yLI9DUQEHxwX3DR4W9IBOQLmms7S8xbLJL+b54bqr
-X-Received: by 2002:a05:6123:2e9:b0:5bc:42be:f758 with SMTP id 71dfb90a1353d-5c7ed3c6dfamr3656204e0c.3.1788547069868;
-        Fri, 04 Sep 2026 11:37:49 -0700 (PDT)
-Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-27.dlp.protect.broadcom.com. [144.49.247.27])
-        by smtp-relay.gmail.com with ESMTPS id 71dfb90a1353d-5c7ec20f1desm1486535e0c.3.2026.09.04.11.37.49
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 04 Sep 2026 11:37:49 -0700 (PDT)
-X-Relaying-Domain: broadcom.com
-X-CFilter-Loop: Reflected
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-38e475f83a2so2434575a91.1
-        for <mptcp@lists.linux.dev>; Fri, 04 Sep 2026 11:37:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1788547069; x=1789151869; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=S2GxLwSx6EjqP7uQ/lfwQxaK/gh/FTk8wuqSuVhY/wc=;
-        b=KAsLFcqMKbbAI5HxMJSqvKmW7vreyb5EzT0HoLOerHV6LHzfgABzUl97QjK0uKeLoF
-         n9OzupXUrrGV6DrBfSaQhQwbrPvxLo/+UVwoGOJNn6afi7KQBdL63OMSLUhRGN5jjVm5
-         66h7TZQOV4PreYaGObFxdUkDUaR9YEeh0d5tQ=
-X-Forwarded-Encrypted: i=1; AKwUvBw593Iry7Dba6Mn1SK8xrV3S8T4mgM825PkNuGGuOVdwA5zLNl5v9LZ9iCRdkj23UldXrKmFg==@lists.linux.dev
-X-Received: by 2002:a17:90a:d610:b0:399:1b08:28de with SMTP id 98e67ed59e1d1-39b2613259fmr11035237a91.7.1788547068630;
-        Fri, 04 Sep 2026 11:37:48 -0700 (PDT)
-X-Received: by 2002:a17:90a:d610:b0:399:1b08:28de with SMTP id 98e67ed59e1d1-39b2613259fmr11035158a91.7.1788547068036;
-        Fri, 04 Sep 2026 11:37:48 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39ae62a54f6sm5881444a91.1.2026.09.04.11.37.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Sep 2026 11:37:47 -0700 (PDT)
-Message-ID: <5bd8deed-ea25-42ed-81b4-85afe8d3cf52@broadcom.com>
-Date: Fri, 4 Sep 2026 11:37:42 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XjDoPW5X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED3DB1F00A3D;
+	Sat,  5 Sep 2026 08:26:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788596792;
+	bh=KniLwPzhRcovhq/ms++dvV72oGJB4zTr6PstJqW/mAw=;
+	h=Subject:From:To:Date:In-Reply-To:References;
+	b=XjDoPW5Xf8GRptFgFxwfbgpREJEY9GBA2XQdJXWK4vUbGOPjOjq4WjNW6rasOvnLg
+	 DctvVyh1uGD4JPvnV02W9emTA9xjjrYZS0pN2x/AGRnEQafw8MXMbf4z6fGHOguN0f
+	 mqqoH8sIqflpVlO8oilEXyg2sanvwx2+AbyLmeVoNSTPVvV6zQrI4Vbvf1TxklbYNi
+	 SsdC6lak03AioAuWReejEbCh9P0y/cqeBz7ufwnuQ/fuUvzEvAR9nmA+Iuomn24EsR
+	 Ejj6FO4/LMtap+/MV3IKdokdFrBSAbO1jSrkYvHvWesft6vGh9Yd8Xx2ddBUK92Aaq
+	 1Z+KFKjrftLeQ==
+Message-ID: <24e7da3ea0b33d5dca970449cf615a4c95ecceb8.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v3] selftests: mptcp: print stats before
+ socket closure
+From: Geliang Tang <geliang@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, MPTCP Linux
+	 <mptcp@lists.linux.dev>
+Date: Sat, 05 Sep 2026 16:26:29 +0800
+In-Reply-To: <20260815-sft-mptcp-stats-b4-close-v3-1-ccd9af14cf73@kernel.org>
+References: <20260815-sft-mptcp-stats-b4-close-v3-1-ccd9af14cf73@kernel.org>
+Content-Type: multipart/mixed; boundary="=-W92beQvJqRl20P3SBO5L"
+User-Agent: Evolution 3.56.2-9 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH stable 6.12] tcp: fix potential race in
- tcp_v6_syn_recv_sock()
-To: Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>,
- syzbot+937b5bbb6a815b3e5d0b@syzkaller.appspotmail.com,
- Kuniyuki Iwashima <kuniyu@google.com>, Jakub Kicinski <kuba@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Neal Cardwell <ncardwell@google.com>,
- Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, mptcp@lists.linux.dev,
- bcm-kernel-feedback-list@broadcom.com
-References: <20260903174016.689839-1-florian.fainelli@broadcom.com>
- <20260903-daily-reply-0002-re-tcp-syn-recv-sock-race-6.12@kernel.org>
-Content-Language: en-US, fr-FR
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20260903-daily-reply-0002-re-tcp-syn-recv-sock-race-6.12@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
 
-On 9/3/26 19:52, Sasha Levin wrote:
->> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+--=-W92beQvJqRl20P3SBO5L
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+
+Hi Matt,
+
+On Sat, 2026-08-15 at 00:28 +0200, Matthieu Baerts (NGI0) wrote:
+> In case of poll timeout, it might be too late to print the stats
+> after
+> the socket closure.
 > 
-> Sadly this breaks the build in net/dccp...
+> Now, in case of poll timeout, 'ss' and 'nstat' are invoked from
+> mptcp_connect to print the stats before exiting. This should help
+> debugging poll timeout issues.
 > 
-Yep my bad, sashiko pointed that out and I just submitted v2 of each 
-patches.
--- 
-Florian
+> Note: for this "workaround", system() is used for debugging purposes
+
+This print_err_stats() implementation is basically the same as
+mptcp_lib_pr_err_stats() in the shell, right?
+
+I think it's better to use mptcp_lib_pr_err_stats() in the shell to
+print the information. In mptcp_connect.c, when a poll timeout occurs,
+we send a signal to the shell and don't close the socket immediately -
+we wait for the shell to finish printing the information before closing
+it. What do you think of this approach? There's a reference
+implementation in the attachment, but I haven't tested it.
+
+Thanks,
+-Geliang
+
+> only. The returned result can then be safely ignored, hence the
+> (void)!
+> to avoid unused-result warnings.
+> 
+> Also, 'nstat *Tcp*' will print '#kernel' at the top, but that's OK,
+> and
+> it seems better to avoid using a pipe here.
+> 
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> Changes in v3:
+> - use double quotes instead of single ones (Sashiko)
+> - Link to v2:
+> https://patch.msgid.link/20260814-sft-mptcp-stats-b4-close-v2-1-b7a8ab3ddae8@kernel.org
+> 
+> Changes in v2:
+> - use 'ip netns identify' to avoid a warning from AI reviews
+> - use 'nstat -s *Tcp*' instead of using grep
+> - add a note about (void)!
+> - Link to v1:
+> https://patch.msgid.link/20260814-sft-mptcp-stats-b4-close-v1-1-2945a591be7e@kernel.org
+> ---
+>  tools/testing/selftests/net/mptcp/mptcp_connect.c | 15
+> +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> index ea4cb6c1bd5e..d6c2237bdba0 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> @@ -210,6 +210,19 @@ static void xgetaddrinfo(const char *node, const
+> char *service,
+>  	}
+>  }
+>  
+> +static void print_err_stats(void)
+> +{
+> +	char cmd[128];
+> +
+> +	snprintf(cmd, sizeof(cmd), "ss -Menitam -o '%cport = :%s'
+> >&2",
+> +		 listen_mode ? 's' : 'd', cfg_port);
+> +
+> +	fprintf(stderr, "socket stats before socket closure:\n");
+> +	(void)!system(cmd);
+> +	(void)!system("NSTAT_HISTORY=\"/tmp/$(ip netns
+> identify).nstat\" "
+> +		      "nstat -s '*Tcp*' >&2");
+> +}
+> +
+>  static void set_rcvbuf(int fd, unsigned int size)
+>  {
+>  	int err;
+> @@ -656,6 +669,7 @@ static int copyfd_io_poll(int infd, int peerfd,
+> int outfd,
+>  			fprintf(stderr, "%s: poll timed out (events:
+> "
+>  				"POLLIN %u, POLLOUT %u)\n",
+> __func__,
+>  				fds.events & POLLIN, fds.events &
+> POLLOUT);
+> +			print_err_stats();
+>  			return 2;
+>  		}
+>  
+> @@ -1194,6 +1208,7 @@ int main_loop_s(int listensock)
+>  		return 1;
+>  	case 0:
+>  		fprintf(stderr, "%s: timed out\n", __func__);
+> +		print_err_stats();
+>  		close(listensock);
+>  		return 2;
+>  	}
+> 
+> ---
+> base-commit: d536472a82d18356d323227213acb5603bb9050c
+> change-id: 20260814-sft-mptcp-stats-b4-close-20964ff6a6ba
+> 
+> Best regards,
+> --  
+> Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 
+
+--=-W92beQvJqRl20P3SBO5L
+Content-Disposition: attachment;
+	filename*0=0001-Squash-to-selftests-mptcp-print-stats-before-socket-.pat;
+	filename*1=ch
+Content-Type: text/x-patch;
+	name="0001-Squash-to-selftests-mptcp-print-stats-before-socket-.patch";
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+RnJvbSAyNzkxZWIwYzg2ZWZjODk5MGJjYzc5YzZhZjA4ZTJlNDlkZDYyMGNkIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpNZXNzYWdlLUlEOiA8Mjc5MWViMGM4NmVmYzg5OTBiY2M3OWM2YWYwOGUy
+ZTQ5ZGQ2MjBjZC4xNzg4NTk2NDAwLmdpdC50YW5nZ2VsaWFuZ0BreWxpbm9zLmNuPgpGcm9tOiBH
+ZWxpYW5nIFRhbmcgPHRhbmdnZWxpYW5nQGt5bGlub3MuY24+CkRhdGU6IFNhdCwgNSBTZXAgMjAy
+NiAxNjoxMjo0NiArMDgwMApTdWJqZWN0OiBbUEFUQ0hdIFNxdWFzaCB0byAic2VsZnRlc3RzOiBt
+cHRjcDogcHJpbnQgc3RhdHMgYmVmb3JlIHNvY2tldAogY2xvc3VyZSIKClNpZ25lZC1vZmYtYnk6
+IEdlbGlhbmcgVGFuZyA8dGFuZ2dlbGlhbmdAa3lsaW5vcy5jbj4KLS0tCiAuLi4vc2VsZnRlc3Rz
+L25ldC9tcHRjcC9tcHRjcF9jb25uZWN0LmMgICAgICAgfCAzNyArKysrKysrKysrKysrLS0tLS0t
+CiAuLi4vc2VsZnRlc3RzL25ldC9tcHRjcC9tcHRjcF9jb25uZWN0LnNoICAgICAgfCAxNiArKysr
+KysrLQogMiBmaWxlcyBjaGFuZ2VkLCA0MCBpbnNlcnRpb25zKCspLCAxMyBkZWxldGlvbnMoLSkK
+CmRpZmYgLS1naXQgYS90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9uZXQvbXB0Y3AvbXB0Y3BfY29u
+bmVjdC5jIGIvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvbmV0L21wdGNwL21wdGNwX2Nvbm5lY3Qu
+YwppbmRleCA4Yzc4ODk3N2U1OTQuLjMyMTdkMzIwNjQ4ZSAxMDA2NDQKLS0tIGEvdG9vbHMvdGVz
+dGluZy9zZWxmdGVzdHMvbmV0L21wdGNwL21wdGNwX2Nvbm5lY3QuYworKysgYi90b29scy90ZXN0
+aW5nL3NlbGZ0ZXN0cy9uZXQvbXB0Y3AvbXB0Y3BfY29ubmVjdC5jCkBAIC00Nyw2ICs0Nyw3IEBA
+IGV4dGVybiBpbnQgb3B0aW5kOwogc3RhdGljIGludCAgcG9sbF90aW1lb3V0ID0gMTAgKiAxMDAw
+Owogc3RhdGljIGJvb2wgbGlzdGVuX21vZGU7CiBzdGF0aWMgYm9vbCBxdWl0Oworc3RhdGljIHBp
+ZF90IHNoZWxsX3BpZDsKIAogZW51bSBjZmdfbW9kZSB7CiAJQ0ZHX01PREVfUE9MTCwKQEAgLTIx
+MCwxNyArMjExLDI4IEBAIHN0YXRpYyB2b2lkIHhnZXRhZGRyaW5mbyhjb25zdCBjaGFyICpub2Rl
+LCBjb25zdCBjaGFyICpzZXJ2aWNlLAogCX0KIH0KIAotc3RhdGljIHZvaWQgcHJpbnRfZXJyX3N0
+YXRzKHZvaWQpCitzdGF0aWMgdm9sYXRpbGUgaW50IHNoZWxsX3dva2VuOworCitzdGF0aWMgdm9p
+ZCB3YWtlX2hhbmRsZXIoaW50IHNpZykKIHsKLQljaGFyIGNtZFsxMjhdOworCXNoZWxsX3dva2Vu
+ID0gMTsKK30KIAotCXNucHJpbnRmKGNtZCwgc2l6ZW9mKGNtZCksICJzcyAtTWVuaXRhbSAtbyAn
+JWNwb3J0ID0gOiVzJyA+JjIiLAotCQkgbGlzdGVuX21vZGUgPyAncycgOiAnZCcsIGNmZ19wb3J0
+KTsKKy8qIE5vdGlmeSB0aGUgc2hlbGwgc2NyaXB0IHRoYXQgYSBwb2xsIHRpbWVvdXQgb2NjdXJy
+ZWQsIHRoZW4gcGF1c2Ugd2l0aCB0aGUKKyAqIHNvY2tldCBzdGlsbCBvcGVuLiBUaGUgc2hlbGwg
+Y29sbGVjdHMgc29ja2V0IHN0YXRzIHZpYSBzcy9uc3RhdCB3aGlsZSB0aGUKKyAqIGZkIGlzIHN0
+aWxsIGFsaXZlLCB0aGVuIHNlbmRzIHVzIFNJR1VTUjEgdG8gd2FrZSB1cyB1cCBzbyB3ZSBjYW4g
+ZXhpdC4KKyAqLworc3RhdGljIHZvaWQgbm90aWZ5X3NoZWxsKHZvaWQpCit7CisJaWYgKCFzaGVs
+bF9waWQpCisJCXJldHVybjsKKworCXNoZWxsX3dva2VuID0gMDsKKwlzaWduYWwoU0lHVVNSMSwg
+d2FrZV9oYW5kbGVyKTsKKwlraWxsKHNoZWxsX3BpZCwgU0lHVVNSMSk7CiAKLQlmcHJpbnRmKHN0
+ZGVyciwgInNvY2tldCBzdGF0cyBiZWZvcmUgc29ja2V0IGNsb3N1cmU6XG4iKTsKLQkodm9pZCkh
+c3lzdGVtKGNtZCk7Ci0JKHZvaWQpIXN5c3RlbSgiTlNUQVRfSElTVE9SWT1cIi90bXAvJChpcCBu
+ZXRucyBpZGVudGlmeSkubnN0YXRcIiAiCi0JCSAgICAgICJuc3RhdCAtcyAnKlRjcConID4mMiIp
+OworCXdoaWxlICghc2hlbGxfd29rZW4pCisJCXBhdXNlKCk7CiB9CiAKIHN0YXRpYyB2b2lkIHNl
+dF9yY3ZidWYoaW50IGZkLCB1bnNpZ25lZCBpbnQgc2l6ZSkKQEAgLTY3MSw3ICs2ODMsNyBAQCBz
+dGF0aWMgaW50IGNvcHlmZF9pb19wb2xsKGludCBpbmZkLCBpbnQgcGVlcmZkLCBpbnQgb3V0ZmQs
+CiAJCQlmcHJpbnRmKHN0ZGVyciwgIiVzOiBwb2xsIHRpbWVkIG91dCAoZXZlbnRzOiAiCiAJCQkJ
+IlBPTExJTiAldSwgUE9MTE9VVCAldSlcbiIsIF9fZnVuY19fLAogCQkJCWZkcy5ldmVudHMgJiBQ
+T0xMSU4sIGZkcy5ldmVudHMgJiBQT0xMT1VUKTsKLQkJCXByaW50X2Vycl9zdGF0cygpOworCQkJ
+bm90aWZ5X3NoZWxsKCk7CiAJCQlyZXR1cm4gMjsKIAkJfQogCkBAIC0xMjEwLDcgKzEyMjIsNyBA
+QCBpbnQgbWFpbl9sb29wX3MoaW50IGxpc3RlbnNvY2spCiAJCXJldHVybiAxOwogCWNhc2UgMDoK
+IAkJZnByaW50ZihzdGRlcnIsICIlczogdGltZWQgb3V0XG4iLCBfX2Z1bmNfXyk7Ci0JCXByaW50
+X2Vycl9zdGF0cygpOworCQlub3RpZnlfc2hlbGwoKTsKIAkJY2xvc2UobGlzdGVuc29jayk7CiAJ
+CXJldHVybiAyOwogCX0KQEAgLTE1MzEsNyArMTU0Myw3IEBAIHN0YXRpYyB2b2lkIHBhcnNlX29w
+dHMoaW50IGFyZ2MsIGNoYXIgKiphcmd2KQogewogCWludCBjOwogCi0Jd2hpbGUgKChjID0gZ2V0
+b3B0KGFyZ2MsIGFyZ3YsICI2YzpmOmhpOkk6amxtOk06bzpwOlA6cjpSOnM6Uzp0OlQ6dzoiKSkg
+IT0gLTEpIHsKKwl3aGlsZSAoKGMgPSBnZXRvcHQoYXJnYywgYXJndiwgIjZjOmY6aGk6STpqbG06
+TTpvOnA6UDpyOlI6czpTOnQ6VDp3Olc6IikpICE9IC0xKSB7CiAJCXN3aXRjaCAoYykgewogCQlj
+YXNlICdmJzoKIAkJCWNmZ190cnVuY2F0ZSA9IGF0b2kob3B0YXJnKTsKQEAgLTE1OTcsNiArMTYw
+OSw5IEBAIHN0YXRpYyB2b2lkIHBhcnNlX29wdHMoaW50IGFyZ2MsIGNoYXIgKiphcmd2KQogCQlj
+YXNlICd3JzoKIAkJCWNmZ193YWl0ID0gYXRvaShvcHRhcmcpKjEwMDAwMDA7CiAJCQlicmVhazsK
+KwkJY2FzZSAnVyc6CisJCQlzaGVsbF9waWQgPSBhdG9pKG9wdGFyZyk7CisJCQlicmVhazsKIAkJ
+Y2FzZSAnTSc6CiAJCQljZmdfbWFyayA9IHN0cnRvbChvcHRhcmcsIE5VTEwsIDApOwogCQkJYnJl
+YWs7CmRpZmYgLS1naXQgYS90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9uZXQvbXB0Y3AvbXB0Y3Bf
+Y29ubmVjdC5zaCBiL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL25ldC9tcHRjcC9tcHRjcF9jb25u
+ZWN0LnNoCmluZGV4IDdhMmE4NTFmYTBhZC4uNjFkNzAzMWFjZDQxIDEwMDc1NQotLS0gYS90b29s
+cy90ZXN0aW5nL3NlbGZ0ZXN0cy9uZXQvbXB0Y3AvbXB0Y3BfY29ubmVjdC5zaAorKysgYi90b29s
+cy90ZXN0aW5nL3NlbGZ0ZXN0cy9uZXQvbXB0Y3AvbXB0Y3BfY29ubmVjdC5zaApAQCAtMzk0LDcg
+KzM5NCw3IEBAIGRvX3RyYW5zZmVyKCkKIAlmaQogCiAJaXAgbmV0bnMgZXhlYyAke2xpc3RlbmVy
+X25zfSBcCi0JCS4vbXB0Y3BfY29ubmVjdCAtdCAke3RpbWVvdXRfcG9sbH0gLWwgLXAgJHBvcnQg
+LXMgJHtzcnZfcHJvdG99IFwKKwkJLi9tcHRjcF9jb25uZWN0IC10ICR7dGltZW91dF9wb2xsfSAt
+VyAkJCAtbCAtcCAkcG9ydCAtcyAke3Nydl9wcm90b30gXAogCQkJJGV4dHJhX2FyZ3MgJGxvY2Fs
+X2FkZHIgPCAiJHNpbiIgPiAiJHNvdXQiICYKIAlsb2NhbCBzcGlkPSQhCiAKQEAgLTQwMyw3ICs0
+MDMsNyBAQCBkb190cmFuc2ZlcigpCiAJbG9jYWwgc3RhcnQKIAlzdGFydD0kKGRhdGUgKyVzJU4p
+CiAJaXAgbmV0bnMgZXhlYyAke2Nvbm5lY3Rvcl9uc30gXAotCQkuL21wdGNwX2Nvbm5lY3QgLXQg
+JHt0aW1lb3V0X3BvbGx9IC1wICRwb3J0IC1zICR7Y2xfcHJvdG99IFwKKwkJLi9tcHRjcF9jb25u
+ZWN0IC10ICR7dGltZW91dF9wb2xsfSAtVyAkJCAtcCAkcG9ydCAtcyAke2NsX3Byb3RvfSBcCiAJ
+CQkkZXh0cmFfYXJncyAkY29ubmVjdF9hZGRyIDwgIiRjaW4iID4gIiRjb3V0IiAmCiAJbG9jYWwg
+Y3BpZD0kIQogCkBAIC00MTEsMTEgKzQxMSwyMyBAQCBkb190cmFuc2ZlcigpCiAJCSIke2Nvbm5l
+Y3Rvcl9uc30iICIke3BvcnR9IiAiJHtjcGlkfSIgIiR7c3BpZH0iICYKIAlsb2NhbCB0aW1lb3V0
+X3BpZD0kIQogCisJbG9jYWwgdGltZWRfb3V0PTAKKwl0cmFwICd0aW1lZF9vdXQ9MScgVVNSMQor
+CiAJd2FpdCAkY3BpZAogCWxvY2FsIHJldGM9JD8KIAl3YWl0ICRzcGlkCiAJbG9jYWwgcmV0cz0k
+PwogCisJaWYgWyAke3RpbWVkX291dH0gLWVxIDEgXTsgdGhlbgorCQkjIG1wdGNwX2Nvbm5lY3Qg
+cGF1c2VkIG9uIHBvbGwgdGltZW91dCwgc29ja2V0IHN0aWxsIG9wZW4gLQorCQkjIGNvbGxlY3Qg
+c3RhdHMgbm93IHdoaWxlIHRoZSBmZCBpcyBhbGl2ZSwgdGhlbiB3YWtlIHRoZW0gdXAKKwkJbXB0
+Y3BfbGliX3ByX2Vycl9zdGF0cyAiJHtsaXN0ZW5lcl9uc30iICIke2Nvbm5lY3Rvcl9uc30iICIk
+e3BvcnR9IgorCQlraWxsIC1VU1IxICRjcGlkICRzcGlkIDI+L2Rldi9udWxsCisJCXdhaXQgJGNw
+aWQ7IHJldGM9JD8KKwkJd2FpdCAkc3BpZDsgcmV0cz0kPworCWZpCisKIAlpZiBraWxsIC0wICR0
+aW1lb3V0X3BpZDsgdGhlbgogCQkjIEZpbmlzaGVkIGJlZm9yZSB0aGUgdGltZW91dDoga2lsbCB0
+aGUgYmFja2dyb3VuZCBqb2IKIAkJbXB0Y3BfbGliX2tpbGxfZ3JvdXBfd2FpdCAkdGltZW91dF9w
+aWQKLS0gCjIuNTMuMAoK
+
+
+--=-W92beQvJqRl20P3SBO5L--
