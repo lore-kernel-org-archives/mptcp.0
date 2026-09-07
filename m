@@ -1,26 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C1484307AA
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C1EC43BDB9
 	for <mptcp@lists.linux.dev>; Mon,  7 Sep 2026 10:15:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788776118; cv=none; b=CsS4NTScNuE0cdBBhVnIN2cqSfxzC9Ph2vB+659VDyzUR8FlZV9MRaxF5ipgvhX9ssNQRRMKS4yyCZ3O3IYD0X4YeiBHVslm3YeFGzNqbYXAXiLp98AdIX9lVvPmcVn/5jrnw+H3VuuckxT3S25k4xdoXJ2yO/B0AtgQVqfyed0=
+	t=1788776118; cv=none; b=pAmWvtRj32IKVHPU0cZ/dsaFkatxxBSIXfzbg1JuZS2U2eK+fUPmmtc2TfxhZvOWiMusJ5NQr11z6S7xgzPcUQJmipbOqNX+RKA0uRhWcmlgwTu6wAwFXsu1mb3S/RMV09/NmQY6CcdU3Aw/3XHvIEtYED0MH/rBvjXVYFnscmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1788776118; c=relaxed/simple;
-	bh=ioB3sffTUzcUOYa7HVzkn4TdcwOrfRSXuWhbltRfhOU=;
+	bh=fltR40xsO63hDr38RsKLkR5OCy59YuLQb6AMAdbTmWM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tUTJc2djN2XhyhDD5n25Ass+cZvNLIVDJIew58WSntkW8gGftrHRXYGGKV8w8DUMzDjg/1zZNpP3mfDvvJ+EBZw58tC3KyDV9y9yfO/xjhe5c0GD4a0n0wK0DpaHNZUDbYfXQgoZGTk4b7BaIv3Ra9YzES2tbJOiuxcy7Zfg6p0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E5796C2BCF5;
+	 In-Reply-To:To:Cc; b=I7/BAHIicMDNXkz+pn6ztpsT2AlLbSznsdygKltATfaXNPp3Er8bNas8XxKnvwF/U8xze1a25FUJp/6JytxZaiEo3m5OUE3oowBoxkTTIe2eNfYPs7AgYdvs5n/v6vil02wTaQfZ1a/60TpXEaSNmM4Cd4Brpke6SGEpIlimYek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fpU6CxsV; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fpU6CxsV"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E902EC2BCFF;
 	Mon,  7 Sep 2026 10:15:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1788776117;
+	bh=fltR40xsO63hDr38RsKLkR5OCy59YuLQb6AMAdbTmWM=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=fpU6CxsVJfqc7zRPD4lCSQd82Eac7PgMfJlf8en35+UUPkg1RTj7iydLSqdJZJxp3
+	 WAkiHAKdNkIUxsBA2Tkzr1bnQGzzUiag2CqcREgI6OKmtn7BJ/oSNbIyXKkk9FQwtv
+	 SY+MsAV4vRMUxwd9r/+VWZ2DvrhGaPgRYFAVhIAcKN/MhUrpVV8q+rwNmmSZPTHkuA
+	 fO7whd6WfIrH1m0fqyVs/5yFdYX+vFF/Baeu1ichccLLxBfYj6ksTMNTk5NDvNWAyG
+	 gGUP/JIYXxI7d0dkZn4sS6wGSxF/ppouU23Qg0b1wSuqedugsr6Q/oxnUhgio3Eqlg
+	 U+K89800xfEQg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFACC79F89;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D03D1C79F9F;
 	Mon,  7 Sep 2026 10:15:17 +0000 (UTC)
-From: quanyeyang@proton.me
-Date: Mon, 07 Sep 2026 18:15:13 +0800
-Subject: [PATCH mptcp-net v3 1/3] mptcp: fix data-race in __mptcp_retrans /
- mptcp_incoming_options
+From: Quanye Yang via B4 Relay <devnull+quanyeyang.proton.me@kernel.org>
+Date: Mon, 07 Sep 2026 18:15:14 +0800
+Subject: [PATCH mptcp-net v3 2/3] mptcp: fix data-race in
+ mptcp_subflow_get_send / tcp_ack
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -29,113 +41,56 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260907-mptcp-snd-una-race-v3-1-65ba0d5f0221@proton.me>
+Message-Id: <20260907-mptcp-snd-una-race-v3-2-65ba0d5f0221@proton.me>
 References: <20260907-mptcp-snd-una-race-v3-0-65ba0d5f0221@proton.me>
 In-Reply-To: <20260907-mptcp-snd-una-race-v3-0-65ba0d5f0221@proton.me>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: geliang@kernel.org, matttbe@kernel.org, pabeni@redhat.com
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1788776116; l=3739;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1788776116; l=1235;
  i=quanyeyang@proton.me; s=20260801; h=from:subject:message-id;
- bh=agIiS5q6FGHevKPJXeJCtkoOlh0vEQhEXqOv5mqmEkw=;
- b=6T25jhW77ypek/AoHcSoUMsqIHbfp8wvgWM6cuB0HXUEJoKGffGNkVKyvMlfhZ5qBm5MRsTrT
- npNuyRDlwquD8ImAQSfdGJvaJ/NCzuq337fGAENWKnJhpRiVD0/2WUL
+ bh=06AW/3QX+jM9WoTzq8ffD3/zCT6sKnkg6/dgcHOi06Y=;
+ b=c73TL15YQPFqkQA02+etGUUBQTHZZR42Wedvp3z7VeJXVC7uV8vY5lLZFFiuy0Illl/tm7mxU
+ A4koShh/F+HCHoLg0Mh1y6dnSG62KndtTxQ53psg0BGuhbHdgB3mT9O
 X-Developer-Key: i=quanyeyang@proton.me; a=ed25519;
  pk=9L9FrcvzMgxPaBRU6XV0EnqTgjDqVO596rQKSZ9qZoY=
 X-Endpoint-Received: by B4 Relay for quanyeyang@proton.me/20260801 with
  auth_id=963
-X-Original-From: quanyeyang@proton.me
+X-Original-From: Quanye Yang <quanyeyang@proton.me>
 Reply-To: quanyeyang@proton.me
 
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+From: Quanye Yang <quanyeyang@proton.me>
 
-SyzKaller found this data-race:
+KCSAN reported a data race between the lockless read of
+icsk->icsk_pending in mptcp_timeout_from_subflow() and the
+smp_store_release() performed from tcp_ack() when clearing the
+subflow retransmission timer.
 
-  BUG: KCSAN: data-race in __mptcp_retrans / mptcp_incoming_options
+The MPTCP socket lock held by the reader does not protect the TCP
+subflow state. Use smp_load_acquire() to match the store-release
+operations used by TCP and the other lockless readers of this field.
 
-  write (marked) to 0xffff888015e8e5f0 of 8 bytes by interrupt on cpu 0:
-   __mptcp_snd_una_update net/mptcp/options.c:1055 [inline]
-   mptcp_incoming_options+0x6a3/0x1ac0 net/mptcp/options.c:1183
-   tcp_data_queue+0x101b/0x2440 net/ipv4/tcp_input.c:5583
-   tcp_rcv_established+0x684/0x1fc0 net/ipv4/tcp_input.c:6654
-   tcp_v4_do_rcv+0x35c/0x690 net/ipv4/tcp_ipv4.c:1866
-   tcp_v4_rcv+0x1d91/0x25a0 net/ipv4/tcp_ipv4.c:2263
-   ip_protocol_deliver_rcu+0x46/0x280 net/ipv4/ip_input.c:207
-   ip_local_deliver_finish+0x190/0x270 net/ipv4/ip_input.c:241
-   NF_HOOK include/linux/netfilter.h:318 [inline]
-   NF_HOOK include/linux/netfilter.h:312 [inline]
-   ip_local_deliver+0xe3/0x210 net/ipv4/ip_input.c:262
-   dst_input include/net/dst.h:480 [inline]
-   ip_rcv_finish net/ipv4/ip_input.c:492 [inline]
-   NF_HOOK include/linux/netfilter.h:318 [inline]
-   NF_HOOK include/linux/netfilter.h:312 [inline]
-   ip_rcv+0x200/0x220 net/ipv4/ip_input.c:612
-   __netif_receive_skb_one_core+0xeb/0x110 net/core/dev.c:6178
-   __netif_receive_skb+0x1f/0xc0 net/core/dev.c:6291
-   process_backlog+0x168/0x360 net/core/dev.c:6642
-   __napi_poll+0x71/0x460 net/core/dev.c:7706
-   napi_poll net/core/dev.c:7769 [inline]
-   net_rx_action+0x6f8/0x810 net/core/dev.c:7926
-   handle_softirqs+0xc9/0x2e0 kernel/softirq.c:622
-   run_ksoftirqd kernel/softirq.c:1063 [inline]
-   run_ksoftirqd+0x20/0x30 kernel/softirq.c:1055
-   smpboot_thread_fn+0x287/0x520 kernel/smpboot.c:160
-   kthread+0x1f2/0x240 kernel/kthread.c:436
-   ret_from_fork+0x321/0x440 arch/x86/kernel/process.c:158
-   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-  read to 0xffff888015e8e5f0 of 8 bytes by task 24 on cpu 1:
-   mptcp_rtx_head net/mptcp/protocol.h:487 [inline]
-   __mptcp_retrans+0x169/0x8f0 net/mptcp/protocol.c:2759
-   mptcp_worker+0x6a6/0xb30 net/mptcp/protocol.c:2980
-   process_one_work+0x3ee/0x970 kernel/workqueue.c:3275
-   process_scheduled_works kernel/workqueue.c:3358 [inline]
-   worker_thread+0x3c3/0x730 kernel/workqueue.c:3439
-   kthread+0x1f2/0x240 kernel/kthread.c:436
-   ret_from_fork+0x321/0x440 arch/x86/kernel/process.c:158
-   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-  value changed: 0x0b17a4285ae6137d -> 0x0b17a4285b078905
-
-It looks like msk->snd_una was being modified in __mptcp_snd_una_update
-under the msk data lock (spin lock), while being accessed in
-mptcp_rtx_head() under a different lock: the msk socket lock.
-
-Annotate access to msk->snd_una in mptcp_rtx_head() to prevent such
-issue.
-
-Fixes: 64b9cea7a0af ("mptcp: fix spurious retransmissions")
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Reviewed-by: Geliang Tang <geliang@kernel.org>
+Fixes: 33d41c9cd74c ("mptcp: more accurate timeout")
 Signed-off-by: Quanye Yang <quanyeyang@proton.me>
 ---
- net/mptcp/protocol.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/mptcp/protocol.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index b3121c8c766b..19ad2fe2036a 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -304,7 +304,9 @@ struct mptcp_sock {
- 						 * protection
- 						 */
- 	u64		bytes_acked;
--	u64		snd_una;
-+	u64		snd_una;		/* updated under the msk data lock,
-+						 * lockless read
-+						 */
- 	u64		wnd_end;
- 	u32		last_data_sent;
- 	u32		last_data_recv;
-@@ -488,7 +490,7 @@ static inline struct mptcp_data_frag *mptcp_rtx_head(struct sock *sk)
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 0b24e0afedfb..f4f63df9d787 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -606,7 +606,9 @@ static long mptcp_timeout_from_subflow(const struct mptcp_subflow_context *subfl
  {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	const struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
  
--	if (msk->snd_una == msk->snd_nxt)
-+	if (READ_ONCE(msk->snd_una) == msk->snd_nxt)
- 		return NULL;
+-	return inet_csk(ssk)->icsk_pending && !subflow->stale_count ?
++	/* Pair this lockless read with TCP's store-release updates. */
++	return smp_load_acquire(&inet_csk(ssk)->icsk_pending) &&
++	       !subflow->stale_count ?
+ 	       tcp_timeout_expires(ssk) - jiffies : 0;
+ }
  
- 	return list_first_entry_or_null(&msk->rtx_queue, struct mptcp_data_frag, list);
 
 -- 
 2.55.0
