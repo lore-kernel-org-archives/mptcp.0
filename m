@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A334E8E07
-	for <mptcp@lists.linux.dev>; Mon,  7 Sep 2026 13:47:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B144A92C8
+	for <mptcp@lists.linux.dev>; Mon,  7 Sep 2026 13:55:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788788863; cv=none; b=eYcVEGv+m7foD/FSBX0nZ2pE/QIfgPqUict8aepGcfIOw+x/0shKDsBciHfURIoUkDVBDzxmPBvBLkCxd4CVmC+xjXx+evHEFIxpkH6RsFhETZO9u/Y2/pKTqRsRLreTUvPjkkN9vXFvEwy68DKmw2HKY5AMfVOSB1xwlDrPKyE=
+	t=1788789339; cv=none; b=VjxolZdEy4sJB3/A7nPrAG9JiNUsZdupyYHe8r6v53v+S1GPMjNXwCeA3ngUsOGUxEmSj1UmNayWPM12vLoZVIr9ugNy3BDLJCsg6Ywr/PHS/Q5ojHGyt/TOdiWsmtHxYzNk6ULDfua3rb7QXNeb80HoZYvBtmlA1iN8sjEtddY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788788863; c=relaxed/simple;
-	bh=84IXWbOK8qRATnGWsQRWIgx93pqkELAL3qV/I9is3bU=;
+	s=arc-20240116; t=1788789339; c=relaxed/simple;
+	bh=0r8oTzOUqurqwWMpEPA8VGM6zx7PP0qIsmL5oRwG8jY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EGhGew334KrrztnI1Rq7e5zcDJ0ly2WqOqDIKsZ0e/34YHOWWV4m50QmeUbgahPmpg982pTbCbrZ80jhOCYrk2tyVA9ZlXda57i1BqLye+4W1OM58WtTOKuiee4B6SVyJA/y7JjYgBJ6NOLSitFK41DvGddLfHcOdjUGD04/M3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aoQtQZqm; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=SF2Ye/Pu8g2gbKyFUxrsEff3wjKYwomIuk3qW6yW69VOFaLmWDyxYDW7BcUFEEjuTTYcCgp1xoa0/ZwM7qDNAXHwH93NfGfSxQ8IGC9RgXt0UvE3b7WeI/cdGx6345yLqYFyuaZ9xbyx1hQHa7Z2jXKNNaIKZvKl5WpdbdeRnoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dr9o/D4m; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aoQtQZqm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D62DD1F00A3A;
-	Mon,  7 Sep 2026 13:47:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dr9o/D4m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B82551F00A3A;
+	Mon,  7 Sep 2026 13:55:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788788857;
-	bh=ZF4XYmnrlnYJBI2j506Q46RbolopBaz2VIKtTRvheyY=;
+	s=k20260515; t=1788789337;
+	bh=jJ+ndCZNHT0zDxYtMGHvipLR4TlMKPnMFQNGeNYe0UQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=aoQtQZqmM677tWSAjIL9vE/haCmPMpsRBNCnZjDs9MEv05pZG807urkhCkP9iiXJg
-	 7HzJR+7srIne6zBjx2xkndI67pA0YB6CpQcN3Z12AN+TSXg2tgW6SUOw179efZJju6
-	 zfY5F9YDbj/89cv5BQpGl3jmKmrAKXF8Bl8pjeZw8Dp9PUtDbJYxPc/dRiFMeiMNjE
-	 t52Gx2nRtyKS564lqYKYPguYgCB0CH7wWqJIryaHpwQyJYcS71bqhaHWKWzLhPKpML
-	 qZw7TzWFGjz0HRzaqZEgdX9bxR+XmCsPP4JKpHMT8whdl5YbWn9x0KjKPdGRzkLM1a
-	 0xnbq/SKGmipw==
-Message-ID: <18756632-c1d6-40f4-8e81-2dcee48f3754@kernel.org>
-Date: Mon, 7 Sep 2026 15:47:33 +0200
+	b=dr9o/D4m5aWfOMIZIuItB2ZIbjE6/Fbh7NdnM4RTMVVBNqxzGtzrADh0ftgSM1EFj
+	 AQhQ+f+SZveyvFTt1bZ/lDwfEl/gqlmeHbiOE3sAir7iuhotdaNXOXJD6PkT6/ROXl
+	 WxWKRAQf3IYvveeyXMp5N13ROiAUZXvX3W0yatl7lnRJeqR0+5cfbViPZw2ggSgutN
+	 dyL1HT9Zd1aIyQNea3AL+a3lLjzjBaQD4+VQGYshflf4TMoCHu6YJ6Mf+7kA1y4VFA
+	 2HYJz6ZO79KGctQK76uJJUKGqg6ZW2hBftPTixNQ/eYJT4xk2QPklVVTBE6jcVnTAR
+	 2mkJcizj3sBag==
+Message-ID: <f61eb670-8db3-4c97-92fd-b66294ef222e@kernel.org>
+Date: Mon, 7 Sep 2026 15:55:34 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,16 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [RFC] Mitigating Sashiko-driven iteration noise on the main MPTCP
- list
+Subject: Re: [PATCH mptcp-net v3 1/3] mptcp: fix data-race in __mptcp_retrans
+ / mptcp_incoming_options
 Content-Language: fr
-To: Shardul Bankar <shardulsb08@gmail.com>, mptcp@lists.linux.dev
-Cc: gang.yan@linux.dev, janak@mpiric.us, kalpan.jani@mpiricsoftware.com
-References: <b13525eb141d18e1fe326fec4e71b53704cdc291@linux.dev>
- <6f86381a-72d4-4a47-bc7d-1880cc39da64@kernel.org>
- <3f13f3acd4c329480331cccf5a12411dc01ee721@linux.dev>
- <7429a238-6297-4a7c-b18c-47cbcee4ab69@kernel.org>
- <20260907125720.516598-1-shardul.b@mpiricsoftware.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Geliang Tang <geliang@kernel.org>, quanyeyang@proton.me,
+ MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260907-mptcp-snd-una-race-v3-0-65ba0d5f0221@proton.me>
+ <20260907-mptcp-snd-una-race-v3-1-65ba0d5f0221@proton.me>
+ <87fb99e7-df73-46b8-97a1-4d6173121ab5@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -90,98 +89,71 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260907125720.516598-1-shardul.b@mpiricsoftware.com>
+In-Reply-To: <87fb99e7-df73-46b8-97a1-4d6173121ab5@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Shardul,
+Hi Paolo,
 
-Thank you for sharing this feedback!
-
-On 07/09/2026 14:57, Shardul Bankar wrote:
-> On 04/09/2026 12:32, Matthieu Baerts wrote:
->> So at the end, it seems like a good thing to have access to various
->> models to cross checks the reviews.
+On 07/09/2026 15:38, Paolo Abeni wrote:
+> On 9/7/26 12:15 PM, quanyeyang@proton.me wrote:
+>> From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+>>
+>> SyzKaller found this data-race:
+>>
+>>   BUG: KCSAN: data-race in __mptcp_retrans / mptcp_incoming_options
+>>
+>>   write (marked) to 0xffff888015e8e5f0 of 8 bytes by interrupt on cpu 0:
+>>    __mptcp_snd_una_update net/mptcp/options.c:1055 [inline]
+>>    mptcp_incoming_options+0x6a3/0x1ac0 net/mptcp/options.c:1183
+>>    tcp_data_queue+0x101b/0x2440 net/ipv4/tcp_input.c:5583
+>>    tcp_rcv_established+0x684/0x1fc0 net/ipv4/tcp_input.c:6654
+>>    tcp_v4_do_rcv+0x35c/0x690 net/ipv4/tcp_ipv4.c:1866
+>>    tcp_v4_rcv+0x1d91/0x25a0 net/ipv4/tcp_ipv4.c:2263
+>>    ip_protocol_deliver_rcu+0x46/0x280 net/ipv4/ip_input.c:207
+>>    ip_local_deliver_finish+0x190/0x270 net/ipv4/ip_input.c:241
+>>    NF_HOOK include/linux/netfilter.h:318 [inline]
+>>    NF_HOOK include/linux/netfilter.h:312 [inline]
+>>    ip_local_deliver+0xe3/0x210 net/ipv4/ip_input.c:262
+>>    dst_input include/net/dst.h:480 [inline]
+>>    ip_rcv_finish net/ipv4/ip_input.c:492 [inline]
+>>    NF_HOOK include/linux/netfilter.h:318 [inline]
+>>    NF_HOOK include/linux/netfilter.h:312 [inline]
+>>    ip_rcv+0x200/0x220 net/ipv4/ip_input.c:612
+>>    __netif_receive_skb_one_core+0xeb/0x110 net/core/dev.c:6178
+>>    __netif_receive_skb+0x1f/0xc0 net/core/dev.c:6291
+>>    process_backlog+0x168/0x360 net/core/dev.c:6642
+>>    __napi_poll+0x71/0x460 net/core/dev.c:7706
+>>    napi_poll net/core/dev.c:7769 [inline]
+>>    net_rx_action+0x6f8/0x810 net/core/dev.c:7926
+>>    handle_softirqs+0xc9/0x2e0 kernel/softirq.c:622
+>>    run_ksoftirqd kernel/softirq.c:1063 [inline]
+>>    run_ksoftirqd+0x20/0x30 kernel/softirq.c:1055
+>>    smpboot_thread_fn+0x287/0x520 kernel/smpboot.c:160
+>>    kthread+0x1f2/0x240 kernel/kthread.c:436
+>>    ret_from_fork+0x321/0x440 arch/x86/kernel/process.c:158
+>>    ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+>>
+>>   read to 0xffff888015e8e5f0 of 8 bytes by task 24 on cpu 1:
+>>    mptcp_rtx_head net/mptcp/protocol.h:487 [inline]
+>>    __mptcp_retrans+0x169/0x8f0 net/mptcp/protocol.c:2759
+>>    mptcp_worker+0x6a6/0xb30 net/mptcp/protocol.c:2980
+>>    process_one_work+0x3ee/0x970 kernel/workqueue.c:3275
+>>    process_scheduled_works kernel/workqueue.c:3358 [inline]
+>>    worker_thread+0x3c3/0x730 kernel/workqueue.c:3439
+>>    kthread+0x1f2/0x240 kernel/kthread.c:436
+>>    ret_from_fork+0x321/0x440 arch/x86/kernel/process.c:158
+>>    ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
 > 
-> Agreed, and that is where I ran into something worth passing on. If the
-> plan is for people to run reviews locally, and more than one model at
-> that, then what a local run costs decides whether anyone actually keeps
-> doing it.
+> I think this race is not present in the current tree, after commit
+> 96d846e3e2a7 ("mptcp: let the retrans scheduler do its job").
+Thank you for having checked. Good point, this old patch is maybe
+outdated, I didn't check.
 
-Just to avoid confusions, even if running multiple models *should* be
-better (and/or having one cross-reviewing the comment from another one),
-running one is already good, but only for those who are able to, i.e.
-companies already using them. And that's what netdev maintainers expect,
-so it somehow applies to MPTCP as well. I'm clearly not going to enforce
-it, especially to individuals (like me) or people who don't want to use
-for various reasons. The idea is "if your company is using LLM, then use
-it to pre-review patches to save cycles".
-
-> I ran Sashiko locally against my Claude subscription, using the Claude
-> Code CLI provider rather than an API key. One patch took about 45
-> minutes and consumed essentially a whole usage window. That window is
-> five hours, so it works out at roughly one patch per window on that
-> setup, which was enough to have me scheduling runs around the reset
-> rather than just running them when I wanted a review. That timing was in
-> August, on a build from before the declarative workflow engine landed,
-> so I cannot say the 45 minutes still holds. What has not changed is the
-> shape of it: the CLI provider still starts a separate claude process per
-> stage, with no session carried between them, so the context is built and
-> sent again for each one.
-> 
-> The part I did not know at the time is that there are two quite
-> different things here. "sashiko init" then "sashiko review" runs the
-> full staged pipeline, one process per stage, and that is the expensive
-> one. The Sashiko repository also ships, in the prompt bundle it vendors,
-> a /kreview command that runs the review as a single Claude Code session,
-> so the context is read once instead of once per stage.
-> 
-> /kreview is not mentioned in Sashiko's README, its maintainers guide, or
-> anything under docs/. It is documented only in
-> third_party/prompts/README.md, inside the vendored copy of the review
-> prompts, with the command itself in
-> third_party/prompts/kernel/slash-commands/kreview.md. So anyone
-> following the setup instructions gets the expensive path and has no
-> particular reason to learn the other one exists. That seems worth fixing
-> if the goal is more people running checks before they post.
-
-Good idea!
-
-(I didn't know it could take that long + the window time)
-
-> A few of the things that make a local run costlier than it needs to be
-> look fixable, and I have sent patches for them to the Sashiko project
-> rather than describe them here, since that is where they belong. One is
-> worth a line because of where it does and does not apply: Sashiko can
-> cache model responses so a repeated request is answered from disk rather
-> than sent again, but that setting has no effect on the local path, so
-> retrying a failed run pays for everything a second time. The reviews you
-> see arriving on this list are unaffected, since the daemon that posts
-> them does use the cache.
-
-I do wonder how people use it. Maybe many companies have deployed their
-own Sashiko and local reviews are not common? (but I doubt that)
-
-I would also not be surprised that many people don't care about the
-cost, and if they use an internal ranking, it is possibly even better
-without cache...
-
-> One other thing, unrelated to cost and possibly of wider interest. Of
-> the findings Sashiko has published for this list, the ones it marks as
-> pre-existing are graded higher than the ones it attributes to the patch
-> under review. Roughly 95 percent of the pre-existing ones are High or
-> Critical and not one is Low, against roughly half for the findings
-> attributed to the patch. I had been treating "this was already broken"
-> as a reason to downgrade, and that is not how the tool treats it. The
-> reasoning holds up, since a pre-existing bug is live in the shipping
-> kernel while one introduced by a patch under review will most likely be
-> caught before it merges.
-Note that pre-existing issues don't always need to be fixed as part of a
-series adding a new feature. A message about that in the commit message,
-in the commit note or in reply to Sashiko's email. If the issue is real,
-the impact has not changed with the modification, and the fix is not
-simple, it is enough to create a new ticket on GitHub and look (or
-someone else) at it later.
+Note that on syzkaller side, the last occurrence I had for this issue
+was on the 13th of May, and your patch was in on tree on the 3rd of
+June. I guess it is indeed not needed then. (I don't know why I didn't
+see it after the 13th of May, but there were no reproducers.)
 
 Cheers,
 Matt
