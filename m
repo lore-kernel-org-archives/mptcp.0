@@ -1,578 +1,195 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C2737B402
-	for <mptcp@lists.linux.dev>; Mon,  7 Sep 2026 04:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.176
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788756562; cv=pass; b=GYp9eUO6cfg2wgIfb2Vn1WX755aMMkanuwgkgUPQzinDZoXoVFS0WvCstJZxxZ2GVwEGiCboKq3c2vEpniDmFhHdQDv/uBrY/i75LC7pQ7+aT4LCqXNcnLKUUuo9X321wCVzzTYLc7Bt7fMA4UWx91fXb0jnHtkE1UcaMV54uPE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788756562; c=relaxed/simple;
-	bh=4a+m0nUMf7To+f+QbBYuCxxGnkIf/JVqeGIfkyRz3gw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d7PulTGsk136LJngKb9uxsmXocHgIAi+neRHEuIfIk2JxtoGASk4tTLYG/5EAZpHnI9Q1jjPdu1AUojG6RhMFlKZifU6B6SItdu8g9brOLVQae6sx172X0ypIKTnBrH6OhBuBSyZ89EUeJ+0aS7LZQAgwqHmZwl+zaXI1ez4Ai0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nebusec.ai; spf=pass smtp.mailfrom=nebusec.ai; dkim=pass (2048-bit key) header.d=nebusec.ai header.i=@nebusec.ai header.b=kmfVDLT/; arc=pass smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nebusec.ai
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nebusec.ai
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44CF3890EE
+	for <mptcp@lists.linux.dev>; Mon,  7 Sep 2026 05:50:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788760209; cv=none; b=tOgYH0IVRZFs4N1w5+md61XVAEJzykeUalhZlh43n8WUD5yumBXwDXpDd2kv5/+/lleCoz7rarHsxMJiYMKqh4VimW91U8ZBEKdTR7yXNF/OywImyL9GBFkn5wnlYhG82hIw32oTJZWtr9sh3Pp/e566DSzqlcB+KoOqA3sIOOw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788760209; c=relaxed/simple;
+	bh=AmYyyVBE3ykRiihXjZh+FTHO896Zvpg2qFKIBK3S7Vw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Rv6yq0FCdlRYO6jZTMKoUs3+dqkfX1aJyU6UfcIlz6lHJUGT3WzGEEnHr7KZmglaLaq1ypZdkaZcMjM2t6GYhcf5Viyxgb8xE59AxiKWhxB1/P/niDqZ0m1u+QLgTi/xbYtbYSdWiptZgWYt6/+Tbw/OUEKws+4N5VkHfwWlS7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AXcM0FoQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nebusec.ai header.i=@nebusec.ai header.b="kmfVDLT/"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-3a20f06cce6so32036511fa.1
-        for <mptcp@lists.linux.dev>; Sun, 06 Sep 2026 21:49:20 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788756558; cv=none;
-        d=google.com; s=arc-20260327;
-        b=kXcrEnMp7yACEVj1HLhW2pqxyC+K+JucfRP8VCQlgZM72UWc7yMXUNSzseN73+c88u
-         ms2ptOE37xa2JTWUq8IoDxn0BSEpCJ2aoWtBwBK+vPgaAi7IPOGEvDGcSuEbgD6Z10fK
-         mHCwL5LQG2reZObBxThu+kqbiGboqE2g/A7vvtFtDSpEydxFBGcX9gn+vaWZ9Sr41cyD
-         Gr6pMvpv/U5FhzVRlO/E5/QMKM3sJUuGBQFA+huAvJEa9mmlElZeg2L2QQWshis8kxUm
-         lBpKStYQoyM49HDWxm4Tj0sqxSvrB+JfIyL/2ESgnFNuZserfQ27MMjpZg8VZJDu1kTO
-         gUeA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=BHVfyifgaW3rIwFNS4IEU0sZK0EOa76cPRMqsXLt5dE=;
-        fh=i5NWQ98+gvgafpbV9VOIrTWu7ryDZFPyzkibTuEeOEs=;
-        b=Cn6ItUplupIMcB/a4LodaIXrg4eHfieJj1xTXdgkMFI9tUNinaADDf4GiPkTAmTN5H
-         2jON2XnCHP+f7k+WEdKObUW+pLSLMyvLD2lJLXiP9RjnN6GDEnMinqVCDxb2wfdPkCvH
-         mtCQrnGnXK5V/NNjfxN4NvK0MQo6JGO23ohFcq+Rc7hDw9P4G3IwrG1YLFqg6km4iJgZ
-         /Unlg5LAg/5m/yN9cxRGSJec+pYQxWHErhRHPjlEITVsNQNpZyY8jNrvT2fxL3UIkBC9
-         Jx4IThKdzURqIklimO7y1eMYE++fyh4ExjqpxNXdawGH+moGRdv4njwb4YzRITYd5zzM
-         QjSA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=nebusec.ai; s=google; t=1788756558; x=1789361358; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=BHVfyifgaW3rIwFNS4IEU0sZK0EOa76cPRMqsXLt5dE=;
-        b=kmfVDLT/b82Ew0qHmqJkCn/ICYuawgUTxsjI4KIfsuZYPCcc4fZq5+MPW9EHz/HVFq
-         ctzA44cuIVKlYsZnYSL1qSsHsuQnYJbrp5GwIFEJb74YDFfGWD482NmOo0HhfWhYqdTQ
-         nQZ0WVVLcAPD9K8GMQDGbHXR3tUS6ovFVDG7gcTBy4/zth51FQb5uBuXvK3OcJO6M4j1
-         lnoL0fLL1HhSYSE9aqMQQeTHBkuCv/DziJbOGKp+cGsiaNrASd+5WUyrFlEWmE/yj4PN
-         QRDVbHDAJxkNkkOKlXgFUmvRASQFzDVPnn5Y50NAx3vNZ4h+2fk5tZ4FExwRRN4DHLtd
-         BH5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788756558; x=1789361358;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=BHVfyifgaW3rIwFNS4IEU0sZK0EOa76cPRMqsXLt5dE=;
-        b=TlnG43XRgj+nCK43UYxC2+ehDaZ7eBDN9q77FbAn9gnY0ZJJZz0Ux/TB9cmwGnEI9J
-         Y4RkPbEG69v1/Bt/IBau0yXr4IenLqYDc6eiMumwCIJRjjgOfwePoEWXfCo5vsDV9R7L
-         27+OYuUqqjXT8/9jQdF3d2KDyH7rwlVfJ/fU4dILUIdiy/Db4XifpnkeQ/zO2WE+gtu6
-         h2rpPALgIEFYp59uYgTfDhwABSAPl0h6IA7jMW59Xkdm7DZfNZmBSVEfaNV1xkFBbEkk
-         WFcdLbGooNqFFFKNQtYnX/yb8RqNu42MjnJm6caC+mLhu7HXF1PBfWmK0CoQhhBn9noM
-         j3fg==
-X-Forwarded-Encrypted: i=1; AKwUvBwMzQiL23Vdgy0SD5+35omFzUTY1r9s10atA3s3cnhW4OXKU6lXm3HLE/B5I4/yCV2b8YzUXA==@lists.linux.dev
-X-Gm-Message-State: AFuF++kdwJJyZQgkbMJRFkLWnaehoTunpKegu4v3CXl2aDjBl7Z5EWMn
-	olsiIwte/AhYPw7JzS89lzxtpvVc3fZLtzL/cZRLiDkjwfLi+UnI+mTl3SB+Azg5huYgphQL0fH
-	y2+k52BxEnPA3sYX3AjJjZbS33199ebepfmhI7EH0fuw=
-X-Gm-Gg: AYBFou1mndWm7bQbXi20u/AtBhF7cPasVDv9bDlPBiJVemtrXRldYIaLoew81YOc+5k
-	XFE0io9JDDc3lFkIqL0cqIhuHvaRxG/urTxXLed5ophZc1JlWeQWmeiGr+EGjyOSR8/z6TCHx19
-	ebz9ygCv2zMblSTMPzpP944DgeODYTYv/7w+LnMWFmIAZ2jTiu8JeaHJ7Vtyu/4gdkG6rBm08xi
-	2s3vjw8tysHNUYE+5qKwAgsaVEtmVflJ1I5rHHU+1edlUXaSh8UiwoTAcM4z0QUG6JeqrIc5UuT
-	htfyRQqpLl5VpaGRR1Rb83eFrKqXTv5BXdUDZBcm5rzTsXvwS7yg57R1ZmF+iYDvffnb5zHZ2Lk
-	=
-X-Received: by 2002:a2e:a808:0:b0:3a3:364:f783 with SMTP id
- 38308e7fff4ca-3a35b5ee8dcmr27990621fa.11.1788756558095; Sun, 06 Sep 2026
- 21:49:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AXcM0FoQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAD6B1F00A3A;
+	Mon,  7 Sep 2026 05:50:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788760207;
+	bh=dwzqH3fxLAq/Iv7oHrFZe6ol0B+tlY3anP0rxgOPP4g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=AXcM0FoQPyMH2ylrYWulF2PBCQfrJ8nhpnNMDFAutZtsQ1uTaNVOxJyC1e5wIObcV
+	 Cn9M6p4nVoHGCgUXzBd5ecx3DqAQftiHujH5qIVKxQsnjitmSRht7rqqsiOA5+p00r
+	 qURGvORZtl+BAesdN+076x3GD2kJFiZI9qt3alkQNByGM+z+VIFBJDeS3w8+KlK1E3
+	 XqImZZxrROaI1ujGD2GWOa/NK5pRBpz85M2EPtg0vP9Q8szIbrmd00JfPDXLBr20u4
+	 SAxolzPsXZb5vUeVwuj8Cp4yutaxWWzp+jr4TS2gWgGGInyAbe8o/iIsgt7GBCd7Nk
+	 14jOTVgzT0rtQ==
+Message-ID: <afad1474-88ac-413c-b81c-1ff1de2c6738@kernel.org>
+Date: Mon, 7 Sep 2026 07:50:04 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <db1f34ca8461c7b0dc5ec504ea1b99c24b909e34.1788248601.git.zihanx@nebusec.ai>
- <178875495568.219967.11621753663025675535@kernel.org>
-In-Reply-To: <178875495568.219967.11621753663025675535@kernel.org>
-From: zihan xi <zihanx@nebusec.ai>
-Date: Mon, 7 Sep 2026 12:49:07 +0800
-X-Gm-Features: AcwNN1V2ewuj06MBLkUFsxxzuExG1XuLJXINLUPg6wVvERHAMZf95XYnMI64nCU
-Message-ID: <CAANe3eTFpY9i9xoVK1zsX+uSxUjGG-jH9RP7xNEofHbK1Zfxkw@mail.gmail.com>
-Subject: Re: [PATCH net v2 2/2] mptcp: diag: bound listener bucket lock hold
-To: netdev-bot+sashiko@kernel.org
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	mptcp@lists.linux.dev, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, ncardwell@google.com, 
-	kuniyu@google.com, matttbe@kernel.org, martineau@kernel.org, 
-	geliang@kernel.org, gnault@redhat.com, fw@strlen.de, stable@vger.kernel.org, 
-	vega@nebusec.ai
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next 2/2] selftests: mptcp: convert iptables to
+ nftables for mptcp_join.sh
+Content-Language: fr
+To: Hangbin Liu <hangbin.liu@linux.dev>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260902-mptcp_nft-v1-0-559caa16f410@kylinos.cn>
+ <20260902-mptcp_nft-v1-2-559caa16f410@kylinos.cn>
+ <513e6559-a06a-45d8-a8b7-72b3a1a77e71@kernel.org> <apjU-uM8dvxnVcaP@fedora>
+ <6c9dd599-e9d2-470f-bc7f-2af2e9d003b6@kernel.org> <app68h1_rYkPBpvn@fedora>
+ <aa5678f7-7089-4049-9120-6604372667ac@kernel.org> <ap4NEvXYLC1U8hqO@fedora>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <ap4NEvXYLC1U8hqO@fedora>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Sep 7, 2026 at 12:22=E2=80=AFPM <netdev-bot+sashiko@kernel.org> wro=
-te:
->
-> Thank you for your contribution! Sashiko AI review found 6 potential
-> issue(s) to consider:
->
-> Critical: 0 =C2=B7 High: 1 =C2=B7 Medium: 3 =C2=B7 Low: 2
->
-> - [High] Use-after-free introduced by the new deferred processing loop in
->   mptcp_diag_dump_listeners().
-> - [Medium] The patch silently changes which MPTCP listeners the dump
->   reports, and the commit message does not mention it.
-> - [Medium] mptcp_diag_dump_listeners() mixes two incompatible counting
->   bases for the resume index diag_ctx->l_num.
-> - [Medium] mptcp_diag_dump_listeners() performs all
->   identity/authorization checks on the parent MPTCP socket=E2=80=A6
-> - [Low] Commit message of "mptcp: diag: bound listener bucket lock hold"
->   carries Fixes: 4fa39b701ce9 + Cc: stable + Reported-by:, but never=E2=
-=80=A6
-> - [Low] In the new post-lock loop of mptcp_diag_dump_listeners()
->   (net/mptcp/mptcp_diag.c), `tmp =3D ctx ?
->
-> --
->
-> mptcp: diag: bound listener bucket lock hold
->
-> This reworks mptcp_diag_dump_listeners() so that the listener bucket lock=
- is
-> only held while collecting up to MPTCP_DIAG_BULK_SZ referenced listener
-> sockets, with the ULP/property re-checks, the parent msk reference and
-> sk_diag_dump() moved outside the lock.  A referenced dump cursor is kept =
-in
-> cb->data so later batches resume after the previous listener instead of
-> rescanning the bucket prefix.
->
-> v1 Link: https://lore.kernel.org/all/cover.1785307984.git.zihanx@nebusec.=
-ai/
->
-> > diff --git a/include/linux/inet_diag.h b/include/linux/inet_diag.h
-> > index 6ccd32bc48f91..4859e77a28c7a 100644
-> > --- a/include/linux/inet_diag.h
-> > +++ b/include/linux/inet_diag.h
-> > @@ -39,6 +39,7 @@ enum inet_diag_dump_cursor_type {
-> >       INET_DIAG_DUMP_CURSOR_TCP_LISTEN,
-> >       INET_DIAG_DUMP_CURSOR_TCP_BIND,
-> >       INET_DIAG_DUMP_CURSOR_TCP_EHASH,
-> > +     INET_DIAG_DUMP_CURSOR_MPTCP_LISTEN,
-> >  };
->
-> [Severity: Low]
-> Two questions about the changelog for this one.
->
-> First, the message says the lock hold time "can therefore grow with the
-> number of sockets visited", but it never states the observed symptom.  Wa=
-s
-> this a soft lockup, an RCU stall, or measured contention on ilb->lock?  G=
-iven
-> the Fixes: 4fa39b701ce9 and Cc: stable tags plus the Reported-by:, could =
-the
-> symptom be spelled out?
->
-> Second, could the backport dependency be mentioned?  enum
-> inet_diag_dump_cursor_type does not exist in the tree this applies on top=
- of:
->
->   git grep inet_diag_dump_cursor_type <base>   -> no match
->
-> The whole enum, cb_data->dump_cursor, dump_cursor_slot, dump_cursor_type =
-and
-> inet_diag_dump_clear_cursor() come from the immediately preceding patch o=
-f
-> this series, "tcp: diag: bound bucket lock hold in tcp_diag_dump()".  Sta=
-ble
-> trees carrying 4fa39b701ce9 cannot take this patch on its own, and nothin=
-g in
-> the message says so.
->
-> > diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
-> > index 136c2d05c0eeb..37b33ea5d79de 100644
-> > --- a/net/mptcp/mptcp_diag.c
-> > +++ b/net/mptcp/mptcp_diag.c
-> > @@ -12,6 +12,19 @@
-> >  #include <net/netlink.h>
-> >  #include "protocol.h"
-> >
-> > +/* Process a bounded number of listeners per bucket lock hold. */
-> > +#define MPTCP_DIAG_BULK_SZ 16
-> > +
-> > +static void mptcp_diag_save_cursor(struct inet_diag_dump_data *cb_data=
-,
-> > +                                unsigned int slot, struct sock *sk)
-> > +{
-> > +     sock_hold(sk);
-> > +     inet_diag_dump_clear_cursor(cb_data);
-> > +     cb_data->dump_cursor =3D sk;
-> > +     cb_data->dump_cursor_slot =3D slot;
-> > +     cb_data->dump_cursor_type =3D INET_DIAG_DUMP_CURSOR_MPTCP_LISTEN;
-> > +}
-> > +
->
-> [ ... ]
->
-> > @@ -84,64 +98,102 @@ static void mptcp_diag_dump_listeners(struct sk_bu=
-ff *skb, struct netlink_callba
-> >       hinfo =3D net->ipv4.tcp_death_row.hashinfo;
-> >
-> >       for (i =3D diag_ctx->l_slot; i <=3D hinfo->lhash2_mask; i++) {
-> > +             struct sock *tmp, *sk, *sk_arr[MPTCP_DIAG_BULK_SZ];
-> >               struct inet_listen_hashbucket *ilb;
-> > +             int num_arr[MPTCP_DIAG_BULK_SZ];
-> >               struct hlist_nulls_node *node;
-> > -             struct sock *sk;
-> > -             int num =3D 0;
-> > +             int accum, idx, num, ret;
-> > +             struct sock *cursor;
-> > +             bool use_cursor;
-> >
-> > +resume_listen_walk:
-> > +             num =3D 0;
-> > +             accum =3D 0;
-> >               ilb =3D &hinfo->lhash2[i];
-> > +             ret =3D 0;
-> >
-> >               rcu_read_lock();
-> >               spin_lock(&ilb->lock);
-> > -             sk_nulls_for_each(sk, node, &ilb->nulls_head) {
-> > -                     const struct mptcp_subflow_context *ctx =3D mptcp=
-_subflow_ctx(sk);
-> > -                     struct inet_sock *inet =3D inet_sk(sk);
-> > -                     int ret;
-> > -
-> > -                     if (num < diag_ctx->l_num)
-> > -                             goto next_listen;
-> > -
-> > -                     if (!ctx || strcmp(inet_csk(sk)->icsk_ulp_ops->na=
-me, "mptcp"))
-> > -                             goto next_listen;
-> > -
-> > -                     sk =3D ctx->conn;
-> > -                     if (!sk || !net_eq(sock_net(sk), net))
-> > -                             goto next_listen;
-> > -
-> > -                     if (r->sdiag_family !=3D AF_UNSPEC &&
-> > -                         sk->sk_family !=3D r->sdiag_family)
-> > -                             goto next_listen;
-> > -
-> > -                     if (r->id.idiag_sport !=3D inet->inet_sport &&
-> > -                         r->id.idiag_sport)
-> > +             cursor =3D cb_data->dump_cursor;
-> > +             use_cursor =3D cursor &&
-> > +                          cb_data->dump_cursor_type =3D=3D
-> > +                          INET_DIAG_DUMP_CURSOR_MPTCP_LISTEN &&
-> > +                          cb_data->dump_cursor_slot =3D=3D i &&
-> > +                          inet_sk_state_load(cursor) =3D=3D TCP_LISTEN=
- &&
-> > +                          !hlist_nulls_unhashed(&cursor->sk_nulls_node=
-) &&
-> > +                          cursor->sk_nulls_node.pprev !=3D LIST_POISON=
-2 &&
-> > +                          inet_lhash2_bucket_sk(hinfo, cursor) =3D=3D =
-ilb;
-> > +             node =3D use_cursor ? cursor->sk_nulls_node.next :
-> > +                                 ilb->nulls_head.first;
-> > +             hlist_nulls_for_each_entry_from(sk, node, sk_nulls_node) =
-{
-> > +                     if (!use_cursor && num < diag_ctx->l_num)
-> >                               goto next_listen;
->
-> [Severity: Medium]
-> Are the two resume mechanisms here using the same counting base for
-> diag_ctx->l_num?
->
-> This test counts entries from the bucket head, but at resume_listen_walk =
-num
-> is reset to 0 and, when use_cursor is true, the walk starts at
-> cursor->sk_nulls_node.next, i.e. mid-bucket.  The values stashed in num_a=
-rr[]
-> and later stored are therefore cursor-relative and bounded by 0..15:
->
->         if (ret >=3D 0) {
->                 ret =3D sk_diag_dump(tmp, skb, cb, r, net_admin);
->                 if (ret < 0)
->                         num =3D num_arr[idx];
->         }
->         ...
->         if (ret < 0) {
->                 diag_ctx->l_slot =3D i;
->                 diag_ctx->l_num =3D num;
->                 return;
->         }
->
-> Walking a bucket with more than 16 matching listeners:
->
->   batch 1: 16 listeners dumped, cursor saved on e15
->   goto resume_listen_walk with diag_ctx->l_num =3D 0, use_cursor true, so=
- num
->     now counts from e16
->   skb fills at idx 5, so diag_ctx->l_num =3D 5 while the real bucket offs=
-et
->     is 21
->   the cursor socket is closed before the next recvmsg(), use_cursor becom=
-es
->     false, and the walk resumes at bucket position 5
->
-> Does that re-emit e5..e19, and, if entries were removed in the meantime a=
-nd
-> positions shifted, silently drop listeners that were never reported?
->
-> The peer implementation of the same cursor protocol from the preceding pa=
-tch,
-> tcp_diag_dump(), zeroes the positional counter when the cursor is unusabl=
-e:
->
->         node =3D use_cursor ? cursor->sk_nulls_node.next : ilb->nulls_hea=
-d.first;
->         if (!use_cursor)
->                 s_num =3D 0;
->
-> Should mptcp_diag_dump_listeners() do the same so the two bases are never
-> mixed?  The intra-call restart also forces diag_ctx->l_num =3D 0 before g=
-oto
-> resume_listen_walk, so a cursor invalidated between lock drops restarts t=
-he
-> bucket at the head within a single dump call.
->
-> >                       if (!refcount_inc_not_zero(&sk->sk_refcnt))
-> >                               goto next_listen;
-> >
-> > -                     ret =3D sk_diag_dump(sk, skb, cb, r, net_admin);
-> > -
-> > -                     sock_put(sk);
-> > -
-> > -                     if (ret < 0) {
-> > -                             spin_unlock(&ilb->lock);
-> > -                             rcu_read_unlock();
-> > -                             diag_ctx->l_slot =3D i;
-> > -                             diag_ctx->l_num =3D num;
-> > -                             return;
-> > -                     }
-> > -                     diag_ctx->l_num =3D num + 1;
-> > -                     num =3D 0;
->
-> [Severity: Medium]
-> Removing this "l_num =3D num + 1; num =3D 0;" pair changes which listener=
-s the
-> dump reports, and the changelog does not mention it.
->
-> In the pre-patch loop the skip test was "if (num < diag_ctx->l_num)" whil=
-e
-> num was reset to 0 after every successful dump and l_num kept growing, so=
- for
-> a bucket e0..e6 the emitted set was e0, e1, e3, e6:
->
->   e0 dumped -> l_num =3D 1, num =3D 0 then ++num =3D 1
->   e1 dumped -> l_num =3D 2, num =3D 1
->   e2 hits 1 < 2 and is skipped
->   e3 dumped -> l_num =3D 3
->   e4, e5 skipped
->
-> The new code keeps num monotonic and applies the skip test only in the
-> non-cursor fallback, so every collected listener is processed.  Is that t=
-he
-> actual user-visible defect being fixed here?  ss -Ml output changes (more
-> listeners reported) on any host with three or more MPTCP listeners hashin=
-g
-> into the same lhash2 bucket, and this seems worth stating in the message,
-> along with whether it belongs in the same patch as the lock-hold change.
->
-> > +                     num_arr[accum] =3D num;
-> > +                     sk_arr[accum] =3D sk;
-> > +                     if (++accum =3D=3D MPTCP_DIAG_BULK_SZ)
-> > +                             break;
-> >  next_listen:
-> >                       ++num;
-> >               }
-> >               spin_unlock(&ilb->lock);
-> >               rcu_read_unlock();
-> >
-> > +             for (idx =3D 0; idx < accum; idx++) {
-> > +                     const struct mptcp_subflow_context *ctx;
-> > +                     const struct tcp_ulp_ops *ulp_ops;
-> > +                     struct inet_sock *inet;
-> > +
-> > +                     sk =3D sk_arr[idx];
-> > +                     rcu_read_lock();
-> > +                     ctx =3D rcu_dereference(inet_csk(sk)->icsk_ulp_da=
-ta);
-> > +                     ulp_ops =3D READ_ONCE(inet_csk(sk)->icsk_ulp_ops)=
-;
-> > +                     inet =3D inet_sk(sk);
-> > +                     tmp =3D ctx ? ctx->conn : NULL;
->
-> [Severity: High]
-> Can this read freed memory?  The rcu_read_lock() here is entered after
-> spin_unlock(&ilb->lock) and rcu_read_unlock() above, so it cannot extend =
-a
-> grace period that already started.
->
-> The collection loop only took sk_refcnt on the listener subflow, which do=
-es
-> not keep the ULP context alive:
->
->   __tcp_close()
->     tcp_set_state(sk, TCP_CLOSE)
->     inet_unhash(sk)               /* takes ilb->lock, free once diag drop=
-s it */
->     inet_csk_destroy_sock()
->       sk->sk_prot->destroy(sk)
->         tcp_v4_destroy_sock()
->           tcp_cleanup_ulp()
->             subflow_ulp_release()
->
-> and net/mptcp/subflow.c:subflow_ulp_release() drops the msk reference and
-> frees the context:
->
->         sk =3D ctx->conn;
->         if (sk) {
->                 ...
->                 sock_put(sk);
->         }
->         mptcp_subflow_ops_undo_override(ssk);
->         if (release)
->                 kfree_rcu(ctx, rcu);
->
-> net/ipv4/tcp_ulp.c:tcp_cleanup_ulp() clears only icsk_ulp_ops:
->
->         if (icsk->icsk_ulp_ops->release)
->                 icsk->icsk_ulp_ops->release(sk);
->         module_put(icsk->icsk_ulp_ops->owner);
->
->         icsk->icsk_ulp_ops =3D NULL;
->
-> icsk_ulp_data is never unpublished on this path (subflow_ulp_fallback() d=
-oes
-> rcu_assign_pointer(icsk->icsk_ulp_data, NULL), this path does not).  If
-> kfree_rcu(ctx) was queued before this loop iteration re-entered
-> rcu_read_lock(), the grace period does not cover this reader, so
-> rcu_dereference(inet_csk(sk)->icsk_ulp_data) can return a freed and reuse=
-d
-> slab object, and ctx->conn is dereferenced before the !ulp_ops guard is e=
-ven
-> evaluated.
->
-> The loop is also preemptible for up to 15 preceding sk_diag_dump() /
-> inet_diag_bc_sk() invocations with request-supplied bytecode, which widen=
-s the
-> window.  Does the commit message claim ("After dropping the lock, read
-> icsk_ulp_data with rcu_dereference()") hold here, or do ctx and the paren=
-t msk
-> reference have to be acquired while ilb->lock is still held, as the pre-p=
-atch
-> code did?
->
-> [Severity: Low]
-> Separately, is it intentional that ctx->conn is loaded before the check t=
-hat
-> the ULP is actually "mptcp"?  The collection loop under ilb->lock no long=
-er
-> filters by ULP at all, so listeners with a foreign ULP context now reach =
-this
-> loop, and the read happens at offsetof(struct mptcp_subflow_context, conn=
-)
-> inside an object of an unrelated type.
->
-> net/xfrm/espintcp.c:espintcp_init_sk() publishes its own object with
-> rcu_assign_pointer(icsk->icsk_ulp_data, ctx) and, unlike tls_init(), has =
-no
-> TCP-state restriction, so an unprivileged setsockopt(TCP_ULP, "espintcp")
-> followed by listen() puts such a socket into lhash2.
->
-> struct espintcp_ctx is larger than that offset today, so the read stays i=
-nside
-> the allocation and the loaded value is discarded by the failing strcmp().
-> Still, the pre-patch code did the strcmp() first and never touched a fore=
-ign
-> context.  Could the ctx->conn load be moved after the ULP name check?
->
-> > +                     if (!ctx || !ulp_ops || strcmp(ulp_ops->name, "mp=
-tcp") ||
-> > +                         !tmp || !net_eq(sock_net(tmp), net) ||
-> > +                         (r->sdiag_family !=3D AF_UNSPEC &&
-> > +                          tmp->sk_family !=3D r->sdiag_family) ||
-> > +                         (r->id.idiag_sport !=3D inet->inet_sport &&
-> > +                          r->id.idiag_sport) ||
-> > +                         !refcount_inc_not_zero(&tmp->sk_refcnt)) {
-> > +                             rcu_read_unlock();
-> > +                             goto processed_listener_sk;
-> > +                     }
-> > +                     rcu_read_unlock();
-> > +                     if (ret >=3D 0) {
-> > +                             ret =3D sk_diag_dump(tmp, skb, cb, r, net=
-_admin);
-> > +                             if (ret < 0)
-> > +                                     num =3D num_arr[idx];
-> > +                     }
-> > +                     sock_put(tmp);
->
-> [Severity: Medium]
-> Does this need a re-validation after refcount_inc_not_zero(&tmp->sk_refcn=
-t)?
->
-> All the identity and scoping checks on the parent msk (net_eq(sock_net(tm=
-p),
-> net), sdiag_family, idiag_sport) run before the reference is taken, and
-> nothing is re-checked afterwards.  mptcp_prot uses SLAB_TYPESAFE_BY_RCU:
->
-> net/mptcp/protocol.c:
->         .slab_flags     =3D SLAB_TYPESAFE_BY_RCU,
->
-> so rcu_read_lock() only guarantees type stability, not identity.  If
-> subflow_ulp_release() already dropped the last reference via
-> sock_put(ctx->conn), the object can be recycled as a different MPTCP sock=
-et
-> inside this reader's RCU section, refcount_inc_not_zero() then succeeds, =
-and
-> sk_diag_dump(tmp, ...) serializes that socket's addresses, ports, uid, co=
-okie
-> and state into the reply, possibly from another namespace.
->
-> The in-tree pattern for this slab, net/mptcp/token.c:mptcp_token_get_sock=
-(),
-> re-checks after the acquisition:
->
->         if (!refcount_inc_not_zero(&sk->sk_refcnt))
->                 goto not_found;
->
->         if (READ_ONCE(msk->token) !=3D token ||
->             !net_eq(sock_net(sk), net)) {
->
-> Should the same re-check be done here?  Pre-patch the conn read and the m=
-sk
-> refcount acquisition both happened under ilb->lock with the subflow still
-> hashed, so the reference held by ctx was still alive.
->
-> > +processed_listener_sk:
-> > +                     if (ret >=3D 0)
-> > +                             mptcp_diag_save_cursor(cb_data, i, sk);
-> > +                     sock_put(sk);
-> > +             }
-> > +
-> > +             if (ret < 0) {
-> > +                     diag_ctx->l_slot =3D i;
-> > +                     diag_ctx->l_num =3D num;
-> > +                     return;
-> > +             }
-> > +
-> >               cond_resched();
-> > +
-> > +             if (accum =3D=3D MPTCP_DIAG_BULK_SZ) {
-> > +                     diag_ctx->l_num =3D 0;
-> > +                     goto resume_listen_walk;
-> > +             }
-> > +
-> > +             inet_diag_dump_clear_cursor(cb_data);
-> >               diag_ctx->l_num =3D 0;
-> >       }
-> >
-> > +     inet_diag_dump_clear_cursor(cb_data);
-> >       diag_ctx->l_num =3D 0;
-> >       diag_ctx->l_slot =3D i;
-> >  }
->
-> --
-> Sashiko AI review =C2=B7 https://netdev-ai.bots.linux.dev/sashiko/#/patch=
-set/cover.1788248601.git.zihanx%40nebusec.ai
+Hi Hangbin,
 
-- UAF on icsk_ulp_data/ctx after dropping ilb->lock: valid
-- mixing cursor-relative and absolute l_num: valid
-- dropping "l_num =3D num + 1; num =3D 0" changes the reported set:
-  valid as a behavior change, not a regression
-- no re-check after msk refcount_inc_not_zero(): valid for the
-  lockless path
-- changelog/stable dependency on 0001: valid as documentation
-- loading ctx->conn before the ULP name check: valid as ordering,
-  not currently an OOB
+On 07/09/2026 03:02, Hangbin Liu wrote:
+> 
+> Hi Matthieu,
+> On Fri, Sep 04, 2026 at 06:40:02PM +0200, Matthieu Baerts wrote:
+>>>
+>>> Yes, if not in purpose, I feel flush the whole table is dangerous.
+>>> Some rules may still in using in later testing.
+>>
+>> Indeed. But in our case, each subtest uses a dedicated netns. Plus only
+>> some tests add Netfilter rules. At the end, it is clearer to delete a
+>> specific rule, but I think that makes sense only if the nft_handle var
+>> is set locally, and used a few lines below.
+>>
+>> If a global nft_handle var is used, that doesn't seem clear, and I think
+>> it would be clearer/easier to:
+>>
+>> - either delete a specific rule (but I don't think that's supported)
+>>
+>> - get the handle from the test and use it to delete the rule
+>>
+>> - or flush the table.
+>>
+>> So up to you, but probably best to avoid using nft_handle as global var.
+> 
+> Thanks, endpoint_tests is the only test that could delete iptables rules.
+> I use the nft_handle mainly because the iptables also delete rules with
+> specific match (iptables -D OUTPUT -s .. -p tcp -j REJECT) other than flush
+> the table directly.
+> 
+> endpoint_tests
+>   - reset_with_tcp_filter
+>     - iptables -D
+>     - iptables -I
+>     - iptables -D
+>   - reset_with_events
+>     - iptables -I
+>     - iptables -D
+>   - reset_with_tcp_filter
+>     - iptables -D
+> 
+> While from the logic it should be safe to flush the tables. I can avoid the
+> nft_handle in v4 (after v3 review).
+
+Just to be sure it is clear: nft_handle can be used, just better to
+avoid using it globally I think. An alternative could be to pass a local
+nft_handle to reset_with_tcp_filter and set it there, but in bash,
+that's not very clear either.
+
+> Just one question, why we use
+> iptables -I here? Is there any intend? If not I will use "add" instead of
+> "insert" in nft rules.
+
+I don't remember. I would say probably best not to change the behaviour
+during the transition. We could add a commit switching back to "add",
+but if that doesn't change anything, probably easier for the reviewers
+to keep "insert" (or add an explicit message in the commit message
+explaining why it is better to change).
+
+>>> However, I cannot perform a reset on the b4 branch, and git rebase also failed.
+>>> These steps have blocked me a little. I have to manually recreate the b4 branch,
+>>> or perhaps avoid using b4 when working on mptcp changes.
+>>
+>> You need to use `|git rebase --onto` instead, e.g.
+>>
+>>   git fetch origin  # adapt here and below if needed
+> 
+> For export branch, I think git fetch is not enough? I have to reset
+> to latest net/net-next merge commit and pull on that.
+
+I'm not sure to understand. 'git fetch' with the right remote should get
+the latest <remote>/export branch ...
+
+>>   git rebase --onto origin/export "$(b4 prep --show-info base-commit)"
+
+... then this command will use this new ref. Why do you need to reset
+net/net-next merge commit?
+
+> Yes, it works! New git usage learned :)
+> 
+>>
+>> Can you check if it works for you, please? (so I can update the wiki
+>> page if needed)
+>>
+>> The alternative is to use `for-review`, with a continuous history, see:
+>>
+>>   https://github.com/multipath-tcp/mptcp_net-next/wiki/Git-Branches
+> 
+> I will try this tree next time
+
+Up to you, but "export" is good as well, and required when using "git
+blame".
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
