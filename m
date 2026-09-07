@@ -1,200 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011019.outbound.protection.outlook.com [40.107.130.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B42475013CA
-	for <mptcp@lists.linux.dev>; Mon,  7 Sep 2026 15:13:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788793986; cv=none; b=UHipBz+keN2M8NiCDBhd3IUd6W0Qyg0U+8WEYnuene1kOhhRlw1bjPsdBXLBnA7HrD419Wnur2zDLnMqiIcLRjBjvnAfQJRIGuJTi6ooOSVTWOS7qy5gdTonscxjGU3KrDnILbHuMMRPc5Gw/vM1OI3siQylq63ZuHjCClshZek=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788793986; c=relaxed/simple;
-	bh=6we+t01FWaNIeEVkQn8BPVRqCbjoG7xeFNSyhUfCHYI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=cLMpNdKTIicdK68zvRUBUmiIT8H0XDfvuWtGkk4K5/O8eIyHuw9kwp3hgLU244F1mqTi6+zDC+4jeR/iuzrzmkoXN2e+6n3YtcUuGb76R9hw9B0pfySpuVRKWzQtA7SfU+PB6tdqI5HwR0n47Qy2gkJU+O6sbIwoqeRlwuSpJNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JD8hVrkQ; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88C950AC07
+	for <mptcp@lists.linux.dev>; Mon,  7 Sep 2026 15:34:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788795292; cv=fail; b=aD7KPbiI+PTSjcQw9VTH4YaHvoZ+Uy+wrw/68zk6dY+7NHWcNs6WF84ne+JRruj964Q0/IoKXHXC7AnhcONo8ht684x8cnxqgU1bwLyRGCoet+ZrLGbKKDL6kCXUDBCjjbXIPEfCtGnxymnngGxHh8yY+76QL5y9G1tlStY6fpY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788795292; c=relaxed/simple;
+	bh=NKshpJR/nXNg2pEJ4Tdo8mF1hAH/tQOQoQV4IcUC1xQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=bsE0tnp+us+vQAxo093WYjd+dP7ggUsiB1XWUIBOh8E96pqwJz3P61gOeeidRLu0AagsqLgmeSjR3HksK5eLKg7JqU5JFfTsdsI98KqzsNMd4uVSfDeqeF4B5BlrqGjRJXlYjVgu8YtCvoUYSTLic+G/mnF+owfxMRIoAMA0oGE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nokia.com; spf=fail smtp.mailfrom=nokia.com; dkim=pass (2048-bit key) header.d=nokia.com header.i=@nokia.com header.b=AsyOo8M4; arc=fail smtp.client-ip=40.107.130.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nokia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nokia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JD8hVrkQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3F1F9C2BCC7;
-	Mon,  7 Sep 2026 15:13:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1788793986;
-	bh=6we+t01FWaNIeEVkQn8BPVRqCbjoG7xeFNSyhUfCHYI=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=JD8hVrkQG1EpTc/Gppwpy2Z/WVFklhpDSzUuRyvNBkNhApredumkIbljs1xeRsfvw
-	 9Q1GKHyU/izF5BDmMxci5vLqTtGL0UoU1xzncT0vuXBWxt0QiipoDA/ThTVrUpNRtv
-	 clp7/rltiLaoEcodC3UKnc+pwM1C7W063mO8pGwErQnFmjq+1NehIdrPEzfbq1q1ar
-	 i3S7Uowu+ACbmW5QSZy+hD4IeM0a+zawjedGq+Z3/OIby/D7LnP2/7fNbB9ir8d95G
-	 5FEmZaNmknoutQlYAPf3jE29yI1vyvmMiRVLuOfgV9XELph/PCdeEvS4/oFPDRvamu
-	 lZ62bWpzKjxKw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 139D0C79FA1;
-	Mon,  7 Sep 2026 15:13:06 +0000 (UTC)
-From: Quanye Yang via B4 Relay <devnull+quanyeyang.proton.me@kernel.org>
-Date: Mon, 07 Sep 2026 23:12:51 +0800
-Subject: [PATCH mptcp-net v4] mptcp: fix data-race in
- mptcp_subflow_get_send / tcp_ack
+	dkim=pass (2048-bit key) header.d=nokia.com header.i=@nokia.com header.b="AsyOo8M4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=F7unWIplOZS/9MW8jb4sFL1OFVmvdgSIh88LzwEZU2trtp2V54EWVnWWRq/+WBFjxoy25nBRWlExY3NHDN4geirlWP9aDo5AqjT+qF1JRrD9yho3L/HE7shuWuQZ3jh+sJ9ye+rwHcjaopWC1vtvbXvx8iHjXW3gQpe2VeUG8FYYxoaj/IT6UTDuNu7Mn4BGI5MYdpeKurwDMKwGB2Nyowfionk/oEGhGHaRo56xgsgw4zWNPNCuBFu881aaCSV2f68dFSTpvlrw6tPyr+Sy99KVpqeMc1ITkUfh2JlSB6gcmyyBM6gjHs1TFHg9jSCU+Zzg5L20/k44oLmMswNQ2A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NKshpJR/nXNg2pEJ4Tdo8mF1hAH/tQOQoQV4IcUC1xQ=;
+ b=frOc7yNvtG1zyg5N7iZVvRyGuLb8TWf3vjcUaaS7EKwn8ASIIM9VbixF2BeUUg+4TCCUBg7yJynDKnWeAcftzLyPesmuej5WELtSdR//qnNQ9WsbIS6NxFFVIOsX/RWxgmhz8nga5fmluXHtkuXAt4/ztTEvObyQ7dN5voZ9PbFgzcuXqNZgXeE3rxl5/9DKtjmbpNf+VjXJ4TtJV5g7NwloJC/GBMOPhx/lLWtj9Aee3zIOmBLkCT9FqZ7arZOMeRw70+XpWWDMmTNPVPTDCyZP3XGDy0pRxDDPbD+89rG+1s2c0syv4FXSReN898TSmzCfxiYIWDHLGWClC+biOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
+ dkim=pass header.d=nokia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NKshpJR/nXNg2pEJ4Tdo8mF1hAH/tQOQoQV4IcUC1xQ=;
+ b=AsyOo8M4eGBjqWv+dPzw6zEogkCGX++TucNRo71PwFMhAhEqEiV0NH+gXBBaoO0Ztbv4G5FkoHrmmhkf6DHAy7bsgln7r0AIr8yCG4jEGKuLiB2z7al6oaewGi+MOQdRTVRAItomxEqZ9AIKuVixIvvHQq0vlvf4wRsvxsFgMVTAF6S0CVxUvUTyjxLuSexr4RFJ2a9MR5EJTeK5DBTXiegGyZpVIXmp5zL0/u4JdtdYxfwOQklAxtowKlTBWmLFgm3dnFWP+V6+qHBfLcxBVN4tqJ2bqVDIHmLn0TFL2s1stLi9CVQljjjNnPFei2rFSUurRCtA5yc1Ybw+M5Gu8A==
+Received: from GVXPR07MB12099.eurprd07.prod.outlook.com
+ (2603:10a6:150:2c5::13) by AS8PR07MB8314.eurprd07.prod.outlook.com
+ (2603:10a6:20b:37d::5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.382.15; Mon, 7 Sep
+ 2026 15:34:45 +0000
+Received: from GVXPR07MB12099.eurprd07.prod.outlook.com
+ ([fe80::f0e5:e65d:145:fd0f]) by GVXPR07MB12099.eurprd07.prod.outlook.com
+ ([fe80::f0e5:e65d:145:fd0f%5]) with mapi id 15.21.0382.007; Mon, 7 Sep 2026
+ 15:34:45 +0000
+From: "Joakim Tjernlund (Nokia)" <joakim.tjernlund@nokia.com>
+To: Sasha Levin <sashal@kernel.org>, "stable@vger.kernel.org"
+	<stable@vger.kernel.org>
+CC: Eric Dumazet <edumazet@google.com>,
+	"syzbot+937b5bbb6a815b3e5d0b@syzkaller.appspotmail.com"
+	<syzbot+937b5bbb6a815b3e5d0b@syzkaller.appspotmail.com>, Kuniyuki Iwashima
+	<kuniyu@google.com>, Jakub Kicinski <kuba@kernel.org>, Florian Fainelli
+	<florian.fainelli@broadcom.com>, "David S . Miller" <davem@davemloft.net>,
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Neal
+ Cardwell <ncardwell@google.com>, Matthieu Baerts <matttbe@kernel.org>, Mat
+ Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"mptcp@lists.linux.dev" <mptcp@lists.linux.dev>,
+	"bcm-kernel-feedback-list@broadcom.com"
+	<bcm-kernel-feedback-list@broadcom.com>, "Atul Joshi (Nokia)"
+	<atul.joshi@nokia.com>
+Subject: Re: [PATCH stable 6.12 v2] tcp: fix potential race in
+ tcp_v6_syn_recv_sock()
+Thread-Topic: [PATCH stable 6.12 v2] tcp: fix potential race in
+ tcp_v6_syn_recv_sock()
+Thread-Index: AQHdPJwfkdwn80RKEEOmmv2uuDBtMbbBj1SAgAG0QwA=
+Date: Mon, 7 Sep 2026 15:34:45 +0000
+Message-ID: <22b7bae35253cebe11b515d11b245d7c551c0f29.camel@nokia.com>
+References: <20260904183500.3841094-4-florian.fainelli@broadcom.com>
+	 <2026-09-05-daily-reply-0047-tcp-syn-recv-race-v2-6-12@kernel.org>
+In-Reply-To:
+ <2026-09-05-daily-reply-0047-tcp-syn-recv-race-v2-6-12@kernel.org>
+Accept-Language: en-SE, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.60.2 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nokia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: GVXPR07MB12099:EE_|AS8PR07MB8314:EE_
+x-ms-office365-filtering-correlation-id: 86d8f0c1-a1b7-48d6-fd12-08df0cf58b22
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|1800799024|7416014|23010399003|366016|38070700021|10067099003|4143699003|56012099006|11063799006|22082099003|18002099003;
+x-microsoft-antispam-message-info:
+ ve2kXonRM7OGEjKzO7PDQr2wEOciVtBtV11whHP8wWU6cKZcCilSxtYi1IbCQDFsoi95UKLoG7tq4x1NcuMbla/9FNpcHfxjta2Z3H2NV+HBa6kBk6ocFqtuU5d1ejjoaTBXOU0VhdePxNtGIKO0orD+FpsEbZoAYfHpqGYpjrNv8OpWDIvdOyggKa7RlZqBVNsHL6O0XysabaEOYFF+UFoYa+GrOG5VixyP7/BgmShAWZhVkscBdbLuACblh57+5fMO7Y0N+GtEfIEeB6xLurpL9XJglscgPRkkbSPRSKT50ExxsAHirkmgczUow4w/B+XTA6MlStCTBBWDvslSYxZGKzMhSDdupLb1T9BDU2LVJG8VCrdenGWdEQgivhSiRtM1T1xQT47jeGsXv26zbuF81eBzJjWmREPkR2GeD6UkkbTRrRTyNBcDjdYuFVJPQ28Yp/Trsq3BlLwQaj0e7S5AcM/OBuwTA8PsL3v2vw7fUG2c3LhoB8U5mO0jRrI30MYw0cuBx1AB9skj30n9RnCjhY5QiN45yb1zOT1pZAqBQ4D7hR/z3wPNKk2XoBq37tp8mfEEZZgUoZ97Ru6wat+rGniJ7Dl2SjeMetUy75TEqeVhqLce/aVTHpYIy98obrR6KdchiUfp8mj1EEZd76led5uj3Ekm+872YcPUK/p+e47a561vXvrfNbsrZUevo7qZwAvbGZALUxz/k7q0ew==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GVXPR07MB12099.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(23010399003)(366016)(38070700021)(10067099003)(4143699003)(56012099006)(11063799006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?NWVleG9mcG50TFd5Q0VtaElRY0VudnRWQzY3eFJrTEpUakdXOHkxUE1QUXpa?=
+ =?utf-8?B?OFBJUFMzeU1ZME1ZMmxvdXNBbUd1SGxBVnpZdXI4RWc1cjRGQkZVTW9wNmww?=
+ =?utf-8?B?WkZkNSswZCtpZzBiMzg5cTZyVGVHY3p2MEpGTnNEUmEzZmdKcUNIeDcxc2Fz?=
+ =?utf-8?B?OUV6MWR6VHdTK242c2h4aERlanRZd0dhZ29JNU1BdVlhQTE0anh3Q2gyeXVC?=
+ =?utf-8?B?TWlSaGNDV1lMdjV5N0xmd3BUQWtaT3R1dE44bHlyNzZUZzF3d2lkYjJ3Vitj?=
+ =?utf-8?B?ZG9RbktlYTU0QTk2aDlyWWJKWGxZd3lRTTBaNFJqK3NMWEw3WWlJNW1YMm5n?=
+ =?utf-8?B?eG5Jc2NjdTNZblZ6UzROY2c0eUZCckVERmhtQU5iRTFySmxtQkx6OEhSbkpM?=
+ =?utf-8?B?aGw2ZS9PRVJLTDVJa21OR09sWXZDdkQ1eGF5dGN2dXBYZEg1ZElhdEhlN2Qz?=
+ =?utf-8?B?NDRkYm94WXdaNHhhQ3VOWE4vbXphejFxYWdlRjV0d0pQZFd2NnZjN1hqT0VN?=
+ =?utf-8?B?OVVSUjl5Ym5tK2hCdG9mejRvdXJiR0dIZUhzQjRCN3E1MjFlNEI1Qlc3S0Z3?=
+ =?utf-8?B?bWxMVFFObFVjZ1p3VlViSXBVeDJ4RkRHTHZMeWgxcEk5UzJsN1B0U1ppQ3Z2?=
+ =?utf-8?B?OWJxYk5jWUJpdk55WHpLRzRaQ3ZWRWhwdHNzeXAzYVM2b003Vi9KdlJJWTln?=
+ =?utf-8?B?d2VraXB6dVdseExLcDlyVW8wUTlRVzk4dFdEU1UybXN3ak41aUdnTFRLKzR3?=
+ =?utf-8?B?VjNEdE0rQUV2Q2JyQUxnQnVSSmFwVGdIWnNoTkVlcElweTlnWHRFdWxYOHhT?=
+ =?utf-8?B?VlhsTjFDc1F1OVNkUHQwUnl6SkJEZDJjaEszTGFWWkwvTDNVS0t6VFByY215?=
+ =?utf-8?B?MnFlVDhLVGtSZldzODdCQ1R6T2ZreGxjZndCb0xVTWxXQ1BEYmFyV2pnd2V2?=
+ =?utf-8?B?UkQ3bXJyanVRSm5oMnZLUWpSZ2FhYjMydjdWbWx1UHZBMy9scTcxTnNaSVY3?=
+ =?utf-8?B?L3dyN0dwdkhzajBnemU2OE9PM013R2VwWXVaUkgzV1VoeHRlZDNaYWE1MU1Y?=
+ =?utf-8?B?MG9odWlVVWVPb000MDNhd1NWbUNIWkhudUFXSGNYZlp2V00yMVZ6V1dlWGRj?=
+ =?utf-8?B?dHAyQVUyMGJKM3IvMWl2d1NPZFNuRnkrZDdyaTdUNzFaS1A1eG5OTGp0SDFG?=
+ =?utf-8?B?L1VrQmw3Q0dLbk9ETEprRVA0ajJNbndZTDB3aXFpMG1hU3FsN1c2Rm5nY1lz?=
+ =?utf-8?B?eUVtRnZtVGZ1QTIzV0txSDkrc2ZsbkZuOFBCNnBEdGhrT3hPS21qYWxKSmtS?=
+ =?utf-8?B?T3QweGtBRjQwdTFMc08vTFpXcGdzcW5seVBJU3lhRzMvSjNaazRPazFBSUZJ?=
+ =?utf-8?B?M2VUamRic0lGanYzUUtURDNvNEhxeGJ1TllIOG9lK2xGTlBDR1NpcFJ4T2Y0?=
+ =?utf-8?B?Y010NHNMSUx3STZuMFVYNTNpMm1obFBVYWpPVmFFRE5RWXpyZDB6OUxoOTJ0?=
+ =?utf-8?B?UHNLZmlOZzhjSXZTS0IrbFRQTEx3b3o2VWpybFBqYk5mU3A3RTZRYWs1ZDJ6?=
+ =?utf-8?B?WlBVTnltaEFtbWZFem9nMzlBOWFYSHBHV1RDbHZOZWZNM3l3MDIrTnFCNTds?=
+ =?utf-8?B?VzdhQWhzTGEzcmlxcFRrZTdGVm1mYkhaYkJWMldkaHBucmtwL241UE84ZWFN?=
+ =?utf-8?B?NXFwVlZCSmxaRXMrZ0ZJSDJWZlBhMjR3eVh1TkJ4SjFPNXNTL25tTU9Vd1Fm?=
+ =?utf-8?B?L3BUVXkrRjY4dCtteFlscEZoL1ZzUUUzNjBoS01sb20zVGs4ajFPc1hYR1U4?=
+ =?utf-8?B?TFpRTmVRSUlFTzRScXNzbFFpcDVjK1BYdUpRQ1A0TmN6bm9iNjlpZVRGUURv?=
+ =?utf-8?B?RWFXakZqWWZOeWtCYkdYcXhqWERXZFFZTTJYa0wwaUNVZFhNNWRyaVJkZG00?=
+ =?utf-8?B?bENGRmNGRnliNEN1WGYrRGFaR1ZZeWxBLzV4RE56STZxRW5LSE9iYTJiY0Uw?=
+ =?utf-8?B?QXBKRW5zVFBKcG95U3pqdmdDdy93NERCOWUwL2dFOFN6TDlqazBEZ1ZCanov?=
+ =?utf-8?B?WGNyLzZ6RHFSZTJDaVhNdW5qZnV2YjY1c1kzbG1CQ2t6YVFDazVOSmVmNUxP?=
+ =?utf-8?B?ZTROMW81NWRqRWVzU01tSUJXelQrblpKcklXbmQyOE8yQTdFRDVkRTBNQTh6?=
+ =?utf-8?B?d21ZK3pvc09kR1ZzMHhMOGViNkRoRU9KQ1VWRHFxU2lBTTZoSzZBeUpKR28z?=
+ =?utf-8?B?KzFRU0N4Y2FIN2NRM0IrZTdWWStMTEcxVURIbDdmUTNYNDRnVlVsbk96T1pw?=
+ =?utf-8?B?NkFxM1lGOTlqNkRBSjJlc1NrV2MwanNtWWx3MGx1SEhTbnJhRTdIdz09?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6DB1EFC9014B4C4EA1FF3420DFE50A3F@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260907-mptcp-snd-una-race-v4-1-6cd76668a8e3@proton.me>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/22OQQ6CMBREr0L+2m9qERBW3sOwaMtHakLbtIVoC
- He3gEuXk5k3MwsE8poCNNkCnmYdtDVJXE8ZqEGYJ6HukgbOeMlqVuLoonIYTIeTEeiFIpSUTE4
- 3LusKEug89fq9lz7gyBuK0B5WmOSLVNxKt/CgQ7T+sx+Y8x35bVX/tuYcGZaFFKwresb55e68j
- dacR4J2Xdcv/EH+QdEAAAA=
-X-Change-ID: 20260906-mptcp-snd-una-race-be0262e82b97
-To: mptcp@lists.linux.dev
-Cc: pabeni@redhat.com, geliang@kernel.org, matttbe@kernel.org
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1788793985; l=6105;
- i=quanyeyang@proton.me; s=20260801; h=from:subject:message-id;
- bh=16sVBMvvNv6uANW5wJoXGNVKFp/tLZOlBxzNyVXE+ZU=;
- b=cMCKmQ/Nut9txGLlioDVDOFB/Td36+nX56XfNq1BgBMyYamO5K4Xp9NOaMURxMvq9mnkPmRhd
- rwx5MoEq4TpA2BdeRp8hh+gCzXQDPMLKloFXJaaRCK9IeT1MVMBV+iq
-X-Developer-Key: i=quanyeyang@proton.me; a=ed25519;
- pk=9L9FrcvzMgxPaBRU6XV0EnqTgjDqVO596rQKSZ9qZoY=
-X-Endpoint-Received: by B4 Relay for quanyeyang@proton.me/20260801 with
- auth_id=963
-X-Original-From: Quanye Yang <quanyeyang@proton.me>
-Reply-To: quanyeyang@proton.me
+X-Exchange-RoutingPolicyChecked:
+	j+87BOoRU6jRSjzM2JpCgbrtyEuDHDLAmgppFD1S+88aJXWYux/mBaWl9Vpyz3N7Vw3B2hOGbFfkRhKyHMGZb9RtMnrF3lgIyvU+PnDMRULeSPJr9CewmDSEROFf9q37BNp/Or5B0VzMg3Ync2RtzbZH09AfSGFl+yNM6geESYvxFErgKse/Ruq5qtDZhERODdfjbfcO063ddlJ+GNvvFIXxzFHkTHqKbTw+U5QBEu8XSeun7vkao6Sp588H78KBrHrCRK2B/QwM0AvaQ+qQ4d95I4gU4vD/A/0VnFDRJTS7ZwtXFtItKpzz2eBpgESdqF15MIi4st/T/QZcSIe54A==
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: GVXPR07MB12099.eurprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 86d8f0c1-a1b7-48d6-fd12-08df0cf58b22
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Sep 2026 15:34:45.0420
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nqx/9I5LQAj4tSbSQ7mL0Y+EGU/xYoFaG/KEjK1NrDn0YCWzgTmj49CZwNkGCHkcQlFL7WzV9foB0//mriPxm26STm7r9/T0teCyVi10wkE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR07MB8314
 
-From: Quanye Yang <quanyeyang@proton.me>
-
-Syzkaller found this data-race:
-
-  BUG: KCSAN: data-race in mptcp_subflow_get_send / tcp_ack
-
-  write (marked) to 0xffff88800ea00eaa of 1 bytes by interrupt on cpu 1:
-   inet_csk_clear_xmit_timer include/net/inet_connection_sock.h:209 [inline]
-   tcp_rearm_rto net/ipv4/tcp_input.c:3536 [inline]
-   tcp_set_xmit_timer net/ipv4/tcp_input.c:3556 [inline]
-   tcp_ack+0x2d3f/0x4240 net/ipv4/tcp_input.c:4430
-   tcp_rcv_established+0x46e/0x1fb0 net/ipv4/tcp_input.c:6678
-   tcp_v4_do_rcv+0x356/0x6e0 net/ipv4/tcp_ipv4.c:1854
-   tcp_v4_rcv+0x1b04/0x26b0 net/ipv4/tcp_ipv4.c:2248
-   ip_protocol_deliver_rcu+0x42/0x280 net/ipv4/ip_input.c:207
-   ip_local_deliver_finish+0x18d/0x270 net/ipv4/ip_input.c:241
-   NF_HOOK include/linux/netfilter.h:325 [inline]
-   NF_HOOK include/linux/netfilter.h:319 [inline]
-   ip_local_deliver+0xdb/0x200 net/ipv4/ip_input.c:262
-   dst_input include/net/dst.h:480 [inline]
-   ip_rcv_finish net/ipv4/ip_input.c:492 [inline]
-   NF_HOOK include/linux/netfilter.h:325 [inline]
-   NF_HOOK include/linux/netfilter.h:319 [inline]
-   ip_rcv+0x206/0x230 net/ipv4/ip_input.c:612
-   __netif_receive_skb_one_core+0xe9/0x110 net/core/dev.c:6264
-   __netif_receive_skb+0x1d/0xd0 net/core/dev.c:6377
-   process_backlog+0x16d/0x360 net/core/dev.c:6728
-   __napi_poll+0x73/0x3a0 net/core/dev.c:7787
-   napi_poll net/core/dev.c:7850 [inline]
-   net_rx_action+0x6ee/0x800 net/core/dev.c:8007
-   handle_softirqs+0xc1/0x260 kernel/softirq.c:645
-   do_softirq kernel/softirq.c:546 [inline]
-   do_softirq+0x40/0x60 kernel/softirq.c:533
-   __local_bh_enable_ip+0x65/0x70 kernel/softirq.c:473
-   __raw_spin_unlock_bh include/linux/spinlock_api_smp.h:237 [inline]
-   _raw_spin_unlock_bh+0x1f/0x30 kernel/locking/spinlock.c:245
-   spin_unlock_bh include/linux/spinlock.h:407 [inline]
-   unlock_sock_fast include/net/sock.h:1773 [inline]
-   mptcp_subflow_cleanup_rbuf net/mptcp/protocol.c:659 [inline]
-   mptcp_cleanup_rbuf+0x300/0x380 net/mptcp/protocol.c:690
-   mptcp_recvmsg+0x6bb/0xd50 net/mptcp/protocol.c:2495
-   inet_recvmsg+0x204/0x210 net/ipv4/af_inet.c:894
-   sock_recvmsg_nosec net/socket.c:1151 [inline]
-   sock_recvmsg+0x11a/0x140 net/socket.c:1173
-   __sys_recvfrom+0x178/0x240 net/socket.c:2331
-   __do_sys_recvfrom net/socket.c:2346 [inline]
-   __se_sys_recvfrom net/socket.c:2342 [inline]
-   __x64_sys_recvfrom+0x76/0x90 net/socket.c:2342
-   x64_sys_call+0x199f/0x1ca0 arch/x86/include/generated/asm/syscalls_64.h:46
-   do_syscall_x64 arch/x86/entry/syscall_64.c:61 [inline]
-   do_syscall_64+0xde/0x3d0 arch/x86/entry/syscall_64.c:84
-   entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-  read to 0xffff88800ea00eaa of 1 bytes by task 2523 on cpu 0:
-   mptcp_timeout_from_subflow net/mptcp/protocol.c:609 [inline]
-   mptcp_subflow_get_send+0x120/0x600 net/mptcp/protocol.c:1651
-   mptcp_sched_default_get_send net/mptcp/sched.c:23 [inline]
-   mptcp_sched_get_send+0x276/0x2b0 net/mptcp/sched.c:191
-   __mptcp_push_pending+0xa6/0x370 net/mptcp/protocol.c:1802
-   mptcp_release_cb+0x3b6/0x900 net/mptcp/protocol.c:3885
-   release_sock+0x100/0x150 net/core/sock.c:3863
-   sk_stream_wait_memory+0x4ea/0x9d0 net/core/stream.c:148
-   mptcp_sendmsg+0x8fc/0x1220 net/mptcp/protocol.c:2145
-   inet6_sendmsg+0xda/0xe0 net/ipv6/af_inet6.c:641
-   sock_sendmsg_nosec net/socket.c:800 [inline]
-   __sock_sendmsg net/socket.c:815 [inline]
-   ____sys_sendmsg+0x409/0x680 net/socket.c:2713
-   ___sys_sendmsg+0x11d/0x160 net/socket.c:2767
-   __sys_sendmsg+0xde/0x160 net/socket.c:2799
-   __do_sys_sendmsg net/socket.c:2804 [inline]
-   __se_sys_sendmsg net/socket.c:2802 [inline]
-   __x64_sys_sendmsg+0x45/0x50 net/socket.c:2802
-   x64_sys_call+0x7aa/0x1ca0 arch/x86/include/generated/asm/syscalls_64.h:47
-   do_syscall_x64 arch/x86/entry/syscall_64.c:61 [inline]
-   do_syscall_64+0xde/0x3d0 arch/x86/entry/syscall_64.c:84
-   entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-  value changed: 0x05 -> 0x00
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 UID: 0 PID: 2523 Comm: syz.2.3 Not tainted 7.2.0-g39d4f32c5d53 #76 PREEMPT(full)
-
-The write is tcp_ack() dropping ICSK_TIME_LOSS_PROBE (0x05) with
-smp_store_release() on icsk_pending, from the subflow receive path
-after unlock_sock_fast().
-
-The read is mptcp_timeout_from_subflow(), called from
-mptcp_subflow_get_send() while holding the MPTCP socket lock. That
-lock does not cover the TCP subflow's icsk_pending.
-
-Use smp_load_acquire() to pair with TCP's store-release updates and
-with the other lockless readers of this field.
-
-Fixes: 33d41c9cd74c ("mptcp: more accurate timeout")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/627
-Signed-off-by: Quanye Yang <quanyeyang@proton.me>
----
-Changes in v4:
-- drop the snd_una patch (already fixed by 96d846e3e2a7)
-- drop the generic sk_err patch (will be sent separately to net)
-- include the full KCSAN splat
-- Link to v3: https://patch.msgid.link/20260907-mptcp-snd-una-race-v3-0-65ba0d5f0221@proton.me
-
-Changes in v3:
-- rebase on the MPTCP export branch
-- wrap the snd_una field comment to satisfy checkpatch
-- add fixes for the reported icsk_pending and sk_err races
-- exclude the unrelated workqueue and timekeeping reports
----
- net/mptcp/protocol.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 0b24e0afedfb..f4f63df9d787 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -606,7 +606,9 @@ static long mptcp_timeout_from_subflow(const struct mptcp_subflow_context *subfl
- {
- 	const struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 
--	return inet_csk(ssk)->icsk_pending && !subflow->stale_count ?
-+	/* Pair this lockless read with TCP's store-release updates. */
-+	return smp_load_acquire(&inet_csk(ssk)->icsk_pending) &&
-+	       !subflow->stale_count ?
- 	       tcp_timeout_expires(ssk) - jiffies : 0;
- }
- 
-
----
-base-commit: 45f7c939f8b155208c7447517e588c9fb133388c
-change-id: 20260906-mptcp-snd-una-race-be0262e82b97
-
-Best regards,
---  
-Quanye Yang <quanyeyang@proton.me>
-
-
+T24gU3VuLCAyMDI2LTA5LTA2IGF0IDA5OjMzIC0wNDAwLCBTYXNoYSBMZXZpbiB3cm90ZToKPiAK
+PiAKPiA+IFRoaXMgZml4ZXMgQ1ZFLTIwMjYtNDMxOTggKHYyIC0tIHYxIGJyb2tlIHRoZSBEQ0NQ
+IGJ1aWxkIGJ5IG5vdCB1cGRhdGluZwo+ID4gZXZlcnkgaWNza19hZl9vcHMuc3luX3JlY3Zfc29j
+ayBpbXBsZW1lbnRlciBmb3IgdGhlIG5ldyBhcmd1bWVudCkuCj4gCj4gUXVldWVkIGZvciA2LjEy
+LCB0aGFua3MuCj4gCj4gLS0KPiBUaGFua3MsCj4gU2FzaGEKCkhpCgpJIGRvIG5vdCBzZWUgdGhp
+cyBvbmUgaW4gdGhlIGp1c3QgcmVsZWFzZWQgNi4xMi4xMDksIG1heWJlIEkgYW0gYmxpbmQ/Cgog
+Sm9ha2ltCg==
