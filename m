@@ -1,180 +1,147 @@
-Received: from mail-4319.protonmail.ch (mail-4319.protonmail.ch [185.70.43.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8DB4F797E;
-	Mon,  7 Sep 2026 13:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1BD468C3D
+	for <mptcp@lists.linux.dev>; Mon,  7 Sep 2026 13:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788787451; cv=none; b=OcR7kTuuBU1TKqCOXHFjAz50ogLRp+2yrK8BUx2qYrAoaB7qB5uVsFPqC5yuc+qncQO5ngNdeg7rLuIeJ1qiX/q+a63qNtDmcNTyq0Fw/9YMj+UUOr+pjeuS2MBKNfqIZgh5f5xFNs1dmxVfW9SrnkOqhtvF3kjnB+VtQBHRGD4=
+	t=1788788335; cv=none; b=BLOLw9YgaXpbV5VmgU0v39VaL44+60dnyfpeaWb81e9HwHmOj8+AAnkPmWho579vRoAaJDiGFrxEV3bd6MEImq80frxbUMGg1wGIL+aapRwiRkWhHFbt0ZB/9EsEUX/aWlwtYp7A5d2iIPciySdDAIayJrhGIOdT0a6TvQgd1dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788787451; c=relaxed/simple;
-	bh=VOlppPcAZaihuaybY3MbXojKeN0i17vEAfbdDCdlvuw=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZC3m58wZyN2HkvpQjbUQ0MsZLSQEBzeviX3hh5Uo96Vg2iDDZ6emosaoY1tIM/L4SrWmFB8ALa3eaAbqEdxlYXIQAb2+USxHaFYql186uyUdkBT/EiZ4RmpfaDRtpW6vUSg94J3+ztGY3sb6pRBr7xdae4whJ7SmhK/Rpvg2Z9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=Sz0fUd9E; arc=none smtp.client-ip=185.70.43.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1788788335; c=relaxed/simple;
+	bh=Any2UXzsfyd7AqmNuE5M1mJE0C9rEefwiv64bVG3BHg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=M67qO8J3skvNNc0CDzTZQVMT/hYJ/ZaW53Jglvx0lRnFmiKbr5Jm+vcMZppaE+gPvJqMpqx4Oi0VM1VZYmPDolMEMgH78HLYI62/dmNSCX2UBHdsiMLTlk+eNgkXe0M/vEK1zb0MHVIReWRyZxJFrZ7v+LowB3cX9SDkkf8glG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MMUmh5CO; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="Sz0fUd9E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1788787429; x=1789046629;
-	bh=hnfY5g75qigvrd0jz2ODhHdnwo4ylq3b80QtLQG7WnI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=Sz0fUd9EhJMPyRuALvCe32NE28SFMKTj1sfqywMEzai31yJm4m1AWa4X56Okp73Uz
-	 Q44gP/t8L1nKLltB5e7+RPDWWq63vWgaqJtw4XVfIY5ihUOoAX10BBLz0g9o1vY0Kz
-	 3M+FwMAeAbGgIxbVJrAsrB9m+VkNZtU+pcuJZ6y/ubwx7Xud7IL9H3EDR5RjGNZDzP
-	 yJZFsLBFXO8MDbfufMDQWdpC5w25X+tVkXP9QHl9FBpz/VXjkc4vvW2nBzjnxZuBxv
-	 W8XlFUUs4zEG9miFoFToBNbRuUnmv60yA+C6JGCBcf+jeU8JougGjQ6BagpJjfXDhu
-	 1vou9WEUlN3ng==
-Date: Mon, 07 Sep 2026 13:23:44 +0000
-To: sashiko-reviews@lists.linux.dev
-From: quanyeyang <quanyeyang@proton.me>
-Cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net v3 3/3] tcp: fix data-race in do_recvmmsg / mptcp_recvmsg
-Message-ID: <BRjPl-qSRxy3Fx7z3OYPbh_uVGAO2xAiTOEhENKwfmLBuZLMw6Gdmlc2zip02u5tK-JJY197mUzv4YjtBk_lTq6Agc80Kj48b6owoUA2_yI=@proton.me>
-In-Reply-To: <20260907102447.4C55E1F00A3A@smtp.kernel.org>
-References: <20260907-mptcp-snd-una-race-v3-0-65ba0d5f0221@proton.me> <20260907-mptcp-snd-una-race-v3-3-65ba0d5f0221@proton.me> <20260907102447.4C55E1F00A3A@smtp.kernel.org>
-Feedback-ID: 206494642:user:proton
-X-Pm-Message-ID: c523e9205894885af1a3a5eff0a6b5ae23752976
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MMUmh5CO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1788788332;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V6DO94cXjpUj8AJT8LloeHfEvJJNnO+5SbSZSh9uGJc=;
+	b=MMUmh5COktGJ++r/p2w+m5oD5IJV/NN1wYOthYRBwY+lv2mOnThnGiS6j3NiRebQUaF0yZ
+	Ks92Pol/6dON43ondgBABgbFBZ7pCz9IzuCzIjq9zwNJQeMFjo2BniSHPhTPAG/PSJj2UO
+	jJM4D/FiWIK5ktxPNluiUCTc7oJ5YW4=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-543-X0NaMVo3Nket_V9OuxCU8A-1; Mon, 07 Sep 2026 09:38:51 -0400
+X-MC-Unique: X0NaMVo3Nket_V9OuxCU8A-1
+X-Mimecast-MFC-AGG-ID: X0NaMVo3Nket_V9OuxCU8A_1788788330
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-490a767b782so28417325e9.2
+        for <mptcp@lists.linux.dev>; Mon, 07 Sep 2026 06:38:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788788330; x=1789393130;
+        h=content-transfer-encoding:content-type:in-reply-to:from:cc
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=V6DO94cXjpUj8AJT8LloeHfEvJJNnO+5SbSZSh9uGJc=;
+        b=ZmSiSTDONw/n0I070ax5ZLQB9KrDOnIIDI9TmVYjibpZ4irOm6lMSS172eToaWc4qm
+         g92+5rSCLt3TziaWUp/5XOWclVTXCEr6pc8+i1Af9ihu4i9xNRUsF6EvWULr7/lTSUl8
+         4/H9NxJWqko8C0d1RUlXh9Zbt9Ez5G/btb1xDTFOZyAtVAnil4xwfWHMA8Uo0cR4SuMH
+         9MqaPN6A0ViOCLH7Pvn4D/avNjAwXR6Dog7VAJpDt3qE7MdBp5RLTx3vMWLIdPKzsxN6
+         C4d+kTpNP5rzbFF9lc/Rvz86O02tiskTanqX5wyYLO2DgaSTkokUSRedi5QxxtTKKCuo
+         uADg==
+X-Forwarded-Encrypted: i=1; AKwUvBzAkMmUGwJCM7ZOwZnluKkYpZuGSu//40iEMJYHMW/mkl44gZ6ZwcicA3DIbp0RYymbKQ+h7Q==@lists.linux.dev
+X-Gm-Message-State: AFuF++kTFPBeLnOOaDmJszsGTivMU6gkC9otxkO3rzRiEinzsQumcasX
+	P7OKrsgjO2nB7d4ryTsFYPct243kiYjXURzabbfr1D6iUkZ7vN+169kxzjMjFfDU5mqClVfeCv8
+	ZLxeqZIHCoaKowZpk2e7EWOkxrgBYtUuwdoEX+vu9M6bNUUTNHUspwrsF
+X-Gm-Gg: AYBFou32Uy/JSnIzcabiWDt0y4CSSfT3UEBQANBLiyBNUvKy1ss6T6gtjzCLKnvUE3y
+	2BOyenlF+9U0oPwWFv5tvYXLRsNmpBw/WVSNV2avtu45wdXOiLV1oIXjNX6Sl0o5H4xnQNNfV2O
+	/hScJPeZA45pCPL7IdWYPQLkS3AJLO8HCBZ956vwMFrmZbe7jc9lS4QURlGRkSle6JGsSGj0KjO
+	qzWL5vbBNpYglPYne6yRuzyn0chS7JgihXnwB+52+phHk2UM10zVsT2wdcmO27RY9GFSYYLucOK
+	RP+uwVHSGseISVKD8KrbAyF/+hp/JfctyirEXvnOwP+ip40LiH8K4xNWNL9Q2Joi2NIDiO/1/6z
+	OHXhugB33Xzqd05jtZuTSi/Nnnu+nRUVuHo98NAonuR1yFX1oz2JNNNTmOvuI6FYpdwO9wZGm5A
+	==
+X-Received: by 2002:a05:600c:4f12:b0:499:da8b:1476 with SMTP id 5b1f17b1804b1-49cf825a5bcmr243414745e9.14.1788788329830;
+        Mon, 07 Sep 2026 06:38:49 -0700 (PDT)
+X-Received: by 2002:a05:600c:4f12:b0:499:da8b:1476 with SMTP id 5b1f17b1804b1-49cf825a5bcmr243414415e9.14.1788788329418;
+        Mon, 07 Sep 2026 06:38:49 -0700 (PDT)
+Received: from [192.168.188.218] (ip232-47-231-195.pool-bba.aruba.it. [195.231.47.232])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49d0af538d0sm161412015e9.8.2026.09.07.06.38.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Sep 2026 06:38:48 -0700 (PDT)
+Message-ID: <87fb99e7-df73-46b8-97a1-4d6173121ab5@redhat.com>
+Date: Mon, 7 Sep 2026 15:38:47 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-net v3 1/3] mptcp: fix data-race in __mptcp_retrans
+ / mptcp_incoming_options
+To: quanyeyang@proton.me, MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260907-mptcp-snd-una-race-v3-0-65ba0d5f0221@proton.me>
+ <20260907-mptcp-snd-una-race-v3-1-65ba0d5f0221@proton.me>
+Cc: Geliang Tang <geliang@kernel.org>,
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20260907-mptcp-snd-una-race-v3-1-65ba0d5f0221@proton.me>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: Yj8ngfJlPZxskcbKVe2KQF5q8MZu19OI70Tqf5Z3E0A_1788788330
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Monday, September 7th, 2026 at AM 3:24, sashiko-bot@kernel.org <sashiko-=
-bot@kernel.org> wrote:
+On 9/7/26 12:15 PM, quanyeyang@proton.me wrote:
+> From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+> 
+> SyzKaller found this data-race:
+> 
+>   BUG: KCSAN: data-race in __mptcp_retrans / mptcp_incoming_options
+> 
+>   write (marked) to 0xffff888015e8e5f0 of 8 bytes by interrupt on cpu 0:
+>    __mptcp_snd_una_update net/mptcp/options.c:1055 [inline]
+>    mptcp_incoming_options+0x6a3/0x1ac0 net/mptcp/options.c:1183
+>    tcp_data_queue+0x101b/0x2440 net/ipv4/tcp_input.c:5583
+>    tcp_rcv_established+0x684/0x1fc0 net/ipv4/tcp_input.c:6654
+>    tcp_v4_do_rcv+0x35c/0x690 net/ipv4/tcp_ipv4.c:1866
+>    tcp_v4_rcv+0x1d91/0x25a0 net/ipv4/tcp_ipv4.c:2263
+>    ip_protocol_deliver_rcu+0x46/0x280 net/ipv4/ip_input.c:207
+>    ip_local_deliver_finish+0x190/0x270 net/ipv4/ip_input.c:241
+>    NF_HOOK include/linux/netfilter.h:318 [inline]
+>    NF_HOOK include/linux/netfilter.h:312 [inline]
+>    ip_local_deliver+0xe3/0x210 net/ipv4/ip_input.c:262
+>    dst_input include/net/dst.h:480 [inline]
+>    ip_rcv_finish net/ipv4/ip_input.c:492 [inline]
+>    NF_HOOK include/linux/netfilter.h:318 [inline]
+>    NF_HOOK include/linux/netfilter.h:312 [inline]
+>    ip_rcv+0x200/0x220 net/ipv4/ip_input.c:612
+>    __netif_receive_skb_one_core+0xeb/0x110 net/core/dev.c:6178
+>    __netif_receive_skb+0x1f/0xc0 net/core/dev.c:6291
+>    process_backlog+0x168/0x360 net/core/dev.c:6642
+>    __napi_poll+0x71/0x460 net/core/dev.c:7706
+>    napi_poll net/core/dev.c:7769 [inline]
+>    net_rx_action+0x6f8/0x810 net/core/dev.c:7926
+>    handle_softirqs+0xc9/0x2e0 kernel/softirq.c:622
+>    run_ksoftirqd kernel/softirq.c:1063 [inline]
+>    run_ksoftirqd+0x20/0x30 kernel/softirq.c:1055
+>    smpboot_thread_fn+0x287/0x520 kernel/smpboot.c:160
+>    kthread+0x1f2/0x240 kernel/kthread.c:436
+>    ret_from_fork+0x321/0x440 arch/x86/kernel/process.c:158
+>    ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+> 
+>   read to 0xffff888015e8e5f0 of 8 bytes by task 24 on cpu 1:
+>    mptcp_rtx_head net/mptcp/protocol.h:487 [inline]
+>    __mptcp_retrans+0x169/0x8f0 net/mptcp/protocol.c:2759
+>    mptcp_worker+0x6a6/0xb30 net/mptcp/protocol.c:2980
+>    process_one_work+0x3ee/0x970 kernel/workqueue.c:3275
+>    process_scheduled_works kernel/workqueue.c:3358 [inline]
+>    worker_thread+0x3c3/0x730 kernel/workqueue.c:3439
+>    kthread+0x1f2/0x240 kernel/kthread.c:436
+>    ret_from_fork+0x321/0x440 arch/x86/kernel/process.c:158
+>    ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
 
-> Thank you for your contribution! Sashiko AI review found 1 potential issu=
-e(s) to consider:
->=20
-> Pre-existing issues:
-> - [High] Incomplete fix for `sk->sk_err` data race leading to false EOFs.=
- The patch fixes a lockless data race in `tcp_recv_should_stop()` by adding=
- `READ_ONCE()`, but overlooks identical plain reads followed by `sock_error=
-()` in `tcp_recvmsg_locked()`, `tcp_splice_read()`, `mptcp_recvmsg()`, and =
-`tcp_bpf_sendmsg()`. If `sk->sk_err` is checked and evaluates to true, but =
-is concurrently cleared to 0 by another thread calling `sock_error()` (e.g.=
- via `do_recvmmsg` or `getsockopt(SO_ERROR)`), the subsequent assignment `c=
-opied =3D sock_error(sk)` will evaluate to 0. For receive and splice functi=
-ons, this results in returning 0, which falsely signals a graceful connecti=
-on closure (EOF) to the application rather than an error.
-> --
->=20
-> commit 0f561938f67b19245ef8889cb9ecc077fb82d7d0
-> Author: Quanye Yang <quanyeyang@proton.me>
->=20
-> tcp: fix data-race in do_recvmmsg / mptcp_recvmsg
->=20
-> This commit fixes a lockless data race in tcp_recv_should_stop() by using
-> READ_ONCE() for reading sk->sk_err. This prevents issues when sock_error(=
-)
-> atomically clears the error using xchg() without holding the socket lock.
->=20
-> > diff --git a/include/net/tcp.h b/include/net/tcp.h
-> > index 436495ff2271d..c61d8678eafd3 100644
-> > --- a/include/net/tcp.h
-> > +++ b/include/net/tcp.h
-> > @@ -3082,7 +3082,8 @@ enum skb_drop_reason tcp_inbound_hash(struct sock=
- *sk,
-> >
-> >  static inline int tcp_recv_should_stop(struct sock *sk)
-> >  {
-> > -=09return sk->sk_err ||
-> > +=09/* sk_err can be cleared locklessly by sock_error(). */
-> > +=09return READ_ONCE(sk->sk_err) ||
->=20
-> [Severity: High]
-> This is a pre-existing issue, but does this fix also need to be applied t=
-o
-> other locations that read sk->sk_err locklessly?
->=20
-> If sk->sk_err is evaluated as non-zero, but the error is concurrently cle=
-ared
-> by another thread calling sock_error() (for example, via concurrent recvm=
-msg
-> or getsockopt calls), a subsequent call to sock_error(sk) will return 0. =
-This
-> masks the socket error and falsely signals a graceful connection closure =
-(EOF)
-> or 0 bytes sent.
->=20
-> This pattern appears to be present in several other functions:
->=20
-> net/ipv4/tcp.c:tcp_recvmsg_locked() {
-> ...
->     if (sk->sk_err) {
->         copied =3D sock_error(sk);
->         break;
->     }
-> ...
-> }
->=20
-> net/ipv4/tcp.c:tcp_splice_read() {
-> ...
->     if (sk->sk_err) {
->         ret =3D sock_error(sk);
->         break;
->     }
-> ...
-> }
->=20
-> net/mptcp/protocol.c:mptcp_recvmsg() {
-> ...
->     if (sk->sk_err) {
->         copied =3D sock_error(sk);
->         break;
->     }
-> ...
-> }
->=20
-> net/ipv4/tcp_bpf.c:tcp_bpf_sendmsg() {
-> ...
->     if (sk->sk_err) {
->         err =3D -sk->sk_err;
->         goto out_err;
->     }
-> ...
-> }
->=20
-> Would it be appropriate to update these instances as well to prevent
-> Time-Of-Check to Time-Of-Use races?
->=20
-> >  =09       sk->sk_state =3D=3D TCP_CLOSE ||
-> >  =09       (sk->sk_shutdown & RCV_SHUTDOWN) ||
-> >  =09       signal_pending(current);
->=20
-> --
-> Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260907-mptcp-sn=
-d-una-race-v3-0-65ba0d5f0221@proton.me?part=3D3
->=20
+I think this race is not present in the current tree, after commit
+96d846e3e2a7 ("mptcp: let the retrans scheduler do its job").
 
-Thanks for the review.
-
-The TOCTOU issue is valid, but it is separate from the reported KCSAN
-race fixed by this patch. tcp_recv_should_stop() only peeks at sk_err
-after data has already been copied, so READ_ONCE() is appropriate there
-and the error must not be consumed.
-
-For the no-data paths, the correct approach is to call sock_error()
-once and only stop when it returns a non-zero error. This avoids
-returning a false EOF if another thread consumes the error between the
-check and sock_error().
-
-The BPF function is tcp_bpf_recvmsg_parser(), not tcp_bpf_sendmsg().
-There are also additional instances, including mptcp_splice_read() and
-the LLC receive path, so updating only the locations listed above would
-still be incomplete.
-
-I will audit these check-then-sock_error() patterns and handle the
-pre-existing TOCTOU issue separately, unless the maintainers prefer it
-to be included as an additional patch in v4.
-
-Thanks,
-Quanye
+/P
 
