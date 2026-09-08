@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0393241CB7;
-	Tue,  8 Sep 2026 14:14:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E765540A9;
+	Tue,  8 Sep 2026 14:14:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788876876; cv=none; b=NdeQzzVcHh6MOwzW+INy1WOBvYSBb2vQQl4ZQklfUIzAhTG5YVcLgIV6K2v/IrxPJd+t9zSDEQKcVfP50HikwGhWfmemeLI0WiOy8mwqQdxhH0+ncvbqlncM1arCyHajL3Fnjcne2zcZwGJXqF0Mn68ZlhaswGLQ5w5SCHM0W7g=
+	t=1788876882; cv=none; b=RjDiW0k7LuOwl36Uz0akZeUEkfvJmBbSJDL11lBHauWGNB38u47yXD9A2bZA+3xSRxe11nP5VaYHRc6X3eTQ/MCBgDcWJGT5lPf6HggcacPF3IbHVJZ8kR+39CGAahh3UdjhOwK1GLxVMwBPy2wXdF9b2/QbENZvZrDgREWU38U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788876876; c=relaxed/simple;
-	bh=xGnuahGwPP4f82k0zQU436ZpG60wJ/aEuwZt7vnyH40=;
+	s=arc-20240116; t=1788876882; c=relaxed/simple;
+	bh=8JjDG2J3jEdCZkbqt3U//6l4ggwme3t78z+VOG5XkDk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JZMowbOyvbaJMgyEcJdSY8yHyvDzvm1srTkVqdecBgBvmfbMGSF/C06yaS+fPvjyrF1TRhMBk8gNz3KzY4oFGTpE2bXqoLTfs4nrPbFrJ9akpQxhocmTXx4yyjXnsIsoLgbYIHCQvSDu2CZnK5uVk/8usQCkUolRcTMEFe5WTPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HLmpwWLm; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=InMbnZPTqBrTZXMYHGycwhzHkU1tKlLXAC/xFaGLjCPb0JWzwhf08D0wL6UaZu4Yu8eaMWXm9SIguk+XLue+UtjpJw/dWflPPY+I7GfJs6VuseHWjQPh5HjGsCoGhdT+22UzJ5OcaHNoUc4AAtvhsCTB05hnxKl0PNxJsry+vdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hLQWE+6t; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HLmpwWLm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C2B81F00AC4;
-	Tue,  8 Sep 2026 14:14:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hLQWE+6t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7C9A1F00A3D;
+	Tue,  8 Sep 2026 14:14:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788876865;
-	bh=NqkLnNdB1iaPRZgzHgODWa8SlkXcWwYoiM8hBJRiEzc=;
+	s=k20260515; t=1788876872;
+	bh=bI1QFqme7+lJ2wpHo1+LquJZx4pXgkY27jmIYw7Nq6E=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=HLmpwWLmY3lKHL14XJaUCgEBnNq58yiKP83mpEFIqmWz6bCK4TKq2nH5sxqNhFb1Y
-	 RXF2lxMhMJZbEUGSzljRwYf6PZO9I17NCO+02uJyQuPszaZYUggDcldE1eUYrP5LEE
-	 cicSGXc7aKq/tiCZ3pY4KDt5Ub320fxgTxwfWYgcAS5aJynB7ws8a+W2nIfpCr/GSb
-	 e0CIObRQCMoT/HwyZ2XQz+ysKab2/w3h7Oz697/vfOZZUBlie1NqyH9GP4XPg3iile
-	 JcQqlibgQY2wMMoKKEEpkOCotM5vhFRaAZVRr93nvpDTHuripXqTM3EH3LRINpI3jE
-	 2T1qzMKkPaxWw==
+	b=hLQWE+6tYqw8dRYth7l9ETFNf4PHqPHGwio52LkyvJp4WA1DvPuVl66scUUbcAuW3
+	 htYbBUVVFYRQcGJjXwkcgbErzmNMAGFLBqgdtex9tzEW6/88eVKni4JF8nk0ClIY0q
+	 UKUNaXg+baVlvj8wKYrFsNfI2kkDoItHwe3cl6n3VeUv3ONglLXux/ASJSUCC3b7Uw
+	 yDYMpDyV3JbeO8BJpIJt6Ur5TUUN6B2BHHxMzF+nAbqgqTY+UWzOn0YCXfneJEQzMy
+	 ZzWlL/uTIdbmHjqwRTYf1Vgd6lvdrqyxlG8AiOIN44D3lpSQViOICNHT9kIhaM9YnK
+	 BGxAaxBA9d+0g==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 08 Sep 2026 16:07:09 +0200
-Subject: [PATCH net v2 04/15] mptcp: pm: kernel: drop pending ADD_ADDR when
- removing ID0
+Date: Tue, 08 Sep 2026 16:07:12 +0200
+Subject: [PATCH net v2 07/15] selftests: mptcp: fix an UAF in
+ mptcp_connect.c
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-4-df1de70348b6@kernel.org>
+Message-Id: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-7-df1de70348b6@kernel.org>
 References: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-0-df1de70348b6@kernel.org>
 In-Reply-To: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-0-df1de70348b6@kernel.org>
 To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
@@ -47,85 +47,65 @@ To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
  Simon Horman <horms@kernel.org>
 Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
  linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Kalpan Jani <kalpan.jani@mpiricsoftware.com>, stable@vger.kernel.org, 
- syzbot+55c2a5c871441261ed14@syzkaller.appspotmail.com, 
- Tao Cui <cuitao@kylinos.cn>
+ Gang Yan <yangang@kylinos.cn>, stable@vger.kernel.org, 
+ Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2746; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=BiUuBgq0c7aOBr6JJpkC2oZ8vE+NuO1ltFCd3RnPXgo=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIWSGg+jpR9sNbqe1nXhsAXa379uDutLnXbovXn7/zav
- 0b1X/4OpY5SFgYxLgZZMUUW6bbI/JnPq3hLvPwsYOawMoEMYeDiFICJ/Ndn+Gd0e9v1v9Fh1xOO
- Vd13myd/YX9eZ2Xaaw/d9VUr1B41cisxMmzLNt0W/fz95528L7r9VhlP353YGSEjt/bf0ZqvZXr
- +/7gB
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1876; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=z1iJ73EI6mQ/ELE58y3y+0cCYyNXtjGYVHzqia9Z/wc=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIWSOikTO9ZY3HypsMioRjWrQ0SkvIss+8cDVz7+3ziZ
+ XP3BW+MO0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACYy5wYjw7QvD3b+NjqtVtTl
+ /W9+XVN8YN2H4JltDNXfql1Vo/L29TMyzE8tOZx2Tv3FSafMrNiXAcrbOFlmXJr4PuFXT6rwIYN
+ MDgA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+From: Gang Yan <yangang@kylinos.cn>
 
-The in-kernel MPTCP path manager can leave a stale ADD_ADDR announcement
-entry alive when removing the id 0 endpoint. This happens because the id 0
-removal path does not tear down pending announcements, unlike the non-zero
-id path.
+At the end of 'sock_connect_mptcp()', it calls 'freeaddrinfo(addr)',
+the 'peer' pointer (which points into 'addr') remains. Later, the main
+loop uses this peer pointer for reconnection attempts. If the memory has
+been freed and reused, the address data could be overwritten, resulting
+in an invalid remote address.
 
-When the PM later reselects id 0 after adding another signal endpoint, it
-finds the stale anno_list entry and hits WARN_ON_ONCE(mptcp_pm_is_kernel())
-in mptcp_pm_announced_alloc().
+This patch keeps the addrinfo list allocated for the whole process
+lifetime so "peer" remains valid across reconnects; the memory will be
+released at exit() time.
 
-Root cause: asymmetry between removal paths.
-- Non-zero id path: mptcp_nl_remove_subflow_and_signal_addr() calls
-  mptcp_pm_remove_announced() to clean up.
-- Id 0 path: mptcp_nl_remove_id_zero_address() skips cleanup entirely.
-
-Fix by making the id 0 path symmetric: call mptcp_pm_announced_remove()
-and decrement add_addr_signaled before queuing the RM_ADDR.
-
-Subtle detail: signal endpoints are stored in anno_list with port 0, but
-msk_local carries the connection's local port. In other words, entries
-linked to ID0 paths should have port == 0. A follow-up patch will ensure
-that. mptcp_pm_announced_remove() uses use_port=true for comparison. So
-clear the port before the lookup.
-
-Fixes: 740d798e8767 ("mptcp: remove id 0 address")
+Fixes: 05be5e273c84 ("selftests: mptcp: add disconnect tests")
 Cc: stable@vger.kernel.org
-Reported-by: syzbot+55c2a5c871441261ed14@syzkaller.appspotmail.com
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/620
-Suggested-by: Tao Cui <cuitao@kylinos.cn>
-Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v2: use new helpers name, note about "port = 0".
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: linux-kselftest@vger.kernel.org
 ---
- net/mptcp/pm_kernel.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-index 424f1a7f9248..1a7750813235 100644
---- a/net/mptcp/pm_kernel.c
-+++ b/net/mptcp/pm_kernel.c
-@@ -1137,6 +1137,8 @@ static int mptcp_nl_remove_id_zero_address(struct net *net,
- 	while ((msk = mptcp_token_iter_next(net, &s_slot, &s_num)) != NULL) {
- 		struct sock *sk = (struct sock *)msk;
- 		struct mptcp_addr_info msk_local;
-+		struct mptcp_addr_info anno_addr;
-+		bool announced;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index ea4cb6c1bd5e..178d98d91fea 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -381,6 +381,9 @@ static int sock_connect_mptcp(const char * const remoteaddr,
  
- 		if (list_empty(&msk->conn_list) || mptcp_pm_is_userspace(msk))
- 			goto next;
-@@ -1146,7 +1148,13 @@ static int mptcp_nl_remove_id_zero_address(struct net *net,
- 			goto next;
+ 	hints.ai_family = pf;
  
- 		lock_sock(sk);
-+		/* Drop a possibly pending ADD_ADDR for this address. */
-+		anno_addr = msk_local;
-+		anno_addr.port = 0;
-+		announced = mptcp_pm_announced_remove(msk, &anno_addr);
- 		spin_lock_bh(&msk->pm.lock);
-+		if (announced)
-+			msk->pm.add_addr_signaled--;
- 		mptcp_pm_remove_addr(msk, &list);
- 		mptcp_pm_rm_subflow(msk, &list);
- 		__mark_subflow_endp_available(msk, 0);
++	/* Keep the resolved address alive for the whole execution: it is
++	 * used again when reconnecting, and will be released at exit time.
++	 */
+ 	xgetaddrinfo(remoteaddr, port, &hints, &addr);
+ 	for (a = addr; a; a = a->ai_next) {
+ 		sock = socket(a->ai_family, a->ai_socktype, proto);
+@@ -421,7 +424,6 @@ static int sock_connect_mptcp(const char * const remoteaddr,
+ 		sock = -1;
+ 	}
+ 
+-	freeaddrinfo(addr);
+ 	if (sock != -1)
+ 		SOCK_TEST_TCPULP(sock, proto);
+ 	return sock;
 
 -- 
 2.55.0
