@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA63E5908BB
-	for <mptcp@lists.linux.dev>; Tue,  8 Sep 2026 17:39:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7F9599A22;
+	Tue,  8 Sep 2026 17:46:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788889149; cv=none; b=MHojC9etFxaR0ij0BG/RYgsMKj5CMMGUEQSWgPezI5Nl4uXIVsz8GpLKVGOp98kSwW1zEOcnG6gE7S9CZLal+/KO73xrSQMhEQEZNNG5iI59qK/pJ9Q1glRdydgz64xAHDdOKmm/deGyRg7va5UxmKHofWKNGthubLL9pGRSA/8=
+	t=1788889584; cv=none; b=oqcDWEmg+H0U55jFG1cKVVuyFnTfAx8P91XhYbOujbWbj8MwBmUjfd9ccQZjJXVRPteawCIM8AH9GFSVXy1iFeWkqVd0VNG9shRml9LfBexEwLVQzn6QyRKB17nr8/RC+gz3dvrIrTXFq/i+AjwjH8EA+s7+Puk7yoFdiAsy4xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788889149; c=relaxed/simple;
-	bh=LaGTbNDb2K5u+vPoNxardYbHgdq8qstgnvcGI9pX5pA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=iYO5zDMJjICD3YIy1VEhz1Cw4feM3lunn2iyMO3DT1zUb4bdzU+dgflYDBxoWFN00aUfk5AdsKXIQLhniFwhGUbd/d/7sDoIblhJyAJ9584DfoyVcpyCgUAd4WfyPAwh/iiWUp2CSNtCzteKOryf9DXjCLYbygA6dwHXB647+TI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WO1dvLxr; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788889584; c=relaxed/simple;
+	bh=1ofZHuz3pILM61337TfKTBVf7yYj018Jg6/nbvn8uYs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r5Om52hj+vGY80OMzIf6lQzeNzN0OV/jD2AcNTdbYiBGsoCQ9NYDxgYp4IzXsoJX4G5yotcI3u4+fZrui+zXC6nrlEFEikQBQw3YohhRwNF7MXIP3d3gD08QzZ6phP6sj8Enj9uetQW9aJdMIDwcYcjf6JsaHFn+tdvufThxPG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UzWFELXk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WO1dvLxr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7675B1F00A3A;
-	Tue,  8 Sep 2026 17:39:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UzWFELXk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6426E1F00A3A;
+	Tue,  8 Sep 2026 17:46:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788889147;
-	bh=mDYyk3EjHsuKG0zaEo1x897vfEDp+T18Ep1Nsz5eBk4=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=WO1dvLxr9AUbcbXOexwQ5oPYIt9A4sz5FWh1eNUxO8sIjNbR5bTrBjuJBCm3WaIzD
-	 PzkwjL4ilLmwYbE/1MfCV/n0or2UKs8VOFsEcbE5VZZ5pcRKY/sroEQpGmCOT/DdVg
-	 56VzmZfAJ8ea0rSvNNEuf1yJLa7W+FBjTIwYKbArUshee5owYaqBD0kyBrzvEgd9lz
-	 O2dBVchbDirzJ4HOYIngL++l9NSFuhpzEMK4rC1vGtLPFvdIUUNfTO7vVgSagNMjnu
-	 QX9njsRjQxMcIOiNr+JlkK0pGDDbmRmWlIdtXZpUJfq84AqoFfbTRWc249iaOf64Rz
-	 LXNG9LydfzYvQ==
-Message-ID: <7ebf53f7-b09d-4d38-a1e5-8f4853627386@kernel.org>
-Date: Tue, 8 Sep 2026 19:39:04 +0200
+	s=k20260515; t=1788889582;
+	bh=4nuA9E5oTaZVZysUvyuAo+KwQ0N7AEYk60FQhfSW1jU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=UzWFELXkR3Z5PxNeOZ3f0QCEuJG9Pe1Xj4liuPZ1Xmk1Z9Xp8dd4rPNlbSleIFFBu
+	 l6V2lDUPBvgY/VCmrdrbRfaPNZLrdr945qnDIJmm3EP1XSeIM4AF7x0FQe3oaVJTO3
+	 PVvfA8C2RhVIDRlapVdUJs0S75xn+kRXg5Us5GODJBdh7Am4dozoGjPbIHFQEcbhJM
+	 cHEhkeUAjzElfzmBAEY8/xnHnlY28DwArSpgm8qeNQDUAsT3rl5f5AXm5GteE8BeAo
+	 K3cMfLfRAx8RHhOWWk1ChceDMSj4/8LpKtXI6KLwaSbQWiQ704HXdZE5eKf5I2VRql
+	 6ofHe8nSGs43w==
+Message-ID: <994ecd4f-eaf9-4d2f-95a3-611083207d6c@kernel.org>
+Date: Tue, 8 Sep 2026 19:46:19 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,10 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2] mptcp: shrink struct mptcp_options_received
+Subject: Re: [PATCH net] mptcp: fix use-after-free of the subflow context on
+ the delegated list
 Content-Language: fr
-To: quanyeyang@proton.me, MPTCP Linux <mptcp@lists.linux.dev>
-References: <20260904-mptcp-shrink-opt-rx-v2-v2-1-d8662bb18ef2@proton.me>
+To: Hyunwoo Kim <imv4bel@gmail.com>
+Cc: martineau@kernel.org, geliang@kernel.org, pabeni@redhat.com,
+ mptcp@lists.linux.dev, netdev@vger.kernel.org
+References: <aoWBrkNwebJe-koh@v4bel>
+ <bf25121c-72cf-40a7-bbaf-5db85aee7f59@kernel.org> <aobtmznTdBks0frM@v4bel>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -84,176 +88,73 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260904-mptcp-shrink-opt-rx-v2-v2-1-d8662bb18ef2@proton.me>
+In-Reply-To: <aobtmznTdBks0frM@v4bel>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Quanye,
+Hi Hyunwoo,
 
-On 04/09/2026 13:22, Quanye Yang via B4 Relay wrote:
-> From: Quanye Yang <quanyeyang@proton.me>
+On 20/08/2026 14:05, Hyunwoo Kim wrote:
+> On Wed, Aug 19, 2026 at 12:22:18PM +0200, Matthieu Baerts wrote:
+>> Hi Hyunwoo,
+>>
+>> On 19/08/2026 12:13, Hyunwoo Kim wrote:
+>>> mptcp_subflow_delegate() links the subflow context into a per-CPU napi
+>>> list and takes a reference on the subflow socket. The context is a
+>>> separate allocation, reached through icsk_ulp_data, and the list holds
+>>> no reference to it.
+>>>
+>>> inet_csk_destroy_sock() runs sk_prot->destroy() regardless of the
+>>> outstanding references. That path ends in tcp_cleanup_ulp(), which calls
+>>> subflow_ulp_release(). subflow_ulp_release() frees the context with
+>>> kfree_rcu() but does not remove it from the list. Once the grace period
+>>> elapses and the context is actually freed, the next mptcp_napi_poll()
+>>> dequeues that entry and mptcp_subflow_delegated_next() writes to the
+>>> freed context with list_del_init(). That is the use-after-free.
+>>>
+>>> The freeing path cannot dequeue the entry itself: the list is per-CPU
+>>> and only the CPU that queued the subflow may touch it, as
+>>> tcp_release_cb_override() already notes.
+>>>
+>>> Delay the free instead. Add MPTCP_DELEGATE_DEAD.
+>>> mptcp_subflow_free_ctx() sets it and frees the context only if the
+>>> subflow is not scheduled, while mptcp_napi_poll() frees it if the dead
+>>> bit is set when it clears the scheduled bit. Either
+>>> mptcp_subflow_free_ctx() gets there first, sees the scheduled bit and
+>>> leaves the free to mptcp_napi_poll(), or mptcp_napi_poll() gets there
+>>> first, does not see the dead bit and mptcp_subflow_free_ctx() does the
+>>> free.
+>>>
+>>> Also skip mptcp_subflow_process_delegated() once the dead bit is set.
+>>> subflow_ulp_release() has already dropped the msk reference by then, so
+>>> the pending actions must not run.
+>>>
+>>> Finally, move delegated_status out of struct_group(reset).
+>>> mptcp_subflow_ctx_reset() clears that group on disconnect, and clearing
+>>> the scheduled bit while the entry is still queued would let
+>>> mptcp_subflow_free_ctx() free a context the napi list still points to.
+>>> delegated_node is already outside the group.
+>> Thank you for looking at this. Do you have more context about how the
+>> bug was discovered? Do you have a reproducer and/or a KASAN calltrace or
+>> similar?
+>>
+>> Having this would help the reviewers.
 > 
-> struct mptcp_options_received is allocated on the stack while parsing
-> incoming MPTCP options. Several suboptions are mutually exclusive, as
-> enforced by mptcp_parse_option(), so their payloads can overlap.
-> 
-> Group fields by suboption and place the mutually exclusive payloads in
-> an anonymous union: MP_CAPABLE keys, MP_JOIN, ADD_ADDR, MP_FAIL and
-> MP_FASTCLOSE. Keep DSS and rm_list outside the union: they can be
-> combined with other suboptions. Split the former shared rcvr_key into
-> rcvr_key (MP_CAPABLE) and fc_recv_key (MP_FASTCLOSE). Move join_id into
-> the MP_JOIN group, and overlap token, thmac and hmac inside that group.
-> 
-> Further shrinking would require changing the parser so currently
-> coexisting fields (DSS mapping vs ACK, rm_list, status flags) can
-> overlap. That adds complexity for little gain, since the outer union is
-> already dominated by the MP_JOIN / ADD_ADDR members.
-> 
-> This reduces the structure size from 136 to 72 bytes on x86_64.
-> 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/625
-> Signed-off-by: Quanye Yang <quanyeyang@proton.me>
-> ---
-> Changes in v2:
-> - Group fields by suboption and move join_id into the MP_JOIN group
-> - Split rcvr_key into rcvr_key (MP_CAPABLE) and fc_recv_key (MP_FASTCLOSE)
-> - Overlap MP_JOIN token, thmac and hmac
-> - Drop the dependency on the invalid-option series
-> - Link to v1: https://patch.msgid.link/20260904-mptcp-shrink-opt-rx-v1-1-2d87ab9505ff@proton.me
+> Sorry for the late reply. The poc was extremely unstable, so I wanted 
+> to improve its reproduction rate a bit before sending it.
 
-Thank you for the new version. It looks good to me, just a few "details"
-if you don't mind.
+No delay at all when compared to my reply, sorry!
+> Attached are the poc, the KASAN log, and the mdelay diff used for 
+> reproduction.
 
-> ---
->  net/mptcp/options.c  |  6 +++---
->  net/mptcp/protocol.h | 44 +++++++++++++++++++++++++++++---------------
->  2 files changed, 32 insertions(+), 18 deletions(-)
-> 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index f87707110c75..943b2b37eaae 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -374,10 +374,10 @@ static void mptcp_parse_option(const struct sk_buff *skb,
->  			break;
->  
->  		ptr += 2;
-> -		mp_opt->rcvr_key = get_unaligned_be64(ptr);
-> +		mp_opt->fc_recv_key = get_unaligned_be64(ptr);
->  		ptr += 8;
->  		mp_opt->suboptions |= OPTION_MPTCP_FASTCLOSE;
-> -		pr_debug("MP_FASTCLOSE: recv_key=%llu\n", mp_opt->rcvr_key);
-> +		pr_debug("MP_FASTCLOSE: fc_recv_key=%llu\n", mp_opt->fc_recv_key);
->  		break;
->  
->  	case MPTCPOPT_RST:
-> @@ -1259,7 +1259,7 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
->  
->  	if (unlikely(mp_opt.suboptions != OPTION_MPTCP_DSS)) {
->  		if ((mp_opt.suboptions & OPTION_MPTCP_FASTCLOSE) &&
-> -		    READ_ONCE(msk->local_key) == mp_opt.rcvr_key) {
-> +		    READ_ONCE(msk->local_key) == mp_opt.fc_recv_key) {
->  			WRITE_ONCE(msk->rcv_fastclose, true);
->  			mptcp_schedule_work((struct sock *)msk);
->  			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPFASTCLOSERX);
+By chance, do you have a decoded stack trace? e.g. using the following
+script with the vmlinux and modules used to generate the KASAN trace:
 
-Could you please do this split in a dedicated commit: it would be easier
-for the reviewer (and to have a shorter patch), and could help in case
-of conflicts with the backports. You can use a union in struct
-mptcp_options_received.
+  ./scripts/decode_stacktrace.sh
 
-You can simply mention in the commit message that it will help to reduce
-the structure size in the next commit.
-
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index b3121c8c766b..11adb2d67bb6 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -145,13 +145,13 @@ static inline bool before64(__u64 seq1, __u64 seq2)
->  #define after64(seq2, seq1)	before64(seq1, seq2)
->  
->  struct mptcp_options_received {
-> -	u64	sndr_key;
-> -	u64	rcvr_key;
-> -	u64	data_ack;
-> -	u64	data_seq;
-> -	u32	subflow_seq;
-> -	u16	data_len;
-> -	__sum16	csum;
-> +	struct { /* DSS, also used by MP_CAPABLE with data */
-> +		u64	data_ack;
-> +		u64	data_seq;
-> +		u32	subflow_seq;
-> +		u16	data_len;
-> +		__sum16	csum;
-> +	};
->  	struct_group(status,
->  		u16 suboptions;
->  		u16 use_map:1,
-> @@ -167,15 +167,29 @@ struct mptcp_options_received {
->  		    deny_join_id0:1,
->  		    __unused:2;
->  	);
-> -	u8	join_id;
-> -	u32	token;
-> -	u32	nonce;
-> -	u64	thmac;
-> -	u8	hmac[MPTCPOPT_HMAC_LEN];
-> -	struct mptcp_addr_info addr;
->  	struct mptcp_rm_list rm_list;
-> -	u64	ahmac;
-> -	u64	fail_seq;
-> +	/* Options below are mutually exclusive, see mptcp_parse_option() */
-> +	union {
-> +		struct {
-
-I suggest adding a short comment on each anonymous struct here to make
-it clearer that it is linked to a specific option:
-
- struct {  /* MP_CAPABLE */
-
-> +			u64 sndr_key;
-> +			u64 rcvr_key;
-> +		};
-> +		struct {
-
- struct {  /* MP_JOIN */
-
-> +			u32 nonce;
-> +			u8 join_id;
-> +			union {
-> +				u32 token;
-> +				u64 thmac;
-> +				u8 hmac[MPTCPOPT_HMAC_LEN];
-
-Maybe adding comments here too on each line?
-
-  /* SYN */
-  /* SYN + ACK */
-  /* ACK */
-
-> +			};
-> +		};
-> +		struct {
-
- struct {  /* ADD_ADDR */
-
-> +			struct mptcp_addr_info addr;
-> +			u64 ahmac;
-> +		};
-> +		u64 fail_seq;
-> +		u64 fc_recv_key;
-> +	};
->  };
->  
->  static inline __be32 mptcp_option(u8 subopt, u8 len, u8 nib, u8 field)
-> 
-> ---
-> base-commit: d5a4e55ccfb893614646d0f0e5c440daa92b7467
-> change-id: 20260904-mptcp-shrink-opt-rx-v2-d8e0c6951294
-> 
-> Best regards,
-> --  
-> Quanye Yang <quanyeyang@proton.me>
+Note that we are still looking at a possible simpler fix, but no luck so
+far. In any cases, we will take this patch in our tree first, then send
+it to netdev.
 
 Cheers,
 Matt
