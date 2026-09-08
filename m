@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174F354A7ED;
-	Tue,  8 Sep 2026 14:14:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3FBA5452A2;
+	Tue,  8 Sep 2026 14:14:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788876870; cv=none; b=HDeaNeo+vGvQlJ3FTm40td+XvkXumsEZpeHt7xQJQ8WKXC3pHa8WDALbiMULFjFVVBq947jxxmoboSRnUwnAO8HHxE1ITxfHtJtlG2oxeGlPi75yPmiRCSYZhsC4EGJSphnhuO939xcWIUTuvvUnBqUvfePwtDFkA2X6sSkcSy8=
+	t=1788876875; cv=none; b=PN/peoWs2Dceg9Ra9FuBbLBbymtD3d4HTsyZxTPA+Dz8SpgsReNB03O9PGZzTCl7NEF0LLPpFXE8injokkbxDFF35/BjNesFR6Ttycun5a4lDrQVJhEcZEWUWFNJCOHk7vlwdkp5vCkIXyxV4d5vPfMvaM9UbspPh18OpFnuMh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788876870; c=relaxed/simple;
-	bh=CDC/K2FJRHVAGcRgJXtSdI6Hc3vAAlafTF+wKI4l1nY=;
+	s=arc-20240116; t=1788876875; c=relaxed/simple;
+	bh=fxMH39EiXefslZTzlRWNigq/snXjgcnGUl/f/2XEJ3Y=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DLLbAc+CSc0k0wHT7JXRxQckfimXpHoT0LV7bO9oOU/DvARAfsn60gN5T7Y0O4vAp9JKhAOEK7M2OpGPcCjALbO6j/yW2ij+smsAHCGU7lfXc3R26/wQCHNmRQto+/KiHM/jeTwbQ8Kljy1Kwe8G90MmYY3aSD+HxCfZncROONk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tcibpc6p; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=pJ8MRnmAx7nGJTPWDqKUiUZgDSXKxxAz8K2PTMehEmkaIxavP3BynpZ4AhxV9AMGJ/8d1Cd1OXwJ/UgwZXAb02yiPjWkCRQI7PIsLb0yl/U1F9b/bTTLHdB/nGTyoKqWLu0Uomb/oc+ECTN8o+NTr9+J430QGgrBzxNPR/YTq7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MnSBQRiG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tcibpc6p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD92A1F00A3E;
-	Tue,  8 Sep 2026 14:14:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MnSBQRiG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3579A1F00A3F;
+	Tue,  8 Sep 2026 14:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788876859;
-	bh=0oaYRQgH57DHWr6sOc46cwyYSafOI68a2pNXApHJ4u4=;
+	s=k20260515; t=1788876862;
+	bh=fw3sAfr3TBuViXjJMX6QyiDIAVSnEhj3ZWxnrfrUtV4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=Tcibpc6ps1nIcgg86IfKX7uvEGmRiVA1BOcGsqYLXvWMlKSlvpUOt9eFJWlQkUfo9
-	 yKkUbt+1kpgoMih3mT712MOhYlDfrUKUAa5qpiXFxP7VZykW7VRWIixEa9KyCZ/t9d
-	 gzzxR2d9Wf5N+JIhcwa12rDfK4L8dYf1yJjbXYGwkjCps8esiMb8uDSJUte2JzwVd6
-	 ARxZIBpUEY6FZp9GA6vce+qPO6VJr9ggFbUoOsvkAxbRK3KRnFJgw5X4SYZgaiC28p
-	 REOtbkGongFU8pHddpJJlkyF/lYxxgAJeaRgmU/oBsGBZnLnX7b9YnfQotZvAkjYLn
-	 493cmO5YBG2Sw==
+	b=MnSBQRiG8CnPZkipcwyFkfJhN995n7+p1AslPgPe6b96ftWKsKOc3DwEuzprpWSEa
+	 pipTrNZzrse4qOvqvOeGHgea1POz07Fl8lZjYvCO8njoEPmz1TXFP42Lu0GserqKBZ
+	 tVTadBamAOoXcxLc2+woO8I1vOMq6T6hdLzbabQamsR60RIFeKRzqfY2GjbNF9MQyq
+	 iH4mAmyi8tgIsrClCh4kHc51P182cHqo6NIpJG49PRD+VAt2aYps5N+W9N7lre67Yx
+	 k2igUU00k0CXNo1MvRE0fivrlLp4DOJIG+J7xqXnMyVFAO5vkMbQ2n19qb2vvfcdYv
+	 NkQyjOHyw6hDw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 08 Sep 2026 16:07:07 +0200
-Subject: [PATCH net v2 02/15] mptcp: subflow: no need to copy thmac during
- ulp_clone
+Date: Tue, 08 Sep 2026 16:07:08 +0200
+Subject: [PATCH net v2 03/15] mptcp: syncookies: remember the request
+ backup flag
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-2-df1de70348b6@kernel.org>
+Message-Id: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-3-df1de70348b6@kernel.org>
 References: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-0-df1de70348b6@kernel.org>
 In-Reply-To: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-0-df1de70348b6@kernel.org>
 To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
@@ -47,52 +47,64 @@ To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
  Simon Horman <horms@kernel.org>
 Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
  linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- stable@vger.kernel.org, Florian Westphal <fw@strlen.de>
+ stable@vger.kernel.org
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1448; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=CDC/K2FJRHVAGcRgJXtSdI6Hc3vAAlafTF+wKI4l1nY=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIWSKizt+3eeEbIbVtl9FxHrf6lLJJzrHUbbkzw4U8+v
- 3+S9erHHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABMxn8bwP/HHhK3lx09pT1p6
- iHmJ8PfLBZVCS0w5j/048Pn3i5mftToZGfbPlpjKqFLFrx3N1ZoZonnLxnmXH5990wudrwJPJNO
- i+QE=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1762; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=fxMH39EiXefslZTzlRWNigq/snXjgcnGUl/f/2XEJ3Y=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIWSGgIPnSbFmqr55UwVcvaqu6rgY+a9R+7fd/2Gl6YH
+ DRf6kh+RykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwERCLjMyLA+YzGNotfernsMz
+ EbXN15Q+7ki/nxrxuTfRwzxrWfm5JIb/AVuWqSrPrPfYs77UbpPAsYMtV5ZEl7f6tnip+3v5lv5
+ kBwA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-'thmac' is not used after that point.
+Instead of using an uninitialised bit when copying the info in
+subflow_ulp_clone().
 
-Indeed, subflow_ulp_clone() is called when the request on the passive
-side is over, so when the truncated HMAC is no longer needed.
+To fix this, no need to extend the join_entry structure: backup is
+coming from struct mptcp_subflow_request_sock, only one bit. Do the same
+here by using one bit for both.
 
-Note that in case of SYN cookies, thmac will not be initialised. So
-better to remove it to avoid a warning from debug tools like KMSAN for
-reading uninitialised data.
-
-Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
+Fixes: efd340bf3d77 ("mptcp: distinguish rcv vs sent backup flag in requests")
 Cc: stable@vger.kernel.org
 Reviewed-by: Geliang Tang <geliang@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Cc: Florian Westphal <fw@strlen.de>
-Note: Peter Krystad's email address is bouncing.
-@Sashiko: yes request_bkup's initialisation is not fixed in this commit
-          but in the next one, no need to complain about that: different
-          Fixes tag...
+v2: update the Fixes tag (even if the target version is the same)
 ---
- net/mptcp/subflow.c | 1 -
- 1 file changed, 1 deletion(-)
+ net/mptcp/syncookies.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index af81ad5e699d..01db7edce18a 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -2084,7 +2084,6 @@ static void subflow_ulp_clone(const struct request_sock *req,
- 		new_ctx->request_bkup = subflow_req->request_bkup;
- 		WRITE_ONCE(new_ctx->remote_id, subflow_req->remote_id);
- 		new_ctx->token = subflow_req->token;
--		new_ctx->thmac = subflow_req->thmac;
+diff --git a/net/mptcp/syncookies.c b/net/mptcp/syncookies.c
+index b5cac5701122..9474706641c1 100644
+--- a/net/mptcp/syncookies.c
++++ b/net/mptcp/syncookies.c
+@@ -26,7 +26,8 @@ struct join_entry {
+ 	u32 local_nonce;
+ 	u8 join_id;
+ 	u8 local_id;
+-	u8 backup;
++	u8 backup:1,
++	   request_bkup:1;
+ 	u8 valid;
+ };
  
- 		/* the subflow req id is valid, fetched via subflow_check_req()
- 		 * and subflow_token_join_request()
+@@ -63,6 +64,7 @@ static void mptcp_join_store_state(struct join_entry *entry,
+ 	entry->remote_nonce = subflow_req->remote_nonce;
+ 	entry->local_nonce = subflow_req->local_nonce;
+ 	entry->backup = subflow_req->backup;
++	entry->request_bkup = subflow_req->request_bkup;
+ 	entry->join_id = subflow_req->remote_id;
+ 	entry->local_id = subflow_req->local_id;
+ 	entry->valid = 1;
+@@ -117,6 +119,7 @@ bool mptcp_token_join_cookie_init_state(struct mptcp_subflow_request_sock *subfl
+ 	subflow_req->remote_nonce = e->remote_nonce;
+ 	subflow_req->local_nonce = e->local_nonce;
+ 	subflow_req->backup = e->backup;
++	subflow_req->request_bkup = e->request_bkup;
+ 	subflow_req->remote_id = e->join_id;
+ 	subflow_req->local_id = e->local_id;
+ 	subflow_req->token = e->token;
 
 -- 
 2.55.0
