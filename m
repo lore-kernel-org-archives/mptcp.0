@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C714757F73D
-	for <mptcp@lists.linux.dev>; Wed,  9 Sep 2026 14:15:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7C95867CB
+	for <mptcp@lists.linux.dev>; Wed,  9 Sep 2026 14:15:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788963307; cv=none; b=rewKA859DRfrvkERYOudwlCR9RYfCvnUkD9PyImEmUo1HPBeCDjB32yPUmb0klpLO+kaKfx9F8m8cAWMGwMLUTpIchKkaFLBAQfQiF/Q7SynyruQ7DHUgSBadhAsCLOL75eFbVQNXG8NU4+ibfjIZo+RuYtw0t1MwCO2lr0u70k=
+	t=1788963307; cv=none; b=QcO/XtZySCksZ5CBGTmZmuTK7dC/gdr2vB5Oqi+ScGSU3rVE+rGVrGsR7iRpgWcS+R0d4IxT3lp7NAfFyel4QVNcCBLoTOeu3cpXBcT7RGq0xy8s3zU9vPOPlV4tVnh6P1K700BhS8+S27lBUTq4wFvExlUEv+b4uMCmAPPaGVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1788963307; c=relaxed/simple;
-	bh=SyH7bQOz04FodkQQTANTF2oZZhi5hGdrWhRy8qbAXE8=;
+	bh=VNc1F2AV0E0x729VMMOZlIi583Rwgx+whiCrHG2L5LU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=q2ym0Jhll9kfulRlr3SQLxs78/3HfNvSLRGdwUozJKPVqnyzWI5Xl6uv0/LjZAldYJ9k6HYoe4v7+5rOfhgCGECPehs9HYYzZbhIG8PDexhiLSporvolLFLmJir5NoTVrIEBNOoRUisVhwjeTfqFTe5OmaP7+BviRWwltfsaroA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EVvS7FI1; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=P66Ko18CBL4bPZzP3LyPuqqry0q/CaWTDc0zKs10DhsCzEZjrQh3v9bfNiF773tT4SdpLXXR6t/Ux1GW52fLz1/BAB0MgCEMO/kOcXdUtDXsLsXIjEGAU2uCkFXv9FksoKYeKJP4E8zfLRO8U5yV1qpyzSMsizQeD4zD9N08N9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ToMaPBDy; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EVvS7FI1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 840EE1F00A3D;
-	Wed,  9 Sep 2026 14:15:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ToMaPBDy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 384121F00A3E;
+	Wed,  9 Sep 2026 14:15:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788963305;
-	bh=jNfYFc8k44s2zzCR+FaU9ay9RmzvPNSh0vdyx0/JWAM=;
+	s=k20260515; t=1788963306;
+	bh=CdDchicwO5CtadRiujswbn3WOvWK6gfuS7s03XFbqQA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=EVvS7FI1ZuHjnAh7G6CgVqGZHvS4XTQCGeSJwj+YkDiORHzHcFOXIVI1YhqIQZ6LA
-	 yd9XTYvuAWSSgS2FCOPYQsENXdy2JtAlrf+/2EXsIekftMoI99Q0RrEinBiZhaqIN3
-	 TZsUaZylV5AAXemD8j/fUAdhaSqOVE5aDc9g78Sy7ZAoYEV5rlWoi/XNvrmykp+l7j
-	 jcIAyeCAr54tn82CeJsF6S6DJcg1KjVfifpaBWKM1rvikd5adYQpOs2YNnyHar8mmR
-	 +lKVeF2I/jSmoxqPzV8cjnVjJvF3DaKgne4hT4ViK4sJJaUvrnbAZ9yAfFG4efkT9f
-	 IWGacNn4OJG/g==
+	b=ToMaPBDy2a136zOIuB8a6o2uPEtEpCb1vWABo5iTZuFtmlUq3OxzODBqQiPay2L5i
+	 wt7lXCFa8Y3wx7ex77KusJEVaRmuDWhe62p0vvypTQCQV8yzdvObAzTwFQrXGFNkFu
+	 qKLu4sEt7N4aW7rE11Pg5wjRTTI5wkVamrTwv8Jv8DXqz+lKKJbsb1ayqWNPC249WE
+	 bnOCMKne9Vmj6ygBBilJ9rreLtWQ+fO9XHEUwV691QNd8F2XinMOzH4kfHihCXff+s
+	 iWI3I1TKBu9ncwAWW/qJ4YevQPp0tNDBriHph3EJrEhTr1+dG3Yo6aRcsmS+0Aa+U6
+	 /82Rn3/+QOj+A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH net v2 08/15] mptcp: pm: userspace: fix address ID
- overflow
+Subject: Re: [PATCH net v2 12/15] selftests: mptcp: lib: get counters for
+ the right test
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>
 Cc: mptcp@lists.linux.dev
-In-Reply-To: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-8-df1de70348b6@kernel.org>
+In-Reply-To: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-12-df1de70348b6@kernel.org>
 References: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-0-df1de70348b6@kernel.org>
- <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-8-df1de70348b6@kernel.org>
+ <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-12-df1de70348b6@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Date: Wed, 09 Sep 2026 14:15:05 +0000
-Message-Id: <20260909141505.840EE1F00A3D@smtp.kernel.org>
+Message-Id: <20260909141506.384121F00A3E@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -49,69 +49,77 @@ Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Incorrect ID collision check permanently breaks ID allocation if a=
-n entry with ID 0 exists.
+- [High] Insecure use of predictable temporary file paths in /tmp allows lo=
+cal privilege escalation via a symlink attack (TOCTOU).
 --
 
-commit 0ac6c6a2ecc7912387ac1b8203c8c6f77120a794
-Author: Qing Luo <luoqing@kylinos.cn>
-mptcp: pm: userspace: fix address ID overflow
+commit 706f0812739080817c63b8f13d5f3a60fbeddf0a
+Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-This commit fixes an address ID overflow in the userspace PM when all
-IDs (1-255) are exhausted. By returning -ENOSPC when the next available ID
-exceeds the maximum, it prevents ID 0 from being incorrectly allocated.
-The ID allocation check is also moved before memory allocation to simplify
-the error path.
+selftests: mptcp: lib: get counters for the right test
 
-> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index b94fbb483bf94..fab16d953dbfe 100644
-> --- a/net/mptcp/pm_userspace.c
-> +++ b/net/mptcp/pm_userspace.c
-> @@ -69,6 +69,19 @@ static int mptcp_userspace_pm_append_new_local_addr(st=
-ruct mptcp_sock *msk,
->  	}
+This commit updates the mptcp_lib_get_counter function to use nstat history
+instead of absolute counters when extracting MIB values. It renames the
+previous variable to cache and introduces a new history file variable.
+
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testi=
+ng/selftests/net/mptcp/mptcp_lib.sh
+> index da1da414c30f2..b9d14647f4019 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+
+[ ... ]
+
+> @@ -416,19 +416,21 @@ mptcp_lib_nstat_get() {
+>  }
 > =20
->  	if (!addr_match && !id_match) {
+>  # $1: ns, $2: MIB counter
+> -# Get the counter from the history (mptcp_lib_nstat_{init,get}()) if ava=
+ilable.
+> -# If not, get the counter from nstat ignoring any history.
+> +# Get the counter from the cache (mptcp_lib_nstat_{init,get}()) if avail=
+able.
+> +# If not, get the counter from nstat ignoring any cache, but using the h=
+istory.
+>  mptcp_lib_get_counter() {
+>  	local ns=3D"${1}"
+>  	local counter=3D"${2}"
+> -	local hist=3D"/tmp/${ns}.out"
+> +	local cache=3D"/tmp/${ns}.out"
+> +	local hist=3D"/tmp/${ns}.nstat"
 
 [Severity: High]
-This isn't a bug introduced by this patch, but does the loop preceding this
-block permanently break ID allocation if an entry with ID 0 exists?
+This isn't a bug introduced by this patch, but was already present in the
+script for .out and .nstat files. Is there a risk of a local privilege
+escalation via a symlink attack here?
 
-If needs_id is true and no address match is found, entry->addr.id remains 0.
-The check in the loop:
+Because the file path is constructed in mptcp_lib_get_counter() using the
+globally visible namespace name, an unprivileged attacker could monitor
+/var/run/netns/ for new network namespace names and preemptively create a
+symlink at /tmp/${ns}.nstat pointing to a sensitive file like /etc/shadow.
 
-    id_match =3D (e->addr.id =3D=3D entry->addr.id);
-    if (addr_match || id_match)
-        break;
+>  	local count
+> =20
+> -	if [[ -s "${hist}" && "${counter}" =3D=3D *"Tcp"* ]]; then
+> -		count=3D$(awk "/^${counter} / {print \$2; exit}" "${hist}")
+> +	if [[ -s "${cache}" && "${counter}" =3D=3D *"Tcp"* ]]; then
+> +		count=3D$(awk "/^${counter} / {print \$2; exit}" "${cache}")
+>  	else
+> -		count=3D$(ip netns exec "${ns}" nstat -asz "${counter}" |
+> -			awk 'NR=3D=3D1 {next} {print $2}')
+> +		count=3D$(NSTAT_HISTORY=3D"${hist}" ip netns exec "${ns}" \
+> +			nstat -sz "${counter}" |
+> +				awk 'NR=3D=3D1 {next} {print $2}')
 
-evaluates to true if an existing entry has ID 0. This breaks the loop early
-and causes the function to return -EINVAL instead of allocating a new ID.
+[Severity: High]
+When nstat is executed here as root with NSTAT_HISTORY pointing to the
+predictable /tmp/ path, could it follow the attacker's symlink and
+overwrite the target file?
 
-A privileged user (CAP_NET_ADMIN) can configure the userspace PM to create a
-subflow using the initial connection address (omitting the ID or specifying
-ID 0) via mptcp_pm_nl_subflow_create_doit(). This legitimately adds an entry
-with ID 0 to the userspace_pm_local_addr_list. Later, when an event requires
-a new implicit ID allocation (e.g., calling
-mptcp_userspace_pm_get_local_id()), needs_id is true and entry->addr.id is
-initially 0.
-
-Could this incorrectly match the unassigned ID against the existing entry
-with ID 0, permanently breaking MPTCP connection management for the socket?
-
-> +		unsigned int id;
-> +
-> +		if (!entry->addr.id && needs_id) {
-> +			id =3D find_next_zero_bit(id_bitmap,
-> +						MPTCP_PM_MAX_ADDR_ID + 1, 1);
-> +			if (id > MPTCP_PM_MAX_ADDR_ID) {
-> +				ret =3D -ENOSPC;
-> +				goto append_err;
-> +			}
-> +		} else {
-> +			id =3D entry->addr.id;
-> +		}
-> +
+>  	fi
+>  	if [ -z "${count}" ]; then
+>  		mptcp_lib_fail_if_expected_feature "${counter} counter"
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260908-net-mptcp-=
-misc-fixes-7-3-rc1-v2-0-df1de70348b6@kernel.org?part=3D8
+misc-fixes-7-3-rc1-v2-0-df1de70348b6@kernel.org?part=3D12
