@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06EE55221FB
-	for <mptcp@lists.linux.dev>; Wed,  9 Sep 2026 10:40:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B92D4B5CD4
+	for <mptcp@lists.linux.dev>; Wed,  9 Sep 2026 10:53:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788950425; cv=none; b=kTgPytu2zY3JREfQfrrwPzqUDAAItxt+Axy28v99/vi2Y1U/4lo2dEEWwtH9idVdvpnSu6E/Go/zX0RQAAti9Ndn/TvPC4tZ/IiT/LJaIFmUfv3uqa8TGI9W6gx8MKkNEs0PaBqEI3NEGEDtRBYrb9C/N5XXealxQ2ZxTdJlrNk=
+	t=1788951204; cv=none; b=bDYrIWo68F45FeyJuuxBANiZYPOL3iI5wupmeZVoSLTxfwY+2UsaDXl5dybmlVbleCkwfxk0ZOkdeTdeXWzee6vOJjJ9wnUFXSV3Kerc5yTeuN4F2J0vXa03BKoINJe3/g6c3hYBfSz3epCCdKu7oX1TdNCW35lflp4/x7jS80U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788950425; c=relaxed/simple;
-	bh=BzUxQ5vybc1OEj1h2/x+9+auCKmfvFlpawNmnGylwnc=;
+	s=arc-20240116; t=1788951204; c=relaxed/simple;
+	bh=I4XpcxIGLhsqPFZz87QB5iYFsq6CUrXs7fBV8zk1PG4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=MCi9ppSWxAmSp5CU20iufhyMt3CpxfjUflRiG8hWp2OheUMSXif6JgkXbKOQm4mmognj65Z1FXiU0cOPO+8Xu9cGJkJi2dgq7cMhuTA22mwfzImgaGdqgoa7s9tFHATZWVb7oHOhjYV2C2RdlCey3C6U0BQDVP+TcRyw/CCfxAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GAUnlfM5; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=ImOT2USBy1qvLG1Qy2zv/nvo8VlOJMteTUuAREAz0lpQ8asMDat42VDw8t1SUP2hUE5ArOB6ABbd3x502iuAeyTIeOwvdRYas6M/y+SqD5Ia83zhz4M1iJGi7BqIxY54rjoxaZF2aQYsNa0Yqqaa7kAEKrRZymneMqxLzRB0BYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DtyfekYQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GAUnlfM5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D97F1F00A3D;
-	Wed,  9 Sep 2026 10:40:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DtyfekYQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3B5B1F00A3E;
+	Wed,  9 Sep 2026 10:53:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788950423;
-	bh=O/kUzHb5QGNvPEOI5AuyX5JZDFn4ar5Qm2EuJq26Zts=;
+	s=k20260515; t=1788951199;
+	bh=BdChnvhbF17Db51XGAHDjy2DSRyszPPWo9/zJZ4W3dI=;
 	h=Date:Subject:To:References:From:In-Reply-To;
-	b=GAUnlfM50mQf1zsxKchVd7kXAvHe1R+dReBRQteTNB/IBcumLhwWDQJeroU3oZe5/
-	 stCrjcrwLszvVVcF2cUIIFCXtSAf2LJFur4z1Brl97xyKvVvUlpwWoopKj9xzP64PM
-	 6t5jn2wGjXzcAijJiw05EXdiUUF6u/bQX+GjSslwCe4rYTGO68YvS5byOG58odOFtY
-	 72NtPl8spsNeQYufhUtr6jOAzULXRPImUoAHPNo2fZpBnKdhrjzUBI/x34rlEI/31q
-	 0kJMJQAjzHv5uGiCg3W2vhr9T5uSfLLLx625Gwumal4cT3IDNIDcqdpd1nlW6mjCcP
-	 Ch4JsWwW3wVEw==
-Message-ID: <23a10084-67a5-4fd4-a001-a21339b604b9@kernel.org>
-Date: Wed, 9 Sep 2026 12:40:21 +0200
+	b=DtyfekYQYqqRQ7EuTr4QTe9UbzGYHGykHB9EAbETpzQDD0/hgss4Geo3W5dZib5HT
+	 ZeC695UvfW8NyNOB7Ozx0okTtfuniYZAMze8N/xEfa+ghY5p57acu3wfax46+XS1lG
+	 Y/IJ7rPIoEDB0rWlPNryjRzO45JxN8YHnrXzp2bOT8K3Li2zpXaz9B52M3EEK8k0wC
+	 oKhA1O552vv4vB8/Rsa00YVje37gSz4tDf74gAGRhcW4KHT+wd9vXXJdwoJgVIY71x
+	 F7SY2IcXFlbCueWFaweG5RET0axW8iJJ2w2HgwerL5b9hpnB8aKd0wVn2sfwNA2m6M
+	 fVRslR3637DLg==
+Message-ID: <1aa3128b-e271-4a17-b455-d413e10a675f@kernel.org>
+Date: Wed, 9 Sep 2026 12:53:16 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -100,15 +100,17 @@ On 09/09/2026 04:40, Quanye Yang via B4 Relay wrote:
 > remaining mutually exclusive payloads in an anonymous union. DSS and
 > rm_list stay outside the union. On x86_64 the structure shrinks from
 > 136 to 72 bytes.
-> 
-> ---
-> Changes in v3:
-> - Split the FASTCLOSE key change into its own commit
-> - Add comments linking union members to their suboptions
-> - Link to v2: https://patch.msgid.link/20260904-mptcp-shrink-opt-rx-v2-v2-1-d8662bb18ef2@proton.me
-Thank you for the v3, it looks good to me:
+Now in our tree (with small changes to silence checkpatch warnings):
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+New patches for t/upstream:
+- f23ba7b8cca7: mptcp: split FASTCLOSE key from rcvr_key
+- 6ae8ca66c6ca: mptcp: shrink struct mptcp_options_received
+- Results: c692d107c31c..ca7966735328 (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/162cbd03ff40db2152751a2fd401abd33b5ba9dc/checks
 
 Cheers,
 Matt
