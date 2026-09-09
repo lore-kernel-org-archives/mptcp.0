@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2153396D13;
-	Wed,  9 Sep 2026 18:03:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E25A39768F;
+	Wed,  9 Sep 2026 18:05:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788977010; cv=none; b=EtrSQpZe6Vj48pK3cZ8wi/+CYgGYoFp6avoxCqQeOWAYmb+u3XcD0lVVBg16Q5wnioSgsT9oQsOaezXqLAejnYa9rVG/ONchI0/0k1PNMnnSis/SiUlCpegntdk+C5ztDFtX/OrUI04OIz0awoIegVyFtkNZGRCEOrsrvIeSUw8=
+	t=1788977138; cv=none; b=PGylSlDTwJWraMiqL3cxHV8pZhMgpr9kkZpZi/RV5i6pV4dv9Uq8iYVOTe1Wz8AksZooUlOZMumZZUqIeSy08lu4WIawKt8vpptwbIRBYAiLjfyVKda3HVgQ351VcMnqR5LJw0tHFqtmI2PGcOz6F6gJwYQvGDAo/9OXuLcYOUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788977010; c=relaxed/simple;
-	bh=Las9w7VEmzQZwGkpCFsvWgiGoM0T0keae01SaXpx4ME=;
+	s=arc-20240116; t=1788977138; c=relaxed/simple;
+	bh=9joxJMBXn3aVf9z/7gRgRBbGfSXFpGVRqWUb513LW34=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Magjg4ex3a/e8r6w5iLFZNagHE3uRA0lQlZMsWajVkSkxBFg/r8drPD39Kjc3D0Meod5LC7pmTCHqmbEMvIyQySxzWmrurKHryZUKBMQBJZ34KAxgJ0u7zZ5v8LzlcgEWfhPOaDtY2pVvI+j1vM0hK0VLtS5N6dLSkq8uBcWZyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cmlnNDid; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=Zg6LcJ92E/lTZG/D3/RJE2cMnj6b15SnaDrjUjicZSiA2ikknDSygu6G8LA+mFny70vykYkF4UJzMxbk5BZTyxAZInbjHb/X2ODHaOtj6ZgszuUACg7RiCs0v5fB89fVjUn851QBPcKt0TQ+J4HqgPw9ixVWx4TJ1H1eNtFr1l8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ii9WzW1i; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cmlnNDid"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E8641F00893;
-	Wed,  9 Sep 2026 18:03:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ii9WzW1i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52C001F000FF;
+	Wed,  9 Sep 2026 18:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788977009;
-	bh=KnDHX9M1i8YbIvHyQzXuOKvuaUqriDDBknhvO0sB8QE=;
+	s=k20260515; t=1788977137;
+	bh=XoiWhP5Uy0YFVA4m/vL613kEs5lCB45rd1IQrlxJEsU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=cmlnNDidZblxlV5/VzdIsPp8MS9wHhh7DzVGRE+vQFXyP+piyEBMYBdDHCwljqDQX
-	 a3oskIjFjUp1la2tk19iHQBPwuUfUJYsLkmljf9AbqIXJH5j+tWS3ePvpWhwRsOQrK
-	 Ao/zSc46p04/qK6UkVj5QcfKzdqdK7OTl4N7Lr0nQpNIcqXodXYqL+JBxIc8AEdXFA
-	 cUk1S7nYgAOiqyOALV0yRJV19HoqNHebVOyVsQBiMBpOekHo5Nh/piATDBlxHlZKPY
-	 hwdCnZvppyxOSnWM9nc/langm5LWe7xV0Ig2ZZjn61edbX15WCTrqH4ZJiQww8ldx3
-	 BU1pJUfrjwvDg==
-Message-ID: <bc937549-d004-4d31-bf05-ddbdeea519bc@kernel.org>
-Date: Wed, 9 Sep 2026 20:03:24 +0200
+	b=Ii9WzW1ikLq2RVxkaYhmk6kZIG0Qs62WD+i9T1wq0sDyGKt2LcMI9+9YGoiDCLfm/
+	 bVqV+dQWA/hL/Ft008iQd1x54+VSkG+SYYNMPa/VWpDmtT7eGxtzZlqSMwSQI1xrut
+	 MzxVURRm+pmAdaWNIAKEz1yuR3GoHIiy/gktavjJ0UKsoVdufOqJiZIEJ00d6aHbJ3
+	 ghLhBwcwAuzbZx+TWYZnyCLfZcDK8z6MCMazGA/c08r6N+IGSqtgP5KZ7Vn8np8SVh
+	 i6WL/R8BzQtFqiTZrDT09CHSLlfEGlyBw8Ww4OLVtpYdyOxouQT5xcnERIMa+mYOa5
+	 GDNn3nmrBDCLg==
+Message-ID: <eb085f4c-c24a-4aec-b571-a068f1c93c30@kernel.org>
+Date: Wed, 9 Sep 2026 20:05:32 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,16 +35,17 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Thunderbird Daily
-Subject: Re: [PATCH net v2 05/15] mptcp: options: handle MPC data + csum reqd
- + no csum
+Subject: Re: [PATCH net v2 06/15] mptcp: prevent race between disconnect() and
+ rtx
 Content-Language: fr
-To: netdev-bot+sashiko@kernel.org
-Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-5-df1de70348b6@kernel.org>
- <178896537514.219967.16760487622956837996@kernel.org>
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-0-df1de70348b6@kernel.org>
+ <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-6-df1de70348b6@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -90,45 +91,25 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <178896537514.219967.16760487622956837996@kernel.org>
+In-Reply-To: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-6-df1de70348b6@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hello,
 
-On 09/09/2026 16:49, netdev-bot+sashiko@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential
-> issue(s) to consider:
+On 08/09/2026 16:07, Matthieu Baerts (NGI0) wrote:
+> From: Paolo Abeni <pabeni@redhat.com>
 > 
-> Critical: 0 · High: 0 · Medium: 0 · Low: 1 (1)
+> Sashiko noted that the two event can race, leading to inconsistent
+> status. Prevent the race using the synchronous timer stop operation.
 > 
-> - [Low] Residual uninitialised read of `mp_opt->csum`: the patch closes
->   the functional consumer of the uninitialised checksum…
+> Fixes: b29fcfb54cd7 ("mptcp: full disconnect implementation")
 
-There is a pr_debug() reading mp_opt->csum. Harmless, but should be
-fixed to silence such report. A follow-up patch will follow:
+It looks like I forgot to add, sorry about that:
 
-https://lore.kernel.org/20260908-mptcp-opt-read-debug-v1-2-b3e74549b6f6@kernel.org
+Cc: stable@vger.kernel.org
 
-> Pre-existing issues:
-> - [Low] Reported concern (assessed as an intentional, documented
->   behaviour change): a passive endpoint whose local checksum sysctl is…
-
-(...)
-
-> The commit message already
-> covers that trade-off.  The gap where the peer's SYN A bit is never
-> stored in subflow_req is pre-existing and unchanged here.
-
-Indeed ...
-
-> Would it be worth a short note in the commit message that the passive
-> side's only source for the peer's A bit is the third ACK, so the new
-> condition also drops that signal for a data-bearing third ACK?
-
-... but there is already a note about that. Maybe the note is not clear
-enough, or my English is not good enough, but I don't think we need to
-add an even longer text.
+Done :)
 
 Cheers,
 Matt
