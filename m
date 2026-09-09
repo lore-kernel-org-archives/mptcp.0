@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A023932E3;
-	Wed,  9 Sep 2026 17:57:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2153396D13;
+	Wed,  9 Sep 2026 18:03:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788976669; cv=none; b=syg8sZmTld+sEWxVdnsRbGXcVXLSR+vTul50A824DeSxlKV1pPnFxbXuMqRMXXhLphWHuxWIngPzMcUKSOVUzQ0ybvWb56wKj4PntjLCvBq0AVmui8LFqSx6y9gPSpFosyT9k4uL2iM6qEa7Ne0ER2ppMOt02ohAvA15uB85Npk=
+	t=1788977010; cv=none; b=EtrSQpZe6Vj48pK3cZ8wi/+CYgGYoFp6avoxCqQeOWAYmb+u3XcD0lVVBg16Q5wnioSgsT9oQsOaezXqLAejnYa9rVG/ONchI0/0k1PNMnnSis/SiUlCpegntdk+C5ztDFtX/OrUI04OIz0awoIegVyFtkNZGRCEOrsrvIeSUw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788976669; c=relaxed/simple;
-	bh=RDcZ1N2of0hE/KEQ6YmRibGweUEaHd7NGJ3Ngz3ILKM=;
+	s=arc-20240116; t=1788977010; c=relaxed/simple;
+	bh=Las9w7VEmzQZwGkpCFsvWgiGoM0T0keae01SaXpx4ME=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KOGtGuWidHVQu3Mi3b9+BHduVng0nYnkfzWOjeBNDVhOE9qwD4OF5L+nd0pSdi6WQlGHlIXbTxAgPuE8c/0Am/EM4Y4m1jjcs+AiadmEEUFVv8wyakOle3wo8+HC+EYye9sws/FHkcb36TrYkDYY5dkWP+85+AhM686KCUrnb1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O0M7TaBu; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=Magjg4ex3a/e8r6w5iLFZNagHE3uRA0lQlZMsWajVkSkxBFg/r8drPD39Kjc3D0Meod5LC7pmTCHqmbEMvIyQySxzWmrurKHryZUKBMQBJZ34KAxgJ0u7zZ5v8LzlcgEWfhPOaDtY2pVvI+j1vM0hK0VLtS5N6dLSkq8uBcWZyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cmlnNDid; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O0M7TaBu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DADE81F000FF;
-	Wed,  9 Sep 2026 17:57:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cmlnNDid"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E8641F00893;
+	Wed,  9 Sep 2026 18:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788976667;
-	bh=bedgQLEmoSjapKQJt0LsEmsD0KkdBrnumX6yghAqwSk=;
+	s=k20260515; t=1788977009;
+	bh=KnDHX9M1i8YbIvHyQzXuOKvuaUqriDDBknhvO0sB8QE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=O0M7TaBuuIqeIHUOZyRrnOQaqBQIdb11hRbifgvv3Oo04KEluIYkgIs5eNKIyCmk7
-	 9R7sajMx7heh8mCNAlr8RBlvRhDVgv/ApQbDZbjKY+OqD+i05Zv4ux3UaJmXKqraJp
-	 flQtBNyvmsjjSXGs0lA9e2MmMC3bUvQVYCc9qhxiDbLFuR11YQxa2K2Wm1MJIPnsZa
-	 FLYqKRwkKLx/NpPlcLF2jqG6dFCtiCgQ1rdnD1plb8QSiKxKVkMIatuH7vDg1VLVXF
-	 NB2z0caRV5lW/50dI3O3wFbCaVZgGZVP/y5D3+A7d/cuaEGA2zgjklsKsQi6Lbl+jb
-	 Y1AnG5Tjd8MhQ==
-Message-ID: <8118ffe2-635f-40dc-98a6-d0bd1878e29e@kernel.org>
-Date: Wed, 9 Sep 2026 19:57:41 +0200
+	b=cmlnNDidZblxlV5/VzdIsPp8MS9wHhh7DzVGRE+vQFXyP+piyEBMYBdDHCwljqDQX
+	 a3oskIjFjUp1la2tk19iHQBPwuUfUJYsLkmljf9AbqIXJH5j+tWS3ePvpWhwRsOQrK
+	 Ao/zSc46p04/qK6UkVj5QcfKzdqdK7OTl4N7Lr0nQpNIcqXodXYqL+JBxIc8AEdXFA
+	 cUk1S7nYgAOiqyOALV0yRJV19HoqNHebVOyVsQBiMBpOekHo5Nh/piATDBlxHlZKPY
+	 hwdCnZvppyxOSnWM9nc/langm5LWe7xV0Ig2ZZjn61edbX15WCTrqH4ZJiQww8ldx3
+	 BU1pJUfrjwvDg==
+Message-ID: <bc937549-d004-4d31-bf05-ddbdeea519bc@kernel.org>
+Date: Wed, 9 Sep 2026 20:03:24 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,16 +35,16 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Thunderbird Daily
-Subject: Re: [PATCH net v2 04/15] mptcp: pm: kernel: drop pending ADD_ADDR
- when removing ID0
+Subject: Re: [PATCH net v2 05/15] mptcp: options: handle MPC data + csum reqd
+ + no csum
 Content-Language: fr
 To: netdev-bot+sashiko@kernel.org
 Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
  edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
  netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
  stable@vger.kernel.org
-References: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-4-df1de70348b6@kernel.org>
- <178896537388.219967.5173915953995910937@kernel.org>
+References: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-5-df1de70348b6@kernel.org>
+ <178896537514.219967.16760487622956837996@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -90,69 +90,45 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <178896537388.219967.5173915953995910937@kernel.org>
+In-Reply-To: <178896537514.219967.16760487622956837996@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hello,
 
 On 09/09/2026 16:49, netdev-bot+sashiko@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential
+> Thank you for your contribution! Sashiko AI review found 1 potential
 > issue(s) to consider:
 > 
-> Critical: 0 · High: 1 · Medium: 1 · Low: 0
+> Critical: 0 · High: 0 · Medium: 0 · Low: 1 (1)
 > 
-> - [High] Incomplete fix: in mptcp_nl_remove_id_zero_address()
->   (net/mptcp/pm_kernel.c) the new cleanup forces `anno_addr.port = 0`…
-> - [Medium] Newly introduced wrong-entry teardown in
->   mptcp_nl_remove_id_zero_address() (net/mptcp/pm_kernel.c:1152-1157):…
-> 
-> --
-> 
-> mptcp: pm: kernel: drop pending ADD_ADDR when removing ID0
-> 
-> This makes the in-kernel path manager's id 0 removal path symmetric with the
-> non-zero id path by dropping a pending ADD_ADDR announcement and decrementing
-> add_addr_signaled before queuing the RM_ADDR.  The lookup key is the msk local
-> address with the port forced to 0.
-> 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/620
-> 
->> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
->> index 424f1a7f9248..1a7750813235 100644
->> --- a/net/mptcp/pm_kernel.c
->> +++ b/net/mptcp/pm_kernel.c
->> @@ -1137,6 +1137,8 @@ static int mptcp_nl_remove_id_zero_address(struct net *net,
->>  	while ((msk = mptcp_token_iter_next(net, &s_slot, &s_num)) != NULL) {
->>  		struct sock *sk = (struct sock *)msk;
->>  		struct mptcp_addr_info msk_local;
->> +		struct mptcp_addr_info anno_addr;
->> +		bool announced;
->>  
->>  		if (list_empty(&msk->conn_list) || mptcp_pm_is_userspace(msk))
->>  			goto next;
->> @@ -1146,7 +1148,13 @@ static int mptcp_nl_remove_id_zero_address(struct net *net,
->>  			goto next;
->>  
->>  		lock_sock(sk);
->> +		/* Drop a possibly pending ADD_ADDR for this address. */
->> +		anno_addr = msk_local;
->> +		anno_addr.port = 0;
->> +		announced = mptcp_pm_announced_remove(msk, &anno_addr);
-> 
-> [Severity: High]
-> Does zeroing the port here make the lookup miss the announcements this
-> patch is meant to remove?
-> 
-> The commit message says:
-> 
->     Subtle detail: signal endpoints are stored in anno_list with port 0, but
->     msk_local carries the connection's local port. In other words, entries
->     linked to ID0 paths should have port == 0. A follow-up patch will ensure
->     that.
-As mentioned, a follow-up patch to fix this non-directly related issue
-is in preparation. The series was already 15 patches long, it has not
-been included and will be sent later on.
+> - [Low] Residual uninitialised read of `mp_opt->csum`: the patch closes
+>   the functional consumer of the uninitialised checksum…
+
+There is a pr_debug() reading mp_opt->csum. Harmless, but should be
+fixed to silence such report. A follow-up patch will follow:
+
+https://lore.kernel.org/20260908-mptcp-opt-read-debug-v1-2-b3e74549b6f6@kernel.org
+
+> Pre-existing issues:
+> - [Low] Reported concern (assessed as an intentional, documented
+>   behaviour change): a passive endpoint whose local checksum sysctl is…
+
+(...)
+
+> The commit message already
+> covers that trade-off.  The gap where the peer's SYN A bit is never
+> stored in subflow_req is pre-existing and unchanged here.
+
+Indeed ...
+
+> Would it be worth a short note in the commit message that the passive
+> side's only source for the peer's A bit is the third ACK, so the new
+> condition also drops that signal for a data-bearing third ACK?
+
+... but there is already a note about that. Maybe the note is not clear
+enough, or my English is not good enough, but I don't think we need to
+add an even longer text.
 
 Cheers,
 Matt
