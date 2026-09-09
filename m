@@ -1,127 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174BD53FD2B;
-	Wed,  9 Sep 2026 14:07:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C714757F73D
+	for <mptcp@lists.linux.dev>; Wed,  9 Sep 2026 14:15:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788962836; cv=none; b=ght1u6XJ8lc4XR80otpEYsHwxVNRixJB14aPF77OgeJ9OQDWIZ8Ht/2R1E0ETmOhuN7XAI1slVH2nQ9PNGl4sfdh13ABkyUX3CSlc/+SvFG8v5+2qrl4ZYEXDlB0MOfdfXxnAacYA6fF+dHUTpfv5QwqK0He5toJBuoR8F9bjxY=
+	t=1788963307; cv=none; b=rewKA859DRfrvkERYOudwlCR9RYfCvnUkD9PyImEmUo1HPBeCDjB32yPUmb0klpLO+kaKfx9F8m8cAWMGwMLUTpIchKkaFLBAQfQiF/Q7SynyruQ7DHUgSBadhAsCLOL75eFbVQNXG8NU4+ibfjIZo+RuYtw0t1MwCO2lr0u70k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788962836; c=relaxed/simple;
-	bh=yGxcXMg/VT7JrxWQ7k59cV5n2jK1svswZYlXM2tThIQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CQ2hy6o7XCqnCH34UjaPRZQVTP07GaFw6jaa3DNFXv380uoG0U6IEeS6pul2uXsaIgsqCs3XijKjvVCNQESKe794acUk/PEFj6e/uy3At+Jn8KuCkJixFNLimSw/W6eiignaHL+KIj8NIn6bEgg7Pu5G8RRgzS4+xrKxtVwNCMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VpvCy6Uw; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788963307; c=relaxed/simple;
+	bh=SyH7bQOz04FodkQQTANTF2oZZhi5hGdrWhRy8qbAXE8=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=q2ym0Jhll9kfulRlr3SQLxs78/3HfNvSLRGdwUozJKPVqnyzWI5Xl6uv0/LjZAldYJ9k6HYoe4v7+5rOfhgCGECPehs9HYYzZbhIG8PDexhiLSporvolLFLmJir5NoTVrIEBNOoRUisVhwjeTfqFTe5OmaP7+BviRWwltfsaroA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EVvS7FI1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VpvCy6Uw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 628091F00A3A;
-	Wed,  9 Sep 2026 14:07:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EVvS7FI1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 840EE1F00A3D;
+	Wed,  9 Sep 2026 14:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788962834;
-	bh=yGxcXMg/VT7JrxWQ7k59cV5n2jK1svswZYlXM2tThIQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=VpvCy6UwudJZRKyHYxBt6LUZKSLzqyeSNPo8wcmuhCq6VuIWbikSim8NAcIVxZdE8
-	 Rr2dWFLy383Dhuh7eMMJ38xof/JHameVOaXR+T3Oz9BdvFb0Mjf5JUjBzSALmUTCYu
-	 VkvaF6rvZECVLdGBKB8OjrZdWoDHc6z4rNutbF/vdkvnn5dV+EGAyvOxEvTE9Zrwn9
-	 5kbIb3SSv8A2THq3Mk3ZUKazodObnYDrfNbLzFzUtxOFWJiM2VcxN5Zf6sI5POERtV
-	 UTAE55cfsVoVsODX4FPbGdSQL0V6DbXl3p6lWexRNY28qtPTAojEgIQp96U1DJPLIX
-	 A+FiqpeFWSKgg==
-Date: Wed, 9 Sep 2026 16:07:09 +0200
-From: Joel Granados <joel.granados@kernel.org>
-To: Mauricio Faria de Oliveira <mfo@igalia.com>
-Cc: Kees Cook <kees@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nsc@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, kernel-dev@igalia.com, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, fsverity@lists.linux.dev, 
-	keyrings@vger.kernel.org, bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, netdev@vger.kernel.org, linux-wpan@vger.kernel.org, 
-	lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org, coreteam@netfilter.org, 
-	linux-sctp@vger.kernel.org, linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org, 
-	bridge@lists.linux.dev, mptcp@lists.linux.dev, rds-devel@oss.oracle.com, 
-	virtualization@lists.linux.dev
-Subject: Re: [PATCH RFC v3 00/13] sysctl: add module aliases
-Message-ID: <rywhz6soawf5dzyui5g7dnbufsgpxr7ma7honuhejwgncemzrm@f32at7hl6ugm>
-References: <20260819-sysctl-module-aliases-v3-0-aab90569365d@igalia.com>
- <bpnqwggtidgiec5akns3fa5edbsvl7xf55dxabtwng2xspy4pn@ue554aii2ngk>
- <53155340c897560bfc67e61ba9568fd6@igalia.com>
- <mokz5pdtwswkyab4byfq7q7m6ac2g6ceoi6jflyxmaszaibzqa@su6m4kamtdpy>
- <b1a6cec17e7c828fcebe310ca2a0d25b@igalia.com>
+	s=k20260515; t=1788963305;
+	bh=jNfYFc8k44s2zzCR+FaU9ay9RmzvPNSh0vdyx0/JWAM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=EVvS7FI1ZuHjnAh7G6CgVqGZHvS4XTQCGeSJwj+YkDiORHzHcFOXIVI1YhqIQZ6LA
+	 yd9XTYvuAWSSgS2FCOPYQsENXdy2JtAlrf+/2EXsIekftMoI99Q0RrEinBiZhaqIN3
+	 TZsUaZylV5AAXemD8j/fUAdhaSqOVE5aDc9g78Sy7ZAoYEV5rlWoi/XNvrmykp+l7j
+	 jcIAyeCAr54tn82CeJsF6S6DJcg1KjVfifpaBWKM1rvikd5adYQpOs2YNnyHar8mmR
+	 +lKVeF2I/jSmoxqPzV8cjnVjJvF3DaKgne4hT4ViK4sJJaUvrnbAZ9yAfFG4efkT9f
+	 IWGacNn4OJG/g==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH net v2 08/15] mptcp: pm: userspace: fix address ID
+ overflow
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-8-df1de70348b6@kernel.org>
+References: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-0-df1de70348b6@kernel.org>
+ <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-8-df1de70348b6@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 09 Sep 2026 14:15:05 +0000
+Message-Id: <20260909141505.840EE1F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2m5clqoly7vxfssm"
-Content-Disposition: inline
-In-Reply-To: <b1a6cec17e7c828fcebe310ca2a0d25b@igalia.com>
 
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
---2m5clqoly7vxfssm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Pre-existing issues:
+- [High] Incorrect ID collision check permanently breaks ID allocation if a=
+n entry with ID 0 exists.
+--
 
-On Fri, Sep 04, 2026 at 02:45:23PM -0300, Mauricio Faria de Oliveira wrote:
-> On 2026-09-04 10:41, Joel Granados wrote:
-> > On Thu, Aug 20, 2026 at 06:22:13PM -0300, Mauricio Faria de Oliveira wr=
-ote:
-> >> On 2026-08-20 09:51, Joel Granados wrote:
-> >> > On Wed, Aug 19, 2026 at 03:16:13PM -0300, Mauricio Faria de Oliveira=
- wrote:
-> >> >> This series adds 'sysctl:' aliases to modules that register sysctl =
-tables; e.g.:
-<... snip ...>
-> > use the correct call moving forward?
->=20
-> This scheme currently covers all modules, AFAIK, as it is wrapped in the
-> functions that register sysctl tables.
->=20
-> On moving forward: usage of such functions in a way that breaks a
-> requirement of this series (e.g., failing to specify the template
-> table/path parameter(s), or not having constant initializers) hits a
-> build error, as the requirements are actually from the compiler.
->=20
-> >> I guess that a different design could use MODULE_SYSCTL_TABLE() as
-> >> MODULE_DEVICE_TABLE(), declared per table instead of wrapped into
-> >> register sysctl functions.
-> >> However, it seems to require moving the value of the path argument (or
-> >> its template) into the macro and still referencing it in the function
-> >> (or its instantiation of the template), which adds obfuscation, to all
-> >> callers.=20
-> >>=20
-> >> What do you think?
-> > It might be that having it inside the module subsys is more work, but I
-> > believe that there is the right place to have it. I still don't see that
-> > adding a module specific arg to the sysctl register is a good thing.
->=20
-> Ok, cool. I can work on a different design.
->=20
-> Please just let me know whether you are OK with the remaining (above),
-> and I'll be happy to tackle this.
+commit 0ac6c6a2ecc7912387ac1b8203c8c6f77120a794
+Author: Qing Luo <luoqing@kylinos.cn>
+mptcp: pm: userspace: fix address ID overflow
 
-What is "the remaining"?
+This commit fixes an address ID overflow in the userspace PM when all
+IDs (1-255) are exhausted. By returning -ENOSPC when the next available ID
+exceeds the maximum, it prevents ID 0 from being incorrectly allocated.
+The ID allocation check is also moved before memory allocation to simplify
+the error path.
 
-Best
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index b94fbb483bf94..fab16d953dbfe 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -69,6 +69,19 @@ static int mptcp_userspace_pm_append_new_local_addr(st=
+ruct mptcp_sock *msk,
+>  	}
+> =20
+>  	if (!addr_match && !id_match) {
 
---2m5clqoly7vxfssm
-Content-Type: application/pgp-signature; name="signature.asc"
+[Severity: High]
+This isn't a bug introduced by this patch, but does the loop preceding this
+block permanently break ID allocation if an entry with ID 0 exists?
 
------BEGIN PGP SIGNATURE-----
+If needs_id is true and no address match is found, entry->addr.id remains 0.
+The check in the loop:
 
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmqhaAwACgkQupfNUreW
-QU+KhwwAk2Lee/ZoiUFUIogotHEgXdEnbLXsVMd7eYE+yCbFRSeHmKvBS3+HIQKk
-3YwwDiKYy9LoPX/Z8J6u2Xzr6HX2acGjasEgcoVhtZwFfhNXbIhLsKQXuCL5xeP8
-SP94dos6ha2gCbwAasxDxDaxBIeSpiyAojpShoXDz5sWPUp0+CmYPWbFSxvUSIiI
-ky8t15AXflY5CE5Zs1l4rIapiMx4+KY3eP9XUpwYfkuRfqrIcdXpZAQLPEEHlvpI
-YWkeFHLIzcVwQDJMylAIDZXqkqkcPwdT7HhvrtG59h/8S3oIx5d/D6RC03Wgb6Ac
-O03rgV1e427EBuBbAqihY/D46amiR8xQUv+T+jgM+DnKvwGlmiTsIUimaqMrbVkq
-tbmIxW90f2zlalhgxxmLbrnkzOLQ/jL4hz7blCO912BBCLNX40Ed/ZwI2GE+7hWk
-LwqnPJ25U43p9yb5S6lO0E4aXy0oDr1cRrm93HBZeRgkQBJM4L8IttiwgbTEVAGM
-McH2aXN2
-=WiYs
------END PGP SIGNATURE-----
+    id_match =3D (e->addr.id =3D=3D entry->addr.id);
+    if (addr_match || id_match)
+        break;
 
---2m5clqoly7vxfssm--
+evaluates to true if an existing entry has ID 0. This breaks the loop early
+and causes the function to return -EINVAL instead of allocating a new ID.
+
+A privileged user (CAP_NET_ADMIN) can configure the userspace PM to create a
+subflow using the initial connection address (omitting the ID or specifying
+ID 0) via mptcp_pm_nl_subflow_create_doit(). This legitimately adds an entry
+with ID 0 to the userspace_pm_local_addr_list. Later, when an event requires
+a new implicit ID allocation (e.g., calling
+mptcp_userspace_pm_get_local_id()), needs_id is true and entry->addr.id is
+initially 0.
+
+Could this incorrectly match the unassigned ID against the existing entry
+with ID 0, permanently breaking MPTCP connection management for the socket?
+
+> +		unsigned int id;
+> +
+> +		if (!entry->addr.id && needs_id) {
+> +			id =3D find_next_zero_bit(id_bitmap,
+> +						MPTCP_PM_MAX_ADDR_ID + 1, 1);
+> +			if (id > MPTCP_PM_MAX_ADDR_ID) {
+> +				ret =3D -ENOSPC;
+> +				goto append_err;
+> +			}
+> +		} else {
+> +			id =3D entry->addr.id;
+> +		}
+> +
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260908-net-mptcp-=
+misc-fixes-7-3-rc1-v2-0-df1de70348b6@kernel.org?part=3D8
