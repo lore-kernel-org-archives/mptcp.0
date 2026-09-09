@@ -1,130 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0270542810
-	for <mptcp@lists.linux.dev>; Wed,  9 Sep 2026 11:24:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174BD53FD2B;
+	Wed,  9 Sep 2026 14:07:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788953052; cv=none; b=WU65MsgLgPEx1P+6XC01o8TNUxg7SrDaJlADOvN8BlIfzafkFLc1juigwSdpcGhjJRtY9GDbfNrgMDl/wQILM69ampfxtg5xVRSsppZ9x03U5LexlBJd05p7o27yGVlvElGWw3GUA37w5GvgZ2KTOapSaHvMSW4bu5Zhht+Tbz0=
+	t=1788962836; cv=none; b=ght1u6XJ8lc4XR80otpEYsHwxVNRixJB14aPF77OgeJ9OQDWIZ8Ht/2R1E0ETmOhuN7XAI1slVH2nQ9PNGl4sfdh13ABkyUX3CSlc/+SvFG8v5+2qrl4ZYEXDlB0MOfdfXxnAacYA6fF+dHUTpfv5QwqK0He5toJBuoR8F9bjxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788953052; c=relaxed/simple;
-	bh=FdFzuiUwwHO6s7diAVcaAa3hXgEWPQE8Qe3uiKYScas=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RgwZjJhONO8Wo4O2cd32LsXEbU5A/EbQwnsR0JBcIgo0v5DpdrPaCO6SZjfI/IOaPkIaG6XfGqS+uMVTpRuYFRk4WVvXzIxlWhuNpp3GSzgGghcgzfUmYsEymGh4HTH31laxo3T7cYCzsQghLKDSp16RFLFw5+ahTflWOviSjsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kdmBHrPh; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788962836; c=relaxed/simple;
+	bh=yGxcXMg/VT7JrxWQ7k59cV5n2jK1svswZYlXM2tThIQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CQ2hy6o7XCqnCH34UjaPRZQVTP07GaFw6jaa3DNFXv380uoG0U6IEeS6pul2uXsaIgsqCs3XijKjvVCNQESKe794acUk/PEFj6e/uy3At+Jn8KuCkJixFNLimSw/W6eiignaHL+KIj8NIn6bEgg7Pu5G8RRgzS4+xrKxtVwNCMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VpvCy6Uw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kdmBHrPh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC8D41F00AC4;
-	Wed,  9 Sep 2026 11:24:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VpvCy6Uw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 628091F00A3A;
+	Wed,  9 Sep 2026 14:07:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788953050;
-	bh=ctjDPzzLcTGykPcTT971wXNlr2YPKK+jqKJEgFzmGQw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=kdmBHrPhsBHJ4Ifji7ZOyAQoTeAR4yY1zzupmsomA+JDMpBtyVKl7qmcLR1GQtk/d
-	 AsWDj3FytjsIMb3pc9NN7Nzjyo8W7oecQGyFD8aIOOhv7MXKYxr5pPrigTRFgYuJev
-	 Ow6LVUE8s//LfBToViEdwsU34z7AEI2/OmDRNNIRpCFrYPQzMloZ/SOSGDvKBWxBC5
-	 xR4ZlqCLJiPjeMXv3av3aWSFCEWqRy3HJE/TCXo5/CIYf3MAS2XKifz3umrTUOOeKV
-	 CY46T7c8snLF+j49rsieGJnbs2TqLHkfRxOk++cl84rBWs2XIBz14XEKuP/qThpOls
-	 hKUi+Gjnguwug==
-Message-ID: <8bda50ef-a62b-4ad4-81c8-ca95d92da57f@kernel.org>
-Date: Wed, 9 Sep 2026 13:24:08 +0200
+	s=k20260515; t=1788962834;
+	bh=yGxcXMg/VT7JrxWQ7k59cV5n2jK1svswZYlXM2tThIQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=VpvCy6UwudJZRKyHYxBt6LUZKSLzqyeSNPo8wcmuhCq6VuIWbikSim8NAcIVxZdE8
+	 Rr2dWFLy383Dhuh7eMMJ38xof/JHameVOaXR+T3Oz9BdvFb0Mjf5JUjBzSALmUTCYu
+	 VkvaF6rvZECVLdGBKB8OjrZdWoDHc6z4rNutbF/vdkvnn5dV+EGAyvOxEvTE9Zrwn9
+	 5kbIb3SSv8A2THq3Mk3ZUKazodObnYDrfNbLzFzUtxOFWJiM2VcxN5Zf6sI5POERtV
+	 UTAE55cfsVoVsODX4FPbGdSQL0V6DbXl3p6lWexRNY28qtPTAojEgIQp96U1DJPLIX
+	 A+FiqpeFWSKgg==
+Date: Wed, 9 Sep 2026 16:07:09 +0200
+From: Joel Granados <joel.granados@kernel.org>
+To: Mauricio Faria de Oliveira <mfo@igalia.com>
+Cc: Kees Cook <kees@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nsc@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, kernel-dev@igalia.com, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, fsverity@lists.linux.dev, 
+	keyrings@vger.kernel.org, bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, netdev@vger.kernel.org, linux-wpan@vger.kernel.org, 
+	lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org, coreteam@netfilter.org, 
+	linux-sctp@vger.kernel.org, linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org, 
+	bridge@lists.linux.dev, mptcp@lists.linux.dev, rds-devel@oss.oracle.com, 
+	virtualization@lists.linux.dev
+Subject: Re: [PATCH RFC v3 00/13] sysctl: add module aliases
+Message-ID: <rywhz6soawf5dzyui5g7dnbufsgpxr7ma7honuhejwgncemzrm@f32at7hl6ugm>
+References: <20260819-sysctl-module-aliases-v3-0-aab90569365d@igalia.com>
+ <bpnqwggtidgiec5akns3fa5edbsvl7xf55dxabtwng2xspy4pn@ue554aii2ngk>
+ <53155340c897560bfc67e61ba9568fd6@igalia.com>
+ <mokz5pdtwswkyab4byfq7q7m6ac2g6ceoi6jflyxmaszaibzqa@su6m4kamtdpy>
+ <b1a6cec17e7c828fcebe310ca2a0d25b@igalia.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Thunderbird Daily
-Subject: Re: [PATCH mptcp-next v4 0/2] selftests: mptcp: convert iptables to
- nftables
-Content-Language: fr
-To: Hangbin Liu <hangbin.liu@linux.dev>, MPTCP Linux <mptcp@lists.linux.dev>
-Cc: Hangbin Liu <liuhangbin@kylinos.cn>
-References: <20260908-mptcp_nft-v4-0-af0a6120240b@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20260908-mptcp_nft-v4-0-af0a6120240b@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2m5clqoly7vxfssm"
+Content-Disposition: inline
+In-Reply-To: <b1a6cec17e7c828fcebe310ca2a0d25b@igalia.com>
 
-Hi Hangbin,
 
-On 08/09/2026 13:36, Hangbin Liu wrote:
-> iptables has been deprecated for years. The Linux kernel has included
-> nftables as the successor to iptables since 2014, and every major
-> distribution uses nftables as the default packet filtering framework.
-> The iptables command we run on modern systems is actually iptables‑nft,
-> a compatibility layer that translates iptables syntax to nftables rules
-> behind the scenes.
-> 
-> There are also some features that can be set easily with nft, while we need
-> to convert to BPF code under iptables, such as MPTCP add‑addr and
-> remove‑addr suboptions. To make future work easier, convert iptables usage
-> in mptcp to nftables.
-Thank you for the new version. It looks good to me:
+--2m5clqoly7vxfssm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+On Fri, Sep 04, 2026 at 02:45:23PM -0300, Mauricio Faria de Oliveira wrote:
+> On 2026-09-04 10:41, Joel Granados wrote:
+> > On Thu, Aug 20, 2026 at 06:22:13PM -0300, Mauricio Faria de Oliveira wr=
+ote:
+> >> On 2026-08-20 09:51, Joel Granados wrote:
+> >> > On Wed, Aug 19, 2026 at 03:16:13PM -0300, Mauricio Faria de Oliveira=
+ wrote:
+> >> >> This series adds 'sysctl:' aliases to modules that register sysctl =
+tables; e.g.:
+<... snip ...>
+> > use the correct call moving forward?
+>=20
+> This scheme currently covers all modules, AFAIK, as it is wrapped in the
+> functions that register sysctl tables.
+>=20
+> On moving forward: usage of such functions in a way that breaks a
+> requirement of this series (e.g., failing to specify the template
+> table/path parameter(s), or not having constant initializers) hits a
+> build error, as the requirements are actually from the compiler.
+>=20
+> >> I guess that a different design could use MODULE_SYSCTL_TABLE() as
+> >> MODULE_DEVICE_TABLE(), declared per table instead of wrapped into
+> >> register sysctl functions.
+> >> However, it seems to require moving the value of the path argument (or
+> >> its template) into the macro and still referencing it in the function
+> >> (or its instantiation of the template), which adds obfuscation, to all
+> >> callers.=20
+> >>=20
+> >> What do you think?
+> > It might be that having it inside the module subsys is more work, but I
+> > believe that there is the right place to have it. I still don't see that
+> > adding a module specific arg to the sysctl register is a good thing.
+>=20
+> Ok, cool. I can work on a different design.
+>=20
+> Please just let me know whether you are OK with the remaining (above),
+> and I'll be happy to tackle this.
 
-Now in our tree (I just fixed the indentation after 'if .* nft' lines
-not to align the rest of the nft commands with the conditional code):
+What is "the remaining"?
 
-New patches for t/upstream:
-- 23ac116ea2c4: selftests: mptcp: convert iptables to nftables for
-mptcp_sockopt.sh
-- 0ae33af3f73f: selftests: mptcp: convert iptables to nftables for
-mptcp_join.sh
-- Results: ca7966735328..2dc29b34b99a (export)
+Best
 
-Tests are now in progress:
+--2m5clqoly7vxfssm
+Content-Type: application/pgp-signature; name="signature.asc"
 
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/b49aa4201a14e200297db9adcde3495e5a778517/checks
+-----BEGIN PGP SIGNATURE-----
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmqhaAwACgkQupfNUreW
+QU+KhwwAk2Lee/ZoiUFUIogotHEgXdEnbLXsVMd7eYE+yCbFRSeHmKvBS3+HIQKk
+3YwwDiKYy9LoPX/Z8J6u2Xzr6HX2acGjasEgcoVhtZwFfhNXbIhLsKQXuCL5xeP8
+SP94dos6ha2gCbwAasxDxDaxBIeSpiyAojpShoXDz5sWPUp0+CmYPWbFSxvUSIiI
+ky8t15AXflY5CE5Zs1l4rIapiMx4+KY3eP9XUpwYfkuRfqrIcdXpZAQLPEEHlvpI
+YWkeFHLIzcVwQDJMylAIDZXqkqkcPwdT7HhvrtG59h/8S3oIx5d/D6RC03Wgb6Ac
+O03rgV1e427EBuBbAqihY/D46amiR8xQUv+T+jgM+DnKvwGlmiTsIUimaqMrbVkq
+tbmIxW90f2zlalhgxxmLbrnkzOLQ/jL4hz7blCO912BBCLNX40Ed/ZwI2GE+7hWk
+LwqnPJ25U43p9yb5S6lO0E4aXy0oDr1cRrm93HBZeRgkQBJM4L8IttiwgbTEVAGM
+McH2aXN2
+=WiYs
+-----END PGP SIGNATURE-----
 
+--2m5clqoly7vxfssm--
