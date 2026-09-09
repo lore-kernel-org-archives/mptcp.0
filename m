@@ -1,143 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A5C4A0927
-	for <mptcp@lists.linux.dev>; Wed,  9 Sep 2026 10:06:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06EE55221FB
+	for <mptcp@lists.linux.dev>; Wed,  9 Sep 2026 10:40:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788948373; cv=none; b=fFyi75IpZkOGCiyiKnjSxDACBC1ZW3IdvvR4xisvjnrkh9Vngj8gmZoTU/iCl2+TsCEQ7ewZlOqcxh9TLyokEQPfCg1b+lcXtPR6nqWhtzp0re5nRb6IWnA2WbycsaNxJwV2UVd1uRQ0xquEeRM7/GNjebhnjE9uspVR+9mR7t8=
+	t=1788950425; cv=none; b=kTgPytu2zY3JREfQfrrwPzqUDAAItxt+Axy28v99/vi2Y1U/4lo2dEEWwtH9idVdvpnSu6E/Go/zX0RQAAti9Ndn/TvPC4tZ/IiT/LJaIFmUfv3uqa8TGI9W6gx8MKkNEs0PaBqEI3NEGEDtRBYrb9C/N5XXealxQ2ZxTdJlrNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788948373; c=relaxed/simple;
-	bh=SszfnMa1N62Q7cWrV2VkEPpSGYmqj8lOX4ASyMrqWc8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=j9ly6ZmfYG2BVerNA98JAuPO3vWJTS7Jaxo3Ru3R0psvhl64u4ep4Gw3ytuQmr1o9R/0/Ld/iI2hBl8AUsEGB1ob36Yo2H74ixB81QZu6xRK29j6MUSEGRSg9lsvRSla8JXD7Ifp4h09q9f18XZXOS4NzM70Jq3nPSoYAqxooCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ls8cBN0g; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788950425; c=relaxed/simple;
+	bh=BzUxQ5vybc1OEj1h2/x+9+auCKmfvFlpawNmnGylwnc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=MCi9ppSWxAmSp5CU20iufhyMt3CpxfjUflRiG8hWp2OheUMSXif6JgkXbKOQm4mmognj65Z1FXiU0cOPO+8Xu9cGJkJi2dgq7cMhuTA22mwfzImgaGdqgoa7s9tFHATZWVb7oHOhjYV2C2RdlCey3C6U0BQDVP+TcRyw/CCfxAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GAUnlfM5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ls8cBN0g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 135491F00A3D;
-	Wed,  9 Sep 2026 10:06:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GAUnlfM5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D97F1F00A3D;
+	Wed,  9 Sep 2026 10:40:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788948372;
-	bh=JQ3HdogSvV6Vy3hfi/zsCCfOmdIgXaE8P5kecFQTRTI=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Ls8cBN0gRMjrGmkopL+aSDVbcaZySHcCwUXeF9JO2451ocIUIVtcIwT+OIm7NpI8T
-	 xbgOjpcBs8N/CcWbRqkjaph9V9u7OyULYsv+D9ZJGu5rnAtioImW7g7HVsuXBpMgbn
-	 R6LkWe5Yt4ah3qV3+1eKW5OboA6BaSwD5Xnr9iXYlUHPGm29eEsuHc20Z9/KR7AqpH
-	 AniLE/6MMaS7MLXSh+PWwG/6C/ZiReRIZobNBEFBFYwtTbu1f8SnS0FmQb2xL7TuIB
-	 MXtS/I8DXNTAZbRhp/+ox9WzsfTUoljTmXsOspYyrXXCvmbDU8nk98daoeXmwK3TwK
-	 9zEpusXKOl5zA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH net-next v6] mptcp: normalize seq numbers reported in
- mptcp_info
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Kalpan Jani" <kalpan.jani@mpiricsoftware.com>
-Cc: mptcp@lists.linux.dev
-In-Reply-To: <20260909094800.766170-1-kalpan.jani@mpiricsoftware.com>
-References: <20260909094800.766170-1-kalpan.jani@mpiricsoftware.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 09 Sep 2026 10:06:11 +0000
-Message-Id: <20260909100612.135491F00A3D@smtp.kernel.org>
+	s=k20260515; t=1788950423;
+	bh=O/kUzHb5QGNvPEOI5AuyX5JZDFn4ar5Qm2EuJq26Zts=;
+	h=Date:Subject:To:References:From:In-Reply-To;
+	b=GAUnlfM50mQf1zsxKchVd7kXAvHe1R+dReBRQteTNB/IBcumLhwWDQJeroU3oZe5/
+	 stCrjcrwLszvVVcF2cUIIFCXtSAf2LJFur4z1Brl97xyKvVvUlpwWoopKj9xzP64PM
+	 6t5jn2wGjXzcAijJiw05EXdiUUF6u/bQX+GjSslwCe4rYTGO68YvS5byOG58odOFtY
+	 72NtPl8spsNeQYufhUtr6jOAzULXRPImUoAHPNo2fZpBnKdhrjzUBI/x34rlEI/31q
+	 0kJMJQAjzHv5uGiCg3W2vhr9T5uSfLLLx625Gwumal4cT3IDNIDcqdpd1nlW6mjCcP
+	 Ch4JsWwW3wVEw==
+Message-ID: <23a10084-67a5-4fd4-a001-a21339b604b9@kernel.org>
+Date: Wed, 9 Sep 2026 12:40:21 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+User-Agent: Thunderbird Daily
+Subject: Re: [PATCH mptcp-next v3 0/2] mptcp: shrink struct
+ mptcp_options_received
+Content-Language: fr
+To: quanyeyang@proton.me, MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260909-mptcp-shrink-opt-rx-v2-v3-0-92bb3009a665@proton.me>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260909-mptcp-shrink-opt-rx-v2-v3-0-92bb3009a665@proton.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] The commit intentionally changes the semantics of UAPI fields (`mp=
-tcpi_write_seq`, `mptcpi_snd_una`, `mptcpi_rcv_nxt`) from absolute on-the-w=
-ire sequence numbers to relative sequence numbers, explicitly breaking exis=
-ting userspace tools.
-- [Medium] Unsynchronized concurrent read and read-modify-write of bitfield=
-s in `struct mptcp_subflow_context`.
---
+Hi Quanye,
 
-commit aed02b920bd2e723a86c213c2ac56f6fb6ab0d6e
-Author: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+On 09/09/2026 04:40, Quanye Yang via B4 Relay wrote:
+> struct mptcp_options_received is the per-packet decode buffer used while
+> parsing incoming MPTCP options. It is larger than needed because several
+> suboptions cannot be combined.
+> 
+> This series splits the FASTCLOSE key from rcvr_key, then overlaps the
+> remaining mutually exclusive payloads in an anonymous union. DSS and
+> rm_list stay outside the union. On x86_64 the structure shrinks from
+> 136 to 72 bytes.
+> 
+> ---
+> Changes in v3:
+> - Split the FASTCLOSE key change into its own commit
+> - Add comments linking union members to their suboptions
+> - Link to v2: https://patch.msgid.link/20260904-mptcp-shrink-opt-rx-v2-v2-1-d8662bb18ef2@proton.me
+Thank you for the v3, it looks good to me:
 
-mptcp: normalize seq numbers reported in mptcp_info
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-This patch modifies mptcpi_write_seq, mptcpi_snd_una, and mptcpi_rcv_nxt
-to report relative sequence numbers rather than raw 64-bit data sequence
-numbers. It does this by subtracting the initial sequence numbers from the
-subflow context. The commit message notes this intentionally changes UAPI
-semantics.
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/445
-
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index fcf6feb2a9eb5..918ec873fcb05 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-
-[ ... ]
-
-> @@ -1008,9 +1010,37 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, =
-struct mptcp_info *info)
-
-[ ... ]
-
->  	info->mptcpi_csum_enabled =3D READ_ONCE(msk->csum_enabled);
->  	info->mptcpi_token =3D msk->token;
-> -	info->mptcpi_write_seq =3D msk->write_seq;
-> +	info->mptcpi_write_seq =3D msk->write_seq - local_idsn;
-
-[Severity: High]
-Will this change break existing userspace tools?
-
-The commit message mentions this intentionally changes the semantics of
-mptcpi_write_seq, mptcpi_snd_una, and mptcpi_rcv_nxt from absolute
-on-the-wire sequence numbers to relative sequence numbers.
-
-Tools and scripts correlating these sequence numbers with network captures,
-like those using tcpdump, might break when relying on the previous UAPI
-semantics.
-
-Is it acceptable to introduce a backward compatibility regression in the
-exported UAPI values here?
-
->  	info->mptcpi_retransmits =3D inet_csk(sk)->icsk_retransmits;
->  	info->mptcpi_bytes_sent =3D msk->bytes_sent;
->  	info->mptcpi_bytes_received =3D msk->bytes_received;
-
-[ ... ]
-
-> @@ -1023,11 +1053,28 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk,=
- struct mptcp_info *info)
->  	unlock_sock_fast(sk, slow);
-> =20
->  	mptcp_data_lock(sk);
-> +	if (first) {
-> +		struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(first);
-> +
-> +		/* subflow->iasn is incremented once in subflow_set_remote_key(),
-> +		 * which runs under this same mptcp_data_lock() (see
-> +		 * mptcp_propagate_state()); compute remote_idsn here, under the
-> +		 * same lock as the writer, and atomically with ack_seq below.
-> +		 * first is the same held reference from earlier in this
-> +		 * function, so it is guaranteed to still be valid here and to
-> +		 * be the same subflow local_idsn was computed from above.
-> +		 */
-> +		remote_idsn =3D subflow->remote_key_valid ? subflow->iasn - 1 : 0;
-
-[Severity: Medium]
-Does this introduce a data race on the u32 container holding the
-remote_key_valid bitfield?
-
-The mptcp_diag_fill_info() function reads remote_key_valid while holding
-mptcp_data_lock(sk). However, other concurrent writers modifying neighboring
-bitfields in the same u32 container (like map_valid) do so under
-bh_lock_sock(first) during softirq packet processing.
-
-Because these locks are distinct, doesn't this result in an unmitigated
-concurrent read and read-modify-write on the shared u32 word when diagnostic
-tools are run concurrently with active connections?
-
-> +	}
-> +
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260909094800.7661=
-70-1-kalpan.jani@mpiricsoftware.com?part=3D1
