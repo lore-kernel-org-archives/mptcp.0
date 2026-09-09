@@ -1,126 +1,161 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 801C037C0FC;
-	Wed,  9 Sep 2026 17:29:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A023932E3;
+	Wed,  9 Sep 2026 17:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788974998; cv=none; b=R6/YiAQskoq0KQt6FN+n1A+bmyloJq62Nr8D0IZueSLhK4TQ+RLwipgDSe3JIGX7yWmpx8M+q2ObyOu/12SCEyAIlacxV8Ocpm1i7MATTiLL8T/xtiEpXcHJJCN+panfBiKuXPhpWGLCLvxFzwTjJPmP+RAwCzItkLaVEtXotJQ=
+	t=1788976669; cv=none; b=syg8sZmTld+sEWxVdnsRbGXcVXLSR+vTul50A824DeSxlKV1pPnFxbXuMqRMXXhLphWHuxWIngPzMcUKSOVUzQ0ybvWb56wKj4PntjLCvBq0AVmui8LFqSx6y9gPSpFosyT9k4uL2iM6qEa7Ne0ER2ppMOt02ohAvA15uB85Npk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788974998; c=relaxed/simple;
-	bh=5D7SoVhjzEokScNygSteAqf9Ex3y5nz2gk7swf3GT9c=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=gDmwF+J/rj7iNGvZy3//wBz1/35Picg7f9t1poNBw0/DUxD5eepICxeAVl+LFazpl9xLP0p89B86qUlsMLn/t4T8AyA/J2RZKBC6ioBxB3fQ1NlqIGKe9lu1n92gP6M5r0iwAFB7yqqwxruQpoDsxBasB4WA0viOKdfBu8MVEXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=KMw6Bqep; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1788976669; c=relaxed/simple;
+	bh=RDcZ1N2of0hE/KEQ6YmRibGweUEaHd7NGJ3Ngz3ILKM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KOGtGuWidHVQu3Mi3b9+BHduVng0nYnkfzWOjeBNDVhOE9qwD4OF5L+nd0pSdi6WQlGHlIXbTxAgPuE8c/0Am/EM4Y4m1jjcs+AiadmEEUFVv8wyakOle3wo8+HC+EYye9sws/FHkcb36TrYkDYY5dkWP+85+AhM686KCUrnb1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O0M7TaBu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="KMw6Bqep"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:Message-ID:Subject:Cc:To
-	:From:Date:MIME-Version:From:Reply-To;
-	bh=ixMZSD8+UhNtarF+6aKvQsI19PdlMWk8UdPjHUJ+BP8=; b=KMw6Bqep7POVCO8ABQLqn26u4z
-	Vm92Tg+j/0+PmqqK/dvW828O7HrV+w+lZ60KY8e00z2BinoAcJO+teusI18GQwPZa93g46fWpKzrh
-	AgVGA7OW13ikcCWBdkNHyCF5MJrQ4LKcZ+GKP5SaO3VjFYCmljrmH6AfZWccpFDtmCtNfrdPm7mPs
-	y4KaCldihKnLxKrccLdvn9dRcj2yIzJUCoUAgq4c2VAAZwBqHbq49TxRAg0vo9Q8rWDVmDAvS1GYm
-	9TAWMFQFYzZ/e/mtZNAnThAS4lu2g6BMirzitO5ItyIEr8XkzcaGF4jYGgtJDCV/itEvyRHzncwMa
-	n8Da47kw==;
-Received: from maestria.local.igalia.com ([192.168.10.14] helo=mail.igalia.com)
-	by fanzine2.igalia.com with esmtps 
-	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1x4M72-00HA6O-2e; Wed, 09 Sep 2026 19:29:32 +0200
-Received: from webmail.service.igalia.com ([192.168.21.45])
-	by mail.igalia.com with esmtp (Exim)
-	id 1x4M71-008Hsn-5l; Wed, 09 Sep 2026 19:29:31 +0200
-Received: from localhost ([127.0.0.1] helo=webmail.igalia.com)
-	by webmail.service.igalia.com with esmtp (Exim 4.98.2)
-	(envelope-from <mfo@igalia.com>)
-	id 1x4M71-00000007Q64-0Tnk;
-	Wed, 09 Sep 2026 19:29:30 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O0M7TaBu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DADE81F000FF;
+	Wed,  9 Sep 2026 17:57:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788976667;
+	bh=bedgQLEmoSjapKQJt0LsEmsD0KkdBrnumX6yghAqwSk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=O0M7TaBuuIqeIHUOZyRrnOQaqBQIdb11hRbifgvv3Oo04KEluIYkgIs5eNKIyCmk7
+	 9R7sajMx7heh8mCNAlr8RBlvRhDVgv/ApQbDZbjKY+OqD+i05Zv4ux3UaJmXKqraJp
+	 flQtBNyvmsjjSXGs0lA9e2MmMC3bUvQVYCc9qhxiDbLFuR11YQxa2K2Wm1MJIPnsZa
+	 FLYqKRwkKLx/NpPlcLF2jqG6dFCtiCgQ1rdnD1plb8QSiKxKVkMIatuH7vDg1VLVXF
+	 NB2z0caRV5lW/50dI3O3wFbCaVZgGZVP/y5D3+A7d/cuaEGA2zgjklsKsQi6Lbl+jb
+	 Y1AnG5Tjd8MhQ==
+Message-ID: <8118ffe2-635f-40dc-98a6-d0bd1878e29e@kernel.org>
+Date: Wed, 9 Sep 2026 19:57:41 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Wed, 09 Sep 2026 14:29:30 -0300
-From: Mauricio Faria de Oliveira <mfo@igalia.com>
-To: Joel Granados <joel.granados@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nsc@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- kernel-dev@igalia.com, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, fsverity@lists.linux.dev,
- keyrings@vger.kernel.org, bpf@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
- netdev@vger.kernel.org, linux-wpan@vger.kernel.org,
- lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org, linux-sctp@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
- bridge@lists.linux.dev, mptcp@lists.linux.dev, rds-devel@oss.oracle.com,
- virtualization@lists.linux.dev
-Subject: Re: [PATCH RFC v3 00/13] sysctl: add module aliases
-In-Reply-To: <rywhz6soawf5dzyui5g7dnbufsgpxr7ma7honuhejwgncemzrm@f32at7hl6ugm>
-References: <20260819-sysctl-module-aliases-v3-0-aab90569365d@igalia.com>
- <bpnqwggtidgiec5akns3fa5edbsvl7xf55dxabtwng2xspy4pn@ue554aii2ngk>
- <53155340c897560bfc67e61ba9568fd6@igalia.com>
- <mokz5pdtwswkyab4byfq7q7m6ac2g6ceoi6jflyxmaszaibzqa@su6m4kamtdpy>
- <b1a6cec17e7c828fcebe310ca2a0d25b@igalia.com>
- <rywhz6soawf5dzyui5g7dnbufsgpxr7ma7honuhejwgncemzrm@f32at7hl6ugm>
-Message-ID: <6e93af907298022f077126f1be7bd386@igalia.com>
-X-Sender: mfo@igalia.com
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Report: NO, Score=-2.1, Tests=ALL_TRUSTED=-3,BAYES_50=0.8,KAM_DMARC_NONE=0.125,KAM_DMARC_STATUS=0.005
-X-Spam-Score: -20
-X-Spam-Bar: --
+User-Agent: Thunderbird Daily
+Subject: Re: [PATCH net v2 04/15] mptcp: pm: kernel: drop pending ADD_ADDR
+ when removing ID0
+Content-Language: fr
+To: netdev-bot+sashiko@kernel.org
+Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-4-df1de70348b6@kernel.org>
+ <178896537388.219967.5173915953995910937@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <178896537388.219967.5173915953995910937@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 2026-09-09 11:07, Joel Granados wrote:
-> On Fri, Sep 04, 2026 at 02:45:23PM -0300, Mauricio Faria de Oliveira wrote:
->> On 2026-09-04 10:41, Joel Granados wrote:
->> > On Thu, Aug 20, 2026 at 06:22:13PM -0300, Mauricio Faria de Oliveira wrote:
->> >> On 2026-08-20 09:51, Joel Granados wrote:
->> >> > On Wed, Aug 19, 2026 at 03:16:13PM -0300, Mauricio Faria de Oliveira wrote:
->> >> >> This series adds 'sysctl:' aliases to modules that register sysctl tables; e.g.:
-> <... snip ...>
->> > use the correct call moving forward?
->> 
->> This scheme currently covers all modules, AFAIK, as it is wrapped in the
->> functions that register sysctl tables.
->> 
->> On moving forward: usage of such functions in a way that breaks a
->> requirement of this series (e.g., failing to specify the template
->> table/path parameter(s), or not having constant initializers) hits a
->> build error, as the requirements are actually from the compiler.
->> 
->> >> I guess that a different design could use MODULE_SYSCTL_TABLE() as
->> >> MODULE_DEVICE_TABLE(), declared per table instead of wrapped into
->> >> register sysctl functions.
->> >> However, it seems to require moving the value of the path argument (or
->> >> its template) into the macro and still referencing it in the function
->> >> (or its instantiation of the template), which adds obfuscation, to all
->> >> callers. 
->> >> 
->> >> What do you think?
->> > It might be that having it inside the module subsys is more work, but I
->> > believe that there is the right place to have it. I still don't see that
->> > adding a module specific arg to the sysctl register is a good thing.
->> 
->> Ok, cool. I can work on a different design.
->> 
->> Please just let me know whether you are OK with the remaining (above),
->> and I'll be happy to tackle this.
+Hello,
+
+On 09/09/2026 16:49, netdev-bot+sashiko@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential
+> issue(s) to consider:
 > 
-> What is "the remaining"?
-
-I meant the rest of the email, addressing the points/questions you
-raised.
-
-cheers,
-
+> Critical: 0 · High: 1 · Medium: 1 · Low: 0
 > 
-> Best
+> - [High] Incomplete fix: in mptcp_nl_remove_id_zero_address()
+>   (net/mptcp/pm_kernel.c) the new cleanup forces `anno_addr.port = 0`…
+> - [Medium] Newly introduced wrong-entry teardown in
+>   mptcp_nl_remove_id_zero_address() (net/mptcp/pm_kernel.c:1152-1157):…
+> 
+> --
+> 
+> mptcp: pm: kernel: drop pending ADD_ADDR when removing ID0
+> 
+> This makes the in-kernel path manager's id 0 removal path symmetric with the
+> non-zero id path by dropping a pending ADD_ADDR announcement and decrementing
+> add_addr_signaled before queuing the RM_ADDR.  The lookup key is the msk local
+> address with the port forced to 0.
+> 
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/620
+> 
+>> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+>> index 424f1a7f9248..1a7750813235 100644
+>> --- a/net/mptcp/pm_kernel.c
+>> +++ b/net/mptcp/pm_kernel.c
+>> @@ -1137,6 +1137,8 @@ static int mptcp_nl_remove_id_zero_address(struct net *net,
+>>  	while ((msk = mptcp_token_iter_next(net, &s_slot, &s_num)) != NULL) {
+>>  		struct sock *sk = (struct sock *)msk;
+>>  		struct mptcp_addr_info msk_local;
+>> +		struct mptcp_addr_info anno_addr;
+>> +		bool announced;
+>>  
+>>  		if (list_empty(&msk->conn_list) || mptcp_pm_is_userspace(msk))
+>>  			goto next;
+>> @@ -1146,7 +1148,13 @@ static int mptcp_nl_remove_id_zero_address(struct net *net,
+>>  			goto next;
+>>  
+>>  		lock_sock(sk);
+>> +		/* Drop a possibly pending ADD_ADDR for this address. */
+>> +		anno_addr = msk_local;
+>> +		anno_addr.port = 0;
+>> +		announced = mptcp_pm_announced_remove(msk, &anno_addr);
+> 
+> [Severity: High]
+> Does zeroing the port here make the lookup miss the announcements this
+> patch is meant to remove?
+> 
+> The commit message says:
+> 
+>     Subtle detail: signal endpoints are stored in anno_list with port 0, but
+>     msk_local carries the connection's local port. In other words, entries
+>     linked to ID0 paths should have port == 0. A follow-up patch will ensure
+>     that.
+As mentioned, a follow-up patch to fix this non-directly related issue
+is in preparation. The series was already 15 patches long, it has not
+been included and will be sent later on.
 
+Cheers,
+Matt
 -- 
-Mauricio
+Sponsored by the NGI0 Core fund.
+
