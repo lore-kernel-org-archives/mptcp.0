@@ -1,115 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A62435F60F;
-	Wed,  9 Sep 2026 18:09:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977483C108F;
+	Wed,  9 Sep 2026 20:41:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788977359; cv=none; b=WE56JS0IclN7YkKzcQwCTlafKeSUGJ1W9q/x3iYRL+ZKEF7Dw5W49AG9sXyhazROWU3Ph1PjeqSLvX1gU4QPBj6Diwntsh2TFGRb+fVU/VHCRj4Y86wvs7tJTBFMNbgqgycRlX0HTJj9+BAxzdp59J6KgW3rAUUrnJKxE2vKAIs=
+	t=1788986490; cv=none; b=Q0Ae/V0AaXiMMdfzB89Sketk9jE1YgJzn818RHyB58TVlfZ3Mew3gAd+c8BH9dhJGFYFef3W9tBItgCmqqg5k4wod6vMJCeUR6p5DP/aS7AR5ZLvpkmTt7dLwzSWxxOyFkN8q+P5WGwtf/QSuBdUciLno2FLFaQSopUHH3MMkBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788977359; c=relaxed/simple;
-	bh=2IVZFdgGbqQOUiK0a5n41VnsRdygPphRzsj20RNYMUM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TOgVx3tiPg423CDxwe9x1fOdH6p6hrS+pXVieA8OJ+0UaFygVpZJGbcbmN13pADMnw/xQn92jUo8+JYy0XAJT2u8bavKyUNatg/ooL4Pnbx8ISXZRHvTRP/fw84VX+HRHLC70h5O5wgv68bOfNUf0f3W2BOh7Em/Jicy5c3zvT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=blZZe0vy; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788986490; c=relaxed/simple;
+	bh=Lv695M+ET14zQcMLsFvWiig8OxilxbrUcVHK7NozT+w=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=ttf4BIA+6L19QnN+l9nlbFKsk1VpivtbDwLlKppEjSgYPe9OUb2oNm5WO/DMP7nwBVGsOE4lcfsxESp/H/JhMAAM325IuCP2Z78l9YDwz/Q/aiipnafVwj+aw7Cd1eHuhiff0EvVDRrzP+BNLbJGI22iuq8rk3832YWE9A3vHTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GgN8x0gn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="blZZe0vy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF9DD1F000FF;
-	Wed,  9 Sep 2026 18:09:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GgN8x0gn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABAA31F000FF;
+	Wed,  9 Sep 2026 20:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788977358;
-	bh=No0dYEBciYCRakfkqasu0ewf4H44mbr8nOCpC5oBpas=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=blZZe0vyWmNz2SaEZl3pi9gdsclGZh2phjh4HwmXyS9CNt9b8+kVWrTQAH6vIAiTs
-	 XsTmwnFZWnSw1peb++s9M3bAGOvaYhuVeGgLe+RYheuxBCqA8F2X/ioBkgkpG9pm37
-	 2Boo25e4HMk2rAqz9vq+B7peCaZ4AuPXmxIyr21/460O1s1gVRdGvmt6RLmQOeLB7z
-	 b4jJnekgaBCSYzDCIpSafA0OYSEgIWvscIePTDb8vFJvgz8rpfkhCwvCWeNFJp6/B0
-	 hcSGvzDt82b5jObDaZP3uF3SSJf5kyzBMPPqBezvPBlAqcxVsGc5XwQoDIhUnBhvN/
-	 qRF744Jh81PdQ==
-Message-ID: <55bbb96a-a464-4124-a704-d64be6f8c0b1@kernel.org>
-Date: Wed, 9 Sep 2026 20:09:10 +0200
+	s=k20260515; t=1788986471;
+	bh=XlRgql6gXyVqTyyC7XPsHaPGMVDu5J/x8i7A2d7OcWM=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc;
+	b=GgN8x0gnUY4zKgKqn7/6SJcyXo0H85ikpN9dAeR/fTlLRYmPg8yHPKzDJts/9fY4X
+	 eumPerJUS32tN7N+eBgyorKqQ2q2g11AsdzMX1tQtRLkYGplUL18pY5QdxsyTyUFpq
+	 8SgKNnKssNqiedoLNkVTc9yZe80VAR1W49rIHB67Cvv3QdVHSXjtTPfG7aMZnaDVMo
+	 pa0GC91I4C7hUnYVg2ig7BlwYb0tpwRzNeod+pGmJGqxIcWipD8PuHq4PTotQUvf48
+	 0xDEVQzPQzRxRgBP1OsgSrItG+zTc3+W2RXidA0V3fD3pJ6zu9LW5S89kY1y5c1dJI
+	 i40LQTq1Ds7JA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id D0D24380AAD2;
+	Wed,  9 Sep 2026 20:40:10 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Thunderbird Daily
+Content-Transfer-Encoding: 8bit
 Subject: Re: [PATCH net v2 00/15] mptcp: misc fixes for v7.3-rc1
-Content-Language: fr
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- Florian Westphal <fw@strlen.de>, Kalpan Jani
- <kalpan.jani@mpiricsoftware.com>,
- syzbot+55c2a5c871441261ed14@syzkaller.appspotmail.com,
- Tao Cui <cuitao@kylinos.cn>, Gang Yan <yangang@kylinos.cn>,
- Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
- Qing Luo <luoqing@kylinos.cn>, Kishen Maloor <kishen.maloor@intel.com>,
- Kuniyuki Iwashima <kuniyu@google.com>, Keita Morisaki <kmta1236@gmail.com>,
- Jakub Sitnicki <jakub@cloudflare.com>
-References: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-0-df1de70348b6@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
- YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
- c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
- WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
- CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
- nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
- TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
- nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
- VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
- 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
- YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
- AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
- EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
- /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
- MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
- cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
- iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
- jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
- 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
- VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
- BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
- ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
- 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
- 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
- 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
- mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
- Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
- Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
- Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
- x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
- V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
- Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
- HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
- 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
- Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
- voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
- KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
- UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
- vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
- mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
- JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-0-df1de70348b6@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <178898640963.1048067.13477009364378101406.git-patchwork-notify@kernel.org>
+Date: Wed, 09 Sep 2026 20:40:09 +0000
+References: 
+ <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-0-df1de70348b6@kernel.org>
+In-Reply-To: 
+ <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-0-df1de70348b6@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, fw@strlen.de, kalpan.jani@mpiricsoftware.com,
+ syzbot+55c2a5c871441261ed14@syzkaller.appspotmail.com, cuitao@kylinos.cn,
+ yangang@kylinos.cn, shuah@kernel.org, linux-kselftest@vger.kernel.org,
+ luoqing@kylinos.cn, kishen.maloor@intel.com, kuniyu@google.com,
+ kmta1236@gmail.com, jakub@cloudflare.com
 
-Hello,
+Hello:
 
-On 08/09/2026 16:07, Matthieu Baerts (NGI0) wrote:
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Tue, 08 Sep 2026 16:07:05 +0200 you wrote:
 > Here are various unrelated fixes:
+> 
+> - Patch 1: Do not reschedule the RTX timer for sockets that fell back to
+>   TCP. A fix for v5.7.
+> 
+> - Patch 2: Avoid copying thmac which will not be used and could be
+>   uninitialised. A fix for v5.7.
+> 
+> [...]
 
-Regarding Clashiko's review: I don't think a new version is needed.
-Follow-up patches for non-directly related issues will be sent later on.
+Here is the summary with links:
+  - [net,v2,01/15] mptcp: do not reschedule the RTX timer for fallback sockets
+    https://git.kernel.org/netdev/net/c/e2ab913f68c7
+  - [net,v2,02/15] mptcp: subflow: no need to copy thmac during ulp_clone
+    https://git.kernel.org/netdev/net/c/29f641951be0
+  - [net,v2,03/15] mptcp: syncookies: remember the request backup flag
+    https://git.kernel.org/netdev/net/c/b76c0e28b392
+  - [net,v2,04/15] mptcp: pm: kernel: drop pending ADD_ADDR when removing ID0
+    https://git.kernel.org/netdev/net/c/2ac7d6e62076
+  - [net,v2,05/15] mptcp: options: handle MPC data + csum reqd + no csum
+    https://git.kernel.org/netdev/net/c/ab36b1a80942
+  - [net,v2,06/15] mptcp: prevent race between disconnect() and rtx
+    https://git.kernel.org/netdev/net/c/85c580b0d859
+  - [net,v2,07/15] selftests: mptcp: fix an UAF in mptcp_connect.c
+    https://git.kernel.org/netdev/net/c/730444f094b1
+  - [net,v2,08/15] mptcp: pm: userspace: fix address ID overflow
+    https://git.kernel.org/netdev/net/c/f9f0068e8813
+  - [net,v2,09/15] mptcp: pm: reset retrans_time when ADD_ADDR entry is reused
+    https://git.kernel.org/netdev/net/c/f968190c0b42
+  - [net,v2,10/15] mptcp: remove unneeded READ_ONCE() annotation
+    https://git.kernel.org/netdev/net/c/caa4a79f74f3
+  - [net,v2,11/15] selftests: mptcp: lib: dump nstat for the right test
+    https://git.kernel.org/netdev/net/c/e1a56368eac1
+  - [net,v2,12/15] selftests: mptcp: lib: get counters for the right test
+    https://git.kernel.org/netdev/net/c/d23c41366e85
+  - [net,v2,13/15] mptcp: options: fix uninit-value in mptcp_write_data_fin
+    https://git.kernel.org/netdev/net/c/b110f1dd6cb6
+  - [net,v2,14/15] mptcp: being below memory limit is a likely() condition
+    https://git.kernel.org/netdev/net/c/a4257a91af7a
+  - [net,v2,15/15] mptcp: avoid pruning for OoW data
+    https://git.kernel.org/netdev/net/c/f01b8275745e
 
-Cheers,
-Matt
+You are awesome, thank you!
 -- 
-Sponsored by the NGI0 Core fund.
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
