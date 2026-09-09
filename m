@@ -1,110 +1,104 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3E657982A
-	for <mptcp@lists.linux.dev>; Wed,  9 Sep 2026 15:54:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FEF457D221;
+	Wed,  9 Sep 2026 16:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788969291; cv=none; b=OrVRQfjS65gQoDAKQVBMBAJgr3pY28tLdO/zHxWI6YOQNmMr/ebSXuGiRVb+Xx3JDun3haLs6D8xIA3CCybp6f1rNkoQEi9YJ+YmdJuJZB/N6gtDfr/MWuu+7pvKtjb3+W21t5iZZdHU7Lh6egPL8NJuTHpvRltLTpwkMMmy6mA=
+	t=1788970670; cv=none; b=eCrjDlptEkhilRi2xk1thH/9d2jUkAEuVxhvqqKKCdfpohhdBZx0MrTPtjTjz/YrpJJBaslu6z4ohkp3lMOQDW1FCKRVyJUX7PCS4SikmHD4L1wvTyfWqgPYlj8lRaixIrPigsf4M6mRXGY0yhM5+M/y+ThKjGGeXWzgh5V8vJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788969291; c=relaxed/simple;
-	bh=ZS57qCJaJZzvLtWT5rb+UsgkBAE6cq2kv5Ow6zPtdvU=;
+	s=arc-20240116; t=1788970670; c=relaxed/simple;
+	bh=kkJQ+MaBNeY3L1fgMx6XEt8mB4L7eJo61BgsylR6JfY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RbAF12X7SMzKhKNUpfOxS5WWAiJVoX0TJAaAGhFD2XvRY+ug5Hcntcw1IShm/QSviFbjaYw0H3hYQSeJ1Sfe+UW712L6VgX6hKY+j6OfIY0eMH9id3hUcV8ESsU/RpWcDxkdNcViQexL+WB07f2V1HA888biF6yKQE6pKlDBTZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L4UAeOFQ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=kbV6+oftDtI8UFeX2im7tb4JdfpclJgTQPK9/qRuR5SYC99YqfP1ZhEkiNluB4htGV8Y4tEcGaqdzmc0yNuRwak7BOkley2oAMwt39HOXWqCvfUJOpB9by8OjmHKkfXCCKGmWWdF/E4tYjQ0gznwUjS+/bTEX301kU01IF4T9AU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CSEkUcWn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L4UAeOFQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1788969287;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QhAkYk+BLfXoLVmp1k/Z3VniIpgJgKO5MbxyHejQ6HY=;
-	b=L4UAeOFQGyq68TxaHe7SBsuVD3GQiFvWZfFHGWsTpKhzwa0v+jkdfAXdQufpYsEiwr43KT
-	2w3K1wJargQ91Q+sJTATnCKBw6sIeFHDNT2uNi7IMZzEI4pFYJv7eId49WBN1aMlRJd1Lf
-	JMK/R47FZw1NkXwkSaR31NC9SXLHODg=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-647-HuvVs-ptMouX_KfjWYy8aw-1; Wed, 09 Sep 2026 11:54:46 -0400
-X-MC-Unique: HuvVs-ptMouX_KfjWYy8aw-1
-X-Mimecast-MFC-AGG-ID: HuvVs-ptMouX_KfjWYy8aw_1788969286
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-485afdd5079so731833f8f.1
-        for <mptcp@lists.linux.dev>; Wed, 09 Sep 2026 08:54:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788969285; x=1789574085;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=QhAkYk+BLfXoLVmp1k/Z3VniIpgJgKO5MbxyHejQ6HY=;
-        b=Uo40TLXuUPvUtuMSunYq9LqdKipLFG9hvt9tufJHCyGpQUpC+J7LPtApX8+yIKMPP6
-         3Ofoc6G4pvJHwkc3qMBG+t/BEnMvqyBe+RFkocpYoiWSKEhnM+p84i2fw6YqRZHyzaps
-         KqT27QRiW6GkzNRq78YQVO1v/QKQC6hjXI+mFbdsEdl+vzWuTpiWwDL3+NWGZ96uOa0J
-         bZ+F7LMJFLgiio5H2878zS7VYS/1mzODVHSkixQTWcoz+Gg+CIUzNsCMaXQls6y6cU1S
-         BS4PILqf799eIkJVD8BEUo0K1gViMI6+MiW1UNkjhAZy/gSfHWKTiD129TBibz5sDngL
-         hbQg==
-X-Forwarded-Encrypted: i=1; AKwUvBxAdpOKG6SBNJGFb4iDLGaHCoQV2rhOdxq4Kyf9h54VA+wfgURyoOxtPNpc2GBVIerdlqdDrQ==@lists.linux.dev
-X-Gm-Message-State: AFuF++lEU7VRX7MgDeTw6sRHnYUt7USPTuY+vDbByS2KoIZTPnC5vI/2
-	uzo9iqFTrjpEJ8Is1Sdb6WJqN7F8KL1U5tkJtxOfZxJ996WdXPyBZod8gI/znoyACIfrv32wJUE
-	HfpEcqu/+nBBDgj6c8GnqjR/FcqczpZU83YsvqcCKv9/G3nuJz3h1Qhiw
-X-Gm-Gg: AYBFou2RbDl2gff/E6qAaippsq5JnYBxoKw4WpbayOhs0GsEU37EJiYPy54UktKRWmd
-	pICEaEtYLnskfMWbRqTetkvaaEzeTLYPevQsg44o7tXGSob/iGaZDY7rrDW6nSIzqFNkCUXnBXd
-	VTd3v9W4/jlzqijTQnUqGVEoBkNI0J1gpd+qmwBFN+/yy2peAMJZAa7ESDGolhPznzHGdOhXpG9
-	JwwXIHSIg4fKbMTN5ih02s/o4BT+rY9bJgVJsUQMB3qJYR/tJlNzzI5ve9ATUBRp5kwvS/yqwFm
-	V8h1VQYtPOtKogsxh9MTdrKc/oilE7b7+3P9Tb/Qr9HzjT7SJt4UVzU5E+xlWTO5NQgKmjeYm+z
-	VnSc+rUXBXZuJkE5ecgOA/GTwzERewIANq6D+TIK//PtT/EJpqMgddwb42jOxDnwv2GAQF331PA
-	==
-X-Received: by 2002:a05:6000:288e:b0:485:8c16:a33f with SMTP id ffacd0b85a97d-4858c16a5d0mr33596603f8f.52.1788969285542;
-        Wed, 09 Sep 2026 08:54:45 -0700 (PDT)
-X-Received: by 2002:a05:6000:288e:b0:485:8c16:a33f with SMTP id ffacd0b85a97d-4858c16a5d0mr33596570f8f.52.1788969285051;
-        Wed, 09 Sep 2026 08:54:45 -0700 (PDT)
-Received: from [192.168.188.218] (ip232-47-231-195.pool-bba.aruba.it. [195.231.47.232])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-485883be709sm44531453f8f.21.2026.09.09.08.54.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2026 08:54:43 -0700 (PDT)
-Message-ID: <03f37b1f-a115-4c63-bdb1-7467ae8b165d@redhat.com>
-Date: Wed, 9 Sep 2026 17:54:41 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CSEkUcWn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BFD91F00893;
+	Wed,  9 Sep 2026 16:17:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788970668;
+	bh=HJdMQb4nqIHbvSYZnC5jsnIbz/VkwPKTvMs2kA9IIy0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=CSEkUcWnPrj5RzNyWMDA8qWMaKCVEYO7OrbKX+wLLRCLlB0fnOAax++YAv6sCUY9R
+	 ivS+j01p0r0SnY2a9OFEjx4fPjlyJUKVsPpD+8W1oD0T7CYAG5lwpnkg0QKputL/Uu
+	 89xAOYAubjrGR3ZfirqMIBV9jPDxJVnjBW0Kk4F15X+VlWS07HoqVPYc4/0DMPev9R
+	 snFOq6nfAWa4n+rK+cT7OBNhMamEiqzFFcbpsG/SggCVzvu28wOQ13poKwZgxmdO+r
+	 NVTL8FvXhQZmaRprFu+u85EP9cBzjjmD1bVz2q1gpeHVnm0yfcUIynOCBiMiWEA7cu
+	 8ohO+hog94DSw==
+Message-ID: <d2f1e2e8-3b10-4fd1-bb86-f523284c0858@kernel.org>
+Date: Wed, 9 Sep 2026 18:17:46 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v2 06/15] mptcp: prevent race between disconnect() and
- rtx
-To: netdev-bot+sashiko@kernel.org, matttbe@kernel.org
-Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, horms@kernel.org,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-6-df1de70348b6@kernel.org>
- <178896537655.219967.3201901026877077910@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <178896537655.219967.3201901026877077910@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: gHfOy4myhjfYG6yGhZXgnhCakWtPoavZD46dmRNbT80_1788969286
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+User-Agent: Thunderbird Daily
+Subject: Re: [PATCH net v2 12/15] selftests: mptcp: lib: get counters for the
+ right test
+Content-Language: fr
+To: sashiko-reviews@lists.linux.dev
+Cc: mptcp@lists.linux.dev
+References: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-0-df1de70348b6@kernel.org>
+ <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-12-df1de70348b6@kernel.org>
+ <20260909141506.384121F00A3E@smtp.kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260909141506.384121F00A3E@smtp.kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 9/9/26 4:49 PM, netdev-bot+sashiko@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential
-> issue(s) to consider:
+On 09/09/2026 16:15, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
 > 
-> Critical: 0 · High: 0 · Medium: 0 · Low: 2
-> 
-> - [Low] The commit message of "mptcp: prevent race between disconnect()
->   and rtx" describes the change as only "Prevent the race using the…
-> - [Low] The commit carries "Fixes: b29fcfb54cd7 (\"mptcp: full disconnect
->   implementation\")" (v5.18) for a real race that can leave a reused msk…
+> Pre-existing issues:
+> - [High] Insecure use of predictable temporary file paths in /tmp allows local privilege escalation via a symlink attack (TOCTOU).
 
-Here the code is actually just fine and sashiko don't like much my prose.
+LOL
 
-/P
-
+Cheers,
+Matt
