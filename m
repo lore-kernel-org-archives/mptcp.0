@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E25A39768F;
-	Wed,  9 Sep 2026 18:05:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6576D492E42;
+	Wed,  9 Sep 2026 18:07:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788977138; cv=none; b=PGylSlDTwJWraMiqL3cxHV8pZhMgpr9kkZpZi/RV5i6pV4dv9Uq8iYVOTe1Wz8AksZooUlOZMumZZUqIeSy08lu4WIawKt8vpptwbIRBYAiLjfyVKda3HVgQ351VcMnqR5LJw0tHFqtmI2PGcOz6F6gJwYQvGDAo/9OXuLcYOUo=
+	t=1788977246; cv=none; b=bdZIVeFitaYRKkWYI/P0LacdWmgKikO3/88D0KsqBNpKJBktvDp+cyNiTEG877LJ19k01t1TaWyAckwhocpYHQSdNfsmCSFKeBSUe1PnuMddA8L/iTEzbXI4OpqCYU88ESOtQh0orGm/HJEivUrZC3lBVJpINHoknqpj0DSM+Aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788977138; c=relaxed/simple;
-	bh=9joxJMBXn3aVf9z/7gRgRBbGfSXFpGVRqWUb513LW34=;
+	s=arc-20240116; t=1788977246; c=relaxed/simple;
+	bh=n7OTc5fFo6oGCdOW1SMqH4WBpt5JXMN8L2Y5Y4P0Gng=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zg6LcJ92E/lTZG/D3/RJE2cMnj6b15SnaDrjUjicZSiA2ikknDSygu6G8LA+mFny70vykYkF4UJzMxbk5BZTyxAZInbjHb/X2ODHaOtj6ZgszuUACg7RiCs0v5fB89fVjUn851QBPcKt0TQ+J4HqgPw9ixVWx4TJ1H1eNtFr1l8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ii9WzW1i; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=VUbbbkvzAu/eXEpv2oQOjXCmQt5Qw/4LzIJKQU1X7mS2agmUtu9kOwooNDT5b3x3DHztbNop7Id3E+uKcC/6ywgkvlf1AKgtykg3gds7c3wP+Fv3pUPCDvRKdAMurIEFNh514ab3sukH2dvTfVo/CJw2ZcSW5RTwfv9MzXhaSKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ik1cyO0n; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ii9WzW1i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52C001F000FF;
-	Wed,  9 Sep 2026 18:05:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ik1cyO0n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E15471F000FF;
+	Wed,  9 Sep 2026 18:07:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788977137;
-	bh=XoiWhP5Uy0YFVA4m/vL613kEs5lCB45rd1IQrlxJEsU=;
+	s=k20260515; t=1788977245;
+	bh=gjumx+yxNIwFXOmGDVV5fmM1mA/kwdbL0yxvNc8CNG0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Ii9WzW1ikLq2RVxkaYhmk6kZIG0Qs62WD+i9T1wq0sDyGKt2LcMI9+9YGoiDCLfm/
-	 bVqV+dQWA/hL/Ft008iQd1x54+VSkG+SYYNMPa/VWpDmtT7eGxtzZlqSMwSQI1xrut
-	 MzxVURRm+pmAdaWNIAKEz1yuR3GoHIiy/gktavjJ0UKsoVdufOqJiZIEJ00d6aHbJ3
-	 ghLhBwcwAuzbZx+TWYZnyCLfZcDK8z6MCMazGA/c08r6N+IGSqtgP5KZ7Vn8np8SVh
-	 i6WL/R8BzQtFqiTZrDT09CHSLlfEGlyBw8Ww4OLVtpYdyOxouQT5xcnERIMa+mYOa5
-	 GDNn3nmrBDCLg==
-Message-ID: <eb085f4c-c24a-4aec-b571-a068f1c93c30@kernel.org>
-Date: Wed, 9 Sep 2026 20:05:32 +0200
+	b=ik1cyO0nALOSAuqMostZkNlp8WtbHEZo+jlPFQACnQrsnXlJZLvL2/FY9LL3iic+P
+	 sEgZ11Ge4rzCDNK7CTDDlvts1h7EngQkjD78oZMZYG4H2p0Y+Aq1HGq18xwdD2ICYb
+	 EQkokuXJOoehIRZJdTxlOsiyv4ecA7cExkYtZLyFHU3col6SolsTVWKGBzDj9r274u
+	 14m62f3nLoIsmX7cjUGr5p6dUtqdt/RR79x5MtgvNSvufI6uU1r6kE9oW1LbGxM9SU
+	 3BoCiMzIuuda/lrO9QUg+t3RZBbYoPCPfqqOrgs1kptl9hnrPRVsPP7ZLcWwgPdlcq
+	 gXlsX85finHAQ==
+Message-ID: <196b5e25-3e5b-42b1-861e-f67f976374eb@kernel.org>
+Date: Wed, 9 Sep 2026 20:07:20 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,17 +35,16 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Thunderbird Daily
-Subject: Re: [PATCH net v2 06/15] mptcp: prevent race between disconnect() and
- rtx
+Subject: Re: [PATCH net v2 15/15] mptcp: avoid pruning for OoW data
 Content-Language: fr
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-0-df1de70348b6@kernel.org>
- <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-6-df1de70348b6@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>, netdev-bot+sashiko@kernel.org
+Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, horms@kernel.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-15-df1de70348b6@kernel.org>
+ <178896537782.219967.1022060629733006428@kernel.org>
+ <121f90e5-a19c-4066-af03-8cf5594bb30f@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -91,25 +90,73 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-6-df1de70348b6@kernel.org>
+In-Reply-To: <121f90e5-a19c-4066-af03-8cf5594bb30f@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Hi Paolo,
 
-On 08/09/2026 16:07, Matthieu Baerts (NGI0) wrote:
-> From: Paolo Abeni <pabeni@redhat.com>
+Thank you for having checked these comments.
+
+On 09/09/2026 17:50, Paolo Abeni wrote:
+> On 9/9/26 4:49 PM, netdev-bot+sashiko@kernel.org wrote:
+>> Thank you for your contribution! Sashiko AI review found 1 potential
+>> issue(s) to consider:
+>>
+>> Critical: 0 · High: 0 · Medium: 1 · Low: 0
+>>
+>> - [Medium] Incomplete realization of the patch's stated principle ("do it
+>>   only when we expect to accept the skb triggering the cleanup"): after…
+>>
+>> --
+>>
+>> mptcp: avoid pruning for OoW data
+>>
+>> This moves the mptcp_try_rmem_schedule() call in mptcp_data_queue_ofo()
+>> so that it runs after the out-of-window check instead of before it, which
+>> avoids running the destructive OoO queue pruning for skbs that are going
+>> to be dropped as out of window.
+>>
+>>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>>> index 4309fca6b119..0098e2830931 100644
+>>> --- a/net/mptcp/protocol.c
+>>> +++ b/net/mptcp/protocol.c
+>>> @@ -313,12 +313,6 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
+>>>  	u64 seq, end_seq, max_seq;
+>>>  	struct sk_buff *skb1;
+>>>  
+>>> -	if (!mptcp_try_rmem_schedule(sk, skb)) {
+>>> -		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
+>>> -		mptcp_drop(sk, skb);
+>>> -		return;
+>>> -	}
+>>> -
+>>>  	seq = MPTCP_SKB_CB(skb)->map_seq;
+>>>  	end_seq = MPTCP_SKB_CB(skb)->end_seq;
+>>>  	max_seq = atomic64_read(&msk->rcv_wnd_sent);
+>>> @@ -335,6 +329,12 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
+>>>  		return;
+>>>  	}
+>>>  
+>>> +	if (!mptcp_try_rmem_schedule(sk, skb)) {
+>>> +		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
+>>> +		mptcp_drop(sk, skb);
+>>> +		return;
+>>> +	}
+>>> +
+>>
+>> [Severity: Medium]
+>> The commit message says pruning should be done "only when we expect
+>> to accept the skb triggering the cleanup".  Does the new placement
+>> fully match that, given the duplicate-data check still happens later in
+>> the rbtree walk of mptcp_data_queue_ofo()?
 > 
-> Sashiko noted that the two event can race, leading to inconsistent
-> status. Prevent the race using the synchronous timer stop operation.
-> 
-> Fixes: b29fcfb54cd7 ("mptcp: full disconnect implementation")
+> The change suggested here would add quite a bit of complexity for little
+> gain, and would diverge MPTCP behavior from TCP. We learned the lesson
+> the hard way we need very good reasons to do the latter. I'm pretty sure
+> we are better off with the proposed code.
 
-It looks like I forgot to add, sorry about that:
-
-Cc: stable@vger.kernel.org
-
-Done :)
+I agree with you.
 
 Cheers,
 Matt
