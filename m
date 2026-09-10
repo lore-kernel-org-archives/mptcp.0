@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACAF48594E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD5848594F
 	for <mptcp@lists.linux.dev>; Thu, 10 Sep 2026 12:23:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789043024; cv=none; b=a8y70w4UbizCSgkdMqv6Vxkz+FZHX7h86Xlrq424iI3+rVAt/pV10diKPP4myUZuvB/yndkxGDkermL1DHT9/Z9lZwL9qxzj5voJQGNho3XydzQ8x9OFJAbDnJGMUfv7MUYz5YhJo0YCn4W1r4hW5hjB1GGFxUVKD4f9duosLoM=
+	t=1789043024; cv=none; b=nPOiHKTtVFAdyfEbqyu3xVd8x96gWWaFIrx3sjifIiTUjMk3DkvGrl6CPDy7mRYiUj6NNCZoxWx6h55NR7FnIZOH+8TsLeeGhEq1IuaVe7w/FpwnS8l2AtoaBXB+HvDJuyhLflHo3FVQoAZXfFbxFrprjCnri9Pmf/cU6x2qDrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1789043024; c=relaxed/simple;
-	bh=CItdKaDD0ktuE1k02O1ylGOC8Quggq20kw6fEqMd9Ik=;
+	bh=b+vzH7qg4sRXiA9sZuV4XghH+6ldfHQuvfkjHwYICZ8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=C+lI2QCl9DZcnprImhCYec3hJ/6WM3dw7qzZ0PmKI76WkK78MmuHGOZNYY1t4kgTyabv9u6YXKvpQohbSuumoTbk86Doqcl/c1BMtpCGllpCmbaYR4zNO22fBZFM1rOzlgvR7Xv0PHILYqvHTnyXBxQWsydKnrnspTxWC5WjUyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FLL6TqoJ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=MxtIomjFNIQPrtezSBbJ1es8fpKrDQMXZBT33Yb0zOzrZntqIUnT1mrmb9jCkeuDs7u/dfw0lzUKQAwGpn1X2rkCye6/oDMx+ENVQYv1M2rUbyv8V58Eq9LztPN3sZ+rlKS2kFu6OeRLO9GHe7iDVw9cHtS/VN52FQXaQZTNeVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=esG1Q9GS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FLL6TqoJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6E08BC2BCF5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="esG1Q9GS"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7B253C2BCC7
 	for <mptcp@lists.linux.dev>; Thu, 10 Sep 2026 12:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1789043023;
-	bh=CItdKaDD0ktuE1k02O1ylGOC8Quggq20kw6fEqMd9Ik=;
+	bh=b+vzH7qg4sRXiA9sZuV4XghH+6ldfHQuvfkjHwYICZ8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=FLL6TqoJXRjhH8LwMT7wpXx85BCoRlqtTQuZWbEMYjbEz/ywhoNXIA6WJoCheEpF6
-	 OHxw4RQNkCzV2d5OyEuTZmEV9A9ZQHpDKwHQm6k+eWBAwvmnXG9RQwuK2I7ksubsfE
-	 bi6gNBxoYQipSYQm0ROtJdwlfGGgRMWJ2MP+CUFYJCMxvXWu7/x5NAOzXIw/vpvhiu
-	 Yvi7wRO6QsH0Lq+TH7IKCP2EZhbdvTZorTFAwGWJIW2N36BlaqCi/uBGK+NNDNLZ9M
-	 teK9YlL2vRsHZVtQ6W8Vh8kxMTR/AQIqZr9SRUd/HscqztjXNnBpthIn+3CidqFZp5
-	 JI2Gl16d0rrGA==
+	b=esG1Q9GSa6LiBhfAFuzDxQmglFarXk7Y9E55GlEFfJTvrhnxcLQsvcI64C07d+KDV
+	 /Oa/tYkrTDEm3QiCHQtcHY77QneAA5JwvqV6H5OYUG8KBRnLKaYNmPQG5H+kWkK/wE
+	 q0iu6fRbuQl0ry3grIOF2SiH+0+phBu5zTt5oqVF1tA4nagHffg7xspkn0mQsgcYab
+	 JkMtUui7Qm9+nTBhN2Ve7YvimuLTIC5yQutjEB7UaXCw5ZeoRaYyHbOVMg+oj9G7PE
+	 T9ahGMraVQHDQruUxWfAPoJRNPY6jI6LGf+O6zDP6eM3YzBzAd7ne23CLF9A2Iz0Sf
+	 36SG9BtOYkUKw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 515F4C79F9F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5EFC79FB9
 	for <mptcp@lists.linux.dev>; Thu, 10 Sep 2026 12:23:43 +0000 (UTC)
 From: Quanye Yang via B4 Relay <devnull+quanyeyang.proton.me@kernel.org>
-Date: Thu, 10 Sep 2026 20:23:33 +0800
-Subject: [PATCH mptcp-net 1/2] mptcp: reset msk state on early connect
- failure
+Date: Thu, 10 Sep 2026 20:23:34 +0800
+Subject: [PATCH mptcp-net 2/2] selftests: mptcp: join: retry connect after
+ early fallback
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -41,17 +41,17 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260910-mptcp-connect-undo-net-v1-1-446e4a4ae3e7@proton.me>
+Message-Id: <20260910-mptcp-connect-undo-net-v1-2-446e4a4ae3e7@proton.me>
 References: <20260910-mptcp-connect-undo-net-v1-0-446e4a4ae3e7@proton.me>
 In-Reply-To: <20260910-mptcp-connect-undo-net-v1-0-446e4a4ae3e7@proton.me>
 To: mptcp@lists.linux.dev
 Cc: 
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1789043021; l=2066;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1789043021; l=10390;
  i=quanyeyang@proton.me; s=20260801; h=from:subject:message-id;
- bh=vjSZbBARSjNtpftevI+lTUhTZMMym6vvPVQ1xF8WwG0=;
- b=mAJthT8d2QlMsuYYE1D0kHdtVaNQnAGhiqReRtXoDvCEGljBB1ABTCSd8ydYUp6lw4VcSCD7Y
- zmfWp9CQu0OCg10Iy44VcqLpbGyS/4BegyGeI+o1N5EcDaTxe5YgHCI
+ bh=TgcJx9K1BwzBI2BnFgkB7YkEtClbAU1cR8sXW8Q7B9k=;
+ b=K0/kAEAm4pTrxAAbAZbDmZOeO8cqOZKB5WxS4xizbKYBahnPP35LH2pJzpEIUxmcxKD99rd5x
+ dxZ3WR6twzMAxinu4QMYtNUDZmQVPQ+l3LfXNAbDU+hHtNmpBC6MbVf
 X-Developer-Key: i=quanyeyang@proton.me; a=ed25519;
  pk=9L9FrcvzMgxPaBRU6XV0EnqTgjDqVO596rQKSZ9qZoY=
 X-Endpoint-Received: by B4 Relay for quanyeyang@proton.me/20260801 with
@@ -61,65 +61,398 @@ Reply-To: quanyeyang@proton.me
 
 From: Quanye Yang <quanyeyang@proton.me>
 
-mptcp_connect() can fall back before the subflow SYN is sent, for
-example when the netns is in an MPTCP blackhole, token allocation
-fails, or MD5SIG is in use. If the subsequent subflow connect()
-fails immediately (EAFNOSUPPORT, ENETUNREACH, ...),
-__inet_stream_connect() returns while the socket is still
-SS_UNCONNECTED and never calls ->disconnect().
+Cover leftover msk state when connect() fails before
+SS_CONNECTING. Existing mptcp_connect tests always use a fresh
+socket, so they cannot see a sticky fallback on the same fd.
 
-The error path only dropped the token and moved the msk back to
-TCP_CLOSE. MPTCP_FALLBACK_DONE, allow_subflows and
-request_mptcp were left as after early fallback, so a later
-connect() on the same fd stayed TCP-only.
+Add a small helper that optionally issues a wrong-family connect()
+on an MPTCP socket, then connects to a real IPv4 destination and
+checks MPTCP_INFO. A new mptcp_join.sh group (-n) runs two cases:
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/633
-Fixes: 0235d075a592 ("mptcp: mark as fallback even early ones")
+- a failed connect without early fallback must not poison the retry
+- after a blackhole-driven early fallback plus a failed connect,
+  clearing blackhole_timeout, the same fd must complete MP_CAPABLE
+  again
+
 Signed-off-by: Quanye Yang <quanyeyang@proton.me>
 ---
- net/mptcp/protocol.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ tools/testing/selftests/net/mptcp/.gitignore       |   1 +
+ tools/testing/selftests/net/mptcp/Makefile         |   1 +
+ .../selftests/net/mptcp/mptcp_connect_retry.c      | 216 +++++++++++++++++++++
+ tools/testing/selftests/net/mptcp/mptcp_join.sh    | 108 +++++++++++
+ 4 files changed, 326 insertions(+)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index e1f08f71cdb1..ad476d29bf3d 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -4129,6 +4129,24 @@ static int mptcp_ioctl(struct sock *sk, int cmd, int *karg)
- 	return 0;
- }
+diff --git a/tools/testing/selftests/net/mptcp/.gitignore b/tools/testing/selftests/net/mptcp/.gitignore
+index 833279fb34e2..5ea8f3e4985f 100644
+--- a/tools/testing/selftests/net/mptcp/.gitignore
++++ b/tools/testing/selftests/net/mptcp/.gitignore
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ mptcp_connect
++mptcp_connect_retry
+ mptcp_diag
+ mptcp_inq
+ mptcp_sockopt
+diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
+index 22ba0da2adb8..e2325d49228f 100644
+--- a/tools/testing/selftests/net/mptcp/Makefile
++++ b/tools/testing/selftests/net/mptcp/Makefile
+@@ -21,6 +21,7 @@ TEST_PROGS := \
  
-+static void mptcp_connect_undo(struct sock *sk)
+ TEST_GEN_FILES := \
+ 	mptcp_connect \
++	mptcp_connect_retry \
+ 	mptcp_diag \
+ 	mptcp_inq \
+ 	mptcp_sockopt \
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect_retry.c b/tools/testing/selftests/net/mptcp/mptcp_connect_retry.c
+new file mode 100644
+index 000000000000..a034d2ad73f7
+--- /dev/null
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect_retry.c
+@@ -0,0 +1,216 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Same-fd MPTCP connect() retry helper.
++ *
++ * Optionally fails an initial connect() with the wrong address family, then
++ * connects to the given IPv4 destination and checks MPTCP_INFO flags.
++ */
++
++#define _GNU_SOURCE
++
++#include <errno.h>
++#include <fcntl.h>
++#include <getopt.h>
++#include <netinet/in.h>
++#include <stdbool.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <unistd.h>
++#include <arpa/inet.h>
++#include <sys/socket.h>
++
++#include <linux/mptcp.h>
++
++#ifndef IPPROTO_MPTCP
++#define IPPROTO_MPTCP 262
++#endif
++#ifndef SOL_MPTCP
++#define SOL_MPTCP 284
++#endif
++
++static void die_perror(const char *msg)
 +{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct sock *ssk = msk->first;
-+
-+	mptcp_token_destroy(msk);
-+	mptcp_set_state(sk, TCP_CLOSE);
-+
-+	spin_lock_bh(&msk->fallback_lock);
-+	msk->allow_subflows = true;
-+	msk->allow_infinite_fallback = true;
-+	clear_bit(MPTCP_FALLBACK_DONE, &msk->flags);
-+	spin_unlock_bh(&msk->fallback_lock);
-+
-+	if (ssk)
-+		mptcp_subflow_ctx_reset(mptcp_subflow_ctx(ssk));
++	perror(msg);
++	exit(1);
 +}
 +
- static int mptcp_connect(struct sock *sk, struct sockaddr_unsized *uaddr,
- 			 int addr_len)
- {
-@@ -4197,9 +4215,7 @@ static int mptcp_connect(struct sock *sk, struct sockaddr_unsized *uaddr,
- 	 * subflow_finish_connect()
- 	 */
- 	if (unlikely(err)) {
--		/* avoid leaving a dangling token in an unconnected socket */
--		mptcp_token_destroy(msk);
--		mptcp_set_state(sk, TCP_CLOSE);
-+		mptcp_connect_undo(sk);
- 		return err;
- 	}
++static void usage(const char *argv0)
++{
++	fprintf(stderr,
++		"Usage: %s [-e] [-c] <ipv4> <port>\n"
++		"  -e  first connect() with a wrong sin_family (EAFNOSUPPORT)\n"
++		"  -c  clear net.mptcp.blackhole_timeout after the failed connect\n",
++		argv0);
++	exit(1);
++}
++
++static int getsockopt_mptcp_info(int fd, struct mptcp_info *info)
++{
++	socklen_t olen = sizeof(*info);
++
++	memset(info, 0, sizeof(*info));
++	return getsockopt(fd, SOL_MPTCP, MPTCP_INFO, info, &olen);
++}
++
++static int get_mptcp_info(int fd, struct mptcp_info *info)
++{
++	if (!getsockopt_mptcp_info(fd, info))
++		return 0;
++
++	/* Fallback sockets forward SOL_MPTCP to TCP. */
++	if (errno == EOPNOTSUPP) {
++		info->mptcpi_flags = MPTCP_INFO_FLAG_FALLBACK;
++		return 0;
++	}
++	return -1;
++}
++
++static int clear_blackhole_timeout(void)
++{
++	ssize_t n;
++	int fd;
++
++	fd = open("/proc/sys/net/mptcp/blackhole_timeout", O_WRONLY);
++	if (fd < 0)
++		return -1;
++
++	n = write(fd, "0\n", 2);
++	close(fd);
++	return n == 2 ? 0 : -1;
++}
++
++static int connect_wrong_family(int fd)
++{
++	struct sockaddr_in addr = {
++		.sin_family = AF_INET6,
++	};
++
++	if (connect(fd, (struct sockaddr *)&addr, sizeof(addr)) == 0) {
++		fprintf(stderr, "wrong-family connect() unexpectedly succeeded\n");
++		return -1;
++	}
++	if (errno != EAFNOSUPPORT) {
++		fprintf(stderr, "wrong-family connect(): unexpected errno %d (%s)\n",
++			errno, strerror(errno));
++		return -1;
++	}
++	return 0;
++}
++
++static int connect_ipv4(int fd, const char *ip, unsigned short port)
++{
++	struct sockaddr_in addr = {
++		.sin_family = AF_INET,
++		.sin_port = htons(port),
++	};
++
++	if (inet_pton(AF_INET, ip, &addr.sin_addr) != 1) {
++		fprintf(stderr, "invalid IPv4 address %s\n", ip);
++		return -1;
++	}
++	if (connect(fd, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
++		fprintf(stderr, "connect(%s:%u): %s\n", ip, port, strerror(errno));
++		return -1;
++	}
++	return 0;
++}
++
++int main(int argc, char **argv)
++{
++	bool fail_first = false, clear_bh = false;
++	struct mptcp_info after_fail = { 0 }, after_ok, probe;
++	bool fail_fb = false, ok_fb, ok_key;
++	const char *ip;
++	unsigned short port;
++	int fd, opt, err = 0;
++	char buf[128];
++	ssize_t n;
++
++	while ((opt = getopt(argc, argv, "ec")) != -1) {
++		switch (opt) {
++		case 'e':
++			fail_first = true;
++			break;
++		case 'c':
++			clear_bh = true;
++			break;
++		default:
++			usage(argv[0]);
++		}
++	}
++
++	if (optind + 2 != argc)
++		usage(argv[0]);
++
++	ip = argv[optind];
++	port = atoi(argv[optind + 1]);
++	if (!port)
++		usage(argv[0]);
++
++	fd = socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP);
++	if (fd < 0)
++		die_perror("socket(IPPROTO_MPTCP)");
++
++	if (getsockopt_mptcp_info(fd, &probe)) {
++		fprintf(stderr, "getsockopt(MPTCP_INFO): %s\n", strerror(errno));
++		close(fd);
++		return 2;
++	}
++
++	if (fail_first && connect_wrong_family(fd)) {
++		close(fd);
++		return 1;
++	}
++
++	if (fail_first) {
++		if (get_mptcp_info(fd, &after_fail)) {
++			fprintf(stderr, "getsockopt(MPTCP_INFO) after fail: %s\n",
++				strerror(errno));
++			close(fd);
++			return 2;
++		}
++		fail_fb = after_fail.mptcpi_flags & MPTCP_INFO_FLAG_FALLBACK;
++	}
++
++	if (clear_bh && clear_blackhole_timeout()) {
++		fprintf(stderr, "unable to clear blackhole_timeout: %s\n",
++			strerror(errno));
++		close(fd);
++		return 1;
++	}
++
++	if (connect_ipv4(fd, ip, port)) {
++		close(fd);
++		return 1;
++	}
++
++	if (get_mptcp_info(fd, &after_ok)) {
++		fprintf(stderr, "getsockopt(MPTCP_INFO) after connect: %s\n",
++			strerror(errno));
++		close(fd);
++		return 2;
++	}
++
++	if (write(fd, "retry\n", 6) < 0)
++		perror("write");
++	shutdown(fd, SHUT_WR);
++	do {
++		n = read(fd, buf, sizeof(buf));
++	} while (n > 0);
++	close(fd);
++
++	ok_fb = after_ok.mptcpi_flags & MPTCP_INFO_FLAG_FALLBACK;
++	ok_key = after_ok.mptcpi_flags & MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED;
++
++	if (fail_fb) {
++		fprintf(stderr, "fallback still set after failed connect()\n");
++		err = 1;
++	}
++	if (ok_fb || !ok_key) {
++		fprintf(stderr, "second connect() did not complete MPTCP handshake\n");
++		err = 1;
++	}
++
++	return err;
++}
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 18ce7136a2b0..dd7984414747 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -3876,6 +3876,113 @@ fail_tests()
+ 	fi
+ }
  
++# $1: ns ; $2: addr ; $3: port
++start_mptcp_listener()
++{
++	local ns="${1}"
++	local addr="${2}"
++	local port="${3}"
++	local pid
++
++	ip netns exec "${ns}" ./mptcp_connect -t ${timeout_poll} -l -p "${port}" \
++		-s MPTCP "${addr}" < "${sin}" > "${sout}" &
++	pid=$!
++	mptcp_lib_wait_local_port_listen "${ns}" "${port}"
++	echo "${pid}"
++}
++
++# Drop MP_CAPABLE SYNs until the client netns records a blackhole.
++trigger_mptcp_blackhole()
++{
++	local port spid rc=0
++	local count
++
++	print_check "trigger blackhole"
++
++	ip netns exec $ns2 sysctl -q net.mptcp.syn_retrans_before_tcp_fallback=0
++
++	if ! ip netns exec $ns2 ${iptables} -A OUTPUT -p tcp \
++			-m tcp --tcp-option 30 -j DROP; then
++		mark_as_skipped "unable to drop MP_CAPABLE SYNs"
++		return 1
++	fi
++
++	port=$(get_port)
++	spid=$(start_mptcp_listener "$ns1" 10.0.1.1 "${port}")
++
++	timeout ${timeout_test} ip netns exec $ns2 ./mptcp_connect \
++		-t ${timeout_poll} -p "${port}" -s MPTCP 10.0.1.1 \
++		< "$cin" > "$cout" || rc=$?
++	wait "${spid}" 2>/dev/null || true
++
++	ip netns exec $ns2 ${iptables} -D OUTPUT -p tcp \
++		-m tcp --tcp-option 30 -j DROP 2>/dev/null || true
++
++	if [ ${rc} -ne 0 ]; then
++		fail_test "blackhole helper connect failed (rc=${rc})"
++		return 1
++	fi
++
++	count=$(mptcp_lib_get_counter $ns2 "MPTcpExtBlackhole")
++	if [ "${count:-0}" -lt 1 ]; then
++		fail_test "got ${count:-0} Blackhole event(s) expected >= 1"
++		return 1
++	fi
++
++	print_ok
++	return 0
++}
++
++connect_retry_tests()
++{
++	# failed connect without fallback, then retry
++	if reset "retry connect after failed connect"; then
++		local port spid rc
++
++		port=$(get_port)
++		spid=$(start_mptcp_listener "$ns1" 10.0.1.1 "${port}")
++
++		print_check "MPTCP after failed connect"
++		ip netns exec $ns2 ./mptcp_connect_retry -e 10.0.1.1 "${port}"
++		rc=$?
++		wait "${spid}" 2>/dev/null || true
++
++		if [ ${rc} -eq 2 ]; then
++			mark_as_skipped "MPTCP_INFO not available"
++		elif [ ${rc} -ne 0 ]; then
++			fail_test "retry connect without fallback failed (rc=${rc})"
++		else
++			print_ok
++		fi
++	fi
++
++	# early fallback + failed connect, then retry with blackhole disabled
++	if reset_check_counter "retry connect after early fallback fail" \
++			       "MPTcpExtBlackhole"; then
++		local port spid rc
++
++		if ! trigger_mptcp_blackhole; then
++			return
++		fi
++
++		port=$(get_port)
++		spid=$(start_mptcp_listener "$ns1" 10.0.1.1 "${port}")
++
++		print_check "MPTCP after sticky fallback fail"
++		ip netns exec $ns2 ./mptcp_connect_retry -e -c 10.0.1.1 "${port}"
++		rc=$?
++		wait "${spid}" 2>/dev/null || true
++
++		if [ ${rc} -eq 2 ]; then
++			mark_as_skipped "MPTCP_INFO not available"
++		elif [ ${rc} -ne 0 ]; then
++			fail_test "sticky fallback survived failed connect() (rc=${rc})"
++		else
++			print_ok
++		fi
++	fi
++}
++
+ # $1: ns ; $2: addr ; $3: id
+ userspace_pm_add_addr()
+ {
+@@ -4617,6 +4724,7 @@ all_tests_sorted=(
+ 	m@fullmesh_tests
+ 	z@fastclose_tests
+ 	F@fail_tests
++	n@connect_retry_tests
+ 	u@userspace_tests
+ 	I@endpoint_tests
+ )
 
 -- 
 2.55.0
