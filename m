@@ -1,142 +1,189 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67FCA38A73B
-	for <mptcp@lists.linux.dev>; Thu, 10 Sep 2026 15:57:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C7C3B6341;
+	Thu, 10 Sep 2026 16:12:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789055830; cv=none; b=na6JpVFG+Gd+3KorEtPl7MplgEfeg9TIQ8FFwGFbg1WYX4SNPkwLWsN75DjQlcUB6u3GMj9+ySt4+A78scOPTZj+1ZblswkzpH5B9Zac9H1o3nyGSfPI49wPeBHnIdWlFXnPfDjGv8/gOiuzLCRvGMTApUcHawN+a/vF5gmN5EM=
+	t=1789056743; cv=none; b=DUvXWWmEW5DxUnKcI41OxOn3pvlwnZqNBxT6SQQQgXxlwOmuNA9rb+1tg8C11b4Ao119l6uWbUz8yS8vJvbSQqBgKHPC5ifIThcd/c60+sPt8Z8hvsUHGFh5ncg51/qSp+B6VQgGxbB26TvhUkiTBWqtiJU9Ew4rKLLw4dm/jRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789055830; c=relaxed/simple;
-	bh=BkSk1UaoFA2REBq3iIZceLv4sf/SG8Kvm8pX48wn67E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=hWERzvUvdJC0VYNr3AzT6OzEMj9jl1Vm/Oj/OijuD6+T7qS+rEKb6u6OBQckH0s5JRZEsMMmk9e1wu2zbRygGY0BfgND98zLpLBo/xOwXic4pAPZJw3iZxhMDYuU5zNcZau/TNDj0pR4KNbdY2WfKNEvbcMu1JRNSCQYIShHQ/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NzwnQxMj; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1789056743; c=relaxed/simple;
+	bh=ihKMovMY4U5JRm7zCzIjO/hxQPk2I4p++Ry90rg382c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Hy+Y10K33N2Iq5pIVjZG7DgHSKh/jEoWr2smLvN4kUbW5FbjjuxOyLbqWbS+dim+G6P1sxtB2j4DAaGiPx3XtUErViDPl7gi1l+rjYa78Rpp6yGciRFHDv7roTW5QqgLGPB/2FeyQGltxTxuLPdv2I6VLyrM1w+mIbqswK5TM3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DliSWd+I; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NzwnQxMj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1789055828;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OEj4hC8Y49cDpkKBujyt6Yg8fnoYLzZx9fhbsi43bqI=;
-	b=NzwnQxMjr/OWRuiNdn0m9DPbyLHxKEYTd6t13ViXaBis130Al4SrLIp9jvPCZT/6utW+Ih
-	m0ZYGdh6VRikdIJZ6huQD/lXfJ+BmAloa5gk9VqmdF8b+h0wuDY5CnR3F64e0VNxIqU+dP
-	LDgBqTSZxvK9WBYRoNaHKuojL3JGLac=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-44-ref-R949N5aGwJNy9CRVmA-1; Thu, 10 Sep 2026 11:57:06 -0400
-X-MC-Unique: ref-R949N5aGwJNy9CRVmA-1
-X-Mimecast-MFC-AGG-ID: ref-R949N5aGwJNy9CRVmA_1789055825
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-49991beee7aso66440355e9.2
-        for <mptcp@lists.linux.dev>; Thu, 10 Sep 2026 08:57:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789055825; x=1789660625;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=OEj4hC8Y49cDpkKBujyt6Yg8fnoYLzZx9fhbsi43bqI=;
-        b=gZAjaMzhJEtQcZbVy2V8ldDmSeVAbkvvKbYQ86j8uOtAJiqObDJyOR7MiyDWgHumZD
-         ldOMXCkb3dl4m6UuA5Cn4ap2Qn3/RkE7AvuONwoem5NGcWZxtawF/YyNUkGQGu5COnOI
-         VK+nXgpNSY5DrYsoufd/HX/kFzWG6JNvzhXcpyy2/pnQZ2pnW0QlaelYitTLG8IxwDeh
-         cK+SiJF4X8Brwg0+0m28C2qnPRFjiB1g/WKVSZYfRpQh6w28h968eSp2GPxaqWjjN35z
-         eIFeCvZ6Xd/5t+MnZm1CvocI5FYRrP6fQeSKXm2kbbKLB6kk+Ti9ox5YwPJKtsn3aaus
-         bD8A==
-X-Forwarded-Encrypted: i=1; AKwUvBzu5ZAzUYDwdiZ7BaI1ZeZ7hPqDI0eCpc2bh1cBwrbcUVSd8KRyJSKdtQrJVcrwQqma5l/u6Q==@lists.linux.dev
-X-Gm-Message-State: AFuF++nXrkXEVU3IJMdorAHxQKix5VyAGKRy3CzUgwefll573vGKhWZ3
-	+izUy6GQ5siZqJ/+S5X3bIzwDYQTYzFYVlOQ/7o797w+YmPIi3qYAO/Bp29tf8ZkO7GsCQeIIet
-	1Cp4DWA1qUyEfjZpuUzzYZSWXIVx0L+avTyIS6pxQtmY72I3fjrQ6g5u5fFEsaHrg
-X-Gm-Gg: AYBFou3u3HyBSgxn2ToNklJAnuqPxPdInaDHi2ulhFjhQiCpAXVTs6heFGJKdYVRQRx
-	WV0S8I1nnx/KyqT4Z1EAxl/mGRhX+7f5ovbwHAcJkDwVUySZMY6WVzfEM6UvV9rEPi5R4eSUO/w
-	nZYa0RO92jDc6Gof1kFiR+bd5XK6MFxZahnZGGPC7LH7UCATqFuQvaYQiyJOxXNKedFvXumrFTl
-	CvaFa1R4+zUedT6DeAImc6m745MBYKx/edRNFB+1k5phfkEAMcx3+n1d0gmdoPW9M9jUgGtVeni
-	sVMjEwgNdo+gc2ID8mXp7QwUW1JY8dgHlSl6/7gLcUwl9HnNiw0q6jpLC5PkNEWzzMIFZCYOfuP
-	SpRpyOXyXoYnuxNZnkA7E+Mz+4+XhyMhksWI1AHfdf2V+lf5vIh1uVjQZA8ZgN0CtCjdFnYGnSw
-	==
-X-Received: by 2002:a05:600c:8b88:b0:49c:f512:2361 with SMTP id 5b1f17b1804b1-49d2593842emr186879865e9.14.1789055825333;
-        Thu, 10 Sep 2026 08:57:05 -0700 (PDT)
-X-Received: by 2002:a05:600c:8b88:b0:49c:f512:2361 with SMTP id 5b1f17b1804b1-49d2593842emr186878825e9.14.1789055824902;
-        Thu, 10 Sep 2026 08:57:04 -0700 (PDT)
-Received: from [192.168.188.218] (ip232-47-231-195.pool-bba.aruba.it. [195.231.47.232])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49e60aba026sm4176925e9.3.2026.09.10.08.57.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Sep 2026 08:57:04 -0700 (PDT)
-Message-ID: <b2107d7d-6202-42ec-a431-ec2fae7db53e@redhat.com>
-Date: Thu, 10 Sep 2026 17:57:03 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DliSWd+I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C18C1F000FF;
+	Thu, 10 Sep 2026 16:12:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789056741;
+	bh=oi3W/VPNME6kUeLxOeFaZGn5HifZxroNnX6q4H5FTvE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=DliSWd+IS2Qmm0LdVZGL+LgJLMir6UO3MqAvAB/376Tm46Sjy+Xuvm7bEF+wZmYyk
+	 Nc6qTL9SMrXo7Bk5fSNnjfbFOO+n4tUuZgALylSfI+4tJVpzgA3E1wWTUaH9PR82Ll
+	 iwsB8ssFE3onMNjAQuUNrr6sOTvFSwgB5RYp0N4L2nCzsIhmuQ8HyXK0SNkhX3rit2
+	 gdfDjkP8+qKErBKtWD/A8JsGZqOP5hxjcObQsgfnmRb4orNVY6Rxzyo1IgFFn2H7me
+	 G641OGL9C/t3rLN7atlk2ML9nRx26YB3myLEtg4L0nHpkzL24n2SekYQcB95CvyIAA
+	 ed7PedeS9ySXg==
+Message-ID: <2a0f06a0-f8d7-45d4-a495-a80631f90280@kernel.org>
+Date: Thu, 10 Sep 2026 18:12:18 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net 1/2] mptcp: reset msk state on early connect
- failure
-To: quanyeyang@proton.me, mptcp@lists.linux.dev
-References: <20260910-mptcp-connect-undo-net-v1-0-446e4a4ae3e7@proton.me>
- <20260910-mptcp-connect-undo-net-v1-1-446e4a4ae3e7@proton.me>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20260910-mptcp-connect-undo-net-v1-1-446e4a4ae3e7@proton.me>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: D_kSDCYU1658VsvQ9RD1BovBBfGUTG7D73sY1dXGSjg_1789055825
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+User-Agent: Thunderbird Daily
+Subject: Re: [PATCH v2] tcp: fastopen: check rsk_drop_req() in
+ tcp_fastopen_create_child()
+Content-Language: fr
+To: Jiayuan Chen <jiayuan.chen@linux.dev>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ Kimi Security Team <bug-report@moonshot.ai>,
+ Yilin Zhang <yilinzhang@moonshot.ai>, Mat Martineau <martineau@kernel.org>
+References: <20260903094010.4066892-1-yilinzhang@moonshot.ai>
+ <c95bc6f8-b8da-426f-a056-1c692559d14f@redhat.com>
+ <cd7d7f5e-d729-475e-b772-e201a2ab37be@kernel.org>
+ <f8028773-9ed6-4a34-9fd4-68150a459cfb@linux.dev>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <f8028773-9ed6-4a34-9fd4-68150a459cfb@linux.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 9/10/26 2:23 PM, Quanye Yang via B4 Relay wrote:
-> mptcp_connect() can fall back before the subflow SYN is sent, for
-> example when the netns is in an MPTCP blackhole, token allocation
-> fails, or MD5SIG is in use. If the subsequent subflow connect()
-> fails immediately (EAFNOSUPPORT, ENETUNREACH, ...),
-> __inet_stream_connect() returns while the socket is still
-> SS_UNCONNECTED and never calls ->disconnect().
-> 
-> The error path only dropped the token and moved the msk back to
-> TCP_CLOSE. MPTCP_FALLBACK_DONE, allow_subflows and
-> request_mptcp were left as after early fallback, so a later
-> connect() on the same fd stayed TCP-only.
-> 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/633
-> Fixes: 0235d075a592 ("mptcp: mark as fallback even early ones")
-> Signed-off-by: Quanye Yang <quanyeyang@proton.me>
-> ---
->  net/mptcp/protocol.c | 22 +++++++++++++++++++---
->  1 file changed, 19 insertions(+), 3 deletions(-)
-> 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index e1f08f71cdb1..ad476d29bf3d 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -4129,6 +4129,24 @@ static int mptcp_ioctl(struct sock *sk, int cmd, int *karg)
->  	return 0;
->  }
->  
-> +static void mptcp_connect_undo(struct sock *sk)
-> +{
-> +	struct mptcp_sock *msk = mptcp_sk(sk);
-> +	struct sock *ssk = msk->first;
-> +
-> +	mptcp_token_destroy(msk);
-> +	mptcp_set_state(sk, TCP_CLOSE);
-> +
-> +	spin_lock_bh(&msk->fallback_lock);
-> +	msk->allow_subflows = true;
-> +	msk->allow_infinite_fallback = true;
-> +	clear_bit(MPTCP_FALLBACK_DONE, &msk->flags);
-> +	spin_unlock_bh(&msk->fallback_lock);
-> +
-> +	if (ssk)
-> +		mptcp_subflow_ctx_reset(mptcp_subflow_ctx(ssk));
+Hi Jiayuan,
 
-Overall LGTM, but I think ssk should always be != NULL. Also it possibly
-make sense to avoid entirely the additional helper, just open code it
-into the mptcp_connect() error path.
+On 10/09/2026 14:15, Jiayuan Chen wrote:
+> 
+> On 9/10/26 6:13 PM, Matthieu Baerts wrote:
+>> Hi Paolo,
+>>
+>> Thank you for having checked!
+>>
+>> On 10/09/2026 10:12, Paolo Abeni wrote:
+>>> On 9/3/26 11:40 AM, Yilin Zhang wrote:
+>>>> subflow_syn_recv_sock() sets drop_req when an MP_JOIN SYN takes the
+>>>> fatal
+>>>> fallback and destroys the cloned child. tcp_fastopen_create_child()
+>>>> ignored the flag and could queue the destroyed child.
+>>>>
+>>>> With an MPTCP listener using server-side Fast Open, a valid-cookie
+>>>> MP_JOIN SYN could then expose the freed child through accept().
+>>>>
+>>>> Release the locked child and drop the request before tcp_conn_request()
+>>>> sends a SYN-ACK. Initialize drop_req when allocating the request so the
+>>>> check cannot observe stale state after request-socket reuse.
+>>>>
+>>>> Changes in v2:
+>>>> - unlock the child before dropping its reference
+>>>> - drop the request instead of sending a SYN-ACK after the MPTCP reset,
+>>>>    as suggested by Jiayuan Chen
+>>>>
+>>>> Fixes: 90bf45134d55 ("mptcp: add new sock flag to deal with join
+>>>> subflows")
+>>>> Reported-by: Kimi Security Team <bug-report@moonshot.ai>
+>>>> Suggested-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+>>>> Signed-off-by: Yilin Zhang <yilinzhang@moonshot.ai>
+>>> This looks like the wrong fix. IIRC fastopen is not compatible with MPJ
+>>> - as the latter must accept data only after the 4way handshake
+>>> completion.
+>>>
+>>> @Mat(s): could you please double check the above ^^^ statement???
+>>>
+>>> If so mptcp should reject entirely MPJ + fastopen and no addtional code
+>>> required on the TCP side.
+>> I didn't check in details, but when I try with this packetdrill repro...
+>>
+>>   https://lore.kernel.org/20260903070649.3965366-1-yilinzhang@moonshot.ai
+>>
+>> ... it looks like the kernel replies with an MP_RST, but also a SYN+ACK,
+>> and a WARN:
+>>
+>>    refcount_t: underflow; use-after-free.
+>>    (...)
+>>    inet_csk_listen_stop (net/ipv4/inet_connection_sock.c:1533)
+>>    ? mptcp_subflow_queue_clean (net/mptcp/subflow.c:1925)
+>>    mptcp_check_listen_stop.part.0 (include/net/sock.h:1486
+>>                                    net/mptcp/protocol.c:3482)
+>>    __mptcp_close (net/mptcp/protocol.c:3534)
+>>    mptcp_close (net/mptcp/protocol.c:3572)
+>>    inet_release (net/ipv4/af_inet.c:425)
+>>
+>> With this v2, I don't see the SYN+ACK, only the RST.
+>>
+>>
+>> If I'm not mistaken, with TFO, syn_recv_sock will be called first
+>> (tcp_conn_request -> tcp_fastopen_create_child -> subflow_syn_recv_sock)
+>> then MPTCP will only check TFO when the SYN+ACK is being sent
+>> (tcp_conn_request -> subflow_v(46)_send_synack).
+>>
+>> In subflow_syn_recv_sock(), I don't think we have a strong indicator
+> 
+> 
+> You inspired me. Maybe we can use such code:
+> 
+>     if (subflow_req->mp_join &&
+>         (TCP_SKB_CB(skb)->tcp_flags & TCPHDR_SYN))
+>             return NULL;
 
-/P
+Good idea! Indeed, having a SYN here only happens with TFO.
+
+It would be good to add a comment there then.
+
+> We now skip RST and SYN+ACK also can be sent by tcp_conn_request().
+
+Yes, I guess returning NULL is not enough, a reset should probably be
+sent as well (prohibit), a MIB counter incremented (MPJ rejected?), and
+the request dropped.
+
+Just to avoid a deadlock: @Yilin: will you send a v3 with this suggestion?
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
