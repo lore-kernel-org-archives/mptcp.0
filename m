@@ -1,112 +1,155 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977483C108F;
-	Wed,  9 Sep 2026 20:41:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5373ACEE2;
+	Thu, 10 Sep 2026 07:29:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788986490; cv=none; b=Q0Ae/V0AaXiMMdfzB89Sketk9jE1YgJzn818RHyB58TVlfZ3Mew3gAd+c8BH9dhJGFYFef3W9tBItgCmqqg5k4wod6vMJCeUR6p5DP/aS7AR5ZLvpkmTt7dLwzSWxxOyFkN8q+P5WGwtf/QSuBdUciLno2FLFaQSopUHH3MMkBk=
+	t=1789025361; cv=none; b=rUO1sQycoKLkbggS8bViJ0LydPdWXaQMvUYKuS7Ugf62YM2hlQaeIS0r6i7Mq4RsT/PTk1YGW704s0It72/+RXWcz55gNZDndKrOYnN7B0ywYampJtTMRMzzVXvFk/gjnJK7o5CC04R3TzGcMxW55L+CuSGt3N/tn3QjFn4u4uU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788986490; c=relaxed/simple;
-	bh=Lv695M+ET14zQcMLsFvWiig8OxilxbrUcVHK7NozT+w=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=ttf4BIA+6L19QnN+l9nlbFKsk1VpivtbDwLlKppEjSgYPe9OUb2oNm5WO/DMP7nwBVGsOE4lcfsxESp/H/JhMAAM325IuCP2Z78l9YDwz/Q/aiipnafVwj+aw7Cd1eHuhiff0EvVDRrzP+BNLbJGI22iuq8rk3832YWE9A3vHTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GgN8x0gn; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789025361; c=relaxed/simple;
+	bh=SDMg6oyZQw6A03eQKQ3Uptuv442Scy0myCx4pmCTZ2Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FHQz6scCWV33MkIR946szX9zjH0u7lV9vCWs1XGSf+MwewJQ2+lwTvHvcjy54nNBUGWh+FgOhgvS46fSujU5m7guQMTpMa9KkMvP/tWCxIWQysMQCEL5mfbYFsPKEZ/UQ1W0gzce9ntQMpDOvf9JvApGqT0DyADNmn132ATMePU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MY03GOet; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GgN8x0gn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABAA31F000FF;
-	Wed,  9 Sep 2026 20:41:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MY03GOet"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9E611F0089E;
+	Thu, 10 Sep 2026 07:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788986471;
-	bh=XlRgql6gXyVqTyyC7XPsHaPGMVDu5J/x8i7A2d7OcWM=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=GgN8x0gnUY4zKgKqn7/6SJcyXo0H85ikpN9dAeR/fTlLRYmPg8yHPKzDJts/9fY4X
-	 eumPerJUS32tN7N+eBgyorKqQ2q2g11AsdzMX1tQtRLkYGplUL18pY5QdxsyTyUFpq
-	 8SgKNnKssNqiedoLNkVTc9yZe80VAR1W49rIHB67Cvv3QdVHSXjtTPfG7aMZnaDVMo
-	 pa0GC91I4C7hUnYVg2ig7BlwYb0tpwRzNeod+pGmJGqxIcWipD8PuHq4PTotQUvf48
-	 0xDEVQzPQzRxRgBP1OsgSrItG+zTc3+W2RXidA0V3fD3pJ6zu9LW5S89kY1y5c1dJI
-	 i40LQTq1Ds7JA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id D0D24380AAD2;
-	Wed,  9 Sep 2026 20:40:10 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20260515; t=1789025359;
+	bh=u3R7KOyofrS0wRSjak8aNV75X2Czsw9QjnW4+38O/ZQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=MY03GOetu5SKBp9nkWTrxqdG7Jl6/NG2Hl+PUb+xVMhfRY77IW+ocH4B48v9OlZH+
+	 2jNjsuE5l7TpMAH4tErFkuASZJQp1s4gqxabcfqFAipFRFLnJoAF9of4isP7Umzi7X
+	 Br84MtRcqTzhRIQx94sSrFT2GUsb/WfFTvrliT9WRrtFns/42kuCEHMX+eQj6SGnZj
+	 6SKyKJyXMZFLIO/MXaq1HQg5I1fUaIXvYvH2imSIKOP1ZdPpYtxN5Nzhby8vBAnpSq
+	 IKWJdVIggpp6it5npUAN6DPsZWIKMJdRJSMqtDQcP+//G3+4DT/6tHCVZ5uOWCi/vM
+	 lQfu9E+dLqOeg==
+Date: Thu, 10 Sep 2026 09:29:14 +0200
+From: Joel Granados <joel.granados@kernel.org>
+To: Mauricio Faria de Oliveira <mfo@igalia.com>
+Cc: Kees Cook <kees@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nsc@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, kernel-dev@igalia.com, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, fsverity@lists.linux.dev, 
+	keyrings@vger.kernel.org, bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, netdev@vger.kernel.org, linux-wpan@vger.kernel.org, 
+	lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org, coreteam@netfilter.org, 
+	linux-sctp@vger.kernel.org, linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org, 
+	bridge@lists.linux.dev, mptcp@lists.linux.dev, rds-devel@oss.oracle.com, 
+	virtualization@lists.linux.dev
+Subject: Re: [PATCH RFC v3 00/13] sysctl: add module aliases
+Message-ID: <uufwu7rqyxf7h55lgavcwrnylnq5gdbd7o5d7mfugrxpblds2d@adra5c2z22gg>
+References: <20260819-sysctl-module-aliases-v3-0-aab90569365d@igalia.com>
+ <bpnqwggtidgiec5akns3fa5edbsvl7xf55dxabtwng2xspy4pn@ue554aii2ngk>
+ <53155340c897560bfc67e61ba9568fd6@igalia.com>
+ <mokz5pdtwswkyab4byfq7q7m6ac2g6ceoi6jflyxmaszaibzqa@su6m4kamtdpy>
+ <b1a6cec17e7c828fcebe310ca2a0d25b@igalia.com>
+ <rywhz6soawf5dzyui5g7dnbufsgpxr7ma7honuhejwgncemzrm@f32at7hl6ugm>
+ <6e93af907298022f077126f1be7bd386@igalia.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v2 00/15] mptcp: misc fixes for v7.3-rc1
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <178898640963.1048067.13477009364378101406.git-patchwork-notify@kernel.org>
-Date: Wed, 09 Sep 2026 20:40:09 +0000
-References: 
- <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-0-df1de70348b6@kernel.org>
-In-Reply-To: 
- <20260908-net-mptcp-misc-fixes-7-3-rc1-v2-0-df1de70348b6@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, fw@strlen.de, kalpan.jani@mpiricsoftware.com,
- syzbot+55c2a5c871441261ed14@syzkaller.appspotmail.com, cuitao@kylinos.cn,
- yangang@kylinos.cn, shuah@kernel.org, linux-kselftest@vger.kernel.org,
- luoqing@kylinos.cn, kishen.maloor@intel.com, kuniyu@google.com,
- kmta1236@gmail.com, jakub@cloudflare.com
-
-Hello:
-
-This series was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Tue, 08 Sep 2026 16:07:05 +0200 you wrote:
-> Here are various unrelated fixes:
-> 
-> - Patch 1: Do not reschedule the RTX timer for sockets that fell back to
->   TCP. A fix for v5.7.
-> 
-> - Patch 2: Avoid copying thmac which will not be used and could be
->   uninitialised. A fix for v5.7.
-> 
-> [...]
-
-Here is the summary with links:
-  - [net,v2,01/15] mptcp: do not reschedule the RTX timer for fallback sockets
-    https://git.kernel.org/netdev/net/c/e2ab913f68c7
-  - [net,v2,02/15] mptcp: subflow: no need to copy thmac during ulp_clone
-    https://git.kernel.org/netdev/net/c/29f641951be0
-  - [net,v2,03/15] mptcp: syncookies: remember the request backup flag
-    https://git.kernel.org/netdev/net/c/b76c0e28b392
-  - [net,v2,04/15] mptcp: pm: kernel: drop pending ADD_ADDR when removing ID0
-    https://git.kernel.org/netdev/net/c/2ac7d6e62076
-  - [net,v2,05/15] mptcp: options: handle MPC data + csum reqd + no csum
-    https://git.kernel.org/netdev/net/c/ab36b1a80942
-  - [net,v2,06/15] mptcp: prevent race between disconnect() and rtx
-    https://git.kernel.org/netdev/net/c/85c580b0d859
-  - [net,v2,07/15] selftests: mptcp: fix an UAF in mptcp_connect.c
-    https://git.kernel.org/netdev/net/c/730444f094b1
-  - [net,v2,08/15] mptcp: pm: userspace: fix address ID overflow
-    https://git.kernel.org/netdev/net/c/f9f0068e8813
-  - [net,v2,09/15] mptcp: pm: reset retrans_time when ADD_ADDR entry is reused
-    https://git.kernel.org/netdev/net/c/f968190c0b42
-  - [net,v2,10/15] mptcp: remove unneeded READ_ONCE() annotation
-    https://git.kernel.org/netdev/net/c/caa4a79f74f3
-  - [net,v2,11/15] selftests: mptcp: lib: dump nstat for the right test
-    https://git.kernel.org/netdev/net/c/e1a56368eac1
-  - [net,v2,12/15] selftests: mptcp: lib: get counters for the right test
-    https://git.kernel.org/netdev/net/c/d23c41366e85
-  - [net,v2,13/15] mptcp: options: fix uninit-value in mptcp_write_data_fin
-    https://git.kernel.org/netdev/net/c/b110f1dd6cb6
-  - [net,v2,14/15] mptcp: being below memory limit is a likely() condition
-    https://git.kernel.org/netdev/net/c/a4257a91af7a
-  - [net,v2,15/15] mptcp: avoid pruning for OoW data
-    https://git.kernel.org/netdev/net/c/f01b8275745e
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="fccfp65dlmdatj3e"
+Content-Disposition: inline
+In-Reply-To: <6e93af907298022f077126f1be7bd386@igalia.com>
 
 
+--fccfp65dlmdatj3e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Sep 09, 2026 at 02:29:30PM -0300, Mauricio Faria de Oliveira wrote:
+> On 2026-09-09 11:07, Joel Granados wrote:
+> > On Fri, Sep 04, 2026 at 02:45:23PM -0300, Mauricio Faria de Oliveira wr=
+ote:
+> >> On 2026-09-04 10:41, Joel Granados wrote:
+> >> > On Thu, Aug 20, 2026 at 06:22:13PM -0300, Mauricio Faria de Oliveira=
+ wrote:
+> >> >> On 2026-08-20 09:51, Joel Granados wrote:
+> >> >> > On Wed, Aug 19, 2026 at 03:16:13PM -0300, Mauricio Faria de Olive=
+ira wrote:
+> >> >> >> This series adds 'sysctl:' aliases to modules that register sysc=
+tl tables; e.g.:
+> > <... snip ...>
+> >> > use the correct call moving forward?
+> >>=20
+> >> This scheme currently covers all modules, AFAIK, as it is wrapped in t=
+he
+> >> functions that register sysctl tables.
+> >>=20
+> >> On moving forward: usage of such functions in a way that breaks a
+> >> requirement of this series (e.g., failing to specify the template
+> >> table/path parameter(s), or not having constant initializers) hits a
+> >> build error, as the requirements are actually from the compiler.
+> >>=20
+> >> >> I guess that a different design could use MODULE_SYSCTL_TABLE() as
+> >> >> MODULE_DEVICE_TABLE(), declared per table instead of wrapped into
+> >> >> register sysctl functions.
+> >> >> However, it seems to require moving the value of the path argument =
+(or
+> >> >> its template) into the macro and still referencing it in the functi=
+on
+> >> >> (or its instantiation of the template), which adds obfuscation, to =
+all
+> >> >> callers.=20
+> >> >>=20
+> >> >> What do you think?
+> >> > It might be that having it inside the module subsys is more work, bu=
+t I
+> >> > believe that there is the right place to have it. I still don't see =
+that
+> >> > adding a module specific arg to the sysctl register is a good thing.
+> >>=20
+> >> Ok, cool. I can work on a different design.
+> >>=20
+> >> Please just let me know whether you are OK with the remaining (above),
+> >> and I'll be happy to tackle this.
+> >=20
+> > What is "the remaining"?
+>=20
+> I meant the rest of the email, addressing the points/questions you
+> raised.
+
+* The dependency on a sysctl path to load a module still is
+  backwards to me. It should be: I need feature A, I load modules
+  M{1,2,3} for A and I set sysctl S{1,2,3...}. Not sure why sysctl tools
+  do it the other way around.
+
+* The fact that the invariance is in the sysctl path and not the module
+  identifier maybe points to a deeper issue.=20
+
+* I still believe that this is better placed outside the sysctl
+  subsys as it does not cater solely to module loading.
+
+Best
+
+
+
+
+--fccfp65dlmdatj3e
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmqiXEIACgkQupfNUreW
+QU+Jpgv/QNMzfwgyYS5bGcjcIdeGmbwPVB4niFRMrcLkDpeUPt2bAuU2q0Si+c2j
+8ZRwIaAx22BLUNWWDpobcza7W5C1A17rIR76XCMUnFSb0n/IWP5htK0UHazibk/r
+s8lxhIQXP5lQAHUSyOaKXEqmO60aWL/VkIxb+qJe3ThcHSESPRVQxL56e054d/fG
+0Hh+/ckA3Yy8AAKkaF1Q52F6thgEqtHKMSNZkdp+XN3Q+IQHRUGULXvXeTgvp4QY
+u5WK/w8RJz5+KQwW6//kpXBCY9uVado45tRrFS/H0fClXF6ovdXuTK169krtJi92
+qouie+C4qFsAjPRGPOQjOYXmCIa8/sKwsArW4CmTg0J9WN3BwQxJksy0jWqaxULM
+xRPx9OxYsSrYZGglZitaJMnNQnc+X20/vQ4lBotfmrMPdUgSrMAzOHO0AcFXBUs9
+s1DSQoFZe+/Kg4RCkGzgk55VbnT0V81UPFbcYx6yuyjb+yZWoTMUpHy8Q47//r54
+Y5lWmFsv
+=Y70+
+-----END PGP SIGNATURE-----
+
+--fccfp65dlmdatj3e--
