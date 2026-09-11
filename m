@@ -1,135 +1,147 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90AA136C9D0
-	for <mptcp@lists.linux.dev>; Fri, 11 Sep 2026 15:13:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE3A374A17;
+	Fri, 11 Sep 2026 15:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789139634; cv=none; b=IzyT0dFbsEwo2SZUq6NfTFcQxqegNviu9szshgnf5oRJtMAIZMqq1uYdZ55mptsmMN4t13U4/WZb91E+BVv+R5eE/XjbuCOJfekUkvxST+HgLAP+LaKwSm1HJAICkEFJOex8aV9R128Lz8Y3+haaX0CdM0aXmbPKE7tTWR6C28U=
+	t=1789139741; cv=none; b=Q6Vi5khbURLpjF4i58BHZQMAvnEIQ71f4K0uMTdVJ8ioJr0kQKjBF6cKyVpEoQCUnaLSDo0j4cfbMZ6gVSYGMVQl4HOPCgz4Anz4Vt6j5V40apA3JNu81iHaqrrM6tnOkkBI4M5j0d9xmZoZe3aP2L+3zxaTE+KX3G22i7Tw+zE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789139634; c=relaxed/simple;
-	bh=kBBBcdbFxJh/f6HOnIQyQygmGlowjlhHh2vYSEuJi6E=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=kPV4+1TLqqE3uemNVJCqIsCIDvUdqalE0aBLieaeYVv2GuBnU6NEag1WzlRsUGtEBJMsS9G1YWWfpUS0b7FaVFsbpRTO5H+GTolEPUBd/iAxrWBqqAQKdDEW6DunyLtLAsp2U9huqTheGPsTZl283cO33Vg8vCLVAsbtSpuRR70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hRkgXhqh; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1789139741; c=relaxed/simple;
+	bh=+JMr+qGMs3sFTxbkwI95qYwIaFt6UtAXLV76Pl4C2Xs=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Rka04Upn2tgRKNeshl0QsMWeXf3UtJfcXvH/ixs8LE4NsaDhr+pXqHLDC94u+lwGKRpaMzEJiOvwsYELa8kXE25njioV404UOXdbzpxK6dP0ax6Ql47fDgy2Q3WvfaGiysiLosiq1DIEm3YkcwPeijnPXY+4WcCtUPtoS5bJJHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=awHF7upi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hRkgXhqh"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-382ef647e20so1286489a91.1
-        for <mptcp@lists.linux.dev>; Fri, 11 Sep 2026 08:13:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789139632; x=1789744432; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=SHZEY3KeusAFG4z3NzUOlr4EW6ac0mEnksI2SY3z/bA=;
-        b=hRkgXhqhSZPmSb7/Hh6SVnI4AGeZSd2cwMetuTdfu5PkL8cZlJseInRZX2xvbVHCVc
-         sCh8OB42hSMSARtyakD1W/R5RS9CtZIBiMXXpBWpamPT/QO1K2CkXp04Doo3ax35BAGV
-         yyfjX9CiHIVer5ywAsOCJno8g4TWgmGzFipYzvQ4ji89gsi1rOaeL4AegRiD2Swps/Bu
-         kfmxhJX9zCDspeMesmiiDnsV7Df566c1Xz5kQ4M+EvqWJaH1hzX432mf7o/K3Edg9E1O
-         aw3eLOlvYJcIAFrb4jbWk/d82X3gxit5WOOFNQeYBbPvv52gWGdYUDZxUJwa3o/J8QMo
-         Y68g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789139632; x=1789744432;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=SHZEY3KeusAFG4z3NzUOlr4EW6ac0mEnksI2SY3z/bA=;
-        b=MAwckteQATnYF7nALlF0pA43qydJK0+7arwmbfpLkNiHrQFmuBRAUJ/5Sf841DbqAi
-         svsFaLm94BAIELBmMLN+JF0NVlmpmEkhKfo61KYJF3RvvsaEOisgCo5c+oxsQD7E2ad3
-         0IyVMdbPifWUo/o0V4j4VdUf+kA/MihoWC+jaL/BRIG2/C73Y3zBEspHLiya8rYe4ORm
-         DT/7zZEkaQZx37Tw0kLtPZatWsudCXlW/iTIh+mAEGZL34q8oV2CRMxaoH0VxlJObEi7
-         0QdXkAi1gSn+1DTCsOvk4mjSFQuBbRnvD2eNOl3mxTkyaJ+x255xQ2a5ZpbMyv7iCUW3
-         WiHA==
-X-Gm-Message-State: AFuF++kSywyVW9o+B6tAgxfNkOHdu9Hv8TTM6fkYJww9mdNEImrpxm5H
-	e3Vgqv4NMtehwVcTxaOZ94Goe+Yr4zqAps+H7KlDdcpBOcsVOtHjRQQxlFOL
-X-Gm-Gg: AYBFou2JeAYBPExOO29QqnyZIoQPMQHoAggIUPgASkWycXmeF0FcLyQ2LEfKFODjm0b
-	kSo/3TgbJu+axb5DHF7BycSbouQsyMFpk8LDUzXZsMkp+V9/YGB66vM4kuHv1D0SAT4HFXDj87u
-	ECN1Bx3cDRkl9Qb5FzxmfDspn5/+9ZklTvX9NreKwKPLDfWJxo2QHIhsFhilrw1EkPTajEyWBrW
-	06AgUhq2R1ypKfsoJH+skc1zADV5R9UGxfB55b9hWcV4UUBpmzMLnbT6gA0m76w9B2ZTX8hguOJ
-	y8b6MVN5hyobUkFI5Knj7Z2uHU9M/mThmJTePi8yp+L5dEOHKftUpH18q6keN1v3+qQSKytORVO
-	WXZQBVA+qKLiXa8mhhj4+o+QkBeTpiOkhg3mkVoH9VGkRE1sjxOnpeawKWfug5Hu1vWOOzHgswl
-	NRkdZ+zuroydUt0sXky1h1FlrS5vUR3DAZ8XXoe8njivCJtb0HrLupn5j05chY9x+hOYrSZBSDx
-	9wTaLC9F9wd
-X-Received: by 2002:a17:90b:5287:b0:398:9bd5:490d with SMTP id 98e67ed59e1d1-39d9c22e224mr8343074a91.20.1789139631548;
-        Fri, 11 Sep 2026 08:13:51 -0700 (PDT)
-Received: from [127.0.0.1] ([20.171.125.218])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-33ba4fa50efsm8132762eec.28.2026.09.11.08.13.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2026 08:13:50 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <22e4057bd8f3c7cb5925794637ffa37d5572acd0.1789135142.git.tanggeliang@kylinos.cn>
-References:
- <22e4057bd8f3c7cb5925794637ffa37d5572acd0.1789135142.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v4] mptcp: drop skb_ext from tx clone in
- fallback mode
-Message-ID: <1579884f-9d48-e83d-b2e3-560f632324c8@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="awHF7upi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FBC61F00898;
+	Fri, 11 Sep 2026 15:15:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789139739;
+	bh=spXyrTowUXWc/69WlA9MNUyghCeh7E7kfBS+3vu+KRc=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=awHF7upiS9J2W4k1vFwqMV+vv0xK2E/MZVYL0TNSj931LhDb++1c+P07HRXDHo5cE
+	 I6WNIDrC30zjaNT2jislU0t3tsPDOG0E3s94GKpqdvYKab5klA/m3OhVLtFVfw8zoG
+	 icIAXzo7+JJsL4wbfUPKmIZCnRR9jic9KuLDR+MqqQIAr3Z+xMaQIgPgiLG+7ZIG4l
+	 +YReFDCcSQ695Gof1ffTn2eChOCUgl57DNXVi1kj7vWBxUJv9efzzgWOPgGHMcyITX
+	 KOr0r9DHA5OVZmtWsNzL39JEDk6kxXcP4OlwrP5tOpMPNJNVPZXaXoFdJmB3wKJgz9
+	 g0K4atLQzEIxw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 01/13 net-next] net: ipv4: introduce CONFIG_IPV4 to
+ decouple the IPv4 stack
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Fernando Fernandez Mancera" <fmancera@suse.de>
+Cc: sven@narfation.org, "Christian Borntraeger" <borntraeger@linux.ibm.com>, marek.lindner@mailbox.org, sw@simonwunderlich.de, "Jeff
+ Layton" <jlayton@kernel.org>, antonio@mandelbit.com, mptcp@lists.linux.dev, linux-rdma@vger.kernel.org, "Heiko
+ Carstens" <hca@linux.ibm.com>, linux-scsi@vger.kernel.org, "Anna Schumaker" <anna@kernel.org>, linux-s390@vger.kernel.org, "Alexander
+ Gordeev" <agordeev@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Chuck
+ Lever" <cel@kernel.org>
+In-Reply-To: <20260910144914.8025-2-fmancera@suse.de>
+References: <20260910144914.8025-1-fmancera@suse.de>
+ <20260910144914.8025-2-fmancera@suse.de>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 11 Sep 2026 15:13:50 +0000
+Date: Fri, 11 Sep 2026 15:15:38 +0000
+Message-Id: <20260911151538.6FBC61F00898@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 
-Hi Geliang,
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] Layer-2 networking features and core drivers incorrectly depend on=
+ IPV4, breaking INET=3Dn builds.
+--
 
-Thank you for your modifications, that's great!
+commit a6e6a467093e978fadc9f73c8f0d22f0bf0ee577
+Author: Fernando Fernandez Mancera <fmancera@suse.de>
+Subject: net: ipv4: introduce CONFIG_IPV4 to decouple the IPv4 stack
 
-Our CI did some validations and here is its report:
+Historically, the IPv4 protocol has been linked to the core INET subsystem.
+This patch introduces the CONFIG_IPV4 Kconfig symbol and adds it as a
+dependency to multiple networking Kconfig symbols.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Perf: Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_n=
-et-next/actions/runs/34609973000
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Kconfig b/drivers/ne=
+t/ethernet/mellanox/mlx5/core/Kconfig
+> index 925ee25d05b47..86b0884968b67 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
+> @@ -12,6 +12,7 @@ config MLX5_CORE
+>  	depends on PTP_1588_CLOCK_OPTIONAL
+>  	depends on PCI_HYPERV_INTERFACE || !PCI_HYPERV_INTERFACE
+>  	depends on HWMON || !HWMON
+> +	depends on IPV4
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/f1cb98f36e=
-18
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1162964
+[Severity: High]
+Does adding this dependency on IPV4 mean the Mellanox core driver can no
+longer be used for L2/DPDK in IP-less kernels?
 
+The IPV4 symbol is sourced inside the if INET block in net/Kconfig, so it
+evaluates to n when INET=3Dn. This seems to prevent selecting MLX5_CORE wit=
+hout
+TCP/IP, which causes a regression for valid Layer-2-only kernel configurati=
+ons.
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+[ ... ]
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+> diff --git a/net/bridge/Kconfig b/net/bridge/Kconfig
+> index 318715c8fc9bc..421892a031299 100644
+> --- a/net/bridge/Kconfig
+> +++ b/net/bridge/Kconfig
+> @@ -7,6 +7,7 @@ config BRIDGE
+>  	tristate "802.1d Ethernet Bridging"
+>  	select LLC
+>  	select STP
+> +	depends on IPV4
 
-For more details:
+[Severity: High]
+Is it intentional that Ethernet bridging requires IPV4 here?
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+Bridging is a Layer-2 feature that does not require INET, but since IPV4 is
+evaluated as n in INET=3Dn builds, this completely disables bridging in ker=
+nels
+configured without TCP/IP, resulting in a configuration regression.
 
+[ ... ]
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+> diff --git a/net/mac80211/Kconfig b/net/mac80211/Kconfig
+> index d6bc295e23a1a..ec485da283730 100644
+> --- a/net/mac80211/Kconfig
+> +++ b/net/mac80211/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config MAC80211
+>  	tristate "Generic IEEE 802.11 Networking Stack (mac80211)"
+> -	depends on CFG80211
+> +	depends on CFG80211 && IPV4
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+[Severity: High]
+Does the generic 802.11 stack need to be rendered unavailable if INET=3Dn?
+
+Since it does not require IP, adding the IPV4 dependency seems to cause a
+regression for valid Layer-2-only configurations.
+
+[ ... ]
+
+> diff --git a/net/packet/Kconfig b/net/packet/Kconfig
+> index 2997382d597c2..00fda9e08cb0b 100644
+> --- a/net/packet/Kconfig
+> +++ b/net/packet/Kconfig
+> @@ -5,6 +5,7 @@
+> =20
+>  config PACKET
+>  	tristate "Packet socket"
+> +	depends on IPV4
+
+[Severity: High]
+Can packet sockets (AF_PACKET) still be used when INET=3Dn?
+
+They provide direct Layer-2 access and are independent of INET, but this
+dependency causes a regression by making them unavailable in INET=3Dn build=
+s.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260910144914.8025=
+-1-fmancera@suse.de?part=3D1
