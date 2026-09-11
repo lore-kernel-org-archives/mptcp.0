@@ -1,159 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from sender6-of-o52.zoho.com (sender6-of-o52.zoho.com [165.173.180.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8AEA3C416A
-	for <mptcp@lists.linux.dev>; Fri, 11 Sep 2026 09:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789120702; cv=none; b=QQ03BuOKKh6neEV+qMItRnDyhmTMvljmJmi5TOd8xQpVxFuWubbVXpzGq+1Wuu0juGD8/5e+1++MtglnBVawWVXKIKxy1Z5vZ3vlS/WnACS/7jC5UZOjnecvjUNWgymCy046uj+6F8JvWGyUjXo8jtjOZAXHEVWVjse83GcCHUQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789120702; c=relaxed/simple;
-	bh=10BrQ+GnIVnUzuSwNps5+zBlNcXC3vckwAcQ9f0Tgvk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=N/ONNeEkhXemt3fRs18jScSoEgXi13ZZ2IUJpSLEO3SlbAcrljUXmwsXqQAZvAUY5gLFKz3t10X/9GIN9B9CCHJpwnDANqRYdzVYYwONx04AQl/CXUrNYJieeREbKDnWMrl9owfAXlY/MRVA0WvjwnID7CrisO9KFACyLSCeZjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HQklp8jk; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9CF3AEF51
+	for <mptcp@lists.linux.dev>; Fri, 11 Sep 2026 09:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=165.173.180.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789120705; cv=pass; b=s1R2MFH+uOsDdTXZUX62q5Cthpctoj8Wnd4trte8U58ssgasuvXWpdi9hM3+mHcAwUqyasa+iRXipamKqA5lMyniIcabKv20e3y4VYpnRNV2i85wIyEUx2fenxO7H0SRzDIleljTOK5Hfp831w/X0n71ey5HXgdkWiLDQ469iM0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789120705; c=relaxed/simple;
+	bh=0dfsUC5gSaxXM6gADQHRcF4eB/0FyPmNAqUm0+CJsiY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=CrRRS9F4nHIXpf2h0Ff7cO47y/csz5EnejeGLSfATQcPl/Y+rQdVy8WyyBjEs0wmUbaQfKB/pbi0lwko0qf9qe/bTOGbkyIHmSjJbtpuyMCvwXVHIXtwUaCJWwg+NgFg3oD9DoEbdZKCTjlG9EkqB+444JPzbg/bbfT1MQBaK3M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=fEfSVmuW reason="key not found in DNS"; arc=pass smtp.client-ip=165.173.180.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HQklp8jk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98CE21F000FF;
-	Fri, 11 Sep 2026 09:58:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789120701;
-	bh=hX/0VXdhTTUQXgm1nvZ6WRmwINMKY0ea3J5ZevaVPdQ=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To;
-	b=HQklp8jkUzc+XuTAgt+MEZAzQNZsCMZYLWJ2IhZ3vASqAsGu2Q6be5+fWsPF7X+ge
-	 Lu2SDt/K0b3cGnuSf7le/2CIqO7Jvxks58+8fjrBZcIFHS+djzdzhjpME+Tuja+dM8
-	 hShq0R97Mi8BrMMCx9rsRyVlNeDPAYjQs83eq7vBDifeCxcHOcDFYupG8dREI5Wy1D
-	 ZZ20OWMWZg3HsPMTEYCfGUX86VP0MthO/uN4zUKJi8Bo7i2OSCfrN9PsKXErOKoxq8
-	 oI88j9GXaxM+bGfpfplqL0u3kkMZORzFLHBPOSib+zop7aJv+drYaKAc2dzqv2kyLh
-	 +vi2rwyHcZZFw==
-Message-ID: <b9a44b9f-0cb9-4420-8860-92763264dd1c@kernel.org>
-Date: Fri, 11 Sep 2026 11:58:18 +0200
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="fEfSVmuW"
+ARC-Seal: i=1; a=rsa-sha256; t=1789120684; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=iO9ZrtVRY1dgDQrmkdssXoqviOgEFGbChnzmCZUwg1utnqF8s+NIlOCW1/sc+opnEXz/OvmLVu4O+eW00ld9yn+0xWoGs4a9WovgBVVttyjUErcw03roBL5x3XHSqGepv7GHrlXnqnSbX8UwsTehiRq+rYpsDB4ccHy4OmEhfhs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1789120684; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=C5L7rW8GyfHzw+j6WS/3A3UlQfBV8N4PPBg+exF+n6w=; 
+	b=gIqagtyoZAiaAqtzviuFaM02RhGiUjpZSB7Wwwb4jCopROsijJiQDaUW/yfiYAXA59pUiC+UtEWoSnOpebl9M9tX4iD7FSrhkU3uHUU/fRB0V2ZDEm4f1HIK4jzS430mAJH718kNZm9gIsrimuKFHQVBmC2sdLszG9h6UI0mrTY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=shardul.b@mpiricsoftware.com;
+	dmarc=pass header.from=<shardul.b@mpiricsoftware.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1789120684;
+	s=mpiric; d=mpiricsoftware.com; i=shardul.b@mpiricsoftware.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=C5L7rW8GyfHzw+j6WS/3A3UlQfBV8N4PPBg+exF+n6w=;
+	b=fEfSVmuW9cfqAvfP+XIUkIxvx//cDbJlpO+roWh61VrWrDPIFAgGq2ciWiXcZvLx
+	934W/g0hCCcJ+xDRhOMwH0DLKa7r+/Ha1hH9yGtPsRfiYFJXElwr4GSzk8IhVwviGW2
+	6k1vPc4/PoXPMgiQQZ7mc2Hl6HDvvkd1bD4ipiis=
+Received: by smtp.zohomail.com with SMTPS id 1789120682434540.6945165920732;
+	Fri, 11 Sep 2026 02:58:02 -0700 (PDT)
+From: Shardul Bankar <shardul.b@mpiricsoftware.com>
+Date: Fri, 11 Sep 2026 15:27:46 +0530
+Subject: [PATCH mptcp-next v4 3/4] mptcp: sched: do not penalise when
+ receive-window-limited
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [RFC] Mitigating Sashiko-driven iteration noise on the main MPTCP
- list
-Content-Language: fr
-To: gang.yan@linux.dev, Shardul Bankar <shardulsb08@gmail.com>
-References: <b13525eb141d18e1fe326fec4e71b53704cdc291@linux.dev>
- <6f86381a-72d4-4a47-bc7d-1880cc39da64@kernel.org>
- <3f13f3acd4c329480331cccf5a12411dc01ee721@linux.dev>
- <7429a238-6297-4a7c-b18c-47cbcee4ab69@kernel.org>
- <20260907125720.516598-1-shardul.b@mpiricsoftware.com>
- <703f2d892ac7432d4317f949e6ceba1b7f73ba40@linux.dev>
-From: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <703f2d892ac7432d4317f949e6ceba1b7f73ba40@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260911-mptcp_penalise_send_v2-v4-3-820f2be4a8fe@mpiricsoftware.com>
+References: <20260911-mptcp_penalise_send_v2-v4-0-820f2be4a8fe@mpiricsoftware.com>
+In-Reply-To: <20260911-mptcp_penalise_send_v2-v4-0-820f2be4a8fe@mpiricsoftware.com>
+To: mptcp@lists.linux.dev
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Janak Patel <janak@mpiric.us>, Kalpan Jani <kalpan.jani@mpiricsoftware.com>, 
+ Shardul Bankar <shardulsb08@gmail.com>, 
+ Shardul Bankar <shardul.b@mpiricsoftware.com>
+X-Mailer: b4 0.15.2
+X-ZohoMailClient: External
 
-Hi Gang, Shardul,
+The penalty in the previous patch shifts load off a slow subflow onto the
+fastest one, which only helps if the fastest path can absorb it. When the
+connection is receive-window-limited (the receiver's advertised window,
+not our congestion window, is the bottleneck), the fastest path is capped
+by that shared window too and cannot send more, so halving the slow path's
+cwnd just sheds its throughput.
 
-On 10/09/2026 13:08, gang.yan@linux.dev wrote:
->>
->> Gang, you mentioned deploying Sashiko locally. Did you see anything like
->> the same cost, and what were you running it against? If this turns out
->> to be particular to a fixed-quota subscription, I would rather find that
->> out than have people avoid running reviews locally over a cost that does
->> not apply to them.
->>
-> 
-> Hi Shardul,
-> 
-> Thanks for your reply.
-> 
-> Sorry for the delayed reply; work has kept me busy lately so I haven’t had much
-> time to check emails. Please also excuse my English — I might have caused some
-> confusion earlier. I'm using the API key and noticed the cost.
-> 
-> I’d like to share my experience with an API-key Sashiko deployment, which may help
-> folks on this list use Sashiko at lower cost.
-> 
-> I run Sashiko using Minimax as the LLM. Minimax offers a monthly subscription plan
-> and is quite affordable. (I submitted a small PR to Sashiko to fix some issues
-> I encountered while using it.)
-> 
-> One observation: reviewing large patch series via the web interface can burn through
-> the 5-hour quota very quickly. In contrast, using `sashiko-cli` from the command line
-> seems to cut token consumption significantly, this is from my practical testing.
-> 
-> I also tried GLM, which is another fixed-quota subscription model and relatively
-> more expensive. While its quality is not as good as Gemini or Opus, it still works
-> well for local code iteration.
-> 
-> I’m still relatively new to working with AI tools. If you have any approaches to save tokens,
-> would you mind sharing them on this thread?
+Gate on the application's queued data fitting within the send window:
+penalise only while write_seq <= wnd_end. If the application has queued
+past the window edge the receive window is the binding constraint, so skip
+the penalty. Neither write_seq (application demand) nor wnd_end (peer
+window) is derived from cwnd, so the test is not made circular by the
+window itself suppressing cwnd.
 
-Did you install Semcode [1]?
+Assisted-by: LLM
+Co-developed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
+---
+ net/mptcp/protocol.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-I remember that this tool was recommended to people using Chris Mason's
-Review Prompts [2], and Sashiko use them [3].
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 0417bfb3db7f..24e1d6bd8577 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1637,6 +1637,14 @@ static bool mptcp_penalise_throttle_ok(struct mptcp_subflow_context *subflow)
+ 	return tcp_jiffies32 - subflow->last_penalise >= max_t(u32, rtt, 1);
+ }
+ 
++/* Like tcp_snd_wnd_test() but without an skb: true while queued data still fits
++ * the send window, i.e. not receive-window-limited.
++ */
++static bool mptcp_snd_wnd_test(const struct mptcp_sock *msk)
++{
++	return !after64(msk->write_seq, mptcp_wnd_end(msk));
++}
++
+ /* Halve cwnd, and ssthresh when cwnd is at or above it, under the subflow
+  * socket lock: the scheduler only marks a candidate, the conditions on this
+  * subflow are evaluated here, on current state.
+@@ -1745,7 +1753,7 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+ 	burst = min(MPTCP_SEND_BURST_SIZE, mptcp_wnd_end(msk) - msk->snd_nxt);
+ 	wmem = READ_ONCE(ssk->sk_wmem_queued);
+ 	/* the conditions on this subflow are re-checked on apply, under its lock */
+-	subflow->penalise = burst && fast_limited;
++	subflow->penalise = burst && fast_limited && mptcp_snd_wnd_test(msk);
+ 	if (!burst)
+ 		return ssk;
+ 
 
-(I tried to use Semcode manually, but I didn't get along with it, maybe
-I should retry, or maybe it is mostly made for agents?)
-
-It looks like this tool can save tokens (don't ask me how/how much) with
-the review prompt [2]. Maybe with Sashiko as well? (If yes, Sashiko's
-README should mention it as well.)
-
-One last thing, Shardul, I noticed the "/kreview" you mentioned is
-something from the review prompts [2]. Perhaps it is not running
-everything from Sashiko, just a part of it?
-
-[1] https://github.com/facebookexperimental/semcode
-[2] https://github.com/masoncl/review-prompts
-[3] https://github.com/sashiko-dev/sashiko#prompts
-
-Cheers,
-Matt
 -- 
-Sponsored by the NGI0 Core fund.
+2.34.1
 
