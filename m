@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E3F41BA94
-	for <mptcp@lists.linux.dev>; Sat, 12 Sep 2026 09:15:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC11B3B47D5;
+	Sat, 12 Sep 2026 09:28:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789204540; cv=none; b=jHuCUYLkQxLmrJOxH2HV6Fv4io39bQhkMyIq5Z9NHGWgtn54buW00fRkyIdd/e1TmmyMFvVGdzxSlGjbjc49X7wQFgrfQhVovBeNzesPMbAa8RvUyTkAQfc2DWKQ7TljMs2Xyl+1kZwkbMu66/9cjh0fOr59/p3GF7Zp+cUIoB8=
+	t=1789205331; cv=none; b=hlHEV4IgkIzD9IrwZUx/MkQUw++2dQ9zagVHOanjkMSEK51egCP+7Et3AEg0G9JkfZHYPkfg+8JcYxZq928AZxLeckaGGIzFN4EYC2D4hJlt7sUp/wS/NQQdGep0FywfiIN9bRGyqw22mW0giw9J+iI1alLisYET/2DWHo+Bddg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789204540; c=relaxed/simple;
-	bh=zpOGUySe6MA3ZA49CcjMkIEvdVwSCh7rDE9d7jE5Scs=;
+	s=arc-20240116; t=1789205331; c=relaxed/simple;
+	bh=hsHZPbHlPlBEmzivqVQMvSSuiORdsyC0qlaXSPnPHx0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Gf6ur64QVYmrpy9UPdSaRby3RGcWWiOA2hk2bOMWpqxjaWGYiwmia2Pmf9CDGJjQOMa5gh8M0ZonXfub+LXYo2Uui/VGhCqyKp1bB1mgpInfaGyeRQGI23ON906jsEkRTYeDewZHX/+tvX4dYsUZ9A0tiq2lJBNvrRD5OF0y7YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A6JkvFst; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=Ju1ZE/tKxyHHx2NTRbgHuqHQC2d6k03g1yWiwYn2BEpJpNOZAg/kCUFHRuNmR1LEWXywEiDjqp9Qc2CaGmOg/BLKk+JuUOVbc0d0msofRpool4a66EViPZxOqFFf01iwR+XoyCtE4IpVmN9Fmje5PIRS6Ile/icwuLqkXGI9sXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IyT/9g+y; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A6JkvFst"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 248121F000FF;
-	Sat, 12 Sep 2026 09:15:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IyT/9g+y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4D301F00898;
+	Sat, 12 Sep 2026 09:28:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789204535;
-	bh=I6AIkUCM2YX4XU6ukcMNWosa5n0zlCzj+oYU7cNJqaU=;
+	s=k20260515; t=1789205329;
+	bh=KyBDOKb2XC4qNx78w1Q+XyZq+awzI8ioCi5GQLwC7QY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=A6JkvFstLCLz4O+ZR9Pdi7i0QR3ZUOIyqddaSjRp+B6hpdvEuuz94GCcN4pu91xHr
-	 niGb/A1ymhzavP85UrEcsfjbogmM2DIsiYsE9LcYwilD16SApkxQfFqkAM7h2dkbiH
-	 dNqBkVJPSEuick77/z7XE7QPNY5+cYxtKGtUNkzMoPAiGERO9AdeiRk5SMO8w0J2VM
-	 y5yo833EXCSab36vL5k2Uy8hX+1fAhyWfDB2D4IJcbiEJLtPJW/0d1pczPtC/GRKBz
-	 fO7pegT3hH44qZfYcpcTCkz7yz5JJ7lUlqKeKZk/dNhEQ45cqvgsgfdTWHnlTTJ7Cr
-	 ErTXoJ2kSLHXw==
-Message-ID: <38df2211-f6b6-409d-80ae-de113601aff0@kernel.org>
-Date: Sat, 12 Sep 2026 11:15:32 +0200
+	b=IyT/9g+yjgrdr8VeyId5uFyAr5xD2xHO9YfLFpXKTcQ2KZ7697WPfAP2hwcdZXvfG
+	 FaJ3w7BQ7+1gdY/+w3qXNXFk+6d6vxUV+KZIjRb31Kq53DMdgDLRNMwXc2GQNqYV46
+	 mQJhCB0vb2uZfSpFPKN6siE3RlnkR0ejdsJoRI+ibT81yuYcl1AkBP+1G9DhWp1wF+
+	 HR2X6Vv9EKoe7uv4WTZr5PKJHJauxD/7viMhiK58nRL/8sfMlrt9VdLDbqVhf9rB7/
+	 mCspxwhc3MgIoQjo7KTWAh5CInMuh8Nz9u6MuG0HqdbUzaJrwxjDqlWo2DKS0OKF/N
+	 vPoagwnYJupKw==
+Message-ID: <767ffb21-9465-4ef5-9e12-ac94f04180f8@kernel.org>
+Date: Sat, 12 Sep 2026 11:28:47 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 2/2] selftests: mptcp: join: retry connect
- after early fallback
+Subject: Re: [PATCH mptcp-next v4 4/4] mptcp: sched: add penalise counters and
+ tracepoint
 Content-Language: fr
-To: quanyeyang <quanyeyang@proton.me>
+To: sashiko-reviews@lists.linux.dev,
+ Shardul Bankar <shardul.b@mpiricsoftware.com>
 Cc: mptcp@lists.linux.dev
-References: <20260911-mptcp-connect-undo-net-v2-0-54224cea2238@proton.me>
- <20260911-mptcp-connect-undo-net-v2-2-54224cea2238@proton.me>
- <9f979653-9817-4daf-89a2-bb6394b406c6@kernel.org>
- <-ZGGpW4fRsw5nfnV8SiV4YNI0qeW_COcXZIfYFiTAtTRENexps8-vPd6Y1Z8DLUx9WWTLlHus0WJMuvbQ9zcB65LJI_w6GjGM5QY-HHRf2g=@proton.me>
+References: <20260911-mptcp_penalise_send_v2-v4-0-820f2be4a8fe@mpiricsoftware.com>
+ <20260911-mptcp_penalise_send_v2-v4-4-820f2be4a8fe@mpiricsoftware.com>
+ <20260911100920.CE6EB1F000FF@smtp.kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,57 +89,69 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <-ZGGpW4fRsw5nfnV8SiV4YNI0qeW_COcXZIfYFiTAtTRENexps8-vPd6Y1Z8DLUx9WWTLlHus0WJMuvbQ9zcB65LJI_w6GjGM5QY-HHRf2g=@proton.me>
+In-Reply-To: <20260911100920.CE6EB1F000FF@smtp.kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 12/09/2026 10:42, quanyeyang wrote:
-> On Friday, September 11th, 2026 at AM 10:20, Matthieu Baerts <matttbe@kernel.org> wrote:
->  
->> Thank you for this test, but we cannot accept this: it is good to have a
->> test linked to a fix or a feature, but it has to be maintainable. If
->> each fix/feature adds 300+ LoC, that's unmaintainable (or LLM become
->> mandatory for that, but that's not what we want: we still need to be
->> able to read the test).
->>
->> Ideally:
->>
->> - create a small packetdrill test instead, using the MPTCP version [1]
->>
->> - not everything can be tested with packetdrill (even if it can also be
->>   extended) and adding code in the selftests is OK, but, if possible, it
->>   should reuse the existing tools and helpers
->>
->> So in this case here: can you have a packetdrill test instead? It should
->> be possible, no? If not, can you only use 'mptcp_connect' and the
->> existing helpers from mptcp_join.sh?
->>
->> Also, mptcp_join.sh is to validate cases with multiple subflows. I don't
->> think you need that, right?
->>
->> [1] https://github.com/multipath-tcp/packetdrill/
->>
->> Cheers,
->> Matt
->> --
->> Sponsored by the NGI0 Core fund.
->>
->>
-> Thanks for the detailed guidance.
-> Agreed, 2/2 is too heavy. I will drop it and try to add a small packetdrill
-> script under gtests/net/mptcp/regressions/ instead: record a blackhole,
-> then fail connect() on the same fd before SS_CONNECTING, clear
-> blackhole_timeout, and check the retry still sends MP_CAPABLE
-> (TCP_IS_MPTCP / the 3rd ACK).
+Hello,
 
-Thanks, I think it should be easier and clearer to do that with packetdrill.
+On 11/09/2026 12:09, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> - [Medium] TP_fast_assign() evaluates a macro containing a WARN_ON() side effect, violating tracing guidelines.
+> - [Medium] Lockless reads of TCP socket state in tracepoint assignment lack data_race() or READ_ONCE() annotations.
+> --
+> 
+> commit 5ddd66e7676359b892e5316c068af949834ad5ce
+> Author: Shardul Bankar <shardul.b@mpiricsoftware.com>
+> 
+> mptcp: sched: add penalise counters and tracepoint
+> 
+> This commit adds observability for the cwnd-halving penalty in MPTCP.
+> It introduces two new SNMP counters, CwndPenalised and PenalCandidate,
+> along with a tracepoint mptcp_subflow_penalise to track subflow selection
+> and pacing dynamics.
+> 
+>> diff --git a/include/trace/events/mptcp.h b/include/trace/events/mptcp.h
+>> index 22882bd034593..f16e04b81322d 100644
+>> --- a/include/trace/events/mptcp.h
+>> +++ b/include/trace/events/mptcp.h
+> [ ... ]
+>> +	TP_fast_assign(
+>> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+>> +
+>> +		__entry->pace = subflow->avg_pacing_rate;
+>> +		__entry->max_pace = max_pace;
+>> +		if (ssk && sk_fullsock(ssk))
+>> +			__entry->cwnd = tcp_snd_cwnd(tcp_sk(ssk));
+> 
+> [Severity: Medium]
+> Does this inject a WARN_ON() side effect into the tracepoint?
+> 
+> The tracepoint assignment evaluates the tcp_sk() macro, which contains a
+> WARN_ON(_ptr->sk_protocol != IPPROTO_TCP). This injects a side effect into
+> TP_fast_assign(), causing the warning condition to be evaluated only when
+> the tracepoint is enabled. This violates the core tracing guideline that
+> TP_fast_assign() must not contain side effects to prevent behavior from
+> diverging based on tracing state.
 
-> The kernel fix in v2 1/2 does not depend on that selftest. Could you
-> apply that one on its own?
-I can, but I prefer to have the new test first, to validate it with and
-without the modification.
+This can be ignored: this WARN is only in our tree (debug to catch dev
+mistakes) and is harmless here.
 
-In other words, no need to resend patch 1.
+> [Severity: Medium]
+> Are these lockless reads of the TCP socket state missing annotations?
+> 
+> The tracepoint mptcp_subflow_penalise is invoked from
+> mptcp_subflow_get_send(), which holds the outer MPTCP socket lock but
+> not the subflow's TCP socket (ssk) lock. Here, sk_fullsock(ssk) reads
+> sk->sk_state and tcp_snd_cwnd() reads tp->snd_cwnd.
+> 
+> Both fields can be concurrently modified by the TCP stack (e.g., during
+> ACK processing) under the ssk lock. Reading them locklessly without
+> KCSAN suppression (data_race()) or READ_ONCE() constitutes an unmarked
+> data race.
+
+Can be ignored here for the tracing: TCP is doing the same in
+include/trace/events/tcp.h.
 
 Cheers,
 Matt
