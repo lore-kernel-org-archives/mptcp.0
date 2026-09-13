@@ -1,132 +1,190 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6234221883E
-	for <mptcp@lists.linux.dev>; Sun, 13 Sep 2026 10:40:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5BFE38F253
+	for <mptcp@lists.linux.dev>; Sun, 13 Sep 2026 10:45:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789296004; cv=none; b=PW4RcWmg3rZNaCbasKr3lv2kyrb60qkrJjvx8Pmr3sDxVSRwoXSN2u2aOU71i3PFTFUUspkHe8EQOTHSBYs6WIbrBzuPTidSqjgAwySFSI9FYy9/vArJR+y8Py22ah2YDz7a0TXXxQBMEE8oXkLJ6O/yhYnCFnavIoq1Wcc5Ak8=
+	t=1789296324; cv=none; b=fVhyl26a8U8gm0JRi00FwGWT1FkHxZZceZtNpMlQjScjLjIwxCI2V0YlIfHtH/4GpUSmqFwVVdzx7xkHZpwbhqu7uXEa/hdeN+Zy8FMWTi1pLi/4kElXOK/fAp/vfXKMQ0ICD0b5r5CKlxWNGppMNU1+pzdpX43pVUrcwwy5K6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789296004; c=relaxed/simple;
-	bh=EnN7yELlDB8cOTQoKPUAo5vMRTbL/GhUbE28HHTNdoQ=;
+	s=arc-20240116; t=1789296324; c=relaxed/simple;
+	bh=tniEt4COmC3RGwc105lhONwbbJVXaOqak172xI07J10=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=U+5Jxx4FF+DKxyE9H00iR1maqh643naClD9veVOWegfGJ2YB1CoGAMXIf19xsxtyTpKgE3iTou8FQJb+b5eaIbFfN5sSiHC9IDAyhOfJh5jwHWs6CKBDEiW5iyI0SspFR4jmnVwOQmKQ08FBZASGZxlZcq7ryaSMjGLyB3SWiUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dai8UG++; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=BTOh7Nigq+VC7acNc08URMRTfuCpM/yCVlvu1ZZCoOuL0geCdpAie5YVv6ackk+MXKqv3jZO8kO6do7MIUg6488JzKlv9jdQwoqaPTqGzQDSxhIu+ITeFJjkJ09ZQBv8My51gheorKzxOo+WhMHcu0ELPaXNwrG9EkaWfiLVQ8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M94TqPec; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dai8UG++"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4DE31F000FF;
-	Sun, 13 Sep 2026 10:40:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M94TqPec"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D6941F000FF;
+	Sun, 13 Sep 2026 10:45:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789296003;
-	bh=Qbfk4ML74PgW6Ihfrg4Xg97EQI+VAj3dzrs4mS/feRg=;
+	s=k20260515; t=1789296320;
+	bh=DxBxoK7T+isbtr19HP4TciS7nBxDYr2yIBMqAkNhUZ4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=dai8UG++uxsBJzZzhrKL00tAIgOtlVORAhhLuV16u7wd5a6ebM/IBLVQEyqPME6wV
-	 cifl0/K+djXsT9xxrt//mU2HVuSXqshJSN8I0sRFEEPWMqfEmPf2raZtJrIrCGOmVR
-	 kQNbqzutYt3p8aWWUoAWyTPKHgOm7HAGud3xHzHzgy5YmYCIFzPue80qBWIlZ/2DyO
-	 w5paSdOquqrY0796e3wzgMwgjlr92EAoSqSjvdX+EkXXlMLx7bLdtR38BzMeGOmSQw
-	 cCPP9qw7O9p2iYp+myA1+r15wlRoqETd62TMOjjQc7+TdHE8cMRt1/085uSK0UfKys
-	 1VSvgqEkwq+FQ==
+	b=M94TqPecgDgd+TZVMz/UXu8aIFlyKnyUz/0bEUFq4OWm449pwcmYFzuayeamD+Wg2
+	 75AY4S3fBzIHFzXiJx++Cos2lPRZHrlBxCFsy1j1dLMxKgn2fcnJ6zFc2NZYaIRVOe
+	 CJXQuT1BqD73aaPYfLj8A1JgjVWnC3HvuiYmdZo0kmO3TJ2QE13OxXTNUff3hI81dH
+	 6VvQSkuJ7QZbMxm5MA/w7XJl44lIHUCgQKfPRot8EGheTgm2g/z9rf2t2316Y5qABW
+	 RBfYnOV+xkPDZjcVXuYASo5atc5LZvz7CvCYs6rlJboB7Ta/nZlbNMkLcrmbDPI8aT
+	 0n8IM6TvH0Hog==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v5 09/16] mptcp: implement read_skb for
- sockmap stream verdict
+Subject: Re: [PATCH mptcp-next v5 16/16] selftests/bpf: add MPTCP coverage
+ to sockmap_listen
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Geliang Tang" <geliang@kernel.org>
 Cc: mptcp@lists.linux.dev
-In-Reply-To: <08dd128a702b7b1d7023d64aea1b94907a981ed9.1789294365.git.tanggeliang@kylinos.cn>
+In-Reply-To: <3857608bd79abf9079a7bebd3d589194bb6433ff.1789294365.git.tanggeliang@kylinos.cn>
 References: <cover.1789294365.git.tanggeliang@kylinos.cn>
- <08dd128a702b7b1d7023d64aea1b94907a981ed9.1789294365.git.tanggeliang@kylinos.cn>
+ <3857608bd79abf9079a7bebd3d589194bb6433ff.1789294365.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 13 Sep 2026 10:40:02 +0000
-Message-Id: <20260913104002.D4DE31F000FF@smtp.kernel.org>
+Date: Sun, 13 Sep 2026 10:45:20 +0000
+Message-Id: <20260913104520.9D6941F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
-- [High] mptcp_read_skb ignores MPTCP_SKB_CB(skb)->offset, passing already-=
-consumed or overlapping data to the BPF verdict program.
-- [High] mptcp_read_skb delegates SKB consumption to the BPF framework, but=
- the framework's cleanup routine (tcp_eat_skb) ignores MPTCP sockets, causi=
-ng a permanent receive window stall.
+- [Medium] Unconditional loading of MPTCP BPF program breaks the entire tes=
+t suite on kernels without CONFIG_MPTCP.
+- [Medium] MPTCP redirect tests silently test standard TCP instead due to h=
+ardcoded protocol in create_socket_pairs().
+- [Medium] The test suite unconditionally executes MPTCP socket tests and w=
+ill report them as failures if the kernel does not support MPTCP.
+- [Low] The SOTYPE_PROTO macro uses a bitwise AND on the SOCK_STREAM enum v=
+alue.
 --
 
-commit 6e8107704d63a143d654e959c9d367d27969a1b4
+commit 94803c56b754dd47ba0a9cd2f2a41576b9144b10
 Author: Geliang Tang <geliang@kernel.org>
 
-mptcp: implement read_skb for sockmap stream verdict
+selftests/bpf: add MPTCP coverage to sockmap_listen
 
-This commit implements the read_skb callback for MPTCP stream operations,
-allowing MPTCP sockets to function with BPF sockmap stream verdict programs.
-It adds mptcp_read_skb() which peeks, unlinks, and hands skbs to the
-receive actor.
+Extend sockmap_listen tests to cover MPTCP sockets. Run the full test
+suite (ops, redir, reuseport) in both TCP and MPTCP modes, using
+IPPROTO_MPTCP for stream sockets when in MPTCP mode. Skip UDP-specific
+tests in MPTCP mode. Add a dedicated BPF reuseport program
+(prog_reuseport_mptcp) that uses bpf_mptcp_sk_select_reuseport() for
+MPTCP-aware reuseport selection. Prefix subtest names with the protocol
+(tcp/mptcp) for clarity.
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
+> diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c b/to=
+ols/testing/selftests/bpf/prog_tests/sockmap_listen.c
+> index 1c96a3cf4b979..d31f3eb661d65 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
+> @@ -31,6 +31,10 @@
+> =20
+>  #define NO_FLAGS 0
+> =20
+> +static bool mptcp;
+> +#define SOTYPE_PROTO(st) \
+> +	(mptcp && ((st) & SOCK_STREAM) ? IPPROTO_MPTCP : 0)
+
+[Severity: Low]
+Does this bitwise AND on the socket type work correctly for all socket type=
+s?
+
+Since SOCK_STREAM is defined as 1, ((st) & SOCK_STREAM) coincidentally
+evaluates to true for SOCK_STREAM (1) and false for SOCK_DGRAM (2). However,
+it evaluates to true for other odd-numbered socket types like SOCK_RAW (3) =
+or
+SOCK_SEQPACKET (5).
+
+Could this be rewritten as ((st) =3D=3D SOCK_STREAM)?
 
 [ ... ]
 
-> @@ -4801,6 +4801,31 @@ static ssize_t mptcp_splice_read(struct socket *so=
-ck, loff_t *ppos,
-> +static int mptcp_read_skb(struct sock *sk, skb_read_actor_t recv_actor)
+> @@ -1359,7 +1375,8 @@ static void test_redir(struct test_sockmap_listen *=
+skel, struct bpf_map *map,
+>  	map_name =3D map_type_str(map);
+> =20
+>  	for (t =3D tests; t < tests + ARRAY_SIZE(tests); t++) {
+> -		snprintf(s, sizeof(s), "%s %s %s", map_name, family_name,
+> +		snprintf(s, sizeof(s), "%s %s %s %s",
+> +			 mptcp ? "mptcp" : "tcp", map_name, family_name,
+>  			 t->name);
+
+[Severity: Medium]
+Are the MPTCP redirect tests silently testing standard TCP instead?
+
+The test_redir() function loops through tests like redir_to_connected() whi=
+ch
+use create_socket_pairs() to establish connections.
+
+However, create_socket_pairs() (defined in socket_helpers.h) hardcodes
+proto =3D 0, which resolves to IPPROTO_TCP for SOCK_STREAM. It completely i=
+gnores
+the SOTYPE_PROTO macro logic intended to create IPPROTO_MPTCP sockets.
+
+[ ... ]
+
+> @@ -1429,13 +1455,17 @@ void serial_test_sockmap_listen(void)
+>  		return;
+>  	}
+> =20
+> -	skel->bss->test_sockmap =3D true;
+> -	run_tests(skel, skel->maps.sock_map, AF_INET);
+> -	run_tests(skel, skel->maps.sock_map, AF_INET6);
+> +	for (int i =3D 0; i < 2; i++) {
+> +		mptcp =3D i;
+> =20
+> -	skel->bss->test_sockmap =3D false;
+> -	run_tests(skel, skel->maps.sock_hash, AF_INET);
+> -	run_tests(skel, skel->maps.sock_hash, AF_INET6);
+> +		skel->bss->test_sockmap =3D true;
+> +		run_tests(skel, skel->maps.sock_map, AF_INET);
+> +		run_tests(skel, skel->maps.sock_map, AF_INET6);
+
+[Severity: Medium]
+Will this unconditionally execute MPTCP socket tests and report them as fai=
+lures
+if the kernel lacks MPTCP support?
+
+When mptcp is set to 1, functions like socket_loopback_proto() call xsocket=
+(),
+which invokes FAIL_ERRNO("socket") if the socket creation fails (e.g., retu=
+rning
+-1 with EPROTONOSUPPORT).
+
+Should the test check for MPTCP support first and gracefully skip the MPTCP
+iterations?
+
+[ ... ]
+
+> diff --git a/tools/testing/selftests/bpf/progs/test_sockmap_listen.c b/to=
+ols/testing/selftests/bpf/progs/test_sockmap_listen.c
+> index b7250eb9c30cc..46e9929ba7c4d 100644
+> --- a/tools/testing/selftests/bpf/progs/test_sockmap_listen.c
+> +++ b/tools/testing/selftests/bpf/progs/test_sockmap_listen.c
+> @@ -137,4 +140,26 @@ int prog_reuseport(struct sk_reuseport_md *reuse)
+>  	return verdict;
+>  }
+> =20
+> +SEC("sk_reuseport")
+> +int prog_reuseport_mptcp(struct sk_reuseport_md *reuse)
 > +{
-> +	struct sk_buff *skb;
-> +	int copied =3D 0;
+> +	unsigned int *count;
+> +	int err, verdict;
+> +	__u32 zero =3D 0;
 > +
-> +	if (sk->sk_state =3D=3D TCP_LISTEN)
-> +		return -ENOTCONN;
-> +
-> +	while ((skb =3D skb_peek(&sk->sk_receive_queue)) !=3D NULL) {
-> +		int used;
-> +
-> +		__skb_unlink(skb, &sk->sk_receive_queue);
-> +		WARN_ON_ONCE(!skb_set_owner_sk_safe(skb, sk));
-> +		used =3D recv_actor(sk, skb);
+> +	if (test_sockmap)
+> +		err =3D bpf_mptcp_sk_select_reuseport(reuse, &sock_map,
+> +						    &zero, 0);
 
-[Severity: High]
-Does this expose stale or overlapping data to the BPF stream verdict progra=
-m?
+[Severity: Medium]
+Will this break the entire test suite on kernels without CONFIG_MPTCP?
 
-It looks like the SKB is handed off to the BPF framework without first
-pulling or accounting for MPTCP_SKB_CB(skb)->offset. If the SKB has a
-non-zero offset (e.g., due to overlapping sequences handled by MPTCP),
-passing it directly to recv_actor() without calling skb_pull() or adjusting
-skb->data could allow the verdict program to read and redirect bytes that
-precede the valid payload.
+The bpf_mptcp_sk_select_reuseport helper is unknown to the verifier when
+CONFIG_MPTCP is disabled.
 
-[Severity: High]
-Will this cause a permanent receive window stall for MPTCP sockets?
-
-When the BPF verdict is SK_REDIRECT or SK_DROP, the framework calls
-tcp_eat_skb() to advance sequences and update the receive window. However,
-tcp_eat_skb() checks sk_is_tcp():
-
-net/ipv4/tcp_bpf.c:tcp_eat_skb() {
-    if (!skb || !skb->len || !sk_is_tcp(sk))
-        return;
-    ...
-}
-
-Since sk_is_tcp() returns false for MPTCP sockets (IPPROTO_MPTCP),
-tcp_eat_skb() will return early. This means the consumed bytes are never
-advanced and mptcp_cleanup_rbuf() is never invoked, which appears to cause
-the MPTCP receive window to permanently close.
-
-> +		if (used < 0) {
-> +			if (!copied)
-> +				copied =3D used;
-> +			break;
-> +		}
-> +		copied +=3D used;
-> +	}
-> +
-> +	return copied;
-> +}
+Since test_sockmap_listen__open_and_load() unconditionally loads all progra=
+ms
+in the skeleton, this will cause the load to fail and skip all standard TCP
+and UDP tests.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1789294365.gi=
-t.tanggeliang@kylinos.cn?part=3D9
+t.tanggeliang@kylinos.cn?part=3D16
