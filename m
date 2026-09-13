@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA2028B517
-	for <mptcp@lists.linux.dev>; Sun, 13 Sep 2026 10:15:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C53939F168
+	for <mptcp@lists.linux.dev>; Sun, 13 Sep 2026 10:15:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789294527; cv=none; b=A7ynJU3FC8RNm+/+vzDVvP59/Lghx3GvXrB9K3pv+/BXIfo/tNaMuoaU2N+ymVWO1fm8Ouvi5xLJbBVCLWQj7tWHMOovlxtRiNaLmTOHG/u2TXSZdy4aXA7ylyUKZJDoxfmDWIrf1mLAGVmEhRn16LrO/ENbVEteyYiv3pDEiRY=
+	t=1789294528; cv=none; b=WPylIC/IAyWkO6d2qOSkhKfna6dr/jkRSx7fuUVZ5BJ5S4ZQ+fx01zgZ9t0l+M/pAk+F3XMVi9n2onGeGbW4rtv8qRQKLGf2n34PMOBAtXIzbg+YK9RySvg12mm6RPE5J7hoh/hVIAKcY8gesLfY381VoXa0pmqf6weOSASVFE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789294527; c=relaxed/simple;
-	bh=JIAGIDjk37WAUMAosEyQmye9Ccb2pEQj4dgM7AA7uuE=;
+	s=arc-20240116; t=1789294528; c=relaxed/simple;
+	bh=YCAKtc9Y53WbhN9EpsdfoNSajkqfASwyTG2aFpSRkgo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hAiTQ63XUrqjSujscaRIYfkd/S0Z7Z2XNzoV2l6sREODdRjmDWL21iYnYJFRQ/Xk0cAcDfqMe5/73MQOIfWUYf65x2knPtMn+930TybJ7R+jWxvr0hZgLDG2HHQFJeFnAaMq/2OxqYoePpKwrhUHQLdWMxn1nx6/K0WpKFQj0BM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cUNpVy5G; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=sOoQVifSIwriYQX5KByzPkVK8nxiUC1ptJ5yRKzPEivvyLLjIVmiv6yY7L1e1MLb62hln4zv9/aoNB0go6tU2ice+iiy9dI5On8ZNsY9ZnY0pxTrpHelOUpLvh0W1Od5THXmEx6hJoBVy1tITymI38BZVAgjxbw++wJc4UWbNGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ENb89wyp; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cUNpVy5G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EBE41F000FF;
-	Sun, 13 Sep 2026 10:15:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ENb89wyp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F8701F00893;
+	Sun, 13 Sep 2026 10:15:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789294526;
-	bh=sz7uxiLJZYWJmfx3X3b1TnlwqN0LCR6/Z6UaxaoE1go=;
+	s=k20260515; t=1789294527;
+	bh=6i4fNQa/xgVC6yxvV84RgV+u48LDEveAR9LFSEh/+mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=cUNpVy5GMkLf9dRG6Q04rH3zqcm+SLzRcIeI0oNjqT0ocOgQvjCMrvJV0On7wO9uh
-	 q01jM640Uuih5xUGAq5L7BWIC0SE1NoJBJUMpMuVJUEgQGfYpapDZq5teRVFBP0GwZ
-	 th7cM8XQucBJmsxmRwAGuWpmmlxGcCwjiv0H8bxxmEPNtZFYNjKBj7oBJP7ilWOyWA
-	 YgDcFT+yiMFt2nDUbw5VjGv5ce/zZhvopecSYK8qD8mdpna9sXrTKkZ0gH+9MgOKLH
-	 RmKPsoawHyiCtSAeDnJgZSkfu+vWH2HPvjy/2oGRDFyJJZuN6n9SFWijC80vHgLAJk
-	 djwbmG8W64bGA==
+	b=ENb89wypk5kgxiTswdMiJyoEhS7StVkJyizLAHXfghY2TCIiEvZM5iUCD7L5O3SW8
+	 E2znRKRzPGvu/CJ6IORQU/fT7an/kKIUusUCgkz+A7fqd9NqUwQWaBRYSw9xUFUsAn
+	 Mh5+rsGDhDxGkkjJ1y3HUnV5+b45qlIWfORINYbfxZFSVY3z736EMK4q/x15j3IiEL
+	 prwoyBVrvNpM2m5Jz8qr9VsD+7dp3i1bVpTgrClegPurdYHgf6c8NpRIuRYPx/a+jI
+	 lTRiRoqWlP1JK/yR6F4UJrqACfTH5i0PUupdBEmpC67lAw54WaEhuozljVRsHdD5X5
+	 DMslYrZs/h70w==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v5 12/16] selftests/bpf: add MPTCP coverage to sockmap_basic
-Date: Sun, 13 Sep 2026 18:14:51 +0800
-Message-ID: <7aa10507517cb94460de386bd4bb81108d61aba2.1789294365.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v5 13/16] mptcp: add sk_is_msk() helper and use it in sockmap
+Date: Sun, 13 Sep 2026 18:14:52 +0800
+Message-ID: <29ec7b3fc7febc1c8946add34f859c8253d9714f.1789294365.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1789294365.git.tanggeliang@kylinos.cn>
 References: <cover.1789294365.git.tanggeliang@kylinos.cn>
@@ -45,193 +45,100 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch extends socket_helpers.h with protocol-aware variants
-(socket_loopback_proto, create_pair_proto) that accept an explicit protocol
-parameter. Run the sockmap_basic test suite in both TCP and MPTCP modes by
-looping over run_basic_tests() with a mptcp flag. Skip UDP-specific tests
-in MPTCP mode since UDP is unaffected by MPTCP.
+Introduce sk_is_msk() to check whether a socket is an MPTCP socket
+(IPPROTO_MPTCP on SOCK_STREAM), modeled after sk_is_tcp(). Unlike
+sk_is_mptcp() which tests a subflow socket, this helper takes an
+MPTCP parent socket directly.
+
+Use it alongside sk_is_tcp() in sock_map.c so that MPTCP sockets are
+treated the same as TCP sockets for strp linking, redirect checks,
+state validation and egress redirect in bpf_msg_redirect_{map,hash}.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../selftests/bpf/prog_tests/socket_helpers.h | 25 ++++++++++----
- .../selftests/bpf/prog_tests/sockmap_basic.c  | 33 ++++++++++++++-----
- 2 files changed, 43 insertions(+), 15 deletions(-)
+ include/net/mptcp.h | 12 ++++++++++++
+ net/core/sock_map.c | 10 +++++-----
+ 2 files changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/socket_helpers.h b/tools/testing/selftests/bpf/prog_tests/socket_helpers.h
-index 0d59503a0c73..d9bd6b11e2cc 100644
---- a/tools/testing/selftests/bpf/prog_tests/socket_helpers.h
-+++ b/tools/testing/selftests/bpf/prog_tests/socket_helpers.h
-@@ -231,7 +231,8 @@ static inline int enable_reuseport(int s, int progfd)
- 	return 0;
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 333bde2a0b76..6ab8d3e5e0f8 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -150,6 +150,13 @@ static inline bool rsk_drop_req(const struct request_sock *req)
+ 	return tcp_rsk(req)->is_mptcp && tcp_rsk(req)->drop_req;
  }
  
--static inline int socket_loopback_reuseport(int family, int sotype, int progfd)
-+static inline int socket_loopback_reuseport_proto(int family, int sotype,
-+						  int proto, int progfd)
- {
- 	struct sockaddr_storage addr;
- 	socklen_t len = 0;
-@@ -239,7 +240,7 @@ static inline int socket_loopback_reuseport(int family, int sotype, int progfd)
- 
- 	init_addr_loopback(family, &addr, &len);
- 
--	s = xsocket(family, sotype, 0);
-+	s = xsocket(family, sotype, proto);
- 	if (s == -1)
- 		return -1;
- 
-@@ -263,11 +264,17 @@ static inline int socket_loopback_reuseport(int family, int sotype, int progfd)
- 	return -1;
- }
- 
--static inline int socket_loopback(int family, int sotype)
-+#define socket_loopback_reuseport(family, sotype, progfd) \
-+	socket_loopback_reuseport_proto(family, sotype, 0, progfd)
-+
-+static inline int socket_loopback_proto(int family, int sotype, int proto)
- {
--	return socket_loopback_reuseport(family, sotype, -1);
-+	return socket_loopback_reuseport_proto(family, sotype, proto, -1);
- }
- 
-+#define socket_loopback(family, sotype) \
-+	socket_loopback_proto(family, sotype, 0)
-+
- static inline int poll_connect(int fd, unsigned int timeout_sec)
- {
- 	struct timeval timeout = { .tv_sec = timeout_sec };
-@@ -329,18 +336,19 @@ static inline int recv_timeout(int fd, void *buf, size_t len, int flags,
- }
- 
- 
--static inline int create_pair(int family, int sotype, int *p0, int *p1)
-+static inline int create_pair_proto(int family, int sotype, int proto,
-+				    int *p0, int *p1)
- {
- 	__close_fd int s, c = -1, p = -1;
- 	struct sockaddr_storage addr;
- 	socklen_t len;
- 	int err;
- 
--	s = socket_loopback(family, sotype);
-+	s = socket_loopback_proto(family, sotype, proto);
- 	if (s < 0)
- 		return s;
- 
--	c = xsocket(family, sotype, 0);
-+	c = xsocket(family, sotype, proto);
- 	if (c < 0)
- 		return c;
- 
-@@ -397,6 +405,9 @@ static inline int create_pair(int family, int sotype, int *p0, int *p1)
- 	return 0;
- }
- 
-+#define create_pair(family, sotype, p0, p1) \
-+	create_pair_proto(family, sotype, 0, p0, p1)
-+
- static inline int create_socket_pairs(int family, int sotype, int *c0, int *c1,
- 				      int *p0, int *p1)
- {
-diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c b/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c
-index 1fef6ec2ba7a..80919a5fef49 100644
---- a/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c
-+++ b/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c
-@@ -32,6 +32,8 @@
- #define SOL_TCP 6
- #endif
- 
-+static bool mptcp;
-+
- static int connected_socket_v4(void)
- {
- 	struct sockaddr_in addr = {
-@@ -42,7 +44,7 @@ static int connected_socket_v4(void)
- 	socklen_t len = sizeof(addr);
- 	int s, repair, err;
- 
--	s = socket(AF_INET, SOCK_STREAM, 0);
-+	s = socket(AF_INET, SOCK_STREAM, mptcp ? IPPROTO_MPTCP : 0);
- 	if (!ASSERT_GE(s, 0, "socket"))
- 		goto error;
- 
-@@ -466,7 +468,8 @@ static void test_sockmap_skb_verdict_shutdown(void)
- 	if (!ASSERT_OK(err, "bpf_prog_attach"))
- 		goto out;
- 
--	err = create_pair(AF_INET, SOCK_STREAM, &c1, &p1);
-+	err = create_pair_proto(AF_INET, SOCK_STREAM,
-+				mptcp ? IPPROTO_MPTCP : 0, &c1, &p1);
- 	if (err < 0)
- 		goto out;
- 
-@@ -568,7 +571,9 @@ static void do_test_sockmap_skb_verdict_fionread(int sotype, bool pass_prog)
- static void test_sockmap_skb_verdict_fionread(bool pass_prog)
- {
- 	do_test_sockmap_skb_verdict_fionread(SOCK_STREAM, pass_prog);
--	do_test_sockmap_skb_verdict_fionread(SOCK_DGRAM, pass_prog);
-+	/* UDP is unaffected by MPTCP, only run it once (in tcp mode) */
-+	if (!mptcp)
-+		do_test_sockmap_skb_verdict_fionread(SOCK_DGRAM, pass_prog);
- }
- 
- static void test_sockmap_skb_verdict_change_tail(void)
-@@ -588,7 +593,8 @@ static void test_sockmap_skb_verdict_change_tail(void)
- 	err = bpf_prog_attach(verdict, map, BPF_SK_SKB_STREAM_VERDICT, 0);
- 	if (!ASSERT_OK(err, "bpf_prog_attach"))
- 		goto out;
--	err = create_pair(AF_INET, SOCK_STREAM, &c1, &p1);
-+	err = create_pair_proto(AF_INET, SOCK_STREAM,
-+				mptcp ? IPPROTO_MPTCP : 0, &c1, &p1);
- 	if (!ASSERT_OK(err, "create_pair()"))
- 		goto out;
- 	err = bpf_map_update_elem(map, &zero, &c1, BPF_NOEXIST);
-@@ -639,7 +645,8 @@ static void test_sockmap_msg_verdict_pop_data(void)
- 	if (!ASSERT_OK(err, "bpf_prog_attach"))
- 		goto out;
- 
--	err = create_pair(AF_INET, SOCK_STREAM, &c1, &p1);
-+	err = create_pair_proto(AF_INET, SOCK_STREAM,
-+				mptcp ? IPPROTO_MPTCP : 0, &c1, &p1);
- 	if (!ASSERT_OK(err, "create_pair"))
- 		goto out;
- 
-@@ -670,7 +677,8 @@ static void test_sockmap_skb_verdict_peek_helper(int map)
- 	char snd[256] = "0123456789";
- 	char rcv[256] = "0";
- 
--	err = create_pair(AF_INET, SOCK_STREAM, &c1, &p1);
-+	err = create_pair_proto(AF_INET, SOCK_STREAM,
-+				mptcp ? IPPROTO_MPTCP : 0, &c1, &p1);
- 	if (!ASSERT_OK(err, "create_pair()"))
- 		return;
- 
-@@ -1362,7 +1370,7 @@ static void test_sockmap_no_verdict_fionread(void)
- 	test_sockmap_pass_prog__destroy(skel);
- }
- 
--void test_sockmap_basic(void)
-+static void run_basic_tests(void)
- {
- 	if (test__start_subtest("sockmap create_update_free"))
- 		test_sockmap_create_update_free(BPF_MAP_TYPE_SOCKMAP);
-@@ -1436,6 +1444,15 @@ void test_sockmap_basic(void)
- 		test_sockmap_copied_seq(true);
- 	if (test__start_subtest("sockmap tcp multi channels"))
- 		test_sockmap_multi_channels(SOCK_STREAM);
--	if (test__start_subtest("sockmap udp multi channels"))
-+	/* UDP is unaffected by MPTCP, only run it once (in tcp mode) */
-+	if (!mptcp && test__start_subtest("sockmap udp multi channels"))
- 		test_sockmap_multi_channels(SOCK_DGRAM);
- }
-+
-+void test_sockmap_basic(void)
++static inline bool sk_is_msk(const struct sock *sk)
 +{
-+	for (int i = 0; i < 2; i++) {
-+		mptcp = i;
-+		run_basic_tests();
-+	}
++	return sk_is_inet(sk) &&
++	       sk->sk_type == SOCK_STREAM &&
++	       sk->sk_protocol == IPPROTO_MPTCP;
 +}
++
+ void mptcp_space(const struct sock *ssk, int *space, int *full_space);
+ bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
+ 		       unsigned int *size, struct mptcp_out_options *opts);
+@@ -258,6 +265,11 @@ static inline bool rsk_drop_req(const struct request_sock *req)
+ 	return false;
+ }
+ 
++static inline bool sk_is_msk(const struct sock *sk)
++{
++	return false;
++}
++
+ static inline bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
+ 				     unsigned int *size,
+ 				     struct mptcp_out_options *opts)
+diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+index 3e3e85e3bd54..e9e0b676aa1c 100644
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -303,7 +303,7 @@ static int sock_map_link(struct bpf_map *map, struct sock *sk)
+ 
+ 	write_lock_bh(&sk->sk_callback_lock);
+ 	if (stream_parser && stream_verdict && !psock->saved_data_ready) {
+-		if (sk_is_tcp(sk))
++		if (sk_is_tcp(sk) || sk_is_msk(sk))
+ 			ret = sk_psock_init_strp(sk, psock);
+ 		else
+ 			ret = -EOPNOTSUPP;
+@@ -527,7 +527,7 @@ static bool sock_map_op_okay(const struct bpf_sock_ops_kern *ops)
+ 
+ static bool sock_map_redirect_allowed(const struct sock *sk)
+ {
+-	if (sk_is_tcp(sk))
++	if (sk_is_tcp(sk) || sk_is_msk(sk))
+ 		return sk->sk_state != TCP_LISTEN;
+ 	else
+ 		return READ_ONCE(sk->sk_state) == TCP_ESTABLISHED;
+@@ -540,7 +540,7 @@ static bool sock_map_sk_is_suitable(const struct sock *sk)
+ 
+ static bool sock_map_sk_state_allowed(const struct sock *sk)
+ {
+-	if (sk_is_tcp(sk))
++	if (sk_is_tcp(sk) || sk_is_msk(sk))
+ 		return (1 << sk->sk_state) & (TCPF_ESTABLISHED | TCPF_LISTEN);
+ 	if (sk_is_udp(sk))
+ 		return sk_hashed(sk);
+@@ -683,7 +683,7 @@ BPF_CALL_4(bpf_msg_redirect_map, struct sk_msg *, msg,
+ 	sk = __sock_map_lookup_elem(map, key);
+ 	if (unlikely(!sk || !sock_map_redirect_allowed(sk)))
+ 		return SK_DROP;
+-	if (!(flags & BPF_F_INGRESS) && !sk_is_tcp(sk))
++	if (!(flags & BPF_F_INGRESS) && !(sk_is_tcp(sk) || sk_is_msk(sk)))
+ 		return SK_DROP;
+ 	if (sk_is_vsock(sk))
+ 		return SK_DROP;
+@@ -1289,7 +1289,7 @@ BPF_CALL_4(bpf_msg_redirect_hash, struct sk_msg *, msg,
+ 	sk = __sock_hash_lookup_elem(map, key);
+ 	if (unlikely(!sk || !sock_map_redirect_allowed(sk)))
+ 		return SK_DROP;
+-	if (!(flags & BPF_F_INGRESS) && !sk_is_tcp(sk))
++	if (!(flags & BPF_F_INGRESS) && !(sk_is_tcp(sk) || sk_is_msk(sk)))
+ 		return SK_DROP;
+ 	if (sk_is_vsock(sk))
+ 		return SK_DROP;
 -- 
 2.53.0
 
