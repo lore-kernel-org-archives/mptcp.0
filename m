@@ -1,141 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D8831352D
-	for <mptcp@lists.linux.dev>; Sun, 13 Sep 2026 10:38:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6234221883E
+	for <mptcp@lists.linux.dev>; Sun, 13 Sep 2026 10:40:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789295894; cv=none; b=AX6ibEx6FZ0CW0d7ET6+b19OodqIClZOU76dpqgjSxZpCm3P0p8MSltv8gp+M6yFjDBQUE73sHMGyqsZkTZ89SOUW0qsg8n0oI6SrohRqbsMTjNBHswcBlrWOW96c0IKMPwWn3YVzz7czEelcu5lZra4biCND7uck8YHeyG5ihM=
+	t=1789296004; cv=none; b=PW4RcWmg3rZNaCbasKr3lv2kyrb60qkrJjvx8Pmr3sDxVSRwoXSN2u2aOU71i3PFTFUUspkHe8EQOTHSBYs6WIbrBzuPTidSqjgAwySFSI9FYy9/vArJR+y8Py22ah2YDz7a0TXXxQBMEE8oXkLJ6O/yhYnCFnavIoq1Wcc5Ak8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789295894; c=relaxed/simple;
-	bh=QYBegstQV/V8Pxia/ybAXPtNqnifnh64lPMUhlgJa6w=;
+	s=arc-20240116; t=1789296004; c=relaxed/simple;
+	bh=EnN7yELlDB8cOTQoKPUAo5vMRTbL/GhUbE28HHTNdoQ=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=d4xLx0jCiC1QcpUo79aLXN70Brev/PH/mMHUWBtepk75RCaiVpcwn5Zc3wp5UzVpmAJK0IDFE67LpoVtMXVuJ3Akl5uJIfBVPxN/p4Sad0YjdNsAi2QeSTs15OxP29sYTrknVjliDLSfp3Uad/zBvNmAZaB881XHBzrX7Uq7j/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nd/bT75B; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=U+5Jxx4FF+DKxyE9H00iR1maqh643naClD9veVOWegfGJ2YB1CoGAMXIf19xsxtyTpKgE3iTou8FQJb+b5eaIbFfN5sSiHC9IDAyhOfJh5jwHWs6CKBDEiW5iyI0SspFR4jmnVwOQmKQ08FBZASGZxlZcq7ryaSMjGLyB3SWiUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dai8UG++; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nd/bT75B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 029221F000FF;
-	Sun, 13 Sep 2026 10:38:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dai8UG++"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4DE31F000FF;
+	Sun, 13 Sep 2026 10:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789295891;
-	bh=oj0GVCHKtvBKK+GA960Zqyhyiem9m2NEHMBBnnLIs5o=;
+	s=k20260515; t=1789296003;
+	bh=Qbfk4ML74PgW6Ihfrg4Xg97EQI+VAj3dzrs4mS/feRg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Nd/bT75BZmnPquNGLp4CDHEtbXxE5ZT2eTspJO2OBA8fxFPR//qR2S/9aFoUPRcS9
-	 hCYAVCqYiP5mGZmMfCTZwDKIJu92g786xvwxhwlLztWZAHKMYPEnFnGSjiFhC+HwpH
-	 RxN62qAKThohfzwRCYHMfV7kQYpQw6ZOKUpf/b2Jh9rl/OyOc9fNKTPPqgwh4yD4EM
-	 jwqME8Sw1aVx73DuuTmyJdngk+wx6j+xkK15oCzg5RIR6SXlzXji5Ees7fDlYwVhZx
-	 sUxTDmQNsuH9HWSWv+UWm4TE7k4ATF9dnVXaJ0NffUko0a46bZocDFYxEDGioZi4Mj
-	 z7z5TsldkgHHw==
+	b=dai8UG++uxsBJzZzhrKL00tAIgOtlVORAhhLuV16u7wd5a6ebM/IBLVQEyqPME6wV
+	 cifl0/K+djXsT9xxrt//mU2HVuSXqshJSN8I0sRFEEPWMqfEmPf2raZtJrIrCGOmVR
+	 kQNbqzutYt3p8aWWUoAWyTPKHgOm7HAGud3xHzHzgy5YmYCIFzPue80qBWIlZ/2DyO
+	 w5paSdOquqrY0796e3wzgMwgjlr92EAoSqSjvdX+EkXXlMLx7bLdtR38BzMeGOmSQw
+	 cCPP9qw7O9p2iYp+myA1+r15wlRoqETd62TMOjjQc7+TdHE8cMRt1/085uSK0UfKys
+	 1VSvgqEkwq+FQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v5 11/16] mptcp: add TCP_REPAIR sockopt
- support
+Subject: Re: [PATCH mptcp-next v5 09/16] mptcp: implement read_skb for
+ sockmap stream verdict
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Geliang Tang" <geliang@kernel.org>
 Cc: mptcp@lists.linux.dev
-In-Reply-To: <15960ae7fff68167e041400db0480e55950ea1c1.1789294365.git.tanggeliang@kylinos.cn>
+In-Reply-To: <08dd128a702b7b1d7023d64aea1b94907a981ed9.1789294365.git.tanggeliang@kylinos.cn>
 References: <cover.1789294365.git.tanggeliang@kylinos.cn>
- <15960ae7fff68167e041400db0480e55950ea1c1.1789294365.git.tanggeliang@kylinos.cn>
+ <08dd128a702b7b1d7023d64aea1b94907a981ed9.1789294365.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 13 Sep 2026 10:38:10 +0000
-Message-Id: <20260913103811.029221F000FF@smtp.kernel.org>
+Date: Sun, 13 Sep 2026 10:40:02 +0000
+Message-Id: <20260913104002.D4DE31F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] The check for repair mode in __mptcp_close() is placed after the f=
-astclose and shutdown sequences, breaking silent teardown.
-- [Medium] mptcp_setsockopt_sol_tcp() silently ignores error codes when set=
-ting TCP_REPAIR.
-- [Medium] TCP_REPAIR is missing from mptcp_getsockopt_sol_tcp(), causing g=
-etsockopt() to fail with -EOPNOTSUPP.
+- [High] mptcp_read_skb ignores MPTCP_SKB_CB(skb)->offset, passing already-=
+consumed or overlapping data to the BPF verdict program.
+- [High] mptcp_read_skb delegates SKB consumption to the BPF framework, but=
+ the framework's cleanup routine (tcp_eat_skb) ignores MPTCP sockets, causi=
+ng a permanent receive window stall.
 --
 
-commit 31eec098dfb51659558f320d2e2ec1abfdffb89c
+commit 6e8107704d63a143d654e959c9d367d27969a1b4
 Author: Geliang Tang <geliang@kernel.org>
 
-mptcp: add TCP_REPAIR sockopt support
+mptcp: implement read_skb for sockmap stream verdict
 
-Add TCP_REPAIR socket option support for MPTCP, required for sockmap CRIU
-checkpoint/restore. When TCP_REPAIR is set on the first subflow, skip the
-normal connection handshake in mptcp_connect() and transition directly to
-TCP_ESTABLISHED. On close, skip the shutdown sequence and jump to cleanup
-when repair mode is active.
+This commit implements the read_skb callback for MPTCP stream operations,
+allowing MPTCP sockets to function with BPF sockmap stream verdict programs.
+It adds mptcp_read_skb() which peeks, unlinks, and hands skbs to the
+receive actor.
 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index c5be29767cb15..07132976016e3 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -3560,6 +3560,11 @@ bool __mptcp_close(struct sock *sk, long timeout)
->  		__mptcp_wr_shutdown(sk);
->  	}
-> =20
-> +	if (msk->first && tcp_sk(msk->first)->repair) {
-> +		mptcp_set_state(sk, TCP_CLOSE);
-> +		goto cleanup;
-> +	}
+
+[ ... ]
+
+> @@ -4801,6 +4801,31 @@ static ssize_t mptcp_splice_read(struct socket *so=
+ck, loff_t *ppos,
+> +static int mptcp_read_skb(struct sock *sk, skb_read_actor_t recv_actor)
+> +{
+> +	struct sk_buff *skb;
+> +	int copied =3D 0;
 > +
+> +	if (sk->sk_state =3D=3D TCP_LISTEN)
+> +		return -ENOTCONN;
+> +
+> +	while ((skb =3D skb_peek(&sk->sk_receive_queue)) !=3D NULL) {
+> +		int used;
+> +
+> +		__skb_unlink(skb, &sk->sk_receive_queue);
+> +		WARN_ON_ONCE(!skb_set_owner_sk_safe(skb, sk));
+> +		used =3D recv_actor(sk, skb);
 
 [Severity: High]
-Does this check evaluate too late in the shutdown sequence?
+Does this expose stale or overlapping data to the BPF stream verdict progra=
+m?
 
-Since mptcp_do_fastclose() or __mptcp_wr_shutdown() can already be invoked
-just before this block, could closing an MPTCP socket in repair mode incorr=
-ectly
-leak RST or FIN packets to the network instead of being silently dismantled?
+It looks like the SKB is handed off to the BPF framework without first
+pulling or accounting for MPTCP_SKB_CB(skb)->offset. If the SKB has a
+non-zero offset (e.g., due to overlapping sequences handled by MPTCP),
+passing it directly to recv_actor() without calling skb_pull() or adjusting
+skb->data could allow the verdict program to read and redirect bytes that
+precede the valid payload.
 
->  	sk_stream_wait_close(sk, timeout);
-> =20
->  cleanup:
+[Severity: High]
+Will this cause a permanent receive window stall for MPTCP sockets?
 
-[ ... ]
+When the BPF verdict is SK_REDIRECT or SK_DROP, the framework calls
+tcp_eat_skb() to advance sequences and update the receive window. However,
+tcp_eat_skb() checks sk_is_tcp():
 
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index 922f6ae5c80cb..d2d1c9d1ed1d7 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-
-[ ... ]
-
-> @@ -918,6 +919,7 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock=
- *msk, int optname,
->  	case TCP_CONGESTION:
->  		return mptcp_setsockopt_sol_tcp_congestion(msk, optval, optlen);
->  	case TCP_DEFER_ACCEPT:
-> +	case TCP_REPAIR:
->  		/* See tcp.c: TCP_DEFER_ACCEPT does not fail */
->  		mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname, optval, optlen);
->  		return 0;
-
-[Severity: Medium]
-Since TCP_DEFER_ACCEPT does not fail, returning 0 unconditionally is correct
-for it. However, because setting TCP_REPAIR requires privileges, can the
-underlying tcp_setsockopt() fail and return an error like -EPERM?
-
-If so, does discarding the return value of mptcp_setsockopt_first_sf_only()
-cause these errors to be silently swallowed while returning 0 to the
-application?
-
-[Severity: Medium]
-Also, should TCP_REPAIR be added to mptcp_getsockopt_sol_tcp()?
-
-If it is omitted from the switch statement there, will applications queryin=
-g the
-repair state via getsockopt(SOL_TCP, TCP_REPAIR) incorrectly receive
--EOPNOTSUPP? For example:
-
-net/mptcp/sockopt.c:mptcp_getsockopt_sol_tcp() {
-	...
-	switch (optname) {
-	case TCP_ULP:
-	case TCP_CONGESTION:
-	...
+net/ipv4/tcp_bpf.c:tcp_eat_skb() {
+    if (!skb || !skb->len || !sk_is_tcp(sk))
+        return;
+    ...
 }
+
+Since sk_is_tcp() returns false for MPTCP sockets (IPPROTO_MPTCP),
+tcp_eat_skb() will return early. This means the consumed bytes are never
+advanced and mptcp_cleanup_rbuf() is never invoked, which appears to cause
+the MPTCP receive window to permanently close.
+
+> +		if (used < 0) {
+> +			if (!copied)
+> +				copied =3D used;
+> +			break;
+> +		}
+> +		copied +=3D used;
+> +	}
+> +
+> +	return copied;
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1789294365.gi=
-t.tanggeliang@kylinos.cn?part=3D11
+t.tanggeliang@kylinos.cn?part=3D9
