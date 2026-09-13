@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85BD9366048;
-	Sun, 13 Sep 2026 17:47:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3A43EC6A4
+	for <mptcp@lists.linux.dev>; Sun, 13 Sep 2026 18:18:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789321635; cv=none; b=b8lBmZtijo0KkDSCZke5klNhquVJ3O2FFpbVhRWzNcKWCga9C9kYkcCmdE2UQRY67Q5GP7vjzRGBO3Nb03a8RsrUyZLrNloThGdkZxZKmLtr+QHGR3dKW/OuI5DCf6QXX/pTWgxCDiTchQL+EsJfFgmv8neMS4Myrh5CUPdIu7M=
+	t=1789323490; cv=none; b=TV5h8kXcitYrk/8J8oVNEdm26TsCOeO1Jb7F9bmQkas4gOy3gHzT5xvS9CwH6KM9NJwqzDNbrBcoqeGj1/pQEgo1I5/4a2A1Ll544dzbGVgFjIEyWGjjnyikIKo3KgSjanEcWFtwrjRP/hjzFqKlPM7zgg7lNBDnc40ZsK7CAdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789321635; c=relaxed/simple;
-	bh=bZ3cbZcKzka8OzsUYfvOtU7Gwk+7yvshVdUbjo3IBOA=;
+	s=arc-20240116; t=1789323490; c=relaxed/simple;
+	bh=6L9QyUavllfxL2reUP4rDu7cKzBLhFikIgWFh4JjEJY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gZERO+nrMAzkacmA+BPi0cslspNA8mtcZowGxsTHwoD9/Uaut0dtILQKsygNZhWZbw0C69Y+L9QIn4CRxaoJhMzeQYj0b9Ii4BbTqf3+jZYq+a4DjMFkbt3B3xyXdY1Ffj5s6FnGXIOUUbuTBkOhjiFEjbeTaBbXREK2TJq4VnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LCMUyw2A; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=R9pDd/IxsFpbyu8vUHNTz9mVP4pVo8pFPc06tiYfEn4LDYLl3mWuOC1Tig27e5tigbP3egfY7/ciwN/6TLU+5wd/jSNFuw+FppnhDIvqlaeJzs+QUo+rkVmPqfpy2oVcb4tIgU6kfmDd9mr1agveuMX9P7eD/RfGR6blPEtDNls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PcQjztcO; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LCMUyw2A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 611C61F000FF;
-	Sun, 13 Sep 2026 17:47:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PcQjztcO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D40281F000FF;
+	Sun, 13 Sep 2026 18:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789321633;
-	bh=A2lVv0GUlGMVjlMaL7oDZcT85SbrHukw05wksytmVWk=;
+	s=k20260515; t=1789323485;
+	bh=JgB2vFqqGBRuqW39cnZ1uJsZ0PgPoE2lE8L9Mh6Gd4k=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=LCMUyw2Amx5KwfrsNaZBD0Xo5hQCD1beua/43mJngL+Oy+oIUycaVT/BUBu3QQCOR
-	 zBCJOnZZp7ahHbU3f9Yj5Gsaqg9cd2xlFUTES1s2IPhI086qlt9dfYrID/gi66yC3H
-	 8nccufY5NsNw9N9KrIrFUm3jUqIjD3Yppo9JfD9Elkq6zW14iS/qmjkSzfLY8P/Hmy
-	 o9FxWkh/t2NXJs/KclpeSRz7n0p7ad4k3qL6PPud/nUg8zKBSq/Yeo7MMseq5ZYodw
-	 7fsA2/vQOjMxNbKI5qYeDfqQBI6UXwwV8V3U70xhAEG184wbwJavqmRVAhVFnKvDlK
-	 SBqlQXV+R+7kQ==
-Message-ID: <c5b348cc-bf4c-4015-ab52-d842485a438d@kernel.org>
-Date: Sun, 13 Sep 2026 19:47:08 +0200
+	b=PcQjztcOIDyhwx4EBrsSw/waU62hio7TcvsSolqxVyq67C8NsOtjsJfgSiZ+DdrKi
+	 91Xvpzy3sGti9+P+N5dvvB8U0dWYRIxvYGi9DBEaTB7TMz/6ZDA1EzQvlHAT26nOCc
+	 dSraV+s4E9yxW2TuFvx/LbNKgvz+ZStUtnKCbVN49sUm+9QsSVvRFBp/TZ+sfpqIWv
+	 1B+7QoqnLJo/o0Frd4oztGkHqPMKP1TvKAwdWPK+l2JQjzibVMZRYYg9vMGqM0o9+X
+	 ejJApR0ojsmmCABMcUzINnGxIf9rzXzLqRrIPHLoCAzbsN3aV4PozShUbbJgEJu1MW
+	 uXfkvWn8+Gfug==
+Message-ID: <3b241101-f090-4228-aa8c-b25f61c4aa40@kernel.org>
+Date: Sun, 13 Sep 2026 20:18:03 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net] mptcp: return sk_wait_data() errors from recvmsg()
+Subject: Re: [PATCH mptcp-next v5 05/16] bpf: drop duplicate check_app_limited
+ in tcp_bpf_push
 Content-Language: fr
-To: markdamirkan@gmail.com, Mat Martineau <martineau@kernel.org>,
- mptcp@lists.linux.dev
-Cc: Jakub Kicinski <kuba@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Simon Horman <horms@kernel.org>,
- linux-kernel@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
- netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>
-References: <20260913-b4-send-mptcp-recv-error-v1-1-4eaa3684a8b8@gmail.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1789294365.git.tanggeliang@kylinos.cn>
+ <aff272cebafec60a4d2080ab1626946870d1262b.1789294365.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,43 +87,36 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260913-b4-send-mptcp-recv-error-v1-1-4eaa3684a8b8@gmail.com>
+In-Reply-To: <aff272cebafec60a4d2080ab1626946870d1262b.1789294365.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Mark,
+Hi Geliang,
 
-On 13/09/2026 12:30, Mark Amirkan via B4 Relay wrote:
-> From: Mark Amirkan <markdamirkan@gmail.com>
+Thank you for sharing this!
+
+On 13/09/2026 12:14, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Commit 581302298524 ("mptcp: error out earlier on disconnect") made
-> mptcp_recvmsg() stop when sk_wait_data() returns an error.  The error is
-> stored in err, but the function then jumps to a path which returns
-> copied.  When no data was copied, recvmsg() therefore returns zero and
-> reports a false EOF.
+> When the sendpage->MSG_SPLICE_PAGES migration series replaced
+> do_tcp_sendpages() with direct tcp_sendmsg_locked() calls, callers
+> that had used do_tcp_sendpages() kept an explicit
+> tcp_rate_check_app_limited(sk) that was originally needed to cover
+> do_tcp_sendpages() (which did not call tcp_rate_check_app_limited()
+> itself). After the inlining, tcp_sendmsg_locked() always provides
+> the check, and the outer call became redundant.
 > 
-> Store the result in copied, which is the value returned by the function.
-> This also keeps the usual partial-read result when data was copied before
-> the error.
+> The site changed here, tcp_bpf_push(), is a MSG_SPLICE_PAGES loop
+> that holds the socket lock and only iterates when size > 0;
+> tcp_sendmsg_locked() is invoked on every iteration with state
+> identical to what the outer call sees, so dropping the outer call
+> is safe and behavior-preserving.
+If it is not related to MPTCP, could you please send this patch to
+netdev/bpf directly?
 
-Good catch! Indeed, it looks like it is a typo and "copied" was supposed
-to be assigned.
-
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
-@Net maintainers: can you please apply it directly in the net tree? (if
-no issues are spot by Clashiko) No need to take a detour via the MPTCP
-tree for this fix.
-
-> A recvmsg() blocked in one thread reproduces the issue when another
-> thread disconnects the same MPTCP socket with connect(AF_UNSPEC).
-> Before this change recvmsg() returns zero; afterwards it returns -EPIPE.
-
-I see that our test suite currently doesn't exercise this error path. By
-chance, do you have a reproducer to avoid similar regressions later on?
-Ideally, one using Packetdrill, the MPTCP fork in this case [1].
-
-[1] https://github.com/multipath-tcp/packetdrill
+Also, should this be seen as a fix? From what I understand, some
+behaviours have changed, and it is only recently that this call is no
+longer needed.
 
 Cheers,
 Matt
