@@ -1,141 +1,170 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5E43515C7
-	for <mptcp@lists.linux.dev>; Sun, 13 Sep 2026 10:30:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B2439CCF8
+	for <mptcp@lists.linux.dev>; Sun, 13 Sep 2026 10:30:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789295429; cv=none; b=KGo5Zyxx+gjbcFgMw2E4UWio6p98wC2L4i30xv1j3CcmOICL/Gr4CLKPDB07C9VBoXm88mBPXCuVk8vrVTUg/t8gebdfDWPbaM1ZLHjs3/C9WoTMV03JBk9AJUCsEZevcDlY6cheJB2OEjdAKU+fXmKeCXY1Qmrcw9Z6UlZQaxQ=
+	t=1789295460; cv=none; b=YwxmUO78/cCp1iqpUOqLtpiHSFUumSRJ5CqMybBVvSZEtOd2EE5BI6T/tmFy5bqnjRzLT9Hakq5oUSQfepJQ7/XgWIKN4tLnxulZbrCMeE8FJ4tCb0r9mMq5UtvloObJaHiSKR0vJOQ5tWJCqctrHQtDZ1wCbasHU+vc7f4cd74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789295429; c=relaxed/simple;
-	bh=QbqB7CvVZ3LbmyNLvaD+pfRMT7uWQCilqmTAhG2Od0Y=;
+	s=arc-20240116; t=1789295460; c=relaxed/simple;
+	bh=tgmjSQZPoMT8mZB711cY6eXr8Hu36aNYiQrYZv9O0OQ=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=uzUFW1JRS2gtnom7qZlZNmL+a7J3Za7PwW7pqXsi8YWq9b84RW+pS6w8l6n0ZPvNGcIswsvIK42RZi2n805L2/qyKzTE94MaP5ShcwusetJzaOAUMrldTz32KaKUYeu5QxHRgZ4lk58J3RadHyk8jdzoQSjeHu6mgVddBctolPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N6xVcgvL; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=JCeLXNHthvzLq5DJc/wYKPc2WbaHeW46jsydo0QW2x8mTqyd0T1Dm/iMvRrXP8mHoe+Tr+dDx4JLt8SQ65U/Ro0C/PBgV/vIz/vkvIP/2WrPdQaF2+DevrtHJA2WhWa08T9vhXMI+wbJClZCpKE3e983SjuhoBrnIU0GrYFN6oU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K2Z+Zyj9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N6xVcgvL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1B431F000FF;
-	Sun, 13 Sep 2026 10:30:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K2Z+Zyj9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3886D1F000FF;
+	Sun, 13 Sep 2026 10:30:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789295425;
-	bh=fd8ofefA+W2IQww5l6hnNFNFF4ZHL0zdBTfofa5dBKs=;
+	s=k20260515; t=1789295456;
+	bh=cPtGzp0fhNhXV2o5E3ep5rr3oliubNiepafg4y+xyXo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=N6xVcgvLqpGHJzhC65szcyf9Sf+YIYYmryhbH7spsqf6/ppjr00UoPQsQ5txr4uvu
-	 mxRWbolxaqyW7Edq2IwvWWFfXDcBtOgUbsLxt/HeH1YDbco5hhHsFcNcw7ToKMErof
-	 u65GWrKKaf8HDBAgU13wFnq0dveLjDS8wRNKxt+HLLkP1C+PCfmXJyaE/p8Ql4l+sP
-	 tOtnIREV9lgWoYBlP6EblZQxVr3T8ocKLPWjWWvMvb9fA7YTmUMBzx09mRXAp5/R6o
-	 KqcI5vD+9Z/eaeZysTAYrUYTJZmGURnd8KmgvqJzZ/PipdIGu/FE3fMtML2clj6cRB
-	 5iGVldKWeeLmg==
+	b=K2Z+Zyj9LCsbIE1lLMH+QCpZ/jhIt4BIoPG98Yjf/A9ZvOAfTCO1abnbV1DgqPd/A
+	 zt/C7RiXgxaQ563fKENEv/KFRG8Es4/uYxIYXhYFEVWt2SQrC9c6K/AaQwO70LnX8U
+	 9mkFmc2mYtz83XMHKmqTRLrS36ewrJAc8iBFlYdpY56KAPy5SLPMBuzmEXbNthrspX
+	 xnGLblpiRWusGx9rp981S2qytdeTN1xyEClZ0/evaK6GWWTNFGCrFDRxOgyQq2P2KE
+	 HLU1G37qS/v38cyim5ETPIDt2Y0OENURq2x7HaMBgAR3V8pDMBognvyRZRHpqwueHw
+	 UH1i1QAhU7hmw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v5 12/16] selftests/bpf: add MPTCP coverage
- to sockmap_basic
+Subject: Re: [PATCH mptcp-next v5 07/16] mptcp: add sock_map_update BPF
+ helper
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Geliang Tang" <geliang@kernel.org>
 Cc: mptcp@lists.linux.dev
-In-Reply-To: <7aa10507517cb94460de386bd4bb81108d61aba2.1789294365.git.tanggeliang@kylinos.cn>
+In-Reply-To: <393478c81ea50e72c49041752385e9b4fc82d469.1789294365.git.tanggeliang@kylinos.cn>
 References: <cover.1789294365.git.tanggeliang@kylinos.cn>
- <7aa10507517cb94460de386bd4bb81108d61aba2.1789294365.git.tanggeliang@kylinos.cn>
+ <393478c81ea50e72c49041752385e9b4fc82d469.1789294365.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 13 Sep 2026 10:30:24 +0000
-Message-Id: <20260913103024.D1B431F000FF@smtp.kernel.org>
+Date: Sun, 13 Sep 2026 10:30:55 +0000
+Message-Id: <20260913103056.3886D1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [Medium] Tests using `create_socket_pairs()` silently fall back to testin=
-g TCP instead of MPTCP, resulting in incomplete coverage.
-- [Medium] Duplicate subtest names for TCP and MPTCP runs make test results=
- indistinguishable in CI logs.
+- [Critical] The verifier incorrectly allows bpf_mptcp_sock_map_update to b=
+e used with BPF_MAP_TYPE_SOCKHASH and other arbitrary map types, but its im=
+plementation treats the map strictly as an array-based BPF_MAP_TYPE_SOCKMAP=
+. This causes type confusion and severe out-of-bounds memory corruption.
+- [High] bpf_mptcp_sock_map_update modifies the parent MPTCP socket (msk) s=
+tate without holding its socket lock, leading to data races with userspace =
+and MPTCP stack operations.
+- [High] bpf_mptcp_sock_map_update bypasses necessary socket state and oper=
+ation context validation (sock_map_op_okay), allowing transient state MPTCP=
+ sockets or ANY standard TCP socket to be unsafely inserted into a sockmap.
 --
 
-commit afd6e61e2a0ed4da071e04fed27c852f1128b3f9
+commit d25c16225b28c5b937139f3df217e21f3cd9bb7b
 Author: Geliang Tang <geliang@kernel.org>
 
-    selftests/bpf: add MPTCP coverage to sockmap_basic
+    mptcp: add sock_map_update BPF helper
    =20
-    This patch extends socket_helpers.h with protocol-aware variants
-    (socket_loopback_proto, create_pair_proto) that accept an explicit prot=
-ocol
-    parameter. Run the sockmap_basic test suite in both TCP and MPTCP modes=
- by
-    looping over run_basic_tests() with a mptcp flag. Skip UDP-specific tes=
-ts
-    in MPTCP mode since UDP is unaffected by MPTCP.
+    Add a BPF helper bpf_mptcp_sock_map_update() that allows sockops progra=
+ms
+    running on MPTCP subflows to insert the parent MPTCP socket into a sock=
+map
+    or sockhash. When called from a sockops callback on a subflow, it resol=
+ves
+    the parent MPTCP socket via bpf_mptcp_sock_from_subflow() and validates
+    that the subflow is the first subflow (msk->first) before inserting the
+    MPTCP socket into the map via sock_map_update_common().
 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/socket_helpers.h b/to=
-ols/testing/selftests/bpf/prog_tests/socket_helpers.h
-> index 0d59503a0c73e..d9bd6b11e2cca 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/socket_helpers.h
-> +++ b/tools/testing/selftests/bpf/prog_tests/socket_helpers.h
+> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> index 72a3f5998dd27..c58c2ba87d264 100644
+> --- a/kernel/bpf/verifier.c
+> +++ b/kernel/bpf/verifier.c
 [ ... ]
-> @@ -397,6 +405,9 @@ static inline int create_pair(int family, int sotype,=
- int *p0, int *p1)
->  	return 0;
->  }
-> =20
-> +#define create_pair(family, sotype, p0, p1) \
-> +	create_pair_proto(family, sotype, 0, p0, p1)
-> +
->  static inline int create_socket_pairs(int family, int sotype, int *c0, i=
-nt *c1,
->  				      int *p0, int *p1)
->  {
+> @@ -9075,6 +9076,7 @@ static int check_map_func_compatibility(struct bpf_=
+verifier_env *env,
+>  		    func_id !=3D BPF_FUNC_msg_redirect_hash &&
+>  		    func_id !=3D BPF_FUNC_sk_select_reuseport &&
+>  		    func_id !=3D BPF_FUNC_map_lookup_elem &&
+> +		    func_id !=3D BPF_FUNC_mptcp_sock_map_update &&
+>  		    !may_update_sockmap(env, func_id))
+>  			goto error;
+>  		break;
 
-[Severity: Medium]
-Since create_socket_pairs() internally uses the create_pair() macro which n=
-ow
-hardcodes protocol 0 (TCP), do tests calling create_socket_pairs() silently
-fall back to TCP when they are supposed to be testing MPTCP?
+[Severity: Critical]
+Does allowing BPF_FUNC_mptcp_sock_map_update for BPF_MAP_TYPE_SOCKHASH maps
+cause type confusion?
 
-For example, do_test_sockmap_skb_verdict_fionread() in sockmap_basic.c:
+Because mptcp_sock_map_update() calls sock_map_update_common() which casts
+the map to struct bpf_stab, passing a SOCKHASH (backed by struct bpf_shtab)
+will write the socket pointer into what it thinks is the stab->sks array.
+Couldn't this overlap with hash bucket lists or spinlocks and corrupt memor=
+y?
 
-	err =3D create_socket_pairs(AF_INET, sotype, &c0, &c1, &p0, &p1);
-	if (!ASSERT_OK(err, "create_socket_pairs()"))
-		goto out;
+Additionally, because BPF_FUNC_mptcp_sock_map_update is omitted from the
+subsequent switch (func_id) statement in check_map_func_compatibility(),
+could this helper be incorrectly allowed for other unrestricted map types
+like ARRAY or HASH?
 
-Should create_socket_pairs() be updated to accept a proto argument or shoul=
-d a
-create_socket_pairs_proto() variant be used instead?
-
-> diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c b/too=
-ls/testing/selftests/bpf/prog_tests/sockmap_basic.c
-> index 1fef6ec2ba7ae..80919a5fef493 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c
+> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+> index 662b80ce2cf63..7ecafbf51fa05 100644
+> --- a/net/mptcp/bpf.c
+> +++ b/net/mptcp/bpf.c
 [ ... ]
-> @@ -1436,6 +1444,15 @@ void test_sockmap_basic(void)
->  		test_sockmap_copied_seq(true);
->  	if (test__start_subtest("sockmap tcp multi channels"))
->  		test_sockmap_multi_channels(SOCK_STREAM);
-> -	if (test__start_subtest("sockmap udp multi channels"))
-> +	/* UDP is unaffected by MPTCP, only run it once (in tcp mode) */
-> +	if (!mptcp && test__start_subtest("sockmap udp multi channels"))
->  		test_sockmap_multi_channels(SOCK_DGRAM);
->  }
-> +
-> +void test_sockmap_basic(void)
+> +BPF_CALL_4(mptcp_sock_map_update, struct bpf_sock_ops_kern *, sops,
+> +	   struct bpf_map *, map, void *, key, u64, flags)
 > +{
-> +	for (int i =3D 0; i < 2; i++) {
-> +		mptcp =3D i;
-> +		run_basic_tests();
+> +	struct sock *sk =3D sops->sk;
+> +	struct mptcp_sock *msk;
+> +
+> +	WARN_ON_ONCE(!rcu_read_lock_held());
+> +
+> +	msk =3D bpf_mptcp_sock_from_subflow(sk);
+> +	if (msk) {
+
+[Severity: High]
+Does this bypass the socket state and operation validation checks normally
+performed before inserting a socket into a sockmap?
+
+If a BPF program calls this helper from an early hook (e.g.,
+BPF_SOCK_OPS_TCP_CONNECT_CB) to insert a TCP_SYN_SENT socket, it appears
+unprepared or closing sockets could be inserted, violating subsystem
+invariants.
+
+Furthermore, if the socket is a standard TCP socket rather than an MPTCP
+subflow, bpf_mptcp_sock_from_subflow() returns NULL. Would this cause the
+helper to silently fall through and insert the standard TCP socket into the
+map, completely bypassing checks like sock_map_op_okay() and
+sock_map_sk_is_suitable()?
+
+> +		if (sk !=3D READ_ONCE(msk->first))
+> +			return -EINVAL;
+> +
+> +		sk =3D (struct sock *)msk;
+
+[Severity: High]
+Does modifying the parent MPTCP socket (msk) state without holding its sock=
+et
+lock lead to data races with userspace and MPTCP stack operations?
+
+When called from a sockops hook running on a subflow socket, the network st=
+ack
+only holds the subflow socket lock, not the parent MPTCP socket lock.
+Because sock_map_update_common() modifies the socket's protocol operations
+(sk->sk_prot) and sets sk_user_data, could modifying sk_prot concurrently
+while another CPU executes userspace system calls (e.g., recvmsg or sendmsg)
+on the parent socket cause use-after-free crashes or data corruption?
+
 > +	}
+> +
+> +	return sock_map_update_common(map, *(u32 *)key, sk, flags);
+
+[Severity: Critical]
+Does unconditionally calling the array-based sockmap update logic here cause
+type confusion when a hash map is supplied?
+
+Also, doesn't this truncate variable-length hash keys to u32?
+
 > +}
-
-[Severity: Medium]
-Does this loop register identical subtest names for both TCP and MPTCP test=
- runs?
-
-Because run_basic_tests() uses static string literals in test__start_subtes=
-t(),
-the subtests for TCP and MPTCP might be indistinguishable in the CI output.
-
-Could a protocol suffix be added to the subtest names when mptcp is true?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1789294365.gi=
-t.tanggeliang@kylinos.cn?part=3D12
+t.tanggeliang@kylinos.cn?part=3D7
