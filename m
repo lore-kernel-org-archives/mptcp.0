@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590F93E16A9
-	for <mptcp@lists.linux.dev>; Sun, 13 Sep 2026 10:15:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06325232395
+	for <mptcp@lists.linux.dev>; Sun, 13 Sep 2026 10:15:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789294523; cv=none; b=NpoT8QI5IGBPCoaekFPkH6PvlkxZrxX0VW6cZPgtq6aF/AywXFa0kcXLfWao3pOl4u8dYe+Bqzwnq41DwteCTTMI2Nzwdpt4AVw0DUUS0E1nx5tWQgq7sVxmEOTLj5f6/Y+cnwktLmBDqexanYTrrAMqb7QreC0CoimBC3yMgPg=
+	t=1789294524; cv=none; b=KECvIBcrQhPXUDVMTuP3BgKY+Ziy0vGNXt139Vb5b2awrc/RymDQ3/2ELtutQM55BlejoFV81xdb9ydtjjhz4yjMBg9M5NUuXD8uwueHzOvL9JJoy0TxwuMSZnA/551F5XOUFFjQhJGy0TRCmhP8l8vtXiMvfOFqoJQiq8SvWbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789294523; c=relaxed/simple;
-	bh=M8i5Itm8HEYRMa8EmHeGu/lEUv6svLMMRkIxnYZASsM=;
+	s=arc-20240116; t=1789294524; c=relaxed/simple;
+	bh=lW/QuE9Zs69ZCHUMesZ2lOArc8dS09q/gw0hvX60Ry0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uA07tCv5a9WlDnsYBemGoGfk/4ubD2KSUsTbhC8itfXcdGnLQRoS2HwvsnRD65896OwSBICsAFkLBCJms4s1DqRQUh4JDSOSTrfXebN5HZa2DhcFsTu2FCENjzdyGdzTjXvsuvgs0Ch8YT7aDTOep7sHDWB9n8XKSH54t/j+1v4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PJWxMBOJ; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=g9TwqQG7Qp12GaXmu7Y0S7cIu4X/HPeey1eZGws87B8jcMtZLiiNFO/lrcOna9fPnob6sDROZ+BjSnlJhXSCuAMRY7ol1pzGYtrAlapemPesg2D352tqUDyRzSSzizxVMOvmxDMLqwfamCH7sc90sp7UKmejUloDa+yywWU5JBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lSIJQklb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PJWxMBOJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 113851F00898;
-	Sun, 13 Sep 2026 10:15:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lSIJQklb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 623941F000FF;
+	Sun, 13 Sep 2026 10:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789294520;
-	bh=zaUslCg2NGFqGsTOCGPfuYrCUiPhrTkj78xHlnj1UuU=;
+	s=k20260515; t=1789294522;
+	bh=gajEtr8iM0vx7FN0XlO4gi98FWlievrAivweiTNXO7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=PJWxMBOJ/dmypFRkzsY6VoOjoUXYVK7GhmgJB6lABMki0suIf7XtEoi9SMtE3mjAl
-	 Rnjj6SzlUdfjtCj+Gyny9l48BzIk9yCRpBWszs7664SrNu8rGnmqMT2Uxo8erWDdVM
-	 H7kYOngxGj2fNcyYbNrfXmJDQc+S0zB+ScsyDsZ4nNZQl/EA7EnWUkKwVOQmuAzHrq
-	 at/4Z77CEK5pRbiLRkYqeKYnvqtT+TIvHbTCFZrP19K2N61bmXI2hzNS5lNTc6w1SA
-	 +QGiWKFR0PXafEBT75FiP5c9382sHxS2yLDDOXoKdgPs5L+IqEOu/sVKgT5yaWXWaW
-	 x7Jx4v1Q96KbQ==
+	b=lSIJQklbGwEoqIQw5BaXQJb/5rCAI79oVC/pG89lgKxSda+YcQlO0ApqDYZ/or2q8
+	 wE/UMzVlypgs5UKcalmECv8CjvIrgK1eZIv+ocOBeEhvy+4Qq3hbkWpsO4qxM+g3jn
+	 yqz4XV6u8mfFi1TAw7wqXNO62I/WsjmnNblheAwqXhB2SoebgEChAn+y4TaccZFPiU
+	 MZr0o9rGuMYwZLs4HzYJu3vrWSDoswAOFrRXUwaLMAntjU0EzHHgCJ0IOv+MHar5f0
+	 2BXewgYgcLhCwcJGEFDoMkiG/2wPoyx1f9LRC88wtKWqZdSxx6nfx8KaibFb7br5jk
+	 M0kqMUiAZ82Cg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v5 08/16] selftests/bpf: enable MPTCP support in sockmap tests
-Date: Sun, 13 Sep 2026 18:14:47 +0800
-Message-ID: <d41e0548d50abfaf2cee060e587889748e3a1f14.1789294365.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v5 09/16] mptcp: implement read_skb for sockmap stream verdict
+Date: Sun, 13 Sep 2026 18:14:48 +0800
+Message-ID: <08dd128a702b7b1d7023d64aea1b94907a981ed9.1789294365.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1789294365.git.tanggeliang@kylinos.cn>
 References: <cover.1789294365.git.tanggeliang@kylinos.cn>
@@ -45,127 +45,78 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Update sockmap tests to reflect new MPTCP support. MPTCP sockets are now
-allowed in sockmap, so test expectations are adjusted accordingly.
+BPF sockmap's stream verdict path (sk_psock_verdict_data_ready) calls
+ops->read_skb() to dequeue skbs from the socket and pass them to the
+verdict BPF program. MPTCP's proto_ops (mptcp_stream_ops and
+mptcp_v6_stream_ops) did not define .read_skb, causing
+sk_psock_verdict_data_ready() to return early without processing any
+data. This made the stream verdict redirect completely non-functional
+for MPTCP sockets.
 
-Use a different key (1) for MPTCP client sockets to validate sockmap.
+Add mptcp_read_skb() as the skb_read_actor_t callback. It peeks skbs
+from the socket receive queue, unlinks each one, and passes it to the
+recv_actor. Processing continues until the queue is drained or the actor
+returns a negative value.
 
-In test_sockmap_with_mptcp, client_fd1 is changed from TCP fallback to
-MPTCP. The sockops program now uses bpf_mptcp_sock_map_update() to insert
-the parent MPTCP socket into the sockmap, which succeeds (returns 0).
-Since the server socket is already inserted by the sockops program, a
-duplicate userspace insertion at the same key returns -EBUSY. The client
-socket is additionally inserted at a different key (1) from userspace to
-verify that MPTCP client sockets are allowed in sockmap.
+This follows the same pattern as tcp_read_skb() in net/ipv4/tcp.c.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 27 ++++++++++---------
- .../selftests/bpf/progs/mptcp_sockmap.c       |  8 ++++--
- 2 files changed, 20 insertions(+), 15 deletions(-)
+ net/mptcp/protocol.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index d77c9f8c53c7..59ea562882a0 100644
---- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -552,11 +552,11 @@ static void test_sockmap_with_mptcp_fallback(struct mptcp_sockmap *skel)
- 	close(listen_fd);
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 3d3c5af7c266..c5be29767cb1 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -4801,6 +4801,31 @@ static ssize_t mptcp_splice_read(struct socket *sock, loff_t *ppos,
+ 	return ret;
  }
  
--/* Test sockmap rejection of MPTCP sockets - both server and client sides. */
--static void test_sockmap_reject_mptcp(struct mptcp_sockmap *skel)
-+/* Test sockmap on MPTCP sockets - both server and client sides. */
-+static void test_sockmap_with_mptcp(struct mptcp_sockmap *skel)
- {
- 	int listen_fd = -1, server_fd = -1, client_fd1 = -1;
--	int err, zero = 0;
-+	int err, zero = 0, one = 1;
- 
- 	/* start server with MPTCP enabled */
- 	listen_fd = start_mptcp_server(AF_INET, NULL, 0, 0);
-@@ -570,20 +570,20 @@ static void test_sockmap_reject_mptcp(struct mptcp_sockmap *skel)
- 	if (!ASSERT_OK_FD(client_fd1, "connect_to_fd client_fd1"))
- 		goto end;
- 
--	/* bpf_sock_map_update() called from sockops should reject MPTCP sk */
--	if (!ASSERT_EQ(skel->bss->helper_ret, -EOPNOTSUPP, "should reject"))
-+	/* bpf_mptcp_sock_map_update() called from sockops should be allowed */
-+	if (!ASSERT_EQ(skel->bss->helper_ret, 0, "should be allowed"))
- 		goto end;
- 
- 	server_fd = accept(listen_fd, NULL, 0);
- 	err = bpf_map_update_elem(bpf_map__fd(skel->maps.sock_map),
- 				  &zero, &server_fd, BPF_NOEXIST);
--	if (!ASSERT_EQ(err, -EOPNOTSUPP, "server should be disallowed"))
-+	if (!ASSERT_EQ(err, -EBUSY, "server should be allowed"))
- 		goto end;
- 
--	/* MPTCP client should also be disallowed */
-+	/* MPTCP client should also be allowed */
- 	err = bpf_map_update_elem(bpf_map__fd(skel->maps.sock_map),
--				  &zero, &client_fd1, BPF_NOEXIST);
--	if (!ASSERT_EQ(err, -EOPNOTSUPP, "client should be disallowed"))
-+				  &one, &client_fd1, BPF_NOEXIST);
-+	if (!ASSERT_EQ(err, 0, "client should be allowed"))
- 		goto end;
- end:
- 	if (client_fd1 >= 0)
-@@ -607,9 +607,10 @@ static void test_mptcp_sockmap(void)
- 	if (!ASSERT_OK_PTR(skel, "skel_open_load: mptcp_sockmap"))
- 		goto close_cgroup;
- 
--	skel->links.mptcp_sockmap_inject =
--		bpf_program__attach_cgroup(skel->progs.mptcp_sockmap_inject, cgroup_fd);
--	if (!ASSERT_OK_PTR(skel->links.mptcp_sockmap_inject, "attach sockmap"))
-+	skel->links.mptcp_sockmap_update =
-+		bpf_program__attach_cgroup(skel->progs.mptcp_sockmap_update,
-+					   cgroup_fd);
-+	if (!ASSERT_OK_PTR(skel->links.mptcp_sockmap_update, "attach sockmap"))
- 		goto skel_destroy;
- 
- 	err = bpf_prog_attach(bpf_program__fd(skel->progs.mptcp_sockmap_redirect),
-@@ -626,7 +627,7 @@ static void test_mptcp_sockmap(void)
- 		goto close_netns;
- 
- 	test_sockmap_with_mptcp_fallback(skel);
--	test_sockmap_reject_mptcp(skel);
-+	test_sockmap_with_mptcp(skel);
- 
- close_netns:
- 	netns_free(netns);
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_sockmap.c b/tools/testing/selftests/bpf/progs/mptcp_sockmap.c
-index d4eef0cbadb9..085e14bea015 100644
---- a/tools/testing/selftests/bpf/progs/mptcp_sockmap.c
-+++ b/tools/testing/selftests/bpf/progs/mptcp_sockmap.c
-@@ -2,6 +2,9 @@
- 
- #include "bpf_tracing_net.h"
- 
-+static long (*bpf_mptcp_sock_map_update)(struct bpf_sock_ops *, void *,
-+					 void *, __u64) = (void *)212;
++static int mptcp_read_skb(struct sock *sk, skb_read_actor_t recv_actor)
++{
++	struct sk_buff *skb;
++	int copied = 0;
 +
- char _license[] SEC("license") = "GPL";
++	if (sk->sk_state == TCP_LISTEN)
++		return -ENOTCONN;
++
++	while ((skb = skb_peek(&sk->sk_receive_queue)) != NULL) {
++		int used;
++
++		__skb_unlink(skb, &sk->sk_receive_queue);
++		WARN_ON_ONCE(!skb_set_owner_sk_safe(skb, sk));
++		used = recv_actor(sk, skb);
++		if (used < 0) {
++			if (!copied)
++				copied = used;
++			break;
++		}
++		copied += used;
++	}
++
++	return copied;
++}
++
+ static const struct proto_ops mptcp_stream_ops = {
+ 	.family		   = PF_INET,
+ 	.owner		   = THIS_MODULE,
+@@ -4824,6 +4849,7 @@ static const struct proto_ops mptcp_stream_ops = {
+ 	.read_sock	   = mptcp_read_sock,
+ 	.splice_read	   = mptcp_splice_read,
+ 	.sendmsg_locked	   = mptcp_sendmsg_locked,
++	.read_skb	   = mptcp_read_skb,
+ };
  
- int sk_index;
-@@ -16,7 +19,7 @@ struct {
- } sock_map SEC(".maps");
+ static struct inet_protosw mptcp_protosw = {
+@@ -4937,6 +4963,7 @@ static const struct proto_ops mptcp_v6_stream_ops = {
+ 	.read_sock	   = mptcp_read_sock,
+ 	.splice_read	   = mptcp_splice_read,
+ 	.sendmsg_locked	   = mptcp_sendmsg_locked,
++	.read_skb	   = mptcp_read_skb,
+ };
  
- SEC("sockops")
--int mptcp_sockmap_inject(struct bpf_sock_ops *skops)
-+int mptcp_sockmap_update(struct bpf_sock_ops *skops)
- {
- 	struct bpf_sock *sk;
- 
-@@ -30,7 +33,8 @@ int mptcp_sockmap_inject(struct bpf_sock_ops *skops)
- 		return 1;
- 
- 	/* update sk handler */
--	helper_ret = bpf_sock_map_update(skops, &sock_map, &sk_index, BPF_NOEXIST);
-+	helper_ret = bpf_mptcp_sock_map_update(skops, &sock_map, &sk_index,
-+					       BPF_NOEXIST);
- 
- 	return 1;
- }
+ static struct proto mptcp_v6_prot;
 -- 
 2.53.0
 
