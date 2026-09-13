@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDBA232395
-	for <mptcp@lists.linux.dev>; Sun, 13 Sep 2026 10:15:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72C9B3BD653
+	for <mptcp@lists.linux.dev>; Sun, 13 Sep 2026 10:15:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789294531; cv=none; b=TR52SwGdqmLvjlvclWWogMCN/gJciJdhUJCaISyGLO8N48vSGwvLV462GDSI4daJZyeyOquAygGtNDpy+EhEHC1BCvpwF8cmH3B3wwcYflyhdb0fc2xtFsfPHnVjPuJ3gapoKcnqY05o0IQK6zZChgnHuAHrfAwf9ST2Foc9cVg=
+	t=1789294533; cv=none; b=T2K8IswOOge9CtCwj3WqREKHMgucjcHl/NhH48R6p5ivaBm5k9BuDarRvlH4Gb30Bm5hM8NvTKs0yoACYriV107lkuJCNJ4n9EC855xb4guyljqxIW6zIDFuoHa9CcYeUCptiVOJMqFi3rgpdKb4CzKfeZ84lBeqFxjsn9NQGVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789294531; c=relaxed/simple;
-	bh=W9HGCG3ybaj9jWkMrMSfDjEK5CWytb8aKSuWxwhQGBs=;
+	s=arc-20240116; t=1789294533; c=relaxed/simple;
+	bh=HVEnPnnpumA9OCH93A5gRXcOnQOVHzetAtq0gickHJA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Y51rQjaOi8uYyUfTrnPUMcWnlT7dAeAT2pJRYWHdngiHoDYNW23XajoihKL7SDzXuSCcSZbOqlNhTrFezlUS/3u/q58kJlOSHDIB0HxSdmysI8h+0sv8SmIy5dFvBdT5m70pzAvTcvZbAGVOduubqaJiHmvTNy+02KawKuQ9eQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AJRscfNp; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=DWnzlumbOF0iML2c8XSGQL3U3ZgJthaHUTscg0uond0T2n5ZOuVA8R4FLPYUUj66BBckk/+hzMxZgb/hkcIjelertkZwjmoyXBcUagAgiY6jrzSKnz1YbGE9gQpffolM7cQjKpnlEPgsByysHJkNfaBQ6YImdP8YhyHsWwWMbRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jyk+9kO/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AJRscfNp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF11D1F00893;
-	Sun, 13 Sep 2026 10:15:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jyk+9kO/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32E201F000FF;
+	Sun, 13 Sep 2026 10:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789294529;
-	bh=lY+E/NXB2Mb5QJ8FTBLpZqVD6HSvK2dD7vPaQWVmz7E=;
+	s=k20260515; t=1789294531;
+	bh=UjFuTpymvaVQtQhikpqbeQUg+od0VtOhW5da+fyqNb0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=AJRscfNpVDSAy130lhOoigTeGXRG8XsGRLnLWI9oTtubmABZmGGhaQJHhHWKpLwow
-	 wTvdU1vJvuE2iqCCWUyRKDpKNFcEMiBqLE7p7L0RW2RBznNUTzRV8lcnPOAxeZ0MJM
-	 LP3dKr7XbedqUbURMuyI5x3c2aFKiI/PwTgVgvKOT+OnoE7bBlwDqnnD4lHDzYXtMK
-	 AzZZ7QOqy+U2xOT7r9soPlFwNuJs3kYahmOBXwMM39YDGBXm4ybIkBmQb4c9w7PSpK
-	 jwF8fN/608xB2fTgETv9SR0pg9t2nEFl4nnc76teura+Im3SipL6UWDP6H5li9l0ca
-	 RtyCx2iMim3kg==
+	b=jyk+9kO/yb++B6D/6HnbECqv7hngh22zB5oBBSL0Jd5ocrC6NaGw+sihdaj3x51fK
+	 Ws/uCNNLWGrbqhBWccgs+r5HnKQBhMXFpmj9UjxUOuCs/ZbW++FS6S2pJa+ZdDJulJ
+	 tXigsQzRWKlDtVlZ+HMdQ+m5u2FfB6fmIE571kHauAF1z7gxzhOQ+C/KjkU+3aE5wF
+	 FF4XxEWCa9xU9G3Ejjs+L2amAJIs24lF/TxyTvVg4n84Z/KCVW8aj+RSzo6hH3UGND
+	 KNATgZyeBm7+J9thN2U7KgCZcjX56myXLjd1GP+IjOzn8yupoN7uoNxU9D/UpodZnz
+	 Q3eAaHXRytCRw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v5 15/16] mptcp: add sk_select_reuseport BPF helper
-Date: Sun, 13 Sep 2026 18:14:54 +0800
-Message-ID: <fdea25aa5bdb8c4a03b5b84a0a593cea93063e9f.1789294365.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v5 16/16] selftests/bpf: add MPTCP coverage to sockmap_listen
+Date: Sun, 13 Sep 2026 18:14:55 +0800
+Message-ID: <3857608bd79abf9079a7bebd3d589194bb6433ff.1789294365.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1789294365.git.tanggeliang@kylinos.cn>
 References: <cover.1789294365.git.tanggeliang@kylinos.cn>
@@ -45,236 +45,457 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Add an MPTCP-aware variant of bpf_sk_select_reuseport() (helper id 213).
-When the map contains an MPTCP parent socket, it resolves to the first
-subflow (msk->first) before selecting it for reuseport dispatch.
-
-Refactor sk_select_reuseport() to extract the core selection logic into
-sk_select_reuseport_lookup(), which is reused by the MPTCP variant.
-Register the helper for both sock_ops and sk_reuseport BPF program types
-with corresponding verifier compatibility checks.
+Extend sockmap_listen tests to cover MPTCP sockets. Run the full test
+suite (ops, redir, reuseport) in both TCP and MPTCP modes, using
+IPPROTO_MPTCP for stream sockets when in MPTCP mode. Skip UDP-specific
+tests in MPTCP mode. Add a dedicated BPF reuseport program
+(prog_reuseport_mptcp) that uses bpf_mptcp_sk_select_reuseport() for
+MPTCP-aware reuseport selection. Prefix subtest names with the protocol
+(tcp/mptcp) for clarity.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- include/linux/bpf.h      |  6 ++++++
- include/uapi/linux/bpf.h |  9 +++++++++
- kernel/bpf/verifier.c    |  6 +++++-
- net/core/filter.c        | 42 +++++++++++++++++++++++++++++++++-------
- net/mptcp/bpf.c          | 22 +++++++++++++++++++++
- 5 files changed, 77 insertions(+), 8 deletions(-)
+ .../selftests/bpf/prog_tests/sockmap_listen.c | 122 +++++++++++-------
+ .../selftests/bpf/progs/test_sockmap_listen.c |  25 ++++
+ 2 files changed, 101 insertions(+), 46 deletions(-)
 
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index ecb53a7ad0e8..00061ef54d57 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -4026,8 +4026,14 @@ u32 bpf_xdp_sock_convert_ctx_access(enum bpf_access_type type,
- int sock_map_update_common(struct bpf_map *map, u32 idx,
- 			   struct sock *sk, u64 flags);
+diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c b/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
+index 1c96a3cf4b97..d31f3eb661d6 100644
+--- a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
++++ b/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
+@@ -31,6 +31,10 @@
  
-+int sk_select_reuseport_lookup(struct sk_reuseport_kern *reuse_kern,
-+			       struct sock *selected_sk,
-+			       struct bpf_map *map);
+ #define NO_FLAGS 0
+ 
++static bool mptcp;
++#define SOTYPE_PROTO(st) \
++	(mptcp && ((st) & SOCK_STREAM) ? IPPROTO_MPTCP : 0)
 +
- #ifdef CONFIG_MPTCP
- u64 mptcp_sock_map_update(u64 r1, u64 r2, u64 r3, u64 r4, u64 r5);
-+
-+u64 mptcp_sk_select_reuseport(u64 r1, u64 r2, u64 r3, u64 r4, u64 r5);
- #endif
- #else
- static inline bool bpf_tcp_sock_is_valid_access(int off, int size,
-diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-index 41eecb8622ac..b44450a3e7ae 100644
---- a/include/uapi/linux/bpf.h
-+++ b/include/uapi/linux/bpf.h
-@@ -6007,6 +6007,14 @@ union bpf_attr {
-  *		it into the *map*.
-  *	Return
-  *		0 on success, or a negative error in case of failure.
-+ *
-+ * long bpf_mptcp_sk_select_reuseport(struct sk_reuseport_md *reuse, struct bpf_map *map, void *key, u64 flags)
-+ *	Description
-+ *		MPTCP-aware variant of **bpf_sk_select_reuseport**\ ().
-+ *		When the *map* contains an MPTCP parent socket, it
-+ *		resolves to the first subflow before selecting it.
-+ *	Return
-+ *		0 on success, or a negative error in case of failure.
-  */
- #define ___BPF_FUNC_MAPPER(FN, ctx...)			\
- 	FN(unspec, 0, ##ctx)				\
-@@ -6222,6 +6230,7 @@ union bpf_attr {
- 	FN(cgrp_storage_get, 210, ##ctx)		\
- 	FN(cgrp_storage_delete, 211, ##ctx)		\
- 	FN(mptcp_sock_map_update, 212, ##ctx)		\
-+	FN(mptcp_sk_select_reuseport, 213, ##ctx)	\
- 	/* This helper list is effectively frozen. If you are trying to	\
- 	 * add a new helper, you should add a kfunc instead which has	\
- 	 * less stability guarantees. See Documentation/bpf/kfuncs.rst	\
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index c58c2ba87d26..33a36afd0eaf 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -9067,6 +9067,7 @@ static int check_map_func_compatibility(struct bpf_verifier_env *env,
- 		    func_id != BPF_FUNC_sk_select_reuseport &&
- 		    func_id != BPF_FUNC_map_lookup_elem &&
- 		    func_id != BPF_FUNC_mptcp_sock_map_update &&
-+		    func_id != BPF_FUNC_mptcp_sk_select_reuseport &&
- 		    !may_update_sockmap(env, func_id))
- 			goto error;
- 		break;
-@@ -9077,11 +9078,13 @@ static int check_map_func_compatibility(struct bpf_verifier_env *env,
- 		    func_id != BPF_FUNC_sk_select_reuseport &&
- 		    func_id != BPF_FUNC_map_lookup_elem &&
- 		    func_id != BPF_FUNC_mptcp_sock_map_update &&
-+		    func_id != BPF_FUNC_mptcp_sk_select_reuseport &&
- 		    !may_update_sockmap(env, func_id))
- 			goto error;
- 		break;
- 	case BPF_MAP_TYPE_REUSEPORT_SOCKARRAY:
--		if (func_id != BPF_FUNC_sk_select_reuseport)
-+		if (func_id != BPF_FUNC_sk_select_reuseport &&
-+		    func_id != BPF_FUNC_mptcp_sk_select_reuseport)
- 			goto error;
- 		break;
- 	case BPF_MAP_TYPE_QUEUE:
-@@ -9191,6 +9194,7 @@ static int check_map_func_compatibility(struct bpf_verifier_env *env,
- 			goto error;
- 		break;
- 	case BPF_FUNC_sk_select_reuseport:
-+	case BPF_FUNC_mptcp_sk_select_reuseport:
- 		if (map->map_type != BPF_MAP_TYPE_REUSEPORT_SOCKARRAY &&
- 		    map->map_type != BPF_MAP_TYPE_SOCKMAP &&
- 		    map->map_type != BPF_MAP_TYPE_SOCKHASH)
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 0b4fec5a8848..f1415ff42a51 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -8832,6 +8832,7 @@ const struct bpf_func_proto bpf_sock_hash_update_proto __weak;
- 
- #if IS_ENABLED(CONFIG_MPTCP)
- static const struct bpf_func_proto mptcp_sock_map_update_proto;
-+static const struct bpf_func_proto mptcp_sk_select_reuseport_proto;
- #endif
- 
- static const struct bpf_func_proto *
-@@ -8857,6 +8858,8 @@ sock_ops_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- #if IS_ENABLED(CONFIG_MPTCP)
- 	case BPF_FUNC_mptcp_sock_map_update:
- 		return &mptcp_sock_map_update_proto;
-+	case BPF_FUNC_mptcp_sk_select_reuseport:
-+		return &mptcp_sk_select_reuseport_proto;
- #endif
- 	case BPF_FUNC_get_socket_cookie:
- 		return &bpf_get_socket_cookie_sock_ops_proto;
-@@ -11738,15 +11741,14 @@ struct sock *bpf_run_sk_reuseport(struct sock_reuseport *reuse, struct sock *sk,
- 		return ERR_PTR(-ECONNREFUSED);
- }
- 
--BPF_CALL_4(sk_select_reuseport, struct sk_reuseport_kern *, reuse_kern,
--	   struct bpf_map *, map, void *, key, u32, flags)
-+int sk_select_reuseport_lookup(struct sk_reuseport_kern *reuse_kern,
-+			       struct sock *selected_sk,
-+			       struct bpf_map *map)
+ static void test_insert_invalid(struct test_sockmap_listen *skel __always_unused,
+ 				int family, int sotype, int mapfd)
  {
- 	bool is_sockarray = map->map_type == BPF_MAP_TYPE_REUSEPORT_SOCKARRAY;
- 	struct sock_reuseport *reuse;
--	struct sock *selected_sk;
- 	int err;
+@@ -56,7 +60,7 @@ static void test_insert_opened(struct test_sockmap_listen *skel __always_unused,
+ 	int err, s;
+ 	u64 value;
  
--	selected_sk = map->ops->map_lookup_elem(map, key);
- 	if (!selected_sk)
- 		return -ENOENT;
+-	s = xsocket(family, sotype, 0);
++	s = xsocket(family, sotype, SOTYPE_PROTO(sotype));
+ 	if (s == -1)
+ 		return;
  
-@@ -11781,10 +11783,20 @@ BPF_CALL_4(sk_select_reuseport, struct sk_reuseport_kern *, reuse_kern,
+@@ -79,7 +83,7 @@ static void test_insert_bound(struct test_sockmap_listen *skel __always_unused,
  
- 	return 0;
- error:
--	/* Lookup in sock_map can return TCP ESTABLISHED sockets. */
--	if (sk_is_refcounted(selected_sk))
--		sock_put(selected_sk);
-+	return err;
-+}
-+EXPORT_SYMBOL(sk_select_reuseport_lookup);
+ 	init_addr_loopback(family, &addr, &len);
+ 
+-	s = xsocket(family, sotype, 0);
++	s = xsocket(family, sotype, SOTYPE_PROTO(sotype));
+ 	if (s == -1)
+ 		return;
+ 
+@@ -107,7 +111,7 @@ static void test_insert(struct test_sockmap_listen *skel __always_unused,
+ 	u32 key;
+ 	int s;
+ 
+-	s = socket_loopback(family, sotype);
++	s = socket_loopback_proto(family, sotype, SOTYPE_PROTO(sotype));
+ 	if (s < 0)
+ 		return;
+ 
+@@ -124,7 +128,7 @@ static void test_delete_after_insert(struct test_sockmap_listen *skel __always_u
+ 	u32 key;
+ 	int s;
+ 
+-	s = socket_loopback(family, sotype);
++	s = socket_loopback_proto(family, sotype, SOTYPE_PROTO(sotype));
+ 	if (s < 0)
+ 		return;
+ 
+@@ -142,7 +146,7 @@ static void test_delete_after_close(struct test_sockmap_listen *skel __always_un
+ 	u64 value;
+ 	u32 key;
+ 
+-	s = socket_loopback(family, sotype);
++	s = socket_loopback_proto(family, sotype, SOTYPE_PROTO(sotype));
+ 	if (s < 0)
+ 		return;
+ 
+@@ -167,7 +171,7 @@ static void test_lookup_after_insert(struct test_sockmap_listen *skel __always_u
+ 	u32 key;
+ 	int s;
+ 
+-	s = socket_loopback(family, sotype);
++	s = socket_loopback_proto(family, sotype, SOTYPE_PROTO(sotype));
+ 	if (s < 0)
+ 		return;
+ 
+@@ -195,7 +199,7 @@ static void test_lookup_after_delete(struct test_sockmap_listen *skel __always_u
+ 	u64 value;
+ 	u32 key;
+ 
+-	s = socket_loopback(family, sotype);
++	s = socket_loopback_proto(family, sotype, SOTYPE_PROTO(sotype));
+ 	if (s < 0)
+ 		return;
+ 
+@@ -218,7 +222,7 @@ static void test_lookup_32_bit_value(struct test_sockmap_listen *skel __always_u
+ 	u32 key, value32;
+ 	int err, s;
+ 
+-	s = socket_loopback(family, sotype);
++	s = socket_loopback_proto(family, sotype, SOTYPE_PROTO(sotype));
+ 	if (s < 0)
+ 		return;
+ 
+@@ -250,11 +254,11 @@ static void test_update_existing(struct test_sockmap_listen *skel __always_unuse
+ 	u64 value;
+ 	u32 key;
+ 
+-	s1 = socket_loopback(family, sotype);
++	s1 = socket_loopback_proto(family, sotype, SOTYPE_PROTO(sotype));
+ 	if (s1 < 0)
+ 		return;
+ 
+-	s2 = socket_loopback(family, sotype);
++	s2 = socket_loopback_proto(family, sotype, SOTYPE_PROTO(sotype));
+ 	if (s2 < 0)
+ 		goto close_s1;
+ 
+@@ -280,7 +284,7 @@ static void do_destroy_orphan_child(int family, int sotype, int mapfd)
+ 	u64 value;
+ 	u32 key;
+ 
+-	s = socket_loopback(family, sotype);
++	s = socket_loopback_proto(family, sotype, SOTYPE_PROTO(sotype));
+ 	if (s < 0)
+ 		return;
+ 
+@@ -293,7 +297,7 @@ static void do_destroy_orphan_child(int family, int sotype, int mapfd)
+ 	value = s;
+ 	xbpf_map_update_elem(mapfd, &key, &value, BPF_NOEXIST);
+ 
+-	c = xsocket(family, sotype, 0);
++	c = xsocket(family, sotype, SOTYPE_PROTO(sotype));
+ 	if (c == -1)
+ 		goto close_srv;
+ 
+@@ -342,7 +346,7 @@ static void test_clone_after_delete(struct test_sockmap_listen *skel __always_un
+ 	u64 value;
+ 	u32 key;
+ 
+-	s = socket_loopback(family, sotype);
++	s = socket_loopback_proto(family, sotype, SOTYPE_PROTO(sotype));
+ 	if (s < 0)
+ 		return;
+ 
+@@ -356,7 +360,7 @@ static void test_clone_after_delete(struct test_sockmap_listen *skel __always_un
+ 	xbpf_map_update_elem(mapfd, &key, &value, BPF_NOEXIST);
+ 	xbpf_map_delete_elem(mapfd, &key);
+ 
+-	c = xsocket(family, sotype, 0);
++	c = xsocket(family, sotype, SOTYPE_PROTO(sotype));
+ 	if (c < 0)
+ 		goto close_srv;
+ 
+@@ -379,7 +383,8 @@ static void test_accept_after_delete(struct test_sockmap_listen *skel __always_u
+ 	socklen_t len;
+ 	u64 value;
+ 
+-	s = socket_loopback(family, sotype | SOCK_NONBLOCK);
++	s = socket_loopback_proto(family, sotype | SOCK_NONBLOCK,
++				  SOTYPE_PROTO(sotype));
+ 	if (s == -1)
+ 		return;
+ 
+@@ -393,7 +398,7 @@ static void test_accept_after_delete(struct test_sockmap_listen *skel __always_u
+ 	if (err)
+ 		goto close_srv;
+ 
+-	c = xsocket(family, sotype, 0);
++	c = xsocket(family, sotype, SOTYPE_PROTO(sotype));
+ 	if (c == -1)
+ 		goto close_srv;
+ 
+@@ -434,7 +439,8 @@ static void test_accept_before_delete(struct test_sockmap_listen *skel __always_
+ 	socklen_t len;
+ 	u64 value;
+ 
+-	s = socket_loopback(family, sotype | SOCK_NONBLOCK);
++	s = socket_loopback_proto(family, sotype | SOCK_NONBLOCK,
++				  SOTYPE_PROTO(sotype));
+ 	if (s == -1)
+ 		return;
+ 
+@@ -448,7 +454,7 @@ static void test_accept_before_delete(struct test_sockmap_listen *skel __always_
+ 	if (err)
+ 		goto close_srv;
+ 
+-	c = xsocket(family, sotype, 0);
++	c = xsocket(family, sotype, SOTYPE_PROTO(sotype));
+ 	if (c == -1)
+ 		goto close_srv;
+ 
+@@ -511,7 +517,7 @@ static void *connect_accept_thread(void *arg)
+ 	for (i = 0; i < ctx->nr_iter; i++) {
+ 		int c, p;
+ 
+-		c = xsocket(family, socktype, 0);
++		c = xsocket(family, socktype, SOTYPE_PROTO(socktype));
+ 		if (c < 0)
+ 			break;
+ 
+@@ -546,7 +552,8 @@ static void test_syn_recv_insert_delete(struct test_sockmap_listen *skel __alway
+ 	int err, s;
+ 	u64 value;
+ 
+-	s = socket_loopback(family, sotype | SOCK_NONBLOCK);
++	s = socket_loopback_proto(family, sotype | SOCK_NONBLOCK,
++				  SOTYPE_PROTO(sotype));
+ 	if (s < 0)
+ 		return;
+ 
+@@ -609,7 +616,7 @@ static void test_race_insert_listen(struct test_sockmap_listen *skel __always_un
+ 	int err, s;
+ 	u64 value;
+ 
+-	s = xsocket(family, socktype, 0);
++	s = xsocket(family, socktype, SOTYPE_PROTO(socktype));
+ 	if (s < 0)
+ 		return;
+ 
+@@ -795,7 +802,8 @@ static void redir_to_listening(int family, int sotype, int sock_mapfd,
+ 
+ 	zero_verdict_count(verd_mapfd);
+ 
+-	s = socket_loopback(family, sotype | SOCK_NONBLOCK);
++	s = socket_loopback_proto(family, sotype | SOCK_NONBLOCK,
++				  SOTYPE_PROTO(sotype));
+ 	if (s < 0)
+ 		return;
+ 
+@@ -804,7 +812,7 @@ static void redir_to_listening(int family, int sotype, int sock_mapfd,
+ 	if (err)
+ 		goto close_srv;
+ 
+-	c = xsocket(family, sotype, 0);
++	c = xsocket(family, sotype, SOTYPE_PROTO(sotype));
+ 	if (c < 0)
+ 		goto close_srv;
+ 	err = xconnect(c, sockaddr(&addr), len);
+@@ -984,8 +992,9 @@ static void test_reuseport_select_listening(int family, int sotype,
+ 
+ 	zero_verdict_count(verd_map);
+ 
+-	s = socket_loopback_reuseport(family, sotype | SOCK_NONBLOCK,
+-				      reuseport_prog);
++	s = socket_loopback_reuseport_proto(family, sotype | SOCK_NONBLOCK,
++					    SOTYPE_PROTO(sotype),
++					    reuseport_prog);
+ 	if (s < 0)
+ 		return;
+ 
+@@ -1000,7 +1009,7 @@ static void test_reuseport_select_listening(int family, int sotype,
+ 	if (err)
+ 		goto close_srv;
+ 
+-	c = xsocket(family, sotype, 0);
++	c = xsocket(family, sotype, SOTYPE_PROTO(sotype));
+ 	if (c < 0)
+ 		goto close_srv;
+ 	err = xconnect(c, sockaddr(&addr), len);
+@@ -1053,7 +1062,9 @@ static void test_reuseport_select_connected(int family, int sotype,
+ 
+ 	zero_verdict_count(verd_map);
+ 
+-	s = socket_loopback_reuseport(family, sotype, reuseport_prog);
++	s = socket_loopback_reuseport_proto(family, sotype,
++					    SOTYPE_PROTO(sotype),
++					    reuseport_prog);
+ 	if (s < 0)
+ 		return;
+ 
+@@ -1069,7 +1080,7 @@ static void test_reuseport_select_connected(int family, int sotype,
+ 	if (err)
+ 		goto close_srv;
+ 
+-	c0 = xsocket(family, sotype, 0);
++	c0 = xsocket(family, sotype, SOTYPE_PROTO(sotype));
+ 	if (c0 < 0)
+ 		goto close_srv;
+ 
+@@ -1082,7 +1093,7 @@ static void test_reuseport_select_connected(int family, int sotype,
+ 		if (p0 < 0)
+ 			goto close_cli0;
+ 	} else {
+-		p0 = xsocket(family, sotype, 0);
++		p0 = xsocket(family, sotype, SOTYPE_PROTO(sotype));
+ 		if (p0 < 0)
+ 			goto close_cli0;
+ 
+@@ -1103,7 +1114,7 @@ static void test_reuseport_select_connected(int family, int sotype,
+ 	if (err)
+ 		goto close_peer0;
+ 
+-	c1 = xsocket(family, sotype, 0);
++	c1 = xsocket(family, sotype, SOTYPE_PROTO(sotype));
+ 	if (c1 < 0)
+ 		goto close_peer0;
+ 
+@@ -1158,11 +1169,15 @@ static void test_reuseport_mixed_groups(int family, int sotype, int sock_map,
+ 	zero_verdict_count(verd_map);
+ 
+ 	/* Create two listeners, each in its own reuseport group */
+-	s1 = socket_loopback_reuseport(family, sotype, reuseport_prog);
++	s1 = socket_loopback_reuseport_proto(family, sotype,
++					     SOTYPE_PROTO(sotype),
++					     reuseport_prog);
+ 	if (s1 < 0)
+ 		return;
+ 
+-	s2 = socket_loopback_reuseport(family, sotype, reuseport_prog);
++	s2 = socket_loopback_reuseport_proto(family, sotype,
++					     SOTYPE_PROTO(sotype),
++					     reuseport_prog);
+ 	if (s2 < 0)
+ 		goto close_srv1;
+ 
+@@ -1176,7 +1191,7 @@ static void test_reuseport_mixed_groups(int family, int sotype, int sock_map,
+ 	if (err)
+ 		goto close_srv2;
+ 
+-	c = xsocket(family, sotype, 0);
++	c = xsocket(family, sotype, SOTYPE_PROTO(sotype));
+ 	if (c < 0)
+ 		goto close_srv2;
+ 
+@@ -1272,7 +1287,7 @@ static const char *sotype_str(int sotype)
+ 	case SOCK_DGRAM:
+ 		return "UDP";
+ 	case SOCK_STREAM:
+-		return "TCP";
++		return mptcp ? "MPTCP" : "TCP";
+ 	default:
+ 		return "unknown";
+ 	}
+@@ -1321,7 +1336,8 @@ static void test_ops(struct test_sockmap_listen *skel, struct bpf_map *map,
+ 	map_fd = bpf_map__fd(map);
+ 
+ 	for (t = tests; t < tests + ARRAY_SIZE(tests); t++) {
+-		snprintf(s, sizeof(s), "%s %s %s %s", map_name, family_name,
++		snprintf(s, sizeof(s), "%s %s %s %s %s",
++			 mptcp ? "mptcp" : "tcp", map_name, family_name,
+ 			 sotype_name, t->name);
+ 
+ 		if (t->sotype != 0 && t->sotype != sotype)
+@@ -1359,7 +1375,8 @@ static void test_redir(struct test_sockmap_listen *skel, struct bpf_map *map,
+ 	map_name = map_type_str(map);
+ 
+ 	for (t = tests; t < tests + ARRAY_SIZE(tests); t++) {
+-		snprintf(s, sizeof(s), "%s %s %s", map_name, family_name,
++		snprintf(s, sizeof(s), "%s %s %s %s",
++			 mptcp ? "mptcp" : "tcp", map_name, family_name,
+ 			 t->name);
+ 
+ 		if (!test__start_subtest(s))
+@@ -1393,10 +1410,15 @@ static void test_reuseport(struct test_sockmap_listen *skel,
+ 
+ 	socket_map = bpf_map__fd(map);
+ 	verdict_map = bpf_map__fd(skel->maps.verdict_map);
+-	reuseport_prog = bpf_program__fd(skel->progs.prog_reuseport);
++	if (mptcp)
++		reuseport_prog =
++			bpf_program__fd(skel->progs.prog_reuseport_mptcp);
++	else
++		reuseport_prog = bpf_program__fd(skel->progs.prog_reuseport);
+ 
+ 	for (t = tests; t < tests + ARRAY_SIZE(tests); t++) {
+-		snprintf(s, sizeof(s), "%s %s %s %s", map_name, family_name,
++		snprintf(s, sizeof(s), "%s %s %s %s %s",
++			 mptcp ? "mptcp" : "tcp", map_name, family_name,
+ 			 sotype_name, t->name);
+ 
+ 		if (t->sotype != 0 && t->sotype != sotype)
+@@ -1413,10 +1435,14 @@ static void run_tests(struct test_sockmap_listen *skel, struct bpf_map *map,
+ 		      int family)
+ {
+ 	test_ops(skel, map, family, SOCK_STREAM);
+-	test_ops(skel, map, family, SOCK_DGRAM);
+ 	test_redir(skel, map, family, SOCK_STREAM);
+ 	test_reuseport(skel, map, family, SOCK_STREAM);
+-	test_reuseport(skel, map, family, SOCK_DGRAM);
 +
-+BPF_CALL_4(sk_select_reuseport, struct sk_reuseport_kern *, reuse_kern,
-+	   struct bpf_map *, map, void *, key, u32, flags)
-+{
-+	struct sock *selected_sk;
-+	int err;
- 
-+	selected_sk = map->ops->map_lookup_elem(map, key);
-+	err = sk_select_reuseport_lookup(reuse_kern, selected_sk, map);
-+	if (unlikely(err) && selected_sk && sk_is_refcounted(selected_sk))
-+		sock_put(selected_sk);
- 	return err;
- }
- 
-@@ -11798,6 +11810,7 @@ static const struct bpf_func_proto sk_select_reuseport_proto = {
- 	.arg4_type	= ARG_ANYTHING,
- };
- 
-+#if IS_ENABLED(CONFIG_MPTCP)
- static const struct bpf_func_proto mptcp_sock_map_update_proto = {
- 	.func		= mptcp_sock_map_update,
- 	.gpl_only	= false,
-@@ -11808,6 +11821,17 @@ static const struct bpf_func_proto mptcp_sock_map_update_proto = {
- 	.arg4_type	= ARG_ANYTHING,
- };
- 
-+static const struct bpf_func_proto mptcp_sk_select_reuseport_proto = {
-+	.func           = mptcp_sk_select_reuseport,
-+	.gpl_only       = true,
-+	.ret_type       = RET_INTEGER,
-+	.arg1_type	= ARG_PTR_TO_CTX,
-+	.arg2_type      = ARG_CONST_MAP_PTR,
-+	.arg3_type      = ARG_PTR_TO_MAP_KEY,
-+	.arg4_type	= ARG_ANYTHING,
-+};
-+#endif
-+
- BPF_CALL_4(sk_reuseport_load_bytes,
- 	   const struct sk_reuseport_kern *, reuse_kern, u32, offset,
- 	   void *, to, u32, len)
-@@ -11851,6 +11875,10 @@ sk_reuseport_func_proto(enum bpf_func_id func_id,
- 	switch (func_id) {
- 	case BPF_FUNC_sk_select_reuseport:
- 		return &sk_select_reuseport_proto;
-+#if IS_ENABLED(CONFIG_MPTCP)
-+	case BPF_FUNC_mptcp_sk_select_reuseport:
-+		return &mptcp_sk_select_reuseport_proto;
-+#endif
- 	case BPF_FUNC_skb_load_bytes:
- 		return &sk_reuseport_load_bytes_proto;
- 	case BPF_FUNC_skb_load_bytes_relative:
-diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-index f6fd610f7077..fe10c5ed28f0 100644
---- a/net/mptcp/bpf.c
-+++ b/net/mptcp/bpf.c
-@@ -511,3 +511,25 @@ BPF_CALL_4(mptcp_sock_map_update, struct bpf_sock_ops_kern *, sops,
- 	return sock_map_update_common(map, *(u32 *)key, sk, flags);
- }
- EXPORT_SYMBOL_GPL(mptcp_sock_map_update);
-+
-+BPF_CALL_4(mptcp_sk_select_reuseport, struct sk_reuseport_kern *, reuse_kern,
-+	   struct bpf_map *, map, void *, key, u32, flags)
-+{
-+	struct sock *sk, *selected_sk;
-+
-+	sk = map->ops->map_lookup_elem(map, key);
-+	if (!sk)
-+		return -ENOENT;
-+
-+	selected_sk = READ_ONCE(mptcp_sk(sk)->first);
-+	if (!selected_sk) {
-+		if (sk_is_refcounted(sk))
-+			sock_put(sk);
-+		return -ENOENT;
++	/* UDP is unaffected by MPTCP, only run it once (in tcp mode) */
++	if (!mptcp) {
++		test_ops(skel, map, family, SOCK_DGRAM);
++		test_reuseport(skel, map, family, SOCK_DGRAM);
 +	}
+ }
+ 
+ void serial_test_sockmap_listen(void)
+@@ -1429,13 +1455,17 @@ void serial_test_sockmap_listen(void)
+ 		return;
+ 	}
+ 
+-	skel->bss->test_sockmap = true;
+-	run_tests(skel, skel->maps.sock_map, AF_INET);
+-	run_tests(skel, skel->maps.sock_map, AF_INET6);
++	for (int i = 0; i < 2; i++) {
++		mptcp = i;
+ 
+-	skel->bss->test_sockmap = false;
+-	run_tests(skel, skel->maps.sock_hash, AF_INET);
+-	run_tests(skel, skel->maps.sock_hash, AF_INET6);
++		skel->bss->test_sockmap = true;
++		run_tests(skel, skel->maps.sock_map, AF_INET);
++		run_tests(skel, skel->maps.sock_map, AF_INET6);
 +
-+	if (sk_is_refcounted(sk))
-+		sock_put(sk);
-+	return sk_select_reuseport_lookup(reuse_kern, selected_sk, map);
++		skel->bss->test_sockmap = false;
++		run_tests(skel, skel->maps.sock_hash, AF_INET);
++		run_tests(skel, skel->maps.sock_hash, AF_INET6);
++	}
+ 
+ 	test_sockmap_listen__destroy(skel);
+ }
+diff --git a/tools/testing/selftests/bpf/progs/test_sockmap_listen.c b/tools/testing/selftests/bpf/progs/test_sockmap_listen.c
+index b7250eb9c30c..46e9929ba7c4 100644
+--- a/tools/testing/selftests/bpf/progs/test_sockmap_listen.c
++++ b/tools/testing/selftests/bpf/progs/test_sockmap_listen.c
+@@ -7,6 +7,9 @@
+ 
+ #include <bpf/bpf_helpers.h>
+ 
++static long (*bpf_mptcp_sk_select_reuseport)(struct sk_reuseport_md *, void *,
++					     void *, __u64) = (void *)213;
++
+ struct {
+ 	__uint(type, BPF_MAP_TYPE_SOCKMAP);
+ 	__uint(max_entries, 2);
+@@ -137,4 +140,26 @@ int prog_reuseport(struct sk_reuseport_md *reuse)
+ 	return verdict;
+ }
+ 
++SEC("sk_reuseport")
++int prog_reuseport_mptcp(struct sk_reuseport_md *reuse)
++{
++	unsigned int *count;
++	int err, verdict;
++	__u32 zero = 0;
++
++	if (test_sockmap)
++		err = bpf_mptcp_sk_select_reuseport(reuse, &sock_map,
++						    &zero, 0);
++	else
++		err = bpf_mptcp_sk_select_reuseport(reuse, &sock_hash,
++						    &zero, 0);
++	verdict = err ? SK_DROP : SK_PASS;
++
++	count = bpf_map_lookup_elem(&verdict_map, &verdict);
++	if (count)
++		(*count)++;
++
++	return verdict;
 +}
-+EXPORT_SYMBOL_GPL(mptcp_sk_select_reuseport);
++
+ char _license[] SEC("license") = "GPL";
 -- 
 2.53.0
 
