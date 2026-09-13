@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3A43EC6A4
-	for <mptcp@lists.linux.dev>; Sun, 13 Sep 2026 18:18:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B18937C0ED
+	for <mptcp@lists.linux.dev>; Sun, 13 Sep 2026 18:22:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789323490; cv=none; b=TV5h8kXcitYrk/8J8oVNEdm26TsCOeO1Jb7F9bmQkas4gOy3gHzT5xvS9CwH6KM9NJwqzDNbrBcoqeGj1/pQEgo1I5/4a2A1Ll544dzbGVgFjIEyWGjjnyikIKo3KgSjanEcWFtwrjRP/hjzFqKlPM7zgg7lNBDnc40ZsK7CAdI=
+	t=1789323731; cv=none; b=X8ZMI34fw1V9owcs/b/OowT02lRtGJyjJ9RWaoxNq12WlltJec5PynkfbQTY10meQHlONMfaj7tPb4Ly/CXcdCHeUNWQC6neYkjE6tCAkEyoRpQ1oBLWDj7xVZPk85aObD1WhWoBhHvDCybf9ZgtCqX0PFCnioXKLZglhh7QRHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789323490; c=relaxed/simple;
-	bh=6L9QyUavllfxL2reUP4rDu7cKzBLhFikIgWFh4JjEJY=;
+	s=arc-20240116; t=1789323731; c=relaxed/simple;
+	bh=WZirnNDgoFDNiazAypqF7+2tbxwY+mxFWceA4z5W96I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R9pDd/IxsFpbyu8vUHNTz9mVP4pVo8pFPc06tiYfEn4LDYLl3mWuOC1Tig27e5tigbP3egfY7/ciwN/6TLU+5wd/jSNFuw+FppnhDIvqlaeJzs+QUo+rkVmPqfpy2oVcb4tIgU6kfmDd9mr1agveuMX9P7eD/RfGR6blPEtDNls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PcQjztcO; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=sMmQszIij/hffFB+cWHZwTol7NlKvUQJKSo62nHnQ19r6I/r/kBX8d+8dFCbehXsIVLdgxVYJOxJ3PyzBiisOHQcxuABkqIgSBxs2uabVBEJMgP5kni8hDRm1CDuScFBUDT9XJnyt9PMXlHW4Wku6ht6LMDzG63cuRfkVvSY9Vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dzRGuVMY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PcQjztcO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D40281F000FF;
-	Sun, 13 Sep 2026 18:18:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dzRGuVMY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B7211F000FF;
+	Sun, 13 Sep 2026 18:22:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789323485;
-	bh=JgB2vFqqGBRuqW39cnZ1uJsZ0PgPoE2lE8L9Mh6Gd4k=;
+	s=k20260515; t=1789323729;
+	bh=nW/NXQsNlc0+QIzZk+s+cpLPERdLhXjwLd0iI1wp5aw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=PcQjztcOIDyhwx4EBrsSw/waU62hio7TcvsSolqxVyq67C8NsOtjsJfgSiZ+DdrKi
-	 91Xvpzy3sGti9+P+N5dvvB8U0dWYRIxvYGi9DBEaTB7TMz/6ZDA1EzQvlHAT26nOCc
-	 dSraV+s4E9yxW2TuFvx/LbNKgvz+ZStUtnKCbVN49sUm+9QsSVvRFBp/TZ+sfpqIWv
-	 1B+7QoqnLJo/o0Frd4oztGkHqPMKP1TvKAwdWPK+l2JQjzibVMZRYYg9vMGqM0o9+X
-	 ejJApR0ojsmmCABMcUzINnGxIf9rzXzLqRrIPHLoCAzbsN3aV4PozShUbbJgEJu1MW
-	 uXfkvWn8+Gfug==
-Message-ID: <3b241101-f090-4228-aa8c-b25f61c4aa40@kernel.org>
-Date: Sun, 13 Sep 2026 20:18:03 +0200
+	b=dzRGuVMYFZzOzFRtb8xekiyZv+1g+NvpDQsuuCf0qMhRS9J/QDZx5o9vAYRMnIqjZ
+	 H2l6JhgRpCWENsQptk093kO9aJe7XHTB2aHOHEN+ORYtfYzNQ0TCran6vaBWj3qML4
+	 a+Az7tKp5gEsHV8uWGife1qICbZ26sJgAdcmr5Fsi0diwMfzMBIWSy7fBra7Wd+fyp
+	 U28qKC3ymr5DgZiY4+pRAIbH5Hbk2RqzjIOZkRbYAOrd/zOh5AotOV/R3BHAPcNHHq
+	 5LLQfRwT3MMOboCZxezqzX12uoo9BYKf6tZCv0BLg8xwNpyiWGIFcwYbdNhK8jbi1K
+	 zLK3shBzWhDBQ==
+Message-ID: <0a4bbaf9-7cc0-4ec8-b630-261a0b324e86@kernel.org>
+Date: Sun, 13 Sep 2026 20:22:05 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v5 05/16] bpf: drop duplicate check_app_limited
- in tcp_bpf_push
+Subject: Re: [PATCH mptcp-next v5 06/16] mptcp: implement psock_update_sk_prot
+ for sockmap
 Content-Language: fr
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, kernel test robot <lkp@intel.com>,
+ Cong Wang <xiyou.wangcong@gmail.com>
 References: <cover.1789294365.git.tanggeliang@kylinos.cn>
- <aff272cebafec60a4d2080ab1626946870d1262b.1789294365.git.tanggeliang@kylinos.cn>
+ <39ae7a2bebed6f38d02356c7e288a21a70bdd07f.1789294365.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,36 +88,49 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <aff272cebafec60a4d2080ab1626946870d1262b.1789294365.git.tanggeliang@kylinos.cn>
+In-Reply-To: <39ae7a2bebed6f38d02356c7e288a21a70bdd07f.1789294365.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-
-Hi Geliang,
-
-Thank you for sharing this!
 
 On 13/09/2026 12:14, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> When the sendpage->MSG_SPLICE_PAGES migration series replaced
-> do_tcp_sendpages() with direct tcp_sendmsg_locked() calls, callers
-> that had used do_tcp_sendpages() kept an explicit
-> tcp_rate_check_app_limited(sk) that was originally needed to cover
-> do_tcp_sendpages() (which did not call tcp_rate_check_app_limited()
-> itself). After the inlining, tcp_sendmsg_locked() always provides
-> the check, and the outer call became redundant.
+> This patch adds basic MPTCP support for BPF sockmap by implementing the
+> psock_update_sk_prot callback (mptcp_bpf_update_proto). This allows MPTCP
+> sockets to be added to sockmap and enables the sk_skb stream_verdict
+> redirect path via the read_skb callback. Separate protocol structures are
+> maintained for IPv4/IPv6 and BASE/TX/RX/TXRX configurations, mirroring
+> tcp_bpf_update_proto(). The IPv6 variant is lazily rebuilt via
+> mptcp_bpf_check_v6_needs_rebuild() when the underlying protocol ops change.
 > 
-> The site changed here, tcp_bpf_push(), is a MSG_SPLICE_PAGES loop
-> that holds the socket lock and only iterates when size > 0;
-> tcp_sendmsg_locked() is invoked on every iteration with state
-> identical to what the outer call sees, so dropping the outer call
-> is safe and behavior-preserving.
-If it is not related to MPTCP, could you please send this patch to
-netdev/bpf directly?
+> MPTCP delegates to the original protocol operations so that MPTCP-specific
+> logic (multi-path scheduling in sendmsg, ordered reassembly in recvmsg) is
+> preserved. recvmsg is overridden in all BPF configurations with
+> mptcp_bpf_recvmsg, which checks the psock ingress queue first and falls
+> back to mptcp_recvmsg via the shared __tcp_bpf_recvmsg() helper. sendmsg
+> is overridden in the TX/TXRX configurations with mptcp_bpf_sendmsg, which
+> processes sk_msg redirect before delegating to mptcp_sendmsg via
+> __tcp_bpf_sendmsg().
+> 
+> Export mptcp_sendmsg, mptcp_recvmsg and mptcp_prot from protocol.c so they
+> can be referenced by bpf.c.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202512261144.DxrvwMS3-lkp@intel.com/
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/521
+> Cc: Cong Wang <xiyou.wangcong@gmail.com>
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  include/net/tcp.h    |   5 ++
+>  net/ipv4/tcp_bpf.c   |  29 +++++++---
 
-Also, should this be seen as a fix? From what I understand, some
-behaviours have changed, and it is only recently that this call is no
-longer needed.
+Probably best to separate this change from the rest: TCP/BPF on one
+side, then MPTCP/BPF (and eventually MPTCP only before, just to do the
+exports.)
+
+>  net/mptcp/bpf.c      | 129 +++++++++++++++++++++++++++++++++++++++++++
+>  net/mptcp/protocol.c |  10 ++--
+>  net/mptcp/protocol.h |  18 ++++++
 
 Cheers,
 Matt
