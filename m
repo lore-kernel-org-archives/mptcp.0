@@ -1,156 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A3AE3E715E
-	for <mptcp@lists.linux.dev>; Sun, 13 Sep 2026 10:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E78C34A79D;
+	Sun, 13 Sep 2026 10:30:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789295330; cv=none; b=iOFEADAT9+Re5w9eT7BsEqFZ8UMExcvAIA802EqkazeIaVgBOII6qhg+947FmUCPqB50VPXvsWiCWA9lGXQu+pPJGbXo/zDRAxf+rvOdtp3ojOBul5U1+G1c9iTDziQkgbv4rT9GuKUTP6UluxWH14PrQA/Ce0Dw4e94uAKXdh8=
+	t=1789295425; cv=none; b=fz/HSkgBNU0wa5UjtcVRQyRlmYwmUvl38QU8yvg/5b/bp/7vknav3C6KeDqk4zxFiAfr87EDEJ+fwghCelovlIBNCPBjJA6b44E91chWZI8chq4Ep0YMjaIEyrH40pUAHFuQvxm4fR/AmWCnU+8aTkefZJxeBYe7PtMxru7MNFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789295330; c=relaxed/simple;
-	bh=Lyqwc3s4hWzK0yu5rECfNjIYA6bEwlG/NmVzDqPOcIg=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=e4VmyIbA+NHTVuBWWFfl9NrZbrpTBnuESkYrTJPkWOCM1A/SKNNCUUtb7J4tq04Tybzjlr/sAKNtYH6+ZFFuDW59kIHoKKyD74+Dp90AhoGhPvTZBXjzB49W08aT4i8T7rcGb2kEH2cHygIFTcvAT+nqd2Q2AhIgdM5Qm9c8N6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iFddnJsc; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789295425; c=relaxed/simple;
+	bh=ngCDj8Emz3p32EELUtISMOwDZrHYeIZwMySzMY+65J4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=BJj/mto/Ktlq89LY6c15/RN9yTPr2fpq8PXUelmP/2+UWkVQ3hhlY9udlDzXCIw89MdxJkOwzggGYF/pfuHw40wQC1VpbU2vdCouyUPE9peVEAAT4LCgEYxiC8W6NLVsllj8pfqqSbglJN3SgJcTt63W/nfisYy+eLOsMl+CxFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qj/94uDh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iFddnJsc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 952271F000FF;
-	Sun, 13 Sep 2026 10:28:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789295318;
-	bh=VuQ0LVJMnKTlSLIIG2DvlMX5akz244cGGiSk4HU/0Oc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=iFddnJscMNyzufJzXb0Ue10wH9sm0O1vSr1oG8dXHiFUGpYLNDxWCAZ/T3RSjHPDf
-	 DYhf1+2a2Ys7rCH5mL8tQafAOmPwhBBh+Ye20oUCt1RTAPZ90Ami+CxJ19XFac3+bz
-	 aPzL3QWEMsF06sWchWdkDbMevg/Txd8Y9LMpnepYFtjdUyhR98RidU/36kY6L2hh1/
-	 VOyDr2NZj1ZZKjlcS3nzfRFBOdTee6jZLJLIuX7XcTFl3J5sk8AvYmTbypHVYuoDkw
-	 dtB5KV7SjlPQd6EJuzGxriVI1TBJqGc4ry+SFntuxrLizUdiYTqM56mv4YYmSYucpe
-	 MEQa0lL+QrruQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v5 10/16] bpf: export and generalize
- tcp_bpf_ioctl
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Geliang Tang" <geliang@kernel.org>
-Cc: mptcp@lists.linux.dev
-In-Reply-To: <2470bdd0b43b4b4530edd7d0448e0e92bd8e578f.1789294365.git.tanggeliang@kylinos.cn>
-References: <cover.1789294365.git.tanggeliang@kylinos.cn>
- <2470bdd0b43b4b4530edd7d0448e0e92bd8e578f.1789294365.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 13 Sep 2026 10:28:38 +0000
-Message-Id: <20260913102838.952271F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qj/94uDh"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7494CC2BCC7;
+	Sun, 13 Sep 2026 10:30:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1789295424;
+	bh=ngCDj8Emz3p32EELUtISMOwDZrHYeIZwMySzMY+65J4=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=qj/94uDh5MMmNZHdT5ndhFtT9gGUmofzZeqyAwYWAabRyNpJbh+3VXeYroEVIyr/L
+	 eK63bu89IzoYAfzqDgfzuRDEze8SaiS1IKAvWONtkGsqRuYuOrJPkL8JKfM6PM3Oeq
+	 HnpSvl3bgndDt8752AGa2OJKIuy8EYGjZEG80/fhXRjiGTR3L68MSC2913b+t0GUQM
+	 NmCmQjz03xwe5/5Rt+kA8XHb/nLfdZ/FKJwdS603BG62mhGEl7vi4q/YWxQa0H5iHE
+	 k6tn2ptUz4ecPXj/3ECw36GQoYbioYBrLd2EDzVac36sTCcy1MWY+nQoSCR8KJNdrH
+	 0G+sVWQ1+XHUg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E120C88E56;
+	Sun, 13 Sep 2026 10:30:24 +0000 (UTC)
+From: Mark Amirkan via B4 Relay <devnull+markdamirkan.gmail.com@kernel.org>
+Date: Sun, 13 Sep 2026 10:30:05 +0000
+Subject: [PATCH net] mptcp: return sk_wait_data() errors from recvmsg()
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260913-b4-send-mptcp-recv-error-v1-1-4eaa3684a8b8@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAC17pmoC/yWMwQ6CMBAFf4Xs2U0KqAF/xXCQ5VXXxNJsKyEh/
+ LtVjzPJzEYJpkh0qTYyLJp0DgXqQ0XyuIU7WKfC1Ljm7Pq65fHICWHiV8wS2SALw2w2hne+6zu
+ 4kwiVPBq8rr/1lQIyDX+Z3uMTkr9T2vcPxYYZLIEAAAA=
+X-Change-ID: 20260913-b4-send-mptcp-recv-error-ef0f898e05cc
+To: Matthieu Baerts <matttbe@kernel.org>, 
+ Mat Martineau <martineau@kernel.org>, mptcp@lists.linux.dev
+Cc: Jakub Kicinski <kuba@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Simon Horman <horms@kernel.org>, 
+ linux-kernel@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>, 
+ netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1789295423; l=1552;
+ i=markdamirkan@gmail.com; s=pscsi-20260818; h=from:subject:message-id;
+ bh=nFns6QPwNtc6ZlWxL0DfCPRqrLoyi61MO8NmnrCReZ0=;
+ b=zUnCB4O2oj2YTonWyuK6Qcw/TnT5pXlznkPJPKBbwLfP6dmUgoy5JYhplV6fjLQ/c/NfTunoJ
+ yPRzcwrZ8Q8A6ln++W+b0owuF5pCAcU12geosagpf0liSbGaRVjlZH4
+X-Developer-Key: i=markdamirkan@gmail.com; a=ed25519;
+ pk=/wb49ibt4gZFDncmhFQBYtjPvzT1tfJtvK4Mqt1P2Wc=
+X-Endpoint-Received: by B4 Relay for markdamirkan@gmail.com/pscsi-20260818
+ with auth_id=961
+X-Original-From: Mark Amirkan <markdamirkan@gmail.com>
+Reply-To: markdamirkan@gmail.com
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Critical] Calling `sk->sk_prot->ioctl(sk, cmd, karg)` from within `tcp_b=
-pf_ioctl` unconditionally causes an infinite recursive loop, leading to ker=
-nel stack exhaustion and a panic (DoS).
-- [Critical] Dereferencing `sk->sk_socket->ops->peek_len` unconditionally c=
-rashes on MPTCP sockets because their protocol operations do not implement =
-the `.peek_len` callback.
---
+From: Mark Amirkan <markdamirkan@gmail.com>
 
-commit 2a70238c7c665c1d078c38019a80c54ba0029da5
-Author: Geliang Tang <geliang@kernel.org>
+Commit 581302298524 ("mptcp: error out earlier on disconnect") made
+mptcp_recvmsg() stop when sk_wait_data() returns an error.  The error is
+stored in err, but the function then jumps to a path which returns
+copied.  When no data was copied, recvmsg() therefore returns zero and
+reports a false EOF.
 
-bpf: export and generalize tcp_bpf_ioctl
+Store the result in copied, which is the value returned by the function.
+This also keeps the usual partial-read result when data was copied before
+the error.
 
-This commit exports tcp_bpf_ioctl() and generalizes it to use
-protocol-specific operations instead of hard-coded TCP functions. It also
-wires this generalized ioctl handler into the MPTCP BPF protocol structures
-so that SIOCINQ returns correct results accounting for data in the psock
-ingress queue.
+A recvmsg() blocked in one thread reproduces the issue when another
+thread disconnects the same MPTCP socket with connect(AF_UNSPEC).
+Before this change recvmsg() returns zero; afterwards it returns -EPIPE.
 
-> diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-> index e006131696e96..8aed3c309b0dc 100644
-> --- a/net/ipv4/tcp_bpf.c
-> +++ b/net/ipv4/tcp_bpf.c
-[ ... ]
-> @@ -331,15 +331,15 @@ static int tcp_bpf_recvmsg_parser(struct sock *sk,
->  	return copied;
->  }
-> =20
-> -static int tcp_bpf_ioctl(struct sock *sk, int cmd, int *karg)
-> +int tcp_bpf_ioctl(struct sock *sk, int cmd, int *karg)
->  {
->  	struct sk_psock *psock;
->  	bool slow;
-> =20
->  	if (cmd !=3D SIOCINQ)
-> -		return tcp_ioctl(sk, cmd, karg);
-> +		return sk->sk_prot->ioctl(sk, cmd, karg);
+Fixes: 581302298524 ("mptcp: error out earlier on disconnect")
+Cc: stable@vger.kernel.org
+Assisted-by: Symbolic
+Signed-off-by: Mark Amirkan <markdamirkan@gmail.com>
+---
+ net/mptcp/protocol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[Severity: Critical]
-Does this cause an infinite recursive loop regression?
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 0098e28309..8dc25ef154 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2459,7 +2459,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 		mptcp_cleanup_rbuf(msk, copied);
+ 		err = sk_wait_data(sk, &timeo, last);
+ 		if (err < 0) {
+-			err = copied ? : err;
++			copied = copied ? : err;
+ 			goto out_err;
+ 		}
+ 	}
 
-When a socket is attached to a BPF sockmap, its protocol operations
-structure is replaced by a BPF-specific protocol structure. Since this patch
-assigns .ioctl =3D tcp_bpf_ioctl in those structures, sk->sk_prot->ioctl wi=
-ll
-resolve right back to tcp_bpf_ioctl itself, exhausting the kernel stack and
-leading to a system panic.
+---
+base-commit: 78445023439506ebd83b86d40b1e428a3b309d4a
+change-id: 20260913-b4-send-mptcp-recv-error-ef0f898e05cc
 
-> =20
-> -	/* works similar as tcp_ioctl */
-> +	/* works similar as sk_prot->ioctl */
->  	if (sk->sk_state =3D=3D TCP_LISTEN)
->  		return -EINVAL;
-> =20
-> @@ -347,7 +347,7 @@ static int tcp_bpf_ioctl(struct sock *sk, int cmd, in=
-t *karg)
->  	psock =3D sk_psock_get(sk);
->  	if (unlikely(!psock)) {
->  		unlock_sock_fast(sk, slow);
-> -		return tcp_ioctl(sk, cmd, karg);
-> +		return sk->sk_prot->ioctl(sk, cmd, karg);
+Best regards,
+--  
+Mark Amirkan <markdamirkan@gmail.com>
 
-[Severity: Critical]
-Will this fallback path also trigger the same infinite recursion regression
-as above?
 
->  	}
->  	*karg =3D sk_psock_get_msg_len_nolock(psock);
->  	/* Without a verdict program, ingress data is never diverted to
-> @@ -357,7 +357,7 @@ static int tcp_bpf_ioctl(struct sock *sk, int cmd, in=
-t *karg)
->  	 */
->  	if (!READ_ONCE(psock->progs.stream_verdict) &&
->  	    !READ_ONCE(psock->progs.skb_verdict))
-> -		*karg +=3D tcp_inq(sk);
-> +		*karg +=3D sk->sk_socket->ops->peek_len(sk->sk_socket);
-
-[Severity: Critical]
-Will this cause a NULL pointer dereference regression for MPTCP sockets?
-
-While TCP's socket operations define a .peek_len callback, MPTCP's socket
-operations do not implement it, leaving the function pointer initialized to
-NULL. Dereferencing it unconditionally here will crash when SIOCINQ is
-invoked on an MPTCP socket attached to a BPF sockmap.
-
->  	sk_psock_put(sk, psock);
->  	unlock_sock_fast(sk, slow);
-> =20
-> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-> index 7ecafbf51fa05..f6fd610f70778 100644
-> --- a/net/mptcp/bpf.c
-> +++ b/net/mptcp/bpf.c
-> @@ -398,6 +398,7 @@ static void mptcp_bpf_rebuild_protos(struct proto pro=
-t[MPTCP_BPF_NUM_CFGS],
->  	prot[MPTCP_BPF_BASE].close		=3D sock_map_close;
->  	prot[MPTCP_BPF_BASE].recvmsg		=3D mptcp_bpf_recvmsg;
->  	prot[MPTCP_BPF_BASE].sock_is_readable	=3D sk_msg_is_readable;
-> +	prot[MPTCP_BPF_BASE].ioctl		=3D tcp_bpf_ioctl;
-
-[Severity: Critical]
-Since tcp_bpf_ioctl is wired into the MPTCP BPF protocol structure here,
-does this expose MPTCP sockets to the NULL pointer dereference mentioned
-above?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1789294365.gi=
-t.tanggeliang@kylinos.cn?part=3D10
