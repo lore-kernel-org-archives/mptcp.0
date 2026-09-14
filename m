@@ -1,89 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75903E7BC6
-	for <mptcp@lists.linux.dev>; Mon, 14 Sep 2026 17:53:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F6C3793BA
+	for <mptcp@lists.linux.dev>; Mon, 14 Sep 2026 18:00:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789408399; cv=none; b=AIJ/qhZob3+NmWdBsC9SM05ShHNwxW7ofcBhOmkudHx3fDJs7ZWXtlFYMTnW0DMT+hhq5f2l0M3swtaCJKDd4lGz61pBvuP+tlpuQ4JPts4JRQ5qaPsT2lkoQBpX7TOvbcashXAa8MKVG4Ta0bNzZg4koI0cm5ZJndUEbPdvsFs=
+	t=1789408826; cv=none; b=h+PCc3CncmZoyxl/cA5bHf5ltr6E0Q/Rt+hf1ZwUTu0RcpBBSFbP8zdW8tEIUOeC0iVl5cnM0DYjNweP3ne56eUDAFBTBGe6oAGGgZmd5ZBR5xKwe3ezK0N39sXauswcpjH4ZxQGfQaSdUxfEn5pXILdMfflqNTDCLSk+BRc6x0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789408399; c=relaxed/simple;
-	bh=8E6VPd4uEksxZmi2YU39PC0mkOv+VfgVb8XjOJCHqRI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=gNKLQmKaOOO3mS2fQSlwPmU1Tincd/cTeEkTymxMw0TzNmE71HhRVLQ34UVTQmSi7NFPZM27K/by7jS2WRW/OLwVdJpiaG5xs0DUlBWhYeMw4e3AZVvZ9Ubix2T2T2g3DsUp3BDvtEdFEbB/ElcfjBz7E58OhBqqhiH350vXKjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VstEvC4h; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789408826; c=relaxed/simple;
+	bh=6aBj19mNBkByx0kHXg49+hLsFIUPrHdJ0Oft0goElD0=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=mup0bVSIt7YvazdCYtzFaHqbAxP/UdqgtEjW5Q25pTjU7UHb6K4NGT0g8qJIAWMzECuVFo/+o1JCheT6OtgnYTF17jCIeLxx5p03s1WP0J0iA1VuEGaHUTOTni7fo6or9ZFxAHN/Dw8i1WpGT7sEhrRivxtUbQScMAbXWOhgE3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iuvDl7xR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VstEvC4h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A24E51F000FF;
-	Mon, 14 Sep 2026 17:53:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iuvDl7xR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC8801F000FF;
+	Mon, 14 Sep 2026 18:00:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789408397;
-	bh=LWzQ2e8fOMdPqT60SbMyZTg4nKRKfrKMwNGs074zo2E=;
-	h=From:Date:Subject:To:Cc;
-	b=VstEvC4hafJH3tLd3Wg4C6utkYOHA7ITS72p/XZlF0MR/YDUNjwqouPQ2fFGSMHsv
-	 hkZlb+QcivNd1gKCR6qT21Kbbbzig6SQmhhM7LJzKB3ZJX1l0c3cF319vZatMgBNBl
-	 AbtbCfydd44ZlPku7ifG271lTNr4BkNYtsnfkUq2o8b7PEarElYDSBqmQplJYWfAiy
-	 lcuY9v1tAA2IFDs/5+CCfmRe2+vVKjJbdokSTwKiyvrXwC9v/06dMNoOv14ImnGbOa
-	 eLtSY3i3XOdDothqoyMNduWrUpHoRC2/CV+Kvq+pkB7bDuyAXn7dOuJlkeWQsQqgQh
-	 q/jRMYcFOXeVQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 14 Sep 2026 19:53:07 +0200
-Subject: [PATCH mptcp-net] selftests: mptcp: join: dump stats with right
- title
+	s=k20260515; t=1789408824;
+	bh=4QvkFbUeJOGQlax4PqJqroqEBituaE24us6fjJTu9/Q=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=iuvDl7xRqcgJn18lgjYVR+d/bYiBnSe5+GNpFtiNpRirVSfebFfb8yXawyylO4OFo
+	 6ACEoIp6Il15B1gF7iycO/nXTmMNfLAl0xsay1UrfXxYQ+MVA0HrtmKZzlOgDVEqdb
+	 isfrXqjMuuiUZq5ODvuCFF+QBASftfAPMweVQflslW9kB55HBvvZcvcSm/31KKQ4Em
+	 xaQK19k3wJkvD5Cxsn2s0H3SWZRvSFAze55wS58VoUSvqDEIVgmptiqhIdau8ki5No
+	 mn2tvQ55B07QhVoijiSFJIRhEfLtFk26sQw8DtAo0aKxOxuAENILeG8doJ/ITZFtOE
+	 QAw8KshXRQQCA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: join: capture on client
+ side for test 020
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <20260914-mptcp-sft-join-cap-ns2-v1-1-2f48e4c5f9eb@kernel.org>
+References: <20260914-mptcp-sft-join-cap-ns2-v1-1-2f48e4c5f9eb@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 14 Sep 2026 18:00:24 +0000
+Message-Id: <20260914180024.BC8801F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260914-mptcp-sft-join-typo-ns-stat-v1-1-30d5a5802b57@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMywrCMBCF4Vcps3YgDcHbq4iLJJ3oFExCZhSl9
- N2NdvlzON8CQo1J4Dws0OjFwiX3GHcDxLvPN0KeeoM1dm9Oo8NH1VhRkuJcOKN+asEsKOoV3RS
- sSSYcvDtCF2qjxO+/foHtmEnhuk3yDDNF/emwrl9TuCBCigAAAA==
-X-Change-ID: 20260914-mptcp-sft-join-typo-ns-stat-4db20f0b7a48
-To: MPTCP Linux <mptcp@lists.linux.dev>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1134; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=8E6VPd4uEksxZmi2YU39PC0mkOv+VfgVb8XjOJCHqRI=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJWmPQsfdCzbLMu64nzy9PUvm59d47B0Sdzikf/lnluM
- wXD3N4+7ihlYRDjYpAVU2SRbovMn/m8irfEy88CZg4rE8gQBi5OAZhIjTjDb5bK7IcPtlgyfjw4
- oVF9Zs7R9edCtggejf92unjmgT1fO44zMrzIOvP4fJd4fUq1yUuft7/2rBYRrJs7w3bHuqR7G2J
- 7t3MBAA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-This fixes a typo when dumping stats to print the right netns.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Nested calls to `cond_start_capture` overwrite the global `cappi=
+d` variable, causing a `tcpdump` process and its network namespace to leak.
+--
 
-Indeed, the client netns was hardcoded instead of taking the netns given
-in argument. Fixing that to avoid confusions when debugging issues.
+commit 80defebd011f8ed71f8eb594afa6362cc8789eb8
+Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Fixes: 658e53141780 ("selftests: mptcp: join: dump stats from history")
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+selftests: mptcp: join: capture on client side for test 020
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index b16e24418e73..bec499047e06 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1163,7 +1163,7 @@ _dump_stats()
- 	local ns="${1}"
- 	local side="${2}"
- 
--	mptcp_lib_print_err "${side} ns stats (${ns2})"
-+	mptcp_lib_print_err "${side} ns stats (${ns})"
- 	mptcp_lib_pr_nstat "${ns}"
- 	echo
- }
+The test "signal address, TCP-only listener on client" is particular, so
+a capture on the client side is added to help understand what happens in
+case of issues.
 
----
-base-commit: 060af37701a3aca2c02cb5e874d740be6acbf1a2
-change-id: 20260914-mptcp-sft-join-typo-ns-stat-4db20f0b7a48
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/test=
+ing/selftests/net/mptcp/mptcp_join.sh
+> index b16e24418e737..690188b01a29d 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -2413,7 +2413,10 @@ signal_address_tests()
+>  		extra_bind=3D$!
+>  		mptcp_lib_wait_local_port_listen "$ns2" "$port"
+> =20
+> +		# there will be traffic on the client side only: MPJ to loopback
+> +		cond_start_capture ${ns2}
+>  		run_tests $ns1 $ns2 10.0.1.1
 
-Best regards,
---  
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+[Severity: Medium]
+Will this leak a tcpdump process by overwriting the global cappid variable?
 
+In cond_start_capture(), cappid is set as a single global variable:
+
+	ip netns exec "$ns" tcpdump -i any -s 128 -B 32768 $capuser -w "$capfile" =
+> "$capout" 2>&1 &
+	cappid=3D$!
+
+Here, cond_start_capture is called for ns2, but run_tests() -> do_transfer()
+also unconditionally calls cond_start_capture again for listener_ns:
+
+	cond_start_capture ${listener_ns}
+
+This second call overwrites the global cappid. When the inner cond_stop_cap=
+ture
+and the outer cond_stop_capture are called, they attempt to kill the same i=
+nner
+process, leaving the first tcpdump process to run indefinitely in the
+background.
+
+> +		cond_stop_capture
+>  		join_synack_no_mpjoin=3D1 join_syn_tx=3D1 \
+>  			chk_join_nr 0 0 0
+>
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260914-mptcp-sft-=
+join-cap-ns2-v1-1-2f48e4c5f9eb@kernel.org?part=3D1
