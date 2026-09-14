@@ -1,129 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436A041D22C;
-	Mon, 14 Sep 2026 10:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B650433E7C
+	for <mptcp@lists.linux.dev>; Mon, 14 Sep 2026 10:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789380408; cv=none; b=GHLUlf4IPIhW4Tj3Zuh1FJIyBgU9vlO5sFX6HHvR+Cr/I8CJh3rdM0Spl1qrS3wQnqVyOeiX6XwG57YdTlp99V8O9h6S0p75vNniXG8DNIpSBF+8DpSgYr7Ko6/II+4kcAY+EHMydvAg2uMO1BnBIcPXOId9iuoTdwA5SqcGmj0=
+	t=1789381758; cv=none; b=FH3ndSIYtFNgLJtBMp8Idsv+X/PqsZS+P0f9elcNt8nIdVx3NBQ1bp518RSPQYJ0SY7OZaguIggrfQFcxzUEjqyNy3OoZ8e4Q8qjlKZwG71B7biRIeCz27Bgo2STcH9KrH2SZVy8cB6H/RZYcJWMDL5a8mrK5J/9aVTimMRIR2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789380408; c=relaxed/simple;
-	bh=Sbe+vc+aVmleVZcpQVtskvA2EDy/QtkUtj4dZJ+rO2E=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=H4ofuDHx6r+kM9B3kCMtFnHnz8ekJ6Eui5nGohf6F7xZ6aUPl34gdkDZyqmNPjwREqvkjSbJCubtnS4kIqe7P/gGpf+TXHfpUJpUlLIcEdEb1jDraff8FTgG7MWsqe8OBqnxzo+osiqp3gYgr4CiEDCINFRREME0uC6veL2K5i4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lkf7PEf6; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789381758; c=relaxed/simple;
+	bh=6akXqD4amjEFOGJqYCgUXHdc4dsnt7KsZ445MgGmJN4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=RcIvtSfLhuVePK6TRW3dulydiChAyzTkUqC2B/rLk9FyDepoXczUsev9N+X0QVvh48Vak4EKr9aECpOJUXGRnM964gLa3q2XPwJl0h8kgze17/TzA6fgYBrFDR8eoitOK/xTsmKTNU/SkJwKdmm+3VchH82vCPMxZWqH8jelxK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B25ZAGyk; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lkf7PEf6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EE811F00893;
-	Mon, 14 Sep 2026 10:06:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789380406;
-	bh=6U66J0vgegkdBYEEUGB5I7wbrHnMwmHGP29FOANs9S0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=lkf7PEf6aiWH2jIeNt/fM8hnpg+mwi5Vemp0FenyA51saZsnLz37Y6tqWEanoouZf
-	 ydlEtXoGu0VvcLM6Sehy1cjPaLFvWKH5MRybWBN1AQaOp4aJtt6b0bO1d04sxeRgDM
-	 ZC1Mxvf7PBoTuUMXpFpaEGaIyGIWcGWXrGMCZO5XP5iPqnZ79EiMc5Md2qyhrr6+zB
-	 9I9Bt2f4OM6sFdvqrDre/RLALqCjnOOuCa6kZW1qG3CIy0joKYRfUZf0CPfPoucf5e
-	 XvYnzSvBSuMEs7EJ7QTGDhHYATwpjaIB5v0wSqgodcJQos2kBaUwByWj5uLhyj3ExF
-	 bzFTyN+vkYSzA==
-Message-ID: <095b530aa856a81d8576d235d28dcbc3e25841b2.camel@kernel.org>
-Subject: Re: [PATCH bpf 1/2] bpf: drop duplicate check_app_limited in
- tcp_bpf_push
-From: Geliang Tang <geliang@kernel.org>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>, John Fastabend	
- <john.fastabend@gmail.com>, Jakub Sitnicki <jakub@cloudflare.com>, Eric
- Dumazet	 <edumazet@google.com>, Neal Cardwell <ncardwell@google.com>,
- Kuniyuki Iwashima	 <kuniyu@google.com>, "David S. Miller"
- <davem@davemloft.net>, Jakub Kicinski	 <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Simon Horman	 <horms@kernel.org>, Sabrina Dubroca
- <sd@queasysnail.net>, David Howells	 <dhowells@redhat.com>, Matthieu Baerts
- <matttbe@kernel.org>, Mat Martineau	 <martineau@kernel.org>
-Cc: netdev@vger.kernel.org, bpf@vger.kernel.org, mptcp@lists.linux.dev
-Date: Mon, 14 Sep 2026 18:06:38 +0800
-In-Reply-To: <da26d2f3-7283-4e9f-85b4-6c12b9beda99@linux.dev>
-References: <cover.1789368148.git.tanggeliang@kylinos.cn>
-	 <f12f1d886c8ff2b6f6e48f797ccc861037eda685.1789368148.git.tanggeliang@kylinos.cn>
-	 <da26d2f3-7283-4e9f-85b4-6c12b9beda99@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.2-9 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B25ZAGyk"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2cfbbdfa60bso32365465ad.3
+        for <mptcp@lists.linux.dev>; Mon, 14 Sep 2026 03:29:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789381756; x=1789986556; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=p4DOMfSJ/gQsLDgVszp6dG1ieZ7cOfNLeT/hTRvdN80=;
+        b=B25ZAGyktIIwAF85oN89GLaPeZVFnwz1ukOTOKPdDBTOTPg9WrmbefEOsKnojRrC5b
+         n6IQKtGlN9N+FxoliiiR1nxjyoU4+/SBvx6ORMl5qoP7XkfJGEJx/Rm2y18mvYJOixls
+         7qoGgzPhMlWBMGJgGgn6HFinN2BVu+Q6X8RAZ2hAql+gMAXQ6bM51eNLTaWTI36N1ml6
+         gvpt6Ku1Ef7GTg36epKkJVYy3NGMy/0Gj/EnFGejmXOaaRzF6w6OR3fN68Fb20VEZ2C1
+         fvdSLDfms7RTBDxSuyIXd9koTyTI0XoKGvpK0rYdH0aCpuCWIQekM5ghgdokPeS/ZCg4
+         F0jQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789381756; x=1789986556;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=p4DOMfSJ/gQsLDgVszp6dG1ieZ7cOfNLeT/hTRvdN80=;
+        b=QxTfIH55mCQfeiepSQYHfYM6Mq0zFWqiYtU23axNssNNGYMSgZ7HL15EWfEUOf2ZSP
+         LZvBscGBlXGNqVhCjZfPhaOyw7+d1L9uAz3ygw/JqapUUchHVxRdEudvKqSkAY6YzM7V
+         w5cBYYQOpcvhS/8FA2LsHP2F/gZLEdeQMCf5AqIeszifR/iocKQ7U6Gg5xN2l6amHMDs
+         u2O97frDwoRg02r9wGuloFAA8xgxAxvWKRcjpjzFOc5hU7axIsjsJDgmsvekFnKReysA
+         cMKuPbV2Q3htcK6GCU/894ZDtQ4Z0IMxJGpQEKVRwlSNNadZ9eb7SvWoPl+jcx3zgnEO
+         F3Cg==
+X-Gm-Message-State: AFuF++lzoZiomKsTzPDTWenquhFuMIjTRT9MamtNMPDU0sInByAOlOHB
+	zJXQRjGMdB/gP2QnJkwqwlZRcBnJZV76qlel4L1szT6MjDkzLLkhnII=
+X-Gm-Gg: AYBFou1i2UmEJ6S59YxQZO0uh4pPHw9mox9oXkx4kLexO/DnpnK+VU7yv7iPnV08UZ3
+	oev5GwsNBX7AJ9CG8RVDUohogFnZpks2eJgYngh4nsvTzo/bA6CJdaaJIQwl7tF0YC22fmqKh6F
+	Kbfs3GolCVe/bsKFJb3CaGo7Wqe5MUctwdtPIcAZlGZz40BM9o6thr66QOoBqBx5zTKH2wZ9mr0
+	d2pva18EV3L1ToSCHtAUqDYaEkvFb2Vmvs6ty7gRXSJjbEaWrde59C7B/OvtlPo6I81WU5OJfx2
+	VzcKiuCgNhoIgMPK8kmJN41JDbir8LsN/4px2BBrVyciGBXlDDviyYXU+iq+EsGQavywHVWEbDY
+	DUrif0I4fCCrJxaTxpMmPs7kLFl8hVbLvNUrXdIGL3zlkRVi6iGFWkinVDDN0Yehk7N6yY2oH/E
+	bL5COA4sfKfEDS7IQeokloegUNeG620AI4HblWG1LnfGenj+WgA9an1Uw+JBSRoNioboXJpC03d
+	6/DNcXnxw==
+X-Received: by 2002:a17:90b:1d82:b0:398:a2a3:b631 with SMTP id 98e67ed59e1d1-39dec0be84amr4035454a91.19.1789381756429;
+        Mon, 14 Sep 2026 03:29:16 -0700 (PDT)
+Received: from [127.0.0.1] ([68.220.63.3])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-33ba4efc398sm30715715eec.19.2026.09.14.03.29.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Sep 2026 03:29:15 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260914092000.1306968-1-kalpan.jani@mpiricsoftware.com>
+References: <20260914092000.1306968-1-kalpan.jani@mpiricsoftware.com>
+Subject: Re: [PATCH mptcp-next v4 0/2] mptcp: sched: let schedulers mark a
+ subflow to avoid
+Message-ID: <63eac29c-9bed-3be0-2ad7-abcbf3fd4768@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 14 Sep 2026 10:29:15 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 
-Hi Jiayuan,
+Hi Kalpan,
 
-On Mon, 2026-09-14 at 16:24 +0800, Jiayuan Chen wrote:
-> 
-> On 9/14/26 3:14 PM, Geliang Tang wrote:
-> > From: Geliang Tang <tanggeliang@kylinos.cn>
-> > 
-> > When the sendpage->MSG_SPLICE_PAGES migration series replaced
-> > do_tcp_sendpages() with direct tcp_sendmsg_locked() calls, callers
-> > that
-> > had used do_tcp_sendpages() kept an explicit
-> > tcp_rate_check_app_limited(sk)
-> > that was originally needed to cover do_tcp_sendpages() (which did
-> > not call
-> > tcp_rate_check_app_limited()). After the inlining,
-> > tcp_sendmsg_locked()
-> > always provides the check, and the outer call became redundant.
-> > 
-> > The site changed here, tcp_bpf_push(), is a MSG_SPLICE_PAGES loop
-> > that
-> > holds the socket lock and only iterates when size > 0;
-> > tcp_sendmsg_locked()
-> > is invoked on every iteration with state identical to what the
-> > outer call
-> > sees, so dropping the outer call is safe and behavior-preserving.
-> > 
-> > A potential benefit of this change is that it facilitates future
-> > reuse of
-> > tcp_bpf_push() for sockmap support in protocols beyond TCP, such as
-> > MPTCP.
-> > Since tcp_rate_check_app_limited() is TCP-specific while
-> > sendmsg_locked()
-> > is a generic interface in struct proto_ops, this change allows us
-> > to switch
-> > to different protocols via sk->sk_socket->ops->sendmsg_locked()
-> > without
-> > carrying protocol-specific assumptions.
-> > 
-> > Fixes: ebf2e8860eea ("tcp_bpf: Inline do_tcp_sendpages as it's now
-> > a wrapper around tcp_sendmsg")
-> 
-> 
-> Same as the tls one: this looks like a cleanup to me. Is there a real
-> regression that affects kernel or user behavior?
-> 
-> Do we really need a Fixes tag?
+Thank you for your modifications, that's great!
 
-Thanks for the review. I fully agree - I'll drop the "Fixes" tags and
-update the commit logs in v2.
+Our CI did some validations and here is its report:
 
-Thanks,
--Geliang
+- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): packetdrill_fastclose =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf: Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_n=
+et-next/actions/runs/34828601595
 
-> 
-> 
-> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> > ---
-> >   net/ipv4/tcp_bpf.c | 1 -
-> >   1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-> > index 2e234d155b5e..d5fcf3ce4861 100644
-> > --- a/net/ipv4/tcp_bpf.c
-> > +++ b/net/ipv4/tcp_bpf.c
-> > @@ -108,7 +108,6 @@ static int tcp_bpf_push(struct sock *sk, struct
-> > sk_msg *msg, u32 apply_bytes,
-> >   		off  = sge->offset;
-> >   		page = sg_page(sge);
-> >   
-> > -		tcp_rate_check_app_limited(sk);
-> >   retry:
-> >   		msghdr.msg_flags = flags | MSG_SPLICE_PAGES;
-> >   		has_tx_ulp = tls_sw_has_ctx_tx(sk);
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/b7129410a6=
+77
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1164353
+
+
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
