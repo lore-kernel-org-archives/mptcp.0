@@ -1,123 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo2-f42.google.com (mail-oo2-f42.google.com [74.125.231.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 299C2331EC7;
-	Mon, 14 Sep 2026 08:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB473F822B
+	for <mptcp@lists.linux.dev>; Mon, 14 Sep 2026 08:14:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.231.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789373236; cv=none; b=tqPps2Iv/4qUonVt+sDIc9FOHoCD7YMcv01PTKLF1ypfq23Usl0N4zxY1SCzXFqiqnRy9EWBy2LtnKFowBT5toh/v+mG7rz8yxSpy/gWo6vO7WWgadQmEasQdHGATrkPHdMh5BzT42GbVF4mPqh7W4VfgkHI+Ynszc7o0SNRZ2M=
+	t=1789373649; cv=none; b=GPZRkky5mvIsPhxlfoeUgKi89mC0RgF1ww76sQAuM+tfZJX4LK7vN7kHKqTuuqO7+3m99Lct39yDCfTUlzV6HTlYjmdM3SK5VzP4eipULNmRICvscEJZHaX8hN1Qf0sFSlzCjOiCmQM5eYN1Qb0/p8qySPrFn92DNse22PKt3fU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789373236; c=relaxed/simple;
-	bh=gLguI1Dvj1p9Hs1Gtajg0sdQbCBo0v751JRhitynJ/0=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=iNToaLbPcdJQlqn9a3cLbsbKlwDQ5orKd8K15lQg9/gacU1AEsy0Hpo+DkKVdLVSeYLq+TgFMZlavDEYcMkoCqzAPUuUBUO6TmhsK1/7lfKV7fiQA1WxJQ4k9OMiB8HuhEiWlU3x4pCiUx+GvAhhRRQIKNjcuQHkuWHNPSqgpBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XUlLGMdJ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789373649; c=relaxed/simple;
+	bh=s/b1vAQfQVK9WPnLmAIRz03zKgPrgn5JoOTkZ1Ula7Y=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=P7b9TnJeaxSinxcO3vHYPeyK43UVz74OQRICEpqFOcTgsJEH/2L1SoI/SLZihGjk3NUIvNSYNBjKDwrNho06GY5sIey/Lfmk4dED2Nk6KgnpFNY5UceIg22YJ9Voj95Y1vuWOnDyjDxvNt3XdvpeR/26ft2DUHsX+pGJkCQZE/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ezXK5T73; arc=none smtp.client-ip=74.125.231.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XUlLGMdJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 805B51F000FF;
-	Mon, 14 Sep 2026 08:07:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789373234;
-	bh=bUESejhHEH3ffsQbUQdnbBFslDvX6q6Ex6c04pHGd1I=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date;
-	b=XUlLGMdJqf8ThjYG5If3HiL3sunkq4qlh2J7gR0dY7dh8rfPxdOGWWnbIJinsy7NU
-	 IAMHyYW/Ff5If7Mbp7E3sC6AD6vggyIYVRh3PMQaLGM4Rsw2AH40pepP3Bq1hHG+tU
-	 uVSV6Yvg6YI8SaBJa+lL5kqiE149fCR7gAWPgYYtpj71WZzqUYMoijkFcl8Gr/nQ8A
-	 sIpPyzTEVOxtoPf4/gqJ+Aatct0Y/yA/e8TGLOenckNSL0yXcsP5AhTk44WRBT3l9c
-	 PDdEC5d/LNXifsmIOz+r8lLn7vj7pxhHddmFs21V7TxReqwLo1e7Ptk7wXnefhzjNP
-	 78TIXM6Sni8cQ==
-Content-Type: multipart/mixed; boundary="===============8455009711460534272=="
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ezXK5T73"
+Received: by mail-oo2-f42.google.com with SMTP id 46e09a7af769-804f7045f3eso439091a34.2
+        for <mptcp@lists.linux.dev>; Mon, 14 Sep 2026 01:14:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789373647; x=1789978447; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=XuBOIMBbqGTM/5CG8gmjHbLalw0Q/L0XcNctZzi3VCM=;
+        b=ezXK5T73mshVf9WB5M/reIdP79Hc4zq1IMyDoG8oevcaWQfNvDliRRdPTDkGVCetXM
+         RFc6hrhjG2xK95776CrgjDZRwswp+HyNsm9FIliwK4xc22GC0igN2QR9i/MJ/ChK/mQi
+         zKW0rS0tVdep3EU4uPQUluO9QfYzEy9FDO5BPx8aeetLMoxhiqbK+P2KSRPQIx+3pwcP
+         2k66POfmwrK7rXGMc5n0Uy64FjatrUxUyACr6CSk1Ojif4RYXPgk4GCbh2RqyFton7Dt
+         AVVwmVKdaJCmf+spUtgYZwB/q1E4qq2OLyEgp5AALQRPUOozS7WsjAyc5sDq8SXXh8bc
+         boFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789373647; x=1789978447;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=XuBOIMBbqGTM/5CG8gmjHbLalw0Q/L0XcNctZzi3VCM=;
+        b=MG9DWRGqdivqcTjYhpaYvuUWj+v1+Y74bSDnu0zgfU1wIIl9wHymbmzlnCI3b3an9H
+         DOgUi7KIR/ZcuReuHsM8eWByEVeOA2w5wk1bFIOy9ZSvPnX1oe6Nhfpwwdxidunm+YnB
+         9lcO2mRomcl5TeZeqOQWdVkIHsKUX0fSNoumNuf7DqSTCUTLpBvCBbFb0kZuw2CQsWmO
+         aIC2CN9CkDbHLc1eF4SvlaODmNzLed9NkAT946I7I0OibGvN3CRc/pzFxKQz5usHhKiJ
+         QhH/5XH/PMR+zvvtkWFw/EfvF8BSj0oDBvRiem21O5sMLBzPFIGG+iyBqWozDz4DIxss
+         FrfA==
+X-Gm-Message-State: AFuF++nXdDrK22JoTjTA6eHH9t/ltHruBA8V3mvzGrtR+xqQsCJV28yE
+	0JUJH86XTlPTDkYt5gf3ELDRUXsVGGNFYqTTOLqW4QkarTqOl170y9eUU08eFpc=
+X-Gm-Gg: AYBFou3KTRMJqDwHrqFLyyBjxTM1561HQS6cqpFAL7qaV4/TEXX/7ghqXOTNXluRQQC
+	iEJBws/lsOlim7UmfoFbsL75DIIIja5oiX252kpprkpXFMEuT2sb68t/AXvZyief/dvXh7Qz2bk
+	dg7VJnkpmo8FPUm0Ux1Oh6/xSwHK9e/drmlcKmkLKfXmpMYVd1LVu0Y9aWMvJH2lwfHhJEGuPhR
+	7P1LzQfGKlTfcMDxCZD55hCXRV78MKOsj4BmIPi7lS8rrNlHVAWu+pf7NEEUf/9PHV1FP6J7p/6
+	pIcxznRpPMV9aEj1Ug8ah7M1nexOxGWqLwzxeyENTLrnC9k7nx01JeMLGNcMKCoQJV0CUfnAbVj
+	h6ZhO8N2M46yWyyRChvE5fTS+1vS0iAFcrzH2nosss7RbJwjimYKfPacUigMxsSwApaqu9bj3B2
+	xJwIw2ei1TMAjkKP/fcAL6RfjqxllUt4nebrwbUGfND3OfrT0lRwE5HjKyZ5eHKWIMqwDWG2nWF
+	b5pWU9dpNU=
+X-Received: by 2002:a05:6830:2a89:b0:800:2de3:45ab with SMTP id 46e09a7af769-80897893ba3mr812039a34.8.1789373646965;
+        Mon, 14 Sep 2026 01:14:06 -0700 (PDT)
+Received: from [127.0.0.1] ([52.242.243.1])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-807ba3acfe4sm2520899a34.23.2026.09.14.01.14.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Sep 2026 01:14:06 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1789368148.git.tanggeliang@kylinos.cn>
+References: <cover.1789368148.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH 0/2] Drop redundant tcp_rate_check_app_limited calls
+Message-ID: <638aee3b-59f3-b6d1-691f-8809f7ed9736@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 14 Sep 2026 08:14:04 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <f960ceb7616cb646c818809a3b5f7890d5c63573c6175f3b92f2fa19bfe54a2e@mail.kernel.org>
-In-Reply-To: <d98eef55bd417f7166a30a9998a3b34e7f0b229d.1789368148.git.tanggeliang@kylinos.cn>
-References: <d98eef55bd417f7166a30a9998a3b34e7f0b229d.1789368148.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH net 2/2] tls: drop duplicate check_app_limited in tls_push_sg
-From: bot+bpf-ci@kernel.org
-To: geliang@kernel.org,john.fastabend@gmail.com,jakub@cloudflare.com,jiayuan.chen@linux.dev,edumazet@google.com,ncardwell@google.com,kuniyu@google.com,davem@davemloft.net,kuba@kernel.org,pabeni@redhat.com,horms@kernel.org,sd@queasysnail.net,dhowells@redhat.com,matttbe@kernel.org,martineau@kernel.org
-Cc: tanggeliang@kylinos.cn,netdev@vger.kernel.org,bpf@vger.kernel.org,mptcp@lists.linux.dev,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
-Date: Mon, 14 Sep 2026 08:07:13 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
 
---===============8455009711460534272==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Hi Geliang,
 
-> When the sendpage->MSG_SPLICE_PAGES migration series replaced
-> do_tcp_sendpages() with direct tcp_sendmsg_locked() calls, callers that
-> had used do_tcp_sendpages() kept an explicit tcp_rate_check_app_limited(sk)
-> that was originally needed to cover do_tcp_sendpages() (which did not call
-> tcp_rate_check_app_limited()). After the inlining, tcp_sendmsg_locked()
-> always provides the check, and the outer call became redundant.
->
-> Fixes: e117dcfd646e ("tls: Inline do_tcp_sendpages()")
+Thank you for your modifications, that's great!
 
-Does the Fixes: tag identify the correct commit? The changelog states the
-outer call "was originally needed to cover do_tcp_sendpages() (which did
-not call tcp_rate_check_app_limited())" and that it "became redundant"
-only "after the inlining". But e117dcfd646e did not introduce the
-redundancy.
+Our CI did some validations and here is its report:
 
-At e117dcfd646e's parent, do_tcp_sendpages() was already a thin wrapper
-that funnels into tcp_sendmsg_locked():
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf: Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_n=
+et-next/actions/runs/34818072039
 
-  ssize_t do_tcp_sendpages(struct sock *sk, struct page *page, int offset,
-                           size_t size, int flags)
-  {
-          struct bio_vec bvec;
-          struct msghdr msg = { .msg_flags = flags | MSG_SPLICE_PAGES, };
-          bvec_set_page(&bvec, page, size, offset);
-          iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, &bvec, 1, size);
-          if (flags & MSG_SENDPAGE_NOTLAST)
-                  msg.msg_flags |= MSG_MORE;
-          return tcp_sendmsg_locked(sk, &msg, size);
-  }
-
-The conversion that made this true - and therefore the commit that made
-the tls_push_sg() call redundant - is c5c37af6ecad9 ("tcp: Convert
-do_tcp_sendpages() to use MSG_SPLICE_PAGES"), three commits earlier in
-the same series. Before c5c37af6ecad9, do_tcp_sendpages() open-coded the
-send loop and indeed had no rate check, and tcp_sendmsg_locked() already
-carried tcp_rate_check_app_limited() at that point. e117dcfd646e only
-replaced the wrapper call with its body; it left the
-tcp_rate_check_app_limited(sk) line untouched as diff context.
-
-If a Fixes: tag is kept, should it be:
-
-  Fixes: c5c37af6ecad9 ("tcp: Convert do_tcp_sendpages() to use MSG_SPLICE_PAGES")
-
-Both commits landed in the same merge window, so the practical backport
-range is unchanged.
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/0add685232=
+c4
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1164231
 
 
-> so dropping the outer call is safe and behavior-preserving.
->
-> A potential benefit of this change is that it facilitates future reuse of
-> tls_push_sg() for KTLS support in protocols beyond TCP, such as MPTCP.
->
-> Fixes: e117dcfd646e ("tls: Inline do_tcp_sendpages()")
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-Should this patch carry a Fixes: tag? The changelog describes the change
-as "safe and behavior-preserving" and motivates it as cleanup plus
-preparation for future MPTCP reuse. No user-visible bug, regression, crash
-or misbehaviour is described or fixed: the removed
-tcp_rate_check_app_limited(sk) is duplicated by the identical call inside
-tcp_sendmsg_locked(), so tp->app_limited ends up with the same value
-either way.
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-A Fixes: tag on a no-op cleanup mainly serves to draw the patch into
-automated stable selection (AUTOSEL) for no benefit. Either drop the tag,
-or state concretely what observable behaviour was wrong before so the tag
-is justified.
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
 
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/34817950722
---===============8455009711460534272==--
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
