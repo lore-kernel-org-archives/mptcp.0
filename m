@@ -1,148 +1,158 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F4A2EA173
-	for <mptcp@lists.linux.dev>; Mon, 14 Sep 2026 09:32:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D21542466A
+	for <mptcp@lists.linux.dev>; Mon, 14 Sep 2026 09:48:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789378326; cv=none; b=OUVEo1kZ4aUbZbn3ZYfMpAlpuOYqrNlwuoS+ZF+xSeomf7513fsTa6Msj5uUlNLUVSsZ9yzXwi6wtufYdyTJD3dn0hFNF0jRLylt2GfrM/5yKrSE9jubn+7+Hj+gEpXnaxui0KxgSNwFA3ALGyxtVKGVOXHUSU0bjMyR1yS2sns=
+	t=1789379289; cv=none; b=d1KPsPghxBQQcvOaqO4WHqRzQrMPpn5IjsOO2mYtsJM+/FdwZVaH4vcw5ocnnECRE2E4NFbilZV1I7DRPCvn9uJUg8d4RySKnJV7RwCYXPenRa9lqFMAVHhQMG+n6YK+08DPdhrxZdOSvFghzDgiqFt96exw5H65LfxGT+40fw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789378326; c=relaxed/simple;
-	bh=mOimL6nZToxkBswzsqVEJRG9uOrHm/gPGho+T5kw07w=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=e1LQ3lw9kc8p4P676y09CDYBl6s9bygFVlyUUTVg5ChzgUSzF/4OPaLnqF7hj5rBlMyayDuFurxjsZrM0di44rnNTfgLeoCefxixjaXAKHxGqKqzujykdI6rvSFphE9XeiUDxvj5cQ8wKv8cCAQYAQGwaSBkgPz6Jfx8H0Msjzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m9xIAaah; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789379289; c=relaxed/simple;
+	bh=uvms7JwxRity1Ng+3vOkCZDDhuo7gXhr5OBjQRjpmQw=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=BbrVaG1kdJGzW30fmaJ9lOdnqjtJNKGrnAtGDm72KO9KIVlFOVV2rg0+ltufT1Jp//C5x420xSy/XKzpJ2o6Fg+sueibcGCunGQRTZ7clLXAU2ju+TYx7fDEv/oT+8KLXqPRPC4uRB0IkZn4h+5Q0GnEv4IcXd7HAttF5Wupj4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hP32biVl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m9xIAaah"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 113E81F000FF;
-	Mon, 14 Sep 2026 09:32:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hP32biVl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 257C71F000FF;
+	Mon, 14 Sep 2026 09:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789378325;
-	bh=XKusrBTFnUCsYX7FgVDpwGyDotrEKMwEMtAtlpPTUGM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=m9xIAaah1t8wDyA1UyllNJo51KXeCXKIxIG3xEtu5rY41NbCTgJfQowBHf4ooiyoO
-	 lR5NXMEt7qvh2qyDbSbLA/qywF5HQYIQYSl1078jHpE+/Z35ppvvBr1RScmcWpBLks
-	 umYpTgw+UV0qYl4vHDbWO7IoYvLflkKeRp+MYp96gKZVB4fuy8k7OvJwxNIdjEVLcq
-	 5/RVJJAES+pDkYrkdyrUic2awoUANfi6nPxxQceewsmmaXg/tLf6w/1902YG7sOFDQ
-	 9bWxGZaEIy9SICmWr9h+tDwpBeBoqeAy6V0sONeUwOH/nGaDgMGgO9s+eOFMUGmYHt
-	 JUVFhAdEW50qA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v4 2/2] selftests: mptcp: bpf: exercise the
- subflow avoid flag across rounds
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Kalpan Jani" <kalpan.jani@mpiricsoftware.com>
-Cc: mptcp@lists.linux.dev
-In-Reply-To: <20260914092000.1306968-3-kalpan.jani@mpiricsoftware.com>
-References: <20260914092000.1306968-1-kalpan.jani@mpiricsoftware.com>
- <20260914092000.1306968-3-kalpan.jani@mpiricsoftware.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 14 Sep 2026 09:32:04 +0000
-Message-Id: <20260914093205.113E81F000FF@smtp.kernel.org>
+	s=k20260515; t=1789379286;
+	bh=4Hp101V4XNtrF38qV5eczWoEGuRLUxIl+LhTBtW7wHk=;
+	h=Subject:From:To:Date:In-Reply-To:References;
+	b=hP32biVlxI++yxnN58L6N0R82/rTL8TamN74dU0q9L8FjS4TGG5bCFs5gqVqmTevK
+	 4OGqgi4XO380gSQbAsRe4imybW0yzow7BNIrFRsN2xSMef9Gh6eO/X/64NgjCA7jAx
+	 j1RXSEiIt4ftmpO+KqNRjIsMwdPxkbXvoUcHkjiyeJJYj9O3N52IaW4wC0YQV/A6H4
+	 uFSW5hDNuRc7dFEc5jZis/VB1a3aRXPXD4W8SoID9b4MK4Br74Fz+FGvCNGd0Ijhg7
+	 X5Yr8sBD42RUwg6sDSmvsRn7sqHB3ELnAhUciZfHOXeiAeyi6IJlx7hhIYB87x9Ppw
+	 KcTJ5wsQ3UJaw==
+Message-ID: <20b73dd157c0e948ba2b33c3600f33097fab5299.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v5 00/16] MPTCP sockmap support
+From: Geliang Tang <geliang@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
+Date: Mon, 14 Sep 2026 17:48:01 +0800
+In-Reply-To: <cover.1789294365.git.tanggeliang@kylinos.cn>
+References: <cover.1789294365.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-9 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The `test_avoid` selftest contains fundamental logic flaws that =
-cause it to silently pass without ever exercising the `avoid` functionality=
-, resulting in a false positive test.
---
+Hi Matt,
 
-commit 23085ecdc8efb175d47c716d935708a8072a4cd5
-Author: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+On Sun, 2026-09-13 at 18:14 +0800, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> v5:
+>  - Patches 1-4 are from "Reduce the differences between TCP and MPTCP
+> for TLS usage" set.
 
-selftests: mptcp: bpf: exercise the subflow avoid flag across rounds
+I put the four patches from the "Reduce the differences between TCP and
+MPTCP for TLS usage" series here because this "MPTCP sockmap support"
+series depends on them. Actually, it doesn't just depend on these four
+patches - it also appears to depend on "mptcp: remove CB offset field"
+(see sashiko's comments on patch 9) and "mptcp: implement peek_len for
+proto_ops" (see sashiko's comments on patch 13).
 
-This commit adds a BPF struct_ops scheduler selftest for=20
-mptcp_subflow_set_avoid(). It attempts to mark subflows as avoided during t=
-he
-first scheduling round and verifies they are skipped in subsequent rounds.
+So this series depends on the entire "Reduce the differences between
+TCP and MPTCP for TLS usage" series. I could use "Based-on: <...>" to
+trigger CI based on the dependency, but Sashiko doesn't recognize
+"Based-on", so it won't be able to apply successfully.
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/349
+Is there some Sashiko feature that can handle this kind of chained
+dependency between patchsets? Or do I need to include all ten patches
+of the "Reduce the differences between TCP and MPTCP for TLS usage"
+series in the next version? I'd appreciate your thoughts on this.
 
-> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_avoid.c b/tools/=
-testing/selftests/bpf/progs/mptcp_bpf_avoid.c
-> new file mode 100644
-> index 0000000000000..359b515800875
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_avoid.c
+Alternatively, let's first do the review of the "Reduce the differences
+between TCP and MPTCP for TLS usage" series - it's already ready for
+review - so that both the subsequent "MPTCP KTLS support" series and
+this "MPTCP sockmap support" series can move forward more easily.
 
-[ ... ]
+Thanks,
+-Geliang
 
-> +SEC("struct_ops")
-> +int BPF_PROG(bpf_avoid_get_send, struct mptcp_sock *msk)
-> +{
-> +	struct mptcp_subflow_context *subflow;
-> +	struct mptcp_avoid_storage *ptr;
-> +
-> +	ptr =3D bpf_sk_storage_get(&mptcp_avoid_map, msk, 0,
-> +				 BPF_LOCAL_STORAGE_GET_F_CREATE);
-> +	if (!ptr)
-> +		return -1;
-> +
-> +	/*
-> +	 * set once, on the first scheduling round, never touched again --
-> +	 * this is what makes "avoid" different from "scheduled": nothing
-> +	 * here re-asserts the decision, and the core doesn't clear it
-> +	 * either.
-> +	 */
-> +	if (!ptr->avoid_marked) {
-> +		int i =3D 0;
-> +
-> +		/* bench every subflow but the first, once */
-> +		bpf_for_each(mptcp_subflow, subflow, (struct sock *)msk) {
-> +			if (i++ > 0)
-> +				mptcp_subflow_set_avoid(subflow, true);
-> +		}
-> +		ptr->avoid_marked =3D true;
-> +	}
-
-[Severity: Medium]
-Since bpf_avoid_get_send() is called immediately when the first subflow is=
-=20
-established (and before the second subflow finishes its MP_JOIN), is `i++ >=
- 0`=20
-ever true here?
-
-If there is only one subflow when this initialization block runs, `avoid` w=
-ill=20
-never be set for any subflow, but `avoid_marked` becomes true, which perman=
-ently=20
-locks out this block.
-
-> +
-> +	/*
-> +	 * every round -- including this one -- just reads back state set
-> +	 * at most once above. no re-assertion, ever.
-> +	 */
-> +	bpf_for_each(mptcp_subflow, subflow, (struct sock *)msk) {
-> +		if (subflow->avoid)
-> +			continue;
-> +		if (mptcp_subflow_active(subflow)) {
-> +			mptcp_subflow_set_scheduled(subflow, true);
-> +			break;
-> +		}
-> +	}
-> +	return 0;
-> +}
-
-[Severity: Medium]
-Because the first subflow is never marked to be avoided, does this loop alw=
-ays=20
-break on the first active subflow?
-
-Since the first subflow naturally handles the entire data transfer, it is a=
-lways=20
-selected, and the second subflow is never evaluated. Does this cause the te=
-st=20
-to artificially pass and provide a false positive result, regardless of whe=
-ther=20
-the `avoid` feature actually works?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260914092000.1306=
-968-1-kalpan.jani@mpiricsoftware.com?part=3D2
+>  - More patches for sockmap support.
+>  - Rename this set from "implement psock_update_sk_prot" to "MPTCP
+> sockmap
+>    support"
+> 
+> v4:
+>  - Address Mat's comments: implement .read_skb to make the selftests
+> run.
+>  - Move mptcp_bpf_update_proto() from protocol.c to bpf.c.
+>  - Include the "implement .splice_eof" patches in this series, as
+> they
+>    both modify mptcp_prot, mptcp_stream_ops and mptcp_v6_stream_ops.
+>  -
+> https://patchwork.kernel.org/project/mptcp/cover/cover.1787554581.git.tanggeliang@kylinos.cn/
+> 
+> v3:
+>  - Address the comments by ai review.
+>    - use WRITE_ONCE to set sk->sk_write_space.
+>    - update the selftest, set a new key for client socket.
+>  - Fix line length warnings.
+>  -
+> https://patchwork.kernel.org/project/mptcp/cover/cover.1773826662.git.tanggeliang@kylinos.cn/
+> 
+> RESEND:
+>  - rebased.
+>  - to trigger ai review.
+> 
+> v2:
+>  - Include mptcp_bpf_update_proto within CONFIG_BPF_SYSCALL to fix
+> the
+> compilation errors reported by the kernel test robot.
+>  - Add checks for IS_ENABLED(CONFIG_MPTCP_IPV6).
+> 
+> Implement psock_update_sk_prot, for basic MPTCP BPF SOCKMAP support.
+> 
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/521
+> 
+> Geliang Tang (15):
+>   mptcp: add sendmsg_locked to proto_ops
+>   mptcp: track app-limited state in mptcp_sendmsg
+>   selftests: mptcp: sockopt: check app_limited
+>   bpf: drop duplicate check_app_limited in tcp_bpf_push
+>   mptcp: implement psock_update_sk_prot for sockmap
+>   mptcp: add sock_map_update BPF helper
+>   selftests/bpf: enable MPTCP support in sockmap tests
+>   mptcp: implement read_skb for sockmap stream verdict
+>   bpf: export and generalize tcp_bpf_ioctl
+>   mptcp: add TCP_REPAIR sockopt support
+>   selftests/bpf: add MPTCP coverage to sockmap_basic
+>   mptcp: add sk_is_msk() helper and use it in sockmap
+>   mptcp: add SO_ATTACH_REUSEPORT_EBPF support
+>   mptcp: add sk_select_reuseport BPF helper
+>   selftests/bpf: add MPTCP coverage to sockmap_listen
+> 
+> Paolo Abeni (1):
+>   mptcp: defer read_sock cleanup to mptcp_worker
+> 
+>  include/linux/bpf.h                           |  13 ++
+>  include/net/mptcp.h                           |  12 ++
+>  include/net/tcp.h                             |   7 +
+>  include/uapi/linux/bpf.h                      |  19 ++
+>  kernel/bpf/verifier.c                         |   8 +-
+>  net/core/filter.c                             |  60 +++++-
+>  net/core/sock_map.c                           |  14 +-
+>  net/ipv4/tcp.c                                |   9 +-
+>  net/ipv4/tcp_bpf.c                            |  40 ++--
+>  net/mptcp/bpf.c                               | 172
+> ++++++++++++++++++
+>  net/mptcp/protocol.c                          | 114 ++++++++++--
+>  net/mptcp/protocol.h                          |  20 ++
+>  net/mptcp/sockopt.c                           |  21 ++-
+>  .../testing/selftests/bpf/prog_tests/mptcp.c  |  27 +--
+>  .../selftests/bpf/prog_tests/socket_helpers.h |  25 ++-
+>  .../selftests/bpf/prog_tests/sockmap_basic.c  |  33 +++-
+>  .../selftests/bpf/prog_tests/sockmap_listen.c | 122 ++++++++-----
+>  .../selftests/bpf/progs/mptcp_sockmap.c       |   8 +-
+>  .../selftests/bpf/progs/test_sockmap_listen.c |  25 +++
+>  .../selftests/net/mptcp/mptcp_sockopt.c       |   1 +
+>  20 files changed, 622 insertions(+), 128 deletions(-)
