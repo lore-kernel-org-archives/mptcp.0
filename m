@@ -1,33 +1,33 @@
-Received: from mta0.migadu.com (out-165.mta0.migadu.com [91.218.175.165])
+Received: from mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5EE40B6EF
-	for <mptcp@lists.linux.dev>; Mon, 14 Sep 2026 08:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7EF410D1A
+	for <mptcp@lists.linux.dev>; Mon, 14 Sep 2026 08:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789375542; cv=none; b=on46UaSjLi9DtendPdYFJmugfnTgDl7fQjVoa1cutnClFdxpRvfxoui9iRXlZvis/rO82AcpnTEZTwLrhSrC382t36t4QZ7HHywDW4N4l+iw8qUbDyf2vtAGOLRsSc3bb6Dl8hYnWB6T4ZHXkLSRDVSocwscO958ZsqoDF29v1U=
+	t=1789375546; cv=none; b=jBpEemUyG5DgC32t9wgyI1v0xSyHjU0UMesxYa67042qmaTyIJqGh+Mgkn2CY3lXTEFrsc7imr8l+92KlaGZHVkQKQrcFJoHplJC94O88WPlnlMBxJoeVY03LQKnHsB60O9jgHLC/NVomZgXKH8d3grk+FdwK6pMxKPg6U2fwLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789375542; c=relaxed/simple;
+	s=arc-20240116; t=1789375546; c=relaxed/simple;
 	bh=fCmcEN2w/YvBwaV3b9hefPqZ881UJA7yaCsX2bSiwBE=;
 	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=eZ1E9xMSoUfOINiRq+s3tViIQ/XpHRcOFqWhShS48DL2sieUIzAR4IZK4WglwP2zJrPFJ7AJj7aU22aygkM1jtbRR6M86QJZh9OwJEIp0NnCFSf37iw4ogeeNENwfuqf4TywiVDF1ZNmkcd3sGe3+vxwhH6v2yWyMpNBGYu8rl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fAY1I0KT; arc=none smtp.client-ip=91.218.175.165
+	 In-Reply-To:References; b=ZSev6JzRgbxnGddd8JmqSB2/3gxsuCL1joVbQv727Zz+u6Wx27zdZwCIi9K1RP6/Sq6RmPyuzk7PQ1g9IFoj0ZyZ0/NCkOIWLTCzWrB0YamLMpmpTEx3oGrfV9KWVuKlaQp3MbiqVklcSDGWbgwXis16MBrB8sPw9euMYXNMBLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=L8KxrE/x; arc=none smtp.client-ip=91.218.175.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fAY1I0KT"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="L8KxrE/x"
 X-Envelope-To: mptcp@lists.linux.dev
 DKIM-Signature: a=rsa-sha256; bh=fCmcEN2w/YvBwaV3b9hefPqZ881UJA7yaCsX2bSiwBE=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1789375537; v=1; x=1789980337;
- b=fAY1I0KTO4U5sAo77QqYvSEexclZAugj+Hyhhe9AxcIhnIg2N3MY04qC7mN0BTzH4DNTD+tg
- HoH2n01i/bMmvY4YfptoEkPeG+stDjMUnDQtO+OnGzfDT16rB8TaqP3w8jxp22WRha2DHHREhll
- EW8ellLvqLQYb1u6KfRAA/dI=
+ t=1789375542; v=1; x=1789980342;
+ b=L8KxrE/xHrL5dh1wDfURWVC6dCoMadRRDp5RZwdQiiBInd2GxfMKiaNQgBNNCdlcgWRiQk5c
+ VgZmvAUOdLEQ+bbIO3bobA70dSD4jFQREXgnV8/KYVL2j+VvnqbaJiU/BiYEV1+Ki7GkNnRDc3E
+ BD9bgU/VyRp71coSucfvG2OE=
 X-Envelope-To: mptcp@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 454b48ababe58b17;
-	Mon, 14 Sep 2026 08:45:08 +0000
-X-Mizu-Trace-ID: 454b48ababe58b17
+Received: by smtp.migadu.com with ESMTPS id db23e7626cd2cd53;
+	Mon, 14 Sep 2026 08:45:41 +0000
+X-Mizu-Trace-ID: db23e7626cd2cd53
 X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -35,11 +35,11 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Mon, 14 Sep 2026 08:45:07 +0000
+Date: Mon, 14 Sep 2026 08:45:41 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 From: gang.yan@linux.dev
-Message-ID: <0b7ac0ea84f0dea0092aa84d4aff3db0b6dc0f93@linux.dev>
+Message-ID: <3782cb274da7916a0b46f3e8fefac86b19b0e1ab@linux.dev>
 TLS-Required: No
 Subject: Re: [PATCH bpf 1/2] bpf: drop duplicate check_app_limited in
  tcp_bpf_push
