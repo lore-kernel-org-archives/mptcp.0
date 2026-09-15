@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF9F3B71BF;
-	Tue, 15 Sep 2026 11:19:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6154921B5;
+	Tue, 15 Sep 2026 11:19:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789471193; cv=none; b=N1lU122C2GuLrbmkY0bD35nfEkCAhDQz1d/YJrKO+FIF0apk0WnsqVPlLYDvAmDF2cWAmWZrt+MLnTwWEjhXwLi//v2gK4SdhWsJIUqtw+3cL7o0TD33FBglOtxRQYrVyv3rdTMY2jBSbkNvXfULiUeBj5Kif2a3862MImm/Ke0=
+	t=1789471200; cv=none; b=AB64cKhlvh/Gte155vOODN5PwiHNwwFZyNpkGRqXXcCXuBNFghWWrdkLtgmI7I/jNwMK7qTaodEHQGo3LQ2E5D8hFFjlAu8W3VYgsLR70ce5fe0cFa35mRD9SKNmT6Qtpfi2kP8ePpDjiNe2/KlpIKVlGe+sIapWyWBtZDURARg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789471193; c=relaxed/simple;
-	bh=zfWoJcnWo9VwngZWVRrPUa4bt30KAuYkCacL3IxKOS4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Foyl/AIWSzzWUPneOsjAwsEgKVuXEQPtvtRDJzzIjCmhJgWxA53zRiE7bhtt+oF4jC382TkrautdnzmoI7zaxdAG3IiU9zORwJFkY+TheUQZnTR4bbINnif5NSLOu5NnThUFClVR6Im1zXpMcMIzYoPg0prYiplO3AsU/Tsbl4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U4/gLsVe; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789471200; c=relaxed/simple;
+	bh=9ep/406Rb8nnAOQ9JDsuFzpTP2x1PWLPr3y6tACJdFA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DZWD+sJYMaE3h6WkIiQ4OBAxDZmzrDILJ0qT3H0hEse46WXAiy015bW/nwimQObPC8oi6py6zROvUrbrhKSdoP7SxMdxsoKFPhsSC5ucnRRswQFqE5hFDuQX2hzgd58fkhEZx+l+3KgETk41lkxhq1fqK1jRZsM141UOi2Tbwo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uyvsl+9i; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U4/gLsVe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DC341F000FF;
-	Tue, 15 Sep 2026 11:19:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uyvsl+9i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 811F91F00898;
+	Tue, 15 Sep 2026 11:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789471191;
-	bh=4mqeKlaygKAXwLw/uVmB1M7xI93uBRn8QQDuvpK3S5M=;
-	h=From:To:Cc:Subject:Date;
-	b=U4/gLsVe/cwnkuA+NoJmZqi0buGJN9Sw9aQvh4WY8IRyJfTsS9fq6SYwIE5xPTPns
-	 L8PONjJwd0nzRKdmVo+TzuE1Uy2QqgfFQu5L5qnTX7cU8eTpLzCnWfSgBpuRThpcuc
-	 1fvAE8trLtYre1wvZ4qn9Ym9R09ADQtRoP8US1YKfBCZwv74DycJ/FVq28s3Wf8/+k
-	 Sg2uSmta3Ype/VnSxyzr4hwH8KhcQSquiN/OctX/35+NajHRl0oK3o9ZD0gYmgl+ld
-	 ru6++4z1bc1MDEeciNL+WOJxJVy3uhmVYB7wCL8QMBzoE+GqdWGHbqUCrHqfLFYjTr
-	 lI6/HxuzMyqWQ==
+	s=k20260515; t=1789471198;
+	bh=QiA+5cZ8KyMykVw4PN+8CaI6Fu4uho+z9OgsW3ypx2Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Uyvsl+9iiUHuA6fthqcbIQDdk92In9KiRj5+2jOroEOPsDuhVAmj9MvmTu7CqoS5k
+	 R5+/xMvUy7UwC4jdyb3Fu6k3EmvJq9gwavsxn6AMxEz/3AOsNt3GD4ryt1NvH905LO
+	 IHHZzrR5GgiGOvS774uRPBFik6SUo4Eyyru3aQnEAn8IqzFCLu6vAfSTLx+P9hTOBs
+	 ttkgtQ+k2DVNc0YhwxnVCMqlYQZpf4aDwNJSgutSKVjNeMMy9SaSi5sJsOS3QDF/1p
+	 +U/+NviNV0ElHZT4YA3/84kqrNI6K9pJPRt5AwFAe0TAtQamUbpIAf+LWjVM+qS8tc
+	 zC3lh89lrcQNg==
 From: Geliang Tang <geliang@kernel.org>
 To: John Fastabend <john.fastabend@gmail.com>,
 	Jakub Sitnicki <jakub@cloudflare.com>,
@@ -44,10 +45,12 @@ Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	netdev@vger.kernel.org,
 	bpf@vger.kernel.org,
 	mptcp@lists.linux.dev
-Subject: [PATCH v2 0/2] Drop redundant tcp_rate_check_app_limited calls
-Date: Tue, 15 Sep 2026 19:19:30 +0800
-Message-ID: <cover.1789469930.git.tanggeliang@kylinos.cn>
+Subject: [PATCH bpf-next v2 1/2] bpf: drop duplicate check_app_limited in tcp_bpf_push
+Date: Tue, 15 Sep 2026 19:19:31 +0800
+Message-ID: <87e00ef420af81974b590f9057cc08234324d45d.1789469930.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <cover.1789469930.git.tanggeliang@kylinos.cn>
+References: <cover.1789469930.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -58,52 +61,43 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-These two patches drop the redundant tcp_rate_check_app_limited() calls
-before tcp_sendmsg_locked() in tcp_bpf_push() and tls_push_sg(), since
-tcp_rate_check_app_limited() is already called inside tcp_sendmsg_locked().
+Before commit c5c37af6ecad9 ("tcp: Convert do_tcp_sendpages() to use
+MSG_SPLICE_PAGES"), do_tcp_sendpages() did not call
+tcp_rate_check_app_limited() internally, so callers needed an explicit
+tcp_rate_check_app_limited() to cover it. That commit replaced
+do_tcp_sendpages() with direct tcp_sendmsg_locked() calls, which always
+provide the check internally. The outer call became redundant but was
+left in place.
 
-Note:
+The site changed here, tcp_bpf_push(), is a MSG_SPLICE_PAGES loop that
+holds the socket lock and only iterates when size > 0; tcp_sendmsg_locked()
+is invoked on every iteration with state identical to what the outer call
+sees, so dropping the outer call is safe and behavior-preserving.
 
-The first patch was originally part of my ongoing "MPTCP sockmap support"
-series [1] (patch 5). Matthieu suggested converting it to a fix and sending
-it directly to netdev. Removing the redundant tcp_rate_check_app_limited()
-call benefits my subsequent MPTCP work: in patch 3 of that series, I
-implement an MPTCP-specific mptcp_rate_check_app_limited() function and
-call it in mptcp_sendmsg_locked(). This allows me to reuse tcp_bpf_push()
-by simply replacing tcp_sendmsg_locked() with
+A potential benefit of this change is that it facilitates future reuse of
+tcp_bpf_push() for sockmap support in protocols beyond TCP, such as MPTCP.
+Since tcp_rate_check_app_limited() is TCP-specific while sendmsg_locked()
+is a generic interface in struct proto_ops, this change allows us to switch
+to different protocols via sk->sk_socket->ops->sendmsg_locked() without
+carrying protocol-specific assumptions.
 
-		sk->sk_socket->ops->sendmsg_locked(),
-
-without carrying protocol-specific assumptions.
-
-The second patch similarly benefits my ongoing "MPTCP KTLS support" work
-[2]. In patch 9 of that series, I had defined a check_app_limited()
-interface in struct tls_prot_ops, but this interface is unnecessary if we
-can drop this redundant call.
-
-v2:
- - drop the "Fixes" tags and update the prefixes and commit logs as Jiayuan
-   suggested.
-
-v1:
- - https://patchwork.kernel.org/project/netdevbpf/cover/cover.1789368148.git.tanggeliang@kylinos.cn/
-
-[1]
-MPTCP sockmap support
-https://lore.kernel.org/mptcp/b5f9e8d7-b738-1df6-3b5e-1d54cbbc663c@gmail.com/T/#t
-
-[2]
-MPTCP KTLS support
-https://lore.kernel.org/netdev/cover.1782123118.git.tanggeliang@kylinos.cn/
-
-Geliang Tang (2):
-  bpf: drop duplicate check_app_limited in tcp_bpf_push
-  tls: drop duplicate check_app_limited in tls_push_sg
-
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
  net/ipv4/tcp_bpf.c | 1 -
- net/tls/tls_main.c | 2 --
- 2 files changed, 3 deletions(-)
+ 1 file changed, 1 deletion(-)
 
+diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
+index 2e234d155b5e..d5fcf3ce4861 100644
+--- a/net/ipv4/tcp_bpf.c
++++ b/net/ipv4/tcp_bpf.c
+@@ -108,7 +108,6 @@ static int tcp_bpf_push(struct sock *sk, struct sk_msg *msg, u32 apply_bytes,
+ 		off  = sge->offset;
+ 		page = sg_page(sge);
+ 
+-		tcp_rate_check_app_limited(sk);
+ retry:
+ 		msghdr.msg_flags = flags | MSG_SPLICE_PAGES;
+ 		has_tx_ulp = tls_sw_has_ctx_tx(sk);
 -- 
 2.53.0
 
