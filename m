@@ -1,120 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABC53C10B2;
-	Tue, 15 Sep 2026 12:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789474428; cv=none; b=ptCvdF1iQ1TQZS+aroqqquImwErlXeyIV5hRj5xLetBEhsc/dLFf99gDgwWDwgYK7p2Jg0AUNXtSyO9n8Z9Nxucien8gUIAWMFxjR2VbBMKH3zV6xL1JWfnWh2o7I18MHZzM6Xd0VAL61Zy+dm4BZOIqEBleo0x7+sdzbg8dE5w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789474428; c=relaxed/simple;
-	bh=JcKoswAOhyuMNjq+mGSOFMd2o3VTqmC8wPMTfTEo83M=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=sAZ2UnrUyFEx6v0FeIukTfcBjlF//bE2R8MdRXlM8084wrJztT4B/od/hFFenmv+sOa2YSHHnQsQt2Xy71JoGSOpxRPWw71Ys26UGgCXFs8zUo4sFG87E4TTJuRn7UdMWcpRs5WbjzaN4gEbq1cAULN/Mwj97a5INVhI5Iz+9q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cpyHmG7U; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195184B2718
+	for <mptcp@lists.linux.dev>; Tue, 15 Sep 2026 12:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789474608; cv=pass; b=vA8vSdghmbPSY+g8f4TyaE4pC43zpLhQNP4VdyKAsxtBbUllnxmrKZONA2dXrECNXvZ4RAfwd7+71jSdl9BCC+mE2kKrAifpmPxEV4RGpVOm4uNql9bFVnxsXXGcfIMUmeB5Zi3M86LeNdzlbMkhFy2Jozd/DsH3GC0I3pssSmE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789474608; c=relaxed/simple;
+	bh=vOBPlcKbW1yxr1mL9fYzl2S+nMjvrKcyf6Aqr7sC6Do=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XYrjooKuwJ3ZQHeWoEIyZ3n0NG3xa8GL6ZCaW/8LvWIwLcRaDhXW6l9j1lMogXOp30fZGTygLBRZZnzjLDq/iGzuxXfYqEGOndgi2YgwQiUqlR5GLxXk5DPCFUQ72sMEicY8rlqSXbpzF8mqwvU6ystC4KmCqGu3U7ZwXqLK2BU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=akshit@mpiricsoftware.com header.b=ftPiJDOD reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cpyHmG7U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3A161F000FF;
-	Tue, 15 Sep 2026 12:13:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789474426;
-	bh=YzkYuMVzkpLRGXY8MKPQ97VDe6r+TzShk9f5fTc3tIE=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date;
-	b=cpyHmG7Uek337dIERN+s/TgP/ItZjRRX27WIafN+eVogPnvDaZ2levjx0+Ekstf9O
-	 aKmmkikGqOS29yGlLv/jMPbQnWSovGv+5ZqP5ITCqBH7IkXD/jYKFw6CJ6+/9okD6W
-	 zOeRvktNMCg4q+b+7YwOHfOExvHI2K82zpul6Qo5wdcpyQN85mi01riFEF0vrY1kVt
-	 YkbBqGJMtRUWN/PD8o3h0zNBi0G+pOIfHJYYTHwLW50aAcUGnyQ4XZSTWr9Wk750D5
-	 wMDD5wcPOzr5n8JPfqGEAX+cQy1x7ok55AUGkaWrL3AXiqXu1BjLYLyD+/jdF7Wtr3
-	 5dih0xkSdft/w==
-Content-Type: multipart/mixed; boundary="===============4719459423094257229=="
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=akshit@mpiricsoftware.com header.b="ftPiJDOD"
+ARC-Seal: i=1; a=rsa-sha256; t=1789474602; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=jDgpOvT0vvLX8ApG/xdPpRbgPsKn/txh1m6JFIyWwSmL1TwSG/4z8Mz//z+Jx2BZYWmbIFxnzPDZsMyC+5WakSwr/l5q0ztQpFYGtUUM23JuxF3mC9hFlBtwLOjdhG0X+uqANftvi0UqWJEmDrAzFuVCiAlL41vPvdqMEGfFFvI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1789474602; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=1xYLuZl+I2o+d72bQWN6/QXXf1zaUEJBzU9V5A6zjm8=; 
+	b=Ogo9baduUZ8bWfjhcU/icNsUhjdZom+KHCCoPUlMfsg/DNTS5iRE4HqgYEF/gv/+7KF2XPClMNRi/GOOvqEiFASosD1pcUnaU8OBIM86MAqrRbHBbTD6qIA4XRwm3sVmuvG1w/uITWlUiKEVMHA3ejNuRRd0tvEM4+t0dqYUxsQ=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=akshit@mpiricsoftware.com;
+	dmarc=pass header.from=<akshit@mpiricsoftware.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1789474602;
+	s=mpiric; d=mpiricsoftware.com; i=akshit@mpiricsoftware.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=1xYLuZl+I2o+d72bQWN6/QXXf1zaUEJBzU9V5A6zjm8=;
+	b=ftPiJDODtHb0U6V9iiMs8bnc41NHQt4L1page2u+U9r4qSS0IldzH7JfOTOzYiRN
+	xGyL5zVga5PjSDuuX2Q+XkoBf1e1D9+5BmPH13pqn+IOupw+9/i98DcGhJb4wN6Jbhz
+	3HlbkZ6zI4hr3/9fjmhXcL7mkXjG30Togl4+bFQQ=
+Received: by smtp.zohomail.com with SMTPS id 1789474596830265.6690777209882;
+	Tue, 15 Sep 2026 05:16:36 -0700 (PDT)
+From: Akshit Patadiya <akshit@mpiricsoftware.com>
+To: mptcp@lists.linux.dev
+Cc: matttbe@kernel.org,
+	martineau@kernel.org,
+	pabeni@redhat.com,
+	shardul.b@mpiricsoftware.com,
+	janak@mpiric.us,
+	kalpanjani009@gmail.com,
+	kalpan.jani@mpiricsoftware.com
+Subject: Re: [PATCH mptcp-next] mptcp: fix add_addr_accepted accounting on subflow close
+Date: Tue, 15 Sep 2026 17:46:22 +0530
+Message-ID: <20260915121622.1151132-1-akshit@mpiricsoftware.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260813123754.4095492-1-akshit@mpiricsoftware.com>
+References: 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <650558176bb55367e1b7c7cee7a4a5285aaa6adbadeaf3935337903efd2c6778@mail.kernel.org>
-In-Reply-To: <87e00ef420af81974b590f9057cc08234324d45d.1789469930.git.tanggeliang@kylinos.cn>
-References: <87e00ef420af81974b590f9057cc08234324d45d.1789469930.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH bpf-next v2 1/2] bpf: drop duplicate check_app_limited in tcp_bpf_push
-From: bot+bpf-ci@kernel.org
-To: geliang@kernel.org,john.fastabend@gmail.com,jakub@cloudflare.com,jiayuan.chen@linux.dev,edumazet@google.com,ncardwell@google.com,kuniyu@google.com,davem@davemloft.net,kuba@kernel.org,pabeni@redhat.com,horms@kernel.org,sd@queasysnail.net,dhowells@redhat.com,matttbe@kernel.org,martineau@kernel.org
-Cc: tanggeliang@kylinos.cn,netdev@vger.kernel.org,bpf@vger.kernel.org,mptcp@lists.linux.dev,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
-Date: Tue, 15 Sep 2026 12:13:45 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
---===============4719459423094257229==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Hi all,
 
-> Before commit c5c37af6ecad9 ("tcp: Convert do_tcp_sendpages() to use
-> MSG_SPLICE_PAGES"), do_tcp_sendpages() did not call
-> tcp_rate_check_app_limited() internally, so callers needed an explicit
-> tcp_rate_check_app_limited() to cover it. That commit replaced
-> do_tcp_sendpages() with direct tcp_sendmsg_locked() calls, which always
-> provide the check internally. The outer call became redundant but was
-> left in place.
+Gentle ping on this patch. When you have a chance, could you please
+take a look and let me know if there are any further changes needed?
+
+On Thu, Aug 13, 2026 at 05:19:09PM +0530, sashiko-bot@kernel.org wrote:
+> [High] Concurrent updates to msk->pm.rm_list_rx can cause RM_ADDR IDs
+> to be silently skipped, resulting in leaked subflows.
 >
-> The site changed here, tcp_bpf_push(), is a MSG_SPLICE_PAGES loop that
-> holds the socket lock and only iterates when size > 0; tcp_sendmsg_locked()
-> is invoked on every iteration with state identical to what the outer call
-> sees, so dropping the outer call is safe and behavior-preserving.
->
-> A potential benefit of this change is that it facilitates future reuse of
-> tcp_bpf_push() for sockmap support in protocols beyond TCP, such as MPTCP.
-> Since tcp_rate_check_app_limited() is TCP-specific while sendmsg_locked()
-> is a generic interface in struct proto_ops, this change allows us to switch
-> to different protocols via sk->sk_socket->ops->sendmsg_locked() without
-> carrying protocol-specific assumptions.
->
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> If a remote peer sends multiple RM_ADDR options in rapid succession,
+> softirq context can call mptcp_pm_rm_addr_received(), which
+> unconditionally overwrites pm->rm_list_rx while scheduling work
 
-This isn't a bug, but the state-equivalence argument here looks right.
-Would it be worth tightening "which always provide the check internally"
-to something like "which performs the check on every path that queues
-data"?
+Looked into this, it's real. Traced it down:
 
-Looking at tcp_sendmsg_locked(), it reaches tcp_rate_check_app_limited()
-only after the MSG_ZEROCOPY and MSG_FASTOPEN early returns:
+mptcp_pm_rm_addr_recv() passes &msk->pm.rm_list_rx straight into
+mptcp_pm_rm_addr_or_subflow() (pm.c:830), and that loop re-reads
+rm_list->nr / rm_list->ids[i] on every iteration. It also drops
+pm.lock mid-loop around mptcp_subflow_shutdown()/mptcp_close_ssk()
+since those can't be called under a spinlock.
 
-net/ipv4/tcp.c:tcp_sendmsg_locked() {
-    ...
-		uarg = msg_zerocopy_realloc(...);
-		if (!uarg) {
-			err = -ENOBUFS;
-			goto out_err;
-		}
-    ...
-	err = tcp_sendmsg_fastopen(sk, msg, &copied_syn, size, uarg);
-	if (err == -EINPROGRESS && copied_syn > 0)
-		goto out;
-	else if (err)
-		goto out_err;
+Worse, mptcp_pm_worker() clears the MPTCP_PM_RM_ADDR_RECEIVED bit
+before calling mptcp_pm_rm_addr_recv():
+
+	if (pm->status & BIT(MPTCP_PM_RM_ADDR_RECEIVED)) {
+		pm->status &= ~BIT(MPTCP_PM_RM_ADDR_RECEIVED);
+		mptcp_pm_rm_addr_recv(msk);
 	}
 
-	timeo = sock_sndtimeo(sk, flags & MSG_DONTWAIT);
+so if a second RM_ADDR shows up while the first is still being
+processed, mptcp_pm_schedule_work() sees the bit already clear,
+treats it as new work, and mptcp_pm_rm_addr_received() overwrites
+rm_list_rx right under the loop during one of its unlock windows
+instead of getting coalesced. End result is the outer loop's i /
+rm_list->nr can go stale mid-flight and some IDs from the original
+batch just never get processed.
 
-	tcp_rate_check_app_limited(sk);  /* is sending application-limited? */
-    ...
-}
+This is pre-existing, not something this patch touches (different
+struct, different lock concern than the id_accepted_bitmap stuff
+here), so I'm not folding a fix into this one. Will open a separate
+issue/patch for it, can take it myself if nobody's already on it.
 
-Those branches are reachable from tcp_bpf_push(), since tcp_bpf_sendmsg()
-forwards the user's flags almost verbatim and tcp_bpf_push() passes them
-on as `msghdr.msg_flags = flags | MSG_SPLICE_PAGES`, so MSG_ZEROCOPY and
-MSG_FASTOPEN both reach tcp_sendmsg_locked(). On those paths the old code
-updated tp->app_limited and the new code does not. Every one of them
-returns without queueing SPLICE_PAGES data, so there is no functional
-consequence -- but "always" is doing load-bearing work in the
-justification, and a narrower phrasing would match the code.
+For #498 itself, this patch should close it as-is. It also looks
+related to #496 per that issue's note - let me know if you want me
+to check whether this covers that one too, or if it's a
+prerequisite.
 
-Also, is the "only iterates when size > 0" clause needed? The internal
-check at net/ipv4/tcp.c:1190 is called unconditionally regardless of
-size, so the size > 0 property is not what makes the removal safe.
+Tested against mptcp_join.sh for the close-before-RM_ADDR case,
+fullmesh reuse of the same remote id, and duplicate RM_ADDR - all
+passing.
 
-
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/34964239423
---===============4719459423094257229==--
+Thanks and regards,
+Akshit Patadiya 
