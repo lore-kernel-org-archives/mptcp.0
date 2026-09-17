@@ -1,121 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mail.netfilter.org (mail.netfilter.org [217.70.190.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C4543CE59;
-	Thu, 17 Sep 2026 08:42:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B74D3AEF55
+	for <mptcp@lists.linux.dev>; Thu, 17 Sep 2026 08:55:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.190.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789634550; cv=none; b=mhua1MTNdfx2KsIxIW6bu5hcFGGKAXxdsUUN/sRrPEylCt8boub2CdvFIfPK6lCp2otEHZuhuks2EUklBTR5YaI6zYl0EHzEC6/YyweEcLOvn3iUpGLJsSJCyGC++sBq57zxC9AeL3yPj1FB2zheZ0q3i1KVj1ZeGoj/Z2omvxY=
+	t=1789635316; cv=none; b=LuB2hCX19ORY8+g2zdSES08DFMTd0O3qdEVPLeqAv9lehxYuoZJoZ13Yiwu2e79O29jzfQYvU+JDrtNtz/ThnvgzrTJTXCZWUGgxUlMZn+g1KHrXYRqtbYvBElsfHvO/nEs7ELfGxG/fXwRV0W6MEl/QfwNf7DTV33CyvqB11FY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789634550; c=relaxed/simple;
-	bh=q6HKl5LtjKuaoZ6SXHAUMkZedUXZ9cKfXJ+5gvF4DIM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O98QCkFBoqH3SYvuflDey6ptrfdoS+ZrOquvvAFUtTVf6QL7Bh5rpLHbe3ST6wO8t4cXUH78Yf0aUUIoCEZc86BgPVACA5l/yUJRHN6tHT0IV8N8Tje78N8wETKWiRpKdt8v1Y/KZqFinGdoLU/gcidZNuSkzageyleH3kUpxdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nOLy/ev3; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789635316; c=relaxed/simple;
+	bh=vn31ij5EjMpSY4fNULl9mNiHva1/BB4PcHzqjFUIWVM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q4DZOt8IBiKZrMu54PXTXb6+KjEvPzUtx+fuO5Dvl7xrdrzDzrrEgnwHJbanKnbDOE10xoQ3+pSCYh5/3SXpfBwsUojkoypKWSgO6K0RoW9zB3IoY2qU6m324cO4ZeHioxtake93xa7ejPQuKxmZk/53DY/qJFzYxIf2mhvtVoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org; spf=pass smtp.mailfrom=netfilter.org; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=E24bQLqZ; arc=none smtp.client-ip=217.70.190.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netfilter.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nOLy/ev3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38CEA1F00893;
-	Thu, 17 Sep 2026 08:42:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789634541;
-	bh=veuI4Ecxd1GG/nHtTshN78zjGaDMSwbi+RzbA2u15EM=;
-	h=From:To:Cc:Subject:Date;
-	b=nOLy/ev3hCOesGlqpGnWMsTpdorPVis0ELdts6LYNqiKmmKWjJ9taVNzUGI2XDBl7
-	 Q1Ilz8BZMZJmuqjto1s93REbULq9LdKsJ4XpF8OcQ0PzyjhHWy02jLMc23G5tR8CzH
-	 zTBH8ExlZ2L5HmAKSlKiC/BEUyMh6MEFFUmZ0nuiro8+w4J0lkb900/26xWUPlaWKm
-	 ln2jyAQ9I3bFPQZaX5LQLCJ15PSnGDmA8kdQYVrXkWM4NZ6ARM/v816q5s+DW647L7
-	 PR+5hnxyqFiGdLxXb/9MaZzChrODyyC02af8BrsJ2m5wLCxgXBWGRL2Bohen7+wOI2
-	 ePeTyr/3U9IAA==
-From: Geliang Tang <geliang@kernel.org>
-To: John Fastabend <john.fastabend@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Sabrina Dubroca <sd@queasysnail.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
+	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="E24bQLqZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
+	s=2025; t=1789635308;
+	bh=VyrNncgMjLTsBvabQF8/YlHLzKKib3TBgXLmZZSfKgQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=E24bQLqZqCbhYofFpFX5C/Yn90lZRe1Y1Sl92lkL5j5M0O9HmOV/qfTuszP+xhHMZ
+	 PHgtIrJLt1Cmp9zNstWDEva8MV+TOpfIOOGS3+ge9KpPnCGTwcnq0yz+rlsZ1KlMyp
+	 +vq4s4VZYDlux6eyjR9b7eMbj375oF+kgQXvTWbHA4pkLKuOhr3fom7iTZp0KNyE9I
+	 yLDpyxv8KzYcp9FiUJju60ACYct+BWomEPCeqvjhM4j6ErtuYmYPrZsZMCAArGhFau
+	 4xUQE97+l1D5vk3XmZBUshNUkKbwXKerlMtqkh4AKdD0+Nr95zNzHgTT4DuGfneKfl
+	 cbtKQePrSd1nA==
+Received: from netfilter.org (mail-agni [217.70.190.124])
+	by mail.netfilter.org (Postfix) with UTF8SMTPSA id 9A1346005F;
+	Thu, 17 Sep 2026 10:55:08 +0200 (CEST)
+Date: Thu, 17 Sep 2026 10:55:05 +0200
+From: Pablo Neira Ayuso <pablo@netfilter.org>
+To: Fernando Fernandez Mancera <fmancera@suse.de>
+Cc: Hangbin Liu <hangbin.liu@linux.dev>,
 	Matthieu Baerts <matttbe@kernel.org>,
 	Mat Martineau <martineau@kernel.org>,
-	Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev
-Subject: [PATCH net-next v3] tls: drop duplicate check_app_limited in tls_push_sg
-Date: Thu, 17 Sep 2026 16:42:06 +0800
-Message-ID: <5bc803abb4e27054eaffc8b26db7812e6347b0dd.1789634247.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.53.0
+	Geliang Tang <geliang@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>,
+	Florian Westphal <fw@strlen.de>, Phil Sutter <phil@nwl.cc>,
+	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org, mptcp@lists.linux.dev,
+	Hangbin Liu <liuhangbin@kylinos.cn>
+Subject: Re: [PATCH net] selftests: net: update netfilter netlink config
+Message-ID: <aquq6fEQiDq5Ey59@chamomile>
+References: <20260917-selftest_config-v1-1-bf25ccbfb18e@kylinos.cn>
+ <f557e44a-86b6-4ebb-ad35-d7bc5902929a@suse.de>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <f557e44a-86b6-4ebb-ad35-d7bc5902929a@suse.de>
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+On Thu, Sep 17, 2026 at 09:06:48AM +0200, Fernando Fernandez Mancera wrote:
+> On 9/17/26 4:17 AM, Hangbin Liu wrote:
+> > From: Hangbin Liu <liuhangbin@kylinos.cn>
+> > 
+> > Since commit d4349ba9872d ("netfilter: allow nfnetlink built-in only"),
+> > NETFILTER_NETLINK was changed to a bool. Use 'y' instead of 'm'.
+> > Otherwise the build emits:
+> > 
+> >    .config:5688:warning: symbol value 'm' invalid for NETFILTER_NETLINK
+> > 
+> > Fixes: d4349ba9872d ("netfilter: allow nfnetlink built-in only")
+> > Signed-off-by: Hangbin Liu <liuhangbin@kylinos.cn>
+> 
+> Reviewed-by: Fernando Fernandez Mancera <fmancera@suse.de>
 
-Before commit c5c37af6ecad9 ("tcp: Convert do_tcp_sendpages() to use
-MSG_SPLICE_PAGES"), do_tcp_sendpages() did not call
-tcp_rate_check_app_limited() internally, so callers needed an explicit
-tcp_rate_check_app_limited() to cover it. That commit replaced
-do_tcp_sendpages() with direct tcp_sendmsg_locked() calls, which perform
-the check on every path that queues data. The outer call became redundant
-but was left in place.
+Acked-by: Pablo Neira Ayuso <pablo@netfilter.org>
 
-The site changed here, tls_push_sg(), holds the socket lock and invokes
-tcp_sendmsg_locked() on every iteration. The early-return paths in
-tcp_sendmsg_locked() that skip tcp_rate_check_app_limited() -- the
-MSG_ZEROCOPY allocation failure and MSG_FASTOPEN branches -- return
-without queueing any MSG_SPLICE_PAGES data, so there is no functional
-consequence from omitting the outer check.
+Thanks.
 
-A potential benefit of this change is that it facilitates future reuse of
-tls_push_sg() for KTLS support in protocols beyond TCP, such as MPTCP.
-Since tcp_rate_check_app_limited() is TCP-specific while sendmsg_locked()
-is a generic interface in struct proto_ops, this change allows us to switch
-to different protocols via sk->sk_socket->ops->sendmsg_locked() without
-carrying protocol-specific assumptions.
-
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
-Note:
-
-The patch benefits my ongoing "MPTCP KTLS support" work [1]. In patch 9
-of that series, I had defined a check_app_limited() interface in struct
-tls_prot_ops, but this interface is unnecessary if we can drop this
-redundant call.
-
-v3:
- - send this patch separately to net-next as Jakub suggested.
- - update the commit log.
-
-v2:
- - drop the "Fixes" tags and update the prefixes and commit logs as Jiayuan
-   suggested.
- - https://patchwork.kernel.org/project/netdevbpf/cover/cover.1789469930.git.tanggeliang@kylinos.cn/
-
-v1:
- - https://patchwork.kernel.org/project/netdevbpf/cover/cover.1789368148.git.tanggeliang@kylinos.cn/
-
-[1]
-MPTCP KTLS support
-https://lore.kernel.org/netdev/cover.1782123118.git.tanggeliang@kylinos.cn/
----
- net/tls/tls_main.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
-index fbb274287aa5..8bdb78718a8d 100644
---- a/net/tls/tls_main.c
-+++ b/net/tls/tls_main.c
-@@ -185,8 +185,6 @@ int tls_push_sg(struct sock *sk,
- 
- 	ctx->splicing_pages = true;
- 	while (1) {
--		/* is sending application-limited? */
--		tcp_rate_check_app_limited(sk);
- 		p = sg_page(sg);
- retry:
- 		bvec_set_page(&bvec, p, size, offset);
--- 
-2.53.0
-
+> Thanks!
+> 
+> > ---
+> > This is a simple update addressing the same issue, so I’d like to post it
+> > directly to netdev instead of bothering two separate subsystems
+> > (mptcp and netfilter).
+> > ---
+> >   tools/testing/selftests/net/mptcp/config     | 2 +-
+> >   tools/testing/selftests/net/netfilter/config | 2 +-
+> >   2 files changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
+> > index 59051ee2a986..bb9c4c97c620 100644
+> > --- a/tools/testing/selftests/net/mptcp/config
+> > +++ b/tools/testing/selftests/net/mptcp/config
+> > @@ -18,7 +18,7 @@ CONFIG_NET_CLS_ACT=y
+> >   CONFIG_NET_CLS_FW=m
+> >   CONFIG_NETFILTER=y
+> >   CONFIG_NETFILTER_ADVANCED=y
+> > -CONFIG_NETFILTER_NETLINK=m
+> > +CONFIG_NETFILTER_NETLINK=y
+> >   CONFIG_NETFILTER_XTABLES=m
+> >   CONFIG_NETFILTER_XTABLES_LEGACY=y
+> >   CONFIG_NETFILTER_XT_MATCH_BPF=m
+> > diff --git a/tools/testing/selftests/net/netfilter/config b/tools/testing/selftests/net/netfilter/config
+> > index c3c121b6f300..629b2b29ed1a 100644
+> > --- a/tools/testing/selftests/net/netfilter/config
+> > +++ b/tools/testing/selftests/net/netfilter/config
+> > @@ -44,7 +44,7 @@ CONFIG_NET_CLS_U32=m
+> >   CONFIG_NETDEVSIM=m
+> >   CONFIG_NETFILTER=y
+> >   CONFIG_NETFILTER_ADVANCED=y
+> > -CONFIG_NETFILTER_NETLINK=m
+> > +CONFIG_NETFILTER_NETLINK=y
+> >   CONFIG_NETFILTER_NETLINK_QUEUE=m
+> >   CONFIG_NETFILTER_SYNPROXY=m
+> >   CONFIG_NETFILTER_XTABLES=m
+> > 
+> > ---
+> > base-commit: 1dd85662fee6e2ac580b1c4f9a0c0a7ae6e31f0e
+> > change-id: 20260917-selftest_config-286bdd44b22b
+> > 
+> > Best regards,
+> 
