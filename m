@@ -1,173 +1,98 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB9439D6D6
-	for <mptcp@lists.linux.dev>; Thu, 17 Sep 2026 11:16:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5305111B0;
+	Thu, 17 Sep 2026 13:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789643820; cv=none; b=qbi6eM2dIltIyF0WheCJS+XM5I1b0Jku+ZMBUy3nHc6KdN5cRLAX1Ym6n/bFx3NsyNZTmu/ynBXpc46cybVm7JvQVYP5a8rEqo+BbxpvxbMrx777nofKtfhNwqf/5cTOvRZnFTW6pQW0PT1PYSbTuNxKLFD2nm8dpvTQvgkyUMs=
+	t=1789650380; cv=none; b=jV5vrWXJGmVHe7jIbCqph9GbyMI1IwzuKtNyEqyeuSZ2vMA5JIHEDG9c3lnGkJ5jXzs/On+FobsKIY8+U52rD5RO5OA8deUSVjEOCJho6kLq4O2l+drGHzMct8b4YVPX5/wWmn1MelSSiTLK+h2gYXc/WAksRd1zTLFhWta7vcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789643820; c=relaxed/simple;
-	bh=zLcvCiAPD5wWmnt5hHFi7ShfG7dr6QAZVgPTgrRf4+4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fQBlnsCxPuI+zNviSybEBb6crNqhbQT6iQNNEpq7g8wV/9YSXjFXnaWgkDEpj0KcWt2GsA8jrk5gM0mqJpSW3yzks1NkV3XbtvbT3qyVNm4z/dlYtHL3Pz6G0tB57H9Ao4LK3xiZhe2EUWWK26KYCFjCzRDvp1aeHSi+Jv11ALI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=drOQEkCB; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1789650380; c=relaxed/simple;
+	bh=BFtu9BG3LXW88IuhrGMQsA1AdjmI0Ht4wDmdDAcOAko=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jH012uoZOYnRe5Rh0hOCuzMumO4VJsuYySQ0ws6qH3sgvjsIGoGavhtsJisEokanJaiBtmmZeIW8SthJhBEBh+VxE1wr15FZxgej/HzqR6ofU8yfmeV6KDxBdr0jn8vV0BmA2IZnXvOlle1dOQpw5zlHsX6gttmmDK48G5tezdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i6ahSMVQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="drOQEkCB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1789643811;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eP1uMmtD3DxvMqH6cKa6vonPQmGtZJRICWnH6003KGo=;
-	b=drOQEkCBVYwK7T6CZAawK6i30DUddFk31qF3fi69vcFC9jqAJ4mGHnqGdwwrgS5UaptirV
-	Rwi2lqkHS2pWBFTyHlFwcJAMHt24U8/HwAgSB3+9peELWYOR1c4JX0DqnzzHMXjLiu/rZA
-	BvlrqDebhK1HJcTbWThxp8sbosX6OVA=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-493-ibUGBGIeOK2O9b1Fk0a_mw-1; Thu, 17 Sep 2026 07:16:34 -0400
-X-MC-Unique: ibUGBGIeOK2O9b1Fk0a_mw-1
-X-Mimecast-MFC-AGG-ID: ibUGBGIeOK2O9b1Fk0a_mw_1789643793
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-49cd74fc1aaso5262515e9.1
-        for <mptcp@lists.linux.dev>; Thu, 17 Sep 2026 04:16:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789643793; x=1790248593;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=eP1uMmtD3DxvMqH6cKa6vonPQmGtZJRICWnH6003KGo=;
-        b=tnT66xptolHvRd8UsnP5+kdLfTLnwl8j2+l8jFMhnzkN3BVCR0C7id1JDlCAYYoksu
-         NYMslI1iYbchcix0gjpDi8ikbKy63VmrV4aoZW62nwVv/flhIVvhoXTWVO9Jdok3bRLP
-         RzOZhqg261V+4H6SaxnuWcBdJhrabcDfWDbW+3f5ob+XCOoCKV03LvkPPEp1wTzOk1zr
-         K8wKw+9yWH/6H0x37HbmLrW3kkJFRlbi66O3308N/fvRhQxBYlaJ1cbUOYjZbOvxU9Qt
-         3m/HC7EqM54JnYl4A7uNs8PyMinKwQnlqTsli2OApGKI4s4jnqnUUGicKO4iKICt3LSr
-         P44g==
-X-Forwarded-Encrypted: i=1; AKwUvBy5ERTnMfVhFxQqROsGDjklYHm8Eliyejl0+cEr0X7MWJsp/Lhhl5vykclEhRzpIeA7NzqosA==@lists.linux.dev
-X-Gm-Message-State: AFuF++k8WGYSVK5xr25XmeynK4PAZ1b3H0IJk6S+eFOoZqE9NDe+vZ5p
-	rJq0srW6wsueBM7JSyR5QmXnz8WW/trkzWK5u8aEEC6o4oGO3qf+xJXA3dV5zrwh6YyZv35DNBn
-	wSCLwc8+wrfeZQeAIF0hssyQiBM5ry+sN/sH/EjSU9gsviyJKR0nirZ+h
-X-Gm-Gg: AYBFou1/w2OOz8OEfKDutPV4aprUcHevLTweaXx2dTEiPSm+u8rTKbnZVC2kylw64VZ
-	BIqNefoPVRq0q4M9tRvWiriQhNfwtKhHaONNMmMqzcNrVmKAgwDgzFL722a6YXM25tHhiuJTBp4
-	GP+VzthaatnsCt8nux+egxqDT14isemvq5CXjsq13OfBuh+zGAdDFSp+5Y1KvCpwEBxqT8tHzjB
-	6oLaOYRqHUAsnWz8zbKN1oc/V1fl3GGBRtsDGB5K6VwVJ9H+YYQ00Y/kTNgPAE+wNIRpNs00I6c
-	7477Aa3nAoSKxuSrmq7yRyNlTBJuGKYbvSmnDjo9poiGdUtYR50tA9kQ8KTmNM3AOz5RLaP++MM
-	7l9LTQAbpgcTvx4zqFpYquyw6jMtnwpjcX32T9aU8m5QeVnDjXg3x5F6ukZqJawPnUqREKUC3VQ
-	==
-X-Received: by 2002:a05:600c:3492:b0:49e:7d25:f397 with SMTP id 5b1f17b1804b1-49eb7301fd4mr64756615e9.15.1789643793389;
-        Thu, 17 Sep 2026 04:16:33 -0700 (PDT)
-X-Received: by 2002:a05:600c:3492:b0:49e:7d25:f397 with SMTP id 5b1f17b1804b1-49eb7301fd4mr64756235e9.15.1789643792937;
-        Thu, 17 Sep 2026 04:16:32 -0700 (PDT)
-Received: from [192.168.188.234] (ip232-47-231-195.pool-bba.aruba.it. [195.231.47.232])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fbf415058sm42188045e9.0.2026.09.17.04.16.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Sep 2026 04:16:31 -0700 (PDT)
-Message-ID: <b32628f0-834d-4906-8479-7687887e371b@redhat.com>
-Date: Thu, 17 Sep 2026 13:16:30 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i6ahSMVQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CEA51F000FF;
+	Thu, 17 Sep 2026 13:06:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789650372;
+	bh=gZlsyDZ2QI6w4s5TauCQWCUnsIAd0UB96M7zvhi0VFs=;
+	h=From:Subject:Date:To:Cc;
+	b=i6ahSMVQQsrR4a36Pf1RTVMjv8ccYdji076rrLk453vOtFIyr6HLhO39To+IhbzAl
+	 SnSJJtRNAOEiPctDL5mT22IldpDF3L06IYhxFEPd+7Tpi84jgJbS0efKjHPOf89TUp
+	 DTnS0qpXKKC5lI3M4SSZVoFA1Dn/HuQocrAtgP9p+qQEosO7HkJSNNTh52Xui6HeYf
+	 lGP0TVNlQq3TtGP33XG9JndOclFiBSHY4Ipcx+tAcl8o7IN0RoJVXgwME0GycuqBXM
+	 mozS+Ty1ZvSxE0XdYBqKXFhOa0pnH0nHJN/gQK7+CH2JZl0hyuJvGWHaCkCgx8Kb73
+	 urZi/x4H8ItuA==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net v2 0/3] mptcp: misc fixes for v7.3-rc4
+Date: Thu, 17 Sep 2026 15:05:56 +0200
+Message-Id: <20260917-net-mptcp-misc-fixes-7-3-rc4-v2-0-0cf5c72667c8@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net 2/2] mptcp: close race between scheduler and state
- change
-To: matttbe@kernel.org
-Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, horms@kernel.org,
- netdev@vger.kernel.org, netdev-bot+sashiko@kernel.org,
- mptcp@lists.linux.dev, stable@vger.kernel.org, shardul.b@mpiricsoftware.com,
- xinyang@anthropic.com
-References: <20260915-net-mptcp-misc-fixes-7-3-rc4-v1-2-a257797dd5d0@kernel.org>
- <178959153630.22033.1222004531183755077@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <178959153630.22033.1222004531183755077@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: mtRJvuiEJdx451erUsp8miY5SVFq-usYUlBz1No7lVY_1789643793
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/42OQQ6CMBBFr2Jm7ZhSqBVX3sOwgHaEUSmkrURDu
+ LsFL+DyT968/2cI5JkCnHczeJo48OBSkPsdmK52LSHblEEKeRRlptBRxH6MZsSeg8Ebvymgxhy
+ 9KVDlp6a0mowoNCTF6GkDkuEK6ROq3zG8mjuZuIpXrOMQB//ZRkzZBv/XN2UosJZK61Jbq6y4P
+ Mg7eh4G30K1LMsX2ghUMuAAAAA=
+X-Change-ID: 20260915-net-mptcp-misc-fixes-7-3-rc4-538b9d7ec047
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org, 
+ Xinyang Ge <xinyang@anthropic.com>, 
+ Shardul Bankar <shardul.b@mpiricsoftware.com>
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1267; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=BFtu9BG3LXW88IuhrGMQsA1AdjmI0Ht4wDmdDAcOAko=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJWP93/Ktrt06SeasddPMvPWvpvZPBkn599Q7eaqev93
+ QPV2pzTOkpZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACYSncvw33O/7Kes+ddrk1oL
+ 60ve/di7jG+lg9yjrMtnuQJU8k47nmRkaDDa6Hsj+oO6uY7Cqxjha2fU8+PPu2uaLcgpXzz74Ol
+ MbgA=
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On 9/16/26 22:45, netdev-bot+sashiko@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential
-> issue(s) to consider:
-> 
-> Critical: 0 · High: 1 · Medium: 0 · Low: 0
-> 
-> - [High] Incomplete fix: the identical `mss_now == 0` divide-by-zero that
->    the patch guards in `mptcp_push_release()` (net/mptcp/protocol.c:1667)…
-> 
-> --
-> 
-> mptcp: close race between scheduler and state change
-> 
-> The patch guards the tcp_push() call in mptcp_push_release() with a check
-> for info->mss_now being non-zero, so that a subflow which failed
-> transmission (leaving mss_now at 0) is not used for a divide operation.
-> 
-> Closes: https://lore.kernel.org/20260525194828.1137119-1-shardul.b@mpiricsoftware.com
-> 
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index 0098e28309318..709610db3ce9d 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -1664,7 +1664,9 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
->>   
->>   static void mptcp_push_release(struct sock *ssk, struct mptcp_sendmsg_info *info)
->>   {
->> -	tcp_push(ssk, 0, info->mss_now, tcp_sk(ssk)->nonagle, info->size_goal);
->> +	if (info->mss_now)
->> +		tcp_push(ssk, 0, info->mss_now, tcp_sk(ssk)->nonagle,
->> +			 info->size_goal);
->>   	release_sock(ssk);
->>   }
-> 
-> [Severity: High]
-> Should the same guard also be added to the second tcp_push() call site, in
-> __mptcp_subflow_push_pending()?
-> 
-> That function starts with a zeroed info:
-> 
-> net/mptcp/protocol.c:__mptcp_subflow_push_pending() {
-> 	struct mptcp_sendmsg_info info = {
-> 		.data_lock_held = true,
-> 	};
-> 	...
-> 	int copied = 0;
-> 
-> and info.mss_now is only ever assigned inside mptcp_sendmsg_frag(), after
-> the early return the commit message refers to:
-> 
-> 	if (unlikely(!__tcp_can_send(ssk)))
-> 		return -EAGAIN;
-> 
-> 	/* compute send limit */
-> 	...
-> 	info->mss_now = tcp_send_mss(ssk, &info->size_goal, info->flags);
-> 
-> In the non-first iteration, the return value is accumulated into copied
-> without filtering negatives:
-> 
-> net/mptcp/protocol.c:__mptcp_subflow_push_pending() {
-> 		if (READ_ONCE(subflow->scheduled)) {
-> 			mptcp_subflow_set_scheduled(subflow, false);
-> 			ret = __subflow_push_pending(sk, ssk, &info);
-> 			if (ret <= 0)
-> 				keep_pushing = false;
-> 			copied += ret;
-> 		}
-> 
-> __subflow_push_pending() passes mptcp_sendmsg_frag()'s -EAGAIN through
-> verbatim when the first frag fails, so copied becomes -EAGAIN, which is
-> non-zero, while info.mss_now is still 0:
-This is a pre-existing issue but it could deserve to be fixed in the 
-same series.
+Here are two unrelated fixes:
 
-/P
+- Patch 1: avoid unneeded actions on subflow reset. A fix for another
+  fix introduced in v6.12 and targeting a commit from v5.7.
+
+- Patch 2: close a possible race when scheduling a closing path. A fix
+  for another fix introduced in v6.0 and targeting v5.10.
+
+- Patch 3: fix bad accounting when __subflow_push_pending returns an
+  error. A fix for v6.6.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v2:
+- Patch 1: rewording commit msg & consume skb and purge queue early.
+- Patch 3: new, for an issue spot by Clashiko.
+- Link to v1: https://patch.msgid.link/20260915-net-mptcp-misc-fixes-7-3-rc4-v1-0-a257797dd5d0@kernel.org
+
+---
+Paolo Abeni (3):
+      mptcp: avoid unneeded actions on subflow reset
+      mptcp: close race between scheduler and state change
+      mptcp: fix bad accounting in __mptcp_subflow_push_pending()
+
+ net/mptcp/protocol.c | 11 +++++++----
+ net/mptcp/protocol.h |  3 ++-
+ net/mptcp/subflow.c  | 11 +++++++++++
+ 3 files changed, 20 insertions(+), 5 deletions(-)
+---
+base-commit: 9ca4ba24259183ce15665be86b2956cd896c4687
+change-id: 20260915-net-mptcp-misc-fixes-7-3-rc4-538b9d7ec047
+
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
