@@ -1,182 +1,177 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mta0.migadu.com (out-216.mta0.migadu.com [91.218.175.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB06477285
-	for <mptcp@lists.linux.dev>; Thu, 17 Sep 2026 07:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C11503F39D8
+	for <mptcp@lists.linux.dev>; Thu, 17 Sep 2026 08:12:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789628865; cv=none; b=hHL4Be6So8/XSbWCD8IMfeQF7SlFL+vbvyx0wWUeutwU/3shdjEGABvABGwclh8uY4AKpAO0oIbgXlWsCYyGrqQG0e4TXPNTN+HX063hqypv1LedTVGnw7kigcTtnLYkDyIw/2AuqAWcYd10yCvVMOQknVoc2HT3QMi44obY4HU=
+	t=1789632759; cv=none; b=kUmiyJwYjvMVwJsBh5AWeJM2ypno1Qe21X7+5DB9x2VmVJfriw0EOvzaafgx8tUR59CSaxesFGXRfNuixWdWc82kcqGbid+pcBGAqWDjPcuhyY2tgdsBpuHDXVqghl5vo92l5MYvdB3DfNXTfXi3PwFURfWW271Qa6YZHPlGGjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789628865; c=relaxed/simple;
-	bh=8HSF+LrOlvT0k5flvlCc9IPHOrpQnuowms4Y/Lxxaz4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lBJxeSFfwAXfF3jYFMgFGGmgRtkwS048GMBFD93SSBtqxpwLplrw6UxMBzVOIbdrlNBF2tH43OZbW/dVC058u0frOkysl/uTxTuEhBlo7Y6gOHQiJkzMLAkchUsGB5tzdIu+4aPNT5kndwJojPo3pkovIvMz2FvPGDNdAe8xktA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jjc3v8Im; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=e2NjjuV1; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=n+XMeo1n; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=X/KXqiqy; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1789632759; c=relaxed/simple;
+	bh=3bNS7vZoXU7N1kY+Mih7avyiv/bjFO+bIZ/936OV2eE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZWw5ejM4j+mn4UmR1tTSPiLrvu3lrlWXS9yFVXD87ZYfySi25NIqCb5BoGhTHygF8b6KAK5uJVRzH/zOwkKpSeq1fnyAbzIuHq7Voasx+p4KlJGmtvssGSM5+kdSWaLv7rOHUBGm2qsm/Eq4HrznmgFVfunK2j+qpcY25vc0X/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Kf4/7XpN; arc=none smtp.client-ip=91.218.175.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jjc3v8Im";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="e2NjjuV1";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="n+XMeo1n";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="X/KXqiqy"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 05D2B21D70;
-	Thu, 17 Sep 2026 07:07:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1789628858; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kjvcZvmqEPMRF/LhXJIRs4s3bEudB5Jl4m8qJV2Wu9c=;
-	b=jjc3v8Im+QznQHTfpETVxbLzdwbn66ZxeLS+slepvGG71PY68L8mGhA4e3y6aaw0yonVan
-	6r37fyI8QLtFcrrMF7CScPYfZIE/x/VS33aVWqNuiCBdR8Drz6l3kY0V4BIN7le40CWMIo
-	8WldHXQfo12Y5SZ2rO3LI5a+lx5iPsU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1789628858;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kjvcZvmqEPMRF/LhXJIRs4s3bEudB5Jl4m8qJV2Wu9c=;
-	b=e2NjjuV1H2CD9Lzxd2acRiVhAoOK+Il5RWy8Hy8LWAOu0Q0tffD4TY8vO+I8dEymOyFEyA
-	Iy7/EqwCyw9bEUAA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1789628854; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kjvcZvmqEPMRF/LhXJIRs4s3bEudB5Jl4m8qJV2Wu9c=;
-	b=n+XMeo1njqwW4rBjHQ5AWI6m0SMaGEfUbAGFDiheonChgXMKnJuMxdY81cQR4v30GUehCM
-	R85SwqWTJmi5GNfoxd1X/0xBNJWQymabL+cJGEpNgghBfhjPBsxqDgIyXSW0+c3FO+4PFb
-	ZtNw/JrSYru4Bxcyv6DDlcdbP0uWQMY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1789628854;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kjvcZvmqEPMRF/LhXJIRs4s3bEudB5Jl4m8qJV2Wu9c=;
-	b=X/KXqiqyecFWWd8CAP7aMBf1OFjZw2VEQe97l6lpFTg5iFvU/uOTb2qTBGLZ50DE1DQh0V
-	S7UEp3klHc7BJ+Dg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D81D8134B3;
-	Thu, 17 Sep 2026 07:07:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MOz5KLSRq2rfCwAAD6G6ig
-	(envelope-from <fmancera@suse.de>); Thu, 17 Sep 2026 07:07:32 +0000
-Message-ID: <f557e44a-86b6-4ebb-ad35-d7bc5902929a@suse.de>
-Date: Thu, 17 Sep 2026 09:06:48 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Kf4/7XpN"
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=3bNS7vZoXU7N1kY+Mih7avyiv/bjFO+bIZ/936OV2eE=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1789632754; v=1; x=1790237554;
+ b=Kf4/7XpN+XXJy1XmOAPCad0qeTiTCs9GI4sHhuBz+MAotbrj6pnyvpKAG2E/WyjFX+saYH3d
+ WKQtZqX42HVy3Yr7s8NB4ah0nABzld9+aeUWhgkoO8jQQMwyvLkV2UnySpPo0kvWYv6vjGm5fzF
+ yMTxENaEfZi9GgrScIiUh4pw=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 6fe8c84a50e127c8;
+	Thu, 17 Sep 2026 08:12:24 +0000
+X-Mizu-Trace-ID: 6fe8c84a50e127c8
+X-Migadu-Flow: FLOW_OUT
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: bpf@vger.kernel.org,
+	mptcp@lists.linux.dev
+Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
+	VEGA <vega@nebusec.ai>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Emil Tsalapatis <emil@etsalapatis.com>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	Shuah Khan <shuah@kernel.org>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	Matt Bobrowski <mattbobrowski@google.com>,
+	Tejun Heo <tj@kernel.org>,
+	Nicolas Rybowski <nicolas.rybowski@tessares.net>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH bpf v1 1/2] mptcp, bpf: reject bpf_sk_release() on msk
+Date: Thu, 17 Sep 2026 16:11:57 +0800
+Message-ID: <20260917081209.361367-1-jiayuan.chen@linux.dev>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] selftests: net: update netfilter netlink config
-To: Hangbin Liu <hangbin.liu@linux.dev>, Matthieu Baerts
- <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Shuah Khan <shuah@kernel.org>, Pablo Neira Ayuso <pablo@netfilter.org>,
- Florian Westphal <fw@strlen.de>, Phil Sutter <phil@nwl.cc>
-Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org, mptcp@lists.linux.dev,
- Hangbin Liu <liuhangbin@kylinos.cn>
-References: <20260917-selftest_config-v1-1-bf25ccbfb18e@kylinos.cn>
-Content-Language: en-US
-From: Fernando Fernandez Mancera <fmancera@suse.de>
-In-Reply-To: <20260917-selftest_config-v1-1-bf25ccbfb18e@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Score: -4.30
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.997];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,kylinos.cn:email]
-X-Spam-Flag: NO
 
-On 9/17/26 4:17 AM, Hangbin Liu wrote:
-> From: Hangbin Liu <liuhangbin@kylinos.cn>
-> 
-> Since commit d4349ba9872d ("netfilter: allow nfnetlink built-in only"),
-> NETFILTER_NETLINK was changed to a bool. Use 'y' instead of 'm'.
-> Otherwise the build emits:
-> 
->    .config:5688:warning: symbol value 'm' invalid for NETFILTER_NETLINK
-> 
-> Fixes: d4349ba9872d ("netfilter: allow nfnetlink built-in only")
-> Signed-off-by: Hangbin Liu <liuhangbin@kylinos.cn>
+A bpf prog can do this today:
 
-Reviewed-by: Fernando Fernandez Mancera <fmancera@suse.de>
+	subflow = bpf_skc_lookup_tcp(...);
+	msk = bpf_skc_to_mptcp_sock(subflow);
+	bpf_sk_release(msk);
 
-Thanks!
+bpf_skc_to_mptcp_sock() returns subflow->conn without taking any
+reference, so bpf_sk_release() drops a refcount nobody took on the msk,
+and the subflow reference is leaked:
 
-> ---
-> This is a simple update addressing the same issue, so I’d like to post it
-> directly to netdev instead of bothering two separate subsystems
-> (mptcp and netfilter).
-> ---
->   tools/testing/selftests/net/mptcp/config     | 2 +-
->   tools/testing/selftests/net/netfilter/config | 2 +-
->   2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
-> index 59051ee2a986..bb9c4c97c620 100644
-> --- a/tools/testing/selftests/net/mptcp/config
-> +++ b/tools/testing/selftests/net/mptcp/config
-> @@ -18,7 +18,7 @@ CONFIG_NET_CLS_ACT=y
->   CONFIG_NET_CLS_FW=m
->   CONFIG_NETFILTER=y
->   CONFIG_NETFILTER_ADVANCED=y
-> -CONFIG_NETFILTER_NETLINK=m
-> +CONFIG_NETFILTER_NETLINK=y
->   CONFIG_NETFILTER_XTABLES=m
->   CONFIG_NETFILTER_XTABLES_LEGACY=y
->   CONFIG_NETFILTER_XT_MATCH_BPF=m
-> diff --git a/tools/testing/selftests/net/netfilter/config b/tools/testing/selftests/net/netfilter/config
-> index c3c121b6f300..629b2b29ed1a 100644
-> --- a/tools/testing/selftests/net/netfilter/config
-> +++ b/tools/testing/selftests/net/netfilter/config
-> @@ -44,7 +44,7 @@ CONFIG_NET_CLS_U32=m
->   CONFIG_NETDEVSIM=m
->   CONFIG_NETFILTER=y
->   CONFIG_NETFILTER_ADVANCED=y
-> -CONFIG_NETFILTER_NETLINK=m
-> +CONFIG_NETFILTER_NETLINK=y
->   CONFIG_NETFILTER_NETLINK_QUEUE=m
->   CONFIG_NETFILTER_SYNPROXY=m
->   CONFIG_NETFILTER_XTABLES=m
-> 
-> ---
-> base-commit: 1dd85662fee6e2ac580b1c4f9a0c0a7ae6e31f0e
-> change-id: 20260917-selftest_config-286bdd44b22b
-> 
-> Best regards,
+refcount_t: underflow; use-after-free.
+WARNING: lib/refcount.c:28 at refcount_warn_saturate+0xdf/0x120, CPU#2: mptcp_pair/440
+Call Trace:
+ <IRQ>
+ sock_gen_put+0xda/0x100
+ bpf_sk_release+0x5e/0xd0
+ bpf_prog_780c70b94862636c_rel_msk+0x127/0x132
+ __dev_queue_xmit+0x104b/0x3c90
+ ip_finish_output2+0x9af/0x1c40
+ __ip_finish_output+0x510/0x7e0
+ ip_finish_output+0x2f/0x320
+ ip_output+0x17a/0x3f0
+ ip_local_out+0x12f/0x170
+ __ip_queue_xmit+0x81d/0x1d50
+ ip_queue_xmit+0x4a/0x80
+ __tcp_transmit_skb+0x2f6f/0x5110
+ __tcp_send_ack.part.0+0x385/0x740
+ tcp_send_ack+0x70/0x90
+ __tcp_ack_snd_check+0x1c9/0x8d0
+ tcp_rcv_established+0xa1e/0x44f0
+ tcp_v4_do_rcv+0x4b8/0xb30
+ tcp_v4_rcv+0x27af/0x3e60
+ ip_protocol_deliver_rcu+0x95/0x410
+ ip_local_deliver_finish+0x357/0x5b0
+ ip_local_deliver+0x15c/0x1c0
+ ip_rcv+0x284/0x320
+
+bpf_skc_to_mptcp_sock() is listed in is_ptr_cast_function(), so if the
+subflow is a referenced obj (returned by bpf_skc_lookup_tcp()), the msk
+becomes a referenced obj too, which lets bpf_sk_release() take it. That
+list is for helpers casting a sock to another type at the same address,
+which does not hold here: msk and subflow are two different socks.
+
+Drop it from is_ptr_cast_function(). To keep the msk from outliving the
+subflow it was derived from, tie the two together with the existing
+parent_id, so this gets rejected as well:
+
+	subflow = bpf_skc_lookup_tcp(...);
+	msk = bpf_skc_to_mptcp_sock(subflow);
+	bpf_sk_release(subflow);
+	msk->token;			/* rejected now */
+
+The other option was to reject bpf_skc_to_mptcp_sock() on a referenced
+subflow altogether, but that breaks progs which only read msk fields, so
+go with parent_id.
+
+Reported-by: VEGA <vega@nebusec.ai>
+Fixes: 3bc253c2e652 ("bpf: Add bpf_skc_to_mptcp_sock_proto")
+Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+---
+ kernel/bpf/verifier.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 9e79750e2480..5db49a0c346f 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -522,11 +522,21 @@ static bool is_ptr_cast_function(enum bpf_func_id func_id)
+ 		func_id == BPF_FUNC_skc_to_tcp_sock ||
+ 		func_id == BPF_FUNC_skc_to_tcp6_sock ||
+ 		func_id == BPF_FUNC_skc_to_udp6_sock ||
+-		func_id == BPF_FUNC_skc_to_mptcp_sock ||
+ 		func_id == BPF_FUNC_skc_to_tcp_timewait_sock ||
+ 		func_id == BPF_FUNC_skc_to_tcp_request_sock;
+ }
+ 
++/*
++ * bpf_skc_to_mptcp_sock() does not cast its argument. It returns the parent
++ * MPTCP socket of the subflow that was passed in, so the return value must not
++ * inherit the argument's reference, or bpf_sk_release() would put the wrong
++ * socket.
++ */
++static bool is_ptr_derive_function(enum bpf_func_id func_id)
++{
++	return func_id == BPF_FUNC_skc_to_mptcp_sock;
++}
++
+ static bool is_sync_callback_calling_kfunc(u32 btf_id);
+ static bool is_async_callback_calling_kfunc(u32 btf_id);
+ static bool is_callback_calling_kfunc(u32 btf_id);
+@@ -11369,6 +11379,14 @@ static int check_helper_call(struct bpf_verifier_env *env, struct bpf_insn *insn
+ 		bpf_diag_mod_begin(env, &regs[BPF_REG_0], NULL, BPF_DIAG_MOD_WRITE);
+ 		regs[BPF_REG_0].type &= ~PTR_MAYBE_NULL;
+ 		regs[BPF_REG_0].id = meta.ref_obj.id;
++	} else if (is_ptr_derive_function(func_id) &&
++		   find_reference_state(env->cur_state, meta.ref_obj.id)) {
++		err = validate_ref_obj(env, &meta.ref_obj);
++		if (err)
++			return err;
++
++		/* Ensures we don't access the object after a release_reference() */
++		regs[BPF_REG_0].parent_id = meta.ref_obj.id;
+ 	} else if (is_acquire_function(func_id, meta.map.ptr)) {
+ 		int id = acquire_reference(env, insn_idx, 0);
+ 
+-- 
+2.43.0
 
