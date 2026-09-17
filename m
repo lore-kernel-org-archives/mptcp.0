@@ -1,127 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7533A8740;
-	Thu, 17 Sep 2026 09:04:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463704A7CAE;
+	Thu, 17 Sep 2026 09:19:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789635897; cv=none; b=akcSKdfsDCj6CxT3sgZe/U1RwaEqDwE28WSyhLJ2t50FkchKOY6pB5jySKtSCvNaMH4Tfo0c3d85H+M6RlrFSghL4KtCWrCmCiEY9MVyKndjjdUNIr+HFwpuEfWA9Zh9JONqh7aGFXyWqSVmNESBN+i+YOPMbi9zZ2XA+qAzpZ8=
+	t=1789636787; cv=none; b=eSysg/j7DbsKApoqrDnSZ3JN2psuuoUZ5XAjdCrZ29jfalkV+iYtT5DZTDNnwICX6Vc7Bk6RmAPx82GqXSl6jJfZViiyaoPAfBe4Uh0wJ1EUZVU/FqW5KXRtmfaP9ZJge0eD13D1OJ40z8WyDceg7SPFpmuRqOP8Di6k0MviplQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789635897; c=relaxed/simple;
-	bh=H6OPmzFwTjfe2eL8uEAAuQ1eUL3Da6keNYthN0hTbXE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u7A6+aB9e7rs9YhQhYBhIWaSKBOIEwFa0yBjQ4+HXcto2sIG5z1NfmUw1l9rhu8xhLQEpJQJFmXkGcTIZqwKGNDfpu5KO7V03V83g/zjYRk7vPXwaTqqb50cFAqJhftNr7EE86skkQ9+D7xNpGxWnP6Iq2itNg+oXX9/trHxDr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cQogZB/F; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789636787; c=relaxed/simple;
+	bh=6hUuYPcWxqXPQ36Q8DpYTJSlN3WpSLI1Ia1MqQ3Lh68=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=S8tcC+IfhUcG+0vYK5gkuBwnz5Udp0rWKsyMKnvAafWtiXOHvStS9tEOW9BiqGQxB35RZjURatEI2VphnNTvO7yObocKayGKS9n30gK71xsHaY7lG9RJfgp845Bp1EbFNUx7YdwV9c8OxktJi0OVm8Mtd52VvZ4RsRUxHCn+GkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ky8zNg2R; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cQogZB/F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB8351F000FF;
-	Thu, 17 Sep 2026 09:04:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ky8zNg2R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 140F41F000FF;
+	Thu, 17 Sep 2026 09:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789635896;
-	bh=r81n00ylFVbyi96blicKVcB99WJF9XijQa/VIFWtlN0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=cQogZB/FKoirxTs55cGY3oQTBAKjyLSqUKFQUl8h6Xz5BCC7tYntnrwYJmIVk89po
-	 27sDFLDfwdyjZX4vyejb54CEeApvVokldjnrisu5slepHYkDG9cUhVUMazhzHIA+4q
-	 CLuuSrMPNbT+29zz5o/j9s+Fw7h+xHC/0EUVEH1dqugAbcUqvAFe/47k5ec0hw8Afj
-	 hoJYO19SdICilqFotCwrlF2oKhJlnJHVZ4pXo74GrEXpbHCWMWtYMN16DIyZ0VXGkg
-	 6QBGKLnB/z9Ur/EsfJHieNjkMRhLDn/8Zk+u2CLr13552mxiBKZzU5mjiSjSl/PAVF
-	 BoayYu/uGq55w==
-Message-ID: <fc614ec4-428a-4e3d-b366-9db5f6e44078@kernel.org>
-Date: Thu, 17 Sep 2026 11:04:47 +0200
+	s=k20260515; t=1789636782;
+	bh=wduxLqvH7l65E4HRHZRiG4ffV/S85OxQP9Lm4sYKkIc=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date;
+	b=ky8zNg2Rj/O662bhRp4Ok7dOz1U6VBLfH0YfjMvq4smARtvLWDCyUqouuV1yZ5Wk5
+	 CHRR2WVlNaqRJ2Bage394GkzwlT1wPlfA9iw/XzF0HIGzFfg1z95EH2BwNhXbonIvg
+	 chy+ZzUGOZtiysiz4KKaOL7c22i8zMOxC+zwVQB91qqZpj+XtoDVidx+qopDfsLBG2
+	 /A9pCOVDdFqrnSeWjAYRMgHW27g+DTiNTLisS5gwaNcu0Egywi7ZIuRsJjIZEL34ou
+	 yjlkeJFRV2u5nby2nl7vwBnOaIVe235MaIgrQZKZLNzC941eLHgr/znhtgDkwRaBQA
+	 C/giGoZKwTT8Q==
+Content-Type: multipart/mixed; boundary="===============2920527551366109915=="
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net] selftests: net: update netfilter netlink config
-Content-Language: fr
-To: Hangbin Liu <hangbin.liu@linux.dev>
-Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org, mptcp@lists.linux.dev,
- Hangbin Liu <liuhangbin@kylinos.cn>,
- Fernando Fernandez Mancera <fmancera@suse.de>,
- Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>,
- Pablo Neira Ayuso <pablo@netfilter.org>, Florian Westphal <fw@strlen.de>,
- Phil Sutter <phil@nwl.cc>
-References: <20260917-selftest_config-v1-1-bf25ccbfb18e@kylinos.cn>
- <f557e44a-86b6-4ebb-ad35-d7bc5902929a@suse.de>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
- YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
- c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
- WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
- CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
- nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
- TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
- nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
- VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
- 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
- YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
- AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
- EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
- /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
- MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
- cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
- iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
- jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
- 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
- VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
- BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
- ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
- 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
- 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
- 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
- mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
- Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
- Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
- Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
- x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
- V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
- Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
- HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
- 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
- Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
- voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
- KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
- UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
- vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
- mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
- JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <f557e44a-86b6-4ebb-ad35-d7bc5902929a@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-Id: <b93838fa6a820d34225ddcfa69056a560d42df034aff760452e09f0f3d5b3f75@mail.kernel.org>
+In-Reply-To: <20260917081209.361367-2-jiayuan.chen@linux.dev>
+References: <20260917081209.361367-2-jiayuan.chen@linux.dev>
+Subject: Re: [PATCH bpf v1 2/2] selftests/bpf: add verifier tests for bpf_skc_to_mptcp_sock
+From: bot+bpf-ci@kernel.org
+To: jiayuan.chen@linux.dev,bpf@vger.kernel.org,mptcp@lists.linux.dev
+Cc: jiayuan.chen@linux.dev,ast@kernel.org,daniel@iogearbox.net,john.fastabend@gmail.com,andrii@kernel.org,eddyz87@gmail.com,memxor@gmail.com,martin.lau@linux.dev,song@kernel.org,yonghong.song@linux.dev,jolsa@kernel.org,emil@etsalapatis.com,ihor.solodrai@linux.dev,shuah@kernel.org,matttbe@kernel.org,martineau@kernel.org,geliang@kernel.org,tangyazhou518@outlook.com,tj@kernel.org,mattbobrowski@google.com,nicolas.rybowski@tessares.net,linux-kernel@vger.kernel.org,linux-kselftest@vger.kernel.org,netdev@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
+Date: Thu, 17 Sep 2026 09:19:41 +0000 (UTC)
 
-Hi Hangbin,
+--===============2920527551366109915==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-On 17/09/2026 09:06, Fernando Fernandez Mancera wrote:
-> On 9/17/26 4:17 AM, Hangbin Liu wrote:
->> From: Hangbin Liu <liuhangbin@kylinos.cn>
->>
->> Since commit d4349ba9872d ("netfilter: allow nfnetlink built-in only"),
->> NETFILTER_NETLINK was changed to a bool. Use 'y' instead of 'm'.
->> Otherwise the build emits:
->>
->>    .config:5688:warning: symbol value 'm' invalid for NETFILTER_NETLINK
->>
->> Fixes: d4349ba9872d ("netfilter: allow nfnetlink built-in only")
->> Signed-off-by: Hangbin Liu <liuhangbin@kylinos.cn>
-> 
-> Reviewed-by: Fernando Fernandez Mancera <fmancera@suse.de>
-Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> diff --git a/tools/testing/selftests/bpf/prog_tests/verifier.c b/tools/testing/selftests/bpf/prog_tests/verifier.c
+> index 8b439e194bcc5..8d5908e34c9b4 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/verifier.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/verifier.c
 
-Thanks!
+[ ... ]
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+> diff --git a/tools/testing/selftests/bpf/progs/verifier_mptcp.c b/tools/testing/selftests/bpf/progs/verifier_mptcp.c
+> new file mode 100644
+> index 0000000000000..1f679265e0437
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/progs/verifier_mptcp.c
+> @@ -0,0 +1,101 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include "bpf_tracing_net.h"
+> +#include <bpf/bpf_helpers.h>
+> +#include "bpf_misc.h"
 
+This isn't a bug, but since nothing from bpf_tracing_net.h is used here,
+would a plain #include "vmlinux.h" (as progs/verifier_sock.c does) be enough
+for struct mptcp_sock?
+
+The file doesn't use any AF_*/SOL_*/TCP_*/IPPROTO_* constants or
+bpf_core_read/BPF_CORE_READ that bpf_tracing_net.h provides. It only needs
+the transitive vmlinux.h for struct mptcp_sock. The 9 verifier_*.c files
+that need BTF kernel types include vmlinux.h directly.
+
+> +
+> +char _license[] SEC("license") = "GPL";
+> +
+> +__u32 token;
+> +
+> +static __always_inline struct bpf_sock *lookup_subflow(struct __sk_buff *skb)
+> +{
+> +	struct bpf_sock_tuple tuple = {};
+> +
+> +	return bpf_skc_lookup_tcp(skb, &tuple, sizeof(tuple.ipv4),
+> +				  BPF_F_CURRENT_NETNS, 0);
+> +}
+
+[ ... ]
+
+
+---
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/35199493791
+--===============2920527551366109915==--
