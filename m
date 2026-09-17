@@ -1,168 +1,301 @@
-Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738943D6CC3
-	for <mptcp@lists.linux.dev>; Thu, 17 Sep 2026 11:07:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789643239; cv=pass; b=Nft2A4qAqWzPqCxeGYc6ikm90h0HSJlsCqLS+4hn/cfjKi8jTojf0pROcUv77Y2gEq5DXE3S1G+ZX+Ek+dg7RBI46MDss4JlWCBd1r6GvoBST3n1M8eiYEPkZCl8DSz2pfPqYpK0EV61kRfFYyvG+KipouRGqWYLXVWXn6Cvp3g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789643239; c=relaxed/simple;
-	bh=41xDYFQQpziqncNzQ0S4/AEnmyQN67a4Es40OByesrQ=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=XVWPPYfq2cRpfiNGKXimaqatVWzbVUJogwR26jlQjqpY2DIVgonkRtOJnswaFsAhAoUh65seFIvE13FotINqF37AtIeC/72T4RJt90dv2Aw84P1ZT2GrWZB0azeB0NTNbXoPFCLtR+lr9+0tc3E10g2PyxET8bJdjwPGCYiU1qc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=cx+4F74d reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EA64BB26D
+	for <mptcp@lists.linux.dev>; Thu, 17 Sep 2026 11:14:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789643697; cv=none; b=JQ2rw1PkmdzImLOUTriH+JtUu/yYtgxL9nWbFHzcCj+k46IskmBw3C2N7VNH4gKl5CoeECrS+AiS3LxPLYpPk7dcJKnpFF4XRxF1ilq4ZvbuTfe1bY3402gKhfcIXOiRFNqPr2AyvU+sOQjA9P0tMLeCC3wrtV/1A0I/y0d00WM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789643697; c=relaxed/simple;
+	bh=yaUHywk+HRls2oGlqzbXlpzTPa0QB+HsreFfTJvFWng=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F/rmgBcYwQ44ya8crUo/zjLLnCoCqEPiDioLu8ZgYrA6RIdCO0AlRDCS8cHml+K0blnv+SMqmMeSROPMaF/T07SOVdXigvBmRT/AF1gxK7ET+CvDEeFnkwn4Wx+wh1ZnrXbyLS53hDGo7pOIz5eHfUjwUgBljEVOr6ik67XPP0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jMGpU7/k; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="cx+4F74d"
-ARC-Seal: i=1; a=rsa-sha256; t=1789643207; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=DNhOUAo1jlLUwd02itr2IC9/qEoshkkTg5q/bVmOFU4XdxD9q2qwZY8TRcwfpsJQfNDEo7oznARWc5S8PYWDMMy8H0sM+mAGAQIQmWORZkBHJO+PlJKi5YvORnVwDCM92K6ozp9hR7oGMecfu6iYnqJUtQjJGi5ganGYS6NBtoo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1789643207; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Z3q7s9EkdzfJ7kZtJqAQ2XTDo7/rlMeQle/Z1w4CZ80=; 
-	b=LKp6I1bIqSg8QGNSljTD5GfubvRBYXnT0f3IHMqP9Di8yLqzPtSwSVcEIHXYMemEruGpPOBojYbiNw6WT+iSvVkOqMzRC/P71HLL2DRtBgV6LeJQZ3CekDt1cHtRxk0ONxJVqgZ0OlidZl4zXwxwOuicJdz9gbbLf19FkcZy1Qo=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=mpiricsoftware.com;
-	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
-	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1789643207;
-	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=Z3q7s9EkdzfJ7kZtJqAQ2XTDo7/rlMeQle/Z1w4CZ80=;
-	b=cx+4F74dSU/bo4Pxw3BLUrMwMFbk2b2ecyo8ZgNAHkZWIjqdQUOChlds6s8kmKxn
-	R+et3e8K/fiXTC4vm5hI030I2JmBkpQdFgJJWEeh6qXA2//QeNwmlCK+t6flsbe+7Wc
-	+hUqzKDzfuwUvn1cLNwL6rk3KcI7XAwtTzEvEfUc=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1789643207468545.0938849369105; Thu, 17 Sep 2026 04:06:47 -0700 (PDT)
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 17896432040711007.7801553990827; Thu, 17 Sep 2026 04:06:44 -0700 (PDT)
-Date: Thu, 17 Sep 2026 16:36:44 +0530
-From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-To: "Matthieu Baerts" <matttbe@kernel.org>
-Cc: "Jiayuan Chen" <jiayuan.chen@linux.dev>, "bpf" <bpf@vger.kernel.org>,
-	"mptcp" <mptcp@lists.linux.dev>, "VEGA" <vega@nebusec.ai>,
-	"Alexei Starovoitov" <ast@kernel.org>,
-	"Daniel Borkmann" <daniel@iogearbox.net>,
-	"John Fastabend" <john.fastabend@gmail.com>,
-	"Andrii Nakryiko" <andrii@kernel.org>,
-	"Eduard Zingerman" <eddyz87@gmail.com>,
-	"Kumar Kartikeya Dwivedi" <memxor@gmail.com>,
-	"Martin KaFai Lau" <martin.lau@linux.dev>,
-	"Song Liu" <song@kernel.org>,
-	"Yonghong Song" <yonghong.song@linux.dev>,
-	"Jiri Olsa" <jolsa@kernel.org>,
-	"Emil Tsalapatis" <emil@etsalapatis.com>,
-	"Ihor Solodrai" <ihor.solodrai@linux.dev>,
-	"Shuah Khan" <shuah@kernel.org>,
-	"Mat Martineau" <martineau@kernel.org>,
-	"Geliang Tang" <geliang@kernel.org>,
-	"Matt Bobrowski" <mattbobrowski@google.com>,
-	"Tejun Heo" <tj@kernel.org>,
-	"linux-kernel" <linux-kernel@vger.kernel.org>,
-	"linux-kselftest" <linux-kselftest@vger.kernel.org>,
-	"netdev" <netdev@vger.kernel.org>, "Paolo Abeni" <pabeni@redhat.com>
-Message-ID: <1a0af0c25d8.352950d2114190.972790069861537729@mpiricsoftware.com>
-In-Reply-To: <18f86b06-7477-4750-b57e-094df4310e4a@kernel.org>
-References: <20260917081209.361367-1-jiayuan.chen@linux.dev> <18f86b06-7477-4750-b57e-094df4310e4a@kernel.org>
-Subject: Re: [PATCH bpf v1 1/2] mptcp, bpf: reject bpf_sk_release() on msk
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jMGpU7/k"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1789643689;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tB6cedv3wb2iJpHvP6bOucKdHMXRoYEnunTmHPPHgss=;
+	b=jMGpU7/kdWWMiiQxhSJZwjSfD+CdYOhUzU4OvcVo3uI0nYPsoitB4nMlk1meBmSmOSFdCg
+	zccstMVJTyW+KQAAWjWxALmRyh7U6EDTg3zbcresgIDCEyTszsAaeRIslaofS62JgxKyl/
+	v6czAZbjHpkx7pybcDS4isfjNzRE8vQ=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-213-v8bynBZMNx29b7y2qYx2pw-1; Thu, 17 Sep 2026 07:14:47 -0400
+X-MC-Unique: v8bynBZMNx29b7y2qYx2pw-1
+X-Mimecast-MFC-AGG-ID: v8bynBZMNx29b7y2qYx2pw_1789643687
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-49e76a80fe5so10434195e9.2
+        for <mptcp@lists.linux.dev>; Thu, 17 Sep 2026 04:14:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789643687; x=1790248487;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=tB6cedv3wb2iJpHvP6bOucKdHMXRoYEnunTmHPPHgss=;
+        b=QJKudI0LXlmwnx2sb4WUtRrAjz8GAbmDq1AtbuXpci6/Yr5X4Zv1sXRwSnLjuxKAYj
+         E3xNDSEQYFi5Bj3cAPvayo76TFCww6XKSgGSpod+9KJSQTNntFbXI5z52XfOqXXkf1il
+         Q3M6lqjcLDh5ab5UHUKlSsB9Mr68CGwZLbtExfSZt+Y1aLpTRpm9pcj1XOZ7kyLc5T7h
+         b3acw5NPQL0UlWnY3YYx1LJjUOQVTY96wVOY68Pu/w7l3rssHP3XW8JMXVzO/ty3IqQL
+         E4a5EIqDLvjxKFwt6jL0O3TysdqGRUsbBdnPoprKzd2m68vnJU5A9qkksB2Xn6o/wyeZ
+         AfWg==
+X-Forwarded-Encrypted: i=1; AKwUvBy7Gz8PT9EB7rWfAkPP9eLZ+Vh1SA+tdts4ezdjQ4ngUR2gc11q0JXKdwn+pjKZdDse/uu9Vw==@lists.linux.dev
+X-Gm-Message-State: AFuF++kcY+v4p6D3XV9x4zS91UwcAcY/ypzO7IfIzhNMmIXSkAKWwAJr
+	ilJ8OInZX3uq6oTehG21gr/3TcEmz66Zs7ClduJziUlh4LIaO1NE5Y9jxzfZtBYogL8EJnZH0PE
+	bWK6dBxna7fO6YHKgoY8Nc0Ivi98jwkiwBBtx5sg6hXWBMnq8Z4xCwOPr
+X-Gm-Gg: AYBFou279n0UqcH5UjaZq+oT3TXXWDp0wR9LLWuCRqrsZxczSH9XNBPUNkSl3dAAjLK
+	EIBElC1VQGiihv7b6SvYoCPiv0Bx6RD1mqDbTPcldsaHql5zltrLc4/IGGXs8WzPH06nFJ3CVF9
+	+k7S7cRl7Who6cY5nF4Hcl/tuVKd/IniScaDGAFy6vLCxFohTmUzSvrWicrb9Qed80T2C2Vwdmc
+	DgqxkayO7AMNuzokI5Vp+i537hQD9u5BYJNuGNda19VxFU4kCILL8bsvCHZmTF54mZNwySiVSu3
+	Dj1pawM8Q3EfvbRU3U6PcJFOfC5ta2AIK8QvjJGFarqnVs0r7PrsDubM+TLLQRz27jOFUSSmJLT
+	s65Y3kJdJr27xax/QmVvKwML8y57wt7BUVfjRgo0HRNXjqJWhUVNjQz36UhXY7Bjr7USUTgq6sg
+	==
+X-Received: by 2002:a05:600c:a14:b0:49d:433:c3b6 with SMTP id 5b1f17b1804b1-49ec053a640mr75279785e9.27.1789643686546;
+        Thu, 17 Sep 2026 04:14:46 -0700 (PDT)
+X-Received: by 2002:a05:600c:a14:b0:49d:433:c3b6 with SMTP id 5b1f17b1804b1-49ec053a640mr75279395e9.27.1789643686000;
+        Thu, 17 Sep 2026 04:14:46 -0700 (PDT)
+Received: from [192.168.188.234] (ip232-47-231-195.pool-bba.aruba.it. [195.231.47.232])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fbbd83e39sm95218655e9.4.2026.09.17.04.14.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Sep 2026 04:14:44 -0700 (PDT)
+Message-ID: <21775818-943d-4978-911a-4da550d49781@redhat.com>
+Date: Thu, 17 Sep 2026 13:14:43 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net 1/2] mptcp: avoid unneeded actions on subflow reset
+To: netdev-bot+sashiko@kernel.org, matttbe@kernel.org
+Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, horms@kernel.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, stable@vger.kernel.org,
+ shardul.b@mpiricsoftware.com, xinyang@anthropic.com
+References: <20260915-net-mptcp-misc-fixes-7-3-rc4-v1-1-a257797dd5d0@kernel.org>
+ <178959153492.22033.1944011998010756543@kernel.org>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <178959153492.22033.1944011998010756543@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: I7-7o-x0YoqGCy4_YmDFJzHE8oNDG8i6_AFKeeDq_qk_1789643687
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Matt, Jiayuan,
+On 9/16/26 22:45, netdev-bot+sashiko@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 3 potential
+> issue(s) to consider:
+> 
+> Critical: 0 · High: 2 · Medium: 1 · Low: 0
+> 
+> - [High] The new unconditional `if (subflow->resetting) return;` in
+>    subflow_state_change() (net/mptcp/subflow.c:1891) removes the last…
+> - [High] mptcp: data race in bitfield resetting and close_event_done
+> - [Medium] The new early return in subflow_state_change()
+>    (net/mptcp/subflow.c:1891) is justified by an in-code comment claiming…
+> 
+> --
+> 
+> mptcp: avoid unneeded actions on subflow reset
+> 
+> This adds a new subflow->resetting bit, set in mptcp_subflow_reset() before
+> tcp_done(), and uses it to return early from subflow_state_change() so the
+> nested mptcp_data_ready() recursion is broken. The early return also skips
+> the data-available check, the error report and subflow_sched_work_if_closed().
+> 
+>> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+>> index 01db7edce18a6..cbe227d218449 100644
+>> --- a/net/mptcp/subflow.c
+>> +++ b/net/mptcp/subflow.c
+>> @@ -438,6 +438,7 @@ void mptcp_subflow_reset(struct sock *ssk)
+>>   	/* must hold: tcp_done() could drop last reference on parent */
+>>   	sock_hold(sk);
+>>   
+>> +	subflow->resetting = 1;
+>>   	mptcp_send_active_reset_reason(ssk);
+>>   	tcp_done(ssk);
+>>   	if (!test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &mptcp_sk(sk)->flags))
+> 
+> [Severity: High]
+> The new bit is carved out of the same 32-bit bitfield word as
+> closeing/close_event_done/mpc_drop, and a C bitfield store is a
+> read-modify-write of that whole word, not of the single bit.  So the
+> question is whether that word is only ever written under one lock.
+> 
+> mptcp_subflow_reset() now writes subflow->resetting.  On the
+> mptcp_mp_fail_no_response() path the caller is mptcp_worker(), which
+> holds the msk socket lock and then lock_sock_fast(ssk), so both locks
+> are held.  But the DSS-corruption path -- mptcp_dss_corruption() ->
+> mptcp_subflow_reset() -- runs from get_mapping_status() /
+> mptcp_subflow_data_available() in the ssk receive path, i.e. with only
+> the subflow socket lock (and possibly in BH context).  Meanwhile
+> mptcp_close_ssk() writes subflow->close_event_done = true holding only
+> the msk socket lock.  Those two locks do not exclude each other, so
+> the two load/or/store sequences can interleave on the same word.
+> 
+> If the msk-side store wins, the resetting = 1 store is silently
+> dropped, subflow_state_change() takes the old path and we are back to
+> the recursive mptcp_data_ready() and the data lock re-acquisition this
+> patch is meant to break -- the failure mode is the same deadlock, just
+> rarer and harder to reproduce.  If the reset-side store wins,
+> close_event_done is lost and the post-close event handling runs twice.
+> KCSAN should be able to flag this write/write pair.
+> 
+> Is there serialization here that I am missing for the
+> mptcp_dss_corruption() caller?  If not, would you consider keeping
+> resetting out of the msk-owned bitfield word -- a plain bool next to
+> data_avail/scheduled, or a bit in a flags word updated with set_bit()
+> -- so that setting it under the ssk lock cannot clobber bits owned by
+> the msk lock?
 
-Thanks for looping me in, and thanks Jiayuan for catching this.
+This is actually a pre-exiting issue, and quite unrelated. Could deserve 
+a separate/later fix.
 
-This is a separate bug from what I was fixing. My patch hardens the
-lockless read of ->conn (the NULL-deref/UAF from #622) with
-rcu_dereference()/acquire-release/SOCK_RCU_FREE, but that doesn't
-touch the helper's return-value ownership contract, so the refcount
-mismatch you're describing exists independently of whether the read
-itself is safe. Hardening the read fixes my bug; it doesn't and can't
-fix this one.
+> [ ... ]
+> 
+>> @@ -1883,6 +1884,13 @@ static void subflow_state_change(struct sock *sk)
+>>   
+>>   	__subflow_state_change(sk);
+>>   
+>> +	/* Rx queue processing is unneeded, error reporting will take place at
+>> +	 * __mptcp_close_ssk() time and subflow reset can't happen in case of
+>> +	 * fallback: subflow_sched_work_if_closed() would be a no-op.
+>> +	 */
+>> +	if (subflow->resetting)
+>> +		return;
+>> +
+> 
+> [Severity: High]
+> Can a reset subflow with a non-empty ssk->sk_receive_queue still get
+> cleaned up after this early return?
+> 
+> mptcp_subflow_reset() calls tcp_done(ssk), and tcp_set_state(TCP_CLOSE)
+> unhashes the socket, so subflow_data_ready() cannot fire again for this
+> ssk.  That makes the tcp_done() -> sk_state_change() ->
+> subflow_state_change() path the last remaining entry into
+> mptcp_subflow_data_available() for this subflow, and the new return skips
+> it.
+> 
+> The flush that exists for exactly this case lives in validate_data_csum():
+> 
+> net/mptcp/subflow.c:validate_data_csum() {
+> 	...
+> 	if (skb_queue_is_last(&ssk->sk_receive_queue, skb)) {
+> 		/* if this subflow is closed, the partial mapping
+> 		 * will be never completed; flush the pending skbs, so
+> 		 * that subflow_sched_work_if_closed() can kick in
+> 		 */
+> 		if (unlikely(ssk->sk_state == TCP_CLOSE))
+> 			while ((skb = skb_peek(&ssk->sk_receive_queue)))
+> 				sk_eat_skb(ssk, skb);
+> 
+> 		/* not enough data to validate the csum */
+> 		return MAPPING_EMPTY;
+> 	}
+> 	...
+> }
+> 
+> With the skbs left in place, does __mptcp_close_subflow() keep skipping
+> the subflow forever?
+> 
+> net/mptcp/protocol.c:__mptcp_close_subflow() {
+> 	...
+> 		/* 'subflow_data_ready' will re-sched once rx queue is empty */
+> 		if (!skb_queue_empty_lockless(&ssk->sk_receive_queue))
+> 			continue;
+> 
+> 		mptcp_close_ssk(sk, ssk, subflow);
+> 	...
+> }
+> 
+> mptcp_worker() has already cleared MPTCP_WORK_CLOSE_SUBFLOW at that point,
+> and recvmsg() only spools msk->backlog_list in mptcp_move_skbs() /
+> __mptcp_move_skbs(), so it never touches ssk->sk_receive_queue.
+> 
+> A concrete path with net.mptcp.checksum_enabled=1: a bad DSS csum arms
+> subflow->fail_tout in mptcp_subflow_fail(); a later partially received
+> mapping returns MAPPING_EMPTY leaving skbs queued on msk->first; the
+> MP_FAIL echo never arrives, so mptcp_worker() calls
+> mptcp_mp_fail_no_response():
+> 
+> net/mptcp/protocol.c:mptcp_mp_fail_no_response() {
+> 	...
+> 	slow = lock_sock_fast(ssk);
+> 	mptcp_subflow_reset(ssk);
+> 	WRITE_ONCE(mptcp_subflow_ctx(ssk)->fail_tout, 0);
+> 	unlock_sock_fast(ssk, slow);
+> }
+> 
+> fail_tout is then cleared, and since __mptcp_close_ssk() is never reached,
+> mptcp_start_tout_timer() is never called either.  Does that leave the msk
+> in TCP_ESTABLISHED with its only, dead subflow, no pending timer, and a
+> reader blocked in mptcp_recvmsg() that is never woken with EOF or an
+> error?
+> 
+> The same early return also appears to leave reset join subflows (the
+> 'reset:' label in check_fully_established() and __mptcp_flush_join_list())
+> with their context and queued skbs pinned on msk->conn_list.
+> 
+> For reference, the DSS-corruption path itself looks unaffected, because
+> __mptcp_move_skbs_from_subflow() re-calls mptcp_subflow_data_available(ssk)
+> in its own loop.
 
-Given that, I think Paolo's original suggestion (dropping the helper
-from tracing_prog_func_proto()) is the right call. I don't see a way
-to fix the refcounting issue while keeping the helper's current shape
-(returning a different object than the input, with no reference taken)
-without a bigger rework of what it hands back to a BPF program.
+This may deserve to be fixed in the same series.
 
-I checked which prog types can actually chain bpf_skc_lookup_tcp()
-into bpf_skc_to_mptcp_sock() - it's broader than just tracing.
-sock_addr, tc_cls_act, xdp, and sk_msg all have bpf_skc_lookup_tcp()
-available and fall through to bpf_sk_base_func_proto(), which is
-where bpf_skc_to_mptcp_sock() is registered, so the same pattern
-Jiayuan showed is reachable from all four of them, not only from
-tracing programs. sock_ops doesn't register bpf_skc_lookup_tcp() at
-all, and cg_skb has the lookup helper but doesn't fall through to
-bpf_sk_base_func_proto(), so neither of those two can chain into it
-this way. I haven't traced the verifier's reference-tracking closely
-enough to rule out some other path I'm not aware of.
+> [Severity: Medium]
+> The comment states "subflow reset can't happen in case of fallback:
+> subflow_sched_work_if_closed() would be a no-op".  Is that premise
+> enforced anywhere?
+> 
+> mptcp_mp_fail_no_response() resets msk->first purely on fail_tout expiry,
+> with no __mptcp_check_fallback() test.  fail_tout is armed by
+> mptcp_subflow_fail() while the msk is not yet in fallback, and nothing
+> seems to clear it when a later fallback succeeds: __mptcp_try_fallback()
+> only touches allow_subflows / MPTCP_FALLBACK_DONE, and the pm.c side clears
+> fail_tout only on an MP_FAIL echo.
+> 
+> With net.mptcp.checksum_enabled=1: a middlebox mangles the MPTCP options,
+> MAPPING_BAD_CSUM with valid_csum_seen sends MP_FAIL and arms
+> fail_tout = jiffies + TCP_RTO_MAX; the echo never arrives; a subsequent
+> MAPPING_NODSS on the same first subflow makes mptcp_try_fallback() succeed,
+> so MPTCP_FALLBACK_DONE is set while fail_tout is still armed.  The tout
+> timer then runs mptcp_worker() -> mptcp_mp_fail_no_response() ->
+> mptcp_subflow_reset(msk->first) with __mptcp_check_fallback(msk) true.
+> 
+> In that state tcp_done() sets SHUTDOWN_MASK/TCP_CLOSE, so subflow_is_done(ssk)
+> is true and msk->first == ssk, which is precisely the branch that is not a
+> no-op:
+> 
+> net/mptcp/subflow.c:subflow_sched_work_if_closed() {
+> 	...
+> 	/* when the fallback subflow closes the rx side, trigger a 'dummy'
+> 	 * ingress data fin, so that the msk state will follow along
+> 	 */
+> 	if (__mptcp_check_fallback(msk) && subflow_is_done(ssk) &&
+> 	    msk->first == ssk &&
+> 	    mptcp_update_rcv_data_fin(msk, subflow->map_seq +
+> 				      subflow->map_data_len, true))
+> 		mptcp_schedule_work(sk);
+> }
+> 
+> Skipping that call means mptcp_update_rcv_data_fin() is never invoked, the
+> msk never moves to CLOSE_WAIT/RCV_SHUTDOWN, and blocked readers get no EOF
+> until the close timeout (net.mptcp.close_timeout, 60 s by default) fires
+> and mptcp_do_fastclose() sets TCP_CLOSE and purges the backlog instead of
+> delivering a clean EOF.  Should the comment be qualified, or should the
+> check be narrowed so the fallback DATA_FIN injection still runs?
+Yeah sashiko does not like my wording, plus another unrelated race 
+between fallback and mp_fail timeout.
 
-I don't have visibility into whether any real tracing (or TC/XDP/etc.)
-programs use this helper today. If that's a live concern for anyone,
-I'll defer to whoever has that visibility.
-
-I can send a version that drops bpf_skc_to_mptcp_sock() from
-tracing_prog_func_proto() as Paolo suggested. Given what Jiayuan found
-also applies to the non-tracing paths above, should that patch just
-remove the BPF_FUNC_skc_to_mptcp_sock case from
-bpf_sk_base_func_proto() as well, rather than leaving it there for
-sock_addr/tc/xdp/sk_msg?
-
-Cheers,
-Kalpan Jani
-
-
-From: Matthieu Baerts <matttbe@kernel.org>
-To: "Jiayuan Chen"<jiayuan.chen@linux.dev>, <bpf@vger.kernel.org>, <mptcp@lists.linux.dev>
-Cc: "VEGA"<vega@nebusec.ai>, "Alexei Starovoitov"<ast@kernel.org>, "Daniel Borkmann"<daniel@iogearbox.net>, "John Fastabend"<john.fastabend@gmail.com>, "Andrii Nakryiko"<andrii@kernel.org>, "Eduard Zingerman"<eddyz87@gmail.com>, "Kumar Kartikeya Dwivedi"<memxor@gmail.com>, "Martin KaFai Lau"<martin.lau@linux.dev>, "Song Liu"<song@kernel.org>, "Yonghong Song"<yonghong.song@linux.dev>, "Jiri Olsa"<jolsa@kernel.org>, "Emil Tsalapatis"<emil@etsalapatis.com>, "Ihor Solodrai"<ihor.solodrai@linux.dev>, "Shuah Khan"<shuah@kernel.org>, "Mat Martineau"<martineau@kernel.org>, "Geliang Tang"<geliang@kernel.org>, "Matt Bobrowski"<mattbobrowski@google.com>, "Tejun Heo"<tj@kernel.org>, <linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>, <netdev@vger.kernel.org>, "Kalpan Jani"<kalpan.jani@mpiricsoftware.com>, "Paolo Abeni"<pabeni@redhat.com>
-Date: Thu, 17 Sep 2026 15:09:13 +0530
-Subject: Re: [PATCH bpf v1 1/2] mptcp, bpf: reject bpf_sk_release() on msk
-
- > Hi Jiayuan,
- > 
- > +Cc Kalpan, Paolo.
- > 
- > On 17/09/2026 10:11, Jiayuan Chen wrote:
- > > A bpf prog can do this today:
- > > 
- > >     subflow = bpf_skc_lookup_tcp(...);
- > >     msk = bpf_skc_to_mptcp_sock(subflow);
- > >     bpf_sk_release(msk);
- > > 
- > > bpf_skc_to_mptcp_sock() returns subflow->conn without taking any
- > > reference, so bpf_sk_release() drops a refcount nobody took on the msk,
- > > and the subflow reference is leaked:
- > Thank you for looking at this!
- > 
- > Note that Kalpan was looking at this [1], and Paolo suggested removing
- > the helper [2] (but we failed to review the last version so far, sorry
- > about that...)
- > 
- > I don't know if there are progs already using it. If yes, I guess your
- > approach is better (but I'm not comfortable reviewing verifier's code).
- > 
- > @Kalpan, WDYT?
- > 
- > [1] https://lore.kernel.org/20260818120437.3949686-1-kalpan.jani@mpiricsoftware.com
- > [2] https://lore.kernel.org/e039e866-fe7e-41ef-ad41-92a76a123713@redhat.com
- > 
- > Cheers,
- > Matt
- > -- 
- > Sponsored by the NGI0 Core fund.
- > 
- > 
-
+/P
 
