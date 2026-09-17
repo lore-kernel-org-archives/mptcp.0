@@ -1,78 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta0.migadu.com (out-157.mta0.migadu.com [91.218.175.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F4131A555;
-	Thu, 17 Sep 2026 00:41:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB9836D51B
+	for <mptcp@lists.linux.dev>; Thu, 17 Sep 2026 02:17:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789605674; cv=none; b=Jt1Q9uzpWAWsN0D8r1hKyh6NfX49vEys/AZ0HfgsrE1vgg6vOj3nEaWTKsQ5OW2RuKVoUFGyu4p6n8FpfDQOo5jqUgkmJiWcHz/PHJ2bQRBdNwXcewMj9XtiHLwCpdlIrI9PUZ7yCLHfQMtQzheWmWBWgoR9X6qB5VGVerlXOyM=
+	t=1789611448; cv=none; b=pdGdtLYxLXR0XnRk/Gpkij2zpKMYonyU1yw7+khfG80exSR+ZORgtyEz97+7FyqdA0PzH1u0kK2qvXlnZdc+Rys5z0KVT8kd2wn0+2vFWvFPsMX/YRXzOXmc4DpwFlCSjucWGi01LvbWb789pmwOEznefgaP7mbVBu+wB3qRGz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789605674; c=relaxed/simple;
-	bh=nv8ehzXNWQ0YNPXGG1PuuM/QJ9hcptY2hc36fynuM4w=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=TZS75eFWyPs1VvDzgB69UKPpMdby3tSO15ZO0iiP0+ATkR3XujIYsLFW+5bAzhEzVxAHiy2eTWm6NEHn8Gz25tSkSmwoWLnyXwr+X/EPb/03/XhjIwOjy4zNiqYhTa4NoZAsoJxHnrkIZRfPMNTGuyls8T4BsxW/qHEvcxApHzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XbpixoQS; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789611448; c=relaxed/simple;
+	bh=6ZKkVFe30ui4+BMavPMekwCbHs+/Mni0LzTbLyfg8Zg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=fO7Bd8wmwoiCO6NSvMD1ChvWAe0qP6di5DQ39JdNmf5GoWOjYf2wH9rcaklofRXr5P5d/68n7upJJzVZKrudGzf+8kJtJ2gJX+D3A6hwerMpNdm5PAbGrcVcJuSHUVAusDmDWy6+m0Fno58KhZw/JDKvBE84nerEcaO7cK0x4+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SH/T9r2C; arc=none smtp.client-ip=91.218.175.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XbpixoQS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B79111F00893;
-	Thu, 17 Sep 2026 00:41:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789605673;
-	bh=KLVHZY0CAS1n0MDo2625TmenwP1t/VjdqFNKwIwcANM=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=XbpixoQSLQtf6CIrx8/KS7F4TMM4kL0JDtNtynizKwpCcBAz8Q6B2sbkCnYcrZ9B7
-	 0AJeM5uaIfJIoSgsbaDokTOnlsACFXbHyfZsNr+qdQD6Nv1XRrK2NlEUuFBrxTnkOF
-	 abpOQkSYp+xHVHOJVrSy5mKRMV1gPecgkTneebafBMhfOjLP0uwhNBJguY4IyduNVN
-	 q2vPjvXHC0J7qm1XbSLmOwbR1dtKVSXdua21TStABZaD+qWo+DgilCLl6YHdE8Dj0p
-	 m8+DKMRNCPdFHaJAnpC70+Xh+vPf7ktopA3Hcme+JhsmGYiQHiObp7gnsPRrp8jCuL
-	 WsAOqgYZahw0w==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id D089D39E9601;
-	Thu, 17 Sep 2026 00:40:08 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SH/T9r2C"
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=6ZKkVFe30ui4+BMavPMekwCbHs+/Mni0LzTbLyfg8Zg=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1789611443; v=1; x=1790216243;
+ b=SH/T9r2CxIow3ov2kN79+LbKILtiqFRpSuWnKadHcVqQ+45wpm3b6pVZP9mlVOxE1G02TS2s
+ 8OCDj9gxTjmyuwzegZEFwOs7GHhAJ7cXHuQsnDmPPrdkMZadvfW2LxmSvsdBbakznlYfbNMlk24
+ 05d8PInjJlaW53waTDdslLQs=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id a56a1f4abc55b453;
+	Thu, 17 Sep 2026 02:17:23 +0000
+X-Mizu-Trace-ID: a56a1f4abc55b453
+X-Migadu-Flow: FLOW_OUT
+From: Hangbin Liu <hangbin.liu@linux.dev>
+Date: Thu, 17 Sep 2026 10:17:01 +0800
+Subject: [PATCH net] selftests: net: update netfilter netlink config
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] mptcp: return sk_wait_data() errors from recvmsg()
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <178960560738.3354472.16740899411483597781.git-patchwork-notify@kernel.org>
-Date: Thu, 17 Sep 2026 00:40:07 +0000
-References: <20260913-b4-send-mptcp-recv-error-v1-1-4eaa3684a8b8@gmail.com>
-In-Reply-To: <20260913-b4-send-mptcp-recv-error-v1-1-4eaa3684a8b8@gmail.com>
-To: Mark Amirkan <markdamirkan@gmail.com>
-Cc: matttbe@kernel.org, martineau@kernel.org, mptcp@lists.linux.dev,
- kuba@kernel.org, geliang@kernel.org, davem@davemloft.net, horms@kernel.org,
- linux-kernel@vger.kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
- edumazet@google.com
+Message-Id: <20260917-selftest_config-v1-1-bf25ccbfb18e@kylinos.cn>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x3MTQqAIBBA4avIrBNqiP6uEhGpYw2EhSMRRHdPW
+ n6L9x4QikwCg3og0sXCR8ioCgV2W8JKml02YIlN2VetFtp9IkmzPYLnVWPXGOfq2iAayNUZyfP
+ 9H0cIlGB63w8i6rrnZgAAAA==
+X-Change-ID: 20260917-selftest_config-286bdd44b22b
+To: Matthieu Baerts <matttbe@kernel.org>, 
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, 
+ Pablo Neira Ayuso <pablo@netfilter.org>, Florian Westphal <fw@strlen.de>, 
+ Phil Sutter <phil@nwl.cc>, Fernando Fernandez Mancera <fmancera@suse.de>
+Cc: Hangbin Liu <hangbin.liu@linux.dev>, netdev@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ netfilter-devel@vger.kernel.org, coreteam@netfilter.org, 
+ mptcp@lists.linux.dev, Hangbin Liu <liuhangbin@kylinos.cn>
+X-Mailer: b4 0.14.3
 
-Hello:
+From: Hangbin Liu <liuhangbin@kylinos.cn>
 
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Since commit d4349ba9872d ("netfilter: allow nfnetlink built-in only"),
+NETFILTER_NETLINK was changed to a bool. Use 'y' instead of 'm'.
+Otherwise the build emits:
 
-On Sun, 13 Sep 2026 10:30:05 +0000 you wrote:
-> From: Mark Amirkan <markdamirkan@gmail.com>
-> 
-> Commit 581302298524 ("mptcp: error out earlier on disconnect") made
-> mptcp_recvmsg() stop when sk_wait_data() returns an error.  The error is
-> stored in err, but the function then jumps to a path which returns
-> copied.  When no data was copied, recvmsg() therefore returns zero and
-> reports a false EOF.
-> 
-> [...]
+  .config:5688:warning: symbol value 'm' invalid for NETFILTER_NETLINK
 
-Here is the summary with links:
-  - [net] mptcp: return sk_wait_data() errors from recvmsg()
-    https://git.kernel.org/netdev/net/c/60404266ef3e
+Fixes: d4349ba9872d ("netfilter: allow nfnetlink built-in only")
+Signed-off-by: Hangbin Liu <liuhangbin@kylinos.cn>
+---
+This is a simple update addressing the same issue, so I’d like to post it
+directly to netdev instead of bothering two separate subsystems
+(mptcp and netfilter).
+---
+ tools/testing/selftests/net/mptcp/config     | 2 +-
+ tools/testing/selftests/net/netfilter/config | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-You are awesome, thank you!
+diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
+index 59051ee2a986..bb9c4c97c620 100644
+--- a/tools/testing/selftests/net/mptcp/config
++++ b/tools/testing/selftests/net/mptcp/config
+@@ -18,7 +18,7 @@ CONFIG_NET_CLS_ACT=y
+ CONFIG_NET_CLS_FW=m
+ CONFIG_NETFILTER=y
+ CONFIG_NETFILTER_ADVANCED=y
+-CONFIG_NETFILTER_NETLINK=m
++CONFIG_NETFILTER_NETLINK=y
+ CONFIG_NETFILTER_XTABLES=m
+ CONFIG_NETFILTER_XTABLES_LEGACY=y
+ CONFIG_NETFILTER_XT_MATCH_BPF=m
+diff --git a/tools/testing/selftests/net/netfilter/config b/tools/testing/selftests/net/netfilter/config
+index c3c121b6f300..629b2b29ed1a 100644
+--- a/tools/testing/selftests/net/netfilter/config
++++ b/tools/testing/selftests/net/netfilter/config
+@@ -44,7 +44,7 @@ CONFIG_NET_CLS_U32=m
+ CONFIG_NETDEVSIM=m
+ CONFIG_NETFILTER=y
+ CONFIG_NETFILTER_ADVANCED=y
+-CONFIG_NETFILTER_NETLINK=m
++CONFIG_NETFILTER_NETLINK=y
+ CONFIG_NETFILTER_NETLINK_QUEUE=m
+ CONFIG_NETFILTER_SYNPROXY=m
+ CONFIG_NETFILTER_XTABLES=m
+
+---
+base-commit: 1dd85662fee6e2ac580b1c4f9a0c0a7ae6e31f0e
+change-id: 20260917-selftest_config-286bdd44b22b
+
+Best regards,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+Hangbin Liu <liuhangbin@kylinos.cn>
 
