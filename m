@@ -1,73 +1,73 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EA64BB26D
-	for <mptcp@lists.linux.dev>; Thu, 17 Sep 2026 11:14:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB9439D6D6
+	for <mptcp@lists.linux.dev>; Thu, 17 Sep 2026 11:16:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789643697; cv=none; b=JQ2rw1PkmdzImLOUTriH+JtUu/yYtgxL9nWbFHzcCj+k46IskmBw3C2N7VNH4gKl5CoeECrS+AiS3LxPLYpPk7dcJKnpFF4XRxF1ilq4ZvbuTfe1bY3402gKhfcIXOiRFNqPr2AyvU+sOQjA9P0tMLeCC3wrtV/1A0I/y0d00WM=
+	t=1789643820; cv=none; b=qbi6eM2dIltIyF0WheCJS+XM5I1b0Jku+ZMBUy3nHc6KdN5cRLAX1Ym6n/bFx3NsyNZTmu/ynBXpc46cybVm7JvQVYP5a8rEqo+BbxpvxbMrx777nofKtfhNwqf/5cTOvRZnFTW6pQW0PT1PYSbTuNxKLFD2nm8dpvTQvgkyUMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789643697; c=relaxed/simple;
-	bh=yaUHywk+HRls2oGlqzbXlpzTPa0QB+HsreFfTJvFWng=;
+	s=arc-20240116; t=1789643820; c=relaxed/simple;
+	bh=zLcvCiAPD5wWmnt5hHFi7ShfG7dr6QAZVgPTgrRf4+4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F/rmgBcYwQ44ya8crUo/zjLLnCoCqEPiDioLu8ZgYrA6RIdCO0AlRDCS8cHml+K0blnv+SMqmMeSROPMaF/T07SOVdXigvBmRT/AF1gxK7ET+CvDEeFnkwn4Wx+wh1ZnrXbyLS53hDGo7pOIz5eHfUjwUgBljEVOr6ik67XPP0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jMGpU7/k; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=fQBlnsCxPuI+zNviSybEBb6crNqhbQT6iQNNEpq7g8wV/9YSXjFXnaWgkDEpj0KcWt2GsA8jrk5gM0mqJpSW3yzks1NkV3XbtvbT3qyVNm4z/dlYtHL3Pz6G0tB57H9Ao4LK3xiZhe2EUWWK26KYCFjCzRDvp1aeHSi+Jv11ALI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=drOQEkCB; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jMGpU7/k"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="drOQEkCB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1789643689;
+	s=mimecast20190719; t=1789643811;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tB6cedv3wb2iJpHvP6bOucKdHMXRoYEnunTmHPPHgss=;
-	b=jMGpU7/kdWWMiiQxhSJZwjSfD+CdYOhUzU4OvcVo3uI0nYPsoitB4nMlk1meBmSmOSFdCg
-	zccstMVJTyW+KQAAWjWxALmRyh7U6EDTg3zbcresgIDCEyTszsAaeRIslaofS62JgxKyl/
-	v6czAZbjHpkx7pybcDS4isfjNzRE8vQ=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=eP1uMmtD3DxvMqH6cKa6vonPQmGtZJRICWnH6003KGo=;
+	b=drOQEkCBVYwK7T6CZAawK6i30DUddFk31qF3fi69vcFC9jqAJ4mGHnqGdwwrgS5UaptirV
+	Rwi2lqkHS2pWBFTyHlFwcJAMHt24U8/HwAgSB3+9peELWYOR1c4JX0DqnzzHMXjLiu/rZA
+	BvlrqDebhK1HJcTbWThxp8sbosX6OVA=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-213-v8bynBZMNx29b7y2qYx2pw-1; Thu, 17 Sep 2026 07:14:47 -0400
-X-MC-Unique: v8bynBZMNx29b7y2qYx2pw-1
-X-Mimecast-MFC-AGG-ID: v8bynBZMNx29b7y2qYx2pw_1789643687
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-49e76a80fe5so10434195e9.2
-        for <mptcp@lists.linux.dev>; Thu, 17 Sep 2026 04:14:47 -0700 (PDT)
+ us-mta-493-ibUGBGIeOK2O9b1Fk0a_mw-1; Thu, 17 Sep 2026 07:16:34 -0400
+X-MC-Unique: ibUGBGIeOK2O9b1Fk0a_mw-1
+X-Mimecast-MFC-AGG-ID: ibUGBGIeOK2O9b1Fk0a_mw_1789643793
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-49cd74fc1aaso5262515e9.1
+        for <mptcp@lists.linux.dev>; Thu, 17 Sep 2026 04:16:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789643687; x=1790248487;
+        d=1e100.net; s=20260707; t=1789643793; x=1790248593;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=tB6cedv3wb2iJpHvP6bOucKdHMXRoYEnunTmHPPHgss=;
-        b=QJKudI0LXlmwnx2sb4WUtRrAjz8GAbmDq1AtbuXpci6/Yr5X4Zv1sXRwSnLjuxKAYj
-         E3xNDSEQYFi5Bj3cAPvayo76TFCww6XKSgGSpod+9KJSQTNntFbXI5z52XfOqXXkf1il
-         Q3M6lqjcLDh5ab5UHUKlSsB9Mr68CGwZLbtExfSZt+Y1aLpTRpm9pcj1XOZ7kyLc5T7h
-         b3acw5NPQL0UlWnY3YYx1LJjUOQVTY96wVOY68Pu/w7l3rssHP3XW8JMXVzO/ty3IqQL
-         E4a5EIqDLvjxKFwt6jL0O3TysdqGRUsbBdnPoprKzd2m68vnJU5A9qkksB2Xn6o/wyeZ
-         AfWg==
-X-Forwarded-Encrypted: i=1; AKwUvBy7Gz8PT9EB7rWfAkPP9eLZ+Vh1SA+tdts4ezdjQ4ngUR2gc11q0JXKdwn+pjKZdDse/uu9Vw==@lists.linux.dev
-X-Gm-Message-State: AFuF++kcY+v4p6D3XV9x4zS91UwcAcY/ypzO7IfIzhNMmIXSkAKWwAJr
-	ilJ8OInZX3uq6oTehG21gr/3TcEmz66Zs7ClduJziUlh4LIaO1NE5Y9jxzfZtBYogL8EJnZH0PE
-	bWK6dBxna7fO6YHKgoY8Nc0Ivi98jwkiwBBtx5sg6hXWBMnq8Z4xCwOPr
-X-Gm-Gg: AYBFou279n0UqcH5UjaZq+oT3TXXWDp0wR9LLWuCRqrsZxczSH9XNBPUNkSl3dAAjLK
-	EIBElC1VQGiihv7b6SvYoCPiv0Bx6RD1mqDbTPcldsaHql5zltrLc4/IGGXs8WzPH06nFJ3CVF9
-	+k7S7cRl7Who6cY5nF4Hcl/tuVKd/IniScaDGAFy6vLCxFohTmUzSvrWicrb9Qed80T2C2Vwdmc
-	DgqxkayO7AMNuzokI5Vp+i537hQD9u5BYJNuGNda19VxFU4kCILL8bsvCHZmTF54mZNwySiVSu3
-	Dj1pawM8Q3EfvbRU3U6PcJFOfC5ta2AIK8QvjJGFarqnVs0r7PrsDubM+TLLQRz27jOFUSSmJLT
-	s65Y3kJdJr27xax/QmVvKwML8y57wt7BUVfjRgo0HRNXjqJWhUVNjQz36UhXY7Bjr7USUTgq6sg
+        bh=eP1uMmtD3DxvMqH6cKa6vonPQmGtZJRICWnH6003KGo=;
+        b=tnT66xptolHvRd8UsnP5+kdLfTLnwl8j2+l8jFMhnzkN3BVCR0C7id1JDlCAYYoksu
+         NYMslI1iYbchcix0gjpDi8ikbKy63VmrV4aoZW62nwVv/flhIVvhoXTWVO9Jdok3bRLP
+         RzOZhqg261V+4H6SaxnuWcBdJhrabcDfWDbW+3f5ob+XCOoCKV03LvkPPEp1wTzOk1zr
+         K8wKw+9yWH/6H0x37HbmLrW3kkJFRlbi66O3308N/fvRhQxBYlaJ1cbUOYjZbOvxU9Qt
+         3m/HC7EqM54JnYl4A7uNs8PyMinKwQnlqTsli2OApGKI4s4jnqnUUGicKO4iKICt3LSr
+         P44g==
+X-Forwarded-Encrypted: i=1; AKwUvBy5ERTnMfVhFxQqROsGDjklYHm8Eliyejl0+cEr0X7MWJsp/Lhhl5vykclEhRzpIeA7NzqosA==@lists.linux.dev
+X-Gm-Message-State: AFuF++k8WGYSVK5xr25XmeynK4PAZ1b3H0IJk6S+eFOoZqE9NDe+vZ5p
+	rJq0srW6wsueBM7JSyR5QmXnz8WW/trkzWK5u8aEEC6o4oGO3qf+xJXA3dV5zrwh6YyZv35DNBn
+	wSCLwc8+wrfeZQeAIF0hssyQiBM5ry+sN/sH/EjSU9gsviyJKR0nirZ+h
+X-Gm-Gg: AYBFou1/w2OOz8OEfKDutPV4aprUcHevLTweaXx2dTEiPSm+u8rTKbnZVC2kylw64VZ
+	BIqNefoPVRq0q4M9tRvWiriQhNfwtKhHaONNMmMqzcNrVmKAgwDgzFL722a6YXM25tHhiuJTBp4
+	GP+VzthaatnsCt8nux+egxqDT14isemvq5CXjsq13OfBuh+zGAdDFSp+5Y1KvCpwEBxqT8tHzjB
+	6oLaOYRqHUAsnWz8zbKN1oc/V1fl3GGBRtsDGB5K6VwVJ9H+YYQ00Y/kTNgPAE+wNIRpNs00I6c
+	7477Aa3nAoSKxuSrmq7yRyNlTBJuGKYbvSmnDjo9poiGdUtYR50tA9kQ8KTmNM3AOz5RLaP++MM
+	7l9LTQAbpgcTvx4zqFpYquyw6jMtnwpjcX32T9aU8m5QeVnDjXg3x5F6ukZqJawPnUqREKUC3VQ
 	==
-X-Received: by 2002:a05:600c:a14:b0:49d:433:c3b6 with SMTP id 5b1f17b1804b1-49ec053a640mr75279785e9.27.1789643686546;
-        Thu, 17 Sep 2026 04:14:46 -0700 (PDT)
-X-Received: by 2002:a05:600c:a14:b0:49d:433:c3b6 with SMTP id 5b1f17b1804b1-49ec053a640mr75279395e9.27.1789643686000;
-        Thu, 17 Sep 2026 04:14:46 -0700 (PDT)
+X-Received: by 2002:a05:600c:3492:b0:49e:7d25:f397 with SMTP id 5b1f17b1804b1-49eb7301fd4mr64756615e9.15.1789643793389;
+        Thu, 17 Sep 2026 04:16:33 -0700 (PDT)
+X-Received: by 2002:a05:600c:3492:b0:49e:7d25:f397 with SMTP id 5b1f17b1804b1-49eb7301fd4mr64756235e9.15.1789643792937;
+        Thu, 17 Sep 2026 04:16:32 -0700 (PDT)
 Received: from [192.168.188.234] (ip232-47-231-195.pool-bba.aruba.it. [195.231.47.232])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fbbd83e39sm95218655e9.4.2026.09.17.04.14.43
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fbf415058sm42188045e9.0.2026.09.17.04.16.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Sep 2026 04:14:44 -0700 (PDT)
-Message-ID: <21775818-943d-4978-911a-4da550d49781@redhat.com>
-Date: Thu, 17 Sep 2026 13:14:43 +0200
+        Thu, 17 Sep 2026 04:16:31 -0700 (PDT)
+Message-ID: <b32628f0-834d-4906-8479-7687887e371b@redhat.com>
+Date: Thu, 17 Sep 2026 13:16:30 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -75,227 +75,99 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net 1/2] mptcp: avoid unneeded actions on subflow reset
-To: netdev-bot+sashiko@kernel.org, matttbe@kernel.org
+Subject: Re: [PATCH net 2/2] mptcp: close race between scheduler and state
+ change
+To: matttbe@kernel.org
 Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
  edumazet@google.com, kuba@kernel.org, horms@kernel.org,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, stable@vger.kernel.org,
- shardul.b@mpiricsoftware.com, xinyang@anthropic.com
-References: <20260915-net-mptcp-misc-fixes-7-3-rc4-v1-1-a257797dd5d0@kernel.org>
- <178959153492.22033.1944011998010756543@kernel.org>
+ netdev@vger.kernel.org, netdev-bot+sashiko@kernel.org,
+ mptcp@lists.linux.dev, stable@vger.kernel.org, shardul.b@mpiricsoftware.com,
+ xinyang@anthropic.com
+References: <20260915-net-mptcp-misc-fixes-7-3-rc4-v1-2-a257797dd5d0@kernel.org>
+ <178959153630.22033.1222004531183755077@kernel.org>
 From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <178959153492.22033.1944011998010756543@kernel.org>
+In-Reply-To: <178959153630.22033.1222004531183755077@kernel.org>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: I7-7o-x0YoqGCy4_YmDFJzHE8oNDG8i6_AFKeeDq_qk_1789643687
+X-Mimecast-MFC-PROC-ID: mtRJvuiEJdx451erUsp8miY5SVFq-usYUlBz1No7lVY_1789643793
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 On 9/16/26 22:45, netdev-bot+sashiko@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 3 potential
+> Thank you for your contribution! Sashiko AI review found 1 potential
 > issue(s) to consider:
 > 
-> Critical: 0 · High: 2 · Medium: 1 · Low: 0
+> Critical: 0 · High: 1 · Medium: 0 · Low: 0
 > 
-> - [High] The new unconditional `if (subflow->resetting) return;` in
->    subflow_state_change() (net/mptcp/subflow.c:1891) removes the last…
-> - [High] mptcp: data race in bitfield resetting and close_event_done
-> - [Medium] The new early return in subflow_state_change()
->    (net/mptcp/subflow.c:1891) is justified by an in-code comment claiming…
+> - [High] Incomplete fix: the identical `mss_now == 0` divide-by-zero that
+>    the patch guards in `mptcp_push_release()` (net/mptcp/protocol.c:1667)…
 > 
 > --
 > 
-> mptcp: avoid unneeded actions on subflow reset
+> mptcp: close race between scheduler and state change
 > 
-> This adds a new subflow->resetting bit, set in mptcp_subflow_reset() before
-> tcp_done(), and uses it to return early from subflow_state_change() so the
-> nested mptcp_data_ready() recursion is broken. The early return also skips
-> the data-available check, the error report and subflow_sched_work_if_closed().
+> The patch guards the tcp_push() call in mptcp_push_release() with a check
+> for info->mss_now being non-zero, so that a subflow which failed
+> transmission (leaving mss_now at 0) is not used for a divide operation.
 > 
->> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
->> index 01db7edce18a6..cbe227d218449 100644
->> --- a/net/mptcp/subflow.c
->> +++ b/net/mptcp/subflow.c
->> @@ -438,6 +438,7 @@ void mptcp_subflow_reset(struct sock *ssk)
->>   	/* must hold: tcp_done() could drop last reference on parent */
->>   	sock_hold(sk);
+> Closes: https://lore.kernel.org/20260525194828.1137119-1-shardul.b@mpiricsoftware.com
+> 
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index 0098e28309318..709610db3ce9d 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+>> @@ -1664,7 +1664,9 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
 >>   
->> +	subflow->resetting = 1;
->>   	mptcp_send_active_reset_reason(ssk);
->>   	tcp_done(ssk);
->>   	if (!test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &mptcp_sk(sk)->flags))
+>>   static void mptcp_push_release(struct sock *ssk, struct mptcp_sendmsg_info *info)
+>>   {
+>> -	tcp_push(ssk, 0, info->mss_now, tcp_sk(ssk)->nonagle, info->size_goal);
+>> +	if (info->mss_now)
+>> +		tcp_push(ssk, 0, info->mss_now, tcp_sk(ssk)->nonagle,
+>> +			 info->size_goal);
+>>   	release_sock(ssk);
+>>   }
 > 
 > [Severity: High]
-> The new bit is carved out of the same 32-bit bitfield word as
-> closeing/close_event_done/mpc_drop, and a C bitfield store is a
-> read-modify-write of that whole word, not of the single bit.  So the
-> question is whether that word is only ever written under one lock.
+> Should the same guard also be added to the second tcp_push() call site, in
+> __mptcp_subflow_push_pending()?
 > 
-> mptcp_subflow_reset() now writes subflow->resetting.  On the
-> mptcp_mp_fail_no_response() path the caller is mptcp_worker(), which
-> holds the msk socket lock and then lock_sock_fast(ssk), so both locks
-> are held.  But the DSS-corruption path -- mptcp_dss_corruption() ->
-> mptcp_subflow_reset() -- runs from get_mapping_status() /
-> mptcp_subflow_data_available() in the ssk receive path, i.e. with only
-> the subflow socket lock (and possibly in BH context).  Meanwhile
-> mptcp_close_ssk() writes subflow->close_event_done = true holding only
-> the msk socket lock.  Those two locks do not exclude each other, so
-> the two load/or/store sequences can interleave on the same word.
+> That function starts with a zeroed info:
 > 
-> If the msk-side store wins, the resetting = 1 store is silently
-> dropped, subflow_state_change() takes the old path and we are back to
-> the recursive mptcp_data_ready() and the data lock re-acquisition this
-> patch is meant to break -- the failure mode is the same deadlock, just
-> rarer and harder to reproduce.  If the reset-side store wins,
-> close_event_done is lost and the post-close event handling runs twice.
-> KCSAN should be able to flag this write/write pair.
-> 
-> Is there serialization here that I am missing for the
-> mptcp_dss_corruption() caller?  If not, would you consider keeping
-> resetting out of the msk-owned bitfield word -- a plain bool next to
-> data_avail/scheduled, or a bit in a flags word updated with set_bit()
-> -- so that setting it under the ssk lock cannot clobber bits owned by
-> the msk lock?
-
-This is actually a pre-exiting issue, and quite unrelated. Could deserve 
-a separate/later fix.
-
-> [ ... ]
-> 
->> @@ -1883,6 +1884,13 @@ static void subflow_state_change(struct sock *sk)
->>   
->>   	__subflow_state_change(sk);
->>   
->> +	/* Rx queue processing is unneeded, error reporting will take place at
->> +	 * __mptcp_close_ssk() time and subflow reset can't happen in case of
->> +	 * fallback: subflow_sched_work_if_closed() would be a no-op.
->> +	 */
->> +	if (subflow->resetting)
->> +		return;
->> +
-> 
-> [Severity: High]
-> Can a reset subflow with a non-empty ssk->sk_receive_queue still get
-> cleaned up after this early return?
-> 
-> mptcp_subflow_reset() calls tcp_done(ssk), and tcp_set_state(TCP_CLOSE)
-> unhashes the socket, so subflow_data_ready() cannot fire again for this
-> ssk.  That makes the tcp_done() -> sk_state_change() ->
-> subflow_state_change() path the last remaining entry into
-> mptcp_subflow_data_available() for this subflow, and the new return skips
-> it.
-> 
-> The flush that exists for exactly this case lives in validate_data_csum():
-> 
-> net/mptcp/subflow.c:validate_data_csum() {
+> net/mptcp/protocol.c:__mptcp_subflow_push_pending() {
+> 	struct mptcp_sendmsg_info info = {
+> 		.data_lock_held = true,
+> 	};
 > 	...
-> 	if (skb_queue_is_last(&ssk->sk_receive_queue, skb)) {
-> 		/* if this subflow is closed, the partial mapping
-> 		 * will be never completed; flush the pending skbs, so
-> 		 * that subflow_sched_work_if_closed() can kick in
-> 		 */
-> 		if (unlikely(ssk->sk_state == TCP_CLOSE))
-> 			while ((skb = skb_peek(&ssk->sk_receive_queue)))
-> 				sk_eat_skb(ssk, skb);
+> 	int copied = 0;
 > 
-> 		/* not enough data to validate the csum */
-> 		return MAPPING_EMPTY;
-> 	}
+> and info.mss_now is only ever assigned inside mptcp_sendmsg_frag(), after
+> the early return the commit message refers to:
+> 
+> 	if (unlikely(!__tcp_can_send(ssk)))
+> 		return -EAGAIN;
+> 
+> 	/* compute send limit */
 > 	...
-> }
+> 	info->mss_now = tcp_send_mss(ssk, &info->size_goal, info->flags);
 > 
-> With the skbs left in place, does __mptcp_close_subflow() keep skipping
-> the subflow forever?
+> In the non-first iteration, the return value is accumulated into copied
+> without filtering negatives:
 > 
-> net/mptcp/protocol.c:__mptcp_close_subflow() {
-> 	...
-> 		/* 'subflow_data_ready' will re-sched once rx queue is empty */
-> 		if (!skb_queue_empty_lockless(&ssk->sk_receive_queue))
-> 			continue;
+> net/mptcp/protocol.c:__mptcp_subflow_push_pending() {
+> 		if (READ_ONCE(subflow->scheduled)) {
+> 			mptcp_subflow_set_scheduled(subflow, false);
+> 			ret = __subflow_push_pending(sk, ssk, &info);
+> 			if (ret <= 0)
+> 				keep_pushing = false;
+> 			copied += ret;
+> 		}
 > 
-> 		mptcp_close_ssk(sk, ssk, subflow);
-> 	...
-> }
-> 
-> mptcp_worker() has already cleared MPTCP_WORK_CLOSE_SUBFLOW at that point,
-> and recvmsg() only spools msk->backlog_list in mptcp_move_skbs() /
-> __mptcp_move_skbs(), so it never touches ssk->sk_receive_queue.
-> 
-> A concrete path with net.mptcp.checksum_enabled=1: a bad DSS csum arms
-> subflow->fail_tout in mptcp_subflow_fail(); a later partially received
-> mapping returns MAPPING_EMPTY leaving skbs queued on msk->first; the
-> MP_FAIL echo never arrives, so mptcp_worker() calls
-> mptcp_mp_fail_no_response():
-> 
-> net/mptcp/protocol.c:mptcp_mp_fail_no_response() {
-> 	...
-> 	slow = lock_sock_fast(ssk);
-> 	mptcp_subflow_reset(ssk);
-> 	WRITE_ONCE(mptcp_subflow_ctx(ssk)->fail_tout, 0);
-> 	unlock_sock_fast(ssk, slow);
-> }
-> 
-> fail_tout is then cleared, and since __mptcp_close_ssk() is never reached,
-> mptcp_start_tout_timer() is never called either.  Does that leave the msk
-> in TCP_ESTABLISHED with its only, dead subflow, no pending timer, and a
-> reader blocked in mptcp_recvmsg() that is never woken with EOF or an
-> error?
-> 
-> The same early return also appears to leave reset join subflows (the
-> 'reset:' label in check_fully_established() and __mptcp_flush_join_list())
-> with their context and queued skbs pinned on msk->conn_list.
-> 
-> For reference, the DSS-corruption path itself looks unaffected, because
-> __mptcp_move_skbs_from_subflow() re-calls mptcp_subflow_data_available(ssk)
-> in its own loop.
-
-This may deserve to be fixed in the same series.
-
-> [Severity: Medium]
-> The comment states "subflow reset can't happen in case of fallback:
-> subflow_sched_work_if_closed() would be a no-op".  Is that premise
-> enforced anywhere?
-> 
-> mptcp_mp_fail_no_response() resets msk->first purely on fail_tout expiry,
-> with no __mptcp_check_fallback() test.  fail_tout is armed by
-> mptcp_subflow_fail() while the msk is not yet in fallback, and nothing
-> seems to clear it when a later fallback succeeds: __mptcp_try_fallback()
-> only touches allow_subflows / MPTCP_FALLBACK_DONE, and the pm.c side clears
-> fail_tout only on an MP_FAIL echo.
-> 
-> With net.mptcp.checksum_enabled=1: a middlebox mangles the MPTCP options,
-> MAPPING_BAD_CSUM with valid_csum_seen sends MP_FAIL and arms
-> fail_tout = jiffies + TCP_RTO_MAX; the echo never arrives; a subsequent
-> MAPPING_NODSS on the same first subflow makes mptcp_try_fallback() succeed,
-> so MPTCP_FALLBACK_DONE is set while fail_tout is still armed.  The tout
-> timer then runs mptcp_worker() -> mptcp_mp_fail_no_response() ->
-> mptcp_subflow_reset(msk->first) with __mptcp_check_fallback(msk) true.
-> 
-> In that state tcp_done() sets SHUTDOWN_MASK/TCP_CLOSE, so subflow_is_done(ssk)
-> is true and msk->first == ssk, which is precisely the branch that is not a
-> no-op:
-> 
-> net/mptcp/subflow.c:subflow_sched_work_if_closed() {
-> 	...
-> 	/* when the fallback subflow closes the rx side, trigger a 'dummy'
-> 	 * ingress data fin, so that the msk state will follow along
-> 	 */
-> 	if (__mptcp_check_fallback(msk) && subflow_is_done(ssk) &&
-> 	    msk->first == ssk &&
-> 	    mptcp_update_rcv_data_fin(msk, subflow->map_seq +
-> 				      subflow->map_data_len, true))
-> 		mptcp_schedule_work(sk);
-> }
-> 
-> Skipping that call means mptcp_update_rcv_data_fin() is never invoked, the
-> msk never moves to CLOSE_WAIT/RCV_SHUTDOWN, and blocked readers get no EOF
-> until the close timeout (net.mptcp.close_timeout, 60 s by default) fires
-> and mptcp_do_fastclose() sets TCP_CLOSE and purges the backlog instead of
-> delivering a clean EOF.  Should the comment be qualified, or should the
-> check be narrowed so the fallback DATA_FIN injection still runs?
-Yeah sashiko does not like my wording, plus another unrelated race 
-between fallback and mp_fail timeout.
+> __subflow_push_pending() passes mptcp_sendmsg_frag()'s -EAGAIN through
+> verbatim when the first frag fails, so copied becomes -EAGAIN, which is
+> non-zero, while info.mss_now is still 0:
+This is a pre-existing issue but it could deserve to be fixed in the 
+same series.
 
 /P
 
