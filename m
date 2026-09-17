@@ -1,113 +1,132 @@
-Received: from mta0.migadu.com (out-157.mta0.migadu.com [91.218.175.157])
+Received: from mail-oi2-f13.google.com (mail-oi2-f13.google.com [74.125.231.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB9836D51B
-	for <mptcp@lists.linux.dev>; Thu, 17 Sep 2026 02:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5634E38F65B
+	for <mptcp@lists.linux.dev>; Thu, 17 Sep 2026 03:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.231.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789611448; cv=none; b=pdGdtLYxLXR0XnRk/Gpkij2zpKMYonyU1yw7+khfG80exSR+ZORgtyEz97+7FyqdA0PzH1u0kK2qvXlnZdc+Rys5z0KVT8kd2wn0+2vFWvFPsMX/YRXzOXmc4DpwFlCSjucWGi01LvbWb789pmwOEznefgaP7mbVBu+wB3qRGz0=
+	t=1789615537; cv=none; b=O5tH9YYll4O/ErlcJtYlgnLPK9+ltwElNq1dCCEpetvlYFISpzGWYa5aKYScat6Km62PrGluLH5DGLnDAgq19EFwwS/VNb2hTbYZ6vJh2UT5WzTOHM0G6VPQdtpfWUHISMB5wx8VMvPrt9KcdP5u+mN3uRYnOAGthvfTXqjr2LA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789611448; c=relaxed/simple;
-	bh=6ZKkVFe30ui4+BMavPMekwCbHs+/Mni0LzTbLyfg8Zg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=fO7Bd8wmwoiCO6NSvMD1ChvWAe0qP6di5DQ39JdNmf5GoWOjYf2wH9rcaklofRXr5P5d/68n7upJJzVZKrudGzf+8kJtJ2gJX+D3A6hwerMpNdm5PAbGrcVcJuSHUVAusDmDWy6+m0Fno58KhZw/JDKvBE84nerEcaO7cK0x4+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SH/T9r2C; arc=none smtp.client-ip=91.218.175.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1789615537; c=relaxed/simple;
+	bh=pz8bARLGJ/BgL6WvpEiGowEybLRzRvOjZvgE4/lum9M=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=hyH8aTOP5uQ+enBVWlnOf4v0+vGDMRrsBtelAQJgKWkNzulIo1f6L1+f6WS9DRRRbdR1TIFQA+sUApM7tcaI0TXMaQJiX859h/6fyD3/2utkui/5Wdrx4wGJmpb8g/NOaBdDr0COZL0ur/FgdF1NwCb+pA/FDX0a1mOrqL49BPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A7cMyEQ7; arc=none smtp.client-ip=74.125.231.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SH/T9r2C"
-X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=6ZKkVFe30ui4+BMavPMekwCbHs+/Mni0LzTbLyfg8Zg=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1789611443; v=1; x=1790216243;
- b=SH/T9r2CxIow3ov2kN79+LbKILtiqFRpSuWnKadHcVqQ+45wpm3b6pVZP9mlVOxE1G02TS2s
- 8OCDj9gxTjmyuwzegZEFwOs7GHhAJ7cXHuQsnDmPPrdkMZadvfW2LxmSvsdBbakznlYfbNMlk24
- 05d8PInjJlaW53waTDdslLQs=
-X-Envelope-To: mptcp@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id a56a1f4abc55b453;
-	Thu, 17 Sep 2026 02:17:23 +0000
-X-Mizu-Trace-ID: a56a1f4abc55b453
-X-Migadu-Flow: FLOW_OUT
-From: Hangbin Liu <hangbin.liu@linux.dev>
-Date: Thu, 17 Sep 2026 10:17:01 +0800
-Subject: [PATCH net] selftests: net: update netfilter netlink config
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A7cMyEQ7"
+Received: by mail-oi2-f13.google.com with SMTP id 5614622812f47-4c206dc8b0dso287073b6e.0
+        for <mptcp@lists.linux.dev>; Wed, 16 Sep 2026 20:25:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789615535; x=1790220335; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=4ERBCurgzzsk/2RyJ1sVaNcMIHOdvvbaKvTqUEiGyjA=;
+        b=A7cMyEQ7AFm7+rixg+ZNO+OtY0AO7wnLq+hAgDvOjGUJDafTQKNVV7XnEcDgWwmZMr
+         /Mq0ymOd/1XOic8dCG5rkeY7VU+iqYdW8Z2gI8mrAi++vMKDqX0j1+EY5htVIMPOKqug
+         EdYPeX0/w78rgvsJEe9k7pN1pbCWxNJ9Am7UMms6Vd/I1CvRDOkp+j43tiWuKINTd4+0
+         VCahqKXfhniS2HAWO4Q5NxXsq8QTk9gT/8l+ZXgmRdEcn6POlCM06ZXhNZCO2ql5/4ZD
+         tQBXymsvWZv65WszWfp3vUggOJQsitu/fD/HmMpCuX0DgBteaZzeTYDPo2MvjRI9BoHZ
+         vn+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789615535; x=1790220335;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=4ERBCurgzzsk/2RyJ1sVaNcMIHOdvvbaKvTqUEiGyjA=;
+        b=vyTJBQzugMji6T2dFxZMLWzH0mjKuKgiLR5MyFsDDp88epQlF6t9WIC08It3t8FQ0a
+         bu6qOARoNLX10ShDCrvF03Y7lUAx39OqghzS/x3FQ9lHFlt3xVUbbO0uH1tne1xKUy4J
+         GXAKe9YLTgtAe/3Ois0FMefChImLqV1PEAJ2p+/6gMjKWElDat6IWvebhsvBcGOIbLxv
+         kkhibV1y6CfPuSf/S9URl/Iwk1cMOuDeJydpxFyqW8hHZaaJfEgopq9H80GgEVmm82Br
+         +OTVkCW5ZBOwsWSPQ0yqN26O8VaqEyPo5GtNkt8eDeHLbeKI6z04/k9k8cpf9zk78wXw
+         1EYw==
+X-Gm-Message-State: AFuF++kEa4rq2PzaO4+bXTiPdE/eNGZidEvtdg7+mIN8SxkyZqQVOaSE
+	1vi6HWTIZS1p8mdtJQ3cU7mMj3h0S9Uo7KvAfjgIiykjRiTANoIt3RlFp080
+X-Gm-Gg: AYBFou2TeZtP+ZqOQMlNr1KasDY5om6lzqjaAYmwtpP1Z1KalQOsN2G7t02vEl1xBeR
+	6KIfwE2FIWG583iaFAS/pUz3YNdv2V2cl+osEA8Kf4fjIFOobxekOUATWWJMLflMU9Ff88+kjgi
+	ymh8Dp+hzNU+PMjU79wwtnAiHVJGVnKRekFPgVtZ0ihOYEs3ZfpFPpwxTyz83m9cxKh86/KJJmU
+	6gLWiYK0QLAm+AWFO4wFI9UnVGUmFWfHfKN8kCux8Gph1Qb6/6kaRhnfX4WHoap5kVpa5PI4wWf
+	I/i93M3QNppKCJc9qS7HhyCv2Jf44Mtx70pvimDaPqjiGOTOIX8EYJjThXSDXZoeZZ5HLXirGJ+
+	LENwwr7UGIOKgzrdy0wRN8gIkNghZm3WOlNB9DeS+L8uppFH2QY4nNSojsQqhnqqETRtGyAfkW4
+	g1oT9PHHkJCfNoq7Wij9vVtewuCkBlSoEGTznoO946NEK33qSTj4Po+xQG3VG0oMoiuTKMEf5gt
+	P3VaNNBKdVh
+X-Received: by 2002:a05:6808:4fdf:b0:4b9:e65b:8c33 with SMTP id 5614622812f47-4ca4c8c4526mr6235981b6e.33.1789615535035;
+        Wed, 16 Sep 2026 20:25:35 -0700 (PDT)
+Received: from [127.0.0.1] ([172.171.13.49])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-4cb6a3d7a4fsm1633179b6e.2.2026.09.16.20.25.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Sep 2026 20:25:34 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Hangbin Liu <liuhangbin@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260917-selftest_config-v1-1-bf25ccbfb18e@kylinos.cn>
+References: <20260917-selftest_config-v1-1-bf25ccbfb18e@kylinos.cn>
+Subject: Re: [PATCH net] selftests: net: update netfilter netlink config
+Message-ID: <520d28e7-3efb-b479-86b8-6641379aa790@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 17 Sep 2026 03:25:32 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260917-selftest_config-v1-1-bf25ccbfb18e@kylinos.cn>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x3MTQqAIBBA4avIrBNqiP6uEhGpYw2EhSMRRHdPW
- n6L9x4QikwCg3og0sXCR8ioCgV2W8JKml02YIlN2VetFtp9IkmzPYLnVWPXGOfq2iAayNUZyfP
- 9H0cIlGB63w8i6rrnZgAAAA==
-X-Change-ID: 20260917-selftest_config-286bdd44b22b
-To: Matthieu Baerts <matttbe@kernel.org>, 
- Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, 
- Pablo Neira Ayuso <pablo@netfilter.org>, Florian Westphal <fw@strlen.de>, 
- Phil Sutter <phil@nwl.cc>, Fernando Fernandez Mancera <fmancera@suse.de>
-Cc: Hangbin Liu <hangbin.liu@linux.dev>, netdev@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
- netfilter-devel@vger.kernel.org, coreteam@netfilter.org, 
- mptcp@lists.linux.dev, Hangbin Liu <liuhangbin@kylinos.cn>
-X-Mailer: b4 0.14.3
+Content-Type: text/plain; charset=utf-8
 
-From: Hangbin Liu <liuhangbin@kylinos.cn>
+Hi Hangbin,
 
-Since commit d4349ba9872d ("netfilter: allow nfnetlink built-in only"),
-NETFILTER_NETLINK was changed to a bool. Use 'y' instead of 'm'.
-Otherwise the build emits:
+Thank you for your modifications, that's great!
 
-  .config:5688:warning: symbol value 'm' invalid for NETFILTER_NETLINK
+Our CI did some validations and here is its report:
 
-Fixes: d4349ba9872d ("netfilter: allow nfnetlink built-in only")
-Signed-off-by: Hangbin Liu <liuhangbin@kylinos.cn>
----
-This is a simple update addressing the same issue, so I’d like to post it
-directly to netdev instead of bothering two separate subsystems
-(mptcp and netfilter).
----
- tools/testing/selftests/net/mptcp/config     | 2 +-
- tools/testing/selftests/net/netfilter/config | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf: Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_n=
+et-next/actions/runs/35175050231
 
-diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
-index 59051ee2a986..bb9c4c97c620 100644
---- a/tools/testing/selftests/net/mptcp/config
-+++ b/tools/testing/selftests/net/mptcp/config
-@@ -18,7 +18,7 @@ CONFIG_NET_CLS_ACT=y
- CONFIG_NET_CLS_FW=m
- CONFIG_NETFILTER=y
- CONFIG_NETFILTER_ADVANCED=y
--CONFIG_NETFILTER_NETLINK=m
-+CONFIG_NETFILTER_NETLINK=y
- CONFIG_NETFILTER_XTABLES=m
- CONFIG_NETFILTER_XTABLES_LEGACY=y
- CONFIG_NETFILTER_XT_MATCH_BPF=m
-diff --git a/tools/testing/selftests/net/netfilter/config b/tools/testing/selftests/net/netfilter/config
-index c3c121b6f300..629b2b29ed1a 100644
---- a/tools/testing/selftests/net/netfilter/config
-+++ b/tools/testing/selftests/net/netfilter/config
-@@ -44,7 +44,7 @@ CONFIG_NET_CLS_U32=m
- CONFIG_NETDEVSIM=m
- CONFIG_NETFILTER=y
- CONFIG_NETFILTER_ADVANCED=y
--CONFIG_NETFILTER_NETLINK=m
-+CONFIG_NETFILTER_NETLINK=y
- CONFIG_NETFILTER_NETLINK_QUEUE=m
- CONFIG_NETFILTER_SYNPROXY=m
- CONFIG_NETFILTER_XTABLES=m
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/a1c252f7ef=
+90
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1167024
 
----
-base-commit: 1dd85662fee6e2ac580b1c4f9a0c0a7ae6e31f0e
-change-id: 20260917-selftest_config-286bdd44b22b
 
-Best regards,
--- 
-Hangbin Liu <liuhangbin@kylinos.cn>
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
