@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D93514775;
-	Thu, 17 Sep 2026 13:06:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E379519900
+	for <mptcp@lists.linux.dev>; Thu, 17 Sep 2026 13:13:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789650390; cv=none; b=k+tjXv3FwrpiHYHFRGWqNgHRMS8PMcZIcDTICRjfB68zYCK7fy2/XUCOBxTbI++MWyJNRIIQdmVhAFTJLGo1ttaMTqZ1gt88nLpCBlgjsWaQ6xvJTDTjVK5wxfbwXHVmYRIo3ycZuuUvCqH3pi0r3oRrXHXlMav/W96bQvQ6els=
+	t=1789650828; cv=none; b=JLe7stnKol4qwGwjPlOfd1l4aDGN/CXvtITlOZskohZO1XsgckgOQVJSWDLRjV3OHJ45quYBlGG7QprOWwgDd3x9/ooGiu5BduMWFhi+kWm/NXkKNUmwRWeoCzWed+ijW0K/DbH0ZEBMdEfl28aFcMr7DT6PGMcgVeHC7UHSZeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789650390; c=relaxed/simple;
-	bh=YvY8L1roEAhWvwCvpso0WcPH5j2XlLAVWe//WqcF0zA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LUwZrJk4OktI3bNmCym2KhgGIbBtDYjc8ILCKbsTiRu+iRsux6KyKdEFYxHkYsaMcnoKuMKz/X76x0YUzhxkJl98UXzhKcllijCCw9lP6cNJC5ooUh4zzYKSQ5WV3MQYaHta0qKuRelUtm7c3CkGAXLi/LrXzGEjhnZwfrIF22o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CfKRyw+z; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789650828; c=relaxed/simple;
+	bh=YbrHuHx5DgQmoc74M4m/3WPvDRRWqgDXoB35dalTY9c=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=memrzwUvsWuPj+kT1jHzo2WWkFJVmue4bm69xDzRVnihChVJWIqAD+p9tij/MKjS0ubTOgsIxUDpMxR741pc8vaAfgUsJeU4dw1b9PevGQjTFOQdyWgRb5TTr3h3R3Tz17fCj0ItrDOWjp4mCOALIchmEVvTVDkoc4Way0IkxT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RjILk7I/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CfKRyw+z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9F071F00899;
-	Thu, 17 Sep 2026 13:06:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RjILk7I/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AEA11F000FF;
+	Thu, 17 Sep 2026 13:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789650379;
-	bh=vc7qfZCRUlMpAR7yCuZ/u0K6XBb5KY58zoxdAw8kDtI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=CfKRyw+zBetItN6A0QtrT9RpgGI7mVoCr0j8fRccdMAjj57Q4mORQaRN77Mg/YXiO
-	 WiZUP65EF+/N6YPoVnNKv7VbTon903/cvFmKwzqwunxRIpUqjNZsrIvZXts5LxV5iY
-	 aD+yQiPn5vsxMF7Pe+Qc78lNPD5SN7O+py9k8YE074jVBFDiYogWI0EtalmMh8DEtz
-	 MXmbnG+GRlgbg09ROVO9XXo3P6m0fm15w9o+vxYiu9kSXm/PotH8KETluXHTUE3/5G
-	 PIL+yd5hSXt9J92UTe2ifrlgzobpyPviVattXD+UpVj6r22iKc8TkWafaaXUNxLNvQ
-	 Bpo5pJSIf1pDA==
+	s=k20260515; t=1789650826;
+	bh=/vrT+eyi4iTocKX0XlwethX1cOYaufpAZSbtDWjGpMs=;
+	h=From:Subject:Date:To:Cc;
+	b=RjILk7I/YtmQLRkM8Ybofa/V1H6OrV0NJWlhxi7FsmH8tQxTi8s+twCg9/qGRQIBs
+	 Bd27RUsPZh2vt1XUI9dUNVBMTey8ReBmD0ih89OH3WTwfzhVcul4r2gGDMFg41zgnU
+	 6SfoNeEQXp3PXd4xQv4ahlHhiqAXS7w9R82obTsfONbfZgQNanS9f/DWXLjJHMaqh/
+	 cO80H7iJyhO01Y35YnULVpSLGdq/+Qnpa5OlkedY/hXWqn+zJK7SwQpZA8yEeogcX5
+	 joNBN0ArNaJLosITD1UdQvdSC8lwS5psFyHLRndQMMCFVwUh14ws91z0KWe2roaVed
+	 MGeefhQq/6j9g==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 17 Sep 2026 15:05:59 +0200
-Subject: [PATCH net v2 3/3] mptcp: fix bad accounting in
- __mptcp_subflow_push_pending()
+Subject: [PATCH mptcp-next 0/2] Fixes for "mptcp: misc fixes for v7.3-rc4"
+Date: Thu, 17 Sep 2026 15:13:12 +0200
+Message-Id: <20260917-mptcp-fixes-7-3-rc4-v2-v1-0-1553391e7815@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,54 +37,43 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260917-net-mptcp-misc-fixes-7-3-rc4-v2-3-0cf5c72667c8@kernel.org>
-References: <20260917-net-mptcp-misc-fixes-7-3-rc4-v2-0-0cf5c72667c8@kernel.org>
-In-Reply-To: <20260917-net-mptcp-misc-fixes-7-3-rc4-v2-0-0cf5c72667c8@kernel.org>
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMQQqDMBBFryKz7oBJjZpeRbrQONopNA2ZKIJ49
+ 6a6fLz//g5CkUngUewQaWXhr8+gbgW4V+9nQh4zgy51XVrV4CckF3DijQQbvGN0Fa4aK2PaerS
+ 2NZOCHIdI5ya3HVyNpy3B83KyDG9y6f8Mx/EDYJ0nV4YAAAA=
+X-Change-ID: 20260917-mptcp-fixes-7-3-rc4-v2-45586d9985f1
+To: MPTCP Linux <mptcp@lists.linux.dev>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=941; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=SgypPxpJWWqrPzXbB0Ymof8bd1pKOxlUAs4CVycduFE=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJWPz0Y4XrtmCa/hIKUjqXjQ441bOJqcXeT3t45x9xto
- d6X2OveUcrCIMbFICumyCLdFpk/83kVb4mXnwXMHFYmkCEMXJwCMJEAPYa/Yu/lLKSz+jrnOO3O
- 3FIuq5y/4WKvrt2vlW4n76xunLP8GcNfAfnJx5Vbu+98/Z++9amO4swHhRU9czcuUrt6k3mpwCs
- mRgA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=754; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=YbrHuHx5DgQmoc74M4m/3WPvDRRWqgDXoB35dalTY9c=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJWP2+v3XL8JJt0P6eM9MZ/QhzLVq9irZrQOCVITbL4V
+ E1fu0toRykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwERu7Gb4X7Aj7cVW8b8n9ffd
+ W7c/8txflu+NUalbLuS+6FdadOe9ixsjw7Sjk80/xM5feXqHU+2amao2TzOunVb8wtcu76iwcFN
+ wIgsA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Paolo Abeni <pabeni@redhat.com>
+Here are some fixes for a previous series.
 
-If __subflow_push_pending() errors out we should avoid updating the
-copied byte counters, to avoid mismatch push call later on.
+Already sent to netdev, hopefully not to delay them by one more week
+because of Clashiko being a bit picky. See the ongoing discussion about
+Clashiko blocking subsystem maintainers.
 
-Fixes: 0fa1b3783a17 ("mptcp: use get_send wrapper")
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/protocol.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Paolo Abeni (2):
+      Squash-to: "mptcp: avoid unneeded actions on subflow reset"
+      mptcp: fix bad accounting in __mptcp_subflow_push_pending()
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 577d0134b9ec..e89a69ab927c 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1854,7 +1854,8 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool
- 			ret = __subflow_push_pending(sk, ssk, &info);
- 			if (ret <= 0)
- 				keep_pushing = false;
--			copied += ret;
-+			else
-+				copied += ret;
- 		}
- 
- 		mptcp_for_each_subflow(msk, subflow) {
+ net/mptcp/protocol.c | 7 ++++---
+ net/mptcp/subflow.c  | 3 +++
+ 2 files changed, 7 insertions(+), 3 deletions(-)
+---
+base-commit: bedb886c7c67296d93549ab0f5ae6255be0846ae
+change-id: 20260917-mptcp-fixes-7-3-rc4-v2-45586d9985f1
 
--- 
-2.55.0
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
