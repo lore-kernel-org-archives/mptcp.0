@@ -1,135 +1,168 @@
-Received: from mail-qk2-f13.google.com (mail-qk2-f13.google.com [74.125.230.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3724A7C98
-	for <mptcp@lists.linux.dev>; Thu, 17 Sep 2026 09:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.205
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789638895; cv=none; b=cYm1zpKL61cXmwmBN9VwM8CTf3jhaQrR88tTI+5FfenJRdNnvs7d8uz8vsDqwbMyy86pWMdMVuieSyOYdTtAHKBKEoq5kBLlFN9iecMteo7TawSuzM1JN6N+7vJ3ahNo2rMgc2dZ5ZdclEf3S8EBciDc0QEtbmDgwVF4aN4tKIY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789638895; c=relaxed/simple;
-	bh=PNKj8muQEq2/0lNDDsFxvxPzS19KL0wVE5P67sBibFU=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=RT+qAS0nZhAiDEEoadwSobiPPm7T6Yd1xfZx0dgQv2if2/qgOnB2nWfEYjuxvKi1N0iNY8c6swrwtKGWD/OwnK0oEx9xRhekOgW8TeXdFr37KqqjjnrGdX/SboVEH/kBFPvk7a7gimb3gnh+yB9DsHtyKyCuaofOEf7nJsZrJTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ssb/vN9B; arc=none smtp.client-ip=74.125.230.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738943D6CC3
+	for <mptcp@lists.linux.dev>; Thu, 17 Sep 2026 11:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789643239; cv=pass; b=Nft2A4qAqWzPqCxeGYc6ikm90h0HSJlsCqLS+4hn/cfjKi8jTojf0pROcUv77Y2gEq5DXE3S1G+ZX+Ek+dg7RBI46MDss4JlWCBd1r6GvoBST3n1M8eiYEPkZCl8DSz2pfPqYpK0EV61kRfFYyvG+KipouRGqWYLXVWXn6Cvp3g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789643239; c=relaxed/simple;
+	bh=41xDYFQQpziqncNzQ0S4/AEnmyQN67a4Es40OByesrQ=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=XVWPPYfq2cRpfiNGKXimaqatVWzbVUJogwR26jlQjqpY2DIVgonkRtOJnswaFsAhAoUh65seFIvE13FotINqF37AtIeC/72T4RJt90dv2Aw84P1ZT2GrWZB0azeB0NTNbXoPFCLtR+lr9+0tc3E10g2PyxET8bJdjwPGCYiU1qc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=cx+4F74d reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ssb/vN9B"
-Received: by mail-qk2-f13.google.com with SMTP id d75a77b69052e-52fb76ef19aso6168521cf.2
-        for <mptcp@lists.linux.dev>; Thu, 17 Sep 2026 02:54:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789638874; x=1790243674; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=fcV5lInkdj4K9HmcbhNaiKkHhbQrLnSuuNA0NuHlonA=;
-        b=ssb/vN9BqeQ1RxPn/iPc0Ggr6W+hP+i8Vz5T/R6ZeourZXnyUvvMlL3q/e5QN8OE3W
-         sQ/7177L8oHlwdl18zOhimLAz6Q+2FjbVsvL9yLnOINoRG8buhY52uVLkqj5jSAo9KDK
-         SC7WBxsKX9pi+1TbgfrV8cG+FK1xtgxddIRJ/muwBsapX+x9nJVtbiDw5GzZ06/RYYQ4
-         gJHUm1JDYGFds1biQ4AgjlzVWsr6vX4bq1uyzH2IN1JhlkAPamMOLevjCuvWoBmOqwiW
-         ydliwDTTJRAxyrolNY1arKbWNA24hJZRIRlmd734TXRcUvwJsJEoSaEerLqUFukyoush
-         z+fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789638874; x=1790243674;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=fcV5lInkdj4K9HmcbhNaiKkHhbQrLnSuuNA0NuHlonA=;
-        b=mrt0SogQNiONyFhdsoXMX7ZLJRvUPMpqmxdYjs0DLx+nwWCsFjUTSBomS4O4JO73Kl
-         CdO9/Dlr8tq18B2S0LywPHDyKcKuRpITipN3uzlNuWB/cADfxEv3koeEdyW3T/9n1bqE
-         fXjxoIUt06mSTwh3C1VilLomq1hLxnPV3nz5jquL4UAUTgy5qtQAnm90vmWEwZFFNt/N
-         WfZYcOXeZGMIKEUIU1yDm0Jwk01wjx3VlXQdhplzE/gcK5CjAGT+ImbyH3si2wH/npOL
-         C6QD8NMEpx5UGcQz/P/IaZhXORCzfyvLRSCZ3caGBeZFg3RBlyORPACnyCtJ4SvX78C0
-         p9xw==
-X-Gm-Message-State: AFuF++nklf7Z0uBUt2lT5ihVPnzutLrlIr5F6e0hM2TLcvYdpR84tYJU
-	QuQ/E2akfqGJQfiTxVxkLCaf52mB8CDpXkOkaoUeyq22xHuhazaJYPJFCG3O
-X-Gm-Gg: AYBFou3E7u/4EAcSErevC1muEydOfN0nFIYB70MqxJ3Vxissf1sL9qqWtoNMk8kFRGX
-	P/ThaSW0ZwKkgMTwjgqVtxyMyUH3SSzP+gWL30zWPTJLNliFviFcEheQ7uanB/Rp+JLguATGXbr
-	g0UyV+xsBoSD3T7IZDtrnFblQE7jwA0Y47vE+gC1qZN5+zdkkPyKVi85vZfws0fjgV7+UW0r7Tw
-	Udz2Cy1w0XsWEp1hntRodVnTFLBD45L569ULNKLnibKzcaaR3eKBOxkpcaDmA83tC1hRDWuu4ZL
-	kbXBC+bf7n15IFLk6YIfjGX1I3w6PvqaWiXCuU2UwpvonkqdNhMeAIwUTNc59w5bA919z3/h+Cf
-	aF9EWNsZxbIFfWoPILVM2l0kwPC615NWyhcmLJ0z4AU/g0rFWlw0FxY/Xa6ai7CU4RkeCIaTkK+
-	/CPJnzyppG2y7OX58yD7uE08Q5+XTiZNbwKdbpqAHYv3WQahOHSpCkU2h6T3oWHU4b1Q2BA8wLm
-	3Fenl8p474=
-X-Received: by 2002:a05:622a:143:b0:52e:fb1b:b50f with SMTP id d75a77b69052e-5327eeaf2aamr101848551cf.35.1789638874450;
-        Thu, 17 Sep 2026 02:54:34 -0700 (PDT)
-Received: from [127.0.0.1] ([74.235.90.91])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-53262021a9esm44803141cf.14.2026.09.17.02.54.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Sep 2026 02:54:33 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <85d9a0f138fa024354edde023a05f9d07b6ac87a.1789633546.git.tanggeliang@kylinos.cn>
-References:
- <85d9a0f138fa024354edde023a05f9d07b6ac87a.1789633546.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH bpf-next v3] bpf: drop duplicate check_app_limited in
- tcp_bpf_push
-Message-ID: <655ddc59-d850-31e9-6023-329459225f85@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 17 Sep 2026 09:54:33 +0000
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="cx+4F74d"
+ARC-Seal: i=1; a=rsa-sha256; t=1789643207; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=DNhOUAo1jlLUwd02itr2IC9/qEoshkkTg5q/bVmOFU4XdxD9q2qwZY8TRcwfpsJQfNDEo7oznARWc5S8PYWDMMy8H0sM+mAGAQIQmWORZkBHJO+PlJKi5YvORnVwDCM92K6ozp9hR7oGMecfu6iYnqJUtQjJGi5ganGYS6NBtoo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1789643207; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Z3q7s9EkdzfJ7kZtJqAQ2XTDo7/rlMeQle/Z1w4CZ80=; 
+	b=LKp6I1bIqSg8QGNSljTD5GfubvRBYXnT0f3IHMqP9Di8yLqzPtSwSVcEIHXYMemEruGpPOBojYbiNw6WT+iSvVkOqMzRC/P71HLL2DRtBgV6LeJQZ3CekDt1cHtRxk0ONxJVqgZ0OlidZl4zXwxwOuicJdz9gbbLf19FkcZy1Qo=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
+	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1789643207;
+	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=Z3q7s9EkdzfJ7kZtJqAQ2XTDo7/rlMeQle/Z1w4CZ80=;
+	b=cx+4F74dSU/bo4Pxw3BLUrMwMFbk2b2ecyo8ZgNAHkZWIjqdQUOChlds6s8kmKxn
+	R+et3e8K/fiXTC4vm5hI030I2JmBkpQdFgJJWEeh6qXA2//QeNwmlCK+t6flsbe+7Wc
+	+hUqzKDzfuwUvn1cLNwL6rk3KcI7XAwtTzEvEfUc=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1789643207468545.0938849369105; Thu, 17 Sep 2026 04:06:47 -0700 (PDT)
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 17896432040711007.7801553990827; Thu, 17 Sep 2026 04:06:44 -0700 (PDT)
+Date: Thu, 17 Sep 2026 16:36:44 +0530
+From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+To: "Matthieu Baerts" <matttbe@kernel.org>
+Cc: "Jiayuan Chen" <jiayuan.chen@linux.dev>, "bpf" <bpf@vger.kernel.org>,
+	"mptcp" <mptcp@lists.linux.dev>, "VEGA" <vega@nebusec.ai>,
+	"Alexei Starovoitov" <ast@kernel.org>,
+	"Daniel Borkmann" <daniel@iogearbox.net>,
+	"John Fastabend" <john.fastabend@gmail.com>,
+	"Andrii Nakryiko" <andrii@kernel.org>,
+	"Eduard Zingerman" <eddyz87@gmail.com>,
+	"Kumar Kartikeya Dwivedi" <memxor@gmail.com>,
+	"Martin KaFai Lau" <martin.lau@linux.dev>,
+	"Song Liu" <song@kernel.org>,
+	"Yonghong Song" <yonghong.song@linux.dev>,
+	"Jiri Olsa" <jolsa@kernel.org>,
+	"Emil Tsalapatis" <emil@etsalapatis.com>,
+	"Ihor Solodrai" <ihor.solodrai@linux.dev>,
+	"Shuah Khan" <shuah@kernel.org>,
+	"Mat Martineau" <martineau@kernel.org>,
+	"Geliang Tang" <geliang@kernel.org>,
+	"Matt Bobrowski" <mattbobrowski@google.com>,
+	"Tejun Heo" <tj@kernel.org>,
+	"linux-kernel" <linux-kernel@vger.kernel.org>,
+	"linux-kselftest" <linux-kselftest@vger.kernel.org>,
+	"netdev" <netdev@vger.kernel.org>, "Paolo Abeni" <pabeni@redhat.com>
+Message-ID: <1a0af0c25d8.352950d2114190.972790069861537729@mpiricsoftware.com>
+In-Reply-To: <18f86b06-7477-4750-b57e-094df4310e4a@kernel.org>
+References: <20260917081209.361367-1-jiayuan.chen@linux.dev> <18f86b06-7477-4750-b57e-094df4310e4a@kernel.org>
+Subject: Re: [PATCH bpf v1 1/2] mptcp, bpf: reject bpf_sk_release() on msk
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
 
-Hi Geliang,
+Hi Matt, Jiayuan,
 
-Thank you for your modifications, that's great!
+Thanks for looping me in, and thanks Jiayuan for catching this.
 
-Our CI did some validations and here is its report:
+This is a separate bug from what I was fixing. My patch hardens the
+lockless read of ->conn (the NULL-deref/UAF from #622) with
+rcu_dereference()/acquire-release/SOCK_RCU_FREE, but that doesn't
+touch the helper's return-value ownership contract, so the refcount
+mismatch you're describing exists independently of whether the read
+itself is safe. Hardening the read fixes my bug; it doesn't and can't
+fix this one.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Perf: Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_n=
-et-next/actions/runs/35203046251
+Given that, I think Paolo's original suggestion (dropping the helper
+from tracing_prog_func_proto()) is the right call. I don't see a way
+to fix the refcounting issue while keeping the helper's current shape
+(returning a different object than the input, with no reference taken)
+without a bigger rework of what it hands back to a BPF program.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/74afe5e0cd=
-d9
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1167222
+I checked which prog types can actually chain bpf_skc_lookup_tcp()
+into bpf_skc_to_mptcp_sock() - it's broader than just tracing.
+sock_addr, tc_cls_act, xdp, and sk_msg all have bpf_skc_lookup_tcp()
+available and fall through to bpf_sk_base_func_proto(), which is
+where bpf_skc_to_mptcp_sock() is registered, so the same pattern
+Jiayuan showed is reachable from all four of them, not only from
+tracing programs. sock_ops doesn't register bpf_skc_lookup_tcp() at
+all, and cg_skb has the lookup helper but doesn't fall through to
+bpf_sk_base_func_proto(), so neither of those two can chain into it
+this way. I haven't traced the verifier's reference-tracking closely
+enough to rule out some other path I'm not aware of.
 
+I don't have visibility into whether any real tracing (or TC/XDP/etc.)
+programs use this helper today. If that's a live concern for anyone,
+I'll defer to whoever has that visibility.
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+I can send a version that drops bpf_skc_to_mptcp_sock() from
+tracing_prog_func_proto() as Paolo suggested. Given what Jiayuan found
+also applies to the non-tracing paths above, should that patch just
+remove the BPF_FUNC_skc_to_mptcp_sock case from
+bpf_sk_base_func_proto() as well, rather than leaving it there for
+sock_addr/tc/xdp/sk_msg?
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Kalpan Jani
+
+
+From: Matthieu Baerts <matttbe@kernel.org>
+To: "Jiayuan Chen"<jiayuan.chen@linux.dev>, <bpf@vger.kernel.org>, <mptcp@lists.linux.dev>
+Cc: "VEGA"<vega@nebusec.ai>, "Alexei Starovoitov"<ast@kernel.org>, "Daniel Borkmann"<daniel@iogearbox.net>, "John Fastabend"<john.fastabend@gmail.com>, "Andrii Nakryiko"<andrii@kernel.org>, "Eduard Zingerman"<eddyz87@gmail.com>, "Kumar Kartikeya Dwivedi"<memxor@gmail.com>, "Martin KaFai Lau"<martin.lau@linux.dev>, "Song Liu"<song@kernel.org>, "Yonghong Song"<yonghong.song@linux.dev>, "Jiri Olsa"<jolsa@kernel.org>, "Emil Tsalapatis"<emil@etsalapatis.com>, "Ihor Solodrai"<ihor.solodrai@linux.dev>, "Shuah Khan"<shuah@kernel.org>, "Mat Martineau"<martineau@kernel.org>, "Geliang Tang"<geliang@kernel.org>, "Matt Bobrowski"<mattbobrowski@google.com>, "Tejun Heo"<tj@kernel.org>, <linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>, <netdev@vger.kernel.org>, "Kalpan Jani"<kalpan.jani@mpiricsoftware.com>, "Paolo Abeni"<pabeni@redhat.com>
+Date: Thu, 17 Sep 2026 15:09:13 +0530
+Subject: Re: [PATCH bpf v1 1/2] mptcp, bpf: reject bpf_sk_release() on msk
+
+ > Hi Jiayuan,
+ > 
+ > +Cc Kalpan, Paolo.
+ > 
+ > On 17/09/2026 10:11, Jiayuan Chen wrote:
+ > > A bpf prog can do this today:
+ > > 
+ > >     subflow = bpf_skc_lookup_tcp(...);
+ > >     msk = bpf_skc_to_mptcp_sock(subflow);
+ > >     bpf_sk_release(msk);
+ > > 
+ > > bpf_skc_to_mptcp_sock() returns subflow->conn without taking any
+ > > reference, so bpf_sk_release() drops a refcount nobody took on the msk,
+ > > and the subflow reference is leaked:
+ > Thank you for looking at this!
+ > 
+ > Note that Kalpan was looking at this [1], and Paolo suggested removing
+ > the helper [2] (but we failed to review the last version so far, sorry
+ > about that...)
+ > 
+ > I don't know if there are progs already using it. If yes, I guess your
+ > approach is better (but I'm not comfortable reviewing verifier's code).
+ > 
+ > @Kalpan, WDYT?
+ > 
+ > [1] https://lore.kernel.org/20260818120437.3949686-1-kalpan.jani@mpiricsoftware.com
+ > [2] https://lore.kernel.org/e039e866-fe7e-41ef-ad41-92a76a123713@redhat.com
+ > 
+ > Cheers,
+ > Matt
+ > -- 
+ > Sponsored by the NGI0 Core fund.
+ > 
+ > 
+
+
