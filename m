@@ -1,82 +1,182 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A9639DBD4;
-	Thu, 17 Sep 2026 06:36:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB06477285
+	for <mptcp@lists.linux.dev>; Thu, 17 Sep 2026 07:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789627019; cv=none; b=bMk8ck094TKkh2sFmWuTO6LMg31VrZ1ZZxm95T4vIC+jQjO+FfVufdIPsWNngu59E5WfgHh4Ly+aXiG3x/cPuE7wKI9CuPmHEGe2xEVFAR82ttVLWeHjqXqdmbaXrykdVLy/BP72DpOZS8TNDhrrBghOkoUIxpIc3rbWovzAlhQ=
+	t=1789628865; cv=none; b=hHL4Be6So8/XSbWCD8IMfeQF7SlFL+vbvyx0wWUeutwU/3shdjEGABvABGwclh8uY4AKpAO0oIbgXlWsCYyGrqQG0e4TXPNTN+HX063hqypv1LedTVGnw7kigcTtnLYkDyIw/2AuqAWcYd10yCvVMOQknVoc2HT3QMi44obY4HU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789627019; c=relaxed/simple;
-	bh=a5LaIFuW2f8s0MPjP/Hzb5tdw4WQVcU4HYCzbY787sM=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=MNp3i3Q4vi0wCFnHrIxO/hu0LXiBm6I/p2sCiAlVNJ4XsLhTTXcko95V+OGTjQAwXCgXSQyU88NIcFRjMPFZ4Z8zGZxV/6Rpy32Pgm2V7fmCsK2nNLlVQ/RD8stpst7RB6T1iOB92BGGamwznvyYSqaHHJ/vd28gI19ag8DJXWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ftM3uKxv; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1789628865; c=relaxed/simple;
+	bh=8HSF+LrOlvT0k5flvlCc9IPHOrpQnuowms4Y/Lxxaz4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lBJxeSFfwAXfF3jYFMgFGGmgRtkwS048GMBFD93SSBtqxpwLplrw6UxMBzVOIbdrlNBF2tH43OZbW/dVC058u0frOkysl/uTxTuEhBlo7Y6gOHQiJkzMLAkchUsGB5tzdIu+4aPNT5kndwJojPo3pkovIvMz2FvPGDNdAe8xktA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jjc3v8Im; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=e2NjjuV1; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=n+XMeo1n; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=X/KXqiqy; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ftM3uKxv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789627017; x=1821163017;
-  h=date:from:to:cc:subject:message-id;
-  bh=a5LaIFuW2f8s0MPjP/Hzb5tdw4WQVcU4HYCzbY787sM=;
-  b=ftM3uKxvHviFnN19yO/aVw+RRhUUsoed1LGtJbH7QANPDc4HkNkZiv9Y
-   LB3RPOtzxuvZK3sLAMmZ/IASyInbUDlp/iaH+FN0fy0Ty7BopxCPRU9bN
-   ps+5NScJ5KJmIYsZP+TOpCVSLnuxWSi6xbJH/zjKlxnVqbrDjt1TKtbzI
-   nlqH4bNVPuopNFVaIRzLJ7yZlDRpnIKpl3VjxRAAGLP2k89Diye3nHkvA
-   UazbLBJrWYtFMGCRdyNSp9x6wLMw6Rh2I17X1pEmVQADL6doeqdP19S//
-   sSLeZU+Ptk1TeBsgFU1we3oz8jD3YYFVglbQS0QbzJ1cQntPNGVGbko70
-   A==;
-X-CSE-ConnectionGUID: L4sMpvmhSSG1662pVULSCw==
-X-CSE-MsgGUID: cEwxpMdLTTmoFhq+TdoWgQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="90035781"
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="90035781"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2026 23:36:56 -0700
-X-CSE-ConnectionGUID: f8zIXeHmT6eWV9yE7NfMKg==
-X-CSE-MsgGUID: 9j4AUk7cRzq7X5vSbECaPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="270960212"
-Received: from lkp-server01.sh.intel.com (HELO 462990a40a85) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 16 Sep 2026 23:36:55 -0700
-Received: from kbuild by 462990a40a85 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1x75jo-000000007D1-320O;
-	Thu, 17 Sep 2026 06:36:52 +0000
-Date: Thu, 17 Sep 2026 14:36:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, mptcp@lists.linux.dev
-Subject: [mptcp:export 1/36] .git_markup: warning: ignored by one of
- the .gitignore files
-Message-ID: <202609171408.j46d5LQG-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jjc3v8Im";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="e2NjjuV1";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="n+XMeo1n";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="X/KXqiqy"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 05D2B21D70;
+	Thu, 17 Sep 2026 07:07:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1789628858; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kjvcZvmqEPMRF/LhXJIRs4s3bEudB5Jl4m8qJV2Wu9c=;
+	b=jjc3v8Im+QznQHTfpETVxbLzdwbn66ZxeLS+slepvGG71PY68L8mGhA4e3y6aaw0yonVan
+	6r37fyI8QLtFcrrMF7CScPYfZIE/x/VS33aVWqNuiCBdR8Drz6l3kY0V4BIN7le40CWMIo
+	8WldHXQfo12Y5SZ2rO3LI5a+lx5iPsU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1789628858;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kjvcZvmqEPMRF/LhXJIRs4s3bEudB5Jl4m8qJV2Wu9c=;
+	b=e2NjjuV1H2CD9Lzxd2acRiVhAoOK+Il5RWy8Hy8LWAOu0Q0tffD4TY8vO+I8dEymOyFEyA
+	Iy7/EqwCyw9bEUAA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1789628854; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kjvcZvmqEPMRF/LhXJIRs4s3bEudB5Jl4m8qJV2Wu9c=;
+	b=n+XMeo1njqwW4rBjHQ5AWI6m0SMaGEfUbAGFDiheonChgXMKnJuMxdY81cQR4v30GUehCM
+	R85SwqWTJmi5GNfoxd1X/0xBNJWQymabL+cJGEpNgghBfhjPBsxqDgIyXSW0+c3FO+4PFb
+	ZtNw/JrSYru4Bxcyv6DDlcdbP0uWQMY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1789628854;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kjvcZvmqEPMRF/LhXJIRs4s3bEudB5Jl4m8qJV2Wu9c=;
+	b=X/KXqiqyecFWWd8CAP7aMBf1OFjZw2VEQe97l6lpFTg5iFvU/uOTb2qTBGLZ50DE1DQh0V
+	S7UEp3klHc7BJ+Dg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D81D8134B3;
+	Thu, 17 Sep 2026 07:07:32 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id MOz5KLSRq2rfCwAAD6G6ig
+	(envelope-from <fmancera@suse.de>); Thu, 17 Sep 2026 07:07:32 +0000
+Message-ID: <f557e44a-86b6-4ebb-ad35-d7bc5902929a@suse.de>
+Date: Thu, 17 Sep 2026 09:06:48 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] selftests: net: update netfilter netlink config
+To: Hangbin Liu <hangbin.liu@linux.dev>, Matthieu Baerts
+ <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Shuah Khan <shuah@kernel.org>, Pablo Neira Ayuso <pablo@netfilter.org>,
+ Florian Westphal <fw@strlen.de>, Phil Sutter <phil@nwl.cc>
+Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
+ coreteam@netfilter.org, mptcp@lists.linux.dev,
+ Hangbin Liu <liuhangbin@kylinos.cn>
+References: <20260917-selftest_config-v1-1-bf25ccbfb18e@kylinos.cn>
+Content-Language: en-US
+From: Fernando Fernandez Mancera <fmancera@suse.de>
+In-Reply-To: <20260917-selftest_config-v1-1-bf25ccbfb18e@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Score: -4.30
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.997];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,kylinos.cn:email]
+X-Spam-Flag: NO
 
-tree:   https://github.com/multipath-tcp/mptcp_net-next.git export
-head:   b95d8ec03dfcd1282c220d2fce0c8fe76ec50297
-commit: 58b4911272d0ed62fc33fa1c0151afa8260e7411 [1/36] DO-NOT-MERGE: git markup: net
-config: x86_64-randconfig-161-20250617 (https://download.01.org/0day-ci/archive/20260917/202609171408.j46d5LQG-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260917/202609171408.j46d5LQG-lkp@intel.com/reproduce)
+On 9/17/26 4:17 AM, Hangbin Liu wrote:
+> From: Hangbin Liu <liuhangbin@kylinos.cn>
+> 
+> Since commit d4349ba9872d ("netfilter: allow nfnetlink built-in only"),
+> NETFILTER_NETLINK was changed to a bool. Use 'y' instead of 'm'.
+> Otherwise the build emits:
+> 
+>    .config:5688:warning: symbol value 'm' invalid for NETFILTER_NETLINK
+> 
+> Fixes: d4349ba9872d ("netfilter: allow nfnetlink built-in only")
+> Signed-off-by: Hangbin Liu <liuhangbin@kylinos.cn>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202609171408.j46d5LQG-lkp@intel.com/
+Reviewed-by: Fernando Fernandez Mancera <fmancera@suse.de>
 
-All warnings (new ones prefixed by >>):
+Thanks!
 
-   .b4-config: warning: ignored by one of the .gitignore files
->> .git_markup: warning: ignored by one of the .gitignore files
-   Documentation/.renames.txt: warning: ignored by one of the .gitignore files
+> ---
+> This is a simple update addressing the same issue, so I’d like to post it
+> directly to netdev instead of bothering two separate subsystems
+> (mptcp and netfilter).
+> ---
+>   tools/testing/selftests/net/mptcp/config     | 2 +-
+>   tools/testing/selftests/net/netfilter/config | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
+> index 59051ee2a986..bb9c4c97c620 100644
+> --- a/tools/testing/selftests/net/mptcp/config
+> +++ b/tools/testing/selftests/net/mptcp/config
+> @@ -18,7 +18,7 @@ CONFIG_NET_CLS_ACT=y
+>   CONFIG_NET_CLS_FW=m
+>   CONFIG_NETFILTER=y
+>   CONFIG_NETFILTER_ADVANCED=y
+> -CONFIG_NETFILTER_NETLINK=m
+> +CONFIG_NETFILTER_NETLINK=y
+>   CONFIG_NETFILTER_XTABLES=m
+>   CONFIG_NETFILTER_XTABLES_LEGACY=y
+>   CONFIG_NETFILTER_XT_MATCH_BPF=m
+> diff --git a/tools/testing/selftests/net/netfilter/config b/tools/testing/selftests/net/netfilter/config
+> index c3c121b6f300..629b2b29ed1a 100644
+> --- a/tools/testing/selftests/net/netfilter/config
+> +++ b/tools/testing/selftests/net/netfilter/config
+> @@ -44,7 +44,7 @@ CONFIG_NET_CLS_U32=m
+>   CONFIG_NETDEVSIM=m
+>   CONFIG_NETFILTER=y
+>   CONFIG_NETFILTER_ADVANCED=y
+> -CONFIG_NETFILTER_NETLINK=m
+> +CONFIG_NETFILTER_NETLINK=y
+>   CONFIG_NETFILTER_NETLINK_QUEUE=m
+>   CONFIG_NETFILTER_SYNPROXY=m
+>   CONFIG_NETFILTER_XTABLES=m
+> 
+> ---
+> base-commit: 1dd85662fee6e2ac580b1c4f9a0c0a7ae6e31f0e
+> change-id: 20260917-selftest_config-286bdd44b22b
+> 
+> Best regards,
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
