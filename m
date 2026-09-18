@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B128C517BB7;
-	Fri, 18 Sep 2026 18:38:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58ED51DE18;
+	Fri, 18 Sep 2026 18:38:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789756726; cv=none; b=tQS6SAJSd5QzVuTnEvPQTBAoeLE/xuwmlvNFr85dQWH45zqejhtaFDHY/RTB9QbjRaVoG4At1QpGtzXvGWLEFJ7hIqkgz5X0LN34Xvy8f4Hqhl/So1GWbQZXqukHe1OBT+u1248ApvC7MuNFeeiVYRBbcx5nr0tk633dlzZEGfU=
+	t=1789756732; cv=none; b=UsxXNnsVwVy65hzaMkwU3OB5HwMe7xGmb+dxBoG3SIvR2TdyUnoW4kemFSWgUUvR7dljglT+5wUUXcXjae78QQYTISLISlVaVOXoLkYJ79mU7qMI0VpQgR+OPQ4ZU629CEq7VGawG2mvEMf8o3Kl8/F5PHfAvQVYLKNVW0npfUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789756726; c=relaxed/simple;
-	bh=ij0ZLOqV4a1NW73gHHs+zwV1KBHd/t0FJBBKKAs5pkY=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=iokHv8CwLfYSwJZi7SnpSTJNnpAIILPLjXMM0CmVwq8SB2qdwEDy76USi33YEMIrkjUSmxQ0lIiiTZtCfpFnlR5U3kcIrd8E9zCcYX3cWn5ZJPtWuiKYHd/OV77KUMfDR5jMYIZhvBDR6G9cgJbUH+Z72qz4XCv2znx2bksK6KQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=owQs0ZMv; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789756732; c=relaxed/simple;
+	bh=wBV9w9NEHxkHdKdv+pY/PQzJ9oBFaLgpjdOOAi9u9lg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=nBiuLpPegC0g46DKR6uArbh+CbWPOEb5+esc6NeTH/g4QjERnVcjAnW3Y0o5uA4LrQs1Sx2neC+6bZjbCN0vCOpeEvuvRSaF/tSx5R1o4CX7IqawRg1H9xSBrbqh4z0uiXvbJTu+UJjuVfCPl+3oi6/X07yZ++kV5F7dZ/1E/vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oP3xccBq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="owQs0ZMv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24AC21F000FF;
-	Fri, 18 Sep 2026 18:38:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oP3xccBq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 470D41F00899;
+	Fri, 18 Sep 2026 18:38:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789756718;
-	bh=biC+8SCAXKWW6NiMDcUaJ7XQBN7jv400DbE8wg+PFYI=;
-	h=From:Subject:Date:To:Cc;
-	b=owQs0ZMvbbQdREl0izVLnvsC9/nO61Jokthh9WdsAOb2OjfBA3VTrAGTxmcamEbgM
-	 JKYrwd8heRB+yJCzADyufp3+Sk4cTMitjIrlitVatG81CFtkz68kXiCkLuTIS2SScI
-	 Evx00jZjwbRrKqrmrDlfQki9VCrIUJ+h6ueGkMeDM+KV3mEy6qO+OwhSmZNesOCbRh
-	 Dzq0FtQY/VRpdwUAqVx2qhlAqU8gA1PhnQLhPSRsDRU6jhb3+dGDGAZ+Jm8n4CmI6w
-	 ADeEBzfedONNgCCE525vfAYeeIwNF+xIxIppynYOd7eM0EP0MOzvARAy1UTcCe1ZKy
-	 nd+FS+wYua3lg==
+	s=k20260515; t=1789756723;
+	bh=h/DLk8aAp4ApzIpkXH1VE7IRsVU6O2wuBRPsq9VNpy8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=oP3xccBqHxIHLQKrg1BzfFMGrFps+h6DfFOPibWGk0LaOFHCGoT+JWreu2jSuy1K3
+	 9lFs1Ucdn7xMs+shJr1Shpm+yLs81qmJauLvt1YimHO4V93fO/0GW8iqVPE7e3pXKK
+	 1Je/YnR3sejQWF9zHnKjST22hnAAUjdJ7guU5DTZBdRFNQb7ESZpzACmVALISgE7kk
+	 yvBkNOpVnS4wI96D0awd9KtOEh8TJ6ZJU3DETYgf6PdCA7+Ss6JSpjBdRXJmao70wg
+	 ldzlYbRAzsDSjYWaE2fTzZDuIkHia0h63qotEMERoZIMI7CaJUny+PBiM/XX1jr/+G
+	 oKEk42nHZbCjA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH net-next 0/4] mptcp: support MSG_ERRQUEUE
-Date: Fri, 18 Sep 2026 20:38:24 +0200
-Message-Id: <20260918-net-next-mptcp-msg_errqueue-v1-0-dd77e1738248@kernel.org>
+Date: Fri, 18 Sep 2026 20:38:26 +0200
+Subject: [PATCH net-next 2/4] mptcp: sockopt: factor inet_flags propagation
+ into a mask
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,70 +38,87 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/zWMywrCMBBFf6XM2oFJlGL9FZFS47WO0BjzkELpv
- xsVF3dxuJyzUEJUJDo0C0W8NOnDVzCbhtxt8CNYL5XJim2lM3v2yHVz5ilkF3hKY48YnwUFLLC
- y64atSGuoFkLEVedv/Uh/kU6/J5XzHS5/4rSub1qghdSJAAAA
-X-Change-ID: 20260918-net-next-mptcp-msg_errqueue-0e2049a30061
+Message-Id: <20260918-net-next-mptcp-msg_errqueue-v1-2-dd77e1738248@kernel.org>
+References: <20260918-net-next-mptcp-msg_errqueue-v1-0-dd77e1738248@kernel.org>
+In-Reply-To: <20260918-net-next-mptcp-msg_errqueue-v1-0-dd77e1738248@kernel.org>
 To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
  Simon Horman <horms@kernel.org>
 Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
  linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- David Carlier <devnexen@gmail.com>, Shuah Khan <shuah@kernel.org>, 
- linux-kselftest@vger.kernel.org
+ David Carlier <devnexen@gmail.com>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2108; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=ij0ZLOqV4a1NW73gHHs+zwV1KBHd/t0FJBBKKAs5pkY=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLWtqqb2j8yqGHQ9nVjObg54jHTZvmpLxYsntCXtr+AU
- dPNK/55RykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwESmz2X4Z8bif/soj0Rp8heX
- a8fNRad/O+1mfmaXxBJbwWuiky5Ne87wh3fm8f32ua2qex5I1SokCL+x+eRmsPRQn36dnc762Tc
- 4mAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2231; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=MZb1Th3F+8BZ7Pe907g7jydsYXsj2hesnGvFASzCFGY=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLWtmoGBD9+/1X035YFCxUW35Y4/jLaf36frc9x+/h1u
+ +be+dF/o6OUhUGMi0FWTJFFui0yf+bzKt4SLz8LmDmsTCBDGLg4BWAi2yoY/rtrLJk3OydGyoH3
+ VdJXi8KrZp9fXfSNN9x8PuPqik2VmswMf7gjd+5tmNoxmffBsZfn+881fktacEnjjtaG88rm6gI
+ HjbgA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-This series lets MPTCP applications use poll(EPOLLERR) and
-recvmsg(MSG_ERRQUEUE) on the MPTCP socket to drain TX timestamps
-through the standard inet ABI, the same way they would on a plain TCP
-socket. ICMP-derived errors stay on the subflow queue: the legacy
-RECVERR ABI cannot convey their per-subflow peer identity, and they
-are intended for a future MPTCP_RECERR channel.
+From: David Carlier <devnexen@gmail.com>
 
-- Patch 1 splices subflow err-skbs onto the MPTCP's sk_error_queue at
-  error-report time. All forwarded events go through sock_queue_err_skb,
-  which re-homes skb->sk onto the MPTCP and charges sk_rmem_alloc, so
-  the MPTCP's error queue stays bounded by sk_rcvbuf and is dropped under
-  rmem pressure, matching tcp's tx-timestamp path and ip_icmp_error() /
-  ipv6_icmp_error(). mptcp_recvmsg(MSG_ERRQUEUE) forwards directly to
-  inet_recv_error(), and mptcp_poll() advertises EPOLLERR purely on the
-  MPTCP's sk_err / sk_error_queue, matching tcp_poll().
+Introduce MPTCP_INET_FLAGS_MASK and replace the per-flag
+inet_assign_bit() calls in sync_socket_options() with a loop driven
+by the mask that calls assign_bit() per set bit, preserving the
+per-bit atomicity of the original. Further flags propagated by MPTCP
+can be added by extending the mask rather than touching the call
+site.
 
-- Patch 2 factors the existing inet_flags subflow-propagation hard-coded
-  list into a mask, so the next patch can extend it without churn.
+No functional change.
 
-- Patch 3 makes IP_RECVERR / IPV6_RECVERR (and the RFC4884 variants)
-  propagate to the subflows. The MPTCP stores the bit so MPTCP-aware
-  helpers can branch on it.
-
-- Patch 4 is a selftest covering the propagation path.
-
+Signed-off-by: David Carlier <devnexen@gmail.com>
+Acked-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-David Carlier (4):
-      mptcp: support MSG_ERRQUEUE on the parent socket
-      mptcp: sockopt: factor inet_flags propagation into a mask
-      mptcp: propagate RECVERR sockopts to subflows
-      selftests: mptcp: cover IP_RECVERR sockopt propagation
+ net/mptcp/sockopt.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
- net/mptcp/protocol.c                              |  55 ++++++--
- net/mptcp/sockopt.c                               | 155 ++++++++++++++++++----
- tools/testing/selftests/net/mptcp/mptcp_sockopt.c |  70 ++++++++++
- 3 files changed, 246 insertions(+), 34 deletions(-)
----
-base-commit: 4bb9710c6a68d35207f123aef55dcd50e7195ec5
-change-id: 20260918-net-next-mptcp-msg_errqueue-0e2049a30061
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index fcf6feb2a9eb..2ba56832587e 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -16,6 +16,10 @@
+ 
+ #define MIN_INFO_OPTLEN_SIZE		16
+ #define MIN_FULL_INFO_OPTLEN_SIZE	40
++#define MPTCP_INET_FLAGS_MASK \
++	(BIT(INET_FLAGS_TRANSPARENT) | \
++	 BIT(INET_FLAGS_FREEBIND) | \
++	 BIT(INET_FLAGS_BIND_ADDRESS_NO_PORT))
+ 
+ static struct sock *__mptcp_tcp_fallback(struct mptcp_sock *msk)
+ {
+@@ -1550,8 +1554,11 @@ int mptcp_getsockopt(struct sock *sk, int level, int optname,
+ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+ {
+ 	static const unsigned int tx_rx_locks = SOCK_RCVBUF_LOCK | SOCK_SNDBUF_LOCK;
++	unsigned long mask = MPTCP_INET_FLAGS_MASK;
+ 	struct sock *sk = (struct sock *)msk;
++	unsigned long src;
+ 	bool keep_open;
++	int b;
+ 
+ 	keep_open = sock_flag(sk, SOCK_KEEPOPEN);
+ 	if (ssk->sk_prot->keepalive)
+@@ -1597,9 +1604,11 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+ 	tcp_sock_set_keepcnt(ssk, msk->keepalive_cnt);
+ 	tcp_sock_set_maxseg(ssk, msk->maxseg);
+ 
+-	inet_assign_bit(TRANSPARENT, ssk, inet_test_bit(TRANSPARENT, sk));
+-	inet_assign_bit(FREEBIND, ssk, inet_test_bit(FREEBIND, sk));
+-	inet_assign_bit(BIND_ADDRESS_NO_PORT, ssk, inet_test_bit(BIND_ADDRESS_NO_PORT, sk));
++	src = READ_ONCE(inet_sk(sk)->inet_flags);
++
++	for_each_set_bit(b, &mask, BITS_PER_LONG)
++		assign_bit(b, &inet_sk(ssk)->inet_flags, src & BIT(b));
++
+ 	WRITE_ONCE(inet_sk(ssk)->local_port_range, READ_ONCE(inet_sk(sk)->local_port_range));
+ }
+ 
 
-Best regards,
---  
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+-- 
+2.55.0
 
