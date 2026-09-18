@@ -1,171 +1,124 @@
-Received: from mail-qk2-f43.google.com (mail-qk2-f43.google.com [74.125.230.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377BE4B66E7
-	for <mptcp@lists.linux.dev>; Fri, 18 Sep 2026 08:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.235
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789721910; cv=pass; b=G32fzf3u2wWDsBD9gsa7n4PFDrcFwsSSYAWgwlw/CydFIh5DKWUaTAyTC6G3f/wsBq80xWQ9vY2inzi64gLOylVVrQfBxqbVmDRki/fRQHHil+7hGvxVAZvg0kHPhr04U9+h7p/eNoe+eI+bvnezQTS+LRFJfZMSk+cloSccsAQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789721910; c=relaxed/simple;
-	bh=z/LGpT6R/K8MuCc78kQ0Sm/cv5SuOxP7TUqRkIH5Dhg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uSZ+kUL5aGzHk+ZPkHMQDiQcUkY+gt2rLP9Zhd46fek2cF6g74nVeqqTPCiODVTckRdscpOORP52/AjQm/nucYYdYmo9NV4TGXtNNTsXR3TClRp460ZpOWnLLYJqPkSyaHFgwuHC0rL54IYfJuhFNzRaSarjKskn4naBx0w2rgk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kzise2AF; arc=pass smtp.client-ip=74.125.230.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C2C3090C2
+	for <mptcp@lists.linux.dev>; Fri, 18 Sep 2026 15:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789745509; cv=none; b=Aq5/ks+kPBCteDt1rECU9x/dZ9M+qjA5Hzyg7c3g7leqjoaI+3BTbLtQIJNr3rbBZwO93wtIb3kWosYuIgp5XzmZRzPh3dAXbIOqYQCuB8IlfTcN9j7bwAmWF4lihKif/yqPmCTSbZiXP4rPcwR6YV/moD6J4yswKkSuEA1JYPk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789745509; c=relaxed/simple;
+	bh=CV2TNN7siWYMKkU5J/XYqUI3I8D2rKHab7IFJ+sycHo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fiSuArfWSONPkB20bdT1SQ9L3M6tgPQgidXqPgq5IWPqLAw58C3cLLHNNp+thQKgNpbr22qNpXv8XiJwLzkWuQaKH7uBL2IxHZthrxPvjMce7V3PvIeUXZNW1F3baWHGF7wolc8+JT6uwYo60NvErxku3AL31UNHisf6oKza2Ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pp8foGi0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kzise2AF"
-Received: by mail-qk2-f43.google.com with SMTP id d75a77b69052e-52fb769ca02so5943771cf.0
-        for <mptcp@lists.linux.dev>; Fri, 18 Sep 2026 01:58:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789721907; cv=none;
-        d=google.com; s=arc-20260327;
-        b=NMqOhyPuaWsQ0rM05OH1P7CRxOjMoRAyB8N/6oHV707VkFVB5u8KJmjMnxdENqzTlg
-         gcdvqIOM6PXnpF4gSv7iMMmRrl3PeHD+jjuHbgG7xJZ/ibaYo13YMGiGPUifQD+slTea
-         1lZ7TMiBiYjZxtlM+yYq7qke/w/MqgBw5JnAREbItPM0n9HVYSWjYhZbQGauNzGj8LPp
-         Q+rmTV3iHJNH0qVRkNq5GjifqiOqiWzZCWmD17OOzJTalX4vZc20fuPXfFa115KLnrtf
-         o5JkOfoGfWoAkif/fC1aHeAuLQkLH1DlHa9Bp4hXh6iiH2dSwxuxduiAWRGYMM6m0QyR
-         pOvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=/MZzkn17IcrulH9WLNQ6p0tJJzz5hdqmt+9izhYMovc=;
-        fh=ta3oWJNUUOGDBubb9ZsHOPUNokkPfzxKTkR8JEtaNGw=;
-        b=EQp6n6RqW4U7gCIMR8xbpujPwUcxZJaNsvebERtt01U39OUzbA+VfgX8fdC966iska
-         /g9bAKB7jMksnlGE2OxlLkTnh7DhpXzM6N05mQ4u3m1Cz6IK488M+7xxTLyuE+YcGuoy
-         8G9Ysq/2rGOodaTKsZ4wiZNLBszKesJUf/7Rt336TB7/YAgDFDOu/OQKHqDn4QAGUAXy
-         esb3pwG3Tj+RD/1GhXPBqbbX8v92upXA3kijWHop4pPWVbU72LUXJBXt3a0vk52MQOGf
-         jfDKiLRDnYIH4VYZB7gIVBh0VieLSSSM0bPiQUZtZzWQSLoXpFrWEdLYtKZS2Sw2q75j
-         XvWw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789721907; x=1790326707; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=/MZzkn17IcrulH9WLNQ6p0tJJzz5hdqmt+9izhYMovc=;
-        b=kzise2AF8KYRLZwkHfS35DzLRtCshoNDIEmWtL4M6bxQkAZpKpX4cWxq3Eq/XXKU3Y
-         PCTHlGsc2dAK+mUp0thZN8izuHot36cJMzngm9VdFngfatVkp6kGzn3kun8CCsCzy5BB
-         YEy9rFhhvCXXQuj0ni3xik6VCnblKIH/L43ipu7wohV1GXz4QY0bcUvfVgShZvxcYQoy
-         92CQ2ajhnVKCnPGj+ZsCOCqIpR+hTsVoaHto20EZeKkPmGz5eu6NJ7WnPxC2IRJ+mPuo
-         W5ewkMGbKcz2YY4EEvSyeEB6btVP1Y9B5Y+KgAHgmyPQZLxzg/sIZSG2vviLKADCksZW
-         AIYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789721907; x=1790326707;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=/MZzkn17IcrulH9WLNQ6p0tJJzz5hdqmt+9izhYMovc=;
-        b=VNDGySHvGjeNC5pOF/doLRJpNhGfOu1UpVfC5fmIiwBpgmH8XhODN80+BlljWEcS6S
-         WTep/0lTYiQBhLoTyonRKQ+Xs9DvfJ9oAodItQarfMdNwPuECRp098zWKuxZwfSz0U0J
-         hQDuDJ5STw9+pNq2ZHyLqp2/p8O8DoJdE4nGW/rllRZwBOls/y9lIsxU2hPKrFZXQIKx
-         kkmCe7ymVzinxV9CqvkJOcfWPG9M6qVoLj4wcgsqwFanANDumTzf0QcWvLOwEuaYF375
-         OEAo4emFJ7Wm2IteEx5eNqN1Rtk93Et/ajrFA4SgxAdbckFwjmGG6AYxpgQRuzgxpVdC
-         meJg==
-X-Gm-Message-State: AFuF++msixkUdZ4r11vGwedmsrcclufpIOmmsuQf2HmOXO/L0YNIH0B0
-	6ZQ/RP/HQ0ynekS3dRnizxqA8zwEnqbT+Sdi6/UFqqnLh77DuGIEOhvHvGPULy+hJnpo7FzUme4
-	iFDgd3PrdqvTlwV2JsoT+2UN1vpbi9fM=
-X-Gm-Gg: AYBFou2YXnfzqhcxze+HZ2W6mmjLrFV1u24qM6PoyicCoSzMiTKKWtQwY6IPhMTaEch
-	ZCIGRhpjjFyVQNBOhYpp98QWhMRXagLXl9g+JWi+fqVeLQquBSusG2SGaTa0+obiQrQod4g8W+v
-	ArtoLPRxirAsMq243Yy6NU6i3eCRI8aRxDqzqsVE44S6Guz7zJHyTLZyKKv4t4R4Mx8QXXg5KIZ
-	CAbMk/KdYWvf2hVYNSaeimvBlndSvVs6mByRHlG23292nM7LFlyAKWDpF5m0fu7XCULvh1ltIV+
-	E9MFH+YGGn45T2dZK5tGUmdRJKdF/1gi7GXwK5QlUU0VlnIDsqRlBU0D
-X-Received: by 2002:a05:622a:c0e:b0:532:9adc:63b1 with SMTP id
- d75a77b69052e-5329e4fc776mr27603961cf.66.1789721906984; Fri, 18 Sep 2026
- 01:58:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pp8foGi0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D1F41F000FF;
+	Fri, 18 Sep 2026 15:31:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789745507;
+	bh=LEogGdEQW0Hg3apQLwV6eLQOtgqlkL2aaOdo3f23ouo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=Pp8foGi0GKqYQrtqm0N1yaXwzD490Rrh4ChK8JFCmnEQgFHvFuT29HMY6P3FYtrlh
+	 9gZSL110LJoAzYCJPo5HG0fzIpdAmgJbfw/odRZSs1GC3hHfLBA7t7iBKCb5JrhsH/
+	 1ISkw/l2s/cX2UtQmpfI4lIpvcz/HZAgy2BeD7yMfJlx8P6i/3wAja2DvtPHBKLK25
+	 801VrnUbhrHhGJnJMTtJKSuXLLbdhjvwLs1CtKncTnsQGtkKp8n0CZ6YR8S+WK6ON7
+	 NXPbMIS/WrWLR5CtqbBNeDJsTKlR/7pO8Nl1OdgXReVVWWEbyFe1d57sP+svNAgrJJ
+	 HPxusEp1D58OQ==
+Message-ID: <75488ad9-4b47-42c6-9be2-e087c4f10820@kernel.org>
+Date: Fri, 18 Sep 2026 17:31:45 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1788800732.git.caoruide123@gmail.com> <6cb7409a-4be0-6d9a-8206-ae38f5f9eff2@gmail.com>
-In-Reply-To: <6cb7409a-4be0-6d9a-8206-ae38f5f9eff2@gmail.com>
-From: Ruide Cao <caoruide123@gmail.com>
-Date: Fri, 18 Sep 2026 16:58:17 +0800
-X-Gm-Features: AcwNN1XEzkUbY-mMDGd5u-fMPWn5ioVOnVWdZ7uOiTBEO_3AFp10BhNUXTVrINo
-Message-ID: <CACveakSFCFOrD6eCpV1NNM0CXhW6NtTELm4DzBoMezCxQJLJyg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH net v6 0/2] mptcp: fix request migration ownership
-To: Matthieu Baerts <matttbe@kernel.org>
+Content-Language: fr
+To: Ruide Cao <caoruide123@gmail.com>, Paolo Abeni <pabeni@redhat.com>
 Cc: mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <cover.1788800732.git.caoruide123@gmail.com>
+ <6cb7409a-4be0-6d9a-8206-ae38f5f9eff2@gmail.com>
+ <CACveakSFCFOrD6eCpV1NNM0CXhW6NtTELm4DzBoMezCxQJLJyg@mail.gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <CACveakSFCFOrD6eCpV1NNM0CXhW6NtTELm4DzBoMezCxQJLJyg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Matthieu,
+Hi Ruide, Paolo,
 
-A brief follow-up on v6 of this series, posted on September 9.
+On 18/09/2026 10:58, Ruide Cao wrote:
+> Hi Matthieu,
+> 
+> A brief follow-up on v6 of this series, posted on September 9.
+> 
+> Patchwork still shows the MPTCP series as “handled-elsewhere” and the
+> netdev copied as “awaiting-upstream”, but no commit has been applied yet.
+> 
+> Could you please let us know whether the series is in your queue and
+> whether any further changes are needed?
+> 
+> Also, the netdev Sashiko check was reported as “Canceled”:
+> https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1788800732.git.caoruide123%40gmail.com
+> while the independent Sashiko review was completed with no findings:
+> https://sashiko.dev/#/patchset/cover.1788800732.git.caoruide123%40gmail.com
+> 
+> Do you know whether the cancellation was due to an infrastructure
+> issue or was expected?
+Thank you for the heads-up. I was waiting for Clashiko's report, and I
+didn't see it was cancelled.
 
-Patchwork still shows the MPTCP series as =E2=80=9Chandled-elsewhere=E2=80=
-=9D and the
-netdev copied as =E2=80=9Cawaiting-upstream=E2=80=9D, but no commit has bee=
-n applied yet.
+@Paolo: any ideas? What should I do here? If the series look OK, apply
+it in our tree and send it to netdev with the next (small) batch?
 
-Could you please let us know whether the series is in your queue and
-whether any further changes are needed?
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-Also, the netdev Sashiko check was reported as =E2=80=9CCanceled=E2=80=9D:
-https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1788800732.git.ca=
-oruide123%40gmail.com
-while the independent Sashiko review was completed with no findings:
-https://sashiko.dev/#/patchset/cover.1788800732.git.caoruide123%40gmail.com
-
-Do you know whether the cancellation was due to an infrastructure
-issue or was expected?
-
-Thanks,
-Ruide
-
-MPTCP CI <wpasupplicant.patchew@gmail.com> =E4=BA=8E2026=E5=B9=B49=E6=9C=88=
-9=E6=97=A5=E5=91=A8=E4=B8=89 01:53=E5=86=99=E9=81=93=EF=BC=9A
->
-> Hi Ruide,
->
-> Thank you for your modifications, that's great!
->
-> Our CI did some validations and here is its report:
->
-> - KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-> - KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-> - KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-> - KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-> - KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-> - KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-> - Perf:
-> - Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/3425=
-5318335
->
-> Initiator: Patchew Applier
-> Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/e19ab209=
-91c2
-> Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D1160=
-691
->
->
-> If there are some issues, you can reproduce them using the same environme=
-nt as
-> the one used by the CI thanks to a docker image, e.g.:
->
->     $ cd [kernel source code]
->     $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it =
-\
->         --pull always mptcp/mptcp-upstream-virtme-docker:latest \
->         auto-normal
->
-> For more details:
->
->     https://github.com/multipath-tcp/mptcp-upstream-virtme-docker
->
->
-> Please note that despite all the efforts that have been already done to h=
-ave a
-> stable tests suite when executed on a public CI like here, it is possible=
- some
-> reported issues are not due to your modifications. Still, do not hesitate=
- to
-> help us improve that ;-)
->
-> Cheers,
-> MPTCP GH Action bot
-> Bot operated by Matthieu Baerts (NGI0 Core)
