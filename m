@@ -1,124 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C2C3090C2
-	for <mptcp@lists.linux.dev>; Fri, 18 Sep 2026 15:31:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B128C517BB7;
+	Fri, 18 Sep 2026 18:38:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789745509; cv=none; b=Aq5/ks+kPBCteDt1rECU9x/dZ9M+qjA5Hzyg7c3g7leqjoaI+3BTbLtQIJNr3rbBZwO93wtIb3kWosYuIgp5XzmZRzPh3dAXbIOqYQCuB8IlfTcN9j7bwAmWF4lihKif/yqPmCTSbZiXP4rPcwR6YV/moD6J4yswKkSuEA1JYPk=
+	t=1789756726; cv=none; b=tQS6SAJSd5QzVuTnEvPQTBAoeLE/xuwmlvNFr85dQWH45zqejhtaFDHY/RTB9QbjRaVoG4At1QpGtzXvGWLEFJ7hIqkgz5X0LN34Xvy8f4Hqhl/So1GWbQZXqukHe1OBT+u1248ApvC7MuNFeeiVYRBbcx5nr0tk633dlzZEGfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789745509; c=relaxed/simple;
-	bh=CV2TNN7siWYMKkU5J/XYqUI3I8D2rKHab7IFJ+sycHo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fiSuArfWSONPkB20bdT1SQ9L3M6tgPQgidXqPgq5IWPqLAw58C3cLLHNNp+thQKgNpbr22qNpXv8XiJwLzkWuQaKH7uBL2IxHZthrxPvjMce7V3PvIeUXZNW1F3baWHGF7wolc8+JT6uwYo60NvErxku3AL31UNHisf6oKza2Ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pp8foGi0; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789756726; c=relaxed/simple;
+	bh=ij0ZLOqV4a1NW73gHHs+zwV1KBHd/t0FJBBKKAs5pkY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=iokHv8CwLfYSwJZi7SnpSTJNnpAIILPLjXMM0CmVwq8SB2qdwEDy76USi33YEMIrkjUSmxQ0lIiiTZtCfpFnlR5U3kcIrd8E9zCcYX3cWn5ZJPtWuiKYHd/OV77KUMfDR5jMYIZhvBDR6G9cgJbUH+Z72qz4XCv2znx2bksK6KQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=owQs0ZMv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pp8foGi0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D1F41F000FF;
-	Fri, 18 Sep 2026 15:31:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="owQs0ZMv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24AC21F000FF;
+	Fri, 18 Sep 2026 18:38:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789745507;
-	bh=LEogGdEQW0Hg3apQLwV6eLQOtgqlkL2aaOdo3f23ouo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Pp8foGi0GKqYQrtqm0N1yaXwzD490Rrh4ChK8JFCmnEQgFHvFuT29HMY6P3FYtrlh
-	 9gZSL110LJoAzYCJPo5HG0fzIpdAmgJbfw/odRZSs1GC3hHfLBA7t7iBKCb5JrhsH/
-	 1ISkw/l2s/cX2UtQmpfI4lIpvcz/HZAgy2BeD7yMfJlx8P6i/3wAja2DvtPHBKLK25
-	 801VrnUbhrHhGJnJMTtJKSuXLLbdhjvwLs1CtKncTnsQGtkKp8n0CZ6YR8S+WK6ON7
-	 NXPbMIS/WrWLR5CtqbBNeDJsTKlR/7pO8Nl1OdgXReVVWWEbyFe1d57sP+svNAgrJJ
-	 HPxusEp1D58OQ==
-Message-ID: <75488ad9-4b47-42c6-9be2-e087c4f10820@kernel.org>
-Date: Fri, 18 Sep 2026 17:31:45 +0200
+	s=k20260515; t=1789756718;
+	bh=biC+8SCAXKWW6NiMDcUaJ7XQBN7jv400DbE8wg+PFYI=;
+	h=From:Subject:Date:To:Cc;
+	b=owQs0ZMvbbQdREl0izVLnvsC9/nO61Jokthh9WdsAOb2OjfBA3VTrAGTxmcamEbgM
+	 JKYrwd8heRB+yJCzADyufp3+Sk4cTMitjIrlitVatG81CFtkz68kXiCkLuTIS2SScI
+	 Evx00jZjwbRrKqrmrDlfQki9VCrIUJ+h6ueGkMeDM+KV3mEy6qO+OwhSmZNesOCbRh
+	 Dzq0FtQY/VRpdwUAqVx2qhlAqU8gA1PhnQLhPSRsDRU6jhb3+dGDGAZ+Jm8n4CmI6w
+	 ADeEBzfedONNgCCE525vfAYeeIwNF+xIxIppynYOd7eM0EP0MOzvARAy1UTcCe1ZKy
+	 nd+FS+wYua3lg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next 0/4] mptcp: support MSG_ERRQUEUE
+Date: Fri, 18 Sep 2026 20:38:24 +0200
+Message-Id: <20260918-net-next-mptcp-msg_errqueue-v1-0-dd77e1738248@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net v6 0/2] mptcp: fix request migration ownership
-Content-Language: fr
-To: Ruide Cao <caoruide123@gmail.com>, Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-References: <cover.1788800732.git.caoruide123@gmail.com>
- <6cb7409a-4be0-6d9a-8206-ae38f5f9eff2@gmail.com>
- <CACveakSFCFOrD6eCpV1NNM0CXhW6NtTELm4DzBoMezCxQJLJyg@mail.gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <CACveakSFCFOrD6eCpV1NNM0CXhW6NtTELm4DzBoMezCxQJLJyg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/zWMywrCMBBFf6XM2oFJlGL9FZFS47WO0BjzkELpv
+ xsVF3dxuJyzUEJUJDo0C0W8NOnDVzCbhtxt8CNYL5XJim2lM3v2yHVz5ilkF3hKY48YnwUFLLC
+ y64atSGuoFkLEVedv/Uh/kU6/J5XzHS5/4rSub1qghdSJAAAA
+X-Change-ID: 20260918-net-next-mptcp-msg_errqueue-0e2049a30061
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ David Carlier <devnexen@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+ linux-kselftest@vger.kernel.org
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2108; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=ij0ZLOqV4a1NW73gHHs+zwV1KBHd/t0FJBBKKAs5pkY=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLWtqqb2j8yqGHQ9nVjObg54jHTZvmpLxYsntCXtr+AU
+ dPNK/55RykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwESmz2X4Z8bif/soj0Rp8heX
+ a8fNRad/O+1mfmaXxBJbwWuiky5Ne87wh3fm8f32ua2qex5I1SokCL+x+eRmsPRQn36dnc762Tc
+ 4mAA=
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Ruide, Paolo,
+This series lets MPTCP applications use poll(EPOLLERR) and
+recvmsg(MSG_ERRQUEUE) on the MPTCP socket to drain TX timestamps
+through the standard inet ABI, the same way they would on a plain TCP
+socket. ICMP-derived errors stay on the subflow queue: the legacy
+RECVERR ABI cannot convey their per-subflow peer identity, and they
+are intended for a future MPTCP_RECERR channel.
 
-On 18/09/2026 10:58, Ruide Cao wrote:
-> Hi Matthieu,
-> 
-> A brief follow-up on v6 of this series, posted on September 9.
-> 
-> Patchwork still shows the MPTCP series as “handled-elsewhere” and the
-> netdev copied as “awaiting-upstream”, but no commit has been applied yet.
-> 
-> Could you please let us know whether the series is in your queue and
-> whether any further changes are needed?
-> 
-> Also, the netdev Sashiko check was reported as “Canceled”:
-> https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1788800732.git.caoruide123%40gmail.com
-> while the independent Sashiko review was completed with no findings:
-> https://sashiko.dev/#/patchset/cover.1788800732.git.caoruide123%40gmail.com
-> 
-> Do you know whether the cancellation was due to an infrastructure
-> issue or was expected?
-Thank you for the heads-up. I was waiting for Clashiko's report, and I
-didn't see it was cancelled.
+- Patch 1 splices subflow err-skbs onto the MPTCP's sk_error_queue at
+  error-report time. All forwarded events go through sock_queue_err_skb,
+  which re-homes skb->sk onto the MPTCP and charges sk_rmem_alloc, so
+  the MPTCP's error queue stays bounded by sk_rcvbuf and is dropped under
+  rmem pressure, matching tcp's tx-timestamp path and ip_icmp_error() /
+  ipv6_icmp_error(). mptcp_recvmsg(MSG_ERRQUEUE) forwards directly to
+  inet_recv_error(), and mptcp_poll() advertises EPOLLERR purely on the
+  MPTCP's sk_err / sk_error_queue, matching tcp_poll().
 
-@Paolo: any ideas? What should I do here? If the series look OK, apply
-it in our tree and send it to netdev with the next (small) batch?
+- Patch 2 factors the existing inet_flags subflow-propagation hard-coded
+  list into a mask, so the next patch can extend it without churn.
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+- Patch 3 makes IP_RECVERR / IPV6_RECVERR (and the RFC4884 variants)
+  propagate to the subflows. The MPTCP stores the bit so MPTCP-aware
+  helpers can branch on it.
+
+- Patch 4 is a selftest covering the propagation path.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+David Carlier (4):
+      mptcp: support MSG_ERRQUEUE on the parent socket
+      mptcp: sockopt: factor inet_flags propagation into a mask
+      mptcp: propagate RECVERR sockopts to subflows
+      selftests: mptcp: cover IP_RECVERR sockopt propagation
+
+ net/mptcp/protocol.c                              |  55 ++++++--
+ net/mptcp/sockopt.c                               | 155 ++++++++++++++++++----
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.c |  70 ++++++++++
+ 3 files changed, 246 insertions(+), 34 deletions(-)
+---
+base-commit: 4bb9710c6a68d35207f123aef55dcd50e7195ec5
+change-id: 20260918-net-next-mptcp-msg_errqueue-0e2049a30061
+
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
