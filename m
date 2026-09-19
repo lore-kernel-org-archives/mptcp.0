@@ -1,81 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CA330FF30;
-	Sat, 19 Sep 2026 00:31:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63DB8336897;
+	Sat, 19 Sep 2026 19:36:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789777873; cv=none; b=DVFb0KUE/g9hPHcseCDJdfNPNDjC1A3jAycD4w3Xcd6veDWzxAKk3sRJ01b13WRkd3uO24fZwYyk9ThbI/SLXBz+Vss1zrBljaxVBbhokwijvKY/tLZisTd1EKA1gt0T+Ab4diSTK4Asnaap53UHGykjZln7BFhnOBqtom7S078=
+	t=1789846566; cv=none; b=j0u8ZG9J5qbwf+FOEMzwe+o0JcLspUiC42GJoqv1NaVMe5Lu3G3slhnpufMZllj1drLn3vP4gXuFSUfHya9IY6+8YehxkyQa3uUPXHzfHEnUn6KmRLN3B9GWRx5kd/s4oaHDQfM74z+yyXHeQTLAETiEQrKgeEDV8sEJhYei+zI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789777873; c=relaxed/simple;
-	bh=dMoJiW38JJqRtPxIswh1acO3Dkrz1uEJCqlw8vLR/S4=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=iV8jXofmY3c0fvl31NYTwgUsKuFpm7zYwf49uS7icJK0kEuT2g+rZmmfJZvBcdJjtHvHqdlGnFna2vVofNZ5jZLDQLpOPCje6De/9YRTxSgeMHoF3zfg7+FemGyGRjkl8gr46R5Xnx9DrpyEY8HbwBD5dhS6rY4vNslHFY70H/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZWUJA+tl; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789846566; c=relaxed/simple;
+	bh=Z7tW9nOA9SNyMpAYQM5shGGa2hmNAkaKn4Kv3tvlEaA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NEIPob/88l6SF3H/9J3dmr+BRXUg8OD89L7v94jiTIyafl33MlV4KPiaGX8LhtJ8RH/wK8JGEl7NBtgx/m1cloxC9J7Cpe2Vnw/kOmlvpYbtj7XhC3DaF44QBMO6t/bN82JRZV3ODXBnSDxPMFz0ICtmH2xwrC9BDJn8YqQGgo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=agtG2KPz; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZWUJA+tl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BEA41F000FF;
-	Sat, 19 Sep 2026 00:31:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="agtG2KPz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA52C1F000FF;
+	Sat, 19 Sep 2026 19:36:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789777872;
-	bh=RsVM44NNXxzYW5W8RXxbc3bpmbVB+wlVWyRDEEzYfvc=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=ZWUJA+tlcj1jemfIp6vC/gWO+wRabVN6E9svOyn6LAUDcg4mnE7AGruEFExmxmmJW
-	 igiuBKGUrhteaSHgdpQuQTHQLauzZgxW76YljwAVeIBsFQOI2GoA4SBOXPg65DPrY2
-	 jbqoWVSJzsUmJlXhVfygOA/9Ul6Tnm2uoaYTIN9fI5qOzRvalPhvOtQXpRem8yxR5x
-	 0+0SPENQky40ILcH6ANYLBJaed0KdoUOQPWBw77e1/dSN2gmkK6RMmt0/2So6WXMjx
-	 9uevsooN02V5LjkRgOa2pYV7R6wsp0rwXyTjPHyDEBftDUo5knw5damSlehSrRBuT3
-	 bn0273DfqRX/g==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 568DF3811978;
-	Sat, 19 Sep 2026 00:30:06 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20260515; t=1789846564;
+	bh=XuMWs1YM+VTHaEpYpWldHjI0bBRpXXkCQTDqHyt/Cxc=;
+	h=From:To:Cc:Subject:Date;
+	b=agtG2KPz+HOueZ6JPU1vSvF7mXQwmkeXNhxX6T8s3z3zapw9822phVSSvADzhjmC9
+	 5xtqzIghSYgirsIp4hqb20Ik867pHTs1xbpZo+Iy6AOonoyZbIfxN83j9LJ+jk9azD
+	 wOQHysEnI70WspcdOvtCvboQlMQQmYtnSSL2Ox1Iru18Kwv3XfD0n3z2TF2hs/FYWj
+	 +4YCzmTEAWlBO4ClS4tDkGe630zmmfociNO8G8PTnlKOIdVlV6Tbgz1lU/oDKKpnhv
+	 Z7n/vKgfvYnp/pzStv0Pu4VFQzpLdK0TxjpCQK8BXuNgjZQhodwJgeDmR9X2qadlH/
+	 xfLQRhk6cw64g==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: mptcp@lists.linux.dev,
+	stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
+	sashal@kernel.org
+Subject: [PATCH 7.2.y 0/4] mptcp: fix recent failed backports (20260919)
+Date: Sat, 19 Sep 2026 21:35:42 +0200
+Message-ID: <20260919193541.1915297-6-matttbe@kernel.org>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=939; i=matttbe@kernel.org; h=from:subject; bh=Z7tW9nOA9SNyMpAYQM5shGGa2hmNAkaKn4Kv3tvlEaA=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLWPeFjK163183VRMu18H/iHrZXotmdT13fRf9NLuf+H 3Cv5P/3jlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIlkbGT4KzjHIcOIZfkvpuJl CoyPjyldEPn6VnBdm/4M69PHTedwBDEyzDgwc+vmbczFb6dG6iay2axsXeWw+tbsU1P5s/VMnW5 UcAEA
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] selftests: net: update netfilter netlink config
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <178977780506.1204672.14114512440910864015.git-patchwork-notify@kernel.org>
-Date: Sat, 19 Sep 2026 00:30:05 +0000
-References: <20260917-selftest_config-v1-1-bf25ccbfb18e@kylinos.cn>
-In-Reply-To: <20260917-selftest_config-v1-1-bf25ccbfb18e@kylinos.cn>
-To: Hangbin Liu <hangbin.liu@linux.dev>
-Cc: matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, shuah@kernel.org, pablo@netfilter.org, fw@strlen.de,
- phil@nwl.cc, fmancera@suse.de, netdev@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
- mptcp@lists.linux.dev, liuhangbin@kylinos.cn
 
-Hello:
+The following patches could not be applied without conflicts in this
+tree:
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+- 2b0f561f21b2 ("mptcp: avoid unneeded actions on subflow reset")
+- 42064de57fb8 ("mptcp: close race between scheduler and state change")
+- f3ef03357396 ("mptcp: fix bad accounting in __mptcp_subflow_push_pending()")
 
-On Thu, 17 Sep 2026 10:17:01 +0800 you wrote:
-> From: Hangbin Liu <liuhangbin@kylinos.cn>
-> 
-> Since commit d4349ba9872d ("netfilter: allow nfnetlink built-in only"),
-> NETFILTER_NETLINK was changed to a bool. Use 'y' instead of 'm'.
-> Otherwise the build emits:
-> 
->   .config:5688:warning: symbol value 'm' invalid for NETFILTER_NETLINK
-> 
-> [...]
+I backported the following commit to avoid conflicts:
 
-Here is the summary with links:
-  - [net] selftests: net: update netfilter netlink config
-    https://git.kernel.org/netdev/net-next/c/c2437bf72a37
+- 6cafe51e0f98 ("mptcp: move the stale logic out of retrans scheduler")
 
-You are awesome, thank you!
+Paolo Abeni (4):
+  mptcp: move the stale logic out of retrans scheduler
+  mptcp: avoid unneeded actions on subflow reset
+  mptcp: close race between scheduler and state change
+  mptcp: fix bad accounting in __mptcp_subflow_push_pending()
+
+ net/mptcp/pm.c       | 41 +++++++++++++++++++++++++++--------------
+ net/mptcp/protocol.c | 15 +++++++++------
+ net/mptcp/protocol.h | 10 +++++++---
+ net/mptcp/subflow.c  | 11 +++++++++++
+ 4 files changed, 54 insertions(+), 23 deletions(-)
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.55.0
 
