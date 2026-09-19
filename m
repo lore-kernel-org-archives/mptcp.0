@@ -1,97 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5BF2CCC6;
-	Sat, 19 Sep 2026 20:29:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EA0313293;
+	Sat, 19 Sep 2026 20:30:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789849773; cv=none; b=cW5CXSgGIGRB6pEs+CrHtK6m5l94JraxOCncdrrJJp7zeCsjXdxIWsdqnKmIMrqoCZuzJcMdgrOsago2fC2A6ZDQ24RR7b3hiktsI6WBjag7MPtT8hm46Qar5xAY0Koa0SQDvdkUoabe6UYEPgGPiMsvc/KcR5mDAJbp3EAePwc=
+	t=1789849818; cv=none; b=mwPo0BOostStx6xnpYLNGdEGlnSt2ASs6ZHFtEI5tq1NyFkdEb/Wb/1k//KqLB6JWxzbB8AF5l6OS5YUU+Q8MpPaFpNQzyebIIsyNxhVyQLyG+xQWeJIZ2l3n5XpYQQvhw3JSgbkM06khbT4J+yXr9yKqoQdIMIJBwy+GNMrG3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789849773; c=relaxed/simple;
-	bh=wIQkGPrpNhIPeBtQ1N8sfhUKxd0h+65q0mrZReynOIY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dFj2WOR9GoIicMAeWuRl2UHrxiGiF0PfCbX9WvHhQjQRLMJldE2kr4EhasfrczzA/FstclQm5A2VqUS9xKMithElzxHcTk9tYOWjdS4JRsoS8IS02CHziH2uZOPT4BVYVyVMHwLsuXG+cWdGZQ8fo9VVdUzhmJXo0Pm4XMCKUzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ToFvT9JD; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789849818; c=relaxed/simple;
+	bh=5vm+uamHoD2yOfgVchiqFhSUMYUi+r/HxRgP2p0+h9I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TyJ7f5SnLY3y8srcmp9yzIqFgAarPL+UrKbi77l8Iok+cUQz7PfxRrdckJQIUIM5DO16hcYarYKHTW1j+mHOg4TCQrJzhXLMnaBThtmBwPlcG089HqJ2l4awNQZTiJIoJH94teUQPPHZQK7RFMVFerKomsfu81wd/HQAqkQDmB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AmuIrgXy; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ToFvT9JD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2F711F000FF;
-	Sat, 19 Sep 2026 20:29:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AmuIrgXy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F8651F000FF;
+	Sat, 19 Sep 2026 20:30:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789849772;
-	bh=19uWkkjWrdCxybP4+/+w8dWq8MXHmX5ZLbJ98WpydaY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ToFvT9JDiSGqdaYHvWSz+AFBC0Ya8da+FxkaSQFQJnqC/pP4FpRKgtvf2hyM89k0J
-	 1cpRBVD4NYoFMoyUb0VlAxcCCc9a/hbSfO4obAF//syU+m0hy3fE71J0sGfXMyYBb/
-	 HY5PpX/7t+vbDZ7MSz4YkD7ZQ+bCcs8WElJKcU6kfBjaqPqizJpyzy0NaUr2WTzqwZ
-	 59/K/NYT4K0aMq+KiQQjG0AX1lSvHu1He4Kg7vF4J2us2RShq7w7nP/cLhNjKLrJHY
-	 /wasNzjtd80ZZ+OnT5/u2UZQyyc6WDVvcCG54K76n8heTNfD7Un0JUQRC8LFxJ1v2P
-	 Tz8r1b8dpwwlQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: mptcp@lists.linux.dev,
-	stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	sashal@kernel.org,
-	Shardul Bankar <shardul.b@mpiricsoftware.com>,
-	Xinyang Ge <xinyang@anthropic.com>,
-	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.15.y 2/2] mptcp: close race between scheduler and state change
-Date: Sat, 19 Sep 2026 22:29:21 +0200
-Message-ID: <20260919202918.2074632-6-matttbe@kernel.org>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260919202918.2074632-4-matttbe@kernel.org>
-References: <20260919202918.2074632-4-matttbe@kernel.org>
+	s=k20260515; t=1789849817;
+	bh=LRmZ9trRqQMjRA/bi4sS2nuMLIkXINAO4Q1zOtsmj30=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=AmuIrgXyEHsqtavAxLU1rlAuSLBY7dDaWO0HTSH89pcmKB4dFNlKP0lgUQH7uvWQs
+	 p/uO8I8D3PLfjLF+6HlOKzzhtvD0tPDATDApqSR4INNhfbCskaonXoWpOGmExyNg9Y
+	 D67qeMB/GhgIcfAQpDSb5GxonSWk7/Jv5QIoYnUuC7ODOuYfYI2TvSoo5GuKpqw0An
+	 cJ5YD626JUqXV1soON1tWFUO8UeVuujEzXZUQFj85Jw3spRQLKJgJd77MFbCWh2P/Y
+	 X9GRysR+Zy6h/Az5erk/ndRRUtsdhe4+kCBB8LECCiFqo4+72+Xr9TMSzyNVqpfkSw
+	 xhBoqdcTR098A==
+Message-ID: <798483f3-55c1-4489-b584-80ad6ebcaedf@kernel.org>
+Date: Sat, 19 Sep 2026 22:30:14 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1643; i=matttbe@kernel.org; h=from:subject; bh=SM1NCJ+XyNa0LwwgpdEzAq2+G78I5l0TBurls9PYHR0=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLWfVi4/FfZwye/AlR0imvYThhKad/o9va3s1rJwKNoz pv6eO6SjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIkIeDIyHPyZ4qyzOYDho6HV /6pjK2YlLS/c5G/2jc24i70wTt0nk+GffscxkeNuz24f+3tLSWL5mnBpp9iChM53vN43kr6+/Rb DCgA=
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH 6.1.y 1/3] mptcp: consolidate subflow cleanup
+Content-Language: fr
+To: sashiko-reviews@lists.linux.dev
+Cc: mptcp@lists.linux.dev
+References: <20260919201252.2025112-5-matttbe@kernel.org>
+ <20260919201252.2025112-6-matttbe@kernel.org>
+ <20260919202324.50DC81F000FF@smtp.kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260919202324.50DC81F000FF@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Paolo Abeni <pabeni@redhat.com>
+On 19/09/2026 22:23, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [High] mptcp: socket hang in fallback teardown due to restrictive state checks
 
-commit 42064de57fb83231fcc89663a94885f228a1ee53 upstream.
+I guess I would have quickly seen that in the mptcp_connect*.sh tests.
 
-The mptcp scheduler may race with subflow sockets state change: data
-transmission on the selected socket may fail and a later release could
-try to use mss_now reset to 0 for a divide operation.
-
-Address the issue by explicitly checking for the critical scenario.
-
-Fixes: c886d70286bf ("mptcp: do not queue data on closed subflows")
-Cc: stable@vger.kernel.org
-Reported-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
-Reported-by: Xinyang Ge <xinyang@anthropic.com>
-Closes: https://lore.kernel.org/20260525194828.1137119-1-shardul.b@mpiricsoftware.com
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20260917-net-mptcp-misc-fixes-7-3-rc4-v2-2-0cf5c72667c8@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/protocol.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 42190efadb11..2f18dcb8d034 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1621,7 +1621,9 @@ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 
- static void mptcp_push_release(struct sock *ssk, struct mptcp_sendmsg_info *info)
- {
--	tcp_push(ssk, 0, info->mss_now, tcp_sk(ssk)->nonagle, info->size_goal);
-+	if (info->mss_now)
-+		tcp_push(ssk, 0, info->mss_now, tcp_sk(ssk)->nonagle,
-+			 info->size_goal);
- 	release_sock(ssk);
- }
- 
+Cheers,
+Matt
 -- 
-2.55.0
+Sponsored by the NGI0 Core fund.
 
