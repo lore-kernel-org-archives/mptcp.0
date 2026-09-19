@@ -1,97 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A0A1E7C18;
-	Sat, 19 Sep 2026 20:13:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00AC33F8B4
+	for <mptcp@lists.linux.dev>; Sat, 19 Sep 2026 20:23:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789848791; cv=none; b=h5vDbQ9d1XXpXSGK6vL0Cc9NKu+mXxJrmJf2ZHkcKoQjm8zJmfok1wXqWp/ijZaaF6nOe1OvdT9j0dM/6sJS0NoXCaDENiye8if/Qw99SzL4IbkEhOsHgZlZctFVn3ejcMNp/P1N5BULADfBhhnPxJbpE+1SRYsEs0qqmEoGAf8=
+	t=1789849406; cv=none; b=bb8hz25cje+qtcyRjoVYj76oWRefJfCeWlscz9sf1A+DcIu870xycCUMJ9uASut8mnOnGWn9oUTHf2LTB+3M5CWY5QfqG/pSfr2KU9QmnLl5+INZ+vopf/cylswxpY8zfnh7flP+KKQa6rmRRTHea9Mw2dvwAeaUm1HfWzHlVl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789848791; c=relaxed/simple;
-	bh=dwhocoWCq7rJOiLDrwA64Y6T/zGO94j072keG0FzDLM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RXmvYhpKA7PCsDJg9j+NtgBkZTakjoVrkgiv2SP/DjsjNhCPhIf9CuwiC+g3VS+ETKWolrNfRWJo3zEI74AMs54zapPKgLwHsAVv3siBpxPU3+Y1RPNehpF6gHoZayWt99FieLfZEofZkRXW1uhPCCygB2D9sfeBS3y3X3MYE7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dGSmk6Fi; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789849406; c=relaxed/simple;
+	bh=V3wKO5FtLiYdr5sCWaUNjCUTO78IOzieI3u/5/K7RFE=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=joZh/tYtBeer01ZFMqjrHHS9sG0nM3vl8GEDfbHaQ0OmMMh/3giZCHzWtFnhS4oePN1KIBPIlfnOeIEuI//7himvMzLzLURiapqTa6jvYJU5bemJON/5T+Yj8cvznQ1k65MMc1T4WLlQ2H0YnoHc2p+mKdQkQJnme542MuA6CN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hCtsBRzW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dGSmk6Fi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A0711F00893;
-	Sat, 19 Sep 2026 20:13:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hCtsBRzW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50DC81F000FF;
+	Sat, 19 Sep 2026 20:23:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789848789;
-	bh=VGv5bcygaPAIYafDfFrgO8tRS847RoBkPdxQSzJbqEM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=dGSmk6Fib+CKh9hvVJMuflpifkMl0u7f7UXLTNN8MJDKAaiCMcpxom9LmIqDHWsvJ
-	 LihUGL0uF78KYkTsemKY9rIJsY8eTdExqEJzGeIAyNWBIEJ87GJr9x0+uGRH0AymQL
-	 QztpCcvYMOjdATw55Jpw6gv3q7nH36FPuvOKb8eGgkWRHLSiOcUNidqZzwZlCsd4ep
-	 wkyxU2mU9hH5o+UEUoO2ts6JjDwIK5tHYdic9dF4u6XeqEs7402FycYGcM41g9+v//
-	 QvIR2UFma5HHujlSlnyCck/uK7tTo+W8BKC3JUTYflK4PuzF27N8DIsvGmDMgsEs/v
-	 dmQ9EwUcFzRZw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: mptcp@lists.linux.dev,
-	stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	sashal@kernel.org,
-	Shardul Bankar <shardul.b@mpiricsoftware.com>,
-	Xinyang Ge <xinyang@anthropic.com>,
-	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 6.1.y 3/3] mptcp: close race between scheduler and state change
-Date: Sat, 19 Sep 2026 22:12:56 +0200
-Message-ID: <20260919201252.2025112-8-matttbe@kernel.org>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260919201252.2025112-5-matttbe@kernel.org>
+	s=k20260515; t=1789849404;
+	bh=o/d5rNInUzDZKFRQbK91Qz00TpPJwuBPjadnRZr9bH8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=hCtsBRzWx0nGMppxsK7WriDHQjUu7awyUkr6WnJMlMcrBxqGgbKiWyyMUglRKH480
+	 3Ek3QvuwFcoTv7ByvqWiBZHqwWML1zoKKbuV3MTx4aYLUqgppwqgr+qGqrjdaanMaK
+	 pKSQp9NM23hWzFR2UVFeBSxH/WohNZfhJw6vw5q9wmOYsjTnTlexbnS06ljwUddLv4
+	 6Ic784xi/0gMDNuFeg+FyUgy5IngVPdt1G8ofaG5vhAWu/xP9p4QWNcIJGml8Ea2JU
+	 6lOh3q+nv+RoOS5xXmHZV0U1PE5hUXop+72RFq8ndVNJGtEUVT5jIBEo2bWbiAXeOG
+	 eb+BrBnHLsqbg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 6.1.y 1/3] mptcp: consolidate subflow cleanup
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <20260919201252.2025112-6-matttbe@kernel.org>
 References: <20260919201252.2025112-5-matttbe@kernel.org>
+ <20260919201252.2025112-6-matttbe@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 19 Sep 2026 20:23:23 +0000
+Message-Id: <20260919202324.50DC81F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1643; i=matttbe@kernel.org; h=from:subject; bh=YCaJS/uVeKh2uLBYtsClOmVMEQ7iEBR2miH8Bkb8vGg=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLWvTm5fae/hR7DxOVbtx8u5EvTa9rwIuJMRYhbQy3jV EdOzr35HaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABMxKWf47/3F4ULyAlcBI04N ERGuKX93PLFx81V8+N5bJ/5u8/VCLUaGfWv4K64W+Mx2tdoU7n30S1nXj/lpjF+0vJUfcP99b/y SDwA=
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
 
-From: Paolo Abeni <pabeni@redhat.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] mptcp: socket hang in fallback teardown due to restrictive state c=
+hecks
+--
 
-commit 42064de57fb83231fcc89663a94885f228a1ee53 upstream.
+commit 56f82de860d8f3b2e8b76eca945e8a61ec848e3a
+Author: Paolo Abeni <pabeni@redhat.com>
 
-The mptcp scheduler may race with subflow sockets state change: data
-transmission on the selected socket may fail and a later release could
-try to use mss_now reset to 0 for a divide operation.
+mptcp: consolidate subflow cleanup
 
-Address the issue by explicitly checking for the critical scenario.
+This commit consolidates subflow cleanup actions requiring the worker into a
+single helper. It ensures the dummy data FIN creation for fallback sockets =
+is
+performed only when the TCP receive queue is empty.
 
-Fixes: c886d70286bf ("mptcp: do not queue data on closed subflows")
-Cc: stable@vger.kernel.org
-Reported-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
-Reported-by: Xinyang Ge <xinyang@anthropic.com>
-Closes: https://lore.kernel.org/20260525194828.1137119-1-shardul.b@mpiricsoftware.com
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20260917-net-mptcp-misc-fixes-7-3-rc4-v2-2-0cf5c72667c8@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/protocol.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Link: https://patch.msgid.link/20250218-net-next-mptcp-rx-path-refactor-v1-=
+1-4a47d90d7998@kernel.org
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index ab83cf46a8c3..ca78add7670d 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1636,7 +1636,9 @@ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 
- static void mptcp_push_release(struct sock *ssk, struct mptcp_sendmsg_info *info)
- {
--	tcp_push(ssk, 0, info->mss_now, tcp_sk(ssk)->nonagle, info->size_goal);
-+	if (info->mss_now)
-+		tcp_push(ssk, 0, info->mss_now, tcp_sk(ssk)->nonagle,
-+			 info->size_goal);
- 	release_sock(ssk);
- }
- 
--- 
-2.55.0
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index d9734bfb7283b..9bbeed6290d7a 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
 
+[ ... ]
+
+> @@ -1169,8 +1174,18 @@ static void subflow_sched_work_if_closed(struct mp=
+tcp_sock *msk, struct sock *ss
+>  		    inet_sk_state_load(sk) !=3D TCP_ESTABLISHED)))
+>  		return;
+> =20
+> -	if (skb_queue_empty(&ssk->sk_receive_queue) &&
+> -	    !test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
+> +	if (!skb_queue_empty(&ssk->sk_receive_queue))
+> +		return;
+> +
+> +	if (!test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
+> +		mptcp_schedule_work(sk);
+> +
+> +	/* when the fallback subflow closes the rx side, trigger a 'dummy'
+> +	 * ingress data fin, so that the msk state will follow along
+> +	 */
+> +	if (__mptcp_check_fallback(msk) && subflow_is_done(ssk) &&
+> +	    msk->first =3D=3D ssk &&
+> +	    mptcp_update_rcv_data_fin(msk, READ_ONCE(msk->ack_seq), true))
+>  		mptcp_schedule_work(sk);
+>  }
+
+[Severity: High]
+Does this new placement of the fallback dummy FIN logic cause a socket hang
+during connection teardown?
+
+In the previous implementation, the dummy FIN injection was executed in
+subflow_state_change() regardless of the early returns in
+subflow_sched_work_if_closed().
+
+By moving it inside subflow_sched_work_if_closed(), it is now gated by the
+restrictive state checks at the top of the function:
+
+	if (likely(ssk->sk_state !=3D TCP_CLOSE &&
+		   (ssk->sk_state !=3D TCP_CLOSE_WAIT ||
+		    inet_sk_state_load(sk) !=3D TCP_ESTABLISHED)))
+		return;
+
+When a local application closes a fallback connection, the msk transitions
+to TCP_FIN_WAIT1 or TCP_FIN_WAIT2. If the remote peer then sends a FIN, the
+underlying TCP subflow (ssk) transitions to TCP_CLOSING or TCP_TIME_WAIT.
+Since the ssk is neither in TCP_CLOSE nor TCP_CLOSE_WAIT, the function
+returns early.
+
+Will this skip the fallback dummy FIN injection entirely, leaving the msk
+state machine stuck without mptcp_update_rcv_data_fin() and causing
+fallback MPTCP sockets to hang indefinitely?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260919201252.2025=
+112-5-matttbe@kernel.org?part=3D1
