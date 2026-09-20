@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0848A32B13E;
-	Sun, 20 Sep 2026 07:39:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C067432B13E;
+	Sun, 20 Sep 2026 07:39:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789889996; cv=none; b=qUz0ArrFw0zYC+EmfptH0lvD3tF3ARN4+Hv4U2/y+C2mr0IpjtDl6wM+ne++sdwMSoWIr/1k8Y+KlTFGqHPEPYO9pd+xyZY9sfZhfjDW5qYC1w4nLY8Hmi9K8TxTLWOFhhwuHKOVmu8nCWqVwvGmyKYNlQNzysYTKaM4cCgObBw=
+	t=1789890000; cv=none; b=QfEhLyiPp53Q5Somubocmzk14r007+qU64iSLWf7/iJp34/F2fMv0OZMV6BGgl11NC5nBEsAR3+9qaTQoHuIFEBor8YAqdXjTP18iXKmTiHYd9OrgJUdmcpxR/wbB1R0NKP2q9faj4lLh51RzgP6nJ41+t7uZsrwa6eDUQBowOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789889996; c=relaxed/simple;
-	bh=Xx3f6OtK4eBzgEXots8cZU9Xq7mUQ/ezPCCW5N3ZPrc=;
+	s=arc-20240116; t=1789890000; c=relaxed/simple;
+	bh=icLTmA6HMgZ0oKuUmxa66Gj00gutpPsAaCcYEq+bPZQ=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=SBqYJH7YSMUafI4xGuZgPCVp55/O3iqRFb/iLutcrExKd+5Ibp3Vd8tDyUkx+21wQ784ztVOhmMa51BykFaZ5A4PR/g4JJkQ4ZIYzbB/ItdFSDxaQjPONIuD3LwqhoCt0bqvAc+h8O8JNbVPLUWvo9uhNEauXSA8vYxOxAbz+58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=jjAwCv3R; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type; b=L28ZaNfCohyBJm8WKO6v4mPKFNfIzSH/DxlXkIQLpcayCsNRrZAtHhox/fw49rFJzD6aERRb4qisSVZB5wDZje+rUpqXPrmnkT0Gpowi7XlvtjifH2rX+ZidcEg4ZmziB9HVMPu25zKC6CkbVWVHlSo++CrhncN9G1ZkxRhR7yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Zv8g3N7N; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="jjAwCv3R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D11921F000FF;
-	Sun, 20 Sep 2026 07:39:53 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Zv8g3N7N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC7211F000FF;
+	Sun, 20 Sep 2026 07:39:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1789889994;
-	bh=6NSE5kOcfD2eSathv92Ys2eUtEiGlGLX4HyVdURKWFo=;
+	s=korg; t=1789889998;
+	bh=9YfEdy56+2ZTRBDpn8WCPDn9xIZUuTjDBE0aguw/LAM=;
 	h=Subject:To:Cc:From:Date:In-Reply-To;
-	b=jjAwCv3RjrjVCw3j2RpNR47GP8+SxU2Os+Qlj1uYTED6M/a3EgDEejW8rP1JJiHQr
-	 8X5VfNk5frNpkuPv6L9hxkGG0Xp2BTDp2snGXiVpTIkqaEfPtwdl1QWi3wS5mtYyVw
-	 8eAE7l/MADvzi8Y5rzUe29nRcUe8zReWFni0sFpc=
-Subject: Patch "mptcp: avoid unneeded actions on subflow reset" has been added to the 6.1-stable tree
+	b=Zv8g3N7NkWUvNfwRDuhUnPIhuNrckR5j+yqICm/JXhdpf0xOMLDngXDyVd3hkV7SB
+	 VNsys6mWt+byDi/oFpmCnlyWTMqfxYIqvwggPaEO9cDThGj7mXvUSchpa9xDM3hzy+
+	 sSRgyttbDG0Yg2LzojEAArNtr1n+uKl473GhNyIE=
+Subject: Patch "mptcp: avoid unneeded actions on subflow reset" has been added to the 6.6-stable tree
 To: gregkh@linuxfoundation.org,kuba@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com,sashal@kernel.org,xinyang@anthropic.com
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Sun, 20 Sep 2026 09:36:34 +0200
-In-Reply-To: <20260919201252.2025112-7-matttbe@kernel.org>
-Message-ID: <2026092034-overlay-scanning-1b95@gregkh>
+Date: Sun, 20 Sep 2026 09:36:35 +0200
+In-Reply-To: <20260919200554.2005069-6-matttbe@kernel.org>
+Message-ID: <2026092035-busybody-renounce-0c28@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -46,24 +46,24 @@ This is a note to let you know that I've just added the patch titled
 
     mptcp: avoid unneeded actions on subflow reset
 
-to the 6.1-stable tree which can be found at:
+to the 6.6-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
      mptcp-avoid-unneeded-actions-on-subflow-reset.patch
-and it can be found in the queue-6.1 subdirectory.
+and it can be found in the queue-6.6 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-338609-greg=kroah.com@vger.kernel.org Sat Sep 19 22:13:16 2026
+From stable+bounces-338604-greg=kroah.com@vger.kernel.org Sat Sep 19 22:06:18 2026
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 19 Sep 2026 22:12:55 +0200
+Date: Sat, 19 Sep 2026 22:05:56 +0200
 Subject: mptcp: avoid unneeded actions on subflow reset
 To: mptcp@lists.linux.dev, stable@vger.kernel.org, gregkh@linuxfoundation.org
 Cc: Paolo Abeni <pabeni@redhat.com>, sashal@kernel.org, Xinyang Ge <xinyang@anthropic.com>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20260919201252.2025112-7-matttbe@kernel.org>
+Message-ID: <20260919200554.2005069-6-matttbe@kernel.org>
 
 From: Paolo Abeni <pabeni@redhat.com>
 
@@ -103,8 +103,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
   consequences.
   Also a conflict in protocol.h, because __unused is at a different
   number. Decrement the one from this version and add the new flag
-  above. The context is also a bit different with data_avail being an
-  enum, but that's without consequences here. ]
+  above.]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
@@ -115,7 +114,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -754,13 +754,13 @@ static bool __mptcp_move_skbs_from_subfl
+@@ -747,13 +747,13 @@ static bool __mptcp_move_skbs_from_subfl
  				mptcp_dss_corruption(msk, ssk);
  			}
  		} else {
@@ -134,19 +133,19 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  		WRITE_ONCE(tp->copied_seq, seq);
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -492,7 +492,8 @@ struct mptcp_subflow_context {
- 		stale : 1,	    /* unable to snd/rcv data, do not use for xmit */
+@@ -510,7 +510,8 @@ struct mptcp_subflow_context {
  		valid_csum_seen : 1,        /* at least one csum validated */
+ 		is_mptfo : 1,	    /* subflow is doing TFO */
  		close_event_done : 1,       /* has done the post-closed part */
--		__unused : 9;
+-		__unused : 8;
 +		resetting : 1,	    /* subflow is resetting */
-+		__unused : 8;
- 	enum mptcp_data_avail data_avail;
++		__unused : 7;
+ 	bool	data_avail;
+ 	bool	scheduled;
  	bool	pm_listener;	    /* a listener managed by the kernel PM? */
- 	u32	remote_nonce;
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -379,6 +379,10 @@ void mptcp_subflow_reset(struct sock *ss
+@@ -421,6 +421,10 @@ void mptcp_subflow_reset(struct sock *ss
  	/* must hold: tcp_done() could drop last reference on parent */
  	sock_hold(sk);
  
@@ -157,7 +156,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  	tcp_send_active_reset(ssk, GFP_ATOMIC);
  	tcp_done(ssk);
  	if (!test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &mptcp_sk(sk)->flags))
-@@ -1710,6 +1714,13 @@ static void subflow_state_change(struct
+@@ -1802,6 +1806,13 @@ static void subflow_state_change(struct
  
  	__subflow_state_change(sk);
  
@@ -175,10 +174,10 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 Patches currently in stable-queue which might be from matttbe@kernel.org are
 
-queue-6.1/selftests-mptcp-fix-an-uaf-in-mptcp_connect.c.patch
-queue-6.1/mptcp-syncookies-remember-the-request-backup-flag.patch
-queue-6.1/mptcp-close-race-between-scheduler-and-state-change.patch
-queue-6.1/mptcp-avoid-unneeded-actions-on-subflow-reset.patch
-queue-6.1/mptcp-options-handle-mpc-data-csum-reqd-no-csum.patch
-queue-6.1/mptcp-consolidate-subflow-cleanup.patch
-queue-6.1/mptcp-subflow-no-need-to-copy-thmac-during-ulp_clone.patch
+queue-6.6/selftests-mptcp-fix-an-uaf-in-mptcp_connect.c.patch
+queue-6.6/mptcp-fix-bad-accounting-in-__mptcp_subflow_push_pending.patch
+queue-6.6/mptcp-syncookies-remember-the-request-backup-flag.patch
+queue-6.6/mptcp-close-race-between-scheduler-and-state-change.patch
+queue-6.6/mptcp-avoid-unneeded-actions-on-subflow-reset.patch
+queue-6.6/mptcp-options-handle-mpc-data-csum-reqd-no-csum.patch
+queue-6.6/mptcp-subflow-no-need-to-copy-thmac-during-ulp_clone.patch
