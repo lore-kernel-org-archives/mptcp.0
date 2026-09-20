@@ -1,123 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from va-2-30.ptr.blmpb.com (va-2-30.ptr.blmpb.com [209.127.231.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378F231F9B9
-	for <mptcp@lists.linux.dev>; Sat, 19 Sep 2026 20:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD2AD3D9555
+	for <mptcp@lists.linux.dev>; Sun, 20 Sep 2026 06:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789851232; cv=none; b=EOv36DUuKbNICj0XcMbm8uWxdLHFjJszU8ut52gxeFWOtI08WWoSat+P/UVPPnVYL/5ovD0GiqQcOsKJs7IiywSMikUC7FIXrReLH7zJ4A07BDQCvmhhlteIzTZ5X0fut5hBNrQ7yQ0OcpF+boD83mqgRoS3YZQ8FPmXFMjNFVg=
+	t=1789885171; cv=none; b=juaHMU+yDN8pO1VC3YJd8FiNOMfMVQQp/rpo2bS6x1nMIfBONviqUVnPPRJllJmP+L4HpJ3a7ylTDicpD5hAQV2GBDFkbTOkbEGipRilf/1U+mu1zYgAhT/0LZeXxc+rrPjvjl7IrpFGLSOPuz+bSOnEBIFLXTyp0Z7EuIqs+Q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789851232; c=relaxed/simple;
-	bh=juRyZ9vLrhMPY4ZdqXDb/H/wrW4PkDI+vwLwt4DN8YM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=SKoZ716FCobfdcJfVy6fXskbzfGH+uLvB/t9eLhNCxikTRp2bfLSoutLuMxjQ96ekyJla+1bYQRkQ4pA8pnG4xUpo2MT4fR2lnp658YLjFU7DJW0pDF0dOiwBPjpGUAbzVtvIzQquio+HXa0VCnK/KW9q5kA2BgU02MkRgAN3lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i0Q6inl0; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789885171; c=relaxed/simple;
+	bh=rnMQbbdgbu32h+ljMvAI3F6b2WvLzvm7YjN6hioE+Yg=;
+	h=Cc:References:Mime-Version:Message-Id:Content-Type:To:From:
+	 Subject:Date:In-Reply-To; b=TIJUt2s2PyYlwU3OujqxTGMApTJzrd+j1W5Rs1zd74cLzRserZTWv6fgVpnY1PwBSHSyLxl6BWV07sCemRzB3cpN1Fg9dr+jiSHTwlNfrUhnrYuWA9gh/xs3H+O2spe7B5MpnO8zk3Ze+LVWEGtMCc5XOYtE1ENCo6aDbADgopQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=moonshot.ai; spf=pass smtp.mailfrom=moonshot.ai; dkim=pass (2048-bit key) header.d=moonshot.ai header.i=@moonshot.ai header.b=BQNGZOt/; arc=none smtp.client-ip=209.127.231.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=moonshot.ai
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=moonshot.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i0Q6inl0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 956551F000FF;
-	Sat, 19 Sep 2026 20:53:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789851230;
-	bh=FxAHG3VcXKnMBUeyQE2NX9bfWQvrLwNy5t8gaqgKQ4Q=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=i0Q6inl0FIHBddZHNyNmEKTaSFqBsk5sflLlQzhS2PqeZvzK8eA2CmXhcTcliVRor
-	 V6k9Z/wWCJ3awxnpJfqUJAxBNZ9kM5M7UHe+RLzwQzmB6QZFZydMWfIWD4sXblgDc/
-	 rJqwI/SXjypuM/hTgYenGk/USZsics0wvdlgqPgMyik5hHpAfKDSac0AQ+iRylQk4O
-	 8pss5Z4xOeMvEIm++cLsOQFvYZxC7I85atIPMhgPr9X1bcmI1pxDosqNCm3cRzssKX
-	 RhOWnMYYOWbTqNtOWZyCrgDiTVZm0YnmTAk5jjanuPaHDZJegmSMxeO2OckUMAhIxX
-	 MegsrXP/ZNWng==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 5.10.y 3/3] mptcp: close race between scheduler and
- state change
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-In-Reply-To: <20260919204002.2106015-8-matttbe@kernel.org>
-References: <20260919204002.2106015-5-matttbe@kernel.org>
- <20260919204002.2106015-8-matttbe@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 19 Sep 2026 20:53:50 +0000
-Message-Id: <20260919205350.956551F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=moonshot.ai header.i=@moonshot.ai header.b="BQNGZOt/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=feishu2510091218; d=moonshot.ai; t=1789885163; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=DtcePfBq/Wgxt45Maj0MMOd4M1kW8iYGmPEyk4W6x5I=;
+ b=BQNGZOt/aS3dPRSUoUnSZjuk8DbRbAfR9rQJMuB3h9DzBs11llUzV9a3ndQqXai287mHEv
+ b/987BhcJXwgng278PEYWW5gNFJ6csa77tCWUCsjvhYeZT6EZUjbjX++ec/V2HVMEP3Dc0
+ UNXgOBpXCaI9ZkxDzweTt03Na955Z4lhJJZdx7553RkILRvGbG8tjhzajL738unDpkRLxa
+ YMgEcdX3G8P5xW79vljejgtaC2Q5ywyWinpfmaY56q2X5m3dhyF4M5X1XQiikA1Sqf2etD
+ DIMKq20kYegSU+YC3FxPpxXZebba1X+J+VZaTjzK3/JRGp4q14F+HsfHPw0oag==
+Cc: "Yilin Zhang" <yilinzhang@moonshot.ai>, <netdev@vger.kernel.org>, 
+	<mptcp@lists.linux.dev>, "Kimi Security Team" <bug-report@moonshot.ai>
+References: <20260903094010.4066892-1-yilinzhang@moonshot.ai>
+Received: from dev.msh-dev.svc.cluster.local ([117.157.206.135]) by smtp.feishu.cn with ESMTPS; Sun, 20 Sep 2026 14:19:20 +0800
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+Mime-Version: 1.0
+X-Original-From: Yilin Zhang <yilinzhang@moonshot.ai>
+Message-Id: <20260920061755.3575063-1-yilinzhang@moonshot.ai>
+X-Lms-Return-Path: <lba+26aaf7ae9+8ccb9a+lists.linux.dev+yilinzhang@moonshot.ai>
+Content-Type: text/plain; charset=UTF-8
+To: "Mat Martineau" <martineau@kernel.org>, 
+	"Matthieu Baerts" <matttbe@kernel.org>, 
+	"Jiayuan Chen" <jiayuan.chen@linux.dev>, 
+	"Paolo Abeni" <pabeni@redhat.com>
+From: "Yilin Zhang" <yilinzhang@moonshot.ai>
+Subject: [PATCH v3] mptcp: do not use Fast Open on MP_JOIN subflows
+Date: Sun, 20 Sep 2026 14:17:55 +0800
+In-Reply-To: <20260903094010.4066892-1-yilinzhang@moonshot.ai>
+Content-Transfer-Encoding: 7bit
+X-Mailer: git-send-email 2.34.1
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] mptcp: skipped timer reset when mss_now is 0 leads to connection s=
-tall
-- [High] mptcp: allow_infinite_fallback state corruption when mss_now is 0
---
+tcp_fastopen_create_child() hands the SYN packet itself to
+subflow_syn_recv_sock(). For an MP_JOIN request this takes the
+fatal fallback: the cloned child is destroyed and handed back with
+drop_req flagged, but tcp_fastopen_create_child() does not check
+the flag and queues it, so accept() can expose the freed child.
 
-commit 4c31a1df5ba815467dd012d7f0c9b7bc2457aca9
-Author: Paolo Abeni <pabeni@redhat.com>
+MP_JOIN cannot use Fast Open: data on a subflow requires the
+completed HMAC exchange (RFC 8684, sec. 3.2). Refuse it (only the
+TFO path passes a SYN skb here) and let tcp_conn_request() fall
+back to the regular MP_JOIN handshake; also strip the Fast Open
+cookie from MP_JOIN SYN/ACKs.
 
-mptcp: close race between scheduler and state change
+Fixes: 90bf45134d55 ("mptcp: add new sock flag to deal with join subflows")
+Reported-by: Kimi Security Team <bug-report@moonshot.ai>
+Suggested-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Suggested-by: Matthieu Baerts <matttbe@kernel.org>
+Signed-off-by: Yilin Zhang <yilinzhang@moonshot.ai>
+---
+v3:
+- refuse TFO for MP_JOIN in subflow_syn_recv_sock() and fall back to
+  the regular handshake; the TCP-side hunks from v2 are dropped
+- strip the TFO cookie from MP_JOIN SYN/ACKs
+v2:
+- https://lore.kernel.org/netdev/20260903094010.4066892-1-yilinzhang@moonshot.ai/
+v1:
+- https://lore.kernel.org/netdev/20260902121247.3248539-1-yilinzhang@moonshot.ai/
 
-This commit adds a check for mss_now being 0 to prevent a divide by zero
-operation when selecting a subflow socket. It modifies mptcp_sendmsg and
-mptcp_worker to only trigger tcp_push if both copied and mss_now are non-ze=
-ro.
+ net/mptcp/subflow.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Link: https://patch.msgid.link/20260917-net-mptcp-misc-fixes-7-3-rc4-v2-2-0=
-cf5c72667c8@kernel.org
-
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 292c21713eb7f..fdebc451e23aa 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1381,7 +1381,7 @@ static int mptcp_sendmsg(struct sock *sk, struct ms=
-ghdr *msg, size_t len)
->  	}
-> =20
->  	mptcp_set_timeout(sk, ssk);
-> -	if (copied) {
-> +	if (copied && mss_now) {
->  		tcp_push(ssk, msg->msg_flags, mss_now, tcp_sk(ssk)->nonagle,
->  			 size_goal);
-> =20
->  		/* start the timer, if it's not pending */
->  		if (!mptcp_timer_pending(sk))
->  			mptcp_reset_timer(sk);
->  	}
-
-[Severity: High]
-Does this unintentionally skip resetting the retransmit timer when mss_now
-is 0?
-
-If multiple fragments are sent and a subsequent fragment fails, it can leave
-copied > 0 but mss_now =3D=3D 0. By bundling the timer initialization with =
-the
-mss_now check, this might prevent data queued to the MPTCP socket from being
-retransmitted if the current subflow fails, potentially stalling the
-connection.
-
-[ ... ]
-
-> @@ -1891,7 +1891,7 @@ static void mptcp_worker(struct work_struct *work)
->  		if (!mptcp_ext_cache_refill(msk))
->  			break;
->  	}
-> -	if (copied) {
-> +	if (copied && mss_now) {
->  		tcp_push(ssk, msg.msg_flags, mss_now, tcp_sk(ssk)->nonagle,
->  			 size_goal);
->  		WRITE_ONCE(msk->allow_infinite_fallback, false);
->  	}
-
-[Severity: High]
-Could skipping this block when mss_now is 0 cause allow_infinite_fallback
-state corruption?
-
-In mptcp_worker(), if a subflow failure occurs during retransmission causing
-mss_now =3D=3D 0, copied might still be > 0. Skipping the update to
-msk->allow_infinite_fallback could leave it as true even after MPTCP data
-was successfully queued. A subsequent error might then trigger an invalid
-fallback to plain TCP, corrupting the connection state and stream data.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260919204002.2106=
-015-5-matttbe@kernel.org?part=3D3
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index af81ad5..2b454d4 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -348,6 +348,10 @@ static void subflow_prep_synack(const struct sock *sk, struct request_sock *req,
+ 	if (foc && foc->len > -1)
+ 		ireq->tstamp_ok = 0;
+ 
++	/* MP_JOIN cannot use TFO, do not send a cookie in the SYN/ACK */
++	if (foc && mptcp_subflow_rsk(req)->mp_join)
++		foc->len = -1;
++
+ 	if (synack_type == TCP_SYNACK_FASTOPEN)
+ 		mptcp_fastopen_subflow_synack_set_params(subflow, req);
+ }
+@@ -832,6 +836,12 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+ 	if (fallback)
+ 		goto create_child;
+ 
++	/* a SYN skb here comes from TFO, which MP_JOIN cannot use: just
++	 * fall back to the regular path.
++	 */
++	if (subflow_req->mp_join && (TCP_SKB_CB(skb)->tcp_flags & TCPHDR_SYN))
++		return NULL;
++
+ 	/* if the sk is MP_CAPABLE, we try to fetch the client key */
+ 	if (subflow_req->mp_capable) {
+ 		/* we can receive and accept an in-window, out-of-order pkt,
+-- 
+2.34.1
