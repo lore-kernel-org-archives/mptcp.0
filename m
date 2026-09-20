@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA0F3D45FE
-	for <mptcp@lists.linux.dev>; Sun, 20 Sep 2026 06:29:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1232B352C35
+	for <mptcp@lists.linux.dev>; Sun, 20 Sep 2026 06:30:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789885748; cv=none; b=qj/8r2/d3l+Bw++O/cTVix9YjmjMq5wyCYvzDtEJNu+qBU3vuITscOjjTYD1TKCe6MdF7Pnr1s0S+B8Mgl1+lXGoT7qtWH3UEnTJiXgP/AIon+OnOfM4uPUHB9XMZZQUFYvnIphAfSaYM/iPWnOp0MlYzyeTp1MIrNtiwpzs9Bk=
+	t=1789885815; cv=none; b=RkwhJCIJEoa0/hAyAPiPxz041K2oLga57j+ZvlA2AnQyhAsVQWH4lychUcZ2v8XPBAW5rdiyBf3kxLSOIoBAFQVRD4GeW0CX5NzhxQcROgeRTKR804oNmo7q1ZU09KgpPSAz80lprpdw26e5KEctzPerM8qY3FXcWbEys1X/HdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789885748; c=relaxed/simple;
-	bh=4/jtPHCZHyVSfIwUWmxPsqMcBinJzwyy1yOg7ergpB4=;
+	s=arc-20240116; t=1789885815; c=relaxed/simple;
+	bh=TK0uG2CgGtpXiFowCE7GF4murr2zWBycG7N7vkHdwL0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=GGd3oGiy99KK1hdPQv3nX/DaoP9uQVHcfTTIvTOcuu2d7dY9W5jjYP1HLxH4gqaI0QSF0i7TCx+GFcIq8jzXoBiCcCc2QKzyPyzfWy8AkDH6yRfIJHx9kNqO9ya3K3gt1fI8t7dvHbcYETVam6hdA7kEwK4HSNPekER1jfthHBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HUFnhea8; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=YXxk0MhluOZ+agqCX1C6rVoMhHHCURVdcSkgB9axLunbpEc4M/v+3KnrNBphWK3d1R3MKuBD6bPEnAm3qM14MRXWr4RkoiYZz4GLVHUD7yQychGolBc250kHrYmSqwwLDzx7jxJazQSu1kthWxf925ZcSrVUck4eueBKq7E4JM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bIDWgYOd; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HUFnhea8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21C3B1F000FF;
-	Sun, 20 Sep 2026 06:29:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bIDWgYOd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89A8E1F000FF;
+	Sun, 20 Sep 2026 06:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789885747;
-	bh=XZQVgV7G4cs538b30n9W2qqR3XfB237DH3rsa/dqrek=;
+	s=k20260515; t=1789885813;
+	bh=Q8xvYdfFwB+tElFpSStrK+sUwEBtI170Ut1CUcPocy8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=HUFnhea8oQgGNfjBYJiu/IK9u2zM1ZUXexd7K9bVUynmBC+DBS0lStaW/BnyeeyqE
-	 COv8lJakLKwEvOYs+8K5KR4SfOiEOHjPTSvxlhITZZOZTcJ8hY60UuXE/eC4hgGeKC
-	 aFY99n+3CyDxg2Feag/Vn4GhC1qiTQgdsWk4dQsRAAC0OnrJrZqAHwpxGGSKW69th6
-	 O4g4lFl2t9yZeD6FiIJhCj7uqwOhWbCgoLF0WcvO0Sf7SLShGdQrqiarLwchltQnTg
-	 pr7lg7K6FlJndPJ5xezdo2NFLloNFebi5z0D5bdFMf+9GM//8R2qvhJygyo4MpBrWt
-	 7jDWbQJ0jzfEw==
+	b=bIDWgYOd0ZDPtXlrw68dD6RpzlV6Sh8c1cTqwPKUHSbxWnDJiRA8gz5Nueh6bpaxq
+	 O8uDpAVbJYPElSnkbERj+shW4xn6XEU3ECDjcrNjh1LqiJ4R4wLlNVvLXsEeCtFbJE
+	 gMsGw4JlRcsrHtAfYybNN56Jz6bR3pHuaKTOrH+rVoYwWhmVsNZzZQgMqRTAMcsN7f
+	 rQHhEI8TXDZoz2PUImGMzPU0nrXWdaf1HVHSsqEFpy16uVxryGadwdxRHt0ecokesx
+	 itp8liSE+fskRtIWLoIs6+ZpSr9NanM5pxu1jpn86QV8uvoDvt8Z25tgs96czRiWt7
+	 baz5Eiswx5t1g==
 From: sashiko-bot@kernel.org
 Subject: Re: [PATCH v3] mptcp: do not use Fast Open on MP_JOIN subflows
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Yilin Zhang" <yilinzhang@moonshot.ai>
 Cc: mptcp@lists.linux.dev
-In-Reply-To: <20260920061904.3575780-1-yilinzhang@moonshot.ai>
+In-Reply-To: <20260920061755.3575063-1-yilinzhang@moonshot.ai>
 References: <20260903094010.4066892-1-yilinzhang@moonshot.ai>
- <20260920061904.3575780-1-yilinzhang@moonshot.ai>
+ <20260920061755.3575063-1-yilinzhang@moonshot.ai>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 20 Sep 2026 06:29:06 +0000
-Message-Id: <20260920062907.21C3B1F000FF@smtp.kernel.org>
+Date: Sun, 20 Sep 2026 06:30:13 +0000
+Message-Id: <20260920063013.89A8E1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -46,19 +46,17 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] mptcp: disabled TCP timestamps on MP_JOIN with TFO due to wrong =
-logic order
+- [Medium] net/mptcp: unintentional disabling of TCP timestamps for MP_JOIN
 --
 
-commit 7c8131d455e6d16e5fa896b1f57ebf371c13798d
+commit 2eba4e34ce837e7639b005fa4e73483919c7fa14
 Author: Yilin Zhang <yilinzhang@moonshot.ai>
 
 mptcp: do not use Fast Open on MP_JOIN subflows
 
-This commit disables TCP Fast Open on MP_JOIN subflows, as data on a subflow
-requires a completed HMAC exchange. It updates the SYN processing path to
-fallback to a regular handshake and strips the TFO cookie from MP_JOIN
-SYN/ACKs.
+This commit rejects Fast Open on MP_JOIN subflows since data on a subflow
+requires a completed HMAC exchange. It falls back to the regular handshake
+for TFO SYN packets and strips the Fast Open cookie from MP_JOIN SYN/ACKs.
 
 > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
 > index f0a6725d2c376..7bf94aea5f681 100644
@@ -73,25 +71,27 @@ k, struct request_sock *req,
 > +	if (foc && mptcp_subflow_rsk(req)->mp_join)
 > +		foc->len =3D -1;
 > +
+
 [Severity: Medium]
-Does this logic order introduce a regression that unnecessarily disables
-TCP timestamps on MP_JOIN subflows?
+Does this sequence unintentionally disable TCP timestamps for MP_JOIN reque=
+sts
+with TFO cookies?
 
-When a client initiates an MP_JOIN connection with a TCP Fast Open cookie
-request, the original code in subflow_prep_synack() evaluates
-foc && foc->len > -1 and sets ireq->tstamp_ok =3D 0.
+In subflow_prep_synack(), if a remote client sends an MP_JOIN SYN with a TFO
+cookie request, foc->len will initially be > -1, causing ireq->tstamp_ok to
+be cleared to 0.=20
 
-Right after that, the newly added patch logic checks mp_join and sets
-foc->len =3D -1 to reject TFO.
+Immediately following that, this new check sets foc->len to -1 to reject TF=
+O.
+While the TFO cookie is correctly dropped and not sent, tstamp_ok has alrea=
+dy
+been cleared and remains 0, leading to an unintended loss of TCP timestamps
+on the subflow.
 
-Because the timestamp check happens before the cookie is disabled, the SYN/=
-ACK
-is sent without both the TFO cookie and the TCP timestamp. Any remote client
-can trigger this by simply adding a TFO option to their MP_JOIN SYN packet.
-
-Could reversing the order of these checks preserve TCP timestamps by causing
-the timestamp condition to evaluate to false when foc->len is updated to -1?
+>  	if (synack_type =3D=3D TCP_SYNACK_FASTOPEN)
+>  		mptcp_fastopen_subflow_synack_set_params(subflow, req);
+>  }
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260920061904.3575=
-780-1-yilinzhang@moonshot.ai?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260920061755.3575=
+063-1-yilinzhang@moonshot.ai?part=3D1
