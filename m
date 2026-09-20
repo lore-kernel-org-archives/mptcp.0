@@ -1,88 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613123EDAB5;
-	Sun, 20 Sep 2026 09:41:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B38B2283142;
+	Sun, 20 Sep 2026 13:10:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789897314; cv=none; b=MYhwxzyqy6IQi0yvqCKExvXWeE/8X6n2wdfPAUwiScMcHyN8TSpbTMEGrW7TZ8g5pkalkcFkIQyvXSmElfXr91VNJABVHhGWvuvKUEL05XBaPD9iU5DYCw//o0Aavwuh+eCljB7N4uONQCzvTsV76C9Vq0v19RBB+DnuCqCeal4=
+	t=1789909854; cv=none; b=g7k+gc8Nt8M4kS3ceyOd0tudUb4SMMbtFk3sSALWO1eq81Ik6dFGkGMK8lJTWcN16z64wmxLNObCxfTASZYe5B7z6OBCdI+8SnMbCFHSmvV2X7omRMW95rsk4mXXoAujE9II8VlJ2Qz6BfLtSTZm6usgE73SwC+qneheIeJ7w6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789897314; c=relaxed/simple;
-	bh=z3eG0hDjQKm0uthwOF6gQpzQRPUyT+NQRh+DalhKjps=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RhiF/H7GWVTpAAp3v54DKQdHN+s7yve/xEW+Q1NMejOvVH7Fj3dzy3ajVO1+u2LFpzz+ULGR1u8oswwPyvJHHVb9HQxbPrClRbTmB3STPWMCiLoXfUVOZsfq5ubL4pKLc5pNwIec9RQ0dGn1X9K8+zX27coPArqZQxYPFlYYLyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gBnKD3OJ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789909854; c=relaxed/simple;
+	bh=neSMIAcBkCTJzjQEqnxQGyOx53XujLrC/UeWsykPT04=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IIUP6kYQh/wkkf1gY5nzKnDzN/KqrFxVBZMf6TvQ8DJoNpTaef95qvMjO4WXtLliDdL9mGNlmDQIHM+PaDnY/D3hLkJ6mjdxkaT18mz4sR4hial2nC66gQSzYETTHpKhS9loNwgLoe81HkjPUPB8Yiqa9z2kmqda/EHKWeusRFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LPOzzS7X; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gBnKD3OJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1DDF1F00899;
-	Sun, 20 Sep 2026 09:41:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789897313;
-	bh=JUx6utZXkDZLh4llFLFuj2gS6/ubIv+qwUeW0tnZEHA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=gBnKD3OJYNuOYciJwCaZc9rUOpd4N4COYfPJE5XtUdPJ9A8diWrGV6EO8/QABhwhA
-	 bBaJigc0Wt1kByu3ZRoHcdw1i+ssNiaKA9Ce7XPWrpqdbS6LCECZwJQ8VxQt2AE90l
-	 j8gTKzAMUWnkKoWxWo9EJYKaMonQxSxW1u+Lyv75yTLvNPomzq5fJYvU8p/atRw+GR
-	 QbivPzsdw6FCwoJmnVOdkDQ3Gs5zdnAA5xZKDdaSf0jIFzvmxt9i76fzwfkVw7U9J/
-	 s4lZYoZ3en3wpPfUnaK/SkyhePzUwvD5ZmMTTi1URUElHTW3+5WNkizoruVWzqs6ws
-	 H7omO3AIgK59g==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: mptcp@lists.linux.dev,
-	stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	sashal@kernel.org,
-	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 6.12.y v2 3/3] mptcp: fix bad accounting in __mptcp_subflow_push_pending()
-Date: Sun, 20 Sep 2026 11:41:39 +0200
-Message-ID: <20260920094135.2431797-8-matttbe@kernel.org>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260920094135.2431797-5-matttbe@kernel.org>
-References: <20260920094135.2431797-5-matttbe@kernel.org>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LPOzzS7X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 302771F000FF;
+	Sun, 20 Sep 2026 13:10:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
+	s=korg; t=1789909847;
+	bh=bDoCChAhdF9K6ioGHOLDHkrSm/Nef9TgJuvucnLPSsg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=LPOzzS7X9I2ESGXxmIUd9+eULHcdFf+/d29UIf+C+gMfAHkXTNiN2yIocVaZbMyK1
+	 WslT3Hl6pEA1XCd2Ox4wjJ66cTbSqCPzjcBixqPd0+FRQ+guwhPtzuGAppnQBGjuM7
+	 DHilLqaW5MPoVBq5v736kr9OJpfUJJrfbRn9+tPY=
+Date: Sun, 20 Sep 2026 15:10:41 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: sashiko-reviews@lists.linux.dev, mptcp@lists.linux.dev
+Subject: Re: Patch "mptcp: annotate data-races around
+ subflow->fully_established" has been added to the 6.12-stable tree
+Message-ID: <2026092026-throwback-iron-bdce@gregkh>
+References: <2026092037-islamic-default-0aca@gregkh>
+ <20260920074855.D7DFF1F000FF@smtp.kernel.org>
+ <3b729163-10e6-44ad-bcde-24da5e8a11c1@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1208; i=matttbe@kernel.org; h=from:subject; bh=D7mEQdlUlOkhHr7cnnZ0yQi/+uAedqRlpcZ5JLZDPAo=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLWrwpuzJZ/oLjJJ89D0Y15bk6+5nXeDabP/3pKxibzN zy+EiHYUcrCIMbFICumyCLdFpk/83kVb4mXnwXMHFYmkCEMXJwCMBFxMYa/0jkRM3Mf/mI61PIm OWkFs/Ne6cDQHXyNfzXzbBtTkrMmMvwzudlxprXPxsjd9WS+6KICRx/Zwy+j5/yY53JKVSDzuxQ 3AA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3b729163-10e6-44ad-bcde-24da5e8a11c1@kernel.org>
 
-From: Paolo Abeni <pabeni@redhat.com>
+On Sun, Sep 20, 2026 at 11:33:47AM +0200, Matthieu Baerts wrote:
+> Hello,
+> 
+> On 20/09/2026 09:48, sashiko-bot@kernel.org wrote:
+> > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> > - [Low] mptcp: build failure due to READ_ONCE() on bit-field
+> 
+> Mmh, I missed the fact this commit has already been backported in commit
+> 477aa7116a76 ("mptcp: annotate data-races around subflow
+> ->fully_established"), but mostly reverted by caa4a79f74f3 ("mptcp:
+> remove unneeded READ_ONCE() annotation").
+> 
+> I don't know what's better here: either we leave it like that, and I can
+> fix the size of the bit-field. Or we drop patch 1 and 2, and I resolve
+> the small conflict on patch 3/5: commit 2b0f561f21b2 ("mptcp: avoid
+> unneeded actions on subflow reset"). I can send a v2, and we can drop it
+> if the other solution has been preferred.
 
-commit f3ef03357396d4b147d8e76c75fb612c2f264ffc upstream.
+Your v2 looks good, thanks for that, I'll go replace the patches with
+those.
 
-If __subflow_push_pending() errors out we should avoid updating the
-copied byte counters, to avoid mismatch push call later on.
-
-Fixes: 0fa1b3783a17 ("mptcp: use get_send wrapper")
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20260917-net-mptcp-misc-fixes-7-3-rc4-v2-3-0cf5c72667c8@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/protocol.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 1304f3cb6d14..ee160c783ff5 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1757,7 +1757,8 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool
- 			ret = __subflow_push_pending(sk, ssk, &info);
- 			if (ret <= 0)
- 				keep_pushing = false;
--			copied += ret;
-+			else
-+				copied += ret;
- 		}
- 
- 		mptcp_for_each_subflow(msk, subflow) {
--- 
-2.55.0
-
+greg k-h
