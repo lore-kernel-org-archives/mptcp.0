@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C067432B13E;
-	Sun, 20 Sep 2026 07:39:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4ADA3E025E;
+	Sun, 20 Sep 2026 07:40:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789890000; cv=none; b=QfEhLyiPp53Q5Somubocmzk14r007+qU64iSLWf7/iJp34/F2fMv0OZMV6BGgl11NC5nBEsAR3+9qaTQoHuIFEBor8YAqdXjTP18iXKmTiHYd9OrgJUdmcpxR/wbB1R0NKP2q9faj4lLh51RzgP6nJ41+t7uZsrwa6eDUQBowOw=
+	t=1789890003; cv=none; b=KGDXKfRnuj7JxbG+hIhdVduAg+EWPz2y2C3vqAEMSE6NPKYjhAfnbhYlDVSADeqCDqzPTMqZD7HN6MJHtnQQ7B0l2WUPIMQZNucMEhELjd98lg3QE5Rju9jcU7tASPYaKEMLCf7k3dIXhlhr0MN3D0RogOyEYQSeEzCqg+gdRY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789890000; c=relaxed/simple;
-	bh=icLTmA6HMgZ0oKuUmxa66Gj00gutpPsAaCcYEq+bPZQ=;
+	s=arc-20240116; t=1789890003; c=relaxed/simple;
+	bh=SzUzCtNpjrZCJlpnStngyxUyPSdnA5IZyP39pyNJ/n8=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=L28ZaNfCohyBJm8WKO6v4mPKFNfIzSH/DxlXkIQLpcayCsNRrZAtHhox/fw49rFJzD6aERRb4qisSVZB5wDZje+rUpqXPrmnkT0Gpowi7XlvtjifH2rX+ZidcEg4ZmziB9HVMPu25zKC6CkbVWVHlSo++CrhncN9G1ZkxRhR7yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Zv8g3N7N; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type; b=WN2Da6xQawgLlUsj0kqHHBQ5jO5Rmn7TWeq+F615LzaMecKs8XkbjdBEK0HkiNE6QtXDBGZ/W3QtQNa7bcsfv7FoPSvT7S6+9oj68WW+hz5oZn0LxDRTL3C/MDSfQ7dAPnk9k9sSrVUWkZTzn+qWxp3jHTNt1R0cag2C8TyFaHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ThuZKV1J; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Zv8g3N7N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC7211F000FF;
-	Sun, 20 Sep 2026 07:39:57 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ThuZKV1J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 305681F000FF;
+	Sun, 20 Sep 2026 07:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1789889998;
-	bh=9YfEdy56+2ZTRBDpn8WCPDn9xIZUuTjDBE0aguw/LAM=;
+	s=korg; t=1789890001;
+	bh=tGQiMFxkNJ29ZC7X7MoQtfZgAJxIZjd56ys4GbAv2Yg=;
 	h=Subject:To:Cc:From:Date:In-Reply-To;
-	b=Zv8g3N7NkWUvNfwRDuhUnPIhuNrckR5j+yqICm/JXhdpf0xOMLDngXDyVd3hkV7SB
-	 VNsys6mWt+byDi/oFpmCnlyWTMqfxYIqvwggPaEO9cDThGj7mXvUSchpa9xDM3hzy+
-	 sSRgyttbDG0Yg2LzojEAArNtr1n+uKl473GhNyIE=
-Subject: Patch "mptcp: avoid unneeded actions on subflow reset" has been added to the 6.6-stable tree
-To: gregkh@linuxfoundation.org,kuba@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com,sashal@kernel.org,xinyang@anthropic.com
+	b=ThuZKV1Jr1PqyrQqiwIBGb0zFbqnB2jjhFqgKop0R3W0jNwWDbXzicwBE2N2fdRpl
+	 fvfTqtOiFqY0GRJ8Z+BjaPLp5G16IE7U/TXivwEcqQ9h6vmv7wRH2rBDiyzKCN7Zbr
+	 0a1q/Ca83vkY9HRKexjeuf4xkRo3itbrmAAXwi/8=
+Subject: Patch "mptcp: fix bad accounting in __mptcp_subflow_push_pending()" has been added to the 6.6-stable tree
+To: gregkh@linuxfoundation.org,kuba@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com,sashal@kernel.org
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Sun, 20 Sep 2026 09:36:35 +0200
-In-Reply-To: <20260919200554.2005069-6-matttbe@kernel.org>
-Message-ID: <2026092035-busybody-renounce-0c28@gregkh>
+Date: Sun, 20 Sep 2026 09:36:36 +0200
+In-Reply-To: <20260919200554.2005069-8-matttbe@kernel.org>
+Message-ID: <2026092036-dirtiness-resolved-d4d3@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,132 +44,59 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    mptcp: avoid unneeded actions on subflow reset
+    mptcp: fix bad accounting in __mptcp_subflow_push_pending()
 
 to the 6.6-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     mptcp-avoid-unneeded-actions-on-subflow-reset.patch
+     mptcp-fix-bad-accounting-in-__mptcp_subflow_push_pending.patch
 and it can be found in the queue-6.6 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-338604-greg=kroah.com@vger.kernel.org Sat Sep 19 22:06:18 2026
+From stable+bounces-338606-greg=kroah.com@vger.kernel.org Sat Sep 19 22:06:26 2026
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 19 Sep 2026 22:05:56 +0200
-Subject: mptcp: avoid unneeded actions on subflow reset
+Date: Sat, 19 Sep 2026 22:05:58 +0200
+Subject: mptcp: fix bad accounting in __mptcp_subflow_push_pending()
 To: mptcp@lists.linux.dev, stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: Paolo Abeni <pabeni@redhat.com>, sashal@kernel.org, Xinyang Ge <xinyang@anthropic.com>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20260919200554.2005069-6-matttbe@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>, sashal@kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+Message-ID: <20260919200554.2005069-8-matttbe@kernel.org>
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-commit 2b0f561f21b27c40c91ea4975268a06092bd7e9c upstream.
+commit f3ef03357396d4b147d8e76c75fb612c2f264ffc upstream.
 
-Once in a blue moon, the mptcp receive path can recursively call
-mptcp_data_ready() via state change under unlucky error conditions, and
-then try to hold the data lock again.
+If __subflow_push_pending() errors out we should avoid updating the
+copied byte counters, to avoid mismatch push call later on.
 
-Break the recursion loop explicitly checking for the exceptional
-condition.
-
-Add a new flag instead of using an existing one like 'closing', to exit
-early in subflow_state_change(), and explicitly flush the RX queue at
-reset time.
-
-This avoids unneeded processing to check for available data -- calling
-get_mapping_status() and more on a dying subflow -- but also in error
-reporting and worker scheduling.
-
-Note that we must consume the currently peeked skb before invoking
-mptcp_dss_corruption to avoid consuming it again after the eventual
-reset has freed it.
-
-Fixes: e32d262c89e2 ("mptcp: handle consistently DSS corruption")
+Fixes: 0fa1b3783a17 ("mptcp: use get_send wrapper")
 Cc: stable@vger.kernel.org
-Reported-by: Xinyang Ge <xinyang@anthropic.com>
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20260917-net-mptcp-misc-fixes-7-3-rc4-v2-1-0cf5c72667c8@kernel.org
+Link: https://patch.msgid.link/20260917-net-mptcp-misc-fixes-7-3-rc4-v2-3-0cf5c72667c8@kernel.org
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Note: conflict in protocol.c, because commit e0ca4057e0ec ("mptcp:
-  micro-optimize __mptcp_move_skb()") is not in this version, and is
-  part of a consequent rx path refactor. The conflict is in the context,
-  and is easy to resolve, "done = true" can be moved along without
-  consequences.
-  Also a conflict in protocol.h, because __unused is at a different
-  number. Decrement the one from this version and add the new flag
-  above.]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/protocol.c |    6 +++---
- net/mptcp/protocol.h |    3 ++-
- net/mptcp/subflow.c  |   11 +++++++++++
- 3 files changed, 16 insertions(+), 4 deletions(-)
+ net/mptcp/protocol.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -747,13 +747,13 @@ static bool __mptcp_move_skbs_from_subfl
- 				mptcp_dss_corruption(msk, ssk);
- 			}
- 		} else {
-+			sk_eat_skb(ssk, skb);
-+			done = true;
-+
- 			if (unlikely(!fin)) {
- 				DEBUG_NET_WARN_ON_ONCE(1);
- 				mptcp_dss_corruption(msk, ssk);
- 			}
--
--			sk_eat_skb(ssk, skb);
--			done = true;
+@@ -1748,7 +1748,8 @@ static void __mptcp_subflow_push_pending
+ 			ret = __subflow_push_pending(sk, ssk, &info);
+ 			if (ret <= 0)
+ 				keep_pushing = false;
+-			copied += ret;
++			else
++				copied += ret;
  		}
  
- 		WRITE_ONCE(tp->copied_seq, seq);
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -510,7 +510,8 @@ struct mptcp_subflow_context {
- 		valid_csum_seen : 1,        /* at least one csum validated */
- 		is_mptfo : 1,	    /* subflow is doing TFO */
- 		close_event_done : 1,       /* has done the post-closed part */
--		__unused : 8;
-+		resetting : 1,	    /* subflow is resetting */
-+		__unused : 7;
- 	bool	data_avail;
- 	bool	scheduled;
- 	bool	pm_listener;	    /* a listener managed by the kernel PM? */
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -421,6 +421,10 @@ void mptcp_subflow_reset(struct sock *ss
- 	/* must hold: tcp_done() could drop last reference on parent */
- 	sock_hold(sk);
- 
-+	subflow->resetting = 1;
-+
-+	/* No need to delay the actual close for to-be discarded data. */
-+	__skb_queue_purge(&ssk->sk_receive_queue);
- 	tcp_send_active_reset(ssk, GFP_ATOMIC);
- 	tcp_done(ssk);
- 	if (!test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &mptcp_sk(sk)->flags))
-@@ -1802,6 +1806,13 @@ static void subflow_state_change(struct
- 
- 	__subflow_state_change(sk);
- 
-+	/* Rx queue processing is unneeded, error reporting will take place at
-+	 * __mptcp_close_ssk() time and subflow reset can't happen in case of
-+	 * fallback: subflow_sched_work_if_closed() would be a no-op.
-+	 */
-+	if (subflow->resetting)
-+		return;
-+
- 	/* as recvmsg() does not acquire the subflow socket for ssk selection
- 	 * a fin packet carrying a DSS can be unnoticed if we don't trigger
- 	 * the data available machinery here.
+ 		mptcp_for_each_subflow(msk, subflow) {
 
 
 Patches currently in stable-queue which might be from matttbe@kernel.org are
