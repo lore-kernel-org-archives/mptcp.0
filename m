@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F50134D3B2;
-	Sun, 20 Sep 2026 07:39:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A3434D3B2;
+	Sun, 20 Sep 2026 07:39:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789889986; cv=none; b=OG7indIRAVtCZeefhGdjhu9XFAqmCgE2Xgdcl5C1EP1zuJp/Wzb2/lDo/CAyywqgi0eYDgBrG/C0SCTbRYJspL9aleHwNKJtZNfsFEvhvtZ/pr1NOBIC2n+0IUDjWRAzvMuQllPLaqhsyHANRw3SlUAVwP0niEVJRGQmpoIZ+iY=
+	t=1789889989; cv=none; b=rZleXDdurGSivUDWLqkDLQ817W6hVFS5o1Gc0eERc207vO0a9QUBb7oWp3+kvpSX/v23wxdVhdFEzgyJABVCcUXOL8NLWseZSusUjwWNvcEv0OZPIOT7eO8BkK+mOsh+5giDSFsqOwNcA8s8gMaGncRXIBp/hk6xtR0Dixa9ggI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789889986; c=relaxed/simple;
-	bh=N8WH8P/tPoJHqVuZzg9R/ft/IZoQczssSnVx4pLBHmo=;
+	s=arc-20240116; t=1789889989; c=relaxed/simple;
+	bh=qrZ/LV/YJGEs/k7YvRE/yzrjY6n0dY8GZgfyBqYSj3Q=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=Um7QnzopdgweJ74TcunfmgBKcW/BEAy0uai7Xi9l+BHE+0VHlFkg0Y+2splT5IbDdMfiejuW8IWVeCnwMabJKG4hYjt6bVPkXlBlWPZAZmj25zNBEdpZddlXrlvkUSUa6GJ/B5K+Uj9FPfnqFqN4fn7dzzD4ng2jdqWrUiz/kS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=IOc0V6Ob; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type; b=lT09MIqHJSRb7ysoUgwKMasj0wV2DUyZbOP1gNJbuZyDKkqedcwzXO1rpCKjVfYDJYmMGaH5iETruma6kdREpjrOcUwCIqOSJ+r7CiHMSG9YrCxWImmpSoiczujRBLwLwTvnE32LCkXVUVeKVk04G4lW0v7VPxKaE2S6tn8sN5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1+1SiW+4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="IOc0V6Ob"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED9351F000FF;
-	Sun, 20 Sep 2026 07:39:44 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1+1SiW+4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F03971F000FF;
+	Sun, 20 Sep 2026 07:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1789889985;
-	bh=mJRgIUvU1gm8IQDS5kTS1Rkm/50FyBeNrIXvtXiR4v8=;
+	s=korg; t=1789889988;
+	bh=g2VcfhI5MmM82V8W99R2sfP48pVHCXBw9keaPVZUS68=;
 	h=Subject:To:Cc:From:Date:In-Reply-To;
-	b=IOc0V6ObnNwCoLKJ4ILnCS4OUNoyoap8uwDVATK8cAi7gZ3jmXQWr4npDXt/53q7i
-	 vA5rG7uiwd6hz84hv378D+pCEozqWbF+mG1TAcOr9czBoowX4uS155hThdP3Q19fRS
-	 PQD375BaboZkgwHbyeEyG36cmlhEaIEdW//mvDiY=
-Subject: Patch "mptcp: close race between scheduler and state change" has been added to the 5.15-stable tree
+	b=1+1SiW+4K/TzU6yg7FFIlwAKY9uNW9ldjxCcvbWrcdrXZv1NYSyv8swyHaGh9WvQ4
+	 Dx5da77VgZhnuUEw/sFkRLIVkP5u5u1JpcvMd5yi4tILFbbjhLVDrwgbgV0SJRnHUv
+	 NnDk4zTvvSC9qWrsorYRrgwEd5AtDFAQXcxWQAl4=
+Subject: Patch "mptcp: close race between scheduler and state change" has been added to the 6.1-stable tree
 To: gregkh@linuxfoundation.org,kuba@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com,sashal@kernel.org,shardul.b@mpiricsoftware.com,xinyang@anthropic.com
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Sun, 20 Sep 2026 09:36:33 +0200
-In-Reply-To: <20260919202918.2074632-6-matttbe@kernel.org>
-Message-ID: <2026092032-scorpion-parasitic-605a@gregkh>
+Date: Sun, 20 Sep 2026 09:36:34 +0200
+In-Reply-To: <20260919201252.2025112-8-matttbe@kernel.org>
+Message-ID: <2026092034-impale-lunchtime-8778@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -46,24 +46,24 @@ This is a note to let you know that I've just added the patch titled
 
     mptcp: close race between scheduler and state change
 
-to the 5.15-stable tree which can be found at:
+to the 6.1-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
      mptcp-close-race-between-scheduler-and-state-change.patch
-and it can be found in the queue-5.15 subdirectory.
+and it can be found in the queue-6.1 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-338613-greg=kroah.com@vger.kernel.org Sat Sep 19 22:29:43 2026
+From stable+bounces-338610-greg=kroah.com@vger.kernel.org Sat Sep 19 22:13:35 2026
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 19 Sep 2026 22:29:21 +0200
+Date: Sat, 19 Sep 2026 22:12:56 +0200
 Subject: mptcp: close race between scheduler and state change
 To: mptcp@lists.linux.dev, stable@vger.kernel.org, gregkh@linuxfoundation.org
 Cc: Paolo Abeni <pabeni@redhat.com>, sashal@kernel.org, Shardul Bankar <shardul.b@mpiricsoftware.com>, Xinyang Ge <xinyang@anthropic.com>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20260919202918.2074632-6-matttbe@kernel.org>
+Message-ID: <20260919201252.2025112-8-matttbe@kernel.org>
 
 From: Paolo Abeni <pabeni@redhat.com>
 
@@ -93,7 +93,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1621,7 +1621,9 @@ static struct sock *mptcp_subflow_get_se
+@@ -1636,7 +1636,9 @@ static struct sock *mptcp_subflow_get_se
  
  static void mptcp_push_release(struct sock *ssk, struct mptcp_sendmsg_info *info)
  {
@@ -108,7 +108,10 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 Patches currently in stable-queue which might be from matttbe@kernel.org are
 
-queue-5.15/mptcp-syncookies-remember-the-request-backup-flag.patch
-queue-5.15/mptcp-close-race-between-scheduler-and-state-change.patch
-queue-5.15/mptcp-avoid-unneeded-actions-on-subflow-reset.patch
-queue-5.15/mptcp-options-handle-mpc-data-csum-reqd-no-csum.patch
+queue-6.1/selftests-mptcp-fix-an-uaf-in-mptcp_connect.c.patch
+queue-6.1/mptcp-syncookies-remember-the-request-backup-flag.patch
+queue-6.1/mptcp-close-race-between-scheduler-and-state-change.patch
+queue-6.1/mptcp-avoid-unneeded-actions-on-subflow-reset.patch
+queue-6.1/mptcp-options-handle-mpc-data-csum-reqd-no-csum.patch
+queue-6.1/mptcp-consolidate-subflow-cleanup.patch
+queue-6.1/mptcp-subflow-no-need-to-copy-thmac-during-ulp_clone.patch
