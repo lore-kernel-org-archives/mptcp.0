@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4AF84F7CC4;
-	Mon, 21 Sep 2026 18:39:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2454D0CDF;
+	Mon, 21 Sep 2026 18:39:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790015956; cv=none; b=GNrfrBqxoM1ipdaiObxrjX2ATezpdBxVP6OhTaCiiRRAjYSiO7hvl+FunDxDT0s4BttKibHOOtm7PhsNoNl0C/6+BtOb257h9JfohiW9RLpDPu+EtHrW8A0tlpYKcpN5yedaqiRKH+ot4ybITq9mRPR5xyfUIjFpFvwRBaWawwQ=
+	t=1790015956; cv=none; b=Ao15MXtAWPOSgZ/WunUsxqQyAn8l3YCWoXKia/7NT1txZ+lDTudU31qELG+/JnSCPulY98vFQXpOC/rJUHEvH0SgS3BQh0qbbh5BsdqKZgP++2SnEz7UX2VUFJQ8NUzgYl3QBeK/W31rfP1BMqciTB7Ml7RzL9oeQowUYjX1iVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1790015956; c=relaxed/simple;
-	bh=olsD80mMDlFuGYVeYchcMqcZveypPBx6KFTLIMfnjFI=;
+	bh=DqNNLGNR3ctF8t2tpsjBQ0im7SGgiH8XvhRHJU6bQws=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=EvkedZ+fCUGvsSGg2RhT1QbnPFf5/hyIuTvN7I+3y3d4ovSKIA4w7qSl7tEoGaHkefn5GwpB5kwt+98FnZ8XEy4seo0ncNwhuDSxYt70rsnR945h6G8qvrSVUmn8aYtDEjbrmG0v8U2FeCI09gcZTwYu8p4wO55g0TPnszPKI+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aKMS/rgL; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:MIME-Version; b=luQv/SVPdWAQYNlsuODWijMmNbkm3lYZCCerhezs83TXwLktoWZ4LwFDYGFVG4KBrkeuZa09bU+z0eOHSpEL9NlwaUlovauvhN0B5qDofVp7zWO/5RrhbXFtJV8K7p7mLSFU31FANGoKYaokeSHhX/503BLAVvBgAzdi428UgXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ANtfCLV2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aKMS/rgL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CFC61F000FF;
-	Mon, 21 Sep 2026 18:39:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ANtfCLV2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8877D1F00893;
+	Mon, 21 Sep 2026 18:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790015952;
-	bh=hmFoNOaYgnKI62IvYdNCaoJ9gU/3laqa9xZtEOHnT5Q=;
+	s=k20260515; t=1790015954;
+	bh=yZunkGbCJx9XTDGw0iPLe5oHZ7LJFHE0Pl5dNj/PA1E=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=aKMS/rgLxGm5ThY4AIVMJokRbpuU/3jknVvjqsOFiz1uxZV6cYjx0vSqYmVC4/gNb
-	 GbmD0OKCefLz+HPb34xWKsofV9wwPuQ5+2DihSEcvz3WtnyGxy++vr1MoFgt0Brm4q
-	 0uV7gWkcifoiQbf+nPDLTRRMUoYe8wY0/aW19OfkJI4N5jEvUYEg39/9jX95FlTvG2
-	 noeOVI+Tj0h0L/tEHX6c0BlUBGy11e9ngI5kLEHQoy9J1Ageq0h7zQM251YgeYWGlp
-	 zW7+Iq9WC0MLiwqUTpqFObuFIr5WqUW7l8go6D4AXwNPGa6uFxlJuy2qrjLzKwdUST
-	 iIJikNwEiSmFw==
+	b=ANtfCLV287BppVzeS+OwPW/vv16U3hh2fWMjzBRppHIw4nzTG1XE0dulKHVcyjGCI
+	 yErup1t0mMoAibzGKWYu7qY+foVMciICUjHeCQLvZCyb8iZyF+HAX4plJiXKuvPMUu
+	 M88qT9XeosRaOFi3Ztqifeez7uzZ6mrEdAyaaF8URMF9waNmWVEJnXJ0bACpMs/WRv
+	 kGpQ2xwk6Q9OmtzzlksjZDyBjly6DyjXj6Zxi99LN50FCbI33DFX+Y+SBmPfo5pDev
+	 FI9BYrQXgj+E6CbVNoFQgOv0ZOtcfYLljHz8i8nw+G05ru2QZdF4nQINQ6mwfSMxBh
+	 BuGpY8grcB+rQ==
 Subject:
- Re: [PATCH net-next 1/4] mptcp: support MSG_ERRQUEUE on the parent socket
+ Re: [PATCH net-next 3/4] mptcp: propagate RECVERR sockopts to subflows
 From: netdev-bot+sashiko@kernel.org
 To: matttbe@kernel.org
 Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
  edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
  netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
  devnexen@gmail.com, shuah@kernel.org, linux-kselftest@vger.kernel.org
-Date: Mon, 21 Sep 2026 18:39:11 +0000
-Message-ID: <179001595171.2160803.3670624686905872378@kernel.org>
+Date: Mon, 21 Sep 2026 18:39:13 +0000
+Message-ID: <179001595305.2160803.9169166654380498423@kernel.org>
 In-Reply-To:
- <20260918-net-next-mptcp-msg_errqueue-v1-1-dd77e1738248@kernel.org>
+ <20260918-net-next-mptcp-msg_errqueue-v1-3-dd77e1738248@kernel.org>
 References:
- <20260918-net-next-mptcp-msg_errqueue-v1-1-dd77e1738248@kernel.org>
+ <20260918-net-next-mptcp-msg_errqueue-v1-3-dd77e1738248@kernel.org>
 X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -53,7 +53,7 @@ MIME-Version: 1.0
 Thank you for your contribution! Sashiko AI review found 2 potential
 issue(s) to consider.
 
-Critical: 0 · High: 0 · Medium: 2 · Low: 0
+Critical: 0 · High: 0 · Medium: 1 · Low: 1 (1)
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -61,151 +61,183 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [Medium] The new error-queue splice is dead code for MPTCP-native data:
-  its only accepted input (SO_EE_ORIGIN_TIMESTAMPING skbs on a subflow…
-- [Medium] Forwarded TX timestamps expose per-subflow identifiers instead
-  of parent-socket byte-stream identifiers, breaking the…
+- [Medium] The new in-code comment in mptcp_setsockopt_all_sf()
+  (net/mptcp/sockopt.c:417-420) and the commit changelog both justify…
+- [Low] Short-buffer getsockopt ABI mismatch for the two newly supported
+  IPv6 options: mptcp_getsockopt_v6() (net/mptcp/sockopt.c:1579 and…
+
+Pre-existing issues:
+- [Low] Inconsistent SOL_IPV6 getsockopt surface inside
+  mptcp_getsockopt_v6() (net/mptcp/sockopt.c): the two newly added cases…
 
 --
 
-mptcp: support MSG_ERRQUEUE on the parent socket
+mptcp: propagate RECVERR sockopts to subflows
 
-This moves pending error skbs from each subflow's error queue onto the
-parent msk error queue at error-report time, keeping only
-SO_EE_ORIGIN_TIMESTAMPING events and dropping subflow ICMP errors.  It
-also makes mptcp_poll() report EPOLLERR when the parent error queue is
-non-empty, and drops the stale comment in front of the MSG_ERRQUEUE
-branch of mptcp_recvmsg().
+This adds IP_RECVERR/IP_RECVERR_RFC4884 and IPV6_RECVERR/
+IPV6_RECVERR_RFC4884 handling to the MPTCP setsockopt and getsockopt
+paths, pushing the value to all existing subflows and extending
+MPTCP_INET_FLAGS_MASK so new subflows inherit the bits through
+sync_socket_options().
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index e89a69ab927c..15ae270ee6fd 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
+A few questions below about the new comment, the changelog wording and the
+getsockopt surface.
+
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index 2ba56832587e..922f6ae5c80c 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
 
 [ ... ]
 
-> @@ -919,21 +920,52 @@ static bool __mptcp_ofo_queue(struct mptcp_sock *msk)
->  	return moved;
+> @@ -398,6 +403,86 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
+>  	return -EOPNOTSUPP;
 >  }
 >  
-> +static bool mptcp_errqueue_skb_forwardable(const struct sk_buff *skb)
+> +static int mptcp_setsockopt_all_sf(struct mptcp_sock *msk, int level,
+> +				   int optname, sockptr_t optval,
+> +				   unsigned int optlen)
 > +{
-> +	/* Subflow-level ICMP errors are dropped: the legacy RECVERR ABI
-> +	 * cannot convey their per-subflow peer identity.
-> +	 */
-> +	return SKB_EXT_ERR(skb)->ee.ee_origin == SO_EE_ORIGIN_TIMESTAMPING;
-> +}
+> +	struct mptcp_subflow_context *subflow;
+> +	int ret = 0;
 > +
-> +static bool __mptcp_subflow_splice_errqueue(struct sock *sk, struct sock *ssk)
-> +{
-> +	struct sk_buff *skb;
-> +	bool moved = false;
+> +	mptcp_for_each_subflow(msk, subflow) {
+> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+> +		int err;
 > +
-> +	while ((skb = skb_dequeue(&ssk->sk_error_queue))) {
-
-[Severity: Medium]
-Is there anything today that can put a SO_EE_ORIGIN_TIMESTAMPING skb on a
-subflow's sk_error_queue?
-
-mptcp_errqueue_skb_forwardable() accepts only ee_origin ==
-SO_EE_ORIGIN_TIMESTAMPING, and the producers of those events
-(skb_tx_timestamp() in drivers, the SKBTX_SCHED_TSTAMP check in
-__dev_queue_xmit(), and tcp_ack_tstamp() -> __skb_tstamp_tx()) all key off
-per-skb state: skb_shinfo(skb)->tx_flags, skb_shinfo(skb)->tskey and
-TCP_SKB_CB(skb)->txstamp_ack.
-
-Those bits are set by tcp_tx_timestamp(), which is only reached from
-tcp_sendmsg_locked().  mptcp_sendmsg_frag() builds the subflow skbs itself:
-
-	skb = mptcp_alloc_tx_skb(sk, ssk, info->data_lock_held);
-	...
-	TCP_SKB_CB(skb)->end_seq += copy;
-
-so it never goes through tcp_sendmsg_locked() and never arms timestamping.
-The fastopen path is not an exception either, since
-mptcp_sendmsg_fastopen() calls tcp_sendmsg_fastopen() directly.  A
-"git grep -E 'tx_timestamp|tskey|txstamp_ack|tsflags' net/mptcp/" finds no
-arming site.
-
-If that reading is right, then __mptcp_subflow_splice_errqueue() always
-returns false for real traffic, and the commit message statement
-
-  "so poll() and recvmsg(MSG_ERRQUEUE) on the parent socket observe TX
-   timestamps through the standard inet ABI"
-
-does not hold yet: recvmsg(MSG_ERRQUEUE) on the parent still returns
--EAGAIN.  Note that mptcp_setsockopt_sol_socket_timestamping() in
-net/mptcp/sockopt.c does accept SO_TIMESTAMPING_OLD/NEW and replicates it
-to every subflow via sock_set_timestamping(), so the configuration side
-advertises something the transmit side does not implement.
-
-The last patch in this series ("selftests: mptcp: cover IP_RECVERR sockopt
-propagation") acknowledges this, saying end-to-end errqueue delivery
-depends on subflow-side producers that are out of scope for the series.
-Could this commit message be reworded the same way, so it describes the
-plumbing rather than claiming the observable behaviour?
-
-> +		/* sock_queue_err_skb() re-homes skb->sk onto the parent and
-> +		 * charges sk_rmem_alloc, bounding the queue by sk_rcvbuf.
+> +		/* SOL_IPV6 options on a v4 subflow (v4 MP_JOIN, or userspace PM
+> +		 * grafting a v4 subflow onto an AF_INET6 msk) would otherwise
+> +		 * abort the loop with -EAFNOSUPPORT from ipv6_setsockopt().
 > +		 */
-> +		if (!mptcp_errqueue_skb_forwardable(skb) ||
-> +		    sock_queue_err_skb(sk, skb)) {
-
-[Severity: Medium]
-Once producers do exist, will the forwarded ee_data still mean anything on
-the parent socket?
-
-__skb_complete_tx_timestamp() fills the identifier from the originating
-socket's counters:
-
-	if (READ_ONCE(sk->sk_tsflags) & SOF_TIMESTAMPING_OPT_ID) {
-		serr->ee.ee_data = skb_shinfo(skb)->tskey;
-		if (sk_is_tcp(sk))
-			serr->ee.ee_data -= atomic_read(&sk->sk_tskey);
-	}
-
-so ee_data is relative to the subflow's sk_tskey and TCP sequence space.
-mptcp_setsockopt_sol_socket_timestamping() enables timestamping on the msk
-and on each subflow separately, giving every subflow its own baseline.
-
-__mptcp_subflow_splice_errqueue() re-homes the skb without translating
-ee_data into the msk write_seq space.  With two or more subflows, does
-userspace reading MSG_ERRQUEUE on the parent then see duplicate or
-unrelated identifiers for one socket?  Documentation/networking/
-timestamping.rst describes SOF_TIMESTAMPING_OPT_ID as unique among
-outstanding timestamp requests for that socket, and byte-incrementing for
-stream sockets.
-
-Even with a single subflow the value is relative to the subflow's TCP
-sequence space rather than msk->write_seq.  Would remapping ee_data here
-require replacing the plain re-home rather than extending it later?
-
-> +			kfree_skb(skb);
+> +		if (level == SOL_IPV6 && ssk->sk_family != AF_INET6)
 > +			continue;
-> +		}
-> +		moved = true;
+> +
+> +		err = tcp_setsockopt(ssk, level, optname, optval, optlen);
+> +		if (err < 0 && ret == 0)
+> +			ret = err;
 > +	}
 > +
-> +	return moved;
-> +}
+> +	if (!ret)
+> +		sockopt_seq_inc(msk);
 > +
+> +	return ret;
+> +}
+
+[Severity: Medium]
+Does the comment above the new skip describe what the loop actually does?
+
+The loop records only the first error and keeps going:
+
+	err = tcp_setsockopt(ssk, level, optname, optval, optlen);
+	if (err < 0 && ret == 0)
+		ret = err;
+
+There is no break or return, so the remaining subflows are still visited.
+Without the guard the visible effects would be the errno returned to
+userspace plus the skipped sockopt_seq_inc(msk), not an aborted loop.
+
+Is -EAFNOSUPPORT from ipv6_setsockopt() the right errno to name here?  For
+a v4 subflow, tcp_setsockopt() with level != SOL_TCP dispatches through
+icsk_af_ops->setsockopt, and net/mptcp/subflow.c sets
+
+	subflow_specific = ipv4_specific;
+
+so the call lands in ip_setsockopt(), which starts with:
+
+	if (level != SOL_IP)
+		return -ENOPROTOOPT;
+
+ipv6_setsockopt() is never entered in that case, and grepping
+net/ipv6/ipv6_sockglue.c for EAFNOSUPPORT gives no match; do_ipv6_setsockopt()
+does not check sk_family either.  Could the comment say -ENOPROTOOPT from
+ip_setsockopt() and describe the suppressed sockopt_seq_inc() instead of a
+loop abort?  The guard itself looks correct and needed.
+
+The changelog repeats the same reasoning:
+
+    mptcp_setsockopt_all_sf() skips IPv4 subflows when called with
+    SOL_IPV6: ipv6_setsockopt() on a sock with sk_family != AF_INET6
+    returns an error, which would abort the loop and leave the remaining
+    subflows desynchronised.
+
+Could that be reworded for the same reasons?
+
+The changelog also says:
+
+    mptcp_setsockopt_recverr() snapshots optval into a local int, applies
+    it to the parent socket via ip_setsockopt() / ipv6_setsockopt(), bumps
+    msk->setsockopt_seq, and forwards to every subflow via
+    mptcp_setsockopt_all_sf().
+
+Does that match the order in the new helper?  mptcp_setsockopt_recverr()
+passes the caller's sockptr and optlen straight to ip_setsockopt() /
+ipv6_setsockopt() first, then reads the resulting bit into val, and
+setsockopt_seq is bumped inside mptcp_setsockopt_all_sf() after a
+successful forward, not before it.
 
 [ ... ]
 
-> @@ -4523,7 +4559,8 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
->  
->  	/* This barrier is coupled with smp_wmb() in __mptcp_error_report() */
->  	smp_rmb();
-> -	if (READ_ONCE(sk->sk_err))
-> +	if (READ_ONCE(sk->sk_err) ||
-> +	    !skb_queue_empty_lockless(&sk->sk_error_queue))
->  		mask |= EPOLLERR;
->  
->  	return mask;
+> @@ -1498,6 +1576,16 @@ static int mptcp_getsockopt_v6(struct mptcp_sock *msk, int optname,
+>  	case IPV6_FREEBIND:
+>  		return mptcp_put_int_option(msk, optval, optlen,
+>  					    inet_test_bit(FREEBIND, sk));
+> +	case IPV6_RECVERR:
+> +		if (sk->sk_family != AF_INET6)
+> +			return -ENOPROTOOPT;
+> +		return mptcp_put_int_option(msk, optval, optlen,
+> +					    inet6_test_bit(RECVERR6, sk));
+> +	case IPV6_RECVERR_RFC4884:
+> +		if (sk->sk_family != AF_INET6)
+> +			return -ENOPROTOOPT;
+> +		return mptcp_put_int_option(msk, optval, optlen,
+> +					    inet6_test_bit(RECVERR6_RFC4884, sk));
 
-With the splice unable to fire for MPTCP-native data, can this new
-sk_error_queue term ever become true through the path described in the
-commit message?
+[Severity: Low]
+This is a pre-existing inconsistency rather than something the patch
+introduces, but the two new cases in mptcp_getsockopt_v6() now behave
+differently from their neighbours in the same switch.
+
+IPV6_V6ONLY, IPV6_TRANSPARENT and IPV6_FREEBIND answer a SOL_IPV6
+getsockopt on an AF_INET msk by returning the IPv4 inet_flags bit, with no
+family gate, while the new IPV6_RECVERR and IPV6_RECVERR_RFC4884 cases
+return -ENOPROTOOPT there.
+
+Plain TCP on an AF_INET socket rejects every SOL_IPV6 getsockopt through
+ip_getsockopt()'s level != SOL_IP check, so the new cases look like the
+stricter and more correct side.  Would it make sense to align the older
+cases with the new gate, or is the divergence intentional for now?
+
+[Severity: Low]
+Does routing these two options through mptcp_put_int_option() change the
+short-buffer behaviour compared to plain TCP?
+
+mptcp_put_int_option() collapses any requested length of 1 to 3 bytes for a
+0/1 value down to one byte:
+
+	if (len < sizeof(int) && len > 0 && val >= 0 && val <= 255) {
+		unsigned char ucval = (unsigned char)val;
+
+		len = 1;
+
+do_ipv6_getsockopt() instead keeps the requested length:
+
+	len = min_t(unsigned int, sizeof(int), len);
+	if (copy_to_sockptr(optlen, &len, sizeof(int)))
+		return -EFAULT;
+	if (copy_to_sockptr(optval, &val, len))
+		return -EFAULT;
+
+So getsockopt(SOL_IPV6, IPV6_RECVERR, buf, &len) with len of 2 or 3 reports
+optlen 1 on an MPTCP socket and 2 or 3 on a TCP socket, and with len 1 the
+returned byte comes from an unsigned char conversion rather than the first
+byte of the native int, which differs on big-endian.
+
+This matches what mptcp already does for IPV6_FREEBIND and
+IPV6_TRANSPARENT, so the helper behaviour is not new here, only its use for
+these two options.  Is the difference acceptable, or should these follow the
+IPv6 stack's length handling?
+
+[ ... ]
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20260918-net-next-mptcp-msg_errqueue-v1-0-dd77e1738248%40kernel.org
