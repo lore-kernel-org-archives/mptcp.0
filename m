@@ -1,36 +1,80 @@
-Received: from mta1.migadu.com (out-77.mta1.migadu.com [95.215.58.77])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A091144A3E0
-	for <mptcp@lists.linux.dev>; Mon, 21 Sep 2026 11:46:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91960486E4C
+	for <mptcp@lists.linux.dev>; Mon, 21 Sep 2026 13:33:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789991221; cv=none; b=A0ZHaDKbuRM9trxQ5N5XIyaadZv2Wrvouosyps+PKcHKcmkoEv9kkyUL4xfHbnEFj0rh0zzESE2tVy9sEd14jQMbVUB2N3ORLysOpfAz8f7Z1jB2pmiO8215IKDccZRnInAYPTmcgSq7pbjOv/0S7vKBXK29Zgx1kNSMQDM7rWs=
+	t=1789997604; cv=none; b=Zj3ZBwE+LI/6oIn7XQO/WjD4ywVLcbXq8GGIAESp3GcSuFfdZO+YzBNC9u6D3qws4b8/fU4rh+FKMRDiS4gbuFDj1eqaqBVhv3TIclXMritrYhDTg9DI6VJgWZeVBDU5xF3WdoBz8rQc/Tw8BM+JGPcGi4VA6bC3u4T729RoF9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789991221; c=relaxed/simple;
-	bh=CukPi6mwk5YtEucP3bbx6fXib/ZpGUFZ5xcTPSFcEwc=;
+	s=arc-20240116; t=1789997604; c=relaxed/simple;
+	bh=o0kZXu9Wb1G8CQz8DpoK+reI0fJdDI+xMCUJ5PK/cvk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FNIdtHO2Z7pVx8yK5Wj3Fau/vFKWyQT/6FIBctqnurswTY4KxKzwK7PwqFtuI0GbXxYLBdRZ+yr7L03oDlj7ZXwtUmWrvU2nkLU3rpIJPEx2I0qxvIJbdSnrMhgQKbneQlZERLb7UhLHudlVJqfpyh/4/56X4W+TI8EQVg/Pbos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NhfYAO/J; arc=none smtp.client-ip=95.215.58.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=W0rvCzCpkat4Eac6Yd4PZkTZelLS7PGqCh+PFwagQqxncHyPyJL0Z22imJ7KjxHP3xqfnRoim6vSTq1QB1kjHZYfeZcJj1BVcVEYWNPmc7mqCsoqpX+qS8VRmnOJB1/okS7Wb+EeQBUZwiWWRkpgJgxBWImEpEUu/HWXVCVz+O8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=aRbxGTxV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=zLc37psQ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CZNbe6dQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jBYuAX/k; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NhfYAO/J"
-X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=CukPi6mwk5YtEucP3bbx6fXib/ZpGUFZ5xcTPSFcEwc=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1789991213; v=1; x=1790596013;
- b=NhfYAO/JlY4QsgTAbcjRSWlao1ARw3UiIYDyMFlT+0wgoGGZ/cRfjYpdALRabNwKlmwm4ZAy
- jCjc7LCqgDyBNhckOJqvO+6czs61qyTwoqiR5xB49l6FUjR+JG4PERw7srDXRCAY5eSnQsZUC2g
- Ev0MtJurILXSG+JXVogApC+I=
-X-Envelope-To: mptcp@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 8a9cf8d0feabb79b;
-	Mon, 21 Sep 2026 11:46:53 +0000
-X-Mizu-Trace-ID: 8a9cf8d0feabb79b
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <08ff0ec5-55aa-46ae-a224-b2d02aa2979e@linux.dev>
-Date: Mon, 21 Sep 2026 19:46:30 +0800
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aRbxGTxV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="zLc37psQ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CZNbe6dQ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jBYuAX/k"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 533311F816;
+	Mon, 21 Sep 2026 13:33:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1789997595; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IsHgzpy/Sl3GscephIYavlJsW/MGoMLXO4ABREtdToo=;
+	b=aRbxGTxV0zKGRo7+m1eVVPa+WVLjA7zvQPC6oPy9zBMzFkRB1beqggNfP9KpoPYJh9dPwG
+	fLcFBSE2JIaXS/qBHIwEX7BD0C/Ohyfit+pZCbZDjcTw2CSCfy3vTyDf7qbeD1Tj1zJ6IC
+	BiBoGwlL+OCYsmtj3oQFBO24blhNL80=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1789997595;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IsHgzpy/Sl3GscephIYavlJsW/MGoMLXO4ABREtdToo=;
+	b=zLc37psQuAOFVgFx+6gFQd+L38CJ2w4D6NSmkB0WrKzOzh9lIoUKYktUHbe7TxSdKfGGpB
+	3K86gLRo+gVSAFDw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1789997591; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IsHgzpy/Sl3GscephIYavlJsW/MGoMLXO4ABREtdToo=;
+	b=CZNbe6dQLFbj1hlZanWBXqoUyA8BfWaZXRZS6XeiC9u5e1pEbIOA5blErM3v5E112jFqVw
+	6h7hnM8Iy7YAvj2ATcbRSxGOlpGNju2lrm9u0C1wV+zOsSYd7ZN/HPTRhxrevYhyPP6D2u
+	h1Ov6QtSsQHt+BO8SOIchY1yKyt+sEk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1789997591;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IsHgzpy/Sl3GscephIYavlJsW/MGoMLXO4ABREtdToo=;
+	b=jBYuAX/k8anLjiURCgNeiLw+bGMSM0c5YRLTVngf01nm+7ewJkRDCHWySgxrxlKSGa1LJo
+	+YrNojdZ/E/68fDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6EE271368D;
+	Mon, 21 Sep 2026 13:33:10 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id JACjERYysWqrBQAAD6G6ig
+	(envelope-from <hare@suse.de>); Mon, 21 Sep 2026 13:33:10 +0000
+Message-ID: <deaf6eaf-3ee5-4d8c-bfed-ac3ab6298c9d@suse.de>
+Date: Mon, 21 Sep 2026 15:33:09 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,53 +82,72 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next v3] bpf: drop duplicate check_app_limited in
- tcp_bpf_push
-To: bot+bpf-ci@kernel.org, geliang@kernel.org, john.fastabend@gmail.com,
- jakub@cloudflare.com, jiayuan.chen@linux.dev, edumazet@google.com,
- ncardwell@google.com, kuniyu@google.com, davem@davemloft.net,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, matttbe@kernel.org,
- martineau@kernel.org
-Cc: tanggeliang@kylinos.cn, netdev@vger.kernel.org, bpf@vger.kernel.org,
- mptcp@lists.linux.dev, ast@kernel.org, andrii@kernel.org,
- daniel@iogearbox.net, martin.lau@kernel.org, eddyz87@gmail.com,
- yonghong.song@linux.dev, mason@kernel.org, ihor.solodrai@linux.dev
-References: <85d9a0f138fa024354edde023a05f9d07b6ac87a.1789633546.git.tanggeliang@kylinos.cn>
- <b39121f2d0860a81719fb0b3f9b16bde9157bc043d7cc918497afc6d896877de@mail.kernel.org>
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-In-Reply-To: <b39121f2d0860a81719fb0b3f9b16bde9157bc043d7cc918497afc6d896877de@mail.kernel.org>
+Subject: Re: [PATCH v3 1/4] nvmet-tcp: unify sockopt with do_sock_setsockopt
+To: Geliang Tang <geliang@kernel.org>, Keith Busch <kbusch@kernel.org>,
+ Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>,
+ David Ahern <dsahern@kernel.org>, Ido Schimmel <idosch@nvidia.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, linux-nvme@lists.infradead.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev
+References: <cover.1786841319.git.tanggeliang@kylinos.cn>
+ <d06dd395575d7f639cd8bc3f984692704fd40e56.1786841319.git.tanggeliang@kylinos.cn>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <d06dd395575d7f639cd8bc3f984692704fd40e56.1786841319.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.996];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,imap1.dmz-prg2.suse.org:helo,kylinos.cn:email]
 
-
-On 9/17/26 5:45 PM, bot+bpf-ci@kernel.org wrote:
->> bpf: drop duplicate check_app_limited in tcp_bpf_push
->>
->> Before commit c5c37af6ecad9 ("tcp: Convert do_tcp_sendpages() to use
->> MSG_SPLICE_PAGES"), do_tcp_sendpages() did not call
->> tcp_rate_check_app_limited() internally, so callers needed an explicit
->> tcp_rate_check_app_limited() to cover it. That commit replaced
->> do_tcp_sendpages() with direct tcp_sendmsg_locked() calls, which perform
->> the check on every path that queues data. The outer call became redundant
->> but was left in place.
-> This isn't a bug, but would it be clearer to cite ebf2e8860eea ("tcp_bpf:
-> Inline do_tcp_sendpages as it's now a wrapper around tcp_sendmsg") as the
-> commit that left the outer tcp_rate_check_app_limited() in tcp_bpf_push(),
-> with c5c37af6ecad9 mentioned as the commit that moved the check inside
-> do_tcp_sendpages()?
->
-> Looking at the git history, c5c37af6ecad9 only touched net/ipv4/tcp.c and
-> turned do_tcp_sendpages() into a wrapper that calls tcp_sendmsg_locked().
-> The direct tcp_sendmsg_locked() call in tcp_bpf_push() was introduced by
-> ebf2e8860eea, which kept the outer tcp_rate_check_app_limited(sk) while
-> inlining the wrapper.
->
-
-CI is right. ebf2e8860eea should be accurate.
-
-
+On 8/16/26 2:59 AM, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> This patch consolidates socket option settings in nvmet-tcp by utilizing
+> the generic do_sock_setsockopt() helper for options including SO_LINGER,
+> SO_PRIORITY, SO_REUSEADDR, TCP_NODELAY, and IP_TOS. This change eliminates
+> the need to export and use specialized helpers for each individual socket
+> option.
+> 
+> A key benefit of this refactoring is that it decouples the socket option
+> configuration from the underlying transport protocol. This makes it
+> easier to extend nvmet-tcp to support other protocols, such as MPTCP, in
+> the future, as do_sock_setsockopt() abstracts away protocol-specific
+> differences without requiring per-option protocol-specific wrappers.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
-> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
->
-> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/35203307255
+>   drivers/nvme/target/tcp.c | 53 +++++++++++++++++++++++++++++++++------
+>   1 file changed, 45 insertions(+), 8 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@kernel.org>
+
+Cheers,
+
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
