@@ -1,80 +1,80 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91960486E4C
-	for <mptcp@lists.linux.dev>; Mon, 21 Sep 2026 13:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18FA2110E
+	for <mptcp@lists.linux.dev>; Mon, 21 Sep 2026 13:33:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789997604; cv=none; b=Zj3ZBwE+LI/6oIn7XQO/WjD4ywVLcbXq8GGIAESp3GcSuFfdZO+YzBNC9u6D3qws4b8/fU4rh+FKMRDiS4gbuFDj1eqaqBVhv3TIclXMritrYhDTg9DI6VJgWZeVBDU5xF3WdoBz8rQc/Tw8BM+JGPcGi4VA6bC3u4T729RoF9I=
+	t=1789997641; cv=none; b=CPQ/uw7piZxWE6PXJAhRAHNy2LXiEA+/TEXhi480NpVXbCaar+5+gvoOdrBrdmzT1OmXCky0U4KueKe2uiG/5QgDkXVIVQHKJOOrfAZi6IXB46NbwGmW6JxyE6E8DeIJyLut0mJUAyEjvcf3htPdJpN3lr+1isZGKWx5ecgLHDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789997604; c=relaxed/simple;
-	bh=o0kZXu9Wb1G8CQz8DpoK+reI0fJdDI+xMCUJ5PK/cvk=;
+	s=arc-20240116; t=1789997641; c=relaxed/simple;
+	bh=O8ANWVDD79OvK/U49MsA1VHeuB1xKL9D9XeQk7AasFU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W0rvCzCpkat4Eac6Yd4PZkTZelLS7PGqCh+PFwagQqxncHyPyJL0Z22imJ7KjxHP3xqfnRoim6vSTq1QB1kjHZYfeZcJj1BVcVEYWNPmc7mqCsoqpX+qS8VRmnOJB1/okS7Wb+EeQBUZwiWWRkpgJgxBWImEpEUu/HWXVCVz+O8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=aRbxGTxV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=zLc37psQ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CZNbe6dQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jBYuAX/k; arc=none smtp.client-ip=195.135.223.131
+	 In-Reply-To:Content-Type; b=hJiFh8aSyOv73BcszaEJFHEBEt2doCYaRzaoupCF1mnagkVm0A/IzWOgI/Oz/3jClInymz5sJ5B99zRDMw/J1jkbw1YIrvf+E8CBa4+cvflekH4WSyF5+cjFheSjWJ6e7gYKZm613vli1t7HE96MvkirSLIxEYBkfQSWt53ZMrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nIfXaJkF; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jWkle4BW; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yc1SL0sk; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xpuWKbQi; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aRbxGTxV";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="zLc37psQ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CZNbe6dQ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jBYuAX/k"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nIfXaJkF";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jWkle4BW";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yc1SL0sk";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xpuWKbQi"
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 533311F816;
-	Mon, 21 Sep 2026 13:33:11 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4C36A21A8D;
+	Mon, 21 Sep 2026 13:33:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1789997595; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1789997629; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IsHgzpy/Sl3GscephIYavlJsW/MGoMLXO4ABREtdToo=;
-	b=aRbxGTxV0zKGRo7+m1eVVPa+WVLjA7zvQPC6oPy9zBMzFkRB1beqggNfP9KpoPYJh9dPwG
-	fLcFBSE2JIaXS/qBHIwEX7BD0C/Ohyfit+pZCbZDjcTw2CSCfy3vTyDf7qbeD1Tj1zJ6IC
-	BiBoGwlL+OCYsmtj3oQFBO24blhNL80=
+	bh=KnOYyWOU5yOdklOhBtAmRV2izjT0ZXv7OgmfJqZjZVM=;
+	b=nIfXaJkFVUoX/weHmZQrQKo1NF8eYVWHgR/D7HMkt4n+L50fvKxUTj2nMvm8cBI6Fgi1yt
+	LA9WU64wetZO3RfibeXH4z2vn7wo+jCL2rBesCJVkk8NBVXcFqxQU/QyHfMMir0X7mBO2Q
+	6GKkiNnUqjlhFGdUkbnj08alAm+b4CI=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1789997595;
+	s=susede2_ed25519; t=1789997629;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IsHgzpy/Sl3GscephIYavlJsW/MGoMLXO4ABREtdToo=;
-	b=zLc37psQuAOFVgFx+6gFQd+L38CJ2w4D6NSmkB0WrKzOzh9lIoUKYktUHbe7TxSdKfGGpB
-	3K86gLRo+gVSAFDw==
-Authentication-Results: smtp-out2.suse.de;
+	bh=KnOYyWOU5yOdklOhBtAmRV2izjT0ZXv7OgmfJqZjZVM=;
+	b=jWkle4BWaqpMFSqm2X9lUPishedxAoWRgFxzxlQp88/SFgSOuUADkyO88YZW5he1GLigYc
+	9SloNoNZB3dRIGBA==
+Authentication-Results: smtp-out1.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1789997591; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1789997625; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IsHgzpy/Sl3GscephIYavlJsW/MGoMLXO4ABREtdToo=;
-	b=CZNbe6dQLFbj1hlZanWBXqoUyA8BfWaZXRZS6XeiC9u5e1pEbIOA5blErM3v5E112jFqVw
-	6h7hnM8Iy7YAvj2ATcbRSxGOlpGNju2lrm9u0C1wV+zOsSYd7ZN/HPTRhxrevYhyPP6D2u
-	h1Ov6QtSsQHt+BO8SOIchY1yKyt+sEk=
+	bh=KnOYyWOU5yOdklOhBtAmRV2izjT0ZXv7OgmfJqZjZVM=;
+	b=yc1SL0skQlO9CQ3iEbOf8t9FCnOjExQ4XFNtlc2bkBVIP++3cZCLQkOsj/UyI+9NQJHb9r
+	1eETgmik8XfE8JJdxr/N2QYbr9b52RjuZhakPLPOx/6M8LPIZK3lS0F+57zwEC7xQpE1sI
+	aA2Schch//YEobPysOkvpaGCKFnZbV0=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1789997591;
+	s=susede2_ed25519; t=1789997625;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IsHgzpy/Sl3GscephIYavlJsW/MGoMLXO4ABREtdToo=;
-	b=jBYuAX/k8anLjiURCgNeiLw+bGMSM0c5YRLTVngf01nm+7ewJkRDCHWySgxrxlKSGa1LJo
-	+YrNojdZ/E/68fDw==
+	bh=KnOYyWOU5yOdklOhBtAmRV2izjT0ZXv7OgmfJqZjZVM=;
+	b=xpuWKbQiLde8vRdWfJWt+lT+gSIqMlJ66UFOj5r7ly/05MMj6szgcBfoE8qM3Cgu+JIjeO
+	SUdzNmVDiDvjPBCA==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6EE271368D;
-	Mon, 21 Sep 2026 13:33:10 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D34891368D;
+	Mon, 21 Sep 2026 13:33:43 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id JACjERYysWqrBQAAD6G6ig
-	(envelope-from <hare@suse.de>); Mon, 21 Sep 2026 13:33:10 +0000
-Message-ID: <deaf6eaf-3ee5-4d8c-bfed-ac3ab6298c9d@suse.de>
-Date: Mon, 21 Sep 2026 15:33:09 +0200
+	id XTn4KTcysWr5BgAAD6G6ig
+	(envelope-from <hare@suse.de>); Mon, 21 Sep 2026 13:33:43 +0000
+Message-ID: <cd68821d-e7d6-4294-8ea7-68b64d4915d3@suse.de>
+Date: Mon, 21 Sep 2026 15:33:43 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -82,7 +82,7 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/4] nvmet-tcp: unify sockopt with do_sock_setsockopt
+Subject: Re: [PATCH v3 2/4] nvme-tcp: unify sockopt with do_sock_setsockopt
 To: Geliang Tang <geliang@kernel.org>, Keith Busch <kbusch@kernel.org>,
  Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
  Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>,
@@ -93,10 +93,10 @@ To: Geliang Tang <geliang@kernel.org>, Keith Busch <kbusch@kernel.org>,
 Cc: Geliang Tang <tanggeliang@kylinos.cn>, linux-nvme@lists.infradead.org,
  netdev@vger.kernel.org, mptcp@lists.linux.dev
 References: <cover.1786841319.git.tanggeliang@kylinos.cn>
- <d06dd395575d7f639cd8bc3f984692704fd40e56.1786841319.git.tanggeliang@kylinos.cn>
+ <97e667df6c3755d1f9e2e709dfa1dc64903317e1.1786841319.git.tanggeliang@kylinos.cn>
 Content-Language: en-US
 From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <d06dd395575d7f639cd8bc3f984692704fd40e56.1786841319.git.tanggeliang@kylinos.cn>
+In-Reply-To: <97e667df6c3755d1f9e2e709dfa1dc64903317e1.1786841319.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Spam-Level: 
@@ -124,22 +124,19 @@ X-Spamd-Result: default: False [-4.30 / 50.00];
 On 8/16/26 2:59 AM, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch consolidates socket option settings in nvmet-tcp by utilizing
+> This patch consolidates socket option settings in nvme-tcp by utilizing
 > the generic do_sock_setsockopt() helper for options including SO_LINGER,
-> SO_PRIORITY, SO_REUSEADDR, TCP_NODELAY, and IP_TOS. This change eliminates
-> the need to export and use specialized helpers for each individual socket
-> option.
+> SO_PRIORITY, TCP_NODELAY, IP_TOS, SO_BINDTODEVICE, and TCP_SYNCNT.
 > 
-> A key benefit of this refactoring is that it decouples the socket option
-> configuration from the underlying transport protocol. This makes it
-> easier to extend nvmet-tcp to support other protocols, such as MPTCP, in
-> the future, as do_sock_setsockopt() abstracts away protocol-specific
-> differences without requiring per-option protocol-specific wrappers.
+> Compared to the target-side implementation, this patch additionally
+> converts SO_BINDTODEVICE and TCP_SYNCNT to use the same unified mechanism.
+> This change eliminates the need to export and use specialized helpers for
+> each individual socket option.
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->   drivers/nvme/target/tcp.c | 53 +++++++++++++++++++++++++++++++++------
->   1 file changed, 45 insertions(+), 8 deletions(-)
+>   drivers/nvme/host/tcp.c | 55 +++++++++++++++++++++++++++++++++++------
+>   1 file changed, 47 insertions(+), 8 deletions(-)
 > 
 Reviewed-by: Hannes Reinecke <hare@kernel.org>
 
