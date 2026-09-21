@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9B444A40B
-	for <mptcp@lists.linux.dev>; Mon, 21 Sep 2026 07:52:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DEAF426438
+	for <mptcp@lists.linux.dev>; Mon, 21 Sep 2026 08:18:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789977139; cv=none; b=YfPDB8oIBoqb+CSIs1P3aizVF1ScRi906VoCnmaH6Tzm65wqu4mKyoDqTWFAsinyL6+FOeNDevywLIlb8w0qw+6TN2FDMnHNbcXvMKJT6snzV/9VawFHCboAuVx2JzN7mG4EDnTZ1OW/FhgVWICeQ8ijpHO7C1CXkk0xXvbdzPc=
+	t=1789978731; cv=none; b=jiYb5+fk6HryL81UBqJNE1Y8DzRGi2AeOfhwYnyNWqqTLs6zEEZDtMnRitdNLysb+oMpTYixjkzZhRSfcSwcn6PrTxppzUqTb799GzD/rp87seRMOyaZch6nnv9Ge5vuP6fw9GVq8AqqVRKQPalvXBgyeAtss8M4LfgMUEypIrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789977139; c=relaxed/simple;
-	bh=H9sZC47ItOBcl28PI3WJAyTegv8/MJ+QPXwiD0dec+E=;
+	s=arc-20240116; t=1789978731; c=relaxed/simple;
+	bh=J5K5GQ+tFClf0ej2o0U8v71S1+XK05ZOyzWKmphX9hA=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nn8qzHpRlHY2DOPfvqKNiBmZBMmasi6ixLD26bGYcg/mW0/IxRMnawwacm2/cCuMkTgQN88jaPkyLMf6aOMjcl8kVepVu7FhmhEwY3X0nqfYzpOF2+ni+i2dWCG/cDgBQgaqHW5hbY+majhcdWm5QOR5i97t7ZZxL62CP6ZuaSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KeKI6W+/; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:MIME-Version; b=l8CGQ10mgD6gou9ZMdSqnK8mWdzj5hDsuZ7jeOqh3SDyRdXNxoqNLBtNWiVhiqN3c8gPqiSB8bxIOqgzy0I2eR9iRjhGu2uDKzji1JSUf77MyRf8ymjXfh3dNzHo2hw5GdSwjnc9Cp78tY4z4Sk2+q8q8YlpzUWlEMUr+QRQ474=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AP7sl2D7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KeKI6W+/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDD321F000FF;
-	Mon, 21 Sep 2026 07:52:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AP7sl2D7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D9F41F000FF
+	for <mptcp@lists.linux.dev>; Mon, 21 Sep 2026 08:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789977137;
-	bh=soAukcLPeu1qnXONfMitI0losCcYi72Zbpgg5kPRIhc=;
+	s=k20260515; t=1789978729;
+	bh=eeSRAFSRZhNwzs09xXy40X63Q4ZXRtXiGTEYYT3D364=;
 	h=Subject:From:To:Date:In-Reply-To:References;
-	b=KeKI6W+/4H+nYz6ZTOgDL4IqtuyR/XuloDLHruv5aZI5yU534w0DcZEFRBtycDgxr
-	 /OBD1SnUAD8IbMS7P43NydWTNbEJk6ZyaPCD8SrkupRUPMwEviyNVryRjhvrpN78uH
-	 La83Vsr2WKd3Ezm3std4/tfBlE0l3eMsbWVfrmCcHpQAKeXWMYyOmPuZeEry2do05d
-	 NR+M+33WL6YlS42ylyCughG6g5ETEoVrpljQU2i76tjcbvUPQjSUfS+ITRDhoPWYDo
-	 0hejFhiJKPAhvbsvhJftsAx0FFETZS5ay2K6wv1RWBDSDJ10lsaPXcbCIzGeBILE/0
-	 eGaNqMpD2/ptw==
-Message-ID: <7ad218abd5b68ac34bc34b607af3bb4c7163f60b.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v3] selftests: mptcp: print stats before
- socket closure
+	b=AP7sl2D70lrYnEkBwNdfxisi4kLHbwS2vtl0VRp9FLQWZuc0rXMWsMwgGs/7IHrBe
+	 trsYpk3+lPU2xfX5Lf9mLmxR2H8iJLPPcyd3rmHAr9gTexNDys4ReTtdnWtBjwvISg
+	 m8zt0yr5Rrfpakp3bJWuoxBhIlWVlI5zAvyrIaC3YdcniUF5zJOCsCKUqv1UiitLjU
+	 GJUIH8O6llF5tn2u+xihW8nKGtNTDjcPPPFcEcpaOSL3KnCqasWHsYx3y4gCHPGCcY
+	 8I0ZcO7rVQA6yrn9jlMO2lsYLzCRiOpcr4f18WtDUCdU6rWncJFUzYSmCcLYFkI48Y
+	 ORKdGNEKI+GFg==
+Message-ID: <0c8156634d1ee0eabbff75bda807e537efd0725e.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v6 0/6] Fix socket options used by NVMe over
+ MPTCP
 From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, MPTCP Linux <mptcp@lists.linux.dev>
-Date: Mon, 21 Sep 2026 15:52:13 +0800
-In-Reply-To: <735a6655-b3ac-4352-8a35-0e54ac2c7ffd@kernel.org>
-References: <20260815-sft-mptcp-stats-b4-close-v3-1-ccd9af14cf73@kernel.org>
-	 <24e7da3ea0b33d5dca970449cf615a4c95ecceb8.camel@kernel.org>
-	 <735a6655-b3ac-4352-8a35-0e54ac2c7ffd@kernel.org>
+To: mptcp@lists.linux.dev
+Date: Mon, 21 Sep 2026 16:18:46 +0800
+In-Reply-To: <4a4ce805c08bf5a8c2f34e0fa371b81317af795e.camel@kernel.org>
+References: <cover.1786938892.git.tanggeliang@kylinos.cn>
+		 <cddcbdb5-b4ab-b99f-54ae-ee6cf8fd8cc5@gmail.com>
+	 <4a4ce805c08bf5a8c2f34e0fa371b81317af795e.camel@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.2-9 
 Precedence: bulk
@@ -44,86 +44,82 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Matt,
 
-Sorry for the delayed reply.
-
-On Tue, 2026-09-08 at 19:52 +0200, Matthieu Baerts wrote:
-> Hi Geliang,
+On Tue, 2026-08-18 at 16:23 +0800, Geliang Tang wrote:
+> Hi Matt,
 > 
-> On 05/09/2026 10:26, Geliang Tang wrote:
-> > Hi Matt,
+> On Mon, 2026-08-17 at 05:11 +0000, MPTCP CI wrote:
+> > Hi Geliang,
 > > 
-> > On Sat, 2026-08-15 at 00:28 +0200, Matthieu Baerts (NGI0) wrote:
-> > > In case of poll timeout, it might be too late to print the stats
-> > > after
-> > > the socket closure.
-> > > 
-> > > Now, in case of poll timeout, 'ss' and 'nstat' are invoked from
-> > > mptcp_connect to print the stats before exiting. This should help
-> > > debugging poll timeout issues.
-> > > 
-> > > Note: for this "workaround", system() is used for debugging
-> > > purposes
+> > Thank you for your modifications, that's great!
 > > 
-> > This print_err_stats() implementation is basically the same as
-> > mptcp_lib_pr_err_stats() in the shell, right?
+> > Our CI did some validations and here is its report:
+> > 
+> > - KVM Validation: normal (except selftest_mptcp_join): Success! ✅
+> > - KVM Validation: normal (only selftest_mptcp_join): Success! ✅
+> > - KVM Validation: debug (except selftest_mptcp_join): Success! ✅
+> > - KVM Validation: debug (only selftest_mptcp_join): Success! ✅
+> > - KVM Validation: btf-normal (only bpftest_all): Success! ✅
+> > - KVM Validation: btf-debug (only bpftest_all): Success! ✅
 > 
-> Correct.
-> 
-> > I think it's better to use mptcp_lib_pr_err_stats() in the shell to
-> > print the information. In mptcp_connect.c, when a poll timeout
-> > occurs,
-> > we send a signal to the shell and don't close the socket
-> > immediately -
-> > we wait for the shell to finish printing the information before
-> > closing
-> > it. What do you think of this approach? There's a reference
-> > implementation in the attachment, but I haven't tested it.
-> Thank you for your review. I agree that what you suggested is better
-> for
-> a tool that would be used in production. But here with the selftests,
-> I
-> don't think we need your long patch with a higher complexity, just
-> for
-> the selftests. I think it is fine to have some "system()" calls with
-> the
-> same ss/nstat commands compared to a patch of 50+ lines to get the
-> same
-> result. No?
+> Sashiko has already reviewed this v6 and has no further comments. If
+> you have time, could you please take a look and review it as well?
 
-I agree with you - simplicity is a plus as well.
+If you have some time, I'd really appreciate it if you could help
+review this series, particularly patches 5 and 6. The subsequent series
+"nvme-tcp: add IPv6 traffic class support" depends on the
+__ip6_sock_set_tclass() implementation in patch 5. Patch 5 was
+originally submitted by David, and I've made some updates on top of his
+version. It addresses issue #568 and is worth merging.
 
-I tested it and it works. So LGTM!
-
-    Reviewed-by: Geliang Tang <geliang@kernel.org>
-
-
-However, we need to handle something in mptcp_connect.sh afterwards.
-Otherwise, when a timeout occurs, we'll get two duplicate outputs: one
-from mptcp_connect, which is the log added by this patch, and one from
-mptcp_connect.sh, which is an invalid log. I think in this case we
-should ignore the latter, for example by adding the following to
-mptcp_connect.sh:
-
-do_transfer()
-{
-  ...
-  mptcp_lib_pr_fail "client exit code $retc, server $rets"
-  if [ ${rets} -ne 2 ] && [ ${retc} -ne 2 ]; then
-    mptcp_lib_pr_err_stats "${listener_ns}" "${connector_ns}" "${port}"
-  fi
-  ...
-}
-
-What do you think? If you don't have time, I can submit this follow-up
-patch as well.
+[1]
+https://patchwork.kernel.org/project/mptcp/cover/cover.1786947923.git.tanggeliang@kylinos.cn/
 
 Thanks,
 -Geliang
 
 > 
-> Cheers,
-> Matt
+> Thanks,
+> -Geliang
+> 
+> > - Task:
+> > https://github.com/multipath-tcp/mptcp_net-next/actions/runs/31994206151
+> > 
+> > Initiator: Patchew Applier
+> > Commits:
+> > https://github.com/multipath-tcp/mptcp_net-next/commits/f3f2396df333
+> > Patchwork:
+> > https://patchwork.kernel.org/project/mptcp/list/?series=1146924
+> > 
+> > 
+> > If there are some issues, you can reproduce them using the same
+> > environment as
+> > the one used by the CI thanks to a docker image, e.g.:
+> > 
+> >     $ cd [kernel source code]
+> >     $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --
+> > rm
+> > -it \
+> >         --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+> >         auto-normal
+> > 
+> > For more details:
+> > 
+> >     https://github.com/multipath-tcp/mptcp-upstream-virtme-docker
+> > 
+> > 
+> > Please note that despite all the efforts that have been already
+> > done
+> > to have a
+> > stable tests suite when executed on a public CI like here, it is
+> > possible some
+> > reported issues are not due to your modifications. Still, do not
+> > hesitate to
+> > help us improve that ;-)
+> > 
+> > Cheers,
+> > MPTCP GH Action bot
+> > Bot operated by Matthieu Baerts (NGI0 Core)
