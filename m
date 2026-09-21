@@ -1,42 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD4245D19E
-	for <mptcp@lists.linux.dev>; Mon, 21 Sep 2026 09:59:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5F8429CF3
+	for <mptcp@lists.linux.dev>; Mon, 21 Sep 2026 10:20:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789984774; cv=none; b=hYOztaua0PN2OZzw9O1PsgAA/iea2yrw2MdA5Pb8/m9n6pMkAhf7EZOBEaNqKMT7YfJNyam92EiWeN2XHghNbFROoNDdp/jjdaXng0q5XlzM1dx+TPt7hfxWEReiOI2mhN1DwdinU9K2ntnWyqZnIFYda8VTCMIHzmQrvRpIuTA=
+	t=1789986055; cv=none; b=I/t2t0bflNdNwp0eh1yg02perIEKT5pGd4E5qHsR5dWFzUw+l7VjWCxoQoZOX5+Vpl9VZ9KIkNL65oltmg2RFBK65dzMaFbsE+Ql3DIT1WCJ/pgXmzoRoiRliZcIXu/M55WHha9wGXOPxBaWnXXd12GY0cP4ar2J1OI+hYjAoXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789984774; c=relaxed/simple;
-	bh=N8gTYoja7HMuc5aANBgq0v6ZVckjyzqVhIylHUMj7BM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Ke8QSmKaXfiS0mBtjE/sEI6Jr+jBg124TrEbmYgp1s+zzLqLlGU/6JypA8exZIGIJCNyT6AMdc+MfuHVSrbfxm1wIXL8L2xiGNatg3AzfnAS97h1jJB4I/l+FP1sl30NWiTfI3uzL7bHfp6n/Gj9PmdSo1AgNkjJ9kw+2RrXBZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ciV0Uv5q; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789986055; c=relaxed/simple;
+	bh=JcuWyXw0b1VxJk6Nt21e0KZ7V3ExZPrBtKocUjj6T1M=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pBjxFLByWbT5Kw/0B5p5eYLHQZL0oHbEaYE8tG6t0pUp5ce1SvPVGFDakASh3hVa0iJypq4YPxYi//jYGQh547R1o64BtOrKoU9L02ABI0/MLqr/HgkJhCbEc2ChE5v17lOofGqN4uTK4s04gJc9wv2QAq6ky0xakW4wfDNp+bI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FjvCdndR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ciV0Uv5q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9A5A1F000FF;
-	Mon, 21 Sep 2026 09:59:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FjvCdndR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 362B81F00898;
+	Mon, 21 Sep 2026 10:20:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789984773;
-	bh=gGYrDKiswJDFdko15FCudeaOT863H4aNBvHYnnuiRYo=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=ciV0Uv5qU/Db6+F5JtToRwK1XXRhBJ29+//e8zaX1WxvJyYPy+wkCQfg3qFNggC8q
-	 4gNvex/fMP3OyotbmlQtgnKQ6WGWVQARd97Y3pMZuQLTk1p9BejpgeP8BRnvfrBu5c
-	 L1GJXkdfBLqlShFyNowK+pW5hLjHMR0CBcrJgBBQ38yKzA/2zE4QM3LW5VjVMgXHx2
-	 hsFIayAjOWxwNVWJYhrJjStnilBUfiyf1RwuP0eIaOOqwICCTXEIQoCQqwblpS7A63
-	 tWcWJC2XVxzpnFtSJUTaXpsSxQqxeE60kjjD1v64kLhzxm0S+ToG3NdEksjBDMjuWU
-	 C4KYVxalEGcmw==
-Message-ID: <a29bd9c420ec8c70ca0091690f441dcf14c699e1.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net v3] mptcp: pm: userspace: unify entry free
- path via RCU callback
+	s=k20260515; t=1789986047;
+	bh=pQRWiKu4jPRmnd4IE1KQjoiODnzdhihFoq+EGJY5dT4=;
+	h=Subject:From:To:Date:In-Reply-To:References;
+	b=FjvCdndR8dTSxNkxBXlE0tKgV859uJzpeBv4BKhrtLP/yNWIdXcBwBUoQef9yqUkZ
+	 m1YJFnw5Tz+gANQMQl3wsRW00YzDf6xMEL40dhvDOuW43J831G5j6lnFNZK5Cikcev
+	 sApShsedyB9rJNzb7b7GfZ3iWbsysaJwe8cAA9v0xnb2+6nIhdplsadNVAij4LPzdk
+	 15BUfYAl+HhRfmAEaig0u2K7eeWJpb+ojO6FZdVdWJZdWJfmiADFcyUE+ffrhNWKd0
+	 bqd2wKCzjzyObuTLkkS9AUmxAxN2TMsFyiKVQi9Y+JlPcH/+MLs8mUx1+TtrhktskW
+	 YmcP9z0q+h1vA==
+Message-ID: <88eb6824e4fb9c14cb6fd975ee947bc450581135.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net v3 2/8] mptcp: pm: userspace: lookup: match
+ port in priority
 From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Date: Mon, 21 Sep 2026 17:59:28 +0800
-In-Reply-To: <c0d1afe2-3e24-47e7-8863-8f0ba018fce9@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>, MPTCP Linux <mptcp@lists.linux.dev>
+Date: Mon, 21 Sep 2026 18:20:38 +0800
+In-Reply-To: <987ee3fe-6533-4739-8181-4367302cac63@kernel.org>
 References: 
-	<de8555fcb235d0e93c02c20bf47231846d30841d.1782886142.git.tanggeliang@kylinos.cn>
-	 <c0d1afe2-3e24-47e7-8863-8f0ba018fce9@kernel.org>
+	<20260807-mptcp-pm-userspace-id0-case-v3-0-de9088549924@kernel.org>
+	 <20260807-mptcp-pm-userspace-id0-case-v3-2-de9088549924@kernel.org>
+	 <7bf7a43655610da952266aa7bfbec76a1dcb5f22.camel@kernel.org>
+	 <b1710700-0755-4f74-a6db-cfaa7f28a057@kernel.org>
+	 <bb74f942d14b1335bd5be83ca8b2c750cc8063b5.camel@kernel.org>
+	 <987ee3fe-6533-4739-8181-4367302cac63@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.2-9 
 Precedence: bulk
@@ -49,70 +52,246 @@ Content-Transfer-Encoding: 8bit
 
 Hi Matt,
 
-Thanks for the review! Sorry for the late reply.
-
-On Wed, 2026-08-26 at 15:51 +0200, Matthieu Baerts wrote:
+On Sun, 2026-08-30 at 23:00 +0200, Matthieu Baerts wrote:
 > Hi Geliang,
 > 
-> On 01/07/2026 08:11, Geliang Tang wrote:
-> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> On 30/08/2026 06:43, Geliang Tang wrote:
+> > Hi Matt,
 > > 
-> > In mptcp_pm_nl_remove_doit(), sk_omem_alloc is decremented
-> > immediately
-> > but the memory is freed later via kfree_rcu(). This allows a
-> > CAP_NET_ADMIN
-> > user to bypass the socket memory quota and exhaust kernel memory by
-> > accumulating RCU callbacks.
+> > On Wed, 2026-08-19 at 09:56 +0200, Matthieu Baerts wrote:
+> > > Hi Geliang,
+> > > 
+> > > Thank you for the review and suggestion!
+> > > 
+> > > On 19/08/2026 09:23, Geliang Tang wrote:
+> > > > Hi Matt,
+> > > > 
+> > > > On Fri, 2026-08-07 at 10:41 +0200, Matthieu Baerts (NGI0)
+> > > > wrote:
+> > > > > In the local address list, there can be entries with the port
+> > > > > set
+> > > > > to
+> > > > > 0
+> > > > > -- corresponding to the source port used by the initial
+> > > > > subflow -
+> > > > > -
+> > > > > and
+> > > > > others with a specific port.
+> > > > > 
+> > > > > When performing a lookup, it is important to compare the
+> > > > > ports to
+> > > > > pick
+> > > > > the right entry: when a specific port is given, then try to
+> > > > > match
+> > > > > it
+> > > > > first. If no match is found, try to find entries with the
+> > > > > port
+> > > > > set to
+> > > > > 0.
+> > > > > 
+> > > > > Fixes: 24430f8bf516 ("mptcp: add address into userspace pm
+> > > > > list")
+> > > > > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> > > > > ---
+> > > > > v3: new (Sashiko)
+> > > > > ---
+> > > > >  net/mptcp/pm_userspace.c | 14 +++++++++++++-
+> > > > >  1 file changed, 13 insertions(+), 1 deletion(-)
+> > > > > 
+> > > > > diff --git a/net/mptcp/pm_userspace.c
+> > > > > b/net/mptcp/pm_userspace.c
+> > > > > index 663cbeb79548..3f1471ec3fc7 100644
+> > > > > --- a/net/mptcp/pm_userspace.c
+> > > > > +++ b/net/mptcp/pm_userspace.c
+> > > > > @@ -33,10 +33,22 @@ mptcp_userspace_pm_lookup_addr(struct
+> > > > > mptcp_sock
+> > > > > *msk,
+> > > > >  {
+> > > > >  	struct mptcp_pm_addr_entry *entry;
+> > > > >  
+> > > > > +	/* Compare ports when set in addr */
+> > > > >  	mptcp_for_each_userspace_pm_addr(msk, entry) {
+> > > > > -		if (mptcp_addresses_equal(&entry->addr,
+> > > > > addr,
+> > > > > false))
+> > > > > +		if (mptcp_addresses_equal(&entry->addr,
+> > > > > addr,
+> > > > > addr-
+> > > > > > port != 0))
+> > > > >  			return entry;
+> > > > >  	}
+> > > > > +
+> > > > > +	if (addr->port == 0)
+> > > > > +		return NULL;
+> > > > > +
+> > > > > +	/* Check only wildcard ports if no exact match with
+> > > > > the
+> > > > > port
+> > > > > */
+> > > > > +	mptcp_for_each_userspace_pm_addr(msk, entry) {
+> > > > > +		if (entry->addr.port == 0 &&
+> > > > > +		    mptcp_addresses_equal(&entry->addr,
+> > > > > addr,
+> > > > > false))
+> > > > > +			return entry;
+> > > > > +	}
+> > > > > +
+> > > > >  	return NULL;
+> > > > >  }
+> > > > 
+> > > > Personally, I think a single-pass lookup is better than a two-
+> > > > pass
+> > > > one.
+> > > 
+> > > Indeed, I initially thought the code wouldn't be very readable,
+> > > but
+> > > maybe worth it.
+> > > 
+> > > > I've implemented a version and it passed the tests:
+> > > > 
+> > > > static struct mptcp_pm_addr_entry *
+> > > > mptcp_userspace_pm_lookup_addr(struct mptcp_sock *msk,
+> > > >                                const struct mptcp_addr_info
+> > > > *addr)
+> > > > {
+> > > >     struct mptcp_pm_addr_entry *entry, *wildcard = NULL;
+> > > >     struct mptcp_addr_info match;
+> > > > 
+> > > >     mptcp_for_each_userspace_pm_addr(msk, entry) {
+> > > >         match = entry->addr;
+> > > 
+> > > Mmh, but now there is a copy for each entry. Not sure what's
+> > > better.
+> > > 
+> > > >         if (match.port == 0 && addr->port != 0)
+> > > 
+> > > (Would it not work to add this condition to the last argument of
+> > > mptcp_addresses_equal()? → EDIT: no, see below)
+> > > 
+> > > >             match.port = addr->port;
+> > > 
+> > > It feels wrong: entry->addr.port == 0 should mean "same port as
+> > > the
+> > > msk"
+> > > (inet_sk((struct sock *)msk)->inet_sport). But this "addr->port"
+> > > is
+> > > possibly yet another port.
+> > > 
+> > > In other words, I think doing that here means accepting the first
+> > > wildcard one. An example: ID0 is now the first entry, if there is
+> > > another IP with another specific port, it should be picked in
+> > > priority.
+> > > With this code here, I don't think that will be the case: the ID0
+> > > entry
+> > > will be picked instead, no?
+> > > 
+> > > (I think we should have a test with the userspace PM announcing
+> > > the
+> > > same
+> > > address but with another port + doing the listen for this port
+> > > manually,
+> > > and checking the IDs being used: shouldn't be 0)
+> > > 
+> > > >         if (mptcp_addresses_equal(&match, addr, addr->port !=
+> > > > 0)) {
+> > > 
+> > > What if we always call mptcp_addresses_equal without the port
+> > > check,
+> > > and
+> > > do that "manually" here below?
+> > > 
+> > > -> Return if the port is the same, then save it as wildcard if
+> > > one of
+> > > them has no port set.
+> > > 
+> > > Even there, it feels like the comparison should be stricter: if
+> > > one
+> > > port
+> > > is 0, either the other one is 0 (port is the same, already
+> > > checked
+> > > then)
+> > > or equal to the msk one. I think I quickly tried this at some
+> > > points,
+> > > and it was causing issues, but I didn't investigate. Maybe the
+> > > tests
+> > > are
+> > > wrong (mixing up IDs) or there is another bug somewhere... Do you
+> > > mind
+> > > looking at this if you have the opportunity, please?
 > > 
-> > Fix by using call_rcu() with a custom callback that uses
-> > sock_kfree_s()
-> > to free the entry and decrement sk_omem_alloc atomically. To ensure
-> > the
-> > socket remains valid until the callback runs, take a reference with
-> > sock_hold() when storing the socket pointer in the entry, and
-> > release it
-> > with sock_put() in the callback.
-> > 
-> > Convert the synchronous freeing paths in free_local_addr_list() and
-> > delete_local_addr() to use the same RCU callback, ensuring the
-> > socket
-> > reference is properly released.
-> > 
-> > Additionally, mptcp_userspace_pm_append_new_local_addr() now checks
-> > SOCK_DEAD under the spinlock before allocating. A SYN+JOIN handler
-> > holding an msk reference from mptcp_token_get_sock() could
-> > otherwise
-> > race with __mptcp_destroy_sock() - sock_orphan() sets SOCK_DEAD and
-> > then mptcp_userspace_pm_release() clears the list, so a new entry
-> > allocated after that point would never be freed and its sock_hold()
-> > would leak the msk permanently.
+> > Apologies for the delayed response.
 > 
-> (...)
+> No need to apologies, it's still way quicker than most of my replies
+> :)
 > 
-> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> > index da40c6f3705f..250736eae0be 100644
-> > --- a/net/mptcp/protocol.h
-> > +++ b/net/mptcp/protocol.h
-> > @@ -257,6 +257,8 @@ struct mptcp_pm_addr_entry {
-> >  	u32			flags;
-> >  	int			ifindex;
-> >  	struct socket		*lsk;
-> > +	struct sock		*sk;
+> > I've revised the implementation to the following version:
+> > 
+> > static struct mptcp_pm_addr_entry *
+> > mptcp_userspace_pm_lookup_addr(struct mptcp_sock *msk,
+> >                                const struct mptcp_addr_info *addr)
+> > {
+> >         struct mptcp_pm_addr_entry *entry, *wildcard = NULL;
+> > 
+> >         mptcp_for_each_userspace_pm_addr(msk, entry) {
+> >                 if (mptcp_addresses_equal(&entry->addr, addr,
+> > false)) {
+> >                         if (!addr->port)
+> >                                 return entry;
 > 
-> Also, I don't think 'lsk' is used with the userspace PM: can we re-
-> use
-> it instead of adding a new one? (Or using an anonymous union?)
+> Even if that's similar to what I did in my patch, should this not be
+> a
+> wildcard either?
+> 
+> It seems that it should be:
+> 
+>   if (addr->port == entry->addr.port)
+>       return entry;
+> 
+>   if (!wildcard && (!addr->port || !entry->addr.port))
+>       wildcard = entry;
+> 
+> No?
+> 
+> 
+> It feels that it should even be without the "wildcard":
+> 
+>   __be16 msk_sport = inet_sk((struct sock *)msk)->inet_sport;
+>   struct mptcp_pm_addr_entry *entry;
+> 
+>   mptcp_for_each_userspace_pm_addr(msk, entry) {
+>       if (mptcp_addresses_equal(&entry->addr, addr, false)) {
+>           if (addr->port == entry->addr.port)
+>               return entry;
+> 
+>           if (!addr->port && entry->addr.port == msk_sport)
+>               return entry;
+> 
+>           if (!entry->addr.port && addr->port == msk_sport)
+>               return entry;
+>       }
+>   }
+> 
+>   return NULL;
+> 
+> But I just remembered we need to handle the case where a subflow got
+> created without forcing the source port: we used the same ID as
+> another
+> subflow, and we still need to match it, even if here the source port
+> is
+> likely not the same as the msk one, but that's OK. So we need this
+> "wildcard".
 
-Done. lsk and sk now share storage via an anonymous union in v4.
+Yes, that's exactly right. The wildcard fallback is necessary.
+
+> 
+> So thank you for the new suggestion, I will take it with the
+> modification I mentioned, if that's OK for you.
+
+I have no further comments.
 
 Thanks,
 -Geliang
 
-> 
-> > +	struct rcu_head		rcu;
-> >  };
-> >  
-> >  struct mptcp_data_frag {
 > 
 > Cheers,
 > Matt
