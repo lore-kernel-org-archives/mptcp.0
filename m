@@ -1,132 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk2-f13.google.com (mail-qk2-f13.google.com [74.125.230.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F0D35FF58
-	for <mptcp@lists.linux.dev>; Tue, 22 Sep 2026 07:35:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8135241D62E
+	for <mptcp@lists.linux.dev>; Tue, 22 Sep 2026 08:27:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790062541; cv=none; b=Cv3uhjoVGHKcogM/2b94JaUUbS7SxvHG00cA2QUknuNPOfuyNKimp6oKzbaaWtM2Bih6Qr5aYdnBYViO+9Lpc6IPBfvq/K3KneNLMT7EJUCbHHVXw7l7/WZLbsbnDZ9wvFD3Tod5DEsR6Tn5NwpH/NKvG8cRE2z1bj8SILffqsU=
+	t=1790065623; cv=none; b=CkrdplXNXka4LZlxjqpQdhH1Nov2wavR07cM+DXsiDIGERAGkQzwGOvS+FJ94UxYRZ4Mn39PHJ+KuDB/qpIhCTBD4ZHUsk2yfJhr/fEWLBDBfjx3DGJJfZGE5DcVL2Cp1bvRByDZZd8hPjKMvYNZWBIs3pz8ig7HoqFtObLHydg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790062541; c=relaxed/simple;
-	bh=Phlp5MT+KaX9dfCBjjow266pVBWF3DdpU1TEXVrHejQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=exeIwssTAXh8b28HqL3fx8gyFJ9Cj4HxGQDRhTtvMRo+ZMk1cAd/nj3+wT65wDKQJKCwYDyFEhrh4y3oxZb30T7Kvz41YFKwcZSUBzzbKcQr762BGWY+/OsKPUXXgg+7gp3cNOJtufukL5ogI2pYhTRkSLmq70AtpNQd1/klmzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RKaIdH5D; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790065623; c=relaxed/simple;
+	bh=D9FNIb9pLmP/ypV4E1vaoET8og1P5tgFuwMyqR8stJg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=Ok3ALje8h32l2oLJ8q2JxS5hxnFMGtkHNVk8TXBcb7KGFIw+DYx56fkoKlvxGujahlBkXVkzEMr178Gnqa1ppP2R/JtTQyIgisPLh65OagOhgBp6Mpmt9NjxCgRAhtOBeDSRp15I4pQNXFuvBig1TyvQGIoFDRgHgQ2mW5MsMKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rW7Mzm7z; arc=none smtp.client-ip=74.125.230.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RKaIdH5D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41C1F1F000FF;
-	Tue, 22 Sep 2026 07:35:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790062539;
-	bh=IiaC4qa/Oh/pkNmtGO5n53dDJ198OND7yqZTvp7/37s=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=RKaIdH5DWHZhfSPwrf/p/KL+zxPX2mLEFbET/Eu2iJDlkFlzzxDDEuBCUv6UJC8Eh
-	 KGOOXYY3SrC+NFX1bi0iRgf0j+/Uua6EKqpA3KpXiDx4eOyo2xkzzStVmUYs9tTGdR
-	 E5ufjNgBFat2iW1KeH7Sqqa94SkuCehalacABs0WzGQv95OY/n6AOmgtqLdUpkKre+
-	 7WXlMhVENvOBSeBxAMTRPjsFC0/6c6GH6VyjthDHBCBwVNylpoQII3I/jH8nD/PHoy
-	 X4lgEbQhyXCS1Y+CCqy3HGCW+8MYR7FIDRTwbuUjHmjEI53PJGHkvpmpWne9LxCslM
-	 4z8xCTOUr9b8Q==
-Message-ID: <317eeb1d-92b7-483c-b035-fc7df106cf26@kernel.org>
-Date: Tue, 22 Sep 2026 09:35:37 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rW7Mzm7z"
+Received: by mail-qk2-f13.google.com with SMTP id af79cd13be357-939eb3249c1so321381885a.2
+        for <mptcp@lists.linux.dev>; Tue, 22 Sep 2026 01:27:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790065621; x=1790670421; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=3u9ikuQynvL9yXjDOW2acnMa1WebeSU9oHKffpWNOXU=;
+        b=rW7Mzm7zTu7MIJCwdxi/TjLWn8ZDO25HRVWfD92io3UNuy3gQ1kA87vzhHlOBam5Mo
+         fWL0X7x9WvGwfe/dnIOvYXvwMJz+H4licLbFyJiMVmI4hCpmGAR840PR4YMalNv+VxnA
+         0vqFOO+QFvoLT+UJZT3oYML1Bmk4hbuhkKoRjBQsGnYPSB0iNV6FSWuZygqRa9b9BkBA
+         hPLiR2FCmXZ6pZA7a4iqbC7RPA7eBiInPmu8nwmpx/KzzfI1xRd6at96x6vX8zW31a7d
+         hAKNX1Cs6SG3HcVPFqaKy6rgQkrCO3I/PwKTJXP0r4q0bVzwY3Te7PLSGFT7p4mADWc4
+         mw+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790065621; x=1790670421;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=3u9ikuQynvL9yXjDOW2acnMa1WebeSU9oHKffpWNOXU=;
+        b=RYuRNVhkjea8+ECIO7ZQLE5AYIYCbZXU/J3tVmBE3X/PpTgs5hozyfN/J0BnPfA3rY
+         05aI3l9gTRcSONI8z0dHzEPojGCdcQF70rX008VL6+oZIxjNozEsGzOD4tEdLpQEslch
+         YGFq0/2Aqkv0z/s1Jppf1EZ21nEeSnwclsgEX5ja2ocWFok9JTXRmw/p/ZKO97KhFw0S
+         hMfsz7jPM1tSro5DVrROVCwDzKjUSK0/dN8QFHXbi4aKRAGp+5l8+z10JAWZvNTIkN9k
+         XekTiy30gs1zRgNCpme5U+yLPBGlr7v8P0VWbsSQkeBaZgLDMWBJb7X5DgZ1cpodQWYs
+         7KXg==
+X-Gm-Message-State: AFuF++msnP0BkgSNh2GP09zY8CbITj5zsRDBwCrD+wqni8oHZAmOAfZe
+	SOCAJk2fl5QfaG+YiE0boP0CNl+wdh1ZUcjaknPBO9n/nQWzJGpr6rF4JjFa
+X-Gm-Gg: AYBFou0XAhSyarvVekGo1++De7fXKH67q4ElJkWFuBT+9POiKeW78rQ/pniH9pMsmd/
+	Rq4hFnY/51FSOKOFZ15/kPe3FSqH6bWYjDTOMSWreuUNOR74Ph2oVOAPKYA1u3CenMcuMRoVtu4
+	6Vy4RRH4ITW1HvCDxpqHcQNPMjEdEo+QcZF665SA0Zfp70iZT++ItAKSkFLvgXL6JK/FNuOXWgB
+	h5tTCE4R2Lkzwq80xGlkd6/gIDPTTfEdkKrzX0qcR/MoxojjlZClk/MZYjdOLl78v6yFHmuBoy2
+	Bh+0u9esX4UnLn3GxRQz1y5hec9gicen7N5d92zIEdQBQF4bV6YttDzzChuy5OOzTgALpNVWorO
+	STGHukMGD8wQmLkw/ET8IR1+SB83oB2ph3pJJ3xpNhlFetTrGpyTvpFo4Ll4Pc2sAMBuj1HpiYH
+	XYYs7mY68aCHuP/JUWtf+iPEMwARgTB0JPiT77ES+DM1wjkyZhCV8tEkygSQnhoTu9gPPdfZVpP
+	tMCjuZv6f/T
+X-Received: by 2002:a05:620a:2b9a:b0:93b:d79a:c469 with SMTP id af79cd13be357-93c15ed1182mr493733885a.65.1790065621205;
+        Tue, 22 Sep 2026 01:27:01 -0700 (PDT)
+Received: from [127.0.0.1] ([172.172.87.72])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-93c1d253165sm84471985a.46.2026.09.22.01.27.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Sep 2026 01:27:00 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260922071245.1997430-1-kalpan.jani@mpiricsoftware.com>
+References: <20260922071245.1997430-1-kalpan.jani@mpiricsoftware.com>
+Subject: Re: [PATCH mptcp-next] mptcp: force a push after arming infinite
+ map on MP_FAIL
+Message-ID: <2865a6a9-ee6d-107a-8500-2c17c1b8876f@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 22 Sep 2026 08:27:00 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: fix subflow bitfield misuse
-Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <0342bcf7f4bc6c4598ecbe58cfd8ec75505c328e.1790009113.git.pabeni@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <0342bcf7f4bc6c4598ecbe58cfd8ec75505c328e.1790009113.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 
-Hi Paolo,
+Hi Kalpan,
 
-On 21/09/2026 18:45, Paolo Abeni wrote:
-> The subflow status bitfield is protected by the subflow socket
-> lock, with one notable exception: the `close_event_done` bit
-> is actually under the msk socket lock protection.
-> 
-> Flipping the latter bit may corrupt other entries in the same
-> bitfield.
+Thank you for your modifications, that's great!
 
-Thank you for looking at this!
+Our CI did some validations and here is its report:
 
-> Move the  `close_event_done` outside the bitfield in a 64bit
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf: Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_n=
+et-next/actions/runs/35700537880
 
-(32?)
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/8426663fc7=
+96
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1171057
 
-> hole. Since the mentioned field is now not cleared at subflow
-> disconnect time, additionally remove the now unneeded `local_id`
-> check in mptcp_close_ssk.
 
-I'm sorry, I'm not sure to understand that: if it is not cleared at
-subflow disconnect time, should we not clear it explicitly at msk
-disconnect time?
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-If I remember well, this flag was added to avoid duplicated SUB_CLOSED
-events only for the first subflow. Instead, I wonder if this flag
-shouldn't be moved to the msk, and have a:
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-  if (ssk == msk->first) {
-      if (msk->first_close_event_done)
-          return;
-      msk->first_close_event_done = true;  // reset at msk disco
-  }
+For more details:
 
-Or maybe the whole logic is wrong, and we should just focus on not
-sending the netlink close event for the first subflow twice?
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
