@@ -1,65 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta0.migadu.com (out-66.mta0.migadu.com [91.218.175.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B63453D0C9;
-	Tue, 22 Sep 2026 11:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEF4535FD1
+	for <mptcp@lists.linux.dev>; Tue, 22 Sep 2026 12:03:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790078233; cv=none; b=SPoljrceop3VCbzByDxZ56fK61UdHSyVlIJKDfaTkPBYmwPRlMGg5zUw9ZsCvkj8rMJSqZb+GpvOvJev/CyoFAYg36yV62vhZUtP2baPrMK4+FdYzudePkaQ/emMozN95nRSdupScIfvZrBirc0LQJLJfUBXGZk1nT1yzaCjuJA=
+	t=1790078607; cv=none; b=Jf/ZudNxFiFB0sLJgkysKAWtsjcqAAiX1WqE+Pa9bcHThEgeAcgXMmVqg7jGFy9trYBc50jMcC68BpdbrPQJ/AptAcX1SJA/a1v3sHFz967yWWyFqxMFAPW8bj9hKRBZbBOcw5DvXUxSNz0UR8B5WelnMosL1Gzofa8eeXRhBlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790078233; c=relaxed/simple;
-	bh=4gBjgFda6pMs6UTC13Km+qBb2HFKEcN8UHIseIYcn9Y=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=SF75gO8V+MOzM5pBHyqZXkhVBYHVZq8ohRZfzyRiINoTO98BSYIi04a2hFPXbdbIEgQS4PuslHE8Nk6lnZ91YkpJItkH9GZzSDvy5mgRP7kn294/e/8rSDl2vCR0lpLNOlgZFLIKeyv9n83gtYgNesIwMzNut5jbPcCmiNz6Ni8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qm+PbuaK; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790078607; c=relaxed/simple;
+	bh=N+YY9kP72EJX4e0q1/BpSD+bJ/oqJzCRVO1fh2+Sk7M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kEzYGRuEVIiuGmWGZq3mHjLMaa5ujAWkv1Db8Aa60oO3C/+6gZEHmu43kLDqcRN7eHWxsOKIXfGuTiTXyB6nQWTMIzG6GFqC20XRtGTZArbbehsEfhpoLA+HkLZdsuPCZCYZwUh2GRijDSu10fsSIG0vJogVsRfV09HxVih7jxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KeOcB33z; arc=none smtp.client-ip=91.218.175.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qm+PbuaK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 263CB1F00893;
-	Tue, 22 Sep 2026 11:57:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790078232;
-	bh=4gBjgFda6pMs6UTC13Km+qBb2HFKEcN8UHIseIYcn9Y=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date;
-	b=Qm+PbuaKwDXd/xjc+4VSzO7kUGhXWlY3BOZf0xI9NEoXM2ts/GXcLQMqXByFcCazc
-	 GbuQ//+BSi0BvOtqE1dND9YxF4DERbM5IXUvycMIUPUV1TuDUkOJHqIl0yHARUkQEU
-	 X7L6y6OOT6J0UJxAi2K9yphf91I8wAWXMzWZkLvpVtUGMxNgHg37tZKBKFxJ4WSbRA
-	 yH3PBaUNtfF6glwE04a+KGYuOZuC8jcssG/VNoFBBb0g6neUhYV3I+WpUvHB+2rc6K
-	 JS0UoNOkc/wtsHwC6g5WKHtTaZL33p+zy8Y6ia7+8pVhyAo6Mml+6SMAzJEUh86U2g
-	 qElcVipBfTBHw==
-Content-Type: multipart/mixed; boundary="===============0288408739989712393=="
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KeOcB33z"
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=N+YY9kP72EJX4e0q1/BpSD+bJ/oqJzCRVO1fh2+Sk7M=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1790078602; v=1; x=1790683402;
+ b=KeOcB33zVuS9tuH1Bq7u0QLT4f7hRrZ6omqQ4tYOxIartMAVKtz+PprWX8jJIL7Urt1TSTJS
+ ZL880NRb/CXh3ayuddUXKg4bd+rDENAlX+MC9NGSE5sQac2yU+oChcCGUFOXQbcYItwk+JeNICi
+ 0fC6aLqAU66HkUYTRWbRzr4c=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 1c9ea4c20335ce24;
+	Tue, 22 Sep 2026 12:03:22 +0000
+X-Mizu-Trace-ID: 1c9ea4c20335ce24
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <f56e2df4-1f2b-44e6-b807-dccb60d5393e@linux.dev>
+Date: Tue, 22 Sep 2026 20:03:07 +0800
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <cc4f8eb66555e38a28d629136531a9ec0187263f7080ded5d01304551f686f45@mail.kernel.org>
-In-Reply-To: <1f7dc605b16fc0590f7cbf5a27d57271926c01ce.1790074764.git.tanggeliang@kylinos.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v4] bpf: drop duplicate check_app_limited in
+ tcp_bpf_push
+To: Geliang Tang <geliang@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Jakub Sitnicki <jakub@cloudflare.com>, Eric Dumazet <edumazet@google.com>,
+ Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, netdev@vger.kernel.org,
+ bpf@vger.kernel.org, mptcp@lists.linux.dev
 References: <1f7dc605b16fc0590f7cbf5a27d57271926c01ce.1790074764.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH bpf-next v4] bpf: drop duplicate check_app_limited in tcp_bpf_push
-From: bot+bpf-ci@kernel.org
-To: geliang@kernel.org,john.fastabend@gmail.com,jakub@cloudflare.com,jiayuan.chen@linux.dev,edumazet@google.com,ncardwell@google.com,kuniyu@google.com,davem@davemloft.net,kuba@kernel.org,pabeni@redhat.com,horms@kernel.org,matttbe@kernel.org,martineau@kernel.org
-Cc: tanggeliang@kylinos.cn,netdev@vger.kernel.org,bpf@vger.kernel.org,mptcp@lists.linux.dev,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
-Date: Tue, 22 Sep 2026 11:57:10 +0000 (UTC)
-
---===============0288408739989712393==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+In-Reply-To: <1f7dc605b16fc0590f7cbf5a27d57271926c01ce.1790074764.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-> bpf: drop duplicate check_app_limited in tcp_bpf_push
 
-This isn't a bug, but would "bpf, sockmap: drop redundant
-tcp_rate_check_app_limited() in tcp_bpf_push()" match the prefix and
-naming used by the other changes to this file? The prefix for this file
-is normally "bpf, sockmap:" (or "tcp_bpf:"), and "check_app_limited" is
-not an identifier that exists - the removed call is
-tcp_rate_check_app_limited().
+On 9/22/26 7:06 PM, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+>
+> Commit c5c37af6ecad9 ("tcp: Convert do_tcp_sendpages() to use
+> MSG_SPLICE_PAGES") moved tcp_rate_check_app_limited() inside
+> do_tcp_sendpages(), turning it into a wrapper around tcp_sendmsg_locked().
+> Later, commit ebf2e8860eea ("tcp_bpf: Inline do_tcp_sendpages as it's now
+> a wrapper around tcp_sendmsg") inlined the wrapper in tcp_bpf_push() with
+> direct tcp_sendmsg_locked() calls, which perform the check on every path
+> that queues data, but kept the outer tcp_rate_check_app_limited() that
+> was previously needed to cover do_tcp_sendpages(). The outer call is now
+> redundant.
+>
+> The site changed here, tcp_bpf_push(), holds the socket lock and invokes
+> tcp_sendmsg_locked() on every iteration. The early-return paths in
+> tcp_sendmsg_locked() that skip tcp_rate_check_app_limited() - the
+> MSG_ZEROCOPY allocation failure and MSG_FASTOPEN branches - return without
+> queueing any MSG_SPLICE_PAGES data, so there is no functional consequence
+> from omitting the outer check.
+>
+> A potential benefit of this change is that it facilitates future reuse of
+> tcp_bpf_push() for sockmap support in protocols beyond TCP, such as MPTCP.
+> Since tcp_rate_check_app_limited() is TCP-specific while sendmsg_locked()
+> is a generic interface in struct proto_ops, this change allows us to switch
+> to different protocols via sk->sk_socket->ops->sendmsg_locked() without
+> carrying protocol-specific assumptions.
+>
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 
 
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+Reviewed-by: Jiayuan Chen <jiayuan.chen@linux.dev>
 
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/35720598036
---===============0288408739989712393==--
+
+Thanks
+
