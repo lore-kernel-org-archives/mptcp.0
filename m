@@ -1,39 +1,39 @@
-Received: from mta0.migadu.com (out-133.mta0.migadu.com [91.218.175.133])
+Received: from mta1.migadu.com (out-194.mta1.migadu.com [95.215.58.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70F44779B1
-	for <mptcp@lists.linux.dev>; Wed, 23 Sep 2026 09:49:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E54E3C9ED6
+	for <mptcp@lists.linux.dev>; Wed, 23 Sep 2026 09:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790156978; cv=none; b=AaOAFC+jsZiN4rSRqe817I3GEXj0nviO9IMdfMZdT9G0IDVSvX+4w0WCtDmUZ/nUMTQ7yauxegg1didrBiqJoSmPZPh6utrS3pqoYJprMyO7r2SPulbDsWXXQW4Szu5c0VfFNTuFCabhiZqzPkgiRgOdb02387G43SxJcVdwJak=
+	t=1790156983; cv=none; b=X4+IbRrgunM+mJQTKkC1OWYpX6/eMIZ7Wh1t//XPLoQTB7swyFxQasFfbqGgh62vfD/+dcrPbQkilHi+iQxqFARVfDeBwv7Ng5NiOnA9WAO28MK4vlC31mNkEMsQHaaklzyPH1A7mdUVmaU7nA4fpUBlFTqAw9UcpvfDp5lmYoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790156978; c=relaxed/simple;
-	bh=f8tgCjT83aIcTUbhHk9sOl+jqy/sFiMJokips0njS/M=;
+	s=arc-20240116; t=1790156983; c=relaxed/simple;
+	bh=rtw1YyrIvzIHYWYdRXpdAafdWLiYM50DLewJZDMU6SY=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q6dnlPkjnPSBODcmEC3dVWuFhzBLd+uoOVzaJdRs+1ysCgqmzShevsmxARHBtByBtmRLLfpfEqCQBEc0t12b10FhfDkKd+jbErF4uRkNCcGQtnqEoCaDse/M6PgBZogBCVYFu+AMGFkanZXeh8wlIgu82zYt9ss33jk02Vx6CM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lW1vwz5X; arc=none smtp.client-ip=91.218.175.133
+	 MIME-Version; b=kx1n6ZmJjzkG9D2/CRZA9RAENMrC1XPX3gM8P+oHYhsZHfpoFRxSt+1bKMjNFA3IwCsc+KGKxIkODeYG6wKdepY6HQVmIhlakLc6EMe0N6/MUKqP7BznK1cEeHTYdkzFo1FB3CVe8ym1jWUuYNLTSi1i4YdZXy4dFADAzlYDOmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rQ6KHRut; arc=none smtp.client-ip=95.215.58.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lW1vwz5X"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rQ6KHRut"
 X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=f8tgCjT83aIcTUbhHk9sOl+jqy/sFiMJokips0njS/M=;
+DKIM-Signature: a=rsa-sha256; bh=rtw1YyrIvzIHYWYdRXpdAafdWLiYM50DLewJZDMU6SY=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790156974; v=1; x=1790761774;
- b=lW1vwz5XlEf8EjpG/uDPrfqEZspPLFnXR4ZfsEXFKiu4dfsYZV7FP3+RRZjTT9kVzYh6Lraj
- +y0hy00oXaEF7uElAkEHjj32yR4Pl5ojilJfdHG+c+eXfUXF8isi1rw7r62XlcdjOW9GXwS5Wad
- 7QsDWsE2A6cxi0QLr/tFY6PQ=
+ t=1790156979; v=1; x=1790761779;
+ b=rQ6KHRut33ZzqQoZvq1GQpRGASw0UGFQZqpJSjgsLp7Xo2L9aoheimAM8vIRfwE/CtGmVly+
+ +btiYgbV6F4w/Ltyltv+/MAhiAywwFnFWXuMoXcOQ+dH4/1nfj5L/3Z76ljfGA1y3Id/oQBS4HU
+ UAXS6lo0ZCifI3at4yOWgRT8=
 X-Envelope-To: mptcp@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 481d9ad2d4ce4dea;
-	Wed, 23 Sep 2026 09:49:34 +0000
-X-Mizu-Trace-ID: 481d9ad2d4ce4dea
+Received: by smtp.migadu.com with ESMTPS id fddd15738cf691a5;
+	Wed, 23 Sep 2026 09:49:39 +0000
+X-Mizu-Trace-ID: fddd15738cf691a5
 X-Migadu-Flow: FLOW_OUT
 From: Gang Yan <gang.yan@linux.dev>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v7 3/6] mptcp: use READ_ONCE() over sysctls
-Date: Wed, 23 Sep 2026 17:49:16 +0800
-Message-ID: <e8335e14eff144774aec63393f5cce13e69dddc0.1790147728.git.yangang@kylinos.cn>
+Subject: [PATCH mptcp-next v7 4/6] mptcp: pm: use WRITE_ONCE() for the pm_type sysctl
+Date: Wed, 23 Sep 2026 17:49:17 +0800
+Message-ID: <dfda2d339d7a91927bdb3ab859003c88a93d6e7e.1790147728.git.yangang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1790147728.git.yangang@kylinos.cn>
 References: <cover.1790147728.git.yangang@kylinos.cn>
@@ -45,85 +45,46 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+From: Gang Yan <yangang@kylinos.cn>
 
-To avoid KCSAN issues.
+Write pernet->pm_type with WRITE_ONCE() in proc_path_manager(), pairing
+it with the READ_ONCE() readers introduced earlier in this series.
 
-This patch is in theory for -net, and will need to be split in multiple
-patches, with different Fixes tags. But I prefer to wait for Eric's
-patches, as I noticed he already started to modify mptcp_is_enabled:
+Note that updating net.mptcp.path_manager swaps the ops pointer first,
+then writes the derived pm_type: a socket created in between may see
+the new ops with the old pm_type. As the net.mptcp.pm_type knob is
+deprecated since v6.15 and will be removed, the race is not fixed on
+purpose; document it above the assignment so it does not get reported
+again.
 
-  https://lore.kernel.org/CANn89iLdwhhwLyO6zRjWMEY3t9g60ZE8ZhOVx33ucg_uRETbmQ@mail.gmail.com
-
-Still, keeping this patch in this series, not to forget about it.
-
-Reported-by: Eric Dumazet <edumazet@google.com>
-Closes: https://lore.kernel.org/CANn89iL=os-60kDKqMDdyiXuPF5CG=eejS0vmthwpDGXz_Bp8A@mail.gmail.com
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Suggested-by: Matthieu Baerts <matttbe@kernel.org>
+Assisted-by: Claude:GLM5.2
+Co-developed-by: Tao Cui <cuitao@kylinos.cn>
+Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
 ---
- net/mptcp/ctrl.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ net/mptcp/ctrl.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-index 76ff2a41ba38..5a75f9b76d15 100644
+index 5a75f9b76d15..87491b961bf2 100644
 --- a/net/mptcp/ctrl.c
 +++ b/net/mptcp/ctrl.c
-@@ -50,39 +50,39 @@ static struct mptcp_pernet *mptcp_get_pernet(const struct net *net)
+@@ -265,7 +265,13 @@ static int proc_path_manager(const struct ctl_table *ctl, int write,
+ 				pm_type = MPTCP_PM_TYPE_KERNEL;
+ 			else if (strncmp(pm_name, "userspace", MPTCP_PM_NAME_MAX) == 0)
+ 				pm_type = MPTCP_PM_TYPE_USERSPACE;
+-			pernet->pm_type = pm_type;
++
++			/* Pre-existing race: two sequential writes, a socket
++			 * created in between may see the new ops with the old
++			 * pm_type. The knob is deprecated since v6.15 and will
++			 * be removed: not fixed on purpose.
++			 */
++			WRITE_ONCE(pernet->pm_type, pm_type);
+ 		}
+ 	}
  
- int mptcp_is_enabled(const struct net *net)
- {
--	return mptcp_get_pernet(net)->mptcp_enabled;
-+	return READ_ONCE(mptcp_get_pernet(net)->mptcp_enabled);
- }
- 
- unsigned int mptcp_get_add_addr_timeout(const struct net *net)
- {
--	return mptcp_get_pernet(net)->add_addr_timeout;
-+	return READ_ONCE(mptcp_get_pernet(net)->add_addr_timeout);
- }
- 
- int mptcp_is_checksum_enabled(const struct net *net)
- {
--	return mptcp_get_pernet(net)->checksum_enabled;
-+	return READ_ONCE(mptcp_get_pernet(net)->checksum_enabled);
- }
- 
- int mptcp_allow_join_id0(const struct net *net)
- {
--	return mptcp_get_pernet(net)->allow_join_initial_addr_port;
-+	return READ_ONCE(mptcp_get_pernet(net)->allow_join_initial_addr_port);
- }
- 
- unsigned int mptcp_stale_loss_cnt(const struct net *net)
- {
--	return mptcp_get_pernet(net)->stale_loss_cnt;
-+	return READ_ONCE(mptcp_get_pernet(net)->stale_loss_cnt);
- }
- 
- unsigned int mptcp_close_timeout(const struct sock *sk)
- {
- 	if (sock_flag(sk, SOCK_DEAD))
- 		return TCP_TIMEWAIT_LEN;
--	return mptcp_get_pernet(sock_net(sk))->close_timeout;
-+	return READ_ONCE(mptcp_get_pernet(sock_net(sk))->close_timeout);
- }
- 
- int mptcp_get_pm_type(const struct net *net)
- {
--	return mptcp_get_pernet(net)->pm_type;
-+	return READ_ONCE(mptcp_get_pernet(net)->pm_type);
- }
- 
- static struct mptcp_pm_ops *mptcp_pernet_pm(struct mptcp_pernet *pernet)
-@@ -586,7 +586,7 @@ void mptcp_active_detect_blackhole(struct sock *ssk, bool expired)
- 
- 	net = sock_net(ssk);
- 	timeouts = inet_csk(ssk)->icsk_retransmits;
--	to_max = mptcp_get_pernet(net)->syn_retrans_before_tcp_fallback;
-+	to_max = READ_ONCE(mptcp_get_pernet(net)->syn_retrans_before_tcp_fallback);
- 
- 	if (timeouts == to_max || (timeouts < to_max && expired)) {
- 		subflow->mpc_drop = 1;
 -- 
 2.43.0
 
