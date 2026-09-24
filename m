@@ -1,133 +1,189 @@
-Received: from mail-oi2-f43.google.com (mail-oi2-f43.google.com [74.125.231.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from canpmsgout12.his.huawei.com (canpmsgout12.his.huawei.com [113.46.200.227])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539AC330647
-	for <mptcp@lists.linux.dev>; Thu, 24 Sep 2026 08:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.231.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE7044607C
+	for <mptcp@lists.linux.dev>; Thu, 24 Sep 2026 09:25:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790239881; cv=none; b=qU8hNW3Dkf4gE/UScpEwsOqORqMT5DJs0C/BlWA4xFy1dl3bfo2rKKmXqvoOeqBpxVPH5zgKcNX9FFLKTFsMx9AakR6nGqgfrADdvfl9auYIPrQem3tAH/RnGjRoo+FXLVC2MNslPYPj6ra16crEHJdeFH4TR7tO7s6VKsRuPfc=
+	t=1790241951; cv=none; b=osjLp1H+uLCoPNTrn08baZljY69Kisc9gcaAJiJAa2y8M8L9tSxPzaLjSstqay5HJlOiLmxK4A+1LVQWlexj+268QYCMCo3NHJbDuNE9auMEJ0qQ05TgTrXqy5y2P/kn3wZ3I+A0aKU2wlioBEbdjVUKGtfd/xor7dVG2Nr/X4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790239881; c=relaxed/simple;
-	bh=j53G3NvCwxx1ZymR8pIM2thQo2QWVEBVE0LNOxMaY2Q=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=pL0PBxxxQJPJMMKwGc7ZFPRCBW/KUuJA712p58i6y9wq5FceBzMqfmwXmRDip55LOmg2uoONx1Z2ihwSsiPE0TX2KEf2fdIwlP8ceG4/ZrDJI2oeZvSgDiG+Yw6Nc9LAHIo+OHYo01lUeKmVcE8hgJ0yewAqWrU8Hmc3eGZrr/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e61Iiwo7; arc=none smtp.client-ip=74.125.231.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790241951; c=relaxed/simple;
+	bh=4uX2DCeyU/gj5TAVOdte+2gkTbpIhw/EGKEofaFszQY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=sY7fiKUbdUeZg+URT49h4BgOs2/U/RD96Ki2GVGBoHSAhdqqP5VXK1M7GLbO8xny0UB6Q0F2yB+fFl2MxOjjpNbIIshqlqQFtJ0+su1+dNKLMkYwcP0oc9JoDvFAlxWbGrv/zf8Fvu6FYc24A4lhx/n/u6ltdmLA6f/ORgWzzw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=oujNsmgU; arc=none smtp.client-ip=113.46.200.227
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e61Iiwo7"
-Received: by mail-oi2-f43.google.com with SMTP id 46e09a7af769-8137b129131so1261876a34.2
-        for <mptcp@lists.linux.dev>; Thu, 24 Sep 2026 01:51:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790239876; x=1790844676; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=ivVnlCXPKxtRs+Gnz6o7oLL37PQeMQbcjOaIZC1/GiQ=;
-        b=e61Iiwo75nJuNeRW5avp02DkHS8QY6UHirPKS34ZeSFExmuE1ryjVNAEOm55br1To0
-         4VKe6Xk5315+ipyKg5eXQvAMG5pZ6ztd1mjwRwhVmEBtG11ht11XmwCGsogbk4RQAzLZ
-         is3DCihMmADgRe0HueL1NWMkagfIy/Tz8Qf256meno82I+LqEgZ2EFINa4ez47Ly+0Tr
-         R0UDNjY8ZAC9gFbPKMACg3HW6erzJp4mQDICU3hbrHqUnRVZLA8AJK7LIlqKw4qdIQ2c
-         3Uv4QA8oKbINPC1YZOHSICC4B82hZPlNSjZSCxZGapfQv/05ihbOWWqPLsHcNV1YL5zi
-         Ntzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790239876; x=1790844676;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ivVnlCXPKxtRs+Gnz6o7oLL37PQeMQbcjOaIZC1/GiQ=;
-        b=ExEMVEtW4QGXu+EvcVVh7VX/6VnvVmxYlFDe1my4jcmhIEqs+4tajNTWjMeGTwb2qj
-         UFSgQK+vFPS+oHjbGKt98D/E+DjvIlywlDYJiXmL5dRhjS1hjReF3F28cq4HAB1LYVUD
-         LwSUYAQUTuCZeSzZ737lf0FMeOgctIaPDoEUbtwxvb5OddEwybKSxzm13qxURmJ15Eec
-         JTovCjC1pSeda5rWZROXdr92hPYbiVcGmvJtFjfCgGkZzEGZoA0hVRWONqzbeTbPnq6I
-         CgP5u3fkzgBYAitXrf9f8f+M24trfl8J2R/iyQKquOpvYckWZb95Qm1a1VTFLFwJd1Ic
-         WqdA==
-X-Gm-Message-State: AFuF++lnicaCEKTY+3QMRKgDkSVJINkjoHhmALirUTYLE9DkxXLL39rq
-	a/HTkSnL66pHzaapJZIAa73IwDKMsiAdldL7bs2l2qrj6Si3CPdvFIChXBRVrSA=
-X-Gm-Gg: AYBFou2mNWw9eKD2RMXYcUTkr2FbhS3lJYHdYwLamtxVduYG9XK6LawQEVGlAs7wivu
-	CtTJ/XVQ5V1cHxojaO2A14gtrjoqXH0o//e+J7Nr6NYh7b3BuFf0N42C8SJI/KiHgpWXZjrlYhi
-	j8V/ABQdhNwroG9RbczSxlTnUx4D5m9i4UuFEvoffTipUoorPazpycA8tBuE3prdhIJH5BYBEOY
-	j84ehKGh9YqIMSWQ9gpcIfuBoYW9D0SO9E0Dv0qmLk8K5lSKBiEK/bc8nfspDGkNGXiHaUdciCu
-	8+7kF9+pjm334YkbfX3SA9DR2KzLN7h3CbxwodCqr0y2ilY/uglaWTA7cARLitOn9nA83bfrfWY
-	G/hu287RE9PF50nWvza2PmykVgFeZf2WI/Ieo/b8MHUNlviUz6cIgD/MSwxbUkhHvpo6w0qpyEs
-	RU2ZNLcGoaH2C8Ynq1TMprIbZG2hOyPaEFY4wDkbvjcsa0ITkHgDZxM4qgBQywEfJq+hKKM92wB
-	DqggJMRiJNz
-X-Received: by 2002:a05:6820:2216:b0:6b1:6c11:686a with SMTP id 006d021491bc7-6d43f98fd33mr1876556eaf.29.1790239876181;
-        Thu, 24 Sep 2026 01:51:16 -0700 (PDT)
-Received: from [127.0.0.1] ([20.186.239.38])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-816049b7b15sm5390875a34.24.2026.09.24.01.51.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Sep 2026 01:51:14 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Cai Xinchen <caixinchen1@huawei.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260924080219.1036588-1-caixinchen1@huawei.com>
-References: <20260924080219.1036588-1-caixinchen1@huawei.com>
-Subject: Re: [PATCH RFC -next 0/5] net: charge socket memory budget to
- memcg upfront
-Message-ID: <29efb2e9-5fa6-4889-dfa2-c61953c8328c@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 24 Sep 2026 08:51:13 +0000
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="oujNsmgU"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=bDikpWMchPRZnYe6ZTjPxkVDUAVMs72pAdd9atbppWw=;
+	b=oujNsmgUBwdI/eT1H+Qs5F7p2O9MDX6RLH5o2hJQlaLXAb/j6LdmuAxKAUikKwjx4ELt2b2y2
+	lgUdHwxOESQ7bGcylb6iraoXxxUeyVASQYTIWGMFuLFmCa9f6T1UfMS9oTgO2W7hua9cXwHXMQz
+	TcR+D/VUrVG60YNnOWDC2RI=
+Received: from mail.maildlp.com (unknown [172.19.162.92])
+	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hr7Rh5MhQznTVd;
+	Thu, 24 Sep 2026 17:13:36 +0800 (CST)
+Received: from whupemk100010.china.huawei.com (unknown [7.152.184.41])
+	by mail.maildlp.com (Postfix) with ESMTPS id 91E8840586;
+	Thu, 24 Sep 2026 17:25:40 +0800 (CST)
+Received: from [10.67.109.91] (10.67.109.91) by whupemk100010.china.huawei.com
+ (7.152.184.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Thu, 24 Sep
+ 2026 17:25:36 +0800
+Message-ID: <d8c12b4e-4ff2-4c62-a40d-d67bb4680a0d@huawei.com>
+Date: Thu, 24 Sep 2026 17:25:35 +0800
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC -next 0/5] net: charge socket memory budget to memcg
+ upfront
+To: Eric Dumazet <edumazet@google.com>
+CC: <tj@kernel.org>, <hannes@cmpxchg.org>, <mkoutny@suse.com>,
+	<corbet@lwn.net>, <skhan@linuxfoundation.org>, <rdunlap@infradead.org>,
+	<kuniyu@google.com>, <pabeni@redhat.com>, <willemb@google.com>,
+	<davem@davemloft.net>, <kuba@kernel.org>, <horms@kernel.org>,
+	<ncardwell@google.com>, <matttbe@kernel.org>, <martineau@kernel.org>,
+	<geliang@kernel.org>, <mhocko@kernel.org>, <roman.gushchin@linux.dev>,
+	<shakeel.butt@linux.dev>, <muchun.song@linux.dev>, <cgroups@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <mptcp@lists.linux.dev>, <linux-mm@kvack.org>,
+	<linux-kselftest@vger.kernel.org>, <lujialin4@huawei.com>
+References: <20260924080219.1036588-1-caixinchen1@huawei.com>
+ <CANn89iJVGmYwQerOixGurH6vw-GtvSAQq6u6zSNZoyZrcEx6Jw@mail.gmail.com>
+Content-Language: en-US
+From: Cai Xinchen <caixinchen1@huawei.com>
+In-Reply-To: <CANn89iJVGmYwQerOixGurH6vw-GtvSAQq6u6zSNZoyZrcEx6Jw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ whupemk100010.china.huawei.com (7.152.184.41)
 
-Hi Cai,
+Hi,
 
-Thank you for your modifications, that's great!
+Thank you for the review.
 
-Our CI did some validations and here is its report:
+We found that sk_forward_alloc is a plain int updated by a non-atomic
+RMW (sk_forward_alloc_add(), where even the read side is not
+READ_ONCE), and its writers span three unrelated lock domains:
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Perf: Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_n=
-et-next/actions/runs/35972467821
+   - socket lock, process context: SO_RESERVE_MEM and TX grants
+      (__sk_mem_schedule(), sk_forced_mem_schedule());
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/dba862a9fa=
-2b
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1172829
+   - receive-queue lock, softirq: UDP RX charges and the
+      udp_rmem_release() fold;
 
+   - no lock at all: sk_mem_charge()/sk_mem_uncharge() from
+      skb_set_owner_r() and skb destructors, and the sk_mem_reclaim()
+      fold itself.
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+Any cross-domain pair loses an update.  A lost charge is still
+returned in full by the matching skb free, so it resurfaces as a
+phantom surplus in sk_forward_alloc, and the next fold hands it back
+to the memcg via __sk_mem_reduce_allocated() ->
+mem_cgroup_sk_uncharge() - an uncharge with no matching charge.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+We first tried to fix it with locks, and hit three walls:
 
-For more details:
+   - the socket lock cannot be used: its holders free skbs (e.g.
+      tcp_recvmsg()), and the destructor's sk_mem_uncharge() would
+      need to re-acquire it - recursion.  That is why these helpers
+      are lockless in the first place;
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+   - a new per-socket spinlock serializes the RMWs but not the bug:
+      __sk_mem_schedule() publishes the grant before the memcg charge,
+      and the charge may sleep (GFP_KERNEL, memcg reclaim/OOM), so no
+      spinlock can cover both steps; a fold in that window can still
+      refund pages whose charge afterwards fails;
 
+   - such a lock would also sit on the per-packet charge/uncharge
+      paths, exactly the hot path the cacheline layout around
+      sk_forward_alloc was tuned to keep cheap.
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Are there any good solutions to solve this problem?
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+On 9/24/2026 4:26 PM, Eric Dumazet wrote:
+> On Thu, Sep 24, 2026 at 9:36 AM Cai Xinchen <caixinchen1@huawei.com> wrote:
+>> The memcg socket accounting currently charges pages to the memory
+>> cgroup per grant (__sk_mem_schedule() publishing forward allocation)
+>> and refunds them later from skb destructors.  The refund side folds
+>> per-skb "was this charged" snapshots back into the socket balance
+>> under concurrent lockless RMW, and races there can drive the memcg
+>> socket balance negative, ending with:
+>>
+>>      page_counter underflow
+>>      WARNING: ... mm/page_counter.c ... page_counter_cancel()
+>>
+>> This series flips the model: a socket is charged its whole memory
+>> budget (sk_sndbuf + sk_rcvbuf + sk_reserved_mem) to its memcg when the
+>> budget is established or grows, and refunded when the budget shrinks
+>> or the socket dies.  Grants and per-skb charge/uncharge stop touching
+>> the memcg entirely, so the racy refund pairing has no code left to go
+>> wrong: refunds can never exceed charges and the balance cannot
+>> underflow by construction.
+>>
+>> Tested: full arm64 build with 0 warnings; each intermediate state
+>> compiles (bisectable); tools/testing/selftests/cgroup builds clean.
+>> Runtime validation on the workload that used to trigger the underflow
+>> is pending.
+>>
+>
+> Charging sk_sndbuf + sk_rcvbuf upfront to memory.current is not
+> viable, especially for servers handling large numbers of connections
+> (e.g. 1 million TCP sockets):
+>
+> We specifically went in the exact opposite direction in commit
+> 4890b686f408 ("net: keep sk->sk_forward_alloc as small as possible")
+> to make sure idle sockets hold zero forward-allocated memory and
+> non-idle sockets hold less than one page (4 KB) in sk_forward_alloc.
+>
+>
+> 1. Massive phantom memory charges and false OOMs:
+>     With default sysctl_tcp_wmem[1] (16 KB) and sysctl_tcp_rmem[1]
+>     (128 KB), 1 million completely idle TCP sockets immediately charge
+>     144 GB to the cgroup's memory.current while holding 0 bytes of
+>     actual packet buffers.
+>     Worse, once TCP autotuning grows sk_rcvbuf / sk_sndbuf during a
+>     short burst (up to tcp_rmem[2] = 6 MB and tcp_wmem[2] = 4 MB by
+>     default), TCP does not shrink sk_rcvbuf or sk_sndbuf when the queues
+>     drain and the connection becomes idle again. 1 million long-lived,
+>     mostly-idle connections would permanently pin hundreds of GBs (up to
+>     several TBs) of non-existent memory in memory.current, forcing the
+>     memcg into constant reclaim thrashing of real page cache/anon pages
+>     and triggering premature memcg OOM kills.
+>
+> 2. Overcommitted caps vs. physical reservations:
+>     sk_sndbuf and sk_rcvbuf are per-socket upper bounds that are heavily
+>     overcommitted across sockets, not reservations (unlike SO_RESERVE_MEM).
+>     Comparing this to vm_committed_as is flawed: vm_committed_as tracks
+>     virtual address space overcommit globally and is never charged to
+>     memcg's memory.current for the exact same reason.
+>
+> 3. Broken memcg limit enforcement (memory.max bypass):
+>     __sk_mem_raise_allocated() drops mem_cgroup_sk_charge() completely,
+>     while sk_memcg_budget_sync() ignores charge failures ("the new budget
+>     is used uncharged"). When a cgroup reaches memory.max,
+>     sk_memcg_budget_sync() fails in sock_init_data_uid(), tcp_init_sock(),
+>     setsockopt(SO_SNDBUF/SO_RCVBUF), or autotuning, yet sk_sndbuf and
+>     sk_rcvbuf are still raised. Subsequent skb allocations in
+>     __sk_mem_schedule() will then allocate real physical memory without
+>     charging the memcg at all.
+>
+> 4. Unnecessary struct sock bloat and hot-path overhead:
+>     - Adds 8 bytes (sk_memcg_budget + sk_memcg_budget_lock) to struct sock
+>       (even when !CONFIG_MEMCG).
+>     - Acquires spin_lock_bh(&sk->sk_memcg_budget_lock) inside
+>       sk_mem_reclaim().
+>     - Every TCP socket creation charges rmem_default + wmem_default
+>       (416 KB) in sock_init_data_uid() and immediately uncharges 272 KB
+>       in tcp_init_sock().
+>
+> If you are hitting a page_counter underflow race in socket memcg
+> accounting, please share the exact race / stack trace and fix the
+> underlying accounting bug rather than charging uncommitted buffer limits.
