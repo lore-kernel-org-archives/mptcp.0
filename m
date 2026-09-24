@@ -1,224 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk2-f43.google.com (mail-qk2-f43.google.com [74.125.230.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67CD4438484
-	for <mptcp@lists.linux.dev>; Thu, 24 Sep 2026 07:53:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790236411; cv=none; b=czYasa2oH8uHm64pSnYObRozzTGFoSeizJOUfR/mQAf2AqwO68bq1HYqqc6nekDfkrRDDwZVXQDXsgeKqrLd5IiwKahfygaX+qSfKef6LQLcZQFcdpm5k0z3d4H2keSmty3CFy54v5nj0/NaEvcF6JH0iASSsfWQ3KyabpFHLIE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790236411; c=relaxed/simple;
-	bh=P/4DbA34LJ+yuxuIZUvZkl5YifQBjdWhnHLd+rL7WMc=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=QLwEM54ZUPDLjDzaP1ce9KuqSchw59s4xwYULQRif4NTkLK0zh6HEvcsDfwNG1hXLqFEG/rJEdecPQXJlqZdwzZIurjrkKUUI46mnjJ84m6DSxUZDO2bPYDVXDCqFgWjYEh6JLVe3vNl+BqUAkWhA1kL+AWanKSWTijuIP3Hbkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ii6akT1Q; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D1443F4C0
+	for <mptcp@lists.linux.dev>; Thu, 24 Sep 2026 08:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.235
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790238405; cv=pass; b=fZOlOYG7BRGojUZM8j+2sWMZfVNT5v80VASsMSzYMIPpb+EHm14N1+EQ73cDKNdTYNzvJR6AU0MXVWfyaWK5sUqPooYYp/qigHjXrCLH7lfhRw9FraQSRp7fnHLB5qvhSdLlrZF3VDvV4GMh3UNkl9jQIZ/xqSiSsNto5SeYdX8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790238405; c=relaxed/simple;
+	bh=svx/lXpxbyRvC5hg9Mf7leQZBgztlGdMd/1meLurTMY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b87Ru1Ws/Wkp7iHulekoNBbc45w6G3Tc6/sOECLVx8E/jgGEOieWiXtqmFKDmp6KmOIQkdu+9EoImUA6oOPVIoRwIHo3EdWzBSiKhM3B7mVu4CZI8u6/H7vW6IhjOnyn+b1yQI5BozuSYSprl/wuHw4CzvGC1rCSfpDzQzSG6j4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LqgHe0Mi; arc=pass smtp.client-ip=74.125.230.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ii6akT1Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97A891F000FF;
-	Thu, 24 Sep 2026 07:53:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790236409;
-	bh=YKYFmQC506eBUeqGJKcV97qX9bWz/36ANY5GQ+X8NZo=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ii6akT1Qbe8A1qBqmjSn0PgvqYeRCzdvvD3HdwtcHj9R2Sj85MKHg79WTTUL96xmU
-	 zMG8L8hl2LuJGA6ed5XC5hSzIefiSeNJdwInwcGa1/j30lmX6iz/6K0GI6F9qHHReM
-	 TS0Bbld7AZQKrcoJG5h8Dl+Ibk9bY7xB4eOeqtOQgYQfYnImUKaE18SDUcRMtq7pNw
-	 Ixe/rLcbiwaYVHhi8FE9jCcSJByMIUUKIpFqsqYBBhCBmXQcaiRtmPUdVI9dQ9zInp
-	 631aVRJ61OeaDiV4kyYnAFBX/mbUGgmjCXGzul+9KrxRQHH7qRTPrPkznD4hmAIuoA
-	 dNhMCrp8Xt7Yw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC -next 1/5] net: charge socket memory budget to memcg
- upfront
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Cai Xinchen" <caixinchen1@huawei.com>
-Cc: mptcp@lists.linux.dev, mkoutny@suse.com, hannes@cmpxchg.org, tj@kernel.org
-In-Reply-To: <20260924080219.1036588-2-caixinchen1@huawei.com>
-References: <20260924080219.1036588-1-caixinchen1@huawei.com>
- <20260924080219.1036588-2-caixinchen1@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 24 Sep 2026 07:53:29 +0000
-Message-Id: <20260924075329.97A891F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LqgHe0Mi"
+Received: by mail-qk2-f43.google.com with SMTP id d75a77b69052e-52fb767cc71so15441491cf.1
+        for <mptcp@lists.linux.dev>; Thu, 24 Sep 2026 01:26:39 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790238399; cv=none;
+        d=google.com; s=arc-20260327;
+        b=na0Bw3d2hCLRFGwu3kHqm5Rofqs4z7h3vEJD7lph83CCyEmY9iHIo1Qm3FmLPJr1nO
+         D3QPwJo9SFyqa4L+/9JqV10imZxgtTTL4sCyjWBNWKZBguJ9wTi96tO33qLSJE3Yn7JW
+         ASzFrAeMrQ9/WmaOY/mP674EsyPhtPt8Ryrgj6P+UDe66udgXGZxStm+FxP5kRsOWETD
+         kz9bwl9Pf733nl+DS3qA0Ya8lplV4oiNKOzj/EMLMyIINuyELOWk48qaabum5Iw6rj6e
+         UTWv7ogtg6zKpEBN307HIzOSiK+BPkF/CzLc4rQP5Lt6sUG7KSn6KFLCa2BJA3T/0z2O
+         lmBA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Djx86NYnyz/9RFz/5fi7+M66lo0Fi/FSUEqHr4nGVIo=;
+        fh=98pnUiNaYnBI8EdcWmIn7z4cFOeRVgNukuLZoTmsYwc=;
+        b=kBiOmjRD/KOsqH9fQb7/kA5qh2SIQSwbpmaWN2rmdt2nP9RPfbp5lwEi7TIXnOjT55
+         v9UZjWQj6WEaFOlI92AwWVi46oD5kGoBVFlXC11zzQ1SdRani6OeyIQWGVyCSQwSSulb
+         bKHeAVyQUwE8pzCSoQem8meUmh6zZqq4XsVJm2WE/m4y7S46HlBayYt5xxTzXUd95BNi
+         EnTTtOq/TgizPpq8a8lPt5beiqX+b14DYu0ayKuPXww6PNujIa/IdeHt0vb/cXv6bpVy
+         +hmVh36tFQz0vhuVQ09bt0zXIjWiWBFxXJAhcJ6mly2HA0nEZ5fLl+9ZZ/r+5jsbxHga
+         ALfw==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1790238399; x=1790843199; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Djx86NYnyz/9RFz/5fi7+M66lo0Fi/FSUEqHr4nGVIo=;
+        b=LqgHe0Mif9Y/Tgor+96NeQhXJg2T+IJBAL30ArfcKRHRA5jBvfLl8zGefE01KWCqvn
+         e9+gYQOmM3B3nr0Vx5aQppZAtAhFm4z2JjR9ydAflp7IPRJRohC9fquazwDyaYfTvPyH
+         QaNRfQ0KBYE0sBJcDDisiS/9+5d82rBjLJngs1vB+/aBVpjuwQwp3lfjZbV3sjBXnTrB
+         NfM5bG+hqBlynsrzm/RdqzdO3M2t1h1c8dtFtTylQKTtUPqQFa/kfuaS48Qtjs+ks4Mb
+         95GmyB3LgLNj86948Bo3PABWiXH+BW+Y6DOmJnTgQWK+UvS2rVGJYniuQu1x0b8sUSeK
+         992Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790238399; x=1790843199;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Djx86NYnyz/9RFz/5fi7+M66lo0Fi/FSUEqHr4nGVIo=;
+        b=znEpJAoU/vTkR1wyv9c797/PQGoKNoVly4Y7+4KGJZraFxOdqSi05vUZhPJ2bznJtl
+         obCMJjWM2VivC9I+2MgjQNhuNUVztGKzbYjB+NlkcyDRyLg+KUBX46RULfdR8i78n9zu
+         4iVnRd5YBspPRJMSIn4DYgNalKR4XaF50pSSODyJLeEJejjzeySzRGe8Q0vfyjEI7Bks
+         bJCjISKnATjPpetdLoeb9tGDfn05gooBKYHvF4VH1lEYVylrOEjVxhF7Ac+qNGMXLkkG
+         +cJKs3zujfvI0C7Y03JlgaidYwIdGdilOWaSmAAcXVgG7kGp1mHRu2lLCrC6LvRWuipp
+         ot4w==
+X-Forwarded-Encrypted: i=1; AKwUvBwu1iyHeCR+Nir3tElSaPJG2k+V1xWMX7k+l16ruuOaTiN7ji6DUAdjhvnCTBFnYRbK18yowg==@lists.linux.dev
+X-Gm-Message-State: AFuF++ni+YmbWVB956k1R7NMTBh7NJ8Hf6JZ0hZxTxMJIxMpvb13eFJn
+	sBjbB0XcErNdxPWi0+M1Pw/MKtlal8Relr5lYp2F2sp15z85XnJ204DQwpyyzJnvSlHC3nfWyeS
+	Pwdk3ZMQGij/D0TLS3zZwnELSK6yKNwdQUvg4QWph
+X-Gm-Gg: AYBFou0Vd4Cudz0ijrIjuKSdWJ+OUTiQ5zgMNwX8yDusLJ5iM7VpF0OgHNfowZYTW4b
+	gCO4MpyfEUYK6Rzyc7ZHgSHqSuT8w6RijyflQmmxt4sdk5c6AyBM37LRcjnlXFvDfLYN/0nJRA+
+	L4lyYTOu/7veupc/NlaulvFR5wDUc2FYkx71T9kU8E2DlXC8JI+VPcDE4VDOyRIn/126hBC4dl1
+	cxwpnKyeI+ihOu0sIe71kyRHV/2k9GawxHF8DpoWo7K07pwy9aos/0rrcCMpwkXQt2lfYCyg/RX
+	AMSSzm1kGQftVH217qZqZ2dYrNEYOd7Ra0fRYNvw24Pwj7/pcNKWAqd6kN+hDQsEAy1DutdKamL
+	ufPbDEXov1dWUyFumwwLlVpze+lLPoIJRJOcyclIAAomkN2SbpU648zPZjyHHGOXBppAc
+X-Received: by 2002:a05:622a:4185:b0:532:d0ab:f3cb with SMTP id
+ d75a77b69052e-532feb52734mr11578341cf.59.1790238398107; Thu, 24 Sep 2026
+ 01:26:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+References: <20260924080219.1036588-1-caixinchen1@huawei.com>
+In-Reply-To: <20260924080219.1036588-1-caixinchen1@huawei.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Thu, 24 Sep 2026 10:26:25 +0200
+X-Gm-Features: AclHuK9XSbyZhfSiccnO7XKdYo-g6nGD7WSG7r9j6ZGeEHZyUxcT2PFsdbnfwn4
+Message-ID: <CANn89iJVGmYwQerOixGurH6vw-GtvSAQq6u6zSNZoyZrcEx6Jw@mail.gmail.com>
+Subject: Re: [PATCH RFC -next 0/5] net: charge socket memory budget to memcg upfront
+To: Cai Xinchen <caixinchen1@huawei.com>
+Cc: tj@kernel.org, hannes@cmpxchg.org, mkoutny@suse.com, corbet@lwn.net, 
+	skhan@linuxfoundation.org, rdunlap@infradead.org, kuniyu@google.com, 
+	pabeni@redhat.com, willemb@google.com, davem@davemloft.net, kuba@kernel.org, 
+	horms@kernel.org, ncardwell@google.com, matttbe@kernel.org, 
+	martineau@kernel.org, geliang@kernel.org, mhocko@kernel.org, 
+	roman.gushchin@linux.dev, shakeel.butt@linux.dev, muchun.song@linux.dev, 
+	cgroups@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+	linux-mm@kvack.org, linux-kselftest@vger.kernel.org, lujialin4@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [Critical] net: signed integer overflow in sk_memcg_budget_pages() causes=
- page_counter underflow
-- [High] memcg: socket memory limit bypass via failed upfront budget charges
-- [High] net: severe performance regression due to unconditional spinlock i=
-n sk_memcg_budget_shrink
---
+On Thu, Sep 24, 2026 at 9:36=E2=80=AFAM Cai Xinchen <caixinchen1@huawei.com=
+> wrote:
+>
+> The memcg socket accounting currently charges pages to the memory
+> cgroup per grant (__sk_mem_schedule() publishing forward allocation)
+> and refunds them later from skb destructors.  The refund side folds
+> per-skb "was this charged" snapshots back into the socket balance
+> under concurrent lockless RMW, and races there can drive the memcg
+> socket balance negative, ending with:
+>
+>     page_counter underflow
+>     WARNING: ... mm/page_counter.c ... page_counter_cancel()
+>
+> This series flips the model: a socket is charged its whole memory
+> budget (sk_sndbuf + sk_rcvbuf + sk_reserved_mem) to its memcg when the
+> budget is established or grows, and refunded when the budget shrinks
+> or the socket dies.  Grants and per-skb charge/uncharge stop touching
+> the memcg entirely, so the racy refund pairing has no code left to go
+> wrong: refunds can never exceed charges and the balance cannot
+> underflow by construction.
+>
+> Tested: full arm64 build with 0 warnings; each intermediate state
+> compiles (bisectable); tools/testing/selftests/cgroup builds clean.
+> Runtime validation on the workload that used to trigger the underflow
+> is pending.
+>
 
-commit 65e9a0129c5179019bbc18d067e00520728a605c
-Author: Cai Xinchen <caixinchen1@huawei.com>
-Subject: net: charge socket memory budget to memcg upfront
 
-This commit changes the socket memory accounting model to charge the entire
-socket memory budget to the memcg upfront, rather than per allocation. It
-adds a tracking field to the socket struct to record this budget and issues
-refunds when the budget shrinks or the socket is destroyed. The goal is to
-avoid racy read-modify-write refunds that previously caused memcg page
-counter underflows.
+Charging sk_sndbuf + sk_rcvbuf upfront to memory.current is not
+viable, especially for servers handling large numbers of connections
+(e.g. 1 million TCP sockets):
 
-> diff --git a/include/net/sock.h b/include/net/sock.h
-> --- a/include/net/sock.h
-> +++ b/include/net/sock.h
-[ ... ]
-> @@ -1622,6 +1634,12 @@ static inline void sk_mem_reclaim(struct sock *sk)
->  	if (!sk_has_account(sk))
->  		return;
-> =20
-> +	/* Return the part of the memcg budget charge that a budget
-> +	 * shrink (by any writer) no longer backs. Never charges, so
-> +	 * it is safe to call locklessly from skb destructors.
-> +	 */
-> +	sk_memcg_budget_shrink(sk);
-> +
+We specifically went in the exact opposite direction in commit
+4890b686f408 ("net: keep sk->sk_forward_alloc as small as possible")
+to make sure idle sockets hold zero forward-allocated memory and
+non-idle sockets hold less than one page (4 KB) in sk_forward_alloc.
 
-[Severity: High]
-Is it safe to invoke this lock-heavy function on the hot path? During SKB
-frees in tcp_wmem_free_skb(), this is called extremely frequently.
 
->  	reclaimable =3D sk->sk_forward_alloc - sk_unused_reserved_mem(sk);
-> =20
->  	if (reclaimable >=3D (int)PAGE_SIZE)
-> diff --git a/net/core/sock.c b/net/core/sock.c
-> --- a/net/core/sock.c
-> +++ b/net/core/sock.c
-[ ... ]
-> @@ -1349,6 +1360,10 @@ int sk_setsockopt(struct sock *sk, int level, int =
-optname,
->  		sk->sk_userlocks |=3D SOCK_SNDBUF_LOCK;
->  		WRITE_ONCE(sk->sk_sndbuf,
->  			   max_t(int, val * 2, SOCK_MIN_SNDBUF));
-> +		/* Charge the new budget to the memcg (or refund the
-> +		 * released one).
-> +		 */
-> +		sk_memcg_budget_sync(sk, gfp_memcg_charge());
->  		/* Wake up sending tasks if we upped the value. */
->  		sk->sk_write_space(sk);
->  		break;
+1. Massive phantom memory charges and false OOMs:
+   With default sysctl_tcp_wmem[1] (16 KB) and sysctl_tcp_rmem[1]
+   (128 KB), 1 million completely idle TCP sockets immediately charge
+   144 GB to the cgroup's memory.current while holding 0 bytes of
+   actual packet buffers.
+   Worse, once TCP autotuning grows sk_rcvbuf / sk_sndbuf during a
+   short burst (up to tcp_rmem[2] =3D 6 MB and tcp_wmem[2] =3D 4 MB by
+   default), TCP does not shrink sk_rcvbuf or sk_sndbuf when the queues
+   drain and the connection becomes idle again. 1 million long-lived,
+   mostly-idle connections would permanently pin hundreds of GBs (up to
+   several TBs) of non-existent memory in memory.current, forcing the
+   memcg into constant reclaim thrashing of real page cache/anon pages
+   and triggering premature memcg OOM kills.
 
-[Severity: High]
-Does ignoring the return value of sk_memcg_budget_sync() allow the socket
-buffer to expand even if the memcg charge fails?
+2. Overcommitted caps vs. physical reservations:
+   sk_sndbuf and sk_rcvbuf are per-socket upper bounds that are heavily
+   overcommitted across sockets, not reservations (unlike SO_RESERVE_MEM).
+   Comparing this to vm_committed_as is flawed: vm_committed_as tracks
+   virtual address space overcommit globally and is never charged to
+   memcg's memory.current for the exact same reason.
 
-[ ... ]
-> @@ -3334,15 +3362,12 @@ EXPORT_SYMBOL(sk_wait_data);
->   *
->   *	Similar to __sk_mem_schedule(), but does not update sk_forward_alloc.
->   *
-> - *	Unlike the globally shared limits among the sockets under same protoc=
-ol,
-> - *	consuming the budget of a memcg won't have direct effect on other one=
-s.
-> - *	So be optimistic about memcg's tolerance, and leave the callers to de=
-cide
-> - *	whether or not to raise allocated through sk_under_memory_pressure() =
-or
-> - *	its variants.
-> + *	Charges the global protocol counter only. The memcg is charged for
-> + *	the socket's full memory budget when that budget is established or
-> + *	resized (see sk_memcg_budget_sync()), not per allocation.
->   */
->  int __sk_mem_raise_allocated(struct sock *sk, int size, int amt, int kin=
-d)
->  {
-> -	bool memcg_enabled =3D false, charged =3D false;
->  	struct proto *prot =3D sk->sk_prot;
->  	long allocated =3D 0;
-> =20
-> @@ -3351,13 +3376,6 @@ int __sk_mem_raise_allocated(struct sock *sk, int =
-size, int amt, int kind)
->  		allocated =3D sk_memory_allocated(sk);
->  	}
-> =20
-> -	if (mem_cgroup_sk_enabled(sk)) {
-> -		memcg_enabled =3D true;
-> -		charged =3D mem_cgroup_sk_charge(sk, amt, gfp_memcg_charge());
-> -		if (!charged)
-> -			goto suppress_allocation;
-> -	}
-> -
->  	if (!allocated)
->  		return 1;
+3. Broken memcg limit enforcement (memory.max bypass):
+   __sk_mem_raise_allocated() drops mem_cgroup_sk_charge() completely,
+   while sk_memcg_budget_sync() ignores charge failures ("the new budget
+   is used uncharged"). When a cgroup reaches memory.max,
+   sk_memcg_budget_sync() fails in sock_init_data_uid(), tcp_init_sock(),
+   setsockopt(SO_SNDBUF/SO_RCVBUF), or autotuning, yet sk_sndbuf and
+   sk_rcvbuf are still raised. Subsequent skb allocations in
+   __sk_mem_schedule() will then allocate real physical memory without
+   charging the memcg at all.
 
-[Severity: High]
-Since the dynamic per-page memcg charging is completely removed here, if
-the upfront charge in sk_setsockopt() fails, is there any fallback memcg
-limit enforcement? It seems a container could bypass its memory cgroup
-limits and consume unbounded amounts of host memory if this is the case.
+4. Unnecessary struct sock bloat and hot-path overhead:
+   - Adds 8 bytes (sk_memcg_budget + sk_memcg_budget_lock) to struct sock
+     (even when !CONFIG_MEMCG).
+   - Acquires spin_lock_bh(&sk->sk_memcg_budget_lock) inside
+     sk_mem_reclaim().
+   - Every TCP socket creation charges rmem_default + wmem_default
+     (416 KB) in sock_init_data_uid() and immediately uncharges 272 KB
+     in tcp_init_sock().
 
-[ ... ]
-> @@ -3505,20 +3514,150 @@ void __sk_mem_reclaim(struct sock *sk, int amoun=
-t)
->  }
->  EXPORT_SYMBOL(__sk_mem_reclaim);
-> =20
-> -void __sk_charge(struct sock *sk, gfp_t gfp)
-> +/* Pages of the socket's currently established memory budget: the send
-> + * and receive buffers plus the SO_RESERVE_MEM reservation.
-> + */
-> +static int sk_memcg_budget_pages(const struct sock *sk)
->  {
-> -	int amt;
-> +	long budget =3D READ_ONCE(sk->sk_sndbuf) + READ_ONCE(sk->sk_rcvbuf) +
-> +		      READ_ONCE(sk->sk_reserved_mem);
-> =20
-
-[Severity: Critical]
-Can this addition of 32-bit signed integers overflow before the assignment
-to long? If a user increases the socket's send and receive buffers to large
-values, their sum could overflow 32-bit arithmetic, resulting in a negative
-value being sign-extended to long budget.
-
-> -	gfp |=3D __GFP_NOFAIL;
-> -	if (mem_cgroup_from_sk(sk)) {
-[ ... ]
-> +void sk_memcg_budget_shrink(struct sock *sk)
-> +{
-> +	int want, refund =3D 0;
-> +
-> +	if (!mem_cgroup_sk_enabled(sk) || !sk_has_account(sk))
-> +		return;
-> +
-> +	/* Claim the excess under the lock, then refund it outside:
-> +	 * the memcg uncharge may sleep, and the claim guarantees each
-> +	 * tracker page is refunded exactly once. @want follows the
-> +	 * socket buffers, which are protected by the socket lock, not
-> +	 * the budget lock; a claim made stale by a concurrent budget
-> +	 * update is corrected by the next sync.
-> +	 */
-> +	spin_lock_bh(&sk->sk_memcg_budget_lock);
-> +	want =3D sk_memcg_budget_pages(sk);
-
-[Severity: High]
-This unconditionally takes the spinlock before checking if a budget shrink
-is actually necessary. Given that this is called from sk_mem_reclaim() for
-every ACKed TCP packet processed, could this add massive overhead and
-drastically reduce TCP throughput?
-
-> +	if (want < sk->sk_memcg_budget) {
-> +		refund =3D sk->sk_memcg_budget - want;
-> +		WRITE_ONCE(sk->sk_memcg_budget, want);
->  	}
-> +	spin_unlock_bh(&sk->sk_memcg_budget_lock);
-> +
-> +	if (refund)
-> +		mem_cgroup_sk_uncharge(sk, refund);
-> +}
-
-[Severity: Critical]
-If the budget computation in sk_memcg_budget_pages() overflows to a
-negative value, won't want < sk->sk_memcg_budget evaluate to true and
-produce a massive positive refund here? This massive refund could then be
-uncharged from the memcg, causing an underflow in the memcg page counter.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260924080219.1036=
-588-1-caixinchen1@huawei.com?part=3D1
+If you are hitting a page_counter underflow race in socket memcg
+accounting, please share the exact race / stack trace and fix the
+underlying accounting bug rather than charging uncommitted buffer limits.
