@@ -1,130 +1,163 @@
-Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B0C43711B
-	for <mptcp@lists.linux.dev>; Thu, 24 Sep 2026 07:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9074398F2
+	for <mptcp@lists.linux.dev>; Thu, 24 Sep 2026 07:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790235390; cv=none; b=I2w5+h3rE71gyoNQiP2tDCQDPNVod2Wxez05GqA7f+2+0HARNT3bdZGWOwPe3/VFwizlQf6ebI8VycQ1PUwPhMPr/eGxcYubRlF3RClMJXMOniOeqFJ94rpncY5ROJnX9LaISeZ0Bos7mV7PcdRiO7vQ/cZZ4X7Jada8msJ5c+E=
+	t=1790236265; cv=none; b=ecYOT5xTtu94ITIZAmIu+iWVR9OyNZna4EwaKJhNcM//hPpeOTBCA4K+mp3+leufhBdAik0a5etMK4VTOFddlGPptjbLK0sN4kT2lPWXUpnojKBQsJTAesYV0F6j1aNajb33KXEGDPRIJk/U5PqjvhV4mRIaGxNNbIj1YtNqSKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790235390; c=relaxed/simple;
-	bh=I00N0sC6N8z/NihuWASPNcr6BoeUuPaC8rphpErkLeI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uCUpej9BYMG2ORjMQ5fe64MgrF8GTBpOmPH4WcGjJukGLZIDKLCD03353YQ2jmHcpL6E7fViPm5wNZvFsoBCmJ/7We5SuaUFKGu6Odn2gQf5FUOxzo85CGY6sgoPrzIJxTOt3RFaxiibHKB8GJeXOLlR14OB48d7e/dGE091Ips=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=xo4e0qcW; arc=none smtp.client-ip=113.46.200.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1790236265; c=relaxed/simple;
+	bh=NCYoDjC96JZWpa0Ml3XH6sYYU5owLur43FEXOIUoziI=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=BAC3FcGS9fFhQQKsP6E8JbOH/3TuM3PVYgAanhefnZOKU1q2U4PLrjCjsScSqt9mK8anXDffNOZGNSwVGtk58OAqQk310DoYLVWbWsagFKzf3RA3YsafXyvbLUnEPlG8RwOFmJ2eIMpzJCTTDeLjvxlyPw1A7oL2PO8n/qQT0kU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VwqMMyvA; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="xo4e0qcW"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=AM/1COYI+X2cxZahYdg2nMaQ9CPWb/Pi9FF0HZq9dI8=;
-	b=xo4e0qcWYUKb+XSdoEELGMTI9wjW82TMlWcj31whkd2V3Qjx9MHato7sp5L3DCl4rrjFgXAk2
-	l+apV22HWtkX2LDdzIWioU1kaq2lpBRU81qUybOOqT721sSCyjyEdMe63VVppSohvA0QfMgfApF
-	wvtZ8BublnUnhUv4ijDY2XM=
-Received: from mail.maildlp.com (unknown [172.19.163.0])
-	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4hr51N5Gw1z1prLc;
-	Thu, 24 Sep 2026 15:24:08 +0800 (CST)
-Received: from whupemk100010.china.huawei.com (unknown [7.152.184.41])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6D41C40537;
-	Thu, 24 Sep 2026 15:36:16 +0800 (CST)
-Received: from octopus.huawei.com (10.67.174.191) by
- whupemk100010.china.huawei.com (7.152.184.41) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45; Thu, 24 Sep 2026 15:36:14 +0800
-From: Cai Xinchen <caixinchen1@huawei.com>
-To: <tj@kernel.org>, <hannes@cmpxchg.org>, <mkoutny@suse.com>,
-	<corbet@lwn.net>, <skhan@linuxfoundation.org>, <rdunlap@infradead.org>,
-	<edumazet@google.com>, <kuniyu@google.com>, <pabeni@redhat.com>,
-	<willemb@google.com>, <davem@davemloft.net>, <kuba@kernel.org>,
-	<horms@kernel.org>, <ncardwell@google.com>, <matttbe@kernel.org>,
-	<martineau@kernel.org>, <geliang@kernel.org>, <mhocko@kernel.org>,
-	<roman.gushchin@linux.dev>, <shakeel.butt@linux.dev>, <muchun.song@linux.dev>
-CC: <cgroups@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<mptcp@lists.linux.dev>, <linux-mm@kvack.org>,
-	<linux-kselftest@vger.kernel.org>, <caixinchen1@huawei.com>,
-	<lujialin4@huawei.com>
-Subject: [PATCH RFC -next 5/5] selftests/cgroup: compare socket memory deltas in test_memcg_sock
-Date: Thu, 24 Sep 2026 16:02:19 +0800
-Message-ID: <20260924080219.1036588-6-caixinchen1@huawei.com>
-X-Mailer: git-send-email 2.18.0.huawei.25
-In-Reply-To: <20260924080219.1036588-1-caixinchen1@huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VwqMMyvA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3F211F00893;
+	Thu, 24 Sep 2026 07:51:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790236263;
+	bh=XxOo0z8R90ITimuTHoUf50+NMBiPsVas7lEFCRxmXcI=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=VwqMMyvA69n487HfaKf+wsSlOXdFOTe61AUD5F/URCZsBMVK53OokTWn1Y0yfh3FV
+	 fSLdlGVJIjnn+MGrfUo1IEi/7bcjCkGtSv18lpyHOPiS0dSgXiBgEo1QkBuJemJ7Zn
+	 BCAlc0DG4Oce3JCjXkoolOxnRMqBRiQBHo1xPRuNrCOevRnViVqvAJmlEJUsggDKUR
+	 tDEWtLONdkum3U26a1tF544sG0QWIVw1dW6gP0geiKwlt263ENUmHIarc10+UmnQzU
+	 lj2U50FnLf97ockfPS3z6cIe+0KTdYX6dNoNWaylsMkdASl/Ff9S+tx8c3X1ZQgCVC
+	 GK1NhLxFpc0SA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH RFC -next 2/5] tcp: sync memcg budget on protocol buffer
+ updates
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Cai Xinchen" <caixinchen1@huawei.com>
+Cc: mptcp@lists.linux.dev, hannes@cmpxchg.org, tj@kernel.org, mkoutny@suse.com
+In-Reply-To: <20260924080219.1036588-3-caixinchen1@huawei.com>
 References: <20260924080219.1036588-1-caixinchen1@huawei.com>
+ <20260924080219.1036588-3-caixinchen1@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 24 Sep 2026 07:51:02 +0000
+Message-Id: <20260924075102.A3F211F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- whupemk100010.china.huawei.com (7.152.184.41)
 
-test_memcg_sock() baselines memory.current and then requires the
-growth of memory.current to match the absolute value of the "sock"
-counter.  That relies on "sock" being zero at the baseline: with an
-idle listener it used to be, because socket memory was only charged
-for in-flight buffers.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] tcp: memcg limit bypass via unhandled budget sync failures
+--
 
-With upfront budget charging, a listening socket is charged its full
-buffer budget as soon as it exists, so "sock" is non-zero at the
-baseline and the absolute comparison breaks.  Baseline the "sock"
-counter as well and compare the growth of both counters; this is valid
-under both the old and the new accounting model.
+commit e6770a5d905e4be1d779ff6b117516aca572b367
+Author: Cai Xinchen <caixinchen1@huawei.com>
+Date:   Thu Sep 24 08:02:16 2026 +0000
 
-Assisted-by: opencode:glm-5.3
-Signed-off-by: Cai Xinchen <caixinchen1@huawei.com>
----
- .../testing/selftests/cgroup/test_memcontrol.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+tcp: sync memcg budget on protocol buffer updates
 
-diff --git a/tools/testing/selftests/cgroup/test_memcontrol.c b/tools/testing/selftests/cgroup/test_memcontrol.c
-index 3a84d068fbf3..54dae37291c3 100644
---- a/tools/testing/selftests/cgroup/test_memcontrol.c
-+++ b/tools/testing/selftests/cgroup/test_memcontrol.c
-@@ -1335,9 +1335,12 @@ static int tcp_client(const char *cgroup, unsigned short port)
- 	char servport[6];
- 	int retries = 0x10; /* nice round number */
- 	int sk, ret;
--	long allocated;
-+	long allocated, sock_pre;
- 
- 	allocated = cg_read_long(cgroup, "memory.current");
-+	sock_pre = cg_read_key_long(cgroup, "memory.stat", "sock ");
-+	if (sock_pre < 0)
-+		return KSFT_FAIL;
- 	snprintf(servport, sizeof(servport), "%hd", port);
- 	ret = getaddrinfo(server, servport, NULL, &ai);
- 	if (ret)
-@@ -1365,8 +1368,12 @@ static int tcp_client(const char *cgroup, unsigned short port)
- 		if (current < 0 || sock < 0)
- 			goto close_sk;
- 
--		/* exclude the memory not related to socket connection */
--		if (values_close(current - allocated, sock, 10)) {
-+		/* exclude the memory not related to socket connection;
-+		 * compare the growth of both counters since the baseline,
-+		 * as the listening socket may already hold socket memory
-+		 * (e.g. its pre-charged memory budget) at the baseline.
-+		 */
-+		if (values_close(current - allocated, sock - sock_pre, 10)) {
- 			ret = KSFT_PASS;
- 			break;
- 		}
-@@ -1384,8 +1391,9 @@ static int tcp_client(const char *cgroup, unsigned short port)
-  * The test forks a TCP server listens on a random port between 1000
-  * and 61000. Once it gets a client connection, it starts writing to
-  * its socket.
-- * The TCP client interleaves reads from the socket with check whether
-- * memory.current and memory.stat.sock are similar.
-+ * The TCP client interleaves reads from the socket with checking whether
-+ * the growth of memory.current and memory.stat.sock since the baseline
-+ * are similar.
-  */
- static int test_memcg_sock(const char *root)
- {
--- 
-2.18.0.huawei.25
+This commit updates the memcg budget tracker during various TCP autotuning
+and buffer adjustment operations by adding calls to sk_memcg_budget_sync()
+after sk_sndbuf and sk_rcvbuf are written.
 
+> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+> index 1e2074f733f43..629ce7dc3032d 100644
+> --- a/net/ipv4/tcp.c
+> +++ b/net/ipv4/tcp.c
+> @@ -471,6 +471,10 @@ void tcp_init_sock(struct sock *sk)
+> =20
+>  	WRITE_ONCE(sk->sk_sndbuf, READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_wmem[=
+1]));
+>  	WRITE_ONCE(sk->sk_rcvbuf, READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_rmem[=
+1]));
+> +	/* The default buffers grew from the generic sock_init_data()
+> +	 * values: charge the difference to the memcg.
+> +	 */
+> +	sk_memcg_budget_sync(sk, gfp_memcg_charge());
+
+[Severity: High]
+In tcp_init_sock(), if sk_memcg_budget_sync() returns false here (e.g., if
+the memcg limit is reached), does this leave the socket buffers expanded
+without being properly charged?
+
+Could this allow a socket to consume uncharged memory up to the expanded
+limits, bypassing memcg resource isolation?
+
+[ ... ]
+> @@ -1850,6 +1854,7 @@ int tcp_set_rcvlowat(struct sock *sk, int val)
+>  	space =3D tcp_space_from_win(sk, val);
+>  	if (space > sk->sk_rcvbuf) {
+>  		WRITE_ONCE(sk->sk_rcvbuf, space);
+> +		sk_memcg_budget_sync(sk, gfp_memcg_charge());
+
+[Severity: High]
+In tcp_set_rcvlowat(), if sk_memcg_budget_sync() fails to charge the memcg,
+shouldn't sk_rcvbuf be rolled back to its previous value?
+
+[ ... ]
+> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> index 892ff256e2352..9fdb2c66821b7 100644
+> --- a/net/ipv4/tcp_input.c
+> +++ b/net/ipv4/tcp_input.c
+> @@ -629,9 +629,11 @@ static void tcp_sndbuf_expand(struct sock *sk)
+>  	sndmem =3D ca_ops->sndbuf_expand ? ca_ops->sndbuf_expand(sk) : 2;
+>  	sndmem *=3D nr_segs * per_mss;
+> =20
+> -	if (sk->sk_sndbuf < sndmem)
+> +	if (sk->sk_sndbuf < sndmem) {
+>  		WRITE_ONCE(sk->sk_sndbuf,
+>  			   min(sndmem, READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_wmem[2])));
+> +		sk_memcg_budget_sync(sk, gfp_memcg_charge());
+> +	}
+
+[Severity: High]
+In tcp_sndbuf_expand(), since this runs in softirq and uses GFP_ATOMIC,
+memcg charges are more likely to fail under pressure.
+
+If sk_memcg_budget_sync() returns false, does the expanded sk_sndbuf need
+to be reverted to prevent uncharged memory consumption up to
+sysctl_tcp_wmem[2]?
+
+[ ... ]
+> @@ -791,6 +793,7 @@ static void tcp_clamp_window(struct sock *sk)
+>  	    sk_memory_allocated(sk) < sk_prot_mem_limits(sk, 0)) {
+>  		WRITE_ONCE(sk->sk_rcvbuf,
+>  			   min(atomic_read(&sk->sk_rmem_alloc), rmem2));
+> +		sk_memcg_budget_sync(sk, gfp_memcg_charge());
+>  	}
+
+[Severity: High]
+Is it safe to ignore the return value of sk_memcg_budget_sync() here after
+expanding sk_rcvbuf in tcp_clamp_window()?
+
+[ ... ]
+> @@ -948,6 +951,7 @@ void tcp_rcvbuf_grow(struct sock *sk, u32 newval)
+>  	rcvbuf =3D min_t(u32, tcp_space_from_win(sk, rcvwin), cap);
+>  	if (rcvbuf > sk->sk_rcvbuf) {
+>  		WRITE_ONCE(sk->sk_rcvbuf, rcvbuf);
+> +		sk_memcg_budget_sync(sk, gfp_memcg_charge());
+
+[Severity: High]
+Similar to the other autotuning functions, if the charge fails in
+tcp_rcvbuf_grow(), does this leave sk_rcvbuf increased without charging
+the memcg?
+
+[ ... ]
+> @@ -6055,8 +6059,10 @@ static bool tcp_should_expand_sndbuf(struct sock *=
+sk)
+>  		 * it never goes below SOCK_MIN_SNDBUF.
+>  		 * See sk_stream_moderate_sndbuf() for more details.
+>  		 */
+> -		if (unused_mem > SOCK_MIN_SNDBUF)
+> +		if (unused_mem > SOCK_MIN_SNDBUF) {
+>  			WRITE_ONCE(sk->sk_sndbuf, unused_mem);
+> +			sk_memcg_budget_sync(sk, gfp_memcg_charge());
+> +		}
+
+[Severity: High]
+Should sk_sndbuf be restored in tcp_should_expand_sndbuf() if the budget
+sync fails here?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260924080219.1036=
+588-1-caixinchen1@huawei.com?part=3D2
