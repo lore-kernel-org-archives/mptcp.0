@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313184534B7;
-	Sat, 26 Sep 2026 15:30:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482632DBF75;
+	Sat, 26 Sep 2026 15:30:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790436652; cv=none; b=SzZqiCbx2zp341MSr6S4ByNqm9DsJqW1TePiVbuKTXLEGjHzy+QBj9fvNZYeYaxuw7MEL8yGo+SS8rzBab4PiQGadzjrh9akEXKngMPYT5Ui4Zhjx6fWv2K8j7mp4YFVW26h8SjxKCniMB1A3cBSJxBeCLjxEWUUR3dLixmK8ks=
+	t=1790436653; cv=none; b=MEBkW7yECj8c4vORwjP1V2QInaklfqeJ/RrT5W8GKb4dDvCK5e4f3jddBXwHJJcVdhGRrVq5IHMN28cB+nB//8fjMZelY7ysh4J1KZLmL3R4QvKnYHy8L830DBMuxtFMrAc+r/XBRegl4kvWbm9ClVctb5+DeQfkCbLvc14Doxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790436652; c=relaxed/simple;
-	bh=AzWuY2z8U/vUkS+ryriyFb9noPXYkL42OJCQbpmmsRM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=r0FgZRKwH39fXE9NYgWxxQF24KIjiuOQ2GFxrIEy+68QtGeFi1oaAB7tYQYWx8Ek6Q1lX+OAD6XX7OneIDYHLtJqRg0WB7SBBjp4tr1KvHc6d+R2nW1lMVYEyMBqMTomedOQxSzSKesediR7wIN5tH5XYBkQ0Q8SBFwYWczOzYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gDOKsAOO; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790436653; c=relaxed/simple;
+	bh=2LpqQ7QmQzukCZTydu4Qhzi/p0rOw9Lkni18IjLNkSw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=hUlWlRlYtQV1atHiDJDny9SbIS3kiKH9Bujefiga5UWanEWvlgr4CX23djRmzn0L3vdz5dqnRWWgO5cS270Tw3mhVkZ50UxEfbb5qwrPFr8qZow63ALDMik7HTEXyoJuDRylzHMycavbK6z2iAoNEmGu4zTNHAl0idQqAJxyRew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gQgUIHV4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gDOKsAOO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49DEB1F000FF;
-	Sat, 26 Sep 2026 15:30:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gQgUIHV4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 209F01F0089D;
+	Sat, 26 Sep 2026 15:30:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790436649;
-	bh=5jb3BDftf/ODffcy+muPOJTz2pJouvKTdOelPtX8WzM=;
-	h=From:Subject:Date:To:Cc;
-	b=gDOKsAOOGhlKivsrI26wSXM0rMpSe4IK/f3gFKDMS4ZGPdXVBhbq055FfoRZI5A/T
-	 2Q9gSZTlHm8kuHqRlziY5yYBvF/i3eEtKV3hpTMO2iVUD5uUm44PvErVC2OvYv4FY7
-	 PckJGrjatB1UedBwxzT9P8DJk896iJxTKCvBid9tajLAaDa1uDcs64dOJ1i7rn+LBb
-	 QjchE9NuVKob+zTgW6lkS42rjxX1QtkyJpm+aTjSJwdZZhcYCDewU8ZmBhv2AjPlzD
-	 J4vhhie+vAf+xHnlglZu6gcI4pQVUV+CpHZN3mv1PvD6vu37n9epEN1inq6Mtocp+s
-	 IHfaGWra/63og==
+	s=k20260515; t=1790436651;
+	bh=4XH8V9Su8JHaF3lOt0qHFhwovcLFv8tgWKpGaq+UFz4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=gQgUIHV4lUfkk9f9bVPqwF/dFaDTZ7dSQgKBgyKJ1gbftBPl0yHH5NhhQLRB5XMpT
+	 TvWtBhQBaHrffy3Uh+0R72aTFgEnRx9LQixnuEwjK8HB074lOCAKzEDMvTzTKW2VFQ
+	 5f6w8ukeHRlV+tcqigHP7WAw2IG4SYptndbqZ7XV8JNGGbyXYLAQzI4duaf74nbhzT
+	 dxCoBXpybqAXgsxdySSh3wk65QLSCUEHNh9MEs/yYz/bJ0jygBDdn7zsG3oQxqE5+j
+	 mx3OljD5hEwqhI3h30pu/h0l7Vg2geA0YH88SmqAVX24M7gTDsxu/hZ+QvfX8vrNRD
+	 nro2a+xgO1s6Q==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH net-next 0/5] mptcp: misc improvements for v7.4
-Date: Sat, 26 Sep 2026 17:30:33 +0200
-Message-Id: <20260926-net-next-mptcp-misc-feat-7-4-v1-0-67af4ab37406@kernel.org>
+Date: Sat, 26 Sep 2026 17:30:34 +0200
+Subject: [PATCH net-next 1/5] mptcp: remove thmac from subflow ctx
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,64 +37,103 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/zWMQQrCQAxFr1KyNlAzU7VepbioMdUIHYeZKIXSu
- 3esuPiLx+e9GbIklQznaoYkH836CgX2uwr40Ye7oN4KA9V0qFtqMIiVTYZjNI44amYcpDc8okd
- HDYlvT+ych5KISQadtnwHfxMuvye/r09h+9ZhWVbQ+jwXigAAAA==
-X-Change-ID: 20260925-net-next-mptcp-misc-feat-7-4-3252e498c334
+Message-Id: <20260926-net-next-mptcp-misc-feat-7-4-v1-1-67af4ab37406@kernel.org>
+References: <20260926-net-next-mptcp-misc-feat-7-4-v1-0-67af4ab37406@kernel.org>
+In-Reply-To: <20260926-net-next-mptcp-misc-feat-7-4-v1-0-67af4ab37406@kernel.org>
 To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
  Simon Horman <horms@kernel.org>
 Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Quanye Yang <quanyeyang@proton.me>, Hangbin Liu <liuhangbin@kylinos.cn>, 
- Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
+ linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1522; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=AzWuY2z8U/vUkS+ryriyFb9noPXYkL42OJCQbpmmsRM=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLK2P1X+/93plBXvojVi876ltz/a3/7AbPPCI1wtEz+qL
- Tzja3Fbp6OUhUGMi0FWTJFFui0yf+bzKt4SLz8LmDmsTCBDGLg4BWAinscZGdq+XlC0OrUrcle4
- /KeTR7dNLChM53pf5Lfu1ttTL3mqm54yMvyfeX9ZXelG2YXvs1+aVU39u6FMSeNUT8QHaY+U9M0
- fT3ABAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2814; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=2LpqQ7QmQzukCZTydu4Qhzi/p0rOw9Lkni18IjLNkSw=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLK2P1VpblTYdn7903m2v/033HaKlIp8r/Vg7X7Z603tH
+ ZO1zY9Gd5SyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEzkRjEjw5rJX9nZbDZdPjjn
+ 9aF/jit2KrHPm7h75pIJTpLZPw5u9HNlZLio0WQ950+v4KzSn53XTUpulPfNXSUU8Vlhn397uNi
+ H4ywA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Here are some unrelated improvements for MPTCP and its selftests:
+This entry is only used in subflow_finish_connect().
 
-- Patch 1: reduce struct mptcp_subflow_context size: no need to store
-  the truncated HMAC for the whole connection.
+Instead, use the original value from mp_opt, and pass it to
+subflow_thmac_valid() to do the validation with the given truncated
+hmac.
 
-- Patches 2-3: shrink struct mptcp_options_received used to parse
-  incoming MPTCP options, from 136 to 72 bytes on x86_64.
+While at it, rename the variables in subflow_thmac_valid() to avoid
+confusions about the received one vs the expected one.
 
-- Patches 4-5: convert IPTables to NFTables in MPTCP selftests.
-
+Reviewed-by: Geliang Tang <geliang@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Hangbin Liu (2):
-      selftests: mptcp: convert iptables to nftables for mptcp_sockopt.sh
-      selftests: mptcp: convert iptables to nftables for mptcp_join.sh
+ net/mptcp/protocol.h |  1 -
+ net/mptcp/subflow.c  | 18 +++++++++---------
+ 2 files changed, 9 insertions(+), 10 deletions(-)
 
-Matthieu Baerts (NGI0) (1):
-      mptcp: remove thmac from subflow ctx
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 0384d6a023f9..dd9957d334b6 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -593,7 +593,6 @@ struct mptcp_subflow_context {
+ 	bool	fully_established;  /* path validated */
+ 	u32	lent_mem_frag;
+ 	u32	remote_nonce;
+-	u64	thmac;
+ 	u32	local_nonce;
+ 	u32	remote_token;
+ 	union {
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index f0a6725d2c37..14aa82647c3d 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -408,20 +408,21 @@ static struct dst_entry *subflow_v6_route_req(const struct sock *sk,
+ #endif
+ 
+ /* validate received truncated hmac and create hmac for third ACK */
+-static bool subflow_thmac_valid(struct mptcp_subflow_context *subflow)
++static bool subflow_thmac_valid(struct mptcp_subflow_context *subflow,
++				u64 thmac)
+ {
+ 	u8 hmac[SHA256_DIGEST_SIZE];
+-	u64 thmac;
++	u64 expected_thmac;
+ 
+ 	subflow_generate_hmac(subflow->remote_key, subflow->local_key,
+ 			      subflow->remote_nonce, subflow->local_nonce,
+ 			      hmac);
+ 
+-	thmac = get_unaligned_be64(hmac);
+-	pr_debug("subflow=%p, token=%u, thmac=%llu, subflow->thmac=%llu\n",
+-		 subflow, subflow->token, thmac, subflow->thmac);
++	expected_thmac = get_unaligned_be64(hmac);
++	pr_debug("subflow=%p, token=%u, expected_thmac=%llu, thmac=%llu\n",
++		 subflow, subflow->token, expected_thmac, thmac);
+ 
+-	return thmac == subflow->thmac;
++	return expected_thmac == thmac;
+ }
+ 
+ void mptcp_subflow_reset(struct sock *ssk)
+@@ -575,14 +576,13 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
+ 		}
+ 
+ 		subflow->backup = mp_opt.backup;
+-		subflow->thmac = mp_opt.thmac;
+ 		subflow->remote_nonce = mp_opt.nonce;
+ 		WRITE_ONCE(subflow->remote_id, mp_opt.join_id);
+ 		pr_debug("subflow=%p, thmac=%llu, remote_nonce=%u backup=%d\n",
+-			 subflow, subflow->thmac, subflow->remote_nonce,
++			 subflow, mp_opt.thmac, subflow->remote_nonce,
+ 			 subflow->backup);
+ 
+-		if (!subflow_thmac_valid(subflow)) {
++		if (!subflow_thmac_valid(subflow, mp_opt.thmac)) {
+ 			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_JOINSYNACKMAC);
+ 			subflow->reset_reason = MPTCP_RST_EMPTCP;
+ 			goto do_reset;
 
-Quanye Yang (2):
-      mptcp: split FASTCLOSE key from rcvr_key
-      mptcp: shrink struct mptcp_options_received
-
- net/mptcp/options.c                                |   6 +-
- net/mptcp/protocol.h                               |  45 ++++---
- net/mptcp/subflow.c                                |  18 +--
- tools/testing/selftests/net/mptcp/config           |   4 +-
- tools/testing/selftests/net/mptcp/mptcp_join.sh    | 149 ++++++++-------------
- tools/testing/selftests/net/mptcp/mptcp_lib.sh     |   2 +-
- tools/testing/selftests/net/mptcp/mptcp_sockopt.sh |  58 ++++----
- 7 files changed, 136 insertions(+), 146 deletions(-)
----
-base-commit: 42a9fb3382fc2573e92f41d203b095d9a372cfc9
-change-id: 20260925-net-next-mptcp-misc-feat-7-4-3252e498c334
-
-Best regards,
---  
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+-- 
+2.55.0
 
