@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 863AA4A7C9F;
-	Mon, 28 Sep 2026 11:24:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D751F4AC14D;
+	Mon, 28 Sep 2026 11:24:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790594663; cv=none; b=SB0fWmuU1CIqdo1J8Ace+ILaxMFZn+tfhwvGVfAxcHBocvE+inaNSZMC8nwgL+9GLic7/1FSURk733+nF+BiA0IEw2wZVHy8UilsEhp8GY2Em9nuA+ynWoTltKUkaNmXweOrIcEs12yNEsvSg0eAHFof8TJHkYxu5bGoAySyPwA=
+	t=1790594668; cv=none; b=eSV+bgF+jl5GV+y49ExHCo+dhOcKiw4KEUPzmpSRZtiM33Z6NJBaBdYF20pFThrab7por0jvVmddH7mc+Bp4pkd+Vmn/+xxSQjfd1LxTpUFVNN1R5CnsYsYspG4yz4s0vyrvI1n3Y7WRp4SNuOlmvbcfV2Fe6oXsXF8bupaonz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790594663; c=relaxed/simple;
-	bh=gtZDbubhec8csC6UVvBqQ4f8lijBqvFrlIsRpAyroKA=;
+	s=arc-20240116; t=1790594668; c=relaxed/simple;
+	bh=96zShvewS0FUHaZkV3Ypl0XopKvOITUxP8nkh+iwyhc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qqew/9TSbmkIVEjDFablTHAgzq1DJyTRVnkqIFNJtUtCCKWo7Qs5QPA008jhyhLI67YxPrzPAT1sTuDQADH2Rn9sZYI0P6h5OLIds3+eltAO1vag80SN1+pfq8GXttMxKm+/tvOg/rxKdEkRsRhTi5PBouTAA0lXR1/Dx2G5CZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LhTm68xE; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=t0cwjGLSVXYyg0typ7QZNJCVXrXaf5MWpvXGLvNpbwQmv+ahr/za6B3V0pfinyIpV61JV5ER2JFjUXkyGc3IrKanH5dXiAdIfPdxBY6JUhzmypJOzQIUZWa/mu/4apjV6CzC7t5Juo3iUaSTE2cYFeRKdY1AWQfYSJ8oJeaJe90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TO+4cgpM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LhTm68xE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2306C1F000FF;
-	Mon, 28 Sep 2026 11:24:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TO+4cgpM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C7411F00898;
+	Mon, 28 Sep 2026 11:24:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790594662;
-	bh=8vz7DW6qXG0wgoJPsKce8ZATJmLbORV6eL3r0XDbp7Y=;
+	s=k20260515; t=1790594666;
+	bh=Z+flXo99CE7ujWH6j+CbkZKQFDT8A/xMdJen7Hp7HEs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=LhTm68xEuTe1a5nNaW6U37A7iuKqHGdNXEf0cHf8e1d/0cifUpWnAJzC9c1dzJGNb
-	 ZqRw1u5xGdgy/qv4fcAvWhFJpj9mKlMAcuBYSXOdXcxjvAKyAM60v0ogIKtfLUuq24
-	 yc98o8ALVYYKcBn9A5zaSH2TK3lXl6UE+qgua2E7agp8+qDmEuBD4JDWmMad6aa9c/
-	 lqj1LAyJi7lWt3FbIWtEZ+IDyVLI2o0HD+pBYos7mHO4WEat/5dNb8/OYNeQ//noJT
-	 OctyteAclRf/+Mj3Gr2IPEiiIh+Jq8+nx05Z4UwV/oMIR7MHkGPMWbJTCdZ51u55+T
-	 7q+7bzEKwu6hQ==
-Message-ID: <a6b1c774-ab85-4c58-93bf-aa0e24385139@kernel.org>
-Date: Mon, 28 Sep 2026 13:24:12 +0200
+	b=TO+4cgpMI7cf2a5cTLrlWYEyzxwFlGMfCpGu3Ij/ESyVcyhh77hhoJbDzu7OxdA00
+	 u+YaDm0OSpMlu/bC99BpR2ptk+jdv1WHmS3N4dX02Z16jM34Z4KO34TRiBSEe8PdLb
+	 z/DJfwfBMqDJNDe5Umwwk8vDD/OWQWThon70Rh9VI6qLtcsFMmIC6mSVuNtTMPBfiy
+	 7wqwk1lk/81LMeEEgD+Kc2wM1lpJkraL+HDZzDkmJFNMsY4DseaEE9Z6CqmOsrNpvz
+	 Ovdhusi0G+JmcW1rxHil+F36NtOVdcnseNS6CJ7AXqoXhLAwMlYKeh8RzxzXVHKVrP
+	 eRPYjTy/43YUA==
+Message-ID: <deb5e3b3-d1d7-4d1e-8bb6-95050769d656@kernel.org>
+Date: Mon, 28 Sep 2026 13:24:20 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,16 +35,16 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next 4/5] selftests: mptcp: convert iptables to
- nftables for mptcp_sockopt.sh
+Subject: Re: [PATCH net-next 5/5] selftests: mptcp: convert iptables to
+ nftables for mptcp_join.sh
 Content-Language: fr
 To: netdev-bot+sashiko@kernel.org
 Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
  edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
  netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
  quanyeyang@proton.me
-References: <20260926-net-next-mptcp-misc-feat-7-4-v1-4-67af4ab37406@kernel.org>
- <179058242329.3145.13094983040753478975@kernel.org>
+References: <20260926-net-next-mptcp-misc-feat-7-4-v1-5-67af4ab37406@kernel.org>
+ <179058242453.3145.1450534124183352369@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -90,7 +90,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <179058242329.3145.13094983040753478975@kernel.org>
+In-Reply-To: <179058242453.3145.1450534124183352369@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
@@ -105,81 +105,81 @@ On 28/09/2026 10:00, netdev-bot+sashiko@kernel.org wrote:
 > If you believe none of the issues are legitimate, please reply to each
 > issue of Medium severity or higher and explain why the AI is wrong.
 
-TL;DR: False positive: no new version needed here.
+TL;DR: It looks like there are issues with NFTables, but no new version
+needed here for these MPTCP patches.
 
 > If any of them are legitimate and you plan to respin, please let patchwork
 > know by including "pw-bot: cr" as a separate line at the end of your reply
 > (one such reply per series is enough).
 > 
-> - [Medium] The nft/jq tool check added to mptcp_lib_check_tools()
->   (tools/testing/selftests/net/mptcp/mptcp_lib.sh:531-532) only runs…
-> - [Low] In add_mark_rules()
->   (tools/testing/selftests/net/mptcp/mptcp_sockopt.sh:57-60), the…
+> - [Medium] In endpoint_tests()
+>   (tools/testing/selftests/net/mptcp/mptcp_join.sh), the new rule `tcp…
+> - [Low] The patch removes CONFIG_NFT_COMPAT from
+>   tools/testing/selftests/net/mptcp/config, "since we don't need it now".
 > 
 > --
 > 
-> selftests: mptcp: convert iptables to nftables for mptcp_sockopt.sh
+> selftests: mptcp: convert iptables to nftables for mptcp_join.sh
 > 
-> This commit makes mptcp_sockopt.sh use nftables instead of
-> iptables/ip6tables. It creates ip/ip6 filter tables with an OUTPUT chain,
-> and check_mark() now reads the drop counter through nft -j and jq. It also
-> extends mptcp_lib_check_tools() to probe for nft and jq.
+> This converts the iptables/ip6tables rules in mptcp_join.sh to nftables.
+> It keeps the same table and chain names and adds init_nftables() to set
+> up the tables only when a test needs them. The cBPF bytecode that matched
+> the ADD_ADDR and RM_ADDR suboptions is replaced with "tcp option mptcp
+> subtype" matching. In the config fragment, CONFIG_NFT_COMPAT is swapped
+> for the nft modules that are now needed.
+
+(...)
+
+>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> index 18ce7136a2b0e..b16e24418e737 100755
+>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
 > 
->> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
->> index b9d14647f4019..e65b4ebee06a6 100644
->> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
->> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
->> @@ -528,7 +528,7 @@ mptcp_lib_check_tools() {
->>  				exit ${KSFT_SKIP}
->>  			fi
->>  			;;
->> -		"iptables"* | "ip6tables"*)
->> +		"iptables"* | "ip6tables"* | "nft" | "jq")
->>  			if ! "${tool}" -V &> /dev/null; then
+> [ ... ]
+> 
+>> @@ -4402,12 +4372,10 @@ endpoint_tests()
+>>  
+>>  		# To make sure RM_ADDR are sent over a different subflow, but
+>>  		# allow the rest to quickly and cleanly close the subflow
+>> -		local ipt=1
+>> -		ip netns exec "${ns2}" ${iptables} -I OUTPUT -s "10.0.1.2" \
+>> -			-p tcp -m tcp --tcp-option 30 \
+>> -			-m bpf --bytecode \
+>> -			"$CBPF_MPTCP_SUBOPTION_RM_ADDR" \
+>> -			-j DROP || ipt=0
+>> +		local nft=1
+>> +		ip netns exec "${ns2}" nft insert rule ip filter OUTPUT \
+>> +			ip saddr 10.0.1.2 meta l4proto tcp \
+>> +			tcp option mptcp subtype remove-addr drop || nft=0
 > 
 > [Severity: Medium]
-> Is nft -V the right probe for nft here?
+> Can this rule ever match an RM_ADDR packet on an established connection?
 > 
-> For nft, -V prints extended build information, and only newer nftables
-> releases have it. The portable version flag is -v or --version, which is
-> what the other selftests use. For example, the netfilter/*.sh scripts call
-> nft --version.
-
-It requires nft >= 0.9.4, released in 2020. I think we are good.
-
-> If an older nft rejects -V, would mptcp_lib_check_tools() exit with
-> KSFT_SKIP from the top-level call in mptcp_sockopt.sh?
+> nft_exthdr_tcp_eval() stops at the first TCP option whose kind matches
+> (30 for MPTCP). The subtype check therefore only ever sees the first
+> MPTCP suboption:
 > 
->     mptcp_lib_check_tools ip nft jq
-> 
-> That would also skip the transfer, sockopt and TCP_INQ subtests, which
-> don't use nft at all.
-> 
-> The opposite case is also a concern. check_mark() needs an nft that was
-> built with JSON support:
-> 
->     drops=$(ip netns exec "$ns" nft -j list table "$tables" filter | \
+> net/netfilter/nft_exthdr.c:nft_exthdr_tcp_eval() {
 >     ...
->     if [ -z "$drops" ] || [ "$drops" -ne 0 ]; then
->             mptcp_lib_pr_fail "got $tables $drops in ns $ns," \
->                               "not 0 - not all expected packets marked"
->             ret=${KSFT_FAIL}
+> 	for (i = sizeof(*tcph); i < tcphdr_len - 1; i += optl) {
+> 		optl = optlen(opt, i);
 > 
-> On an nftables build without libjansson, nft -V still exits 0 and just
-> reports json: no. add_mark_rules() works, because it only uses nft -f.
-> 
-> nft -j then fails with "JSON support not compiled-in", so drops is empty.
-> The test then reports "not all expected packets marked" and sets
-> KSFT_FAIL. Should a missing userspace feature give a skip here instead?
-> 
-> The later patch in the series, "selftests: mptcp: convert iptables to
-> nftables for mptcp_join.sh", keeps the same "nft" | "jq" case with the -V
-> probe. So it looks like this is still present at the end of the series.
-> 
-> Would a separate nft check match the real dependency better? For example,
-> nft --version plus a JSON check such as nft -j list ruleset.
+> 		if (priv->type != opt[i])
+> 			continue;
+> 		...
+> 		return;
+> 	}
+>     ...
+> }
 
-I don't expect packet distributions not building nft with JSON support.
+Indeed, the RM_ADDR will be added in a second MPTCP option. It looks
+like Netfilter doesn't handle that case. But that seems to be an issue
+on the Netfilter side, rather than with the command that should work. I
+will follow up with Netfilter devs. If a fix cannot be added on their
+side, I will change the nft command to look at a specific offset.
+
+Note that the command here is just to check there is no RM_ADDR sent on
+the wrong side: it shouldn't catch any packets here anyway.
 
 Cheers,
 Matt
