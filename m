@@ -1,203 +1,170 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73214364E89;
-	Mon, 28 Sep 2026 21:18:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39643612DB;
+	Tue, 29 Sep 2026 07:17:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790630288; cv=none; b=senLT2axYMllpqtUehjsDZWjq+/4ZYvUC8QcPfTXkrKmTZTvdnW5iV4056EEp/hsxcdTOGkPVdY5ehIQYpUc4ldLg5CmKzw8nP5Oel6erq7fS6hkgvNnYITVuhuzThAGkeMgQqg+9qcMyMISPk2mjQNwzD/IBSfFSmHZxq6X9xg=
+	t=1790666275; cv=none; b=f42ev/thX0vo/VrZrvEynRGjheBTbKGH9NK7dXikAG0epRwXP/aI+U3mKJ5y80o+8yToVicuCk5U6dNNY42c8nKlGPu425XP0twqO3rlMmH795PcAuar/jEX2aO6YNGX0SmNXjvRdrl30bHzcUgDPkgJJbyzdnJW2YillaR/UEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790630288; c=relaxed/simple;
-	bh=7M7fJ5FstXWzL5H1GQ2KodG1IQeWAG9XJtykoxuneAQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=NhkKnaUExG2z77jg3XatGltVxSka0tItv+Uo47V+/l5Em1bF3NLYEIQLw7X1xU5umkYzTXk0nLFFRSjKAr6Wo2y5d0T49wAjnZMAGCeFWvZbD4cEphb1wuVLpxclilxxqy+x/yjU9eMvP4UnMjmvEOOaDKurAXPcilAReLr+Xg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dB9H5IKe; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790666275; c=relaxed/simple;
+	bh=4vCIQXmbxD/BJRzWDsEb/yfZXwazmkAxLJ75C0XOahc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bv72Ggsz/rtTL4JX1hUsFEmaYnIthbLj0kyjy+ykoG1FW47COlpux50F/3q1wWl/JD/bUxzQHzqXe6IvohVtHmUtGPByBOH0ueFTxRKhRQO6brXHNTkSsgqSAvKU3wAiK+niR1DHgmRquZFxW+Y9hDFCeFxJS7yM9xBr6IGOluA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HC9gNeCZ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dB9H5IKe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AC891F000FF;
-	Mon, 28 Sep 2026 21:18:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HC9gNeCZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 040681F000FF;
+	Tue, 29 Sep 2026 07:17:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790630286;
-	bh=TFPWYRQoyz6NWOuEze9ht0jM/GEuJCUXxLhM2GrLzxU=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To;
-	b=dB9H5IKeAnra4gl9EZU9Ss3vj8CAYtRSkGFQHsZtDA1K0cSG3Mep+RsQViwoNTU/8
-	 AtSgEppgX+Den+KR9JprebA9MVJKryIiZw3CmG9J8iBAoT8KcqHUoJ7agr1ljceRiX
-	 eX+/vZGHJUOzzphPFIhYp6TaVsoW7FTgH9vPuOGQyL8PYKvqj6Sqyx0Z9WUve+rS+U
-	 EyXPeYO1z4NcfAbuFfrO8HGJUJAyeH865jo9HH37/Vu7yObS5YMyGNWpe9loDcVXqc
-	 epBNHVF6RboR3plEO4+q4fu8WJCJQhEClGWJhBAAz7SpTLj2Ihc3hROZCXpVgxaCrf
-	 N8362+EWdbmiA==
-Message-ID: <4278a970-2957-4387-8f20-604ae4ae97e9@kernel.org>
-Date: Mon, 28 Sep 2026 23:17:59 +0200
+	s=k20260515; t=1790666274;
+	bh=DfV0ZdyXjwMFuzBG40t+uh9OXVIWsQkLcTmp8LtXSIY=;
+	h=From:To:Cc:Subject:Date;
+	b=HC9gNeCZQT3WnFBnHiYLaloBAkhdlb69XWMbxRy8PiaJGIPTPD6zTlnf3Ryvc5YtD
+	 ndc1eqGx+qsW/X5N60SwWKjXKN/SDPDG9hXhKxLq33KqrAu55Pg74vSUxLQoxmHM/A
+	 H+J9biykKCRQU4nYH8TyqyD8WmPWQUy9/BuIvyefKsCo/b4tbec7l5y2zh5U6NU3vi
+	 Vl6GVqTVBJUVa4EkAj/o8NBWA2q3BUWLxqFONpztoLahQLNxKZAn5q64UDAdmqIZ1O
+	 iFjMVQtBoLp1twfVreBa2slbPq0CUbtZDgBGVZGoTwPMB9daryMl2npyQVIszOZHCz
+	 l0d+sbbfh4V4w==
+From: Eric Dumazet <edumazet@kernel.org>
+To: "David S . Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Simon Horman <horms@kernel.org>,
+	Neal Cardwell <ncardwell@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	edumazet@google.com,
+	netdev@vger.kernel.org,
+	Alexander Aring <aahringo@redhat.com>,
+	David Teigland <teigland@redhat.com>,
+	gfs2@lists.linux.dev,
+	John Fastabend <john.fastabend@gmail.com>,
+	Jakub Sitnicki <jakub@cloudflare.com>,
+	Sabrina Dubroca <sd@queasysnail.net>,
+	Jiayuan Chen <jiayuan.chen@linux.dev>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	mptcp@lists.linux.dev,
+	Wen Gu <guwen@linux.alibaba.com>,
+	Dust Li <dust.li@linux.alibaba.com>,
+	"D. Wythe" <alibuda@linux.alibaba.com>,
+	Chuck Lever <cel@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	linux-nfs@vger.kernel.org,
+	Allison Henderson <achender@kernel.org>,
+	rds-devel@oss.oracle.com,
+	Philipp Reisner <philipp.reisner@linbit.com>,
+	Lars Ellenberg <lars.ellenberg@linbit.com>,
+	=?UTF-8?q?Christoph=20B=C3=B6hmwalder?= <christoph.boehmwalder@linbit.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	drbd-dev@lists.linux.dev,
+	Keith Busch <kbusch@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	linux-nvme@lists.infradead.org,
+	Ilya Dryomov <idryomov@gmail.com>,
+	Alex Markuze <amarkuze@redhat.com>,
+	Viacheslav Dubeyko <slava@dubeyko.com>,
+	ceph-devel@vger.kernel.org,
+	Eric Dumazet <edumazet@kernel.org>
+Subject: [PATCH v3 net-next 0/9] tcp: avoid struct socket cache line miss in tcp_check_space()
+Date: Tue, 29 Sep 2026 07:17:34 +0000
+Message-ID: <20260929071743.23624-1-edumazet@kernel.org>
+X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next 5/5] selftests: mptcp: convert iptables to
- nftables for mptcp_join.sh
-Content-Language: fr
-From: Matthieu Baerts <matttbe@kernel.org>
-To: netdev-bot+sashiko@kernel.org, Hangbin Liu <liuhangbin@kylinos.cn>
-Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- quanyeyang@proton.me
-References: <20260926-net-next-mptcp-misc-feat-7-4-v1-5-67af4ab37406@kernel.org>
- <179058242453.3145.1450534124183352369@kernel.org>
- <deb5e3b3-d1d7-4d1e-8bb6-95050769d656@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <deb5e3b3-d1d7-4d1e-8bb6-95050769d656@kernel.org>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 28/09/2026 13:24, Matthieu Baerts wrote:
-> Hello,
-> 
-> On 28/09/2026 10:00, netdev-bot+sashiko@kernel.org wrote:
->> Thank you for your contribution! Sashiko AI review found 2 potential
->> issue(s) to consider.
->>
->> Critical: 0 · High: 0 · Medium: 1 · Low: 1
->>
->> If you believe none of the issues are legitimate, please reply to each
->> issue of Medium severity or higher and explain why the AI is wrong.
-> 
-> TL;DR: It looks like there are issues with NFTables, but no new version
-> needed here for these MPTCP patches.
-> 
->> If any of them are legitimate and you plan to respin, please let patchwork
->> know by including "pw-bot: cr" as a separate line at the end of your reply
->> (one such reply per series is enough).
->>
->> - [Medium] In endpoint_tests()
->>   (tools/testing/selftests/net/mptcp/mptcp_join.sh), the new rule `tcp…
->> - [Low] The patch removes CONFIG_NFT_COMPAT from
->>   tools/testing/selftests/net/mptcp/config, "since we don't need it now".
->>
->> --
->>
->> selftests: mptcp: convert iptables to nftables for mptcp_join.sh
->>
->> This converts the iptables/ip6tables rules in mptcp_join.sh to nftables.
->> It keeps the same table and chain names and adds init_nftables() to set
->> up the tables only when a test needs them. The cBPF bytecode that matched
->> the ADD_ADDR and RM_ADDR suboptions is replaced with "tcp option mptcp
->> subtype" matching. In the config fragment, CONFIG_NFT_COMPAT is swapped
->> for the nft modules that are now needed.
-> 
-> (...)
-> 
->>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->>> index 18ce7136a2b0e..b16e24418e737 100755
->>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->>
->> [ ... ]
->>
->>> @@ -4402,12 +4372,10 @@ endpoint_tests()
->>>  
->>>  		# To make sure RM_ADDR are sent over a different subflow, but
->>>  		# allow the rest to quickly and cleanly close the subflow
->>> -		local ipt=1
->>> -		ip netns exec "${ns2}" ${iptables} -I OUTPUT -s "10.0.1.2" \
->>> -			-p tcp -m tcp --tcp-option 30 \
->>> -			-m bpf --bytecode \
->>> -			"$CBPF_MPTCP_SUBOPTION_RM_ADDR" \
->>> -			-j DROP || ipt=0
->>> +		local nft=1
->>> +		ip netns exec "${ns2}" nft insert rule ip filter OUTPUT \
->>> +			ip saddr 10.0.1.2 meta l4proto tcp \
->>> +			tcp option mptcp subtype remove-addr drop || nft=0
->>
->> [Severity: Medium]
->> Can this rule ever match an RM_ADDR packet on an established connection?
->>
->> nft_exthdr_tcp_eval() stops at the first TCP option whose kind matches
->> (30 for MPTCP). The subtype check therefore only ever sees the first
->> MPTCP suboption:
->>
->> net/netfilter/nft_exthdr.c:nft_exthdr_tcp_eval() {
->>     ...
->> 	for (i = sizeof(*tcph); i < tcphdr_len - 1; i += optl) {
->> 		optl = optlen(opt, i);
->>
->> 		if (priv->type != opt[i])
->> 			continue;
->> 		...
->> 		return;
->> 	}
->>     ...
->> }
-> 
-> Indeed, the RM_ADDR will be added in a second MPTCP option. It looks
-> like Netfilter doesn't handle that case. But that seems to be an issue
-> on the Netfilter side, rather than with the command that should work. I
-> will follow up with Netfilter devs. If a fix cannot be added on their
-> side, I will change the nft command to look at a specific offset.
-> 
-> Note that the command here is just to check there is no RM_ADDR sent on
-> the wrong side: it shouldn't catch any packets here anyway.
+tcp_check_space() is called on every incoming ACK and every transmitted
+packet, and tests SOCK_NOSPACE in sk->sk_socket->flags.  Because struct
+socket lives in its own cache line and the TCP fast paths do not touch
+it for anything else, that test pulls in an extra cache line that is
+cold when the working set of active sockets is large.
 
-After a discussion with Netfilter devs, it looks like a fix will not be
-easy to have. Yet, I wonder if it wouldn't be better to apply this patch
-like that (it doesn't break things), and have an explicit follow-up/fix
-to document this issue somehow.
+This series mirrors SOCK_NOSPACE into a new u8 field, tp->tcp_nospace,
+placed right after tp->chrono_type in the tcp_sock_write_tx cache line
+group (fitting in an existing 3-byte hole before chrono_start, so no
+other field moves and sizeof(struct tcp_sock) is unchanged).  Both the
+transmit and ACK fast paths already touch that cache line, making the
+fast-path test in tcp_check_space() free of extra cache misses while
+keeping __tcp_check_space() authoritative on SOCK_NOSPACE.
 
-@Hangbin: do you plan to look at a fix for that? I guess a raw payload
-looking at the same fields as what the previous cBPF rule was doing
-would be enough.
+To maintain the invariant (SOCK_NOSPACE set => tp->tcp_nospace set) from
+a single choke point:
 
-Don't hesitate to fix the "low" priority comments as well.
+ - Patch 1 fixes a long-standing bug in dlm where SOCKWQ_ASYNC_NOSPACE
+   was tested and cleared on con->sock->flags instead of SOCK_NOSPACE.
+ - Patch 2 introduces sk_set_nospace() and sk_clear_nospace() and
+   converts the core networking setters and clearers.
+ - Patches 3-8 convert the remaining in-kernel callers (sunrpc, rds,
+   dlm, drbd, nvme-tcp, libceph) so that no open-coded set_bit() or
+   clear_bit() of SOCK_NOSPACE remains in the tree.
+ - Patch 9 adds tp->tcp_nospace, wires it into sk_set_nospace() and
+   sk_clear_nospace(), and switches tcp_check_space() to test it.
 
-https://lore.kernel.org/all/20260926-net-next-mptcp-misc-feat-7-4-v1-0-67af4ab37406@kernel.org/T/#u
+v3:
+ - Rebase and CC subsystem maintainers (Jakub)
+ - Link to v2: https://lore.kernel.org/netdev/20260924134729.2047213-1-edumazet@google.com/
 
-Cheers,
-Matt
+v2:
+ - Order set_bit(SOCK_NOSPACE) before tp->tcp_nospace = 1 in
+   sk_set_nospace() and tp->tcp_nospace = 0 before
+   clear_bit(SOCK_NOSPACE) in sk_clear_nospace() so a concurrent
+   lockless tcp_poll() cannot leave SOCK_NOSPACE set with
+   tp->tcp_nospace cleared (Sashiko)
+ - Move tp->tcp_nospace to the 3-byte hole after tp->chrono_type so no
+   field in struct tcp_sock shifts after the AccECN bitfield additions
+   (Sashiko)
+ - Clarify comment and Patch 2 changelog wording (Sashiko)
+ - Link to v1: https://lore.kernel.org/netdev/20260922122721.3568295-1-edumazet@google.com/
+
+Eric Dumazet (9):
+  dlm: fix send buffer backpressure handling
+  net: add sk_set_nospace() and sk_clear_nospace()
+  sunrpc: use sk_set_nospace() and sk_clear_nospace()
+  rds: use sk_set_nospace()
+  dlm: use sk_set_nospace() and sk_clear_nospace()
+  drbd: use sk_set_nospace()
+  nvme-tcp: use sk_clear_nospace()
+  libceph: use sk_clear_nospace()
+  tcp: add tp->tcp_nospace
+
+ .../networking/net_cachelines/tcp_sock.rst    |  1 +
+ drivers/block/drbd/drbd_worker.c              |  3 +-
+ drivers/nvme/host/tcp.c                       |  2 +-
+ drivers/nvme/target/tcp.c                     |  2 +-
+ fs/dlm/lowcomms.c                             | 10 ++--
+ include/linux/tcp.h                           |  3 ++
+ include/net/sock.h                            |  2 +
+ include/net/tcp.h                             | 30 +++++++++++-
+ net/ceph/messenger.c                          |  2 +-
+ net/core/sock.c                               | 46 ++++++++++++++++++-
+ net/core/stream.c                             |  6 +--
+ net/ipv4/tcp.c                                |  5 +-
+ net/ipv4/tcp_bpf.c                            |  2 +-
+ net/ipv4/tcp_input.c                          |  8 +++-
+ net/kcm/kcmsock.c                             |  4 +-
+ net/mptcp/protocol.c                          |  4 +-
+ net/mptcp/subflow.c                           |  5 ++
+ net/rds/tcp_send.c                            |  5 +-
+ net/smc/af_smc.c                              |  2 +-
+ net/smc/smc_tx.c                              |  6 +--
+ net/sunrpc/svcsock.c                          |  4 +-
+ net/sunrpc/xprtsock.c                         |  4 +-
+ net/tls/tls_sw.c                              |  2 +-
+ 23 files changed, 121 insertions(+), 37 deletions(-)
+
 -- 
-Sponsored by the NGI0 Core fund.
+2.56.0.rc1.315.gc6ed9934b7-goog
 
