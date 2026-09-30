@@ -1,78 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2943624AB;
-	Wed, 30 Sep 2026 02:10:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE4E547059;
+	Wed, 30 Sep 2026 02:20:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790734259; cv=none; b=FLBeuFiff1nhclnl/pMLp24nSLGi5rl0dd+5NQMf9EcfZRcK0K3V+5RNqteZCWIQyH5ZP+66WJuPlbdR+iWQp+TZtREqbhcGrBxSrhNa5E6hO2/BnYP6vBmK+emUp7AmHbnE/eQukN9+syNUXuOG1GgyKRhW9a97QTOWbeIdUjU=
+	t=1790734809; cv=none; b=bECsmmSA18RKzNlQV5E9oevByho37qfqbwxySNgqi8SGrG8la/XAVqaAFDwa69o0LyCrwGhr2LuTFYHkmEpHT/FGoGZ37hUA/SPLo9Y0Dc1qb01i9XWYCHsWjb1AsmC83epHv3/efzcRmOqTS1Wqqc+AVl74UHTv40D7b9oM7QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790734259; c=relaxed/simple;
-	bh=W32nvCISOv+QAJ7rEbXFq6CPdoKleRQ4nNHOcgg+XXo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pyuwasbRgYR3RRJP2F08IJKE2Eg95PqmINIkpzKNyRsD7zuEvCiH920815mPxxgX27Ef0ooq+kjyBLfgQphK0MdP/CeEfQw4l4N2efjxG/FRxVMsDivGzheWMAH/plFSCg5uILWZ6YgLI013t/dyuPZJ8A42jo9R2uzxM6z0KtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mKWTL9o6; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790734809; c=relaxed/simple;
+	bh=8uGBMMioS5lDejFVuty7woie6iD1aexXTSEa2wGECLo=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=W5QwjEmx9V9yzQTf1VSKLxgu3YT3U9MYre2tWN0IGnjOnW9EYw/6gIIBFYALEKb0xIkltw/kh45hGUyb546XukmneKc8n0vS3WghxDdrP0xuZYAx6CyJUrl97ww8x5bRevPE3lz4UtSF14uoCih0u6ep1NK6hYjtSCHGEk8LjLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S+VUn2Hw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mKWTL9o6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB0951F000FF;
-	Wed, 30 Sep 2026 02:10:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S+VUn2Hw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 802451F000FF;
+	Wed, 30 Sep 2026 02:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790734258;
-	bh=T8EKNXYenlstFgfxKWv/tz4x7AnSYkrIn/LqQvDI5R0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=mKWTL9o6nKJlBF66yGNpF33GCCUPS3gjhqk8KAxXS0RzpyPDEXZkseniftYAVpMBl
-	 Ctp1RuNf4O/2UqJssJxYkInE2TDKBPhMQF27bNe9mf1BQGWTmHaGB7Qdi6n37sW8XI
-	 em04GNqYeOJV5XRZAOyDT6aqRGZOrIWwSVe4GOaKTvKFsC8mv0Mpav6WbCy/8ACCJB
-	 aQVtXms+1jEv4RLnTaKy7kVULL6LLwxEkuIpygYnijEhgPCcYBh2dizarij+7dXaIS
-	 T9nfnWa7fl1wVquHTRgU6FZCQGCSKdvc5mkQL0/CLDOUEHBGiMOex/8rtkqZQDgnUT
-	 F0GlirUPeZGNA==
-Date: Tue, 29 Sep 2026 19:10:57 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: netdev-bot+sashiko@kernel.org, Hangbin Liu <liuhangbin@kylinos.cn>,
- martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
- edumazet@google.com, pabeni@redhat.com, horms@kernel.org,
- netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, quanyeyang@proton.me
-Subject: Re: [PATCH net-next 5/5] selftests: mptcp: convert iptables to
- nftables for mptcp_join.sh
-Message-ID: <20260929191057.45ff98e4@kernel.org>
-In-Reply-To: <4278a970-2957-4387-8f20-604ae4ae97e9@kernel.org>
-References: <20260926-net-next-mptcp-misc-feat-7-4-v1-5-67af4ab37406@kernel.org>
-	<179058242453.3145.1450534124183352369@kernel.org>
-	<deb5e3b3-d1d7-4d1e-8bb6-95050769d656@kernel.org>
-	<4278a970-2957-4387-8f20-604ae4ae97e9@kernel.org>
+	s=k20260515; t=1790734807;
+	bh=Qk06ge0yUWOjB14r7PQI/pwqnAiKGPmdvuKcq6Teydo=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc;
+	b=S+VUn2HwyKN7he3LoPBTa9mONGR3J9gz3IpTey2yt8H0fKXdX2cF5ogh8q+8Tx+ug
+	 JpKwO/4UFWl/MeoqcbjnjO0OF4ZocJeWmcXQ/4JSmImIkr7eAITDKWU+Xp0Vceqwqa
+	 jQmq2gn/f3AjyODChBKI+zRco6DH9DGfSNyJIO9o73rT22jdA9D6vGuxn/CKL9jjzl
+	 LcDmd+LpyG1y8tGCyhdSjW1WskdXH8iBWNpOyptHGK3vjPrYvaPCC1yMZwFCZx+0LS
+	 d2cz26fItwi3RpD3AVO0/X4iu+W+gcPydyCpsNiXTMShWBzYVEIfs1Ncn+/aL40ACS
+	 WnpXY3LvBiBzw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 774843924FEA;
+	Wed, 30 Sep 2026 02:20:07 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/5] mptcp: misc improvements for v7.4
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <179073480628.1213686.7153370643683858452.git-patchwork-notify@kernel.org>
+Date: Wed, 30 Sep 2026 02:20:06 +0000
+References: 
+ <20260926-net-next-mptcp-misc-feat-7-4-v1-0-67af4ab37406@kernel.org>
+In-Reply-To: 
+ <20260926-net-next-mptcp-misc-feat-7-4-v1-0-67af4ab37406@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ quanyeyang@proton.me, liuhangbin@kylinos.cn, shuah@kernel.org,
+ linux-kselftest@vger.kernel.org
 
-On Mon, 28 Sep 2026 23:17:59 +0200 Matthieu Baerts wrote:
-> > Indeed, the RM_ADDR will be added in a second MPTCP option. It looks
-> > like Netfilter doesn't handle that case. But that seems to be an issue
-> > on the Netfilter side, rather than with the command that should work. I
-> > will follow up with Netfilter devs. If a fix cannot be added on their
-> > side, I will change the nft command to look at a specific offset.
-> > 
-> > Note that the command here is just to check there is no RM_ADDR sent on
-> > the wrong side: it shouldn't catch any packets here anyway.  
-> 
-> After a discussion with Netfilter devs, it looks like a fix will not be
-> easy to have. Yet, I wonder if it wouldn't be better to apply this patch
-> like that (it doesn't break things), and have an explicit follow-up/fix
-> to document this issue somehow.
-> 
-> @Hangbin: do you plan to look at a fix for that? I guess a raw payload
-> looking at the same fields as what the previous cBPF rule was doing
-> would be enough.
-> 
-> Don't hesitate to fix the "low" priority comments as well.
-> 
-> https://lore.kernel.org/all/20260926-net-next-mptcp-misc-feat-7-4-v1-0-67af4ab37406@kernel.org/T/#u
+Hello:
 
--110, let me take the kernel patches for now, repost the selftests
-please, in whatever form you decide to have them.
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Sat, 26 Sep 2026 17:30:33 +0200 you wrote:
+> Here are some unrelated improvements for MPTCP and its selftests:
+> 
+> - Patch 1: reduce struct mptcp_subflow_context size: no need to store
+>   the truncated HMAC for the whole connection.
+> 
+> - Patches 2-3: shrink struct mptcp_options_received used to parse
+>   incoming MPTCP options, from 136 to 72 bytes on x86_64.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,1/5] mptcp: remove thmac from subflow ctx
+    https://git.kernel.org/netdev/net-next/c/0cb6910130a3
+  - [net-next,2/5] mptcp: split FASTCLOSE key from rcvr_key
+    https://git.kernel.org/netdev/net-next/c/9f778b567817
+  - [net-next,3/5] mptcp: shrink struct mptcp_options_received
+    https://git.kernel.org/netdev/net-next/c/d16d54dac08f
+  - [net-next,4/5] selftests: mptcp: convert iptables to nftables for mptcp_sockopt.sh
+    (no matching commit)
+  - [net-next,5/5] selftests: mptcp: convert iptables to nftables for mptcp_join.sh
+    (no matching commit)
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
