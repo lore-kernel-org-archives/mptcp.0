@@ -1,129 +1,133 @@
-Received: from mta0.migadu.com (out-141.mta0.migadu.com [91.218.175.141])
+Received: from mail-qv2-f41.google.com (mail-qv2-f41.google.com [74.125.230.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3E62FA0C6
-	for <mptcp@lists.linux.dev>; Wed, 30 Sep 2026 02:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5670A327C08
+	for <mptcp@lists.linux.dev>; Wed, 30 Sep 2026 03:37:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790736521; cv=none; b=bC4NHlz9+0f/Tl+ajVH1Hcq6GIhrQkjwGRCa0BafulVPHBIEgMQ9DEKVWCpOKY1CWQzYANF5zo7jWFYgwtUdpQq9S2c4uG5NHsM8tSHhM5WUpwuJOO6S/U7Wb1Gcz+xxVOLA4xh4whcVXKb+GW40UEm7kER6dcYGhIM8S4kdW5k=
+	t=1790739467; cv=none; b=tVJcXM776KAiPBZSBEFhoYV5sOmN/98cqfq0ys/1RVRLKmlIpOFuA+PvcKGPBeC15zORtxypaqQ8RUKO8ZPYs+SmmZ9Oi2Xa/Wz1iG4b4t2nZxyCZgR7sVh5syxAlkyt+xuo3Bg9s4xAFnv56NILdOOTvFiupJtg82XLKshaKpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790736521; c=relaxed/simple;
-	bh=hsZwqTFeJz2g9lzDoXRrDPkpsxLhsmA9bGRCfMIBE7g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hJVwpXMYPGROEYRSvVPz9rgTWaeDGlsCtoqZXyp0i4BAex8SD3EEMh3Eh/wjCycn2DIwEzbPljI7mFmg09brnIA2ArQoadQkAkWUjIjIvdBqt8rTjA9WfXMYWTrmDm4eB0u1VtGP7K3wEFculsQQulE/X3t9g7nWSV/iOKaYUo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=b0nVwRIn; arc=none smtp.client-ip=91.218.175.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1790739467; c=relaxed/simple;
+	bh=hLF5pin+p8Qy3S5qPL7uH4WeE6Ewv0Vv/u1Af5gSwas=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=tHyanZTlDTYVCpRV/hgDyEbluB4CfB7LOEaX7fTAzZw66IFe0p/SsqpvxY2f+i9hlCNun949lRVG8Nv82EvxN1YjCcX9r0orGs8N9SZaAeh0YoK9rZAi2rdUwDnituAS3dOQp6TMxHSmdzuhPeWAELDJfEziykADbsec+WdnI+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cZJSgK8f; arc=none smtp.client-ip=74.125.230.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="b0nVwRIn"
-X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=hsZwqTFeJz2g9lzDoXRrDPkpsxLhsmA9bGRCfMIBE7g=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790736517; v=1; x=1791341317;
- b=b0nVwRIntDBm1odY6bAn1U2duT+HTVE8fQkuW0GsQuxV5Ei2fYvLVrprjckshVC/MQCY3jga
- 2qBBp+oDr+X1EOfKPZ/gOYFbusTacEerf+s9jw7ZgLzj8yaEmRhy1jPhY5ShM5UZVuFsAGyTpuY
- HdHxK+CBTivXz4J/3mJ0GkrY=
-X-Envelope-To: mptcp@lists.linux.dev
-Received: by mta12.migadu.com with ESMTPS id 8804b216241e0b16;
-	Wed, 30 Sep 2026 02:48:27 +0000
-X-Mizu-Trace-ID: 8804b216241e0b16
-X-Migadu-Flow: FLOW_OUT
-Date: Wed, 30 Sep 2026 10:48:18 +0800
-From: Hangbin Liu <hangbin.liu@linux.dev>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: netdev-bot+sashiko@kernel.org, Hangbin Liu <liuhangbin@kylinos.cn>,
-	martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	horms@kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
-	linux-kernel@vger.kernel.org, quanyeyang@proton.me
-Subject: Re: [PATCH net-next 5/5] selftests: mptcp: convert iptables to
- nftables for mptcp_join.sh
-Message-ID: <arx4cn3ZPDtuUNBM@fedora>
-References: <20260926-net-next-mptcp-misc-feat-7-4-v1-5-67af4ab37406@kernel.org>
- <179058242453.3145.1450534124183352369@kernel.org>
- <deb5e3b3-d1d7-4d1e-8bb6-95050769d656@kernel.org>
- <4278a970-2957-4387-8f20-604ae4ae97e9@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cZJSgK8f"
+Received: by mail-qv2-f41.google.com with SMTP id 6a1803df08f44-91782711448so14823546d6.2
+        for <mptcp@lists.linux.dev>; Tue, 29 Sep 2026 20:37:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790739465; x=1791344265; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=gBf0NxxCfHxC5ZoHNNTohli9GUWmAeS/lLjH2Co7q9Q=;
+        b=cZJSgK8fxGN/JNqOYU4AH81jTt2Z9Pkv7vqQrXSBXNk8KBeCLtQqB8qvJxTrSHVqCm
+         c80vce5lPcQU04TpnCL2bNQQY+bx6d3bOUD5fJH6KfXev2YTLPUP4bnRNUEHWY+DCDVs
+         EfSUV9jiCutD36jR/S/smLlwQP4yk2Sb7fljk/k61il6+s0Ow+NlV4fVs5bX4hA4yVu4
+         cfwh8kmxild8aeKN+GFtUq6V72yTQ8e2lFXtHXJAjawHshIJt4g39gkRe+MRpTA2Fk9g
+         b6G8x2m5VkDkgG+6vk0edbqK8mqkle1btgf3ygYYG98sVWVcW1oPKCd/6PLx0+0lCau2
+         S69A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790739465; x=1791344265;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=gBf0NxxCfHxC5ZoHNNTohli9GUWmAeS/lLjH2Co7q9Q=;
+        b=rM0v9T+Lk6mhXar5gVKONxmNKrZ9eNlqjlz3NarVpZDjlFudeHVErXaGt69oGuMZga
+         6rqf3GInQh4y6oww+/faGQTbArjAfZ+uLHle4K7zEvziubQj9OQZ8BcQDP/NbfIgr4p8
+         UihQzOFbfa0H5bqXsaB8cz1X51fScsHbxV2D93rvL0Zk69PC51EgrDM7yxuanoy1zN/C
+         prsg/jgbXKNupwpZJHtiuDiDtitN9wk6lT61b//CsCXM/z/dRSUw/W9PD8kBS9PSmlpE
+         XDZ3PLuQ2UyLE+DFS02z2GoPApFE+ap7R0WkSlfP8JzgFKxEhH7r2/X3oX79UJxVUfWJ
+         UfYQ==
+X-Gm-Message-State: AFq9FYKhDLal78SYxNkQU5miqZDwpo53wttczSgRvB299RILe48fYjQ3
+	R0Y7GxNotSuwVTUbAW5DGIDy4pV/yqrrTaaNLDAkgjrJL7Ornq/yF2wt2aKz
+X-Gm-Gg: AYBFou3D1vHEkzNEIs9sS1NmaORhzy5Mmq2rRGhIiSdvxhx5aPLmZPECpxV6QuDdkU+
+	m80v050qECVFyB5BOehqKeLEa7IX74wpgSvEml06+NgKHTKr33JTMM0YLhqLDcMRP7Me5innEzL
+	hLgrLIwVz4AwXIKt0Q7ImHkP/MhNWEHDNO5gYiZnVVA79+LBJ0E2Af6vTEdw+iGo/gbjFaQiVWs
+	tHM0h1rsPeHCMXbL1uW90PKhws2A6654IaEXlhx1jVQe03WksZQu5TfrEbi4zhbN3PWhqCZ0tm0
+	LiGU69cpM6IXL2EDEH5dxY0DouwvVYwrNQyYq0EKSHmhFGU1yYu4Bir0Bg2jxl58c0j49yVODMS
+	7bTwmYfg6ZP2awVonVdgHpAPs6AOWDNcG7l3Lbkb6ExiZwIuMqMtDi49OgNmKPFJA55HQWBOBji
+	UeYy/X/SWgy744ZLbwSq19bmkjSunnB4cYnU4dctpQAuHdWPUEcvbi9aVuAw8ECoHDd375OdRBj
+	ocjDG5Q2A==
+X-Received: by 2002:a05:6214:1314:b0:914:4e89:132e with SMTP id 6a1803df08f44-91799b46f91mr22907036d6.26.1790739465068;
+        Tue, 29 Sep 2026 20:37:45 -0700 (PDT)
+Received: from [127.0.0.1] ([20.94.54.80])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-917a03cff1fsm771516d6.31.2026.09.29.20.37.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Sep 2026 20:37:44 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Gang Yan <yangang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1790734083.git.tanggeliang@kylinos.cn>
+References: <cover.1790734083.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v14 00/11] Reduce the differences between
+ TCP and MPTCP for TLS usage
+Message-ID: <b3fabc8c-796e-ff55-0c3c-7e2ba5670bf2@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 30 Sep 2026 03:37:43 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4278a970-2957-4387-8f20-604ae4ae97e9@kernel.org>
+Content-Type: text/plain; charset=utf-8
 
-On Mon, Sep 28, 2026 at 11:17:59PM +0200, Matthieu Baerts wrote:
-> On 28/09/2026 13:24, Matthieu Baerts wrote:
-> >>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> >>> index 18ce7136a2b0e..b16e24418e737 100755
-> >>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> >>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> >>
-> >> [ ... ]
-> >>
-> >>> @@ -4402,12 +4372,10 @@ endpoint_tests()
-> >>>  
-> >>>  		# To make sure RM_ADDR are sent over a different subflow, but
-> >>>  		# allow the rest to quickly and cleanly close the subflow
-> >>> -		local ipt=1
-> >>> -		ip netns exec "${ns2}" ${iptables} -I OUTPUT -s "10.0.1.2" \
-> >>> -			-p tcp -m tcp --tcp-option 30 \
-> >>> -			-m bpf --bytecode \
-> >>> -			"$CBPF_MPTCP_SUBOPTION_RM_ADDR" \
-> >>> -			-j DROP || ipt=0
-> >>> +		local nft=1
-> >>> +		ip netns exec "${ns2}" nft insert rule ip filter OUTPUT \
-> >>> +			ip saddr 10.0.1.2 meta l4proto tcp \
-> >>> +			tcp option mptcp subtype remove-addr drop || nft=0
-> >>
-> >> [Severity: Medium]
-> >> Can this rule ever match an RM_ADDR packet on an established connection?
-> >>
-> >> nft_exthdr_tcp_eval() stops at the first TCP option whose kind matches
-> >> (30 for MPTCP). The subtype check therefore only ever sees the first
-> >> MPTCP suboption:
-> >>
-> >> net/netfilter/nft_exthdr.c:nft_exthdr_tcp_eval() {
-> >>     ...
-> >> 	for (i = sizeof(*tcph); i < tcphdr_len - 1; i += optl) {
-> >> 		optl = optlen(opt, i);
-> >>
-> >> 		if (priv->type != opt[i])
-> >> 			continue;
-> >> 		...
-> >> 		return;
-> >> 	}
-> >>     ...
-> >> }
-> > 
-> > Indeed, the RM_ADDR will be added in a second MPTCP option. It looks
-> > like Netfilter doesn't handle that case. But that seems to be an issue
-> > on the Netfilter side, rather than with the command that should work. I
-> > will follow up with Netfilter devs. If a fix cannot be added on their
-> > side, I will change the nft command to look at a specific offset.
-> > 
-> > Note that the command here is just to check there is no RM_ADDR sent on
-> > the wrong side: it shouldn't catch any packets here anyway.
-> 
-> After a discussion with Netfilter devs, it looks like a fix will not be
-> easy to have. Yet, I wonder if it wouldn't be better to apply this patch
-> like that (it doesn't break things), and have an explicit follow-up/fix
-> to document this issue somehow.
-> 
-> @Hangbin: do you plan to look at a fix for that? I guess a raw payload
-> looking at the same fields as what the previous cBPF rule was doing
-> would be enough.
+Hi Gang,
 
-Yes, I will add this on my todo list and fix it after holiday.
+Thank you for your modifications, that's great!
 
-> 
-> Don't hesitate to fix the "low" priority comments as well.
-> 
-> https://lore.kernel.org/all/20260926-net-next-mptcp-misc-feat-7-4-v1-0-67af4ab37406@kernel.org/T/#u
+Our CI did some validations and here is its report:
 
-Sure, I will.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf: Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_n=
+et-next/actions/runs/36661539144
 
-Thanks
-Hangbin
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/e903b8eead=
+de
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1176484
+
+
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
