@@ -1,133 +1,347 @@
-Received: from mail-qv2-f41.google.com (mail-qv2-f41.google.com [74.125.230.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5670A327C08
-	for <mptcp@lists.linux.dev>; Wed, 30 Sep 2026 03:37:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F334B3515C0;
+	Wed, 30 Sep 2026 03:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790739467; cv=none; b=tVJcXM776KAiPBZSBEFhoYV5sOmN/98cqfq0ys/1RVRLKmlIpOFuA+PvcKGPBeC15zORtxypaqQ8RUKO8ZPYs+SmmZ9Oi2Xa/Wz1iG4b4t2nZxyCZgR7sVh5syxAlkyt+xuo3Bg9s4xAFnv56NILdOOTvFiupJtg82XLKshaKpQ=
+	t=1790740211; cv=none; b=m+Aknc68ZvqGv0736v2JxMqzPJQIeryQkuV3UvAy5oMHR8WFk0hT8Q7xVH29MsNxOCHJO+Qzm8QusYm944cwyboqs+mJvapuRsPQwpZUmycv+dDWyukLpHHKC1zjXmQ7EQn7eprpAWp2YTREFCXyE8uMBe2g/yiTfgZuKBH0Rus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790739467; c=relaxed/simple;
-	bh=hLF5pin+p8Qy3S5qPL7uH4WeE6Ewv0Vv/u1Af5gSwas=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=tHyanZTlDTYVCpRV/hgDyEbluB4CfB7LOEaX7fTAzZw66IFe0p/SsqpvxY2f+i9hlCNun949lRVG8Nv82EvxN1YjCcX9r0orGs8N9SZaAeh0YoK9rZAi2rdUwDnituAS3dOQp6TMxHSmdzuhPeWAELDJfEziykADbsec+WdnI+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cZJSgK8f; arc=none smtp.client-ip=74.125.230.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790740211; c=relaxed/simple;
+	bh=Bf+DsAW5nTvc9GPk9imvQwx9+H7YFzV78ffJrc0GbrY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JYOEWB9bAxlPGk93VAfycPlMsVw6tRbMn900G7vJEMUkAq+yniD2pEWZpRWelvwtGG+ROxQ93jhdeFBCbwIL9B9sBj832XcFG5OI54vL+kge5dzZ+3yf9Im/QulCP1fy5O6X0Bn5bF0Z8qopYokBbvuOUtyc++/JrHJk1cdxn1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gRS4MPcU; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cZJSgK8f"
-Received: by mail-qv2-f41.google.com with SMTP id 6a1803df08f44-91782711448so14823546d6.2
-        for <mptcp@lists.linux.dev>; Tue, 29 Sep 2026 20:37:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790739465; x=1791344265; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=gBf0NxxCfHxC5ZoHNNTohli9GUWmAeS/lLjH2Co7q9Q=;
-        b=cZJSgK8fxGN/JNqOYU4AH81jTt2Z9Pkv7vqQrXSBXNk8KBeCLtQqB8qvJxTrSHVqCm
-         c80vce5lPcQU04TpnCL2bNQQY+bx6d3bOUD5fJH6KfXev2YTLPUP4bnRNUEHWY+DCDVs
-         EfSUV9jiCutD36jR/S/smLlwQP4yk2Sb7fljk/k61il6+s0Ow+NlV4fVs5bX4hA4yVu4
-         cfwh8kmxild8aeKN+GFtUq6V72yTQ8e2lFXtHXJAjawHshIJt4g39gkRe+MRpTA2Fk9g
-         b6G8x2m5VkDkgG+6vk0edbqK8mqkle1btgf3ygYYG98sVWVcW1oPKCd/6PLx0+0lCau2
-         S69A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790739465; x=1791344265;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=gBf0NxxCfHxC5ZoHNNTohli9GUWmAeS/lLjH2Co7q9Q=;
-        b=rM0v9T+Lk6mhXar5gVKONxmNKrZ9eNlqjlz3NarVpZDjlFudeHVErXaGt69oGuMZga
-         6rqf3GInQh4y6oww+/faGQTbArjAfZ+uLHle4K7zEvziubQj9OQZ8BcQDP/NbfIgr4p8
-         UihQzOFbfa0H5bqXsaB8cz1X51fScsHbxV2D93rvL0Zk69PC51EgrDM7yxuanoy1zN/C
-         prsg/jgbXKNupwpZJHtiuDiDtitN9wk6lT61b//CsCXM/z/dRSUw/W9PD8kBS9PSmlpE
-         XDZ3PLuQ2UyLE+DFS02z2GoPApFE+ap7R0WkSlfP8JzgFKxEhH7r2/X3oX79UJxVUfWJ
-         UfYQ==
-X-Gm-Message-State: AFq9FYKhDLal78SYxNkQU5miqZDwpo53wttczSgRvB299RILe48fYjQ3
-	R0Y7GxNotSuwVTUbAW5DGIDy4pV/yqrrTaaNLDAkgjrJL7Ornq/yF2wt2aKz
-X-Gm-Gg: AYBFou3D1vHEkzNEIs9sS1NmaORhzy5Mmq2rRGhIiSdvxhx5aPLmZPECpxV6QuDdkU+
-	m80v050qECVFyB5BOehqKeLEa7IX74wpgSvEml06+NgKHTKr33JTMM0YLhqLDcMRP7Me5innEzL
-	hLgrLIwVz4AwXIKt0Q7ImHkP/MhNWEHDNO5gYiZnVVA79+LBJ0E2Af6vTEdw+iGo/gbjFaQiVWs
-	tHM0h1rsPeHCMXbL1uW90PKhws2A6654IaEXlhx1jVQe03WksZQu5TfrEbi4zhbN3PWhqCZ0tm0
-	LiGU69cpM6IXL2EDEH5dxY0DouwvVYwrNQyYq0EKSHmhFGU1yYu4Bir0Bg2jxl58c0j49yVODMS
-	7bTwmYfg6ZP2awVonVdgHpAPs6AOWDNcG7l3Lbkb6ExiZwIuMqMtDi49OgNmKPFJA55HQWBOBji
-	UeYy/X/SWgy744ZLbwSq19bmkjSunnB4cYnU4dctpQAuHdWPUEcvbi9aVuAw8ECoHDd375OdRBj
-	ocjDG5Q2A==
-X-Received: by 2002:a05:6214:1314:b0:914:4e89:132e with SMTP id 6a1803df08f44-91799b46f91mr22907036d6.26.1790739465068;
-        Tue, 29 Sep 2026 20:37:45 -0700 (PDT)
-Received: from [127.0.0.1] ([20.94.54.80])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-917a03cff1fsm771516d6.31.2026.09.29.20.37.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Sep 2026 20:37:44 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Gang Yan <yangang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1790734083.git.tanggeliang@kylinos.cn>
-References: <cover.1790734083.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v14 00/11] Reduce the differences between
- TCP and MPTCP for TLS usage
-Message-ID: <b3fabc8c-796e-ff55-0c3c-7e2ba5670bf2@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 30 Sep 2026 03:37:43 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gRS4MPcU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C59151F000FF;
+	Wed, 30 Sep 2026 03:50:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790740209;
+	bh=YIbSyCiOLeEUjjfXA44UKdojHNTuWRGoF01Fd+gF+Vo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=gRS4MPcUabeFuR3C9i4klfpgJNpppqfTNOI3ByEj403YUelxdvjP8tP0FOlqhr9uM
+	 WFP4K8EdWYl6ZEXDEuec5SjtWPc14c4aRw7FBtJuApwzfJtGTV4M4AkM4oyTvHlTc/
+	 dozFazcACAuj8EotbA4zjvUc/q3OGkD3QeBy+f27NcjnZgXPYytHVUeM681jYWQAha
+	 MiDV9hyjl9LQJfLeD7SUBThIzKsRBzo6EyWASE2wMTRjYJDKnxejhJNDWhOXNQ30Ci
+	 qjC0NOhtS9+dFLjqVZeRamKemrT/esFnuwh2tHI1aFxkjEsliRYqjnZSEZueXblqNj
+	 44/OyrH/LspvQ==
+Message-ID: <07eee1c8cebf02f346b46ba55164f6dfc5f36e91.camel@kernel.org>
+Subject: Re: [PATCH 3/6] landlock: Add MPTCP bind and connect access rights
+From: Geliang Tang <geliang@kernel.org>
+To: =?ISO-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>
+Cc: =?ISO-8859-1?Q?G=FCnther?= Noack <gnoack3000@gmail.com>, 
+ =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?=	 <mic@digikod.net>, Matthieu Baerts
+ <matttbe@kernel.org>, Mat Martineau	 <martineau@kernel.org>, Mikhail Ivanov
+ <ivanov.mikhail1@huawei-partners.com>, 	mptcp@lists.linux.dev,
+ netdev@vger.kernel.org, 	linux-security-module@vger.kernel.org
+Date: Wed, 30 Sep 2026 11:50:02 +0800
+In-Reply-To: <arPhu-qFxCgmfk87@google.com>
+References: <20260830201650.67050-1-gnoack3000@gmail.com>
+	 <20260830201650.67050-4-gnoack3000@gmail.com>
+	 <c0bf0918bd97105ee50f1436e6ff729e84cedf03.camel@kernel.org>
+	 <a5a2f4353d0c2a1b1f86ebf466838f5ef3de27ce.camel@kernel.org>
+	 <arPhu-qFxCgmfk87@google.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-9 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-Hi Gang,
+Hi Günther,
 
-Thank you for your modifications, that's great!
+On Wed, 2026-09-23 at 16:27 +0200, Günther Noack wrote:
+> On Wed, Sep 23, 2026 at 01:04:40PM +0800, Geliang Tang wrote:
+> > On Mon, 2026-08-31 at 12:09 +0800, Geliang Tang wrote:
+> > > On Sun, 2026-08-30 at 22:16 +0200, Günther Noack wrote:
+> > > > MPTCP sockets have equivalent bind(2) and connect(2) operations
+> > > > as
+> > > > TCP
+> > > > sockets, but can not currently be restricted with Landlock
+> > > > without
+> > > > explicit MPTCP access rights.  As MPTCP operates on the same
+> > > > TCP
+> > > > port
+> > > > number space as TCP, this is a gap in Landlock's policies.
+> > > > 
+> > > > Add access rights for MPTCP bind(2) and connect(2) operations
+> > > > and document them in the header.
+> > > > 
+> > > > Treat TCP Fast Open the same as done for plain TCP in
+> > > > commit 33cb713db016 ("landlock: Fix TCP Fast Open connection
+> > > > bypass")
+> > > > 
+> > > > The port numbers used in MPTCP subflows are negotiated by the
+> > > > kernel
+> > > > and therefore not subject to these access rights.
+> > > > 
+> > > > Bump the Landlock ABI version to 12.
+> > > > 
+> > > > Closes: https://github.com/landlock-lsm/linux/issues/54
+> > > > Signed-off-by: Günther Noack <gnoack3000@gmail.com>
+> > > > ---
+> > > >  include/linux/landlock.h                     |  5 +-
+> > > >  include/uapi/linux/landlock.h                | 24 +++++++
+> > > >  security/landlock/limits.h                   |  2 +-
+> > > >  security/landlock/net.c                      | 68
+> > > > ++++++++++++++--
+> > > > --
+> > > > --
+> > > >  security/landlock/syscalls.c                 |  2 +-
+> > > >  tools/testing/selftests/landlock/base_test.c |  2 +-
+> > > >  6 files changed, 79 insertions(+), 24 deletions(-)
+> > > > 
+> > > > diff --git a/include/linux/landlock.h
+> > > > b/include/linux/landlock.h
+> > > > index 004cbd0b9298..b04ffc7caa21 100644
+> > > > --- a/include/linux/landlock.h
+> > > > +++ b/include/linux/landlock.h
+> > > > @@ -46,7 +46,10 @@
+> > > >  	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_NET_CONNECT_TCP,
+> > > > "connect_tcp"), \
+> > > >  	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_NET_BIND_UDP,
+> > > > "bind_udp"), \
+> > > >  	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_NET_CONNECT_SEND_
+> > > > UDP,
+> > > > \
+> > > > -			     "connect_send_udp")
+> > > > +			     "connect_send_udp"), \
+> > > > +	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_NET_BIND_MPTCP,
+> > > > "bind_mptcp"), \
+> > > > +	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_NET_CONNECT_MPTCP
+> > > > , \
+> > > > +			     "connect_mptcp")
+> > > >  
+> > > >  #define _LANDLOCK_SCOPE_NAMES \
+> > > >  	_LANDLOCK_NAME_ENTRY(LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCK
+> > > > ET,
+> > > > \
+> > > > diff --git a/include/uapi/linux/landlock.h
+> > > > b/include/uapi/linux/landlock.h
+> > > > index cceda3b3b961..2a953ba7ce25 100644
+> > > > --- a/include/uapi/linux/landlock.h
+> > > > +++ b/include/uapi/linux/landlock.h
+> > > > @@ -448,6 +448,9 @@ struct landlock_net_port_attr {
+> > > >   * - %LANDLOCK_ACCESS_NET_CONNECT_TCP: Connect TCP sockets to
+> > > > the
+> > > > given
+> > > >   *   remote port. Support added in Landlock ABI version 4.
+> > > >   *
+> > > > + * .. note:: These rights do not apply to MPTCP sockets, which
+> > > > have
+> > > > their own
+> > > > + *   access rights (see below).
+> > > > + *
+> > > >   * And similarly for UDP port numbers:
+> > > >   *
+> > > >   * - %LANDLOCK_ACCESS_NET_BIND_UDP: Bind UDP sockets to the
+> > > > given
+> > > > local
+> > > > @@ -474,12 +477,33 @@ struct landlock_net_port_attr {
+> > > >   * .. note:: Sending datagrams to an ``AF_UNSPEC`` destination
+> > > > address
+> > > >   *   family is not supported for IPv6 UDP sockets: you will
+> > > > need
+> > > > to
+> > > > use a
+> > > >   *   ``NULL`` address instead.
+> > > > + *
+> > > > + * MPTCP sockets (created with ``IPPROTO_MPTCP``) use TCP port
+> > > > numbers, but
+> > > > + * they are controlled by their own access rights:
+> > > > + *
+> > > > + * - %LANDLOCK_ACCESS_NET_BIND_MPTCP: Bind MPTCP sockets to
+> > > > the
+> > > > given local
+> > > > + *   port. Support added in Landlock ABI version 12.
+> > > > + * - %LANDLOCK_ACCESS_NET_CONNECT_MPTCP: Connect MPTCP sockets
+> > > > to
+> > > > the given
+> > > > + *   remote port. Support added in Landlock ABI version 12.
+> > > > + *
+> > > > + * .. note:: The TCP and the MPTCP access rights are
+> > > > independent,
+> > > > even though
+> > > > + *   they refer to the same port number space. Handling only
+> > > > + *   %LANDLOCK_ACCESS_NET_BIND_TCP and
+> > > > %LANDLOCK_ACCESS_NET_CONNECT_TCP leaves
+> > > > + *   MPTCP sockets unrestricted, and vice versa. A sandbox
+> > > > that
+> > > > wants to
+> > > > + *   control all TCP-based traffic needs to handle both sets.
+> > > > + *
+> > > > + * .. note:: These MPTCP access rights restrict the ports
+> > > > passed
+> > > > to
+> > > > + *   :manpage:`bind(2)` and :manpage:`connect(2)`. The ports
+> > > > used
+> > > > in
+> > > > MPTCP
+> > > > + *   subflows are negotiated in the MPTCP protocol by the
+> > > > kernel
+> > > > and
+> > > > are not
+> > > > + *   subject to these restrictions.
+> > > >   */
+> > > >  /* clang-format off */
+> > > >  #define LANDLOCK_ACCESS_NET_BIND_TCP			(1ULL
+> > > > <<
+> > > > 0)
+> > > >  #define
+> > > > LANDLOCK_ACCESS_NET_CONNECT_TCP			(1ULL << 1)
+> > > >  #define LANDLOCK_ACCESS_NET_BIND_UDP			(1ULL
+> > > > <<
+> > > > 2)
+> > > >  #define LANDLOCK_ACCESS_NET_CONNECT_SEND_UDP		(1ULL
+> > > > <<
+> > > > 3)
+> > > > +#define LANDLOCK_ACCESS_NET_BIND_MPTCP			(1ULL
+> > > > <<
+> > > > 4)
+> > > > +#define LANDLOCK_ACCESS_NET_CONNECT_MPTCP		(1ULL
+> > > > <<
+> > > > 5)
+> > > >  /* clang-format on */
+> > > >  
+> > > >  /**
+> > > > diff --git a/security/landlock/limits.h
+> > > > b/security/landlock/limits.h
+> > > > index 1a7c5fb8f6fd..d25e056b7ca2 100644
+> > > > --- a/security/landlock/limits.h
+> > > > +++ b/security/landlock/limits.h
+> > > > @@ -23,7 +23,7 @@
+> > > >  #define
+> > > > LANDLOCK_MASK_ACCESS_FS		((LANDLOCK_LAST_ACCESS_FS <<
+> > > > 1) -
+> > > > 1)
+> > > >  #define
+> > > > LANDLOCK_NUM_ACCESS_FS		__const_hweight64(LANDLOCK_MAS
+> > > > K_AC
+> > > > CESS_FS)
+> > > >  
+> > > > -#define
+> > > > LANDLOCK_LAST_ACCESS_NET	LANDLOCK_ACCESS_NET_CONNECT_SE
+> > > > ND_U
+> > > > DP
+> > > > +#define
+> > > > LANDLOCK_LAST_ACCESS_NET	LANDLOCK_ACCESS_NET_CONNECT_MP
+> > > > TCP
+> > > >  #define
+> > > > LANDLOCK_MASK_ACCESS_NET	((LANDLOCK_LAST_ACCESS_NET
+> > > > << 1) - 1)
+> > > >  #define
+> > > > LANDLOCK_NUM_ACCESS_NET		__const_hweight64(LANDLOCK_MAS
+> > > > K_AC
+> > > > CESS_NET)
+> > > >  
+> > > > diff --git a/security/landlock/net.c b/security/landlock/net.c
+> > > > index 8f2aaac54b33..8541b0c07d64 100644
+> > > > --- a/security/landlock/net.c
+> > > > +++ b/security/landlock/net.c
+> > > > @@ -11,6 +11,7 @@
+> > > >  #include <linux/net.h>
+> > > >  #include <linux/socket.h>
+> > > >  #include <net/ipv6.h>
+> > > > +#include <net/mptcp.h>
+> > > >  
+> > > >  #include "common.h"
+> > > >  #include "cred.h"
+> > > > @@ -53,6 +54,26 @@ int landlock_append_net_rule(struct
+> > > > landlock_ruleset *const ruleset,
+> > > >  	return err;
+> > > >  }
+> > > >  
+> > > > +static bool sk_is_mptcp_socket(const struct sock *sk)
+> > > > +{
+> > > > +	return sk_is_inet(sk) && sk->sk_type == SOCK_STREAM &&
+> > > > +	       sk->sk_protocol == IPPROTO_MPTCP;
+> > > > +}
+> > > 
+> > > This helper should be placed in include/net/mptcp.h. I had
+> > > already
+> > > implemented one in [1], called sk_is_msk(), to differentiate it
+> > > from
+> > > sk_is_mptcp(). If you have no concerns with my implementation,
+> > > please
+> > > feel free to pick it up and use it in your series.
+> > 
+> > Sorry, let me correct myself. I thought about this more carefully,
+> > and
+> > the ideal place to define sk_is_msk() is in include/net/sock.h,
+> > between
+> > sk_is_tcp() and sk_is_udp():
+> > 
+> > static inline bool sk_is_tcp(const struct sock *sk) 
+> > {
+> >         return sk_is_inet(sk) &&
+> >                sk->sk_type == SOCK_STREAM &&
+> >                sk->sk_protocol == IPPROTO_TCP;
+> > }
+> > 
+> > static inline bool sk_is_msk(const struct sock *sk) 
+> > {
+> >         return sk_is_inet(sk) &&
+> >                sk->sk_type == SOCK_STREAM &&
+> >                sk->sk_protocol == IPPROTO_MPTCP;
+> > }
+> > 
+> > static inline bool sk_is_udp(const struct sock *sk) 
+> > {
+> >         return sk_is_inet(sk) &&
+> >                sk->sk_type == SOCK_DGRAM &&
+> >                sk->sk_protocol == IPPROTO_UDP;
+> > }
+> > 
+> > If possible, please fold this code into this patch.
+> 
+> Thank you for the review, Geliang!
+> 
+> I'll include something like this in the next review round.
+> (We are a bit bottlenecked on doing Landlock code reviews at the
+> moment,
+> so some delays are unfortunately expected.)
+> 
+> Small question about the function name sk_is_msk(): Is "msk" the
+> right
+> name for this?  It seems to be used as abbreviation for "MPTCP" in
+> net/mptcp, but it's also used in net/mctp as an abbreviation, and I
 
-Our CI did some validations and here is its report:
+Thanks for the heads-up! I hadn't considered that "msk" is also used as
+an abbreviation in net/mctp.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Perf: Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_n=
-et-next/actions/runs/36661539144
+> could not find a function name in include/net/mptcp.h which used
+> "msk"
+> to mean "MPTCP".  Should that say sk_is_mptcp() instead?
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/e903b8eead=
-de
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1176484
+However, sk_is_mptcp() is already taken - it's defined in
+include/net/mptcp.h and used to check whether a socket is an MPTCP
+subflow (tcp_sk(sk)->is_mptcp).
 
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+So I'd like to propose the following rename scheme:
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+- Rename the existing sk_is_mptcp() (subflow check) to ssk_is_mptcp(),
+where "ssk" stands for "subflow socket".
 
-For more details:
+- Rename sk_is_msk() (the one I introduced here) to sk_is_mptcp(),
+which checks whether the socket is the MPTCP socket itself.
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+This would give a consistent naming scheme:
 
+  sk_is_mptcp()    - is this the MPTCP socket?
+  ssk_is_mptcp()   - is this an MPTCP subflow?
+  rsk_is_mptcp()   - is this an MPTCP request subflow?
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+We'll need to discuss this with the MPTCP maintainers before
+proceeding.
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Thanks,
+-Geliang
+
+> 
+> Thanks,
+> —Günther
