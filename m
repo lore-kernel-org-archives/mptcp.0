@@ -1,130 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9463A55294B;
-	Tue, 29 Sep 2026 19:32:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B7D282F2A;
+	Wed, 30 Sep 2026 01:59:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790710366; cv=none; b=dhSIK1cOWPOCP4SHc7TNh66kcCgg7ym00Eew1qqdHpN+l/clvYOWJ7+i+oEUVGx3nsh30iZY7XN2yKQzUHtRUO5JNnrno9UbyxsjZ54zSm0FXGzLDHn00Aeov/3sAx6prem9N6dbAKIKcXddqxbfd3zflp9tuiQaQnvt0l8+L1A=
+	t=1790733594; cv=none; b=ZkvpXrQeofqXryqhWibGLPcsO7ZLWG1pHsOLPoFQEDgBeJzLIhrFIwdWXOmJ9vTSnKPubP9QPCuG7gwhxGepJM4TpTyC3Tt1r2pRd61tfS5eMf2ZDnJ6H8Z/w2AR1qAW2rJv7yi9ogWARYxr9DsEaynuwMpeic0kP6PKAsVJFW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790710366; c=relaxed/simple;
-	bh=Fn4MPbxI+JJCAvX0AAkAD9uyazR2zHDgsv3pW6Q0Lqk=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=B8C6LVt0cCxjohEMaxKuCJzCplRzC1JfqpJHrhO10JJgtaXJ0d90eUTslewjb0TgoszFD5J+2hxxeupeUshQCrHyWfsQ+5MIlWaMCEH7uDt4XGZK52juEpNQBPEnVmqMlycX1/XokADWS0V/rvcgMN+PPR970sA1Fsx+61wt9NM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PBMBkbXD; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790733594; c=relaxed/simple;
+	bh=1XZfKocU/lN5GfPuRrDk1+Frer+DxmS5rdeBz68W3/4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=M8iRlLN4SbH19AbPui6B/x7sCHntBq1/a1v6Ue8lFquWiEN4T0faOO2zjy60TpQB+avn1bnG63o3ZpUz4DnuCPq4qZWHgVa1t/39gapGq1sSlaGvC5Wc6Gwlq2qJXHmz8MHVnd1JAiYMlVN+4AgI/CbBjixYynOMz3sCizcF5G4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O1welR2X; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PBMBkbXD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90FF01F000FF;
-	Tue, 29 Sep 2026 19:32:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O1welR2X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 530171F000FF;
+	Wed, 30 Sep 2026 01:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790710364;
-	bh=HZtibm6wLNY3C3qTYpBig2hjrFtePeC9eV4kCyAr5kk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=PBMBkbXDwVUZDdWjT7rS5KJdKcI3WcPLdaGiv0mGoM8mOWUIez5KcDyQuJDKYconx
-	 0AmBoli61qd2jVKbOaa6HRODoEUA8xU8abZZBHSndeS/0o32MDvPrD1UMw+HyjJzMa
-	 5UuqfqCFSU985LqHm72wG5wJ5RhCvm2U+J3uEe8cJvdx0bzVGwBZjXo5SYCwktq6ZT
-	 ymtXXHsvx+uth+8+nCVRJUonHnd06oxoX7bvvbVg5LZiZd2sgxUEjXzcF/P1TQM6Lj
-	 il66dHPgFR6OexyHL/FGVqD2xxB2ThleAXInFqamp+uEaAWuEcj2pSxs+rE3AjbV1i
-	 e+PXbnKfJSOjA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 01/16 net-next v2] ipv4: introduce CONFIG_IPV4 to
- decouple the IPv4 stack
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Fernando Fernandez Mancera" <fmancera@suse.de>
-Cc: antonio@mandelbit.com, sw@simonwunderlich.de, linux-scsi@vger.kernel.org, "Jeff
- Layton" <jlayton@kernel.org>, sven@narfation.org, linux-security-module@vger.kernel.org, "Anna
- Schumaker" <anna@kernel.org>, "Chuck Lever" <cel@kernel.org>, marek.lindner@mailbox.org, mptcp@lists.linux.dev, linux-rdma@vger.kernel.org
-In-Reply-To: <20260928193046.6698-2-fmancera@suse.de>
-References: <20260928193046.6698-1-fmancera@suse.de>
- <20260928193046.6698-2-fmancera@suse.de>
-Content-Type: text/plain; charset=utf-8
+	s=k20260515; t=1790733593;
+	bh=DX9g4ivFVPNTKG/kBEx/zUz96+yiO19hM2X9UAqzp0o=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=O1welR2XYxDBYcQMymrp8H6LU8yzVjVEsXTqj+hE3Y6d384E20FR9whrky/Hlyvq8
+	 PJBgrnmt0uwt8QYwPmssrtdWFnj9TlvpkUOcLju5O3FJ9+ZO1qq4A3RQp9kbPSJ3JI
+	 AQvB1zRp2pyQRux8QZ6NS1/NHs7TRz8Ec101/R5TwolVHbJdIOa6AehLEpMX9RzcYp
+	 0/12MShIxqBagJhTZ5n1HD9WpixNqk7ruvokk+tWP/ZJLFstOnlRPsEKrX2BtUpdlO
+	 JsTn+twh2/J6S5QCngwhB61nx+6Ifhk+jqBTPr//Obogdmns5GmWCsQY5R9XKfbPgj
+	 PklpO8bvU1b8g==
+Message-ID: <3453cad85b6ec1d3b36398ba7565d053163a5929.camel@kernel.org>
+Subject: Re: [PATCH v3 net-next 4/9] rds: use sk_set_nospace()
+From: Allison Henderson <achender@kernel.org>
+To: Eric Dumazet <edumazet@kernel.org>, "David S . Miller"
+ <davem@davemloft.net>,  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>
+Cc: Simon Horman <horms@kernel.org>, Neal Cardwell <ncardwell@google.com>, 
+ Kuniyuki Iwashima <kuniyu@google.com>, edumazet@google.com,
+ netdev@vger.kernel.org, Alexander Aring <aahringo@redhat.com>, David
+ Teigland <teigland@redhat.com>,  gfs2@lists.linux.dev, John Fastabend
+ <john.fastabend@gmail.com>, Jakub Sitnicki <jakub@cloudflare.com>, Sabrina
+ Dubroca <sd@queasysnail.net>, Jiayuan Chen <jiayuan.chen@linux.dev>,
+ Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>,  mptcp@lists.linux.dev, Wen Gu
+ <guwen@linux.alibaba.com>, Dust Li <dust.li@linux.alibaba.com>, "D. Wythe"
+ <alibuda@linux.alibaba.com>, Chuck Lever <cel@kernel.org>, Jeff Layton
+ <jlayton@kernel.org>, NeilBrown <neil@brown.name>, Olga Kornievskaia
+ <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker
+ <anna@kernel.org>, linux-nfs@vger.kernel.org,  rds-devel@oss.oracle.com,
+ Philipp Reisner <philipp.reisner@linbit.com>, Lars Ellenberg
+ <lars.ellenberg@linbit.com>, Christoph =?ISO-8859-1?Q?B=F6hmwalder?=
+ <christoph.boehmwalder@linbit.com>, Jens Axboe <axboe@kernel.dk>, 
+ drbd-dev@lists.linux.dev, Keith Busch <kbusch@kernel.org>, Christoph
+ Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni
+ <kch@nvidia.com>, linux-nvme@lists.infradead.org, Ilya Dryomov
+ <idryomov@gmail.com>, Alex Markuze <amarkuze@redhat.com>, Viacheslav
+ Dubeyko <slava@dubeyko.com>, ceph-devel@vger.kernel.org
+Date: Tue, 29 Sep 2026 18:59:50 -0700
+In-Reply-To: <20260929071743.23624-5-edumazet@kernel.org>
+References: <20260929071743.23624-1-edumazet@kernel.org>
+	 <20260929071743.23624-5-edumazet@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 29 Sep 2026 19:32:43 +0000
-Message-Id: <20260929193243.90FF01F000FF@smtp.kernel.org>
+User-Agent: Evolution 3.52.3-0ubuntu1.1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] kconfig: core dual-stack and IPv6 features are forcibly disabled w=
-ithout IPv4
---
+On Tue, 2026-09-29 at 07:17 +0000, Eric Dumazet wrote:
+> Use the new helpers instead of open coding the SOCK_NOSPACE
+> manipulation, so that TCP can later maintain a cheaper private
+> copy of this bit.
+>=20
+> No functional change intended.
+>=20
+> Reviewed-by: Kuniyuki Iwashima <kuniyu@google.com>
+> Signed-off-by: Eric Dumazet <edumazet@kernel.org>
 
-commit e9e0ffe00541dede8370017851b597f6f3e1cfa2
-Author: Fernando Fernandez Mancera <fmancera@suse.de>
+Thank you!
+Acked-by: Allison Henderson <achender@kernel.org>
 
-ipv4: introduce CONFIG_IPV4 to decouple the IPv4 stack
-
-This commit introduces the CONFIG_IPV4 symbol to decouple the IPv4 stack,
-currently defaulting it to yes. It adjusts multiple networking subsystems
-across tunnels, drivers, and filesystems to depend on this new IPv4
-configuration symbol.
-
-> diff --git a/net/Kconfig b/net/Kconfig
-> index 76ab44aa439a6..ca86f20540dd1 100644
-> --- a/net/Kconfig
-> +++ b/net/Kconfig
-[ ... ]
-> @@ -232,6 +235,7 @@ config BRIDGE_NETFILTER
->  	depends on BRIDGE
->  	depends on NETFILTER && INET
->  	depends on NETFILTER_ADVANCED
-> +	depends on IPV4
->  	select NETFILTER_FAMILY_BRIDGE
-
-[Severity: High]
-Does adding this dependency force bridge netfilter to be unavailable on
-kernels without IPv4?
-
-Bridge netfilter handles both IPv4 and IPv6 bridged traffic. Tying it
-exclusively to CONFIG_IPV4 under config BRIDGE_NETFILTER might prevent
-filtering IPv6 traffic on an IPv6-only kernel.
-
-[ ... ]
-> diff --git a/net/ipv6/Kconfig b/net/ipv6/Kconfig
-> index c3806c6ac96f9..f83efc1505cc4 100644
-> --- a/net/ipv6/Kconfig
-> +++ b/net/ipv6/Kconfig
-[ ... ]
-> @@ -256,7 +265,7 @@ config IPV6_SUBTREES
+> ---
+>  net/rds/tcp_send.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/net/rds/tcp_send.c b/net/rds/tcp_send.c
+> index 7c52acc749cf4d4003c749a2646c2b4f87f207fe..824222c475119d91e333123c5=
+afc9291005a8696 100644
+> --- a/net/rds/tcp_send.c
+> +++ b/net/rds/tcp_send.c
+> @@ -100,7 +100,7 @@ int rds_tcp_xmit(struct rds_connection *conn, struct =
+rds_message *rm,
 > =20
->  config IPV6_MROUTE
->  	bool "IPv6: multicast routing"
-> -	depends on IPV6
-> +	depends on IPV4 && IPV6
->  	select IP_MROUTE_COMMON
+>  	if (hdr_off < sizeof(struct rds_header)) {
+>  		/* see rds_tcp_write_space() */
+> -		set_bit(SOCK_NOSPACE, &tc->t_sock->sk->sk_socket->flags);
+> +		sk_set_nospace(tc->t_sock->sk);
+> =20
+>  		ret =3D rds_tcp_sendmsg(tc->t_sock,
+>  				      (void *)&rm->m_inc.i_hdr + hdr_off,
+> @@ -221,6 +221,5 @@ void rds_tcp_write_space(struct sock *sk)
+>  	 */
+>  	write_space(sk);
+> =20
+> -	if (sk->sk_socket)
+> -		set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
+> +	sk_set_nospace(sk);
+>  }
 
-[Severity: High]
-Does this change break IPv6 multicast routing when CONFIG_IPV4 is disabled?
-
-IPv6 multicast routing under config IPV6_MROUTE does not inherently require
-IPv4. Adding this dependency disables purely IPv6 functionality on an
-IPv6-only kernel.
-
-[ ... ]
-> diff --git a/net/xfrm/Kconfig b/net/xfrm/Kconfig
-> index 4a62817a88f8f..203188b05be40 100644
-> --- a/net/xfrm/Kconfig
-> +++ b/net/xfrm/Kconfig
-> @@ -4,7 +4,7 @@
->  #
->  config XFRM
->  	bool
-> -	depends on INET
-> +	depends on INET && IPV4
->  	select GRO_CELLS
-
-[Severity: High]
-Will adding this dependency disable the global IPsec subsystem for IPv6-only
-kernels?
-
-Tying config XFRM entirely to CONFIG_IPV4 restricts dual-stack infrastructu=
-re,
-making it impossible to use IPsec with IPv6 if IPv4 is disabled.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260928193046.6698=
--1-fmancera@suse.de?part=3D1
