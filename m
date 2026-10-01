@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59825488757
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD0B495515
 	for <mptcp@lists.linux.dev>; Thu,  1 Oct 2026 21:12:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790889132; cv=none; b=RdIeZkesqy3TYGrS0dSsKOt+hCinrSJxH8d2fFKvD6I4fUS5gQ9hIFCgAbrs58Fb0Tmvtw+65yDHvAt9TlZeln2mUACSY/FdrD+hhOIFJjWscB1Dx7UjWcgCG2u82AyPKCxMxE+zw14H8bqrr/EOtq3bCdZI2XvLMd98kJ2Qlv4=
+	t=1790889133; cv=none; b=hxPOM1W2WtpJ/aifkD97djQBLg1svyLDy+4dOM6gweWVw7bI9LJFLfABDdz+ilG9NQDNOZ45TF6ulYmOHUZjUlPzre6H6/+RZrD0IN9+0AQYUaGLbAoIUjLEHJIGKpRugm8CaL41gwEpPsTNcSDP+Juk8YAHVv7N51UJpZstiuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790889132; c=relaxed/simple;
-	bh=fwHzVspzHLECmEKlLZJ6Om33nxd427XycnGUW8JMhD4=;
+	s=arc-20240116; t=1790889133; c=relaxed/simple;
+	bh=FTOctffQ7z/+XaSstjzKXOZ/v4A7YakNT1mjIbdU9tM=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=EKRWWFTEwQlW8wcUwmxHOEtj16ca/N6P82aDBQXfpopseER4l5SBccRicDLR7qQqlnZMkolFTfEU91+wuKVeFHBZpw008vM6EshFShD3wpY6gT+bZ4yv+1MXyXFZs7CHonTA1Y9TBC8e/eBKYrqh+CPXEqoBNj0KenC6PmCc5rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PxolDw+4; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:MIME-Version; b=Bt4/nkngazKRmYlA5rfb2MAEIpaWO2kFH7s4v9ssct6/WdJTaTeiyFpo21L+SBwLjJJSHRR+m0uvf4n5tuptvIgxCRHebw9N/MYKLwcJP51/V7q/NbgPxvZfIzWhBCdnagD5NKioYr/qc/FhVlRrPzyWTzdA700uFDsNRKAjzR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M5Uw5Ia/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PxolDw+4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B15421F000FF;
-	Thu,  1 Oct 2026 21:12:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M5Uw5Ia/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 906861F00893;
+	Thu,  1 Oct 2026 21:12:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1790889131;
-	bh=kLTxR+97v8dvqfNOx4zreOr7ES7HYNkMoquoyJ2AOP4=;
+	bh=kRyzBGx7mc3X5OrjxmcxpnmhC9Lkjp/5jYtNJjlkpUk=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=PxolDw+43nVYAR11/6Z0scWNVHZFqwGTIMjmBDLzYicviJji1um0pmpbZERO7wqN+
-	 b7dEBfeRM00fd1HEHh92IigSGIOH5ORkvGITOZU0m1DU0Mmxc8LKug4CxpaE2SIzCc
-	 8KS5mKBDRJ/azhHknKrOJDz3O56XZfuLP162zaFdFPzIeWZlu+73prwhIYZMkqqhdr
-	 iSTqUTzJ7mPD5cMTHZgdoMTtGpDda8yVqIO2kXsoWIaScRkSu0Xj0hz+5TnaClbBBE
-	 p9j7fULQTHBLyR/5UyBpxm20bmMKPvM/Qx5UbKZQKtNRzcTgZlMeSxeH3sz8hZALDz
-	 zr+hRDJNeo8Zw==
-Subject: Re: [PATCH mptcp-next v14 05/11] mptcp: defer read_sock cleanup to
- mptcp_worker
+	b=M5Uw5Ia/EOHze6lnzInMGXWHHjR3qiy/lBP2RC17YYnzniPM3AycUkn2HAGxSuaZv
+	 4MXaVybGQOM4v6Bo6WETELLFDqhg521BWQ9BEUcjVVOqHJtso0AAj6MMjmQnR731Xg
+	 qJ4DKZxhZ5GUkW0oHIfj4KAgoh1jEqf89ipmRj2ecma4Mn13ZkA5bVBV5xDEr2ffe9
+	 H7/RBTmaxjTBdQz1o4RR9qSp2V/IzkHQdnwwK07umXxZCI/ni+JskSh/i32yvO6aAS
+	 4R9PndUDEDBUkjGIAJDvG+EZyc7vJpSJa9XK1Y4GOrWVErk4TwSS5TrkNNDYFD0gFX
+	 jYXxuaXrpXRiw==
+Subject: Re: [PATCH mptcp-next v14 06/11] mptcp: align FIN handling with TCP
+ via SOCK_DONE
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc:
  mptcp@lists.linux.dev, pabeni@redhat.com, yangang@kylinos.cn, kuba@kernel.org
-Date: Thu, 01 Oct 2026 21:12:10 +0000
-Message-ID: <179088913030.3135.17267555452910281818@kernel.org>
-In-Reply-To: =?utf-8?q?=3C1ce3c8d4b5fb4704bf81d1b9ee629a40f9ef67ec=2E1790734?=
+Date: Thu, 01 Oct 2026 21:12:11 +0000
+Message-ID: <179088913113.3135.12561434524857640069@kernel.org>
+In-Reply-To: =?utf-8?q?=3C64ec5f3d886de8362ffea9c0cc173dd89487ef1d=2E1790734?=
  =?utf-8?q?083=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
-References: =?utf-8?q?=3C1ce3c8d4b5fb4704bf81d1b9ee629a40f9ef67ec=2E17907340?=
+References: =?utf-8?q?=3C64ec5f3d886de8362ffea9c0cc173dd89487ef1d=2E17907340?=
  =?utf-8?q?83=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
 X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
@@ -48,10 +48,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 5 potential
+Thank you for your contribution! Sashiko AI review found 4 potential
 issue(s) to consider.
 
-Critical: 0 · High: 0 · Medium: 3 · Low: 2
+Critical: 0 · High: 0 · Medium: 3 · Low: 1
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -59,206 +59,235 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [Medium] The commit message describes a different change from the one
-  the code makes.
-- [Medium] The patch changes behaviour for every existing MPTCP read_sock
-  user: splice via mptcp_splice_read(), and the in-kernel…
-- [Medium] The new per-connection accumulator msk->read_copied is never
-  reset when a connection is torn down or a socket is cloned.
-- [Low] The patch is written as a fix ("Fix this by ...") for a lock
-  recursion and a BH-context problem "when MPTCP carries TLS", but that…
-- [Low] msk->read_copied is a signed int.
+- [Medium] The commit message describes a bug that cannot happen at this
+  commit.
+- [Medium] The new `if (!hint_val && sock_done) return 1;` branch in
+  mptcp_inq_hint() can never be taken, so the claimed TCP-style FIN…
+- [Medium] The new `if (sock_flag(sk, SOCK_DONE)) break;` in the
+  copied==0 branch of mptcp_recvmsg() runs before the sk_err check.
+- [Low] The new smp_mb() in mptcp_check_data_fin() and the smp_rmb() in
+  mptcp_inq_hint() (commented "Pair with smp_mb() in…
 
 --
 
-mptcp: defer read_sock cleanup to mptcp_worker
+mptcp: align FIN handling with TCP via SOCK_DONE
 
-This patch moves the mptcp_rcv_space_adjust() and mptcp_cleanup_rbuf()
-calls out of __mptcp_read_sock() and into mptcp_worker(). The consumed
-byte count is kept in a new msk->read_copied field and the worker is
-signalled through a new MPTCP_WORK_READ_COMPLETE bit. The patch also
-removes the backlog flush from mptcp_recv_skb() and the msk_owned_by_me()
-assertion from __mptcp_read_sock().
+This patch sets SOCK_DONE in mptcp_check_data_fin() when a DATA_FIN is
+accounted. It tests the flag in mptcp_inq_hint() and mptcp_recvmsg(), and
+clears it in mptcp_disconnect(). It also replaces smp_mb__before_atomic()
+with smp_mb() in mptcp_check_data_fin() and adds a paired smp_rmb() in
+mptcp_inq_hint().
 
-> When MPTCP carries TLS, the data path runs under mptcp_data_lock().
-> Reaching sk->sk_data_ready(sk) synchronously ends up at
-> tls_strp_check_rcv() -> mptcp_recv_skb() -> mptcp_move_skbs(), which
-> calls mptcp_data_lock() on the same sk and recurses on sk_lock.slock.
-
-[Severity: Low]
-Can this path be reached in the current tree?
-mptcp_setsockopt_sol_tcp() still rejects TCP_ULP:
-
-net/mptcp/sockopt.c:mptcp_setsockopt_sol_tcp() {
-    ...
-	case TCP_ULP:
-		return -EOPNOTSUPP;
-    ...
-}
-
-The TLS strparser also calls the TCP helpers directly:
-tls_strp_read_copyin() calls tcp_read_sock(), and tls_strp_msg_load()
-calls tcp_recv_skb(). There doesn't seem to be a route from
-tls_strp_check_rcv() into mptcp_recv_skb().
-
-Today the only callers of __mptcp_read_sock() are mptcp_read_sock() and
-mptcp_splice_read(). Both run in process context under lock_sock().
-
-If this is preparation for TLS over MPTCP support that hasn't been merged
-yet, could the commit message say so? Otherwise stable/AUTOSEL tooling
-and backporters may treat it as a fix for a reachable bug.
-
-> Fix this by deferring sk->sk_data_ready(sk) to mptcp_worker() via a new
-> MPTCP_WORK_READ_COMPLETE bit, reusing the existing mptcp_schedule_work()/
-> mptcp_cancel_work() infrastructure. The wakeup bit is consumed after the
-> SOCK_DEAD && TCP_CLOSE destroy branch, so a socket that reaches the destroy
-> path drops the pending wakeup rather than running it post-free.
+> TCP uses SOCK_DONE to mark FIN reception because RCV_SHUTDOWN alone is
+> ambiguous: it is also set by RST (via SHUTDOWN_MASK) without an ack_seq
+> increment. mptcp_inq_hint() used the latter as a proxy for "FIN pending",
+> causing over-count and potentially returning 0 to peek_len() on a
+> RST-while-data-queued socket, hanging TLS/BPF strparser consumers.
 
 [Severity: Medium]
-Does this description match the code? Nothing on the
-MPTCP_WORK_READ_COMPLETE path calls sk_data_ready(). mptcp_read_complete()
-only drains msk->read_copied and then calls:
+Can this hang actually happen at this commit?
 
-	mptcp_rcv_space_adjust(msk, read_copied);
-	mptcp_cleanup_rbuf(msk, read_copied);
+MPTCP does not have a .peek_len in its proto_ops yet. The only providers
+are tcp_peek_len() in af_inet.c and af_inet6.c. Strparser reaches the
+socket only through strp_peek_len():
 
-So the deferred work is rcvbuf autotuning plus a window update, not a
-wakeup. That is also what gets dropped on the destroy path.
+    return sock->ops->peek_len(sock);
 
-The recursion described in the first paragraph seems to be fixed by
-removing this from mptcp_recv_skb():
+TLS also cannot be attached to an MPTCP socket, because
+mptcp_setsockopt_sol_tcp() rejects TCP_ULP:
 
--	if (!list_empty(&msk->backlog_list))
--		mptcp_move_skbs(sk);
+    case TCP_ULP:
+        return -EOPNOTSUPP;
 
-The commit message doesn't mention that. It also doesn't mention that
-msk_owned_by_me() is removed from __mptcp_read_sock().
+That is still the case at the end of the series.
 
-Could the commit message be updated to describe these changes?
+The removed check also only ran when hint_val was 0:
+
+    if (!hint_val &&
+        (sk->sk_state == TCP_CLOSE || (sk->sk_shutdown & RCV_SHUTDOWN)))
+            return 1;
+
+So the old mptcp_inq_hint() could not return 0 while data was queued.
+
+Even in the follow-up "mptcp: implement peek_len for proto_ops", peek_len
+calls the new mptcp_inq(), not mptcp_inq_hint(). The hang argument reads
+more like a reason for that later helper.
+
+The change users will actually see is not described. The current callers
+of mptcp_inq_hint() are SIOCINQ in mptcp_ioctl(), the TCP_CM_INQ cmsg in
+mptcp_recvmsg(), and mptcp_rcv_space_adjust(). For them, a socket that is
+TCP_CLOSE, reset, or locally RCV_SHUTDOWN with nothing queued now reports
+0 instead of 1.
+
+Could the commit message describe that change instead?
 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index a4a21717867fe..58b48a8962ccf 100644
+> index 58b48a8962ccf..7eafe904dbc65 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-
-[ ... ]
-
-> @@ -4666,11 +4679,14 @@ static int __mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
->  	if (noack)
->  		goto out;
+> @@ -741,7 +741,8 @@ static void mptcp_check_data_fin(struct sock *sk)
+>  		WRITE_ONCE(msk->rcv_data_fin, 0);
 >  
-> -	mptcp_rcv_space_adjust(msk, copied);
-> -
-> +	/* The backlog flushing is only needed when some data is actually
-> +	 * moved and will take place in the workers's release callback.
-> +	 */
->  	if (copied > 0) {
->  		mptcp_recv_skb(sk, &offset);
-> -		mptcp_cleanup_rbuf(msk, copied);
-> +		msk->read_copied += copied;
-> +		set_bit(MPTCP_WORK_READ_COMPLETE, &msk->flags);
-> +		mptcp_schedule_work(sk);
->  	}
->  out:
->  	return copied;
-
-[Severity: Medium]
-This changes behaviour for every existing read_sock user. All of them
-run in process context with the msk lock held: mptcp_splice_read(), and
-in-kernel sock->ops->read_sock() callers such as nvme_tcp_try_recv() and
-strparser.
-
-Before this patch, mptcp_cleanup_rbuf() sent the window-opening ACK as
-soon as data was consumed. Now every read_sock call that returns data
-does a sock_hold() and queue_work(). The window update and autotuning
-only run once mptcp_worker() gets the socket lock:
-
-mptcp_worker()
-    lock_sock(sk);
-    ...
-    if (test_and_clear_bit(MPTCP_WORK_READ_COMPLETE, &msk->flags))
-        mptcp_read_complete(sk);
-
-While mptcp_splice_read() holds the msk lock, the worker can only get in
-during the release_sock()/lock_sock() gap between iterations, or after
-splice returns. Could a sender stalled on a closed receive window end up
-waiting for workqueue scheduling here?
-
-The backlog drain is also removed from mptcp_recv_skb(), so data that
-reached msk->backlog_list while the reader held the lock is no longer
-picked up in the same call. Would a non-blocking splice (timeo == 0) now
-return -EAGAIN while data is sitting in the backlog? The data would only
-be spooled by mptcp_release_cb() at the next release_sock().
-
-Process-context callers already own the socket lock. Could they keep
-calling mptcp_rcv_space_adjust() and mptcp_cleanup_rbuf() inline, with
-deferral used only for the BH case?
-
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 0258b4462d80d..2bf97e570d37b 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-
-[ ... ]
-
-> @@ -326,6 +327,7 @@ struct mptcp_sock {
->  	u32		last_data_sent;
->  	u32		last_data_recv;
->  	u32		last_ack_recv;
-> +	int		read_copied;
-
-[Severity: Medium]
-Is read_copied reset anywhere other than mptcp_read_complete()?
-mptcp_disconnect() clears the pending bit:
-
-	WRITE_ONCE(msk->flags, 0);
-
-It also resets bytes_consumed, rcvspace_init, copied_seq and similar
-fields, but it doesn't touch msk->read_copied. __mptcp_init_sock()
-doesn't initialise it either.
-
-There seem to be two ways for a byte count to be left behind.
-
-(a) __mptcp_read_sock() runs when the msk is already in TCP_CLOSE, for
-example when splicing leftover data after a peer fastclose. In that case
-mptcp_schedule_work() refuses to queue the worker:
-
-	if (inet_sk_state_load(sk) == TCP_CLOSE)
-		return false;
-
-so read_copied is never consumed.
-
-(b) The worker is still pending when mptcp_disconnect() runs. When it
-runs later, MPTCP_WORK_READ_COMPLETE has already been cleared, so it
-skips mptcp_read_complete().
-
-If the socket is then reused via connect() or listen(), won't the first
-read_sock on the new connection pass the stale count plus copied to
-mptcp_rcv_space_adjust()?
-
-On the listen path, sk_clone_lock() -> sock_copy() copies the whole
-mptcp_sock. Would every accepted child then inherit the listener's stale
-read_copied as well?
+>  		WRITE_ONCE(sk->sk_shutdown, sk->sk_shutdown | RCV_SHUTDOWN);
+> -		smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
+> +		smp_mb(); /* Order SHUTDOWN, ack_seq before SOCK_DONE. */
+> +		sock_set_flag(sk, SOCK_DONE);
 
 [Severity: Low]
-Can this signed int counter wrap? __mptcp_read_sock() adds to it on
-every successful call, and only mptcp_read_complete() resets it.
+Is there a lockless writer or reader for this barrier pair to order
+against?
 
-In TCP_CLOSE the worker is never queued, and mptcp_worker() jumps
-straight to unlock for CLOSE/LISTEN. Combined with the missing reset in
-mptcp_disconnect(), repeated cycles of reading in TCP_CLOSE and then
-reconnecting keep adding to it.
+mptcp_check_data_fin() has only two callers:
 
-If it passes INT_MAX and goes negative, mptcp_rcv_space_adjust() returns
-early on copied <= 0. mptcp_cleanup_rbuf() then passes a negative copied
-to tcp_cleanup_rbuf(), which skips the window update for that batch.
+  - mptcp_worker(), under lock_sock().
+  - __mptcp_move_skbs(), which runs from mptcp_move_skbs() (in
+    mptcp_recvmsg() and mptcp_ioctl(), both under lock_sock()) or from
+    mptcp_release_cb() while the socket is still owned.
 
-A large positive value could also overflow msk->rcvq_space.copied (an
-int) inside mptcp_rcv_space_adjust().
+The BH path in move_skbs_to_msk() only schedules the worker:
 
->  	unsigned long	timer_ival;
->  	u32		token;
->  	u32		tfo_skb_len;
+    if (mptcp_pending_data_fin(sk, NULL))
+        mptcp_schedule_work(sk);
+
+The readers also run with the msk owned:
+
+  - mptcp_inq_hint() is reached from mptcp_recvmsg(), mptcp_ioctl() and
+    mptcp_rcv_space_adjust(), which asserts msk_owned_by_me().
+  - The SOCK_DONE checks in mptcp_recvmsg() and mptcp_splice_read() run
+    under lock_sock().
+
+If socket ownership already serializes all of these, the smp_mb() and
+smp_rmb() pair, and the LoongArch reordering argument in the commit
+message, describe a race that cannot happen.
+
+Would it be clearer to document that SOCK_DONE is protected by msk socket
+ownership?
+
+[ ... ]
+
+> @@ -2405,8 +2406,12 @@ static bool mptcp_move_skbs(struct sock *sk)
+>  static unsigned int mptcp_inq_hint(struct sock *sk)
+>  {
+>  	const struct mptcp_sock *msk = mptcp_sk(sk);
+> +	bool sock_done = sock_flag(sk, SOCK_DONE);
+>  	u64 hint_val;
+>  
+> +	/* Pair with smp_mb() in mptcp_check_data_fin(). */
+> +	smp_rmb();
+> +
+>  	/* Avoid races vs ack_seq updates and MPTCP_SYNC_SEQ flag. */
+>  	mptcp_data_lock(sk);
+>  	if (test_bit(MPTCP_SYNC_SEQ, &msk->cb_flags)) {
+> @@ -2419,8 +2424,7 @@ static unsigned int mptcp_inq_hint(struct sock *sk)
+>  	if (hint_val >= INT_MAX)
+>  		return INT_MAX;
+>  
+> -	if (!hint_val &&
+> -	    (sk->sk_state == TCP_CLOSE || (sk->sk_shutdown & RCV_SHUTDOWN)))
+> +	if (!hint_val && sock_done)
+>  		return 1;
+
+[Severity: Medium]
+Can this branch ever be taken?
+
+SOCK_DONE is set only in mptcp_check_data_fin(), right after the DATA_FIN
+byte is added to ack_seq:
+
+    WRITE_ONCE(msk->ack_seq, msk->ack_seq + 1);
+    ...
+    sock_set_flag(sk, SOCK_DONE);
+
+Nothing moves msk->copied_seq past that byte. Every update adds payload
+length (*seq += count in __mptcp_recvmsg_mskq(), msk->copied_seq += count
+in __mptcp_read_sock()), adds the IASN once at setup, or resets it. So
+whenever sock_done is true, hint_val = ack_seq - copied_seq is at least 1.
+
+The tcp_inq_hint() idiom works because tcp_recvmsg() advances copied_seq
+over the FIN. MPTCP never does that.
+
+As a result, SIOCINQ/FIONREAD through mptcp_ioctl() reports N + 1 when N
+payload bytes are queued after a DATA_FIN. Once the queue is drained and
+read() returns 0, it still reports 1.
+
+TCP's SIOCINQ uses tcp_inq(), which does:
+
+    if (answ && sock_flag(sk, SOCK_DONE))
+        answ--;
+
+TCP therefore reports N, and then 0.
+
+This is still the case at the end of the series. "mptcp: implement
+peek_len for proto_ops" adds mptcp_inq() with the subtraction, but
+mptcp_ioctl() still calls mptcp_inq_hint().
+
+The selftest check in mptcp_inq.c passes because of the FIN byte in
+ack_seq, not because of this branch:
+
+    /* tcp_inq should be 1 due to received fin. */
+    assert(tcp_inq == 1);
+
+The test does not cover FIONREAD after a FIN, or a reset socket with an
+empty queue.
+
+Should the SIOCINQ path subtract the FIN byte when SOCK_DONE is set, as
+tcp_inq() does?
+
+> @@ -2492,6 +2496,9 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+>  			    !timeo)
+>  				break;
+>  		} else {
+> +			if (sock_flag(sk, SOCK_DONE))
+> +				break;
+> +
+>  			if (sk->sk_err) {
+>  				copied = sock_error(sk);
+>  				break;
+
+[Severity: Medium]
+Can this hide a pending ECONNRESET on a fallback connection?
+
+The commit message says the check fires only on a real DATA_FIN. After a
+TCP fallback, a RST can also end up setting SOCK_DONE.
+
+Suppose the msk is owned by the user (for example inside recvmsg) and
+peer data is already queued on msk->backlog_list. A RST on the subflow
+then does:
+
+subflow_state_change()
+  subflow_error_report()
+    /* msk owned, so the error report is deferred */
+    __set_bit(MPTCP_ERROR_REPORT,  &mptcp_sk(sk)->cb_flags);
+  subflow_sched_work_if_closed()
+    /* subflow_is_done() is true for TCP_CLOSE after the RST */
+    mptcp_update_rcv_data_fin(msk, subflow->map_seq +
+                              subflow->map_data_len, true)
+
+Later the backlog is spooled, either by mptcp_move_skbs() in
+mptcp_recvmsg() or by mptcp_release_cb(). mptcp_release_cb() spools the
+backlog before it handles MPTCP_ERROR_REPORT:
+
+mptcp_release_cb()
+  __mptcp_move_skbs()
+    mptcp_check_data_fin()
+      /* msk still TCP_ESTABLISHED, ack_seq matches the synthesized FIN */
+      sock_set_flag(sk, SOCK_DONE);
+  __mptcp_error_report()
+    /* sets TCP_CLOSE and sk_err = ECONNRESET, SOCK_DONE stays set */
+
+Once the application drains the payload, every later read() hits
+SOCK_DONE before the sk_err check and returns 0 instead of -ECONNRESET.
+The application sees a clean close rather than a reset.
+
+Before this patch the sk_err check came first and the reset was reported.
+Plain TCP also reports ECONNRESET here, because tcp_reset() never sets
+SOCK_DONE.
+
+Should SOCK_DONE be left unset when the DATA_FIN was synthesized from a
+subflow reset?
+
+This change also makes the existing SOCK_DONE check in
+mptcp_splice_read() live. It could never fire before, because MPTCP never
+set SOCK_DONE. Should the commit message mention that as well?
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1790734083.git.tanggeliang%40kylinos.cn
