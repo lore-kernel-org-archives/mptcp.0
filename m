@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AF5488757
-	for <mptcp@lists.linux.dev>; Thu,  1 Oct 2026 21:12:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB5C2495515
+	for <mptcp@lists.linux.dev>; Thu,  1 Oct 2026 21:12:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790889134; cv=none; b=apjt2ejY3pYuOSXzgq29ZGKbySFwt/UdKyA1DoJv6sFgJswGygQlvmWTpERAT+4b/7oQ3HkKPYVweVoYeA/QZhuF5AgYQVVLRX4UtQPqF2r3pESX+u74t1MWW6zeW+DSC3sZP44pikhKbXtYuwhFDhpZSgOpUSDwPsxDfUJn+N0=
+	t=1790889135; cv=none; b=YpSssNewfvWfRnt9LHbilFo6Pc5VNGU8VqTNWSfvH527TD7vz0KYzjkYUXKSXtDytXpx94cAz791pU0mq+4/UQZ0/cvudrueBz0R1WieM6HqElZd4hhTMIYW4PeImC51t5xM72FGl2idMurYRu6SA5GRfzBsyULevNpycWnArrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790889134; c=relaxed/simple;
-	bh=atWnGSixhU2EqBxYuSlk8g4qyv3ICZURdDqBqQjnRZw=;
+	s=arc-20240116; t=1790889135; c=relaxed/simple;
+	bh=0cbF+e2HVa52Vdjmrq4HH6UedcVqbAqmXZ6n0uZWg/A=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QRATd7HA+zBGPSGdW+rZQ4v+BSdST+FOi4DnR2bCNfjAqZtaLkIzsqAtyO5VUuIqI/xC0OQq7+OUJrNF3vgn91tzJXiDfO5LD6rvFCc5obIqZ5PWuhkZcpCI2z6+p78ZgIdXo1udzwgKSCZUl38NQYctmQiDKnITnBodN6mIG4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H3UUuywO; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:MIME-Version; b=IhkyUA3DGGacgrIohAd/8WqfC4zObOqh85wih/e0YhovE8oQEGGzGCP0bAafGo1eG1nSgMI1Z083C8+2dzjEWHGk6AWJUNQJFvbw9xif/QzheSRgjiafZI4zLKC63NSx85lO1UQ3S64pNOvh9MtffYR3kZunevBwvDkHnq5OGUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b0KbJH5K; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H3UUuywO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79CD41F00898;
-	Thu,  1 Oct 2026 21:12:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b0KbJH5K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 593871F000FF;
+	Thu,  1 Oct 2026 21:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790889132;
-	bh=r0NUsWJxyyHWlY4NeD5LrL3sWLxlSR66Y4M2xDFIawA=;
+	s=k20260515; t=1790889133;
+	bh=l8ZD59QYJiTacLH/vsyWiLYzSZ9mDPI4DWDm2paBCA4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=H3UUuywOGo/HTImyIGqJhNRbI87IJMyk7QQNY9M7ou4J6cBswqA/JpuIA7bV3D63H
-	 Z4Vm/9tNzN5/ZptD5C9v9UpUm2ASwuLrI4CkJPZh/+u6YZz3XXXAqYyG3fG8PeJl//
-	 uUxYql3lj3LiWum/gvAIqCE7Uj74VTYvGzzaxOWnWkIZrh3m8DoYo1cR39bdyD976x
-	 BXNgiIyvIzWGn1YnZlMBW0hd9l0+kbCgQ9PBY4g262P2ZFOt7gdVZzqGN7YGJPdsV6
-	 VY5IPa18qLnmGpbKxxkpHWbpQL9Sw+9ZW4pJpDWxnjbUr14qDUqt4wM33axjcUztxK
-	 /y7zW96895NIQ==
-Subject:
- Re: [PATCH mptcp-next v14 07/11] mptcp: implement peek_len for proto_ops
+	b=b0KbJH5KtA0Q8TDSL69aTUQYT2qps4ohpzUYp4563GDjdqp4iwGk6vWFE+hUlcs0B
+	 OS8yt/5dAx5mfRQrsQPOyr8BaeY5WWsY0G9Awx9D8OdTPBsEyvIcTuETf5urQamc6N
+	 ITmVFeqOYRy6j3LPWqD0dFrau2NuekFaTao8k9bVNeN6/bUreN+O+dAjx4MuGSlitt
+	 TGakMAYEBDbqFsXpQHT+ulzaeHinHLsubYfEQmlnCTrid4Wh0qhEkjlvcFSyStkDAM
+	 3tQ6rlJff05+FmpISrKkaz2CVGmrL0mpHk85VrpKR05eI/qfN2ZogoRzRBhbqyX5LP
+	 akM4U1nU/r+4g==
+Subject: Re: [PATCH mptcp-next v14 09/11] mptcp: track app-limited state in
+ mptcp_sendmsg
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc:
  mptcp@lists.linux.dev, pabeni@redhat.com, yangang@kylinos.cn, kuba@kernel.org
 Date: Thu, 01 Oct 2026 21:12:12 +0000
-Message-ID: <179088913203.3135.11419962416862692363@kernel.org>
-In-Reply-To: =?utf-8?q?=3C3ccb18c2210da287ff7c13b9d28d85310e2b671e=2E1790734?=
+Message-ID: <179088913294.3135.15874495190303859917@kernel.org>
+In-Reply-To: =?utf-8?q?=3Cc1cfbd64bd5447d3f8464d2004865afab609d43c=2E1790734?=
  =?utf-8?q?083=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
-References: =?utf-8?q?=3C3ccb18c2210da287ff7c13b9d28d85310e2b671e=2E17907340?=
+References: =?utf-8?q?=3Cc1cfbd64bd5447d3f8464d2004865afab609d43c=2E17907340?=
  =?utf-8?q?83=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
-X-sashiko-severity: Low
+X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -48,118 +48,169 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found more severe
-issue(s) in other patches of this series. This mail is only an FYI, in case
-you want to address the nit picks below when you respin.
+Thank you for your contribution! Sashiko AI review found 3 potential
+issue(s) to consider.
 
-Low priority / nit picks for your consideration:
+Critical: 0 · High: 0 · Medium: 1 · Low: 2
 
-- [Low] The commit message says that wiring mptcp_peek_len() into
-  mptcp_stream_ops/mptcp_v6_stream_ops lets 'upper layers get the…
-- [Low] The commit's author identity is 'Geliang Tang
-  <geliang@kernel.org>', but the author's own Signed-off-by is 'Geliang…
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
+
+- [Medium] mptcp_rate_check_app_limited() (net/mptcp/protocol.c:2058)
+  runs the plain-TCP test tcp_sock_rate_check_app_limited() on each…
+- [Low] Several statements in the commit message do not match the code.
+- [Low] The commit author is 'Geliang Tang <geliang@kernel.org>', but the
+  only sign-off is 'Signed-off-by: Geliang Tang…
 
 --
 
-mptcp: implement peek_len for proto_ops
+mptcp: track app-limited state in mptcp_sendmsg
 
-This commit adds mptcp_inq(), which computes the number of readable bytes
-at the MPTCP level from ack_seq - copied_seq. It subtracts 1 once a
-DATA_FIN has been received. It then connects mptcp_inq() to a new
-mptcp_peek_len() in net/mptcp/protocol.c and sets .peek_len in both
-mptcp_stream_ops and mptcp_v6_stream_ops.
+This commit splits tcp_rate_check_app_limited() into
+tcp_sock_rate_check_app_limited(), which takes a struct tcp_sock, and a
+thin struct sock wrapper around it. It then adds an MPTCP helper that
+runs the check on every subflow under that subflow's socket lock. The
+helper is called from mptcp_sendmsg_locked() so that
+tcpi_delivery_rate_app_limited gets updated for MPTCP connections.
 
-> mptcp: implement peek_len for proto_ops
+> Then add mptcp_sock_rate_check_app_limited() that walks every subflow of
+> the mptcp_sock and runs tcp_sock_rate_check_app_limited() under each
+> subflow's socket lock. Invoke it from mptcp_sendmsg() right after the
+> send-side setup, so the delivery-rate app_limited state stays in sync
+> with what the application actually has to send across each subflow.
 >
-> [ ... ]
->
-> The subtraction is needed because MPTCP's ack_seq is incremented by 1
-> in mptcp_check_data_fin() when the DATA_FIN is processed, consuming a
-> sequence number without carrying any payload data. Without subtracting 1,
-> peek_len would over-report by one byte, causing upper layers to wait for
-> data that will never arrive.
->
-> READ_ONCE() is used instead of mptcp_data_lock() for the u64 reads of
-> ack_seq and copied_seq because mptcp_inq() will be called from TLS
-> contexts with the socket lock held - taking the spinlock would deadlock.
-> On 32-bit systems a torn read can produce a wrapped subtraction (close to
-> 2^64), which is caught by the INT_MAX clamp. TLS callers use mptcp_inq()
-> conservatively: over-reporting defers work to the next iteration, where
-> recvmsg() provides the actual byte count.
->
-> Wire mptcp_inq() into mptcp_peek_len() and assign .peek_len in both
-> mptcp_stream_ops and mptcp_v6_stream_ops, so upper layers get the
-> correct in-queue byte count for MPTCP connections.
+> With this in place, TCP_INFO.tcpi_delivery_rate_app_limited is reported
+> correctly for MPTCP connections instead of being left at 0.
 
 [Severity: Low]
-Which upper layer is expected to reach mptcp_peek_len() for an MPTCP
-socket?
+A few details in this part of the message don't seem to match the code.
 
-The only in-tree caller of sock->ops->peek_len seems to be
-strp_peek_len() in net/strparser/strparser.c:
+The helper added in net/mptcp/protocol.c is named
+mptcp_rate_check_app_limited(), not mptcp_sock_rate_check_app_limited().
+It is called from mptcp_sendmsg_locked(), not mptcp_sendmsg().
 
-    return sock->ops->peek_len(sock);
+Was the field really "left at 0" before this patch? tcp_init_sock()
+starts every socket, subflows included, as app-limited:
 
-None of the strparser users appear able to attach to an MPTCP socket.
-
-kcm_attach() in net/kcm/kcmsock.c rejects sockets that are not TCP:
-
-    csk->sk_protocol != IPPROTO_TCP) {
-        err = -EOPNOTSUPP;
-
-sock_map_link() in net/core/sock_map.c sets up a strparser only for TCP:
-
-    if (sk_is_tcp(sk))
-        ret = sk_psock_init_strp(sk, psock);
-
-TLS and espintcp are TCP ULPs, and mptcp_setsockopt_sol_tcp() in
-net/mptcp/sockopt.c refuses TCP_ULP:
-
-    case TCP_ULP:
-        return -EOPNOTSUPP;
-
-TLS also doesn't go through ->peek_len. It calls tcp_inq() directly in
-tls_strp.c, tls_sw.c and tls_device.c. Since mptcp_inq() is static, TLS
-can't call it either.
-
-The message also seems to contradict itself. It first says a one byte
-over-report causes "upper layers to wait for data that will never
-arrive". It then says over-reporting is harmless because "TLS callers
-use mptcp_inq() conservatively".
-
-The existing TLS receive path uses inq as an exact length:
-
-net/tls/tls_strp.c:tls_strp_read_sock() {
+net/ipv4/tcp.c:tcp_init_sock() {
     ...
-    inq = tcp_inq(strp->sk);
-    ...
-    tls_strp_load_anchor_with_queue(strp, inq);
+	/* There's a bubble in the pipe until at least the first ACK. */
+	tp->app_limited = ~0U;
+	tp->rate_app_limited = 1;
     ...
 }
 
-tls_strp_load_anchor_with_queue() then sets anchor->len = offset + len.
+BBR's PROBE_RTT handling also sets tp->app_limited.
 
-At the end of the series (the "mptcp: update mptcp_check_readable"
-patch), mptcp_inq() and mptcp_peek_len() are unchanged, and no TLS or
-strparser consumer has been added.
+Also, SOL_TCP / TCP_INFO on an MPTCP socket goes through
+mptcp_getsockopt_sol_tcp()->mptcp_getsockopt_first_sf_only(), so it
+reports only the first subflow. Per-subflow values are only available
+through MPTCP_TCPINFO or MPTCP_FULL_INFO.
 
-Is this preparatory work for a TLS over MPTCP series that isn't part of
-this one? If so, could the commit message say so? Could the rationale
-for the lockless READ_ONCE() reads either refer to callers that exist or
-move to the patch that adds them?
+Could the message be reworded to match the helper name, the call site,
+and what TCP_INFO actually reports?
 
-> Co-developed-by: Zqiang <qiang.zhang@linux.dev>
-> Signed-off-by: Zqiang <qiang.zhang@linux.dev>
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 
 [Severity: Low]
-This isn't a bug, but the author's Signed-off-by address doesn't match
-the Author line, which is Geliang Tang <geliang@kernel.org>. checkpatch
-reports this as "From:/Signed-off-by: email address mismatch".
+This isn't a bug, but the author is Geliang Tang <geliang@kernel.org>
+and the only sign-off uses tanggeliang@kylinos.cn. checkpatch reports
+this as FROM_SIGN_OFF_MISMATCH. Other patches in the series are signed
+off as geliang@kernel.org. Should the From: and Signed-off-by: addresses
+match here as well?
 
-Other patches in this series, such as "mptcp: remove CB offset field",
-use geliang@kernel.org in the Signed-off-by. Could the two addresses be
-made to match?
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 319339be80760..1f7aaf3214a06 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2055,6 +2055,21 @@ static void mptcp_rps_record_subflows(const struct mptcp_sock *msk)
+>  	}
+>  }
+>  
+> +static void mptcp_rate_check_app_limited(struct sock *sk)
+> +{
+> +	struct mptcp_sock *msk = mptcp_sk(sk);
+> +	struct mptcp_subflow_context *subflow;
+> +
+> +	mptcp_for_each_subflow(msk, subflow) {
+> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+> +		bool slow;
+> +
+> +		slow = lock_sock_fast_nested(ssk);
+> +		tcp_sock_rate_check_app_limited(tcp_sk(ssk));
+> +		unlock_sock_fast(ssk, slow);
+> +	}
+> +}
+
+[Severity: Medium]
+Can this mark a subflow app-limited while the msk still has queued data
+that is blocked by the MPTCP-level receive window?
+
+The first test in tcp_sock_rate_check_app_limited() only looks at the
+subflow's own write queue:
+
+	if (/* We have less than one packet to send. */
+	    tp->write_seq - tp->snd_nxt < tp->mss_cache &&
+
+In MPTCP, data that the application has queued but that has not been
+sent stays at the msk level. It sits on msk->rtx_queue starting at
+msk->first_pending, and msk->write_seq is ahead of msk->snd_nxt.
+
+That data only reaches a subflow when
+__mptcp_push_pending()->mptcp_sendmsg_frag() hands it over, and the
+hand-off is capped by mptcp_wnd_end(msk):
+
+net/mptcp/protocol.c:mptcp_check_allowed_size() {
+    ...
+	mptcp_snd_wnd = window_end - data_seq;
+	avail_size = min(mptcp_snd_wnd, avail_size);
+    ...
+}
+
+net/mptcp/protocol.c:mptcp_sendmsg_frag() {
+    ...
+		if (snd_una != msk->snd_nxt || skb->len ||
+		    skb != tcp_send_head(ssk)) {
+			tcp_remove_empty_skb(ssk);
+			return 0;
+		}
+    ...
+}
+
+The scheduler burst in mptcp_subflow_get_send() has the same cap:
+
+	burst = min(MPTCP_SEND_BURST_SIZE, mptcp_wnd_end(msk) - msk->snd_nxt);
+
+Consider a slow reader during a bulk transfer:
+
+- The peer's MPTCP window fills up.
+- The subflow drains, so write_seq == snd_nxt, sk_wmem_alloc is near
+  zero, in-flight is below cwnd and lost_out <= retrans_out.
+- The next send() goes through
+  mptcp_sendmsg_locked()->mptcp_rate_check_app_limited().
+- tp->app_limited gets set on the subflow, even though the connection
+  is limited by the receive window and not by the application.
+
+Plain TCP keeps rwnd-blocked data in the same write queue, so
+write_seq - snd_nxt >= mss_cache and the socket is not marked.
+
+The marker is only cleared once tp->delivered moves past it. Until then,
+skbs sent after the window reopens get tx.is_app_limited set in
+tcp_rate_skb_sent(), and the rate samples built from them are flagged
+app-limited too.
+
+As a result, tcpi_delivery_rate_app_limited would read 1 where TCP would
+read 0. BBR also ignores those window-limited bandwidth samples unless
+they exceed max_bw.
+
+Would it make sense to skip the per-subflow check when
+mptcp_send_head(sk) is non-NULL, or when msk->write_seq differs from
+msk->snd_nxt?
+
+[ ... ]
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1790734083.git.tanggeliang%40kylinos.cn
