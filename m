@@ -1,43 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D997B3D4138;
-	Tue,  6 Oct 2026 21:36:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B29F429CEE;
+	Tue,  6 Oct 2026 21:36:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791322584; cv=none; b=BZtziatyPMgorcK+eDIHVnMpdo8hCZnGL8Wnx/IPgtoV13dzjhxP9w+UYXrbiquIQUqNAWXxAXVvd4hY7Gf9uF86cQ7LGNVGQMymGpljSfJ9f/SRW0U4RGY43iMqWuCY+SAUN74//uwdVozXlMPDtjVuFzWR2/Tu4i987tEsIjM=
+	t=1791322592; cv=none; b=p72dpB7U4XaujZpF0j9pp/sDSZqCVaP+XJtWQR4ImYGcgDqbhkmzH8sAE6kRi6BjeSUAFV2WC7fcLd8r6YIwq5HiHx9OKNpvzlIOyMWPsu3aX7uyupE9WD9zkmAZUjYWk18LWghHt46VYRvv9Srlx053HUzCnSc3U8WRhwXvapo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791322584; c=relaxed/simple;
-	bh=Is7r2UQkiL0IIMHY7iVW5w+1/FG4jltC+We0JlS7pks=;
+	s=arc-20240116; t=1791322592; c=relaxed/simple;
+	bh=5mxINJmrCBCXVW2eWG0uxDmhymwst9X1mXtgC2tUQZc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fGs4GNoR1E8DDA8d+Krky4APgD94SVvQPsF+tsioiv5L1AdBQUB3OuhzjGEu4v3qVpBqlLEtLXiwxFrzmDqB/UD+XLYs47jM91T99Y6IPM6HYDgZAQd9X53DKFJ5joG3DB16rLoWgyNmMwZydvSM1XquvLlCELhjupn7LiClwM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ULHsnARB; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=qY/CUbv3NBVLWH3ygXHCjCaBWL8EbZRlhg95sEmG8izwFI3dJhrhbFIm6OHGDigLUsY9OhQEuPISIDbB69t4XGoRhjV5LggFlOOuHWnv+I6XXSYvxCa1yRvb7C9H569qWOgzyYMy2wIkEa5/n5fYkXbRGNBtNBYfqMqKTU3jjo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=arI3Gj2E; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ULHsnARB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E07B1F0089B;
-	Tue,  6 Oct 2026 21:36:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="arI3Gj2E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAF6F1F0089B;
+	Tue,  6 Oct 2026 21:36:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791322583;
-	bh=DoIPMteEZGl9sKihffpx/Jd0w6HJSg/dXjkh/QaT8pc=;
+	s=k20260515; t=1791322591;
+	bh=mdB53c/+D6/yTK1/16yZm0+J5jSaDZuMgTOPNLmZEEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ULHsnARBVAzyLrz1vCbkdTaw51f3LZIfhN67jRy8+Zz/3WSaeX7oa9+Y/BAuu6GET
-	 nNcBXowpHPk+oP3FTIWv6ho2j4vbZZatlEIqgmicuE+EvqzRzBMH4tZf6s2fgn78VP
-	 os3QipcFPTg3Fg3kZvsLA8RRsMSvwvhVfm9nXGFWp+mvJb7C+7X81bgjGskPKOiubz
-	 sJ9HM9UCrOzIYOM+q3AyoI7kmCAl7vTeU34Wv+i5fbgDhmTJWc7D3wW8LEPi65setB
-	 NQ4BY3BTkMQL7689Np3lGUMaxjKIyOhFp0WgkOv5GMjXo0ds4Y1iGOXeA0vzCx2sC0
-	 3cJgHjyguOSUw==
+	b=arI3Gj2E0J/rPJqDphuMvpCCwjyS+xLkD0SsM2QqZkMh7CTOEY/tr7TgNQKjAl+bR
+	 L+/Yp3G/i1K7Iaheg/0hNNTOPqU3o/qii2N2du2R5xP7Z3C0DbISRE/oMxL5E1c3n8
+	 NLugaMG5lXjsi6ot7avnn4+RaWPFcZv22mStOUIKRNdwBiyDoHXwRtV2ycpU/0kvf9
+	 Yf+SoEATvKZr/ULs7GQi5EJ3wZSM63CvZTgqRZ2qi2UtA6mW3eNJmiXQx3zwI0pD5u
+	 i6+IeZPUo/zE6VpZzpWZgVLpK01wxLTmELofmkPfTpe89jt+rhLUD7xn5sihi1xVGn
+	 1tZa0gFONZjdA==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
 	gregkh@linuxfoundation.org
 Cc: Sasha Levin <sashal@kernel.org>,
 	MPTCP Upstream <mptcp@lists.linux.dev>,
-	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: Re: [PATCH 7.2.y] mptcp: fix msk->timer_ival reset
-Date: Tue,  6 Oct 2026 17:35:41 -0400
-Message-ID: <2026-10-06-1-daily-reply-0009-mptcp-timer-ival-7.2@kernel.org>
+	Paolo Abeni <pabeni@redhat.com>,
+	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH 6.12.y] mptcp: prevent race between disconnect() and rtx
+Date: Tue,  6 Oct 2026 17:35:45 -0400
+Message-ID: <2026-10-06-1-daily-reply-0013-mptcp-disconnect-rtx-6.12@kernel.org>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261005174222.3524381-2-matttbe@kernel.org>
-References: <20261005174222.3524381-2-matttbe@kernel.org>
+In-Reply-To: <20261005175226.3607979-2-matttbe@kernel.org>
+References: <20261005175226.3607979-2-matttbe@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -46,10 +48,10 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-> Reset it to TCP_RTO_MIN, which is how msk->timer_ival is also reset in
-> __mptcp_init_sock() in this version.
+> [ No conflicts, but reset msk->timer_ival to TCP_RTO_MIN: in this kernel
+>   version, icsk->icsk_rto_min is not initialised, because this version
 
-Queued for 7.2, thanks.
+Queued for 6.12, thanks.
 
 -- 
 Thanks,
