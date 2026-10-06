@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD853EC69C
-	for <mptcp@lists.linux.dev>; Tue,  6 Oct 2026 17:36:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02DDD231A23
+	for <mptcp@lists.linux.dev>; Tue,  6 Oct 2026 17:37:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791308166; cv=none; b=Um+t+ygzTfDuzswxsek4HJQy7PDT38fJnyzhz3XhrYD01BdNnegqK1V5Afm4jQxI4yFy8aNP+Lo08lTu4U11nWegfia/bcFhnA6YUzjfsF6jjBmlRvACb6lfH6mYSZ8XWavaABs6mJDRwI9/KfytWUl45caPnAT2Zjixt+fX54A=
+	t=1791308246; cv=none; b=hj2WJBSu+0p4DZYsVgkmaZcjf1vSC/5HGJkUW3RotnmKzz0jMk7HZd6UwqHQfr9EZhPmi4zh/dbCPfkGYuea97Ab8k5O8nyOLpaBiu8UPmfDW8d3Gq4CNR4x19A+poAvRbaRa8mJO34legTHE+hrRrorXm9foBbtlddLswZBFVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791308166; c=relaxed/simple;
-	bh=LBw5PETk463a742txJjJsHIHNQlsi9K5WLFpLScT5D8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=qqgchN/JCNLeh4F3H9vVp7ESijhNnwrx33Arz7z8Rov4pCeua7O/XXWmmYsbjdOxE7OSmk/3nDtiaFfNWYMWgSVxNJwtk8MS4oEXU9Zxo4NM5buF5Qby40GFrMMqdj6DndJfGkORf1s/Gaq4Zc9LkkeRLY9fIeQal//nYxEJtA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i2WzUv1+; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791308246; c=relaxed/simple;
+	bh=JKFhz64XYR9LLLd0gsAEsx8EvgopXg0zoduRZkjK7L4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:Cc:
+	 In-Reply-To:Content-Type; b=ZXoiXDNwFgbuJvhqB21qnaYUuvqGwzhB5HV9w4FKndTHYTgRL/OJ4HxWxoU1SvEennfzeBhR/S3OehcxsjHJ7xTxhQkeqoaHHxVNZ/xAKIMsTH/pQWNAOyQAbD4DlidPi6mMBvLUmwYGG5I5ntbWxi7zUGdEZUyKEPd9revnCbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AWhQOcrO; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i2WzUv1+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D51271F0089B;
-	Tue,  6 Oct 2026 17:36:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AWhQOcrO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27E2B1F0089B;
+	Tue,  6 Oct 2026 17:37:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791308165;
-	bh=WWAFxSQ7IgsSq9r8kF18CGIR4KRbLKeMGtHvSt0ontk=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=i2WzUv1+j3HhO+em2YuNSVS+gJwKGPegfXVgAToVfdH9R3cr1BAFoOCvt/XDx18HK
-	 DUpqBEL1FDLfhlCqe3Hn/7AwekLBbHkhTbhJUA8cuGlAjQGYiaui1h6UHE6NOAiUEA
-	 N4Ddmf1jafr3T88HhyR1H5sMDASgI1weccJNHPR97FnUt3jEQJuJe32TtvjwtnSriv
-	 dAO7nS8YAZMRNn6bpxXKBVlBUxF1pKdegtdJRRwk+DBO0GVmI9cSTIqIaD7WunqJtV
-	 JjiJ4aIUgS0K68ci26TVYidRyX5xQYmvkbA8oxYVIaMy/MGHNYt97F4rH/152zIJbl
-	 URJvuxTn/rEhQ==
-Message-ID: <21b19217-8aff-4147-b240-dd04260b3450@kernel.org>
-Date: Tue, 6 Oct 2026 19:36:02 +0200
+	s=k20260515; t=1791308244;
+	bh=Prj0kmtpw/ldy5BUmgXobF2L2iq2+f2osu8em1BV9x0=;
+	h=Date:Subject:From:To:References:Cc:In-Reply-To;
+	b=AWhQOcrO9YMjsIa6POjpxp2byFrVbenwF2g3QWPjK00bSHZNI0NwoqhbM+6NqlYU8
+	 SAZdznBSieJ1C4KQmDjms6CRwEXrwTbdeuDopfEYqBkyEuTH6tbGML3Pia2vY8mEZH
+	 cgkDN1F2YHlEB6PbqE1pCKhfhCKRyuLuGSqCy7ZTof0deuhrP21AkW7aRWZ99hIJAc
+	 nZJ3HO2cJZelnAl4bWCm2mqmN6NhDIaQBu6mxWYhUboqw1eu//c+bc8Pls2aUwet3H
+	 tEtynKwrMVk4PDc+UxpUHjDozVC1qVEfgQXMg48DHyfMWFiSuufuIB8dyrvpoR3qVy
+	 Ai5daQ2z1iE6Q==
+Message-ID: <a091954a-5989-42b8-a4ba-1f636ba33571@kernel.org>
+Date: Tue, 6 Oct 2026 19:37:22 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,10 +38,12 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-net v2 1/2] mptcp: reset msk state on early connect
  failure
 Content-Language: fr
-To: quanyeyang@proton.me, mptcp@lists.linux.dev
+From: Matthieu Baerts <matttbe@kernel.org>
+To: quanyeyang@proton.me
 References: <20260911-mptcp-connect-undo-net-v2-0-54224cea2238@proton.me>
  <20260911-mptcp-connect-undo-net-v2-1-54224cea2238@proton.me>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <21b19217-8aff-4147-b240-dd04260b3450@kernel.org>
+Cc: mptcp@lists.linux.dev
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,31 +88,46 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260911-mptcp-connect-undo-net-v2-1-54224cea2238@proton.me>
+In-Reply-To: <21b19217-8aff-4147-b240-dd04260b3450@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Quanye,
-
-On 11/09/2026 17:42, Quanye Yang via B4 Relay wrote:
-> From: Quanye Yang <quanyeyang@proton.me>
+On 06/10/2026 19:36, Matthieu Baerts wrote:
+> Hi Quanye,
 > 
-> mptcp_connect() can fall back before the subflow SYN is sent, for
-> example when the netns is in an MPTCP blackhole, token allocation
-> fails, or MD5SIG is in use. If the subsequent subflow connect()
-> fails immediately (EAFNOSUPPORT, ENETUNREACH, ...),
-> __inet_stream_connect() returns while the socket is still
-> SS_UNCONNECTED and never calls ->disconnect().
+> On 11/09/2026 17:42, Quanye Yang via B4 Relay wrote:
+>> From: Quanye Yang <quanyeyang@proton.me>
+>>
+>> mptcp_connect() can fall back before the subflow SYN is sent, for
+>> example when the netns is in an MPTCP blackhole, token allocation
+>> fails, or MD5SIG is in use. If the subsequent subflow connect()
+>> fails immediately (EAFNOSUPPORT, ENETUNREACH, ...),
+>> __inet_stream_connect() returns while the socket is still
+>> SS_UNCONNECTED and never calls ->disconnect().
+>>
+>> The error path only dropped the token and moved the msk back to
+>> TCP_CLOSE. MPTCP_FALLBACK_DONE, allow_subflows and
+>> request_mptcp were left as after early fallback, so a later
+>> connect() on the same fd stayed TCP-only.
 > 
-> The error path only dropped the token and moved the msk back to
-> TCP_CLOSE. MPTCP_FALLBACK_DONE, allow_subflows and
-> request_mptcp were left as after early fallback, so a later
-> connect() on the same fd stayed TCP-only.
+> Thank you for the new version, and for your patience! This patch looks
+> good to me:
+> 
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Thank you for the new version, and for your patience! This patch looks
-good to me:
+Now in our tree:
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+New patches for t/upstream-net and t/upstream:
+- 070796c3cfb9: mptcp: reset msk state on early connect failure
+- Results: 55d917c22cff..a89bac927400 (export-net)
+- Results: 3f56793da91f..3ec672648191 (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/fe786c67a826c2b32c8a2882858ab9ab45b7cfe0/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/bd2d51a45268c4bc02f5bdf66c5605ff6de59afd/checks
 
 Cheers,
 Matt
