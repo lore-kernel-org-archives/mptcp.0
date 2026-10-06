@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12EF388E5B
-	for <mptcp@lists.linux.dev>; Tue,  6 Oct 2026 19:01:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A6526CE32
+	for <mptcp@lists.linux.dev>; Tue,  6 Oct 2026 19:18:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791313295; cv=none; b=QbNBqiMbXE6VlsFXUwNYC0wQ1H49bpPD9+u51x32FkGteFehQqaWhr8CX4Da/pyEUTU8n872UunxU0oGG0Xgq06DBINo27W+XUVgbe4KjGY2p09ggeC06lL1vJd7mOVX+xSNWHtuUdvdkXHfnWEUa6s3C37iriMVBIezyIczkb4=
+	t=1791314283; cv=none; b=fa3uMJ+MZJ8MFxf5C+ljT5VfGZej+gooL022+Ns6kzzWwGq0k7PoxXJws4uYujihKalURASJHPgnaCKrNWcmyrs88ksfzPliB6WHIjoxk7oLmyc2cTzTApIqNNlPeRESxTh6QyIpE5/607hMNSw6pJzzcE1sc2Ib5TI1WBmawNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791313295; c=relaxed/simple;
-	bh=PA8cOifQZjtRF4ggvnwxWcL5wCZwN6LOVklyuvVddaM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YNNu7WTWqMDMnQ8N8WW3cPoynPDq64kuQSfkS0CsqrSzlpd0aRM353SXyVh7hcav6Kc2qcnw2gO0lWZA+EBcuz5YfqVLrxUozfR/JiHmW2ByjngSAvdZlNye39HDHPgnZWwV47HHCnYwI7876NV6PUNL4007OC3vIbmQtTJPPS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AHw9mtY3; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791314283; c=relaxed/simple;
+	bh=N/dK9JuKhTPvt7bC3j2gviv1K8XGDV4+uDAZz+yMGh4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=eFYB12pDL9MmeC79taayXnOtBlKodiFRYAU7vC/sB2nDqds7+f5YPjIoC3P+gMAaTLKu704WwtSgk8kcj35pZz1J8bWlw/8j9IAqCBOsA/BKPD1JKCOt77X5KSjukYnHugy8fCE5ieyMJl8ZPRklRRH1HgRGRGYVkpo90lOaiZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PzLNUVd7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AHw9mtY3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC5871F0089B;
-	Tue,  6 Oct 2026 19:01:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PzLNUVd7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D51B1F0089B;
+	Tue,  6 Oct 2026 19:18:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791313293;
-	bh=sTyiBfpztr2xfRQmgEGq7IPa/HY4Qpv5kDxa/6c6JO4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=AHw9mtY3oMwpmUtTQgBG14I9GswTyyXrh9qQcHL7KCOQhxUUDf4jOkklmfWy/4/T3
-	 zRhKGjPAuhVM0lxhkdYUhpWt2uMpADdcl04BuDPXKeAAsp5fQUDz9enbxJ5M/tzSnc
-	 R/qS6tz83yBY0QvOElp/utxuRl5TWdeq2g00IgdwWMiLkF5ajcvF+4ZTzWilpac81m
-	 vLsyPVn+2JCrTra+XR883mS5lwtNYnWvMFMCI4cAZzxSZQhpc4RPDvDn9SNNH64T5Q
-	 wOMBcCXuHtmib5pnjCC8N18qdPJFktJ0vop/W7kOceuTEMEe8wG+b8Zzuh0mCHNbQj
-	 5Oi3DGrx4U2Fw==
-Message-ID: <7ea079f5-f610-4613-a4a4-bcb53cbd2b1c@kernel.org>
-Date: Tue, 6 Oct 2026 21:01:30 +0200
+	s=k20260515; t=1791314280;
+	bh=IPoK5EVQauvha5sCEw35wog2pjJZaW+4FMXiiFba4UE=;
+	h=Date:Subject:To:References:From:In-Reply-To;
+	b=PzLNUVd7ZBT/8EEbg3C9zD5lW+aTZBSkmaJKd/JHCtEBFFtgOafaB2DUavp+EgbQP
+	 jo3DSSV0q7Oa8CH//Bht7DjaSSS0B0rW6HHzCsolI8suYmcI2+eMNoWu/c7s2wsKP6
+	 Fmng0ml6BqDo+sFXl6hvqC9M23umrOa3ZJd4vey+1zF7Psa9bERqSfUExAQ8rVESwE
+	 ysBA6qspDYeg2EAP4InfWFeDIcUyf/egsCzSsUbzZxUSU1YIbR4XkZ4W/dFj3hKKZW
+	 iRdvcD5/EpbJM42HCq/1D89ZS5pUwFQyK67TEUGA8LsTt4C/see7LcGKODgkUHXm/m
+	 qpwMvlCIMI/DA==
+Message-ID: <099068f7-36a0-4937-b92d-27ac8b781043@kernel.org>
+Date: Tue, 6 Oct 2026 21:17:58 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next v7] mptcp: normalize seq numbers reported in
- mptcp_info
+Subject: Re: [PATCH mptcp-net v2] mptcp: fix subflow bitfield misuse
 Content-Language: fr
-To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>, mptcp@lists.linux.dev
-Cc: shardul.b@mpiricsoftware.com, janak@mpiric.us, kalpanjani009@gmail.com
-References: <20260930102804.2796208-1-kalpan.jani@mpiricsoftware.com>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <0c859a0153b64833949f03be2391e4d2a60f8d6d.1790160379.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,42 +84,79 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260930102804.2796208-1-kalpan.jani@mpiricsoftware.com>
+In-Reply-To: <0c859a0153b64833949f03be2391e4d2a60f8d6d.1790160379.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Kalpan,
+Hi Paolo,
 
-On 30/09/2026 12:28, Kalpan Jani wrote:
-> mptcpi_write_seq, mptcpi_snd_una and mptcpi_rcv_nxt report the raw
-> 64-bit data sequence numbers, seeded from the connection's IDSN/IASN.
-> Since the IDSN/IASN come from mptcp_crypto_key_sha(), these fields
-> carry an effectively random offset and are not useful to userspace as
-> absolute values: a caller has to snapshot two getsockopt(MPTCP_INFO)
-> calls and subtract to get anything meaningful, which is exactly what
-> tools/testing/selftests/net/mptcp/mptcp_sockopt.c already does.
+On 23/09/2026 12:47, Paolo Abeni wrote:
+> The subflow status bitfield is protected by the subflow socket
+> lock, with one notable exception: the `close_event_done` bit
+> is actually under the msk socket lock protection.
+> 
+> Flipping the latter bit may corrupt other entries in the same
+> bitfield.
 
-Thank you for your patience! It looks like it becomes way more
-complicated than expected, e.g. I didn't think about
-mptcp_subflow_ctx_reset() being called on the first subflow. Maybe it
-should only be called when coming from mptcp_disconnect()?
+Thank you for the fix!
 
-Also, perhaps mptcp_diag_fill_info() can stop early in case of
-disconnected MPTCP socket? Most fields are reset on disconnection, so no
-need to bother. (And/Or check icsk_ulp_data validity?)
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-About the patch itself, and similar to the general "kernel code style",
-please avoid big comments in the code, and huge amount of text in the
-commit message simply describing the code change. I know LLM loves doing
-that, but that's not human friendly. What is important to add in a
-commit message are the reasons why you need this modification, and why
-you took one way and not another (+ pitfalls/remarks), but no need to
-describe the diff. If it starts to be too long, that's probably because
-you need to split your patch. If you need to add text to "please"
-sashiko, please mention it somehow.
+> Move the  `close_event_done` outside the bitfield in a 32bit
+> hole.
+> 
+> Fixes: d82809b6c5f2 ("mptcp: avoid duplicated SUB_CLOSED events")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> v1 -> v2:
+>   - place close_event_done in the reset area, drop the chunk in
+>     mptcp_close_ssk
+> ---
+>  net/mptcp/protocol.h | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 4bf04f9ecbd9..d18272fee2be 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -598,14 +598,16 @@ struct mptcp_subflow_context {
+>  		closing : 1,	    /* must not pass rx data to msk anymore */
+>  		valid_csum_seen : 1,        /* at least one csum validated */
+>  		is_mptfo : 1,	    /* subflow is doing TFO */
+> -		close_event_done : 1,       /* has done the post-closed part */
+>  		mpc_drop : 1,	    /* the MPC option has been dropped in a rtx */
+>  		resetting : 1,	    /* subflow is resetting */
+> -		__unused : 8;
+> +		__unused : 9;
+>  	bool	data_avail;
+>  	bool	scheduled;
+>  	bool	pm_listener;	    /* a listener managed by the kernel PM? */
+>  	bool	fully_established;  /* path validated */
+> +	bool	close_event_done;   /* netlink event generated,
 
-Note: no need to address the 'low' comments from Clashiko (except the
-one about the '---' missing after the Signed-off-by).
+Small detail: I kept "has done the post-closed part", because it is not
+just about the netlink event, but also not to call __mptcp_close_ssk() a
+second time for example.
+
+Now in our tree:
+
+New patches for t/upstream-net and t/upstream:
+- b0fee7fb1388: mptcp: fix subflow bitfield misuse
+- Results: 791d82ad3995..1fbd5c79d0b0 (export-net)
+- Results: 1ca5a862adc9..cc3d41a12d90 (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/e8ca111352cd94ad7f8409694086020cd54589dc/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/d36866855349a0689ae2ff0b426fe1476f987238/checks
+
+> +				     * protected by msk socket lock
+> +				     */
+>  	u32	lent_mem_frag;
+>  	u32	remote_nonce;
+>  	u32	local_nonce;
 
 Cheers,
 Matt
