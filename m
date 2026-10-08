@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20038481A87
-	for <mptcp@lists.linux.dev>; Thu,  8 Oct 2026 11:48:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9193CEB84
+	for <mptcp@lists.linux.dev>; Thu,  8 Oct 2026 11:55:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791460141; cv=none; b=j07jzIr0gSi1wsEPOSnmpRfUZWtWd+iWVLKP1VI57UdwVAah2u7S8vm/s29evxbodPGeZaW0n0brgiUfWTQvZU0FadEnwLyRjsXpF/OeJiw/jc7mtub9uPj+KyIVQpiHRLUZm4x081Ldult44GBlJ0wzUjTlR2+8wlGNv03jeH4=
+	t=1791460510; cv=none; b=ohSw1otxkNYB31G1KVLQvXyTjJ0xqhc+ffcEupaJCR86JEv1gdV7C9j931u/mOKBtx9wVPyrQdsI34eaFTlvLETv+ckRg5GfkZSGTAP2niunMnYzCHpnql82BjJuenOuSrvkBL1VCjPSublrft6zm+56WfJ0aanxkW37OGWDRHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791460141; c=relaxed/simple;
-	bh=g5NgsNdRpMa5OUbQDiX4VPSrznDipWGJIFAYZletPBA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u8j1ck5UcS2yLm+2rjH2kw5pOOrjOt1cV69yYr+X949Q4H5ICQWDjiIsZ0ZOHfq09HvVLI68rKIBdaNSZFyeb1cb1frvnNQNXOz129lDemXEJ5a87WRG7Jww0B4oJN0n896C9jOhlWvbFpqyEiy8NB4zob/MAtAa/huEFxXH4zY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dymN3b3X; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791460510; c=relaxed/simple;
+	bh=DZwN1gdYZHRQ4QwzEu8rsOqAvUbsYgQnR9GJ5sIf8kI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=IjT2y3Ih/BcXhOySEXbvOHZsczSirCuWl2CLLEO8hJc8+OURiHdjO/B142neuzIxj1pxUb80/Z/l5+CIAIMzvvu/XrD7lDRIzf6ChW6fUUZZ2FSBqY5gqthFYGrfwrej7eIrqFkxN3SvcBysHxkLUfq9+bIx0TD/vHQZ/OLc6Y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mAi2AEot; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dymN3b3X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC9761F000FF;
-	Thu,  8 Oct 2026 11:48:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mAi2AEot"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88CCC1F000FF;
+	Thu,  8 Oct 2026 11:55:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791460139;
-	bh=YvM7zTzHeQCsuGdD9lJzkXi0+jtCBY2HRmP9OtNoyfE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=dymN3b3Xsci6UO8+YA5qNcmOWsAlGk+BqCxmn/NjHQN09W+e6heXhC1l3PNHzy94+
-	 4kKFON16+kELIJpYyUT730ai80MjVh0H/aPu9du9oicM8EuK7YhU1r1n7NjYHP2c7j
-	 vEuBrRAZlfkJwpxGU1PNatu7oQcu6kae5o+A1LCr039jhHzL8HE6vCIJJRZffa2fNB
-	 /px39tojNRc7Vu/hGxCjm6UKShdsiC2R3bjK3IJcn7phG+qq+XPDZOKKdLebnGsAtZ
-	 EoeKsINs8a5mbX8Ve7FFOzyGgOMpUmSNA+9VPBQdPph+Qq5Evm6BNi801ZeHJmZuVc
-	 9htf4CXlsAOLw==
-Message-ID: <8af523ad-9333-4c6a-963a-faee24877770@kernel.org>
-Date: Thu, 8 Oct 2026 13:48:57 +0200
+	s=k20260515; t=1791460509;
+	bh=wXovDay/CoOHr7swRtvI8gz2CrKspqk2qHQX6msO7o4=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To;
+	b=mAi2AEotSQDaUw9zrUVXcNX+3rczX9n54A84lLL5A5lJZLWPkfebWPRR0YoVCnlZW
+	 041ARB559EPotwSstBvrNxCZYS7Uy2xdBHKTc1PQuEqXCq7M7A9CDi3HyMgmseXL/s
+	 G2GMQsDEOLac9PJMk5QJt8ljlOqClGvySQ22KVYRX4G+kHh2ra33mc804kmH3NltFn
+	 chYFQOtnSyRWmQ3KaVDclr9uozWrgPkDL1/dhgTnXAaT1bUrM4H/PNWwgkZLLXZgYZ
+	 eVkU0r0FkQWEEve4Az9CfuCyC//ozaEh53cGl98BFXZwytdUHWsJ/JgUVmMCH6HQvT
+	 daEg+VaNf4qeg==
+Message-ID: <d78a6c82-1652-4aee-b2ed-72553b03725e@kernel.org>
+Date: Thu, 8 Oct 2026 13:55:06 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: remove unused configs
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: verify nft JSON support
 Content-Language: fr
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Hangbin Liu <hangbin.liu@linux.dev>, MPTCP Linux <mptcp@lists.linux.dev>
 Cc: Hangbin Liu <liuhangbin@kylinos.cn>
-References: <20261008-mptcp_config-v1-1-269d05f7e6be@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
+References: <20261008-mptcp_nft_version-v1-1-efe5f200cb02@kylinos.cn>
+ <00f4f36f-37ce-4845-a86a-ef190961b843@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -85,22 +86,35 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20261008-mptcp_config-v1-1-269d05f7e6be@kylinos.cn>
+In-Reply-To: <00f4f36f-37ce-4845-a86a-ef190961b843@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Hangbin,
-
-On 08/10/2026 11:28, Hangbin Liu wrote:
-> From: Hangbin Liu <liuhangbin@kylinos.cn>
+On 08/10/2026 13:09, Matthieu Baerts wrote:
+> On 08/10/2026 12:00, Hangbin Liu wrote:
+>> Use --version to check for nft presence, as older nft versions reject -V.
+>> Ensure the nft tool has JSON support, since we need JSON output for
+>> parsing with jq.
+> Thank you for the patch. But do you think it is really needed? 'nft -V'
+> as been introduced before MPTCP being upstream, and who is building nft
+> without JSON support?
 > 
-> After converting the mptcp selftests from iptables to nftables,
-> the xtables-only options are no longer needed.
-Thank you for the follow-up. Should we squash this into "selftests:
-mptcp: convert iptables to nftables for mptcp_join.sh"? This commit
-already removes one unused option, plus ip*tables* from mptcp_lib.sh.
+> As an alternative, I can squash this in "selftests: mptcp: convert
+> iptables to nftables for mptcp_sockopt.sh", just to silence Clashiko.
 
-WDYT?
+I just did that:
+
+New patches for t/upstream:
+- 7b299bd2ff08: "squashed" (with conflicts) in "selftests: mptcp:
+convert iptables to nftables for mptcp_sockopt.sh"
+- 585585efcf69: conflict in
+t/selftests-mptcp-convert-iptables-to-nftables-for-mptcp_join.sh
+- Results: 1b9bfe42c3a5..5b1d535dc33e (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/a467f29c9a787c2d2d970fcd60116bb19ade259a/checks
 
 Cheers,
 Matt
