@@ -1,135 +1,134 @@
-Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB5025B09A
-	for <mptcp@lists.linux.dev>; Thu,  8 Oct 2026 10:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7FF443846B
+	for <mptcp@lists.linux.dev>; Thu,  8 Oct 2026 10:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791456598; cv=none; b=EG5Ca8xEb1LYg0H1xLqlup1egBoUrDAWRk4fARPWOseeRmag20zZi8wus2w97BNkYdAvQ0sJBbafVU8iw57CsbgUNkd4ocavLqnD/QSP4woDYOgz+R6aEBRy0CC7iZfb/LdxHhxTGMwmNUkD72r34tSERGcgXjozbeM1RRKu+MI=
+	t=1791456976; cv=none; b=K0dj/I+mAl9gbTYfHWuj/MBn+sbX20au0SXggqnGU2ts/g+Gs+mmZ438OCLSouacsjWHa09ie/snzA/bQQdCvui92IMYZ2BSGbd7MFeDfKOLONXCFafYIhjQ/CWHHkj/K/b284K9ZSogbWgEAbAD1Vi4JiIQCziICa74H5dkmNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791456598; c=relaxed/simple;
-	bh=ZVqPaMj9OBKmp7Fn9d0f7hf6S0qpLN+SZH0ehciTrYI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cenjHBFPVJm0vaQbxWbJfK4bUOlnYUNbpLCRXnkx9zV/WhxoO1SLJbCktJlXbj1r6zXFONSPvuFCbW4u61xySK7HDDQ9wQPZgtRPWRMcDMl5n6yUjmwB33lI5DJN9ViNcEvNoSmqroN8bvybpf874w5ptC5wd5eIXYIeHcDuFIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RZBGu1sw; arc=none smtp.client-ip=74.125.82.49
+	s=arc-20240116; t=1791456976; c=relaxed/simple;
+	bh=ZBry7OTdHtSDUzVOKivy7oyNdCgnRP4KKbGWFwWs09Q=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=iiwyVSdhV0kWmskvsojfePRqMPAULotxQ9cFN06ywpcigZrVRu9/g2TBUWiyo3TzfW4GTBOyK3Ha7z+OTsgk8YIOydFkqRVdOUu1F1WXejudhKnyzyvKB+aA4HccFfoxSCwWuz9b4ZpaIX3RO08r/mjuSdh+9JYcQqrsFch9JcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g1ukifsp; arc=none smtp.client-ip=209.85.167.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RZBGu1sw"
-Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-15354aa70e8so1219416c88.1
-        for <mptcp@lists.linux.dev>; Thu, 08 Oct 2026 03:49:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g1ukifsp"
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-504ae5941faso452368b6e.3
+        for <mptcp@lists.linux.dev>; Thu, 08 Oct 2026 03:56:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791456596; x=1792061396; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=JcYKjibBDVYYKXsTs/kEMk8DPe0X6aXUqJTngq/c/Sk=;
-        b=RZBGu1swhT5rYUKZSIIg8u7GXCQCwF+kCkqecLKGRB88yZDlORpWa69suYuW/OL4Q2
-         0fSzai3khDBQ5afnPfzyIam1FhtisrpABf6sFiQuBu1f7r0vj1K16MqxEdmneR2rYZj0
-         5fdrmJzE3t0w+h6N6zSOMGfyvLu5GPmvnytf+IUAyTkDEnRlNdKm1rjqYkv8Lks0dtXu
-         VuscZwE/6/qdWSRwDpoxlF2FGvli0mgy8IHi2PuK1H80nEhI/6AoQGxKTbtaz3xB/JEX
-         anpz1FvGEWMKnhXx51kxzdGxEbCj77lAf8ALyiuiyuWAP+q84FrYYWSkNmG5VbO9hGKQ
-         LRGQ==
+        d=gmail.com; s=20251104; t=1791456974; x=1792061774; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=xVgZwKbWZywUNlpf6eB/vyhy9OqPXZcZ0UHTEb/5/jA=;
+        b=g1ukifspO6GJ4iU3vtMiH/7wZNf0zpPHm1kb4DUUSS36MjNr0EpKZDKsXCFMYsLg94
+         Mf46ANXnkTplXw78dSpITocimqtPBD5rhGTeGYoies0UxdWLW+XQZ6vDsMDdh/7cQZjA
+         owb/4FTx9NyHR7OlWw2rfmOIic6acy4zuwLp1QB2h4VHcaHSXtupqtU1RI7QsKINL854
+         ILNboVClZ6qqf3Zf9uIsow/my2YXMcChEF+aTFifZ/4mHd7usMQJJArWMUngPDDQ46IE
+         qoTrLYO7ae2YTjtPqednrUWoSSRGd9kAyV19ov6pQ1JaR/kKLttRZBi3vNcdpocqUjv9
+         Woqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791456596; x=1792061396;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=JcYKjibBDVYYKXsTs/kEMk8DPe0X6aXUqJTngq/c/Sk=;
-        b=aarQjlfFp09R53m30kl5rrnJORE8r+K1ChXxs+CkmjPvrM0Cjkz1r+s0rIYumUKSwE
-         +PR2vbd9BntteJEvwo3vMda03Q2MzvIc9bH8USnWP/62/AH+wMHzhXnmqYdl3su61uhx
-         SROpF/xqHDAr+wiD72LXZRE1QjV7OWkrbQKkus1xA7mIKvtHy9l8v916IQdG5QpEijec
-         48jBmyPS9iqTEEG7Odz1p6vUYYUmGUb4a1C4BIVW2D5DgbqmZ5NL+KyIBJ+QBH3rUjuw
-         LS9D6ZMy9j7zsIo8zInd459mstuVPdnHFSNY21NjeDLne6+Y0WkRKfEqz3zhOqIXNwLe
-         NWqQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxvoBJ6sObezRrF5IGfrYeuMTmn+wU6zNp9ZrPgDokQBTK97ov786aA9doU5gKkUKbMIrPxmw==@lists.linux.dev
-X-Gm-Message-State: AFuF++nbFu2czh7KTC/HPRwvkhwR3dew4ozpss1wGcRFLO8VaIZhtBb9
-	Rmv3oymgc6PShih1O/4OUzekG/BfpNj0kvaVB9YaSotRFdTrzhTXdwMDAFCY2SN3x9xppw==
-X-Gm-Gg: AYBFou0NtFpMDxNFTk2sPbiCDjH8+I4lW+ZB4UyDj+p5/+1pyhSQj3ny39/WTvKhafl
-	HBew78mq+s3SRl2VOib3PRNIiSnQ7K5UGtog3q0NH2Mst/3asg1o2MQbVNm76hI9MuaHdno0HEj
-	MqE6SUMa0XvpQIo2TJKBZZOO7zYhzhm/bUpmaKvUq2/muMnmE0xW1nTVqjU9jY1ojkdCksPsB1g
-	xgNKnPVkge0zDmLubsltzz4kgu1vH4C5bvHmcwTPKsJoKEWbwgmtmmUWVzkSY99e2IEiAa1qbSH
-	/sh1SrgEhZqN79n9gX2u+O/tWS7teDTzP4EJ4197ssvzVo12F9+7Yp7R+qHYRCwHA+Q3SNu+8BL
-	ufNMkgT3OwTXSYakbS8MDrWqhp+Eq+jQY6SkvLSinG9A+JbsJxqCuI7uWZDw8Z7f6Jz+M4krhy3
-	mlmlqgb12GSdN8Zd52hPdWFoAtrgJEBuCBICWXfQkeHB9Ad18Mt/r2zz8CbKPkjT4uPCeotVfEu
-	YeVF30Y
-X-Received: by 2002:a05:7023:a8a:b0:14d:baf5:c40f with SMTP id a92af1059eb24-16205db7867mr7233939c88.14.1791456595585;
-        Thu, 08 Oct 2026 03:49:55 -0700 (PDT)
-Received: from ramesh.. ([124.123.89.203])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1616b01c2b4sm12797756c88.20.2026.10.08.03.49.52
+        d=1e100.net; s=20260707; t=1791456974; x=1792061774;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=xVgZwKbWZywUNlpf6eB/vyhy9OqPXZcZ0UHTEb/5/jA=;
+        b=QBfv8jZJEjxdiYo7NHOmCaPlnrYe9pOzBWVDN21V71QDWyD4Ri7X01x27J39IAW/tk
+         BFghtVX6niTMniyIoKZQrBY2PfccZKa+eFTU3Z3ox4tlOgQAhLkSDZLTQbOvblc9Bqq1
+         /aS01wdEi2yYYREATZ0wLz4ciURnBPIoFpfn8jaSELjCT7Un2MCNQMbwarG9pRwHvkTb
+         cXT/4HoGSDBaioSXxatoBlfKsCzWuWnv6FWX0QWezlIh2sIFHoTyIIcJH3TBlz8AJ7+A
+         2VvqkbP960+LrVgFogD8Gt9VTQb3Lhp29mv4QtKwduYTMfkS25E5yqjs6f33YXiwrnQb
+         wvhg==
+X-Gm-Message-State: AFuF++nlF4SERoNmA7BHQcAlhUl5VtUPd9R8imxYNTC7JESJcC2saYar
+	AiSroddDwBEasFXPOhfyMd5IkN1R9g1qREScyRLwT2W+3DrNezrPhIAGAqsW
+X-Gm-Gg: AYBFou00y/oLREeaE1+rDxP6JKNGr4oLiiQhm0PLGmcEepViCvGGuibZ7CLQc1s5g3W
+	G+iwA/lZvYX+mWvA8zr3eh17NxusISRDcYe6S08lY04jUMgVpVNPHHPnqzGHVduM2kEY61ErQAj
+	dwe++x7TLSYGe3btr2NpKGfEIwPVOvt35HeWRzvmGmJi24oe1muDbqnjLcyQSI/fHh4nxXNsqHR
+	IjH2ozL8vES3LAm840bd0TSzfv7uEAA+M1e1JK+SLIKB6uPQG7e8Oqh3lOSvamTS4wsZLRdDaBd
+	piBJbwrwgKPfsnQq+cIqeEjWouWC18xnHgZE17MEzzAFDzmfAtUme/n81SHRGMYdsmnnOzYlcXy
+	wtAw+5opprd9D/IlP97ANHJ7AO2/RGXjxREViGdwh6bjAqvMXCTFoR+tVvlSFmsH4w2i2iAKk4a
+	uK12u77H3N03dk6QQpMo4EDTuukAQqi97J1QfeL3dBItCJYKJJQeopXtxfxsKXPdJV/Q0qQsFoy
+	M1Cvz2GJsaruQ==
+X-Received: by 2002:a05:6808:1308:b0:4f4:550a:3a88 with SMTP id 5614622812f47-4fc44c392e6mr4347605b6e.16.1791456973615;
+        Thu, 08 Oct 2026 03:56:13 -0700 (PDT)
+Received: from [127.0.0.1] ([132.196.15.183])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-4fc49a7594bsm4818360b6e.17.2026.10.08.03.56.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Oct 2026 03:49:55 -0700 (PDT)
-From: T S Rameshkumar <rameshsv06@gmail.com>
-X-Google-Original-From: T S Rameshkumar <rameshkumar.t@phytecembedded.in>
-To: matttbe@kernel.org,
-	martineau@kernel.org,
-	geliang@kernel.org
-Cc: netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	petar.sakic@ink.fish,
-	T S Rameshkumar <rameshkumar.t@phytecembedded.in>
-Subject: [PATCH v3] mptcp: push queued data on passive TFO subflows becoming established
-Date: Thu,  8 Oct 2026 16:18:40 +0530
-Message-Id: <20261008104840.131986-1-rameshkumar.t@phytecembedded.in>
-X-Mailer: git-send-email 2.34.1
+        Thu, 08 Oct 2026 03:56:11 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: T S Rameshkumar <rameshsv06@gmail.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20261008095231.103186-1-rameshkumar.t@phytecembedded.in>
+References: <20261008095231.103186-1-rameshkumar.t@phytecembedded.in>
+Subject: Re: [PATCH] mptcp: push queued data on passive TFO subflows
+ becoming established
+Message-ID: <ce247326-f8e8-f190-c0b5-22cc79b8e450@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 08 Oct 2026 10:56:10 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 
-With TCP Fast Open on an MPTCP listener, if the server application
-writes data while the passive subflow is still in SYN_RECV (after
-consuming the client's SYN data but before the MP_CAPABLE third ACK
-arrives), __mptcp_subflow_active() refuses transmission and the data
-is queued into the msk write queue.
+Hi T,
 
-When the MPC third ACK arrives, the subflow transitions to
-TCP_ESTABLISHED and is marked fully established in
-check_fully_established(), but because the third ACK carries no
-DSS data, the queued bytes remain stranded until the peer sends
-more data.
+Thank you for your modifications, that's great!
 
-Fix this in check_fully_established() by checking if the subflow
-was doing passive TFO (subflow->is_mptfo). Under mptcp_data_lock(),
-flush queued bytes via __mptcp_check_push() and clear is_mptfo.
+Our CI did some validations and here is its report:
 
-Reported-by: Petar Sakic <petar.sakic@ink.fish>
-Closes: https://lore.kernel.org/netdev/CAFPPu1gU2Y-D+d4i3F0MoNkYK+e1U+=X3qf6QycjfKBw+8snPg@mail.gmail.com/
-Fixes: fb7084501a61 ("mptcp: add support for TCP_FASTOPEN sockopt")
-Signed-off-by: T S Rameshkumar <rameshkumar.t@phytecembedded.in>
----
-v2 -> v3:
- - Move the push and is_mptfo reset directly into check_fully_established()
-   under mptcp_data_lock(), avoiding any potential race in subflow_state_change()
-   which could clear is_mptfo before check_fully_established() processes the 3rd ACK.
-v1 -> v2:
- - Use __mptcp_check_push() under mptcp_data_lock() instead of mptcp_push_pending().
+- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): packetdrill_syscalls =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf: Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_n=
+et-next/actions/runs/37761463175
 
- net/mptcp/options.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/4cb33181b6=
+87
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1181518
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index ce0de02f5..b865ee6af 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1042,6 +1042,15 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
- 
- 	mptcp_data_lock((struct sock *)msk);
- 	__mptcp_subflow_fully_established(msk, subflow, mp_opt);
-+	/* Passive TFO: the application may have written data while the
-+	 * subflow was still in SYN_RECV; __mptcp_subflow_active() refused
-+	 * it then and nothing else spools the msk write queue when the
-+	 * MPC third ack (no DSS) arrives. Push it now.
-+	 */
-+	if (subflow->is_mptfo) {
-+		subflow->is_mptfo = 0;
-+		__mptcp_check_push((struct sock *)msk, ssk);
-+	}
- 	mptcp_data_unlock((struct sock *)msk);
- 
- check_notify:
--- 
-2.34.1
 
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
