@@ -1,144 +1,148 @@
-Received: from mail-dy1-f170.google.com (mail-dy1-f170.google.com [74.125.82.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8853E00B8
-	for <mptcp@lists.linux.dev>; Thu,  8 Oct 2026 10:09:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB043E00B8
+	for <mptcp@lists.linux.dev>; Thu,  8 Oct 2026 10:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791454195; cv=none; b=EnC9FDH01BHgw3GUOzioLlCenfIKgWMIAPkOHoXVTDytNasQux6nNrI5BSxpgG3NsFag3PJrBtWXXjWA+fLqtsYqDumFE4K2JPFwGBtirobyb2jgT3ntMRsL27gvLBQD348nTHyNdlofLMneVaM/oZoH+TgEtc5L8k63bf4c7YQ=
+	t=1791455370; cv=none; b=ZdhPjxqA4YxH15MfHE4OJMmJkvN7S9bjqi7IqHWHI5N+bOElJqyFPDugOmA6Xp2Tcfl0omIzDWFBEOExAbTnoT5IOMz+guyFwiB+2F2bjk+b+d8VkQMZm/R+srxikZbAN5OrKOLV6Gk2RLfXJR5JWn5jdMfeqSImsYrd3DjpOPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791454195; c=relaxed/simple;
-	bh=UGd+kjwZ7wLqKrdkmrx/xsOpXTlQdSYek/Xxji0Jj+g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rYlXOqwrN2fpD4e/MFA2B/wgLRhYuIgcuA8vQAPzZcqqv9PjqKQ7SI31C8UBQ9KNf3YFcJuWjgI2GVkiVyiGMlIomhgHt5Uyadmb6rWBw9IhUAF20HxVrzAv2uX71LL5jfChpcMOeLar4oUaY6VtKJO8b6hSp6DCucemAuWleew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kVHUfXWx; arc=none smtp.client-ip=74.125.82.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791455370; c=relaxed/simple;
+	bh=/GztcdQ12soDcamBB9Jl9VyNUjlB+FVbvNUPe+k94zc=;
+	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
+	 Date; b=UhdFKG4wIwTLcoXvktnfHsnTSUjzEPPENs5QI6/r4KLSiY2iBWCcS+oa8PY2bLEXmaEgN3I0iJFuoYSug0Pv50OjNcUoxXypIwcMy2Zu/+xjp5nIAo7lnid8T2Fc4j+T7owm8mfai21XQDLwEme0pPPYIPK4PopTqpxEmT7ppbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ihMxXBrE; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kVHUfXWx"
-Received: by mail-dy1-f170.google.com with SMTP id 5a478bee46e88-30b6dad2382so6404351eec.0
-        for <mptcp@lists.linux.dev>; Thu, 08 Oct 2026 03:09:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791454194; x=1792058994; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=wXNayWQZtrxImfBFLGBlgxTe4JKCGS+pfnkyA+c+fwU=;
-        b=kVHUfXWx3rEG+BmwQMtKKmwLQxU/paPt1woPdM3mSPL4RXTboP0Sn0yS9BNmtLi6qb
-         l6tmboB6hzJAIKlyU0idkqvRXV0JvgB9uymMaPleHfXMlueU10PrkSX5lXa2aY1aXkcu
-         7wDenj24OWX411eIcYHGMSTMAH/dyLRMDDQd32s1WCrpD5xe6K6jM6IV19s/pvmD+R02
-         XfoqnEluD3E+YAorvd0OjzlDpmkqlLNDoVDXR4I2b9awQBdOLgNJ8gfQrPmx1jGM2WS1
-         UKgC/WOxv/awLTWNthPmu5+dKdRW2IOksu3y39sLDY3QDuyeJ5OMwkGaWtafFrJgKY1G
-         3itw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791454194; x=1792058994;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=wXNayWQZtrxImfBFLGBlgxTe4JKCGS+pfnkyA+c+fwU=;
-        b=DI99yEeBD/fpPvdoVR94gfrFtIHNWd+KaX9KJCJEeq/o5MeHRaXLxGUcwEHa/yBbzU
-         u2+Mc3Csp32ARcO+MLLJwJjrFU4XrpVsE3SniHvLFsWniftOH4BNdM8iaydrrO5MU+s0
-         bOcEyrnO9GfLS3wDDCN1KeaRz2NYC34xafExeTWB0xSpyBTdyuwJOdLhUM4CwM47vGje
-         nAalWJr2uqB5n9uWHT1b5eihrCZ6Fm/VnMpY4yJ29Id06Wj5+r6LiFo5it8BFS6XU+4p
-         8YIA943G42W/ZlgRml2DSy1851260VNkIwkaJUzkBVz6URGKHVZkQgyZuNu1vYvDnit2
-         VSsQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzTMV0A/SRCmJR4PduxrkI4ZLZQ0/rlSPVsF4ULuinhrIS6QEJ6eQkgWOAaSw/yYnBkESo2Tw==@lists.linux.dev
-X-Gm-Message-State: AFuF++lMo4qnTr8PXJ1uMdsdLiPvtJKUIIZb/gqYzRxe89WEKn65U8xf
-	y1/nmJrl6+SqiRsr2tS9MFCm9T0eB2W4vrdbaG/8jDGUCMEysUId9FGs
-X-Gm-Gg: AYBFou3IH34ufPYyxq/bM86XmW39scBQc9v4MuvSoRQE1lZLsh99aZQqdmtjVZEDYjb
-	Pntsc6ycpXMdgW/YIolH51nkktB3BeUA0b42XoojWv9wyQuAY0lF7zBbqE2Vq310MWEWRlkDKb0
-	fr5LThuc6FO5syOkYlbTiS6UADmMca3BRYYCLvESZ9ud75WlOKtOgNEOsjlo9ljvF2TpKjktEqU
-	wodK+lZ1VdNK/mWk8HOqnzevuDzCEZnm5gEPT3ySzn587touQ2Z6bDoshxJjoMiG+ZhYIUFl3P1
-	zAniz+b8GguyArkD75RqFcCa1jelxu3y+DkcbP2v88TRtRppFc1U2uzS+Y3Y0ZgaCPu2d9LLg6X
-	2xLP2Rw18O1t971mdLdeDBF4LFCrvsv1sKb4z2un+ciDC4CWoMsH/z5zG5KkKIzgCYiTS8+9IR/
-	F+wXHY34Rwmuj7sTPrwFQGLw7CUgeWdqBn9y+V7Z8QqimrcysWSYbD6NeFy68q4PchIf6oi07z1
-	fJ0X+Qcu52+4Xh+OFE=
-X-Received: by 2002:a05:701b:451a:10b0:158:7ea9:4a5c with SMTP id a92af1059eb24-1620637efafmr5613674c88.27.1791454193686;
-        Thu, 08 Oct 2026 03:09:53 -0700 (PDT)
-Received: from ramesh.. ([124.123.89.203])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3515abb5389sm16487581eec.2.2026.10.08.03.09.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Oct 2026 03:09:52 -0700 (PDT)
-From: T S Rameshkumar <rameshsv06@gmail.com>
-X-Google-Original-From: T S Rameshkumar <rameshkumar.t@phytecembedded.in>
-To: Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>
-Cc: netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Petar Sakic <petar.sakic@ink.fish>,
-	T S Rameshkumar <rameshkumar.t@phytecembedded.in>
-Subject: [PATCH v2] mptcp: push queued data on passive TFO subflows becoming established
-Date: Thu,  8 Oct 2026 15:39:41 +0530
-Message-Id: <20261008100941.104715-1-rameshkumar.t@phytecembedded.in>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ihMxXBrE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AFDB1F000FF;
+	Thu,  8 Oct 2026 10:29:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791455369;
+	bh=pOfFiosbJxG4HbrOjnxUn/JDX76Aj2UcXiZFUUoAUCk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=ihMxXBrEIP5Tfrwjl2wzn95yiuw6y3OK0hpXEQyOe9x0l+ztT31fupjOvRUB/KtJV
+	 PS+fq9gYWsBeHlH8ifCnVr1Q2NNGUmAsMSo8m3hjt35CeoJzJshPSTorpWGI3T13YE
+	 NG8B159/iUvwRVN3eLyu+cJIeOKjm18VLiG2cnKbxIPkRjQfeLujhwLit/UXcCBkHi
+	 OI8+2V/pu8WHsvZWeRKa0/Z59zFT+rAhaj8kqiF1Tw1W3CO2ByGYb7PFT5er5QNcgK
+	 AXoKUrx1LB9JUDHK6hqhgf+wt20xHMu3iruAaO2V6gwYZj3pB7f5bZ5NlskvNJLOkT
+	 TdaH8FEe23kJw==
+Message-ID: <sashiko-outbox-164014@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2] mptcp: push queued data on passive TFO subflows
+ becoming established
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "T S Rameshkumar" <rameshsv06@gmail.com>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <20261008100941.104715-1-rameshkumar.t@phytecembedded.in>
+References: <20261008100941.104715-1-rameshkumar.t@phytecembedded.in>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 08 Oct 2026 10:29:28 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-With TCP Fast Open on an MPTCP listener, if the server application
-writes data while the passive subflow is still in SYN_RECV (after
-consuming the client's SYN data but before the MP_CAPABLE third ACK
-arrives), __mptcp_subflow_active() refuses transmission and the data
-is queued into the msk write queue.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] mptcp: premature clear of is_mptfo breaks passive TFO sequence val=
+idation
+--
 
-When the MPC third ACK arrives, the subflow transitions to
-TCP_ESTABLISHED, but because the third ACK carries no DSS data,
-the queued bytes remain stranded until the peer sends more data.
+commit 22ac3fb6b29817664eb5b68ac5a70275e689140e
+Author: T S Rameshkumar <rameshsv06@gmail.com>
 
-Fix this in subflow_state_change() by checking if the subflow was doing
-passive TFO (subflow->is_mptfo) and has reached TCP_ESTABLISHED. Acquire
-mptcp_data_lock() and call __mptcp_check_push() to flush queued bytes,
-clearing is_mptfo so subsequent state transitions are ignored.
+mptcp: push queued data on passive TFO subflows becoming established
 
-Reported-by: Petar Sakic <petar.sakic@ink.fish>
-Closes: https://lore.kernel.org/netdev/CAFPPu1gU2Y-D+d4i3F0MoNkYK+e1U+=X3qf6QycjfKBw+8snPg@mail.gmail.com/
-Fixes: fb7084501a61 ("mptcp: add support for TCP_FASTOPEN sockopt")
-Signed-off-by: T S Rameshkumar <rameshkumar.t@phytecembedded.in>
----
- net/mptcp/options.c | 7 +++++++
- net/mptcp/subflow.c | 7 +++++++
- 2 files changed, 14 insertions(+)
+This commit flushes queued data on passive TCP Fast Open subflows
+when the subflow transitions to TCP_ESTABLISHED. It checks for
+subflow->is_mptfo in subflow_state_change() and check_fully_established()
+to push the data, and clears the flag so subsequent state transitions
+are ignored.
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index ce0de02f5..d5238fa11 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1042,6 +1042,13 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
- 
- 	mptcp_data_lock((struct sock *)msk);
- 	__mptcp_subflow_fully_established(msk, subflow, mp_opt);
-+	/* Passive TFO: the application may have written data while the
-+	 * subflow was still in SYN_RECV; __mptcp_subflow_active() refused
-+	 * it then and nothing else spools the msk write queue when the
-+	 * MPC third ack (no DSS) arrives. Push it now.
-+	 */
-+	if (subflow->is_mptfo)
-+		__mptcp_check_push((struct sock *)msk, ssk);
- 	mptcp_data_unlock((struct sock *)msk);
- 
- check_notify:
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index f0a6725d2..c71122842 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1894,6 +1894,13 @@ static void subflow_state_change(struct sock *sk)
- 	if (subflow->resetting)
- 		return;
- 
-+	if (subflow->is_mptfo && sk->sk_state == TCP_ESTABLISHED) {
-+		subflow->is_mptfo = 0;
-+		mptcp_data_lock(parent);
-+		__mptcp_check_push(parent, sk);
-+		mptcp_data_unlock(parent);
-+	}
-+
- 	/* as recvmsg() does not acquire the subflow socket for ssk selection
- 	 * a fin packet carrying a DSS can be unnoticed if we don't trigger
- 	 * the data available machinery here.
--- 
-2.34.1
+Closes: https://lore.kernel.org/netdev/CAFPPu1gU2Y-D+d4i3F0MoNkYK+e1U+=3DX3=
+qf6QycjfKBw+8snPg@mail.gmail.com/
 
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index ce0de02f5a3a1..d5238fa111dee 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -1042,6 +1042,13 @@ static bool check_fully_established(struct mptcp_s=
+ock *msk, struct sock *ssk,
+> =20
+>  	mptcp_data_lock((struct sock *)msk);
+>  	__mptcp_subflow_fully_established(msk, subflow, mp_opt);
+> +	/* Passive TFO: the application may have written data while the
+> +	 * subflow was still in SYN_RECV; __mptcp_subflow_active() refused
+> +	 * it then and nothing else spools the msk write queue when the
+> +	 * MPC third ack (no DSS) arrives. Push it now.
+> +	 */
+> +	if (subflow->is_mptfo)
+> +		__mptcp_check_push((struct sock *)msk, ssk);
+
+[Severity: High]
+Does this block become entirely unreachable dead code?
+
+When an MPTCP connection using passive TCP Fast Open receives the 3rd ACK,
+tcp_rcv_state_process() executes sk_state_change() (transitioning from SYN_=
+RECV
+to ESTABLISHED) before executing tcp_data_queue().
+
+Since the newly added code in subflow_state_change() clears the
+is_mptfo flag during this state transition, subflow->is_mptfo will evaluate
+to 0 by the time check_fully_established() is reached here.
+
+>  	mptcp_data_unlock((struct sock *)msk);
+> =20
+>  check_notify:
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index f0a6725d2c376..c7112284254a5 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1894,6 +1894,13 @@ static void subflow_state_change(struct sock *sk)
+>  	if (subflow->resetting)
+>  		return;
+> =20
+> +	if (subflow->is_mptfo && sk->sk_state =3D=3D TCP_ESTABLISHED) {
+> +		subflow->is_mptfo =3D 0;
+
+[Severity: High]
+Does prematurely clearing the is_mptfo flag here break passive TFO sequence
+validation?
+
+After this state change runs, tcp_data_queue() calls mptcp_incoming_options=
+()
+which evaluates check_fully_established(). Because the flag is already 0, t=
+he
+preexisting sequence number check bypass for passive TFO fails:
+
+net/mptcp/options.c:check_fully_established() {
+    ...
+	if (TCP_SKB_CB(skb)->seq !=3D subflow->ssn_offset + 1) {
+		if (subflow->mp_join)
+			goto reset;
+		if (subflow->is_mptfo && mp_opt->suboptions & OPTION_MPTCP_MPC_ACK)
+			goto set_fully_established;
+		return subflow->mp_capable;
+	}
+    ...
+}
+
+The TFO 3rd ACK sequence number includes the data length sent in the SYN and
+does not equal ssn_offset + 1. Since the bypass condition fails, doesn't th=
+is
+prevent the subflow from becoming fully established?
+
+> +		mptcp_data_lock(parent);
+> +		__mptcp_check_push(parent, sk);
+> +		mptcp_data_unlock(parent);
+> +	}
+> +
+>  	/* as recvmsg() does not acquire the subflow socket for ssk selection
+>  	 * a fin packet carrying a DSS can be unnoticed if we don't trigger
+>  	 * the data available machinery here.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261008100941.1047=
+15-1-rameshkumar.t@phytecembedded.in?part=3D1
