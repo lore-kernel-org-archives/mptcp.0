@@ -1,148 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB043E00B8
-	for <mptcp@lists.linux.dev>; Thu,  8 Oct 2026 10:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1404F40A93E
+	for <mptcp@lists.linux.dev>; Thu,  8 Oct 2026 10:33:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791455370; cv=none; b=ZdhPjxqA4YxH15MfHE4OJMmJkvN7S9bjqi7IqHWHI5N+bOElJqyFPDugOmA6Xp2Tcfl0omIzDWFBEOExAbTnoT5IOMz+guyFwiB+2F2bjk+b+d8VkQMZm/R+srxikZbAN5OrKOLV6Gk2RLfXJR5JWn5jdMfeqSImsYrd3DjpOPA=
+	t=1791455618; cv=none; b=b1hK6gPmwhiHObC/WEMTa39wyMFx7Liy3lqQnCOYNXmTCL/9uifNMhI0pvpVmDQG3hZbsq946C0X1U4KAKydLKmVmU9DiDU0E7GKj9kl4JaACv/G6MkOoN0mG8ZeAZce5uEfslNinY2HhZMkt92CjOKEgVkXEXe/DdMulMwBosM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791455370; c=relaxed/simple;
-	bh=/GztcdQ12soDcamBB9Jl9VyNUjlB+FVbvNUPe+k94zc=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=UhdFKG4wIwTLcoXvktnfHsnTSUjzEPPENs5QI6/r4KLSiY2iBWCcS+oa8PY2bLEXmaEgN3I0iJFuoYSug0Pv50OjNcUoxXypIwcMy2Zu/+xjp5nIAo7lnid8T2Fc4j+T7owm8mfai21XQDLwEme0pPPYIPK4PopTqpxEmT7ppbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ihMxXBrE; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791455618; c=relaxed/simple;
+	bh=e6Tr9bVfFq9wjisyV/V8QwWGu6JiBlBPR6aZPx85y14=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=ZDoTwoGroSRNsSIZoLVWBErIFBk9kHm1htSXfLciFQCYlivebBKnWeUxIZo+a1qjkkaRyl7l6BWw8lsa3rcvpTE+0C7/UgIvvfQ91lRpVtWLXp+pVyUqCvpyTGo4CRJ4QBCwH67M0VLCR8nZzFUnNnHV1Pq7AmHjNzPBpbQ0b0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XKS8REdu; arc=none smtp.client-ip=209.85.161.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ihMxXBrE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AFDB1F000FF;
-	Thu,  8 Oct 2026 10:29:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791455369;
-	bh=pOfFiosbJxG4HbrOjnxUn/JDX76Aj2UcXiZFUUoAUCk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ihMxXBrEIP5Tfrwjl2wzn95yiuw6y3OK0hpXEQyOe9x0l+ztT31fupjOvRUB/KtJV
-	 PS+fq9gYWsBeHlH8ifCnVr1Q2NNGUmAsMSo8m3hjt35CeoJzJshPSTorpWGI3T13YE
-	 NG8B159/iUvwRVN3eLyu+cJIeOKjm18VLiG2cnKbxIPkRjQfeLujhwLit/UXcCBkHi
-	 OI8+2V/pu8WHsvZWeRKa0/Z59zFT+rAhaj8kqiF1Tw1W3CO2ByGYb7PFT5er5QNcgK
-	 AXoKUrx1LB9JUDHK6hqhgf+wt20xHMu3iruAaO2V6gwYZj3pB7f5bZ5NlskvNJLOkT
-	 TdaH8FEe23kJw==
-Message-ID: <sashiko-outbox-164014@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] mptcp: push queued data on passive TFO subflows
- becoming established
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "T S Rameshkumar" <rameshsv06@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XKS8REdu"
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-6df5e315bd1so1581120eaf.2
+        for <mptcp@lists.linux.dev>; Thu, 08 Oct 2026 03:33:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791455616; x=1792060416; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=3sbcVIQDTOelTtX/UC9+23s47ZZAMWt+sdjx0emlGbU=;
+        b=XKS8REdubeMmGuwi2oq2y16Pzd+gi2vGCJnaE5Y88nb03kNzfyD6WRga4IylOlWOJq
+         1q/IrxdV/+BZHLa0ZVS1NZVq6+j/fITLuwVE7k4b/0ertY/xoepTCw1zZ7RuS8m8cI9p
+         Zhukhy1+nQIRvqMy6CjvLNkwhLKbLtF00bWLsF9YwzDhurTJoPOUTQyfz0hEqi0V0cJw
+         5W0CaBEgE6YJnBbduAR2f75KM32uf83zRVkx/nBkC5P+UtqJbSvWnH3FmL06QgyRlpSy
+         5nlvTLt3WIF2czFv01yFy8rvPM5c+BgOaQcQh90w8AOE729708j/OmLMb7FlAcbFbQdS
+         UgGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791455616; x=1792060416;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=3sbcVIQDTOelTtX/UC9+23s47ZZAMWt+sdjx0emlGbU=;
+        b=rWtg5RTmFS34LznTgYza1BFs+B4LrkrVlaQBnXftsXlry5rQm/usF7wrBQAn5Jldaq
+         63VtcfBZEeeQ8RdfZxymNZunABsKxYiFZqHJoaQfpyR4d3z/7GnqyMUyUsvl2rSgIJSN
+         kG/sBh+EzgXc5KVcDzZoy4dAec+dApP03qOIY89T0mbGC4u8eSFBXjZ1eFsgRECkkzjw
+         jhrQw+ZJCAsChAcuAv1+kvOaTb0tE2XqkhAsaKJX4zGv+qjdvgmuuTq/WL93TTlzmDwQ
+         t8itKrHX+turoymW+nqSJDlnJsVJ0uQ2OhPQk4Lnotq01rImDRRm5F9qH95glCimKp3W
+         XUgA==
+X-Gm-Message-State: AFuF++l1Nc8bzNzXJu9XN4QATF53PJe9Vu2tHcCKnp3GuEZqGZDQHqWJ
+	D0l5/VF9DRz47upk8ivl/8UTGde2O5WmwBTZlMt9IosvqhE1MUlRaTcu6/b7
+X-Gm-Gg: AYBFou1p0zowCKxpNMKOvdxicVhz6cYzowYvSs6QDYayK5EOd9X4m2YK0l61ZzRTgec
+	csjwYkNdy6CCc0jGCHKiqFqlGPI1RU9Y4eFq3pRMswnmAMrPPoouC5qLKatCmHg6EclBqVbPppf
+	kWthyUIrfRKNa6Zpbj8Tx0wRzwi0HuZ1kVsl1rPWxIf3quN43Qq/OtMJUWgFGeOEHsf9aKSQVc5
+	3bKpcw6EGzx3qT7Y/jqxKEK72P3CsKKFqCjXWoxNgkinHH3dzm7z9wikkDu8gXCRlaRY/X6hMXI
+	u9if4j/y8n/IDPtvMmLHYIsvACYyzJZJ9RL61yDj7S7KKl7uPcbYYkbM5aN+ryNA9LjS96jq19Q
+	0enMHcE0GKOyxvZwoRQjgZIdJEaDEEk9fjXmYZCN2h7pnCl3+/vLGxXg9+fHtfFEktbswJCa4b8
+	UHGdKKl8eJwr1yRu+p3bmr28vSLHd9BeopRmihpptRmXP4EiVH/wewGU9H+1ahB09OTQ+Ypnc9Y
+	DnIXi4E7jU=
+X-Received: by 2002:a05:6820:a0a:b0:6d7:6278:2d60 with SMTP id 006d021491bc7-6e7a8bcfd88mr4035657eaf.55.1791455615652;
+        Thu, 08 Oct 2026 03:33:35 -0700 (PDT)
+Received: from [127.0.0.1] ([20.118.29.25])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6e78e17e7fdsm3753426eaf.0.2026.10.08.03.33.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Oct 2026 03:33:34 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Hangbin Liu <liuhangbin@kylinos.cn>
 Cc: mptcp@lists.linux.dev
-In-Reply-To: <20261008100941.104715-1-rameshkumar.t@phytecembedded.in>
-References: <20261008100941.104715-1-rameshkumar.t@phytecembedded.in>
-Content-Type: text/plain; charset=utf-8
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20261008-mptcp_config-v1-1-269d05f7e6be@kylinos.cn>
+References: <20261008-mptcp_config-v1-1-269d05f7e6be@kylinos.cn>
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: remove unused configs
+Message-ID: <33f9e262-ce47-cc7c-ab3a-6155ed2f3c05@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 08 Oct 2026 10:29:28 +0000
+Date: Thu, 08 Oct 2026 10:33:32 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] mptcp: premature clear of is_mptfo breaks passive TFO sequence val=
-idation
---
+Hi Hangbin,
 
-commit 22ac3fb6b29817664eb5b68ac5a70275e689140e
-Author: T S Rameshkumar <rameshsv06@gmail.com>
+Thank you for your modifications, that's great!
 
-mptcp: push queued data on passive TFO subflows becoming established
+Our CI did some validations and here is its report:
 
-This commit flushes queued data on passive TCP Fast Open subflows
-when the subflow transitions to TCP_ESTABLISHED. It checks for
-subflow->is_mptfo in subflow_state_change() and check_fully_established()
-to push the data, and clears the flag so subsequent state transitions
-are ignored.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf: Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_n=
+et-next/actions/runs/37758614350
 
-Closes: https://lore.kernel.org/netdev/CAFPPu1gU2Y-D+d4i3F0MoNkYK+e1U+=3DX3=
-qf6QycjfKBw+8snPg@mail.gmail.com/
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/95c1feb8aa=
+98
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1181492
 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index ce0de02f5a3a1..d5238fa111dee 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -1042,6 +1042,13 @@ static bool check_fully_established(struct mptcp_s=
-ock *msk, struct sock *ssk,
-> =20
->  	mptcp_data_lock((struct sock *)msk);
->  	__mptcp_subflow_fully_established(msk, subflow, mp_opt);
-> +	/* Passive TFO: the application may have written data while the
-> +	 * subflow was still in SYN_RECV; __mptcp_subflow_active() refused
-> +	 * it then and nothing else spools the msk write queue when the
-> +	 * MPC third ack (no DSS) arrives. Push it now.
-> +	 */
-> +	if (subflow->is_mptfo)
-> +		__mptcp_check_push((struct sock *)msk, ssk);
 
-[Severity: High]
-Does this block become entirely unreachable dead code?
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-When an MPTCP connection using passive TCP Fast Open receives the 3rd ACK,
-tcp_rcv_state_process() executes sk_state_change() (transitioning from SYN_=
-RECV
-to ESTABLISHED) before executing tcp_data_queue().
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-Since the newly added code in subflow_state_change() clears the
-is_mptfo flag during this state transition, subflow->is_mptfo will evaluate
-to 0 by the time check_fully_established() is reached here.
+For more details:
 
->  	mptcp_data_unlock((struct sock *)msk);
-> =20
->  check_notify:
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index f0a6725d2c376..c7112284254a5 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1894,6 +1894,13 @@ static void subflow_state_change(struct sock *sk)
->  	if (subflow->resetting)
->  		return;
-> =20
-> +	if (subflow->is_mptfo && sk->sk_state =3D=3D TCP_ESTABLISHED) {
-> +		subflow->is_mptfo =3D 0;
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-[Severity: High]
-Does prematurely clearing the is_mptfo flag here break passive TFO sequence
-validation?
 
-After this state change runs, tcp_data_queue() calls mptcp_incoming_options=
-()
-which evaluates check_fully_established(). Because the flag is already 0, t=
-he
-preexisting sequence number check bypass for passive TFO fails:
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-net/mptcp/options.c:check_fully_established() {
-    ...
-	if (TCP_SKB_CB(skb)->seq !=3D subflow->ssn_offset + 1) {
-		if (subflow->mp_join)
-			goto reset;
-		if (subflow->is_mptfo && mp_opt->suboptions & OPTION_MPTCP_MPC_ACK)
-			goto set_fully_established;
-		return subflow->mp_capable;
-	}
-    ...
-}
-
-The TFO 3rd ACK sequence number includes the data length sent in the SYN and
-does not equal ssn_offset + 1. Since the bypass condition fails, doesn't th=
-is
-prevent the subflow from becoming fully established?
-
-> +		mptcp_data_lock(parent);
-> +		__mptcp_check_push(parent, sk);
-> +		mptcp_data_unlock(parent);
-> +	}
-> +
->  	/* as recvmsg() does not acquire the subflow socket for ssk selection
->  	 * a fin packet carrying a DSS can be unnoticed if we don't trigger
->  	 * the data available machinery here.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261008100941.1047=
-15-1-rameshkumar.t@phytecembedded.in?part=3D1
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
