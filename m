@@ -1,143 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-14.mta1.migadu.com [95.215.58.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D99C4349AC
-	for <mptcp@lists.linux.dev>; Thu,  8 Oct 2026 13:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754DD4A3D42
+	for <mptcp@lists.linux.dev>; Thu,  8 Oct 2026 13:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791466297; cv=none; b=H/Vc1vj6OmEmOYtOj78sObASye85SWgSTmCMfwNItbTKXitktBtt7tIPiBE4jEJAkSyoI5D+bazWpO2Lxz4QwCLv1MrnYV72DPXj13ueOg2+L9aPy0LaWGQ/DT28xeGwVmcUFi7XjM+inXFpxpPycDBraoc2OrX0sUGq7u58pT0=
+	t=1791466817; cv=none; b=jHk0J8pvk/xNjGKcpTAGree1QX1vUo6ldtUPOTb47Um949Y4qtk6hwiqdPIsVw7lOc/zgOOpktRzLn65wWVvRdJujzJTv7QLwSM9XzKTzhcCUvuJ+bylsR0/Z1yfK1gxoMZ5RtGESWEzyliYMeLXqgwfmT0VHwsGX147M5nd56Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791466297; c=relaxed/simple;
-	bh=673WcoRVoNSUhl4DIjMqO1Lrlzm13M/OEkPHH0nqklY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=K/57kXqBjZWCx6rQ6NXt2bP79ylrQoMnCwmgq1VJ7Q3ajcUMfqhDnaLvATpeTEb3xpPKyScz0oVK9Nr26pvu9/87Mtel+dcF0mR9ExlFGSw7MVOwVtPxqHoCpJG0Oqkn3rLDdQWFrxZtoSLAelFti/ZHZkFSEPgnpL75+uBlmKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PQOtcCIJ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791466817; c=relaxed/simple;
+	bh=7pBdVdAGqS4OAWGGgFLj8yenQhQTqxWeKD0mfWQLhow=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=qpPm1h4AsryuyqqgamhpDZlphg1COJJuA75UXzTmF3YY3Q1KIPtNiQ9AbrECr5fFqbSydK2w+4DTST9mhaRX9d6roMYmQZa9491ndJgDmy7oV71caYz/OdE0Oe/um03n6lLJTkAbyHWVW6TrD70x1dz9eh/1Ro/vWq88krGmTaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rOpflvK6; arc=none smtp.client-ip=95.215.58.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PQOtcCIJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E48D11F000FF;
-	Thu,  8 Oct 2026 13:31:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791466295;
-	bh=PGtE4iETYs8kA6PAEjtoNN2QVYE00l0j4tuEYQlDiAk=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To;
-	b=PQOtcCIJ4L7jDff1X9kWDBrYMYKz5uVrFj1K9I5tAo2vK2V+myEs/osh0LZ7o+xNx
-	 pHxF6azsYYDPagoOFVwlPEXtLTGaLtMsbWFY3GEK1VjnGvKmWzMETjwKEdtShMy72I
-	 O4MO17zUQEwB4t//ybcJznIHc8uVeSdt2lVSvD37SVfefuoJ8BhpXjl8fQgRxjKUu5
-	 9+75jPh6fNqaBDzgBIiqIftZ2Hs79xZGS1N0p68l0OD76cjBDaoPf6+MtLr/zLmoee
-	 vGMS9SKpDDpK7iosg2cTwcWx0Ro6jW6DiO53zRbiYFNZ+Z830SUhlKgYUGMJvupYKE
-	 O1bXxsmkjeMBg==
-Message-ID: <a1ed275c-d455-480c-b12c-d44eeedbed65@kernel.org>
-Date: Thu, 8 Oct 2026 15:31:32 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rOpflvK6"
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=7pBdVdAGqS4OAWGGgFLj8yenQhQTqxWeKD0mfWQLhow=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1791466811; v=1; x=1792071611;
+ b=rOpflvK6cI+2YFjUp5xWS4gIzTr4UIO7nTIr7GTMvHTC4BsHJPhGOTbyST6jrnhXXVoNY3gI
+ SsrFVMhcCF1d+EBbKTlqkWKWm7IXlUbj6eiKFFvKK1jy8Mmox9CnsKNr1yMyGYWKv7BMVpLHugN
+ Va4vft+IZ1JKorsuWTVCqZT8=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id eaab6a661fc0967a;
+	Thu, 08 Oct 2026 13:40:08 +0000
+X-Mizu-Trace-ID: eaab6a661fc0967a
+X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v4] mptcp: push queued data on passive TFO subflows
- becoming established
-Content-Language: fr
-To: T S Rameshkumar <Rameshkumar.t@phytecembedded.in>
-References: <20261008124220.213016-1-rameshkumar.t@phytecembedded.in>
- <a6269e21-a506-4607-b39a-3b4d2e4cccf6@kernel.org>
- <PN0PR01MB9382C18780E137E3013A097CF4932@PN0PR01MB9382.INDPRD01.PROD.OUTLOOK.COM>
-From: Matthieu Baerts <matttbe@kernel.org>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>, petar.sakic@ink.fish
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <PN0PR01MB9382C18780E137E3013A097CF4932@PN0PR01MB9382.INDPRD01.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Thu, 08 Oct 2026 13:40:07 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+From: hangbin.liu@linux.dev
+Message-ID: <a07411464cafcb016436eb3c17ffca73730d7fe1@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: use offset to match RM_ADDR
+ message
+To: "Matthieu Baerts" <matttbe@kernel.org>, "MPTCP Linux"
+ <mptcp@lists.linux.dev>
+Cc: "Florian Westphal" <fw@strlen.de>, "Hangbin Liu" <liuhangbin@kylinos.cn>
+In-Reply-To: <b7438cbf-0674-4b8f-aa23-3ba5791cfe26@kernel.org>
+References: <20261008-mptcp_rm_addr-v1-1-b4d35ac8afef@kylinos.cn>
+ <b7438cbf-0674-4b8f-aa23-3ba5791cfe26@kernel.org>
 
-On 08/10/2026 15:06, T S Rameshkumar wrote:
-> Thank you for the detailed feedback and guidance on the workflow!
-> I apologize for sending revisions too quickly without giving enough time
-> for review and discussion. I will make sure to pace subsequent
-> submissions properly, base patches on top of the MPTCP "export" branch,
-> increment version tags (v2, v3, etc.), and include changelogs using b4.
+Hi Matthieu,
 
-Thank you!
+October 8, 2026 at 7:46 PM, "Matthieu Baerts" <matttbe@kernel.org> wrote:
+>=20
+>=20Hi Hangbin,
+>=20
+>=20Thank you for the follow-up!
+>=20
+>=20On 08/10/2026 12:06, Hangbin Liu wrote:
+>=20
+>=20>=20
+>=20> From: Hangbin Liu <liuhangbin@kylinos.cn>
+> >=20=20
+>=20>  nft cannot match RM_ADDR when it is the second MPTCP option,
+> >=20
+>=20Do you mind adding a short explanation why or just a ref to:
+>=20
+>=20 https://lore.kernel.org/a391d81c-0bce-41e6-886e-a558765c6891@kernel.=
+org
 
-Please keep the discussions on the ML (and reply in plain text, and no
-top-post [1]).
+OK, I will.
 
-[1] https://subspace.kernel.org/etiquette.html
+>=20
+>=20Also, could you title this patch:
+>=20
+>=20 Squash to "selftests: mptcp: convert iptables to nftables for
+>  mptcp_join.sh"
+>=20
+>=20And mention what should be added to the original commit message, plea=
+se?
 
-> Regarding your technical questions:
-> 
->  1.
->     Clearing is_mptfo:
->      1.
->         You are completely right. An automated bot flagged a potential
->         bitfield data race if is_mptfo were cleared concurrently.
->         However, since check_fully_established() is only evaluated once
->         upon receiving the MPC third-ACK, clearing is_mptfo is not
->         needed at all. Since is_mptfo is only read after subflow
->         creation, leaving it in the bitfield and uncleared (exactly as
->         Petar drafted) is completely race-free and clean.
+OK, no problem.
 
-Thanks!
+>=20
+>=20>=20
+>=20> so we rely on hard-coded offsets. A tcpdump capture of the RM_ADDR
+> >  message looks like:
+> >=20=20
+>=20>  [TCP header: 20 bytes] [nop] [nop] [timestamp: 10 bytes] \
+> >  [MPTCP DSS: 12 bytes] [MPTCP RM_ADDR: 4 bytes]
+> >=20=20
+>=20>  We verify: TCP Data Offset (TCP[12] =C3=97 8) equals 48 bytes (12 =
+x 4),
+> >  DSS length (TCP[33] x 8) is 12 bytes, and RM_ADDR subtype (TCP[46] =
+=C3=97 8)
+> >  is 4. This matches the old cBPF check, which calculated offsets star=
+ting
+> >  from the IP header:
+> >=20=20
+>=20>  (ip[32] & 0xf0) =3D=3D 0xc0 && ip[53] =3D=3D 0x0c && (ip[66] & 0xf=
+0) =3D=3D 0x40
+> >=20=20
+>=20>  Also add MPTCP kind (30) checks for the DSS (TCP[32] x 8) and RM_A=
+DDR
+> >  (TCP[44] x 8) options.
+> >=20
+>=20Good idea.
+>=20
+>=20>=20
+>=20> Signed-off-by: Hangbin Liu <liuhangbin@kylinos.cn>
+> >  ---
+> >  tools/testing/selftests/net/mptcp/mptcp_join.sh | 14 ++++++++++++--
+> >  1 file changed, 12 insertions(+), 2 deletions(-)
+> >=20=20
+>=20>  diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/too=
+ls/testing/selftests/net/mptcp/mptcp_join.sh
+> >  index b16e24418e73..194b80277ae2 100755
+> >  --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> >  +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> >  @@ -4375,7 +4375,12 @@ endpoint_tests()
+> >  local nft=3D1
+> >  ip netns exec "${ns2}" nft insert rule ip filter OUTPUT \
+> >  ip saddr 10.0.1.2 meta l4proto tcp \
+> >  - tcp option mptcp subtype remove-addr drop || nft=3D0
+> >  + @th,96,4 =3D=3D 12 \
+> >  + @th,256,8 =3D=3D 30 \
+> >  + @th,264,8 =3D=3D 12 \
+> >  + @th,352,8 =3D=3D 30 \
+> >  + @th,368,4 =3D=3D 4 \
+> >  + drop || nft=3D0
+> >  local i
+> >  for i in $(seq 3); do
+> >  pm_nl_del_endpoint $ns2 1 10.0.1.2
+> >  @@ -4454,7 +4459,12 @@ endpoint_tests()
+> >  local nft=3D1
+> >  ip netns exec "${ns1}" nft insert rule ip filter OUTPUT \
+> >  ip saddr 10.0.1.1 meta l4proto tcp \
+> >  - tcp option mptcp subtype remove-addr drop || nft=3D0
+> >  + @th,96,4 =3D=3D 12 \
+> >  + @th,256,8 =3D=3D 30 \
+> >  + @th,264,8 =3D=3D 12 \
+> >  + @th,352,8 =3D=3D 30 \
+> >  + @th,368,4 =3D=3D 4 \
+> >=20
+>=20Do you mind just adding this sequence to a global variable (an array?=
+),
+> similar to what was done before with the cBPF filter, with a short
+> comment, please?
+>=20
+>=20That would be easier to understand here, and to avoid duplicated code=
+.
 
-Please also send a regression test for this, ideally with Packetdrill:
+Yes, I will.
 
- https://lore.kernel.org/bfd64e10-7f1e-41f6-ad12-12f06c4d2880@kernel.org
+BTW, For mptcp_sockopt.sh,
 
->  2.
->     Attribution:
->      1.
->         I will definitely add "Suggested-by: Petar Sakic
->         <petar.sakic@ink.fish>".
-> 
-> I will wait for Petar's response and any further review comments before
-> submitting v2 on top of the export branch.
+    # just to debug: check we have multiple subflows connection requests
+    add rule $table filter OUTPUT \
+        tcp flags & (fin | syn | rst | ack) =3D=3D syn \
+        meta mark $m accept
 
-Sounds good to be. But it will be a "v6" then.
+do you think if there is a need to add counter or remove this rule?
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+Thanks
+Hangbin
