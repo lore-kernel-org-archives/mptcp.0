@@ -1,109 +1,261 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A919C38AC88
-	for <mptcp@lists.linux.dev>; Thu,  8 Oct 2026 11:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3FE392C46
+	for <mptcp@lists.linux.dev>; Thu,  8 Oct 2026 11:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791457744; cv=none; b=qBdv8MwlN4FJGoqxqlBlMeaQapoG7obQuzyyMe/tXwuXj2IanttRmAGtyEX2zi2V6+3yfdZYnp5GrLI8m+efjTdtIexVvjzPmueend7PFGOUcY2fT0c05wyd/yawLwpeAHdq/H5HAk/eFRCWEYZUl2bNZTYC3wX+Hvas4DYrCB0=
+	t=1791457813; cv=none; b=UfQW781UGs7vSCC4WkJS9wIowO2Z0lKPdB/4veMA8wZ+J3pzXftH53mtlO6mLfpAdEBGL1nlLwzIXFMsT0erf2lAge3GqRPwHEXeV0Wm4escsSxEURQTnbOse1qlw0nc3gOxioqkvseQq3JDZ7jhhc1kAHzds53QT0i8wqylI9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791457744; c=relaxed/simple;
-	bh=z35SI15xbghq5YeivBZldx+iNctXCrFFHlj+uy1Zq7c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PFSar7Iaq1xPKY1N/e3SFSMh7nF9uhH4UgEiGG2jz5+YsEPsbZ/4djEKyF3UBm9NhOoF9N6E32g23wOWgoJZnO7Aq1dRMuOQgyYydcbwx2DZHQOjocc98GNYTVWLamjdd9+IX+pOwWLx4zv5MOWI60HtkCR3aGlm0ozfmjMWIsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BkQUuAjQ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791457813; c=relaxed/simple;
+	bh=OQ1sBuwp7i4mtiBMz3g9ZmE1aw++E1wr3jKq7s6Is9s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=T7NsbKiHquXOkDoMOzVqGEi8oZKzUuUGt6k0Q1V0NLPw3xP6WZN+jUbHERvvEo4V9F4/bUEpEEtQr4eHFj6+1Juchw3j9B43tUqn0xpzzRhgcIIIxFJZEkZhwXvxLzgdBTjWsCwk9nAt0V5NNDVdhRU2dDZ5RYwUeYplZhutiOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nNatWXxu; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BkQUuAjQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EB531F00893;
-	Thu,  8 Oct 2026 11:09:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791457743;
-	bh=4mGbUW3aJGJDjRqqkVuXMzfNRsNb2ql/uRLbEmdFuO4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=BkQUuAjQeCVAMzdDeV9ri1M6lkvh3so/KYSGKhdYtDu37TtKZDTPk+ePwbjjZ3Q15
-	 dXP9eLOfiZd9j4D5+ol+R0jTVFsdXq2VZEur96FSF+gnyW6cTzgpCr3f0iFMHkPZFv
-	 xSzdbwvSR+1FXypAVVtqmZjgrJivQNx/v9g7I4F9Qfn7Lz+AVm8Xb7MJODMyvsJKx6
-	 X0B0v0aFLzTYejS/YeZfeALFYZnlPnuICnZHHbw/0NF4j3eMeeUqaGCujLtBd14iZl
-	 sy+4k4PhKLVFOuNlTPApFeZnocusu7STL4UpI1x9mjJk+6WZq/O2uOAoP2yNukHdy+
-	 NYyaBpu6oR4sw==
-Message-ID: <00f4f36f-37ce-4845-a86a-ef190961b843@kernel.org>
-Date: Thu, 8 Oct 2026 13:09:00 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nNatWXxu"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-ccc6b11a19aso1585746a12.0
+        for <mptcp@lists.linux.dev>; Thu, 08 Oct 2026 04:10:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791457811; x=1792062611; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=ksAcPAYjWXgsbyCjE4ePPZl3/rW2axHKGjjtYG6aLyc=;
+        b=nNatWXxu/G29P8lLVykACYfR0fzCQeBvmhS+aNMT6gPDHsy8vhTz126756yrUpOS2I
+         CjVO0IrFUPO38TZSTfyl24NEf1LTUvo3gsHRafXoWvObVkQW8lFg+NUizEfoieYeBcyD
+         fDO4aA7eKXql4D25/rqLIud/t7N5Vmm6CONILKGt5sOFRPjK+pGNRNJgGC2A9/o8A/Ry
+         9s+59rLQiVni8DUeM4oo4jSU5FW2FvULCQPww14RVNvzi9LSp837jiAn/Md2zdXzgJOi
+         hu3NEaOVa7BWXZF4XwXqDL3EWcXhhf+wu+d0KxfjfrA6QXwxLX5zcWWaBgcI+FMXmwSA
+         d7bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791457811; x=1792062611;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ksAcPAYjWXgsbyCjE4ePPZl3/rW2axHKGjjtYG6aLyc=;
+        b=Qn6X48laEGoMUBxGKKE5yqDSk9QJhDZhuspF8TfqRnsLB9aO3wicLRW1eUNiO7092k
+         M/MIelm6FEpQkr1B7wiqLjrJ1kkHDPqrpqQc5Cl3pwjJRs95NemG51aJIE4kq7xzztHB
+         PALU2xdXYvwoxy1rPVIy0wi/D6DgxLKV8Lgqk+jdWoEVycYg0iz58Kahg9MDvjlAy6bj
+         r0HpwMZH1xZk5DR2n3bB5w1IRNWO+9TZkeGpYBPSXaKUE155lu2sWVKt0JBZeKmzFTM2
+         jlIlpHS6A0IhpmKg7K5mzEckFZi+jZv0ybP3QQviYJwwC+IJbt60O1a+JLEh60OmFozv
+         jkcg==
+X-Forwarded-Encrypted: i=1; AKwUvBzcexCGk/8gmHfjCr8N2GCZYb95eedR3hnnVeyz+e8ZM4D4+PVX/ujIqOlbQ3NNfGjwwFjTAQ==@lists.linux.dev
+X-Gm-Message-State: AFuF++nftXQY6KSx9OtuG+L3Ecv4ftfPBxMwT8ihEN/OYxPQJu41N5ph
+	E+mZYqLyUwWters6qfSnHDSQPJcUMTZeLTpiSHMlJyzZodJ+MPYWOX2u
+X-Gm-Gg: AYBFou1qz3y/zz79VXSdHIdPeYaIVdpPRXBHhBVYnW3taXQMowvACFWqvwgpFtd/GV/
+	g9CFxp9u1B34WxQhSMxNlQet8qlgq1EX4lwBxnOtJV1mnP9Wi63Pavx+/frnwyoOSEUsVqwFcsD
+	q7BmaNr2p0CFOewVgLHlbtAs+Wo3uZI9PVw3CugsDpbiNimXchraV186CxzXZuWPgcxS0qxb02z
+	0dgUiLdxB+tseasAdgUABLFB1D8ZAAoLeGtRLAWHXnisyxOWBwZ5e/pQUBQWwq9EUPMywvBarCt
+	LHmTnbXn65WyC1qeal+733hBVm7Bqkb4Ure22ufmrhWZrSqbeArwILSEMyTA2Orv8ysowJTDedp
+	o7ePkR5O6+5JJchuq980KarImCcIVZ6Md0sXowMIzAO76YAjJ0rKXYsc0MnEF/bpJAFrz6bkQUQ
+	DNTEv4OHiHHQbpLIW/Cgr2QGmY+T0BQdg0Md6jG3Y/TcDEOQwKgGouw3QlScy7/XEs7CUQoe2ht
+	bOdDlLp
+X-Received: by 2002:a05:7301:fd05:b0:351:2958:1740 with SMTP id 5a478bee46e88-3515debbfc0mr4973570eec.37.1791457810536;
+        Thu, 08 Oct 2026 04:10:10 -0700 (PDT)
+Received: from ramesh.. ([124.123.89.203])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3515aeb5c2esm14847521eec.10.2026.10.08.04.10.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Oct 2026 04:10:09 -0700 (PDT)
+From: T S Rameshkumar <rameshsv06@gmail.com>
+X-Google-Original-From: T S Rameshkumar <rameshkumar.t@phytecembedded.in>
+To: matttbe@kernel.org,
+	martineau@kernel.org,
+	geliang@kernel.org
+Cc: netdev@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	T S Rameshkumar <rameshkumar.t@phytecembedded.in>
+Subject: [PATCH mptcp-next] selftests: mptcp: sockopt: test passive Fast Open early write push
+Date: Thu,  8 Oct 2026 16:40:03 +0530
+Message-Id: <20261008111003.136143-1-rameshkumar.t@phytecembedded.in>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: verify nft JSON support
-Content-Language: fr
-To: Hangbin Liu <hangbin.liu@linux.dev>, MPTCP Linux <mptcp@lists.linux.dev>
-Cc: Hangbin Liu <liuhangbin@kylinos.cn>
-References: <20261008-mptcp_nft_version-v1-1-efe5f200cb02@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20261008-mptcp_nft_version-v1-1-efe5f200cb02@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Hangbin,
+Add automated test coverage for passive Fast Open early write data
+push in mptcp_sockopt.c and mptcp_sockopt.sh.
 
-On 08/10/2026 12:00, Hangbin Liu wrote:
-> Use --version to check for nft presence, as older nft versions reject -V.
-> Ensure the nft tool has JSON support, since we need JSON output for
-> parsing with jq.
-Thank you for the patch. But do you think it is really needed? 'nft -V'
-as been introduced before MPTCP being upstream, and who is building nft
-without JSON support?
+The server enables TCP_FASTOPEN on an MPTCP listening socket, accepts
+an incoming connection with SYN payload data, and immediately writes
+reply bytes before the 3-way handshake fully completes. The client
+connects with TCP_FASTOPEN_CONNECT, sends request data, and validates
+reception of the server's reply over both IPv4 and IPv6.
 
-As an alternative, I can squash this in "selftests: mptcp: convert
-iptables to nftables for mptcp_sockopt.sh", just to silence Clashiko.
+Signed-off-by: T S Rameshkumar <rameshkumar.t@phytecembedded.in>
+---
+ .../selftests/net/mptcp/mptcp_sockopt.c       | 59 ++++++++++++++++++-
+ .../selftests/net/mptcp/mptcp_sockopt.sh      | 34 +++++++++++
+ 2 files changed, 91 insertions(+), 2 deletions(-)
 
-Cheers,
-Matt
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+index b6e58d936..04af7cebc 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+@@ -28,6 +28,7 @@
+ #include <linux/compiler.h>
+ 
+ static int pf = AF_INET;
++static bool do_tfo;
+ 
+ #ifndef IPPROTO_MPTCP
+ #define IPPROTO_MPTCP 262
+@@ -247,6 +248,14 @@ static int sock_connect_mptcp(const char * const remoteaddr,
+ 		if (sock < 0)
+ 			continue;
+ 
++		if (do_tfo) {
++			int one = 1;
++
++			if (setsockopt(sock, IPPROTO_TCP, TCP_FASTOPEN_CONNECT,
++				       &one, sizeof(one)) < 0)
++				die_perror("setsockopt TCP_FASTOPEN_CONNECT");
++		}
++
+ 		if (connect(sock, a->ai_addr, a->ai_addrlen) == 0)
+ 			break; /* success */
+ 
+@@ -264,7 +273,7 @@ static void parse_opts(int argc, char **argv)
+ {
+ 	int c;
+ 
+-	while ((c = getopt(argc, argv, "h6")) != -1) {
++	while ((c = getopt(argc, argv, "h6f")) != -1) {
+ 		switch (c) {
+ 		case 'h':
+ 			die_usage(0);
+@@ -272,6 +281,9 @@ static void parse_opts(int argc, char **argv)
+ 		case '6':
+ 			pf = AF_INET6;
+ 			break;
++		case 'f':
++			do_tfo = true;
++			break;
+ 		default:
+ 			die_usage(1);
+ 			break;
+@@ -719,13 +731,36 @@ static int server(int pipefd)
+ 		break;
+ 	}
+ 
++	if (do_tfo) {
++		int qlen = 5;
++
++		if (setsockopt(fd, IPPROTO_TCP, TCP_FASTOPEN, &qlen, sizeof(qlen)) < 0)
++			die_perror("setsockopt TCP_FASTOPEN");
++	}
++
+ 	r = write(pipefd, "conn", 4);
+ 	assert(r == 4);
+ 
+ 	alarm(15);
+ 	r = xaccept(fd);
+ 
+-	process_one_client(r, pipefd);
++	if (do_tfo) {
++		char buf[64] = {0};
++		ssize_t n;
++
++		n = read(r, buf, sizeof(buf) - 1);
++		if (n <= 0)
++			die_perror("read tfo syn data");
++
++		n = write(r, "PONG_REPLY", 10);
++		if (n != 10)
++			die_perror("write tfo reply");
++
++		n = read(r, buf, 1);
++		close(r);
++	} else {
++		process_one_client(r, pipefd);
++	}
+ 
+ 	close(fd);
+ 	return 0;
+@@ -775,6 +810,26 @@ static int client(int pipefd)
+ 
+ 	alarm(15);
+ 
++	if (do_tfo) {
++		const char *addr = (pf == AF_INET) ? "127.0.0.1" : "::1";
++		struct timeval tv = {.tv_sec = 5, .tv_usec = 0};
++		char buf[64] = {0};
++		ssize_t n;
++
++		fd = sock_connect_mptcp(addr, "15432", IPPROTO_MPTCP);
++		n = write(fd, "PING_DATA", 9);
++		if (n != 9)
++			die_perror("write PING_DATA");
++
++		setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
++		n = read(fd, buf, sizeof(buf) - 1);
++		if (n <= 0 || strcmp(buf, "PONG_REPLY") != 0)
++			xerror("Fastopen early write failed: received %zd bytes '%s'", n, buf);
++
++		close(fd);
++		return 0;
++	}
++
+ 	switch (pf) {
+ 	case AF_INET:
+ 		fd = sock_connect_mptcp("127.0.0.1", "15432", IPPROTO_MPTCP);
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+index e850a8742..b3b523ce8 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+@@ -351,6 +351,39 @@ do_tcpinq_tests()
+ 	return $?
+ }
+ 
++do_fastopen_tests()
++{
++	local lret=0
++
++	ip netns exec "$ns_sbox" sysctl -q net.ipv4.tcp_fastopen=3
++
++	ip netns exec "$ns_sbox" ./mptcp_sockopt -f
++	lret=$?
++
++	print_title "Fast Open early write v4"
++	if [ $lret -ne 0 ]; then
++		mptcp_lib_pr_fail
++		mptcp_lib_result_fail "Fast Open early write v4"
++		ret=$lret
++		return
++	fi
++	mptcp_lib_pr_ok
++	mptcp_lib_result_pass "Fast Open early write v4"
++
++	ip netns exec "$ns_sbox" ./mptcp_sockopt -6 -f
++	lret=$?
++
++	print_title "Fast Open early write v6"
++	if [ $lret -ne 0 ]; then
++		mptcp_lib_pr_fail
++		mptcp_lib_result_fail "Fast Open early write v6"
++		ret=$lret
++		return
++	fi
++	mptcp_lib_pr_ok
++	mptcp_lib_result_pass "Fast Open early write v6"
++}
++
+ sin=$(mktemp)
+ sout=$(mktemp)
+ cin=$(mktemp)
+@@ -366,6 +399,7 @@ run_tests $ns1 $ns2 dead:beef:1::1
+ 
+ do_mptcp_sockopt_tests
+ do_tcpinq_tests
++do_fastopen_tests
+ 
+ mptcp_lib_result_print_all_tap
+ exit $ret
 -- 
-Sponsored by the NGI0 Core fund.
+2.34.1
 
