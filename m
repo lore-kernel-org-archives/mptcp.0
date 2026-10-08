@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1DF4302F8
-	for <mptcp@lists.linux.dev>; Thu,  8 Oct 2026 11:46:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20038481A87
+	for <mptcp@lists.linux.dev>; Thu,  8 Oct 2026 11:48:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791459977; cv=none; b=oFV0gV2eI2S21GpDBYJzpF+GCQ4xiZq/fagM12tw6yYlRRPlz7BH8I4aB49LWdbN04293ycP0o7LPRqkJBbodjR8eAL0/UcFNZ97FtxXP6ldNXUizxgpt/5LU8GXKgzZXe9Paz6S7R144zKAGbAljk/R9YEYdFxb9X/jKM1JVAI=
+	t=1791460141; cv=none; b=j07jzIr0gSi1wsEPOSnmpRfUZWtWd+iWVLKP1VI57UdwVAah2u7S8vm/s29evxbodPGeZaW0n0brgiUfWTQvZU0FadEnwLyRjsXpF/OeJiw/jc7mtub9uPj+KyIVQpiHRLUZm4x081Ldult44GBlJ0wzUjTlR2+8wlGNv03jeH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791459977; c=relaxed/simple;
-	bh=ConEoR0ZfZaWggzZWzKOsFKlQNu5jfBU5KmfBuR/fWY=;
+	s=arc-20240116; t=1791460141; c=relaxed/simple;
+	bh=g5NgsNdRpMa5OUbQDiX4VPSrznDipWGJIFAYZletPBA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NQWqakAjTVG2kVC8dXOYeMIVT672AJn6m/pt5U0T8QKByA5DiLOqjMqBXa0nl5CSNTNi1Y0iuF9qfy92KAvg9x2waU5UkNIbnOfzNWawfdrTtBXfsphYpcJWH595/4/q64uU0tddc+fPSf9TVOCC7c0nbVKh575rofrlvNcmTbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c5NDV5Rz; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=u8j1ck5UcS2yLm+2rjH2kw5pOOrjOt1cV69yYr+X949Q4H5ICQWDjiIsZ0ZOHfq09HvVLI68rKIBdaNSZFyeb1cb1frvnNQNXOz129lDemXEJ5a87WRG7Jww0B4oJN0n896C9jOhlWvbFpqyEiy8NB4zob/MAtAa/huEFxXH4zY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dymN3b3X; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c5NDV5Rz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79C861F000FF;
-	Thu,  8 Oct 2026 11:46:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dymN3b3X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC9761F000FF;
+	Thu,  8 Oct 2026 11:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791459976;
-	bh=n8dhUrh0MitDa6vG3uSAn8+1m5OFkRvMYejurLcOba0=;
+	s=k20260515; t=1791460139;
+	bh=YvM7zTzHeQCsuGdD9lJzkXi0+jtCBY2HRmP9OtNoyfE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=c5NDV5RzdK+JJ5glU+Icg5GmUJPjII+EWw32MjEBJ5ag90muDxXflpTc/aTWwBHMX
-	 YgSvLQVwAJuXbaarCOIcNJNunoH28ihBMbWuplDpNgQp1psAexEZrZo3mZ38Ac2vBH
-	 rugE+utbOyug4JVs1eF+pmfXzeG+Ly8tB7IDoXiWXhIvoSrzZJ+9eB17ccBND5vE9f
-	 HmIwZnaY9tCCLoz1nVspx2YZf36GG8B5RWTEKhLFjhok7Vmd4m4YeWeM2eE9RQeNKC
-	 eIpHkmV6YUjGoe5L3Kajj1bivL2bYyywpnrEOvnXpnm8GVzRn7cBV8b9UUYLVEq0OY
-	 6gnu6uukPvTzA==
-Message-ID: <b7438cbf-0674-4b8f-aa23-3ba5791cfe26@kernel.org>
-Date: Thu, 8 Oct 2026 13:46:12 +0200
+	b=dymN3b3Xsci6UO8+YA5qNcmOWsAlGk+BqCxmn/NjHQN09W+e6heXhC1l3PNHzy94+
+	 4kKFON16+kELIJpYyUT730ai80MjVh0H/aPu9du9oicM8EuK7YhU1r1n7NjYHP2c7j
+	 vEuBrRAZlfkJwpxGU1PNatu7oQcu6kae5o+A1LCr039jhHzL8HE6vCIJJRZffa2fNB
+	 /px39tojNRc7Vu/hGxCjm6UKShdsiC2R3bjK3IJcn7phG+qq+XPDZOKKdLebnGsAtZ
+	 EoeKsINs8a5mbX8Ve7FFOzyGgOMpUmSNA+9VPBQdPph+Qq5Evm6BNi801ZeHJmZuVc
+	 9htf4CXlsAOLw==
+Message-ID: <8af523ad-9333-4c6a-963a-faee24877770@kernel.org>
+Date: Thu, 8 Oct 2026 13:48:57 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: use offset to match RM_ADDR
- message
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: remove unused configs
 Content-Language: fr
 To: Hangbin Liu <hangbin.liu@linux.dev>, MPTCP Linux <mptcp@lists.linux.dev>
-Cc: Florian Westphal <fw@strlen.de>, Hangbin Liu <liuhangbin@kylinos.cn>
-References: <20261008-mptcp_rm_addr-v1-1-b4d35ac8afef@kylinos.cn>
+Cc: Hangbin Liu <liuhangbin@kylinos.cn>
+References: <20261008-mptcp_config-v1-1-269d05f7e6be@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,99 +85,22 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20261008-mptcp_rm_addr-v1-1-b4d35ac8afef@kylinos.cn>
+In-Reply-To: <20261008-mptcp_config-v1-1-269d05f7e6be@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Hangbin,
 
-Thank you for the follow-up!
-
-On 08/10/2026 12:06, Hangbin Liu wrote:
+On 08/10/2026 11:28, Hangbin Liu wrote:
 > From: Hangbin Liu <liuhangbin@kylinos.cn>
 > 
-> nft cannot match RM_ADDR when it is the second MPTCP option,
+> After converting the mptcp selftests from iptables to nftables,
+> the xtables-only options are no longer needed.
+Thank you for the follow-up. Should we squash this into "selftests:
+mptcp: convert iptables to nftables for mptcp_join.sh"? This commit
+already removes one unused option, plus ip*tables* from mptcp_lib.sh.
 
-Do you mind adding a short explanation why or just a ref to:
-
- https://lore.kernel.org/a391d81c-0bce-41e6-886e-a558765c6891@kernel.org
-
-Also, could you title this patch:
-
-  Squash to "selftests: mptcp: convert iptables to nftables for
-  mptcp_join.sh"
-
-And mention what should be added to the original commit message, please?
-
-> so we rely on hard-coded offsets. A tcpdump capture of the RM_ADDR
-> message looks like:
-> 
->   [TCP header: 20 bytes] [nop] [nop] [timestamp: 10 bytes] \
->         [MPTCP DSS: 12 bytes] [MPTCP RM_ADDR: 4 bytes]
-> 
-> We verify: TCP Data Offset (TCP[12] × 8) equals 48 bytes (12 x 4),
-> DSS length (TCP[33] x 8) is 12 bytes, and RM_ADDR subtype (TCP[46] × 8)
-> is 4. This matches the old cBPF check, which calculated offsets starting
-> from the IP header:
-> 
-> (ip[32] & 0xf0) == 0xc0 && ip[53] == 0x0c && (ip[66] & 0xf0) == 0x40
-> 
-> Also add MPTCP kind (30) checks for the DSS (TCP[32] x 8) and RM_ADDR
-> (TCP[44] x 8) options.
-
-Good idea.
-
-> 
-> Signed-off-by: Hangbin Liu <liuhangbin@kylinos.cn>
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index b16e24418e73..194b80277ae2 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -4375,7 +4375,12 @@ endpoint_tests()
->  		local nft=1
->  		ip netns exec "${ns2}" nft insert rule ip filter OUTPUT \
->  			ip saddr 10.0.1.2 meta l4proto tcp \
-> -			tcp option mptcp subtype remove-addr drop || nft=0
-> +			@th,96,4 == 12 \
-> +			@th,256,8 == 30 \
-> +			@th,264,8 == 12 \
-> +			@th,352,8 == 30 \
-> +			@th,368,4 == 4 \
-> +			drop || nft=0
->  		local i
->  		for i in $(seq 3); do
->  			pm_nl_del_endpoint $ns2 1 10.0.1.2
-> @@ -4454,7 +4459,12 @@ endpoint_tests()
->  		local nft=1
->  		ip netns exec "${ns1}" nft insert rule ip filter OUTPUT \
->  			ip saddr 10.0.1.1 meta l4proto tcp \
-> -			tcp option mptcp subtype remove-addr drop || nft=0
-> +			@th,96,4 == 12 \
-> +			@th,256,8 == 30 \
-> +			@th,264,8 == 12 \
-> +			@th,352,8 == 30 \
-> +			@th,368,4 == 4 \
-
-Do you mind just adding this sequence to a global variable (an array?),
-similar to what was done before with the cBPF filter, with a short
-comment, please?
-
-That would be easier to understand here, and to avoid duplicated code.
-
-> +			drop || nft=0
->  		pm_nl_del_endpoint $ns1 42 10.0.1.1
->  		sleep 0.5
->  		chk_subflow_nr "after delete ID 0" 2
-> 
-> ---
-> base-commit: 9651c766735c19e7a6b90d731bab53ef7959def8
-> change-id: 20261008-mptcp_rm_addr-92ab7ff3d94d
-> 
-> Best regards,
+WDYT?
 
 Cheers,
 Matt
