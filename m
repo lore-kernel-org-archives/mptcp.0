@@ -1,167 +1,133 @@
-Received: from mta1.migadu.com (out-14.mta1.migadu.com [95.215.58.14])
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754DD4A3D42
-	for <mptcp@lists.linux.dev>; Thu,  8 Oct 2026 13:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76F942124D
+	for <mptcp@lists.linux.dev>; Thu,  8 Oct 2026 13:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791466817; cv=none; b=jHk0J8pvk/xNjGKcpTAGree1QX1vUo6ldtUPOTb47Um949Y4qtk6hwiqdPIsVw7lOc/zgOOpktRzLn65wWVvRdJujzJTv7QLwSM9XzKTzhcCUvuJ+bylsR0/Z1yfK1gxoMZ5RtGESWEzyliYMeLXqgwfmT0VHwsGX147M5nd56Q=
+	t=1791466950; cv=none; b=MvxCkyw37QNg3Z8mnnoeh0lK8Y7DvgEwekPMJrMctoP3P9P04cCY2Mz3xbrnRnfBxclfB6/uB7sq/YShof1B5F1/MRYOdsFdgURF6AgdG+NmrGflQtWPzPJUFKtbFEOVfy5oWZVZIpzLzUsNnkyl8QmyVUK1+/MY38HFMq7FzSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791466817; c=relaxed/simple;
-	bh=7pBdVdAGqS4OAWGGgFLj8yenQhQTqxWeKD0mfWQLhow=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=qpPm1h4AsryuyqqgamhpDZlphg1COJJuA75UXzTmF3YY3Q1KIPtNiQ9AbrECr5fFqbSydK2w+4DTST9mhaRX9d6roMYmQZa9491ndJgDmy7oV71caYz/OdE0Oe/um03n6lLJTkAbyHWVW6TrD70x1dz9eh/1Ro/vWq88krGmTaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rOpflvK6; arc=none smtp.client-ip=95.215.58.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1791466950; c=relaxed/simple;
+	bh=4lSU8QOeaDsa1dRNOD4McehBAXPjDfnla8d+H5PTPgg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=ZUvPI6VAp82mimNeYOE53lakwAFHEF+d0uaK2v0AWwaUzegSIDdRcQtPPaGOhS/wm2/IJG+KmxIfyqHqT1jt1+4jfVfmrVjWaA8Qy4kOIVa/hnl7j1TyKZWyRtWSnkYdcieGYLtcOpYo2ZuftkE8nvZxW68BOp78952xeFkVmAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sI2FpCzk; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rOpflvK6"
-X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=7pBdVdAGqS4OAWGGgFLj8yenQhQTqxWeKD0mfWQLhow=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1791466811; v=1; x=1792071611;
- b=rOpflvK6cI+2YFjUp5xWS4gIzTr4UIO7nTIr7GTMvHTC4BsHJPhGOTbyST6jrnhXXVoNY3gI
- SsrFVMhcCF1d+EBbKTlqkWKWm7IXlUbj6eiKFFvKK1jy8Mmox9CnsKNr1yMyGYWKv7BMVpLHugN
- Va4vft+IZ1JKorsuWTVCqZT8=
-X-Envelope-To: mptcp@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id eaab6a661fc0967a;
-	Thu, 08 Oct 2026 13:40:08 +0000
-X-Mizu-Trace-ID: eaab6a661fc0967a
-X-Migadu-Flow: FLOW_OUT
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sI2FpCzk"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-ccc7a6070b4so1559386a12.0
+        for <mptcp@lists.linux.dev>; Thu, 08 Oct 2026 06:42:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791466949; x=1792071749; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=BAyiOthA1hn38bI8irDXmjsMUuC+lcS/HzerhZe1xwo=;
+        b=sI2FpCzkMSoLrsYVZ96X/swNG8gqSyWEHOymyJvG9341xoZG8VlcWHaw3L19WefuRr
+         FdA4LgBM1YCk8OkXuf5+Wupmz+dvuIbJEv1xbgPIaQ9eWubD/lZDc9+KDzVpMC+zQg3x
+         LjOAi/FrQRxkLsLYn9EFVmJsGFENPlm5rvmBY07dj7XnqkLTvQuKsHleVmeg8JyYgFEq
+         v2oT2O2Hhf4DYnVtxvKUEJWUYDvxAY4ht1y4Jxxi4VRvqxsMDmoz/rX5XTj6HkXXTUcy
+         N9rBD5BHuHoBXS3MwhjGdLNDOmTA4dS4S3p/4+xcEmhjj1dBMEX1ax5RKS/lrZNewU1M
+         NzJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791466949; x=1792071749;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=BAyiOthA1hn38bI8irDXmjsMUuC+lcS/HzerhZe1xwo=;
+        b=rzVB1CIRczdNAmCdM1b0PiO6Pq/EMB+5tDdqWN4RlIqVOsDuJMAQoB3repeXK9JMYp
+         TWXt8SY8LdrNWeQFFhcxfwLlXeqQDAErSC5iR1QioC35a5zHIoA96EVEX92xnruo2PNC
+         IA05M62DEigJ+7vWLnaSEJ0lOaOyIKYzHXPDjpT2gmVt3WtQ7oMpLq9jsYq73y0HP4NB
+         qhqNz0MnBKvaf85cMHkyerWCmaejibGDyd5z0br63cEo+07xZSnVkbiHgOcydWgeppmW
+         C/iABVE5bC3xSHONLe7x+RTtjcZrKwo4GEyLwUgnZNTbW4J+ZNin3cd8h3z6yxku7GRf
+         RvMA==
+X-Gm-Message-State: AFq9FYKUNHeA/Y/TiVnddJtmseA4wxF08L+LB8L/7K6nxW0p/bi3V6iU
+	GqdEZHFj2SzHjsNK8sOREdI5P500T8wSh2ZmBbECF4GxrX/xlygdqi8=
+X-Gm-Gg: AYBFou3T8C7FsMXpiEwzdVqXZ0LWoC/9RFcWkll0LshDu/t1x1RoqoIIt9BcXNtdWqw
+	OD9CkyFv454ese69PlMNezfK4t6UZvnnKHKBD6R3PA5e9rlkvwEZmrBNJPdm8qekuW/MHN+MLgk
+	ielbOOuJ99e2ljdCx27AByIEmFYsuetDxcMZG20Aei6umGk4mBn0gfq4aEjc+zA/oJ9/XsNz78X
+	boXrd3dvHYLvBkxU3xjVyVDZznkut6KWUZaKToohPPgx56zX6A4XGJ2eSr3Rwl0/HEWwjO8gb/G
+	wMPtsQX3L8y7aWhUi1GRR+hDhe1eTyIMH3ULeXjVTjVnMC23avml24jQGNcO7NbEzCdgXxvwJT2
+	XDQVdUB8giJSxy0udIH7lD1ed8W4ObkwInZ+ZzEBUrZ6iboolIQ5wlyEfoj9w7Y8NKNTDq2nsmT
+	Z/XoY3m+lMxPwWVPK/e44XBhySEtlc5BcqfXcgdJHRCuOGb3cWzDYrcyhgo+Iz9y+d9cNzP90rM
+	Ex2W7/PPttL
+X-Received: by 2002:a17:90a:1057:b0:3a8:bb56:f450 with SMTP id 98e67ed59e1d1-3a8bb570f55mr2316908a91.41.1791466948806;
+        Thu, 08 Oct 2026 06:42:28 -0700 (PDT)
+Received: from [127.0.0.1] ([52.161.178.97])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a9ff7ab034sm4326205a91.4.2026.10.08.06.42.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Oct 2026 06:42:28 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: T S Rameshkumar <rameshsv06@gmail.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20261008121602.206507-1-rameshkumar.t@phytecembedded.in>
+References: <20261008121602.206507-1-rameshkumar.t@phytecembedded.in>
+Subject: Re: [PATCH v4] mptcp: push queued data on passive TFO subflows
+ becoming established
+Message-ID: <e2f81350-b9b9-d790-fb3d-33a199ad9e58@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 08 Oct 2026 13:42:27 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Thu, 08 Oct 2026 13:40:07 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-From: hangbin.liu@linux.dev
-Message-ID: <a07411464cafcb016436eb3c17ffca73730d7fe1@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: use offset to match RM_ADDR
- message
-To: "Matthieu Baerts" <matttbe@kernel.org>, "MPTCP Linux"
- <mptcp@lists.linux.dev>
-Cc: "Florian Westphal" <fw@strlen.de>, "Hangbin Liu" <liuhangbin@kylinos.cn>
-In-Reply-To: <b7438cbf-0674-4b8f-aa23-3ba5791cfe26@kernel.org>
-References: <20261008-mptcp_rm_addr-v1-1-b4d35ac8afef@kylinos.cn>
- <b7438cbf-0674-4b8f-aa23-3ba5791cfe26@kernel.org>
+Content-Type: text/plain; charset=utf-8
 
-Hi Matthieu,
+Hi T,
 
-October 8, 2026 at 7:46 PM, "Matthieu Baerts" <matttbe@kernel.org> wrote:
->=20
->=20Hi Hangbin,
->=20
->=20Thank you for the follow-up!
->=20
->=20On 08/10/2026 12:06, Hangbin Liu wrote:
->=20
->=20>=20
->=20> From: Hangbin Liu <liuhangbin@kylinos.cn>
-> >=20=20
->=20>  nft cannot match RM_ADDR when it is the second MPTCP option,
-> >=20
->=20Do you mind adding a short explanation why or just a ref to:
->=20
->=20 https://lore.kernel.org/a391d81c-0bce-41e6-886e-a558765c6891@kernel.=
-org
+Thank you for your modifications, that's great!
 
-OK, I will.
+Our CI did some validations and here is its report:
 
->=20
->=20Also, could you title this patch:
->=20
->=20 Squash to "selftests: mptcp: convert iptables to nftables for
->  mptcp_join.sh"
->=20
->=20And mention what should be added to the original commit message, plea=
-se?
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf: Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_n=
+et-next/actions/runs/37777427552
 
-OK, no problem.
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/e76f38387d=
+94
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1181596
 
->=20
->=20>=20
->=20> so we rely on hard-coded offsets. A tcpdump capture of the RM_ADDR
-> >  message looks like:
-> >=20=20
->=20>  [TCP header: 20 bytes] [nop] [nop] [timestamp: 10 bytes] \
-> >  [MPTCP DSS: 12 bytes] [MPTCP RM_ADDR: 4 bytes]
-> >=20=20
->=20>  We verify: TCP Data Offset (TCP[12] =C3=97 8) equals 48 bytes (12 =
-x 4),
-> >  DSS length (TCP[33] x 8) is 12 bytes, and RM_ADDR subtype (TCP[46] =
-=C3=97 8)
-> >  is 4. This matches the old cBPF check, which calculated offsets star=
-ting
-> >  from the IP header:
-> >=20=20
->=20>  (ip[32] & 0xf0) =3D=3D 0xc0 && ip[53] =3D=3D 0x0c && (ip[66] & 0xf=
-0) =3D=3D 0x40
-> >=20=20
->=20>  Also add MPTCP kind (30) checks for the DSS (TCP[32] x 8) and RM_A=
-DDR
-> >  (TCP[44] x 8) options.
-> >=20
->=20Good idea.
->=20
->=20>=20
->=20> Signed-off-by: Hangbin Liu <liuhangbin@kylinos.cn>
-> >  ---
-> >  tools/testing/selftests/net/mptcp/mptcp_join.sh | 14 ++++++++++++--
-> >  1 file changed, 12 insertions(+), 2 deletions(-)
-> >=20=20
->=20>  diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/too=
-ls/testing/selftests/net/mptcp/mptcp_join.sh
-> >  index b16e24418e73..194b80277ae2 100755
-> >  --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> >  +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> >  @@ -4375,7 +4375,12 @@ endpoint_tests()
-> >  local nft=3D1
-> >  ip netns exec "${ns2}" nft insert rule ip filter OUTPUT \
-> >  ip saddr 10.0.1.2 meta l4proto tcp \
-> >  - tcp option mptcp subtype remove-addr drop || nft=3D0
-> >  + @th,96,4 =3D=3D 12 \
-> >  + @th,256,8 =3D=3D 30 \
-> >  + @th,264,8 =3D=3D 12 \
-> >  + @th,352,8 =3D=3D 30 \
-> >  + @th,368,4 =3D=3D 4 \
-> >  + drop || nft=3D0
-> >  local i
-> >  for i in $(seq 3); do
-> >  pm_nl_del_endpoint $ns2 1 10.0.1.2
-> >  @@ -4454,7 +4459,12 @@ endpoint_tests()
-> >  local nft=3D1
-> >  ip netns exec "${ns1}" nft insert rule ip filter OUTPUT \
-> >  ip saddr 10.0.1.1 meta l4proto tcp \
-> >  - tcp option mptcp subtype remove-addr drop || nft=3D0
-> >  + @th,96,4 =3D=3D 12 \
-> >  + @th,256,8 =3D=3D 30 \
-> >  + @th,264,8 =3D=3D 12 \
-> >  + @th,352,8 =3D=3D 30 \
-> >  + @th,368,4 =3D=3D 4 \
-> >=20
->=20Do you mind just adding this sequence to a global variable (an array?=
-),
-> similar to what was done before with the cBPF filter, with a short
-> comment, please?
->=20
->=20That would be easier to understand here, and to avoid duplicated code=
-.
 
-Yes, I will.
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-BTW, For mptcp_sockopt.sh,
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-    # just to debug: check we have multiple subflows connection requests
-    add rule $table filter OUTPUT \
-        tcp flags & (fin | syn | rst | ack) =3D=3D syn \
-        meta mark $m accept
+For more details:
 
-do you think if there is a need to add counter or remove this rule?
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-Thanks
-Hangbin
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
