@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE4943C045
-	for <mptcp@lists.linux.dev>; Fri,  9 Oct 2026 09:48:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18693C0607
+	for <mptcp@lists.linux.dev>; Fri,  9 Oct 2026 09:49:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791539338; cv=none; b=Lxwy7C9K9dsh+pqoWkp2fdg4TJyI7W2BkHQVu4RHfNXhyP6LChDREqjwOJykTIKp93qL9sdZpxt3uKa5itfQzx9kQvXBf8WomvIhPwQpXyXt1Y/SAbpvdPPStkw9JgQQXD/eOH8LczFtoceXcb9bBefTm/aMiQSOoh+OCl0awZA=
+	t=1791539379; cv=none; b=NxsFp2r3gEFkgkpjy3dlD0PSlD6fQIUA/KuKsV28vUCuJH9s+Zi9PVNLuNC6ei7xiga4mkAegAnbnxifpuatKfbhuHREal2be6zwAnXWqCVyslkI0auBBApA7SpOpdJa7v9DioeYdjcw7CoEZaGVyHhT8fRVvfjUfQUHJOYSxLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791539338; c=relaxed/simple;
-	bh=/Bnsh9Kd4hShCcC2MW98xVvUGN4+P7LhIkvSzNqSrvE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=f8dPEibvhFfCSdXwKonAJQM9s0k3caZkx69pZ5C9+jJs/E16RT60NCLVkcQA4klySte/jltMi5jAapXd5ke6LJVvQFQIhZ1E3CX0spS+5ehkA5UtTdAy6KfA3hBzA09ufpW1vYz6LnC82frVKpuEOi4oXjfITA0F4hFbuHHIxlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FdeTrAUd; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791539379; c=relaxed/simple;
+	bh=J+HpozaH31S5bcuGmrUtcELMXoQZWv0S0RdUQX0+6mc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C2c3sBj+HX/1WETwl8HHrDu4p8fAamOka8fBQUp05e+unvq6HOk3zPQ5g1pdB1McBFOjtEBM7nC5tV5kSSMkmEltfhzyxBcDY0ejiH9BJxJL2eq8qujkfd7WMV4ryzXFfH4QaGSMDvmIoHWAlhIoE5oQGBRxvibwx024tNzAFrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YBOKBOuW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FdeTrAUd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32BBD1F000FF;
-	Fri,  9 Oct 2026 09:48:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YBOKBOuW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D42A01F000FF;
+	Fri,  9 Oct 2026 09:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791539337;
-	bh=9l67rolEtv5Hshr5dcjDmODCBLz5Q+BefN5H7z0gP5g=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To;
-	b=FdeTrAUdF7NFtf3IY3XRVjwzWJTRJUOv/T0mMQwMIIDpxzlppuYxHJ1hKVzLcTCp1
-	 dkQ3t4pDF9XIGnDQFsJeJYsLZrYruGoPIKN6k12AXqob6EHgoZnGDe3QS2h81YfKxV
-	 YpA/Q6w1bcxqQ+3EZqnk9lXiXOH8gYS2udNTIK8uf3IczoswDXeIeUf55BOopTjpYN
-	 zVuuNwFxXtgAmJV40KMrMvjlMhhVAr09gIzQwnU0niSIuOI2STZKBn0WZzJRKSM4Pi
-	 mQbYh/hg+PGmG4U9TXe5++3O1vSHkSyzbtKRRsQUuElXhlRTxRNTzzCC8zHsbV/RLa
-	 ul9dIoZq/xLWg==
-Message-ID: <ad230806-6046-443b-a039-2bbb700f5620@kernel.org>
-Date: Fri, 9 Oct 2026 11:48:54 +0200
+	s=k20260515; t=1791539378;
+	bh=hE2oxZAgNiF0C5cVWg/pJjkqldwZymjfu5NTRjROBIY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=YBOKBOuWNwQBXjxZmH9OADUNN8EnAxBQtBu8fNcWH5sBHHtiIwJTKp1C4qNU0GVMU
+	 FEco+Ahb/8BfO1x2qZ5qU++5aK6SSUzQ9h4NBSMpoEvcRy/u3kCkyOfc0qrqmm6k4m
+	 K9JSw81HnIEgPa7cF6B0f8+ewvzQHH9mN5cOQLEl3Rq+u2oyFq3PifcR44MFaH/2Ff
+	 DdhxOU3YvB87q1w0DBQHmzgOpYENQ4s3hEnbRrkjPKwUALfVUSjwfAh/jyvVyUXpbq
+	 k1mrALS5Pl8w7s0VDPivequvh7btbWX4kAt7EeHe9MplFg+/3IbNWMGH5hvZq24Aop
+	 HHsU55caFjsQg==
+Message-ID: <a52bbffa-8d5a-43d8-8b11-54d43e3cd7f5@kernel.org>
+Date: Fri, 9 Oct 2026 11:49:36 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: convert iptables
- to nftables for mptcp_join.sh"
+Subject: Re: [PATCH mptcp-next] squash to "selftests: mptcp: convert iptables
+ to nftables for mptcp_sockopt.sh"
 Content-Language: fr
+To: Hangbin Liu <hangbin.liu@linux.dev>, MPTCP Linux <mptcp@lists.linux.dev>
+Cc: Hangbin Liu <liuhangbin@kylinos.cn>
+References: <20261009-mptcp_rm_debug-v1-1-a7b4fdbe1b5f@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
-To: Hangbin Liu <hangbin.liu@linux.dev>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>, Hangbin Liu <liuhangbin@kylinos.cn>
-References: <20261009-mptcp_remove_addr-v1-1-4471d460e026@kylinos.cn>
- <f76282e6-9120-414b-8402-72beb0a12ec9@kernel.org> <asizQp6ewh2fF0Q5@fedora>
- <115e155e-734f-44d9-95d1-d82b6fcfed08@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,94 +86,29 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <115e155e-734f-44d9-95d1-d82b6fcfed08@kernel.org>
+In-Reply-To: <20261009-mptcp_rm_debug-v1-1-a7b4fdbe1b5f@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 09/10/2026 11:38, Matthieu Baerts wrote:
-> On 09/10/2026 11:26, Hangbin Liu wrote:
->> On Fri, Oct 09, 2026 at 11:03:07AM +0200, Matthieu Baerts wrote:
->>> Hi Hangbin,
->>>
->>> On 09/10/2026 09:26, Hangbin Liu wrote:
->>>> From: Hangbin Liu <liuhangbin@kylinos.cn>
->>>>
->>>> After squash, the new commit description could be:
->>>
->>> Thank you for the new version!
->>>
->>>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->>>> index b16e24418e73..cf079c18af12 100755
->>>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->>>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->>>> @@ -97,6 +97,20 @@ unset add_addr_tx_nr
->>>>  unset add_addr_echo_tx_nr
->>>>  unset add_addr_drop_tx_nr
->>>>  
->>>> +# A tcpdump capture of the RM_ADDR message looks like:
->>>> +#
->>>> +#   [TCP header: 20 bytes] [nop] [nop] [timestamp: 10 bytes] \
->>>> +#         [MPTCP DSS: 12 bytes] [MPTCP RM_ADDR: 4 bytes]
->>>> +#
->>>> +# nft cannot process the RM_ADDR option because it stops parsing after
->>>> +# matching the first DSS option. Use hard-coded byte offsets to match
->>>> +# RM_ADDR messages. We verify:
->>>> +#
->>>> +# TCP Data Offset (12 x 4 = 48 bytes), DSS (TCP[32] x 8) kind (MPTCP 0x1e)
->>>> +# and length (0x0c). RM_ADDR (TCP[44] x 8) kind (MPTCP 0x1e) and subtype (4)
->>>> +
->>>> +RM_ADDR_OFFSETS="tcp doff 12 @th,256,16 == 0x1e0c @th,352,8 == 0x1e @th,368,4 == 4"
->>>
->>> The subtype is on 4 bits. For the moment, the rest are not used, but
->>> would it not be better to compare the 20 first bits of this offset?
->>>
->>> So using this: (not tested)
->>>
->>>   "tcp doff 12 @th,256,20 == 0x1e0c2 @th,352,12 == 0x1e044"
->>
->> Here it should be @th,352,20 == 0x1e044
-> 
-> Yes indeed, 20, not 12.
-> 
->>> Or maybe we prefer not to be strict for the RM_ADDR size to match
->>> options with multiple IDs? Then having:
->>>
->>>   "tcp doff 12 @th,256,20 == 0x1e0c2 @th,352,8 == 0x1e @th,368,4 == 4"
->>>
->>> and for the comment:
->>>
->>> # TCP Data Offset (12 x 4 = 48 bytes).
->>> # DSS (TCP[32] x 8) kind (MPTCP 0x1e), length (0x0c), subtype (2).
->>> # RM_ADDR (TCP[44] x 8) kind (MPTCP 0x1e), variable length, subtype (4).
->>>
->>> I can modify this when applying if that's OK for you (and validated).
->>
->> And both works for me. I tested these 2 rules, all are able to capture the
->> RM_ADDR messages.
+Hi Hangbin,
 
-Thank you for having checked!
+On 09/10/2026 09:27, Hangbin Liu wrote:
+> From: Hangbin Liu <liuhangbin@kylinos.cn>
+> 
+> After squash, the new commit description could be:
+> 
+> During the conversion, we retain the same filter and chain names previously
+> used by iptables/ip6tables. Counters are not added to accept rules because
+> the test does not inspect them. The syn mark rule is removed as it is
+> only for debugging, which could be added easily when needed.
+> 
+> After conversion, the generated output matches the original
+> iptables/ip6tables behavior.
 
->>
->>         chain OUTPUT {
->>                 type filter hook output priority filter; policy accept;
->>                 ip saddr 10.0.2.1 tcp doff 12 @th,256,24 & 0xfffff0 == 0x1e0c20 @th,352,24 & 0xfffff0 == 0x1e0440 counter packets 1 bytes 68 accept
->>                 ip saddr 10.0.1.1 tcp doff 12 @th,256,24 & 0xfffff0 == 0x1e0c20 @th,352,24 & 0xfffff0 == 0x1e0440 drop
-> 
-> Did you use 24 for the length because 20 is not accepted?
-> 
->>         }
->>
->>         chain OUTPUT {
->>                 type filter hook output priority filter; policy accept;
->>                 ip saddr 10.0.2.2 tcp doff 12 @th,256,24 & 0xfffff0 == 0x1e0c20 @th,352,8 0x1e @th,368,8 & 0xf0 == 0x40 counter packets 3 bytes 204 accept
->>                 ip saddr 10.0.1.2 tcp doff 12 @th,256,24 & 0xfffff0 == 0x1e0c20 @th,352,8 0x1e @th,368,8 & 0xf0 == 0x40 drop
-> 
-> Same here for 8 instead of 4.
-> 
-> Or is it nft which automatically converted the length to a multiple of 8
-> with a mask?
+Thank you, now in our repo:
 
-Yes it is apparently.
+- 8bec9f45285e: "squashed" in "selftests: mptcp: convert iptables to
+nftables for mptcp_sockopt.sh"
 
 Cheers,
 Matt
