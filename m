@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA9834B1A6
-	for <mptcp@lists.linux.dev>; Fri,  9 Oct 2026 09:52:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88C0489FDB
+	for <mptcp@lists.linux.dev>; Fri,  9 Oct 2026 10:31:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791539549; cv=none; b=jh5AbrqkAbAZo/f2bpkYhZSG/Mq8VZdSe7UrfG5LSMOIkFABh1EO5Kmcde0DFqRkPtayKkx6LislpGLF/O0TnVCj0hHBVltQltlCBaJjLs53wBvcNCaItwWn4kAt1jY5sGTzYe+NDRwslou/xiJ8FChCSfVJ6h9aPQPTemBI1JQ=
+	t=1791541883; cv=none; b=VJ8QqT6vgISJatWT98wxUehVrsKnOpUUfAEJ1VhAhpSSaMKCn4XVEX3M5tGdcHAlAIGYRfKaqjUYfs/KfJT2XD7dnnaE4g44j6dLB3/IFZOdwZRdX5LhcNWEA0osp9pmR9d1UeWvhcH00SPAsRbXTzXqeUye+63wwC7+Pv8f39g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791539549; c=relaxed/simple;
-	bh=d6HO+RwXwZmAw7cxMklghQXN1WoW4C14ZPMDWHqRcoU=;
+	s=arc-20240116; t=1791541883; c=relaxed/simple;
+	bh=4kdVFUlJjxmdXUPXroyblEhfv+quBbk53lbIML8I/fI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tEF1SV12dpvsckFVaIn5su7zohX0lh3qqFFcnDDLL4bckxEia8xjlktA6SGUxf4/t4DglcLSWYc1D6Ek75B9C3LocMLPJAKukrEw8a+JCSgE/F1FyDS3H+C76v7bDX+bs7NBhWS6KEAzlta5igxl9ZVg8pLTr0GU6Al8BJ9xZ4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b4ESvPBM; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=MPBS5KuansjI87UqgFJlCuZ06ofA5KQDJHN5utqQnoaCr9NBwnjagXodQC/OX3lJ7vK4vYO11QwHMahCbdj7TgO5N5v8LSl4abRURwThu6UcpvU+L9QoygkIMdBNYpcDrXzBZeDGrzP2cUa9u78SPvaqtdZPmlA+7jfviJrASqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZJ8+Uvw1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b4ESvPBM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A1AB1F000FF;
-	Fri,  9 Oct 2026 09:52:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZJ8+Uvw1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7F341F000FF;
+	Fri,  9 Oct 2026 10:31:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791539547;
-	bh=nYebQQ2Vm9jfWry1kIUDFmmwA7stnuIL9mBbeKcT+as=;
+	s=k20260515; t=1791541881;
+	bh=mwetpzuzSsvrQRbzijrBRvvXcANc4QJsCanRrIGiooA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=b4ESvPBM7qC0kJexkXQQli1hkgiUpO3Uc9dZ5f/R6ataYevNO5e82NIwR3VFuJ270
-	 No7UofU8desaR5RnQ0iKzFa8muC6jBDrljufLTo+EuoiamzbKghwDUuWXJke6m1L4Z
-	 YC6AQJ5KqujXb+UgJc3F8gcFedGMLESSvYx4lkpVi5iq6y8G3HOwYPSbjHOr5k7XTo
-	 Q8Mi1Q1XVwrv2FVpB5chj/jSvZ6/BKizYIbctTRYd3BnlTsDCaJgx+S1gV2mwtN0+W
-	 NyvgK3vmXavtFvoCLQYBhddr938eX24NE7bW5ywqPy4Uzly4o/s9uL0TcoaoaycrYM
-	 Ag+C3Hw2kkvUQ==
-Message-ID: <886bf07f-c6cb-4a04-a71b-f45daef9b8ca@kernel.org>
-Date: Fri, 9 Oct 2026 11:52:24 +0200
+	b=ZJ8+Uvw1x7cADQ7rGeLjh50Vs2WwWSm+62gBlyaaC8QlLtq2Nn57e1WUG2amFFnAN
+	 f4lWqyj9SCQhCzn8LTzvr1DlFu6fj5tytnDOI4Z+vFpk98+xOJnDXOmxZ8UrINw9Tu
+	 rhNvAMFjEPVSJk4WIVRQvQTMY6PY5vJdYnOq9vdKePZiOJngbQ1mwHS7emAnUMdJGJ
+	 xbVzgbbi+yOegBrzx6QyCQMhbyAqiSnAOjP4zcF/jITrL0jZs/Jh9cc/ubEF+k6MBj
+	 ZrWAGksy0JPn9Vq2gvJAGFD/HtnvOM5j8Sn/bl3c6pp6/aQlUi5EfHsmfYRL5iKCYI
+	 /X+PHIheaw1WA==
+Message-ID: <98ff7eb0-a0d2-46ff-b689-4708a0cd7fe8@kernel.org>
+Date: Fri, 9 Oct 2026 12:31:18 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: convert iptables
- to nftables for mptcp_join.sh"
+Subject: Re: [PATCH mptcp-net 0/2] mptcp: options: avoid printing uninit data
 Content-Language: fr
-To: Hangbin Liu <hangbin.liu@linux.dev>, MPTCP Linux <mptcp@lists.linux.dev>
-Cc: Hangbin Liu <liuhangbin@kylinos.cn>
-References: <20261009-mptcp_remove_addr-v1-1-4471d460e026@kylinos.cn>
+To: Mat Martineau <martineau@kernel.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260908-mptcp-opt-read-debug-v1-0-b3e74549b6f6@kernel.org>
+ <d4f8a020-8cce-d760-4625-adafb26d9ede@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,39 +86,40 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20261009-mptcp_remove_addr-v1-1-4471d460e026@kylinos.cn>
+In-Reply-To: <d4f8a020-8cce-d760-4625-adafb26d9ede@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Hangbin,
+Hi Mat,
 
-On 09/10/2026 09:26, Hangbin Liu wrote:
-> From: Hangbin Liu <liuhangbin@kylinos.cn>
+On 09/09/2026 17:51, Mat Martineau wrote:
+> On Tue, 8 Sep 2026, Matthieu Baerts (NGI0) wrote:
 > 
-> After squash, the new commit description could be:
-Thank you, now in our repo:
+>> When parsing the MPTCP suboptions, some pr_debug() might read and print
+>> uninit values.
+>>
+>> That's mostly harmless, but that's also confusing. Fixing that also
+>> avoids some tools to complain about accessing unint data.
+>>
+>> So read these fields only if they have been set.
 
-New patches for t/upstream:
-- 8bec9f45285e: squash to "selftests: mptcp: convert iptables to
-nftables for mptcp_sockopt.sh"
-- 4995527f04f5: tg:msg: add notes from the squash-to commit
-  → the other Squash-to patch
+(...)
+> Thanks Matthieu, series LGTM:
+Thank you for the review! I'm lagging so much I even slow at applying my
+own patches :)
 
-- 9ea0a7a5c683: Squash to "selftests: mptcp: convert iptables to
-nftables for mptcp_join.sh"
-- 3385248cdea7: tg:msg: add notes from the squash-to commit
-  → this Squash-to patch
-
-- b5888e236f17: Squash to "selftests: mptcp: convert iptables to
-nftables for mptcp_join.sh"
-  → an extra modification as discussed in this email thread
-
-- Results: 4edaecd07abe..45035345367c (export)
+New patches for t/upstream-net and t/upstream:
+- e83426516ebe: mptcp: options: mpc: avoid printing uninit data
+- 55dcf92c5ff9: mptcp: options: dss: avoid printing uninit csum
+- Results: 7e92f912c44e..77cb3db4e666 (export-net)
+- Results: 45035345367c..fbeaa40c1480 (export)
 
 Tests are now in progress:
 
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/984504faff7251d01755ff9d5077c95929788472/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/916150e52b3520605f54439b34888275cda250ea/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/c320b1b2220752a879c853142d2ce128985a6012/checks
 
 Cheers,
 Matt
