@@ -1,130 +1,293 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A202AD03
-	for <mptcp@lists.linux.dev>; Mon, 12 Oct 2026 09:43:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218FC3A783F;
+	Mon, 12 Oct 2026 10:21:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791798224; cv=none; b=My9qbab642wJRpPGXOeFkqc8XQeKim0hgdlf7FoibnMnL+pD6820JaWeFpsGjRe2sG0rP4ocO3/mY7LSha/tHzrs+Neim1TIEvwR3FhYieZGzauGeCwNGZAcDxCt/ej15kH9bLgkjDLv6eQ2gsBok1LxChnk/On+W/E/x+0y854=
+	t=1791800513; cv=none; b=bG8oyqCsoES/HISH3cQQaLO3N4WcPfE25/HNETgapZOPYGh4Z6Y5ey9gV2ErbMueQ3zXI4YfMcC3fqKOlP4DIyu8/5w7TbGLIuucB+HW13vX15opux/FwlYFSWcCgvi95Hdz1rQtRMpplWVVCrKG+Hs2IghY2HIrfnTzCeBgEJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791798224; c=relaxed/simple;
-	bh=gArbG+RYPewbZzyF2unAndYZuJoFRZtSGBj3jTAw3EE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=DUfckPef36ggo2Fs3tyaN2pzcx4I3nM5MKXNLiefs3IZVOgciiTJkRO4Gkp3PqrO4NqMog/K69K9PeaB99P/P1gf+TtNNhi4N134jlPbjRi0VmxQK1hccWJDZcveLe5Js9zYwU6c7Tt+BQZWCia6ove9YZjemIg0vqxEd34Y9Ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O3OtUSgj; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791800513; c=relaxed/simple;
+	bh=tt1Olzp1MD4fsUOy/cOmWDm5X/BFh/k9tqnzJQ6JJeY=;
+	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=sHsyGyhopiuHujLoBIK2cSK03QE06TxWn3NPrLYhjFZuRwJ/9n6+NEk1WVs2ukg68af+jUg7dvhYzQaWHLAevdH/5Cm7JlKHMxbGvl5mn6fKm5pYF8aWt8Kw0JU5rw05EHSGvrguY61YcY/Y5xR3Yz7lKlgY/+0+LPAjb4dtFqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=liUoouJI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O3OtUSgj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 803D31F0089B;
-	Mon, 12 Oct 2026 09:43:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="liUoouJI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C46A51F0089D;
+	Mon, 12 Oct 2026 10:21:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791798223;
-	bh=ze3viHER8q3c1p5ydyg6UH9ceItgOCmOfy+OCyQtUcM=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To;
-	b=O3OtUSgjUpcGS9TjL7zPKYbMG/9CYxCf3x44t3RRdAI1BXo7Sr5mTmEdl+pWrRKk1
-	 A3Xzoc3G+kJoG8PhLzMAQ/hjxCDwtNSuGRRj6ftxFuihbhPE9uW2Xbj2n5Lf5sS4su
-	 9+f6GprDchM5rMfOBFw4iJFeErFKjK9zt4Ickrrf1YZQC+xnFjTzVpcc+buVONdRnM
-	 yv2eb4EtLpYlbxucAseRpPn/aehvxTU+JSzR4aC34GOv+08ULQ7Dmr5BhtZ3kt2O/j
-	 aWLB3DpB3FS8ibLX7RLtHtg37q/iVhabzDbjtlabnXIMe9fktQ+DUnzQRMVYitGPwO
-	 hXCiR7eRhAUxw==
-Message-ID: <f253a105-5a15-4158-80e8-484739b99f0c@kernel.org>
-Date: Mon, 12 Oct 2026 11:43:40 +0200
+	s=k20260515; t=1791800497;
+	bh=zEdqtRomAjkOUDRAt/clQFYIks43Xswl/Vr+ajWSkcA=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=liUoouJI2ptjjd7Y3JhU1ykbk3N55YsW4/nLE6RweftHuMotNQnNb5XL790tHEHP3
+	 V8/0KG2kNA77xQyzyokP7J9gfXi+m4vPazkmh0Caui4NdWSKbsAicsdP+/E88tvqxh
+	 gP+WB4ost7IHgA+GVE1PzNnSnawamFrhlfApKcTcqPhhb9zSVFM+ies5NaxZBgAJZ4
+	 ZdkykrEFTGRVK8cuaUHwAq5aXNaQa5n6VjJ2tIvCEaX1aE4i334qUQJt40tqAUhygX
+	 adI2FePQgg/5x8JOmPqB2/WJh5kEC6G0UP2FOC6DAE68HpGbgda8kgtKGu8dM6g0mg
+	 En1RnDt3+dqjA==
+Subject: Re: [PATCH] mptcp: push queued data on passive TFO subflows becoming
+ established
+From: netdev-bot+sashiko@kernel.org
+To: rameshsv06@gmail.com
+Cc: matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ petar.sakic@ink.fish, rameshkumar.t@phytecembedded.in, kuba@kernel.org
+Date: Mon, 12 Oct 2026 10:21:36 +0000
+Message-ID: <179180049633.434549.1829139205933181446@kernel.org>
+In-Reply-To: <20261008095231.103186-1-rameshkumar.t@phytecembedded.in>
+References: <20261008095231.103186-1-rameshkumar.t@phytecembedded.in>
+X-sashiko-severity: High
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v4] mptcp: push queued data on passive TFO subflows
- becoming established
-Content-Language: fr
-From: Matthieu Baerts <matttbe@kernel.org>
-To: T S Rameshkumar <Rameshkumar.t@phytecembedded.in>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>, petar.sakic@ink.fish
-References: <20261008124220.213016-1-rameshkumar.t@phytecembedded.in>
- <a6269e21-a506-4607-b39a-3b4d2e4cccf6@kernel.org>
- <PN0PR01MB9382C18780E137E3013A097CF4932@PN0PR01MB9382.INDPRD01.PROD.OUTLOOK.COM>
- <a1ed275c-d455-480c-b12c-d44eeedbed65@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
- YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
- c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
- WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
- CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
- nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
- TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
- nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
- VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
- 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
- YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
- AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
- EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
- /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
- MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
- cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
- iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
- jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
- 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
- VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
- BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
- ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
- 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
- 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
- 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
- mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
- Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
- Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
- Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
- x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
- V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
- Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
- HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
- 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
- Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
- voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
- KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
- UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
- vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
- mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
- JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <a1ed275c-d455-480c-b12c-d44eeedbed65@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi T S,
+Thank you for your contribution! Sashiko AI review found 6 potential
+issue(s) to consider.
 
-On 08/10/2026 15:31, Matthieu Baerts wrote:
-> On 08/10/2026 15:06, T S Rameshkumar wrote:
+Critical: 0 · High: 1 · Medium: 2 · Low: 3
 
-(...)
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
 
->> Regarding your technical questions:
->>
->>  1.
->>     Clearing is_mptfo:
->>      1.
->>         You are completely right. An automated bot flagged a potential
->>         bitfield data race if is_mptfo were cleared concurrently.
->>         However, since check_fully_established() is only evaluated once
->>         upon receiving the MPC third-ACK, clearing is_mptfo is not
->>         needed at all. Since is_mptfo is only read after subflow
->>         creation, leaving it in the bitfield and uncleared (exactly as
->>         Petar drafted) is completely race-free and clean.
-> 
-> Thanks!
-> 
-> Please also send a regression test for this, ideally with Packetdrill:
-> 
->  https://lore.kernel.org/bfd64e10-7f1e-41f6-ad12-12f06c4d2880@kernel.org
+- [High] The fix is incomplete because both new push triggers depend on
+  subflow->is_mptfo.
+- [Medium] The new block in subflow_state_change()
+  (net/mptcp/subflow.c:1897-1900) checks only subflow->is_mptfo.
+- [Medium] subflow_state_change() now does set_bit(MPTCP_PUSH_PENDING,
+  &mptcp_sk(parent)->cb_flags) without holding the msk data lock…
+- [Low] The Fixes: tag names e00b63056fb4 ('mptcp: fastopen: only mark
+  MPTFO subflows with SYN data'), but that commit did not introduce the…
+- [Low] The commit author is 'T S Rameshkumar <rameshsv06@gmail.com>',
+  but the only Signed-off-by is 'T S Rameshkumar…
+- [Low] The new comment in check_fully_established()
+  (net/mptcp/options.c:1045-1049) says '... nothing else spools the msk…
 
-Just to avoid a deadlock, no urgency, but do you plan to send a new
-version? If there are some issues with Packetdrill, please describe
-them, someone can also help you there.
+--
 
-Cheers,
-Matt
+mptcp: push queued data on passive TFO subflows becoming established
+
+This patch targets data that gets queued in the msk write queue while a
+passive TFO subflow is still in SYN_RECV. That data stays stranded after
+the MPC third ACK arrives. The patch adds a __mptcp_check_push() call in
+check_fully_established(). It also sets MPTCP_PUSH_PENDING and schedules
+the msk worker in subflow_state_change(). Both changes are gated on
+subflow->is_mptfo.
+
+Closes: https://lore.kernel.org/netdev/CAFPPu1gU2Y-D+d4i3F0MoNkYK+e1U+=X3qf6QycjfKBw+8snPg@mail.gmail.com/
+
+> Fixes: e00b63056fb4 ("fastopen: only mark MPTFO subflows with SYN data")
+
+[Severity: Low]
+Is this the right commit for the Fixes: tag?
+
+The diff of e00b63056fb4 ("mptcp: fastopen: only mark MPTFO subflows with
+SYN data") does two things in mptcp_fastopen_subflow_synack_set_params():
+
+- it removes WARN_ON_ONCE(!skb)
+- it moves subflow->is_mptfo = 1 after the skb_peek() check
+
+It does not add or remove any push of the msk write queue.
+
+This patch targets TFO SYNs that carry data, and for those the behaviour
+is the same before and after that commit. The missing push after the MPC
+third ACK seems to date back to the original passive MPTFO support.
+e00b63056fb4 points there with its own Fixes: tag on 36b122baf6a8
+("mptcp: add subflow_v(4,6)_send_synack()").
+
+Would 36b122baf6a8 be a more accurate Fixes: target?
+
+> Signed-off-by: T S Rameshkumar <rameshkumar.t@phytecembedded.in>
+
+[Severity: Low]
+The author is T S Rameshkumar <rameshsv06@gmail.com>, but the only
+Signed-off-by uses rameshkumar.t@phytecembedded.in. checkpatch.pl reports
+"From:/Signed-off-by: email address mismatch" for this.
+
+Could the From: line or the sign-off be updated so they match?
+
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index ce0de02f5a3a1..d5238fa111dee 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -1042,6 +1042,13 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
+>  
+>  	mptcp_data_lock((struct sock *)msk);
+>  	__mptcp_subflow_fully_established(msk, subflow, mp_opt);
+> +	/* Passive TFO: the application may have written data while the
+> +	 * subflow was still in SYN_RECV; __mptcp_subflow_active() refused
+> +	 * it then and nothing else spools the msk write queue when the
+> +	 * MPC third ack (no DSS) arrives. Push it now.
+> +	 */
+
+[Severity: Low]
+This isn't a bug, but is the "nothing else spools the msk write queue"
+part of this comment still accurate?
+
+The same patch adds a second push in subflow_state_change(). It fires on
+the SYN_RECV->ESTABLISHED transition caused by this same third ACK, before
+check_fully_established() runs.
+
+The subflow.c hunk also has no comment explaining how the two mechanisms
+relate.
+
+> +	if (subflow->is_mptfo)
+> +		__mptcp_check_push((struct sock *)msk, ssk);
+
+[Severity: High]
+Does this cover TFO connections where the SYN has a valid cookie but no
+data? Since e00b63056fb4, is_mptfo is only set when the SYN had a
+payload:
+
+net/mptcp/fastopen.c:mptcp_fastopen_subflow_synack_set_params() {
+    ...
+	/* A valid TFO cookie does not guarantee SYN data. */
+	skb = skb_peek(&ssk->sk_receive_queue);
+	if (!skb)
+		return;
+
+	subflow->is_mptfo = 1;
+    ...
+}
+
+tcp_try_fastopen() still creates an early-accepted Fast Open child in
+SYN_RECV whenever a cookie is present, even without data. A cookie
+request without data also qualifies when TFO_SERVER_COOKIE_NOT_REQD is
+set:
+
+net/ipv4/tcp_fastopen.c:tcp_try_fastopen() {
+    ...
+	if (!((tcp_fastopen & TFO_SERVER_ENABLE) &&
+	      (syn_data || foc->len >= 0) &&
+	      tcp_fastopen_queue_check(sk))) {
+    ...
+}
+
+In that case mptcp_sk_clone_init() puts the msk in TCP_ESTABLISHED, so
+the application can accept() and write() right away.
+__mptcp_subflow_active()->__tcp_can_send() refuses the SYN_RECV subflow,
+and the data stays in the msk write queue.
+
+When the MPC third ACK arrives:
+
+- check_fully_established() reaches set_fully_established but skips
+  __mptcp_check_push(), because is_mptfo is 0
+- the new block in subflow_state_change() is skipped for the same reason
+- the ACK has no DSS, so ack_update_msk() is not reached
+- nothing was copied, so no rtx timer is armed
+
+Wouldn't the data then stay stuck until the peer sends something? That is
+the same stall this patch is meant to fix.
+
+Should the condition be whether the msk was exposed or written to before
+the subflow was fully established, rather than whether the SYN carried
+data?
+
+>  	mptcp_data_unlock((struct sock *)msk);
+>  
+>  check_notify:
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index f0a6725d2c376..f499073a62d7c 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1894,6 +1894,11 @@ static void subflow_state_change(struct sock *sk)
+>  	if (subflow->resetting)
+>  		return;
+>  
+> +	if (subflow->is_mptfo) {
+
+[Severity: Medium]
+Should this be limited to the transition to TCP_ESTABLISHED?
+
+is_mptfo is set once in mptcp_fastopen_subflow_synack_set_params() and is
+never cleared. So this block runs on every sk_state_change of a passive
+TFO subflow for the life of the connection, including:
+
+- FIN receipt via tcp_fin() (ESTABLISHED->CLOSE_WAIT)
+- FIN_WAIT1->FIN_WAIT2
+- tcp_done()
+
+Each of these schedules the msk worker, which takes the msk lock and runs
+a __mptcp_push_pending() pass.
+
+The commit message says this flushes "once the underlying subflow
+transitions to TCP_ESTABLISHED", but there is no state check here.
+
+Even for the SYN_RECV->ESTABLISHED transition, the callback runs before
+the MPC third ACK is parsed:
+
+tcp_rcv_state_process()
+    tcp_set_state(sk, TCP_ESTABLISHED);
+    sk->sk_state_change(sk);        <- subflow_state_change()
+    ...
+    tcp_data_queue()
+        mptcp_incoming_options()
+            check_fully_established()
+
+So the worker is scheduled before subflow->fully_established is set.
+
+Change 1 in check_fully_established() already pushes on the third ACK,
+and the commit message doesn't explain why both mechanisms are needed.
+Could that be clarified?
+
+> +		set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(parent)->cb_flags);
+
+[Severity: Medium]
+Can this set_bit() race with the non-atomic updates to msk->cb_flags?
+
+subflow_state_change() runs from the subflow's softirq path with only the
+subflow lock held, not the msk data lock (parent->sk_lock.slock). Every
+other cb_flags writer holds slock, and most of them use plain
+read-modify-write operations. For example, in mptcp_release_cb():
+
+		msk->cb_flags &= ~flags;
+		spin_unlock_bh(&sk->sk_lock.slock);
+	...
+	if (__test_and_clear_bit(MPTCP_CLEAN_UNA, &msk->cb_flags))
+
+and in mptcp_check_and_set_pending():
+
+		mptcp_data_lock(sk);
+		mptcp_sk(sk)->cb_flags |= BIT(MPTCP_PUSH_PENDING);
+		mptcp_data_unlock(sk);
+
+An atomic set_bit() on one CPU doesn't protect against a plain RMW on
+another:
+
+CPU0                              CPU1 (softirq)
+release_sock(msk)
+  mptcp_release_cb()
+    load cb_flags (X)
+                                  subflow_state_change()
+                                    set_bit(MPTCP_PUSH_PENDING)
+    store X & ~flags
+                                    mptcp_schedule_work()
+
+PUSH_PENDING is lost, and the worker's release_sock()->mptcp_release_cb()
+then finds nothing to push.
+
+Suppose the third ACK has no MPC option. check_fully_established() then
+falls back via mptcp_try_fallback() and returns without pushing, so this
+hook is the only trigger and the queued data would stay stranded.
+
+KCSAN would likely also report the unlocked writer racing with the plain
+reads in mptcp_release_cb().
+
+Would it be better to set the bit under mptcp_data_lock(parent), as
+mptcp_check_and_set_pending() does?
+
+> +		mptcp_schedule_work(parent);
+> +	}
+
+[ ... ]
+
 -- 
-Sponsored by the NGI0 Core fund.
-
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261008095231.103186-1-rameshkumar.t%40phytecembedded.in
