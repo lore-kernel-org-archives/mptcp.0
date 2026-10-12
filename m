@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF1C2D7386;
-	Mon, 12 Oct 2026 09:40:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A202AD03
+	for <mptcp@lists.linux.dev>; Mon, 12 Oct 2026 09:43:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791798033; cv=none; b=tE1CUsduG6VM82RcTaFWNjOQyvVC2dkBwVKpYBvMHFFC+4qPOupreiBYupN4x0DWvkMTO43DvfzD+T3onhIhsccksTu9drGcBpMSEsvcPzaoJGK572ggrhF9wsWmHp9uyHs/Mas8gA92/XMqDpH7U2IxXJlT0bdTNkuiV8BmGa8=
+	t=1791798224; cv=none; b=My9qbab642wJRpPGXOeFkqc8XQeKim0hgdlf7FoibnMnL+pD6820JaWeFpsGjRe2sG0rP4ocO3/mY7LSha/tHzrs+Neim1TIEvwR3FhYieZGzauGeCwNGZAcDxCt/ej15kH9bLgkjDLv6eQ2gsBok1LxChnk/On+W/E/x+0y854=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791798033; c=relaxed/simple;
-	bh=u39a6/azd6Frz3W7pr9zhas2BIwbSmu+1Z8thRE/zXA=;
+	s=arc-20240116; t=1791798224; c=relaxed/simple;
+	bh=gArbG+RYPewbZzyF2unAndYZuJoFRZtSGBj3jTAw3EE=;
 	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=TY0XwPlslcvoqP4WH8MbFWtif7TnRoqXr0J/Fbfz7boEei8nkhLVPQsWSjC1E4VGQ7LQxRgzq28iQYEqmVB8sZYo+OEFPaEPjUKhN+tWm9yfg10rSy31mSWWHTQBiZb+JCLyR4HIBmjzH2NNEXxnBsCG6bMiHZOTQ+X40Q0M4Nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PP3KBtWD; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=DUfckPef36ggo2Fs3tyaN2pzcx4I3nM5MKXNLiefs3IZVOgciiTJkRO4Gkp3PqrO4NqMog/K69K9PeaB99P/P1gf+TtNNhi4N134jlPbjRi0VmxQK1hccWJDZcveLe5Js9zYwU6c7Tt+BQZWCia6ove9YZjemIg0vqxEd34Y9Ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O3OtUSgj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PP3KBtWD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7E4D1F0089B;
-	Mon, 12 Oct 2026 09:40:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O3OtUSgj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 803D31F0089B;
+	Mon, 12 Oct 2026 09:43:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791798030;
-	bh=wQBFnHwXdBJ2Qf7mEAbLlJA3svxAuxzM+Wfv1BeJPFU=;
+	s=k20260515; t=1791798223;
+	bh=ze3viHER8q3c1p5ydyg6UH9ceItgOCmOfy+OCyQtUcM=;
 	h=Date:Subject:From:To:Cc:References:In-Reply-To;
-	b=PP3KBtWDMm3TX3NFyqS9Gc4tSQ06D36YAzzwA/N+r7EdAOFDSf1AvSK4bxbtHmkC/
-	 kZmoAeHfFjz1kYcmZHu9J9/HZF0EQxRgDg8Alui8rOn1dwBsHSa+rM4wS66afgDM9Q
-	 J4pOUteZN2b4qcOp9WHOPrPyHs6o3gAgzkEs9x3x20shBfuaTB7k7bZTXZ0WehNEez
-	 gObgY+zWco0t0YzFWCzFIWm5DL3LKBNDGNcUph5jADsLr46i0QWO+M2v2nrrisyf6S
-	 g6WqraeovV5fG22U4Je363CeoaXArPxMi9Ou3Jnq/tFbFhUy5h62yLJ6HeSqVBQMih
-	 l/uQ7Dq8m4UaA==
-Message-ID: <100decff-fc86-4e82-9bb0-c22002979da7@kernel.org>
-Date: Mon, 12 Oct 2026 11:40:26 +0200
+	b=O3OtUSgjUpcGS9TjL7zPKYbMG/9CYxCf3x44t3RRdAI1BXo7Sr5mTmEdl+pWrRKk1
+	 A3Xzoc3G+kJoG8PhLzMAQ/hjxCDwtNSuGRRj6ftxFuihbhPE9uW2Xbj2n5Lf5sS4su
+	 9+f6GprDchM5rMfOBFw4iJFeErFKjK9zt4Ickrrf1YZQC+xnFjTzVpcc+buVONdRnM
+	 yv2eb4EtLpYlbxucAseRpPn/aehvxTU+JSzR4aC34GOv+08ULQ7Dmr5BhtZ3kt2O/j
+	 aWLB3DpB3FS8ibLX7RLtHtg37q/iVhabzDbjtlabnXIMe9fktQ+DUnzQRMVYitGPwO
+	 hXCiR7eRhAUxw==
+Message-ID: <f253a105-5a15-4158-80e8-484739b99f0c@kernel.org>
+Date: Mon, 12 Oct 2026 11:43:40 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,16 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net] mptcp: pm: in-kernel: fix C-flag endpoint accounting
- on family mismatch
+Subject: Re: [PATCH v4] mptcp: push queued data on passive TFO subflows
+ becoming established
 Content-Language: fr
 From: Matthieu Baerts <matttbe@kernel.org>
-To: Yiming Qian <yimingqian591@gmail.com>, mptcp@lists.linux.dev
-Cc: martineau@kernel.org, geliang@kernel.org, stable@vger.kernel.org,
- Netdev <netdev@vger.kernel.org>
-References: <20261006114409.117190-1-yimingqian591@gmail.com>
- <97c651a1-7647-4f12-8b6b-74b949dce575@kernel.org>
+To: T S Rameshkumar <Rameshkumar.t@phytecembedded.in>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>, petar.sakic@ink.fish
+References: <20261008124220.213016-1-rameshkumar.t@phytecembedded.in>
+ <a6269e21-a506-4607-b39a-3b4d2e4cccf6@kernel.org>
+ <PN0PR01MB9382C18780E137E3013A097CF4932@PN0PR01MB9382.INDPRD01.PROD.OUTLOOK.COM>
+ <a1ed275c-d455-480c-b12c-d44eeedbed65@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,37 +89,39 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <97c651a1-7647-4f12-8b6b-74b949dce575@kernel.org>
+In-Reply-To: <a1ed275c-d455-480c-b12c-d44eeedbed65@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Yiming Qian,
+Hi T S,
 
-On 06/10/2026 13:59, Matthieu Baerts wrote:
-> Hi Yiming Qian,
-> 
-> On 06/10/2026 13:42, Yiming Qian wrote:
->> fill_local_addresses_vec_c_flag() clears the endpoint ID bit in
->> id_avail_bitmap before checking whether the endpoint's address family
->> matches the remote ADD_ADDR.  If it does not match, the loop skips the
->> endpoint without incrementing local_addr_used, leaving id_avail_bitmap
->> and local_addr_used inconsistent.
->>
->> Removing that SUBFLOW endpoint later calls
->> __mark_subflow_endp_available(), which sees the cleared bit, expects
->> local_addr_used to be non-zero, and triggers a WARN and, with
->> panic_on_warn=1, a panic.
->>
->> Keep the endpoints that are skipped during this specific C-flag
->> iteration available by tracking them in a local bitmap passed to
->> select_local_address(), instead of clearing their IDs in the per-socket
->> bitmap.  Only IDs of endpoints actually used for a subflow are now
->> cleared and accounted for.
-> 
-> Thank you for the patch.
+On 08/10/2026 15:31, Matthieu Baerts wrote:
+> On 08/10/2026 15:06, T S Rameshkumar wrote:
 
-Just to avoid a deadlock, do you plan to send a v2, or do you prefer if
-someone else does that?
+(...)
+
+>> Regarding your technical questions:
+>>
+>>  1.
+>>     Clearing is_mptfo:
+>>      1.
+>>         You are completely right. An automated bot flagged a potential
+>>         bitfield data race if is_mptfo were cleared concurrently.
+>>         However, since check_fully_established() is only evaluated once
+>>         upon receiving the MPC third-ACK, clearing is_mptfo is not
+>>         needed at all. Since is_mptfo is only read after subflow
+>>         creation, leaving it in the bitfield and uncleared (exactly as
+>>         Petar drafted) is completely race-free and clean.
+> 
+> Thanks!
+> 
+> Please also send a regression test for this, ideally with Packetdrill:
+> 
+>  https://lore.kernel.org/bfd64e10-7f1e-41f6-ad12-12f06c4d2880@kernel.org
+
+Just to avoid a deadlock, no urgency, but do you plan to send a new
+version? If there are some issues with Packetdrill, please describe
+them, someone can also help you there.
 
 Cheers,
 Matt
