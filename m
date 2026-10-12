@@ -1,194 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561D44766B1;
-	Mon, 12 Oct 2026 11:49:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C61E947F77D
+	for <mptcp@lists.linux.dev>; Mon, 12 Oct 2026 12:21:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791805791; cv=none; b=aRoBXpZKQPTfkDD7wYsE5nuYE5zFTLIFHz0DZOqQYkS39jHh3K/QRWKpcLuwRRsVbLwPj48oxxdSCd1np3REAUFtZhBI7oy/h5gmPDcznfzPpLDtMw8Uorer43FbyVCxF0+/1c0u4JnPPWEZaxQUNUCfm22wxS6Z2P8rwYHVwRs=
+	t=1791807677; cv=none; b=FnAAF5gXAgrxBlySL73cgiTYOmElG4hdlF4wgHiDvpkJx2Io18Z/eAQZAo4GwFUCxphrBPIoUQgnNm8tfKSwIwAT5lQhZTYrfJdD4JAnyGYpGbBIOVq60bd/1CTsUsxgNK9vnZu4apdlyJ6Qx4PRVc0e4wIjeiXeNYK332uagaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791805791; c=relaxed/simple;
-	bh=eEGHR1mGzXV2D56jleqiwMUkHuS2xYotBOpfGB3XqRI=;
-	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=F50CmbVwv/KDJHWRYr/0/NpYVdiepKwKxbo1qfqIxruBFGNA01MvFDeVY3pITgCFsiu7F9hW4gdaB91Nh8xlbQEXP7YxmFLirc8N5BsSaHxPPRp4SUNaVvBWSFoQP3sNO9pCvCgKdlrVt9nDfH5GEj6vmeqH37wFo2Z5HaoseWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kXmx+Frb; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791807677; c=relaxed/simple;
+	bh=tY0bY38PkI8uDER6KoScO0ahm40ekXIxR6HxmpIw4/U=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=odISxZLU5mFmbgjcYEzZdagCQeTZu4AM6srKMSrObcAdpFleG4GtJKY/ATwtyLRc6dqZgZ4jqePYnirtV0uieWN1OOcf1uCE9MmPkEtjx8ynReJ/n/RJcQMMtsmeKDfNPVFTlClbxUMZhj7yzHMHzE+s4Oug/1npQaVjvkfwFG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dMEePD0c; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kXmx+Frb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7931E1F0089B;
-	Mon, 12 Oct 2026 11:49:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791805788;
-	bh=PaRI2t53VPJ+0vnPAZfKfUr2oOawUBTdE9uZt78o1Uc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=kXmx+FrbPvCsEW2vEl21Q/yVnEthdkJSytQmPizNFEsodSCilD0W/WvMklCWfIwUY
-	 GDpsGQC7cxBmotApKOmze5p9lwyEoPeeahfNhKXGu0jEPib35XcDC+rmuHb9PzH78O
-	 aoCFLjU2I0rA9OUGi0kXD+BM/VhT5AFmsmlPZXdfNaxC6DcNQrzwwLYJEIhpjS03Eg
-	 SvtrvUuh05md8ltiTsK3NgurxraDY1njvesDM90QQ4jYMg+Tj3OXtOi11FAksJU1+Z
-	 M2l2Wsq+XliKD95SiU/tlfBnLUAPA/RgEyio7RY+Zey3FdekkPcZGtTOgI4Db436GH
-	 lwWrgJlVsLMyw==
-Subject: Re: [PATCH v3] mptcp: push queued data on passive TFO subflows
- becoming established
-From: netdev-bot+sashiko@kernel.org
-To: rameshsv06@gmail.com
-Cc: matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- petar.sakic@ink.fish, rameshkumar.t@phytecembedded.in, kuba@kernel.org
-Date: Mon, 12 Oct 2026 11:49:46 +0000
-Message-ID: <179180578699.434549.17104698101547866638@kernel.org>
-In-Reply-To: <20261008104840.131986-1-rameshkumar.t@phytecembedded.in>
-References: <20261008104840.131986-1-rameshkumar.t@phytecembedded.in>
-X-sashiko-severity: High
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dMEePD0c"
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-6dd059478dcso1346524eaf.0
+        for <mptcp@lists.linux.dev>; Mon, 12 Oct 2026 05:21:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791807674; x=1792412474; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=fdgHH3IwtyXA2hpqImliKrVX8n66ewcRaAz00Slc3hw=;
+        b=dMEePD0cfh/9Qwa9Y0geXS4E6GOUDDdsCN/XkbbOel/kzHBeHN/wLSpS2otL9tjdfj
+         OswE49ZWbBBnKhGR/LsJpYM5GfpgO2l3n+QnL9MTk5frACnao/ToRwFC+5/7R+0n2QMu
+         VG/BGEa94QnOW8sCnJh/K6riVNv53/9tbG1GyL8f121l8nEtRbNy7PgK0tI1dUNrTu6K
+         BmiT1alKSEJy4o5qioqkh9wLx7aMRKwXVqBmVVxS4EHddJvJ78j/3qDoj2DjMu0pfemz
+         BJkjSd1FIlq7ps1F5ciWhf3ysnQ3cESZVBNBeokWw4bNAkMNSGvQlqGbITJwC0yMGh/u
+         te+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791807674; x=1792412474;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=fdgHH3IwtyXA2hpqImliKrVX8n66ewcRaAz00Slc3hw=;
+        b=M7t5kh/sykzXLwMJFt75xbZsD4Cq+9ZNCA+HFgec0aupvQZioK9QEeyr6eSbxzzR1B
+         e6XvbPOU4PFGXpRzEBVXIx+j5bHZsEA+jkejrqGUHQT8oooGPwmHxW/KKmxYpifWri7H
+         WzQ1kujus6Gz9sms+LiDxvyjmGRFL+DocXM8NF44SMph590mnPxK3g/B/L3Vv/Zie4pr
+         8WmJcAS0COZugJhG8CsebDedNC6ia4bTRw87g65u52N4Tuqh2cMaKVDgpfatZmFuGRuI
+         i3sNXavegTVCn08fdq8QPak/7ujplea2IkIN8MpnX0VJMA19hzniD9auA2WG7KYu7CVi
+         QwsQ==
+X-Gm-Message-State: AFq9FYINLxD6a9O4lQP0O2o/xqAVPtancHTFAmixHCyH8CI8qNQ/+U/r
+	gb/R9oeGvXysrV2TDS5Afh6G/N8OFooAzDnduN2FbewatSWK644mxEw=
+X-Gm-Gg: AYBFou09scRG9uu8GM5DwQzX08oMFxYH7Gu1ab2OlpBOvzkFhni1Ebt7N9ciYbrrUfy
+	g1VdR++3g9Y+lh+FwZkjws32CP2z5bWeNvMdIbYkh5GQBV+x4KIuEfafoYmDS21txY85Fj483lY
+	KK2tHD++vjDcFDvosd1RERzUweMTC1r4DBvqhwOBekpU5dXZgFE81AFYo5X5drzSI0p2xEdd6Nc
+	C6tLN8Lwu7PFThRqu2pKaGSWhtp8ls/fGFvdIfb59fmfBaNiZhQQ9oVI7CbqIp6rJNfjjXw23Gn
+	a9gdfwYYHl9xeQi4bi3lTM1wbS8SyIBoZ1RpbdZk2kgLBXnEGD2JOKi8k+JeQJ7YV34FXwJwg/L
+	3VsJeSSLQOhTjHTr5MwZjMC2LSHjEHOTU25JNqYKgQIpvOKGrGVoSUN0Nvzy2gjBIIF05Qlu1sP
+	uVLvvUOlF6fmHaHyRIASRAnoC6iaWamXFm9O6kiWsUppm2oHAr38DojANwbAtqDKQHjVpzBh5JZ
+	SMEMwGxPQ==
+X-Received: by 2002:a4a:ee14:0:b0:6dc:e1c3:b2a2 with SMTP id 006d021491bc7-6ef0f4a3c08mr7348394eaf.57.1791807674491;
+        Mon, 12 Oct 2026 05:21:14 -0700 (PDT)
+Received: from [127.0.0.1] ([20.29.29.17])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6f56b25672bsm3052025eaf.11.2026.10.12.05.21.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Oct 2026 05:21:13 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: T S Rameshkumar <rameshsv06@gmail.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20261012112625.578911-1-rameshkumar.t@phytecembedded.in>
+References: <20261012112625.578911-1-rameshkumar.t@phytecembedded.in>
+Subject: Re: [PATCH mptcp-net] mptcp: reset MP_JOIN subflows on missing or
+ invalid DSS options
+Message-ID: <5bb72603-4e11-24f5-8bf7-1f8004ba0545@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 12 Oct 2026 12:21:12 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-Thank you for your contribution! Sashiko AI review found 3 potential
-issue(s) to consider.
+Hi T,
 
-Critical: 0 · High: 1 · Medium: 1 · Low: 1
+Thank you for your modifications, that's great!
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
+Our CI did some validations and here is its report:
 
-- [High] The fix only covers passive TFO children whose SYN carried data.
-- [Medium] If the passive TFO subflow's third ACK has no MP_CAPABLE
-  option (for example a middlebox strips MPTCP options from non-SYN…
-- [Low] The author and sign-off addresses do not match.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf: Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_n=
+et-next/actions/runs/38243692179
 
---
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/b2c2369c30=
+b5
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1183809
 
-mptcp: push queued data on passive TFO subflows becoming established
 
-This patch handles data that the server application writes while a
-passive TFO subflow is still in SYN_RECV. When the MPC third ACK makes
-the subflow fully established in check_fully_established(), the patch
-calls __mptcp_check_push() under mptcp_data_lock() if subflow->is_mptfo
-is set, and then clears is_mptfo.
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-Closes: https://lore.kernel.org/netdev/CAFPPu1gU2Y-D+d4i3F0MoNkYK+e1U+=X3qf6QycjfKBw+8snPg@mail.gmail.com/
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-> Signed-off-by: T S Rameshkumar <rameshkumar.t@phytecembedded.in>
+For more details:
 
-[Severity: Low]
-This isn't a bug, but the author address (rameshsv06@gmail.com) does not
-match the only Signed-off-by address (rameshkumar.t@phytecembedded.in).
-checkpatch.pl reports this as FROM_SIGN_OFF_MISMATCH.
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-Could the sign-off or the From: line be changed so they match?
 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index ce0de02f5a3a1..b865ee6afb00c 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -1042,6 +1042,15 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
->  
->  	mptcp_data_lock((struct sock *)msk);
->  	__mptcp_subflow_fully_established(msk, subflow, mp_opt);
-> +	/* Passive TFO: the application may have written data while the
-> +	 * subflow was still in SYN_RECV; __mptcp_subflow_active() refused
-> +	 * it then and nothing else spools the msk write queue when the
-> +	 * MPC third ack (no DSS) arrives. Push it now.
-> +	 */
-> +	if (subflow->is_mptfo) {
-> +		subflow->is_mptfo = 0;
-> +		__mptcp_check_push((struct sock *)msk, ssk);
-> +	}
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-[Severity: High]
-Does this cover passive TFO children created from a SYN that carried no
-data?
-
-Only mptcp_fastopen_subflow_synack_set_params() sets is_mptfo, and only
-when SYN data is on the child's receive queue:
-
-net/mptcp/fastopen.c:mptcp_fastopen_subflow_synack_set_params() {
-    ...
-	/* A valid TFO cookie does not guarantee SYN data. */
-	skb = skb_peek(&ssk->sk_receive_queue);
-	if (!skb)
-		return;
-
-	subflow->is_mptfo = 1;
-    ...
-}
-
-tcp_try_fastopen() still creates a full TFO child in TCP_SYN_RECV from a
-data-less SYN in two cases:
-
-  - a SYN with a valid cookie and no payload
-  - a cookie-request SYN when TFO_SERVER_COOKIE_NOT_REQD is set
-
-The comment in tcp_try_fastopen() says:
-
-	 * Note: Data-less SYN with valid cookie is allowed to
-	 * send data in SYN_RECV state.
-
-In both cases tcp_fastopen_add_skb() returns early on
-end_seq == rcv_nxt. Nothing gets queued, so is_mptfo stays 0.
-
-The msk is cloned in TCP_ESTABLISHED, so the server can accept() and
-write right away. __mptcp_subflow_active() rejects the SYN_RECV ssk, so
-the data stays at msk->first_pending.
-
-When the pure MPC third ACK arrives, check_fully_established() reaches
-set_fully_established but skips this push. mptcp_incoming_options() then
-returns before ack_update_msk():
-
-		if (!(mp_opt.suboptions & OPTION_MPTCP_DSS))
-			return true;
-
-Neither subflow_state_change() nor mptcp_pm_fully_established() pushes
-the msk write queue. No rtx timer is armed either, because nothing was
-ever sent.
-
-Wouldn't a server-speaks-first protocol still stall in this case? That
-is the same symptom the commit message describes.
-
-Would it work better to trigger the push when a passive MPC subflow
-becomes fully established while msk->first_pending is set, rather than
-on is_mptfo?
-
-[Severity: Medium]
-What happens if the third ACK on a passive TFO subflow with SYN data has
-no MP_CAPABLE option? That can happen if a middlebox strips MPTCP
-options from non-SYN segments, or if the peer leaves them out.
-
-The SYN payload advanced ssn_offset, so the third ACK has
-seq == ssn_offset + 1 and skips the out-of-order branch. Without DSS or
-ADD_ADDR, it then takes the fallback branch earlier in
-check_fully_established():
-
-	if (!(mp_opt->suboptions & OPTIONS_MPTCP_MPC)) {
-		if (subflow->mp_join)
-			goto reset;
-		subflow->mp_capable = 0;
-		if (!mptcp_try_fallback(ssk, MPTCP_MIB_MPCAPABLEDATAFALLBACK)) {
-			...
-		}
-		return false;
-	}
-
-That branch returns before set_fully_established, so the new push never
-runs. mptcp_incoming_options() then returns without pushing:
-
-	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
-		return sk->sk_state != TCP_CLOSE;
-
-tcp_data_snd_check() finds the ssk write queue empty, because the data
-is still in the msk write queue. __mptcp_check_push() only runs on the
-next incoming segment, through the __mptcp_check_fallback() branch at
-the top of mptcp_incoming_options().
-
-If the client is waiting for the server's reply to its TFO request,
-could the data written in SYN_RECV stay stuck in this fallback case too?
-
--- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261008104840.131986-1-rameshkumar.t%40phytecembedded.in
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
