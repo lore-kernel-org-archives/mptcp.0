@@ -1,161 +1,173 @@
-Received: from PNZPR01CU001.outbound.protection.outlook.com (mail-centralindiaazon11021139.outbound.protection.outlook.com [40.107.51.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com [209.85.167.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FBFA1C5D5E
-	for <mptcp@lists.linux.dev>; Sun, 11 Oct 2026 00:15:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.51.139
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791677721; cv=fail; b=Bn/b910bSqOkebAeFZBYYtSFCLY2d+L9cFla+zKi+Gecym6D5s4vHPdCViVvO4TExVl+eT+ZDkhNb2KST/dxM/6tPHN1cMTYHU4xn6pXvidQmPlLaYgfHpEXbwBcZg1xS5mf5fQeuHuIwgQOnwXSxhMAlZdFWecchia0m+DZxTw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791677721; c=relaxed/simple;
-	bh=S9AZZvtYrG27lAvPVT7bqS0ZXHxGR4tPbm4n3LFdiIU=;
-	h=Message-ID:In-Reply-To:References:From:To:Subject:Date:
-	 Content-Type:MIME-Version; b=EsXxLRhqlP00bXQ4hQyFjwfEsI4J9EqNzNOV74krkeP3JrbWb3wL/ZXgpfEwwW2cY9QqVpijCkF3pEhI5TSFKPmD9c3drSy5rRMev6zWp1ODN5VKyGbAHiv28dYRRLAEfyjKgIEKX1KtwEVaKxW1HAhEswJOgvTSYPfbko3MY/c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=persistiqalpha1.pro; spf=pass smtp.mailfrom=PersistIQAlpha1.pro; dkim=pass (2048-bit key) header.d=PersistIQAlpha1.pro header.i=@PersistIQAlpha1.pro header.b=PRO3ZAq3; arc=fail smtp.client-ip=40.107.51.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=persistiqalpha1.pro
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=PersistIQAlpha1.pro
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=PersistIQAlpha1.pro header.i=@PersistIQAlpha1.pro header.b="PRO3ZAq3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZUVunNFZvCIqE/v7vztXiu6iHgmk5aNFI7wmdG8NHr6fjvpLeak9Ytf51PMJ7q5JKIV08eZsRVhu7M4rD2fKBb0pMFvwwNowBcRQGVm2HbbhVwzZP1uWNeQl1XOrbAv9hujx4ulupUqcMO/G+z6B2mzUOn+hmmh199eCSTQWNiRadiQqE3ELgy7Fta0MZxtXm+pkh61auSvjkbLaVDSPY3C6CjEZXneQTibm9Qgc8gFSFlEsME5dF00Y1kfKxATZHrF/HdnEb6JSht7Z6JFNS7lI53ouT/Gkn8Kbtazw1LQhBHsZ6sgJ+t7aBvXE/QiyxJ41cfXUrVOC3mT+D949/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=S9AZZvtYrG27lAvPVT7bqS0ZXHxGR4tPbm4n3LFdiIU=;
- b=fVamB/SL4x8ffWGJwYnAjPPwAaBmo7VlEoLI0WvLU4gWQ0qLbE52ziFKGwZYiO3MWVQHEolyZP3smN8AmF+wwkdaMEad0XKsvJEi4dHJf0AZzCHFCsNYZtpHSgQ9dALvtyCx9ZOQ4VGxc07tbxZ0M4rKpIECOJoGsFuH2/2/Af26uDQ9GjScvTd7UGtD3E7dA3BwdEJx7a4rWqRVrN3bHliGYW9kkY3Qhal5+sGQ/bfT924Pcp78soXOxNWCfYx/3EdfAFJKG1dWlCDSKzRJiSGU8jgw/enhVXseHVlEjYkurv575OGulJYWYpVbxHZjDp7PNRG9Cf2qVaJCMwhY2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=persistiqalpha1.pro; dmarc=pass action=none
- header.from=persistiqalpha1.pro; dkim=pass header.d=persistiqalpha1.pro;
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=PersistIQAlpha1.pro;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S9AZZvtYrG27lAvPVT7bqS0ZXHxGR4tPbm4n3LFdiIU=;
- b=PRO3ZAq3lpFC2GhVpNI8Tc+KwDbZ1S7Vjkhsv+f2fTlnAkH6GUH4mh/bgIOiPDBGzShtVs+b7oxwT6kpO31DdDU1wMPE6pFXDHNp3LqUJ7pnARSGnJr1v41G/p6HoCB5Mq2zRUNp44v+bhIsPqC+M9YAGCR+fkbN5ctDRUSJF377ZLXKyHacdP6T49ms3mnJiNITI3ccR1qxVJjCGOCLnUqsxIOyHxycjknOYr5IR2GO8vd6qDDbjLoWdYFgO7YmIi2eI3UURSudzif7Ss1A5O1BaVAYHce4R4aCF2QOyYzdMuHHhZmWrgL8VcHFYAj1MldJEZ8GxFizkIBQVak8tQ==
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=persistiqalpha1.pro;
-Received: from MA5PR01MB12114.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:1bc::12) by MAZPR01MB5583.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:62::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.9; Sun, 11 Oct
- 2026 00:15:16 +0000
-Received: from MA5PR01MB12114.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::5e2f:fac0:972d:8c93]) by MA5PR01MB12114.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::5e2f:fac0:972d:8c93%5]) with mapi id 15.21.0522.008; Sun, 11 Oct 2026
- 00:15:16 +0000
-Message-ID: <01a12850-490a-78bd-bbac-a07716cf46f8@persistiqalpha1.pro>
-In-Reply-To: <01a0f4c9-6046-7b14-91fa-0f93f02c6a22@persistiqalpha1.pro>
-References: <01a0f4c9-6046-7b14-91fa-0f93f02c6a22@persistiqalpha1.pro>
-From: Christine Bennett <christinebennett@persistiqalpha1.pro>
-To: mptcp@lists.linux.dev
-Subject: Re: about network protocols clients
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 11 Oct 2026 00:15:12 +0000
-Content-Type: text/plain; charset=utf-8
-X-ClientProxiedBy: BL1PR13CA0219.namprd13.prod.outlook.com
- (2603:10b6:208:2bf::14) To MA5PR01MB12114.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:1bc::12)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357E638BF72
+	for <mptcp@lists.linux.dev>; Mon, 12 Oct 2026 01:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.197
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791770374; cv=none; b=GtXeYhNK+/zHCR6EdtWPJny4rt6P3wQVVifumLHYF3+caAm46TDNThKluSzSmpN5Q8595+CmvXArI2Zo9ffkQlpm+Wwvu2jFzku6N1bwEnhWrzMyrq31bS4A2v1Rk9rO4ZydrKjxd5XqCwtpDi7CpMjEod3BFsEaiGuO5zwN5TY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791770374; c=relaxed/simple;
+	bh=oahBO1025qVPSPugkA64I7iVejIAS2a4Gsh5Tbhx5fk=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ZS6bsO0sZAPmctxaz8pc0eGBjN2tyrEIikvTi33qXeT5SIZgLoBg5Zc/07XWfWQ6WVQzSPZDilrRf0lzFipulQs+WrUMk0JsEzkEIYwdZK0ZO0FZiQDqLUTs9YoS7ntxTIFOcyLBHxG5l83LXBLsQRwdj9UgoazV0G5Y8DRVdKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.197
+Received: by mail-oi1-f197.google.com with SMTP id 5614622812f47-4d2f0f77124so2107090b6e.3
+        for <mptcp@lists.linux.dev>; Sun, 11 Oct 2026 18:59:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791770372; x=1792375172;
+        h=content-type:to:from:subject:message-id:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=gKk9txmv0mZCyRJL6L+tG/6jg3Fga3i3/ojfl8+Y39s=;
+        b=Epwkly+s38AN+sW8yp+77TGGPSmFys0GLHz3QUNnNIvCSUkZBr8cZm2xCXZKZbO6hN
+         5zZMj1m7x+2GRYqAvsXApXjrAEVAViqc06EkOzQW7KaRfPKWoKMIZtoXw4O/k8efikyq
+         0GgyRJkmrvZunChs91F8aJ4PWCrX/sJETwWCdWfRaksS9OTKquHbOm5HJQfl2IHqgHNj
+         pP/kNsix84XqLmW9ZDrbT2HIIhBuRinPEgYhgKGqKv4Q25JRwI/uLVjv6cWE5wZRkIh9
+         P+GXLLiltvmi93T+NYRaant7Wntt9mVTQJz7ndEomAFgEzZnhSrdRiemKGfoMsvyoGyD
+         16/Q==
+X-Forwarded-Encrypted: i=1; AKwUvBwfsK57y0R/f5+g/9vzZFsealyGFaoY+4ECCPLIjsCBeBveH6i3ORcOQJuSLxqz2byTus3Ctg==@lists.linux.dev
+X-Gm-Message-State: AFq9FYKf1iQRfnY4MfdgnBYZeN2GBWlXFLDUOd19vrEp7VykdLxiP3YS
+	w1qKOx+oFrwRDKeDoqa3HdyDvpp3n+Dn+iLXMBDBtsy5aVRMjKbB41G1QQj0nTFrGLQU8crbVVQ
+	m8wXQRX9ZCRs2ZZ8ESq2PAH1h2t4UNOvzj+dk/uzEb5pknIFt+TxbWmAv4YI=
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MA5PR01MB12114:EE_|MAZPR01MB5583:EE_
-X-MS-Office365-Filtering-Correlation-Id: 52674083-9438-43c3-8bf2-08df272cba05
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|23010399003|1800799024|366016|56012099006|10067099003|22082099003|18002099003|3023799007;
-X-Microsoft-Antispam-Message-Info:
-	G+d/XPwou/Nsw4Saww2R3Rw/wcpfQeL58nOJConTuPNIemXdWtP6X5GLdsPAcjOnmKhs59g7xI2KYxUSnso1ASiKX+vrzvNx4QEnz0Ea9/W7AcBDTdAC+cA1PVi2K1LmBUoWefBHk4WRFLlliouEu+vdbua3ibzPsmwxdplgwR63TV6RN8u503asXTO0OsfZWcs6mMm2PB0Ubxtjajnt8EubTj7NEP7ihwKYlBidsQ/vpMGkFqpJCO0OEm3H90s6hzyHX5j3Uc+LGADiiHYnJVFMnBhe1S7zNmzmxWa+e5D1J4X5CjygWglbtNOV1sLKl4spYxFsWzoyN9ZBb12dlK5VQCBI7x3MMjzdLUjOedAQh25R7OgnescA73tYmSzAYfgcVIluMQk6HfhJ3AeWbGkhGz0DeSoY1npeAw93Hf6wEOcxTBMP1T525Eeu5ZjGR35KqRURi7f9FXTiuQKuJqognWcIQSdRqb2wnruqLaOMmo+FDJ7Kif0eH4LnTe/YzSbpNSHD8BmetRRlsOeIOqnFB2DiaJl1dxOj1FaiD2Yg4s3Jr833PZha2E3VzXP7pY4yeTDkXxy7ubI/QcusCaZarFJwzYYtK+E6+kziLvfoaBm09FKxgzjcJny1fkEFnWEU2u12Z8ON231kDOVxDGcHGbR/Rwq+2bQ9eyj0cEU=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MA5PR01MB12114.INDPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(1800799024)(366016)(56012099006)(10067099003)(22082099003)(18002099003)(3023799007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TVpjNlBWQzdpVkxGMzZ3ZXVrQXRCU0lFZVJOY1FiR0xIZU51VTZnbldmSkg1?=
- =?utf-8?B?bUZIdVF1dTFJQllMYUhsZitCS3d0dGxUVUJXa2VEQ21JTGEyTjBFNkczREFJ?=
- =?utf-8?B?NEM4M2lPRlJObzdVelVFRUk3ZUhOMStYUVhzbWR1aDNPU1pObHQ2V3BHUGxw?=
- =?utf-8?B?bVBFQXlMNkl2b1J5cWcxWEhoRG9qZ0ZnTXlVZEo4VG5oV3FyTVUyMmtjU0dh?=
- =?utf-8?B?cVlIZVRMaUNXcmt3cDRISEFXS1IwV0t6UmNSdG5CMUNUZnlvTlprUXp6UE9p?=
- =?utf-8?B?WVBjMW9EQ0crUWE1c2lqYkl6N3cvU1ZoWHNKdytqSUxrdC9FQ0NwRmEvaHlU?=
- =?utf-8?B?VVRKL3FqMUM5TzVsb2lHbGNNVTBMNGlBdnJXVzFhM0tla0hBdjNtVk55SVFO?=
- =?utf-8?B?T3JnVFN1bXRha2ZXWnErWHZteWUzc296OE41WWVsR0NLMngrR2QraXpoM2ti?=
- =?utf-8?B?Ny9VQTI3KzJPT1R5WDFkK1RvRTNqRS9zRDUwOEpvNWE3MVFGdmtqdVkySFhP?=
- =?utf-8?B?WVNNMFdhRFNwYjYvR0xRZTk4WWtGU3RCTUtrT0tXdXIvY2gxS3doUFVPVmx3?=
- =?utf-8?B?SnVKTE5KaDZONlJQUldUcEZiZE5ZY05XamR5ZzFyNElqODB5N3V3WkdwZnlp?=
- =?utf-8?B?YjI4Sit2Ry9xZVY4SGNqeTZoRDYyL2xvZXNRZmJnVkxkRWQ3Y28rZEErcGZm?=
- =?utf-8?B?R2tJaWlEUFA1QzQxYUNBQUJhQkpWVnY5L3BWeW00RGFOd2hvNTZJSko0eTRX?=
- =?utf-8?B?SDdWVy84U0EyVHN1QTh3aGF2eHYyakY1TkNtMjJNVzUzRXZOVGQ0ZEZBbEh1?=
- =?utf-8?B?eGJqU0QvMitRbHFkMUJUdm1iUVFtSXJYbWgrdkh0cEJ5eEJSWTBmMERRUGVJ?=
- =?utf-8?B?dU9wSHNWb3F1UEt5dnFVdWNrSmQ4OE95V3VaQVhQVlIyQ3N2WGJISEM3V0E2?=
- =?utf-8?B?U3NJdUpYT2NxU3JJWHFHY3JFSXlnRXRtbkxhR1FBbGpEOE5lTGwzM3hZSmUr?=
- =?utf-8?B?STVPWGQzZTFVUWFFWTJUbFhSTlBqeVBOZkk4TmN1dmU4Qk9vYm9FVjhnM2t3?=
- =?utf-8?B?TUFlbHRoVVVVM05MMXE0eW9QZjQwVlZnY1lNZkdUTVZxRHE1OFZSdWI1SHVn?=
- =?utf-8?B?d09nNGhEOVhFRlZrbUFNbWN4ZmVPMnhWVDFmQm85U2cwSU1hY0I3c0dWL3k2?=
- =?utf-8?B?NFZHQmo2N2pWZ3NMWHdsZ1BOWGd5MWY4YlloZDd5Ui9XUE5aQ0lTakE5V2dQ?=
- =?utf-8?B?Q2lVaWx4QnhHWlo1YkVMNzJwSzZIRmM2TW5ZeXFtMDhIeEo4Ynp4djY5U29m?=
- =?utf-8?B?YjhOWmNFVy81V0k3R09yRWk1VzBmTFVDSDNsQ05kbFltMmV0ME1EOXdWaktE?=
- =?utf-8?B?Ym40ZU9xMWFaMFNHdERPTkpBbmhOemVXMlFJQUlhY2ZSblQ3Y2VQR1pVMFlh?=
- =?utf-8?B?QVB1TXEvVTd5MU1KTUxnZ0ZDTXhES1FGdXNCOHR1ZVpGN05reGQ0cW9GSVN1?=
- =?utf-8?B?RXdXWlM5ZlVYeVZLby9yWFl1MFZ4MEhoUi9malhJVGxQSCtoK0EvOVVkSjJY?=
- =?utf-8?B?NmRzSVBzS0l4N3BVMXE1YldLeWEyeG85OUxLNC9WOWltTE1pd3FRRWhhakN4?=
- =?utf-8?B?ckdlTDdOdjdScjBqTVV5TVdVQ05peS80RTV4RkdhNGV0RC8yS0NlN1pkWmlX?=
- =?utf-8?B?cEpQQjhBY0xsTmx0WmV2YUo1TWlENkxIMHptREh2RFpXck4vakJxZVdyekFJ?=
- =?utf-8?B?dUVXOUUyU29QM2xvS1NxTHZJNmFBRXZldzFwRTlpWWpqdm1KbnQvRFBVaU4v?=
- =?utf-8?B?cDc3Wk5hdTdCRVY3N29BbW1hbG5LSUV1SjYwVHFhUHJiTmRxRG5jRUVhdmhD?=
- =?utf-8?B?ME9tREtKYUtkb0VJMlV2MWRiVTFUMEw3M2dydGhlMzVxeWxwTEw2c0p1WlBH?=
- =?utf-8?B?UW1DNDFaaGE2WkVYYWdvYk5CSXBwNVdINzVEUU9YY3RxRFRVMUdVN3doOEpX?=
- =?utf-8?B?TFByMEU2ZnVCS0NldkN1QmtMOGl6OGZ2VUlJbGFkcjVwU0ZzS3NHQUVUbWtv?=
- =?utf-8?B?Uk1xb1JmRkIwZENzR3hrOGc1dWUwSVJ6L3lmemUzQkpKVys2cE03NVlmeFZm?=
- =?utf-8?B?YmVoWWplVmRCVVhoOGl1OTNkVHpGNFdHQ3MzV3ZrVUhEWXVLaDhSc0s0Njcw?=
- =?utf-8?B?eEY2N1dUWm15UVovdmdXdFRUZWdUNUVqK0h4a0tjQmw0dTRlemZacTdVTG5E?=
- =?utf-8?B?ZTZ1VW55eHF0RGNCdHQ4YjFORUdlbFovYkVnQUF5MEFyK1hIbHlaQWFyMFJO?=
- =?utf-8?B?YXRVdWdHQW02N0ZEVWtzZk1GTHQvY1FFS05wd2plRElIQUtWR1J6YWlHdlU3?=
- =?utf-8?Q?qAyh4QnG79sl0DWVAfm5ZAJinV+Pm1ahtJ7+V?=
-X-OriginatorOrg: PersistIQAlpha1.pro
-X-MS-Exchange-CrossTenant-Network-Message-Id: 52674083-9438-43c3-8bf2-08df272cba05
-X-MS-Exchange-CrossTenant-AuthSource: MA5PR01MB12114.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Oct 2026 00:15:16.7067
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 207f505b-349f-4fb5-a048-321d02f8ab9e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VXKZcBTgrKya8+M1he2jxULk3UsOoNZqWQ9GG+JuUqH2TTQi7jOgPf2mzyMgRke0K4UFP8Gec2vbXdfC6GOQzIcEt9GARgZYSGo2c6c3ewxIKjt9DiymgBXg3b7F0eP1
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MAZPR01MB5583
+X-Received: by 2002:a05:6808:c3c2:b0:4ed:7045:d3bc with SMTP id
+ 5614622812f47-50c50f29bf2mr7110424b6e.32.1791770372245; Sun, 11 Oct 2026
+ 18:59:32 -0700 (PDT)
+Date: Sun, 11 Oct 2026 18:59:32 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6acc3f04.a150a118.27e199.003f.GAE@google.com>
+Subject: [syzbot] [mptcp?] WARNING in __mptcp_move_skbs_from_subflow (3)
+From: syzbot <syzbot+a0f240a492551e97b466@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@kernel.org, geliang@kernel.org, 
+	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	martineau@kernel.org, matttbe@kernel.org, mptcp@lists.linux.dev, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi =C2=A0
+Hello,
 
-I previously mentioned that I=E2=80=99ve been helping software projects fin=
-d clients by creating personalized email sequences, finding targeted prospe=
-cts, and booking them meetings with warm leads.
+syzbot found the following issue on:
 
-Would that be interesting to you?
+HEAD commit:    af32da41b032 Merge tag 'net-7.3-rc7' of git://git.kernel.o..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=14b48c9c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4118aaa2d227be26
+dashboard link: https://syzkaller.appspot.com/bug?extid=a0f240a492551e97b466
+compiler:       Debian clang version 22.1.8 (++20260613092233+e80beda6e255-1~exp1~20260613092250.77), Debian LLD 22.1.8
 
-Best,
--Christine
-PersistIQ
+Unfortunately, I don't have any reproducer for this issue yet.
 
-P.S: let me know if irrelevant.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/67d1818d6d97/disk-af32da41.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/903b9a3843fb/vmlinux-af32da41.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/b878ac72b487/bzImage-af32da41.xz
 
-On Thu, October 1, 2026 12:07 AM, Christine Bennett <christinebennett@persi=
-stiqalpha1.pro>
-[christinebennett@persistiqalpha1.pro]> wrote:
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+a0f240a492551e97b466@syzkaller.appspotmail.com
 
-> Hey,
->=20
-> Came across MPTCP, and wanted to check if you are looking to bring in mor=
-e clients for network protocols?
->=20
-> If yes, worth a quick chat to see how we can help?
->=20
-> -Christine
->=20
-> Thanks,
-> -Christine
-> PersistIQ
->=20
-> P.S: let me know if irrelevant.
->
+------------[ cut here ]------------
+1
+WARNING: net/mptcp/protocol.c:855 at __mptcp_move_skbs_from_subflow+0x11cf/0x19a0 net/mptcp/protocol.c:855, CPU#1: syz.4.337/7111
+Modules linked in:
+CPU: 1 UID: 0 PID: 7111 Comm: syz.4.337 Not tainted syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/16/2026
+RIP: 0010:__mptcp_move_skbs_from_subflow+0x11cf/0x19a0 net/mptcp/protocol.c:855
+Code: b6 04 26 84 c0 0f 85 57 05 00 00 41 c6 07 00 e9 e6 f5 ff ff e8 92 5d f7 f5 90 0f 0b 90 48 8b 5c 24 30 eb 0c e8 82 5d f7 f5 90 <0f> 0b 90 4d 89 ec 48 8b 7c 24 68 e8 11 13 01 00 e9 50 fd ff ff e8
+RSP: 0018:ffffc90000a18120 EFLAGS: 00010246
+RAX: ffffffff8bd0b1be RBX: ffff88802a7bf8e0 RCX: ffff888035d8be80
+RDX: 8000000000000300 RSI: 0000000000000100 RDI: 0000000000004500
+RBP: ffffc90000a18328 R08: 0000000000000100 R09: 1ffff110048f1958
+R10: dffffc0000000000 R11: ffffed10048f1959 R12: 0000000000007fe4
+R13: dffffc0000000000 R14: 000000002f8eae63 R15: 0000000000004500
+FS:  00007f14a00f66c0(0000) GS:ffff888123bbf000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000287000 CR3: 000000007ec44000 CR4: 00000000003526f0
+Call Trace:
+ <IRQ>
+ move_skbs_to_msk net/mptcp/protocol.c:971 [inline]
+ mptcp_data_ready+0x3f5/0xc20 net/mptcp/protocol.c:1028
+ subflow_data_ready+0x2bc/0x7f0 net/mptcp/subflow.c:1540
+ tcp_data_queue+0x1e94/0x5fa0 net/ipv4/tcp_input.c:5700
+ tcp_rcv_established+0xb05/0x2940 net/ipv4/tcp_input.c:6696
+ tcp_v4_do_rcv+0x727/0x13b0 net/ipv4/tcp_ipv4.c:1854
+ tcp_v4_rcv+0x27d4/0x3170 net/ipv4/tcp_ipv4.c:2248
+ ip_protocol_deliver_rcu+0x21d/0x440 net/ipv4/ip_input.c:207
+ ip_local_deliver_finish+0x3bb/0x6f0 net/ipv4/ip_input.c:241
+ NF_HOOK+0x336/0x3c0 include/linux/netfilter.h:325
+ NF_HOOK+0x336/0x3c0 include/linux/netfilter.h:325
+ __netif_receive_skb_one_core net/core/dev.c:6297 [inline]
+ __netif_receive_skb net/core/dev.c:6410 [inline]
+ process_backlog+0xa6b/0x18b0 net/core/dev.c:6761
+ __napi_poll+0xaa/0x330 net/core/dev.c:7830
+ napi_poll net/core/dev.c:7893 [inline]
+ net_rx_action+0x61d/0xf50 net/core/dev.c:8050
+ handle_softirqs+0x226/0x860 kernel/softirq.c:645
+ do_softirq+0x77/0xd0 kernel/softirq.c:546
+ </IRQ>
+ <TASK>
+ __local_bh_enable_ip+0x100/0x140 kernel/softirq.c:473
+ local_bh_enable include/linux/bottom_half.h:33 [inline]
+ rcu_read_unlock_bh include/linux/rcupdate.h:923 [inline]
+ __dev_queue_xmit+0x1efb/0x3920 net/core/dev.c:4993
+ dev_queue_xmit include/linux/netdevice.h:3464 [inline]
+ neigh_hh_output include/net/neighbour.h:544 [inline]
+ neigh_output include/net/neighbour.h:558 [inline]
+ ip_finish_output2+0xbda/0x10b0 net/ipv4/ip_output.c:236
+ NF_HOOK_COND include/linux/netfilter.h:314 [inline]
+ ip_output+0x29f/0x450 net/ipv4/ip_output.c:437
+ __ip_queue_xmit+0x10df/0x1b10 net/ipv4/ip_output.c:533
+ __tcp_transmit_skb+0x2d18/0x47c0 net/ipv4/tcp_output.c:1717
+ tcp_transmit_skb net/ipv4/tcp_output.c:1734 [inline]
+ tcp_write_xmit+0x1bfa/0x6400 net/ipv4/tcp_output.c:3062
+ __tcp_push_pending_frames+0x96/0x380 net/ipv4/tcp_output.c:3245
+ mptcp_push_release net/mptcp/protocol.c:1668 [inline]
+ __mptcp_push_pending+0x60f/0x900 net/mptcp/protocol.c:1809
+ mptcp_sendmsg+0x11ea/0x1d10 net/mptcp/protocol.c:2110
+ sock_sendmsg_nosec+0x90/0x180 net/socket.c:800
+ __sock_sendmsg net/socket.c:815 [inline]
+ ____sys_sendmsg+0x54e/0x850 net/socket.c:2713
+ ___sys_sendmsg+0x2a5/0x360 net/socket.c:2767
+ __sys_sendmsg net/socket.c:2799 [inline]
+ __do_sys_sendmsg net/socket.c:2804 [inline]
+ __se_sys_sendmsg net/socket.c:2802 [inline]
+ __x64_sys_sendmsg+0x1b1/0x290 net/socket.c:2802
+ do_syscall_x64 arch/x86/entry/syscall_64.c:61 [inline]
+ do_syscall_64+0x166/0x520 arch/x86/entry/syscall_64.c:84
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f149f19e1d9
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f14a00f6028 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007f149f425fa0 RCX: 00007f149f19e1d9
+RDX: 0000000000040010 RSI: 00002000000008c0 RDI: 0000000000000007
+RBP: 00007f149f235888 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f149f426038 R14: 00007f149f425fa0 R15: 00007ffe2ec5e878
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
