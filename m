@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8517030ACE6
-	for <mptcp@lists.linux.dev>; Mon, 12 Oct 2026 13:11:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B90B932570D
+	for <mptcp@lists.linux.dev>; Mon, 12 Oct 2026 13:28:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791810718; cv=none; b=akLfnehtPXXHrMWBgNpu+s6j4yqoxmUqTe22KXqH4SPXN2U8hQbWUSFZH80DpfIa7r9ziUXRAGasj5fZhNuvDeRwAbax6axtvHRyGh3aRHxEWFoFeU7p8Q3gVZAddXWnioBPJx7nHUy+Z1cE1rWq9ot+lPSGYp6hqnV/b1vMZds=
+	t=1791811732; cv=none; b=r2hfHAWtkMmePxk0aaWlCP/HqFwDzhFPomyUCTUBYHzFhtP9y3/BImgyCHLXYDbDnOi1BM1mruFrIAw4xCFMdmVer3IiFPUczS7rgDIiYwa+7iDICBAySZ52dYV6D7Ibkn4182gm5X52LTApN8A1KHXfF601IkjfV/GVdakbRvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791810718; c=relaxed/simple;
-	bh=S2H32v3aSIiNtsf3NicUhJA0asvQIyj/xJTDt+zh/3s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uJUrFxfzs2BdWf7fNpFUwwwTadCZnHeyNhHUM2sBmx8tMsEFFikcS+CsJDe76xaYvJa7X9D2OETSYUFrPbMJPd0qVmaBAKfbDbdEwQjHP51G8ojodOQxXvwzwwUHedjpNmc1BdzVfpknMTyb30LSXLCct/Ed5jyOOYzTu5jkEtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VSfxjV6k; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791811732; c=relaxed/simple;
+	bh=+IR7rUBKXwZcd8Lj3UMr+KmJXKrL5fJwUDv9YtZBe38=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=SVAzb9p0R+cBoqm1wAk0Rx94R31aM6YyODAUfBI7wyBbbtrlXNOP/QwgxNKeo5QIt/CfbggnHCdxVNCs+ID5iG5o/C4iBCJK/R2TFhR4AlmD5WDX/Ez3JQEoSJGYQzU+068krXnCFG4soeCw7087WfE620296ztE0dNWItewV0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fv8/ErW2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VSfxjV6k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1B6B1F0089E;
-	Mon, 12 Oct 2026 13:11:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fv8/ErW2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88D771F0089B;
+	Mon, 12 Oct 2026 13:28:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791810717;
-	bh=15QsKANBqhl6XUin7qfQ07aiBggi10KGLATQp2QT0S0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=VSfxjV6kxSp8OGPFe6gFU93A/xIcWowa/Ec51MZBtRYa9swBQUwy6YGFc3nt21h7C
-	 I2wpIUBqiNAZH5QIO4hNXZuJKuX9XNB/37EsjqHdjAlAhV+MdH+3zYYUuFuqYhfOY7
-	 GBeVlA18l4CNwye4lZlTUhieQuWva+ZXzVvg94L+WOgUTzTGa/WlcGCOuEo0fNGb99
-	 ngdmY7EzWB9g/GufHnS6WKSQ60B09VKWQje/C8CgkJn3A45ZiRLR8XrTHuyQBCXe/P
-	 kTk30bzih8OnRE8wvEApm0EiPZq476banCAWj0gZOHOo3BAvVTZ0BgAYQ9FAePzK9W
-	 eDlLMpKzyjjlQ==
-Message-ID: <7da818ff-d263-4138-808c-e4bd23d110d6@kernel.org>
-Date: Mon, 12 Oct 2026 15:11:53 +0200
+	s=k20260515; t=1791811731;
+	bh=QYAY+zkeNWacH9t661vnDnRJgy5aywGDi+e4lgDEUjo=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To;
+	b=fv8/ErW2QAc0ZjQa4zpNFpAON4/rCC7FXxEmfM9IlsBnmEmEo45tydfJNAYa4HDcU
+	 W6EFl0orTaj3Jhxi09RWMm5ktVBbXFWrFSBY2OkHBovNKVRDrqw5Y74Eja2Rz39i+2
+	 3KjNcrTZCiDilcOX3Tf+m/F1bcuwyv+QDENisbYPAMJmvu3BJybXRZXDXMumLV4UKb
+	 TWkKneoDTGmYZ8PDnjePrA21PnFnF0mvDionQCRTUOQarRZQS8b5QHB6CRj9whIn5q
+	 hIwFaexv3Gl6Kbp7RJynLcZCByxbXe10ZHeTfRdng90An9O+sU1nCTNPiP86JanxGT
+	 T2itYMn6XF/TA==
+Message-ID: <b5d420d1-859a-4c84-a658-e7aa44abbb30@kernel.org>
+Date: Mon, 12 Oct 2026 15:28:48 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: reset MP_JOIN subflows on missing or
- invalid DSS options
+Subject: Re: [PATCH v4] mptcp: push queued data on passive TFO subflows
+ becoming established
 Content-Language: fr
-To: T S Rameshkumar <rameshsv06@gmail.com>, mptcp@lists.linux.dev
-Cc: T S Rameshkumar <rameshkumar.t@phytecembedded.in>
-References: <20261012112625.578911-1-rameshkumar.t@phytecembedded.in>
+To: T S RAMESHKUMAR <rameshsv06@gmail.com>
+References: <20261008121602.206507-1-rameshkumar.t@phytecembedded.in>
+ <CADRhS2uk-P8TSmyiM=X5JQXHtzdm68vg6+vyBDr-UCf0EAu0HA@mail.gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,59 +86,101 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20261012112625.578911-1-rameshkumar.t@phytecembedded.in>
+Cc: Petar Sakic <petar.sakic@ink.fish>, mptcp@lists.linux.dev
+In-Reply-To: <CADRhS2uk-P8TSmyiM=X5JQXHtzdm68vg6+vyBDr-UCf0EAu0HA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi T S,
 
-On 12/10/2026 13:26, T S Rameshkumar wrote:
-> Per RFC 8684 Section 3.7, fallback to regular TCP is only permitted
-> on the initial subflow. Additional subflows established via MP_JOIN
-> MUST NOT fall back to regular TCP, and if an additional subflow
-> encounters missing DSS mappings, corrupted mappings, or unmapped data,
-> it MUST be closed with a reset.
++cc Petar.
+
+On 12/10/2026 12:00, T S RAMESHKUMAR wrote:
+> Hi Matt, Petar,
 > 
-> Currently, in subflow_check_data_avail(), when an MP_JOIN subflow
-> receives data without DSS mapping or with invalid mappings, it branches
-> to the fallback label. If fallback was already performed or allowed on
-> the connection, the subflow bypasses reset and incorrectly accepts
-> plain TCP data, synthesizing a fake fallback mapping.
-
-Do you have a reproducer for this?
-
-> Fix this by explicitly checking if the subflow is a joined subflow
-> (subflow->mp_join || ssk != READ_ONCE(msk->first)) under the fallback
-> label. If so, immediately set the appropriate reset reason
-> (MPTCP_RST_EMIDDLEBOX on MAPPING_NODSS, MPTCP_RST_EMPTCP otherwise),
-> increment MPTCP_MIB_DSSRESET, and jump to reset.
+> Thank you both!
 > 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/544
-> Signed-off-by: T S Rameshkumar <rameshkumar.t@phytecembedded.in>
-> ---
->  net/mptcp/subflow.c | 24 +++++++++++++++++++++++-
->  1 file changed, 23 insertions(+), 1 deletion(-)
+> I have prepared [PATCH mptcp-net v2] based on the export branch.
+> In v2:
+> - Reverted bitfield modifications: check_fully_established() is only
+> called once upon receiving the MPC 3rd-ACK, so is_mptfo is read-only at
+> that stage and safe from concurrency races.
+> - Added "Suggested-by: Petar Sakic <petar.sakic@ink.fish>" and
+> "Reported-by: Petar Sakic <petar.sakic@ink.fish>".
+> - Kept the Fixes tag pointing to fb7084501a61 ("mptcp: add support for
+> TCP_FASTOPEN sockopt") to ensure backports cover 6.8 and all stable trees.
+
+Thank you. I will try to review this after the automated tests.
+
+> Regarding Packetdrill:
+> I have prepared the packetdrill test case (server-TCP_FASTOPEN-early-
+> write.pkt) which simulates the server writing data in SYN_RECV before
+> the 3rd ACK arrives and verifies that the 100 bytes are pushed
+> immediately with DSS mapping once the 3rd ACK is received. All 51
+> fastopen tests pass.
 > 
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 78e886b20..5faab6ffd 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1446,7 +1446,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
->  	return false;
->  
->  fallback:
-> -	if (!__mptcp_check_fallback(msk)) {
-> +	if (subflow->mp_join || ssk != READ_ONCE(msk->first)) {
+> I can submit the packetdrill test via a PR on https://github.com/
+> multipath-tcp/packetdrill <https://github.com/multipath-tcp/
+> packetdrill>, or send it directly to the list if preferred. Here is the
+> test script for reference:
 
-Here you are changing the condition "did we already fallback". Is it
-because a fallback already happened but yet you have a second subflow?
-That's not consistent, and the root cause is elsewhere.
+Please open a new PR.
 
-Maybe it is linked to:
+> --- server-TCP_FASTOPEN-early-write.pkt ---
+> // SPDX-License-Identifier: GPL-2.0
+> // Test MPTCP passive Fast Open early write before 3rd ACK arrives
+> --tolerance_usecs=100000
+> `../common/defaults.sh`
+> 
+>  0.0    socket(..., SOCK_STREAM, IPPROTO_MPTCP) = 3
+> +0.0    setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+> +0.0    setsockopt(3, SOL_TCP, TCP_FASTOPEN, [2], 4) = 0
+> 
+> +0.0    bind(3, ..., ...) = 0
+> +0.0    listen(3, 1) = 0
+> 
+> // Client connects with TFO Cookie and 500 bytes of SYN data
+> +0.1      <  S   0:500(500)                win 65535  <mss 1460, sackOK,
+> TS val 100 ecr 0,   nop, wscale 8, FO TFO_COOKIE, nop, nop, mpcapable v1
+> flags[flag_h] nokey>
+> +0.0      >  S.  0:0(0)          ack 501              <mss 1460, sackOK,
+> TS val 100 ecr 100, nop, wscale 8,                          mpcapable v1
+> flags[flag_h] key[skey]>
+> 
+> // Server accepts while still in SYN_RECV and reads the SYN data
+> +0.0    accept(3, ..., ...) = 4
+> +0.0    read(4, ..., 500) = 500
+> 
+> // Server writes early reply data before receiving client's 3rd ACK
+> +0.0    write(4, ..., 100) = 100
+> 
+> // Client's 3rd ACK arrives with no data, establishing the MPTCP connection
+> +0.2      <   .  501:501(0)      ack 1     win 450    <                
+>                                                              mpcapable
+> v1 flags[flag_h] key[ckey, skey]>
 
-https://lore.kernel.org/20260814-mptcp-reset-mpj-early-v1-0-3ca3260f9474@kernel.org
+Here, you are dropping TCP Timestamps (TS) negotiated before. Probably
+better to keep it (or you don't inject it in he first SYN, clearer).
 
-I didn't have time to work on a v2.
+> // Server must immediately push the queued 100 bytes with DSS mapping
+> +0.0      >  P.  1:101(100)      ack 501              <nop, nop, TS val
+> 100 ecr 100, dss dack8=0 dsn8=1 ssn=1 dll=100 nocs>
+
+"dack8=0"? That's strange...
+
+Also, TCP options are not padded correctly to ensure TCP header is a
+multiple of 4 bytes: 2 excess bytes → you are missing two "nop" at the end.
+
+How did you test it?
+
+ $ cd <Packetdrill DIR>/gtests/net
+ $ run_all.py -lv mptcp/fastopen/server-TCP_FASTOPEN-early-write.pkt
+
+Don't forget to add the "Assisted-by: LLM" tag if used, and mention what
+you did, how you tested things. You can use this docker image to ease
+the testing part:
+
+  https://github.com/multipath-tcp/mptcp-upstream-virtme-docker
 
 Cheers,
 Matt
