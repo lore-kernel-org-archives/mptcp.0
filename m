@@ -1,177 +1,299 @@
-Received: from MA0PR01CU012.outbound.protection.outlook.com (mail-southindiaazon11021079.outbound.protection.outlook.com [40.107.57.79])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64AB41D114
-	for <mptcp@lists.linux.dev>; Mon, 12 Oct 2026 11:42:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.57.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791805369; cv=fail; b=DatJX1qZIzDtC4YwdxAMg0RoHK9VthQZkHaF4hmPn+uw9qih+VyuCQ3E8BD4scRlG06jynPkNkuvNAEsWDG7UFFCk9RP57Gw+sRhbObsLFK2t2rxdY1eZLtONRaZwuqzXjrjSBsux79vFkaKXx4e4oxHzEXTNxsZHyFHraRvoOY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791805369; c=relaxed/simple;
-	bh=fcdvUZFhqn0t+9QHh7tuQuagRQlQHELG2YJMbi+iUa0=;
-	h=Message-ID:In-Reply-To:References:From:To:Subject:Date:
-	 Content-Type:MIME-Version; b=Vcnhf6M3wb2A6d2wPhye/7XYefV1dUnTgmInquwcRpaZPMr+WPqTWrVnNTpv1c6jcLVkS8S3RixVTRERMBIHUlbVwQ199aEY1MfKLXtL0SKJHMN/ZCuVVec+4xed/Tn7qSxs8P4OF6ssUSfpI0qa+RUx9nIebGe1k0FaO0DGn10=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=persistiqalpha1.pro; spf=pass smtp.mailfrom=PersistIQAlpha1.pro; dkim=pass (2048-bit key) header.d=PersistIQAlpha1.pro header.i=@PersistIQAlpha1.pro header.b=m+y0oZCP; arc=fail smtp.client-ip=40.107.57.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=persistiqalpha1.pro
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=PersistIQAlpha1.pro
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8683B6BFA;
+	Mon, 12 Oct 2026 11:43:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791805412; cv=none; b=IMv6ZqYYKdg7mI3KJvgGPIi2N2XKmm9VyT/mFI4jMdiSudLH7Proa3IOvcM0O2thpEtGaSOuC03m7T5jMOxQxcmxt3I/W/iMhmjfLvW8PbX7mE0yziOfsxxMpibK9VJJQj3u5E7khJXYYzz8U2n5rIDio4zg9F1rTGt7EEyWQYM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791805412; c=relaxed/simple;
+	bh=QywlOtHVCWjGzDGEYVoq8CHeQJUpWd2ryrHm5jfxzoo=;
+	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jG0tCbPKB740w0E0nw5kkBuQsR8GuJhIH+29MlmLCHaNRmNsbn5kgRT9fWnT4tFE+FOyp/m+u70LfV4Ur4jDvu1Vk3ukiqKaOb7k1kJn3e0p7sP/E6B5RvlqenZG5GfFwazJkpJ5VqjRSdBgqX2ZoLovxmgGaKXS4XooL2WbbwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XD8fruwF; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=PersistIQAlpha1.pro header.i=@PersistIQAlpha1.pro header.b="m+y0oZCP"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IvQLjjZBnwJ/ES2s6T//lwHjTXrbFYypoMjRXUgyFDLZsj2tiHYfH/Je5vD/Ecb2jX0+P18pYKULPvAlnKrfNujVAEOOP7u2xoUP25xq0/ZzZXfXxmSK1ruz4vUh/PaGTgGuIOGOV3kNE4c/cAkHUQI2Odc2IsrIwotC8NCssPdHf73jX0z1hsQyzNw77tJBBpZPOjsZ5p7T+uYSqfgV8smt/i7OJwHll4OZ5UZjJxQ1xdYOtq5owCVJuS9D1T969BLwMgw9fvWHnYn662Sw4c9E1Ubob3PIZBvcsSMq7qzgC70XU4G18crPJa8mJdUcvj0L/b4zSb6bJhQCKXjWCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fcdvUZFhqn0t+9QHh7tuQuagRQlQHELG2YJMbi+iUa0=;
- b=s5Bmw2ck66HsrtANNtqlMY5SrudXZzN41LdqCMAvNv4JWTDQXhpPBLORrBQEgMWRhy5hG/ozRm7eZLJYf77M62gFjC9dncGAX8Y0uddg4la3OTFNP2r79Adttcjb0eVQAqeT5VH59VABuYw05pAMkTvqNoAsud/842ZxHYAXxuzV5U6WfV53ad1FFsxL8NkCH3ocdCFvA+jmoXpcwxVpwA5pDMNnwCIZ4SHPZQ8RY4HvLyg9o5FyuBvOaoquzyiX3hjHg3NU8w34BlafRXmOnMfNQy26HaGUi3FNFN62jfzDaFynaGgZSUL7AJzLwEVlUb7HHTZC18/umlEF/+wY6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=persistiqalpha1.pro; dmarc=pass action=none
- header.from=persistiqalpha1.pro; dkim=pass header.d=persistiqalpha1.pro;
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=PersistIQAlpha1.pro;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fcdvUZFhqn0t+9QHh7tuQuagRQlQHELG2YJMbi+iUa0=;
- b=m+y0oZCPXneNFsZ6C3LDvNHjIfxrfoenryDy6yZccNNMdcYHNvmNTNyUN2zuLdBm4H3iYn9PuH7cAG58bSZh6FP4wWEDorXYF0COpaDSTAbnvAoLzcJIMetM31N/Xz6x00LmSZexEu4B+SJDE053PD0XHXaVAx9V59a9b8NsYBgewZDVd/fGlRnIjIFE5yRzLy/onRnHtqDUZJ7IDltUmGTNj7DbqP1jZlP6gCm3k0CXISqN65vFCv4MXJjpD5tdlbn3mrFmlIOpxPntYbpbpAMeJcbtxUAfqhySp15OgU/seb1II9Nfy6aVJu0yud1CcxuULHrl4O3ib5FVxHUGOA==
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=persistiqalpha1.pro;
-Received: from MA5PR01MB12114.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:1bc::12) by MA5PR01MB12677.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:1e7::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.11; Mon, 12 Oct
- 2026 11:42:43 +0000
-Received: from MA5PR01MB12114.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::5e2f:fac0:972d:8c93]) by MA5PR01MB12114.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::5e2f:fac0:972d:8c93%5]) with mapi id 15.21.0522.009; Mon, 12 Oct 2026
- 11:42:43 +0000
-Message-ID: <01a12fec-034f-70cc-9fc7-9ac4a0c0565c@persistiqalpha1.pro>
-In-Reply-To: <01a12850-490a-78bd-bbac-a07716cf46f8@persistiqalpha1.pro>
-References: <01a12850-490a-78bd-bbac-a07716cf46f8@persistiqalpha1.pro>
-From: Christine Bennett <christinebennett@persistiqalpha1.pro>
-To: mptcp@lists.linux.dev
-Subject: Re: about network protocols clients
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 12 Oct 2026 11:42:38 +0000
-Content-Type: text/plain; charset=utf-8
-X-ClientProxiedBy: BN9PR03CA0721.namprd03.prod.outlook.com
- (2603:10b6:408:110::6) To MA5PR01MB12114.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:1bc::12)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XD8fruwF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00E911F0089D;
+	Mon, 12 Oct 2026 11:43:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791805408;
+	bh=5UxJrnWb6DUWlRK98/7z/XIw7Ci0cIBCbPmLnyjbiss=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=XD8fruwFh0qa/PYAcaRWNY4ybAX/Xa59SwCqMrxJZWurpcbLbolbAJ4VrdISih0xY
+	 81j5lHiFbzQAhtzYc2mLNjdtmsi6DWFYpow2gqnC8qzT5I5H4AAJGLv19RrF1CiNv7
+	 SAPhp4LCJbJrSTE85fkrRBYrCpdShlI4StCjIAPeeiKBts4lEUeJjydmHDti7wdN4a
+	 hRkDQugJ+4U+FAlcnGMtOsU01Hxn0KT6ptuqbw4Vqlc6T+j9PxeRDI7xBXkVPtFJNs
+	 S0fO0+KmizjW3fxR3LYObD2cTT2QYAWZaEg3HnYFcF+/gtQZUAU+ig2scqm8o9J5JI
+	 cA15IWBJHOiYA==
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: sockopt: test passive Fast
+ Open early write push
+From: netdev-bot+sashiko@kernel.org
+To: rameshsv06@gmail.com
+Cc: matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ rameshkumar.t@phytecembedded.in, kuba@kernel.org
+Date: Mon, 12 Oct 2026 11:43:27 +0000
+Message-ID: <179180540754.434549.14278237692861809718@kernel.org>
+In-Reply-To: <20261008111003.136143-1-rameshkumar.t@phytecembedded.in>
+References: <20261008111003.136143-1-rameshkumar.t@phytecembedded.in>
+X-sashiko-severity: High
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MA5PR01MB12114:EE_|MA5PR01MB12677:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6b6794e6-2f49-4439-704f-08df2855ed48
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|366016|1800799024|23010399003|56012099006|18002099003|22082099003|3023799007|10067099003;
-X-Microsoft-Antispam-Message-Info:
-	OHk/7Tkr0k02XUo4GRE9fLxNwUn35TSehBGM8dkZ/reRCU5KLMApfljPE3HPHpXryDTE4witMXVd6XpltNXM7+G20PdUSytFqIqirpEf2AOyrRDWaGHWPorOn6IGot+s5++DLLOEJbwlVHQXZqKBC8Eeb/jviT7bv4mfg0ESE5Ar2iXj+rG+RONlQyQDuDp4Nl30Iww0qwvm1Gq8jAWU5DhdyECjtbdNRE8IPcAQD0W/5EC9xv1/Ka4MlAHaNUF4I7lFDw1e40s9D0ZiyyUF6TCeiGbY4+BB+XgY6lG0mgVLhH//ZcFm3xEqR8TO/bTKqIb9peUxNqmv/Lkv2Jk6N/n4jaojrpNWkSKpKtg7D6/mMcPGdTuiqxaXjrZnIPNZDBUag7fT2f8s3nVjF0hHeNKnSX6om1H41uB6N5NcLui0Dh4byfS2zG4WoC8pxVZL6zdn+w2iSB9+6J1XcGhlfxnd/CD9v+CqHk7E1YSHvYEQEjqpngr5mzyvImNdJ8S6aDfR1yboCWb2Kbhkephm9aI97AknGz9C8wvD/3JAhAdqD0KPgTGajRFc5sO2Xju9rfOh2L8Jq+deyXqUiHHu1lUzvVw5l8Dfu8jsOaGFQfZNTffTUXBxtCWsiitflYmThT+KfNxXI9W1BQjbQm7F8MZctalG0rW+LtvzGS3XF3Q=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MA5PR01MB12114.INDPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(23010399003)(56012099006)(18002099003)(22082099003)(3023799007)(10067099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bTdRdDEva25aLzZESitoTU0zUWRSZDNuS0RYTGZJb1dRVGhHMmZnUW45a3A4?=
- =?utf-8?B?R2NJU0x6Zk5GRi93eTZjaDRmOHVxaXFoeHo5R2Y3SElDcEpGVkt0N2NmODN1?=
- =?utf-8?B?VjFsajl4Z2t4Y21vTmVPZFB1STFZNVBHWk40eUtFcXZVVCtrdEFuMG9ZZm02?=
- =?utf-8?B?Z0N0L1BpcU1zYTJqdEVJa25Xd3R4VGNPQXRtUVhhUGFva0xoUXFOamh0WFBq?=
- =?utf-8?B?SnkzNmhjOFhjaXZKMTRLYnNZT2grS0ZmSjRkQXdBNzlFdXljelBpaUFoTk40?=
- =?utf-8?B?NXZ6cVczZHVRaUVsUi85bmVZUGwwb3R5THNaQVpVS0pRRFB0UDFQU3dCU1Zw?=
- =?utf-8?B?bC9lUU10Wk9MWmFvYko1WU9CREo0ZVdtcUF0RTdOcDJ5UWJja0FxL1lacHFK?=
- =?utf-8?B?SFIxUmZoOTBVYTduSVZhM24rTUl6bmd4dk1uZkF5alBMQVQvNVdWa2ZNdW9R?=
- =?utf-8?B?ZFUwQ0dDdGh2Y0RhVVdUMXF0TUVmTnQ0Yk16d1I5R05aWk45SDJyRy9SRjYz?=
- =?utf-8?B?YmRFTDZYclFJMWduQjZ4OVY0V3I5TVdyTDdsaUgzSmxZbkhmL3VUazcxSllG?=
- =?utf-8?B?OERKazd6bTJoVkZ0M0hGKzFrSjJIZFZtUkxnMmJCbWYvdnB5bVdSeDlqNjJt?=
- =?utf-8?B?WEpsb1ppS0hVUjlZSEFIZEhtQlYrTERqMEk2VUN1UjJ3NHg1RGQ2VHVYWVU0?=
- =?utf-8?B?NU11TjVGOENaN081WitUMW1tYi9NMTVEMVlEdXFwNzJWZTZTQjg5V1cyL1Bo?=
- =?utf-8?B?N1JBbGNYTDZ3ZHdXbDU3d0JrTjl2V21WVWxhcEN2em5mbXZ4NXlxZUhBU3VD?=
- =?utf-8?B?ZnNjbVpDZTFzejlaNmVFUjRhV1JMeHlhdTAvaGt3VmhyQzJqRDU3REQrbkFq?=
- =?utf-8?B?QjZjY2RETVNqNmZJUXZlK0NGd0xqNGZFeDdPSWJRdG5vS05YL1JKSzd0VDE3?=
- =?utf-8?B?QWgvaDMxT3BocEtBWm0wNGp2aEMwMHUrQmtRZDBkTmhUZndOMnFjREZETldy?=
- =?utf-8?B?SlFsa3NmbjM2Y0U2blh5Rlhsemw2VG5EUjZYeHNyeDhFaTRoU1dEVlRSTmVG?=
- =?utf-8?B?clhGRDFRaHlkaUY2VVZLTHNMNGl1d0UydmZSMTUybmY1T2FWaHF1UE5TLy9l?=
- =?utf-8?B?Rkd5R2dlL1NEeXllaEZTVEJtdTB1TXRuRGVrcGViZk5uZXJjRXJ0bU5oMjBB?=
- =?utf-8?B?bFEydjZabkRqQ0hSb1NoRGxTQXI2OXBhbVV4a1pvYkVYTVNYTlFmRGFhNEVM?=
- =?utf-8?B?VHM5VXRlci9QVUZrU1puazFJdnh4VXEzNUlqd2F0U295a1VrMXBGM3dBSGtt?=
- =?utf-8?B?d3FST0VTNXVTcTNkbXQyeXkya0xCRFdScEFGZURhZkhoNjdRb3dXNjhjaDRE?=
- =?utf-8?B?YUdJTTFRVGp0YkhsanJpV1BUdlV5Qk1BYWNMWEE0K0dUN3o5c245UXRuR3hl?=
- =?utf-8?B?WDBGUlM3TGF2NlJJSkF6UjQySzczbkFSY0NBcGxmNkE0Y0ZRak5vVXRwc29K?=
- =?utf-8?B?ck5vSG10ejJWenZSZzhRekJWM0gycDlTNDBNaldxcmpVMFRMc016aVVYSW1B?=
- =?utf-8?B?NERPM2ovMHUxT3Nid0ZvUnZaNThhemkxZXNGU3hGK3FOeVFTblp0QVVCLytN?=
- =?utf-8?B?VzEwOENsSnUraHFDZk95WW9IelBjbG9TWXFTMkNyY2NZaWxHdmR1dHNGeFZs?=
- =?utf-8?B?NDk1ZFFtSzl4UTl2UU8vQXdXYWxTMHJNTDdPalR5MGZpVDRaOE5VVGpGUUZ2?=
- =?utf-8?B?aUNVSnlLWGI5UHpzYkovdjd3OStmY2ZEa1dPYWhieHdoVGdCam9XS3ROVCtz?=
- =?utf-8?B?YStkZVBVZWlLRDYrdHlqRGVva3MyWXpaS1JQamhUdWdoWnJCTEJReklwZnBC?=
- =?utf-8?B?eXk1eU93eGo0SFM4WmtMaEtEUHpHdmVxaktxZDh6TVBYaGNBQW42TExjZkYw?=
- =?utf-8?B?OWVpWGl2MHJ0bmE1ZWlGMnUyUy94T1Mza2x6dnVWek83SnVaN2RjVm5vaitP?=
- =?utf-8?B?SlJKVXNhaWZFc2d3WjJhUFUxc09xdmJzNDdsUFdtRGlZbGJENW1DbzY2TnFU?=
- =?utf-8?B?T3NVanZJS1NPZi9JZ2lSMnVTTkVHR1V1VGMyT3pHTlMvR2pmUG5OTmIyNkNu?=
- =?utf-8?B?VXNCK3BERU4xTEdoZ293S1RFazJXMmZwMW90aFlmMVhzK1hoTHlBbkROaFc2?=
- =?utf-8?B?N0h6V2pOcEovTnkvbm4zZ2NIZSs4Y24vdnNJelN3WUlBNkNXMFBtOVF6dDh3?=
- =?utf-8?B?R05kVXRFaUphdnl1dmlnWHh5SUtrTUlrd05zRWZxU0dLVGZha0xkT3ZnRVE3?=
- =?utf-8?B?NXNubkd6OHhlVUU3SUh0ckZlYVRKYkJBUUJ0aXQzbWY1a2orU1lDcXE1TlRV?=
- =?utf-8?Q?duOxNZ+PCsJNFybs3uEmC0bEU8XicqOL1yz4m?=
-X-OriginatorOrg: PersistIQAlpha1.pro
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b6794e6-2f49-4439-704f-08df2855ed48
-X-MS-Exchange-CrossTenant-AuthSource: MA5PR01MB12114.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Oct 2026 11:42:43.1666
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 207f505b-349f-4fb5-a048-321d02f8ab9e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Z3PnKtZ0InUUq7B9JwoiZszeHs4z5CHu17oCUrHlEoRDFRo0XemppAnqoYF5HA9KZ6WJFLRZtqMM4WF7jwrNXhjR2e0YyT2Wvzjwh6/433oOVqg8dcPkeKgeZmB9NDLd
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA5PR01MB12677
 
-Hi,
+Thank you for your contribution! Sashiko AI review found 7 potential
+issue(s) to consider.
 
-I know you're busy, so making it quick. PersistIQ could help MPTCP enhance =
-its client bookings consistently.
+Critical: 0 · High: 1 · Medium: 3 · Low: 3
 
-Mind a quick call in the next few days to see if this can work?
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
 
-Thanks!
--Christine
-PersistIQ
+- [High] The new test never runs the code path it was written to cover.
+- [Medium] do_fastopen_tests() runs the TFO subtests without first
+  checking that the kernel supports MPTCP Fast Open.
+- [Medium] The TFO branches of client() and server() in mptcp_sockopt.c
+  skip every MPTCP-level check.
+- [Medium] Even if passive TFO were actually triggered (see the
+  sysctl/cookie finding), the test has nothing that keeps the handshake…
+- [Low] The commit author is 'T S Rameshkumar <rameshsv06@gmail.com>',
+  but the only Signed-off-by is 'T S Rameshkumar…
+- [Low] parse_opts() in mptcp_sockopt.c now accepts '-f' (the getopt
+  string changed from "h6" to "h6f"), but die_usage(), which both -h and…
+- [Low] Result checking in the TFO path is fragile and weaker than in the
+  non-TFO path.
 
-P.S: let me know if irrelevant.
+--
 
-On Sun, October 11, 2026 12:15 AM, Christine Bennett <christinebennett@pers=
-istiqalpha1.pro>
-[christinebennett@persistiqalpha1.pro]> wrote:
+selftests: mptcp: sockopt: test passive Fast Open early write push
 
-> Hi
->=20
-> I previously mentioned that I=E2=80=99ve been helping software projects f=
-ind clients by creating personalized email sequences, finding targeted pros=
-pects, and booking them meetings with warm leads.
->=20
-> Would that be interesting to you?
->=20
-> Best,
-> -Christine
-> PersistIQ
->=20
-> P.S: let me know if irrelevant.
-> On Thu, October 1, 2026 12:07 AM, Christine Bennett <christinebennett@per=
-sistiqalpha1.pro>
-> [christinebennett@persistiqalpha1.pro]> wrote:
->=20
-> > Hey,
-> >=20
-> > Came across MPTCP, and wanted to check if you are looking to bring in m=
-ore clients for network protocols?
-> >=20
-> > If yes, worth a quick chat to see how we can help?
-> >=20
-> > -Christine
-> >=20
-> > Thanks,
-> > -Christine
-> > PersistIQ
-> >=20
-> > P.S: let me know if irrelevant.
-> >
+This adds a -f option to mptcp_sockopt. It enables TCP_FASTOPEN on the
+MPTCP listener and TCP_FASTOPEN_CONNECT on the client, then exchanges a
+short request and reply. mptcp_sockopt.sh gains do_fastopen_tests(),
+which sets net.ipv4.tcp_fastopen=3 in ns_sbox and runs the helper over
+IPv4 and IPv6.
+
+> Signed-off-by: T S Rameshkumar <rameshkumar.t@phytecembedded.in>
+
+[Severity: Low]
+The author is T S Rameshkumar <rameshsv06@gmail.com>, but the only
+Signed-off-by uses rameshkumar.t@phytecembedded.in. checkpatch reports
+this as FROM_SIGN_OFF_MISMATCH.
+
+Could the Signed-off-by, the author, or an explicit From: line be
+updated so they match?
+
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> index d68515b7903b8..861de909abbd8 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+
+[ ... ]
+
+> @@ -271,7 +280,7 @@ static void parse_opts(int argc, char **argv)
+>  {
+>  	int c;
+>  
+> -	while ((c = getopt(argc, argv, "h6")) != -1) {
+> +	while ((c = getopt(argc, argv, "h6f")) != -1) {
+
+[Severity: Low]
+This isn't a bug, but die_usage() still prints:
+
+	fprintf(stderr, "Usage: mptcp_sockopt [-6]\n");
+
+Should the usage string also list the new -f option?
+
+[ ... ]
+
+> @@ -726,13 +738,36 @@ static int server(int pipefd)
+
+[ ... ]
+
+>  	alarm(15);
+>  	r = xaccept(fd);
+>  
+> -	process_one_client(r, pipefd);
+> +	if (do_tfo) {
+> +		char buf[64] = {0};
+> +		ssize_t n;
+> +
+> +		n = read(r, buf, sizeof(buf) - 1);
+> +		if (n <= 0)
+> +			die_perror("read tfo syn data");
+> +
+> +		n = write(r, "PONG_REPLY", 10);
+> +		if (n != 10)
+> +			die_perror("write tfo reply");
+
+[Severity: Medium]
+Even if passive TFO were triggered, what keeps the handshake incomplete
+while this write runs? server() does xaccept() -> read() ->
+write("PONG_REPLY").
+
+On loopback, the server stack is likely to process the client's final
+ACK in softirq before the process returns from accept(), or between the
+read() and the write().
+
+Nothing in the test holds that ACK back (for example, a netfilter rule
+that drops the final ACK). Nothing checks that the socket is still in
+SYN_RECV when the write happens either.
+
+Wouldn't a normal write on an established socket still be reported as a
+"Fast Open early write" pass?
+
+> +
+> +		n = read(r, buf, 1);
+> +		close(r);
+> +	} else {
+> +		process_one_client(r, pipefd);
+> +	}
+
+[Severity: Medium]
+This TFO branch, and the one added to client(), skip every MPTCP-level
+check. In the non-TFO path, process_one_client() and
+connect_one_server() call do_getsockopts() (MPTCP_INFO, MPTCP_TCPINFO,
+...). They also check mptcpi_rcv_delta and the bytes_sent, received and
+acked counters.
+
+The new branches only do a plain write/read exchange and never call
+getsockopt(SOL_MPTCP, ...).
+
+If MPTCP with TFO silently fell back to plain TCP, wouldn't this still
+pass?
+
+> @@ -844,6 +879,26 @@ static int client(int pipefd)
+>  
+>  	alarm(15);
+>  
+> +	if (do_tfo) {
+
+[ ... ]
+
+> +		setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
+> +		n = read(fd, buf, sizeof(buf) - 1);
+> +		if (n <= 0 || strcmp(buf, "PONG_REPLY") != 0)
+> +			xerror("Fastopen early write failed: received %zd bytes '%s'", n, buf);
+
+[Severity: Low]
+On a stream socket, read() can return fewer than the 10 bytes the
+server wrote. Could a short read here cause a spurious failure, since
+the result is compared exactly against "PONG_REPLY" with strcmp()?
+
+On the server side, the return value of the final read in server() is
+stored but never checked:
+
+		n = read(r, buf, 1);
+		close(r);
+
+process_one_client() checks for EOF instead:
+
+	ret3 = read(fd, buf, 1);
+	if (ret3 != 0)
+		xerror("expected EOF, got %lu", ret3);
+
+Should the TFO path do the same, so that read errors or unexpected extra
+data are not silently ignored?
+
+[ ... ]
+
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> index b4e3eddc9cf21..e88a8bbeb6e36 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> @@ -359,6 +359,39 @@ do_tcpinq_tests()
+>  	return $?
+>  }
+>  
+> +do_fastopen_tests()
+> +{
+> +	local lret=0
+> +
+
+[Severity: Medium]
+Should this function check for MPTCP Fast Open support before it runs?
+
+On a kernel without that support, one of two setsockopt() calls fails:
+TCP_FASTOPEN in server() or TCP_FASTOPEN_CONNECT in
+sock_connect_mptcp(). die_perror() then exits with 1. The script
+records "Fast Open early write v4" as a failure and sets ret, where a
+skip would be expected.
+
+do_tcpinq_tests() in this script already handles this case:
+
+	if ! mptcp_lib_kallsyms_has "mptcp_ioctl$"; then
+		mptcp_lib_pr_skip "TCP_INQ not supported"
+		mptcp_lib_result_skip "TCP_INQ"
+		return
+	fi
+
+run_tests_mptfo() in mptcp_connect.sh does the same with
+mptcp_lib_kallsyms_has "mptcp_fastopen_".
+
+> +	ip netns exec "$ns_sbox" sysctl -q net.ipv4.tcp_fastopen=3
+
+[Severity: High]
+Does this test ever reach the passive Fast Open path it is meant to
+cover?
+
+The value 3 is TFO_CLIENT_ENABLE | TFO_SERVER_ENABLE. It does not set
+TFO_CLIENT_NO_COOKIE (0x4) or TFO_SERVER_COOKIE_NOT_REQD (0x200). Also,
+sock_connect_mptcp() does not set TCP_FASTOPEN_NO_COOKIE.
+
+Each mptcp_sockopt -f run makes a single connection, first to 127.0.0.1
+and then to ::1. So no cookie is cached for either destination in
+ns_sbox. On the client, tcp_fastopen_defer_connect() then gets false
+from here:
+
+net/ipv4/tcp_fastopen.c:tcp_fastopen_cookie_check() {
+    ...
+	if (cookie->len > 0)
+		return true;
+	tcp_sk(sk)->fastopen_client_fail = TFO_COOKIE_UNAVAILABLE;
+	return false;
+}
+
+As a result, connect() does a normal handshake and sends a cookie-request
+SYN with no data.
+
+On the server, tcp_try_fastopen() only generates a cookie:
+
+	if (foc->len == 0) {
+		/* Client requests a cookie. */
+		tcp_fastopen_cookie_gen(sk, req, skb, &valid_foc);
+
+No TFO child socket is created. accept() returns an ESTABLISHED socket,
+PING_DATA arrives after the handshake, and PONG_REPLY is an ordinary
+write.
+
+Neither side checks that TFO actually happened. There is no
+TCPI_OPT_SYN_DATA check on tcpi_options and no TcpExtTCPFastOpenPassive
+check, and the server doesn't compare the payload it reads.
+
+Wouldn't this pass whether or not the MPTCP passive TFO early write path
+works?
+
+This also seems to contradict the commit message, which says the server:
+
+  "accepts an incoming connection with SYN payload data, and immediately
+  writes reply bytes before the 3-way handshake fully completes"
+
+For comparison, run_tests_mptfo() in mptcp_connect.sh connects to each
+address twice, so the second connection has a cookie:
+
+	run_tests_lo "$ns1" "$ns2" 10.0.1.1 0 "-o MPTFO"
+	run_tests_lo "$ns1" "$ns2" 10.0.1.1 0 "-o MPTFO"
+
+[ ... ]
+
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261008111003.136143-1-rameshkumar.t%40phytecembedded.in
