@@ -1,115 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96F73DEFF3
-	for <mptcp@lists.linux.dev>; Tue, 13 Oct 2026 09:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD13A31618B
+	for <mptcp@lists.linux.dev>; Tue, 13 Oct 2026 09:57:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791884138; cv=none; b=p/p8fHxm/gtvLkUKXIxLOJyCIc3gj9LQ64SPrKc94VhELYLuNnhXoibEvaximOHKeOL9yWP4T/bPaD69ztGo8Z3205TMrAW2m/cUtI5pHZMFL4oaNw3q/9rUXUnUnDX5QkCxk8LC3Xpz8jTKsiWILRpm94MiucwUPibChfunjZA=
+	t=1791885428; cv=none; b=p421bECREL6Mguz8G9YB31zXJzuD3YkdZn2eCSLharsaNfgE2jhwd7CYaFr//mRuNE9/LFk1q6e1s6RtsEYaCONvlarud44EyFRz2/sFm5smM3xW8G4W6YZ3zQpcfKv7VvKQRCD/WxdiYtIGdaBycIFIxgYHxytJC8KlLbyP7wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791884138; c=relaxed/simple;
-	bh=uLJ6BPXPCfGHApan3qQoluoOnw9ypsguc5L0VRuuLGo=;
-	h=Message-ID:From:Subject:To:In-Reply-To:References:Content-Type:
-	 Date; b=mHHjMfdiOD0RqotO1dFdyRfQxB1zAfp+Q35VVHTmxV3anNaAh52JE97y0YvwSdQnSGVrCGglp9AbpRNZ/BvpPdc3a0hAyFFh5Z4KqiGeNuMTE+F3TvqsYCJk8K1QqWrUxvWOF/nEH16UoQgnFfk8NyhxcfIks8hpWhBZUZY2d5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZN9K53qO; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791885428; c=relaxed/simple;
+	bh=9wJ8jZ/OUrctPOVdcLBs4Mk2otVTL6937RliX80qf7w=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=s0PmtpGxAoBdix8/En5nfyLdQb/+6iUbay+ee28aEPDWKSKcxYtB/hNV7MwVUD2ZFFdDmbqoQteAfQaYvZla2HE7y+svb5RrLNX2zlHISgo8TTjuiExL04bT9gXAzAo4R01wxK/SwQTujysWzr4G+3iyvjnFDcPRPvmxf307xf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fZtKzloA; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZN9K53qO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 473E91F000FF;
-	Tue, 13 Oct 2026 09:35:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791884137;
-	bh=TFf2DHDDnJmO+egLz/QJN1R2kuV6z1uu7j/xWF+3Hgc=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=ZN9K53qOj0OQT2knrBRCJDoHn0CXZWL8UgFkDCaAZ9ZZrCkZ2pidj5NIYA5o/OpR9
-	 bEg7uqs5SfTYv8WVq/m/BZ7xskd1eCoA19vw/gnL8/TT7lDJgfiCka/+LNdzYsVLhi
-	 w1Z6ny4TXDlbz/aHDYbiF7q3tXYxYZdanjUlxmdgygUZr22h7Af5ScFzQRICmnBIgg
-	 LTQwjIy7LitBu5ig0TGmDfoKtBtaiMY13BUFQxrwCnSMmXcFogztNQ+3hQftJr0m8N
-	 3EYzqmi4Ilnl3CTZrkC1OlQWqjMve41O4cYBXX0HbDWE+RY+iGlH+3aRn4GAiy2Fco
-	 kyBoIvbJ0VBbQ==
-Message-ID: <sashiko-outbox-169354@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next] mptcp: add MPTCP_MIB_RCVINVALIDOPT counter
- for invalid options
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "T S Rameshkumar" <rameshsv06@gmail.com>, mptcp@lists.linux.dev
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fZtKzloA"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-383b4a3755fso1757620a91.3
+        for <mptcp@lists.linux.dev>; Tue, 13 Oct 2026 02:57:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791885427; x=1792490227; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=0ImVH49mGpsyGrFYhCM0XYrDEaC3uAQjsN3k21LfbSg=;
+        b=fZtKzloAHT4jHf67JOARQ9Yh/YWcbKVQCklcxeb/jLe/yQpHAXppRuErUI9PvkNV4L
+         kIOGMCPh4N7zd1D6bqCsrwRt6B8u7399XlwPAWFiLZa7SDxoV6WGwTTKJAK+vJUTfLvO
+         tC++64jay6cEY6Veg1IjrbM1G4AelCNTcvtuU59YX67kzPAzoVm0loBI9w6kwWDK+hA5
+         mMUg83/DUv6ODBya5kMrwns3R0CNymgEmDuxzsqkA0JFY48Il2xtdh2zum5QQhwEGyth
+         OkZzg6agT1Rz68wCDwgiYf9i9LuiDhGdGoHF1bjNaU2VDMO0liVJL97UPsI8OsCpkc2c
+         Oarg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791885427; x=1792490227;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=0ImVH49mGpsyGrFYhCM0XYrDEaC3uAQjsN3k21LfbSg=;
+        b=BTzXvjnM6QCtOPxiIM0t2qdKCCpmhRq9KMGmVBXJad4fe9L+4OOSHfwy5lt2PRMQLX
+         6W3CDXjKdbaDmAeZBLCdn4aT9qDFSUKuN9F8lHBAasbzaD/QO03ApVtQaN+zLWoOzFXM
+         L0eXWrwr6j4kDOprVIO3CYW7Ytpm/xd1PacRWA9jgWq7Gh6t5y4JWb0VWU4NojNKxobN
+         fMwBy7AEbxuO2wuYMetbzQYLqC2nSZ2voRcJ7UYV+OGSRy0AUoRfQ3Rj1AaIBNgxwyTl
+         yGTk9b9XBaTisNxTZw/r8VJdg1paA/b3cGWMLTvF/OXu3LhHadSy5DP8eRdPX+qcwVZ7
+         OYiA==
+X-Gm-Message-State: AFq9FYK1vXl1dEXAXT2eMGZ4kfqUmZxDOV+fh7IrO+X5ifbRiJcupVZQ
+	8YhleyCq8su/IYaqEtL6ZqG/zmNs39KEdGXjezBFY2vnimPypX+teyM=
+X-Gm-Gg: AYBFou2NwmnYXZ1BmX3LuHv17FLwi8VQCAOS16T8lK0+O08qBVMVnOuDLhgDxAoc6nB
+	wordGOibqbmTwmOkpkvJ578tupju0W4mq8WI1AaiYtvCg90dPtt5Sib7bARkShZValDw5iHhGxE
+	M0sNSmYvrA6S2n0Qj3L7KwdRkO/ECwrptwH9Tdjrspu95KivBLzV7+jecSlF90pX35NLollXGRz
+	4/W6Q/T6ZpU6C1LEmpRmi5AezR5pr6xs3WD+eWJK8wf7SnYjNkmEVF+h5f+cU1N1CgSFnL6qtOb
+	UwyujLAngvKrZUL7vSyuDt9lM0Th3IwQtTBJQ9aOpsomOjK99dQRhjXcGcKLJZ4OYldRBqgmwZG
+	9U7MFs64cQwgpYm3KBUBM6TkGkCJjs1fFTh7BUmou69hlJzw6GOv90VKRc/y98PYtFkFpPkEOwU
+	9FWW9qZBcv3kGGhTz5lplnpJVqzBEzzEj9myd82Ptk1x3AE91Z2i4dA1LmDxXuKry9C51QiCg5x
+	b8okuuLbHU=
+X-Received: by 2002:a17:90b:1c08:b0:3a4:f75d:d1a3 with SMTP id 98e67ed59e1d1-3ab3ab29dcbmr10638688a91.32.1791885426982;
+        Tue, 13 Oct 2026 02:57:06 -0700 (PDT)
+Received: from [127.0.0.1] ([40.75.131.25])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ab338676besm11493802a91.1.2026.10.13.02.57.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Oct 2026 02:57:06 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: T S Rameshkumar <rameshsv06@gmail.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
 In-Reply-To: <20261013085604.115478-1-rameshkumar.t@phytecembedded.in>
 References: <20261013085604.115478-1-rameshkumar.t@phytecembedded.in>
-Content-Type: text/plain; charset=utf-8
+Subject: Re: [PATCH mptcp-next] mptcp: add MPTCP_MIB_RCVINVALIDOPT counter
+ for invalid options
+Message-ID: <8d149bd3-7dbe-c337-13da-b0facc875405@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 09:35:36 +0000
+Date: Tue, 13 Oct 2026 09:57:05 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] mptcp: missed MIB increment for backlog packets due to mptcp_skb=
-_net()
---
+Hi T,
 
-commit 69466d93fa353450c6162f23ad6457846e513a9d
-Author: T S Rameshkumar <rameshsv06@gmail.com>
+Thank you for your modifications, that's great!
 
-mptcp: add MPTCP_MIB_RCVINVALIDOPT counter for invalid options
+Our CI did some validations and here is its report:
 
-This commit introduces the MPTCP_MIB_RCVINVALIDOPT counter to track invalid
-MPTCP options encountered during parsing. To perform the increment, it atte=
-mpts
-to resolve the net pointer from the socket buffer in mptcp_skb_net() by
-checking skb->sk, skb->dev, and skb_dst.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf: Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_n=
+et-next/actions/runs/38375270540
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/628
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/248a54272f=
+d4
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1184533
 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index adbf8e0773dbb..a1af2acfa791b 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
 
-[ ... ]
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-> @@ -419,13 +422,28 @@ static void mptcp_parse_option(const struct sk_buff=
- *skb,
->  		break;
-> =20
->  	default:
-> +bad_opt:
-> +		if (net)
-> +			MPTCP_INC_STATS(net, MPTCP_MIB_RCVINVALIDOPT);
->  		break;
->  	}
->  }
-> =20
-> +static inline struct net *mptcp_skb_net(const struct sk_buff *skb)
-> +{
-> +	if (skb->sk)
-> +		return sock_net(skb->sk);
-> +	if (skb->dev)
-> +		return dev_net_rcu(skb->dev);
-> +	if (skb_dst(skb) && skb_dst_dev_rcu(skb))
-> +		return skb_dst_dev_net_rcu(skb);
-> +	return NULL;
-> +}
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-[Severity: Medium]
-For TCP packets processed from the socket backlog queue, is it possible for
-mptcp_skb_net() to always return NULL?
+For more details:
 
-When a packet is processed from the backlog (e.g. via tcp_v4_do_rcv()),
-skb->dev is cleared unconditionally, skb_dst is dropped, and skb->sk is not
-yet set for incoming packets.
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-Because all three pointers are NULL, the function will return NULL. This wi=
-ll
-cause the MIB increment at the bad_opt label to be silently skipped for any
-malformed options present in backlog packets.
 
-Since the callers of mptcp_get_options() generally have access to the relev=
-ant
-socket, could they pass the known net or sk directly instead of deriving it
-from the skb?
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013085604.1154=
-78-1-rameshkumar.t@phytecembedded.in?part=3D1
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
