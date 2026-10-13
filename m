@@ -1,349 +1,143 @@
-Received: from mail-dl1-f54.google.com (mail-dl1-f54.google.com [74.125.82.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075D2358D00
-	for <mptcp@lists.linux.dev>; Tue, 13 Oct 2026 08:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DB53BBFC9
+	for <mptcp@lists.linux.dev>; Tue, 13 Oct 2026 09:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791881773; cv=none; b=enNCPwuSOkL1U0Q2kTHRGjSnCcg2jjUdM9Oe9qB6aB/Djx+XQGpDTtZ9mdLhMp/CDQKQtjfnyFwLC7hgL+6ro20qIwbJjgfnEcU6oZT+knHNspYeFgrYi9XQKT16Q3NMbeZj93dcy80NAgzUIQS7HnDQWJPtiHxMXLl9KOuw1HI=
+	t=1791882102; cv=none; b=WlMBm8tcPu8oxrQv2J8v/RQ7G3Wekm1vdW3+eBY4PqJQfok4ZAjKtgy0RgQgpc5j7yqOCWDyS0JK5vMmvfyPgrCuqflQpS2ZMmo9YqB6IG4GevZxtz1bFZJSzANrby0Zaw/e5kEnbP13qqxqwJO9IWYAACmWJ7uYIb/z0mu+Oe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791881773; c=relaxed/simple;
-	bh=Xy+MTukBcfUtxBhKAPV4uGJUiRsjgNxFkikpxfzdIuE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lvhOLIS/SZRm7PqBI5NZrtJVufRr1/K521Gsiuj5YH24MVR3RNlfZVSb4tRkXRxxe3muRciAjZivnLAVTdMoXmI+eeeMIItCgcUDD3B4Idj+MtuoMrc86luqr5E+AsGLiwDw6+YbTu6ljukhmao2XomXmIhl/Y71f7+75l5oCWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j20XRgdz; arc=none smtp.client-ip=74.125.82.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791882102; c=relaxed/simple;
+	bh=ZXOKzo1V9DmP1+XK9esIWzWwFpDvHcvcMK1fr30OY2w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=mx8Gq1fb+cQ3gvW0WSkA4+giKIkV/ScpNAjzSTkK4U09hVdAolhB3rddW3P9ZY8IZiSEp5sOJWlGnYhh0DsLdqatTBEYUYIugvGk1Kq+sXAX/M9F9XJWNPeXETOGCK1+zbuDGmhQ6ZA4IjjK9FaCjrUTf0SPIMirZ8epbF0CEcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U1UX+5zu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j20XRgdz"
-Received: by mail-dl1-f54.google.com with SMTP id a92af1059eb24-141395927feso4879262c88.0
-        for <mptcp@lists.linux.dev>; Tue, 13 Oct 2026 01:56:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791881771; x=1792486571; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=/ydoXtL1b+rm8DE6mQtlEhB4i5rcpR8iVwntBET9sHc=;
-        b=j20XRgdzi01BO563xrBJp2q/Dzpae+YhXk5XkO8gZ/Vmn0Xx7jM8OVY1Tjip34cCtp
-         yDDLUn9h4B+xS05be7JEdck3Mrn+IBgKI285vmR4v+kd1/OqRyxU7DFw4yRiwgZKT9GI
-         lEWN/vkwWXks1A3rEZeaYcQzmnpUVopgsVI6lm8xqOHgJ1gPp3kH1ALYrood1xxjBY8q
-         vVqAmQtf/e9xrNClTWy1AMHCcNEKKR4F4JeFs3V1xx8BGoSiRFjpclHm1naYLtQdRGfD
-         P8u7PrPLKc4ytoy4bHkcOdybsL39Quz0JMF5263e1gWxGId1nKvot6A3voeWv2FYzTUS
-         iDwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791881771; x=1792486571;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=/ydoXtL1b+rm8DE6mQtlEhB4i5rcpR8iVwntBET9sHc=;
-        b=N3jXzbf6oZtWI0Ae0Gm9g/GSUTPKUviBYa6OXWZPzC7GBZuOmZ/XOsp9mLtO6pcX91
-         V4z2tvjnspUUS9ZbuM68Zw3rPw5HRPPk1sYGRTaZtjVt7u+dVqEYZ9Ub2GwvnapRSHwL
-         sr0BoYGhUFgsVpQ2FGMdhpwkaZpNX9STZ+UfDK93vML1OHopMZnWZrJX49PpZqDx6jkU
-         hUu+DVV4yfAsWn0lx0c09MJG0pbcbPsG2rhiaGm+fbHocREZ1GHJm24KqnI5yfqXRs3f
-         rUHhEK9Mf3ixb6uS9Pld836ibcGLUw+JK2OrkEH5ynYaonof3nbHxcfe7FxU5w5R9XRR
-         iX6g==
-X-Gm-Message-State: AFq9FYKWxa17nUN6czVb8SNkIvTXzjrkQL3KCXn+zf8oZKPGBh8aAZ/i
-	DNurmwKOoe+aGNbyYZDMu7jpUSBNTHN0a3tFI6ZdckWAG+MlnPcu8MZHPL7KU+PHufo=
-X-Gm-Gg: AYBFou10EqqLdMruqoWB0yoZVngiq/5fGMOJhG7Omx7Revastvsth+t29nzqxkAYC+b
-	Vt8WI85RpL5QslER6xqxOpLa3Df9iX/4fwIAbR6dhBdHgwAsaE14g1NqBYHPaf8FF4ZEQIwchIq
-	aMvm/kJASb3Yt4CZZsxpNWlXUlBtQcMQOEUbaxV8iemb9cgTYU9Dblffhz7j2HNZVmNpWet9x1p
-	T9pYaeiFjsb2ozegt0rqgnUANL1QJ80t5sujA1gf7y4RCisZi3aO1/Q38hQnzACPAxOzv+MCHox
-	5BxvJfkZl3twin3ct2t81uVoIXMMycdBPVCLO7kDoojDKh0DgGEG6LNDKqmFaNnSCEEog83BBV1
-	C06ooluD5u7p5GPX9o7P9co5Gh10ksj+sKZ+/URoRtxo69J4aHj9AdohprOZsJXLOkneIi8zaKo
-	+imyf04hxOkelkXwTI6FqQtg3wXlPtBbxgjpCLJCcBpYrZ5xk2TNYoVyYbfYeJ/7BqLmgKLellS
-	WXFvg5N
-X-Received: by 2002:a05:701b:4211:10b0:14a:a6dc:9cd7 with SMTP id a92af1059eb24-16a57a16ef2mr16558700c88.2.1791881770655;
-        Tue, 13 Oct 2026 01:56:10 -0700 (PDT)
-Received: from ramesh.. ([124.123.89.203])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-169a3f6186fsm39034150c88.14.2026.10.13.01.56.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Oct 2026 01:56:10 -0700 (PDT)
-From: T S Rameshkumar <rameshsv06@gmail.com>
-X-Google-Original-From: T S Rameshkumar <rameshkumar.t@phytecembedded.in>
-To: mptcp@lists.linux.dev
-Cc: matttbe@kernel.org,
-	T S Rameshkumar <rameshkumar.t@phytecembedded.in>
-Subject: [PATCH mptcp-next] mptcp: add MPTCP_MIB_RCVINVALIDOPT counter for invalid options
-Date: Tue, 13 Oct 2026 14:26:04 +0530
-Message-Id: <20261013085604.115478-1-rameshkumar.t@phytecembedded.in>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U1UX+5zu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D79691F000FF;
+	Tue, 13 Oct 2026 09:01:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791882101;
+	bh=+ImHXOEkgTk2km2TUydmpBsfnqhwMqLVX/w7XmO/hdw=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To;
+	b=U1UX+5zuGeJYXlPNM8/fUA7MJzzzbD6peOMOyEZRqT2bueVqopVZbFWqQZQUA5lC+
+	 xmiXtWjsxAMV+4+UJcxTslWaBHHPhE6J6ZTq3a12t8vwHX6HHXGExRIoFv76XnqKrV
+	 5ks7BN5E7K76itziblnXCa22BUZoD035gE0bhZUL5hAhD+8J+qk9+FnBnZvPwUOjWx
+	 0GjofMLzktML+jl0ZIcSA2ZP1dAPPFR/5sc+RNQY9ZLSBSDpZSE5tkMXr6fhdr6C7L
+	 nNQxyRytXbIsZGvLSZOXt1eTMWLD/yE2ELplbvHjGu6ySHuQBSMHF7EKeLMbvpFTRd
+	 o3mcY5dHGGX1Q==
+Message-ID: <f6c396a4-13bd-4b6c-adc2-be2d8929e14e@kernel.org>
+Date: Tue, 13 Oct 2026 11:01:38 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net] mptcp: reset MP_JOIN subflows on missing or
+ invalid DSS options
+Content-Language: fr
+To: T S RAMESHKUMAR <rameshsv06@gmail.com>
+References: <CADRhS2vwE7QCAPgGmt96gCQ7bwHBWJJXG-d0at13ZAO+Z5kHJg@mail.gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <CADRhS2vwE7QCAPgGmt96gCQ7bwHBWJJXG-d0at13ZAO+Z5kHJg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-In mptcp_parse_option(), invalid MPTCP options or unsupported suboptions
-and malformed option lengths are silently ignored via break statements.
-As noted in GitHub issue #628, tracking these invalid options with a MIB
-counter is useful to detect potential attacks, network corruption, or
-misbehaving peers.
+Hi T S,
 
-Introduce MPTCP_MIB_RCVINVALIDOPT ("RcvInvalidOpt") to track invalid
-MPTCP options encountered during parsing. When mptcp_parse_option()
-encounters invalid combinations, lengths, versions, or unknown subtypes,
-jump to the bad_opt label to increment MPTCP_MIB_RCVINVALIDOPT.
+On 13/10/2026 10:18, T S RAMESHKUMAR wrote:
+> Hi Matt,
 
-To increment the MIB counter, mptcp_parse_option() requires a pointer to
-struct net. Safely resolve net in mptcp_get_options() via mptcp_skb_net()
-from skb->sk, skb->dev, or skb_dst, with NULL guards to prevent NULL
-pointer dereferences when sk, dev, or dst is not set.
+Please reply in plain text, without HTML. And actually reply to a
+message, don't start a new thread when you want to send a reply
+otherwise it is not visible when looking at patches:
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/628
-Signed-off-by: T S Rameshkumar <rameshkumar.t@phytecembedded.in>
----
- net/mptcp/mib.c     |  1 +
- net/mptcp/mib.h     |  1 +
- net/mptcp/options.c | 68 ++++++++++++++++++++++++++++-----------------
- 3 files changed, 45 insertions(+), 25 deletions(-)
 
-diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-index 608cb5688..0ab1ddac8 100644
---- a/net/mptcp/mib.c
-+++ b/net/mptcp/mib.c
-@@ -95,6 +95,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
- 	SNMP_MIB_ITEM("BacklogDrop", MPTCP_MIB_BACKLOGDROP),
- 	SNMP_MIB_ITEM("RcvPruned", MPTCP_MIB_RCVPRUNED),
- 	SNMP_MIB_ITEM("OFOPruned", MPTCP_MIB_OFOPRUNED),
-+	SNMP_MIB_ITEM("RcvInvalidOpt", MPTCP_MIB_RCVINVALIDOPT),
- };
- 
- /* mptcp_mib_alloc - allocate percpu mib counters
-diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-index 1ebdb55e9..483f79dab 100644
---- a/net/mptcp/mib.h
-+++ b/net/mptcp/mib.h
-@@ -98,6 +98,7 @@ enum linux_mptcp_mib_field {
- 	MPTCP_MIB_BACKLOGDROP,		/* Backlog over memory limit */
- 	MPTCP_MIB_RCVPRUNED,		/* Dropped due to memory constraints */
- 	MPTCP_MIB_OFOPRUNED,		/* MPTCP-level OoO queue pruned */
-+	MPTCP_MIB_RCVINVALIDOPT,	/* Received invalid MPTCP option */
- 	__MPTCP_MIB_MAX
- };
- 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index adbf8e077..a1af2acfa 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -20,7 +20,8 @@ static bool mptcp_cap_flag_sha256(u8 flags)
- 	return (flags & MPTCP_CAP_FLAG_MASK) == MPTCP_CAP_HMAC_SHA256;
- }
- 
--static void mptcp_parse_option(const struct sk_buff *skb,
-+static void mptcp_parse_option(struct net *net,
-+			       const struct sk_buff *skb,
- 			       const unsigned char *ptr, int opsize,
- 			       struct mptcp_options_received *mp_opt)
- {
-@@ -53,9 +54,9 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		/* Only the MPC + ACK can be used with a RM_ADDR */
- 		if (subopt == OPTION_MPTCP_MPC_ACK) {
- 			if ((mp_opt->suboptions & ~OPTION_MPTCP_RM_ADDR) != 0)
--				break;
-+				goto bad_opt;
- 		} else if (mp_opt->suboptions != 0) {
--			break;
-+			goto bad_opt;
- 		}
- 
- 		/* Cfr RFC 8684 Section 3.3.0:
-@@ -71,21 +72,21 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		if (opsize != expected_opsize &&
- 		    (expected_opsize != TCPOLEN_MPTCP_MPC_ACK_DATA ||
- 		     opsize != TCPOLEN_MPTCP_MPC_ACK_DATA_CSUM))
--			break;
-+			goto bad_opt;
- 
- 		/* try to be gentle vs future versions on the initial syn */
- 		version = *ptr++ & MPTCP_VERSION_MASK;
- 		if (opsize != TCPOLEN_MPTCP_MPC_SYN) {
- 			if (version != MPTCP_SUPPORTED_VERSION)
--				break;
-+				goto bad_opt;
- 		} else if (version < MPTCP_SUPPORTED_VERSION) {
--			break;
-+			goto bad_opt;
- 		}
- 
- 		flags = *ptr++;
- 		if (!mptcp_cap_flag_sha256(flags) ||
- 		    (flags & MPTCP_CAP_EXTENSIBILITY))
--			break;
-+			goto bad_opt;
- 
- 		/* RFC 6824, Section 3.1:
- 		 * "For the Checksum Required bit (labeled "A"), if either
-@@ -137,7 +138,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		/* Can be used with a restricted number of other options */
- 		if ((mp_opt->suboptions & ~(OPTION_MPTCP_RM_ADDR |
- 					    OPTION_MPTCP_PRIO)) != 0)
--			break;
-+			goto bad_opt;
- 
- 		if (opsize == TCPOLEN_MPTCP_MPJ_SYN) {
- 			mp_opt->suboptions |= OPTION_MPTCP_MPJ_SYN;
-@@ -166,6 +167,8 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 			ptr += 2;
- 			memcpy(mp_opt->hmac, ptr, MPTCPOPT_HMAC_LEN);
- 			pr_debug("MP_JOIN hmac\n");
-+		} else {
-+			goto bad_opt;
- 		}
- 		break;
- 
-@@ -176,7 +179,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 					    OPTION_MPTCP_PRIO |
- 					    OPTION_MPTCP_FASTCLOSE |
- 					    OPTION_MPTCP_FAIL)) != 0)
--			break;
-+			goto bad_opt;
- 
- 		pr_debug("DSS\n");
- 		ptr++;
-@@ -219,7 +222,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 			mp_opt->ack64 = 0;
- 			mp_opt->use_ack = 0;
- 			mp_opt->data_fin = 0;
--			break;
-+			goto bad_opt;
- 		}
- 
- 		mp_opt->suboptions |= OPTION_MPTCP_DSS;
-@@ -269,7 +272,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		if ((mp_opt->suboptions & ~(OPTIONS_MPTCP_DSS |
- 					    OPTION_MPTCP_RM_ADDR |
- 					    OPTION_MPTCP_PRIO)) != 0)
--			break;
-+			goto bad_opt;
- 
- 		mp_opt->echo = (*ptr++) & MPTCP_ADDR_ECHO;
- 		if (!mp_opt->echo) {
-@@ -282,7 +285,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 				mp_opt->addr.family = AF_INET6;
- #endif
- 			else
--				break;
-+				goto bad_opt;
- 		} else {
- 			if (opsize == TCPOLEN_MPTCP_ADD_ADDR_BASE ||
- 			    opsize == TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT)
-@@ -293,7 +296,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 				mp_opt->addr.family = AF_INET6;
- #endif
- 			else
--				break;
-+				goto bad_opt;
- 		}
- 
- 		mp_opt->suboptions |= OPTION_MPTCP_ADD_ADDR;
-@@ -336,11 +339,11 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 					    OPTIONS_MPTCP_DSS |
- 					    OPTION_MPTCP_ADD_ADDR |
- 					    OPTION_MPTCP_PRIO)) != 0)
--			break;
-+			goto bad_opt;
- 
- 		if (opsize < TCPOLEN_MPTCP_RM_ADDR_BASE + 1 ||
- 		    opsize > TCPOLEN_MPTCP_RM_ADDR_BASE + MPTCP_RM_IDS_MAX)
--			break;
-+			goto bad_opt;
- 
- 		ptr++;
- 
-@@ -357,10 +360,10 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 					    OPTIONS_MPTCP_DSS |
- 					    OPTION_MPTCP_ADD_ADDR |
- 					    OPTION_MPTCP_RM_ADDR)) != 0)
--			break;
-+			goto bad_opt;
- 
- 		if (opsize != TCPOLEN_MPTCP_PRIO)
--			break;
-+			goto bad_opt;
- 
- 		mp_opt->suboptions |= OPTION_MPTCP_PRIO;
- 		mp_opt->backup = *ptr++ & MPTCP_PRIO_BKUP;
-@@ -371,10 +374,10 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		/* Can be used with a restricted number of other options */
- 		if ((mp_opt->suboptions & ~(OPTIONS_MPTCP_DSS |
- 					    OPTION_MPTCP_RST)) != 0)
--			break;
-+			goto bad_opt;
- 
- 		if (opsize != TCPOLEN_MPTCP_FASTCLOSE)
--			break;
-+			goto bad_opt;
- 
- 		ptr += 2;
- 		mp_opt->fc_recv_key = get_unaligned_be64(ptr);
-@@ -387,13 +390,13 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		/* Can be used with a restricted number of other options */
- 		if ((mp_opt->suboptions & ~(OPTION_MPTCP_FAIL |
- 					    OPTION_MPTCP_FASTCLOSE)) != 0)
--			break;
-+			goto bad_opt;
- 
- 		if (opsize != TCPOLEN_MPTCP_RST)
--			break;
-+			goto bad_opt;
- 
- 		if (!(TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST))
--			break;
-+			goto bad_opt;
- 
- 		mp_opt->suboptions |= OPTION_MPTCP_RST;
- 		flags = *ptr++;
-@@ -407,10 +410,10 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		/* Can be used with a restricted number of other options */
- 		if ((mp_opt->suboptions & ~(OPTIONS_MPTCP_DSS |
- 					    OPTION_MPTCP_RST)) != 0)
--			break;
-+			goto bad_opt;
- 
- 		if (opsize != TCPOLEN_MPTCP_FAIL)
--			break;
-+			goto bad_opt;
- 
- 		ptr += 2;
- 		mp_opt->suboptions |= OPTION_MPTCP_FAIL;
-@@ -419,13 +422,28 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		break;
- 
- 	default:
-+bad_opt:
-+		if (net)
-+			MPTCP_INC_STATS(net, MPTCP_MIB_RCVINVALIDOPT);
- 		break;
- 	}
- }
- 
-+static inline struct net *mptcp_skb_net(const struct sk_buff *skb)
-+{
-+	if (skb->sk)
-+		return sock_net(skb->sk);
-+	if (skb->dev)
-+		return dev_net_rcu(skb->dev);
-+	if (skb_dst(skb) && skb_dst_dev_rcu(skb))
-+		return skb_dst_dev_net_rcu(skb);
-+	return NULL;
-+}
-+
- void mptcp_get_options(const struct sk_buff *skb,
- 		       struct mptcp_options_received *mp_opt)
- {
-+	struct net *net = mptcp_skb_net(skb);
- 	const struct tcphdr *th = tcp_hdr(skb);
- 	const unsigned char *ptr;
- 	int length;
-@@ -458,7 +476,7 @@ void mptcp_get_options(const struct sk_buff *skb,
- 			if (opsize > length)
- 				return;	/* don't parse partial options */
- 			if (opcode == TCPOPT_MPTCP)
--				mptcp_parse_option(skb, ptr, opsize, mp_opt);
-+				mptcp_parse_option(net, skb, ptr, opsize, mp_opt);
- 			ptr += opsize - 2;
- 			length -= opsize;
- 		}
+https://patchwork.kernel.org/project/mptcp/patch/20261012112625.578911-1-rameshkumar.t@phytecembedded.in/
+
+> 1.)  Do you have a reproducer for this?
+> 
+> No, this was spotted during code review of subflow_check_data_avail()
+> rather than from a reproducer in tests or production.
+
+OK. Please mention that in the commit message next time. Or better,
+check if this can really happen with a reproducer.
+
+>> Here you are changing the condition "did we already fallback". Is it
+>> because a fallback already happened but yet you have a second subflow?
+>> That's not consistent, and the root cause is elsewhere.
+>> Maybe it is linked to:
+>> https://lore.kernel.org/20260814-mptcp-reset-mpj-early-
+> v1-0-3ca3260f9474@kernel.org <https://lore.kernel.org/20260814-mptcp-
+> reset-mpj-early-v1-0-3ca3260f9474@kernel.org>
+>> I didn't have time to work on a v2.
+> 
+> You are completely right. Once fallback happens on the initial subflow,
+> no MP_JOIN subflow should be accepted or established in the first place,
+> so patching it under the fallback label in subflow_check_data_avail()
+> is indeed only treating a symptom rather than the root cause.
+
+OK, let's drop the patch then.
+
+> I looked at your RFC series (20260814-mptcp-reset-mpj-early-
+> v1-0-3ca3260f9474@kernel.org <mailto:20260814-mptcp-reset-mpj-early-
+> v1-0-3ca3260f9474@kernel.org>)
+> and Paolo's feedback on rejecting MP_JOIN earlier in subflow_check_req().
+> If you don't mind, I would be very happy to take over and work on v2
+> of that series to address Paolo's comments and get it completed.
+
+Thank you, but I will take the time at some points to send a v2, no
+urgency there.
+
+Cheers,
+Matt
 -- 
-2.34.1
+Sponsored by the NGI0 Core fund.
 
