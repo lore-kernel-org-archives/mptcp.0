@@ -1,259 +1,116 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC5E4D4879
-	for <mptcp@lists.linux.dev>; Mon, 12 Oct 2026 19:48:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791834503; cv=pass; b=mlAONR2fBv4/kOTu4XEwfRn/ftmsFzjGRS9PaFpED5YbgiCDQKmx0pMUu2gMQbcYxZwLqdAN1JYsYbjmqjK0aKN7tq/fFrNW+Hc0Eh6+gba0ytKjGc/q5Q10rxQai9gAlTvbRum11dk7NulacBDpptN6s2n+LPpFq42qqWoaYOU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791834503; c=relaxed/simple;
-	bh=B7US8fNePp2tNbb4HE/pkst7F1dJjN1jZlpZjHlvhyQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d7Te8tYvsYk4yz+zshXy63D/xBZwWaNu1MJEqLotX11ngeotjfiRYuAwF/opg54e/4iCqMljRununncHprh44UhnGssKM6wYcODzHwnv2JLoS9UpRn7raLPJzIC+qw6BQ8f4EeVfWnqLhM4zq8CjO02lZGB7Qc826s3+r2qM3zE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ink.fish; spf=pass smtp.mailfrom=ink.fish; dkim=pass (2048-bit key) header.d=ink.fish header.i=@ink.fish header.b=y3aKvtxv; arc=pass smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ink.fish
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ink.fish
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F310470E8B
+	for <mptcp@lists.linux.dev>; Tue, 13 Oct 2026 02:56:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791860220; cv=none; b=ozJ6+2+WwwWIu3uG6kwbAO/SBR4WY4w+0YRjufzmj8nJPV6H+pjpqZvkhudmPcmcnxMejGu9MqsAbMis5xOh/PGiPf0TwXIPz7sdj/SV5ijTbGoZLWbV9l6MmRbLAVn14zcDGmhqrOL0QRYOUXIDrWUBrtc3IlEpqFuZE0dj/p8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791860220; c=relaxed/simple;
+	bh=bFrz5wo7sCze2JWREtcZrtE56FE8F+IKrz09D1L9VdQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=q4rU1bTHOCJTmHu2CwsZDi6LALSwzW+h3MFu2vM23HdpChSUSqCX9xt2fEAbocIxfo8OHZr50eqTV7mv3ZNmRpxmCjeAFSxvoqhoOnN/d78eoPW5wl9HsOJvAuAn3cIgoQ5hUyz3zSY8TsVjvKJSIhKGlPYR1E0uoAp4V+cu1RM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AQzzZ4Cv; arc=none smtp.client-ip=74.125.82.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ink.fish header.i=@ink.fish header.b="y3aKvtxv"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6a642495d81so2957561a12.2
-        for <mptcp@lists.linux.dev>; Mon, 12 Oct 2026 12:48:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791834500; cv=none;
-        d=google.com; s=arc-20260327;
-        b=rS/bHPR7x12podhX7htGyzkuwGRb4vH7OrJ33p1Zec0LxSr+oua1KOu5A/qVDWEa0W
-         ggtq7wIFmKV51nPoa5tfXBvlzRImFNW+8kK5laoiWxQHZIeG9d9mpOmutdWsRxYSR8RW
-         N0ARdrdRNCiP7j8SF0D0CsNpNRghBxYQrP6Sd/gECqtFFOmzBQKQd+ISiG2EPJGEnwPw
-         mY1n0Ry79TenmzaYPWpHsawpSxr62hy6b2Gds/C8BkpdsrBt8j0Sv1ZZF7vJyudDjKPh
-         xC2+sxPdScVowNggGXD5UDeIsy/bPrbtSpjnhWYpV9R0gAYcPp4TEzyT3t196WLkWgia
-         ND+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=WDhUKkAq9qSEi3pYQ4/Fd8cwrPQgAd0uKr7kcgvf+40=;
-        fh=DmscGsNTtDZieTwNmareJY1Y0ZTj47lohRqIS2VoUV8=;
-        b=LgfwojQn7wqBrQgdzBXHUwBMxlMJ6nJDDxnxBiv+wrlb8zjLhyfSojIs/23936VA09
-         SvAF20PwGmqxaPFFI1Yjo01OhVXM3WRzjFoL8onxvyrDbzPZBxold3p4Lr1+5Fttv6/+
-         bQO7poXvetgkKuHlfPIfGH/qv3SqVStOtIvLouY28Gv+9ZCJr4/Pp1U+DDnooT1JEpaK
-         x+h+cyk19H2HDoMHoV13o0z7xcEx70/7OWSFZ/TjB0dmPNpxjHDUbUwOzFE6fgloxQX2
-         Xaprt+ldRaspS5anqrm9IF82g4hzz1n2xCKY+Dcd9nwWP7a+sDRGOQmJG3wSSE+QpIsp
-         +nxw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AQzzZ4Cv"
+Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-354ba08cfd1so4347498eec.1
+        for <mptcp@lists.linux.dev>; Mon, 12 Oct 2026 19:56:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ink.fish; s=google; t=1791834500; x=1792439300; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=WDhUKkAq9qSEi3pYQ4/Fd8cwrPQgAd0uKr7kcgvf+40=;
-        b=y3aKvtxvx4Or4KqAvFM+Z6nasqugiA0IqMzwlKJsTKWfbbLoxsJ2IuKgZyva//JZhO
-         3oyQuqHFfcANo9t2ZT1DzTNI63V21YadmE4pX1MFlOdfAswYwKdFqlXEsLQfOQ70suKN
-         XJC8LMCKvJaweVEOO5K9p16PgcK8YuvEyo/d45rKFj/xobZNqcvO1o9JI2rSXm53ih4/
-         Rml0/nkgmFqKw4v2hfKBzKNzsnbK/ZZNiXv/qyBbilEN/kVVhcRsfyMtCOnBar6mPWAt
-         mm34UN62iOSI15PHo1eBW8uwlt7Zqr9TH4lAdwrPtNgmYqhSVFc/nWmhExwRJFLhcf4i
-         wafg==
+        d=gmail.com; s=20251104; t=1791860218; x=1792465018; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=fHu9Ww8azyxyab0pRNKy6K3oj/2MCS91S9kwLy3/j8E=;
+        b=AQzzZ4Cvk1wDVWG3mv4EFh8uin4AoKJBQOF6y+eZKzlJGZQ4c7hR+biV1s2+ttmWZ+
+         BBLb73+NEYywNmV6PawVhhuF+X/j0sxwZbDWFJN5T21bECVyp8i3e9ZhhkJpJzwFCADw
+         g3u+mAYKNe2MHYYpCOasnwq9XlSDegRS+CGJ+McOh9TgQt4zOwjVpj9cwXN439pnCwD3
+         9QnZlWs1xpBjSdYl0fPVQoakPHRgNLZNyArcuCXALtBi1wOr3P2wYbjfB8qbnccLdMeh
+         EhTKE5NomB22D3atdftvl6Vt8eYun4Z/1Y8Nu2j8UdR0eWQE9LswCIF12LY509EYSq1Q
+         m5aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791834500; x=1792439300;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=WDhUKkAq9qSEi3pYQ4/Fd8cwrPQgAd0uKr7kcgvf+40=;
-        b=SjEUfXCxMwTUzf8RpGJnW1aJcG7TWbe/Q6bPJweO4yshh7lNs96wwX4tpb2c7YzPHq
-         /b8+gz28+aBLlPbb/UJxxweirWovXEtEAutxbb9lDEBpq6491JRdj4sQ/U4bOZAUSACR
-         J8Q/ECfw8QzIFd72f//i81OZ79jHbk9rDlTiauzqnpXXTyq54TtN8N2kNJR1jJIyT+P2
-         SCzDyc5V4kKgDN9RCLo4sVDgSBG2PPu8jqOw1xFb5ZeEw78cbGi4Pu6WNyA+x1oQEyC2
-         M1wRdqBziXpETjj78P/6mYpyx/Ru9t2fjNZBM5U8XAZd3T07vmVysTtGcEpmG27yXROG
-         9ccQ==
-X-Forwarded-Encrypted: i=1; AKwUvBynOoLLx415WMyFtL4yF7v4P0VPyIRXcFLVRVpRrFj7uuuEPhTohrqaVYsZeqjzyZPDaVUhZQ==@lists.linux.dev
-X-Gm-Message-State: AFq9FYKfj1hNb2WitLsLtL35B/3H0U9j2O5U+h1ptpHtT3WMksG7GwWx
-	pbqPadoIBZG52l/Vv7bwEXk/RxdZQiIxyS+Jbn85atdAL19VOR/NYsLMzwsaC4OUi8noAZLTDMx
-	fA2PckB+eZHBPZgfDG9SDeaDDOtvBtYTHMV7fX1P2DR9iQD8WiJKLodlKO8Kn
-X-Gm-Gg: AYBFou0IROkgJuTl5hKz7dkXc1+OZVv5zpKqwHGuT77j1viA3jTZbEeHnOMy9v/eXKx
-	nKfGWcAVgetUupY7e50PHeT4gK2lQsB9YBkBlt7DZupZhv2rYwGSaoeBo+kCKmraEuGhm4BbRUW
-	iy1t4buZ80k5edXEAwySgYV2CtrebODkYnF+UbLAjuEzvohihtbXDQHap3j9RwezQ2WDdG9c2io
-	be7S/MTTgX7nmE4e7/QShMmLbeJEsAKNhno8ysiGedJO5NXWeeUZzx6fWdKPGPRR8VpqhQ7SzcW
-	Dx4UfqkgMgdV1yI7uLzzogR80y3jS/pFZN15p3Z2GhQQ6KrXdovZ+G0GI5+I0QACWzPvMV6+Juv
-	wTuz87PItFr9oG600PEvBVjxfFIliL0LUQdB42aiYnzQtaDfn5g+AqefKwbxTqCJrJG/vIHUP
-X-Received: by 2002:a05:6402:2346:b0:6aa:e37e:92b8 with SMTP id
- 4fb4d7f45d1cf-6b17c294046mr9127137a12.16.1791834500341; Mon, 12 Oct 2026
- 12:48:20 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1791860218; x=1792465018;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=fHu9Ww8azyxyab0pRNKy6K3oj/2MCS91S9kwLy3/j8E=;
+        b=z8hqccssr7dDQ5xNbGwEDIEK7D8CmaHeWUfnMscRLk+PWNLJi7b7Rm51GXh8QVHqyc
+         aYPypdED5Sz+19X3gyOQE4Kima7yEFFqPA3BBxqNOgiZujD6XZvlaB5y/qXIJwtqbhQz
+         ZyDymmfLf7slT0WkK/WafwOt5rp8qXgzjVFTqykT5tNDSiUFGaEWnCahFqw8HP8zPHDP
+         8YIrFObCJYcg09fYvAvbo/xwWRTHc4cb3qkd9cp+/nV2y/afYwtYNxRNMss2rpCY34vM
+         JJ0p8O7HzRRRQKbCNQaGsiB+mbMuhyXNdYXeWc9lrnT0uGzaxtSyz743JyVqpaWqMi8C
+         yoJA==
+X-Gm-Message-State: AFq9FYIprdhFL+Hajp/zC0wUAcddMo8KQmA0098HdLMSRWaJsXNYEqbo
+	HYAtgKRVvTOfu5cWxreb+UeCQKhWbUb/WZuh2CAdqLGI//heI2T3qrNiDQOb/g==
+X-Gm-Gg: AYBFou14GDVneAyf26oiuW9t03rKIFjE/yU1h43kIpZMvMT9IdNRm6d07Yil1crzK6j
+	L435yrjlMIUBzJrCDTxOQRQbQ/uF2ijtxbYthptKp1ca/YtWid474WdpNSirPz/wsJM0/FAPtYf
+	90Fpf2v6DtpltPcajPFkfFSn5qY6BLkmbZkvia91DOwYGWUm9cUgsJLqacXhK58ZqaSAi5L4/wj
+	pOV826lauJGRnSy9SMlOcsY8TlURvxDL/tNvg6KPso2T6ZL4JeiHTw8dhtiD/GVLn71zeRpE1CL
+	DPs7ezKEFxEq1/mgVGoEfx5FtMS5UfVq9b0897aQGa55a6LFyIr7d8DyDv5ed2ltbqftp4Zwjb5
+	Xm56Fmj62YEcrVZbypaey9B071wVAVvwiOI46xsEUWZpu3J6wfZsMC8yDQigEy6ZqOMUBGSBPzV
+	oCIyUWU8tSuTS6i8IcivR5HHheQ91uURvmZzt2t/l3Mjl+1XD3wGrrVTdC08iJCaGoVLNwnlpvu
+	AOo2tM/SIyO1aIt8XRgfwJbqjeg43fx0LDIZFBy17ydkdlMup92Dy7MlKHQR1LrrsLECHDC0qhL
+	gG5pJ0a6uvjqL3LZG5F3p/akgrcrLr8mE3mujc29JVE=
+X-Received: by 2002:a05:7301:298:b0:358:bbb7:88da with SMTP id 5a478bee46e88-358bbb793e2mr11286199eec.32.1791860217988;
+        Mon, 12 Oct 2026 19:56:57 -0700 (PDT)
+Received: from ramen-dev-security-2.asia-south1-c.c.ramen-dev-345017.internal (90.156.200.35.bc.googleusercontent.com. [35.200.156.90])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3537cb2954bsm39890217eec.26.2026.10.12.19.56.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Oct 2026 19:56:57 -0700 (PDT)
+From: Anil Kaushik <anilkaushikwireless@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: Anil Kaushik <anilkaushikwireless@gmail.com>
+Subject: [RFC PATCH mptcp-next v2 0/3] mptcp: pm: kernel: retry subflows closed after an error
+Date: Tue, 13 Oct 2026 02:56:50 +0000
+Message-Id: <20261013025653.523755-1-anilkaushikwireless@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20261008121602.206507-1-rameshkumar.t@phytecembedded.in>
- <CADRhS2uk-P8TSmyiM=X5JQXHtzdm68vg6+vyBDr-UCf0EAu0HA@mail.gmail.com> <b5d420d1-859a-4c84-a658-e7aa44abbb30@kernel.org>
-In-Reply-To: <b5d420d1-859a-4c84-a658-e7aa44abbb30@kernel.org>
-From: Petar Sakic <petar.sakic@ink.fish>
-Date: Mon, 12 Oct 2026 21:48:09 +0200
-X-Gm-Features: AclHuK-ZKDufcBnW9I3rYZfIzzKqmuhwPe1hMduO1lLdfuXfhvTkbtyJrQnKfEs
-Message-ID: <CAFPPu1gEqVx=LuW8Z5qv-6GRDwzkLjbvdQwYOgaacL3zLBXWtQ@mail.gmail.com>
-Subject: Re: [PATCH v4] mptcp: push queued data on passive TFO subflows
- becoming established
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: T S RAMESHKUMAR <rameshsv06@gmail.com>, mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Matthieu and T S
+A subflow closed after an error is never re-created, even once the path
+is back (#440).
 
-I hope replying here is OK.
+v2 has no extra list or timer. The PM opens a new subflow to the same
+addresses right away, and if it fails, the same socket is used for the
+next try. A new sysctl, net.mptcp.subflow_retries, sets the max tries.
 
-Tested v2 on top of 6.12.111 (applies with a 15-line offset, no other chang=
-e).
+Is a sysctl fine, or should it be a netlink setting?
 
-Setup: two netns over a veth pair, netem 50 ms each way (100 ms RTT). MPTCP
-listener with TCP_FASTOPEN=3D16; the server replies as soon as accept() ret=
-urns,
-while the TFO child is still SYN_RECV (checked via TCP_INFO). Client: first
-connection fetches the cookie, the next ones use TCP_FASTOPEN_CONNECT so th=
-e
-request rides the SYN. Checked per run: TCPFastOpenActive/Passive,
-MPCapableSYNTX/ACKRX, MPCapableFallbackACK =3D 0.
+Patch 1: I saw the EAGAIN error only with the new tests, also with the
+retries disabled.
 
-- 6.12.111 unpatched: reply stranded on every TFO connection (3/3).
-- 6.12.111 + v2: reply delivered on every TFO connection (3/3), ~2 RTT.
-  Plain TCP control unchanged.
+Changes in v2:
+ - use the subflow sockets, no list or timer
+ - sysctl is now the max number of tries
+ - code moved to pm_kernel.c
+ - Fixes tag on patch 1
+ - one selftest with netfilter
+ - Assisted-by on all patches
 
-Tested-by: Petar Sakic <petar.sakic@ink.fish>
+v1: https://lore.kernel.org/mptcp/20261012171740.464517-1-anilkaushikwireless@gmail.com/
 
-One case v2 does not cover, same setup: a cookie-bearing SYN with no data
-(sendmsg MSG_FASTOPEN, zero bytes), server speaking first.
-tcp_fastopen_create_child() still creates the child (TCPFastOpenPassive
-increments, accept() returns in SYN_RECV), but
-mptcp_fastopen_subflow_synack_set_params() returns before setting
-subflow->is_mptfo because the receive queue is empty, so the new check
-never fires and the reply is stranded again (2/2, with and without v2).
-Plain TCP handles it. Moving the assignment above the early return makes
-both cases pass here (3/3 and 2/2), no splats:
+Anil Kaushik (3):
+  selftests: mptcp: connect: retry write() on EAGAIN
+  mptcp: pm: kernel: retry subflows closed after an error
+  selftests: mptcp: join: validate subflow retry after link failure
 
---- a/net/mptcp/fastopen.c
-+++ b/net/mptcp/fastopen.c
-@@ -25,13 +25,13 @@
-        tp =3D tcp_sk(ssk);
+ Documentation/networking/mptcp-sysctl.rst     |  15 +++
+ net/mptcp/ctrl.c                              |  13 ++
+ net/mptcp/mib.c                               |   1 +
+ net/mptcp/mib.h                               |   1 +
+ net/mptcp/pm_kernel.c                         | 116 ++++++++++++++++++
+ net/mptcp/protocol.c                          |   9 ++
+ net/mptcp/protocol.h                          |  20 +++
+ net/mptcp/subflow.c                           |  53 ++++++++
+ .../selftests/net/mptcp/mptcp_connect.c       |   8 ++
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  90 ++++++++++++++
+ 10 files changed, 326 insertions(+)
 
-+       subflow->is_mptfo =3D 1;
-+
-        /* A valid TFO cookie does not guarantee SYN data. */
-        skb =3D skb_peek(&ssk->sk_receive_queue);
-        if (!skb)
-                return;
+-- 
+2.25.1
 
--       subflow->is_mptfo =3D 1;
--
-        /* dequeue the skb from sk receive queue */
-
-Up to you whether that belongs in this patch or a follow-up.
-
-Cheers,
-- Petar
-
-
-On Mon, Oct 12, 2026 at 3:28=E2=80=AFPM Matthieu Baerts <matttbe@kernel.org=
-> wrote:
->
-> Hi T S,
->
-> +cc Petar.
->
-> On 12/10/2026 12:00, T S RAMESHKUMAR wrote:
-> > Hi Matt, Petar,
-> >
-> > Thank you both!
-> >
-> > I have prepared [PATCH mptcp-net v2] based on the export branch.
-> > In v2:
-> > - Reverted bitfield modifications: check_fully_established() is only
-> > called once upon receiving the MPC 3rd-ACK, so is_mptfo is read-only at
-> > that stage and safe from concurrency races.
-> > - Added "Suggested-by: Petar Sakic <petar.sakic@ink.fish>" and
-> > "Reported-by: Petar Sakic <petar.sakic@ink.fish>".
-> > - Kept the Fixes tag pointing to fb7084501a61 ("mptcp: add support for
-> > TCP_FASTOPEN sockopt") to ensure backports cover 6.8 and all stable tre=
-es.
->
-> Thank you. I will try to review this after the automated tests.
->
-> > Regarding Packetdrill:
-> > I have prepared the packetdrill test case (server-TCP_FASTOPEN-early-
-> > write.pkt) which simulates the server writing data in SYN_RECV before
-> > the 3rd ACK arrives and verifies that the 100 bytes are pushed
-> > immediately with DSS mapping once the 3rd ACK is received. All 51
-> > fastopen tests pass.
-> >
-> > I can submit the packetdrill test via a PR on https://github.com/
-> > multipath-tcp/packetdrill <https://github.com/multipath-tcp/
-> > packetdrill>, or send it directly to the list if preferred. Here is the
-> > test script for reference:
->
-> Please open a new PR.
->
-> > --- server-TCP_FASTOPEN-early-write.pkt ---
-> > // SPDX-License-Identifier: GPL-2.0
-> > // Test MPTCP passive Fast Open early write before 3rd ACK arrives
-> > --tolerance_usecs=3D100000
-> > `../common/defaults.sh`
-> >
-> >  0.0    socket(..., SOCK_STREAM, IPPROTO_MPTCP) =3D 3
-> > +0.0    setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) =3D 0
-> > +0.0    setsockopt(3, SOL_TCP, TCP_FASTOPEN, [2], 4) =3D 0
-> >
-> > +0.0    bind(3, ..., ...) =3D 0
-> > +0.0    listen(3, 1) =3D 0
-> >
-> > // Client connects with TFO Cookie and 500 bytes of SYN data
-> > +0.1      <  S   0:500(500)                win 65535  <mss 1460, sackOK=
-,
-> > TS val 100 ecr 0,   nop, wscale 8, FO TFO_COOKIE, nop, nop, mpcapable v=
-1
-> > flags[flag_h] nokey>
-> > +0.0      >  S.  0:0(0)          ack 501              <mss 1460, sackOK=
-,
-> > TS val 100 ecr 100, nop, wscale 8,                          mpcapable v=
-1
-> > flags[flag_h] key[skey]>
-> >
-> > // Server accepts while still in SYN_RECV and reads the SYN data
-> > +0.0    accept(3, ..., ...) =3D 4
-> > +0.0    read(4, ..., 500) =3D 500
-> >
-> > // Server writes early reply data before receiving client's 3rd ACK
-> > +0.0    write(4, ..., 100) =3D 100
-> >
-> > // Client's 3rd ACK arrives with no data, establishing the MPTCP connec=
-tion
-> > +0.2      <   .  501:501(0)      ack 1     win 450    <
-> >                                                              mpcapable
-> > v1 flags[flag_h] key[ckey, skey]>
->
-> Here, you are dropping TCP Timestamps (TS) negotiated before. Probably
-> better to keep it (or you don't inject it in he first SYN, clearer).
->
-> > // Server must immediately push the queued 100 bytes with DSS mapping
-> > +0.0      >  P.  1:101(100)      ack 501              <nop, nop, TS val
-> > 100 ecr 100, dss dack8=3D0 dsn8=3D1 ssn=3D1 dll=3D100 nocs>
->
-> "dack8=3D0"? That's strange...
->
-> Also, TCP options are not padded correctly to ensure TCP header is a
-> multiple of 4 bytes: 2 excess bytes =E2=86=92 you are missing two "nop" a=
-t the end.
->
-> How did you test it?
->
->  $ cd <Packetdrill DIR>/gtests/net
->  $ run_all.py -lv mptcp/fastopen/server-TCP_FASTOPEN-early-write.pkt
->
-> Don't forget to add the "Assisted-by: LLM" tag if used, and mention what
-> you did, how you tested things. You can use this docker image to ease
-> the testing part:
->
->   https://github.com/multipath-tcp/mptcp-upstream-virtme-docker
->
-> Cheers,
-> Matt
-> --
-> Sponsored by the NGI0 Core fund.
->
