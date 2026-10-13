@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB19253340
-	for <mptcp@lists.linux.dev>; Tue, 13 Oct 2026 09:28:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846C03D9DC3
+	for <mptcp@lists.linux.dev>; Tue, 13 Oct 2026 09:30:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791883715; cv=none; b=Qc6PnlEVWPyZscxZNpbmRlViGielkQHYDrU9wN0oyt69W3t+hTxdE0f1Wy4U2MXYti7PCKQ2EyEct3dLCczUtVGJxkO5Kl2oZYsp3mphR77kFuRT1CiH9Yt82MhW6KsZyjUEjK3dqPxlpnIU78a8SvFxRVd5KBo/g4nk7CYPQp0=
+	t=1791883817; cv=none; b=kM8Y2Vz6u0hC3epKDvQSYdZzMMU2pZY7bzY+dFXAszKo6+BE24S/qqJGNkbjbz3IvxJ9OHK8qySDuVLLb7y4a2Fh5yJIOj+BDDFyL6PS3YPjkC52OcnC80aoRV3M94jLSfx5I7+aR/QdaVcUND7CKfl7//INrLIpIwQPOK6E2KA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791883715; c=relaxed/simple;
-	bh=6ToZ/vfAO5+XDZE3j9k1mLctLQcftJo7HpEqYkK1XDw=;
+	s=arc-20240116; t=1791883817; c=relaxed/simple;
+	bh=fN4UrdrzXWyJSOnGeOEFtDIy3EX6NmXLobX1UG0tR3k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VPTaRBDtJQQgY9vYEMZV7mOGqr3fa64oLoKOfiSv6w08qM8rWuqCrpW8Um07apZiGtY5/jrZWqBIKsuLiQnp6Dsd+uJ2ggmS1ozpsHSeNfokVnl0FoWN6dfqlGXP7v04+A+9BzEnQrImMaGHMXnknkDpZV22ASArqWFESyLqRzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nODcbkhP; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=OJiZCoE2g8XMEan1zKSjWSq9LkxKxPF5Quo+IHp/7J4qqZznTg2cRB+NKAIC07I3fu8KqzCnnT+qEOODnzB4fZKD2WvunYc0tdCcTeOQFKIDNCofrTgf+EYUH2G24yi3fKAj7IbUp0WLvCvClEo2cW18LqOlkrdO7CWwOy5oMRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CNi4o1Wb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nODcbkhP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 131AF1F000FF;
-	Tue, 13 Oct 2026 09:28:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CNi4o1Wb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA86C1F000FF;
+	Tue, 13 Oct 2026 09:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791883713;
-	bh=jtj6bb4bSydAAdSlcb0w9lyDzoTnFf3v6RMFOUBMkqc=;
+	s=k20260515; t=1791883815;
+	bh=+tFw0RzK3gqieiBF/LycvdbnMp5N8upvf7wLSvp06Bw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=nODcbkhPZYt4mM+a4dpPl6WRuAwGnJElYz2BNPTzjNgyy4mFvEdE0VMi682Zq+Lt7
-	 2owdctcBaD1DRZc1Ix3d6mz3SHKSa41XZDVNe1XnIkwXWt/40RS2Qo4X37TalzqJ59
-	 0axdoj/Lwm2l1zRkSEOMgMM0Q2bJKTveYuemyUGfexmFL3MNZmTlvU1kEAjShaIOCx
-	 gq9e00BHJ9uV9Oh6j48z3WB8AR4RBDNfKdKifXczuPgHT/NTtbuVMhoRf/K5PVkb83
-	 5PpKxEWDLCJQCFMuHzv683T2DZi4nm5zxsCEF4UKXNjEEgkKk88z7jcI1NxdQCEq2m
-	 frq4QiEZ16v4w==
-Message-ID: <3f9d7081-65f1-4618-8f34-d95e3f84824e@kernel.org>
-Date: Tue, 13 Oct 2026 11:28:31 +0200
+	b=CNi4o1Wb6mZ4ipTjVavmDunIH+Hm8uckIKjYL9d77j491XtkF4MinpeSkU6eRLe32
+	 n9i5krqjtkx9u7m0znGmfb0W5vDMaQYO09zJM+t3ARiyAPtLcm96pg/vcSdzr23Ind
+	 +/Gd2HUm76TTI1gdgqmBc/vtOQVGrwvqRMdJuaekOKPE6mmFnPw1c2fHmOvU2MYFsz
+	 Uw74MGaKapMzqI0e92o04VkSFTV4i42PCy2ZEkW4IQsj79MnB+7XFSo8mEYu6G0I92
+	 eNVmoUul6OXiErCXq+q07WgS9n9w7WRf0TARBUF7qgV2NiCfqCMGgcDOG/qBQIXJxC
+	 4cDN0vF/JUC9A==
+Message-ID: <b667a46d-7cd0-4b91-bcd3-6d745f2d7062@kernel.org>
+Date: Tue, 13 Oct 2026 11:30:11 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v4] mptcp: push queued data on passive TFO subflows
- becoming established
+Subject: Re: [PATCH mptcp-net v3] mptcp: push queued data on passive TFO
+ subflows becoming established
 Content-Language: fr
-To: Petar Sakic <petar.sakic@ink.fish>
-Cc: T S RAMESHKUMAR <rameshsv06@gmail.com>, mptcp@lists.linux.dev
-References: <20261008121602.206507-1-rameshkumar.t@phytecembedded.in>
- <CADRhS2uk-P8TSmyiM=X5JQXHtzdm68vg6+vyBDr-UCf0EAu0HA@mail.gmail.com>
- <b5d420d1-859a-4c84-a658-e7aa44abbb30@kernel.org>
- <CAFPPu1gEqVx=LuW8Z5qv-6GRDwzkLjbvdQwYOgaacL3zLBXWtQ@mail.gmail.com>
+To: T S Rameshkumar <rameshsv06@gmail.com>, mptcp@lists.linux.dev
+Cc: petar.sakic@ink.fish, T S Rameshkumar <rameshkumar.t@phytecembedded.in>
+References: <20261013080254.83992-1-rameshkumar.t@phytecembedded.in>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,67 +86,58 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <CAFPPu1gEqVx=LuW8Z5qv-6GRDwzkLjbvdQwYOgaacL3zLBXWtQ@mail.gmail.com>
+In-Reply-To: <20261013080254.83992-1-rameshkumar.t@phytecembedded.in>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 12/10/2026 21:48, Petar Sakic wrote:
-> Hi Matthieu and T S
-> 
-> I hope replying here is OK.
-> 
-> Tested v2 on top of 6.12.111 (applies with a 15-line offset, no other change).
-> 
-> Setup: two netns over a veth pair, netem 50 ms each way (100 ms RTT). MPTCP
-> listener with TCP_FASTOPEN=16; the server replies as soon as accept() returns,
-> while the TFO child is still SYN_RECV (checked via TCP_INFO). Client: first
-> connection fetches the cookie, the next ones use TCP_FASTOPEN_CONNECT so the
-> request rides the SYN. Checked per run: TCPFastOpenActive/Passive,
-> MPCapableSYNTX/ACKRX, MPCapableFallbackACK = 0.
-> 
-> - 6.12.111 unpatched: reply stranded on every TFO connection (3/3).
-> - 6.12.111 + v2: reply delivered on every TFO connection (3/3), ~2 RTT.
->   Plain TCP control unchanged.
-> 
-> Tested-by: Petar Sakic <petar.sakic@ink.fish>
+Hi T S,
 
-Thank you for having tested that.
-
-> One case v2 does not cover, same setup: a cookie-bearing SYN with no data
-> (sendmsg MSG_FASTOPEN, zero bytes), server speaking first.
-> tcp_fastopen_create_child() still creates the child (TCPFastOpenPassive
-> increments, accept() returns in SYN_RECV), but
-> mptcp_fastopen_subflow_synack_set_params() returns before setting
-> subflow->is_mptfo because the receive queue is empty, so the new check
-> never fires and the reply is stranded again (2/2, with and without v2).
-> Plain TCP handles it. Moving the assignment above the early return makes
-> both cases pass here (3/3 and 2/2), no splats:
+On 13/10/2026 10:02, T S Rameshkumar wrote:
+> With TCP Fast Open on an MPTCP listener, if the server application
+> writes data while the passive subflow is still in SYN_RECV (after
+> consuming the client's SYN data but before the MP_CAPABLE third ACK
+> arrives), __mptcp_subflow_active() refuses transmission and the data
+> is queued into the msk write queue.
 > 
+> When the MPC third ACK arrives, the subflow transitions to
+> TCP_ESTABLISHED and is marked fully established in
+> check_fully_established(), but because the third ACK carries no
+> DSS data, the queued bytes remain stranded until the peer sends
+> more data.
+> 
+> Fix this in check_fully_established() by checking if the subflow
+> was doing passive TFO (subflow->is_mptfo). Under mptcp_data_lock(),
+> flush queued bytes via __mptcp_check_push().
+> 
+> Additionally, ensure subflow->is_mptfo is set in
+> mptcp_fastopen_subflow_synack_set_params() even if the cookie-bearing
+> SYN carries no data, so that server-first replies on zero-data TFO
+> connections are also pushed upon 3WHS completion.
+
+(...)
+
+> diff --git a/net/mptcp/fastopen.c b/net/mptcp/fastopen.c
+> index f71775090..c4c525019 100644
 > --- a/net/mptcp/fastopen.c
 > +++ b/net/mptcp/fastopen.c
-> @@ -25,13 +25,13 @@
->         tp = tcp_sk(ssk);
-> 
-> +       subflow->is_mptfo = 1;
+> @@ -24,13 +24,13 @@ void mptcp_fastopen_subflow_synack_set_params(struct mptcp_subflow_context *subf
+>  	sk = subflow->conn;
+>  	tp = tcp_sk(ssk);
+>  
+> +	subflow->is_mptfo = 1;
 > +
->         /* A valid TFO cookie does not guarantee SYN data. */
->         skb = skb_peek(&ssk->sk_receive_queue);
->         if (!skb)
->                 return;
-> 
-> -       subflow->is_mptfo = 1;
-> -
->         /* dequeue the skb from sk receive queue */
-> 
-> Up to you whether that belongs in this patch or a follow-up.
-Probably better in a follow-up in this form, but not with this patch:
-here, you are reverting this:
+>  	/* A valid TFO cookie does not guarantee SYN data. */
+>  	skb = skb_peek(&ssk->sk_receive_queue);
+>  	if (!skb)
+>  		return;
+>  
+> -	subflow->is_mptfo = 1;
 
-  https://git.kernel.org/torvalds/c/e00b63056fb4
+No, we cannot do that:
 
-What about calling __mptcp_check_push() if (subflow->mp_capable) instead?
+ https://lore.kernel.org/3f9d7081-65f1-4618-8f34-d95e3f84824e@kernel.org
 
-@T S: please wait for the discussions to settle before sending new versions.
+Please wait for the discussions to settle before sending new versions.
 
 Cheers,
 Matt
