@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DB53BBFC9
-	for <mptcp@lists.linux.dev>; Tue, 13 Oct 2026 09:01:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897613CE0A4
+	for <mptcp@lists.linux.dev>; Tue, 13 Oct 2026 09:07:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791882102; cv=none; b=WlMBm8tcPu8oxrQv2J8v/RQ7G3Wekm1vdW3+eBY4PqJQfok4ZAjKtgy0RgQgpc5j7yqOCWDyS0JK5vMmvfyPgrCuqflQpS2ZMmo9YqB6IG4GevZxtz1bFZJSzANrby0Zaw/e5kEnbP13qqxqwJO9IWYAACmWJ7uYIb/z0mu+Oe0=
+	t=1791882437; cv=none; b=ThR3ZBD1qd656D8uTee0LDRmFsQWy2iiQqR9D9HWJSfMHxarMIZfl5tagdvpkKTK3VPmmKhsapnafWfhHXCuKv1YBu3HXjheJbER7OdYJFb2BJtudHkpjQKNiSWy5ZlPOpMZ5uaLaBLgsNGPk6PQSb3EpacuEL4madCyVcouqns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791882102; c=relaxed/simple;
-	bh=ZXOKzo1V9DmP1+XK9esIWzWwFpDvHcvcMK1fr30OY2w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=mx8Gq1fb+cQ3gvW0WSkA4+giKIkV/ScpNAjzSTkK4U09hVdAolhB3rddW3P9ZY8IZiSEp5sOJWlGnYhh0DsLdqatTBEYUYIugvGk1Kq+sXAX/M9F9XJWNPeXETOGCK1+zbuDGmhQ6ZA4IjjK9FaCjrUTf0SPIMirZ8epbF0CEcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U1UX+5zu; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791882437; c=relaxed/simple;
+	bh=nJsJ5o3lB8u82qpSuxA6GZ6WEUWnRlpsBQ90UvkM7x4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pgAB7WnpLvkZ93kTDTJUIdM4l77H8EN6TNBHJG6PqcKFKQUpejscIJ+5YTnD8WNhJf3LYOBpcokiOP10Pj+4R+cavIl00Xarv8NzJ1smj8wD4TgWjQ1SRUMeOVMqinXferWWW0NBc2ElNA2JEFfOI7gsjSkdwTLsuBXwwwOQTXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MYD0DJRZ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U1UX+5zu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D79691F000FF;
-	Tue, 13 Oct 2026 09:01:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MYD0DJRZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FC6A1F000FF;
+	Tue, 13 Oct 2026 09:07:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791882101;
-	bh=+ImHXOEkgTk2km2TUydmpBsfnqhwMqLVX/w7XmO/hdw=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To;
-	b=U1UX+5zuGeJYXlPNM8/fUA7MJzzzbD6peOMOyEZRqT2bueVqopVZbFWqQZQUA5lC+
-	 xmiXtWjsxAMV+4+UJcxTslWaBHHPhE6J6ZTq3a12t8vwHX6HHXGExRIoFv76XnqKrV
-	 5ks7BN5E7K76itziblnXCa22BUZoD035gE0bhZUL5hAhD+8J+qk9+FnBnZvPwUOjWx
-	 0GjofMLzktML+jl0ZIcSA2ZP1dAPPFR/5sc+RNQY9ZLSBSDpZSE5tkMXr6fhdr6C7L
-	 nNQxyRytXbIsZGvLSZOXt1eTMWLD/yE2ELplbvHjGu6ySHuQBSMHF7EKeLMbvpFTRd
-	 o3mcY5dHGGX1Q==
-Message-ID: <f6c396a4-13bd-4b6c-adc2-be2d8929e14e@kernel.org>
-Date: Tue, 13 Oct 2026 11:01:38 +0200
+	s=k20260515; t=1791882436;
+	bh=QfHxCCccR5Y6GVA50IhWO2eqoiBDMmoTkNjtZvSVpPo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=MYD0DJRZj6VwDt4vpO9ApZQDYHJwvoibFVNSDltMVSTCDr1wqBS71n9K5XKenpO7v
+	 6Nq5N5o4fAsKq4Ib3m4JchRVGSe8WDta51C22xAL6TImxU/9BJFd90xU0MY5ZMQzi5
+	 MqDW8CPSUYtGfzazoTO+nO0I60VmWV72RcKT4ck71pf08CFbkJqwpQxm1MgLeQQV50
+	 s6LShgyVJcVNILAgMBDIGF9E0LQ9vVnCjLONOSgsed18gx3Crsp4+Mfous96+QXTph
+	 UpXL2syKg3rl2o79BCMCUZLMDuqPDd4451dU4KOohqz5N1Cas+NFtJz8+hXNzCkUq0
+	 CjcwKgU/yZpHg==
+Message-ID: <994409a5-857a-4735-bd6b-7574a81dca10@kernel.org>
+Date: Tue, 13 Oct 2026 11:07:13 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: reset MP_JOIN subflows on missing or
- invalid DSS options
-Content-Language: fr
-To: T S RAMESHKUMAR <rameshsv06@gmail.com>
-References: <CADRhS2vwE7QCAPgGmt96gCQ7bwHBWJJXG-d0at13ZAO+Z5kHJg@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next] mptcp: add MPTCP_MIB_RCVINVALIDOPT counter for
+ invalid options
+To: T S Rameshkumar <rameshsv06@gmail.com>, mptcp@lists.linux.dev
+Cc: T S Rameshkumar <rameshkumar.t@phytecembedded.in>
+References: <20261013085604.115478-1-rameshkumar.t@phytecembedded.in>
 From: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
+Content-Language: fr
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,55 +86,26 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <CADRhS2vwE7QCAPgGmt96gCQ7bwHBWJJXG-d0at13ZAO+Z5kHJg@mail.gmail.com>
+In-Reply-To: <20261013085604.115478-1-rameshkumar.t@phytecembedded.in>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi T S,
 
-On 13/10/2026 10:18, T S RAMESHKUMAR wrote:
-> Hi Matt,
+On 13/10/2026 10:56, T S Rameshkumar wrote:
+> In mptcp_parse_option(), invalid MPTCP options or unsupported suboptions
+> and malformed option lengths are silently ignored via break statements.
+> As noted in GitHub issue #628, tracking these invalid options with a MIB
+> counter is useful to detect potential attacks, network corruption, or
+> misbehaving peers.
 
-Please reply in plain text, without HTML. And actually reply to a
-message, don't start a new thread when you want to send a reply
-otherwise it is not visible when looking at patches:
+Thank you for the patches. Please next time add a comment on the GitHub
+ticket: patches have already been shared and waiting for a review (don't
+hesitate to review it). If a ticket is assigned, that means someone is
+working on it.
 
+https://lore.kernel.org/mptcp/20260904-mptcp-mib-inval-opt-v2-0-a72003dc4425@kernel.org/
 
-https://patchwork.kernel.org/project/mptcp/patch/20261012112625.578911-1-rameshkumar.t@phytecembedded.in/
-
-> 1.)  Do you have a reproducer for this?
-> 
-> No, this was spotted during code review of subflow_check_data_avail()
-> rather than from a reproducer in tests or production.
-
-OK. Please mention that in the commit message next time. Or better,
-check if this can really happen with a reproducer.
-
->> Here you are changing the condition "did we already fallback". Is it
->> because a fallback already happened but yet you have a second subflow?
->> That's not consistent, and the root cause is elsewhere.
->> Maybe it is linked to:
->> https://lore.kernel.org/20260814-mptcp-reset-mpj-early-
-> v1-0-3ca3260f9474@kernel.org <https://lore.kernel.org/20260814-mptcp-
-> reset-mpj-early-v1-0-3ca3260f9474@kernel.org>
->> I didn't have time to work on a v2.
-> 
-> You are completely right. Once fallback happens on the initial subflow,
-> no MP_JOIN subflow should be accepted or established in the first place,
-> so patching it under the fallback label in subflow_check_data_avail()
-> is indeed only treating a symptom rather than the root cause.
-
-OK, let's drop the patch then.
-
-> I looked at your RFC series (20260814-mptcp-reset-mpj-early-
-> v1-0-3ca3260f9474@kernel.org <mailto:20260814-mptcp-reset-mpj-early-
-> v1-0-3ca3260f9474@kernel.org>)
-> and Paolo's feedback on rejecting MP_JOIN earlier in subflow_check_req().
-> If you don't mind, I would be very happy to take over and work on v2
-> of that series to address Paolo's comments and get it completed.
-
-Thank you, but I will take the time at some points to send a v2, no
-urgency there.
 
 Cheers,
 Matt
