@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89BB249AA30
-	for <mptcp@lists.linux.dev>; Wed, 14 Oct 2026 14:42:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32343803D1
+	for <mptcp@lists.linux.dev>; Wed, 14 Oct 2026 14:50:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791988972; cv=none; b=q1a/yECKuaTNrwzdjqp0HMaNpxEelEQtcJcyumkLGmhGJtKur7fn/9CUCb/XW0uMGgYkuO1S6p55HF34LSXFXmVC6B6xBHc0FoVbbx+aKEQD2mkyEtkXIU1Owgag4FqAl2RDIfRO6tVA9he2l0VPwK/UDNg7JERrarg9tI5KHMY=
+	t=1791989420; cv=none; b=BDXn2+inRXNasPKj1V/hmDFPQ8eNVEOxq94t7/TLJkfgGcR6DzDeklxjMdieuX//tI50t//qi0LRKuupC1uBrfoeK3M5YHOk5I8H+MKVYhgJ/HFng1tj9kP9MBLhdUPh7TXuEDrKPCU2RnJHc/zLQmgnKVH7ziMtI+jjCZyn800=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791988972; c=relaxed/simple;
-	bh=71d2AKis7JCx/6HoFo0tlub7peURDeRvypnPjfx+BqA=;
+	s=arc-20240116; t=1791989420; c=relaxed/simple;
+	bh=hLhNaXYIp8OKeJH+N0ijtxidqpXckam9Yq9Pa0rBC8Q=;
 	h=Message-ID:From:Subject:To:In-Reply-To:References:Content-Type:
-	 Date; b=REAnp7SHz+Jd86HLAqtsFF9HzPltfPLeFvRspPM16Kq5+c3TUvojITA6O7A3SVj/J7zHBsDApKvLfPsiGQPl2pu+Ryo9AqKZLtmz8GCTHBNpz5+4MmntskSnmVWE++KAH95q7JfWe7bIM0zMgM69kkTF86iX4s6sX50KCzFIbqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NkBG8gHP; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=Fj6P9tPtq9OdtvfSTPEz8+qiXMIeRgTBhKpghRSqM/Tn6xpXdEe9n4djo0IUXxLneREmHGDv0bVCRwbo74ySXWzaZeGYmE0oLIph9ihwDqZ/nJBVeNST86bOcK8gGJLd6xE5CQ5oZ0sPZn+aUVIcMxE6treCw13Zqb01+Uxd7C0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nYNRwaT/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NkBG8gHP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0D061F000C5;
-	Wed, 14 Oct 2026 14:42:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nYNRwaT/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D92DA1F000C7;
+	Wed, 14 Oct 2026 14:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791988969;
-	bh=A3im49CDnoc9xp/vAu5H5MYocPSMLiaxQIaDGWhlQJA=;
+	s=k20260515; t=1791989416;
+	bh=roKRYRfq/qDMov+6yP1uE9fx6cL0DToH9/Tpci/WgMQ=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=NkBG8gHPUwmYHY5vRgo/s0il6ye68iysLWwZ7NU7f/6Pwn1ZhfotE8cnLkq63galb
-	 vFxVAaBRjqNxZZBLIEHhu4hRikJCthK2JbSI2pKD5NqTv7qoeezQLYbw8zWzSS2MNa
-	 WLYwkbUxfQHgEiOdpbUBuPFZ+iLgaIrh64xai0yR1neT/Ru8gXFJf+QjXcvjTJNXJ0
-	 TaSr4ruv/zKlmcbY29yuNRkdnChc1wBUdlZ7X5+I8lr6wBkqWVogLeJayiqULYiBmv
-	 YrHOblVn/ATfjleRs+ilhdl3GLoxn4jeO0WPy7qlAcY7k0pFyF9JceIB8/US+9cOB7
-	 U+sZ3XMvnH4IQ==
-Message-ID: <sashiko-outbox-171440@kernel.org>
+	b=nYNRwaT/COZulbzjDMa6oTYm12mg77iIGWr/uR8hOzLQ8AItdIMXG+p2uOKpLSLsQ
+	 XjZsTF2LK31esiavoid3R7OyZG9AckvbaEMi01XQTFzCu191Mia+66ObEnbnJFTA0d
+	 mo39yR3ck59MxmHHDfYhjs9MHDOrXWHg7awiK9MXSQ0GmbFlyRebmBJdS7hTDZqnAF
+	 vwOG6pDrYgz/wyLMysQHO2ACD9Aa9mcwWMiUFr4G/vvE1id5oV5UTRh+jjL5sAwGNw
+	 BZaJemy9x0AEpl/PEkvu4KnOGVPFsuEU5sOZIJP2Ov5tSTkM0TIk9tcXIRRcPadcFL
+	 YcqGm16uNNb5g==
+Message-ID: <sashiko-outbox-171447@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH mptcp-next v3 1/3] selftests: mptcp: connect: retry
- write() on EAGAIN
+Subject: Re: [RFC PATCH mptcp-next v3 2/3] mptcp: pm: kernel: retry subflows
+ closed after an error
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Anil Kaushik" <anilkaushikwireless@gmail.com>, mptcp@lists.linux.dev
-In-Reply-To: <20261014143349.768138-2-anilkaushikwireless@gmail.com>
+In-Reply-To: <20261014143349.768138-3-anilkaushikwireless@gmail.com>
 References: <20261014143349.768138-1-anilkaushikwireless@gmail.com>
- <20261014143349.768138-2-anilkaushikwireless@gmail.com>
+ <20261014143349.768138-3-anilkaushikwireless@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 14 Oct 2026 14:42:48 +0000
+Date: Wed, 14 Oct 2026 14:50:15 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -46,75 +46,96 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] selftests: mptcp_connect fails on EAGAIN when poll_timeout is in=
-finite
+- [Medium] mptcp: duplicate MPTCP_EVENT_SUB_CLOSED event emitted on reconne=
+ct failure
 --
 
-commit c4cb29705a0b8f55f650eb00f7f218f1708de879
+commit 66071f5b3caa5390ad8bce4ae347cb2285123fa3
 Author: Anil Kaushik <anilkaushikwireless@gmail.com>
 
-selftests: mptcp: connect: retry write() on EAGAIN
+mptcp: pm: kernel: retry subflows closed after an error
 
-mptcp_connect treats any write() error as fatal. But write() can fail
-with EAGAIN even after poll() said the socket was writable: the MPTCP
-send buffer shrinks when a subflow is closed.
+This commit adds an opt-in sysctl to retry creating subflows closed by
+TCP after an error. The PM immediately creates a new subflow using the
+same addresses, and spaces out attempts via SYN retransmissions. A new
+SubflowRetry counter tracks these attempts.
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/te=
-sting/selftests/net/mptcp/mptcp_connect.c
-> index 178d98d91fea2..03fff859e4d1d 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/440
+
+> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+> index d3014bf57bf3c..d020e5f69c013 100644
+> --- a/net/mptcp/pm_kernel.c
+> +++ b/net/mptcp/pm_kernel.c
 [ ... ]
-> @@ -711,6 +712,20 @@ static int copyfd_io_poll(int infd, int peerfd, int =
-outfd,
-> =20
->  				bw =3D do_rnd_write(peerfd, winfo->buf + winfo->off, winfo->len);
->  				if (bw < 0) {
-> +					/* POLLOUT does not guarantee that
-> +					 * the next write will not block:
-> +					 * the MPTCP send buffer can shrink
-> +					 * in between, e.g. when a subflow
-> +					 * is closed. Wait for more space,
-> +					 * but not forever: poll() does not
-> +					 * check every cause of EAGAIN.
-> +					 */
-> +					if (errno =3D=3D EAGAIN &&
-> +					    ++eagain_ms <=3D poll_timeout) {
-                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> @@ -1591,6 +1591,151 @@ bool mptcp_pm_nl_check_work_pending(struct mptcp_=
+sock *msk)
+[ ... ]
+> +/* Called with the msk socket lock held, instead of closing the subflow =
+*/
+> +bool mptcp_pm_kernel_retry_reconnect(struct mptcp_sock *msk, struct sock=
+ *ssk,
+> +				     const struct mptcp_pm_retry *retry)
+> +{
+> +	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
+> +	struct sock *sk =3D (struct sock *)msk;
+> +
+> +	/* like mptcp_close_ssk() does for the failed attempt */
+> +	mptcp_event(MPTCP_EVENT_SUB_CLOSED, msk, ssk, GFP_KERNEL);
+> +
+> +	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_SUBFLOWRETRY);
+> +	if (mptcp_subflow_reconnect(sk, ssk, &retry->local, &retry->remote))
+> +		return false;
+
 [Severity: Medium]
-Will this condition incorrectly abort the test immediately if poll_timeout
-is set to -1 (infinite timeout)?
+Will this sequence emit a duplicate MPTCP_EVENT_SUB_CLOSED event if the
+reconnect attempt fails?
 
-If the tool is invoked with a timeout of 0 or less (e.g., -t 0), poll_timeo=
-ut
-is set to -1. When write() returns EAGAIN, the new condition evaluates to
-1 <=3D -1, which is false. This bypasses the intended retry logic, immediat=
-ely
-failing the transfer instead of waiting.
+When mptcp_subflow_reconnect() is called, it clears the subflow context
+using mptcp_subflow_ctx_reset(), which zeroes the close_event_done flag:
 
-I noticed a similar issue in the preexisting code in xdisconnect():
+net/mptcp/subflow.c:mptcp_subflow_reconnect() {
+...
+	mptcp_subflow_ctx_reset(subflow);
+...
 
-tools/testing/selftests/net/mptcp/mptcp_connect.c:xdisconnect() {
-	...
-	for (i =3D 0; ; i +=3D msec_sleep) {
-		/* closed socket are not listed by 'ss' */
-		if (system(cmd) !=3D 0)
-			break;
+If the underlying tcp connect call fails, mptcp_subflow_reconnect() returns
+an error, causing mptcp_pm_kernel_retry_reconnect() to return false.
 
-		if (i > poll_timeout)
-			xerror("timeout while waiting for spool to complete");
-		usleep(msec_sleep * 1000);
-	}
-	...
-}
+[ ... ]
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 60cbd91be6320..f29cfd2ad69b9 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+[ ... ]
+> @@ -2827,7 +2829,14 @@ static void __mptcp_close_subflow(struct sock *sk)
+>  		if (!skb_queue_empty_lockless(&ssk->sk_receive_queue))
+>  			continue;
+> =20
+> +		do_retry =3D mptcp_pm_kernel_retry_check(msk, subflow, &retry);
+> +		if (do_retry && retry.reuse &&
+> +		    mptcp_pm_kernel_retry_reconnect(msk, ssk, &retry))
+> +			continue;
+> +
+>  		mptcp_close_ssk(sk, ssk, subflow);
 
-Does this code also incorrectly assume poll_timeout is positive, causing an
-immediate crash if poll_timeout is -1?
+[Severity: Medium]
+When mptcp_pm_kernel_retry_reconnect() returns false, the fallback path
+here calls mptcp_close_ssk().
 
-> +						usleep(1000);
-> +						continue;
-> +					}
+Since the close_event_done flag was cleared to false by the failed
+reconnect attempt, and the parent MPTCP socket is still in TCP_ESTABLISHED,
+mptcp_close_ssk() will unconditionally emit a second MPTCP_EVENT_SUB_CLOSED
+event for the exact same subflow socket.
+
+Could this duplicate state notification confuse or desynchronize userspace
+path managers?
+
+> +		if (do_retry && !retry.reuse)
+> +			mptcp_pm_kernel_retry(msk, &retry);
+>  	}
+> =20
+>  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261014143349.7681=
-38-1-anilkaushikwireless@gmail.com?part=3D1
+38-1-anilkaushikwireless@gmail.com?part=3D2
