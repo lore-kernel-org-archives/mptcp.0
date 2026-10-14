@@ -1,141 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32343803D1
-	for <mptcp@lists.linux.dev>; Wed, 14 Oct 2026 14:50:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E4D3515C8
+	for <mptcp@lists.linux.dev>; Wed, 14 Oct 2026 15:39:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791989420; cv=none; b=BDXn2+inRXNasPKj1V/hmDFPQ8eNVEOxq94t7/TLJkfgGcR6DzDeklxjMdieuX//tI50t//qi0LRKuupC1uBrfoeK3M5YHOk5I8H+MKVYhgJ/HFng1tj9kP9MBLhdUPh7TXuEDrKPCU2RnJHc/zLQmgnKVH7ziMtI+jjCZyn800=
+	t=1791992391; cv=none; b=rZvGIBzy+wfq8gVAt9843DlJLsHJTeKQkdz6AQHBpmxgwhPv/YnN6GpIzy9CKK6SKjy3DJZGMcHIvE2WlAdA/yBSL+vZrG1alGROJMZ+Y1KL6OvgKPToGhrm9X4j/ZhCQ2ggJxTXn+BmM36idS/ampWajQxr2yM920J+Vek6MUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791989420; c=relaxed/simple;
-	bh=hLhNaXYIp8OKeJH+N0ijtxidqpXckam9Yq9Pa0rBC8Q=;
-	h=Message-ID:From:Subject:To:In-Reply-To:References:Content-Type:
-	 Date; b=Fj6P9tPtq9OdtvfSTPEz8+qiXMIeRgTBhKpghRSqM/Tn6xpXdEe9n4djo0IUXxLneREmHGDv0bVCRwbo74ySXWzaZeGYmE0oLIph9ihwDqZ/nJBVeNST86bOcK8gGJLd6xE5CQ5oZ0sPZn+aUVIcMxE6treCw13Zqb01+Uxd7C0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nYNRwaT/; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791992391; c=relaxed/simple;
+	bh=x4dLW4BX6sgpbsxCO9qFn4QRu0BfWA39oiWoGsSqPKU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=SkAdFgNoc2UGZwE0dokMdyqw7ABGgDUyhWgTm2jGF6CT1/u5qnV0VwCWNzWuds9Wj2TVD63NCN4KuGEdqKme0ra0N8+0oxUEjZA879axd2btDXxhU9p7ifqMV51FMIUX273wy/Vjlo5NawZatJAmVMrj3fbq8JrHaeGn8Hb78Nc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TzL2bOZN; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nYNRwaT/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D92DA1F000C7;
-	Wed, 14 Oct 2026 14:50:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791989416;
-	bh=roKRYRfq/qDMov+6yP1uE9fx6cL0DToH9/Tpci/WgMQ=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=nYNRwaT/COZulbzjDMa6oTYm12mg77iIGWr/uR8hOzLQ8AItdIMXG+p2uOKpLSLsQ
-	 XjZsTF2LK31esiavoid3R7OyZG9AckvbaEMi01XQTFzCu191Mia+66ObEnbnJFTA0d
-	 mo39yR3ck59MxmHHDfYhjs9MHDOrXWHg7awiK9MXSQ0GmbFlyRebmBJdS7hTDZqnAF
-	 vwOG6pDrYgz/wyLMysQHO2ACD9Aa9mcwWMiUFr4G/vvE1id5oV5UTRh+jjL5sAwGNw
-	 BZaJemy9x0AEpl/PEkvu4KnOGVPFsuEU5sOZIJP2Ov5tSTkM0TIk9tcXIRRcPadcFL
-	 YcqGm16uNNb5g==
-Message-ID: <sashiko-outbox-171447@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH mptcp-next v3 2/3] mptcp: pm: kernel: retry subflows
- closed after an error
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Anil Kaushik" <anilkaushikwireless@gmail.com>, mptcp@lists.linux.dev
-In-Reply-To: <20261014143349.768138-3-anilkaushikwireless@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TzL2bOZN"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2e8d2574fd9so27369155ad.1
+        for <mptcp@lists.linux.dev>; Wed, 14 Oct 2026 08:39:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791992390; x=1792597190; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=FKlXwinWhKKOvQWdhu6fCifP9EWCG9odmbkkLyjjcLQ=;
+        b=TzL2bOZNYaM9suQ9YgHWq6KjWp72AwLnoJy9a7x6c7LakGT9VURySfys7RypF7jXol
+         wE2TK4FQO1aNiahuoKNgKJtQPzGSc4DYQeXwY9zXxxUKyDQ9vCiixXCtiGJbuZHVVYeA
+         Y1MieAYE5x4cFYU/JjGDYUNnV5X2338y3AK7E+CpE07LjKUHBih9sgzx7XisYy9DDUUb
+         nBR5t5jH/6v2JK1QjatMrZkULEX1xhFKUy8qNAKcwra742F3ZFzMYLJOzTgcy93vc3Ka
+         Sxb11YDgbk5lHZ9MZoZGuFtOX6baDnPH2HtoGVIVAddpqkLv0RCdlVciWFZowV+BwB8Y
+         3v8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791992390; x=1792597190;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=FKlXwinWhKKOvQWdhu6fCifP9EWCG9odmbkkLyjjcLQ=;
+        b=UxGO5UUTiSPl24kpnNLwga22zVM9vdfxkJqEUvYh8s/+Q0D6vH4Kpw8w3Tqzrq7E0j
+         RqL0nCmBggwD56/WAQKiLdY5XRSrmoZkYopEPhAohTIYR0chGOwGFXiK2MC2ys3jwmX3
+         ybU5qpWa3pDBL00Ys7pNgBTkpCX9KFprOU/CmmFB7z2eJ5/VpIFWnpvwJNnuO9X196As
+         NbcdWnlj6yijYG/FvnkEcgquNiRtS2UYjtpKGhUMyl9oX9J5LObkyyHrloH7OxhfIbzz
+         Avbi9GAO06HcKCCJ6/qTKm85UGUpDYd1VA6cx+b++sobOXKukfSBK+nSAa7uJYdK2a+m
+         yhzw==
+X-Gm-Message-State: AFq9FYJ7NdUQCFgLa03PrlS+c/Ph/PwZQAZebKOKWGiNJBcqbW5NrCph
+	3F/AvDb0sabY7xNZgxgTb+hJvjUDFhdEv15tRQapklHamo5CZ15leKs=
+X-Gm-Gg: AYBFou3MdqHX2+/BKgSr/WcIkSHE5t+SxwnUxJTOF6I+M5C0DQS99KYnhVMXT2dqdFD
+	VWg81GX5U9LDZ5ll8PbAlivrnoaEE2h6ufWJdNwa26JrYMw/SKiKbqswaoplDpVRIAq7BZfldfl
+	ojmVcbZK/AEtQ/KdaUXCihPMsuwq5rzsEcuaSMjTLAvKJM2+P9FUDGduR1XKDypZDa28npGXGWz
+	wZqegwdRrgH2nOp/7qWvOgiCJLIBBLSzk4yBOKZiOSEon5c5K3Qy9RG6LFT1XjRhfcPT5/juNZb
+	q0kD8FxxRtL35E3aXkmSUz7fB7YUuTISktS/+kyUm3DfOoPNOWoYeORyLc8uqyL8+7+GM4DImhP
+	R/nsR5eSMfO5rdXxN15kiCAqbh9rc00TnLiNIYi4oCux3pBo67qsa2yDqCb5GqwH/1A13/wqYqN
+	1qPvO2pPU/rPuGXFLuHKd+azOauO3UrV/zzwQIcpnKbmn3cOvFx7xOdiciL6yYuy320OWBkMLyO
+	8skVhQHjS4=
+X-Received: by 2002:a17:902:e54f:b0:2d9:216a:cdd3 with SMTP id d9443c01a7336-2e842aa7c60mr137575495ad.18.1791992389627;
+        Wed, 14 Oct 2026 08:39:49 -0700 (PDT)
+Received: from [127.0.0.1] ([20.163.39.232])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2e8421b298dsm69752615ad.33.2026.10.14.08.39.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Oct 2026 08:39:49 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Anil Kaushik <anilkaushikwireless@gmail.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20261014143349.768138-1-anilkaushikwireless@gmail.com>
 References: <20261014143349.768138-1-anilkaushikwireless@gmail.com>
- <20261014143349.768138-3-anilkaushikwireless@gmail.com>
-Content-Type: text/plain; charset=utf-8
+Subject: Re: [RFC PATCH mptcp-next v3 0/3] mptcp: pm: kernel: retry
+ subflows closed after an error
+Message-ID: <f57d3c57-d40c-0325-7437-e9e04fb1c86d@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 14 Oct 2026 14:50:15 +0000
+Date: Wed, 14 Oct 2026 15:39:48 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] mptcp: duplicate MPTCP_EVENT_SUB_CLOSED event emitted on reconne=
-ct failure
---
+Hi Anil,
 
-commit 66071f5b3caa5390ad8bce4ae347cb2285123fa3
-Author: Anil Kaushik <anilkaushikwireless@gmail.com>
+Thank you for your modifications, that's great!
 
-mptcp: pm: kernel: retry subflows closed after an error
+Our CI did some validations and here is its report:
 
-This commit adds an opt-in sysctl to retry creating subflows closed by
-TCP after an error. The PM immediately creates a new subflow using the
-same addresses, and spaces out attempts via SYN retransmissions. A new
-SubflowRetry counter tracks these attempts.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf: Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_n=
+et-next/actions/runs/38583978482
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/440
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/06eef3d66a=
+29
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1185663
 
-> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-> index d3014bf57bf3c..d020e5f69c013 100644
-> --- a/net/mptcp/pm_kernel.c
-> +++ b/net/mptcp/pm_kernel.c
-[ ... ]
-> @@ -1591,6 +1591,151 @@ bool mptcp_pm_nl_check_work_pending(struct mptcp_=
-sock *msk)
-[ ... ]
-> +/* Called with the msk socket lock held, instead of closing the subflow =
-*/
-> +bool mptcp_pm_kernel_retry_reconnect(struct mptcp_sock *msk, struct sock=
- *ssk,
-> +				     const struct mptcp_pm_retry *retry)
-> +{
-> +	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
-> +	struct sock *sk =3D (struct sock *)msk;
-> +
-> +	/* like mptcp_close_ssk() does for the failed attempt */
-> +	mptcp_event(MPTCP_EVENT_SUB_CLOSED, msk, ssk, GFP_KERNEL);
-> +
-> +	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_SUBFLOWRETRY);
-> +	if (mptcp_subflow_reconnect(sk, ssk, &retry->local, &retry->remote))
-> +		return false;
 
-[Severity: Medium]
-Will this sequence emit a duplicate MPTCP_EVENT_SUB_CLOSED event if the
-reconnect attempt fails?
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-When mptcp_subflow_reconnect() is called, it clears the subflow context
-using mptcp_subflow_ctx_reset(), which zeroes the close_event_done flag:
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-net/mptcp/subflow.c:mptcp_subflow_reconnect() {
-...
-	mptcp_subflow_ctx_reset(subflow);
-...
+For more details:
 
-If the underlying tcp connect call fails, mptcp_subflow_reconnect() returns
-an error, causing mptcp_pm_kernel_retry_reconnect() to return false.
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-[ ... ]
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 60cbd91be6320..f29cfd2ad69b9 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-[ ... ]
-> @@ -2827,7 +2829,14 @@ static void __mptcp_close_subflow(struct sock *sk)
->  		if (!skb_queue_empty_lockless(&ssk->sk_receive_queue))
->  			continue;
-> =20
-> +		do_retry =3D mptcp_pm_kernel_retry_check(msk, subflow, &retry);
-> +		if (do_retry && retry.reuse &&
-> +		    mptcp_pm_kernel_retry_reconnect(msk, ssk, &retry))
-> +			continue;
-> +
->  		mptcp_close_ssk(sk, ssk, subflow);
 
-[Severity: Medium]
-When mptcp_pm_kernel_retry_reconnect() returns false, the fallback path
-here calls mptcp_close_ssk().
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-Since the close_event_done flag was cleared to false by the failed
-reconnect attempt, and the parent MPTCP socket is still in TCP_ESTABLISHED,
-mptcp_close_ssk() will unconditionally emit a second MPTCP_EVENT_SUB_CLOSED
-event for the exact same subflow socket.
-
-Could this duplicate state notification confuse or desynchronize userspace
-path managers?
-
-> +		if (do_retry && !retry.reuse)
-> +			mptcp_pm_kernel_retry(msk, &retry);
->  	}
-> =20
->  }
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261014143349.7681=
-38-1-anilkaushikwireless@gmail.com?part=3D2
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
