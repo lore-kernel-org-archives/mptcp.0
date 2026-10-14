@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE7E1F3B85
-	for <mptcp@lists.linux.dev>; Wed, 14 Oct 2026 00:11:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B28CB640
+	for <mptcp@lists.linux.dev>; Wed, 14 Oct 2026 00:35:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791936677; cv=none; b=RCH3faVRC7BbVDgWIZmeczgBweaV4UfCCSyk1saMERr4CuODbU6FsWMas5nsbW6yoJ7YXvW/wZ+u1R9//4woS5MLr718Puhdk7Uq9NC1KIz4aJwNBYTivO3Bf50Y4YUjMBhZCpWkSnC4laLlh45XVQBmdhmw+Z2z3swKNUqLvQY=
+	t=1791938124; cv=none; b=kaIz8BKUoKaBQXmAeE7Jwd7O/09LZSdtBVCxTzpSg/UTwb0VDqushYU7lk3Kp8quZ+l3IQuAvKRVjPODFsVOu1YoBBKo1aMq0IgKniqd5qJifERSIqEBJlAXKH8bNMEMhJWtl1vEs91W0q8LAudoUFPLBaGhUepFLyOz9cBKg58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791936677; c=relaxed/simple;
-	bh=i1SEHtwn4xfDH3W8Ve60GnVa7hbGikbiCTpnVDdIU+Y=;
+	s=arc-20240116; t=1791938124; c=relaxed/simple;
+	bh=ahKANnHlffOPByaJUCxPTRzxnyolH5QjPatyQO1UPa4=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oc2XmDj9LrrPpD8p3nn1UykxdZwVcr4xEkt/CPrNKXlsWRawtheRAfjbzMXm/FPozikEao5lBkx59EunnMC1cfDQTxclFV3SqWBht+alxjHinV0I/SQfs2GGVSEwgU3Sp9WLle8TJgymEHuJgfgFjanbezl+SGccQwQG5OxibnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K4xwtmQ+; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:MIME-Version; b=RxurVBVObQAIrBI2iJ1GvNN/zMj95c4OKoy+OB51QZ33C5UJT8S8RFjUsg/IqoH6lXYS7k5xLPvLNn79uoIEgmAl7gIXFgjgzLV3KaLIMp1xPjb8HlYlUrPYwnADk4+uu3aSHxZvN0kxmbxW583RMYHXBkU+2x7mTdvUgWY/Kuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RTow85Ts; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K4xwtmQ+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14FBF1F000FF;
-	Wed, 14 Oct 2026 00:11:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RTow85Ts"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4D191F000FF;
+	Wed, 14 Oct 2026 00:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791936673;
-	bh=5SNzA+saJcAZ0SRSLwsMbOc4QLweQOSUJwAb3w4uzHw=;
+	s=k20260515; t=1791938123;
+	bh=5s6WulDGabmKRfzPjEdUu3qO0RBkG/NzXQxse9v6GY4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=K4xwtmQ+Yl58YQrIfd79OKbSNQMIYBQag94LAUFuKiUKjUrv6Lkma61E/UIY81pY8
-	 c0gBg71DodoBxfXEEaDSHOofyPYxJu+O5MBMVNsrByXvQx5GBgVjgMIO1p80W1fDIa
-	 pgeC+61OzOw0jG+taNXImLVNDj6uimnRHeMCIPp5Wo49SJKFmB+KARHvogb/hzP3nJ
-	 wDyu6Be5lJMYBtTokYDppIki1dai1nfe+jKBNKL68a48kSErXoSe9FrO51tteNBIAj
-	 oHP4l0cq5M5cVt+2mMcoAlxKJF8uzd529hOwmZ/3JiyYTsbzrDWdjWISHPA++s1f3e
-	 lQ0C3KY1yp6VA==
-Subject: Re: [PATCH mptcp-net v2] mptcp: push queued data on passive TFO
- subflows becoming established
+	b=RTow85TsZO0W5jib4+tbQat26vq81vyePy2ZX+bKkvnucEt8toXYHSWjV46byWdpL
+	 w+2gWS2TD7vcU6mJkeHEDUokaD6N1DSx9VLSBMOLKYlfHJkWg5E5JmGKCFNWUhNHcx
+	 9bieusQOw5CKDJmPAzIRtd+HxeWWa8uH7HuRDq10aaJrEKeoFcfTajfyBbDXi4iTHU
+	 bjXGXoTqRjI+GjWi2UscsrG1w4d3lBdvyQ3H6Jj9UstJZXOjPNiIPcEj+npiaGmCHu
+	 7S6uFnJ8PLK5ri7dQ9//xJlZ+3LyoGZrhERc9WtTYALam6dLM6zXeUqpO4PWKgJx3b
+	 lEKw94l2rkMhA==
+Subject: Re: [PATCH mptcp-net] mptcp: reset MP_JOIN subflows on missing or
+ invalid DSS options
 From: netdev-bot+sashiko@kernel.org
 To: rameshsv06@gmail.com
-Cc: mptcp@lists.linux.dev, matttbe@kernel.org, petar.sakic@ink.fish,
- rameshkumar.t@phytecembedded.in, kuba@kernel.org
-Date: Wed, 14 Oct 2026 00:11:12 +0000
-Message-ID: <179193667256.3135.13011798294766264196@kernel.org>
-In-Reply-To: <20261012111001.542847-1-rameshkumar.t@phytecembedded.in>
-References: <20261012111001.542847-1-rameshkumar.t@phytecembedded.in>
+Cc: mptcp@lists.linux.dev, matttbe@kernel.org, rameshkumar.t@phytecembedded.in,
+ kuba@kernel.org
+Date: Wed, 14 Oct 2026 00:35:22 +0000
+Message-ID: <179193812231.3135.9291068793791022556@kernel.org>
+In-Reply-To: <20261012112625.578911-1-rameshkumar.t@phytecembedded.in>
+References: <20261012112625.578911-1-rameshkumar.t@phytecembedded.in>
 X-sashiko-severity: High
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -46,10 +46,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 3 potential
+Thank you for your contribution! Sashiko AI review found 4 potential
 issue(s) to consider.
 
-Critical: 0 · High: 1 · Medium: 1 · Low: 1
+Critical: 0 · High: 1 (1) · Medium: 1 · Low: 2
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -57,153 +57,215 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [High] The fix is incomplete.
-- [Medium] The fix also misses the fallback path.
-- [Low] The commit tags are wrong.
+- [High] mptcp: DoS and skipped stats via mptcp_subflow_fail() on MP_JOIN
+- [Medium] The patch now resets an MP_JOIN subflow when its data arrives
+  after the connection has fallen back.
+- [Low] The commit fixes a real bug but has no Fixes: tag.
+- [Low] The author and sign-off addresses do not match.
+
+Pre-existing issues:
+- [High] The new joined-subflow branch in subflow_check_data_avail()
+  (subflow.c:1449-1462) still sends MP_JOIN subflows with…
 
 --
 
-mptcp: push queued data on passive TFO subflows becoming established
+mptcp: reset MP_JOIN subflows on missing or invalid DSS options
 
-This commit makes check_fully_established() call __mptcp_check_push()
-when a passive TFO subflow (subflow->is_mptfo) becomes fully
-established. The goal is to flush data the server wrote while the
-subflow was still in SYN_RECV. Without the flush, that data stays in
-the msk write queue because the MPC third ACK carries no DSS.
+This patch changes the fallback label in subflow_check_data_avail(). MP_JOIN
+subflows, and any subflow other than msk->first, are now always reset when
+they see missing or invalid DSS mappings. Before, they got a fake fallback
+mapping once the connection had fallen back. The initial subflow keeps the
+existing MP_FAIL and infinite fallback handling.
 
-Closes: https://lore.kernel.org/netdev/CAFPPu1gU2Y-D+d4i3F0MoNkYK+e1U+=X3qf6QycjfKBw+8snPg@mail.gmail.com/
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/544
 
-> Fixes: fb7084501a61 ("mptcp: add support for TCP_FASTOPEN sockopt")
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/544
 > Signed-off-by: T S Rameshkumar <rameshkumar.t@phytecembedded.in>
 
 [Severity: Low]
-This isn't a bug, but does fb7084501a61 exist? The hash doesn't resolve
-in the tree, and no commit has that subject.
+This fixes the baseline behaviour where data on a join subflow, arriving
+after the connection fell back, went through the fake fallback mapping path
+in subflow_check_data_avail() instead of being reset. There is no Fixes: tag
+though.
 
-The passive TFO and is_mptfo handling seem to have come from these
-commits:
+Could one be added so stable maintainers know which trees need the backport?
+MPTCP fixes for net are expected to carry one.
 
-  36b122baf6a8 ("mptcp: add subflow_v(4,6)_send_synack()")
-  dfc8d0603033 ("mptcp: implement delayed seq generation for passive fastopen")
-  4ffb0a02346c ("mptcp: add TCP_FASTOPEN sock option")
+[Severity: Low]
+The author is T S Rameshkumar <rameshsv06@gmail.com>, but the only
+Signed-off-by uses rameshkumar.t@phytecembedded.in. checkpatch reports this
+as a From:/Signed-off-by: email address mismatch.
 
-Should the Fixes tag point at 36b122baf6a8 or dfc8d0603033 instead?
+Could the sign-off use the author address, or could a From: line be added to
+the body?
 
-Also, the Signed-off-by address (rameshkumar.t@phytecembedded.in) doesn't
-match the author address (rameshsv06@gmail.com). Checkpatch reports this
-as FROM_SIGN_OFF_MISMATCH.
-
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 20490410fa22f..33eede084af8d 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -1046,6 +1046,8 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 2c72cb50fbf36..421832874cc62 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1446,7 +1446,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
+>  	return false;
 >  
->  	mptcp_data_lock((struct sock *)msk);
->  	__mptcp_subflow_fully_established(msk, subflow, mp_opt);
-> +	if (subflow->is_mptfo)
-> +		__mptcp_check_push((struct sock *)msk, ssk);
+>  fallback:
+> -	if (!__mptcp_check_fallback(msk)) {
+> +	if (subflow->mp_join || ssk != READ_ONCE(msk->first)) {
+>  		/* RFC 8684 section 3.7. */
+>  		if (status == MAPPING_BAD_CSUM &&
+>  		    (subflow->mp_join || subflow->valid_csum_seen)) {
 
 [Severity: High]
-Does this check miss passive TFO children whose SYN carried no data?
+This is a pre-existing issue, but this block now handles only joined
+subflows. Is the mptcp_subflow_fail() call under this MAPPING_BAD_CSUM check
+still correct?
 
-mptcp_fastopen_subflow_synack_set_params() sets is_mptfo only after it
-finds SYN data in the subflow receive queue:
+mptcp_subflow_fail() only works for the MPC subflow:
 
-net/mptcp/fastopen.c:mptcp_fastopen_subflow_synack_set_params() {
+net/mptcp/subflow.c:mptcp_subflow_fail() {
     ...
-	/* A valid TFO cookie does not guarantee SYN data. */
-	skb = skb_peek(&ssk->sk_receive_queue);
-	if (!skb)
-		return;
+	msk->allow_subflows = false;
+	spin_unlock_bh(&msk->fallback_lock);
 
-	subflow->is_mptfo = 1;
-    ...
-}
-
-The TCP core still creates a full TFO child for a data-less SYN that has
-a valid cookie. It also does this when TFO_SERVER_COOKIE_NOT_REQD is set:
-
-net/ipv4/tcp_fastopen.c:tcp_try_fastopen() {
-    ...
-	if (!((tcp_fastopen & TFO_SERVER_ENABLE) &&
-	      (syn_data || foc->len >= 0) &&
-	      tcp_fastopen_queue_check(sk))) {
+	/* graceful failure can happen only on the MPC subflow */
+	if (WARN_ON_ONCE(ssk != READ_ONCE(msk->first)))
+		return false;
     ...
 }
 
-tcp_conn_request() then puts that child straight into the accept queue,
-while the subflow is still in SYN_RECV.
+Every subflow that reaches this branch has mp_join set or is not msk->first.
+So the helper either returns false early or hits the WARN_ON_ONCE(). The
+data_avail = true / return true success path cannot run here.
 
-Suppose the application accepts and writes at once, as a
-server-speaks-first protocol does. mptcp_sendmsg_frag() returns -EAGAIN
-because !__tcp_can_send(ssk). __mptcp_push_pending() then exits with
-nothing copied, so the rtx timer is never armed.
+A remote peer seems able to reach the warning. When mptcp_finish_join()
+defers a passive join to join_list, allow_infinite_fallback stays true. It
+is only cleared in mptcp_subflow_joined(), on retransmission, or during
+MP_FAIL handling.
 
-When the pure MPC third ACK arrives, is_mptfo is 0 at this point and the
-push is skipped. mptcp_incoming_options() then returns before
-ack_update_msk():
+A peer that negotiated checksums can then send a DSS with a bad checksum on
+that subflow:
 
-	if (!(mp_opt.suboptions & OPTION_MPTCP_DSS))
-		return true;
+subflow_data_ready()
+  mptcp_subflow_data_available()
+    subflow_check_data_avail()
+      get_mapping_status() -> MAPPING_BAD_CSUM
+      mptcp_subflow_fail()
+        WARN_ON_ONCE(ssk != READ_ONCE(msk->first))
 
-So won't the queued bytes stay stuck until the peer sends something,
-exactly as before this patch?
+This also clears allow_subflows on the msk. With panic_on_warn set, it
+becomes a panic.
 
-Would it work better to replace the is_mptfo test with one that covers
-every passive TFO child, such as tcp_sk(ssk)->syn_fastopen_child? Another
-option is to push whenever data is pending.
+The baseline made the same call under !__mptcp_check_fallback(), so this
+path was already reachable. The commit message says joined subflows should
+simply be reset. Could this branch set send_mp_fail if needed and go
+straight to the reset label without calling mptcp_subflow_fail()?
+
+> @@ -1461,6 +1461,28 @@ static bool subflow_check_data_avail(struct sock *ssk)
+>  			return true;
+>  		}
+>  
+> +		subflow->reset_transient = 0;
+> +		subflow->reset_reason = status == MAPPING_NODSS ?
+> +					MPTCP_RST_EMIDDLEBOX :
+> +					MPTCP_RST_EMPTCP;
+> +		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSRESET);
+> +		goto reset;
+> +	}
+
+[Severity: High]
+For a joined subflow that sees MAPPING_BAD_CSUM, this branch still
+calls mptcp_subflow_fail() first, and that helper cannot succeed for a
+join subflow. That has two consequences.
+
+First, when allow_infinite_fallback is already clear,
+mptcp_subflow_fail() returns false. The code then sets
+MPTCP_RST_EMIDDLEBOX and jumps to the reset label. That label sits
+after the MPTCP_INC_STATS(..., MPTCP_MIB_DSSRESET) call in the
+mptcp_try_fallback() failure block. So a join subflow reset for a bad
+checksum is never counted in MPTCP_MIB_DSSRESET. A join subflow reset
+for MAPPING_NODSS or MAPPING_INVALID is counted here. The commit
+message says joined subflows get the MIB bump before the reset. Was
+the bad checksum case meant to be left out?
+
+Second, when allow_infinite_fallback is still true, the helper gets
+past its early return and clears msk->allow_subflows. It then hits
+WARN_ON_ONCE(ssk != READ_ONCE(msk->first)), because the ssk here is a
+join subflow.
+
+A remote peer can get there. When the msk is owned by the user,
+mptcp_finish_join() only queues the passive join on join_list.
+allow_infinite_fallback stays set until the join list is flushed and
+mptcp_subflow_joined() runs. If a DSS with a bad checksum arrives on
+that subflow in the meantime, subflow_data_ready() handles it in
+softirq context and it reaches the warning. With panic_on_warn set,
+that is a remotely triggerable panic.
+
+The baseline made the same call under !__mptcp_check_fallback(), but
+this patch now dedicates the branch to join subflows.
+
+This branch can only end in a reset. Could it skip
+mptcp_subflow_fail() altogether, keep send_mp_fail if an MP_FAIL is
+still wanted, and share the reset code just below that bumps
+MPTCP_MIB_DSSRESET? Or is MPTCP_MIB_DATACSUMERR enough accounting for
+the checksum case?
 
 [Severity: Medium]
-What happens on the fallback path of a passive TFO subflow?
+Can this reset of a join subflow close the whole MPTCP connection, even
+after the connection has already fallen back to the initial subflow?
 
-The third ACK may carry no MP_CAPABLE option. That happens if a middlebox
-stripped MPC and the client fell back, or if the peer doesn't conform. In
-that case check_fully_established() never reaches set_fully_established:
+On the passive side, when the msk is owned by the user, mptcp_finish_join()
+only queues the new subflow:
 
-net/mptcp/options.c:check_fully_established() {
+net/mptcp/protocol.c:mptcp_finish_join() {
     ...
-	if (!(mp_opt->suboptions & OPTIONS_MPTCP_MPC)) {
-		if (subflow->mp_join)
-			goto reset;
-		subflow->mp_capable = 0;
-		if (!mptcp_try_fallback(ssk, MPTCP_MIB_MPCAPABLEDATAFALLBACK)) {
-			MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_FALLBACKFAILED);
-			goto reset;
-		}
+	} else {
+		sock_hold(ssk);
+		list_add_tail(&subflow->node, &msk->join_list);
+		__set_bit(MPTCP_FLUSH_JOIN_LIST, &msk->cb_flags);
+    ...
+}
+
+mptcp_subflow_joined() has not run yet, so allow_infinite_fallback is still
+true. Suppose the initial subflow then falls back, for example because a
+middlebox strips DSS and mptcp_try_fallback() succeeds. That sets
+MPTCP_FALLBACK_DONE and clears allow_subflows.
+
+Later, data arrives on the join subflow and get_mapping_status() returns
+MAPPING_DUMMY. This new branch then sets ssk->sk_err = EBADMSG and moves the
+ssk to TCP_CLOSE. The msk is owned, so subflow_error_report() only sets
+MPTCP_ERROR_REPORT.
+
+mptcp_release_cb() flushes the join list first. __mptcp_finish_join() fails
+because allow_subflows is false, but mptcp_subflow_reset() returns early:
+
+net/mptcp/subflow.c:mptcp_subflow_reset() {
+    ...
+	if (ssk->sk_state == TCP_CLOSE)
+		return;
+    ...
+}
+
+That leaves the subflow on conn_list with EBADMSG still pending. Next,
+__mptcp_error_report() walks conn_list and reaches it.
+__mptcp_subflow_error_report() checks only the connection-wide fallback flag:
+
+net/mptcp/protocol.c:__mptcp_subflow_error_report() {
+    ...
+	if (sk->sk_state != TCP_SYN_SENT && !__mptcp_check_fallback(mptcp_sk(sk)))
 		return false;
-	}
+    ...
+	if (ssk_state == TCP_CLOSE && !sock_flag(sk, SOCK_DEAD))
+		mptcp_set_state(sk, ssk_state);
+	WRITE_ONCE(sk->sk_err, -err);
     ...
 }
 
-mptcp_try_fallback() switches the msk to fallback mode, but it doesn't
-push pending data.
+Wouldn't this move the msk to TCP_CLOSE and report EBADMSG to the
+application, even though the initial subflow is healthy?
 
-The fallback push in mptcp_incoming_options() is checked before
-check_fully_established() runs, so it only fires on later segments:
+Before this patch, the join subflow got the fake fallback mapping and no
+sk_err. mptcp_subflow_reset() tore it down during the join list flush, and
+the connection kept running on the initial subflow.
 
-net/mptcp/options.c:mptcp_incoming_options() {
-	if (__mptcp_check_fallback(msk)) {
-		...
-		if (sk_stream_memory_free(sk))
-			__mptcp_check_push(subflow->conn, sk);
-		...
-	}
-	...
-	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
-		return sk->sk_state != TCP_CLOSE;
-	...
-}
-
-In a typical TFO request/response, the client already sent its request in
-the SYN and has nothing more to send.
-
-Could a server reply written during SYN_RECV also get stuck in the msk
-write queue on this path, with no rtx timer armed?
-
->  	mptcp_data_unlock((struct sock *)msk);
->  
->  check_notify:
+[ ... ]
 
 -- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261012111001.542847-1-rameshkumar.t%40phytecembedded.in
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261012112625.578911-1-rameshkumar.t%40phytecembedded.in
