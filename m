@@ -1,220 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D854E50C6
-	for <mptcp@lists.linux.dev>; Wed, 14 Oct 2026 09:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69843F926D
+	for <mptcp@lists.linux.dev>; Wed, 14 Oct 2026 10:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791970939; cv=none; b=iQPYwA59np01psPc39fuSZi9Y6grCity2zOBQPfqW1N0shozmKA+6YaycWx4lZLXVF79vO03C72NkZC4tiETdpw3xEn8WQpNjTH4dacR+2SQ47rtTxLV/GGtfov4FWvu5KzChZAM8R1DHo8j0LLNoJvMIzA9Wdc9iax/HgziaSE=
+	t=1791972402; cv=none; b=hCkFE58CO7jWBz+9Y6hgmcsgPj9OHDRw0NS6FkmphNbpFQACSoU/V0pE5cEitUzKAGAtlFGtnJJFFSd6efkarsLw1LMPtk1kf3AeCbExTD/s8h4FeViouORs/fiQbr5j8D4qp6VoFwOOT4ai491vCWrtUJ/U+cTCVb0w9JFfTpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791970939; c=relaxed/simple;
-	bh=/Oz1rsphHz4ewBvUsT8kT3GRrOA8sx6hjpdz1E72Nio=;
-	h=Message-ID:From:Subject:To:In-Reply-To:References:Content-Type:
-	 Date; b=G15Z5pWVwAr3q3ERF89eXVWu+LErqyoIN3UWmqwnvEcdWqiAboM1iKn5qwueVjiCKYuA6AXxh1KxAJs6VU2tIqimNjJ5fXfsNXPXFr3le4gde5vh3X0MtaRdPSM0VTXAWeV/28VVYjwfn+kbEUrgX+yjvZu3yBEaQ1EVxXTaPJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kpR7AFzO; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791972402; c=relaxed/simple;
+	bh=JfIbhTu4vHjU8D3Ff/N7OzoEDjqw4ZvSZ/cMW3hlsjc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=CaYyGbnDGUVGrktIgyq3Zy3WKK3OJBNTTel+j0H5JLQUmjC/IqfaloNnxsZBY1SjkQdiQ2VPUGFXZfIDc3nY2ENFs1Il/y5/us68xBNfa5HQ1+GL5i6X2WWAfhPbNYiKMkpqZze2ZQ6TIZQip0E0z40zyLVEyZ5zVYXQUznOmAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X4i1AM6b; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kpR7AFzO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B61E1F0089F;
-	Wed, 14 Oct 2026 09:42:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791970938;
-	bh=xu3GgfrZK7fw9QVOk4Wc0Ep4/h7Fbdx46Dkrb4gVkPs=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=kpR7AFzOQmOKvtY26PH03lnn5UeXx1/NZYkmd3oOG6DvlAA5RX8J8kv0idiksb4H2
-	 vk7np1//l6cVRlRKnRPTwDOC6BL+9KN5W30KE1pHeH7+0+7VpdYJH/hkqRmcXt7pZt
-	 rg/2wSvaPy3OtHaVfJSF4SAlfB3yBgVPoENJhZLgu9s8llhRHDP9rji0+NNzEa+1B8
-	 IXZfZLJJgsIy1LygpwH/BCnehTizOwwmwfhVrdbrvhBxZzBh7nclgwaLHF8w+OXEGx
-	 W/SAM26vAKpaYhub2CoibnYFtycSGRlx0h43RDONE7hfXwrqYT6J0IgxYSdhHXIr8h
-	 sZIWUseQ6fSog==
-Message-ID: <sashiko-outbox-171084@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next 1/2] tls: implement tls_disconnect
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <6ffac9e36dab9b4f5fdb6e55a744b35f0d51ffb4.1791967771.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X4i1AM6b"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-917866225aaso56786026d6.1
+        for <mptcp@lists.linux.dev>; Wed, 14 Oct 2026 03:06:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791972400; x=1792577200; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=7OIj/dVl/ALUGhW+x7g6WGBENbzgoJ0pto0cqiOO5Lg=;
+        b=X4i1AM6brpUQ4+K2FT2D8iTopyQcMOadM1LZwO9momyBMwy67JaoaI3scH4hQ0RmRT
+         NduN9hWYQH0Col2fFLsLDvebM17sTQcROZxQazxC9aOV4HgE3OdBamguobzCFywWAD0+
+         qGl60JAgpXyTaXiE6ve5GbXgO8mBwrwCE0Tltz+Ck6Ru8S6iOFOkY6WH07D3YN9V0f3B
+         DWr6rBckIc444zOBKq2JhrRI04I+klqq59KiBjeHQCsmaUOXcgwtvVuZzVk6+xlUpkq+
+         EMyIyM6PZtyU5+lEiiJU/IOyMhY2mXMSLON1FJqXCqleWjTlKG+nXbBjc5q3TI8PCCF1
+         +Xgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791972400; x=1792577200;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=7OIj/dVl/ALUGhW+x7g6WGBENbzgoJ0pto0cqiOO5Lg=;
+        b=hZhn2CiccGNf6MPz0Kwz/qoQIEno2BjPo6InZ1Fb+eqH2tWlNbFtk9Ukz5Uifrirmh
+         ShlTFxJvthbgbSKoiY7U399vuWKgo72frPZRD6Ad17wUispDg2L3PTMWyArkZrHhqF/W
+         lFmH/DwbWAFFgN/oi1d8WB518e3mDG8Mn8Ecpc8TGijJgz49gwacT5FeAMSlISc5VZxu
+         PIQBrkYcdXwfPb40Cepgd8byJj99pc4XhF+AkJUHxrtk/orSJ1InP/tXwX9ay6lu60En
+         YKFDm3rBr/1SGFteYv7YwkKkshCzFKZq1DNIwrzPK74rbiKwlTkoKLox+GaG+hywY2Bd
+         mXCQ==
+X-Gm-Message-State: AFq9FYKX1Fy0wbeup14cjjKY7djLZ0U6ErKsMC2sDDzvBFrdLxMm7vMR
+	DkvSSrgMzWsWY7LIH79YBVV20lKmRX4K6o8jVpnwgEJdIcdCSngEjEX/Py25
+X-Gm-Gg: AYBFou3onqleXi0Y6O06MnWfbC6LEBB4U9DcOc29OeCFhMZmJfFBTBJZXkhgSiql9TO
+	3nIORaA1VpmgKIgyMqr3x8HJDDo6LWabqKzZyqru0ZXavS5Y8ph9fngfOL0MzMVhcm1eTiV3ZnU
+	/60fOeGBrxDzbPWiXRteo3x1qC08MLKDm8pxb1jMZeQGJVylv0C9J7vzEeo2pYJoRkhawfMt8x+
+	iEsP3WeJhhWP3L5G3PQrrgGOmFpZPiDjd0/5hAuUzJKzseDsl0Rr3F9o9nDOdj/j8e9IQ3dEElG
+	UX7pcDqQvY2ecR2UBxy6Yx8EUtBcZkduyefYZ7hMxKy5xjPeiZrcDdOXCSzQDo84nm4YfpERgyq
+	bw6aebFQDBWQyifpgigMXVR4T3jK0AH5CdoJlxg8vP3KSZ+GajYJt/GGQha8e1IWbbk3Rgkb+c2
+	hwPaSrtL6mO4Dz1cQi/xKquqecpTtv1fvbGzMPEl/qZgkQIJMBmR3m3MoWl72jtmhdPzP24ScmJ
+	gQNZOGMrkKe
+X-Received: by 2002:a05:6214:2524:b0:917:97f0:1bb7 with SMTP id 6a1803df08f44-91b55335385mr249947276d6.5.1791972399670;
+        Wed, 14 Oct 2026 03:06:39 -0700 (PDT)
+Received: from [127.0.0.1] ([172.214.99.11])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91b97b622bfsm48781026d6.24.2026.10.14.03.06.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Oct 2026 03:06:39 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1791967771.git.tanggeliang@kylinos.cn>
 References: <cover.1791967771.git.tanggeliang@kylinos.cn>
- <6ffac9e36dab9b4f5fdb6e55a744b35f0d51ffb4.1791967771.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=utf-8
+Subject: Re: [PATCH mptcp-next 0/2] TLS disconnect support
+Message-ID: <c5bd4dbf-05a8-3819-afd0-29fd39fce43e@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 14 Oct 2026 09:42:17 +0000
+Date: Wed, 14 Oct 2026 10:06:38 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
-s) to consider:
-- [High] net/tls: double free of tls_context on concurrent connect(AF_UNSPE=
-C)
-- [High] net/tls: memory leak of TLS_HW contexts due to unconditional sk_de=
-struct overwrite
-- [High] net/tls: NULL pointer dereference in lockless socket ops on concur=
-rent disconnect
-- [High] tls: UAF in recvmsg/sendmsg due to concurrent tls_disconnect
-- [High] tls: memory leak of HW offload context due to unconditional sk_des=
-truct restore
---
+Hi Geliang,
 
-commit c85d98242c0f64ea4b94701ff52f11b27b61f2a3
-Author: Geliang Tang <geliang@kernel.org>
+Thank you for your modifications, that's great!
 
-tls: implement tls_disconnect
+Our CI did some validations and here is its report:
 
-Implement disconnect support for TLS sockets via connect(AF_UNSPEC).
-The handler invokes the underlying disconnect() first, then on success
-cancels TX work (for TLS_SW), calls tls_sk_proto_free() to restore
-original protocol operations and clear TLS state, cleans up RX context
-and frees the TLS context.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf: Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_n=
+et-next/actions/runs/38541308008
 
-> diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
-> index 8bdb78718a8d4..d00e56af628a0 100644
-> --- a/net/tls/tls_main.c
-> +++ b/net/tls/tls_main.c
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/cab552cd4a=
+4d
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1185404
 
-[ ... ]
 
-> -static void tls_sk_proto_close(struct sock *sk, long timeout)
-> +static void tls_sk_proto_free(struct sock *sk,
-> +			      struct tls_context *ctx,
-> +			      bool free_ctx)
->  {
->  	struct inet_connection_sock *icsk =3D inet_csk(sk);
-> -	struct tls_context *ctx =3D tls_get_ctx(sk);
->  	long timeo =3D sock_sndtimeo(sk, 0);
-> -	bool free_ctx;
-> -
-> -	if (ctx->tx_conf =3D=3D TLS_SW)
-> -		tls_sw_cancel_work_tx(ctx);
-> -
-> -	lock_sock(sk);
-> -	free_ctx =3D ctx->tx_conf !=3D TLS_HW && ctx->rx_conf !=3D TLS_HW;
-> =20
->  	if (ctx->tx_conf !=3D TLS_BASE || ctx->rx_conf !=3D TLS_BASE)
->  		tls_sk_proto_cleanup(sk, ctx, timeo);
-> =20
->  	write_lock_bh(&sk->sk_callback_lock);
-> -	if (free_ctx)
-> -		rcu_assign_pointer(icsk->icsk_ulp_data, NULL);
->  	WRITE_ONCE(sk->sk_prot, ctx->sk_proto);
-> +	if (sk->sk_socket)
-> +		WRITE_ONCE(sk->sk_socket->ops, ctx->sk_proto_ops);
->  	if (sk->sk_write_space =3D=3D tls_write_space)
->  		sk->sk_write_space =3D ctx->sk_write_space;
-> +	if (sk->sk_destruct =3D=3D tls_device_sk_destruct)
-> +		sk->sk_destruct =3D ctx->sk_destruct;
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-[Severity: High]
-For hardware-offloaded TLS sockets (TLS_HW), free_ctx evaluates to false. T=
-his
-means tls_ctx_free() is intentionally skipped so the context can be cleaned=
- up
-asynchronously later.
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-However, this code unconditionally unhooks tls_device_sk_destruct and resto=
-res
-the original socket destructor. Does this completely bypass the hardware
-offload cleanup and permanently leak the tls_context and associated NIC
-hardware state when the socket is ultimately destroyed?
+For more details:
 
-> +	if (free_ctx) {
-> +		rcu_assign_pointer(icsk->icsk_ulp_data, NULL);
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-[Severity: High]
-When tls_disconnect() is called, it can run concurrently with lockless
-operations like setsockopt() or poll() on the same file descriptor.
 
-If tls_disconnect() sets icsk_ulp_data to NULL here while tls_setsockopt() =
-or
-tls_sk_poll() are fetching it locklessly via tls_get_ctx(), won't those
-functions dereference a NULL pointer since they don't validate the pointer
-before dereferencing ctx?
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-> +		if (icsk->icsk_ulp_ops) {
-> +			/* Balance try_module_get in __tcp_ulp_find_autoload */
-> +			module_put(icsk->icsk_ulp_ops->owner);
-> +			icsk->icsk_ulp_ops =3D NULL;
-> +		}
-> +	}
->  	write_unlock_bh(&sk->sk_callback_lock);
-> -	release_sock(sk);
->  	if (ctx->tx_conf =3D=3D TLS_SW)
->  		tls_sw_free_ctx_tx(ctx);
-> +}
-
-[ ... ]
-
-> @@ -904,7 +943,52 @@ static int tls_setsockopt(struct sock *sk, int level=
-, int optname,
-> =20
->  static int tls_disconnect(struct sock *sk, int flags)
->  {
-> -	return -EOPNOTSUPP;
-> +	struct tls_context *ctx;
-> +	bool free_ctx;
-> +	int rc;
-> +
-> +	ctx =3D tls_get_ctx(sk);
-> +	if (!ctx)
-> +		return 0;
-> +
-> +	if (!ctx->sk_proto->disconnect)
-> +		return -EOPNOTSUPP;
-> +
-> +	set_bit(TLS_DISCONNECTING, &ctx->flags);
-
-[Severity: High]
-Two threads can concurrently call connect() with AF_UNSPEC on the same sock=
-et
-file descriptor.
-
-If thread 1 enters tls_disconnect(), sets the TLS_DISCONNECTING bit, and
-temporarily drops the socket lock to wait for disable_delayed_work_sync(),
-thread 2 can acquire the lock and enter tls_disconnect() as well.
-
-Since set_bit() is used instead of test_and_set_bit() to abort, thread 2 wi=
-ll
-resolve the same ctx pointer and proceed. Will this result in both threads
-sequentially executing tls_sk_proto_free() and tls_ctx_free(), causing a
-double free of the contexts?
-
-> +
-> +	rc =3D ctx->sk_proto->disconnect(sk, flags);
-> +	if (rc) {
-> +		clear_bit(TLS_DISCONNECTING, &ctx->flags);
-> +		return rc;
-> +	}
-
-[ ... ]
-
-> +	if (ctx->rx_conf =3D=3D TLS_SW) {
-> +		struct tls_sw_context_rx *sw_ctx =3D tls_sw_ctx_rx(ctx);
-> +
-> +		release_sock(sk);
-> +		tls_strp_done(&sw_ctx->strp);
-> +		tls_sw_free_ctx_rx(ctx);
-> +		lock_sock(sk);
-> +	}
-> +
-> +	if (free_ctx)
-> +		tls_ctx_free(sk, ctx);
-
-[Severity: High]
-Threads calling tls_sw_recvmsg() or tls_sw_sendmsg() cache pointers to the
-RX/TX contexts and then temporarily drop the socket lock to wait for data or
-memory via sk_wait_event() or sk_stream_wait_memory().
-
-If a concurrent disconnect triggers tls_disconnect(), it acquires the
-socket lock and synchronously frees the RX and TX contexts here.
-
-When the waiting recvmsg or sendmsg thread wakes up, won't it re-acquire the
-socket lock and use its locally cached context pointer, leading to a
-use-after-free read or write?
-
-> +
-> +	return 0;
->  }
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1791967771.gi=
-t.tanggeliang@kylinos.cn?part=3D1
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
