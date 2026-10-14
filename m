@@ -1,253 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F29C4A2E19
-	for <mptcp@lists.linux.dev>; Wed, 14 Oct 2026 08:28:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234E74B0C82
+	for <mptcp@lists.linux.dev>; Wed, 14 Oct 2026 08:59:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791966504; cv=none; b=My1+yyR5+Q5/ezhvz+Wm/cY4LwsSFKBFdqYj7pwR1oG8/UeCH6d/4+ll3wKr+atJS2iZTILTyitBURqLxOxhUt70ZEzxuuNNMeuB+KWciy9HlRHqMioz9AJoT1Guj/pEJFZ6sBJ+LyXQQjNFhIso9CoYyaWqf8KAmF9TLc+Xniw=
+	t=1791968389; cv=none; b=Hua7a3AZsCiJxHsKRMoVVgNQAFx57qTnRXI0xsgczOL58rc5nhJ23Vz/G2lbrPjO7m91A9pzPCzvsHxY6kUTmOsBsQXhTu99tOFUgilma+gMOgWr+saQNyOAYTRZEcfpAfS1SBNloZhQEsWneZTkERBdmcBbcEYflpDlG8tkWxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791966504; c=relaxed/simple;
-	bh=I5g5T4yiKViKGiesgx6rMCKsQEXpsd6GlyBiKuDTkzQ=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=Qdpunmxm8IGKaRPygYqvZ+UYb31CScGvwdqdcEYEuw7xL4PgAUjmDYaHJqUsB8eKfAPu08UdnZH62aN4vIvci2yk5bsjtMyrviDc0J7Cia9lvf4m2Ghd4ArcyjyV/CBBwc98wthuUxnFoY//LoLMBlo0O4xpbz5RlhVj64VGNE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a3jPvWUH; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791968389; c=relaxed/simple;
+	bh=uHUNgb6OO0w4ys/wv5V7Yimt3mDvNpw5d2JiLKZL4BQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oJxSaSRNWPIfJlKUVkzrwnBimbqgIcL/AM27l2s7fXNIX6OfMiGkcJ8XfIny6NKrT1+Jlh3tatngyiVlL0N1szYyfYPk6q+xBz9VMgBOyvBrHDVXf+eAUn6Bll6ELHOIZZi0ZgRuHdmHDQuDZWLmrtMWez9Wq/MYrYjEb8poDCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mACYih9X; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a3jPvWUH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B9EA1F000FF;
-	Wed, 14 Oct 2026 08:28:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mACYih9X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83EC71F000FF;
+	Wed, 14 Oct 2026 08:59:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791966503;
-	bh=I5g5T4yiKViKGiesgx6rMCKsQEXpsd6GlyBiKuDTkzQ=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=a3jPvWUHeeXaTHEHirc4Gkeh/DogKXb3ZznZeGjc6JMJhJBBAIcgK3Y40txc5PSxR
-	 f1taa4Rqv345BsgRYQGyOKj2SEyhqeIasyomtpcxbCG4tD8HnViq8HbqcvUuDEixKp
-	 QBesErp7hEaDmpHAAVHdiTRkaZxC0yINpcwBcTx6CmKWEqqbTHCYo++Ma1faOwo2ql
-	 sAcoSdHVWj1weYlaPlHienLsbuEe3q6JIvV1ZHir/Q8RVlAZ6sQaHI0NljBx1rEI9B
-	 BZkbZ16COSKVHnWPwg63w+aXyAeaS2P5vy5xjfcm0pvFIWIkVoKoifjVgXGEBlE8xm
-	 Ah9q25DOD9YNg==
-Date: Wed, 14 Oct 2026 10:28:17 +0200
-From: Matthieu Baerts <matttbe@kernel.org>
-To: netdev-bot+sashiko@kernel.org
-Cc: rameshsv06@gmail.com, mptcp@lists.linux.dev, petar.sakic@ink.fish,
-	rameshkumar.t@phytecembedded.in, kuba@kernel.org
-Message-ID: <964aeab4-7974-4a84-a391-65a00da9de72@kernel.org>
-In-Reply-To: <179193667256.3135.13011798294766264196@kernel.org>
-References: <20261012111001.542847-1-rameshkumar.t@phytecembedded.in> <179193667256.3135.13011798294766264196@kernel.org>
-Subject: Re: [PATCH mptcp-net v2] mptcp: push queued data on passive TFO
- subflows becoming established
+	s=k20260515; t=1791968381;
+	bh=8gnkbT9K08bEhdqcjvWng/DLSstfQK1/HPc9JR9eoWQ=;
+	h=From:To:Cc:Subject:Date;
+	b=mACYih9XZ1w655letNlso0c3IdFxREEWBTn5KUUbrEAYlj04vFVwZJvKjJcOeCLuB
+	 LawJCKGFyrG5BVfl0AnADWuM0+u6ccasuGXnx3EoV+2FnqDT6w4si1GGMQvQGObNr0
+	 Mw1CSDNWvwSrAcBqMz5IgKiKfXDaDJfUR45ziYad4n8CADNlWbqvlK3CYYGYa0aEBe
+	 KMkNxbK93GNRlQVDE3c+An5/JzaourlJSceyonhUT8R5pztOKxhR9XC/QOBgqGcg4w
+	 5wN5Jej597IUKaSbAOZfm7sN9kDdTIabf7dHIvfdteY5k41pTsOBtDShLU4nXDvzvs
+	 AUcGOn9Rxjj7g==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 0/2] TLS disconnect support
+Date: Wed, 14 Oct 2026 16:59:34 +0800
+Message-ID: <cover.1791967771.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Correlation-ID: <964aeab4-7974-4a84-a391-65a00da9de72@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-Hi T S,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-14 Oct 2026 02:11:13 netdev-bot+sashiko@kernel.org:
+To verify the correctness of MPTCP KTLS implementation, I added TLS test
+support to MPTCP selftests mptcp_connect.c. The test results showed that
+the disconnect test group failed with error code EOPNOTSUPP, so I added
+this series to support TLS disconnect.
 
-> Thank you for your contribution! Sashiko AI review found 3 potential
-> issue(s) to consider.
->
-> Critical: 0 =C2=B7 High: 1 =C2=B7 Medium: 1 =C2=B7 Low: 1
->
-> If you believe none of the issues are legitimate, please reply to each
-> issue of Medium severity or higher and explain why the AI is wrong.
-> If any of them are legitimate and you plan to respin, please let patchwor=
-k
-> know by including "pw-bot: cr" as a separate line at the end of your repl=
-y
-> (one such reply per series is enough).
->
-> - [High] The fix is incomplete.
-> - [Medium] The fix also misses the fallback path.
-> - [Low] The commit tags are wrong.
->
-> --
->
-> mptcp: push queued data on passive TFO subflows becoming established
->
-> This commit makes check_fully_established() call __mptcp_check_push()
-> when a passive TFO subflow (subflow->is_mptfo) becomes fully
-> established. The goal is to flush data the server wrote while the
-> subflow was still in SYN_RECV. Without the flush, that data stays in
-> the msk write queue because the MPC third ACK carries no DSS.
->
-> Closes: https://lore.kernel.org/netdev/CAFPPu1gU2Y-D+d4i3F0MoNkYK+e1U+=3D=
-X3qf6QycjfKBw+8snPg@mail.gmail.com/
->
->> Fixes: fb7084501a61 ("mptcp: add support for TCP_FASTOPEN sockopt")
->> Signed-off-by: T S Rameshkumar <rameshkumar.t@phytecembedded.in>
->
-> [Severity: Low]
-> This isn't a bug, but does fb7084501a61 exist? The hash doesn't resolve
-> in the tree, and no commit has that subject.
+Patch 1 implements tls_disconnect() to support disconnect operation for
+TLS sockets via connect(AF_UNSPEC).
 
-Nice, the LLM invented a plausible commit...
+Patch 2 updates selftests to verify the full disconnect/reconnect cycle,
+including data transfer verification before and after disconnect.
 
-BTW, don't forget the "Assisted-by: LLM" tag.
+Geliang Tang (2):
+  tls: implement tls_disconnect
+  selftests: tls: update disconnect tests
 
-> The passive TFO and is_mptfo handling seem to have come from these
-> commits:
->
-> =C2=A0 36b122baf6a8 ("mptcp: add subflow_v(4,6)_send_synack()")
+ include/net/tls.h                 |  12 +++-
+ net/tls/tls_main.c                | 112 ++++++++++++++++++++++++++----
+ tools/testing/selftests/net/tls.c |  57 ++++++++++++++-
+ 3 files changed, 163 insertions(+), 18 deletions(-)
 
-Yes
-
-> =C2=A0 dfc8d0603033 ("mptcp: implement delayed seq generation for passive=
- fastopen")
-> =C2=A0 4ffb0a02346c ("mptcp: add TCP_FASTOPEN sock option")
->
-> Should the Fixes tag point at 36b122baf6a8 or dfc8d0603033 instead?
->
-> Also, the Signed-off-by address (rameshkumar.t@phytecembedded.in) doesn't
-> match the author address (rameshsv06@gmail.com). Checkpatch reports this
-> as FROM_SIGN_OFF_MISMATCH.
-
-Indeed: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/382435=
-94334
-
->> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
->> index 20490410fa22f..33eede084af8d 100644
->> --- a/net/mptcp/options.c
->> +++ b/net/mptcp/options.c
->> @@ -1046,6 +1046,8 @@ static bool check_fully_established(struct mptcp_s=
-ock *msk, struct sock *ssk,
->>
->> =C2=A0=C2=A0=C2=A0 mptcp_data_lock((struct sock *)msk);
->> =C2=A0=C2=A0=C2=A0 __mptcp_subflow_fully_established(msk, subflow, mp_op=
-t);
->> +=C2=A0=C2=A0 if (subflow->is_mptfo)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __mptcp_check_push((struct sock *)=
-msk, ssk);
->
-> [Severity: High]
-> Does this check miss passive TFO children whose SYN carried no data?
->
-> mptcp_fastopen_subflow_synack_set_params() sets is_mptfo only after it
-> finds SYN data in the subflow receive queue:
->
-> net/mptcp/fastopen.c:mptcp_fastopen_subflow_synack_set_params() {
-> =C2=A0=C2=A0=C2=A0 ...
-> =C2=A0=C2=A0=C2=A0 /* A valid TFO cookie does not guarantee SYN data. */
-> =C2=A0=C2=A0=C2=A0 skb =3D skb_peek(&ssk->sk_receive_queue);
-> =C2=A0=C2=A0=C2=A0 if (!skb)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
->
-> =C2=A0=C2=A0=C2=A0 subflow->is_mptfo =3D 1;
-> =C2=A0=C2=A0=C2=A0 ...
-> }
->
-> The TCP core still creates a full TFO child for a data-less SYN that has
-> a valid cookie. It also does this when TFO_SERVER_COOKIE_NOT_REQD is set:
->
-> net/ipv4/tcp_fastopen.c:tcp_try_fastopen() {
-> =C2=A0=C2=A0=C2=A0 ...
-> =C2=A0=C2=A0=C2=A0 if (!((tcp_fastopen & TFO_SERVER_ENABLE) &&
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (syn_data || foc->=
-len >=3D 0) &&
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tcp_fastopen_queue=
-_check(sk))) {
-> =C2=A0=C2=A0=C2=A0 ...
-> }
->
-> tcp_conn_request() then puts that child straight into the accept queue,
-> while the subflow is still in SYN_RECV.
->
-> Suppose the application accepts and writes at once, as a
-> server-speaks-first protocol does. mptcp_sendmsg_frag() returns -EAGAIN
-> because !__tcp_can_send(ssk). __mptcp_push_pending() then exits with
-> nothing copied, so the rtx timer is never armed.
->
-> When the pure MPC third ACK arrives, is_mptfo is 0 at this point and the
-> push is skipped. mptcp_incoming_options() then returns before
-> ack_update_msk():
->
-> =C2=A0=C2=A0=C2=A0 if (!(mp_opt.suboptions & OPTION_MPTCP_DSS))
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return true;
->
-> So won't the queued bytes stay stuck until the peer sends something,
-> exactly as before this patch?
-
-Indeed (as mentioned in the human review).
-
-> Would it work better to replace the is_mptfo test with one that covers
-> every passive TFO child, such as tcp_sk(ssk)->syn_fastopen_child? Another
-
-Good idea to use syn_fastopen_child here.
-
-> option is to push whenever data is pending.
->
-> [Severity: Medium]
-> What happens on the fallback path of a passive TFO subflow?
->
-> The third ACK may carry no MP_CAPABLE option. That happens if a middlebox
-> stripped MPC and the client fell back, or if the peer doesn't conform. In
-> that case check_fully_established() never reaches set_fully_established:
->
-> net/mptcp/options.c:check_fully_established() {
-> =C2=A0=C2=A0=C2=A0 ...
-> =C2=A0=C2=A0=C2=A0 if (!(mp_opt->suboptions & OPTIONS_MPTCP_MPC)) {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (subflow->mp_join)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto r=
-eset;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 subflow->mp_capable =3D 0;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!mptcp_try_fallback(ssk, M=
-PTCP_MIB_MPCAPABLEDATAFALLBACK)) {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 MPTCP_=
-INC_STATS(sock_net(ssk), MPTCP_MIB_FALLBACKFAILED);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto r=
-eset;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return false;
-> =C2=A0=C2=A0=C2=A0 }
-> =C2=A0=C2=A0=C2=A0 ...
-> }
->
-> mptcp_try_fallback() switches the msk to fallback mode, but it doesn't
-> push pending data.
->
-> The fallback push in mptcp_incoming_options() is checked before
-> check_fully_established() runs, so it only fires on later segments:
->
-> net/mptcp/options.c:mptcp_incoming_options() {
-> =C2=A0=C2=A0=C2=A0 if (__mptcp_check_fallback(msk)) {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ...
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (sk_stream_memory_free(sk))
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __mptc=
-p_check_push(subflow->conn, sk);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ...
-> =C2=A0=C2=A0=C2=A0 }
-> =C2=A0=C2=A0=C2=A0 ...
-> =C2=A0=C2=A0=C2=A0 if (!check_fully_established(msk, sk, subflow, skb, &m=
-p_opt))
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return sk->sk_state !=3D TCP_C=
-LOSE;
-> =C2=A0=C2=A0=C2=A0 ...
-> }
->
-> In a typical TFO request/response, the client already sent its request in
-> the SYN and has nothing more to send.
->
-> Could a server reply written during SYN_RECV also get stuck in the msk
-> write queue on this path, with no rtx timer armed?
->
->> =C2=A0=C2=A0=C2=A0 mptcp_data_unlock((struct sock *)msk);
->>
->> check_notify:
-
-It's plausible, but: to be confirmed with a packetdrill test, and it should
-be part of another fix. Do you want to work on that too?
-
-Cheers,
-Matt
-
->
-> --
-> Sashiko AI review =C2=B7 https://netdev-ai.bots.linux.dev/sashiko/#/patch=
-set/20261012111001.542847-1-rameshkumar.t%40phytecembedded.in
+-- 
+2.55.0
 
