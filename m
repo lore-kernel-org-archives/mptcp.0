@@ -1,132 +1,188 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender5-of-o54.zoho.com (sender5-of-o54.zoho.com [165.173.182.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69843F926D
-	for <mptcp@lists.linux.dev>; Wed, 14 Oct 2026 10:06:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791972402; cv=none; b=hCkFE58CO7jWBz+9Y6hgmcsgPj9OHDRw0NS6FkmphNbpFQACSoU/V0pE5cEitUzKAGAtlFGtnJJFFSd6efkarsLw1LMPtk1kf3AeCbExTD/s8h4FeViouORs/fiQbr5j8D4qp6VoFwOOT4ai491vCWrtUJ/U+cTCVb0w9JFfTpE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791972402; c=relaxed/simple;
-	bh=JfIbhTu4vHjU8D3Ff/N7OzoEDjqw4ZvSZ/cMW3hlsjc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=CaYyGbnDGUVGrktIgyq3Zy3WKK3OJBNTTel+j0H5JLQUmjC/IqfaloNnxsZBY1SjkQdiQ2VPUGFXZfIDc3nY2ENFs1Il/y5/us68xBNfa5HQ1+GL5i6X2WWAfhPbNYiKMkpqZze2ZQ6TIZQip0E0z40zyLVEyZ5zVYXQUznOmAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X4i1AM6b; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131A84D9F93
+	for <mptcp@lists.linux.dev>; Wed, 14 Oct 2026 13:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=165.173.182.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791983305; cv=pass; b=ihZU4/ODBRlQC1n+R11V2B2GK5yg5V3+3z79SERY5O9M3PwCGwdq1l+MHahIhpr9lllTd3b3UQ6CW2UoSh6vk9cBr2ZVaewCDIEXVsBmPNwwxzVx0tQeI0MENHmCVbO3rzE6BkOgeqyo42joTVWjRIcD6H4LJK04ckm7DjHDIs0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791983305; c=relaxed/simple;
+	bh=zNpbHZrZoMUZzQYPko+fEe/e4SI7bhgCMd3gWPijZUU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HYl4rn+fltX9ZI19KJ52A5wXUO7YhG5EXqJc/l1dp2geXX5WXGFG+vrDAHyqkeN3R/+OTKOdrDR3Dze8sGYFwDbol456gBSHExHeBkr09mcdSfNFEtBZQnzoiTuIEyd6SE/iGtUoGsb4328Km4mu0srmsib8OSGwAHv48nGlXxo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=W3KdizHy reason="key not found in DNS"; arc=pass smtp.client-ip=165.173.182.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X4i1AM6b"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-917866225aaso56786026d6.1
-        for <mptcp@lists.linux.dev>; Wed, 14 Oct 2026 03:06:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791972400; x=1792577200; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=7OIj/dVl/ALUGhW+x7g6WGBENbzgoJ0pto0cqiOO5Lg=;
-        b=X4i1AM6brpUQ4+K2FT2D8iTopyQcMOadM1LZwO9momyBMwy67JaoaI3scH4hQ0RmRT
-         NduN9hWYQH0Col2fFLsLDvebM17sTQcROZxQazxC9aOV4HgE3OdBamguobzCFywWAD0+
-         qGl60JAgpXyTaXiE6ve5GbXgO8mBwrwCE0Tltz+Ck6Ru8S6iOFOkY6WH07D3YN9V0f3B
-         DWr6rBckIc444zOBKq2JhrRI04I+klqq59KiBjeHQCsmaUOXcgwtvVuZzVk6+xlUpkq+
-         EMyIyM6PZtyU5+lEiiJU/IOyMhY2mXMSLON1FJqXCqleWjTlKG+nXbBjc5q3TI8PCCF1
-         +Xgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791972400; x=1792577200;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=7OIj/dVl/ALUGhW+x7g6WGBENbzgoJ0pto0cqiOO5Lg=;
-        b=hZhn2CiccGNf6MPz0Kwz/qoQIEno2BjPo6InZ1Fb+eqH2tWlNbFtk9Ukz5Uifrirmh
-         ShlTFxJvthbgbSKoiY7U399vuWKgo72frPZRD6Ad17wUispDg2L3PTMWyArkZrHhqF/W
-         lFmH/DwbWAFFgN/oi1d8WB518e3mDG8Mn8Ecpc8TGijJgz49gwacT5FeAMSlISc5VZxu
-         PIQBrkYcdXwfPb40Cepgd8byJj99pc4XhF+AkJUHxrtk/orSJ1InP/tXwX9ay6lu60En
-         YKFDm3rBr/1SGFteYv7YwkKkshCzFKZq1DNIwrzPK74rbiKwlTkoKLox+GaG+hywY2Bd
-         mXCQ==
-X-Gm-Message-State: AFq9FYKX1Fy0wbeup14cjjKY7djLZ0U6ErKsMC2sDDzvBFrdLxMm7vMR
-	DkvSSrgMzWsWY7LIH79YBVV20lKmRX4K6o8jVpnwgEJdIcdCSngEjEX/Py25
-X-Gm-Gg: AYBFou3onqleXi0Y6O06MnWfbC6LEBB4U9DcOc29OeCFhMZmJfFBTBJZXkhgSiql9TO
-	3nIORaA1VpmgKIgyMqr3x8HJDDo6LWabqKzZyqru0ZXavS5Y8ph9fngfOL0MzMVhcm1eTiV3ZnU
-	/60fOeGBrxDzbPWiXRteo3x1qC08MLKDm8pxb1jMZeQGJVylv0C9J7vzEeo2pYJoRkhawfMt8x+
-	iEsP3WeJhhWP3L5G3PQrrgGOmFpZPiDjd0/5hAuUzJKzseDsl0Rr3F9o9nDOdj/j8e9IQ3dEElG
-	UX7pcDqQvY2ecR2UBxy6Yx8EUtBcZkduyefYZ7hMxKy5xjPeiZrcDdOXCSzQDo84nm4YfpERgyq
-	bw6aebFQDBWQyifpgigMXVR4T3jK0AH5CdoJlxg8vP3KSZ+GajYJt/GGQha8e1IWbbk3Rgkb+c2
-	hwPaSrtL6mO4Dz1cQi/xKquqecpTtv1fvbGzMPEl/qZgkQIJMBmR3m3MoWl72jtmhdPzP24ScmJ
-	gQNZOGMrkKe
-X-Received: by 2002:a05:6214:2524:b0:917:97f0:1bb7 with SMTP id 6a1803df08f44-91b55335385mr249947276d6.5.1791972399670;
-        Wed, 14 Oct 2026 03:06:39 -0700 (PDT)
-Received: from [127.0.0.1] ([172.214.99.11])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91b97b622bfsm48781026d6.24.2026.10.14.03.06.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Oct 2026 03:06:39 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1791967771.git.tanggeliang@kylinos.cn>
-References: <cover.1791967771.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next 0/2] TLS disconnect support
-Message-ID: <c5bd4dbf-05a8-3819-afd0-29fd39fce43e@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 14 Oct 2026 10:06:38 +0000
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="W3KdizHy"
+ARC-Seal: i=1; a=rsa-sha256; t=1791983300; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=elJwlJribRfdIPUc06zh4Xd98lQiuEpPh6jUXmZ0z7e7dousi1HM2Yo+sKuUXnQqPqCJGNbOu1gatD7tw4A7V6U6XXed34jKNzu6veGpfVlWDbbKpI5ty9xVUAVBhH8O2xMY6cvd/0HUbEb+/HpO+qyx86466R8T9UWJrdAWBJc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1791983300; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=jN8vCQMOOk0kXcBOfjkQHWInlYZ/y726M/81sXlBrDk=; 
+	b=GV4viUnC4nH0kpxoafRUeQD1O3K9s0T/TtD4IRe8BiQUUtHE1xhRO+8RDlHw6bWj4PN77jT+3dbyMdKCPAI3iDxTrTaLGV/F+wfV/60ClTIz24bHVxB6vxFwTgLFUiH2Ua7ohiigmIt8xp6kWzWirYQLtr24Tq3YomhRC8+JCOM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
+	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1791983300;
+	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=jN8vCQMOOk0kXcBOfjkQHWInlYZ/y726M/81sXlBrDk=;
+	b=W3KdizHyar/O74+PClqlRODkFT4yZIjMgJc2i1dfs1TJCJC2tXTQbthBvdGdKOZU
+	b4uPa3bgtXKRUG0lS/yKpP5MMHHCJOh/r+XpiptxmAqwoINNQVNas0xo+nnoKaFZCT5
+	GI9kdqmIgNQNxGcG5xVlcu8+nF6t8jZpSXZVHfHo=
+Received: by smtp.zohomail.com with SMTPS id 1791983298373325.3490278306999;
+	Wed, 14 Oct 2026 06:08:18 -0700 (PDT)
+From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+To: mptcp@lists.linux.dev
+Cc: shardul.b@mpiricsoftware.com,
+	janak@mpiric.us,
+	kalpanjani009@gmail.com,
+	Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Subject: [PATCH net-next v8] mptcp: normalize seq numbers reported in mptcp_info
+Date: Wed, 14 Oct 2026 18:38:09 +0530
+Message-ID: <20261014130809.1874184-1-kalpan.jani@mpiricsoftware.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Hi Geliang,
+The sequence numbers exposed through MPTCP_INFO include random initial
+data sequence numbers, making their absolute values difficult for
+userspace to interpret.
 
-Thank you for your modifications, that's great!
+Report write_seq and snd_una relative to the local IDSN, and rcv_nxt
+relative to the peer's initial data sequence number.
 
-Our CI did some validations and here is its report:
+Read the sequence baselines from the subflow context under RCU, handle
+a missing context, and skip disconnected sockets. Publish
+remote_key_valid only after initializing iasn.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Perf: Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_n=
-et-next/actions/runs/38541308008
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/445
+Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/cab552cd4a=
-4d
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1185404
+---
+Changes since v7:
+- Return early for MPTCP sockets in TCP_CLOSE state.
+- Access icsk_ulp_data under RCU and handle a NULL context
+  when obtaining the local and remote IDSN values.
+- Zero-initialize the MPTCP_INFO output structure.
 
+v7: https://lore.kernel.org/all/20260930102804.2796208-1-kalpan.jani@mpiricsoftware.com/
+---
+ net/mptcp/sockopt.c | 37 ++++++++++++++++++++++++++++++++-----
+ net/mptcp/subflow.c |  4 +++-
+ 2 files changed, 35 insertions(+), 6 deletions(-)
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 922f6ae5c80cb..c441c49e7f5f7 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -1046,7 +1046,10 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
+ 
+ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ {
++	struct mptcp_subflow_context *subflow;
+ 	struct sock *sk = (struct sock *)msk;
++	u64 local_idsn = 0, remote_idsn = 0;
++	struct sock *first;
+ 	u32 flags = 0;
+ 	bool slow;
+ 	u32 now;
+@@ -1058,7 +1061,8 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ 	info->mptcpi_add_addr_accepted = READ_ONCE(msk->pm.add_addr_accepted);
+ 	info->mptcpi_local_addr_used = READ_ONCE(msk->pm.local_addr_used);
+ 
+-	if (inet_sk_state_load(sk) == TCP_LISTEN)
++	if (inet_sk_state_load(sk) == TCP_LISTEN ||
++	    inet_sk_state_load(sk) == TCP_CLOSE)
+ 		return;
+ 
+ 	/* The following limits only make sense for the in-kernel PM */
+@@ -1084,9 +1088,23 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ 	info->mptcpi_flags = flags;
+ 
+ 	slow = lock_sock_fast(sk);
++	/* Hold a reference to the first subflow while accessing its context. */
++	rcu_read_lock();
++	first = READ_ONCE(msk->first);
++	if (first && !refcount_inc_not_zero(&first->sk_refcnt))
++		first = NULL;
++	rcu_read_unlock();
++
++	rcu_read_lock();
++	subflow = first ?
++		rcu_dereference(inet_csk(first)->icsk_ulp_data) : NULL;
++	if (subflow)
++		local_idsn = subflow->idsn;
++	rcu_read_unlock();
++
+ 	info->mptcpi_csum_enabled = READ_ONCE(msk->csum_enabled);
+ 	info->mptcpi_token = msk->token;
+-	info->mptcpi_write_seq = msk->write_seq;
++	info->mptcpi_write_seq = msk->write_seq - local_idsn;
+ 	info->mptcpi_retransmits = inet_csk(sk)->icsk_retransmits;
+ 	info->mptcpi_bytes_sent = msk->bytes_sent;
+ 	info->mptcpi_bytes_received = msk->bytes_received;
+@@ -1099,17 +1117,26 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ 	unlock_sock_fast(sk, slow);
+ 
+ 	mptcp_data_lock(sk);
++	rcu_read_lock();
++	subflow = first ?
++		rcu_dereference(inet_csk(first)->icsk_ulp_data) : NULL;
++	if (subflow && subflow->remote_key_valid)
++		remote_idsn = subflow->iasn - 1;
++	rcu_read_unlock();
+ 	info->mptcpi_last_ack_recv = jiffies_to_msecs(now - msk->last_ack_recv);
+-	info->mptcpi_snd_una = msk->snd_una;
+-	info->mptcpi_rcv_nxt = msk->ack_seq;
++	info->mptcpi_snd_una = msk->snd_una - local_idsn;
++	info->mptcpi_rcv_nxt = msk->ack_seq - remote_idsn;
+ 	info->mptcpi_bytes_acked = msk->bytes_acked;
+ 	mptcp_data_unlock(sk);
++
++	if (first)
++		sock_put(first);
+ }
+ EXPORT_SYMBOL_GPL(mptcp_diag_fill_info);
+ 
+ static int mptcp_getsockopt_info(struct mptcp_sock *msk, char __user *optval, int __user *optlen)
+ {
+-	struct mptcp_info m_info;
++	struct mptcp_info m_info = {};
+ 	int len;
+ 
+ 	if (get_user(len, optlen))
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 2d7ccb01d2342..a3313a3db5a76 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -482,7 +482,6 @@ static void subflow_set_remote_key(struct mptcp_sock *msk,
+ 	if (subflow->remote_key_valid)
+ 		return;
+ 
+-	subflow->remote_key_valid = 1;
+ 	subflow->remote_key = mp_opt->sndr_key;
+ 	mptcp_crypto_key_sha(subflow->remote_key, NULL, &subflow->iasn);
+ 	subflow->iasn++;
+@@ -494,6 +493,9 @@ static void subflow_set_remote_key(struct mptcp_sock *msk,
+ 	WRITE_ONCE(msk->ack_seq, subflow->iasn);
+ 	WRITE_ONCE(msk->can_ack, true);
+ 	atomic64_set(&msk->rcv_wnd_sent, subflow->iasn);
++
++	/* publish last, once iasn and the fields above are fully populated */
++	subflow->remote_key_valid = 1;
+ }
+ 
+ static void mptcp_propagate_state(struct sock *sk, struct sock *ssk,
+-- 
+2.43.0
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
