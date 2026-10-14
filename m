@@ -1,271 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B28CB640
-	for <mptcp@lists.linux.dev>; Wed, 14 Oct 2026 00:35:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0963441612A
+	for <mptcp@lists.linux.dev>; Wed, 14 Oct 2026 05:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791938124; cv=none; b=kaIz8BKUoKaBQXmAeE7Jwd7O/09LZSdtBVCxTzpSg/UTwb0VDqushYU7lk3Kp8quZ+l3IQuAvKRVjPODFsVOu1YoBBKo1aMq0IgKniqd5qJifERSIqEBJlAXKH8bNMEMhJWtl1vEs91W0q8LAudoUFPLBaGhUepFLyOz9cBKg58=
+	t=1791954826; cv=none; b=WAFxqoI1v5l7OZ/NJWrbJIxEXBiqqOM+qDrdwFHnPqVSlSuWsX17y0fwRAKl4WI5sYVxV3gUPAwrryx4U9mESfZ7Ei9VNZAaYrwzm3nk7vGD9eFzis0ebDnU6AlIDSvxnsKIGOU2/tld1IcI2X3/8rOt0SADkJO2Vkvxd+F1zPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791938124; c=relaxed/simple;
-	bh=ahKANnHlffOPByaJUCxPTRzxnyolH5QjPatyQO1UPa4=;
-	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RxurVBVObQAIrBI2iJ1GvNN/zMj95c4OKoy+OB51QZ33C5UJT8S8RFjUsg/IqoH6lXYS7k5xLPvLNn79uoIEgmAl7gIXFgjgzLV3KaLIMp1xPjb8HlYlUrPYwnADk4+uu3aSHxZvN0kxmbxW583RMYHXBkU+2x7mTdvUgWY/Kuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RTow85Ts; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791954826; c=relaxed/simple;
+	bh=n7UQH2dAB6e7eCUTrqRrbBz4vi+fqy9kbHXf2oy+oxQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L63jbLxY+dmsymDZhPGSGY+26PqEyWzDjHJKlFPb+SyZ2ary15id7krccTD9ucvUotZJ6hoDHXk9PrEu8W6MUJn7X5PMwU42920tB3eIrjsU22IXYlqkRL4X3NY+a9tiaFwAC7XPOdwXZ1lRBTRh96pMlMYdka+Vym/Fue4GC2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A5x3xKVw; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RTow85Ts"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4D191F000FF;
-	Wed, 14 Oct 2026 00:35:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791938123;
-	bh=5s6WulDGabmKRfzPjEdUu3qO0RBkG/NzXQxse9v6GY4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=RTow85TsZO0W5jib4+tbQat26vq81vyePy2ZX+bKkvnucEt8toXYHSWjV46byWdpL
-	 w+2gWS2TD7vcU6mJkeHEDUokaD6N1DSx9VLSBMOLKYlfHJkWg5E5JmGKCFNWUhNHcx
-	 9bieusQOw5CKDJmPAzIRtd+HxeWWa8uH7HuRDq10aaJrEKeoFcfTajfyBbDXi4iTHU
-	 bjXGXoTqRjI+GjWi2UscsrG1w4d3lBdvyQ3H6Jj9UstJZXOjPNiIPcEj+npiaGmCHu
-	 7S6uFnJ8PLK5ri7dQ9//xJlZ+3LyoGZrhERc9WtTYALam6dLM6zXeUqpO4PWKgJx3b
-	 lEKw94l2rkMhA==
-Subject: Re: [PATCH mptcp-net] mptcp: reset MP_JOIN subflows on missing or
- invalid DSS options
-From: netdev-bot+sashiko@kernel.org
-To: rameshsv06@gmail.com
-Cc: mptcp@lists.linux.dev, matttbe@kernel.org, rameshkumar.t@phytecembedded.in,
- kuba@kernel.org
-Date: Wed, 14 Oct 2026 00:35:22 +0000
-Message-ID: <179193812231.3135.9291068793791022556@kernel.org>
-In-Reply-To: <20261012112625.578911-1-rameshkumar.t@phytecembedded.in>
-References: <20261012112625.578911-1-rameshkumar.t@phytecembedded.in>
-X-sashiko-severity: High
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A5x3xKVw"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-48c4d99c32bso133818f8f.1
+        for <mptcp@lists.linux.dev>; Tue, 13 Oct 2026 22:13:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791954823; x=1792559623; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=A6eKNCXYVr5WLXmMwH40qQ+TRWBdLnu+ATms5IRKfPU=;
+        b=A5x3xKVwNyJ3Hwj4DFp0u5rmecjkFui4z+hZhKIRodXJiox2FVJf5qQU4li2pbvH2x
+         eOU4LJoVX2mI7iLXaY7wJMMWe1gkmZv+wbKnKjoy9/d1or0bDhCQi2k2otzbqicNrOyS
+         vXPsMrOey5Glf72Y6YaTXhYimqasyskan5nFgdk2ITqYrKIITc21NciXrT5H4nyMYR88
+         GYHwFhLSGzzUhEpGLcRnxVedmlrkbeE9LdvsgLawPr6OheiECOkgdmfuJcKa2VNcH9tS
+         lThVJkP3NwhqN/VkMzjb0o/R53t7p5sTcGa09ENXkS0xRZoOFXyXeNetKc9lYWEkq9Il
+         vTXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791954823; x=1792559623;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=A6eKNCXYVr5WLXmMwH40qQ+TRWBdLnu+ATms5IRKfPU=;
+        b=Yil29nBd7ctsEwWvNANtuwoX8F9/Tr0aEBRHISK7W8u4E+sxOMyx/YPLdJ2xoVWi3K
+         kE6YYTbj6Ogg0n+jp3pIIUwvaNri2cgmguLY0hvH9nSgpxcnkfvLcmO0Z0so37Il5O5y
+         FQsZmWxmF08YXwxto95CvFYCoCL/Ddi1W6knjQI0z/sHEfPWulj1hST1WmfwnnKUu0SJ
+         +NeljNXWfYBY8O7KzPBcOBbeFOFfyekF4LE2M/Odz5GANrs+ccxuxpN96ldhaT329F52
+         aAY6ub/Z1P2m8XmRFrI/GPQ6R5ILZaF8ndANWFFd2x2wUbsn+HADbMsqQQtT+uIKwCtW
+         xqqQ==
+X-Gm-Message-State: AFq9FYLlKEHej0nfpeO8+pAtE0c10obB6R3cyYjTE5ouSEVH8r/N86uD
+	V8rGcnckmPQDK1ZfsLxf18ggSARPuW9mbmkJZ0B44UX80hFn6Jt8bxE8
+X-Gm-Gg: AYBFou3VQr2rD1SST8cVjIp4HFIUVYP9GJlqBV1Vnu7QSOmlNa5CAHVSgNielev6BPL
+	6BHLmkmHU2mdgbdZ4ckc06ExamErcW/vnaXZTWNLrSHZY+1hqmM2E0h33dQxVE5/+LsagnsXTAG
+	B2KqFNULRKFjm+14ES3pWdEaCqbjoxAx27Tn4+cz6DXrKEPT6A6MGBYuhPyMRBnw4VcFjNkpS+t
+	sStX+txc9kPpJMbuh8+Aumt1TT+Voz8VACJiWQkgYXliCZq4Bef+TEWSjRUoIXfaZ006+HtgI6J
+	dFj17wjEc4BsC/lpRAqbLeVIW2010pX3oB5Z9n97GZsYyLlYpPcjLMWi4WoCSJQm4EYXtalQqi+
+	fJLgF1MM4A7W0kgIITf6DfxdfORI0lzlYqQDea87S/BXQWMlXqB2lHL80iHhoI8n2mUwhgwQ5uT
+	ZgYR4N/boB7zV/aTfGoA5N56CU7T58ouigDu0r+8OzFtqNmpOc15byUK3q1n6H7HBjQb65vZl3x
+	O30iinwuipQyI4P4JHfJqY=
+X-Received: by 2002:a05:6000:288a:b0:488:8568:bb02 with SMTP id ffacd0b85a97d-48dba9e6727mr26830117f8f.23.1791954823039;
+        Tue, 13 Oct 2026 22:13:43 -0700 (PDT)
+Received: from localhost (ip87-106-108-193.pbiaas.com. [87.106.108.193])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48de0aaaad1sm9155942f8f.17.2026.10.13.22.13.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Oct 2026 22:13:42 -0700 (PDT)
+Date: Wed, 14 Oct 2026 07:13:36 +0200
+From: =?iso-8859-1?Q?G=FCnther?= Noack <gnoack3000@gmail.com>
+To: Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>,
+	linux-security-module@vger.kernel.org,
+	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+Subject: Re: [PATCH mptcp-next 1/2] mptcp: add msk_is_mptcp() helper
+Message-ID: <20261014.8253317f0919@gnoack.org>
+References: <cover.1791873760.git.tanggeliang@kylinos.cn>
+ <1b21558a40905ae312d2ac987de4db0a04db3c02.1791873760.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1b21558a40905ae312d2ac987de4db0a04db3c02.1791873760.git.tanggeliang@kylinos.cn>
 
-Thank you for your contribution! Sashiko AI review found 4 potential
-issue(s) to consider.
-
-Critical: 0 · High: 1 (1) · Medium: 1 · Low: 2
-
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
-
-- [High] mptcp: DoS and skipped stats via mptcp_subflow_fail() on MP_JOIN
-- [Medium] The patch now resets an MP_JOIN subflow when its data arrives
-  after the connection has fallen back.
-- [Low] The commit fixes a real bug but has no Fixes: tag.
-- [Low] The author and sign-off addresses do not match.
-
-Pre-existing issues:
-- [High] The new joined-subflow branch in subflow_check_data_avail()
-  (subflow.c:1449-1462) still sends MP_JOIN subflows with…
-
---
-
-mptcp: reset MP_JOIN subflows on missing or invalid DSS options
-
-This patch changes the fallback label in subflow_check_data_avail(). MP_JOIN
-subflows, and any subflow other than msk->first, are now always reset when
-they see missing or invalid DSS mappings. Before, they got a fake fallback
-mapping once the connection had fallen back. The initial subflow keeps the
-existing MP_FAIL and infinite fallback handling.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/544
-
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/544
-> Signed-off-by: T S Rameshkumar <rameshkumar.t@phytecembedded.in>
-
-[Severity: Low]
-This fixes the baseline behaviour where data on a join subflow, arriving
-after the connection fell back, went through the fake fallback mapping path
-in subflow_check_data_avail() instead of being reset. There is no Fixes: tag
-though.
-
-Could one be added so stable maintainers know which trees need the backport?
-MPTCP fixes for net are expected to carry one.
-
-[Severity: Low]
-The author is T S Rameshkumar <rameshsv06@gmail.com>, but the only
-Signed-off-by uses rameshkumar.t@phytecembedded.in. checkpatch reports this
-as a From:/Signed-off-by: email address mismatch.
-
-Could the sign-off use the author address, or could a From: line be added to
-the body?
-
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 2c72cb50fbf36..421832874cc62 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1446,7 +1446,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
+On Tue, Oct 13, 2026 at 02:56:46PM +0800, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> Introduce msk_is_mptcp() to check whether a socket is an MPTCP socket
+> (IPPROTO_MPTCP on SOCK_STREAM), modeled after sk_is_tcp(). Unlike
+> sk_is_mptcp() which tests a subflow socket, this helper takes an
+> MPTCP parent socket directly.
+> 
+> The naming follows the convention of rsk_is_mptcp() to distinguish it
+> from sk_is_mptcp(). This helper will be used in net/core/sock_map.c
+> alongside sk_is_tcp() to add MPTCP support for BPF sockmap, and in
+> other places where MPTCP parent socket type checking is needed.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  include/net/mptcp.h | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index 30f0e8ba88a8..8943d9f2b48b 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -150,6 +150,13 @@ static inline bool rsk_drop_req(const struct request_sock *req)
+>  	return tcp_rsk(req)->is_mptcp && tcp_rsk(req)->drop_req;
+>  }
+>  
+> +static inline bool msk_is_mptcp(const struct sock *sk)
+> +{
+> +	return sk_is_inet(sk) &&
+> +	       sk->sk_type == SOCK_STREAM &&
+> +	       sk->sk_protocol == IPPROTO_MPTCP;
+> +}
+> +
+>  void mptcp_space(const struct sock *ssk, int *space, int *full_space);
+>  bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
+>  		       unsigned int *size, struct mptcp_out_options *opts);
+> @@ -261,6 +268,11 @@ static inline bool rsk_drop_req(const struct request_sock *req)
 >  	return false;
+>  }
 >  
->  fallback:
-> -	if (!__mptcp_check_fallback(msk)) {
-> +	if (subflow->mp_join || ssk != READ_ONCE(msk->first)) {
->  		/* RFC 8684 section 3.7. */
->  		if (status == MAPPING_BAD_CSUM &&
->  		    (subflow->mp_join || subflow->valid_csum_seen)) {
+> +static inline bool msk_is_mptcp(const struct sock *sk)
+> +{
+> +	return false;
+> +}
+> +
+>  static inline bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
+>  				     unsigned int *size,
+>  				     struct mptcp_out_options *opts)
+> -- 
+> 2.55.0
+> 
 
-[Severity: High]
-This is a pre-existing issue, but this block now handles only joined
-subflows. Is the mptcp_subflow_fail() call under this MAPPING_BAD_CSUM check
-still correct?
+Reviewed-by: Günther Noack <gnoack3000@gmail.com>
 
-mptcp_subflow_fail() only works for the MPC subflow:
+Thank you Geliang!  This is exactly the helper we'd need for the
+Landlock MPTCP patch as well, and I'll happily rebase my patch set on
+that and use this more central helper!
 
-net/mptcp/subflow.c:mptcp_subflow_fail() {
-    ...
-	msk->allow_subflows = false;
-	spin_unlock_bh(&msk->fallback_lock);
+(Landlock is currently a bit bottlenecked on code reviews, so that
+review is moving a bit slower, but we'll get to it.)
 
-	/* graceful failure can happen only on the MPC subflow */
-	if (WARN_ON_ONCE(ssk != READ_ONCE(msk->first)))
-		return false;
-    ...
-}
-
-Every subflow that reaches this branch has mp_join set or is not msk->first.
-So the helper either returns false early or hits the WARN_ON_ONCE(). The
-data_avail = true / return true success path cannot run here.
-
-A remote peer seems able to reach the warning. When mptcp_finish_join()
-defers a passive join to join_list, allow_infinite_fallback stays true. It
-is only cleared in mptcp_subflow_joined(), on retransmission, or during
-MP_FAIL handling.
-
-A peer that negotiated checksums can then send a DSS with a bad checksum on
-that subflow:
-
-subflow_data_ready()
-  mptcp_subflow_data_available()
-    subflow_check_data_avail()
-      get_mapping_status() -> MAPPING_BAD_CSUM
-      mptcp_subflow_fail()
-        WARN_ON_ONCE(ssk != READ_ONCE(msk->first))
-
-This also clears allow_subflows on the msk. With panic_on_warn set, it
-becomes a panic.
-
-The baseline made the same call under !__mptcp_check_fallback(), so this
-path was already reachable. The commit message says joined subflows should
-simply be reset. Could this branch set send_mp_fail if needed and go
-straight to the reset label without calling mptcp_subflow_fail()?
-
-> @@ -1461,6 +1461,28 @@ static bool subflow_check_data_avail(struct sock *ssk)
->  			return true;
->  		}
->  
-> +		subflow->reset_transient = 0;
-> +		subflow->reset_reason = status == MAPPING_NODSS ?
-> +					MPTCP_RST_EMIDDLEBOX :
-> +					MPTCP_RST_EMPTCP;
-> +		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSRESET);
-> +		goto reset;
-> +	}
-
-[Severity: High]
-For a joined subflow that sees MAPPING_BAD_CSUM, this branch still
-calls mptcp_subflow_fail() first, and that helper cannot succeed for a
-join subflow. That has two consequences.
-
-First, when allow_infinite_fallback is already clear,
-mptcp_subflow_fail() returns false. The code then sets
-MPTCP_RST_EMIDDLEBOX and jumps to the reset label. That label sits
-after the MPTCP_INC_STATS(..., MPTCP_MIB_DSSRESET) call in the
-mptcp_try_fallback() failure block. So a join subflow reset for a bad
-checksum is never counted in MPTCP_MIB_DSSRESET. A join subflow reset
-for MAPPING_NODSS or MAPPING_INVALID is counted here. The commit
-message says joined subflows get the MIB bump before the reset. Was
-the bad checksum case meant to be left out?
-
-Second, when allow_infinite_fallback is still true, the helper gets
-past its early return and clears msk->allow_subflows. It then hits
-WARN_ON_ONCE(ssk != READ_ONCE(msk->first)), because the ssk here is a
-join subflow.
-
-A remote peer can get there. When the msk is owned by the user,
-mptcp_finish_join() only queues the passive join on join_list.
-allow_infinite_fallback stays set until the join list is flushed and
-mptcp_subflow_joined() runs. If a DSS with a bad checksum arrives on
-that subflow in the meantime, subflow_data_ready() handles it in
-softirq context and it reaches the warning. With panic_on_warn set,
-that is a remotely triggerable panic.
-
-The baseline made the same call under !__mptcp_check_fallback(), but
-this patch now dedicates the branch to join subflows.
-
-This branch can only end in a reset. Could it skip
-mptcp_subflow_fail() altogether, keep send_mp_fail if an MP_FAIL is
-still wanted, and share the reset code just below that bumps
-MPTCP_MIB_DSSRESET? Or is MPTCP_MIB_DATACSUMERR enough accounting for
-the checksum case?
-
-[Severity: Medium]
-Can this reset of a join subflow close the whole MPTCP connection, even
-after the connection has already fallen back to the initial subflow?
-
-On the passive side, when the msk is owned by the user, mptcp_finish_join()
-only queues the new subflow:
-
-net/mptcp/protocol.c:mptcp_finish_join() {
-    ...
-	} else {
-		sock_hold(ssk);
-		list_add_tail(&subflow->node, &msk->join_list);
-		__set_bit(MPTCP_FLUSH_JOIN_LIST, &msk->cb_flags);
-    ...
-}
-
-mptcp_subflow_joined() has not run yet, so allow_infinite_fallback is still
-true. Suppose the initial subflow then falls back, for example because a
-middlebox strips DSS and mptcp_try_fallback() succeeds. That sets
-MPTCP_FALLBACK_DONE and clears allow_subflows.
-
-Later, data arrives on the join subflow and get_mapping_status() returns
-MAPPING_DUMMY. This new branch then sets ssk->sk_err = EBADMSG and moves the
-ssk to TCP_CLOSE. The msk is owned, so subflow_error_report() only sets
-MPTCP_ERROR_REPORT.
-
-mptcp_release_cb() flushes the join list first. __mptcp_finish_join() fails
-because allow_subflows is false, but mptcp_subflow_reset() returns early:
-
-net/mptcp/subflow.c:mptcp_subflow_reset() {
-    ...
-	if (ssk->sk_state == TCP_CLOSE)
-		return;
-    ...
-}
-
-That leaves the subflow on conn_list with EBADMSG still pending. Next,
-__mptcp_error_report() walks conn_list and reaches it.
-__mptcp_subflow_error_report() checks only the connection-wide fallback flag:
-
-net/mptcp/protocol.c:__mptcp_subflow_error_report() {
-    ...
-	if (sk->sk_state != TCP_SYN_SENT && !__mptcp_check_fallback(mptcp_sk(sk)))
-		return false;
-    ...
-	if (ssk_state == TCP_CLOSE && !sock_flag(sk, SOCK_DEAD))
-		mptcp_set_state(sk, ssk_state);
-	WRITE_ONCE(sk->sk_err, -err);
-    ...
-}
-
-Wouldn't this move the msk to TCP_CLOSE and report EBADMSG to the
-application, even though the initial subflow is healthy?
-
-Before this patch, the join subflow got the fake fallback mapping and no
-sk_err. mptcp_subflow_reset() tore it down during the join list flush, and
-the connection kept running on the initial subflow.
-
-[ ... ]
-
--- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261012112625.578911-1-rameshkumar.t%40phytecembedded.in
+–Günther
