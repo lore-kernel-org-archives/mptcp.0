@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27FE424A078;
-	Thu, 15 Oct 2026 13:54:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD6252FE49;
+	Thu, 15 Oct 2026 14:01:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792072501; cv=none; b=HPXrCmBhNJrSLSmFOPwbdrC5+0mpTM2Xo/oc1kmDmYU4Gj7jat2BiyQ/tqUz5JFzEY88H+Mc5EUzKJVqVZmT/w5wetUOI1ZtaI27BagUG5JWpt0nV7YsRzGf1rJvhhiMe8P0TAnGZyFNSloQbbEZtKXkeQ5BM0z0ch3hEVs2GhM=
+	t=1792072882; cv=none; b=Oq3a9e/t6P0kE0iWcO8FZsnmDBsXBo9O2puwqq7XGhjAQyeDgrpeew7fXIeF2m/MgJtt7m62KuZNMwRlJL2AXdIcMM7Jk0SY3DIrwaUPU+AadZglT/gRv8ghTpVrSYqbd6UkubhKB8de2tGu6821n8hiTqPZXUSgXVkymTphUg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792072501; c=relaxed/simple;
-	bh=0PRBjTr5TypY1b893wkFMEDgcWkORlJqXUbeNeHQLNk=;
+	s=arc-20240116; t=1792072882; c=relaxed/simple;
+	bh=zQL3qSUowu0rrs8+iZQGoZGjL/KOJYqqe1X0AwjWNIM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NeXlvjCS5LfiT/vvaCRpK7rUAJw0WfqPBf9GX2xrR3bJg8+TlN7Q0ZSWvi0bt2+xlleuQYUVrzU73MD94eS65cwmdNHmVh7k7fw4b0Cw3y12LF3802bsnFWMaV2pP2kcxqE0UeEK5T3sjH7CYqdpeScasibaJiRq300nnGp9Iro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a+s5HZxi; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=bKCeg3HWoQnGpqOmq0/EuedS1ixqG/Mbbo3y7YjrWlwRpPzI3aOEqeF3YNTI/swqnBxgkiK8gsAD4QC+BXpvCTRJ3wa2wsWhBlMttSs1rqTgiO7PWTzQEHVtdpmxBGBQ1oRlCorMHmQUZKdbM3ggCz7QkrTbHEAXv7ChE03dtLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mtT5lg5R; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a+s5HZxi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2937E1F000C4;
-	Thu, 15 Oct 2026 13:54:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mtT5lg5R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 071241F000C5;
+	Thu, 15 Oct 2026 14:01:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792072499;
-	bh=gcI24nl2IlPA5Bb0Wh99zUo3x/8i2k9HfoyGQVQIpDg=;
+	s=k20260515; t=1792072880;
+	bh=klUThUGZ1hiPn8RzG4E3smXlt9xowrUvd+yKdXtjHsw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=a+s5HZxibXWhqhURTstsw12T/IevWt4HrHhRpZgbNCdg/hWmVdbb2gZ4YzOpVs1X+
-	 8UfkgDVdL/JQAzMUaI5YDFrAThRBXJWI1XxrX3c8sxnoiFNlLNxenVhMo5uaqgf1Jk
-	 1ArLyKrMO3Va5Cp1nw0RYV7K6u4jfA1r3FV25QV30265brksQ1nNGVNQKQ7LN3ocvk
-	 KQ5tovhGpFCrhA+ZiE6bubRtCD7KTbLkfNRiIvDEMvlAhU8pxBBcIhMrklmhmfG5Xj
-	 etdkC5AzhFEyn05iJZSi7gtIF8BSb5ZCFXSzYebOO6kdwH7HEkAA832hhPo+ujro6q
-	 b3umGmKUykOmA==
-Message-ID: <6747ddd1-3eb4-45ff-be2d-f858dc71ab35@kernel.org>
-Date: Thu, 15 Oct 2026 15:54:50 +0200
+	b=mtT5lg5R6WFY8oSxtTTjl2OW7U8LwGFcmqn2Qp+jo2BGmt6+cx1krXuS0BAWSIoVn
+	 QZVoNp+4l+OCPvKYnXh5DmYLhZM4se+u0H9MJHpK04bdJVBRAtG8MMZvHWvo5aEn9W
+	 3k6eWsLtr7NasHsJTqXHQkU6z2WeZiYl9LiVWK8z5lrWn3lRJIG2wZZpl89M1+rSkd
+	 +QaYzJMlGbu7OHLxpsjgCSnm3SdVi5zdnxOD5XhGEUNZv0KV9560F3LL6I1FHI15q2
+	 3HxWdzUNxwtLjdeL8BTBnA4mnG6l2XW+gru8HL3+0IJzkjrbPz3yr4pjD5jtnkGoXc
+	 fM5F1EkF5dX8g==
+Message-ID: <a3bd583f-f942-4636-8057-593357f10ec0@kernel.org>
+Date: Thu, 15 Oct 2026 16:01:13 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,17 +35,18 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net 1/4] mptcp: reset msk state on early connect failure
+Subject: Re: [PATCH net-next 3/4] selftests: mptcp: convert iptables to
+ nftables for mptcp_sockopt.sh
 Content-Language: fr
 To: netdev-bot+sashiko@kernel.org
 Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
  edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- caoruide123@gmail.com, stable@vger.kernel.org, vega@nebusec.ai,
- sashiko-bot@kernel.org, weir@nebusec.ai, kuniyu@google.com,
- daniel@iogearbox.net, kafai@fb.com, Quanye Yang <quanyeyang@proton.me>
-References: <20261013-net-mptcp-misc-fixes-7-3-rc8-v1-1-932c9b182fc7@kernel.org>
- <179198834484.434549.4616694240552704738@kernel.org>
+ cpaasch@openai.com, netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org, liuhangbin@kylinos.cn, shuah@kernel.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+ Hangbin Liu <hangbin.liu@linux.dev>
+References: <20261013-net-next-mptcp-misc-feat-7-4-part2-v1-3-1181e5d2fda4@kernel.org>
+ <179201140828.434549.10971881913720826839@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -91,152 +92,60 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <179198834484.434549.4616694240552704738@kernel.org>
+In-Reply-To: <179201140828.434549.10971881913720826839@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 14/10/2026 22:56, netdev-bot+sashiko@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found more severe
+> issue(s) in other patches of this series. This mail is only an FYI, in case
+> you want to address the nit picks below when you respin.
+> 
+> Low priority / nit picks for your consideration:
+> 
+> - [Low] The commit message does not mention two new runtime requirements
+>   added by this patch.
 
-On 14/10/2026 16:32, netdev-bot+sashiko@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential
-> issue(s) to consider.
-> 
-> Critical: 0 · High: 0 · Medium: 1 · Low: 0
-> 
-> If you believe none of the issues are legitimate, please reply to each
-> issue of Medium severity or higher and explain why the AI is wrong.
-> If any of them are legitimate and you plan to respin, please let patchwork
-> know by including "pw-bot: cr" as a separate line at the end of your reply
-> (one such reply per series is enough).
-> 
-> - [Medium] The new error path in mptcp_connect()
->   (net/mptcp/protocol.c:4224) calls…
+(...)
 
-TL;DR: this is a pre-existing issue.
+>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+>> index e850a87429b61..ef2738720e249 100755
+>> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+>> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> 
+> [ ... ]
+> 
+>> @@ -105,32 +109,31 @@ cleanup()
+>>  
+>>  mptcp_lib_check_mptcp
+>>  mptcp_lib_check_kallsyms
+>> -mptcp_lib_check_tools ip "${iptables}" "${ip6tables}"
+>> +mptcp_lib_check_tools ip nft jq
+> 
+> [Severity: Low]
+> This isn't a bug, but should the commit message list the new runtime
+> requirements? The script now needs jq and an nft built with JSON support
+> (nft -j list ruleset). The shared mptcp_lib_check_tools() helper in
+> mptcp_lib.sh also gets new "nft" and "jq" cases.
+> 
+> The commit message only says:
+> 
+>     After conversion, the generated output matches the original
+>     iptables/ip6tables behavior.
+> 
+> The reason for using JSON and jq appears only in the v2 notes below the
+> --- line, and those notes are dropped when the patch is applied.
+> 
+> This check runs at top level, before any subtest. So a system that has
+> iptables but no jq, or an nft without JSON support, now skips the whole
+> script. That includes do_mptcp_sockopt_tests and do_tcpinq_tests, which
+> don't use netfilter.
+> 
+> Could the commit message mention the jq and nft JSON dependencies and the
+> mptcp_lib.sh change?
 
-> mptcp: reset msk state on early connect failure
-> 
-> This commit changes the mptcp_connect() error path. It now clears the
-> fallback state (MPTCP_FALLBACK_DONE, allow_subflows,
-> allow_infinite_fallback) and resets the first subflow context. The goal
-> is that a later connect() on the same fd can use MPTCP again after an
-> early fallback followed by an immediate connect failure.
-> 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/633
-> 
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index e89a69ab927c9..e6f73a5ee630a 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -4212,9 +4212,16 @@ static int mptcp_connect(struct sock *sk, struct sockaddr_unsized *uaddr,
->>  	 * subflow_finish_connect()
->>  	 */
->>  	if (unlikely(err)) {
->> -		/* avoid leaving a dangling token in an unconnected socket */
->>  		mptcp_token_destroy(msk);
->>  		mptcp_set_state(sk, TCP_CLOSE);
->> +
->> +		spin_lock_bh(&msk->fallback_lock);
->> +		msk->allow_subflows = true;
->> +		msk->allow_infinite_fallback = true;
->> +		clear_bit(MPTCP_FALLBACK_DONE, &msk->flags);
->> +		spin_unlock_bh(&msk->fallback_lock);
->> +
->> +		mptcp_subflow_ctx_reset(mptcp_subflow_ctx(ssk));
-> 
-> [Severity: Medium]
-> Is mptcp_subflow_ctx_reset() resetting more than this path needs? It
-> clears the whole reset group and then sets local_id to -1:
-> 
-> net/mptcp/protocol.h:mptcp_subflow_ctx_reset() {
-> 	memset(&subflow->reset, 0, sizeof(subflow->reset));
-> 	subflow->request_mptcp = 1;
-> 	WRITE_ONCE(subflow->local_id, -1);
-> }
-> 
-> This also wipes two values that are set only once, when msk->first is
-> created:
-> 
-> net/mptcp/protocol.c:__mptcp_socket_create() {
->     ...
-> 	subflow->subflow_id = msk->subflow_id++;
-> 
-> 	/* This is the first subflow, always with id 0 */
-> 	WRITE_ONCE(subflow->local_id, 0);
->     ...
-> }
-> 
-> A second connect() gets the same msk->first back from __mptcp_nmpc_sk(),
-> so this setup does not run again. The reset also runs on every immediate
-> failure (ENETUNREACH, EAFNOSUPPORT, BPF pre_connect, ...), not only after
-> an early fallback.
-> 
-> On the retry, local_id is -1, so the connect goes through:
-> 
-> tcp_connect()
->   subflow_rebuild_header()
->     subflow_chk_local_id()
->       mptcp_pm_get_local_id()
-> 
-> mptcp_pm_get_local_id() returns 0 only when the msk local address matches
-> the subflow's address:
-> 
-> 	mptcp_local_address((struct sock_common *)msk, &msk_local);
-> 	mptcp_local_address((struct sock_common *)skc, &skc_local.addr);
-> 	if (mptcp_addresses_equal(&msk_local, &skc_local.addr, false))
-> 		return 0;
-> 
-> mptcp_copy_inaddrs() runs only after a successful connect. For an unbound
-> msk, the msk address is therefore still zero at this point.
-> 
-> Wouldn't the kernel PM then give the MPC subflow a non-zero ID, either
-> from a matching endpoint or by adding an IMPLICIT endpoint to the netns
-> endp_list?
-> 
-> If the endpoint table is full, mptcp_pm_nl_get_local_id() returns -ERANGE.
-> tcp_connect() would then fail the retry with -EHOSTUNREACH, even though a
-> valid route exists.
-> 
-> A non-zero local_id on the initial subflow also seems to break endpoint
-> removal. When that endpoint is deleted,
-> mptcp_nl_remove_subflow_and_signal_addr() gets the ID from
-> mptcp_endp_get_local_id(), which returns rm_id 0 for the MPC endpoint.
-> mptcp_pm_rm_addr_or_subflow() then skips the initial subflow because
-> id != rm_id, so the initial subflow is never closed.
-> 
-> The reset also zeroes subflow_id, while msk->subflow_id has already
-> advanced to 2. After a successful retry, mptcp_get_full_info() would
-> report the first subflow with id 0:
-> 
-> 	sfinfo.id = subflow->subflow_id;
-> 
-> But tools/testing/selftests/net/mptcp/mptcp_sockopt.c expects:
-> 
-> 	assert(sfinfo[0].id == 1);
-> 
-> mptcp_disconnect() already behaves this way for subflow_id. The local_id
-> part looks new, though: on the disconnect path, the msk still holds the
-> addresses from the earlier successful connect.
-
-The code here is doing a "disconnect" of the first subflow: similar to
-what is done in __mptcp_subflow_disconnect(), mptcp_subflow_ctx_reset()
-is called. It will indeed set subflow->local_id to -1 and causing the
-(minor) issue reported here where the PM could assign the wrong ID when
-reconnecting (yeah, another reconnect after a "disconnect" case...). So
-I don't think this issue is new, and the fix here is doing the right
-thing of calling mptcp_subflow_ctx_reset().
-
-> The commit message mentions only MPTCP_FALLBACK_DONE, allow_subflows and
-> request_mptcp. Would it work to reset only request_mptcp here (plus the
-> token and key fields if needed)? Another option would be to restore
-> local_id to 0 and keep the original subflow_id for msk->first after
-> mptcp_subflow_ctx_reset().
-
-I don't think we should set the local_id to 0 in mptcp_subflow_ctx_reset
-because it will cause issues in mptcp_close_ssk(). Maybe we should set
-local_id to 0 for the first subflow in mptcp_disconnect()? Anyway, that
-should be part of a follow-up patch (I can look at that), not as a new
-version of this one.
+nft is implicit. 'jq' is used in many other selftests. No need to
+re-spin (but if we do, yes we can mention it just to please Clashiko).
 
 Cheers,
 Matt
