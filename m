@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ED6F43F0A7
-	for <mptcp@lists.linux.dev>; Thu, 15 Oct 2026 10:42:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77AA81A0BF3
+	for <mptcp@lists.linux.dev>; Thu, 15 Oct 2026 10:42:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792060966; cv=none; b=TWOVRNPyYiUTS69ecELLQAVn7IWliqU7VoAhYZEFBmezllgtPi4Gdpr30npOVh9kKD7uNSwo6vLcMW8oq7mYULZpjhSv0+0I7nUjb+eOe4+a3tkoa7i5QhrvExIIkofE5HMktvHx/fQhhrvcXIIcHzYNAChj5EchZiN9GaeW1Ck=
+	t=1792060968; cv=none; b=cXFVkGVUUIPCDz3EsXalFbiWoDnJIy99oxCX+JlLO+Df2Q2Fu5gbdrkTvZJ8h2rm8o5zmWqqvYKprNL+QVKBct2GK9NslncYowK3Zzy6cH8GcovJfrB+N81ZqJtBsRetmb95WbmzXTNDj7/hyKaFKOrPAn2Zt5EklWBBFLvFXIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792060966; c=relaxed/simple;
-	bh=xBz/1HomzZi1xkneY+MYlJTusdVa4kphXZ8RVh3kkPM=;
+	s=arc-20240116; t=1792060968; c=relaxed/simple;
+	bh=qgI33aJ6iAEHlANkEnIehYS/BtQnxUWc4GxhOhFKKjc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pOBg4bgGdWhZ+7+q1MGCqhx2mBdnMW3hXNPOJfMX6SXpi+1Utw/stM9MLu17C8U8Dp+ZN8UYc19zL+e/+YDgnejaMfbdLGXGFc7dCj8XDJF2AwkwxwUcS45uLcFcyJOqe6fJQzF5oA2CGPFVAEZj3u13ZwPPdG3wCLE3krTVUJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bWuu9nar; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=QXPQ9b+0trYgbful0xoJ5feO8I6iHRevCyPj0Xd/v2BEKkEizHtp0COAyCYCykhas6CxXnqYkoZcM5n0PH3nHaIFBhk0zCUqhDA1cT9pVj81Cz5ci6sAG5l0siD4+yJ5jCmyhHSL6u+z483I/ZHglUA7f8IwOq01604p06uPkB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mpaIdpWM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bWuu9nar"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06CA81F000C5;
-	Thu, 15 Oct 2026 10:42:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mpaIdpWM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A32A91F000C4;
+	Thu, 15 Oct 2026 10:42:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792060965;
-	bh=1lqA5IWbmJYAFcnC+QyK0kEawrNiswlVLmX7kOn2vlU=;
+	s=k20260515; t=1792060966;
+	bh=4Nhxo4E3tSMi6ZdP/h6qVZYYhXrOa1YTkOSaHMmUmZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=bWuu9narrHyo3+b4+BBAiuSNmdhX8YSFUkkw5zR5rTI2VE7Gs0Ikkm5lWctsRzq6t
-	 MavRWEZEaLObDwP6/2WrWyijJ+1e/2jxOXkGbntkG5fXkFEVSRJWUWHJ6n34QnLMi4
-	 Wfy40STf5NSxQ7IiDLY1tmOGSoCL8CZDz92YJp73jKd2bSjY7rfKWcltJ7Erbxsv4f
-	 9o2eHWbLA6+2lA3Wh3/o1PkOmLByfom8TYtJhFqhT1Ai5DDDmmLjAA34xXMQAY2jb9
-	 dLeqKDFqjsZWdbvnIR1UVhxm5DJBm7GDPA9K7VEeqUwzKGWT9AAdqKoPs45IrXTiLG
-	 hBChO4atrKBPw==
+	b=mpaIdpWMW/xBX6DDQMXFrYdM0d2zMeluWVqtTlA6cAzHWkzMKOVTvBwGXHQBX275B
+	 ghpY7RCbcng1pRe62gKIs38sWsqPxXkGJ1SnNpsIc52FSm6jC5euuDRXlkF4oOJVim
+	 lFLZLPVA0f89s1u4MLcACWX+Vl4utUx5FAJmxSEIR2QMSyaDHz2RmMnpvMRr1Fzuqc
+	 lN/z3TcgqlBoqtvZ5VrQKzrgSoW04PCJHBWzUCuETc+Gop1ivuHwl+SBuW3xdjP5fy
+	 OMf6PM0jBsK1aHQsKRSYpcWmNZ1zEM1kgoXleda1soOe6zW75F9oPk+WbQvTpfqIRm
+	 tJFcLzPGv8z0g==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 1/2] mptcp: give MPTCP sockets a distinct lockdep class
-Date: Thu, 15 Oct 2026 18:42:36 +0800
-Message-ID: <23c5f34fa80bff87b4c49981b1ab19d13bf7f136.1792060837.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 2/2] mptcp: kunit: add sockopt test for subflow socket locking
+Date: Thu, 15 Oct 2026 18:42:37 +0800
+Message-ID: <142cbcb29b102475a20728f41b3d696154f5e04d.1792060837.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <cover.1792060837.git.tanggeliang@kylinos.cn>
 References: <cover.1792060837.git.tanggeliang@kylinos.cn>
@@ -45,79 +45,101 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-MPTCP sockets and their subflows share the same k-sk_lock-AF_INET
-lockdep class. When both are kernel sockets, lockdep flags every path
-that holds the MPTCP socket lock and then locks a subflow (setsockopt,
-connect, bind, worker send-ack) as "possible recursive locking".
+Add a KUnit test to verify that MPTCP sockets have a distinct lockdep
+class from their subflows. The test creates a kernel MPTCP socket and
+sets SO_REUSEADDR, which triggers the code path where
+mptcp_setsockopt_sol_socket() locks the MPTCP socket and then calls
+sk_setsockopt() on the subflow.
 
-Reclassify the MPTCP socket lock in mptcp_init_sock() to use a distinct
-lock class (sk_lock-AF_INET-MPTCP for IPv4, sk_lock-AF_INET6-MPTCP for
-IPv6). This approach is similar to nvme-tcp and avoids the need to
-reclassify each subflow socket individually.
+Without the lockdep fix (distinct MPTCP socket class), this triggers a
+"possible recursive locking" warning:
 
-The implementation is based on nvme_tcp_reclassify_socket() from
-drivers/nvme/host/tcp.c.
+'''
+  kunit_try_catch/355 is trying to acquire lock:
+  ffff888115c99c58 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: \
+					sk_setsockopt+0x1132/0x3b30
+
+  but task is already holding lock:
+  ffff88811ac80e98 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: \
+				mptcp_setsockopt_sol_socket+0xed/0x910
+
+  Possible unsafe locking scenario:
+         CPU0
+         ----
+    lock(k-sk_lock-AF_INET);
+    lock(k-sk_lock-AF_INET);
+
+  *** DEADLOCK ***
+'''
+
+With the fix, the MPTCP socket has its own sk_lock-AF_INET-MPTCP class
+and no warning appears.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ net/mptcp/Makefile       |  4 +++-
+ net/mptcp/sockopt_test.c | 37 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 40 insertions(+), 1 deletion(-)
+ create mode 100644 net/mptcp/sockopt_test.c
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 60cbd91be632..e63896a60595 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -56,6 +56,41 @@ DEFINE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions) = {
- };
- static struct net_device *mptcp_napi_dev;
+diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
+index bd72b300a0f6..e9ae91cff940 100644
+--- a/net/mptcp/Makefile
++++ b/net/mptcp/Makefile
+@@ -10,7 +10,9 @@ obj-$(CONFIG_INET_MPTCP_DIAG) += mptcp_diag.o
  
-+#ifdef CONFIG_DEBUG_LOCK_ALLOC
-+/* distinct lockdep class for MPTCP sockets */
-+static struct lock_class_key mptcp_sk_key[2];
-+static struct lock_class_key mptcp_slock_key[2];
+ mptcp_crypto_test-objs := crypto_test.o
+ mptcp_token_test-objs := token_test.o
+-obj-$(CONFIG_MPTCP_KUNIT_TEST) += mptcp_crypto_test.o mptcp_token_test.o
++mptcp_sockopt_test-objs := sockopt_test.o
++obj-$(CONFIG_MPTCP_KUNIT_TEST) += mptcp_crypto_test.o mptcp_token_test.o \
++				  mptcp_sockopt_test.o
+ 
+ obj-$(CONFIG_BPF_SYSCALL) += bpf.o
+ 
+diff --git a/net/mptcp/sockopt_test.c b/net/mptcp/sockopt_test.c
+new file mode 100644
+index 000000000000..ebd43de02543
+--- /dev/null
++++ b/net/mptcp/sockopt_test.c
+@@ -0,0 +1,37 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <kunit/test.h>
 +
-+static void mptcp_reclassify_socket(struct socket *sock)
++#include "protocol.h"
++
++static void mptcp_sockopt_reuseaddr(struct kunit *test)
 +{
-+	struct sock *sk = sock->sk;
++	struct socket *sock;
++	int err, reuse = 1;
 +
-+	if (WARN_ON_ONCE(!sock_allow_reclassification(sk)))
-+		return;
++	err = sock_create_kern(&init_net, AF_INET, SOCK_STREAM, IPPROTO_MPTCP,
++			       &sock);
++	KUNIT_ASSERT_EQ(test, err, 0);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, sock);
 +
-+	switch (sk->sk_family) {
-+	case AF_INET:
-+		sock_lock_init_class_and_name(sk, "slock-AF_INET-MPTCP",
-+					      &mptcp_slock_key[0],
-+					      "sk_lock-AF_INET-MPTCP",
-+					      &mptcp_sk_key[0]);
-+		break;
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+	case AF_INET6:
-+		sock_lock_init_class_and_name(sk, "slock-AF_INET6-MPTCP",
-+					      &mptcp_slock_key[1],
-+					      "sk_lock-AF_INET6-MPTCP",
-+					      &mptcp_sk_key[1]);
-+		break;
-+#endif
-+	default:
-+		WARN_ON_ONCE(1);
-+	}
++	err = sock_common_setsockopt(sock, SOL_SOCKET, SO_REUSEADDR,
++				     KERNEL_SOCKPTR(&reuse), sizeof(reuse));
++
++	KUNIT_EXPECT_EQ(test, err, 0);
++
++	sock_release(sock);
 +}
-+#else
-+static void mptcp_reclassify_socket(struct socket *sock) { }
-+#endif
 +
- /* Returns end sequence number of the receiver's advertised window */
- u64 mptcp_wnd_end(const struct mptcp_sock *msk)
- {
-@@ -3292,6 +3327,8 @@ static int mptcp_init_sock(struct sock *sk)
- 	sk->sk_sndbuf = READ_ONCE(net->ipv4.sysctl_tcp_wmem[1]);
- 	sk->sk_write_space = sk_stream_write_space;
- 
-+	mptcp_reclassify_socket(sk->sk_socket);
++static struct kunit_case mptcp_sockopt_test_cases[] = {
++	KUNIT_CASE(mptcp_sockopt_reuseaddr),
++	{}
++};
 +
- 	return 0;
- }
- 
++static struct kunit_suite mptcp_sockopt_suite = {
++	.name = "mptcp-sockopt",
++	.test_cases = mptcp_sockopt_test_cases,
++};
++
++kunit_test_suite(mptcp_sockopt_suite);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("KUnit tests for MPTCP sockopt");
 -- 
 2.55.0
 
