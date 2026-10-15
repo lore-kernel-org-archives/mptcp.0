@@ -1,130 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE6E41DDF0;
-	Wed, 14 Oct 2026 20:56:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81D8275870;
+	Thu, 15 Oct 2026 00:34:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792011412; cv=none; b=u1EnURHPknJ4plp+6B3iwy2jCFK6iA1qYTMQHO6pEkkCjXxMPTgdl8DXZtyrrNrbNqle+6sXg/+cG9X4dsEu9PbOrIG/9hoL0yga5VzRuDx7prGc64iKRoXyt+oKTEmV0r1W1lpFMsDTZu3Jcgkk8NRYn5S6sI9GyAu0jq83lso=
+	t=1792024498; cv=none; b=DKS3zbkSdKaFJosT59E/8o2aXn2Pwke5KM/mWU8yoLA+RM2n3x+nclhOZ8cvD7+hFhzGb9GFt6U5ufXJznXP7FaK8WrgpnDzI3MKr5vHK2eT256YgbO5/sfbwnXg+t3xZur4TyIqQuCPDvILq2dVgr3osF+s8X3Fu7vnLBeYghI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792011412; c=relaxed/simple;
-	bh=6hqYPJ6/xAsJgWntVG80XsH3EXmRejAXLJ/fskhKgjg=;
-	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XmTt/uUnXP/T/ElcCZOsKErm+8wgFyctHoJnxf5b9koqdtgicj3Wd/ACN2NPwYhV++D1HHZypAYiGMfVSuYeA849Ze+/Dq8C0vXdZ+NHgaE1dVusmxhbcXWUqXLfy5ZE+BCjCjBjVHoy35sg8jPeNQxFqaW96N02RPIrO5HYcNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LmJY9Oz5; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792024498; c=relaxed/simple;
+	bh=gwTaAOEasKiDHbzb7R1qUUjQw6xLTsx5YdIQap7eOG0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nac5oMRyKVTb+bleuVxkb56PKPIcl3pnQDl0M90E/Ky2MUQsdh8FwY1VaPRY7W9Div0c4uqZOAeQ0+3IKMUMR8w+RemUZekjDl3W1np7RBiiRmAvxFjUukgb/FNUKAIalbE4CPHiPt9qmxcZEsn8C3QmFPLdkx3Rj9nlXRDBbBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GDCtZT39; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LmJY9Oz5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F7A71F000C5;
-	Wed, 14 Oct 2026 20:56:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792011411;
-	bh=oYmMLeNpHr3M9c+dYZAHyUCaqhInsdxFPD8shQdQogo=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=LmJY9Oz55ES4iMAozXDfVZ0E4Yq1MWHh5o0VGSVY7MxD6P7QVFtJwQn1x0ng1ZJPr
-	 Gv+okYHtdQEt2UseP9heBww39iurITYhiu7kl70ZLgaY7VlJqGjHMc0O7J3titBgef
-	 HSNTTZCTSlGRVeHNskfHr6mya6eS+51vhBXFBwCEDihQMfGf4nF+gc9oIRsGJENsYv
-	 EXRPdxOvV+WPxKp4HNCvcVlGh+6QlxuBah47aWj2lG6Zt28/e9TWtuIXfwry1uEt9P
-	 yRkhAPaBZ8+WXW8nZLbt+4Z9xao1ZnS+JULNNol3vCMZKp2k6c8M0yCo581VEozB6r
-	 sdXlftxFyfL5g==
-Subject: Re: [PATCH net-next 4/4] selftests: mptcp: convert iptables to
- nftables for mptcp_join.sh
-From: netdev-bot+sashiko@kernel.org
-To: matttbe@kernel.org
-Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
- edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- cpaasch@openai.com, netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, liuhangbin@kylinos.cn, shuah@kernel.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org
-Date: Wed, 14 Oct 2026 20:56:49 +0000
-Message-ID: <179201140983.434549.4591346402914779226@kernel.org>
-In-Reply-To:
- <20261013-net-next-mptcp-misc-feat-7-4-part2-v1-4-1181e5d2fda4@kernel.org>
-References:
- <20261013-net-next-mptcp-misc-feat-7-4-part2-v1-4-1181e5d2fda4@kernel.org>
-X-sashiko-severity: Medium
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GDCtZT39"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1792024497; x=1823560497;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gwTaAOEasKiDHbzb7R1qUUjQw6xLTsx5YdIQap7eOG0=;
+  b=GDCtZT39FD1B/ErcVscqqHksPC2GfAKAT89iWL2eeEes4JoERfkhTsEd
+   +w1BHHus4TfcI2tdKgB95u4KV3ijA4JcEbzawnhAaiHCHGqF42Z6YP4oB
+   uYqYLY1ifWvFK3dp1gZCpGbGhm+e02b41k/Cyao06EtpZK6Ff6+B5gIms
+   RSTogE+zuL05C/nCOUDhdtSwpAdCtdmuAENVObk9aCpsD6m0/pN9SAmXj
+   paKBCQc8ms9bRIa7e0gxAgJk8v/AUVO59Romyuaa0HSEg5h+WmYUkiy5h
+   uJblJySBdFJ9C85iDg5yw4bMDl8csM6iCdkz6FPq6ZlJ9BA6Ijli5vqlH
+   Q==;
+X-CSE-ConnectionGUID: u2ugbvzURcyX3u+KIq7vqQ==
+X-CSE-MsgGUID: kY9Kbk+mQ3a19AWCc0sn3g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11935"; a="796594"
+X-IronPort-AV: E=Sophos;i="6.27,158,1787036400"; 
+   d="scan'208";a="796594"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2026 17:34:56 -0700
+X-CSE-ConnectionGUID: pb2hHKhxTWC9JZFUa+Ws+g==
+X-CSE-MsgGUID: fpGoSFUETaaSUQ/RN0Rc+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,158,1787036400"; 
+   d="scan'208";a="1516288"
+Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 14 Oct 2026 17:34:54 -0700
+Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1xH9Qq-00000000FR1-1K0N;
+	Thu, 15 Oct 2026 00:34:52 +0000
+Date: Thu, 15 Oct 2026 08:34:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: oe-kbuild-all@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next 1/2] tls: implement tls_disconnect
+Message-ID: <202610150856.tk1Ryxlc-lkp@intel.com>
+References: <6ffac9e36dab9b4f5fdb6e55a744b35f0d51ffb4.1791967771.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6ffac9e36dab9b4f5fdb6e55a744b35f0d51ffb4.1791967771.git.tanggeliang@kylinos.cn>
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue(s) to consider.
+Hi Geliang,
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 0
+kernel test robot noticed the following build errors:
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
+[auto build test ERROR on mptcp/export]
+[also build test ERROR on mptcp/export-net shuah-kselftest/next shuah-kselftest/fixes linus/master v7.3-rc7 next-20261012]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-- [Medium] mptcp_join.sh init() now calls `mptcp_lib_check_tools ip tc ss
-  nft` (mptcp_join.sh:192).
+url:    https://github.com/intel-lab-lkp/linux/commits/Geliang-Tang/tls-implement-tls_disconnect/20261014-165935
+base:   https://github.com/multipath-tcp/mptcp_net-next.git export
+patch link:    https://lore.kernel.org/r/6ffac9e36dab9b4f5fdb6e55a744b35f0d51ffb4.1791967771.git.tanggeliang%40kylinos.cn
+patch subject: [PATCH mptcp-next 1/2] tls: implement tls_disconnect
+config: m68k-defconfig (https://download.01.org/0day-ci/archive/20261015/202610150856.tk1Ryxlc-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 16.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261015/202610150856.tk1Ryxlc-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202610150856.tk1Ryxlc-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   net/tls/tls_main.c: In function 'tls_sk_proto_free':
+>> net/tls/tls_main.c:377:32: error: 'tls_device_sk_destruct' undeclared (first use in this function); did you mean 'tls_device_sendmsg'?
+     377 |         if (sk->sk_destruct == tls_device_sk_destruct)
+         |                                ^~~~~~~~~~~~~~~~~~~~~~
+         |                                tls_device_sendmsg
+   net/tls/tls_main.c:377:32: note: each undeclared identifier is reported only once for each function it appears in
+
+
+vim +377 net/tls/tls_main.c
+
+   360	
+   361	static void tls_sk_proto_free(struct sock *sk,
+   362				      struct tls_context *ctx,
+   363				      bool free_ctx)
+   364	{
+   365		struct inet_connection_sock *icsk = inet_csk(sk);
+   366		long timeo = sock_sndtimeo(sk, 0);
+   367	
+   368		if (ctx->tx_conf != TLS_BASE || ctx->rx_conf != TLS_BASE)
+   369			tls_sk_proto_cleanup(sk, ctx, timeo);
+   370	
+   371		write_lock_bh(&sk->sk_callback_lock);
+   372		WRITE_ONCE(sk->sk_prot, ctx->sk_proto);
+   373		if (sk->sk_socket)
+   374			WRITE_ONCE(sk->sk_socket->ops, ctx->sk_proto_ops);
+   375		if (sk->sk_write_space == tls_write_space)
+   376			sk->sk_write_space = ctx->sk_write_space;
+ > 377		if (sk->sk_destruct == tls_device_sk_destruct)
+   378			sk->sk_destruct = ctx->sk_destruct;
+   379		if (free_ctx) {
+   380			rcu_assign_pointer(icsk->icsk_ulp_data, NULL);
+   381			if (icsk->icsk_ulp_ops) {
+   382				/* Balance try_module_get in __tcp_ulp_find_autoload */
+   383				module_put(icsk->icsk_ulp_ops->owner);
+   384				icsk->icsk_ulp_ops = NULL;
+   385			}
+   386		}
+   387		write_unlock_bh(&sk->sk_callback_lock);
+   388		if (ctx->tx_conf == TLS_SW)
+   389			tls_sw_free_ctx_tx(ctx);
+   390	}
+   391	
 
 --
-
-selftests: mptcp: convert iptables to nftables for mptcp_join.sh
-
-This converts the iptables/ip6tables rules in mptcp_join.sh to nftables.
-The cBPF bytecode matches are replaced with native nft matching, and
-hard-coded offsets are used for RM_ADDR. The config file is updated to
-match, and the iptables/ip6tables tool check is removed from
-mptcp_lib.sh.
-
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 18ce7136a2b0e..f4d8afaeda4f3 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-
-[ ... ]
-
-> @@ -196,7 +189,7 @@ init() {
->  
->  	mptcp_lib_check_mptcp
->  	mptcp_lib_check_kallsyms
-> -	mptcp_lib_check_tools ip tc ss "${iptables}" "${ip6tables}"
-> +	mptcp_lib_check_tools ip tc ss nft
-
-[Severity: Medium]
-Will this skip the whole mptcp_join.sh suite when nft has no JSON
-support?
-
-The shared "nft" case in mptcp_lib_check_tools() in mptcp_lib.sh also
-requires JSON output:
-
-tools/testing/selftests/net/mptcp/mptcp_lib.sh:mptcp_lib_check_tools() {
-    ...
-		"nft")
-			if ! nft --version &> /dev/null || \
-			   ! nft -j list ruleset &> /dev/null; then
-				mptcp_lib_pr_skip "Could not run all tests without nft -j"
-				exit ${KSFT_SKIP}
-			fi
-			;;
-    ...
-}
-
-As far as I can tell, that JSON requirement is there for
-mptcp_sockopt.sh, which pipes "nft -j list table ... filter" into jq.
-
-mptcp_join.sh never uses JSON output. It only runs "nft -f -" from
-init_nftables(), plus "nft add rule", "nft insert rule" and "nft flush
-chain".
-
-If nft was built without JSON support, init() would exit with
-KSFT_SKIP. Every join, PM, endpoint and userspace subtest would then be
-skipped, including the many that do not use nft at all. The skip
-message would also point at "nft -j", which this script does not need.
-
-Before this patch, mptcp_join.sh only checked for iptables/ip6tables, so
-nft JSON support did not matter here.
-
-Would it make sense to check only for plain nft in mptcp_join.sh, for
-example with a separate non-JSON case in mptcp_lib_check_tools()?
-
--- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261013-net-next-mptcp-misc-feat-7-4-part2-v1-0-1181e5d2fda4%40kernel.org
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
