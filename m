@@ -1,136 +1,197 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E24032B110
-	for <mptcp@lists.linux.dev>; Fri, 16 Oct 2026 07:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF743D301D
+	for <mptcp@lists.linux.dev>; Fri, 16 Oct 2026 08:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792135155; cv=none; b=NlBtjW1k9RIpjHQIgqzGgYplVGNSXpKZ2syfJ/awmQz/1/aYghpi8CIkVN3a9/RwSo8y4S9rSMuThXXt/sVjARwYA/gCjcyZQ3CtfeZ/sDI8pmEmMaNh84vhJtHPMuvehLR22gbiLS6Nu3OxK+SgEe+xPZBzwlremsxha8tVILI=
+	t=1792137818; cv=none; b=JxScSr57ts3ZuS17OV7SLCtmyzH2kdqTr6JuqSwbUscZxejs0/skGmDU63VSwZ9YVl98CyKJCtkX5AhWmTjrtaH0br7B8rnh7TWcO+rPmTDFH6g4xI0gdvIRh56stmE7IYYCOnNAlYDuoSyUSVqzR4bam+endSLujXBQ6KOXiSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792135155; c=relaxed/simple;
-	bh=SZNJkYc3tkfDXW6WlSvsV2DyrfkRhtTK4mmHxO+/8MU=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=mz78xDACzHYPtOgz5t3haViF9uVOCL1CfThjCbhYLQSShfXjNKeWIWqVoUCeLT3fIK8PzfXq1OUXpyRc6o7LkwIfikFgg/viHO3CSjt9fP4/vbb4mAPbG1hJ4RffW43bV4Ug47zLYxFAT8O5FtvmpG6YYWlf7nW5lZ2T2ZRp/W8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mv/B7Ez5; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1792137818; c=relaxed/simple;
+	bh=fVpeicE9c0fxk6LUKIBH3T/+emOq2zl5js5ylDzCwok=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qXiPMEvqa0ZIKo+6W5J/X7Xla4o3o8/xQONJl0n/WtqYzEU4N5vw9hBJz7wMn8wUOVslp/QaqHBbGPAoGjEi0svIEA3A1EskLvlr/uEFhsP2Hcj0nstpYUbDjpg62Gqd0u25iIwe9wNu+i/fwrk2zkryYev9iGDy99CqGvrb9Qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cDJ+G07I; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mv/B7Ez5"
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-8266c388b67so5108767a34.0
-        for <mptcp@lists.linux.dev>; Fri, 16 Oct 2026 00:19:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792135153; x=1792739953; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=BJM0bghpLmKEDCEhcdAxyFSTUzWF3kq3I8I/7XMYbTk=;
-        b=Mv/B7Ez5mTlSIt9qOku2jvV28LsR2oTLk51+uUocZa7pzXqwKstE6wheNGcjunJ0l7
-         HMWt2XZa2LUSPGxDGy/iCQ7QPQ4hGakQghNO86PSkUDEry2A80gkzAmhZaHkWKkdTm5r
-         c9Nd+trLty4qo0ZbPSMsEWVUpetENgo+wZ5ubavBoH3BognSaCq7VScnFZFU2Fv6dPxU
-         bq3McssoRzWPwzs3zwrC/SWa9x61kWeMSJNxkGTMxMFIcryB9SY8utZYtH/d7+QBirt9
-         4AvGa8bEdVnW8L/wspsr5azDoVzIoZbPW6DcWYZqskNsTGVfKlL9lYvzxEJFmWt3jj9G
-         LIOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792135153; x=1792739953;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=BJM0bghpLmKEDCEhcdAxyFSTUzWF3kq3I8I/7XMYbTk=;
-        b=kWsYPAyTUnUfOjEJweWbPEkCfR8wXdWQ9jASnxaubY9efi75PvogbeWmcNbTukQDAD
-         CIeQm1zZmh/y16YYUQ5rQw0FRty87DhvAWR3+RjfG4+I+r4qs5nRlueBnEqRqOj6H4Me
-         rTA5fQZE5X6jltFAEFfvw2vXjST3Rhn42vs2jlX8Vi3ZcSpHBEbB/gepMHYpZwX0YBys
-         SoyS6l0z7+OEpnjleerpyHqSgZSVKsT73jWlNz1GjLQYTKnwl9ggs3JgbYq3RLGNleuC
-         FaFDTTr8YAnA9T3GK7Hmqn1lxAXNwjiKJYXHTyT6+2MOb093sQ0AZV4IBY0qJxx8M8aS
-         +/yg==
-X-Gm-Message-State: AFq9FYJF2QjNWrV7fe0XziAWsYE00QjxFxg7Aj8XYNB92PA9aXXFygNN
-	Q59254fxO/YiFHNWdoFZa+qNYUZ+BQqFdnMWDZKU+QL42IZmMB4Pi+qt9CMRCEA=
-X-Gm-Gg: AYBFou2xIFPKweS2rdfkJ7WnURTiHiKjsquDvQTUNMyoL+R6upFeFnaQXUYLRXrpM3T
-	y/QyI5wZI28jrwOo2JbluAe6c4j2qSqoe5sYyzTixWfMNPcKJ64jB3WaCMGnhv/8sYeYRD0/abZ
-	C9t9QNa04j1z+akC0NHaK9m0RJRdg1wioC9we6Fou5tmDA07Z/JQQEv8mcRof7Z3imf7EZvkd1q
-	ZOS73dVQxdq+sORG0fQELSl156aSkntSzeoph2M8moMvEMHiu6LFtI8Rrs1Mmm8RfXL5Z8yaBYR
-	cqfcAllY6kZYnnXDGseN2MWeammtG8t2qDIhLgEVVKF1czWvsvRaPMV0YyJ5077YpgZcCexgLE5
-	JyFW/rbKf6AMte5XNmz3WvufYRJAbPtyRUG8zjatiDfyrbRjX99HmqZIWvuAeaqOLa3DVixphdH
-	SwXnlWTN981KueFUJcgfhK9VrgGoR80u1onmxHnIA/rnJUEovB0oTeut1OJjiR/mFCTGAaytGAA
-	lrCnfL3GgV8BA==
-X-Received: by 2002:a05:6830:270d:b0:80c:d34f:5f63 with SMTP id 46e09a7af769-8309814be28mr20294610a34.28.1792135152670;
-        Fri, 16 Oct 2026 00:19:12 -0700 (PDT)
-Received: from [127.0.0.1] ([128.203.190.81])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-842a6f0a55csm1231938a34.25.2026.10.16.00.19.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Oct 2026 00:19:11 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Anil Kaushik <anilkaushikwireless@gmail.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20261016055010.980819-1-anilkaushikwireless@gmail.com>
-References: <20261016055010.980819-1-anilkaushikwireless@gmail.com>
-Subject: Re: [PATCH mptcp-next v4 0/3] mptcp: pm: kernel: retry subflows
- closed after an error
-Message-ID: <b1c946d9-43fc-9a28-63c0-3d577a43460f@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 16 Oct 2026 07:19:10 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cDJ+G07I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B51631F000C5;
+	Fri, 16 Oct 2026 08:03:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792137813;
+	bh=prLWnN7jGolaWhLiNmETbAELeScuz5F6+iowRQZ24PQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=cDJ+G07InRQd51QhGlxzSCS+HU3B2z32ZDnhSaTEra1Ymn3b1LE7y+/Az+ZhYt2Nt
+	 6HrBDZXheiRUzhpZx8b8MwdA/qQYHF8Ny7jK0jza7RN99yRqMMEVuJAaye/ukUsqil
+	 rq96GfluwYUOWJUxOtOfW7dnViPV2uHgbgTOCSQmghaMzrYK+BQzbbk/MjZnq9J8a5
+	 wUHLi3uvExyAkyc/g/O5Be1BrZ61O0PexUY88kgHf4MwL413sPYib4QBi1odyP+h0e
+	 +pnyEaO+e8ChZ3ad7xowR5WKlDiOjqPgypSD5P+tdaljSn9gkus3Y6OLFxohvtGACm
+	 j0mQm0db4nOtw==
+Message-ID: <f9145188-a354-49e9-ad5f-889a2895e4fa@kernel.org>
+Date: Fri, 16 Oct 2026 10:03:29 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v2 1/2] mptcp: give MPTCP sockets a distinct
+ lockdep class
+Content-Language: fr
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1792114102.git.tanggeliang@kylinos.cn>
+ <8651f29fb4e11de14a7ea7d05d97a33b1e5390f3.1792114102.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <8651f29fb4e11de14a7ea7d05d97a33b1e5390f3.1792114102.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Anil,
+Hi Geliang,
 
-Thank you for your modifications, that's great!
+Thank you for the new version.
 
-Our CI did some validations and here is its report:
+On 16/10/2026 03:35, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> MPTCP sockets and their subflows share the same k-sk_lock-AF_INET
+> lockdep class. When both are kernel sockets, lockdep flags every path
+> that holds the MPTCP socket lock and then locks a subflow (setsockopt,
+> connect, bind, worker send-ack) as "possible recursive locking".
+> 
+> Extract the lock reclassification logic from PM listener socket creation
+> into mptcp_reclassify_socket() helper to reclassify MPTCP socket locks
+> to a distinct class (msk_lock-AF_INET for IPv4, msk_lock-AF_INET6 for
+> IPv6). Call it from __mptcp_init_sock() to cover both active (connect)
+> and passive (accept/clone) socket creation paths.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/pm_kernel.c | 18 ++++++++++++------
+>  net/mptcp/protocol.c  |  3 +++
+>  net/mptcp/protocol.h  |  2 ++
+>  3 files changed, 17 insertions(+), 6 deletions(-)
+> 
+> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+> index d3014bf57bf3..5e8792ad38ca 100644
+> --- a/net/mptcp/pm_kernel.c
+> +++ b/net/mptcp/pm_kernel.c
+> @@ -849,10 +849,20 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
+>  static struct lock_class_key mptcp_slock_keys[2];
+>  static struct lock_class_key mptcp_keys[2];
+>  
+> +void mptcp_reclassify_socket(struct sock *sk)
+> +{
+> +	bool is_ipv6 = sk->sk_family == AF_INET6;
+> +
+> +	sock_lock_init_class_and_name(sk,
+> +				      is_ipv6 ? "mlock-AF_INET6" : "mlock-AF_INET",
+> +				      &mptcp_slock_keys[is_ipv6],
+> +				      is_ipv6 ? "msk_lock-AF_INET6" : "msk_lock-AF_INET",
+> +				      &mptcp_keys[is_ipv6]);
+> +}
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Unstable: 1 failed =
-test(s): selftest_mptcp_join =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: =
-btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: =
-btf-debug (only bpftest_all): Success! =E2=9C=85
-- Perf: Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/388598=
-46683
+Good idea to share this code here, but then I think it should be better
+in net/mptcp/protocol.c than in the in-kernel PM.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/29a6a3b28517
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1186977
+>  static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+>  					    struct mptcp_pm_addr_entry *entry)
+>  {
+> -	bool is_ipv6 = entry->addr.family == AF_INET6;
+>  	int addrlen = sizeof(struct sockaddr_in);
+>  	struct sockaddr_storage addr;
+>  	struct sock *newsk, *ssk;
+> @@ -874,11 +884,7 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+>  	 * modifiers in several places, re-init the lock class for the msk
+>  	 * socket to an mptcp specific one.
+>  	 */
+> -	sock_lock_init_class_and_name(newsk,
+> -				      is_ipv6 ? "mlock-AF_INET6" : "mlock-AF_INET",
+> -				      &mptcp_slock_keys[is_ipv6],
+> -				      is_ipv6 ? "msk_lock-AF_INET6" : "msk_lock-AF_INET",
+> -				      &mptcp_keys[is_ipv6]);
+> +	mptcp_reclassify_socket(newsk);
+>  
+>  	lock_sock(newsk);
+>  	ssk = __mptcp_nmpc_sk(mptcp_sk(newsk));
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 60cbd91be632..68f339311993 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -3245,6 +3245,9 @@ static void __mptcp_init_sock(struct sock *sk)
+>  	/* re-use the csk retrans timer for MPTCP-level retrans */
+>  	timer_setup(&sk->mptcp_retransmit_timer, mptcp_retransmit_timer, 0);
+>  	timer_setup(&msk->sk.mptcp_tout_timer, mptcp_tout_timer, 0);
+> +
+> +	if (sk->sk_socket)
 
+If you need this check here, that means the reclassification is not
+always done, thus this new helper is certainly called from the wrong place.
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+> +		mptcp_reclassify_socket(sk);
+>  }
+>  
+>  static void mptcp_ca_reset(struct sock *sk)
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index ed2f363bb915..325499e65236 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -1265,6 +1265,8 @@ u8 mptcp_pm_get_endp_fullmesh_max(const struct mptcp_sock *msk);
+>  u8 mptcp_pm_get_limit_add_addr_accepted(const struct mptcp_sock *msk);
+>  u8 mptcp_pm_get_limit_extra_subflows(const struct mptcp_sock *msk);
+>  
+> +void mptcp_reclassify_socket(struct sock *sk);
+> +
+>  /* called under PM lock */
+>  static inline void __mptcp_pm_close_subflow(struct mptcp_sock *msk)
+>  {
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
