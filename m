@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3763D301D
-	for <mptcp@lists.linux.dev>; Fri, 16 Oct 2026 08:05:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2827142E439
+	for <mptcp@lists.linux.dev>; Fri, 16 Oct 2026 08:43:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792137958; cv=none; b=UNFK67fJhO1nwpaJn6mUwpSB93bAvgzNbgUk/V3wo7qB7lL4SJeegccpXt/6qx/9R9mm1SmJIzUod+36PXKwKdfe/gB3IwnkOfflOsvfNePz3/7uFTYMI39oqabluPNJxcTANzZYJCMDOzkmg87IVIQ4jzkzHbDtJR1e2dWK1cQ=
+	t=1792140210; cv=none; b=ESgB6Pwv+Z7I32J4Abt5aGmMNrA367RquceT7pLdmgIvKb3zriEdLJAOzRc/kdhL3QxDK5IcY1o2siDpkGeuaajzA4l1vsUoEv1s40GKKgJj9Lfr6Zkd9Ld+kb4EktyuIwB6g3eZbtOE77SLd3THgLW2P8JSGyi4SE+/rauJioc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792137958; c=relaxed/simple;
-	bh=Dcd1uXusR8xFdif4k6jTw8lgb/32ae+SeOfjA/h22is=;
+	s=arc-20240116; t=1792140210; c=relaxed/simple;
+	bh=nZvxVSODBqHrufMD1ojJ+6J/tIRS1ZEkFbtesCvQ974=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oIbf5EEBwj7Q5p5cJz6OF5l+yjenpkSbHPgSVOEf6y1FqjzEsThsfvKYJKVgxOy53o4gWy9OdWcDP1dM7Gfo9Roa9JrwubX8yGpYt5TT6gg5NRLNp2MTQYhgQ9f74nD5UkQphvGHrZ4LojStzcJFTpjKVHHKQKNFTHyCpz8+gaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l0DOLYwN; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=h1Jjn1uRqMQUaOKx79Htl3Jm96Y1m8orGw352IJfcsNa/m9LSNHhn/CaRVzwxRF4TPxcpfHbMFA00K8gCyvcn33Du0DE6Ie7OA1gu/efQUqBeEy/OcDNUa1Mam3k2xuwBXHKFM5ELwNUK6DkJW1ImoOjBRXmKY9JvbZT/f23Lqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gsugGjHG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l0DOLYwN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4753E1F000C4;
-	Fri, 16 Oct 2026 08:05:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gsugGjHG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28D441F000C4;
+	Fri, 16 Oct 2026 08:43:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792137957;
-	bh=TU8qWuKpPLsPRGiAyauqlcEyRFr/sMt7sax7L8VxPyk=;
+	s=k20260515; t=1792140208;
+	bh=r4gsxa/gLaE/ll56SCjbEWGVtoYzo/Wfy3FZv+WFPl0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=l0DOLYwN9gdHOipk2VujHCSoKPgS0GJcquZvFSZXwdIt0PL2M2EKh1UYvU+m6JFJY
-	 CajrYqnvfda6cqhZPI5TqzONBG7Oto0SIhqIe2cYXcFv/QhDNaWUyyY0G8MWWLzV6q
-	 UH0MgpPJLhL3rJKFleWQa7yLU6mnKPF1FwzIRfRk1sZfFbgWEeEvAKq28x2xH7iqF/
-	 BvyVD4P/JoH5a4zeP5trlWdu2XJvakD8hSgKLJJwXxmEFDC/LSyjg+17uyXZMYQiGx
-	 gNTihloP+p/17oNp5Rvx0tPyVFxR8l7biEeqt11h9b93UAueSxHaP7Pf/ka37C9r+x
-	 SBPv96jpVUzpQ==
-Message-ID: <e243599f-781b-4073-97a4-1f57cd8879e1@kernel.org>
-Date: Fri, 16 Oct 2026 10:05:54 +0200
+	b=gsugGjHGyjmG0zQLEjaVznvU1WIDrtrlxBrdnaTWAjoEHgMU8/8NJgSYr69rJqHur
+	 SDdAX78Yi6jUMUG/qxh0tk7fNPe8Pyx0R947qUkk/cQcZVmSimoprgArZILsowqjWS
+	 Qjsx9NCLE9F+2G+Uj0u65KeRmFSXIntUp43R9ZBqznl65PZrWdF6kJ+qLP9R3HR3hR
+	 gsbmFGghHiJq4QXy4qVI4InkXwRA9ltPgkp9MDri6RM8v/2C0ksZelwopBDAR2fgKI
+	 SoJvl1tsoKds03qnrPWT9bxEg9BzLsg4TPS4X4VdIvAAiKSkfxjjd9zCs6dklOfLJw
+	 kvvrMudN0C4sg==
+Message-ID: <7c7308c5-c150-41a1-9d84-9981acfb5962@kernel.org>
+Date: Fri, 16 Oct 2026 10:43:25 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 2/2] mptcp: kunit: add sockopt test for
- subflow socket locking
+Subject: Re: [RFC PATCH mptcp-next v3 2/3] mptcp: pm: kernel: retry subflows
+ closed after an error
 Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1792114102.git.tanggeliang@kylinos.cn>
- <e32025457f5b30b3d859e85077752b761757a35f.1792114102.git.tanggeliang@kylinos.cn>
+To: Anil Kaushik <anilkaushikwireless@gmail.com>
+Cc: mptcp@lists.linux.dev
+References: <20261014143349.768138-1-anilkaushikwireless@gmail.com>
+ <20261014143349.768138-3-anilkaushikwireless@gmail.com>
+ <b150dde6-05f1-4e7b-9440-360b7ce17eff@kernel.org>
+ <CAG0Mgm_uj70o=R5HnEb0GkTy4FTQK6cy6GHWuO7y2FitzwnucA@mail.gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,24 +89,91 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <e32025457f5b30b3d859e85077752b761757a35f.1792114102.git.tanggeliang@kylinos.cn>
+In-Reply-To: <CAG0Mgm_uj70o=R5HnEb0GkTy4FTQK6cy6GHWuO7y2FitzwnucA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+Hi Anil,
 
-On 16/10/2026 03:35, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+Thank you for your reply.
+
+On 16/10/2026 07:49, Anil Kaushik wrote:
+>> Add a sensible default value (what do you recommend?)
 > 
-> Add a KUnit test to verify that MPTCP sockets have a distinct lockdep
-> class from their subflows. The test creates a kernel MPTCP socket and
-> sets SO_REUSEADDR, which triggers the code path where
-> mptcp_setsockopt_sol_socket() locks the MPTCP socket and then calls
-> sk_setsockopt() on the subflow.
-Good idea to add this test. Could we also have a test for passive
-connections? (Or is it something that doesn't make sense to support with
-a kernel socket?)
+> 15 SYN retries: about 20 minutes with the 120s max RTO.
 
+I guess it could even be longer, no? With an exponential backoff, it's
+not spamming the network too much.
+
+I wonder if we shouldn't get something similar to tcp_retries2. But
+here, with the syn, we also need to tcp_syn_linear_timeouts into
+account. Either we keep it to 15 by default and, (if not 0), we add
+tcp_syn_linear_timeouts, or we initialise it to 19.
+
+>> modify icsk_syn_retries instead [...] WDYT?
+> 
+> Good idea, I will do that: one new subflow per failure, with its SYN
+> retries set from the new netlink limit, 0 = disabled. It also removes
+> the socket reuse, the retries counter and the 60s check.
+> 
+> One point to think though, If ICMP unreachable stops the SYN at once.
+> I would not retry
+> again then. Is that OK?
+
+Good point. In your specific case, what do you observe?
+
+To me, the best is to have the network manager (something from
+userspace) removing the MPTCP endpoints when they are not "usable", but
+here it can be specific to the destination. I would then say to look at
+this case later. In this case, we could eventually disconnect the
+subflow, and add a timer to retry later. But that's also more prone to
+bugs, so if we can avoid that, probably better to!
+
+>> Do we have other similar ones? [...] ss -Mte, would that work?
+> 
+> I will drop the MIB counter. The test can use the MPJ counters and the
+> netlink events.
+
+Thanks! You can expose the new limit in "struct mptcp_info", instead of
+"reserved".
+
+>> Is it specific for your case?
+> 
+> No, it came from a Sashiko review: a dead subflow waiting to be closed
+> could be re-created after its endpoint or the peer's address was
+> removed. I will try to move it to pm_kernel.c.
+
+What did you end-up doing for this?
+
+>> can we not check why it failed instead?
+> 
+> With your idea it is not needed: only one retry, nothing to count.
+
+Good
+
+>> what error do you get when the issue is detected via TCP Keepalive?
+> 
+> ETIMEDOUT, so it is retried.
+
+Thanks!
+
+>> Why can we not always re-used?
+> 
+> A subflow that carried data needs the full close cleanup. With your
+> idea we always create a new subflow, so there is only one path.
+> 
+> For the rest: OK. I will go through pm.c, avoid struct holes and
+> duplicated connect code, drop the RFC tag, add a changelog per patch,
+> and test closing the connection while retrying plus the netlink events.
+> I will wait for the netdev Sashiko review before sending.
+
+Thanks! BTW, it is easier if you reply inline here below, to keep the
+context:
+
+https://subspace.kernel.org/etiquette.html#do-not-top-post-when-replying
+
+> On Wed, Oct 14, 2026 at 11:43 PM Matthieu Baerts <matttbe@kernel.org> wrote:
+(...)
 
 Cheers,
 Matt
