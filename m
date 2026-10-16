@@ -1,217 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611A83546E9
-	for <mptcp@lists.linux.dev>; Fri, 16 Oct 2026 16:34:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FCF501F48
+	for <mptcp@lists.linux.dev>; Fri, 16 Oct 2026 16:47:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792168498; cv=none; b=LryP/R/fyoPY8zbNBIn9lM2J2hVULhOanVRChwzmhYoreOzYUr02SbzXtSBmWTOw89IlrKb2asUPhjdFMHkcFG2saYK7vxKUudSmP/V0UrevtqrO42k4UZiQ4Sr6oleqy5DKSJ2SMZc1Qfsr3DaEUhPtbWE1Ue1Ms6aznZvkPw4=
+	t=1792169279; cv=none; b=SzeOX/Wlaj8/SHD/Yyh6BzCQ1TfTTOXwJ7kJbHZDyXZr8cNnhpOicnVquIjQu2eg+ZT1nH7DXrnzvjeJsZO7AcxvyOO+oztV267x2uJA6Uz8Ejg7ePTPnc+uTWs+QmhoaTHyhM5GjsKz1nKQPGizR1KcWs4HVb7cCTb60TkLhqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792168498; c=relaxed/simple;
-	bh=B4T+hd5cJ/yTTV+fROXpiFpVkj9oMqYRxec0RPaNs4Q=;
-	h=Message-ID:From:Subject:To:In-Reply-To:References:Content-Type:
-	 Date; b=daI3LF+7huKj7nSrxtKgKg1PgrvX0uN6cf/97A6FDpltxR0TbPOpiwE0tZguNBoOThLhMBsDFO4ylSxA1IXnEsmYAv/GI+/zuWzBdjG3+Kn0JYp4dZN/W3X1vi44Sm+L4EjNLm+gjRj9Y38tZqNb3g4hkk8vYi47LJykUglUsFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R4v3lthf; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792169279; c=relaxed/simple;
+	bh=H5X7AE/Sy+Mv1up5iyNiT/bBFdJjaulzGEdfd+9It+g=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=g6PSDJvLyu9VacEy0nJqHLn6GSUsJ97506FM39c+pQGBwykhzTknNHlpadK5ndYro41v9gVWrh1Aiss6vAbTpzRpJwpLkajGoFNPXpATvA0dGX/J8unTbHH5FC58Wc2IwSwz7kLoMaSWs8CfhAEU3K2nsQaqlTbLJZCZ23Gmkhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bb5B99UI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R4v3lthf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F4F81F000C5;
-	Fri, 16 Oct 2026 16:34:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bb5B99UI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05DF61F000C5;
+	Fri, 16 Oct 2026 16:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792168497;
-	bh=Wfby2FaV4mkZw4kRpqUiMWmBMpbtk5srqZocn/UQpt0=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=R4v3lthfaDHqKjZ3sMRyRSk3BdUjmkvwFv3vD1e3rYTS3X2IrtfJYL73+J6MS3fh4
-	 osq5E1ZSg5UnG8TDg74kHjGZhNpjAfSnuXXPD3jrbsTHJ2iGucLjGwK7cNt1s4Co+L
-	 ZlstmonQEwRLAvHggqQt0rmXUAGMPVJcekyDSTYgNmEdTOUjHoA4N97oPZsrQLE5YD
-	 cg0QXkNZ/CeV9rvXWz5CLju4Q6RgBnetK0NTlvEtOmx3V7PLgsuLGMYgGTY00M/VG2
-	 w4/qwz4FIfWRySvqIw3+oGaMzWFb2BV/bt48dLdLBuZddrfFbV0JppCLVJPT0EocLl
-	 /HMR9u11v7kbQ==
-Message-ID: <sashiko-outbox-174647@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v5 7/7] selftests: mptcp: join: validate
- subflow retry after link failure
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Anil Kaushik" <anilkaushikwireless@gmail.com>, mptcp@lists.linux.dev
-In-Reply-To: <20261016160926.1155262-8-anilkaushikwireless@gmail.com>
-References: <20261016160926.1155262-1-anilkaushikwireless@gmail.com>
- <20261016160926.1155262-8-anilkaushikwireless@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 16 Oct 2026 16:34:56 +0000
+	s=k20260515; t=1792169277;
+	bh=D7Rnhu0tbZB3PDfG7wIQMB18hE4Hn+p/9Bm2Io968YM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References;
+	b=Bb5B99UIcvCEZy+tBt46+nUvFV9QC8/iXKhOMTfSoMqa7FWmxztkGc1HFJ2DE8jZK
+	 CYdiK+B8uR9moba9WqnsAqMyOL52B7DYokej/TWxid/l8j60mNlP1bVZFZop0w+Xqv
+	 OQPnEtcu9iclgFOLrPV6deN7C79kal86nw+DtrY+HXYheFHGCci0bl9nW+jp3abWxh
+	 f0+c4aaQpF/SXoUMFzdLaEflHW9A9tWq+sn4FeWXFIS81CPoHFqLti/aMCR9S7E4Gi
+	 TY/QI/l5F3+5ybyRkNtj+1aLrR9dzoAJ26CVyCSxgj/sKgNYVfFrfTSk+RHI3T8Fg2
+	 dGrfzbh/JVJcA==
+Date: Fri, 16 Oct 2026 09:47:56 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+cc: MPTCP Linux <mptcp@lists.linux.dev>
+Subject: Re: [PATCH mptcp-net] mptcp: disconnect: reset first subflow's
+ local_id
+In-Reply-To: <20261015-mptcp-first-disco-id-reset-v1-1-6ae41e8f02c6@kernel.org>
+Message-ID: <308170eb-b0f2-fff0-0d9a-7610e148fa0c@kernel.org>
+References: <20261015-mptcp-first-disco-id-reset-v1-1-6ae41e8f02c6@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [Medium] selftests/mptcp: sf_from() extracts Send-Q instead of local addr=
-ess and port
-- [Medium] selftests/mptcp: hand-rolled busy-wait polling loops instead of =
-shared helpers
-- [Medium] selftests: mptcp: background file generation race causes flaky t=
-imeout
---
+On Thu, 15 Oct 2026, Matthieu Baerts (NGI0) wrote:
 
-commit f8121441934e1bbc20d48bed94f57afe881c5d82
-Author: Anil Kaushik <anilkaushikwireless@gmail.com>
+> The first subflow can get disconnected for various reasons and
+> mptcp_subflow_ctx_reset() will reset most fields and set local_id to -1.
+> That's fine until the subflow is reused after a reconnect.
+>
+> As mentioned by Clashiko [1]: on the retry, local_id is -1, so the
+> connect goes through:
+>
+>  tcp_connect()
+>    subflow_rebuild_header()
+>      subflow_chk_local_id()
+>        mptcp_pm_get_local_id()
+>
+> mptcp_pm_get_local_id() returns 0 only when the msk local address
+> matches the subflow's address. The addresses can change, but even if
+> they don't, for an unbound msk, the address is therefore still zero at
+> this point. (Note: in MPTCP disconnect selftests, the address is the
+> same, and mptcp_pm_get_local_id() will return 0.)
+>
+> At this stage, the kernel PM might then give the MPC subflow a non-zero
+> ID, either from a matching endpoint or by adding an "implicit" endpoint.
+> The RFC 8684 says that the first subflow always has the ID 0, and the
+> PMs rely on that for special cases. So it is important to reset it to 0.
+>
+> Note that we need to keep it to -1 in mptcp_subflow_ctx_reset() to avoid
+> a double closures in mptcp_close_ssk().
+>
+> This issue was found by code analysis, and confirmed by looking at the
+> ID after a reconnection.
+>
+> Fixes: a7cfe7766370 ("mptcp: fix data races on local_id")
+> Link: https://lore.kernel.org/179198834484.434549.4616694240552704738@kernel.org
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> net/mptcp/protocol.c | 1 +
+> 1 file changed, 1 insertion(+)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 60cbd91be632..4a6f16e0d809 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -3654,6 +3654,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
+> 	 */
+> 	mptcp_do_fastclose(sk);
+> 	mptcp_destroy_common(msk);
+> +	WRITE_ONCE(mptcp_subflow_ctx(msk->first)->local_id, 0);
+>
+> 	/* The first subflow is already in TCP_CLOSE status, the following
+> 	 * can't overlap with a fallback anymore
+>
+> ---
+> base-commit: 6a6728a8e881c12c984d104403ecaa0523d3b7e8
+> change-id: 20261015-mptcp-first-disco-id-reset-a0866d67d9a6
+>
 
-selftests: mptcp: join: validate subflow retry after link failure
+Fix looks good, thanks Matthieu
 
-Test the subflow-retries limit, with its default value, and a long
-connection in the background.
-
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/test=
-ing/selftests/net/mptcp/mptcp_join.sh
-> index f4d8afaeda4f3..521f95d3027fa 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -2151,6 +2151,102 @@ wait_attempt_fail()
->  	return 1
->  }
-> =20
-> +# $1: ns ; $2: counter ; $3: expected minimum value
-> +wait_counter()
-> +{
-> +	local cnt
-> +
-> +	for _ in $(seq $((timeout_poll * 10))); do
-> +		cnt=3D$(mptcp_lib_get_counter "${1}" "${2}")
-> +		[ "${cnt:-0}" -ge "${3}" ] && return 0
-> +		sleep 0.1
-> +	done
-> +
-> +	return 1
-> +}
-
-[Severity: Medium]
-Does this hand-roll a busy-wait polling loop instead of using the shared
-helpers?
-
-The networking selftests library (tools/testing/selftests/net/lib.sh) alrea=
-dy
-provides busywait_for_counter specifically to handle this pattern robustly.
-
-> +
-> +# $1: client address ; prints the local address and port of its subflow
-> +sf_from()
-> +{
-> +	ip netns exec $ns2 ss -tnH state established src "${1}" |
-> +		awk '{ print $3; exit }'
-> +}
-
-[Severity: Medium]
-Does this extract the Send-Q column instead of the Local Address:Port colum=
-n?
-
-The command ss -tnH state established outputs columns: State, Recv-Q, Send-=
-Q,
-Local Address:Port, Peer Address:Port. So the 3rd column is Send-Q, rather =
-than
-Local Address:Port.
-
-Because the previously blocked subflow has queued, dropped packets, its Sen=
-d-Q
-is non-zero. The newly created subflow has an empty Send-Q (0). The test lo=
-gic
-later evaluates [ "${after}" =3D "${before}" ] as [ "0" =3D "<non-zero>" ],
-which evaluates to false, causing the test to pass by coincidence without e=
-ver
-verifying that the new subflow originated from a different port.
-
-[ ... ]
-
-> +
-> +# $1: result of the wait for the subflow being re-created before the clo=
-se
-> +chk_no_sf_connecting()
-> +{
-> +	print_check "no subflow connecting after close"
-> +	if [ "${1}" -ne 0 ]; then
-> +		fail_test "no subflow re-created before the close"
-> +		return
-> +	fi
-> +
-> +	# closed with the MPTCP socket
-> +	for _ in $(seq $((timeout_poll * 10))); do
-> +		if ! ip netns exec $ns2 ss -tnH state syn-sent | grep -q .; then
-> +			print_ok
-> +			return
-> +		fi
-> +		sleep 0.1
-> +	done
-> +
-> +	fail_test "subflow still connecting after close"
-> +}
-
-[Severity: Medium]
-Does this hand-roll a busy-wait polling loop instead of using the shared
-helpers?
-
-The networking selftests library (tools/testing/selftests/net/lib.sh) alrea=
-dy
-provides busywait to handle this pattern robustly.
-
-[ ... ]
-
-> @@ -2585,6 +2681,62 @@ link_failure_tests()
->  		chk_stale_nr $ns2 1 -1 2
->  		chk_link_usage $ns2 ns2eth3 $cinsent 50
->  	fi
-> +
-> +	# subflows closed after a silent link failure, then re-created: the
-> +	# additional one, then the initial one. Then close the connection
-> +	# while a subflow is being re-created.
-> +	if reset_with_events "subflow retry after link failure" &&
-> +	   continue_if has_subflow_retries; then
-> +		init_nftables
-> +		# slow links, short queues: the transfer lasts the whole test on
-> +		# any machine, and the blocked subflow always has data in flight
-> +		local i
-> +		for i in 1 3; do
-> +			tc -n $ns1 qdisc add dev ns1eth$i root netem \
-> +				rate 4mbit limit 30 delay 1ms
-> +			tc -n $ns2 qdisc add dev ns2eth$i root netem \
-> +				rate 4mbit limit 30 delay 1ms
-> +		done
-> +		ip netns exec $ns2 sysctl -q net.ipv4.tcp_retries2=3D3
-> +		ip netns exec $ns2 sysctl -q net.ipv4.tcp_syn_retries=3D1
-> +		ip netns exec $ns2 sysctl -q net.ipv4.tcp_syn_linear_timeouts=3D0
-> +		pm_nl_set_limits $ns1 0 4
-> +		pm_nl_set_limits $ns2 0 2
-> +		pm_nl_add_endpoint $ns2 10.0.3.2 dev ns2eth3 flags subflow
-> +		# created here, not in the background job, for cleanup()
-> +		if [ -z "$cinfail" ]; then
-> +			cinfail=3D$(mktemp)
-> +		fi
-> +		if [ -z "$sinfail" ]; then
-> +			sinfail=3D$(mktemp)
-> +		fi
-> +		# killed at the end: the timeout only stops a stuck test
-> +		{ timeout_test=3D600 test_linkfail=3D131072 \
-> +			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
-> +		local tests_pid=3D$!
-> +
-> +		wait_counter $ns1 "MPTcpExtMPJoinAckRx" 1
-
-[Severity: Medium]
-Could this foreground polling loop time out before the background file
-generation completes?
-
-The test case sets test_linkfail=3D131072 and launches run_tests in the
-background. Inside run_tests, it sequentially generates 128MB of random data
-per file via dd, blocking the network transfer from starting until both fil=
-es
-are fully generated.
-
-Meanwhile, the foreground script immediately calls wait_counter, which polls
-for the MPTcpExtMPJoinAckRx counter to increment with a 30-second timeout.
-If the dd commands take longer than 30 seconds on a slow test runner, the
-foreground script will time out and fail the test before the actual connect=
-ion
-has even started.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261016160926.1155=
-262-1-anilkaushikwireless@gmail.com?part=3D7
+Reviewed-by: Mat Martineau <martineau@kernel.org>
