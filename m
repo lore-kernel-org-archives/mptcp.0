@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF743D301D
-	for <mptcp@lists.linux.dev>; Fri, 16 Oct 2026 08:03:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3763D301D
+	for <mptcp@lists.linux.dev>; Fri, 16 Oct 2026 08:05:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792137818; cv=none; b=JxScSr57ts3ZuS17OV7SLCtmyzH2kdqTr6JuqSwbUscZxejs0/skGmDU63VSwZ9YVl98CyKJCtkX5AhWmTjrtaH0br7B8rnh7TWcO+rPmTDFH6g4xI0gdvIRh56stmE7IYYCOnNAlYDuoSyUSVqzR4bam+endSLujXBQ6KOXiSs=
+	t=1792137958; cv=none; b=UNFK67fJhO1nwpaJn6mUwpSB93bAvgzNbgUk/V3wo7qB7lL4SJeegccpXt/6qx/9R9mm1SmJIzUod+36PXKwKdfe/gB3IwnkOfflOsvfNePz3/7uFTYMI39oqabluPNJxcTANzZYJCMDOzkmg87IVIQ4jzkzHbDtJR1e2dWK1cQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792137818; c=relaxed/simple;
-	bh=fVpeicE9c0fxk6LUKIBH3T/+emOq2zl5js5ylDzCwok=;
+	s=arc-20240116; t=1792137958; c=relaxed/simple;
+	bh=Dcd1uXusR8xFdif4k6jTw8lgb/32ae+SeOfjA/h22is=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qXiPMEvqa0ZIKo+6W5J/X7Xla4o3o8/xQONJl0n/WtqYzEU4N5vw9hBJz7wMn8wUOVslp/QaqHBbGPAoGjEi0svIEA3A1EskLvlr/uEFhsP2Hcj0nstpYUbDjpg62Gqd0u25iIwe9wNu+i/fwrk2zkryYev9iGDy99CqGvrb9Qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cDJ+G07I; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=oIbf5EEBwj7Q5p5cJz6OF5l+yjenpkSbHPgSVOEf6y1FqjzEsThsfvKYJKVgxOy53o4gWy9OdWcDP1dM7Gfo9Roa9JrwubX8yGpYt5TT6gg5NRLNp2MTQYhgQ9f74nD5UkQphvGHrZ4LojStzcJFTpjKVHHKQKNFTHyCpz8+gaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l0DOLYwN; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cDJ+G07I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B51631F000C5;
-	Fri, 16 Oct 2026 08:03:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l0DOLYwN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4753E1F000C4;
+	Fri, 16 Oct 2026 08:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792137813;
-	bh=prLWnN7jGolaWhLiNmETbAELeScuz5F6+iowRQZ24PQ=;
+	s=k20260515; t=1792137957;
+	bh=TU8qWuKpPLsPRGiAyauqlcEyRFr/sMt7sax7L8VxPyk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=cDJ+G07InRQd51QhGlxzSCS+HU3B2z32ZDnhSaTEra1Ymn3b1LE7y+/Az+ZhYt2Nt
-	 6HrBDZXheiRUzhpZx8b8MwdA/qQYHF8Ny7jK0jza7RN99yRqMMEVuJAaye/ukUsqil
-	 rq96GfluwYUOWJUxOtOfW7dnViPV2uHgbgTOCSQmghaMzrYK+BQzbbk/MjZnq9J8a5
-	 wUHLi3uvExyAkyc/g/O5Be1BrZ61O0PexUY88kgHf4MwL413sPYib4QBi1odyP+h0e
-	 +pnyEaO+e8ChZ3ad7xowR5WKlDiOjqPgypSD5P+tdaljSn9gkus3Y6OLFxohvtGACm
-	 j0mQm0db4nOtw==
-Message-ID: <f9145188-a354-49e9-ad5f-889a2895e4fa@kernel.org>
-Date: Fri, 16 Oct 2026 10:03:29 +0200
+	b=l0DOLYwN9gdHOipk2VujHCSoKPgS0GJcquZvFSZXwdIt0PL2M2EKh1UYvU+m6JFJY
+	 CajrYqnvfda6cqhZPI5TqzONBG7Oto0SIhqIe2cYXcFv/QhDNaWUyyY0G8MWWLzV6q
+	 UH0MgpPJLhL3rJKFleWQa7yLU6mnKPF1FwzIRfRk1sZfFbgWEeEvAKq28x2xH7iqF/
+	 BvyVD4P/JoH5a4zeP5trlWdu2XJvakD8hSgKLJJwXxmEFDC/LSyjg+17uyXZMYQiGx
+	 gNTihloP+p/17oNp5Rvx0tPyVFxR8l7biEeqt11h9b93UAueSxHaP7Pf/ka37C9r+x
+	 SBPv96jpVUzpQ==
+Message-ID: <e243599f-781b-4073-97a4-1f57cd8879e1@kernel.org>
+Date: Fri, 16 Oct 2026 10:05:54 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 1/2] mptcp: give MPTCP sockets a distinct
- lockdep class
+Subject: Re: [PATCH mptcp-next v2 2/2] mptcp: kunit: add sockopt test for
+ subflow socket locking
 Content-Language: fr
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1792114102.git.tanggeliang@kylinos.cn>
- <8651f29fb4e11de14a7ea7d05d97a33b1e5390f3.1792114102.git.tanggeliang@kylinos.cn>
+ <e32025457f5b30b3d859e85077752b761757a35f.1792114102.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,108 +87,24 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <8651f29fb4e11de14a7ea7d05d97a33b1e5390f3.1792114102.git.tanggeliang@kylinos.cn>
+In-Reply-To: <e32025457f5b30b3d859e85077752b761757a35f.1792114102.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-Thank you for the new version.
-
 On 16/10/2026 03:35, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> MPTCP sockets and their subflows share the same k-sk_lock-AF_INET
-> lockdep class. When both are kernel sockets, lockdep flags every path
-> that holds the MPTCP socket lock and then locks a subflow (setsockopt,
-> connect, bind, worker send-ack) as "possible recursive locking".
-> 
-> Extract the lock reclassification logic from PM listener socket creation
-> into mptcp_reclassify_socket() helper to reclassify MPTCP socket locks
-> to a distinct class (msk_lock-AF_INET for IPv4, msk_lock-AF_INET6 for
-> IPv6). Call it from __mptcp_init_sock() to cover both active (connect)
-> and passive (accept/clone) socket creation paths.
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/pm_kernel.c | 18 ++++++++++++------
->  net/mptcp/protocol.c  |  3 +++
->  net/mptcp/protocol.h  |  2 ++
->  3 files changed, 17 insertions(+), 6 deletions(-)
-> 
-> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-> index d3014bf57bf3..5e8792ad38ca 100644
-> --- a/net/mptcp/pm_kernel.c
-> +++ b/net/mptcp/pm_kernel.c
-> @@ -849,10 +849,20 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
->  static struct lock_class_key mptcp_slock_keys[2];
->  static struct lock_class_key mptcp_keys[2];
->  
-> +void mptcp_reclassify_socket(struct sock *sk)
-> +{
-> +	bool is_ipv6 = sk->sk_family == AF_INET6;
-> +
-> +	sock_lock_init_class_and_name(sk,
-> +				      is_ipv6 ? "mlock-AF_INET6" : "mlock-AF_INET",
-> +				      &mptcp_slock_keys[is_ipv6],
-> +				      is_ipv6 ? "msk_lock-AF_INET6" : "msk_lock-AF_INET",
-> +				      &mptcp_keys[is_ipv6]);
-> +}
+> Add a KUnit test to verify that MPTCP sockets have a distinct lockdep
+> class from their subflows. The test creates a kernel MPTCP socket and
+> sets SO_REUSEADDR, which triggers the code path where
+> mptcp_setsockopt_sol_socket() locks the MPTCP socket and then calls
+> sk_setsockopt() on the subflow.
+Good idea to add this test. Could we also have a test for passive
+connections? (Or is it something that doesn't make sense to support with
+a kernel socket?)
 
-Good idea to share this code here, but then I think it should be better
-in net/mptcp/protocol.c than in the in-kernel PM.
-
->  static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
->  					    struct mptcp_pm_addr_entry *entry)
->  {
-> -	bool is_ipv6 = entry->addr.family == AF_INET6;
->  	int addrlen = sizeof(struct sockaddr_in);
->  	struct sockaddr_storage addr;
->  	struct sock *newsk, *ssk;
-> @@ -874,11 +884,7 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
->  	 * modifiers in several places, re-init the lock class for the msk
->  	 * socket to an mptcp specific one.
->  	 */
-> -	sock_lock_init_class_and_name(newsk,
-> -				      is_ipv6 ? "mlock-AF_INET6" : "mlock-AF_INET",
-> -				      &mptcp_slock_keys[is_ipv6],
-> -				      is_ipv6 ? "msk_lock-AF_INET6" : "msk_lock-AF_INET",
-> -				      &mptcp_keys[is_ipv6]);
-> +	mptcp_reclassify_socket(newsk);
->  
->  	lock_sock(newsk);
->  	ssk = __mptcp_nmpc_sk(mptcp_sk(newsk));
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 60cbd91be632..68f339311993 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -3245,6 +3245,9 @@ static void __mptcp_init_sock(struct sock *sk)
->  	/* re-use the csk retrans timer for MPTCP-level retrans */
->  	timer_setup(&sk->mptcp_retransmit_timer, mptcp_retransmit_timer, 0);
->  	timer_setup(&msk->sk.mptcp_tout_timer, mptcp_tout_timer, 0);
-> +
-> +	if (sk->sk_socket)
-
-If you need this check here, that means the reclassification is not
-always done, thus this new helper is certainly called from the wrong place.
-
-> +		mptcp_reclassify_socket(sk);
->  }
->  
->  static void mptcp_ca_reset(struct sock *sk)
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index ed2f363bb915..325499e65236 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -1265,6 +1265,8 @@ u8 mptcp_pm_get_endp_fullmesh_max(const struct mptcp_sock *msk);
->  u8 mptcp_pm_get_limit_add_addr_accepted(const struct mptcp_sock *msk);
->  u8 mptcp_pm_get_limit_extra_subflows(const struct mptcp_sock *msk);
->  
-> +void mptcp_reclassify_socket(struct sock *sk);
-> +
->  /* called under PM lock */
->  static inline void __mptcp_pm_close_subflow(struct mptcp_sock *msk)
->  {
 
 Cheers,
 Matt
