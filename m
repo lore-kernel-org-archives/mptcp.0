@@ -1,133 +1,163 @@
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A04DB2931CB
-	for <mptcp@lists.linux.dev>; Fri, 16 Oct 2026 02:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02CC364933;
+	Fri, 16 Oct 2026 04:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792118991; cv=none; b=sa9brMoVTph9egVF1Cx+KWr9l+vUKl9p4qJLreicI+BfcY5d3/5LGIQvWjveSbjxqQXZoWD4Ud6Wy9EzP1x/88dCsAUoZvRHQTk04JK6nMSpay4/qA1Swf7dBv95yvNrRck4rL+uKoCEgUPKL9EsJZgDVjxq9v8F3wAlnQ273Po=
+	t=1792126313; cv=none; b=p07T6EJY8/53qr75ZD9N0pKcA0xWBFzxBB/5DQMnQJpTE1uXDT1DJgjPku/swSHGsPTeWm6hqOYaQwwdK5Z2suoJ6SwItUDkcyIgqYi/nYbJCDdYX4PHMHHYlwRoNsSSZfQrT+B50JuamZzZhsHs5zW+ItruyeJyxRgA8YO4sn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792118991; c=relaxed/simple;
-	bh=2/7SsHHKmlIrKJD4bR613ky12NVmcdMYK56yGqrtQ2k=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=acHQjqgqX861Gb78Cqp9+QS/XLLomDXBC/wlrtsYhNP6x/BlAHq/WfB5/tGHi0mpohlMFH9xWi6WyUiRX+XWqKPUEux/hiUVXyjCsre1E3sAjzmJpkFaVqpGY3N58KO+TD4UjHBQhipE6PTTxL5ovAJmhJ4AiZNPCR9PB+OuK8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iHXISuHn; arc=none smtp.client-ip=209.85.160.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1792126313; c=relaxed/simple;
+	bh=YdxYgV0cyICXIRBGQmu2hwnZbzsJyfTCaAgkpvzARew=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=L03xHD7gVaWmrcclDpAPc1+zLofYG3MrkunRXdmfm7DySsJzgDP3Zt9W8sHZoSxyxJy07kSmWui4OcOOABsMr7TAZyuzESWG4ydF9fdEcCgKS7z9YW9xQcl3WyTQDSCYMDjj2Q2Thf+9oOENysPlvWsd5wotrux3CDfJrL0n+3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NOZSFC/T; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iHXISuHn"
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-4a6bb779d13so2357803fac.1
-        for <mptcp@lists.linux.dev>; Thu, 15 Oct 2026 19:49:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792118989; x=1792723789; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=fKQV22m2yCl1/L0bVJjoRk5B3cVL85isyC+rvjaKdqE=;
-        b=iHXISuHnTqaCxyBTYdzTBrNDnZAPghFXl3xMhcJNMDj6Xe7t8k9j3/r84euSt9f7lt
-         s4I6To4i69w/Dm868ze29pDTQaA/5Z2ndeaSOb4sVfM880TfKZ/HQ/pqt/woa14UfWAw
-         8BunhMUts6CbegEavCc7Pw73fulhRIZSXb188qdYHWqoFbyyzxVVF/guopqSbpI6aVPz
-         l2LROHVjwz7p0PaHOTLMQvO6qUxkhs5EyIvdFTcgcu8tDggQMaArGaPjZ6++/Ox85LZs
-         v6gCXoNPaxEsqO+a1KDKulFoz816Sft6MP46VcAXGXNLelTvq4hsQB/p5VFGC8chf+mU
-         aahA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792118989; x=1792723789;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=fKQV22m2yCl1/L0bVJjoRk5B3cVL85isyC+rvjaKdqE=;
-        b=A44hVxRt+hn1tJc2yy7Zk8HU5q1Lttv5QNyjMnorX/fVja2h48DlFBrzhCUmeetrye
-         u0ABNhtzC5Kh2fVcqQYlYayTtr1aV4lxTicFIbvh4hEA0qLHg7vhrL5y+F3OEjtlEsoP
-         A+7zweYQ24CMIvIfdvT0wObtd977o6rOrMnuVus+lKbAtTh4q7Oak70SiYzLhynV0Pg7
-         qFOoRcOq78ks6PDy3vkPDGJDHJEOHL879eVNkQCYpRRE/AE7RCBtD3Kfuz5vWMtAnt/4
-         zzFR6jeZMvAbFt7mEe1YjIlSR4kv5u/eDnZQW4Qak3HsLXbKwWmLoPlCjykZUYIW+3o5
-         toQA==
-X-Gm-Message-State: AFq9FYJbot15XJbH38CG4gu6VxA4bVM+DjV+IN9H63ez5us7+RW9jbfE
-	rJCnV5nsLsTl20KULu2XhuDp0pg/W+MgmdoCJTXR+XDN7BivrS6YBHzjGxCP
-X-Gm-Gg: AYBFou14d4/fYQOUCkv4LJAELheGmXcLeDucRZf6KF/h4IDEHw0vCKrOvqbs/1aEIZC
-	/juVNy3FdtSaLu2iwo+bzX8FdXNoZSBYkJqdkbu/GnzroCRG+u9h5IKfkq9kfADs4Mp+t8vk6o1
-	r4AtcetFnsq06M7MbuPD4npiDu0yiwNt2kkM2y2WEwv06Ee6LrZa1U9bpSqqB4Zb8RWrbNEC9Mw
-	akKtOTYI0BEsgBOyZpxydpfoNa/hSH4pWPD8Yfma8hshr3EtOodOsYItX5hqQr1NnLC87FTO1SH
-	YFtW2Sw5A7DCIjCq6V39Palcqf/YkLNRl/KZKXpiB2WfAM28L71CASGAk2szpKMlL8eJLgHR6BU
-	UwSjaM60z+yR6FUQoheufUA2WB6JH0ykHCxWPC2qzbETEEqCFeVN0012i2+dC1imX/lZN8UGiX0
-	7uS2Y5EJKtmz3wtzPv7GGn/kXFrlf9RHJ7g/7n7zO1dsQ6PObqBCTq0OmZ6zEuQVI3LKitUZEvd
-	9GBErAaAjQ4MxQ=
-X-Received: by 2002:a05:6870:1704:b0:475:a1ec:9617 with SMTP id 586e51a60fabf-4a2a89d1dd9mr16501427fac.25.1792118989428;
-        Thu, 15 Oct 2026 19:49:49 -0700 (PDT)
-Received: from [127.0.0.1] ([135.232.220.242])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4a73b7728casm667257fac.16.2026.10.15.19.49.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Oct 2026 19:49:48 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1792114102.git.tanggeliang@kylinos.cn>
-References: <cover.1792114102.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v2 0/2] add distinct lockdep class for MPTCP
- sockets
-Message-ID: <2dcefb26-8f67-ed17-b746-b50024568957@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 16 Oct 2026 02:49:47 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NOZSFC/T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D89D1F000C4;
+	Fri, 16 Oct 2026 04:51:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792126312;
+	bh=mGSLHm+5r2YjDZa9OvTpQNpwlOfK9c7WttCpRckwv6g=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=NOZSFC/Tf2CsanFYXB5WHiRVu4KtaVvuxq1LA07PMZNZhbBMcLMo2V83DUDjKzoOU
+	 13NLxyI81DDgcubxJqN0CaLIxFPl5l86co7+w23gNyji/6KrByha/A7yRgC2675F61
+	 NI5Vao9uw2I9L5reRMmtt2f7Nh9fA+QzLBjlKtvBrHanYr4BrSLPuJEKnc8t3hHNtr
+	 qjdJJpzP5P45TNg6eV9vnSMc0FvarasA+bZASqnZ3bbiaAl6IkzC+tcmzzFQR6Ijx1
+	 wtfmApVrQVslahtWyELu/+jMRXI715MI/TV56WJiZx8s7m2VA1y3eouhUtNCFsZFJY
+	 9cjC6SF3SYZmQ==
+Message-ID: <6732a24185668fe8b527f7f562dc8453b85ec138.camel@kernel.org>
+Subject: Re: [PATCH v4 1/4] nvmet-tcp: unify sockopt with do_sock_setsockopt
+From: Geliang Tang <geliang@kernel.org>
+To: Christoph Hellwig <hch@lst.de>, Jakub Kicinski <kuba@kernel.org>, Hannes
+ Reinecke <hare@suse.de>, Breno Leitao <leitao@debian.org>, Sagi Grimberg
+ <sagi@grimberg.me>
+Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Chaitanya
+ Kulkarni <kch@nvidia.com>, David Ahern <dsahern@kernel.org>, Ido Schimmel
+ <idosch@nvidia.com>,  "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+ <horms@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Geliang Tang	
+ <tanggeliang@kylinos.cn>, linux-nvme@lists.infradead.org, 
+	netdev@vger.kernel.org, mptcp@lists.linux.dev
+Date: Fri, 16 Oct 2026 12:51:43 +0800
+In-Reply-To: <20260819090439.GB9267@lst.de>
+References: <cover.1786947923.git.tanggeliang@kylinos.cn>
+			 <010e6810cc4c10b30237c964b2bb9dfa7a3c740c.1786947923.git.tanggeliang@kylinos.cn>
+			 <20260819090439.GB9267@lst.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-10build1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+Hi,
 
-Thank you for your modifications, that's great!
+Sorry for the late reply. In another patch "mptcp: sockopt: implement
+IPV6_TCLASS" [1] on the MPTCP mailing list, I implemented the
+__ip6_sock_set_tclass() helper and hoped it would be upstreamed first,
+but it is still pending.
 
-Our CI did some validations and here is its report:
+Thank you all very much for your review comments, but I was caught in a
+dilemma after receiving different suggestions.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Perf: Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_n=
-et-next/actions/runs/38837878897
+On Wed, 2026-08-19 at 11:04 +0200, Christoph Hellwig wrote:
+> On Tue, Aug 18, 2026 at 02:03:00PM +0800, Geliang Tang wrote:
+> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > 
+> > This patch consolidates socket option settings in nvmet-tcp by
+> > utilizing
+> > the generic do_sock_setsockopt() helper for options including
+> > SO_LINGER,
+> > SO_PRIORITY, SO_REUSEADDR, TCP_NODELAY, and IP_TOS. This change
+> > eliminates
+> > the need to export and use specialized helpers for each individual
+> > socket
+> > option.
+> 
+> Hmm.  I see that do_sock_setsockopt is exported, but it really should
+> not be.  It's really just an internal helper exposed for io_uring
+> and no modular code should be using it (never mind the non-GPL
+> export).
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/107f77088a=
-f0
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1186840
+You are right, my current version has several problems:
 
+1. do_sock_setsockopt() should be exported with EXPORT_SYMBOL_GPL(),
+not EXPORT_SYMBOL().
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+2. The "compat" parameter of do_sock_setsockopt() should be "true"
+instead of "false" to skip BPF cgroup setsockopt programs, matching the
+behavior of the original nvme-tcp code.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+3. The helpers should return "void" instead of "int", to preserve the
+original behavior in nvme-tcp where these socket options are set on a
+best-effort basis.
 
-For more details:
+4. Error logging (pr_err) should be inside the helpers to minimize
+changes to nvme-tcp code.
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+5. The helpers should not be duplicated between host and target, they
+should be consolidated into a shared header, e.g., nvme/common/tcp-
+sockopt.h.
 
+I wonder if we can move forward with this approach once these issues
+are fixed?
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+> 
+> > A key benefit of this refactoring is that it decouples the socket
+> > option
+> > configuration from the underlying transport protocol. This makes it
+> > easier to extend nvmet-tcp to support other protocols, such as
+> > MPTCP, in
+> > the future, as do_sock_setsockopt() abstracts away protocol-
+> > specific
+> > differences without requiring per-option protocol-specific
+> > wrappers.
+> 
+> We really should have generic helpers in the networking code for this
+> and not duplicate them in driver using socket options.
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+However, I still need to use do_sock_setsockopt() for a fundamental
+reason: the upcoming NVMe MPTCP support series requires protocol-
+independent socket option handling.
+
+When NVMe creates MPTCP sockets instead of TCP sockets, calling
+protocol-specific helpers like tcp_sock_set_nodelay() or
+ip_sock_set_tos() directly will not work correctly on MPTCP sockets.
+MPTCP needs to set options not only on the MPTCP socket itself but also
+synchronize them to all subflow sockets.
+
+In the previous NVMe MPTCP support implementation [2], I exported
+protocol-specific sockopt helpers separately on the TCP side and MPTCP
+side, then had NVMe switch between them based on the protocol. This is
+not as clean as using do_sock_setsockopt() for protocol-independent
+calls.
+
+For MPTCP, we could use sock_common_setsockopt() which always
+dispatches to the protocol's .setsockopt for all options. However, for
+TCP, this doesn't work correctly for SOL_SOCKET level options
+(SO_LINGER, SO_PRIORITY, SO_REUSEADDR, SO_BINDTODEVICE) which should be
+handled by sock_setsockopt() directly. That's why do_sock_setsockopt()
+is used here - it intelligently chooses between sock_setsockopt() for
+SOL_SOCKET options and sock->ops->setsockopt() for protocol-specific
+options, making it work correctly for both TCP and MPTCP without
+requiring nvme-tcp to know which protocol it is dealing with. This is
+the key to enabling NVMe MPTCP support without adding MPTCP-specific
+exports or protocol dispatch logic in nvme-tcp. A more detailed
+discussion can be found in [3].
+
+I would appreciate any further suggestions you may have.
+
+Thanks,
+-Geliang
+
+[1]
+https://patchwork.kernel.org/project/mptcp/patch/c17925172fd53c98f0ec5c0095c86e6e28cbebf4.1786938892.git.tanggeliang@kylinos.cn/
+[2]
+https://patchwork.kernel.org/project/linux-nvme/cover/cover.1779934709.git.tanggeliang@kylinos.cn/
+[3]
+https://patchwork.kernel.org/project/linux-nvme/patch/a1fa5dd3ebb0cafe1bf7948bf2a96436e9452e19.1779934709.git.tanggeliang@kylinos.cn/
+
