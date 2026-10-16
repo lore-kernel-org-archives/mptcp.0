@@ -1,163 +1,162 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02CC364933;
-	Fri, 16 Oct 2026 04:51:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF81B29BDBF
+	for <mptcp@lists.linux.dev>; Fri, 16 Oct 2026 05:11:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792126313; cv=none; b=p07T6EJY8/53qr75ZD9N0pKcA0xWBFzxBB/5DQMnQJpTE1uXDT1DJgjPku/swSHGsPTeWm6hqOYaQwwdK5Z2suoJ6SwItUDkcyIgqYi/nYbJCDdYX4PHMHHYlwRoNsSSZfQrT+B50JuamZzZhsHs5zW+ItruyeJyxRgA8YO4sn4=
+	t=1792127515; cv=none; b=JtuYexLzoe7TwRXlHuOD/dsDEXK+jMPD3MgYN2ubw4QGPY/sT2pPfJx5KQbppXrJtM/SR/8aIpH/M57NN5lzD1qWLVN7PiJCnKF1Ziei9Ij+5Ne2PMkjIPn7I/qeQ7noUX4qIazOabm+BOUjxbS1W1F+XHdCYFm2o90jmDAXsKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792126313; c=relaxed/simple;
-	bh=YdxYgV0cyICXIRBGQmu2hwnZbzsJyfTCaAgkpvzARew=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=L03xHD7gVaWmrcclDpAPc1+zLofYG3MrkunRXdmfm7DySsJzgDP3Zt9W8sHZoSxyxJy07kSmWui4OcOOABsMr7TAZyuzESWG4ydF9fdEcCgKS7z9YW9xQcl3WyTQDSCYMDjj2Q2Thf+9oOENysPlvWsd5wotrux3CDfJrL0n+3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NOZSFC/T; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792127515; c=relaxed/simple;
+	bh=ThaiiFouCx80ZhckSJma8mMy7TRbZAWQQaux8C1uJz0=;
+	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=p1OCFELQO0EshERC87EkMv7GshwhdPTH2KdsXHqUHY1bCrS7JMQrotP4uOBAXEecamIw4KuDEFrJVoD2NMnSGj7jJfFanNqoMWibO6Soismw1ddIuctY+2tOm5cPZSLEDHLgI2TREKfYPP5x1PuIBUd3Sh+5HQ/7D9YYOLAR3ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mcexD1ze; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NOZSFC/T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D89D1F000C4;
-	Fri, 16 Oct 2026 04:51:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mcexD1ze"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BBFA1F000C4;
+	Fri, 16 Oct 2026 05:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792126312;
-	bh=mGSLHm+5r2YjDZa9OvTpQNpwlOfK9c7WttCpRckwv6g=;
+	s=k20260515; t=1792127513;
+	bh=Y+7BqsQeicGR3EduiiEF+blDvjAEAdPk3G3UuWWeXcg=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=NOZSFC/Tf2CsanFYXB5WHiRVu4KtaVvuxq1LA07PMZNZhbBMcLMo2V83DUDjKzoOU
-	 13NLxyI81DDgcubxJqN0CaLIxFPl5l86co7+w23gNyji/6KrByha/A7yRgC2675F61
-	 NI5Vao9uw2I9L5reRMmtt2f7Nh9fA+QzLBjlKtvBrHanYr4BrSLPuJEKnc8t3hHNtr
-	 qjdJJpzP5P45TNg6eV9vnSMc0FvarasA+bZASqnZ3bbiaAl6IkzC+tcmzzFQR6Ijx1
-	 wtfmApVrQVslahtWyELu/+jMRXI715MI/TV56WJiZx8s7m2VA1y3eouhUtNCFsZFJY
-	 9cjC6SF3SYZmQ==
-Message-ID: <6732a24185668fe8b527f7f562dc8453b85ec138.camel@kernel.org>
-Subject: Re: [PATCH v4 1/4] nvmet-tcp: unify sockopt with do_sock_setsockopt
-From: Geliang Tang <geliang@kernel.org>
-To: Christoph Hellwig <hch@lst.de>, Jakub Kicinski <kuba@kernel.org>, Hannes
- Reinecke <hare@suse.de>, Breno Leitao <leitao@debian.org>, Sagi Grimberg
- <sagi@grimberg.me>
-Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Chaitanya
- Kulkarni <kch@nvidia.com>, David Ahern <dsahern@kernel.org>, Ido Schimmel
- <idosch@nvidia.com>,  "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
- <horms@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Geliang Tang	
- <tanggeliang@kylinos.cn>, linux-nvme@lists.infradead.org, 
-	netdev@vger.kernel.org, mptcp@lists.linux.dev
-Date: Fri, 16 Oct 2026 12:51:43 +0800
-In-Reply-To: <20260819090439.GB9267@lst.de>
-References: <cover.1786947923.git.tanggeliang@kylinos.cn>
-			 <010e6810cc4c10b30237c964b2bb9dfa7a3c740c.1786947923.git.tanggeliang@kylinos.cn>
-			 <20260819090439.GB9267@lst.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.2-10build1 
+	b=mcexD1zeuw7tfZjMP46jN1+kZyeaOKEaC3/Wk/R4eupN4er1kkapXZyMaXPC3MmFZ
+	 1WYexYakwzk1UnRCSv+ryhEzhYEpqgs10bgyX5+u5IaUd/0SCPsoktxMGz+XvnIFtX
+	 PvMj2XK/oA6KTuz1fB4jblwRDZfUVG5tkv3UrI/lTSzTDxoJ1Dsxnu7MJQJyNmttc0
+	 p/8ha0ZOsbh/8zIympUV8PEiNiPQWkROQrsINgPju5z4Rkb3IvAWAQBW7KyIvWy40E
+	 8j3oAXYREfNZkJpnaHb5/npGBs4IONp4U7vuBk/V7HQ7EnVYrF7D0xi4e5pCgwGUmT
+	 yRvyyS9nIClKQ==
+Subject: Re: [RFC PATCH mptcp-next v3 1/3] selftests: mptcp: connect: retry
+ write() on EAGAIN
+From: netdev-bot+sashiko@kernel.org
+To: anilkaushikwireless@gmail.com
+Cc: mptcp@lists.linux.dev, kuba@kernel.org
+Date: Fri, 16 Oct 2026 05:11:52 +0000
+Message-ID: <179212751285.3135.6193959615773234178@kernel.org>
+In-Reply-To: <20261014143349.768138-2-anilkaushikwireless@gmail.com>
+References: <20261014143349.768138-2-anilkaushikwireless@gmail.com>
+X-sashiko-severity: Medium
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Hi,
+Thank you for your contribution! Sashiko AI review found 2 potential
+issue(s) to consider.
 
-Sorry for the late reply. In another patch "mptcp: sockopt: implement
-IPV6_TCLASS" [1] on the MPTCP mailing list, I implemented the
-__ip6_sock_set_tclass() helper and hoped it would be upstreamed first,
-but it is still pending.
+Critical: 0 · High: 0 · Medium: 1 · Low: 1
 
-Thank you all very much for your review comments, but I was caught in a
-dilemma after receiving different suggestions.
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
 
-On Wed, 2026-08-19 at 11:04 +0200, Christoph Hellwig wrote:
-> On Tue, Aug 18, 2026 at 02:03:00PM +0800, Geliang Tang wrote:
-> > From: Geliang Tang <tanggeliang@kylinos.cn>
-> > 
-> > This patch consolidates socket option settings in nvmet-tcp by
-> > utilizing
-> > the generic do_sock_setsockopt() helper for options including
-> > SO_LINGER,
-> > SO_PRIORITY, SO_REUSEADDR, TCP_NODELAY, and IP_TOS. This change
-> > eliminates
-> > the need to export and use specialized helpers for each individual
-> > socket
-> > option.
-> 
-> Hmm.  I see that do_sock_setsockopt is exported, but it really should
-> not be.  It's really just an internal helper exposed for io_uring
-> and no modular code should be using it (never mind the non-GPL
-> export).
+- [Medium] In copyfd_io_poll()
+  (tools/testing/selftests/net/mptcp/mptcp_connect.c), the new EAGAIN…
+- [Low] In copyfd_io_poll()
+  (tools/testing/selftests/net/mptcp/mptcp_connect.c), `eagain_ms`…
 
-You are right, my current version has several problems:
+--
 
-1. do_sock_setsockopt() should be exported with EXPORT_SYMBOL_GPL(),
-not EXPORT_SYMBOL().
+selftests: mptcp: connect: retry write() on EAGAIN
 
-2. The "compat" parameter of do_sock_setsockopt() should be "true"
-instead of "false" to skip BPF cgroup setsockopt programs, matching the
-behavior of the original nvme-tcp code.
+In copyfd_io_poll(), this patch stops treating an EAGAIN from write()
+after POLLOUT as fatal. The loop sleeps 1ms and goes back to poll().
+It still gives up once the EAGAIN count exceeds poll_timeout.
 
-3. The helpers should return "void" instead of "int", to preserve the
-original behavior in nvme-tcp where these socket options are set on a
-best-effort basis.
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> index 178d98d91fea..03fff859e4d1 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> @@ -638,6 +638,7 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
+>  		.events = POLLIN | POLLOUT,
+>  	};
+>  	unsigned int total_wlen = 0, total_rlen = 0;
+> +	int eagain_ms = 0;
+>  
+>  	set_nonblock(peerfd, true);
+>  
+> @@ -711,6 +712,20 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
+>  
+>  				bw = do_rnd_write(peerfd, winfo->buf + winfo->off, winfo->len);
+>  				if (bw < 0) {
+> +					/* POLLOUT does not guarantee that
+> +					 * the next write will not block:
+> +					 * the MPTCP send buffer can shrink
+> +					 * in between, e.g. when a subflow
+> +					 * is closed. Wait for more space,
+> +					 * but not forever: poll() does not
+> +					 * check every cause of EAGAIN.
+> +					 */
+> +					if (errno == EAGAIN &&
+> +					    ++eagain_ms <= poll_timeout) {
 
-4. Error logging (pr_err) should be inside the helpers to minimize
-changes to nvme-tcp code.
+[Severity: Medium]
+What happens here when poll_timeout is -1? The -t option parser in
+main() turns any non-positive value into the "no timeout" value:
 
-5. The helpers should not be duplicated between host and target, they
-should be consolidated into a shared header, e.g., nvme/common/tcp-
-sockopt.h.
+	case 't':
+		poll_timeout = atoi(optarg) * 1000;
+		if (poll_timeout <= 0)
+			poll_timeout = -1;
 
-I wonder if we can move forward with this approach once these issues
-are fixed?
+With -t 0 or a negative value, the poll() call at the top of the loop
+waits forever. But the first EAGAIN from do_rnd_write() sets eagain_ms
+to 1, and 1 <= -1 is false.
 
-> 
-> > A key benefit of this refactoring is that it decouples the socket
-> > option
-> > configuration from the underlying transport protocol. This makes it
-> > easier to extend nvmet-tcp to support other protocols, such as
-> > MPTCP, in
-> > the future, as do_sock_setsockopt() abstracts away protocol-
-> > specific
-> > differences without requiring per-option protocol-specific
-> > wrappers.
-> 
-> We really should have generic helpers in the networking code for this
-> and not duplicate them in driver using socket options.
+Control then falls through to perror("write") and return 111. That is
+the same fatal exit this patch is meant to remove.
 
-However, I still need to use do_sock_setsockopt() for a fundamental
-reason: the upcoming NVMe MPTCP support series requires protocol-
-independent socket option handling.
+Would a condition like (poll_timeout < 0 || ++eagain_ms <= poll_timeout)
+fit the intent better? A separate finite cap would also work.
 
-When NVMe creates MPTCP sockets instead of TCP sockets, calling
-protocol-specific helpers like tcp_sock_set_nodelay() or
-ip_sock_set_tos() directly will not work correctly on MPTCP sockets.
-MPTCP needs to set options not only on the MPTCP socket itself but also
-synchronize them to all subflow sockets.
+The in-tree scripts all pass -t ${timeout_poll}, so only an explicit
+non-positive -t hits this.
 
-In the previous NVMe MPTCP support implementation [2], I exported
-protocol-specific sockopt helpers separately on the TCP side and MPTCP
-side, then had NVMe switch between them based on the protocol. This is
-not as clean as using do_sock_setsockopt() for protocol-independent
-calls.
+> +						usleep(1000);
+> +						continue;
+> +					}
 
-For MPTCP, we could use sock_common_setsockopt() which always
-dispatches to the protocol's .setsockopt for all options. However, for
-TCP, this doesn't work correctly for SOL_SOCKET level options
-(SO_LINGER, SO_PRIORITY, SO_REUSEADDR, SO_BINDTODEVICE) which should be
-handled by sock_setsockopt() directly. That's why do_sock_setsockopt()
-is used here - it intelligently chooses between sock_setsockopt() for
-SOL_SOCKET options and sock->ops->setsockopt() for protocol-specific
-options, making it work correctly for both TCP and MPTCP without
-requiring nvme-tcp to know which protocol it is dealing with. This is
-the key to enabling NVMe MPTCP support without adding MPTCP-specific
-exports or protocol dispatch logic in nvme-tcp. A more detailed
-discussion can be found in [3].
+[Severity: Low]
+Does eagain_ms actually measure milliseconds? It goes up by one per
+EAGAIN and is compared with poll_timeout, which is in milliseconds. But
+each retry goes back to the top of the loop, and this call gets the full
+timeout again:
 
-I would appreciate any further suggestions you may have.
+	switch (poll(&fds, 1, poll_timeout)) {
 
-Thanks,
--Geliang
+That iteration can also handle POLLIN with a blocking do_write() to
+outfd before the next write attempt.
 
-[1]
-https://patchwork.kernel.org/project/mptcp/patch/c17925172fd53c98f0ec5c0095c86e6e28cbebf4.1786938892.git.tanggeliang@kylinos.cn/
-[2]
-https://patchwork.kernel.org/project/linux-nvme/cover/cover.1779934709.git.tanggeliang@kylinos.cn/
-[3]
-https://patchwork.kernel.org/project/linux-nvme/patch/a1fa5dd3ebb0cafe1bf7948bf2a96436e9452e19.1779934709.git.tanggeliang@kylinos.cn/
+So each counted retry costs at least 1ms plus timer slack and syscall
+overhead. If poll() blocks before reporting POLLOUT, a retry can cost up
+to a full poll_timeout.
 
+The counter is reset only after a successful write. Iterations that only
+see POLLIN neither increment it nor reset it.
+
+The in-tree scripts pass -t 30, which allows 30000 retries. That is
+about 31-35 seconds when POLLOUT is reported right away.
+
+If poll() blocks between EAGAINs, the total can go past the harness kill
+timeout in mptcp_connect.sh:
+
+	timeout_test=$((timeout_poll * 2 + 1))
+
+The tool is then killed from outside and never prints its own write()
+error.
+
+The commit message says "If EAGAIN lasts longer than the poll timeout,
+still fail". Could the bound track elapsed time, for example with
+clock_gettime()? Alternatively, the variable could be renamed to show
+that it is a retry count.
+
+[ ... ]
+
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261014143349.768138-1-anilkaushikwireless%40gmail.com
