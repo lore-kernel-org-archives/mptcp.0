@@ -1,122 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8151F7260D
-	for <mptcp@lists.linux.dev>; Sat, 17 Oct 2026 01:19:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB0B38550E;
+	Sat, 17 Oct 2026 01:40:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792199966; cv=none; b=ZXywRWjhg3Jg1MOFsmgE5M7Z0aDj1euJaABGQHT7MlIpcaP/AFp4O+2rvfEeJf/JNXPvykVhfrYSI0G5vvQ1u9UkVq3TjxEsl5x0x+y2vt60NpNoyu19w4DJjGakqBvgV1dhzF8sqxork2PmZqlZwgV8GRazHqdQ5/44bqaUCAY=
+	t=1792201218; cv=none; b=l7RBg9/c2K7HhQoSZ5DzTTnBK9VkVbmS8ve5PwztYcgz2qwKHqrYE3nWF3OTh78j+J3Irq08mD+V0WOkQrfXVJKzlj3qDq7RElrbHxfURY9bSUncFEg1OXjs3yz473FCJAEsYDs56mDO2xg8pLhc9+pw3Cv77aJQNxIk2Z7/2Bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792199966; c=relaxed/simple;
-	bh=ffrMVfDlzOztloGEZvefHddlXwC21DAAzidflSVEOVg=;
-	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=W1XbbasTq0kNPkVmCoERXg6gSWVtWUpswdxmfsUN0OP9t+NCXBHdYLHerMaOoTduu1OyEv26zKIMfJfMnbtGvbkpzD8qpH2t3bOrQ/rHpWn+IQJwteetWvgagDV+rd4BcT6W5PxTGqPMkaoBoXExWh8UZyTISPQpSwzSQBWJdsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JTmZFWfj; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792201218; c=relaxed/simple;
+	bh=OjI94ysJpX2K5r1PNJ5d3g4UcWqb3+ItTogJjArhhFo=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=XA5vpaI2GD/TBRQZSlOOPShC8t53raW1d7l/BbcapWL9KsU+gCVMWiqf0piy3Zr6l+5cXM2agp/bxCCOVZULBfhivkFxnU/apWNZ75BjdY4A3O7QoA7mOrcDp6LlcZSpyF9ESmCobYSjmdhjyTowPHv3jNZi0qYEtkJvmaCZq3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MgK09Mtn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JTmZFWfj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E88AC1F000C4;
-	Sat, 17 Oct 2026 01:19:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MgK09Mtn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 087781F000C6;
+	Sat, 17 Oct 2026 01:40:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792199965;
-	bh=jgFqvLl7mL88E3xCmp+9jgLXD2wChUDd9vaQu+uNPTc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=JTmZFWfjZmchepLNBoJxfj6ewATRV5+Nl59NFVlzLB/R0JvOdF1uf4wM5tZ79cYZ+
-	 8fIcP4k0MdTCQdG8NEpPwfmzq/1ksv4wtZZia/Hw7pXz71H9d51yKHHsSr2a97MXjI
-	 QCyGkBXA2hBST+ZfMq1lZtqm46a6Qm3LsjKgfaNK3mePlMBhbRrmBsLdhOSO4ceK5z
-	 HBMr74BUsM+PrBQD8VS5YUYuQEo4PpBe8SqxjnI69tIwOMC4pgnB7j7TEVHhGMe+Ut
-	 D1EwaU7tF+tVTDFIQl6AqMR/XJyp5vHRsAnMUF+lf3ToytMpU317PnhRmce+OXV1OU
-	 X39Z7aMhVdJQA==
-Subject: Re: [PATCH mptcp-net] selftests: mptcp: sockopt: pass total bytes to
- do_getsockopts
-From: netdev-bot+sashiko@kernel.org
-To: quanyeyang@proton.me
-Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Sat, 17 Oct 2026 01:19:24 +0000
-Message-ID: <179219996445.3135.17949387714487378147@kernel.org>
-In-Reply-To: <20261015-fix-mptcp-issue-638-v1-1-5de999ad601c@proton.me>
-References: <20261015-fix-mptcp-issue-638-v1-1-5de999ad601c@proton.me>
-X-sashiko-severity: Medium
+	s=k20260515; t=1792201215;
+	bh=n9nh2kG+i/gBx9kwNBoZa3tMJRwxBESHMVixHtegqJQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc;
+	b=MgK09Mtnqwa0HukbW+ENA3arUwTrqUX0VXHtraocWgB+bxY0jTE/Yl7FNw5xyZi05
+	 l0yNp1vF3dFz7J096LlfGFDDzcfZ1ueHXLgjW1yOTntzNpMOWia0teXUME1e3b+GvC
+	 Yf5mY7+Rlyg3laaD2qWTr7m9M3hcete5TnW6b0SFrlvTLu/XkYKuaOYj1ummm32ic2
+	 QYR0bN2kYuEjQlGl9FWUtsZnmugIdoHO6F/Bu4V8FewWkIPFvP/m8ScGFz+qs3a1D3
+	 PeXgKDWS8I1oiGj3GcZuvBoGNc40lTLvmWHTwJjgkw9jes00pZTgqBx7HYRwIGZ45O
+	 evOh/AC0EPd4A==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id F160E380CED9;
+	Sat, 17 Oct 2026 01:40:14 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 0/4] mptcp: misc fixes for v7.3-rc8
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <179220121377.1050340.16852423271530294795.git-patchwork-notify@kernel.org>
+Date: Sat, 17 Oct 2026 01:40:13 +0000
+References: 
+ <20261013-net-mptcp-misc-fixes-7-3-rc8-v1-0-932c9b182fc7@kernel.org>
+In-Reply-To: 
+ <20261013-net-mptcp-misc-fixes-7-3-rc8-v1-0-932c9b182fc7@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
+ edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ quanyeyang@proton.me, stable@vger.kernel.org, caoruide123@gmail.com,
+ kylebot@openai.com, david.lee@trailofbits.com, vega@nebusec.ai,
+ weir@nebusec.ai, ncardwell@google.com, kuniyu@google.com,
+ daniel@iogearbox.net, kafai@fb.com, sashiko-bot@kernel.org
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue(s) to consider.
+Hello:
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 0
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
+On Tue, 13 Oct 2026 16:29:18 +0200 you wrote:
+> Here are some unrelated fixes:
+> 
+> - Patch 1: fully reset the msk state on early connect failure. A fix for
+>   v5.9.
+> 
+> - Patch 2: avoid using the subflow status bitfield for a field that is
+>   used under the msk context, not the subflow one like the other fields.
+>   A fix for v5.12.
+> 
+> [...]
 
-- [Medium] The commit message describes a failure path that the old code
-  cannot reach.
+Here is the summary with links:
+  - [net,1/4] mptcp: reset msk state on early connect failure
+    https://git.kernel.org/netdev/net/c/29afe67082b2
+  - [net,2/4] mptcp: fix subflow bitfield misuse
+    https://git.kernel.org/netdev/net/c/7538fa33bb2f
+  - [net,3/4] mptcp: hold MP_JOIN msk ref when cloning reqsk
+    https://git.kernel.org/netdev/net/c/c9c90cf437a9
+  - [net,4/4] mptcp: fix MP_CAPABLE token migration when cloning reqsk
+    https://git.kernel.org/netdev/net/c/2093bc7fa500
 
---
-
-selftests: mptcp: sockopt: pass total bytes to do_getsockopts
-
-This changes connect_one_server() in the mptcp_sockopt selftest so it
-passes the total number of echoed bytes to do_getsockopts(). Before, it
-passed the return value of the last read() call. The commit message
-says the partial value made do_getsockopt_tcp_info() time out.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/638
-
-> do_getsockopt_tcp_info() then compared the subflow TCP counters
-> against that partial size, polled until timeout, and failed the
-> test. Use the total instead.
->
-> Fixes: ce9979129a0b ("selftests: mptcp: add mptcp getsockopt test cases")
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/638
-
-[Severity: Medium]
-Is this the failure the old code actually hits? In
-tools/testing/selftests/net/mptcp/mptcp_sockopt.c, do_getsockopts()
-runs the MPTCP_INFO check before the TCP_INFO polling:
-
-static void do_getsockopts(struct so_state *s, int fd, size_t r, size_t w)
-{
-	do_getsockopt_mptcp_info(s, fd, w);
-
-	do_getsockopt_tcp_info(s, fd, r, w);
-	...
-}
-
-do_getsockopt_mptcp_info() then asserts on w:
-
-	assert(s->mi.mptcpi_write_seq + w == i.mptcpi_write_seq);
-
-s->mi is saved by the first do_getsockopts(&s, fd, 0, 0) call, which
-runs before the write. Once write(fd, buf, len) returns len,
-mptcp_sendmsg() has moved msk->write_seq forward by len, and
-mptcpi_write_seq reports that value. The client only sends DATA_FIN at
-close(), which comes later.
-
-Take the old code with a split echo, where the last ret is less than
-len. Doesn't this assert fail and abort the process inside
-do_getsockopt_mptcp_info()? If so, the code never reaches the sleep(1)
-retry loop or the "tcpi_bytes_sent ..., want ..." xerror() in
-do_getsockopt_tcp_info(). The selftest Makefile does not define NDEBUG,
-so the assert is active.
-
-The code change itself looks correct. With total == len, both the
-write_seq assert and the tcp_info counter checks pass.
-
-Could the commit message describe the assert failure in
-do_getsockopt_mptcp_info() instead?
-
-Is the Closes: tag also accurate? Suppose issue 638 reports the
-timeout xerror() from do_getsockopt_tcp_info(). Then the mptcp_info
-assert must already have passed, which means w == r == len. A partial
-read would not be the cause, and this patch would not fix that issue.
-
+You are awesome, thank you!
 -- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261015-fix-mptcp-issue-638-v1-1-5de999ad601c%40proton.me
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
