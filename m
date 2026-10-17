@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BDFE35C1BC
-	for <mptcp@lists.linux.dev>; Sat, 17 Oct 2026 17:27:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820833AFB07
+	for <mptcp@lists.linux.dev>; Sat, 17 Oct 2026 17:27:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792258044; cv=none; b=m1emKAinxoWgp1wRKxArAJLw3kdgJo7zV5w+42rGwEyKoncOo/cOHRsAkxivBnnyp7te00E5MXDhHJucDxQi6aTHgHW/GntbnYkfVdMcg46cyL1dSLUUvdZjvbf74eNJAMeLr5BawrWYBqxutdjdrOBhETJc9ixi1H1dPRi5TYs=
+	t=1792258047; cv=none; b=hlk0vVLJw+8uMywus7QzJI4GYXQ6KBsxe16ZtYISGZg0AownGFmoWUQ3ALZr7cNNO+SO+jBI2AJirRbkaQQK8FkCOoh2wxlPr+4va8qZroqLcKceRhNRtvIVUF4fGTMwi34mjbW3bITGgUlDNUL50vjXPdVwTxGfty3dJxHqEI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792258044; c=relaxed/simple;
-	bh=YrNLJ1Y7MQfU2D+lSEYqDYLoMLCdAexvbTNj9qlfTJ4=;
+	s=arc-20240116; t=1792258047; c=relaxed/simple;
+	bh=3QMEFnqdppoZNqILGSU0YnltC7ALjgN08lwe4nIYRgI=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XYSRTaB9mPvNEviFnKDSMmm/QJks0JYE/g3Fj1Y7Ago5YslOz2ASKX/rcpOD39d5FacgNIt2i2+RH688kekOoxr9zZ77T3jBFIZswTjQwZC8RQ+nyGIaJQPfkv+A1iNNxfMbM/8vx1Es6CqYY5R5CXhz6vjrQ834r2jAkXFx+CQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c1LH8b3X; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:MIME-Version; b=b0G65hGSvr0KOJHo5rM7VhH5Eh24joTEhb7a7MTxg06KqyUCiukJ+RCzQ2OLUILofAHL/5dbiHapQtnI+f7mhuUtPkQHo+6q61aCRnfbnrz3Mppm9rL+zvJWh+NUZI3vnO/myrs807gj0jOjRShKpmBXhX+o7uS6tyDuaAarKTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XvHph9+J; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c1LH8b3X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21DC81F000C6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XvHph9+J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E31EA1F000C5;
 	Sat, 17 Oct 2026 17:27:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792258043;
-	bh=B3mHagbXGVFTwSTskEEEyXJDfMX/EPURCotIG0hhf6M=;
+	s=k20260515; t=1792258044;
+	bh=a8vAG6CjdUaDC8m2fGPeWC0Il/J9l0SryqkAJc0CHE0=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=c1LH8b3XfLYmBaaTo0tQg2WOr61mSlQLVXDeGETFftTaHu7d1tIqmzDL8/eXxn6mT
-	 NEc0R9dpQPE7KHEV/IISVVU1qClBIa3CqiqCZ7HlBk4T5z53cIt71DhgWzDZvxIY6A
-	 l37XyoWQTGO85rTIAg9l3aLkbMi0Hp2TDWV8PrqoXY2kh7RE9skjOfBEDrDAaPrmlA
-	 q9yeoLnqbwgg9Y44IEVW1NBhps2j26j/L/pAqSZlXZ8Gd7xFmX00UAOkuhpe2Vz0BO
-	 Lp0e/LqXx/0qElKZyktW3gNJ5AWzd/qIvJy+O9tu3rvVN5+B2FpBqT11+I1xJp9e10
-	 feHXNTtzoZquQ==
-Subject: Re: [PATCH mptcp-next v2 1/2] mptcp: give MPTCP sockets a distinct
- lockdep class
+	b=XvHph9+J79MeyURfC+ORx3fX1vrHRg7OX1A0so/D+V9XujrMLfGRS5AM0A3JXJ7aQ
+	 5Z8fZLpoPZ6whzhoZBQxofmD+/Xv+zVb1/EZbhThZqU0ABi5lNHbCsDGoNPtgqGQnq
+	 JG3zXKT6iOBvMsgPNxjvM1SJ9ZRIunkHX9Lp6b1B76E8YSTv73R42R/Taz7dWfjrd5
+	 teEqYqqeJtN3NoUmDdtYKiNyqmuLIwhnIWsB8uB2yQBhPbhecK1D/2vUaIywyYBwoD
+	 Jz/0y4rarXFM0I/ioNAApqGhDcJ5z/Rn35zv9EQBz1ir0DyYXfR95OeYi1mfLyp0Z6
+	 pyn+3PAe+9f0Q==
+Subject: Re: [PATCH mptcp-next v2 2/2] mptcp: kunit: add sockopt test for
+ subflow socket locking
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, tanggeliang@kylinos.cn, kuba@kernel.org
-Date: Sat, 17 Oct 2026 17:27:22 +0000
-Message-ID: <179225804264.3133.5374808777837243575@kernel.org>
-In-Reply-To: =?utf-8?q?=3C8651f29fb4e11de14a7ea7d05d97a33b1e5390f3=2E1792114?=
+Date: Sat, 17 Oct 2026 17:27:23 +0000
+Message-ID: <179225804350.3133.12494514393089653943@kernel.org>
+In-Reply-To: =?utf-8?q?=3Ce32025457f5b30b3d859e85077752b761757a35f=2E1792114?=
  =?utf-8?q?102=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
-References: =?utf-8?q?=3C8651f29fb4e11de14a7ea7d05d97a33b1e5390f3=2E17921141?=
+References: =?utf-8?q?=3Ce32025457f5b30b3d859e85077752b761757a35f=2E17921141?=
  =?utf-8?q?02=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
 X-sashiko-severity: High
 Content-Type: text/plain; charset="utf-8"
@@ -58,169 +58,176 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [High] The fix leaves out the passive (accept/clone) path, although the
-  commit message says "Call it from __mptcp_init_sock() to cover both…
-- [Medium] The new call site in __mptcp_init_sock() checks only
-  `sk->sk_socket`, not `sk->sk_kern_sock`.
-- [Low] The refactor is incomplete: mptcp_pm_nl_create_listen_socket()
-  still calls mptcp_reclassify_socket(newsk) explicitly…
+- [High] The fix this test is meant to cover is commit "mptcp: give MPTCP
+  sockets a distinct lockdep class", in the same reviewed range.
+- [Medium] The new test mptcp_sockopt_reuseaddr()
+  (net/mptcp/sockopt_test.c) cannot detect the regression it is meant to…
+- [Low] The MPTCP_KUNIT_TEST help text in net/mptcp/Kconfig still says
+  "Currently covers the MPTCP crypto and token helpers." This patch adds…
 
 --
 
-mptcp: give MPTCP sockets a distinct lockdep class
+mptcp: kunit: add sockopt test for subflow socket locking
 
-This patch moves the msk lock reclassification out of PM listener
-creation and into a new mptcp_reclassify_socket() helper. The helper is
-then called from __mptcp_init_sock(). The aim is to stop lockdep from
-reporting recursive locking when a kernel msk and its kernel subflows
-share the k-sk_lock-AF_INET class.
+This commit adds a KUnit test that creates a kernel AF_INET MPTCP socket
+and sets SO_REUSEADDR on it. That goes through
+mptcp_setsockopt_sol_socket(), which locks the msk and then calls
+sk_setsockopt() on the subflow. The test is meant to check that the msk
+has a lockdep class distinct from its subflows.
 
-> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-> index d3014bf57bf3c..5e8792ad38ca7 100644
-> --- a/net/mptcp/pm_kernel.c
-> +++ b/net/mptcp/pm_kernel.c
-> @@ -849,10 +849,20 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
->  static struct lock_class_key mptcp_slock_keys[2];
->  static struct lock_class_key mptcp_keys[2];
->  
-> +void mptcp_reclassify_socket(struct sock *sk)
-> +{
-> +	bool is_ipv6 = sk->sk_family == AF_INET6;
-> +
-> +	sock_lock_init_class_and_name(sk,
-> +				      is_ipv6 ? "mlock-AF_INET6" : "mlock-AF_INET",
-> +				      &mptcp_slock_keys[is_ipv6],
-> +				      is_ipv6 ? "msk_lock-AF_INET6" : "msk_lock-AF_INET",
-> +				      &mptcp_keys[is_ipv6]);
-> +}
-> +
+> diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
+> index bd72b300a0f68..e9ae91cff940a 100644
+> --- a/net/mptcp/Makefile
+> +++ b/net/mptcp/Makefile
+> @@ -10,7 +10,9 @@ obj-$(CONFIG_INET_MPTCP_DIAG) += mptcp_diag.o
+>
+>  mptcp_crypto_test-objs := crypto_test.o
+>  mptcp_token_test-objs := token_test.o
+> -obj-$(CONFIG_MPTCP_KUNIT_TEST) += mptcp_crypto_test.o mptcp_token_test.o
+> +mptcp_sockopt_test-objs := sockopt_test.o
+> +obj-$(CONFIG_MPTCP_KUNIT_TEST) += mptcp_crypto_test.o mptcp_token_test.o \
+> +				  mptcp_sockopt_test.o
+
+[Severity: Low]
+This isn't a bug, but should the MPTCP_KUNIT_TEST help text in
+net/mptcp/Kconfig be updated as well? It still says:
+
+	  Currently covers the MPTCP crypto and token helpers.
+
+The crypto and token tests only exercise helpers. This new one creates
+real kernel MPTCP sockets and subflows in init_net.
 
 [ ... ]
 
-> @@ -874,11 +884,7 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
->  	 * modifiers in several places, re-init the lock class for the msk
->  	 * socket to an mptcp specific one.
->  	 */
-> -	sock_lock_init_class_and_name(newsk,
-> -				      is_ipv6 ? "mlock-AF_INET6" : "mlock-AF_INET",
-> -				      &mptcp_slock_keys[is_ipv6],
-> -				      is_ipv6 ? "msk_lock-AF_INET6" : "msk_lock-AF_INET",
-> -				      &mptcp_keys[is_ipv6]);
-> +	mptcp_reclassify_socket(newsk);
+> diff --git a/net/mptcp/sockopt_test.c b/net/mptcp/sockopt_test.c
+> new file mode 100644
+> index 0000000000000..ebd43de025432
+> --- /dev/null
+> +++ b/net/mptcp/sockopt_test.c
+> @@ -0,0 +1,37 @@
 
-[Severity: Low]
-This isn't a bug, but is this explicit call still needed?
-sock_create_kern() already reclassifies the socket:
+[ ... ]
 
-sock_create_kern()
-  inet_create() / inet6_create()
-    sock_init_data()                 <- sets sk_socket
-    sk->sk_prot->init() == mptcp_init_sock()
-      __mptcp_init_sock()
-        if (sk->sk_socket)
-            mptcp_reclassify_socket(sk);
-
-So this second call re-initializes the same lock with the same keys. That
-looks harmless because the lock is not held yet. The comment above it
-still reads as if the PM listener needs special handling.
-
-Also, mptcp_slock_keys[], mptcp_keys[] and mptcp_reclassify_socket() stay
-in pm_kernel.c, but protocol.c now uses them for every msk. Would
-protocol.c be a better home for them?
-
->  
->  	lock_sock(newsk);
->  	ssk = __mptcp_nmpc_sk(mptcp_sk(newsk));
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 60cbd91be6320..68f339311993e 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -3245,6 +3245,9 @@ static void __mptcp_init_sock(struct sock *sk)
->  	/* re-use the csk retrans timer for MPTCP-level retrans */
->  	timer_setup(&sk->mptcp_retransmit_timer, mptcp_retransmit_timer, 0);
->  	timer_setup(&msk->sk.mptcp_tout_timer, mptcp_tout_timer, 0);
+> +static void mptcp_sockopt_reuseaddr(struct kunit *test)
+> +{
+> +	struct socket *sock;
+> +	int err, reuse = 1;
 > +
-> +	if (sk->sk_socket)
-> +		mptcp_reclassify_socket(sk);
+> +	err = sock_create_kern(&init_net, AF_INET, SOCK_STREAM, IPPROTO_MPTCP,
+> +			       &sock);
 
 [Severity: High]
-The commit message says this covers "both active (connect) and passive
-(accept/clone) socket creation paths". Does the passive path actually
-get reclassified?
+This question is about the companion fix that this test is meant to
+cover, commit 61c155e850cb ("mptcp: give MPTCP sockets a distinct lockdep
+class"). That commit message says calling mptcp_reclassify_socket() from
+__mptcp_init_sock() is done:
 
-On the passive side, the msk is created by mptcp_sk_clone_init():
+    to cover both active (connect)
+    and passive (accept/clone) socket creation paths.
 
-mptcp_sk_clone_init()
-  sk_clone_lock(sk, GFP_ATOMIC)
-    sk_clone()
-      sock_lock_init(newsk);     <- k-sk_lock-AF_INET* for a kernel listener
-      bh_lock_sock(newsk);
-      ...
-      sk_set_socket(newsk, NULL);
-  __mptcp_init_sock(nsk)
-    if (sk->sk_socket)           <- always NULL here
-        mptcp_reclassify_socket(sk);
+Is the passive path actually reclassified? __mptcp_init_sock() only
+reclassifies when sk_socket is set:
 
-sk_clone() clears sk_socket, so this guard is always false on the clone
-path. The cloned msk keeps the generic class chosen by sock_lock_init().
-
-Nothing later seems to fix this up. mptcp_stream_accept() does:
-
-    newsk->sk_kern_sock = arg->kern;
-    lock_sock(newsk);
-    __inet_accept(sock, newsock, newsk);
+net/mptcp/protocol.c:__mptcp_init_sock() {
     ...
-    mptcp_graft_subflows(newsk);
+	if (sk->sk_socket)
+		mptcp_reclassify_socket(sk);
+}
 
-Then mptcp_graft_subflows() calls lock_sock(ssk) on the subflow. That
-subflow is a clone of the sock_create_kern() TCP listener subflow, so it
-is also in k-sk_lock-AF_INET.
+Passive msk sockets come from mptcp_sk_clone_init(), which goes through
+sk_clone_lock()->sk_clone(). sk_clone() calls sock_lock_init(newsk) and
+bh_lock_sock(newsk). It also calls sk_set_socket(newsk, NULL) before it
+returns.
 
-When an in-kernel MPTCP listener accepts an MP_CAPABLE connection, won't
-lockdep still report "possible recursive locking" on the first accept,
-and again later on the setsockopt and worker paths? The in-tree PM
-listener rejects MP_CAPABLE, so this needs some other in-kernel MPTCP
-listener. That is still the case the commit message says it covers.
+So by the time mptcp_sk_clone_init() calls __mptcp_init_sock(nsk),
+sk->sk_socket is NULL and the reclassification is skipped.
 
-Simply dropping the guard doesn't look safe either. At this point
-nsk->sk_lock.slock is held by bh_lock_sock() from sk_clone(). Calling
-sock_lock_init_class_and_name() would then spin_lock_init() a held lock.
-It would also trip debug_check_no_locks_freed() and break the later
-bh_unlock_sock(nsk) in mptcp_sk_clone_init().
+mptcp_stream_accept() then only does this, without re-initializing the
+lock class:
 
-Would it work to do the passive reclassification in
-mptcp_stream_accept() instead, before lock_sock(newsk), when arg->kern
-is set?
+		newsk->sk_kern_sock = arg->kern;
+		lock_sock(newsk);
+		__inet_accept(sock, newsock, newsk);
+
+sock_lock_init() picks the class from sk_kern_sock, and that field is
+copied from the listener. Take an MP_CAPABLE connection accepted on a
+kernel-created MPTCP listener. Wouldn't the passive msk end up in
+k-sk_lock-AF_INET (or AF_INET6)?
+
+Its first subflow is cloned from a listener subflow that was created with
+sock_create_kern(), so it would be in the same class. A sequence like
+this would then seem to produce the same "possible recursive locking"
+report that the fix is meant to remove:
+
+kernel_accept()
+setsockopt(SO_REUSEADDR) on the accepted msk
+  mptcp_setsockopt_sol_socket()
+    lock_sock(sk)             <- msk, k-sk_lock-AF_INET
+    sk_setsockopt(ssk, ...)   <- takes the ssk lock, same class
+
+After that report, lockdep turns itself off for the rest of the boot.
+
+The in-tree PM listeners reject MP_CAPABLE, so reaching this needs a
+kernel user that calls sock_create_kern(), kernel_listen() and
+kernel_accept() on an MPTCP socket.
+
+Removing the sk_socket guard does not look like a fix by itself. On the
+clone path bh_lock_sock() holds the slock, and
+sock_lock_init_class_and_name() would then spin_lock_init() a lock that
+is held.
+
+Would the passive msk have to be reclassified at accept/graft time
+instead, when the lock is not held? This test only creates an active
+AF_INET socket, so it would not catch this gap.
+
+> +	KUNIT_ASSERT_EQ(test, err, 0);
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, sock);
+> +
+> +	err = sock_common_setsockopt(sock, SOL_SOCKET, SO_REUSEADDR,
+> +				     KERNEL_SOCKPTR(&reuse), sizeof(reuse));
+> +
+> +	KUNIT_EXPECT_EQ(test, err, 0);
 
 [Severity: Medium]
-Should this also check sk->sk_kern_sock?
+Can this check ever fail if the lockdep reclassification regresses? The
+commit message says the test is there:
 
-inet_create() and inet6_create() call sock_init_data(sock, sk) before
-sk->sk_prot->init(sk), so sk_socket is also set for a socket() call from
-user space. As a result, every actively created msk, user or kernel, now
-ends up in msk_lock-AF_INET/AF_INET6. mptcp_reclassify_socket() picks
-the keys by family only:
+    to verify that MPTCP sockets have a distinct lockdep
+    class from their subflows.
 
-    &mptcp_keys[is_ipv6]
+Here err comes from sk_setsockopt(ssk, ...) through
+mptcp_setsockopt_sol_socket(), and it does not depend on the msk lock
+class. If mptcp_reclassify_socket() is removed or broken, or the call in
+__mptcp_init_sock() is dropped, err is still 0 and the case still passes.
 
-Before this patch, user msks were in sk_lock-AF_INET. That class was
-already distinct from their k-sk_lock-AF_INET subflows, so user sockets
-did not hit the recursion described here. The commit message also
-places the problem at "When both are kernel sockets".
+A "possible recursive locking" report only prints a splat and calls
+debug_locks_off(). Nothing in kernel/locking/ calls
+kunit_fail_current_test(), and lib/kunit/ has no lockdep or debug_locks
+hook. So KUnit never marks the case as failed.
 
-Merging user and kernel msks into one class undoes the split that
-sock_lock_init() keeps between af_family_keys and af_family_kern_keys.
-For example, user msks record msk_lock-AF_INET -> mmap_lock through
-copy_from_user() in mptcp_sendmsg(). An in-kernel MPTCP user that holds
-fs or reclaim locks would then share that same class.
+The test only tells us anything about locking when all of these hold:
 
-Could this lead to false circular dependency reports? Limiting the
-reclassification to sk_kern_sock sockets, or using separate key arrays
-for user and kernel sockets, would avoid this.
+  - CONFIG_PROVE_LOCKING is enabled. MPTCP_KUNIT_TEST does not depend on
+    lockdep.
+  - Lockdep has not already turned itself off after an earlier splat.
+  - Someone reads dmesg.
 
->  }
->  
->  static void mptcp_ca_reset(struct sock *sk)
+Could the test check the classes directly, under IS_ENABLED(CONFIG_LOCKDEP)?
+For example, after the setsockopt call it could assert that
+sock->sk->sk_lock.dep_map.key differs from
+mptcp_sk(sock->sk)->first->sk_lock.dep_map.key.
+
+The coverage is also narrow:
+
+  - Only AF_INET is created, so the msk_lock-AF_INET6 branch of
+    mptcp_reclassify_socket() is never run. An AF_INET6 case under
+    CONFIG_MPTCP_IPV6 would cover it.
+  - sock->sk->sk_reuse is never checked, even though SO_REUSEADDR is the
+    option being set.
+
+> +
+> +	sock_release(sock);
+> +}
 
 [ ... ]
 
