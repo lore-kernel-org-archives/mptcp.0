@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0580219F137
-	for <mptcp@lists.linux.dev>; Sat, 17 Oct 2026 00:58:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8151F7260D
+	for <mptcp@lists.linux.dev>; Sat, 17 Oct 2026 01:19:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792198702; cv=none; b=Y8MM46B2RmrJG7R++xfTkurXU1Ien0LNcI2nmCXEnZVQZU0AsqZ/WoD/tK5Atc5Hujiru0chx9X7unVmuvR9y7ivWaesT9X17Zv2SOOITCBs6XbQCgTyt2JbnmGdve2S9NLvF4YX0/a2XeCuhzCdzVDhhF1O1isjqjksVtZjn8Y=
+	t=1792199966; cv=none; b=ZXywRWjhg3Jg1MOFsmgE5M7Z0aDj1euJaABGQHT7MlIpcaP/AFp4O+2rvfEeJf/JNXPvykVhfrYSI0G5vvQ1u9UkVq3TjxEsl5x0x+y2vt60NpNoyu19w4DJjGakqBvgV1dhzF8sqxork2PmZqlZwgV8GRazHqdQ5/44bqaUCAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792198702; c=relaxed/simple;
-	bh=0WrtTOruFQiP/TAAMzjIk9qYXQUcnzYruvo1ubjtG6A=;
+	s=arc-20240116; t=1792199966; c=relaxed/simple;
+	bh=ffrMVfDlzOztloGEZvefHddlXwC21DAAzidflSVEOVg=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uL7Ve0Z/LMxPSELK9bd0pLOhuwalZdsy8t2N14BURN3xA5+aO4V/GFc3FvgIb0KhzSFAuzSxkLkGWA2EREavNM0kJ8vFLWhkrYzfCLYzIfn51xqdNEP0il1JUS7ZVTJa+hiIu8zrhxkuKjo/ys5AEdm4IfAASrLVUPqY9XaNNvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RvbkHFZU; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:MIME-Version; b=W1XbbasTq0kNPkVmCoERXg6gSWVtWUpswdxmfsUN0OP9t+NCXBHdYLHerMaOoTduu1OyEv26zKIMfJfMnbtGvbkpzD8qpH2t3bOrQ/rHpWn+IQJwteetWvgagDV+rd4BcT6W5PxTGqPMkaoBoXExWh8UZyTISPQpSwzSQBWJdsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JTmZFWfj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RvbkHFZU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8DC41F000C5;
-	Sat, 17 Oct 2026 00:58:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JTmZFWfj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E88AC1F000C4;
+	Sat, 17 Oct 2026 01:19:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792198700;
-	bh=cL2kSqImBgZ+JxF3+Xd5rUG8E0SG4TaewIVpmKx+JpE=;
+	s=k20260515; t=1792199965;
+	bh=jgFqvLl7mL88E3xCmp+9jgLXD2wChUDd9vaQu+uNPTc=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=RvbkHFZUk+f9kENXajlbr8gNyxOT8YN1eTjUHzzYH3jJBU5YOnqJaejJRNFKAuAV8
-	 svh35bHy5y/N9D8lWsbKcij3RXmDGc7an/xjosc41bmrAPwxKRgwH2LdUvUxSsB+gO
-	 4uQw1RKl9xySsfMZrLB7R8DVBJYBTl4cAnXUw1GLgMUDxcioR8ZiSizV7TBd3tndMi
-	 jHMiY12U2Df8rAZ55P3gVBcaOU7to0Xp0SkzaIZwc3zm+q14M9iD7Bzwl+yV+vy186
-	 DoMunPraxzGGHOOyNDoqqkD6y+fklOK364RQ9Wx79OasK3UyLJIO8lJ/wjMRODmV99
-	 y7+fOUtcyylrg==
-Subject:
- Re: [PATCH mptcp-net] mptcp: annotate lockless access to msk->scaling_ratio
+	b=JTmZFWfjZmchepLNBoJxfj6ewATRV5+Nl59NFVlzLB/R0JvOdF1uf4wM5tZ79cYZ+
+	 8fIcP4k0MdTCQdG8NEpPwfmzq/1ksv4wtZZia/Hw7pXz71H9d51yKHHsSr2a97MXjI
+	 QCyGkBXA2hBST+ZfMq1lZtqm46a6Qm3LsjKgfaNK3mePlMBhbRrmBsLdhOSO4ceK5z
+	 HBMr74BUsM+PrBQD8VS5YUYuQEo4PpBe8SqxjnI69tIwOMC4pgnB7j7TEVHhGMe+Ut
+	 D1EwaU7tF+tVTDFIQl6AqMR/XJyp5vHRsAnMUF+lf3ToytMpU317PnhRmce+OXV1OU
+	 X39Z7aMhVdJQA==
+Subject: Re: [PATCH mptcp-net] selftests: mptcp: sockopt: pass total bytes to
+ do_getsockopts
 From: netdev-bot+sashiko@kernel.org
 To: quanyeyang@proton.me
-Cc: mptcp@lists.linux.dev, matttbe@kernel.org, kuba@kernel.org
-Date: Sat, 17 Oct 2026 00:58:20 +0000
-Message-ID: <179219870023.3135.6428859397034144575@kernel.org>
-In-Reply-To:
- <20261015-t-mptcp-scaling-ratio-kcsan-v1-1-db146f55802e@proton.me>
-References: <20261015-t-mptcp-scaling-ratio-kcsan-v1-1-db146f55802e@proton.me>
+Cc: mptcp@lists.linux.dev, kuba@kernel.org
+Date: Sat, 17 Oct 2026 01:19:24 +0000
+Message-ID: <179219996445.3135.17949387714487378147@kernel.org>
+In-Reply-To: <20261015-fix-mptcp-issue-638-v1-1-5de999ad601c@proton.me>
+References: <20261015-fix-mptcp-issue-638-v1-1-5de999ad601c@proton.me>
 X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -57,84 +56,67 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [Medium] The patch is incomplete: one lockless reader of
-  msk->scaling_ratio is still a plain load.
+- [Medium] The commit message describes a failure path that the old code
+  cannot reach.
 
 --
 
-mptcp: annotate lockless access to msk->scaling_ratio
+selftests: mptcp: sockopt: pass total bytes to do_getsockopts
 
-This commit annotates the BH write of msk->scaling_ratio in
-mptcp_rcv_rtt_update() with WRITE_ONCE(). It also annotates the reads in
-mptcp_win_from_space() and mptcp_space_from_win() with READ_ONCE(). The
-goal is to fix a KCSAN data-race between mptcp_cleanup_rbuf() and
-mptcp_data_ready().
+This changes connect_one_server() in the mptcp_sockopt selftest so it
+passes the total number of echoed bytes to do_getsockopts(). Before, it
+passed the return value of the last read() call. The commit message
+says the partial value made do_getsockopt_tcp_info() time out.
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/634
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/638
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 05c38564e8fdf..ffd22849b719b 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-
-[ ... ]
-
-> @@ -1004,9 +1005,13 @@ static void mptcp_rcv_rtt_update(struct mptcp_sock *msk,
->  	if (++msk->rcv_rtt_est.next_sample == MPTCP_RTT_SAMPLES)
->  		msk->rcv_rtt_est.next_sample = 0;
->  
-> -	/* EWMA among the incoming subflows */
-> -	msk->scaling_ratio = ((msk->scaling_ratio << 3) - msk->scaling_ratio +
-> -			     tp->scaling_ratio) >> 3;
-> +	/* EWMA among the incoming subflows.
-> +	 * Pairs with READ_ONCE() in mptcp_win_from_space().
-> +	 */
-> +	scaling_ratio = READ_ONCE(msk->scaling_ratio);
-> +	WRITE_ONCE(msk->scaling_ratio,
-> +		   ((scaling_ratio << 3) - scaling_ratio +
-> +		    tp->scaling_ratio) >> 3);
+> do_getsockopt_tcp_info() then compared the subflow TCP counters
+> against that partial size, polled until timeout, and failed the
+> test. Use the total instead.
+>
+> Fixes: ce9979129a0b ("selftests: mptcp: add mptcp getsockopt test cases")
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/638
 
 [Severity: Medium]
-Is there one more lockless reader of msk->scaling_ratio that still needs
-annotating? The mptcp_rcvbuf_grow tracepoint in
-include/trace/events/mptcp.h still uses a plain load:
+Is this the failure the old code actually hits? In
+tools/testing/selftests/net/mptcp/mptcp_sockopt.c, do_getsockopts()
+runs the MPTCP_INFO check before the TCP_INFO polling:
 
-include/trace/events/mptcp.h:TRACE_EVENT(mptcp_rcvbuf_grow) {
-    TP_fast_assign(
-        ...
-        __entry->rtt_us = mptcp_rtt_us_est(msk) >> 3;
-        ...
-        __entry->scaling_ratio = msk->scaling_ratio;
-        ...
+static void do_getsockopts(struct so_state *s, int fd, size_t r, size_t w)
+{
+	do_getsockopt_mptcp_info(s, fd, w);
+
+	do_getsockopt_tcp_info(s, fd, r, w);
+	...
 }
 
-The tracepoint fires from mptcp_rcv_space_adjust() on the recvmsg and
-read_sock paths:
+do_getsockopt_mptcp_info() then asserts on w:
 
-__mptcp_recvmsg_mskq()
-  mptcp_rcv_space_adjust()
-    trace_mptcp_rcvbuf_grow(sk, time)
+	assert(s->mi.mptcpi_write_seq + w == i.mptcpi_write_seq);
 
-That path holds only the msk owner lock (msk_owned_by_me()), not the msk
-data spinlock. mptcp_data_ready() takes mptcp_data_lock() and calls
-mptcp_rcv_rtt_update() before it checks sock_owned_by_user(). So the
-WRITE_ONCE() above can run on another CPU at the same time as the
-tracepoint read.
+s->mi is saved by the first do_getsockopts(&s, fd, 0, 0) call, which
+runs before the write. Once write(fd, buf, len) returns len,
+mptcp_sendmsg() has moved msk->write_seq forward by len, and
+mptcpi_write_seq reports that value. The client only sends DATA_FIN at
+close(), which comes later.
 
-With the mptcp:mptcp_rcvbuf_grow tracepoint enabled, wouldn't KCSAN still
-report a race on msk->scaling_ratio here? The same TP_fast_assign already
-reads rcv_rtt_est.samples[] locklessly through mptcp_rtt_us_est() with
-READ_ONCE().
+Take the old code with a split echo, where the last ret is less than
+len. Doesn't this assert fail and abort the process inside
+do_getsockopt_mptcp_info()? If so, the code never reaches the sleep(1)
+retry loop or the "tcpi_bytes_sent ..., want ..." xerror() in
+do_getsockopt_tcp_info(). The selftest Makefile does not define NDEBUG,
+so the assert is active.
 
-Should this become the following?
+The code change itself looks correct. With total == len, both the
+write_seq assert and the tcp_info counter checks pass.
 
-    __entry->scaling_ratio = READ_ONCE(msk->scaling_ratio);
+Could the commit message describe the assert failure in
+do_getsockopt_mptcp_info() instead?
 
->  }
->  
->  void mptcp_data_ready(struct sock *sk, struct sock *ssk)
-
-[ ... ]
+Is the Closes: tag also accurate? Suppose issue 638 reports the
+timeout xerror() from do_getsockopt_tcp_info(). Then the mptcp_info
+assert must already have passed, which means w == r == len. A partial
+read would not be the cause, and this patch would not fix that issue.
 
 -- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261015-t-mptcp-scaling-ratio-kcsan-v1-1-db146f55802e%40proton.me
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261015-fix-mptcp-issue-638-v1-1-5de999ad601c%40proton.me
