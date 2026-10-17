@@ -1,218 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24B638239C
-	for <mptcp@lists.linux.dev>; Sat, 17 Oct 2026 05:53:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99BC2C08BB
+	for <mptcp@lists.linux.dev>; Sat, 17 Oct 2026 08:53:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792216425; cv=none; b=NnQUk7mlkN0AU7HxZehcm6nFbEwxh/3cF4tGDcHoNmB0AWyYUyIRcVwRkNZdZVRAiirW0d3w1Ij/jMO8wb0ecTTdYvn4Ze6n1MvQlYt29GKcPQY/ZT/FzjamYWA5C47gebygYTNBzEvP25RYRYbYGeswIho83ak8krcIkDSp5qM=
+	t=1792227219; cv=none; b=L/w3lYUGZEk2KqdqQYHDFjZs64YvyFvMeklzUBfJ8a17rFCyX2yLOhDGjSufO9qrPf4kTtItB90YFRuUh1gJsjwO/7x/+n3flGWdnbkW8jIlRAKoS1INxnqC+NuZZMlgTEGYGFgQPytBWgGucFBOhqp/bk7M4kRX0UKQDvpqoLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792216425; c=relaxed/simple;
-	bh=fd3TeyB/cnzZ4/5LTJizqmamkKk2dbyGTto47FF2p0Y=;
-	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IQA4gBoDo/YrLUwRCif+2CW/pUz6oh/DDe+VuXdz6UrHDrUXmKhf77WKDh0FBF4mt/DoNwCjLibSXizk5cAhQVJgZDB2MdA5cIsuBuxlJ9PcEat/9h1vIl3PACci0LDk1+3EyOZv4LucsWHJmXNIAENDEc7GtdixoM/PGnsbKsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WTZKEMrT; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792227219; c=relaxed/simple;
+	bh=sKEs7E2FcSaNFN2gRH6TrCTNNM5eyBpEF/9U1lXOC9c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=X/Iv8VdBy9zU5hWowfbgdBLMtzCJrt54kNtAe5mshwKWqFejGHvbx58fuhfT/0xzd+5zoBk45IcHDJcqdthQMytOOxRxU9NGHA+O4+FBkZTyw3rKa/znylEWDecnGTZt29nLzmOM4jgGWw1tcp+I9jgqLEdT14vbBmkv4I0jQaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DVYKxKYx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WTZKEMrT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55B701F000C4;
-	Sat, 17 Oct 2026 05:53:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792216423;
-	bh=NRCQ1AlD+miEAAKYQH/jbnAsO4KzL9qqzOXHTgGITWU=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=WTZKEMrTXRXwC+WoqrrfGPyJpWjvCg3YRTUWYb7Sx7UEGgNzp6el/5O59H4/i7BIo
-	 I+i3m0YlcVQfX6D70VYpGHoYljLxPDde3U5yx2pdC+rbicsoIV+dTj6Ki1ydgbxMNp
-	 uQJhDRQk6U3zO/zD//dTEjFtYGUv0ZVa3sFpQwA/sKDu8KaWmQKPaWydNeyFHDOljD
-	 GKtbpCspVMlvtPbX363j2Rq4u8HI1WZwwN1BnmI07TDyuO4y1H7e/OvoCCTmZr7gvQ
-	 J1ziboJ64avquoHRISE4zNl37hW/WMlRO5hqCdTrMnwc1pMfDw/gnaukWEMaA7O8JK
-	 bwQ5EyajAEMlA==
-Subject:
- Re: [PATCH mptcp-net v2] mptcp: disconnect: reset first subflow's local_id
-From: netdev-bot+sashiko@kernel.org
-To: matttbe@kernel.org
-Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Sat, 17 Oct 2026 05:53:42 +0000
-Message-ID: <179221642289.3135.11740381750915982127@kernel.org>
-In-Reply-To:
- <20261015-mptcp-first-disco-id-reset-v2-1-49b71541b059@kernel.org>
-References: <20261015-mptcp-first-disco-id-reset-v2-1-49b71541b059@kernel.org>
-X-sashiko-severity: High
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DVYKxKYx"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7D003C2BCF5
+	for <mptcp@lists.linux.dev>; Sat, 17 Oct 2026 08:53:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1792227219;
+	bh=sKEs7E2FcSaNFN2gRH6TrCTNNM5eyBpEF/9U1lXOC9c=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=DVYKxKYxbv9MB7eCMWQ8ajaQUJFUJCAek8zxAvAQ9gXXzhRZpjA6Lo8bbDZ9UOjcH
+	 a6TG3q5YLX1O8HX6OHTFW5SCu35rMygxKKcIUIwAx/baA3smDloaPXkKIlGJ+qGEEn
+	 FwYCIPlPOC13Bm8Pe8O3bOPx0GDhAvgm76XA/F7Lqb/xdtD9Eopn09COe3ahcqtc0I
+	 lE6+m0QA+3LeRhMjFdrGVcQESlViXrGnvhuDZrvJwmYdr8vVTTK6l4e0Mnwm0dTap0
+	 FyCRiuBg7Xp5Fzr7wrWujFH5s4liZMauygkSsQyDhvRQQcI4s9UVCOvF92tkZE1tRE
+	 4rmqWg/QiwZjA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A75BCCF2C9
+	for <mptcp@lists.linux.dev>; Sat, 17 Oct 2026 08:53:39 +0000 (UTC)
+From: Quanye Yang via B4 Relay <devnull+quanyeyang.proton.me@kernel.org>
+Date: Sat, 17 Oct 2026 01:53:38 -0700
+Subject: [PATCH mptcp-net] selftests: mptcp: sockopt: drop unreachable FIN
+ accounting
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261017-fix-mptcp-issue-637-v1-1-cda9bf1c79de@proton.me>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMQQqDMBBFryKz7kBGrSm9SnFh4lSn0DRkohTEu
+ zfV5eO//zZQTsIK92qDxKuofEIBulTg5yFMjDIWhtrUHRmy+JQvvmP2EUV1Yewai8ZRa6kd3PX
+ moDxj4qId1QeccuAM/Tnp4l7s878K+/4D6FUn3IIAAAA=
+X-Change-ID: 20261017-fix-mptcp-issue-637-0b14714ab58b
+To: MPTCP Linux <mptcp@lists.linux.dev>
+Cc: 
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1792227218; l=2417;
+ i=quanyeyang@proton.me; s=20260801; h=from:subject:message-id;
+ bh=ZpuiPIB1QPb3VfM2ymJIY8rzST/1xBmMmukn2oZWteo=;
+ b=BeOP1DqZ/SubdQM53wLwhMHTnd1mlQTstUn+9MPvSbF0jX+bNF7zd/uVgzLYP4ZvDB/rl49Nj
+ dwcljeOQjNLCLEkztvsAZ+YC69voT55zw1APHdJCscUHDKCwl949tv8
+X-Developer-Key: i=quanyeyang@proton.me; a=ed25519;
+ pk=9L9FrcvzMgxPaBRU6XV0EnqTgjDqVO596rQKSZ9qZoY=
+X-Endpoint-Received: by B4 Relay for quanyeyang@proton.me/20260801 with
+ auth_id=963
+X-Original-From: Quanye Yang <quanyeyang@proton.me>
+Reply-To: quanyeyang@proton.me
 
-Thank you for your contribution! Sashiko AI review found 3 potential
-issue(s) to consider.
+From: Quanye Yang <quanyeyang@proton.me>
 
-Critical: 0 · High: 1 · Medium: 1 · Low: 1
+connect_one_server() sets eof when read() returns 0, then immediately
+checks total != len. The receive loop only observes EOF while total is
+still below len, so that check always fires and xerror() terminates the
+process. The later if (eof) block that increments total for DATA_FIN is
+therefore unreachable.
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
+The client also does not wait for the peer to close: process_one_client()
+blocks on hangup first, so a peer DATA_FIN cannot arrive before this
+assertion. DATA_FIN sequence advancement is already checked on the server
+after EOF. Treat an early EOF as a hard error and drop the dead
+adjustment.
 
-- [High] The patch fixes only one of the two paths that reset the first
-  subflow and then reuse it, so its own bug class is still reachable.
-- [Medium] mptcp_disconnect() now sets the first subflow's local_id back
-  to 0, but leaves msk->mpc_endpoint_id unchanged.
-- [Low] The Fixes: tag points at the wrong commit.
+Fixes: ce9979129a0b ("selftests: mptcp: add mptcp getsockopt test cases")
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/637
+Signed-off-by: Quanye Yang <quanyeyang@proton.me>
+---
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
---
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+index b6e58d936ebe..20e0050e7cd7 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+@@ -572,7 +572,6 @@ static void connect_one_server(int fd, int pipefd)
+ 	char buf[4096], buf2[4096];
+ 	size_t len, i, total;
+ 	struct so_state s;
+-	bool eof = false;
+ 	ssize_t ret;
+ 
+ 	memset(&s, 0, sizeof(s));
+@@ -610,16 +609,15 @@ static void connect_one_server(int fd, int pipefd)
+ 		ret = read(fd, buf2 + total, sizeof(buf2) - total);
+ 		if (ret < 0)
+ 			die_perror("read");
+-		if (ret == 0) {
+-			eof = true;
+-			break;
+-		}
++		if (ret == 0)
++			xerror("unexpected EOF, total %lu, len %lu\n",
++			       total, len);
+ 
+ 		total += ret;
+ 	} while (total < len);
+ 
+ 	if (total != len)
+-		xerror("total %lu, len %lu eof %d\n", total, len, eof);
++		xerror("total %lu, len %lu\n", total, len);
+ 
+ 	if (memcmp(buf, buf2, len))
+ 		xerror("data corruption");
+@@ -629,9 +627,6 @@ static void connect_one_server(int fd, int pipefd)
+ 
+ 	do_getsockopts(&s, fd, ret, ret);
+ 
+-	if (eof)
+-		total += 1; /* sequence advances due to FIN */
+-
+ 	assert(s.mptcpi_rcv_delta == (uint64_t)total);
+ 	close(fd);
+ }
 
-mptcp: disconnect: reset first subflow's local_id
+---
+base-commit: a22035be824449c4921ec406f6383089016a628c
+change-id: 20261017-fix-mptcp-issue-637-0b14714ab58b
 
-This commit sets the first subflow's local_id back to 0 in
-mptcp_disconnect(), after mptcp_destroy_common() runs. Without it, a
-reconnect goes through subflow_chk_local_id(), and the kernel PM can give
-the MPC subflow a non-zero ID. The patch also fixes a stale comment that
-still refers to msk->subflow.
+Best regards,
+--  
+Quanye Yang <quanyeyang@proton.me>
 
-Link: https://lore.kernel.org/179198834484.434549.4616694240552704738@kernel.org
 
-> Fixes: a7cfe7766370 ("mptcp: fix data races on local_id")
-
-[Severity: Low]
-Is this the right commit for the Fixes: tag?
-
-Before a7cfe7766370, local_id_valid was inside struct_group(reset) in
-struct mptcp_subflow_context. The memset in mptcp_subflow_ctx_reset()
-already cleared it, and subflow_chk_local_id() did:
-
-	if (likely(subflow->local_id_valid))
-		return 0;
-
-Otherwise it called mptcp_pm_get_local_id(). That is the same reconnect
-flow described above. a7cfe7766370 only replaced the flag with a -1
-sentinel in local_id, which means the same thing.
-
-The behaviour seems to come from 4cf86ae84c71 ("mptcp: strict local
-address ID selection"). That commit added subflow_chk_local_id() to the
-rebuild_header path and put local_id_valid inside the reset group. Before
-it, the memset left local_id at 0 and nothing looked it up again, so the
-MPC subflow kept ID 0.
-
-This patch does depend on the s16 local_id from a7cfe7766370. Even so,
-should the tag point to 4cf86ae84c71 instead?
-
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 60cbd91be6320..a165e6683e6b5 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -3649,11 +3649,13 @@ static int mptcp_disconnect(struct sock *sk, int flags)
-
-[ ... ]
-
->  	mptcp_do_fastclose(sk);
->  	mptcp_destroy_common(msk);
-> +	if (msk->first)
-> +		WRITE_ONCE(mptcp_subflow_ctx(msk->first)->local_id, 0);
-
-[Severity: High]
-Does this cover every path where the first subflow is reset and then
-reused?
-
-The error path in mptcp_connect() also resets the first subflow context:
-
-net/mptcp/protocol.c:mptcp_connect() {
-    ...
-	if (unlikely(err)) {
-		mptcp_token_destroy(msk);
-		mptcp_set_state(sk, TCP_CLOSE);
-		...
-		mptcp_subflow_ctx_reset(mptcp_subflow_ctx(ssk));
-		return err;
-	}
-
-	mptcp_copy_inaddrs(sk, ssk);
-    ...
-}
-
-After this, local_id is -1 and msk->first stays allocated. When
-sk->sk_prot->connect() returns a negative value, __inet_stream_connect()
-just does "goto out" and never calls sk_prot->disconnect(). So
-mptcp_disconnect() and this new restore are both skipped.
-
-Take an unbound MPTCP socket where connect() fails synchronously. For
-example, addr_len is shorter than sizeof(struct sockaddr_in), sin_family
-is wrong, or ip_route_connect() returns -ENETUNREACH. A second connect()
-then reuses msk->first through __mptcp_nmpc_sk() and goes through:
-
-  tcp_v4_connect()
-    tcp_connect()
-      subflow_rebuild_header()
-        subflow_chk_local_id()
-          mptcp_pm_get_local_id()
-
-mptcp_copy_inaddrs() only runs after a successful connect, so the msk
-local address is still 0. It does not match the subflow's routed source
-address, and mptcp_pm_get_local_id() skips the ID 0 shortcut. The kernel
-PM can then return a matching endpoint ID, or create an implicit endpoint
-with a non-zero ID. subflow_set_local_id() stores that ID on the MPC
-subflow.
-
-Would it be more robust to set local_id to 0 for msk->first when the MPC
-connect starts, for example in mptcp_connect() before
-ssk->sk_prot->connect()? That would cover both the disconnect path and
-the connect error path, and could replace this disconnect-only hunk.
-
-[Severity: Medium]
-Should msk->mpc_endpoint_id also be reset here?
-
-The kernel PM uses mpc_endpoint_id to decide which endpoint maps to ID 0.
-The field is in struct mptcp_sock, outside pm->reset, so
-mptcp_pm_data_reset() does not clear it. The only place that clears it is
-the endpoint delete path.
-
-On reconnect, mptcp_mpc_endpoint_setup() runs again, but it only writes
-the field when the new MPC address matches an endpoint:
-
-net/mptcp/pm_kernel.c:mptcp_mpc_endpoint_setup() {
-    ...
-	entry = __lookup_addr(pernet, &mpc_addr);
-	if (entry) {
-		__clear_bit(entry->addr.id, msk->pm.id_avail_bitmap);
-		msk->mpc_endpoint_id = entry->addr.id;
-		...
-	}
-    ...
-}
-
-Suppose the first connection's MPC address matched endpoint E, and the
-reconnect uses a source address that matches no endpoint. E then stays
-mapped to ID 0. mptcp_pm_create_subflow_or_signal_addr() would announce
-E's address, or open a subflow from it, with ID 0:
-
-	/* Special case for ID0: set the correct ID */
-	if (local.addr.id == msk->mpc_endpoint_id)
-		local.addr.id = 0;
-
-With this patch the MPC subflow also has local ID 0. The connection then
-has two different local addresses that both use ID 0.
-
-If E is deleted later, mptcp_nl_remove_subflow_and_signal_addr()
-computes:
-
-	list.ids[0] = mptcp_endp_get_local_id(msk, addr);
-
-This returns 0. mptcp_pm_rm_addr_or_subflow() then closes every subflow
-with local ID 0, which includes the unrelated MPC subflow. Before this
-patch, the MPC subflow had a non-zero ID in this case and was not
-affected.
-
-Setting up endpoints and deleting them needs CAP_NET_ADMIN, but the
-socket operations do not.
-
->  
->  	/* The first subflow is already in TCP_CLOSE status, the following
->  	 * can't overlap with a fallback anymore
-
-[ ... ]
-
--- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261015-mptcp-first-disco-id-reset-v2-1-49b71541b059%40kernel.org
