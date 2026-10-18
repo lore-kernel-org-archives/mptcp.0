@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2753ACA7C
-	for <mptcp@lists.linux.dev>; Sun, 18 Oct 2026 05:39:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E992D0C8F
+	for <mptcp@lists.linux.dev>; Sun, 18 Oct 2026 05:39:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792301967; cv=none; b=s1hwYVzV6w1hhmcIt45d+yVS2Y27z1Ho+YWLyGNrxQSorAfaOu8ASSDKzzyokOP+7GGgLgIccFLvfQboZLnaS+wf9Oh7jRrwdFCTIoOnTghA4VtqE/N/H5z+Pjqve5OVrYJEfq4tfFO32/oTSB5gxmQXEtwbn+PE5VQXT3XbjSM=
+	t=1792301968; cv=none; b=BPykAJ9/tlviO9binmnPboemIXjwv5KBYIzmcZDNu7MF7TT2vjwhARojQcQ8o1KxpoKeQg1cQgJZwwhjzMbS7xT0qokNKpYHI8XBtQrvyzaEuWB/RtER1++LZ9SVzgLOt4T9AgM75/KvZnYBhFAlnvkYrjBnCZG6Wj2QVjyWqEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792301967; c=relaxed/simple;
-	bh=Ppfv1pnBga+MQhnm4y2YFZ5CZYiZIo8ftZmM59x7jUk=;
+	s=arc-20240116; t=1792301968; c=relaxed/simple;
+	bh=1CvKztzrCFaYZMH3bSvOjiEObH26VN99InXRyZT8x6w=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=M1EkHnejJoI/KcBplCjo02jwUEeWMc2K5VkYFAI7J9dG77SStDswajaAUlHZI6Idtruemfp/09jnO7ncxS/bScXmAcEGlzR8k6jI4FM84fUmxCAacrlKx37Q1MPvl6gpi5JeV+y4Dv7hkEyFkF5MIoWQlTlIOJSdvcXgKDrcgIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bUHrGDJZ; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:MIME-Version; b=B6TDWeidpZ3p/7vpQok4iSGAD6Vf4pkW8sKOoV1Y7fcDgBlKNIUYlPLR4xcG7AQ2A75D3KWgSJmlXYuNXcaQnhJpo7T+htQXr4eC2OpWW7vO5QdyhVUms7fG3Az0ReRN0dHv2m+0iwsOmKLxAXjGCLYih05x0HP/+YU2fosYHyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CVC+Js7R; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bUHrGDJZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB6811F000C4;
-	Sun, 18 Oct 2026 05:39:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CVC+Js7R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FFCD1F000C5;
+	Sun, 18 Oct 2026 05:39:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792301965;
-	bh=UXqwSeILcDDO0UExNDlya+/Trw5LwuvBOwJG9Ol92eA=;
+	s=k20260515; t=1792301966;
+	bh=P5C+wg+EJI32FgQ9fC8DrsdcnAu02OZRozikG56M/qE=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=bUHrGDJZixxXpWryxBEGWoD3MN35MGLLKt5wxWwnU0ridPYAYtXxdvYIVp4La6HUQ
-	 nkxLJLd+ZIf8Hjv8Dbgufd8opsL5HYyfL3RX472+rD44ODTp8FEC+KO04DAKAi1Wap
-	 mc1PadHVfIO4CXsSA57n4WFmg0hgd+bsHBluf9UIeS2tT3an8Hkl3GnHf2N9KDdA/D
-	 PF4wUwPWMurSGSorDQ14v2YvDQrIL6WH2TwRBItrOp64SXs6reN7wQ2f/uSmbGybR5
-	 6q7qE9E9uR81SWz9+p9v+l+fZJavOtUmhzi+EabqI31LEVWFSBdI31t06m5AZR430i
-	 V1Lv31vkx2sGA==
-Subject: Re: [PATCH mptcp-next v5 6/7] selftests: mptcp: pm_nl_ctl: support
- the subflow-retries limit
+	b=CVC+Js7Rllz/0MOMPBFdj/lMMJ3IHdhnM1EGkb438yHxqce0OM03dmuIG4EF6M0p3
+	 BspUW/cBDE+OBujdKzilzK5JuXd4HEB+Ra6XeupNqdzd7tfY3O8/twdn1wVFrlpCMZ
+	 ToVuMft2RiZYTtteE/CelwaIT9AwjCFNtgjpw2ieZz6yca2W6ewRihUNzoeRPWmtq8
+	 6uNWG1L8/VfTH5jGAdpO0+I95dflpyTzYuizNyZ0oOCKRLAnbeECZBJrNHL39erzmT
+	 D0WuDWAaFyD6vIoKQ1EztzHo3dHaGzHxBqVKNXCu8rypUmUlylPnEdp1b72ezInrml
+	 OzM0q4zeMdPfw==
+Subject: Re: [PATCH mptcp-next v5 7/7] selftests: mptcp: join: validate
+ subflow retry after link failure
 From: netdev-bot+sashiko@kernel.org
 To: anilkaushikwireless@gmail.com
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Sun, 18 Oct 2026 05:39:25 +0000
-Message-ID: <179230196529.3133.6142254982525099118@kernel.org>
-In-Reply-To: <20261016160926.1155262-7-anilkaushikwireless@gmail.com>
-References: <20261016160926.1155262-7-anilkaushikwireless@gmail.com>
-X-sashiko-severity: Low
+Date: Sun, 18 Oct 2026 05:39:26 +0000
+Message-ID: <179230196601.3133.2242694314991271561@kernel.org>
+In-Reply-To: <20261016160926.1155262-8-anilkaushikwireless@gmail.com>
+References: <20261016160926.1155262-8-anilkaushikwireless@gmail.com>
+X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -45,89 +45,171 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found more severe
-issue(s) in other patches of this series. This mail is only an FYI, in case
-you want to address the nit picks below when you respin.
+Thank you for your contribution! Sashiko AI review found 2 potential
+issue(s) to consider.
 
-Low priority / nit picks for your consideration:
+Critical: 0 · High: 0 · Medium: 1 · Low: 1
 
-- [Low] The new subflow-retries subtests in
-  tools/testing/selftests/net/mptcp/pm_netlink.sh test only one side of…
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
+
+- [Medium] Setup for the new "subflow retry after link failure" test in
+  link_failure_tests() depends on timing, and its first gate is never…
+- [Low] chk_no_sf_connecting() cannot reliably show that the new
+  mptcp_close_retry_subflows() helper works.
 
 --
 
-selftests: mptcp: pm_nl_ctl: support the subflow-retries limit
+selftests: mptcp: join: validate subflow retry after link failure
 
-This commit lets 'pm_nl_ctl limits' take an optional third value that
-sets the subflow-retries limit. It also prints that limit from the
-GET_LIMITS reply when the kernel reports it. pm_netlink.sh gets new
-subtests for the default value, for an out-of-range value being refused,
-and for setting a new value.
+This adds a test to mptcp_join.sh for the subflow-retries limit. While a
+long transfer runs in the background, nftables drops the client packets
+sent from a subflow address. Once the re-created subflow's SYN has been
+retransmitted more times than tcp_syn_retries allows, the packets are let
+through and the test checks that the subflow comes back. This is done for
+the additional subflow and then the initial one. Finally the connection is
+closed while a subflow is being re-created, and the netlink events are
+checked.
 
-> diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-> index 21bfe1311f118..ddf2899e4830b 100755
-> --- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-> +++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index f4d8afaeda4f3..521f95d3027fa 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
 
 [ ... ]
 
-> @@ -224,7 +247,22 @@ check "get_limits" "${default_limits}" "subflows above hard limit"
->
->  set_limits ${max_limits} ${max_limits}
->  flush_endpoint  ## to make sure it doesn't affect the limits
-> -check "get_limits" "$(format_limits ${max_limits} ${max_limits})" "set limits"
-> +max_limits_out="$(format_limits ${max_limits} ${max_limits} \
-> +		 "${default_retries}")"
-> +check "get_limits" "${max_limits_out}" "set limits"
+> @@ -2585,6 +2681,62 @@ link_failure_tests()
+>  		chk_stale_nr $ns2 1 -1 2
+>  		chk_link_usage $ns2 ns2eth3 $cinsent 50
+>  	fi
 > +
-> +if [ -n "${default_retries}" ]; then
-> +	ip netns exec "${ns1}" ./pm_nl_ctl limits ${max_limits} ${max_limits} \
-> +		128 2>/dev/null
-> +	check "get_limits" "${max_limits_out}" \
-> +		"subflow retries above hard limit"
+> +	# subflows closed after a silent link failure, then re-created: the
+> +	# additional one, then the initial one. Then close the connection
+> +	# while a subflow is being re-created.
+> +	if reset_with_events "subflow retry after link failure" &&
+> +	   continue_if has_subflow_retries; then
+> +		init_nftables
+
+[ ... ]
+
+> +		# created here, not in the background job, for cleanup()
+> +		if [ -z "$cinfail" ]; then
+> +			cinfail=$(mktemp)
+> +		fi
+> +		if [ -z "$sinfail" ]; then
+> +			sinfail=$(mktemp)
+> +		fi
+> +		# killed at the end: the timeout only stops a stuck test
+> +		{ timeout_test=600 test_linkfail=131072 \
+> +			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
+> +		local tests_pid=$!
 > +
-> +	ip netns exec "${ns1}" ./pm_nl_ctl limits ${max_limits} ${max_limits} 0
-> +	check "get_limits" "$(format_limits ${max_limits} ${max_limits} 0)" \
-> +		"set subflow retries"
+> +		wait_counter $ns1 "MPTcpExtMPJoinAckRx" 1
+
+[Severity: Medium]
+
+Can the setup for this test take longer than this first wait_counter()
+allows?
+
+With test_linkfail=131072, run_tests() always regenerates both files,
+because test_linkfail > 2. Only after that does it call do_transfer():
+
+tools/testing/selftests/net/mptcp/mptcp_join.sh:run_tests() {
+    ...
+	if [ "$test_linkfail" -gt 2 ]; then
+		size=$test_linkfail
+		...
+		make_file "$cinfail" "client" $size
+    ...
+	if [ "$test_linkfail" -gt 2 ]; then
+		size=$test_linkfail
+		...
+		make_file "$sinfail" "server" $size
+    ...
+	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr}
+}
+
+That reads 2 x 128 MiB from /dev/urandom in 1 KiB blocks
+(mptcp_lib_make_file() uses dd with bs=1024). All of this runs in the
+background subshell before the listener and connector start. The mktemp
+calls above only create the file names.
+
+The return value of this wait_counter() call is ignored. File generation
+plus connection setup might not fit in the timeout_poll window, for
+example on a KASAN or lockdep debug kernel, or under emulation. In that
+case sf_retry_after_block 10.0.3.2 fails with "no established subflow
+from 10.0.3.2 before the block".
+
+The later phases would then fail in turn. The absolute
+wait_counter $ns2 "MPTcpExtMPJoinSynTx" 4 waits out its full timeout,
+chk_no_sf_connecting() reports "no subflow re-created before the close",
+and chk_join_nr and chk_evt_nr fail.
+
+The commit message says the transfer lasts the whole test "on any
+machine", but that covers the transfer, not this setup time.
+
+Would it help to check the result of this first wait, or to generate the
+files in the foreground before starting the background job?
+
+> +		sf_retry_after_block 10.0.3.2
+> +		sf_retry_after_block 10.0.1.2
+> +
+> +		ip netns exec $ns2 nft add rule ip filter OUTPUT \
+> +			ip saddr 10.0.3.2 drop
+> +		wait_counter $ns2 "MPTcpExtMPJoinSynTx" 4
+> +		local retrying=$?
+> +		mptcp_lib_kill_group_wait $tests_pid
+> +		chk_no_sf_connecting ${retrying}
 
 [Severity: Low]
-This isn't a bug, but should these subtests also check that the largest
-valid value is accepted?
 
-The values sent here are 128 (refused), 0, and then the default 15 when
-the limit is restored. On the kernel side, mptcp_pm_nl_set_limits_doit()
-in net/mptcp/pm_kernel.c does:
+Does chk_no_sf_connecting() actually exercise
+mptcp_close_retry_subflows()?
 
-	retries = pernet->limit_subflow_retries;
-	ret = parse_limit(info, MPTCP_PM_ATTR_SUBFLOW_RETRIES, &retries,
-			  MAX_TCP_SYNCNT);
+mptcp_lib_kill_group_wait() closes the connection by killing both
+mptcp_connect processes in the middle of a bidirectional transfer. If the
+client msk still has unread data at that point, __mptcp_close() takes the
+fastclose path:
 
-parse_limit() only refuses the value when *limit > max, so 127 should be
-accepted. Nothing in the test sends 127.
+net/mptcp/protocol.c:__mptcp_close() {
+    ...
+	if (mptcp_data_avail(msk) || timeout < 0 ||
+	    (sock_flag(sk, SOCK_LINGER) && !sk->sk_lingertime)) {
+		...
+		mptcp_do_fastclose(sk);
+		timeout = 0;
+	} else if (mptcp_close_state(sk)) {
+		__mptcp_wr_shutdown(sk);
+	}
 
-If the check broke in a way that still refuses 128 and accepts 0, these
-subtests would still pass. Two examples are an off-by-one (>= instead
-of >), which would refuse 127, and a smaller cap such as 15.
+	mptcp_close_retry_subflows(sk);
+    ...
+}
 
-The earlier tests for the rcv-add-addrs and subflows limits cover both
-sides of the boundary: max_limits + 1 is refused, and max_limits is
-accepted in "set limits".
+mptcp_do_fastclose() moves the msk to TCP_CLOSE. __mptcp_destroy_sock()
+then closes every subflow, including the SYN_SENT retry subflow, whatever
+the new helper does.
 
-Could a step be added that sets 127 and checks it with format_limits
-before the default is restored?
+The same happens if the server is killed first with unread data. It sends
+MP_FASTCLOSE, and on the client mptcp_check_fastclose() closes every
+subflow not already in TCP_CLOSE, including SYN_SENT ones:
 
-A smaller point: the out-of-range request sends rcv_addr and subflows
-equal to the values already in place (max_limits). That means the test
-can't show that the whole request is refused together. The current
-kernel stores all three values only after every parse_limit() call
-succeeds, so this is a gap in the test, not a bug.
+	if (tcp_sk->sk_state != TCP_CLOSE) {
+		mptcp_send_active_reset_reason(tcp_sk);
+		tcp_set_state(tcp_sk, TCP_CLOSE);
+	}
 
-> +	ip netns exec "${ns1}" ./pm_nl_ctl limits ${max_limits} ${max_limits} \
-> +		"${default_retries}"
-> +fi
->
->  flush_endpoint
->  add_endpoint 10.0.1.1
+The helper only seems to matter on the graceful close path. Which path a
+run takes depends on timing that the test doesn't control.
+
+Could the "no subflow connecting after close" check pass even if
+mptcp_close_retry_subflows() were broken or removed? Would a drained,
+graceful close make this check deterministic?
+
+[ ... ]
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261016160926.1155262-1-anilkaushikwireless%40gmail.com
