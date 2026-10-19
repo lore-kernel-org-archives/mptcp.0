@@ -1,91 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.182
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792430816;
-	b=zi6ZSEu0e4bR47Y39pqUx0RhWigLAMBFzaaZUyiXrWN0sepB5Te9OuEq2JFUuk07zQsE
-	 iPsly/3PMT0PW09LmY3Py0eEaqKn3Mv4t01W4xVhRyXd934f4jrmHbdhd3r0aeNvgwjGT
-	 0IEKIU+cdSedO9+5Bnlkl/vp1uNoyL8NKPvEKVysrLm6w1cbqFOtGsI+Z4Xfzj59eteGm
-	 QHFTtOy0Y+ajSfVTJ0z6PhbTj+vLIWoH/ya/z5XtGwOcaE1UBA6bkQqNsEPLou0vgrXo9
-	 HES6jyHZQxHZXvjEXUGlbXPZ+eXaiifxtvZilF2tFEhiCyYy/HbXXu/HPAxgII8cYcA==
+	t=1792431979;
+	b=vbeauJ5EY3J6q8B/JEutz0gilpy9AtkpezHVwwigyVuHOkOl3ZklSk63voUDi3MmZus9
+	 oeKIzf+XaJZXtiLgyNFPDHNfVlMGLwMGH+4F+OlDi9ls6IsM6LCX8cOdK8VzB3qKbEfd7
+	 ZdN/KLVFlF/g7Z7UvRI/IbFncs998Pb4QvpinztwN/pEzYlbqC6vu3lMC9mYB7m53etd/
+	 VwszYlaKsdcUsiCy+sYPAaVoJJC5IeWZHwpKATw51+IdQSHG7rA1a8Xl2EvfUaGYsJr6L
+	 OZbhMigtg4nFo2mCaWAT8rvITXMlSiuZW0lsPVpUdUW5AduVnv1eLen6Ezrad0A7BKg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792430816;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=urUtuA7OinbrArFEjRgFaH9/8Nd3vWt4zAKhHs4kAV4=;
-	b=AxxqGA4PnJfjJ3SocS2qQgWika44RYf8UKqPOGdI8McyICVRFkrfB1vSqoUg1sTacCf1
-	 ngPE/Qp2oJGD43xd1U/lqzRwYumu1gyrzMjQmLYYJ4MGzZ7vmv7B5wC8lLj+e9fzXdfn6
-	 UvrARoEv7UmEvyFD7BV2nKl4sN0ewVxXVHdX3N4KT69c/iIhNKvb5fWxqQu8HlOSr7GDC
-	 Vi9ZNK9I6scTgS6u+aA9Ga0q/c4LmdwH6h95NjGX3dm1rkODqprvVRE/wBfLZ/Ldq0lEd
-	 RLKGrBSOcfF+mlCdxZr/TooV1gnf7soELpQsu3+ifo+xj+h30+Qkootp0qq0x0W7XSw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792431979;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=ynEN3XNdSzF/ZsCnx96KBbXt8LkZcfEUwdrePqAMK80=;
+	b=xmPg/wMp0sr8iYQTnRaF9D/2qG+dmq7PnnVAf4vAjX3w8ZY5ySW+mCDrcwMXUK3xJAsO
+	 3PTuBSMTqs3+hI2KtypO5xnLrIwsn4lSTxhs3dth/fZLb1xcdoNLHKg1JABwaDLSsmQuN
+	 J++q9AnJQYA/HfAR0O0mriiY0J9ki3E+vHi+WK/4z88SuAzfz7q4KaRiqO6MnLjrYBwyx
+	 jxlr4IuVkiWY8frb2hQ34IYyAVk/ruT25tM3avrn8P2+28qb4oy4T+yt1eCmyprQ+vb8C
+	 585buHPq4p5HNJoC0oyJbncMW0KKjYFRvEhsLlCkW5YoE/s1Cw4ioqKHjm3EhBDq77Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=PM0UzUyC;
-	arc=none smtp.remote-ip=74.125.82.182
-Received: from mail-dy1-f182.google.com (mail-dy1-f182.google.com [74.125.82.182])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gL+TKJmX;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FB8606A321
-	for <mptcp@lists.linux.dev>; Mon, 19 Oct 2026 17:26:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 43FB8606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DFC606A329
+	for <mptcp@lists.linux.dev>; Mon, 19 Oct 2026 17:46:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=PM0UzUyC
-Received: by mail-dy1-f182.google.com with SMTP id 5a478bee46e88-35829219da8so3976072eec.0
-        for <mptcp@lists.linux.dev>; Mon, 19 Oct 2026 10:26:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792430815; x=1793035615; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=urUtuA7OinbrArFEjRgFaH9/8Nd3vWt4zAKhHs4kAV4=;
-        b=PM0UzUyC6qLkmAJISs2Ym1hclDRC4c7mSrDCa7QLhajJPoYgsLi8yVjAaf/kDrqywR
-         gsb25zb3PXesQgVqVxGb/muQ352DdNPGsAigFZN8r0qggX72MbDjHOZM0zDSFvd5Arpy
-         vduTYZNwW4VGZdMeoN/BrzJuxSFh6lFdZ8y6l61kD24nxjsuph4BMURQLTa38YdhkPDS
-         fEhsQcpzQGnZ5nXV18LGZvOzaVKKEkh/1/hszqxPpCneIBTlKlHnHll39ZBR/JsTxYW6
-         5LoWUK+DfGgtoxi61kz9kKWLdWzYCl4nzkHg0ywlDUKZ/hkASnvw3keLEhHDlVB8DVIE
-         o8hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792430815; x=1793035615;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=urUtuA7OinbrArFEjRgFaH9/8Nd3vWt4zAKhHs4kAV4=;
-        b=xRB18HnxfRxIeXzmNki0wXKgMs3TBNFg+ro9CdBhvlgB8UAoYzhEv9+jTZXcvQROyO
-         LGtWvjnKNaXHVQF9E+ln4FLjFFBBm3aJPkg8NPabNBH9CQyQsClOLqQZMgmnZYod8+xd
-         ug1iO/q7VvhJ+KULSC0iWdUti1yKfg/ooZqpAnCYEgzCy8KeII9g76Px2g8F+hyqNbWK
-         qm1b8hqiBekCpeQPbNRAAUtIkNL8khGOJ1hlmBUaw7w2Hf/VjQvUaTWoghMr3RL+ab3Y
-         K9zxKorvelojZywOJVaNIb/7q62qTrRfOlK4G3SN4fh+b9pCFARzGd7dsodY8tJQz6OW
-         E2sQ==
-X-Gm-Message-State: AFq9FYJg8Cnb+FpUXPjrEnyKIaTjz5l+wLo/ienSnBP5c6jFhDILO0Z1
-	pPHRUAnxOPfXsh2wTuX4cHbFjgLyO84UHdbuEPtiOV5lF+b1BJCRFHN6
-X-Gm-Gg: AYBFou0G8jzU+gY/afruCzs41w/rItymwT0Mksq0Tptm8Lz2LnJqaMmeftbW0L/L+7c
-	9+05vNPFUTP4RoM1OXp3fmxdSfj5t6ALNJXvO1pnrFzkbkLZrmZtAgWxItUioP5aFBYDqXzU8J9
-	CWm+8i+5SSguWVcevaFweQIcIb+cd4XVryEa4ktFWqMdm60YXi57uvMTLdE6gImDwUl5UUeF5Et
-	saVYiQhUZKXTOfphc4fftZQFm1wHHYcZd1PZI0PDNdD6HdabsaYDOGVa6Ks/ogxs2mlkZCIILy1
-	/YBZy0+BUVJTam0Ifdf1k0bEDdYEVxZVCU7zk7mVbva9fxXKnzbLsKu/MYK6k7WUV4WuOlmDvtf
-	2emZJMyUXg7AGICF1FT0Cnp2fP3jTHZzl7PI9ojDF/cSXCcnq+OUAJu+a4YeqpO0JYYJL12nfh5
-	Il36xf9b/ixjGTdwu1pUCerVb40V9yZpxc7JLDrwcLQo8zR31CwVSLE+99/EGvPJaY8zulw4r4R
-	VAC6C4=
-X-Received: by 2002:a05:701b:220e:b0:159:d448:dd1c with SMTP id a92af1059eb24-1825a67565cmr13392814c88.19.1792430814974;
-        Mon, 19 Oct 2026 10:26:54 -0700 (PDT)
-Received: from vscode-11-19.w453y.xyz ([59.164.88.43])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1831c5cb39esm31725599c88.22.2026.10.19.10.26.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Oct 2026 10:26:54 -0700 (PDT)
-From: Abdul Wasey <w453y.me@gmail.com>
-To: Anil Kaushik <anilkaushikwireless@gmail.com>
-Cc: mptcp@lists.linux.dev,
-	Matthieu Baerts <matttbe@kernel.org>
-Subject: Re: [PATCH mptcp-next v6 4/6] mptcp: pm: in-kernel: retry subflows closed after an error
-Date: Mon, 19 Oct 2026 17:26:46 +0000
-Message-ID: <20261019172646.212143-1-w453y.me@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261018041748.1655711-5-anilkaushikwireless@gmail.com>
-References: <20261018041748.1655711-1-anilkaushikwireless@gmail.com> <20261018041748.1655711-5-anilkaushikwireless@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gL+TKJmX
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1812F1F000C5;
+	Mon, 19 Oct 2026 17:46:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792431978;
+	bh=ynEN3XNdSzF/ZsCnx96KBbXt8LkZcfEUwdrePqAMK80=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=gL+TKJmXPwtcawX2Ri5Q1vjW//0RaHiFloURcHGH9r8HrT8W0U1h+Lp2zR5nV7jhk
+	 S5azHIdIW7dBfXnmkrgA6T6Z9vVo7x+b2jUg6wwPJnwYW1ZzmaMugqiQCsKi6xCS0l
+	 r5cph3dYXvvH4ecAYzKJzEZuPhkDw54ECHt7iwkboC5y8C9y5vazqwDnVA44gQcwjS
+	 60k/aeI49wgaB6ERMVIYhzhNsRVPzZB8IrqyA4MoLJqsOunJTHIHNkxshUo5CY/lQE
+	 4GIkA9eZTa0pCkRmWLHcR0PtUl+XOFXTTfuMa1cUtZ9ybjiy5v22V/IUdcsFom/Tp3
+	 KnzGtAr3kazrw==
+Subject: Re: [PATCH mptcp-next v6 2/6] netlink: specs: mptcp: add the
+ subflow-retries attribute
+From: netdev-bot+sashiko@kernel.org
+To: anilkaushikwireless@gmail.com
+Cc: mptcp@lists.linux.dev, kuba@kernel.org
+Date: Mon, 19 Oct 2026 17:46:17 +0000
+Message-ID: <179243197759.3133.3716885953083097764@kernel.org>
+In-Reply-To: <20261018041748.1655711-3-anilkaushikwireless@gmail.com>
+References: <20261018041748.1655711-3-anilkaushikwireless@gmail.com>
+X-sashiko-severity: Low
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -95,36 +61,67 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Hi Anil,
+Thank you for your contribution! Sashiko AI review found more severe
+issue(s) in other patches of this series. This mail is only an FYI, in case
+you want to address the nit picks below when you respin.
 
-I tested v6 on top of export (8bb146c4c) in netns: two 10 Mbit paths
-with 15 ms delay, the second one blackholed with netem loss 100% in both
-directions during an iperf3 transfer, tcp_retries2=3.
+Low priority / nit picks for your consideration:
 
-Upload (the client sends) works: without the series the path never
-comes back, with it the path carries data again 4.5 s after it returns
-for a 20 s outage, and 12.6 s for a 60 s one, the extra time being the
-SYN backoff.
+- [Low] The concern: commit "netlink: specs: mptcp: add the subflow-
+  retries attribute" adds MPTCP_PM_ATTR_SUBFLOW_RETRIES to the uAPI…
 
-Download (the server sends) is not recovered. The server's subflow times
-out and is freed without sending anything, while the client's subflow
-on that path only receives: it stays established and idle, never gets
-an error, so it is never retried. With keepalive enabled on the client
-socket (idle 5 s, interval 2 s, count 3), the idle subflow times out and
-your patch re-creates it: the path is back 3 s after it returns for a
-20 s outage.
+--
 
-So for a client mostly receiving data, which is probably the common
-case, the retry only helps if the application sets keepalive. Would it
-make sense for the PM to probe idle subflows it initiated, or would you
-rather document the keepalive requirement? I'd be happy to work on the
-download case if you have a preferred direction.
+netlink: specs: mptcp: add the subflow-retries attribute
 
-With the default tcp_retries2=15, the subflows are not closed during 20
-to 180 s outages, and the old ones resume by themselves 17 to 24 s after
-the path returns, with or without the series.
+This commit adds the subflow-retries attribute to the MPTCP PM netlink
+spec for the set-limits and get-limits commands. ynl-regen regenerates the
+uapi header and the generated policy files. The new policy limits the value
+to 127 (MAX_TCP_SYNCNT).
 
-Thanks,
-Abdul Wasey
+> diff --git a/net/mptcp/mptcp_pm_gen.c b/net/mptcp/mptcp_pm_gen.c
+> index c180930a8e0e4..e2d4af1bc1d5d 100644
+> --- a/net/mptcp/mptcp_pm_gen.c
+> +++ b/net/mptcp/mptcp_pm_gen.c
+> @@ -44,15 +44,17 @@ const struct nla_policy mptcp_pm_flush_addrs_nl_policy[MPTCP_PM_ENDPOINT_ADDR +
+>  };
+>  
+>  /* MPTCP_PM_CMD_SET_LIMITS - do */
+> -const struct nla_policy mptcp_pm_set_limits_nl_policy[MPTCP_PM_ATTR_SUBFLOWS + 1] = {
+> +const struct nla_policy mptcp_pm_set_limits_nl_policy[MPTCP_PM_ATTR_SUBFLOW_RETRIES + 1] = {
+>  	[MPTCP_PM_ATTR_RCV_ADD_ADDRS] = { .type = NLA_U32, },
+>  	[MPTCP_PM_ATTR_SUBFLOWS] = { .type = NLA_U32, },
+> +	[MPTCP_PM_ATTR_SUBFLOW_RETRIES] = NLA_POLICY_MAX(NLA_U32, 127),
+>  };
+
+[Severity: Low]
+With only this commit applied, does the kernel accept
+MPTCP_PM_ATTR_SUBFLOW_RETRIES and then silently drop it?
+
+The policy checks the value (max 127). But mptcp_pm_nl_set_limits_doit()
+in net/mptcp/pm_kernel.c still parses only MPTCP_PM_ATTR_RCV_ADD_ADDRS and
+MPTCP_PM_ATTR_SUBFLOWS. A set-limits request that carries the new attribute
+returns success and the value is not stored.
+
+The same applies to mptcp_pm_nl_get_limits_doit(): it does not put the
+attribute in its reply, although the spec lists it in the get-limits reply.
+
+The next commit in this series, "mptcp: pm: in-kernel: add the
+subflow-retries limit", fixes this. In that commit, set-limits does:
+
+	attr = info->attrs[MPTCP_PM_ATTR_SUBFLOW_RETRIES];
+	retries = nla_get_u32_default(attr, pernet->limit_subflow_retries);
+
+and get-limits does:
+
+	if (nla_put_u32(msg, MPTCP_PM_ATTR_SUBFLOW_RETRIES,
+			READ_ONCE(pernet->limit_subflow_retries)))
+
+So this only affects a kernel built at exactly this commit, for example
+while bisecting. Would it be better to fold the spec change into that
+commit? Or is the usual netdev split, with the ynl-regen patch landing
+before its user, acceptable here?
+
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261018041748.1655711-1-anilkaushikwireless%40gmail.com
