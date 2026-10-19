@@ -1,61 +1,61 @@
 Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DDB14E1C78
-	for <mptcp@lists.linux.dev>; Mon, 19 Oct 2026 11:15:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E02048F828
+	for <mptcp@lists.linux.dev>; Mon, 19 Oct 2026 11:16:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792408562; cv=none; b=gAUMzEShysMouf6c5TwBSQLMddHJ2jS/5YtGhcYMEBfwEFzspF3ENMQ1W3UZL974iHbA/odGKKhTUdMY2Pl/6hUVjLMFUwAhj5q/q7d6LcnJxxP7b5yPEwg8jaEF5MOVXbHulQhOXAiCC8q0q4q2iQhy4kliecn33xE/DtcGXOI=
+	t=1792408571; cv=none; b=luWKa6MP+/YW6r3GTr/RmL9Lw5Jn1PuyUaEWbKReNrfsvpJ4nzoEPEiyMt2jAb7wNbnFHfA4Ds/z6JOdwR1a+YKqW9+QCLt7pDpaEL/9IINgvYssRUY9iVTFoJ2dxzWz7EzP+3hFwy7PRHMp3CKvc4D3OMscmA/PwY2Y+dzyql8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792408562; c=relaxed/simple;
-	bh=8lqV+LxgYl2m/EvykQxnIXKyz1/rsjJbLS81eRPpR7g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g848LWtrbFLd78BXzzSmiF62Q0MCcaAG43HkV4SUsB8djDM4jbRtMFf/aZIajkCH4cQG4NbpYkJdJQxwCGssiQNJEhM1mSXAsI6IibBaqlfQuit+S4bNQTB658ulyvVpXZsvEkiU+Rs1svjVxPzHbtc1TDj7NOgqli1mxcfd7Qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j4TeHF2D; arc=none smtp.client-ip=74.125.82.174
+	s=arc-20240116; t=1792408571; c=relaxed/simple;
+	bh=iz8BaEglKzNiDaqzpo32rmLdGATYVIwM2YXV38QpGII=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S1/GgRfkRGFmPRUC3MZXQguPNXRYyI1HIOArFC0je/AWYaYKEmm9MGIl3HXZHx1kNReocYrnQdUFWTahJwViMtryT7aA6x+Qa4NVC6zE/IqTTdnxvCzFyP6Q/VvmmBTfuoN3+I9cpH84Qqs9u247dAqUlQ/ReEmyntmMcwnx61g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=knzdREas; arc=none smtp.client-ip=74.125.82.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j4TeHF2D"
-Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-35cd4e8bdbdso4924637eec.1
-        for <mptcp@lists.linux.dev>; Mon, 19 Oct 2026 04:15:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="knzdREas"
+Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-353804b591eso3786388eec.0
+        for <mptcp@lists.linux.dev>; Mon, 19 Oct 2026 04:16:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792408557; x=1793013357; darn=lists.linux.dev;
+        d=gmail.com; s=20251104; t=1792408564; x=1793013364; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=OBCsG2VdnjP+rQWjfgSi6c+QBBT287exYkN58FtX+/8=;
-        b=j4TeHF2Dh3EtiSHK532JLUsuXrONCavk0ATHBkcKlsVT1LgCJ9GwYnBRWU6aa3tpIC
-         VFhQ62q2LE6Ki5Z6GFmfX314mh0kdabYKdi8UUtPifLNQK0hLdF9BE5kVcV8+wQp9nLG
-         6ViN7cfVAbAuWYK9pE5ywWKLsMe5AD2yUw4vdMuW6JifqHzDt5FQMALtkw3LGoRuGzUc
-         bxVUyQKiNM4XQwaLKLo+dHAjG9QVXpXEBBPLoR2MHrp9hTFsY18zwuKfDbc9cDuI+YEC
-         mOJf1Y3xm5wCLXLFxZz1eaS3BUlhtV6UYg7P2k0WeJ8Fem21cR4m7a9DeA4Y9aYJDk/r
-         emYQ==
+        bh=wzzVad7uWaphIKub8ka4ND4kxhHIf8Bz0Lzltgz+Dmc=;
+        b=knzdREasqe2pmt02IGA26ST13i7sO0aRmAzsgIYGZfzmMKBOw8+TCsNb5XJ13faFyq
+         xRJSBAn21HCnfB6yufV13mViLFu7DWz1BTKI+rQDdd20e2DPuuwJvCjHSWPBQ1HcuyZW
+         S4UjVHg8Ucqd883DW/ODLllWNBTOowIZlIFs3L/ljzz+QV66gVURfJy5ryQnm+J9X9Bt
+         UFvJEgq7+sIvox2T+U8B03n/NoINONlPUZgX7YuZx8UYsNqBNlgMyq2HV947X+qGrlIK
+         W7YKbpBGZ69m48di1gT42QiENdRNB3I0/W3oeI+nXuNSYzIHrdBELZMut1Vr1TPxId80
+         cXiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792408557; x=1793013357;
+        d=1e100.net; s=20260707; t=1792408564; x=1793013364;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=OBCsG2VdnjP+rQWjfgSi6c+QBBT287exYkN58FtX+/8=;
-        b=z4p3NhGVMS1W3jsQNARzCbEDEI/KkkFEbu2RfaGFInTO+5oYlgtdW0bCjw6tK7T3A1
-         NOTUDL7aiCP5Z5FDRG2C68jqKcsqrQNiY3NMmA+FhYfnkMA3nC3yu/N+9dSlg/FgC0KF
-         ISHrIpqqBNLzomGBFbqx4C4Qwe4QYxaJNEZiKE/K+N0ZWbBUgoQXBUqiQ0+YA9BqCFvv
-         YynVG1FkxsS2urFgoHK9riGRS2nQ6UWKGtjMDlw+qAUFYulous7DFgJ5XpBFOj+aDSgt
-         IDGH1ROwUNtwjf5fHvfADTOavvzl9S4qcRZUNuon0mll+NPNAZnAsODEY/jVQ3QQh6R1
-         KFHA==
-X-Gm-Message-State: AFq9FYJ57BlT8dVa1o0CyzVLN7tK1ZQ15i0tSBt9MXTmD6wVdPFGVlnT
-	MTPrNRZ42bVjoe3ivZJyoeY2XrXDm6pxzYQ0SbJx+aNOLU8nIzkJ6yKWbCzO3w==
-X-Gm-Gg: AYBFou2a0CknTrpku3qps39yPSm9veC1KqlFstLnr26kzL6C4nkCPf0NGHTwA/oGJL1
-	nHhWCa7f7nM3OP0Li3K2vV417t3OzIb2aMw/QRYa+HbD/E/QJa/2SPgE7T2HdN3vLBAb4VUTzf9
-	/mgPW/WbpvHLwJvlGz9ma8mjnQWcxrdJ8/tpnYsxsHz2LFoul+WpjAeJWF6qSEFT1Vna6VXz/PJ
-	GYMDtQAZ5SV3zqROQDupzbEFOqa1uG6lFwkiCrZjhpzLG0Se7tnrsbxGkQCDTCPiRcGXkl6PySP
-	eBuL0cXVbjIL1dwgsfv8zi75se4nvHYRapA9OMlIqI+k0fWwwNuO+oIcoZx7783kjieu8rIGxpQ
-	FGP6lWxSIK5WUgDokXhZxGBlqGJZ0ipJVDtwBe6jUuDZBw4ZNC2gNyrHstQQ5mDRF5sjv7r3MmP
-	F2h6jG/v93UpSIkPVkb+9Ah2UOZ1Ou0ZlqUatDQbm+ZGKUMu24P2MWfFhT8YuCNkl6aUFz7AEx0
-	fKmbJA=
-X-Received: by 2002:a05:701b:291b:b0:160:90a3:ca8c with SMTP id a92af1059eb24-18511ad841amr9702532c88.7.1792408556680;
-        Mon, 19 Oct 2026 04:15:56 -0700 (PDT)
+        bh=wzzVad7uWaphIKub8ka4ND4kxhHIf8Bz0Lzltgz+Dmc=;
+        b=x/bkmnvGwpj+9/3s1n+ogK8RPSVpnXuLSp0rOx+AzrX62h2oOi+8EwwLSNKjdgWqAs
+         dmbWAKU+LBjkF4d4mD/M5s6zohhVOUhtaPl+B6dUK2hSw24Nn8qFB+0fidDFgDKulbi2
+         oH2+Tgr6kxc7ysjUEuhdi3ZzIJ3N0g0HYw61Uv7Br2dlyDLACxDtPn9ff0Unzxv2xwMj
+         EZ8smR9klhEtw6hdlrjGSOt9PchcHWK8T1J0e0r2VroyVcP7OFT9VfwBi9qwS5xI05qs
+         skXg6uLEUuJSgA58PLcyzFSsXuxZD91cCHnboJR8QATar3yQn/9HXfitQ4lhLQPFWex3
+         VJXw==
+X-Gm-Message-State: AFq9FYL6czQ5gAS7lZ27V7g+ZsRCjQv0HJH6nxwr7vnGPCS0vjH0jEtM
+	s7d9ngFi/1iwonsAwnt3zg0C2NltiFA8CoAXCy7l2aifAOuL9qhR1+An
+X-Gm-Gg: AYBFou1nX4WjbcYF7hVUJrNIYv1Ok0h9ky2kFBaDM7mvQy4LrWCAyiKq0AwgxflJc/N
+	Kf6FrYTuCTj6k4TEXj/0SWudgLG/jjO0E+CAmNKrKkEXDm1oVVKXgjqhPWvJIxo1na96q1NZE4+
+	Ml26CQaYWMXrbk6D40kZYDn9CsTtxUGKpguRFOZW0ml7qsbt7o407CJyyioJZuNlgMnvreik9p/
+	kO+2FebeJek2FieV+zWkyzXHywR8s4fkTGhQxe4RFmr9W6mwfCKCYrqf2uJNULFAjnyH0jDvZWj
+	tkbIUn85DKZufRp5Vt8OCbxvb1iE2yrw77MvfvQTIf60iQ1WaQleT/WgMm3xdVw8HmNWfq/MYD/
+	Pa7y+a9LgTrTAAtQT8sOogNFs0HS4scQmaOTf6e+KvOVN6aKh6yOBfs8YlGDA0iuJFmDYpiM1Pp
+	Uiw4GnBEd0EQjpdsG9ZNcvSE8DG/sYBH0J2/O0gjCOclD22rDwo6VBChoQJ1GfiU20u4JmEoOZQ
+	gLxYt8=
+X-Received: by 2002:a05:7300:7aa1:b0:351:5cb5:53f7 with SMTP id 5a478bee46e88-3619e926244mr11216707eec.3.1792408564054;
+        Mon, 19 Oct 2026 04:16:04 -0700 (PDT)
 Received: from vscode-11-19.w453y.xyz ([59.164.88.43])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-183190aa411sm31817337c88.4.2026.10.19.04.15.54
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36082f7f6e0sm35689068eec.27.2026.10.19.04.16.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Oct 2026 04:15:56 -0700 (PDT)
+        Mon, 19 Oct 2026 04:16:03 -0700 (PDT)
 From: Abdul Wasey <w453y.me@gmail.com>
 To: stable@vger.kernel.org
 Cc: mptcp@lists.linux.dev,
@@ -63,9 +63,9 @@ Cc: mptcp@lists.linux.dev,
 	Mat Martineau <martineau@kernel.org>,
 	Geliang Tang <geliang@kernel.org>,
 	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH 6.6.y] mptcp: move the OoO check back into __mptcp_try_fallback()
-Date: Mon, 19 Oct 2026 11:15:51 +0000
-Message-ID: <20261019111551.2063200-1-w453y.me@gmail.com>
+Subject: [PATCH 6.1.y] mptcp: move the OoO check back into __mptcp_try_fallback()
+Date: Mon, 19 Oct 2026 11:15:59 +0000
+Message-ID: <20261019111559.2063342-1-w453y.me@gmail.com>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -75,7 +75,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The 6.6.y backport of upstream commit 1bba3f219c5e ("mptcp: do not
+The 6.1.y backport of upstream commit 1bba3f219c5e ("mptcp: do not
 fallback when OoO is present") put the out-of-order queue check
 in __mptcp_finish_join() instead of __mptcp_try_fallback().
 
@@ -89,12 +89,12 @@ comes back after an outage can't rejoin while data is in flight.
 Move the check to __mptcp_try_fallback(), as upstream does. On this
 branch that function is in protocol.h.
 
-Tested on 6.6.159 in netns: 6 connections (5 uploading) over two paths,
+Tested on 6.1.190 in netns: 6 connections (5 uploading) over two paths,
 then a third endpoint added mid-transfer. Without this patch only the
 idle connection gets a subflow on the new path and the other 5 joins
 are reset. With it, all 6 join. Same result in 3 of 3 runs each.
 
-Fixes: 642561238c98 ("mptcp: do not fallback when OoO is present")
+Fixes: 9074732c1caf ("mptcp: do not fallback when OoO is present")
 Signed-off-by: Abdul Wasey <w453y.me@gmail.com>
 ---
  net/mptcp/protocol.c | 7 -------
@@ -102,10 +102,10 @@ Signed-off-by: Abdul Wasey <w453y.me@gmail.com>
  2 files changed, 8 insertions(+), 7 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 48b6e9ed..c63ccb4a 100644
+index 10be901f..cc0d8a19 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -925,13 +925,6 @@ static bool __mptcp_finish_join(struct mptcp_sock *msk, struct sock *ssk)
+@@ -932,13 +932,6 @@ static bool __mptcp_finish_join(struct mptcp_sock *msk, struct sock *ssk)
  	if (sk->sk_state != TCP_ESTABLISHED)
  		return false;
  
@@ -120,10 +120,10 @@ index 48b6e9ed..c63ccb4a 100644
  	if (!msk->allow_subflows) {
  		spin_unlock_bh(&msk->fallback_lock);
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 825f7701..d70c71ee 100644
+index 1de257b8..39c1d823 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -1126,6 +1126,14 @@ static inline bool __mptcp_try_fallback(struct mptcp_sock *msk)
+@@ -1004,6 +1004,14 @@ static inline bool __mptcp_try_fallback(struct mptcp_sock *msk)
  		pr_debug("TCP fallback already done (msk=%p)\n", msk);
  		return true;
  	}
