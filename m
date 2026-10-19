@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E992D0C8F
-	for <mptcp@lists.linux.dev>; Sun, 18 Oct 2026 05:39:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4648B1CFA2
+	for <mptcp@lists.linux.dev>; Mon, 19 Oct 2026 00:15:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792301968; cv=none; b=BPykAJ9/tlviO9binmnPboemIXjwv5KBYIzmcZDNu7MF7TT2vjwhARojQcQ8o1KxpoKeQg1cQgJZwwhjzMbS7xT0qokNKpYHI8XBtQrvyzaEuWB/RtER1++LZ9SVzgLOt4T9AgM75/KvZnYBhFAlnvkYrjBnCZG6Wj2QVjyWqEE=
+	t=1792368946; cv=none; b=Q0v99WM1odFtQDtFqB6/5yLtsuJbWgIssjBOV+PMBs2Bk/aGuRYXhaf9YmWCAp4afCdoztMdnKQMe8MQYVLiKv8HtDWo0B6YAlyKR/TZ2vM6ZDVbhOXnC2mSslAIXZ4ULU6exhMV2yOYirD7ZGozUoMQTVp8U3l26FG4ww0g208=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792301968; c=relaxed/simple;
-	bh=1CvKztzrCFaYZMH3bSvOjiEObH26VN99InXRyZT8x6w=;
+	s=arc-20240116; t=1792368946; c=relaxed/simple;
+	bh=W3XNDta7Jo/XuzL2rnxfqP23pYm6nOfYXCh17GpJonM=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=B6TDWeidpZ3p/7vpQok4iSGAD6Vf4pkW8sKOoV1Y7fcDgBlKNIUYlPLR4xcG7AQ2A75D3KWgSJmlXYuNXcaQnhJpo7T+htQXr4eC2OpWW7vO5QdyhVUms7fG3Az0ReRN0dHv2m+0iwsOmKLxAXjGCLYih05x0HP/+YU2fosYHyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CVC+Js7R; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:MIME-Version; b=mI/PRXEfwB1HqnKxOjx3sqxCMpaMCgYboWBJSCUEQyGHu12I5E+8TDTqC8d2LQMe0s4p/JO/IwZ4H4gBTiJcpBGfhO5MKq6WZgQu6jGntlHG3rRFMmJTtLD2+O6Fa8IT1uBKeU2C+EiPPD3WSlI/agRQzLxEW472HRgN7I+9y1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n4MV80cT; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CVC+Js7R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FFCD1F000C5;
-	Sun, 18 Oct 2026 05:39:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n4MV80cT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C92391F000C4;
+	Mon, 19 Oct 2026 00:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792301966;
-	bh=P5C+wg+EJI32FgQ9fC8DrsdcnAu02OZRozikG56M/qE=;
+	s=k20260515; t=1792368945;
+	bh=LjqTt6X5ta9rS1ebh3shhi+z0DaKgNCSSJfWC4UHy9o=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=CVC+Js7Rllz/0MOMPBFdj/lMMJ3IHdhnM1EGkb438yHxqce0OM03dmuIG4EF6M0p3
-	 BspUW/cBDE+OBujdKzilzK5JuXd4HEB+Ra6XeupNqdzd7tfY3O8/twdn1wVFrlpCMZ
-	 ToVuMft2RiZYTtteE/CelwaIT9AwjCFNtgjpw2ieZz6yca2W6ewRihUNzoeRPWmtq8
-	 6uNWG1L8/VfTH5jGAdpO0+I95dflpyTzYuizNyZ0oOCKRLAnbeECZBJrNHL39erzmT
-	 D0WuDWAaFyD6vIoKQ1EztzHo3dHaGzHxBqVKNXCu8rypUmUlylPnEdp1b72ezInrml
-	 OzM0q4zeMdPfw==
-Subject: Re: [PATCH mptcp-next v5 7/7] selftests: mptcp: join: validate
- subflow retry after link failure
+	b=n4MV80cTL9jSJ7a7SKG2j7EhZfSNY5okPltejNJiIFNcYy/7GQhtPWJrXROf5kEno
+	 tiX0ui3Gplzh8Jr3Bv29AYos+6Sm1AFqrR+bPonECnpVKEcJZbcSfshSDc0vKMNx8t
+	 YwXR9zF7gQaqudGLlmU9JlOwzeB4S9BmYNMrSVj4hr6kUzCv9ynaK+l34y6Z8FavzO
+	 2UGxA7K78Q+J0L53bqeRFMoGGiSjpLwBR/03bO6fOmkryajbc/xnXkKjwPEO2SyFzT
+	 RbNIdC0bw0HJxIzEyyxeK/aKLefDMiAZDW2L/jQVXG11HRzBWYnaVi52//m+bAt8lT
+	 u6iQOIhKIejBA==
+Subject: Re: [PATCH mptcp-net] selftests: mptcp: sockopt: echo until EOF on
+ partial reads
 From: netdev-bot+sashiko@kernel.org
-To: anilkaushikwireless@gmail.com
+To: quanyeyang@proton.me
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Sun, 18 Oct 2026 05:39:26 +0000
-Message-ID: <179230196601.3133.2242694314991271561@kernel.org>
-In-Reply-To: <20261016160926.1155262-8-anilkaushikwireless@gmail.com>
-References: <20261016160926.1155262-8-anilkaushikwireless@gmail.com>
-X-sashiko-severity: Medium
+Date: Mon, 19 Oct 2026 00:15:44 +0000
+Message-ID: <179236894433.3133.2023724514413325674@kernel.org>
+In-Reply-To: <20261017-fix-mptcp-issue-639-v1-1-0554d07ab8f8@proton.me>
+References: <20261017-fix-mptcp-issue-639-v1-1-0554d07ab8f8@proton.me>
+X-sashiko-severity: High
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -48,7 +48,7 @@ MIME-Version: 1.0
 Thank you for your contribution! Sashiko AI review found 2 potential
 issue(s) to consider.
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 1
+Critical: 0 · High: 1 · Medium: 1 · Low: 0 (1)
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -56,160 +56,162 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [Medium] Setup for the new "subflow retry after link failure" test in
-  link_failure_tests() depends on timing, and its first gate is never…
-- [Low] chk_no_sf_connecting() cannot reliably show that the new
-  mptcp_close_retry_subflows() helper works.
+- [High] The fix is incomplete: the segmented-payload case still fails.
+- [Medium] The commit message describes a failure the old code could not
+  produce.
+
+Pre-existing issues:
+- [Low] This problem wasn't introduced by this patch, but the xerror()
+  calls in process_one_client() pass `ssize_t` values (`ret + 1`,…
 
 --
 
-selftests: mptcp: join: validate subflow retry after link failure
+selftests: mptcp: sockopt: echo until EOF on partial reads
 
-This adds a test to mptcp_join.sh for the subflow-retries limit. While a
-long transfer runs in the background, nftables drops the client packets
-sent from a subflow address. Once the re-created subflow's SYN has been
-retransmitted more times than tcp_syn_retries allows, the packets are let
-through and the test checks that the subflow comes back. This is done for
-the additional subflow and then the initial one. Finally the connection is
-closed while a subflow is being re-created, and the netlink events are
-checked.
+This commit changes process_one_client() in the mptcp_sockopt selftest.
+The old code did a single read() and write(), then a one-byte read to wait
+for hangup. The new code loops on read()/write() until EOF and passes the
+accumulated byte counts to the existing sockopt checks.
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index f4d8afaeda4f3..521f95d3027fa 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/639
 
-[ ... ]
-
-> @@ -2585,6 +2681,62 @@ link_failure_tests()
->  		chk_stale_nr $ns2 1 -1 2
->  		chk_link_usage $ns2 ns2eth3 $cinsent 50
->  	fi
-> +
-> +	# subflows closed after a silent link failure, then re-created: the
-> +	# additional one, then the initial one. Then close the connection
-> +	# while a subflow is being re-created.
-> +	if reset_with_events "subflow retry after link failure" &&
-> +	   continue_if has_subflow_retries; then
-> +		init_nftables
-
-[ ... ]
-
-> +		# created here, not in the background job, for cleanup()
-> +		if [ -z "$cinfail" ]; then
-> +			cinfail=$(mktemp)
-> +		fi
-> +		if [ -z "$sinfail" ]; then
-> +			sinfail=$(mktemp)
-> +		fi
-> +		# killed at the end: the timeout only stops a stuck test
-> +		{ timeout_test=600 test_linkfail=131072 \
-> +			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
-> +		local tests_pid=$!
-> +
-> +		wait_counter $ns1 "MPTcpExtMPJoinAckRx" 1
+> process_one_client() used a single read() and write() before waiting
+> for hangup. A SOCK_STREAM read() can return a short count when the
+> payload is segmented, so the server echoed only part of the data and
+> then blocked on FIN.
+>
+> The client keeps reading until it has the full length and only then
+> closes the socket. The two sides wait on each other and the test
+> hangs until SIGALRM.
 
 [Severity: Medium]
+Is this description of the old behavior accurate?
 
-Can the setup for this test take longer than this first wait_counter()
-allows?
+In the old process_one_client(), the server did this after a short first
+read and the partial echo:
 
-With test_linkfail=131072, run_tests() always regenerates both files,
-because test_linkfail > 2. Only after that does it call do_transfer():
+	/* wait for hangup */
+	ret3 = read(fd, buf, 1);
+	if (ret3 != 0)
+		xerror("expected EOF, got %lu", ret3);
 
-tools/testing/selftests/net/mptcp/mptcp_join.sh:run_tests() {
-    ...
-	if [ "$test_linkfail" -gt 2 ]; then
-		size=$test_linkfail
-		...
-		make_file "$cinfail" "client" $size
-    ...
-	if [ "$test_linkfail" -gt 2 ]; then
-		size=$test_linkfail
-		...
-		make_file "$sinfail" "server" $size
-    ...
-	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr}
-}
+By then connect_one_server() has already written all len bytes, since it
+calls xerror() on a short write. So the remaining bytes reach the server,
+read(fd, buf, 1) returns 1, and the server exits through xerror().
 
-That reads 2 x 128 MiB from /dev/urandom in 1 KiB blocks
-(mptcp_lib_make_file() uses dd with bs=1024). All of this runs in the
-background subshell before the listener and connector start. The mktemp
-calls above only create the file names.
+The server is a separate forked process. When it exits, its socket is
+closed and the client's blocked read() returns. That is a quick failure,
+not both sides waiting on each other until the alarm fires.
 
-The return value of this wait_counter() call is ignored. File generation
-plus connection setup might not fit in the timeout_poll window, for
-example on a KASAN or lockdep debug kernel, or under emulation. In that
-case sf_retry_after_block 10.0.3.2 fails with "no established subflow
-from 10.0.3.2 before the block".
+The old read(fd, buf, 1) could only block forever if the rest of the data
+never arrived. In that case the new read() loop would block in the same
+way.
 
-The later phases would then fail in turn. The absolute
-wait_counter $ns2 "MPTcpExtMPJoinSynTx" 4 waits out its full timeout,
-chk_no_sf_connecting() reports "no subflow re-created before the close",
-and chk_join_nr and chk_evt_nr fail.
+If issue #639 really shows a timeout, is the root cause somewhere else?
+If not, could the commit message describe the failure as the "expected
+EOF" error instead of a hang?
 
-The commit message says the transfer lasts the whole test "on any
-machine", but that covers the transfer, not this setup time.
-
-Would it help to check the result of this first wait, or to generate the
-files in the foreground before starting the background job?
-
-> +		sf_retry_after_block 10.0.3.2
-> +		sf_retry_after_block 10.0.1.2
-> +
-> +		ip netns exec $ns2 nft add rule ip filter OUTPUT \
-> +			ip saddr 10.0.3.2 drop
-> +		wait_counter $ns2 "MPTcpExtMPJoinSynTx" 4
-> +		local retrying=$?
-> +		mptcp_lib_kill_group_wait $tests_pid
-> +		chk_no_sf_connecting ${retrying}
-
-[Severity: Low]
-
-Does chk_no_sf_connecting() actually exercise
-mptcp_close_retry_subflows()?
-
-mptcp_lib_kill_group_wait() closes the connection by killing both
-mptcp_connect processes in the middle of a bidirectional transfer. If the
-client msk still has unread data at that point, __mptcp_close() takes the
-fastclose path:
-
-net/mptcp/protocol.c:__mptcp_close() {
-    ...
-	if (mptcp_data_avail(msk) || timeout < 0 ||
-	    (sock_flag(sk, SOCK_LINGER) && !sk->sk_lingertime)) {
-		...
-		mptcp_do_fastclose(sk);
-		timeout = 0;
-	} else if (mptcp_close_state(sk)) {
-		__mptcp_wr_shutdown(sk);
-	}
-
-	mptcp_close_retry_subflows(sk);
-    ...
-}
-
-mptcp_do_fastclose() moves the msk to TCP_CLOSE. __mptcp_destroy_sock()
-then closes every subflow, including the SYN_SENT retry subflow, whatever
-the new helper does.
-
-The same happens if the server is killed first with unread data. It sends
-MP_FASTCLOSE, and on the client mptcp_check_fastclose() closes every
-subflow not already in TCP_CLOSE, including SYN_SENT ones:
-
-	if (tcp_sk->sk_state != TCP_CLOSE) {
-		mptcp_send_active_reset_reason(tcp_sk);
-		tcp_set_state(tcp_sk, TCP_CLOSE);
-	}
-
-The helper only seems to matter on the graceful close path. Which path a
-run takes depends on timing that the test doesn't control.
-
-Could the "no subflow connecting after close" check pass even if
-mptcp_close_retry_subflows() were broken or removed? Would a drained,
-graceful close make this check deterministic?
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> index b6e58d936ebe5..5e1ec33368590 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
 
 [ ... ]
 
+> @@ -648,23 +648,27 @@ static void process_one_client(int fd, int pipefd)
+>  	ret = write(pipefd, "xmit", 4);
+>  	assert(ret == 4);
+>  
+> -	ret = read(fd, buf, sizeof(buf));
+> -	if (ret < 0)
+> -		die_perror("read");
+> +	ret = 0;
+> +	ret2 = 0;
+> +	while ((n = read(fd, buf, sizeof(buf))) > 0) {
+> +		if (!ret) {
+> +			assert(s.mptcpi_rcv_delta <= (uint64_t)n);
+>  
+> -	assert(s.mptcpi_rcv_delta <= (uint64_t)ret);
+> -
+> -	if (s.tcpi_rcv_delta)
+> -		assert(s.tcpi_rcv_delta == (uint64_t)ret);
+> +			if (s.tcpi_rcv_delta)
+> +				assert(s.tcpi_rcv_delta <= (uint64_t)n);
+> +		}
+>  
+> -	ret2 = write(fd, buf, ret);
+> -	if (ret2 < 0)
+> -		die_perror("write");
+> +		w = write(fd, buf, n);
+> +		if (w < 0)
+> +			die_perror("write");
+> +		if (w != n)
+> +			xerror("short write");
+
+[Severity: High]
+When the payload is segmented, the server now sends the echo as several
+write() calls. Can the client still fail in connect_one_server() in that
+case?
+
+The client read loop adds up total, but then passes ret, which holds only
+the size of the last read() chunk:
+
+	total = 0;
+	do {
+		ret = read(fd, buf2 + total, sizeof(buf2) - total);
+		...
+		total += ret;
+	} while (total < len);
+	...
+	do_getsockopts(&s, fd, ret, ret);
+
+For a plain read(), mptcp_recvmsg() uses a sock_rcvlowat() target of 1.
+So if the echo arrives as n1 and then n2, the client can return n1
+without waiting for n2. That leaves ret equal to n2, which is less than
+len.
+
+do_getsockopt_mptcp_info() then checks:
+
+	assert(s->mi.mptcpi_write_seq + w == i.mptcpi_write_seq);
+
+Here w is n2 but write_seq has advanced by len, so the client aborts.
+
+Without that assert, do_getsockopt_tcp_info() would still fail. It
+compares tcpi_bytes_sent and tcpi_bytes_received (both len) against n2,
+never matches, and ends in xerror() after the retries.
+
+Before this patch the echo was a single write(), so ret == len usually
+held. Should connect_one_server() pass total (or len) to do_getsockopts()
+as part of this fix?
+
+>  
+> -	/* wait for hangup */
+> -	ret3 = read(fd, buf, 1);
+> -	if (ret3 != 0)
+> -		xerror("expected EOF, got %lu", ret3);
+> +		ret += n;
+> +		ret2 += w;
+> +	}
+> +	if (n < 0)
+> +		die_perror("read");
+>  
+>  	do_getsockopts(&s, fd, ret, ret2);
+>  	if (s.mptcpi_rcv_delta != (uint64_t)ret + 1)
+
+[Severity: Low]
+This is a pre-existing issue, not one introduced by this patch. The
+xerror() calls that follow pass ssize_t values to PRIu64 conversions:
+
+		xerror("mptcpi_rcv_delta %" PRIu64 ", expect %" PRIu64 ", diff %" PRId64,
+		       s.mptcpi_rcv_delta, ret + 1, s.mptcpi_rcv_delta - (ret + 1));
+
+ret2 and ret are passed the same way in the mptcpi_bytes_sent,
+mptcpi_bytes_received and mptcpi_bytes_acked messages.
+
+On 32-bit builds ssize_t is 32 bits, so will these messages print
+garbage values? The declaration of ret and ret2 is being rewritten
+anyway. Could they be cast to uint64_t in these calls, or declared with a
+64-bit type?
+
 -- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261016160926.1155262-1-anilkaushikwireless%40gmail.com
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261017-fix-mptcp-issue-639-v1-1-0554d07ab8f8%40proton.me
