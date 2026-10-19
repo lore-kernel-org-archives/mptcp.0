@@ -1,57 +1,98 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792431980;
-	b=FMtSNFNBHFJ0JPFE9EtGQVsSsKB1xlejYOVoF04zrddg0rI5ZYmzgjs+/Lp4sRsQKmKQ
-	 YvpE+FVdIPIaw9sdFrRF28CaY5mZDTeRWDWL8qMkZ7jzyj2h5by0+Ag9nuQxmnPv53bYs
-	 aKc/xPobzBVOhUfsDO6uamQNme/sbSyNrlumSYMe6tUw803VZO0JTRxI5lGRmjsbQOJrN
-	 6MBjeh1ACUWA1BaqxMIyzn0zFMxEyqlxEces5Ftp6Fh6BZKk62T03Djmlwoh7nMBtEQEW
-	 Mk10l3engWB2ARQ2hRIjTzZQltiMysQUr+bcwaM0rwMciUb1O+zCSkTDSlqDC63BJAg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792431980;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=D9aHnwGL6FY6QcYOpQR9sYy0Z9eIPJd69W1MjJAcdBU=;
-	b=WmYW9fRPS6ZqO0+fR/zSl9ZYVeeOhT01i6ypG8b1tjz9FFqgd2n1qM4c7rXDUSjUJZdF
-	 Ou34MPQwFtLWHcPpTJ7wLJTO87bwSmWq07F64XXWdAmqUQVrZttWpGqfYBFXMFfvgAkoN
-	 n2HgksjF9gh8pz0rCu3fUUDk/uI+iDQ+PQ0IWVALiQoihF7BVNdzSEhiwK8B5eXqE7eER
-	 zeJPEMG5a0U+Vj0bx2UxQctQ2j8ns28zEWKNNaINuienF37My/gzg/xlCOw7pAGQadUXL
-	 w11ePBQCikUAcgX026oLJPCHjtQ20STmvr0NNMTxjZcEwNIILonCrp4K21cbvBNTXrQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VG17gzsN;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.49
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792432592;
+	b=E6PBo+Hbc8Ec4sPac6AADUSol1k0inT/UMFdfgJfuaVZ5h5yySHZX5TJBnwmwhELe+HW
+	 kHiC5qhTrvsc+nXMR96LVtKzlhPjlk6hwVK/emMHlkc1U0hPFGIlowTIlJAhR0W3XbBMJ
+	 P+FpdT9hpJU5WD2JNjY9brqCN5fRWunxtIDP5U6PUJsHhSkgc8aTADDy5mupogYCZRGsz
+	 ZnMiKdBnJG0OGCXYqiLe/qYIu4xLdvdO5tGn3gxN1INgzHTTnxXP+v7VNTMIVLWr1/4AV
+	 U29nlNVGCgwbVka2PhW4LI1s3CBKKCiO04ZHsQCQBpV7WytGGLtA8uQ4ul40A5qTLOQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792432592;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:MIME-Version:References:
+	 In-Reply-To:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=oUEZZJi1vAM0jDTf/FoBlrVfbfDfgD6LhpLJHb8Tc8M=;
+	b=ANZoU1+uJgeGuBGAd2yWYVPB3pv21NGFAaVTjs34jGlpYoCojvMkZbgr6uUf2OzhqcoD
+	 sQuaUftvPnXiWU69SjaQ2jD342hG9PbZmjWivq0Ku7g5AgdndOyx3SyjovllHhEsnvO37
+	 O6qhc2Fq/YIWabfpc7XztMctZtpUvGMUdGxG9zAOEehMM7iVPm+QLfYhISVDThQhfL+yl
+	 xmy1mF7O1CCJPLLtrqKx3izeUoLab7Cgr3/Tyt8z6E8iimmcqxpDGUtndodTvmuK6KpcI
+	 BI120Vq2W33inxp4RZ+IgQJY0fkbu4l+oa8eg9/pXtLPt+WBHPYlKBy2NWzlv/hbVyA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=BlFgYCeb;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.49
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55439606A33C
-	for <mptcp@lists.linux.dev>; Mon, 19 Oct 2026 17:46:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AEA0606A31C
+	for <mptcp@lists.linux.dev>; Mon, 19 Oct 2026 17:56:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6AEA0606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VG17gzsN
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C27811F000CB;
-	Mon, 19 Oct 2026 17:46:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792431980;
-	bh=D9aHnwGL6FY6QcYOpQR9sYy0Z9eIPJd69W1MjJAcdBU=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=VG17gzsNbQKPowv4RmSo0BgAuWGbz9K0V4JPGz1eF0q6jbMAvFSBTqV+xYP9/pbkV
-	 GsU7Ba550PKIvnoSXnpu8hASrS0bk2T5g93a82JxYYjVtkFj1wig+VvWyYeDuQGYEQ
-	 Z8sdNeqfYyUy1y672X1wnwtuK/ULDyc09epndOZICSTtpMYEwtT0txowXY6Vq4nFNI
-	 380pqMwtyM6jc38DFKO3WHcK40eRmN2b7siOBPet5RNJ9uK1CMpZFt58pwLZV9u/4X
-	 v4F9zsH7XUDQF2AZStVA38wmr355E/hqfo4JrBx/s78LEZJarEiEMhFfBohpfKr8MI
-	 cfPfKZbBGlf+g==
-Subject: Re: [PATCH mptcp-next v6 6/6] selftests: mptcp: join: validate
- subflow retry after link failure
-From: netdev-bot+sashiko@kernel.org
-To: anilkaushikwireless@gmail.com
-Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Mon, 19 Oct 2026 17:46:19 +0000
-Message-ID: <179243197932.3133.1635647280837164563@kernel.org>
-In-Reply-To: <20261018041748.1655711-7-anilkaushikwireless@gmail.com>
-References: <20261018041748.1655711-7-anilkaushikwireless@gmail.com>
-X-sashiko-severity: Medium
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=BlFgYCeb
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5be4fea434bso968659e87.1
+        for <mptcp@lists.linux.dev>; Mon, 19 Oct 2026 10:56:32 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792432590; cv=none;
+        d=google.com; s=arc-20260327;
+        b=fbUuR1OTHsDf4iFKOVEXBfqMLctZBXvaXi43anD9kmFBrKz0PcJ/A6/8oI2doXmAgL
+         ZN+S+9EfSXRZjR29NswIPR4lXU7OIAPgZ/xSe8GsY/zdtX2lNKNzJ0fb8e/l0o99lL5V
+         4KoML246HXKSDGrGZLOy7JPY470N4DXCf5d6pR/Rsabnxr2iFZFH/9MotGaZJQrswsxB
+         SZ/Ap5p5xMvvH2Fyt6ycO1fwGAc/Ia2UVnIilDErRNzCOZTfgg+WD+G3N4grdUDuy52Q
+         sPvqBc5ueCK0DFMXFnq+W+tJoRasK4eQ5a8q2LUGvSMUUYA/kGVTvgF7+dt4985g2woC
+         DyZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=oUEZZJi1vAM0jDTf/FoBlrVfbfDfgD6LhpLJHb8Tc8M=;
+        fh=f3DqXekhpmaMkf9TAUWRp+rzYWY1T5NwBBCIfHpCrLY=;
+        b=Wtq9AtDlHKDYliZ5S6UqYaRC0bW5UQry1xF9Yur9My/VIAoMskiYhRajG3d29QyZwV
+         f7aXcvxkQO21lkBZ1QjV3IS30jCAsdQ/P8eotweZ8ybKv1TyeS+xJesUNq8MFaguOpTs
+         wO1vxncMWNdpl3RzERgvKVHpDZHK1/4biJpCFDVMYFZut9tLHSXGO0AbGtt4GdPJr5or
+         9Dgv4JdHE37V+LH50Z463yGg1WMivayX/cFD2Xzu4THCi92yIS4u5KcW56jzqup5K9x6
+         zrTv8OjCcFeGnNRcMjd5EO1ju0bwbxmGMOccbjKFU9Mk2waMWOjagyZz6MIN1Sfb3sZF
+         ZdCw==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792432590; x=1793037390; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=oUEZZJi1vAM0jDTf/FoBlrVfbfDfgD6LhpLJHb8Tc8M=;
+        b=BlFgYCebrzq6ehle0fSgRskNfSgsV/YdQgvvBqdPq774QeNIgEQEZGA1d/4tVUufSr
+         6m8DPlVnEgKGeDHvPH8AUJbCN3R4gCicBObzHwHEH6CfRneCWL33fDU2HW9cg+M5Lfd1
+         UeGpf2iQ52vyRWmTKEBFEsuWCSp9yAwuJTgLA4WA4rgfifoIMTRhnGF40Alw0mgopRnn
+         Bm9DG95SSky42N013HliFoxcaApwxQw1bzdan0kBWdzR3NvxI4lKaXYiuIgeMo3Ijlsn
+         vnf1Iik97Mgm9Wr72cFaBTTUd62VzcatuonGtn1zbAtzr9U8aCqHJwsLzTqwRDvmu4gW
+         ewzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792432590; x=1793037390;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=oUEZZJi1vAM0jDTf/FoBlrVfbfDfgD6LhpLJHb8Tc8M=;
+        b=hPDR9VIYFLtiETf3NO7eYyw0vvvyswCwHwgog1ixoveg+k/86YUrHsL8klOiJDr4Ov
+         5Stz2JmPsLeRnd3mdwd7P53eG/1bIoDnYYOVog6tfw7uxYkLtRuNX1t440CiU/Oe5BCX
+         xrHcpK20pdQbqvIUfOonxc1AaPaom8Mc/A0/uJXLonDtxTKlE1pP0bEbCfaBftrHLNHS
+         Sk+HKfQa/9UzQ/MJDaKVAvsJG5ua+NzjKyoF+SCMepqKR8JWAc0e1Tk1Jk5AsgefJ4+U
+         OF9CbNKOk0oi4uSMNsvNP8UMpODyFqwQWjuu0VME1hSdCoRuyAtYO7OZ58Vjh7sMxRuf
+         oDmQ==
+X-Gm-Message-State: AFq9FYLEBPDQ6KkgcPENsJTjmQOzqCGgqaz2/vj21SxjViexBqqyKFsE
+	xSnuRSq1XfZUuTg2g4q7vZppAus8oiWq2pmpF16a0ula2OQKF+2Qp1Hf2+ghUH1wL2g6bIr8Ji+
+	KbNub7TKQN/HC+AYlDZqnIrLFEIovVSc=
+X-Gm-Gg: AYBFou3TxEOKbePLcbGZgO1wHpYcLLfe+BG64MXFAHqUrXrX277x6+3evfeeVdZyiC2
+	0A4SKGjK0koPFtfOGaAg6vpHHATj//4AOUqu0jPRO5+WDuCDEyIMj8Mf+Gr7SSBnau0ooG8yR38
+	E0bCdzkoh0HhL8E+b3gDbRbOt3IymsZgsJ/5PWQYTquF5dKFCg92ffCj3oo7NS/WJDyqgiNXh81
+	+zVUHz5a8kGxniK6c/Ja6KiCi6N4V3P6IDkrJ/zyVaMoI2o0N7LH2WVrWB2Fj3UnkNv4UO+51gu
+	BBH3XMaz8vMyaC+TH5/DT8jVpzAQGEtCsy1ySL2MjxF9D6WWGsgUmLs=
+X-Received: by 2002:a05:6512:31d5:b0:5bc:f2d3:f949 with SMTP id
+ 2adb3069b0e04-5be479127d5mr3632089e87.25.1792432590220; Mon, 19 Oct 2026
+ 10:56:30 -0700 (PDT)
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -61,186 +102,75 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+References: <20261018041748.1655711-1-anilkaushikwireless@gmail.com>
+ <20261018041748.1655711-5-anilkaushikwireless@gmail.com> <20261019172646.212143-1-w453y.me@gmail.com>
+In-Reply-To: <20261019172646.212143-1-w453y.me@gmail.com>
+From: Anil Kaushik <anilkaushikwireless@gmail.com>
+Date: Mon, 19 Oct 2026 23:26:18 +0530
+X-Gm-Features: AclHuK_MRPkj9lyClaBiRSe0GZMzYqq2gIDoh6t3SgQpjJj61aWYL1aDV4JRZmQ
+Message-ID: <CAG0Mgm9TunYCsiSyp=Se=uQmq_kzXO=M5DF6wdVtsh591NwENQ@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next v6 4/6] mptcp: pm: in-kernel: retry subflows
+ closed after an error
+To: Abdul Wasey <w453y.me@gmail.com>
+Cc: mptcp@lists.linux.dev, Matthieu Baerts <matttbe@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 3 potential
-issue(s) to consider.
+Hi Abdul,
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 2
+Thanks for testing.
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
+My comments are inline.
 
-- [Medium] In link_failure_tests(), the new "subflow retry after link
-  failure" block empties the shared input files at the end (`: >…
-- [Low] In sf_retry_after_block(), the drop rule is flushed (`ip netns
-  exec $ns2 nft flush chain ip filter OUTPUT`, line 2225) before…
-- [Low] sf_retry_after_block() decides whether the subflow was re-created
-  by comparing the local address:port strings from `ss` before and after…
+Regards
+Anil
 
---
+On Mon, Oct 19, 2026 at 10:56=E2=80=AFPM Abdul Wasey <w453y.me@gmail.com> w=
+rote:
+>
+> Hi Anil,
+>
+> I tested v6 on top of export (8bb146c4c) in netns: two 10 Mbit paths
+> with 15 ms delay, the second one blackholed with netem loss 100% in both
+> directions during an iperf3 transfer, tcp_retries2=3D3.
+>
+> Upload (the client sends) works: without the series the path never
+> comes back, with it the path carries data again 4.5 s after it returns
+> for a 20 s outage, and 12.6 s for a 60 s one, the extra time being the
+> SYN backoff.
+>
+> Download (the server sends) is not recovered. The server's subflow times
+> out and is freed without sending anything, while the client's subflow
+> on that path only receives: it stays established and idle, never gets
+> an error, so it is never retried. With keepalive enabled on the client
+> socket (idle 5 s, interval 2 s, count 3), the idle subflow times out and
+> your patch re-creates it: the path is back 3 s after it returns for a
+> 20 s outage.
+>
+> So for a client mostly receiving data, which is probably the common
+> case, the retry only helps if the application sets keepalive. Would it
+> make sense for the PM to probe idle subflows it initiated, or would you
+> rather document the keepalive requirement? I'd be happy to work on the
+> download case if you have a preferred direction.
 
-selftests: mptcp: join: validate subflow retry after link failure
+I will document it in the next version.
+ Application that only receives data should enable TCP keepalive on MPTCP
+socket. MPTCP already copies these options to every subflow, including
+the re-created ones, so a dead path is then detected even when the
+subflow is idle.
 
-This adds a test to link_failure_tests(). It uses nftables to drop the
-client packets from one subflow address until the subflow is closed and
-re-created, and lets them through again once the new SYN has been
-retransmitted more times than tcp_syn_retries allows. This is done for
-the additional subflow and then the initial one. The test then closes
-the connection while a subflow is being re-created, checks the netlink
-events, and empties the big input files at the end.
+Probing from the PM can be a separate series. Please go ahead if you
+want, Matt may have an opinion on it. I could also work with you. Let me kn=
+ow.
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index f4d8afaeda4f3..d4b4146cbd64b 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -2151,6 +2151,111 @@ wait_attempt_fail()
->  	return 1
->  }
->  
-> +# $1: timeout in seconds ; $2: ns ; $3: counter ; $4: increment, 1 by default
-> +wait_counter_inc()
-> +{
-> +	slowwait_for_counter "${1}" "${4:-1}" \
-> +		mptcp_lib_get_counter "${2}" "${3}" >/dev/null
-> +}
 
-[ ... ]
+> With the default tcp_retries2=3D15, the subflows are not closed during 20
+> to 180 s outages, and the old ones resume by themselves 17 to 24 s after
+> the path returns, with or without the series.
+>
+Yes, this is for longer outages, or a lower tcp_retries2. I will add it
+to the doc.
 
-> +sf_retry_after_block()
-> +{
-> +	local before after
-> +
-> +	before=$(sf_from "${1}")
 
-[ ... ]
-
-> +	# tcp_syn_retries=1: one more retransmission than allowed
-> +	if ! wait_counter_inc "${timeout_poll}" \
-> +		$ns2 "TcpExtTCPSynRetrans" 2; then
-> +		ip netns exec $ns2 nft flush chain ip filter OUTPUT
-> +		fail_test "SYN from ${1} not retransmitted enough"
-> +		return
-> +	fi
-> +	ip netns exec $ns2 nft flush chain ip filter OUTPUT
-> +
-> +	if ! wait_counter_inc "${timeout_poll}" $ns1 "MPTcpExtMPJoinAckRx"; then
-
-[Severity: Low]
-Can this wait miss the MP_JOIN ACK it is waiting for?
-
-The drop rule is flushed before wait_counter_inc() reads its baseline.
-slowwait_for_counter() in net/lib.sh only reads the baseline when it is
-called:
-
-tools/testing/selftests/net/lib.sh:slowwait_for_counter() {
-	...
-	local base=$("$@")
-	slowwait "$timeout" until_counter_is ">= $((base + delta))" "$@"
-}
-
-The re-created subflow keeps retransmitting its SYN on its own timer
-(mptcp_pm_kernel_retry() sets icsk_syn_retries). If a retransmission
-lands between the nft flush and the nstat read, the handshake can finish
-and MPTcpExtMPJoinAckRx can go up before the baseline is taken.
-
-The wait would then need one more MP_JOIN ACK that never arrives. It
-would time out after timeout_poll and report "re-created subflow from
-... not established", even though the subflow came back.
-
-With exponential backoff, the next retransmission is about 4 seconds
-away, so this only happens if the script stalls. Would it still be
-more robust to read the counter before the flush and poll against that
-saved value?
-
-> +		fail_test "re-created subflow from ${1} not established"
-> +		return
-> +	fi
-> +
-> +	after=$(sf_from "${1}")
-> +	if [ -z "${after}" ] || [ "${after}" = "${before}" ]; then
-> +		fail_test "no new subflow from ${1}: ${before} -> ${after}"
-
-[Severity: Low]
-Is the address:port string always different for a re-created subflow?
-
-The retry binds with port 0:
-
-net/mptcp/pm_kernel.c:mptcp_pm_kernel_retry_check() {
-	...
-	retry->local.addr.port = 0;
-	...
-}
-
-__mptcp_subflow_connect() then passes this address to kernel_bind(), so
-the kernel picks an ephemeral port. The old subflow was also bound with
-port 0. It released its port when it reached TCP_CLOSE, and the retry
-check runs at that point, so the allocator can hand out the same port
-again.
-
-If that happens, this reports "no new subflow from 10.0.3.2: X -> X",
-even though the MPJoinSynTx, TCPSynRetrans and MPJoinAckRx waits above
-have already shown that a new subflow was established.
-
-The odds are low, roughly 1 in 14000 per run for the 10.0.3.2 case.
-Could the check rely on the MPJoinAckRx wait and an established subflow
-being present, instead of comparing ports?
-
-[ ... ]
-
-> @@ -2585,6 +2690,65 @@ link_failure_tests()
-
-[ ... ]
-
-> +		join_syn_tx=4 chk_join_nr 3 3 3
-> +		chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_ESTABLISHED 3
-> +		chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_CLOSED 3 error 3
-> +
-> +		# big files: empty them, the next tests write their own content
-> +		: > "$cinfail"
-> +		: > "$sinfail"
-> +		: > "$cinsent"
-
-[Severity: Medium]
-Does the comment "the next tests write their own content" hold for the
-test_linkfail=1 and test_linkfail=2 callers?
-
-The files are emptied, but cinfail and sinfail still hold their paths.
-For those modes, run_tests() only fills the files when the variable is
-empty:
-
-tools/testing/selftests/net/mptcp/mptcp_join.sh:run_tests() {
-	...
-	elif [ "$test_linkfail" -ne 0 ] && [ -z "$cinfail" ]; then
-	...
-	elif [ "$test_linkfail" -eq 2 ] && [ -z "$sinfail" ]; then
-	...
-}
-
-Only the test_linkfail > 2 branches always rewrite the files.
-
-The default order isn't affected, because this block is the last one in
-link_failure_tests(). However, the getopts loop adds one entry per
-option and doesn't remove duplicates:
-
-	tests+=("${all_tests[${opt}]}")
-
-So "mptcp_join.sh -l -l" runs link_failure_tests() twice. On the second
-run, the test_linkfail=1/2 subtests would send 0-byte files and leave
-$cinsent empty. chk_stale_nr() would then fail, and chk_link_usage()
-would divide by zero:
-
-	local tx_rate=$((tx_link * 100 / tx_total))
-
-Reordering the groups, or adding a test_linkfail=1/2 case after this
-one, would cause the same failures. Would it be better to remove the
-files and reset cinfail and sinfail, or to have those branches check
-[ ! -s "$cinfail" ] instead?
-
-> +	fi
->  }
-
--- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261018041748.1655711-1-anilkaushikwireless%40gmail.com
+> Thanks,
+> Abdul Wasey
