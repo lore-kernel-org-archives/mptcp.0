@@ -1,56 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792433590;
-	b=z4W0/iCZYCErfpDQAVRhOW4aJRGPDlaLz6HNXKmOfZvRrIBOpTPchQZ7fcZmatiXnxma
-	 WTK9zZijI2LivdSrDqzFlehHcGcc03E1lUYEDWqGp00dtjSLj79LLj8xe5iX0GbTn8Cl7
-	 jZ25Ctsjw+dQdbsAOPrg0IHqMxtKJtMGVtWa6N8dxbIat+4oFh8JXyJ0GfyDecAvY1zHO
-	 /1w5Bm8Vn+1ZNrGolTtQCchaHAjuvuZ7ihfEOLDO/EtqIktU4upK3mqj34qs8ot+LOZo5
-	 bxoxQGvXl5C5/7jLhHQRqNGSjH5cGJ70SlC7TsfDfTSvcMrsHjVGoBxhHi16HLAxNGw==
+	t=1792433896;
+	b=oqiqjkuHkLL5g/J0+WcrSfKNAxiXFUz1jsbVHZeWZavSlWC6ovyS6g0IgqxFudSPqC3D
+	 LTrGXWC8G7Bo9u8cwLx8wOCIehFBjR9xTX7cLe7do9hqyDyecppMvMN8YuaEdPrDNXiNg
+	 k+cx3GfOcw9z+/5pJriWnr5R8GOA6qrFCNI5CmFLRCbHrYY/9d1ra1gG2p6onsoOVfB8u
+	 6oYBpcouPzcQiMWjiMZJmW76h7EmiiPj5/RIuR1oyJReIDn4QsyA3V/KJdeNz7e2NmKAh
+	 +dcb6aoJV0n1K+8L3+WljAmTCWiBYOuuqSqosprs+jqmb2fBwOs4zErDjA8hD1WRpCg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792433590;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=JRVZG82TFS8HgGNP5rd6Y8eVbFEk7lvzapdw1yhKeFU=;
-	b=ySmLgeqCe94c66WtifH25XyMXOI8sCt03S96mSZg54PI5wy0VTp7lo53sYe+8l0RX/40
-	 JiI1gXXcE+ApBDqLdELwGXerMbdKHRortohMD7Ehn7kP4AwW+UFlwIMpqvmPIrAbmiqFY
-	 5od5ELXTp3EzyHvfdAXyaDIK1YAff0AWQ6a2q7TFGnqdCGy7zy0757MYy9oyDvb4TaasL
-	 2c8bEH0M71y3EaL3UOAOoUS6UYr/TLUN7SjNReBsYZfVHh8nAxvqWdEmxRh+U4drVaRDQ
-	 Z0dqd9GMm6QkahZM8AMkaVVTJ0XXjNP9MaH9d9MrM5P4e8MZs22oM476+U0sjCCrXNA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792433896;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=vJfABPvmV/8sGcMGrwQut1HGxJ4dbtz4kJRM6J59tNM=;
+	b=VUR65XYea4MYoquJ+tNc7OW0ttkj8LaZp1FKswdPEz5YPeYAlmbxY2arb9G3ERa1+tJe
+	 BgBaqqwfhcNXd8d5Zt/+xuz2CAcIXc549sGxxVWvUS4LpWkzCA+ROUmfVfbYaXzOSPI/6
+	 LM1PGF13CSyZ0vK81fYZTHR9VbjIb/INjkPIwaszuz3DAuj+IBbCIq196vwy0QGk41uO2
+	 SPF5L+KWWyCfPC4W2iEO8tVafrUG7odDtPkyOVOFM/cs+kFKq+8Rsf6v+CUzU2X3cwT6j
+	 7szhjeS7C24aT2Ol7FGIvO0AYnnZsribuwbvCQgCaNK7VuTTgHbDDy3tbVcmQy5Xcfg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="TJ/DlXJT";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NtoX8vlT;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66049606A31C
-	for <mptcp@lists.linux.dev>; Mon, 19 Oct 2026 18:13:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292EE606A335;
+	Mon, 19 Oct 2026 18:18:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TJ/DlXJT
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C05941F000C4;
-	Mon, 19 Oct 2026 18:13:09 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NtoX8vlT
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EC9B1F000C6;
+	Mon, 19 Oct 2026 18:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792433590;
-	bh=JRVZG82TFS8HgGNP5rd6Y8eVbFEk7lvzapdw1yhKeFU=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=TJ/DlXJTiCwqRi+Ig61AjGdnaO74n9Y/fe8sT37Qf3LPY4c6IG82PY5bM9y459fkL
-	 QFZ8SSP+g606B7Fx9HDj8ikLQ6gwnxN/7XAp9cDWFAJ8DwkMl/vBex02iBMqum2N3n
-	 R1bJ744e5cLwP9gwP7RGX8xZSPVj0NUmp0Q2jO8dmTnW+xxt7D7nTq9cYl8rs7vltI
-	 kBqFtnm/MVmpkYHCRcEHYRP3GH/dmrPti9cjt0zId5gKnn9Zty/vN+AGnP/vrwlMfT
-	 U07jaCWpouBfdYkQ3v3+WZkSa0y98G5dMxDAr6T2OWpqsJ42ez4i8dUtANDUPxroRQ
-	 LHkkas2VNErcw==
-Message-ID: <sashiko-outbox-178065@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-net v2 2/2] selftests: mptcp: join: re-add the
- initial subflow endp with fullmesh
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Abdul Wasey" <w453y.me@gmail.com>, mptcp@lists.linux.dev
-In-Reply-To: <20261019180306.382039-3-w453y.me@gmail.com>
-References: <20261019180306.382039-1-w453y.me@gmail.com>
- <20261019180306.382039-3-w453y.me@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 19 Oct 2026 18:13:09 +0000
+	s=k20260515; t=1792433895;
+	bh=vJfABPvmV/8sGcMGrwQut1HGxJ4dbtz4kJRM6J59tNM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=NtoX8vlTNoc17AycRtUxAbenLDrvnqt9DXHreVbZqRXIH+Yf3HW6UUJWnHqSWtupJ
+	 0goWt56SUb/9F84a6e+b9fZ5ngJ5eH0F00MLNcpvROxrs1KX1wj21LOQa1AUf6vdn9
+	 MdlTeklPcRx72CEAP7UBMy+Sj1FEepr8mssubS4wbaURLe0yhmNropBRglv5e1dBal
+	 ZCgq4V/oZhnIBlrjZPJrK6I2lQ03mgD5zuyWI3rYxUOke/AEmsXzxVmLy55TUbarow
+	 JcyAqv5XK73Zu3cPJrG/SqjtA6mPaaO1KHPRsfRiqkXfGHgWX28HazpULm1aEYx1s+
+	 c6dL3NDgo+Osg==
+Message-ID: <aa28dc5a-f06d-47ef-8518-34ea3cf6a052@kernel.org>
+Date: Mon, 19 Oct 2026 20:18:12 +0200
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -59,91 +50,87 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH 6.12.y] mptcp: move the OoO check back into
+ __mptcp_try_fallback()
+Content-Language: fr
+To: Abdul Wasey <w453y.me@gmail.com>, stable@vger.kernel.org
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+References: <20261019111541.2063142-1-w453y.me@gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20261019111541.2063142-1-w453y.me@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] selftests: mptcp: undefined init_nftables() breaks endpoint_test=
-s()
---
+On 19/10/2026 13:15, Abdul Wasey wrote:
+> The 6.12.y backport of upstream commit 1bba3f219c5e ("mptcp: do not
+> fallback when OoO is present") put the out-of-order queue check
+> in __mptcp_finish_join() instead of __mptcp_try_fallback().
+> 
+> So the fix itself is missing, as fallback still happens with OoO data
+> queued. Worse, the passive side now refuses every MP_JOIN while its
+> OoO queue is not empty, which is the normal state of a connection
+> already sending data over more than one subflow. The joining subflow
+> is reset, so such a connection can't add a new path, and a path that
+> comes back after an outage can't rejoin while data is in flight.
+> 
+> Move the check to __mptcp_try_fallback(), as upstream does.
 
-commit bc814fecc7de467b22c281bbf58a319ea166e5a2
-Author: Abdul Wasey <w453y.me@gmail.com>
+Oh, good catch, it looks like quilt (or git?) was a bit too "relax"
+here, and it should have reported a conflict.
 
-selftests: mptcp: join: re-add the initial subflow endp with fullmesh
+The fix here looks good to me, thank you!
 
-This commit adds two selftests to endpoint_tests() in mptcp_join.sh to
-verify deleting and re-adding the endpoint of the initial subflow when the
-fullmesh flag is set, both normally and after the initial subflow is reset.
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/test=
-ing/selftests/net/mptcp/mptcp_join.sh
-> index 18ce7136a2b0e..0fa69aa2e9b80 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -4445,6 +4445,70 @@ endpoint_tests()
-[ ... ]
-> +	# same, but the initial subflow is reset before removing its endpoint
-> +	if reset_with_events "delete and re-add, fullmesh, after reset" &&
-> +	   continue_if mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
-> +		pm_nl_set_limits $ns1 0 2
-> +		pm_nl_set_limits $ns2 0 2
-> +		pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullme=
-sh
-> +		pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2 flags subflow,fullme=
-sh
-> +		{ timeout_test=3D120 test_linkfail=3D128 speed=3D5 \
-> +			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
-> +		local tests_pid=3D$!
-> +
-> +		wait_event ns2 MPTCP_LIB_EVENT_ESTABLISHED 1
-> +		wait_mpj 1
-> +		chk_subflow_nr "before reset" 2
-> +
-> +		init_nftables
-> +		if ip netns exec "${ns1}" nft add rule ip filter INPUT \
-> +				ip saddr "10.0.1.2" meta l4proto tcp \
-> +				reject with tcp reset; then
-> +			wait_event ns2 MPTCP_LIB_EVENT_SUB_CLOSED 1
-> +			ip netns exec "${ns1}" nft flush chain ip filter INPUT
-> +
-> +			pm_nl_del_endpoint $ns2 1 10.0.1.2
-> +			pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullm=
-esh
-> +			wait_mpj 2
-> +			chk_mptcp_info subflows 2 subflows 2
-> +		fi
-> +
-> +		mptcp_lib_kill_group_wait $tests_pid
-> +		kill_events_pids
-> +
-> +		chk_join_nr 2 2 2
-> +	fi
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-[Severity: Medium]
-Where is init_nftables defined? It does not appear to exist in
-tools/testing/selftests/net/mptcp/mptcp_join.sh, mptcp_lib.sh, or
-net/lib.sh, so calling it here produces "init_nftables: command not found".
-
-Because the ip filter table and INPUT chain are never initialized in
-${ns1} (which was freshly created via reset_with_events() ->
-init_partial()), the subsequent "nft add rule ip filter INPUT ..." command
-also fails with "No such file or directory".
-
-That causes the if block to be skipped without resetting the subflow or
-deleting and re-adding endpoint 1, and then chk_join_nr 2 2 2 fails
-unconditionally because only 1 MP_JOIN occurred.
-
-Should this use ${iptables} instead, matching how userspace_tests() in
-tools/testing/selftests/net/mptcp/mptcp_join.sh injects TCP resets:
-
-		if ip netns exec "${ns1}" ${iptables} -A INPUT -s "10.0.1.2" \
-		      -p tcp --tcp-option 30 -j REJECT --reject-with tcp-reset &&
-
-> +
->  	# remove and re-add
->  	if reset_with_events "delete re-add signal" &&
->  	   continue_if mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261019180306.3820=
-39-1-w453y.me@gmail.com?part=3D2
