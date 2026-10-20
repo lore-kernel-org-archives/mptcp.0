@@ -1,50 +1,50 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792470893;
-	b=Nh6IXvaPoJgTdiNxF+9gHu9/CrvUEONrDgqKY9qSAw0ltdJ+1s5FGeX2Xoo5vkODtLdE
-	 1VFwEEc1nB/0KtAGeybFfhsTXY+VF+6nK3be90zncHFpon5KV09xzthJAy9R22mWivJEQ
-	 I0R9Y3zS3nJqdj+zGOWjYYmh9H/at9jyVB6tdfL/8mi6Iavl3gmZ0wo3jyAtPOzV0HI6V
-	 F8alNq3jg6hgrZy8zzCoCsF2guAfYlE5yrf4ftM9DQGQ8DE8yP5C6UMZPhVsgdQiAgBp5
-	 BDVQ2eMoBxech0NBOe7QaYx77PAN8HpL1tAVRtx/iWR1QPvxMvWDdgxBZtjRAWdLDCQ==
+	t=1792470894;
+	b=Hj9C8/gTlYsGjAitGdPytu6266Wtg9F3Al0/uSzTYHYHV5FsM2gI4Yr3M/x2+SYiObew
+	 lcwES7fE0fvV8Sa4RcfjnxTMhTs6YVc3n9sbI8w1J6aMsDpPNe322iJycGEy9QQlTq/t4
+	 5Kbrc4W+yQcCL7QIj1t3d/RHNe6as0yVuxFv9I41TDcdWjfgVDo7icV+QNUsM8e0hoDfA
+	 Xe/T3gTOWaAKYWTXVteS0xWW0BiMI9fS+Iyf383KMK66JLYrah9K9i7RXc4K6LT4ty1UE
+	 ckzQP9SBptAp3/OPyTrzMOz8Gv9kI1tbnlwQ7E9bDcpGBTCbArf4Jn9qSBkThChD0QQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792470893;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792470894;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=LRRz31708bq10sSxxjIZ5AB8L5mEs3+DQCtoFC2f0Z4=;
-	b=2Mlul6Vu3ktW1Ucnl8sXPK1k+5dEfRCzjPh2wnckWqo15EaarlPAm4fzVCcSB6L0foFL
-	 fzXdgRKhzlbJAzAU0JY0Bae33mdBfUSYfiUffeRhm4n3ySr/CJQLiiOJ/N/R1RZpWBVyt
-	 wQyz6x3XE2MKIGMP9N8ofWf0UB02+aldojDjZMsPSI1/umvuZXOIA8+OEc0J58oyNIPwx
-	 VO8+acIFOJNRXT5RSYVMg55wSdNoS3IIfzCDucenOjvduQUU7fw5R7ob/mIxSw8oiQZ1T
-	 ke9vnWTJjcqsTwhP+8VUWw0rX/fhvcACB4Kdl/+gzkohigVuH4wMOj7a5qUVDzke8MA==
+	bh=fJP65vf7CMB69ymRYBv2ifWTgzRUCNSkCohui2lA43Y=;
+	b=MpUMxTMp272du5FFOxM3ew8eBVDgXoGaJUU9vG0C6FIGKwfn9xS/6Z64EzCj+TmiNT2l
+	 7zcXz1zLTZzUIwzkXROwCloyU3ZHLycQ9fHoARooHKKSdXqGrgEQ+lubRgUOLGVW3ZLnG
+	 nX6aIEVit9A6y/pHsomtHzWUkG6nkAb7j8WV720VR0OCMbyX/jMXOLYHK3Z2E/HpQSE88
+	 PcdCYFKAzXo5uuvPtDofGjAJN6dpB2JtkdNhsTh42HyEBzYHYYTMvexh8Ag8SMC/8w/Jo
+	 DDdpnhAN+wPbb+smKDn6Wyf6g2gm0V1h1H9lZYDa2bw5G2HSIh7egEf6IqsXUl/IYvA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hsPCHNnf;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=krijcdFE;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B39606A319
-	for <mptcp@lists.linux.dev>; Tue, 20 Oct 2026 04:34:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82330606A319
+	for <mptcp@lists.linux.dev>; Tue, 20 Oct 2026 04:34:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hsPCHNnf
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 381AB1F000C5;
-	Tue, 20 Oct 2026 04:34:52 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=krijcdFE
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8862A1F000C4;
+	Tue, 20 Oct 2026 04:34:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792470893;
-	bh=LRRz31708bq10sSxxjIZ5AB8L5mEs3+DQCtoFC2f0Z4=;
+	s=k20260515; t=1792470894;
+	bh=fJP65vf7CMB69ymRYBv2ifWTgzRUCNSkCohui2lA43Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=hsPCHNnfDCipHWsAaLCQrJyqZYCP2MZ4KoGAIFIQLLVQNB/r04OC61jk7gHYaSR5s
-	 AWR83wBJ0aLHEuFxL5HqjoGxLzC8A3nbD8/pFZYbnohYkqBAd+oc52uHmxyK6dmlOz
-	 bdxpeSEdox3gPrMgtR79td7CA+Ck1gzGHTr4JzKpVmP2mvDbj4EXBQyVfk6TY7Czap
-	 B+1dXgq3AiWWeA6YExIIUdCFKfAQY37IW1jXhA79wrJamnk6nwCkWarHQQg21ADAax
-	 hn9XWNdICJ7H7pphLiUhpw2kGUHK9W/44p7zfBYh6K3spvJT+gLyULs7yqgJZJ4VAm
-	 3Am1z3yHwxlFw==
+	b=krijcdFEDenVyoGJMg/9KWGTodADC+IH9VGZAKq8azx5Y/OweNQi9YYZuL4uC5n5x
+	 IHV4VyyhywDmKVExSop66bvWeM8rKtMSpnioN1MdfYT0VMFFVwD8nXX4qvNZ0wI2ut
+	 iU4ueYKxUMxb4oV3azHIyFkrF6ciccaTBWq2S0U9CWSn3WqFneLPOy0H5BD0BEHmpv
+	 91/feNSbwGCfBDVyqZoRsRizWyap9/Qz5m4accePkFH/YypcCgJ3RgqYXyR5JUu9CI
+	 G3bL3lwa5Jf+8V/RPXzDDHfB1BIgyQswqsRpqcmIaQLEGXNMKCVNyTfettAaXwPAny
+	 NNBlMcTUavZnw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v4 1/3] mptcp: give MPTCP sockets a distinct lockdep class
-Date: Tue, 20 Oct 2026 12:34:43 +0800
-Message-ID: <57a28e59a137afcf8a5dd8b220037cd753a61591.1792470313.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v4 2/3] mptcp: inherit sk_reuse and fix dev bind override
+Date: Tue, 20 Oct 2026 12:34:44 +0800
+Message-ID: <4adf96455e63a35be3228434cfe2ba79ea99bcb0.1792470313.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <cover.1792470313.git.tanggeliang@kylinos.cn>
 References: <cover.1792470313.git.tanggeliang@kylinos.cn>
@@ -61,134 +61,58 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-MPTCP sockets and their subflows share the same k-sk_lock-AF_INET
-lockdep class. When both are kernel sockets, lockdep flags every path
-that holds the MPTCP socket lock and then locks a subflow (setsockopt,
-connect, bind, worker send-ack) as "possible recursive locking".
+Propagate sk_reuse and sk_reuseport from master socket to subflows, and
+bump setsockopt_seq so later subflows pick up the changes.
 
-Extract the lock reclassification logic from PM listener socket creation
-into mptcp_reclassify_socket() helper. Assign distinct lock classes
-based on both socket type (kernel or user) and address family (IPv4 or
-IPv6) to prevent lockdep from conflating kernel MPTCP socket usage
-(which may nest with fs/storage locks) with user-space socket API usage
-(which records mmap_lock dependencies through page faults).
-
-Call mptcp_reclassify_socket() from mptcp_init_sock() for actively
-created sockets, and from mptcp_sk_clone_init() before bh_lock_sock()
-for passively cloned sockets. The reclassification must happen before
-the lock is held to avoid lockdep warnings. PM listener sockets are
-automatically reclassified through the mptcp_init_sock() path when
-created via sock_create_kern().
+This patch also fixes unconditional sk_bound_dev_if override in
+__mptcp_subflow_connect(): only set it when local->ifindex is non-zero,
+otherwise preserve the value inherited from the master socket via
+sync_socket_options().
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/pm_kernel.c | 16 ----------------
- net/mptcp/protocol.c  | 37 ++++++++++++++++++++++++++++++++++++-
- 2 files changed, 36 insertions(+), 17 deletions(-)
+ net/mptcp/sockopt.c | 5 +++++
+ net/mptcp/subflow.c | 4 +++-
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-index d3014bf57bf3..03603defdf6c 100644
---- a/net/mptcp/pm_kernel.c
-+++ b/net/mptcp/pm_kernel.c
-@@ -846,13 +846,9 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
- 	return ret;
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 922f6ae5c80c..952bc015eee8 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -335,6 +335,8 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
+ 				sk->sk_bound_dev_if = ssk->sk_bound_dev_if;
+ 			else if (optname == SO_BINDTOIFINDEX)
+ 				sk->sk_bound_dev_if = ssk->sk_bound_dev_if;
++
++			sockopt_seq_inc(msk);
+ 		}
+ 		release_sock(sk);
+ 		return ret;
+@@ -1706,6 +1708,9 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+ 		assign_bit(b, &inet_sk(ssk)->inet_flags, src & BIT(b));
+ 
+ 	WRITE_ONCE(inet_sk(ssk)->local_port_range, READ_ONCE(inet_sk(sk)->local_port_range));
++
++	ssk->sk_reuse = sk->sk_reuse;
++	ssk->sk_reuseport = sk->sk_reuseport;
  }
  
--static struct lock_class_key mptcp_slock_keys[2];
--static struct lock_class_key mptcp_keys[2];
--
- static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
- 					    struct mptcp_pm_addr_entry *entry)
- {
--	bool is_ipv6 = entry->addr.family == AF_INET6;
- 	int addrlen = sizeof(struct sockaddr_in);
- 	struct sockaddr_storage addr;
- 	struct sock *newsk, *ssk;
-@@ -868,18 +864,6 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
- 	if (!newsk)
- 		return -EINVAL;
- 
--	/* The subflow socket lock is acquired in a nested to the msk one
--	 * in several places, even by the TCP stack, and this msk is a kernel
--	 * socket: lockdep complains. Instead of propagating the _nested
--	 * modifiers in several places, re-init the lock class for the msk
--	 * socket to an mptcp specific one.
--	 */
--	sock_lock_init_class_and_name(newsk,
--				      is_ipv6 ? "mlock-AF_INET6" : "mlock-AF_INET",
--				      &mptcp_slock_keys[is_ipv6],
--				      is_ipv6 ? "msk_lock-AF_INET6" : "msk_lock-AF_INET",
--				      &mptcp_keys[is_ipv6]);
--
- 	lock_sock(newsk);
- 	ssk = __mptcp_nmpc_sk(mptcp_sk(newsk));
- 	release_sock(newsk);
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 60cbd91be632..eae3f25dd3d4 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3260,11 +3260,43 @@ static void mptcp_ca_reset(struct sock *sk)
- 	icsk->icsk_ca_ops = NULL;
- }
- 
-+/* The subflow socket lock is acquired in a nested to the msk one
-+ * in several places, even by the TCP stack: lockdep complains when
-+ * both are kernel sockets. Instead of propagating the _nested modifiers
-+ * in several places, re-init the lock class for the msk socket to an
-+ * mptcp specific one. Separate lock classes are used for kernel and
-+ * user sockets to prevent lockdep from conflating their usage patterns.
-+ */
-+static struct lock_class_key mptcp_slock_keys[2][2];
-+static struct lock_class_key mptcp_keys[2][2];
-+
-+static void mptcp_reclassify_socket(struct sock *sk)
-+{
-+	bool is_ipv6 = sk->sk_family == AF_INET6;
-+	const char *slock_name, *lock_name;
-+	bool is_kern = !!sk->sk_kern_sock;
-+
-+	if (is_kern) {
-+		slock_name = is_ipv6 ? "kmlock-AF_INET6" : "kmlock-AF_INET";
-+		lock_name = is_ipv6 ? "kmsk_lock-AF_INET6" :
-+				      "kmsk_lock-AF_INET";
-+	} else {
-+		slock_name = is_ipv6 ? "mlock-AF_INET6" : "mlock-AF_INET";
-+		lock_name = is_ipv6 ? "msk_lock-AF_INET6" : "msk_lock-AF_INET";
-+	}
-+
-+	sock_lock_init_class_and_name(sk, slock_name,
-+				      &mptcp_slock_keys[is_kern][is_ipv6],
-+				      lock_name, &mptcp_keys[is_kern][is_ipv6]);
-+}
-+
- static int mptcp_init_sock(struct sock *sk)
- {
- 	struct net *net = sock_net(sk);
- 	int ret;
- 
-+	mptcp_reclassify_socket(sk);
-+
- 	__mptcp_init_sock(sk);
- 
- 	if (!mptcp_is_enabled(net))
-@@ -3765,13 +3797,16 @@ struct sock *mptcp_sk_clone_init(const struct sock *sk,
- 				 struct request_sock *req)
- {
- 	struct mptcp_subflow_request_sock *subflow_req = mptcp_subflow_rsk(req);
--	struct sock *nsk = sk_clone_lock(sk, GFP_ATOMIC);
-+	struct sock *nsk = sk_clone(sk, GFP_ATOMIC, false);
- 	struct mptcp_subflow_context *subflow;
- 	struct mptcp_sock *msk;
- 
- 	if (!nsk)
- 		return NULL;
- 
-+	mptcp_reclassify_socket(nsk);
-+
-+	bh_lock_sock(nsk);
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 	if (nsk->sk_family == AF_INET6)
- 		inet_sk(nsk)->pinet6 = mptcp_inet6_sk(nsk);
+ void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk)
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 78e886b20258..5bdfbe172665 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1713,7 +1713,9 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_pm_local *local,
+ 	if (addr.ss_family == AF_INET6)
+ 		addrlen = sizeof(struct sockaddr_in6);
+ #endif
+-	ssk->sk_bound_dev_if = local->ifindex;
++	/* Only override the bound device if the path manager picked one. */
++	if (local->ifindex)
++		ssk->sk_bound_dev_if = local->ifindex;
+ 	err = kernel_bind(sf, (struct sockaddr_unsized *)&addr, addrlen);
+ 	if (err) {
+ 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_JOINSYNTXBINDERR);
 -- 
 2.55.0
 
