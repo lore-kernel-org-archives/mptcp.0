@@ -1,56 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792485870;
-	b=SrV1LjHwNkn0YuEEm0zrNZIshNDtrZy2yvRDnZMSvp3a7y+AlAIkmM2BPfFq39NhfW6o
-	 bkIPwXjiPhNbQuLczR6Z/6ozzqCarwjmz3plZqO1ipROebkAB6WteygMMRUAfuK74deYT
-	 NBSJAr3oBn5tdJvEXyMpmk62mGlhxLp2lCrCBm00l6XnWiga+smBv9WS5HN4ULP/c1RM9
-	 61dEi56QJhSk4GDNTOmUEtcoi3/PXE9NSsv2Lw53Onniu4ukEoETWbWRvfag/1tjvoP4e
-	 uWLqpAJHct4GQft1sPNZQw/ymY0iOp18ymLfO96SH2mxIMWC5XWa4lMfK76kmM62yZQ==
+	t=1792486532;
+	b=G2mCHaULPTpvalk/D+wBIl4j18NqfxhMhxcB+FhzhHTaFid9XV+zJEUf71FCuyVfoa9C
+	 1B760z9HxOP0wWPcin5SU5OBfOVVaWHDBDPAkxNZqx46gkUaPDDISTJ/RpAFUM6jiWWfD
+	 XuhhPgTpqxF3TKL7tu8J0KMhrs4oQjwcfo35VSaO1MoBOLkcyw9DT0/DI/RJfCgc3XAKO
+	 p6a4VbiWG91rBd3/DvZh1WeIxurmAVoby85tEB+8KqC5qHIdnlzU3pRs0UQs5ij0Ms2x1
+	 yzaH935LReaGNtt8G3IKhj4eQ8ufm7Zj2iNtj0jH9gcH4JRG2w2fW62X6mWtk6BloPA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792485870;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792486532;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=qdZiXzT4CJkHQlqb7iSDmu1qfmRJcpjD97jm3kVH3Cc=;
-	b=AlKqSo5ZjPlxu3nOYTlImAA7ln7c3n9icJPWIDwXeBNcdZrtpGx+EYHUiHQ5Hpr3l1Ng
-	 CBwrXwbmhEba2YAhszzEOohOVNCwv/pOXJAL43TeH5xVcWi9m1J1KBjVziiB8KmwbEKcC
-	 vW+vTSFEs85C3RiqzG1FlF9y6y8tyCje9sdlEUjwndr+nSDfFwRIwt/y4n30NBNyNBTSz
-	 zijGw0sCaQHeXFxUpsV5SN9geLzDP4PJZFP/+7U1oiBDuZt3MuAyUIS56sI772DZX/1oo
-	 LjwItRAw3MP7ZfwkS0elVOlag/E5ud5KkRU3GRxN5HOfLe6SPrTyHC6xJxq4HRbXLiw==
+	bh=1cdF8aZXwCWWm3srLGnn3f/gNyq5KhqCbV0jj6pfj78=;
+	b=mYs+vObiRrxU3i+hvJ2phlHGJuMGTawk6r7hApfGd7nnGCIDqag+Vn6futafNlUa2bMS
+	 yf/oegAUzXkTkZOqNXkg4iWQDo6CEbSdHHYpnnQU9gFeBICNRBMG0XJodZAdLjZEMldPr
+	 KTzTT4EGxgSbtl0AxCz+BaLR3flLov4BknNcK4ev2OM/1JuO+iKNKMmnV2SQrHOqn2Sdy
+	 7imsU0KN8vxodWlylSoD11yuOCuRsTR2w/8VcTFTNLwrBUJAuAflyK6BoWZOhHbY6I9Lm
+	 EGNrp0PA6WpMngPxGQWGlN33qjUa4VY1XjR7PKJXpdHKnIsv/u+FPN1uPqY/6UC1qBw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=B6op7VOM;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mXiRhNXN;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FC1606A31B
-	for <mptcp@lists.linux.dev>; Tue, 20 Oct 2026 08:44:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511B3606A319
+	for <mptcp@lists.linux.dev>; Tue, 20 Oct 2026 08:55:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=B6op7VOM
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A50C1F000C6;
-	Tue, 20 Oct 2026 08:44:29 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mXiRhNXN
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCDA91F000C4;
+	Tue, 20 Oct 2026 08:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792485869;
-	bh=qdZiXzT4CJkHQlqb7iSDmu1qfmRJcpjD97jm3kVH3Cc=;
+	s=k20260515; t=1792486532;
+	bh=1cdF8aZXwCWWm3srLGnn3f/gNyq5KhqCbV0jj6pfj78=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=B6op7VOMEn96LjomorUK0pS6SX6KxbT6X9MjMVSk0KKD7hVY+KS4tcRChAUrrdz1B
-	 45gKIkQtgI+5/Lj/7R3cMu8GyLTixe3A9RZx8jCEGq+OTlNIx0lSfNlL/bMBG3YSBv
-	 ndK6Z5U3+nOdAblb1doSbsEQytFSyVTW76IC5kNzXvHgjehi6WMJOJfmVFewIhcWEG
-	 2TKKAhNALTqxsCwc9MkupkTPTCXGTTzNs2gpaZLhsceY9GLjidJa0gteGPvKF4RWmT
-	 c3i/hcr/b5bZXFDco38s8XFB0T9Gghix8YdTjzyv+o06u8BAkFZGN2vS/G5f0iLizR
-	 bNW40ZbE6OJtg==
-Message-ID: <sashiko-outbox-178606@kernel.org>
+	b=mXiRhNXNLJN/ZWLS9hl12mryQ2GDzYw5pFqlxZdfHyHX/jTqITqpxIv2bKm6V++Q8
+	 1YufWD2s2BvjInTZX4K2w6R0Iv1QsfXV0f5Efmek7G4SktrhaO89tkXeD1HGmL5XFF
+	 /P7x8/M2tVd6KqVyaBKa9bt+w4W+V5URyrU9VhMun6x/ikxCsWkrzGk5Ub8sEQl4fi
+	 6VT9zepdYsZihHYn508402DY5/TNn73bEj2d29j0FJyNXuwIl6oQ1TqBlPSGvI4tjF
+	 v31zmgMLcgPkpnOQu9vaHG/DJf6g7SQ6J4e6tb9freq/bwgintbg5tuGshfh9QE9tx
+	 KhT57/Vfyy/zg==
+Message-ID: <sashiko-outbox-178653@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v4 2/3] mptcp: inherit sk_reuse and fix dev
- bind override
+Subject: Re: [PATCH mptcp-next v4 3/3] mptcp: kunit: add sockopt test
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <4adf96455e63a35be3228434cfe2ba79ea99bcb0.1792470313.git.tanggeliang@kylinos.cn>
+In-Reply-To: <fdd33ceda25e9c54bf9c38c999034af7d6a6f08e.1792470313.git.tanggeliang@kylinos.cn>
 References: <cover.1792470313.git.tanggeliang@kylinos.cn>
- <4adf96455e63a35be3228434cfe2ba79ea99bcb0.1792470313.git.tanggeliang@kylinos.cn>
+ <fdd33ceda25e9c54bf9c38c999034af7d6a6f08e.1792470313.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 20 Oct 2026 08:44:28 +0000
+Date: Tue, 20 Oct 2026 08:55:31 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -62,98 +61,148 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] mptcp: wrong sk_uid during subflow bind when syncing sk_reuseport
+- [Medium] mptcp: kunit: mptcp_sockopt_test() fails in kernel_connect() whe=
+n lo is down
 --
 
-commit 1d41a74d8cd4f5351a1f4186bfb92fe0ffeada01
+commit d196ed613cae4d93a15c8207b2a196e0356c9e7d
 Author: Geliang Tang <geliang@kernel.org>
 
-mptcp: inherit sk_reuse and fix dev bind override
+mptcp: kunit: add sockopt test
 
-This commit propagates sk_reuse and sk_reuseport from the master socket to
-subflows, increments setsockopt_seq when SOL_SOCKET options are set, and
-avoids overriding sk_bound_dev_if in __mptcp_subflow_connect() when
-local->ifindex is zero.
+This commit adds a KUnit test for MPTCP socket options (SO_REUSEADDR,
+SO_BINDTODEVICE, and SO_BINDTOIFINDEX) and lockdep class separation between
+MPTCP sockets and their subflows across IPv4 and IPv6.
 
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index 922f6ae5c80cb..952bc015eee87 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
+> diff --git a/net/mptcp/sockopt_test.c b/net/mptcp/sockopt_test.c
+> new file mode 100644
+> index 0000000000000..f8ce69911cafd
+> --- /dev/null
+> +++ b/net/mptcp/sockopt_test.c
+> @@ -0,0 +1,184 @@
 
 [ ... ]
 
-> @@ -1706,6 +1708,9 @@ static void sync_socket_options(struct mptcp_sock *=
-msk, struct sock *ssk)
->  		assign_bit(b, &inet_sk(ssk)->inet_flags, src & BIT(b));
-> =20
->  	WRITE_ONCE(inet_sk(ssk)->local_port_range, READ_ONCE(inet_sk(sk)->local=
-_port_range));
+> +static void mptcp_sockopt_test(struct kunit *test, sa_family_t family)
+> +{
+> +	struct socket *server_sock, *client_sock, *accepted_sock;
+> +	struct msghdr send_msg =3D { 0 }, recv_msg =3D { 0 };
+> +	struct sockaddr_storage addr =3D { 0 };
+> +	struct kvec send_vec, recv_vec;
+> +	char send_buf[] =3D "MPTCP";
+> +	char recv_buf[32] =3D { 0 };
+> +	int err, addrlen;
 > +
-> +	ssk->sk_reuse =3D sk->sk_reuse;
-> +	ssk->sk_reuseport =3D sk->sk_reuseport;
->  }
-> =20
->  void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk)
+> +	if (family =3D=3D AF_INET6) {
+> +		struct sockaddr_in6 *addr6 =3D (struct sockaddr_in6 *)&addr;
+> +
+> +		addr6->sin6_family =3D AF_INET6;
+> +		addr6->sin6_port =3D htons(0);
+> +		addr6->sin6_addr =3D in6addr_any;
+> +		addrlen =3D sizeof(struct sockaddr_in6);
+> +	} else {
+> +		struct sockaddr_in *addr4 =3D (struct sockaddr_in *)&addr;
+> +
+> +		addr4->sin_family =3D AF_INET;
+> +		addr4->sin_port =3D htons(0);
+> +		addr4->sin_addr.s_addr =3D htonl(INADDR_ANY);
+> +		addrlen =3D sizeof(struct sockaddr_in);
+> +	}
+> +
+> +	err =3D sock_create_kern(&init_net, family, SOCK_STREAM, IPPROTO_MPTCP,
+> +			       &server_sock);
+> +	KUNIT_ASSERT_EQ(test, err, 0);
+> +	err =3D kunit_add_action_or_reset(test, sock_release_wrapper,
+> +					server_sock);
+> +	KUNIT_ASSERT_EQ(test, err, 0);
+> +
+> +	mptcp_test_reuseaddr(test, server_sock);
+> +
+> +	mptcp_test_bindtodevice(test, server_sock);
+> +
+> +	err =3D kernel_bind(server_sock, (struct sockaddr_unsized *)&addr,
+> +			  addrlen);
+> +	KUNIT_ASSERT_EQ(test, err, 0);
+> +
+> +	err =3D kernel_getsockname(server_sock, (struct sockaddr *)&addr);
+> +	KUNIT_ASSERT_EQ(test, err, addrlen);
+> +
+> +	err =3D kernel_listen(server_sock, 5);
+> +	KUNIT_ASSERT_EQ(test, err, 0);
+> +
+> +	err =3D sock_create_kern(&init_net, family, SOCK_STREAM, IPPROTO_MPTCP,
+> +			       &client_sock);
+> +	KUNIT_ASSERT_EQ(test, err, 0);
+> +	err =3D kunit_add_action_or_reset(test, sock_release_wrapper,
+> +					client_sock);
+> +	KUNIT_ASSERT_EQ(test, err, 0);
+> +
+> +	mptcp_test_bindtoifindex(test, client_sock);
+> +
+> +	err =3D kernel_connect(client_sock,
+> +			     (struct sockaddr_unsized *)&addr,
+> +			     addrlen, 0);
+> +	KUNIT_ASSERT_EQ(test, err, 0);
 
-[Severity: High]
-When syncing sk_reuseport to ssk here in sync_socket_options(), does ssk
-have the right sk_uid before kernel_bind() runs in
-__mptcp_subflow_connect()?
+[Severity: Medium]
+The commit message notes that INADDR_ANY is used instead of INADDR_LOOPBACK
+to avoid failures when running during early boot before the loopback device
+is up. However, will kernel_connect() in mptcp_sockopt_test() still fail
+when CONFIG_MPTCP_KUNIT_TEST=3Dy runs built-in at early boot?
 
-In mptcp_subflow_create_socket(), sock_create_kern() initializes
-SOCK_INODE(sf)->i_uid to current_fsuid(), and sock_init_data() copies that
-into sf->sk->sk_uid. Although mptcp_subflow_create_socket() then updates
-SOCK_INODE(sf)->i_uid to the master socket's UID:
+When kunit_run_all_tests() executes from kernel_init_freeable(), the "lo"
+device in init_net has been registered by loopback_net_init() without
+IFF_UP set, so the NETDEV_UP handlers in inetdev_event() and
+addrconf_notify() -> init_loopback() have not yet configured 127.0.0.1/8 or
+::1/128.
 
-net/mptcp/subflow.c:mptcp_subflow_create_socket() {
-	...
-	SOCK_INODE(sf)->i_ino =3D SOCK_INODE(sk->sk_socket)->i_ino;
-	SOCK_INODE(sf)->i_uid =3D SOCK_INODE(sk->sk_socket)->i_uid;
-	SOCK_INODE(sf)->i_gid =3D SOCK_INODE(sk->sk_socket)->i_gid;
-	...
-}
+While binding server_sock to INADDR_ANY or in6addr_any allows kernel_bind()
+and kernel_listen() to succeed, client_sock is bound to lo->ifindex via
+mptcp_test_bindtoifindex() before calling kernel_connect():
 
-ssk->sk_uid is not updated until mptcp_sock_graft() calls sk_set_socket()
-at the end of __mptcp_subflow_connect(), after kernel_bind() and
-kernel_connect():
+For AF_INET, mptcp_connect() -> tcp_v4_connect() -> ip_route_connect() ->
+ip_route_output_key_hash_rcu() checks fl4->flowi4_oif in net/ipv4/route.c:
 
-net/mptcp/subflow.c:__mptcp_subflow_connect() {
-	...
-	err =3D mptcp_subflow_create_socket(sk, local->addr.family, &sf);
-	...
-	err =3D kernel_bind(sf, (struct sockaddr_unsized *)&addr, addrlen);
-	...
-	err =3D kernel_connect(sf, (struct sockaddr_unsized *)&addr, addrlen, O_NO=
-NBLOCK);
-	...
-	mptcp_sock_graft(ssk, sk->sk_socket);
-}
+	if (fl4->flowi4_oif) {
+		dev_out =3D dev_get_by_index_rcu(net, fl4->flowi4_oif);
+		rth =3D ERR_PTR(-ENODEV);
+		if (!dev_out)
+			goto out;
 
-When additional subflows are created asynchronously via mptcp_worker or a
-privileged path manager daemon, current_fsuid() is 0 (root) rather than the
-UID of the owning MPTCP socket.
-
-During kernel_bind() -> inet_csk_get_port(), the SO_REUSEPORT checks in
-sk_reuseport_match(), inet_csk_bind_conflict() -> inet_bind_conflict(), and
-inet_csk_update_fastreuse() all read sk_uid(ssk):
-
-net/ipv4/inet_connection_sock.c:inet_bind_conflict() {
-	...
-		} else if (!reuseport_ok || !sk->sk_reuseport ||
-			   !sk2->sk_reuseport || !reuseport_cb_ok ||
-			   (sk2->sk_state !=3D TCP_TIME_WAIT &&
-			    !uid_eq(uid, sk_uid(sk2)))) {
-			return true;
+		/* RACE: Check return value of inet_select_addr instead. */
+		if (!(dev_out->flags & IFF_UP) || !__in_dev_get_rcu(dev_out)) {
+			rth =3D ERR_PTR(-ENETUNREACH);
+			goto out;
 		}
-	...
-}
 
-Because sk_uid(ssk) is still 0 during kernel_bind(), won't an unprivileged
-user's subflow fail with -EADDRINUSE when binding to the same port as the
-initial subflow or another SO_REUSEPORT socket owned by that user, while
-also matching against root-owned SO_REUSEPORT sockets and recording
-tb->fastuid as 0 in inet_csk_update_fastreuse()?
+Because "lo" does not have IFF_UP set, route lookup fails with
+-ENETUNREACH.
+
+For AF_INET6, mptcp_connect() -> tcp_v6_connect() rewrites in6addr_any to
+in6addr_loopback in net/ipv6/tcp_ipv6.c:
+
+	if (ipv6_addr_any(&usin->sin6_addr)) {
+		if (ipv6_addr_v4mapped(&sk->sk_v6_rcv_saddr))
+			ipv6_addr_set_v4mapped(htonl(INADDR_LOOPBACK),
+					       &usin->sin6_addr);
+		else
+			usin->sin6_addr =3D in6addr_loopback;
+	}
+
+Subsequent route and source-address lookup via ip6_dst_lookup_flow() ->
+ip6_dst_lookup_tail() -> ip6_route_get_saddr() -> ipv6_dev_get_saddr() then
+fails with -EADDRNOTAVAIL or -ENETUNREACH because "lo" has no IPv6 address
+or route while down (and __dev_queue_xmit() also drops packets with
+-ENETDOWN when !(dev->flags & IFF_UP)).
+
+Should the test run in a dedicated network namespace with its loopback
+device brought up, or ensure "lo" is up before connecting?
+
+[ ... ]
+
+> +MODULE_LICENSE("GPL");
+> +MODULE_DESCRIPTION("KUnit tests for MPTCP sockopt");
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1792470313.gi=
-t.tanggeliang@kylinos.cn?part=3D2
+t.tanggeliang@kylinos.cn?part=3D3
