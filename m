@@ -1,56 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792512441;
-	b=aB/MGoOFj7n2s2NKWU0IbvBmhDxO8E3JB4zurYDRUe2BD6P1Vrs4fvz0bNNcFIT2s1+P
-	 iYzjz0Rdjwo6lisjdsfjczqbpAYascg5JNjwhnDAsJ7vtf1GGDOC2SYO/CDWAXWjLwCkY
-	 O57leNIa4OGcGU4dLDSTQhfFaHnve+OJQVOBL4350ZN2RWE0P5w+aCYkif6F0dTubvUYs
-	 cfkukAO+fJzMuD3bxGH2Q+YuS5D03HRerWCX9Ou2BM2H2kPiPzLXxhgjwfOpq10eulVPG
-	 yMEiOJcxZ7yqBfGXJGE9B++dOcwDPoB48IjtUcryOF9XH+TcTExKzWjDUbU6M2XVs3w==
+	t=1792562820;
+	b=vG4Cim2OmQXpnJy5KIbhT0KWuF/t8EqLmdInr7TSpWT+1O926IEUTmM2q+JTk45Rn9bO
+	 LMLTL9ZXhvgBIHl09mel/ejZYejt+w0B+tJjYX8bmYs0ZKXxaCrzATsi94NsoCm2EKWYj
+	 rCkZPuWHZcn5RW/PNRA7EZdpQVCRnBS4S/OC+ScpLGOTEcr3X6GfUqlV2r2LWwhPnPSru
+	 nCcJVrilC5utMSdZqZB2mtTs6HCmtlY796w34wawP384TnR4sQTpTqwOBkT/SDT6apRjD
+	 NM0dW+vntotDEm0uMYNP1gL/AH/FkXofjDZITQrd74sUd11IYqEHDGzA+kiAia7JxeA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792512441;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792562820;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=VQx2a/dS4Gb1kXbZNild2IxqxxbbMst8sQabNMkEt44=;
-	b=nlfuCgYK/AxFu0Bz7FQj278W8dZ4kHmfRb04tmHeoM6TANFb+76RXdWA/O/nMS1YqSDP
-	 CDwazkg3h9njCFykoVDzD6dJj9CPyYtuKMav8PLiUk5kdCPjL2xwzTbkgYal43HFV5+et
-	 vhC1B9uLomGA9raW4TQlN/sRhW7w+UtkPmGQjkysuGnYh08ZUO+EYEee2WtzIvbxMKnGF
-	 9usNhipZOAGf+OQqliAK7xCkbhwFJsVLVSvB6W0NJIx0szDnTHZKLRSkBJ0zEmMMVPoKr
-	 PItQ7W6SN7CnL+2BlRdLNfq8CYQ3653IswzcRC8X4Jj8PLXF7OCClQZMK1+aKC/ApDg==
+	bh=izfThV7wsAx4FqTvspHGNv4Iqj5ikmlqrQJJX3as0oY=;
+	b=a1NhecAEeZHpIGgPr1BDNxRzJBN+DomP0ll86BhtM9B4tB2yJLHhgtUTkjR6Lq9ToUTm
+	 MK38355trfRNSNcRZ5MKzFMNLKLBmRoUXQBcwPMO5aOylJjrH+Zsp65kphjSaWhGmN5Nz
+	 gkPocs0hqx38+FWBmrWe+GT94YQZX44FR0gi0LbOkkbtTscWotDZWzgkiIBrnPlcSt4m+
+	 q8HGNfc6EUB1TC1vNKeJ8sQxN+Wpc3XkUMnAFFOnF5SxiCZoEZ2zqgLRk9ZeWcfGL+GlL
+	 RFuCuI/I4+MspmD9VhYucsdQIqsZHLgGCWpy0mMfN13/WZw84rL2su/ysR/FlSKcEmw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LkFav1X3;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PMUYlTft;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F404606A31A
-	for <mptcp@lists.linux.dev>; Tue, 20 Oct 2026 16:07:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D82606A31F;
+	Wed, 21 Oct 2026 06:07:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LkFav1X3
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEE6F1F000C4;
-	Tue, 20 Oct 2026 16:07:20 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PMUYlTft
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE7B21F000C9;
+	Wed, 21 Oct 2026 06:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792512441;
-	bh=VQx2a/dS4Gb1kXbZNild2IxqxxbbMst8sQabNMkEt44=;
+	s=k20260515; t=1792562820;
+	bh=izfThV7wsAx4FqTvspHGNv4Iqj5ikmlqrQJJX3as0oY=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=LkFav1X3mB2+Vj8h9r6mOXOF6z6jrjgsZzuyGO2a1JsGOsTkauWTjyWkLrfdbjkuv
-	 mf3tTuV88KFs88sAvAh0BYkS9J3jPfAnRHa9n/RjVsN0jWCrSXAGyfsei2CuDMiJnH
-	 80KayEkGdg6Aje0ox6kxtkRTul952esWx17HcrM4HBll2cVLRpM25TzRJ6ss//HDAK
-	 B/ZfNqVaXNfduXnVC4Yt/qnPirdQeqAp/yFoqwRSMCwptLEbLCFOrIht1DgxKLfN8t
-	 bY7NRs5U8MaebOOvR8u3+SDnl6Z4fPjcEvvvLVQU/vJP/PEsKUtds4jrqKDMAVbOn1
-	 nYOygTPdbDiAA==
-Subject: Re: [PATCH mptcp-next v3 2/2] mptcp: kunit: add sockopt test
+	b=PMUYlTft9TCo2t6T/gpJcngC2XNsVA4/E3o/6XIKf83oxdO7NY0OoUceaIg6WWYd6
+	 mju4UMRnMgSoZHgqYZFjaVygt4msxHnpgUNMJ2F3gHLxpVE1gkAY4w2cxUNqDd54oo
+	 GCrehLhFnxufcMUkfS9ksGb7h0g2P7lJUTTpzcDUERtlODkmxqaMaSs2uNr/yURbQd
+	 Bjid/YzEIiJrK38cjHaxfnh5UkrR8mUw8a4RYxj8++0prnFK4tmtdhegaP3VdxyVpH
+	 v/JR1ZGryoAY/Mtk3EaM90VXgoUlQc/aTHMNvIgPBVBw2ql+goLa3Sm0NVQhdw63pl
+	 ySq3jmObpn9hw==
+Subject: Re: [PATCH mptcp-net 1/2] mptcp: pm: in-kernel: fullmesh: skip closed
+ subflows
 From: netdev-bot+sashiko@kernel.org
-To: geliang@kernel.org
-Cc: mptcp@lists.linux.dev, tanggeliang@kylinos.cn, kuba@kernel.org
-Date: Tue, 20 Oct 2026 16:06:56 +0000
-Message-ID: <179251241642.3133.7263923768840837613@kernel.org>
-In-Reply-To: =?utf-8?q?=3C398dbbf2562050831dae08e0a9058df6b91e575e=2E1792378?=
- =?utf-8?q?794=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
-References: =?utf-8?q?=3C398dbbf2562050831dae08e0a9058df6b91e575e=2E17923787?=
- =?utf-8?q?94=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
-X-sashiko-severity: Medium
+To: w453y.me@gmail.com
+Cc: mptcp@lists.linux.dev, matttbe@kernel.org, martineau@kernel.org,
+ geliang@kernel.org, pabeni@redhat.com, stable@vger.kernel.org,
+ kuba@kernel.org
+Date: Wed, 21 Oct 2026 06:06:59 +0000
+Message-ID: <179256281931.3133.3826869783117765302@kernel.org>
+In-Reply-To: <20261019170751.200446-2-w453y.me@gmail.com>
+References: <20261019170751.200446-2-w453y.me@gmail.com>
+X-sashiko-severity: High
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -63,10 +64,10 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 4 potential
+Thank you for your contribution! Sashiko AI review found 2 potential
 issue(s) to consider.
 
-Critical: 0 · High: 0 · Medium: 2 · Low: 2
+Critical: 0 · High: 2 · Medium: 0 · Low: 0
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -74,195 +75,146 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [Medium] mptcp_sockopt_test() in net/mptcp/sockopt_test.c binds to
-  127.0.0.1 or ::1 in init_net (lines 31-61).
-- [Medium] Under CONFIG_PROVE_LOCKING, mptcp_sockopt_test() passes
-  accepted_sock->sk to mptcp_check_lockdep_class() (sockopt_test.c:109).
-- [Low] The MPTCP_KUNIT_TEST help text in net/mptcp/Kconfig (line 31) was
-  changed to "Currently covers the MPTCP crypto and token helpers, and…
-- [Low] mptcp_sockopt_test() releases server_sock, client_sock and
-  accepted_sock only at the end of the function (sockopt_test.c:112-114).
+- [High] In fill_remote_addresses_fullmesh() (net/mptcp/pm_kernel.c,
+  lines 228-234), the new `if (subflow->closing) continue;` check in the…
+- [High] fill_remote_addresses_fullmesh() (net/mptcp/pm_kernel.c) now
+  skips every subflow with `closing` set, in both loops.
 
 --
 
-mptcp: kunit: add sockopt test
+mptcp: pm: in-kernel: fullmesh: skip closed subflows
 
-This adds a KUnit suite that creates kernel MPTCP sockets in init_net,
-sets SO_REUSEADDR, connects over loopback and transfers data. With
-CONFIG_PROVE_LOCKING it also checks that the client and accepted MPTCP
-sockets use a different lockdep key than their first subflow. Both IPv4
-and IPv6 are covered.
+When a fullmesh endpoint used by the initial subflow is removed and then
+added back, the closed initial subflow stays in conn_list and marks remote
+ID 0 as unavailable, so no new subflow is created. This patch makes
+fill_remote_addresses_fullmesh() skip subflows with closing set, both when
+collecting unavailable remote IDs and when picking remote addresses.
 
-> diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
-> index a9f58edc354c..cdae7be802fb 100644
-> --- a/net/mptcp/Kconfig
-> +++ b/net/mptcp/Kconfig
-> @@ -28,7 +28,7 @@ config MPTCP_KUNIT_TEST
->  	depends on KUNIT
->  	default KUNIT_ALL_TESTS
->  	help
-> -	  Currently covers the MPTCP crypto and token helpers.
-> +	  Currently covers the MPTCP crypto and token helpers, and sockopt tests
->  	  Only useful for kernel devs running KUnit test harness and are not
->  	  for inclusion into a production build.
-
-[Severity: Low]
-This isn't a bug, but the new help line has lost its trailing period, so
-it runs into the "Only useful for kernel devs ..." sentence after it.
+> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+> index 1a7750813235..b7d7520a3290 100644
+> --- a/net/mptcp/pm_kernel.c
+> +++ b/net/mptcp/pm_kernel.c
+> @@ -216,11 +216,19 @@ fill_remote_addresses_fullmesh(struct mptcp_sock *msk,
 
 [ ... ]
 
-> diff --git a/net/mptcp/sockopt_test.c b/net/mptcp/sockopt_test.c
-> new file mode 100644
-> index 000000000000..b4b9c40be92f
-> --- /dev/null
-> +++ b/net/mptcp/sockopt_test.c
-> @@ -0,0 +1,145 @@
-
-[ ... ]
-
-> +#ifdef CONFIG_PROVE_LOCKING
-> +static void mptcp_check_lockdep_class(struct kunit *test, struct sock *sk)
-> +{
-> +	struct mptcp_sock *msk = mptcp_sk(sk);
-> +	struct sock *ssk = msk->first;
+>  	mptcp_for_each_subflow(msk, subflow) {
+> +		if (subflow->closing)
+> +			continue;
 > +
-> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ssk);
-> +	KUNIT_EXPECT_PTR_NE(test,
-> +			    sk->sk_lock.dep_map.key,
-> +			    ssk->sk_lock.dep_map.key);
-> +}
-> +#endif
+>  		ssk = mptcp_subflow_tcp_sock(subflow);
+>  		mptcp_remote_address((struct sock_common *)ssk, &addrs[i]);
+>  		addrs[i].id = READ_ONCE(subflow->remote_id);
 
-[Severity: Medium]
-What happens here if the accepted socket fell back to plain TCP?
+[Severity: High]
+Does the closing check catch the tcp_disconnect() case that the commit
+message gives as the reason for this check?
 
-mptcp_sockopt_test() passes accepted_sock->sk to this helper. The helper
-casts it with mptcp_sk() and reads msk->first, and it never checks
-sk_is_mptcp() or sk->sk_protocol first.
+msk->first can reach TCP_CLOSE while the msk stays established, for
+example after a peer RST or a timeout. In that case __mptcp_close_ssk()
+sets closing = 1. The first subflow is not disposed, so
+__mptcp_subflow_disconnect() then runs:
 
-On passive fallback, mptcp_stream_accept() grafts the plain TCP subflow
-onto the new socket:
-
-net/mptcp/protocol.c:mptcp_stream_accept() {
+net/mptcp/protocol.c:__mptcp_subflow_disconnect() {
     ...
-tcpfallback:
-		newsk->sk_kern_sock = arg->kern;
-		lock_sock(newsk);
-		__inet_accept(sock, newsock, newsk);
+		WARN_ON_ONCE(tcp_disconnect(ssk, 0));
+		mptcp_subflow_ctx_reset(subflow);
     ...
 }
 
-When that happens, accepted_sock->sk is a struct tcp_sock. msk->first then
-reads unrelated tcp_sock bytes, and the resulting pointer is dereferenced
-for ssk->sk_lock.dep_map.key. KUNIT_ASSERT_NOT_ERR_OR_NULL() only catches
-NULL and ERR_PTR values.
+tcp_disconnect() sets inet_dport to 0 and keeps daddr.
+mptcp_subflow_ctx_reset() memsets the reset struct_group, which includes
+closing and remote_id, and sets local_id to -1:
 
-Passive fallback does not need malformed input. Some examples:
-
-- The client is in the active-disable window, so mptcp_connect() calls
-  mptcp_early_fallback(..., MPTCP_MIB_MPCAPABLEACTIVEDISABLED) and sends
-  a plain SYN.
-- Token allocation fails in mptcp_connect().
-- mptcp_sk_clone_init() fails in subflow_syn_recv_sock(), which then
-  sets fallback = true.
-- Another local process connects with plain TCP to the ephemeral
-  listening port in init_net before the test client does.
-  kernel_accept() takes whichever connection is queued first.
-
-Send and recv still work over TCP in each of these cases, so the test
-gets as far as this cast. The test also never checks that MPTCP was
-actually negotiated.
-
-Could the test confirm that accepted_sock->sk really is an MPTCP socket
-before it dereferences msk->first?
-
-[ ... ]
-
-> +	err = kernel_bind(server_sock, (struct sockaddr_unsized *)&addr,
-> +			  addrlen);
-> +	KUNIT_ASSERT_EQ(test, err, 0);
-
-[Severity: Medium]
-Can this bind succeed when the suite is built in?
-
-The test binds to 127.0.0.1 or ::1 in init_net but never brings lo up.
-The kernel does not set IFF_UP on lo by itself. The only in-kernel path
-that opens it is ic_open_devs(), and ip_auto_config() skips that unless
-ip= is on the command line:
-
-net/ipv4/ipconfig.c:ip_auto_config() {
-    ...
-	if (!ic_enable)
-		return 0;
+net/mptcp/protocol.h:mptcp_subflow_ctx_reset() {
+	memset(&subflow->reset, 0, sizeof(subflow->reset));
+	subflow->request_mptcp = 1;
+	WRITE_ONCE(subflow->local_id, -1);
     ...
 }
 
-The loopback addresses are only installed after lo gets NETDEV_UP. Until
-then, __inet_bind() fails here:
+The subflow stays at the head of conn_list, because msk->first is added
+with list_add() and joins use list_add_tail(). It now has closing == 0,
+remote_id == 0 and dport == 0.
 
-net/ipv4/af_inet.c:__inet_bind() {
-    ...
-	err = -EADDRNOTAVAIL;
-	if (!inet_addr_valid_or_nonlocal(net, inet, addr->sin_addr.s_addr,
-	                                 chk_addr_ret))
-		goto out;
-    ...
-}
+The first loop does not match it, since local_id is -1. The second loop
+does not skip it either, so addrs[0] becomes {peer daddr, port 0, id 0}
+and bit 0 is set in unavail_id. It is visited first, so it would also
+hide the valid remote ID 0 address of any live subflow later in the list.
 
-The IPv6 bind fails the same way.
+When a fullmesh endpoint is added later, would the PM call
+__mptcp_subflow_connect() towards <peer>:0? The endpoint would be marked
+used and extra_subflows incremented, so that local address would still
+never get a working subflow.
 
-Built-in suites run from kernel_init_freeable() through
-kunit_run_all_tests(), right after do_basic_setup(). That is before
-userspace has a chance to run "ip link set lo up".
+The commit message also says:
 
-MPTCP_KUNIT_TEST defaults to KUNIT_ALL_TESTS. Won't both the v4 and v6
-cases fail in a normal kunit.py or KUNIT_ALL_TESTS run, before the
-lockdep check is reached?
+  "The initial subflow is kept in the conn_list once closed, and it keeps
+   the local ID 0"
 
-Until now MPTCP_KUNIT_TEST only covered pure unit tests (crypto and
-token). Neither the commit message nor the Kconfig help says this test
-has to run as a module after lo is up.
+That seems to hold only on the tcp_shutdown() path. mptcp_close_ssk()
+already treats local_id < 0 as a disconnected first subflow:
 
-Other KUnit tests that need a live netdev open it themselves. For
-example, net/mctp/test/utils.c calls dev_open(ndev, NULL).
+	/* The first subflow can already be closed or disconnected */
+	if (subflow->close_event_done || READ_ONCE(subflow->local_id) < 0)
+		return;
 
-[ ... ]
+Should this also skip subflows with READ_ONCE(subflow->local_id) < 0, or
+with the ssk in TCP_CLOSE? Another option is to take the remote ID 0
+address from the msk, as fill_remote_addr() does.
 
-> +#ifdef CONFIG_PROVE_LOCKING
-> +	mptcp_check_lockdep_class(test, client_sock->sk);
-> +	mptcp_check_lockdep_class(test, accepted_sock->sk);
-> +#endif
-> +
-> +	sock_release(accepted_sock);
-> +	sock_release(client_sock);
-> +	sock_release(server_sock);
-> +}
+[Severity: High]
+With every closing subflow skipped in both loops, can this function end
+up with no candidate at all? Unlike fill_remote_addr(), there is no
+fallback to the msk's remote address.
 
-[Severity: Low]
-Does a failed assertion leak server_sock, client_sock and accepted_sock?
+On graceful endpoint removal, mptcp_pm_rm_addr_or_subflow() calls
+mptcp_subflow_shutdown() and then mptcp_close_ssk(). For an established
+msk->first, __mptcp_close_ssk() sets closing = 1 and only calls
+tcp_shutdown(ssk, SEND_SHUTDOWN). local_id, remote_id, daddr and dport
+all stay valid, and the subflow stays in conn_list.
 
-These sock_release() calls are the only cleanup in the test. Between
-sock_create_kern() and here there are many KUNIT_ASSERT_*() checks,
-including the one in mptcp_check_lockdep_class().
+The msk is kept alive on purpose in this state. A comment in
+__mptcp_close_ssk() says "the protocol can still create more subflows".
 
-A failed assertion ends the test thread through kunit_try_catch_throw():
+Take a single-subflow connection whose initial endpoint is deleted. The
+closed initial subflow is then the only conn_list entry with remote ID 0.
+Both new checks skip it, and the function returns 0.
+mptcp_pm_create_subflow_or_signal_addr() has already cleared the
+endpoint id from id_avail_bitmap at this point:
 
-lib/kunit/try-catch.c:kunit_try_catch_throw() {
-    ...
-	try_catch->try_result = -EFAULT;
-	kthread_exit(0);
-}
+		nr = fill_remote_addresses_vec(msk, &local.addr, fullmesh,
+					       addrs, ARRAY_SIZE(addrs));
+		if (nr == 0)
+			continue;
 
-That skips these releases. No cleanup is registered either, for example
-through kunit_add_action_or_reset().
+As a result, no subflow is attempted from that endpoint.
 
-A failure after the server socket is created leaks that MPTCP socket and
-its subflow. A later failure also leaks the client and accepted sockets,
-plus the established loopback connection in init_net.
+Does re-adding the initial fullmesh endpoint (local ID 0) still create no
+subflow in this case? The selftest in the follow-up patch, "selftests:
+mptcp: join: re-add the initial subflow endp with fullmesh", seems to
+cover only the case with a second subflow (endpoint id 2) to remote ID 0.
 
-In a built-in run with lo down, the kernel_bind() assertion above already
-fails, so server_sock leaks in both the v4 and v6 cases.
+There also seems to be a new regression for a different fullmesh
+endpoint X (X != 0) added after the initial endpoint was removed.
+
+Before this patch, the first loop marked nothing (local_id 0 != X). The
+second loop then used the closed subflow's still-valid peer address, so
+the subflow X -> peer was created.
+
+With this patch, nothing is created and the endpoint is consumed. The
+connection can then only wait for the close timeout.
+
+Non-fullmesh endpoints still work, because fill_remote_addr() uses the
+msk address:
+
+	mptcp_remote_address((struct sock_common *)sk, &remote);
+
+Would using the msk's remote address for remote ID 0 in the fullmesh
+path, subject to deny_join_id0, cover both cases?
+
+Since the patch is tagged for stable, these regressions would also go to
+stable kernels.
 
 -- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1792378794.git.tanggeliang%40kylinos.cn
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261019170751.200446-1-w453y.me%40gmail.com
