@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792600615;
-	b=PTevMnpTXw5+T1EgLM8iu3SkYh6sMjoYCxpLayHpyO9SalkckqLng1mQSw2UuG8IGG0g
-	 THjWE5xVZmwp7+UibT7Ld8tmjKOL05abZm0mhUnpCjG+ZVSLwpVeUqDG14gu+yglQfzk0
-	 z2+041oVulAHnNvtlCFKAI1ypzXMOzxXkdm4BRh+aVlR5abfCuYyiQ56z7YeRmb35KskR
-	 d/GT2OrUkpwezVaN9XqNcJE6hqGqyUmWlXhBWFdNFk7JXPRGFY/oNK7DXs5Bm546nCQFK
-	 wv4umkJvMu6alJg4pTEXGaxnwi1PxR6m4/2cuV4upclGjUqxmJ890OuQ07RjAnhvNrA==
+	t=1792600616;
+	b=yFBoC79j5J8voOsjyio5Y27TgWtDVfJCD+hNXhxLaTVzhyPEMDJNY6FLwJ7H5kxNpwrK
+	 TG7Zi3wQnfcDDKEvMQ0fksrjmo15MfzFE4ZVtlVxB6psTt9CzpgJObZeyk8gLaL4SGD30
+	 lzCg4N57bK21oZ+U9tYNtJF+5bBUTqZ4ZEFtDimneHnPCAJI99J/tED88UehnKUYRxrTy
+	 RzRwx7mzeeH4eyT7GYaQxDSPjEf3iDU/o5VbbVnh1pDmPTClApfnycx2Xz8CpMBsfi/CL
+	 VS6uaWUUxKwP7VY350qa3mzPHHOj5JuUxn7oXhIg3ScNmeVLB90m8S8awFZ0EiPXwCA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792600615;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792600616;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=pnvn85uCz4KQiQDcqAE1uqGvm4H0Dc/0KsPcKHffwCU=;
-	b=4CXIKBxfDowaQqlMtXiFurXVoqpFE3GfNdZiHnoGGvCS8WiuyjOu3CztLseMR5qJVbbm
-	 8kn7quCQdEsMMiLqtpALfg6P/5AnJNkF71USvoxR3VXqClcbvJLJSUe+HJ1mMvKULy6eJ
-	 PKEExMe1rA9r9hZQG5rn+hVczcyzLIaSvrsemPh5ELp148yVbVWMzojbP+zwGa+SxLJc8
-	 GJrWC8GXKUZdlyyCU8kIlokGXRpJKeC0WrSX/Eq1sUZpryQcnICERYC+cZWDx7mceOL7Z
-	 9i31ve4BU68hPUEFwmc/uk5u5VIFGIa79XojAhhLYNE+F1EKPir+PcFQqpR9zPRl5qw==
+	bh=L5Eayrtw8N35HVeH5BztZx1Eg5ELU2FIMHy1YK/Q8ks=;
+	b=2H5iP/fJyNdebFxHqXZfrV+3Sr1xBGaK+V1a9SmJLqNE+HmQUR0ME06eWt5DTQFOj/AZ
+	 RNc8NC5CWJUY3WRkRQCjyuJwkp6I2M9Wx8N2dG6MXgq811u4r5pVOOtE3Su2Ok9vx3EN3
+	 dICnlhaAlkMvf41yQkhU0QVXWvCQp7iF7DqzfflefUv648KeCUgnWBSsPchLdQQDzWlKJ
+	 rr9BkPn6jsJ1SzYn/0OJqL8Q+Fmn+VXnlOVBdZONpTI+DjbeGwEVlfbhpDbmuW/gU7OME
+	 9wqgT7DXfgJwuPoPbHvC9zeDwH/409UpjYq9EAlpL0pDb2CxeyUngswec6KZHkh2P1w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MV8ZIX7h;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nwe+XBUN;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425D4606A319
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453F2606A319
 	for <mptcp@lists.linux.dev>; Wed, 21 Oct 2026 16:36:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MV8ZIX7h
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7D591F000C1;
-	Wed, 21 Oct 2026 16:36:54 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nwe+XBUN
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A98A81F000C1;
+	Wed, 21 Oct 2026 16:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1792600615;
-	bh=pnvn85uCz4KQiQDcqAE1uqGvm4H0Dc/0KsPcKHffwCU=;
+	bh=L5Eayrtw8N35HVeH5BztZx1Eg5ELU2FIMHy1YK/Q8ks=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=MV8ZIX7hZUv3yYR3cPHfWY0JWjKTLmV1O0vqoWCvGXlQQfdoHWs7o/bcoqPr0awGk
-	 zyPZrY5gYcJj0ni1+3tCfhnGh9AtFLxh3jkSU9Mpj1xTpf15/ITSOdwAKXwx2Nsp+K
-	 BMDLQFg/pmQkpkwrNwK8kGYs0SmyxyaewEPl2x1pjA7FaIjQZ37Hm/GduMA/qYMwsW
-	 p31Nm2+XSqxoHYoxIrRlIWPJtKqMZ1T1SgGnYSa90BvbkF4ANIkamkrVYT2YsDR9gg
-	 FoMV/Cn9COxfHcSMXnHtL2MHdJsaNlqd+Wznq5ozGuIDlQHn451Be/w+HXE5FNXR4S
-	 2irobuTk7ySkQ==
-Subject: Re: [PATCH mptcp-next v7 4/6] mptcp: pm: in-kernel: retry subflows
- closed after an error
+	b=nwe+XBUNMHv/+u78UdloA82cpuJLSJ4VK2+9a4A2WOwCv16peb48akYq1Kpuv7keE
+	 uqbevRzJj4u6/vEncFYcX9Qr+oazOr7rqqP4+Bmnc1cMuKa7WYoGF/x92f/kCoF6eM
+	 Zg/dgNQuRb5hs7nabisfED4q7asqu6u3De/iHLnIoJV8hk6QTdt8D95RVfhq0ooE2t
+	 fktSrEezydWLGyoCJFQ4gHMbkMIrccFU3wOHcwac3NMKXmWjr5CNmvZRnDhMc+ZAOE
+	 tBpZdG0uFjLYsnOczfq2j2orKNYWw/mX2MDtQxFULjktUGtO+dudyu6IjIIq+hy+DU
+	 X+cv9HDRYOGRA==
+Subject: Re: [PATCH mptcp-next v7 6/6] selftests: mptcp: join: validate
+ subflow retry after link failure
 From: netdev-bot+sashiko@kernel.org
 To: anilkaushikwireless@gmail.com
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Wed, 21 Oct 2026 16:36:54 +0000
-Message-ID: <179260061448.3133.10825671379220141321@kernel.org>
-In-Reply-To: <20261020031711.1896660-5-anilkaushikwireless@gmail.com>
-References: <20261020031711.1896660-5-anilkaushikwireless@gmail.com>
-X-sashiko-severity: Low
+Date: Wed, 21 Oct 2026 16:36:55 +0000
+Message-ID: <179260061526.3133.1559971650588338889@kernel.org>
+In-Reply-To: <20261020031711.1896660-7-anilkaushikwireless@gmail.com>
+References: <20261020031711.1896660-7-anilkaushikwireless@gmail.com>
+X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -62,98 +62,109 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found more severe
-issue(s) in other patches of this series. This mail is only an FYI, in case
-you want to address the nit picks below when you respin.
+Thank you for your contribution! Sashiko AI review found 2 potential
+issue(s) to consider.
 
-Low priority / nit picks for your consideration:
+Critical: 0 · High: 0 · Medium: 1 · Low: 1
 
-- [Low] The new paragraph in Documentation/networking/mptcp.rst (lines
-  76-85) does not match what the code does in three ways.
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
+
+- [Medium] The last step of the new test is meant to cover a specific
+  kernel path: msk close while a re-created subflow is still in SYN_SENT.
+- [Low] In run_tests() (mptcp_join.sh:1138-1140), the comment above the
+  cinfail branch still says '# create the input file for the failure…
 
 --
 
-mptcp: pm: in-kernel: retry subflows closed after an error
+selftests: mptcp: join: validate subflow retry after link failure
 
-With the in-kernel PM, a subflow that TCP closes after a retransmission
-or keepalive timeout is now re-created with the same addresses. The new
-subflow's SYN retries are set from the subflow-retries limit. Subflows
-reset by the peer or the path, never established, aborted locally, or
-using a removed address are not retried.
+This adds a link failure test case to mptcp_join.sh for the
+subflow-retries limit. Netfilter drops the client packets from one
+address at a time, and the test checks that the subflow is re-created
+from the same address. At the end the connection is closed while a
+subflow is being re-created, and the netlink events are checked.
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/440
-
-> diff --git a/Documentation/networking/mptcp.rst b/Documentation/networking/mptcp.rst
-> index b6753ffb9c9a6..0f07d4a29b6b7 100644
-> --- a/Documentation/networking/mptcp.rst
-> +++ b/Documentation/networking/mptcp.rst
-> @@ -73,6 +73,17 @@ To be able to use multiple IP addresses on a host to create multiple *subflows*
->  addresses can be used. This can be configured with ``ip mptcp endpoint`` for
->  example.
->  
-> +When TCP gives up on an established subflow initiated by the in-kernel path
-> +manager, after a retransmission or keepalive timeout, the path manager creates
-> +it again, with the ``subflow-retries`` limit as its number of SYN retries, like
-> +``TCP_SYNCNT``. A subflow reset by the peer, or by anything on the path, is not
-> +created again. TCP only gives up on a subflow after ``tcp_retries2``
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index f4d8afaeda4f3..a99cee39da63e 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -1137,7 +1137,7 @@ run_tests()
+>  		make_file "$cinfail" "client" $size
+>  	# create the input file for the failure test when
+>  	# the first failure test run
+> -	elif [ "$test_linkfail" -ne 0 ] && [ -z "$cinfail" ]; then
+> +	elif [ "$test_linkfail" -ne 0 ] && [ ! -s "$cinfail" ]; then
 
 [Severity: Low]
-Does this paragraph match what mptcp_pm_kernel_retry_check() and
-mptcp_pm_kernel_retry() do? I see three differences.
+This isn't a bug, but the comment above still says the file is created
+on "the first failure test run". With [ ! -s "$cinfail" ], the file is
+now regenerated whenever it is missing or empty. The sinfail branch has
+the same change.
 
-First, the text says only subflows "initiated by the in-kernel path
-manager" are re-created. The scope check in mptcp_pm_kernel_retry_check()
-is:
+The new test depends on this, because it empties cinfail and sinfail at
+the end so that later tests write their own content.
 
-net/mptcp/pm_kernel.c:mptcp_pm_kernel_retry_check() {
+Could the comment be updated to match the new condition?
+
+[ ... ]
+
+> @@ -2585,6 +2696,65 @@ link_failure_tests()
+
+[ ... ]
+
+> +		local retrying=1
+> +		if nft_drop_from 10.0.3.2; then
+> +			wait_counter_inc "${timeout_poll}" \
+> +				$ns2 "MPTcpExtMPJoinSynTx"
+> +			retrying=$?
+> +		fi
+> +		mptcp_lib_kill_group_wait $tests_pid
+> +		chk_no_sf_connecting ${retrying}
+
+[Severity: Medium]
+Does this teardown actually exercise mptcp_close_retry_subflows()?
+
+mptcp_lib_kill_group_wait() sends SIGTERM to every descendant. That
+means both the ns1 listener and the ns2 connector are killed while the
+128 MB transfers are still running in both directions.
+
+If the client has unread data when it is killed, __mptcp_close() takes
+the fastclose branch:
+
+net/mptcp/protocol.c:__mptcp_close() {
     ...
-	/* Only re-create subflows initiated by this side: MP_JOIN ones, or the
-	 * initial one on the client side.
-	 */
-	if (!subflow->request_join &&
-	    (subflow->mp_join || READ_ONCE(msk->pm.server_side)))
-		return false;
+	if (mptcp_data_avail(msk) || timeout < 0 ||
+	    (sock_flag(sk, SOCK_LINGER) && !sk->sk_lingertime)) {
+		...
+		mptcp_do_fastclose(sk);
+		timeout = 0;
     ...
 }
 
-On the client side, the initial MP_CAPABLE subflow has request_join,
-mp_join and server_side all at 0, so it passes this check and gets
-re-created. That subflow came from the application's connect(), not
-from the PM.
+The msk then becomes TCP_CLOSE. Next,
+__mptcp_destroy_sock()->mptcp_destroy_common() calls __mptcp_close_ssk()
+on every subflow, the SYN_SENT one included.
 
-Second, re-creating the initial subflow takes one of the "subflows"
-limit slots. mptcp_pm_kernel_retry() always does:
+If the server has unread data instead, it sends MP_FASTCLOSE over the
+unblocked 10.0.1.x subflow. On the client, mptcp_check_fastclose() then
+moves every subflow to TCP_CLOSE.
 
-	if (allowed)
-		msk->pm.extra_subflows++;
+In both cases, no_sf_connecting() in chk_no_sf_connecting() would pass
+even if mptcp_close_retry_subflows() were removed or broken. The check
+can only tell the difference on the non-fastclose path. On that path,
+without the helper, the SYN_SENT subflow would stay until the 60 s msk
+close timeout, which is longer than timeout_poll.
 
-The original initial subflow never decremented that counter when it
-closed, because mptcp_pm_subflow_check_next() only updates it when
-request_join or mp_join is set.
+Is there a way to make sure the close here takes the non-fastclose path,
+so that "no subflow connecting after close" really covers the new
+helper?
 
-So once the initial subflow is re-created, later endpoints or announced
-addresses have one less slot. With a "subflows" limit of 0, the initial
-subflow is never re-created at all.
-
-Third, the re-creation only happens once. A re-created subflow that does
-not connect within its SYN retries never becomes fully_established, so
-this check stops it from being tried again:
-
-	if (!READ_ONCE(subflow->fully_established))
-		return false;
-
-The commit message covers the second and third points ("Re-creating the
-initial subflow uses one of the additional subflows allowed by the
-limits" and "If this new subflow cannot connect, it is not retried
-again"). Could mptcp.rst describe the scope correctly and mention these
-two points as well?
-
-> +retransmissions, about 15 minutes by default: shorter outages are handled by
-> +TCP itself. A subflow that only receives data does not notice that its path
-> +stopped working: the application should then enable TCP keepalive on the
-> +MPTCP socket (``SO_KEEPALIVE``, ``TCP_KEEPIDLE``, ``TCP_KEEPINTVL`` and
-> +``TCP_KEEPCNT``), which MPTCP applies to all its subflows.
-> +
+> +		ip netns exec $ns2 nft flush chain ip filter OUTPUT
+> +		kill_events_pids
 
 [ ... ]
 
