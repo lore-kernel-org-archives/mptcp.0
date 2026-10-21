@@ -1,81 +1,82 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.179
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792566214;
-	b=IoOgfh+H0c3aoQ0hs6XqM/ZE5BnlezVTdaAWyU/ZkcGozhYzJV3C1C3Ykrs9tJ+M2gF2
-	 NLrvyxOS9Oa+vE++W/hq9urEDsBhSoKBErtbqpb+6uSlX26mJujjjcxE7N3guEnOnZnu9
-	 kiniy8L2xqQK7dP8ipLxs3ywSF3el1zrViiPwXofMqX8SwGzPZNp3GWDaSzqd38If0+4K
-	 TpWzP1sYWHpIDJgSLgkTeAJNK4mxbMEtNt3VKDBro0Avm0+2m5fmFzN/DjIn+48q0m+Kl
-	 TAxWbBV61U9q+pzAeY0ol8MncgBW7GgTKrcB+7XZhccTZUKRdVGMulyQYrP5UFKrKVA==
+	t=1792566218;
+	b=DucmjjjQutoprHtd2wtyCCT0yx8YlW1y1+LPbAokTpLLdSZZOy7VxP+rYFuh2Yss7IfA
+	 gRNm9nWKE2w4c4FcKYw/B1J1GzqnRYtelK4r2/5kitX7x6StpojdhMLlbnpUGgPcqypa0
+	 4EE2LrcGuZRxQ4C2NhOwdxYpLKmi6V+IOoSGk4pm+LzqehyZ8zebj/KAP39onARh58LzD
+	 gQt21NIDVOEkSYF5A/nEp8FtrEKSxBR+It8kWEAxowLGDba2Coxz73gi6UIEsODaDRs72
+	 Pq7Bi0GND51gwPZvnFw3p9Sz3r69ak3f1GxC+fbIWX/JxQqAwR2ZQPzw/tmHtpCQMUg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792566214;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792566218;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=r7UgBzkOgkIY49aE7RQgGmpl5vSoNjCtBQrLqqDS2II=;
-	b=BqmDzbhE0zokTgx88klKzn/cgMBPt3J79wtbd6aw31MHFeP6XLjadaePPyDY6FbIza6b
-	 ZpFAYsj96dbb8oE0uyvshxxwbi1C75QHz/ohHoHN8e/63zEAfunNgh4gohQ5eTpoPYRHk
-	 KeBI6pguGB3WN87SVzr2ZHFOtkQJy9O7UM+MCGh/NhmmxUgcJJSDuamO/yhDRiulNiqGp
-	 zVsn/68E16swPng5uI6JZMt66TuTnvydXyi2NTCGTwph8bbJngj0PNLVyQCCzUJjStBTe
-	 LBQm8GAAUlVER9+JbqU8B4LauAANIq3joCjQD2GD5/O3I3fYZD6m3AiEJ5AqGpfbaQA==
+	bh=OTuelo28LtKtv9zZAt0jyN4R/II6FPUmb0zaJoxGTxs=;
+	b=ylfZUb9BFuoxJWH7mFb8FAGru72Ga6onCgfaAQqbaq2J7bFx7hmUnubEpPqeZ51IA/+G
+	 tgwuiPMVIne+z2lqRcsFQ7zZ1wMA8mAKCIIi36qwDtsWI/Ji0Wlt9kiNS+aGAQaZ1Hlij
+	 cAeh9hXa3rA1836QAd9udfpg0C+XOjtsD83bFJBOwd8YdQuoW75XWOftQZFPgBndqz6De
+	 QiWLVYMt4gM8CxdmSPLJQATm+jgX98mP+ybRFj3SQF5xjbPjvLhE7nOmrd+GJJysmH1qJ
+	 SU382gYKM8cs3mXz4NvOu1fn8kZBTZdpXSXa7VjZKmdW0u+rGsP3cYuaDOVNBzFissQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=TZd3otsa;
-	arc=none smtp.remote-ip=74.125.82.171
-Received: from mail-dy1-f171.google.com (mail-dy1-f171.google.com [74.125.82.171])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=rKcSH33b;
+	arc=none smtp.remote-ip=74.125.82.179
+Received: from mail-dy1-f179.google.com (mail-dy1-f179.google.com [74.125.82.179])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AF2606A31B
-	for <mptcp@lists.linux.dev>; Wed, 21 Oct 2026 07:03:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 66AF2606A31B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1FE606A31D
+	for <mptcp@lists.linux.dev>; Wed, 21 Oct 2026 07:03:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CE1FE606A31D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=TZd3otsa
-Received: by mail-dy1-f171.google.com with SMTP id 5a478bee46e88-3535bf8b3e0so757669eec.0
-        for <mptcp@lists.linux.dev>; Wed, 21 Oct 2026 00:03:34 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=rKcSH33b
+Received: by mail-dy1-f179.google.com with SMTP id 5a478bee46e88-3535a54bed9so507139eec.1
+        for <mptcp@lists.linux.dev>; Wed, 21 Oct 2026 00:03:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792566213; x=1793171013; darn=lists.linux.dev;
+        d=gmail.com; s=20251104; t=1792566217; x=1793171017; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=r7UgBzkOgkIY49aE7RQgGmpl5vSoNjCtBQrLqqDS2II=;
-        b=TZd3otsaPq6r/fBO6GxAKi1zlLOBfLAwWQL7a+5s4ECSHXF3v6ay0bdcOyq0NWBAkv
-         FId1n+8i7KwaFKCZXPg6/PJccbUvbr9vyAMwcipkb+QhevW0SPNo+/ItyJXmxSDpLA39
-         eGp83+9H534sY0KqdDHlI8QZk07oAvK+BUNk5GOmnwYSSE/8R7TgbMfvQxoOgDQrN5/O
-         dDAWsi1BDbI4qp3I0PrrKdjrw2PGUf3IhSQt5tEwWn/HR5vgaETtZe8Md0CWHc+vrYUU
-         CcCPyidW4/zPsDwXAp6Z07dl5xgHU8aOdantnwne8JuYxtKakaLYPtb5DkIX+P4vmGHd
-         h6fw==
+        bh=OTuelo28LtKtv9zZAt0jyN4R/II6FPUmb0zaJoxGTxs=;
+        b=rKcSH33b65GBlXGG07Wfg38dCH5W4Lb+E5y/wgBDGw7t5c7KJDRP98jBBJUcPnIPsK
+         J7V3TyCH0jdumKACP/NPQe4XT0OKMeW6QWy2Ate8gR0Fg1YD91tNHFjj/pBWOtxATu6v
+         5F9ykdQZ4PeiDmnv/nFAWh2pe3NOUFIdimA+bg4ioLDjhUpkOzEj5EJAOTcVdrK6fERz
+         hiVjPGja8RdObr/hr1D8OAiGX0pcD6606Q+ZG8kVEk2IBn91P8qqkJNxXSdxUtf2Lq1Q
+         cPyeMxCVeAzEn9GpfhFFNIOcxc0DV7TyKBETvLkWLEvHQJQS9XQVlP1Bqm6Y3aPQLM0A
+         hrQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792566213; x=1793171013;
+        d=1e100.net; s=20260707; t=1792566217; x=1793171017;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=r7UgBzkOgkIY49aE7RQgGmpl5vSoNjCtBQrLqqDS2II=;
-        b=Vm3iyCh2/Fh/FHEqxTAxgbE9WxemL5OR1eORG+xo+OkYssFYCs9PzqfqKAG79m9K8G
-         evhNfEJEf8dAe/7e6txiHsuXZPG+GF1/iewf0lkTsMaH3KwTSPjIadxtxSeM0yqHa3DQ
-         ez1XocBIWMQMY+bJAFkGqDiBYEIBxXg7ij1PBWXJcEdTuU+0lp/+vuwPTt7W3sfS48Ib
-         JeKM2F0eFJY+p4rub+QpvwrEQrdVT2aRhyN3Ndk5lKkkGeSO1B7hmOE6hHuxmrOWnrmm
-         0uKHUDpWXXyL4kR3A71eSUOWXv6fvAzN8OItuIcRi10rqBzVhjK0xpEL1qjpGHnK45ap
-         DDTQ==
-X-Gm-Message-State: AFq9FYKBn3EtIAilxcE6nC49OZmhBVpUHwCKvf0DCWiie3ZaDT6WGbww
-	KsL5XdJ+GeV/6Eqy1t+bHNoy8PwZ94JI42RbbG7Xy0DwUrN6ScEK+o/lvvrkMA==
-X-Gm-Gg: AYBFou1A37ip2G9lm7SsnZ1lCGfqm4lW4cSvOIcpeySe7UqL7XkMXSX3MYgP8LNfaYb
-	7tLH3ZgqLOP+aRyOJpOn8bET23OBG6l1yxmGFYWF+GLMomsu4JLpAbt3bSCSppQ9sI89k8rk9TI
-	e8SY8V9xo3th7DLazlglj5rxmvBKoNwyOjVFG9tQILOczxIEXzb8flzBoqpwdrQpHN/3eu+ozz3
-	P4qhfCSgNmr/khmNuu7kPYNQjmkDUyeZshAPXE2yp0l9aM+iVikQ5Rc6Xg+WcBZNwbRES8I9XQp
-	YCmzQvcBd3tInODpee8c6RqN7YFanErgTdDdwP5qGPNGZDjTQzDWapBYLN4B5SSzA3ylMlEdLmO
-	E4dvCip+k7VOLSWlAxr7P8K007NmLvfEhloRjQ+HIY2KyVRE9RSso/gHpFvsIJh8yVgDCvl1eiU
-	n8p2GRbouubbJ78KHwLZpdQiqxcE2cvjWQJaqq4XMoEre3MhDeKLoar8Rgn0rDY1mtNnKWl5kY4
-	YFT9ObG2rIcNY2q83DmY4Svr5rNyBo/0LXthTLRbSSAW+Vi68mIcOnZmm9s
-X-Received: by 2002:a05:7301:1885:b0:351:29c8:643 with SMTP id 5a478bee46e88-3674cd33c0bmr2256286eec.18.1792566213454;
-        Wed, 21 Oct 2026 00:03:33 -0700 (PDT)
+        bh=OTuelo28LtKtv9zZAt0jyN4R/II6FPUmb0zaJoxGTxs=;
+        b=IE6uU/pL7SqIFitr0gXtVo3Xhq2sOHb3s4rbKQBbJL1G6HJjVsFJqbOE1usK5iJ7Nz
+         s+DIcGuXPkSQEcQbEbzHnx7vb7UVTezhVmQfpJi65VMCfqnTpHvVIWg5dh99TJaHbp01
+         ZccX4iemYEYwTipaLH5XEqY9Z6gZrH4JNxvtVrOU+W8vCz4zUsRbX7y5IzB9JPvxPZFd
+         K/0wXbB9pzJXxaNUcP19vp2KbYU2sKCnpEUkjc9SqAEeUlz4NzywFvVxvQi7zeE7hNii
+         /bUyolP6KoJipPqusCEaEy7CtP240rJPn3OAtR3jWEE5vm6ifWtPzoCePhT8zOPT8FI0
+         QwQw==
+X-Gm-Message-State: AFq9FYLsYqcWe22Uz/oICSPXSa6pflb8zosG2xU7UeLgpcDwd+pVCb6a
+	UCYr5OzW+MwogtJQiaFuoeUoaEicnWDzsgq34aSfpyCq5f3jkiUiZ63DkcUXCA==
+X-Gm-Gg: AYBFou3ym3dkWltBbwdRGS9q7/QQP/C/Raa3exb+JzO/+f0omwTyq2sp8pgAQo0/s73
+	CaWSEnbp21GgH7ri+CJ1OzCxc+APBHsujtzvKFcd031yaH7Bq33kn8Ksp37830mdb7m7V4F4M8j
+	ffgluFdoCdKOe7p2EFT6uVvPjasJiEOTcymF2NSmwuuMXZXI3FgB5i4cr4Yk9Odwvalx4If0VnI
+	PwCwfR26zYj8fmNSDiwu/pX8wSXXMwPNGWl9GWMtkTSNONh1mP5ajUdqcW3TXq3noPy7MYkGr93
+	91zMcBIhTMQb81MojqnxsVtFbWCJU9u1/tnRIGa8gzj4LZD5MFyJLG6D4TkQZ55RRnQUoMWKHow
+	0+O36vuECTzG6/zCckM06oWAi+KYWjfQKFHRSyh2lkEy+hpekDGuSoYrNaoj4WIPjQMWiopsjhM
+	Mx5wIHtqcNbZkTZVq1Mzx868JnwUwr17L8sI39BwAAgdBpl31j9eOKQbi9tyFLjXXimJhbQOyi2
+	/IQWFra5tEzNwLEFpv5Xk45cBA3L+wlyaQnw6iGDmtoi5t6Ic+trtYo5j/ph8kCw+WzNMYBLSxG
+	ygzuOmU=
+X-Received: by 2002:a05:7301:8615:b0:359:8492:20ff with SMTP id 5a478bee46e88-3674c43a7a8mr2023878eec.12.1792566216610;
+        Wed, 21 Oct 2026 00:03:36 -0700 (PDT)
 Received: from mptcp-lab.w453y.xyz ([59.164.88.43])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3674198f1d8sm6468910eec.24.2026.10.21.00.03.30
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3674198f1d8sm6468910eec.24.2026.10.21.00.03.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Oct 2026 00:03:33 -0700 (PDT)
+        Wed, 21 Oct 2026 00:03:36 -0700 (PDT)
 From: Abdul Wasey <w453y.me@gmail.com>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matttbe@kernel.org>,
@@ -83,9 +84,9 @@ Cc: Matthieu Baerts <matttbe@kernel.org>,
 	Geliang Tang <geliang@kernel.org>,
 	Paolo Abeni <pabeni@redhat.com>,
 	stable@vger.kernel.org
-Subject: [PATCH mptcp-net v5 1/2] mptcp: pm: in-kernel: fullmesh: skip closed subflows
-Date: Wed, 21 Oct 2026 07:03:23 +0000
-Message-ID: <20261021070324.50533-2-w453y.me@gmail.com>
+Subject: [PATCH mptcp-net v5 2/2] selftests: mptcp: join: re-add the initial subflow endp with fullmesh
+Date: Wed, 21 Oct 2026 07:03:24 +0000
+Message-ID: <20261021070324.50533-3-w453y.me@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20261021070324.50533-1-w453y.me@gmail.com>
 References: <20261021070324.50533-1-w453y.me@gmail.com>
@@ -100,105 +101,146 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With fullmesh endpoints, if the endpoint used by the initial subflow is
-removed and then added back, no new subflow is created from it: the
-connection never uses this local address again.
+The "delete and re-add" test validates the removal and the re-addition
+of the endpoint used by the initial subflow, but without the fullmesh
+flag.
 
-The initial subflow is kept in the conn_list once closed. If it was
-still established when closed, it keeps the local ID 0, which is also
-the ID used by the re-added endpoint, and fill_remote_addresses_fullmesh()
-then marks its remote ID as unavailable. If it was already in TCP_CLOSE,
-e.g. after a reset, it is disconnected and its context is reset: the
-'closing' flag and the remote ID are cleared, and its remote address
-and port are zeroed. It is then picked as a remote address, with the
-address 0.0.0.0, the port 0 and the ID 0, which also marks the remote
-ID 0 as unavailable. In both cases, when the peer has a single address,
-all subflows use the remote ID 0, and no valid remote address is left.
+Do the same with the fullmesh flag: with a second subflow, after a reset
+of the initial subflow, and with the initial subflow only, then re-adding
+its endpoint or adding another one. Without the previous patch, no new
+subflow is created, except when adding another endpoint.
 
-Skip the subflows being closed or in TCP_CLOSE state, both when looking
-for the remote IDs already in use and when picking the remote addresses.
-__mptcp_subflow_active() cannot be used here: subflows still being
-established have to keep their remote ID marked as in use, to avoid
-creating duplicated subflows.
-
-When no subflow is left to take the remote ID 0 address from, e.g. when
-the initial subflow was the only one, use the remote address of the MPTCP
-socket, as fill_remote_addr() does for non-fullmesh endpoints. Before,
-re-adding the initial endpoint created no subflow in this case either,
-and another endpoint only worked by picking the closed initial subflow.
-
-Without the fullmesh flag, the remote address is taken from the MPTCP
-socket, so this issue is specific to fullmesh endpoints.
+The 'Fixes' tag here below is the same as the one from the previous
+commit: this patch here is not fixing anything wrong in the selftests,
+but it validates the previous fix for an issue introduced by this commit
+ID.
 
 Fixes: 045e9d812868 ("mptcp: fix duplicate subflow creation")
 Cc: stable@vger.kernel.org
 Signed-off-by: Abdul Wasey <w453y.me@gmail.com>
 ---
- net/mptcp/pm_kernel.c | 33 ++++++++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 108 ++++++++++++++++++
+ 1 file changed, 108 insertions(+)
 
-diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-index 1a7750813..c240c1056 100644
---- a/net/mptcp/pm_kernel.c
-+++ b/net/mptcp/pm_kernel.c
-@@ -199,6 +199,16 @@ fill_remote_addr(struct mptcp_sock *msk, struct mptcp_addr_info *local,
- 	return 1;
- }
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 18ce7136a..6d2cc01ac 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -4445,6 +4445,114 @@ endpoint_tests()
+ 		chk_rm_nr 4 4
+ 	fi
  
-+/* Closed subflows can stay in the conn_list, e.g. the initial one: their
-+ * addresses and IDs are not reliable, possibly even reset.
-+ */
-+static bool mptcp_subflow_is_closed(struct mptcp_subflow_context *subflow)
-+{
-+	struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++	# remove and re-add the endpoint of the initial subflow, with fullmesh
++	if reset_with_events "delete and re-add, fullmesh" &&
++	   continue_if mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
++		pm_nl_set_limits $ns1 0 2
++		pm_nl_set_limits $ns2 0 2
++		pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullmesh
++		pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2 flags subflow,fullmesh
++		{ timeout_test=120 test_linkfail=128 speed=5 \
++			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
++		local tests_pid=$!
 +
-+	return subflow->closing || inet_sk_state_load(ssk) == TCP_CLOSE;
-+}
++		wait_event ns2 MPTCP_LIB_EVENT_ESTABLISHED 1
++		wait_mpj 1
++		chk_subflow_nr "before delete id 0" 2
 +
- static unsigned int
- fill_remote_addresses_fullmesh(struct mptcp_sock *msk,
- 			       struct mptcp_addr_info *local,
-@@ -216,11 +226,18 @@ fill_remote_addresses_fullmesh(struct mptcp_sock *msk,
- 	 * already created by incoming ADD_ADDR
- 	 */
- 	bitmap_zero(unavail_id, MPTCP_PM_MAX_ADDR_ID + 1);
--	mptcp_for_each_subflow(msk, subflow)
-+	mptcp_for_each_subflow(msk, subflow) {
-+		if (mptcp_subflow_is_closed(subflow))
-+			continue;
++		pm_nl_del_endpoint $ns2 1 10.0.1.2
++		sleep 0.5
++		chk_subflow_nr "after delete id 0" 1
 +
- 		if (READ_ONCE(subflow->local_id) == local->id)
- 			__set_bit(subflow->remote_id, unavail_id);
-+	}
- 
- 	mptcp_for_each_subflow(msk, subflow) {
-+		if (mptcp_subflow_is_closed(subflow))
-+			continue;
++		pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullmesh
++		wait_mpj 2
++		chk_subflow_nr "after re-add id 0" 2
 +
- 		ssk = mptcp_subflow_tcp_sock(subflow);
- 		mptcp_remote_address((struct sock_common *)ssk, &addrs[i]);
- 		addrs[i].id = READ_ONCE(subflow->remote_id);
-@@ -243,6 +260,20 @@ fill_remote_addresses_fullmesh(struct mptcp_sock *msk,
- 			break;
- 	}
- 
-+	/* The initial subflow can be closed: like fill_remote_addr(), use the
-+	 * remote address of the MPTCP socket for the remote ID 0.
-+	 */
-+	if (!deny_id0 && !test_bit(0, unavail_id) && i < addrs_size &&
-+	    msk->pm.extra_subflows < limit_extra_subflows) {
-+		struct mptcp_addr_info remote = { 0 };
++		mptcp_lib_kill_group_wait $tests_pid
++		kill_events_pids
 +
-+		mptcp_remote_address((struct sock_common *)sk, &remote);
-+		if (mptcp_pm_addr_families_match(sk, local, &remote)) {
-+			addrs[i++] = remote;
-+			msk->pm.extra_subflows++;
-+		}
-+	}
++		chk_join_nr 2 2 2
++		chk_rm_nr 1 1
++	fi
 +
- 	return i;
- }
- 
++	# same, but the initial subflow is reset before removing its endpoint
++	if reset_with_events "delete and re-add, fullmesh, after reset" &&
++	   continue_if mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
++		pm_nl_set_limits $ns1 0 2
++		pm_nl_set_limits $ns2 0 2
++		pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullmesh
++		pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2 flags subflow,fullmesh
++		{ timeout_test=120 test_linkfail=128 speed=5 \
++			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
++		local tests_pid=$!
++
++		wait_event ns2 MPTCP_LIB_EVENT_ESTABLISHED 1
++		wait_mpj 1
++		chk_subflow_nr "before reset" 2
++
++		if ip netns exec "${ns1}" ${iptables} -A INPUT -s "10.0.1.2" \
++		      -p tcp --tcp-option 30 -j REJECT --reject-with tcp-reset; then
++			wait_event ns2 MPTCP_LIB_EVENT_SUB_CLOSED 1
++			ip netns exec "${ns1}" ${iptables} -F INPUT
++
++			pm_nl_del_endpoint $ns2 1 10.0.1.2
++			pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullmesh
++			wait_mpj 2
++			chk_mptcp_info subflows 2 subflows 2
++			chk_join_nr 2 2 2
++		fi
++
++		mptcp_lib_kill_group_wait $tests_pid
++		kill_events_pids
++	fi
++
++	# only the initial subflow: once its endpoint is removed, no live subflow
++	# is left to take the remote address from
++	if reset_with_events "delete and re-add, fullmesh, single subflow" &&
++	   continue_if mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
++		pm_nl_set_limits $ns1 0 2
++		pm_nl_set_limits $ns2 0 2
++		pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullmesh
++		{ timeout_test=120 test_linkfail=128 speed=5 \
++			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
++		local tests_pid=$!
++
++		wait_event ns2 MPTCP_LIB_EVENT_ESTABLISHED 1
++		pm_nl_del_endpoint $ns2 1 10.0.1.2
++		sleep 0.5
++		pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullmesh
++		wait_mpj 1
++		chk_mptcp_info subflows 1 subflows 1
++
++		mptcp_lib_kill_group_wait $tests_pid
++		kill_events_pids
++
++		chk_join_nr 1 1 1
++	fi
++
++	# same, but another endpoint is added after the removal
++	if reset_with_events "delete and add another, fullmesh, single subflow" &&
++	   continue_if mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
++		pm_nl_set_limits $ns1 0 2
++		pm_nl_set_limits $ns2 0 2
++		pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullmesh
++		{ timeout_test=120 test_linkfail=128 speed=5 \
++			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
++		local tests_pid=$!
++
++		wait_event ns2 MPTCP_LIB_EVENT_ESTABLISHED 1
++		pm_nl_del_endpoint $ns2 1 10.0.1.2
++		sleep 0.5
++		pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2 flags subflow,fullmesh
++		wait_mpj 1
++		chk_mptcp_info subflows 1 subflows 1
++
++		mptcp_lib_kill_group_wait $tests_pid
++		kill_events_pids
++
++		chk_join_nr 1 1 1
++	fi
++
+ 	# remove and re-add
+ 	if reset_with_events "delete re-add signal" &&
+ 	   continue_if mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
 -- 
 2.43.0
 
