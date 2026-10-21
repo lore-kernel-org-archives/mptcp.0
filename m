@@ -1,55 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792605321;
-	b=rwwHE8Q+JIHDEA0o+4OTj7bDc7AAecOmRQpBzcChTeo1ppuKNwe0udqREcU9Im0F5fbr
-	 5VQmWHyCtN+ipn6s0al8j3WQaZY9TQ7REJbV+iY4Ox7wfHUjerBY5glgbI+TjnOTteaGD
-	 dK8inOysoNxj7QtEqpifCUQAcYfEsVSNoKe8MBRWcNc0NYiiiHK+RHcotJBKPQkQwJrg9
-	 4HWA2hxdONnujpzBT1uMiUi45BwuzZQsF7AcqayI8hQ7sPcthNtUOLfjspFRaGhBSXMpR
-	 nVBlWa4t16O/Wcx1wjaA/AGxXpDp0TTtZQ4QH1rtFTSeuCBuVie9qTH8Xze4jdzFvCg==
+	t=1792605322;
+	b=ZwEk/Iw26F6JoYmmPtna6iQCodx+BGBF09nzhAJq/Oyy2nUPtz0+GwnE0xAe0ksYgyOe
+	 PtqxyA8dXZaXHkPgZWGYj8ZVZc8rcdAjHxqL0x5Xo2MW5gqFJAXTffUaZaJ6JldUxwOUc
+	 pcTFq+vSRt27rgz1wD6p8mYkpxbV3o19/uv5rH/u85mc0yf/AZM+bGvzJiMBU8Zoe7Nxj
+	 gTXcRzoW8cyiKVViWbolrDtA31tUc6JkmdqzK8xDbuElggnn2AewQAvM3CtpflotAZ6x/
+	 fB2zhilCDkjVfCGMYIj2gGBCXRzHvwdqpvvkfGfNSPffTteOlpheHVe1VGp0vtHb5gw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792605321;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792605322;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=86q/mfqtCdvFJz6xVVNTGPExrEt4cTj64U+tVcZ3vFc=;
-	b=K9hzBjTqIYrh8mnwfxiRFiW6uzGK5ut0YSj1ZUJ+s5vLNJfOVdH5Wvqalm86+cpjPABI
-	 djXg2mSgnNxN9a/QparN936jETU8HqpBFbtr5zx+XNL6pNHXyp7u5ndI63k8JKje3akQ5
-	 kh77jJQ0AF6Co+lduc1ELVMo3cYX5XqsFqg4JDfRvEP/h37dBW7WOKaHzoJfVW2RPfPux
-	 1CZ9GNCVJZuVvaj7epYLaz87YsR+77SeTou8qtygYmA91hfhJEq5c6IaK7xJKfmwqg7uX
-	 Q+9BIwe8zoqmc95hy4Lu3iUm1xrJkTx79DphL/1SOOUrUhjXe/NIb+zA4LHqObQEmrA==
+	bh=FpxRjj1VyN+423FgxmSQ4tVEn+shJ+ws34AzMeIbNlE=;
+	b=r0MyV0bbbxTODdvnkh6PJ5lPzrxwBSUy7tIWUFsaKcMGod+gYJ7RHEUIUE1hyKutPeTP
+	 D4RMVhgJDjNG/Hj1Q3Jo18T41ghNtBW0R7WC0F7xDa8TU6LTTwWRPhYg8k6crkkVy03qJ
+	 Cjuz0j5qxfQkL+NP7UOmYFslubMtyOefhi2AjyO4FoI0AyLPvAcChJzQriAEZmpjpHJpP
+	 LB7J7QeTJwCAEAEKYFCoZoY0gInyBk+i4IsAUEFg3SyV5izyleKdb2Qf0/McpQTyFMRnc
+	 WkHdKsaG6hAkYZxUfBvtOtobMlPNz/hj1SRIzhlU0Mj6Sv1gU9Ah+iLwDYs/BYiYAPw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=O0Pe6TRa;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PFPIdSvR;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6B9606A319
-	for <mptcp@lists.linux.dev>; Wed, 21 Oct 2026 17:55:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B99A606A31A
+	for <mptcp@lists.linux.dev>; Wed, 21 Oct 2026 17:55:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=O0Pe6TRa
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7BAE1F000C1;
-	Wed, 21 Oct 2026 17:55:20 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PFPIdSvR
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8B5C1F000C2;
+	Wed, 21 Oct 2026 17:55:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792605321;
-	bh=86q/mfqtCdvFJz6xVVNTGPExrEt4cTj64U+tVcZ3vFc=;
+	s=k20260515; t=1792605322;
+	bh=FpxRjj1VyN+423FgxmSQ4tVEn+shJ+ws34AzMeIbNlE=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=O0Pe6TRa84DsGoJdn3150NJPVjUDanmKmVzzLg8gsGLteMeES1of2qdvOy+VsMW1q
-	 g4cHZxByiu49GFAuYjuBPcubcHuuhbPs42U4HkbJ4q4AGimoTwV9vx2nN3Uz2U9SSd
-	 nWlvFmGKLMrtUfOW4oFS55Q4411MuC3+LM57EEHRtF3hDo73/o8ypyV9GGslSDVqlh
-	 /ayh1rD1mw8i+QOfWr+L90d2Xm8I0Pc7viykcujmnWp8tytGVh4hMLsvLnV+JzBLEf
-	 jm+srxpilD3Dw1PpsO+AZGGtOuQ/fR9RNuHTrsTnZI7QrthHgKQF61jahx4nfeWX/q
-	 IzGM8bLZiED2Q==
-Subject: Re: [PATCH mptcp-next v4 2/3] mptcp: inherit sk_reuse and fix dev
- bind override
+	b=PFPIdSvR/m7STCzJIY5U1xsNWGI1AgflrfL1cDm9nkH/vsXZSU91wuiaskLz0bMSu
+	 W7l53WipmMCeMP8aH15xVe5taWmS75AFYZlX65Iy+k3TyXv3D68MjSbViDzgAm3zLH
+	 Rj8IKfpt6+FaPIr6kTEA6HtMpeMOP7O3I3L3rqEKZ9Pp0qaheGReOEt6MNWfqxZeEO
+	 /mpwgnEBp0o6KPiRz67D/B7Gw/6ReGPLFOyrLj+3+nQ1ixd9hq5CtFkjCyZpTgl+gs
+	 gc9e4bgPC7Ar5em0FCyi/CYqFCRKZzDT2Hjj15ymUj5/HJHa1ATsqSu1iTNKlGyZhY
+	 4cvD8Cm65jAJw==
+Subject: Re: [PATCH mptcp-next v4 3/3] mptcp: kunit: add sockopt test
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, tanggeliang@kylinos.cn, kuba@kernel.org
-Date: Wed, 21 Oct 2026 17:55:20 +0000
-Message-ID: <179260532035.3133.1916700556916202514@kernel.org>
-In-Reply-To: =?utf-8?q?=3C4adf96455e63a35be3228434cfe2ba79ea99bcb0=2E1792470?=
+Date: Wed, 21 Oct 2026 17:55:21 +0000
+Message-ID: <179260532129.3133.10682938300935459058@kernel.org>
+In-Reply-To: =?utf-8?q?=3Cfdd33ceda25e9c54bf9c38c999034af7d6a6f08e=2E1792470?=
  =?utf-8?q?313=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
-References: =?utf-8?q?=3C4adf96455e63a35be3228434cfe2ba79ea99bcb0=2E17924703?=
+References: =?utf-8?q?=3Cfdd33ceda25e9c54bf9c38c999034af7d6a6f08e=2E17924703?=
  =?utf-8?q?13=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
 X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
@@ -64,10 +63,10 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 5 potential
+Thank you for your contribution! Sashiko AI review found 3 potential
 issue(s) to consider.
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 4
+Critical: 0 · High: 0 · Medium: 2 · Low: 1
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -75,163 +74,199 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [Medium] Passive-side join subflows can now lose their per-connection
-  device or VRF binding.
-- [Low] The commit bundles a claimed bug fix with a new feature.
-- [Low] The commit message gives no reason for propagating
-  sk_reuse/sk_reuseport to MP_JOIN subflows ('Propagate sk_reuse and…
-- [Low] Author and sign-off do not match.
-- [Low] Join subflows now inherit sk_reuseport (and sk_reuse) from the
-  msk, but subflow sk->sk_uid is never set to the msk owner's uid.
+- [Medium] When the suite is built in, mptcp_sockopt_test() fails every
+  time for both mptcp_sockopt_test_v4 and mptcp_sockopt_test_v6, because…
+- [Medium] mptcp_sockopt_test() passes accepted_sock->sk to
+  mptcp_check_lockdep_class() without checking that it is an MPTCP…
+- [Low] Concern: the sockopt assertions…
 
 --
 
-mptcp: inherit sk_reuse and fix dev bind override
+mptcp: kunit: add sockopt test
 
-This commit copies sk_reuse and sk_reuseport from the MPTCP msk to its
-subflows in sync_socket_options(). It also bumps setsockopt_seq when
-SO_REUSEADDR, SO_REUSEPORT, SO_BINDTODEVICE or SO_BINDTOIFINDEX is set.
-In addition, __mptcp_subflow_connect() now overrides sk_bound_dev_if only
-when local->ifindex is non-zero.
+This commit adds a KUnit suite that creates kernel MPTCP sockets in
+init_net and sets SO_REUSEADDR, SO_BINDTODEVICE and SO_BINDTOIFINDEX on
+them. It then connects a client to a listener and transfers data. With
+CONFIG_PROVE_LOCKING it also checks that the MPTCP sockets and their first
+subflows have distinct lockdep keys, for both IPv4 and IPv6.
 
-> Propagate sk_reuse and sk_reuseport from master socket to subflows, and
-> bump setsockopt_seq so later subflows pick up the changes.
+> diff --git a/net/mptcp/sockopt_test.c b/net/mptcp/sockopt_test.c
+> new file mode 100644
+> index 0000000000000..f8ce69911cafd
+> --- /dev/null
+> +++ b/net/mptcp/sockopt_test.c
+> @@ -0,0 +1,184 @@
 
-[Severity: Low]
+[ ... ]
 
-Could the commit message explain why MP_JOIN subflows need these flags,
-and what the user-visible effect is?
-
-The call chain mptcp_subflow_create_socket()->mptcp_sockopt_sync_locked()
-now sets ssk->sk_reuse and ssk->sk_reuseport before kernel_bind() in
-__mptcp_subflow_connect().
-
-That changes how inet_csk_get_port() handles conflicts for these
-kernel-owned subflows. Explicit port binds from the userspace PM may share
-ports with other SO_REUSEADDR sockets, and ephemeral port selection
-follows reuse semantics.
-
-> This patch also fixes unconditional sk_bound_dev_if override in
-> __mptcp_subflow_connect(): only set it when local->ifindex is non-zero,
-> otherwise preserve the value inherited from the master socket via
-> sync_socket_options().
-
-[Severity: Low]
-
-This isn't a runtime bug, but should this fix be split out and sent
-separately with a Fixes: tag?
-
-Before this patch, take a socket with SO_BINDTODEVICE plus any other
-option that bumps setsockopt_seq (SO_KEEPALIVE, for example).
-sync_socket_options() copied the device to the subflow, and then
-__mptcp_subflow_connect() reset it to local->ifindex (0) before
-kernel_bind().
-
-Here the fix is bundled with the new sk_reuse/sk_reuseport propagation and
-has no Fixes: trailer. So it can't go to net/stable on its own, and a
-backport would also pull in the new reuse semantics.
-
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-
-[Severity: Low]
-
-This isn't a bug, but the author address (geliang@kernel.org) doesn't
-match the Signed-off-by: address (tanggeliang@kylinos.cn). checkpatch
-reports this as FROM_SIGN_OFF_MISMATCH. The other patches in the series
-seem to have the same mismatch.
-
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index 922f6ae5c80cb..952bc015eee87 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-> @@ -335,6 +335,8 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
->  				sk->sk_bound_dev_if = ssk->sk_bound_dev_if;
->  			else if (optname == SO_BINDTOIFINDEX)
->  				sk->sk_bound_dev_if = ssk->sk_bound_dev_if;
+> +static void mptcp_test_reuseaddr(struct kunit *test, struct socket *sock)
+> +{
+> +	int reuse = 1;
+> +	int err;
 > +
-> +			sockopt_seq_inc(msk);
+> +	err = sock_common_setsockopt(sock, SOL_SOCKET, SO_REUSEADDR,
+> +				     KERNEL_SOCKPTR(&reuse), sizeof(reuse));
+> +	KUNIT_EXPECT_EQ(test, err, 0);
+> +	KUNIT_EXPECT_EQ(test, (int)sock->sk->sk_reuse, SK_CAN_REUSE);
+
+[Severity: Low]
+This isn't a bug, but these checks only look at the msk's sk_reuse and
+sk_bound_dev_if. The same applies to mptcp_test_bindtodevice() and
+mptcp_test_bindtoifindex().
+
+mptcp_setsockopt_sol_socket() already copies those values from the first
+subflow:
+
+net/mptcp/sockopt.c:mptcp_setsockopt_sol_socket() {
+    ...
+		ret = sk_setsockopt(ssk, SOL_SOCKET, optname, optval, optlen);
+		if (ret == 0) {
+			if (optname == SO_REUSEPORT)
+				sk->sk_reuseport = ssk->sk_reuseport;
+			else if (optname == SO_REUSEADDR)
+				sk->sk_reuse = ssk->sk_reuse;
+			else if (optname == SO_BINDTODEVICE)
+				sk->sk_bound_dev_if = ssk->sk_bound_dev_if;
+			else if (optname == SO_BINDTOIFINDEX)
+				sk->sk_bound_dev_if = ssk->sk_bound_dev_if;
+    ...
+}
+
+The test never creates an MP_JOIN subflow. That means the
+sync_socket_options() and __mptcp_subflow_connect() changes from the
+previous patch in the series ("mptcp: inherit sk_reuse and fix dev bind
+override") are never exercised.
+
+Would it be worth adding an extra subflow and checking sk_reuse and
+sk_bound_dev_if on it as well?
+
+[ ... ]
+
+> +	mptcp_test_reuseaddr(test, server_sock);
+> +
+> +	mptcp_test_bindtodevice(test, server_sock);
+> +
+> +	err = kernel_bind(server_sock, (struct sockaddr_unsized *)&addr,
+> +			  addrlen);
+> +	KUNIT_ASSERT_EQ(test, err, 0);
+
+[ ... ]
+
+> +	mptcp_test_bindtoifindex(test, client_sock);
+> +
+> +	err = kernel_connect(client_sock,
+> +			     (struct sockaddr_unsized *)&addr,
+> +			     addrlen, 0);
+> +	KUNIT_ASSERT_EQ(test, err, 0);
 
 [Severity: Medium]
+Can this kernel_connect() succeed when the suite is built in?
 
-Can this make passive join subflows lose their device or VRF binding?
+mptcp_test_bindtodevice() binds the listener to "lo" and
+mptcp_test_bindtoifindex() binds the client to lo's ifindex. Neither one
+checks IFF_UP. gen_lo_setup() registers lo with only IFF_LOOPBACK set:
 
-sockopt_seq_inc() bumps msk->setsockopt_seq here. It does not touch
-ctx->setsockopt_seq of the first subflow, which is the socket
-sk_setsockopt() was just applied to. Take a server that sets only
-SO_REUSEADDR on its listener: the listener msk seq becomes non-zero, but
-the listener subflow ctx seq stays 0.
+drivers/net/loopback.c:gen_lo_setup() {
+    ...
+	dev->flags		= IFF_LOOPBACK;
+    ...
+}
 
-On the passive side, mptcp_sk_clone_init() copies the listener msk seq
-into the accepted msk:
+Built-in KUnit suites run from kernel_init_freeable() through
+kunit_run_all_tests(), before userspace can bring lo up. The only
+in-kernel code that opens lo is ic_open_devs() under CONFIG_IP_PNP, and
+tools/testing/kunit/configs/all_tests.config does not enable it.
 
-	msk->setsockopt_seq = mptcp_sk(sk)->setsockopt_seq;
+With an oif bound, the connect path is
+mptcp_connect()->tcp_v4_connect()->ip_route_connect(). In that path,
+ip_route_output_key_hash_rcu() rejects the down device:
 
-Each MP_JOIN child, however, copies the stale listener subflow seq in
-subflow_syn_recv_sock():
+net/ipv4/route.c:ip_route_output_key_hash_rcu() {
+    ...
+		if (!(dev_out->flags & IFF_UP) || !__in_dev_get_rcu(dev_out)) {
+			rth = ERR_PTR(-ENETUNREACH);
+			goto out;
+		}
+    ...
+}
 
-	/* ssk inherits options of listener sk */
-	ctx->setsockopt_seq = listener->setsockopt_seq;
+This check is in the flowi4_oif branch and runs before the !fl4->daddr
+loopback fallback, so using INADDR_ANY does not get around it.
 
-As a result, __mptcp_finish_join()->mptcp_sockopt_sync_locked() sees a
-mismatch and runs sync_socket_options(), which does:
+For IPv6, tcp_v6_connect() turns the any-address destination into
+in6addr_loopback with oif=lo. ::1 is only configured once lo goes up.
 
-	ssk->sk_bound_dev_if = sk->sk_bound_dev_if;
+If so, the KUNIT_ASSERT_EQ() after kernel_connect() would abort both
+mptcp_sockopt_test_v4 and mptcp_sockopt_test_v6 on every built-in run
+(for example kunit.py run --alltests). The accept, data transfer and
+lockdep checks would never run.
 
-For an unbound listener, that value is 0.
+The commit message says:
 
-inet_csk_clone_lock() set the child's sk_bound_dev_if from ireq->ir_iif.
-For IPv6 link-local peers this is the ingress ifindex, and with
-tcp_l3mdev_accept it is the l3mdev master. Both get overwritten with 0,
-and sk_dst_reset() is not called. Once the cached dst is invalidated, the
-next route lookup uses oif 0.
+  The test uses INADDR_ANY instead of INADDR_LOOPBACK to avoid binding
+  failures when running during early boot before loopback device is up.
 
-Would the subflow then go out the wrong interface or use the wrong
-routing table?
+Is that accurate? INADDR_ANY seems to move the failure from kernel_bind()
+to kernel_connect(). Even without the device binding, the down loopback
+device would drop the SYN, and connect would block until it timed out.
 
-The same stale-seq resync could already be triggered by TCP_NODELAY,
-IPV6_V6ONLY or the keepalive options. This patch makes it reachable for
-the very common server that only sets SO_REUSEADDR. It also seems to work
-against the goal of preserving sk_bound_dev_if on subflows.
+Could the test bring lo up itself, for example with dev_change_flags()
+under RTNL or in a dedicated netns with lo configured? Or could it call
+kunit_skip() when lo is not IFF_UP?
 
->  		}
->  		release_sock(sk);
->  		return ret;
-> @@ -1706,6 +1708,9 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
->  		assign_bit(b, &inet_sk(ssk)->inet_flags, src & BIT(b));
->  
->  	WRITE_ONCE(inet_sk(ssk)->local_port_range, READ_ONCE(inet_sk(sk)->local_port_range));
-> +
-> +	ssk->sk_reuse = sk->sk_reuse;
-> +	ssk->sk_reuseport = sk->sk_reuseport;
+[ ... ]
 
-[Severity: Low]
+> +#ifdef CONFIG_PROVE_LOCKING
+> +	mptcp_check_lockdep_class(test, client_sock->sk);
+> +	mptcp_check_lockdep_class(test, accepted_sock->sk);
+> +#endif
+> +}
 
-Now that subflows inherit sk_reuseport, do the uid-based reuseport checks
-use the right uid?
+[Severity: Medium]
+Is accepted_sock->sk guaranteed to be an MPTCP socket here?
 
-mptcp_subflow_create_socket() creates the subflow with sock_create_kern(),
-so sk_uid comes from the creator's current_fsuid(). After that, only the
-inode ownership is switched:
+On the passive side, subflow_syn_recv_sock() falls back to plain TCP if
+mptcp_sk_clone_init() fails its GFP_ATOMIC allocation. It also falls back
+if the MPC ACK options are missing:
 
-	SOCK_INODE(sf)->i_uid = SOCK_INODE(sk->sk_socket)->i_uid;
-	SOCK_INODE(sf)->i_gid = SOCK_INODE(sk->sk_socket)->i_gid;
+net/mptcp/subflow.c:subflow_syn_recv_sock() {
+    ...
+			ctx->conn = mptcp_sk_clone_init(listener->conn, &mp_opt, child, req);
+			if (!ctx->conn) {
+				fallback = true;
+				goto fallback;
+			}
+    ...
+}
 
-Nothing updates sk->sk_uid. Join subflows created from the in-kernel PM
-worker therefore carry GLOBAL_ROOT_UID. Subflows created by userspace PM
-netlink requests carry the daemon's fsuid.
+mptcp_stream_accept() then takes the tcpfallback branch and puts a plain
+tcp_sock into newsock:
 
-With sk_reuseport set, kernel_bind()->inet_csk_get_port() uses that uid
-in two places:
+net/mptcp/protocol.c:mptcp_stream_accept() {
+    ...
+tcpfallback:
+		newsk->sk_kern_sock = arg->kern;
+		lock_sock(newsk);
+		__inet_accept(sock, newsock, newsk);
+		/* we are being invoked after accepting a non-mp-capable
+		 * flow: sk is a tcp_sk, not an mptcp one.
+    ...
+}
 
-  - inet_bind_conflict(), through uid_eq(uid, sk_uid(sk2))
-  - inet_csk_update_fastreuse(), through tb->fastuid = sk_uid(sk)
+kernel_accept() still returns 0. The client falls back too, so the
+"MPTCP" payload still arrives and the recvmsg and STREQ assertions pass.
 
-For example, a userspace PM subflow with an explicit port could share
-that port with root-owned SO_REUSEPORT sockets. Ephemeral buckets created
-by in-kernel PM subflows would record fastuid as root.
+mptcp_check_lockdep_class() then calls mptcp_sk(sk) and
+READ_ONCE(msk->first) on a tcp_sock. That reads an unrelated TCP field at
+the mptcp_sock offset.
 
-Before this patch, subflows always had sk_reuseport == 0, so the stale
-sk_uid didn't matter. Should sk_uid also be set to the msk owner's uid?
+KUNIT_ASSERT_NOT_ERR_OR_NULL() only rejects NULL and ERR values. Could a
+non-zero garbage value get dereferenced through ssk->sk_lock.dep_map.key
+and oops the kernel instead of failing the test? A local plain TCP client
+that connects to the init_net listener first could hit the same branch.
+
+Would checking accepted_sock->sk->sk_protocol == IPPROTO_MPTCP before
+calling mptcp_sk() avoid this?
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1792470313.git.tanggeliang%40kylinos.cn
