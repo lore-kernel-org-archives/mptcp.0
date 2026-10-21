@@ -1,93 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792589174;
-	b=X7VKTA3+jsfDtaJjvGjhfJVvXuMQwd0Ydyyj/n41Lkx2hsySLGUkKshgDe+6PIt5ox4J
-	 UYMWzgkTFrZnkiCj27UfktoQjviZDU//FT4zAHJzJ0m+bFrUhbwhyePVVlFvxfEFriP8q
-	 3RpDtpIjTi8IzBfUTFh0uC9/HeAAgaKI14StthlzqjAb5f30itxLg4aC6hmtEv5OwGf2N
-	 5G6R/b0EmOZ+iADhzu8pC1JzyjLTUKPpyxlAi1YpxC+gK0DTVPglxSeZg0F9uI3CvLcbT
-	 jMBh2UkOExgCLswmGiRxfyA7MULZHVTPmTGAx9ccOKbYdIL1Y7lVZ2KHLCZxduSeB2w==
+	t=1792600615;
+	b=PTevMnpTXw5+T1EgLM8iu3SkYh6sMjoYCxpLayHpyO9SalkckqLng1mQSw2UuG8IGG0g
+	 THjWE5xVZmwp7+UibT7Ld8tmjKOL05abZm0mhUnpCjG+ZVSLwpVeUqDG14gu+yglQfzk0
+	 z2+041oVulAHnNvtlCFKAI1ypzXMOzxXkdm4BRh+aVlR5abfCuYyiQ56z7YeRmb35KskR
+	 d/GT2OrUkpwezVaN9XqNcJE6hqGqyUmWlXhBWFdNFk7JXPRGFY/oNK7DXs5Bm546nCQFK
+	 wv4umkJvMu6alJg4pTEXGaxnwi1PxR6m4/2cuV4upclGjUqxmJ890OuQ07RjAnhvNrA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792589174;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
-	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
-	 Date:MIME-Version:Content-Type;
-	bh=9Ul1u89f2Me/tawqCnw/0U4IgI4PH9koOFwF9pcob28=;
-	b=TIYIcVouirAEXLVADPjw/5RXZQac5x9+dRf1iEq0yCzPY4IYagfpxoGP8JfQb7FEKTM5
-	 RYmW15/SZvgrwEkaTBjcwT1OWYkG/rWOvbCCZUGdoF/w/cgybQL9L1v9SCoWoWdVvZOkQ
-	 SLv4DFYT9O9MOnVy5xXtWjRiEyMFAoTCaindiiJ8EdKrdv/letlwJ5poJ1tEOIFzZ6zD/
-	 op0MCOp20NATu9alJ/SwaCBgqNHYMANlRWkcy3So97nzWN+jOT4ZgYf4Bjyj6V4Xw6yTj
-	 ludce3Gd5exMYLDwiFeQHyBzU9uvxG64dKIVHHKUSGsTn2rqaDSZmk2/NOl1/YuwnaQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792600615;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=pnvn85uCz4KQiQDcqAE1uqGvm4H0Dc/0KsPcKHffwCU=;
+	b=4CXIKBxfDowaQqlMtXiFurXVoqpFE3GfNdZiHnoGGvCS8WiuyjOu3CztLseMR5qJVbbm
+	 8kn7quCQdEsMMiLqtpALfg6P/5AnJNkF71USvoxR3VXqClcbvJLJSUe+HJ1mMvKULy6eJ
+	 PKEExMe1rA9r9hZQG5rn+hVczcyzLIaSvrsemPh5ELp148yVbVWMzojbP+zwGa+SxLJc8
+	 GJrWC8GXKUZdlyyCU8kIlokGXRpJKeC0WrSX/Eq1sUZpryQcnICERYC+cZWDx7mceOL7Z
+	 9i31ve4BU68hPUEFwmc/uk5u5VIFGIa79XojAhhLYNE+F1EKPir+PcFQqpR9zPRl5qw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=MXtIhwZz;
-	arc=none smtp.remote-ip=209.85.208.46
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MV8ZIX7h;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A23B606A319
-	for <mptcp@lists.linux.dev>; Wed, 21 Oct 2026 13:26:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0A23B606A319
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425D4606A319
+	for <mptcp@lists.linux.dev>; Wed, 21 Oct 2026 16:36:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=MXtIhwZz
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6b2237b596cso1080621a12.0
-        for <mptcp@lists.linux.dev>; Wed, 21 Oct 2026 06:26:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792589172; x=1793193972; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=9Ul1u89f2Me/tawqCnw/0U4IgI4PH9koOFwF9pcob28=;
-        b=MXtIhwZz0YOrh7OtD1TWkYoNBQoJdAh+mygNm6p+wM8+KYsGVBb+s/5P81lr7Aof/G
-         i7EgUgZEPGXDKwuCTq+lnbTgdbRQkE8P5PFNrKZfUs2P9QfpRzdHToQRjJ5DlhQiYmuL
-         0jS7s99YeALUZjHPVpKvbZA6woyc7oFr+5KjQ9rxSIC2AKHryF5hRBCd2kHLJGvj+cxL
-         1L0aVXuqkEX9IGSr6u1jTS8u4y6CkF7lQlLeYjCCnyJe8NFZ7IWeSqlEeUtWVHoEgi37
-         qaK50kyw6FOhudprvwS4cgqI3xl2SsGyxLwWw7RzUn8k6sELXR/cYZUwteaKfPnejhkO
-         M16w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792589172; x=1793193972;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=9Ul1u89f2Me/tawqCnw/0U4IgI4PH9koOFwF9pcob28=;
-        b=kwkpiz/A5bML0oZvVqYgUoyClvHuyadY0Tf8yQ1LzPlarXc3uSs+tNwJRBJ4JbkWPr
-         nLVicOueU39XL9aCG9mfaMFcpZC5ep7CKZi6YziNGxoG/hZzBcehAkEXq0RVyZsr+RLh
-         rYPulDcwkIpzELjk+qme7B2Wug7aD5L9zxvNEA/Yi+tr84kcXyigkVWByyK/0Y82LVe2
-         BKDKmtyDCpile6qbzJm/dLlCkvFnTmrK0KVzLlDvfANUNV31bwWUWKVnL1F/SsrfKUQB
-         iY6yLOI5He43BPaphJvcQr72RbQ4ISBAd6NetPEnn7TEXug1HrAeo++adwdpyJ97MGdM
-         PEjQ==
-X-Gm-Message-State: AFq9FYJlTPRbn48MQ8sxwslCwXWGcbXKGPe4ZWmxadnbve4OtaxOdG2Y
-	x4ifHv+LfPdU6P9sUzufCckXBz4OxHQwFNSMPRtKiHhSSrcforO2X0+uI+7P
-X-Gm-Gg: AYBFou20B32fvmnd5EKvuDwagJtCa/BKxfFiKcnosteVuij2CVp0MpIxDSREcJaM7It
-	5OkHRzPwer+EjAlVOvy6L7YLfb8bVJZqeB3lb7poXFUTn+4ahQ+srtVCdihwGEDN42qAIv8fTxK
-	GKZfE5A6rY6vwkYfFMvj4dxY7oifBmJ83vpbAnFa/eM7BhUy9wfn5+RSNJz8nV+pZwjjWTr3f9p
-	x7um4qEJ0Tat95dDf9g+YRhGJlJ7QEZtGiVOoHn/9Xr6xQecuY+RLbmy4dyguu+147Tf8S6UByy
-	bVKx5sgDK5mbj/g2K+uPhhg6DJtoLFgIMhaC6le6ggDz4E0KzBsMGG2x5RlJ4PWQFXCcZucyphu
-	OsZpIWKv8KAcBRvYfzKJvtxiArN1HOzqw+2Tw/0jJg60Uu3bH0Ft9cJ57oE2LrYGja5mEtcxu5t
-	mKnDoIKXVGp4l6oCGahXz8cIRSCWDhT6c1Rmw7l+UoL4gQ5wNCB5wc3GoGpQCoKZM0S6ZzFGi9q
-	SR49ef1OnqNXUjCeBelm8rD7S5NWu0e2Oknut9R3sQM0f6aqye0/ib+EJK3F1exQm8J
-X-Received: by 2002:a05:6402:5023:b0:6b3:d0a0:3a2d with SMTP id 4fb4d7f45d1cf-6b408dc358dmr1673143a12.1.1792589171998;
-        Wed, 21 Oct 2026 06:26:11 -0700 (PDT)
-Received: from github.com ([172.190.85.26])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6b402f2c658sm876759a12.5.2026.10.21.06.26.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Oct 2026 06:26:11 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1792470313.git.tanggeliang@kylinos.cn>
-References: <cover.1792470313.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v4 0/3] add distinct lockdep class for MPTCP
- sockets
-Message-ID: <8482124d-530f-5272-4b48-70d3712aa1e4@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 21 Oct 2026 13:26:08 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MV8ZIX7h
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7D591F000C1;
+	Wed, 21 Oct 2026 16:36:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792600615;
+	bh=pnvn85uCz4KQiQDcqAE1uqGvm4H0Dc/0KsPcKHffwCU=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=MV8ZIX7hZUv3yYR3cPHfWY0JWjKTLmV1O0vqoWCvGXlQQfdoHWs7o/bcoqPr0awGk
+	 zyPZrY5gYcJj0ni1+3tCfhnGh9AtFLxh3jkSU9Mpj1xTpf15/ITSOdwAKXwx2Nsp+K
+	 BMDLQFg/pmQkpkwrNwK8kGYs0SmyxyaewEPl2x1pjA7FaIjQZ37Hm/GduMA/qYMwsW
+	 p31Nm2+XSqxoHYoxIrRlIWPJtKqMZ1T1SgGnYSa90BvbkF4ANIkamkrVYT2YsDR9gg
+	 FoMV/Cn9COxfHcSMXnHtL2MHdJsaNlqd+Wznq5ozGuIDlQHn451Be/w+HXE5FNXR4S
+	 2irobuTk7ySkQ==
+Subject: Re: [PATCH mptcp-next v7 4/6] mptcp: pm: in-kernel: retry subflows
+ closed after an error
+From: netdev-bot+sashiko@kernel.org
+To: anilkaushikwireless@gmail.com
+Cc: mptcp@lists.linux.dev, kuba@kernel.org
+Date: Wed, 21 Oct 2026 16:36:54 +0000
+Message-ID: <179260061448.3133.10825671379220141321@kernel.org>
+In-Reply-To: <20261020031711.1896660-5-anilkaushikwireless@gmail.com>
+References: <20261020031711.1896660-5-anilkaushikwireless@gmail.com>
+X-sashiko-severity: Low
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -97,55 +61,101 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 
-Hi Geliang,
+Thank you for your contribution! Sashiko AI review found more severe
+issue(s) in other patches of this series. This mail is only an FYI, in case
+you want to address the nit picks below when you respin.
 
-Thank you for your modifications, that's great!
+Low priority / nit picks for your consideration:
 
-Our CI did some validations and here is its report:
+- [Low] The new paragraph in Documentation/networking/mptcp.rst (lines
+  76-85) does not match what the code does in three ways.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Perf: Critical: No conclusion =E2=9D=93
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/39580425199
+--
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/f0bcad9487e3
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1189426
+mptcp: pm: in-kernel: retry subflows closed after an error
 
+With the in-kernel PM, a subflow that TCP closes after a retransmission
+or keepalive timeout is now re-created with the same addresses. The new
+subflow's SYN retries are set from the subflow-retries limit. Subflows
+reset by the peer or the path, never established, aborted locally, or
+using a removed address are not retried.
 
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/440
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+> diff --git a/Documentation/networking/mptcp.rst b/Documentation/networking/mptcp.rst
+> index b6753ffb9c9a6..0f07d4a29b6b7 100644
+> --- a/Documentation/networking/mptcp.rst
+> +++ b/Documentation/networking/mptcp.rst
+> @@ -73,6 +73,17 @@ To be able to use multiple IP addresses on a host to create multiple *subflows*
+>  addresses can be used. This can be configured with ``ip mptcp endpoint`` for
+>  example.
+>  
+> +When TCP gives up on an established subflow initiated by the in-kernel path
+> +manager, after a retransmission or keepalive timeout, the path manager creates
+> +it again, with the ``subflow-retries`` limit as its number of SYN retries, like
+> +``TCP_SYNCNT``. A subflow reset by the peer, or by anything on the path, is not
+> +created again. TCP only gives up on a subflow after ``tcp_retries2``
 
-For more details:
+[Severity: Low]
+Does this paragraph match what mptcp_pm_kernel_retry_check() and
+mptcp_pm_kernel_retry() do? I see three differences.
 
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+First, the text says only subflows "initiated by the in-kernel path
+manager" are re-created. The scope check in mptcp_pm_kernel_retry_check()
+is:
 
+net/mptcp/pm_kernel.c:mptcp_pm_kernel_retry_check() {
+    ...
+	/* Only re-create subflows initiated by this side: MP_JOIN ones, or the
+	 * initial one on the client side.
+	 */
+	if (!subflow->request_join &&
+	    (subflow->mp_join || READ_ONCE(msk->pm.server_side)))
+		return false;
+    ...
+}
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+On the client side, the initial MP_CAPABLE subflow has request_join,
+mp_join and server_side all at 0, so it passes this check and gets
+re-created. That subflow came from the application's connect(), not
+from the PM.
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+Second, re-creating the initial subflow takes one of the "subflows"
+limit slots. mptcp_pm_kernel_retry() always does:
+
+	if (allowed)
+		msk->pm.extra_subflows++;
+
+The original initial subflow never decremented that counter when it
+closed, because mptcp_pm_subflow_check_next() only updates it when
+request_join or mp_join is set.
+
+So once the initial subflow is re-created, later endpoints or announced
+addresses have one less slot. With a "subflows" limit of 0, the initial
+subflow is never re-created at all.
+
+Third, the re-creation only happens once. A re-created subflow that does
+not connect within its SYN retries never becomes fully_established, so
+this check stops it from being tried again:
+
+	if (!READ_ONCE(subflow->fully_established))
+		return false;
+
+The commit message covers the second and third points ("Re-creating the
+initial subflow uses one of the additional subflows allowed by the
+limits" and "If this new subflow cannot connect, it is not retried
+again"). Could mptcp.rst describe the scope correctly and mention these
+two points as well?
+
+> +retransmissions, about 15 minutes by default: shorter outages are handled by
+> +TCP itself. A subflow that only receives data does not notice that its path
+> +stopped working: the application should then enable TCP keepalive on the
+> +MPTCP socket (``SO_KEEPALIVE``, ``TCP_KEEPIDLE``, ``TCP_KEEPINTVL`` and
+> +``TCP_KEEPCNT``), which MPTCP applies to all its subflows.
+> +
+
+[ ... ]
+
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261020031711.1896660-1-anilkaushikwireless%40gmail.com
