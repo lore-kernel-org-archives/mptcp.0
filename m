@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792654328;
-	b=gHi/PUcfCNu+J2mx1VBW0CaXRkyj676Nq4YGNV7hnMQaT8+FW6oW/UTONakTCh/aSlxb
-	 tiJgvWdEdw8E1Xjk8AqGWraVTNhoTp9jrXtOfCXS/R0xgVSYFpsj+ososgK4gi900sTft
-	 qh14/vu7r3v+raGsQq97Vks1dnvPiwqugjk4XbrYJdFYvYb4xHDEQU5TJATNKk5q4lTxb
-	 F22dgkey0a42eUZAmCpxTS++Gvkcr7cxiUSQfsPbp4YwPjdOJua4zO2RE5cjo5bJU6irp
-	 bej0+LOssrNdLctYFmQi8i0smqxTw8cl+bJAvdWuhTEERA891KYcYVaO7eD8kQ/bJ5A==
+	t=1792655380;
+	b=u3g0BAaYhHSz9NR+T14VA7Gp7l7rWt6gf0BwDYbdEDRatsVsELU7IEqqq7P8A8TEXZ9W
+	 sy6XhkA5Kyslxf72zdnhbq27DM6BfCueUaAI5VQDUTUAhbNqRrWKW5z4FRsMbl6n7czUb
+	 zFMFOrQKfKqAw4g+jquYtsGrxjhOCxaPorsRn2dcIItDbBn10VePSQ8k5/gMp4kEEQmnB
+	 1WzHYmAyhAH5EyG3gtenpR33F6C2o0U9n7F+DdYVBOz+ztJRtDsYZvIFIHZJft3jllcDK
+	 /VOoD/dZouyOdtBUCtCqoCSlDiCqH+kzEr/PR6mV6v8+Ats0ZnYtYJ4nvURrzHysRaA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792654328;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792655380;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=Ek2I6lhzKLVpKhWrHC8CkaiwKfM46N88Eca0M8TIyXY=;
-	b=XUFxvjLET53sGtprYtoj3bN0FnD2tXAUbd6glM0ASaI6TigTk249T1lPNSylN77vlPn5
-	 1bDL45+aSZxjbxXPkaBC5HKl3KIZ/HE56vs4VrI+ylUeLmPcLdtdk0426djuNwwK9bkrf
-	 XkYxUSr+HcKSLDypWFU7b0zvhHYFJfYSAIviLTrEOu4QjkYCo4BvnyyXj8hEUi6zxMk3P
-	 1kmXkWdu+ekwFOCacKLfcZZ37NRd7M6N+ujQIbRgSGOg5s9LrLQdBL5TPPAf54kUcs/bv
-	 d5eMjpGHr+uBvpaHiGEKDMpbXo0Nf1T/gX38eYdsaXIaUO6EtugebzOLncQSvJEGQEA==
+	bh=zys8IZt2Ljh7eJI9v08W06sGJKFWO25wFvf7iQ+Qxa4=;
+	b=x3EJDl6D7/1uC/DII+6Aj7W0NY+iEEQN01JRdqcAXjBYOpT2J8oI2Yg7riccQuI3AIo8
+	 /eMX0M49LbsZKGs9YMRrrvy6WKf0I+PV4IYSu/Euo90AM7CGVpF6gMDOkmnKnxV2KkAC/
+	 OK40c2ph/8FShcZTfmDnH8yIhCh1iGB7mqXS3GW6lmK2WR83ICvEFpdP8/P0ivKN5hMrC
+	 iP0weL8JyVVdULoVivyLPON+9IEcNFOpI+kuEHggQl61/kvZGleLvdOv+4EP2x2iSuTkG
+	 6BWskolTG2E2GJx0GM5If7h80UY4WQ/asMNAnrFdUT7tTDY1hI/KJUSd5MVwyM8iAdQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="nTIAaSo/";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bdaGQvPC;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E66D4606A31F
-	for <mptcp@lists.linux.dev>; Thu, 22 Oct 2026 07:32:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66BED606A31A
+	for <mptcp@lists.linux.dev>; Thu, 22 Oct 2026 07:49:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nTIAaSo/
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01AD11F000C1;
-	Thu, 22 Oct 2026 07:32:06 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bdaGQvPC
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2432E1F000C1;
+	Thu, 22 Oct 2026 07:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792654327;
-	bh=Ek2I6lhzKLVpKhWrHC8CkaiwKfM46N88Eca0M8TIyXY=;
+	s=k20260515; t=1792655380;
+	bh=zys8IZt2Ljh7eJI9v08W06sGJKFWO25wFvf7iQ+Qxa4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=nTIAaSo/T7sQpzx93OCbE9fCmyNV1MCDWZ1PFUoh6toBJ/Y3myUzrdb0qG6PvGnFw
-	 ofSUTgysmj6QKikZagr/cEf/8vhBAhBRHd9M8S7rkKYa6wK/Q412ujJZN/oQflY5oN
-	 W7MEMN+jXq8F96Jfi167WRor+UiNpS7xV+wdEhadJ8OrVYvm1Z8DvgzoFM7UxVvqbg
-	 qTESRMY/iVIHswG+O+bAXyVLdt6+DnMdyeK5SvnmAPvANhrkBYrkxPH5ZAQBdn1R4w
-	 9l/Kknm/8uLboo/bo/6nB4rp9NcLSKJxBZ9NyxT5hm8j19aL9cUCAafI4+4ACi27eh
-	 4xNIJH/XGuFUQ==
-Message-ID: <4180b794-8877-4516-9400-afb0894e8f49@kernel.org>
-Date: Thu, 22 Oct 2026 09:32:04 +0200
+	b=bdaGQvPCi2CsYx0VVkuzF3PdnNwEabGy3bNyRBZiYcaJIoA/WabS7WI1skekbGPLe
+	 Cm149+Xqr9I5BX3iMkjN/CiZWkjeio4lxHjJh8tMseVAWrWhMxhwTGyZtx5y4unyUL
+	 FO8w4UpBnW4xerFQORebUWNAoxN9c38YmEWh1ixMdGG4i0n3Ofmwmdes8wv5NBV+pR
+	 XNE65fWNhkEkXvctJ8n5HTwk5txSLvbVOEEOH3jpd9tLLjW2JwRnG2+rzhjIrd7mnR
+	 EVqTD+qHdsTT0vMWy5wu5ckCSELXu6ueq4kvSnLVCIHq9oUj0r/sByUGZ4h7MPYPcP
+	 VnVsxBDsrzkVA==
+Message-ID: <ad66bd33-aaf1-48c7-8251-113930c557ad@kernel.org>
+Date: Thu, 22 Oct 2026 09:49:36 +0200
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,18 +52,12 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [RFC PATCH mptcp-next v3 2/3] mptcp: pm: kernel: retry subflows
- closed after an error
+Subject: Re: [PATCH mptcp-next 0/2] introduce msk_is_mptcp() helper
 Content-Language: fr
-To: Anil Kaushik <anilkaushikwireless@gmail.com>
-Cc: mptcp@lists.linux.dev
-References: <20261014143349.768138-1-anilkaushikwireless@gmail.com>
- <20261014143349.768138-3-anilkaushikwireless@gmail.com>
- <b150dde6-05f1-4e7b-9440-360b7ce17eff@kernel.org>
- <CAG0Mgm_uj70o=R5HnEb0GkTy4FTQK6cy6GHWuO7y2FitzwnucA@mail.gmail.com>
- <7c7308c5-c150-41a1-9d84-9981acfb5962@kernel.org>
- <ffc98c40-09d5-4299-8128-72cc0ed6beae@kernel.org>
- <CAG0Mgm9ShHdApcKAUj_PgGdm_A+w--FKpSpJq=nTJ=DkRcuACA@mail.gmail.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+ =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack3000@gmail.com>
+References: <cover.1791873760.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -109,102 +103,37 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <CAG0Mgm9ShHdApcKAUj_PgGdm_A+w--FKpSpJq=nTJ=DkRcuACA@mail.gmail.com>
+In-Reply-To: <cover.1791873760.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Anil,
+Hi Geliang,
 
-Thank you for your reply.
-
-On 21/10/2026 20:20, Anil Kaushik wrote:
-> On Wed, Oct 21, 2026 at 11:18 PM Matthieu Baerts <matttbe@kernel.org> wrote:
->> On 16/10/2026 10:43, Matthieu Baerts wrote:
->>> On 16/10/2026 07:49, Anil Kaushik wrote:
->>>>> Add a sensible default value (what do you recommend?)
->>>>
->>>> 15 SYN retries: about 20 minutes with the 120s max RTO.
->>>
->>> I guess it could even be longer, no? With an exponential backoff, it's
->>> not spamming the network too much.
->>>
->>> I wonder if we shouldn't get something similar to tcp_retries2. But
->>> here, with the syn, we also need to tcp_syn_linear_timeouts into
->>> account. Either we keep it to 15 by default and, (if not 0), we add
->>> tcp_syn_linear_timeouts, or we initialise it to 19.
->>>
+On 13/10/2026 08:56, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> tcp_write_timeout() already adds tcp_syn_linear_timeouts on top of
-> icsk_syn_retries for SYN_SENT sockets. With the defaults, 15 gives 4
-> linear + 15 exponential retries, about 20 minutes, close to
-> tcp_retries2. I can make it longer if you prefer. Let me know please?
+> This series introduces the msk_is_mptcp() helper function to check
+> whether a socket is an MPTCP parent socket (IPPROTO_MPTCP on SOCK_STREAM).
 
-It is always tricky to find a good default value. I guess 15-20 minutes
-is fine for most people. Connections are usually not that long, but some
-can be, e.g. ssh. But then, what do we loose to put it higher by default
-to support more cases? Maybe environments with low memory could not like
-that, but either they don't manage that many connections, or they don't
-use MPTCP.
+Thank you, it looks good to me:
 
-When I look at nf_conntrack_tcp_timeout_established, it is set to 5 days
-by default, so we shouldn't go higher than that. But maybe we should
-target a few hours by default? e.g. using 20 (~10.5h?) or maybe better
-to use 21 (~21h) or 22 to cover a WE (~42.5h?)?
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
->>>>> modify icsk_syn_retries instead [...] WDYT?
->>>>
->>>> Good idea, I will do that: one new subflow per failure, with its SYN
->>>> retries set from the new netlink limit, 0 = disabled. It also removes
->>>> the socket reuse, the retries counter and the 60s check.
->>>>
->>>> One point to think though, If ICMP unreachable stops the SYN at once.
->>>> I would not retry
->>>> again then. Is that OK?
->>>
->>> Good point. In your specific case, what do you observe?
-> 
-> In my tests, the fiber outage is a silent drop: the SYNs just time
-> out, and the subflow comes back once the path is up again.
+> This helper is useful for adding MPTCP support in various subsystems,
+> such as MPTCP sockmap support [1] and landlock MPTCP access rights [2].
 
-Interesting. Out of curiosity, how long are these outages typically?
-Less than ~20 minutes I suppose?
+I also added the Landlock case in the commit message, to justify why
+this patch might be sent alone.
 
->>> To me, the best is to have the network manager (something from
->>> userspace) removing the MPTCP endpoints when they are not "usable", but
->>> here it can be specific to the destination. I would then say to look at
->>> this case later. In this case, we could eventually disconnect the
->>> subflow, and add a timer to retry later. But that's also more prone to
->>> bugs, so if we can avoid that, probably better to!
->>>
-> 
-> Sure, lets take up this case later
-> 
->>>>> Do we have other similar ones? [...] ss -Mte, would that work?
->>>>
->>>> I will drop the MIB counter. The test can use the MPJ counters and the
->>>> netlink events.
->>>
->>> Thanks! You can expose the new limit in "struct mptcp_info", instead of
->>> "reserved".
->>>
-> 
-> Done since v5.
+New patches for t/upstream:
+- a15d45cff6cd: mptcp: add msk_is_mptcp() helper
+- e697e37e696d: "squashed" patch 2/2 in "bpf: Add mptcp_subflow bpf_iter"
+- Results: 9ad04f9a236a..8bf8f58e5882 (export)
 
-Thanks.
+Tests are now in progress:
 
->>>>> Is it specific for your case?
->>>>
->>>> No, it came from a Sashiko review: a dead subflow waiting to be closed
->>>> could be re-created after its endpoint or the peer's address was
->>>> removed. I will try to move it to pm_kernel.c.
->>>
->>> What did you end-up doing for this?
->>>
-> 
-> When an address is removed, mptcp_pm_rm_addr_or_subflow() now marks the
-> subflows using it, so they are not re-created.
-
-Good, simpler.
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/9f6ee7994db76825b2200216e12e7403c649ff94/checks
 
 Cheers,
 Matt
