@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792667873;
-	b=pJrQjgU3v7KldP+J/3lI3ZRHOM4xyy07ZRpTLujMsypnxO5rj4mg+09+lIv58ewFywst
-	 vL0vILvdswJ/AtcJHDWg8l5mIplCG1t6cTahhBTZM9AW/U3PqIFjGB/JGDTrsodjwCbpX
-	 1SgVPaOWbaBJ3S5iaPxbEV0xbzFuTKeK1OabiJNBIV9Jc3F2RUsWXxVPnqiIBaJn39rFg
-	 m5syX76fAAOTTEUMSzumTpJfJs/REkF+Uce0530UMPMqbubWhYcB+ojTOuMeB4yxPHtGe
-	 sIcHedoU7aifa8QAL51GsGVtUhaU9EV75ttJUFxWNKs4d2y/iVrLr4GgfosNds/d3Rg==
+	t=1792668845;
+	b=e5jQxfRGWoEqHsS+l5b4hYKJB4Dq09xp0GQgrx2WrLgP+lkrOMLGISYJk8TMOsmBz0mG
+	 xOu5yQ6hyPLzZMknQzmogzQOu1YNHY5JnYwX8AIAXqbSCj2fsfWSec9AIdOo6DOojl2+Y
+	 X/swppTL/eyozwR7W8jmz4bsHEJQi926Sv+go/JyVMNY02uCJkXp9sYvazo3xtphGKw2C
+	 UZmP0aW6BeGQ90W/dJAfsiHfN/jr1yiL/KbN5uCkg0QivPUWYk/EGxO0fZB0HTMDW1MfZ
+	 wZiDUuShPO82rvC26vtom6TRADm9VIjOA/zOk8kTNjEKSkrFpQ053tndaW4/0C4EkpQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792667873;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792668845;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=h7+J0U3lvfvF1yCcBdaCydq6NkgERK4I0MzDhq//0Zw=;
-	b=g9lu5Ca2CDfuo5FoIKvG3hKvmhHNoakyoP+tnSe6ZtCEpisoYyxgDTYNRyE9W8nDi8Ue
-	 Nu3dUrMIayJ0Af5D8A2Iklr5Qxw793pky9uOcn9CiP/zPcMXVMgjF0qHFKpCyr+z9Cou1
-	 14gOPZBk39nV2LRgoAUpCFm/mFBEDsvwRT4xywmLX7WjMHHg7lzNEjJKGa5QdtWYby9eM
-	 r7+ZD6oUhJx6baWcbqrNPMqsSwOKl3nNay4Iust3r8V0jVWbqdZV3UnJHPBq1is3Wsr8q
-	 YwMjQjhy9EBWtWRE7q3jOfdQXX6cQrCeYYKmU3hX5fGptrmyjwCt+j3ksSQh1dvxsYg==
+	bh=/oPb7+OIDsNAVcJ2hjkcUDu5TJggJVKxdbLJnbyAdXw=;
+	b=u+if6tUiW0gXv+kvZq40RRdAc9+q8f7oArWpEPnbwfVdebwCr7tp9nrWvEGP5BOP7FbQ
+	 PxTd4gZbQ9foAergJuw68iUxcTzoMwaNAP6nvPZcjOOkS9ZZb0Y7IVN7mKTaiBvsfQVyd
+	 uYokAqmUUpKUtVakta+Ku4q57+ncgDIncj4OU8tjTYbnQVMy9tsa07Le797qfrWraL45K
+	 5KH0eO8h2bU8qtdFMD0IxQE8E+2PPEAr8G9PU+MNZ0pHQsp9velNLzlH0gBoHcLEYz2Kp
+	 b0DJqx1dDnQfj+7C+sxDh+AlwpMSVcMp66CxLYRPDaEKb3uZPOTXLyiM0eJ8uc6ZSuw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n9PQgpa0;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VEVBWMqC;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161AE606A319
-	for <mptcp@lists.linux.dev>; Thu, 22 Oct 2026 11:17:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3307606A319
+	for <mptcp@lists.linux.dev>; Thu, 22 Oct 2026 11:34:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n9PQgpa0
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 096231F000C1;
-	Thu, 22 Oct 2026 11:17:51 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VEVBWMqC
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7B201F000C1;
+	Thu, 22 Oct 2026 11:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792667872;
-	bh=h7+J0U3lvfvF1yCcBdaCydq6NkgERK4I0MzDhq//0Zw=;
+	s=k20260515; t=1792668844;
+	bh=/oPb7+OIDsNAVcJ2hjkcUDu5TJggJVKxdbLJnbyAdXw=;
 	h=Date:Subject:To:References:From:In-Reply-To;
-	b=n9PQgpa0BsB8cuixHOj7oY5n3NCsrekzIq6uUUSj+vtmS7eOPAeie//7clDKhLLlM
-	 74k1K1iqrkaZhyK8LKPpNFlltXseMBi63npbeNhI4qhOLo01QS8wqaMAA9TTeVTvIo
-	 Q47le9c93BetvSe5OhYQYEbFcIVvZZf5ARMw7e0Skls0FHNrVUhig8jqcauKFBYzbP
-	 4/kUFE5dWr5IYpJ9334B1usTPAkBiU4lBl35KoQ8V3KjL3aV7vN4bKxf3P7k7I/Iqu
-	 Dz0Xap09brTDNcpErxjgMcQzoS/cicIrw2DSyJ4GJxTJO7oA6UGRJ6MXDVW2Id2oyA
-	 pjYXTse4wrnZw==
-Message-ID: <14824187-7186-4c9e-bb14-77c8599a3fd0@kernel.org>
-Date: Thu, 22 Oct 2026 13:17:50 +0200
+	b=VEVBWMqCHX86rzmmtpM1OJGSwiyYjDMDpKm458/6j7eimnkxtcWG15cxM/mUIGK3H
+	 /EkfdgCeokPC13Dc/S1PfT0Gh96TYfuiO5LyPMEnSMBldQsydHrpa9NoMgfLS3E39E
+	 +/kpc+rC98kq+QiAH/Cp2QfbR4b7yfRgi5o5qN4xvDcCr5W2bnbHDi6pcAWStcRCAA
+	 QyHT75p/Q67JONrusSaV1Q2r3fP2NTu1Y0H70Z9z1TJaLwzoBpMlc0CFEagwUZQagB
+	 RZYRQn6fP+k5hVdu8toJ7GPB/H1AvY95c3ssjk4zVIoepHwYIDPNilMsUjSY5E2I6S
+	 +0fFN1zeYQugw==
+Message-ID: <bb6151a5-e9b4-4b43-a57b-94aa853beaa0@kernel.org>
+Date: Thu, 22 Oct 2026 13:34:01 +0200
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,11 +52,11 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2] mptcp: annotate lockless access to
- msk->scaling_ratio
+Subject: Re: [PATCH mptcp-net] selftests: mptcp: sockopt: echo until EOF on
+ partial reads
 Content-Language: fr
 To: quanyeyang@proton.me, MPTCP Linux <mptcp@lists.linux.dev>
-References: <20261016-t-mptcp-scaling-ratio-kcsan-v2-1-241d1f92dcf1@proton.me>
+References: <20261017-fix-mptcp-issue-639-v1-1-0554d07ab8f8@proton.me>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -102,70 +102,129 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20261016-t-mptcp-scaling-ratio-kcsan-v2-1-241d1f92dcf1@proton.me>
+In-Reply-To: <20261017-fix-mptcp-issue-639-v1-1-0554d07ab8f8@proton.me>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Quanye,
 
-On 17/10/2026 07:23, Quanye Yang via B4 Relay wrote:
+On 17/10/2026 13:22, Quanye Yang via B4 Relay wrote:
 > From: Quanye Yang <quanyeyang@proton.me>
 > 
-> mptcp_rcv_rtt_update() writes msk->scaling_ratio from BH while holding
-> the msk data lock (sk->sk_lock.slock). mptcp_cleanup_rbuf() reads the
-> same byte via mptcp_win_from_space() after mptcp_release_cb() drops
-> that lock, so it can run concurrently with the RX path.
+> process_one_client() used a single read() and write() before waiting
+> for hangup. A SOCK_STREAM read() can return a short count when the
+> payload is segmented, so the server echoed only part of the data and
+> then blocked on FIN.
 > 
-> KCSAN reports:
+> The client keeps reading until it has the full length and only then
+> closes the socket. The two sides wait on each other and the test
+> hangs until SIGALRM.
 > 
->   BUG: KCSAN: data-race in mptcp_cleanup_rbuf / mptcp_data_ready
-> 
->   write to 0xffff888014978790 of 1 bytes by interrupt on cpu 1:
->    mptcp_rcv_rtt_update net/mptcp/protocol.c:1045 [inline]
->    mptcp_data_ready+0x1c1/0x4d0 net/mptcp/protocol.c:1062
->    subflow_data_ready+0x271/0x350 net/mptcp/subflow.c:1536
->    tcp_data_ready+0x92/0x2c0 net/ipv4/tcp_input.c:5604
->    tcp_data_queue+0x1236/0x26c0 net/ipv4/tcp_input.c:5694
->    tcp_rcv_established+0x695/0x1fb0 net/ipv4/tcp_input.c:6689
->    tcp_v4_do_rcv+0x356/0x6e0 net/ipv4/tcp_ipv4.c:1854
->    tcp_v4_rcv+0x1b04/0x26b0 net/ipv4/tcp_ipv4.c:2248
-> 
->   read to 0xffff888014978790 of 1 bytes by task 2624 on cpu 0:
->    mptcp_win_from_space net/mptcp/protocol.h:421 [inline]
->    __mptcp_space net/mptcp/protocol.h:431 [inline]
->    mptcp_cleanup_rbuf+0x8a/0x380 net/mptcp/protocol.c:680
->    mptcp_release_cb+0x375/0x900 net/mptcp/protocol.c:3889
->    release_sock+0x100/0x150 net/core/sock.c:3866
->    sk_wait_data+0x141/0x2f0 net/core/sock.c:3314
->    mptcp_recvmsg+0x6cd/0xd50 net/mptcp/protocol.c:2496
-> 
->   value changed: 0xd0 -> 0xd5
-> 
->   Reported by Kernel Concurrency Sanitizer on:
->   CPU: 0 UID: 0 PID: 2624 Comm: syz.7.22 Not tainted 7.3.0-rc1-gbaff4b3d06ef #77 PREEMPT(full)
-> 
-> The u8 EWMA is used only to convert sk_rcvbuf occupancy into an
-> advertised window. A slightly stale ratio is acceptable, so annotate
-> the lockless accesses with READ_ONCE()/WRITE_ONCE() instead of
-> widening the data lock. Do the same in mptcp_space_from_win(), which
-> reads the same field from DRS and SO_RCVLOWAT.
+> Loop the server read/write until read() returns 0, and accumulate the
+> copied byte counts for the existing sockopt checks.
 
-Thank you, it looks good to me:
+Thank you for the fix.
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Fixes: ce9979129a0b ("selftests: mptcp: add mptcp getsockopt test cases")
 
-I just applied it in our tree, but for net-next because from what I
-understood, KCSAN issues are not considered as "urgent", so it should go
-to -next first.
+Note, you can keep the Fixes tag, but target mptcp-next because I don't
+think I saw the issue in our and the netdev CI, and we got asked to
+delay "non-urgent" fixes like this one found by AI without user reports.
+(Not that the fix is useless, but it is not urgent, and there are
+already too many urgent ones ;) )
 
-New patches for t/upstream:
-- ab82be554559: mptcp: annotate lockless access to msk->scaling_ratio
-- Results: 54143bb812b1..15904a7a5590 (export)
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/639
+> Signed-off-by: Quanye Yang <quanyeyang@proton.me>
+> ---
+>  tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 34 +++++++++++++----------
+>  1 file changed, 19 insertions(+), 15 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> index b6e58d936ebe..5e1ec3336859 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> @@ -638,7 +638,7 @@ static void connect_one_server(int fd, int pipefd)
+>  
+>  static void process_one_client(int fd, int pipefd)
+>  {
+> -	ssize_t ret, ret2, ret3;
+> +	ssize_t ret, ret2, n, w;
+>  	struct so_state s;
+>  	char buf[4096];
+>  
+> @@ -648,23 +648,27 @@ static void process_one_client(int fd, int pipefd)
+>  	ret = write(pipefd, "xmit", 4);
+>  	assert(ret == 4);
+>  
+> -	ret = read(fd, buf, sizeof(buf));
+> -	if (ret < 0)
+> -		die_perror("read");
+> +	ret = 0;
+> +	ret2 = 0;
+> +	while ((n = read(fd, buf, sizeof(buf))) > 0) {
+> +		if (!ret) {
 
-Tests are now in progress:
+Instead of 'ret' and 'ret2', maybe clearer to use 'read' and 'written'?
 
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/10148edc4b64c7799f9109d3ece843362819f108/checks
+(Also, with an integer, it is clearer to use > 0 or != 0)
+
+But regarding the modification: if the 'read' is partial, will we not
+have an issue with the assert below?
+Do we know in advance how much we are supposed to receive? If yes, we
+can retry if "0 < n < expected"?
+
+(Note: you can maybe avoid the big loop and use a label + goto?)
+
+> +			assert(s.mptcpi_rcv_delta <= (uint64_t)n);
+>  
+> -	assert(s.mptcpi_rcv_delta <= (uint64_t)ret);
+> -
+> -	if (s.tcpi_rcv_delta)
+> -		assert(s.tcpi_rcv_delta == (uint64_t)ret);
+> +			if (s.tcpi_rcv_delta)
+> +				assert(s.tcpi_rcv_delta <= (uint64_t)n);
+> +		}
+>  
+> -	ret2 = write(fd, buf, ret);
+> -	if (ret2 < 0)
+> -		die_perror("write");
+> +		w = write(fd, buf, n);
+> +		if (w < 0)
+> +			die_perror("write");
+> +		if (w != n)
+> +			xerror("short write");
+
+Same here: if we fail in this case, then the modification doesn't seem
+useful, no?
+Instead, could we try to write again? (goto)
+
+>  
+> -	/* wait for hangup */
+> -	ret3 = read(fd, buf, 1);
+
+Without the big loop, we can keep this explicit "wait for hangup" which
+is perhaps clearer.
+
+WDYT?
+
+> -	if (ret3 != 0)
+> -		xerror("expected EOF, got %lu", ret3);
+> +		ret += n;
+> +		ret2 += w;
+> +	}
+> +	if (n < 0)
+> +		die_perror("read");
+>  
+>  	do_getsockopts(&s, fd, ret, ret2);
+>  	if (s.mptcpi_rcv_delta != (uint64_t)ret + 1)
+> 
+> ---
+> base-commit: a22035be824449c4921ec406f6383089016a628c
+> change-id: 20261017-fix-mptcp-issue-639-96339a3d921a
+> 
+> Best regards,
+> --  
+> Quanye Yang <quanyeyang@proton.me>
 
 Cheers,
 Matt
