@@ -1,56 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792683284;
-	b=bJD8NuKLmWMCcwlJASY5NJr3Xg8JNGXJgrXNFKAFjAOs3SBq/hrQo9EDWEaRraCHtCyM
-	 QZ/K4bYBil7n0YodBOSfj7fDhmiLhOrwxFyrCnExhs/QvQIKUKiQMCQC62LDOQX07CJl0
-	 HyTh1MxB0tOMyAj4CQW9E7SnZyClb2na7ANOypURqDaagb+b4JJ9v52LaSaNEs6DDKRdW
-	 /GMe1Qj8C5Fmv47l6slFBkSm7TwUkSDs8az+JyotAK1aMzVGhMZH8uMPGVZOFXDZtwgwC
-	 VMHoQ83nm1Wcx5weGKaNNXo7gNAOn1lqJdlDcLhR+5ORCH4KAW4xfe4aAQYKeIX1OBw==
+	t=1792684181;
+	b=Uw1hOHZ7ZIZQio9xqnKeXovTYbFAifESBUv7fnn4a49lc9U/y0slJ8sJ6W45/+xrRe9E
+	 pyp3h2Xyco4nqPUr5MPvitjAtFHmSJ/HFpMLWt2cF1v/H5rQgINHT26NSHspigjurpFn/
+	 S749zYM2MboWBW/cSiy6ZfGx9TIlMSz80fsG5iSlcDmIa44xP6UuT5Yd/5NMLqGjnNRWO
+	 4Ja3MLyZ9k2J5XnqSV/D5Cpec6SMjN5/0iYgvG6KjDKdpHYXZLXsRJwa/256r+A7Wuycf
+	 d5Mz8FFOJ5gw4bMnWdWo2G76jWiNdl5r+H6yNQLUxXwuEOo5SXINqtS3CAT+JImwcbw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792683284;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792684181;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=QaE/BxgyedfodD53OGQMiB5pNvai5+qgWcgZL6RC/F8=;
-	b=JuRYHGeKnKIlsbBNhWrEyAQJkMrqotqcsY8LTpWSMqD04PLm+6pjju/sg4Wro92A/B1n
-	 KekwYgoEqtumSYQmorEKl2W00VREzWHjnLI2efXS06GB4eVRo0t+gVm917+Yxi2oI4ZCc
-	 Fm1HdpwEaXDkIMPTlves8gtS2S7BwwAnwjv6TSGqjzx87hVTTLluWlMQh+jVIbjmi+7eI
-	 SrmLiP7PkBLfmJl6OUm+3RFyE74McXtFkNoVR2YGLyePZfukXzbAQWKn+Ql5EeGsHE4Ti
-	 NCfqsueJ8YnIMh/AAr4ObhG9rUhwDlhPbFKx6jp5yLzPwFfzbZl01jt9FDwCTIJyLMA==
+	bh=SjIreWJeDKQ8VGy7A/i93Byt+W2J011866PDvZl9oc8=;
+	b=5gnTAZM+XY0hq2sXAIrddwcw1awfTZx6pClpWSu5IZh9UY9OPkrVhcBq0pACRLAm2ajj
+	 l5fUpuSI5IXmwRiZw075hOJSlZNccSptzFTOs7ysUWEMs30+918tkDmpwaymT3pVBCMRI
+	 ymPNIjo4HQtzdNlTZdoOQ9cT1b0Sw4ZdsaiB/drheFF1qwasY/vomY2JYoyztxh7Le80z
+	 zMFTqLnUX/aD0GH/QdOI0Nizmn13ZmRhJG8/fTaWYv8MYFXItYoCckgKnDLmhL5WJ59v4
+	 YfSuPSwWHoQ/Zs03WBjkZbO3u9KiKbTHb/xM0k2M40dOSuoiD5cLlnyaEHaE7K8llAA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VTaMSSCc;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Za9rXPHS;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2FE9606A323
-	for <mptcp@lists.linux.dev>; Thu, 22 Oct 2026 15:34:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43540606A31A
+	for <mptcp@lists.linux.dev>; Thu, 22 Oct 2026 15:49:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VTaMSSCc
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 687EF1F01825;
-	Thu, 22 Oct 2026 15:34:43 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Za9rXPHS
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDC6C1F01825;
+	Thu, 22 Oct 2026 15:49:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792683283;
-	bh=QaE/BxgyedfodD53OGQMiB5pNvai5+qgWcgZL6RC/F8=;
+	s=k20260515; t=1792684180;
+	bh=SjIreWJeDKQ8VGy7A/i93Byt+W2J011866PDvZl9oc8=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=VTaMSSCcmntQM1izbXzN5rTWXEXZRonlCFVeMismXfHm5BcwiSJf6T8idQI13FBGJ
-	 Pil5s8C/dJNqh4kJm0TPfGRP/XDsXKdJo9q0/uXE8j1/+VLAgy7wtm0NXq7hyrY4l1
-	 JbJjCLK5y7whNL6aB7G+Ss4w4lssrkGPkHYXUlzGT/PnGvxlgJl07aavZl1BQyWo5k
-	 1Shw5r2+yq+c55S8s0/4NnX1KY2Ky8d15XeXQkW6wYubftgRgwyeIM6GnFVhRfcELA
-	 HuYiH7NfzLO5lGbE3b9mxiNGieWm/9Tf37+UiINujUnSsSz9C8wyAR09B/r/qgvuAn
-	 4LyN3jY1xLP2Q==
-Message-ID: <sashiko-outbox-181711@kernel.org>
+	b=Za9rXPHS0la13UvBRd3+FForKFHiwB0X4wqQI1EoeHSvvhWpNVtNkh4a12gU+ubIG
+	 U9Q/Yxa3LmTRg6ygz7bCgirh/umJtipbJ3KmmYpxuQ61r6mpz6rBMFWgGGid+nTUxv
+	 oMTzOv1cJ2/dKbO4Znf7A9LMZ6cqFGzyWjqGySSB1zEsFQjixCMv2wahAbI0CdmQTD
+	 X1yNROlpfZ3lJQ/KwXIS0A2ntDCw5gXslA0nZaC12a9SbVicZtYX0UOA9d4XAzaHG1
+	 Nwe5/HXP7SsHxhi41r9Myw30MZRUkoczxS0JjXECisAWeDOToRIvJfhRfi1hKc5+Oz
+	 2MfFfyteaUU5w==
+Message-ID: <sashiko-outbox-181728@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v8 6/6] selftests: mptcp: join: validate
- subflow retry after link failure
+Subject: Re: [PATCH mptcp-next v8 4/6] mptcp: pm: in-kernel: retry subflows
+ closed after an error
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Anil Kaushik" <anilkaushikwireless@gmail.com>, mptcp@lists.linux.dev
-In-Reply-To: <20261022151130.2285198-7-anilkaushikwireless@gmail.com>
+In-Reply-To: <20261022151130.2285198-5-anilkaushikwireless@gmail.com>
 References: <20261022151130.2285198-1-anilkaushikwireless@gmail.com>
- <20261022151130.2285198-7-anilkaushikwireless@gmail.com>
+ <20261022151130.2285198-5-anilkaushikwireless@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 22 Oct 2026 15:34:43 +0000
+Date: Thu, 22 Oct 2026 15:49:40 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -62,109 +62,132 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] selftests: mptcp: blocking FIFO stdin stalls server in copyfd_io=
-_poll()
+- [High] mptcp: race in mptcp_close_retry_subflows() due to unlocked ssk st=
+ate check
 --
 
-commit a6a2fc5110d407a3c76cad8c29bab3f867efa20e
+commit c03fc05db7095624e90e910918ec9a00af7081a3
 Author: Anil Kaushik <anilkaushikwireless@gmail.com>
 
-selftests: mptcp: join: validate subflow retry after link failure
+mptcp: pm: in-kernel: retry subflows closed after an error
 
-This commit adds two selftests in mptcp_join.sh to validate subflow retries
-after packet drops using netfilter rules. The first test verifies that
-additional and initial subflows reconnect after silent packet drops, and the
-second test verifies closing the client connection while a subflow is being
-re-created.
+This commit teaches the in-kernel path manager to re-create established
+client-initiated or joined subflows that were closed by TCP after a path
+timeout error. It also closes any re-created subflows that are still
+connecting when the parent MPTCP socket is closed.
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/test=
-ing/selftests/net/mptcp/mptcp_join.sh
-> index c3ccce96b45b1..58a48f50ba152 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 02a4f479d9d8c..f941533a1eb48 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+
 [ ... ]
-> @@ -1038,7 +1039,9 @@ do_transfer()
->  	fi
+
+> @@ -3501,6 +3506,34 @@ static void mptcp_check_listen_stop(struct sock *s=
+k)
+>  	release_sock(ssk);
+>  }
 > =20
->  	extra_srv_args=3D"$extra_args $extra_srv_args"
-> -	if [ "$test_linkfail" -gt 1 ];then
-> +	if [ -n "${server_in}" ]; then
-> +		listener_in=3D"${server_in}"
-> +	elif [ "$test_linkfail" -gt 1 ]; then
->  		listener_in=3D"${sinfail}"
->  	fi
->  	ip netns exec ${listener_ns} \
-[ ... ]
-> @@ -2585,6 +2769,69 @@ link_failure_tests()
-[ ... ]
-> +	# close the connection while a subflow is being re-created
-> +	if reset_with_events "subflow retry, close while connecting" &&
-> +	   continue_if has_subflow_retries && init_nft_filter; then
-> +		sf_retry_init
-> +		# The server sends nothing, but does not close its side: the
-> +		# client has nothing to read, and the connection stays
-> +		# established.
-> +		local srv_in srv_in_pid
-> +		srv_in=3D$(mktemp -u)
-> +		mkfifo "${srv_in}"
-> +		sleep 600 > "${srv_in}" &
-> +		srv_in_pid=3D$!
-> +		{ timeout_test=3D600 test_linkfail=3D131072 server_in=3D"${srv_in}" \
-> +			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
+> +/* Re-created subflows still connecting are useless once the msk is clos=
+ed,
+> + * and their SYN retransmissions could keep them around for a long time.
+> + */
+> +static void mptcp_close_retry_subflows(struct sock *sk)
+> +{
+> +	struct mptcp_subflow_context *subflow, *tmp;
+> +	struct mptcp_sock *msk =3D mptcp_sk(sk);
+> +
+> +	mptcp_for_each_subflow_safe(msk, subflow, tmp) {
+> +		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+> +		int state;
+> +
+> +		if (!subflow->retry || READ_ONCE(subflow->fully_established))
+> +			continue;
+> +
+> +		/* still connecting, or already disconnected by
+> +		 * mptcp_subflow_shutdown(), e.g. after shutdown(SHUT_WR)
+> +		 */
+> +		state =3D inet_sk_state_load(ssk);
+> +		if (state !=3D TCP_SYN_SENT && state !=3D TCP_CLOSE)
+> +			continue;
+> +
+> +		/* it never carried data: nothing to push or re-inject */
+> +		mptcp_pm_subflow_check_next(msk, subflow);
+> +		__mptcp_close_ssk(sk, ssk, subflow, 0);
+> +	}
+> +}
 
-[Severity: Medium]
-Does redirecting the server's stdin from the srv_in FIFO cause the server
-mptcp_connect process to block in read() and stop draining incoming data fr=
-om
-the client?
+[Severity: High]
+Can mptcp_close_retry_subflows() in net/mptcp/protocol.c race with softirq
+packet processing on ssk because subflow->fully_established and
+inet_sk_state_load(ssk) are checked before ssk is locked in
+__mptcp_close_ssk()?
 
-In link_failure_tests() -> run_tests() -> do_transfer(), the server is star=
-ted
-in poll mode (-j / CFG_MODE_POLL) with stdin redirected from listener_in
-(srv_in), while sleep 600 holds the write end of the FIFO open without writ=
-ing
-any bytes.
+When __mptcp_close() calls mptcp_close_retry_subflows(sk), the msk socket
+lock is held, sk->sk_state is still TCP_ESTABLISHED, and msk->allow_subflows
+is true, while ssk is not locked until __mptcp_close_ssk() runs:
 
-In tools/testing/selftests/net/mptcp/mptcp_connect.c:copyfd_io_poll(), only
-peerfd is set to non-blocking mode and passed to poll(), while infd (stdin)
-remains blocking:
+net/mptcp/protocol.c:__mptcp_close_ssk() {
+    lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
+    subflow->closing =3D 1;
 
-	set_nonblock(peerfd, true);
+    if (flags & MPTCP_CF_PUSH)
+        mptcp_cleanup_ssk_backlog(sk, ssk);
+    ...
+}
 
-	for (;;) {
-		...
-		switch (poll(&fds, 1, poll_timeout)) {
-		...
-		}
+Between the lockless checks in mptcp_close_retry_subflows() and
+lock_sock_nested(ssk) in __mptcp_close_ssk(), TCP softirq on another CPU can
+process incoming packets under bh_lock_sock_nested(ssk):
 
-		if (fds.revents & POLLIN) {
-			...
-		}
+1. If ssk is observed in TCP_SYN_SENT, an incoming MP_JOIN handshake can
+transition ssk to TCP_ESTABLISHED via:
 
-		if (fds.revents & POLLOUT) {
-			if (winfo->len =3D=3D 0) {
-				winfo->off =3D 0;
-				winfo->len =3D read(infd, winfo->buf, sizeof(winfo->buf));
-			}
+  tcp_rcv_synsent_state_process()
+    -> subflow_finish_connect()
+      -> mptcp_finish_join()
 
-Because peerfd has POLLOUT set on the first poll() iteration after accept(),
-the server calls read(infd, ...) on the FIFO and blocks for 600 seconds. As=
- a
-result, the server never returns to poll() and never reads from peerfd agai=
-n.
+which succeeds without acquiring the msk socket lock because subflow->node
+is on msk->conn_list and msk->allow_subflows is true. A subsequent packet
+carrying the 4th ACK and DSS data can then set subflow->fully_established =
+=3D
+true in check_fully_established() and queue skbs onto msk->backlog_list via:
 
-Once the client fills the initial ~64 KB receive window, the server adverti=
-ses
-a zero receive window and stops acknowledging new data. If wait_counter_inc
-for MPTcpExtMPJoinAckRx and nft_drop_from 10.0.3.2 run after that initial
-window has been sent and acknowledged, subflow 10.0.3.2 has no unacknowledg=
-ed
-data in flight (and zero-window probes are only sent on the initial subflow
-10.0.1.2), so subflow 10.0.3.2 never times out or gets re-created, causing
-wait_counter_inc on MPTcpExtMPJoinSynTx to time out.
+  subflow_data_ready()
+    -> mptcp_data_ready()
+      -> __mptcp_move_skbs_from_subflow(msk, ssk, false)
+        -> __mptcp_add_backlog()
 
-[ ... ]
+which sets skb->destructor =3D NULL and skb->sk =3D ssk while leaving
+skb->truesize charged to ssk->sk_rmem_alloc.
+
+2. Similarly, if ssk already completed the 3-way handshake
+(TCP_ESTABLISHED, subflow->fully_established =3D=3D false) when
+READ_ONCE(subflow->fully_established) is checked, softirq can process the
+4th ACK with DSS data (queuing skbs onto msk->backlog_list) and then a
+subsequent FIN or RST transitioning ssk to TCP_CLOSE before
+inet_sk_state_load(ssk) is read.
+
+When __mptcp_close_ssk(sk, ssk, subflow, 0) then runs without MPTCP_CF_PUSH,
+it skips mptcp_cleanup_ssk_backlog(sk, ssk) and destroys ssk while skbs on
+msk->backlog_list still hold skb->sk =3D ssk:
+
+net/mptcp/protocol.h:mptcp_borrow_fwdmem() {
+    struct sock *ssk =3D skb->sk;
+    ...
+    if (!ssk)
+        return;
+
+    atomic_sub(skb->truesize, &ssk->sk_rmem_alloc);
+    skb->sk =3D NULL;
+}
+
+Wouldn't this trigger the sk->sk_rmem_alloc warning in inet_sock_destruct()
+and a use-after-free atomic_sub() on ssk->sk_rmem_alloc in
+mptcp_borrow_fwdmem() when msk->backlog_list is later drained or purged?
+
+=E4=B8=8D=E6=96=AD=E5=9C=B0
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261022151130.2285=
-198-1-anilkaushikwireless@gmail.com?part=3D6
+198-1-anilkaushikwireless@gmail.com?part=3D4
