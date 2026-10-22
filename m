@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792655889;
-	b=F/eVMpzgRosybhlWvAkUtn9MBIzv69ttAZpec//G/Nm1HvOWpwh0juJKBZt0oc0vauwp
-	 oSNsNtiAZIXBBCzxcN3VFqNqS3k9v6dIujseJU74oS4btMYNsfLgxNT8wDl7gwazgf2Rf
-	 MnnQTHlcU8+QoQcn13De5sOUlkkQbvqp9CwoLg66m7CTP7N3AWa0SJlq4bZsMrA/15vtC
-	 WVDOdXnpy+Dqvr1T6ndw2WrS4Q27gVPg5kyI+NXHTISWXUr5Y3O7nVAkLXZcl1vPAtB96
-	 BqSLSpbdTY1a9V2QRjzqOYzcYXcUeMcSKr1RNF/7sabJsCyveTfxmT7K5U71GRiqUqQ==
+	t=1792655931;
+	b=4bCbHZivULUuFAkDuVK6WGqfL8EnT2vyeC82dpre6WfQ0HvZRr8t7lXuXvIF19spHdgc
+	 uCUc10MWnkIo1yEHvPguciNONQlaP5OUL5/7Oq2wAXrzmotGpYTxn3KmSb4DtOw8pAIv8
+	 a7smxpTPvGklopijf+iOoBFfjwP8TfNbDQ366BnZlfatsIzPJWU2Sawylufz1mLmzMrJI
+	 OgEghgQtcpdC6D0+JKRQL7kfgExQ9/+E9YZ/LD//4sTH9vkDEEb8ul1yj1bZMp1otOTvq
+	 hMSNoHW9q+uYJC9GQJMaff9T7xPzCzOHEDYgBrHC5b07oOh0mLzTPNoriugThOzXPaA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792655889;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792655931;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:References:From:Autocrypt:Organization:
+	 Subject:Content-Language:To:References:From:Autocrypt:Organization:Cc:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=+GWQZ0V7URCf8bFtf+N1jbL1CMQRBSC1XXUv+Mx6Iqc=;
-	b=4R7foKNr0zOCACxGJzZkZyzLE49iS0nmKKr4xmk4HT+ry2gJFA3U5mLke2SInXAxLNdx
-	 hgQ95PXZPxHcr8qy8umj9eNtWgayw5yjw6HJ90I8KTiaOE8Q6QIeR/uUhc/hxnOipHlD2
-	 f1LFtE9OJT0HDzauc9sottpj58M+L3olXotQuWTMpv3QD4oH9HRnPb1LKjvTf7y7w55bR
-	 lL9ghtcHNwMY6YXTOKpJoJoTXRszc+aTL4I04Wl51T83/rnb9K6uYT4t87YQBNlAG6Ptr
-	 PF8iPh+1cYjX4p2g47yVnwg4bfHWVS/YE6V7Au0s5oHEqkHrHgEa748jGzPi7YVRhZg==
+	bh=zW8CBSjI+6wltdQTDVN6yb0qZl3H5FIxUI7tVgQ/JPo=;
+	b=dQrzNGmnNl0QdkLSqd5in+yiFpC1b3T50knIXkQ0YG+YCvUccmQMn2HxoriZrI7Jy+Gk
+	 +fmho6Ub//+ir69xgkorovJGZPodjshEMjWu0FwA4fYOftKSuOO2YRFRvsH6cdJ3rt5y3
+	 KVYU2ro0+MW8XHswx4E0V52Rf6EaKj5b9xO8Npn0nthqYWHLAREB9uEosMH8yV9Ws1cGk
+	 U4q2Db5pjdIgt94xWIG5GZ0jmvzJWE8+XJ2FHFp24bAdoIzoT7WUCDeU6N6KK7b/4ABVR
+	 ZXTHe6vwoWHdUX5vZMR0g3aTCKCCtcmn0HmIDboqyVFeL15w43wdl6dLm7EBjXqRXRA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eOPbKxi+;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fbCLmjLi;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7784F606A31B
-	for <mptcp@lists.linux.dev>; Thu, 22 Oct 2026 07:58:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E32606A319
+	for <mptcp@lists.linux.dev>; Thu, 22 Oct 2026 07:58:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eOPbKxi+
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 634E21F000C8;
-	Thu, 22 Oct 2026 07:58:08 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fbCLmjLi
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8DD81F000C1;
+	Thu, 22 Oct 2026 07:58:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792655888;
-	bh=+GWQZ0V7URCf8bFtf+N1jbL1CMQRBSC1XXUv+Mx6Iqc=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=eOPbKxi+0THKokQLhcSDURsZqiMQHxVZHpcbRI+Kt34kEOojJ2UTV8r4CaaqCvkah
-	 4t8bygBiecArCtFbPjsecrIj6+6rT6/EwWlNoZsOXX1grhGGioxd4ThTLt9G6GP73r
-	 53kiDqDA5vvMbVmOu9eJ6DZMt8fB3ZLazBXG2QE8rep5hXn24W1xYjCvjXuQgaCK3g
-	 LiwDINwwrZ30cIyb8gRnieNmuCoFjVqi0ZTEN/QmbG8eRDA4dD8BpWwHBhosZgPwTT
-	 MCpBmUJt5Dce1kVW/ymU2eTYsjzvnGJJkiFNl/oU/UYDNiywUPEZXwW8BErwSLTFhY
-	 sUHR6zQ579rJw==
-Message-ID: <6995e688-db92-4291-a94d-18b03e517a73@kernel.org>
-Date: Thu, 22 Oct 2026 09:58:06 +0200
+	s=k20260515; t=1792655930;
+	bh=zW8CBSjI+6wltdQTDVN6yb0qZl3H5FIxUI7tVgQ/JPo=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To;
+	b=fbCLmjLiWCgKPKKmgYOS3VSfalFXPkF8xTHgM46aijmkr7tr+D1BO9GNWHFBe9Kns
+	 D4q6tjesq2jub5TbgPpuSseMcEcBjoIb6TWiNJgTgKaGDqY7oOKjX+ftWUwDBAfeeJ
+	 vYQalrtcv9IcrY7Iu8v1ljKVYxmzQYtOyKw/BqX0lQXMDnGlQQAV1PfDF31S41Tipp
+	 GBMsAAjKd7bvayACljhHcDhQ2axUvUrhqK8qHHR5rZKSSMbAbn9JczEHOLfrfykEXV
+	 d/u8foJ+aaYOp6bRuAFdH1E9cjCC8/V1FOT6mb8FJfEkJ1ysJZkfQZu9FSVEC33+l1
+	 M1ikZHbCXlDZg==
+Message-ID: <1cbd0011-38fa-4467-9894-d4b42219936a@kernel.org>
+Date: Thu, 22 Oct 2026 09:58:48 +0200
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,14 +52,12 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3] selftests: mptcp: print stats before socket
- closure
+Subject: Re: [PATCH mptcp-net] selftests: mptcp: join: dump stats with right
+ title
 Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>, MPTCP Linux <mptcp@lists.linux.dev>
-References: <20260815-sft-mptcp-stats-b4-close-v3-1-ccd9af14cf73@kernel.org>
- <24e7da3ea0b33d5dca970449cf615a4c95ecceb8.camel@kernel.org>
- <735a6655-b3ac-4352-8a35-0e54ac2c7ffd@kernel.org>
- <7ad218abd5b68ac34bc34b607af3bb4c7163f60b.camel@kernel.org>
+To: Geliang Tang <geliang@kernel.org>
+References: <20260914-mptcp-sft-join-typo-ns-stat-v1-1-30d5a5802b57@kernel.org>
+ <adfae8144b8e274753ea15d8798b8c29d4e139d9.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -105,100 +103,58 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <7ad218abd5b68ac34bc34b607af3bb4c7163f60b.camel@kernel.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>
+In-Reply-To: <adfae8144b8e274753ea15d8798b8c29d4e139d9.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-Thank you for your patience.
-
-On 21/09/2026 09:52, Geliang Tang wrote:
+On 15/09/2026 08:12, Geliang Tang wrote:
 > Hi Matt,
 > 
-> Sorry for the delayed reply.
-> 
-> On Tue, 2026-09-08 at 19:52 +0200, Matthieu Baerts wrote:
->> Hi Geliang,
+> On Mon, 2026-09-14 at 19:53 +0200, Matthieu Baerts (NGI0) wrote:
+>> This fixes a typo when dumping stats to print the right netns.
 >>
->> On 05/09/2026 10:26, Geliang Tang wrote:
->>> Hi Matt,
->>>
->>> On Sat, 2026-08-15 at 00:28 +0200, Matthieu Baerts (NGI0) wrote:
->>>> In case of poll timeout, it might be too late to print the stats
->>>> after
->>>> the socket closure.
->>>>
->>>> Now, in case of poll timeout, 'ss' and 'nstat' are invoked from
->>>> mptcp_connect to print the stats before exiting. This should help
->>>> debugging poll timeout issues.
->>>>
->>>> Note: for this "workaround", system() is used for debugging
->>>> purposes
->>>
->>> This print_err_stats() implementation is basically the same as
->>> mptcp_lib_pr_err_stats() in the shell, right?
+>> Indeed, the client netns was hardcoded instead of taking the netns
+>> given
+>> in argument. Fixing that to avoid confusions when debugging issues.
 >>
->> Correct.
+>> Fixes: 658e53141780 ("selftests: mptcp: join: dump stats from
+>> history")
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
 >>
->>> I think it's better to use mptcp_lib_pr_err_stats() in the shell to
->>> print the information. In mptcp_connect.c, when a poll timeout
->>> occurs,
->>> we send a signal to the shell and don't close the socket
->>> immediately -
->>> we wait for the shell to finish printing the information before
->>> closing
->>> it. What do you think of this approach? There's a reference
->>> implementation in the attachment, but I haven't tested it.
->> Thank you for your review. I agree that what you suggested is better
->> for
->> a tool that would be used in production. But here with the selftests,
->> I
->> don't think we need your long patch with a higher complexity, just
->> for
->> the selftests. I think it is fine to have some "system()" calls with
->> the
->> same ss/nstat commands compared to a patch of 50+ lines to get the
->> same
->> result. No?
+>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> index b16e24418e73..bec499047e06 100755
+>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> @@ -1163,7 +1163,7 @@ _dump_stats()
+>>  	local ns="${1}"
+>>  	local side="${2}"
+>>  
+>> -	mptcp_lib_print_err "${side} ns stats (${ns2})"
+>> +	mptcp_lib_print_err "${side} ns stats (${ns})"
 > 
-> I agree with you - simplicity is a plus as well.
-> 
-> I tested it and it works. So LGTM!
+> Good catch!
 > 
 >     Reviewed-by: Geliang Tang <geliang@kernel.org>
-> 
-> 
-> However, we need to handle something in mptcp_connect.sh afterwards.
-> Otherwise, when a timeout occurs, we'll get two duplicate outputs: one
-> from mptcp_connect, which is the log added by this patch, and one from
-> mptcp_connect.sh, which is an invalid log. I think in this case we
-> should ignore the latter, for example by adding the following to
-> mptcp_connect.sh:
-> 
-> do_transfer()
-> {
->   ...
->   mptcp_lib_pr_fail "client exit code $retc, server $rets"
->   if [ ${rets} -ne 2 ] && [ ${retc} -ne 2 ]; then
->     mptcp_lib_pr_err_stats "${listener_ns}" "${connector_ns}" "${port}"
->   fi
->   ...
-> }
-> 
-> What do you think? If you don't have time, I can submit this follow-up
-> patch as well.
 
-Is it really an issue to have two stats outputs? They are not
-duplicated: one is explicitly printing stats before socket closure, and
-the other one after.
+Thank you for the review!
 
-Ignoring the 2nd output is easy, but this output can be valuable? Also,
-I don't think there will be a timeout issue on both the client and the
-server. Likely only one of them will timeout, and the additional check
-you suggest is not needed.
+Now in our tree (in -next because it is not urgent):
 
-So OK like that?
+New patches for t/upstream:
+- 348b1436ff01: selftests: mptcp: join: dump stats with right title
+- Results: 8bf8f58e5882..894c5749a613 (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/f5652e342b128698e90c4f11ec8a95056f91178c/checks
 
 Cheers,
 Matt
