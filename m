@@ -1,99 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.172
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792606834;
-	b=LKiPOypRzczxoSBS0hdFQgKuyvhhQBQQrexcGgWv7Ltss74EwvIFe6GLYi/qLyswouz1
-	 La8YHbU75yBOVY6sNce419yG126Zabb9mFsg4GPK6fPMaGfbA7+DEVJHJ9laIDL2UjuXU
-	 gc70djlByDaSgIun3cROqqYksgUv0IvRHb9avAQy4ZM5x3K2ckexac820DNkzTw4+8w7u
-	 uxrtB7KiUjotkwxfo8sJdJukT0IWfBjpMHATt2vf7+JWFfjozPI0uAId8RnW7BqTRMdC+
-	 cRq7T3roeaIBv32P+CeQB6DlGImoJOf6aOFZ6IyF90dDSP/FUE8yTgTWc6Re14VreBw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792606834;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:MIME-Version:References:
-	 In-Reply-To:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=JKo6udsSQ21WTyHr47XfeCKV2YRvU7kSU1kyzYBCCTc=;
-	b=0GvocKqzglIDUX9cdVg2tSOTQzP6S3JsfHKy2fsNggC+Fc+h3rQe/mysiq9tMI1g/F0g
-	 w2A9uvLlNh6raBUbM9NjqeuhBRlQgNoiBHkky3ZgMP0isPCurxvRTlxUwrZWAkdgl+vwI
-	 dAr5SJ9hpdAs4/B73YifPb8x6VL8zEgHJJu8svgIeL+wg2dxCxSPvHienNyaH1ZlgLOLo
-	 uz3ZyoavR23jUSbqWYWnvsbbDVzyiKpghHZPk3AixcxKuj6RWdvAzbXlZtWKjI8jdvfhN
-	 MUxU22iAVgXeUQJew5fn+ITLcvWL24d70/a8bDm2Zu7cKwwb+1sgZ96W+ptWAT+S74Q==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=mTYGlxCV;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.172
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792654328;
+	b=gHi/PUcfCNu+J2mx1VBW0CaXRkyj676Nq4YGNV7hnMQaT8+FW6oW/UTONakTCh/aSlxb
+	 tiJgvWdEdw8E1Xjk8AqGWraVTNhoTp9jrXtOfCXS/R0xgVSYFpsj+ososgK4gi900sTft
+	 qh14/vu7r3v+raGsQq97Vks1dnvPiwqugjk4XbrYJdFYvYb4xHDEQU5TJATNKk5q4lTxb
+	 F22dgkey0a42eUZAmCpxTS++Gvkcr7cxiUSQfsPbp4YwPjdOJua4zO2RE5cjo5bJU6irp
+	 bej0+LOssrNdLctYFmQi8i0smqxTw8cl+bJAvdWuhTEERA891KYcYVaO7eD8kQ/bJ5A==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792654328;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=Ek2I6lhzKLVpKhWrHC8CkaiwKfM46N88Eca0M8TIyXY=;
+	b=XUFxvjLET53sGtprYtoj3bN0FnD2tXAUbd6glM0ASaI6TigTk249T1lPNSylN77vlPn5
+	 1bDL45+aSZxjbxXPkaBC5HKl3KIZ/HE56vs4VrI+ylUeLmPcLdtdk0426djuNwwK9bkrf
+	 XkYxUSr+HcKSLDypWFU7b0zvhHYFJfYSAIviLTrEOu4QjkYCo4BvnyyXj8hEUi6zxMk3P
+	 1kmXkWdu+ekwFOCacKLfcZZ37NRd7M6N+ujQIbRgSGOg5s9LrLQdBL5TPPAf54kUcs/bv
+	 d5eMjpGHr+uBvpaHiGEKDMpbXo0Nf1T/gX38eYdsaXIaUO6EtugebzOLncQSvJEGQEA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="nTIAaSo/";
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B22606A319
-	for <mptcp@lists.linux.dev>; Wed, 21 Oct 2026 18:20:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 79B22606A319
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E66D4606A31F
+	for <mptcp@lists.linux.dev>; Thu, 22 Oct 2026 07:32:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=mTYGlxCV
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-3ab27e45e7cso8048221fa.3
-        for <mptcp@lists.linux.dev>; Wed, 21 Oct 2026 11:20:34 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792606833; cv=none;
-        d=google.com; s=arc-20260327;
-        b=Qaqchs+47wjA1iKAm6M+POJ7WlTWeCiGVI6Z9ilAdagHt3LyvlxfsScYJwAQM8tWrO
-         2zex6JlfgZ96IdvXlkf6cCIFyCTNa3Ex2Tr9q4M/Xg9bx2H0Bgo49ciehuHd5lHv5NHX
-         jRgxIlPBK6wqEblUJOAy5+a99A3My0yZxE48tDJlWuRMJDBLmMYpt1gGEYBEiKL1tdo+
-         pUMTM9aOe/NdtZr8JxGC6B+o4t/MCE3oRpfFWK881zEmXBttlAw5g238t9+Xkpx35yQ5
-         ks9TKeMIptgILnwVIHg2KuDrCZ4CdZ3uyzFeHpCOhC1YVkf3P0EjHdN1gn9VHEw35oDk
-         i2KQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=JKo6udsSQ21WTyHr47XfeCKV2YRvU7kSU1kyzYBCCTc=;
-        fh=ta3oWJNUUOGDBubb9ZsHOPUNokkPfzxKTkR8JEtaNGw=;
-        b=JArwgfQt3rPaepxsdk3IImJpDvEbxsCr5pZfFwqo8qwtfYDzIwKEdeCmVCR4oX8UHc
-         kRD3n3e+xq3X7BS1UKUepUIdTz5UKpnU/Tpp2Be0TyGSLiq411llLmZx43A2btqo993P
-         YinvTjz98WyBLBEB3pU0A4MFjmSIhnDsf/p2dosAv3daV9zH/OQUmZ02uoIH4grKZ92X
-         hJPNFeyxbpe6/0FqKgPBmmIu9erBa3LI6UKoV7LKyPiUo4o3SBGMowU70KJtjVEuK06+
-         mDxOPNxROe41ralvy3T5OzoMSamlWzSXGn23ChjX3iw2fu5rLZCgBG5DwZrgnXPj9GOT
-         T7vw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792606833; x=1793211633; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=JKo6udsSQ21WTyHr47XfeCKV2YRvU7kSU1kyzYBCCTc=;
-        b=mTYGlxCVYcpq3Sxnxe7EmooSroxS6crN2Y5llK0a+SwasAC+6XE8bYSnrYGEckVmA4
-         fvRW1t2APVJpZD1b8XgIRyfLPEBzW/4QwvIx+ydMP5lGrJCcitoc8EbqgPoveL68jb1l
-         c8Obob/524FO5n05V3+72fnz10x1n9oVVeQ4aic0QcSzjOmDkEFmKPDZY9Y1UqpAjcqq
-         VEqdl+5g1xcCb2gskZ9VrNwh/9kimXl8+ktSYJ/oE9sMkGVecSgi+jDhgDOpnHdbMJsu
-         ufSROeicRaevpspR1xb5XSPAps3Te6AUgSquNSfhI1odM2+v0qz23TMYKXTcUo8vXPHV
-         Q36Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792606833; x=1793211633;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=JKo6udsSQ21WTyHr47XfeCKV2YRvU7kSU1kyzYBCCTc=;
-        b=B8ejGiyJf7QedL1VfcQSMEp6Qnre/f51dIqeWcDTA+F9gA9gGmQXX2XXen5O20Oufl
-         d1JSLhUFedGyT2zLsnejnDJLsBmWBFICtNn4dDG/AErBlmV9RjQ4ZolccnbNwwTKxGVY
-         n8KpQzhkasEo8fVJrpdgwfKehrk0jPK2KHP/AISSVdNjdjoPRCvKq/0orw+Y6BKrSp2q
-         IkCYuF238tTAOsWyawoJyIcFy0YDXSe37b+XLU+PtHeL5x/UdJsqPfbj//Q3WVkujC0O
-         MKVAaWLyaLbuVwO/EnWLuOEiyy/cz2H0TP4yVsnCcYlCf8FpGXQXAcIbKpUskfU15aAL
-         4CVQ==
-X-Gm-Message-State: AFq9FYIq1mz5ivgCt0TuxZd9+JaiofxAEQ+/ZRba3iP2MSxUGYq43f76
-	sHotUASIP2dSoP+bcYvee6Ivxwx2VTgKGDvfwjmLh2wfXWdbfMaQbT4uCbqMxlWbmyvbndmqFDm
-	BdYbOMKvXem9oM0hPnd4EgB2/1QCynpVJmg/v
-X-Gm-Gg: AYBFou3XRADy/wexFtXW7Hz0Y0wAYucxa3AwBFPDOontkzrFXspEzpZeqMU+BMWkH5T
-	uAG8Uj/Vtt/YXKvYTUZaFXVSTrGkuzZviT5Iqkwcn5jclyK/9FGYH/7WR35UqECykyTx7Ay20TN
-	GS4xpvevtHeWrp51QwMcFpFQW2VAKtql8YvaNhxUI+QO6HQzk/agm6By0C8gzCFXeWQ1jh9YOEz
-	A15fhAzVZ6N3tenD4s1YA+jutG3ZKbPMBDhOVFr13oAeQnQFxO3BnhikO3Nv7GLdyV9/Rggs13B
-	sgE6duyYXIm7GwBxW8Z1hkTC40LqwLKI6cjx2qCywwedhzs50UrrB3YQM4FEWwhrPqOBM3+2b3s
-	6DPoh1SMtEuqTu734ZkNdFxGMeBZzqe7J7XEw
-X-Received: by 2002:a05:651c:1501:b0:3a9:a1ed:6341 with SMTP id
- 38308e7fff4ca-3ac441634bdmr8139311fa.11.1792606832291; Wed, 21 Oct 2026
- 11:20:32 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nTIAaSo/
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01AD11F000C1;
+	Thu, 22 Oct 2026 07:32:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792654327;
+	bh=Ek2I6lhzKLVpKhWrHC8CkaiwKfM46N88Eca0M8TIyXY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=nTIAaSo/T7sQpzx93OCbE9fCmyNV1MCDWZ1PFUoh6toBJ/Y3myUzrdb0qG6PvGnFw
+	 ofSUTgysmj6QKikZagr/cEf/8vhBAhBRHd9M8S7rkKYa6wK/Q412ujJZN/oQflY5oN
+	 W7MEMN+jXq8F96Jfi167WRor+UiNpS7xV+wdEhadJ8OrVYvm1Z8DvgzoFM7UxVvqbg
+	 qTESRMY/iVIHswG+O+bAXyVLdt6+DnMdyeK5SvnmAPvANhrkBYrkxPH5ZAQBdn1R4w
+	 9l/Kknm/8uLboo/bo/6nB4rp9NcLSKJxBZ9NyxT5hm8j19aL9cUCAafI4+4ACi27eh
+	 4xNIJH/XGuFUQ==
+Message-ID: <4180b794-8877-4516-9400-afb0894e8f49@kernel.org>
+Date: Thu, 22 Oct 2026 09:32:04 +0200
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -103,152 +51,163 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <20261014143349.768138-1-anilkaushikwireless@gmail.com>
- <20261014143349.768138-3-anilkaushikwireless@gmail.com> <b150dde6-05f1-4e7b-9440-360b7ce17eff@kernel.org>
- <CAG0Mgm_uj70o=R5HnEb0GkTy4FTQK6cy6GHWuO7y2FitzwnucA@mail.gmail.com>
- <7c7308c5-c150-41a1-9d84-9981acfb5962@kernel.org> <ffc98c40-09d5-4299-8128-72cc0ed6beae@kernel.org>
-In-Reply-To: <ffc98c40-09d5-4299-8128-72cc0ed6beae@kernel.org>
-From: Anil Kaushik <anilkaushikwireless@gmail.com>
-Date: Wed, 21 Oct 2026 23:50:20 +0530
-X-Gm-Features: AclHuK8f4WthLILvuv2KwWsQUgmBX5_E1tgSVUxvKCsMvOZRVUwpd6p5xmBZTQQ
-Message-ID: <CAG0Mgm9ShHdApcKAUj_PgGdm_A+w--FKpSpJq=nTJ=DkRcuACA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [RFC PATCH mptcp-next v3 2/3] mptcp: pm: kernel: retry subflows
  closed after an error
-To: Matthieu Baerts <matttbe@kernel.org>
+Content-Language: fr
+To: Anil Kaushik <anilkaushikwireless@gmail.com>
 Cc: mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <20261014143349.768138-1-anilkaushikwireless@gmail.com>
+ <20261014143349.768138-3-anilkaushikwireless@gmail.com>
+ <b150dde6-05f1-4e7b-9440-360b7ce17eff@kernel.org>
+ <CAG0Mgm_uj70o=R5HnEb0GkTy4FTQK6cy6GHWuO7y2FitzwnucA@mail.gmail.com>
+ <7c7308c5-c150-41a1-9d84-9981acfb5962@kernel.org>
+ <ffc98c40-09d5-4299-8128-72cc0ed6beae@kernel.org>
+ <CAG0Mgm9ShHdApcKAUj_PgGdm_A+w--FKpSpJq=nTJ=DkRcuACA@mail.gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <CAG0Mgm9ShHdApcKAUj_PgGdm_A+w--FKpSpJq=nTJ=DkRcuACA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Matt,
+Hi Anil,
 
- Sorry I missed this one. Response was in draft and I missed sending it.
+Thank you for your reply.
 
-On Wed, Oct 21, 2026 at 11:18=E2=80=AFPM Matthieu Baerts <matttbe@kernel.or=
-g> wrote:
->
-> Hi Anil,
->
-> I noticed new versions, but I don't know if you saw my reply here. Do
-> you mind replying to my previous questions / comments here below, please?
->
-> On 16/10/2026 10:43, Matthieu Baerts wrote:
-> > Hi Anil,
-> >
-> > Thank you for your reply.
-> >
-> > On 16/10/2026 07:49, Anil Kaushik wrote:
-> >>> Add a sensible default value (what do you recommend?)
-> >>
-> >> 15 SYN retries: about 20 minutes with the 120s max RTO.
-> >
-> > I guess it could even be longer, no? With an exponential backoff, it's
-> > not spamming the network too much.
-> >
-> > I wonder if we shouldn't get something similar to tcp_retries2. But
-> > here, with the syn, we also need to tcp_syn_linear_timeouts into
-> > account. Either we keep it to 15 by default and, (if not 0), we add
-> > tcp_syn_linear_timeouts, or we initialise it to 19.
-> >
+On 21/10/2026 20:20, Anil Kaushik wrote:
+> On Wed, Oct 21, 2026 at 11:18 PM Matthieu Baerts <matttbe@kernel.org> wrote:
+>> On 16/10/2026 10:43, Matthieu Baerts wrote:
+>>> On 16/10/2026 07:49, Anil Kaushik wrote:
+>>>>> Add a sensible default value (what do you recommend?)
+>>>>
+>>>> 15 SYN retries: about 20 minutes with the 120s max RTO.
+>>>
+>>> I guess it could even be longer, no? With an exponential backoff, it's
+>>> not spamming the network too much.
+>>>
+>>> I wonder if we shouldn't get something similar to tcp_retries2. But
+>>> here, with the syn, we also need to tcp_syn_linear_timeouts into
+>>> account. Either we keep it to 15 by default and, (if not 0), we add
+>>> tcp_syn_linear_timeouts, or we initialise it to 19.
+>>>
+> 
+> tcp_write_timeout() already adds tcp_syn_linear_timeouts on top of
+> icsk_syn_retries for SYN_SENT sockets. With the defaults, 15 gives 4
+> linear + 15 exponential retries, about 20 minutes, close to
+> tcp_retries2. I can make it longer if you prefer. Let me know please?
 
-tcp_write_timeout() already adds tcp_syn_linear_timeouts on top of
-icsk_syn_retries for SYN_SENT sockets. With the defaults, 15 gives 4
-linear + 15 exponential retries, about 20 minutes, close to
-tcp_retries2. I can make it longer if you prefer. Let me know please?
+It is always tricky to find a good default value. I guess 15-20 minutes
+is fine for most people. Connections are usually not that long, but some
+can be, e.g. ssh. But then, what do we loose to put it higher by default
+to support more cases? Maybe environments with low memory could not like
+that, but either they don't manage that many connections, or they don't
+use MPTCP.
 
-> >>> modify icsk_syn_retries instead [...] WDYT?
-> >>
-> >> Good idea, I will do that: one new subflow per failure, with its SYN
-> >> retries set from the new netlink limit, 0 =3D disabled. It also remove=
-s
-> >> the socket reuse, the retries counter and the 60s check.
-> >>
-> >> One point to think though, If ICMP unreachable stops the SYN at once.
-> >> I would not retry
-> >> again then. Is that OK?
-> >
-> > Good point. In your specific case, what do you observe?
+When I look at nf_conntrack_tcp_timeout_established, it is set to 5 days
+by default, so we shouldn't go higher than that. But maybe we should
+target a few hours by default? e.g. using 20 (~10.5h?) or maybe better
+to use 21 (~21h) or 22 to cover a WE (~42.5h?)?
 
-In my tests, the fiber outage is a silent drop: the SYNs just time
-out, and the subflow comes back once the path is up again.
+>>>>> modify icsk_syn_retries instead [...] WDYT?
+>>>>
+>>>> Good idea, I will do that: one new subflow per failure, with its SYN
+>>>> retries set from the new netlink limit, 0 = disabled. It also removes
+>>>> the socket reuse, the retries counter and the 60s check.
+>>>>
+>>>> One point to think though, If ICMP unreachable stops the SYN at once.
+>>>> I would not retry
+>>>> again then. Is that OK?
+>>>
+>>> Good point. In your specific case, what do you observe?
+> 
+> In my tests, the fiber outage is a silent drop: the SYNs just time
+> out, and the subflow comes back once the path is up again.
 
-> >
-> > To me, the best is to have the network manager (something from
-> > userspace) removing the MPTCP endpoints when they are not "usable", but
-> > here it can be specific to the destination. I would then say to look at
-> > this case later. In this case, we could eventually disconnect the
-> > subflow, and add a timer to retry later. But that's also more prone to
-> > bugs, so if we can avoid that, probably better to!
-> >
+Interesting. Out of curiosity, how long are these outages typically?
+Less than ~20 minutes I suppose?
 
-Sure, lets take up this case later
+>>> To me, the best is to have the network manager (something from
+>>> userspace) removing the MPTCP endpoints when they are not "usable", but
+>>> here it can be specific to the destination. I would then say to look at
+>>> this case later. In this case, we could eventually disconnect the
+>>> subflow, and add a timer to retry later. But that's also more prone to
+>>> bugs, so if we can avoid that, probably better to!
+>>>
+> 
+> Sure, lets take up this case later
+> 
+>>>>> Do we have other similar ones? [...] ss -Mte, would that work?
+>>>>
+>>>> I will drop the MIB counter. The test can use the MPJ counters and the
+>>>> netlink events.
+>>>
+>>> Thanks! You can expose the new limit in "struct mptcp_info", instead of
+>>> "reserved".
+>>>
+> 
+> Done since v5.
 
-> >>> Do we have other similar ones? [...] ss -Mte, would that work?
-> >>
-> >> I will drop the MIB counter. The test can use the MPJ counters and the
-> >> netlink events.
-> >
-> > Thanks! You can expose the new limit in "struct mptcp_info", instead of
-> > "reserved".
-> >
+Thanks.
 
-Done since v5.
+>>>>> Is it specific for your case?
+>>>>
+>>>> No, it came from a Sashiko review: a dead subflow waiting to be closed
+>>>> could be re-created after its endpoint or the peer's address was
+>>>> removed. I will try to move it to pm_kernel.c.
+>>>
+>>> What did you end-up doing for this?
+>>>
+> 
+> When an address is removed, mptcp_pm_rm_addr_or_subflow() now marks the
+> subflows using it, so they are not re-created.
 
-> >>> Is it specific for your case?
-> >>
-> >> No, it came from a Sashiko review: a dead subflow waiting to be closed
-> >> could be re-created after its endpoint or the peer's address was
-> >> removed. I will try to move it to pm_kernel.c.
-> >
-> > What did you end-up doing for this?
-> >
+Good, simpler.
 
-When an address is removed, mptcp_pm_rm_addr_or_subflow() now marks the
-subflows using it, so they are not re-created.
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-> >>> can we not check why it failed instead?
-> >>
-> >> With your idea it is not needed: only one retry, nothing to count.
-> >
-> > Good
-> >
-> >>> what error do you get when the issue is detected via TCP Keepalive?
-> >>
-> >> ETIMEDOUT, so it is retried.
-> >
-> > Thanks!
-> >
-> >>> Why can we not always re-used?
-> >>
-> >> A subflow that carried data needs the full close cleanup. With your
-> >> idea we always create a new subflow, so there is only one path.
-> >>
-> >> For the rest: OK. I will go through pm.c, avoid struct holes and
-> >> duplicated connect code, drop the RFC tag, add a changelog per patch,
-> >> and test closing the connection while retrying plus the netlink events=
-.
-> >> I will wait for the netdev Sashiko review before sending.
-> >
-> > Thanks! BTW, it is easier if you reply inline here below, to keep the
-> > context:
-> >
-
-Sorry, will do.
-
-
-> > https://subspace.kernel.org/etiquette.html#do-not-top-post-when-replyin=
-g
-> >
-> >> On Wed, Oct 14, 2026 at 11:43=E2=80=AFPM Matthieu Baerts <matttbe@kern=
-el.org> wrote:
-> > (...)
-> >
-> > Cheers,
-> > Matt
->
-> Cheers,
-> Matt
-> --
-> Sponsored by the NGI0 Core fund.
->
-Regards
-Anil
