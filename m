@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792667166;
-	b=SkqhqjlO1TYw8xzT6IDUozjZFU2STbIJhZOcTmT1HeU7VDKgQ9HKy5tkkeT0KihQ/LQN
-	 2w9heHwu90MSA+lDdIfv6gD/dW4CPAPOI3InsJpRblNWAA/qKfVg13iP6oM4X8nbEz8IG
-	 z8B0miqxZeq2xA4NDz30sQgyWSy5MappSkPkjgoNnO5PTVyt4JIPIi7c49J9C3MefZ5oN
-	 uFg9k1LhK8StAWBL/zX1jBubWqCjysKbI8zHxjpJ7CXtnVYEdo/qPHexHbaM4HfzYF0SQ
-	 BN67ATyjVdy7+oZ+2rjlzaM9aebmnuoUyL/8U/C/5RysVar5ph+G3R/6+58+JhQkzdQ==
+	t=1792667873;
+	b=pJrQjgU3v7KldP+J/3lI3ZRHOM4xyy07ZRpTLujMsypnxO5rj4mg+09+lIv58ewFywst
+	 vL0vILvdswJ/AtcJHDWg8l5mIplCG1t6cTahhBTZM9AW/U3PqIFjGB/JGDTrsodjwCbpX
+	 1SgVPaOWbaBJ3S5iaPxbEV0xbzFuTKeK1OabiJNBIV9Jc3F2RUsWXxVPnqiIBaJn39rFg
+	 m5syX76fAAOTTEUMSzumTpJfJs/REkF+Uce0530UMPMqbubWhYcB+ojTOuMeB4yxPHtGe
+	 sIcHedoU7aifa8QAL51GsGVtUhaU9EV75ttJUFxWNKs4d2y/iVrLr4GgfosNds/d3Rg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792667166;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792667873;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=vCSotPvxAedliCLuAqODYszqzBZZOGiu1M0m7uhVEDA=;
-	b=eQd7EgYYER3pRLunHJwozPAAVtYWMI458KyNdv6NkN9Ka709GOqu7jSZ9oFS8H8zzT2i
-	 rRATDLtNSq7M7WG3QORmphjLkoNRVtaQbQZuxF0VY5HggqlB8ZPfufZuWyRhe75lpdF1I
-	 FlITpxwUq1L/DWGOl7efiCgIJxxR7tsEY60ifFo0b3pUi1hkmMjyk/1zhID64WNW0RyRp
-	 ANXbTYjAkFvh0P/jWmy/CNWMT+A0pGW3SVAvPhz3ZIf/XpBHnfRV0xMslvVJ9P+cFZkgQ
-	 dnsUjK1zH2aw43zGhRS4OuIjvrZwLTKh1zP1UyW2NAE1NkXUaJocg5l3moFScAutztg==
+	bh=h7+J0U3lvfvF1yCcBdaCydq6NkgERK4I0MzDhq//0Zw=;
+	b=g9lu5Ca2CDfuo5FoIKvG3hKvmhHNoakyoP+tnSe6ZtCEpisoYyxgDTYNRyE9W8nDi8Ue
+	 Nu3dUrMIayJ0Af5D8A2Iklr5Qxw793pky9uOcn9CiP/zPcMXVMgjF0qHFKpCyr+z9Cou1
+	 14gOPZBk39nV2LRgoAUpCFm/mFBEDsvwRT4xywmLX7WjMHHg7lzNEjJKGa5QdtWYby9eM
+	 r7+ZD6oUhJx6baWcbqrNPMqsSwOKl3nNay4Iust3r8V0jVWbqdZV3UnJHPBq1is3Wsr8q
+	 YwMjQjhy9EBWtWRE7q3jOfdQXX6cQrCeYYKmU3hX5fGptrmyjwCt+j3ksSQh1dvxsYg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bzXLLUFe;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n9PQgpa0;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96535606A319
-	for <mptcp@lists.linux.dev>; Thu, 22 Oct 2026 11:06:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161AE606A319
+	for <mptcp@lists.linux.dev>; Thu, 22 Oct 2026 11:17:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bzXLLUFe
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A252C1F000C1;
-	Thu, 22 Oct 2026 11:06:05 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n9PQgpa0
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 096231F000C1;
+	Thu, 22 Oct 2026 11:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792667166;
-	bh=vCSotPvxAedliCLuAqODYszqzBZZOGiu1M0m7uhVEDA=;
+	s=k20260515; t=1792667872;
+	bh=h7+J0U3lvfvF1yCcBdaCydq6NkgERK4I0MzDhq//0Zw=;
 	h=Date:Subject:To:References:From:In-Reply-To;
-	b=bzXLLUFexTNJtRgw0DgF1d+Z0QIgCA/DWqrPKNaz1fDq5WFDQXeqGSvy5gj3AY498
-	 6bL7dEUvJWe7LzFSg4VCSy/CbHlxv9KiELRitG6TxaOXQy82zPxYpxH+nU//tfc5DJ
-	 ewZTK68SBmNsHmn054NYXPnLVOv38ApN4RLaJ6zFue8gt45MeqQJkI7vzXqM8UORsx
-	 MjZVhhA7vlHK6GS4hLvBrSwrwYkWIZUpmkPM0tWUqcu4k8x07CHfpFNyP/hOHikOsg
-	 yIu6gKHmn92upsSdM4f6zk5ReLNMJ3mcvc1mdtJ0u4bVOCfsfd/C9hpUNvZCyjbz4M
-	 ZVyd352CjmZ2Q==
-Message-ID: <d16ffc4a-d8af-4b8d-b112-ce83736b9c3b@kernel.org>
-Date: Thu, 22 Oct 2026 13:06:03 +0200
+	b=n9PQgpa0BsB8cuixHOj7oY5n3NCsrekzIq6uUUSj+vtmS7eOPAeie//7clDKhLLlM
+	 74k1K1iqrkaZhyK8LKPpNFlltXseMBi63npbeNhI4qhOLo01QS8wqaMAA9TTeVTvIo
+	 Q47le9c93BetvSe5OhYQYEbFcIVvZZf5ARMw7e0Skls0FHNrVUhig8jqcauKFBYzbP
+	 4/kUFE5dWr5IYpJ9334B1usTPAkBiU4lBl35KoQ8V3KjL3aV7vN4bKxf3P7k7I/Iqu
+	 Dz0Xap09brTDNcpErxjgMcQzoS/cicIrw2DSyJ4GJxTJO7oA6UGRJ6MXDVW2Id2oyA
+	 pjYXTse4wrnZw==
+Message-ID: <14824187-7186-4c9e-bb14-77c8599a3fd0@kernel.org>
+Date: Thu, 22 Oct 2026 13:17:50 +0200
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,11 +52,11 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2] selftests: mptcp: sockopt: pass total bytes
- to do_getsockopts
+Subject: Re: [PATCH mptcp-net v2] mptcp: annotate lockless access to
+ msk->scaling_ratio
 Content-Language: fr
 To: quanyeyang@proton.me, MPTCP Linux <mptcp@lists.linux.dev>
-References: <20261016-fix-mptcp-issue-638-v2-1-cc32774a8b0c@proton.me>
+References: <20261016-t-mptcp-scaling-ratio-kcsan-v2-1-241d1f92dcf1@proton.me>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -102,45 +102,70 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20261016-fix-mptcp-issue-638-v2-1-cc32774a8b0c@proton.me>
+In-Reply-To: <20261016-t-mptcp-scaling-ratio-kcsan-v2-1-241d1f92dcf1@proton.me>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Quanye,
 
-On 17/10/2026 07:33, Quanye Yang via B4 Relay wrote:
+On 17/10/2026 07:23, Quanye Yang via B4 Relay wrote:
 > From: Quanye Yang <quanyeyang@proton.me>
 > 
-> connect_one_server() reads the echoed payload in a loop because read()
-> on a stream socket can return a partial chunk. After the loop, it still
-> passed the last read() return value to do_getsockopts() instead of the
-> accumulated byte count.
+> mptcp_rcv_rtt_update() writes msk->scaling_ratio from BH while holding
+> the msk data lock (sk->sk_lock.slock). mptcp_cleanup_rbuf() reads the
+> same byte via mptcp_win_from_space() after mptcp_release_cb() drops
+> that lock, so it can run concurrently with the RX path.
 > 
-> do_getsockopts() checks MPTCP_INFO first. The client samples
-> mptcpi_write_seq before write(), and write() has already advanced
-> msk->write_seq by the full length, so a partial last read() makes
-> the write_seq assert fail. Pass the total instead.
+> KCSAN reports:
+> 
+>   BUG: KCSAN: data-race in mptcp_cleanup_rbuf / mptcp_data_ready
+> 
+>   write to 0xffff888014978790 of 1 bytes by interrupt on cpu 1:
+>    mptcp_rcv_rtt_update net/mptcp/protocol.c:1045 [inline]
+>    mptcp_data_ready+0x1c1/0x4d0 net/mptcp/protocol.c:1062
+>    subflow_data_ready+0x271/0x350 net/mptcp/subflow.c:1536
+>    tcp_data_ready+0x92/0x2c0 net/ipv4/tcp_input.c:5604
+>    tcp_data_queue+0x1236/0x26c0 net/ipv4/tcp_input.c:5694
+>    tcp_rcv_established+0x695/0x1fb0 net/ipv4/tcp_input.c:6689
+>    tcp_v4_do_rcv+0x356/0x6e0 net/ipv4/tcp_ipv4.c:1854
+>    tcp_v4_rcv+0x1b04/0x26b0 net/ipv4/tcp_ipv4.c:2248
+> 
+>   read to 0xffff888014978790 of 1 bytes by task 2624 on cpu 0:
+>    mptcp_win_from_space net/mptcp/protocol.h:421 [inline]
+>    __mptcp_space net/mptcp/protocol.h:431 [inline]
+>    mptcp_cleanup_rbuf+0x8a/0x380 net/mptcp/protocol.c:680
+>    mptcp_release_cb+0x375/0x900 net/mptcp/protocol.c:3889
+>    release_sock+0x100/0x150 net/core/sock.c:3866
+>    sk_wait_data+0x141/0x2f0 net/core/sock.c:3314
+>    mptcp_recvmsg+0x6cd/0xd50 net/mptcp/protocol.c:2496
+> 
+>   value changed: 0xd0 -> 0xd5
+> 
+>   Reported by Kernel Concurrency Sanitizer on:
+>   CPU: 0 UID: 0 PID: 2624 Comm: syz.7.22 Not tainted 7.3.0-rc1-gbaff4b3d06ef #77 PREEMPT(full)
+> 
+> The u8 EWMA is used only to convert sk_rcvbuf occupancy into an
+> advertised window. A slightly stale ratio is acceptable, so annotate
+> the lockless accesses with READ_ONCE()/WRITE_ONCE() instead of
+> widening the data lock. Do the same in mptcp_space_from_win(), which
+> reads the same field from DRS and SO_RCVLOWAT.
 
-Thank you for the patch, it looks good to me.
+Thank you, it looks good to me:
 
 Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-I just applied it in our tree, but for net-next because I don't think I
-saw the issue in our and the netdev CI. So I added this in the commit
-message:
-
-This issue has been reported by Sashiko and not seen in CI environments.
-Yet, it could be visible, especially when the test is launched manually.
+I just applied it in our tree, but for net-next because from what I
+understood, KCSAN issues are not considered as "urgent", so it should go
+to -next first.
 
 New patches for t/upstream:
-- e4ab26e68fc2: selftests: mptcp: sockopt: pass total bytes to
-do_getsockopts
-- Results: 7ea69c5a1764..54143bb812b1 (export)
+- ab82be554559: mptcp: annotate lockless access to msk->scaling_ratio
+- Results: 54143bb812b1..15904a7a5590 (export)
 
 Tests are now in progress:
 
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/fae0397e047620f27866048567a39eb2bae6746c/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/10148edc4b64c7799f9109d3ece843362819f108/checks
 
 Cheers,
 Matt
