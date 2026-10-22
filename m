@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792663957;
-	b=W4OJHUHlmtTBun069ms+m5M8ALKS1G/SKO0KQh2EI2SFNWR29BfZJx51O6CvTkR4ghHc
-	 9d2bgKsTlyIJObXjSIqwpZip77FWO4TU3+71sqQX3o9FCEMszcF2XcP6xqbgiD6B6J7o+
-	 zhfreIYcsYd5x3HujkSqHOY0SAohrazMz+luf5HVCNMYfsYnbhSVafu9w3sdFBWfWHibv
-	 A8mQ07cK0fZIEUXyjDQWqoSdTgssQcpTWhtrP4uUI2VctQtoxEyPRJmgHsZD7KDpvdVrM
-	 HGhHMGWf641JdFDy/f4do5ibMD4RFQHDGN0y9vNxDpUz3jlGToYgm6H+Q1jRN1IvnaQ==
+	t=1792664382;
+	b=mQP64lcsbb9uxWAaF1sWmfBszhysgwNVXB+t8MS9jNua8vxsqKKhWBsJ7gVowqm/W5e1
+	 IhXGjXcaZGk4psgZWp6FGj3zPI51hNC4MtWMD2Y9vtHCCirk1UKOiejIdzzkn4/EH7Nzs
+	 cgP+57kpLwXyQXextOxqCwGwb2BxR0IiHUgJmQBQJSO0Lvui9l9jHMIVbVuJVreaRBMRg
+	 ltSFY2ooWvBioyFyFLjrk2BX4FA45JEFd+knPGEgwGNLIFoMs3jvxNKLHouRjVybfU9ZU
+	 95lxXpM7O0altUXQDNRULj3HHPtcc0mUfjYEokC0VZKhmr0K0irq2jyFwC5JJm9TPZw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792663957;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792664382;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=h3Tv8eGqKzhP1CEPap2Iu9fF2t0Jb4HznSVB2lmmadY=;
-	b=gDS7WVi2v12DQRiCBq8I0rw1eQQkOWdrHrbyMCYX8ygnbvUPY2jj2NR9b+V5Zrizf4jX
-	 FCdbxashRdv7hQfaPIJbcngCfZpTi+39JtJqlfexsAiZDciCmT1wZPGprmhXycaqizT0M
-	 wlHJ7uQ+UKnOgwa97vGoR5jBobXp7KLF6arX9rMISBWX8HW0Np7qZBxN0+N1PYIOpcN37
-	 VTFvArzBSTBHxEl3KmAItdFParzZ4l9deiwBhxUKni+XRBrJPmDopr+Af0PaJ+qNPSzac
-	 0n2ycVx7QBeE262iFY8CtXKPt/nFdagAkUZPKzmHqN3OQZZvXL8LftTXSdM6yn88Dog==
+	bh=1D3+/otixqO6pjwI33PcoWvwPnFPmdlbMKb4y+KtnWs=;
+	b=oDfZdA58JG5TV0yQIzslM0AVFYykahB0n/NCqssJLj8vAph5lL8TaT8E8hkIxjyMMkzz
+	 hPfrcNZPqdUEBSR9H6JYpxu7KHnRba7FZMyARabn7jDXOpVMad9kPWnZSOLgyVSt8/8uI
+	 WAx8391xWkwjLo7+XmT4p7HbZAYKdOvY2aDQGFZDlOVinkpbHRhkblA8KFhJhKlLIkN33
+	 S43M5o1SMqDlp99E1MawWKYkU/skwMRyBABudUxUdf+roVMduAxpZY/G1HhHAvPuLE21o
+	 HxADwxiQ0hkymvmpg/LSGkgDz/LK4Tt9wSl5OKjlZoqiIJUDScb1+H9HduEbSvLRg7w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lEpPhBPt;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cQN92BEb;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9F4606A319;
-	Thu, 22 Oct 2026 10:12:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25A5606A319
+	for <mptcp@lists.linux.dev>; Thu, 22 Oct 2026 10:19:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lEpPhBPt
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CF371F000C1;
-	Thu, 22 Oct 2026 10:12:36 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cQN92BEb
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43CCE1F000C1
+	for <mptcp@lists.linux.dev>; Thu, 22 Oct 2026 10:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792663957;
-	bh=h3Tv8eGqKzhP1CEPap2Iu9fF2t0Jb4HznSVB2lmmadY=;
+	s=k20260515; t=1792664381;
+	bh=1D3+/otixqO6pjwI33PcoWvwPnFPmdlbMKb4y+KtnWs=;
 	h=Date:Subject:To:References:From:In-Reply-To;
-	b=lEpPhBPtLouFLN+TDsA/nbx3dlNVfjiClnDK2LlEScS20NGUR165PRwb9tyDWhbSk
-	 Q0DFV8h1wqb0oRaNjyyxlaRIhiR7S0IjOH4Ac3Z/H3glpISFHPha+NF/hBGavtShoq
-	 +ZSViyEK9uGxZ9AupLnjqSaORBWHLOAWw/UbWzHVmwjsEX9XM32J0QOSfmeSuL0qsj
-	 776695iE5zfVCN7CBSW3BFjECOHcDs0qriG5TZdvc3P14/ultWgOcYi/kL1N233nwD
-	 xmgWRa1MjIx/zHLWYIHAeXajfAaZ1b3VCEs5d97Q/oi8k9vEh3LotubDFfR4AwWzr1
-	 5sZiBU7F3Z6vQ==
-Message-ID: <5ecb8462-3071-4f90-a0b7-614417337cf1@kernel.org>
-Date: Thu, 22 Oct 2026 12:12:34 +0200
+	b=cQN92BEb41kSn1ATGdRWQdt0QtmyttcOUZ77Al4EZ7XCtVMoZIwiAAC9NxYbVysaR
+	 hCPHBGiM1uceitjFq+Xq1VcsIAMjkjcZl/5XFkBR2rK0fF6vx/83zYUSPS54gzjkZM
+	 mbVaK3x8ee8b4AtZpSzp7lcQ972q/nOg36/LpUidNx+zY8R1PnqEFt/SdEWFfFLEvb
+	 NDmml9Nt8yptLY/mCeXd9Z0jIv7j2Ruigrr+iEkQ0fNG7jzeGciiirwPJTLZrhkHYN
+	 TEcQJqhBOhtWlIuMFrK/RvBqqNgAni7oZtf9y8pJ6lMLID/qNQuR2f99nmv+vUAiw1
+	 P2gXPms7bt0QQ==
+Message-ID: <56679372-0ae6-43bf-b0fa-a6b853a1b68c@kernel.org>
+Date: Thu, 22 Oct 2026 12:19:39 +0200
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,12 +52,12 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: pm: kernel: c-flag: mark as used only
- when it is
+Subject: Re: [PATCH mptcp-next v7 3/6] mptcp: pm: in-kernel: add the
+ subflow-retries limit
 Content-Language: fr
-To: sashiko-reviews@lists.linux.dev, MPTCP Linux <mptcp@lists.linux.dev>
-References: <20261022-mptcp-pm-cflag-clear-when-used-v1-1-516c09b4ee65@kernel.org>
- <sashiko-outbox-181256@kernel.org>
+To: mptcp@lists.linux.dev
+References: <20261020031711.1896660-1-anilkaushikwireless@gmail.com>
+ <20261020031711.1896660-4-anilkaushikwireless@gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -103,50 +103,37 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <sashiko-outbox-181256@kernel.org>
+In-Reply-To: <20261020031711.1896660-4-anilkaushikwireless@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 22/10/2026 11:24, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Critical] mptcp: infinite loop in fill_local_addresses_vec_c_flag() on skipped endpoint
-> --
+On 20/10/2026 05:17, Anil Kaushik wrote:
+> A new limit for the in-kernel PM, set and read with the other limits:
+> the number of SYN retries of a subflow re-created after an error, like
+> the TCP_SYNCNT socket option. 15 by default, about 20 minutes, and 0
+> to not re-create it. The netlink policy checks the maximum value,
+> MAX_TCP_SYNCNT.
 > 
-> commit 13a1b915ae070fcc7bed06cf022912abbebad663
-> Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> It is also exposed in struct mptcp_info, in place of the reserved field.
 > 
-> mptcp: pm: kernel: c-flag: mark as used only when it is
+> The next patch uses it.
 > 
-> This commit moves the clearing of local->addr.id in msk->pm.id_avail_bitmap
-> in fill_local_addresses_vec_c_flag() until after checking that the address
-> families match and the local endpoint is not msk->mpc_endpoint_id.
+> Assisted-by: LLM
+> Signed-off-by: Anil Kaushik <anilkaushikwireless@gmail.com>
+> ---
 > 
->> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
->> index d3014bf57bf3c..3e473a81389d3 100644
->> --- a/net/mptcp/pm_kernel.c
->> +++ b/net/mptcp/pm_kernel.c
->> @@ -582,14 +582,14 @@ fill_local_addresses_vec_c_flag(struct mptcp_sock *msk,
->>  		if (!select_local_address(pernet, msk, local))
->>  			break;
->>  
->> -		__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
->> -
->>  		if (!mptcp_pm_addr_families_match(sk, &local->addr, remote))
->>  			continue;
->>  
->>  		if (local->addr.id == msk->mpc_endpoint_id)
->>  			continue;
->>  
->> +		__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
-> 
-> [Severity: Critical]
-> Could moving __clear_bit() after the continue statements cause an infinite
-> loop in fill_local_addresses_vec_c_flag()?
+> Notes:
+>     v6:
+>      - the netlink policy checks the maximum, no more parse_limit() change
+>        (netdev Sashiko)
+>      - the limit works like TCP_SYNCNT, say so (netdev Sashiko)
 
-Mmh, yes, now I remember why __clear_bit was there...
+That's a good idea to use netlink policy to check the maximum. Do you
+mind adding a patch between the current 1 and 2 to do the same with the
+other 2 limits to uniform everything, please?
 
-Because this's "urgent", I will send a v2 soon with what the original
-author did + a few fixes.
+Either that, or continuing to use parse_limit(), but better not to have
+a mix of the two.
 
 Cheers,
 Matt
