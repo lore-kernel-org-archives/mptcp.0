@@ -1,99 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.42
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792667111;
-	b=iOkN/Kc76PVMxsZ1quoruYBYGrlxyK3LcVXzJYj6zs+pYFGKzzBkG90W5KRUMyz9TbkR
-	 K7B5s/DvyJkM/dFqudnPTHc8PcKVJRnolON4qT/qeqFKWPB9J2ifc5h7zJpJfLkhW/eWM
-	 pLkCuUgmJps4AJZrJ846frsWnID3FgXvCMzz1wfHPlM8iEeYs//whnHQsNRq9QOlLXV4W
-	 uZ+4y3SqEEedLayrH4PcuNUU3vCohQKj0bqx/Hqoc48aaa5OMK2dY63t4SneZaZhkrWcj
-	 3OdNaZIFNLutAQNEDQCFy+STkkw+yMMU/sNZrfPBOav3n50E26g1epWmj4JHDhMPZJw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792667111;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:MIME-Version:References:
-	 In-Reply-To:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=9NGRkYSpVr1rV/Jv/r+XGqK1KJCqYa/beS3iVvgqf6w=;
-	b=kYbsQtCtYDkMvvFiSSnLHCzTK7OF0eO8e96RyFIgUtTsbWTqW592PdH3GIurQX9Zb78o
-	 GsmQUkKbbsdLOuS5mHRVmozL5mt1CwsrsQOR64J7DAqlSryfI4o8mvKWTJhSHoVf4V0pn
-	 yBBmWGZmnHbgOLW5/qwklZ2yPeu1KXK738sBZmMuPR0g5KOWE1yASl3TO9qoFj8jXk//9
-	 MfHfKiuc20YpFVtHBkHLAOgkAzyGhmQaAXgWglxGudGDJhizLUQ+yBUfAsdOVL65ZMRuc
-	 wd1cro4gkgK1bcgRxMpydiPrEpgqfWTnlDqVVE/pAFk0pvnmNj/UADBGTOf5MRmYF7w==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=AqrfFAM1;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.42
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792667166;
+	b=SkqhqjlO1TYw8xzT6IDUozjZFU2STbIJhZOcTmT1HeU7VDKgQ9HKy5tkkeT0KihQ/LQN
+	 2w9heHwu90MSA+lDdIfv6gD/dW4CPAPOI3InsJpRblNWAA/qKfVg13iP6oM4X8nbEz8IG
+	 z8B0miqxZeq2xA4NDz30sQgyWSy5MappSkPkjgoNnO5PTVyt4JIPIi7c49J9C3MefZ5oN
+	 uFg9k1LhK8StAWBL/zX1jBubWqCjysKbI8zHxjpJ7CXtnVYEdo/qPHexHbaM4HfzYF0SQ
+	 BN67ATyjVdy7+oZ+2rjlzaM9aebmnuoUyL/8U/C/5RysVar5ph+G3R/6+58+JhQkzdQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792667166;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:Content-Language:To:References:From:Autocrypt:Organization:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=vCSotPvxAedliCLuAqODYszqzBZZOGiu1M0m7uhVEDA=;
+	b=eQd7EgYYER3pRLunHJwozPAAVtYWMI458KyNdv6NkN9Ka709GOqu7jSZ9oFS8H8zzT2i
+	 rRATDLtNSq7M7WG3QORmphjLkoNRVtaQbQZuxF0VY5HggqlB8ZPfufZuWyRhe75lpdF1I
+	 FlITpxwUq1L/DWGOl7efiCgIJxxR7tsEY60ifFo0b3pUi1hkmMjyk/1zhID64WNW0RyRp
+	 ANXbTYjAkFvh0P/jWmy/CNWMT+A0pGW3SVAvPhz3ZIf/XpBHnfRV0xMslvVJ9P+cFZkgQ
+	 dnsUjK1zH2aw43zGhRS4OuIjvrZwLTKh1zP1UyW2NAE1NkXUaJocg5l3moFScAutztg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bzXLLUFe;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0B6606A319
-	for <mptcp@lists.linux.dev>; Thu, 22 Oct 2026 11:05:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8B0B6606A319
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96535606A319
+	for <mptcp@lists.linux.dev>; Thu, 22 Oct 2026 11:06:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=AqrfFAM1
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5bccb867d6fso308520e87.0
-        for <mptcp@lists.linux.dev>; Thu, 22 Oct 2026 04:05:11 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792667110; cv=none;
-        d=google.com; s=arc-20260327;
-        b=WH1JftwwhkY9v1cIXBtR6CE64+6GU5JQxC835M1AvNgSHqDPOUV8SfZPP2V6Y7QSK4
-         qVe5nDDE7unoNijNhX96fscS5cOVzF2+Bmr4/x+DE1eCn+JfGGrKfKvQQJjvLtNiMtHz
-         4lyTGh9PLMG5ZxGMqdgq2/pCSkY86vD1w6UkTSX6sv0+EQVNE10BvLY7RcNzKBa6XNDB
-         gdQkCsW+FgXhWKujjHvyWPkGC7g2ZQIKBQQ1MZilimyg6GVim3pvTSejKvJwP9oPyuDC
-         gWggddGHPc/mOOFmBB4zf/F3TV7mp2FHhKYN2Sr3TSNON8fZrcs8Rxgul9dYxwSWXOYF
-         pguw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=9NGRkYSpVr1rV/Jv/r+XGqK1KJCqYa/beS3iVvgqf6w=;
-        fh=ta3oWJNUUOGDBubb9ZsHOPUNokkPfzxKTkR8JEtaNGw=;
-        b=l9ifpmajaZAeTnDQluoOA9FCh7MCtuXGYLuNEIftWj54/zhoKIXEQzOECn/giIe1/H
-         L3+6y0X4KVt3P8x1C2MdjGcf2yxetItnvhqUSzMny3ZUndUWv19Ms5vo3FixfAAf6FXj
-         UTmYzCXWbGW6k9uj9/ryOQzfBzXRCchZEIhMe36dQJoM8M1kKqtbZ+j1/PDWp7Vfg2m0
-         vdpPHkwW09WKoMbNpHx7Z4Guh2M+4MxZrLg8AEnZ8pgEythswKuIV9IGwoZJVkRbbmyl
-         j6TGJY9ldAEOt9/WH24h8zLkLOFVM4I+EZ9xNrCStrz1M2Wvc9L389NoeyJJejABQeso
-         K73g==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792667110; x=1793271910; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=9NGRkYSpVr1rV/Jv/r+XGqK1KJCqYa/beS3iVvgqf6w=;
-        b=AqrfFAM1TK5mY4oWcTcrPnBD5KQfPdLaNxunGJXSwuVE1hWtv2gbWudpfp8w3YNbIh
-         cf2cyIl8JRgcIBsJJuL7M2ktT4zuSoHjtwyS4zMyqLM6qCDZGtLgsYCFdOwNdegNe48B
-         Je6v6GLDzkAaUUnfJ5FOIxe8WewtWKBHDIPliQmGDx2agYJdYu+pcaAqp7y/XVIV5xvx
-         SJ2qVjdwDB8KS3w8xlbxt9nITlE5FvggNPU7h3dU2eOR/8g75/FhNz+7xXyNkwi0hPxR
-         V7XdYKtmwPbVzRnwSrBaSjaD2SmXr0JM2kNHtm0GxEmYexsbRMFxrsdrGrhcaG2O4+pt
-         GHWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792667110; x=1793271910;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=9NGRkYSpVr1rV/Jv/r+XGqK1KJCqYa/beS3iVvgqf6w=;
-        b=O4Wz6Od7ykWMy5N1yyIbEW0UJm9FKKGVxjbgZgbKwFMbr0BtBd2CsJTBHz1RpkAME5
-         Pvh+g5Pf3LY+URUgdHEZ1qMhq2T0M5yskcw7Ou2SiMi4mau3e/NquByZshEvLmqXTWpz
-         LLTkB9FG5dBOFoHQZLpdMWZMfhW+9xVBW2mbNvkzrENjFy1slr+n3GeerKsobzze0obf
-         XDmlbsnAXq8g3Ejbhj9CtwK/RSxj/SklYhzxdPLTATX7YSYY0oEyjarCo8Sav9IPN03Y
-         vSozKSTdZaBmRJcuR3e5Yw1tfs0gqr0LAhn7v8EIafsBoos0/38ftDO8EEsvr8pYmbca
-         hwuQ==
-X-Gm-Message-State: AFq9FYK2o5L06nd0T0MN7DbAFVeyij/7kdWIAATHIZOl49f5csYplfUR
-	+0OEe4PKy5h/qmfkgYkxjquAKFIB871MA5nMWJvoKE1xY9OgCso46eyRb49qbToPKRgGrBo/FyA
-	suK+N5pzF/32HPJ/qLooUn+XU6EitxhjWuiqQ
-X-Gm-Gg: AYBFou23hSCUIrhfKB3yAane86cz4ekYuT8jaVegHG5as2g5XVm4BZHXyb3mPwZ3lCF
-	xLLTgTrk3B7v4rbLr6vbJy3BfDvGuVkfid9BXYwVEleL8fNmmWFWKOzwpCdFZl49WOq8Ht9mI1V
-	ZExtUYRWmcRtdUtvZworOqkjw5hXvWlPSUCGL4EuR/3eyDCeRmCk6mnrkUUREU7eYYYiXXzD8Rb
-	Bp/HKRYtSXrvQ6E/SvxaB/tYA4F9wKAAm8+/b3f1brpqHkHRjeLsNwMNDizGjkrPNIWKZjoUsMQ
-	APu2j5jJZAJtNKLU0H1EMiQQ4xq88sVAFxN2TbX8PGq00CtmWIiCB+s8U16p67TxDMcx5yye/xJ
-	TrSUdkZdTzme9Sli3MgA/6tIgSH6P3eBxdvYzdoyPPA4JwY33tfVWIjTdiw==
-X-Received: by 2002:a05:6512:3b2c:b0:5bb:7b64:340d with SMTP id
- 2adb3069b0e04-5bfa1bfc1b3mr1842959e87.28.1792667108821; Thu, 22 Oct 2026
- 04:05:08 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bzXLLUFe
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A252C1F000C1;
+	Thu, 22 Oct 2026 11:06:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792667166;
+	bh=vCSotPvxAedliCLuAqODYszqzBZZOGiu1M0m7uhVEDA=;
+	h=Date:Subject:To:References:From:In-Reply-To;
+	b=bzXLLUFexTNJtRgw0DgF1d+Z0QIgCA/DWqrPKNaz1fDq5WFDQXeqGSvy5gj3AY498
+	 6bL7dEUvJWe7LzFSg4VCSy/CbHlxv9KiELRitG6TxaOXQy82zPxYpxH+nU//tfc5DJ
+	 ewZTK68SBmNsHmn054NYXPnLVOv38ApN4RLaJ6zFue8gt45MeqQJkI7vzXqM8UORsx
+	 MjZVhhA7vlHK6GS4hLvBrSwrwYkWIZUpmkPM0tWUqcu4k8x07CHfpFNyP/hOHikOsg
+	 yIu6gKHmn92upsSdM4f6zk5ReLNMJ3mcvc1mdtJ0u4bVOCfsfd/C9hpUNvZCyjbz4M
+	 ZVyd352CjmZ2Q==
+Message-ID: <d16ffc4a-d8af-4b8d-b112-ce83736b9c3b@kernel.org>
+Date: Thu, 22 Oct 2026 13:06:03 +0200
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -103,151 +51,99 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <20261014143349.768138-1-anilkaushikwireless@gmail.com>
- <20261014143349.768138-3-anilkaushikwireless@gmail.com> <b150dde6-05f1-4e7b-9440-360b7ce17eff@kernel.org>
- <CAG0Mgm_uj70o=R5HnEb0GkTy4FTQK6cy6GHWuO7y2FitzwnucA@mail.gmail.com>
- <7c7308c5-c150-41a1-9d84-9981acfb5962@kernel.org> <ffc98c40-09d5-4299-8128-72cc0ed6beae@kernel.org>
- <CAG0Mgm9ShHdApcKAUj_PgGdm_A+w--FKpSpJq=nTJ=DkRcuACA@mail.gmail.com>
- <4180b794-8877-4516-9400-afb0894e8f49@kernel.org> <CAG0Mgm85JF6bFs2Nwije+2cbFjC-DmUNLeanwSCqOXxU=c1piA@mail.gmail.com>
- <07243418-dc96-43c6-beb6-ff220234bdeb@kernel.org>
-In-Reply-To: <07243418-dc96-43c6-beb6-ff220234bdeb@kernel.org>
-From: Anil Kaushik <anilkaushikwireless@gmail.com>
-Date: Thu, 22 Oct 2026 16:34:57 +0530
-X-Gm-Features: AclHuK9R3gBeEiHPXgwSi9vXnUrDwnmk24fjHG40O8ip4zkzNOUctmComL-ssxA
-Message-ID: <CAG0Mgm_iQmH2uuP8x8dd7M9qDZm7G_ySp=XzqxsHhuXaFC23Cg@mail.gmail.com>
-Subject: Re: [RFC PATCH mptcp-next v3 2/3] mptcp: pm: kernel: retry subflows
- closed after an error
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net v2] selftests: mptcp: sockopt: pass total bytes
+ to do_getsockopts
+Content-Language: fr
+To: quanyeyang@proton.me, MPTCP Linux <mptcp@lists.linux.dev>
+References: <20261016-fix-mptcp-issue-638-v2-1-cc32774a8b0c@proton.me>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20261016-fix-mptcp-issue-638-v2-1-cc32774a8b0c@proton.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matt,
+Hi Quanye,
 
- Thanks for the response.
+On 17/10/2026 07:33, Quanye Yang via B4 Relay wrote:
+> From: Quanye Yang <quanyeyang@proton.me>
+> 
+> connect_one_server() reads the echoed payload in a loop because read()
+> on a stream socket can return a partial chunk. After the loop, it still
+> passed the last read() return value to do_getsockopts() instead of the
+> accumulated byte count.
+> 
+> do_getsockopts() checks MPTCP_INFO first. The client samples
+> mptcpi_write_seq before write(), and write() has already advanced
+> msk->write_seq by the full length, so a partial last read() makes
+> the write_seq assert fail. Pass the total instead.
 
-On Thu, Oct 22, 2026 at 3:58=E2=80=AFPM Matthieu Baerts <matttbe@kernel.org=
-> wrote:
->
-> On 22/10/2026 11:24, Anil Kaushik wrote:
-> > Hi Matt,
-> >
-> >   Thanks for the review.
-> >
-> > My response inline.
-> >
-> > On Thu, Oct 22, 2026 at 1:02=E2=80=AFPM Matthieu Baerts <matttbe@kernel=
-.org> wrote:
-> >>
-> >> Hi Anil,
-> >>
-> >> Thank you for your reply.
-> >>
-> >> On 21/10/2026 20:20, Anil Kaushik wrote:
-> >>> On Wed, Oct 21, 2026 at 11:18=E2=80=AFPM Matthieu Baerts <matttbe@ker=
-nel.org> wrote:
-> >>>> On 16/10/2026 10:43, Matthieu Baerts wrote:
-> >>>>> On 16/10/2026 07:49, Anil Kaushik wrote:
-> >>>>>>> Add a sensible default value (what do you recommend?)
-> >>>>>>
-> >>>>>> 15 SYN retries: about 20 minutes with the 120s max RTO.
-> >>>>>
-> >>>>> I guess it could even be longer, no? With an exponential backoff, i=
-t's
-> >>>>> not spamming the network too much.
-> >>>>>
-> >>>>> I wonder if we shouldn't get something similar to tcp_retries2. But
-> >>>>> here, with the syn, we also need to tcp_syn_linear_timeouts into
-> >>>>> account. Either we keep it to 15 by default and, (if not 0), we add
-> >>>>> tcp_syn_linear_timeouts, or we initialise it to 19.
-> >>>>>
-> >>>
-> >>> tcp_write_timeout() already adds tcp_syn_linear_timeouts on top of
-> >>> icsk_syn_retries for SYN_SENT sockets. With the defaults, 15 gives 4
-> >>> linear + 15 exponential retries, about 20 minutes, close to
-> >>> tcp_retries2. I can make it longer if you prefer. Let me know please?
-> >>
-> >> It is always tricky to find a good default value. I guess 15-20 minute=
-s
-> >> is fine for most people. Connections are usually not that long, but so=
-me
-> >> can be, e.g. ssh. But then, what do we loose to put it higher by defau=
-lt
-> >> to support more cases? Maybe environments with low memory could not li=
-ke
-> >> that, but either they don't manage that many connections, or they don'=
-t
-> >> use MPTCP.
-> >>
-> >> When I look at nf_conntrack_tcp_timeout_established, it is set to 5 da=
-ys
-> >> by default, so we shouldn't go higher than that. But maybe we should
-> >> target a few hours by default? e.g. using 20 (~10.5h?) or maybe better
-> >> to use 21 (~21h) or 22 to cover a WE (~42.5h?)?
-> >>
-> > The SYN RTO is capped at TCP_RTO_MAX (120s), so after the first
-> > doubling each retry only adds 2 minutes: 20 is about 30 minutes,and
-> > the maximum, 127 (MAX_TCP_SYNCNT), about 4 hours.
-> > Should I use 127 by default, to get a few hours? Covering a weekend
-> > would need something else, e.g. a new attempt once the SYN retries are
-> > used up, which would bring a timer back. Let me know what you think?
->
-> Ah yes, thank you, I remember something with the TCP_RTO_MAX. OK then
-> please use the maximum, and add "(127)" after mentionning MAX_TCP_SYNCNT
-> in the doc.
->
-Will do in the next version(v8).
-> >>>>>>> modify icsk_syn_retries instead [...] WDYT?
-> >>>>>>
-> >>>>>> Good idea, I will do that: one new subflow per failure, with its S=
-YN
-> >>>>>> retries set from the new netlink limit, 0 =3D disabled. It also re=
-moves
-> >>>>>> the socket reuse, the retries counter and the 60s check.
-> >>>>>>
-> >>>>>> One point to think though, If ICMP unreachable stops the SYN at on=
-ce.
-> >>>>>> I would not retry
-> >>>>>> again then. Is that OK?
-> >>>>>
-> >>>>> Good point. In your specific case, what do you observe?
-> >>>
-> >>> In my tests, the fiber outage is a silent drop: the SYNs just time
-> >>> out, and the subflow comes back once the path is up again.
-> >>
-> >> Interesting. Out of curiosity, how long are these outages typically?
-> >> Less than ~20 minutes I suppose?
-> >>
-> > It varies. Short ones are a few minutes, but when the fiber is cut, the
-> > repair can take several hours. So a longer default would help.
->
-> When the "fiber is cut", do you still have an IP address or is the
-> connection still up?
->
-> To me, if there is an issue in the network, we generally have two cases:
-> either we are closed to an end (client / server) and the host should be
-> disconnected from that network, or it is happening in the "middle" of
-> the network where BGP will reroute the traffic.
-> In case of disconnection, I would guess the IP is lost and the
-> corresponding MPTCP endpoint is removed. The userspace will try to
-> reconnect, then re-add the MPTCP endpoint, and the PM can restart the
-> subflows.
->
-> But that doesn't seem to be the case on your side :)
-> Do you know why?
->
-Yes. MPTCP runs on a gateway in front of the fiber and Starlink
-routers, connected to each of them over Ethernet. The fiber cut is
-between the fiber router and the ISP, so the gateway keeps its link and
-its IP address on that side, nothing removes the MPTCP endpoint, and
-the packets on that path are just dropped. There will be mix of
-deployments like this.
+Thank you for the patch, it looks good to me.
 
-Any thoughts?
-> Cheers,
-> Matt
-> --
-> Sponsored by the NGI0 Core fund.
->
-Regards
-Anil
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+I just applied it in our tree, but for net-next because I don't think I
+saw the issue in our and the netdev CI. So I added this in the commit
+message:
+
+This issue has been reported by Sashiko and not seen in CI environments.
+Yet, it could be visible, especially when the test is launched manually.
+
+New patches for t/upstream:
+- e4ab26e68fc2: selftests: mptcp: sockopt: pass total bytes to
+do_getsockopts
+- Results: 7ea69c5a1764..54143bb812b1 (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/fae0397e047620f27866048567a39eb2bae6746c/checks
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
