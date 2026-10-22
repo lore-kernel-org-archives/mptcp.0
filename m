@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792675120;
-	b=tXyMELdxW8NlEdztjfdbhe4u7qC4vQQsfSgtgRKMtRdKNc3YtgKhOHWbrvAop3HvxWIz
-	 HycKI/hZZXTagbtliwHsVbLdSk/8LAEn1D/O7loCiYrdr0rVubvqYtF8f/+DQIhROmErx
-	 9azqnHPEO1WVOF6pt+xQlquYg5SfZtjscHux0qvGiO3ELKCtPLCw8PK3GBTYRCusiGK1r
-	 CneTvxSnlEHuwUIW42Co+PLKWhiXCRePUREtCvptruMPcnCr8d1kFgE5ij6anehzM7rha
-	 CX9BTcEhT/cKkGqV+LR1q8GRPqgsAkAgYenrQrYRP322knZNFZnQkcZk+wbAmMzvYyg==
+	t=1792675831;
+	b=VV5RY4BtlwVM847Xk66DrZD4sgozpVIH2eVkCP7TBWtUm0eUMhpXVl42V8sAhRpiyFuV
+	 4HmQ4NdbV0BxkhfEeRrSPTd2z1Q5WSrbKwLGkpKxBVOdyeIRTmUI+Df9m3n4WOHSpxk67
+	 vNTFr6ofuDLfWQ8iDeN411ly6yhbBdMPyoRW3CsYjXz76WSysbM0rp4yD6zthApFd3qao
+	 H2vRUadpSo7ziUKyDU//v3HQP0OoLNPy4a5fGNFwunx2MbqrcVRTSkOG5uoQIMtoaX1f8
+	 hEc6+hC75mkklhS82aciutQEABJ+NLwEl3byi0bMA+oS0ctsZxBnzLJGHYJjl4lf7KQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792675120;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792675831;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:References:From:Autocrypt:Organization:
+	 Subject:Content-Language:To:References:From:Autocrypt:Organization:Cc:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=ZYjnh0mPnqJPwghCSs2kYNZYtk47oZpigd1q1saV6v4=;
-	b=xuPho75m+2CDvp6TpaNfH5bwQFVuTw8gebmqt7xWR/cHkI9lytuRt47SppeG0ekVIsQh
-	 gf8M90XKemMPEYJ9owTGUx2R/j2ujv9gE786dXDTSF9m6bhLAyioyVFb4PpPl4qOu0cW8
-	 38aVp7GTNbw9BwrwWBb78ajP+hHXGtR3wysEzWDnBX0V1xnZ1JdhJPBHf4fFlWWX3p7fa
-	 oMzF+Nt1FMXrQAWqMnH3fvhQ/uPeu57VwZzKHPnwZhURjP8e/1E2x8mWdXS2vewDkQIwI
-	 FpZCCE0pGTxS5vdBAdZbOTWYh+8jqgWsFaXzjo0j+U+9C0+rTDt4omRcnidN4vXDtQQ==
+	bh=7nZ+PTvIIYY32MbOGiiGjY3A9u7uFw/+tvgMhQC7g20=;
+	b=4SXZMbcR5c92mKIth/wWR40/HfvH7N4QF741kw3k2H/EPsJ1sVQ4+PClapK9wwWk7Ewn
+	 jMyJ/2WX7z9Fx3qi2NMIbqDfAM8MntkeGurOId188kGQ8uy+MRn3ThJ+6gc5OhP111s2+
+	 M3hAHrW+RFmRQXuFYVl+k3mHUPMyvstwF2XxHuwN0z6lbh1yJ976RpbR3aaNhB8ShekTY
+	 1mUKqbeDi70Q26nejzBTwZ4TqJJxTxYBCiDLx5JSZfAFqLPyYGK3kuIJK75uFw+9NDiIG
+	 u5jtFrHnN1wTsSjWkPWnyvjeFbKJ8C7y0aMxVum6fYWJPPF6GfYrhdCU53YmCT8QQfw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jZ0slr0o;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cmWkw7W7;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0986B606A319
-	for <mptcp@lists.linux.dev>; Thu, 22 Oct 2026 13:18:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA13606A323
+	for <mptcp@lists.linux.dev>; Thu, 22 Oct 2026 13:30:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jZ0slr0o
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D3271F000C1;
-	Thu, 22 Oct 2026 13:18:39 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cmWkw7W7
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DB411F000C2;
+	Thu, 22 Oct 2026 13:30:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792675119;
-	bh=ZYjnh0mPnqJPwghCSs2kYNZYtk47oZpigd1q1saV6v4=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=jZ0slr0oHTj0BuE1DCSU+kPiUCgJ3e1NfzuLnetPyKFpzQWtXad2s7rkzBIGQiIJp
-	 K24cTN7i/Ik4uN+vYoS0gmdlKPLWFoBU1MAZVs4MZe4z+V6/moV4N4PXVpNVaoVwAX
-	 qTKPbWEyO8WakOYkJNYFv1oon/Fmk+JyoeF/Q1seNLztGUuFBem66u212MSFkiXx33
-	 thpB/NaY7oAzDw5FhxTmpspEJi2XWtVOxLXNm2rwPC4hvIh3ppJjgHU8a9ZXY61noX
-	 H5BDoiBmlCZIp5KL5H0l/hhismvhG0aCOUZ3ckHkYeLZRdKjam1JYyYfn0j9ITmsBh
-	 VzqTEUSx3f9Iw==
-Message-ID: <8a1d2674-86d9-4eb7-99b6-521810a313a7@kernel.org>
-Date: Thu, 22 Oct 2026 15:18:37 +0200
+	s=k20260515; t=1792675831;
+	bh=7nZ+PTvIIYY32MbOGiiGjY3A9u7uFw/+tvgMhQC7g20=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To;
+	b=cmWkw7W7u+fHGMnFzJ7sb6AruZMIJ/Z87BtvRHe8zuw5zhc0+WgpdtCTwMHblmmir
+	 qfuV90gJ+Xj6DirQk7zXXzCOeoRvUjvk5nu0TSVDcAHSFOPMZd7fIvgR9N1FfnZCNW
+	 3ICcDHfTINUK8njR+Vod1X86uknfIUFljOyZNG2awS8pseMU6TsCHm2a6dS2zYrizF
+	 6FlJdABssJi4RmzkWlg7QFwBF7YgjzZNRj86aHnuKXWJlpp21mciEy9I9KlZvWQVqF
+	 yj/dn9KGBPyUPok9SOv3t7RDnspZCsx5I/Yqn3qR4RQRWbYjtkHoqTyfeGHFVdeJyJ
+	 lFf6KuGSeXOtA==
+Message-ID: <b6eed470-af86-4554-b89e-2edc702521e9@kernel.org>
+Date: Thu, 22 Oct 2026 15:30:28 +0200
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,11 +52,21 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: push pending data after a sendmsg copy
- fault
+Subject: Re: [RFC PATCH mptcp-next v3 2/3] mptcp: pm: kernel: retry subflows
+ closed after an error
 Content-Language: fr
-To: quanyeyang@proton.me, MPTCP Linux <mptcp@lists.linux.dev>
-References: <20261017-fix-mptcp-issue-640-v1-1-50a7bace7d43@proton.me>
+To: Anil Kaushik <anilkaushikwireless@gmail.com>
+References: <20261014143349.768138-1-anilkaushikwireless@gmail.com>
+ <20261014143349.768138-3-anilkaushikwireless@gmail.com>
+ <b150dde6-05f1-4e7b-9440-360b7ce17eff@kernel.org>
+ <CAG0Mgm_uj70o=R5HnEb0GkTy4FTQK6cy6GHWuO7y2FitzwnucA@mail.gmail.com>
+ <7c7308c5-c150-41a1-9d84-9981acfb5962@kernel.org>
+ <ffc98c40-09d5-4299-8128-72cc0ed6beae@kernel.org>
+ <CAG0Mgm9ShHdApcKAUj_PgGdm_A+w--FKpSpJq=nTJ=DkRcuACA@mail.gmail.com>
+ <4180b794-8877-4516-9400-afb0894e8f49@kernel.org>
+ <CAG0Mgm85JF6bFs2Nwije+2cbFjC-DmUNLeanwSCqOXxU=c1piA@mail.gmail.com>
+ <07243418-dc96-43c6-beb6-ff220234bdeb@kernel.org>
+ <CAG0Mgm_iQmH2uuP8x8dd7M9qDZm7G_ySp=XzqxsHhuXaFC23Cg@mail.gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -102,48 +112,80 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20261017-fix-mptcp-issue-640-v1-1-50a7bace7d43@proton.me>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <CAG0Mgm_iQmH2uuP8x8dd7M9qDZm7G_ySp=XzqxsHhuXaFC23Cg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Quanye,
+On 22/10/2026 13:04, Anil Kaushik wrote:
+> On Thu, Oct 22, 2026 at 3:58 PM Matthieu Baerts <matttbe@kernel.org> wrote:
+>> On 22/10/2026 11:24, Anil Kaushik wrote:
+>>> On Thu, Oct 22, 2026 at 1:02 PM Matthieu Baerts <matttbe@kernel.org> wrote:
+>>>> On 21/10/2026 20:20, Anil Kaushik wrote:
+>>>>> On Wed, Oct 21, 2026 at 11:18 PM Matthieu Baerts <matttbe@kernel.org> wrote:
+>>>>>> On 16/10/2026 10:43, Matthieu Baerts wrote:
+>>>>>>> On 16/10/2026 07:49, Anil Kaushik wrote:
 
-On 17/10/2026 14:46, Quanye Yang via B4 Relay wrote:
-> From: Quanye Yang <quanyeyang@proton.me>
+(...)
+
+>>>>>>>>> modify icsk_syn_retries instead [...] WDYT?
+>>>>>>>>
+>>>>>>>> Good idea, I will do that: one new subflow per failure, with its SYN
+>>>>>>>> retries set from the new netlink limit, 0 = disabled. It also removes
+>>>>>>>> the socket reuse, the retries counter and the 60s check.
+>>>>>>>>
+>>>>>>>> One point to think though, If ICMP unreachable stops the SYN at once.
+>>>>>>>> I would not retry
+>>>>>>>> again then. Is that OK?
+>>>>>>>
+>>>>>>> Good point. In your specific case, what do you observe?
+>>>>>
+>>>>> In my tests, the fiber outage is a silent drop: the SYNs just time
+>>>>> out, and the subflow comes back once the path is up again.
+>>>>
+>>>> Interesting. Out of curiosity, how long are these outages typically?
+>>>> Less than ~20 minutes I suppose?
+>>>>
+>>> It varies. Short ones are a few minutes, but when the fiber is cut, the
+>>> repair can take several hours. So a longer default would help.
+>>
+>> When the "fiber is cut", do you still have an IP address or is the
+>> connection still up?
+>>
+>> To me, if there is an issue in the network, we generally have two cases:
+>> either we are closed to an end (client / server) and the host should be
+>> disconnected from that network, or it is happening in the "middle" of
+>> the network where BGP will reroute the traffic.
+>> In case of disconnection, I would guess the IP is lost and the
+>> corresponding MPTCP endpoint is removed. The userspace will try to
+>> reconnect, then re-add the MPTCP endpoint, and the PM can restart the
+>> subflows.
+>>
+>> But that doesn't seem to be the case on your side :)
+>> Do you know why?
+>>
+> Yes. MPTCP runs on a gateway in front of the fiber and Starlink
+> routers, connected to each of them over Ethernet. The fiber cut is
+> between the fiber router and the ISP, so the gateway keeps its link and
+> its IP address on that side, nothing removes the MPTCP endpoint, and
+> the packets on that path are just dropped. There will be mix of
+> deployments like this.
 > 
-> mptcp_sendmsg() copies into the msk write queue first, then
-> __mptcp_push_pending() on the success path. tcp_sendmsg_locked()
-> does the opposite: its do_error path jumps to out, and out
-> calls tcp_push() when copied > 0.
-> 
-> A later iovec fault (copy_from_iter / -EFAULT) after a successful
-> iteration therefore returns the partial byte count but leaves the
-> already-queued dfrag on rtx_queue. No subflow packet is sent, no
-> retransmission timer is armed, and DATA_FIN stays blocked on
-> first_pending.
-> 
-> Push in do_error when copied is already non-zero. Do not move
-> the push to out: copied is a size_t, and sk_stream_error()
-> stores a negative errno there.
+> Any thoughts?
 
-Thank you for the fix and for the test, it looks good to me:
+So when you have an issue between the fiber router and the ISP, the
+fiber router keeps its connection up to the ISP, and no ICMP network
+unreachable are sent?
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+In such setup, and if the fiber router gets a notification somehow in
+case of issue, I would find it better to forward this notification to
+the gateway to disable the MPTCP endpoint. An alternative is to have a
+simple service monitoring the links, and removing/re-adding endpoints: a
+simple "echo" service in TCP (or ICMP echo) with a server somewhere, one
+per link. With that, you have more control and can eventually ack quicker.
 
-I just added that it was spot by AI, but easy to reproduce with
-Packetdrill (to justify why we want it to -net):
-
-New patches for t/upstream-net and t/upstream:
-- f94544594473: mptcp: push pending data after a sendmsg copy fault
-- Results: 8d14bfc65f4a..b13e2e43af96 (export-net)
-- Results: c2dd59af75f8..9257a00903b8 (export)
-
-Tests are now in progress:
-
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/501231f7acb612561523f4e194cf01c77938bdad/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/f2f79e9af965c1c49decfe56312fa547095fbbee/checks
+Yet, the series you are suggesting here still makes sense because that
+would help people, or in case of issues not detected by the network manager.
 
 Cheers,
 Matt
