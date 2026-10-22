@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792668845;
-	b=e5jQxfRGWoEqHsS+l5b4hYKJB4Dq09xp0GQgrx2WrLgP+lkrOMLGISYJk8TMOsmBz0mG
-	 xOu5yQ6hyPLzZMknQzmogzQOu1YNHY5JnYwX8AIAXqbSCj2fsfWSec9AIdOo6DOojl2+Y
-	 X/swppTL/eyozwR7W8jmz4bsHEJQi926Sv+go/JyVMNY02uCJkXp9sYvazo3xtphGKw2C
-	 UZmP0aW6BeGQ90W/dJAfsiHfN/jr1yiL/KbN5uCkg0QivPUWYk/EGxO0fZB0HTMDW1MfZ
-	 wZiDUuShPO82rvC26vtom6TRADm9VIjOA/zOk8kTNjEKSkrFpQ053tndaW4/0C4EkpQ==
+	t=1792669293;
+	b=v1YsjEvxSDmL6WxPPn2TMNBo5UQ202OLcbGBd7CJS804iklTmv7SrphqKWLJs1zu5UFb
+	 mWseX6/qdVp2yqnUFAkTEPmhz9se55Kpwe78bA0bP8WYZzJjMTPdSdzMlrTptolkfEKwG
+	 6htuX2NTbpKVMcy0dGd2GcwhBUqorYvlg1QvdaQhAfOIbfMO1Fzee5IxQ4bxwVpILmTsR
+	 u9PwhwD0pgZQnyY5TE7TLhTOk2FXJdZ05k8pi5CqjRXwUwNo4+9xrbGvneWSR6ta1Wv99
+	 gyyFAfxLTZErG1UeSJA+e0pLHYxCjUsbFP2vzUsT3UgvRdfTG3XHKik4W+JNGhyCTTA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792668845;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792669293;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=/oPb7+OIDsNAVcJ2hjkcUDu5TJggJVKxdbLJnbyAdXw=;
-	b=u+if6tUiW0gXv+kvZq40RRdAc9+q8f7oArWpEPnbwfVdebwCr7tp9nrWvEGP5BOP7FbQ
-	 PxTd4gZbQ9foAergJuw68iUxcTzoMwaNAP6nvPZcjOOkS9ZZb0Y7IVN7mKTaiBvsfQVyd
-	 uYokAqmUUpKUtVakta+Ku4q57+ncgDIncj4OU8tjTYbnQVMy9tsa07Le797qfrWraL45K
-	 5KH0eO8h2bU8qtdFMD0IxQE8E+2PPEAr8G9PU+MNZ0pHQsp9velNLzlH0gBoHcLEYz2Kp
-	 b0DJqx1dDnQfj+7C+sxDh+AlwpMSVcMp66CxLYRPDaEKb3uZPOTXLyiM0eJ8uc6ZSuw==
+	bh=weTRpf87XHCKVmKeuRnXUiUaRUVcjXRZxpafjWmzXng=;
+	b=NB92fhgndkPmWCglkyzayHLK9U5TGVaDTEogBTiEIlLMaK1cXyxtF5Yx8pjIGgkTH0j2
+	 1Ux6yl54dUMln+fuA7iz4aqBXPRn2hnvlDE51o7J2UTpCl/ym2hrxRfdTIaxV36FY+4FX
+	 yg9TPq+sCtfCPfXh15p9NsVP7n+dZZyq3Cr44zQcf+n42MmRO+mPWVsxeQLqcdPcc8UtT
+	 HpwfVSJyIE1F9Chbg0PPckswacn2xxY6KOpDW2IUpAQLDyrvqs8umvH8+wAhmPl5gskpu
+	 saKMxLOGFDYYuMpnCOh0kggvOtlcZT4tSY21Cw9OeUVN5LsglSk3RUwGe3czV8RwEhg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VEVBWMqC;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lXQtWDU+;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3307606A319
-	for <mptcp@lists.linux.dev>; Thu, 22 Oct 2026 11:34:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31DDF606A31D
+	for <mptcp@lists.linux.dev>; Thu, 22 Oct 2026 11:41:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VEVBWMqC
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7B201F000C1;
-	Thu, 22 Oct 2026 11:34:03 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lXQtWDU+
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 451B41F000C1;
+	Thu, 22 Oct 2026 11:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792668844;
-	bh=/oPb7+OIDsNAVcJ2hjkcUDu5TJggJVKxdbLJnbyAdXw=;
+	s=k20260515; t=1792669292;
+	bh=weTRpf87XHCKVmKeuRnXUiUaRUVcjXRZxpafjWmzXng=;
 	h=Date:Subject:To:References:From:In-Reply-To;
-	b=VEVBWMqCHX86rzmmtpM1OJGSwiyYjDMDpKm458/6j7eimnkxtcWG15cxM/mUIGK3H
-	 /EkfdgCeokPC13Dc/S1PfT0Gh96TYfuiO5LyPMEnSMBldQsydHrpa9NoMgfLS3E39E
-	 +/kpc+rC98kq+QiAH/Cp2QfbR4b7yfRgi5o5qN4xvDcCr5W2bnbHDi6pcAWStcRCAA
-	 QyHT75p/Q67JONrusSaV1Q2r3fP2NTu1Y0H70Z9z1TJaLwzoBpMlc0CFEagwUZQagB
-	 RZYRQn6fP+k5hVdu8toJ7GPB/H1AvY95c3ssjk4zVIoepHwYIDPNilMsUjSY5E2I6S
-	 +0fFN1zeYQugw==
-Message-ID: <bb6151a5-e9b4-4b43-a57b-94aa853beaa0@kernel.org>
-Date: Thu, 22 Oct 2026 13:34:01 +0200
+	b=lXQtWDU+RJqqFZwezblhoEDirUMomSUv6EVus9/7a7xUslRk/PXGk/VIzYVQZ6C0K
+	 5FoupPLMe0kPAWJwr8g4T7kdL0fG1iGl8jUdacyiDLyPg9+S/Xpst7bmWPEvfYarYr
+	 HBeVtS5wSUyg+QzHlmw/5MOmv2mW//lPVhd3Ux0A061bA3r/k4H9FzbRQG6W2fM8cT
+	 FdZctXQbkCW/XeG1cyioDQ4olyHd3Q4k1QwVc105/Pwl2l9BnDlJoARwX4pK3/9CzE
+	 db2m9ZAUdsxyQe4nU80QIzll3z7Nkg07VcdVMUjrs8lLiwH7aTaBde5m32oUx+CPBC
+	 uCbM08HCDtnKg==
+Message-ID: <ab542a7f-ab5e-45a0-a16d-3dc851fdf2e9@kernel.org>
+Date: Thu, 22 Oct 2026 13:41:30 +0200
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,11 +52,11 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] selftests: mptcp: sockopt: echo until EOF on
- partial reads
+Subject: Re: [PATCH mptcp-net] selftests: mptcp: sockopt: drop unreachable FIN
+ accounting
 Content-Language: fr
 To: quanyeyang@proton.me, MPTCP Linux <mptcp@lists.linux.dev>
-References: <20261017-fix-mptcp-issue-639-v1-1-0554d07ab8f8@proton.me>
+References: <20261017-fix-mptcp-issue-637-v1-1-cda9bf1c79de@proton.me>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -102,129 +102,44 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20261017-fix-mptcp-issue-639-v1-1-0554d07ab8f8@proton.me>
+In-Reply-To: <20261017-fix-mptcp-issue-637-v1-1-cda9bf1c79de@proton.me>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Quanye,
 
-On 17/10/2026 13:22, Quanye Yang via B4 Relay wrote:
+On 17/10/2026 10:53, Quanye Yang via B4 Relay wrote:
 > From: Quanye Yang <quanyeyang@proton.me>
 > 
-> process_one_client() used a single read() and write() before waiting
-> for hangup. A SOCK_STREAM read() can return a short count when the
-> payload is segmented, so the server echoed only part of the data and
-> then blocked on FIN.
+> connect_one_server() sets eof when read() returns 0, then immediately
+> checks total != len. The receive loop only observes EOF while total is
+> still below len, so that check always fires and xerror() terminates the
+> process. The later if (eof) block that increments total for DATA_FIN is
+> therefore unreachable.
 > 
-> The client keeps reading until it has the full length and only then
-> closes the socket. The two sides wait on each other and the test
-> hangs until SIGALRM.
-> 
-> Loop the server read/write until read() returns 0, and accumulate the
-> copied byte counts for the existing sockopt checks.
+> The client also does not wait for the peer to close: process_one_client()
+> blocks on hangup first, so a peer DATA_FIN cannot arrive before this
+> assertion. DATA_FIN sequence advancement is already checked on the server
+> after EOF. Treat an early EOF as a hard error and drop the dead
+> adjustment.
 
-Thank you for the fix.
+Thank you for the patch!
 
-> Fixes: ce9979129a0b ("selftests: mptcp: add mptcp getsockopt test cases")
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Note, you can keep the Fixes tag, but target mptcp-next because I don't
-think I saw the issue in our and the netdev CI, and we got asked to
-delay "non-urgent" fixes like this one found by AI without user reports.
-(Not that the fix is useless, but it is not urgent, and there are
-already too many urgent ones ;) )
+I also just applied it in our tree, but for -next, and added this paragraph:
 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/639
-> Signed-off-by: Quanye Yang <quanyeyang@proton.me>
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 34 +++++++++++++----------
->  1 file changed, 19 insertions(+), 15 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-> index b6e58d936ebe..5e1ec3336859 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-> @@ -638,7 +638,7 @@ static void connect_one_server(int fd, int pipefd)
->  
->  static void process_one_client(int fd, int pipefd)
->  {
-> -	ssize_t ret, ret2, ret3;
-> +	ssize_t ret, ret2, n, w;
->  	struct so_state s;
->  	char buf[4096];
->  
-> @@ -648,23 +648,27 @@ static void process_one_client(int fd, int pipefd)
->  	ret = write(pipefd, "xmit", 4);
->  	assert(ret == 4);
->  
-> -	ret = read(fd, buf, sizeof(buf));
-> -	if (ret < 0)
-> -		die_perror("read");
-> +	ret = 0;
-> +	ret2 = 0;
-> +	while ((n = read(fd, buf, sizeof(buf))) > 0) {
-> +		if (!ret) {
+This issue has been reported by Sashiko and not seen in CI environments.
+Yet, it could be visible, especially when the test is launched manually.
 
-Instead of 'ret' and 'ret2', maybe clearer to use 'read' and 'written'?
+New patches for t/upstream:
+- 5531a8151ac8: selftests: mptcp: sockopt: drop unreachable FIN accounting
+- Results: 15904a7a5590..c2dd59af75f8 (export)
 
-(Also, with an integer, it is clearer to use > 0 or != 0)
+Tests are now in progress:
 
-But regarding the modification: if the 'read' is partial, will we not
-have an issue with the assert below?
-Do we know in advance how much we are supposed to receive? If yes, we
-can retry if "0 < n < expected"?
-
-(Note: you can maybe avoid the big loop and use a label + goto?)
-
-> +			assert(s.mptcpi_rcv_delta <= (uint64_t)n);
->  
-> -	assert(s.mptcpi_rcv_delta <= (uint64_t)ret);
-> -
-> -	if (s.tcpi_rcv_delta)
-> -		assert(s.tcpi_rcv_delta == (uint64_t)ret);
-> +			if (s.tcpi_rcv_delta)
-> +				assert(s.tcpi_rcv_delta <= (uint64_t)n);
-> +		}
->  
-> -	ret2 = write(fd, buf, ret);
-> -	if (ret2 < 0)
-> -		die_perror("write");
-> +		w = write(fd, buf, n);
-> +		if (w < 0)
-> +			die_perror("write");
-> +		if (w != n)
-> +			xerror("short write");
-
-Same here: if we fail in this case, then the modification doesn't seem
-useful, no?
-Instead, could we try to write again? (goto)
-
->  
-> -	/* wait for hangup */
-> -	ret3 = read(fd, buf, 1);
-
-Without the big loop, we can keep this explicit "wait for hangup" which
-is perhaps clearer.
-
-WDYT?
-
-> -	if (ret3 != 0)
-> -		xerror("expected EOF, got %lu", ret3);
-> +		ret += n;
-> +		ret2 += w;
-> +	}
-> +	if (n < 0)
-> +		die_perror("read");
->  
->  	do_getsockopts(&s, fd, ret, ret2);
->  	if (s.mptcpi_rcv_delta != (uint64_t)ret + 1)
-> 
-> ---
-> base-commit: a22035be824449c4921ec406f6383089016a628c
-> change-id: 20261017-fix-mptcp-issue-639-96339a3d921a
-> 
-> Best regards,
-> --  
-> Quanye Yang <quanyeyang@proton.me>
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/08e13d22410569c3de4f17c5568d2b19d29eb4be/checks
 
 Cheers,
 Matt
