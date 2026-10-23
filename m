@@ -1,55 +1,92 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.51
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792748832;
-	b=OdBUH2kZ57JVj6Lm7wfeaxbwLUcU+iXR5vWE6Pg+4Rw+ZBjojxRZsoPmZy/zW2DbF5yu
-	 AkOUdZX/dgKXwA+YenEHNdvALZWqpNPlxSzlzb81L8iJrj/BXpNrYK8JQ9Rvt7YqjEpG9
-	 M2nqPk6jtp1J/bVkc40pepY9H8iLzFfAR4m5+GUbvBC9sLLbdFgiii+S++zSyfqNGQEkr
-	 32m0C+s2/9PlsEWoXpQrq6MXSwE1t7Q7kogOk1huUty+QoyPO5VrqqKSPbkSJs8Y6yHFO
-	 sapdZm+YJm0eNyPTBVzZiqL6sHr9LeW/VgmXVg1wIzJ6urty3841Ili3g0BU+mhN9Mg==
+	t=1792751517;
+	b=NAFqYNe9v7KPpkP8CWP+XNxP/zv3v1xlLwblm8hV4VRVJxBtuYE4Z73xR8OUvySpI2bc
+	 BJQJh01JdcTCtmLd0jaVAi/X+REFb0GqnPaydtQznTvvkfYSSP5Kh0YHH6stJNJKu9/7q
+	 4Z9YSL9PZzfXCCGFPom2JKBlCFHSGSt9m1i5QhdFRl+0CrrAZTmR+Qx5MJdry5FibG9bi
+	 Z86vq6KpaGZX4sI3kWRluwWzKQ7e2TgDyJwzfhfSZx4O+k1pzpi4oBlggNhU5hnOh03cS
+	 dygUsPKzLUlgJcToFePVdt4ZiVYicQzJvzOVS2yRnggRqK/IkBp/uKn3CUIAicQsCiA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792748832;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=9oAbCgEMrP0mEyAoEYk2h9xY6C0kaWWKdK2Laon+PV8=;
-	b=NR7dbUoKH80rby2lF/fvIX4ExatIxNG9BOkj8AQOT3dTJYpNUpEfoSlQ5JjGsIvVn1cj
-	 QIE+7+q9tj4ivIV0SOyqtJIh29UfBsGQ6kLu4Z7mLGvRagv7EXl8JFameqdf/faF31JtF
-	 ZHnoU2VqJbCNRb8Ne8K3C+xPZyl/pIKa6eipNQ8elAgPZod14VyDOowfTGeH9G1f/nhYO
-	 drV93CTOU5SunK+2jtDEU9Jh63fj3s6AOcq1tMMOX0OCjLcLpfgTI/25sE6BMWb0Azgwx
-	 RNYq1BYg4YbmWob3jKHq7JhxHg6LYoKVEg6rg9MSE4ILoQhXNZzTA4mIfRUG6mZIYjw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792751517;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
+	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
+	 Date:MIME-Version:Content-Type;
+	bh=9rQ6JtbpEYlPbwrRtFoS5R+vmb6svETseJ9p/OrLr+Y=;
+	b=wsQRhoOMHoagPgeq//Nx5lBkEdstV/DD2K5h+vUkaARfWAUlq0pBKkgSrAP9crHbH5pd
+	 wcCCA2U+cmMro/kTJFp0VT7mkHmrepL0IJzyvdeoYRz+dxC1r7lnUnNqnUZfvu1/+RC2V
+	 X9MsMNgKnCwQBa2IQ5S1yOW9Ihx+kXqotbfoLNxY0tRIK0pnWUoYBx8PNo5p9Vx84Iuk2
+	 VmrTymiKQlFacQfBA/g8yJ6c7TmbYy5tLm6P4eYgPuC0qF9iO1VZz1qbvPj+YtUlYuheJ
+	 ej+pa0tuFPpXDgkJyVlmTb9wPOCrzZr0jPmLx9yQUVyguLXS7xsDaQe/B+UkyZyYVLg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=L3AiKO6w;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=g2O9JFWA;
+	arc=none smtp.remote-ip=209.85.210.51
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B93C606A325
-	for <mptcp@lists.linux.dev>; Fri, 23 Oct 2026 09:47:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1281606A31A
+	for <mptcp@lists.linux.dev>; Fri, 23 Oct 2026 10:31:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A1281606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=L3AiKO6w
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 459E11F01825;
-	Fri, 23 Oct 2026 09:47:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792748832;
-	bh=9oAbCgEMrP0mEyAoEYk2h9xY6C0kaWWKdK2Laon+PV8=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=L3AiKO6whGpApL+8nA5GxLbpFn0ZWPVte193RROLqI3zyW7F/am5GRHypvn1Daoox
-	 tIAKZdZa9uFra/xAkypRkyffChUuZPbMUUJLO8v9huE/A/6rM0pVf598rLwHF77PDa
-	 BUdqGcq3lEQ2cmKYePq0eZ61mMwudG9fxNdmM6KXOQpZ5phNpSevs9JASU6z2IXn+7
-	 OhhC49kK9SK6QZ9Rl/cEh/LGk7JO51EAkdGziXBhSgP22aONvTn+PSaQFv8cbJ7SON
-	 pi7sWjIz8O0R0jVONksm9clQ/nCneqfQDsBpmSHPCHu7PooAivsMoee5M3gkYNeXXw
-	 crGE11eEOxGyA==
-Message-ID: <sashiko-outbox-182633@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next 1/2] nbd: allow MPTCP sockets
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <1612e1611a1e5d78d651a4c1a69da38fdcf98ca8.1792746800.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=g2O9JFWA
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-82380b0f55dso260924a34.1
+        for <mptcp@lists.linux.dev>; Fri, 23 Oct 2026 03:31:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792751515; x=1793356315; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=9rQ6JtbpEYlPbwrRtFoS5R+vmb6svETseJ9p/OrLr+Y=;
+        b=g2O9JFWAxj1UFjyN268LgQ9iVUPkffMqK2ovIjvtcktP3x/ue5oTDdsKlTUUNIJbF+
+         dlrvQ1qcY2iDCNA+ktGUQGmRxy/c4HHqKbx8HGVDEKTjaO7UCuOXCJhresrfe0FE0nYz
+         V96rN75H5jLUUqActVnrhTyA1uNeKVA62qsXS3MaUFAfFxWihiEcwtLzCUIkuBvguH6F
+         tUMeoCX8y4LtEAMu+OTYLT4zPaoKpTFuCJPxVhlTbNkw3GZ9iZqyMeVVJVoQnF16Nx46
+         Gj3zjgeKStpf74liWfI7n49XeJfcNwsI+v2JkhdVs8X8evMj3cxo9RoWqwg6xFp1kfTZ
+         1GIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792751515; x=1793356315;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=9rQ6JtbpEYlPbwrRtFoS5R+vmb6svETseJ9p/OrLr+Y=;
+        b=PpIwJc7B78P1arklIeKSakAqCMKl9QPgRnUA+U/+lqQQnIIpFBfC300VPEWbXZF3b6
+         x33u+lZlTLg8Ts7dWmdqmnZYq4nTxfHWQaj2yz6gaYX7wTE65+XgKXWwKh0vUo92WNNB
+         WbpTBAN2HsQDYutkR1cM6QQJNY2lv95mTuR9GurYl4/GFf5yN0DtDRtomNSuyfZC008c
+         +78K1g14rFuiaFYKEYNPvoZtc/2SdPN/UtN8ndXTTgRn/Fm+3ZRoE0h4a+8rPTQgUUel
+         lRQdvFLXdsEaHqKVIGXlLDN4KeJUWRRDysOo+EtufnysBPcp7GxwN79QjwRYgV0BSYWX
+         le2A==
+X-Gm-Message-State: AFq9FYLZ4UqtFJEDxR/X4DKjfu8MuRO7Bp20EvQNlEFhqNk1wrxYN1ye
+	BzHSlDhW+j6MSnFRpYf8vANEhJBesCTZyBPl1DWMIzM547Z4XlKmbagxvOiO
+X-Gm-Gg: AYBFou0wAFOAFfGkUh65912Oe4SxVEcq7TrmtT6gb6Cp0QsNm33LgZYFvbLCDq2oIyf
+	7rOCv2iJDyKT7TdZ3pfOtDuMdH8ii8O6QTarZWO8omP7X1PkMGbayK3owwx1eIcnqEuLg4y4jYY
+	27BDJlX4BI33LL8UezXi+bCZje7Tj0UFu/ukoq/xjBuISaJfWo4XCrciQIHFVgXyhG4vqPKzgaF
+	MBUfGrOgh+iYSwX5jjSDzHr0XAu2Q3M/kYLSFPSAdpQXhYPIedQgEnWvkzyDXA00i6gCUXsrGEl
+	NCKl4ZN4WIf7s0HAjR86JI+hB18YOkLKW0gskgKfvGot2f7oiv9VQojj9s81WwRpPMQ0lkSvktq
+	WLpeSPUB3N26l2JF10RLpafESiqM2JTj5jmj8Db91GBYo4iYCx8OA3yJpsWK+kNadG26Vnrvtg5
+	/mv52KOyvv5QCvptT5F4peeZ1N0/zq/L+Db+7SsOrIhXvgNdeJ7GTgx4G8GoP2khGV7X0WVcqVC
+	pn7HCZDgyNcxJUrBGkaO+coTbqiRMLoao8cb/kHAa9mG1b2c5B498yC4pjqpLNap6K7hlo=
+X-Received: by 2002:a05:6830:b14:b0:7fa:ab72:9e04 with SMTP id 46e09a7af769-84fb20298c5mr1091764a34.28.1792751513991;
+        Fri, 23 Oct 2026 03:31:53 -0700 (PDT)
+Received: from github.com ([135.232.208.147])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-84fbd362a19sm1709897a34.7.2026.10.23.03.31.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Oct 2026 03:31:52 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1792746800.git.tanggeliang@kylinos.cn>
 References: <cover.1792746800.git.tanggeliang@kylinos.cn>
- <1612e1611a1e5d78d651a4c1a69da38fdcf98ca8.1792746800.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=utf-8
+Subject: Re: [PATCH mptcp-next 0/2] Add MPTCP support for NBD
+Message-ID: <c5be76ca-ade1-c5a0-7460-e9dbd6476fbe@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 23 Oct 2026 09:47:11 +0000
+Date: Fri, 23 Oct 2026 10:31:51 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -58,122 +95,64 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] nbd: missing SOCK_MEMALLOC and sk_allocation propagation to MPTCP =
-subflows
-- [High] nbd: lockdep circular dependency and reclaim deadlock with MPTCP s=
-ockets
---
+Hi Geliang,
 
-commit dbca698e3d4256ddeebe565fd33ea333c059d349
-Author: Geliang Tang <geliang@kernel.org>
+Thank you for your modifications, that's great!
 
-nbd: allow MPTCP sockets
+Our CI did some validations and here is its report:
 
-This commit allows MPTCP sockets to be used with NBD devices by checking
-msk_is_mptcp(sock->sk) in nbd_get_socket().
+- KVM Validation: normal (except selftest_mptcp_join): Unstable: 2 failed =
+test(s): selftest_mptcp_nbd selftest_simult_flows =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): selftest_mptcp_nbd =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: debug =
+(only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal=
+ (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only =
+bpftest_all): Success! =E2=9C=85
+- Perf: Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/399337=
+48069
 
-> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-> index ffce519bf0087..2aeb22b1ad40e 100644
-> --- a/drivers/block/nbd.c
-> +++ b/drivers/block/nbd.c
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/04bb6f5fada2
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1191964
 
-[ ... ]
 
-> @@ -1221,8 +1222,9 @@ static struct socket *nbd_get_socket(struct nbd_dev=
-ice *nbd, unsigned long fd,
->  		return NULL;
-> =20
->  	if (!sk_is_tcp(sock->sk) &&
-> +	    !msk_is_mptcp(sock->sk) &&
->  	    !sk_is_stream_unix(sock->sk)) {
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-[Severity: High]
-When an MPTCP socket is attached to NBD, does SOCK_MEMALLOC and
-sk_allocation get propagated to the underlying TCP subflow sockets (ssk)?
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-In drivers/block/nbd.c, nbd_start_device() and
-nbd_genl_reconnect_sock_cb() call sk_set_memalloc(sock->sk), and
-__sock_xmit() configures sock->sk->sk_allocation:
+For more details:
 
-drivers/block/nbd.c:__sock_xmit()
-    sock->sk->sk_allocation =3D GFP_NOIO | __GFP_MEMALLOC;
-    sock->sk->sk_use_task_frag =3D false;
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-For an MPTCP socket, sock->sk is the master struct mptcp_sock (msk), while
-actual wire segments are sent and received on the underlying TCP subflow
-sockets (ssk). Calling sk_set_memalloc() on msk enables the global
-memalloc_socks_key static key, but neither NBD nor MPTCP (such as
-sync_socket_options() in net/mptcp/sockopt.c or
-mptcp_subflow_create_socket() in net/mptcp/subflow.c) propagates
-SOCK_MEMALLOC or sk_allocation to existing or newly created subflows.
 
-Under memory pressure (for example, swap or writeback over NBD), incoming
-packets allocated from emergency reserves have skb_pfmemalloc(skb) set.
-When tcp_v4_rcv() or tcp_v6_rcv() looks up the subflow socket ssk, both
-sk_filter_trim_cap() in net/core/filter.c:
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-    if (skb_pfmemalloc(skb) && !sock_flag(sk, SOCK_MEMALLOC)) {
-        NET_INC_STATS(sock_net(sk), LINUX_MIB_PFMEMALLOCDROP);
-        return SKB_DROP_REASON_PFMEMALLOC;
-    }
-
-and sk_add_backlog() in include/net/sock.h:
-
-    if (skb_pfmemalloc(skb) && !sock_flag(sk, SOCK_MEMALLOC))
-        return -ENOMEM;
-
-check ssk rather than msk, dropping all incoming pfmemalloc packets. In
-addition, subflow TX allocations in __tcp_push_pending_frames() and
-__tcp_send_ack() use ssk->sk_allocation (which remains GFP_KERNEL without
-__GFP_MEMALLOC). Won't this stall NBD I/O completion and cause a memory
-reclaim deadlock under memory pressure?
-
-[Severity: High]
-Could attaching an MPTCP socket to NBD also trigger a lockdep circular
-locking dependency splat and a reclaim deadlock via subflow socket locks
-and mptcp_worker()?
-
-When nbd_add_socket() attaches a socket, nbd_reclassify_socket() in
-drivers/block/nbd.c only reclassifies the top-level sock->sk (msk) to
-sk_lock-AF_INET-NBD or sk_lock-AF_INET6-NBD. The underlying TCP subflow
-sockets created in mptcp_subflow_create_socket() via sock_create_kern()
-retain the generic k-sk_lock-AF_INET or k-sk_lock-AF_INET6 lock class,
-under which GFP_KERNEL allocations are performed:
-
-net/mptcp/subflow.c:mptcp_subflow_create_socket()
-    err =3D sock_create_kern(net, family, SOCK_STREAM, IPPROTO_TCP, &sf);
-    if (err)
-        return err;
-
-    lock_sock_nested(sf->sk, SINGLE_DEPTH_NESTING);
-    ...
-    sk_net_refcnt_upgrade(sf->sk);
-    err =3D tcp_set_ulp(sf->sk, "mptcp");
-
-This establishes k-sk_lock-AF_INET -> fs_reclaim. Meanwhile, on the NBD I/O
-dispatch path, nbd_queue_rq() -> nbd_handle_cmd() -> nbd_send_cmd() ->
-sock_xmit() -> __sock_xmit() -> sock_sendmsg() -> mptcp_sendmsg() ->
-__mptcp_push_pending() runs under set->srcu (which is chained after
-fs_reclaim -> &q->q_usage_counter(io)) and acquires lock_sock(ssk) in
-net/mptcp/protocol.c:
-
-net/mptcp/protocol.c:__mptcp_push_pending()
-    lock_sock(ssk);
-
-completing a circular dependency chain between k-sk_lock-AF_INET and
-fs_reclaim.
-
-Furthermore, mptcp_worker() in net/mptcp/protocol.c runs in workqueue
-context without GFP_NOIO / PF_MEMALLOC, acquires lock_sock(sk) on msk
-(sk_lock-AF_INET-NBD), and calls mptcp_pm_worker() and
-__mptcp_close_subflow(), which perform GFP_KERNEL allocations while holding
-msk->sk_lock. Can this cause a lockdep splat and deadlocks if
-mptcp_worker() enters direct reclaim waiting on NBD writeback while
-nbd_queue_rq() or recv_work() waits for lock_sock(msk)?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1792746800.gi=
-t.tanggeliang@kylinos.cn?part=3D1
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
