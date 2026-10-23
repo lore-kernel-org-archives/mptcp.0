@@ -1,77 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792791250;
-	b=MVE4+r6alLTrBukiqP2jGPztZ+iq/qszK21IgR4wrP2YWGlSe3dAasiEdXiCnOw1tIO5
-	 FrziZYg5+VvN6wane8tOj5PDXErpsU3tgiSIk99W84A5UqWkkHDamCx2tp03wf/55BWib
-	 mIda6nrY2vdaKSwDd7609zD17+HyTA8EKB54NAD138/UCd2bC44dynqBua7RLScRmJgbR
-	 Lu6/0e8uu3pWK8VSrJmgqIKjA4l+fUnIRUdDg2x4KAMR7sgk0W3o2vGfaHkQoHir52GRS
-	 cXyXHdjvsVhgjKR+x73ReO6X6kN3V6iOOxilMft6hypTvttBxZTEt4gn+tITghUFiYg==
+	t=1792793329;
+	b=t97hSFSZa1H9ltSzN6XEygX0vndvY+sv+r0nZHxQL0TW0j4KXJHbafCPS9qS7FDpS3YW
+	 XUMHK7FYktXzOAoRh3w5cA3uNIyiBn1I6KkWEcoNaZNmjrqTYWd+iLitRKUl2GNcecGOR
+	 YQKRIskR6VxFSSPj+2OKDZanyxN+s1uQ3LmynxUApDmwz/ZoaYqjR6ydxCv1YBL7lc3rG
+	 9ey/wSeo/VzQHWYQy4G5eed/WDSZHyDwteI8Pi1Hmdml1iWxY5yqRqpmr+IDH4bwj5dWM
+	 ojZgPtBrHD2xCE6hRgtj3iFp5iWGAL7FjXB8/lI9RvVKkyLGJRa+fOZONtUuiq4fQvQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792791250;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:From:To:
-	 Cc:Subject:Message-ID:User-Agent;
-	bh=pQRfsss0LwRjOjWqVtxpyWJg4zzkx7izecI++Y98tnE=;
-	b=PTpy6c8jq+wY+XkpHt9vWBR9fawyVtoGL8ZeeXg4mhzOMRUjcS+90f4RFU7hijQYgTpX
-	 cS5fzSF9/Qm2LI5//0HSqcWG0vEVaUc29FqczE7jex2SfWUw5zrb3cI4ItApHYOosOnAB
-	 9IznCa2drLv6Je7CEIgMbR/DQBUMtky26zCE2dbyKjQJQZItnJQNUZKKtzF2UOZmT7KXZ
-	 buq20t7qHsO1OcLDMja3Lwc0P5zuxu5K0q6hwdXkO4Z1lrGdFq+ea6rWe0vY5SR50NVq7
-	 a+iqaNDAEHwVUgWzXfs7RJ/HgvgACwtdlu4FOb4oLCJuLvHoxEz9jFHH31mU4g2bW0g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792793329;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=e7oAFuckFMx7W0E61PjGMaFfAeNYQLKdoncPVZoG0Qg=;
+	b=FhRyzFK0a5i1NrKx8SQGNR34BKFWPGG1HDB+uEdJyXfDHP4uKuIxV1a8NKo3zy7cx/Es
+	 +yn6Kk72z3rwxyZTaubDAg8Rtrr+N18jycPw8FY0CBhf7lSDoCCbo6rONXqtCbBoyGQlL
+	 3AuQ7IPOL5ljBgzzH79dtCszfxC/Emo/f282GnS2PX1XMtJfZQ5rSdwPQPor+xpZKkP/u
+	 BnoCb8xbEHPonA1E8zZYhQ2ryxAMiMvb1TkO065l9i/vAwEErW7HF33XkOQMmoGlyaBO+
+	 j3ZGjdl3V8B0dSkcm6L4GKnRbtPGTZgkjs72Q/RUBDAbam70uIhKsV63+hmSFV6sitw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=WeFA17Jk;
-	arc=none smtp.remote-ip=198.175.65.18
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nQ+93vAb;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E82606A31A;
-	Fri, 23 Oct 2026 21:34:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B4E82606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E449606A31A;
+	Fri, 23 Oct 2026 22:08:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=WeFA17Jk
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792791250; x=1824327250;
-  h=date:from:to:cc:subject:message-id;
-  bh=ntAGzn41ApYUG8qzQ6sTu+EgE1mDoiTKDfQBnujLso0=;
-  b=WeFA17JkG77+zgEpSNEbkaYaGec/gLpUeOPb68wB27/+4J0M96xboG7B
-   DQYcpTtNKqCVP8zf4+KuxYaIou6t+ElHtmwihpc3KMpNRv0bCPols1CKa
-   9F5ASTvXCeV+ZTPgGwmSBbgbcFwm+QIcyV1c4HEajh+EtcT52b27LB5rW
-   Dq/s3dniYMfd6VPsdF4wcEWywYjs3jwKdwE4rCxuMFr9x9CMlCk6b0Co7
-   4+iAH7pJNd1w4JTSV1clTKnwPdNYgFBNMGeGuRyh7Sm4HmBiMK78gUIwL
-   gsVqxlWiaO3NqzZMNJaJrC9Bm8KgMf54Bm0l6TvC3ecWP2cJxzbUfSUZq
-   Q==;
-X-CSE-ConnectionGUID: bMYwlvIpSCekpJnnzk8/wA==
-X-CSE-MsgGUID: mk9N3L3eTo2wEOCSdY+rzQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11944"; a="1561663"
-X-IronPort-AV: E=Sophos;i="6.27,175,1787036400"; 
-   d="scan'208";a="1561663"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2026 14:34:08 -0700
-X-CSE-ConnectionGUID: xMVrXFVKRCGlPeLDnb6l+g==
-X-CSE-MsgGUID: xxxd7kHxTBWa4r6V87C5RA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,175,1787036400"; 
-   d="scan'208";a="3671196"
-Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 23 Oct 2026 14:34:01 -0700
-Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1xKMtj-00000000THI-1BXy;
-	Fri, 23 Oct 2026 21:33:59 +0000
-Date: Sat, 24 Oct 2026 05:33:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, mptcp@lists.linux.dev,
- matthieu.baerts@tessares.net
-Subject: [mptcp:export 6/35] .github/ISSUE_TEMPLATE/01-bug.yml:
- warning: ignored by one of the .gitignore files
-Message-ID: <202610240521.9hBINO5K-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nQ+93vAb
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38A921F01828;
+	Fri, 23 Oct 2026 22:08:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792793328;
+	bh=e7oAFuckFMx7W0E61PjGMaFfAeNYQLKdoncPVZoG0Qg=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=nQ+93vAbDOr7lwlOWSXk/T4FUBZ17tHLSwcdM6WFJttxPQid9mHENxCWWWIGulzY/
+	 RYw6kkVw2++tYCFr6XD7RteYtBkqxsSN1Hy2eCWqYxn1wzUU3cU7Z8Bf+403WnZ2v0
+	 1p1VU5Y1KQQq1Acf2/StAFs4/8yhyK9ogZWjSuVKG+NHHskyOrr+5wtr1a6QCopQDk
+	 oAwqpTl6BWst7Pe7JUCZ5POwih0Zq47zvYcCKUXFdM6ew06jFfmypEcRbvoJhj5xhK
+	 K1204Hs52tSmMmpbfjaaM+DDEtb4hpsczasVM5nHG1JKvSuKAC81FK5zIdtg2P5C9f
+	 9LB9f76ypy92Q==
+Subject: Re: [PATCH mptcp-net v6 2/2] selftests: mptcp: join: re-add the
+ initial subflow endp with fullmesh
+From: netdev-bot+sashiko@kernel.org
+To: w453y.me@gmail.com
+Cc: mptcp@lists.linux.dev, matttbe@kernel.org, martineau@kernel.org,
+ geliang@kernel.org, pabeni@redhat.com, stable@vger.kernel.org,
+ kuba@kernel.org
+Date: Fri, 23 Oct 2026 22:08:47 +0000
+Message-ID: <179279332774.3132.7813168813559908382@kernel.org>
+In-Reply-To: <20261022085041.211318-3-w453y.me@gmail.com>
+References: <20261022085041.211318-3-w453y.me@gmail.com>
+X-sashiko-severity: Medium
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -80,36 +62,148 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
 
-tree:   https://github.com/multipath-tcp/mptcp_net-next.git export
-head:   6ce5f1be3eecbc06913957ca12f7b346c948814f
-commit: cabae5f9340debcc509a8940d2886ad7e23ff069 [6/35] DO-NOT-MERGE: mptcp: add CI support
-config: parisc64-alldefconfig (https://download.01.org/0day-ci/archive/20261024/202610240521.9hBINO5K-lkp@intel.com/config)
-compiler: hppa64-linux-gcc (GCC) 16.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261024/202610240521.9hBINO5K-lkp@intel.com/reproduce)
+Thank you for your contribution! Sashiko AI review found 2 potential
+issue(s) to consider.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202610240521.9hBINO5K-lkp@intel.com/
+Critical: 0 · High: 0 · Medium: 1 · Low: 1
 
-All warnings (new ones prefixed by >>):
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
 
-   .b4-config: warning: ignored by one of the .gitignore files
-   .git_markup: warning: ignored by one of the .gitignore files
-   .github/FUNDING.yml: warning: ignored by one of the .gitignore files
->> .github/ISSUE_TEMPLATE/01-bug.yml: warning: ignored by one of the .gitignore files
->> .github/ISSUE_TEMPLATE/02-feature.yml: warning: ignored by one of the .gitignore files
->> .github/ISSUE_TEMPLATE/03-question.yml: warning: ignored by one of the .gitignore files
->> .github/dependabot.yml: warning: ignored by one of the .gitignore files
-   .github/workflows/build-validation.yml: warning: ignored by one of the .gitignore files
-   .github/workflows/checkpatch.yml: warning: ignored by one of the .gitignore files
-   .github/workflows/notif.yml: warning: ignored by one of the .gitignore files
-   .github/workflows/stable.yml: warning: ignored by one of the .gitignore files
-   .github/workflows/tests.yml: warning: ignored by one of the .gitignore files
-   .github/workflows/update-tg-tree.yml: warning: ignored by one of the .gitignore files
-   Documentation/.renames.txt: warning: ignored by one of the .gitignore files
+- [Medium] Two of the new tests, "delete and re-add, fullmesh, single
+  subflow" and "delete and add another, fullmesh, single subflow"…
+- [Low] In "delete and re-add, fullmesh, single subflow" and "delete and
+  add another, fullmesh, single subflow" (endpoint_tests() in…
 
 --
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+selftests: mptcp: join: re-add the initial subflow endp with fullmesh
+
+This adds four cases to endpoint_tests() in mptcp_join.sh. Each one
+removes and re-adds the endpoint used by the initial subflow, with the
+fullmesh flag set. The cases are: with a second subflow, after a reset of
+the initial subflow, and with the initial subflow only (re-adding the
+same endpoint or adding another one).
+
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 18ce7136a2b0e..52031288bcc86 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -4445,6 +4445,123 @@ endpoint_tests()
+
+[ ... ]
+
+> +	# only the initial subflow: once its endpoint is removed, no live subflow
+> +	# is left to take the remote address from
+> +	if reset_with_events "delete and re-add, fullmesh, single subflow" &&
+> +	   continue_if mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
+> +		pm_nl_set_limits $ns1 0 2
+> +		pm_nl_set_limits $ns2 0 2
+> +		pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullmesh
+> +		{ timeout_test=120 test_linkfail=128 speed=5 \
+> +			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
+> +		local tests_pid=$!
+> +
+> +		wait_event ns2 MPTCP_LIB_EVENT_ESTABLISHED 1
+> +		pm_nl_del_endpoint $ns2 1 10.0.1.2
+
+[Severity: Medium]
+Can this delete race with ns2's PM worker accounting the MPC endpoint?
+
+mptcp_pm_fully_established() only queues the PM work before it sends the
+ESTABLISHED event:
+
+net/mptcp/pm.c:mptcp_pm_fully_established() {
+    ...
+	if (READ_ONCE(pm->work_pending) &&
+	    !(pm->status & BIT(MPTCP_PM_ALREADY_ESTABLISHED)))
+		mptcp_pm_schedule_work(msk, MPTCP_PM_ESTABLISHED);
+    ...
+	if (announce)
+		mptcp_event(MPTCP_EVENT_ESTABLISHED, msk, ssk, GFP_ATOMIC);
+}
+
+msk->mpc_endpoint_id is set later, from the worker, in
+mptcp_mpc_endpoint_setup(). If the delete request is handled first,
+mpc_endpoint_id is still 0, so mptcp_endp_get_local_id() returns 1
+instead of 0:
+
+	return msk->mpc_endpoint_id == addr->id ? 0 : addr->id;
+
+As a result, mptcp_nl_remove_subflow_and_signal_addr() asks to remove
+local id 1. mptcp_pm_rm_addr_or_subflow() then skips the initial subflow,
+which has local id 0:
+
+			if (rm_type == MPTCP_MIB_RMSUBFLOW && id != rm_id)
+				continue;
+
+When the worker runs later, __lookup_addr() in mptcp_mpc_endpoint_setup()
+can no longer find the endpoint. MPTCP_PM_MPC_ENDPOINT_ACCOUNTED is set
+while mpc_endpoint_id is still 0, and the initial subflow stays alive.
+
+If that happens, does the SUB_CLOSED wait_event time out, and does
+chk_subflow_nr "after delete" 0 fail?
+
+After the re-add, the live initial subflow still holds remote id 0. No
+fullmesh subflow would be created, so wait_mpj, chk_mptcp_info and
+chk_join_nr would fail as well.
+
+The comment below shows this ordering is known. However, waiting for
+SUB_CLOSED only detects the race and does not prevent it. Could the test
+wait until the MPC endpoint has been accounted before it deletes the
+endpoint?
+
+"delete and add another, fullmesh, single subflow" has the same pattern.
+The two-subflow variants look fine: wait_mpj 1 only succeeds after the
+same worker run has done the accounting.
+
+> +		# the ESTABLISHED event comes before the PM worker accounts the
+> +		# initial subflow endpoint: check the subflow is really gone
+> +		wait_event ns2 MPTCP_LIB_EVENT_SUB_CLOSED 1
+> +		chk_subflow_nr "after delete" 0
+
+[Severity: Low]
+Does a SUB_CLOSED event on ns2 guarantee that ss reports 0 subflows in
+both namespaces at this point?
+
+mptcp_close_ssk() sends the event before teardown starts:
+
+	if (sk->sk_state == TCP_ESTABLISHED)
+		mptcp_event(MPTCP_EVENT_SUB_CLOSED, mptcp_sk(sk), ssk, GFP_KERNEL);
+	...
+	__mptcp_close_ssk(sk, ssk, subflow, MPTCP_CF_PUSH);
+
+For msk->first, __mptcp_subflow_disconnect() only does:
+
+	} else {
+		tcp_shutdown(ssk, SEND_SHUTDOWN);
+	}
+
+ns2's subflow can therefore sit in FIN_WAIT1/FIN_WAIT2, and ss still
+lists it until ns1 sends its FIN. ns1 closes its side asynchronously,
+once its PM worker has handled the RM_ADDR id 0.
+
+chk_subflow_nr() counts the sockets once, with no retry:
+
+	cnt1=$(ss -N $ns1 -tOni | grep -c token)
+	cnt2=$(ss -N $ns2 -tOni | grep -c token)
+
+The other tests in endpoint_tests() run sleep 0.5 before this check, and
+so does the new "delete and re-add, fullmesh" test. Could the
+single-subflow variants fail spuriously without that delay?
+
+"delete and add another, fullmesh, single subflow" has the same pattern.
+
+> +		pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullmesh
+> +		wait_mpj 1
+> +		chk_mptcp_info subflows 1 subflows 1
+
+[ ... ]
+
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261022085041.211318-1-w453y.me%40gmail.com
