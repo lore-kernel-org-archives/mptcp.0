@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792748221;
-	b=wBq2slJ2mNJhzPfMQNFgaRdCWdaay9vPg3eTvZuxoxSh1lmrmsNozM9j6Rm8EeAu0/9Q
-	 qIRweqInB5hcNNm9OmMydoTcTjnId2e+qzz1qVVvwbQi1aGQnX+5OcorLsAhR6/i+sDRM
-	 Z/lU4V/yHGToMF3wCsry6Y4BDbDzDUSHdqhZq9L7uXIrIr5QUiOcOmhi3iwHSjXqhyu3M
-	 BhA1z4LtKEAl1PI8ybn8SoiugOWqcDTLpdUZWk+Ig8NrXQaXeT+rq9GfIHQ7u+ImKUIyv
-	 TwN/YTtA0iX2RjcmiBnCbp7D+LBESXsIbZD8k/pagsGVYorMmMpVXMbZwmfjfXkfihQ==
+	t=1792748832;
+	b=OdBUH2kZ57JVj6Lm7wfeaxbwLUcU+iXR5vWE6Pg+4Rw+ZBjojxRZsoPmZy/zW2DbF5yu
+	 AkOUdZX/dgKXwA+YenEHNdvALZWqpNPlxSzlzb81L8iJrj/BXpNrYK8JQ9Rvt7YqjEpG9
+	 M2nqPk6jtp1J/bVkc40pepY9H8iLzFfAR4m5+GUbvBC9sLLbdFgiii+S++zSyfqNGQEkr
+	 32m0C+s2/9PlsEWoXpQrq6MXSwE1t7Q7kogOk1huUty+QoyPO5VrqqKSPbkSJs8Y6yHFO
+	 sapdZm+YJm0eNyPTBVzZiqL6sHr9LeW/VgmXVg1wIzJ6urty3841Ili3g0BU+mhN9Mg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792748221;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792748832;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=fYDzX1G5sxHlA9gvNJTqMWLAOkNzEaPJRClqSmY+kAY=;
-	b=xbAXFhgiVO6DUe9a6KNAfq2jDXJE88zfNIhlsPPlBMhqtAA2T1W0g6+yh3IFRm2F7lQD
-	 bXvs5B9A9fMPLV3ZUeoGUimVaDJ5ME+Aw5r8D1hAGOr5HUo+Er1dNOJGKte1xVYqaPySt
-	 mo1TuwHsH28ERPFg2AkRuqbCJ2NbIx9ildfn0mKp52ZX35c/0z086JM2RhIMDUWT1X6M8
-	 5+kU8dB+xoyYsM3G6W5hxiKH3oxdg8TELCt0TF33+gyBeL2Rz2wp4irBDbRxfnZVhknHO
-	 PA9NGenVccsK3SGQdQZJmQEHq5hztjv58DCZrA3dZtjrAz3g91sgSRTfJnR+cRniDdg==
+	bh=9oAbCgEMrP0mEyAoEYk2h9xY6C0kaWWKdK2Laon+PV8=;
+	b=NR7dbUoKH80rby2lF/fvIX4ExatIxNG9BOkj8AQOT3dTJYpNUpEfoSlQ5JjGsIvVn1cj
+	 QIE+7+q9tj4ivIV0SOyqtJIh29UfBsGQ6kLu4Z7mLGvRagv7EXl8JFameqdf/faF31JtF
+	 ZHnoU2VqJbCNRb8Ne8K3C+xPZyl/pIKa6eipNQ8elAgPZod14VyDOowfTGeH9G1f/nhYO
+	 drV93CTOU5SunK+2jtDEU9Jh63fj3s6AOcq1tMMOX0OCjLcLpfgTI/25sE6BMWb0Azgwx
+	 RNYq1BYg4YbmWob3jKHq7JhxHg6LYoKVEg6rg9MSE4ILoQhXNZzTA4mIfRUG6mZIYjw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KD8y2MRB;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=L3AiKO6w;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B9F606A31A
-	for <mptcp@lists.linux.dev>; Fri, 23 Oct 2026 09:37:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B93C606A325
+	for <mptcp@lists.linux.dev>; Fri, 23 Oct 2026 09:47:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KD8y2MRB
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 540261F01825;
-	Fri, 23 Oct 2026 09:37:00 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=L3AiKO6w
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 459E11F01825;
+	Fri, 23 Oct 2026 09:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792748220;
-	bh=fYDzX1G5sxHlA9gvNJTqMWLAOkNzEaPJRClqSmY+kAY=;
+	s=k20260515; t=1792748832;
+	bh=9oAbCgEMrP0mEyAoEYk2h9xY6C0kaWWKdK2Laon+PV8=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=KD8y2MRBFQK57ZX/3Dd51HQtCAhSEb7+hmkyK5DbiFUNL55VMikj+ll9FBl6/syep
-	 R0GNPvNVWjtxlh8e3npqgWZULZml6UGomOL6/s6QXi8pZGWFX3Z6UDDLQ4asuGDyjC
-	 wpUEh3AwzixlkvUdFjB8Azoyswy/m83LOcpdPOqMlAY6dY0d7+DTcRTUVUCFFaEbXR
-	 U3wLtJcwp82+6P7OAkWUw1FAs8pR9P07RdeILEyDbdptRdvnJ6XxqMEoTIvVWpGtzC
-	 2uOJtj8ZH2kPpPtwSZuNA8SlkLJp0A02ICgo+nqVGzKV7pYZ0IjcTqix6G67Uz3j1b
-	 9tRfA450zlZqQ==
-Message-ID: <sashiko-outbox-182608@kernel.org>
+	b=L3AiKO6whGpApL+8nA5GxLbpFn0ZWPVte193RROLqI3zyW7F/am5GRHypvn1Daoox
+	 tIAKZdZa9uFra/xAkypRkyffChUuZPbMUUJLO8v9huE/A/6rM0pVf598rLwHF77PDa
+	 BUdqGcq3lEQ2cmKYePq0eZ61mMwudG9fxNdmM6KXOQpZ5phNpSevs9JASU6z2IXn+7
+	 OhhC49kK9SK6QZ9Rl/cEh/LGk7JO51EAkdGziXBhSgP22aONvTn+PSaQFv8cbJ7SON
+	 pi7sWjIz8O0R0jVONksm9clQ/nCneqfQDsBpmSHPCHu7PooAivsMoee5M3gkYNeXXw
+	 crGE11eEOxGyA==
+Message-ID: <sashiko-outbox-182633@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next 2/2] selftests: mptcp: add mptcp nbd tests
+Subject: Re: [PATCH mptcp-next 1/2] nbd: allow MPTCP sockets
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <8cd8c351da081aa504f4bf25d3cdaf64613070d9.1792746800.git.tanggeliang@kylinos.cn>
+In-Reply-To: <1612e1611a1e5d78d651a4c1a69da38fdcf98ca8.1792746800.git.tanggeliang@kylinos.cn>
 References: <cover.1792746800.git.tanggeliang@kylinos.cn>
- <8cd8c351da081aa504f4bf25d3cdaf64613070d9.1792746800.git.tanggeliang@kylinos.cn>
+ <1612e1611a1e5d78d651a4c1a69da38fdcf98ca8.1792746800.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 23 Oct 2026 09:36:59 +0000
+Date: Fri, 23 Oct 2026 09:47:11 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -59,161 +59,121 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] selftests: mptcp: run_io_test() returns 0 on fallback or missing=
- subflows
-- [Medium] selftests: mptcp: missing prerequisite checks cause failure inst=
-ead of skip
-- [Medium] selftests: mptcp: temp files leaked in cleanup() due to subshell=
- assignment
-- [Medium] selftests: mptcp: host-wide pkill/pgrep and /dev/nbd0 clobber in=
- cleanup()
+- [High] nbd: missing SOCK_MEMALLOC and sk_allocation propagation to MPTCP =
+subflows
+- [High] nbd: lockdep circular dependency and reclaim deadlock with MPTCP s=
+ockets
 --
 
-commit 3361c31ea4cfbf255e2c3ce5c5e70d2193d46dd4
+commit dbca698e3d4256ddeebe565fd33ea333c059d349
 Author: Geliang Tang <geliang@kernel.org>
 
-selftests: mptcp: add mptcp nbd tests
+nbd: allow MPTCP sockets
 
-This commit adds the mptcp_nbd.sh selftest to verify Network Block Device
-(NBD) functionality and throughput over both TCP and MPTCP across multiple
-virtual network interfaces.
+This commit allows MPTCP sockets to be used with NBD devices by checking
+msk_is_mptcp(sock->sk) in nbd_get_socket().
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_nbd.sh b/tools/testi=
-ng/selftests/net/mptcp/mptcp_nbd.sh
-> new file mode 100755
-> index 0000000000000..935dea5738aa1
-> --- /dev/null
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_nbd.sh
-> @@ -0,0 +1,309 @@
-[ ... ]
-> +cleanup()
-> +{
-> +	# Disconnect nbd device in ns2
-> +	ip netns exec "$ns2" nbd-client -d /dev/nbd0 2>/dev/null || true
-> +
-> +	sleep 1
-> +
-> +	# Kill nbd-server in ns1
-> +	if [ -n "${server_pid}" ]; then
-> +		ip netns exec "$ns1" kill "${server_pid}" 2>/dev/null || true
-> +	fi
-> +	ip netns exec "$ns1" pkill -9 -f nbd-server 2>/dev/null || true
-
-[Severity: Medium]
-Since ip netns exec only switches the network namespace while sharing the
-host PID namespace, won't running pkill -9 -f nbd-server in cleanup() kill
-all nbd-server processes across the entire host system, and won't pgrep -f
-"nbd-server" in run_test() match unrelated host processes as well?
-
-Also, /dev/nbd0 is a host-global block device that is not isolated by
-network namespaces. Could run_client(), run_io_test(), and cleanup()
-clobber or disconnect /dev/nbd0 if it is already in use on the host?
-
-> +
-> +	# Clean up temp files
-> +	if [ -n "${temp_file}" ]; then
-> +		ip netns exec "$ns1" rm -f "${temp_file}" 2>/dev/null || true
-> +	fi
-
-[Severity: Medium]
-Does cleanup() leak /tmp/nbd_backing.raw and /tmp/nbd-server.conf on every
-run?
-
-In run_test(), run_server() is executed inside a child bash process:
-
-	if ! ip netns exec "$ns1" bash <<- EOF
-		$(declare -f run_server)
-		export trtype port
-		run_server
-		exit \$?
-	EOF
-
-Because temp_file=3D"/tmp/nbd_backing.raw" is assigned inside that child
-process, temp_file in the parent shell remains empty when the EXIT trap
-invokes cleanup(). In addition, conf_file=3D"/tmp/nbd-server.conf" is a loc=
-al
-variable in run_server() with no removal in cleanup(), and both use
-hardcoded /tmp paths instead of mktemp.
+> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+> index ffce519bf0087..2aeb22b1ad40e 100644
+> --- a/drivers/block/nbd.c
+> +++ b/drivers/block/nbd.c
 
 [ ... ]
-> +run_server()
-> +{
-> +	local conf_file=3D"/tmp/nbd-server.conf"
-> +
-> +	# Create backing file
-> +	temp_file=3D"/tmp/nbd_backing.raw"
-> +	dd if=3D/dev/zero of=3D"${temp_file}" bs=3D1M count=3D0 seek=3D256 2>/d=
-ev/null
-> +
-> +	# Detect MPTCP support: native config or mptcpize fallback
-> +	local use_mptcpize=3D""
-> +	local mptcp_opt=3D""
-> +	if [ "${trtype}" =3D "mptcp" ]; then
-> +		if ! grep -q '"mptcp"' /usr/bin/nbd-server 2>/dev/null && \
-> +		   ! nbd-server --help 2>&1 | grep -qi mptcp; then
-> +			if command -v mptcpize &> /dev/null; then
-> +				use_mptcpize=3D"mptcpize run -d"
-> +				echo "INFO: nbd-server lacks native MPTCP," \
-> +					"using mptcpize"
-> +			else
-> +				echo "ERROR: no MPTCP support in nbd-server"
-> +				return 1
-> +			fi
 
-[Severity: Medium]
-Should the test skip with KSFT_SKIP instead of failing with KSFT_FAIL when
-optional prerequisites are unavailable?
+> @@ -1221,8 +1222,9 @@ static struct socket *nbd_get_socket(struct nbd_dev=
+ice *nbd, unsigned long fd,
+>  		return NULL;
+> =20
+>  	if (!sk_is_tcp(sock->sk) &&
+> +	    !msk_is_mptcp(sock->sk) &&
+>  	    !sk_is_stream_unix(sock->sk)) {
 
-In run_server() and run_client(), if trtype is mptcp and neither native
-MPTCP support in nbd-server/nbd-client nor mptcpize is installed, returning
-1 causes run_test() to set ret=3D${KSFT_FAIL}. Also, run_server() hardcodes
-/usr/bin/nbd-server rather than using command -v nbd-server.
+[Severity: High]
+When an MPTCP socket is attached to NBD, does SOCK_MEMALLOC and
+sk_allocation get propagated to the underlying TCP subflow sockets (ssk)?
 
-Similarly, at the top level of mptcp_nbd.sh:
+In drivers/block/nbd.c, nbd_start_device() and
+nbd_genl_reconnect_sock_cb() call sk_set_memalloc(sock->sk), and
+__sock_xmit() configures sock->sk->sk_allocation:
 
-mptcp_lib_check_tools nbd fio
-validate_params
+drivers/block/nbd.c:__sock_xmit()
+    sock->sk->sk_allocation =3D GFP_NOIO | __GFP_MEMALLOC;
+    sock->sk->sk_use_task_frag =3D false;
 
-if MPTCP is not supported by the kernel (checked via mptcp_lib_check_mptcp
-in other mptcp selftests), ip/tc/ss are missing, or /dev/nbd0 is not
-present (for example when CONFIG_BLK_DEV_NBD is disabled or the nbd module
-is not loaded), the script will fail instead of skipping.
+For an MPTCP socket, sock->sk is the master struct mptcp_sock (msk), while
+actual wire segments are sent and received on the underlying TCP subflow
+sockets (ssk). Calling sk_set_memalloc() on msk enables the global
+memalloc_socks_key static key, but neither NBD nor MPTCP (such as
+sync_socket_options() in net/mptcp/sockopt.c or
+mptcp_subflow_create_socket() in net/mptcp/subflow.c) propagates
+SOCK_MEMALLOC or sk_allocation to existing or newly created subflows.
 
-[ ... ]
-> +	# Verify MPTCP subflows if trtype is mptcp
-> +	if [ "${trtype}" =3D "mptcp" ]; then
-> +		local sf_total sf_max tcp_conns is_fallback
-> +		sf_total=3D$(ss -Mia | grep -oP "subflows_total:\K[0-9]+" | \
-> +			head -1)
-> +		sf_max=3D$(ss -Mia | grep -oP "subflows_max:\K[0-9]+" | head -1)
-> +		tcp_conns=3D$(ss -tia | grep -c "tcp-ulp-mptcp" || true)
-> +		is_fallback=3D$(ss -Mia | grep -c "fallback" || true)
-> +		if [ "${is_fallback}" -gt 0 ]; then
-> +			echo "FAIL: MPTCP fell back to TCP!" \
-> +				"subflows_total:${sf_total}" \
-> +				"tcp_subflows:${tcp_conns}"
-> +		elif [ -n "${sf_total}" ]; then
-> +			echo "PASS: MPTCP subflows_total:${sf_total}" \
-> +				"subflows_max:${sf_max}" \
-> +				"tcp_subflows:${tcp_conns}"
-> +		else
-> +			echo "WARNING: No MPTCP subflows info found"
-> +		fi
-> +	fi
-> +
-> +	return 0
-> +}
+Under memory pressure (for example, swap or writeback over NBD), incoming
+packets allocated from emergency reserves have skb_pfmemalloc(skb) set.
+When tcp_v4_rcv() or tcp_v6_rcv() looks up the subflow socket ssk, both
+sk_filter_trim_cap() in net/core/filter.c:
 
-[Severity: Medium]
-In run_io_test(), when is_fallback is greater than 0 or sf_total is empty,
-the function prints a FAIL or WARNING message but still falls through to
-return 0, and the elif branch only checks that sf_total is non-empty rather
-than verifying that multiple subflows were created. Doesn't this cause
-mptcp_nbd.sh to report KSFT_PASS even when MPTCP falls back to TCP or fails
-to establish subflows?
+    if (skb_pfmemalloc(skb) && !sock_flag(sk, SOCK_MEMALLOC)) {
+        NET_INC_STATS(sock_net(sk), LINUX_MIB_PFMEMALLOCDROP);
+        return SKB_DROP_REASON_PFMEMALLOC;
+    }
+
+and sk_add_backlog() in include/net/sock.h:
+
+    if (skb_pfmemalloc(skb) && !sock_flag(sk, SOCK_MEMALLOC))
+        return -ENOMEM;
+
+check ssk rather than msk, dropping all incoming pfmemalloc packets. In
+addition, subflow TX allocations in __tcp_push_pending_frames() and
+__tcp_send_ack() use ssk->sk_allocation (which remains GFP_KERNEL without
+__GFP_MEMALLOC). Won't this stall NBD I/O completion and cause a memory
+reclaim deadlock under memory pressure?
+
+[Severity: High]
+Could attaching an MPTCP socket to NBD also trigger a lockdep circular
+locking dependency splat and a reclaim deadlock via subflow socket locks
+and mptcp_worker()?
+
+When nbd_add_socket() attaches a socket, nbd_reclassify_socket() in
+drivers/block/nbd.c only reclassifies the top-level sock->sk (msk) to
+sk_lock-AF_INET-NBD or sk_lock-AF_INET6-NBD. The underlying TCP subflow
+sockets created in mptcp_subflow_create_socket() via sock_create_kern()
+retain the generic k-sk_lock-AF_INET or k-sk_lock-AF_INET6 lock class,
+under which GFP_KERNEL allocations are performed:
+
+net/mptcp/subflow.c:mptcp_subflow_create_socket()
+    err =3D sock_create_kern(net, family, SOCK_STREAM, IPPROTO_TCP, &sf);
+    if (err)
+        return err;
+
+    lock_sock_nested(sf->sk, SINGLE_DEPTH_NESTING);
+    ...
+    sk_net_refcnt_upgrade(sf->sk);
+    err =3D tcp_set_ulp(sf->sk, "mptcp");
+
+This establishes k-sk_lock-AF_INET -> fs_reclaim. Meanwhile, on the NBD I/O
+dispatch path, nbd_queue_rq() -> nbd_handle_cmd() -> nbd_send_cmd() ->
+sock_xmit() -> __sock_xmit() -> sock_sendmsg() -> mptcp_sendmsg() ->
+__mptcp_push_pending() runs under set->srcu (which is chained after
+fs_reclaim -> &q->q_usage_counter(io)) and acquires lock_sock(ssk) in
+net/mptcp/protocol.c:
+
+net/mptcp/protocol.c:__mptcp_push_pending()
+    lock_sock(ssk);
+
+completing a circular dependency chain between k-sk_lock-AF_INET and
+fs_reclaim.
+
+Furthermore, mptcp_worker() in net/mptcp/protocol.c runs in workqueue
+context without GFP_NOIO / PF_MEMALLOC, acquires lock_sock(sk) on msk
+(sk_lock-AF_INET-NBD), and calls mptcp_pm_worker() and
+__mptcp_close_subflow(), which perform GFP_KERNEL allocations while holding
+msk->sk_lock. Can this cause a lockdep splat and deadlocks if
+mptcp_worker() enters direct reclaim waiting on NBD writeback while
+nbd_queue_rq() or recv_work() waits for lock_sock(msk)?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1792746800.gi=
-t.tanggeliang@kylinos.cn?part=3D2
+t.tanggeliang@kylinos.cn?part=3D1
