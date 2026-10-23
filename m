@@ -1,53 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792747205;
-	b=vQ6V/ekF5iMfmU5XTF0lrhnXpJrTIinh2nndhGxoZcqlpBqSiPM35ceIb4lcB8sSzePG
-	 ajVLwm6nP62nS+sjxo2hnPlOVGuXnaXHEFqz0nvMtvOWrsUSgOCtJ6XO9Cyh0ASeiHpjg
-	 NfqzSGn/2kchQ4GFT6OlKb+m2b7VpgUnQm8vKAhFB6gQ3vVIrqPnwR5FOYpYaor19Eg74
-	 UFUubRjTDIOcFwLwHPNkqWT3C6/EmysXs87y46+nVHKJpnjxaiGRGdodFTax7Dh8z77ec
-	 YqXXRMOOGZQJm0H0G4xkscdJAyhvVwxAkLuRpLdYOVcWNjiNR4sc+6dCxjwnhZmATRA==
+	t=1792747707;
+	b=c6OtUTYG4T9nDcEQSwRIzBezgl9qiuQcQ+EoGUILTssL/c/9/OM217XMJWq4aNXHY4n/
+	 qUhP9vb2uRo0KU9/m802kSX7I9avXMtuGnkj1MIekGbuhLc+J2yzN9Vj8oJWT9QQjMmJL
+	 BIJwjqEaoFGDYzWv0sJxVw4mNExYXhHc0iwMevzbq4scUcYb5WjXBqWfm6YmcZJtiImyB
+	 nFGDVTa7/4xzyYdO8rPMJzosaef6JiEiRxdWMwlhzB+5BNSoi3ZJQcer8gW8uAQLFhfqa
+	 YGvjkSu3IKnR2pyN629JfLHYKBVIb+sHL6f9S7TBogtH8c3YGXytRQWSfHQViq5JO9Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792747205;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=TWwloY9pWFDxOLaYsI6WRieVmnDInp7PpLH1go7U6kA=;
-	b=iyIiccMt8sTaBswTLWHAt//TMACQMQYjEs6F3SfGODDt2xRPJUchcKY20A3L9Ht+0pzb
-	 ntXEX6CdlnSa54DBLlhrx+5J4M5chzXHFecHRjytc7LfnOhKmUHqLAdRXc5QtINdIPd4B
-	 AGXnGwOni+Rjj/obvYffqN0PCBJk69t3/SU7rv0u3TBZrrKn+iD5z4h7srYmYr6/1hReA
-	 m21XdNB3CnnSU3exAKqbeyVP/vvmMKzTXysqK1f05BnAjo4JJcHUKFB2+W2qtognkDusw
-	 cK35UlvBEl73SdwKEZYdJzgONaJs7nnaB00e1Kw5axwXNiNoJOO61yq+9YJD8yQGb/g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792747707;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:Content-Language:To:References:From:Autocrypt:Organization:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=f24oR8NTC6UYP/jKJJP8EwjAfpA3oqXmerVNPnCbo98=;
+	b=5Z3hVZSLXzeynZoEb1gScoVIhrvUNYaJzjvR+umZUSFOCyFjRZNJ0IwBl9OeEc0J12GM
+	 C+APo8UqXUdRbmMN8k1klmyA4nwOYwqs15hEfgoivuEWZ1Ua/6N2oPgWhEJriihLdq/Ot
+	 9D/D+Zufb2Nn/9rEu+x+2bK0Sa39aIDSDzKWeua3LA2Sc4L5+JnvhwttLRcG+mU50kOvc
+	 7ynRlmjt35Nmz7N+Tjgqulm0duSfLZukntEYUDiJHWxc5SK9SIeMDa62yGOTMnsNNo9jN
+	 phwYMdX/q5jEo2RYkZvXJhaCRE8LDTxmA+BRWnT83ymFCa+8oAILt9Jeh54Oj6SP2nA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=i8KrMh8k;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TYrnRNvN;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FDDC606A31B
-	for <mptcp@lists.linux.dev>; Fri, 23 Oct 2026 09:20:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E30606A32D
+	for <mptcp@lists.linux.dev>; Fri, 23 Oct 2026 09:28:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=i8KrMh8k
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD62E1F031E0;
-	Fri, 23 Oct 2026 09:20:03 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TYrnRNvN
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 760181F031E1;
+	Fri, 23 Oct 2026 09:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792747204;
-	bh=TWwloY9pWFDxOLaYsI6WRieVmnDInp7PpLH1go7U6kA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=i8KrMh8kQDEzRKmlcZ5RqSrcK8sFkQftA7efP13vUP/5J2LaRtQCBO3SaoMd8zShN
-	 bJlfwJffj3SYMSTXqL0nAWrsytNvnQL9CbroudzAEqg3ducXCc4BPLnPb+qJia/yft
-	 rSpqNtxqJfDuViYmG4c9XzCrTo8FzCBTh6or7yOAUmz6azaqz5qOxJ6tY7FhM6PXn2
-	 bewertuhUdNQJZqTTDRZNCF9WxkjzJxUMdZ0nLBt/+jt0wuPYk4U7BthtIBnSXt/AF
-	 EvFvI9z1u4H91mwQoAjXCSZaRgcn4syWxoF1G5fS3Fgd4gYbXIRzYpkAO2FkDu3GHf
-	 1sIz6b0gSt+pg==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 2/2] selftests: mptcp: add mptcp nbd tests
-Date: Fri, 23 Oct 2026 17:19:56 +0800
-Message-ID: <8cd8c351da081aa504f4bf25d3cdaf64613070d9.1792746800.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <cover.1792746800.git.tanggeliang@kylinos.cn>
-References: <cover.1792746800.git.tanggeliang@kylinos.cn>
+	s=k20260515; t=1792747707;
+	bh=f24oR8NTC6UYP/jKJJP8EwjAfpA3oqXmerVNPnCbo98=;
+	h=Date:Subject:To:References:From:In-Reply-To;
+	b=TYrnRNvNm6mKZ9RioR4GOiBcfQU05Y18fipibdP5aAvLUJqfUp6mwXXq4ylbubOos
+	 Baul5mjEXzJFl+W8OuinVgABaDkyzarD5vUuiIkRRd/O1Ykvypp3Q7JqKr+JQFVy5m
+	 eGkV2ayqjqiY/uRFAWKBH7ZCZnGGWcWwaRauF3arHhbn3yiR6WGuirT8fUdWSzI6Qq
+	 O/zDgebOD5kFaRIC1argcjYsvJCavlY6lJYGU4T7oNO4Q/QfGdY224G8cq6zejpU2/
+	 MiE6n+0RkEv4+vomt2bp1aoUsfQbslCTPXeV3ze9y6/2HHSwwBvFIfJ/R3RR+sXOQQ
+	 Ur0oZmBv0+TEQ==
+Message-ID: <6b4005d8-850f-438d-a692-ebda1608d13d@kernel.org>
+Date: Fri, 23 Oct 2026 11:28:24 +0200
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -57,421 +51,125 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net v2] selftests: mptcp: sockopt: pass total bytes
+ to do_getsockopts
+Content-Language: fr
+To: Geliang Tang <geliang@kernel.org>, quanyeyang@proton.me,
+ MPTCP Linux <mptcp@lists.linux.dev>
+References: <20261016-fix-mptcp-issue-638-v2-1-cc32774a8b0c@proton.me>
+ <d16ffc4a-d8af-4b8d-b112-ce83736b9c3b@kernel.org>
+ <758fc944eb96407a0d761ff84679ee5066cf836e.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <758fc944eb96407a0d761ff84679ee5066cf836e.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+On 23/10/2026 03:05, Geliang Tang wrote:
+> Hi Matt, Quanye,
+> 
+> On Thu, 2026-10-22 at 13:06 +0200, Matthieu Baerts wrote:
+>> Hi Quanye,
+>>
+>> On 17/10/2026 07:33, Quanye Yang via B4 Relay wrote:
+>>> From: Quanye Yang <quanyeyang@proton.me>
+>>>
+>>> connect_one_server() reads the echoed payload in a loop because
+>>> read()
+>>> on a stream socket can return a partial chunk. After the loop, it
+>>> still
+>>> passed the last read() return value to do_getsockopts() instead of
+>>> the
+>>> accumulated byte count.
+>>>
+>>> do_getsockopts() checks MPTCP_INFO first. The client samples
+>>> mptcpi_write_seq before write(), and write() has already advanced
+>>> msk->write_seq by the full length, so a partial last read() makes
+>>> the write_seq assert fail. Pass the total instead.
+>>
+>> Thank you for the patch, it looks good to me.
+>>
+>> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>
+>> I just applied it in our tree, but for net-next because I don't think
+>> I
+>> saw the issue in our and the netdev CI. So I added this in the commit
+>> message:
+>>
+>> This issue has been reported by Sashiko and not seen in CI
+>> environments.
+>> Yet, it could be visible, especially when the test is launched
+>> manually.
+> 
+> Sorry for the late reply - I just saw this patch. Glad the issue has
+> been fixed. But actually, I had already fixed this issue earlier: my
+> patch titled "selftests: mptcp: sockopt: use exact length in
+> connect_one_server" [1] is still waiting for review on the MPTCP
+> mailing list. But it's no big deal - I should have replied with an
+> Acked-by for this patch.
 
-Add mptcp_nbd.sh to verify NBD (Network Block Device) works correctly
-over both TCP and MPTCP.
+My bad, I forgot about that patch when I opened a bunch of issues
+reported by Sashiko.
 
-Both ns1 and ns2 have 4 virtual network interfaces, each limited to
-1000 Mbit/s (125 MB/s). When running NBD over TCP, fio tests show
-read/write bandwidth of about 110 MiB/s:
+I will add your co-dev-by on that one.
 
- # ./mptcp_nbd.sh tcp
- Negotiation: ..size = 256MB
- Connected /dev/nbd0
- connected
+Do we need the other modification you did on the 'read' to silence a GCC
+warning? Because the current "sizeof(buf2) - total" seems correct to me.
 
- fio-3.41
- ... ...
- Run status group 0 (all jobs):
-    READ: bw=112MiB/s (117MB/s), 112MiB/s-112MiB/s (117MB/s-117MB/s), \
-		io=1119MiB (1173MB), run=10002-10002msec
- ... ...
- Run status group 0 (all jobs):
-   WRITE: bw=113MiB/s (118MB/s), 113MiB/s-113MiB/s (118MB/s-118MB/s), \
-		io=1129MiB (1184MB), run=10002-10002msec
+> Anyway, I'm wondering - does it look like my pending series "selftests:
+> consolidate TCP_INQ testing into sockopt" [2] is still useful after
+> all? Should I rebase it and send a v15?
 
-With simple MPTCP configuration and running MPTCP NBD, we can achieve
-about 400 MiB/s read/write bandwidth:
+It is still useful, but sorry, I need to go through it (and many others
+:( ). I will try to do that in November/December after some deadlines.
+No need to rebase before.
 
- # ./mptcp_nbd.sh mptcp
- INFO: nbd-server lacks native MPTCP, using mptcpize
- INFO: nbd-client lacks native MPTCP, using mptcpize
- Negotiation: ..size = 256MB
- Connected /dev/nbd0
- connected
-
- fio-3.41
- ... ...
- Run status group 0 (all jobs):
-    READ: bw=406MiB/s (426MB/s), 406MiB/s-406MiB/s (426MB/s-426MB/s), \
-		io=4063MiB (4261MB), run=10001-10001msec
- ... ...
- Run status group 0 (all jobs):
-   WRITE: bw=376MiB/s (394MB/s), 376MiB/s-376MiB/s (394MB/s-394MB/s), \
-		io=3758MiB (3940MB), run=10001-10001msec
-
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/Makefile    |   1 +
- tools/testing/selftests/net/mptcp/config      |   1 +
- .../testing/selftests/net/mptcp/mptcp_lib.sh  |  13 +
- .../testing/selftests/net/mptcp/mptcp_nbd.sh  | 309 ++++++++++++++++++
- 4 files changed, 324 insertions(+)
- create mode 100755 tools/testing/selftests/net/mptcp/mptcp_nbd.sh
-
-diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
-index 22ba0da2adb8..2c8b12866f81 100644
---- a/tools/testing/selftests/net/mptcp/Makefile
-+++ b/tools/testing/selftests/net/mptcp/Makefile
-@@ -13,6 +13,7 @@ TEST_PROGS := \
- 	mptcp_connect_sendfile.sh \
- 	mptcp_connect_splice.sh \
- 	mptcp_join.sh \
-+	mptcp_nbd.sh \
- 	mptcp_sockopt.sh \
- 	pm_netlink.sh \
- 	simult_flows.sh \
-diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
-index 6a96cfbbc461..f6f266211bee 100644
---- a/tools/testing/selftests/net/mptcp/config
-+++ b/tools/testing/selftests/net/mptcp/config
-@@ -1,3 +1,4 @@
-+CONFIG_BLK_DEV_NBD=y
- CONFIG_INET_DIAG=m
- CONFIG_INET_MPTCP_DIAG=m
- CONFIG_IP_ADVANCED_ROUTER=y
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index e1c8c6fd8820..aee7a73d9772 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -541,6 +541,19 @@ mptcp_lib_check_tools() {
- 				exit ${KSFT_SKIP}
- 			fi
- 			;;
-+		"nbd")
-+			if ! command -v nbd-client &> /dev/null || \
-+			   ! command -v nbd-server &> /dev/null; then
-+				mptcp_lib_pr_skip "nbd tools not found"
-+				exit ${KSFT_SKIP}
-+			fi
-+			;;
-+		"fio")
-+			if ! fio -h &> /dev/null; then
-+				mptcp_lib_pr_skip "fio tool not found"
-+				exit ${KSFT_SKIP}
-+			fi
-+			;;
- 		*)
- 			mptcp_lib_pr_fail "Internal error: unsupported tool: ${tool}"
- 			exit ${KSFT_FAIL}
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_nbd.sh b/tools/testing/selftests/net/mptcp/mptcp_nbd.sh
-new file mode 100755
-index 000000000000..935dea5738aa
---- /dev/null
-+++ b/tools/testing/selftests/net/mptcp/mptcp_nbd.sh
-@@ -0,0 +1,309 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+. "$(dirname "$0")/mptcp_lib.sh"
-+
-+ret=0
-+trtype="${1:-mptcp}"
-+ns1=""
-+ns2=""
-+port=$((RANDOM % 10000 + 20000))
-+temp_file=""
-+server_pid=""
-+
-+export trtype port
-+export temp_file server_pid
-+
-+usage()
-+{
-+	cat << EOF
-+
-+Usage:
-+
-+	$(basename "$0") [trtype]
-+
-+	trtype   Transport type (tcp|mptcp) - default: mptcp
-+
-+EOF
-+exit ${KSFT_FAIL}
-+}
-+
-+validate_params()
-+{
-+	if [[ ! "${trtype}" =~ ^(tcp|mptcp)$ ]]; then
-+		echo "Invalid trtype ${trtype}. Must be tcp or mptcp"
-+		usage
-+	fi
-+}
-+
-+# This function is used in the cleanup trap
-+#shellcheck disable=SC2317,SC2329
-+cleanup()
-+{
-+	# Disconnect nbd device in ns2
-+	ip netns exec "$ns2" nbd-client -d /dev/nbd0 2>/dev/null || true
-+
-+	sleep 1
-+
-+	# Kill nbd-server in ns1
-+	if [ -n "${server_pid}" ]; then
-+		ip netns exec "$ns1" kill "${server_pid}" 2>/dev/null || true
-+	fi
-+	ip netns exec "$ns1" pkill -9 -f nbd-server 2>/dev/null || true
-+
-+	# Clean up temp files
-+	if [ -n "${temp_file}" ]; then
-+		ip netns exec "$ns1" rm -f "${temp_file}" 2>/dev/null || true
-+	fi
-+
-+	mptcp_lib_ns_exit "$ns1" "$ns2"
-+
-+	unset -v trtype port
-+	unset -v temp_file server_pid
-+}
-+
-+init()
-+{
-+	mptcp_lib_ns_init ns1 ns2
-+
-+	ip netns exec "$ns1" sysctl -qw net.ipv4.tcp_reflect_tos=1
-+
-+	# ns1		ns2
-+	# 10.1.1.1	10.1.1.2
-+	# 10.1.2.1	10.1.2.2
-+	# 10.1.3.1	10.1.3.2
-+	# 10.1.4.1	10.1.4.2
-+	for i in {1..4}; do
-+		ip link add ns1eth"$i" netns "$ns1" type veth peer \
-+			name ns2eth"$i" netns "$ns2"
-+		ip -net "$ns1" addr add 10.1."$i".1/24 dev ns1eth"$i"
-+		ip -net "$ns1" link set ns1eth"$i" up
-+		ip -net "$ns2" addr add 10.1."$i".2/24 dev ns2eth"$i"
-+		ip -net "$ns2" link set ns2eth"$i" up
-+		ip -net "$ns2" route add default via 10.1."$i".1 \
-+			dev ns2eth"$i" metric 10"$i"
-+
-+		# Rate limit to 1000mbit
-+		tc -n "$ns1" qdisc add dev ns1eth"$i" root netem rate 1000mbit
-+		tc -n "$ns2" qdisc add dev ns2eth"$i" root netem rate 1000mbit
-+	done
-+
-+	mptcp_lib_pm_nl_set_limits "${ns1}" 8 8
-+	mptcp_lib_pm_nl_add_endpoint "$ns1" 10.1.1.1 flags signal
-+	mptcp_lib_pm_nl_add_endpoint "$ns1" 10.1.2.1 flags signal
-+	mptcp_lib_pm_nl_add_endpoint "$ns1" 10.1.3.1 flags signal
-+	mptcp_lib_pm_nl_add_endpoint "$ns1" 10.1.4.1 flags signal
-+
-+	mptcp_lib_pm_nl_set_limits "${ns2}" 8 8
-+	mptcp_lib_pm_nl_add_endpoint "$ns2" 10.1.1.2 flags subflow
-+	mptcp_lib_pm_nl_add_endpoint "$ns2" 10.1.2.2 flags subflow
-+	mptcp_lib_pm_nl_add_endpoint "$ns2" 10.1.3.2 flags subflow
-+	mptcp_lib_pm_nl_add_endpoint "$ns2" 10.1.4.2 flags subflow
-+}
-+
-+# This function is invoked indirectly
-+#shellcheck disable=SC2317,SC2329
-+run_server()
-+{
-+	local conf_file="/tmp/nbd-server.conf"
-+
-+	# Create backing file
-+	temp_file="/tmp/nbd_backing.raw"
-+	dd if=/dev/zero of="${temp_file}" bs=1M count=0 seek=256 2>/dev/null
-+
-+	# Detect MPTCP support: native config or mptcpize fallback
-+	local use_mptcpize=""
-+	local mptcp_opt=""
-+	if [ "${trtype}" = "mptcp" ]; then
-+		if ! grep -q '"mptcp"' /usr/bin/nbd-server 2>/dev/null && \
-+		   ! nbd-server --help 2>&1 | grep -qi mptcp; then
-+			if command -v mptcpize &> /dev/null; then
-+				use_mptcpize="mptcpize run -d"
-+				echo "INFO: nbd-server lacks native MPTCP," \
-+					"using mptcpize"
-+			else
-+				echo "ERROR: no MPTCP support in nbd-server"
-+				return 1
-+			fi
-+		else
-+			mptcp_opt="mptcp = true"
-+			echo "INFO: nbd-server has native MPTCP support"
-+		fi
-+	fi
-+
-+	cat > "${conf_file}" << CONF
-+[generic]
-+	port = ${port}
-+	listenaddr = 0.0.0.0
-+	${mptcp_opt}
-+
-+[test]
-+	exportname = ${temp_file}
-+CONF
-+
-+	# Use -n (nodaemon) and background manually for better control
-+	${use_mptcpize} nbd-server -C "${conf_file}" -n > /dev/null 2>&1 &
-+	server_pid=$!
-+
-+	sleep 2
-+
-+	# Verify server is running
-+	if ! kill -0 "${server_pid}" 2>/dev/null; then
-+		echo "nbd-server failed to start"
-+		return 1
-+	fi
-+}
-+
-+# This function is invoked indirectly
-+#shellcheck disable=SC2317,SC2329
-+run_client()
-+{
-+	local extra_args=()
-+	local nbd_dev="/dev/nbd0"
-+	local server_addr="10.1.1.1"
-+
-+	local use_mptcpize=""
-+	if [ "${trtype}" = "mptcp" ]; then
-+		if nbd-client 2>&1 | grep -qE "\-M|\-\-mptcp"; then
-+			extra_args+=("-M")
-+			echo "INFO: nbd-client has native MPTCP support (-M)"
-+		elif command -v mptcpize &> /dev/null; then
-+			use_mptcpize="mptcpize run -d"
-+			echo "INFO: nbd-client lacks native MPTCP," \
-+				"using mptcpize"
-+		else
-+			echo "ERROR: no MPTCP support in nbd-client"
-+			return 1
-+		fi
-+	fi
-+
-+	# Options before positional args: -N name host port device
-+	if ! ${use_mptcpize} nbd-client -N test "${extra_args[@]}" \
-+			"${server_addr}" "${port}" "${nbd_dev}"; then
-+		echo "Failed to connect ${nbd_dev} to ${server_addr}"
-+		return 1
-+	fi
-+
-+	sleep 1
-+
-+	# Verify connection
-+	if ! nbd-client -c /dev/nbd0; then
-+		echo "nbd-client check failed"
-+		return 1
-+	fi
-+
-+	return 0
-+}
-+
-+# This function is invoked indirectly
-+#shellcheck disable=SC2317,SC2329
-+run_io_test()
-+{
-+	local nbd_dev="/dev/nbd0"
-+
-+	# dd write test
-+	if ! dd if=/dev/urandom of="${nbd_dev}" bs=4k count=1000 \
-+			conv=fdatasync 2>/dev/null; then
-+		echo "dd write failed"
-+		return 1
-+	fi
-+
-+	# dd read test
-+	if ! dd if="${nbd_dev}" of=/dev/null bs=4k count=1000 2>/dev/null; then
-+		echo "dd read failed"
-+		return 1
-+	fi
-+
-+	# fio random read test
-+	if ! fio --name=randread --direct=1 --ioengine=libaio \
-+		 --blocksize=4k --runtime=10 --time_based \
-+		 --rw=randread --numjobs=1 --iodepth=32 \
-+		 --group_reporting --size=128M \
-+		 --filename="${nbd_dev}"; then
-+		echo "fio randread failed"
-+		return 1
-+	fi
-+
-+	# fio random write test
-+	if ! fio --name=randwrite --direct=1 --ioengine=libaio \
-+		 --blocksize=4k --runtime=10 --time_based \
-+		 --rw=randwrite --numjobs=1 --iodepth=32 \
-+		 --group_reporting --size=128M \
-+		 --filename="${nbd_dev}"; then
-+		echo "fio randwrite failed"
-+		return 1
-+	fi
-+
-+	# Verify MPTCP subflows if trtype is mptcp
-+	if [ "${trtype}" = "mptcp" ]; then
-+		local sf_total sf_max tcp_conns is_fallback
-+		sf_total=$(ss -Mia | grep -oP "subflows_total:\K[0-9]+" | \
-+			head -1)
-+		sf_max=$(ss -Mia | grep -oP "subflows_max:\K[0-9]+" | head -1)
-+		tcp_conns=$(ss -tia | grep -c "tcp-ulp-mptcp" || true)
-+		is_fallback=$(ss -Mia | grep -c "fallback" || true)
-+		if [ "${is_fallback}" -gt 0 ]; then
-+			echo "FAIL: MPTCP fell back to TCP!" \
-+				"subflows_total:${sf_total}" \
-+				"tcp_subflows:${tcp_conns}"
-+		elif [ -n "${sf_total}" ]; then
-+			echo "PASS: MPTCP subflows_total:${sf_total}" \
-+				"subflows_max:${sf_max}" \
-+				"tcp_subflows:${tcp_conns}"
-+		else
-+			echo "WARNING: No MPTCP subflows info found"
-+		fi
-+	fi
-+
-+	return 0
-+}
-+
-+mptcp_lib_check_tools nbd fio
-+validate_params
-+
-+trap cleanup EXIT
-+
-+init
-+
-+run_test()
-+{
-+	if ! ip netns exec "$ns1" bash <<- EOF
-+		$(declare -f run_server)
-+		export trtype port
-+		run_server
-+		exit \$?
-+	EOF
-+	then
-+		ret="${KSFT_FAIL}"
-+		return
-+	fi
-+
-+	# Get server pid for cleanup
-+	server_pid=$(ip netns exec "$ns1" pgrep -f "nbd-server" | head -1)
-+
-+	sleep 1
-+
-+	if ! ip netns exec "$ns2" bash <<- EOF
-+		$(declare -f run_client run_io_test)
-+		export trtype port
-+		run_client || exit 1
-+		run_io_test || exit 1
-+		exit \$?
-+	EOF
-+	then
-+		ret="${KSFT_FAIL}"
-+	fi
-+
-+	sleep 1
-+}
-+
-+run_test "$@"
-+
-+if [ "${ret}" -eq 0 ]; then
-+	mptcp_lib_result_pass "nbd over ${trtype} test"
-+else
-+	mptcp_lib_result_fail "nbd over ${trtype} test"
-+fi
-+
-+mptcp_lib_result_print_all_tap
-+exit "$ret"
+Cheers,
+Matt
 -- 
-2.55.0
+Sponsored by the NGI0 Core fund.
 
