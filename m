@@ -1,56 +1,93 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.177
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792754080;
-	b=RT+L0ZotDv0U+NnY3df1mVxhlXYxWG6n2Hs75aJkiO8HjKu4BK2A/tRI+qgYEb/0SOWs
-	 ZDrA75mAZnvg7Y9sy8x0ZCs/1gXhumHAP/OXMoG6yq5faD2k0Lj8XtvUQEskUhdb0CdAz
-	 cIcwy64cJSA/qgudDNc+kK339YVs+ebGSOfCYrUZXm4FAUUIPLPVGAHCQ1ziihIIbhgCG
-	 qkO4oX8eKsHX24wCrZpIBw6nbEfoa6ZbOL89BPbN4BrG9G1E9k8tKTCV1R27s+ojYdK8f
-	 cyfF9jMN2TTrMlFhUVChLix4dyHw2xiuAWS/LFrsDk6Z9+16I6UbiCqycUNvX6s0gHA==
+	t=1792758850;
+	b=4km5h3dVDdvPnuSd8Mur4kdTRW7ZlHqhs1b7M+NFhP7yG4lo8PjeoWzT0OfBuHUmjb45
+	 53NLoBFpn/UroGIOlZO4EkeED3uyF950817yW+MRkzG8ZrzBkJE+fPWCVjzTYvi6eWr07
+	 v8F8533HmcjQMygXlSxHvnLgY4Awc9TNhZNXJGVX8pWZk+45FdydaXA9eAZk7YHaDwyST
+	 +/08I61+khmkTiYxQoKekYXQ6vdkYIR7oBBkJYHpDfWoxF1W/LsPoPz+GXXyZgRqJlVh5
+	 V1ImguUNbaAj4y1wHF//Gn/IElMhxdijSLI7eqAx262jpzwrSSFbzlCMhWm/U3Z94Ww==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792754080;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=ONgawtVLxSNMOrNo8G3jy6kt0P0pTIj58M3DOqrncyk=;
-	b=PXLQFMN1vOif0CYph1PfwTY0nKWH8B7j8H5W0wmPr2L/Q9Qy5dJj+jGUAf5yYyYiadxc
-	 29johMIcrMU1/Q15ojkpRvnRSthCjG0iWA000n2ua/iXwQ+102ULd2DI7XrCHZlg4yTxj
-	 qO6L/QntFgStu49KStPzCx6mJ3o3ts4FEDvaU3AYzAJjTnF8GxJp65VMXWTfzkBn8nu9/
-	 O3jlKv6ntnvVV0pRrAQ3KAksYATEqgigrl1AUAzUH+bOuFLwjtc1lLeM7dJ/p6RrwI7nH
-	 kRkydJ05tkSoK6zyTUY1Sp5H8/hQKjCvtS0y7vu7CFlaX1KEat15xLxZ+5B02c9Wj8Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792758850;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
+	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
+	 Date:MIME-Version:Content-Type;
+	bh=Ap6OTWnG8EkVIr23DcEWimejirQHDw3Kh65SbqOHB7s=;
+	b=LOOQw3/nXHTk2XvtDxvBOKxRnK1s+byfUV5jTom0TTYHknox16z6oAtwozpeTrG1Palp
+	 is4dr69ef7ZG1izD8aVr+b79GxOOL9SGmIYAH9iIQ8DFkquAIblDjFCfpVgZ7x1/AKLcx
+	 Xhz5JQjbyLChDm9AQB4ZFvFxUM1CxUL0WouJ0HX9T5ULZC1tB32dWJMJv4UjAsKkUqlDQ
+	 1HpYmqodBiuiq1/vyNuuweLBh44eNngHpaiZ0/jsGyYSa7/261uYXaP3EG51AhVPSr0Gu
+	 9B6gBVItagqTFTUGxKShSGVcgGo6dRU5E1ldD5orG7BjPwXMBMbaZ829roityilED8A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LeBXDppN;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=BpBpHohz;
+	arc=none smtp.remote-ip=74.125.82.177
+Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B391606A31A
-	for <mptcp@lists.linux.dev>; Fri, 23 Oct 2026 11:14:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A56606A31B
+	for <mptcp@lists.linux.dev>; Fri, 23 Oct 2026 12:34:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 49A56606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LeBXDppN
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A17F1F01825;
-	Fri, 23 Oct 2026 11:14:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792754079;
-	bh=ONgawtVLxSNMOrNo8G3jy6kt0P0pTIj58M3DOqrncyk=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=LeBXDppN+o0EL+i2zo7p5n/yfMXU3ml+32yOK6cnF1wH8GwZphx+SkrKlRDgsFunv
-	 os2twP54U5T9w8eMWO9l2QoepjpvxChSBZsmucXHGpRJj2tmsiEBF+/OVoDEuoNh70
-	 LGPhsFxTkIQZ6NgaD6Wvn7IW3XSpIPxSAd+pjYObopRzglBSKxrcWqjZhM2almBnmP
-	 Jp251rlNQHA+CqCc8voUKje84jNh45Ff9UZc3l36T+CyUVJaWlCPjpN93Eov2XmWcj
-	 M/emVNivd8+sxOMqrC305hSiQJ7tpxTPkRquXp8w2hwZ2haKwM6dnlMiFhV/2bkNtJ
-	 4tmSprS6cp6ug==
-Message-ID: <sashiko-outbox-182722@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-net v7 2/2] selftests: mptcp: join: re-add the
- initial subflow endp with fullmesh
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Abdul Wasey" <w453y.me@gmail.com>, mptcp@lists.linux.dev
-In-Reply-To: <20261023110321.403874-3-w453y.me@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=BpBpHohz
+Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-35f1f76ea84so1283221eec.1
+        for <mptcp@lists.linux.dev>; Fri, 23 Oct 2026 05:34:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792758849; x=1793363649; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=Ap6OTWnG8EkVIr23DcEWimejirQHDw3Kh65SbqOHB7s=;
+        b=BpBpHohzILzqh6sRd19LgMSSNcJC17V65WEE7aoTOSESVAeUSdz3Xqx2N7jyT2+D3c
+         BAWfbn8xmb7K3uiBu9u0rSyfaZNNDu1Ovcmvcydg5hpA1LtbEjSOnf0Pxi2AbRvYvyJL
+         MN+nhHtvwfySny09Nn+VaCv8O9mfy5G7+BeF1VBGEqZefB5NDaO2tpHPwCiM5f7fCp25
+         BblJarkgSW0J99/iU3EU4eldm9QI3cvlnTN2o6KP6TnR4djF5K5SJVttRpH98AxJX2cy
+         sf4vc8fZhOqAEj4xBmsFtzGrwb3tRHI8hckQPWbZS1DyFMdY6d26v0CC0Pg+o91l6q61
+         YfaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792758849; x=1793363649;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Ap6OTWnG8EkVIr23DcEWimejirQHDw3Kh65SbqOHB7s=;
+        b=ICg8fOx8RvaSfOS19O3C3SOkOyhH923O4CsgjXAZxg9AVBve/Jw91ABh9J2n0doNQM
+         7LBF0M/54bz9TvwgvU4sUErtHx5NrkMDnxV5t6EY8kugOipfG5UqTyGza3r5AaICARAH
+         PizAo5DZSob1Gt2dRYy6YHi8XIWQM4TWi10EACsZ1P7IF9ImZeGEPBs3sjPGRSFpj+vx
+         J4UnmrkiAY30fDh9VGrUbk+I/8+EOvbRBrDITkezThbOMlIbEyXokbsnuDAWykNE65b6
+         YVNA+c5yAnECeedMlATUNndsk+VeiBu1punLh7JFhHB1d6Dbc130jQL89AdOzJF0EPfh
+         u8hw==
+X-Gm-Message-State: AFq9FYKsTMCJb/bWREepokQNvel1PJ/jJ1g+nqmonAA4YgFNvfnrFDNV
+	WOuW8+Zye7eWON2XPlDhPseD1rCh9gnXl5V88BX7ybgzQ5XL5x3Goco=
+X-Gm-Gg: AYBFou25l4PgFggI0P8oK0XP7axaJateaIDpmQAU9FwAzuXn4PtrSotLzpRcZZXlWx0
+	CHZUoxhRZIlKcYZBV4YZEfmswx1GQVhdSDasAhdU3GMzyZbdhKUlQiJuLuUrn03hFqhNWZXBkNI
+	6PNz4MkmFYk/NDHzG/Nzkxdra+uwke7fw5fFz6ogD4MSK3OskcIrYUWrPOi6oRT7fqvBHgVAV/q
+	2RhJwH2jTcTs/GXVUdUsMuTny6wK5gi+B5YklIdJvlbiSd9Lv5UafhvdkHgW5yK4UdgxU9kco6Q
+	H2KqqJnkji65ol13GzTcAbje8qSwbraOK+bnE4PROPSrFmaS92Yn+xeKg6d5qUpWHVfOncnEjJU
+	sO1SFR7YT99bTmxyszeK2YoGzJZw6UKehWlXP4vzrH+6r4xkm4Mxrd4Ta3TPihjPqUHLZDm5Uvi
+	/Ijbm7TCwH2nSgPAgG1PgAHMUPgXk5JAOjo19goM3I7uxBEbVVTpUXV/wEZcWDJogQ/TGGnMu6u
+	AM7T9bLlhouzjQ6/2OMMMvEqrpDlPKvLQxIaOqLl8YVkvozysVf6KatSoI2DkJwEvA=
+X-Received: by 2002:a05:693c:8392:10b0:360:b8b4:840a with SMTP id 5a478bee46e88-369d9899130mr3023737eec.39.1792758848954;
+        Fri, 23 Oct 2026 05:34:08 -0700 (PDT)
+Received: from github.com ([20.171.23.187])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-369d9d5ea64sm9117567eec.5.2026.10.23.05.34.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Oct 2026 05:34:08 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Abdul Wasey <w453y.me@gmail.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20261023110321.403874-1-w453y.me@gmail.com>
 References: <20261023110321.403874-1-w453y.me@gmail.com>
- <20261023110321.403874-3-w453y.me@gmail.com>
-Content-Type: text/plain; charset=utf-8
+Subject: Re: [PATCH mptcp-net v7 0/2] mptcp: pm: in-kernel: fullmesh:
+ re-add of the initial subflow endp
+Message-ID: <fd4ac963-d67e-5ac3-0e7a-7980d0a61cf4@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 23 Oct 2026 11:14:38 +0000
+Date: Fri, 23 Oct 2026 12:34:07 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -59,93 +96,62 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] selftests: mptcp: unset iptables variable in endpoint_tests() br=
-eaks test
---
+Hi Abdul,
 
-commit 5d801b552c8fda4d06f17bc60e0d917102aa1d3c
-Author: Abdul Wasey <w453y.me@gmail.com>
+Thank you for your modifications, that's great!
 
-selftests: mptcp: join: re-add the initial subflow endp with fullmesh
+Our CI did some validations and here is its report:
 
-This commit adds four subtests to endpoint_tests() in mptcp_join.sh to
-validate removing and re-adding the initial subflow endpoint when using the
-fullmesh flag.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Unstable: 1 failed =
+test(s): selftest_mptcp_join =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: debug =
+(except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug =
+(only selftest_mptcp_join): Unstable: 1 failed test(s): selftest_mptcp_join=
+ =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: btf-normal (only bpftest_all): =
+Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success!=
+ =E2=9C=85
+- Perf: Success! =E2=9C=85
+- Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/39945885343
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/test=
-ing/selftests/net/mptcp/mptcp_join.sh
-> index f4d8afaeda4f3..98dc8de81cf01 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -4424,6 +4424,135 @@ endpoint_tests()
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/8237af68cd2b
+Patchwork: https://patchwork.kernel.=
+org/project/mptcp/list/?series=3D1192064
 
-[ ... ]
 
-> +	# same, but the initial subflow is reset before removing its endpoint
-> +	if reset_with_events "delete and re-add, fullmesh, after reset" &&
-> +	   continue_if mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
-> +		pm_nl_set_limits $ns1 0 2
-> +		pm_nl_set_limits $ns2 0 2
-> +		pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullme=
-sh
-> +		pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2 flags subflow,fullme=
-sh
-> +		{ timeout_test=3D120 test_linkfail=3D128 speed=3D5 \
-> +			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
-> +		local tests_pid=3D$!
-> +
-> +		wait_event ns2 MPTCP_LIB_EVENT_ESTABLISHED 1
-> +		wait_mpj 1
-> +		chk_subflow_nr "before reset" 2
-> +
-> +		if ip netns exec "${ns1}" ${iptables} -A INPUT -s "10.0.1.2" \
-> +		      -p tcp --tcp-option 30 -j REJECT --reject-with tcp-reset; then
-> +			wait_event ns2 MPTCP_LIB_EVENT_SUB_CLOSED 1
-> +			ip netns exec "${ns1}" ${iptables} -F INPUT
-> +			chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_CLOSED 1 error 1
-> +
-> +			pm_nl_del_endpoint $ns2 1 10.0.1.2
-> +			pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullm=
-esh
-> +			wait_mpj 2
-> +			chk_mptcp_info subflows 2 subflows 2
-> +			chk_join_nr 2 2 2
-> +		else
-> +			mark_as_skipped "unable to set the filter rules"
-> +		fi
+If there are some issues, you =
+can reproduce them using the same environment as
+the one used by the CI =
+thanks to a docker image, e.g.:
 
-[Severity: Medium]
-Will this filter setup in endpoint_tests() always fail?
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-Commit be3b69f3cedfaf ("selftests: mptcp: convert iptables to nftables for
-mptcp_join.sh") converted mptcp_join.sh to nftables and removed the
-definition of the iptables variable.
+For more details:
 
-Because ${iptables} is unset and unquoted here, the command expands to:
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
 
-    ip netns exec "${ns1}" -A INPUT -s "10.0.1.2" ...
 
-which fails immediately, causing this subtest to always fall into the else
-branch calling mark_as_skipped (or exit with KSFT_FAIL before killing
-$tests_pid and the event listeners when
-SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES=3D1 is set).
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
-Should this subtest call init_nftables and use nft to add and flush the rul=
-e,
-matching userspace_tests() in mptcp_join.sh:
-
-    init_nftables
-    ...
-    if ip netns exec "${ns1}" nft add rule ip filter INPUT \
-            ip saddr "10.0.1.2" meta l4proto tcp \
-            tcp option mptcp exists reject with tcp reset; then
-        wait_event ns2 MPTCP_LIB_EVENT_SUB_CLOSED 1
-        ip netns exec "${ns1}" nft flush chain ip filter INPUT
-        ...
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261023110321.4038=
-74-1-w453y.me@gmail.com?part=3D2
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
