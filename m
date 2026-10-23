@@ -1,93 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.177
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792758850;
-	b=4km5h3dVDdvPnuSd8Mur4kdTRW7ZlHqhs1b7M+NFhP7yG4lo8PjeoWzT0OfBuHUmjb45
-	 53NLoBFpn/UroGIOlZO4EkeED3uyF950817yW+MRkzG8ZrzBkJE+fPWCVjzTYvi6eWr07
-	 v8F8533HmcjQMygXlSxHvnLgY4Awc9TNhZNXJGVX8pWZk+45FdydaXA9eAZk7YHaDwyST
-	 +/08I61+khmkTiYxQoKekYXQ6vdkYIR7oBBkJYHpDfWoxF1W/LsPoPz+GXXyZgRqJlVh5
-	 V1ImguUNbaAj4y1wHF//Gn/IElMhxdijSLI7eqAx262jpzwrSSFbzlCMhWm/U3Z94Ww==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792758850;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
-	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
-	 Date:MIME-Version:Content-Type;
-	bh=Ap6OTWnG8EkVIr23DcEWimejirQHDw3Kh65SbqOHB7s=;
-	b=LOOQw3/nXHTk2XvtDxvBOKxRnK1s+byfUV5jTom0TTYHknox16z6oAtwozpeTrG1Palp
-	 is4dr69ef7ZG1izD8aVr+b79GxOOL9SGmIYAH9iIQ8DFkquAIblDjFCfpVgZ7x1/AKLcx
-	 Xhz5JQjbyLChDm9AQB4ZFvFxUM1CxUL0WouJ0HX9T5ULZC1tB32dWJMJv4UjAsKkUqlDQ
-	 1HpYmqodBiuiq1/vyNuuweLBh44eNngHpaiZ0/jsGyYSa7/261uYXaP3EG51AhVPSr0Gu
-	 9B6gBVItagqTFTUGxKShSGVcgGo6dRU5E1ldD5orG7BjPwXMBMbaZ829roityilED8A==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=BpBpHohz;
-	arc=none smtp.remote-ip=74.125.82.177
-Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792766793;
+	b=T70ThkThJm0H3rQpWAwxhdFVaCZtbssiJfMHOgDA0ee+VsKeL5a/1OwC+I5K0D9E8OJm
+	 A+715bTDVa2zqpXrTaq7Gnf6CbUL0Aj6hWtQuifQnM5U1UQuO/H5PKgNnK6us++ICNY4T
+	 hDKTnQY2KQ/UkOEgmOzpKN70vaNhRVPVQ0HA5KC5WC716FTUzkrnjWH7sVbz+rSHqLN80
+	 eaCLOtoYkWSBBON7Sy+df99WfHQqShFQ1WrXyATlUV812Pyp/t45wLH7riEehoRCRHyPD
+	 fbyfS+xBLuMMwvyRw0v2pXsHk7EkBvrTQF9C1FRQgx8lSWSMoPLqjc3Cx+jh3c7uilw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792766793;
+	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=G4Z4rtFsjtXFqz4ZYaXAo7VrVRocMEtqqJZfM7rlH9k=;
+	b=VHkqbAm9kKehCqN1V/I9kb9QLIZesQMcayD5hrcm1AXAwicU4ieRa7F3B8LpWlLx74i9
+	 wWe4N/1HerDI29Iwqj9jUpZAWSYBEbtFAW5tA7wX9zfoX1fepkacPvG4Dvz0Y5EHxte6O
+	 m4OPOp/ibUSCK4zW/6obYj1D1o5Ghoe0Bi73qriW9k6kNMpPFyC6iyVjExvLnzxOX71yP
+	 4491X0EfWqbubTBlGdkuoBUUzIcC24tHeFcKN+N6kvNPZXkCeQUPe3kAgWX5rh+yrNz3m
+	 Dp0ph3km4Jrc2RfIYqzANZXwcfDINHQDA7rr4eNUtw6kM1DaWYwEhLCqHeL4KmqrIIw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Tva5fBNi;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1DE2606A31B
+	for <mptcp@lists.linux.dev>; Fri, 23 Oct 2026 14:46:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Tva5fBNi
+Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
+ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
+	t=1792766792;
+	b=LWIuiz3xamUVTOAVwT0dNUTNVb1CrnkvcwiVLNKa4f92hxEa5CmeJ1F9rzB+IFXkIB1K
+	 7Od4TXXsKGxfa5kxu9G9rSP9OX15OWFjXYFPhrpEef8uyAde8Y6NDVk2f5KbnDHAiguxF
+	 Y6UGyCqx2qjX5fOw1O9SBcZgmHIOIFWTRvZLNT3IyE7YYzqbFkEYQZR7tlp05d0gJOgsY
+	 sC8dZbnZ/qXUbC7Qpw9HViyjAJ+WySKhFaWUfCkvziI3XJjWvL+iFbSfd6xnorZd8PHA+
+	 5/yEjYonN3QsWHR3MYZkiZHWT++xRKro8jCoT1/Se1axzr386AN7u4jmC3dKDrRA9Zw==
+ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
+	c=relaxed/relaxed; t=1792766792;
+	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
+	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=G4Z4rtFsjtXFqz4ZYaXAo7VrVRocMEtqqJZfM7rlH9k=;
+	b=M3Jvnr7yeuVCOnLsq4Kcd0516phEXrBGqgSHA1y3gCI6hU28KsmiDlMEib5VhynIYGXd
+	 8WpW0KGwLUSdNjcy8lHZ2DtGpazorLtHSMYHlrNDSqCQQSGrsxXnvgDYtqwf7Xu1ctGn1
+	 BxuPeoH7y7WJpv1eytxs1jcXPFB8VMAmzVVGd+H10RF5YuZkk9boqwbGfu5KEFrgoprxR
+	 Hur87j1/oKxBzjV2NGAzh2eLyn+neZWNZjxdC2mRh/t6TEnpD4XIQkjzVp4nQdP/Spp/u
+	 IcJap7an5J5k5oyk4MO8/Zm1O8uoDd00/JkpeNCruXV7NK3131GaubYG2yDkfbtphQw==
+ARC-Authentication-Results: i=1; smtp.kernel.org; 
+	arc=none smtp.remote-ip=100.80.115.77
+Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A56606A31B
-	for <mptcp@lists.linux.dev>; Fri, 23 Oct 2026 12:34:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 49A56606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=BpBpHohz
-Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-35f1f76ea84so1283221eec.1
-        for <mptcp@lists.linux.dev>; Fri, 23 Oct 2026 05:34:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792758849; x=1793363649; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=Ap6OTWnG8EkVIr23DcEWimejirQHDw3Kh65SbqOHB7s=;
-        b=BpBpHohzILzqh6sRd19LgMSSNcJC17V65WEE7aoTOSESVAeUSdz3Xqx2N7jyT2+D3c
-         BAWfbn8xmb7K3uiBu9u0rSyfaZNNDu1Ovcmvcydg5hpA1LtbEjSOnf0Pxi2AbRvYvyJL
-         MN+nhHtvwfySny09Nn+VaCv8O9mfy5G7+BeF1VBGEqZefB5NDaO2tpHPwCiM5f7fCp25
-         BblJarkgSW0J99/iU3EU4eldm9QI3cvlnTN2o6KP6TnR4djF5K5SJVttRpH98AxJX2cy
-         sf4vc8fZhOqAEj4xBmsFtzGrwb3tRHI8hckQPWbZS1DyFMdY6d26v0CC0Pg+o91l6q61
-         YfaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792758849; x=1793363649;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Ap6OTWnG8EkVIr23DcEWimejirQHDw3Kh65SbqOHB7s=;
-        b=ICg8fOx8RvaSfOS19O3C3SOkOyhH923O4CsgjXAZxg9AVBve/Jw91ABh9J2n0doNQM
-         7LBF0M/54bz9TvwgvU4sUErtHx5NrkMDnxV5t6EY8kugOipfG5UqTyGza3r5AaICARAH
-         PizAo5DZSob1Gt2dRYy6YHi8XIWQM4TWi10EACsZ1P7IF9ImZeGEPBs3sjPGRSFpj+vx
-         J4UnmrkiAY30fDh9VGrUbk+I/8+EOvbRBrDITkezThbOMlIbEyXokbsnuDAWykNE65b6
-         YVNA+c5yAnECeedMlATUNndsk+VeiBu1punLh7JFhHB1d6Dbc130jQL89AdOzJF0EPfh
-         u8hw==
-X-Gm-Message-State: AFq9FYKsTMCJb/bWREepokQNvel1PJ/jJ1g+nqmonAA4YgFNvfnrFDNV
-	WOuW8+Zye7eWON2XPlDhPseD1rCh9gnXl5V88BX7ybgzQ5XL5x3Goco=
-X-Gm-Gg: AYBFou25l4PgFggI0P8oK0XP7axaJateaIDpmQAU9FwAzuXn4PtrSotLzpRcZZXlWx0
-	CHZUoxhRZIlKcYZBV4YZEfmswx1GQVhdSDasAhdU3GMzyZbdhKUlQiJuLuUrn03hFqhNWZXBkNI
-	6PNz4MkmFYk/NDHzG/Nzkxdra+uwke7fw5fFz6ogD4MSK3OskcIrYUWrPOi6oRT7fqvBHgVAV/q
-	2RhJwH2jTcTs/GXVUdUsMuTny6wK5gi+B5YklIdJvlbiSd9Lv5UafhvdkHgW5yK4UdgxU9kco6Q
-	H2KqqJnkji65ol13GzTcAbje8qSwbraOK+bnE4PROPSrFmaS92Yn+xeKg6d5qUpWHVfOncnEjJU
-	sO1SFR7YT99bTmxyszeK2YoGzJZw6UKehWlXP4vzrH+6r4xkm4Mxrd4Ta3TPihjPqUHLZDm5Uvi
-	/Ijbm7TCwH2nSgPAgG1PgAHMUPgXk5JAOjo19goM3I7uxBEbVVTpUXV/wEZcWDJogQ/TGGnMu6u
-	AM7T9bLlhouzjQ6/2OMMMvEqrpDlPKvLQxIaOqLl8YVkvozysVf6KatSoI2DkJwEvA=
-X-Received: by 2002:a05:693c:8392:10b0:360:b8b4:840a with SMTP id 5a478bee46e88-369d9899130mr3023737eec.39.1792758848954;
-        Fri, 23 Oct 2026 05:34:08 -0700 (PDT)
-Received: from github.com ([20.171.23.187])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-369d9d5ea64sm9117567eec.5.2026.10.23.05.34.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Oct 2026 05:34:08 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Abdul Wasey <w453y.me@gmail.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20261023110321.403874-1-w453y.me@gmail.com>
-References: <20261023110321.403874-1-w453y.me@gmail.com>
-Subject: Re: [PATCH mptcp-net v7 0/2] mptcp: pm: in-kernel: fullmesh:
- re-add of the initial subflow endp
-Message-ID: <fd4ac963-d67e-5ac3-0e7a-7980d0a61cf4@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 23 Oct 2026 12:34:07 +0000
+	by smtp.kernel.org (Postfix) with ESMTPS id D34DB1F01825
+	for <mptcp@lists.linux.dev>; Fri, 23 Oct 2026 14:46:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792766792;
+	bh=G4Z4rtFsjtXFqz4ZYaXAo7VrVRocMEtqqJZfM7rlH9k=;
+	h=From:Date:Subject:To:Cc:Reply-To;
+	b=Tva5fBNi+caf5VfVDMbSbBQ4DbSbZW9ixj3mwLdC2iJ5TE39aWvAKqGERMBBDwA8A
+	 t+UugdDxnSm7ITi4H15JLjY17z2mx4kvrQagvKboIZlI04vJPjQnifEk7EJ5+/lqv7
+	 ZsKdV5txk7AECBWJIZ9rhCrA3KpgAGU5k9TfiAnZKdrC3fu4u6r2k+oOak4hXD1yZ4
+	 6sVwwdUX0y7cacJbGLD/An5CM0Hz8JGQhnGx2SLBQWqlUYDRL+u9kt/j6SMWU5fgBq
+	 Xc/5Z7B7ruT8oZfk+82h9j8zBrm599mn2IQQfgrr8V65VSOqOeHWlfeFdkz04LqYeY
+	 xBKXL95WvNBPg==
+Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
+	by lkml.kernel.org (Postfix) with ESMTP id 2E7EA4455B
+	for <mptcp@lists.linux.dev>; Fri, 23 Oct 2026 14:46:31 +0000 (UTC)
+From: Quanye Yang via B4 Relay <devnull+quanyeyang.proton.me@kernel.org>
+Date: Fri, 23 Oct 2026 07:46:28 -0700
+Subject: [PATCH mptcp-next v2] selftests: mptcp: sockopt: echo until EOF on
+ partial reads
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -97,61 +83,156 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <20261023-fix-mptcp-issue-639-v2-1-14a3d3746d2d@proton.me>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/32OyQ6CMBRFf8W8tc90kKGu/A/DosBDagJt2kIwh
+ H+3wN7lzT13WCGQNxTgcVnB02yCsWMS4nqBptfjm9C0SYNgIueMF9iZBQcXG4cmhIkwlwpVLqX
+ SslWCa0hJ5ylhR+sLTnikJUJ1emGqP9TEvXanexOi9d/jwsyPzN+1mSNHlmX3lhW6Lrvy6byNd
+ rwNBNW2bT+CCqIH1AAAAA==
+X-Change-ID: 20261017-fix-mptcp-issue-639-96339a3d921a
+To: MPTCP Linux <mptcp@lists.linux.dev>
+Cc: 
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1792766790; l=4572;
+ i=quanyeyang@proton.me; s=20260801; h=from:subject:message-id;
+ bh=YFBOuJzzXnClbJR18ebSuZTHm9Q2G8VNkK/qk0+YwCo=;
+ b=2DCnDe3eQBEdXXw5WJ4YIEVv1hcxesRVTcOX7vCIIOAo/4ohN8fI3DYfVMCXmN2E9SKbePm9E
+ kW0YvEDBm75Dy/M0mhGoY5c1VYZh6xNA5kan6vtgG+XubZJ4SKCGah2
+X-Developer-Key: i=quanyeyang@proton.me; a=ed25519;
+ pk=9L9FrcvzMgxPaBRU6XV0EnqTgjDqVO596rQKSZ9qZoY=
+X-Endpoint-Received: by B4 Relay for quanyeyang@proton.me/20260801 with
+ auth_id=963
+X-Original-From: Quanye Yang <quanyeyang@proton.me>
+Reply-To: quanyeyang@proton.me
+Content-Transfer-Encoding: 7bit
 
-Hi Abdul,
+From: Quanye Yang <quanyeyang@proton.me>
 
-Thank you for your modifications, that's great!
+process_one_client() used a single read() and write() before waiting
+for hangup. A SOCK_STREAM read() can return a short count when the
+payload is segmented, so the server echoed only part of the data and
+then blocked on FIN.
 
-Our CI did some validations and here is its report:
+The client keeps reading until it has the full length and only then
+closes the socket. The two sides wait on each other and the test
+hangs until SIGALRM.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Unstable: 1 failed =
-test(s): selftest_mptcp_join =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: debug =
-(except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug =
-(only selftest_mptcp_join): Unstable: 1 failed test(s): selftest_mptcp_join=
- =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: btf-normal (only bpftest_all): =
-Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success!=
- =E2=9C=85
-- Perf: Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/39945885343
+The server does not know the payload length, so echo each chunk until
+read() returns 0. Retry short writes, and accumulate nread/nwritten for
+the existing sockopt checks.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/8237af68cd2b
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1192064
+Fixes: ce9979129a0b ("selftests: mptcp: add mptcp getsockopt test cases")
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/639
+Signed-off-by: Quanye Yang <quanyeyang@proton.me>
+---
+Changes in v2:
+- target mptcp-next instead of mptcp-net
+- echo until hangup with goto; retry short writes; use nread/nwritten
+- Link to v1: https://patch.msgid.link/20261017-fix-mptcp-issue-639-v1-1-0554d07ab8f8@proton.me
+---
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 60 +++++++++++++----------
+ 1 file changed, 34 insertions(+), 26 deletions(-)
+
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+index b6e58d936ebe..deb239058e79 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+@@ -638,7 +638,8 @@ static void connect_one_server(int fd, int pipefd)
+ 
+ static void process_one_client(int fd, int pipefd)
+ {
+-	ssize_t ret, ret2, ret3;
++	size_t nread = 0, nwritten = 0;
++	ssize_t ret, n, w, off;
+ 	struct so_state s;
+ 	char buf[4096];
+ 
+@@ -648,46 +649,53 @@ static void process_one_client(int fd, int pipefd)
+ 	ret = write(pipefd, "xmit", 4);
+ 	assert(ret == 4);
+ 
+-	ret = read(fd, buf, sizeof(buf));
+-	if (ret < 0)
++read_more:
++	n = read(fd, buf, sizeof(buf));
++	if (n < 0)
+ 		die_perror("read");
++	if (n == 0)
++		goto hangup;
++
++	for (off = 0; off < n; off += w) {
++		w = write(fd, buf + off, n - off);
++		if (w < 0)
++			die_perror("write");
++		if (w == 0)
++			xerror("write returned 0");
++	}
++	nread += n;
++	nwritten += n;
++	goto read_more;
+ 
+-	assert(s.mptcpi_rcv_delta <= (uint64_t)ret);
++hangup:
++	assert(s.mptcpi_rcv_delta <= nread);
+ 
+ 	if (s.tcpi_rcv_delta)
+-		assert(s.tcpi_rcv_delta == (uint64_t)ret);
+-
+-	ret2 = write(fd, buf, ret);
+-	if (ret2 < 0)
+-		die_perror("write");
+-
+-	/* wait for hangup */
+-	ret3 = read(fd, buf, 1);
+-	if (ret3 != 0)
+-		xerror("expected EOF, got %lu", ret3);
++		assert(s.tcpi_rcv_delta <= nread);
+ 
+-	do_getsockopts(&s, fd, ret, ret2);
+-	if (s.mptcpi_rcv_delta != (uint64_t)ret + 1)
++	do_getsockopts(&s, fd, nread, nwritten);
++	if (s.mptcpi_rcv_delta != (uint64_t)nread + 1)
+ 		xerror("mptcpi_rcv_delta %" PRIu64 ", expect %" PRIu64 ", diff %" PRId64,
+-		       s.mptcpi_rcv_delta, ret + 1, s.mptcpi_rcv_delta - (ret + 1));
++		       s.mptcpi_rcv_delta, (uint64_t)nread + 1,
++		       s.mptcpi_rcv_delta - ((uint64_t)nread + 1));
+ 
+ 	/* be nice when running on top of older kernel */
+ 	if (s.pkt_stats_avail) {
+-		if (s.last_sample.mptcpi_bytes_sent != ret2)
++		if (s.last_sample.mptcpi_bytes_sent != nwritten)
+ 			xerror("mptcpi_bytes_sent %" PRIu64 ", expect %" PRIu64
+ 			       ", diff %" PRId64,
+-			       s.last_sample.mptcpi_bytes_sent, ret2,
+-			       s.last_sample.mptcpi_bytes_sent - ret2);
+-		if (s.last_sample.mptcpi_bytes_received != ret)
++			       s.last_sample.mptcpi_bytes_sent, nwritten,
++			       s.last_sample.mptcpi_bytes_sent - nwritten);
++		if (s.last_sample.mptcpi_bytes_received != nread)
+ 			xerror("mptcpi_bytes_received %" PRIu64 ", expect %" PRIu64
+ 			       ", diff %" PRId64,
+-			       s.last_sample.mptcpi_bytes_received, ret,
+-			       s.last_sample.mptcpi_bytes_received - ret);
+-		if (s.last_sample.mptcpi_bytes_acked != ret)
++			       s.last_sample.mptcpi_bytes_received, nread,
++			       s.last_sample.mptcpi_bytes_received - nread);
++		if (s.last_sample.mptcpi_bytes_acked != nread)
+ 			xerror("mptcpi_bytes_acked %" PRIu64 ", expect %" PRIu64
+ 			       ", diff %" PRId64,
+-			       s.last_sample.mptcpi_bytes_acked, ret,
+-			       s.last_sample.mptcpi_bytes_acked - ret);
++			       s.last_sample.mptcpi_bytes_acked, nread,
++			       s.last_sample.mptcpi_bytes_acked - nread);
+ 	}
+ 
+ 	close(fd);
+
+---
+base-commit: a22035be824449c4921ec406f6383089016a628c
+change-id: 20261017-fix-mptcp-issue-639-96339a3d921a
+
+Best regards,
+--  
+Quanye Yang <quanyeyang@proton.me>
 
 
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
