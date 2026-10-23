@@ -1,75 +1,76 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792773917;
-	b=FjNRLyUJr1PaHSXuFVqooHdzz3LDlRSco9yhbq1JUYBmpe9aiJ4rMHl+DjMVsg4o48bZ
-	 M0dVECaqG2dC0dZI6f+2/6YR0Ym5L57LKBZwCL8YldTgdky5mu4QGwff6QsN9OzXSY1Lp
-	 fhlRaDEwNYd8Jg103okAuMHcqCMEm5v0TUzL81hcHfMCqPs3K3VFQx6Anie7qeAG2VTID
-	 XNznU9/7cSgqA0MVmu/jPiOdCmVTAZchF7N8s9+uQUztsPN67puz3hPFCFPtYpB9YAxhv
-	 fiWw8gchKdv7QB3jYgMP1j7YwfGEFssffVrE56BTn0EVVvqz3brEaUu+mLaaMs5wgPw==
+	t=1792791250;
+	b=MVE4+r6alLTrBukiqP2jGPztZ+iq/qszK21IgR4wrP2YWGlSe3dAasiEdXiCnOw1tIO5
+	 FrziZYg5+VvN6wane8tOj5PDXErpsU3tgiSIk99W84A5UqWkkHDamCx2tp03wf/55BWib
+	 mIda6nrY2vdaKSwDd7609zD17+HyTA8EKB54NAD138/UCd2bC44dynqBua7RLScRmJgbR
+	 Lu6/0e8uu3pWK8VSrJmgqIKjA4l+fUnIRUdDg2x4KAMR7sgk0W3o2vGfaHkQoHir52GRS
+	 cXyXHdjvsVhgjKR+x73ReO6X6kN3V6iOOxilMft6hypTvttBxZTEt4gn+tITghUFiYg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792773917;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792791250;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:From:To:
 	 Cc:Subject:Message-ID:User-Agent;
-	bh=0A8KiySiC3s9BMJDdSFp2ZCfJ95dC2sd+/dk1VSZs/g=;
-	b=3WKAsiv4vYO4PI4iht+6xlrIJNEZB2JfqcwgRxTMlBOcaMudTVjXynajeZ64dAN8zDE4
-	 OPRor+4jhNkGV5nyoil+nAXY+E+97GMZCIjhHhRTxlhGzdjJ9qFdg9ekaZQTdyDEQY6j+
-	 kwYoBi1miSDqu/BRX8WjCbMl3bziFeakjkI2zqMWLyymU96auSrdUFQeAeWvnSZuPzBkX
-	 AUxz14qQYWJXVNkEn5l5Kss3W3yglnZsgm1kQZIMUUPEnD6toqJGI4uajMP8KYeDOLhB4
-	 hXoLrIGjoeOY2en4HVs0F4rnXqFj2gDk43C4jirQrfHgDelZVVsBPCy5n/Awv5FWOXw==
+	bh=pQRfsss0LwRjOjWqVtxpyWJg4zzkx7izecI++Y98tnE=;
+	b=PTpy6c8jq+wY+XkpHt9vWBR9fawyVtoGL8ZeeXg4mhzOMRUjcS+90f4RFU7hijQYgTpX
+	 cS5fzSF9/Qm2LI5//0HSqcWG0vEVaUc29FqczE7jex2SfWUw5zrb3cI4ItApHYOosOnAB
+	 9IznCa2drLv6Je7CEIgMbR/DQBUMtky26zCE2dbyKjQJQZItnJQNUZKKtzF2UOZmT7KXZ
+	 buq20t7qHsO1OcLDMja3Lwc0P5zuxu5K0q6hwdXkO4Z1lrGdFq+ea6rWe0vY5SR50NVq7
+	 a+iqaNDAEHwVUgWzXfs7RJ/HgvgACwtdlu4FOb4oLCJuLvHoxEz9jFHH31mU4g2bW0g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=J3BbZH01;
-	arc=none smtp.remote-ip=198.175.65.17
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=WeFA17Jk;
+	arc=none smtp.remote-ip=198.175.65.18
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF63606A320;
-	Fri, 23 Oct 2026 16:45:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7DF63606A320
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E82606A31A;
+	Fri, 23 Oct 2026 21:34:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B4E82606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=J3BbZH01
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=WeFA17Jk
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792773916; x=1824309916;
+  t=1792791250; x=1824327250;
   h=date:from:to:cc:subject:message-id;
-  bh=oQOhcaweA44vxpaCh8PyUsT0Rz4/s09cqcqwoO4iYgo=;
-  b=J3BbZH01TlnTla3pCWD7uI4CP+Jpe7ul/BHHnqUcY/Un6s6fepcdWO5J
-   83QOk46HSsFRKUgnCOyrei7fyiLwve20QBArgu8TmFsn5olRDwbj9vues
-   852L72k3PdsrE5UVP7CiMa9yRU0gJFQRqcXoEesx9oSIva6yvlRfQpiZJ
-   ieKsPUFu9DeGqZmzhnpgRPTN3+75nZMF8DE8o7phpKf7FMtY8GYbi2HOC
-   7FThuL56AqFXAZO8ABqUKZJqQAiBwEKbwUIr47KXMfSnrMNPOKBrYcQAA
-   aQ5VSrdY0RpKit8vHF7vnfSloA5i4+Aq03ECX7ReK83gYNRsuqvOjzkfv
-   w==;
-X-CSE-ConnectionGUID: xLz9lMpcQi+GRmekhN60JA==
-X-CSE-MsgGUID: Z2U/GIfZRHGgcM9C3hJt1A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11944"; a="1550541"
-X-IronPort-AV: E=Sophos;i="6.27,174,1787036400"; 
-   d="scan'208";a="1550541"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2026 09:45:16 -0700
-X-CSE-ConnectionGUID: Thx3A8fnQ42SnvAP52RiRw==
-X-CSE-MsgGUID: 9K4bwP3zSJyRTCNIUAXOLQ==
+  bh=ntAGzn41ApYUG8qzQ6sTu+EgE1mDoiTKDfQBnujLso0=;
+  b=WeFA17JkG77+zgEpSNEbkaYaGec/gLpUeOPb68wB27/+4J0M96xboG7B
+   DQYcpTtNKqCVP8zf4+KuxYaIou6t+ElHtmwihpc3KMpNRv0bCPols1CKa
+   9F5ASTvXCeV+ZTPgGwmSBbgbcFwm+QIcyV1c4HEajh+EtcT52b27LB5rW
+   Dq/s3dniYMfd6VPsdF4wcEWywYjs3jwKdwE4rCxuMFr9x9CMlCk6b0Co7
+   4+iAH7pJNd1w4JTSV1clTKnwPdNYgFBNMGeGuRyh7Sm4HmBiMK78gUIwL
+   gsVqxlWiaO3NqzZMNJaJrC9Bm8KgMf54Bm0l6TvC3ecWP2cJxzbUfSUZq
+   Q==;
+X-CSE-ConnectionGUID: bMYwlvIpSCekpJnnzk8/wA==
+X-CSE-MsgGUID: mk9N3L3eTo2wEOCSdY+rzQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11944"; a="1561663"
+X-IronPort-AV: E=Sophos;i="6.27,175,1787036400"; 
+   d="scan'208";a="1561663"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2026 14:34:08 -0700
+X-CSE-ConnectionGUID: xMVrXFVKRCGlPeLDnb6l+g==
+X-CSE-MsgGUID: xxxd7kHxTBWa4r6V87C5RA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,174,1787036400"; 
-   d="scan'208";a="3797589"
+X-IronPort-AV: E=Sophos;i="6.27,175,1787036400"; 
+   d="scan'208";a="3671196"
 Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 23 Oct 2026 09:45:14 -0700
+  by orviesa001.jf.intel.com with ESMTP; 23 Oct 2026 14:34:01 -0700
 Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1xKIOG-00000000Syi-1nZd;
-	Fri, 23 Oct 2026 16:45:12 +0000
-Date: Sat, 24 Oct 2026 00:44:49 +0800
+	id 1xKMtj-00000000THI-1BXy;
+	Fri, 23 Oct 2026 21:33:59 +0000
+Date: Sat, 24 Oct 2026 05:33:17 +0800
 From: kernel test robot <lkp@intel.com>
 To: Matthieu Baerts <matttbe@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, mptcp@lists.linux.dev
-Subject: [mptcp:export 1/35] .git_markup: warning: ignored by one of
- the .gitignore files
-Message-ID: <202610240012.9uIgIRG5-lkp@intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, mptcp@lists.linux.dev,
+ matthieu.baerts@tessares.net
+Subject: [mptcp:export 6/35] .github/ISSUE_TEMPLATE/01-bug.yml:
+ warning: ignored by one of the .gitignore files
+Message-ID: <202610240521.9hBINO5K-lkp@intel.com>
 User-Agent: s-nail v14.9.25
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -82,20 +83,31 @@ Precedence: list
 
 tree:   https://github.com/multipath-tcp/mptcp_net-next.git export
 head:   6ce5f1be3eecbc06913957ca12f7b346c948814f
-commit: 0d55d8f752543be2b6f4afbc6b3d58dbc7be09dd [1/35] DO-NOT-MERGE: git markup: net
-config: parisc64-alldefconfig (https://download.01.org/0day-ci/archive/20261024/202610240012.9uIgIRG5-lkp@intel.com/config)
+commit: cabae5f9340debcc509a8940d2886ad7e23ff069 [6/35] DO-NOT-MERGE: mptcp: add CI support
+config: parisc64-alldefconfig (https://download.01.org/0day-ci/archive/20261024/202610240521.9hBINO5K-lkp@intel.com/config)
 compiler: hppa64-linux-gcc (GCC) 16.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261024/202610240012.9uIgIRG5-lkp@intel.com/reproduce)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261024/202610240521.9hBINO5K-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202610240012.9uIgIRG5-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202610240521.9hBINO5K-lkp@intel.com/
 
 All warnings (new ones prefixed by >>):
 
    .b4-config: warning: ignored by one of the .gitignore files
->> .git_markup: warning: ignored by one of the .gitignore files
+   .git_markup: warning: ignored by one of the .gitignore files
+   .github/FUNDING.yml: warning: ignored by one of the .gitignore files
+>> .github/ISSUE_TEMPLATE/01-bug.yml: warning: ignored by one of the .gitignore files
+>> .github/ISSUE_TEMPLATE/02-feature.yml: warning: ignored by one of the .gitignore files
+>> .github/ISSUE_TEMPLATE/03-question.yml: warning: ignored by one of the .gitignore files
+>> .github/dependabot.yml: warning: ignored by one of the .gitignore files
+   .github/workflows/build-validation.yml: warning: ignored by one of the .gitignore files
+   .github/workflows/checkpatch.yml: warning: ignored by one of the .gitignore files
+   .github/workflows/notif.yml: warning: ignored by one of the .gitignore files
+   .github/workflows/stable.yml: warning: ignored by one of the .gitignore files
+   .github/workflows/tests.yml: warning: ignored by one of the .gitignore files
+   .github/workflows/update-tg-tree.yml: warning: ignored by one of the .gitignore files
    Documentation/.renames.txt: warning: ignored by one of the .gitignore files
 
 --
