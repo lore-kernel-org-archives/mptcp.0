@@ -1,59 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792699846;
-	b=0W2Lmjs29CSR4YZDzy63IRaS58kLKsykcKdlAJLqxb7xYVFjWp5RK51CVmFeva+RKXzY
-	 nv5WoKpy7IlAZ1xi7cdvJxvLvFHClzxPspHb0NRzOGq0hFcky68payptcU73jKBC7z/yp
-	 sTa8uB2Ux1gj27yFxA+1mmPU2l898gADwnmNuReLfZH8ph/UvvkmD7OFJXFN/buEopPAK
-	 Eht9+zerAVfZyUHg8Ql5dv7PmEM8gjVseKCZ5RAVxMiEmHUGwySGWc6b4x6oHFkqPNEXh
-	 gAeSGvKz+8xqd/ZNHuGdgJdj3zH3AP04k7aY3NgqT2yJa4IE/A7Tdvw8RM+imUG5eoQ==
+	t=1792717551;
+	b=0Raf6I9nUr2yuFfeKC72qWMBwJJzRbBaskWotWSMq+VBvQI6GrXPERtfXjHtJPLpYuwL
+	 lqKOA4G9aHyJfaCrcNemeV60g/VUxwMxeQCT5EBoSAuX8XbarkPQF61lyVqEUEx8b1vXm
+	 4Y4khsZL01p4r+roD6pgfwKIhogmR9neGGLjFICihFgkkh9QTtoqPKJEL/8pxE2MFGnOu
+	 jb4RyR4o2gGBUKGu4pyIIEKExEH9nDqK7ojDn5C9u3T+LA3AbrZoL99jkvdNxNOrHIGtH
+	 diTiwgjRNXFGVns+loihRW51gBZcGVrhXwwX3r5JRQs1CMl/BqEzXQVjim42YmkchSw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792699846;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=IHKIB44D4PfWrcJ2DF0A4+dTYI8QvNL9ppG/s6UZSeI=;
-	b=sVRFlWXSNCBvskJamGjCwb8+MqOgr0qLrza2QKjiRxY2uJX3Lgj6Mg/WItwGtsjOLz03
-	 qW4fUaHeOMawhdfG0GJnJBGUVQWiaA95+jT2LQVplV3Nxum9ie4RxUE/xMf7kpMmgzCMg
-	 iWWykt9tNfxKGwZR6DY2WLwRDjAshEYk7DYwuVwFOy8Gxj8Di5fR8LTod1MQaUmo4WOl4
-	 EEbxh6G7EeOgibIRs/MH+gIpBG58B1rXoUvj5gr5LoirUTPvWbS6DJvp9DdFFnyXVK+VT
-	 wdRcoz4hdDP2IUnM/c8v+j5RAln3+6hUuV4SqAB+rXEpKbuSJ2tDTVCYDmffoCi3RfA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792717551;
+	h=Received:DKIM-Signature:Message-ID:Subject:From:To:Date:In-Reply-To:
+	 References:Content-Type:User-Agent:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=7gITHsLJGrhoXPvLv0qeEFZR2Pz9tkRqEq+0nKRC7vE=;
+	b=CPIFZ2vcclSw7R3tpWSqIWv9iJcEdZefe4jKFdxSomEs4U954sFpfC5vCSthWMTC+fGD
+	 +2jy9kr0zG/7UXmDbGRnTt00A+PBCi6IFYCd7nhXuJNOmku61tXueq4/c9jp7nuA9+qa7
+	 +zqIlM+wT1z+mhNqIUEb/baiIOaVxoDquwzEgC6C10JTfGk7/tPEZUFJH/xInNeCpj6Yb
+	 dlyzWqyC1VX9S7bp0lHisl+1Me9LPLHtsk5pDn2rm6Cf5HXbJzA9C9+b6xpAMLzWBhPXp
+	 o0QDShsBYK0VLMypC5ekibpCpPCFqrRmVWu858UHccxiEnr35hLM5rJFtiR/59e/onQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cFaYBLNc;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=j4KthTlr;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2526F606A320;
-	Thu, 22 Oct 2026 20:10:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC9D606A319
+	for <mptcp@lists.linux.dev>; Fri, 23 Oct 2026 01:05:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cFaYBLNc
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 698681F01828;
-	Thu, 22 Oct 2026 20:10:45 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=j4KthTlr
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CD5B1F01825;
+	Fri, 23 Oct 2026 01:05:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792699845;
-	bh=IHKIB44D4PfWrcJ2DF0A4+dTYI8QvNL9ppG/s6UZSeI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=cFaYBLNcZqsCfung7WT83N6qubChsbiWE5CJy58U0fLeOka3V6N/rMSEaJ5JxVicI
-	 YPWwu7361lEl76+aUnKONVF0pVI/DFENDzWHxuy9OcIYJYCG31SV7AA4fAYV8sq0vm
-	 peLsi/V8Bke9s1c+KeY7WE/9wJ7sgkuRafLFZD4Pl8uFNe7x1cHMNDDO9ts1GAoWGD
-	 oazzbRuCWGGShtqEKvoul5rlin64MBlxjT3aZkHe+Pv/oCCDHKvgbvN0Vk/2EFqqKy
-	 +CrQs1+4SDRe7F9ndETflfOTj4hPdpq+5LzdJU7l83D1FaAi5+6i7JL+mtdFMZpxNV
-	 6mbLmyGswAl6A==
-Subject: Re: [PATCH mptcp-net v5 2/2] selftests: mptcp: join: re-add the
- initial subflow endp with fullmesh
-From: netdev-bot+sashiko@kernel.org
-To: w453y.me@gmail.com
-Cc: mptcp@lists.linux.dev, matttbe@kernel.org, martineau@kernel.org,
- geliang@kernel.org, pabeni@redhat.com, stable@vger.kernel.org,
- kuba@kernel.org
-Date: Thu, 22 Oct 2026 20:10:45 +0000
-Message-ID: <179269984501.3133.3133518777444307676@kernel.org>
-In-Reply-To: <20261021070324.50533-3-w453y.me@gmail.com>
-References: <20261021070324.50533-3-w453y.me@gmail.com>
-X-sashiko-severity: Medium
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20260515; t=1792717551;
+	bh=7gITHsLJGrhoXPvLv0qeEFZR2Pz9tkRqEq+0nKRC7vE=;
+	h=Subject:From:To:Date:In-Reply-To:References;
+	b=j4KthTlryd5vAdIhCx/hfNF8oLJ3+VC9BoOMhzWL5IJeN+Cmd+t7gwCmmdf7KM6KF
+	 WCnPXuA5zef7KKDPQ1C5tLqltq2W2gclnCVVJ6N7yO5yqb/MvIzh+dy+Y5sYwjUNAH
+	 nO9ZhXRG0BDdX926YRKmHB+4iJJLiYyMrjZihTer5ge8aR2WFcaR0c7VjvBrCe3e1Z
+	 E6EWZ9kkrZoucD7L1VwMSwYyWfJG4ewJXu2FWzqOT66DaNQ51Umc6o7NhNqebEIDkl
+	 9+QZ54s77BJDA8hwj2RT/sZaLyZvE/8DpZCNoeedp0dGMgGrxkxJcGwOH/7/aA59pD
+	 lfa5AD7IxxeZQ==
+Message-ID: <758fc944eb96407a0d761ff84679ee5066cf836e.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net v2] selftests: mptcp: sockopt: pass total
+ bytes to do_getsockopts
+From: Geliang Tang <geliang@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>, quanyeyang@proton.me, MPTCP Linux
+	 <mptcp@lists.linux.dev>
+Date: Fri, 23 Oct 2026 09:05:47 +0800
+In-Reply-To: <d16ffc4a-d8af-4b8d-b112-ce83736b9c3b@kernel.org>
+References: <20261016-fix-mptcp-issue-638-v2-1-cc32774a8b0c@proton.me>
+	 <d16ffc4a-d8af-4b8d-b112-ce83736b9c3b@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-10build1 
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -63,182 +61,72 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issue(s) to consider.
+Hi Matt, Quanye,
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 1
+On Thu, 2026-10-22 at 13:06 +0200, Matthieu Baerts wrote:
+> Hi Quanye,
+> 
+> On 17/10/2026 07:33, Quanye Yang via B4 Relay wrote:
+> > From: Quanye Yang <quanyeyang@proton.me>
+> > 
+> > connect_one_server() reads the echoed payload in a loop because
+> > read()
+> > on a stream socket can return a partial chunk. After the loop, it
+> > still
+> > passed the last read() return value to do_getsockopts() instead of
+> > the
+> > accumulated byte count.
+> > 
+> > do_getsockopts() checks MPTCP_INFO first. The client samples
+> > mptcpi_write_seq before write(), and write() has already advanced
+> > msk->write_seq by the full length, so a partial last read() makes
+> > the write_seq assert fail. Pass the total instead.
+> 
+> Thank you for the patch, it looks good to me.
+> 
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 
+> I just applied it in our tree, but for net-next because I don't think
+> I
+> saw the issue in our and the netdev CI. So I added this in the commit
+> message:
+> 
+> This issue has been reported by Sashiko and not seen in CI
+> environments.
+> Yet, it could be visible, especially when the test is launched
+> manually.
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
+Sorry for the late reply - I just saw this patch. Glad the issue has
+been fixed. But actually, I had already fixed this issue earlier: my
+patch titled "selftests: mptcp: sockopt: use exact length in
+connect_one_server" [1] is still waiting for review on the MPTCP
+mailing list. But it's no big deal - I should have replied with an
+Acked-by for this patch.
 
-- [Medium] The two new single-subflow subtests, "delete and re-add,
-  fullmesh, single subflow" (lines 4520-4523) and "delete and add…
-- [Low] In the new subtest "delete and re-add, fullmesh, after reset"
-  (endpoint_tests() in tools/testing/selftests/net/mptcp/mptcp_join.sh),…
+Anyway, I'm wondering - does it look like my pending series "selftests:
+consolidate TCP_INQ testing into sockopt" [2] is still useful after
+all? Should I rebase it and send a v15?
 
---
+Thanks,
+-Geliang
 
-selftests: mptcp: join: re-add the initial subflow endp with fullmesh
+[1]
+https://patchwork.kernel.org/project/mptcp/patch/6ec4570fb7b73f92905ef38beb414a4a7709e0a4.1785380422.git.tanggeliang@kylinos.cn/
+[2]
+https://patchwork.kernel.org/project/mptcp/cover/cover.1785380422.git.tanggeliang@kylinos.cn/
 
-This commit adds four subtests to endpoint_tests() in mptcp_join.sh. Each
-one removes and re-adds the endpoint used by the initial subflow, with the
-fullmesh flag set. They cover three cases: a second subflow is present,
-the initial subflow is reset first, and only the initial subflow exists
-(re-adding the same endpoint or adding another one).
-
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 18ce7136a2b0e..6d2cc01ac4492 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -4445,6 +4445,114 @@ endpoint_tests()
-
-[ ... ]
-
-> +	# same, but the initial subflow is reset before removing its endpoint
-> +	if reset_with_events "delete and re-add, fullmesh, after reset" &&
-> +	   continue_if mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
-
-[ ... ]
-
-> +		wait_event ns2 MPTCP_LIB_EVENT_ESTABLISHED 1
-> +		wait_mpj 1
-> +		chk_subflow_nr "before reset" 2
-> +
-> +		if ip netns exec "${ns1}" ${iptables} -A INPUT -s "10.0.1.2" \
-> +		      -p tcp --tcp-option 30 -j REJECT --reject-with tcp-reset; then
-> +			wait_event ns2 MPTCP_LIB_EVENT_SUB_CLOSED 1
-> +			ip netns exec "${ns1}" ${iptables} -F INPUT
-> +
-> +			pm_nl_del_endpoint $ns2 1 10.0.1.2
-> +			pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullmesh
-> +			wait_mpj 2
-> +			chk_mptcp_info subflows 2 subflows 2
-> +			chk_join_nr 2 2 2
-> +		fi
-
-[Severity: Low]
-What happens if the iptables rule can't be installed here? For example,
-the REJECT target or the tcp-option match might be unavailable.
-
-There is no else branch. In that case the SUB_CLOSED wait, the endpoint
-delete and re-add, wait_mpj 2, chk_mptcp_info and chk_join_nr are all
-skipped. Nothing calls mark_as_skipped() or fail_test(), so
-append_prev_results() reports the subtest as a pass even though only
-chk_subflow_nr "before reset" 2 ran.
-
-The rule is the reason this subtest exists: it is there to exercise the
-TCP_CLOSE branch of mptcp_subflow_is_closed(). Should it mark the test as
-skipped, the way reset_with_tcp_filter() does?
-
-reset_with_tcp_filter() {
-    ...
-	if ! ip netns exec "${ns}" ${iptables} \
-			-A "${chain}" \
-			-s "${src}" \
-			-p tcp \
-			-j "${target}"; then
-		mark_as_skipped "unable to set the filter rules"
-		return 1
-	fi
-    ...
-}
-
-The "userspace pm no dup close events after error" subtest uses a
-similar bare if. Commit 560edd99b5f5 accepted that because another subtest
-that depends fully on iptables would be marked as skipped. Nothing like
-that covers this case.
-
-> +
-> +		mptcp_lib_kill_group_wait $tests_pid
-> +		kill_events_pids
-> +	fi
-> +
-> +	# only the initial subflow: once its endpoint is removed, no live subflow
-> +	# is left to take the remote address from
-> +	if reset_with_events "delete and re-add, fullmesh, single subflow" &&
-> +	   continue_if mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
-> +		pm_nl_set_limits $ns1 0 2
-> +		pm_nl_set_limits $ns2 0 2
-> +		pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullmesh
-> +		{ timeout_test=120 test_linkfail=128 speed=5 \
-> +			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
-> +		local tests_pid=$!
-> +
-> +		wait_event ns2 MPTCP_LIB_EVENT_ESTABLISHED 1
-> +		pm_nl_del_endpoint $ns2 1 10.0.1.2
-> +		sleep 0.5
-> +		pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullmesh
-> +		wait_mpj 1
-> +		chk_mptcp_info subflows 1 subflows 1
-
-[Severity: Medium]
-Is the ESTABLISHED event enough synchronization before deleting endpoint
-id 1?
-
-mptcp_pm_fully_established() only schedules the PM work, then emits the
-event:
-
-net/mptcp/pm.c:mptcp_pm_fully_established() {
-    ...
-	if (READ_ONCE(pm->work_pending) &&
-	    !(pm->status & BIT(MPTCP_PM_ALREADY_ESTABLISHED)))
-		mptcp_pm_schedule_work(msk, MPTCP_PM_ESTABLISHED);
-    ...
-	if (announce)
-		mptcp_event(MPTCP_EVENT_ESTABLISHED, msk, ssk, GFP_ATOMIC);
-}
-
-msk->mpc_endpoint_id is set later, from the worker, in
-mptcp_mpc_endpoint_setup():
-
-	entry = __lookup_addr(pernet, &mpc_addr);
-	if (entry) {
-		__clear_bit(entry->addr.id, msk->pm.id_avail_bitmap);
-		msk->mpc_endpoint_id = entry->addr.id;
-		...
-	}
-
-Suppose pm_nl_del_endpoint runs before the worker. Then this call in
-mptcp_nl_remove_subflow_and_signal_addr() returns 1 rather than 0:
-
-	list.ids[0] = mptcp_endp_get_local_id(msk, addr);
-
-mptcp_pm_rm_addr_or_subflow() then skips the initial subflow, because its
-local id is 0, so the subflow stays established. When the worker runs it
-finds no endpoint for 10.0.1.2, and mpc_endpoint_id stays 0.
-
-In this re-add variant, the re-add then maps endpoint 1 to local id 0.
-The initial subflow is still alive and keeps remote id 0 unavailable, so
-no new subflow is created. Could wait_mpj 1, chk_mptcp_info subflows 1
-and chk_join_nr 1 1 1 then fail spuriously?
-
-The "delete and add another, fullmesh, single subflow" subtest below has
-the same race. There, endpoint 2 would still join using the remote
-address of the live initial subflow. The test would pass without covering
-the case where no subflow is left.
-
-The two-subflow subtests avoid this, because their wait_mpj 1 runs after
-the worker has called mptcp_mpc_endpoint_setup(). Neither single-subflow
-subtest checks the subflow count after the delete, the way the first new
-subtest does with chk_subflow_nr.
-
-The window is probably small, but nothing seems to prevent it on loaded
-CI machines or debug kernels. Should these subtests wait for the PM
-worker, or check that the initial subflow is gone, before re-adding the
-endpoint?
-
-> +
-> +		mptcp_lib_kill_group_wait $tests_pid
-> +		kill_events_pids
-> +
-> +		chk_join_nr 1 1 1
-> +	fi
-
-[ ... ]
-
--- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261021070324.50533-1-w453y.me%40gmail.com
+> 
+> New patches for t/upstream:
+> - e4ab26e68fc2: selftests: mptcp: sockopt: pass total bytes to
+> do_getsockopts
+> - Results: 7ea69c5a1764..54143bb812b1 (export)
+> 
+> Tests are now in progress:
+> 
+> - export:
+> https://github.com/multipath-tcp/mptcp_net-next/commit/fae0397e047620f27866048567a39eb2bae6746c/checks
+> 
+> Cheers,
+> Matt
