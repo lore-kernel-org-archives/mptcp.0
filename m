@@ -1,47 +1,90 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.179
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792833892;
-	b=wnkLeYXkSZAxwDyWheArz/pIzPdppRTDXA0s7yfuzNurwSvQMSJPEcvQ4+cegPbmo8SE
-	 gUchrUrXraUMZ++iwhHIvz0NifVQewxFwayx8qO9HP+YyzYCs3EkpkOHI8HV85RliIwIq
-	 2BSc6tVjdzxn/pZvUdZb8qo/diXiGE629OyaoELShMQvV6bxamGRsu0xU6p55Hus3JcIQ
-	 p1QhKHy9MjKy/E8TLQpRAvqh7I0sdIbGuDRcFn3wYnEpT3WHzs7f4+uzqCeoxl/LBajOl
-	 XJSSfNnn5KTttZBmj7u3ixRIn9MjH0LSfYocQFsIvB6a6FQHJCHuXtkHQguZYQI+TXg==
+	t=1792840729;
+	b=fZs9HUp1Rlem0QAYws1KJ4KO4T5k3B9gIx0tCONOus3/T2qdY2S7HzH3pMccR3k3JiwA
+	 5wyxDnFV0VmG/Obs8o8OOkMMScg9WeCG9Cvh1+KIHTsXB76gNm4NJd+0BuIRgsnnTbqtN
+	 4wdiIv0d8Z2mTb/uA2z0N0P/q1PeTMnkGxmsB/6No/Tb1ao7Ed73zej3o762vPmo5Dh/U
+	 aMQ1ckyRYcmt4suK/N8yCpyiwHBu3pwSek1j/GD4nJHB6D2WiQHveFRmBN77bFW7kCZTW
+	 3+QNcwM0ggPYZnTRIP9PKp39Db2W8cKtO+YzWoAkK+8x2bfxzbqTODRkhTE9GpbIloQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792833892;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=/r+3XZ0QVZqvIz8ZHQOipXOcUhoank7bgo2gUkEXK/c=;
-	b=cDKQnYjz7g2LBB/qHKJkz/kD66JNSsvUxNBAEOT422whRh3nU5vNxWfLpv530rxUPoIS
-	 r7G28DZ1zKtuMWYNa26eQgESasiNSYDCBDWG9R+loNsdYCu3e++1cMvHbVZaPcUk3ZGRT
-	 ZIOT/6SyCfDY99Cz0baPI9wc5Ti34FWzu8whBAsx1XyzBDxGYll8eWNn9plMHuAbDMGB1
-	 shhrs5YoEzrKbMvVVpwpQ2XPieICeexGs/R2SApNwuYuMWJU31IrgVdyrTfG6EaiTj73v
-	 IjKaetP61CzumMFEAdfj3BTvu0T2BvsdJiwpgz2UKr0zhWD95vZ+3HpqEpOsWltaG+A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792840729;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=/WUwy9+Lg2AU2psx0cCAyfS4NVUsg4eGAr7YFPYwQno=;
+	b=4i0ub3our7VaZwnIwwghZENHn7LRSIMjJzllhVpL1l4lqLl34imzL1uNcJfwnFKajGyz
+	 hJO7iKOhONjgMqHPzt7U/jQpd+EZy7nLFnHK50VpPgc3uRmoCtz0j7f7cDh9PSOk7v4m0
+	 7YpQ8w22k1CzFmBtWk6+/eIvuUwc1Oa8XSvg+NFZ6K5m++DKDxKDMChVRzK30AuhxuZtL
+	 kGEzlfxLOJ15qMFsJzs5jdopTV8hQCIWVI+bMzoSmkDyYchxK1v4IJaqXD6Wa5DwYGCwY
+	 j6YCRwiH8gMBIjPsLOuySES+Pn/0y/WpFTAvKFui6lToH6qqgBU8dQr2+nHOzlrvWDQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Nlk4lpM8;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=ZuGfKKCA;
+	arc=none smtp.remote-ip=74.125.82.179
+Received: from mail-dy1-f179.google.com (mail-dy1-f179.google.com [74.125.82.179])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4FE606A31F
-	for <mptcp@lists.linux.dev>; Sat, 24 Oct 2026 09:24:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E2C606A31A
+	for <mptcp@lists.linux.dev>; Sat, 24 Oct 2026 11:18:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 97E2C606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Nlk4lpM8
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E31BF1F031E0;
-	Sat, 24 Oct 2026 09:24:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792833892;
-	bh=/r+3XZ0QVZqvIz8ZHQOipXOcUhoank7bgo2gUkEXK/c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Nlk4lpM8H6xYnYq/RZijQ7Z5W8lcPcla3Gv2TGuRu/gTCfUr3ZVfkQQJj2+8z57l7
-	 ZMa4S4PuVdBZ9njW2QMz80DfckZK7MWdLh73RF2ttLv7t4qmdwp/WSn0M5m6fweMn8
-	 Q3JNuX9ubannyF2b7UPEtXR6a+c4IryNjeHsK8IteEBaNNTMtuXqWuPGGI56otmjgz
-	 qm6EFDSRAFFE6dKVB13MPJ1SaZo3bjnup2p+0MDsz+qPCSMkgmB/D/0cPa1BJg98Us
-	 RZIMf+AMuXU4SiHsyZfb6q8nzRSBC649Cyk1qXEd8sXghgkVBPv7zwxY8FPMgh4qsG
-	 flRDMmx3+TvaQ==
-Message-ID: <c6f1f223-f4cd-4545-80af-c902f4dbd460@kernel.org>
-Date: Sat, 24 Oct 2026 11:24:47 +0200
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=ZuGfKKCA
+Received: by mail-dy1-f179.google.com with SMTP id 5a478bee46e88-354ba08cfd1so2936146eec.1
+        for <mptcp@lists.linux.dev>; Sat, 24 Oct 2026 04:18:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792840728; x=1793445528; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=/WUwy9+Lg2AU2psx0cCAyfS4NVUsg4eGAr7YFPYwQno=;
+        b=ZuGfKKCAZ3ZW7Z1vHdDmYJ9HPQfKqif5Xb+PExBYo4caciENx114MRvmy8eUUtg/dQ
+         BJJXBsAZvj9vix2L4JEG3Om/FitFe7IWc40fuqplk9AXB1pgc9lSjfRO+NMdhKZVTqFy
+         FgFKcNJa7WKrsNRUNjLwLEyNBUa5NAwER1DKKyUxTskuZO2z4yC2zuRJWt1HyG0FIUuj
+         cYBNdzpDRoOOEqRt5rDs3z9OSVSHwLPLh8B9EsyVfmWVbhlF1yK1G9OvzjUR5tko2d+P
+         pbkkiGzOfvFw9mMsQdNGqqEC/AZSka0VjytyqIzdTQgcwNPW/gHBodY/iS1ZLZJMFvMG
+         c6wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792840728; x=1793445528;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=/WUwy9+Lg2AU2psx0cCAyfS4NVUsg4eGAr7YFPYwQno=;
+        b=WKRK4bqHPkR+QEFT1aeZODsfSRcrMZS3oVk9lOqWgrwhkqbg3QcspwTRX/7A2XtROq
+         nO/4Cd6ju7CL1DVadVKneZe7NpSEXmzVC7arqWLd4E3BhB7Gxs0/9xQDmLCC1bbtHzgr
+         a6I5y+iEOK+oNYazF3PLiSIROLgiluj4JBMfXQ0X7oYpgRj1q9/DzThGqKnA4caN8t0Q
+         jcNI9C3i7iY+w9FvDQqymRt/uuAHjh+VnB99zvckYlty+ri8NGMAht7NSEU2kvvrk2v7
+         NH+lP/wMuABi2ksilSklP/Eo20PS1Bh14H8GRSO0e69Hy3B1Z25miVonHFGx0gqFwbyJ
+         xVGA==
+X-Gm-Message-State: AFq9FYKGYYfCJNnwF6diAZeSXw8cLXcSav+6i6mrugHXhneFqnKxcU3e
+	uDKezYa1/6WJOpEbSOJsjGQ/x8QYyJKFCly/sCPywHMplM35ewGi78kX7sKHrA==
+X-Gm-Gg: AYBFou057SDISwO8B5YavnbRqmGjFhszzPqWDI0tm3Y+FVg2djOuhnx9pXoha5pwzQo
+	VPXk8DljPsn5KMi53NPOVm7vImAUTYNTGeaRBxd6PniTnIk1hhH2xo4D90KeQUtuIjjUOAzhFy5
+	V1Usi8krTkeUeBYnx2sYLIlo1QzQBZNV58STDq7ASuuUAp7uhfbGc6VBVWIPN6GPh72KR/zVRKz
+	yn4MAZTkYgptnMSF3VAmTK6OjCmqsHxiRsdU3q9dQ0gfzTDorZPFHbEMIP1oknH7aNBUzmSz5G3
+	tF6HC7dOxXYw62NA2rVYzRRK26wLg+kbczU2re2NVCc9g48rKptBEXG0Z3MqpfLT+xE0qYBRD4X
+	gPwUuo2umnTLwx/VFe1+5tRWXdI0MoJT83bckbihZtMrWr6PftxLBsaMYRKwfj4M77PHF+L5Kii
+	ZXQap6vjUpwGXYon9NM4ieFQV3s3DKbTvHyl6uxrMJiQfphZUn2xKuO9lDnh5v1H3Q5w7xSSyk3
+	hoLkHxPRvZ15lIjC/eRjpNZjD9c1dIfgA7kU1EqoLaFsENJYrXk65BgR+OOeEB0CV6zxCAIBobp
+	WOUlMQ==
+X-Received: by 2002:a05:693c:8809:20b0:369:daea:812a with SMTP id 5a478bee46e88-369e84f4d51mr2463967eec.30.1792840727452;
+        Sat, 24 Oct 2026 04:18:47 -0700 (PDT)
+Received: from mptcp-lab.w453y.xyz ([59.164.88.43])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-369e8afd64fsm7458774eec.0.2026.10.24.04.18.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 Oct 2026 04:18:47 -0700 (PDT)
+From: Abdul Wasey <w453y.me@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Subject: [PATCH mptcp-net v8 0/2] mptcp: pm: in-kernel: fullmesh: re-add of the initial subflow endp
+Date: Sat, 24 Oct 2026 11:18:40 +0000
+Message-ID: <20261024111842.1069878-1-w453y.me@gmail.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -51,115 +94,88 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 1/2] nbd: allow MPTCP sockets
-Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1792746800.git.tanggeliang@kylinos.cn>
- <1612e1611a1e5d78d651a4c1a69da38fdcf98ca8.1792746800.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <1612e1611a1e5d78d651a4c1a69da38fdcf98ca8.1792746800.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+With fullmesh endpoints, removing and re-adding the endpoint used by the
+initial subflow never creates a new subflow from it: the closed initial
+subflow stays in the conn_list, and makes the PM think the remote ID 0
+is already used, or picks its reset remote address. If the initial
+subflow was the only one, no address is left for the remote ID 0 at all.
 
-On 23/10/2026 11:19, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> MPTCP (Multipath TCP, RFC 8684) is an extension to TCP introduced in
-> Linux 5.6 that can combine bandwidth from multiple network interfaces.
-> 
-> For NBD (Network Block Device), MPTCP provides significant bandwidth
-> aggregation in multi-NIC scenarios. Our tests with 4 virtual NICs
-> (each limited to 1000 Mbit/s / 125 MB/s) show ~4x improvement,
-> TCP achieves ~110 MiB/s while MPTCP achieves ~400 MiB/s for both
-> read and write:
-> 
->  # ./mptcp_nbd.sh mptcp
->  INFO: nbd-server lacks native MPTCP, using mptcpize
->  INFO: nbd-client lacks native MPTCP, using mptcpize
->  Negotiation: ..size = 256MB
->  Connected /dev/nbd0
->  connected
-> 
->  fio-3.41
->  ... ...
->  Run status group 0 (all jobs):
->     READ: bw=406MiB/s (426MB/s), 406MiB/s-406MiB/s (426MB/s-426MB/s), \
-> 		io=4063MiB (4261MB), run=10001-10001msec
->  ... ...
->  Run status group 0 (all jobs):
->    WRITE: bw=376MiB/s (394MB/s), 376MiB/s-376MiB/s (394MB/s-394MB/s), \
-> 		io=3758MiB (3940MB), run=10001-10001msec
-> 
-> MPTCP sockets can be created with:
-> 
->   fd = socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP);
-> 
-> Or enabled transparently using the mptcpize tool without modifying
-> applications (mptcpize run nbd-server, mptcpize run nbd-client).
-> Future patches will add -M (--mptcp) options to nbd-server and
-> nbd-client for native MPTCP support.
-> 
-> Currently, the kernel NBD driver only accepts TCP and UNIX sockets.
-> This patch adds MPTCP socket support by adding msk_is_mptcp() check
-> in nbd_get_socket().
+Patch 1 fixes that, patch 2 adds tests for it.
 
-Just to be sure: are you sure it is safe with just that? We got a bunch
-of Syzbot/Syzkaller reports back then before commit:
+Found with a router flapping one of its links: the link carrying the
+initial subflow never rejoined the existing connections. Tested on top
+of export-net: the new tests fail without patch 1, except the one adding
+another endpoint, which already worked and guards against breaking it.
+The whole mptcp_join.sh passes with patch 1.
 
-  9f7c02e03157 ("nbd: restrict sockets to TCP and UDP")
+Changes in v8, after the review of v7 by Sashiko on mptcp and on netdev,
+and the MPTCP CI:
+- Patch 2: use nftables in the "after reset" test, as the rest of
+  mptcp_join.sh does now: export-net also got be3b69f3cedf, so
+  ${iptables} was empty there too, and the test failed on v7.
+- Patch 2: stop the transfer and the event listeners before marking that
+  test as skipped: when all features are expected, the skip exits.
+- v7: https://lore.kernel.org/mptcp/20261023110321.403874-1-w453y.me@gmail.com/
 
-https://github.com/multipath-tcp/mptcp_net-next/issues/599
+Changes in v7, after the review of v6 by Sashiko on netdev:
+- Patch 2: in the two tests with the initial subflow alone, wait until
+  the PM worker has accounted the initial subflow endpoint before
+  removing it: a join on a third endpoint is created in the same worker
+  run, then that endpoint is removed. v6 only detected the race.
+- Patch 2: wait a bit before counting the subflows after the removal,
+  as the other tests do: the closed subflow can still be listed.
+- v6: https://lore.kernel.org/mptcp/20261022085041.211318-1-w453y.me@gmail.com/
 
-Cheers,
-Matt
+Changes in v6, after the review of v5 by Sashiko on netdev:
+- Patch 1: in the commit message, the closed initial subflow keeps its
+  remote address: only the destination port is zeroed, not the address.
+- Patch 2: skip the "after reset" test if the iptables rule cannot be
+  added, instead of passing, and check that the reset closed the
+  subflow.
+- Patch 2: in the two tests with the initial subflow alone, check it is
+  gone after the removal of its endpoint: the ESTABLISHED event comes
+  before the PM worker accounts that endpoint, so a removal right after
+  it can miss the subflow.
+- v5: https://lore.kernel.org/mptcp/20261021070324.50533-1-w453y.me@gmail.com/
+
+Changes in v5:
+- Patch 1: when no subflow is left to take the remote ID 0 address from,
+  use the remote address of the MPTCP socket, as fill_remote_addr()
+  does. Without it, v4 also broke adding another endpoint after the
+  removal of the initial one, when it was the only subflow (Sashiko on
+  netdev).
+- Patch 2: add two tests for the initial subflow alone: re-adding its
+  endpoint, and adding another endpoint.
+- v4: https://lore.kernel.org/mptcp/20261019190558.465270-1-w453y.me@gmail.com/
+
+Changes in v4:
+- Patch 2: only check the joins when the iptables rule has been added
+  (Sashiko).
+- v3: https://lore.kernel.org/mptcp/20261019185512.458313-1-w453y.me@gmail.com/
+
+Changes in v3:
+- Patch 2: use iptables instead of init_nftables(), which is only in
+  net-next (Sashiko).
+- v2: https://lore.kernel.org/mptcp/20261019180306.382039-1-w453y.me@gmail.com/
+
+Changes in v2:
+- Patch 1: also skip the subflows in TCP_CLOSE: the initial subflow can
+  be disconnected and its context reset, clearing the 'closing' flag and
+  zeroing its remote address (Sashiko).
+- Patch 2: validate this case too, by resetting the initial subflow
+  before removing its endpoint.
+- v1: https://lore.kernel.org/mptcp/20261019170751.200446-1-w453y.me@gmail.com/
+
+Abdul Wasey (2):
+  mptcp: pm: in-kernel: fullmesh: skip closed subflows
+  selftests: mptcp: join: re-add the initial subflow endp with fullmesh
+
+ net/mptcp/pm_kernel.c                         |  33 ++++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 133 ++++++++++++++++++
+ 2 files changed, 165 insertions(+), 1 deletion(-)
+
 -- 
-Sponsored by the NGI0 Core fund.
+2.43.0
 
