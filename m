@@ -1,54 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1792859170;
-	b=coS/exg8Dz8n00UEWD8+DbaWrylhGmZwRRSuCQUcAxuC0I70Dbs3DZUPYFHst3pyS1VY
-	 n18v9EqAYRZO/gzbktebCGYwsrJG4eHgEg/MYRH4xaJQLz6DTpD7Pg4SN0GJEBmyQ67uj
-	 95/pi0GG80Tkf/vYhCHIFREokEUMjD8uwhzDPLZVw2oNxP/w3eDEKNwYGfw9eQpjGBGW8
-	 oSeZZrn20I6zgQ2aNWUkDpMUtN9gm6qXYDlhfLFJ7JD2SqVa2gjvZ8VdzISqsKY1sSU6M
-	 OjLg3dbrufyjzcaLwqxs4Y+GvGahJ3Xk2IJAB5jHRkGAYzgqfprzEtHPQv+WZ8ukzDQ==
+	b=EDv1eB8zJ90wnHYAQGA1dD1CA5W/LedMszsE0WIyyzDlOPRnfyoxfoONQaa2oXWDzjRY
+	 6iFgbTIxlAhxyDChnfZpXdDwL5MiPEA5yWi8G/awQz0b2z7NP3T6kIdng4Uj6qZ97RTDT
+	 JhmKtdHowdWJTL9sWrV5unuAdDgiog795SMXIA6AbUV0dWIpklskNk17LEjOPZXxsijka
+	 rhtEjcG9b0FPLR5nchLTDji+R3rPXi8KHtSOpGOJOdz/mvEYMRG9rmf+A96witKqUgy7R
+	 RzpWjbVBBgEP00I0ie39Z0obFNuxPkfLwejpnaz58sQvX9s4cMgXKjQivy4EdCiDsLA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1792859170;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=J4Qvt05EaUjBiXEAsbhyLaB72FXcj87K0itH3rgYHVQ=;
-	b=dmRlPobC8PebkC8oO1ZjtJJa8R5H84svT0BcAOQeen9xbirwDziat/D3Kq3ktYEQY4LM
-	 xvy6GYITOQBqbCP9KFdXP8Ivcgt9G+OWCxXbbeUQu6x9AuqQAS/LKsdobD5C0llgvcHlt
-	 PYZXgQcLVZjemv4KUalvkZMYnW6eXktHy9pbMttt9QBvceY6LqPOcA6qAkVAI+QNgBoWu
-	 8f5oQwjLWsbYqVicRKvfzzzxmfrjNbl1zfbC77OAU1wUyHkJSitcfcoyiuz34u+r2LLT+
-	 plewTne/9sEbeTO+NI61J8+mkMQXOqdPmoz7fCBkcxpfM0FIYoxNoJz/UARrhaZNCaw==
+	bh=1oRFBwlmOCy+Bs2/t8Y34IHKip1N83FfFh/1FRLOi4Y=;
+	b=kqn16XWC+oTAwnMWOm08z2ct4bZwL4u6nugyxAwKDglPgny50Nc1vaWveoKZNEpswORN
+	 TWnfq5TSvRaJw4u6UUUjpa3Jaz04yYhWvPgip7C1CA6lDTEaKb+mfq7LruIiihsLvcst/
+	 GFCQW7SDayQwAWm0i1xgwK8wLGaMPTdrQD6OxiCQ/4EAbrFGmMIqQEYIJtYWP0h+i8jmC
+	 Rb1ruJQ+Me5vMG0aDB7dmmt8giCucCaC4Skj4hil1Yuz5HadDlYl0Ra1yjDPXb3UHbSDl
+	 kIL7LbDkr5RBmK0T+RhetwzPpJScW5xFqCL+LO/KILo22cxUP8G0RwJWP10TuV32stg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KIq2EsCk;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=R1D9SfvK;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9F3606A31B
-	for <mptcp@lists.linux.dev>; Sat, 24 Oct 2026 16:26:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93AAC606A325
+	for <mptcp@lists.linux.dev>; Sat, 24 Oct 2026 16:26:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KIq2EsCk
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5462D1F031E7;
-	Sat, 24 Oct 2026 16:26:09 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=R1D9SfvK
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 288CE1F031E0;
+	Sat, 24 Oct 2026 16:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792859169;
-	bh=J4Qvt05EaUjBiXEAsbhyLaB72FXcj87K0itH3rgYHVQ=;
+	s=k20260515; t=1792859170;
+	bh=1oRFBwlmOCy+Bs2/t8Y34IHKip1N83FfFh/1FRLOi4Y=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=KIq2EsCk4UsCUUlQ5rg2ZEKzlr5bGkcawuifQxcOaxfeQ8QwSfJiw4yN3c1SY2vMM
-	 1+b1tmldqvNhKokxL54FbajTT4BGc+/FlR6MNv0M3/EPQA0nwxFP5B1UletmAy3VRO
-	 QGpRUrjsgzUhmVNulNlSkUm32yvLM1MGPXvtHAr/91SK7ekeOgDOsbHcjFRQGmQxi6
-	 6czYPkfJ6Kw3YUgj068TWFzHM/xo0gAMI4PPfeK3Jj6wizdqNNQBALAzR7Gi3iTP5x
-	 BKr1x7Rg60ElWxvzY/hMlETwrTWoOhoMRbB/VrbpeSl/YRc67rI6tzv2xEIx2xVhe2
-	 rw0HUhsa1FMIg==
-Subject: Re: [PATCH mptcp-next v15 03/11] mptcp: remove CB offset field
+	b=R1D9SfvKAjy8wDLdq3cEa+AB01DA3GOVR2CBzbQmNGHLV0S9PE+t1dhDtevFGNY09
+	 BuQkZnNU8/5joCw5vAPzFCOeewR5LlPHZQpl9jq877+2WQp4tWj0bOHcwxBmhZVldM
+	 6e20DwtetMlSTmmh6agQpYFCn6j5Emz09pw3jV2kIRiGons6ggKBq7yZ8P+/5agWey
+	 8rOdnJI7DG2KEctSzgSPi9ghea1EGIYn5u7n++T1XDOihtjLeDmnMDfGOG/RAZZHef
+	 KGmCOHTLM5foj9ivPH88TN3MyhowTh9AsVTxaiMAsa65MZXDKVBDYs+GCaTWAIvw/M
+	 NaELxHGMswb3w==
+Subject:
+ Re: [PATCH mptcp-next v15 04/11] mptcp: sync mptcp skb cb layout with tcp one
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, yangang@kylinos.cn, kuba@kernel.org
-Date: Sat, 24 Oct 2026 16:26:08 +0000
-Message-ID: <179285916888.3132.6939287124307215571@kernel.org>
-In-Reply-To: =?utf-8?q?=3C8f0a05ab4c45b9ff763ac81eaf85b2eb8148d2cb=2E1792718?=
+Date: Sat, 24 Oct 2026 16:26:09 +0000
+Message-ID: <179285916974.3132.1607917745186645456@kernel.org>
+In-Reply-To: =?utf-8?q?=3Ca0dc7793379f9fd85ac0f9ba8acb9e7f8f7100e3=2E1792718?=
  =?utf-8?q?041=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
-References: =?utf-8?q?=3C8f0a05ab4c45b9ff763ac81eaf85b2eb8148d2cb=2E17927180?=
+References: =?utf-8?q?=3Ca0dc7793379f9fd85ac0f9ba8acb9e7f8f7100e3=2E17927180?=
  =?utf-8?q?41=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
 X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
@@ -63,10 +64,10 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 6 potential
+Thank you for your contribution! Sashiko AI review found 2 potential
 issue(s) to consider.
 
-Critical: 0 · High: 0 · Medium: 4 · Low: 2
+Critical: 0 · High: 0 · Medium: 1 · Low: 1
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -74,302 +75,187 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [Medium] While MPTCP_SYNC_SEQ is pending, mptcp_inq_hint() returns `skb
-  ?
-- [Medium] mptcp_init_skb() now sets `map_seq =
-  mptcp_subflow_get_mapped_dsn(subflow) - offset` and `end_seq = map_seq…
-- [Medium] mptcp_inq_hint() tests MPTCP_SYNC_SEQ and then separately
-  reads `READ_ONCE(msk->ack_seq) - msk->copied_seq`.
-- [Medium] The patch adds a non-idempotent `msk->copied_seq +=
-  mptcp_iasn(msk)` wherever MPTCP_SYNC_SEQ is consumed.
-- [Low] The commit message describes a user-visible bug that this patch
-  fixes.
-- [Low] The new `else` (mp_opt == NULL, fallback) branch in
-  mptcp_propagate_state() writes subflow->map_seq,…
+- [Medium] In __mptcp_ofo_queue() (net/mptcp/protocol.c), the patch
+  replaces the 64-bit OFO dequeue checks with 32-bit after() comparisons…
+- [Low] The commit message for "mptcp: sync mptcp skb cb layout with tcp
+  one" does not match the code.
 
 --
 
-mptcp: remove CB offset field
+mptcp: sync mptcp skb cb layout with tcp one
 
-This patch replaces the per-skb MPTCP CB offset field with a new msk-level
-copied_seq that tracks bytes already copied to user space, similar to TCP.
-copied_seq is rebased to the IASN when the remote key arrives, or later in
-the release callback via MPTCP_SYNC_SEQ when the msk is owned. The patch
-also changes the TFO dummy mapping sign, rewrites mptcp_inq_hint() on top
-of copied_seq, and initialises the sequence space in
-mptcp_propagate_state() on fallback.
+This commit shrinks the MPTCP skb cb sequence fields to 32 bits, so that
+map_seq, end_seq and flags sit at the same offsets as the matching
+tcp_skb_cb fields. A 64-bit map_seq64 copy is kept for the admission and
+in-sequence checks, while the OFO queue and recvmsg paths move to 32-bit
+arithmetic. A build-time check on the field offsets is added in
+mptcp_proto_init().
 
-> diff --git a/net/mptcp/fastopen.c b/net/mptcp/fastopen.c
-> index e18b31028e7e3..421a50a855476 100644
-> --- a/net/mptcp/fastopen.c
-> +++ b/net/mptcp/fastopen.c
-> @@ -45,10 +45,11 @@ void mptcp_fastopen_subflow_synack_set_params(struct mptcp_subflow_context *subf
->  	subflow->ssn_offset += skb->len;
->  	has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
->  
-> -	/* Only the sequence delta is relevant */
-> -	MPTCP_SKB_CB(skb)->map_seq = -skb->len;
-> +	/* The TFO segment data sits before the IASN; before receiving
-> +	 * the remote key, IASN is assumed being 0.
-> +	 */
-> +	MPTCP_SKB_CB(skb)->map_seq = -(u64)skb->len;
-
-[Severity: Low]
-
-The commit message says:
-
-  Prior to this patch, the TFO skb dummy mapping (map_seq = -(u32)skb->len,
-  zero-extended to u64) caused mptcp_inq_hint() to compute a wrapped
-  ack_seq - map_seq, so SIOCINQ and TCP_CM_INQ returned INT_MAX before the
-  MPC ACK.
-
-That is a user-visible bug going back to commit 36b122baf6a8 ("mptcp: add
-subflow_v(4,6)_send_synack()"), but there is no Fixes: tag.
-
-The fix is also part of a refactor that depends on earlier patches in
-this series ("mptcp: drop the mptcp_ooo_try_coalesce() helper" and "mptcp:
-drop the cant_coalesce CB field").
-
-With the old formula in mptcp_inq_hint(), wouldn't the one-line
--(u64)skb->len change be enough on its own? Could it be sent separately
-with a Fixes: tag so stable trees pick it up?
-
->  	MPTCP_SKB_CB(skb)->end_seq = 0;
+> As the msk-level rcvbuf buffer size is limited by the core socket code the
+> INT_MAX; after validating the incoming skb vs the current receive window,
+> we can safely use 32 bits for MPTCP-level sequence number.
 
 [ ... ]
+
+> Add build time check to ensure the latter invariant.
+
+[Severity: Low]
+This isn't a bug, but does this sentence describe what the patch adds?
+
+It comes right after the paragraph arguing that 32-bit arithmetic is safe
+within 2^31. The check added in mptcp_proto_init() only compares field
+offsets against struct tcp_skb_cb:
+
+	CHK_CB_FIELD(map_seq, seq);
+	CHK_CB_FIELD(end_seq, end_seq);
+	CHK_CB_FIELD(flags, tcp_flags);
+
+Nothing checks the 2^31 distance invariant, at build time or at runtime.
+
+The message also says the patch moves to 32 bits for the MPTCP-level
+sequence number. However, struct mptcp_skb_cb still has a 64-bit
+map_seq64 next to the 32-bit map_seq and end_seq. map_seq64 still drives
+these checks:
+
+  - the in-sequence test in __mptcp_move_skb()
+  - OFO admission in mptcp_data_queue_ofo()
+  - the partial-packet test in __mptcp_move_skb()
+  - the coalesce check in __mptcp_try_coalesce()
+
+Could the message mention this?
+
+The patch also depends on two new invariants:
+
+  - map_seq == (u32)map_seq64
+  - end_seq - map_seq == skb->len
+
+Every CB writer has to keep them in sync: mptcp_init_skb(),
+__mptcp_sync_rcv_sequence(), mptcp_fastopen_subflow_synack_set_params()
+and __mptcp_try_coalesce(). They seem to hold in the current tree. Would a
+comment next to struct mptcp_skb_cb in protocol.h help?
+
+The claim that receive-queue skbs are validated against the receive
+window is covered in the __mptcp_ofo_queue() comment below.
 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 96deaed109a2f..f2840c8d9c825 100644
+> index f2840c8d9c825..01eb7fb314e76 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -168,7 +168,6 @@ static bool __mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
->  	int limit = READ_ONCE(sk->sk_rcvbuf);
->  
->  	if (MPTCP_SKB_CB(from)->map_seq != MPTCP_SKB_CB(to)->end_seq ||
-> -	    MPTCP_SKB_CB(from)->offset ||
->  	    ((to->len + from->len) > (limit >> 3)) ||
->  	    !skb_try_coalesce(to, from, fragstolen, delta))
->  		return false;
 
 [ ... ]
 
-> @@ -425,9 +423,9 @@ static void mptcp_init_skb(struct sock *ssk, struct sk_buff *skb, int offset,
->  	 * mptcp_subflow_get_mapped_dsn() is based on the current tp->copied_seq
->  	 * value
->  	 */
-> -	MPTCP_SKB_CB(skb)->map_seq = mptcp_subflow_get_mapped_dsn(subflow);
-> -	MPTCP_SKB_CB(skb)->end_seq = MPTCP_SKB_CB(skb)->map_seq + copy_len;
-> -	MPTCP_SKB_CB(skb)->offset = offset;
-> +	MPTCP_SKB_CB(skb)->map_seq = mptcp_subflow_get_mapped_dsn(subflow) -
-> +				     offset;
-> +	MPTCP_SKB_CB(skb)->end_seq = MPTCP_SKB_CB(skb)->map_seq + skb->len;
+> @@ -893,37 +903,37 @@ static bool __mptcp_ofo_queue(struct mptcp_sock *msk)
+>  {
+>  	struct sock *sk = (struct sock *)msk;
+>  	struct sk_buff *skb, *tail;
+> +	u32 seq_delta, ack_seq;
+>  	bool moved = false;
+>  	struct rb_node *p;
+> -	u64 end_seq;
+>  
+>  	p = rb_first(&msk->out_of_order_queue);
+>  	pr_debug("msk=%p empty=%d\n", msk, RB_EMPTY_ROOT(&msk->out_of_order_queue));
+>  	while (p) {
+> +		ack_seq = msk->ack_seq;
+>  		skb = rb_to_skb(p);
+> -		if (after64(MPTCP_SKB_CB(skb)->map_seq, msk->ack_seq))
+> +		if (after(MPTCP_SKB_CB(skb)->map_seq, ack_seq))
+>  			break;
 
 [Severity: Medium]
+Is this 32-bit after() still correct when an OFO entry is 2^31 bytes or
+more behind ack_seq at the time __mptcp_ofo_queue() runs?
 
-Is it safe to assume the offset head bytes belong to the current mapping?
+The commit message says "all SKBs in the receive queue and OFO queue have
+been validated against the receive window". However, only
+mptcp_data_queue_ofo() checks against rcv_wnd_sent. The in-sequence and
+partial paths in __mptcp_move_skb() advance ack_seq with no window check:
 
-The offset bytes are subflow data before tp->copied_seq, already consumed
-at subflow level. With this change they get DSNs by running the current
-mapping backwards, so they are labelled [D - offset, D), where D is
-mptcp_subflow_get_mapped_dsn().
+net/mptcp/protocol.c:__mptcp_move_skb() {
+    ...
+	if (MPTCP_SKB_CB(skb)->map_seq64 == msk->ack_seq) {
+		/* in sequence */
+insert:
+		if (!mptcp_try_rmem_schedule(sk, skb)) {
+    ...
+		WRITE_ONCE(msk->ack_seq, msk->ack_seq + copy_len);
+    ...
+}
 
-validate_mapping() accepts a new DSS mapping whose map_subflow_seq equals
-copied_seq in the middle of an skb. One way to get there is
-tcp_data_queue() queueing a partially overlapping segment unchanged
-(seq < rcv_nxt) while the segment's DSS describes the later mapping. If
-the head bytes came from an earlier mapping with a non-adjacent DSN, they
-now get the wrong DSNs.
+The only limit on that path is mptcp_can_ingest():
 
-If msk->ack_seq equals D - offset, __mptcp_move_skb() takes the
-in-sequence branch and delivers the stale head bytes as stream data. The
-real [D - offset, D) data from another subflow is then dropped later as
-old. In the OFO queue, mptcp_data_queue_ofo() can also replace or drop the
-real skb because of the enlarged range.
+	return likely(sk_rmem_alloc_get(sk) <= READ_ONCE(sk->sk_rcvbuf)) ||
+	       __mptcp_check_fallback(mptcp_sk(sk));
 
-Before this patch map_seq was D, and the head bytes were skipped through
-the CB offset. The offset check removed from __mptcp_try_coalesce() above
-also kept such skbs from being merged.
+This is always true for fallback sockets. It is also always true once
+sk_rcvbuf reaches INT_MAX, which mptcp_rcvbuf_grow() can reach when
+tcp_rmem[2] is set to INT_MAX.
 
-Linux senders don't seem to produce such segments. Hitting this would take
-another MPTCP implementation, a resegmenting middlebox, or a crafted peer.
+__mptcp_ofo_queue() runs only once per batch: at the end of
+move_skbs_to_msk(), and once per backlog spool in __mptcp_move_skbs().
+The backlog limit in __mptcp_add_backlog() is about rcvbuf * 1.5 + 64K,
+roughly 3.2 GB at INT_MAX. On fallback it is skipped.
 
->  	MPTCP_SKB_CB(skb)->has_rxtstamp = has_rxtstamp;
+Consider this sequence:
+
+  1. A peer places an OFO segment X.
+  2. On other subflows it sends in-sequence data that covers X and
+     extends more than 2^31 bytes past it, all within one batch.
+  3. The after() check above then sees X as ahead of ack_seq and keeps
+     it. The old after64() logic would have dropped it as DUPDATA.
+
+Later, about 4 GiB further on, (u32)ack_seq falls inside
+[X.map_seq, X.end_seq). X then passes both 32-bit checks. It is appended
+to sk_receive_queue by itself, because only the map_seq64 test in
+__mptcp_try_coalesce() rejects coalescing. ack_seq then advances by:
+
+	seq_delta = MPTCP_SKB_CB(skb)->end_seq - ack_seq;
+
+__mptcp_recvmsg_mskq() then computes:
+
+	u32 offset = (u32)(*seq) - MPTCP_SKB_CB(skb)->map_seq;
+
+It copies X's stale payload to the application as current stream data.
+The real data for that range is dropped as duplicate, yet it is still
+DATA_ACKed.
+
+I could not confirm that more than 2 GiB can be processed in a single
+batch with real window dynamics and lock hold times. Still, nothing in
+the code seems to prevent it.
+
+Could __mptcp_ofo_queue() keep 64-bit arithmetic instead, for example by
+comparing map_seq64 and map_seq64 + skb->len against msk->ack_seq? The
+other option would be to enforce the claimed bound on the in-sequence
+path.
+
+>  
+>  		p = rb_next(p);
+>  		rb_erase(&skb->rbnode, &msk->out_of_order_queue);
+>  
+> -		if (unlikely(!after64(MPTCP_SKB_CB(skb)->end_seq,
+> -				      msk->ack_seq))) {
+> +		if (unlikely(!after(MPTCP_SKB_CB(skb)->end_seq, ack_seq))) {
+>  			mptcp_drop(sk, skb);
+>  			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_DUPDATA);
+>  			continue;
+>  		}
+>  
+> -		end_seq = MPTCP_SKB_CB(skb)->end_seq;
+> +		seq_delta = MPTCP_SKB_CB(skb)->end_seq - ack_seq;
+>  		tail = skb_peek_tail(&sk->sk_receive_queue);
+>  		if (!tail || !mptcp_try_coalesce(sk, tail, skb)) {
 
 [ ... ]
 
-> @@ -468,6 +464,7 @@ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
->  	if (test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags)) {
->  		/* Ensure we see the updated ack_seq after seeing the flag */
->  		smp_rmb();
-> +		msk->copied_seq += mptcp_iasn(msk);
-
-[Severity: Medium]
-
-This adjustment is not idempotent. What happens if MPTCP_SYNC_SEQ is
-consumed twice?
-
-Here the flag is cleared with test_and_clear_bit() outside the msk data
-lock, because mptcp_move_skbs() and mptcp_release_cb() both drop the
-spinlock before calling __mptcp_move_skbs(). Meanwhile, softirq writers do
-non-atomic read-modify-writes of the same cb_flags word under the data
-lock, for example:
-
-mptcp_retransmit_timer()
-    __set_bit(MPTCP_RETRANSMIT, &msk->cb_flags);
-
-mptcp_propagate_state()
-    __set_bit(MPTCP_SYNC_STATE, &msk->cb_flags);
-
-Suppose one of these __set_bit() calls reads the word while SYNC_SEQ is
-still set and writes it back after the atomic clear here. The flag then
-comes back. The next consumer (another __mptcp_move_skb() or
-mptcp_release_cb()) adds the IASN to copied_seq a second time.
-rcvd_dummy_seq is already false, so the skb mapping is not rebased again.
-
-Wouldn't copied_seq then be far from every skb's map_seq? Readers would
-compute offset >= skb->len, skip all data, and the receive path would
-stall.
-
-The lockless test_and_clear_bit() came from "mptcp: drop the cant_coalesce
-CB field", but this patch is what makes a second consumption harmful.
-
->  
->  		/* Be sure to sync the eventual fastopen dummy mapping before
->  		 * any other skb lands into the msk.
-
-[ ... ]
-
-> @@ -2426,22 +2403,20 @@ static unsigned int mptcp_inq_hint(const struct sock *sk)
->  	const struct sk_buff *skb;
->  	u64 hint_val;
->  
-> -	skb = skb_peek(&sk->sk_receive_queue);
-> -	if (skb) {
-> -		if (test_bit(MPTCP_SYNC_SEQ, &msk->cb_flags))
-> -			return skb->len - MPTCP_SKB_CB(skb)->offset;
-> -
-> -		hint_val = READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
-> -		if (hint_val >= INT_MAX)
-> -			return INT_MAX;
-> -
-> -		return (unsigned int)hint_val;
-> +	if (test_bit(MPTCP_SYNC_SEQ, &msk->cb_flags)) {
-> +		skb = skb_peek(&sk->sk_receive_queue);
-> +		return skb ? skb->len : 0;
+> -		msk->bytes_received += end_seq - msk->ack_seq;
+> -		WRITE_ONCE(msk->ack_seq, end_seq);
+> +		msk->bytes_received += seq_delta;
+> +		WRITE_ONCE(msk->ack_seq, msk->ack_seq + seq_delta);
+>  		moved = true;
 >  	}
-
-[Severity: Medium]
-
-Does this over-report pending data when the TFO skb was partially read?
-
-The old branch returned skb->len - MPTCP_SKB_CB(skb)->offset. Elsewhere,
-the offset is now computed as msk->copied_seq - MPTCP_SKB_CB(skb)->map_seq
-(in __mptcp_recvmsg_mskq() and mptcp_recv_skb()). Nothing is subtracted
-here.
-
-Take a passive TFO socket where user space partially reads the TFO skb.
-__mptcp_recvmsg_mskq() advances copied_seq, but the skb stays queued
-because count < data_len. If the MPC third ACK arrives while the msk is
-owned, subflow_set_remote_key() only sets MPTCP_SYNC_SEQ.
-
-Until mptcp_release_cb() runs, copied_seq and the dummy map_seq are both
-still in the pre-IASN space. So copied_seq - map_seq is still the amount
-already consumed.
-
-The TCP_CM_INQ cmsg in mptcp_recvmsg(), SIOCINQ in mptcp_ioctl(), and
-mptcp_rcv_space_adjust() via:
-
-	copied -= mptcp_inq_hint(sk);
-
-would all count the bytes already read a second time. Should this return
-skb->len - (msk->copied_seq - MPTCP_SKB_CB(skb)->map_seq) instead?
-
->  
-> -	if (sk->sk_state == TCP_CLOSE || (sk->sk_shutdown & RCV_SHUTDOWN))
-> +	hint_val = READ_ONCE(msk->ack_seq) - msk->copied_seq;
-
-[Severity: Medium]
-
-Can this still return INT_MAX before the IASN sync?
-
-The callers (mptcp_ioctl() for SIOCINQ, mptcp_recvmsg() for TCP_CM_INQ)
-hold only lock_sock() ownership, not the msk data spinlock. Nothing
-serialises this against subflow_set_remote_key() running in softirq on
-another CPU:
-
-CPU1 (owner)                          CPU2 (softirq, msk owned)
-mptcp_inq_hint()
-  test_bit(MPTCP_SYNC_SEQ) == 0
-                                      subflow_set_remote_key()
-                                        WRITE_ONCE(msk->ack_seq, iasn);
-                                        smp_wmb();
-                                        set_bit(MPTCP_SYNC_SEQ, ...);
-  READ_ONCE(msk->ack_seq) == iasn
-  hint_val = iasn - copied_seq
-
-At that point copied_seq is still the pre-IASN value (-len plus the bytes
-read). With a hash-derived iasn, hint_val is almost always >= INT_MAX,
-which is the result the commit message says this patch fixes.
-
-There is also no smp_rmb() between the flag test and the ack_seq load. The
-smp_wmb() in subflow_set_remote_key() only orders the writer side.
-
-The final patch of the series keeps the same check-then-read window, even
-though the new mptcp_inq() adds an smp_rmb().
-
-> +	if (hint_val >= INT_MAX)
-> +		return INT_MAX;
+>  	return moved;
 
 [ ... ]
-
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index bf6ba235c268b..ebba77f05a42a 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-
-[ ... ]
-
-> @@ -559,6 +561,17 @@ static void mptcp_propagate_state(struct sock *sk, struct sock *ssk,
->  		WRITE_ONCE(msk->snd_una, subflow->idsn + 1);
->  		WRITE_ONCE(msk->wnd_end, subflow->idsn + 1 + tcp_sk(ssk)->snd_wnd);
->  		subflow_set_remote_key(msk, subflow, mp_opt);
-> +	} else {
-> +		/* Fallback (no MPTCP options at SYN-ACK): initialise the
-> +		 * sequence space to 0 so that skb map_seq starts from 0
-> +		 * to match msk->copied_seq.  Safe without deferral because
-> +		 * mptcp_data_lock() is already held.
-> +		 */
-> +		subflow->map_seq = 0;
-> +		subflow->map_subflow_seq = tcp_sk(ssk)->copied_seq -
-> +					   subflow->ssn_offset;
-> +		WRITE_ONCE(msk->ack_seq, 0);
-> +		msk->copied_seq = 0;
->  	}
-
-[Severity: Low]
-
-Is the locking rationale here accurate? The commit message says:
-
-  The writes are safe without sock_owned_by_user() deferral because
-  mptcp_propagate_state() already holds mptcp_data_lock().
-
-mptcp_data_lock() is spin_lock_bh(&sk->sk_lock.slock), and that does not
-exclude a lock_sock() owner. The owner reads and writes copied_seq and
-ack_seq without the spinlock in mptcp_recvmsg(), __mptcp_recvmsg_mskq(),
-mptcp_inq_hint() and __mptcp_read_sock(). That is why
-subflow_set_remote_key() just above defers the copied_seq update through
-MPTCP_SYNC_SEQ when the msk is owned.
-
-In practice the branch also looks like a no-op. The only caller with
-mp_opt == NULL is the fallback path in subflow_finish_connect(). It runs
-once per connection, on a freshly allocated or mptcp_disconnect()-reset
-msk, where ack_seq, copied_seq and subflow->map_seq are already 0. Also,
-subflow_check_data_avail() recomputes map_seq and map_subflow_seq for
-every fallback skb.
-
-The branch also goes against the existing "avoid updating rx path fields
-otherwise" comment in the mp_opt branch. Could the branch be dropped, or
-the comment and commit message corrected?
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1792718041.git.tanggeliang%40kylinos.cn
