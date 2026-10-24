@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792859182;
-	b=R9910kjhALkq/qzBn3EfGAcYk9guCq30SpyTixcPCBjfw52EXM93ATG4jN0v6xX36FyZ
-	 08v5J5SUG8mHXEPULEZSzO2sOUxngz3VeSotQ+dGAKEJGYIza/Y1/OywaX4IlCvoKE9CC
-	 UJk48/czxGKgPUTn3HDNmra+UO3mEF/73wII39XMtDtA8LdpmjiAHASuuQyLf+5HMy101
-	 WwecZd2fJ43GRKZrok9BOVvvJ0ZbFzbqoJzaqD3c13pERnhGPdYbyYwncs9i/dyd5fks3
-	 B0jamNCSPOiNso1CN1XcDhQEBnMuJC5kyrjF9p8P5qg9lndTXfVlu/9j2jwqLyh1hUQ==
+	t=1792881769;
+	b=USE3CKI0Gv3qk0tv+rOC9Da6ou3POUMJGnZdLXRLnmerkpgc5RI7yUcCjtgEzv4pTY8t
+	 pnX/QvqkX5c8Cw2UL2sHb8PJyr1zpX2mdV9Ll4gOg1NK4oAQJRD3c8chZEy7Bl66Z1t2A
+	 f81ZNpGwDSJwWBDVoBxZtNmKGoSN+//yqfaIpbs9IwavbcG2f6pTJDJL+vDcppHNQwYj7
+	 2xs+IUEaiLJT6/oBjfEfE7Yod4Cj8YqjgrQoVkFTGPWPBjq4pntKORimbSU+YK/ahQdVd
+	 b7LrCUJBgWEAGAmY0BitJCAbNWQJzMYr8tiodeUY6+VmB1ECU3L+5lK9hVQF9mPMNzg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792859182;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792881769;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=oW750dJo2CcYgDxEC9H8OejhE0shENt5wXhkApUwWrw=;
-	b=MIV2Dezo5mGBlfakZQYiAu/MefG78Zhgc2Vq4eVlB8gcM899RM2yRNKbJqdpMgmG8HEp
-	 NoPt70fqV3guEJdW/DL5g8jiem3AhvX06wcNjPDrlTUK/zryzBJmC7Mf1OV4hmHm94Ltg
-	 QA08PfxX9xJteKOZ1flZxSmdsITPD6jARF1ooib+ccrBoMbe0Khajdd+YVNPiuCptmook
-	 xpuQzc7JUmqdWxu5eQbl3EMa2HDydjLxuuXeY5wIyeQQMAhQc3jKnlEKGKWbYXEhifoQo
-	 BtL7cEb3sxJq9vHPef1sooBtfkIkpsoNnSd5yfShdxazzzaTuh3udofIsJua4LbxBoA==
+	bh=A1pZZCGydh9cu6mbm+6sBP/cfhZEp5gKcsoOm5NIb+E=;
+	b=Auvg1hTSZmSmM0EipBbwWz/9EWuJS9wGfN8rKuvQB6EYJ3zyMPsRAH7gvDEuayJ+0rGK
+	 zZt/KfMa/+dsLOF2vByy4PqDoQcXC1FagXpvw/IdItj/E8o+444xfAKpZawNU6yrIcc8k
+	 41fOHDRtj+phh0HlUHoPilntiWc2pwZdT8NhBI09Vl7iotndrG697C1xk+f27nqMymMNd
+	 B9/YkSJFIpMC52IHpTw+GM2DwtQLMC6c8G3ToBVr9ktuhO04m23W6cUbPPuOndX42FAQG
+	 ZKvs3Qi7N6YS54tP4KRvLi2Tt/Dttmad1Gxdzqqcdl7gWh/1LCM/YKFAuyvMaktLUdA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QlICVoBA;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OFXFqU8V;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C20E606A32A
-	for <mptcp@lists.linux.dev>; Sat, 24 Oct 2026 16:26:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4DA606A31A
+	for <mptcp@lists.linux.dev>; Sat, 24 Oct 2026 22:42:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QlICVoBA
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6C1F1F031EB;
-	Sat, 24 Oct 2026 16:26:12 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OFXFqU8V
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 701FC1F01825;
+	Sat, 24 Oct 2026 22:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792859172;
-	bh=oW750dJo2CcYgDxEC9H8OejhE0shENt5wXhkApUwWrw=;
+	s=k20260515; t=1792881768;
+	bh=A1pZZCGydh9cu6mbm+6sBP/cfhZEp5gKcsoOm5NIb+E=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=QlICVoBA/r/41GQBZ1otTfdYnKqsum0Yb+stzGSaMb5aBi4TPudazdE/22n+2lw3j
-	 3660LM4s8A6URtRbqlSoE1bfGG/0ZNrtR45JBvtuqEizLMkTug/cxOcZJvaRaTj4ev
-	 iR4CKb0DsdslqihbRhBv4WPZIm3uFpIy3/CgBtpUpKj25X6u+ORnKCzIGeOYTMsY/F
-	 oYpkWUvKQZ2TCpnBKKKKcPL0LSSG72V46fGZJ97vneUiz/2NUGNXkFiSZQJBACUZZC
-	 EDI7slGCPLgTYCo71zZ2l2e0o/+Q/J3o9aJ6GWAJqk5XG5Mg4A6Fs7cGMLZUe5TFuk
-	 OHFqs/bc9BM0w==
-Subject:
- Re: [PATCH mptcp-next v15 07/11] mptcp: implement peek_len for proto_ops
+	b=OFXFqU8V6Db3Nq8ozQxEu6E6V7O82NdDJdTr/7jjRhyGJmvbm8JDXAmgh9goMtty6
+	 GDxksialmcI/6Rj7c6ahfugNw+DFhN5XYFCJdabd/FVv7ltQBO6j8hEXkX50Z+koEP
+	 PEXwhUe1NpvA31Fz0XCKLQ37rFaTBoSvf+mGnrASWemnDDNIMYH8Ri0jmUQIMZafee
+	 tpeGXk5VTAmG+wfDbaYajLKy31enMELH+fJkurFpu+7P81jHJlC6zOv9gohAqiQt64
+	 KyOmq50jzHkZrSY+xHKX1rH0QJypIeDoeaXB7aetXEtRMzp7SoGogfSTVcKT1NIyga
+	 gaQXpEdD8ywoA==
+Subject: Re: [PATCH mptcp-next 1/2] nbd: allow MPTCP sockets
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
-Cc: mptcp@lists.linux.dev, yangang@kylinos.cn, kuba@kernel.org
-Date: Sat, 24 Oct 2026 16:26:12 +0000
-Message-ID: <179285917226.3132.1744926048999475719@kernel.org>
-In-Reply-To: =?utf-8?q?=3C7f915090708935804fe0b5a61b50e24fcd232a40=2E1792718?=
- =?utf-8?q?041=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
-References: =?utf-8?q?=3C7f915090708935804fe0b5a61b50e24fcd232a40=2E17927180?=
- =?utf-8?q?41=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
-X-sashiko-severity: Medium
+Cc: mptcp@lists.linux.dev, tanggeliang@kylinos.cn, kuba@kernel.org
+Date: Sat, 24 Oct 2026 22:42:47 +0000
+Message-ID: <179288176799.3132.8840650312946859071@kernel.org>
+In-Reply-To: =?utf-8?q?=3C1612e1611a1e5d78d651a4c1a69da38fdcf98ca8=2E1792746?=
+ =?utf-8?q?800=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
+References: =?utf-8?q?=3C1612e1611a1e5d78d651a4c1a69da38fdcf98ca8=2E17927468?=
+ =?utf-8?q?00=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
+X-sashiko-severity: High
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -64,10 +63,10 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 4 potential
+Thank you for your contribution! Sashiko AI review found 3 potential
 issue(s) to consider.
 
-Critical: 0 · High: 0 · Medium: 3 · Low: 1
+Critical: 0 · High: 2 · Medium: 1 · Low: 0
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -75,226 +74,163 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [Medium] mptcp_inq() in net/mptcp/protocol.c returns 0 whenever
-  MPTCP_SYNC_SEQ is set, without looking at sk_receive_queue.
-- [Medium] In mptcp_inq() (net/mptcp/protocol.c), the order
-  test_bit(MPTCP_SYNC_SEQ) -> smp_rmb() -> READ_ONCE(ack_seq) -…
-- [Medium] The commit message says a torn 64-bit read of
-  ack_seq/copied_seq on 32-bit systems "is caught by the INT_MAX clamp".
-- [Low] The commit message for "mptcp: implement peek_len for proto_ops"
-  contains two factual errors.
+- [High] NBD's memory-reserve setup for its socket does not reach the TCP
+  subflows of an MPTCP socket.
+- [High] Accepting MPTCP sockets lets an in-kernel, process-context
+  worker hold the NBD msk socket lock while making reclaim-capable…
+- [Medium] nbd_reclassify_socket() (drivers/block/nbd.c:1247-1274) moves
+  only sock->sk into the NBD lock classes.
 
 --
 
-mptcp: implement peek_len for proto_ops
+nbd: allow MPTCP sockets
 
-This adds mptcp_inq(), which computes the number of readable bytes at the
-MPTCP level from ack_seq - copied_seq. It is wired into a new
-mptcp_peek_len() callback for both the IPv4 and IPv6 MPTCP proto_ops. The
-commit describes this as preparatory work for an upcoming kTLS-over-MPTCP
-series.
+This patch adds an msk_is_mptcp() check to nbd_get_socket(), so NBD
+accepts MPTCP sockets as well as TCP and stream UNIX sockets. The
+stated goal is to aggregate bandwidth across several NICs.
 
-> This is preparatory work for
-> an upcoming kTLS-over-MPTCP series: no in-tree consumer currently
-> reaches ->peek_len on an MPTCP socket (the only caller, strp_peek_len(),
-> cannot attach strparser to MPTCP; the existing TLS receive path calls
-> tcp_inq() directly rather than going through ->peek_len).
-
-[Severity: Low]
-Is "the only caller" accurate? sock_has_rx_data() in drivers/vhost/net.c
-also calls ->peek_len:
-
-	if (sock->ops->peek_len)
-		return sock->ops->peek_len(sock);
-
-vhost-net only accepts packet/tun/tap sockets, so the conclusion that MPTCP
-is not reached still holds. Only the wording is off.
-
-> Note: mptcp_inq() intentionally differs from mptcp_inq_hint() when the
-> calculated value is 0 and SOCK_DONE is set.
-
-Can that state actually happen? mptcp_check_data_fin() bumps ack_seq and
-sets SOCK_DONE together:
-
-	if (mptcp_pending_data_fin(sk, &rcv_data_fin_seq)) {
-		WRITE_ONCE(msk->ack_seq, msk->ack_seq + 1);
-		...
-		sock_set_flag(sk, SOCK_DONE);
-
-copied_seq only advances by the number of data bytes in recvmsg and
-read_sock, so it never moves past the DATA_FIN. After a DATA_FIN,
-ack_seq - copied_seq is therefore always at least 1.
-
-That would make the !hint_val && SOCK_DONE branch in mptcp_inq_hint()
-unreachable. The real difference between the two helpers would then be
-N + 1 vs N for N unread bytes. Could the note be updated to say that?
-
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 7b0005d47bead..ad11a96b83eba 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -4848,6 +4848,43 @@ static ssize_t mptcp_splice_read(struct socket *sock, loff_t *ppos,
->  	return ret;
->  }
->  
-> +static int mptcp_inq(struct sock *sk)
-> +{
-> +	const struct mptcp_sock *msk = mptcp_sk(sk);
-> +	int answ;
-> +
-> +	if ((1 << sk->sk_state) & (TCPF_SYN_SENT | TCPF_SYN_RECV)) {
-> +		answ = 0;
-> +	} else if (test_bit(MPTCP_SYNC_SEQ, &msk->cb_flags)) {
-> +		answ = 0;
-
-[Severity: Medium]
-Can this branch under-report readable data on a passive Fast Open (TFO)
-socket?
-
-For a passive TFO msk, mptcp_sk_clone_init() has already moved the msk to
-TCP_ESTABLISHED, so the SYN_SENT/SYN_RECV check above doesn't filter it.
-mptcp_fastopen_subflow_synack_set_params() has also queued the SYN payload
-on sk_receive_queue with a dummy mapping.
-
-If the MPC third ACK is processed while the user owns the msk,
-check_fully_established()->__mptcp_subflow_fully_established()->
-subflow_set_remote_key() takes the deferred path:
-
-net/mptcp/subflow.c:subflow_set_remote_key() {
-    ...
-	WRITE_ONCE(msk->ack_seq, subflow->iasn);
-    ...
-	} else {
-		/* Ensure ack_seq is visible before setting the flag */
-		smp_wmb();
-		set_bit(MPTCP_SYNC_SEQ, &msk->cb_flags);
-	}
-}
-
-The flag stays set until mptcp_release_cb() or __mptcp_move_skb() clears
-it. During that time, a ->peek_len caller holding lock_sock() gets 0 here.
-recvmsg() or read_sock() can still read the queued TFO bytes in that window.
-
-The existing mptcp_inq_hint() handles the same state by looking at the
-queue:
-
-	if (test_bit(MPTCP_SYNC_SEQ, &msk->cb_flags)) {
-		skb = skb_peek(&sk->sk_receive_queue);
-		return skb ? skb->len : 0;
-	}
-
-A peek_len consumer such as strp_data_ready() treats this value as a gate:
-
-	if (strp_peek_len(strp) < strp->need_bytes)
-		return;
-
-Suppose the whole message arrived in the SYN data and nothing else follows.
-Could the reader stall in that case? There is no in-tree MPTCP ->peek_len
-consumer yet, so this would show up with the planned kTLS user.
-
-The commit message doesn't mention this case as a difference from
-mptcp_inq_hint(). Should this branch do what mptcp_inq_hint() does?
-
-> +	} else {
-> +		bool sock_done = sock_flag(sk, SOCK_DONE);
-> +		u64 hint_val;
-> +
-> +		/* Ensure we see updated ack_seq and copied_seq after
-> +		 * checking MPTCP_SYNC_SEQ flag.
-> +		 */
-> +		smp_rmb();
-> +
-> +		hint_val = READ_ONCE(msk->ack_seq) - READ_ONCE(msk->copied_seq);
-
-[Severity: Medium]
-Does this smp_rmb() give the guarantee the comment describes?
-
-In subflow_set_remote_key(), the writer stores ack_seq, then does smp_wmb()
-and set_bit(MPTCP_SYNC_SEQ). When the msk is user-owned, it defers the
-copied_seq rebase. That pairing only orders accesses for a reader that sees
-the flag set, which is what __mptcp_move_skb() does:
-
-	if (test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags)) {
-		/* Ensure we see the updated ack_seq after seeing the flag */
-		smp_rmb();
-		msk->copied_seq += mptcp_iasn(msk);
-
-Here the barrier is only reached after the flag was seen clear, and a clear
-flag says nothing about ack_seq.
-
-Take a passive TFO msk that is ESTABLISHED via mptcp_sk_clone_init(), with
-ack_seq 0 and copied_seq set to minus the TFO length, owned by a lock_sock()
-holder:
-
-CPU0                                CPU1 (BH, MPC third ACK)
-mptcp_inq()                         check_fully_established()
-  test_bit(MPTCP_SYNC_SEQ) == 0
-                                      subflow_set_remote_key()
-                                        WRITE_ONCE(msk->ack_seq, iasn)
-                                        smp_wmb()
-                                        set_bit(MPTCP_SYNC_SEQ)
-  smp_rmb()
-  READ_ONCE(msk->ack_seq)     -> iasn
-  READ_ONCE(msk->copied_seq)  -> not yet rebased
-
-hint_val then becomes iasn minus the old copied_seq. With a hash-derived
-64-bit iasn, that is almost always >= INT_MAX, so INT_MAX would be returned
-as the readable byte count.
-
-Would re-checking the flag after the loads close this window?
-
-The commit message also says:
-
-  READ_ONCE() is used instead of mptcp_data_lock() for the u64 reads of
-  ack_seq and copied_seq because mptcp_inq() will be called from TLS
-  contexts with the socket lock held - taking the spinlock would deadlock.
-
-A lock_sock() owner doesn't hold sk_lock.slock, so taking
-mptcp_data_lock() there would not deadlock. Could the data lock be taken
-when the caller owns the socket?
-
-> +		if (hint_val >= INT_MAX)
-> +			hint_val = INT_MAX;
-
-[Severity: Medium]
-The commit message says:
-
-  On 32-bit systems a torn read can produce a wrapped subtraction (close to
-  2^64), which is caught by the INT_MAX clamp.
-
-Is "caught" the right word here? The clamp doesn't reject a torn value. It
-turns it into INT_MAX, which mptcp_inq() then returns as the readable byte
-count.
-
-A torn read leaves the difference off by about 2^32, in either direction.
-It is either a small real value plus 2^32, or a negative difference that
-wraps near 2^64. Both cases end up as INT_MAX.
-
-In the lock_sock() owner context, subflow_set_remote_key() is still a
-concurrent u64 writer of ack_seq:
-
-	WRITE_ONCE(msk->ack_seq, subflow->iasn);
-
-On 32-bit, READ_ONCE() and WRITE_ONCE() of a u64 are two 32-bit accesses.
-That would let ->peek_len report about 2GB readable on a socket holding
-little or no data.
-
-tcp_inq(), which this is meant to mirror, doesn't have this problem because
-TCP sequence numbers are 32-bit. Would a retry, a fallback to 0, or taking
-the data lock in owner context fit better here?
-
-> +
-> +		answ = (unsigned int)hint_val;
-> +
-> +		/* Subtract 1, if FIN was received. Mirror tcp_inq() */
-> +		if (answ && sock_done)
-> +			answ--;
-> +	}
-> +
-> +	return answ;
-> +}
+> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+> index ffce519bf0087..2aeb22b1ad40e 100644
+> --- a/drivers/block/nbd.c
+> +++ b/drivers/block/nbd.c
 
 [ ... ]
 
+> @@ -1221,8 +1222,9 @@ static struct socket *nbd_get_socket(struct nbd_device *nbd, unsigned long fd,
+>  		return NULL;
+>  
+>  	if (!sk_is_tcp(sock->sk) &&
+> +	    !msk_is_mptcp(sock->sk) &&
+
+[Severity: High]
+Once an MPTCP socket is accepted here, does NBD's memalloc setup reach
+the sockets that actually carry the traffic?
+
+NBD marks sock->sk in nbd_start_device() and
+nbd_genl_reconnect_sock_cb():
+
+    sk_set_memalloc(config->socks[i]->sock->sk);
+
+and __sock_xmit() sets:
+
+    sock->sk->sk_allocation = GFP_NOIO | __GFP_MEMALLOC;
+    sock->sk->sk_use_task_frag = false;
+
+For MPTCP, sock->sk is the msk. The data travels on TCP subflows created
+by mptcp_subflow_create_socket()->sock_create_kern().
+
+sync_socket_options() in net/mptcp/sockopt.c copies SOCK_KEEPOPEN,
+SOCK_LINGER, SOCK_DBG, priority, mark and similar settings to the
+subflow. It does not copy SOCK_MEMALLOC or sk_allocation, and nothing
+under net/mptcp/ seems to refer to SOCK_MEMALLOC.
+
+On receive, tcp_v4_rcv()->tcp_filter()->sk_filter_trim_cap() checks
+the subflow, not the msk:
+
+net/core/filter.c:sk_filter_trim_cap() {
+    ...
+	if (skb_pfmemalloc(skb) && !sock_flag(sk, SOCK_MEMALLOC)) {
+		NET_INC_STATS(sock_net(sk), LINUX_MIB_PFMEMALLOCDROP);
+		return SKB_DROP_REASON_PFMEMALLOC;
+	}
+    ...
+}
+
+Because the msk is marked, sk_memalloc_socks() is enabled, and drivers
+can pass up pfmemalloc RX skbs under memory pressure. Wouldn't every
+NBD reply, and every retransmission, that arrives in such an skb be
+dropped at the subflow?
+
+Transmit allocations on the subflow (ACKs, SYNs, retransmit clones via
+sk_gfp_mask(ssk, ...)) also keep the default GFP_KERNEL. Subflows that
+the path manager adds later through __mptcp_subflow_connect() start
+with the same defaults.
+
+With swap or dirty writeback on an NBD-over-MPTCP device, can this
+stall or livelock reclaim? Preventing that for TCP is the reason
+sk_set_memalloc() is called. The commit message does not mention this
+limitation.
+
+[Severity: Medium]
+Does nbd_reclassify_socket() still cover the socket locks NBD takes
+when the socket is MPTCP?
+
+nbd_reclassify_socket() only reclassifies sock->sk:
+
+drivers/block/nbd.c:nbd_reclassify_socket() {
+	struct sock *sk = sock->sk;
+    ...
+	case AF_INET:
+		sock_lock_init_class_and_name(sk, "slock-AF_INET-NBD",
+    ...
+}
+
+This helper came from commit d532cddb6c60 ("nbd: Reclassify sockets to
+avoid lockdep circular dependency"). For MPTCP, only the msk lock moves
+into the NBD class.
+
+Every NBD send also takes subflow locks through
+mptcp_sendmsg()->__mptcp_push_pending()->lock_sock(ssk). Subflows are
+kernel sockets from sock_create_kern(), so they share the
+k-sk_lock-AF_INET/AF_INET6 class with every other MPTCP subflow on the
+system.
+
+Ordinary MPTCP user sockets allocate with GFP_KERNEL while holding a
+lock of that class. The path is
+__subflow_push_pending()->mptcp_sendmsg_frag()->mptcp_alloc_tx_skb():
+
+    gfp_t gfp = data_lock_held ? GFP_ATOMIC : sk->sk_allocation;
+
+That records a k-sk_lock -> fs_reclaim dependency. Meanwhile, NBD I/O
+issued under the block layer's reclaim ordering takes the same class.
+
+Could this bring back the fs_reclaim/sk_lock circular dependency report
+that d532cddb6c60 suppressed, this time through the subflow lock class?
+Nothing seems to reclassify subflows, including the ones the path
+manager creates later.
+
+[Severity: High]
+Can accepting MPTCP sockets lead to a deadlock between reclaim and the
+msk socket lock?
+
+mptcp_worker() runs on the system workqueue and holds the msk lock
+while it runs the path manager and closes subflows:
+
+net/mptcp/protocol.c:mptcp_worker() {
+    ...
+	lock_sock(sk);
+    ...
+	mptcp_pm_worker(msk);
+    ...
+	if (test_and_clear_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
+		__mptcp_close_subflow(sk);
+    ...
+}
+
+>From there, __mptcp_subflow_connect() calls
+mptcp_subflow_create_socket()->sock_create_kern() and
+subflow_ulp_init()->subflow_create_ctx(sk, GFP_KERNEL). The subflow
+close path also calls mptcp_close_ssk()->mptcp_event(..., GFP_KERNEL).
+None of this runs under a memalloc_noio scope.
+
+If direct reclaim in that worker waits on swap or writeback to the NBD
+device, the NBD I/O needs the same msk lock:
+
+    nbd_queue_rq()->sock_xmit()->mptcp_sendmsg()->lock_sock(msk)
+    recv_work()->sock_xmit()->mptcp_recvmsg()->lock_sock(msk)
+
+Wouldn't the worker and NBD then wait on each other?
+
+There is also a self-deadlock case. If the worker's own reclaim flushes
+a plug into the BLK_MQ_F_BLOCKING nbd queue from the worker's own
+context, lock_sock() would wait on an msk that the same task already
+holds.
+
+The memalloc_noreclaim_save() call and the sk_allocation setting in
+__sock_xmit() only cover the NBD task and allocations that use
+sk_allocation. They do not cover explicit GFP_KERNEL allocations in the
+MPTCP worker. With plain TCP, no in-kernel process context sleeps in
+reclaim while holding the NBD socket lock.
+
 -- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1792718041.git.tanggeliang%40kylinos.cn
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1792746800.git.tanggeliang%40kylinos.cn
