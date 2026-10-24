@@ -1,59 +1,92 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.176
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792799110;
-	b=U5HyMrKsrp2tr3PRh7JQXzLxkYihOwf2PJG5NMccZz1Hv9BRK486coCciNCnz0fSBUlU
-	 nK5R3s0SaCt0CGoNga+3adSjE5P41DwwpEMBpBW1R2OeeE0/yccYUC6b4bgn2JqsVblrR
-	 1Q54L8V9YVrohGzT3ac/twqc8VSJ4g4feYHM/eDAdHaMjywfEtBmnNXrEjGMssDDUS4bN
-	 gKWZiIcCEXhvBMMLIevC+4r6nYpeBU4iqTAoy+HTQFsx+Y/8wj2flNgj0lQfHiUoY+D+L
-	 nbw0hbvRzULZ3IPIN5MF9m1WKs2V3m1Jlcl15WIluHWavF8Q5ejD6u93GteKZEz9/CQ==
+	t=1792821899;
+	b=SibKsYwudNh+YTRf0l7UfwchRjCaX8pjHAtJo163Ws7PHhldFxH7Y3ljtRLxofD1CnuL
+	 LBQYscZS+JQpWvy0h9qWlCMpl2Dp+p05qVukA89mlAFB0JC6FPZ02QOWW/pgR7xhRdlPJ
+	 +n3qOdsoEegF33GMV/tYpISrhwYXaXqLBuWkVPFCFT8+Vplj8kH13weT52w3upczFbeim
+	 2wUyax7MEFvJf+ckqoKQSke7OvOt4fVh6EOqGee3ufaDoFIhmuaYX0VetFtrze+9tjlsk
+	 /1EMiiUyWLgfzv7KUDOfbT3LT3YTo9Z8I3PDM4NGJ5RFcZMUwGeOz6mAy/FIBRniKXQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792799110;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=s0o3D+PmBGoyfGPorsJgKVylCQEgoQ5lUAcayUAABEc=;
-	b=e0liBg6z7twjqrOop80zB2KU0sOL3hRWQCLbEF+p7FYmef5jlAtc4rJzinYki/07BY8D
-	 rXJwQyRwY3Tv0WeHidR9dFwSD4hxp4F5vhgVzYh8JLx73Feb/e3w16oK28lUWNTjMGgy2
-	 Zrmyr3P766Yi9zTtmiGIZ2og3vaPHdM6zWFJbFMv1pBLnDV5iwdxM+EgviPdrGoO26H1s
-	 inqNVo7ooJRQf5ksVNnV2kRJBmCPPT2iGhSq8mfb3k6vLKWLBTzr6swxvnpyXPuD1rOqR
-	 TerGtAHn1OGqDnqEjAjKyVpsGPI3gCvb6EjFFGF5MJjIKmlr4xiCCRx0lSwBm8suqqQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792821899;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
+	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
+	 Date:MIME-Version:Content-Type;
+	bh=q4olno8II5dwNhcjboptZN9dtmLgk5iBrVQuq6cgPS4=;
+	b=C4ZTO9fKntm0BH8EL+FZ/RGENbB0B3hUn5b5T5GNTmX8ltHLbRWk73sGKoYp5zIdpr3t
+	 mTKIY6jPCtbXmt0kiTC5ScWj6bdq69F9GwrRZdSITTJtiXdLqvIrudITmbRusokIng8d9
+	 KyaGIZEcTSbA21ctAT1vyROkIvEDe8jshipBCs7+eox/r4ilmDPz1EyGghQeNe6gY76S9
+	 KfPLkEiOkMSD+YutcBnwizG00Fiah2rgyROZJcH3REfzzq+7M63G2YpuVWAE0NnJwtTag
+	 rcfJ/AdQTPtE9JIeUySYQjZe4PAOet8iRgPCMp6X/XravA1yV4E6j76n5aNX1ak2oDA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kM3ujoDm;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=NMrCT47L;
+	arc=none smtp.remote-ip=209.85.222.176
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4234606A31F
-	for <mptcp@lists.linux.dev>; Fri, 23 Oct 2026 23:45:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34804606A31A
+	for <mptcp@lists.linux.dev>; Sat, 24 Oct 2026 06:04:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 34804606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kM3ujoDm
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC8161F01825;
-	Fri, 23 Oct 2026 23:45:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792799109;
-	bh=s0o3D+PmBGoyfGPorsJgKVylCQEgoQ5lUAcayUAABEc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=kM3ujoDmYVc0NGefj54k2PDMOULJRToXJITlXZM/QZNJFhrhpF247YidNsICWFa41
-	 rHI7sdKIukWqdEolKZ7bv4/6xND0hCqwsMRHiOICtjbrIRdErLweZ9CVLk/MV0QKmz
-	 yrQAjCWylA58YPIHZxi8jEQJrNh+PHDtiZim4lFENHQbw4Z/TwlOLEUS8PfrvbfqwD
-	 PQrXCfhF9C4wn1GxIOw48OH5PN144owEsCJFlpVYzp//jsTusvPdY4z9yRYxNXtcSB
-	 /+dJE3sJS5NPm1sHLZsDyzdxm713oN6IZNy9HxhN0GYk0IwJ+XvAl+JIFYSSCuhREi
-	 Lp5CC3qUv8hIQ==
-Subject: Re: [PATCH mptcp-net v2] mptcp: pm: kernel: c-flag: mark as used only
- when it is
-From: netdev-bot+sashiko@kernel.org
-To: matttbe@kernel.org
-Cc: mptcp@lists.linux.dev, yimingqian591@gmail.com, kuba@kernel.org
-Date: Fri, 23 Oct 2026 23:45:08 +0000
-Message-ID: <179279910840.3132.11347843926681774689@kernel.org>
-In-Reply-To:
- <20261022-mptcp-pm-cflag-clear-when-used-v2-1-8c7fbe166b74@kernel.org>
-References:
- <20261022-mptcp-pm-cflag-clear-when-used-v2-1-8c7fbe166b74@kernel.org>
-X-sashiko-severity: Medium
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=NMrCT47L
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-93f2ed2541aso118922785a.0
+        for <mptcp@lists.linux.dev>; Fri, 23 Oct 2026 23:04:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792821898; x=1793426698; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=q4olno8II5dwNhcjboptZN9dtmLgk5iBrVQuq6cgPS4=;
+        b=NMrCT47LNXzjWkS5og1St4j9FvQjQAUa/InI2tTbXJiDZeJwF1ERrSPy6f/4KImsuv
+         P1Y2gZyhji9feBbCYLTvZBfgV1KaCcuU+ai7jtUa+NN2Vro/RtO2EwJR/0BPd1K5U4Jx
+         kphdS+EvOcutQ4/0Ef+3YIzIPOOB15P4hRk9CLxYps7h/HXaXUQEJMmjwbT4E4ccHVbL
+         FBGHYjxPupIljqM5x5cj02EEdHoH/hAc3FYWgwrB48LW6GDUpfquuF95J8mI+QPIcVSW
+         sqvPPbmpmkC7vtVsjVTh5OqMMsMB3qxEOXaoUWxRt6TBo+rdVYxkBvvilxsoGG4gUiIm
+         c1Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792821898; x=1793426698;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=q4olno8II5dwNhcjboptZN9dtmLgk5iBrVQuq6cgPS4=;
+        b=uEJcp8Eea952JQC09L6mpThf+PGXBjpBn6rVZogIG9VRCPSSQwE1pPUo9e9L6DwxZx
+         vVzVmJHL5gTKRBP2UC3L0qouhiwIICV310bQ0J/Jil5CqBlt7o+h/x+EBJsw6poXNiOM
+         H9aFsOe5mU2+0Zn2ea9My+k42EfciZNKlIxEygPS4C1N1lkOvEQVhckgMJvW0MVYWP6j
+         WNOjDFtWHFLAygpKFC41TADLdg8WcO/bTfF/Pfky+RX3kmqu49KiygGB/Mk5nPt1bd30
+         kOllV1dsY/Ps+W/UGNjEhc74bGtjl8OkJ4XJgGLvsXZs963Olo/HCUMDD2bpVcRAlIlZ
+         iZpQ==
+X-Gm-Message-State: AFq9FYKY/LcVylFXr/0bj7O3e25R+0AkM5bcMDz7MljCl9qGArbAy5fT
+	faQOV6EJ2P061LK2HlZol8nT3be2qtHaY75PTovdga4datJ4KP0dIzafBgDG
+X-Gm-Gg: AYBFou3W/YGjFNl46GHmEuY97PeXA/+ZBi1tT3Q1wFAXm79q4qcs8CyOzomgLbiYOiB
+	3ucDMA1se1T6osPbxYWxUt0fzrjkBnzk/1YGcJr4md1DslzgQTCzm6jYtFaOj/NEYq/L72tDKbI
+	j9HZm9Zi8z9mI7Yv/Gd/t8V8TK300nqxKygWt2rtv4fWtxygA955CZ+drIh5DHMCCOk746Y3uph
+	LRALdZ/vaMpM+4bCO6HTnhXDusD89AmqBWJ+VDoBQIwQXvNNRpMytSr4L91g/rdWgrexjeFMJ5D
+	6Ax+OTaenIRS2OgcrctQXgtk+N7mHnvq2KY4GVyk0nEcBHWIlbtlSmBTRXHH+CHl7aeAQnZKvhC
+	RwC8pVBiAsM0JPZwbJQW7e4IvL94lqBe7QtU0dpZg4omEPgLpwwWSb0V5qIjA1DCplXK8WePeNI
+	SfRCq+18SMaVvchg6cV18bwDP4H+856hOt+NZQrZOVRZ0fR1UYpOzGdTo6j7EzbDZxHTI75X/kK
+	fOb4AvBV715P4C6bfQaZpeHYbUlo+yCMF6WoIZMYfWK8PUEBH/SBLbU/He2P8VJ4fMD5A==
+X-Received: by 2002:a05:620a:4146:b0:93c:891b:90f1 with SMTP id af79cd13be357-940ef987567mr156205485a.26.1792821898017;
+        Fri, 23 Oct 2026 23:04:58 -0700 (PDT)
+Received: from github.com ([20.124.87.177])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-940f066a5bcsm104843285a.13.2026.10.23.23.04.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Oct 2026 23:04:57 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1792746800.git.tanggeliang@kylinos.cn>
+References: <cover.1792746800.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next 0/2] Add MPTCP support for NBD
+Message-ID: <32ef3240-9e62-abcc-9a85-78aec545d2d7@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 24 Oct 2026 06:04:56 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -63,100 +96,58 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue(s) to consider.
+Hi Geliang,
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 0
+Thank you for your modifications, that's great!
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
+Our CI did some validations and here is its report:
 
-- [Medium] The subject and first paragraph of the commit message describe
-  a different fix from the one in the code.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf: Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_n=
+et-next/actions/runs/39933748069
 
---
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/04bb6f5fad=
+a2
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1191964
 
-mptcp: pm: kernel: c-flag: mark as used only when it is
 
-This patch changes fill_local_addresses_vec_c_flag() so that
-local_addr_used is incremented before the address family check. The
-counter then stays consistent when endpoints are removed. Without this,
-removing endpoints could decrement local_addr_used below zero and
-trigger a warning in __mark_subflow_endp_available().
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-Closes: https://lore.kernel.org/20261006114409.117190-1-yimingqian591@gmail.com
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-> mptcp: pm: kernel: c-flag: mark as used only when it is
->
-> The ID was marked as used before checking if it could actually be used
-> in all conditions: if the families match and the local endpoint is not
-> the one linked to the initial endpoint.
+For more details:
 
-[Severity: Medium]
-Do the subject and this first paragraph match what the diff does?
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-In fill_local_addresses_vec_c_flag(), the bitmap update still happens
-before both checks, and the patch does not move it:
 
-    __clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-    if (local->addr.id == msk->mpc_endpoint_id)
-        continue;
-
-    msk->pm.local_addr_used++;
-
-    if (!mptcp_pm_addr_families_match(sk, &local->addr, remote))
-        continue;
-
-So an endpoint whose family does not match the remote address, and which
-never gets a subflow, is now counted as used in both id_avail_bitmap and
-local_addr_used. That is the opposite of "mark as used only when it is".
-
-The code itself looks right. select_local_address() returns the first
-subflow endpoint that still has its avail bit set, so the loop has to
-clear the bit to make progress. If it skipped mismatched endpoints
-without clearing their bit, the loop could spin forever on the same
-endpoint.
-
-The actual fix is keeping local_addr_used in step with id_avail_bitmap,
-which is what __mark_subflow_endp_available() relies on. Only the final
-paragraph ("increment local_addr_used similar to ...") says that, plus
-the v2 changelog below the "---", and that changelog is dropped when the
-patch is applied.
-
-Could the subject and the opening paragraph be reworded to describe that
-instead, something like "c-flag: keep local_addr_used in sync with
-id_avail_bitmap"?
-
-> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-> index d3014bf57bf3c..fb611c4b3eb8d 100644
-> --- a/net/mptcp/pm_kernel.c
-> +++ b/net/mptcp/pm_kernel.c
-> @@ -584,13 +584,15 @@ fill_local_addresses_vec_c_flag(struct mptcp_sock *msk,
->  
->  		__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
->  
-> -		if (!mptcp_pm_addr_families_match(sk, &local->addr, remote))
-> -			continue;
-> -
->  		if (local->addr.id == msk->mpc_endpoint_id)
->  			continue;
->  
-> +		/* Increment before checking families, similar to non C-flag */
->  		msk->pm.local_addr_used++;
-> +
-> +		if (!mptcp_pm_addr_families_match(sk, &local->addr, remote))
-> +			continue;
-> +
->  		msk->pm.extra_subflows++;
->  		i++;
->  
-
-[ ... ]
-
--- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261022-mptcp-pm-cflag-clear-when-used-v2-1-8c7fbe166b74%40kernel.org
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
