@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792859174;
-	b=s3PQ7T3OXnpZ4HposLARwZp6N+3UM7w0tz80FYAzpkh7MGAJuYOQnNri1aKGd5Dyq6mC
-	 TTa2BDS0LUcng2XCB/PoRHwDRwLdY3AqXjQJ3A00NsE/BwSGidZaRSJLOje67WtIP+FYM
-	 HrjrIQcGNg4Pa6gnIaSjlDqbaRcDjaebw3FBfTHUu3w8d9FD6loUGDUMwkB+77vPvmFlr
-	 c360Wlz3NyOmu4y7rpkf50d5tBVwT3ZJMLHQWHrpNrpXvIyL+lqzY9m5img+5rt23tnEn
-	 L/nqzC4ZhwoowUWPEh+mkdgtANmzWroDwHu9M559OSmRAzV4DLlPX5+77OsdKeLVN3Q==
+	t=1792859175;
+	b=JfOSWdlBzT8ZDDP7ln188w8n5Z8rZZRrZ5V1Eg802ja/gYP8OqsBnztcg0qWlWfh5WoL
+	 GYaBwmB5+RHidqlxB+18rADxzQGeLTIfgNbV0UD0wLsPkjiGk9kg/CO2/QK+0DmQoLEp9
+	 pghbAQn4CBtHT2JlGQZPO0wfDfLZX7Hnff6u6ETgBR215krwwRRfGLnLhorUG7NYix0Gu
+	 1erTxcxXnQrhQCDDrgcg86Zdx5bQroPhSRO6ZbioU9oR0sI3KCTWjBH6tG2OA/Aa0J/Pw
+	 E6K4ggmoQKak7kK1gABLQlq0ob8IL3Eaoy116Ml1ZueZqrADzijEQ6p2RiupKRFnGzg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792859174;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792859175;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=lzz1YsW2a6XnYDT1uUA/zcXGXIMEREz6EfKQbXvgHgA=;
-	b=mtEIr6cqMsW02pRqrSS2wMyUmcION1shVS1ViBQ1+3KkYggTICbo3mh+7wguwLm8Hw1f
-	 3RcPzl/dpJcavNCrSH10bkwoD7a6Q+gaJwXgu3BKQK7O3Ib8eL+awIJzaiPO2zuBVZDdW
-	 /aVNSQaHpTab0f6IiDmv8u1i0cy3YZQJHXCkfmwVJ8AimGQTjE3dsE9nLwA4cmDThE/xd
-	 Pn/WYHQEomOndbZkztqOQWW+jF8e1v+HQla7Lx1x2GXHA2pjVLipjhJJaWjSYvA35vKYd
-	 x1ZkRHA6uZoPGNMddC1JEMnh0rszEzfbku5EFqJu6OhbDOkL/DYFT3KAva1yF52mI8w==
+	bh=rEYvHdhBa3LszUOn6NvnbQU7HVKpJnGhOfI1tUGT76U=;
+	b=ZsrB5cqrzRUkde6Gk9ggnhxycCumvJQEOt7x8QMbxuPGvtRnpyz2gq/jtyD+igLlAwiv
+	 VCNEohezKss4VrudagtzwEh8QPhOQ4MjgNo3DaWdjgBhSix8NMKRwRVrtT5KCFIISspIU
+	 A134Y7l+7UtchC6PSF1FtchLsejSUoFbKtrwzQpLG5ZLE3lx/rpdkYaVAm3LY+wEwUBTc
+	 icnMGEdETLI9wrW+20wJ+Aqj2a+/B/9wiIk80klaBnR+A0WDL4Au2DysQtPH8CBhgBhUC
+	 bnZXR/XtdHgV6PHRvMF6ZMi3gUw3t0ABK8DoHvvwjJV2Q0Byr1o6c4gLgIrauNoPalw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fmNJ7Zas;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QDOpDJQJ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D072E606A329
-	for <mptcp@lists.linux.dev>; Sat, 24 Oct 2026 16:26:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F25606A323
+	for <mptcp@lists.linux.dev>; Sat, 24 Oct 2026 16:26:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fmNJ7Zas
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77CA51F01828;
-	Sat, 24 Oct 2026 16:26:13 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QDOpDJQJ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 539BC1F01828;
+	Sat, 24 Oct 2026 16:26:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792859173;
-	bh=lzz1YsW2a6XnYDT1uUA/zcXGXIMEREz6EfKQbXvgHgA=;
+	s=k20260515; t=1792859174;
+	bh=rEYvHdhBa3LszUOn6NvnbQU7HVKpJnGhOfI1tUGT76U=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=fmNJ7ZasTez4nsPTLO48SMqFNtq+ERTcgEyiOXrsC9KPqbXE+HzMOoi09lRMtbOLM
-	 BRcsLWTd7PaiOLr5duFwNi4d7v5DYHPFblxNlDc+0bCAaepuw8pbl70tn9kBw5AZaS
-	 2S4Wlg2vJVlya8owvrrLQ/RHlvSniBNX2Djtc2ejnRRm/i4nEnVrZXf2wBke+movB6
-	 ig5B0CL1YrnnSL72Q9ZPy7U7QxSIVSh/pW0U28p80cXbpIRiHVWzguvKuV9HSzJTTP
-	 /rUUOCVAxcw0guTDyAlE1R+xuwU98sedx6sVnVyLzHyMRmkIug+6Xo5Y1NwewXxsAy
-	 raWGzr8o1GJRg==
-Subject: Re: [PATCH mptcp-next v15 09/11] mptcp: track app-limited state in
- mptcp_sendmsg
+	b=QDOpDJQJQYqsPyq4+CS5DwVzW+dxeRXg3skg06rSybRsnlziVPS/OjT4pcFFH3uKn
+	 LmvZL2y+X0VGwLKXZ7gxBhEsbdv1kOzSLNI6ayePyNqOwWdMRzdZg7l5NCt9v/nivh
+	 TpycLs5dYbb2k/6BXCcFa/ezT+99s6L4vlt0gw3B3Lcta03yxLWfF0s45zNCcOJZFy
+	 vC8TONlHv2/9dnCGRubIDWiNLfoHtlxMIcCu9yEBB+HrUSJSrFD0J3njZSRVcvu5aP
+	 UvKjpiTcxvaKcJLemXF9NGIQUAwygEFfGHwAnSD5I8ixubvfLaQUEjy0c1ytLHeqy8
+	 5p9AP1lB7TAhA==
+Subject:
+ Re: [PATCH mptcp-next v15 10/11] selftests: mptcp: sockopt: check app_limited
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, yangang@kylinos.cn, kuba@kernel.org
 Date: Sat, 24 Oct 2026 16:26:13 +0000
-Message-ID: <179285917304.3132.6958669428424790164@kernel.org>
-In-Reply-To: =?utf-8?q?=3C38d46163209730399bc8927b0e37cdd79f9c4b70=2E1792718?=
+Message-ID: <179285917388.3132.154779516364059270@kernel.org>
+In-Reply-To: =?utf-8?q?=3C24897c9e72a3f0a2d489dcd7f1c2413eef88c85a=2E1792718?=
  =?utf-8?q?041=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
-References: =?utf-8?q?=3C38d46163209730399bc8927b0e37cdd79f9c4b70=2E17927180?=
+References: =?utf-8?q?=3C24897c9e72a3f0a2d489dcd7f1c2413eef88c85a=2E17927180?=
  =?utf-8?q?41=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
-X-sashiko-severity: Medium
+X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -64,147 +64,103 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issue(s) to consider.
+Thank you for your contribution! Sashiko AI review found more severe
+issue(s) in other patches of this series. This mail is only an FYI, in case
+you want to address the nit picks below when you respin.
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 1
+Low priority / nit picks for your consideration:
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
-
-- [Medium] The new early-return check in mptcp_rate_check_app_limited()
-  (net/mptcp/protocol.c:2066-2067) is incomplete.
-- [Low] The From/Signed-off-by addresses do not match in commit "mptcp:
-  track app-limited state in mptcp_sendmsg".
+- [Low] The new assertion
+  `assert(s.tcp_info.tcpi_delivery_rate_app_limited == 1)` in…
 
 --
 
-mptcp: track app-limited state in mptcp_sendmsg
+selftests: mptcp: sockopt: check app_limited
 
-This commit adds mptcp_rate_check_app_limited(), which runs
-tcp_rate_check_app_limited() on every subflow under the subflow socket
-lock. It returns early when msk->write_seq != msk->snd_nxt. The helper is
-called from mptcp_sendmsg_locked() so that subflow rate samples are marked
-app-limited when the MPTCP connection is application-limited.
+This patch extends the TCP_INFO readback at the end of
+connect_one_server() in mptcp_sockopt. It now asserts that
+tcpi_delivery_rate_app_limited is 1, which is meant to guard the
+subflow-side app-limited accounting added in the preceding commit.
 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> index b8158a1198eba..f7a45b93cbe06 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> @@ -635,6 +635,11 @@ static void connect_one_server(int fd, int pipefd)
+>  	do_getsockopts(&s, fd, total, total);
+>  
+>  	assert(s.mptcpi_rcv_delta == (uint64_t)total);
+> +
+> +	/* app-limited accounting requires a recent kernel */
+> +	if (expect_all_features())
+> +		assert(s.tcp_info.tcpi_delivery_rate_app_limited == 1);
 
 [Severity: Low]
-This isn't a bug, but the author address (geliang@kernel.org) and the
-Signed-off-by address (tanggeliang@kylinos.cn) don't match. checkpatch
-reports this as FROM_SIGN_OFF_MISMATCH.
+Can this assertion tell the new accounting apart from the default value?
 
-Other patches in the same series sign off as geliang@kernel.org. Should the
-Signed-off-by use the author address, or should the patch body carry a
-From: line that matches the Signed-off-by?
+Every subflow starts out with the flag already set to 1:
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 086de4f3100e0..7870b9be76c79 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2058,6 +2058,24 @@ static void mptcp_rps_record_subflows(const struct mptcp_sock *msk)
->  	}
->  }
->  
-> +static void mptcp_rate_check_app_limited(struct sock *sk)
-> +{
-> +	struct mptcp_sock *msk = mptcp_sk(sk);
-> +	struct mptcp_subflow_context *subflow;
-> +
-> +	if (msk->write_seq != msk->snd_nxt)
-> +		return;
-
-[Severity: Medium]
-Is the sequence comparison alone enough to detect unsent data at the
-MPTCP level?
-
-During failover or stale-subflow recovery, __mptcp_retransmit_pending_data()
-re-injects the rtx queue without moving snd_nxt back:
-
-net/mptcp/protocol.c:__mptcp_retransmit_pending_data() {
+net/ipv4/tcp.c:tcp_init_sock() {
     ...
-	msk->recovery_snd_nxt = msk->snd_nxt;
-	msk->recovery = true;
-	mptcp_data_unlock(sk);
-
-	msk->first_pending = rtx_head;
-	msk->snd_burst = 0;
+	tp->app_limited = ~0U;
+	tp->rate_app_limited = 1;
     ...
 }
 
-mptcp_update_post_push() only ever moves snd_nxt forward. So if the
-application had already handed all its data down before recovery started,
-write_seq == snd_nxt while mptcp_send_head(sk) still returns re-injected
-data.
+tcp_get_info() then reports tp->rate_app_limited ? 1 : 0.
 
-That backlog can last until the next sendmsg(). Some ways this happens:
+The SYN is sent while app_limited is still ~0U, so tcp_rate_skb_sent()
+tags it with is_app_limited = 1. The handshake sample therefore writes 1
+again.
 
-  - mptcp_subflow_get_send() returns NULL because the best subflow is not
-    sk_stream_memory_free()
-  - __subflow_push_pending() bails out on a mptcp_sendmsg_frag() error
-    without advancing first_pending
-  - __subflow_push_pending() stops on !sk_stream_memory_free(ssk)
+The only writer of rate_app_limited is this block in tcp_rate_gen():
 
-On the next sendmsg(), this guard passes and every subflow that looks idle
-at the TCP level gets tp->app_limited set. Later in the same
-mptcp_sendmsg_locked() call, __mptcp_push_pending() pushes the re-injected
-data onto those subflows. Their delivery-rate samples are then flagged as
-app-limited when they should not be.
+net/ipv4/tcp_input.c:tcp_rate_gen() {
+    ...
+	if (!rs->is_app_limited ||
+	    ((u64)rs->delivered * tp->rate_interval_us >=
+	     (u64)tp->rate_delivered * rs->interval_us)) {
+		...
+		tp->rate_app_limited = rs->is_app_limited;
+	}
+    ...
+}
 
-With BBR, bbr_update_bw() skips app-limited samples that fall below the
-current max_bw estimate:
+That block is skipped for invalid samples (!rs->prior_mstamp, SACK
+reneging, or rs->interval_us < tcp_min_rtt(tp)). With the preceding
+commit applied, it is also skipped for an app-limited data sample whose
+bandwidth is lower than the SYN sample's.
 
-	if (!rs->is_app_limited || bw >= bbr_max_bw(sk)) {
+So with the fix, the 1 seen here may just be left over from init or the
+handshake. Without the fix, the assertion fails only when a valid,
+non-app-limited data-ACK sample overwrites the default.
 
-So the surviving subflow's bandwidth estimate cannot drop during the
-failover. tcpi_delivery_rate_app_limited is also misreported.
+In the common lossless veth case that overwrite does happen, so a revert
+would most likely still be caught. Still, the check does not prove that
+the data sample itself was flagged app-limited.
 
-mptcp_check_send_data_fin() asks the same "nothing left to push" question
-and checks both conditions:
+The msk->write_seq != msk->snd_nxt early return in
+mptcp_rate_check_app_limited() is also never exercised. Would
+over-marking go unnoticed by this test?
 
-	if (!msk->snd_data_fin_enable || msk->snd_nxt + 1 != msk->write_seq ||
-	    mptcp_send_head(sk))
-		return;
+The commit message also seems to describe the mechanism inaccurately:
 
-Should this helper also return early when mptcp_send_head(sk) is
-non-NULL?
+> Without the preceding commit, mptcp_sendmsg() never updates the per-subflow
+> app-limited state, and this field stays at 0 - the assertion would fail.
+> With it in place, the value is forced to 1, turning this into a regression
+> guard for the subflow-side application-limited accounting.
 
-This also affects the commit message, which says:
+Based on tcp_init_sock() and tcp_rate_gen() above, the field does not
+stay at 0 without the fix. It starts at 1 and is cleared only by a valid
+non-app-limited data sample. With the fix, it is not forced to 1 either.
 
-  The helper bails out early when MPTCP still has unsent data
-  (msk->write_seq != msk->snd_nxt), because in that case the subflows may
-  look idle only because mptcp_sendmsg_frag() has not pushed data down yet
-  [ ... ] and marking them app-limited would be wrong.
-
-If the check is extended, could the commit message be updated to match?
+Could the message be updated to reflect this? Could it also name the
+commit it depends on ("mptcp: track app-limited state in mptcp_sendmsg")
+instead of saying "the preceding commit"?
 
 > +
-> +	mptcp_for_each_subflow(msk, subflow) {
-> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-> +		bool slow;
-> +
-> +		slow = lock_sock_fast_nested(ssk);
-> +		tcp_rate_check_app_limited(ssk);
-> +		unlock_sock_fast(ssk, slow);
-> +	}
-> +}
-> +
->  static int mptcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t len)
->  {
->  	struct mptcp_sock *msk = mptcp_sk(sk);
-> @@ -2086,6 +2104,9 @@ static int mptcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t len)
->  
->  	timeo = sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
->  
-> +	/* is sending application-limited? */
-> +	mptcp_rate_check_app_limited(sk);
-> +
->  	if ((1 << sk->sk_state) & ~(TCPF_ESTABLISHED | TCPF_CLOSE_WAIT)) {
->  		ret = sk_stream_wait_connect(sk, &timeo);
->  		if (ret)
+>  	close(fd);
+>  }
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1792718041.git.tanggeliang%40kylinos.cn
