@@ -1,95 +1,93 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.178
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.169
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792943935;
-	b=NlekqINx/b7v0vD9vy4IpX5be5Hq7B/+9zlgnOCrwZ4AgGbtLRRyYrGH8x1EutKh9Jbl
-	 iG1pU8y+x6sIFQT9zhRxZUWwnNiEMdq/qmJ0zAkPKNzQdFT4VwhyqWuSPbucglQ8jKTxG
-	 zubMGJREVNCmXe1pAimvVDhVCmAsH39mdo+59lS0VsijqG+8GnlTDvLauDX62rgaUOZwK
-	 kb8j7NVav46nGmGFWhLoxuymzN+kUZDNwLl4+mug6Sp3Ic+JsH8HmauPzL5kIPJIG0DBZ
-	 nUt2yNua2J/JNHfGV1lgi7+8eDOlniFIlUQH0L6dDDs7GEWzOrvyyyi/vfVR2B+RJTA==
+	t=1792956208;
+	b=3NuP12dliwv7emyR2Todf181w8HgvRjgTIZch34JV82S3LWVy0CzCYKU+As7ZLqHGVmb
+	 KaTwlJL0O6PXt73aNmw990vX79584DIJE1ABJ9guDn4amq8XPwISpGVm4MotF14CLN34a
+	 Vku9ZZJm38EbFmhMcXMmXCg1oQddxuSShynusmJTr25apzcX8eM8EdBJpT+VYRWHnZZRr
+	 LVDv1T068VJKr7TlowuusN4jadHMfJ9eaIrajXev/u5AVy81zIRuzrzWXKgLJ2Tdh2tqF
+	 Pr4MwAjFl/wOxijfoiOn8NlLo7ltZlY+XC6YFJaLps9bMkPdPEgzbz6K3dBSCNnCkNg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792943935;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792956208;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=QjUXQ9U3FZL0zXzmfqMQXfHQBs3OYet1zCK6SBcITr0=;
-	b=GVIHDcDLqQg7c2gU9a87nuCqmhEQ7uMeUTf9oP71nrO5NRbBVnj4aXwzi4ek2/pnhxZC
-	 /ap3Fs/nwVnLVfv7SgZM+4ASSjdjjzeWgSDWVhY/fKE2JAfdcTPLHkAnZCnM+0jA/QR4p
-	 kxeJybFS7e5212F8XyDjHgDd7OhZXG2GX+cFl5VgS1TqtHNUKZF1TWU8ozZYIkGd7q68W
-	 RuZ/VyEI30IQTLRFjsN0HLKP8WDHaU+Vn6VvU1YXNoEuglj+HiYAsRPGW6wmEHy28nRTD
-	 16cSEc7HZeu1p1dkILf1d+0Hb4lj5XtHR1bIHukeF0NkoOTDkMMrK8KAJ44zF5ZQLOw==
+	bh=2pZiLiCs1EPClBtHaMUiY2+ncRDndtpDYb4X2uwrh0g=;
+	b=accdD37jaYXzhA5DOhwi6cqbptvKFDjZFVDgVNJg/OEbKzAUoEk7jbIE6rdk06ZCFqG3
+	 90KYf2imyOV6aCncVdkdWrXwlB5gJOVHxv996GzJWeOyl9uY0lJLnebqYdZQMoxBDGxrZ
+	 EF5WeiuuaaTGTmPzYiDsJwW/XjhEVfZYifb07mWugL13ZX3Eu+qDHCkgSwNodm/MUTTLx
+	 4vmkW75yIdc/YMh7iDLDuXclrdE92fEjo+XDHLGeJ4PIjr3fh9zYhOA/Q9QppdKL3ip9D
+	 a9B+PJeBdGQPJtoSQ+8DmRPnp2PXdVfgUgHIL5Iad9DR5RsDKpFjHNZvr9BXSt0sENA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=SCm9E65V;
-	arc=none smtp.remote-ip=74.125.82.178
-Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=dM2xkd4m;
+	arc=none smtp.remote-ip=74.125.82.169
+Received: from mail-dy1-f169.google.com (mail-dy1-f169.google.com [74.125.82.169])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844E5606A31A
-	for <mptcp@lists.linux.dev>; Sun, 25 Oct 2026 15:58:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 844E5606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB284606A323
+	for <mptcp@lists.linux.dev>; Sun, 25 Oct 2026 19:23:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AB284606A323
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=SCm9E65V
-Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-36661f953e4so4349457eec.1
-        for <mptcp@lists.linux.dev>; Sun, 25 Oct 2026 08:58:55 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=dM2xkd4m
+Received: by mail-dy1-f169.google.com with SMTP id 5a478bee46e88-369f33df08eso1569558eec.0
+        for <mptcp@lists.linux.dev>; Sun, 25 Oct 2026 12:23:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792943934; x=1793548734; darn=lists.linux.dev;
+        d=gmail.com; s=20251104; t=1792956207; x=1793561007; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=QjUXQ9U3FZL0zXzmfqMQXfHQBs3OYet1zCK6SBcITr0=;
-        b=SCm9E65VS6HlIDc87bAi4QnbD1tC51AuwFzCaCAbFN/jLUo4ZY2HcL84n5tCfrJBbr
-         TA5HcR0Md1jgFnHXeGrAkzH5qfhJpOThuzsth+laVFbxLKlTxMbj4SYKIQOsONg8Rbhq
-         yO1z7qhbFJA0/SRhaYUeWvKqZ9DqBVoPEb0spdd/gOTOSf2ml9Dj9dtJa+1YS9cWU0uj
-         FXG+45XNlTTMeIJkaIfkxv921zqp8hvvFtKG5zSifpZpGiXGOeIzNMxmkh0heBLFVO/C
-         thiTqp1+NvsdiMc/xMcuyPHFNPezsQcWjeZWtjSsL8DyOCGbJnrsP+9nri4Rkm2/jtGb
-         TWyA==
+        bh=2pZiLiCs1EPClBtHaMUiY2+ncRDndtpDYb4X2uwrh0g=;
+        b=dM2xkd4mPh74kzEkn2UYzj131kWQvi7BAlj5rXvjGsPKLyWiV5GYAK1lXAiir0NiOb
+         694+VBAPcEvmtSfxTFnHOW5ndx1+emn1ADCIIwM0ZolRlqU5kgenYWFhh5PgQeFrXMNx
+         ndDAien4xg7ALN8o81d559KFdPc9DQYf5lohtpDFdYnFLw98PxHDn7tFToMOn/UyuCTt
+         XKGg7ZHe6DurqCpSFfqYwTNbJwA8DP++z8X0VvE7eq/8DrbIVReu8swOaGHIzX7p3RN5
+         VvKRSDZMzLrxC22fSlJC5Ds1KGQaMwWvJArLsUG1oxtX2HdcvL1oKUOmSTbWgbMwBpX/
+         GBTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792943934; x=1793548734;
+        d=1e100.net; s=20260707; t=1792956207; x=1793561007;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=QjUXQ9U3FZL0zXzmfqMQXfHQBs3OYet1zCK6SBcITr0=;
-        b=Y0ex6F/0IIWw69hVX36tgSNiAHup2+wEReS47bmhn+MWEv94fvrkSxUoCoV/Uo+YGG
-         qlJkUT4g/LNbKlUD+6bfnXJ+IQZkMAiH0v631U8NVgJonhITtYKviMCisSVttanuTEuR
-         gujM+4Bzhh04r5NulE+ryTuvL+6brhaoNGgucjnEWQwsnF3lgjRY/hEi4oWHJrjEjH/f
-         dUTwUBr8hWpNcaCTXf7qmMcCSCo+VmaSymzj/nB6A7db24ehObf6eKXKdp0AdjLjuUF9
-         mElqS05ll5bgWJrSKIm+Gaye++fuAJnCYagNpxMWTP2D28upQsUbERcfEkZa5SdoE4jI
-         HZIg==
-X-Gm-Message-State: AFq9FYLWXZ2Bf4VotMlKFgmUMyQXEBsoMYYHKo0TIgkhNYr9MUqvyDxh
-	nR6O3O/6T71WxJQp0ic63YXUdJYp4hzm4K3dUnBX2wxEMuzmOZUpGOGZUBdI3g==
-X-Gm-Gg: AYBFou3kiBREYf0FWFFXglIdBUpKNgKciQCWODbIRMees2JRIyAIRLVi66kChKKX9zf
-	EWphhV+wjz+2rSB+v970sRF28wLLWN3GJO4NLuoxQS9IxyYQhm0Z617Ry1jLCWt59wde1Hdyjyz
-	lyNcxQRs48Q4SiKrxcDnXlC4XLFSP+uxtIZgHnl04SCDrzvvGTGFtWVlSCUpLJBgDzGE7IJ3/PB
-	O2x303ANDN7Rwh4HEBqSJlUahG5lz4x/t8yw4cb5gldJpE8EXkfNpFVbP8jMCxJdOyslsQyZEBE
-	SGDPgZVWHa70HBM/37lrMLBKb8F+Ntt9sZVmdnkSbt5nXgw/MB1YMNUtAsP8DjVcNKJri1QlvRx
-	o4YdKloaEBEsNHcDrb2kG0mAEA9ShDSeudK04MjyZyRTn7ih48HLddhWNtRd1dha+UsOXn3HKFY
-	QT8NBkOSxikVVYS8tW5nnnKKF5UyR3Qd9b3lLcA2qOm03Sn97ACyfasNr9R9nGyS6elEIPtn4Sq
-	Y+cg7ODKcCsRg5rVqBoUfxBqpDsQF9lNYy4PW4VcZnoD5OX/wH5+J1qOvGU
-X-Received: by 2002:a05:7023:a86:b0:19a:8e3e:530e with SMTP id a92af1059eb24-19a8e3e563bmr7536055c88.8.1792943934397;
-        Sun, 25 Oct 2026 08:58:54 -0700 (PDT)
+        bh=2pZiLiCs1EPClBtHaMUiY2+ncRDndtpDYb4X2uwrh0g=;
+        b=TE8FmaxWFVmFKJjsG3sJGx4fz+G2adN9TSqW90RL7gBBwQzjwiP8MtbyeqH5m7qc/S
+         d49FNTNym/WudTKkyuFmIS4qQ60ne7XT5PfRv19yz7wrKanHA0FlgUe7gP9TeOGaMeMw
+         z/9E/BO5d79ZOWRGaGG6dq26m1PdgMY1KzhT38EMtXVQFx1v8GxfKzgXsFtksbku6+Jz
+         Vn9E0CESX+NC7A/PRtW4Bo+H8D2/JwCL2aSorOj/UjGNWoixBR+2UNbwq0QHL6wGv7id
+         PciW9QeEXd2Dh3gXKA0FunobDwbatL4W72OMl4XUiX4+jnLXnrZ2TsW8Fed7aPoOtRhp
+         CH0Q==
+X-Gm-Message-State: AFq9FYK9Gij8gh5sGIhzYN3uvvmu1PkRdjK752VifHx51cAw96J9dJs9
+	Eoeqf9l3zQ7+/vaBLKgoSsEYB0Cablsgvdh4jg0djqHT79D99GSbudzW
+X-Gm-Gg: AYBFou2u8CjFpkQB5Ge7MfXVmK0MkyohTsJq1rwuUQQEGkIuTyDtN8yP5RDhEFlu4nO
+	hCbiZjHwOm76KDSbX9sZXoyQ0fi/s9lVOmdkR3qvPSgvlM0uOI+syyoCtvcW6kRIRBaU5rtnWrd
+	qapk4W0K1xF9ay5EI8iwXyKIpdKRejcxjBOqrZGMhPAfTtpLBJqnUQf85OocMCnzm9P1ryEnFef
+	U1RZQNQJtRwGCxbXN2zTPx41zQJioM575IdHpituXJ8DFiGh+A5bRqNjvxKEnUTkp8rh9wD711N
+	BaO9XUbT/Bwkj+nya/wlc35ziAqfrynbXEkjbK6Pvapbxmck9fL6yFramr/oDceTtNVKaPvBbg9
+	YtHhmnYnldD6ypyeGYItNOi/R+J8cUehvNnNF6MRukPMX94tQijqRf7NnBCn5XZOhUdil+h8AkO
+	3HrqcWdjSr0TlxdWHhaqrYVC8LB+nUGZ/GGnI+QRGBrT2LnZub6hMcwD3p4bAKwo00xokWEoLoK
+	mxZKf7qw09zukarMb/DOhi+k1BdZ4GP+wgMZWlGta2XE1YnWZGJx6b29Glu
+X-Received: by 2002:a05:693c:6391:20b0:369:f85c:787c with SMTP id 5a478bee46e88-369f85c79b0mr3355359eec.10.1792956205553;
+        Sun, 25 Oct 2026 12:23:25 -0700 (PDT)
 Received: from mptcp-lab.w453y.xyz ([59.164.88.43])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-19894d59f90sm16263655c88.3.2026.10.25.08.58.51
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-369e8db7b23sm25251266eec.19.2026.10.25.12.23.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Oct 2026 08:58:54 -0700 (PDT)
+        Sun, 25 Oct 2026 12:23:25 -0700 (PDT)
 From: Abdul Wasey <w453y.me@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
+To: Shardul Bankar <shardul.b@mpiricsoftware.com>
 Cc: mptcp@lists.linux.dev,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shardul Bankar <shardul.b@mpiricsoftware.com>,
-	Gregory Detal <gregory.detal@gmail.com>
-Subject: Re: [RFC PATCH mptcp-next 0/1] mptcp: opportunistic reinjection on an idle subflow
-Date: Sun, 25 Oct 2026 15:58:48 +0000
-Message-ID: <20261025155848.1745712-1-w453y.me@gmail.com>
+	Matthieu Baerts <matttbe@kernel.org>,
+	Janak Patel <janak@mpiric.us>,
+	Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Subject: Re: [PATCH mptcp-next v4 0/4] mptcp: sched: penalise a slow subflow
+Date: Sun, 25 Oct 2026 19:23:20 +0000
+Message-ID: <20261025192320.1831707-1-w453y.me@gmail.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <5e0ccd66-205f-4055-8ab3-4d300e83fd48@kernel.org>
-References: <20261025134643.1537069-1-w453y.me@gmail.com> <5e0ccd66-205f-4055-8ab3-4d300e83fd48@kernel.org>
+In-Reply-To: <20260911-mptcp_penalise_send_v2-v4-0-820f2be4a8fe@mpiricsoftware.com>
+References: <20260911-mptcp_penalise_send_v2-v4-0-820f2be4a8fe@mpiricsoftware.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -101,28 +99,55 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Matt,
+Hi Shardul,
 
-I'll rebase on Shardul's series. I'll also test his v4 on my setup and
-reply on that thread, since it's still waiting for reviews.
+I tested v4 on top of the current export (77f43f9f7643). Patches 2 to 4
+needed a small context fix in protocol.h, because of the new
+close_event_done field.
 
-Moving it to the scheduler makes sense. The CI also caught it on v1: the
-BPF "first" test saw bytes on its second subflow because of the
-reinjection.
+Setup: two paths in netns, netem on both directions, one iperf3 MPTCP
+connection for 20 s, upload and download, BBR and CUBIC, tcp_rmem max
+6 MB and 32 MB. 9 path pairs, for example 400M/10ms + 15M/120ms,
+40M/10ms + 2M/250ms with 5% loss, 40M/5ms + 30M/35ms with 17 ms jitter.
+3 runs each, 10 runs for the three noisiest pairs.
 
-Gregory, are you still planning to continue the scheduler API series? If
-not, I can pick it up. Shardul, same if you already started on it.
+I found no regression. Throughput is the same within noise in every
+case. The 400M + 15M pair with CUBIC and 6 MB looked worse at first, but
+it's bimodal (about 30 or 65-170 Mbit) with and without the series, and
+10 runs each show no difference. There are two small changes, both with
+CUBIC. The jitter pair gets 66 Mbit in all 10 runs without the series
+and 64-65 in all 10 runs with it. Two 50M paths with 1% loss each go
+from 10 to 9 Mbit, and that's where the halving fires the most, about
+140 times over the 3 runs in each direction.
 
-About once per RTT: in the old fork that limit was on the cwnd halving.
-The reinjection itself only took the head of the rtx queue, when the
-holder's srtt was more than 4x the idle subflow's. I'll check the cost on
-fast transfers.
+But it rarely fires. In most cases CwndPenalised stays at 0 or a few
+while PenalCandidate counts hundreds or thousands. To see why, I added
+two local counters, one after the cwnd-limited check on the fastest
+subflow and one after the receive window check. Download, 6 MB, 2 runs:
 
-The perf lab would help, yes. I can share my netns cases if that's
-useful.
+                   candidate  fastest cwnd-limited  wnd ok  penalised
+  starve  BBR        75 / 131         0 / 2         0 / 0     0 / 0
+  hol     BBR         27 / 46         0 / 4         0 / 0     0 / 0
+  starve  CUBIC     147 / 251        87 / 241       0 / 0     0 / 0
+  jitter  CUBIC   1668 / 1524     1668 / 1524      26 / 24   16 / 13
 
-I've fixed what Sashiko found locally, and will fold it into the
-scheduler version instead of sending a v2 of this one.
+With BBR the fastest subflow is almost never cwnd-limited, since BBR
+paces and keeps cwnd around 2x BDP. So the series does nearly nothing
+for BBR. With a 6 MB buffer the receive window check from patch 3 stops
+most of the rest. With 32 MB it fires more often, but still only on a
+small share of the candidates (starve with BBR: 341 cwnd-limited out of
+1541, 1 penalised).
+
+Is that what you expect for BBR? If the cwnd-limited check is only
+there to know that the fastest path is saturated, something that also
+works for a pacing CC might be needed.
+
+Selftests: mptcp_connect passes. simult_flows failed test 9 ("unbalanced
+bwidth with opposed, unbalanced delay") in 1 out of 8 runs with the
+series, but also in 2 out of 8 without it on the same base, so that's
+not from your patches.
+
+Tested-by: Abdul Wasey <w453y.me@gmail.com>
 
 Thanks,
 Abdul Wasey
