@@ -1,89 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.170
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.181
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792936164;
-	b=zV7iUiDT86sQJ0YCgxeiR+jQ0TPdT1woxHdGDDJVlXS/LjQM1SqjkzwqKfBGSChXAYcb
-	 if5LXhblFp+S2SopuzaqOl9wMwcKvMkaUn6gnEGaAvtl2ndeC8p9Z0Rm4P/D2Av81xiSV
-	 1DmIDVEXNiqUKKKMCUTG7x0aQjHno+LwK1G8lElCDQ28tH42ZLOhFG8CT8QKcq9BgVh2A
-	 wbIPNgeuyJSMkTZw9S8C12zP9m0W+Drno2QjlHLoHMjYG/Jjsnzaxs/gec8/sKUdXDfSf
-	 e+s8t44b2BcDuKzS1dxuT/+gagDXzeS8hFM2vop6Rpuu+HP0CJwD9Vco4+boduqlmOg==
+	t=1792936165;
+	b=pf3t6DapOZ0jt0bsiZo22zv9/q7OfT1q7Dm5Iv8XLalsZYdtH1lxhvKo4AlbWi4LqYly
+	 rnM2ahkZe8d7dp0glMcGhT3TaRPnmQ4nV5F1q4LHSdvT3qO6PrRCnYbQ/pbtEe0FTsloo
+	 jJi2ghyuq0yoh0Ebqe1difqS5ytzpO3xyT+HewY4pXvqYCkbUxoABE1tnmnupV1DEcdGu
+	 z8aUvu0ek2+GaleGzODv2j4+2lh/wF7JiOi/owpQp6sXzdTy9Q0nY5vB+7InlT7jwSzd5
+	 SAn7pMNFseuk7F/VY+/TGO47wnIL2ynx4qnHi0hicOJcVQ5AJUrvm1TUL8BFd8uBw4A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792936164;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792936165;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
 	 Date:Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=1BvY0DXxR9CJgs5pHYqiq9XbQfPxHYyDZlUcLyPbzM8=;
-	b=vJ1L7Qi9+C5s/Nv7rh+5wNF1xApR7tHKHkguL72yuvJV9Kn+/tDX34DTnUT1s+hYWmZR
-	 GN/punYVTocS9V+MvMZRK+wuNcNS1UguMk8RFZ0DaGvxrjQ8CxjMQ63YZwLDLgfonhxBf
-	 2Bs8qTeWIuzljb2P549hFQpThIcirCWqNCHrxxKugWHXUAvaxlFBpbRDU1QNz7gVwJqL4
-	 AJgEDi20BVBxQ5h/bnNwp5axuDGeIvflEUa0iyzl0aTBIotcsKTPVdR0O7oKWwUASDXVV
-	 92YfZxJ5AcZTVHkuP289kLJOrL/pRaZ/dS7RhPBOJeNt59RkUVS1BhHRcOyBWnc0/Sg==
+	bh=KhC19Luu2JMGOYfja02bJsBK5t5EOeLtyB/kLQhB3HA=;
+	b=LcKsri5hvXqpF9ZFhkLOspYXoqQ0ekfS4HcVwrC3PtgHVlpk6p1/TEqTWJqMnBodceZm
+	 7dmZQAWCmfIt8nh3CFGyUzP35LSE8H22QQ8oxR3o1NSvvCX0QP6N8m3YuHu+m3/wwYIZQ
+	 V7lVL91JUZ1nsYpj5oCpgSop0YOXyrVKnrFd3dOGEt0XnZ0jWpr1Xd8syWBirEQCqUe8T
+	 atVsJZ4xD4no8tuFTtTtk3XK/nW5XrgSzZAuGFvLb9QV4XtEMk00d1+sfqUOAcHMO/mUh
+	 05vfsyGVjSbrIIEQ34KlBGbl8Kqgn4MSjUw6RUWtGtDj8myWYoqBwQpGF8+05hW8FdQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b="PU0/RIHA";
-	arc=none smtp.remote-ip=74.125.82.170
-Received: from mail-dy1-f170.google.com (mail-dy1-f170.google.com [74.125.82.170])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b="fr/1PCn7";
+	arc=none smtp.remote-ip=74.125.82.181
+Received: from mail-dy1-f181.google.com (mail-dy1-f181.google.com [74.125.82.181])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51082606A31B
-	for <mptcp@lists.linux.dev>; Sun, 25 Oct 2026 13:49:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 51082606A31B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF29606A31B
+	for <mptcp@lists.linux.dev>; Sun, 25 Oct 2026 13:49:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0AF29606A31B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=PU0/RIHA
-Received: by mail-dy1-f170.google.com with SMTP id 5a478bee46e88-36661f953e4so4246387eec.1
-        for <mptcp@lists.linux.dev>; Sun, 25 Oct 2026 06:49:23 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=fr/1PCn7
+Received: by mail-dy1-f181.google.com with SMTP id 5a478bee46e88-36661f953e4so4246413eec.1
+        for <mptcp@lists.linux.dev>; Sun, 25 Oct 2026 06:49:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792936162; x=1793540962; darn=lists.linux.dev;
+        d=gmail.com; s=20251104; t=1792936164; x=1793540964; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=1BvY0DXxR9CJgs5pHYqiq9XbQfPxHYyDZlUcLyPbzM8=;
-        b=PU0/RIHA0ctI7tt9Bpg93YUSZ+qreyIVwQsa5nbC+8gjjZWWpesJg3phQn87mXlyAk
-         RDO/tX3B8b/h8X1gVbxwiFOHPnuRGOztd8mTSvebA+fnZ/pf9zN26MgY5Hlkp87JjxxW
-         58QtW56L+hLHlW8Wt7VCeWKTuc5t+MQMBNS9/bCtfHdGr/qqOBgvk9B4Ulgyi+Zt92GP
-         WcsATGTQofrLSxLrOUlMBQwihcd8cUGBRlP5iCv+n6VJpe8UgvI4tbO18JxSS3ZB931Q
-         NSkSTmf7k2NdrLi89l+k0MvjpDiUCs29RbtLwBntfHnt1a/f9Df13zmhBO9+PiRqTUBK
-         SeHg==
+        bh=KhC19Luu2JMGOYfja02bJsBK5t5EOeLtyB/kLQhB3HA=;
+        b=fr/1PCn7f/Fi7YB1hrG+fh8/a4+M68qBd/1sZtwxbIevmPQv+Mg6pDi6JbHGArq9PO
+         X38BNJ1dYP1rbi+7SeYHyhoF5lrHpdc456GCYaQhQU5uPDfxE3BD2n2kJtxOLGG09dnM
+         qfXi2wgfjCwNncC7gcWRKoGYqvUcXO578YSd8TDcTaaGaXU3EOdO4QqpQmgI+YYzwqLr
+         tSOjy9P/TMYuPJuepzM+93Xjpl7iqokIFtS3oiFwUu0VtB0YIugsA8jzdW6iNAYccLkF
+         E7Wn7jpIFPGfKbbnc2NjuTzZoxNRqpRktdrRpveIui76xPWLTkoDyioM9covuT2x0YLq
+         dKDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792936162; x=1793540962;
+        d=1e100.net; s=20260707; t=1792936164; x=1793540964;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=1BvY0DXxR9CJgs5pHYqiq9XbQfPxHYyDZlUcLyPbzM8=;
-        b=muOGlMWX5ReBGpSLlkYYQLs3pCK5zgTSYeLifChu3sScj4OtQejiBWtmY1y9fFfcQW
-         NsnU8VSN5U0e8yA16Zw1idGJ6duh9GYNtWOipe2awwgMh6Ns2yWv0VUV5+ZoSz2tGf/p
-         +Pjh1mqvxlegVYwKj3uuKo56sfrfZCs4bRoIiay9vi8ydIaLxCAdkyzgnOJCqeEK9Bkw
-         S5IyacncayVAhp6vF8at8I7lW7lYZLva5urnvyJ9bgCbw/nY0sMLNGIaiSE6cO3sKg7K
-         EuTaXIhNwwI4JGhBMtowuCUcNPZy+JiPCLqnNljm8bu83X9smrBv3rV2j+U9w3zjzSP0
-         2Kjw==
-X-Gm-Message-State: AFq9FYLO5HGByVwPr3wtYjKNyhyoSa5PpiEyGUIEpf/6jic8EWFKYuJn
-	NASljJZZ3lkUtXxhyyqs2X2wSNdecmtKEsaTWHyYPaCBnI9lhpc7EdvSke8kZw==
-X-Gm-Gg: AYBFou2S6LM9CDYZ9KkaetvjYKw3nRdIXxOra4nLcykdpLjBw4penZZwNE5i+iTwm3F
-	l9P2hO+dhUv/TJM8ZokVfrO29vyPSELDWkMT4emOjzNs8oge2VO7wxMUrHs0xHtrBjG+Zf1TE0I
-	A8SOqVnHeKFHzVPYcsLYsVEc6uGTKm6IVR5c99JVNsgiQqTRLtuG6Acgw77f1bM+qPKRkPh3+iy
-	TkFoN4ioMLVsK4ExbFn5nrZy7FPZqh+aK6fFTDvflG13i73KKhMzOB2mPbzBCFhNueK2aFKmR/h
-	Sj8VGn6ZsjAMEfRKF389GtQULpxu2xPwWgBiDAyNZIfLEVyWpUut5VISsUigrTjxC1XVvNlUqri
-	D6qEb5OOrZZtj8SnJmd4rt/m9BHPgaZAbyPoMNYCjDibEDv4oCwGPvRC6aCso8e7z1x9Rbe2EG0
-	HK0zTIYrygkt67BTcRej0OEPTy4xTW/1vak0+DFkzz4iyDICcOAO6qMLUOZ2odMXEleiMOzJ2c6
-	RKRZtLmGNT/rfWZHXIsPHpzWTEPWhlKIeJwujVqcJElPeY2MbZ+0pTl7Lfc9Ni3PR2iz6pH7B5u
-	eGe9TtimwM7AM2vhYacl6/SgMPrRRDSQimskxO0DKoS0nYMwumIW2Ct63Wh5tms+aRbe9yYZNqp
-	noYzOb0IFC0q4liYNIkzqXk0S
-X-Received: by 2002:a05:693c:66d4:10b0:35f:227b:f8bc with SMTP id 5a478bee46e88-369e84936cfmr6715653eec.11.1792936161925;
-        Sun, 25 Oct 2026 06:49:21 -0700 (PDT)
+        bh=KhC19Luu2JMGOYfja02bJsBK5t5EOeLtyB/kLQhB3HA=;
+        b=fx2ItuZgVDWNBKz0k6yRhIzMf8lb7+YmEJRvkgOFK24GfCPL/znzNyI4pvwjwVVRt7
+         fvHuz31ZorhuVOxdjEEfLBFYYRWhtw3yy+tL+DnPDwLGxNIRugT0mkT58scxt9kUyGIQ
+         oJzkrKKvp0A5+XSHEyt1w7lEu57yJUwDgVtHVpRB4dPZs6jCug9jjUELFg4yWRDM8d6x
+         KEddmREIwgBc54lejWdw3BwOQWGvKCTsCIYUl/VVPMCYuLvHlK8dxZN4TwPPNslJwHh6
+         g1tUqD5VmzHZAAKkfjw+K4smPBLEgBiPZqUcv5krY5rNhuXH7Qg9VLP4jIbPisef+ss2
+         RblQ==
+X-Gm-Message-State: AFq9FYL9E4uqjS5MYUzJdOB1ZcFFcdEsIZflMpdxbE8Pei8a2APupyKG
+	qDthg4XMPnXxGNYkyJQN9aiihPeBfLz2Vw79nvrC45+6sItn4EpG79i6Wph6eQ==
+X-Gm-Gg: AYBFou3EK+U8Um/hnH6a/QW2ogR/qQ6uC1yyiLnjDqx7SWaCnONu2Uzct8jzjsmS5yb
+	zwewoqhP0ktyGPIgQc+tNM9/S9q0hqIL3xtfZyWNE6yc7ODuyyWIg3uhXNItX+TngbuWjHIAuO1
+	abrnciX9GZT6tULPbkexGLMvrNZf5v6kWLJlGKWw137aSM1fNut2Z3sWDcOum2vvpK01nQiQdes
+	yKvaWgzJ/3naIjR17N+dT6zC0yWafG63qQUpLTQzJCz4J+M8Ras68zP2w891B0MnWRGt4tQZA/5
+	4nsuy5LRUZyVTuC4rpnoHkmjxsEixAgJInF4DQQEARAahMDIYZKyhVOyP1mou+b+WCW587UfP7G
+	4EKevpn7Gh/iqpbJPKTZsYpZXZdJSxdj2SXyw/5qRTlPQLPhlludCWHvGei1IX6TJgbNTkcJGEp
+	TCeXUrKvKRo42Q56+ardGM3U8aU2Lm9zbw0UhOhIIYD0oSexhploRaPq5n58JyJDHpPvV+Lb1dG
+	kcR+U+qB9PzfWoaaz5Z4sCysXeybQpH3paca0lQTnRi71o59UXEVgzCPrZasXU70/ILZxIxzQnK
+	I73qXhKyqDuvPwYl8msu+oRG08kyYloJsVQSqEYwyXZb7IlamPtBp59hAHlxj4OYf7DgF5c9+r7
+	FP2e2gJL/STMxcxynnoxnJPLJ
+X-Received: by 2002:a05:693c:68d2:b0:369:f3c4:e1fa with SMTP id 5a478bee46e88-369f3c4e87bmr3303481eec.24.1792936163871;
+        Sun, 25 Oct 2026 06:49:23 -0700 (PDT)
 Received: from ramen-dev-security-2.asia-south1-c.c.ramen-dev-345017.internal (90.156.200.35.bc.googleusercontent.com. [35.200.156.90])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36a002a486csm1188159eec.22.2026.10.25.06.49.20
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36a002a486csm1188159eec.22.2026.10.25.06.49.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Oct 2026 06:49:21 -0700 (PDT)
+        Sun, 25 Oct 2026 06:49:23 -0700 (PDT)
 From: Anil Kaushik <anilkaushikwireless@gmail.com>
 To: mptcp@lists.linux.dev
 Cc: Anil Kaushik <anilkaushikwireless@gmail.com>
-Subject: [PATCH mptcp-next v9 4/6] mptcp: pm: in-kernel: retry subflows closed after an error
-Date: Sun, 25 Oct 2026 13:49:07 +0000
-Message-Id: <20261025134909.2794368-5-anilkaushikwireless@gmail.com>
+Subject: [PATCH mptcp-next v9 5/6] selftests: mptcp: pm_nl_ctl: support the subflow-retries limit
+Date: Sun, 25 Oct 2026 13:49:08 +0000
+Message-Id: <20261025134909.2794368-6-anilkaushikwireless@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20261025134909.2794368-1-anilkaushikwireless@gmail.com>
 References: <20261025134909.2794368-1-anilkaushikwireless@gmail.com>
@@ -98,523 +98,207 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With the in-kernel PM, a subflow closed after an error, e.g. a timeout
-when a path silently drops packets, is never re-created, even once the
-path works again. For example, with a main link and a backup link,
-connections move to the backup after an outage but never come back.
+'pm_nl_ctl limits' can now set the subflow-retries limit with a third
+value, and shows it when the kernel supports it.
 
-When TCP gives up on an established subflow created by this side, after
-a retransmission or keepalive timeout, whatever ICMP error was received
-from the path before, the PM now creates a new one with the same
-addresses. Its SYN retries, set like TCP_SYNCNT by the subflow-retries
-limit, space out the attempts. This is a single connection attempt: an
-ICMP error, or a local error when connecting, ends it, and it is not
-retried again. It is also closed if the MPTCP socket is closed in the
-meantime. If no other subflow can send data, the connection is still
-closed after the close timeout, as when all the subflows are closed,
-unless the new subflow connects before. Once it is established, it is
-handled like any other subflow. Re-creating the initial subflow uses one
-of the additional subflows allowed by the limits.
+pm_netlink.sh checks its default value, that a value above the maximum
+is refused, and that it can be set. This is only done with pm_nl_ctl
+for the moment: iproute2 does not support this limit yet.
 
-__mptcp_close_ssk() now always cleans the references to the closed
-subflow in the MPTCP backlog, not only with MPTCP_CF_PUSH: a re-created
-subflow closed with the MPTCP socket can get established in between.
-The other paths without MPTCP_CF_PUSH have already purged the backlog.
-
-A subflow reset by the peer, or by anything on the path, is not
-re-created: the path works, and re-creating it right away could loop.
-A subflow that never got established is not re-created either: the PM
-keeps trying the next endpoints, as before. Subflows aborted locally,
-also by MPTCP, or using an address that has been removed are not
-retried.
-
-TCP only closes a subflow after tcp_retries2 retransmissions, about 15
-minutes by default. A subflow that only receives data never gets an
-error: the application has to enable TCP keepalive on the MPTCP socket,
-which MPTCP applies to all the subflows. Both are documented in
-mptcp.rst.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/440
 Assisted-by: LLM
 Signed-off-by: Anil Kaushik <anilkaushikwireless@gmail.com>
 ---
 
 Notes:
     v9:
-     - every timeout is retried, whatever ICMP error TCP reports for it,
-       the last one received, see tcp_write_err(): resets, local aborts
-       and MPTCP protocol errors are excluded instead of listing the
-       timeout errors, so IPv4 and IPv6 behave the same (netdev Sashiko)
-     - mptcp.rst: 0 does not re-create the subflows (netdev Sashiko)
-     - the re-created subflows closed with the msk get no SUB_CLOSED
-       event, like the other subflows closed with it
-     - if no other subflow can send data, the close timeout still applies:
-       creating the new subflow no longer keeps the connection open for
-       the whole SYN retries
-     - doc and commit message: a single connection attempt, ended by an
-       ICMP error or a local connect error
-     - __mptcp_close_ssk() always cleans the msk backlog of the closed
-       subflow: a re-created subflow closed with the msk can have been
-       established in between, with data in the backlog (netdev Sashiko).
-       It is still closed without MPTCP_CF_PUSH, which would re-send all
-       the pending data
-     - tcp_sock_set_syncnt(), without the ssk lock
+     - try the value above the maximum after setting 0, not the default
+       value, which is also the maximum: a refused value is then told
+       apart from a clamped one (netdev Sashiko)
     v8:
-     - mptcp.rst gives the default, 127, about 4 hours
-     - close the re-created subflows still connecting before
-       __mptcp_wr_shutdown() disconnects them, and also the already
-       disconnected ones, e.g. after shutdown(SHUT_WR) (sashiko.dev)
-     - mptcp.rst: the initial subflow on the client side, the subflows
-       limit, and only one attempt (netdev Sashiko)
+     - the default value is now 127
     v7:
-     - only after a path error, a retransmission or keepalive timeout: a
-       reset from the peer or the path could make it loop (netdev
+     - also check that the maximum value, 127, is accepted (netdev
        Sashiko)
-     - retry and no_retry are bools under the msk socket lock, in the
-       padding after close_event_done, not bits next to the reset ones
-       (netdev Sashiko)
-     - mark all the subflows using a removed address, whatever their
-       state (netdev Sashiko)
-     - doc: tcp_retries2, and keepalive for a subflow that only receives
-       data (Abdul Wasey's tests)
-     - not retried after a reset by MPTCP itself, even with an old sk_err
-       left by IP_RECVERR (netdev Sashiko)
-     - close the re-created subflows still connecting without
-       MPTCP_CF_PUSH: they never carried data (netdev Sashiko)
-    v6 (netdev Sashiko):
-     - only re-create subflows that were established: the PM still tries the
-       next endpoints when one never gets established
-     - only once TCP closed the subflow, to read its reset flags safely
-     - removed addresses, also the remote ones and the local ID 0: the dead
-       subflows are marked in mptcp_pm_rm_addr_or_subflow(), instead of
-       looking up the endpoint
-    v5 (Matthieu):
-     - split in 4 patches
-     - reverse xmas tree in mptcp_pm_kernel_retry_check()
-     - "in-kernel" in the subject, like the other in-kernel PM patches
-     - close the re-created subflows still connecting when the socket is
-       closed (Matthieu: closing the socket during a retry)
-    v4 (Matthieu):
-     - netlink limit, on by default, instead of the sysctl
-     - one new subflow per failure, its SYN retries set from the limit: no
-       socket reuse, no attempts counter, no 60s check
-     - no MIB counter
-     - not retried if the endpoint was removed, instead of the pm.c change
-     - called through pm.c
-     - new bit in the subflow context, no new hole
-     - commit message: MP_RST, not any RST (Sashiko)
-    v3 (Sashiko):
-     - no retry after MP_RST without the T flag, local abort or EBADMSG
-     - no retry on a removed endpoint or address
-     - use only request_bkup for the backup flag
-    v2:
-     - use the subflow sockets, no list or timer
-     - code moved to pm_kernel.c
+    v5:
+     - new (Matthieu)
 
- Documentation/networking/mptcp.rst |  18 +++++
- net/mptcp/pm.c                     |  39 ++++++++++
- net/mptcp/pm_kernel.c              | 118 +++++++++++++++++++++++++++++
- net/mptcp/protocol.c               |  77 ++++++++++++++++++-
- net/mptcp/protocol.h               |  19 +++++
- 5 files changed, 269 insertions(+), 2 deletions(-)
+ .../testing/selftests/net/mptcp/pm_netlink.sh | 48 ++++++++++++++++++-
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 34 ++++++++++---
+ 2 files changed, 73 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/networking/mptcp.rst b/Documentation/networking/mptcp.rst
-index b6753ffb9c9a..8a2c9b9d2a4f 100644
---- a/Documentation/networking/mptcp.rst
-+++ b/Documentation/networking/mptcp.rst
-@@ -73,6 +73,24 @@ To be able to use multiple IP addresses on a host to create multiple *subflows*
- addresses can be used. This can be configured with ``ip mptcp endpoint`` for
- example.
+diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+index 21bfe1311f11..9a6209181962 100755
+--- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
++++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+@@ -46,15 +46,20 @@ trap cleanup EXIT
  
-+When TCP gives up on an established subflow created by this host, after a
-+retransmission or keepalive timeout, the in-kernel path manager creates it
-+again, with the ``subflow-retries`` limit as its number of SYN retries, like
-+``TCP_SYNCNT``: 127 by default, about 4 hours, and 0 to not re-create it. This
-+is done for the additional subflows, and for the initial one on the client side:
-+the new subflow then takes one of the additional subflows allowed by the
-+``subflows`` limit. This is a single connection attempt: an ICMP error, or a
-+local error when connecting, ends it, and it is not created again. If no other
-+subflow can send data in the meantime, the connection is closed after
-+``close_timeout``, as when all the subflows are closed, unless the new subflow
-+connects before. A subflow reset by the peer, or by anything on the path, is not
-+created again either. TCP only gives up on a subflow after ``tcp_retries2``
-+retransmissions, about 15 minutes by default: shorter outages are handled by TCP
-+itself. A subflow that only receives data does not notice that its path stopped
-+working: the application should then enable TCP keepalive on the MPTCP socket
-+(``SO_KEEPALIVE``, ``TCP_KEEPIDLE``, ``TCP_KEEPINTVL`` and ``TCP_KEEPCNT``),
-+which MPTCP applies to all its subflows.
-+
- Packet Scheduler
- ----------------
+ mptcp_lib_ns_init ns1
  
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index d7c5b50b34cc..2bb08be95cd1 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -694,6 +694,26 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk,
- 	spin_unlock_bh(&pm->lock);
++# $3: subflow retries, only shown by pm_nl_ctl, if supported
+ format_limits() {
+ 	local accept="${1}"
+ 	local subflows="${2}"
++	local retries="${3}"
+ 
+ 	if mptcp_lib_is_ip_mptcp; then
+ 		# with a space at the end
+ 		printf "add_addr_accepted %d subflows %d \n" "${accept}" "${subflows}"
+ 	else
+ 		printf "accept %d\nsubflows %d\n" "${accept}" "${subflows}"
++		if [ -n "${retries}" ]; then
++			printf "subflow_retries %d\n" "${retries}"
++		fi
+ 	fi
  }
  
-+/* Called with the msk socket lock held, before closing a subflow: true if
-+ * it has to be re-created once closed, see mptcp_pm_subflow_retry().
-+ */
-+bool mptcp_pm_subflow_retry_check(struct mptcp_sock *msk,
-+				  const struct mptcp_subflow_context *subflow,
-+				  struct mptcp_pm_retry *retry)
-+{
-+	if (!mptcp_pm_is_kernel(msk))
-+		return false;
+@@ -75,6 +80,22 @@ get_limits_nb() {
+ 	fi
+ }
+ 
++# The subflow retries limit is only set and shown with pm_nl_ctl for now.
++# Prints its default value if it is supported.
++get_default_retries() {
++	if mptcp_lib_is_ip_mptcp; then
++		return
++	fi
 +
-+	return mptcp_pm_kernel_retry_check(msk, subflow, retry);
++	if ip netns exec "${ns1}" ./pm_nl_ctl limits |
++	   grep -q "^subflow_retries"; then
++		echo 127
++	elif mptcp_lib_expect_all_features; then
++		# missing feature: the defaults limits check will fail
++		echo 127
++	fi
 +}
 +
-+void mptcp_pm_subflow_retry(struct mptcp_sock *msk,
-+			    const struct mptcp_pm_retry *retry)
-+{
-+	if (mptcp_pm_is_kernel(msk))
-+		mptcp_pm_kernel_retry(msk, retry);
-+}
+ format_endpoints() {
+ 	mptcp_lib_pm_nl_format_endpoints "${@}"
+ }
+@@ -154,8 +175,10 @@ mptcp_lib_subtests_last_ts_reset
+ check "show_endpoints" "" "defaults addr list"
+ 
+ default_limits="$(get_limits)"
++default_retries="$(get_default_retries)"
+ if mptcp_lib_expect_all_features; then
+-	check "get_limits" "$(format_limits 0 2)" "defaults limits"
++	check "get_limits" "$(format_limits 0 2 "${default_retries}")" \
++		"defaults limits"
+ fi
+ 
+ add_endpoint 10.0.1.1
+@@ -224,7 +247,28 @@ check "get_limits" "${default_limits}" "subflows above hard limit"
+ 
+ set_limits ${max_limits} ${max_limits}
+ flush_endpoint  ## to make sure it doesn't affect the limits
+-check "get_limits" "$(format_limits ${max_limits} ${max_limits})" "set limits"
++max_limits_out="$(format_limits ${max_limits} ${max_limits} \
++		 "${default_retries}")"
++check "get_limits" "${max_limits_out}" "set limits"
 +
- void mptcp_pm_add_addr_received(const struct sock *ssk,
- 				const struct mptcp_addr_info *addr)
++if [ -n "${default_retries}" ]; then
++	ip netns exec "${ns1}" ./pm_nl_ctl limits ${max_limits} ${max_limits} 0
++	check "get_limits" "$(format_limits ${max_limits} ${max_limits} 0)" \
++		"set subflow retries"
++
++	# not from the default: a refused value differs from a clamped one
++	ip netns exec "${ns1}" ./pm_nl_ctl limits ${max_limits} ${max_limits} \
++		128 2>/dev/null
++	check "get_limits" "$(format_limits ${max_limits} ${max_limits} 0)" \
++		"subflow retries above hard limit"
++
++	ip netns exec "${ns1}" ./pm_nl_ctl limits ${max_limits} ${max_limits} \
++		127
++	check "get_limits" "$(format_limits ${max_limits} ${max_limits} 127)" \
++		"set max subflow retries"
++	ip netns exec "${ns1}" ./pm_nl_ctl limits ${max_limits} ${max_limits} \
++		"${default_retries}"
++fi
+ 
+ flush_endpoint
+ add_endpoint 10.0.1.1
+diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+index 78180da1efcc..41467b997018 100644
+--- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
++++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+@@ -39,7 +39,7 @@ static void syntax(char *argv[])
+ 	fprintf(stderr, "\tset [<ip>] [id <nr>] flags [no]backup|[no]fullmesh [port <nr>] [token <token>] [rip <ip>] [rport <port>]\n");
+ 	fprintf(stderr, "\tflush\n");
+ 	fprintf(stderr, "\tdump\n");
+-	fprintf(stderr, "\tlimits [<rcv addr max> <subflow max>]\n");
++	fprintf(stderr, "\tlimits [<rcv addr max> <subflow max> [<retry>]]\n");
+ 	fprintf(stderr, "\tevents\n");
+ 	fprintf(stderr, "\tlisten <local-ip> <local-port>\n");
+ 	exit(0);
+@@ -1217,6 +1217,7 @@ int flush_addrs(int fd, int pm_family, int argc, char *argv[])
+ static void print_limits(struct nlmsghdr *nh, int pm_family, int total_len)
  {
-@@ -762,6 +782,24 @@ static void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk)
- 	mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_SEND_ACK);
- }
+ 	struct rtattr *attrs;
++	const char *name;
+ 	uint32_t max;
  
-+/* A subflow using a removed address must not be re-created, whatever its
-+ * state, e.g. closed by TCP but not collected yet, see
-+ * mptcp_pm_kernel_retry_check().
-+ */
-+static void mptcp_pm_rm_no_retry(struct mptcp_subflow_context *subflow,
-+				 enum linux_mptcp_mib_field rm_type, u8 rm_id)
-+{
-+	u8 id;
-+
-+	if (rm_type == MPTCP_MIB_RMADDR)
-+		id = READ_ONCE(subflow->remote_id);
-+	else
-+		id = subflow_get_local_id(subflow);
-+
-+	if (id == rm_id)
-+		subflow->no_retry = true;
-+}
-+
- static void mptcp_pm_rm_addr_or_subflow(struct mptcp_sock *msk,
- 					const struct mptcp_rm_list *rm_list,
- 					enum linux_mptcp_mib_field rm_type)
-@@ -794,6 +832,7 @@ static void mptcp_pm_rm_addr_or_subflow(struct mptcp_sock *msk,
- 			int how = RCV_SHUTDOWN | SEND_SHUTDOWN;
- 			u8 id = subflow_get_local_id(subflow);
+ 	for (; NLMSG_OK(nh, total_len); nh = NLMSG_NEXT(nh, total_len)) {
+@@ -1235,13 +1236,22 @@ static void print_limits(struct nlmsghdr *nh, int pm_family, int total_len)
+ 		while (RTA_OK(attrs, len)) {
+ 			int type = attrs->rta_type;
  
-+			mptcp_pm_rm_no_retry(subflow, rm_type, rm_id);
- 			if ((1 << inet_sk_state_load(ssk)) &
- 			    (TCPF_FIN_WAIT1 | TCPF_FIN_WAIT2 | TCPF_CLOSING | TCPF_CLOSE))
- 				continue;
-diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-index 7fb4c7874340..de84aecd6a62 100644
---- a/net/mptcp/pm_kernel.c
-+++ b/net/mptcp/pm_kernel.c
-@@ -1610,6 +1610,124 @@ bool mptcp_pm_nl_check_work_pending(struct mptcp_sock *msk)
- 	return true;
- }
+-			if (type != MPTCP_PM_ATTR_RCV_ADD_ADDRS &&
+-			    type != MPTCP_PM_ATTR_SUBFLOWS)
++			switch (type) {
++			case MPTCP_PM_ATTR_RCV_ADD_ADDRS:
++				name = "accept";
++				break;
++			case MPTCP_PM_ATTR_SUBFLOWS:
++				name = "subflows";
++				break;
++			case MPTCP_PM_ATTR_SUBFLOW_RETRIES:
++				name = "subflow_retries";
++				break;
++			default:
+ 				goto next;
++			}
  
-+/* TCP gave up on the path: after a retransmission, keepalive or user
-+ * timeout, sk_err is ETIMEDOUT, or the last ICMP error received from the
-+ * path, see tcp_write_err(). The other errors on an established subflow
-+ * are not path failures: a reset, from the peer or from anything on the
-+ * path (ECONNRESET, or EPIPE in CLOSE_WAIT, see tcp_reset()), a local
-+ * abort (ECONNABORTED), or an MPTCP protocol error (EBADMSG).
-+ */
-+static bool mptcp_pm_retry_path_error(int err)
-+{
-+	switch (err) {
-+	case ECONNRESET:
-+	case EPIPE:
-+	case ECONNABORTED:
-+	case EBADMSG:
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+/* Called with the msk socket lock held, before the subflow is closed */
-+bool mptcp_pm_kernel_retry_check(struct mptcp_sock *msk,
-+				 const struct mptcp_subflow_context *subflow,
-+				 struct mptcp_pm_retry *retry)
-+{
-+	struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+	struct sock *sk = (struct sock *)msk;
-+	int err;
-+
-+	/* Only once TCP closed it: the acquire in inet_sk_state_load() makes
-+	 * sure sk_err and the resetting flag checked below are the ones of
-+	 * this close.
-+	 */
-+	if (inet_sk_state_load(ssk) != TCP_CLOSE)
-+		return false;
-+
-+	err = READ_ONCE(ssk->sk_err);
-+	retry->syn_retries = mptcp_pm_get_limit_subflow_retries(msk);
-+	if (!retry->syn_retries || !err || sk->sk_state != TCP_ESTABLISHED ||
-+	    __mptcp_check_fallback(msk))
-+		return false;
-+
-+	/* mptcp_close_ssk() will not handle it again, e.g. the initial
-+	 * subflow, kept in the list once closed
-+	 */
-+	if (subflow->close_event_done || READ_ONCE(subflow->local_id) < 0)
-+		return false;
-+
-+	/* Only a path that worked is tried again. If a subflow never got
-+	 * established, the PM moves on to the next endpoints instead, and a
-+	 * re-created subflow that cannot connect is not retried again: its SYN
-+	 * retransmissions already spaced out the tries.
-+	 */
-+	if (!READ_ONCE(subflow->fully_established))
-+		return false;
-+
-+	/* its address has been removed, see mptcp_pm_rm_addr_or_subflow() */
-+	if (subflow->no_retry)
-+		return false;
-+
-+	/* Only when the path stopped working. A reset, from the peer or from
-+	 * anything on the path, means the path works: re-creating the subflow
-+	 * right away could loop. Not after a reset by MPTCP itself either, with
-+	 * mptcp_subflow_reset(), whatever sk_err says.
-+	 */
-+	if (!mptcp_pm_retry_path_error(err) || subflow->resetting)
-+		return false;
-+
-+	/* Only re-create subflows initiated by this side: MP_JOIN ones, or the
-+	 * initial one on the client side.
-+	 */
-+	if (!subflow->request_join &&
-+	    (subflow->mp_join || READ_ONCE(msk->pm.server_side)))
-+		return false;
-+
-+	mptcp_remote_address((struct sock_common *)ssk, &retry->remote);
-+	retry->remote.id = READ_ONCE(subflow->remote_id);
-+	if (!retry->remote.id && READ_ONCE(msk->pm.remote_deny_join_id0))
-+		return false;
-+
-+	mptcp_local_address((struct sock_common *)ssk, &retry->local.addr);
-+	retry->local.addr.port = 0;
-+	retry->local.addr.id = subflow_get_local_id(subflow);
-+	retry->local.flags = subflow->request_bkup ?
-+			     MPTCP_PM_ADDR_FLAG_BACKUP : 0;
-+	retry->local.ifindex = ssk->sk_bound_dev_if;
-+
-+	return true;
-+}
-+
-+/* Called with the msk socket lock held, after the subflow has been closed */
-+void mptcp_pm_kernel_retry(struct mptcp_sock *msk,
-+			   const struct mptcp_pm_retry *retry)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct sock *sk = (struct sock *)msk;
-+	bool allowed;
-+
-+	spin_lock_bh(&msk->pm.lock);
-+	allowed = msk->pm.extra_subflows <
-+		  mptcp_pm_get_limit_extra_subflows(msk);
-+	if (allowed)
-+		msk->pm.extra_subflows++;
-+	spin_unlock_bh(&msk->pm.lock);
-+
-+	if (!allowed ||
-+	    __mptcp_subflow_connect(sk, &retry->local, &retry->remote))
-+		return;
-+
-+	/* the new subflow is the last one */
-+	subflow = list_last_entry(&msk->conn_list, struct mptcp_subflow_context,
-+				  node);
-+	/* from 1 to MAX_TCP_SYNCNT, see mptcp_pm_kernel_retry_check() */
-+	tcp_sock_set_syncnt(mptcp_subflow_tcp_sock(subflow),
-+			    retry->syn_retries);
-+	subflow->retry = true;
-+}
-+
- /* Called under PM lock */
- void __mptcp_pm_kernel_worker(struct mptcp_sock *msk)
- {
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 02a4f479d9d8..25fd0628686c 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2697,8 +2697,11 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
- 	subflow->closing = 1;
+ 			memcpy(&max, RTA_DATA(attrs), 4);
+-			printf("%s %u\n", type == MPTCP_PM_ATTR_SUBFLOWS ?
+-					  "subflows" : "accept", max);
++			printf("%s %u\n", name, max);
  
--	if (flags & MPTCP_CF_PUSH)
--		mptcp_cleanup_ssk_backlog(sk, ssk);
-+	/* also without MPTCP_CF_PUSH: a re-created subflow closed with the msk
-+	 * can have been established in between, see
-+	 * mptcp_close_retry_subflows()
-+	 */
-+	mptcp_cleanup_ssk_backlog(sk, ssk);
+ next:
+ 			attrs = RTA_NEXT(attrs, len);
+@@ -1254,15 +1264,17 @@ int get_set_limits(int fd, int pm_family, int argc, char *argv[])
+ 	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
+ 		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) +
+ 		  1024];
+-	uint32_t rcv_addr = 0, subflows = 0;
++	uint32_t rcv_addr = 0, subflows = 0, retries = 0;
+ 	int cmd, len = sizeof(data);
+ 	struct nlmsghdr *nh;
+ 	int off = 0;
  
- 	/* Borrow the fwd allocated page left-over; fwd memory for the subflow
- 	 * could be negative at this point, but will be reach zero soon - when
-@@ -2788,6 +2791,32 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 	}
- }
+ 	/* limit */
+-	if (argc == 4) {
++	if (argc == 4 || argc == 5) {
+ 		rcv_addr = atoi(argv[2]);
+ 		subflows = atoi(argv[3]);
++		if (argc == 5)
++			retries = atoi(argv[4]);
+ 		cmd = MPTCP_PM_CMD_SET_LIMITS;
+ 	} else {
+ 		cmd = MPTCP_PM_CMD_GET_LIMITS;
+@@ -1287,6 +1299,14 @@ int get_set_limits(int fd, int pm_family, int argc, char *argv[])
+ 		memcpy(RTA_DATA(rta), &subflows, 4);
+ 		off += NLMSG_ALIGN(rta->rta_len);
  
-+/* With no subflow left to send data, a re-created subflow still connecting
-+ * must not keep the connection open longer than the close timeout, as when
-+ * all the subflows are closed, see __mptcp_close_ssk(). A join stops it.
-+ */
-+static void mptcp_retry_check_tout(struct sock *sk)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	bool connecting = false;
-+
-+	if (sk->sk_state != TCP_ESTABLISHED ||
-+	    inet_csk(sk)->icsk_mtup.probe_timestamp)
-+		return;
-+
-+	mptcp_for_each_subflow(msk, subflow) {
-+		if (__mptcp_subflow_active(subflow))
-+			return;
-+
-+		connecting |= subflow->retry &&
-+			      !READ_ONCE(subflow->fully_established);
-+	}
-+
-+	if (connecting)
-+		mptcp_start_tout_timer(sk);
-+}
-+
- void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 		     struct mptcp_subflow_context *subflow)
- {
-@@ -2806,6 +2835,7 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 	mptcp_pm_subflow_check_next(mptcp_sk(sk), subflow);
- 
- 	__mptcp_close_ssk(sk, ssk, subflow, MPTCP_CF_PUSH);
-+	mptcp_retry_check_tout(sk);
- }
- 
- static unsigned int mptcp_sync_mss(struct sock *sk, u32 pmtu)
-@@ -2823,6 +2853,8 @@ static void __mptcp_close_subflow(struct sock *sk)
- 	mptcp_for_each_subflow_safe(msk, subflow, tmp) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 		int ssk_state = inet_sk_state_load(ssk);
-+		struct mptcp_pm_retry retry;
-+		bool do_retry;
- 
- 		if (ssk_state != TCP_CLOSE &&
- 		    (ssk_state != TCP_CLOSE_WAIT ||
-@@ -2834,7 +2866,13 @@ static void __mptcp_close_subflow(struct sock *sk)
- 		if (!skb_queue_empty_lockless(&ssk->sk_receive_queue))
- 			continue;
- 
-+		do_retry = mptcp_pm_subflow_retry_check(msk, subflow, &retry);
- 		mptcp_close_ssk(sk, ssk, subflow);
-+		if (do_retry) {
-+			mptcp_pm_subflow_retry(msk, &retry);
-+			/* creating a subflow stopped the close timeout */
-+			mptcp_retry_check_tout(sk);
++		if (argc == 5) {
++			rta = (void *)(data + off);
++			rta->rta_type = MPTCP_PM_ATTR_SUBFLOW_RETRIES;
++			rta->rta_len = RTA_LENGTH(4);
++			memcpy(RTA_DATA(rta), &retries, 4);
++			off += NLMSG_ALIGN(rta->rta_len);
 +		}
++
+ 		/* do not expect a reply */
+ 		len = 0;
  	}
- 
- }
-@@ -3501,6 +3539,38 @@ static void mptcp_check_listen_stop(struct sock *sk)
- 	release_sock(ssk);
- }
- 
-+/* Re-created subflows still connecting are useless once the msk is closed:
-+ * they would keep it around until the close timeout.
-+ */
-+static void mptcp_close_retry_subflows(struct sock *sk)
-+{
-+	struct mptcp_subflow_context *subflow, *tmp;
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+
-+	mptcp_for_each_subflow_safe(msk, subflow, tmp) {
-+		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+		int state;
-+
-+		if (!subflow->retry || READ_ONCE(subflow->fully_established))
-+			continue;
-+
-+		/* still connecting, or already disconnected by
-+		 * mptcp_subflow_shutdown(), e.g. after shutdown(SHUT_WR)
-+		 */
-+		state = inet_sk_state_load(ssk);
-+		if (state != TCP_SYN_SENT && state != TCP_CLOSE)
-+			continue;
-+
-+		/* Checked without the ssk lock: it can have been established
-+		 * in between. __mptcp_close_ssk() cleans its data in the msk
-+		 * backlog, and the MPTCP retransmissions cover what it sent.
-+		 * No need to push the pending data again.
-+		 */
-+		mptcp_pm_subflow_check_next(msk, subflow);
-+		__mptcp_close_ssk(sk, ssk, subflow, 0);
-+	}
-+}
-+
- bool __mptcp_close(struct sock *sk, long timeout)
- {
- 	struct mptcp_subflow_context *subflow;
-@@ -3516,6 +3586,9 @@ bool __mptcp_close(struct sock *sk, long timeout)
- 		goto cleanup;
- 	}
- 
-+	/* before __mptcp_wr_shutdown() disconnects them */
-+	mptcp_close_retry_subflows(sk);
-+
- 	if (mptcp_data_avail(msk) || timeout < 0 ||
- 	    (sock_flag(sk, SOCK_LINGER) && !sk->sk_lingertime)) {
- 		/* If the msk has read data, or the caller explicitly ask it,
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 4aa4aedb2ba7..d47430fc7dc8 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -610,6 +610,8 @@ struct mptcp_subflow_context {
- 	bool	close_event_done;   /* has done the post-closed part,
- 				     * protected by msk socket lock
- 				     */
-+	bool	retry;		    /* re-created after an error, msk lock */
-+	bool	no_retry;	    /* uses a removed address, msk lock */
- 	u32	lent_mem_frag;
- 	u32	remote_nonce;
- 	u32	local_nonce;
-@@ -1139,6 +1141,18 @@ void mptcp_pm_subflow_established(struct mptcp_sock *msk);
- bool mptcp_pm_nl_check_work_pending(struct mptcp_sock *msk);
- void mptcp_pm_subflow_check_next(struct mptcp_sock *msk,
- 				 const struct mptcp_subflow_context *subflow);
-+
-+struct mptcp_pm_retry {
-+	struct mptcp_pm_local	local;
-+	struct mptcp_addr_info	remote;
-+	u8			syn_retries;
-+};
-+
-+bool mptcp_pm_subflow_retry_check(struct mptcp_sock *msk,
-+				  const struct mptcp_subflow_context *subflow,
-+				  struct mptcp_pm_retry *retry);
-+void mptcp_pm_subflow_retry(struct mptcp_sock *msk,
-+			    const struct mptcp_pm_retry *retry);
- void mptcp_pm_add_addr_received(const struct sock *ssk,
- 				const struct mptcp_addr_info *addr);
- void mptcp_pm_add_addr_echoed(struct mptcp_sock *msk,
-@@ -1260,6 +1274,11 @@ void __init mptcp_pm_userspace_register(void);
- void __init mptcp_pm_nl_init(void);
- void mptcp_pm_worker(struct mptcp_sock *msk);
- void __mptcp_pm_kernel_worker(struct mptcp_sock *msk);
-+bool mptcp_pm_kernel_retry_check(struct mptcp_sock *msk,
-+				 const struct mptcp_subflow_context *subflow,
-+				 struct mptcp_pm_retry *retry);
-+void mptcp_pm_kernel_retry(struct mptcp_sock *msk,
-+			   const struct mptcp_pm_retry *retry);
- u8 mptcp_pm_get_endp_signal_max(const struct mptcp_sock *msk);
- u8 mptcp_pm_get_endp_subflow_max(const struct mptcp_sock *msk);
- u8 mptcp_pm_get_endp_laminar_max(const struct mptcp_sock *msk);
 -- 
 2.25.1
 
