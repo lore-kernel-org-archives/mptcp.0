@@ -1,93 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.167.175
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792940865;
-	b=sxSjCRGITwRw2S0AjyVs9OFH8s2LaA3sWschO6uZb42Mio5G1aXaXwQd0uTXmuVXgJiK
-	 MvmAioxdcveMwKcRGI06kMysfax3InFo3YCZcDcvoC3HX9wi9sgi5XH2Usaq9G7jN8Hgk
-	 27LWJFdoHjHPxInz2k5fmdUiy9Bfbn1q0QACt0+dyUdmjRjKs8rj/Wj7/jP8g7p/yRojL
-	 DUoStNYXhktAIdrYKiY3SSp5qEZ2n8c+nSm++FQGCfK5FHPccdaRNuKCEvA6oIGetL2dh
-	 zVTqZjHYPxq+OhXxT42RY8ybp7LcWJzcDwCTqjqLg8WniHFNa4Rgp9s17+U+PCc1yNQ==
+	t=1792941146;
+	b=xnxZe/g0BVWqmR6ClTgdaX4Mgrwbz/MxSyuuQuWNZy9GQWP5x6eVE/nNUbd6haQlT3iH
+	 mAPb0TSDiwP6OORYugYlYPDynFvO0/028/7NtuInRKj8bq8QCylSlaoecbZrSjQrtWVwZ
+	 EoK4Rs5veXPDPHupv2V2Jfltt2Cx7fmCjpQNie56pUFghuT2HySJ8zRvQvigfkH+wwhOB
+	 5dSAnU+Gq79GrXWy/+5QXROTGdJc+/MPKKADzF4cEGd3dHm4E9AEaC7I9yutxgFHXHW6b
+	 VlN67FDBUtxuCwzvIxjn18b3R1Eh4v/47eES4TfcyKtZPmgdo3njxhzGSYDNPaJSESA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792940865;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
-	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
-	 Date:MIME-Version:Content-Type;
-	bh=y8pn24/AU+bTl6zImMQMns5f1FAUSuc77vACk9sagUE=;
-	b=JeNvpZ48kwR2q8UdOT9S/Kqwqe2ukVGl2uz8Vk6gteoEBHIT3vslWL7YWaeBKzkJ8iAG
-	 sdguXoHZJGTJV/IisgKm4OgEtWJDjH41FInv59RYUxqbBl+09hIVKvruCdJWLZBQxrENL
-	 16BBRSjQt4CU9fo4A99xD3JC/crdFzSY5VhIMptglIF2uP2QhGEAE+dF8J201yOwknWv8
-	 64sgoZ8V3pjAnCCmK6jsd96dK1/k2t+xRsd5jRcN5aQmWfqAgeYyJkkKjh4XV9oTk0UhF
-	 0Zy0qOYbYr/Vr0VJLbDe1USU8Kkcn2Dp4A78S+0p0g6vbryXqqOOZNwA+tWl60ajsdQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792941146;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=vaNa7aNsyuGbWys8c3YAUqrzkr+8XFTTZYz0MDqNKUU=;
+	b=SSoPreA3KdCyn6ixOWXemWDpyBod1qkHZ4tH50klbZi8oNcIesceZlPz5LoMvH3KlSGo
+	 mSkaa+NUYAz2iTR70OKWvsdBqpwX57eCDZHNa397Lgt4d49qFl/Em+XB2Ay0g48DSGFq9
+	 6Zz9223s5xTqht77QRRvux+63hgKJuhS24v55zEmejSHIZLTxrNeNcyxWqRXuPPx/fM8s
+	 tOIn89LnrVlEg24MD93wZ88MAzVFkRhzTZdltjR0m2tt6VWnavyBUNqGCvUvjGifN7tIm
+	 7sc0A38W5qy2A0tLQrYUTh0ZHgAKizKT7m85Uh++wytvqQl1KFnm0+XdsuIP7FM0FRA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=RMZVBucm;
-	arc=none smtp.remote-ip=209.85.167.175
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GLi2RU+u;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A16F606A31A
-	for <mptcp@lists.linux.dev>; Sun, 25 Oct 2026 15:07:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7A16F606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB85606A31A
+	for <mptcp@lists.linux.dev>; Sun, 25 Oct 2026 15:12:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=RMZVBucm
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-4d7034a99a9so1387756b6e.3
-        for <mptcp@lists.linux.dev>; Sun, 25 Oct 2026 08:07:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792940864; x=1793545664; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=y8pn24/AU+bTl6zImMQMns5f1FAUSuc77vACk9sagUE=;
-        b=RMZVBucmHVvXl3+gMpS1omOStnTpSG4w9zn1Wl8wlNyNK9drwV4kRkPgvt+aF94lum
-         XQFKtciubeCJKqC6AqlG3iyqBqrO8aXLjBLEP42xdVExOPRXbsUx0b6lbBfmRydXbg8C
-         hUOj+15M2JY5+9ALrivbUyo0Bqn677RUr5oeIRyvthbHdGsi8dhDRzV/X4vG1op5d8Yh
-         z+E8VQF2Vt1fjZA+EJEXx80S6EPY81HAL7S2aZtPOlDUW3lLjd/jmJRvGR0dbt/R2IJq
-         dY9fJkewlvVyG/RXR8arSTGRErBDvgxi13DE5hMSB7Ud3Z/sVrsBzmi3n5WFmuSoyZJS
-         9bcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792940864; x=1793545664;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=y8pn24/AU+bTl6zImMQMns5f1FAUSuc77vACk9sagUE=;
-        b=kaSPxAieaTKQHIYpHN4kzoksvEIyIjlhr6Ea2eerH9xxAzEOHmHBjSGMs/dm6Foccd
-         xSfTuN0mgw0NgpuLAZCmxA6nWtT7w+ogrCOT8P+UuMN5hE8fMl6VJSL7PXCOojWMrRLN
-         amXL+htkCijbQOtjaM25IU7XaMg02b6uR7Z8OQIf9+aN/OFdTTIWL0B0cewF6yIVvhBn
-         usunAdtCzlFgVgLPqrxXYKVuUhXu4IC0hS141nTV5h3waNllpk7fz50+qzA17+bcFt37
-         zgZQjCi4SA5fjaiJny5GhziJE+t+EFFznSSIhRbUaPi3vxHf1MctK4VgB3AGuuK3pTrU
-         O49w==
-X-Gm-Message-State: AFq9FYLAgUYrO/bcuUN5HaQ90B/SkpM1LTCMJdhNmG5HlO6bA5kJTSJB
-	D9685mG8IahyxNl976izwtxXZecTUmZK1gkZI2DSZzQCoqA05eHRd4Q=
-X-Gm-Gg: AYBFou1+c4aQo1Gz5IExuPZ5UK/YA2WTQwT48sRJvz5JX9tQUq5RyXa+S/dokZa5l4G
-	a3sICL3Ode1oC39XkTFDX0RGWnjPshMKaLSf/1T2Bgh5jN6HxPC+bG76niy7ASGQzkw9ZQIwSHJ
-	2ICViBcgbegIbmr83mleVjgUMmlH7GDI+Kht86kK7j45WuyZncOuVr1S0AdE/zIXNfMbbQHBr6o
-	NgzhJeZ9pfkXq+zqPdvI+NmY6FhfQXxD3laI9jO6ujcb9DV6lUUF9HiG4wUd7Go75HUDILaAQcu
-	qiVQxEoai7eWvGHF291lXVrNSZpGqz52pbrB1IKJxRvUZqw6aXHITtF/R5fXYNRae8KuoLCqJRD
-	r9ZSQbLfeTPt3ckA+GCeSPsD8PRb97o5Okbc4M+f4kynZ3e+YFp3ykiqhA/NFo7dSEDHAPZMMYF
-	0m7PXV9d2Lcw+5AtqHli+qfBpqCN77puDOPrr1rvZrRedZPhrcCcFhNdtx0D5dkEEUGI7S8h71T
-	sZehV1I2DpMt/G4G8RORZm40XCT0OS65D1ypKHPOAMeiohEX6by5Z0iOb78YbpE+CDZvQ==
-X-Received: by 2002:a05:6808:1510:b0:539:ad19:d0cf with SMTP id 5614622812f47-55c0020b600mr2856324b6e.20.1792940864214;
-        Sun, 25 Oct 2026 08:07:44 -0700 (PDT)
-Received: from github.com ([135.233.180.49])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-55c04074375sm3413000b6e.1.2026.10.25.08.07.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Oct 2026 08:07:43 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Anil Kaushik <anilkaushikwireless@gmail.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20261025134909.2794368-1-anilkaushikwireless@gmail.com>
-References: <20261025134909.2794368-1-anilkaushikwireless@gmail.com>
-Subject: Re: [PATCH mptcp-next v9 0/6] mptcp: pm: in-kernel: retry subflows
- closed after an error
-Message-ID: <f75cd54d-2b3b-4984-1372-6c0f98f197a4@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 25 Oct 2026 15:07:42 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GLi2RU+u
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B67351F01825;
+	Sun, 25 Oct 2026 15:12:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792941146;
+	bh=vaNa7aNsyuGbWys8c3YAUqrzkr+8XFTTZYz0MDqNKUU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=GLi2RU+uK5LyctJB0dF+6ws8/avb4t6ACYrCBFABPTH5VHc8pG3LoEJKWzmQcaIja
+	 B0h0RSuJdOsyMW5L9NbqSYtRER0YJwL5DXD7foVgvCAKp8tVpqyK2YXGy4fdhOUr53
+	 /UC/t4ZP9vWKPqqm69brIAmXISVEYE9eQ0A+g3AUe3ZE8ns3+dONnlGTdtSPEv2y9y
+	 S6NKo/WCkfhc3P13VVsicmlW8gpOIorgZWb525uRHn8jlt01bOK24SYAqerrUOuaMh
+	 p9Or8wEXKnjDfX8erowley2gsYEKaMMMna7KvzBfLmO/M2YRlvsDO7x3RQU+eQP+bd
+	 cbfq+l8k0Ee2A==
+Message-ID: <5e0ccd66-205f-4055-8ab3-4d300e83fd48@kernel.org>
+Date: Sun, 25 Oct 2026 16:12:21 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -97,55 +51,171 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [RFC PATCH mptcp-next 0/1] mptcp: opportunistic reinjection on an
+ idle subflow
+Content-Language: fr
+To: Abdul Wasey <w453y.me@gmail.com>, mptcp@lists.linux.dev
+Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Shardul Bankar <shardul.b@mpiricsoftware.com>
+References: <20261025134643.1537069-1-w453y.me@gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20261025134643.1537069-1-w453y.me@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Anil,
+Hi Abdul,
 
-Thank you for your modifications, that's great!
+(+cc Shardul)
 
-Our CI did some validations and here is its report:
+On 25/10/2026 14:46, Abdul Wasey wrote:
+> This is an attempt at issue #332, the "opportunistic retransmission" of
+> section 4.2 of the NSDI 2012 paper, which the out-of-tree kernel had.
+> 
+> I found it from a multi-WAN router: a fast link next to a slow one gets
+> much less than the fast link alone, because data sent on the slow link
+> holds back the DATA_ACK until the receive window or the send buffer is
+> used up. With the default tcp_rmem, a 400 Mbit link next to a
+> 15 Mbit/240 ms one gave 67-82 Mbit in total with BBR, and 30-142 with
+> CUBIC. With this patch it is 320-345, and uploads gain the same.
+> 
+> When a DATA_ACK shows that no new data can go out and an active subflow
+> is idle, the data the slower subflows hold is resent on it: the ranges
+> from the DSS mappings in their queues, not everything from snd_una. It
+> only does so when the copy can arrive at least one RTT of the idle
+> subflow sooner, and no more than the idle subflow can send in that time.
+> Without these limits it cost about 1% on simult_flows.sh's unbalanced
+> cases, and even waking the worker for nothing showed there, so the
+> decision is made before scheduling it.
+> 
+> A subflow that had a retransmission timeout and no progress since is
+> left alone: the copies would keep the MPTCP-level timeout from firing,
+> and with it the stale detection (mptcp_join.sh's "multiple flows,
+> signal, link failure" caught that).
+> 
+> Tested in netns on the current export, against the same kernel without
+> the patch: nine 2-path cases with BBR and CUBIC, 6 and 32 MB tcp_rmem,
+> uploads and downloads, 3 runs each and 16 for the slow lossy path.
+> mptcp_connect.sh, mptcp_join.sh (twice) and simult_flows.sh (16 runs)
+> pass as they do without the patch. The 2-path cases, mptcp_connect.sh
+> and simult_flows.sh also ran on a KASAN + lockdep kernel, with no
+> report, and on a KCSAN one, whose reports are the same data races in
+> mptcp_subflow_get_send() and mptcp_subflow_active() that it shows
+> without the patch.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Perf: Unstable =E2=9A=A0=EF=B8=8F
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/40200459151
+Thank you for working on this.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/65fbacd31d21
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1193019
+That's indeed something we need to improve.
+
+Before replying to the questions below, I think it would be good if you
+rebase your work on top of Shardul's one:
 
 
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
+https://lore.kernel.org/20260911-mptcp_penalise_send_v2-v4-0-820f2be4a8fe@mpiricsoftware.com
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Note: this work looks good to me, but I was waiting for external reviews
+(because I helped a bit) before applying it (and other urgent fixes/work
+kept us busy...)
 
-For more details:
+> Questions, since this is an RFC:
+> - It is in the core, for every scheduler. Should it rather be a
+>   scheduler hook (#344), with the default scheduler using it?
 
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+Yes, I think it should (and moved to sched.c), but having a wait for
+others schedulers to re-use that. At the end, that's a decision a
+scheduler can take depending on the use case. But we want that by default.
+
+When discussing #332 with Shardul, it was clear that the current MPTCP
+packet scheduler API is not flexible enough to stop sending on one
+subflow and force a reinjection on another subflow. I think it would be
+best to take over the following old series, rebase it, address the
+comments, and validate it:
 
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+https://lore.kernel.org/all/20240527-sched_per_packet-v1-0-09a41d405f7c@gmail.com/t/#u
+
+Once it is there, I think it should be easier to modify the scheduler to
+force a reinjection, e.g. set a flag to stop pushing, then find a way to
+force using another subflows (e.g. the stale flag or another one). WDYT?
+Also, if this work is in place, it would help to add BPF support for the
+MPTCP packet scheduler.
+
+Note that I don't know if Shardul is still looking at that. (BTW, sorry
+for delaying the work you did with #345 ... note that, in between, I
+managed to get Clashiko (Netdev Sashiko) doing reviews not to be blocked
+when upstreaming them: so probably we should also check what Clashiko
+thinks about this series by resending the last version, to "be prepared"
+or to fix issues if any we missed during dev/review).
+
+> - The rules (slower, one RTT of gain, budget) come from my tests. Is
+>   there a better signal to use here?
+
+I guess imitating what the old fork was doing is a good starting point.
+
+> - mptcp_oppr_check() runs on each DATA_ACK and reads the other
+>   subflows' queues and RTTs without their locks: is that acceptable as a
+>   heuristic, or should it be done differently?
+
+Was the fork not limiting this to once per RTT? In any cases, it will be
+needed to measure the impact on high perf transfers.
+
+> - I could not find a short simult_flows.sh case where the stock kernel
+>   is clearly slower: the stall needs a few seconds of traffic to build
+>   up. Would a counter based test (OppReinject moving on a lossy slow
+>   path, with the data checked) be enough?
+
+I'm (still :( ) working on a perf lab that might help to measure the
+behaviour in different conditions. Would that help here? I don't think
+we can have such tests in the selftests: stability needs to be measured
+on long runs and in "stable" environments I guess.
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
