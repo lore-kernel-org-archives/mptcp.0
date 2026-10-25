@@ -1,56 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792886466;
-	b=13XZc/OhHpjW0j2RYrjfhNme0aFuNOL9v6gBFufMNh+EhTMu3e7MuBzovCv6hsLqEbD8
-	 WcuFvLkwo5xqzCCprvgyd1LPPj0BNF9M2CZBcdMqbYcZ1Tg/onBM0uXNMPfQPqGQv7nof
-	 N/Vf7omlzGSnezzFz7RlJNhkbaxsmjeP/auOtSNhbUMlQvETDccHDzMw93zlqJF/TZdBn
-	 ph2CtdZc8SPe7/or/1auRpFojhMl2Vk+wH9HSYjki2kLUBBWjORqiJa9C5wYBbXZr12AD
-	 1uNbvOXCHbFBu673plbeVt1g+Ax9X7oabJZSdaQFrG7AbmiA2ryu5Sp37sVJsCc6Z7g==
+	t=1792899657;
+	b=o2oOqjmDOr1ARMHmbHPUAwJVjKFvsBl3Lwo+eJHbNYZPluY7CgcgUKgR9TtkDzPA1gay
+	 ZuUkcs5SBIWobXsHv5cv/1I7UojxWqDpMc/peWXVtjOMMqINlLZp6FUOkZcgtceUR8Q8S
+	 cocpg8f6dlt6jqcJJ/iuT67C4/TzK4n6VVpSpN8D6X0o05dU6bIpzTYNTtT1bGfj92G0L
+	 0BqTJv2Fr4rlftUG/iwLbcW7EWjhuQFZ99s3XDcainwNHtGp/4p3wubMnAx601D+jOLhC
+	 CCnrgcoXFadg7Qh3NHbjGReFrOQ07le8Fv1rHNESifJonN/hMkyB+Bhnuie4Me/M6bQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792886466;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792899657;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=jbVBejo2uto+Jd7jW4dgNdqbBXMg9WCrh1sx9t99UE0=;
-	b=WdnY0K7UYYrzb8qFwdGBwu1FhMpndDZbtZNcAwTZDSlxAWLUKj2DqfLIdtFd0QaIVFQk
-	 mbIbqXAnZzHcIWfxR8y4YX0tDGUBx5oo/k70DlTxbZLaXxxdQa7XttzjypbOFg6dj5ALl
-	 0wFMYtvm/xbvgbfaCc5tXu/AW2BYVwGknuy1HgDOHPOKpIwHVXSoVaXDu0ufYAjF4NhbO
-	 D5bd1JdlwOJGjKKrsSBVU7QrQS/9tomkWa2KHO9/jtcY2NJuzA15fqQ9U3+cNk0rAwhmw
-	 9vQCCKbvK9KCSA+NtW6/hM3WaQLzZ8oaJ/N3gUXsxnuMteTpU8CCKKcrPO80S09Pcfw==
+	bh=+LsZfoj0hgxigZs766yoV7Yxz48rmom0RCG/r6XILPw=;
+	b=X20FRJLK373lvAIj/ZqInQ6hUeWqwKoKwx95bMppbYZLzPa/FK8aPsQroTP5lyKwdgZL
+	 z6KsFEk89JDFiWqLtheTDFRANf3jcI8vUP5DOcf36Sshdo7C2EM3Hq/gf4/4F1+gO+asB
+	 ySuk1m2Cfmj9EXR/4D4RKkbKaRFQE51sWZRr5V1DJtr80S7i9ABtgMMEzFxEo8o1pB0h7
+	 dlZqk3BR3ClrtAP2YPYhoLuYycbLpeAKXM6KC7y02e99NHR/CMvIM4/LZoWIxntoF0jec
+	 YgA+QU0YM0jNvIWr+ZbRiNhPZX2yeNHQ/MAJd44lyigkKFlhJB9GLWlJkiGJYPb95zw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PpfkSlkf;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Rn3/WM6U";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0411606A31A;
-	Sun, 25 Oct 2026 00:01:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD35606A31A
+	for <mptcp@lists.linux.dev>; Sun, 25 Oct 2026 03:40:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PpfkSlkf
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F148C1F01825;
-	Sun, 25 Oct 2026 00:01:04 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Rn3/WM6U
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 422DD1F01825;
+	Sun, 25 Oct 2026 03:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792886465;
-	bh=jbVBejo2uto+Jd7jW4dgNdqbBXMg9WCrh1sx9t99UE0=;
+	s=k20260515; t=1792899656;
+	bh=+LsZfoj0hgxigZs766yoV7Yxz48rmom0RCG/r6XILPw=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=PpfkSlkfR/myhnASgCUeU4se2a0nesYT2zNtb3Pa9RVSw8zzl8tossOUAnR9Dgvo5
-	 JQ0QcRNW+ZjoKbIntteGEBm9KTDilkbyrXf+CKGww4CH+/OJTBs1seDkaX14pIT6Sm
-	 ZvR10Kje3kRIacyd2pFpfn+fdUJ+elTIvCco6TdrPNfwG44C5WKW3CA5VZupwnCYc+
-	 AXeNsSzSwNi3B5ben2Mc/2rD3edAhLNkKel9tZEgxGW7NSqKehQOpJBYCtFYoUUUQ6
-	 JE2BOsCnkvAtxQhZWxy+09PKe66hgKpAA0rIvgaG0PJtQ8WK2zZk/e05iBcBOjzWUW
-	 KFXRqI+ktufQQ==
-Subject: Re: [PATCH mptcp-net v7 2/2] selftests: mptcp: join: re-add the
- initial subflow endp with fullmesh
+	b=Rn3/WM6U58trCpI2zl8DMiOJf1pbm6WcUe2/o3vBwodncOpZHIbHibbh0abIo4rN0
+	 1WJ9cTaJMLpiZuRdL4rhIlb9Gi1c3zCGBZw/MueGXnijeIovXVp27PLc6etoJ7P/pz
+	 mYkfVlOGEVjxQWZ0LUdIS8n8m2GMxvscaW2pdb3jbnsYzErXtzKXs5DhQB9Le+umnv
+	 mb1w6mE2I3oqGN7Lg3FDgNxdRhswLl9GaK5JeFYYLyP7G/7tbpv5Ia7M03ePHIUyVC
+	 vzr78F3sPnP3IoEO9FhA9Tg9uwMwOH9BC26YPwoERXzLaCNwoqAZcRJJ4+6kcogBVW
+	 C2dYeYPUWAo9g==
+Subject: Re: [PATCH mptcp-next v2] selftests: mptcp: sockopt: echo until EOF
+ on partial reads
 From: netdev-bot+sashiko@kernel.org
-To: w453y.me@gmail.com
-Cc: mptcp@lists.linux.dev, matttbe@kernel.org, martineau@kernel.org,
- geliang@kernel.org, pabeni@redhat.com, stable@vger.kernel.org,
- kuba@kernel.org
-Date: Sun, 25 Oct 2026 00:01:04 +0000
-Message-ID: <179288646445.3132.10444972890542088038@kernel.org>
-In-Reply-To: <20261023110321.403874-3-w453y.me@gmail.com>
-References: <20261023110321.403874-3-w453y.me@gmail.com>
+To: quanyeyang@proton.me
+Cc: mptcp@lists.linux.dev, kuba@kernel.org
+Date: Sun, 25 Oct 2026 03:40:55 +0000
+Message-ID: <179289965578.3132.14505074087260563831@kernel.org>
+In-Reply-To: <20261023-fix-mptcp-issue-639-v2-1-14a3d3746d2d@proton.me>
+References: <20261023-fix-mptcp-issue-639-v2-1-14a3d3746d2d@proton.me>
 X-sashiko-severity: High
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -64,10 +62,10 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 1 potential
+Thank you for your contribution! Sashiko AI review found 3 potential
 issue(s) to consider.
 
-Critical: 0 · High: 1 · Medium: 0 · Low: 0
+Critical: 0 · High: 1 · Medium: 1 · Low: 1 (1)
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -75,111 +73,209 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [High] The new subtest "delete and re-add, fullmesh, after reset" in
-  endpoint_tests() (tools/testing/selftests/net/mptcp/mptcp_join.sh)…
+- [High] This is an incomplete fix: connect_one_server() on the client
+  side still has the same partial-read bug that the patch fixes in…
+- [Medium] The commit message's account of the pre-patch failure does not
+  match the pre-patch code.
+- [Low] selftests: mptcp: process_one_client() passes size_t to PRIu64 in
+  xerror()
+
+Pre-existing issues:
+- [Low] The patch did not introduce this problem, but it rewrote these
+  exact argument lists.
 
 --
 
-selftests: mptcp: join: re-add the initial subflow endp with fullmesh
+selftests: mptcp: sockopt: echo until EOF on partial reads
 
-This patch adds four subtests to endpoint_tests() in mptcp_join.sh. Each
-one removes and re-adds the endpoint of the initial subflow with the
-fullmesh flag set: with a second subflow, after a reset of the initial
-subflow, and with only the initial subflow. The goal is to validate the
-previous in-kernel fullmesh fix.
+This commit changes process_one_client() in the mptcp_sockopt selftest so
+the server echoes data in a loop until read() returns 0, retrying short
+writes. The accumulated nread/nwritten counts replace the single read and
+write sizes in the existing sockopt checks.
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index f4d8afaeda4f3..98dc8de81cf01 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -4424,6 +4424,135 @@ endpoint_tests()
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/639
 
-[ ... ]
+> The client keeps reading until it has the full length and only then
+> closes the socket. The two sides wait on each other and the test
+> hangs until SIGALRM.
 
-> +	# same, but the initial subflow is reset before removing its endpoint
-> +	if reset_with_events "delete and re-add, fullmesh, after reset" &&
-> +	   continue_if mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
-> +		pm_nl_set_limits $ns1 0 2
-> +		pm_nl_set_limits $ns2 0 2
-> +		pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullmesh
-> +		pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2 flags subflow,fullmesh
-> +		{ timeout_test=120 test_linkfail=128 speed=5 \
-> +			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
-> +		local tests_pid=$!
+[Severity: Medium]
+
+Does this match what the old code would do? Before this patch,
+process_one_client() ran this after the partial echo:
+
+	/* wait for hangup */
+	ret3 = read(fd, buf, 1);
+	if (ret3 != 0)
+		xerror("expected EOF, got %lu", ret3);
+
+The client had already queued all len bytes with one write(). Once the
+remaining bytes reached the server, this read() would return 1 and the
+server would exit through xerror().
+
+That closes the socket, so the client's read() returns. Both processes
+would be reaped well before alarm(15).
+
+A mutual hang seems possible only if the remaining bytes never reach the
+server's receive queue. In that case the new loop would block in the
+same way here:
+
+	n = read(fd, buf, sizeof(buf));
+
+and the client would keep waiting for len bytes.
+
+Could the hang reported in issue #639 have a different cause, perhaps in
+the client side accounting in connect_one_server() or in the kernel? If
+so, is the Closes: tag right for this patch?
+
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> index b6e58d936ebe5..deb239058e796 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> @@ -638,7 +638,8 @@ static void connect_one_server(int fd, int pipefd)
+>  
+>  static void process_one_client(int fd, int pipefd)
+>  {
+> -	ssize_t ret, ret2, ret3;
+> +	size_t nread = 0, nwritten = 0;
+> +	ssize_t ret, n, w, off;
+>  	struct so_state s;
+>  	char buf[4096];
+>  
+> @@ -648,46 +649,53 @@ static void process_one_client(int fd, int pipefd)
+>  	ret = write(pipefd, "xmit", 4);
+>  	assert(ret == 4);
+>  
+> -	ret = read(fd, buf, sizeof(buf));
+> -	if (ret < 0)
+> +read_more:
+> +	n = read(fd, buf, sizeof(buf));
+> +	if (n < 0)
+>  		die_perror("read");
+> +	if (n == 0)
+> +		goto hangup;
 > +
-> +		wait_event ns2 MPTCP_LIB_EVENT_ESTABLISHED 1
-> +		wait_mpj 1
-> +		chk_subflow_nr "before reset" 2
-> +
-> +		if ip netns exec "${ns1}" ${iptables} -A INPUT -s "10.0.1.2" \
-> +		      -p tcp --tcp-option 30 -j REJECT --reject-with tcp-reset; then
-> +			wait_event ns2 MPTCP_LIB_EVENT_SUB_CLOSED 1
-> +			ip netns exec "${ns1}" ${iptables} -F INPUT
+> +	for (off = 0; off < n; off += w) {
+> +		w = write(fd, buf + off, n - off);
+> +		if (w < 0)
+> +			die_perror("write");
+> +		if (w == 0)
+> +			xerror("write returned 0");
+> +	}
+> +	nread += n;
+> +	nwritten += n;
+> +	goto read_more;
 
 [Severity: High]
-Where does ${iptables} get set? I can't find it assigned anywhere under
-tools/testing/selftests/net/mptcp/. These two lines seem to be its only
-uses.
 
-mptcp_join.sh only uses nftables. init() checks only for these tools:
+Does connect_one_server() on the client side still have the same
+short-read problem? Its read loop adds the echoed bytes up in total, but
+the sockopt check after it passes the size of the last read() chunk:
 
-	mptcp_lib_check_tools ip tc ss nft
+tools/testing/selftests/net/mptcp/mptcp_sockopt.c:connect_one_server() {
+    ...
+	total = 0;
+	do {
+		ret = read(fd, buf2 + total, sizeof(buf2) - total);
+		...
+		total += ret;
+	} while (total < len);
+    ...
+	do_getsockopts(&s, fd, ret, ret);
+    ...
+}
 
-When the variable is empty, the command expands to:
+With this loop, a short first read() on the server makes the echo go out
+in several write() calls. The client is then likely to receive it in
+more than one read(), which leaves ret holding only the final chunk.
 
-	ip netns exec <ns1> -A INPUT -s 10.0.1.2 ...
+do_getsockopt_mptcp_info() would then run this check with w smaller than
+the len bytes the client wrote:
 
-That always fails, so the if condition is always false. The checks that
-would exercise the fix never run: the SUB_CLOSED wait, chk_evt_nr, the
-endpoint delete/re-add, wait_mpj 2, chk_mptcp_info and chk_join_nr.
+	assert(s->mi.mptcpi_write_seq + w == i.mptcpi_write_seq);
 
-> +			chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_CLOSED 1 error 1
-> +
-> +			pm_nl_del_endpoint $ns2 1 10.0.1.2
-> +			pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullmesh
-> +			wait_mpj 2
-> +			chk_mptcp_info subflows 2 subflows 2
-> +			chk_join_nr 2 2 2
-> +		else
-> +			mark_as_skipped "unable to set the filter rules"
-> +		fi
+That assert fails and the client dies with SIGABRT. Without the assert,
+do_getsockopt_tcp_info() compares tcpi_bytes_sent/received against w/r
+and would call xerror() after its retries.
 
-Since the if is always false, this else branch always runs.
+So the segmented-payload case from the commit message still looks like
+it fails the test, only in a different way.
 
-mark_as_skipped() calls mptcp_lib_fail_if_expected_feature(). With
-SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES=1, that helper does:
-
-	echo "ERROR: missing feature: ${*}"
-	exit ${KSFT_FAIL}
-
-The test groups run in the main shell, so in that mode the whole
-mptcp_join.sh run would stop here and report a failure. None of the
-later tests would run, and the background run_tests would still be
-running when the script exits.
-
-In the default mode, this subtest is always reported as skipped. It would
-still pass if the previous fix were reverted, so the "after a reset of the
-initial subflow" case from the commit message is never actually tested.
-
-Should this use nftables, like the existing reset test in
-userspace_tests() ("userspace pm no dup close events after error")?
-
-	init_nftables
-	...
-	ip netns exec "${ns1}" nft add rule ip filter INPUT \
-		ip saddr "10.0.1.2" meta l4proto tcp \
-		tcp option mptcp exists reject with tcp reset
-
-Unlike reset_with_tcp_filter(), reset_with_events() does not call
-init_nftables. The test would need an explicit init_nftables call, and
-something like "nft flush chain ip filter INPUT" for the cleanup.
-
-> +
-> +		mptcp_lib_kill_group_wait $tests_pid
-> +		kill_events_pids
-> +	fi
+Should connect_one_server() call do_getsockopts(&s, fd, total, total)
+instead? The other checks in that function already use total.
 
 [ ... ]
 
+>  	/* be nice when running on top of older kernel */
+>  	if (s.pkt_stats_avail) {
+> -		if (s.last_sample.mptcpi_bytes_sent != ret2)
+> +		if (s.last_sample.mptcpi_bytes_sent != nwritten)
+>  			xerror("mptcpi_bytes_sent %" PRIu64 ", expect %" PRIu64
+>  			       ", diff %" PRId64,
+> -			       s.last_sample.mptcpi_bytes_sent, ret2,
+> -			       s.last_sample.mptcpi_bytes_sent - ret2);
+> -		if (s.last_sample.mptcpi_bytes_received != ret)
+> +			       s.last_sample.mptcpi_bytes_sent, nwritten,
+> +			       s.last_sample.mptcpi_bytes_sent - nwritten);
+> +		if (s.last_sample.mptcpi_bytes_received != nread)
+>  			xerror("mptcpi_bytes_received %" PRIu64 ", expect %" PRIu64
+>  			       ", diff %" PRId64,
+> -			       s.last_sample.mptcpi_bytes_received, ret,
+> -			       s.last_sample.mptcpi_bytes_received - ret);
+> -		if (s.last_sample.mptcpi_bytes_acked != ret)
+> +			       s.last_sample.mptcpi_bytes_received, nread,
+> +			       s.last_sample.mptcpi_bytes_received - nread);
+> +		if (s.last_sample.mptcpi_bytes_acked != nread)
+>  			xerror("mptcpi_bytes_acked %" PRIu64 ", expect %" PRIu64
+>  			       ", diff %" PRId64,
+> -			       s.last_sample.mptcpi_bytes_acked, ret,
+> -			       s.last_sample.mptcpi_bytes_acked - ret);
+> +			       s.last_sample.mptcpi_bytes_acked, nread,
+> +			       s.last_sample.mptcpi_bytes_acked - nread);
+
+[Severity: Low]
+nread and nwritten are declared as size_t, but these three xerror()
+calls pass them straight to an "expect %" PRIu64 conversion. On 32-bit
+(ILP32) builds size_t is 4 bytes while PRIu64 consumes 8. That means
+vfprintf() in xerror() reads past nwritten/nread and picks up the wrong
+bytes for the PRId64 diff that follows.
+
+The diff argument itself is fine. Subtracting a size_t from a uint64_t
+promotes the result to 64 bits, so only the bare nread/nwritten
+argument is the wrong width.
+
+The mptcpi_rcv_delta xerror() just above already casts with
+(uint64_t)nread + 1, so the patch is not consistent here. xerror() has
+no printf format attribute, so the compiler does not warn about this.
+
+The old code had the same mismatch with ret/ret2, so this is not a new
+problem. But these argument lists are being rewritten anyway, and when
+one of the mptcpi_bytes_sent/received/acked checks fails on a 32-bit
+machine, the expect and diff values would be garbage. That is exactly
+when the output matters.
+
+Could you either cast nwritten and nread to (uint64_t) in these calls,
+or declare the two counters as uint64_t? Is it also worth adding a
+format(printf, 1, 2) attribute to xerror() so the compiler catches
+this kind of mismatch?
+
+[Severity: Low]
+
+This isn't a bug introduced by this patch, but these argument lists are
+being rewritten anyway. nwritten and nread are size_t, while the format
+strings use PRIu64.
+
+The mptcpi_rcv_delta xerror() above gets a (uint64_t) cast, but these
+three calls do not. xerror() has no printf format attribute, so the
+compiler gives no warning.
+
+On 32-bit builds, would the expect and diff values print as garbage when
+one of these checks fails? The old code had the same mismatch with
+ret/ret2.
+
+>  	}
+>  
+>  	close(fd);
+
 -- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261023110321.403874-1-w453y.me%40gmail.com
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261023-fix-mptcp-issue-639-v2-1-14a3d3746d2d%40proton.me
