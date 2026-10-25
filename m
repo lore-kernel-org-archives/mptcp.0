@@ -1,56 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.161.44
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792938067;
-	b=zICvdl0dbFNN5k/zW/zLcXZbksmbqAwZ6toLWvs9BYZACZleeA+hsuq7qYRKwCfbvF3t
-	 5gEmG9r/Xr92v0CRwQfb9yaNg+JUYqFMA0vG81XaP2I++/M1+d2AAE8mf37muGlI82zlY
-	 LZxMCT1SCgF4PQoPJNx6aXS5M4hnOSwoguhzy9cLIxCbckMmXyJdAeZrYnOALt72G+R6a
-	 vf3UBcoxCL0US7PgaEvU7YW2JNic7Z8CTdXjo68Ho2p8w/z6b/3ONTG3F1xRgX8nFTL/X
-	 aadSyABEqGn8Nh20o4Taurm/d7ZcxOOYH+4vijJUKsY+zwWvOVWVdBEdGOaiKiDhPTA==
+	t=1792940083;
+	b=r+lu2oFIJjiqscCVLpiJ+GH4xXRkd39uOdlThN654FVV8zGKNBesjuk5JNNCL48VjChY
+	 J4NXvCLzhg77tmUeYH5wBd76YZS5fF9uDSz+yi1uRPE7CI6FD9sKFA24w+Lj6K+UwQZOH
+	 B4XsIJg3JVZdXP+3DbFZDn1UzQUPv28DT76lnZvnUUWhIdwmOdUU32VqcEJZSvxG3yBKG
+	 Fwh8U7+hao/aSq8qPURA08TNbV9t/8iISqZ5rPKHeVp+YB3HwF/pRZP3Fhsc3gWL8mUxc
+	 DdRah0+TICNpLx1bFnwCVk3hmsj7fdcxa/YUJoIp0+3eQu07BdiYogFR4qrxHA6CKTg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792938067;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=pmf1od8G+sJepafyOW0AAig4MdyGkDFQum2y2eeomew=;
-	b=fVYqj9CryCQxRoUf1F/+tNkVRv66258S4Bhtw81jUIxmyZhRk8jUFsswFOfJwmFnKHMP
-	 KDxtWepU8jSLw71l2r9P8Q6Ug6H1KjhqyKvVt0ipIh//BEfpv0Yqh0Hx1g+YzokXBVORB
-	 yUFrusq0CQKfgj7qpAd/OgIzadl6Z2onwlDoDTpQSX37+vwETfwqQEewLLFD89DBZk6Z2
-	 u7fXwCYRd7bkEn2oP4zkwBRx5mRo3ODci+Ck1ywzxNNYqCZI62TrXOBtNcAZA0Hte1eCp
-	 eJx4T5149ce5EGr3U1ySBpSdanBIAvTVThuGFPnGgNIkKUu4s6k5lnJRmbOoB1a9+Pw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792940083;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
+	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
+	 Date:MIME-Version:Content-Type;
+	bh=LPd1R5sQq1Wmdqb/BhEs16Nl9eG2A9tDNFnEOqgZLF4=;
+	b=SJSVn1584eI6UP5p0tlM0oApN6Pi0GS7YPPioVLUAwjWXXKJlk9zEvQNr2IefGXp0Wsa
+	 Fuhe4M7MSEhPUaiYikiFj7dveKI9DeM3z+9218VZgF3zXNlMcevrp8bj/7LwFLu2fSk/N
+	 +GSpe8VPJtNL/qP2HN78/Vm2Jq83aA3G7lR90sN71Tv5xjNAoyGsVRaS5SZSylgC4PRXU
+	 FZnjbedkFotUbLGHSFxHBfD9l1rYGG7rrvzf6U/0XV0KVLYapB8dvs2cwgcBiYcszyLBp
+	 1jTin9iJvezXwdTmsbRDomISIO50MKcn8zmk8N0ffWgeLRRLXgN6Hs2HTEeQil5fyng==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=e7agvhqj;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=TUDHQ+yW;
+	arc=none smtp.remote-ip=209.85.161.44
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C8B606A31A
-	for <mptcp@lists.linux.dev>; Sun, 25 Oct 2026 14:21:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78132606A31F
+	for <mptcp@lists.linux.dev>; Sun, 25 Oct 2026 14:54:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 78132606A31F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=e7agvhqj
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD0921F01825;
-	Sun, 25 Oct 2026 14:21:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792938067;
-	bh=pmf1od8G+sJepafyOW0AAig4MdyGkDFQum2y2eeomew=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=e7agvhqjZHM7Y7nuC+x1ncEmJpkiF974WGrrM7rQd7XBp75E6qIxgVuwZ9SSemPnR
-	 /6KBnUnea/zGWvqrxtE9GopzDxmFWP6er1H+K/ZXvnSCPKA7qE4jwTyU/9YpmAAjej
-	 ccF8Htuf1YXHnc/Sv/3ip5mVscZGgYMBKSxNGa4gZVWgP6WyciB3rZooVckpIRvlHR
-	 JzcM01hA0Ov9SyrS1cVRMsD9lCKJmq6n2z+e7nHGQr54ChRH9jHzttaE6/PuN/YmEd
-	 fJZgkBBAi+9dOBGlNjQJkuZOkjq1zCpOQwV+i8hRuJfOB0byKmySrAi72Nw5bbgJsI
-	 l1c8jZQGwG4Lg==
-Message-ID: <sashiko-outbox-184246@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v9 4/6] mptcp: pm: in-kernel: retry subflows
- closed after an error
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Anil Kaushik" <anilkaushikwireless@gmail.com>, mptcp@lists.linux.dev
-In-Reply-To: <20261025134909.2794368-5-anilkaushikwireless@gmail.com>
-References: <20261025134909.2794368-1-anilkaushikwireless@gmail.com>
- <20261025134909.2794368-5-anilkaushikwireless@gmail.com>
-Content-Type: text/plain; charset=utf-8
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=TUDHQ+yW
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-6de2f213b7aso973106eaf.0
+        for <mptcp@lists.linux.dev>; Sun, 25 Oct 2026 07:54:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792940082; x=1793544882; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=LPd1R5sQq1Wmdqb/BhEs16Nl9eG2A9tDNFnEOqgZLF4=;
+        b=TUDHQ+yW7riZU12mQLt0MYdj6aoCe+1fkP7LLo0kYCC8vczFLz8z7eqiq8LKgCGYYo
+         Dme+EIpLJRyla9TiB7h2k+HLnBooHEFabstTfi8Lf+DcZ02AJFJugs6MvR7umLv5sgPR
+         rKLJYXkrQXnqBeiBptCyn5/8Bik6TkCIcLHGzZHCtNGxHqFuJeSgk3DokUoCRIo7y4rD
+         V1AMF4dJAOywWn4QycJYYy+nKvcdaS7dSOu5hVAIHEJAuygnP82PtXEQFgoXXmirbJ3e
+         BuurW54uL8QuXCAnp55Q2C1AynLVT2Ni+eVU0tiEu0i+FuOkz9F5+fcZGllSysoux+dZ
+         Az2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792940082; x=1793544882;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=LPd1R5sQq1Wmdqb/BhEs16Nl9eG2A9tDNFnEOqgZLF4=;
+        b=tVNmaXaZxlPUsewKeZo6Gl3sUellD17vDcGP7nj9jHVHxZlBWOOUnnKoP6L7eZ/+nm
+         6nmtRYdUoTJuI+J/sPqitEIMWUxRwJJ0IiWVJg6DHVRaQjS8gDAFEHUxsexSWgS29Y5J
+         6AOgT0wirHUPu1obuQV0SqUzTmHfamnXdJpM9GpAh1MhpCDHTJKsBPyokmwlEPk2++xk
+         JekEvH4AIj0Y9dqGGZaWTeNdXuzj6w5nGrB5mT1FsawNbPNEJ5v+egJ3hEvAtsamDZ1A
+         zsVEIYqIiU7pC0tgZUM4YAkhem0G/PwpWBnF+K2w7F7Nf2zJ36Vp8lfzFYUvMNPQ8gBM
+         0GvQ==
+X-Gm-Message-State: AFq9FYIjCJUEnVbKCMpGFGvwYK69S3w+LbAgTD1/tg1A6uIF2GhxqX68
+	GvRZBShnyqvExbvF9oKapPqpPyR72S5+uU/K+4hWc850CDXtg6wtU4o=
+X-Gm-Gg: AYBFou1qgSgnX561F+waRWbtzEA11uZiFdQUxrm5KwKX/FAGLDAs1omwnh2tasYpkPJ
+	Az3ghmbmVKp7FhT7na0D9mreRhixWmSmsu9BAtHN2pkcjTFVJOHgNm3uJarvfNhpu2sTSwsec52
+	64Y9g32PxgPiq7/oSEzPFSuf9cKafn5y+QFEctTxSMKlwcz/WyS8hh898JV2SW0HgEgVBauu2xM
+	j66FIFCm9zmtoCyy/14L6BEi0UH+YG1mTVhdxKf5HWAbhUbCyg7xGCPYY5LdqPnQYljsBPaGvi4
+	1FCgklx2ocNmdsLwgx69oKUXOxALFCE3QiXXuDKcny37WX/E6KY2Yaj/QE3K8DrgWzuyQxcf2ht
+	zg+yBZ30Csx43ODtI0+0zBr4JxXEXm5MlFyIAYpz9GFGYTcDbcPiVa1b50KNH2dldxMl68dFW8H
+	EaHP+vVW1aQ6eDzItSJ2Ci3d60iNd7evRdy/Uwms0sX8F8wjK+J4H9UOFo8znQs2lcB9fOwaDcZ
+	KpaeNo7L1EwIaCPAoV9txd3FdEdwqlAvp54zu6zJUuyPwBA9rVujU8F60NCcLXu5YbQZvAAysM/
+	/dG3paIEf3v6ZA==
+X-Received: by 2002:a05:6820:f023:b0:70d:cb53:ee71 with SMTP id 006d021491bc7-70dcb54267fmr402263eaf.13.1792940082329;
+        Sun, 25 Oct 2026 07:54:42 -0700 (PDT)
+Received: from github.com ([52.173.162.99])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-70b9da521b6sm4756319eaf.0.2026.10.25.07.54.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 Oct 2026 07:54:41 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Abdul Wasey <w453y.me@gmail.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20261025134643.1537069-1-w453y.me@gmail.com>
+References: <20261025134643.1537069-1-w453y.me@gmail.com>
+Subject: Re: [RFC PATCH mptcp-next 0/1] mptcp: opportunistic reinjection on
+ an idle subflow
+Message-ID: <451da49a-47f6-9060-3402-924dcd6f883e@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 25 Oct 2026 14:21:06 +0000
+Date: Sun, 25 Oct 2026 14:54:40 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -59,192 +97,60 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] mptcp: close timeout from mptcp_retry_check_tout() not stopped on =
-retry join
-- [Medium] mptcp: pm: retry subflows keep half-closed sockets open when all=
- subflows close
---
+Hi Abdul,
 
-commit 92b3e7c79536b83b9f6407cb01792ce3da0243f5
-Author: Anil Kaushik <anilkaushikwireless@gmail.com>
+Thank you for your modifications, that's great!
 
-mptcp: pm: in-kernel: retry subflows closed after an error
+Our CI did some validations and here is its report:
 
-This commit updates the in-kernel path manager to re-create established
-subflows initiated by the local host when TCP closes them after a
-retransmission or keepalive timeout, using the subflow-retries limit for SYN
-retransmissions. It also cleans up connecting retry subflows on socket close
-and starts the close timeout timer if no active subflows remain while a ret=
-ry
-subflow is connecting.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Unstable: 1 failed test(s):=
+ bpftest_test_progs_mptcp =E2=9A=A0=EF=B8=8F=20
+- Perf: Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/402003=
+88982
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 02a4f479d9d8c..25fd0628686c3 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/41031047963c
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1193018
 
-[ ... ]
 
-> @@ -2788,6 +2791,32 @@ static void __mptcp_close_ssk(struct sock *sk, str=
-uct sock *ssk,
->  	}
->  }
-> =20
-> +/* With no subflow left to send data, a re-created subflow still connect=
-ing
-> + * must not keep the connection open longer than the close timeout, as w=
-hen
-> + * all the subflows are closed, see __mptcp_close_ssk(). A join stops it.
-> + */
-> +static void mptcp_retry_check_tout(struct sock *sk)
-> +{
-> +	struct mptcp_subflow_context *subflow;
-> +	struct mptcp_sock *msk =3D mptcp_sk(sk);
-> +	bool connecting =3D false;
-> +
-> +	if (sk->sk_state !=3D TCP_ESTABLISHED ||
-> +	    inet_csk(sk)->icsk_mtup.probe_timestamp)
-> +		return;
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-[Severity: Medium]
-What happens if sk transitions out of TCP_ESTABLISHED while a re-created
-subflow is still connecting in TCP_SYN_SENT, and the remaining active
-subflows subsequently close before close() is called?
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-For example, if subflow 1 times out while sk->sk_state is TCP_ESTABLISHED,
-__mptcp_close_subflow() -> mptcp_pm_subflow_retry() creates a retry subflow
-in TCP_SYN_SENT while subflow 2 is still active.
+For more details:
 
-If the peer then sends DATA_FIN on subflow 2 (moving sk->sk_state to
-TCP_CLOSE_WAIT in mptcp_check_data_fin()), or the application calls
-shutdown(fd, SHUT_WR) with unsent data still queued (moving sk->sk_state to
-TCP_FIN_WAIT1 in mptcp_shutdown() while mptcp_check_send_data_fin() returns
-before calling mptcp_subflow_shutdown()), mptcp_close_retry_subflows() is n=
-ot
-called because it only runs from __mptcp_close(). At that point,
-mptcp_is_fully_established(sk) is false, so mptcp_finish_join() will reject
-the connecting retry subflow even if the path recovers.
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-If subflow 2 later closes via mptcp_close_ssk(), __mptcp_close_ssk() checks
-list_is_singular(&msk->conn_list), which is false because the connecting
-retry subflow is still in msk->conn_list alongside msk->first:
 
-net/mptcp/protocol.c:__mptcp_close_ssk() {
-	...
-	if (list_is_singular(&msk->conn_list) && msk->first &&
-	    inet_sk_state_load(msk->first) =3D=3D TCP_CLOSE) {
-		if (sk->sk_state !=3D TCP_ESTABLISHED ||
-		    msk->in_accept_queue || sock_flag(sk, SOCK_DEAD)) {
-			mptcp_set_state(sk, TCP_CLOSE);
-			mptcp_close_wake_up(sk);
-		} else {
-			mptcp_start_tout_timer(sk);
-		}
-	}
-}
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-Then mptcp_retry_check_tout() returns early because sk->sk_state is no long=
-er
-TCP_ESTABLISHED. Doesn't this leave the half-closed MPTCP socket open witho=
-ut
-a close timeout timer until all 127 SYN retries on the retry subflow expire?
-
-> +
-> +	mptcp_for_each_subflow(msk, subflow) {
-> +		if (__mptcp_subflow_active(subflow))
-> +			return;
-> +
-> +		connecting |=3D subflow->retry &&
-> +			      !READ_ONCE(subflow->fully_established);
-> +	}
-> +
-> +	if (connecting)
-> +		mptcp_start_tout_timer(sk);
-> +}
-> =20
->  void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
->  		     struct mptcp_subflow_context *subflow)
-> @@ -2806,6 +2835,7 @@ void mptcp_close_ssk(struct sock *sk, struct sock *=
-ssk,
->  	mptcp_pm_subflow_check_next(mptcp_sk(sk), subflow);
-> =20
->  	__mptcp_close_ssk(sk, ssk, subflow, MPTCP_CF_PUSH);
-> +	mptcp_retry_check_tout(sk);
->  }
-> =20
->  static unsigned int mptcp_sync_mss(struct sock *sk, u32 pmtu)
-> @@ -2823,6 +2853,8 @@ static void __mptcp_close_subflow(struct sock *sk)
->  	mptcp_for_each_subflow_safe(msk, subflow, tmp) {
->  		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
->  		int ssk_state =3D inet_sk_state_load(ssk);
-> +		struct mptcp_pm_retry retry;
-> +		bool do_retry;
-> =20
->  		if (ssk_state !=3D TCP_CLOSE &&
->  		    (ssk_state !=3D TCP_CLOSE_WAIT ||
-> @@ -2834,7 +2866,13 @@ static void __mptcp_close_subflow(struct sock *sk)
->  		if (!skb_queue_empty_lockless(&ssk->sk_receive_queue))
->  			continue;
-> =20
-> +		do_retry =3D mptcp_pm_subflow_retry_check(msk, subflow, &retry);
->  		mptcp_close_ssk(sk, ssk, subflow);
-> +		if (do_retry) {
-> +			mptcp_pm_subflow_retry(msk, &retry);
-> +			/* creating a subflow stopped the close timeout */
-> +			mptcp_retry_check_tout(sk);
-> +		}
-
-[Severity: High]
-Where is the close timeout timer stopped once the re-created subflow finish=
-es
-connecting and joins the connection?
-
-When the last active subflow closes and is retried here in
-__mptcp_close_subflow(), mptcp_pm_subflow_retry() -> mptcp_pm_kernel_retry()
-calls __mptcp_subflow_connect(), which adds subflow->node to msk->conn_list,
-starts the non-blocking connect, and calls mptcp_stop_tout_timer(sk).
-
-Immediately after mptcp_pm_subflow_retry() returns (or in mptcp_close_ssk()
-when another last active subflow closes while a retry subflow is connecting=
-),
-mptcp_retry_check_tout(sk) sees no active subflows and calls
-mptcp_start_tout_timer(sk), setting inet_csk(sk)->icsk_mtup.probe_timestamp
-and arming the close timeout timer.
-
-The comment in mptcp_retry_check_tout() notes "A join stops it", but when t=
-he
-outgoing retry subflow receives SYN+ACK and subflow_finish_connect() calls
-mptcp_finish_join(ssk), subflow->node is already in msk->conn_list, so
-mptcp_finish_join() takes the early return path without calling
-__mptcp_finish_join() or mptcp_stop_tout_timer(sk):
-
-net/mptcp/protocol.c:mptcp_finish_join() {
-	...
-	if (!list_empty(&subflow->node)) {
-		spin_lock_bh(&msk->fallback_lock);
-		if (!msk->allow_subflows) {
-			spin_unlock_bh(&msk->fallback_lock);
-			return false;
-		}
-		mptcp_subflow_joined(msk, ssk);
-		spin_unlock_bh(&msk->fallback_lock);
-		mptcp_propagate_sndbuf(parent, ssk);
-		return true;
-	}
-}
-
-Later, when the 4th ACK arrives in check_fully_established() ->
-__mptcp_subflow_fully_established(), mptcp_stop_tout_timer(sk) is not called
-there either.
-
-Because inet_csk(sk)->icsk_mtup.probe_timestamp remains non-zero, won't
-mptcp_worker() see mptcp_close_tout_expired(sk) as true once close_timeout
-elapses and abort the recovered connection with mptcp_do_fastclose(sk) and
-__mptcp_close_ssk() (also leaving msk->pm.extra_subflows incremented)?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261025134909.2794=
-368-1-anilkaushikwireless@gmail.com?part=3D4
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
