@@ -1,88 +1,92 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.170
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.171
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792996623;
-	b=kCM4Rwt5irNPLb5FbusNHDWKIN8vtxQBKZpTB/y3Z7gnNNOjnPmlmZMJ0NYErfld1pOJ
-	 1LkBa9T7jDZ88th9Cc4RRn+vK9p+CuZdvzGJKCdL3elsqH58HL0Ke2tQK2mW4+8Lag+0L
-	 wr9xsmoX/4oXtXJG5A+YiHHDzF4t7CAewPiWxMyYj4EAOzymBcdRF6+F4AjD6TLzZ3Mmc
-	 a2lBS6WR6kDb4rQqBhB6AwubLdG38EQWTqFXRC2PbDbPJkhE+Yzi5aTD5KwqgyxQj41x/
-	 VjdsaHHrRIiDy2dkKpTKv4oUoB3yzX63B9pl0DgJGit+6EBPjJ2A3qVunC7UAIS8TUw==
+	t=1792996624;
+	b=dUeAmfmOqj5Zh5uNDHW3IqRqIcpyO2WjXTfA6piBrh01GZCyeOsY8VJOeN3Iapvy95BN
+	 NWF6Zopi8gWeegz/K10zmeJosyRBykJ7jyM/SXQVV8pWXvo40fLojLp3tWKFCalQ36Kmt
+	 9DyzDuhSlbEPzVWWyVg396xFBhB5xFr++erHixAziAF7vndMUOtxk/tHo7LstHSrCU2xw
+	 XvAAlgnXZZv+3N5ynEZyjaVtBJcAf77gr0pCW1vjn9l3q+VSUBDo/xM7k9ZYWgbCunBcV
+	 QMjhyqkPxtEcbll5jEV0n6Pj7yCYLQTjbzqrlup/4eOGma+Esmc3pUD9DIoGI7f3ixg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792996623;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792996624;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=fTOi3cXwECUitV3qoUO6PBHYcNks6df1hlKDWRsdmm4=;
-	b=f7GKhzFMUkiLWcVMI879FOR5p4dpP2TNdxv7RINKxyte/ZvH/p1lrNImjjiBXhySdt53
-	 h9DUWvqyXFRoYQykpcp4o6DSip9Sc8VZbj/h3MNYeuOMMkRsVafz37711C4sKZq80rwtY
-	 4IWOxtDutGNsM95LBUU2W9WNgk24EtgNvXPUmtE9JGmK4aDbOAdVb88BqfY2Mooxw+wLw
-	 plS63f3/pDj5Q7leSsXTZ5dv6HiYPIu9Rlnh8WQlZN+UjNglLRQW4JLAL1swjsnmobmrj
-	 BZCcmDQLdSEvKtez93Vlx40wxqCV8WiX8gKeCO81JmhB7EF1Ar7QWNlKpoP4FGja4gg==
+	 Date:Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=XwlldahLZl6u6KBDX9l7n8vOmnvTZvhZdUFA/a8ErDA=;
+	b=AIaa/ZZYcnZ2MgKc12cWPfrzkpFrYPL88IkWpNvgofNx9GH1zs0kl0WTtllhYPN4mYOi
+	 lywHodFw+u9v2dLfN0WnbHcjwik6kS2TponzJuaIqUtn74pt8vgXuTzRSCggFY/iSSBX6
+	 NcvFpKpg7YUB2fkUXLtLjdgH7/xDgR0RRpIa7BEmZebu5W3gedjoU2ewo4JiEAOk53fAM
+	 BYq0oaE+LOSPvPWTrfZAwM7yymZZzernkbE/zXNMjc08rLufobRJeS0YPK93nutPGViFF
+	 Plva6T3TXzN2ivTQj+IXvXSTasc37HkR3tu2WEVLiqcMcpHQN5SUIX+4PqByO6DNc1A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=EHDoudsK;
-	arc=none smtp.remote-ip=74.125.82.170
-Received: from mail-dy1-f170.google.com (mail-dy1-f170.google.com [74.125.82.170])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=oPkvesGn;
+	arc=none smtp.remote-ip=74.125.82.171
+Received: from mail-dy1-f171.google.com (mail-dy1-f171.google.com [74.125.82.171])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E5F606A31A
-	for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 06:37:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C4E5F606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50ED5606A31A
+	for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 06:37:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 50ED5606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=EHDoudsK
-Received: by mail-dy1-f170.google.com with SMTP id 5a478bee46e88-33bf40b0c8bso7906353eec.0
-        for <mptcp@lists.linux.dev>; Sun, 25 Oct 2026 23:37:02 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=oPkvesGn
+Received: by mail-dy1-f171.google.com with SMTP id 5a478bee46e88-3550c917fd3so4012514eec.0
+        for <mptcp@lists.linux.dev>; Sun, 25 Oct 2026 23:37:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792996622; x=1793601422; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=fTOi3cXwECUitV3qoUO6PBHYcNks6df1hlKDWRsdmm4=;
-        b=EHDoudsK3UpJsHQnAWSmzC766N7auowftD256RPBpzc370q1wy9S/kq/d21ZVRh+IV
-         zh3XsAGoNgXP8nDGet7ufGxhR9XtGaCx78lSnYR/z3b5IAmK403t5yhlRayYrZXpaNj1
-         F8WxsDMrdYJ5VyM/urnPr4e1eJkbA+LcxMkN21e7JfE4FxLlbexQWVl0pjAQ5cHknGzr
-         k1zqOY8vLqEIfS9PGyND/CdkKR9GUy/Wcw6ahD9HeqQBYaxLKpdm2SeAURvro05Sguw7
-         fq9I8WASFdMYbzNuCLzb7gIVd3yBBBdtHb5N280PrQirwXNdEELTPcbleAVTtQqJH6M2
-         /rHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792996622; x=1793601422;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1792996623; x=1793601423; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=fTOi3cXwECUitV3qoUO6PBHYcNks6df1hlKDWRsdmm4=;
-        b=0p8ZATQo515fbxAxvCcz5IsEl+hAyiB8R6TucJH1P9T6deee97QXY5yqW6iuML7Ntu
-         6c4ErhGhOGH26uOo55D8T/9qL9+xg+Zxg92n/vXem+kk2MkHQW4ajHaRAQ4IBnQSdMC9
-         CIrPx7zEsufgfDetiOAG7ZAlwmN/BWEgscG+7f56pdmWd/s08PjeAaIn6IpANNKKLyY3
-         XTES8PuXlgEvQWCAly7a2irowYC8UIVj1ZqmQvPcoAiEDafeRlPuo3ZJQvvXb9Isd92v
-         v3LLIgVkiVRmRnBEGVtzAYQ8pjTpTJW5E9GXTQEaGknzsROlU/e05KGIYAvCwys1X/tY
-         81FA==
-X-Gm-Message-State: AFq9FYLOHaoWMWFz144Er8fJpwOhVTQFGIwsaprsWGEqJ8xpf8R3RPmh
-	iyvAHYCk7KL9Va7zQkvBfp7YlJKzmh8BSYWIq4UkTspnQhQ1QGnNqkiJWAk25w==
-X-Gm-Gg: AYBFou2ZG9c0kENbOUc1ubPo7Y6qF4yPsBZBlTJBV2JR1ho0Jyn5e62N5swu9mAgI5+
-	iWRYByR4v+owWQS1RplPhZPh26V9NNNyM8gKKe0iHmLCt68p4vMpyX8EIXhBj+hmp6RLOWqGTXW
-	zbv1VsBtY00mFA6Pl6gaAUsbOUPez2ux+fncYuF/xMOAdy3nuY6NPphcv/wUYbXk2yMJd55Q4nq
-	A9/0LRlIHdfIeIDKVWWkV4evacibIQD/17abF+Q1ERTamhoukkr9dkSYMZizizoE7trh8haqmAL
-	pRffXfyPO1f5df7toPre/ZEeWfpvFXJUA0FHKCg78GlspgoJJDmCIqkGpJNcAwWNkTsTYya+lfl
-	E3BkAp3qaHugD6jbZ3+yOAng+JHkrWNP9MzvjsqX4WWm2WBPQE/qdQOA3f05OYh6uuvbhBKbJyh
-	Dv3Ny4/86MoOPhCQUwXlG9BLdU3J1HeIQqw94CYPT698EZXm8wdMv0ShiNFgeNB9yPsL45dFdY0
-	NZXTQjJxA1MW/MoYVQ/9rrVE7jOlR+uXDymNaRXXPn1vNOfs495TZ6vUKPEMHHBAEVZANprZrSb
-	+OaVPBUmTNMVWwWTPMLIRqlMxZe4PKMLkVs397ezzJQSWjIwESGRjddQBBCqJQ31V4O8WM5ffoJ
-	u3uiaQtjuweQ5hYHyxRbdhp6U
-X-Received: by 2002:a05:7300:f497:b0:369:f3b8:2c48 with SMTP id 5a478bee46e88-369f3b8473bmr6364776eec.34.1792996621133;
-        Sun, 25 Oct 2026 23:37:01 -0700 (PDT)
+        bh=XwlldahLZl6u6KBDX9l7n8vOmnvTZvhZdUFA/a8ErDA=;
+        b=oPkvesGnt46FwDE2OYNUFms1VfrjfJp2tfA7yj3tCW6mDI9TV4ldxliOwC9T5GvDce
+         Zj1CW5jWrhMOR8M5yDRKspaHuocWI/GHuR184XYa+j7IGPmkzs8/MIw2gqhM/HxNsd8d
+         APSnMb3Gub4N0E1VnhG8XZYAHHWpadRCckj7rM/RkowU9bjI47QurygmHEgxvYrdks0g
+         t9WFOgJwZhB6+cSNiy7ZxdoZ4AIzv0mQIUAnntOjMIQOSrjq4YxC76gbJjW9UcDjnDny
+         GSOZ+6fSOFckzWttc/ht+znjiTeUreg0a4mqA1gETpI4jXTJ6uAFDX8oHFFfUv2SK1sf
+         HhFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792996623; x=1793601423;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=XwlldahLZl6u6KBDX9l7n8vOmnvTZvhZdUFA/a8ErDA=;
+        b=KthnxgqCmm347+WUyLqgGFvzbs3vXlrug/tj2rPWucYZ4tbcD0uLr3O6lmgbT9KKf6
+         xNQuiH1IEg31f08gXotwzWpHh+muThPJ3NGA9Ql1zxeONkBGXdNeDO7X8wYoqOmztk5E
+         eXMW6qu4WGWLnYeLepzGwckq7LsGEw6I1EVKUs6uuvCtRRpZ2BiKHoCzuLPP+lmIGPQ8
+         VcdVJfkaENQlyyL0Nv1L2fMrnzAv6UmVwweiSOe9QlGKEZ4jvALmVFQ4UbY9F4x7P+rG
+         bhaMHZHSw4slaGT3W+aVbb1Y3eUxKb3Jm91lumAPasOsoLtIMpayxu25v7BncvFWXXVL
+         Us7A==
+X-Gm-Message-State: AFq9FYLpMN7rdq07Nj2YxOCBTIGyMckk2dVy8dWVAeb/PiCI79jzkYyg
+	1MIUrBEtN97Z+gmUD0IZ8wqSu9vXCwgf4wo05e+l4pVei6aE7HZwV4wHXnsVqw==
+X-Gm-Gg: AYBFou3avSe5e0XnEcd7XZHPv0VPAlH5qiDXF+Bly/u4CXOGspr/VCuLFFKIYmQ2Xgr
+	Hf7MR6Sgno4ReVZb0uOlan86ExqeH3RPAlSmeF4Ff3x5qAIWHSNhSVw4GwEtrRv6yNmhcvNSWiE
+	VTCzKyzswRvyxdfuAsa7uHZxRqmzlgf2bX8TGxMS6/QQFv1wYoqhVgLymni5HMgfAa8fPTBIs4r
+	jCV0+lkdGrHvi272ZwhrVREkXGNy4rTxQ1Rclu5VXpqJqes2uZP18zPk8VB3l0SVaxTCuzZnpcG
+	FGbNgfF6OJg6y3r67yK/F4AQN5ZLEYQ2szTO0vMl4DZuFB0KhOqN4O9pb3HGjcUxoyIiwJtjtmO
+	xFvwrR7bGNzoApTNIDha2Pjjw03Ri1a/hsUjfagw+NlW+e0o8OkJzEdrHsP8lglBnGZ9gENS/As
+	CEN4OG0ECLkTWwAiA9EojIeXIgScIXtNa7We1RXtP07ffy0kEOwamzVXDIwCEQolzrK0ndmmsn/
+	U5L0Q0hthIHLi8vq6rraWCNpt6i9bdggVetAejxtqFEB0lRr5PTNhhTvgd3fNLUEq2Dy/DmkxyY
+	giJWt87/T+eD8TD3upaCnE9XUXPlpohXseSvBpHwvxlNxfhTd1zvEt8IQ4rniamBsRMdUm8bt0x
+	1vkDKSAY7eOdF07IIwn2VvVPV
+X-Received: by 2002:a05:7300:c00f:20b0:358:5bc0:4f08 with SMTP id 5a478bee46e88-369e84d7f7bmr9692985eec.37.1792996623075;
+        Sun, 25 Oct 2026 23:37:03 -0700 (PDT)
 Received: from ramen-dev-security-2.asia-south1-c.c.ramen-dev-345017.internal (90.156.200.35.bc.googleusercontent.com. [35.200.156.90])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-369ef6a71a4sm21191609eec.8.2026.10.25.23.36.59
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-369ef6a71a4sm21191609eec.8.2026.10.25.23.37.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Oct 2026 23:37:00 -0700 (PDT)
+        Sun, 25 Oct 2026 23:37:02 -0700 (PDT)
 From: Anil Kaushik <anilkaushikwireless@gmail.com>
 To: mptcp@lists.linux.dev
 Cc: Anil Kaushik <anilkaushikwireless@gmail.com>
-Subject: [PATCH mptcp-next v10 0/6] mptcp: pm: in-kernel: retry subflows closed after an error
-Date: Mon, 26 Oct 2026 06:36:51 +0000
-Message-Id: <20261026063657.2955783-1-anilkaushikwireless@gmail.com>
+Subject: [PATCH mptcp-next v10 1/6] selftests: mptcp: connect: retry write() on EAGAIN
+Date: Mon, 26 Oct 2026 06:36:52 +0000
+Message-Id: <20261026063657.2955783-2-anilkaushikwireless@gmail.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20261026063657.2955783-1-anilkaushikwireless@gmail.com>
+References: <20261026063657.2955783-1-anilkaushikwireless@gmail.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -94,108 +98,80 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A subflow closed after an error is never re-created, even once the path
-is back (#440).
+mptcp_connect treats any write() error as fatal. But write() can fail
+with EAGAIN even after poll() said the socket was writable: the MPTCP
+send buffer shrinks when a subflow is closed.
 
-When TCP gives up on an established subflow we created, after a
-retransmission or keepalive timeout, the in-kernel PM now creates a new
-one to the same addresses. Its SYN retries space out the attempts.
-Their number is set by a new limit, subflow-retries, like TCP_SYNCNT:
-the maximum, 127, by default, about 4 hours, and 0 disables it.
+The tool then exits and the transfer fails on both sides. Instead, go
+back to poll() and wait for more space. If a poll timeout is set, still
+fail after as many retries, 1ms apart: poll() does not check every
+cause of EAGAIN.
 
-Patch 1 fixes a selftest tool issue seen with the new test. Patches 2
-and 3 add the new limit, patch 4 the retry, patches 5 and 6 the
-selftests.
+Fixes: 048d19d444be ("mptcp: add basic kselftest for mptcp")
+Signed-off-by: Anil Kaushik <anilkaushikwireless@gmail.com>
+---
 
-I used an LLM to help write and review the code, the tests and the
-commit messages of this series. I checked and tested every change
-myself.
+Notes:
+    v6:
+     - the comment says the limit only applies with a poll timeout (netdev
+       Sashiko)
+    v5:
+     - no change
+    v4:
+     - count the EAGAIN retries, not ms (Sashiko)
+     - no limit when there is no poll timeout, -t 0 (Sashiko)
+    v3:
+     - do not wait forever on EAGAIN (Sashiko)
+     - wrap lines over 80 columns
+    v2:
+     - Fixes tag
 
-Known issue: in about 1 run in 20, more often on debug kernels, the
-first new test fails. Once the path is back, the re-created subflow
-joins, but the server resets it right away with an MP_RST, after
-DSSNotMatching, and the PAWS counters are high on both sides. It looks
-like an existing issue on the receive path, triggered by the two-way
-transfer with losses rather than by the retry itself, but I have not
-found the cause yet: it does not show up with tcpdump or tracepoints
-running. Any hint is welcome.
+ .../selftests/net/mptcp/mptcp_connect.c        | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-Changes in v10, after the Sashiko review of v9: when the close timeout
-expires, the connection is kept if a re-created subflow connected in the
-meantime, since an active join does not stop the timer; the re-created
-subflows still connecting are closed once the msk is no longer
-established and no other subflow is left; a new test lets the path come
-back before the close timeout; and the patches are rebased on the
-current export branch, without the Assisted-by tag, removed upstream.
-
-Changes in v9, after the Sashiko reviews of v8 and more checks: every
-timeout is retried, whatever ICMP error TCP reports for it, and only
-resets, local aborts and MPTCP protocol errors are excluded; if no other
-subflow can send data, the close timeout still applies, the new subflow
-no longer keeps the connection open for all its SYN retries; the
-re-created subflows closed with the msk have their data in the msk
-backlog cleaned, since they can get established in between; the doc says
-this is a single connection attempt, ended by an ICMP error, and that 0
-disables it; the close test blocks both paths, and its server reads all
-the data first; the tests read the counters before blocking a path; and
-a new test checks the close timeout with only one subflow.
-
-Changes in v8, after the Sashiko reviews of v7 and Matthieu's comments:
-the default number of SYN retries is the maximum, 127; the re-created
-subflows still connecting are closed before the write shutdown
-disconnects them; the doc is more precise; and a separate test closes
-the connection while a subflow is being re-created.
-
-Changes in v7, after the netdev Sashiko reviews of v5 and v6, and
-Abdul's tests: only a path error, a retransmission or keepalive
-timeout, makes the PM re-create a subflow, not a reset, so a peer
-cannot make it loop; the flags are bools under the msk socket lock;
-mptcp.rst documents tcp_retries2 and the keepalive needed by a subflow
-that only receives data; and small fixes in the tests.
-
-Changes in v6, after the Sashiko reviews (netdev Sashiko on v4, which
-also applied to v5, and sashiko.dev on v5): only subflows that were
-established are re-created, so the PM still moves on to the next
-endpoints as before; removed remote addresses and the local ID 0 are
-handled too; the policy checks the maximum value, so the parse_limit()
-patch is gone; and the test uses the net/lib.sh helpers. Details in
-each patch.
-
-v9: https://lore.kernel.org/mptcp/20261025134909.2794368-1-anilkaushikwireless@gmail.com/
-v8: https://lore.kernel.org/mptcp/20261022151130.2285198-1-anilkaushikwireless@gmail.com/
-v7: https://lore.kernel.org/mptcp/20261020031711.1896660-1-anilkaushikwireless@gmail.com/
-v6: https://lore.kernel.org/mptcp/20261018041748.1655711-1-anilkaushikwireless@gmail.com/
-v5: https://lore.kernel.org/mptcp/20261016160926.1155262-1-anilkaushikwireless@gmail.com/
-v4: https://lore.kernel.org/mptcp/20261016055010.980819-1-anilkaushikwireless@gmail.com/
-v3: https://lore.kernel.org/mptcp/20261014143349.768138-1-anilkaushikwireless@gmail.com/
-v2: https://lore.kernel.org/mptcp/20261013025653.523755-1-anilkaushikwireless@gmail.com/
-v1: https://lore.kernel.org/mptcp/20261012171740.464517-1-anilkaushikwireless@gmail.com/
-
-Anil Kaushik (6):
-  selftests: mptcp: connect: retry write() on EAGAIN
-  netlink: specs: mptcp: add the subflow-retries attribute
-  mptcp: pm: in-kernel: add the subflow-retries limit
-  mptcp: pm: in-kernel: retry subflows closed after an error
-  selftests: mptcp: pm_nl_ctl: support the subflow-retries limit
-  selftests: mptcp: join: validate subflow retry after link failure
-
- Documentation/netlink/specs/mptcp_pm.yaml     |  13 +
- Documentation/networking/mptcp.rst            |  18 +
- include/uapi/linux/mptcp.h                    |   2 +-
- include/uapi/linux/mptcp_pm.h                 |   1 +
- net/mptcp/mptcp_pm_gen.c                      |  10 +-
- net/mptcp/mptcp_pm_gen.h                      |   4 +-
- net/mptcp/pm.c                                |  39 ++
- net/mptcp/pm_kernel.c                         | 141 ++++++-
- net/mptcp/protocol.c                          | 108 ++++-
- net/mptcp/protocol.h                          |  20 +
- net/mptcp/sockopt.c                           |   2 +
- .../selftests/net/mptcp/mptcp_connect.c       |  18 +
- .../testing/selftests/net/mptcp/mptcp_join.sh | 399 +++++++++++++++++-
- .../testing/selftests/net/mptcp/pm_netlink.sh |  48 ++-
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  34 +-
- 15 files changed, 826 insertions(+), 31 deletions(-)
-
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index 178d98d91fea..49017d00ab69 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -638,6 +638,7 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
+ 		.events = POLLIN | POLLOUT,
+ 	};
+ 	unsigned int total_wlen = 0, total_rlen = 0;
++	int eagain_cnt = 0;
+ 
+ 	set_nonblock(peerfd, true);
+ 
+@@ -711,6 +712,22 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
+ 
+ 				bw = do_rnd_write(peerfd, winfo->buf + winfo->off, winfo->len);
+ 				if (bw < 0) {
++					/* POLLOUT does not guarantee that
++					 * the next write will not block:
++					 * the MPTCP send buffer can shrink
++					 * in between, e.g. when a subflow
++					 * is closed. Wait for more space,
++					 * but not forever if a poll timeout
++					 * is set: poll() does not check
++					 * every cause of EAGAIN.
++					 */
++					if (errno == EAGAIN &&
++					    (poll_timeout < 0 ||
++					     ++eagain_cnt <= poll_timeout)) {
++						usleep(1000);
++						continue;
++					}
++
+ 					/* expected reset, continue to read */
+ 					if (cfg_rcv_trunc &&
+ 					    (errno == ECONNRESET ||
+@@ -723,6 +740,7 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
+ 					return 111;
+ 				}
+ 
++				eagain_cnt = 0;
+ 				winfo->off += bw;
+ 				winfo->len -= bw;
+ 				total_wlen += bw;
 -- 
 2.25.1
 
