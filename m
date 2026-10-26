@@ -1,82 +1,82 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.45
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793016263;
-	b=XYTL7bKXw9zhMiCVaz11UUlotyOSD40WP5dE6osx86QNnuJfU7lhC33b/5zEALJ/yeFg
-	 lAiMsztztbKdjW8cucfusaF0VaXwOQ+Uxa2mEWh0Pr2Sy9ilCyJlpExKBDS3KAMpJskki
-	 R0FXjSCFeWM1VdVdbjfBsInr0y8XxkA3vF9MY5uccmd6elVQQTw0ohJb7zyteSYQTkRXh
-	 rdbWYDQ8ZeyJZ8UtwlQr2cjUyZPydvCBffyN4OhYLMPsES6bEt1Z/WnRUtcpGorGHHNP1
-	 JmSv3daNJ0lfq8RiafdzG8gSYuGjAEakvqbNvgY+sJyrrhb1fYNuJ+v6gh4/EXLacwA==
+	t=1793016268;
+	b=0M6deFzvkUwzcZZBJamr5fUbQN69YR8/gzgxYoqx1RxbE0+5Xz3Ji+VIaGuWMfKqYPF6
+	 EuAxUuJT/CLsDAUftuLhglLAp2ttzlYQ9sV0Nw2RVS5fj++JEYwS6+9Di5UVvJ36e7pW+
+	 TRuhk8Z0aUl+ehPpJt+QCVwP3rabaTwxyyIkMA1YB0wgQQvU4wrMI0D8gaJYsRiC/yb1F
+	 V1OEazopFc36bgpsEwmYj5pP36Ju1cKLqMLweZMbcdePSkwnRaDiKKYbq19QHJT7Ry4bn
+	 zog3DlohJTrVkW2XRmi3JLL87dxe5HM6S2ivYBl/eV/6bmsV2GCyv8TRJlcrXgdWuRA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793016263;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793016268;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=/0C4rlxAw/43YJa3IFTDARWYcZPND6mimQSbZdwuy8E=;
-	b=AhjMmhMJ9cv5UbVuPai6nL0w6ggOPAg3u7ga4yzPbzbc27my/DbTQcV6sC/vWcPoo2aI
-	 qmOxU1K9+jTX8zpoIwvuAvNRWlz/Gp5m6BejX3H3Iu+Yl1HJpugqdEP6xvjQDI8T4Jd+Q
-	 yH4DoH69wQsOGpFMkZ95yBEly767eZEUlVLwrkLSdmsvhV4P0VX+u0oe/Q+LJuAw7lbM/
-	 zsEwmJNMSaxtBzG+WcCuxA7P3hxJUmy/bTt4ArV1Lrr9J/eun6AMGHh/oZEjB/54rlyPm
-	 yTSxoH9RZDnHijDV1RQn8QYSCKwOeA76Ff/fPOxTLBnN3VZQSXdHgOEse9cDCNrsfHg==
+	bh=6hhfEnTNSqKM/tyqjy+CS3N1xRody6+azCrBm85/WAM=;
+	b=19QlZMXKT6cpPGBeD1NIzopVkhA6IAkYWjHFei7tc0+TGvPUU+FEZynufGdXsqSS/7OM
+	 riVCfMyJyV4ZPC+s04vRLw1Zm/h2gOh33agSMHhANJPZdnD2/GK7yV26a5gpbF8mnSK79
+	 zDy/ZNKCehLs1vUK22AI92KAGhloyGgB8BnEOw8DM9HXsD6F/Znk/LMH9lb9QGWPZ7Jp+
+	 /2RH4TqJwCGJjPouAojvYkL9zj24fbM1dfOdC71WB3n2mavXPG9ycAWFfd7N/7KWKH7nz
+	 yVo7zPXIQEO5/YWxj84aTWrJ2gmL9oPP+Fezo3ZNxQ545qzQl6tQ2A3tk5NOE0nCBFw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=WLKqysld;
-	arc=none smtp.remote-ip=209.85.216.50
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=XImY2RHC;
+	arc=none smtp.remote-ip=209.85.216.45
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86F960A2605
-	for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 12:04:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D86F960A2605
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9412460A2624
+	for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 12:04:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9412460A2624
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=WLKqysld
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-3ae1da332bcso293998a91.2
-        for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 05:04:22 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=XImY2RHC
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3ac77270fbfso1445205a91.2
+        for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 05:04:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1793016262; x=1793621062; darn=lists.linux.dev;
+        d=gmail.com; s=20251104; t=1793016267; x=1793621067; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=/0C4rlxAw/43YJa3IFTDARWYcZPND6mimQSbZdwuy8E=;
-        b=WLKqysldBcPMzy5BG5iialxX+RD5PMvucInrfoKNQLNCViffj6zSAw/4JEYuY9U9lC
-         TSiiSME8GzzUynwuD5hxTPxQCX8XxsBXDyv9Eq9rxA+HhsH7u3IJRCCbmvG9RpiOkd93
-         2aQrVv31Pq1bdiFOvpyTN3WqROMQ3szaPErpVJNO8e8UT0IpgL9OoRcvsvJ86fIdT0Lh
-         0j1zGTe7TokkFUgblWo1OgSW6xrY+vtJjQ1MfJn/CWLwPJBU5v+TpXyTNcUu9Ac7aqB7
-         btAbko2gNg+anTgW66rPKvULirmhhe+uzB2nDleUbpePEJ/MTnceSovhgC/q6QbD+0i+
-         EgQw==
+        bh=6hhfEnTNSqKM/tyqjy+CS3N1xRody6+azCrBm85/WAM=;
+        b=XImY2RHC/Xcqp/DAWl/EgBBeP13bVud3hfyTdG0XE0BXPZKI5sKtNhArNq6cXMtO8m
+         Q72Tbv8Z2OwjPBXJSGnhMftxA5mfA0U0OUr1zFREWawPxky3XcZCgEkC354bqVSiWLaH
+         /cmqQ5v1f401K6+vrt7Wc4usFk9uER6ZAUeeCZHoY5DpXeUTxUt/fh8im80nLPO8Puy6
+         wyhDOhB+dydOOIWxin0S5bnFl5q9YV7HOoWpYeA3dxTGq7p5vy0FwqobyeffA/SYJ4oe
+         VjNhNNwbUbxYjojCunP62U72XElhmsCCis4qMx+5LCl/CsJ8mtwiq4YXjdnuOvgpAWqQ
+         3prw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793016262; x=1793621062;
+        d=1e100.net; s=20260707; t=1793016267; x=1793621067;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=/0C4rlxAw/43YJa3IFTDARWYcZPND6mimQSbZdwuy8E=;
-        b=p/1BM7woO5cOD8S41m1cVdkeXYk8kEGtH51h0WxsfyTpegCBuOcaLyqmQrLRDig4Z4
-         asV3uBW7tK081bpD9GovhX6TPGmV97PBq2pJFeBvnevOI3ETRloOwLZd1X3CLAPTT6RN
-         +fVNxGRd9c3K+Cw0PXyFCwbjuq4NJFdJHUdnvzlUgg+F+MvoamYvx8Trltx5YEY3cGam
-         BHmhIXlAr3aJTXnb1mbQhi/lY36vJ+fPQDe6iXPEHdmyQfTFreN30B8b4oJh3DT00dV2
-         S306xopuQu3cOdS1kfqJW0RnO5UuFM4NvLtwNLdGR3QOcDmt9DkQyWwzgJG5nNZLXpCa
-         I6vw==
-X-Forwarded-Encrypted: i=1; AKwUvBy5N7cYh7sclnO1f8KmSQfjdju+3Hfvb0yOexEU6GKzmQG2h2DXUYo84LwCra+AbdZNvHiNaQ==@lists.linux.dev
-X-Gm-Message-State: AFq9FYK5BMFqyhPmzDr156ipGiNRHFRQx3iNTup0nQ6Gry+MdfDaaq3A
-	Oi5VQxd5SKRn6s08xcWUI87UTEPlKeyXmtai6KUVIkkd9wOFBcmT1Au4
-X-Gm-Gg: AYBFou2fcmq0dLyncV7UhznVQzYb/t3eiH7W41BGXRlOPZSK3jSR6631l8jlgCTkCtk
-	vo/y56xl7ua3j54iB6V/Chz02mbHqD71fAX7jRDLcf4Gqn5dqFhizGPHUK+3UYLtPYGhIeqpW6+
-	/vCeMMjLPi+WozZMgDEFObrtGD6qGCxtEEygkYoQEyxpwcrFxslSNFaus5SY7Y53lpzJaoD/tfg
-	jqyXZ68jG4tT6ublrdn6JiDbXImFT93GPMvy+zhQUVPnRIBT/agVvAhf++2H3dwbSlX344np+EE
-	ZKpqRoYiCamCUgTfQJUfRu6p2akHJA0kLYXYWg9D99kFkSwl4J9W4gUYsuICg/eItrsgTtCFdLr
-	O8lYNcE2Mphekb27xu9px2thq4hrau7LwPx26ltESOMYLukjKbg7yvuZ0I3xgkoBEmWLsnbgL74
-	/1EztJhvtsNQazzTIfQayhgna0I5ipqv2yoq1wCtFreuuFY2Af7utL2qW+aR962UqLGrDcOGtWE
-	MWPRUF+tdDvIbMuODdkvaq1t2s8AAIcb4a7Rr1rwfBTJZqW+KbMRfhKIqtoXWeOG+Iv7KPv
-X-Received: by 2002:a17:90a:fd89:b0:3ac:b6eb:e0dd with SMTP id 98e67ed59e1d1-3ae3c222aa8mr202856a91.50.1793016261932;
-        Mon, 26 Oct 2026 05:04:21 -0700 (PDT)
+        bh=6hhfEnTNSqKM/tyqjy+CS3N1xRody6+azCrBm85/WAM=;
+        b=Row0iRiTGnN3u9LxRdVRIh6yQ+Rt5pYP7pPv5YX66TxCXBsXv7JRwYXG4CUX6XH1u0
+         fIxQrU6gTBWmlNGho5rEAvqMTqueYhf1oaG61bNVh9e857MzFhL8TIOJuB7oz2mYrNQv
+         dEL78XT5eI5JnhZshziDYAe7Yf0jhTpAwMeYgnJWzyuLDX23cdFsapPJ+GJt6s5wbAhF
+         S+jnElBqXCUdARarh3sGhn+D0vMQXriYDpJKb+xxqOKMLVBwUznsjmkla7I2EPsORMRs
+         UTQGhLWagFjh8RzMP+mu3w/DHmElh6S3w8jBIfHMfRCI1Yt9Ieb0q/TieWg+ySjSPPpJ
+         RC6A==
+X-Forwarded-Encrypted: i=1; AKwUvBzg3jfKxumZtcEPJF9LqUGaXPzmQHLh7mmRQMQbqJ1HOFjEV3NfAE+urWt4doMZy19aajjFVg==@lists.linux.dev
+X-Gm-Message-State: AFq9FYKCg0qD4aC/advQP8DzP4csWo0iUTlglE3jgP+P5JJwjF9CTS4O
+	GByw6SYrBtfs3TAiZ4X8ZYIxvBqoNM3Ny00FPtb0D+fovclR20Ay6bXR
+X-Gm-Gg: AYBFou1FQtjjbAm41X0OlCOk2Vh3A/aHryjQBDxjSRhgA+F6ZSN8X8Z7n6/3fupAGhK
+	wa2Ix5TqMla1/NpUzNveU8lfz5PUN+pzt29xfpe5BrUIWl+dPaNzKrWs/ONMR/pcaPNoy6Q5AQk
+	Ei0WlEhTQWgEa2sZOt6UTopjrcr54HhBHtppJ0/cdsqMRNQiilQIDx6lK4Xb1TJUP20s8L/525F
+	PYJEN1UTUltqN0B83d73gMVhowG/J6LPRmHmen7DpuMEL893XjP/yYRxjI6dfxOSDOpx8pqcmkH
+	DbommIxHu5WfKaShp3vmTiGae4mnbbm4A/lms//OxVNaqPnWlZ29IZTOSJNVfD1u9Md+7Eiqjnb
+	0NV9BNUozNE8dGB3Z6NO8U2MSNBbxsyPRKMUVXSA2cWPrsoJM0jOfG1OfwqJrA0eHExMp13FYH2
+	OT/xK5TtfHMKFYLHUlqPXCrPq4YWhmafp1vM7zP5Jy53nSJ5LLpA2TXN4lyONwB+NWifMfRw6sc
+	CeoJE7wMKAGkLKzdNriuTaUDMtrnIOKmeZQzLMQBoneM0EOO8I=
+X-Received: by 2002:a17:90b:4a44:b0:3ad:818f:3da2 with SMTP id 98e67ed59e1d1-3adeb195cfbmr4778178a91.63.1793016266667;
+        Mon, 26 Oct 2026 05:04:26 -0700 (PDT)
 Received: from localhost ([111.228.63.84])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3adebb0639bsm8298309a91.12.2026.10.26.05.04.17
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3adebb0639bsm8298309a91.12.2026.10.26.05.04.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2026 05:04:21 -0700 (PDT)
+        Mon, 26 Oct 2026 05:04:26 -0700 (PDT)
 From: Cen Zhang <zzzccc427@gmail.com>
 To: matttbe@kernel.org,
 	martineau@kernel.org,
@@ -92,9 +92,9 @@ Cc: geliang@kernel.org,
 	baijiaju1990@gmail.com,
 	jjzuming@gmail.com,
 	zzzccc427@gmail.com
-Subject: [PATCH net 1/2] mptcp: keep delegated subflow contexts alive until socket release
-Date: Mon, 26 Oct 2026 20:04:08 +0800
-Message-Id: <pm-mptcp-objects-candidate-0010-v3-14c229ea28a7d31f60a0-1@gmail.com>
+Subject: [PATCH net 2/2] mptcp: release the parent socket reference with the subflow context
+Date: Mon, 26 Oct 2026 20:04:09 +0800
+Message-Id: <pm-mptcp-objects-candidate-0010-v3-14c229ea28a7d31f60a0-2@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <pm-mptcp-objects-candidate-0010-v3-14c229ea28a7d31f60a0-0@gmail.com>
 References: <pm-mptcp-objects-candidate-0010-v3-14c229ea28a7d31f60a0-0@gmail.com>
@@ -109,277 +109,205 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-mptcp_subflow_delegate() links the subflow context into a per-CPU list
-and pins only the TCP subflow socket with sock_hold(). The context is
-freed independently of that reference: subflow_ulp_release() frees a
-disposable context with kfree_rcu() when inet_csk_destroy_sock() tears
-the ULP down, and __mptcp_close_ssk() does the same for a context whose
-ULP release ran earlier. Neither path checks whether delegated_node is
-still linked, and TCP protocol destruction runs before the final
-sock_put(), so the queued socket reference does not protect the
-context.
+The subflow context owns a reference on its MPTCP parent socket through
+ctx->conn, and subflow_ulp_release() drops it when the TCP protocol
+state of the subflow is destroyed. Two users of the TCP subflow socket
+can outlive that point and still follow the pointer.
 
-When mptcp_napi_poll() dequeues the entry on the scheduling CPU only
-after that RCU grace period has elapsed, for example because the poll
-returned at its budget or runs from ksoftirqd, it unlinks the node from
-freed memory, as the KASAN report at the end shows:
+bpf_skc_to_mptcp_sock() returns ctx->conn for any TCP socket that has
+is_mptcp set. An SK_SKB program can look up a connected subflow with
+bpf_sk_lookup_tcp() and hold the TCP child without holding the MPTCP
+socket. A concurrent zero-linger close destroys the TCP protocol state
+and releases the ULP despite that reference, and once the remaining
+MPTCP references drain the program reads the freed MPTCP socket:
 
-  TCP / NAPI                   Close                     RCU
-  enqueue ctx, sock_hold(ssk)
-  return at budget
-                               __mptcp_close_ssk()
-                                 ctx->disposable = 1
-                                 __tcp_close()
-                                   tcp_cleanup_ulp()
-                                     kfree_rcu(ctx)
-                                                         reclaim ctx
-  dequeue ctx->delegated_node
+  SK_SKB reader                    MPTCP close
+  rcu_read_lock()
+  bpf_sk_lookup_tcp() -> ssk
+  bpf_skc_to_mptcp_sock(ssk) -> msk
+                                   mptcp_close()
+                                     __mptcp_destroy_sock()
+                                       __mptcp_close_ssk()
+                                         __tcp_close()
+                                           subflow_ulp_release()
+                                             sock_put(ctx->conn)
+                                     final sock_put(msk)
+  read msk->token
 
-Keep a retired context attached to its socket until the socket itself
-is destroyed, which happens only after every pending reference, the
-delegated one included, has been dropped. mptcp_subflow_ctx_release()
-chains sk_destruct: the replacement clears the ULP data pointer, calls
-the original TCP destructor and then queues the context for RCU
-freeing. It is only used for an unhashed socket that is already dead.
-TCP never clones such a socket, so a child cannot inherit the
-overridden destructor.
+A delegated action pins the TCP subflow socket, but
+mptcp_subflow_process_delegated() locks and updates ctx->conn. A peer
+reset followed by the application closing the MPTCP socket releases
+the parent before mptcp_napi_poll() takes its data lock:
 
-mptcp_napi_poll() skips a subflow whose ULP has been released or that
-fell back to plain TCP: its protocol ops have been restored and nothing
-is left to process. The ops pointer is cleared with the socket owned or
-under its bh lock, so a racing read lands in the owned branch, which
-only dequeues the entry.
+  Delegation / NAPI                 Peer reset / application close
+  queue SEND or SNDBUF
+    sock_hold(ssk)
+                                    subflow_ulp_release(ssk)
+                                      sock_put(parent)
+                                    mptcp_close(parent)
+                                      last sock_put(parent)
+  mptcp_napi_poll()
+    mptcp_subflow_process_delegated()
+      mptcp_data_lock(parent)
 
-The fallback branch of mptcp_subflow_drop_ctx() cannot use the socket
-destructor: that socket lives on as a plain TCP socket and must keep
-neither a stale ULP pointer nor an overridden destructor. It is reached
-with a live socket when an unaccepted MPTCP socket is force-closed at
-listener shutdown, and a delegated action may still be queued for its
-first subflow. Hand such a context over to mptcp_napi_poll() instead:
-the dropping path sets a new RETIRED bit in delegated_status and frees
-the context only if no action was scheduled, while the poll frees a
-dequeued context that carries that bit. Both sides use atomic
-read-modify-write operations on the same word, so exactly one of them
-frees the context.
+Now that a retired context stays attached to its socket until
+sk_destruct, release the parent reference from the context destructor
+instead of from the ULP release. Every reference on the subflow socket
+then also keeps the parent alive, and delegated actions need no
+reference of their own. The final parent sock_put() may now run from
+the subflow destructor in softirq or RCU callback context; the parent
+is already closed and its protocol destroy callback has run by then, so
+only the generic socket release is left. This depends on the previous
+commit, which keeps the context alive until the subflow socket is
+destroyed.
 
-BUG: KASAN: slab-use-after-free in __list_del_entry_valid_or_report+0x1ed/0x210
-Read of size 8 at addr ffff8881271668c8 by task kworker/0:9/1315
+The hold around tcp_done() in mptcp_subflow_reset() stays, with its
+comment updated: that call can destroy the subflow socket and thereby
+release the parent reference.
 
-Workqueue: events mptcp_worker
+Both reports below were taken with KASAN poisoning forced for the
+SLAB_TYPESAFE_BY_RCU MPTCP socket cache. The first one is the BPF
+reader, the second one the delegated action.
+
+BUG: KASAN: slab-use-after-free in ___bpf_prog_run+0x2507/0xbcf0
+Read of size 4 at addr ffff888119920930 by task mptcp_skb_looku/492
+
 Call Trace:
  <IRQ>
- __list_del_entry_valid_or_report+0x1ed/0x210
- mptcp_napi_poll+0x1de/0xa50
+ ___bpf_prog_run+0x2507/0xbcf0
+ __bpf_prog_run32+0xda/0x120
+ bpf_prog_run_pin_on_cpu+0x136/0x3d0
+ sk_psock_verdict_recv+0x319/0x12c0
+ tcp_read_skb+0x349/0x500
+ sk_psock_verdict_data_ready+0x164/0x6f0
+ tcp_data_ready+0xfe/0x3c0
+ tcp_data_queue+0x181b/0x48e0
+ tcp_rcv_established+0x9c5/0x3480
+ tcp_v4_do_rcv+0x5bf/0xc60
+ tcp_v4_rcv+0x29cb/0x3da0
+ ip_protocol_deliver_rcu+0xad/0x430
+ ip_local_deliver_finish+0x383/0x610
+ ip_local_deliver+0x16a/0x1c0
+ ip_rcv+0x2d1/0x380
+ __netif_receive_skb_one_core+0x19c/0x1f0
+ __netif_receive_skb+0x22/0x150
+ process_backlog+0x43c/0x1260
  __napi_poll.constprop.0+0xab/0x670
  net_rx_action+0x4df/0xe60
  handle_softirqs+0x201/0x930
  do_softirq+0x47/0xa0
  </IRQ>
- <TASK>
- __local_bh_enable_ip+0xf6/0x120
- __mptcp_close_ssk+0x7a/0x1680
- mptcp_close_ssk+0x11f/0x170
- mptcp_worker+0x7df/0x11c0
- process_one_work+0x908/0x19c0
- worker_thread+0x65c/0xe40
- kthread+0x34f/0x460
- ret_from_fork+0x659/0x940
- ret_from_fork_asm+0x1a/0x30
- </TASK>
 
-Allocated by task 1308:
- __kmalloc_cache_noprof+0x251/0x610
- subflow_create_ctx+0x91/0x290
- subflow_ulp_init+0x66/0x460
- tcp_set_ulp+0x2d0/0x720
- mptcp_subflow_create_socket+0x32b/0x9a0
- __mptcp_subflow_connect+0x30a/0x12b0
- mptcp_pm_create_subflow_or_signal_addr+0xf4a/0x1630
- mptcp_pm_nl_add_addr_doit+0x4cf/0xb80
- genl_family_rcv_msg_doit+0x1f6/0x2e0
- genl_rcv_msg+0x48b/0x700
- netlink_rcv_skb+0x133/0x390
- genl_rcv+0x2d/0x40
- netlink_unicast+0x504/0x840
- netlink_sendmsg+0x7f7/0xcf0
- ____sys_sendmsg+0x88b/0x9d0
- ___sys_sendmsg+0x125/0x1d0
- __sys_sendmsg+0x13e/0x1e0
+Allocated by task 492:
+ kmem_cache_alloc_noprof+0x20b/0x5f0
+ sk_prot_alloc+0x65/0x260
+ sk_alloc+0x37/0xb40
+ inet_create+0x33a/0xf40
+ __sock_create+0x2c4/0x730
+ __sys_socket+0x141/0x210
+ __x64_sys_socket+0x77/0xc0
  do_syscall_64+0x115/0x6a0
  entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-Freed by task 29:
- __rcu_free_sheaf_prepare+0x65/0x2a0
- rcu_free_sheaf+0x1f/0xe0
- rcu_core+0x661/0x1d10
+Freed by task 496:
+ kmem_cache_free+0x293/0x670
+ __sk_destruct+0x4dd/0x8f0
+ sk_destruct+0xb3/0xd0
+ __sk_free+0xdd/0x370
+ sk_free+0x51/0x80
+ mptcp_close+0x7d/0x100
+ inet_release+0x11f/0x250
+ __sock_release+0xb8/0x270
+ sock_close+0x21/0x30
+ __fput+0x39f/0xa60
+ fput_close_sync+0xff/0x200
+ __x64_sys_close+0x8c/0xf0
+ do_syscall_64+0x115/0x6a0
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+BUG: KASAN: slab-use-after-free in _raw_spin_lock_bh+0x38/0x50
+Read of size 1 at addr ffff88810acf25d8 by task ksoftirqd/2/29
+
+Call Trace:
+ <TASK>
+ lock_acquire+0x113/0x2f0
+ _raw_spin_lock_bh+0x38/0x50
+ mptcp_subflow_process_delegated+0xa6/0x9a0
+ mptcp_napi_poll+0x50d/0x12f0
+ __napi_poll.constprop.0+0xab/0x670
+ net_rx_action+0x4df/0xe60
  handle_softirqs+0x201/0x930
  run_ksoftirqd+0x33/0x60
  smpboot_thread_fn+0x3bd/0x9a0
  kthread+0x34f/0x460
  ret_from_fork+0x659/0x940
  ret_from_fork_asm+0x1a/0x30
+ </TASK>
 
+Allocated by task 586:
+ kmem_cache_alloc_noprof+0x20b/0x5f0
+ sk_prot_alloc+0x65/0x260
+ sk_alloc+0x37/0xb40
+ inet_create+0x33a/0xf40
+ __sock_create+0x2c4/0x730
+ __sys_socket+0x141/0x210
+ __x64_sys_socket+0x77/0xc0
+ do_syscall_64+0x115/0x6a0
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 586:
+ kmem_cache_free+0x259/0x5a0
+ __sk_destruct+0x4a0/0x790
+ sk_destruct+0xb3/0xd0
+ __sk_free+0xdd/0x370
+ sk_free+0x51/0x80
+ mptcp_close+0x150/0x530
+ inet_release+0x11f/0x250
+ __sock_release+0xb8/0x270
+ sock_close+0x21/0x30
+ __fput+0x39f/0xa60
+ fput_close_sync+0xff/0x200
+ __x64_sys_close+0x8c/0xf0
+ do_syscall_64+0x115/0x6a0
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Fixes: 3bc253c2e652 ("bpf: Add bpf_skc_to_mptcp_sock_proto")
 Fixes: b19bc2945b40 ("mptcp: implement delegated actions")
 Signed-off-by: Cen Zhang <zzzccc427@gmail.com>
 Assisted-by: LLM
 ---
- net/mptcp/protocol.c | 18 +++++++++++++++++-
- net/mptcp/protocol.h |  8 ++++++--
- net/mptcp/subflow.c  | 44 +++++++++++++++++++++++++++++++++++++++++---
- 3 files changed, 64 insertions(+), 6 deletions(-)
+ net/mptcp/subflow.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 7a22e9388e0e..01b94a280c81 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2705,7 +2705,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 	 */
- 	if (!inet_csk(ssk)->icsk_ulp_ops) {
- 		WARN_ON_ONCE(!sock_flag(ssk, SOCK_DEAD));
--		kfree_rcu(subflow, rcu);
-+		mptcp_subflow_ctx_release(ssk);
- 	} else {
- 		/* otherwise tcp will dispose of the ssk and subflow ctx */
- 		__tcp_close(ssk, 0);
-@@ -4793,6 +4793,21 @@ static int mptcp_napi_poll(struct napi_struct *napi, int budget)
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 
- 		bh_lock_sock_nested(ssk);
-+		if (unlikely(!READ_ONCE(inet_csk(ssk)->icsk_ulp_ops))) {
-+			/* The subflow was retired, by ULP release or by a
-+			 * fallback to plain TCP: nothing is left to process.
-+			 * The ops pointer is cleared with the socket owned or
-+			 * under its bh lock, so a racing read lands in the
-+			 * owned branch below instead.
-+			 * mptcp_subflow_drop_ctx() leaves a still queued
-+			 * context to us: free it now that it is dequeued.
-+			 */
-+			if (xchg(&subflow->delegated_status, 0) &
-+			    BIT(MPTCP_DELEGATE_RETIRED))
-+				kfree_rcu(subflow, rcu);
-+			goto unlock;
-+		}
-+
- 		if (!sock_owned_by_user(ssk)) {
- 			mptcp_subflow_process_delegated(ssk, xchg(&subflow->delegated_status, 0));
- 		} else {
-@@ -4804,6 +4819,7 @@ static int mptcp_napi_poll(struct napi_struct *napi, int budget)
- 			smp_wmb();
- 			clear_bit(MPTCP_DELEGATE_SCHEDULED, &subflow->delegated_status);
- 		}
-+unlock:
- 		bh_unlock_sock(ssk);
- 		sock_put(ssk);
- 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 011e73d04ee6..45bae97a4e21 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -553,8 +553,10 @@ DECLARE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions);
- #define MPTCP_DELEGATE_SEND		1
- #define MPTCP_DELEGATE_ACK		2
- #define MPTCP_DELEGATE_SNDBUF		3
-+#define MPTCP_DELEGATE_RETIRED		4	/* unreachable ctx, NAPI frees it */
- 
--#define MPTCP_DELEGATE_ACTIONS_MASK	(~BIT(MPTCP_DELEGATE_SCHEDULED))
-+#define MPTCP_DELEGATE_ACTIONS_MASK	(~(BIT(MPTCP_DELEGATE_SCHEDULED) | \
-+					   BIT(MPTCP_DELEGATE_RETIRED)))
- /* MPTCP subflow context */
- struct mptcp_subflow_context {
- 	struct	list_head node;/* conn_list of subflows */
-@@ -593,7 +595,7 @@ struct mptcp_subflow_context {
- 		send_fastclose : 1,
- 		send_infinite_map : 1,
- 		remote_key_valid : 1,        /* received the peer key from */
--		disposable : 1,	    /* ctx can be free at ulp release time */
-+		disposable : 1,	    /* ctx is no longer owned by the msk */
- 		closing : 1,	    /* must not pass rx data to msk anymore */
- 		valid_csum_seen : 1,        /* at least one csum validated */
- 		is_mptfo : 1,	    /* subflow is doing TFO */
-@@ -646,6 +648,7 @@ struct mptcp_subflow_context {
- 	const	struct inet_connection_sock_af_ops *icsk_af_ops;
- 	void	(*tcp_state_change)(struct sock *sk);
- 	void	(*tcp_error_report)(struct sock *sk);
-+	void	(*tcp_sock_destruct)(struct sock *sk);
- 
- 	struct	rcu_head rcu;
- };
-@@ -761,6 +764,7 @@ mptcp_subflow_get_mapped_dsn(const struct mptcp_subflow_context *subflow)
- }
- 
- void mptcp_subflow_process_delegated(struct sock *ssk, long actions);
-+void mptcp_subflow_ctx_release(struct sock *ssk);
- 
- static inline void mptcp_subflow_delegate(struct mptcp_subflow_context *subflow, int action)
- {
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 78e886b20258..8dc0677dc551 100644
+index 8dc0677dc551..ebcface15661 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -814,6 +814,33 @@ static void subflow_ulp_fallback(struct sock *sk,
- 	mptcp_subflow_ops_undo_override(sk);
+@@ -471,7 +471,9 @@ void mptcp_subflow_reset(struct sock *ssk)
+ 	if (ssk->sk_state == TCP_CLOSE)
+ 		return;
+ 
+-	/* must hold: tcp_done() could drop last reference on parent */
++	/* must hold: the parent reference owned by the subflow context is
++	 * released together with ssk, which tcp_done() can destroy
++	 */
+ 	sock_hold(sk);
+ 
+ 	subflow->resetting = 1;
+@@ -820,6 +822,8 @@ static void subflow_ctx_destruct(struct sock *ssk)
+ 
+ 	rcu_assign_pointer(inet_csk(ssk)->icsk_ulp_data, NULL);
+ 	ctx->tcp_sock_destruct(ssk);
++	if (ctx->conn)
++		sock_put(ctx->conn);
+ 	kfree_rcu(ctx, rcu);
  }
  
-+static void subflow_ctx_destruct(struct sock *ssk)
-+{
-+	struct mptcp_subflow_context *ctx = mptcp_subflow_ctx(ssk);
-+
-+	rcu_assign_pointer(inet_csk(ssk)->icsk_ulp_data, NULL);
-+	ctx->tcp_sock_destruct(ssk);
-+	kfree_rcu(ctx, rcu);
-+}
-+
-+/* Retire the context of a subflow socket that is being destroyed: a
-+ * delegated action, or any other holder of a socket reference, can still
-+ * reach the context, so free it together with the socket.
-+ *
-+ * Only an unhashed, dead socket may be retired this way. TCP never clones
-+ * such a socket, so the overridden destructor can't leak into a child.
-+ */
-+void mptcp_subflow_ctx_release(struct sock *ssk)
-+{
-+	struct mptcp_subflow_context *ctx = mptcp_subflow_ctx(ssk);
-+
-+	if (WARN_ON_ONCE(ssk->sk_destruct == subflow_ctx_destruct))
-+		return;
-+
-+	ctx->tcp_sock_destruct = ssk->sk_destruct;
-+	ssk->sk_destruct = subflow_ctx_destruct;
-+}
-+
- void mptcp_subflow_drop_ctx(struct sock *ssk)
- {
- 	struct mptcp_subflow_context *ctx = mptcp_subflow_ctx(ssk);
-@@ -826,9 +853,20 @@ void mptcp_subflow_drop_ctx(struct sock *ssk)
- 		subflow_ulp_fallback(ssk, ctx);
- 		if (ctx->conn)
- 			sock_put(ctx->conn);
--	}
- 
--	kfree_rcu(ctx, rcu);
-+		/* The socket lives on as a plain TCP socket: it must keep
-+		 * neither a stale ULP context nor an overridden destructor,
-+		 * so the context can't be retired through sk_destruct here.
-+		 * A delegated action may still be queued for it, though:
-+		 * hand the context over to mptcp_napi_poll() in that case.
-+		 */
-+		if (!(set_mask_bits(&ctx->delegated_status, 0,
-+				    BIT(MPTCP_DELEGATE_RETIRED)) &
-+		      BIT(MPTCP_DELEGATE_SCHEDULED)))
-+			kfree_rcu(ctx, rcu);
-+	} else {
-+		mptcp_subflow_ctx_release(ssk);
-+	}
- }
- 
- void __mptcp_subflow_fully_established(struct mptcp_sock *msk,
-@@ -2087,7 +2125,7 @@ static void subflow_ulp_release(struct sock *ssk)
+@@ -2120,7 +2124,6 @@ static void subflow_ulp_release(struct sock *ssk)
+ 		if (!release && !test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW,
+ 						  &mptcp_sk(sk)->flags))
+ 			mptcp_schedule_work(sk);
+-		sock_put(sk);
+ 	}
  
  	mptcp_subflow_ops_undo_override(ssk);
- 	if (release)
--		kfree_rcu(ctx, rcu);
-+		mptcp_subflow_ctx_release(ssk);
- }
- 
- static void subflow_ulp_clone(const struct request_sock *req,
-
