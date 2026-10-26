@@ -1,55 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793009234;
-	b=0tZXSIZYiejBhLy5Gld8t3qz8XW6TX/yyuFX6iAkrNkD5WN8hj3B+jSfR3mYCA+1u/oY
-	 aogUGfkGHF0LzgMJfxHEKn4TVsiEo9N+VvcfIyklqNfKNs2r0wSzWjquuXI47Y5Ox4R3W
-	 /L9hC/OuG+d4FEq4UpZ/x6VZkTLs9/ZihcA9iQrTF1qW8NCz2s1llg+4hSvJHKaeyXtUJ
-	 rl9s9Kc0N7sC7rQUmcc14NIAgBhWGD5DrKVArRf6WDSFoomzGQ8Pj5e0d1ko2xu/Xms3n
-	 rE2h0FqGyF+Bmdp7hTCusp0lIvhKHH4ccyMaEDbufetfLagFfBdys1dQvac/hTInZmQ==
+	t=1793009635;
+	b=xPDHehKA4w8e0HsvgW2Hq+1gboS0K+D4sZKHG9gvpHDOBuce9xkN29jHsNtn3yiY/fny
+	 g5KJ6jsqE1ucVq4fPOWNHEcwZFCGMiJoddYRIIDs5GE4C/EWDBll18XxNU2yFVJd3iOa0
+	 PRkOIf+2+bCjHZ4gyU1yE30PCN5MgkcObgPKaCMPGvNFQrjo06DRSuugI/52KbXkZR3Iz
+	 GK6rI+69mkMm/J0N7jEex1mr40EX4M+Iyb91I+WS4dr+gPhlvtKOuE7o/8mFEcIXXTK5u
+	 0MnUMlXmt1+wl6MXENjpHe+uVLiKw12kuoxt9OgZ4zF1YZMopfAMoDiY0thbWi9JK4w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793009234;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=SZb3w2r7MezB61xij6PN26HfMVzMGBrapjWhH+ZL1Is=;
-	b=fHWP/gT7HLddIzdlPulnvlqGZb7eVnKAcTVvavr5qKovRn2KiOZmB/Npe2/UvS5EhDhj
-	 MUOzONPc+dTvsV0HiTkb4YkaAf0ZrSB4oJ3VpN0/hzMoMsY5aZ3/23ImcgLOlRqI9iiQR
-	 WWYt/9YOXXEcqNchPofj1R2DDPRKK2H9RMUS8KdywcdR12DJsf7HYWcoJdy+E4qGtyUbU
-	 ce3FNjNQ4wd0LBA8TuoknLPMWszznWikyJ827KjMtJfOK4KvSKzlDvHG1N0CpQp5u0HRi
-	 eIyeLEqpoOsCk5VhTiunwIKFjivXPt0XPDpeUxhmcqt97DeatVUP2LGM+hvz2UlNU0w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793009635;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=0itbaYKvZlmLDAw2E9DRo+m1sD9lE8XIcLoBdm1AbuQ=;
+	b=xp0bz2Yi9q6xz8Z32P509VHQNSi9PO5krheNhxkLYLeODaI4BsEgls686ypJv+snSgJx
+	 GoFYNPjRzPEDv4ei5IXr9J69pVERp+XLTmf7znPWptVBABLED6Iwry0n1IQ/2i49PvQ1Q
+	 JJ9vD5SU/+HfdS07h5X3kM8lDNW1yCJp6x8Hf14i+1X71SVwjbLcOoP9arQgUHnFfGfaz
+	 26Zxxn5Z950fCuA6rBQI44T8MVQGnwh7uCJmBceYKNezS0j3xIWQJL5fq89Gh7VJGSEbS
+	 QA0cINAPC+RCrVvj3cpObG6Z6prdueUDVK+1a4Dp9dyNDt48roH71UEtGdo+r0abCPw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aiCXpLUM;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lrcLFp5I;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B31606A31A
-	for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 10:07:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C102A606A31A
+	for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 10:13:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aiCXpLUM
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 194EF1F01282;
-	Mon, 26 Oct 2026 10:07:14 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lrcLFp5I
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD3431F031E0;
+	Mon, 26 Oct 2026 10:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793009234;
-	bh=SZb3w2r7MezB61xij6PN26HfMVzMGBrapjWhH+ZL1Is=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=aiCXpLUM0IWxbgssTgXDfpDQJxUiUHpmwV9MgO2mrfU3U298cjSeYjCcDIrAH2a1c
-	 EkhYQSqcxgsPIMYeSgSd1TA6X3m8jPG9gtFsi6PqRwfTM33H+EL1MY9noTmtfefV/b
-	 EKyzJLA9tnUMdOpClVh1kyprid4pbH3xUA/iXe+e0dQb5jWg3T8nP9ii99bBY9P5fq
-	 WFjplTXyaZkXfMLvjqQBP3L6tuEnVL8htmDX2iZdXLHtjZeqQGwma0u0TK1kRSZFDx
-	 Ncal+oP64i9CHYAcFO7klWnZVVwGzq4mY2EhmeY9R4xZpYSYqYCGNn4cWT5ZqSqyGy
-	 k/AwislwsW8dQ==
-Message-ID: <sashiko-outbox-184878@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next 3/6] mptcp: implement peek_len for proto_ops
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <22bc848942a31334be17f49a2488c51e2f307eb5.1792999988.git.tanggeliang@kylinos.cn>
-References: <cover.1792999988.git.tanggeliang@kylinos.cn>
- <22bc848942a31334be17f49a2488c51e2f307eb5.1792999988.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 26 Oct 2026 10:07:13 +0000
+	s=k20260515; t=1793009634;
+	bh=0itbaYKvZlmLDAw2E9DRo+m1sD9lE8XIcLoBdm1AbuQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=lrcLFp5IbZTatSbsbm3MNS90dn+PyaGn0iHLgvHjofASIQWHX4PKi+1CS7diP7jmj
+	 y4rvZjcMe1+N+GZ/BzYvvBqJaPsOeXRlnwCieszWRBj/9AnF2SrtCz01iS+/HAwdZ4
+	 YQ6yA20LvMXwSoUJDqhgygPQ4Gy/Hx3Ngv1lNQF6iAOdFHjbDgHhralRDLIk6UJ2b5
+	 Q7v9P7tNV2am3Sm/Zv1wniRc/WX6+NoxlOWT8gkgRJKdTPEpf1gj7cVhPGrs8wRtnM
+	 YATp3+DDjnMxTnNVrzabV2LSLor9fkYP/u0yUzdoi9wcUDuowPINFNbIBl87ntIrlZ
+	 3tsB0Q4WLTxIQ==
+Message-ID: <6fbbeca8-836c-46cf-a8de-73ecd127b932@kernel.org>
+Date: Mon, 26 Oct 2026 11:13:49 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -58,248 +50,133 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [RFC PATCH mptcp-next 0/1] mptcp: opportunistic reinjection on an
+ idle subflow
+Content-Language: fr
+To: Abdul Wasey <w453y.me@gmail.com>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Shardul Bankar <shardul.b@mpiricsoftware.com>,
+ Gregory Detal <gregory.detal@gmail.com>
+References: <20261025134643.1537069-1-w453y.me@gmail.com>
+ <5e0ccd66-205f-4055-8ab3-4d300e83fd48@kernel.org>
+ <20261025155848.1745712-1-w453y.me@gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20261025155848.1745712-1-w453y.me@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [Medium] mptcp: mptcp_inq() under-reports readable bytes by 1 without DAT=
-A_FIN
-- [Medium] mptcp: mptcp_inq() returns bogus byte count for TFO data after 3=
-rd ACK
-- [Medium] mptcp: mptcp_inq() and mptcp_ioctl() mismatch commit message
---
+Hi Abdul,
 
-commit 2cfec08fb299c62052c815a2a207f3aacada8176
-Author: Geliang Tang <geliang@kernel.org>
+Thank you for your reply.
 
-mptcp: implement peek_len for proto_ops
+(Do you mind quoting the text you are replying to, please: it helps to
+remember the context, especially when switching between many topics per
+day :) )
 
-This commit adds mptcp_inq() and mptcp_peek_len() to report readable bytes =
-on
-an MPTCP socket, wires .peek_len into mptcp_stream_ops and
-mptcp_v6_stream_ops, and switches SIOCINQ in mptcp_ioctl() to use mptcp_inq=
-().
+https://subspace.kernel.org/etiquette.html#do-not-top-post-when-replying
 
->     mptcp: implement peek_len for proto_ops
->    =20
->     Add mptcp_inq() to compute the number of readable bytes at the MPTCP
->     level. It derives the count from ack_seq - copied_seq, returns 0 while
->     the connection is still handshaking (TCP_SYN_SENT/TCP_SYN_RECV), retu=
-rns
->     0 when the connection is closed (TCP_CLOSE or RCV_SHUTDOWN), and
->     subtracts 1 once a FIN has been received, mirroring tcp_inq().
->    =20
->     READ_ONCE() is used instead of mptcp_data_lock() for the u64 reads of
->     ack_seq and copied_seq because mptcp_inq() will be called from TLS
->     contexts with the socket lock held - taking the spinlock would deadlo=
-ck.
->    =20
->     On 32-bit systems a torn read can produce a wrapped subtraction (clos=
-e to
->     2^64). When hint_val >=3D INT_MAX, we return 0 instead of INT_MAX to =
-avoid
->     reporting 2GB of readable data when there may be none. This is likely
->     caused by a torn read rather than a legitimate large receive window, =
-as
->     normal receive queues should not exceed INT_MAX bytes.
->    =20
->     Wire mptcp_inq() into mptcp_peek_len() and assign .peek_len in both
->     mptcp_stream_ops and mptcp_v6_stream_ops. This is preparatory work for
->     an upcoming kTLS-over-MPTCP series.
->    =20
->     Note: mptcp_inq() intentionally differs from mptcp_inq_hint() when the
->     calculated value is 0. mptcp_inq_hint() returns 1 to signal EOF to
->     ioctl/cmsg users (mirroring tcp_inq_hint()), while mptcp_inq() returns
->     0 because peek_len should report the actual readable byte count
->     (mirroring tcp_inq()).
->    =20
->     Co-developed-by: Zqiang <qiang.zhang@linux.dev>
->     Signed-off-by: Zqiang <qiang.zhang@linux.dev>
->     Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
->=20
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 0caa31525b907..71a0a28b0d3c9 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
+While at it, it usually helps to send one version per day, and ideally
+wait for Netdev's Sashiko review that can take ~48h, then reply to the
+comments on the list before sending a new version. Except if there is an
+urgency to fix something of course. By doing that, it's easier for human
+reviewers to follow and give guidance. Without that, people might only
+look at the last version, and likely after a while or waiting for a
+comment to say "Sashiko is happy, please review now". Note that AI
+reviews can still miss things or focus on details instead of the big
+picture: they might guide a dev to a wrong path.
 
-[ ... ]
+On 25/10/2026 16:58, Abdul Wasey wrote:
+> I'll rebase on Shardul's series. I'll also test his v4 on my setup and
+> reply on that thread, since it's still waiting for reviews.
 
-> @@ -4188,7 +4189,7 @@ static int mptcp_ioctl(struct sock *sk, int cmd, in=
-t *karg)
->  		lock_sock(sk);
->  		if (mptcp_move_skbs(sk))
->  			mptcp_cleanup_rbuf(msk, 0);
-> -		*karg =3D mptcp_inq_hint(sk);
-> +		*karg =3D mptcp_inq(sk);
->  		release_sock(sk);
->  		break;
->  	case SIOCOUTQ:
+Thank you, that's very helpful!
 
-[Severity: Medium]
-Does this change in mptcp_ioctl() contradict the commit message?
+> Moving it to the scheduler makes sense. The CI also caught it on v1: the
+> BPF "first" test saw bytes on its second subflow because of the
+> reinjection.
+> 
+> Gregory, are you still planning to continue the scheduler API series? If
+> not, I can pick it up.
 
-The commit message notes that mptcp_inq_hint() returns 1 to signal EOF to
-ioctl/cmsg users, while mptcp_inq() returns 0 for peek_len. However, switch=
-ing
-SIOCINQ in mptcp_ioctl() from mptcp_inq_hint(sk) to mptcp_inq(sk) causes
-ioctl(SIOCINQ) to return 0 instead of 1 at EOF when sk->sk_receive_queue is
-empty and TCP_CLOSE or RCV_SHUTDOWN is set.
+For Gregory, I'm sure he is not planning to continue working on that.
 
-In addition, the commit message describes mptcp_inq() as reading a scalar
-copied_seq with READ_ONCE(), returning 0 when TCP_CLOSE or RCV_SHUTDOWN is
-set, and avoiding mptcp_data_lock() because taking it under the socket lock
-would deadlock. In the implementation below, struct mptcp_sock has no
-copied_seq field; mptcp_inq() instead peeks sk->sk_receive_queue and reads
-MPTCP_SKB_CB(skb)->map_seq without READ_ONCE(), decrements answ rather than
-returning 0 on TCP_CLOSE or RCV_SHUTDOWN when an skb is queued, and
-mptcp_move_skbs() right above takes mptcp_data_lock() while holding
-lock_sock(sk).
+> Shardul, same if you already started on it.
+> 
+> About once per RTT: in the old fork that limit was on the cwnd halving.
+> The reinjection itself only took the head of the rtx queue, when the
+> holder's srtt was more than 4x the idle subflow's. I'll check the cost on
+> fast transfers.
 
-Should SIOCINQ in mptcp_ioctl() keep calling mptcp_inq_hint(sk), and could =
-the
-commit message be updated to match the implementation?
+Thanks!
 
-> @@ -4797,6 +4798,39 @@ static ssize_t mptcp_splice_read(struct socket *so=
-ck, loff_t *ppos,
->  	return ret;
->  }
-> =20
-> +static int mptcp_inq(struct sock *sk)
-> +{
-> +	const struct mptcp_sock *msk =3D mptcp_sk(sk);
-> +	const struct sk_buff *skb;
-> +	u64 hint_val;
-> +	int answ;
-> +
-> +	if ((1 << sk->sk_state) & (TCPF_SYN_SENT | TCPF_SYN_RECV))
-> +		return 0;
-> +
-> +	skb =3D skb_peek(&sk->sk_receive_queue);
-> +	if (!skb)
-> +		return 0;
-> +
-> +	hint_val =3D READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
-> +	if (hint_val >=3D INT_MAX)
-> +		return 0;
+Please also note that for optimisation purposes, the current
+implementation tries to push as much as possible on the selected
+subflow: it can be quickly costly to stop the delegation and alternate
+between subflows.
 
-[Severity: Medium]
-Can this sequence subtraction return 0 (or a bogus byte count) when unread =
-TCP
-Fast Open data is still at the head of sk->sk_receive_queue after the 3rd A=
-CK
-arrives?
+(Of course, this cost might not be a problem in some cases, e.g. a
+"redundant" scheduler is not designed for fast transfers, but for low
+latency.)
 
-On a passive MPTCP Fast Open connection,
-mptcp_fastopen_subflow_synack_set_params() in net/mptcp/fastopen.c queues t=
-he
-SYN data skb onto sk->sk_receive_queue while msk->ack_seq is 0:
+> The perf lab would help, yes. I can share my netns cases if that's
+> useful.
 
-    /* Only the sequence delta is relevant */
-    MPTCP_SKB_CB(skb)->map_seq =3D -skb->len;
-    MPTCP_SKB_CB(skb)->end_seq =3D 0;
-    MPTCP_SKB_CB(skb)->offset =3D 0;
+That could indeed. But I'm going to try to push what I have today: it
+might be better to work on improving the same thing.
 
-Commit f03afb3aeb9d ("mptcp: drop __mptcp_fastopen_gen_msk_ackseq()") remov=
-ed
-the helper that rebased the queued TFO skb's map_seq when the 3rd ACK arriv=
-es.
-When the 3rd ACK carrying MP_CAPABLE is processed, subflow_set_remote_key()=
- in
-net/mptcp/subflow.c sets msk->ack_seq to the 64-bit initial data sequence
-number:
+> I've fixed what Sashiko found locally, and will fold it into the
+> scheduler version instead of sending a v2 of this one.
+Thank you!
 
-    WRITE_ONCE(msk->remote_key, subflow->remote_key);
-    WRITE_ONCE(msk->ack_seq, subflow->iasn);
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-If the TFO skb at the head of sk->sk_receive_queue has not yet been fully
-consumed when mptcp_inq() runs, READ_ONCE(msk->ack_seq) -
-MPTCP_SKB_CB(skb)->map_seq evaluates to subflow->iasn + remaining_tfo_len
-(plus any subsequent data). Because subflow->iasn is a 64-bit hash of the
-remote key, hint_val will almost always be >=3D INT_MAX and cause mptcp_inq=
-() to
-return 0 (or a bogus value if it wraps below INT_MAX) even though unread TFO
-data is queued.
-
-Would using mptcp_data_avail(msk), i.e. READ_ONCE(msk->bytes_received) -
-READ_ONCE(msk->bytes_consumed), avoid this issue?
-
-> +
-> +	answ =3D (unsigned int)hint_val;
-> +
-> +	/* Subtract 1, if FIN was received. Mirror tcp_inq() */
-> +	if (answ &&
-> +	    (sk->sk_state =3D=3D TCP_CLOSE || (sk->sk_shutdown & RCV_SHUTDOWN)))
-> +		answ--;
-> +
-> +	return answ;
-> +}
-
-[Severity: Medium]
-Won't subtracting 1 whenever sk->sk_state =3D=3D TCP_CLOSE or RCV_SHUTDOWN =
-is set
-under-report the readable byte count by 1 whenever the socket enters those
-states without processing an in-sequence DATA_FIN?
-
-In TCP, tcp_inq() decrements answ only when sock_flag(sk, SOCK_DONE) is set,
-which happens in tcp_fin() when an in-sequence FIN has been received and
-tp->rcv_nxt has been incremented by 1.
-
-In MPTCP, payload skbs queued onto sk->sk_receive_queue advance msk->ack_seq
-by the exact payload length, and the only place that increments msk->ack_seq
-by an extra 1 for DATA_FIN is mptcp_check_data_fin() in net/mptcp/protocol.=
-c:
-
-    if (mptcp_pending_data_fin(sk, &rcv_data_fin_seq)) {
-        WRITE_ONCE(msk->ack_seq, msk->ack_seq + 1);
-        WRITE_ONCE(msk->rcv_data_fin, 0);
-
-        WRITE_ONCE(sk->sk_shutdown, sk->sk_shutdown | RCV_SHUTDOWN);
-
-However, sk->sk_state =3D=3D TCP_CLOSE or (sk->sk_shutdown & RCV_SHUTDOWN) =
-can be
-set while unread data remains in sk->sk_receive_queue without
-mptcp_check_data_fin() ever incrementing msk->ack_seq:
-
-1. A local user calls shutdown(fd, SHUT_RD) or shutdown(fd, SHUT_RDWR), whe=
-re
-   inet_shutdown() in net/ipv4/af_inet.c sets RCV_SHUTDOWN on sk->sk_shutdo=
-wn
-   without modifying msk->ack_seq or purging sk->sk_receive_queue:
-
-    default:
-        WRITE_ONCE(sk->sk_shutdown, sk->sk_shutdown | how);
-        if (sk->sk_prot->shutdown)
-            sk->sk_prot->shutdown(sk, how);
-        break;
-
-2. The peer aborts the connection with MP_FASTCLOSE, where
-   mptcp_check_fastclose() in net/mptcp/protocol.c sets TCP_CLOSE and
-   SHUTDOWN_MASK without incrementing msk->ack_seq:
-
-    mptcp_set_state(sk, TCP_CLOSE);
-    WRITE_ONCE(sk->sk_shutdown, SHUTDOWN_MASK);
-
-3. A fallback subflow receives a TCP RST after data, where
-   __mptcp_subflow_error_report() in net/mptcp/protocol.c transitions the
-   MPTCP socket to TCP_CLOSE without incrementing msk->ack_seq (and commit
-   f3589041bbf5, "mptcp: prevent dummy DATA_FIN on RST in fallback mode",
-   explicitly avoided synthesizing a dummy DATA_FIN on RST):
-
-    ssk_state =3D inet_sk_state_load(ssk);
-    if (ssk_state =3D=3D TCP_CLOSE && !sock_flag(sk, SOCK_DEAD))
-        mptcp_set_state(sk, ssk_state);
-
-4. All subflows close without DATA_FIN or time out in __mptcp_close_ssk() /
-   mptcp_do_fastclose(), setting sk->sk_state to TCP_CLOSE without
-   incrementing msk->ack_seq.
-
-In all of these cases, READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq=
- is
-the exact number of unread payload bytes N in sk->sk_receive_queue, so
-decrementing answ causes mptcp_inq(), mptcp_peek_len(), and
-mptcp_ioctl(SIOCINQ) to return N - 1 (and 0 when 1 byte of unread data
-remains), which can also stall strp_data_ready() when waiting for
-strp_peek_len() >=3D strp->need_bytes.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1792999988.gi=
-t.tanggeliang@kylinos.cn?part=3D3
