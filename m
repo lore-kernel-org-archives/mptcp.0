@@ -1,51 +1,50 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793000191;
-	b=FSBT1StuqLjO0J6HN0D2WBedKR7RoW2RZbO1qsya6kHO4ktDMbm/hfA1d+DVlk8eMeQF
-	 k2l9jFoHKX9CJX/X5pflBB/+5HxH2qAZ5qI00025Qfkxsj4PREgsVa2EXFmqEb9gnNdyP
-	 uZUKPScBgiFzvZGX/RL4MBxcWpd0DGCWtlqp1RUugPNLu/22kosBb/WxfdVIGvLIMjauH
-	 Qejkvu43aI5/QXnl4hXzRGd+XQ4x0sGXToLxwlaZccjehV7LG2uHiXyjv7muKDEKufWqH
-	 DGzoEzliE5WLLszsQaB6+waGAeOYkl0knuBL8QbPKdsumdi//d5c9dJRK/kIurnNlsA==
+	t=1793000192;
+	b=SMOAJ+yMsAB1YqUs93g8uhhccpjC1b0gj2VX7eGqAA0i2UlGvZAtXK3KhBbqwkDQ7vOs
+	 IDjn8D4BuFoO19IzvVaYh0ziCzLG9NNMJe3LoZNUDyRovXrsXZKbAM9enWdj1rFNRTucp
+	 NmKKuoGp3HMUhIASwfl4/7QQHBcbGZ4nxaI8AtM0kPeM9gjyaDQVst/2uf7PNpz11YRi/
+	 jwtx7UN3SJIv+mZnc9gIpyE4dFCg3umSwXpDYRMCi5NqcAqAgDKjmXzRPkXGNWLM/iYNE
+	 3IlWrXaYCewj0vm3fhuePAS5XhkaMC2aU3HLGMG6HW1F5JB/+/5LDGrvSpbexApypzg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793000191;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793000192;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=FcyZ/23EO9wCaimpG8uixyj/1tWZ+pqjTJz3x+0Dc/c=;
-	b=iHtALZBrC/kzDP2S7fAQTS/uaREQVY0ORrolDlwH2M9oTTrSx3zhZ9pDz5K+Gfx1T8uI
-	 HTrwX42cKnF9yJCAydc3s5Und+2phvx4uUG5fK+LnO3dDAGufFAQSNf1Rtxn0BLKzefWi
-	 7JV80l3coajnq3w1+gLeCLT+FpFc0CKTXGYaGDhHFgiGzhVnkmsVLd+3yfccEi5183YCc
-	 oIdOrkgIYtUw/37Em1jG3feoum3xi1wrJeFnZ4hYMZct/lfNlcaMfs85B8ojVDOYb9Buj
-	 IEWcJC4OVxjw6Sp2+VZQh/GgIjwlvBFfM8Sb8FLveAWgjT2PAgSM/o+kKdJ7vqfTBzA==
+	bh=s3wUI4Rffeqvtew3fCHpivfru7G7wPPHmlZZmjiUDcs=;
+	b=4wYKsZHksUUzv28sfIvkPjgCr+KSO40i0mkPqk3NdXGXoKlYERmwqzD2oe0SgT+np34g
+	 mKPuHCUoV8bSTNLl7q7hrnH01McnU2i2iAmQtIFZmK11WV7EhYBch3sy+q9tBN+zboBHr
+	 CYywoCoCxGynqy41bHUw2yEzBztngyDfbJqapm4hXa9J0TcBcvW8QgRmezzJ9sszZehpC
+	 ABcRT0V199kD5ohldHiK7raPdZruToY4WGmVvmwKMIoCDZQJhYZRiysU1uuA76iAf0Us5
+	 90nhdb6zORsPiHp57+M/EUdaNUfq66otrbBey/HKA2ZCsI60lkM1dXXbQIog30pOkQQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="gkTuVZ/u";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TwkUEP5M;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076A0606A31A
-	for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 07:36:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D6A606A31A
+	for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 07:36:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gkTuVZ/u
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 277211F01825;
-	Mon, 26 Oct 2026 07:36:28 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TwkUEP5M
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CDDD1F01829;
+	Mon, 26 Oct 2026 07:36:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793000190;
-	bh=FcyZ/23EO9wCaimpG8uixyj/1tWZ+pqjTJz3x+0Dc/c=;
+	s=k20260515; t=1793000192;
+	bh=s3wUI4Rffeqvtew3fCHpivfru7G7wPPHmlZZmjiUDcs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=gkTuVZ/ubXjZvcZqZ1F8yAsUcfYX0S913/KR7q62R2bO4okpZ9zmKcaJ06fobyd1H
-	 +DD3BV2JThUItBFDvJ5zHzQQEG50sY2wt7L7ayz70YbbNj9y5XcpUSemlUEcpbiHW5
-	 WmbVcoPNk9q1XjWvhLROkOqVeiraasM4BcYHZdvNMqxBssaf4D9cq4J1oNUhm/Xx24
-	 DI5D03h0uA6n2Lda2cA6IUARvUJ7cdMhFWknozQ8+6X5PmAlP1IZAflNI4T3UWa2kh
-	 69T2HvScIpTYqBHQUPnesrwbNan0pIIX70r30wmUemKtMuVbueoZh+YTd7hk0bV62L
-	 eQ/jjjBRsqy4w==
+	b=TwkUEP5MyJb1jbjdW7Wt2Ryve/omxcOMK8wBhS9t0uYwqocNIdJsYPDfQoVUxdeo9
+	 nV2SwYvtwT6jkDWXxnaiIlyTm31FJjuJ7qtiNEsS5XyGrOb3oYx9BX8OH1STwu/ZRe
+	 XWHVPXI2XrrQS4wuPm1zfiYnhTCNzxm/n9YsdQdFocQF0yGAFijzrBQ+y6Jb9iiCvj
+	 vb93cGoY6CaoSZiZPLUaEmId5GhfrQmRGenrkVctxthN+5XAnjHCfiCo08Sr3KDAs6
+	 IRNKNF0VvdL5rX84yWxjCFdxDOvTq55JtxIHGhnMSfcsN2fO4H6ov03DlPjUPA/B6f
+	 8BgokPPwRq0pQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>,
-	Geliang Tang <geliang@kernel.org>
-Subject: [PATCH mptcp-next 1/6] mptcp: update mptcp_check_readable
-Date: Mon, 26 Oct 2026 15:36:17 +0800
-Message-ID: <56b390f4512669bab42f013024891aa2af0dca95.1792999988.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 2/6] mptcp: prevent dummy DATA_FIN on RST in fallback mode
+Date: Mon, 26 Oct 2026 15:36:18 +0800
+Message-ID: <827c399d23b97b70e59e123d32c7b4b74d3f3987.1792999988.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <cover.1792999988.git.tanggeliang@kylinos.cn>
 References: <cover.1792999988.git.tanggeliang@kylinos.cn>
@@ -60,48 +59,39 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Gang Yan <yangang@kylinos.cn>
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch makes mptcp_check_readable() aligned with TCP, and renames it to
-mptcp_stream_is_readable(). It will be used in the case of KTLS, because
-'prot' will be modified, tls_sw_sock_is_readable() is expected to be called
-from prot->sock_is_readable().
+When a fallback subflow receives a TCP RST, subflow_is_done() returns true
+(because sk_state == TCP_CLOSE), causing subflow_sched_work_if_closed()
+to create a dummy DATA_FIN. This is semantically incorrect - RST is an
+abortive close, not a clean close with FIN.
 
-Co-developed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
+While mptcp_recvmsg() checks sock_error() before RCV_SHUTDOWN (so the
+error is correctly returned to userspace), creating a dummy DATA_FIN for
+RST causes unnecessary state transitions and semantic confusion.
+
+Add a check for sk_err in subflow_is_done() to prevent dummy DATA_FIN
+creation when the subflow was aborted with an error.
+
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ net/mptcp/subflow.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 02a4f479d9d8..0caa31525b90 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3476,9 +3476,11 @@ void __mptcp_unaccepted_force_close(struct sock *sk)
- 	__mptcp_destroy_sock(sk);
- }
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 78e886b20258..a53c83644a40 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1327,6 +1327,9 @@ static void mptcp_subflow_discard_data(struct sock *ssk, struct sk_buff *skb,
  
--static __poll_t mptcp_check_readable(struct sock *sk)
-+static bool mptcp_stream_is_readable(struct sock *sk)
+ static bool subflow_is_done(const struct sock *sk)
  {
--	return mptcp_epollin_ready(sk) ? EPOLLIN | EPOLLRDNORM : 0;
-+	if (mptcp_epollin_ready(sk))
-+		return true;
-+	return sk_is_readable(sk);
++	if (READ_ONCE(sk->sk_err))
++		return false;
++
+ 	return sk->sk_shutdown & RCV_SHUTDOWN || sk->sk_state == TCP_CLOSE;
  }
  
- static void mptcp_check_listen_stop(struct sock *sk)
-@@ -4580,7 +4582,8 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
- 		mask |= EPOLLIN | EPOLLRDNORM | EPOLLRDHUP;
- 
- 	if (state != TCP_SYN_SENT && state != TCP_SYN_RECV) {
--		mask |= mptcp_check_readable(sk);
-+		if (mptcp_stream_is_readable(sk))
-+			mask |= EPOLLIN | EPOLLRDNORM;
- 		if (shutdown & SEND_SHUTDOWN)
- 			mask |= EPOLLOUT | EPOLLWRNORM;
- 		else
 -- 
 2.55.0
 
