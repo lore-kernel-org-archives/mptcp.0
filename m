@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793017969;
-	b=uLsle8mB0Uh53ej0t9VYUGlrKDvUX9UaWBKJnQ+KrVOUHXkNKgHwLpxshOKdjTHDVfy7
-	 v94ZlUAByaABugDUxnNdlf6yJhKS9fHuWXYqN+2DG8aFnkI/RqiQhrTKAghA1REJLbSx1
-	 VGTIQv0GkTlWcFsdLXGA7bOtv9XLZCgSTkM/Qjhf39S23NAEoWblEEDfEuyz173qJv++D
-	 ueiVcZcK3HN9uDlNaQ74ulDVigKZhGSVw8QpqsUZageMoid8//JTCa9IRTfTkoIvu+3ZY
-	 ha/3gE4mVzrLY/YJtBfHdb1xVtmzKS/JRKNSL/hQ9zkcWw1R7+BDB5i9BXVbB/6cf1Q==
+	t=1793018300;
+	b=oOVTCnuGB1YxzUKamatgxQe53UJFeJls7BK42mI3IS66OuGDjXmJpRc2Re/AC/4gxaUS
+	 jRsOhHs6jRDA/FFhAhrViabTIJrKBVGp0z6jkJ7qD8/vaXe2rq5aAL+m5mQQ40LLoXzoD
+	 cqyGf8JeYEfJiIPJaiOoh9lK2A6btiSXG/zydY/TGMUwLCIr9/hZISgrv1eAn8HBWs6vI
+	 eCt46Pvm0fBHND0wm0wG8i0oBdtZIy0OasLTw6CDPL6aKU2ZoBhqy3GbNhpK1bDjc+Waj
+	 Y1edWugbHbfpeuwZOCWHpDnTKGeknVR+nw7jRdkhdJ8VOemfDCB1BOML82ZnyP3dICA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793017969;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=Hdv17Hx71ICeo2r0zQSe1ccgbSy1iu7tTVL8HRmNSBY=;
-	b=Zy/KpS2oe+USlKuyrxvoeQVUCCmrGZ4Eq8qpHiqzcZ9l0PH+29tffa1MPcClx+OxTmy8
-	 +LD1AURV/CEGTUpqNzOILTMkGdzxcuRDIhBScKS1Ut3lXuRfkGqC7x0QENhoR8nhJcby1
-	 kUiT/f9e5W5XZqfLXn0dnzvtiCi3zCHbmwAea9SLf5rcln9uAey10gwXSY9YJLwc76WHn
-	 UEGDmh9FtLSK1ZI0mcGd9JxYq4+saIISAZwzjX5Nuv4HX65myWg5PCMsSE+8prJQ1RZkn
-	 +DyV/7b7kMlpZUMkymUkLrhJUlWP9pc1vJs9iRfPfnMlrp7ALpC5yp6xLOGlYcW/LrA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793018300;
+	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=XG8Szrq9HyP4p8mCyECorg47iCZAl2TOpPnmqA0Xpkw=;
+	b=ocAGt9N7/Mm/hyLP5GhyWI6/oOisoaXSZGeeshxYNIZNiZXQkGCeyO2ip5gGSfr0og1f
+	 tv4BeejvEyAFsWERgiWH4C3dezESPF8FD0OyWICa+QrAkvgZHQIV0Qv6HQM8PTVmK8Ar8
+	 i+oNY/0sBsHrOHCvOXSyraiipOse4PPqtU71doVulmENto4rU0JQEuFEW+Ak8n4MnbNwS
+	 amjPrhMIVhEB3B9+tL3vQVX660qOrBAsKPVtbhwlsaNoWg+LIyGnTuRbZIJN3vSJdW8uy
+	 buNwA15EJ8vXB4AXLiqWkZmT13x4td5xMNmwZ3T+6xZUpDTgPpun26+jPR8mj9qHveA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=beRSpiEW;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZjLm8FtS;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E405606A322
-	for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 12:32:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D215606A31A
+	for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 12:38:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=beRSpiEW
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AE6F1F01825;
-	Mon, 26 Oct 2026 12:32:49 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZjLm8FtS
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCA1A1F01828
+	for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 12:38:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793017969;
-	bh=Hdv17Hx71ICeo2r0zQSe1ccgbSy1iu7tTVL8HRmNSBY=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=beRSpiEWNnpwpdvg1TMedVKy0Ji+ffRnrvZoaWetR1QseWUbMSG02LsyHVoCZnewS
-	 uARt4U1QmuERYt6qtF30uaB6Oeb3BrKmvYm8fsqsBT+/FEvH54zUTun0iz73Dpz8fo
-	 x4XYTZzH/cxpj3K/HfbG08x4sp6Sl/dRo88PRSpel7iZustqP526ByWR1C8Q6eCm2N
-	 CpTMH1f+R31jnk7AolJ1PI1lu0D9kESSPhvjIThU/vIvJx1TFtTSpvybjjQ5jzrfiB
-	 IKBEoBKrVA9BuCwftAndvg8lXU+SK2bAXGS8nbU2BSpWLn3N5LGA2lAKpcAcngL4l1
-	 xEuW/vvOcgEsw==
-Message-ID: <sashiko-outbox-185214@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v2 4/4] selftests: mptcp: add mptcp nbd tests
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <14de6d44e34c880f684ce171784dc04407e8958c.1793010744.git.tanggeliang@kylinos.cn>
-References: <cover.1793010744.git.tanggeliang@kylinos.cn>
- <14de6d44e34c880f684ce171784dc04407e8958c.1793010744.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 26 Oct 2026 12:32:48 +0000
+	s=k20260515; t=1793018298;
+	bh=XG8Szrq9HyP4p8mCyECorg47iCZAl2TOpPnmqA0Xpkw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=ZjLm8FtShg0tZhNiT+oKp913XnkSkLx/78VjPoVNrWiTHkCSmS4c3LBPxoIHUU08n
+	 1dGRvAOAkhPCG+83WlAsP3/L0Yr3DKYkbVGpfRX5zBVbBP7bnTGTuzev+v5S8t/JHw
+	 +g3L3okX2yOeF04zu0Eg+13Ak/6OScCvZY7VTjBFImLpeYZC06W3sV6iMG10wuoLWW
+	 AQhV1H4bSQH64Jbz3j0Ewl+TyfqaQuNBfwv80Ldo85+QgS/RtLgyS2vAY/NlC6jJHq
+	 7uo3ZwPh3c/RQJZkwV6k1V7XXI1HuemK9zLTl0ITxbz1UQ5+W4/JhssuE8v+uWE7vH
+	 Ok5+sneFl/1Ow==
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-48e2d5a69c4so1660719fac.3
+        for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 05:38:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBz4d5xKH+tNphmfLSoRx2wcbUKLoe15TkSYeILydwAmwmR2F4aM63k4vpV/T6B6Kfh6I3gEXQ==@lists.linux.dev
+X-Gm-Message-State: AFq9FYITNl6YdzJMZJyJLibQ659HHgdjNuQd+pAS9/S9yKNw7YggI56b
+	JqyzkFU9s2oTRKRNy6wg0Kz6XZw2E6YfyAAD3swoczGBlJyOGYSxFzHhpc4NB1yAAPe+Wlq5VaE
+	nBgho2ikL8YLXutNhoPG4TB0bxhjzGXo=
+X-Received: by 2002:a05:6871:a69f:b0:491:b7fa:76f8 with SMTP id
+ 586e51a60fabf-4a83ec452e7mr3868754fac.0.1793018298084; Mon, 26 Oct 2026
+ 05:38:18 -0700 (PDT)
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -58,237 +58,154 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
+References: <pm-mptcp-objects-candidate-0066-v3-73df72b7a543d4cada0e@gmail.com>
+In-Reply-To: <pm-mptcp-objects-candidate-0066-v3-73df72b7a543d4cada0e@gmail.com>
+From: Eric Dumazet <edumazet@kernel.org>
+Date: Mon, 26 Oct 2026 13:38:07 +0100
+X-Gmail-Original-Message-ID: <CAL4WiiqEHwZRhSRXqFOtF3OYsX_v3519Ey8AEknbaZKFNogeJA@mail.gmail.com>
+X-Gm-Features: AclHuK-yOS0_zQhnBgPZbv2A9ize24MPt8Vf2Uf9oc7WYOKvbednnhX2kOUiocA
+Message-ID: <CAL4WiiqEHwZRhSRXqFOtF3OYsX_v3519Ey8AEknbaZKFNogeJA@mail.gmail.com>
+Subject: Re: [PATCH net] mptcp: protect listener backlog reads in diagnostics
+To: Cen Zhang <zzzccc427@gmail.com>
+Cc: matttbe@kernel.org, martineau@kernel.org, davem@davemloft.net, 
+	kuba@kernel.org, pabeni@redhat.com, geliang@kernel.org, horms@kernel.org, 
+	netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	baijiaju1990@gmail.com, jjzuming@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [Medium] selftests: mptcp: broken native MPTCP and mptcpize checks in mpt=
-cp_nbd.sh
-- [Medium] selftests: mptcp: weak and non-portable subflow check in run_io_=
-test()
-- [Medium] selftests: mptcp: mptcp_nbd.sh disconnects active host /dev/nbd0=
- in cleanup()
---
+Le lun. 26 oct. 2026 =C3=A0 13:04, Cen Zhang <zzzccc427@gmail.com> a =C3=A9=
+crit :
+>
+> mptcp_diag_get_info() reports the accept queue of a listening MPTCP
+> socket by reading msk->first. The token based dump and the exact token
+> query only hold a reference on the MPTCP socket, which pins neither the
+> first subflow nor the listener hash bucket, and __mptcp_close_ssk()
+> drops the last reference on the first subflow before clearing
+> msk->first.
+>
+> An application can disconnect a connected MPTCP socket with AF_UNSPEC,
+> which removes the token but retains the first subflow, listen on it
+> again and close it. A dump that obtained the MPTCP socket before the
+> disconnect then reads the backlog of a freed TCP listener:
+>
+>   Token diagnostic                 Application
+>   mptcp_token_iter_next()
+>     retain MPTCP socket
+>                                    connect(AF_UNSPEC)
+>                                      remove token, retain first
+>                                    listen()
+>                                      reuse first
+>   mptcp_diag_get_info()
+>     observe TCP_LISTEN
+>     lsk =3D msk->first
+>                                    close()
+>                                      mptcp_destroy()
+>                                        __mptcp_close_ssk()
+>                                          release first
+>     read lsk->sk_ack_backlog
+>
+> Take the MPTCP data lock around the listener state check and the
+> backlog reads, and only follow msk->first while no process owns the
+> socket. Every path that disposes of the first subflow runs with the
+> socket owned, and lock_sock() has to take the same spinlock to become
+> the owner, so the reads cannot overlap with the release. Waiting for
+> the owner is not an option: mptcp_diag_dump_listeners() calls this
+> function with the listener hash bucket lock held, which the owner needs
+> to unhash that very listener. While a process owns the socket, the dump
+> reports the MPTCP socket's own queue values instead.
+>
+> BUG: KASAN: slab-use-after-free in mptcp_diag_get_info+0x415/0x490
+> Read of size 4 at addr ffff888111763818 by task python3/499
+>
+> Call Trace:
 
-commit 7951aabe0d1917726a0a08d246614408762a837e
-Author: Geliang Tang <geliang@kernel.org>
+Adding these stack traces without symbols is not really nice.
 
-selftests: mptcp: add mptcp nbd tests
+Time to use scripts/decode_stacktrace.sh
 
-This commit adds mptcp_nbd.sh to test NBD over TCP and MPTCP using four
-rate-limited virtual interfaces between two network namespaces, verifying
-data integrity with dd/cmp and measuring I/O with fio.
+>
+> Fixes: 4fa39b701ce9 ("mptcp: listen diag dump support")
+> Signed-off-by: Cen Zhang <zzzccc427@gmail.com>
+> Assisted-by: LLM
+> ---
+>  net/mptcp/mptcp_diag.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
+> index 136c2d05c0ee..a71bcaee15c8 100644
+> --- a/net/mptcp/mptcp_diag.c
+> +++ b/net/mptcp/mptcp_diag.c
+> @@ -199,7 +199,12 @@ static void mptcp_diag_get_info(struct sock *sk, str=
+uct inet_diag_msg *r,
+>                           READ_ONCE(mptcp_sk(sk)->backlog_len);
+>         r->idiag_wqueue =3D sk_wmem_alloc_get(sk);
+>
+> -       if (inet_sk_state_load(sk) =3D=3D TCP_LISTEN) {
+> +       /* The listener walk holds the listen hash lock: do not wait for =
+a
+> +        * socket owner that could be unhashing the first subflow.
+> +        */
+> +       mptcp_data_lock(sk);
+> +       if (!sock_owned_by_user(sk) &&
+> +           inet_sk_state_load(sk) =3D=3D TCP_LISTEN) {
+>                 struct sock *lsk =3D READ_ONCE(msk->first);
+>
+>                 if (lsk) {
+> @@ -210,6 +215,7 @@ static void mptcp_diag_get_info(struct sock *sk, stru=
+ct inet_diag_msg *r,
+>                         r->idiag_wqueue =3D READ_ONCE(lsk->sk_max_ack_bac=
+klog);
+>                 }
+>         }
+> +       mptcp_data_unlock(sk);
+>
+>         if (!info)
+>                 return;
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_nbd.sh b/tools/testi=
-ng/selftests/net/mptcp/mptcp_nbd.sh
-> new file mode 100755
-> index 0000000000000..29998be71a982
-> --- /dev/null
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_nbd.sh
+This seems overkill, and adds a new msk slock -> ilb->lock nesting from
+mptcp_diag_dump_listeners(). It also makes ss randomly report msk
+rmem/wmem instead of the accept queue while the listener is owned.
 
-[ ... ]
+msk->first is a TCP socket: TCP listeners have SOCK_RCU_FREE, and
+tcp_prot / tcpv6_prot use SLAB_TYPESAFE_BY_RCU. Reading two integers
+under rcu_read_lock() is safe, and stale values are fine for diag.
 
-> +# This function is used in the cleanup trap
-> +#shellcheck disable=3DSC2317,SC2329
-> +cleanup()
-> +{
-> +	# Disconnect nbd device in ns2
-> +	ip netns exec "$ns2" nbd-client -d /dev/nbd0 2>/dev/null || true
-> +
-> +	sleep 1
-> +
-> +	# Kill nbd-server in ns1
-> +	if [ -n "${server_pid}" ]; then
-> +		ip netns exec "$ns1" kill "${server_pid}" 2>/dev/null || true
-> +		ip netns exec "$ns1" kill -9 "${server_pid}" 2>/dev/null || true
-> +	fi
-> +
-> +	# Clean up temp files
-> +	if [ -n "${temp_file}" ]; then
-> +		ip netns exec "$ns1" rm -f "${temp_file}" 2>/dev/null || true
-> +	fi
-> +	if [ -n "${conf_file}" ]; then
-> +		ip netns exec "$ns1" rm -f "${conf_file}" 2>/dev/null || true
-> +	fi
-> +	if [ -n "${pid_file}" ]; then
-> +		ip netns exec "$ns1" rm -f "${pid_file}" 2>/dev/null || true
-> +	fi
-> +
-> +	mptcp_lib_ns_exit "$ns1" "$ns2"
-> +
-> +	unset -v trtype port
-> +	unset -v temp_file server_pid
-> +}
+mptcp_diag_dump_listeners() already holds rcu_read_lock(), only the
+token dump and mptcp_diag_dump_one() paths are missing it.
 
-[Severity: Medium]
-Can cleanup() disconnect an active /dev/nbd0 device on the host if /dev/nbd0
-was already in use before the test started?
+Something like:
 
-Before registering the cleanup trap, the script only checks whether
-/dev/nbd0 is a block device node:
+diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
+index 136c2d05c0eeb8f7050344a63396396d8718206c..28a42eee665129fe56c47dc2dd5=
+b265ba18b2e95
+100644
+--- a/net/mptcp/mptcp_diag.c
++++ b/net/mptcp/mptcp_diag.c
+@@ -200,8 +200,10 @@ static void mptcp_diag_get_info(struct sock *sk,
+struct inet_diag_msg *r,
+        r->idiag_wqueue =3D sk_wmem_alloc_get(sk);
 
-	# Check for /dev/nbd0
-	if [ ! -b /dev/nbd0 ]; then
-		mptcp_lib_pr_skip "/dev/nbd0 not found"
-		exit ${KSFT_SKIP}
-	fi
+        if (inet_sk_state_load(sk) =3D=3D TCP_LISTEN) {
+-               struct sock *lsk =3D READ_ONCE(msk->first);
++               struct sock *lsk;
 
-Because NBD devices in drivers/block/nbd.c are global across network
-namespaces (nbd_index_idr is global and nbd_genl_family sets .netnsok =3D 1=
-),
-if /dev/nbd0 is already connected on the host, run_client() will fail to
-attach it (or run_server() may fail earlier) and cleanup() will still execu=
-te
-nbd-client -d /dev/nbd0, disconnecting the host's active block device. Shou=
-ld
-the script check whether /dev/nbd0 is already connected via nbd-client -c
-/dev/nbd0 before setting up the trap, or only disconnect /dev/nbd0 if
-run_client() actually connected it?
++               rcu_read_lock();
++               lsk =3D READ_ONCE(msk->first);
+                if (lsk) {
+                        /* override with settings from tcp listener,
+                         * so Send-Q will show accept queue.
+@@ -209,6 +211,7 @@ static void mptcp_diag_get_info(struct sock *sk,
+struct inet_diag_msg *r,
+                        r->idiag_rqueue =3D READ_ONCE(lsk->sk_ack_backlog);
+                        r->idiag_wqueue =3D READ_ONCE(lsk->sk_max_ack_backl=
+og);
+                }
++               rcu_read_unlock();
+        }
 
-Also, in run_io_test(), two 10 MiB temporary files are created inside the
-child subshell:
+        if (!info)
 
-	test_data=3D$(mktemp /tmp/nbd_test_XXXXXX.bin)
-	read_data=3D$(mktemp /tmp/nbd_read_XXXXXX.bin)
 
-If the test is interrupted or killed by a timeout during dd or cmp, will
-test_data and read_data be leaked in /tmp since they are not tracked by
-cleanup()? And in cleanup(), since temp_file, conf_file, and pid_file are
-created on the host filesystem in init(), is ip netns exec "$ns1" needed to
-remove them?
-
-[ ... ]
-
-> +run_server()
-> +{
-> +	# Create backing file
-> +	dd if=3D/dev/zero of=3D"${temp_file}" bs=3D1M count=3D0 seek=3D256 2>/d=
-ev/null
-> +
-> +	# Detect MPTCP support: native config or mptcpize fallback
-> +	local use_mptcpize=3D""
-> +	local mptcp_opt=3D""
-> +	if [ "${trtype}" =3D "mptcp" ]; then
-> +		if ! grep -q '"mptcp"' /usr/bin/nbd-server 2>/dev/null && \
-> +		   ! nbd-server --help 2>&1 | grep -qi mptcp; then
-> +			if command -v mptcpize &> /dev/null; then
-> +				use_mptcpize=3D"mptcpize run -d"
-> +				echo "INFO: nbd-server lacks native MPTCP," \
-> +					"using mptcpize"
-> +			else
-> +				echo "ERROR: no MPTCP support in nbd-server"
-> +				return 1
-> +			fi
-> +		else
-> +			mptcp_opt=3D"mptcp =3D true"
-> +			echo "INFO: nbd-server has native MPTCP support"
-> +		fi
-> +	fi
-
-[ ... ]
-
-> +run_client()
-> +{
-> +	local extra_args=3D()
-> +	local nbd_dev=3D"/dev/nbd0"
-> +	local server_addr=3D"10.1.1.1"
-> +
-> +	local use_mptcpize=3D""
-> +	if [ "${trtype}" =3D "mptcp" ]; then
-> +		if nbd-client 2>&1 | grep -qE "\-M|\-\-mptcp"; then
-> +			extra_args+=3D("-M")
-> +			echo "INFO: nbd-client has native MPTCP support (-M)"
-> +		elif command -v mptcpize &> /dev/null; then
-> +			use_mptcpize=3D"mptcpize run -d"
-> +			echo "INFO: nbd-client lacks native MPTCP," \
-> +				"using mptcpize"
-> +		else
-> +			echo "ERROR: no MPTCP support in nbd-client"
-> +			return 1
-> +		fi
-> +	fi
-
-[Severity: Medium]
-Does the native MPTCP detection in run_server() and run_client() work as
-intended when the top-level script unconditionally skips if mptcpize is
-missing?
-
-Later in the script, before run_test() is called, there is an unconditional
-check for mptcpize:
-
-	# Check for mptcpize if using MPTCP transport
-	if [ "${trtype}" =3D "mptcp" ]; then
-		if ! command -v mptcpize &> /dev/null; then
-			mptcp_lib_pr_skip "mptcpize tool not found"
-			exit ${KSFT_SKIP}
-		fi
-	fi
-
-Because that check exits with KSFT_SKIP whenever mptcpize is not installed,
-systems where nbd-server and nbd-client have native MPTCP support will still
-skip the test if mptcpize is absent, and the else branches in run_server()
-and run_client() can never be reached.
-
-In addition, in run_server():
-
-	if ! grep -q '"mptcp"' /usr/bin/nbd-server 2>/dev/null && \
-	   ! nbd-server --help 2>&1 | grep -qi mptcp; then
-
-Can grep -q '"mptcp"' /usr/bin/nbd-server ever match a compiled ELF binary?
-In a compiled C binary, string literals in .rodata do not include the
-surrounding C source double quotes, and /usr/bin/nbd-server is also
-hardcoded rather than resolved via command -v nbd-server (for example when
-installed in /usr/sbin). Since mptcp =3D true is a configuration file direc=
-tive
-rather than a command-line option printed by nbd-server --help, won't
-run_server() always fall back to mptcpize even when nbd-server supports
-native MPTCP?
-
-[ ... ]
-
-> +	# Verify MPTCP subflows if trtype is mptcp
-> +	if [ "${trtype}" =3D "mptcp" ]; then
-> +		local sf_total sf_max tcp_conns is_fallback
-> +		sf_total=3D$(ss -Mia | grep -oP "subflows_total:\K[0-9]+" | \
-> +			head -1)
-> +		sf_max=3D$(ss -Mia | grep -oP "subflows_max:\K[0-9]+" | head -1)
-> +		tcp_conns=3D$(ss -tia | grep -c "tcp-ulp-mptcp" || true)
-> +		is_fallback=3D$(ss -Mia | grep -c "fallback" || true)
-> +		if [ "${is_fallback}" -gt 0 ]; then
-> +			echo "FAIL: MPTCP fell back to TCP!" \
-> +				"subflows_total:${sf_total}" \
-> +				"tcp_subflows:${tcp_conns}"
-> +			return 1
-> +		elif [ -n "${sf_total}" ]; then
-> +			echo "PASS: MPTCP subflows_total:${sf_total}" \
-> +				"subflows_max:${sf_max}" \
-> +				"tcp_subflows:${tcp_conns}"
-> +		else
-> +			echo "FAIL: No MPTCP subflows info found"
-> +			return 1
-> +		fi
-> +	fi
-
-[Severity: Medium]
-In run_io_test(), is checking [ -n "${sf_total}" ] sufficient to verify that
-the additional MPTCP subflows were established?
-
-In net/mptcp/sockopt.c:mptcp_diag_fill_info():
-
-	info->mptcpi_subflows_total =3D info->mptcpi_extra_subflows +
-		__mptcp_has_initial_subflow(msk);
-
-Even if all extra subflows fail to establish across the four interfaces
-configured in init(), subflows_total is still 1 for the initial subflow, so
-elif [ -n "${sf_total}" ] will pass with only a single subflow.
-
-Also, on systems where ss supports MPTCP but predates the subflows_total
-field, sf_total will be empty and this check will fail with "No MPTCP
-subflows info found" even though tcp_conns was computed right above. Could
-this use mptcp_lib_get_info_value() instead of grep -oP, fall back to
-tcp_conns when subflows_total is unavailable (similar to chk_subflows_total=
-()
-in mptcp_join.sh), and verify that multiple subflows were actually created?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1793010744.gi=
-t.tanggeliang@kylinos.cn?part=3D4
+pw-bot: cr
