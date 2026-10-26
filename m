@@ -1,55 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.174
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793018300;
-	b=oOVTCnuGB1YxzUKamatgxQe53UJFeJls7BK42mI3IS66OuGDjXmJpRc2Re/AC/4gxaUS
-	 jRsOhHs6jRDA/FFhAhrViabTIJrKBVGp0z6jkJ7qD8/vaXe2rq5aAL+m5mQQ40LLoXzoD
-	 cqyGf8JeYEfJiIPJaiOoh9lK2A6btiSXG/zydY/TGMUwLCIr9/hZISgrv1eAn8HBWs6vI
-	 eCt46Pvm0fBHND0wm0wG8i0oBdtZIy0OasLTw6CDPL6aKU2ZoBhqy3GbNhpK1bDjc+Waj
-	 Y1edWugbHbfpeuwZOCWHpDnTKGeknVR+nw7jRdkhdJ8VOemfDCB1BOML82ZnyP3dICA==
+	t=1793019231;
+	b=St9QTHu11bO17i2vFmNK+F2GBs/POa8bPU4ETJjTpErJKbLdm0uzWu1yEcmV6obr8tNM
+	 5/LeC4swZ6lJt2zoi4+anhGt+CrrfNXC0tQ5j1/iw75qalZtKEyPmtklDK5hKa8rXOLqv
+	 fXkzIGaWCT42dyLqi9ZqTeFLbVSlgUTAgyGooOMsCKHs1OJFbTUMstd/AKrxuv02jr18x
+	 iKWaUU1AxgF2Tild41KNNP8yKjHstL72oPpXcHdA7ELKz5ZgFqnyJLcaD4HoTRsPLQORH
+	 d1gboQhRcf8QeRQ8sJr439qdloj+IxVKX8L9P+tecgZ0rkmB30CuQxytkkd4puW3qnA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793018300;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=XG8Szrq9HyP4p8mCyECorg47iCZAl2TOpPnmqA0Xpkw=;
-	b=ocAGt9N7/Mm/hyLP5GhyWI6/oOisoaXSZGeeshxYNIZNiZXQkGCeyO2ip5gGSfr0og1f
-	 tv4BeejvEyAFsWERgiWH4C3dezESPF8FD0OyWICa+QrAkvgZHQIV0Qv6HQM8PTVmK8Ar8
-	 i+oNY/0sBsHrOHCvOXSyraiipOse4PPqtU71doVulmENto4rU0JQEuFEW+Ak8n4MnbNwS
-	 amjPrhMIVhEB3B9+tL3vQVX660qOrBAsKPVtbhwlsaNoWg+LIyGnTuRbZIJN3vSJdW8uy
-	 buNwA15EJ8vXB4AXLiqWkZmT13x4td5xMNmwZ3T+6xZUpDTgPpun26+jPR8mj9qHveA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793019231;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=E0njs3XuDXo9ko2WsQq5fVHJ/QY/gDv5xpYPk9SHFW0=;
+	b=DRhIC0l1EWVTPco3+RbHwVZ5oFOHm9jq2US8zU4EhbDzzNRfwm/v+cMUyg4K7M33ZDVz
+	 DYdY9xLz//9qO0OvW7Mo8eO8KCMbfevByOl8UFHZdBI+Q+UeAFC33LoJ0Xzc6aiCweyOq
+	 tNafWO0bccFzU2HIe/0JqEP6kLnUoEeOojOvHXy00TSukCiyneUB1mYZM5IcWTyRl0NBP
+	 19jwLttnuWsH2RacXvMdsFwJipKvVoRSpG4bY9E7VjoS1vuaJtSulB7gRcGq9/sadqHTw
+	 Wqglih4+Y1WneQc5Wt4Uyw527adWpJGiLNZG2zVgNw5XhTOvUS1D9/BN3INn3EnC2Ug==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZjLm8FtS;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=RQHzIi8G;
+	arc=none smtp.remote-ip=74.125.82.174
+Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D215606A31A
-	for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 12:38:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFF1606A31B
+	for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 12:53:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0EFF1606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZjLm8FtS
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCA1A1F01828
-	for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 12:38:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793018298;
-	bh=XG8Szrq9HyP4p8mCyECorg47iCZAl2TOpPnmqA0Xpkw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=ZjLm8FtShg0tZhNiT+oKp913XnkSkLx/78VjPoVNrWiTHkCSmS4c3LBPxoIHUU08n
-	 1dGRvAOAkhPCG+83WlAsP3/L0Yr3DKYkbVGpfRX5zBVbBP7bnTGTuzev+v5S8t/JHw
-	 +g3L3okX2yOeF04zu0Eg+13Ak/6OScCvZY7VTjBFImLpeYZC06W3sV6iMG10wuoLWW
-	 AQhV1H4bSQH64Jbz3j0Ewl+TyfqaQuNBfwv80Ldo85+QgS/RtLgyS2vAY/NlC6jJHq
-	 7uo3ZwPh3c/RQJZkwV6k1V7XXI1HuemK9zLTl0ITxbz1UQ5+W4/JhssuE8v+uWE7vH
-	 Ok5+sneFl/1Ow==
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-48e2d5a69c4so1660719fac.3
-        for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 05:38:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBz4d5xKH+tNphmfLSoRx2wcbUKLoe15TkSYeILydwAmwmR2F4aM63k4vpV/T6B6Kfh6I3gEXQ==@lists.linux.dev
-X-Gm-Message-State: AFq9FYITNl6YdzJMZJyJLibQ659HHgdjNuQd+pAS9/S9yKNw7YggI56b
-	JqyzkFU9s2oTRKRNy6wg0Kz6XZw2E6YfyAAD3swoczGBlJyOGYSxFzHhpc4NB1yAAPe+Wlq5VaE
-	nBgho2ikL8YLXutNhoPG4TB0bxhjzGXo=
-X-Received: by 2002:a05:6871:a69f:b0:491:b7fa:76f8 with SMTP id
- 586e51a60fabf-4a83ec452e7mr3868754fac.0.1793018298084; Mon, 26 Oct 2026
- 05:38:18 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=RQHzIi8G
+Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-3282db206d3so5823786eec.0
+        for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 05:53:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1793019230; x=1793624030; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=E0njs3XuDXo9ko2WsQq5fVHJ/QY/gDv5xpYPk9SHFW0=;
+        b=RQHzIi8G4YmHd0i0o+RrC+Chij7HBvFGwtzfYI2jWv2naVDgm2PnzDgtCBKdQ7/F5h
+         xl/+UBC1aveRViEi/hlPhZS2ehI7kMDgKSSjZdl++Q912h4xKFJyQWkwVRMKM/5SP6GA
+         SxkmMfHI6BlThFyWHc1ZvKr1ypRFrrm3H/TX9CD/J3rwU3tOsiOCet5MRanDBh5gtkBK
+         2pu7F5N8gU0HaHLFBcW2aAvM1YLbP4X5M0RqkQNBwVOpKde2RSUXvAcqWVqMw7IzVIEI
+         R26MaqwN8vUJZTfNOYzE46E8LV7Y/Ecri6PZovOnxNyfCzOI//PrkEKq0AOjz17HdvWg
+         O9ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793019230; x=1793624030;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=E0njs3XuDXo9ko2WsQq5fVHJ/QY/gDv5xpYPk9SHFW0=;
+        b=gUtiSdTTNGV9obqBWp1ACxAnSr+rYt2pczbfXuozEUvNV6Y7tebFSbvJJOS4Kyvpuz
+         5ASsmvuanQdig3fdeqFMRgZnG8igbC118BZVN52SK8pTJzQq5PnKaLaLfSP33zj9ZPYc
+         2JjY3uL3pQh3rFvQlWI8WsJYwPtTr9CQnbnHtJRvDlmIwygkOAoWLW3Q4raY1hTavMFf
+         pRLmHIeLeHCpTQvDLwgkoBtTHVjRMb2SE7Ipxp8x2qOZwS6Zlt4+jz7zDOuvdzK6YEXY
+         xpD7syLjNi47YeOMg6/RVkRqoOpOQODO+dG55W8UH+HDy4cFgYnq2Hn6X83htxQbPySw
+         EbaQ==
+X-Gm-Message-State: AFq9FYI08f9oYvckPCoBwofakPLdJ0Kr4Ak1k9lfrfWhSqEYUZApF33y
+	Rd1Dl/mtzx0S3TDC00BNkgrDHmqcBZ5NI9BK6eYbO6izjhFknB9dDUTcwV/MTA==
+X-Gm-Gg: AYBFou0orfUQjVAsCc4efyqsLUk+bsX52rV8n8g7ATUyQTnC3mZwUhUd3aA2gNQJTiv
+	sPbg8ceeaALi4rXyingDGvSeg9vWtIu5R9gCtApt4HG/KeFsVm1adaLRedAzHlC93KdWurH3Nwr
+	wlt3csPQnRL3z2PyfwMAqh7RPxCP8xAvgHMxlZJbgMZ+xi0EJ2oBephIO6K/ZujtTdRG8wDNxCX
+	Kw5gKrJnt8gjgk3BNeIA/brlJWMEjS4J8Fx3/WYEZVbcyLQ+VRcNOgn2ch7qOtwpvwox4F5R8D6
+	+sYPRAtB39E46M0s6PlphHJvgyB5uTJkYDYopnLXHgspnCRJ9AFXiDmAwjIlxIUk7BWECoq8K7i
+	zOdFcDfjjhxplkhxq4fPMSYIfYZj6fnHz+AadAi7jwLuvJq5Ig46lOk2KSR87Onduhk2ypcYz2U
+	kZKhir113aqSeZhjVHrB7m7cZEyEPqiJ23tKngHgpFlQR3QHcfimvOfZYfgRhKu7x63rCm5CsvE
+	qZkksYi48QjKNVhi9Owq+5QqE1ftvl0pTZCP80zWLqjbjNrbVrKE7bldLjCHKILJ0NEC7uD2G+i
+	T7xHfgEjdFbbKzAPSVr7Bm8/7YWH7BZnNL6io0UvscNAWxI+zRkMtw2aV+MMYnMKzTV7Ej/6XZU
+	cBtbfgYiVclrSw7jpfpEBcJ+H
+X-Received: by 2002:a05:7301:488a:b0:368:72f0:353a with SMTP id 5a478bee46e88-369e8624c4fmr10033536eec.38.1793019229787;
+        Mon, 26 Oct 2026 05:53:49 -0700 (PDT)
+Received: from ramen-dev-security-2.asia-south1-c.c.ramen-dev-345017.internal (90.156.200.35.bc.googleusercontent.com. [35.200.156.90])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-369f4164886sm18377923eec.7.2026.10.26.05.53.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Oct 2026 05:53:49 -0700 (PDT)
+From: Anil Kaushik <anilkaushikwireless@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: Anil Kaushik <anilkaushikwireless@gmail.com>
+Subject: [PATCH mptcp-next v11 0/6] mptcp: pm: in-kernel: retry subflows closed after an error
+Date: Mon, 26 Oct 2026 12:53:39 +0000
+Message-Id: <20261026125345.3019372-1-anilkaushikwireless@gmail.com>
+X-Mailer: git-send-email 2.25.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -59,153 +92,120 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <pm-mptcp-objects-candidate-0066-v3-73df72b7a543d4cada0e@gmail.com>
-In-Reply-To: <pm-mptcp-objects-candidate-0066-v3-73df72b7a543d4cada0e@gmail.com>
-From: Eric Dumazet <edumazet@kernel.org>
-Date: Mon, 26 Oct 2026 13:38:07 +0100
-X-Gmail-Original-Message-ID: <CAL4WiiqEHwZRhSRXqFOtF3OYsX_v3519Ey8AEknbaZKFNogeJA@mail.gmail.com>
-X-Gm-Features: AclHuK-yOS0_zQhnBgPZbv2A9ize24MPt8Vf2Uf9oc7WYOKvbednnhX2kOUiocA
-Message-ID: <CAL4WiiqEHwZRhSRXqFOtF3OYsX_v3519Ey8AEknbaZKFNogeJA@mail.gmail.com>
-Subject: Re: [PATCH net] mptcp: protect listener backlog reads in diagnostics
-To: Cen Zhang <zzzccc427@gmail.com>
-Cc: matttbe@kernel.org, martineau@kernel.org, davem@davemloft.net, 
-	kuba@kernel.org, pabeni@redhat.com, geliang@kernel.org, horms@kernel.org, 
-	netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	baijiaju1990@gmail.com, jjzuming@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Le lun. 26 oct. 2026 =C3=A0 13:04, Cen Zhang <zzzccc427@gmail.com> a =C3=A9=
-crit :
->
-> mptcp_diag_get_info() reports the accept queue of a listening MPTCP
-> socket by reading msk->first. The token based dump and the exact token
-> query only hold a reference on the MPTCP socket, which pins neither the
-> first subflow nor the listener hash bucket, and __mptcp_close_ssk()
-> drops the last reference on the first subflow before clearing
-> msk->first.
->
-> An application can disconnect a connected MPTCP socket with AF_UNSPEC,
-> which removes the token but retains the first subflow, listen on it
-> again and close it. A dump that obtained the MPTCP socket before the
-> disconnect then reads the backlog of a freed TCP listener:
->
->   Token diagnostic                 Application
->   mptcp_token_iter_next()
->     retain MPTCP socket
->                                    connect(AF_UNSPEC)
->                                      remove token, retain first
->                                    listen()
->                                      reuse first
->   mptcp_diag_get_info()
->     observe TCP_LISTEN
->     lsk =3D msk->first
->                                    close()
->                                      mptcp_destroy()
->                                        __mptcp_close_ssk()
->                                          release first
->     read lsk->sk_ack_backlog
->
-> Take the MPTCP data lock around the listener state check and the
-> backlog reads, and only follow msk->first while no process owns the
-> socket. Every path that disposes of the first subflow runs with the
-> socket owned, and lock_sock() has to take the same spinlock to become
-> the owner, so the reads cannot overlap with the release. Waiting for
-> the owner is not an option: mptcp_diag_dump_listeners() calls this
-> function with the listener hash bucket lock held, which the owner needs
-> to unhash that very listener. While a process owns the socket, the dump
-> reports the MPTCP socket's own queue values instead.
->
-> BUG: KASAN: slab-use-after-free in mptcp_diag_get_info+0x415/0x490
-> Read of size 4 at addr ffff888111763818 by task python3/499
->
-> Call Trace:
+A subflow closed after an error is never re-created, even once the path
+is back (#440).
 
-Adding these stack traces without symbols is not really nice.
+When TCP gives up on an established subflow we created, after a
+retransmission or keepalive timeout, the in-kernel PM now creates a new
+one to the same addresses, while another subflow can still send data.
+Its SYN retries space out the attempts. Their number is set by a new
+limit, subflow-retries, like TCP_SYNCNT: the maximum, 127, by default,
+about 4 hours, and 0 disables it.
 
-Time to use scripts/decode_stacktrace.sh
+Patch 1 fixes a selftest tool issue seen with the new test. Patches 2
+and 3 add the new limit, patch 4 the retry, patches 5 and 6 the
+selftests.
 
->
-> Fixes: 4fa39b701ce9 ("mptcp: listen diag dump support")
-> Signed-off-by: Cen Zhang <zzzccc427@gmail.com>
-> Assisted-by: LLM
-> ---
->  net/mptcp/mptcp_diag.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
-> index 136c2d05c0ee..a71bcaee15c8 100644
-> --- a/net/mptcp/mptcp_diag.c
-> +++ b/net/mptcp/mptcp_diag.c
-> @@ -199,7 +199,12 @@ static void mptcp_diag_get_info(struct sock *sk, str=
-uct inet_diag_msg *r,
->                           READ_ONCE(mptcp_sk(sk)->backlog_len);
->         r->idiag_wqueue =3D sk_wmem_alloc_get(sk);
->
-> -       if (inet_sk_state_load(sk) =3D=3D TCP_LISTEN) {
-> +       /* The listener walk holds the listen hash lock: do not wait for =
-a
-> +        * socket owner that could be unhashing the first subflow.
-> +        */
-> +       mptcp_data_lock(sk);
-> +       if (!sock_owned_by_user(sk) &&
-> +           inet_sk_state_load(sk) =3D=3D TCP_LISTEN) {
->                 struct sock *lsk =3D READ_ONCE(msk->first);
->
->                 if (lsk) {
-> @@ -210,6 +215,7 @@ static void mptcp_diag_get_info(struct sock *sk, stru=
-ct inet_diag_msg *r,
->                         r->idiag_wqueue =3D READ_ONCE(lsk->sk_max_ack_bac=
-klog);
->                 }
->         }
-> +       mptcp_data_unlock(sk);
->
->         if (!info)
->                 return;
+I used an LLM to help write and review the code, the tests and the
+commit messages of this series. I checked and tested every change
+myself.
 
-This seems overkill, and adds a new msk slock -> ilb->lock nesting from
-mptcp_diag_dump_listeners(). It also makes ss randomly report msk
-rmem/wmem instead of the accept queue while the listener is owned.
+Known issue: in about 1 run in 20, more often on debug kernels, the
+first new test fails. Once the path is back, the re-created subflow
+joins, but the server resets it right away with an MP_RST, after
+DSSNotMatching, and the PAWS counters are high on both sides. It looks
+like an existing issue on the receive path, triggered by the two-way
+transfer with losses rather than by the retry itself, but I have not
+found the cause yet: it does not show up with tcpdump or tracepoints
+running. Any hint is welcome.
 
-msk->first is a TCP socket: TCP listeners have SOCK_RCU_FREE, and
-tcp_prot / tcpv6_prot use SLAB_TYPESAFE_BY_RCU. Reading two integers
-under rcu_read_lock() is safe, and stale values are fine for diag.
+Changes in v11, after the Sashiko review of v10: a subflow is only
+re-created while another subflow can send data, so the close timeout
+works as before, and all the code re-arming or stopping it is gone; the
+re-created subflows not established yet are closed from the worker, or
+when the MPTCP socket is shut down or closed, never while iterating on
+the subflows; the path-back test is gone, and the third test checks the
+only subflow is not re-created.
 
-mptcp_diag_dump_listeners() already holds rcu_read_lock(), only the
-token dump and mptcp_diag_dump_one() paths are missing it.
+Changes in v10, after the Sashiko review of v9: when the close timeout
+expires, the connection is kept if a re-created subflow connected in the
+meantime, since an active join does not stop the timer; the re-created
+subflows still connecting are closed once the msk is no longer
+established and no other subflow is left; a new test lets the path come
+back before the close timeout; and the patches are rebased on the
+current export branch, without the Assisted-by tag, removed upstream.
 
-Something like:
+Changes in v9, after the Sashiko reviews of v8 and more checks: every
+timeout is retried, whatever ICMP error TCP reports for it, and only
+resets, local aborts and MPTCP protocol errors are excluded; if no other
+subflow can send data, the close timeout still applies, the new subflow
+no longer keeps the connection open for all its SYN retries; the
+re-created subflows closed with the msk have their data in the msk
+backlog cleaned, since they can get established in between; the doc says
+this is a single connection attempt, ended by an ICMP error, and that 0
+disables it; the close test blocks both paths, and its server reads all
+the data first; the tests read the counters before blocking a path; and
+a new test checks the close timeout with only one subflow.
 
-diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
-index 136c2d05c0eeb8f7050344a63396396d8718206c..28a42eee665129fe56c47dc2dd5=
-b265ba18b2e95
-100644
---- a/net/mptcp/mptcp_diag.c
-+++ b/net/mptcp/mptcp_diag.c
-@@ -200,8 +200,10 @@ static void mptcp_diag_get_info(struct sock *sk,
-struct inet_diag_msg *r,
-        r->idiag_wqueue =3D sk_wmem_alloc_get(sk);
+Changes in v8, after the Sashiko reviews of v7 and Matthieu's comments:
+the default number of SYN retries is the maximum, 127; the re-created
+subflows still connecting are closed before the write shutdown
+disconnects them; the doc is more precise; and a separate test closes
+the connection while a subflow is being re-created.
 
-        if (inet_sk_state_load(sk) =3D=3D TCP_LISTEN) {
--               struct sock *lsk =3D READ_ONCE(msk->first);
-+               struct sock *lsk;
+Changes in v7, after the netdev Sashiko reviews of v5 and v6, and
+Abdul's tests: only a path error, a retransmission or keepalive
+timeout, makes the PM re-create a subflow, not a reset, so a peer
+cannot make it loop; the flags are bools under the msk socket lock;
+mptcp.rst documents tcp_retries2 and the keepalive needed by a subflow
+that only receives data; and small fixes in the tests.
 
-+               rcu_read_lock();
-+               lsk =3D READ_ONCE(msk->first);
-                if (lsk) {
-                        /* override with settings from tcp listener,
-                         * so Send-Q will show accept queue.
-@@ -209,6 +211,7 @@ static void mptcp_diag_get_info(struct sock *sk,
-struct inet_diag_msg *r,
-                        r->idiag_rqueue =3D READ_ONCE(lsk->sk_ack_backlog);
-                        r->idiag_wqueue =3D READ_ONCE(lsk->sk_max_ack_backl=
-og);
-                }
-+               rcu_read_unlock();
-        }
+Changes in v6, after the Sashiko reviews (netdev Sashiko on v4, which
+also applied to v5, and sashiko.dev on v5): only subflows that were
+established are re-created, so the PM still moves on to the next
+endpoints as before; removed remote addresses and the local ID 0 are
+handled too; the policy checks the maximum value, so the parse_limit()
+patch is gone; and the test uses the net/lib.sh helpers. Details in
+each patch.
 
-        if (!info)
+v10: https://lore.kernel.org/mptcp/20261026063657.2955783-1-anilkaushikwireless@gmail.com/
+v9: https://lore.kernel.org/mptcp/20261025134909.2794368-1-anilkaushikwireless@gmail.com/
+v8: https://lore.kernel.org/mptcp/20261022151130.2285198-1-anilkaushikwireless@gmail.com/
+v7: https://lore.kernel.org/mptcp/20261020031711.1896660-1-anilkaushikwireless@gmail.com/
+v6: https://lore.kernel.org/mptcp/20261018041748.1655711-1-anilkaushikwireless@gmail.com/
+v5: https://lore.kernel.org/mptcp/20261016160926.1155262-1-anilkaushikwireless@gmail.com/
+v4: https://lore.kernel.org/mptcp/20261016055010.980819-1-anilkaushikwireless@gmail.com/
+v3: https://lore.kernel.org/mptcp/20261014143349.768138-1-anilkaushikwireless@gmail.com/
+v2: https://lore.kernel.org/mptcp/20261013025653.523755-1-anilkaushikwireless@gmail.com/
+v1: https://lore.kernel.org/mptcp/20261012171740.464517-1-anilkaushikwireless@gmail.com/
 
+Anil Kaushik (6):
+  selftests: mptcp: connect: retry write() on EAGAIN
+  netlink: specs: mptcp: add the subflow-retries attribute
+  mptcp: pm: in-kernel: add the subflow-retries limit
+  mptcp: pm: in-kernel: retry subflows closed after an error
+  selftests: mptcp: pm_nl_ctl: support the subflow-retries limit
+  selftests: mptcp: join: validate subflow retry after link failure
 
-pw-bot: cr
+ Documentation/netlink/specs/mptcp_pm.yaml     |  13 +
+ Documentation/networking/mptcp.rst            |  18 +
+ include/uapi/linux/mptcp.h                    |   2 +-
+ include/uapi/linux/mptcp_pm.h                 |   1 +
+ net/mptcp/mptcp_pm_gen.c                      |  10 +-
+ net/mptcp/mptcp_pm_gen.h                      |   4 +-
+ net/mptcp/pm.c                                |  39 ++
+ net/mptcp/pm_kernel.c                         | 164 ++++++++-
+ net/mptcp/protocol.c                          |  68 +++-
+ net/mptcp/protocol.h                          |  42 +++
+ net/mptcp/sockopt.c                           |   2 +
+ .../selftests/net/mptcp/mptcp_connect.c       |  18 +
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 335 +++++++++++++++++-
+ .../testing/selftests/net/mptcp/pm_netlink.sh |  48 ++-
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  34 +-
+ 15 files changed, 770 insertions(+), 28 deletions(-)
+
+-- 
+2.25.1
+
