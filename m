@@ -1,79 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793011388;
-	b=E+kki5XAiWS+KSBAuQhV2O3a9JwZH2+ZTTRkzjD7RvpkKZUdB7oAX4vB3taRobdiiNBv
-	 6SkLEWCsRsipSMDOXr1WK4E8t0EufBkcrg4G0cy1dxsr4fYzcBG1UL230ljWeGqrayl59
-	 GBKqRijIXLjO0UZCbjSRTJAFdbaM+osxRCKZ9qakEqphCR3sWkLeZQHtO0V0Nlvtp6p9w
-	 p3bWxylLvX1pnCdh9CWb7ssO/6e19A+nd4JrOTeGf775UrLwxIp/OwOiNCS8K0iR4Qesy
-	 6DI+PE1CWKq8WVH5d3dayYPtAeawuEFdM1p/GiaEE3ptMQxKgr25a4dVEavKZKasotw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793011388;
-	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=hRusVOW6yPxvo12nJa3Ma+cUdTkKX0KR33lpUjoEUUU=;
-	b=ySRjcALQbYK1dI1c1VB9tGY2kbOcvvZVRUTt/1LJTWVdLM997lQwt/wKjvPUI3xwgNib
-	 M4xSyoK5Hcj3D64PQEnrblMYRWWJ5BdvGd1uERLXq2SgJAmD9VeHEF2ZP1u8WKzgOw1as
-	 Dj6MoloK49U/LHtvh1RCBoP9YzDvDE4/Hx0cfwzDl8RVOXyTTzb2OYFQSDP1Phfx8dY4Z
-	 4DIDAORLVhOV+QswIlQn4B4C3PwNc5PklA1PTDd9ehamJ/W1v/iTkHhnSNusGUfsRg3AN
-	 +TS42bmI9R3YFaweDpN/ODInpfpijaf5AnajgR+x88XNGtsNzoi0dL5Hh6xYZCg6g3w==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eipLwFjK;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793012154;
+	b=r6KPcevN12EdrDGibvC6OUtvZZMziVFI3tosCTgLVamgK0Eq5LobRS5lAFQ2dMwUvW0d
+	 QHycsSEwlyT4LmqsHPeT4XtywqwIoaSppN60yjeOOgmWD46lOjq8kkmlbsoj+Bh26bL2/
+	 nF0WxTcAVHN/Jd+2Bhk+pAVBfZEYveXuPhOegBn6TXrIQB+q5+YwVooOmJiyBq1ZGvJgT
+	 ZqTDpBuFBSIQaYSJvPzqKkeFPpZ2Fa/PbL760Dh8jQBq1t4MlTAg08NSjAjELcZFp3VYA
+	 qR7w4stShSo82aQinhjQ+fy8rS8kh29J55xQOIbMmCoQb/p7jOJOz+NLq350jgWkqmQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793012154;
+	h=Received:DKIM-Signature:Message-ID:Subject:From:To:Date:In-Reply-To:
+	 References:Content-Type:User-Agent:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=eLA7PIRs/g+oR3+s8bFZHOewrWnop8L/Vi7wz4jXt24=;
+	b=qeungsuTe6x7q2noIbka4lvc/u0bWl652GEk8EhFhP5x2Nr0JE5YaKNBmQy/91RL1wdK
+	 XA0CClNM1ZxGxRoJjlTIUpjZKratgJN6kxS3mJ+OohAlekfGd6Yxzl+FdS570xfCTQlix
+	 CFz4GAFWKaWv6j3NOQHuK++C1UJqxeTkGFu4M0bT/clWOWiWHMyxw3kQ1QqbY0mh1agWc
+	 UabmXQL1S/xKXs3w5RUJYmEvQxMcIk+JbSoFjzx8ZU3Gwb7XwU6eM7C/Sq1A90NqciwVY
+	 3FOqyWsyQtRYRWXZ1/DLPuPrTEivPkzhXqJ85oB9o9uAGJps5povN7C5FCOQapEec+g==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="fw/PHz29";
+	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10DB9606A31A
-	for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 10:43:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E5D606A31A
+	for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 10:55:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eipLwFjK
-Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
-ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1793011387;
-	b=MiBYMoyv1c+nmaOuao9/90PV3U8zo/iGenLjpExiLg1sHkexgabQ9CKPQ5fyutz8QyCh
-	 3MCDMx9iqJbXPF/J1AglVl8IC4IaVa6cYLEovpbNyscva9Vsi6Sqc25CMS2R02RIxGoUw
-	 ptAHk9y+8HcIOwFUpVQrAw78glE+dzqh5wLixFqK/RKPR5WBSWP50kk7HHuMr6cGGx1A+
-	 yVdqm60YUEdS3VXitIK5BtN5xov/+5MQQShcfH9MG04peBKFeAZdKV6oTo3+rZNOSNKFg
-	 pChuBJxi5VSk1N8855+8T61M2tVV2eHBcuAijnJ4sjbdsqQ8yI9aNqQyqEMnAUsWsmA==
-ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1793011387;
-	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
-	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=hRusVOW6yPxvo12nJa3Ma+cUdTkKX0KR33lpUjoEUUU=;
-	b=PDc122ktqeBQ4iFzaKu8zIuqeWM9Vf1KEBn0BINARJUavMty05B23GDkOgmwU18HX7jd
-	 N1wqLsKGjO8du/oxfvIuc/2c8X6efpxHupxDXTZwqoUVbR3Cret1pr0InzLoayr6cr2ii
-	 5xNfuCqGYxsArrMSg07VlmAa4k95HjK/B47o8LpCa7JDcYdknNZ4PSS6h2QHzoTk6C6k/
-	 Vi1AKuFXFbgB+l8yPi9y8MRjfvS/abDpLAaljQNoOfegNRRDO2jvcAYh/zBk+taGqGAmF
-	 sf9gg4uzToaD3YJU8JLdglP7ru8OCbk64xBwiBju1WR48ZRLrREaHHURet153qCF2YA==
-ARC-Authentication-Results: i=1; smtp.kernel.org; 
-	arc=none smtp.remote-ip=100.80.115.77
-Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id 19D7A1F01825;
-	Mon, 26 Oct 2026 10:43:07 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fw/PHz29
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C3731F01825;
+	Mon, 26 Oct 2026 10:55:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793011387;
-	bh=hRusVOW6yPxvo12nJa3Ma+cUdTkKX0KR33lpUjoEUUU=;
-	h=From:Date:Subject:To:Cc:Reply-To;
-	b=eipLwFjKd43qw/opw4zuaTbhqfr1mQ6St+ke9H0sjsL6Qh/QR70oN2rJChr7D66Zc
-	 TCElXNv6NfOwx9MGmghbiNxgzzohW+RJ3UzQgMOEfp03rQxd+BsiELITVM+4cEVaPx
-	 DRjJ/EB6cfAV9qLS2KiI2jOBos5ez6DlPRNMYPZ4kaxMdZrwg4e9FrxUuvholVue92
-	 Tz7E4CRtPu3l04u/DLdnzqTyvMwzAZ++d79jxQLwZJcVu7wbVvhWYxJprwCntw0oiy
-	 Urh7xNiIMd2xLyFcQrtV9ZRnpgfChxlTvV+tE43Mux+4bQLRRftXUqFBK5KuNMNL+e
-	 YvyvM/Xrg+iYQ==
-Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 6D3F144C80;
-	Mon, 26 Oct 2026 10:43:06 +0000 (UTC)
-From: Quanye Yang via B4 Relay <devnull+quanyeyang.proton.me@kernel.org>
-Date: Mon, 26 Oct 2026 03:43:03 -0700
-Subject: [PATCH mptcp-next v3] selftests: mptcp: sockopt: echo until EOF on
- partial reads
+	s=k20260515; t=1793012153;
+	bh=eLA7PIRs/g+oR3+s8bFZHOewrWnop8L/Vi7wz4jXt24=;
+	h=Subject:From:To:Date:In-Reply-To:References;
+	b=fw/PHz29D1+bWMQrDQQ6/cd+QC6qKOVc7iMBogX78JlK9GX/CdFjWKS4lyw+lPnqy
+	 gdTJpiY43ZUmPWPCkkC/yX2N12bcJqjXo4IzGSxR4jgTfvEMk825GakVzt/6orWMz/
+	 4UPbmdogDzzdHknhMoCUKvBK0F+f7yMr54/EOQdxCG02xq8/cr0JqETiAgk5AtWOq0
+	 V7jofRvpMrNAkFfr/um/JM3tswn/jjaGnDo9NynjuTG8g+H1v9OesdJm4mX+yZ4DAb
+	 9PyGd/xBnlAOeHHba2dyKm4GgpDfpPTkiURufoZoPvwWsU182Mm8ytdgLh5NnX2CTU
+	 HjdsB9X9alyJA==
+Message-ID: <699a31e9224d6fc32d57e066ac3a70f19ad61122.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net v2] selftests: mptcp: sockopt: pass total
+ bytes to do_getsockopts
+From: Geliang Tang <geliang@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>, quanyeyang@proton.me, MPTCP Linux
+	 <mptcp@lists.linux.dev>
+Date: Mon, 26 Oct 2026 18:55:47 +0800
+In-Reply-To: <6b4005d8-850f-438d-a692-ebda1608d13d@kernel.org>
+References: <20261016-fix-mptcp-issue-638-v2-1-cc32774a8b0c@proton.me>
+	 <d16ffc4a-d8af-4b8d-b112-ce83736b9c3b@kernel.org>
+	 <758fc944eb96407a0d761ff84679ee5066cf836e.camel@kernel.org>
+	 <6b4005d8-850f-438d-a692-ebda1608d13d@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-10build1 
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -83,162 +63,94 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261026-fix-mptcp-issue-639-v3-1-165485982827@proton.me>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/32OSw6DIBiEr2JYl4aHonTVezRdoPxWmigGkNgY7
- 17UjYumy8nMfDML8uAMeHTLFuQgGm/skAS/ZKjp1PACbHTSiBEmKKElbs2M+zE0IzbeT4AFl1g
- KzqXiWjKqUGqODlJspz7QER5gDuh5eH6q39CEDbulO+ODdZ/9QqR75+9apJhiUhS5JqWqq7a6j
- 84GO1x72BciOzEY/81giUHz9JmXudBMnxnrun4BJ3d3KBgBAAA=
-X-Change-ID: 20261017-fix-mptcp-issue-639-96339a3d921a
-To: MPTCP Linux <mptcp@lists.linux.dev>
-Cc: matttbe@kernel.org
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1793011385; l=4942;
- i=quanyeyang@proton.me; s=20260801; h=from:subject:message-id;
- bh=o6McbY/P99n91QwPAyUuPX3sTnYTyHf/vgicwWKGmfM=;
- b=X8+eBXsi2sTnzCxhoiWHd1D7UTHhTKjWO112WhJJMP29BBllJ9D+3fcnHP9IaukOj2pFLw+AQ
- hZ8QGqUU+pqAJA4mni7h7PXo/Sd13WY6ireJl5tq9CM95Vu16RRlzlC
-X-Developer-Key: i=quanyeyang@proton.me; a=ed25519;
- pk=9L9FrcvzMgxPaBRU6XV0EnqTgjDqVO596rQKSZ9qZoY=
-X-Endpoint-Received: by B4 Relay for quanyeyang@proton.me/20260801 with
- auth_id=963
-X-Original-From: Quanye Yang <quanyeyang@proton.me>
-Reply-To: quanyeyang@proton.me
 Content-Transfer-Encoding: 7bit
 
-From: Quanye Yang <quanyeyang@proton.me>
+Hi Matt,
 
-process_one_client() used a single read() and write() before waiting
-for hangup. A SOCK_STREAM read() can return a short count when the
-payload is segmented, so the server echoed only part of the data and
-then blocked on FIN.
+On Fri, 2026-10-23 at 11:28 +0200, Matthieu Baerts wrote:
+> On 23/10/2026 03:05, Geliang Tang wrote:
+> > Hi Matt, Quanye,
+> > 
+> > On Thu, 2026-10-22 at 13:06 +0200, Matthieu Baerts wrote:
+> > > Hi Quanye,
+> > > 
+> > > On 17/10/2026 07:33, Quanye Yang via B4 Relay wrote:
+> > > > From: Quanye Yang <quanyeyang@proton.me>
+> > > > 
+> > > > connect_one_server() reads the echoed payload in a loop because
+> > > > read()
+> > > > on a stream socket can return a partial chunk. After the loop,
+> > > > it
+> > > > still
+> > > > passed the last read() return value to do_getsockopts() instead
+> > > > of
+> > > > the
+> > > > accumulated byte count.
+> > > > 
+> > > > do_getsockopts() checks MPTCP_INFO first. The client samples
+> > > > mptcpi_write_seq before write(), and write() has already
+> > > > advanced
+> > > > msk->write_seq by the full length, so a partial last read()
+> > > > makes
+> > > > the write_seq assert fail. Pass the total instead.
+> > > 
+> > > Thank you for the patch, it looks good to me.
+> > > 
+> > > Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> > > 
+> > > I just applied it in our tree, but for net-next because I don't
+> > > think
+> > > I
+> > > saw the issue in our and the netdev CI. So I added this in the
+> > > commit
+> > > message:
+> > > 
+> > > This issue has been reported by Sashiko and not seen in CI
+> > > environments.
+> > > Yet, it could be visible, especially when the test is launched
+> > > manually.
+> > 
+> > Sorry for the late reply - I just saw this patch. Glad the issue
+> > has
+> > been fixed. But actually, I had already fixed this issue earlier:
+> > my
+> > patch titled "selftests: mptcp: sockopt: use exact length in
+> > connect_one_server" [1] is still waiting for review on the MPTCP
+> > mailing list. But it's no big deal - I should have replied with an
+> > Acked-by for this patch.
+> 
+> My bad, I forgot about that patch when I opened a bunch of issues
+> reported by Sashiko.
+> 
+> I will add your co-dev-by on that one.
 
-The client keeps reading until it has the full length and only then
-closes the socket. The two sides wait on each other and the test
-hangs until SIGALRM.
+No need - let's keep it as it is.
 
-The server does not know the payload length, so echo each chunk until
-read() returns 0. Retry short writes, and accumulate nread/nwritten for
-the existing sockopt checks. Cast those totals to uint64_t when passing
-them to PRIu64 so the xerror() format is correct on 32-bit.
+> 
+> Do we need the other modification you did on the 'read' to silence a
+> GCC
+> warning? Because the current "sizeof(buf2) - total" seems correct to
+> me.
+> 
+> > Anyway, I'm wondering - does it look like my pending series
+> > "selftests:
+> > consolidate TCP_INQ testing into sockopt" [2] is still useful after
+> > all? Should I rebase it and send a v15?
+> 
+> It is still useful, but sorry, I need to go through it (and many
+> others
+> :( ). I will try to do that in November/December after some
+> deadlines.
+> No need to rebase before.
 
-Fixes: ce9979129a0b ("selftests: mptcp: add mptcp getsockopt test cases")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/639
-Signed-off-by: Quanye Yang <quanyeyang@proton.me>
----
-Changes in v3:
-- rebase on latest mptcp/export
-- cast nread/nwritten to uint64_t for PRIu64 in xerror()
-- Link to v2: https://patch.msgid.link/20261023-fix-mptcp-issue-639-v2-1-14a3d3746d2d@proton.me
+But could we hold off on the other patch, "selftests: mptcp: sockopt:
+echo until EOF on partial reads"? It conflicts with patches 3 and 4 in
+my series. As it's for "-next" rather than "-net", I'd suggest not
+merging it yet - I'll sort out the conflict once I have some time.
 
-Changes in v2:
-- target mptcp-next instead of mptcp-net
-- echo until hangup with goto; retry short writes; use nread/nwritten
-- Link to v1: https://patch.msgid.link/20261017-fix-mptcp-issue-639-v1-1-0554d07ab8f8@proton.me
----
- tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 60 +++++++++++++----------
- 1 file changed, 34 insertions(+), 26 deletions(-)
+Thanks,
+-Geliang
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index b8158a1198eb..367ff12bf6c7 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -640,7 +640,8 @@ static void connect_one_server(int fd, int pipefd)
- 
- static void process_one_client(int fd, int pipefd)
- {
--	ssize_t ret, ret2, ret3;
-+	size_t nread = 0, nwritten = 0;
-+	ssize_t ret, n, w, off;
- 	struct so_state s;
- 	char buf[4096];
- 
-@@ -650,46 +651,53 @@ static void process_one_client(int fd, int pipefd)
- 	ret = write(pipefd, "xmit", 4);
- 	assert(ret == 4);
- 
--	ret = read(fd, buf, sizeof(buf));
--	if (ret < 0)
-+read_more:
-+	n = read(fd, buf, sizeof(buf));
-+	if (n < 0)
- 		die_perror("read");
-+	if (n == 0)
-+		goto hangup;
-+
-+	for (off = 0; off < n; off += w) {
-+		w = write(fd, buf + off, n - off);
-+		if (w < 0)
-+			die_perror("write");
-+		if (w == 0)
-+			xerror("write returned 0");
-+	}
-+	nread += n;
-+	nwritten += n;
-+	goto read_more;
- 
--	assert(s.mptcpi_rcv_delta <= (uint64_t)ret);
-+hangup:
-+	assert(s.mptcpi_rcv_delta <= nread);
- 
- 	if (s.tcpi_rcv_delta)
--		assert(s.tcpi_rcv_delta == (uint64_t)ret);
--
--	ret2 = write(fd, buf, ret);
--	if (ret2 < 0)
--		die_perror("write");
--
--	/* wait for hangup */
--	ret3 = read(fd, buf, 1);
--	if (ret3 != 0)
--		xerror("expected EOF, got %lu", ret3);
-+		assert(s.tcpi_rcv_delta <= nread);
- 
--	do_getsockopts(&s, fd, ret, ret2);
--	if (s.mptcpi_rcv_delta != (uint64_t)ret + 1)
-+	do_getsockopts(&s, fd, nread, nwritten);
-+	if (s.mptcpi_rcv_delta != (uint64_t)nread + 1)
- 		xerror("mptcpi_rcv_delta %" PRIu64 ", expect %" PRIu64 ", diff %" PRId64,
--		       s.mptcpi_rcv_delta, ret + 1, s.mptcpi_rcv_delta - (ret + 1));
-+		       s.mptcpi_rcv_delta, (uint64_t)nread + 1,
-+		       s.mptcpi_rcv_delta - ((uint64_t)nread + 1));
- 
- 	/* be nice when running on top of older kernel */
- 	if (s.pkt_stats_avail) {
--		if (s.last_sample.mptcpi_bytes_sent != ret2)
-+		if (s.last_sample.mptcpi_bytes_sent != nwritten)
- 			xerror("mptcpi_bytes_sent %" PRIu64 ", expect %" PRIu64
- 			       ", diff %" PRId64,
--			       s.last_sample.mptcpi_bytes_sent, ret2,
--			       s.last_sample.mptcpi_bytes_sent - ret2);
--		if (s.last_sample.mptcpi_bytes_received != ret)
-+			       s.last_sample.mptcpi_bytes_sent, (uint64_t)nwritten,
-+			       s.last_sample.mptcpi_bytes_sent - (uint64_t)nwritten);
-+		if (s.last_sample.mptcpi_bytes_received != nread)
- 			xerror("mptcpi_bytes_received %" PRIu64 ", expect %" PRIu64
- 			       ", diff %" PRId64,
--			       s.last_sample.mptcpi_bytes_received, ret,
--			       s.last_sample.mptcpi_bytes_received - ret);
--		if (s.last_sample.mptcpi_bytes_acked != ret)
-+			       s.last_sample.mptcpi_bytes_received, (uint64_t)nread,
-+			       s.last_sample.mptcpi_bytes_received - (uint64_t)nread);
-+		if (s.last_sample.mptcpi_bytes_acked != nread)
- 			xerror("mptcpi_bytes_acked %" PRIu64 ", expect %" PRIu64
- 			       ", diff %" PRId64,
--			       s.last_sample.mptcpi_bytes_acked, ret,
--			       s.last_sample.mptcpi_bytes_acked - ret);
-+			       s.last_sample.mptcpi_bytes_acked, (uint64_t)nread,
-+			       s.last_sample.mptcpi_bytes_acked - (uint64_t)nread);
- 	}
- 
- 	close(fd);
-
----
-base-commit: 77f43f9f764392db19087a46499b301ae629f437
-change-id: 20261017-fix-mptcp-issue-639-96339a3d921a
-
-Best regards,
---  
-Quanye Yang <quanyeyang@proton.me>
-
-
+> 
+> Cheers,
+> Matt
