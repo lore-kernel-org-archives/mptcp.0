@@ -1,56 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793014023;
-	b=tD/YC+IYhtwTvpvvBd3QeoqPNrfbEiYoW9CvAWExodM8t2fZyfv+/EA2bn97fmgHn/m5
-	 nUb12TGME279D8cNexvF+l+Q9t51099U9yzWJJ0CgnVC+ucZHpmO5F3uLVWhmmBlZ39fm
-	 x3iC3DEB+3ZJBfqNc8vWNrRLJgQpMjDEd0Dx+5/A9oeLsU0B4gu0M1Sk7YeUb5mBYreQb
-	 AKRrh5K/xYg8yDj4AG8GribJNXsiwWjW7r6zHrTep8JF65K4hpoB1bCriGNxCPXQc6ai9
-	 54V+pZ8CI8Ks7ML65PoyIqgwUyfHBIg7Qzl46nF5Zwy2eTgRWjkjz/z7IFQmYAItLTg==
+	t=1793015212;
+	b=02WUEZOi7xzn2+ourG0ddME1NkSYHd4KM0gDUnSl7ZMCrXJomoPI2eQTukK8NmQZdR9X
+	 rsyyTlgakmefMcqQBVWeA9d0tXs9uFgSOIC+e3pd5spcqUzbI7pf1Zs4kZajCHtp6bstM
+	 iNQ6hxNwzh0oujWpI5yDWJrhbd2hI7Y6/N7bfdwEEih32VvB0vXgLVI4ilXxZADkNiZ1m
+	 uQ9H5dY2DxqCarJxs03dvwwn9BIqMy8Y+HOOP/CLe9kvrHH6CkRMsr9woSlbUaOV2maKU
+	 3TbWtFz1pyrYVhL+BLQMrE9Zh15Lw+KNmtqVSzcFd2wSha05vNmPvKlHiD43214K+XA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793014023;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793015212;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=8r8wr/YA6Gnrs/PEVTvpveMe/4n5hRDSj75klYH++qk=;
-	b=TsBzbtQJaYJEO/SVg3rrYGIYDDek5oI1oWAARtwK6qwvocIbQalR1XX6eTbfsEgUY/ep
-	 5qN2sH9KsnCF1sk0ehtAlK3TN2eELqIOWqTCiS/IBsUwn7A3XZ22NvipqPiaOQpsQcAxY
-	 7mbCmFiKlA8p+eV5YPxq0Vlk18bNLHoxf77ADkQaT54ps2ARSMKiveFpX6ou40zboOV8s
-	 08rGutzSPmVvjm/0Jisy5tk1eumJUfGVTImEVmM9M6m2lt0UhBYoxVsyIrZxzan5faE+Q
-	 dErefBDsiErtNEHsk0oWm12cQin+gsNKZrpouD0evYfaUvlVKCmoFDQHGmJQARZr+KA==
+	bh=nN7TCn17mlrpkw/ZxWQDOQa03Nu5/+jpyLWOcpT6K7I=;
+	b=djyvtiH01H0aWQBYiDhRH3e6rK4fLghgv3udoW6f0EM4Fk308RCP7zqw8tnrroui5aDR
+	 m99aX8k9udaswD4RjQnh/IBzCgnCcaOzrHipU0fl9JDiud1puo29eelxXdS5fykBGuVFj
+	 FVDMYHLZPatYfK12b0EccuAPbsQQa5QdiVcL/RppeWHz4eq56BdCj+4Og51T67RxfhyDr
+	 8TeYPAZMAKu/USxTFcVVuj1dpqlzeQRPlBoWlYc2lpFJsMQYruqLJcUBRv7zkJxbqsdtZ
+	 sWt0HGoMftHcf6Fz8preGPvC3SYDGij/BXxNU7Idv3VWUu60l4Q+oL52mXhR/FofGfw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XtCuBxIE;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ica2zS5c;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE9E606A31B
-	for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 11:27:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F18606A324
+	for <mptcp@lists.linux.dev>; Mon, 26 Oct 2026 11:46:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XtCuBxIE
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6DE71F01825;
-	Mon, 26 Oct 2026 11:27:02 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ica2zS5c
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 416891F01829;
+	Mon, 26 Oct 2026 11:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793014023;
-	bh=8r8wr/YA6Gnrs/PEVTvpveMe/4n5hRDSj75klYH++qk=;
+	s=k20260515; t=1793015211;
+	bh=nN7TCn17mlrpkw/ZxWQDOQa03Nu5/+jpyLWOcpT6K7I=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=XtCuBxIE6Q6PULW66KpNMDNH+wJ7aSTf3Y7xA/L3sBPX1FUs/7YOSCCbv67LfAFTj
-	 2HCrPdmTdeJs+PkBfyVWI9gAfWTNUJ1SoVEqMWMBN5WuWS6Q5gVSwI1G3+Txy0AoXj
-	 bcAtduQX3UecFD3FATPh2B0bJJwIKkjwVt/R2LofkmTA4XOrHZ/s4aGinQJ6EHLR8T
-	 r4Y1z6KRFvJ5WSW6F5E4QR4i94fNBZ6P7ufa1uxmh5WbKh/ba6QJQxpWwVht84OxsW
-	 LmEUrjykobBQJvV+nO26Ks1oHRxbhj2pkjRcnRgKbfE6yGxqfAl1Rm+GJErA++8kkv
-	 r4osHhFiNJlqQ==
-Message-ID: <sashiko-outbox-185097@kernel.org>
+	b=Ica2zS5coJmmhu0+X7cDJ63yZbV68KNN0EQFc7rmSwcMjeH6Jdy2KHMCrMLaYXaYK
+	 dBlaVxCsHzWtmwnZIVfX8P+6exp1fTzdxIgSEjLU7zBbOi15C+ftoupUIVB3CipFR2
+	 lldVbNYDr1pNtcrXKDBVOwLsYp3FWQUeSYkQCpxd5qzhNXRpao8b4Sm29R/soO2ntf
+	 sXaI14vtzzOGrWJ8FR3G7PfJmcsSYpPZKXupTTpv3LXwXKaM+fiTnrdtidNCI1U82g
+	 2Io6uAR0dY+jrGu7yKb0hDKLnIoFHttI2wKiw/98+y9+gG5DXbkASjpbTw57utTep4
+	 VhXWvBjGkWGTg==
+Message-ID: <sashiko-outbox-185117@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v2 1/4] mptcp: give MPTCP sockets a distinct
- lockdep class
+Subject: Re: [PATCH mptcp-next v2 2/4] sock: add set_memalloc protocol
+ callback
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <a17b9360df88d22c8ed579f532c41456fc46006e.1793010744.git.tanggeliang@kylinos.cn>
+In-Reply-To: <2394cada9a75d45edb8773c3d24e699e9211e98c.1793010744.git.tanggeliang@kylinos.cn>
 References: <cover.1793010744.git.tanggeliang@kylinos.cn>
- <a17b9360df88d22c8ed579f532c41456fc46006e.1793010744.git.tanggeliang@kylinos.cn>
+ <2394cada9a75d45edb8773c3d24e699e9211e98c.1793010744.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 26 Oct 2026 11:27:02 +0000
+Date: Mon, 26 Oct 2026 11:46:50 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -60,158 +60,148 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] mptcp: race on sk_lock reinit and unlocked clone with SLAB_TYPESAF=
-E_BY_RCU
+- [High] nbd: per-I/O sk_set_memalloc() in __sock_xmit() leaks static key a=
+nd deadlocks
+- [High] mptcp: mptcp_set_memalloc() misses subflows created or joined later
 --
 
-commit 1535a4c9bef6857111a0222f084ae0666d8e7461
+commit b144942ec73c0d6666c170f8c7917db0e4e17462
 Author: Geliang Tang <geliang@kernel.org>
 
-mptcp: give MPTCP sockets a distinct lockdep class
+sock: add set_memalloc protocol callback
 
-This commit introduces mptcp_reclassify_socket() to assign distinct lockdep
-classes to MPTCP sockets based on address family and kernel vs user socket
-type. It calls this helper from mptcp_init_sock() and from
-mptcp_sk_clone_init() after switching from sk_clone_lock() to unlocked
-sk_clone().
+This patch adds a set_memalloc() callback to struct proto so protocols such=
+ as
+MPTCP can synchronize SOCK_MEMALLOC, sk_allocation, and sk_use_task_frag to
+their subflows when sk_set_memalloc() or sk_clear_memalloc() is called. It
+also updates NBD's __sock_xmit() to call sk_set_memalloc() on each transmit=
+ or
+receive loop iteration.
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 02a4f479d9d8c..d4f42dfc227e2 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -3267,11 +3267,43 @@ static void mptcp_ca_reset(struct sock *sk)
->  	icsk->icsk_ca_ops =3D NULL;
->  }
-> =20
-> +/* The subflow socket lock is acquired in a nested to the msk one
-> + * in several places, even by the TCP stack: lockdep complains when
-> + * both are kernel sockets. Instead of propagating the _nested modifiers
-> + * in several places, re-init the lock class for the msk socket to an
-> + * mptcp specific one. Separate lock classes are used for kernel and
-> + * user sockets to prevent lockdep from conflating their usage patterns.
-> + */
-> +static struct lock_class_key mptcp_slock_keys[2][2];
-> +static struct lock_class_key mptcp_keys[2][2];
-> +
-> +static void mptcp_reclassify_socket(struct sock *sk)
-> +{
-> +	bool is_ipv6 =3D sk->sk_family =3D=3D AF_INET6;
-> +	const char *slock_name, *lock_name;
-> +	bool is_kern =3D !!sk->sk_kern_sock;
-> +
-> +	if (is_kern) {
-> +		slock_name =3D is_ipv6 ? "kmlock-AF_INET6" : "kmlock-AF_INET";
-> +		lock_name =3D is_ipv6 ? "kmsk_lock-AF_INET6" :
-> +				      "kmsk_lock-AF_INET";
-> +	} else {
-> +		slock_name =3D is_ipv6 ? "mlock-AF_INET6" : "mlock-AF_INET";
-> +		lock_name =3D is_ipv6 ? "msk_lock-AF_INET6" : "msk_lock-AF_INET";
-> +	}
-> +
-> +	sock_lock_init_class_and_name(sk, slock_name,
-> +				      &mptcp_slock_keys[is_kern][is_ipv6],
-> +				      lock_name, &mptcp_keys[is_kern][is_ipv6]);
-> +}
-> +
->  static int mptcp_init_sock(struct sock *sk)
->  {
->  	struct net *net =3D sock_net(sk);
->  	int ret;
-> =20
-> +	mptcp_reclassify_socket(sk);
-> +
->  	__mptcp_init_sock(sk);
-> =20
->  	if (!mptcp_is_enabled(net))
-> @@ -3772,13 +3804,16 @@ struct sock *mptcp_sk_clone_init(const struct soc=
-k *sk,
->  				 struct request_sock *req)
->  {
->  	struct mptcp_subflow_request_sock *subflow_req =3D mptcp_subflow_rsk(re=
-q);
-> -	struct sock *nsk =3D sk_clone_lock(sk, GFP_ATOMIC);
-> +	struct sock *nsk =3D sk_clone(sk, GFP_ATOMIC, false);
->  	struct mptcp_subflow_context *subflow;
->  	struct mptcp_sock *msk;
-> =20
->  	if (!nsk)
->  		return NULL;
-> =20
-> +	mptcp_reclassify_socket(nsk);
-> +
-> +	bh_lock_sock(nsk);
+> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+> index ffce519bf0087..c5e26fc98d1aa 100644
+> --- a/drivers/block/nbd.c
+> +++ b/drivers/block/nbd.c
+> @@ -579,6 +579,7 @@ static int __sock_xmit(struct nbd_device *nbd, struct=
+ socket *sock, int send,
+>  		do {
+>  			sock->sk->sk_allocation =3D GFP_NOIO | __GFP_MEMALLOC;
+>  			sock->sk->sk_use_task_frag =3D false;
+> +			sk_set_memalloc(sock->sk);
 
 [Severity: High]
-Can calling mptcp_reclassify_socket() and unlocked sk_clone() race with
-lockless RCU readers on SLAB_TYPESAFE_BY_RCU MPTCP sockets?
+Should sk_set_memalloc() really be called inside the per-I/O loop in
+__sock_xmit()?
 
-Both mptcp_prot and mptcp_v6_prot use SLAB_TYPESAFE_BY_RCU, and accepted
-MPTCP sockets clear SOCK_RCU_FREE in mptcp_sk_clone_init(), so a closed
-mptcp_sock can be immediately recycled from the slab cache while a
-concurrent RCU reader in mptcp_token_iter_next() or mptcp_token_get_sock()
-is walking bucket->msk_chain:
+NBD already calls sk_set_memalloc() once per socket during setup in
+nbd_start_device() and during reconnection in nbd_genl_reconnect_sock_cb():
 
-net/mptcp/token.c:mptcp_token_iter_next() {
+drivers/block/nbd.c:nbd_start_device() {
 	...
-	rcu_read_lock();
-	sk_nulls_for_each_rcu(sk, pos, &bucket->msk_chain) {
-		++num;
-		if (!net_eq(sock_net(sk), net))
-			continue;
-
-		if (num <=3D *s_num)
-			continue;
-
-		if (!refcount_inc_not_zero(&sk->sk_refcnt))
-			continue;
+	sk_set_memalloc(config->socks[i]->sock->sk);
+	if (nbd->tag_set.timeout)
+		config->socks[i]->sock->sk->sk_sndtimeo =3D
+			nbd->tag_set.timeout;
 	...
 }
 
-Once refcount_inc_not_zero(&sk->sk_refcnt) succeeds on the recycled socket,
-callers of mptcp_token_iter_next() (such as mptcp_diag_dump(),
-mptcp_nl_remove_subflow_and_signal_addr(), mptcp_nl_remove_id_zero_address(=
-),
-mptcp_nl_flush_addrs_list(), and mptcp_nl_set_flags()) immediately call
-lock_sock(sk) or lock_sock_fast(sk).
+Calling sk_set_memalloc(sock->sk) on every send and receive iteration in
+__sock_xmit() invokes static_branch_inc(&memalloc_socks_key) without a
+matching sk_clear_memalloc(), which leaks a reference on
+memalloc_socks_key.key.enabled on every I/O until the counter saturates at
+INT_MAX and triggers WARN_ON_ONCE(!static_key_fast_inc_not_disabled(key)) in
+static_key_slow_inc_cpuslocked().
 
-In mptcp_sk_clone_init(), sk_clone_lock() previously initialized newsk's
-lock and acquired bh_lock_sock(newsk) before setting newsk->sk_refcnt to 2:
+In addition, static_branch_inc() -> static_key_slow_inc() acquires
+cpus_read_lock() on every call while __sock_xmit() is running in the block =
+I/O
+and swap-out path under memalloc_noreclaim_save(). During CPU hot-unplug,
+blk_mq_hctx_notify_offline() holds cpus_write_lock() while waiting for
+in-flight requests on the queue to complete, which can deadlock if an NBD
+request is waiting on cpus_read_lock() in __sock_xmit().
 
-net/core/sock.c:sk_clone() {
+Furthermore, nbd_send_cmd() and recv_work() -> nbd_read_reply() call
+__sock_xmit() concurrently on the same socket without holding lock_sock(), =
+so
+sock_set_flag(sk, SOCK_MEMALLOC) performs an unlocked non-atomic __set_bit()
+on sk->sk_flags, and MPTCP sockets will acquire lock_sock(sk) and each subf=
+low
+lock on every packet.
+
+Would it work to initialize sk_allocation and sk_use_task_frag before the
+existing one-time sk_set_memalloc() calls in nbd_start_device() and
+nbd_genl_reconnect_sock_cb() instead of calling sk_set_memalloc() in
+__sock_xmit()?
+
+[ ... ]
+
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index d4f42dfc227e2..5eccff04151d7 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -4327,6 +4327,26 @@ static int mptcp_connect(struct sock *sk, struct s=
+ockaddr_unsized *uaddr,
+>  	return 0;
+>  }
+> =20
+> +static void mptcp_set_memalloc(struct sock *sk)
+> +{
+> +	struct mptcp_sock *msk =3D mptcp_sk(sk);
+> +	struct mptcp_subflow_context *subflow;
+> +	bool memalloc;
+> +
+> +	lock_sock(sk);
+> +	memalloc =3D sock_flag(sk, SOCK_MEMALLOC);
+> +	mptcp_for_each_subflow(msk, subflow) {
+> +		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+> +
+> +		lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
+> +		sock_valbool_flag(ssk, SOCK_MEMALLOC, memalloc);
+> +		ssk->sk_allocation =3D sk->sk_allocation;
+> +		ssk->sk_use_task_frag =3D sk->sk_use_task_frag;
+> +		release_sock(ssk);
+> +	}
+> +	release_sock(sk);
+> +}
+
+[Severity: High]
+How are subflows that are created or joined after sk_set_memalloc() is call=
+ed
+handled?
+
+mptcp_set_memalloc() only iterates over subflows currently in msk->conn_lis=
+t.
+If a caller invokes sk_set_memalloc() before connect() (where the first
+subflow is created lazily via __mptcp_nmpc_sk() -> __mptcp_socket_create() =
+->
+mptcp_subflow_create_socket()), or when additional MP_JOIN subflows are
+created later via __mptcp_subflow_connect() -> mptcp_subflow_create_socket()
+or joined via mptcp_finish_join() -> __mptcp_finish_join() (including subfl=
+ows
+queued on msk->join_list while sk is locked), those subflows only run
+mptcp_sockopt_sync_locked() -> sync_socket_options():
+
+net/mptcp/sockopt.c:mptcp_sockopt_sync_locked() {
 	...
-	sock_lock_init(newsk);
+	if (READ_ONCE(subflow->setsockopt_seq) !=3D msk->setsockopt_seq) {
+		sync_socket_options(msk, ssk);
 
-	if (lock)
-		bh_lock_sock(newsk);
-	...
-	smp_wmb();
-	refcount_set(&newsk->sk_refcnt, 2);
+		subflow->setsockopt_seq =3D msk->setsockopt_seq;
+	}
 }
 
-Holding bh_lock_sock(newsk) before sk_refcnt became non-zero serialized any
-concurrent lock_sock() or lock_sock_fast() reader until __mptcp_init_sock()
-completed and bh_unlock_sock(nsk) was called.
+Because neither mptcp_sockopt_sync_locked() nor sync_socket_options()
+propagates SOCK_MEMALLOC, sk_allocation, or sk_use_task_frag, any subflow
+created or joined after sk_set_memalloc() will miss those settings and can
+drop incoming pfmemalloc packets or allocate without __GFP_MEMALLOC under
+memory pressure.
 
-With sk_clone(sk, GFP_ATOMIC, false), nsk->sk_refcnt becomes 2 while nsk is
-unlocked. Can a concurrent RCU reader grab a reference on nsk and call
-lock_sock(nsk) or lock_sock_fast(nsk):
-
-1. Concurrently with mptcp_reclassify_socket(nsk) (and similarly in
-   mptcp_init_sock() after sock_init_data() has set sk->sk_refcnt to 1),
-   where sock_lock_init_class_and_name() zeroes sk_lock.owned and
-   re-initializes sk_lock.wq, sk_lock.slock, and the lockdep maps while
-   another CPU is acquiring or holding sk_lock?
-
-2. In mptcp_sk_clone_init(), after mptcp_reclassify_socket(nsk) finishes
-   and before bh_lock_sock(nsk) is called? If the reader acquires
-   lock_sock(nsk) first, it sets nsk->sk_lock.owned =3D 1 and drops
-   nsk->sk_lock.slock, which does not prevent bh_lock_sock(nsk) from
-   proceeding into __mptcp_init_sock(nsk) concurrently, and the reader can
-   iterate msk->conn_list while it still contains the raw copy of the
-   listening socket's list head from sock_copy()?
+Also, when sk_clear_memalloc() clears SOCK_MEMALLOC, should
+mptcp_set_memalloc() call sk_mem_reclaim(ssk) on each subflow socket just as
+sk_clear_memalloc() does on sk?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1793010744.gi=
-t.tanggeliang@kylinos.cn?part=3D1
+t.tanggeliang@kylinos.cn?part=3D2
