@@ -1,56 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793134543;
-	b=WjMUXZjZPcodeoIXIXnODBxi29DWSR1qY30ItxGdIqOG3AOxJuSUtNhYp01E88t/apb5
-	 yKaGXS/YshxpdbUb4BhIslB1jj6DlYb6HnCzoD7aq6PILOM/CTxFGOqxjVj0QiHVg3gCE
-	 fQIEciDSUdEEe9xYR0BT22r9oKexqrTnmr9Qhzu3lKhH27i7kZCH6TkOIjczk8PV1ps5C
-	 9xb+ggih8lXyZA0XexwN5e9woy1ubuc/c04nc0NS2zvJayK/605gmTZrE2hMKWQOFp11M
-	 RTAGDVenTItcaO1WcvgfHzUcZ6czjpg90OZak+0k3RrGoVdBWqh0WeWJsdQ8wexpNwQ==
+	t=1793134544;
+	b=VeTR8Kx5xCUN5bPLRv4vMh2cc5/A6pD/jXUV5/hNsy+6plZbmLHCXt6R5JFHDBS9KmaS
+	 P34r+djzlkq2UPT1rByFgLgNJUS9bJExiHIvDPDuQUsgYgYHrGee6tKPsUqxvqiHB+Idw
+	 RQoX/2q5VdIycrZo/AkKCtcEc+RK2HRtb6MJQ5Lld1+Gvxsf+NDPt3tta0GZovvdZG8hE
+	 0FkI0+UUOykI8uu2OWTgCn6WnsvTlRRgwaHLVm0hUVouR2h8/NEXKUd1RH7B1MT2ypmrC
+	 2r+5HAWAw/7P2eqQu2QtvRDnQNgsy3nerfQSfDaj5kWpewLj8S1Iu6KDB2SMyeaJJBg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793134543;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793134544;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=50fg2cxwx8JKEIfDnZFDKyqG7p3pshMOlDWFE/2e+SQ=;
-	b=uvQ6/LNGjUdK0qZN/6Gi9Q00SmQAbrODQEF1VtOb2G8Vf1EUyKnA+JZ1ykyDeZxH88dD
-	 w2rv0fDhb9mcFDfyW63I4baUc8TMKyurEUvo+5DAj4EjQ4IrGtY25I53b8Urd4CIoJI0n
-	 jLXSZDI1DyWiQAlwTEERIX4eNAz/kcvdZfYtcBZRcenIbMRth0NHpIqj9BcZfHZ5pQ0cL
-	 3YSyJqUpqXO9rsDafoKBrwgg/QoE33DTQdbstmRB7JbWRo8sIeJR8ySCOUSsghWqh05UQ
-	 b5K/+Pr+Uz6esceZx1Gw7xz54eeEihEbP+beI1ng/rjRl+1bh4xmuXShe+TKfrne9Bw==
+	bh=R2+8eki5uoeOjnNBz5RIi1B9NZshMITSkypWthqGJl0=;
+	b=bfevjzO3Q7HXIt6g9/sLVddLRYT4TgPsRdNkA25Oq8XvY2B184InWsX5YkWpHKTAixac
+	 cqImArGFNyj7q301akubU51Pbjy8EX1enSTF1UfWkFI8oeMQCHMDgu9zNcFiCApuyb7VK
+	 CEm7TV+ew5DwcRtPVYmIn7x/i66RsNZN+69Q0Q6FAJWEXO4U431fQ5Fxu6bbUO6n7Y9pD
+	 4WIBCCwe/DgHIW7P3r4SoEfl72oSqo6ejEacVI1bOPjICui0p5fAoRvhxj2Ucm7av+IIb
+	 TnLUAo4x9pGkFy7NakP+eDfKBXhU0MVovM5XkTkPWJ7R1P1Wz8ApL8nu+URz+C59IZA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=boyxOaw5;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lUTAyfyB;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69A9606A31A
-	for <mptcp@lists.linux.dev>; Tue, 27 Oct 2026 20:55:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEAC606A31A
+	for <mptcp@lists.linux.dev>; Tue, 27 Oct 2026 20:55:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=boyxOaw5
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59BAA1F01828;
-	Tue, 27 Oct 2026 20:55:42 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lUTAyfyB
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A8DA1F01825;
+	Tue, 27 Oct 2026 20:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793134542;
-	bh=50fg2cxwx8JKEIfDnZFDKyqG7p3pshMOlDWFE/2e+SQ=;
+	s=k20260515; t=1793134543;
+	bh=R2+8eki5uoeOjnNBz5RIi1B9NZshMITSkypWthqGJl0=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=boyxOaw5b419iPACKps9zHrJic7UpfnCt7lRW+OJOIYP5hWc86l7fQkB+8Tgy0njA
-	 VshHD5CVp/W+QnTbSOW33oFnc7jMkJSTAs+MrefMYQSfnQ/M9aE+OCkXBGT/cEgBAG
-	 92dNmMiFy5zM5UkZ+OXU2+wO6YXXwMm3YrOg5trX2LJ4rlWmHmc5dxZa2B1XKk62Ir
-	 dcd6N8s6jTpLJSu67nV1o+FJXVV57Yiq4DMea3VqJ3KO1vmozm55+yTDv8QczGLRD+
-	 0qTJNwjxTC8ezkcQ1tUtCCKEQnbWDNZu237H6OsH7dqRhy9e7PS0rEiGLMwd/aqKq8
-	 6Dr+mPSsdXMGA==
-Subject: Re: [PATCH mptcp-next 3/6] mptcp: implement peek_len for proto_ops
+	b=lUTAyfyBsDeEFQV8tjnjr7FtU1UTl1V/+2bX1Mp99HUtK1uRoD1tauH0fppvY+nZt
+	 4f6vucqrg9e6Tcwh8+h6L2zvoFFp5N4QUPDmwD0eOsNk5CrbQwR1dEetOvIFQM0v94
+	 2rhUF2Q44LNTnINklU19AzuwsP9HBE+DSYQpLe3+A4Weo5SOcZweBWHZgxjsOusfBP
+	 zHNwS0kN0AFnbzm51c8mAHffWQnT7BUKgFEuhMNtNL4ci8ptBnu37kys3g5HedFyv8
+	 bqt7lHL0RxQHGFzk99t60azTDG2Ldr88pEeq3CQEMYazZzJ1DSXgk7za/krWSzMFdh
+	 9GFYzjWLS6ZAg==
+Subject: Re: [PATCH mptcp-next 4/6] mptcp: add sendmsg_locked to proto_ops
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, tanggeliang@kylinos.cn, kuba@kernel.org
-Date: Tue, 27 Oct 2026 20:55:41 +0000
-Message-ID: <179313454191.3132.7810453996924430013@kernel.org>
-In-Reply-To: =?utf-8?q?=3C22bc848942a31334be17f49a2488c51e2f307eb5=2E1792999?=
+Date: Tue, 27 Oct 2026 20:55:42 +0000
+Message-ID: <179313454275.3132.8860698770809524538@kernel.org>
+In-Reply-To: =?utf-8?q?=3C949a4262ea959da66bcb9fbac72b23f0eecf2879=2E1792999?=
  =?utf-8?q?988=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
-References: =?utf-8?q?=3C22bc848942a31334be17f49a2488c51e2f307eb5=2E17929999?=
+References: =?utf-8?q?=3C949a4262ea959da66bcb9fbac72b23f0eecf2879=2E17929999?=
  =?utf-8?q?88=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
-X-sashiko-severity: Medium
+X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -63,238 +63,159 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 4 potential
-issue(s) to consider.
+Thank you for your contribution! Sashiko AI review found more severe
+issue(s) in other patches of this series. This mail is only an FYI, in case
+you want to address the nit picks below when you respin.
 
-Critical: 0 · High: 0 · Medium: 3 · Low: 1
+Low priority / nit picks for your consideration:
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
-
-- [Medium] The patch changes the result of the SIOCINQ/FIONREAD ioctl on
-  MPTCP sockets and does not say so.
-- [Medium] mptcp_inq() (net/mptcp/protocol.c:4821-4824) subtracts 1 from
-  the readable byte count whenever `sk->sk_state == TCP_CLOSE ||…
-- [Medium] mptcp: mptcp_inq() returns bogus byte count for TFO data after
-  3rd ACK
-- [Low] The commit message describes mptcp_inq() differently from the
-  code.
+- [Low] This patch adds `.sendmsg_locked = mptcp_sendmsg_locked` to
+  `mptcp_stream_ops` (net/mptcp/protocol.c:4865) and…
+- [Low] `mptcp_sendmsg_locked()` behaves differently from the other
+  `proto_ops->sendmsg_locked` implementer, `tcp_sendmsg_locked()`.
+- [Low] `mptcp_sendmsg_locked()` is now exposed as a generic
+  `proto_ops->sendmsg_locked` callback with no `msk_owned_by_me()`…
 
 --
 
-mptcp: implement peek_len for proto_ops
+mptcp: add sendmsg_locked to proto_ops
 
-This commit adds mptcp_inq(), which computes the number of readable bytes
-at the MPTCP level. It wires mptcp_inq() into a new mptcp_peek_len()
-callback for both the IPv4 and IPv6 stream proto_ops, as preparation for
-kTLS over MPTCP. It also switches the SIOCINQ ioctl path from
-mptcp_inq_hint() to mptcp_inq().
-
-> Add mptcp_inq() to compute the number of readable bytes at the MPTCP
-> level. It derives the count from ack_seq - copied_seq, returns 0 while
-> the connection is still handshaking (TCP_SYN_SENT/TCP_SYN_RECV), returns
-> 0 when the connection is closed (TCP_CLOSE or RCV_SHUTDOWN), and
-> subtracts 1 once a FIN has been received, mirroring tcp_inq().
->
-> READ_ONCE() is used instead of mptcp_data_lock() for the u64 reads of
-> ack_seq and copied_seq because mptcp_inq() will be called from TLS
-> contexts with the socket lock held - taking the spinlock would deadlock.
-
-[Severity: Low]
-Does this description match the code?
-
-struct mptcp_sock has no copied_seq field. mptcp_inq() actually computes:
-
-    hint_val = READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
-
-This uses the map_seq of the head skb in sk_receive_queue.
-
-Also, mptcp_inq() never returns 0 because of TCP_CLOSE or RCV_SHUTDOWN. When
-data is queued it decrements answ and returns the remaining count. It only
-returns 0 for SYN_SENT/SYN_RECV, an empty receive queue, or
-hint_val >= INT_MAX.
-
-As written, the message describes two different behaviours for a closed
-connection ("returns 0" and "subtracts 1"), and only the second one exists.
-Could the description be updated to match the code?
+This patch splits mptcp_sendmsg() into two parts. The new
+mptcp_sendmsg_locked() expects the caller to already hold the msk socket
+lock, and a small mptcp_sendmsg() wrapper takes the lock and calls it. The
+locked variant is then exposed as .sendmsg_locked in both mptcp_stream_ops
+and mptcp_v6_stream_ops.
 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 0caa31525b907..71a0a28b0d3c9 100644
+> index 71a0a28b0d3c9..8aad55e0cce79 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
+> @@ -2039,7 +2039,7 @@ static void mptcp_rps_record_subflows(const struct mptcp_sock *msk)
+>  	}
+>  }
+>  
+> -static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+> +static int mptcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t len)
+>  {
+>  	struct mptcp_sock *msk = mptcp_sk(sk);
+
+[Severity: Low]
+This is now a generic proto_ops callback. Would it make sense to add a
+msk_owned_by_me() assertion here, plus a comment saying what callers must
+guarantee? Other helpers in protocol.c that depend on the msk lock already
+assert ownership.
+
+The function can sleep. sk_stream_wait_connect() and
+sk_stream_wait_memory() drop and re-take the msk lock through
+sk_wait_event(). __mptcp_push_pending() also takes the subflow lock for
+each scheduled subflow, even when MSG_DONTWAIT is set:
+
+net/mptcp/protocol.c:__mptcp_push_pending() {
+    ...
+				if (ssk != prev_ssk) {
+					...
+					lock_sock(ssk);
+				}
+    ...
+}
+
+So, unlike tcp_sendmsg_locked(), this can't be called from BH context. A
+caller that already holds a subflow lock would also deadlock in
+lock_sock(ssk).
+
+For comparison, the existing skb_send_sock_locked() user espintcp reaches
+the TCP implementation under bh_lock_sock:
+
+esp_output_tcp_finish()
+  espintcp_push_skb()
+    espintcp_push_msgs()
+      skb_send_sock_locked()
+
+Today no in-tree caller can reach this function for an MPTCP socket, and
+tcp_sendmsg_locked() has no ownership assertion either. This becomes
+relevant once a consumer such as kTLS over MPTCP lands.
+
+> @@ -2051,8 +2051,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+>  	msg->msg_flags &= MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL |
+>  			  MSG_FASTOPEN | MSG_EOR;
+
+[Severity: Low]
+This isn't a bug, but this masking makes mptcp_sendmsg_locked() behave
+differently from tcp_sendmsg_locked(), the other implementer of the same
+ops slot.
+
+The masking changes the caller's msg->msg_flags in place and clears
+MSG_SPLICE_PAGES. __skb_send_sock() always sets MSG_SPLICE_PAGES for page
+frags, so on MPTCP those frags would be copied with do_copy_data_nocache()
+rather than spliced. tcp_sendmsg_locked() reads the flags without changing
+them and honours the flag:
+
+net/ipv4/tcp.c:tcp_sendmsg_locked() {
+    ...
+	} else if (unlikely(msg->msg_flags & MSG_SPLICE_PAGES) && size) {
+		if (sk->sk_route_caps & NETIF_F_SG)
+			zc = MSG_SPLICE_PAGES;
+    ...
+}
+
+__skb_send_sock() also assumes that only TCP sockets implement
+sendmsg_locked:
+
+	int more_hint = sk_is_tcp(sk) ? MSG_MORE : 0;
+
+sk_is_tcp() is false for an MPTCP socket, so MPTCP would never receive the
+MSG_MORE hint.
+
+The copied data is still correct. mptcp_sendmsg() already did this masking
+before this patch, and today this path can't be reached for MPTCP sockets.
+
+Is this difference intended now that the function is exported as a generic
+sendmsg_locked implementation?
 
 [ ... ]
 
-> @@ -4188,7 +4189,7 @@ static int mptcp_ioctl(struct sock *sk, int cmd, int *karg)
->  		lock_sock(sk);
->  		if (mptcp_move_skbs(sk))
->  			mptcp_cleanup_rbuf(msk, 0);
-> -		*karg = mptcp_inq_hint(sk);
-> +		*karg = mptcp_inq(sk);
+> @@ -4854,6 +4862,7 @@ static const struct proto_ops mptcp_stream_ops = {
+>  	.read_sock	   = mptcp_read_sock,
+>  	.splice_read	   = mptcp_splice_read,
+>  	.peek_len	   = mptcp_peek_len,
+> +	.sendmsg_locked	   = mptcp_sendmsg_locked,
+>  };
 
-[Severity: Medium]
-Is this change to SIOCINQ/FIONREAD intended? The subject and body only
-describe a new peek_len callback.
+[Severity: Low]
+Is there anything that calls this callback for an MPTCP socket? The commit
+message says:
 
-The note at the end of the commit message says:
+    However, certain upper layers need to call the sendmsg method while the
+    socket lock is already held.
 
-    mptcp_inq_hint() returns 1 to signal EOF to ioctl/cmsg users
-    (mirroring tcp_inq_hint())
+but it doesn't say which layers.
 
-After this hunk, ioctl users no longer go through mptcp_inq_hint().
+The only generic dispatcher of ->sendmsg_locked is the static
+sendmsg_locked() in net/core/skbuff.c. It is reached through
+skb_send_sock_locked() and skb_send_sock_locked_with_flags(), which have
+two users.
 
-Compared with the old mptcp_inq_hint(), ioctl(FIONREAD) on an MPTCP socket
-now returns:
+The first is espintcp, which is a TCP ULP. mptcp_setsockopt_sol_tcp()
+rejects TCP_ULP:
 
-- 0 instead of 1 for an empty receive queue with TCP_CLOSE or
-  RCV_SHUTDOWN set
-- N instead of N+1 for queued data after a DATA_FIN, because
-  mptcp_check_data_fin() advanced ack_seq by one
-- N-1 instead of N when RCV_SHUTDOWN or TCP_CLOSE is set without a
-  DATA_FIN (see the comment on mptcp_inq() below)
-- 0 instead of INT_MAX when hint_val >= INT_MAX
+	case TCP_ULP:
+		return -EOPNOTSUPP;
 
-Some of this brings MPTCP closer to tcp_ioctl(), which uses tcp_inq(), but
-userspace can see the difference. Should this go in a separate patch, with
-a commit message that describes the new ioctl behaviour and perhaps a
-Fixes: tag?
+The second is ovpn, which only accepts sockets whose sk_protocol is
+IPPROTO_TCP or IPPROTO_UDP. MPTCP sockets use IPPROTO_MPTCP.
 
-No later patch in the series touches this code.
+The other senders that run with the lock held (kTLS tls_push_sg(),
+tcp_bpf, espintcp and siw) call tcp_sendmsg_locked() directly and never
+look at sock->ops. So even a kTLS consumer wouldn't pick up this op
+without further changes. I also couldn't find a consumer added later in
+the series.
 
->  		release_sock(sk);
->  		break;
->  	case SIOCOUTQ:
-> @@ -4797,6 +4798,39 @@ static ssize_t mptcp_splice_read(struct socket *sock, loff_t *ppos,
->  	return ret;
->  }
->  
-> +static int mptcp_inq(struct sock *sk)
-> +{
-> +	const struct mptcp_sock *msk = mptcp_sk(sk);
-> +	const struct sk_buff *skb;
-> +	u64 hint_val;
-> +	int answ;
-> +
-> +	if ((1 << sk->sk_state) & (TCPF_SYN_SENT | TCPF_SYN_RECV))
-> +		return 0;
-> +
-> +	skb = skb_peek(&sk->sk_receive_queue);
-> +	if (!skb)
-> +		return 0;
-> +
-> +	hint_val = READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
-> +	if (hint_val >= INT_MAX)
-> +		return 0;
-> +
-> +	answ = (unsigned int)hint_val;
-> +
-> +	/* Subtract 1, if FIN was received. Mirror tcp_inq() */
-> +	if (answ &&
-> +	    (sk->sk_state == TCP_CLOSE || (sk->sk_shutdown & RCV_SHUTDOWN)))
-> +		answ--;
+Unlike the sibling commit "mptcp: implement peek_len for proto_ops", this
+commit message doesn't describe the change as preparatory. The same applies
+to the identical mptcp_v6_stream_ops entry.
 
-[Severity: Medium]
-Can this return 0 while passive TFO data is still queued?
-
-On the passive side, mptcp_fastopen_subflow_synack_set_params() queues
-the SYN data skb on sk_receive_queue with a sequence that is relative
-to an ack_seq of 0:
-
-    MPTCP_SKB_CB(skb)->map_seq = -skb->len;
-    MPTCP_SKB_CB(skb)->end_seq = 0;
-
-When the third ACK carrying MP_CAPABLE arrives,
-subflow_set_remote_key() does:
-
-    WRITE_ONCE(msk->ack_seq, subflow->iasn);
-
-Since commit f03afb3aeb9d ("mptcp: drop
-__mptcp_fastopen_gen_msk_ackseq()"), nothing rebases the map_seq of an
-skb that is already in the receive queue.
-
-Suppose userspace has not consumed the SYN data by then, or strparser
-has not, once kTLS uses this. The subtraction in mptcp_inq() then
-yields roughly subflow->iasn plus the remaining TFO length. iasn is
-derived from a hash of the remote key, so the result is almost always
->= INT_MAX, and mptcp_inq() returns 0 even though bytes are readable.
-In the rare case where the value wraps below INT_MAX, it returns a
-bogus positive count instead.
-
-The commit message treats hint_val >= INT_MAX as a torn read on 32-bit.
-Here, though, it is a stable state that holds until the TFO skb is
-drained.
-
-The old mptcp_inq_hint() used the same arithmetic but returned INT_MAX
-in this case, which at least did not hide the data. With the ioctl hunk
-in this patch, FIONREAD now reports 0. For peek_len, a 0 return would
-leave a strparser waiting on need_bytes for data that is already
-queued.
-
-Would it be better to derive the count from mptcp_data_avail()? It uses
-bytes_received - bytes_consumed and does not depend on the map_seq of
-the head skb. Alternatively, should the queued TFO skb be rebased when
-ack_seq is set from iasn?
-
-[Severity: Medium]
-Can this under-report the readable byte count by one?
-
-msk->ack_seq only holds the extra unit after mptcp_check_data_fin() has
-processed a DATA_FIN:
-
-    if (mptcp_pending_data_fin(sk, &rcv_data_fin_seq)) {
-        WRITE_ONCE(msk->ack_seq, msk->ack_seq + 1);
-        ...
-        WRITE_ONCE(sk->sk_shutdown, sk->sk_shutdown | RCV_SHUTDOWN);
-
-Several other paths set TCP_CLOSE or RCV_SHUTDOWN without touching ack_seq,
-while in-order data stays in sk_receive_queue:
-
-- shutdown(fd, SHUT_RD): the .shutdown handler is inet_shutdown(), which
-  sets RCV_SHUTDOWN, and mptcp_shutdown() only acts on SEND_SHUTDOWN.
-
-- A received MP_FASTCLOSE: mptcp_check_fastclose() does
-
-    mptcp_set_state(sk, TCP_CLOSE);
-    WRITE_ONCE(sk->sk_shutdown, SHUTDOWN_MASK);
-
-  and neither changes ack_seq nor purges the queue.
-
-- A reset or error on a fallback subflow: __mptcp_subflow_error_report()
-  moves the msk to TCP_CLOSE. With the earlier "mptcp: prevent dummy
-  DATA_FIN on RST in fallback mode" patch in this series, no dummy DATA_FIN
-  bumps ack_seq on this path.
-
-In these cases ack_seq - map_seq is exactly the queued length N, but
-mptcp_inq() returns N-1. With a single byte queued it returns 0.
-mptcp_recvmsg() still drains all N bytes before it checks sk_err,
-RCV_SHUTDOWN or TCP_CLOSE.
-
-mptcp_ioctl() now calls mptcp_inq(), so FIONREAD reports N-1 where
-mptcp_inq_hint() used to return N. For the new peek_len, strp_data_ready()
-compares strp_peek_len() against need_bytes, so a complete final message
-could be treated as incomplete.
-
-The comment says this mirrors tcp_inq(), but tcp_inq() only decrements when
-SOCK_DONE is set:
-
-    if (answ && sock_flag(sk, SOCK_DONE))
-        answ--;
-
-A processed DATA_FIN always sets RCV_SHUTDOWN, so the TCP_CLOSE check can
-only cause undercounts.
-
-Should the decrement depend on whether ack_seq actually includes the
-DATA_FIN, for example a condition derived from rcv_data_fin_seq, rather
-than on TCP_CLOSE or RCV_SHUTDOWN?
-
-This code is unchanged at the end of the series.
-
-> +
-> +	return answ;
-> +}
+Could the commit message name the intended user, or could this patch go in
+together with the change that uses it?
 
 [ ... ]
 
