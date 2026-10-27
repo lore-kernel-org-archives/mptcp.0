@@ -1,66 +1,52 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.54
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793094878;
-	b=hAjmenVPoO6tKEsxkLV43UnF+WJbpuGxNkpOzv6FCXYWnk07tqpMlg9kTkjrgihptBfI
-	 +a4lVO2SBONym4+0wNSLikJF0wQvut/KIucXA0WGjkCm1Ve5wf2doGavpuuDQnmJIlv3J
-	 z6Ljbg37ptleqq+mdrsayJ2QvMBHEJJDR1ZvoiZstSjJFmsyCfSaRWly1P6xwnUyGyPBu
-	 wBJs7RgJUZ6C2EtbwpCrzSCdMW9mTSp10fxUWdJGgoFLr8lSFrtnTl8jXjNU4DJnunVBx
-	 cyFSm2MxZ/ZoT97Cf2voTFo/pShPfdHbz1/Fto0rYm2gPgsKZhypG4Oh5o8ykCCpuKA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793094878;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-ZohoMailClient;
-	bh=ohKNQ2BO7cSZG4/v+7RKIVxo01xC1CmZhknvPW2l4Tc=;
-	b=az2EGisdvC0s72E0WDjgQItgcR+wKb86q47GaF3HtRhBfY/gGf/AmW6XIVYWLXL5179G
-	 QFeJAODJ3ZwpZard0HXzlvfPqCt4mlqjEX9FgY0iUxYTIkUuUm8YkqlG6WsDnHSgiBQLg
-	 mC6RFXoTEtMfBCGK8deAtj85VEZD5bDGmANYrsBXW1a5UVS3GYs2oB0hq8SUyrdbP8qDn
-	 fNDIQdgZk0voOP1CYivU1O1p7hSViaG3GRGjsYH4bnM45i3RrOiN5UUAW6hid0Ro/8dDe
-	 MVBLOewCkjAt+jZ+h7zxg+TbjgJcB/F/jl4AQq8tYydHKMpwiJMKbSkq1eaXL3fIcjw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=mpiricsoftware.com;
-	spf=pass smtp.mailfrom=mpiricsoftware.com;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.54
-Received: from sender6-of-o54.zoho.com (sender6-of-o54.zoho.com [165.173.180.54])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.250
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793097685;
+	b=VKDMHiXaybHsb/UeXiK0vPrJXAIFx4sKuwftuyYTGuZmfdwGLRN86Z9mW6Ek4ZPJ6Dfl
+	 d8M0YKBITx9Kdg+3ku+8cCZO3rHBv5nb7Rzn7ruzn5be41D0G5i5zLyoYelmLbf8Krj4g
+	 J2KXyFWmaz+inj728n6itCKSxyMzb077OVAkbm2loedkznv1n4Nmg7f36cWch+puB50OL
+	 /HTI7hk7fieJkvhRKWaEy8tEoW+d1DzjcwLoz/F+fg1DtbUAmnvJvFTySvp+13zXoqYF8
+	 Gu+EDvU9Jx+9fAz9a0FmatRrgUc7bLNjTCBDEF/tP5cYwsAHN9p4I7OBvd409zF09sw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793097685;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:MIME-Version:Date:Content-Type:
+	 Content-Transfer-Encoding:From:Message-ID:TLS-Required:Subject:To:Cc:
+	 In-Reply-To:References;
+	bh=zSzxpuNBZGTL3sCPUmF9sYLDET9CcW0uV9i5/gpcgJQ=;
+	b=K5BjKwHQFTP5nZOAgY2tVXeFgmuRptY28U5WWOTH/5aUgJCgh1vwp6MLdDCg6KLg/JXa
+	 bG4AAvdWJ4OOHiiEJG3grxR+OJcOvSCHiI7jvhSSqEcuSKFUsJs1XzqYwvllMbxVRZln1
+	 GlF/JKS1j0iB7FRvBRWd/6t5GDReUdk/3+0mLgRZ9y+qi2Q3wmG1NZL2ZNuZ/60Vy3KJc
+	 3mVuhPNo1r6IbXcbGFAqNUMiw8Yef4DsikAbqKcEQY965AN2hquOK9khhtdmM1bN9GLFQ
+	 MMrd8j8HJkWja4dhK33A+UH3Uaxv6S1DtCIYatpdzqJLacC19qnhnrm3kbdxy6Z2Zdw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=TaCCg0UC;
+	arc=none smtp.remote-ip=95.215.58.250
+Received: from mta1.migadu.com (out-250.mta1.migadu.com [95.215.58.250])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671E5606A31F
-	for <mptcp@lists.linux.dev>; Tue, 27 Oct 2026 09:54:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 671E5606A31F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
-ARC-Seal: i=1; a=rsa-sha256; t=1793094869; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=OmVclmBaWF2pXJ9xJZA0kFHJTC0pNUVtJF1wzdQTMxJGJy6FrHyFoHQNB3CKXw517Z0WkJYQng+m1LrSekW4Kkulk1xVoeAhn7bigOMMgS+Gdp5Gb7dfSouoamggueVU/VsXmmQdiP8AyMsJgHWhLtcsvdy8Lvx0Ms2kL3EtlyE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1793094869; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ohKNQ2BO7cSZG4/v+7RKIVxo01xC1CmZhknvPW2l4Tc=; 
-	b=H9KK/x4uxY/k8IGs4MsIhBFYrIbJ5HLx+rtveyy+8ZmBZXRedTJeECvWj/umyJc+e3OCkUuA4nL2O/Sqjfe9TntwxKi/R6eZ6Muh0XfrM3DzfoAeecoLoauvs5x044fTahCNFuhe2aobbdCpzxK/xlx16ZJOMsJy/WjS5qivBHE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=mpiricsoftware.com;
-	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
-	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1793094869;
-	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=ohKNQ2BO7cSZG4/v+7RKIVxo01xC1CmZhknvPW2l4Tc=;
-	b=RVm+TlLT1G/IJvkEVXki0khbbenQ2NuLwuY4RpEwXk0RrhjGmA0KHxzTdYHl+Uue
-	LnjpVuvuhJJZh2NPw+JR2oQXi4cFC60TINoBdGBHSciV/QGbunmgaM7RRkHgzG9NXwD
-	2kOu6wzYEkwNCbj0/91uhJxO5gbN3QXEw42BtXDQ=
-Received: by smtp.zohomail.com with SMTPS id 1793094866557540.9808834534165;
-	Tue, 27 Oct 2026 02:54:26 -0700 (PDT)
-From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-To: mptcp@lists.linux.dev
-Cc: matttbe@kernel.org,
-	martineau@kernel.org,
-	pabeni@redhat.com
-Subject: Re: [RFC net-next v10] mptcp: normalize seq numbers reported in mptcp_info
-Date: Tue, 27 Oct 2026 15:24:10 +0530
-Message-ID: <20261027095410.3675317-1-kalpan.jani@mpiricsoftware.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261027062750.2095515-1-kalpan.jani@mpiricsoftware.com>
-References: <20261027062750.2095515-1-kalpan.jani@mpiricsoftware.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9572E606A31B
+	for <mptcp@lists.linux.dev>; Tue, 27 Oct 2026 10:41:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9572E606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=TaCCg0UC
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=ZdMAZAoqaOEltNIDxSXjIZRNw1tltjocsB24YtoDDKE=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793097681; v=1; x=1793702481;
+ b=TaCCg0UCa8h8T+VlM626DglJ1l9gEyd92u+u4CkgCgPdxom1GkeQgdQQkVTAjmypc6bLHBSj
+ vookrjavYSJAd8G3MfUbdb5++1uUlcm20bfOkt9rG7enHHivP76MW8lTgyi7IVHBiGeOXz/WEhF
+ V9+5Fx2aabhONXQd+Db2uBJo=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id c738543dc2c8c0d4;
+	Tue, 27 Oct 2026 10:41:21 +0000
+X-Mizu-Trace-ID: c738543dc2c8c0d4
+X-Migadu-Flow: FLOW_OUT
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -70,22 +56,71 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Date: Tue, 27 Oct 2026 10:41:21 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+From: gang.yan@linux.dev
+Message-ID: <f88992ae9b2dc51fd3a0ba2f9c23a29a91660877@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH net] mptcp: protect listener backlog reads in diagnostics
+To: "Cen Zhang" <zzzccc427@gmail.com>
+Cc: matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
+ mptcp@lists.linux.dev
+In-Reply-To: <CAFRLqsU2QHD2Ta2aL_qSVr9nVFrn6mXV_nZ987+oqHUbCa7ZSw@mail.gmail.com>
+References: <pm-mptcp-objects-candidate-0066-v3-73df72b7a543d4cada0e@gmail.com>
+ <CAL4WiiqEHwZRhSRXqFOtF3OYsX_v3519Ey8AEknbaZKFNogeJA@mail.gmail.com>
+ <CAFRLqsU2QHD2Ta2aL_qSVr9nVFrn6mXV_nZ987+oqHUbCa7ZSw@mail.gmail.com>
 
-Hi Matt,
+October 26, 2026 at 10:44 PM, "Cen Zhang" <zzzccc427@gmail.com mailto:zzz=
+ccc427@gmail.com?to=3D%22Cen%20Zhang%22%20%3Czzzccc427%40gmail.com%3E > w=
+rote:
 
-Thanks for reviewing the new version and for the suggestions.
 
-I understand that v10 mixes two different approaches: normalizing the sequence values and hiding them from unprivileged diagnostic requests. I will separate these concerns rather than keep them bundled together.
+>=20
+>=20Hi Eric,
+>=20
+>=20Eric Dumazet <edumazet@kernel.org> =E4=BA=8E2026=E5=B9=B410=E6=9C=882=
+6=E6=97=A5=E5=91=A8=E4=B8=80 20:38=E5=86=99=E9=81=93=EF=BC=9A
+>=20
+>=20>=20
+>=20> Adding these stack traces without symbols is not really nice.
+> >=20
+>=20>  Time to use scripts/decode_stacktrace.sh
+> >=20
+>=20Sorry about that, v2 carries the report decoded with
+> scripts/decode_stacktrace.sh and trimmed to the relevant frames.
+>=20
+>=20>=20
+>=20> msk->first is a TCP socket: TCP listeners have SOCK_RCU_FREE, and
+> >  tcp_prot / tcpv6_prot use SLAB_TYPESAFE_BY_RCU. Reading two integers
+> >  under rcu_read_lock() is safe, and stale values are fine for diag.
+> >=20
+>=20Thanks for the suggestions.
 
-I will first check whether the requester's CAP_NET_ADMIN status can be obtained reliably from the existing skb in inet_diag_handler_get_info(), so that we can avoid changing the idiag_get_info callback interface if possible. If that is not feasible, I will keep the generic callback change separate from the MPTCP-specific diagnostic change.
+Hi Cen,
 
-For MPTCP_SUBFLOW_ATTR_MAP_SEQ, I understand that the value should be zero for callers without CAP_NET_ADMIN. I will apply the same access-control policy consistently to the relevant MPTCP diagnostic fields.
+Basically this looks fine to me, I don't see any issue with the overall
+approach.
 
-I will also investigate whether the existing byte counters, such as bytes sent, received, and acknowledged, can provide the information needed for issue #445 without exposing the sequence counters. I will keep any required sequence-baseline fixes, including the two issues reported by Sashiko, separate from the diagnostic access-control change.
+Also, could you send v3 separately to the MPTCP mailing list? It seems th=
+e
+CI checks were not triggered this time. I guess it might be because the
+patch was not based on the export branch of the mptcp repo on GitHub, so
+you can generate the patch based on that branch
+(multipath-tcp/mptcp_net-next, branch export).
 
-I will update the patch series after checking these points and validating the changes.
+Two notes for next time (Important):
+1. For MPTCP-only patches, it is enough to send them to the MPTCP list
+   only, no need to CC netdev.
+2. If a new version is needed, please wait 24 hours before sending it.
 
-Cheers,
-Kalpan
+
+
+Thanks
+Gang
+
+
+>=20
+>=20Best regards,
+> Cen Zhang
+>
