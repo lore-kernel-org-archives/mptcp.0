@@ -1,65 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.54
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793104187;
-	b=JUbFNU+0HeSAo6VgSM21zH4iKoGkhsXSOO6ZGtvERVD5ZM13/zS3KU4awFlpgQu//Kh1
-	 rNBSj+tpChQQ/fqEw19ENXGYs1OpIQj82vQj+ARKsYdKnzy6Htc4xBawRUdbz7OPHcQFw
-	 Thfh6rFEQgYs+xp6FTEo9arN4w+0vj4cewbd32FfjLdnZhKObHRhB8+9XUOp295CcruQ9
-	 vRu4KtjfBwBllapmLgcQm/+fmu1jIVsZBoLeBA+sesiJF6V8bhmGwcVz0Yz5Q4ztzDCuD
-	 ywm5VX+CH4ayWQT6zYQD5dJv6Rpu7olNSQJ7CdTGlnti6VhXl06pwGOkBxHO2Im+aVQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793104187;
-	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Message-ID:
-	 In-Reply-To:References:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Importance:User-Agent:X-Mailer;
-	bh=uT4EtiobDsOMDgefC4s/QjydkeRdEFOrVedhzInslsE=;
-	b=pUtkOGiNdFjNn5yg7OsLU6kowaRxk1zEMxUKhsNKLcmDbGjqbAQMAnRADjCr+2t9PEpr
-	 pG2IZFC7mLGCqXSh47BAIXiUz9MRU3JqXWURyCYb5T01pL/hjXjStYiQuSaGZMeisAHtM
-	 Zd6SaZbWCqghMwnBGZMtkKLQVXHCqsLQPKL4E9WaN2a5FrcUAN8F8AxANrxA4vMxZj10C
-	 YKgYUtfxaLVJDJT+Vwp8h4fKXUrZCFe4nVjvqCp1THjnU8WV1pldZEhZV9f3f2PQWpZHb
-	 5ijbahCWAHBU5ZfNig1zks9O58za8kNYYmu3m9qtJwbBPSYDgAvoS/vJUxFdylW4xnA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=mpiricsoftware.com;
-	spf=pass smtp.mailfrom=mpiricsoftware.com;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.54
-Received: from sender5-of-o54.zoho.com (sender5-of-o54.zoho.com [165.173.182.54])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793108523;
+	b=U6SaQpKhtxt4tlfDSn54AcXK3TZOwA2qqqmNa6cGKYtXCxZI4OJLUmjXKicHMgCw7483
+	 AXUal/7WiURZsB5WmslpRy8YhtSFIBRWAwKaGmraSiUWVcHNHJJ3tbsPQioEwUtifm3zr
+	 sNypdtDjE92JgDpQdtHdp0nwqgIjKrjA0kTzAxXepvp0mj8ZNs7ti1cOBQXFi1seuAzoS
+	 ZUG2rzdWi7u9NQJtuCRrfPRhKQWynmqnhJr2gqQ6ml7+RVPG/FlRZRh1mbtDttzqvwve/
+	 rmsrW/N1YBqu5NIZmG/AFIw9rfyOjeFfK0VVx8+rPjuXbfaesw32RhULEpvMZsCmE+w==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793108523;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=0o1IrJTUNX+1Hnp/7kuO0LUiqsxuBZ70eMNrzlpuJgw=;
+	b=ET0Pm4k0DkMDijeBjn31+7RspzZFKsv5pgTvi7J4P5rr31I8FPUNV4et7ES97tw4EXrZ
+	 a7GQeAm0+Jbeak7xFeKHalSCbH47Vh5y20Q+w87Utf0QibkTc/JCJSNNdlWhLe2O8+ynW
+	 MjWXlmmvnl2zxGwB1AGDV4G3AjxSBmiS6U7uftOmtTAuNIG53rdqdxbaHbFHP+koCpxtI
+	 HwwJ4h08kxQgWbZCuJaGD08sp3kWauns4FKPJYF/k0n1lIxAz9lytVtOopCRP0MX/Sr6/
+	 UUFUD6RNs0YEx5v7laIt/cZib36b68+E5TKjq+U5W9eGcMux5h1KZ4ysTNk5tEzNnhA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=enXb5x+0;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C4BD606CB2C
-	for <mptcp@lists.linux.dev>; Tue, 27 Oct 2026 12:29:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0C4BD606CB2C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
-ARC-Seal: i=1; a=rsa-sha256; t=1793104178; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=G9VxeU6LSWbVejR/C9V3oHdWQpufaQVGU0+TcIRVXdF87s+G+Im6UG0EJZwWVrq98Q9vgwo6kYBP8bXw5wmaNYcdR29l3F2jnQDvbQZIEHlM7lJxry/jU+Pr0HeyZhPjLGoa4qEVOAE9kI6Hd8Ct8+qatZguc7fO/HKJKjo4GbY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1793104178; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=uT4EtiobDsOMDgefC4s/QjydkeRdEFOrVedhzInslsE=; 
-	b=DvkbQs0b4NHlU5C/eJQXA8N5zEgrLP0OBGFbCjD2XNvXjJa1WpYEV+5dV/1ftanTqptAiYQg2eWB0LTcdlUDUKI5RQo8aBTxYrnqLNAfrC/XVOkFzvzrR0Lvf99LtOYbokmbKcT6CZHvxjAkd+Y7vPPPGh3tNXTv2Z/PkLxFQpI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=mpiricsoftware.com;
-	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
-	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1793104178;
-	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=uT4EtiobDsOMDgefC4s/QjydkeRdEFOrVedhzInslsE=;
-	b=ho9Smqbk92EXjoj71j5RICHgD5uA5T4loZdHz0LXedXdXs44UkEmyfa9nZ2IvhEI
-	l9hcGo6mmtdPj5ImqHyuQL/KsDmGrdLNs1LXf2bvEQEp7KK+O3HbOjR/g2B3HtjLNcw
-	ORGGa1C+tp3hPllijoMjBaY0SI1uXIXN2VA1wqts=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1793104174061795.9636357823046; Tue, 27 Oct 2026 05:29:34 -0700 (PDT)
-Date: Tue, 27 Oct 2026 17:59:34 +0530
-From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-To: "Matthieu Baerts" <matttbe@kernel.org>
-Cc: "mptcp" <mptcp@lists.linux.dev>, "martineau" <martineau@kernel.org>,
-	"pabeni" <pabeni@redhat.com>
-Message-ID: <1a17d565bd7.51ae4f93484769.4801857719496061627@mpiricsoftware.com>
-In-Reply-To: <ad0f8a94-09b8-46d4-b807-94f1f52f1d1d@kernel.org>
-References: <20261027062750.2095515-1-kalpan.jani@mpiricsoftware.com> <20261027095410.3675317-1-kalpan.jani@mpiricsoftware.com> <ad0f8a94-09b8-46d4-b807-94f1f52f1d1d@kernel.org>
-Subject: Re: [RFC net-next v10] mptcp: normalize seq numbers reported in
- mptcp_info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82CBA606A322
+	for <mptcp@lists.linux.dev>; Tue, 27 Oct 2026 13:42:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=enXb5x+0
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BF231F01825;
+	Tue, 27 Oct 2026 13:42:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793108523;
+	bh=0o1IrJTUNX+1Hnp/7kuO0LUiqsxuBZ70eMNrzlpuJgw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=enXb5x+0IrE8FD89vtzppoV9U6MGGlwT/RzrcqxeKmV3cnWsk58P4nYpjuWgYYNLR
+	 26r/9w+uiDiDJr4qsTSQnqQBWupMRdhgBSdiUeEk1QRvoKquyLc7tWlmnqrIMhRjER
+	 XKrCeEWORNALxXN90BWxrs75C0/2q5GZXWJ+RZuV65N9kZ856Sh89L0AwfWWZMYeUj
+	 z7HfwnhlhnBfkrInTmadPMdDGbMMzGM5PS61trjckOHACww0wg2lOIauqXbU1BXGz1
+	 laTVq4E5GJybvePJ5+S0t+VSCilNoViUf9UlrY1GLJETfu7FtbV0jth05XcElBTtLm
+	 DlBGzu+d06QkQ==
+Message-ID: <1ec0c2b5-a0fa-44e8-9ae8-dca9b7f90ec6@kernel.org>
+Date: Tue, 27 Oct 2026 14:42:00 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -69,123 +51,130 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [RFC net-next v10] mptcp: normalize seq numbers reported in
+ mptcp_info
+Content-Language: fr
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Cc: mptcp <mptcp@lists.linux.dev>, martineau <martineau@kernel.org>,
+ pabeni <pabeni@redhat.com>
+References: <20261027062750.2095515-1-kalpan.jani@mpiricsoftware.com>
+ <20261027095410.3675317-1-kalpan.jani@mpiricsoftware.com>
+ <ad0f8a94-09b8-46d4-b807-94f1f52f1d1d@kernel.org>
+ <1a17d565bd7.51ae4f93484769.4801857719496061627@mpiricsoftware.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <1a17d565bd7.51ae4f93484769.4801857719496061627@mpiricsoftware.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matt,
+Hi Kalpan,
 
-I investigated the existing byte counters and the diagnostic capability pat=
-h.
+Thank you for your reply.
 
-The existing byte counters are not direct replacements for the normalized s=
-equence fields:
+On 27/10/2026 13:29, Kalpan Jani wrote:
+> Hi Matt,
+> 
+> I investigated the existing byte counters and the diagnostic
+> capability path.
+> 
+> The existing byte counters are not direct replacements for the
+> normalized sequence fields:
+> 
+> - write_seq advances when application data is queued and when
+> DATA_FIN is added. bytes_sent tracks send progress, and the
+> retransmission path can update snd_nxt directly without updating
+> bytes_sent. - snd_una is assigned directly during connection setup,
+> outside __mptcp_snd_una_update(). Therefore, bytes_acked cannot be
+> assumed to reproduce snd_una - local_idsn. - ack_seq advances when
+> processing DATA_FIN, whereas bytes_received counts payload bytes.
+> Their initial values also differ.
 
-- write_seq advances when application data is queued and when DATA_FIN is a=
-dded. bytes_sent tracks send progress, and the retransmission path can upda=
-te snd_nxt directly without updating bytes_sent.
-- snd_una is assigned directly during connection setup, outside __mptcp_snd=
-_una_update(). Therefore, bytes_acked cannot be assumed to reproduce snd_un=
-a - local_idsn.
-- ack_seq advances when processing DATA_FIN, whereas bytes_received counts =
-payload bytes. Their initial values also differ.
+OK, let's not use the bytes counters then.
 
-Regarding the capability check, the normal MPTCP diagnostic dump paths have=
- access to the original request skb and can check netlink_net_capable(cb->s=
-kb, CAP_NET_ADMIN).
+> Regarding the capability check, the normal MPTCP diagnostic dump
+> paths have access to the original request skb and can check
+> netlink_net_capable(cb->skb, CAP_NET_ADMIN).
 
-However, inet_diag_handler_get_info() is also called for socket-destruction=
- notifications. In that path, sock_diag_broadcast_destroy_work() creates a =
-new skb and invokes the callback without an original diagnostic request. Th=
-erefore, the requester's capability cannot be recovered from that skb. Pass=
-ing false in this notification path appears to be the appropriate conservat=
-ive behavior.
+Good!
 
-Based on this investigation, I will keep the capability/privacy change sepa=
-rate from sequence normalization. I will also address the stale remote_idsn=
- after disconnect and the inconsistent sequence snapshot reported by Sashik=
-o before sending another normalization revision.
+> However, inet_diag_handler_get_info() is also called for socket-
+> destruction notifications. In that path,
+> sock_diag_broadcast_destroy_work() creates a new skb and invokes the
+> callback without an original diagnostic request. Therefore, the
+> requester's capability cannot be recovered from that skb. Passing
+> false in this notification path appears to be the appropriate
+> conservative behavior.
 
-The existing counters are not direct substitutes for the sequence fields, a=
-lthough dedicated accounting remains a possible option if needed.
+OK to pass false in this case.
+
+> Based on this investigation, I will keep the capability/privacy
+> change separate from sequence normalization. I will also address the
+> stale remote_idsn after disconnect and the inconsistent sequence
+> snapshot reported by Sashiko before sending another normalization
+> revision.
+
+Just to be sure it is clear: the main goal here is not to show the seq
+counters to everybody from the same netns. This can be done either by
+"normalising" them -- i.e. starting from 0 -- or by not presenting them
+to some users.
+
+Just thinking about that: for the normalisation, we can also just
+add/remove an offset the userspace cannot predict and different per
+connection. In fact, why not using the address of the msk pointer? I
+guess that should prevent the different issues reported by Sashiko, no?
+
+(In case of "other" existing issues, please split them and move them in
+a dedicated patch not to mix the fix and the main patch here.)
+
+If the "normalisation" is not possible, better not displaying them to
+non cap-admin users. But we don't need both.
 
 Cheers,
-Kalpan Jani
-
-
-From: Matthieu Baerts <matttbe@kernel.org>
-To: "Kalpan Jani"<kalpan.jani@mpiricsoftware.com>, <mptcp@lists.linux.dev>
-Cc: <martineau@kernel.org>, <pabeni@redhat.com>
-Date: Tue, 27 Oct 2026 16:15:13 +0530
-Subject: Re: [RFC net-next v10] mptcp: normalize seq numbers reported in mp=
-tcp_info
-
- > Hi Kalpan,
- >=20
- > Thank you for your reply.
- >=20
- > On 27/10/2026 10:54, Kalpan Jani wrote:
- > > Hi Matt,
- > >=20
- > > Thanks for reviewing the new version and for the suggestions.
- > >=20
- > > I understand that v10 mixes two different approaches: normalizing the
- > > sequence values and hiding them from unprivileged diagnostic
- > > requests. I will separate these concerns rather than keep them
- > > bundled together.
- > >=20
- > > I will first check whether the requester's CAP_NET_ADMIN status can
- > > be obtained reliably from the existing skb in
- > > inet_diag_handler_get_info(), so that we can avoid changing the
- > > idiag_get_info callback interface if possible. If that is not
- > > feasible, I will keep the generic callback change separate from the
- > > MPTCP-specific diagnostic change.
- > >=20
- > > For MPTCP_SUBFLOW_ATTR_MAP_SEQ, I understand that the value should be
- > > zero for callers without CAP_NET_ADMIN. I will apply the same access-
- > > control policy consistently to the relevant MPTCP diagnostic fields.
- > >=20
- > > I will also investigate whether the existing byte counters, such as
- > > bytes sent, received, and acknowledged, can provide the information
- > > needed for issue #445 without exposing the sequence counters. I will
- > > keep any required sequence-baseline fixes, including the two issues
- > > reported by Sashiko, separate from the diagnostic access-control
- > > change.
- >=20
- > Just to be sure it is clear:
- >=20
- > - If it is possible to use the bytes counters to provide the normalised
- >   seq counters, let's use them. If not, please say why before sending a
- >   new version, maybe we could add a similar counter instead of relying
- >   on the initial one.
- >=20
- > - If that's not possible, set 0 for if no CAP_NET_ADMIN by looking at
- >   the skb (minimal changes only on MPTCP side).
- >=20
- > - If that's not possible, add the net_admin parameter, and try to avoid
- >   setting "false" in inet_diag_handler_get_info =E2=86=92 maybe we can c=
-heck the
- >   capability linked to this skb? =E2=86=92 to be tested of course
- >=20
- > > I will update the patch series after checking these points and
- > > validating the changes.
- >=20
- > Thank you for your patience!
- >=20
- > Also, please reply to the right message with quote to add context,
- > otherwise it is hard to follow when switching between many series.
- >=20
- >   https://subspace.kernel.org/etiquette.html
- >=20
- >   https://docs.kernel.org/process/email-clients.html
- >=20
- > Cheers,
- > Matt
- > --=20
- > Sponsored by the NGI0 Core fund.
- >=20
- >=20
-
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
