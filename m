@@ -1,55 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793083905;
-	b=xiapn3+Soe+DIAmW+VP7z1ccqXkaJzPobAPcCqaIgLcj1qxjLZtKSPKG7j8afGVjaVi7
-	 hmjdpY/nRUXC8z5TNjewqTrUSzhFkGQhkUQpDZlpQtBWn+5qsUj/GLJtWh/n+kUW+9z+9
-	 T4l9hPUCkeuedKJ7bvCNLbQm1HNLIMEXIoyDRDmUhLV4q2OFFAMER/ezE7wXJIr+g+P2T
-	 auT6+fTGHo9Y4k3G+yYdHxe+i2j7jqfR51Gam1ZydFN4WtrbVJ+dGiFvTEyn+DGMBZSHE
-	 Ba/pYWQHlIwYdOvayhvMQprKPnGISas6/jtV90UIIiBdeq8SOgInPDo2p3avnEOhQYQ==
+	t=1793086426;
+	b=pQEfLiL6AGw08YJ94fb5TQ1+mN2qHFQH+2JQ49BcrX7Ra/AEFlGs78s5/MdLxZ3Kkebi
+	 I8mumyKWyyysJu4kYQtbYnRLslWCURb/qJ9huWx4Qr5B6unQm9ucwt3l7OPclSHhCFo/o
+	 LHBID6xY/wxsVxEbHJgQDdB5BChpdU8vZga02yVc8DzPuKyrKS+i6+3pByLUuYwMksJta
+	 gwvRQu0/N93aVaoCvHIbj9kXfCWMoGnmQps0VcCLxg64WrwTC8GCrgURjVoIokRJBC3rr
+	 3FT0Au3secx0Q55ZjodDWb81blmx3g9lWa8MI/c0deUQZxZzLm45fXXAndq8wVwNJUg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793083905;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=FNKNdgJvpmjOn0fSS0iYOLuJJ1bPKnstXe1oGICBBgY=;
-	b=hUSjmEQb/pT/Zbbxs+vqyhzUlbJcCUyUS10cRro8/4FUckbQbRdQ36CgGUkGu2MHCOlD
-	 lGY88sZV8f52/An0wt45+pzH1uLrNe0ajOC9YAy1cbz9R4xII7GSpnkFr55I6eC87Yvuk
-	 BEUnoM4+bC2AtodxRYvduWo3Z5NqBcfvHKfXasg5w+ikVoTWZO+D6fpFEIa6zjTTA7nhV
-	 jsRsCdXd3rbP6H0Ju5kEejdx1rpfY0oFgjmq6Ceza2fslOYf0FBID38ZKaaDjVO10O20Z
-	 2KB6bs3tLe5TNNOC7/NapWk7M+01+MEZmHFaH18GlX9/oz7dRBT9GxZulKZghijopkw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793086426;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=xdNLewiC+WJ4scEMDf+9ddu98aPTZ9LTAVT9XHDtmF0=;
+	b=ryRqHWaHmfWx9IDoMmCHcsVJH03VzTa4pw5vxq0KZ/BnzenksYuCJMxMcIjfpokuVa82
+	 ipvWKbeO77XOwGjAemnJaM+4miWpvUSevaMLQnwoOaTTqpwKz8tPVHUjlRvCkaWdt+JKK
+	 ygl12zMAug/DnnbaGJGWOhAFxicAZw75QDQg1nLtcIer8D9R1B7E2foVbJjhmNIVC80DG
+	 XqsZuWyCu+RaLzv+J4rbEA4SUN/+ZvCGIyByC5kWT3TGvX0/CYcGvYXdbNBM7rEAJNYI9
+	 U4Xz0ihUpVOvR0G0IShjqLv1xGo9RDzeihSK2kytDfc3g1y+3GLdyyUN0xzgFaBY+ZQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OAPaAjNg;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WfIuhn0v;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738C8606A31E
-	for <mptcp@lists.linux.dev>; Tue, 27 Oct 2026 06:51:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B702606A31D
+	for <mptcp@lists.linux.dev>; Tue, 27 Oct 2026 07:33:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OAPaAjNg
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D94DB1F01825;
-	Tue, 27 Oct 2026 06:51:44 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WfIuhn0v
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84B1F1F01825;
+	Tue, 27 Oct 2026 07:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793083905;
-	bh=FNKNdgJvpmjOn0fSS0iYOLuJJ1bPKnstXe1oGICBBgY=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=OAPaAjNgY4H9bWcHv7Qrn+Nc9AUysJGu4koEgnbLkz0DTr4UdDhFuDlY+I3xby0hX
-	 xraGDHgcXFm9CYiiOFwRl0R6xvOeeRC4QM3obzT2eFNYva0yILHr6dnYK4Pn8gOilc
-	 2j2AVbdJiOX3mUO/tMWUgKWyyohnbVV2YDklStLfMRsZjNkEV9AcChIgd+0hSWD94A
-	 vKuXRKKf2CEIYpX2Jxts5b+tIc6eaREoTnpkGDpOY5AWsZ+XvoIa8Aihmb+FK5QK/a
-	 iXyZjyBrGTk1HXxTqHWyifR/Nq4TgjiNT1550+FuMBZv+l9AKTKA3D2NxYbGfXR+1u
-	 +jYWOSwuqwchg==
-Message-ID: <sashiko-outbox-186170@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [RFC net-next v10] mptcp: normalize seq numbers reported in
- mptcp_info
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Kalpan Jani" <kalpan.jani@mpiricsoftware.com>, mptcp@lists.linux.dev
-In-Reply-To: <20261027062750.2095515-1-kalpan.jani@mpiricsoftware.com>
-References: <20261027062750.2095515-1-kalpan.jani@mpiricsoftware.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 06:51:44 +0000
+	s=k20260515; t=1793086426;
+	bh=xdNLewiC+WJ4scEMDf+9ddu98aPTZ9LTAVT9XHDtmF0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=WfIuhn0vDOLfU19QjgrtBRRSiHKAjJsba4k9ZVwSvcy0PcrZA47eSX8nTpnKNZWSL
+	 YwYZr9ZXY2AlByzgp5FVRwBBGnK8BuE/nv0Y+7EIwsjdh0HmyoS9MkxyCmqt8yXBBP
+	 skN2WRP16E+XhkWWAAN4c+IXWxxpJPvppc+3qiVIcXcp6pFd2bmChAxytdbEfQKSP+
+	 9bB9kOUFc6bwPOuLR8I5w2/jIsBuLvyCyd04QNef/qjTrH8S1JSTh5bxrN3VKFM/07
+	 39Wq4Kg5Wy4lyXxFtqktXGH1MmOAAnYqRoWsHex79TU4MPQoTTGBR5o2XjCM+tIG8O
+	 +VqF2T1Ra1QDA==
+Message-ID: <d802ebc3-477b-4e86-b4d9-9fa2a3005e40@kernel.org>
+Date: Tue, 27 Oct 2026 08:33:42 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -58,170 +50,144 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [RFC net-next v10] mptcp: normalize seq numbers reported in
+ mptcp_info
+Content-Language: fr
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>, mptcp@lists.linux.dev
+Cc: shardul.b@mpiricsoftware.com, janak@mpiric.us, kalpanjani009@gmail.com
+References: <20261027062750.2095515-1-kalpan.jani@mpiricsoftware.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
+ YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
+ c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
+ WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
+ CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
+ nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
+ TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
+ nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
+ VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
+ 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
+ YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
+ AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
+ EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
+ /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
+ MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
+ cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
+ iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
+ jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
+ 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
+ VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
+ BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
+ ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
+ 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
+ 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
+ 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
+ mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
+ Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
+ Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
+ Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
+ x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
+ V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
+ Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
+ HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
+ 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
+ Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
+ voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
+ KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
+ UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
+ vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
+ mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
+ JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20261027062750.2095515-1-kalpan.jani@mpiricsoftware.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] mptcp: stale remote_idsn after mptcp_disconnect() corrupts subfl=
-ow map_seq
-- [Medium] mptcp: torn local_idsn and snd_una snapshot in mptcp_diag_fill_i=
-nfo()
---
+Hi Kalpan,
 
-commit 7fad37bbb6af298d7d24854d3ee0023c92539f7c
-Author: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+On 27/10/2026 07:27, Kalpan Jani wrote:
+> Normalize the MPTCP sequence fields relative to the initial data sequence
+> number baselines.
+> 
+> Keep the normalized values available to privileged diagnostic requests,
+> while zeroing them in INET_DIAG_INFO for callers without CAP_NET_ADMIN.
+> 
+> Normalize MPTCP_SUBFLOW_ATTR_MAP_SEQ against remote_idsn as well, so
+> subflow mapping sequence numbers use the same remote sequence space as
+> mptcpi_rcv_nxt.
+> 
+> Pass requester capability state to idiag_get_info callbacks. Other
+> protocol callbacks retain their existing behavior.
+> 
+> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/445
+> Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+> ---
+> Changes since v9:
 
-mptcp: normalize seq numbers reported in mptcp_info
+Thank you for the new version!
 
-This patch normalizes the sequence number fields in mptcp_info and
-MPTCP_SUBFLOW_ATTR_MAP_SEQ relative to the initial data sequence numbers. It
-also passes the requester capability state to idiag_get_info callbacks so t=
-hat
-sequence numbers in INET_DIAG_INFO are zeroed for unprivileged callers.
+> - Keep normalized sequence values available to privileged diagnostic
+>   requests and zero the three sequence fields for unprivileged
+>   INET_DIAG_INFO callers.
+> - Pass requester capability state to idiag_get_info callbacks while
+>   preserving existing behavior for other protocol callbacks.
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/445
+I think it should be one or the other: the suggestion to disable the
+different fields for non net-admin is a sort of workaround not to have
+to deal with the possible issues reported by Sashiko.
 
-[ ... ]
+If we take this route, the only modifications on MPTCP side would be in
+the diag files (or if you have fixes, they can be in separated patches).
+Also, it would be easier to split this change in two: exposing the
+net_admin boolean, then modifying MPTCP to hide data.
 
-> diff --git a/net/mptcp/diag.c b/net/mptcp/diag.c
-> index 70cf9ebce8338..590cdee419ef9 100644
-> --- a/net/mptcp/diag.c
-> +++ b/net/mptcp/diag.c
-> @@ -16,6 +16,7 @@ static int subflow_get_info(struct sock *sk, struct sk_=
-buff *skb, bool net_admin
->  {
->  	struct mptcp_subflow_context *sf;
->  	struct nlattr *start;
-> +	u64 map_seq;
->  	u32 flags =3D 0;
->  	bool slow;
->  	int err;
-> @@ -35,6 +36,11 @@ static int subflow_get_info(struct sock *sk, struct sk=
-_buff *skb, bool net_admin
->  		goto nla_failure;
+BTW, using the bytes sent/received was not something that could be used
+here?
+
+> - Normalize MPTCP_SUBFLOW_ATTR_MAP_SEQ relative to remote_idsn so it
+>   uses the same remote sequence-number baseline as mptcpi_rcv_nxt.
+
+I guess it would be 0 for non net-admin.
+
+(...)
+
+> diff --git a/net/ipv4/inet_diag.c b/net/ipv4/inet_diag.c
+> index 34b77aa87d0a4..362161bf39fe3 100644
+> --- a/net/ipv4/inet_diag.c
+> +++ b/net/ipv4/inet_diag.c
+> @@ -276,7 +276,7 @@ int inet_sk_diag_fill(struct sock *sk, struct inet_connection_sock *icsk,
 >  	}
-> =20
-> +	map_seq =3D 0;
-> +	if (sf->conn && sf->map_seq)
-> +		map_seq =3D sf->map_seq -
-> +			  READ_ONCE(mptcp_sk(sf->conn)->remote_idsn);
+>  
+>  	if (!icsk) {
+> -		handler->idiag_get_info(sk, r, NULL);
+> +		handler->idiag_get_info(sk, r, NULL, net_admin);
+>  		goto out;
+>  	}
+>  
+> @@ -327,7 +327,7 @@ int inet_sk_diag_fill(struct sock *sk, struct inet_connection_sock *icsk,
+>  			goto errout;
+>  	}
+>  
+> -	handler->idiag_get_info(sk, r, info);
+> +	handler->idiag_get_info(sk, r, info, net_admin);
+>  
+>  	if (ext & (1 << (INET_DIAG_INFO - 1)) && handler->idiag_get_aux)
+>  		if (handler->idiag_get_aux(sk, net_admin, skb) < 0)
+> @@ -1027,7 +1027,7 @@ int inet_diag_handler_get_info(struct sk_buff *skb, struct sock *sk)
+>  	if (attr)
+>  		info = nla_data(attr);
+>  
+> -	handler->idiag_get_info(sk, r, info);
+> +	handler->idiag_get_info(sk, r, info, false);
 
-[Severity: Medium]
-Can this underflow map_seq if a connected MPTCP socket is disconnected via
-mptcp_disconnect() and then reconnected with a fallback to TCP?
+I didn't check, but can you not extract the capability from the skb?
 
-When an initial connection completes the MP_CAPABLE handshake,
-subflow_set_remote_key() sets msk->remote_idsn and msk->can_ack =3D true. I=
-f the
-socket is subsequently disconnected, mptcp_disconnect() resets msk->can_ack,
-msk->ack_seq, and the byte counters, while __mptcp_subflow_disconnect() res=
-ets
-the subflow context (zeroing subflow->iasn and subflow->map_seq), but
-msk->remote_idsn (as well as msk->local_idsn, msk->write_seq, msk->snd_nxt,
-and msk->snd_una) is left holding the previous connection's values:
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-net/mptcp/protocol.c:mptcp_disconnect() {
-	...
-	WRITE_ONCE(msk->can_ack, false);
-	...
-	/* for fallback's sake */
-	WRITE_ONCE(msk->ack_seq, 0);
-	atomic64_set(&msk->rcv_wnd_sent, 0);
-}
-
-If the socket is then reconnected via mptcp_connect() and falls back to pla=
-in
-TCP before receiving a peer key (for example via mptcp_early_fallback() or
-when the SYN-ACK lacks MP_CAPABLE in subflow_finish_connect()),
-subflow_set_remote_key() is not called. When data arrives on the fallback
-connection, subflow_check_data_avail() computes subflow->map_seq relative to
-subflow->iasn =3D=3D 0.
-
-In mptcp_diag_fill_info(), reading msk->remote_idsn is guarded by
-READ_ONCE(msk->can_ack), so mptcpi_rcv_nxt uses remote_idsn =3D=3D 0. Howev=
-er,
-subflow_get_info() does not check can_ack and subtracts the stale
-msk->remote_idsn of the previous connection from the 0-based sf->map_seq.
-
-Should mptcp_disconnect() reset the sequence and IDSN fields, and should
-subflow_get_info() also gate remote_idsn on READ_ONCE(msk->can_ack)?
-
-[ ... ]
-
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index 922f6ae5c80cb..b20263b4cd55c 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-> @@ -1047,6 +1047,7 @@ static int mptcp_getsockopt_first_sf_only(struct mp=
-tcp_sock *msk, int level, int
->  void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *inf=
-o)
->  {
->  	struct sock *sk =3D (struct sock *)msk;
-> +	u64 local_idsn =3D 0, remote_idsn =3D 0;
->  	u32 flags =3D 0;
->  	bool slow;
->  	u32 now;
-> @@ -1084,9 +1085,11 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, =
-struct mptcp_info *info)
->  	info->mptcpi_flags =3D flags;
-> =20
->  	slow =3D lock_sock_fast(sk);
-> +	local_idsn =3D READ_ONCE(msk->local_idsn);
-> +
->  	info->mptcpi_csum_enabled =3D READ_ONCE(msk->csum_enabled);
->  	info->mptcpi_token =3D msk->token;
-> -	info->mptcpi_write_seq =3D msk->write_seq;
-> +	info->mptcpi_write_seq =3D msk->write_seq - local_idsn;
->  	info->mptcpi_retransmits =3D inet_csk(sk)->icsk_retransmits;
->  	info->mptcpi_bytes_sent =3D msk->bytes_sent;
->  	info->mptcpi_bytes_received =3D msk->bytes_received;
-> @@ -1099,17 +1102,20 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk,=
- struct mptcp_info *info)
->  	unlock_sock_fast(sk, slow);
-> =20
->  	mptcp_data_lock(sk);
-> +	if (READ_ONCE(msk->can_ack))
-> +		remote_idsn =3D READ_ONCE(msk->remote_idsn);
->  	info->mptcpi_last_ack_recv =3D jiffies_to_msecs(now - msk->last_ack_rec=
-v);
-> -	info->mptcpi_snd_una =3D msk->snd_una;
-> -	info->mptcpi_rcv_nxt =3D msk->ack_seq;
-> +	info->mptcpi_snd_una =3D msk->snd_una - local_idsn;
-> +	info->mptcpi_rcv_nxt =3D msk->ack_seq - remote_idsn;
-
-[Severity: Medium]
-Could mptcp_diag_fill_info() observe a torn pair of local_idsn and
-msk->snd_una if it races with mptcp_connect()?
-
-In mptcp_getsockopt(), the socket lock is released before calling
-mptcp_getsockopt_sol_mptcp() -> mptcp_getsockopt_info() ->
-mptcp_diag_fill_info(). In mptcp_diag_fill_info(), local_idsn is sampled un=
-der
-lock_sock_fast(sk) and then the socket lock is released via
-unlock_sock_fast(sk, slow) before acquiring mptcp_data_lock(sk).
-
-If another thread concurrently calls connect() -> inet_stream_connect() ->
-mptcp_connect() right after unlock_sock_fast(sk, slow), mptcp_connect()
-initializes msk->local_idsn and msk->snd_una under lock_sock(sk) without
-holding mptcp_data_lock(sk):
-
-net/mptcp/protocol.c:mptcp_connect() {
-	...
-	WRITE_ONCE(msk->local_idsn, subflow->idsn);
-	WRITE_ONCE(msk->write_seq, subflow->idsn);
-	WRITE_ONCE(msk->snd_nxt, subflow->idsn);
-	WRITE_ONCE(msk->snd_una, subflow->idsn);
-}
-
-When mptcp_diag_fill_info() then acquires mptcp_data_lock(sk), msk->snd_una
-will be subflow->idsn while the previously sampled local_idsn is still 0,
-causing info->mptcpi_snd_una to report the raw unnormalized subflow->idsn to
-userspace.
-
-Would it be safer to re-read READ_ONCE(msk->local_idsn) or sample msk->snd_=
-una
-using READ_ONCE() within the same critical section?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027062750.2095=
-515-1-kalpan.jani@mpiricsoftware.com?part=3D1
