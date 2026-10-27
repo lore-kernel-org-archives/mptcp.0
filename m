@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793097917;
-	b=MxRNrTf5d/tB6J01d4mH3YXV6RCQa+9QI3ob8wWXBYQRjIpwcH5MzG8P9b3IauZhDt5S
-	 Zsvck/Y6QpdEiCnKwPylPhkl9eb6A/3/4PJSKnnnZE4HBEfub0HrwbZkzZIkGsj+0i8LY
-	 Mk/3vqxClhK5FLqAhA1FPllLMGunPLUve/L88xkMaJmt963QHP7uH6aYDDkJGE+ELrH2m
-	 MxliC3gqB6lBF7u5VPS09qilVaUd2PfgO3fBREKVj21jB7ZXiynEWXrizURJm8Sfl4m5Q
-	 FDLvsWzuLc07kH6tEvNdu7Kgv34RPxePT2pv6lPYxiFWwSWtXIgTAO+4h+Tx7YlXe3Q==
+	t=1793098124;
+	b=FxQAUfOwP6hX7w/FUuD2Ds5qeZQe7w4Gs/dwKyPfHFwvZaIYDbf6QVZzkurr8keNP1MX
+	 OtRWwrKt/QWU/yZy1GRFJliIrh8WoRM3W5JeYHWZ5pG3bNW0QnNiXHbbUTAeSjbQauqGK
+	 E0mxf3aa2PTr8DOrhzlFtrmSimWCPg5AJmN45fLIO1vJisj1wJCHlxivfQgLvPWv57dr+
+	 rsp6QH68ezAwk39DfPMJXJzO6w+k3EL3owMQCyJ8YOk5vfqgJPG2X3dDHtJzt+2pxlBxS
+	 bNgOF31TQQxNaol6BY/oFc43r+XgP1ft8H+Kyprx+bB+jeDmvidecSpz7wbATM2RU9A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793097917;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793098124;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
+	 Subject:Content-Language:To:References:From:Cc:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=vtv1OzrhaHal7/oEeA55QBvV5cR5nnK9uv/WVL/r9cg=;
-	b=xWN1pLrpGIOpfZQQ6Wr5KzR6PvtCAtW3QKzcdr5vqLNF0hO5Wpee374nAAxsk84mSfRn
-	 rChutIa6VYQPQd+JbakFW2R6bO7KMzwFjXCTbHq1cE4/waJd3NRMDO7V1P+M0IDdM7AWs
-	 ZLE+pBycCyf9C6c/WoJvfyhGsuRqcmU+kMs7tF2co5gBql7myvwRvHd8A4eJ1Fo/gkIwS
-	 08tGF6yFcjwU4MNlsPSi6eqcfB/Lh4zmpzN0R1QIWXOYrWCA+ISwctKfblAUHLoPHsA2h
-	 R57jBnhqpgRXcliBHEPIc96J7WRPy83zj51RPtYNi1jx4Uu3uDJGmi2dEJ9H+E5OHDA==
+	bh=U1cepPgL8ocXNiqY3I3OLJlzorEx1NCp7eA7ucFDP7s=;
+	b=nShr4AN/JXfPWUSjR6888pg7Q3kjn99/OHccDlmVJcYwrCnJnHuZZtbfCPd9T+lzqwBl
+	 vHGGjCI8+5BrnZ2uYhVMU+PPYJWnKfXK/hk+kCzwrIt4HqMDr0+3+lZpgZ7W3ruueEwOu
+	 Na6Szhlah9XyPAX/ktyB5zRH7iXYrBoATrHYAXSHqlCGJIDlBeu4Y5ThErxw0dUOSrYxw
+	 3AIiC5oOgXlJlJlqa1wUitFUrsdEet1/POQPSSn7WvvDNeoHHz2U10OZaxWDX8B4/o1fl
+	 39MmHWkXR66y/YOJnmi+7uju8LBqk0iQThvRsD9SmfFMh/BbtvOu049AWd0oPnkpUNQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DtWgHq5Q;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZFMGcLEr;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C8C606A31A
-	for <mptcp@lists.linux.dev>; Tue, 27 Oct 2026 10:45:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CCB5606A31E
+	for <mptcp@lists.linux.dev>; Tue, 27 Oct 2026 10:48:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DtWgHq5Q
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABDF81F01825;
-	Tue, 27 Oct 2026 10:45:15 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZFMGcLEr
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 388921F01825;
+	Tue, 27 Oct 2026 10:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793097916;
-	bh=vtv1OzrhaHal7/oEeA55QBvV5cR5nnK9uv/WVL/r9cg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=DtWgHq5QPwcecWCa7HM1s2Mfqid7D/N3cwEMj7+mhyBxuz31+zTK4jFKBAegVmEyS
-	 x9qLHj0aD3X3MJGIdr6y61wjC1pb47NC/hs6Lk4M9lGzUR6Q5UYaJnnNRt4rVHH5fb
-	 o0sqI/5SfNcRIaJoZakWopZfPc2HNpCNe/Mn5D5PausOujgL+oO0GKfkFqzCOWT/WA
-	 Q/o0ehpkM7+I0x9hQYdgtzVlhYXS2W9GWFnSqhrvJ4oTrtPHHR/3JQjX4OEyn58bJ5
-	 hAeYjSwAL63WTk2WubmQmJhYpR12BQ6pOFZZS8uhi1VVjqaK3Z1fM2hF95tMKa7405
-	 31bPdd32V1Txw==
-Message-ID: <ad0f8a94-09b8-46d4-b807-94f1f52f1d1d@kernel.org>
-Date: Tue, 27 Oct 2026 11:45:13 +0100
+	s=k20260515; t=1793098124;
+	bh=U1cepPgL8ocXNiqY3I3OLJlzorEx1NCp7eA7ucFDP7s=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To;
+	b=ZFMGcLErFGsYvmOC5+4PkPe5vYYRvvf1JGBv1Du2ryZXZBIwRBERveufAk8W0eN1Y
+	 YplX3Czc63RN58eDOsKQkCzCdA7ZVsJXCVGe4DQVjW3Spz13G9UWmnxiB2O+6DGluD
+	 6ucd53z50UflN6gb54OxNImO0jakm0hOB4Mk+Kkyr+QlOMP3Di9SJVP7hPExbfch9C
+	 QLRH8XAFmcCuh1dIk//FLTupQOXR8jZnOCRtpWjSEmgTPKKlp71Z5qN0anloqw+VRl
+	 RnXalNqqInCZ1GH3LKt4cFPpYj1xKUjjBTY/GSOC8y8mHv4Q3Vu8oOvPQaAMHI4B1n
+	 y+0bwi9MqPwKg==
+Message-ID: <cee29410-ef2b-408e-8311-866b878da4f9@kernel.org>
+Date: Tue, 27 Oct 2026 11:48:41 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,14 +52,18 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [RFC net-next v10] mptcp: normalize seq numbers reported in
- mptcp_info
+Subject: Re: [PATCH mptcp-net v2] mptcp: push queued data on passive TFO
+ subflows becoming established
 Content-Language: fr
-To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>, mptcp@lists.linux.dev
-Cc: martineau@kernel.org, pabeni@redhat.com
-References: <20261027062750.2095515-1-kalpan.jani@mpiricsoftware.com>
- <20261027095410.3675317-1-kalpan.jani@mpiricsoftware.com>
+To: T S RAMESHKUMAR <rameshsv06@gmail.com>
+References: <20261012111001.542847-1-rameshkumar.t@phytecembedded.in>
+ <179193667256.3135.13011798294766264196@kernel.org>
+ <964aeab4-7974-4a84-a391-65a00da9de72@kernel.org>
+ <decee37e-e60d-4703-9b10-c8ce35c3f78e@kernel.org>
+ <CADRhS2to+Z-ZztOpfYhum5z4jXkUHFhnQL3+nVBJHJxe3NZjZw@mail.gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>, Petar Sakic <petar.sakic@ink.fish>,
+ T S Rameshkumar <rameshkumar.t@phytecembedded.in>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -104,67 +108,19 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20261027095410.3675317-1-kalpan.jani@mpiricsoftware.com>
+In-Reply-To: <CADRhS2to+Z-ZztOpfYhum5z4jXkUHFhnQL3+nVBJHJxe3NZjZw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Kalpan,
+Hi T S,
 
-Thank you for your reply.
-
-On 27/10/2026 10:54, Kalpan Jani wrote:
-> Hi Matt,
+On 22/10/2026 04:29, T S RAMESHKUMAR wrote:
+> Yes, I am working on it. 
 > 
-> Thanks for reviewing the new version and for the suggestions.
-> 
-> I understand that v10 mixes two different approaches: normalizing the
-> sequence values and hiding them from unprivileged diagnostic
-> requests. I will separate these concerns rather than keep them
-> bundled together.
-> 
-> I will first check whether the requester's CAP_NET_ADMIN status can
-> be obtained reliably from the existing skb in
-> inet_diag_handler_get_info(), so that we can avoid changing the
-> idiag_get_info callback interface if possible. If that is not
-> feasible, I will keep the generic callback change separate from the
-> MPTCP-specific diagnostic change.
-> 
-> For MPTCP_SUBFLOW_ATTR_MAP_SEQ, I understand that the value should be
-> zero for callers without CAP_NET_ADMIN. I will apply the same access-
-> control policy consistently to the relevant MPTCP diagnostic fields.
-> 
-> I will also investigate whether the existing byte counters, such as
-> bytes sent, received, and acknowledged, can provide the information
-> needed for issue #445 without exposing the sequence counters. I will
-> keep any required sequence-baseline fixes, including the two issues
-> reported by Sashiko, separate from the diagnostic access-control
-> change.
+> I planned that the fixes that the commit has been made on the Friday 22
+> Oct 2026 
 
-Just to be sure it is clear:
-
-- If it is possible to use the bytes counters to provide the normalised
-  seq counters, let's use them. If not, please say why before sending a
-  new version, maybe we could add a similar counter instead of relying
-  on the initial one.
-
-- If that's not possible, set 0 for if no CAP_NET_ADMIN by looking at
-  the skb (minimal changes only on MPTCP side).
-
-- If that's not possible, add the net_admin parameter, and try to avoid
-  setting "false" in inet_diag_handler_get_info → maybe we can check the
-  capability linked to this skb? → to be tested of course
-
-> I will update the patch series after checking these points and
-> validating the changes.
-
-Thank you for your patience!
-
-Also, please reply to the right message with quote to add context,
-otherwise it is hard to follow when switching between many series.
-
-  https://subspace.kernel.org/etiquette.html
-
-  https://docs.kernel.org/process/email-clients.html
+I'm sorry for this reminder, but everything is still OK on your side?
 
 Cheers,
 Matt
