@@ -1,57 +1,65 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793071736;
-	b=BP7q8aYuETo2+WhWsyDS6rbsR+E4OLUUc2mf/M2lyn8A7eyy2cA9ukVgj9Wdzd6JyPRy
-	 kxHmYJYPyF1u1fs4kpDJUu79KgK17PN7yYiho9+si7T2vkvjp1I/pxeCp+pmVL1s9uu8V
-	 DtHk+Ybr0hleC8gW51mmiVz98IQQQg6guywL1+pM2TDtTDZUlPiSRiQVQr/+3x43cAknh
-	 QSEMJkApfybHxXcW3dIjlXtSTrnZe8JLkOyenWTsU7YFOEjjJV6eAihpPNC0EaCUwKhNc
-	 /Ohnt1WkmUhnTV4YlEcoblZRitAD8vplfmerOIBa45sRl9Nkxon8ftiku2jWnmF6t4w==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793071736;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=DHrJhQnJsy8qR45yRwardHDqhC1mbcOnourkfrXQrNA=;
-	b=hFtij4u5c5PKdYa0CqWIPaoZbYB7ToX08NwUS+g4+6hCfwSRmbPR5KVtuXSdGTueB9if
-	 CPzdqQdFNLjqBrLZ8Vq+IepzAqDBkvkviBxXwS5FWpCjHoVqGFn4k9a7nTK7u8KUisDIs
-	 Fsu+sYw3KcjjVxNJK35BAzykZ0IseYxPa+NOD81CdxhintTaIFJLlqiC/oXm1cUM7S2YV
-	 CL6yia4H3qU7BKPEUdW6uKwSP+sTWtE3MLb7dXLIRWIywPkXvLPflRP6pdIVm5u6SNNHb
-	 oFVtyIPruz3/ElIDYDzkynafhKTLvn1o9QgyxIjG2B3bJlMU83q84CbDR1CrI39x5Mg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VYh+2T+m;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.54
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793082489;
+	b=Sds6CqylYDhm7M7QILRjxMbNgsafcyaH/R9j3UtDpNVL2cwGlrWP2HjsW3KGFznfH8T6
+	 32KRIhJ85bqH8qcE625EJOQ+70DqyJ/PWKfkd3Mb8PBlWVXOAq4sY6hiGByFmPV1Cv+Su
+	 KDZqqptJiqnsWPIflBiBSTXujyJo/l2p9XHZBjNGYrB1bzAvmhQWvF5sWCEbMcBq3QVht
+	 nCSf3A6SDrjiFASC+dGK81U6TIz/ulSFrAfnuCswNKm0cCypEjUpLNFU7mir5gjDt2fwS
+	 FIg9n4Um5DluzFWEcqx7RfXXQSod3cuHZE1EGY9YotwUWjznHzQC6U2oXxgMeY/zsdA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793082489;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 X-ZohoMailClient;
+	bh=gB1yuYaeMIHij6RVao4q4xxDZCCgJQrom3+PlOynyWw=;
+	b=ppc4o0AmBZ1KJpindufrhBMEG9bripBC2TLApoemXxJ6ME3rpaAQDLNK9oUyvP0v3IBN
+	 qtv+/1W3Y7EzPUtk6vvT543vFBrUpn9/52t16+lQPlqzJtN8EDF8MlhFufnIV+5tfv+DW
+	 SvWFoW0/J1hzFA0h7AcgklojhH/fn1oH/whI60uuDAPu8toJGQS6kZbwP/6I4Y3BHaJp5
+	 5ZhQpbgwJHy4kLEAqQNc5u4DYd6sJxL2OUoE0MeubX1wa3rxf+fB5Ce30T9UO85spFfnL
+	 pPLEt7zG/fUE79hk5/rp8s14r3pMuuGcUhyadSliy2VTRlqhQ7jo+YoentUJZhvvCiQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=mpiricsoftware.com;
+	spf=pass smtp.mailfrom=mpiricsoftware.com;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.54
+Received: from sender6-of-o54.zoho.com (sender6-of-o54.zoho.com [165.173.180.54])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16EB606A322
-	for <mptcp@lists.linux.dev>; Tue, 27 Oct 2026 03:28:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VYh+2T+m
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46AD21F01825;
-	Tue, 27 Oct 2026 03:28:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793071735;
-	bh=DHrJhQnJsy8qR45yRwardHDqhC1mbcOnourkfrXQrNA=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=VYh+2T+m1nZgLgI5UyL10VOdryLhf1iN6G8VNdVUWvLG1269ujIRTf3V3QqN5cpIh
-	 524pF/TCZ50rHQhi3J9R+nHaOM8N89dWy3dtJrpBtgxDz5aRC2D+1nTlJrfg2KZJOS
-	 Co6A1EfQMcEi4qkcUMjqR6XYZjGZQvI/wjV+VvBjrYXbyqrQXtzYjQMs1hcQZgw9Fr
-	 ELody37wNiw9IyJnRln2NEh3lkdzYE9xmROz904ZCDhA8NnGBiTN7mgtvauYhsileA
-	 x8VOMyHHeHyFStBd7dSYT2AQh5dW0SPfd2i7Z1eQX0IgL46hpBbMkldpfbGnS7xHya
-	 4TgrIlIbrXtZw==
-Subject: Re: [PATCH mptcp-next v9 6/6] selftests: mptcp: join: validate
- subflow retry after link failure
-From: netdev-bot+sashiko@kernel.org
-To: anilkaushikwireless@gmail.com
-Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Tue, 27 Oct 2026 03:28:54 +0000
-Message-ID: <179307173479.3132.8276480291439834113@kernel.org>
-In-Reply-To: <20261025134909.2794368-7-anilkaushikwireless@gmail.com>
-References: <20261025134909.2794368-7-anilkaushikwireless@gmail.com>
-X-sashiko-severity: Medium
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FBC5606A31A
+	for <mptcp@lists.linux.dev>; Tue, 27 Oct 2026 06:28:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6FBC5606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
+ARC-Seal: i=1; a=rsa-sha256; t=1793082484; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=V2rZav/pXc2OBd3cDV8/MQJ9b+QkQzXM3E60ViTvWZMeNC8SXTFJ3ES+YXI/XIHZF/JFPSboNAB/f5ygRWZHPIJ/BbCvPkv4lVFI0mhUXT7Q74e18n/9BWGYT9Vlc6SDA1Be3hucI4R/BD7Ne89G79w2RbaiqQrdfE1+fBWCjQs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1793082484; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=gB1yuYaeMIHij6RVao4q4xxDZCCgJQrom3+PlOynyWw=; 
+	b=B5RlFd1mXos2zbou4AQ0vkKdlMzJszHDtUC7Ao2KVksK7DHvJYH06cNxEMKBA/RMs7XXxbg6I/SjDM2llGgBC0ZfQhbu4Jg/fLMlURzmKwI1Axbmw8C/TeTy8ZEB8/GK0zzLmPh/3smBWpzq8oTQ+o+DAm+PMeEnNCySJBPO548=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
+	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1793082484;
+	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=gB1yuYaeMIHij6RVao4q4xxDZCCgJQrom3+PlOynyWw=;
+	b=m4hg64kf6rQxVqLnFOtQYlTK12tzJ4B5OVCXOZ4BIO2MY3Lzt4u5vomqjD95g4q5
+	yGeFcNXZuD8HoTtWgb3KdkY45ELqXaXaQ37U+KEZmISSHrjbCEotEBL6tFF13OHu33p
+	BP6zAuQQSg8KZhq7cptqCOzJaFh5mHBJ8h9wjkeI=
+Received: by smtp.zohomail.com with SMTPS id 1793082482348898.921445953905;
+	Mon, 26 Oct 2026 23:28:02 -0700 (PDT)
+From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+To: mptcp@lists.linux.dev
+Cc: shardul.b@mpiricsoftware.com,
+	janak@mpiric.us,
+	kalpanjani009@gmail.com,
+	Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Subject: [RFC net-next v10] mptcp: normalize seq numbers reported in mptcp_info
+Date: Tue, 27 Oct 2026 11:57:50 +0530
+Message-ID: <20261027062750.2095515-1-kalpan.jani@mpiricsoftware.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -61,126 +69,341 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue(s) to consider.
+Normalize the MPTCP sequence fields relative to the initial data sequence
+number baselines.
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 0
+Keep the normalized values available to privileged diagnostic requests,
+while zeroing them in INET_DIAG_INFO for callers without CAP_NET_ADMIN.
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
+Normalize MPTCP_SUBFLOW_ATTR_MAP_SEQ against remote_idsn as well, so
+subflow mapping sequence numbers use the same remote sequence space as
+mptcpi_rcv_nxt.
 
-- [Medium] In link_failure_tests(), the third new test ("subflow retry,
-  no other subflow") does not reliably check what it claims, that the…
+Pass requester capability state to idiag_get_info callbacks. Other
+protocol callbacks retain their existing behavior.
 
---
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/445
+Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+---
+Changes since v9:
+- Keep normalized sequence values available to privileged diagnostic
+  requests and zero the three sequence fields for unprivileged
+  INET_DIAG_INFO callers.
+- Pass requester capability state to idiag_get_info callbacks while
+  preserving existing behavior for other protocol callbacks.
+- Normalize MPTCP_SUBFLOW_ATTR_MAP_SEQ relative to remote_idsn so it
+  uses the same remote sequence-number baseline as mptcpi_rcv_nxt.
 
-selftests: mptcp: join: validate subflow retry after link failure
+v9: https://lore.kernel.org/all/20261015101303.144541-1-kalpan.jani@mpiricsoftware.com/
+---
+ include/linux/inet_diag.h |  2 +-
+ net/ipv4/inet_diag.c      |  6 +++---
+ net/ipv4/raw_diag.c       |  2 +-
+ net/ipv4/tcp_diag.c       |  2 +-
+ net/ipv4/udp_diag.c       |  2 +-
+ net/mptcp/diag.c          |  8 +++++++-
+ net/mptcp/mptcp_diag.c    |  9 ++++++++-
+ net/mptcp/protocol.c      |  4 ++++
+ net/mptcp/protocol.h      |  2 ++
+ net/mptcp/sockopt.c       | 14 ++++++++++----
+ net/mptcp/subflow.c       |  5 ++++-
+ net/sctp/diag.c           |  6 +++---
+ 12 files changed, 45 insertions(+), 17 deletions(-)
 
-This adds three tests to link_failure_tests() for the subflow-retries
-limit. Netfilter drops the client packets so the subflows are closed and
-re-created. The tests check that the re-created subflows connect again,
-that a subflow still connecting goes away when the connection is closed,
-and that a connection whose only subflow is re-created is still closed
-after the close timeout.
-
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index c3ccce96b45b1..e80f3f5f99973 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-
-[ ... ]
-
-> @@ -2585,6 +2784,119 @@ link_failure_tests()
-
-[ ... ]
-
-> +	# the only subflow is re-created: the connection is still closed after
-> +	# the close timeout, the new subflow cannot connect
-> +	if reset_with_events "subflow retry, no other subflow" &&
-> +	   continue_if has_subflow_retries && init_nft_filter; then
-> +		sf_retry_init
-> +		pm_nl_flush_endpoint $ns2
-> +		ip netns exec $ns2 sysctl -q net.mptcp.close_timeout=5
-> +		{ timeout_test=600 test_linkfail=131072 \
-> +			run_tests $ns1 $ns2 10.0.1.1 >/dev/null & } 2>/dev/null
-> +		local tests_pid=$!
-> +
-> +		print_check "closed after the close timeout"
-> +		if ! wait_counter_ge $((timeout_poll * 4)) \
-> +		     $ns1 "MPTcpExtMPCapableACKRX" 1; then
-> +			fail_test "connection not established"
-> +		elif ! nft_drop_from 10.0.1.2; then
-> +			fail_test "unable to drop the packets"
-> +		# no other subflow: the first MP_JOIN SYN is the re-created one
-> +		elif ! wait_counter_ge "${timeout_poll}" \
-> +		     $ns2 "MPTcpExtMPJoinSynTx" 1; then
-> +			fail_test "no subflow re-created"
-> +		# closed with the connection, after 5 seconds
-> +		elif slowwait "${timeout_poll}" no_sf_connecting; then
-> +			print_ok
-
-[Severity: Medium]
-Could this check pass even when the close timeout never fires?
-
-do_transfer() starts the background client with the usual 30 s I/O
-timeout. Setting timeout_test=600 only changes the outer watchdog:
-
-    ./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
-
-After 10.0.1.2 is blocked, the client gets no more events. When poll()
-times out, copyfd_io_poll() returns 2 and mptcp_connect exits, which
-closes the MPTCP socket. __mptcp_close() then calls
-mptcp_close_retry_subflows(), and that closes the SYN_SENT retry subflow
-without any help from the close timeout:
-
-net/mptcp/protocol.c:mptcp_close_retry_subflows() {
-    ...
-		if (state != TCP_SYN_SENT && state != TCP_CLOSE)
-			continue;
-    ...
-		__mptcp_close_ssk(sk, ssk, subflow, 0);
-}
-
-The client's last event happens at or before the re-created SYN. Its 30 s
-poll timeout therefore starts around the time of the block.
-
-The slowwait window here is also timeout_poll (30 s). It only starts once
-MPTcpExtMPJoinSynTx >= 1 is seen, about 3-5 s after the block with
-tcp_retries2=3. So the client's own close falls inside this window, or
-races with its end.
-
-Suppose the re-arm in mptcp_retry_check_tout() were missing or broken:
-
-	if (connecting)
-		mptcp_start_tout_timer(sk);
-
-__mptcp_subflow_connect() stops the timer, so the subflow would stay
-connecting until the client exits on its own. Wouldn't this check still
-print ok, or pass or fail depending on a sub-second race?
-
-The final checks don't tell the two close paths apart either.
-__mptcp_close_ssk() emits no SUB_CLOSED event, and the exit status of the
-background transfer is never checked.
-
-Could the wait be bounded to close_timeout plus a margin, well below
-timeout_poll? Alternatively, the test could check that the client is still
-running when the subflow goes away.
-
-> +		else
-> +			fail_test "subflow still connecting"
-> +		fi
-> +		mptcp_lib_kill_group_wait $tests_pid
-> +		kill_events_pids
-> +
-> +		join_syn_tx=1 chk_join_nr 0 0 0
-> +		chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_CLOSED 1 error 1
-> +		sf_retry_cleanup
-> +	fi
->  }
-
+diff --git a/include/linux/inet_diag.h b/include/linux/inet_diag.h
+index 704fd415c2b49..85f6278d5db1d 100644
+--- a/include/linux/inet_diag.h
++++ b/include/linux/inet_diag.h
+@@ -18,7 +18,7 @@ struct inet_diag_handler {
+ 
+ 	void		(*idiag_get_info)(struct sock *sk,
+ 					  struct inet_diag_msg *r,
+-					  void *info);
++					  void *info, bool net_admin);
+ 
+ 	int		(*idiag_get_aux)(struct sock *sk,
+ 					 bool net_admin,
+diff --git a/net/ipv4/inet_diag.c b/net/ipv4/inet_diag.c
+index 34b77aa87d0a4..362161bf39fe3 100644
+--- a/net/ipv4/inet_diag.c
++++ b/net/ipv4/inet_diag.c
+@@ -276,7 +276,7 @@ int inet_sk_diag_fill(struct sock *sk, struct inet_connection_sock *icsk,
+ 	}
+ 
+ 	if (!icsk) {
+-		handler->idiag_get_info(sk, r, NULL);
++		handler->idiag_get_info(sk, r, NULL, net_admin);
+ 		goto out;
+ 	}
+ 
+@@ -327,7 +327,7 @@ int inet_sk_diag_fill(struct sock *sk, struct inet_connection_sock *icsk,
+ 			goto errout;
+ 	}
+ 
+-	handler->idiag_get_info(sk, r, info);
++	handler->idiag_get_info(sk, r, info, net_admin);
+ 
+ 	if (ext & (1 << (INET_DIAG_INFO - 1)) && handler->idiag_get_aux)
+ 		if (handler->idiag_get_aux(sk, net_admin, skb) < 0)
+@@ -1027,7 +1027,7 @@ int inet_diag_handler_get_info(struct sk_buff *skb, struct sock *sk)
+ 	if (attr)
+ 		info = nla_data(attr);
+ 
+-	handler->idiag_get_info(sk, r, info);
++	handler->idiag_get_info(sk, r, info, false);
+ 	inet_diag_unlock_handler(handler);
+ 
+ 	nlmsg_end(skb, nlh);
+diff --git a/net/ipv4/raw_diag.c b/net/ipv4/raw_diag.c
+index 943e5998e0ad5..264912d0cb9fc 100644
+--- a/net/ipv4/raw_diag.c
++++ b/net/ipv4/raw_diag.c
+@@ -185,7 +185,7 @@ static void raw_diag_dump(struct sk_buff *skb, struct netlink_callback *cb,
+ }
+ 
+ static void raw_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+-			      void *info)
++			      void *info, bool net_admin)
+ {
+ 	r->idiag_rqueue = sk_rmem_alloc_get(sk);
+ 	r->idiag_wqueue = sk_wmem_alloc_get(sk);
+diff --git a/net/ipv4/tcp_diag.c b/net/ipv4/tcp_diag.c
+index ba1fdbe9807fd..cac32575282e3 100644
+--- a/net/ipv4/tcp_diag.c
++++ b/net/ipv4/tcp_diag.c
+@@ -19,7 +19,7 @@
+ #include <net/tcp.h>
+ 
+ static void tcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+-			      void *_info)
++			      void *_info, bool net_admin)
+ {
+ 	struct tcp_info *info = _info;
+ 
+diff --git a/net/ipv4/udp_diag.c b/net/ipv4/udp_diag.c
+index f4b24e628cf8d..5a1fa627cbee8 100644
+--- a/net/ipv4/udp_diag.c
++++ b/net/ipv4/udp_diag.c
+@@ -142,7 +142,7 @@ static void udp_diag_dump(struct sk_buff *skb, struct netlink_callback *cb,
+ }
+ 
+ static void udp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+-		void *info)
++		void *info, bool net_admin)
+ {
+ 	r->idiag_rqueue = udp_rqueue_get(sk);
+ 	r->idiag_wqueue = sk_wmem_alloc_get(sk);
+diff --git a/net/mptcp/diag.c b/net/mptcp/diag.c
+index 70cf9ebce8338..590cdee419ef9 100644
+--- a/net/mptcp/diag.c
++++ b/net/mptcp/diag.c
+@@ -16,6 +16,7 @@ static int subflow_get_info(struct sock *sk, struct sk_buff *skb, bool net_admin
+ {
+ 	struct mptcp_subflow_context *sf;
+ 	struct nlattr *start;
++	u64 map_seq;
+ 	u32 flags = 0;
+ 	bool slow;
+ 	int err;
+@@ -35,6 +36,11 @@ static int subflow_get_info(struct sock *sk, struct sk_buff *skb, bool net_admin
+ 		goto nla_failure;
+ 	}
+ 
++	map_seq = 0;
++	if (sf->conn && sf->map_seq)
++		map_seq = sf->map_seq -
++			  READ_ONCE(mptcp_sk(sf->conn)->remote_idsn);
++
+ 	if (sf->mp_capable)
+ 		flags |= MPTCP_SUBFLOW_FLAG_MCAP_REM;
+ 	if (sf->request_mptcp)
+@@ -67,7 +73,7 @@ static int subflow_get_info(struct sock *sk, struct sk_buff *skb, bool net_admin
+ 	if (net_admin &&
+ 	    (nla_put_u32(skb, MPTCP_SUBFLOW_ATTR_RELWRITE_SEQ,
+ 			 sf->rel_write_seq) ||
+-	     nla_put_u64_64bit(skb, MPTCP_SUBFLOW_ATTR_MAP_SEQ, sf->map_seq,
++	     nla_put_u64_64bit(skb, MPTCP_SUBFLOW_ATTR_MAP_SEQ, map_seq,
+ 			       MPTCP_SUBFLOW_ATTR_PAD) ||
+ 	     nla_put_u32(skb, MPTCP_SUBFLOW_ATTR_MAP_SFSEQ,
+ 			 sf->map_subflow_seq) ||
+diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
+index 136c2d05c0eeb..d526b1015da16 100644
+--- a/net/mptcp/mptcp_diag.c
++++ b/net/mptcp/mptcp_diag.c
+@@ -190,7 +190,7 @@ static void mptcp_diag_dump(struct sk_buff *skb, struct netlink_callback *cb,
+ }
+ 
+ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+-				void *_info)
++				void *_info, bool net_admin)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	struct mptcp_info *info = _info;
+@@ -215,6 +215,13 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+ 		return;
+ 
+ 	mptcp_diag_fill_info(msk, info);
++
++	if (!net_admin) {
++		/* Hide data sequence numbers from unprivileged users. */
++		info->mptcpi_write_seq = 0;
++		info->mptcpi_snd_una = 0;
++		info->mptcpi_rcv_nxt = 0;
++	}
+ }
+ 
+ static const struct inet_diag_handler mptcp_diag_handler = {
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index f22d64ab1c53b..e59209b6fc41c 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3216,6 +3216,8 @@ static void __mptcp_init_sock(struct sock *sk)
+ 	INIT_WORK(&msk->work, mptcp_worker);
+ 	msk->out_of_order_queue = RB_ROOT;
+ 	msk->first_pending = NULL;
++	WRITE_ONCE(msk->local_idsn, 0);
++	WRITE_ONCE(msk->remote_idsn, 0);
+ 
+ 	/* msk does not go through tcp_init_sock(); seed RTO bounds. */
+ 	icsk->icsk_rto_min =
+@@ -3763,6 +3765,7 @@ struct sock *mptcp_sk_clone_init(const struct sock *sk,
+ 
+ 	msk = mptcp_sk(nsk);
+ 	WRITE_ONCE(msk->local_key, subflow_req->local_key);
++	WRITE_ONCE(msk->local_idsn, subflow_req->idsn);
+ 	WRITE_ONCE(msk->token, subflow_req->token);
+ 	msk->in_accept_queue = 1;
+ 	WRITE_ONCE(msk->fully_established, false);
+@@ -4201,6 +4204,7 @@ static int mptcp_connect(struct sock *sk, struct sockaddr_unsized *uaddr,
+ 					     MPTCP_MIB_TOKENFALLBACKINIT);
+ 	}
+ 
++	WRITE_ONCE(msk->local_idsn, subflow->idsn);
+ 	WRITE_ONCE(msk->write_seq, subflow->idsn);
+ 	WRITE_ONCE(msk->snd_nxt, subflow->idsn);
+ 	WRITE_ONCE(msk->snd_una, subflow->idsn);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 3d250e8204d52..fc6858863fa89 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -288,6 +288,8 @@ struct mptcp_sock {
+ 						 * lockless access read
+ 						 */
+ 	u64		remote_key;		/* same as above */
++	u64		local_idsn;
++	u64		remote_idsn;
+ 	u64		write_seq;
+ 	u64		bytes_sent;
+ 	u64		snd_nxt;
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 922f6ae5c80cb..b20263b4cd55c 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -1047,6 +1047,7 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
+ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ {
+ 	struct sock *sk = (struct sock *)msk;
++	u64 local_idsn = 0, remote_idsn = 0;
+ 	u32 flags = 0;
+ 	bool slow;
+ 	u32 now;
+@@ -1084,9 +1085,11 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ 	info->mptcpi_flags = flags;
+ 
+ 	slow = lock_sock_fast(sk);
++	local_idsn = READ_ONCE(msk->local_idsn);
++
+ 	info->mptcpi_csum_enabled = READ_ONCE(msk->csum_enabled);
+ 	info->mptcpi_token = msk->token;
+-	info->mptcpi_write_seq = msk->write_seq;
++	info->mptcpi_write_seq = msk->write_seq - local_idsn;
+ 	info->mptcpi_retransmits = inet_csk(sk)->icsk_retransmits;
+ 	info->mptcpi_bytes_sent = msk->bytes_sent;
+ 	info->mptcpi_bytes_received = msk->bytes_received;
+@@ -1099,17 +1102,20 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ 	unlock_sock_fast(sk, slow);
+ 
+ 	mptcp_data_lock(sk);
++	if (READ_ONCE(msk->can_ack))
++		remote_idsn = READ_ONCE(msk->remote_idsn);
+ 	info->mptcpi_last_ack_recv = jiffies_to_msecs(now - msk->last_ack_recv);
+-	info->mptcpi_snd_una = msk->snd_una;
+-	info->mptcpi_rcv_nxt = msk->ack_seq;
++	info->mptcpi_snd_una = msk->snd_una - local_idsn;
++	info->mptcpi_rcv_nxt = msk->ack_seq - remote_idsn;
+ 	info->mptcpi_bytes_acked = msk->bytes_acked;
+ 	mptcp_data_unlock(sk);
++
+ }
+ EXPORT_SYMBOL_GPL(mptcp_diag_fill_info);
+ 
+ static int mptcp_getsockopt_info(struct mptcp_sock *msk, char __user *optval, int __user *optlen)
+ {
+-	struct mptcp_info m_info;
++	struct mptcp_info m_info = {};
+ 	int len;
+ 
+ 	if (get_user(len, optlen))
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 2d7ccb01d2342..39c7422afa779 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -482,7 +482,6 @@ static void subflow_set_remote_key(struct mptcp_sock *msk,
+ 	if (subflow->remote_key_valid)
+ 		return;
+ 
+-	subflow->remote_key_valid = 1;
+ 	subflow->remote_key = mp_opt->sndr_key;
+ 	mptcp_crypto_key_sha(subflow->remote_key, NULL, &subflow->iasn);
+ 	subflow->iasn++;
+@@ -491,9 +490,13 @@ static void subflow_set_remote_key(struct mptcp_sock *msk,
+ 	subflow->map_seq = subflow->iasn;
+ 
+ 	WRITE_ONCE(msk->remote_key, subflow->remote_key);
++	WRITE_ONCE(msk->remote_idsn, subflow->iasn - 1);
+ 	WRITE_ONCE(msk->ack_seq, subflow->iasn);
+ 	WRITE_ONCE(msk->can_ack, true);
+ 	atomic64_set(&msk->rcv_wnd_sent, subflow->iasn);
++
++	/* publish last, once iasn and the fields above are fully populated */
++	subflow->remote_key_valid = 1;
+ }
+ 
+ static void mptcp_propagate_state(struct sock *sk, struct sock *ssk,
+diff --git a/net/sctp/diag.c b/net/sctp/diag.c
+index c2a0de2adf6fd..ab6c560fde053 100644
+--- a/net/sctp/diag.c
++++ b/net/sctp/diag.c
+@@ -20,7 +20,7 @@
+ #include <net/sctp/sctp.h>
+ 
+ static void sctp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+-			       void *info);
++			       void *info, bool net_admin);
+ 
+ /* define some functions to make asoc/ep fill look clean */
+ static void inet_diag_msg_sctpasoc_fill(struct inet_diag_msg *r,
+@@ -200,7 +200,7 @@ static int inet_sctp_diag_fill(struct sock *sk, struct sctp_association *asoc,
+ 	}
+ 	infox.sctpinfo = (struct sctp_info *)info;
+ 	infox.asoc = asoc;
+-	sctp_diag_get_info(sk, r, &infox);
++	sctp_diag_get_info(sk, r, &infox, net_admin);
+ 
+ 	addr_list = asoc ? &asoc->base.bind_addr.address_list
+ 			 : &ep->base.bind_addr.address_list;
+@@ -412,7 +412,7 @@ static int sctp_ep_dump(struct sctp_endpoint *ep, void *p)
+ 
+ /* define the functions for sctp_diag_handler*/
+ static void sctp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+-			       void *info)
++			       void *info, bool net_admin)
+ {
+ 	struct sctp_infox *infox = (struct sctp_infox *)info;
+ 
 -- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261025134909.2794368-1-anilkaushikwireless%40gmail.com
+2.43.0
+
