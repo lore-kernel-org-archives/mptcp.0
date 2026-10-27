@@ -1,55 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793136193;
-	b=modZm5+310JxHluF3xCzsA3oUydrYqKRHP0PMDZ3XlQJtp0jvvpX0lamfSuRK2y7rY0l
-	 YpuyxmMKOv7bcJdQF1SmHcMkneIzUcphQ1RE6dY4mWyi8uNCe09O720OiiWje3am/Rz01
-	 0dwcVc9m6tZNKbRJjO6AhLe2T5NsZCQTEPlDzdz+E5Y3lIKkg4mYeyAzY89XgXWbm+K9l
-	 A79vCf2/DxGYoYB2QO+T6Gld02ocRd3WU5V92S2JDS7VBYXQKI8j6levE7+WJtR5I1Vp3
-	 zoARnc8glUQG3VmH2Ue+LL2PWS8XJZ4WkOHB/K+DSW0KBNzjR5TcYti6780rAfoDuKQ==
+	t=1793144788;
+	b=5Yzu5wDSgPISg8yQHj6pXs8aaiVQyTqymSBK8a8oQl0iIm1ql4x8OMPFwYM6RVw+B4th
+	 Ywz5lbiHOw5ZhAIuQ3wZIzIelXs4ojaE0zg2XhONwsi3Ncib+QhK8CoVuE+ZeqM9NaH8s
+	 xb6xCvy/3GAHWTXI/YO1cRoQBdAYrCnDy913uFkYi8eyekyEPfA7MBoy2Ung+9FPuOT1i
+	 K+ZKjvH1h9RNEXJTVH6OfS2R/KzrBBkK4gCOvl18acmf7XBA9za/i0IeNjz430q9wvPdl
+	 lstcB2NKaOV9goQtX+HW6V+hhx8rcOowFKBY7Fzfz094kv1lRK20RV5+9DEYeh2cxsg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793136193;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793144788;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=6A+5ACqZjK1lxXQ4wn4TYVngV3I0ZVfrbF0xnSxgW/U=;
-	b=g0I4cIckKyC+UHp9/qgXiC2yEKKkPVeLxW96dja36GeTlpgRncRHUkGS3/CtW7mPxmnU
-	 BshXq4hsU2pFxzRp9sWn0eYQJgR8jKp8U1n7L2LRrdw+ymJpb3i4zZ0VKfOpr57dlECj1
-	 fWInIgo3N0U3p1ybPUbZHkZgi1+t92SMBkjqXZyq/k6lZKX0Qp6ZWw0uMudim1DHvR532
-	 gKsuWuX38eb4tRCb0WHyXd7SA5NKP54kOFPaXBwn9HelVakvP/HvI+6fn0Tk97+M30CUR
-	 dbGD22FhHYp2z+24SozKIE0os4kwkBe4i1V++k3LqwA5Ws+knPujm9tkpk1wK8ucI4w==
+	bh=o6mayHzGBLKtgFWAyedyY1WW9f+C9WIzemAgISHlz3Q=;
+	b=Yrrym871wLU1YzWsbLdyZNC9fq1nobR3G1W3tMSM4opWlYShVLHHYxnB6Wm36NSmSdjm
+	 Q8tkvHfdLu4sSKF7JCVc6EZZp1/3e0YsiVvR91CatLOKnM5bkABmTW6dpXXrGJ9yqr6lb
+	 azsoasLd9S0IE28V3vJ/3eu7ncObJDmiEWFY5fp8ddxJ0LruUTWJ3G1r/QAvPJlnKpX4s
+	 oeSKE7x6iDzSGq2WtVGAAEuk/PBkrvpDJPpElzaOLnElg+HbtukJTx45NoxJHkgVaVXxO
+	 77uxLON7YmuLrzA5gpbEVXi6+PycQo/r5Rn75Ppc4inM2KsiDEFvnZsmHgTWCYJ+XuA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="It64T5/7";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PjK4aGi0;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E5C3606A329
-	for <mptcp@lists.linux.dev>; Tue, 27 Oct 2026 21:23:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732D2606A31A
+	for <mptcp@lists.linux.dev>; Tue, 27 Oct 2026 23:46:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=It64T5/7
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03E231F01289;
-	Tue, 27 Oct 2026 21:23:12 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PjK4aGi0
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C73FD1F01825;
+	Tue, 27 Oct 2026 23:46:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793136193;
-	bh=6A+5ACqZjK1lxXQ4wn4TYVngV3I0ZVfrbF0xnSxgW/U=;
+	s=k20260515; t=1793144788;
+	bh=o6mayHzGBLKtgFWAyedyY1WW9f+C9WIzemAgISHlz3Q=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=It64T5/7Df6E4nnqHHyAhg6N9E3q0Tv1Ofvxn1a2xpnxn8kljyejOvI0jkgJhhEpA
-	 F34Yo2Lsj8E+PgSbp+Sy52QagLkDGYoTEPqws3HpAPnA88hGa9h+BLiiiEXR6r+NeM
-	 iF8o4IWXUJ0x8nF0CqvnAurfZeE/PQJbVLjJm1nlpQ2ciOykoXQZGHlj8MHDma6CNv
-	 nNq5J+9kGi7lVOEXuTPZyRCPFsxFM4K6bjmC9Z/razQHYbOb9k007o7XfRN8Grpx1g
-	 P4n5Kp1BTfMxceCkbww0ONVlKOFC8OdRtYDNjmO8qgyJEuk3pcOtJE6MtPw23g8l9Q
-	 Uqz8sQBs5MHRQ==
-Subject: Re: [PATCH mptcp-next v10 6/6] selftests: mptcp: join: validate
- subflow retry after link failure
+	b=PjK4aGi0pcZmSs80h7m1DGe7/2bJNpZaySuZtcTKVNsgCcCQ5f7V3DZ17Lgmp3dfs
+	 GKMpcILNYd9dNGiNmzwKJi9vXm/DeHAiVhDG7kWtoeNcGJIR7z4GWoE+JFFMW4yauZ
+	 bUFP833xnffEDkhRcG8wiiXZ0moHR60yUOskIgDo4+zNQHoBs1nquVKtm5sT287upO
+	 hnxSl/v4e8xkHEb1zkYFcZx9oKYyJPFbQQYdjnPXdp0YtT/CxxPudRA5nTe0AkGOt5
+	 bHE/FfMSB6NugiMOyL64vLaApDlvxlVoQqGV7hYAvIjAx26IZ76kWKlT7p8fOdb9mk
+	 Ejpk6PcXBnDlQ==
+Subject: Re: [PATCH mptcp-next v2 1/4] mptcp: give MPTCP sockets a distinct
+ lockdep class
 From: netdev-bot+sashiko@kernel.org
-To: anilkaushikwireless@gmail.com
-Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Tue, 27 Oct 2026 21:23:12 +0000
-Message-ID: <179313619254.3132.16266932205245652213@kernel.org>
-In-Reply-To: <20261026063657.2955783-7-anilkaushikwireless@gmail.com>
-References: <20261026063657.2955783-7-anilkaushikwireless@gmail.com>
-X-sashiko-severity: Medium
+To: geliang@kernel.org
+Cc: mptcp@lists.linux.dev, tanggeliang@kylinos.cn, kuba@kernel.org
+Date: Tue, 27 Oct 2026 23:46:27 +0000
+Message-ID: <179314478731.3132.9286359278508249322@kernel.org>
+In-Reply-To: =?utf-8?q?=3Ca17b9360df88d22c8ed579f532c41456fc46006e=2E1793010?=
+ =?utf-8?q?744=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
+References: =?utf-8?q?=3Ca17b9360df88d22c8ed579f532c41456fc46006e=2E17930107?=
+ =?utf-8?q?44=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
+X-sashiko-severity: High
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -62,10 +64,10 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 3 potential
+Thank you for your contribution! Sashiko AI review found 1 potential
 issue(s) to consider.
 
-Critical: 0 · High: 0 · Medium: 2 · Low: 1
+Critical: 0 · High: 1 · Medium: 0 · Low: 0
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -73,222 +75,125 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [Medium] The 'subflow retry, no other subflow' test in
-  link_failure_tests() (tools/testing/selftests/net/mptcp/mptcp_join.sh)…
-- [Medium] With -C, mptcp_join.sh sets validate_checksum=true for every
-  test (reset(): `validate_checksum=$checksum`).
-- [Low] In the 'subflow retry, no other subflow, path back' test, the
-  background `run_tests` is started with only stderr redirected (`{…
+- [High] Race in the passive path of mptcp_sk_clone_init()
+  (net/mptcp/protocol.c): the msk lock is reinitialized after other…
 
 --
 
-selftests: mptcp: join: validate subflow retry after link failure
+mptcp: give MPTCP sockets a distinct lockdep class
 
-This adds four mptcp_join.sh tests for the subflow-retries limit. Each one
-uses netfilter to drop the client packets from one address until the
-subflow is closed and re-created. They cover re-creating the additional and
-initial subflows, closing the connection while a subflow is being
-re-created, and the close timeout when only a re-created subflow is left,
-with and without the path coming back.
+This commit moves the msk lock reclassification out of the PM listener
+creation path and into a new helper, mptcp_reclassify_socket(). The helper
+uses separate lockdep classes for kernel and user sockets, per address
+family. It is called from mptcp_init_sock() for active sockets and from
+mptcp_sk_clone_init() for passive ones. In the passive path,
+sk_clone_lock() is replaced by sk_clone(..., false) followed by
+bh_lock_sock().
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index c3ccce96b45b1..3fa561b1a8fd1 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-
-[ ... ]
-
-> @@ -2585,6 +2826,148 @@ link_failure_tests()
->  		chk_stale_nr $ns2 1 -1 2
->  		chk_link_usage $ns2 ns2eth3 $cinsent 50
->  	fi
-> +
-> +	# subflows closed after a silent link failure, then re-created: the
-> +	# additional one, then the initial one
-> +	if reset_with_events "subflow retry after link failure" &&
-> +	   continue_if has_subflow_retries && init_nft_filter; then
-> +		sf_retry_init
-> +		# killed at the end: the timeout only stops a stuck test
-> +		{ timeout_test=600 test_linkfail=131072 \
-> +			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
-> +		local tests_pid=$!
-> +
-> +		# the 128 MB files are created first, that can take a while
-> +		wait_counter_ge $((timeout_poll * 4)) \
-> +			$ns1 "MPTcpExtMPJoinAckRx" 1
-> +		sf_retry_after_block 10.0.3.2
-> +		sf_retry_after_block 10.0.1.2
-> +		mptcp_lib_kill_group_wait $tests_pid
-> +		kill_events_pids
-> +
-> +		join_syn_tx=3 chk_join_nr 3 3 3
-
-[Severity: Medium]
-Can this fail on a correct kernel when mptcp_join.sh is run with -C?
-
-With -C, reset() sets validate_checksum=true. chk_join_nr() then also
-runs:
-
-	if $validate_checksum; then
-		chk_csum_nr $csum_ns1 $csum_ns2
-		chk_fail_nr $fail_nr $fail_nr
-		chk_rst_nr $rst_nr $rst_nr
-
-join_rst_nr defaults to 0 here, so any MP_RST counted in ns1 or ns2 makes
-the check fail.
-
-The transfer is killed while it is still running in both directions at
-the full 4mbit link rate, and mptcp_connect has no SIGTERM handler. If
-either side still has unread data when its socket is closed at exit,
-__mptcp_close() takes the mptcp_data_avail() branch:
-
-__mptcp_close()
-    mptcp_do_fastclose()
-        tcp_send_active_reset()
-            mptcp_established_options()
-                mptcp_established_options_rst()  /* MPTCP_MIB_MPRSTTX++ */
-
-On the peer, mptcp_check_fastclose() can do the same for subflows that are
-not closed yet.
-
-The "subflow retry, no other subflow, path back" test kills its transfer
-the same way before calling join_syn_tx=1 chk_join_nr 1 1 1.
-
-The existing tests that kill live transfers use rate-limited speeds
-(speed=5/20), which leaves a much smaller window for unread data. Do these
-two tests need to account for the MP_RST counters when -C is used?
-
-> +		chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_ESTABLISHED 3
-> +		chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_CLOSED 2 error 2
-> +		sf_retry_cleanup
-> +	fi
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 02a4f479d9d8c..d4f42dfc227e2 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -3267,11 +3267,43 @@ static void mptcp_ca_reset(struct sock *sk)
 
 [ ... ]
 
-> +	# the only subflow is re-created: the connection is still closed after
-> +	# the close timeout, the new subflow cannot connect
-> +	if reset_with_events "subflow retry, no other subflow" &&
-> +	   continue_if has_subflow_retries && init_nft_filter; then
-> +		sf_retry_init
-> +		pm_nl_flush_endpoint $ns2
-> +		ip netns exec $ns2 sysctl -q net.mptcp.close_timeout=5
-> +		{ timeout_test=600 test_linkfail=131072 \
-> +			run_tests $ns1 $ns2 10.0.1.1 >/dev/null & } 2>/dev/null
-> +		local tests_pid=$!
+> +static void mptcp_reclassify_socket(struct sock *sk)
+> +{
+
+[ ... ]
+
+> +	sock_lock_init_class_and_name(sk, slock_name,
+> +				      &mptcp_slock_keys[is_kern][is_ipv6],
+> +				      lock_name, &mptcp_keys[is_kern][is_ipv6]);
+> +}
 > +
-> +		print_check "closed after the close timeout"
-> +		if ! wait_counter_ge $((timeout_poll * 4)) \
-> +		     $ns1 "MPTcpExtMPCapableACKRX" 1; then
-> +			fail_test "connection not established"
-> +		elif ! nft_drop_from 10.0.1.2; then
-> +			fail_test "unable to drop the packets"
-> +		# no other subflow: the first MP_JOIN SYN is the re-created one
-> +		elif ! wait_counter_ge "${timeout_poll}" \
-> +		     $ns2 "MPTcpExtMPJoinSynTx" 1; then
-> +			fail_test "no subflow re-created"
-> +		# closed with the connection, after 5 seconds
-> +		elif slowwait "${timeout_poll}" no_sf_connecting; then
-> +			print_ok
+>  static int mptcp_init_sock(struct sock *sk)
+>  {
+>  	struct net *net = sock_net(sk);
+>  	int ret;
+>  
+> +	mptcp_reclassify_socket(sk);
+> +
+>  	__mptcp_init_sock(sk);
+>  
+>  	if (!mptcp_is_enabled(net))
+> @@ -3772,13 +3804,16 @@ struct sock *mptcp_sk_clone_init(const struct sock *sk,
+>  				 struct request_sock *req)
+>  {
+>  	struct mptcp_subflow_request_sock *subflow_req = mptcp_subflow_rsk(req);
+> -	struct sock *nsk = sk_clone_lock(sk, GFP_ATOMIC);
+> +	struct sock *nsk = sk_clone(sk, GFP_ATOMIC, false);
+>  	struct mptcp_subflow_context *subflow;
+>  	struct mptcp_sock *msk;
+>  
+>  	if (!nsk)
+>  		return NULL;
+>  
+> +	mptcp_reclassify_socket(nsk);
+> +
+> +	bh_lock_sock(nsk);
 
-[Severity: Medium]
-Does this check actually depend on the 5 second close timeout?
+[Severity: High]
+Can this reinitialize the msk lock while another CPU already holds it?
 
-The commit message says this test "checks the connection is still closed
-after the close timeout". However, the only pass condition is that ns2 has
-no SYN-SENT socket within timeout_poll, which is 30s by default:
+When lock is false, sk_clone() makes the new socket's refcount nonzero
+before it returns, and it does not hold sk_lock.slock at that point:
 
-no_sf_connecting()
-{
-	! ip netns exec $ns2 ss -tnH state syn-sent | grep -q .
+net/core/sock.c:sk_clone() {
+    ...
+	smp_wmb();
+	refcount_set(&newsk->sk_refcnt, 2);
+    ...
 }
 
-The background transfer here keeps the default timeout_poll, and
-do_transfer() passes it to the client as "mptcp_connect -t ${timeout_poll}".
-The path back test raises it, but this test does not.
+mptcp_prot uses SLAB_TYPESAFE_BY_RCU and the msk clears SOCK_RCU_FREE, so
+this clone can reuse a freed msk object right away. A reader in
+mptcp_token_iter_next() may have loaded the old pointer under RCU. Its
+refcount_inc_not_zero() can then succeed on the recycled object, and only
+the netns is checked again afterwards:
 
-With the only path blocked, the client stops getting poll events. After
-about 30s copyfd_io_poll() returns on poll timeout and the client exits.
-Its close goes through:
+net/mptcp/token.c:mptcp_token_iter_next() {
+    ...
+			if (!refcount_inc_not_zero(&sk->sk_refcnt))
+				continue;
 
-__mptcp_close()
-    mptcp_close_retry_subflows()
+			if (!net_eq(sock_net(sk), net)) {
+    ...
+}
 
-This closes the retry subflow that is still in SYN_SENT, whether or not
-the close timeout ever fired.
+The callers then lock the socket, for example:
 
-The slowwait only starts once MPJoinSynTx reaches 1, a few seconds after
-the block (tcp_retries2=3). That puts the application's own close at
-around 30s inside the 30s window.
+mptcp_nl_flush_addrs_list()
+    lock_sock(sk);
 
-Wouldn't this still print ok if mptcp_retry_check_tout() never started the
-close timeout? It would also pass if the retry subflow followed
-tcp_syn_retries=1 and went away after about 3 seconds.
+mptcp_diag_dump()->mptcp_diag_fill_info()
+    lock_sock_fast(sk);
 
-The later checks give the same result in all these cases:
+If one of these overlaps with mptcp_reclassify_socket(), the
+sock_lock_init_class_and_name() call does more than set the lockdep class:
 
-	join_syn_tx=1 chk_join_nr 0 0 0
-	chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_CLOSED 1 error 1
+	sk->sk_lock.owned = 0;
+	init_waitqueue_head(&sk->sk_lock.wq);
+	spin_lock_init(&(sk)->sk_lock.slock);
 
-MPTCP_LIB_EVENT_CLOSED is not checked, and the exit status of the
-background job is ignored.
+That could reset a spinlock that another CPU holds, or clear the ownership
+that a lock_sock() caller has just taken. The clone path would then take
+bh_lock_sock() on the reset lock. __mptcp_init_sock() would reinitialize
+conn_list and other fields while the iterator caller thinks it owns the msk.
 
-Could the transfer use a longer timeout_poll, and could the wait be bounded
-by close_timeout, or check that the MPTCP connection itself was closed?
+Before this patch, sk_clone_lock() took bh_lock_sock() before
+refcount_set(2) and held it through mptcp_sk_clone_init(). A late
+lock_sock() caller would just spin until bh_unlock_sock().
 
-> +		else
-> +			fail_test "subflow still connecting"
-> +		fi
+The new call in mptcp_init_sock() seems to open a similar window for
+user-created sockets. sock_init_data_uid() has already set sk_refcnt to 1
+before inet_create() calls sk_prot->init(). Before this patch, user sockets
+did not get their lock reinitialized after that point.
 
-[ ... ]
-
-> +	# the path of the only subflow comes back before the close timeout:
-> +	# the re-created subflow keeps the connection open
-> +	if reset_with_events "subflow retry, no other subflow, path back" &&
-> +	   continue_if has_subflow_retries && init_nft_filter; then
-> +		# The SYN retransmissions back off: long enough for the next one
-> +		# to be sent once the path is back, also on a slow machine.
-> +		local close_timeout=30
-> +
-> +		sf_retry_init
-> +		pm_nl_flush_endpoint $ns2
-> +		ip netns exec $ns2 sysctl -q \
-> +			net.mptcp.close_timeout=${close_timeout}
-> +		# no data at all while the only path is blocked: a longer poll
-> +		# timeout, so the transfer outlives the outage
-> +		{ timeout_poll=$((timeout_poll * 4)) timeout_test=600 \
-> +			test_linkfail=131072 \
-> +			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
-
-[Severity: Low]
-Will the output of this test always come out garbled? The second and third
-tests send the stdout of the background job to /dev/null, but this one
-does not.
-
-chk_sf_retry_path_back() starts with:
-
-	print_check "open after the close timeout"
-	if ! wait_counter_ge $((timeout_poll * 4)) \
-	     $ns1 "MPTcpExtMPCapableACKRX" 1; then
-
-print_check() does not end the line. MPCapableACKRX can only reach 1 once
-do_transfer() starts, and that happens after run_tests() has called
-make_file() for the two 128 MB files.
-
-So make_file()'s "Test file (size 131072 KB) for client/server" info lines
-seem to always land in the middle of the check label, with the
-[ OK ]/[FAIL] result on a line of its own.
-
-The first test avoids this by waiting before print_check.
-
-> +		local tests_pid=$!
-> +
-> +		chk_sf_retry_path_back 10.0.1.2 ${close_timeout}
-> +		mptcp_lib_kill_group_wait $tests_pid
-> +		kill_events_pids
-> +
-> +		join_syn_tx=1 chk_join_nr 1 1 1
-
-[ ... ]
+The window looks narrow, since an iterator has to hold a stale pointer while
+the msk object is recycled. Could the reclassification be done before the
+socket's refcount is set, instead of after sk_clone() returns?
 
 -- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261026063657.2955783-1-anilkaushikwireless%40gmail.com
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1793010744.git.tanggeliang%40kylinos.cn
