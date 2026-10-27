@@ -1,55 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793144789;
-	b=ZyeDuCln/jtaIVBvCqYVtv01fGgeRwtmu+z3TKqompUCcj7n6l4w4kaHdBWkQ7a0MCIK
-	 qYlnuekf52nUXMqFDF6V6BzoJmJhI2GaTs0bfg8qUljEN64bk++n5121mNexWzgf/XtGY
-	 fVSCvGdQKxOUFMcvzD+l8F5TqMUyPUyBZu7m4SxMZ3Os4f8JJWaTiBxZGJdJaTU3UjkTw
-	 nrJAyCDWW6+yIabGhSi05lObjzNDXAtx1+1sGvSZzp0DfCYkrgaia9VyourcgWGzKfVou
-	 z96kFoBn+GBSX0DIpR0XhGN0n+Dej1nAjMw0uegIiNHwjPXSoH9V1gPz8F1xqvZTIEg==
+	t=1793144790;
+	b=vXoxrhbYq4Twd93NYtfFaHiShKYaB1VstsIN3semnXTepoipyq/pwJvgE493eBY98aX7
+	 eLeUEdxVrKe6dn6Os6/URIaOKTymsKyC2K4GXP3pWG/ajje/71P6GKsOqvvgGj/dePJ/9
+	 nRGqDkVmauY9nO0omEK52cosFSFC5koR9LaRCthQ4UGYZgOYGCyKCkREzCTpganpt85qL
+	 x4fmSKAp2Yw/W+FHd703p4XyLYVlmS2Eyg0NCWkmDZzs2UEKgLuEortGWk8FN9Rv9S1SV
+	 H6kYRpu/3Dtailx/GfCXMWYB1nTH4vIGPv5wcMFzPtLm0wfJQ/mTYXQDczVad8G6Pbw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793144789;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793144790;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=zNftzB1UBZhb8xpoko8z+Wi3jOZr4DinqeKu7PgOwQY=;
-	b=A8MBIw2swSXgWR/+4rqzAASrBD+ogxTOUf3wJgCDsWahy505WZmmzk/SvCVh9gzl5r9b
-	 VaHo1fsdXyczdy77TO2R5uPkimTAkU3LgJHP5ybOXx6cYCDU0IHgblyLShkaR6pGE6Io3
-	 u8BtDbSxQAnmgw708XqaWwoWcVQVpYir487hTYWRv9/BUgJSXuq2NppK0L7fa4zFi7/rN
-	 gTQHxiBAJKVz8JOWzvaPDcst9SpdrK6NS84WksFUf3hpL5DU4wYOQZEVT/LjiTF6nkhhZ
-	 6K/ER1QuUaK1HO9iOGIu8epXno5H4sV8hdqEtTXFKo/w/fiHSSbK9+Gd8zpfmxrE2zw==
+	bh=yIsCfl6Nr+KMSmXdz72EfiH+jcKs1Lg82bNkEaEHMpw=;
+	b=HRM13fH/Vj0WneatbZ9ctRt6T6wBmxT5ao/SulqaAC0UXoeD8ctDvjPXHwBH5PRpZAEc
+	 4rn8KVZ/mwWF8ikvQpQesJ2kkrC03I9fwQq2WQG3+NkrfYSwdb4zZV/IZ9MNWUVibR0+q
+	 qk/g+agnWZtw1VQBc2QgcJjeEW18J30yrak57Q+5ZLdOwBl3LZWotRDkPV4LHW/kq9wi/
+	 /oEQ0LRych4gqYR0pPJgqmPfa2agVlzTYOavIPE8JZWckOs6ajUhND6YK0cKpBJ+oQfYt
+	 SrDQ7KF+gI7E6lZkZSpSDUIixwbePq4s9HbBdHhJN+JJzbNDrvgznT3zlhQFxCSR6HA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VpAaEq+B;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YlCEFMYt;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2405E606A31A
-	for <mptcp@lists.linux.dev>; Tue, 27 Oct 2026 23:46:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6722606A324
+	for <mptcp@lists.linux.dev>; Tue, 27 Oct 2026 23:46:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VpAaEq+B
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B5761F01828;
-	Tue, 27 Oct 2026 23:46:28 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YlCEFMYt
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AB1A1F01829;
+	Tue, 27 Oct 2026 23:46:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793144788;
-	bh=zNftzB1UBZhb8xpoko8z+Wi3jOZr4DinqeKu7PgOwQY=;
+	s=k20260515; t=1793144789;
+	bh=yIsCfl6Nr+KMSmXdz72EfiH+jcKs1Lg82bNkEaEHMpw=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=VpAaEq+BIPMR57Gn5RvFYFwA+TWBYOhEVX15x80DeY0SD+P9vuum9pKgh1kEaoS5v
-	 Ri9k4ie2Z52WzVbCI57WB6hZIh/lorQUw0oMwuXf1WWYggP49UObiGtlLeTVRpkEy0
-	 4s+4Q8uzIGzQ/BYtkuP+CVVQavSNV5aenwQe3cFA6OixicbmJ5xNVNNdRGnx5IpmRC
-	 Z725PRw4bxwFyG6o7ZOpzgUkplQmO5cxfWcFLJEfwMOt9XKbPJs2P+fdJ2BZcdYLTy
-	 Ah7oLk7TDkyjB2+178Tu0NXm0O6AfSIfR/H8l85sdZ6hG4m1Z+S7UMG+3P7beiuHEu
-	 taR6gDBknY8xA==
-Subject:
- Re: [PATCH mptcp-next v2 2/4] sock: add set_memalloc protocol callback
+	b=YlCEFMYtj9GVvl1eBpEjlQCsME6PM1JotZzYB4PCMZUsSzmo2VZdMle3C3QcIRfvw
+	 Uo0POgNrtanvQkII+qj2PaRP8OutH9TzlGw4RUncoCn8ZwDRrNy9Juz854f24UZS8f
+	 nHDYCBf8XlyImMLj98PMnFBQq0SnaupERUwtJUscaBJ9ezjSCE/pGuXjqj7uyEws2/
+	 +2XmHSYLGR6sP2oP93uPOlmVtipDUA6eW059H+kZz7F1+2whM720TxD3QWiSSDPqpG
+	 qJoAavi9k6IdxfuPXLMGuWkIeNgcT8f4E/noL9M/qft6oOQcd53f8xfZI0f2dfDjEF
+	 wdfwsxGGlNbvg==
+Subject: Re: [PATCH mptcp-next v2 3/4] nbd: allow MPTCP sockets
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, tanggeliang@kylinos.cn, kuba@kernel.org
-Date: Tue, 27 Oct 2026 23:46:28 +0000
-Message-ID: <179314478821.3132.6933487680636505359@kernel.org>
-In-Reply-To: =?utf-8?q?=3C2394cada9a75d45edb8773c3d24e699e9211e98c=2E1793010?=
+Date: Tue, 27 Oct 2026 23:46:29 +0000
+Message-ID: <179314478900.3132.11012834474298776948@kernel.org>
+In-Reply-To: =?utf-8?q?=3Ced971f839d9482713fca427b4b3dad3935a593c4=2E1793010?=
  =?utf-8?q?744=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
-References: =?utf-8?q?=3C2394cada9a75d45edb8773c3d24e699e9211e98c=2E17930107?=
+References: =?utf-8?q?=3Ced971f839d9482713fca427b4b3dad3935a593c4=2E17930107?=
  =?utf-8?q?44=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
 X-sashiko-severity: High
 Content-Type: text/plain; charset="utf-8"
@@ -64,10 +63,10 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 4 potential
+Thank you for your contribution! Sashiko AI review found 5 potential
 issue(s) to consider.
 
-Critical: 0 · High: 3 · Medium: 1 · Low: 0
+Critical: 0 · High: 2 · Medium: 2 · Low: 1
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -75,36 +74,65 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [High] Unbounded static-key refcount leak in the NBD I/O hot path.
-- [High] mptcp_set_memalloc() (net/mptcp/protocol.c:4330-4348) walks
-  msk->conn_list once while holding the msk lock and copies…
-- [High] cpu_hotplug_lock is now taken on the NBD block/swap I/O path.
-- [Medium] Data race / lost update on sk->sk_flags.
+- [High] __sock_xmit() (drivers/block/nbd.c:583) calls
+  sk_set_memalloc(sock->sk) inside the do/while loop, so it runs once…
+- [High] Once NBD accepts an MPTCP msk, an in-kernel agent can hold the
+  NBD data socket's lock while doing allocations that may reclaim.
+- [Medium] With this patch an MPTCP msk can be attached to NBD.
+- [Medium] nbd_reclassify_socket() (drivers/block/nbd.c:1248-1276)
+  switches on sk_family and moves only the top-level socket lock into…
+- [Low] The commit author is 'Geliang Tang <geliang@kernel.org>', but the
+  only Signed-off-by is 'Geliang Tang <tanggeliang@kylinos.cn>'.
 
 --
 
-sock: add set_memalloc protocol callback
+nbd: allow MPTCP sockets
 
-This adds a set_memalloc() callback to struct proto, called from
-sk_set_memalloc() and sk_clear_memalloc(). MPTCP implements it to copy
-SOCK_MEMALLOC, sk_allocation and sk_use_task_frag to its subflows, and NBD
-now calls sk_set_memalloc() from __sock_xmit().
+This commit makes nbd_get_socket() accept MPTCP sockets as well as TCP
+and stream UNIX sockets, by adding an msk_is_mptcp() check. The goal is
+to get MPTCP bandwidth aggregation across several NICs for NBD traffic.
+
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+
+[Severity: Low]
+This isn't a bug, but the author address (geliang@kernel.org) doesn't
+match the Signed-off-by address (tanggeliang@kylinos.cn). checkpatch
+reports this as FROM_SIGN_OFF_MISMATCH.
+
+Could a matching Signed-off-by or From: line be added? The other patches
+in the series seem to have the same mismatch.
 
 > diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-> index ffce519bf0087..c5e26fc98d1aa 100644
+> index c5e26fc98d1aa..9cf89d53839a1 100644
 > --- a/drivers/block/nbd.c
 > +++ b/drivers/block/nbd.c
-> @@ -579,6 +579,7 @@ static int __sock_xmit(struct nbd_device *nbd, struct socket *sock, int send,
->  		do {
->  			sock->sk->sk_allocation = GFP_NOIO | __GFP_MEMALLOC;
->  			sock->sk->sk_use_task_frag = false;
-> +			sk_set_memalloc(sock->sk);
+
+[ ... ]
+
+> @@ -1222,8 +1223,9 @@ static struct socket *nbd_get_socket(struct nbd_device *nbd, unsigned long fd,
+>  		return NULL;
+>  
+>  	if (!sk_is_tcp(sock->sk) &&
+> +	    !msk_is_mptcp(sock->sk) &&
 
 [Severity: High]
-Does this leak references on memalloc_socks_key?
+Now that MPTCP sockets are accepted here, does the sk_set_memalloc() call
+that runs on every loop iteration in __sock_xmit() cause problems on the
+I/O path?
 
-sk_set_memalloc() calls static_branch_inc() every time, even when
-SOCK_MEMALLOC is already set:
+drivers/block/nbd.c:__sock_xmit() {
+    ...
+		do {
+			sock->sk->sk_allocation = GFP_NOIO | __GFP_MEMALLOC;
+			sock->sk->sk_use_task_frag = false;
+			sk_set_memalloc(sock->sk);
+			msg.msg_flags = msg_flags | MSG_NOSIGNAL;
+    ...
+}
+
+That call came from the earlier "sock: add set_memalloc protocol
+callback" commit in this series. sk_set_memalloc() increments the global
+static key every time, even when SOCK_MEMALLOC is already set:
 
 net/core/sock.c:sk_set_memalloc() {
 	sock_set_flag(sk, SOCK_MEMALLOC);
@@ -113,172 +141,126 @@ net/core/sock.c:sk_set_memalloc() {
 	...
 }
 
-This call sits inside the do/while loop of __sock_xmit(). It runs for the
-request header send, for the reply header receive, once per bvec segment
-in nbd_handle_reply()->sock_xmit(), and once per partial send/recv loop
-iteration.
+NBD never calls sk_clear_memalloc(). So memalloc_socks_key goes up once
+per send/recv fragment and never comes down. Each increment takes
+cpus_read_lock() through static_key_slow_inc().
 
-nbd.c never calls sk_clear_memalloc(), so the count only goes up. This
-hits every NBD socket, including plain TCP and UNIX, not only MPTCP.
+When the count reaches INT_MAX, static_key_slow_inc_cpuslocked() hits
+WARN_ON_ONCE(). After that, every call takes jump_label_mutex.
 
-When the count reaches INT_MAX, static_key_fast_inc_not_disabled() fails.
-static_key_slow_inc_cpuslocked() then takes jump_label_mutex and reaches:
+For MPTCP, each iteration also calls mptcp_set_memalloc(). That takes
+lock_sock() on the msk and lock_sock_nested() on every subflow before the
+actual sendmsg/recvmsg:
 
-	if (WARN_ON_ONCE(!static_key_fast_inc_not_disabled(key)))
-		return false;
+net/mptcp/protocol.c:mptcp_set_memalloc() {
+	...
+	lock_sock(sk);
+	memalloc = sock_flag(sk, SOCK_MEMALLOC);
+	mptcp_for_each_subflow(msk, subflow) {
+		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
 
->From then on, every NBD transfer serializes on jump_label_mutex. With
-panic_on_warn set, the machine panics. sk_memalloc_socks() also stays true
-system wide for good.
-
-nbd_start_device() and nbd_reconnect_socket() already call
-sk_set_memalloc() once per socket. Is the per-transfer call needed?
-
-[Severity: High]
-Can this deadlock against CPU hotplug? static_branch_inc() goes through
-static_key_slow_inc(), which takes cpu_hotplug_lock for read before it
-tries the fast path:
-
-kernel/jump_label.c:static_key_slow_inc() {
-	cpus_read_lock();
-	ret = static_key_slow_inc_cpuslocked(key);
-	cpus_read_unlock();
+		lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
 	...
 }
 
-Before this patch, the NBD I/O path never took cpu_hotplug_lock.
-
-The first case is offlining a CPU while a multi-connection NBD device has
-I/O in flight. _cpu_down() holds cpus_write_lock while
-blk_mq_hctx_notify_offline() waits for the hctx to drain:
-
-	while (blk_mq_hctx_has_requests(hctx)) {
-		...
-		msleep(5);
-	}
-
-Those requests only complete after recv_work reads the reply through
-nbd_handle_reply()->sock_xmit()->__sock_xmit(). That path now blocks in
-cpus_read_lock() behind the writer.
-
-With num_connections > 1, nbd_xmit_timeout() only requeues the request
-through nbd_requeue_cmd(), so the tag stays allocated. With timeout=0 it
-only resets the timer. Does the hotplug operation ever finish here?
-
-The second case is reclaim. The hotplug control task holds cpus_write_lock
-while it runs callbacks that allocate with GFP_KERNEL. If that allocation
-enters direct reclaim and swaps to NBD, the swap I/O can be issued inline
-in the same task:
-
-nbd_queue_rq()->__sock_xmit()->sk_set_memalloc()->cpus_read_lock()
-
-Would that self-deadlock on the percpu rwsem?
+Should this setup happen once at attach time, as nbd_start_device() and
+nbd_reconnect_socket() already do it, and be undone at teardown?
 
 [Severity: Medium]
-Is it safe to write sk->sk_flags here without the socket lock?
-sock_set_flag() is a non-atomic __set_bit():
+Do MPTCP subflows created after the socket is attached get the
+reclaim-safe settings?
 
-include/net/sock.h:sock_set_flag() {
-	__set_bit(flag, &sk->sk_flags);
-}
+mptcp_set_memalloc() copies SOCK_MEMALLOC, sk_allocation and
+sk_use_task_frag only to the subflows that are on msk->conn_list when it
+runs. Subflows still on join_list are skipped.
 
-__sock_xmit() is called from the send path, which holds only
-nsock->tx_lock, and from recv_work, which holds no lock at all.
+The PM worker creates new subflows through:
 
-TCP softirq processing writes the same word when the socket is not owned
-by user. For example, tcp_fin() calls sock_set_flag(sk, SOCK_DONE), and
-SOCK_QUEUE_SHRUNK is updated through sk_wmem_free_skb() and
-tcp_check_space().
+mptcp_worker()->mptcp_pm_worker()->__mptcp_subflow_connect()->
+    mptcp_subflow_create_socket()->sock_create_kern()
 
-A softirq update that lands between the load and the store of __set_bit()
-is overwritten with the stale word, even though SOCK_MEMALLOC was already
-set. Could a lost SOCK_QUEUE_SHRUNK suppress a write-space wakeup, or
-could SOCK_DONE be lost?
+These start with GFP_KERNEL, SOCK_MEMALLOC clear and sk_use_task_frag
+set. mptcp_sockopt_sync_locked() doesn't copy these fields, and nothing
+else in net/mptcp/ appears to write them.
 
-Before this patch, the hot path only did plain stores to sk_allocation and
-sk_use_task_frag. sk_flags was only written at attach time.
+Until some later __sock_xmit() iteration resyncs them, can
+sk_filter_trim_cap() drop pfmemalloc skbs that arrive on such a subflow?
+Can the subflow's allocations also enter reclaim in a swap-over-NBD
+setup?
 
->  			msg.msg_flags = msg_flags | MSG_NOSIGNAL;
->  
->  			if (send)
-
-[ ... ]
-
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index d4f42dfc227e2..5eccff04151d7 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -4327,6 +4327,26 @@ static int mptcp_connect(struct sock *sk, struct sockaddr_unsized *uaddr,
->  	return 0;
->  }
->  
-> +static void mptcp_set_memalloc(struct sock *sk)
-> +{
-> +	struct mptcp_sock *msk = mptcp_sk(sk);
-> +	struct mptcp_subflow_context *subflow;
-> +	bool memalloc;
-> +
-> +	lock_sock(sk);
-> +	memalloc = sock_flag(sk, SOCK_MEMALLOC);
-> +	mptcp_for_each_subflow(msk, subflow) {
-> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-> +
-> +		lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
-> +		sock_valbool_flag(ssk, SOCK_MEMALLOC, memalloc);
-> +		ssk->sk_allocation = sk->sk_allocation;
-> +		ssk->sk_use_task_frag = sk->sk_use_task_frag;
-> +		release_sock(ssk);
-> +	}
-> +	release_sock(sk);
-> +}
+And if the sk_set_memalloc() call is moved to attach time, would late
+subflows ever be covered?
 
 [Severity: High]
-What happens to subflows that are created or joined after this runs? The
-loop only updates the subflows on msk->conn_list at the time of the call.
+Can this add a reclaim deadlock that plain TCP NBD sockets don't have?
 
-New subflows come from mptcp_subflow_create_socket()->sock_create_kern().
-They start with GFP_KERNEL, no SOCK_MEMALLOC, and sk_use_task_frag set to
-true.
+mptcp_worker() holds the msk socket lock while the PM creates subflows:
 
-Their only sync step is mptcp_sockopt_sync_locked()->sync_socket_options().
-That doesn't copy SOCK_MEMALLOC, sk_allocation or sk_use_task_frag. It
-also only runs when setsockopt_seq changes, and sk_set_memalloc() never
-bumps it:
+net/mptcp/protocol.c:mptcp_worker() {
+	...
+	lock_sock(sk);
+	...
+	mptcp_pm_worker(msk);
+	...
+}
 
-	if (READ_ONCE(subflow->setsockopt_seq) != msk->setsockopt_seq) {
-		sync_socket_options(msk, ssk);
-		...
-	}
+mptcp_pm_worker() reaches __mptcp_subflow_connect(). That calls
+mptcp_subflow_create_socket()->sock_create_kern(), which does a
+GFP_KERNEL sk_alloc. It then calls kernel_connect(), where tcp_connect()
+allocates with the subflow's default GFP_KERNEL sk_allocation. The
+userspace PM does the same under lock_sock(). None of this runs under
+memalloc_noio_save().
 
-This affects three kinds of subflow:
+Suppose one of those allocations enters direct reclaim and waits on
+writeback or swap-out to the NBD device. The NBD I/O that reclaim is
+waiting for also needs the msk lock:
 
-- MP_JOIN subflows the path manager adds later
-- passive joins that wait on join_list while this callback owns the msk
-  (they are only spliced in by the final release_sock(sk))
-- the lazily created first subflow
+__sock_xmit()->sk_set_memalloc()->mptcp_set_memalloc()->lock_sock(msk)
+__sock_xmit()->sock_sendmsg()->mptcp_sendmsg()->lock_sock(msk)
+__sock_xmit()->sock_recvmsg()->mptcp_recvmsg()->lock_sock(msk)
 
-Under memory pressure, sk_filter_trim_cap() drops pfmemalloc skbs on such
-a subflow:
+The timeout path doesn't seem to break the cycle either:
+nbd_xmit_timeout()->sock_shutdown()->kernel_sock_shutdown()->
+mptcp_shutdown() also takes lock_sock(msk).
 
-	if (skb_pfmemalloc(skb) && !sock_flag(sk, SOCK_MEMALLOC))
+The NBD peer can trigger subflow creation remotely, for example with an
+ADD_ADDR. That is the multi-subflow setup the commit message describes.
 
-Its allocations can also recurse into reclaim. With NBD over MPTCP (which
-the later "nbd: allow MPTCP sockets" patch in the series enables), doesn't
-this leave the swap forward-progress problem from the commit message
-unsolved for these subflows?
+Does anything prevent this cycle: reclaim waits on NBD, NBD waits on the
+msk lock, and the msk lock holder waits on reclaim?
 
-The per-transfer sk_set_memalloc() call in __sock_xmit() only narrows the
-window, since a recv_work thread blocked in sock_recvmsg() won't re-sync.
+[Severity: Medium]
+Could this bring back the lockdep circular dependency that commit
+d532cddb6c60 ("nbd: Reclassify sockets to avoid lockdep circular
+dependency") removed?
 
-Would it work better to inherit these settings when a subflow is created
-or joins, for example in sync_socket_options() or __mptcp_finish_join(),
-rather than only notifying existing subflows?
+nbd_reclassify_socket() reclassifies only the top-level sock. For MPTCP,
+that means only the msk lock moves to the sk_lock-AF_INET(6)-NBD class:
 
->  static struct proto mptcp_prot = {
->  	.name		= "MPTCP",
->  	.owner		= THIS_MODULE,
+drivers/block/nbd.c:nbd_reclassify_socket() {
+	...
+	switch (sk->sk_family) {
+	case AF_INET:
+		sock_lock_init_class_and_name(sk, "slock-AF_INET-NBD",
+	...
+}
 
-[ ... ]
+The subflows come from sock_create_kern(). They stay in the shared
+k-sk_lock-AF_INET(6) class that every kernel TCP socket uses.
+
+NBD I/O takes those subflow locks while holding the NBD-classed msk lock.
+Examples are lock_sock(ssk) in __mptcp_push_pending() and
+lock_sock_nested(ssk) in mptcp_set_memalloc().
+
+Lockdep already records fs_reclaim -> sk_lock-AF_INET-NBD, so this adds
+fs_reclaim -> k-sk_lock-AF_INET.
+
+Any kernel TCP socket in that class that allocates with GFP_KERNEL under
+lock_sock() records the reverse edge. One example is
+__mptcp_subflow_connect()->kernel_connect()->tcp_connect() on a join
+subflow.
+
+Do the subflow locks need to be reclassified too?
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1793010744.git.tanggeliang%40kylinos.cn
