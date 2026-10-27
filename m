@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793134542;
-	b=URvhgAF43NGlwyiT2xMuvNlENbS64gBQeQiPZJTTvHQw3VkhoPxeF8cBySiH7GgUU5xd
-	 +tP6WuShJwS6Pt9QCidHUZ67KYpdneCZKCuh+bGa+ZrI/9DlcpdM0D87R3IKnhT+TFtdl
-	 m/3bXX288DQpMPfQp9j3hY7BE0oSfZTcMudixbEHgZBVof+rSzKPlxqBBG/ewd05nkhjr
-	 CDqZbS4kg7Yd2mkUY89eZRw9bYDf3iAJyI94f/eWXSoqEvGdEWNQAaRRjtC5YnpqHxc8g
-	 2OzMHjMFLNL7YNXE4k3wWPPdH4vwxI+tPalR7k7oihas0W/b0t6lz5UDcBMIVg75IAA==
+	t=1793134543;
+	b=WjMUXZjZPcodeoIXIXnODBxi29DWSR1qY30ItxGdIqOG3AOxJuSUtNhYp01E88t/apb5
+	 yKaGXS/YshxpdbUb4BhIslB1jj6DlYb6HnCzoD7aq6PILOM/CTxFGOqxjVj0QiHVg3gCE
+	 fQIEciDSUdEEe9xYR0BT22r9oKexqrTnmr9Qhzu3lKhH27i7kZCH6TkOIjczk8PV1ps5C
+	 9xb+ggih8lXyZA0XexwN5e9woy1ubuc/c04nc0NS2zvJayK/605gmTZrE2hMKWQOFp11M
+	 RTAGDVenTItcaO1WcvgfHzUcZ6czjpg90OZak+0k3RrGoVdBWqh0WeWJsdQ8wexpNwQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793134542;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793134543;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=gvNIgibGJc7rKV4XbF5XKyKq0LseK4s026fcuxk+iQc=;
-	b=L2bKR1qWoZ9LlFhsQbTm4I7zCiYZd3+j+e967+rQ3smAAeNd4iOiXn2VezEVGx2Y7nmN
-	 sS91DOiUvzFFm5THzOHbwpL/9WMCvEb0F5v6P176Ar5D1ugzdE43S3NiUNMNBqUCGyGZi
-	 3ZIZlC+D/NVo/xp81OLzIQizfgV68/x8+GrApF8AnDcrCU50fqobY4tbJz+u7IFodyj9q
-	 wS96e+keRToQjF/u3idEHebCq6aOUwT50bMsei/tVLOmDoo3XyEAorTY2hfpC7Qqwy9/M
-	 DLiz3sstdgTNMhUoaB8tpbIe31NCs0Sq62onCIJomM8Tz12NIPk7NLhZF9R/MMrVivg==
+	bh=50fg2cxwx8JKEIfDnZFDKyqG7p3pshMOlDWFE/2e+SQ=;
+	b=uvQ6/LNGjUdK0qZN/6Gi9Q00SmQAbrODQEF1VtOb2G8Vf1EUyKnA+JZ1ykyDeZxH88dD
+	 w2rv0fDhb9mcFDfyW63I4baUc8TMKyurEUvo+5DAj4EjQ4IrGtY25I53b8Urd4CIoJI0n
+	 jLXSZDI1DyWiQAlwTEERIX4eNAz/kcvdZfYtcBZRcenIbMRth0NHpIqj9BcZfHZ5pQ0cL
+	 3YSyJqUpqXO9rsDafoKBrwgg/QoE33DTQdbstmRB7JbWRo8sIeJR8ySCOUSsghWqh05UQ
+	 b5K/+Pr+Uz6esceZx1Gw7xz54eeEihEbP+beI1ng/rjRl+1bh4xmuXShe+TKfrne9Bw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hz3Wxl84;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=boyxOaw5;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32643606A31A
-	for <mptcp@lists.linux.dev>; Tue, 27 Oct 2026 20:55:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69A9606A31A
+	for <mptcp@lists.linux.dev>; Tue, 27 Oct 2026 20:55:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hz3Wxl84
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87A471F01825;
-	Tue, 27 Oct 2026 20:55:41 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=boyxOaw5
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59BAA1F01828;
+	Tue, 27 Oct 2026 20:55:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793134541;
-	bh=gvNIgibGJc7rKV4XbF5XKyKq0LseK4s026fcuxk+iQc=;
+	s=k20260515; t=1793134542;
+	bh=50fg2cxwx8JKEIfDnZFDKyqG7p3pshMOlDWFE/2e+SQ=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=hz3Wxl84Y1UAU2q63kn+bimAsJX352erUPj9QLeKuPIFcfjeCrDbJceEjFtb5wzQ7
-	 0DEW7yW19IIKYk/QuWXwSZ9hoXIMw13AZaODIsa8nn6jWN9gOse971FVB+77vLLs2R
-	 1r42WZiV1k2PFCbeWpuPexrkKZVtjG5dgnt2Rggq9DIIIHrBhMC69ZPaHktSJf6Jju
-	 AAaMFo9jNBDJH3ZHpU0Wl7arTVpo86EwUxPQ/4IUy+RDFiB5KcA208PJ0DLin+XtvV
-	 ABOzpiTK/N4t28Wx3PmTsD9tKpCPeRVmIB91R8pZkeg41nDQOvwkYLSUPnHkf+2WCK
-	 bOeUqn9S32X2A==
-Subject: Re: [PATCH mptcp-next 2/6] mptcp: prevent dummy DATA_FIN on RST in
- fallback mode
+	b=boyxOaw5b419iPACKps9zHrJic7UpfnCt7lRW+OJOIYP5hWc86l7fQkB+8Tgy0njA
+	 VshHD5CVp/W+QnTbSOW33oFnc7jMkJSTAs+MrefMYQSfnQ/M9aE+OCkXBGT/cEgBAG
+	 92dNmMiFy5zM5UkZ+OXU2+wO6YXXwMm3YrOg5trX2LJ4rlWmHmc5dxZa2B1XKk62Ir
+	 dcd6N8s6jTpLJSu67nV1o+FJXVV57Yiq4DMea3VqJ3KO1vmozm55+yTDv8QczGLRD+
+	 0qTJNwjxTC8ezkcQ1tUtCCKEQnbWDNZu237H6OsH7dqRhy9e7PS0rEiGLMwd/aqKq8
+	 6Dr+mPSsdXMGA==
+Subject: Re: [PATCH mptcp-next 3/6] mptcp: implement peek_len for proto_ops
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, tanggeliang@kylinos.cn, kuba@kernel.org
 Date: Tue, 27 Oct 2026 20:55:41 +0000
-Message-ID: <179313454109.3132.7704558912692124192@kernel.org>
-In-Reply-To: =?utf-8?q?=3C827c399d23b97b70e59e123d32c7b4b74d3f3987=2E1792999?=
+Message-ID: <179313454191.3132.7810453996924430013@kernel.org>
+In-Reply-To: =?utf-8?q?=3C22bc848942a31334be17f49a2488c51e2f307eb5=2E1792999?=
  =?utf-8?q?988=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
-References: =?utf-8?q?=3C827c399d23b97b70e59e123d32c7b4b74d3f3987=2E17929999?=
+References: =?utf-8?q?=3C22bc848942a31334be17f49a2488c51e2f307eb5=2E17929999?=
  =?utf-8?q?88=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
-X-sashiko-severity: High
+X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -64,10 +63,10 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 3 potential
+Thank you for your contribution! Sashiko AI review found 4 potential
 issue(s) to consider.
 
-Critical: 0 · High: 1 · Medium: 1 · Low: 1
+Critical: 0 · High: 0 · Medium: 3 · Low: 1
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -75,151 +74,229 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [High] The fix does not prevent the dummy DATA_FIN in the common RST
-  case.
-- [Medium] subflow_is_done() now returns false whenever ssk->sk_err is
-  non-zero, even when the subflow got a clean FIN (TCP_CLOSE_WAIT /…
-- [Low] The From: and Signed-off-by: email addresses do not match.
+- [Medium] The patch changes the result of the SIOCINQ/FIONREAD ioctl on
+  MPTCP sockets and does not say so.
+- [Medium] mptcp_inq() (net/mptcp/protocol.c:4821-4824) subtracts 1 from
+  the readable byte count whenever `sk->sk_state == TCP_CLOSE ||…
+- [Medium] mptcp: mptcp_inq() returns bogus byte count for TFO data after
+  3rd ACK
+- [Low] The commit message describes mptcp_inq() differently from the
+  code.
 
 --
 
-mptcp: prevent dummy DATA_FIN on RST in fallback mode
+mptcp: implement peek_len for proto_ops
 
-This patch adds an sk_err check to subflow_is_done(). The goal is that
-subflow_sched_work_if_closed() no longer creates a dummy DATA_FIN when a
-fallback subflow is closed by a TCP RST, because a RST is an abortive close
-and not a clean FIN.
+This commit adds mptcp_inq(), which computes the number of readable bytes
+at the MPTCP level. It wires mptcp_inq() into a new mptcp_peek_len()
+callback for both the IPv4 and IPv6 stream proto_ops, as preparation for
+kTLS over MPTCP. It also switches the SIOCINQ ioctl path from
+mptcp_inq_hint() to mptcp_inq().
 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> Add mptcp_inq() to compute the number of readable bytes at the MPTCP
+> level. It derives the count from ack_seq - copied_seq, returns 0 while
+> the connection is still handshaking (TCP_SYN_SENT/TCP_SYN_RECV), returns
+> 0 when the connection is closed (TCP_CLOSE or RCV_SHUTDOWN), and
+> subtracts 1 once a FIN has been received, mirroring tcp_inq().
+>
+> READ_ONCE() is used instead of mptcp_data_lock() for the u64 reads of
+> ack_seq and copied_seq because mptcp_inq() will be called from TLS
+> contexts with the socket lock held - taking the spinlock would deadlock.
 
 [Severity: Low]
-This isn't a bug, but the Author address (geliang@kernel.org) doesn't match
-the Signed-off-by address (tanggeliang@kylinos.cn). checkpatch.pl reports
-this as a From:/Signed-off-by: email address mismatch.
+Does this description match the code?
 
-Could the two addresses be made to match, or could a Signed-off-by for the
-author address be added?
+struct mptcp_sock has no copied_seq field. mptcp_inq() actually computes:
 
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 78e886b202585..a53c83644a40b 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1327,6 +1327,9 @@ static void mptcp_subflow_discard_data(struct sock *ssk, struct sk_buff *skb,
->  
->  static bool subflow_is_done(const struct sock *sk)
->  {
-> +	if (READ_ONCE(sk->sk_err))
-> +		return false;
-> +
+    hint_val = READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
 
-[Severity: High]
-In the common RST case, is sk_err still set when the last
-subflow_sched_work_if_closed() call runs?
+This uses the map_seq of the head skb in sk_receive_queue.
 
-sock_error() reads the error and clears it:
+Also, mptcp_inq() never returns 0 because of TCP_CLOSE or RCV_SHUTDOWN. When
+data is queued it decrements answ and returns the remaining count. It only
+returns 0 for SYN_SENT/SYN_RECV, an empty receive queue, or
+hint_val >= INT_MAX.
 
-include/net/sock.h:sock_error() {
-    ...
-	err = xchg(&sk->sk_err, 0);
-    ...
-}
+As written, the message describes two different behaviours for a closed
+connection ("returns 0" and "subtracts 1"), and only the second one exists.
+Could the description be updated to match the code?
 
-On a RST, tcp_done_with_error() sets ssk->sk_err. tcp_done() then moves the
-subflow to TCP_CLOSE and calls subflow_state_change():
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 0caa31525b907..71a0a28b0d3c9 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
 
-net/mptcp/subflow.c:subflow_state_change() {
-    ...
-	if (mptcp_subflow_data_available(sk))
-		mptcp_data_ready(parent, sk);
-	else if (unlikely(READ_ONCE(sk->sk_err)))
-		subflow_error_report(sk);
+[ ... ]
 
-	subflow_sched_work_if_closed(mptcp_sk(parent), sk);
-}
-
-If the rx queue is empty, mptcp_subflow_data_available() takes the no_data
-path. That path calls subflow_sched_work_if_closed() once while sk_err is
-still set, so the new check returns false there.
-
-Next, subflow_error_report() runs. When msk->sk_socket is set and the msk
-is not owned by user, the call chain is:
-
-subflow_error_report()
-  __mptcp_error_report()
-    __mptcp_subflow_error_report()
-      err = sock_error(ssk);          /* clears ssk->sk_err */
-      mptcp_set_state(sk, ssk_state); /* msk -> TCP_CLOSE */
-
-On a fallback msk this clears ssk->sk_err. The unconditional
-subflow_sched_work_if_closed() call at the end of subflow_state_change()
-then sees sk_err == 0 and sk_state == TCP_CLOSE. subflow_is_done() returns
-true, and mptcp_update_rcv_data_fin() records the dummy DATA_FIN anyway.
-
-When the rx queue is not empty, the result looks the same.
-mptcp_data_ready()->move_skbs_to_msk() also clears the error:
-
-	if (unlikely(READ_ONCE(ssk->sk_err)))
-		__mptcp_subflow_error_report(sk, ssk);
-
-Any later no_data->subflow_sched_work_if_closed() call then creates the
-DATA_FIN.
-
-The suppression seems to work only while the error is still pending. That
-is the case when the msk is owned by user and the report is deferred via
-MPTCP_ERROR_REPORT, or when msk->sk_socket is NULL. So whether a RST
-produces a dummy DATA_FIN depends on msk lock ownership at the time the RST
-arrives.
-
-Would it be more reliable to record the abort in state that survives error
-consumption, such as a subflow flag set at reset time, instead of relying
-on sk_err?
+> @@ -4188,7 +4189,7 @@ static int mptcp_ioctl(struct sock *sk, int cmd, int *karg)
+>  		lock_sock(sk);
+>  		if (mptcp_move_skbs(sk))
+>  			mptcp_cleanup_rbuf(msk, 0);
+> -		*karg = mptcp_inq_hint(sk);
+> +		*karg = mptcp_inq(sk);
 
 [Severity: Medium]
-Could this early return also suppress the legitimate dummy DATA_FIN after
-a clean FIN, when an unrelated error is still pending on the subflow?
+Is this change to SIOCINQ/FIONREAD intended? The subject and body only
+describe a new peek_len callback.
 
-The new check returns false for any non-zero sk_err, even when RCV_SHUTDOWN
-is set. Consider a fallback msk with IP_RECVERR set, which
-mptcp_setsockopt_recverr() propagates to the subflows:
+The note at the end of the commit message says:
 
-1. An ICMP error arrives on the established fallback subflow. tcp_v4_err()
-   sets ssk->sk_err and calls subflow_error_report().
+    mptcp_inq_hint() returns 1 to signal EOF to ioctl/cmsg users
+    (mirroring tcp_inq_hint())
 
-2. The msk is owned by user, so the report is deferred:
+After this hunk, ioctl users no longer go through mptcp_inq_hint().
 
-	if (!sock_owned_by_user(sk))
-		__mptcp_error_report(sk);
-	else
-		__set_bit(MPTCP_ERROR_REPORT,  &mptcp_sk(sk)->cb_flags);
+Compared with the old mptcp_inq_hint(), ioctl(FIONREAD) on an MPTCP socket
+now returns:
 
-   The same happens if msk->sk_socket is NULL, because
-   subflow_error_report() returns early. Either way ssk->sk_err stays set.
+- 0 instead of 1 for an empty receive queue with TCP_CLOSE or
+  RCV_SHUTDOWN set
+- N instead of N+1 for queued data after a DATA_FIN, because
+  mptcp_check_data_fin() advanced ack_seq by one
+- N-1 instead of N when RCV_SHUTDOWN or TCP_CLOSE is set without a
+  DATA_FIN (see the comment on mptcp_inq() below)
+- 0 instead of INT_MAX when hint_val >= INT_MAX
 
-3. The peer's FIN arrives before release_sock(). The subflow moves to
-   TCP_CLOSE_WAIT while the msk is still ESTABLISHED.
-   subflow_sched_work_if_closed() passes the state and queue checks, but
-   subflow_is_done() now returns false, so no dummy DATA_FIN is recorded.
+Some of this brings MPTCP closer to tcp_ioctl(), which uses tcp_inq(), but
+userspace can see the difference. Should this go in a separate patch, with
+a commit message that describes the new ioctl behaviour and perhaps a
+Fixes: tag?
 
-4. Later, mptcp_release_cb() calls __mptcp_error_report(), which clears
-   sk_err. Because ssk_state is TCP_CLOSE_WAIT, the msk state is left
-   unchanged. Nothing calls subflow_sched_work_if_closed() again.
+No later patch in the series touches this code.
 
-The worker doesn't seem to recover from this either, because
-__mptcp_close_subflow() skips CLOSE_WAIT subflows on fallback sockets:
-
-		if (ssk_state != TCP_CLOSE &&
-		    (ssk_state != TCP_CLOSE_WAIT ||
-		     inet_sk_state_load(sk) != TCP_ESTABLISHED ||
-		     __mptcp_check_fallback(msk)))
-			continue;
-
-Would the msk then never get RCV_SHUTDOWN? That would leave recvmsg() and
-poll() waiting for an EOF that has already arrived. Before this patch,
-step 3 always recorded the dummy DATA_FIN.
-
->  	return sk->sk_shutdown & RCV_SHUTDOWN || sk->sk_state == TCP_CLOSE;
+>  		release_sock(sk);
+>  		break;
+>  	case SIOCOUTQ:
+> @@ -4797,6 +4798,39 @@ static ssize_t mptcp_splice_read(struct socket *sock, loff_t *ppos,
+>  	return ret;
 >  }
->
+>  
+> +static int mptcp_inq(struct sock *sk)
+> +{
+> +	const struct mptcp_sock *msk = mptcp_sk(sk);
+> +	const struct sk_buff *skb;
+> +	u64 hint_val;
+> +	int answ;
+> +
+> +	if ((1 << sk->sk_state) & (TCPF_SYN_SENT | TCPF_SYN_RECV))
+> +		return 0;
+> +
+> +	skb = skb_peek(&sk->sk_receive_queue);
+> +	if (!skb)
+> +		return 0;
+> +
+> +	hint_val = READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
+> +	if (hint_val >= INT_MAX)
+> +		return 0;
+> +
+> +	answ = (unsigned int)hint_val;
+> +
+> +	/* Subtract 1, if FIN was received. Mirror tcp_inq() */
+> +	if (answ &&
+> +	    (sk->sk_state == TCP_CLOSE || (sk->sk_shutdown & RCV_SHUTDOWN)))
+> +		answ--;
+
+[Severity: Medium]
+Can this return 0 while passive TFO data is still queued?
+
+On the passive side, mptcp_fastopen_subflow_synack_set_params() queues
+the SYN data skb on sk_receive_queue with a sequence that is relative
+to an ack_seq of 0:
+
+    MPTCP_SKB_CB(skb)->map_seq = -skb->len;
+    MPTCP_SKB_CB(skb)->end_seq = 0;
+
+When the third ACK carrying MP_CAPABLE arrives,
+subflow_set_remote_key() does:
+
+    WRITE_ONCE(msk->ack_seq, subflow->iasn);
+
+Since commit f03afb3aeb9d ("mptcp: drop
+__mptcp_fastopen_gen_msk_ackseq()"), nothing rebases the map_seq of an
+skb that is already in the receive queue.
+
+Suppose userspace has not consumed the SYN data by then, or strparser
+has not, once kTLS uses this. The subtraction in mptcp_inq() then
+yields roughly subflow->iasn plus the remaining TFO length. iasn is
+derived from a hash of the remote key, so the result is almost always
+>= INT_MAX, and mptcp_inq() returns 0 even though bytes are readable.
+In the rare case where the value wraps below INT_MAX, it returns a
+bogus positive count instead.
+
+The commit message treats hint_val >= INT_MAX as a torn read on 32-bit.
+Here, though, it is a stable state that holds until the TFO skb is
+drained.
+
+The old mptcp_inq_hint() used the same arithmetic but returned INT_MAX
+in this case, which at least did not hide the data. With the ioctl hunk
+in this patch, FIONREAD now reports 0. For peek_len, a 0 return would
+leave a strparser waiting on need_bytes for data that is already
+queued.
+
+Would it be better to derive the count from mptcp_data_avail()? It uses
+bytes_received - bytes_consumed and does not depend on the map_seq of
+the head skb. Alternatively, should the queued TFO skb be rebased when
+ack_seq is set from iasn?
+
+[Severity: Medium]
+Can this under-report the readable byte count by one?
+
+msk->ack_seq only holds the extra unit after mptcp_check_data_fin() has
+processed a DATA_FIN:
+
+    if (mptcp_pending_data_fin(sk, &rcv_data_fin_seq)) {
+        WRITE_ONCE(msk->ack_seq, msk->ack_seq + 1);
+        ...
+        WRITE_ONCE(sk->sk_shutdown, sk->sk_shutdown | RCV_SHUTDOWN);
+
+Several other paths set TCP_CLOSE or RCV_SHUTDOWN without touching ack_seq,
+while in-order data stays in sk_receive_queue:
+
+- shutdown(fd, SHUT_RD): the .shutdown handler is inet_shutdown(), which
+  sets RCV_SHUTDOWN, and mptcp_shutdown() only acts on SEND_SHUTDOWN.
+
+- A received MP_FASTCLOSE: mptcp_check_fastclose() does
+
+    mptcp_set_state(sk, TCP_CLOSE);
+    WRITE_ONCE(sk->sk_shutdown, SHUTDOWN_MASK);
+
+  and neither changes ack_seq nor purges the queue.
+
+- A reset or error on a fallback subflow: __mptcp_subflow_error_report()
+  moves the msk to TCP_CLOSE. With the earlier "mptcp: prevent dummy
+  DATA_FIN on RST in fallback mode" patch in this series, no dummy DATA_FIN
+  bumps ack_seq on this path.
+
+In these cases ack_seq - map_seq is exactly the queued length N, but
+mptcp_inq() returns N-1. With a single byte queued it returns 0.
+mptcp_recvmsg() still drains all N bytes before it checks sk_err,
+RCV_SHUTDOWN or TCP_CLOSE.
+
+mptcp_ioctl() now calls mptcp_inq(), so FIONREAD reports N-1 where
+mptcp_inq_hint() used to return N. For the new peek_len, strp_data_ready()
+compares strp_peek_len() against need_bytes, so a complete final message
+could be treated as incomplete.
+
+The comment says this mirrors tcp_inq(), but tcp_inq() only decrements when
+SOCK_DONE is set:
+
+    if (answ && sock_flag(sk, SOCK_DONE))
+        answ--;
+
+A processed DATA_FIN always sets RCV_SHUTDOWN, so the TCP_CLOSE check can
+only cause undercounts.
+
+Should the decrement depend on whether ack_seq actually includes the
+DATA_FIN, for example a condition derived from rcv_data_fin_seq, rather
+than on TCP_CLOSE or RCV_SHUTDOWN?
+
+This code is unchanged at the end of the series.
+
+> +
+> +	return answ;
+> +}
+
+[ ... ]
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1792999988.git.tanggeliang%40kylinos.cn
