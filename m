@@ -1,57 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.179
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793153673;
-	b=apRYB+6PDThGINohJ/4N65fsCVIIgpFIcPxjk7MX5nY80p2/IgwOQXB2LJFF3+ApXm25
-	 xiTxDWSwV/PmOjEcKHvEbnvL8gpEl+wHMPJuArriCCKeMl1tPkbMgifz21f2Qr5TJPlhW
-	 BumngVTibFmyGc/THK+5c0zkb8QEn9gA5r+zD2/7PssvZF02m4cfJKT5jwIYQg3UojUwl
-	 27+U1yjjKNADbY9lQbdXxHZF5+Rh95CrFOTWBFww0RevqCpRc0x3Pe6gFBgxQXvWfdso4
-	 Knyn+f6BGu7sHW9OSITJDVYrFHxcwqt7o+1JllG0tN8D2A6k7HTnqeIpDNr2PsGjT3A==
+	t=1793166109;
+	b=yHY/IdEv+RYQhyiQhNGm9+rgz9vC2huG4fhoSIgvrwohifZWjWzl9txqrw0FIfc9q8Mq
+	 m6K8LdkOjRPbQIt/5BSdpYYG9BLbW4VcpSK2SS/+9CctaR2D4kz4sTTFWOMvazy1ySmNE
+	 G74hKpZ1v0oWqEcAYA39GWSFI6n5lzCB5YWZwdKEA+BhsqaPQA64YG8ZIgdCD/pKUQEgz
+	 QJx5BqrFxB23hCEeYXrrPNeLEKgKKbq89PB2egkqCUVk1aKRsYNq0fDxH7Bmjj3jj3nkz
+	 dLsv1yuLqQZMk11e9+Aoj+sklYI4cNBJtaikk2IY/MwPyoGcXywTzxlR3k4Mdhi/lig==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793153673;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=KUT6lEdVNZiJEGnBru0QrMt1V5pyg/Z8Vw+pR5c9frY=;
-	b=qOUsvUWz26SFzspywmn3fZsikXaft1W/Psg6lDVEP56Zeh9YXXrdJo7Zqg9kXM4Aph3g
-	 LYDuAu/V1JnfTLKCO70lNdsYAoLh8nfiOqsJwUYWrshOtnD2pmCdnUHxhtW2zoeNObpUp
-	 uGOJMdCiP390ESVT1fnejb1Og6Y/UIvuhfP4H8fPFSwe/11AsRnIFQYRFZPkuhelfFHL/
-	 uWeQJpGIpXQ9ACxV0kkCUspa/BcDDQifpPFLyz3mFSbAgYCzYm31NXF8JK6SqrY/AFC1g
-	 9xQCrfs5YU4l/DeMpicmd3yY+/N/s7IImnnGhsbTAZSoq/yfTR6IBpGzu3CxL/ldiVQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793166109;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=GfRibmZuY1ryPhKjA2qHgTRyp+kUteqF+DNioQ1vuMY=;
+	b=0V/7xiLzn4LNwLu0WBixKK5KKD3IHB7mbQlDAvF0YC5FltyXiDo1DonkeYIWjTc7Losl
+	 nA/8qwh81YgtIKg8aw/1fUHP4t9lhb6TDXe8CHIlOPkIHpkLkEPBwR80YeLLPtDqRzuBu
+	 Tr45M/shgDzUqirpPpFcnyeS1xlHjBU7WXJ8O7Rdmf4f1p06vtPpYC4sR/9kQn4qMIByq
+	 7X5FSBr5W1h7bivch5AiKq+LJ1gMnthucQr5tD0zZRBHEKLlwdiR+roSOCqXfRe8rsuqR
+	 Jk5PDME7XbghJ9Iqp8o7hdjlqz+j9r0DfJFTP6WJ79oTy39SNO7xAllHG+tN3ZlfeRQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FAza6sWw;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=t3iO+BO9;
+	arc=none smtp.remote-ip=74.125.82.179
+Received: from mail-dy1-f179.google.com (mail-dy1-f179.google.com [74.125.82.179])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B481606A320
-	for <mptcp@lists.linux.dev>; Wed, 28 Oct 2026 02:14:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8D2606A31A
+	for <mptcp@lists.linux.dev>; Wed, 28 Oct 2026 05:41:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2E8D2606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FAza6sWw
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B61211F01825;
-	Wed, 28 Oct 2026 02:14:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793153672;
-	bh=KUT6lEdVNZiJEGnBru0QrMt1V5pyg/Z8Vw+pR5c9frY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=FAza6sWwl1dfiRe/Rr7+q3Va6v8H8OAZQTZJqrRMjnKG35woENivU7QBIvhSl1y93
-	 QM+ZhPZJtOvWBS5DNfWUz56utWhqiYFz6WYdvHwSDGP+9PBIrXPkvtkj8ldIgJO3MP
-	 Cz5roP2NPRXPUa/90FmFv1IDZvI9sjF3HLYxlFoaBO8+o60HBLXQZYE1OTpcGMJ7Lu
-	 mznhTJFfXreKLv659oGE/Gpc0w+ovd4UomRv+nS2gXMLWKsQMjrEBu5CpJ5SLYku57
-	 NopC8OuPWRYNHIMBhd5QTwZhTY6j6FXtWzf1IGbb6tVSAMH1jhYKVhozTmUeD6CEpe
-	 ul27bbP0fZhbA==
-Subject: Re: [PATCH mptcp-next v11 6/6] selftests: mptcp: join: validate
- subflow retry after link failure
-From: netdev-bot+sashiko@kernel.org
-To: anilkaushikwireless@gmail.com
-Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Wed, 28 Oct 2026 02:14:32 +0000
-Message-ID: <179315367228.3132.6586887428411214670@kernel.org>
-In-Reply-To: <20261026125345.3019372-7-anilkaushikwireless@gmail.com>
-References: <20261026125345.3019372-7-anilkaushikwireless@gmail.com>
-X-sashiko-severity: Low
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=t3iO+BO9
+Received: by mail-dy1-f179.google.com with SMTP id 5a478bee46e88-3550c917fd3so870712eec.0
+        for <mptcp@lists.linux.dev>; Tue, 27 Oct 2026 22:41:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793166108; x=1793770908; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=GfRibmZuY1ryPhKjA2qHgTRyp+kUteqF+DNioQ1vuMY=;
+        b=t3iO+BO9u37oyHNPmyLRkBTfWWjdF+gxe5kwNTKCNrLaqrOxpLgPO2v7s+zeM96G/Y
+         fJ47WSvEgBYD+5cC7vdMlBQeA6De+sMUPVUAsKxCkr2cXedGzEa97QA6AdELbOJhXxUH
+         4Hzb9TSF0J3ufnjAI8CDJyfprGJIMk6aI8jm8s8R7MhddTSxIJcGmxcmrUMSgT37HSD3
+         /wemgAjbsNRN9210Z8BTTaRis3avXk+s4D0MU3zowUtoGAd1mV0Xs5oTeoeZxSU1b5Rs
+         RIDqWhc1FcrZQH0cUcUiztJSc6o8Q2qjnP6ol0KkYjuRPOZSGfq5HKPPcI6JG6iVmoMP
+         vsRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793166108; x=1793770908;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=GfRibmZuY1ryPhKjA2qHgTRyp+kUteqF+DNioQ1vuMY=;
+        b=Y4oNaPKQr8xnythgjS8usoWhp6fb+3XayZaRbmJoy/xVcsB6dtUxbFo2QKBgRzhYiI
+         R+JIS7Abk3fU6y7DDm+AwmbLiyd3CPvoYBhATeGm9detEwU/HirFCBZmR3MR5d4luT03
+         wgi/kUzErYSkNHRDY7KyK9dKoO6fINOXMF8Y14BZ+9QtiZZOSF2WQvvgJwEDSonMc6vk
+         21R9rfjHfzaD4b2PuwYSNAHMJychEjw3MkT38If1y+tD9dRCfQl5eSSN3DUydmTF9Sc7
+         DPAFHKHs8ck1oQJ1cfEl5hlhiZ0OPF5ZfieC3Fj1QjPFGNZog4MNhwLTedvF6xkm0oES
+         SU6A==
+X-Gm-Message-State: AFq9FYIUO7iJGaybPU8XhhO5zou8mCpLmzYik4PyUxhsoBtGFhX/PAlv
+	k4OnqzuRwQlZT2nFjvHCqSWl1Uv044U2uvIesgdFs7dzQcFbbPGXeeSqJkFdZw==
+X-Gm-Gg: AYBFou35la+CIYlkWqoTqBQ7q9QPypjQ1q+WKMzEoo7if4jJWBxwopvV6cnN28nKCVa
+	YUNFwCh3vXJYQ7Sn4j15kSt3KznWM6uQ8hrgFxdr8Yd3+SkDWM9upRnZpOeuu3A3lNrgOmr4i8S
+	GrCeud4BpgmOm3jfh8MozQgbUAPHkvDduE3i9iJZt+N4Vrl9/rR8FIcnjHcwGu2WQBdCYN31EDz
+	/VRG5OAjCa32D33UJ9v4E0IvoEpipc55PhZl3nI6lYAZFo+WTubxU9wYM+yzwri9mEWrhGezgJZ
+	lzo1UlSV9vU/tKrvwTu+8LuGUhV13bqGzoDejrfOOgwsCQQWhFeSMqWKWWGKQRnBp6LRr4a7P+/
+	JqX4O1+EQDPNG7XKUYFHgHa6HlKurLneY2KUbQnqPxgHs4vwM1Sk5HEVFux7wAuxk4WcBzsSCMt
+	XXpdqF+mdsPROusixSr4jq1NMonYIBXAZN+hPLBk1nknZbD/rLTMlK3/15BuL6pIv+qRFkm6tiM
+	7OCkzjTww05Vj4xKErsYLfLkj3OHLcLmQoNccCh/GSao43n5MI7eziv3a0of9KSDMGG+CDUQDLO
+	89DnM1EHR2uZwoKfhtmK3AcdbJLmUObgv9RPOi560QBQmblL5n7IdCLJDsWY+ou1JHlfecummL5
+	AzYUbiOQy/P2ovkcXYNfCRfwFNFH/QJOgJCtr4JhgTtNlCnQaAJLD0bFabl3Pv4lGB9lJiepVHg
+	==
+X-Received: by 2002:a05:693c:881a:20b0:35e:f1a5:9ba6 with SMTP id 5a478bee46e88-36a202869c9mr2319463eec.5.1793166107874;
+        Tue, 27 Oct 2026 22:41:47 -0700 (PDT)
+Received: from ramen-dev-security-2.asia-south1-c.c.ramen-dev-345017.internal (90.156.200.35.bc.googleusercontent.com. [35.200.156.90])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36a237be80csm5860973eec.2.2026.10.27.22.41.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Oct 2026 22:41:47 -0700 (PDT)
+From: Anil Kaushik <anilkaushikwireless@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: Anil Kaushik <anilkaushikwireless@gmail.com>
+Subject: [PATCH mptcp-next v12 0/6] mptcp: pm: in-kernel: retry subflows closed after an error
+Date: Wed, 28 Oct 2026 05:41:37 +0000
+Message-Id: <20261028054143.3222998-1-anilkaushikwireless@gmail.com>
+X-Mailer: git-send-email 2.25.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -61,161 +93,129 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found more severe
-issue(s) in other patches of this series. This mail is only an FYI, in case
-you want to address the nit picks below when you respin.
+A subflow closed after an error is never re-created, even once the path
+is back (#440).
 
-Low priority / nit picks for your consideration:
+When TCP gives up on an established subflow we created, after a
+retransmission or keepalive timeout, the in-kernel PM now creates a new
+one to the same addresses, while another subflow can still send data.
+Its SYN retries space out the attempts. Their number is set by a new
+limit, subflow-retries, like TCP_SYNCNT: the maximum, 127, by default,
+about 4 hours, and 0 disables it.
 
-- [Low] In link_failure_tests(), the comment on the 'subflow retry, no
-  other subflow' test says 'the connection is closed after the close…
-- [Low] In the first new test, link_failure_tests() calls
-  mptcp_lib_kill_group_wait right after sf_retry_after_block 10.0.1.2…
+Patch 1 fixes a selftest tool issue seen with the new test. Patches 2
+and 3 add the new limit, patch 4 the retry, patches 5 and 6 the
+selftests.
 
---
+I used an LLM to help write and review the code, the tests and the
+commit messages of this series. I checked and tested every change
+myself.
 
-selftests: mptcp: join: validate subflow retry after link failure
+Known issue: in about 1 run in 20, more often on debug kernels, the
+first new test fails. Once the path is back, the re-created subflow
+joins, but the server resets it right away with an MP_RST, after
+DSSNotMatching, and the PAWS counters are high on both sides. It looks
+like an existing issue on the receive path, triggered by the two-way
+transfer with losses rather than by the retry itself, but I have not
+found the cause yet: it does not show up with tcpdump or tracepoints
+running. Any hint is welcome.
 
-This adds three mptcp_join.sh tests for the subflow-retries limit. The
-first re-creates subflows after their packets are dropped with
-netfilter. The second closes the connection while a subflow is being
-re-created. The third checks that the only subflow is not re-created.
+Changes in v12, after the netdev Sashiko review of v11: when no other
+subflow can send data, only the re-created subflows still connecting are
+closed, a joined one is fully established soon; a subflow in CLOSE_WAIT
+no longer keeps them open either; the doc says the initial subflow is
+not re-created if the peer does not accept joins to its initial address;
+small test fixes; and the patches are rebased on the current export
+branch.
 
-do_transfer() and run_tests() also get a server_in option, and the
-failure input files are regenerated when they have been emptied.
+Changes in v11, after the Sashiko review of v10: a subflow is only
+re-created while another subflow can send data, so the close timeout
+works as before, and all the code re-arming or stopping it is gone; the
+re-created subflows not established yet are closed from the worker, or
+when the MPTCP socket is shut down or closed, never while iterating on
+the subflows; the path-back test is gone, and the third test checks the
+only subflow is not re-created.
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index c3ccce96b45b1..93a42bb06c69e 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+Changes in v10, after the Sashiko review of v9: when the close timeout
+expires, the connection is kept if a re-created subflow connected in the
+meantime, since an active join does not stop the timer; the re-created
+subflows still connecting are closed once the msk is no longer
+established and no other subflow is left; a new test lets the path come
+back before the close timeout; and the patches are rebased on the
+current export branch, without the Assisted-by tag, removed upstream.
 
-[ ... ]
+Changes in v9, after the Sashiko reviews of v8 and more checks: every
+timeout is retried, whatever ICMP error TCP reports for it, and only
+resets, local aborts and MPTCP protocol errors are excluded; if no other
+subflow can send data, the close timeout still applies, the new subflow
+no longer keeps the connection open for all its SYN retries; the
+re-created subflows closed with the msk have their data in the msk
+backlog cleaned, since they can get established in between; the doc says
+this is a single connection attempt, ended by an ICMP error, and that 0
+disables it; the close test blocks both paths, and its server reads all
+the data first; the tests read the counters before blocking a path; and
+a new test checks the close timeout with only one subflow.
 
-> @@ -2585,6 +2784,126 @@ link_failure_tests()
->  		chk_stale_nr $ns2 1 -1 2
->  		chk_link_usage $ns2 ns2eth3 $cinsent 50
->  	fi
-> +
-> +	# subflows closed after a silent link failure, then re-created: the
-> +	# additional one, then the initial one
-> +	if reset_with_events "subflow retry after link failure" &&
-> +	   continue_if has_subflow_retries && init_nft_filter; then
-> +		sf_retry_init
+Changes in v8, after the Sashiko reviews of v7 and Matthieu's comments:
+the default number of SYN retries is the maximum, 127; the re-created
+subflows still connecting are closed before the write shutdown
+disconnects them; the doc is more precise; and a separate test closes
+the connection while a subflow is being re-created.
 
-[ ... ]
+Changes in v7, after the netdev Sashiko reviews of v5 and v6, and
+Abdul's tests: only a path error, a retransmission or keepalive
+timeout, makes the PM re-create a subflow, not a reset, so a peer
+cannot make it loop; the flags are bools under the msk socket lock;
+mptcp.rst documents tcp_retries2 and the keepalive needed by a subflow
+that only receives data; and small fixes in the tests.
 
-> +		sf_retry_after_block 10.0.3.2
-> +		sf_retry_after_block 10.0.1.2
-> +		mptcp_lib_kill_group_wait $tests_pid
-> +		kill_events_pids
-> +
-> +		join_syn_tx=3 chk_join_nr 3 3 3
-> +		chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_ESTABLISHED 3
-> +		chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_CLOSED 2 error 2
+Changes in v6, after the Sashiko reviews (netdev Sashiko on v4, which
+also applied to v5, and sashiko.dev on v5): only subflows that were
+established are re-created, so the PM still moves on to the next
+endpoints as before; removed remote addresses and the local ID 0 are
+handled too; the policy checks the maximum value, so the parse_limit()
+patch is gone; and the test uses the net/lib.sh helpers. Details in
+each patch.
 
-[Severity: Low]
-Can the SUB_CLOSED count here be off by one if the client is killed before
-its re-created subflow is fully established?
+v11: https://lore.kernel.org/mptcp/20261026125345.3019372-1-anilkaushikwireless@gmail.com/
+v10: https://lore.kernel.org/mptcp/20261026063657.2955783-1-anilkaushikwireless@gmail.com/
+v9: https://lore.kernel.org/mptcp/20261025134909.2794368-1-anilkaushikwireless@gmail.com/
+v8: https://lore.kernel.org/mptcp/20261022151130.2285198-1-anilkaushikwireless@gmail.com/
+v7: https://lore.kernel.org/mptcp/20261020031711.1896660-1-anilkaushikwireless@gmail.com/
+v6: https://lore.kernel.org/mptcp/20261018041748.1655711-1-anilkaushikwireless@gmail.com/
+v5: https://lore.kernel.org/mptcp/20261016160926.1155262-1-anilkaushikwireless@gmail.com/
+v4: https://lore.kernel.org/mptcp/20261016055010.980819-1-anilkaushikwireless@gmail.com/
+v3: https://lore.kernel.org/mptcp/20261014143349.768138-1-anilkaushikwireless@gmail.com/
+v2: https://lore.kernel.org/mptcp/20261013025653.523755-1-anilkaushikwireless@gmail.com/
+v1: https://lore.kernel.org/mptcp/20261012171740.464517-1-anilkaushikwireless@gmail.com/
 
-sf_retry_after_block() reports success once MPTcpExtMPJoinAckRx goes up in
-ns1 and ss shows an established TCP subflow from 10.0.1.2. Nothing checks
-that the client-side MP_JOIN subflow has become fully_established before
-mptcp_lib_kill_group_wait kills the client.
+Anil Kaushik (6):
+  selftests: mptcp: connect: retry write() on EAGAIN
+  netlink: specs: mptcp: add the subflow-retries attribute
+  mptcp: pm: in-kernel: add the subflow-retries limit
+  mptcp: pm: in-kernel: retry subflows closed after an error
+  selftests: mptcp: pm_nl_ctl: support the subflow-retries limit
+  selftests: mptcp: join: validate subflow retry after link failure
 
-If the close comes first, __mptcp_close()->mptcp_close_retry_subflows()
-emits one more event for that subflow:
-
-net/mptcp/protocol.c:mptcp_close_retry_subflows() {
-    ...
-		if (!subflow->retry || READ_ONCE(subflow->fully_established))
-			continue;
-
-		if (sk->sk_state == TCP_ESTABLISHED &&
-		    !subflow->close_event_done) {
-			subflow->close_event_done = true;
-			mptcp_event(MPTCP_EVENT_SUB_CLOSED, msk, ssk,
-    ...
-}
-
-In that case "chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_CLOSED 2 error 2" would
-see 3 events.
-
-In practice the window looks small. When the server's
-check_fully_established() gets the 3rd ACK, it sends the 4th ACK right
-away, so the client should be fully established a few ms after
-MPJoinAckRx goes up. The shell path to the kill takes tens of ms.
-
-The race still only needs that ACK to be lost or handled late, and
-nothing in the test stops that. Would it help to wait until the client
-side is fully established before killing it?
-
-> +		sf_retry_cleanup
-> +	fi
-
-[ ... ]
-
-> +	# the only subflow is not re-created: the connection is closed after the
-> +	# close timeout, as before
-> +	if reset_with_events "subflow retry, no other subflow" &&
-> +	   continue_if has_subflow_retries && init_nft_filter; then
-
-[ ... ]
-
-> +		else
-> +			# the worker decides right after TCP closed the subflow
-> +			sleep 2
-> +			local syn_tx
-> +			syn_tx=$(mptcp_lib_get_counter $ns2 \
-> +				 "MPTcpExtMPJoinSynTx")
-> +			if [ "${syn_tx}" != 0 ]; then
-> +				fail_test "subflow re-created"
-> +			else
-> +				print_ok
-> +			fi
-> +		fi
-> +		mptcp_lib_kill_group_wait $tests_pid
-> +		kill_events_pids
-> +
-> +		join_syn_tx=0 chk_join_nr 0 0 0
-> +		chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_CLOSED 1 error 1
-> +		sf_retry_cleanup
-> +	fi
->  }
-
-[Severity: Low]
-The comment above this test says the connection is closed after the close
-timeout. The commit message says the same:
-
-  A third test checks the only subflow is not re-created: without another
-  subflow to send data, the connection is closed after the close timeout,
-  as before.
-
-Is the second half of that checked anywhere?
-
-The body only checks that MPTcpExtMPJoinSynTx is still 0 after sleep 2.
-Then mptcp_lib_kill_group_wait kills both client and server, long before
-net.mptcp.close_timeout (60s by default) can expire. After that, only
-chk_join_nr 0 0 0 and one SUB_CLOSED event with an error are checked.
-
-Nothing looks at MPTCP_LIB_EVENT_CLOSED, the msk state, or the close
-timeout that mptcp_start_tout_timer() starts in __mptcp_close_ssk().
-
-mptcp_pm_kernel_retry_check() in net/mptcp/pm_kernel.c makes the same
-claim:
-
-	/* Only while another subflow can send data: without one, the
-	 * connection is closed after the close timeout, as before, see
-	 * __mptcp_close_ssk().
-	 */
-
-Suppose the msk stopped closing on its own after its last subflow closed,
-for example staying established with no subflows. Would this test still
-pass, as long as no MP_JOIN SYN goes out?
-
-Could the test check the close as well, for example with a shorter
-close_timeout and a wait for the CLOSED event? Or could the comment and the
-commit message be reduced to what is actually checked?
+ Documentation/netlink/specs/mptcp_pm.yaml     |  13 +
+ Documentation/networking/mptcp.rst            |  19 +
+ include/uapi/linux/mptcp.h                    |   2 +-
+ include/uapi/linux/mptcp_pm.h                 |   1 +
+ net/mptcp/mptcp_pm_gen.c                      |  10 +-
+ net/mptcp/mptcp_pm_gen.h                      |   4 +-
+ net/mptcp/pm.c                                |  39 ++
+ net/mptcp/pm_kernel.c                         | 160 +++++++-
+ net/mptcp/protocol.c                          |  78 +++-
+ net/mptcp/protocol.h                          |  51 +++
+ net/mptcp/sockopt.c                           |   2 +
+ .../selftests/net/mptcp/mptcp_connect.c       |  18 +
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 342 +++++++++++++++++-
+ .../testing/selftests/net/mptcp/pm_netlink.sh |  53 ++-
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  34 +-
+ 15 files changed, 798 insertions(+), 28 deletions(-)
 
 -- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261026125345.3019372-1-anilkaushikwireless%40gmail.com
+2.25.1
+
