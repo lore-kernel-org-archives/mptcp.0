@@ -1,79 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793178652;
-	b=H6c8kFQfl14gYzeCrU8+8n0cQe3c6VQDPt6x11F7UAtj7dDv/h6r1GFjidnRLcFJjHkr
-	 SfvNKEDzXKpLNmOeJyBzA1G5n0G/MGnTg+1neiUNziOUrILI1XElpRk+JGQ/BNb3eTXXq
-	 73oCYCUYS+UZ7EI4y1UujZimRWX21Dsu6xSZfkhkHjPKoVnIwn7K9M49DMeFYwbr/gmkk
-	 GfiRDnT8u/6Prsy1smaWzJIXue4a1vomnG6faEePC8CHMP0CYTW1t+vYH0sTcE8Y9IZdV
-	 M+D6azSUYK3ehMPZFl+Qsgz6Pv8IpcNL+PvNHUoX4xcb3ZCVNrQJqpTWzvIs64xKM7A==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793178652;
-	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=yhHqNhSKL7bxU4tHGrXaO5JdZbZSD5e+AEeLcG4BnbU=;
-	b=3hR3j7Azw72hkD6wwjAFI3MD76mSzd1mdXtQmk26Ipis6ak41lS98cfj21D7/mMPRkKU
-	 fjkEh980JE9FU7g5wZfz+V1rt5KQAs30LjIDY5myUemrmsx3Y53Imcdpmmc64k/5V+Ick
-	 +PyUm2sgN3x60hRFO3DGvZHV0mMxcpYdUAAl3dqLd+d3QJ+NDRcJ+Z37VHGEkJG/Jid+F
-	 uR1xf38e7WPC0LMcyETCnjyx8vmfF6qS/MzwV5pR945pgC9HiX9tK1vc7y5jNfFtJuT8Y
-	 wZ+IEZznDBiKwA9zeIJO3zXwRLoxTMa+Df3DvUnhQt45QXWHIeIE0UPwidN5Adx23CQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Y2PZfUYb;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A363606A31A
-	for <mptcp@lists.linux.dev>; Wed, 28 Oct 2026 09:10:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Y2PZfUYb
-Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
-ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1793178651;
-	b=argA60ElkfMRYYXbUwRBoodAoOQhZkjcB1FNluKPA9R2GnlVoLTmlggJlQsyXEr44092
-	 2o1/abYdCkMKm2py/z+3eFJp7LUT9/fNm9P99GztGKYsHUFPjO/kjYAyIHCUM+lbKm5qJ
-	 /HVpTvb+p0JbsfL3+zQ8jApQfRBtgXzKaUePXRJmUlieq1hBySu7kRa4asRJ4JRMjvxEB
-	 Li6ummHNEs4xp6xNh0U9Ag2LGihBeTFRSqvN1T1wyxX+h208zGhwtGqdsLy2sW/Ih3bbO
-	 /WrbeC7b5pGVrpiNDk9a05w4Dl1JAd5Vus32XZl2jCLai/D7mEdcHrSpPRzs5DmF6Bg==
-ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1793178651;
-	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
-	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=yhHqNhSKL7bxU4tHGrXaO5JdZbZSD5e+AEeLcG4BnbU=;
-	b=NtfQiTHyWlK2B8wK20dimFR5GnD3uW7tlPK99ODyJ8OZzMmetWtQHwaVKvSebMURpuyP
-	 72yaPjCbZodtC6v5rTiDIATFcdh0dOWfoXL/1Y5dmMHDNM1fllo+RYTrQE36++axzUrdP
-	 rJShPcOyVJGvO1BVAkRcKfhQ/fmURxoAxTgFT7PqWHMHtccp4NuupeVJVUhQP9ydSR7tq
-	 05a0Pjm4V3bqu0qoa6oxqzbV254AlpnuBlyt+LIpAmi1vz9GItg2jM+oTTqkYq3auXNo8
-	 yxZK6l0mckyzFeDtgQP1ECZnnfXO4I/Gg1hwMyQVj+NMNWCtLMmwraO2OWSwwm1BF2w==
-ARC-Authentication-Results: i=1; smtp.kernel.org; 
-	arc=none smtp.remote-ip=100.80.115.77
-Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.174
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793179931;
+	b=pf0Wvy/17v6lqqphtY89CTNWC7KWlihKFJE9kVTGR8gNFp9MdJC3HBnYewI0KnF2vUoh
+	 LUGTc1L8SYX2TMHSWHiRcxwq6orUsCUbN2jGoNI2944fY6krSW5qnfHwTCOGut9lijCWr
+	 ESi8HXCBSq2ThfnaCUupaDhkEYuqJ4TIj3BM6eYTvecwgZigaiDsAtyZMkbGwbSmHGw7u
+	 ptBkyhh8FNfiTGN3T/IloX1XLisIIERUCQk/3lLQnH4vt3N4SM95fBXclI7nb+CjR0VjD
+	 7PDdxIqu4dyVfLJyOFaZ8NOrV3xkzG5a/2X279sQFp5/2XkBQCr61pJ6N3QUTxThVdQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793179931;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
+	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
+	 Date:MIME-Version:Content-Type;
+	bh=cg7dVXrQM8cT3Wg6VKqFfkAjgPksddaVzYQ8+kbFF+E=;
+	b=m1G5KQgy6AHyer5y4Qtcf6bjCQa7MT9IAy3X3/RLoE7v2H339PNyzyVznAz5yHUkDrYj
+	 cj3qTI2X1ys2YcsVLbUVjehSWZKqVdW5cvtzx5K+Wzr2ZzYDwL4ujCpzwcTZAe3OFwuk2
+	 iwtAxJAOHUv9pgFfzRjqokJwe9OyFXJ1JKeCBFkao1TUkIHGOU0rxhgcNdfyyesleYQvu
+	 4BxIJSv93mzxUktWq25PNB7CRMFZc/qN03VJyNxa58tSLvdersREoYOtOzwPdiO2Dw7Um
+	 vdn9koUO61RNr6tkZNjyRgH58UVg+e4uCCGHQpdB/lBwU7Nco6HOqOgx3DQFF9w7A7Q==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=fVghYpns;
+	arc=none smtp.remote-ip=209.85.222.174
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id 5B0A31F01825
-	for <mptcp@lists.linux.dev>; Wed, 28 Oct 2026 09:10:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793178651;
-	bh=yhHqNhSKL7bxU4tHGrXaO5JdZbZSD5e+AEeLcG4BnbU=;
-	h=From:Date:Subject:To:Cc:Reply-To;
-	b=Y2PZfUYb+6Y8VVoUrNq/bAU8cTUGsERvRtl1tyy/Ga6TqmSXYIlnBKtYCQOSK9xx8
-	 DPilbnRHaref9X5az9PmAoFH+t3Jy/ddoimEwNLhLrTehBApupHarrP1L3FcnbluHr
-	 Mi5bNp5U+UL5MprpyY9cQ3keCrPXg9w0G2sEFoLID6yBjj91RzmXz0w/Y7yxUY2Jkq
-	 tCvDvD9jmzVRfRhiJul4zfS3kvhTF+CEUL+1IpkwSSJnLOF7iZrbaMKQacAIJigUlo
-	 qelOF+S1i1n2/VJUwAAy45LLHCdzqLb3JFRmyrSK2wsxUbHnHrFZ12QxJjYAUuXABE
-	 vPbXcbwa+eypg==
-Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id AF3C8453C8
-	for <mptcp@lists.linux.dev>; Wed, 28 Oct 2026 09:10:50 +0000 (UTC)
-From: Quanye Yang via B4 Relay <devnull+quanyeyang.proton.me@kernel.org>
-Date: Wed, 28 Oct 2026 02:10:47 -0700
-Subject: [PATCH mptcp-next] selftests: mptcp: connect: fix OOB read on
- read() error
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77E9606A31C
+	for <mptcp@lists.linux.dev>; Wed, 28 Oct 2026 09:32:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D77E9606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=fVghYpns
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-93e635220b4so62439085a.1
+        for <mptcp@lists.linux.dev>; Wed, 28 Oct 2026 02:32:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793179930; x=1793784730; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=cg7dVXrQM8cT3Wg6VKqFfkAjgPksddaVzYQ8+kbFF+E=;
+        b=fVghYpnswlyM4+9JJVgCgYkH2zZe36klZ+w70D5eOIn4BnrgTdl1PSBgXGL8lG/1Sn
+         KxXXKzw2E3787dW1KUkd8miD5Yu9iPxBQPNGmqSTLCLaAMyHJmsUt6/M5ma2vNx/QNDG
+         dSMjwCciKI40B8dsncZlB0fOFzxa7RXOVQpqzQ//lrLSeX70tvV/7zitc7/Q0sTe4Dpo
+         KlwdVKfjbkI4gR61FIsqseMmd7BOyJ1U6qYUB1b+bVdaM/M9XOGdL+NyzsaZ+X2RTVLs
+         4orL5SsZdvwTpFpl8AgiH/4RNqgmtLduzi0SCJS/OJ3lMfJDWkymz2Z9GoAkgEcnvKj0
+         LQdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793179930; x=1793784730;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=cg7dVXrQM8cT3Wg6VKqFfkAjgPksddaVzYQ8+kbFF+E=;
+        b=j92XTaffefLUR11rhZn1E200NcA17ijH6T1HW24FSYCE9gY976g/2CFkcfHbIp+xqo
+         ocU+xPBmfdmrVqHmqiNLIvPIh2Jq+QNioDkz3O22Zqb1/UA5OsdKoKrrBkpOVgy4SXpN
+         fc0CNh3TQZ7mSUZ3HG/LwHNIgr+6H80Ef/lwgRgwpWElk7abICE8Mml8z+m97amDPRQZ
+         OBlS1pjvjX6u1MuAz6/+sHXs249PQ3Uhn3MmPvRk2TvilTUHe/ltVi5efTnbEBmblQ2/
+         Y7O49k3ujKFmVCDMq8WkUTxkspRzaQRSCIr54rwW3bvwmd0l6+LI1msAap20Nw3ohsb5
+         jzkg==
+X-Gm-Message-State: AFq9FYK3eUYkH3TDpfahiajXnS3ae7sk2zjP/k6cbOZeNQGgQyhP6cOX
+	qTJBt5oJiN65zs+xDsCf3fHwvdnFRx+BaGpPfPgdIefy0nDBU/kTJ9vBwNEF
+X-Gm-Gg: AYBFou1DeBRfyB79yIqvzezYJDjdjBfRDX+oaEYH9D423paBVW/hRW8nAJL/BvZGVGX
+	AQAVlbjps3nWr9WaeiKXcwEmzG5L/GyKW7tzJUE4Xxc1mt1oixWm4HreYE0coJilLUFedWws3gr
+	whGg4HXYZDjobahJwVTjL15GTsAfap1DI3f5+Or8XSkPI++UOFwzMy3qJn5Blwlw/uDVuh63au9
+	YpXu0PeDYRRi2BsDuNLrXEqrlREIi5hmDJgYK8AXTkFWGs6BVYCItpdxJFKovuf65sXSjQVj1UK
+	qbPqHDR3CjaCvfpPUefBhi4OOUvXKU1iGF5NT4NoF6L8UZYs1N/ci4oADzkJzObPevoPk1n6cQN
+	hK5FjoyJEGmRog6MpfzS1dQIWcjQHJCgKO19H6FWqh4VJS8UHZCUI6wc7eg/pZN1fDeUZbNDzti
+	bgbgDfiy48bLiMR+tfvz1hb4UkqmVb8SBBYFwd6/13wk3UUeVbOREhMPE+mO3FnxvYKIO+UXje+
+	qZDztiM4b8oACQ1c6XRn7SjYNqBRzk6/VS8tm/B1eJBBucBF1IL8Hsn8nV4pSGx9wGjqBmDJxcG
+	ZOru/Ahv51vssuqqTMHRJM8hEeazj/vRdTQgWJYvqg8/5T0bMzX8CNobJTerNIw=
+X-Received: by 2002:a05:620a:460f:b0:93e:53fd:4139 with SMTP id af79cd13be357-944089436a6mr238593585a.9.1793179929802;
+        Wed, 28 Oct 2026 02:32:09 -0700 (PDT)
+Received: from github.com ([20.55.223.219])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-940f068328dsm1221199885a.23.2026.10.28.02.32.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Oct 2026 02:32:09 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20261028082704.1609493-1-kalpan.jani@mpiricsoftware.com>
+References: <20261028082704.1609493-1-kalpan.jani@mpiricsoftware.com>
+Subject: Re: [RFC net-next v11 0/2] inet_diag: restrict MPTCP sequence
+ counters
+Message-ID: <8d2d4016-b0ea-29fc-d6ad-4165f5f44296@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 28 Oct 2026 09:32:08 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -83,120 +98,58 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261028-fix-mptcp-issue-636-v1-1-1f1e2ee07a1e@proton.me>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMQQqDMBBFryKz7kAm1lB6ldJFTUYdoWnIxCKId
- zety8d//22gnIUV7s0Gmb+i8okV6NKAn15xZJRQGayxjoy94SArvlPxCUV1YXStQ+pMcFeiIbQ
- G6jNlrtq/+oBTjrwWeJ6bLv3MvvyysO8He/2o1IMAAAA=
-X-Change-ID: 20261028-fix-mptcp-issue-636-150d6411fd30
-To: MPTCP Linux <mptcp@lists.linux.dev>
-Cc: 
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1793178649; l=2933;
- i=quanyeyang@proton.me; s=20260801; h=from:subject:message-id;
- bh=5AkzoNWl9/i9Wmm1H6HE1sEtdhjRlQBNIjrUVgGp/uM=;
- b=/izKasSmI4b1Ey19uaSP6XVUothrGxwM6rdH+FcDKYdHRwVLuUl/eyfy25t6V+3zCSjInfV9m
- PejxSgd/PeLAIbIq/ijUSxuzB/5t5egbag8IxH4f6oWl/i4YhDDiQch
-X-Developer-Key: i=quanyeyang@proton.me; a=ed25519;
- pk=9L9FrcvzMgxPaBRU6XV0EnqTgjDqVO596rQKSZ9qZoY=
-X-Endpoint-Received: by B4 Relay for quanyeyang@proton.me/20260801 with
- auth_id=963
-X-Original-From: Quanye Yang <quanyeyang@proton.me>
-Reply-To: quanyeyang@proton.me
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 
-From: Quanye Yang <quanyeyang@proton.me>
+Hi Kalpan,
 
-copyfd_io_poll() and sock_connect_mptcp() store the signed read()
-return value in unsigned wstate.len. On failure, -1 becomes UINT_MAX,
-so the later "len > 0" check is always true and the error path is
-dead. do_rnd_write() / sendto() then copy past the 8192-byte stack
-buffer.
+Thank you for your modifications, that's great!
 
-Keep wstate.len unsigned, but capture read() in a ssize_t and only
-store a non-negative length. Retry EINTR in the poll loop; abort the
-TFO connect if the input file cannot be read.
+Our CI did some validations and here is its report:
 
-Fixes: 048d19d444be ("mptcp: add basic kselftest for mptcp")
-Fixes: ca7ae8916043 ("selftests: mptcp: mptfo Initiator/Listener")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/636
-Signed-off-by: Quanye Yang <quanyeyang@proton.me>
----
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 32 ++++++++++++++++-------
- 1 file changed, 22 insertions(+), 10 deletions(-)
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf: Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_n=
+et-next/actions/runs/40658455981
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 178d98d91fea..d124fb96db15 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -398,9 +398,17 @@ static int sock_connect_mptcp(const char * const remoteaddr,
- 			set_mark(sock, cfg_mark);
- 
- 		if (cfg_sockopt_types.mptfo) {
--			if (!winfo->total_len)
--				winfo->total_len = winfo->len = read(infd, winfo->buf,
--								     sizeof(winfo->buf));
-+			if (!winfo->total_len) {
-+				ssize_t ret = read(infd, winfo->buf,
-+						   sizeof(winfo->buf));
-+
-+				if (ret < 0) {
-+					perror("read");
-+					close(sock);
-+					return -1;
-+				}
-+				winfo->total_len = winfo->len = ret;
-+			}
- 
- 			syn_copied = sendto(sock, winfo->buf, winfo->len, MSG_FASTOPEN,
- 					    a->ai_addr, a->ai_addrlen);
-@@ -698,8 +706,17 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
- 
- 		if (fds.revents & POLLOUT) {
- 			if (winfo->len == 0) {
-+				ssize_t ret;
-+
- 				winfo->off = 0;
--				winfo->len = read(infd, winfo->buf, sizeof(winfo->buf));
-+				ret = read(infd, winfo->buf, sizeof(winfo->buf));
-+				if (ret < 0) {
-+					if (errno == EINTR)
-+						continue;
-+					perror("read");
-+					return 4;
-+				}
-+				winfo->len = ret;
- 			}
- 
- 			if (winfo->len > 0) {
-@@ -726,7 +743,7 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
- 				winfo->off += bw;
- 				winfo->len -= bw;
- 				total_wlen += bw;
--			} else if (winfo->len == 0) {
-+			} else {
- 				/* We have no more data to send. */
- 				fds.events &= ~POLLOUT;
- 
-@@ -735,11 +752,6 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
- 					break;
- 
- 				shut_wr(peerfd);
--			} else {
--				if (errno == EINTR)
--					continue;
--				perror("read");
--				return 4;
- 			}
- 		}
- 
-
----
-base-commit: f2f79e9af965c1c49decfe56312fa547095fbbee
-change-id: 20261028-fix-mptcp-issue-636-150d6411fd30
-
-Best regards,
---  
-Quanye Yang <quanyeyang@proton.me>
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/af313b5e94=
+2e
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1195245
 
 
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
