@@ -1,100 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.176
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793195676;
-	b=rCtvfQy4pPBxnv5qU1hhM2dzKXMcCRqeJPTDDDQP1qC1Yb2PYVdMo1sB95mYwQOAcWDa
-	 t3CPwwPihpVGYrfCul4VXJi2F7e6beBpfZru0meNEGGGEYCZYwH2Fn1gEbKQgF5o8kdvQ
-	 gTNTplvrRjBOSiKdWPRiKP7W3CNy4UNbL/CQV7/8EExwbPbH65bMoTkB/3hFbwt7WMLdt
-	 Cty1i+z0Aucg1biDzYKw3rHiteG3ErocK0gY4RvJD0rICFk4zAdcYE3FyZsE0dfiNR6Ce
-	 XCTswOnO8ifhxjuaO4b44Y+JcFP1IrlYhbIKMMbNR+TmLktp2cm9V5u/birHSxlBjvA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793195676;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=FrHo7Qkiab7upMciYX+4ZM1HRc3ihXAUiouxL7q47ys=;
-	b=r+Tg+YbbVI0ZDJpQN5yBSU+hvQIiZQy8PVB2kd3UFklpB4J4i49wEfel6JOGbEhWV5a+
-	 Yj8nTfcqPtYJ5cfNVsa0Xv3ryYP2Z4GpyfledzZX/NLeAzHf9SmL3F4dYSR3tvBZG2kOe
-	 tq+szSTbQzbxyJ8U7W4TjAA0BMKX2oGT4vu5y6tULOdvcIL0RTns9kkUUnoZ6kQ2M+NNH
-	 5c5R+nQIo4divGZdM1ZaRLTxAzzCLtbWTvs8UsGnEizXCaUCt2/2ZS0GmnnRKlvMq2uxv
-	 bzQE3WU9dURHAwzdyTN6miTDM1dIhbURK60xprUxRkBX9p0XQM9PjLaDaPmycnyB7gg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=wN7oRwns;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.176
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793216463;
+	b=rO05MSOJMcEeQOL9UrI0svgmUa0Slq5nR/SSyHlHewcYgJ1rziu8E/KOpzEHIIuaNYQM
+	 9vk/3wjJK7196VVkaueYlkYvrUU/69obR4KBykGqJ5UStp2qXk4JUdVp8ca3WAdbSnGEi
+	 Wum8xANCd9TgRPSx8ywrbzvGqtWDA9oUwKtNAo3w15OE0idP34RcRHsdFoO2itFXqGWZO
+	 Lw+/elnFsyxnmQKj7q+TGe2a17FJFWPoKDIboLx8dhLq+c2GSKMO+cQ9or26gosMk3Fp4
+	 lF1/x74JwMF7dZdJuT6630ZvHix8KWylGhJwoHNypMFaCKfsNJu3iWWY6iovvUVQ3Sw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793216463;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=z1oH9nVXlfEJguFMjU2Q4+RBBImfUJG3G8ntqUgh6vw=;
+	b=M9/JtipJRXEqmV0eCajpzC1QrdZvdKFfQnwzknnDCNGcgK7Z23zB4oDBuotsvYRag3WC
+	 Ls/vvhy5p/fw/KOja6BMIYaBesxyV3L48BVGoccSFTLtwItRG5PRryeZzPZOwBWhfNc1C
+	 AC4rO8PKY6cgNzh3VBkQhDcopn7P5V7t2aRpCNMFmDYH7zozNLUnTQIgWWsYuXum9wFvG
+	 dcTM4dU6ailVnGHELJuUIE76jX+dyuZd9GuAmO2c0nHYgWfNfTjtxsOCza8m3cXzdzzFE
+	 yqfYDByqjXbOUnVXTtf+CdlQNVC+AlNc2JUYNd9T7Z3X/9r21CRjI5kuudcZSOkqMgA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d63i97x3;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D80F8606A31D
-	for <mptcp@lists.linux.dev>; Wed, 28 Oct 2026 13:54:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D80F8606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A58F606A331
+	for <mptcp@lists.linux.dev>; Wed, 28 Oct 2026 19:41:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=wN7oRwns
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-8b0a28a720aso10082337b3.2
-        for <mptcp@lists.linux.dev>; Wed, 28 Oct 2026 06:54:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1793195675; cv=none;
-        d=google.com; s=arc-20260327;
-        b=n1zQbmFHUX/zmPgaaDsTHc1uH5zL/E9PL3CA4qpl9jSi7TYbS5izAji/8t1GDSsmoE
-         ir4IciCUpt0yajlhxk6m8wK3mpewqzvyixHGsqddWNdYR9OK7rpT2P/dFX3nGogDhR4K
-         Q3TAIF4QRTM400c8u+yPFwG7O78Dn3HgcCY7wvt/2Ud3PxJc3o17WFWTFYWBb/2YWfV0
-         mvaMV6w+91qVy6gVevYLj7+w9i7CfYLlHEq+8aGRDwuI7yd6YxY3Uk9FPqT7dIYgWb4P
-         eDBrDN/0Vi7z1qtVNIdPllJieLr8uRtpdyOOscUVUrZsJ+JpNFIS86jp74rjefSA2+Sk
-         s/WA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=FrHo7Qkiab7upMciYX+4ZM1HRc3ihXAUiouxL7q47ys=;
-        fh=IwXVHCKCrY/jZHyAj7jyBDjdyZ2bL37PrmmNIE51HO0=;
-        b=nMTzFMqG61QvKzjOzxwJmN9YYIQc1CvYQ3rTHtwFtfWRC5YkvaHi8JKWVDS0Lw0XK3
-         +YF48DKDVgm2I331VfYSyvj4Cki1Ua3phYFwIEz4u8DbGSr8pFtl2f4roJQS8xkC39EM
-         k/oBZ0TaSnT10dHwJxe8OcNod6r1iL+ATXEWcQs9wNmYUop50mtK4V583QK6ySauPM0C
-         YP1Txlr4o+gvB33y4jDEtIByj+Gvl/XDt/AShfxJIKgEOqZjER6bGqwFk/4z1kymJnzX
-         zDOO3U4AeJZivy4S+ItwLfBv7sJqueeN+q2EuL8DANNqzYhBpZAWdBlagHDEN6K0iCO9
-         W4Cg==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793195675; x=1793800475; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=FrHo7Qkiab7upMciYX+4ZM1HRc3ihXAUiouxL7q47ys=;
-        b=wN7oRwnsjwPpunVSyxZOTVd+p4hgNiCJKv8EQNvTie8QS4Ef2nnUQb3pbeKZCfEJkk
-         mVp6qlqpVneWNq04ZfdOvU7Zje40dNMptmMpkskB3sr43K9gq1UpQQTZ5Io8N9wvh3/o
-         TWoTQAMo/kTH11GkOjQe6VQR6m7pzbV1wRU1FRM2r53PXIurtcpuFMcbErfc6ESvDhbA
-         orq+lZqJO2pChU99PwbUsSLz+cKO9jKpaPatKiIYLpBYGyeJy80RBkCIlga4riVapB7i
-         lWaQyfscoHkYqQ/wXs+t0t2P5bTp2cMUvJ/D6TZpHBY0KwPFlrgHyJPWdA2bSnfsExgy
-         XBbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793195675; x=1793800475;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=FrHo7Qkiab7upMciYX+4ZM1HRc3ihXAUiouxL7q47ys=;
-        b=wlbnhxolhS5G06DLcyUE6fRWE4OZ6ybuxlSMN55Kxjjn32UvgBKDdrz0AYv7NqniI4
-         6hbgLJqHWnop6R960bfuSbTIPbQ1Ya1HODLm52xsx1Niyg7hfA9P1BdnFSsdqYY0IrNU
-         IxULE5MQqeqRCfrkvSnqnlNTrtzY/WrUOY9SAK089pJubD9Qfj38sr+r4KPOZef/BEgU
-         +pSxxiB7FVdfricsLElwRrlmAT8UpCZtpCiUVi3GCaP2Guam7I1VFTElzWFnDXQEFD7o
-         Q3LaFLUTd+OjsAra/hQ35JqmXWIeLn6InpxwXj+Kqo8HZIi0d/zYSnh9vmUolPLBPEcv
-         ADag==
-X-Forwarded-Encrypted: i=1; AKwUvBygcZ8cex6s/AKQTfJ1GTEVc0bZ1UI3ZNUyNftb5Ky2g6LaUUDsKTtBcitlsb5UlnDD5pzkwA==@lists.linux.dev
-X-Gm-Message-State: AFq9FYK6QhZOyr75HSnDJe/cMiZbXxsfXouetESHPtvhD5pmwiefT7nZ
-	eIxdOOv343x3FwYxUBASZpJIkGmbmw8Y5qbfb6W3i8yATULAIevjnoEjGVZlBBPkLrEKuaNqDg8
-	Q+ZrJFN7AWoR1x/WWVj5Z8rjR0JbqC/c=
-X-Gm-Gg: AYBFou3Av6zhFXV2kqxQSr0Ai3xX+98jgp611PyOZcOV9CJa8G9s+Ne0L7LxXZo2ChJ
-	xzjnj+XdC/m4Cmmrl9N/CBTasn4Si4cd1BVEYRsuqQng6Yq/fysFfeEdNKNHMdQLkAfsGPo1ORx
-	Nke9F8ovak9WGOhCjcfrIWdfcAaInFBf3FBm+MkOtM28//1i9xTc08eSBYOhSjUgMil1gU8h4gW
-	CLRhTiDJUPxVIZvySE5HGVa+oygLLSBz4WyadNHp4AMMphziUCY4zROuOU2nW4X+XeErDxLRHJj
-	wRnZrgOj4UNNY0zvXAhszSdoemEkE7HqC/iEeCafK0DbcQmFFP+FuTqWQtHNKC8Amt0t80JAKry
-	VTsUe4dKfJbOVyOu6xxus+WCLFvzvVho7Zd9DBKmGzAKWyOL4RwrpuZTIZZon
-X-Received: by 2002:a05:690c:660c:b0:8b0:dabe:cf4b with SMTP id
- 00721157ae682-8b1b5ad911fmr15793197b3.37.1793195674929; Wed, 28 Oct 2026
- 06:54:34 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d63i97x3
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB9001F01825;
+	Wed, 28 Oct 2026 19:41:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793216463;
+	bh=z1oH9nVXlfEJguFMjU2Q4+RBBImfUJG3G8ntqUgh6vw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=d63i97x3uUMJ1ppnY5onUw3EyL2DyL0xvLRVH2sfhPIgXJfxvEh1F4LSOdD79ugD0
+	 UqI3TUiU19DMbVKQI4RFRQw/bZyUgQ/CpF+BGASkwiEHtpb3ZCvHs9+8f4cFlp7Sdc
+	 WR9RG1H6mAk1VchyBcm1nBmgR/vt0RZ0Bpg44FL8tzjWdeeh65/QJCa/nlS5a0rMPb
+	 LSWJ7c4R/7D0/mK6j7jv6DVKcAUCQlh+t6qcv2lV32E3Y8dWxojLwERqGdGE446EWJ
+	 ev58oaklXtqI2TCgSPfVCZY+cqPqibukY6LzmNkVzOKJeS3s5GqB4LmUJyQ2czD1gR
+	 5esg9DsHAVu0w==
+Subject:
+ Re: [RFC net-next v10] mptcp: normalize seq numbers reported in mptcp_info
+From: netdev-bot+sashiko@kernel.org
+To: kalpan.jani@mpiricsoftware.com
+Cc: mptcp@lists.linux.dev, shardul.b@mpiricsoftware.com, janak@mpiric.us,
+ kalpanjani009@gmail.com, kuba@kernel.org
+Date: Wed, 28 Oct 2026 19:41:02 +0000
+Message-ID: <179321646231.3132.10355145486034253199@kernel.org>
+In-Reply-To: <20261027062750.2095515-1-kalpan.jani@mpiricsoftware.com>
+References: <20261027062750.2095515-1-kalpan.jani@mpiricsoftware.com>
+X-sashiko-severity: High
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -104,58 +62,249 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <pm-mptcp-objects-candidate-0066-v3-73df72b7a543d4cada0e@gmail.com>
- <CAL4WiiqEHwZRhSRXqFOtF3OYsX_v3519Ey8AEknbaZKFNogeJA@mail.gmail.com>
- <CAFRLqsU2QHD2Ta2aL_qSVr9nVFrn6mXV_nZ987+oqHUbCa7ZSw@mail.gmail.com>
- <f88992ae9b2dc51fd3a0ba2f9c23a29a91660877@linux.dev> <076d9826-4441-4098-9d35-c568d38ccfc6@kernel.org>
-In-Reply-To: <076d9826-4441-4098-9d35-c568d38ccfc6@kernel.org>
-From: Cen Zhang <zzzccc427@gmail.com>
-Date: Wed, 28 Oct 2026 21:54:23 +0800
-X-Gm-Features: AclHuK96TKMNuEl2guOSVTAwQGGwPjpr-G-orF3Zt_JaeFaiaOl8rCyoCelvGm8
-Message-ID: <CAFRLqsX9cBqrJn94wF-q5NyzoA9tuA72LV00yBYLv5fm7xs=zQ@mail.gmail.com>
-Subject: Re: [PATCH net] mptcp: protect listener backlog reads in diagnostics
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: gang.yan@linux.dev, martineau@kernel.org, geliang@kernel.org, 
-	mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Matt, Gang,
+Thank you for your contribution! Sashiko AI review found 4 potential
+issue(s) to consider.
 
-Thanks for the  review and guidence.
+Critical: 0 · High: 1 · Medium: 1 · Low: 2
 
-Matthieu Baerts <matttbe@kernel.org> =E4=BA=8E2026=E5=B9=B410=E6=9C=8827=E6=
-=97=A5=E5=91=A8=E4=BA=8C 19:37=E5=86=99=E9=81=93=EF=BC=9A
->
-> > Also, could you send v3 separately to the MPTCP mailing list? It seems =
-the
-> > CI checks were not triggered this time. I guess it might be because the
-> > patch was not based on the export branch of the mptcp repo on GitHub, s=
-o
-> > you can generate the patch based on that branch
-> > (multipath-tcp/mptcp_net-next, branch export).
->
-> @Cen: just to be clear: don't send a v3 just to fix the CI issue, except
-> if a reviewer asks you too.
->
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
 
-Understood. Thanks for applying v2 manually and the guidence.
+- [High] subflow_get_info() (net/mptcp/diag.c:39-42) adds a new read
+  through the subflow context into the parent msk:…
+- [Medium] The two places that normalize against msk->remote_idsn
+  disagree on when it is valid, and remote_idsn is not reset when the…
+- [Low] mptcp_diag_fill_info() (net/mptcp/sockopt.c) reads the local_idsn
+  baseline (line 1012) inside a lock_sock_fast() section, releases the…
+- [Low] subflow_get_info() (net/mptcp/diag.c:40) treats `sf->map_seq ==
+  0` as 'no mapping' and exports 0 without normalizing.
 
+--
 
-> > Two notes for next time (Important):
-> > 1. For MPTCP-only patches, it is enough to send them to the MPTCP list
-> >    only, no need to CC netdev.
->
-> Small note: for "urgent" patches, it is fine to send them to Netdev as
-> well, following what's in the MAINTAINERS file. For new features and
-> non-urgent fixes, it is better to send them to the MPTCP list only to
-> reduce the traffic on the Netdev list.
->
-> > 2. If a new version is needed, please wait 24 hours before sending it.
->
-> (or more: wait for the Netdev Sashiko review)
+mptcp: normalize seq numbers reported in mptcp_info
 
-Thanks for the clarification. I will follow it in the future.
+This patch adds local_idsn and remote_idsn baselines to struct mptcp_sock.
+It uses them to normalize mptcpi_write_seq, mptcpi_snd_una and
+mptcpi_rcv_nxt, and zeroes those fields in INET_DIAG_INFO for callers
+without CAP_NET_ADMIN. It also normalizes MPTCP_SUBFLOW_ATTR_MAP_SEQ
+against remote_idsn, and passes a net_admin flag to the idiag_get_info
+callbacks.
 
-Best regards,
-Cen Zhang
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/445
+
+> diff --git a/net/mptcp/diag.c b/net/mptcp/diag.c
+> index 70cf9ebce8338..590cdee419ef9 100644
+> --- a/net/mptcp/diag.c
+> +++ b/net/mptcp/diag.c
+
+[ ... ]
+
+> @@ -35,6 +36,11 @@ static int subflow_get_info(struct sock *sk, struct sk_buff *skb, bool net_admin
+>  		goto nla_failure;
+>  	}
+>  
+> +	map_seq = 0;
+> +	if (sf->conn && sf->map_seq)
+> +		map_seq = sf->map_seq -
+> +			  READ_ONCE(mptcp_sk(sf->conn)->remote_idsn);
+
+[Severity: High]
+Can this READ_ONCE() read from an mptcp_sock that has already been freed?
+
+Before this patch, subflow_get_info() only read fields of the subflow
+context, and that context is freed with kfree_rcu(). The new line follows
+sf->conn into the parent msk. Nothing in the diag path seems to guarantee
+that the ctx still holds its reference on sf->conn at this point.
+
+The dump path reaches here like this:
+
+inet_diag_dump_icsk()
+  sk_diag_fill()          /* ssk held only by refcount, ehash lock dropped */
+    inet_sk_diag_fill()
+      tcp_diag_get_aux()  /* reads icsk->icsk_ulp_ops without the lock */
+        tcp_diag_put_ulp()
+          subflow_get_info()
+            lock_sock_fast(sk);
+            sf = rcu_dereference(inet_csk(sk)->icsk_ulp_data);
+
+Suppose the subflow is destroyed between the icsk_ulp_ops read and
+lock_sock_fast(). The teardown then runs:
+
+tcp_done()
+  inet_csk_destroy_sock()
+    tcp_v4_destroy_sock()
+      tcp_cleanup_ulp()
+        subflow_ulp_release()
+
+and subflow_ulp_release() does:
+
+	sk = ctx->conn;
+	if (sk) {
+		...
+		sock_put(sk);
+	}
+
+	mptcp_subflow_ops_undo_override(ssk);
+	if (release)
+		kfree_rcu(ctx, rcu);
+
+tcp_cleanup_ulp() only clears icsk->icsk_ulp_ops. icsk_ulp_data and
+ctx->conn are left in place, and subflow_get_info() does not check
+icsk_ulp_ops again after it takes the lock.
+
+If the user has already closed the msk, that sock_put() can drop the last
+reference. Connected msks are not SOCK_RCU_FREE, because
+mptcp_sk_clone_init() does:
+
+	sock_reset_flag(nsk, SOCK_RCU_FREE);
+
+So the rcu_read_lock() in subflow_get_info() would not keep the msk alive.
+
+This read also happens before the net_admin check, so an unprivileged
+dump such as ss -ti could reach it. A CAP_NET_ADMIN requester would also
+get the stale value back as MAP_SEQ.
+
+[Severity: Medium]
+Should this be gated on msk->can_ack, as mptcp_diag_fill_info() does?
+
+mptcp_diag_fill_info() only uses remote_idsn for mptcpi_rcv_nxt when
+can_ack is set:
+
+	if (READ_ONCE(msk->can_ack))
+		remote_idsn = READ_ONCE(msk->remote_idsn);
+
+Here, remote_idsn is subtracted whenever sf->map_seq is non-zero.
+
+remote_idsn is also not reset on disconnect. mptcp_disconnect() clears
+can_ack and ack_seq:
+
+	WRITE_ONCE(msk->can_ack, false);
+	...
+	/* for fallback's sake */
+	WRITE_ONCE(msk->ack_seq, 0);
+
+local_idsn and remote_idsn are only zeroed in __mptcp_init_sock(), which
+does not run on that path.
+
+Consider this sequence:
+
+socket(IPPROTO_MPTCP)
+connect() to an MPTCP peer     /* subflow_set_remote_key() sets remote_idsn */
+connect(AF_UNSPEC)             /* mptcp_disconnect() */
+connect() to a non-MPTCP peer  /* fallback, remote key never set */
+
+The first subflow's iasn and map_seq were reset, so in fallback
+subflow_check_data_avail() rebuilds map_seq starting from iasn == 0:
+
+	subflow->map_seq = __mptcp_expand_seq(subflow->map_seq,
+					      subflow->iasn +
+					      TCP_SKB_CB(skb)->seq -
+					      subflow->ssn_offset - 1);
+
+MAP_SEQ would then be a small value minus the stale remote_idsn, which
+wraps. For the same socket, mptcpi_rcv_nxt is reported as ack_seq - 0.
+
+That seems to contradict this part of the commit message:
+
+    Normalize MPTCP_SUBFLOW_ATTR_MAP_SEQ against remote_idsn as well, so
+    subflow mapping sequence numbers use the same remote sequence space as
+    mptcpi_rcv_nxt.
+
+Should mptcp_disconnect() also reset local_idsn and remote_idsn?
+
+[Severity: Low]
+Is sf->map_seq == 0 a reliable test for "no mapping"?
+
+get_mapping_status() stores whatever mptcp_expand_seq() returns and marks
+the mapping valid:
+
+	subflow->map_seq = map_seq;
+	subflow->map_subflow_seq = mpext->subflow_seq;
+	subflow->map_data_len = data_len;
+	subflow->map_valid = 1;
+
+So once the 64-bit data sequence space wraps, a valid mapping can start
+at absolute DSN 0. With remote_idsn = 2^64 - k, that mapping's relative
+sequence is k, but MAP_SEQ would be reported as 0. The peer picks its own
+key, so it can make its IDSN close to 2^64.
+
+Could the check use something other than the numeric sequence value?
+
+>  	if (sf->mp_capable)
+>  		flags |= MPTCP_SUBFLOW_FLAG_MCAP_REM;
+>  	if (sf->request_mptcp)
+
+[ ... ]
+
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index fcf6feb2a9eb5..b1e41c967157e 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+
+[ ... ]
+
+> @@ -1008,9 +1009,11 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+>  	info->mptcpi_flags = flags;
+>  
+>  	slow = lock_sock_fast(sk);
+> +	local_idsn = READ_ONCE(msk->local_idsn);
+> +
+>  	info->mptcpi_csum_enabled = READ_ONCE(msk->csum_enabled);
+>  	info->mptcpi_token = msk->token;
+> -	info->mptcpi_write_seq = msk->write_seq;
+> +	info->mptcpi_write_seq = msk->write_seq - local_idsn;
+
+[ ... ]
+
+> @@ -1023,17 +1026,20 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+>  	unlock_sock_fast(sk, slow);
+>  
+>  	mptcp_data_lock(sk);
+> +	if (READ_ONCE(msk->can_ack))
+> +		remote_idsn = READ_ONCE(msk->remote_idsn);
+>  	info->mptcpi_last_ack_recv = jiffies_to_msecs(now - msk->last_ack_recv);
+> -	info->mptcpi_snd_una = msk->snd_una;
+> -	info->mptcpi_rcv_nxt = msk->ack_seq;
+> +	info->mptcpi_snd_una = msk->snd_una - local_idsn;
+> +	info->mptcpi_rcv_nxt = msk->ack_seq - remote_idsn;
+
+[Severity: Low]
+Can the baseline and the counter here come from different connections?
+
+local_idsn is read under lock_sock_fast(), the lock is dropped, and
+snd_una is read later under mptcp_data_lock(). mptcp_connect() writes all
+of these while holding only the msk owner lock:
+
+	WRITE_ONCE(msk->local_idsn, subflow->idsn);
+	WRITE_ONCE(msk->write_seq, subflow->idsn);
+	WRITE_ONCE(msk->snd_nxt, subflow->idsn);
+	WRITE_ONCE(msk->snd_una, subflow->idsn);
+
+Holding the owner lock does not exclude a data lock holder.
+
+Suppose another thread calls connect() between the two critical sections
+on a fresh socket. The reader then holds local_idsn == 0 and reports the
+absolute IDSN as mptcpi_snd_una. Across a disconnect and reconnect, the
+result is the difference between two unrelated baselines.
+
+mptcp_disconnect() also clears can_ack, and later ack_seq, without the
+data lock. mptcpi_rcv_nxt can therefore combine can_ack == false with the
+old ack_seq, or the old remote_idsn with ack_seq == 0.
+
+mptcp_getsockopt_info() calls mptcp_diag_fill_info() without the socket
+lock and copies the result out as is. Could the baselines and the
+counters be sampled under one consistent lock?
+
+>  	info->mptcpi_bytes_acked = msk->bytes_acked;
+>  	mptcp_data_unlock(sk);
+> +
+>  }
+
+[ ... ]
+
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261027062750.2095515-1-kalpan.jani%40mpiricsoftware.com
