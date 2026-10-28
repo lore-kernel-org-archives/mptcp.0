@@ -1,47 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793184101;
-	b=fXOG8pmvgI5G2SRrzDRCgTJQhNM3+d4ZDi9Vq2DadifUsEeenghHfru0PlX9CewAZFSS
-	 45RZlKlI3bmZ0WCkL8PqNuUcCPqJvofwyfJxxGQ9c94gG3Bdq71FdGxyjiSt1geGzXfni
-	 jTShQe1D0GsBNXBdGoEy1c9lAnfUtmPAUMmyPttOUboVZK6Ww8D7KkHggevWQ/NVXjdXX
-	 x+4PIZq69K094NdLZ9LZVst0G1dxcNQlsNFldO6E0BUAZsF1AOscs42ITW+rkMhSJdWP5
-	 SNkqs1Gja4BoaEj8d3lJ7wev5uHnbswpLFEORARBE+939/9Zx6DEHV44SzctqZY5iww==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793184101;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=vWlJIXGN2mCWIfMvySKczN8C2rDEInKxc0fQbbz0h/M=;
-	b=2YVqC66V/nk/HohYZpN7KCdhPjrr/ziulMFQKUebDlVawhdB9RvZQ6nca2ptaSxPU3V3
-	 T4fnYdT9Y5A4DzzXH4jA1SiCn8ETXChjwjU02sHg48CNMEh0V2Swbq9nlkdCL+lMUJsIQ
-	 dBWRq/ANG1sGrHv4MaD7QpauPVwR/hcfjA/Yiwo6OFMtSgfUVvVIuLbg6x4PShIX4yBZs
-	 6r+4qgd2eCK+PufjuwU4WdCNMsm6ECeTCny7IMCELwO41Leev3yT+OnbjZLXt2wzVEUBq
-	 Ghj4ufvBCcXvUJIEszN/yw0z6TrjJmWQMsYiK2PmpAyg54uQ237OCcsays9L52Lk0rg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Souzgep8;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.52
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793186138;
+	b=k/j72kcngTIr4pIecI99fEw/2HMycyiRyXFAACT3KqEqCHgh0DTUv2LQEEjHk/MG1qEk
+	 QZxJUNWty5e3oTuJyBtWdTcka371B/71Fgl0el0hG649T8+hdDFPViQD/ETk7xKiKyLAX
+	 +1zpat0L1F9QhQrmyeYzV60SEOaIbEi7MlyWcfdOGLit/KkcUghUV6qvQXsdZScFBjY9w
+	 YU8t4trhvTJVKpzmnFHhaINWn1WychUCcQsCtuaNlxO+bdxFkAJPoAUfWSzn6rWDXxnuz
+	 V/m6ANrpTvR2Yk/EoRrlglsALWF2G31aRXYLaSslxDN5a7R8issDHYcxXbcDwBASrsA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793186138;
+	h=DMARC-Filter:DKIM-Signature:Received:From:Subject:Date:Message-Id:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-B4-Tracking:
+	 X-Change-ID:To:Cc:X-Mailer:X-ZohoMailClient;
+	bh=pFlxJwCj0HMDvgGNwLKgKAsxgmxkMgUkmSbE4clw0uo=;
+	b=skNX6YmFEPYKUo/MRw+dUm4UiJmfkSwlvOOyYDdvX1jPsgRi0pqNjCA4I+mLSRO4K79K
+	 W62XmxsSvc/FGo9fNyZWa9WA1mTsLkQsnqmIJAqBTe9vzsCaMQvWANwrUm/C5NEe5hV3g
+	 QybzQ3Gxnpsw0Ok3N5MTnXYpzQvuPkyJ+70ArbVzW5cdDxqvNoQbLuRTAaBeCl5akpPAx
+	 kPpxSJVn+QoRxt5zCY2PHzN5oDzebAuNzIzkQejTtkxhV0yWDqdBOxTYx8khtthhKFszO
+	 7ta4ZVizV/sQaHoe+B6o8s1VbI2H6/BwjrN//iLk6qmUCXskyr9y9K2zIPBDuOutXYg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=mpiricsoftware.com;
+	spf=pass smtp.mailfrom=mpiricsoftware.com;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.52
+Received: from sender6-of-o52.zoho.com (sender6-of-o52.zoho.com [165.173.180.52])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC49606A31A
-	for <mptcp@lists.linux.dev>; Wed, 28 Oct 2026 10:41:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Souzgep8
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93F631F01825;
-	Wed, 28 Oct 2026 10:41:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793184101;
-	bh=vWlJIXGN2mCWIfMvySKczN8C2rDEInKxc0fQbbz0h/M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Souzgep8+lUlwXElnVSlIfDyZTYMbZDsfMRmLYu2qV2rONa7Cv5tKJFKQB+54/J3g
-	 zsX0iBUHMp9LmiKqu1+pV7CwomVoQt/8dYbleUMBAPY1ufUunUNV88+w6sozhdu/em
-	 gSItP9DRI+nZvGdqzzx5RWsg99bWz0QJWgBdPUqnZGqe2wRjQe02FBGkA8uZSQis3D
-	 oN3GOHepkm+IrwXwX7ukAM9Clq0ENvsLPtwDK41Hq1hW2+4Jitb2SjhitE1Rj7Cppo
-	 Aqrlr8Qr6HKlJHrLyKGCX9+yPKOKrnWG0yO83OeDf9MSWdZFxrOjtH1sNMq9kZ9V7R
-	 2a2XMLaAjIi9w==
-Message-ID: <199b6eb5-0705-4c65-a6c2-402484e204c2@kernel.org>
-Date: Wed, 28 Oct 2026 11:41:38 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32603606A31A
+	for <mptcp@lists.linux.dev>; Wed, 28 Oct 2026 11:15:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 32603606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
+ARC-Seal: i=1; a=rsa-sha256; t=1793186134; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=M+H2EZ4vrsBg1pPYUH4BegPGHiV0ZDD9qFscOUAg6NT2MFcj6aPJT2YwxlxlqBeYG4UIIBM9zU2MbfLRUDM738RgOWgYSVaFZEHpFSZVG+Srh+/1uwhqY1sA7KtjsASODw6qw+8dBHe75DLeLqiHjGfhP06i6PnRah/pfAcZrbQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1793186134; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=pFlxJwCj0HMDvgGNwLKgKAsxgmxkMgUkmSbE4clw0uo=; 
+	b=EkSUS1oiFzc9VAjtGHCTULkqXASQDSomUx7oTDiLuRn+bDMBWGDP1HENmfivM1kgy00Gia6FYqYWIJUKJU6eyGPVXSL7D+srpIa3RsEesK7cqvf5LWMnCUwr/y55PBCPR1rZCOOhidw7xUkEGsd7E2lbzp4nWwZaWAPOhpzhYQI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=shardul.b@mpiricsoftware.com;
+	dmarc=pass header.from=<shardul.b@mpiricsoftware.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1793186134;
+	s=mpiric; d=mpiricsoftware.com; i=shardul.b@mpiricsoftware.com;
+	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
+	bh=pFlxJwCj0HMDvgGNwLKgKAsxgmxkMgUkmSbE4clw0uo=;
+	b=lRqolIF+Kj+rUSlLrytuZxoqxLWAqcK2LAAMm8XuCf3Sqh9iNUB4YeJi55DOe+sW
+	KEuGPSmvXnmAlUSw5cIjDZxoin2/G5J6zj4AoDeVTFu/BsCMniFDI3XF/RzYANRwtsW
+	EKCRyvUcGUK9Hgo6v6O+ieQDr7tmI8HocARs/UNo=
+Received: by smtp.zohomail.com with SMTPS id 1793186131378554.6728296751378;
+	Wed, 28 Oct 2026 04:15:31 -0700 (PDT)
+From: Shardul Bankar <shardul.b@mpiricsoftware.com>
+Subject: [PATCH mptcp-next v5 0/4] mptcp: sched: penalise a slow subflow
+Date: Wed, 28 Oct 2026 16:45:07 +0530
+Message-Id: <20261028-mptcp_penalise_send_v2-v5-0-32fb379ce117@mpiricsoftware.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -51,96 +63,139 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [RFC net-next v10] mptcp: normalize seq numbers reported in
- mptcp_info
-Content-Language: fr
-To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-Cc: mptcp <mptcp@lists.linux.dev>, martineau <martineau@kernel.org>,
- pabeni <pabeni@redhat.com>
-References: <20261027062750.2095515-1-kalpan.jani@mpiricsoftware.com>
- <20261027095410.3675317-1-kalpan.jani@mpiricsoftware.com>
- <ad0f8a94-09b8-46d4-b807-94f1f52f1d1d@kernel.org>
- <1a17d565bd7.51ae4f93484769.4801857719496061627@mpiricsoftware.com>
- <1ec0c2b5-a0fa-44e8-9ae8-dca9b7f90ec6@kernel.org>
- <495a89c5-40ca-4758-8366-6c4c28e28112@kernel.org>
- <1a18212dbaf.7594e0f1624805.5831653841901931656@mpiricsoftware.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <1a18212dbaf.7594e0f1624805.5831653841901931656@mpiricsoftware.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADvZ4WoC/4XOwW7DIAwG4FepOI8KHELoTnuPqYoIMSvTQhCwt
+ FOVdx+lh+3QqJIvlv1/9pUkjA4Ted1dScTFJTf70rQvO2JO2n8gdWPpCTCQTPGWTiGb0Af0+ss
+ l7BP6sV+A4iiBSdsxrQQp4RDRukuF30nNUI+XTI73WfoePtHkm3zbPrmU5/hTv1igZp4dLMVog
+ y0TB901UvG3KbjoTJptPuuIezNP9drS/Pe6Ta8pHkoNegTLBwWbnvjzDpxveqJ4CpiFAYVWFh9
+ 667r+AixgobeDAQAA
+X-Change-ID: 20260815-mptcp_penalise_send_v2-ed6206f70a84
+To: mptcp@lists.linux.dev
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Janak Patel <janak@mpiric.us>, Kalpan Jani <kalpan.jani@mpiricsoftware.com>, 
+ Shardul Bankar <shardulsb08@gmail.com>, 
+ Shardul Bankar <shardul.b@mpiricsoftware.com>, 
+ Abdul Wasey <w453y.me@gmail.com>
+X-Mailer: b4 0.15.2
+X-ZohoMailClient: External
 
-On 28/10/2026 11:33, Kalpan Jani wrote:> No, I haven't tried the
-msk-address offset approach yet.
-> 
-> I sent RFC v11 with the alternative approach of hiding the sequence
-> fields from users without CAP_NET_ADMIN, based on your previous
-> message. I did not mean to imply that the pointer-offset approach had
-> been tried and found not to work.
-> 
-> The two patches applied and built successfully against my local mptcp/
-> net-next tree, and both passed checkpatch. However, I haven't done a
-> runtime test of the access restriction or tested the pointer-offset
-> approach.
+A subflow that is slow relative to the others can soak up connection
+resources and cause head-of-line blocking of the aggregate stream. This
+series lets the packet scheduler send less than such a subflow's
+congestion window by halving it, and leaves the congestion control to
+raise it again. It implements issue #345 [1]. This is a deliberately
+simple first form.
 
-Always better to have a runtime validation, especially here where you
-Cc'ed netdev and the net maintainers ;)
-(BTW, I think we can wait to settle on a working design before involving
-them.)
+- Patch 1: a prerequisite fix. The scheduler truncates the pacing rate to a
+  u32, which skews subflow selection on fast paths (Fixes).
+- Patch 2: penalise a slow subflow by halving its cwnd, triggered on its
+  pacing rate and gated on the fast path being cwnd-limited.
+- Patch 3: skip the penalty when the transfer is receive-window-limited,
+  where it would otherwise slow the transfer.
+- Patch 4: MPTcpExt counters and a dedicated mptcp_subflow_penalise
+  tracepoint for observability.
 
-> I'll look into the pointer-offset option before deciding whether
-> another revision is needed. Since v11 has already been sent, I'll
-> wait for your feedback before posting any further changes.
+Validation, baseline versus this series (test helper, its run_matrix.sh
+base-vs-patch driver, and run steps are in [2]):
+- No regression in the mptcp selftests.
+- No regression versus baseline across the buffer-limited transfers
+  (send-buffer, receive-window, both, sndbuf>rcvbuf): the two-path completion
+  time with the penalty enabled matches the unpatched kernel. Where the
+  slow subflow is beneficial (send-buffer-limited), the two-path transfer
+  stays faster than the fast path alone.
+- Patch 3's gate keeps the penalty from firing when receive-window-limited,
+  where halving cwnd would slow the transfer.
+- With a bufferbloated slow path, the penalty roughly halves the slow path's
+  queueing latency (subflow srtt), with the transfer time unchanged. It does
+  not reduce the aggregate out-of-order volume or move data off the slow
+  path; that is the role of issue #332 [3], and the two are complementary.
+- The conditions above do not catch one case: with the buffers left to
+  autotuning and a subflow that is slow because of latency rather than limited
+  bandwidth, penalising it costs throughput, and the cost grows as the added
+  delay grows.
 
-If this approach works, we could eventually consider that as a fix and
-backport that.
+Used LLM for design, review, coding assistance.
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+[1] https://github.com/multipath-tcp/mptcp_net-next/issues/345
+[2] https://github.com/shardulsdk-mpiric/linux/blob/e0f78406d921/tools/testing/selftests/net/mptcp/mptcp_sched_penalise.sh
+    (run_matrix.sh + runs.conf are alongside it in the same directory)
+[3] https://github.com/multipath-tcp/mptcp_net-next/issues/332
+
+Changes in v5:
+- Rebased on the current export; no code change.
+- Dropped the Assisted-by tags, which the kernel docs no longer describe;
+  tool use is noted in this cover letter instead.
+- Collected Abdul Wasey's Tested-by, thanks:
+  https://lore.kernel.org/all/20261025192320.1831707-1-w453y.me@gmail.com/
+- Link to v4: https://patch.msgid.link/20260911-mptcp_penalise_send_v2-v4-0-820f2be4a8fe@mpiricsoftware.com
+
+Changes in v4:
+- Patch 1: compute the pacing-rate average with 128-bit intermediates
+  (mul_u64_u64_div_u64); a single 64-bit numerator overflows at a high
+  pacing rate with a large send queue. Dividing before multiplying loses
+  too much precision on slow paths, details in the commit message.
+- Patch 1: add a second Fixes tag. The u32 truncation predates the
+  averaging formula; it dates to d5f49190def6.
+- Patch 2: evaluate the conditions on the subflow itself where the penalty is
+  applied, under that subflow's socket lock; the scheduler only marks a
+  candidate. Annotate the cross-subflow tcp_is_cwnd_limited() read with
+  data_race().
+- Patch 2: exclude backup subflows from the fastest-path comparison. A
+  backup carries no data while an active subflow exists, so its rate and
+  cwnd-limited state go stale, and using one as the reference penalised
+  the subflow that was actually sending.
+- Patch 3: drop a throughput figure taken from an early debug-kernel run;
+  the mechanism argument stands without it.
+- Patch 4: add the send burst to mptcp_subflow_penalise, and emit the
+  verdict once the burst is known.
+- Longer explanations moved from code comments into the commit messages.
+- Retested base versus this series on one kernel configuration, congestion
+  control pinned to reno, three runs of the full matrix on each side. No
+  behavioural difference against v3.
+- Link to v3: https://patch.msgid.link/20260817-mptcp_penalise_send_v2-v3-0-e6a2ad2f1b82@mpiricsoftware.com
+
+Changes in v3:
+- Dropped the RFC tag (Matthieu Baerts (NGI0)). No changes to the patches themselves.
+- Rebased on current export.
+- Link to v2: https://patch.msgid.link/20260815-mptcp_penalise_send_v2-v2-0-3e5049a73681@mpiricsoftware.com
+
+Changes in v2
+- Patch 1 (new, not in v1): fix the scheduler's pre-existing u32 pacing-rate
+  truncation (Fixes: 3ce0852c86b9).
+- Patch 2 (v1's 1/3): also skip a subflow already at the cwnd floor
+  (MPTCP_PENALISE_MIN_CWND); clear the flag when returning without send-window
+  room; re-check TCP_CA_Open in the apply path; express the rate trigger as a
+  division (avg_pacing_rate < max_pace / ratio, using the widened pace from
+  patch 1) instead of a u64-cast multiply.
+- Patch 3 (v1's 2/3): make the receive-window test wrap-safe
+  (after64, like tcp_snd_wnd_test()); same condition otherwise.
+- Patch 4 (v1's 3/3): real MPTcpExt counters (dropped DO-NOT-MERGE) plus
+  a dedicated mptcp_subflow_penalise tracepoint (not a field on
+  mptcp_subflow_get_send).
+- Rebased on current export.
+- Link to v1:
+  https://lore.kernel.org/mptcp/20260726-mptcp_penalise_send-v1-0-84485e0e995b@mpiricsoftware.com
+
+Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
+---
+Shardul Bankar (4):
+      mptcp: sched: avoid truncating the pacing rate in the scheduler
+      mptcp: sched: penalise a slow subflow by halving its cwnd
+      mptcp: sched: do not penalise when receive-window-limited
+      mptcp: sched: add penalise counters and tracepoint
+
+ include/trace/events/mptcp.h | 33 ++++++++++++++++
+ net/mptcp/mib.c              |  2 +
+ net/mptcp/mib.h              |  2 +
+ net/mptcp/protocol.c         | 89 ++++++++++++++++++++++++++++++++++++++++----
+ net/mptcp/protocol.h         |  2 +
+ 5 files changed, 121 insertions(+), 7 deletions(-)
+---
+base-commit: d367c3b57a16822766c0f0c9b039a3d29d9dca56
+change-id: 20260815-mptcp_penalise_send_v2-ed6206f70a84
+
+Best regards,
+--  
+Shardul Bankar <shardul.b@mpiricsoftware.com>
 
