@@ -1,65 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.52
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.54
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793176044;
-	b=mCdZtBtCasco573l6Ku6npawg3bRxM3KILHo8SQrje3Kwq6oq3RH1vzB4MqhvWuDtNvo
-	 UwEWtaGUl0sQ8/SxRB6Jtq6STTC7GT04aoeRk7kwtFyL8VmBJe2gMsJ09YzmAebpZHvlI
-	 c2TySKMFKABVYI6D3fut5zO1qnji/0X5CfwYxThLvdTwEHA6HuFH7uR9wHH0wy0wG6A99
-	 cNbTZvyPxPGOP4XVYSaFLY2qHbrnsR9f8ikms7jJ83PK1/m2MlMDJMYUB/NTs2/Gdq1YS
-	 1YzNU5IZghtGnxMZjH0wvOK53gZ2mV29shJJxqDfmdPJcB2nYykmaNBohdfMyn7cU4w==
+	t=1793176067;
+	b=TMQawFSUXNPgnQI9M3FRllLIPL88UTUBnGvTfux4M7yAGXAwlH9FdAIu7UqtURgibIt+
+	 XDsX2POdyC+TtBVJ25nd3nwld/9eiMZUV6FIlLj9hWaWPxCqGxkYbYObLkWF7jM4jbTkc
+	 ohjd1laQKd/xDOnZFmH7+RjrzH0HH2vOcuLkE9NOuU/Y9heiea6V/eTt+EUx7xwFmrvFL
+	 XVgq7IdCmCiQm0iTcCgjLuOBokD5AIDrSFZ8VoiLVu/8tE8oG91fP9a0LypkCJKWZLTsE
+	 b+Tqbcrg/i6OOU7PxmRrhJuC3rOUZ1h78RuIp6L8NoewCCxdBSeHYgkiLsXtaVHZ09A==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793176044;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793176067;
 	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
 	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding:X-ZohoMailClient;
-	bh=3S4mlc+KKWGHl+066WSbmpUDxv3nEWv4SNsXrmgPfuY=;
-	b=ggSlXN+9044IsO1dXLNDd8jslenY3bptZUTSI/phM9igVlHjfbkKBe0BsDnjGpQvZHlS
-	 DNLl0eMRhDgRLKtnCq7reQD2cFRaleRM+XSEGgf3ZKU1dO4jgPPgt0urd79a6mpn/3Toq
-	 FDgU4/INIYXOYq3uLEj7dFbMWflQJKYOXaiVJxG748fow03opMnbw7MnQyToL3spnkKG7
-	 v5/98S6PlW7vE7yqagevBN8u2h3oedAwX2YrY/RH4exosMIWrNkJWXPUGlvZvAQ6fjfkD
-	 DWXMrjLuatrAz7Xjha6tGPrQmyW34ukfJOpL2M++U9gQ6RmrAXwHpSmZdqVecUCfO5A==
+	bh=myM/NwutGCZOyeD1H4WToSGlYN7DqWtaA9tPjs0fpP0=;
+	b=5HoWij46ig69XO/B0bdJFvdTw2s+AHkXrmNlnIIzeuTd/Y80veb4WXPrqD0pACQF1++Y
+	 3aXbmS5nk5xqRmShXwrXFW47o5QvmHGQUDG0/vZYDByrp1zBrExXiUZTkhLsHG6XzvYmi
+	 ma15hi0qeC2nCrvb70/kFo9RpweYf/BMUPspzIfjhgMwSW/7VZEtNucpV1A59k1aMClKg
+	 4q6IvIXkr3pcfserTHZ94xFeFU2mOCVedC32IDYaKs6jctlVXeOmUB6+40EpMlYv9MYOz
+	 smI7jvaprh6my74VMITJ+ulNHKBfyIzuEkTdLA+uIS4O4ltYFLdl3mghSP0WLGJKybw==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=mpiricsoftware.com;
 	spf=pass smtp.mailfrom=mpiricsoftware.com;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.52
-Received: from sender6-of-o52.zoho.com (sender6-of-o52.zoho.com [165.173.180.52])
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.54
+Received: from sender6-of-o54.zoho.com (sender6-of-o54.zoho.com [165.173.180.54])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE26606A31A
-	for <mptcp@lists.linux.dev>; Wed, 28 Oct 2026 08:27:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5EE26606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B34606A31D
+	for <mptcp@lists.linux.dev>; Wed, 28 Oct 2026 08:27:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E6B34606A31D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
-ARC-Seal: i=1; a=rsa-sha256; t=1793176041; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1793176057; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=Fx57gA+sLXXdsvgYHipzEcQi+UGjVQgc8ro1qRVReWYvu38WvDes2ase6u+KhIGIItTcbixVgNI6FloOYwvui2OYw2KjGhzaN1LfWQ3Q6ZZxeAbA/XOzG+9cE7N6vg3hvMCEVLc3pUnYuu9DyFhrCT7GvrhI0Hsj6bXhoVXsTaw=
+	b=ExSEXI2BEp3D/p4wP7Oy3FrT8GVNHD2UPFhot8vC1ZRHnE79aRf4AXEYryVbY+6t9KGE/1d1hCEyK3H1+2mm43tt5Xy3MKdH2ViOG500gjLDPTe3CbUUonJy3yBJe0nzvwZkJPCRK/H6n8BmBCAq7KlBw347hlgrpxgtI3Wz/hE=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1793176041; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=3S4mlc+KKWGHl+066WSbmpUDxv3nEWv4SNsXrmgPfuY=; 
-	b=Tg072T1JxJSqhG4UwLpEuzAgGUFpoHq44I5l2cYdJdm3VMuqJgShB8bBzlCy2+yJBFPqccya8FEnB/Nxd1ol2F9Dwy+G2uUZH86iUnDV+Jl6HiZc5IEyy9gGZdBoM1nHCWrJdxo82PvKys5Q4sCYD9j/ir1pxd7zroribiO4Wcs=
+	t=1793176057; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=myM/NwutGCZOyeD1H4WToSGlYN7DqWtaA9tPjs0fpP0=; 
+	b=KgC6mU7tCzVhs0xr3tQq6hU0UF735YlXnQAQF1VsEIIOAyP+QtGqaAe8PTCpU8R3HwfU3V5oXTni+G1GIXhKlu3/Vuu0IM/Q9XSW8/VdgGPPjc++f05rweV1v/FW/lH1cxRi1KlpENihMROzBTO/hoehjdYYVUqDdBX9KClRaaU=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=mpiricsoftware.com;
 	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
 	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1793176041;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1793176057;
 	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=3S4mlc+KKWGHl+066WSbmpUDxv3nEWv4SNsXrmgPfuY=;
-	b=tPxhAATkUaviiR08JAqSlRksmf8D97Q7ERzCWyuIjc/Ee8Ilv0JFV/sbDB/v/ddp
-	S72DVtFyGYN1Ne8cOhCtwPsNCI1eUTvOEWm28FSwK7n7NGRe9mGZqN2jZ3dxFv2BD1G
-	eEZDEF8hD+7IMUOKqGqqjscNEfEF9ItUDvC9/Qt0=
-Received: by smtp.zohomail.com with SMTPS id 1793176039202459.22084619033524;
-	Wed, 28 Oct 2026 01:27:19 -0700 (PDT)
+	bh=myM/NwutGCZOyeD1H4WToSGlYN7DqWtaA9tPjs0fpP0=;
+	b=m9h+e0jC7f+h7Cb6o43k/Xo0qb4nBhudcwHqzxSZdKR09/izEAZ4pElGUjMuQumr
+	0a5jibu2lemUn73Nl/E5L5Fpj6tbBVvn44isBNE9LNhLopMCJKDGFyPKvicgLNptG2t
+	hah10mmOGTFECuTc9FrrY87lwMpq0PLHtlG3kqow=
+Received: by smtp.zohomail.com with SMTPS id 1793176054284430.2233145702239;
+	Wed, 28 Oct 2026 01:27:34 -0700 (PDT)
 From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
 To: mptcp@lists.linux.dev
 Cc: matttbe@kernel.org,
-	Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-Subject: [RFC net-next v11 0/2] inet_diag: restrict MPTCP sequence counters
-Date: Wed, 28 Oct 2026 13:56:59 +0530
-Message-ID: <20261028082704.1609493-1-kalpan.jani@mpiricsoftware.com>
+	Kalpan Jani <kalpan.jani@mpiricsoftware.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Neal Cardwell <ncardwell@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>,
+	Kees Cook <kees@kernel.org>,
+	David Ahern <dsahern@kernel.org>,
+	Willem de Bruijn <willemb@google.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-sctp@vger.kernel.org
+Subject: [RFC net-next v11 1/2] inet_diag: pass net_admin to get_info
+Date: Wed, 28 Oct 2026 13:57:00 +0530
+Message-ID: <20261028082704.1609493-2-kalpan.jani@mpiricsoftware.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <1ec0c2b5-a0fa-44e8-9ae8-dca9b7f90ec6@kernel.org>
+In-Reply-To: <20261028082704.1609493-1-kalpan.jani@mpiricsoftware.com>
 References: <1ec0c2b5-a0fa-44e8-9ae8-dca9b7f90ec6@kernel.org>
+ <20261028082704.1609493-1-kalpan.jani@mpiricsoftware.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -72,41 +90,152 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-This series updates v10 following the review discussion.
+Pass the request's CAP_NET_ADMIN status to idiag_get_info()
+so protocol-specific diagnostic handlers can restrict privileged
+information.
 
-Instead of normalising sequence counters, it restricts their visibility
-to users with CAP_NET_ADMIN.
+Socket-destruction notifications have no individual requesting user,
+so the callback receives net_admin set to false for that path.
 
-Patch 1 passes the request's CAP_NET_ADMIN status through the generic
-inet-diag callback. Socket-destruction notifications pass false because
-there is no individual requesting user.
-
-Patch 2 zeros mptcpi_write_seq, mptcpi_snd_una and mptcpi_rcv_nxt in
-unprivileged MPTCP diagnostic responses. The MPTCP_INFO getsockopt path
-remains unchanged.
-
-Changes since v10:
-- Drop IDSN-based sequence normalization.
-- Split generic capability propagation and MPTCP visibility restriction.
-
-Testing:
-- W=1 build of all six affected diagnostic objects against the local
-  mptcp/net-next reference.
-- checkpatch.pl --strict: zero errors and zero warnings for both patches.
-
-Kalpan Jani (2):
-  inet_diag: pass net_admin to get_info
-  mptcp: hide seq counters without net_admin
-
+Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+---
  include/linux/inet_diag.h | 3 ++-
  net/ipv4/inet_diag.c      | 6 +++---
  net/ipv4/raw_diag.c       | 2 +-
  net/ipv4/tcp_diag.c       | 2 +-
  net/ipv4/udp_diag.c       | 2 +-
- net/mptcp/mptcp_diag.c    | 8 +++++++-
+ net/mptcp/mptcp_diag.c    | 2 +-
  net/sctp/diag.c           | 6 +++---
- 7 files changed, 18 insertions(+), 11 deletions(-)
+ 7 files changed, 12 insertions(+), 11 deletions(-)
 
+diff --git a/include/linux/inet_diag.h b/include/linux/inet_diag.h
+index 704fd415c2b49..8db96bfd3e67f 100644
+--- a/include/linux/inet_diag.h
++++ b/include/linux/inet_diag.h
+@@ -18,7 +18,8 @@ struct inet_diag_handler {
+ 
+ 	void		(*idiag_get_info)(struct sock *sk,
+ 					  struct inet_diag_msg *r,
+-					  void *info);
++					  void *info,
++					  bool net_admin);
+ 
+ 	int		(*idiag_get_aux)(struct sock *sk,
+ 					 bool net_admin,
+diff --git a/net/ipv4/inet_diag.c b/net/ipv4/inet_diag.c
+index 34b77aa87d0a4..362161bf39fe3 100644
+--- a/net/ipv4/inet_diag.c
++++ b/net/ipv4/inet_diag.c
+@@ -276,7 +276,7 @@ int inet_sk_diag_fill(struct sock *sk, struct inet_connection_sock *icsk,
+ 	}
+ 
+ 	if (!icsk) {
+-		handler->idiag_get_info(sk, r, NULL);
++		handler->idiag_get_info(sk, r, NULL, net_admin);
+ 		goto out;
+ 	}
+ 
+@@ -327,7 +327,7 @@ int inet_sk_diag_fill(struct sock *sk, struct inet_connection_sock *icsk,
+ 			goto errout;
+ 	}
+ 
+-	handler->idiag_get_info(sk, r, info);
++	handler->idiag_get_info(sk, r, info, net_admin);
+ 
+ 	if (ext & (1 << (INET_DIAG_INFO - 1)) && handler->idiag_get_aux)
+ 		if (handler->idiag_get_aux(sk, net_admin, skb) < 0)
+@@ -1027,7 +1027,7 @@ int inet_diag_handler_get_info(struct sk_buff *skb, struct sock *sk)
+ 	if (attr)
+ 		info = nla_data(attr);
+ 
+-	handler->idiag_get_info(sk, r, info);
++	handler->idiag_get_info(sk, r, info, false);
+ 	inet_diag_unlock_handler(handler);
+ 
+ 	nlmsg_end(skb, nlh);
+diff --git a/net/ipv4/raw_diag.c b/net/ipv4/raw_diag.c
+index 943e5998e0ad5..264912d0cb9fc 100644
+--- a/net/ipv4/raw_diag.c
++++ b/net/ipv4/raw_diag.c
+@@ -185,7 +185,7 @@ static void raw_diag_dump(struct sk_buff *skb, struct netlink_callback *cb,
+ }
+ 
+ static void raw_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+-			      void *info)
++			      void *info, bool net_admin)
+ {
+ 	r->idiag_rqueue = sk_rmem_alloc_get(sk);
+ 	r->idiag_wqueue = sk_wmem_alloc_get(sk);
+diff --git a/net/ipv4/tcp_diag.c b/net/ipv4/tcp_diag.c
+index ba1fdbe9807fd..cac32575282e3 100644
+--- a/net/ipv4/tcp_diag.c
++++ b/net/ipv4/tcp_diag.c
+@@ -19,7 +19,7 @@
+ #include <net/tcp.h>
+ 
+ static void tcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+-			      void *_info)
++			      void *_info, bool net_admin)
+ {
+ 	struct tcp_info *info = _info;
+ 
+diff --git a/net/ipv4/udp_diag.c b/net/ipv4/udp_diag.c
+index f4b24e628cf8d..5a1fa627cbee8 100644
+--- a/net/ipv4/udp_diag.c
++++ b/net/ipv4/udp_diag.c
+@@ -142,7 +142,7 @@ static void udp_diag_dump(struct sk_buff *skb, struct netlink_callback *cb,
+ }
+ 
+ static void udp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+-		void *info)
++		void *info, bool net_admin)
+ {
+ 	r->idiag_rqueue = udp_rqueue_get(sk);
+ 	r->idiag_wqueue = sk_wmem_alloc_get(sk);
+diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
+index 136c2d05c0eeb..9ed7a6be1e628 100644
+--- a/net/mptcp/mptcp_diag.c
++++ b/net/mptcp/mptcp_diag.c
+@@ -190,7 +190,7 @@ static void mptcp_diag_dump(struct sk_buff *skb, struct netlink_callback *cb,
+ }
+ 
+ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+-				void *_info)
++				void *_info, bool net_admin)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	struct mptcp_info *info = _info;
+diff --git a/net/sctp/diag.c b/net/sctp/diag.c
+index c2a0de2adf6fd..ab6c560fde053 100644
+--- a/net/sctp/diag.c
++++ b/net/sctp/diag.c
+@@ -20,7 +20,7 @@
+ #include <net/sctp/sctp.h>
+ 
+ static void sctp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+-			       void *info);
++			       void *info, bool net_admin);
+ 
+ /* define some functions to make asoc/ep fill look clean */
+ static void inet_diag_msg_sctpasoc_fill(struct inet_diag_msg *r,
+@@ -200,7 +200,7 @@ static int inet_sctp_diag_fill(struct sock *sk, struct sctp_association *asoc,
+ 	}
+ 	infox.sctpinfo = (struct sctp_info *)info;
+ 	infox.asoc = asoc;
+-	sctp_diag_get_info(sk, r, &infox);
++	sctp_diag_get_info(sk, r, &infox, net_admin);
+ 
+ 	addr_list = asoc ? &asoc->base.bind_addr.address_list
+ 			 : &ep->base.bind_addr.address_list;
+@@ -412,7 +412,7 @@ static int sctp_ep_dump(struct sctp_endpoint *ep, void *p)
+ 
+ /* define the functions for sctp_diag_handler*/
+ static void sctp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+-			       void *info)
++			       void *info, bool net_admin)
+ {
+ 	struct sctp_infox *infox = (struct sctp_infox *)info;
+ 
 -- 
 2.43.0
 
