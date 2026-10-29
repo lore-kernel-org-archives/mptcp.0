@@ -1,94 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793256382;
-	b=ao7lm4NzOYZS+/hepunsWvotKxhT3qyk4o0YsxbAu4DhoEBARqhr3Fx46o1PCcssOKXo
-	 cYUg8Qy8NKPrYaNiMbD7nPBuxRt+LN8oPILe2hlixIRPoUMYBhpOKs9JQnnCPoTRjLPd8
-	 wh37E6OzirEYrdoyMteimQN3R9qEyzxmCk/d0hKoval18UMiLaXfLXYXW2Ir5ky9ZdA8G
-	 oULjS42me4ole0S9mm3T6MY5xPQuuCADPad+yrD9H4oIY94P9TQh2+EB7Gt0Udf0MQYRk
-	 4KEHI0h4QHVaCgbSgTzm7gQteNTlbXSCbzeOUz9Bh60liZ75g7+XNVg9ZzGi/Ob0z8Q==
+	t=1793256450;
+	b=FoMy1x/EByTcr2S5yQiTFk9b/DoO6D9AAfFpC4US/EPcva0vPWdZ/vK1uX9HR6uTcU7R
+	 6riclIEZf3tBhEp7hz/5TVwwnxqpEw6ZzQ1CFq7zh4Kr5HU6zGmJhgt/PXouk4jy4KGvR
+	 9W6RaAHVKMBHjcwQtVhzFrOr8MBieGpSAITIycFnlT4/uoqjxwhvQ8WOJ1tuubbcyWObI
+	 +h9/q0b0fMM0OfU+l2/83dHoOG2BgsaUUYFBldb7a6uLyhzpMvtXAXgtYxbd9fWgfTS5J
+	 9FbSXfGequzrx11XzfgQCx8KDqRyWFhLBzVKPg8xPswhKLTIoKJp0OUNOnyUGkKh0EQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793256382;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=pYWSeNyiA0knZcASPM8Si5EX2vlAu5pmAZ4wmX3c4Zo=;
-	b=0as9SCPFBj5FfEzb2/ohYCRfzciaqIpSKdhMhc0SZsiv7E0XmUcz1wxfaArlaaT4IKRi
-	 3WC9kPmM6mDETW1MpGOm0JB6zGS8WidZEkyQ9ghOuVMtEky56/xMKFKMaHiRUH/2F7hjk
-	 moiLHX5mTgbnFMxGQRGz2N0PyWeI9Fiw9uToPx+lfhVigW7kr0bV0eIxcNeDQ7woKZbWT
-	 SKAX8yw/QuGYFZ2Hi9/RttxyeUgIYQ0mfdRK+nLi55YzLSB78TNFpzTrlE670Omj3sADp
-	 i/QR2YJcz8Vi8X9ceNp79mdDJ6SMqJ56g++T5ztrRwNjlK3Jw/H09j4oioBhYk5YS5Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793256450;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=670mwVk3RBlH2q0RYyR9cxwDWwYLVirNx7Eiyi9m/Pk=;
+	b=cYt/qPcc+k+iFV0YNj9wa4XSF8T/4g9XoaiTiOBC56KzwLpBWkZkTjYRNIn0Lg9MiKQf
+	 zLBYFkUW/G74/oaZ0BMdg2Qg8dc5SYPMHdgNrGymWjtMlTC13GJkwelf97Uj7/ZWx2D61
+	 yiihUhRcXPTICxElHxDrCSCZdqFRHMjyYoa2VkdGHyGySb0LsHJY0CTz7l3wMVUErie9Q
+	 HRoYUciblH6ScaU8E6U7P++TruLgfszaI5pnSMblObPWgz9gWBaPlLjpmMQlwzPwFy6cc
+	 uNdVmj49SZ7S/Uk2C28yTbD5tZlfhM2pzwXjeL2iBj4nV6bqk1hhSMBLin2zjd5st/g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=A1TaLi8V;
-	arc=none smtp.remote-ip=209.85.215.176
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gYDvPOQ8;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 217E2606A31A
-	for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 06:46:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 217E2606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599AF606A31A
+	for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 06:47:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=A1TaLi8V
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-cd3310348d2so180979a12.1
-        for <mptcp@lists.linux.dev>; Wed, 28 Oct 2026 23:46:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793256381; x=1793861181; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=pYWSeNyiA0knZcASPM8Si5EX2vlAu5pmAZ4wmX3c4Zo=;
-        b=A1TaLi8VrnplMhX/TH4gx64sxsE5RqlppbgE4IYbk0DYzWoI2j84CB49gg9Ml/DgV0
-         lEowo2BFE4olGa9PFQN2O/AfBXsv20doKDb560EnENlVDWhUv7gnXfGx7ibOdbFhtWDq
-         XWeRgmenZYTdS7Y34WmsU0w5S1PklKp5MKGdyEv7k2/yaeKNT4lr+dDj7+SbLaN6TnkA
-         FPCztTQbzfR+Kz+xnVw6QluTimzPKeyszcUr6VCm53BDUwXx3LbOejE9v95KLAd/+yWj
-         30NHlcvUVfJqT/wAhYeX2rKEzpXVPlo22hdexonhzTKYXzmoEOI4WVsVKSLTU/e6iDmf
-         hojA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793256381; x=1793861181;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=pYWSeNyiA0knZcASPM8Si5EX2vlAu5pmAZ4wmX3c4Zo=;
-        b=mXDgdbbJ+F13ml8PyAOWuc4/9uqDMDdq5gaZYQS35bjl3wggdmMDXmsdczlBnfH72r
-         AJESYUtCwAiFe2wNy6H1SDhIY77CihYS3xyvl7I6yw0xaEkKfd2D+9KjzbnuSo/p399Q
-         OraB3RACxtMJV72ZN+SR4NOMoziFgE/uIbpCeWJObABc8nHTWHJYciNcZnQ9PgZvV05p
-         wq5CwHacPFXYKBXXtYZzYAYHF+T6XPeCrqvrcEDeC42+xyUzLmK14ICvipEpqTxVZyf4
-         M9Iuqf5bBdpwQ4vRzaHaa90k1hLsiRgPJ4ttbUsd2vzd/Rv6swRblwOqOioTMOG+LvcV
-         z2ng==
-X-Forwarded-Encrypted: i=1; AKwUvBww4BmTvR7pU6HkhH1ykv+vCS0iHA+I5ljEdaDYZZVVWpcr7gjYXpeRRwYYXCu0B8UNn+BPMQ==@lists.linux.dev
-X-Gm-Message-State: AFq9FYKlcMHUGskveltg7+dHzi753n3gQs9X/svQZKeDjw1SQgVSX8eu
-	JNU/E8VDOxXPmQiLOEcsyjk8/3ATIfxCqf+6oHaGB2tZ2pgs8V6DVEVA
-X-Gm-Gg: AYBFou1KwdHb+WQxosSHCcBNSMNFWlhnsGjf23d8j+AOEjbV9JwRCi9CWc5yJW3+kmm
-	w3W9M34Xo7+SGYvXel5iQx9dVEImFuiRQk8i5qS3EDUeIwOrPGi2OTRRU066xHQDw4jA2Qa8gq4
-	ubQQhx5ObvOM8tINTJ5+u/rEWQXv1zrh2JVM6I2UhJk7NCdnKMogtA5two9xSZ7NagAJXOR7B0g
-	h8n51xwbr+fDCWMmoS/VsB/Y+WPjYpa3L5su93ydLxPFTDuFC1R0HIUtspIsx48lNVl9Jort/w3
-	LE9onSUl4XoaRSA2W/d98dPiILmWzDm3oV+sTujKsMq0dLydKageKTKvdoO+o99YOlmXRY44XrP
-	0zQObGBsvV+w+97RklZdskV5WJr2UPcYBKa7McYjnGsjYOKooTu3aRT88IJRbjZr/I+XC6K7WqG
-	JRthqmBzURCPWZ5h+vHjGC9wPeiUkT3d4hcD5B9M5o384Cno5uYrEGFW/Ugt6nMBlEYOzAKxGBx
-	Bw8dPZIE2SPzH71/ZGHRuIGZCNU/1fFK+fh7E6ZYaOGwkE54qNZkMpISsueHr5+UUaJD8ebGxir
-	Ka9Dr0u8mfAX9MGwl44ANUxU
-X-Received: by 2002:a17:90b:4b0b:b0:3a0:e568:ed63 with SMTP id 98e67ed59e1d1-3ae6ecde884mr966447a91.8.1793256381151;
-        Wed, 28 Oct 2026 23:46:21 -0700 (PDT)
-Received: from localhost ([111.228.63.84])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ae6e98f888sm2700767a91.13.2026.10.28.23.46.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Oct 2026 23:46:20 -0700 (PDT)
-From: Cen Zhang <zzzccc427@gmail.com>
-To: matttbe@kernel.org,
-	martineau@kernel.org
-Cc: geliang@kernel.org,
-	mptcp@lists.linux.dev,
-	baijiaju1990@gmail.com,
-	jjzuming@gmail.com,
-	zzzccc427@gmail.com
-Subject: [PATCH mptcp-net v2] mptcp: free delegated subflow contexts only after they are dequeued
-Date: Thu, 29 Oct 2026 14:46:13 +0800
-Message-Id: <pm-mptcp-objects-candidate-0010-v4-f64139fe98063730da45@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gYDvPOQ8
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A1CA1F01825;
+	Thu, 29 Oct 2026 06:47:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793256450;
+	bh=670mwVk3RBlH2q0RYyR9cxwDWwYLVirNx7Eiyi9m/Pk=;
+	h=From:To:Cc:Subject:Date;
+	b=gYDvPOQ8VXTQPVCq9OL2U8pTS5FHtCn9BN/dIGEjmfO4bdpcUZTM6mcEW4kPc3dgm
+	 nnRD2yg5PBMCAhAdCJZaDN8rmLMRPh9xBmvFIoYSHT655ooS6dIor66IlZgGHZPwo9
+	 /VV1F7aKq6RcMS8a8YWJbntlA1D3txb5p2g2p+PGThOak0uyXrV3noe/5XxMyMQAH9
+	 4cTbOQTbqVZNOxSsnrhK0f/XSUbq6sFgIo8H62qOYBRwF96nr8weOwf5sV5AMs7D2t
+	 gG0EQ7bXqqfz9AmYiR/KJRcVWXxPCgaoExt2gFdEyRxTL/5CG3thoXDaPE6vONA4Iy
+	 KO0pnrT5KSjjQ==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v16 0/4] Reduce the differences between TCP and MPTCP for TLS usage
+Date: Thu, 29 Oct 2026 14:47:17 +0800
+Message-ID: <cover.1793255126.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.55.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -100,279 +57,262 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-mptcp_subflow_delegate() links the subflow context into a per-CPU list
-and pins only the TCP subflow socket with sock_hold(). The context is
-freed independently of that reference, with kfree_rcu(), by
-subflow_ulp_release() when inet_csk_destroy_sock() tears the ULP down,
-by __mptcp_close_ssk() for a context whose ULP release ran earlier, and
-by mptcp_subflow_drop_ctx() when a subflow falls back to plain TCP.
-None of them checks whether delegated_node is still linked.
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-When mptcp_napi_poll() dequeues the entry on the scheduling CPU only
-after that RCU grace period has elapsed, for example because the poll
-returned at its budget or runs from ksoftirqd, it unlinks the node from
-freed memory, as the first report below shows:
+v16:
+ - Simplified the series to retain only the core changes required by both
+   kTLS and sockmap: drop the CB offset field, add copied_seq tracking,
+   and sync the MPTCP skb CB layout with the TCP one.
+ - Dropped patch 2, leaving the fastopen code unchanged.
+ - Moved patches 6-11 into a separate series "prepare interfaces for kTLS
+   and sockmap support".
 
-  TCP / NAPI                   Close                     RCU
-  enqueue ctx, sock_hold(ssk)
-  return at budget
-                               __mptcp_close_ssk()
-                                 ctx->disposable = 1
-                                 __tcp_close()
-                                   tcp_cleanup_ulp()
-                                     kfree_rcu(ctx)
-                                                         reclaim ctx
-  dequeue ctx->delegated_node
+v15:
+ - Patch 2: drop mptcp_data_lock() in mptcp_inq_hint(), use READ_ONCE()
+   and __test_and_clear_bit() instead. This issue is unrelated to this
+   series and will be addressed in a separate patch later.
+ - Patch 5: Guard mptcp_cleanup_rbuf() with read_copied > 0. Initialize/
+   reset msk->read_copied. Drop redundant mptcp_recv_skb() in
+   __mptcp_read_sock().
+ - Patch 6: simplify memory ordering, drop smp_mb()/smp_rmb(), keep
+   existing smp_mb__before_atomic(). Check SOCK_DONE inline.
+ - Patch 9: drop tcp_sock_rate_check_app_limited() split, call
+   tcp_rate_check_app_limited() directly as Paolo suggested. Add
+   write_seq != snd_nxt early bail-out.
+ - Patch 10: wrap assertion behind expect_all_features().
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1792718041.git.tanggeliang@kylinos.cn/
 
-Retire the context at these three places instead: set a new RETIRED bit
-in delegated_status and free the context only if no action is
-scheduled; otherwise mptcp_napi_poll() frees it once it has dequeued
-the entry. Both sides use atomic read-modify-write operations on the
-same word, so exactly one of them frees the context.
+v14:
+ - v13 can no longer be applied to the export branch, so it has been
+   rebased here with the following corrections:
+ - Patch 2: move locking in mptcp_inq_hint() to avoid races with ack_seq
+   change from patch 3 to here. Update commit log.
+ - Patch 3: add mptcp_data_lock() in __mptcp_move_skb() around copied_seq
+   update. Remove local delta variable in __mptcp_ofo_queue(). Initialize
+   msk->copied_seq to 0 in mptcp_propagate_state() fallback path.
+ - Patch 4: add map_seq64 comparison in __mptcp_try_coalesce() for 64-bit
+   sequence consistency.
+ - New patch 11: rename mptcp_check_readable to mptcp_stream_is_readable,
+   and align with TCP by calling sk_is_readable() for KTLS support.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1790734083.git.tanggeliang@kylinos.cn/
 
-The poll must not process a subflow whose ULP is gone either. The ULP
-release has dropped the reference on the MPTCP socket, which may be
-freed and reused before the poll takes its data lock, as the second
-report shows. Skip such a subflow. The ops pointer is cleared with the
-socket owned or under its bh lock, so a racing read lands in the owned
-branch, which only dequeues the entry; both paths free a context that
-was retired while queued.
+v13:
+ - use smp_mb instead of smp_mb__before_atomic in mptcp_check_data_fin.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1788245079.git.tanggeliang@kylinos.cn/
 
-mptcp_subflow_ctx_reset() cleared delegated_status with the rest of the
-reset group on disconnect, wiping the scheduled bit of an entry that
-may still be queued. Move the field out of the group and only drop the
-pending actions there.
+v12:
+ - Move sock_set_flag(SOCK_DONE) to after smp_mb__before_atomic() in
+   mptcp_check_data_fin() and reuse the existing barrier rather than adding
+   a new smp_wmb().
+ - Sample SOCK_DONE before smp_rmb() in mptcp_inq_hint() and mptcp_inq(),
+   so the smp_rmb() only orders SOCK_DONE read relative to the subsequent
+   ack_seq/copied_seq reads.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1788171508.git.tanggeliang@kylinos.cn/
 
-The reports below were decoded with scripts/decode_stacktrace.sh
-against the 7.2.0-rc5 based test kernels that produced them, rebuilt
-from the same source and configuration, with the line numbers mapped to
-this tree; only the relevant frames are kept. The second one was taken
-with KASAN poisoning forced for the SLAB_TYPESAFE_BY_RCU MPTCP socket
-cache; without it, the poll locks and updates whatever socket reuses
-that memory.
+v11:
+ - __mptcp_move_skb(): gate __mptcp_sync_rcv_sequence() on
+   test_and_clear_bit(MPTCP_SYNC_SEQ) so the dummy mapping is only re-based
+   after ack_seq = iasn.
+ - a new patch to set and test SOCK_DONE.
+ - use SOCK_DONE in mptcp_inq_hint() and mptcp_inq().
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1788099847.git.tanggeliang@kylinos.cn/
 
-  BUG: KASAN: slab-use-after-free in __list_del_entry_valid_or_report (lib/list_debug.c:65)
-  Read of size 8 at addr ffff8881271668c8 by task kworker/0:9/1315
+v10:
+ - Drop "mptcp: use atomic64_t for locklessly accessed u64 fields"
+   (v9 patch 1) and the squash to bpf_burst test (v9 patch 11).
+   Series reduced from 11 to 9 patches.
+ - Revert all atomic64_read()/atomic64_set() on msk->ack_seq back to
+   plain reads and WRITE_ONCE() in patches 1-4. Remove the local u64
+   ack_seq variables that only existed to hold atomic64_read() results.
+ - mptcp_inq_hint: move test_bit(MPTCP_SYNC_SEQ) inside mptcp_data_lock()
+   to close the race between the flag check and the ack_seq read. Revert
+   atomic64_read() to plain msk->ack_seq under the lock.
+ - mptcp_inq (patch 6): use READ_ONCE() for both ack_seq and copied_seq
+   instead of atomic64_read(). Add comment for the FIN subtraction,
+   mirroring tcp_inq(). Update commit log.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787888115.git.tanggeliang@kylinos.cn/
 
-  Call Trace:
-   <IRQ>
-   __list_del_entry_valid_or_report (lib/list_debug.c:65)
-   mptcp_napi_poll (include/linux/list.h:140 include/linux/list.h:261 include/linux/list.h:333 net/mptcp/protocol.h:806 net/mptcp/protocol.c:4794)
-   __napi_poll.constprop.0 (net/core/dev.c:7958)
-   net_rx_action (net/core/dev.c:8021 net/core/dev.c:8178)
-   handle_softirqs (kernel/softirq.c:669)
-   </IRQ>
-   <TASK>
-   __local_bh_enable_ip (kernel/softirq.c:473)
-   __mptcp_close_ssk (net/mptcp/protocol.c:2656)
-   mptcp_close_ssk (net/mptcp/protocol.c:2767 net/mptcp/protocol.c:2750)
-   mptcp_worker (net/mptcp/protocol.c:2796 net/mptcp/protocol.c:3145)
-   </TASK>
+v9:
+ - Extend atomic64_t conversion from only msk->ack_seq to all locklessly
+   accessed u64 fields: write_seq, snd_nxt, snd_una, wnd_end,
+   bytes_received, bytes_consumed.
+ - Add mptcp_data_lock() in mptcp_inq_hint() to read ack_seq and
+   copied_seq atomically.
+ - Add read_copied field and drain it under mptcp_data_lock() in
+   mptcp_read_complete() to fix the BH vs worker data race.
+ - New patches: mptcp_inq/peek_len and sendmsg_locked proto_ops.
+ - Squash to "selftests/bpf: Add bpf_burst scheduler & test".
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787827525.git.tanggeliang@kylinos.cn/
 
-  Allocated by task 1308:
-   subflow_create_ctx (include/linux/slab.h:991 include/linux/slab.h:1312 net/mptcp/subflow.c:1893)
-   subflow_ulp_init (net/mptcp/subflow.c:2032)
-   tcp_set_ulp (net/ipv4/tcp_ulp.c:150 net/ipv4/tcp_ulp.c:171)
-   mptcp_subflow_create_socket (net/mptcp/subflow.c:1854)
-   __mptcp_subflow_connect (net/mptcp/subflow.c:1677)
-   mptcp_pm_create_subflow_or_signal_addr (net/mptcp/pm_kernel.c:424)
-   mptcp_pm_nl_add_addr_doit (net/mptcp/pm_kernel.c:982 net/mptcp/pm_kernel.c:1048)
+v8:
+ - check MPTCP_SYNC_SEQ in mptcp_inq_hint:
+       if (hint_val >= INT_MAX) {
+               if (test_bit(MPTCP_SYNC_SEQ, &msk->cb_flags))
+                       return 0;
+               return INT_MAX;
+       }
+ - rename mptcp_sock_rate_check_app_limited to
+   mptcp_rate_check_app_limited.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787644449.git.tanggeliang@kylinos.cn/
 
-  Freed by task 29:
-   __rcu_free_sheaf_prepare (include/linux/kasan.h:235 mm/slub.c:2748 mm/slub.c:3009)
-   rcu_free_sheaf (mm/slub.c:6061)
-   rcu_core (kernel/rcu/tree.c:2650 kernel/rcu/tree.c:2919)
+v7:
+ - Patch 1 is a new one to fix the existing issue Sashiko mentioned -
+   using atomic64_t for msk->ack_seq.
+ - Fix the map_subflow_seq setting in fallback mode in patch 4.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787537436.git.tanggeliang@kylinos.cn/
 
-  The buggy address belongs to the object at ffff888127166800
-   which belongs to the cache kmalloc-512 of size 512
+v6:
+ - Memory ordering for MPTCP_SYNC_SEQ: Add smp_wmb() before set_bit() in
+   subflow_set_remote_key() and smp_rmb() after test_and_clear_bit() in
+   __mptcp_move_skb() and mptcp_release_cb() to prevent data races on
+   weakly-ordered architectures, ensuring ack_seq updates are visible
+   before the flag is set and readers see the updated sequence after
+   observing the flag.
+ - Lockdep nested locking: Use lock_sock_fast_nested(ssk) instead of
+   lock_sock_fast(ssk) in mptcp_sock_rate_check_app_limited() to suppress
+   false positive recursive locking warnings when acquiring subflow socket
+   locks while holding the parent MPTCP socket lock.
+ - Receive window advertisement order: Swap mptcp_rcv_space_adjust() and
+   mptcp_cleanup_rbuf() in mptcp_read_complete() to expand the receive
+   buffer before evaluating window updates, ensuring ACKs advertise the
+   new (larger) window size instead of delaying the advertisement until
+   the next cycle.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787446274.git.tanggeliang@kylinos.cn/
 
-  BUG: KASAN: slab-use-after-free in _raw_spin_lock_bh (include/linux/spinlock_api_smp.h:182 kernel/locking/spinlock.c:205)
-  Read of size 1 at addr ffff88810acf25d8 by task ksoftirqd/2/29
+v5:
+ - only patch 3 changed.
+ - Fallback offset underflow: Initialize MPTCP sequence space to 0 in
+   mptcp_propagate_state() when mp_opt == NULL, ensuring SKB's map_seq
+   starts from 0 to match msk->copied_seq and prevent offset calculation
+   underflow in fallback mode.
+ - Stale peek_seq: Move peek_seq recomputation into the mptcp_move_skbs()
+   continue path and add another recomputation after sk_wait_data(),
+   ensuring peek_seq stays synchronized with msk->copied_seq updates from
+   MPTCP_SYNC_SEQ processing in both paths.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787368526.git.tanggeliang@kylinos.cn/
 
-  Call Trace:
-   <TASK>
-   _raw_spin_lock_bh (include/linux/spinlock_api_smp.h:182 kernel/locking/spinlock.c:205)
-   mptcp_subflow_process_delegated (include/linux/spinlock.h:353 net/mptcp/protocol.c:3936)
-   mptcp_napi_poll (net/mptcp/protocol.c:4799)
-   __napi_poll.constprop.0 (net/core/dev.c:7958)
-   net_rx_action (net/core/dev.c:8021 net/core/dev.c:8178)
-   handle_softirqs (kernel/softirq.c:669)
-   run_ksoftirqd (kernel/softirq.c:1133 kernel/softirq.c:1125)
-   </TASK>
+v4:
+ - mptcp_recvmsg: move the peek_seq recompute from after sk_wait_data()
+   to before the mptcp_move_skbs() continue check.
+   mptcp_move_skbs() -> __mptcp_move_skb() may shift the head skb's
+   map_seq to the IASN frame via __mptcp_sync_rcv_sequence(); if
+   'continue' then exits the loop, the recompute is skipped, and the
+   next __mptcp_recvmsg_mskq() computes offset with peek_seq in the old
+   frame minus map_seq in the new frame. The underflow makes the offset
+   test fail and the skb is skipped (and mptcp_recv_skb() actually frees
+   the TFO skb via mptcp_eat_recv_skb()).
+ - Make all three MPTCP_SYNC_SEQ bit accesses atomic:
+   - subflow_set_remote_key:   __set_bit            -> set_bit
+   - __mptcp_move_skb:         __test_and_clear_bit -> test_and_clear_bit
+   - mptcp_release_cb:         __test_and_clear_bit -> test_and_clear_bit
+   The flag is set in BH under mptcp_data_lock() (msk slock held) and
+   cleared in user context under lock_sock() slow path (only owned=1,
+   slock not held). The non-atomic RMW on the two sides races, which can
+   lose the IASN sync.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787295147.git.tanggeliang@kylinos.cn/
 
-  Allocated by task 586:
-   sk_alloc (net/core/sock.c:2337)
-   inet_create (net/ipv4/af_inet.c:333 net/ipv4/af_inet.c:259)
-   __sock_create (net/socket.c:1679)
-   __sys_socket (net/socket.c:1737 net/socket.c:1774 net/socket.c:1821)
+v3:
+ - Patch 2, handle "offset" in __mptcp_sync_rcv_sequence().
+ - Patch 3, update __mptcp_move_skb() in response to Sashiko comments:
 
-  Freed by task 586:
-   __sk_destruct (net/core/sock.c:2318 net/core/sock.c:2420)
-   sk_destruct (net/core/sock.c:2448)
-   __sk_free (net/core/sock.c:2459)
-   sk_free (net/core/sock.c:2470)
-   mptcp_close (include/net/sock.h:2024 net/mptcp/protocol.c:3545)
-   inet_release (net/ipv4/af_inet.c:442)
-   __sock_release (net/socket.c:735)
+ 	if (__test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags))
+		msk->copied_seq += mptcp_iasn(msk);
 
-  The buggy address belongs to the object at ffff88810acf2400
-   which belongs to the cache MPTCP of size 2944
+ - Patch 4, replace after64() to after() in mptcp_prune_ofo_queue(). The
+   pre-existing issue raised by Sashiko regarding changing the type of
+   ack_seq to atomic64_t is not addressed in this series.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1786445142.git.tanggeliang@kylinos.cn/
 
-Fixes: b19bc2945b40 ("mptcp: implement delegated actions")
-Signed-off-by: Cen Zhang <zzzccc427@gmail.com>
-Assisted-by: LLM
----
-Changes in v2:
-- Retire the context at all three places that free it and let
-  mptcp_napi_poll() free a queued one, instead of chaining the socket
-  destructor: a closing listener can still be cloned by a handshake that
-  passed its state check before the close, and the clone would inherit the
-  overridden destructor.
-- Free a retired context in the owned branch of mptcp_napi_poll() too:
-  mptcp_subflow_drop_ctx() runs with the subflow owned but not bh-locked, so
-  the poll can read the ULP ops before they are cleared and take that branch
-  (Sashiko review).
-- Keep delegated_status out of the reset group, so that a disconnect no
-  longer clears the scheduled bit of an entry that is still queued (Sashiko
-  review).
-- Drop patch 2: the skip in mptcp_napi_poll() already covers the delegated
-  action it described, and the BPF case only reads stale fields of an MPTCP
-  socket from a SLAB_TYPESAFE_BY_RCU cache within an RCU read-side section,
-  as bpf_skc_to_mptcp_sock() always could.
-- Decode the stack traces, map the line numbers to the export-net branch of
-  mptcp_net-next and send to the MPTCP list only.
+v2:
+ - Patch 3, updated in response to Sashiko comments:
 
-Link to v1: https://lore.kernel.org/r/pm-mptcp-objects-candidate-0010-v3-14c229ea28a7d31f60a0-0@gmail.com
+        if (unlikely(msk->rcvd_dummy_seq)) {
+                msk->copied_seq += mptcp_iasn(msk);
+                __mptcp_sync_rcv_sequence(sk);
+                /* Release cb() would otherwise re-base copied_seq
+                 * again.
+                 */
+                test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags);
+        }
 
- net/mptcp/protocol.c | 20 +++++++++++++++++---
- net/mptcp/protocol.h | 20 ++++++++++++++++++--
- net/mptcp/subflow.c  |  4 ++--
- 3 files changed, 37 insertions(+), 7 deletions(-)
+        /* Skip the already peeked data. */
+        if (offset >= skb->len) {
+                *last = skb;
+                continue;
+        }
+ - Patch 5, replaced with Paolo's patch.
+ - Patch 6, 7, new patches addressing app-limited conditions.
+ - The patch "trim the duplicated skb head at receive enqueue" has been
+   dropped, as it is no longer needed after Paolo updated the "mptcp:
+   out-of-order queue pruning" series.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1786158416.git.tanggeliang@kylinos.cn/
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 4335eb8f9f2d..bb535d6cb2e7 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2707,7 +2707,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 	 */
- 	if (!inet_csk(ssk)->icsk_ulp_ops) {
- 		WARN_ON_ONCE(!sock_flag(ssk, SOCK_DEAD));
--		kfree_rcu(subflow, rcu);
-+		mptcp_subflow_ctx_retire(subflow);
- 	} else {
- 		/* otherwise tcp will dispose of the ssk and subflow ctx */
- 		__tcp_close(ssk, 0);
-@@ -4795,7 +4795,18 @@ static int mptcp_napi_poll(struct napi_struct *napi, int budget)
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 
- 		bh_lock_sock_nested(ssk);
--		if (!sock_owned_by_user(ssk)) {
-+		if (unlikely(!READ_ONCE(inet_csk(ssk)->icsk_ulp_ops))) {
-+			/* The ULP is gone, released or fallen back to plain
-+			 * TCP: there is nothing left to process, and the msk
-+			 * may be gone too. The ops are cleared with the socket
-+			 * owned or under its bh lock, so a racing read lands
-+			 * in the owned branch below. Both free a context that
-+			 * was retired while queued.
-+			 */
-+			if (xchg(&subflow->delegated_status, 0) &
-+			    BIT(MPTCP_DELEGATE_RETIRED))
-+				kfree_rcu(subflow, rcu);
-+		} else if (!sock_owned_by_user(ssk)) {
- 			mptcp_subflow_process_delegated(ssk, xchg(&subflow->delegated_status, 0));
- 		} else {
- 			/* tcp_release_cb_override already processed
-@@ -4804,7 +4815,10 @@ static int mptcp_napi_poll(struct napi_struct *napi, int budget)
- 			 * CPU that scheduled it.
- 			 */
- 			smp_wmb();
--			clear_bit(MPTCP_DELEGATE_SCHEDULED, &subflow->delegated_status);
-+			if (set_mask_bits(&subflow->delegated_status,
-+					  BIT(MPTCP_DELEGATE_SCHEDULED), 0) &
-+			    BIT(MPTCP_DELEGATE_RETIRED))
-+				kfree_rcu(subflow, rcu);
- 		}
- 		bh_unlock_sock(ssk);
- 		sock_put(ssk);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 011e73d04ee6..26ae5425ef37 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -553,8 +553,10 @@ DECLARE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions);
- #define MPTCP_DELEGATE_SEND		1
- #define MPTCP_DELEGATE_ACK		2
- #define MPTCP_DELEGATE_SNDBUF		3
-+#define MPTCP_DELEGATE_RETIRED		4	/* the ULP is gone, NAPI frees the ctx */
- 
--#define MPTCP_DELEGATE_ACTIONS_MASK	(~BIT(MPTCP_DELEGATE_SCHEDULED))
-+#define MPTCP_DELEGATE_ACTIONS_MASK	(~(BIT(MPTCP_DELEGATE_SCHEDULED) | \
-+					   BIT(MPTCP_DELEGATE_RETIRED)))
- /* MPTCP subflow context */
- struct mptcp_subflow_context {
- 	struct	list_head node;/* conn_list of subflows */
-@@ -628,11 +630,11 @@ struct mptcp_subflow_context {
- 
- 	u32	subflow_id;
- 
--	long	delegated_status;
- 	unsigned long	fail_tout;
- 
- 	);
- 
-+	long	delegated_status;	    /* not reset, the ctx may still be queued */
- 	struct	list_head delegated_node;   /* link into delegated_action, protected by local BH */
- 
- 	u32	setsockopt_seq;
-@@ -671,6 +673,8 @@ mptcp_subflow_ctx_reset(struct mptcp_subflow_context *subflow)
- 	memset(&subflow->reset, 0, sizeof(subflow->reset));
- 	subflow->request_mptcp = 1;
- 	WRITE_ONCE(subflow->local_id, -1);
-+	/* a queued delegated action stays queued, only its payload goes */
-+	set_mask_bits(&subflow->delegated_status, MPTCP_DELEGATE_ACTIONS_MASK, 0);
- }
- 
- /* Convert reset reasons in MPTCP to enum sk_rst_reason type */
-@@ -791,6 +795,18 @@ static inline void mptcp_subflow_delegate(struct mptcp_subflow_context *subflow,
- 	}
- }
- 
-+/* Retire a subflow context whose ULP is gone: free it, unless a delegated
-+ * action is still queued for it, in which case mptcp_napi_poll() frees it
-+ * once the entry is dequeued.
-+ */
-+static inline void mptcp_subflow_ctx_retire(struct mptcp_subflow_context *subflow)
-+{
-+	if (!(set_mask_bits(&subflow->delegated_status, 0,
-+			    BIT(MPTCP_DELEGATE_RETIRED)) &
-+	      BIT(MPTCP_DELEGATE_SCHEDULED)))
-+		kfree_rcu(subflow, rcu);
-+}
-+
- static inline struct mptcp_subflow_context *
- mptcp_subflow_delegated_next(struct mptcp_delegated_action *delegated)
- {
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 78e886b20258..ddf7424c46b6 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -828,7 +828,7 @@ void mptcp_subflow_drop_ctx(struct sock *ssk)
- 			sock_put(ctx->conn);
- 	}
- 
--	kfree_rcu(ctx, rcu);
-+	mptcp_subflow_ctx_retire(ctx);
- }
- 
- void __mptcp_subflow_fully_established(struct mptcp_sock *msk,
-@@ -2087,7 +2087,7 @@ static void subflow_ulp_release(struct sock *ssk)
- 
- 	mptcp_subflow_ops_undo_override(ssk);
- 	if (release)
--		kfree_rcu(ctx, rcu);
-+		mptcp_subflow_ctx_retire(ctx);
- }
- 
- static void subflow_ulp_clone(const struct request_sock *req,
+v1:
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1785150300.git.tanggeliang@kylinos.cn/
+
+The goal of this series is to reduce the differences between TCP and MPTCP
+for TLS usage, in preparation for adding TLS over MPTCP support in the
+future.
+
+In previous versions [1], a struct tls_prot_ops was defined to represent
+the interface differences between TCP and MPTCP, which contained the
+following callbacks:
+
+	struct sk_buff *(*recv_skb)(struct sock *sk, u32 *off);
+	bool (*lock_is_held)(struct sock *sk);
+	void (*read_done)(struct sock *sk, size_t len);
+	u32 (*get_skb_seq)(struct sk_buff *skb);
+	int (*skb_get_header)(const struct sk_buff *skb, int offset,
+	                      void *to, int len);
+	bool (*epollin_ready)(const struct sock *sk);
+	void (*check_app_limited)(struct sock *sk);
+
+In reality, some of these callbacks are unnecessary. This series aims to
+eliminate the get_skb_seq(), skb_get_header(), and lock_is_held()
+callbacks.
+
+The first four patches come from Paolo's "mptcp: address stall under memory
+pressure" series v5 [2], with only minor cleanup from my side.
+
+They remove the CB offset field and sync the MPTCP skb CB layout with the
+TCP one, so that we can obtain the TCP or MPTCP sequence number in a
+unified way, e.g.:
+
+	struct tls_skb_cb {
+	    u32 seq;
+	};
+
+	#define TLS_SKB_CB(__skb) ((struct tls_skb_cb *)&((__skb)->cb[0]))
+
+This eliminates the need for a separate get_skb_seq() callback.
+
+Building on the removal of the CB offset field, I also added patch 5 that
+trims the duplicated skb head at receive enqueue. With that in place, KTLS
+can retrieve the record header via skb_copy_bits() directly, so there is no
+longer any need for a dedicated MPTCP helper like mptcp_skb_get_header().
+The skb_get_header() callback can thus be removed.
+
+Patch 6 defers sk_data_ready to the worker, which avoids recursive locking
+when TLS calls back into MPTCP under mptcp_data_lock(). With this change,
+the lock_is_held() callback is no longer needed and can be removed.
+
+[1]
+https://patchwork.kernel.org/project/mptcp/cover/cover.1782123118.git.tanggeliang@kylinos.cn/
+[2]
+https://patchwork.kernel.org/project/mptcp/cover/cover.1778446731.git.pabeni@redhat.com/
+
+Paolo Abeni (4):
+  mptcp: drop the mptcp_ooo_try_coalesce() helper
+  mptcp: remove CB offset field
+  mptcp: sync mptcp skb cb layout with tcp one
+  mptcp: defer read_sock cleanup to mptcp_worker
+
+ net/mptcp/fastopen.c |  14 +++-
+ net/mptcp/protocol.c | 184 ++++++++++++++++++++++++-------------------
+ net/mptcp/protocol.h |  11 ++-
+ net/mptcp/subflow.c  |  16 +++-
+ 4 files changed, 137 insertions(+), 88 deletions(-)
+
 -- 
-2.43.0
+2.55.0
 
