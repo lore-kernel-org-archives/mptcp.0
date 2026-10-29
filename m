@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793294669;
-	b=vceiash4wEW9J5KAz12r5sAZdot/rj72gMmpyZN5DxsGHMu3q5ZGJjjFJ88BhYfaBB7o
-	 x92tOovlJj00irP6mCtzNb5JonkqXqLoEDm7qTxLR/vBV+OtAXK8qe9/O9jT3YLuRMdxm
-	 aO6ttKawvLNL574qKCiofP0oohMWitPOwxgpX1gXQBRxfrE/n3XZTU88b+vUBiEoMK3fI
-	 9S+CSoed7Ozj6GJnC1JSlL9+QT1+pC32PC60oM7eMGk8/y91G5p67HMInGJSN740VJE/v
-	 Zlhb7csJeF5abA+U9wk1x00AoVX7lFpdjRmlIVeo3iNjMadHb3no5uEFi890F+agV+Q==
+	t=1793300759;
+	b=i8/syhrzhvi6b42zrxR+ANV+fnWWdkSrXJHTyDIl2D3T2vKVX1N9ryl7gjwQbTLMUII/
+	 EK9lahVUjfGxjX/DrJBCvj2xL1fU+lhlHQY9/Wux5gdgmjRUy4dJioSca2qT7T9iAVWSE
+	 eIqAEjS+6W0nkM8aLZbeJcOOIsOPyscgF36OodJdEMy/oGKpYL1gCy0EF1fD/zlsMDyCb
+	 iN6Pgx+4MCUZ1AODMBKrXjbimfLwYl2dq3COQGcCPFi3on5dJeXfnmUYc+1HyMdolew/W
+	 QtOIm8M9bNjJF+nC0+vgjnm17DHnmXjQpV6kU665DNwHMF3qvstO1dWu7IvtLu5G0lQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793294669;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793300759;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
+	 Subject:Content-Language:From:To:Cc:References:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=f3BdBNh1o3iZmtSjlSRESQeyO7zMNUxkDS2xwUHCGWQ=;
-	b=rFiTC/BBi446K9FqdsVBezu41NV3C0u2WiKb5Y+m1+vjUNadr3qLXHi5HKwKeTDKe4tJ
-	 2Dg4Y5cr4rF7Qn6sQ/ryvBOfU+0Yq3Tl2I+ziq710wuLsvl/AjzTKigOcwZ4VjVPys1rV
-	 NT+lnWIOTo5eh2dJEWFa8Efg0z1rs9PN8yoExNRY8VCHWJBSXU9AvwZiKrT0IKKKN+GXe
-	 1QroByv/rBCWRVj0SgvjtxqxvHXs/afNsmjTEartnXbiXHZfru45X8JAGPoxhEc07Enpu
-	 E86usUmAaeosQiU1v/fSrKzoXwAtxk5/xLoLfG7jBa+F55UuwUlMW5667dKUMsMoHtw==
+	bh=FLaoRP2jZ7c6VMORttpJN7FhIVE44wSOwbbfj0TNVEI=;
+	b=VaZfqHUCTh6rVGUv4qKyC+7M+d3FL0fwqp/iVaSGlWjqJJTn0l3RF1DH6QwFhIn7mf6X
+	 x69rPwuXb7QSpcxwlh5PZFdEjYedrv0PO6gaq2KQuuE08y57Xr4WHGOfJL7NZM9MD8QSB
+	 TwHYOLCxIAFhqofzIY/+nIUr3I0vGMEnJh72dVh7Jd3kVot+Fl+HRzx49mJ+cjgXbUi7g
+	 YviJrjGZuUv9kiFLXMDaqt2B8DwW3lPd0dVdA2N+wn60Yic4nQWGspVTXvmFN4cJEget1
+	 fMDzczsjy+I1poHyXNRyRuPR58LchXZTPNGGDKm4KEOy1WegxO8vZn6aMQIezxqL6rA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bd2LDDSH;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Pxor+6Ak;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A65C606A31A;
-	Thu, 29 Oct 2026 17:24:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29730606A31A
+	for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 19:05:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bd2LDDSH
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51DF31F01816;
-	Thu, 29 Oct 2026 17:24:27 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Pxor+6Ak
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 637C11F01816;
+	Thu, 29 Oct 2026 19:05:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793294668;
-	bh=f3BdBNh1o3iZmtSjlSRESQeyO7zMNUxkDS2xwUHCGWQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=bd2LDDSHr6Y/G0+CwJwadqfz54SDMq6uCYWqUFexGhACZgxfqF5JpvH/IM6Gp4msf
-	 Oyzi7gy6P8E0/8s0BaTptsViiP/4WGpe63QvhOPSFHkvuTspVVZ81bYQ0pb7vIBT2c
-	 8CW0N+sRRDpli9x6hGh43fIqfn1HEiRROsI/6tfzZgyK12eW0HQG63z1BZqRnq9xzB
-	 sPb2+2YiHaSi54G5GGT0r1kT8GJtI6zYWjsnGYOwPp226QRdCXY0Dy5f7ppIkYZo/X
-	 Df0EUcjFzgay5B4YWdDhmGTkinANd6w1MwlPau0XQiy6TFOkWY0aFz4So4Dp9fcCYF
-	 1V5EjIW/58+Ew==
-Message-ID: <48a15033-3e8f-4043-aa2b-eb7440bf3742@kernel.org>
-Date: Thu, 29 Oct 2026 18:24:25 +0100
+	s=k20260515; t=1793300758;
+	bh=FLaoRP2jZ7c6VMORttpJN7FhIVE44wSOwbbfj0TNVEI=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To;
+	b=Pxor+6AkfQ9iq6kUNdlhXAI7ASQX92dvMohNkwqrc0yaan3itSAYiaEjfWRiXj3+b
+	 fRIYELS/8qHXzQajXGylSJV3PaAcFYrq1DYZPi8oHcMelTQuyXX4NeGFTVk+QtTXIf
+	 Qk6iaFb/p/2IkZvEv1MJgtSFsDQO6ilWsn6TvmtXv/h6weq0662OaI5rc6OBfeYtVA
+	 ymGMxRaWBc1tKmqlfLhqGfzWMli/oyteREIlnI/5nae/rTqdlUq4N6JQdQp+M82iX5
+	 Z9nG6twCXWldzDWCVGOsvCWJU6No1pxXHaX5pmIjvGfqNJGfJkWvDoulgVG6yoN2ok
+	 KtBj2nyMSiVEg==
+Message-ID: <e5648dd6-e4c1-4bfc-a8a9-a00bb71791ae@kernel.org>
+Date: Thu, 29 Oct 2026 20:05:55 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,14 +52,18 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH iproute2-net] mptcp: limits: fix JSON support
+Subject: Re: [RFC PATCH mptcp-next 0/1] mptcp: opportunistic reinjection on an
+ idle subflow
 Content-Language: fr
-To: Stephen Hemminger <stephen@networkplumber.org>
-Cc: David Ahern <dsahern@kernel.org>, netdev@vger.kernel.org,
- mptcp@lists.linux.dev
-References: <20261029-mptcp-limits-json-v1-1-7ac73cdab054@kernel.org>
- <20261029100741.3cd38216@phoenix.local>
 From: Matthieu Baerts <matttbe@kernel.org>
+To: Abdul Wasey <w453y.me@gmail.com>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Shardul Bankar <shardul.b@mpiricsoftware.com>
+References: <20261025134643.1537069-1-w453y.me@gmail.com>
+ <5e0ccd66-205f-4055-8ab3-4d300e83fd48@kernel.org>
+ <20261025155848.1745712-1-w453y.me@gmail.com>
+ <6fbbeca8-836c-46cf-a8de-73ecd127b932@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -104,138 +108,58 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20261029100741.3cd38216@phoenix.local>
+In-Reply-To: <6fbbeca8-836c-46cf-a8de-73ecd127b932@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Stephen,
+Hi Abdul,
 
-Thank you for the review!
+On 26/10/2026 11:13, Matthieu Baerts wrote:
 
-On 29/10/2026 18:07, Stephen Hemminger wrote:
-> On Thu, 29 Oct 2026 14:17:42 +0100
-> "Matthieu Baerts (NGI0)" <matttbe@kernel.org> wrote:
-> 
->> print_mptcp_limit() was trying to open a JSON sub-object and closing it,
->> but no JSON object was actually created before.
->>
->> Because of that, JSON support was working with the MPTCP limits:
->>
->>   $ ip -j mptcp limits show
->>   add_addr_accepted 0 subflows 2
->>
->> Create a plain object before calling print_mptcp_limit: an array is not
->> needed here because all limits have a different name.
->>
->> After this modification, we now have:
->>
->>   $ ip -j mptcp limits show | jq
->>   {
->>     "add_addr_accepted": 0,
->>     "subflows": 2
->>   }
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
-> 
-> Should be the regular json_obj variants, not the _plain ones
-> here.
+(...)
 
-Mmh, can I disagree with AI? :)
+> On 25/10/2026 16:58, Abdul Wasey wrote:
+>> I'll rebase on Shardul's series. I'll also test his v4 on my setup and
+>> reply on that thread, since it's still waiting for reviews.
+> 
+> Thank you, that's very helpful!
 
-> The AI response was:
-> 
-> On Thu, 29 Oct 2026 14:17:42 +0100, Matthieu Baerts (NGI0) wrote:
->> print_mptcp_limit() was trying to open a JSON sub-object and closing it,
->> but no JSON object was actually created before.
-> 
-> Right, and that part of the diagnosis is correct -- the open_json_object()
-> and close_json_object() calls in print_mptcp_limit() were silent no-ops
-> because no writer existed. Thanks for catching it.
-> 
->> Create a plain object before calling print_mptcp_limit: an array is not
->> needed here because all limits have a different name.
-> 
-> This is where I'd push back. An array isn't needed in the sense that there
-> is only ever one object, but it is what every other "ip" subcommand emits,
-> including the other three JSON sites in this same file:
-> 
-> 	ip/ipmptcp.c:317	new_json_obj(json)	mptcp_addr_dump()
-> 	ip/ipmptcp.c:345	new_json_obj(json)	mptcp_addr_show()
-> 	ip/ipmptcp.c:611	new_json_obj(json)	mptcp_monitor()
-> 
-> So after this patch "ip mptcp" is inconsistent with itself:
-> 
-> 	$ ip -j mptcp endpoint show
-> 	[]
-> 	$ ip -j mptcp limits show
-> 	{"add_addr_accepted":0,"subflows":2}
+Do not hesitate to send what you have without waiting for the last
+details from Shardul's series to be fixed. You can simply mention the
+base series in your cover letter as explained here:
 
-Mmh, yes that's "inconsistent", but that's a different output, for a
-different purpose:
+  https://github.com/multipath-tcp/mptcp_net-next/wiki/CI
 
- - for the first one, we have a list of endpoints: a dictionary with
-   the same keys. We need an extra object (an array, but that could have
-   been a dict with the ID as key) here to get the different endpoints.
+e.g.
 
- - for the limits, we have a bunch of key-values. Adding an extra array
-   doesn't make sense.
+  Based-on: <20261028-mptcp_penalise_send_v2-v5-0-32fb379ce117@mpiricsoftware.com>
 
-> The _plain variant exists for the standalone utilities that have their own
-> output conventions -- dcb, devlink, dpll, nstat, ifstat, lnstat, vdpa. It
-> is not used anywhere else under ip/, and I'd rather it stayed that way.
-> 
->> +		new_json_obj_plain(json);
->>  		ret = print_mptcp_limit(answer, stdout);
->> +		delete_json_obj_plain();
+(Sashiko also supports b4's dependencies tags, but not Patchew -- it is
+ fine to add both.)
 
-Each output has its own convention, no?
+(...)
 
-> Please use the regular pair instead:
+>> The perf lab would help, yes. I can share my netns cases if that's
+>> useful.
 > 
-> 		new_json_obj(json);
-> 		ret = print_mptcp_limit(answer, stdout);
-> 		delete_json_obj();
-> 
-> which gives
-> 
-> 	$ ip -j mptcp limits show
-> 	[{"add_addr_accepted":0,"subflows":2}]
-> 	$ ip -j -p mptcp limits show
-> 	[
-> 	    {
-> 	        "add_addr_accepted": 0,
-> 	        "subflows": 2
-> 	    }
-> 	]
+> That could indeed. But I'm going to try to push what I have today: it
+> might be better to work on improving the same thing.
 
-Here, we can see the array doesn't make sense. Are there other similar
-output in 'ip' adding an extra array just to present one dict?
+It took me a bit more time to fix the last details, but it should be
+usable now:
 
-> No other change is needed: print_mptcp_limit() already calls
-> open_json_object(NULL), which is required either way -- under an array it
-> creates the element object, under _plain it created the root object. Plain
-> text output is unchanged in both versions.
-> 
-> Worth doing now rather than later: JSON output for the limits never worked,
-> so nothing can be depending on the current shape yet. I checked the mptcp
-> selftests as the likely consumer and they parse text only --
-> pm_netlink.sh:71 does
-> 
-> 	ip -n "${ns1}" mptcp limits | awk '{ print $2" "$4 }'
-> 
-> with no -j or --json use anywhere under selftests/net/mptcp/ (the only jq
-> there parses nft output in mptcp_sockopt.sh). So the shape is still free to
-> change; once it ships in a release it isn't.
-> 
-> One nit in the commit message while you're respinning:
-> 
->> Because of that, JSON support was working with the MPTCP limits:
-> 
-> Missing a negation -- "was not working". The example output just below makes
-> the intent clear, so this alone wouldn't be worth a v2.
+  https://github.com/multipath-tcp/mptcp-upstream-virtme-docker/blob/latest/PERF.md#tracking-regressions-locally
 
-Indeed, I can add the missing "not" if a v2 is needed.
+There are many use-cases (based on previous work). The idea is that
+the regressions are found automatically by looking at the distribution
+over multiple runs. So it works best if you execute the tests a lot of
+time on a base branch, then check on top of your modifications (always
+under the same conditions).
+
+The whole suite might take a lot of time (1 to 2h), but it is possible
+to execute only some parts. Do not hesitate to suggest modifications or
+send PRs ;)
+Or tell me if that doesn't work for what you are doing.
 
 Cheers,
 Matt
