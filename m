@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793310771;
-	b=HBQ5maUEOlbsjE5bsAz+ovtPDfWLcqshX2UboT7AJdrDz49k4iqhwEmsrqQaROqP4zQ3
-	 hLiW15Lg/ssTmT9Yep0boemjR2E6eUK3cHALb1cs5JKnqyEMKpYzStKvxvxXaiuqfAKN8
-	 l37/TO/xgHctcEloPTx+uKxl4HUbKDNfypwJSrbfjCmskZxhr1p89wSLgb30y5RRa+5HO
-	 kaCyvNXmujJGDuLrbOiwABG0EgGLnYS5xWYPWP7kmuQCIOobjioj9dvqbxCXGa8X7ZVUB
-	 4EF71SFIGqHEMvYpWINtRtbdS5Ug35JZX3vVFOApll6HuBL7oWyJyQZgsv9arc45mjA==
+	t=1793311027;
+	b=yCvigl8Fu2GlpuyejQamxqAveJ951dQ/H7PJflIbZ2Lx6drqzIYrsbeCHaDNYCdu0leC
+	 GepLYYkmnPtZXtPDUiE25Pr4rWYP/f0pF528sOMgPEqongFij+/iShZbG9Bes1tEnwLns
+	 6lkRW/9qECMg8sHMhEu3xShuPhKRN4OxmVtRDW1mD8A5FXMmEuyv1kZOFEelaJ1Ogz5+q
+	 xvLCXTyuR+TBGNyWmwTEUL135MAZF9tPwUR3JQqYOtiR1YfHMPuXIsekeAYdPj/a96fEE
+	 +ku6wnnOq7dRhl+p9b3c27QNfhBoZtfNXTw9cKOMHFqPA695L33cV/JTmzRkT5wk03Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793310771;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793311027;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=KsHJKATWWJcADk0Y4JliS/ouXqFCdKnJ/1bktzfeDOA=;
-	b=GObYQEM1I7+MyN6p3aNu7zZjmZbnDN7kyUYrtnWdQib2/ACgp673ICbfssrqa7BDrQ5D
-	 vakfy6AUAUrQjc1WwnuSsVFA+kGJr8fVy3fW2JLEqvThuKX9InJSr85wD+q6ZXTuZeJWs
-	 N3tvPpqSn1Wjrl91W/Hj/VM9GB8lBfRoOXgedtLaayaehhTcsETpn3nILU6PqzoPpKoJ/
-	 e14KfwGePnW0F9LzwNax8i7cfyniDAesOaoI1ubKOf2srtox2xakDmCzESqZjZBwrqBA2
-	 55WdFwlY6G9G5XOTTOYhQ47GuYvBi1XINZsDeeBzy+e6G+X0RJovWOwHJ9iwXJIDYEA==
+	bh=WMyvqPrLdQNt9shdCLKO7ZbHDXMCTSBowgKi9sHY/f4=;
+	b=k/BZG6UTRNlmCNflmK7WT1XCKcUJ4u8vfvwgPhaenNg9BxVf7MrE/ldYRTIPdxyevG9V
+	 CNc34YMQZSIHs1x0imMGH56l/MkOj6iv0f1XnkdXVK6C951ZtiiGvdXK23dGzcK7q86i9
+	 ILyqUskl8dNZo7lzTNMZNoc3N/gz57hkMIv7pdF+g9VcuWqbWP68O1dLil6GwC2KstiWR
+	 11efQ1ppNaizSW1VtvM1/CFePAyp0+F26nCucCYi3kKoMzcauIvZps5wicTvASMHkD5c+
+	 iOwQALtpAMzSH14Tuk29+na46agP6CTNJyvaUP5HQ5lHn8T3JRTTj7uHnJMPTWJrUIA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=b4bGz7Td;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cMXiajxt;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EAA4606A31A
-	for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 21:52:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3915B606A31A
+	for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 21:57:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=b4bGz7Td
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A37BC1F01816;
-	Thu, 29 Oct 2026 21:52:50 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cMXiajxt
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0F591F01816;
+	Thu, 29 Oct 2026 21:57:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793310770;
-	bh=KsHJKATWWJcADk0Y4JliS/ouXqFCdKnJ/1bktzfeDOA=;
+	s=k20260515; t=1793311026;
+	bh=WMyvqPrLdQNt9shdCLKO7ZbHDXMCTSBowgKi9sHY/f4=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=b4bGz7Tdsb6X1UgGkf2DCVp1JxEGMgzhZ8q6xRn2Uo/2F6guwWwlohc+GCTAAuoGA
-	 bHWqcZdVDygjFdhzqcmdFJ4kq7/GDS5SaSKY8MXR0quhp+r2KQMKLlH6TJdNcfouAi
-	 pX9vZZPXkC+UQAxiMmqCpOWdwMhxyxATuog45U7uMwR+s7F4lPrEXwAPUNmkmqu3H4
-	 zmtLTiZzVppyKtGVslbuZAPezrtKPbjj2xjCyHPQsunos/6Omb55GQ8o9ufzR9CxWj
-	 hLB8UTGkHxon9z0vYfilzUbdY3YvIwIcUOnJYzp9RK7HB08q/RsYwnXCMnRlPgh6lh
-	 Txc3Sjmg1jauA==
-Message-ID: <sashiko-outbox-190022@kernel.org>
+	b=cMXiajxtfcBkOgGIidfCIA/swQhl2i9bjXk79ej7eflXUq+ynmfx1XZZ011RG4oml
+	 PVKoxrlT00PeW3W126O+Evze4xWIU4fbrX4TgdpFPBUkltpXNxZKyO+bEQVKf8snV0
+	 OmYYSW9QQaumny+QFOgbFEgM24fzK73oxQeTaCmg9UDwaXzwbANM/esdlnvpLC7N3f
+	 W9Y/6ZtkGoQqhCMeWYvNED7JrjYbyGIGqjt6EJLAAwzlm1YBC3WwgEUV5I8qYPJvbR
+	 S+RdCvqB3nauIcEAan+eeSIpVUM14s6UXEmah8IAG4mGwLTn7HqFVRKm4rUEn4oBtE
+	 F32eTB9RcY31A==
+Message-ID: <sashiko-outbox-190026@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v3 2/3] mptcp: options: track invalid
- suboptions
+Subject: Re: [PATCH mptcp-net v4 1/8] mptcp: pm: userspace: properly handle
+ the ID0 case
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>, "MPTCP
  Linux" <mptcp@lists.linux.dev>
-In-Reply-To: <20261029-mptcp-mib-inval-opt-v3-2-428f42a35674@kernel.org>
-References: <20261029-mptcp-mib-inval-opt-v3-0-428f42a35674@kernel.org>
- <20261029-mptcp-mib-inval-opt-v3-2-428f42a35674@kernel.org>
+In-Reply-To: <20261029-mptcp-pm-userspace-id0-case-v4-1-555066fa4292@kernel.org>
+References: <20261029-mptcp-pm-userspace-id0-case-v4-0-555066fa4292@kernel.org>
+ <20261029-mptcp-pm-userspace-id0-case-v4-1-555066fa4292@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 29 Oct 2026 21:52:50 +0000
+Date: Thu, 29 Oct 2026 21:57:06 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -63,143 +63,109 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] mptcp: missing invalid option checks in mptcp_parse_option()
+- [High] mptcp: pm: userspace: ID 0 entry breaks mptcp_pm_userspace_get_loc=
+al_id()
 --
 
-commit e7e04837e80d59cf3334575f91dc516262bef4d7
+commit 626a00aaeaa0d778f8ba3b1e9d1ca84367bbdac3
 Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-mptcp: options: track invalid suboptions
+mptcp: pm: userspace: properly handle the ID0 case
 
-This commit adds the MPTCP_MIB_OPTINVALID MIB counter to track incoming
-MPTCP options that have invalid sizes or unexpected suboption combinations.
+This commit adds the initial subflow's local address (with ID 0 and port 0)
+to the userspace path manager's local address list when a connection is
+created so that ID 0 can be handled uniformly with other local addresses.
 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index cbc105199073e..10a150e2ad69e 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -20,7 +20,7 @@ static bool mptcp_cap_flag_sha256(u8 flags)
->  	return (flags & MPTCP_CAP_FLAG_MASK) =3D=3D MPTCP_CAP_HMAC_SHA256;
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index f723a134356f3..45faee894ac3d 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -707,6 +707,26 @@ int mptcp_userspace_pm_get_addr(u8 id, struct mptcp_=
+pm_addr_entry *addr,
+>  	return ret;
 >  }
 > =20
-> -static void mptcp_parse_option(const struct sk_buff *skb,
-> +static void mptcp_parse_option(const struct sock *sk, const struct sk_bu=
-ff *skb,
->  			       const unsigned char *ptr, int opsize,
->  			       struct mptcp_options_received *mp_opt)
->  {
-
-[ ... ]
-
-> @@ -175,7 +177,7 @@ static void mptcp_parse_option(const struct sk_buff *=
-skb,
->  					    OPTION_MPTCP_PRIO |
->  					    OPTION_MPTCP_FASTCLOSE |
->  					    OPTION_MPTCP_FAIL)) !=3D 0)
-> -			break;
-> +			goto invalid;
-> =20
->  		pr_debug("DSS\n");
->  		ptr++;
-> @@ -218,7 +220,7 @@ static void mptcp_parse_option(const struct sk_buff *=
-skb,
->  			mp_opt->ack64 =3D 0;
->  			mp_opt->use_ack =3D 0;
->  			mp_opt->data_fin =3D 0;
-> -			break;
-> +			goto invalid;
->  		}
-> =20
->  		mp_opt->suboptions |=3D OPTION_MPTCP_DSS;
-
-[ ... ]
-
-> @@ -386,10 +388,10 @@ static void mptcp_parse_option(const struct sk_buff=
- *skb,
->  		/* Can be used with a restricted number of other options */
->  		if ((mp_opt->suboptions & ~(OPTION_MPTCP_FAIL |
->  					    OPTION_MPTCP_FASTCLOSE)) !=3D 0)
-> -			break;
-> +			goto invalid;
-> =20
->  		if (opsize !=3D TCPOLEN_MPTCP_RST)
-> -			break;
-> +			goto invalid;
-> =20
->  		if (!(TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST))
->  			break;
-
-[ ... ]
-
-> @@ -418,11 +420,17 @@ static void mptcp_parse_option(const struct sk_buff=
- *skb,
->  		break;
-> =20
->  	default:
-> +		/* Not invalid: maybe used for experimentations */
->  		break;
->  	}
+> +/* Add the initial local address (ID0) to the local list: easier that wa=
+y */
+> +void mptcp_pm_userspace_created(struct mptcp_sock *msk, const struct soc=
+k *ssk)
+> +{
+> +	struct mptcp_pm_addr_entry *entry;
 > +
-> +	return;
+> +	entry =3D sock_kmalloc((struct sock *)msk, sizeof(*entry), GFP_ATOMIC);
+> +	/* Fine not to handle the ID0 case in memory pressure */
+> +	if (!entry)
+> +		return;
 > +
-> +invalid:
-> +	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_OPTINVALID);
->  }
+> +	memset(entry, 0, sizeof(*entry));
+> +	mptcp_local_address((struct sock_common *)ssk, &entry->addr);
+> +	entry->addr.port =3D 0; /* msk port */
+> +
+> +	spin_lock_bh(&msk->pm.lock);
+> +	list_add_tail_rcu(&entry->list, &msk->pm.userspace_pm_local_addr_list);
+> +	/* The initial address ID doesn't increment local_addr_used */
+> +	spin_unlock_bh(&msk->pm.lock);
+> +}
 
-[Severity: Medium]
-Can a couple of invalid option cases in net/mptcp/options.c:mptcp_parse_opt=
-ion()
-still read out of bounds or miss incrementing MPTCP_MIB_OPTINVALID?
+[Severity: High]
+Does adding an entry with entry->addr.id =3D=3D 0 to
+msk->pm.userspace_pm_local_addr_list cause a regression in
+mptcp_pm_userspace_get_local_id() when allocating a local ID for a new,
+unannounced address?
 
-First, mptcp_get_options() only rejects opsize < 2 before calling
-mptcp_parse_option():
+When mptcp_pm_get_local_id() -> mptcp_pm_userspace_get_local_id() is called
+for a subflow whose local IP address differs from the initial subflow's IP
+address and is not yet in userspace_pm_local_addr_list, skc->addr.id is 0 a=
+nd
+it calls mptcp_userspace_pm_append_new_local_addr(msk, skc, true):
 
-net/mptcp/options.c:mptcp_get_options()
-	opsize =3D *ptr++;
-	if (opsize < 2) /* "silly options" */
-		return;
-	if (opsize > length)
-		return;	/* don't parse partial options */
-	if (opcode =3D=3D TCPOPT_MPTCP)
-		mptcp_parse_option(sk, skb, ptr, opsize,
-				   mp_opt);
+net/mptcp/pm_userspace.c:mptcp_pm_userspace_get_local_id() {
+	...
+	if (skc->addr.port =3D=3D msk_sport)
+		skc->addr.port =3D 0;
 
-When opsize =3D=3D 2, ptr already points past the end of the 2-byte option.
-At the start of mptcp_parse_option(), *ptr is dereferenced before checking
-opsize:
+	return mptcp_userspace_pm_append_new_local_addr(msk, skc, true);
+}
 
-net/mptcp/options.c:mptcp_parse_option()
-	u8 subtype =3D *ptr >> 4;
+Inside mptcp_userspace_pm_append_new_local_addr(), the loop iterates over
+userspace_pm_local_addr_list and encounters the initial ID 0 entry added by
+mptcp_pm_userspace_created():
 
-If the byte following the 2-byte option has an upper nibble in the default
-range (9..15), switch (subtype) hits default: break and returns without
-incrementing MPTCP_MIB_OPTINVALID. Similarly, if opsize is 2 or 3 and
-subtype is MPTCPOPT_DSS, the MPTCPOPT_DSS case advances ptr and reads a
-4th byte before validating opsize against expected_opsize (minimum
-TCPOLEN_MPTCP_DSS_BASE =3D=3D 4):
-
-	case MPTCPOPT_DSS:
-		...
-		ptr++;
-
-		flags =3D (*ptr++) & MPTCP_DSS_FLAG_MASK;
-
-Second, in the MPTCPOPT_RST case:
-
-		if (!(TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST))
+net/mptcp/pm_userspace.c:mptcp_userspace_pm_append_new_local_addr() {
+	...
+	mptcp_for_each_userspace_pm_addr(msk, e) {
+		addr_match =3D mptcp_addresses_equal(&e->addr, &entry->addr, true);
+		if (addr_match && entry->addr.id =3D=3D 0 && needs_id)
+			entry->addr.id =3D e->addr.id;
+		id_match =3D (e->addr.id =3D=3D entry->addr.id);
+		if (addr_match || id_match)
 			break;
+		__set_bit(e->addr.id, id_bitmap);
+	}
 
-If a peer sends an MP_RST suboption on a packet without TCPHDR_RST set, it
-breaks out instead of jumping to invalid. Aside from not incrementing
-MPTCP_MIB_OPTINVALID, this leaves OPTION_MPTCP_RST unset in
-mp_opt->suboptions, so a packet carrying MP_RST followed by DSS on a
-non-RST segment will accept the DSS option without flagging the invalid
-MP_RST + DSS combination.
+	if (!addr_match && !id_match) {
+		...
+	} else if (addr_match && id_match) {
+		ret =3D entry->addr.id;
+	}
 
-Should mptcp_parse_option() check for a minimum opsize (and minimum DSS
-size before reading flags) and jump to invalid when MPTCPOPT_RST is
-received without TCPHDR_RST?
+append_err:
+	spin_unlock_bh(&msk->pm.lock);
+	return ret;
+}
+
+Because the new address does not match the initial subflow's address,
+addr_match is false and entry->addr.id remains 0. However, e->addr.id is
+also 0 on the initial entry, so id_match becomes true and the loop breaks
+with addr_match =3D=3D false and id_match =3D=3D true, causing the function=
+ to
+return -EINVAL instead of assigning a new ID from id_bitmap.
+
+Although the v2 changelog notes mention handling needs_id where the address=
+es
+do not match but the IDs (0) do, that check does not appear to be present in
+this commit or later in the series.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029-mptcp-mib-=
-inval-opt-v3-0-428f42a35674@kernel.org?part=3D2
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029-mptcp-pm-u=
+serspace-id0-case-v4-0-555066fa4292@kernel.org?part=3D1
