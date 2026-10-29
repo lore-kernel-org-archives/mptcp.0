@@ -1,94 +1,50 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.160.41
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793315054;
-	b=mq2HbKW7fjBzjsd3F8j0bMUldedBvWsD6zOMXZnAwdPaeLK+z4xIzq2qQ6TbJA5Pw8Ww
-	 8he2WJUDKLskI3HA48oCQkk9yzYdkXo1B7uebuk9XBW2zZ5y/N5VBGFlwPpr97qhLiYqO
-	 34BX5fEeIsfPGebCdSWEYY6+Y5QxVsrGdyA+q3h6Md2K+3WWOaNcYhpWjJtLnNWw5tdOB
-	 wPvvaD65Nm+a2OL0iUuXfwxqsLhv0E94fTaTHhMjdPb6mDWk/R5W9B8Azb3SNEvLGlZnj
-	 lp/bwpxqte2xroNyXM36FMDqrNIy7l64BS7LDgqcepYvWpn4tr2ONcfJIYrYVAt10QA==
+	t=1793316128;
+	b=Yuwk+9SAImrDO+W/526tUb0wgFXg83inONPdeCfNw8dcoKjf+5Ir0FZ3KDyVMv1009vk
+	 HnfY+t4LVJjrsCeODeTFeG5BYI+HMsURQeER6uRg7VAS9K3Ou+1r134zfjJspNDZOvFSI
+	 OZURqcbgXz4MMdNk3AzevkNuH9c+aaK/YZ3gAgv82no+LWM5Nw7KzhwLiiRp3GhVhBDT/
+	 k6kjjfLSx84AssWHemkP2Hzj+J6KsVbYNuOLrEGAKJ8O7rmkd/5jqLg6pooNYDFzBJEEy
+	 0b+H4PUsLb1mRk/BTJ6pWIM2tMVjIOVE+vO1lldQOih2pSlBoY3zIvGR+4oF6+DS3Mw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793315054;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
-	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
-	 Date:MIME-Version:Content-Type;
-	bh=EAr1+5icJgsBBUXaQ7EMDLPZu9FG+i0x/p19VFlTlMg=;
-	b=pBev6vKquw3JEKq/wMWGIbtBzswhYmSarJAVIF1jEmMzfjkuRVB+fD7TIUvbIKwGOYRC
-	 SIwY5fSZw4t8gN1VucbN/znomPWQZfAJkYxfiblcEDeT7W3PW1VMqubzpjst4hZ+PCUH5
-	 68dMnmqvTyyC2Fouc1gQ68KQaVte2kjcm8apR71sY890pnIPQ7Gg3r/VfIRD1VAEPx0+8
-	 /zvEOdajVif4J1znQaI6e1t6fgdA0Yl6mbtMINjCl8q37RVdrE7FFWI1JDUE5LjS16oNM
-	 EUCWZVG9NoD7CONCfbewh+8aBUntQsFtyap/sT9YMw+FIMNXiYhNxjoY8moERAqMxBQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793316128;
+	h=Received:DKIM-Signature:From:Subject:Date:Message-Id:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:
+	 Cc:X-Mailer:X-Developer-Signature:X-Developer-Key;
+	bh=3VTdkt1O229KG/ISNAW3+0LwXDDNMTJjTkclfDGrSAo=;
+	b=GHOBj8uM5K7D43mt7IVW37x8eMJlqPUzfvBuRvFWNxTAHFJy83kwJpnpXwGsZ/CuRIfB
+	 jgWd8GDD4EIL1lGr+1+pUyCFJqU+GTbvaT/6B81NeL+73C02ferEVdDV5E5Po2Op+C4mK
+	 68/kPWul+rSgO9TdqLQNss/7aDhEXxEbTreeXRY0KsdxNSirAItpMPuuFH0bZIfjtyyrL
+	 Hl0c1WjiR5qdsB3gIH4+VP20gqXGpiIi2nrKOl06mQz6ivbBTB5o+Sr9utv5QOW6FNKte
+	 iNKZ6OwdGBDmznMsamn1XoEAg+qDZWEZc9/b6XinlhBbeNIOMoNtoMM0xhO8ZwipJKA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=r+gJDNbw;
-	arc=none smtp.remote-ip=209.85.160.41
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bnaMfjan;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E98606A31A
-	for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 23:04:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 38E98606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC1A606A31D
+	for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 23:22:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=r+gJDNbw
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-451a49abd8aso95168fac.3
-        for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 16:04:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793315053; x=1793919853; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=EAr1+5icJgsBBUXaQ7EMDLPZu9FG+i0x/p19VFlTlMg=;
-        b=r+gJDNbw6Q73ks9ArCar8Cg4/pZXyjJcyZYXcQKLnL+kk21wnqmKs9DUa7ercEVYKW
-         bd0xmTaZN8Bq72fr8Sai+jpbveknHWgMyLk8gCt1JOSSzqs9DJzrdOriKJ3hctJnQAOr
-         FR/NthIaAAigEnJzMnoofMrbbnFs8Q1uPXWrWmio6sSw3KU9Mj7UuSOptCHevvwNJ7U7
-         egOtsQi1wRSfieUf1M33Z0FLnAMsyN1C8urnVUjYW2UB2LBi+MczzJrU11xX5h+Rtphm
-         m6f0WkHQeWyCv9JeVjx7bljoqVJdB4FeF+zhz0oqAkZmXm/77OUccc2YkVdpE0+beGn9
-         /3CA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793315053; x=1793919853;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=EAr1+5icJgsBBUXaQ7EMDLPZu9FG+i0x/p19VFlTlMg=;
-        b=KUforWYKaBaJOou3neK6Ew7qZ/CweP5Ai8jZOAPt4XMphpHiSmoIVquu8L6GtHLJd3
-         v1RKskLbSnqQ0nlcb6zncOp5HuV40YGbwRPAVXxUY8WpCxCKZw9cx4eWvpb2hMmMGflP
-         3xTZP0IGta751OB5F4kKEtL91JjqMy6Im3kKTu7ne9hTlvSyz3sg9vnhixEAWESoik4D
-         AZOLIQEdwQVzdHGbDWVyTchLKRDy0/sF/r0dUT4vSPADBukEXpRZVYJ/RgCOCky8rWO+
-         8XcR+ZikGURZjRFsOVoL2gquk3MX/1zlpeDH7EziWoHLuAxfAJuPsEQst6Zq5tWrwgTi
-         bmXQ==
-X-Gm-Message-State: AFq9FYL+mHrTv8b7TNJKqFoktGe93O46BRTqmRWbPGo1DXPnTOJHW/d/
-	8a8k/Lt/Gj/EL99H1fklI1Y32+3btXeo9SaC4Wus0IyYsSQigHvlrBg=
-X-Gm-Gg: AYBFou3x3y52oI6Fn/rpEAq1Iy8oJAEYj0q5WsuQ5YPpw+mrXgHMz8nzZyA4fwbYPrg
-	VwDnvfg2vldW/9FrxWV7DHOQX0QRQkWNwILH+jKD9qbMWvUc9xUIByvU/cGbgryrloNuDP0tkSb
-	VBErRbnKvb1e1OvQKrPgH5dl1baChEY21PgFbU5ayw7JCDMWHw56GMVCMK+6JaFo5Mq/ShpGDmy
-	QL8qUXp5L0DbNyoAkFa3On/S0aU7w7/uUkY1kUmkCxYSRCTWsOcgE1AeSRDaSUz9KSfNtheb0pG
-	XcJOuk04WvWFcxehn19QIxhsNYmvl/QVfD5OqTgZc+RJumEA0DAvRWRs1/QbDuJncHvdiU/LLEk
-	CNl2mVzSdbzHqDkINP3Uos+L0g8sGLDNl6x7qM3pENvZ5c2YVP1SwsjC/IaxueAnHLuUm2n5SXR
-	36QLl6xAYITOTI/qhFn24hZXX1x3pPx99sxsXSrt24IGd4wnTTuiFBsU3dh2+glYKgG6MapnqLM
-	A0lBCXn1PmreOXYV19U5R5x2D8DZee3oTrKH6Xb5sX1ULGd1auOXgnelu+RzlhICoecLe40yVOM
-	fOtXi4Jgb15uazZDatYKjlC8pOnzpXOpL6wiofYgwKT0
-X-Received: by 2002:a05:6808:c12a:b0:4f2:6f1a:a34a with SMTP id 5614622812f47-5640dd023dfmr566082b6e.12.1793315053122;
-        Thu, 29 Oct 2026 16:04:13 -0700 (PDT)
-Received: from github.com ([172.214.155.176])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-5640fa0af12sm282800b6e.0.2026.10.29.16.04.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Oct 2026 16:04:11 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20261029-mptcp-mib-inval-opt-v3-0-428f42a35674@kernel.org>
-References: <20261029-mptcp-mib-inval-opt-v3-0-428f42a35674@kernel.org>
-Subject: Re: [PATCH mptcp-next v3 0/3] mptcp: options: MIB for invalid &
- drop suboptions
-Message-ID: <a96d6955-67be-a163-5bdb-8beeb0037036@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 29 Oct 2026 23:04:11 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bnaMfjan
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F3B31F01825;
+	Thu, 29 Oct 2026 23:22:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793316127;
+	bh=3VTdkt1O229KG/ISNAW3+0LwXDDNMTJjTkclfDGrSAo=;
+	h=From:Subject:Date:To:Cc;
+	b=bnaMfjanAO0fcFYhulFW+4LO9gv+kNSbILNj8uQPv69NZQ1w/82KO3LWGGUPTngiV
+	 lbbfo0KwFa+y3pdlFWIm8FJKJjkSXB3PBV4eJQN3+0Zeuq8ciIM7AO8e1WIm7mKW2T
+	 rjEvhbFuoLmi8lZ1Qdt8UTZqqyIKE4mxq8R03HHjI2F74XKrZxkvwTX8F/hyOM5qQX
+	 JkIGXyT/Jaccsx3M0fvm88Z5iUITkDgwTsGNO/zJSSBTp4ETgZIk/FMtBEehvXYQTB
+	 E3QS3501DidYw1LybSlH6OxkkNzBWuPJuQfnAMaZSZO0tGw4MHTTd6GdnSTvDEe7Mn
+	 aeI1qzKLzHSEw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-next v2 0/5] mptcp: reset fully_estab after fallback
+ & reject MPJ earlier
+Date: Fri, 30 Oct 2026 00:21:38 +0100
+Message-Id: <20261030-mptcp-reset-mpj-early-v2-0-90f119392263@kernel.org>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -98,58 +54,65 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/4WOwQ6CMBBEf4Xs2TVQGhFP/IfhgO0CRSxkWwmE8
+ O8W+ABvM5l5s7uCIzbk4BGtwDQZZwYbjLhEoNrKNoRGBw8iFrf4nkj8jF6NyOTIB90hVdwvqJX
+ KtNS50HUOgR2ZajMfu084EUuzh/LM3PfVkfL78N5ujfMDL8cTU3Iwf+5NCcaYqioNrTqXmSzex
+ Jb668ANlNu2/QBMURwo2QAAAA==
+X-Change-ID: 20260814-mptcp-reset-mpj-early-dcc7d4d92df9
+To: MPTCP Linux <mptcp@lists.linux.dev>
+Cc: Paolo Abeni <pabeni@redhat.com>, 
+ Chenguang Zhao <chenguang.zhao@linux.dev>, Gang Yan <gang.yan@linux.dev>, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1621; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=yWXtGqzQjRuujCUgXxsMTsUc8bH7OgUYqk5QAJQ72Yo=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIeXxVneRBQLn1PcXmd4OLtd9drP3jqO2GD5TPjBF6++
+ vcHqt90dpSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEwkYhEjw/69J3i0c/LDSv6c
+ nbTnRK/FMs6nuSFbfBbOjVfdzjSbt4GR4fXSz2x8bgn1742Ni9jKT3a5c+To1MyYEHg56ebixCI
+ uTgA=
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Matthieu,
+Bailing out early when we can: reset the fully established when a
+fallback is done, then reject the MPJ earlier, and finally stop
+processing connections early with the in-kernel PM. Plus two
+refactoring patches.
 
-Thank you for your modifications, that's great!
+Maybe the first patch should be backported? Eventually the second
+and fourth ones if we find related issues? (That's why I put the
+refactoring patches after.)
 
-Our CI did some validations and here is its report:
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v2:
+- patch 2: why the new racy check is OK, +ed, support old kernels & synC
+- patch 3: new
+- patch 4: safer approach
+- patch 5: new
+- Link to v1: https://patch.msgid.link/20260814-mptcp-reset-mpj-early-v1-0-3ca3260f9474@kernel.org
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Perf: Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_n=
-et-next/actions/runs/40958087376
+---
+Matthieu Baerts (NGI0) (5):
+      mptcp: no longer fully_established after a fallback
+      mptcp: reject MP_JOIN earlier
+      mptcp: subflow: split subflow_check_req()
+      mptcp: pm: kernel: skip operating on closing connections
+      mptcp: pm: kernel: avoid mptcp_pm_is_userspace checks
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/7d5e686a6c=
-fc
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1196631
+ net/mptcp/mib.c                                 |   1 +
+ net/mptcp/mib.h                                 |   1 +
+ net/mptcp/pm_kernel.c                           |  18 +-
+ net/mptcp/protocol.c                            |   1 +
+ net/mptcp/subflow.c                             | 210 +++++++++++++-----------
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |  55 +++++--
+ 6 files changed, 171 insertions(+), 115 deletions(-)
+---
+base-commit: bcc5638fabf418e763621a432840cf55287e604d
+change-id: 20260814-mptcp-reset-mpj-early-dcc7d4d92df9
 
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
