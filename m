@@ -1,56 +1,52 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.7
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793260375;
-	b=esK27vn0f6A0jSsLcbgUWyUbwEuVlkZ51yx3N/IBF0t7E+KLrLXC73+aR6fkUg0lwoYg
-	 gjpycfvG58m5E9tzJe4coyjeTLAa+SGGOsynt365yflKseUczzyn7pPAswQ4dffVQ7oE/
-	 1OqHTI3Fjm3WTYKYFzMMk6BpOPyZ/qf2u1QSPvKK3ecX7Nun7wWuRKqR6AyO8rY+u6/ve
-	 LtPmryv17IYLQHgcyDzhITPr2oX9TyDZ7VdiR66CARYlDtP1tPSPrNaR2IdRSln7SoarD
-	 zB1UBn2Ftwm7nFNOZkW3r4N/wUVTUnhFaRjpUgUk88shn3/VQjNdty/u0jRm1rs56fw==
+	t=1793260980;
+	b=faGtyOEN6hIbnXmiqOJfoielLlkedGvh6F1BeiGVAZHYAS35VTesmM+4j+xcTH9mKNSN
+	 rRDDFwaI4InHJDPjUhko9OI5s9r+sGCoqL9cu9cHfb1x/D+9wNaNhb1kESRBwkuXJfQwD
+	 UzwMW46OQB9/o1i8oqvYxbIB+609zKEdXrQJTloOFTnipsl2YzxZWOSs1wk8mTNvCuS1p
+	 7gXggFh8G+7r+yzMSKQxmf0kcbIlyqXF1VYo4jjznhlHxi/dYSv1shuC1uQ76Xy0CX117
+	 lJPsaqbEjB/hHHZcz/hbtaXCFxbG4qZAj1iqC0f02YhzYxwgpcjjly9ue7tNmfXHKCw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793260375;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=QVCQxNmzLO9/EkqoNUpUM9p8HNnQ/Y0aWj6dm2YXMq4=;
-	b=gEKZDt4mutjK0LQwG+aU7z7GugeUcwMS8louzbgf/QKH8Z6FzdWOHj67KwUDqXk2r/I8
-	 UhUZlwf51hyrZnli4CBHd3cvvWrhV7sfDWxohiZU9E6qULEC3V1Xg4qeDNeF2Bxl0JTPW
-	 zwZ6oMNaL1JXYRofF4VE1+E5GJr7oKIfwLJUnunLwSORT5HZXAjL7ZKQmInYlr4p2fwXH
-	 +qREngHqCgUpxtUFkHHmS7EkSFnymTMzmwcwlW78Abpq1UHtzWgVdBsQUdMeQ/KEbP0TD
-	 MlhBpBFFsCdVmLRfDRppM83IyPILRJKEHpj1EvbkUjeLmB66o6YJ+kjCT9NbDy4VEXA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793260980;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:MIME-Version:Date:Content-Type:
+	 Content-Transfer-Encoding:From:Message-ID:TLS-Required:Subject:To:Cc:
+	 In-Reply-To:References;
+	bh=1rbj7wvVXNmL3PUyISA9geKh98Ts8W387b6f/PyNAOk=;
+	b=JWd28OOlMIfqJ4grm+9m5vID0wMCDmmc4TD6+qTYKu9G9TifP19KLFWJuce7MoeYmtGl
+	 HvdF7RK12ms7mhKhFMPGfOOMV1sWzHZTPccFe9cYBlpRWRsKpeUR7/iH1vFAvGitkT9US
+	 HEviZaB1fs+oA/IxQvU9zW0Ln1DZ82dd1rzoPaa7XeWWS5DnQzoaxKW3buIq+zomNI8Ue
+	 ZFCQboAHmgF/UYA326J5cqIkmsXTLifvdlejAKwoF9EVCr2xSEj3WBluFVh7C0bs7yAU8
+	 kiA5xcplz4eRfCv6m3eluDU9QzmXskOsFGSxdUaBQ/0/h7U4mUmCvURSp4iDJ9FFkWg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SDCyv1oe;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=cIOSm7V+;
+	arc=none smtp.remote-ip=91.218.175.7
+Received: from mta0.migadu.com (out-7.mta0.migadu.com [91.218.175.7])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C74A606A31A
-	for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 07:52:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA70606A31D
+	for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 08:02:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9AA70606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SDCyv1oe
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 221CD1F01825;
-	Thu, 29 Oct 2026 07:52:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793260375;
-	bh=QVCQxNmzLO9/EkqoNUpUM9p8HNnQ/Y0aWj6dm2YXMq4=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=SDCyv1oeCFHzvfJ9o6Go4vNNGSLwqaayM91RGvIGokFAygWMkQnpffKyv3Mk7oX35
-	 u6RoWFoPCBytgUu327RGzJqWBtioOD6lJv5iF8PGwBduLrYPdmNGPZc7I42lB0+3rB
-	 PLfgdSVuXed7pGLx2oFUu+fN2o/PXYZAFCN3sDu2Vu8SsWourbzww1uKp0BSfvuA+t
-	 5gdyoVEpN1hLmZ9sR+/WdZCZ82gll3A4GAcOxGXP+ZEFfl54sG+D2J5RIwFE1b+IWh
-	 Zj1tx/ZfkflWjwJ34B/wR2usMNYely+2ESOV5CrrqoRaaoU84GmLhZB/D9/aEtDAIv
-	 CkZZpopW5mPMQ==
-Message-ID: <sashiko-outbox-188915@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v2 2/5] mptcp: implement peek_len for
- proto_ops
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <5a0397c9d6a1bdbb1ddeb7b2c900a8c1184dee59.1793258749.git.tanggeliang@kylinos.cn>
-References: <cover.1793258749.git.tanggeliang@kylinos.cn>
- <5a0397c9d6a1bdbb1ddeb7b2c900a8c1184dee59.1793258749.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 29 Oct 2026 07:52:54 +0000
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=cIOSm7V+
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=67ftyRJklHTQSw6DhAS9t+f5zCKnUSz0olqnnN5c9Vc=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793260976; v=1; x=1793865776;
+ b=cIOSm7V+HxkiIdKtUBihXexWqWQrGQziq/PxoVmZ8SGH1jddZfI1huVqVX4MID9b8deuSIWf
+ bDvId86P389vmcsUdpiM9+ik0Pyt+WcVmTHM77D4J9LI+RnyfjgxnFW0TFMuClDtN+kev5oEpbL
+ iiYiAha0xkFJjpcmeIDUBAlk=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 91043d89a12ae494;
+	Thu, 29 Oct 2026 08:02:56 +0000
+X-Mizu-Trace-ID: 91043d89a12ae494
+X-Migadu-Flow: FLOW_OUT
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -59,132 +55,210 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
+Date: Thu, 29 Oct 2026 08:02:52 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+From: gang.yan@linux.dev
+Message-ID: <71116e2870aa207609ef8606d6f087cd21757e1a@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH mptcp-net v3] mptcp: protect listener backlog reads in
+ diagnostics
+To: "Cen Zhang" <zzzccc427@gmail.com>, matttbe@kernel.org,
+ martineau@kernel.org
+Cc: geliang@kernel.org, mptcp@lists.linux.dev, edumazet@kernel.org,
+ baijiaju1990@gmail.com, jjzuming@gmail.com, zzzccc427@gmail.com
+In-Reply-To: <pm-mptcp-objects-candidate-0066-v6-36c93fb39222b9c59043@gmail.com>
+References: <pm-mptcp-objects-candidate-0066-v6-36c93fb39222b9c59043@gmail.com>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] mptcp: off-by-one undercount in mptcp_inq() when rcv_data_fin is s=
-et
---
+>=20
+>=20mptcp_diag_get_info() reports the accept queue of a listening MPTCP
+> socket by reading msk->first. The token based dump and the exact token
+> query only hold a reference on the MPTCP socket, which pins neither the
+> first subflow nor the listener hash bucket, and __mptcp_close_ssk()
+> drops the last reference on the first subflow before clearing
+> msk->first.
+>=20
+>=20An application can disconnect a connected MPTCP socket with AF_UNSPEC=
+,
+> which removes the token but retains the first subflow, listen on it
+> again and close it. A dump that obtained the MPTCP socket before the
+> disconnect then reads the backlog of a freed TCP listener:
+>=20
+>=20 Token diagnostic Application
+>  mptcp_token_iter_next()
+>  retain MPTCP socket
+>  connect(AF_UNSPEC)
+>  remove token, retain first
+>  listen()
+>  reuse first
+>  mptcp_diag_get_info()
+>  observe TCP_LISTEN
+>  lsk =3D msk->first
+>  close()
+>  mptcp_destroy()
+>  __mptcp_close_ssk()
+>  release first
+>  read lsk->sk_ack_backlog
+>=20
+>=20The report below was decoded with scripts/decode_stacktrace.sh agains=
+t
+> the 7.2.0-rc5 based test kernel that produced it, with the line numbers
+> mapped to this tree; only the relevant frames are kept:
+>=20
+>=20 BUG: KASAN: slab-use-after-free in mptcp_diag_get_info (net/mptcp/mp=
+tcp_diag.c:209)
+>  Read of size 4 at addr ffff888111763818 by task python3/499
+>=20
+>=20 Call Trace:
+>  mptcp_diag_get_info (net/mptcp/mptcp_diag.c:209)
+>  inet_sk_diag_fill (net/ipv4/inet_diag.c:330)
+>  mptcp_diag_dump (net/mptcp/mptcp_diag.c:23 net/mptcp/mptcp_diag.c:177)
+>  __inet_diag_dump (net/ipv4/inet_diag.c:823)
+>  netlink_dump (net/netlink/af_netlink.c:2355)
+>=20
+>=20 Allocated by task 497:
+>  sk_alloc (net/core/sock.c:2337)
+>  inet_create (net/ipv4/af_inet.c:333)
+>  __sock_create (net/socket.c:1679)
+>  mptcp_subflow_create_socket (net/mptcp/subflow.c:1836)
+>  __mptcp_nmpc_sk (net/mptcp/protocol.c:111 net/mptcp/protocol.c:143)
+>  mptcp_setsockopt (net/mptcp/sockopt.c:313 net/mptcp/sockopt.c:916)
+>=20
+>=20 Freed by task 0:
+>  slab_free_after_rcu_debug (mm/slub.c:6571)
+>  rcu_core (kernel/rcu/tree.c:2919)
+>=20
+>=20 Second to last potentially related work creation:
+>  __call_rcu_common.constprop.0 (kernel/rcu/tree.c:3287)
+>  sk_destruct (net/core/sock.c:2446)
+>  __sk_free (net/core/sock.c:2459)
+>  sk_free (net/core/sock.c:2470)
+>  __mptcp_close_ssk (include/net/sock.h:2024 net/mptcp/protocol.c:2723)
+>  mptcp_destroy_common (net/mptcp/protocol.c:3581)
+>  mptcp_destroy (net/mptcp/protocol.c:3817)
+>  __mptcp_destroy_sock (net/mptcp/protocol.c:3423)
+>  __mptcp_close (net/mptcp/protocol.c:3525)
+>  mptcp_close (net/mptcp/protocol.c:3540)
+>  inet_release (net/ipv4/af_inet.c:442)
+>=20
+>=20The first subflow is a TCP socket: TCP listeners carry SOCK_RCU_FREE
+> and tcp_prot/tcpv6_prot sockets live in SLAB_TYPESAFE_BY_RCU caches, so
+> reading the two backlog counters under rcu_read_lock() is safe, and a
+> stale value is acceptable for diagnostics. mptcp_diag_dump_listeners()
+> already runs the formatter inside an RCU read-side section; only the
+> token dump and mptcp_diag_dump_one() reach it without one. Take
+> rcu_read_lock() around the msk->first snapshot and the backlog reads.
+>=20
+>=20That alone does not cover the token dump: __mptcp_close_ssk() clears
+> msk->first only after dropping its reference on the first subflow, so a
+> dump that enters its read-side section once the grace period has ended
+> can still load the pointer to the freed listener. Clear msk->first
+> before dropping the reference, as mptcp_sk_clone_init() already does on
+> its error path.
+>=20
+>=20Fixes: 4fa39b701ce9 ("mptcp: listen diag dump support")
+> Suggested-by: Eric Dumazet <edumazet@kernel.org>
+> Signed-off-by: Cen Zhang <zzzccc427@gmail.com>
+> Assisted-by: LLM
 
-commit 9982b9cd38095d8d40ec92ab4d0f1aec03009b6d
-Author: Geliang Tang <geliang@kernel.org>
+Hi Cen
 
-mptcp: implement peek_len for proto_ops
+According to [1], the Assisted-by tag is not required here.
 
-This commit adds mptcp_inq() and wires it into mptcp_peek_len() to implement
-the .peek_len callback for both IPv4 and IPv6 MPTCP stream proto_ops. It
-computes available bytes using mptcp_data_avail() and subtracts 1 when
-msk->rcv_data_fin is set.
-
+> ---
+> Changes in v3:
+> - Clear msk->first in __mptcp_close_ssk() before dropping the reference=
+ on
+>  the first subflow: the RCU read-side section only protects a pointer t=
+hat
+>  is cleared before the subflow can be released (Sashiko review).
+> - Rebase on the export-net branch of mptcp_net-next and remap the decod=
+ed
+>  line numbers to it; send to the MPTCP list only, as Gang Yan and Matth=
+ieu
+>  Baerts suggested.
+>=20
+>=20Changes in v2:
+> - Take rcu_read_lock() around the first subflow reads instead of the MP=
+TCP
+>  data lock plus an owner check, as suggested by Eric Dumazet; this avoi=
+ds
+>  the new msk slock -> listener hash lock nesting and keeps ss reporting=
+ the
+>  accept queue while the socket is owned.
+> - Decode the stack trace with scripts/decode_stacktrace.sh, map the lin=
+e
+>  numbers to this tree and keep only the relevant frames.
+>=20
+>=20Link to v1: https://lore.kernel.org/r/pm-mptcp-objects-candidate-0066=
+-v3-73df72b7a543d4cada0e@gmail.com
+> Link to v2: https://lore.kernel.org/r/pm-mptcp-objects-candidate-0066-v=
+5-4d1b83d62fcde2d57e8d@gmail.com
+>=20
+>=20 net/mptcp/mptcp_diag.c | 5 ++++-
+>  net/mptcp/protocol.c | 7 +++++--
+>  2 files changed, 9 insertions(+), 3 deletions(-)
+>=20
+>=20diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
+> index 136c2d05c0ee..28a42eee6651 100644
+> --- a/net/mptcp/mptcp_diag.c
+> +++ b/net/mptcp/mptcp_diag.c
+> @@ -200,8 +200,10 @@ static void mptcp_diag_get_info(struct sock *sk, s=
+truct inet_diag_msg *r,
+>  r->idiag_wqueue =3D sk_wmem_alloc_get(sk);
+>=20=20
+>=20 if (inet_sk_state_load(sk) =3D=3D TCP_LISTEN) {
+> - struct sock *lsk =3D READ_ONCE(msk->first);
+> + struct sock *lsk;
+>=20=20
+>=20+ rcu_read_lock();
+> + lsk =3D READ_ONCE(msk->first);
+>  if (lsk) {
+>  /* override with settings from tcp listener,
+>  * so Send-Q will show accept queue.
+> @@ -209,6 +211,7 @@ static void mptcp_diag_get_info(struct sock *sk, st=
+ruct inet_diag_msg *r,
+>  r->idiag_rqueue =3D READ_ONCE(lsk->sk_ack_backlog);
+>  r->idiag_wqueue =3D READ_ONCE(lsk->sk_max_ack_backlog);
+>  }
+> + rcu_read_unlock();
+>  }
+>=20=20
+>=20 if (!info)
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 0caa31525b907..6f34e3459e8ac 100644
+> index 4335eb8f9f2d..efc6d4db5bbc 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -4797,6 +4797,33 @@ static ssize_t mptcp_splice_read(struct socket *so=
-ck, loff_t *ppos,
->  	return ret;
->  }
-> =20
-> +static int mptcp_inq(struct sock *sk)
-> +{
-> +	const struct mptcp_sock *msk =3D mptcp_sk(sk);
-> +	u64 avail;
-> +	int answ;
+> @@ -2720,11 +2720,14 @@ static void __mptcp_close_ssk(struct sock *sk, =
+struct sock *ssk,
+>  __mptcp_subflow_error_report(sk, ssk);
+>  release_sock(ssk);
+>=20=20
+>=20- sock_put(ssk);
+> -
+> + /* the diag code reads msk->first under RCU only: clear it before
+> + * dropping the reference that keeps the subflow alive
+> + */
+
+This comment doesn't seem necessary. I'd suggest dropping it.
+
+Otherwise LGTM.
+
+Reviewed-by: Gang Yan <gang.yan@linux.dev>
+
+
+[1] https://lore.kernel.org/lkml/87o6cww7c1.fsf@trenco.lwn.net/
+>  if (ssk =3D=3D msk->first)
+>  WRITE_ONCE(msk->first, NULL);
+>=20=20
+>=20+ sock_put(ssk);
 > +
-> +	if ((1 << sk->sk_state) & (TCPF_SYN_SENT | TCPF_SYN_RECV))
-> +		return 0;
-> +
-> +	avail =3D mptcp_data_avail(msk);
-> +	if (avail >=3D INT_MAX)
-> +		return 0;
-> +
-> +	answ =3D (unsigned int)avail;
-> +
-> +	/* Subtract 1, if DATA_FIN was received. Mirror tcp_inq() */
-> +	if (answ && READ_ONCE(msk->rcv_data_fin))
-> +		answ--;
+>  out:
+>  __mptcp_sync_sndbuf(sk);
+>  if (need_push)
+> --=20
 
-[Severity: High]
-Does subtracting 1 when msk->rcv_data_fin is set cause mptcp_inq() to
-under-report the readable payload by 1 byte?
 
-In tcp_inq(), 1 is subtracted from tp->rcv_nxt - tp->copied_seq when a fin =
-is
-received because tp->rcv_nxt advances by 1 for the fin sequence number. Her=
-e,
-however, mptcp_inq() starts from mptcp_data_avail(msk):
-
-net/mptcp/protocol.h:mptcp_data_avail() {
-	return READ_ONCE(msk->bytes_received) - READ_ONCE(msk->bytes_consumed);
-}
-
-When a subflow receives a mapping with data_fin set, get_mapping_status() in
-net/mptcp/subflow.c strips the 1 byte of sequence space before the payload =
-is
-queued:
-
-net/mptcp/subflow.c:get_mapping_status() {
-	...
-		mptcp_update_rcv_data_fin(msk, data_fin_seq, mpext->dsn64);
-		pr_debug("DATA_FIN with mapping seq=3D%llu dsn64=3D%d\n",
-			 data_fin_seq, mpext->dsn64);
-
-		/* Adjust for DATA_FIN using 1 byte of sequence space */
-		data_len--;
-	...
-}
-
-And when mptcp_check_data_fin() in net/mptcp/protocol.c later processes the
-pending fin, it only advances msk->ack_seq while clearing msk->rcv_data_fin:
-
-net/mptcp/protocol.c:mptcp_check_data_fin() {
-	...
-	if (mptcp_pending_data_fin(sk, &rcv_data_fin_seq)) {
-		WRITE_ONCE(msk->ack_seq, msk->ack_seq + 1);
-		WRITE_ONCE(msk->rcv_data_fin, 0);
-	...
-}
-
-Since msk->bytes_received only ever counts actual payload bytes queued into
-sk->sk_receive_queue, mptcp_data_avail(msk) never includes the extra sequen=
-ce
-byte.
-
-When a peer sends the final bytes of a message together with data_fin (or
-when data_fin arrives out of order while unread payload is queued),
-mptcp_data_ready() -> move_skbs_to_msk() in net/mptcp/protocol.c moves the
-payload to sk->sk_receive_queue, defers mptcp_check_data_fin() to
-mptcp_worker:
-
-net/mptcp/protocol.c:move_skbs_to_msk() {
-	...
-	if (mptcp_pending_data_fin(sk, NULL))
-		mptcp_schedule_work(sk);
-	return moved;
-}
-
-and immediately invokes sk->sk_data_ready(sk) while msk->rcv_data_fin is
-still 1.
-
-When strparser (used by ktls rx, kcm, and sockmap) handles that callback via
-strp_data_ready() -> strp_recv() in net/strparser/strparser.c:
-
-net/strparser/strparser.c:strp_recv() {
-	...
-			if (stm->strp.full_len - stm->accum_len >
-			    strp_peek_len(strp)) {
-				/* Don't have whole message in the socket
-				 * buffer. Set timer to wait for the rest
-				 * of the message.
-				 */
-	...
-}
-
-strp_peek_len() -> mptcp_peek_len() -> mptcp_inq() will return 1 byte less
-than the actual unread payload, causing strp_recv() to stop reading and sta=
-ll
-until the message timeout expires?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1793258749.gi=
-t.tanggeliang@kylinos.cn?part=3D2
+>=202.43.0
+>
