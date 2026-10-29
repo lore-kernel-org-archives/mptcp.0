@@ -1,52 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.7
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.161.48
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793260980;
-	b=faGtyOEN6hIbnXmiqOJfoielLlkedGvh6F1BeiGVAZHYAS35VTesmM+4j+xcTH9mKNSN
-	 rRDDFwaI4InHJDPjUhko9OI5s9r+sGCoqL9cu9cHfb1x/D+9wNaNhb1kESRBwkuXJfQwD
-	 UzwMW46OQB9/o1i8oqvYxbIB+609zKEdXrQJTloOFTnipsl2YzxZWOSs1wk8mTNvCuS1p
-	 7gXggFh8G+7r+yzMSKQxmf0kcbIlyqXF1VYo4jjznhlHxi/dYSv1shuC1uQ76Xy0CX117
-	 lJPsaqbEjB/hHHZcz/hbtaXCFxbG4qZAj1iqC0f02YhzYxwgpcjjly9ue7tNmfXHKCw==
+	t=1793263346;
+	b=DpG7z3eZ3d83GY5Mgdd7olHX1+884aFQhnqSkVicqGzuvC0u1YYF1P1lsBsvOtGjx30Y
+	 dHNqUO/GKykxQR1u5BRKDOShlFqhGMvjw1UiDIQDWF/UQ9erA7FZb3SpqPNSVzqPpQGUU
+	 BnjmtCtaBOg0Lgecp1HnCZ0Zx9V9V6sTRtLXj0SrfpHaehHeDPGjPznmOO5Fy2pOMtjPJ
+	 GZ8bEQhYG5tNM6O+Hk2WMkyvR8R0TANwjLPHx8wrH8Kktx8JVgm+Eb+wAOccc/UtaY32K
+	 irkQOCCu3jhMGWDW6m9eP3J2JZgCOg2zOYV1YSbu6kzP8AwcnOrMdQLTc/9fsF72cKw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793260980;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:MIME-Version:Date:Content-Type:
-	 Content-Transfer-Encoding:From:Message-ID:TLS-Required:Subject:To:Cc:
-	 In-Reply-To:References;
-	bh=1rbj7wvVXNmL3PUyISA9geKh98Ts8W387b6f/PyNAOk=;
-	b=JWd28OOlMIfqJ4grm+9m5vID0wMCDmmc4TD6+qTYKu9G9TifP19KLFWJuce7MoeYmtGl
-	 HvdF7RK12ms7mhKhFMPGfOOMV1sWzHZTPccFe9cYBlpRWRsKpeUR7/iH1vFAvGitkT9US
-	 HEviZaB1fs+oA/IxQvU9zW0Ln1DZ82dd1rzoPaa7XeWWS5DnQzoaxKW3buIq+zomNI8Ue
-	 ZFCQboAHmgF/UYA326J5cqIkmsXTLifvdlejAKwoF9EVCr2xSEj3WBluFVh7C0bs7yAU8
-	 kiA5xcplz4eRfCv6m3eluDU9QzmXskOsFGSxdUaBQ/0/h7U4mUmCvURSp4iDJ9FFkWg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793263346;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
+	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
+	 Date:MIME-Version:Content-Type;
+	bh=ChhMg/p3nyhrT34sk9P2Iu7AwhG6435U3SG8CsHiISM=;
+	b=hBL4BIJ6bz6dNe5GyJjrNRH8gzLlAtVOYmYYMIPmSDb42yup3NUMI6x32iFJ7S7bF6kS
+	 /9fwQzGt7aaCFCewpJWK3xswJyXKpnmDMcCNDv5B0UV9dFHUfmf23Jm/iT0qCiMqLvKUt
+	 vE4/08JGkBTcy3NPKXZ8dYT+nCR57zdrBjvVBcko0y+JmFPxip/kDo1Y4OKrScZ8IOgaW
+	 GVKo1UR/ZXaL/J8xrTXzDrbWVzJy6/qGix5w1Cx2iHDw3RJU4klVugrSRp8XqfIJXJF8b
+	 Lw3//Iz+OV4B9+aFt3qhXahvHYk1mSgUnAWcLbgHJHufqwJufBHbp1nnljDBjSWYxPQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=cIOSm7V+;
-	arc=none smtp.remote-ip=91.218.175.7
-Received: from mta0.migadu.com (out-7.mta0.migadu.com [91.218.175.7])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="kpaoEc/a";
+	arc=none smtp.remote-ip=209.85.161.48
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA70606A31D
-	for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 08:02:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9AA70606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1AF1606A31A
+	for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 08:42:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A1AF1606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=cIOSm7V+
-X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=67ftyRJklHTQSw6DhAS9t+f5zCKnUSz0olqnnN5c9Vc=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793260976; v=1; x=1793865776;
- b=cIOSm7V+HxkiIdKtUBihXexWqWQrGQziq/PxoVmZ8SGH1jddZfI1huVqVX4MID9b8deuSIWf
- bDvId86P389vmcsUdpiM9+ik0Pyt+WcVmTHM77D4J9LI+RnyfjgxnFW0TFMuClDtN+kev5oEpbL
- iiYiAha0xkFJjpcmeIDUBAlk=
-X-Envelope-To: mptcp@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 91043d89a12ae494;
-	Thu, 29 Oct 2026 08:02:56 +0000
-X-Mizu-Trace-ID: 91043d89a12ae494
-X-Migadu-Flow: FLOW_OUT
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=kpaoEc/a
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-7143451981fso892115eaf.3
+        for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 01:42:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793263344; x=1793868144; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=ChhMg/p3nyhrT34sk9P2Iu7AwhG6435U3SG8CsHiISM=;
+        b=kpaoEc/ajZ6nwQSJBfIvJjR67FcZm+CScLXazU3xnuC9DrIHC/A1KTASrJC8OEFDx7
+         V88/VVyTLA2MCa+54OHV7I70xWs1PZBmIW8jKj2hsShf2Ps5mqAibedkZ5AtiodOVxd6
+         BusIazgZWGPqBtxOWpAJh/3qcMlCgA6jRSci5KRpGXa8XCTJ3VWPhIKVt+YmYhOFIyuN
+         /hBVuaHk3ybLUhdHd8utxABExOeBdL721ILEfvYNVZv4hCxcP7sWjXr2X0baaHJpSFLc
+         9oIfPgJvmzFE6Whk5rU+Jty77j+ZattgiDDoN22+awhPxHFfKtCPX1lCn34YptYSrUjJ
+         rtGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793263344; x=1793868144;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ChhMg/p3nyhrT34sk9P2Iu7AwhG6435U3SG8CsHiISM=;
+        b=MQiaoA+wq4OeQ9fzcKAhZK7eht0Zvfoqu6qPmGUME1FCjY1NvA1qtwBSzYINLIzXpJ
+         2NA1olzOjTkBDqM8lyj1Ad4PU+zs1AegAYbPtXOFnOf3WauOnJ9W8Qi5slRF1SUf4rvX
+         gu7aLZul9zuod/u5dsDeZfx1tgKtNShpN7978g0HIQUr/vOpps+vRRA03uf5ezKgV+zz
+         ow5fFOtTKXtthXy9qh/D3Kea6VK9MqoUNd969Y51NYh4iLqFiYQLYJLJLhqEQuWchtf0
+         1L3ZdrAWo6hmh7LuXAGndO3TdxUpBFIX8guXCD1pYVPimE/EK9R9/FSQeVpd1pVjs3xW
+         ZeRw==
+X-Gm-Message-State: AFq9FYLUpaJJIEAn0n8HfN1IX8KZBidX1CtlTpzkgP0sq/XBsIjug3TL
+	QNlsc2duQr7CaN4KHNdF8oxhYFcjVwc0OM3J7vLHuk60mWrMS82G4Bw=
+X-Gm-Gg: AYBFou3EB8tE8aFwZal5ueI4HX5N48NqoJZP55IwDYqrmNpHyu4suFEoTFgX4D63pcS
+	xhrr2kogeMR7PfQ5HKKsgMLfFbJouz2Orpf8QJLjSsLOyD2BOzy8i2HNs8Rgdd5H9TQ7Rv1xBue
+	Q8n4mULaCW86apENKk7hV00XaWh/gwrZnUI85d/KrCi6y2eW0RgYnhRpovsXzx7qshxDAXeMOBq
+	CllvoxMTwjmF8rwgGSZ0wECNHtJ5ykIp2l9yBhik6h40FAiAeyAB0ob9jZiV91fOkyhljFQjtCF
+	ERLuo0dZIdhOEGvWnDUf2CFNBSAU6dUFeSzJb7lR9vf8R8y+oNSrT7y6F8lsJZoxceVAZMGauPv
+	yMnV28Amq9olQvEYbpwNvxaFLZ33EveAoy//ypSGMqS70+nmvkKwSJWZfSsTnIFkyU6bCblxHSc
+	FK0fyYUOUXyPVfODIIiDddDaATQ2oeWPZJId9LIrZ2yxYUsCGISachexocWmUQaSDKcLYA5NJpy
+	pA+gT23irAp/7ttXCRHSA1CqpUffdVBQjoM894x+ShT52GolYppFAjFX7o4KhK7OExW4ixHfyPy
+	nhyoxLB8w/eJvz3SvfB+1LEOYmDbG1bhYmyGnysO
+X-Received: by 2002:a05:6820:1c81:b0:6b1:6636:e919 with SMTP id 006d021491bc7-713eb554b6amr2989586eaf.11.1793263344337;
+        Thu, 29 Oct 2026 01:42:24 -0700 (PDT)
+Received: from github.com ([20.84.246.20])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-71426f16f66sm3414924eaf.0.2026.10.29.01.42.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Oct 2026 01:42:23 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1793255126.git.tanggeliang@kylinos.cn>
+References: <cover.1793255126.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v16 0/4] Reduce the differences between TCP
+ and MPTCP for TLS usage
+Message-ID: <57574db2-4070-9aff-cfab-0a8d5c31da46@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 29 Oct 2026 08:42:22 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -56,209 +98,313 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Date: Thu, 29 Oct 2026 08:02:52 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-From: gang.yan@linux.dev
-Message-ID: <71116e2870aa207609ef8606d6f087cd21757e1a@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH mptcp-net v3] mptcp: protect listener backlog reads in
- diagnostics
-To: "Cen Zhang" <zzzccc427@gmail.com>, matttbe@kernel.org,
- martineau@kernel.org
-Cc: geliang@kernel.org, mptcp@lists.linux.dev, edumazet@kernel.org,
- baijiaju1990@gmail.com, jjzuming@gmail.com, zzzccc427@gmail.com
-In-Reply-To: <pm-mptcp-objects-candidate-0066-v6-36c93fb39222b9c59043@gmail.com>
-References: <pm-mptcp-objects-candidate-0066-v6-36c93fb39222b9c59043@gmail.com>
+Content-Type: text/plain; charset=utf-8
 
->=20
->=20mptcp_diag_get_info() reports the accept queue of a listening MPTCP
-> socket by reading msk->first. The token based dump and the exact token
-> query only hold a reference on the MPTCP socket, which pins neither the
-> first subflow nor the listener hash bucket, and __mptcp_close_ssk()
-> drops the last reference on the first subflow before clearing
-> msk->first.
->=20
->=20An application can disconnect a connected MPTCP socket with AF_UNSPEC=
-,
-> which removes the token but retains the first subflow, listen on it
-> again and close it. A dump that obtained the MPTCP socket before the
-> disconnect then reads the backlog of a freed TCP listener:
->=20
->=20 Token diagnostic Application
->  mptcp_token_iter_next()
->  retain MPTCP socket
->  connect(AF_UNSPEC)
->  remove token, retain first
->  listen()
->  reuse first
->  mptcp_diag_get_info()
->  observe TCP_LISTEN
->  lsk =3D msk->first
->  close()
->  mptcp_destroy()
->  __mptcp_close_ssk()
->  release first
->  read lsk->sk_ack_backlog
->=20
->=20The report below was decoded with scripts/decode_stacktrace.sh agains=
-t
-> the 7.2.0-rc5 based test kernel that produced it, with the line numbers
-> mapped to this tree; only the relevant frames are kept:
->=20
->=20 BUG: KASAN: slab-use-after-free in mptcp_diag_get_info (net/mptcp/mp=
-tcp_diag.c:209)
->  Read of size 4 at addr ffff888111763818 by task python3/499
->=20
->=20 Call Trace:
->  mptcp_diag_get_info (net/mptcp/mptcp_diag.c:209)
->  inet_sk_diag_fill (net/ipv4/inet_diag.c:330)
->  mptcp_diag_dump (net/mptcp/mptcp_diag.c:23 net/mptcp/mptcp_diag.c:177)
->  __inet_diag_dump (net/ipv4/inet_diag.c:823)
->  netlink_dump (net/netlink/af_netlink.c:2355)
->=20
->=20 Allocated by task 497:
->  sk_alloc (net/core/sock.c:2337)
->  inet_create (net/ipv4/af_inet.c:333)
->  __sock_create (net/socket.c:1679)
->  mptcp_subflow_create_socket (net/mptcp/subflow.c:1836)
->  __mptcp_nmpc_sk (net/mptcp/protocol.c:111 net/mptcp/protocol.c:143)
->  mptcp_setsockopt (net/mptcp/sockopt.c:313 net/mptcp/sockopt.c:916)
->=20
->=20 Freed by task 0:
->  slab_free_after_rcu_debug (mm/slub.c:6571)
->  rcu_core (kernel/rcu/tree.c:2919)
->=20
->=20 Second to last potentially related work creation:
->  __call_rcu_common.constprop.0 (kernel/rcu/tree.c:3287)
->  sk_destruct (net/core/sock.c:2446)
->  __sk_free (net/core/sock.c:2459)
->  sk_free (net/core/sock.c:2470)
->  __mptcp_close_ssk (include/net/sock.h:2024 net/mptcp/protocol.c:2723)
->  mptcp_destroy_common (net/mptcp/protocol.c:3581)
->  mptcp_destroy (net/mptcp/protocol.c:3817)
->  __mptcp_destroy_sock (net/mptcp/protocol.c:3423)
->  __mptcp_close (net/mptcp/protocol.c:3525)
->  mptcp_close (net/mptcp/protocol.c:3540)
->  inet_release (net/ipv4/af_inet.c:442)
->=20
->=20The first subflow is a TCP socket: TCP listeners carry SOCK_RCU_FREE
-> and tcp_prot/tcpv6_prot sockets live in SLAB_TYPESAFE_BY_RCU caches, so
-> reading the two backlog counters under rcu_read_lock() is safe, and a
-> stale value is acceptable for diagnostics. mptcp_diag_dump_listeners()
-> already runs the formatter inside an RCU read-side section; only the
-> token dump and mptcp_diag_dump_one() reach it without one. Take
-> rcu_read_lock() around the msk->first snapshot and the backlog reads.
->=20
->=20That alone does not cover the token dump: __mptcp_close_ssk() clears
-> msk->first only after dropping its reference on the first subflow, so a
-> dump that enters its read-side section once the grace period has ended
-> can still load the pointer to the freed listener. Clear msk->first
-> before dropping the reference, as mptcp_sk_clone_init() already does on
-> its error path.
->=20
->=20Fixes: 4fa39b701ce9 ("mptcp: listen diag dump support")
-> Suggested-by: Eric Dumazet <edumazet@kernel.org>
-> Signed-off-by: Cen Zhang <zzzccc427@gmail.com>
-> Assisted-by: LLM
+Hi Paolo,
 
-Hi Cen
+Thank you for your modifications, that's great!
 
-According to [1], the Assisted-by tag is not required here.
+Our CI did some validations and here is its report:
 
-> ---
-> Changes in v3:
-> - Clear msk->first in __mptcp_close_ssk() before dropping the reference=
- on
->  the first subflow: the RCU read-side section only protects a pointer t=
-hat
->  is cleared before the subflow can be released (Sashiko review).
-> - Rebase on the export-net branch of mptcp_net-next and remap the decod=
-ed
->  line numbers to it; send to the MPTCP list only, as Gang Yan and Matth=
-ieu
->  Baerts suggested.
->=20
->=20Changes in v2:
-> - Take rcu_read_lock() around the first subflow reads instead of the MP=
-TCP
->  data lock plus an owner check, as suggested by Eric Dumazet; this avoi=
-ds
->  the new msk slock -> listener hash lock nesting and keeps ss reporting=
- the
->  accept queue while the socket is owned.
-> - Decode the stack trace with scripts/decode_stacktrace.sh, map the lin=
-e
->  numbers to this tree and keep only the relevant frames.
->=20
->=20Link to v1: https://lore.kernel.org/r/pm-mptcp-objects-candidate-0066=
--v3-73df72b7a543d4cada0e@gmail.com
-> Link to v2: https://lore.kernel.org/r/pm-mptcp-objects-candidate-0066-v=
-5-4d1b83d62fcde2d57e8d@gmail.com
->=20
->=20 net/mptcp/mptcp_diag.c | 5 ++++-
->  net/mptcp/protocol.c | 7 +++++--
->  2 files changed, 9 insertions(+), 3 deletions(-)
->=20
->=20diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
-> index 136c2d05c0ee..28a42eee6651 100644
-> --- a/net/mptcp/mptcp_diag.c
-> +++ b/net/mptcp/mptcp_diag.c
-> @@ -200,8 +200,10 @@ static void mptcp_diag_get_info(struct sock *sk, s=
-truct inet_diag_msg *r,
->  r->idiag_wqueue =3D sk_wmem_alloc_get(sk);
->=20=20
->=20 if (inet_sk_state_load(sk) =3D=3D TCP_LISTEN) {
-> - struct sock *lsk =3D READ_ONCE(msk->first);
-> + struct sock *lsk;
->=20=20
->=20+ rcu_read_lock();
-> + lsk =3D READ_ONCE(msk->first);
->  if (lsk) {
->  /* override with settings from tcp listener,
->  * so Send-Q will show accept queue.
-> @@ -209,6 +211,7 @@ static void mptcp_diag_get_info(struct sock *sk, st=
-ruct inet_diag_msg *r,
->  r->idiag_rqueue =3D READ_ONCE(lsk->sk_ack_backlog);
->  r->idiag_wqueue =3D READ_ONCE(lsk->sk_max_ack_backlog);
->  }
-> + rcu_read_unlock();
->  }
->=20=20
->=20 if (!info)
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 4335eb8f9f2d..efc6d4db5bbc 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2720,11 +2720,14 @@ static void __mptcp_close_ssk(struct sock *sk, =
-struct sock *ssk,
->  __mptcp_subflow_error_report(sk, ssk);
->  release_sock(ssk);
->=20=20
->=20- sock_put(ssk);
-> -
-> + /* the diag code reads msk->first under RCU only: clear it before
-> + * dropping the reference that keeps the subflow alive
-> + */
+- KVM Validation: normal (except selftest_mptcp_join): Unstable: 2 failed =
+test(s): packetdrill_syscalls selftest_mptcp_sockopt =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf: Unstable: 1 failed test(s): validation: - Critical: =
+mptcp-perf/01-Test_1/client.log: Global Timeout - Critical: =
+mptcp-perf/01-Test_1/server.log: Global Timeout - Critical: =
+sched-baseline/01-slow_primary/client.log: Global Timeout - Critical: =
+sched-baseline/01-slow_primary/server.log: Global Timeout - Critical: =
+sched-baseline/02-tiny_primary/client.log: Global Timeout - Critical: =
+sched-baseline/02-tiny_primary/server.log: Global Timeout - Critical: =
+sched-baseline/03-fast_both/client.log: Global Timeout - Critical: =
+sched-baseline/03-fast_both/server.log: Global Timeout - Critical: =
+sched-baseline/04-balanced/client.log: Global Timeout - Critical: =
+sched-baseline/04-balanced/server.log: Global Timeout - Critical: =
+sched-baseline/05-slow_near_primary/client.log: Global Timeout - Critical: =
+sched-baseline/05-slow_near_primary/server.log: Global Timeout - Critical: =
+sched-baseline/06-slow_secondary/client.log: Global Timeout - Critical: =
+sched-baseline/06-slow_secondary/server.log: Global Timeout - Critical: =
+sched-baseline/07-very_fast/client.log: Global Timeout - Critical: =
+sched-baseline/07-very_fast/server.log: Global Timeout - Critical: =
+sched-baseline/08-shallow_primary/client.log: Global Timeout - Critical: =
+sched-baseline/08-shallow_primary/server.log: Global Timeout - Critical: =
+sched-baseline/09-high_lat_primary/client.log: Global Timeout - Critical: =
+sched-baseline/09-high_lat_primary/server.log: Global Timeout - Critical: =
+sched-baseline/10-huge_lat_primary/client.log: Global Timeout - Critical: =
+sched-baseline/10-huge_lat_primary/server.log: Global Timeout - Critical: =
+sched-baseline/11-high_lat_secondary/client.log: Global Timeout - Critical:=
+ sched-baseline/11-high_lat_secondary/server.log: Global Timeout - =
+Critical: sched-baseline/12-huge_lat_secondary/client.log: Global Timeout -=
+ Critical: sched-baseline/12-huge_lat_secondary/server.log: Global Timeout =
+- Critical: sched-baseline/13-bloated_primary/client.log: Global Timeout - =
+Critical: sched-baseline/13-bloated_primary/server.log: Global Timeout - =
+Critical: sched-baseline/14-bloated_secondary/client.log: Global Timeout - =
+Critical: sched-baseline/14-bloated_secondary/server.log: Global Timeout - =
+Critical: sched-baseline/15-slow_primary_upload/client.log: Global Timeout =
+- Critical: sched-baseline/15-slow_primary_upload/server.log: Global =
+Timeout - Critical: sched-baseline/16-balanced_upload/client.log: Global =
+Timeout - Critical: sched-baseline/16-balanced_upload/server.log: Global =
+Timeout - Critical: sched-baseline/17-slow_primary_parallel_4/client.log: =
+Global Timeout - Critical: sched-baseline/17-slow_primary_parallel_4/server=
+.log: Global Timeout - Critical: sched-baseline/18-balanced_parallel_4/clie=
+nt.log: Global Timeout - Critical: sched-baseline/18-balanced_parallel_4/se=
+rver.log: Global Timeout - Critical: sched-bbr/01-slow_primary_bbr/client.=
+log: Global Timeout - Critical: sched-bbr/01-slow_primary_bbr/server.log: =
+Global Timeout - Critical: sched-bbr/02-balanced_bbr/client.log: Global =
+Timeout - Critical: sched-bbr/02-balanced_bbr/server.log: Global Timeout - =
+Critical: sched-bbr/03-slow_near_primary_bbr/client.log: Global Timeout - =
+Critical: sched-bbr/03-slow_near_primary_bbr/server.log: Global Timeout - =
+Critical: sched-bbr/04-high_lat_primary_bbr/client.log: Global Timeout - =
+Critical: sched-bbr/04-high_lat_primary_bbr/server.log: Global Timeout - =
+Critical: sched-bbr/05-huge_lat_primary_bbr/client.log: Global Timeout - =
+Critical: sched-bbr/05-huge_lat_primary_bbr/server.log: Global Timeout - =
+Critical: sched-bbr/06-high_lat_secondary_bbr/client.log: Global Timeout - =
+Critical: sched-bbr/06-high_lat_secondary_bbr/server.log: Global Timeout - =
+Critical: sched-bbr/07-huge_lat_secondary_bbr/client.log: Global Timeout - =
+Critical: sched-bbr/07-huge_lat_secondary_bbr/server.log: Global Timeout - =
+Critical: sched-bbr/08-slow_secondary_bbr/client.log: Global Timeout - =
+Critical: sched-bbr/08-slow_secondary_bbr/server.log: Global Timeout - =
+Critical: sched-bbr/09-very_fast_bbr/client.log: Global Timeout - Critical:=
+ sched-bbr/09-very_fast_bbr/server.log: Global Timeout - Critical: =
+sched-bbr/10-bloated_secondary_bbr/client.log: Global Timeout - Critical: =
+sched-bbr/10-bloated_secondary_bbr/server.log: Global Timeout - Critical: =
+sched-bbr/11-bloated_slow_secondary_bbr/client.log: Global Timeout - =
+Critical: sched-bbr/11-bloated_slow_secondary_bbr/server.log: Global =
+Timeout - Critical: sched-bbr/12-very_bloated_secondary_bbr/client.log: =
+Global Timeout - Critical: sched-bbr/12-very_bloated_secondary_bbr/server.=
+log: Global Timeout - Critical: sched-bbr/13-bad_secondary_bbr/client.log: =
+Global Timeout - Critical: sched-bbr/13-bad_secondary_bbr/server.log: =
+Global Timeout - Critical: sched-bbr/14-far_secondary_bbr/client.log: =
+Global Timeout - Critical: sched-bbr/14-far_secondary_bbr/server.log: =
+Global Timeout - Critical: sched-clientlim/01-slow_primary_bw_5/client.log:=
+ Global Timeout - Critical: sched-clientlim/01-slow_primary_bw_5/server.=
+log: Global Timeout - Critical: sched-clientlim/02-balanced_bw_5/client.=
+log: Global Timeout - Critical: sched-clientlim/02-balanced_bw_5/server.=
+log: Global Timeout - Critical: sched-clientlim/03-huge_lat_primary_bw_5/cl=
+ient.log: Global Timeout - Critical: sched-clientlim/03-huge_lat_primary_bw=
+_5/server.log: Global Timeout - Critical: sched-clientlim/04-slow_secondary=
+_bw_5/client.log: Global Timeout - Critical: sched-clientlim/04-slow_second=
+ary_bw_5/server.log: Global Timeout - Critical: sched-clientlim/05-slow_pri=
+mary_bw_10/client.log: Global Timeout - Critical: sched-clientlim/05-slow_p=
+rimary_bw_10/server.log: Global Timeout - Critical: =
+sched-clientlim/06-balanced_bw_10/client.log: Global Timeout - Critical: =
+sched-clientlim/06-balanced_bw_10/server.log: Global Timeout - Critical: =
+sched-clientlim/07-huge_lat_primary_bw_10/client.log: Global Timeout - =
+Critical: sched-clientlim/07-huge_lat_primary_bw_10/server.log: Global =
+Timeout - Critical: sched-clientlim/08-slow_secondary_bw_10/client.log: =
+Global Timeout - Critical: sched-clientlim/08-slow_secondary_bw_10/server.=
+log: Global Timeout - Critical: sched-clientlim/09-slow_primary_bw_50/clien=
+t.log: Global Timeout - Critical: sched-clientlim/09-slow_primary_bw_50/ser=
+ver.log: Global Timeout - Critical: sched-clientlim/10-balanced_bw_50/clien=
+t.log: Global Timeout - Critical: sched-clientlim/10-balanced_bw_50/server.=
+log: Global Timeout - Critical: sched-clientlim/11-huge_lat_primary_bw_50/c=
+lient.log: Global Timeout - Critical: sched-clientlim/11-huge_lat_primary_b=
+w_50/server.log: Global Timeout - Critical: sched-clientlim/12-slow_seconda=
+ry_bw_50/client.log: Global Timeout - Critical: sched-clientlim/12-slow_sec=
+ondary_bw_50/server.log: Global Timeout - Critical: =
+sched-cpu-preempt/01-shallow_primary/client.log: Global Timeout - Critical:=
+ sched-cpu-preempt/01-shallow_primary/server.log: Global Timeout - =
+Critical: sched-cpu-preempt/02-shallow_primary_cpu_hog/client.log: Global =
+Timeout - Critical: sched-cpu-preempt/02-shallow_primary_cpu_hog/server.=
+log: Global Timeout - Critical: sched-mem-pressure/01-bloated_slow_secondar=
+y_receiver_tcp_mem_parallel_1/client.log: Global Timeout - Critical: =
+sched-mem-pressure/01-bloated_slow_secondary_receiver_tcp_mem_parallel_1/se=
+rver.log: Global Timeout - Critical: sched-mem-pressure/02-bloated_slow_sec=
+ondary_receiver_tcp_mem_parallel_16/client.log: Global Timeout - Critical: =
+sched-mem-pressure/02-bloated_slow_secondary_receiver_tcp_mem_parallel_16/s=
+erver.log: Global Timeout - Critical: sched-mem-pressure/03-bloated_slow_se=
+condary_receiver_tcp_mem_parallel_99/client.log: Global Timeout - Critical:=
+ sched-mem-pressure/03-bloated_slow_secondary_receiver_tcp_mem_parallel_99/=
+server.log: Global Timeout - Critical: sched-mem-pressure/04-very_bloated_p=
+rimary_both_tcp_mem_parallel_1/client.log: Global Timeout - Critical: =
+sched-mem-pressure/04-very_bloated_primary_both_tcp_mem_parallel_1/server.=
+log: Global Timeout - Critical: sched-mem-pressure/05-slow_primary_both_tcp=
+_mem_parallel_1/client.log: Global Timeout - Critical: =
+sched-mem-pressure/05-slow_primary_both_tcp_mem_parallel_1/server.log: =
+Global Timeout - Critical: sched-mem-pressure/06-balanced_both_tcp_mem_para=
+llel_1/client.log: Global Timeout - Critical: sched-mem-pressure/06-balance=
+d_both_tcp_mem_parallel_1/server.log: Global Timeout - Critical: =
+sched-mem-pressure/07-very_bloated_primary_both_tcp_mem_parallel_10/client.=
+log: Global Timeout - Critical: sched-mem-pressure/07-very_bloated_primary_=
+both_tcp_mem_parallel_10/server.log: Global Timeout - Critical: =
+sched-mem-pressure/08-slow_primary_both_tcp_mem_parallel_10/client.log: =
+Global Timeout - Critical: sched-mem-pressure/08-slow_primary_both_tcp_mem_=
+parallel_10/server.log: Global Timeout - Critical: sched-mem-pressure/09-ba=
+lanced_both_tcp_mem_parallel_10/client.log: Global Timeout - Critical: =
+sched-mem-pressure/09-balanced_both_tcp_mem_parallel_10/server.log: Global =
+Timeout - Critical: sched-rmem/01-slow_primary_rmem_200/client.log: Global =
+Timeout - Critical: sched-rmem/01-slow_primary_rmem_200/server.log: Global =
+Timeout - Critical: sched-rmem/02-balanced_rmem_200/client.log: Global =
+Timeout - Critical: sched-rmem/02-balanced_rmem_200/server.log: Global =
+Timeout - Critical: sched-rmem/03-huge_lat_primary_rmem_200/client.log: =
+Global Timeout - Critical: sched-rmem/03-huge_lat_primary_rmem_200/server.=
+log: Global Timeout - Critical: sched-rmem/04-bloated_primary_rmem_200/clie=
+nt.log: Global Timeout - Critical: sched-rmem/04-bloated_primary_rmem_200/s=
+erver.log: Global Timeout - Critical: sched-rmem/05-slow_primary_rmem_800/c=
+lient.log: Global Timeout - Critical: sched-rmem/05-slow_primary_rmem_800/s=
+erver.log: Global Timeout - Critical: sched-rmem/06-balanced_rmem_800/clien=
+t.log: Global Timeout - Critical: sched-rmem/06-balanced_rmem_800/server.=
+log: Global Timeout - Critical: sched-rmem/07-huge_lat_primary_rmem_800/cli=
+ent.log: Global Timeout - Critical: sched-rmem/07-huge_lat_primary_rmem_800=
+/server.log: Global Timeout - Critical: sched-rmem/08-bloated_primary_rmem_=
+800/client.log: Global Timeout - Critical: sched-rmem/08-bloated_primary_rm=
+em_800/server.log: Global Timeout - Critical: sched-rmem/09-slow_primary_rm=
+em_2000/client.log: Global Timeout - Critical: sched-rmem/09-slow_primary_r=
+mem_2000/server.log: Global Timeout - Critical: sched-rmem/10-balanced_rmem=
+_2000/client.log: Global Timeout - Critical: sched-rmem/10-balanced_rmem_20=
+00/server.log: Global Timeout - Critical: sched-rmem/11-huge_lat_primary_rm=
+em_2000/client.log: Global Timeout - Critical: sched-rmem/11-huge_lat_prima=
+ry_rmem_2000/server.log: Global Timeout - Critical: =
+sched-rmem/12-bloated_primary_rmem_2000/client.log: Global Timeout - =
+Critical: sched-rmem/12-bloated_primary_rmem_2000/server.log: Global =
+Timeout - Critical: sched-rmem/13-slow_primary_rmem_6000/client.log: Global=
+ Timeout - Critical: sched-rmem/13-slow_primary_rmem_6000/server.log: =
+Global Timeout - Critical: sched-rmem/14-balanced_rmem_6000/client.log: =
+Global Timeout - Critical: sched-rmem/14-balanced_rmem_6000/server.log: =
+Global Timeout - Critical: sched-rmem/15-huge_lat_primary_rmem_6000/client.=
+log: Global Timeout - Critical: sched-rmem/15-huge_lat_primary_rmem_6000/se=
+rver.log: Global Timeout - Critical: sched-rmem/16-bloated_primary_rmem_600=
+0/client.log: Global Timeout - Critical: sched-rmem/16-bloated_primary_rmem=
+_6000/server.log: Global Timeout - Critical: sched-serverlim/01-slow_primar=
+y_bw_5_burst_10/client.log: Global Timeout - Critical: =
+sched-serverlim/01-slow_primary_bw_5_burst_10/server.log: Global Timeout - =
+Critical: sched-serverlim/02-balanced_bw_5_burst_10/client.log: Global =
+Timeout - Critical: sched-serverlim/02-balanced_bw_5_burst_10/server.log: =
+Global Timeout - Critical: sched-serverlim/03-huge_lat_primary_bw_5_burst_1=
+0/client.log: Global Timeout - Critical: sched-serverlim/03-huge_lat_primar=
+y_bw_5_burst_10/server.log: Global Timeout - Critical: =
+sched-serverlim/04-slow_secondary_bw_5_burst_10/client.log: Global Timeout =
+- Critical: sched-serverlim/04-slow_secondary_bw_5_burst_10/server.log: =
+Global Timeout - Critical: sched-serverlim/05-slow_primary_bw_5_burst_250/c=
+lient.log: Global Timeout - Critical: sched-serverlim/05-slow_primary_bw_5_=
+burst_250/server.log: Global Timeout - Critical: sched-serverlim/06-balance=
+d_bw_5_burst_250/client.log: Global Timeout - Critical: =
+sched-serverlim/06-balanced_bw_5_burst_250/server.log: Global Timeout - =
+Critical: sched-serverlim/07-huge_lat_primary_bw_5_burst_250/client.log: =
+Global Timeout - Critical: sched-serverlim/07-huge_lat_primary_bw_5_burst_2=
+50/server.log: Global Timeout - Critical: sched-serverlim/08-slow_secondary=
+_bw_5_burst_250/client.log: Global Timeout - Critical: =
+sched-serverlim/08-slow_secondary_bw_5_burst_250/server.log: Global Timeout=
+ - Critical: sched-serverlim/09-slow_primary_bw_10_burst_10/client.log: =
+Global Timeout - Critical: sched-serverlim/09-slow_primary_bw_10_burst_10/s=
+erver.log: Global Timeout - Critical: sched-serverlim/10-balanced_bw_10_bur=
+st_10/client.log: Global Timeout - Critical: sched-serverlim/10-balanced_bw=
+_10_burst_10/server.log: Global Timeout - Critical: =
+sched-serverlim/11-huge_lat_primary_bw_10_burst_10/client.log: Global =
+Timeout - Critical: sched-serverlim/11-huge_lat_primary_bw_10_burst_10/serv=
+er.log: Global Timeout - Critical: sched-serverlim/12-slow_secondary_bw_10_=
+burst_10/client.log: Global Timeout - Critical: sched-serverlim/12-slow_sec=
+ondary_bw_10_burst_10/server.log: Global Timeout - Critical: =
+sched-serverlim/13-slow_primary_bw_10_burst_250/client.log: Global Timeout =
+- Critical: sched-serverlim/13-slow_primary_bw_10_burst_250/server.log: =
+Global Timeout - Critical: sched-serverlim/14-balanced_bw_10_burst_250/clie=
+nt.log: Global Timeout - Critical: sched-serverlim/14-balanced_bw_10_burst_=
+250/server.log: Global Timeout - Critical: sched-serverlim/15-huge_lat_prim=
+ary_bw_10_burst_250/client.log: Global Timeout - Critical: =
+sched-serverlim/15-huge_lat_primary_bw_10_burst_250/server.log: Global =
+Timeout - Critical: sched-serverlim/16-slow_secondary_bw_10_burst_250/clien=
+t.log: Global Timeout - Critical: sched-serverlim/16-slow_secondary_bw_10_b=
+urst_250/server.log: Global Timeout - Critical: sched-serverlim/17-slow_pri=
+mary_bw_50_burst_10/client.log: Global Timeout - Critical: =
+sched-serverlim/17-slow_primary_bw_50_burst_10/server.log: Global Timeout -=
+ Critical: sched-serverlim/18-balanced_bw_50_burst_10/client.log: Global =
+Timeout - Critical: sched-serverlim/18-balanced_bw_50_burst_10/server.log: =
+Global Timeout - Critical: sched-serverlim/19-huge_lat_primary_bw_50_burst_=
+10/client.log: Global Timeout - Critical: sched-serverlim/19-huge_lat_prima=
+ry_bw_50_burst_10/server.log: Global Timeout - Critical: =
+sched-serverlim/20-slow_secondary_bw_50_burst_10/client.log: Global Timeout=
+ - Critical: sched-serverlim/20-slow_secondary_bw_50_burst_10/server.log: =
+Global Timeout - Critical: sched-serverlim/21-slow_primary_bw_50_burst_250/=
+client.log: Global Timeout - Critical: sched-serverlim/21-slow_primary_bw_5=
+0_burst_250/server.log: Global Timeout - Critical: sched-serverlim/22-balan=
+ced_bw_50_burst_250/client.log: Global Timeout - Critical: =
+sched-serverlim/22-balanced_bw_50_burst_250/server.log: Global Timeout - =
+Critical: sched-serverlim/23-huge_lat_primary_bw_50_burst_250/client.log: =
+Global Timeout - Critical: sched-serverlim/23-huge_lat_primary_bw_50_burst_=
+250/server.log: Global Timeout - Critical: sched-serverlim/24-slow_secondar=
+y_bw_50_burst_250/client.log: Global Timeout - Critical: =
+sched-serverlim/24-slow_secondary_bw_50_burst_250/server.log: Global =
+Timeout - Critical: sched-serverlim/25-slow_primary_bw_10_burst_10_wmem_600=
+0/client.log: Global Timeout - Critical: sched-serverlim/25-slow_primary_bw=
+_10_burst_10_wmem_6000/server.log: Global Timeout - Critical: =
+sched-serverlim/26-balanced_bw_10_burst_10_wmem_6000/client.log: Global =
+Timeout - Critical: sched-serverlim/26-balanced_bw_10_burst_10_wmem_6000/se=
+rver.log: Global Timeout - Critical: sched-serverlim/27-slow_primary_bw_50_=
+burst_10_wmem_6000/client.log: Global Timeout - Critical: =
+sched-serverlim/27-slow_primary_bw_50_burst_10_wmem_6000/server.log: Global=
+ Timeout - Critical: sched-serverlim/28-balanced_bw_50_burst_10_wmem_6000/c=
+lient.log: Global Timeout - Critical: sched-serverlim/28-balanced_bw_50_bur=
+st_10_wmem_6000/server.log: Global Timeout - Critical: =
+sched-weak-secondary/01-weak_secondary/client.log: Global Timeout - =
+Critical: sched-weak-secondary/01-weak_secondary/server.log: Global Timeout=
+ - Critical: sched-weak-secondary/02-bad_secondary/client.log: Global =
+Timeout - Critical: sched-weak-secondary/02-bad_secondary/server.log: =
+Global Timeout - Critical: sched-weak-secondary/03-far_secondary/client.=
+log: Global Timeout - Critical: sched-weak-secondary/03-far_secondary/serve=
+r.log: Global Timeout - Critical: sched-weak-secondary/04-bloated_secondary=
+/client.log: Global Timeout - Critical: sched-weak-secondary/04-bloated_sec=
+ondary/server.log: Global Timeout - Critical: sched-weak-secondary/05-bloat=
+ed_slow_secondary/client.log: Global Timeout - Critical: =
+sched-weak-secondary/05-bloated_slow_secondary/server.log: Global Timeout -=
+ Critical: sched-weak-secondary/06-very_bloated_secondary/client.log: =
+Global Timeout - Critical: sched-weak-secondary/06-very_bloated_secondary/s=
+erver.log: Global Timeout - Critical: sched-weak-secondary/07-weak_secondar=
+y_backup/client.log: Global Timeout - Critical: sched-weak-secondary/07-wea=
+k_secondary_backup/server.log: Global Timeout - Critical: =
+sched-weak-secondary/08-bad_secondary_backup/client.log: Global Timeout - =
+Critical: sched-weak-secondary/08-bad_secondary_backup/server.log: Global =
+Timeout - Critical: sched-weak-secondary/09-far_secondary_backup/client.=
+log: Global Timeout - Critical: sched-weak-secondary/09-far_secondary_backu=
+p/server.log: Global Timeout - Critical: sched-weak-secondary/10-bloated_se=
+condary_backup/client.log: Global Timeout - Critical: =
+sched-weak-secondary/10-bloated_secondary_backup/server.log: Global Timeout=
+ - Critical: sched-weak-secondary/11-bloated_slow_secondary_backup/client.=
+log: Global Timeout - Critical: sched-weak-secondary/11-bloated_slow_second=
+ary_backup/server.log: Global Timeout - Critical: sched-weak-secondary/12-v=
+ery_bloated_secondary_backup/client.log: Global Timeout - Critical: =
+sched-weak-secondary/12-very_bloated_secondary_backup/server.log: Global =
+Timeout =E2=9D=8C
+- Task: https://github.com/multipath-tcp/mptcp_net-next/a=
+ctions/runs/40833457021
 
-This comment doesn't seem necessary. I'd suggest dropping it.
-
-Otherwise LGTM.
-
-Reviewed-by: Gang Yan <gang.yan@linux.dev>
-
-
-[1] https://lore.kernel.org/lkml/87o6cww7c1.fsf@trenco.lwn.net/
->  if (ssk =3D=3D msk->first)
->  WRITE_ONCE(msk->first, NULL);
->=20=20
->=20+ sock_put(ssk);
-> +
->  out:
->  __mptcp_sync_sndbuf(sk);
->  if (need_push)
-> --=20
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/50ce0a995d=
+da
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1195957
 
 
->=202.43.0
->
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
