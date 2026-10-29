@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793273373;
-	b=HWf4v7PklfJ9caVq1vU8pz3IYSXBkCjyjuhAuPpX4Q1T+Ob2t14jn5TSHLsLmZzGW+b6
-	 eN9ts6G/fb48st2x9Vaz7iYWq+R1J1sXx0i4cnXUEjFcDYjFVp5GMHXcL3bVzn+fHjhhQ
-	 RIKNf6atKc362arBvbw0UjXMSA3quJGlw36436ILVIpWwLT97ywac9DHwfUxTJlsrihpB
-	 Tj2vLwReJM68ZHQVUI6xwrOS3XEDc1H7MJCHGzL7TwKKTeFXfVyiDTMgnKv3Poo3xRDap
-	 FSWCs8CgTzE7exk4m6POmTf2nLkrIuVYlrx+rLD5ssJx3ikLPk86ske4tTvhcgzXQVA==
+	t=1793273520;
+	b=NFVNcjnGGSOI5oVjyAg6LIb+Tvi7U0Xmos8UApThiz8cJYXQ+8xs6olFGi9XpxoOovZK
+	 ibF+/fL3dDWpDHV82fudn5yRmYpOVCaD1v0j0WldbtN+JwUzSFVrl1cIrJUwkt69QzX7D
+	 O9O1yvcLNOFO5c7Ofqt0V63A93egNw9heQwUENNvC5Yu510can1pVH/JE0C1nJPiE2nD+
+	 zH1HZYZcI6qHydvtDAuDelSATY4m6XHlwumKYk5Ihe7Nn8yyeu4vgiuaS0tYz+Olpu3P0
+	 Zl3ms2QWbYJiNPE2HXikBT2QIj9CsWZ8wTkk2ZbyetKixlUWxs0ZF5C2+4H3vsOICJg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793273373;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793273520;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
+	 Subject:Content-Language:From:To:Cc:References:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=f4e5hAdUQ0cQSG0pWxfsfPDpF4I/CUJyLA7vOXgQpYU=;
-	b=v5tmkZiArxdegVKdHq155F511P3Oc4bwB3Eiw/A8BXcEnV8lhD5b3BjB6X+OmIxz64Ri
-	 K0SCCnYjglBosYZBDh1XW+rAwQOUZeyakGYmoEgiJKUKVY6Rg5LVzhAADE2So1zeij9Ln
-	 APP2CbUHXEDFsHYdYIO2ag2s4wbvPmzo1KcOZHZGRb8gMYvlOGbbQo4m8I7jpBmbOvOXC
-	 LB0mMIgv3fzpLGOUv47pQM9K/OfGyOyIM4llXflN5MNhb2UVqWD4BqiWCV6zmNqUk+dxC
-	 B/LVwwMDbnaa7NzAWHC4D8LiHI8bhJmAaNZzdYGv8yraTKRXq5PrwfkCJumm/0DXKAQ==
+	bh=vr49/uDUdrrPdW59aSLQ9rQWq28XKupxTJhlHHY0qNo=;
+	b=g1stzKtF5O1Edm6OEsJ82UZCH3OJKezf5bZRgirHtVNdiIH7Yi5lSMWHAwBhxHhTQjoQ
+	 /4PINoI42ixK1DfNj0P5ixI7K5X+o7ilqRzCdap/h0QPoSeFN6vlyOkp8Tl4Nxsi3RzS8
+	 ofFQ8s+KLbBJvtPj7/SFtT1uTvTtQ+5AWQkHWlION2+cB0SlGuZRkhUJ0UfoNzcuZ8Jjc
+	 RtkE66jPepI3FpS8Ox8vIOQGDzJvYmXZOkmE8M06w5M5V1CVX1jleB/QAgyAahZU9uyTP
+	 Pa1ZgCzT+dR/C7ryumXywh3G+zlbl9GnJF5/KUXiAKgHgfxEbkqqMYO5Cl0y/XqAgqA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DOXRNtMg;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DOeD6W3v;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1FBC606A31A
-	for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 11:29:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6D5606A31D
+	for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 11:31:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DOXRNtMg
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D05B51F01828;
-	Thu, 29 Oct 2026 11:29:30 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DOeD6W3v
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB57B1F01825;
+	Thu, 29 Oct 2026 11:31:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793273372;
-	bh=f4e5hAdUQ0cQSG0pWxfsfPDpF4I/CUJyLA7vOXgQpYU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=DOXRNtMgCB5SWloockxZrsG0KCZNyZIEUN9+eqiglzo7Sfup7LGsW1qG8y/oLMisb
-	 lhS0pT7KVhqOTAaccXeliUve+CBBC4uM7YvXhH4muYTxfd2f2F+shM+Cfw3Ng3s9TP
-	 YL6K1Isp7I/K42m88/doelACc5wgEfYOA3Yt3Ogxywcr3W+zfxCX7HWcBcS6enNiId
-	 Iv5aIwaizncRovCWISBNE7cQ68cY/rc1S8iMeKyexopuadjdxhLqaqm/b30+9ZLczt
-	 Mihh7Sm+BabLUwIkx+Fic9FHGOaQEZxJ4cSS5cKEe9cQHB/Ce0At/PpaaqAiDWFrqN
-	 7fLm2IC9BwamA==
-Message-ID: <8c832d96-4470-481a-8772-cf2bfc8d1fc0@kernel.org>
-Date: Thu, 29 Oct 2026 12:29:27 +0100
+	s=k20260515; t=1793273519;
+	bh=vr49/uDUdrrPdW59aSLQ9rQWq28XKupxTJhlHHY0qNo=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To;
+	b=DOeD6W3vVwMj+SnX7sEDWx4G7OrIy0tKOBPy+Myr1PhlDL8fZrG1uX2OKdcQpoD2x
+	 XHTqXBHZk0j7eUqTB8MUHh2myXloidxSDXtz5Jr9zY2LbXuVQiyLSejXO23+11U07n
+	 hSPmdK/VhbXvUWjdkZ3MjclmlfqZW27n9OPJr1+NHcttfF9rIMAbKvtTysXUPrzgS2
+	 ux1xRk19OMYIITE6gnS/hllOd/4IPx7pRRLiPuVR3YnNzMXiMwtnegIyC7mQTo8OoT
+	 JBfbyjEKQ9zKJuvO06D6HF5QQCXAyO1NHdpS5su7Bi7gfOK29KB9z1zlRU4qrSOytS
+	 psZkHw+auC0sw==
+Message-ID: <25c89b55-e853-4340-b44b-8593f1d18171@kernel.org>
+Date: Thu, 29 Oct 2026 12:31:56 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,6 +55,7 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [RFC net-next v10] mptcp: normalize seq numbers reported in
  mptcp_info
 Content-Language: fr
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
 Cc: mptcp <mptcp@lists.linux.dev>, martineau <martineau@kernel.org>,
  pabeni <pabeni@redhat.com>, Mpiric Private Limited <janak@mpiric.us>,
@@ -69,7 +70,7 @@ References: <20261027062750.2095515-1-kalpan.jani@mpiricsoftware.com>
  <1a18212dbaf.7594e0f1624805.5831653841901931656@mpiricsoftware.com>
  <199b6eb5-0705-4c65-a6c2-402484e204c2@kernel.org>
  <1a1871ef80b.413e22cb735353.2237627450065761496@mpiricsoftware.com>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <8c832d96-4470-481a-8772-cf2bfc8d1fc0@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -114,32 +115,42 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <1a1871ef80b.413e22cb735353.2237627450065761496@mpiricsoftware.com>
+In-Reply-To: <8c832d96-4470-481a-8772-cf2bfc8d1fc0@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Kalpan,
+On 29/10/2026 12:29, Matthieu Baerts wrote:
+> Hi Kalpan,
+> 
+> On 29/10/2026 11:05, Kalpan Jani wrote:
+>> Following up on the V11 patch, I've proceeded with the runtime
+>> validation of the submitted approach.
+> 
+> Thanks, good to know it can be an alternative.
+> 
+>> Could V11 be considered a candidate fix for this issue, subject to
+>> your review? If you think the current approach is suitable, I'd be
+>> happy to proceed with the next steps.
+> 
+> For me, the goal is still the same: the main goal here is not to show
+> the seq counters to everybody. This can be done either by adding an
+> offset -- i.e. starting from 0 or something else -- or by not presenting
+> them to some users. It seems better to normalise them, than reporting 0,
+> especially when looking at the v11 RFC modifying code a bit everywhere
+> "just for MPTCP": other net maintainers might not accept that.
+> 
+> So as mentioned before: try the normalisation/offset first, then if that
 
-On 29/10/2026 11:05, Kalpan Jani wrote:
-> Following up on the V11 patch, I've proceeded with the runtime
-> validation of the submitted approach.
+Just to make sure that's clear: the normalisation (i.e. starting from 0)
+seems more complex than initially thought, plus it seems that we need to
+store more counters just for that. Using the msk address pointer as
+offset seems easier, but we will see once there is a PoC.
 
-Thanks, good to know it can be an alternative.
-
-> Could V11 be considered a candidate fix for this issue, subject to
-> your review? If you think the current approach is suitable, I'd be
-> happy to proceed with the next steps.
-
-For me, the goal is still the same: the main goal here is not to show
-the seq counters to everybody. This can be done either by adding an
-offset -- i.e. starting from 0 or something else -- or by not presenting
-them to some users. It seems better to normalise them, than reporting 0,
-especially when looking at the v11 RFC modifying code a bit everywhere
-"just for MPTCP": other net maintainers might not accept that.
-
-So as mentioned before: try the normalisation/offset first, then if that
-causes more troubles, hide the value to non-CAP_NET_ADMIN users but
-that's more a workaround that might be hard to backport.
+> causes more troubles, hide the value to non-CAP_NET_ADMIN users but
+> that's more a workaround that might be hard to backport.
+> 
+> Cheers,
+> Matt
 
 Cheers,
 Matt
