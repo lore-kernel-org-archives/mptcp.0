@@ -1,56 +1,96 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.173
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793317139;
-	b=x3Ddi8mlGWaIxF3+0tl06P+7VXGPO0S3QMl1ZFxew8FdxTziFDkBGm0z2OwGvn9jME0l
-	 keP21rX9IA8xfgipY2Rj1unMkJrIOeWAHwACAIHNN7KzA/FSHG4uJMaWSEhTGwNpimXDB
-	 zp+2oWGGtj1ZLckJkCjGCrgDGiG1tDJQnGsX1jZKEGf6cucSI66W1rF3TOuAeGVd0ovYH
-	 3YnENPOSwTXpyWL/Q8vL13dJr22jXHkYa9QbR1fzOO2M6jNX62LnXdr7Ei5UA+O9LYc39
-	 rj0kugbJOFYtUNrmH0sMvlgbZVM8/xt8QNdBlGZvmjXJmbJXHkBqWtw9YO7bg2JAkUA==
+	t=1793317719;
+	b=4pnLHa4NrSnVh8SDzslctj9MvY+3wGmSj5No0++JV8WEDjEj7FJw1o/HWxODdLux866t
+	 RjdXD75Oqxp0N4fyvxE19jYfcAhKEJnA0zDx4cpG262cw2fIFfV1NZKpfne2q73dUKkM4
+	 N9evxxX3JGrRtPkA2LZMaZZ2ksN5w8mxX3KleEshcsmEK+AeFisC4QDXXLNr2C44AvbZq
+	 w56V1P4DUdwH176wtRbqpMIpXWYZ4PK6NvzUYmu4oahv7FR3qfPFiZJ+R0HcDawoOUW+N
+	 utYYDhzQ4+8/T4LvV7uJeanIkDJct5xSvt+LJt9orKLoquYgYzGVdJu9ztOOXi/hQVw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793317139;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=jvsGxSyWij+D8hxDHCuP9RmfDfn9v4vNR/Yeu00zg8M=;
-	b=WlhT1TpnrOx7z8AdbVJyL37KeJlM+bGEAIonsmnnszpzBX95BF+sPcva+ZwlZQY+WURc
-	 4L4gFligXIUzte/Ijmf7ixe20+WW766aOktNXH5zLO/UMFrF+sE86zBks39nl+x7Xji5e
-	 fvvaqz/QjrxXYxiVXCIIqP+JUSLF9/PYzBtvUpHCwDEZcASAYNQrS2PRljSJpNWE2HE+A
-	 TfxqWJdKb5w8TtidXvd9gdQzNr7xIikrBghZu1O7jKC/3eyicC1KnJswqxdK1eZneWYs2
-	 zIIdbjvCZ0YeAklS+FgcFtD9eOz8+mizpjolhWEE75WdIQKhODNgxwfEDMfyr3oIgQw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793317719;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
+	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
+	 Date:MIME-Version:Content-Type;
+	bh=ulfBY5bs+tdP7tIlv3WvKi+Ww2XFVFT9BMFBhJFiayY=;
+	b=Qgne+sndYYXRIP4v5ySaESsbHYhQ77a20oJ5NBQrX1LvjMeUFpfWnylyMJXFON4ocIv/
+	 ilr3DvpRvhInQ6tYka1Pctd6LHV7mLqpNbeB8qEaqGV3aJtnHWoJ/dUqD/weLcvtoZoLP
+	 t84Y5BFpB3I/hfOAEtM57EWv19NG3YNiSYMANTq3697nYaZbsgksfGXoRtsjqzZvoNdFc
+	 7+8d/iIip7ptUaox58r5UV2SsfEnSUHR9mVWi42ijQ9WFjpupiXO7Q83W2bzfHLVy72KL
+	 xSRVwE9xMD2Dd0yoqI+Cn5LJPapeZReanlfTgyDfK9EOJtI4wXIQoW8XFPsCbgtW4bA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eCFylUHd;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=WRAnS9bb;
+	arc=none smtp.remote-ip=209.85.222.173
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEDEA606A31A
-	for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 23:38:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A654606A31A
+	for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 23:48:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7A654606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eCFylUHd
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AAA31F000C1;
-	Thu, 29 Oct 2026 23:38:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793317138;
-	bh=jvsGxSyWij+D8hxDHCuP9RmfDfn9v4vNR/Yeu00zg8M=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=eCFylUHdjsgtfHs3TSWCFsuDlkJ4x+zGhJr2I/HMJp1f02INWjiYI7kwdyaPkpqcN
-	 wm/OuQuiPql1RrBmbQkFiZ8aQWskW7W03QbkHZFdRUcykr+RUSXap1a5mCWkZniQSO
-	 6H1wS8B2ySue3VpD4czMfiY0Sdfx8bQBvFkSFO2pvmNQj2B8+OneZwiyKjpKZtPj1c
-	 H8fGkKEXNzW8DfL5+O9hMvRT0+0V6lbcEMRzvvuZG2QEN3TUJEzLCCMZzor9f494T2
-	 DqqrUgHXAnv2wfafGRJKKgdVImaYDr9ms+nd6Odm6swbVGu+14gvocVwNZKXhkfvAW
-	 w7Hg1k0TYBRYQ==
-Message-ID: <sashiko-outbox-190117@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v2 2/5] mptcp: reject MP_JOIN earlier
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>, "MPTCP
- Linux" <mptcp@lists.linux.dev>
-In-Reply-To: <20261030-mptcp-reset-mpj-early-v2-2-90f119392263@kernel.org>
-References: <20261030-mptcp-reset-mpj-early-v2-0-90f119392263@kernel.org>
- <20261030-mptcp-reset-mpj-early-v2-2-90f119392263@kernel.org>
-Content-Type: text/plain; charset=utf-8
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=WRAnS9bb
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-93ead211f14so18363585a.1
+        for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 16:48:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793317718; x=1793922518; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=ulfBY5bs+tdP7tIlv3WvKi+Ww2XFVFT9BMFBhJFiayY=;
+        b=WRAnS9bbS+SmiQR7hsECNt2/ht3KjA8SRZLdiUuMPcBSwOEab2GJsGWlEHs+6pP+xS
+         jwhD39F5jh9EkWHma4FbuVvUI1UewEJhKyVqWOJppEwdRTyR9IGNGiktZQCDrCKqp+n7
+         5M9ZVtwF7celM9iGt01e8gr7wfWxv45SP7lCC2iLkpmlFFQ0Ybtt0sj/cTlOrITYq7RX
+         m/h9G36OCJ3ilNS9mORZW12A10MboiwLkfeanxP5ftDjlcRO2eEJJ6dP8RWO3hp9zpAj
+         DZwDqJ8nTLAtSa90+U7x8PR00Z37RXVSZTaRuje8H8HUG27t85l/zvnYN3PYE2soKBfq
+         zFqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793317718; x=1793922518;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ulfBY5bs+tdP7tIlv3WvKi+Ww2XFVFT9BMFBhJFiayY=;
+        b=d8rcVHaMzicPnKQReFz26bPzTTOz2v7A9nmLq/nShxH8KrL9gGaK4uGvMYQ18Uq+PX
+         Dz4sdnXETvdWeu0Pn32sU/NimVMkMJL1XaBMCxeo3REczQsAQ9Jn0+PsmBq0k0cMrpOZ
+         PHlYSioRz3vXffOxHBzkmKZDKUPeiiTxopUq+ioUt7sih0RTT58JsP6Cbq45d8WJtojH
+         rp8BeJIftwQL9GU1nm9QtBz9aIFg1v/+NcvPBn8TkE5CB9bXpAD6Qejdq/PQcawSQ6Kj
+         XItaNU6JL4WiCeLn2K9H1bqGBUD6WU7O8ZiEtpt3Y+3uE4cCT64RN4ae+GTQv0OREK7+
+         k+rw==
+X-Gm-Message-State: AFq9FYKYzno2T8iQ4LpjL4SN+Gq1XLY8I5QC4DQ9yfN3tobjxGd9yPdg
+	vIAhvaRKrADfyTdTolcCUPqO1jl4QqTmHxio7CNHX18epwkqfripg1c=
+X-Gm-Gg: AYBFou30az5InsOhvFnmLwMl/s+TvExDR3M9T7tIAYibrvcF+ieuNrkoaQCWt3ouuxd
+	hGotjUaJ/wPq1mY9gyKsrm0+9HN1Wz6sfQa1uLF6H6XRUagtRys21/m0fhwrLJkfkyZzIFkF8GT
+	iqkI7AW4NPO6cRa8YD/eqm3ZzXejXErxsmgEv21oW/UNLCD27hpkTBR0UAuOIYItBrNmFSOiPwJ
+	Rpit1LRgdCCMa18bL1PtTrdEzexkNsAg4B9bj7/efKlTDU9f9R031QMsMe740paRj8VDEacYUqy
+	iE5eHEd0B2e4ikpG8XOe17Sl6cGapV9YrZHyyH2gWh+TbKPS5Xme86aNIOHjKhj7rn/CZkKgvmi
+	jOxcKgLwDOYO37rQlyVxWzWdaKp+1OFFgBh5ti8l1qzE/TnEBAJd/wLjpbrKaPd4a+b+kCrGXDq
+	zDNNxDQWAlGyICqIeSM4uq7JvnwJZAFnfCojCmFhSQD2aKC+hQAN38WwTitozuCH5YqBmIfUvKv
+	PF749PwpSl8qwqMVCHTrwTieuqds2cnuHQFqkrdE7i+DatheJnRJ3aO0FVJijCTZB2jZaaG5N/3
+	ISByM0nWnIFTuKFvF0LhZhVy2d7Vj99LWX7wGnBH
+X-Received: by 2002:a05:620a:404d:b0:93e:5060:f961 with SMTP id af79cd13be357-944216191a5mr116311285a.6.1793317718319;
+        Thu, 29 Oct 2026 16:48:38 -0700 (PDT)
+Received: from github.com ([20.119.95.37])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-9442423a212sm8992885a.18.2026.10.29.16.48.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Oct 2026 16:48:37 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20261029-mptcp-pm-userspace-id0-case-v4-0-555066fa4292@kernel.org>
+References:
+ <20261029-mptcp-pm-userspace-id0-case-v4-0-555066fa4292@kernel.org>
+Subject: Re: [PATCH mptcp-net v4 0/8] mptcp: pm: userspace: properly deal
+ with the ID0 case
+Message-ID: <b7c51ba1-e1ba-b99c-ecb6-413594155e29@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 29 Oct 2026 23:38:57 +0000
+Date: Thu, 29 Oct 2026 23:48:37 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -59,126 +99,60 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] selftests: mptcp: handle simultaneous MP_JOIN race in chk_join_n=
-r()
---
+Hi Matthieu,
 
-commit a8174c281034f9fecaa480fc2e253d29198241eb
-Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Thank you for your modifications, that's great!
 
-mptcp: reject MP_JOIN earlier
+Our CI did some validations and here is its report:
 
-This commit moves the mptcp_can_accept_new_subflow() check to
-subflow_token_join_request() so disallowed MP_JOIN requests are rejected
-upon receiving the SYN, tracked by a new MPJoinDisallowed MIB counter, and
-updates the mptcp_join.sh selftest accordingly.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf: Unstable: 1 failed test(s): validation:sched-bbr =
+=E2=9A=A0=EF=B8=8F=20
+- Task: https://github.com/multipath-tcp/mptcp_net-ne=
+xt/actions/runs/40961992710
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/test=
-ing/selftests/net/mptcp/mptcp_join.sh
-> index c3ccce96b45b1..308fad861afc1 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/d3c16edd6a=
+b0
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1196652
 
-[ ... ]
 
-> @@ -1617,10 +1619,21 @@ chk_join_nr()
->  	if [ -z "$count" ]; then
->  		rc=3D${KSFT_SKIP}
->  	elif [ "$count" !=3D "$syn_ack_nr" ]; then
-> +		# support old kernels without MPTcpExtMPJoinDisallowed counter:
-> +		# =3D> connections are rejected later on (MPTcpExtMPJoinRejected)
-> +		if [ "${disallowed}" -gt 0 ] &&
-> +		   ! mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinDisallowed" >/dev/nul=
-l; then
-> +			syn_rej=3D$((syn_rej + disallowed))
-> +			syn_ack_nr=3D$((syn_ack_nr + disallowed))
-> +		fi
-> +
->  		# simult connections exceeding the limit with cookie enabled could go =
-up to
->  		# synack validation as the conn limit can be enforced reliably only af=
-ter
->  		# the subflow creation
-> -		if [ "$with_cookie" !=3D 2 ] || [ "$count" -le "$syn_ack_nr" ] || [ "$=
-count" -gt "$syn_nr" ]; then
-> +		if [ "$count" !=3D "$syn_ack_nr" ] && {
-> +		     [ "$with_cookie" !=3D 2 ] ||
-> +		     [ "$count" -le "$syn_ack_nr" ] ||
-> +		     [ "$count" -gt "$syn_nr" ]; }; then
->  			rc=3D${KSFT_FAIL}
->  			print_check "synack rx"
->  			fail_test "got $count JOIN[s] synack rx expected $syn_ack_nr"
-> @@ -1658,9 +1671,18 @@ chk_join_nr()
->  	if [ -z "$count" ]; then
->  		: # ignore skip
->  	elif [ "$count" !=3D "$syn_rej" ]; then
-> -		rc=3D${KSFT_FAIL}
-> -		print_check "syn rejected"
-> -		fail_test "got $count JOIN[s] syn rejected expected $syn_rej"
-> +		# support old kernels without MPTcpExtMPJoinDisallowed counter:
-> +		# =3D> with syncookies, the MPJoinRejected was incremented instead
-> +		if [ "$with_cookie" =3D 2 ] && [ "${disallowed}" -gt 0 ] &&
-> +		   ! mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinDisallowed" >/dev/nul=
-l; then
-> +			syn_rej=3D$((syn_rej + disallowed))
-> +		fi
-> +
-> +		if [ "$count" !=3D "$syn_rej" ]; then
-> +			rc=3D${KSFT_FAIL}
-> +			print_check "syn rejected"
-> +			fail_test "got $count JOIN[s] syn rejected expected $syn_rej"
-> +		fi
->  	fi
-> =20
->  	# Per-event MPTCP_RST_EMPTCP JOIN counters; default 0, gated on
-> @@ -1701,6 +1723,13 @@ chk_join_nr()
->  		fail_test "got $count JOIN[s] no id found expected $no_id_found"
->  	fi
-> =20
-> +	count=3D$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinDisallowed")
-> +	if [ -n "$count" ] && [ "$count" !=3D "$disallowed" ]; then
-> +		rc=3D${KSFT_FAIL}
-> +		print_check "join disallowed"
-> +		fail_test "got $count JOIN[s] disallowed expected $disallowed"
-> +	fi
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-[Severity: Medium]
-Can simultaneous MP_JOIN attempts cause false failures in chk_join_nr() now
-that subflow_token_join_request() checks mptcp_can_accept_new_subflow() on
-SYN reception for both syncookie and non-syncookie cases, and uses a separa=
-te
-counter from 3rd-ACK rejection?
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-In tests like "multiple subflows, limited by server" in subflows_tests() and
-"subflows limited by server w cookies" in syncookies_tests(), the client
-initiates two subflows back-to-back in
-mptcp_pm_create_subflow_or_signal_addr(). On the server,
-msk->pm.accept_subflow is only cleared when the first subflow completes its
-3WHS in subflow_syn_recv_sock() -> mptcp_finish_join() ->
-mptcp_pm_allow_new_subflow().
+For more details:
 
-If the second MP_JOIN SYN arrives before the first subflow's third ACK is
-processed, mptcp_can_accept_new_subflow() in subflow_token_join_request()
-still returns true. The server then sends a SYN+ACK for the second subflow
-and rejects it later on the third ACK in mptcp_finish_join(), incrementing
-MPTcpExtMPJoinRejected instead of MPTcpExtMPJoinDisallowed.
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-In chk_join_nr(), the allowance for receiving more SYN+ACKs than syn_ack_nr
-is still restricted to with_cookie =3D=3D 2, even though the same SYN-time =
-race
-now applies without syncookies. In addition, when an extra SYN+ACK is sent
-due to this race, MPTcpExtMPJoinRejected increases and
-MPTcpExtMPJoinDisallowed decreases by (count - syn_ack_nr), but syn_rej and
-disallowed are not adjusted accordingly before checking those two counters.
 
-Should chk_join_nr() allow count up to syn_nr whenever disallowed > 0 (not
-only when with_cookie =3D=3D 2), and shift the extra (count - syn_ack_nr) f=
-rom
-disallowed to syn_rej when that race occurs?
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261030-mptcp-rese=
-t-mpj-early-v2-0-90f119392263@kernel.org?part=3D2
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
