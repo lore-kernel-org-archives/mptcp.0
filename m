@@ -1,49 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793316134;
-	b=ebndOzdR/aa7yRj3xYXTxFG4NG0AuNWx8NCd+x/olUNOvqguzl0PXic8gNEHW5s1i/xA
-	 W1S6FzxGNDK2pUdnmJY4L1FXC7vFB2yuiqj1fRcyDTQrf6hdpsUtL7q/Y6PROJoCqZ814
-	 gvsmVQvVzZSsV7WrPWLa3ISgO8X+Iy8rJUCooBII8k6dOcRcx0Sm3WiAq57XmoVJ09LyA
-	 OJmUUcUObXzuMajvz6QwijQflSoiP08dDzeEUXZ5gN0TALGSFuzepAnZ0gGgGJl/7178U
-	 MQi6OQFQB/oiiBPWvRrv2k52K1J6Ge3ZHsybxK4u0KQQoAhJ0l1OBnLPqGqYp5/hqOw==
+	t=1793317139;
+	b=x3Ddi8mlGWaIxF3+0tl06P+7VXGPO0S3QMl1ZFxew8FdxTziFDkBGm0z2OwGvn9jME0l
+	 keP21rX9IA8xfgipY2Rj1unMkJrIOeWAHwACAIHNN7KzA/FSHG4uJMaWSEhTGwNpimXDB
+	 zp+2oWGGtj1ZLckJkCjGCrgDGiG1tDJQnGsX1jZKEGf6cucSI66W1rF3TOuAeGVd0ovYH
+	 3YnENPOSwTXpyWL/Q8vL13dJr22jXHkYa9QbR1fzOO2M6jNX62LnXdr7Ei5UA+O9LYc39
+	 rj0kugbJOFYtUNrmH0sMvlgbZVM8/xt8QNdBlGZvmjXJmbJXHkBqWtw9YO7bg2JAkUA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793316134;
-	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
-	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=HyCkS8rRWl0pRzwjO6c4qhtJD8Oar1dl5moffglq0iE=;
-	b=OlaY/pUxSexyrJVfsNhqSfFUqk4A0KzjMhUpQbB51Ucd7Pagj/fCXLr8/zBoBVAV9eej
-	 1Z28dl1u9otd8IV76F0uIZvNRxbvwAzbm8ymm2ikO6KBsKfeLouzli0ucIwkO+NpERGGj
-	 GJNnWWf9z0C7ReT2l58AQBfKXecNkMoYqFLOv8Y96rdK0+hAZ3hZw4f7Xeo8diw5zSvEj
-	 vm97KptdGRk3JMxR9BayLvpQCMnU6PrVIyJwuafjul11PpsUZCEOG8Rwmvd8FMbnSQKE3
-	 5KKAzfXtz6eS3coTy8wQz2IiUNxady3jm1dKDxvNi0JAWmjaqEojjFwg0bntfYq9KjA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793317139;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=jvsGxSyWij+D8hxDHCuP9RmfDfn9v4vNR/Yeu00zg8M=;
+	b=WlhT1TpnrOx7z8AdbVJyL37KeJlM+bGEAIonsmnnszpzBX95BF+sPcva+ZwlZQY+WURc
+	 4L4gFligXIUzte/Ijmf7ixe20+WW766aOktNXH5zLO/UMFrF+sE86zBks39nl+x7Xji5e
+	 fvvaqz/QjrxXYxiVXCIIqP+JUSLF9/PYzBtvUpHCwDEZcASAYNQrS2PRljSJpNWE2HE+A
+	 TfxqWJdKb5w8TtidXvd9gdQzNr7xIikrBghZu1O7jKC/3eyicC1KnJswqxdK1eZneWYs2
+	 zIIdbjvCZ0YeAklS+FgcFtD9eOz8+mizpjolhWEE75WdIQKhODNgxwfEDMfyr3oIgQw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fambBQbL;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eCFylUHd;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A65606A31A
-	for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 23:22:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEDEA606A31A
+	for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 23:38:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fambBQbL
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C27C81F01826;
-	Thu, 29 Oct 2026 23:22:12 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eCFylUHd
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AAA31F000C1;
+	Thu, 29 Oct 2026 23:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793316133;
-	bh=HyCkS8rRWl0pRzwjO6c4qhtJD8Oar1dl5moffglq0iE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=fambBQbLUP6r1+u0TKLHUr03B7lM10zwl/9KOHeJy7hRS+iSaSIHhnRkq+8Mbbs+B
-	 PsVgFSV9L+DiSafnO580M8KNEydqfHrJUJx8qJf0KDKTPMa0jjCMwlUb2HAUlKWlw/
-	 V6uTzrjPsD3qtckefmple/DaDxjnJXPHVUeluYTim0F0LMV0D0Ntl5GMeJXh8qzGU6
-	 jXPM8SPRERFEEzmNIGf1ewdcSEM7tFWe0/QTR2Sge17U2illcjvdwDORgXGb49hmkZ
-	 QfgZ/hpmgRlE7L3R+BzITUwAk+zD9ua7eGTkzmnly7Nfb8hDxHlO+6u/sM4M2XlVnn
-	 2bHP3mJiRM09A==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 30 Oct 2026 00:21:43 +0100
-Subject: [PATCH mptcp-next v2 5/5] mptcp: pm: kernel: avoid
- mptcp_pm_is_userspace checks
+	s=k20260515; t=1793317138;
+	bh=jvsGxSyWij+D8hxDHCuP9RmfDfn9v4vNR/Yeu00zg8M=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=eCFylUHdjsgtfHs3TSWCFsuDlkJ4x+zGhJr2I/HMJp1f02INWjiYI7kwdyaPkpqcN
+	 wm/OuQuiPql1RrBmbQkFiZ8aQWskW7W03QbkHZFdRUcykr+RUSXap1a5mCWkZniQSO
+	 6H1wS8B2ySue3VpD4czMfiY0Sdfx8bQBvFkSFO2pvmNQj2B8+OneZwiyKjpKZtPj1c
+	 H8fGkKEXNzW8DfL5+O9hMvRT0+0V6lbcEMRzvvuZG2QEN3TUJEzLCCMZzor9f494T2
+	 DqqrUgHXAnv2wfafGRJKKgdVImaYDr9ms+nd6Odm6swbVGu+14gvocVwNZKXhkfvAW
+	 w7Hg1k0TYBRYQ==
+Message-ID: <sashiko-outbox-190117@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH mptcp-next v2 2/5] mptcp: reject MP_JOIN earlier
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>, "MPTCP
+ Linux" <mptcp@lists.linux.dev>
+In-Reply-To: <20261030-mptcp-reset-mpj-early-v2-2-90f119392263@kernel.org>
+References: <20261030-mptcp-reset-mpj-early-v2-0-90f119392263@kernel.org>
+ <20261030-mptcp-reset-mpj-early-v2-2-90f119392263@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 29 Oct 2026 23:38:57 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,86 +59,126 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261030-mptcp-reset-mpj-early-v2-5-90f119392263@kernel.org>
-References: <20261030-mptcp-reset-mpj-early-v2-0-90f119392263@kernel.org>
-In-Reply-To: <20261030-mptcp-reset-mpj-early-v2-0-90f119392263@kernel.org>
-To: MPTCP Linux <mptcp@lists.linux.dev>
-Cc: Paolo Abeni <pabeni@redhat.com>, 
- Chenguang Zhao <chenguang.zhao@linux.dev>, Gang Yan <gang.yan@linux.dev>, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2014; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=mKiqJx82yHSZxVlMvmsYjk/GQTMm/9kWzwXJL5d8PJg=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIeX5U1sTqX7hGY/mLWMpug6i/bGLff3N+uuT7pTCOT8
- /yqA6/6OkpZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACaykpfhf8aBaUv4ls+bO3+H
- rtZjt8r3DDavfxuvaF+5Yq7qfcmcLkeG/0kL7ByNz1m////PVjwjx0Ri+gPtUw5ltstiS4U+Hzq
- Xxw4A
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-It is strange to see them in the kernel code, plus it is more logical
-that way: only do in-kernel PM specific for this PM.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] selftests: mptcp: handle simultaneous MP_JOIN race in chk_join_n=
+r()
+--
 
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-v2: new
----
- net/mptcp/pm_kernel.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+commit a8174c281034f9fecaa480fc2e253d29198241eb
+Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-index 096ffea80f61..670db79ff4d3 100644
---- a/net/mptcp/pm_kernel.c
-+++ b/net/mptcp/pm_kernel.c
-@@ -970,7 +970,7 @@ static int mptcp_nl_add_subflow_or_signal_addr(struct net *net,
- 		struct mptcp_addr_info mpc_addr;
- 
- 		if (!mptcp_is_fully_established(sk) ||
--		    mptcp_pm_is_userspace(msk))
-+		    !mptcp_pm_is_kernel(msk))
- 			goto next;
- 
- 		/* if the endp linked to the init sf is re-added with a != ID */
-@@ -1096,7 +1096,7 @@ static int mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
- 		bool remove_subflow;
- 
- 		if (!READ_ONCE(msk->fully_established) ||
--		    mptcp_pm_is_userspace(msk))
-+		    !mptcp_pm_is_kernel(msk))
- 			goto next;
- 
- 		lock_sock(sk);
-@@ -1144,7 +1144,7 @@ static int mptcp_nl_remove_id_zero_address(struct net *net,
- 
- 		if (list_empty(&msk->conn_list) ||
- 		    !READ_ONCE(msk->fully_established) ||
--		    mptcp_pm_is_userspace(msk))
-+		    !mptcp_pm_is_kernel(msk))
- 			goto next;
- 
- 		mptcp_local_address((struct sock_common *)msk, &msk_local);
-@@ -1292,7 +1292,7 @@ static void mptcp_nl_flush_addrs_list(struct net *net,
- 		struct sock *sk = (struct sock *)msk;
- 
- 		if (READ_ONCE(msk->fully_established) &&
--		    !mptcp_pm_is_userspace(msk)) {
-+		    mptcp_pm_is_kernel(msk)) {
- 			lock_sock(sk);
- 			mptcp_pm_flush_addrs_and_subflows(msk, rm_list, NULL);
- 			release_sock(sk);
-@@ -1508,7 +1508,7 @@ static void mptcp_pm_nl_set_flags_all(struct net *net,
- 
- 		if (list_empty(&msk->conn_list) ||
- 		    !READ_ONCE(msk->fully_established) ||
--		    mptcp_pm_is_userspace(msk))
-+		    !mptcp_pm_is_kernel(msk))
- 			goto next;
- 
- 		lock_sock(sk);
+mptcp: reject MP_JOIN earlier
 
--- 
-2.55.0
+This commit moves the mptcp_can_accept_new_subflow() check to
+subflow_token_join_request() so disallowed MP_JOIN requests are rejected
+upon receiving the SYN, tracked by a new MPJoinDisallowed MIB counter, and
+updates the mptcp_join.sh selftest accordingly.
 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/test=
+ing/selftests/net/mptcp/mptcp_join.sh
+> index c3ccce96b45b1..308fad861afc1 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+
+[ ... ]
+
+> @@ -1617,10 +1619,21 @@ chk_join_nr()
+>  	if [ -z "$count" ]; then
+>  		rc=3D${KSFT_SKIP}
+>  	elif [ "$count" !=3D "$syn_ack_nr" ]; then
+> +		# support old kernels without MPTcpExtMPJoinDisallowed counter:
+> +		# =3D> connections are rejected later on (MPTcpExtMPJoinRejected)
+> +		if [ "${disallowed}" -gt 0 ] &&
+> +		   ! mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinDisallowed" >/dev/nul=
+l; then
+> +			syn_rej=3D$((syn_rej + disallowed))
+> +			syn_ack_nr=3D$((syn_ack_nr + disallowed))
+> +		fi
+> +
+>  		# simult connections exceeding the limit with cookie enabled could go =
+up to
+>  		# synack validation as the conn limit can be enforced reliably only af=
+ter
+>  		# the subflow creation
+> -		if [ "$with_cookie" !=3D 2 ] || [ "$count" -le "$syn_ack_nr" ] || [ "$=
+count" -gt "$syn_nr" ]; then
+> +		if [ "$count" !=3D "$syn_ack_nr" ] && {
+> +		     [ "$with_cookie" !=3D 2 ] ||
+> +		     [ "$count" -le "$syn_ack_nr" ] ||
+> +		     [ "$count" -gt "$syn_nr" ]; }; then
+>  			rc=3D${KSFT_FAIL}
+>  			print_check "synack rx"
+>  			fail_test "got $count JOIN[s] synack rx expected $syn_ack_nr"
+> @@ -1658,9 +1671,18 @@ chk_join_nr()
+>  	if [ -z "$count" ]; then
+>  		: # ignore skip
+>  	elif [ "$count" !=3D "$syn_rej" ]; then
+> -		rc=3D${KSFT_FAIL}
+> -		print_check "syn rejected"
+> -		fail_test "got $count JOIN[s] syn rejected expected $syn_rej"
+> +		# support old kernels without MPTcpExtMPJoinDisallowed counter:
+> +		# =3D> with syncookies, the MPJoinRejected was incremented instead
+> +		if [ "$with_cookie" =3D 2 ] && [ "${disallowed}" -gt 0 ] &&
+> +		   ! mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinDisallowed" >/dev/nul=
+l; then
+> +			syn_rej=3D$((syn_rej + disallowed))
+> +		fi
+> +
+> +		if [ "$count" !=3D "$syn_rej" ]; then
+> +			rc=3D${KSFT_FAIL}
+> +			print_check "syn rejected"
+> +			fail_test "got $count JOIN[s] syn rejected expected $syn_rej"
+> +		fi
+>  	fi
+> =20
+>  	# Per-event MPTCP_RST_EMPTCP JOIN counters; default 0, gated on
+> @@ -1701,6 +1723,13 @@ chk_join_nr()
+>  		fail_test "got $count JOIN[s] no id found expected $no_id_found"
+>  	fi
+> =20
+> +	count=3D$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinDisallowed")
+> +	if [ -n "$count" ] && [ "$count" !=3D "$disallowed" ]; then
+> +		rc=3D${KSFT_FAIL}
+> +		print_check "join disallowed"
+> +		fail_test "got $count JOIN[s] disallowed expected $disallowed"
+> +	fi
+
+[Severity: Medium]
+Can simultaneous MP_JOIN attempts cause false failures in chk_join_nr() now
+that subflow_token_join_request() checks mptcp_can_accept_new_subflow() on
+SYN reception for both syncookie and non-syncookie cases, and uses a separa=
+te
+counter from 3rd-ACK rejection?
+
+In tests like "multiple subflows, limited by server" in subflows_tests() and
+"subflows limited by server w cookies" in syncookies_tests(), the client
+initiates two subflows back-to-back in
+mptcp_pm_create_subflow_or_signal_addr(). On the server,
+msk->pm.accept_subflow is only cleared when the first subflow completes its
+3WHS in subflow_syn_recv_sock() -> mptcp_finish_join() ->
+mptcp_pm_allow_new_subflow().
+
+If the second MP_JOIN SYN arrives before the first subflow's third ACK is
+processed, mptcp_can_accept_new_subflow() in subflow_token_join_request()
+still returns true. The server then sends a SYN+ACK for the second subflow
+and rejects it later on the third ACK in mptcp_finish_join(), incrementing
+MPTcpExtMPJoinRejected instead of MPTcpExtMPJoinDisallowed.
+
+In chk_join_nr(), the allowance for receiving more SYN+ACKs than syn_ack_nr
+is still restricted to with_cookie =3D=3D 2, even though the same SYN-time =
+race
+now applies without syncookies. In addition, when an extra SYN+ACK is sent
+due to this race, MPTcpExtMPJoinRejected increases and
+MPTcpExtMPJoinDisallowed decreases by (count - syn_ack_nr), but syn_rej and
+disallowed are not adjusted accordingly before checking those two counters.
+
+Should chk_join_nr() allow count up to syn_nr whenever disallowed > 0 (not
+only when with_cookie =3D=3D 2), and shift the extra (count - syn_ack_nr) f=
+rom
+disallowed to syn_rej when that race occurs?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261030-mptcp-rese=
+t-mpj-early-v2-0-90f119392263@kernel.org?part=3D2
