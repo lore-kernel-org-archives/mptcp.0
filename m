@@ -1,57 +1,96 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.49
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793312528;
-	b=1gNnEFaEcdeV8gWOAuwJb2rdT5kRRQhnP5tcjRJlMb1s3IwR4ZiQghlxUS32VH1eqYlj
-	 7HBmP5QNzJtmuE9H55u1GUYfDrc2T0VBVBeZKov0JXhZHrAiVaWIFUuLTjkDE5x1FPVhA
-	 F7SVPJNtJDRY5buDcCHYDqJ1v2MPgnaF3QO5m145qscNDM0t4knq8E04gCwmJZ/ivzh8P
-	 aOm2MYu6ZJutXqWvW0YNdpc5hkNAm3h8C2S65slB40bkDMsdoLaqR2vHVa/OrstN85+JF
-	 /Qo/6ieNB4my2QKesHchOaFP1JT82FPN078Xp7hAjisN8UUA+myA9DJNquOYITtFV+w==
+	t=1793314477;
+	b=yShU7VNeChmfXVaEUnAaICTpb/A6FFJ5bxDe2E9sT0ax8RU9EipCVHpeCDfXV1Rcggak
+	 fwcxIf3fgLxqMigT/Q+xl6L+zS+KR078I4XADrV9kmpfhBQXkxMgRF7XDcraEy3ZETjDR
+	 Ue3HyrRlHod4bd5r3eBDQiTPmIocABlrLbnR2ad2JRB+6ZrYWKx3hYqadvnCtQDxtbwKj
+	 4uy+iSZHErpnCka+yvwaCaNEETuX2ai63sXk/Aky0o7tQNAYWyXIidmSo11bfL1JUEmD8
+	 LmlohyeQTv6BzdsvUGS3xgvMgJBfoJh07+zyrcrsA1umW0zqhkPbICmCSovFkLH4ArQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793312528;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=ZBL11904ha2XuVcxUCXDdozPUIRl2y6/Tu1B29481qQ=;
-	b=2ZJblJRneFQboUU3S4x77IxCFyxy2f2Z6u07UnAXwO74jsLCCDPslmAn2ZFEedb2JXuc
-	 qYe/IOkaeVT5wCY/fSiziDmFoELF0wc/2hMUuKGUxUvLYmdUFWfy+lBVYJXdGplT8b/+t
-	 rI8R8A80tmq1dEsXJv+FYmVZ0Ogr8ypXZ2hM3B9ITCGpprNsks9EP7InM1UGFm7+RMYeL
-	 pVEWx9lzH1Wh/MM8G0JGUThcG0VYbUyhj6NMVtN9C9KJLW5hSBzR9c9udcKiRBbpaTkAY
-	 ykj4EVMoQ8WbKy4ZwTX5exZtZuU+C+Hx5cFiCG5UuuY2l1/8ToijXNGAjolLoI07kYw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793314477;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
+	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
+	 Date:MIME-Version:Content-Type;
+	bh=4nAG/XN4B5aSHSgoDVFlC9DmR6Zz9KnXErLpiHuzikk=;
+	b=RdS3p3KWwMm4sypaTTGUgevMV5xvOshhMet2uSd88PMKR0fL3jNHVcYpVWTdglMZWIbw
+	 sN1tjEBaqnKOfEEJASpPfJyyYVrTO1w4o2OKE9FtfExCPycaw8jPKXrScjvezOBiIKRWR
+	 jh/sSbYDr6rIPtsO405SbVh5xC8t37YOuVsg/YQ86LwYPymlzTgkDfy4SvFR5GBiNBTaz
+	 elSGkoTtF5oDr6UE2qh2NncNb1uNZpS01zi+Bko7CcbX7T8BY/9qEaEH5ivG6q+JdQent
+	 OqijTHaezDx4HJKWzwzKrSF5jrTON1wWS1+4/Tq3t9hAyJ5wnpuwl+D29Uh4CC0bGSQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VvGLK0mG;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=WiHLW9sg;
+	arc=none smtp.remote-ip=209.85.216.49
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9EC7606A31A
-	for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 22:22:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F68606A31A
+	for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 22:54:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 35F68606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VvGLK0mG
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D1A21F01824;
-	Thu, 29 Oct 2026 22:22:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793312527;
-	bh=ZBL11904ha2XuVcxUCXDdozPUIRl2y6/Tu1B29481qQ=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=VvGLK0mGw34QwCMlxRI/hMxfHkO107ngTnVoaUpUVumUmgiPnvo23aL/fjUVY5NtP
-	 /6LOM+mxhphNaWOIV1FF00xh7sYObzG7LyEQOwOvsSgQom0c1giBopyxYS+GsGBQbh
-	 TneIX+nWbr+VCeD1rA7SMHiUnoV2OtoxEBEI+5xx7HcdtBChyo1rmUNfVDytR285pp
-	 OFhqA6xhpDZqp9uDzLwAbSEN/gNIHeBmfKbakoFBhhg3SKmp6UzPVxGUqDwf/wNT00
-	 jL6WjnglsUqMF6JBBToAIBYqfISjcvAnof+fj5hhLRjwyHRbGhSIfQENUk5bfDctCM
-	 gFo/r2HarmSkQ==
-Message-ID: <sashiko-outbox-190073@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-net v4 6/8] mptcp: pm: userspace: don't dump
- initial ID0
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>, "MPTCP
- Linux" <mptcp@lists.linux.dev>
-In-Reply-To: <20261029-mptcp-pm-userspace-id0-case-v4-6-555066fa4292@kernel.org>
-References: <20261029-mptcp-pm-userspace-id0-case-v4-0-555066fa4292@kernel.org>
- <20261029-mptcp-pm-userspace-id0-case-v4-6-555066fa4292@kernel.org>
-Content-Type: text/plain; charset=utf-8
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=WiHLW9sg
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3ad2b3b1c02so56422a91.1
+        for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 15:54:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793314476; x=1793919276; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=4nAG/XN4B5aSHSgoDVFlC9DmR6Zz9KnXErLpiHuzikk=;
+        b=WiHLW9sgQ8yjE7mzZkXab1fFMA5F/cI5MyzNx5Zqix3TqwHFeCcytdTHg+KdwEae0q
+         ughtTFTQ3ulJ/jzW1QJatxF9XCArrlL6k7ZLH2eACa8i45IlRg0/LXn2RE+e/qATrcg1
+         gs2PxzH5cPjFxcPk8d2WICdsZfqh1f9pJck/gmzYNIzxm+ldyG+UzM1Kj1joH04qJJu4
+         dCS5MQ6SOPy8vy1jxKnyZuSWhJ0B80A98SVvyQBjj+XCXIdJf8koiVsoAhAR4cShdhsX
+         pQoiliqT7t0U0kQZU0+hU6/dZgCvcBZpXA8gbaSlti2tg3tk3xQ4jPSA1OwbBjByr7Bm
+         tnUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793314476; x=1793919276;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=4nAG/XN4B5aSHSgoDVFlC9DmR6Zz9KnXErLpiHuzikk=;
+        b=Ub/0XNQsE/XohpYyQw5RjxQn0LVqiJ60PkBG/R8Fmpf5kEIcNZq5mK7yPL2aQ9+juT
+         XF9Znm6+FGoB1puKViRq2EUmPq07BWTTsV11TyrMUALHXtRzU0+tz2d/z8SMPMW2+sfW
+         RSrxdWEbgfCKLM6lCjmk9OFmkdosxgqRmNMi+2PpkkwL6YNXB1U/gu7kMKTt2WUMXMZm
+         cZzTIhZ3sE+EYO+mBZz4FNZCXGyRzmMgZwd/n7emCrmntTep4DtkbXbc7AvCNKE5gWRO
+         QccJqlGlxcBrn2+nfZWQpRtMvxapx+3NVHlpf+9sgG/27hyN/uqFsiYUAw6z678D4FXh
+         bCNw==
+X-Gm-Message-State: AFq9FYIIlFNWhsttFrNj3hUn2gI3SWngCofdsEL+7j4mYAwgoCGRwqNM
+	QAOwoiuZ1WelrfredyP6plycP+2RediZ95aNvLjCRasehMcEZarWvdYrdEJc
+X-Gm-Gg: AYBFou0vH7OkWfUmS6ngkGysWMoXOaRTYwDqLH9qPpacNe+SxEBbOJgZLWa0ouoxNbq
+	lmT2rTVl0EO+EjMW5VqsIudYONN3GzFytDi+pOpkYfiLJpvmMR+zBeSKfmylBh+S8wBbRk8+HcS
+	30Pjinb46hi4Nb/dsuT/V1xABcEy1JjwFlY81OvJrXjy1opqoJNbRbEcFvzLiJDHyrzqcUopVFl
+	tC9BcunXWCIdWLfeDOJVPxdzHM3HdUPRPrWtZM9896JFi4KbHyXjEcLR2jGR4fwenhBJTUblK6Q
+	QBPnt15RQUBS45aUw+baOGeMIzFbw+kt7pZ2cIeIhjlupx7/EjQm8vtChCJdFhPvzHlB9jy9fSc
+	YrYJXahgZXuYUoylt59mpcuiy9IOF807SBX6JebunKH7nT0rH5p4/dg8lLlEq9OtFeMDJ0uC7mE
+	AObBkQYbK+HHDmX3pQQNr+2sy6K9SHP8mSycJexr33sWlY65wqHR/7zG2nNWoolCgcYcs5I513Q
+	yLADOCb7MxtIjci114jUTlfbFLh0AcFBaMIUSV1BF42YoitPtZn2DNPAAp55XUpLfwLoK4Smp6Z
+	zKxsXDo68LHOZ0ZULh0liYg80wg7uLb2nz4HPkC+LL7DC3trgfrOkfZ/Lzhd
+X-Received: by 2002:a17:90a:ec90:b0:3ac:9c37:942e with SMTP id 98e67ed59e1d1-3ae89831a14mr314228a91.49.1793314476432;
+        Thu, 29 Oct 2026 15:54:36 -0700 (PDT)
+Received: from github.com ([4.154.166.7])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ae85cb1bfdsm556573a91.0.2026.10.29.15.54.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Oct 2026 15:54:35 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20261029-mptcp-pm-cflag-clear-when-used-v3-1-fa96c11f97b0@kernel.org>
+References:
+ <20261029-mptcp-pm-cflag-clear-when-used-v3-1-fa96c11f97b0@kernel.org>
+Subject: Re: [PATCH mptcp-net v3] mptcp: pm: kernel: c-flag: keep
+ local_addr_used in sync
+Message-ID: <7cd286b3-2edc-1312-a94f-7ab3ab17ec4f@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 29 Oct 2026 22:22:06 +0000
+Date: Thu, 29 Oct 2026 22:54:35 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -60,80 +99,59 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] mptcp: pm: userspace: is_init_id0() skips re-added ID 0 without =
-port
---
+Hi Matthieu,
 
-commit 06caddae470be561eadf1499e52b7564e7ab99b8
-Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Thank you for your modifications, that's great!
 
-mptcp: pm: userspace: don't dump initial ID0
+Our CI did some validations and here is its report:
 
-This patch skips the initial ID 0 address entry in
-mptcp_userspace_pm_dump_addr() by checking is_init_id0(entry) so that it is
-not dumped when the connection is first created, while intending to allow it
-to be dumped if removed and re-added later.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf: Unstable: 1 failed test(s): error:sched-bbr =E2=9A=A0=EF=B8=8F=20
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/409575=
+19828
 
-> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index 0f6400bc3bf8e..282d7f57c32ab 100644
-> --- a/net/mptcp/pm_userspace.c
-> +++ b/net/mptcp/pm_userspace.c
-> @@ -637,7 +637,7 @@ int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
->  	lock_sock(sk);
->  	spin_lock_bh(&msk->pm.lock);
->  	mptcp_for_each_userspace_pm_addr(msk, entry) {
-> -		if (test_bit(entry->addr.id, bitmap->map))
-> +		if (is_init_id0(entry) || test_bit(entry->addr.id, bitmap->map))
->  			continue;
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/b704bed908d9
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1196621
 
-[Severity: Medium]
-Does is_init_id0(entry) also skip a re-added ID 0 address when userspace do=
-es
-not specify an explicit local port?
 
-In net/mptcp/pm_userspace.c, is_init_id0() checks:
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-static bool is_init_id0(struct mptcp_pm_addr_entry *entry)
-{
-	return entry->addr.id =3D=3D 0 && entry->addr.port =3D=3D 0;
-}
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-When the initial ID 0 entry is removed via mptcp_pm_nl_remove_doit() or
-mptcp_pm_nl_subflow_destroy_doit(), and later re-added with a new subflow v=
-ia
-mptcp_pm_nl_subflow_create_doit() (or announced via
-mptcp_pm_nl_announce_doit()) without the optional MPTCP_PM_ADDR_ATTR_PORT
-attribute on the local address, mptcp_pm_parse_entry() leaves
-entry.addr.port =3D=3D 0:
+For more details:
 
-net/mptcp/pm_userspace.c:mptcp_pm_nl_subflow_create_doit() {
-	...
-	err =3D mptcp_pm_parse_entry(laddr, info, true, &entry);
-	...
-	entry.flags |=3D MPTCP_PM_ADDR_FLAG_SUBFLOW;
-	...
-	err =3D mptcp_userspace_pm_append_new_local_addr(msk, &entry, false);
-	...
-	local.addr =3D entry.addr;
-	local.flags =3D entry.flags;
-	local.ifindex =3D entry.ifindex;
-	...
-	err =3D __mptcp_subflow_connect(sk, &local, &addr_r);
-}
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-Because mptcp_userspace_pm_append_new_local_addr() stores the entry before
-__mptcp_subflow_connect() runs on a stack copy, the entry in
-msk->pm.userspace_pm_local_addr_list retains entry->addr.id =3D=3D 0 and
-entry->addr.port =3D=3D 0.
 
-When mptcp_userspace_pm_dump_addr() subsequently iterates over the list,
-wouldn't is_init_id0(entry) return true for this re-added ID 0 entry and sk=
-ip
-it during the dump, contrary to the commit description?
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029-mptcp-pm-u=
-serspace-id0-case-v4-0-555066fa4292@kernel.org?part=3D6
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
