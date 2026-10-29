@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793309527;
-	b=l98hbuMF0lfmId1HMfb20TN2Md6omQKMPxUQPrWEb4CX30WLQs9hcBnG1fy/D6e5m4YX
-	 t33hjNE/KCmlsxSIsZOLDRWrdBAbNOSzGjCs2c2UEnPxWv8b881MiPhTMgNQT5OwgTvO9
-	 IPKTYDl4xNXBFhHeAzARaGED2HC8/8Cb3aTqj0qZPbVV5sM5Fql4TbX+2xn/8wbqTkpqB
-	 TrlbssMy4TxCRv0hl8cVUym7Sg6qIwXnUOLH0vzklcUolHXSQ9fY0BK3Bm8eoTKBFQiTa
-	 xCUYhSrk091ZotAMMGueYY41mB8uILk7AqAl3YyXw6W6jSJtq3dC4tN3G3aucHZLPpA==
+	t=1793309528;
+	b=xY+liuh8y8ZN50HBYlHirNhHcngdNPIqAaoTD1ywJiA7cbLOXblfr5lOLVey+SPjJ4zA
+	 jmbNVzwvBJZacK3+iAyxX3/QsQO99UTt8yubK1sV2suK50jEV4i7mTbiKWIyWCF0kDc3v
+	 PDntXTRpmOUlKpVpJia3JbOjXT/dLVkT1Sr2s8oP8/uqsaWjnhbxsefP+8/PNyNxItOPs
+	 0+9smlIfAV8famLlTUWHVS1TQPhWd02xHLxPgizPKhe71R3776FgLfLka1BBR+WUrNAQC
+	 FxclDUCQTte4nA9ILQ8wBNmnUOIX/7xxWIttrDZRlDDXM8qCplBD0wmVOsAlLJ3J0lg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793309527;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793309528;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=o1xzL/rAqWXRY5gnIvTD/rPCVClM4/ctORTZ/ieUWXI=;
-	b=ifiKMuH3IkfzkHmgZkbwYhO8YwvxXEWm9Oi15VBzWc7b5JxznxaFqc5i6ucaTE2tTYWS
-	 ihTPsAkY93zl8NmTaS2tsgvy8mgTFe5QvfMZM1mMGII7ypoygTluCJR2ZTCTch0OdG9OA
-	 oYSvnRxyLTpI00hD43GW96D0/ec2hH1AghaVfgNGUU/OGZ53wctfiNvwCkP+1IUHsv9Qw
-	 WefYybvk0i0xYhor2SFtkwPh+AVlE67EbxYjqPATVz1t53DKYxl1Zy/a5gYbZ+n+uWfRa
-	 j+5v7j+c0cf+leuYqxFHXnl57ikRa+nm3FlZSZPGu2IVHv0mYs2zweFXAFrTY1Tschw==
+	bh=YiCK5Jj4VRRHy/fecTbn6QsuOjg25bt0JwD4qMhkTJc=;
+	b=FTcL4KI14IyF6H3RcepzoJfKQwxeFhzyfQEu9djjFIaJ1gzG/N+mhL+WIpvlUfN8uBZZ
+	 IK37Hna7Z6bGAagk8JFSc54XPWusnjJRus9hHLSbKeUFTQvU08bf9ZaPyXNGP8XvqIqPa
+	 1g+bjeEIWxK4nY7QTO+8Pk03PEW5pFTrH3pL3rHs6EKTAB2gTrmheIh3gwyW25TRWVzKA
+	 MtB/U4VpnzEXhBnldgqoAjDkju0UGAoLavpeRfSJTfr4Rk0j/cz4/DfSlpo/IbQlX4kZx
+	 hkR57GL5kyuvBbu+KXnvoHmbGNg1TeVFk76wEvaxDadx5dCgMn5FE5PURgB3Qi2CfWQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eyzEjvbW;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FL+KJZHq;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F82606A31A
-	for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 21:32:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6EF1606A31A
+	for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 21:32:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eyzEjvbW
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ECF51F01816;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FL+KJZHq
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 021921F031E0;
 	Thu, 29 Oct 2026 21:32:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793309526;
-	bh=o1xzL/rAqWXRY5gnIvTD/rPCVClM4/ctORTZ/ieUWXI=;
+	s=k20260515; t=1793309527;
+	bh=YiCK5Jj4VRRHy/fecTbn6QsuOjg25bt0JwD4qMhkTJc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=eyzEjvbW13wnkz+hwgSZtM9Exijr6eM27IGaTFcjDkhk+H0ctWM6Mbo9iRXUbpHCn
-	 aIvDL1OilEfbf5nJU3GEcOUyL8Y270ej0cIeNwhTr+tcZFdBH2KQc2Ah0cWPq1KEeh
-	 M5qi/C0DetGNNhqUPhUqcI/SROThM+iZDjIDo2sbGzGHgyzMMHCA8KlMmtJEMQj0Mb
-	 H1cpoyatoLL8JmY3SV8FfnMWRCly8zmhvry6fDQXh891NorJG/dyO1AgVkk439VEiY
-	 iPIEEVCdJxTdGkggYpwnCBBQtxBCc4Wuih647gQwHIIpHZXszHFubrkOaCFiyZt66x
-	 mJkS1yPRwcQQQ==
+	b=FL+KJZHqVlBZ/kCL24c/xGT50mETWZ1k6HG43FDMHgHdH+HthGGsw+s+0cCz95+gN
+	 OZrSzpLUzjzs9w0a5N4+QaHGpPucDvElCjojf+3ho+NFIDdZl70Pw6OQw0VkPrDIis
+	 GEusY3lA3YAZZq0ITh74k5e7a1K/deoOfrbBL14hwmX8+jW1jnIw0tpt6kjCYGKrmF
+	 SkEH8r/RGQtk7FUqfAW+FsHo4Zk3NJSTImH1HK/O1UqrakL8BU1HPt5rWzzH9xJrvr
+	 VXnoBSLWb0WkQLwsKdbFbflr/xpIvBD24OJsHe61UM86tP0/eZBm9wZSZhmI2t5Xof
+	 5npMMpSMlnRHA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 29 Oct 2026 22:31:48 +0100
-Subject: [PATCH mptcp-net v4 3/8] mptcp: pm: userspace: ID0 is not part of
- local_addr_used
+Date: Thu, 29 Oct 2026 22:31:49 +0100
+Subject: [PATCH mptcp-net v4 4/8] mptcp: pm: userspace: allow announcing
+ ID0 addr
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,85 +55,63 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261029-mptcp-pm-userspace-id0-case-v4-3-555066fa4292@kernel.org>
+Message-Id: <20261029-mptcp-pm-userspace-id0-case-v4-4-555066fa4292@kernel.org>
 References: <20261029-mptcp-pm-userspace-id0-case-v4-0-555066fa4292@kernel.org>
 In-Reply-To: <20261029-mptcp-pm-userspace-id0-case-v4-0-555066fa4292@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2282; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=MJF5UucRTSbdz1A4jWZ4kEervi6VoRbLTIqZ4JN4ZAA=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIe7/b/4KCXsHh5hM5Tk9PBexduPmuumcD7Z/8q5eO/v
- 6Xezlc/01HKwiDGxSArpsgi3RaZP/N5FW+Jl58FzBxWJpAhDFycAjCR9dwM/+O73O/P3m32/pjN
- fY6GkG75w8wGv5W2nVu6RXXjVu6tDu4M/4x9JJ5/28trtSva7d12wSPtC5uFJX1XTJe4HNwiEPi
- 6hxUA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1788; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=RhvRsmm764l/fbDteakqbdBfWAuivqGjDaDiK0dm4QA=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIe7w74K788atJhJ0Oz8BaJB7E+Bxd6aX0PLc9/cU9Zn
+ mnZ7qPnO0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACaiocXwP2PWXP6rm2M+6u44
+ t9TrlueUJF5D7yj7K2GRSyXPuDM9aWdkmH/8lnvvu9p39WrPHq1euOZmV+JZxTylut61JwwzTCs
+ 9GQE=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The PM's local_addr_used counter doesn't take into account the ID0,
-similar to what is done with the in-kernel PM.
+It is valid to announce an address with the ID0, the in-kernel PM allows
+to do that when re-announcing the initial IP address after having been
+deleted.
 
-When deleting a local address, only decrement the counter if it is not
-linked to the (initial) ID0. Similarly, do not increment it when
-re-adding the exact same entry.
+So no need to have such exception. If the ID is set to 0, but the
+address doesn't match with the existing one, an error will be returned
+by mptcp_userspace_pm_append_new_local_addr().
 
-Fixes: 77e4b94a3de6 ("mptcp: update userspace pm infos")
+Note that once removed, the ID0 entry could be replaced by another IP
+address. The RFC8684 doesn't specify this specific case with ID0, but it
+says [1]: "A host wishing to replace an existing Address ID MUST first
+remove the existing one". In these unclear conditions, better to let the
+responsibility to the userspace daemon to pick the same IP or another
+one, similar to what was in place before.
+
+Fixes: 9ab4807c84a4 ("mptcp: netlink: Add MPTCP_PM_CMD_ANNOUNCE")
+Link: https://datatracker.ietf.org/doc/html/rfc8684#section-3.4.1-13 [1]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
 sashiko: check the next patches before pointing at existing issues.
-v3:
- - split from patch 1.
- - do the same check when incrementing it to avoid a "leak". (Sashiko)
- - use a new dedicated helper, clearer.
-v4: move to one line when declaring is_init_id0. (Geliang)
+v2: Add note about re-using the ID0 with another address (Sashiko)
 ---
- net/mptcp/pm_userspace.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ net/mptcp/pm_userspace.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
 diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 68a02b15a4c5..74969b86fb81 100644
+index 74969b86fb81..66dbf67fd6d8 100644
 --- a/net/mptcp/pm_userspace.c
 +++ b/net/mptcp/pm_userspace.c
-@@ -27,6 +27,11 @@ void mptcp_userspace_pm_free_local_addr_list(struct mptcp_sock *msk)
- 	}
- }
+@@ -239,12 +239,6 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
+ 	if (err < 0)
+ 		goto announce_err;
  
-+static bool is_init_id0(struct mptcp_pm_addr_entry *entry)
-+{
-+	return entry->addr.id == 0 && entry->addr.port == 0;
-+}
-+
- static struct mptcp_pm_addr_entry *
- mptcp_userspace_pm_lookup_addr(struct mptcp_sock *msk,
- 			       const struct mptcp_addr_info *addr)
-@@ -99,7 +104,9 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
- 
- 		e->addr.id = id;
- 		list_add_tail_rcu(&e->list, &msk->pm.userspace_pm_local_addr_list);
--		msk->pm.local_addr_used++;
-+		/* Just to avoid this counter not to decrease when deleted */
-+		if (!is_init_id0(e))
-+			msk->pm.local_addr_used++;
- 		ret = e->addr.id;
- 	} else if (addr_match && id_match) {
- 		ret = entry->addr.id;
-@@ -125,12 +132,15 @@ static int mptcp_userspace_pm_delete_local_addr(struct mptcp_sock *msk,
- 	if (!entry)
- 		return -EINVAL;
- 
-+	/* The initial address ID doesn't increment local_addr_used */
-+	if (!is_init_id0(entry))
-+		msk->pm.local_addr_used--;
-+
- 	/* TODO: a refcount is needed because the entry can
- 	 * be used multiple times (e.g. fullmesh mode).
- 	 */
- 	list_del_rcu(&entry->list);
- 	sock_kfree_s(sk, entry, sizeof(*entry));
--	msk->pm.local_addr_used--;
- 	return 0;
- }
- 
+-	if (addr_val.addr.id == 0) {
+-		NL_SET_ERR_MSG_ATTR(info->extack, addr, "invalid addr id");
+-		err = -EINVAL;
+-		goto announce_err;
+-	}
+-
+ 	if (!(addr_val.flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
+ 		NL_SET_ERR_MSG_ATTR(info->extack, addr, "invalid addr flags");
+ 		err = -EINVAL;
 
 -- 
 2.55.0
