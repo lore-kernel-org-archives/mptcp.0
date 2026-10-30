@@ -1,59 +1,48 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793397764;
-	b=MlHourCQBOrhIcw9kd/txtlWidoBAVogjSZR2hM67sNmbFAtya/V1vsm5c7rXV8N0/3o
-	 cGC4wW4+rBpw5wON3L7vrjx2Lizm5PZgNF1RoH2jcXCEdJWCQPEq5OeYO4O5BoI2Ylg7c
-	 LmDfOX1AxHykCgvV110KNpWtvD2CryXzmVMoXC1Q0cQRZcJs4nMn2j6anrICmYrmQ/PX6
-	 m8Auxo6MKYpjo8xufj3NrWwTas/lN0rCYxsQW+XDW8vKEnUupKS8IEQOHkjgQJ9DASFrv
-	 +ExpIsl90Nhr5aCCpP0M05Ca6T2CyRoEYszyTwzPwWArMHTCpd4xoQiE4om7p47XErA==
+	t=1793397839;
+	b=2EO6Vq8CM0XAJeNg/H9ty7qbvfau2P01jzaCX68sMwCsMxi1BiqkPaQk5R7cvBzOM+4X
+	 EoF+QIjHOdW3nitOvZerQ4LB+rp1TYJZ2vd8JTvCd+cmjdr30OYBPDqQeOjkoA9izfCvu
+	 cvta1O5CYe9hoOgjeYUjWHREHoDWeFBvlkeKXzmbt7y9uMA64ZD8KJhW4PXgOas9U7dPm
+	 BtyttocfagnVQ+jl3SG1CuhH+2jngbzmrIeBnfKsjYa/lZQJcSQ4VK/aGFMIxcGT4NzVC
+	 R781A73MKa7inrZxg3SM6MrQX6Al6ez8bDxp2DMwW86UWLsrnAzZCLpWNJ7llz8x40A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793397764;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=83DWnuryJk8r3INmsqyxAiGGcclgod4HVpZzM7RmFLM=;
-	b=ITSpVZIa/zPEgP1ufBK5+m7SyVE5L/liO94/P+NsbQFeTA9k6X3WvEfll+mzzTrXLTte
-	 3khFeEg6dObnKpwW/UBN1JYR8tjzV+EDRNfUTDMSBlS48hEsAbR1ZtEQpEzcgJuybv6bB
-	 cH/yE9/mmNKyVciYruxdMKMqJRI09a1Opvxx3/qJW0Vt+uACLF/t0OpZlzCiFWqbWKpov
-	 gVbM1DD6eRAQwDWQe2HM68qvkrQuJn6m1qLeua069u+bRJLsIKEZz3YK+1CqLzHbnG08D
-	 jLGbZhBMYPumPPUY1mEQRrBOvpauKGaSC2CYcd6JmSNzxCPK4PD+p/ZkBe9eHnncS5Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793397839;
+	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:
+	 X-Mailer:X-Developer-Signature:X-Developer-Key;
+	bh=PuVchuw0uEOKu1VDlIzRfKfIbdb/XBgPSE1fFCX+3tI=;
+	b=Y6zQmBoT+6NuSuachhT4vUl5+qOILv8LKI0QWkf/rkpXwx5OmRLZt6Mq+XlTh6FsZcQo
+	 AE86hic922pw33rSGDuBAjI9JDliuD+O1dcFMkhcgtTcaT+b0lLQvuww40cyFU5yF+fDq
+	 pcPG+FkW0LvfCQO4LFr6ks2sIHRiWNmBWxS5vWyQBlbrJ17RmDYCGfWPwUuFiQQh0X3rS
+	 JKCmi8DSWfb+hmFSWOTY5COIU+8D91xfS38+JWyhHwco7qDURbxdGfB0Mu2eo3d8dFcL6
+	 dCzlbTf/gqY8wFN+o6GEU3xvGm5CIjJIXzXEDZapPyH8PxDQyGh1zivWW4zMIEpjulA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jtRc0e7+;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gMlW0voA;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F42C60A2602
-	for <mptcp@lists.linux.dev>; Fri, 30 Oct 2026 22:02:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF55606A31A;
+	Fri, 30 Oct 2026 22:03:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jtRc0e7+
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D6121F0093A;
-	Fri, 30 Oct 2026 22:02:44 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gMlW0voA
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C50E1F000C1;
+	Fri, 30 Oct 2026 22:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793397764;
-	bh=83DWnuryJk8r3INmsqyxAiGGcclgod4HVpZzM7RmFLM=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=jtRc0e7+y9v+ORzJCaLxE4xckvHPho5W3dys7ieT5sFbhFRLgIjsTGVMF04vpBdvW
-	 1GSaSSX3ggMUDSI/QDmAIPHCIx04ZlNd0qxyDWxrbk/st0Cndd4+o7T8e/0jrd+u/v
-	 rrjUD/G9T8IUF6RDfNdTPnqa22/887CYea3oITQP8DEQdAVL3UaMqB4Z7Yg0nFapOX
-	 sKF1VqaXAC2Ajh4R4u24pC/q9vc6PCZB6y6gDRyS20RCn1ePsQKwrWJnTCaV3NLisv
-	 BVTxTunOGOUhjS6qBBqUDi7C/LNApUQpUtlKhRKSgHGmS1fNMUJrF3atOPIZ0jIHEY
-	 3FDlMN0VwvlAg==
-Subject:
- Re: [PATCH mptcp-next v2 5/5] selftests: mptcp: sockopt: check app_limited
-From: netdev-bot+sashiko@kernel.org
-To: geliang@kernel.org
-Cc: mptcp@lists.linux.dev, tanggeliang@kylinos.cn, kuba@kernel.org
-Date: Fri, 30 Oct 2026 22:02:43 +0000
-Message-ID: <179339776363.3128.13786911219654450267@kernel.org>
-In-Reply-To: =?utf-8?q?=3C785e65bbb01dbf31ef2832d7a36c159027d6f22c=2E1793258?=
- =?utf-8?q?749=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
-References: =?utf-8?q?=3C785e65bbb01dbf31ef2832d7a36c159027d6f22c=2E17932587?=
- =?utf-8?q?49=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
-X-sashiko-severity: Low
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20260515; t=1793397838;
+	bh=PuVchuw0uEOKu1VDlIzRfKfIbdb/XBgPSE1fFCX+3tI=;
+	h=From:Date:Subject:To:Cc;
+	b=gMlW0voA1tDaLTuPhNCXCgpJC9MP/2e7x+L/c4CA4gtumn1g+3sYzN4/8e4MSzgbS
+	 kNv3iLXq/Er8EYQ353kpCU9HYQiEy7kCEQmDbmGdwu4ZkfoG3t/73Y0K3Q8AH2F4dv
+	 Hvpzj/c0frYxxhlov0RzOnplWYWVdi8tvTKuu98kHecO1z9OK5u91D+0sOQu+kGEAu
+	 8mse6zezo6mPIcOUok19Q0hWOeb7JWaCZdUtKKi8vvplyfE3kMP1L6p8+6+qmHHf2H
+	 YYzCU5Jg/CXkioB9xEbPyR41Fg+tQi0EIvDb/WNFi5//a2AEKgE8NVMZA8HuLRdsJe
+	 o4EHZAOuPmv6A==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Fri, 30 Oct 2026 23:03:51 +0100
+Subject: [PATCH net v4] mptcp: do not use Fast Open on MP_JOIN subflows
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -63,102 +52,109 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261030-mptcp-tfo-mpj-v4-1-e6eff2027342@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/z2OwQ6CMBBEf4Xs2ZIttaCe/A/jActWlkhL2mpUw
+ r9bNPE2M5l5mRkiBaYIh2KGQA+O7F02200Bpm/dlQR32UOFVS1RoRinZCaRrM9qEFpb6oySu70
+ 1kDdTIMvPL+8EjhKcf2G8XwYyaSWtNRv8KFIfqP3DcV8h1rLRulS60VgrIcWLb+ze64/j6L2Lv
+ U9ly7AsH+UAfBO4AAAA
+X-Change-ID: 20261030-mptcp-tfo-mpj-55fedc3189fc
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@kernel.org>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, Christoph Paasch <cpaasch@openai.com>, 
+ Chris Mason <mason@kernel.org>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, Yilin Zhang <yilinzhang@moonshot.ai>, 
+ stable@vger.kernel.org, Kimi Security Team <bug-report@moonshot.ai>, 
+ Jiayuan Chen <jiayuan.chen@linux.dev>, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2961; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=HZWXbnMpkuoJXWdgZWlVEwG84W1F//W89aqlg7o6T7Q=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLKeinhx2HE2Fu2dYn1b1XdVYOeGuD1VjjWpXU+8Nba4L
+ ODbsluno5SFQYyLQVZMkUW6LTJ/5vMq3hIvPwuYOaxMIEMYuDgFYCJxyowM2zii5/jps4fuVb74
+ 1c7KMWzr45V+imaBJe3Crye+b3A9yPA/fZXEnnwm1bSDi/OrE6w3HCnwjz3ZuP7H+a/9Tpre16Y
+ yAQA=
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Thank you for your contribution! Sashiko AI review found more severe
-issue(s) in other patches of this series. This mail is only an FYI, in case
-you want to address the nit picks below when you respin.
+From: Yilin Zhang <yilinzhang@moonshot.ai>
 
-Low priority / nit picks for your consideration:
+tcp_fastopen_create_child() hands the SYN packet itself to
+subflow_syn_recv_sock(). For an MP_JOIN request this takes the
+fatal fallback: the cloned child is destroyed and handed back with
+drop_req flagged, but tcp_fastopen_create_child() does not check
+the flag and queues it, so accept() can expose the freed child.
 
-- [Low] The new check in connect_one_server()
-  (tools/testing/selftests/net/mptcp/mptcp_sockopt.c:640-641) asserts…
+MP_JOIN cannot use Fast Open: data on a subflow requires the
+completed HMAC exchange (RFC 8684, sec. 3.2). Refuse it (only the
+TFO path passes a SYN skb here) and let tcp_conn_request() fall
+back to the regular MP_JOIN handshake; also strip the Fast Open
+cookie from MP_JOIN SYN/ACKs.
 
---
+Fixes: 90bf45134d55 ("mptcp: add new sock flag to deal with join subflows")
+Cc: stable@vger.kernel.org
+Reported-by: Kimi Security Team <bug-report@moonshot.ai>
+Suggested-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Yilin Zhang <yilinzhang@moonshot.ai>
+[ Moving code to avoid clearing TS and consolidating checks. ]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Note: I'm taking over this series because the v3 got lost a bit, the v4
+      only contains minor modifications, no need to delay this fix any
+      longer.
+v4:
+- Disable TFO without clearing tstamp_ok.
+- Moving SYN check inside the existing MPJ section.
+- Check for SYN only. (Paolo)
+v3:
+- https://lore.kernel.org/20260920061904.3575780-1-yilinzhang@moonshot.ai
+v2:
+- https://lore.kernel.org/20260903094010.4066892-1-yilinzhang@moonshot.ai
+v1:
+- https://lore.kernel.org/20260902121247.3248539-1-yilinzhang@moonshot.ai
+---
+ net/mptcp/subflow.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-selftests: mptcp: sockopt: check app_limited
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 78e886b20258..00677fb3efcd 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -379,6 +379,10 @@ static void subflow_prep_synack(const struct sock *sk, struct request_sock *req,
+ 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+ 	struct inet_request_sock *ireq = inet_rsk(req);
+ 
++	/* MP_JOIN cannot use TFO, do not send a cookie in the SYN/ACK */
++	if (foc && mptcp_subflow_rsk(req)->mp_join)
++		foc->len = -1;
++
+ 	/* clear tstamp_ok, as needed depending on cookie */
+ 	if (foc && foc->len > -1)
+ 		ireq->tstamp_ok = 0;
+@@ -887,6 +891,13 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+ 			fallback = true;
+ 
+ 	} else if (subflow_req->mp_join) {
++		/* a SYN skb here comes from TFO, which MP_JOIN cannot use: just
++		 * fall back to the regular path.
++		 */
++		if ((TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_ACK)) ==
++		    TCPHDR_SYN)
++			return NULL;
++
+ 		mptcp_get_options(skb, &mp_opt);
+ 		if (!(mp_opt.suboptions & OPTION_MPTCP_MPJ_ACK))
+ 			fallback = true;
 
-This adds a check to connect_one_server() in the mptcp_sockopt selftest.
-After a small data exchange, the test now asserts that the client subflow
-reports tcpi_delivery_rate_app_limited == 1. The check is meant to cover
-the preceding change to mptcp_rate_check_app_limited().
+---
+base-commit: d8a4f4c59da52b7c31ae337243b8473a19a3f819
+change-id: 20261030-mptcp-tfo-mpj-55fedc3189fc
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-> index b8158a1198eba..f7a45b93cbe06 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-> @@ -635,6 +635,11 @@ static void connect_one_server(int fd, int pipefd)
->  	do_getsockopts(&s, fd, total, total);
->  
->  	assert(s.mptcpi_rcv_delta == (uint64_t)total);
-> +
-> +	/* app-limited accounting requires a recent kernel */
-> +	if (expect_all_features())
-> +		assert(s.tcp_info.tcpi_delivery_rate_app_limited == 1);
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-[Severity: Low]
-Does this assertion only cover one direction of the subflow app-limited
-accounting?
-
-The expected value of 1 is also the initial value set in tcp_init_sock():
-
-net/ipv4/tcp.c:tcp_init_sock() {
-    ...
-	tp->app_limited = ~0U;
-	tp->rate_app_limited = 1;
-    ...
-}
-
-It only changes in tcp_rate_gen(), and only for a valid sample:
-
-	if (!rs->is_app_limited ||
-	    ((u64)rs->delivered * tp->rate_interval_us >=
-	     (u64)tp->rate_delivered * rs->interval_us)) {
-		tp->rate_delivered = rs->delivered;
-		tp->rate_interval_us = rs->interval_us;
-		tp->rate_app_limited = rs->is_app_limited;
-	}
-
-So a reading of 1 means one of two things: every valid sample was
-app-limited, or no valid sample was ever recorded.
-
-The test does catch the case it was written for. Without the preceding
-fix, the handshake ACK clears tp->app_limited. The ACK for the data then
-gives a valid sample that is not app-limited, and rate_app_limited
-becomes 0.
-
-However, the test never creates a sender that still has data queued.
-Suppose a later change always marked subflows app-limited, for example
-by dropping this bail-out in mptcp_rate_check_app_limited():
-
-	if (msk->write_seq != msk->snd_nxt || mptcp_send_head(sk))
-		return;
-
-Would this test still pass in that case? Could a check be added that a
-subflow reports rate_app_limited == 0 while the MPTCP socket still has
-data queued?
-
-Some smaller points:
-
-Only the client subflow is checked. process_one_client() also sends the
-echo through mptcp_sendmsg() on the accepted socket:
-
-	ret2 = write(fd, buf, ret);
-
-Should the server side have a matching check?
-
-The check only runs when SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES=1.
-Otherwise it is skipped without printing a SKIP message.
-
-do_getsockopt_tcp_info() only waits for tcpi_bytes_sent and
-tcpi_bytes_received to reach the expected values. It does not check that
-a delivery rate sample was actually taken.
-
-Given the above, the commit message says:
-
-  This guards against regressions in subflow app-limited accounting.
-
-Could this be narrowed to say that the test covers a missing app-limited
-mark on an idle sender?
-
--- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1793258749.git.tanggeliang%40kylinos.cn
