@@ -1,62 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.45
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793372556;
-	b=d92VIMB/fR6gN6zbzw6Mxgq3v5MmpxquGq4JM9o9LnAccx8NasfnGod4eXROg2oSOnC9
-	 XF9X6bUEMswRT7otQ44j4BlwVN88citcwh/btyd+ISGcsr+OQvdBusChGnwKjbFS9I1LT
-	 dDRLR3WNnCZVthzEwn7AQe4C+CGguqwMXXmNWFVWm3SyDpvHO1hdoT4OG+ObjHshTSHgq
-	 Pdn/2sSwtH/S4xF+103NolMlFqPIgnWXKuvJNERSFPlGSIioc2S693W9hPS0Uj9soJa1q
-	 56ZVnV/mwPZDNDHnmLQJsENWLl/b6tomkZJBcUCX74PyVhhcjd33LzTBCxDC+dmmekw==
+	t=1793377441;
+	b=fQ35XqP7U0lAoVsQvyp5XU+NNcmEyxlI6NB24bUwfgpjT6TkxSYx/n5Ri4FleiQweDi4
+	 uTTuQrOGGzMohkLnN6CfFIPvsShe2gmpt8j0IskQvTLtNyO/1ssAf19Z9V/qrYXBW5c3l
+	 9lKFjRelh/DqW9S8YLkQ0apd5OcFmNClktcaxgaghxyZI1JqxCDGfLyksEnRcGre9wz/o
+	 RPrXSUD5iUvuBTDe9VnUyeeuhm0ws+5eV84IrJYCLU2E2afva2HJ5yLDc3ta4l7UMZrTl
+	 6kNi485djqZ0Jk7eJjQLhtTezG6YJmXgAzZzyLTeE7J6vUax9VYkiGF2tSR//mYX+/g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793372556;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=f9ihZf6UqF+2d1Fz4DVdyw0ufLhdjjD5UhKkL6DYQ14=;
-	b=v9K4r4+o4kGMzcLZRa/PI1he8Jyx1Osq2tM7gxl159JPdBHSxUH7nhi/KdLKf7D7j368
-	 H0oNmVqoRLVFG6SSMqTIld7Pg7+0A8WDhsf2o8oEZhXKlMz6kMYmAohrOuDjJ6/YPYy5+
-	 TlmcrJF0oJlo6ZniLguuWztNzBCLdfYaRJXtmdQAwhkMSmw4W+pFZRfKXBAcPznBxZcuP
-	 vPSu//KGbD8piNwU+RGdkCP3dil/qa1efU0qURteclNpoelpeFUP2Fze3E/ZtdbZ+GH2f
-	 sESrrsJAGJk7R2cMDIe9A1DYi5OdoM+SYEH/GRWpVU8/Xoo1SExjoBQd0UhU+TllcnQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793377441;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=U9jFWNJ4Q4zms5lBhof3omcjmmZI2zbYwFhomCmAGl8=;
+	b=ClcPC27tCGSY6OAFPjoLOu0hNaGkxIC6I3K+DrAFXvgI/HqkptlOa5ZZFxyUfOWYbv3A
+	 4JqOGtUsjlts8qRVOkmW6TAz6r32H0gAN4kc/zJ9qpJucvrFHJrLnZ2HJw/m9IP8skAdo
+	 u5P7nOeyNPe5ugUS0VmS7mw6EXhmx7S47K1RAIn35aUJ/NtprJv3jpzv8sQZv1de3hUlT
+	 o8muax5zeUqWfRuT4mfuo8np6QleajHHoNz2co4L9UWA3TsbASXaJnhDnTo6qyM9dXDmf
+	 vBK+CY9+6ALpS2O08qJZkL/KoqpWd+X3zJW475E8Ia1HwfZuu4waIFIyXb7aijIiymg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gJgdTTh7;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=YAGNsBaB;
+	arc=none smtp.remote-ip=74.125.82.45
+Received: from mail-dl1-f45.google.com (mail-dl1-f45.google.com [74.125.82.45])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83920606A32D;
-	Fri, 30 Oct 2026 15:02:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA90606A31A
+	for <mptcp@lists.linux.dev>; Fri, 30 Oct 2026 16:24:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8AA90606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gJgdTTh7
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BE061F00A20;
-	Fri, 30 Oct 2026 15:02:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793372556;
-	bh=f9ihZf6UqF+2d1Fz4DVdyw0ufLhdjjD5UhKkL6DYQ14=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=gJgdTTh7pmXUoTSGljkSP+sJ2OO2Dq/e+TiR2NJ56BmjrofA40JFsd/HQi8zS+BnT
-	 Hn1FshCe+bvumRGfgHVYLDlO9Eek52MIStST+rdACC/7u8rCN2veib1OFQgCUkl2YJ
-	 dVn0c0bj3UD/WBHJEaRY1ohuKdJuj2TQh2Kr95yj/kJCQJvTudRTMdZgWhtatJncJk
-	 SC4SILVQTAnJaSIsJudhcvOm6vzlyQ0+o7nPjAhbfBrG4mdyE2XYke+JDYgUaurFK1
-	 MMFrPRl9v8sj3aQz2L8crLUR7ExurH99LY2pZv3tUcLv6QHL1TVVZFvwyTM57sJKf6
-	 SDZn3e+ZVp+8g==
-Subject:
- Re: [PATCH net v2] mptcp: protect listener backlog reads in diagnostics
-From: netdev-bot+sashiko@kernel.org
-To: zzzccc427@gmail.com
-Cc: matttbe@kernel.org, martineau@kernel.org, davem@davemloft.net,
- edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, geliang@kernel.org,
- horms@kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, baijiaju1990@gmail.com, jjzuming@gmail.com
-Date: Fri, 30 Oct 2026 15:02:34 +0000
-Message-ID: <179337255481.3134.11373670095456215150@kernel.org>
-In-Reply-To:
- <pm-mptcp-objects-candidate-0066-v5-4d1b83d62fcde2d57e8d@gmail.com>
-References:
- <pm-mptcp-objects-candidate-0066-v5-4d1b83d62fcde2d57e8d@gmail.com>
-X-sashiko-severity: High
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=YAGNsBaB
+Received: by mail-dl1-f45.google.com with SMTP id a92af1059eb24-181516de561so839856c88.1
+        for <mptcp@lists.linux.dev>; Fri, 30 Oct 2026 09:24:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793377441; x=1793982241; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=U9jFWNJ4Q4zms5lBhof3omcjmmZI2zbYwFhomCmAGl8=;
+        b=YAGNsBaBMuy2ZpIa2rUqY5gGT48dZosP+ypMImQmfLYlHU8nEs8+EloVXAIESQKnEH
+         snrdtTIopxutHxS2UMU9VH8XYPKW4NHqC8nj/7qhlbVL1V7cwncJLNqfSQIvMowivoZa
+         roYQneRaPASeNoasgVfp5JXHgq8GBt/s+2/v/FcpjQrn/zTdLo7PFgUiYrclp1VNhSAH
+         +amz/t+r/UwFaeb4DCP7sjr+UimIdiq4GVpYglv7QMxwBWGJ9hG4GZdvqajjdO2EJUzq
+         m0+nqvETVA6wg46tCtzoNhrKSpf3DsjFQ4EuR9NrST4ebkIS/WYtrhNXXkhkGu6cLjn7
+         ll7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793377441; x=1793982241;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=U9jFWNJ4Q4zms5lBhof3omcjmmZI2zbYwFhomCmAGl8=;
+        b=VV+Iq1y+6nPobYUDy3DCd9DQ89mAKFnoRRyuF7vqFIg3MEwHWtzPVJXDhmbmJmoX1s
+         egK1277ttJ97G1yhkKbwtf3NzMpaCN3rRvT38w2fIpEnOh1ePK4xWTa+TkMRwofxnTBC
+         Rr7cetDDJNWGK6n89Gfim3AI84LUykkzYzwTy+65lbtZchun1NKO0/tFgH2BgQY1JSnY
+         DIrYk0wFOnQWO54GLRwFaAM6vzsmnnRR0Gy3r2nHLBSxuGMv2s0329Unrfx5vtPSF4Yj
+         rkL+C2n+wywJ5NKMMftlEktFvAZ+8vKCPRoLDJ5sbKiHmYGDv91f/I92EP09aS3EpaYV
+         zz8g==
+X-Gm-Message-State: AFq9FYL3jGBuq5keb09fDiKgmsf/V6DeA0fg3PoHH4ANiquOpwkf1nvS
+	IlywnjQoHR7C33yaotSAFNFhwjUX73BM6wsnnhaABV/+9SfIWW7ZhkML
+X-Gm-Gg: AYBFou1uRAzrP91na0WstL+hKM+5W5gZlh7b+oUIU422D/ZibRHmNqSp/vII7jlgSQy
+	Aa4F1XhdxPY/3fYsy0zQsTRM8R05mh5sEnxCj25hWErLkv3TlJEzepEGyeQ9SZiJLyuTPc9ObOm
+	nJLM/haL2RgOsiDfbgCZ9JgWlKVBjuOsKvs7uZzxys1HgVAbWb4P4mIrQUtq1a7wgDvuhl8mdPd
+	jmnw5izljNAX2/NmNNWlKGGevVZNM42EGJm0MFfgOU4aNhrLcFctvhev5OK8VJBJl8fKzeRvZ2u
+	LD3I96JtcuzkFHDomui5XWie+kbmNfGVP1X6GJDhiKg3U42WC981zCnLGa5JEWPUAYF5M7dg3qD
+	6M/6gq8oWpVlTCynIBuKdj/yIkwgYq5XCzp6qyVeWGkZ9+4jqEZJB1ySr+Ws1hbZb6ZO55EIUpp
+	Kq189LL84XrsHS6cTYtxGWh++Sd6vD5JkXZP8HlJluVnCPoy02oMmEdqfzQeTcDc7rZtYrcw9qb
+	CavciKUHn10ww6JhLY9Ltctmp6hw8deTCpAx2ecxGJL0Ik3n03ufun4IONEh+veKq4p72+nt+Zb
+	vYCAxKSlhtGPvxM45r9sv+Be8a4ki7gZqup9Wq335ty+LXfWzUy2UPc=
+X-Received: by 2002:a05:701b:4586:20b0:1ab:9742:e028 with SMTP id a92af1059eb24-1ac55960b4bmr3384983c88.3.1793377440426;
+        Fri, 30 Oct 2026 09:24:00 -0700 (PDT)
+Received: from mptcp-lab.w453y.xyz ([59.164.88.43])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1ac1854d925sm13229471c88.7.2026.10.30.09.23.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Oct 2026 09:23:59 -0700 (PDT)
+From: Abdul Wasey <w453y.me@gmail.com>
+To: Shardul Bankar <shardul.b@mpiricsoftware.com>
+Cc: mptcp@lists.linux.dev,
+	Matthieu Baerts <matttbe@kernel.org>,
+	janak@mpiric.us,
+	kalpan.jani@mpiricsoftware.com,
+	shardulsb08@gmail.com,
+	kuba@kernel.org,
+	netdev-bot+sashiko@kernel.org
+Subject: Re: [PATCH mptcp-next v5 2/4] mptcp: sched: penalise a slow subflow by halving its cwnd
+Date: Fri, 30 Oct 2026 16:23:53 +0000
+Message-ID: <20261030162353.2424988-1-w453y.me@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <179332426731.3132.5154849254860151673@kernel.org>
+References: <20261028-mptcp_penalise_send_v2-v5-2-32fb379ce117@mpiricsoftware.com> <179332426731.3132.5154849254860151673@kernel.org>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -66,123 +101,29 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue(s) to consider.
+Hi Shardul,
 
-Critical: 0 · High: 1 · Medium: 0 · Low: 0
+On 30/10/2026 01:37, sashiko-bot wrote:
+> Nothing here tells a slow path apart from a subflow that just has a
+> small cwnd.
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
+I hit a case where the penalty goes to the fast subflow. Two paths,
+40 Mbit 10 ms and 2 Mbit 250 ms with 5% loss, CUBIC, one download. In
+about 1 of 100 runs, max_pace is huge and the 40 Mbit subflow gets
+flagged:
 
-- [High] The patch turns msk->first into an RCU-protected pointer for
-  diag readers, but the code that frees the first subflow still frees it…
+  pace=17592676 max_pace=510560401580578488 cwnd=313 penalise=1
+  pace=17656286 max_pace=510560401580578488 cwnd=156 penalise=1
+  pace=8813600 max_pace=510560401580578488 cwnd=78 penalise=1
 
---
+It then gets halved every RTT until the end, 11 Mbit/s instead of 38
+over 20 s.
 
-mptcp: protect listener backlog reads in diagnostics
+I think the slow subflow's avg_pacing_rate was seeded from the initial
+~0UL sk_pacing_rate, as Sashiko said on 1/4, and it only comes down
+slowly since that subflow is rarely picked.
 
-This patch puts the msk->first load and the listener backlog reads in
-mptcp_diag_get_info() under rcu_read_lock(). The goal is to fix a KASAN
-slab-use-after-free that happens when a token dump or
-mptcp_diag_dump_one() races with close() on an MPTCP socket that was
-put back into listen after connect(AF_UNSPEC). The fix depends on
-SOCK_RCU_FREE and the SLAB_TYPESAFE_BY_RCU TCP slab caches to keep the
-first subflow readable.
-
-> diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
-> index 136c2d05c0ee..28a42eee6651 100644
-> --- a/net/mptcp/mptcp_diag.c
-> +++ b/net/mptcp/mptcp_diag.c
-> @@ -200,8 +200,10 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
->  	r->idiag_wqueue = sk_wmem_alloc_get(sk);
->  
->  	if (inet_sk_state_load(sk) == TCP_LISTEN) {
-> -		struct sock *lsk = READ_ONCE(msk->first);
-> +		struct sock *lsk;
->  
-> +		rcu_read_lock();
-> +		lsk = READ_ONCE(msk->first);
-
-[Severity: High]
-Is rcu_read_lock() here enough by itself? The writer in
-__mptcp_close_ssk() frees the subflow first and only then clears
-msk->first:
-
-net/mptcp/protocol.c:__mptcp_close_ssk() {
-    ...
-	release_sock(ssk);
-
-	sock_put(ssk);
-
-	if (ssk == msk->first)
-		WRITE_ONCE(msk->first, NULL);
-    ...
-}
-
-On the path close() -> __mptcp_close() -> __mptcp_destroy_sock() ->
-mptcp_destroy() -> mptcp_destroy_common(), with free_first set, this
-sock_put() drops the last reference. The KASAN trace in the changelog
-shows exactly that. For a SOCK_RCU_FREE listener, sk_destruct() then
-queues call_rcu(__sk_destruct). msk->first is still published until the
-WRITE_ONCE() that follows.
-
-A grace period only covers readers that were already inside a read-side
-section when call_rcu() was called. The closer runs in sleepable process
-context, outside RCU. On a PREEMPT_RCU kernel, could it be preempted
-between sock_put() and WRITE_ONCE() long enough for both the
-__sk_destruct grace period and the later SLAB_TYPESAFE_BY_RCU (or
-SLUB_RCU_DEBUG) grace period to finish?
-
-The reader side has a matching gap. The TCP_LISTEN check above runs
-outside RCU, and both mptcp_diag_dump() and mptcp_diag_dump_one() can
-sleep. A reader could see TCP_LISTEN, get preempted, and enter
-rcu_read_lock() only after those grace periods. It would then load the
-stale msk->first and read sk_ack_backlog and sk_max_ack_backlog from
-freed or reused memory into idiag_rqueue/idiag_wqueue.
-
-Wouldn't that be the same slab-use-after-free shown in the KASAN report?
-
-There also seems to be a second path through mptcp_listen():
-
-	mptcp_set_state(sk, TCP_LISTEN);
-	sock_set_flag(sk, SOCK_RCU_FREE);
-
-	lock_sock(ssk);
-	err = __inet_listen_sk(ssk, backlog);
-
-The msk becomes TCP_LISTEN before the first subflow is hashed. The
-subflow only gets SOCK_RCU_FREE in __inet_hash(), after hashing
-succeeds. If listen fails, the subflow is later freed synchronously
-through __sk_destruct(), and again msk->first is cleared only after
-that.
-
-The changelog says SOCK_RCU_FREE plus the typesafe slab make this read
-safe. Doesn't that hold only if msk->first is unpublished before
-reclamation starts? mptcp_sk_clone_init() already uses that order:
-
-	list_del_init(&subflow->node);
-	WRITE_ONCE(msk->first, NULL);
-	sock_put(ssk);
-
-Would it close the remaining window to clear msk->first in
-__mptcp_close_ssk() before the final sock_put(ssk), and keep the
-rcu_read_lock() added here?
-
->  		if (lsk) {
->  			/* override with settings from tcp listener,
->  			 * so Send-Q will show accept queue.
-> @@ -209,6 +211,7 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
->  			r->idiag_rqueue = READ_ONCE(lsk->sk_ack_backlog);
->  			r->idiag_wqueue = READ_ONCE(lsk->sk_max_ack_backlog);
->  		}
-> +		rcu_read_unlock();
->  	}
-
-[ ... ]
-
--- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/pm-mptcp-objects-candidate-0066-v5-4d1b83d62fcde2d57e8d%40gmail.com
+Thanks,
+Abdul Wasey
