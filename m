@@ -1,55 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793364732;
-	b=f+On1s5RfTbSwaNYzxM12i6zPS7G5R5NRxQEkaNyiqCTNDZqHDl1vgVTlZMdA1Cv1jZw
-	 e0Ygka3RtxO/6JQvBJdGOxSh1LOSkN09Er4gtc0XDKU8FMQGG3ja6458EvJwawfcj4C27
-	 jiqYJaY4Ej/KfwXY+8bnVdgiaiH2UE5H7AhHkqmMlJVweVCD0QMJNgn5VOcISdmMflees
-	 JG7uiimXRArSmVxtE6b8NnSAgeQNhgg4KWKJlFUQugvMV7zCssWAOn+I2nFjkOGboukeY
-	 BqGv439P3XqBYBLoSvUtOMlBoyf59J9HbGl74SgyFk9vyBuYk+TTWyTBnK7RoYALcKg==
+	t=1793365018;
+	b=pLz89y9xxMDTyqcBDNd204vqNfNuzdmE7ZxCTpYh0YUIxPVtf86k3iT0Ef/kxs82R8fs
+	 ZLW/XGTrk7hQP97FH9qUXwNekpXQbkNc0rGSn0+rf90nZrzG7IaYKIPjWkvsHkOVGG3gN
+	 sUYCyU1zKMZ3LngCZthZazD9vtDkPz9e2JPytBRtDeSc5/1XWgDkeNY9mW5r3pKER+bUY
+	 wCrs7tKLmpY9OmQRnmepKqrA8k95ZJ+berHJxW5b9umz6iq7vlmxrRHGuTY45DQw9EQdT
+	 1FudmM/v2Z5e5WCSqmQqifmU7ljkrjHymtaiOPBMeSAaeOmN0QrCIG/eJBFiQlJl0xA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793364732;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793365018;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=QKA1fAOj1a0e2wDhq4/FS0LiasuvXxL7Dm/mfVAWbIQ=;
-	b=ugFV2RbvOLWuiYm31Rv10xDw6dUwzFc9YnqUJhLNiEL7vaz0MVSOLwpTirBPVDL873L7
-	 uFJTaH3+o8iBBaLAkqiDxdaF4qYqj6J3CTFjHGszyi+fx4KASgyKGiue3LV6w0UIhn/3I
-	 ytPC1wTBiaOf6eBp1eP0FgffDd6EwBUobMZ5/HkDi6dcSySdN9p+D78LEdp+PY8pG2WxH
-	 z4pFcYBqssSmF5Uj4l8XJkCsRgb8WTXDS5uftn/TQePO++0KrpDl/83PMlB8PCXvOYc0a
-	 MRFFUl7Kc3QOMlgMbWt7uGdSzU+pL5R/s6hMKk7LIHAkxAf9Xm3/Mez1sz+wrDB/vbw==
+	bh=oYOa7N78/qqY0tBF3dbyai+XpIiC5snNyJSlUt4U5N4=;
+	b=gWrOXNkb+vJXI4Uro3+puOUqscdI13AcSsXpvWS1ic2WYfvjdIyaaRC8eg1Sg+Xpjg9l
+	 EgxuLKlZTsflBuGGQFFK2O4EWp9dHqq2B6ZifLYSBJFiH++qdpq7cIrYxlxPdXYDLG9WS
+	 7xdbzLJ85+8Dzj3cQhjbfu9khRYQdnOWtAHILh5qVqusHeFR0b9Gk/5x1dyAmTKZLY0qH
+	 pwn4Bp4ekcsXU9DGvx5b5Q+sL3EbcvH+f0csszWQAM3vekppvl6neG+AhGM5z2z62nJRU
+	 h3QF4v0KsuX55ZyCACFvDIOQjUhN2sGZL62I/HQNYHcxyhu3XLH0MO3c3DfacRlTT4g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YXqOXOhe;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RL4upPei;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A7F606A329
-	for <mptcp@lists.linux.dev>; Fri, 30 Oct 2026 12:52:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E8D606A31A
+	for <mptcp@lists.linux.dev>; Fri, 30 Oct 2026 12:56:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YXqOXOhe
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B87D1F00A21;
-	Fri, 30 Oct 2026 12:52:11 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RL4upPei
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAF801F000C1;
+	Fri, 30 Oct 2026 12:56:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793364731;
-	bh=QKA1fAOj1a0e2wDhq4/FS0LiasuvXxL7Dm/mfVAWbIQ=;
+	s=k20260515; t=1793365018;
+	bh=oYOa7N78/qqY0tBF3dbyai+XpIiC5snNyJSlUt4U5N4=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=YXqOXOhelZs0b+kW5sxSrO9g3zPD7/zFYn1EZ9Kj40VL3rGheNwF5E9YlzWqH8Wwa
-	 rfZObm6CIJRBGZGCA6N3NfHOC1HKwhGZhvsHAtI9iNhZHAlu1e3+RFkHQEsSkyZM6H
-	 rlurkDYMNnE96gTgKisQCrx+tGVdk96nsA7/DVyT6+Yk61nEmth2IHm7f1ZVzLx9W+
-	 KGVqNXVeOwMc/HEoyYq+72Hxb1YJnuz447AE7JYz5x+RVBBbqtJgwVHt+jBlndiYV7
-	 kUQ4eECpbBpjshr8I7DrFlbhu4LZU14bMsUZ1P7eOmH9Ugfm6oyg7FQPh+YSaqBg5h
-	 L4i6QhutLmzFg==
-Message-ID: <sashiko-outbox-191034@kernel.org>
+	b=RL4upPeiBJsX6wpoxmJm8uUz+nkVuc7HAVpV+6NMf7tCmA1rQX1u050zRHA9QYmwV
+	 Gy+ZEHWLP/ztqTqnhxVkppXEdt7VzWEVT5MpfmJIu3ML7aHNBOvBot2GQaX9d3VKzc
+	 0fBDr8Z+6qzvwDcn5PfAWT9nlixyCRurhMJjQFlzsybxzET1sDB0wIZV8sMPJrFIf6
+	 xvBnQ/yHbuh8E7zoazIhZX59GcHcOw4YOlKiQ0p1r+vMTcfWnL1oGcFD0RYtKTHguV
+	 LT5BBUOXzF35u3HkLbasy1l1JmI+Ey6MIkhh5P3g7p0rX9LPmob6JZxe2DrthzlLcY
+	 qlFyELVtZhsdA==
+Message-ID: <sashiko-outbox-191040@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v19 3/5] mptcp: remove CB offset field
+Subject: Re: [PATCH mptcp-next v19 5/5] mptcp: defer read_sock cleanup to
+ mptcp_worker
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <1dac839fffd26114e35382b256fdee9923c0949b.1793361629.git.tanggeliang@kylinos.cn>
+In-Reply-To: <90a300d74f44443759ebe14be70c07385267db5b.1793361629.git.tanggeliang@kylinos.cn>
 References: <cover.1793361629.git.tanggeliang@kylinos.cn>
- <1dac839fffd26114e35382b256fdee9923c0949b.1793361629.git.tanggeliang@kylinos.cn>
+ <90a300d74f44443759ebe14be70c07385267db5b.1793361629.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 12:52:10 +0000
+Date: Fri, 30 Oct 2026 12:56:57 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -59,42 +60,31 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] mptcp: stream corruption in mptcp_init_skb() on non-zero subflow o=
-ffset
 - [High] mptcp: unsynchronized copied_seq when MPTCP_SYNC_SEQ is deferred
-- [Medium] mptcp: unlocked test_and_clear_bit() on cb_flags in mptcp_move_s=
-kbs()
-- [Medium] mptcp: missing reset of tfo_iasn in mptcp_disconnect() and __mpt=
-cp_init_sock()
+- [High] mptcp: wrong map_seq64 in mptcp_init_skb() on non-zero skb offset
 --
 
-commit 373a78c8c2985557d0ce492ed496a374c5080029
-Author: Paolo Abeni <pabeni@redhat.com>
+commit 1033c608c403db5f17f6be77476b0bb66333000f
+Author: Geliang Tang <geliang@kernel.org>
 
-mptcp: remove CB offset field
+mptcp: defer read_sock cleanup to mptcp_worker
 
-This commit replaces the per-skb MPTCP_SKB_CB(skb)->offset field with an
-msk-level copied_seq counter to track bytes consumed from the receive queue.
-It also updates fastopen sequence synchronization, receive queue coalescing,
-and mptcp_inq_hint() to compute offsets and hints from copied_seq.
+This series reworks MPTCP receive sequence tracking to use msk->copied_seq =
+and
+32-bit SKB control block sequence numbers aligned with TCP, and defers
+__mptcp_read_sock() receive buffer autotuning and cleanup to mptcp_worker().
 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index e855aaa59da29..3f967c4dc825f 100644
+> index 02a4f479d9d8c..13078f2f3c498 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -168,7 +168,6 @@ static bool __mptcp_try_coalesce(struct sock *sk, str=
-uct sk_buff *to,
->  	int limit =3D READ_ONCE(sk->sk_rcvbuf);
-> =20
->  	if (MPTCP_SKB_CB(from)->map_seq !=3D MPTCP_SKB_CB(to)->end_seq ||
-> -	    MPTCP_SKB_CB(from)->offset ||
->  	    ((to->len + from->len) > (limit >> 3)) ||
->  	    !skb_try_coalesce(to, from, fragstolen, delta))
->  		return false;
-> @@ -415,8 +414,7 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *m=
-sk, struct sk_buff *skb)
+
+[ ... ]
+
+> @@ -424,21 +423,21 @@ static void mptcp_data_queue_ofo(struct mptcp_sock =
+*msk, struct sk_buff *skb)
 >  	skb_set_owner_r(skb, sk);
 >  }
 > =20
@@ -106,137 +96,147 @@ fset)
 >  {
 >  	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
 >  	bool has_rxtstamp =3D TCP_SKB_CB(skb)->has_rxtstamp;
-> @@ -425,9 +423,9 @@ static void mptcp_init_skb(struct sock *ssk, struct s=
-k_buff *skb, int offset,
+> =20
+>  	/* the skb map_seq accounts for the skb offset:
 >  	 * mptcp_subflow_get_mapped_dsn() is based on the current tp->copied_seq
->  	 * value
+> -	 * value
+> +	 * value; note that end seq number is only available in 32bits format.
 >  	 */
 > -	MPTCP_SKB_CB(skb)->map_seq =3D mptcp_subflow_get_mapped_dsn(subflow);
 > -	MPTCP_SKB_CB(skb)->end_seq =3D MPTCP_SKB_CB(skb)->map_seq + copy_len;
 > -	MPTCP_SKB_CB(skb)->offset =3D offset;
-> +	MPTCP_SKB_CB(skb)->map_seq =3D mptcp_subflow_get_mapped_dsn(subflow) -
-> +				     offset;
+> +	MPTCP_SKB_CB(skb)->map_seq64 =3D mptcp_subflow_get_mapped_dsn(subflow) -
+> +				       offset;
+> +	MPTCP_SKB_CB(skb)->map_seq =3D (u32)MPTCP_SKB_CB(skb)->map_seq64;
 > +	MPTCP_SKB_CB(skb)->end_seq =3D MPTCP_SKB_CB(skb)->map_seq + skb->len;
+> +	MPTCP_SKB_CB(skb)->flags =3D 0;
 >  	MPTCP_SKB_CB(skb)->has_rxtstamp =3D has_rxtstamp;
-
-[Severity: High]
-As reported by Sashiko on v18 [1], can subtracting offset from
-mptcp_subflow_get_mapped_dsn(subflow) in mptcp_init_skb() while removing the
-MPTCP_SKB_CB(from)->offset check in __mptcp_try_coalesce() corrupt the
-MPTCP receive stream when offset > 0?
-
-In __mptcp_move_skbs_from_subflow(), the skb at the head of
-ssk->sk_receive_queue can have a non-zero offset (tp->copied_seq -
-TCP_SKB_CB(skb)->seq > 0) while starting a new DSS mapping M2 at
-tp->copied_seq with DSN mapped_dsn =3D mptcp_subflow_get_mapped_dsn(subflow=
-).
-
-For example, in subflow_check_data_avail() -> get_mapping_status(), a single
-TCP skb can carry the tail of a previous DSS mapping M1 in bytes
-0 .. offset - 1 and a new DSS mapping M2 in its SKB_EXT_MPTCP extension
-starting at byte offset. When M1's remaining bytes were already received on
-another subflow (before64(ack_seq, old_ack)), get_mapping_status() sees
-!skb_is_fully_mapped(ssk, skb) and keeps SKB_EXT_MPTCP on the skb,
-mptcp_subflow_discard_data() advances tp->copied_seq by offset without
-eating the skb and resets subflow->map_valid =3D 0, and the next iteration =
-of
-subflow_check_data_avail() installs M2 starting at tp->copied_seq. A
-partially overlapping TCP segment queued by tcp_data_queue() or
-tcp_ofo_queue() at a mapping boundary can also produce offset > 0.
-
-Because MPTCP stripes data across multiple subflows, the discarded prefix
-bytes in skb->data[0 .. offset) do not belong to DSN range
-[mapped_dsn - offset, mapped_dsn). Setting map_seq =3D mapped_dsn - offset =
-and
-end_seq =3D map_seq + skb->len appears to cause three issues:
-
-1. In __mptcp_add_backlog(), __mptcp_move_skb(), mptcp_data_queue_ofo(), and
-__mptcp_ofo_queue(), whenever mapped_dsn - offset equals to->end_seq,
-__mptcp_try_coalesce() calls skb_try_coalesce(to, from, ...), which appends
-all from->len bytes starting from byte 0 (including the discarded prefix
-from->data[0 .. offset)) onto to.
-
-2. When M2 is out of order at the MPTCP level (mapped_dsn > msk->ack_seq)
-because [msk->ack_seq, mapped_dsn) is in flight on another subflow, and
-mapped_dsn - offset <=3D msk->ack_seq < mapped_dsn, __mptcp_move_skb() sees
-MPTCP_SKB_CB(skb)->map_seq <=3D msk->ack_seq and treats the out-of-order skb
-as in-sequence or a partial packet starting at msk->ack_seq. It advances
-msk->ack_seq and msk->bytes_received across the unreceived gap
-[msk->ack_seq, mapped_dsn), queues or coalesces the skb into
-sk->sk_receive_queue, delivers the stale bytes from skb->data[0 .. offset)
-to user space in __mptcp_recvmsg_mskq() and mptcp_recv_skb(), and causes the
-genuine data for [msk->ack_seq, mapped_dsn) arriving on the other subflow to
-be dropped as MPTCP_MIB_DUPDATA.
-
-3. When mapped_dsn - offset > msk->ack_seq, mptcp_data_queue_ofo() inserts
-the skb into msk->out_of_order_queue at mapped_dsn - offset, where it can
-coalesce with or replace legitimate out-of-order segments covering
-[mapped_dsn - offset, mapped_dsn) and be dequeued early by
-__mptcp_ofo_queue() once msk->ack_seq reaches mapped_dsn - offset.
+> -	MPTCP_SKB_CB(skb)->cant_coalesce =3D 0;
+> =20
+>  	__skb_unlink(skb, &ssk->sk_receive_queue);
+> =20
+> @@ -446,15 +445,40 @@ static void mptcp_init_skb(struct sock *ssk, struct=
+ sk_buff *skb, int offset,
+>  	skb_dst_drop(skb);
+>  }
 
 [ ... ]
 
-> @@ -2396,8 +2376,10 @@ static bool mptcp_move_skbs(struct sock *sk)
+>  static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
+>  {
+> -	u64 copy_len =3D MPTCP_SKB_CB(skb)->end_seq - MPTCP_SKB_CB(skb)->map_se=
+q;
+> +	u32 copy_len =3D MPTCP_SKB_CB(skb)->end_seq - MPTCP_SKB_CB(skb)->map_se=
+q;
+>  	struct mptcp_sock *msk =3D mptcp_sk(sk);
+>  	struct sk_buff *tail;
+> =20
+>  	mptcp_borrow_fwdmem(sk, skb);
+> =20
+> -	if (MPTCP_SKB_CB(skb)->map_seq =3D=3D msk->ack_seq) {
+> +	/* Be sure to sync the eventual fastopen dummy mapping before any other
+> +	 * skb lands into the msk.
+> +	 */
+> +	if (unlikely(msk->rcvd_dummy_seq))
+> +		__mptcp_sync_rcv_sequence(sk);
+> +
+> +	if (MPTCP_SKB_CB(skb)->map_seq64 =3D=3D msk->ack_seq) {
+>  		/* in sequence */
+>  insert:
+>  		if (!mptcp_try_rmem_schedule(sk, skb)) {
+> @@ -472,18 +496,14 @@ static bool __mptcp_move_skb(struct sock *sk, struc=
+t sk_buff *skb)
+>  		skb_set_owner_r(skb, sk);
+>  		__skb_queue_tail(&sk->sk_receive_queue, skb);
+>  		return true;
+> -	} else if (after64(MPTCP_SKB_CB(skb)->map_seq, msk->ack_seq)) {
+> +	} else if (after64(MPTCP_SKB_CB(skb)->map_seq64, msk->ack_seq)) {
+>  		mptcp_data_queue_ofo(msk, skb);
+>  		return false;
+>  	}
+> =20
+>  	/* Partial packet */
+> -	if (after64(MPTCP_SKB_CB(skb)->end_seq, msk->ack_seq)) {
+> -		copy_len =3D MPTCP_SKB_CB(skb)->end_seq - msk->ack_seq;
+> -		MPTCP_SKB_CB(skb)->offset +=3D msk->ack_seq -
+> -					     MPTCP_SKB_CB(skb)->map_seq;
+> -		MPTCP_SKB_CB(skb)->map_seq +=3D msk->ack_seq -
+> -					      MPTCP_SKB_CB(skb)->map_seq;
+> +	if (after64(MPTCP_SKB_CB(skb)->map_seq64 + skb->len, msk->ack_seq)) {
+> +		copy_len =3D MPTCP_SKB_CB(skb)->end_seq - (u32)msk->ack_seq;
+>  		goto insert;
+>  	}
+
+[Severity: High]
+As reported by Sashiko on v18 [1], can subtracting offset from
+mptcp_subflow_get_mapped_dsn(subflow) in mptcp_init_skb() corrupt the recei=
+ve
+stream when an out-of-order subflow skb has a non-zero offset?
+
+In __mptcp_move_skbs_from_subflow(), offset =3D seq - TCP_SKB_CB(skb)->seq =
+is
+non-zero when the leading offset bytes of skb on ssk->sk_receive_queue were
+already consumed or discarded (for instance, when skb spans the end of a
+duplicate DSS mapping discarded by mptcp_subflow_discard_data() in
+subflow_check_data_avail() and the start of a new DSS mapping at
+tp->copied_seq).
+
+Setting MPTCP_SKB_CB(skb)->map_seq64 =3D mptcp_subflow_get_mapped_dsn(subfl=
+ow) -
+offset assigns DSNs [mapped_dsn - offset, mapped_dsn) to those already
+discarded leading bytes 0..offset of skb.
+
+When the new DSS mapping starting at offset is out-of-order at the MPTCP le=
+vel
+(mapped_dsn > msk->ack_seq because the intervening DSN range
+[msk->ack_seq, mapped_dsn) is in flight on another subflow):
+
+1. If mapped_dsn - offset <=3D msk->ack_seq < mapped_dsn, __mptcp_move_skb()
+sees map_seq64 <=3D msk->ack_seq and map_seq64 + skb->len > msk->ack_seq. It
+treats the out-of-order skb as in-sequence or a partial packet, queues it
+onto sk->sk_receive_queue, and advances msk->ack_seq across the missing DSN
+gap [msk->ack_seq, mapped_dsn), causing __mptcp_recvmsg_mskq() or
+mptcp_recv_skb() to copy the stale leading bytes in 0..offset to user space.
+
+2. If mapped_dsn - offset > msk->ack_seq, __mptcp_move_skb() queues skb into
+msk->out_of_order_queue with map_seq =3D mapped_dsn - offset, so
+mptcp_data_queue_ofo() and __mptcp_ofo_queue() treat bytes 0..offset as val=
+id
+data for [mapped_dsn - offset, mapped_dsn) and drop the real segments arriv=
+ing
+on other subflows as duplicate data.
+
+[ ... ]
+
+> @@ -2383,6 +2386,11 @@ static bool mptcp_move_skbs(struct sock *sk)
 >  	bool enqueued =3D false;
 >  	u32 moved =3D 0;
 > =20
-> -	if (test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags))
 > +	if (test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags)) {
 > +		msk->copied_seq +=3D msk->tfo_iasn;
->  		__mptcp_sync_rcv_sequence(sk);
+> +		__mptcp_sync_rcv_sequence(sk);
 > +	}
-> =20
+> +
 >  	mptcp_data_lock(sk);
 >  	while (mptcp_can_spool_backlog(sk, &skbs)) {
-
-[Severity: Medium]
-As reported by Sashiko on v15 [2], is it safe to call
-test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags) and
-__mptcp_sync_rcv_sequence(sk) in mptcp_move_skbs() before acquiring
-mptcp_data_lock(sk)?
-
-All other flags in msk->cb_flags share the same unsigned long word and are
-updated when sock_owned_by_user(sk) is true under mptcp_data_lock(sk) using
-non-atomic __set_bit() or |=3D, such as in mptcp_propagate_state() right af=
-ter
-subflow_set_remote_key():
-
-    mptcp_propagate_state()
-        subflow_set_remote_key()
-            set_bit(MPTCP_SYNC_SEQ, &msk->cb_flags);
-        ...
-        __set_bit(MPTCP_SYNC_STATE, &msk->cb_flags);
-
-as well as in __mptcp_data_acked(), __mptcp_check_push(),
-mptcp_retransmit_timer(), mptcp_subflow_process_delegated(),
-mptcp_finish_join(), subflow_error_report(), and
-mptcp_check_and_set_pending().
-
-If a BH or timer handler on another CPU holds mptcp_data_lock(sk) and
-performs a non-atomic read-modify-write on msk->cb_flags while
-MPTCP_SYNC_SEQ is set, and mptcp_move_skbs() clears MPTCP_SYNC_SEQ without
-holding mptcp_data_lock(sk) between that load and store, can the store
-restore MPTCP_SYNC_SEQ to 1 and cause mptcp_release_cb() or a later
-mptcp_move_skbs() call to add msk->tfo_iasn to msk->copied_seq a second
-time?
-
-> @@ -2418,22 +2400,17 @@ static bool mptcp_move_skbs(struct sock *sk)
+>  		mptcp_data_unlock(sk);
+> @@ -2402,22 +2410,17 @@ static bool mptcp_move_skbs(struct sock *sk)
 >  static unsigned int mptcp_inq_hint(const struct sock *sk)
 >  {
 >  	const struct mptcp_sock *msk =3D mptcp_sk(sk);
 > -	const struct sk_buff *skb;
-> -
+> +	u64 hint_val;
+> =20
 > -	skb =3D skb_peek(&sk->sk_receive_queue);
 > -	if (skb) {
 > -		u64 hint_val =3D READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
-> +	u64 hint_val;
-> =20
-> -		if (hint_val >=3D INT_MAX)
-> -			return INT_MAX;
 > +	hint_val =3D READ_ONCE(msk->ack_seq) - READ_ONCE(msk->copied_seq);
 > +	if (hint_val >=3D INT_MAX)
 > +		return INT_MAX;
 > =20
+> -		if (hint_val >=3D INT_MAX)
+> -			return INT_MAX;
+> -
 > -		return (unsigned int)hint_val;
 > -	}
 > -
@@ -248,95 +248,88 @@ time?
 > -	return 0;
 > +	return (unsigned int)hint_val;
 >  }
-
-[Severity: High]
-As reported by Sashiko on v15 [2], can deferring the msk->copied_seq update
-via MPTCP_SYNC_SEQ in subflow_set_remote_key() leave msk->copied_seq out of
-sync with sk->sk_receive_queue and msk->ack_seq?
-
-When subflow_set_remote_key() runs in BH context while sock_owned_by_user(s=
-k)
-is true, it immediately updates WRITE_ONCE(msk->ack_seq, subflow->iasn) and
-msk->tfo_iasn =3D subflow->iasn under mptcp_data_lock(sk), while deferring
-msk->copied_seq +=3D subflow->iasn and __mptcp_sync_rcv_sequence(sk) via
-MPTCP_SYNC_SEQ. This appears to leave two windows where sequence numbers are
-mismatched:
-
-1. In mptcp_move_skbs(), test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags)
-is only checked once before acquiring mptcp_data_lock(sk) and outside the
-while (mptcp_can_spool_backlog(sk, &skbs)) loop (which drops
-mptcp_data_lock(sk) on each iteration). If the 3rd ACK carrying MP_CAPABLE
-and data arrives in BH after that initial check, subflow_set_remote_key()
-sets msk->tfo_iasn and MPTCP_SYNC_SEQ, and mptcp_data_ready() queues the new
-skb onto msk->backlog_list.
-
-mptcp_move_skbs() then splices msk->backlog_list and calls
-__mptcp_move_skbs() -> __mptcp_move_skb(), which sees msk->rcvd_dummy_seq
-and calls __mptcp_sync_rcv_sequence(sk) directly:
-
-    __mptcp_move_skb()
-        if (unlikely(msk->rcvd_dummy_seq))
-            __mptcp_sync_rcv_sequence(sk);
-
-This clears msk->rcvd_dummy_seq =3D false and rebases the TFO skb in
-sk->sk_receive_queue to map_seq =3D msk->tfo_iasn - skb->len, without adding
-msk->tfo_iasn to msk->copied_seq. When mptcp_move_skbs() returns to
-mptcp_recv_skb() or mptcp_recvmsg(), sk->sk_receive_queue is in the
-post-IASN sequence space while msk->copied_seq (and peek_seq) is still in
-the pre-IASN sequence space. In mptcp_recv_skb(),
-offset =3D msk->copied_seq - MPTCP_SKB_CB(skb)->map_seq underflows by
-msk->tfo_iasn, causing mptcp_eat_recv_skb() to drop unread skbs (or return a
-corrupted offset if (u32)(-msk->tfo_iasn) < skb->len), and
-__mptcp_recvmsg_mskq() skips unread skbs as already-peeked data.
-
-2. While MPTCP_SYNC_SEQ is still pending, msk->ack_seq holds subflow->iasn
-while msk->copied_seq is still pre-IASN. Calling mptcp_inq_hint(sk) before
-MPTCP_SYNC_SEQ is processed (such as in __mptcp_recvmsg_mskq() ->
-mptcp_rcv_space_adjust(), in mptcp_recvmsg() for TCP_CM_INQ when
-msk->backlog_list is empty after a pure 3rd ACK without payload, in
-__mptcp_read_sock() -> mptcp_rcv_space_adjust(), or in mptcp_ioctl(SIOCINQ)
-if the remote key arrives after mptcp_move_skbs()) subtracts the pre-IASN
-msk->copied_seq from the post-IASN msk->ack_seq, returning INT_MAX (or an
-IASN-inflated value) and underflowing copied -=3D mptcp_inq_hint(sk) in
-mptcp_rcv_space_adjust().
+> =20
+>  static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
 
 [ ... ]
 
-> @@ -3699,6 +3689,7 @@ static int mptcp_disconnect(struct sock *sk, int fl=
-ags)
->  	mptcp_pm_data_reset(msk);
->  	mptcp_ca_reset(sk);
->  	msk->bytes_consumed =3D 0;
-> +	msk->copied_seq =3D 0;
->  	msk->bytes_acked =3D 0;
->  	msk->bytes_received =3D 0;
->  	msk->bytes_sent =3D 0;
+> @@ -2463,8 +2472,11 @@ static int mptcp_recvmsg(struct sock *sk, struct m=
+sghdr *msg, size_t len,
+> =20
+>  		copied +=3D bytes_read;
+> =20
+> -		if (!list_empty(&msk->backlog_list) && mptcp_move_skbs(sk))
+> +		if (!list_empty(&msk->backlog_list) && mptcp_move_skbs(sk)) {
+> +			if (flags & MSG_PEEK)
+> +				peek_seq =3D msk->copied_seq + copied;
+>  			continue;
+> +		}
 
-[Severity: Medium]
-Should mptcp_disconnect() (and __mptcp_init_sock()) also reset
-msk->tfo_iasn =3D 0?
+[Severity: High]
+As reported by Sashiko on v18 [2], can deferring the msk->copied_seq update
+via MPTCP_SYNC_SEQ leave msk->copied_seq out of sync with msk->ack_seq and
+sk->sk_receive_queue while the socket lock is held?
 
-If an MPTCP socket connects and receives a remote key,
-subflow_set_remote_key() sets msk->tfo_iasn =3D subflow->iasn. If the socket
-is later disconnected via mptcp_disconnect() and reused as a listener, child
-sockets cloned in mptcp_sk_clone_init() via sk_clone_lock() will inherit the
-stale non-zero msk->tfo_iasn.
+In subflow_set_remote_key() in net/mptcp/subflow.c, when the remote key and
+IASN arrive in BH context while sock_owned_by_user(sk) is true, msk->ack_seq
+is updated immediately to subflow->iasn while updating msk->copied_seq is
+deferred:
 
-If a passive TFO connection on that listener queues a SYN payload in
-mptcp_fastopen_subflow_synack_set_params() (setting map_seq and
-msk->copied_seq to -(u64)skb->len and msk->rcvd_dummy_seq =3D true) and then
-falls back to TCP on the 3rd ACK without receiving MP_CAPABLE,
-subflow_set_remote_key() is never called on the child. When the next
-fallback data segment arrives in __mptcp_move_skb(),
-__mptcp_sync_rcv_sequence() will rebase the TFO skb's map_seq to
-msk->tfo_iasn - skb->len using the stale msk->tfo_iasn while
-msk->copied_seq remains -(u64)skb->len.
+	WRITE_ONCE(msk->ack_seq, subflow->iasn);
+	WRITE_ONCE(msk->can_ack, true);
+	atomic64_set(&msk->rcv_wnd_sent, subflow->iasn);
+	msk->tfo_iasn =3D subflow->iasn;
 
-[1] https://lore.kernel.org/r/3cc892c20ed48f8f31f40e7a9ff7363d4b7b0806.1793=
+	if (!sock_owned_by_user(sk)) {
+		msk->copied_seq +=3D subflow->iasn;
+		__mptcp_sync_rcv_sequence(sk);
+	} else {
+		set_bit(MPTCP_SYNC_SEQ, &msk->cb_flags);
+	}
+
+This appears to leave several paths with an unsynchronized msk->copied_seq:
+
+1. In mptcp_move_skbs(), test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags)=
+ is
+checked only once before mptcp_data_lock(sk) rather than inside the
+while (mptcp_can_spool_backlog(sk, &skbs)) loop. If the 3rd ACK and payload
+arrive in BH after that initial check or while mptcp_data_lock(sk) is dropp=
+ed
+around __mptcp_move_skbs(), the next iteration of the loop spools the new s=
+kb
+via __mptcp_move_skb(), which calls __mptcp_sync_rcv_sequence(sk) (updating
+the TFO skb in sk->sk_receive_queue to the IASN sequence space and clearing
+msk->rcvd_dummy_seq) and queues the new IASN-based skb while msk->copied_seq
+remains unsynchronized for the next iteration of mptcp_recvmsg().
+
+2. While MPTCP_SYNC_SEQ is pending, mptcp_inq_hint() subtracts the
+pre-IASN msk->copied_seq from the IASN-based msk->ack_seq and returns INT_M=
+AX.
+In mptcp_recvmsg(), if the 3rd ACK or SYN-ACK arrives without payload while
+lock_sock(sk) is held, msk->backlog_list is empty so mptcp_move_skbs() is n=
+ot
+called; both mptcp_rcv_space_adjust() and the TCP_CM_INQ cmsg calculation r=
+un
+before release_sock(sk) and observe INT_MAX from mptcp_inq_hint(sk). Simila=
+rly,
+in mptcp_ioctl() for SIOCINQ, if the remote key arrives in BH after
+mptcp_move_skbs() checks MPTCP_SYNC_SEQ and before mptcp_inq_hint(sk), SIOC=
+INQ
+returns INT_MAX.
+
+3. In mptcp_recvmsg(), when flags & MSG_PEEK is set and mptcp_move_skbs(sk)
+consumes MPTCP_SYNC_SEQ (updating msk->copied_seq and the TFO skb map_seq) =
+but
+returns false because the backlog skb was out-of-order or dropped, peek_seq=
+ is
+only updated inside the if (mptcp_move_skbs(sk)) branch and remains stale if
+the loop continues without sleeping.
+
+[1] https://lore.kernel.org/r/b6e4ed70642e2f86c041381cea810db82116b836.1793=
 349369.git.geliang@kernel.org
-[2] https://lore.kernel.org/r/25f42bae1af43649a5c89ca10cfe0d962941c6f7.1792=
-718041.git.tanggeliang@kylinos.cn
+[2] https://lore.kernel.org/r/b6e4ed70642e2f86c041381cea810db82116b836.1793=
+349369.git.geliang@kernel.org
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1793361629.gi=
-t.tanggeliang@kylinos.cn?part=3D3
+t.tanggeliang@kylinos.cn?part=3D5
