@@ -1,59 +1,59 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793324268;
-	b=U4XtK7n2Y2N3XvqKvv81JKZMT4BdKtdU6/4ziS2dwsy59VVSyJbJrSyJoaxSxb6loLVD
-	 jTkvy5cMcyduZPi5JMzwHliKsYEVD/EjrxcsyZBDJE4bpTjHnTholtZupc/At4eCBMfBs
-	 j2LwPoICQqZHD73pbr8TQy3BSQjZxbW7jjOWjulJEsejgjj7wGoMBS+pM7+R4GDwxjxxg
-	 q/e9ASKVHDwC7AOaWZhtMx7y0AMNcvKGZq2trB4cf2ByFMRkWRtugoNjVJ8H3MupkJ6wC
-	 466kE1pS9jZzUfecvXzZRJTaz7C+g9Jshp9WHVyWGfzGrRYFjP5LGZemeToaPlwvC2A==
+	t=1793324270;
+	b=HyVBp8xRUyLl5J8kykCElzNXiR5sk9ufJjVFh440EAftyCF0EXL93FrhD4wT8jF//6Nv
+	 KIVhLT560Z2oCLSNXD2EdfR3gCBsirabqcga6etopg0IlTWqx1x4ME1zWDwJ20FFky8Sc
+	 Krm4A5zrQ2JIqszUzctQo2AzBX5eaoNWfBi1xUnxiiCjwVILh9L3OmSZDh83oXU3ToCAq
+	 zZWzO49ZzcCKgcQhPg410l+831S+upljGNDdIHdJBKQh6fySwUPuoXpiftOJjTn/9dbnn
+	 9DxZxpZUC+lt8tUpxdiiilAjBoAsMrIRQSLVu/x7flVLfEGFh+wudNxcaAlHBVq4+xQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793324268;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793324270;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=A1CDe/Vl1eF9+bi4pnuJBCoiuzCOxMXyWkqkbUzGmso=;
-	b=PCOVbwVNZ+0k9PyMB4Xi9be83DwoaaiCEVfN8xL+uABHeFwMpq5kJhKau446/lH4FIP1
-	 P57/xuL9mD7pjBoqCgnn1czwWhSTujglaxGhDKlDXW5W1oPy/wnS/EfAvb/j1cQFAY4R0
-	 zBu74hu6IFRRYc/k89T9f95UVvodTi1DAFa7xLfZr6qmn20zmrnTVD3igrT+z7yZ7wMtP
-	 9BtBXNi27Je4eOr80GiFsrfMcuSAAqs4RaZ1mfQZCIHr+g4AzBZ/9t57llsZVhHLd9EnH
-	 b6J555cEpgT+mMSxEFFMgwjwHyXbvFkIqFCMWmhGgOmXy3wEFZBKGpcW8YaJxZVB0Yg==
+	bh=9V+1kx9OJDTws/jau8bbDEUhbBaMuAMGwO7L+9KlkPk=;
+	b=VP32a7OxDjWKAj+hb57Wpt6qzApBhyDsI51fLzTiI+n/X6aMsSlcce/vd4LA3MMnyTJg
+	 JoP6b5ktcICu/xWtubBIkL1tqeT6TU46qEPeChlYnoThFWI010iYEcvHeW2yp9WtTgtnC
+	 CNpSaGaYB+buKy29vjSgU4VNfkiHES1yhrfcn7ilWS472dhEbVmGZb/ruonFwYIIQeb8L
+	 ++q4IaRUgEFZiW3An7LXnu7AQ8MHqXVlOdK/jXO6+EHmQpuEx6SCjJ+gOYMhHtk7SD+pe
+	 3n3+rEr41aG1kuxTF8KMol+x3GVrVRP81Lbg9adIokX2fCKCawwtWC+PVS4wDwhnTPQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Uh9pjX3G;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fwhI7Q0x;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656FE606A31A
-	for <mptcp@lists.linux.dev>; Fri, 30 Oct 2026 01:37:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB23606A31A
+	for <mptcp@lists.linux.dev>; Fri, 30 Oct 2026 01:37:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Uh9pjX3G
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCF851F00919;
-	Fri, 30 Oct 2026 01:37:47 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fwhI7Q0x
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D26DD1F000C1;
+	Fri, 30 Oct 2026 01:37:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793324268;
-	bh=A1CDe/Vl1eF9+bi4pnuJBCoiuzCOxMXyWkqkbUzGmso=;
+	s=k20260515; t=1793324269;
+	bh=9V+1kx9OJDTws/jau8bbDEUhbBaMuAMGwO7L+9KlkPk=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=Uh9pjX3GLiq2XWNQW8kLu/s2RJlu+k5fbhwsAJsR5p839XsYEz/+G7jQwRFAObegh
-	 aU+nUHKtSOMkInjeVVKsTIS0kX1GTCaRhpBiJV/vDSPnyb4GRTEm0Q8bxNLsuxoRV7
-	 NTaU/a8/cjcDIlBoqd/mId/dIvWfzEE8yKV1NpoiuO/0lww0Tnx+v+Y79mwwrH0OSo
-	 N9NMYf27D18Gjd//atdiryp8zIayPkoSCrOB325YsF0gMUDtB6xepKLRGmqy+OCiYI
-	 /o54MJvFpKhIg5C4ff+6qfTZ2a1o4hYpnlD8VAfttvNfO7QjJcOYth8HfV0EDLEZ/u
-	 9+wqFM9Rt4kMw==
-Subject: Re: [PATCH mptcp-next v5 2/4] mptcp: sched: penalise a slow subflow
- by halving its cwnd
+	b=fwhI7Q0xo6vNBvnwQftycHOOIjyvcJMO4WPbm+OPnEUflp3QKc4+lRoWhCUX+KPRS
+	 wj6paFVa09W8jB0xVSDfqI0D/o/jhVobmLtusyyq4NRRVh5iPzREUqegpfPyX9n3YR
+	 l33DjTueU8EbTcLc+idkg3DCMFy4xhYJPh0mXXOKg1BuNcQvdR1TBHr/q5JPCeBDFH
+	 F45UOBuO6ST8+p/SC9KnpIcuofzx3N9FCNsHfR9yia0RSc+AKyaBFQMwOPdJaFKWhE
+	 mGhM+85t2b7g74DWaP9Y8YrmVSccNSvVKrQecXvvGvb24QoW156YSlkmgaZ3ZWMc3p
+	 e83pDrUC9YCZA==
+Subject: Re: [PATCH mptcp-next v5 3/4] mptcp: sched: do not penalise when
+ receive-window-limited
 From: netdev-bot+sashiko@kernel.org
 To: shardul.b@mpiricsoftware.com
 Cc: mptcp@lists.linux.dev, matttbe@kernel.org, janak@mpiric.us,
  kalpan.jani@mpiricsoftware.com, shardulsb08@gmail.com, w453y.me@gmail.com,
  kuba@kernel.org
-Date: Fri, 30 Oct 2026 01:37:47 +0000
-Message-ID: <179332426731.3132.5154849254860151673@kernel.org>
+Date: Fri, 30 Oct 2026 01:37:48 +0000
+Message-ID: <179332426836.3132.10907231021496841665@kernel.org>
 In-Reply-To:
- <20261028-mptcp_penalise_send_v2-v5-2-32fb379ce117@mpiricsoftware.com>
+ <20261028-mptcp_penalise_send_v2-v5-3-32fb379ce117@mpiricsoftware.com>
 References:
- <20261028-mptcp_penalise_send_v2-v5-2-32fb379ce117@mpiricsoftware.com>
-X-sashiko-severity: High
+ <20261028-mptcp_penalise_send_v2-v5-3-32fb379ce117@mpiricsoftware.com>
+X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -66,10 +66,10 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 3 potential
+Thank you for your contribution! Sashiko AI review found 2 potential
 issue(s) to consider.
 
-Critical: 0 · High: 1 · Medium: 0 · Low: 2
+Critical: 0 · High: 0 · Medium: 1 · Low: 1
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -77,158 +77,135 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [High] The penalty feeds itself and drives a slow subflow's cwnd down
-  to a near-floor value.
-- [Low] The commit message has a 'Co-developed-by: Matthieu Baerts (NGI0)
-  <matttbe@kernel.org>' trailer, but no Signed-off-by from Matthieu…
-- [Low] mptcp_penalise_throttle_ok() (net/mptcp/protocol.c:1637-1643)
-  enforces 'not penalised in the last RTT' by comparing jiffy…
+- [Medium] The new gate does not test for receive-window limitation, even
+  though its comment and the commit message say it does.
+- [Low] mptcp_snd_wnd_test() is evaluated only when
+  mptcp_subflow_get_send() sets subflow->penalise (line 1761).
 
 --
 
-mptcp: sched: penalise a slow subflow by halving its cwnd
+mptcp: sched: do not penalise when receive-window-limited
 
-With this commit, the default MPTCP packet scheduler flags the subflow it
-picks when that subflow's avg_pacing_rate is below half that of the
-fastest non-backup subflow, and that fastest subflow is cwnd-limited.
-The flagged subflow then gets its cwnd (and possibly its ssthresh) halved
-in __subflow_push_pending(), under its own socket lock. This happens at
-most once per RTT, and cwnd never goes below MPTCP_PENALISE_MIN_CWND.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/345
-Link: https://github.com/multipath-tcp/mptcp/blob/825b62d597b5/net/mptcp/mptcp_sched.c#L300-L330
-
-> Co-developed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
-
-[Severity: Low]
-This isn't a bug, but shouldn't the Co-developed-by tag be followed by a
-Signed-off-by from Matthieu Baerts?
-
-Documentation/process/submitting-patches.rst says every Co-developed-by:
-must be immediately followed by a Signed-off-by: from the same co-author.
-checkpatch.pl warns about this.
-
-The later commits "mptcp: sched: do not penalise when
-receive-window-limited" and "mptcp: sched: add penalise counters and
-tracepoint" have the same trailer layout.
+This patch adds mptcp_snd_wnd_test(), which compares msk->write_seq with
+mptcp_wnd_end(). It uses the result to gate the cwnd penalty flag set in
+mptcp_subflow_get_send(). The goal is to skip halving a slow subflow's cwnd
+when the receiver's advertised window, not cwnd, is the bottleneck.
 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 886f00ee2a4d4..395f9582ece89 100644
+> index 395f9582ece89..5eef96fa4f3e0 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -1624,6 +1624,45 @@ bool mptcp_subflow_active(struct mptcp_subflow_context *subflow)
-
-[ ... ]
-
-> +/* Rate-limit the penalty to at most once per subflow RTT, so the congestion
-> + * control can grow the window back between reductions.
+> @@ -1642,6 +1642,14 @@ static bool mptcp_penalise_throttle_ok(struct mptcp_subflow_context *subflow)
+>  	return tcp_jiffies32 - subflow->last_penalise >= max_t(u32, rtt, 1);
+>  }
+>  
+> +/* Like tcp_snd_wnd_test() but without an skb: true while queued data still fits
+> + * the send window, i.e. not receive-window-limited.
 > + */
-> +static bool mptcp_penalise_throttle_ok(struct mptcp_subflow_context *subflow)
+> +static bool mptcp_snd_wnd_test(const struct mptcp_sock *msk)
 > +{
-> +	struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-> +	u32 rtt = usecs_to_jiffies(READ_ONCE(tcp_sk(ssk)->srtt_us) >> 3);
-> +
-> +	return tcp_jiffies32 - subflow->last_penalise >= max_t(u32, rtt, 1);
-
-[Severity: Low]
-Is the once-per-RTT limit actually enforced when srtt is shorter than one
-jiffy?
-
-In that case rtt is 0 and the threshold becomes 1. A difference of one
-jiffy only means a tick boundary was crossed. A penalty late in jiffy N,
-followed by another pick of the same subflow early in jiffy N+1, would
-pass this check microseconds later with no ACK in between. That would
-quarter cwnd within a single RTT.
-
-This can happen on sub-millisecond paths at HZ=1000, below 4ms at HZ=250,
-or below 10ms at HZ=100. __mptcp_push_pending() calls the scheduler on
-every loop iteration, so picking the same subflow twice in a row is
-normal. For larger RTTs, the real gap can still be up to one jiffy
-shorter than srtt.
-
-Would a microsecond clock, such as tp->tcp_mstamp compared with
-srtt_us >> 3, match the documented limit better?
-
+> +	return !after64(msk->write_seq, mptcp_wnd_end(msk));
 > +}
-> +
-> +/* Halve cwnd, and ssthresh when cwnd is at or above it, under the subflow
-> + * socket lock: the scheduler only marks a candidate, the conditions on this
-> + * subflow are evaluated here, on current state.
-> + */
-> +static void mptcp_penalise_cwnd(struct sock *ssk)
-> +{
-> +	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-> +	struct tcp_sock *tp = tcp_sk(ssk);
-> +	u32 cwnd = tcp_snd_cwnd(tp);
-> +
-> +	subflow->penalise = false;
-> +	if (cwnd <= MPTCP_PENALISE_MIN_CWND ||
-> +	    inet_csk(ssk)->icsk_ca_state != TCP_CA_Open ||
-> +	    !mptcp_penalise_throttle_ok(subflow))
-> +		return;
-> +	subflow->last_penalise = tcp_jiffies32;
-> +	tcp_snd_cwnd_set(tp, max_t(u32, cwnd >> 1, MPTCP_PENALISE_MIN_CWND));
-> +	if (cwnd >= tp->snd_ssthresh)
-> +		tp->snd_ssthresh = max_t(u32, tp->snd_ssthresh >> 1, 2);
 
-[Severity: High]
-Can the congestion control really grow the window back between
-reductions, as the comment above mptcp_penalise_throttle_ok() says?
+[Severity: Medium]
+Does this predicate actually detect a receive-window-limited connection?
 
-Once ssthresh has also been halved, the subflow is in congestion
-avoidance. There, Reno grows by about one segment per RTT in
-tcp_cong_avoid_ai(). CUBIC limits growth to about cwnd/2 per RTT:
+tcp_snd_wnd_test() only checks whether the first segment of the head skb
+fits the window:
 
-net/ipv4/tcp_cubic.c:bictcp_update() {
-    ...
-	ca->cnt = max(ca->cnt, 2U);
-    ...
+net/ipv4/tcp_output.c:tcp_snd_wnd_test() {
+	u32 end_seq = TCP_SKB_CB(skb)->end_seq;
+
+	if (skb->len > cur_mss)
+		end_seq = TCP_SKB_CB(skb)->seq + cur_mss;
+
+	return !after(end_seq, tcp_wnd_end(tp));
 }
 
-Halving every RTT outpaces both. It looks like cwnd would ratchet down
-towards MPTCP_PENALISE_MIN_CWND (3 -> 2, regrow to 3, halve again). In
-slow start, doubling per RTT against halving per RTT gives roughly zero
-net growth.
+mptcp_snd_wnd_test() instead compares the tail of the whole application
+backlog (write_seq) with wnd_end. Is the "Like tcp_snd_wnd_test()" comment
+accurate, then?
 
-The trigger also seems to feed itself. avg_pacing_rate is built from
-sk_pacing_rate, which tcp_update_pacing_rate() computes from:
+mptcp_subflow_get_send() already checks the send point:
 
-	rate *= max(tcp_snd_cwnd(tp), tp->packets_out);
+	burst = min(MPTCP_SEND_BURST_SIZE, mptcp_wnd_end(msk) - msk->snd_nxt);
 
-divided by srtt. Each halving lowers the subflow's rate, so this check in
-mptcp_subflow_get_send() passes by a wider margin each time:
+When burst is 0, penalise is already cleared. So the new term only makes a
+difference when snd_nxt < wnd_end < write_seq. In that state the window
+still has room and fast_limited says the fastest subflow is cwnd-limited.
+Isn't that the case the previous patch was meant to handle?
 
-	penal_cand = fastest && ssk != fastest &&
-		     subflow->avg_pacing_rate < max_pace / MPTCP_PENALISE_RATE_RATIO;
+The commit message says:
 
-Nothing here tells a slow path apart from a subflow that just has a small
-cwnd.
+    If the application has queued
+    past the window edge the receive window is the binding constraint, so skip
+    the penalty.
 
-For example, take a newly joined MP_JOIN subflow B on a path as good as
-A. B starts with cwnd 10 and sk_wmem_queued == 0, so linger_time is 0
-and the scheduler picks it. If A has a cwnd of around 100 and is
-cwnd-limited, B becomes a candidate.
+Does this hold for bulk senders? mptcp_sendmsg() advances write_seq by the
+whole copied amount before it pushes anything:
 
-B is in TCP_CA_Open, its cwnd of 10 is above 2, and last_penalise == 0
-passes the throttle. So B's cwnd is halved before B has sent any data:
+	WRITE_ONCE(msk->write_seq, msk->write_seq + psize);
 
-mptcp_subflow_get_send()
-    subflow->penalise = burst && fast_limited;
-__subflow_push_pending()
-    mptcp_penalise_cwnd()
-        tcp_snd_cwnd_set()    /* cwnd 10 -> 5 */
+The copy is limited by mptcp_send_limit(), not by the peer window:
 
-This would repeat every srtt, so B could not ramp up while A stays
-saturated. Would this keep slower or newly added subflows at a tiny cwnd
-and defeat bandwidth aggregation for bulk transfers with the default
-scheduler?
+	if (sk->sk_wmem_queued >= READ_ONCE(sk->sk_sndbuf))
+		return 0;
 
-The later patches in this series don't seem to change this behaviour.
+notsent_lowat defaults to UINT_MAX, so it does not add a limit either.
 
-> +}
+Take an 8 MiB SO_SNDBUF, a 1 MiB rwnd and 64 KiB in flight on a
+cwnd-limited fastest subflow. write_seq ends up past wnd_end, so the
+penalty never fires, even though the receive window is not the limit.
+
+The msk sk_sndbuf is tcp_wmem[0] plus the sum of the subflow sndbufs. Would
+this switch off the penalty for most bulk transfers? If so, the predicate
+probably needs to change, not just the comment.
 
 [ ... ]
+
+> @@ -1750,7 +1758,7 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+>  	burst = min(MPTCP_SEND_BURST_SIZE, mptcp_wnd_end(msk) - msk->snd_nxt);
+>  	wmem = READ_ONCE(ssk->sk_wmem_queued);
+>  	/* the conditions on this subflow are re-checked on apply, under its lock */
+> -	subflow->penalise = burst && fast_limited;
+> +	subflow->penalise = burst && fast_limited && mptcp_snd_wnd_test(msk);
+
+[Severity: Low]
+The window test is only evaluated here, and its result is cached in
+subflow->penalise. __subflow_push_pending() later uses the flag through
+mptcp_penalise_cwnd(). That function re-checks only subflow-local
+conditions:
+
+	subflow->penalise = false;
+	if (cwnd <= MPTCP_PENALISE_MIN_CWND ||
+	    inet_csk(ssk)->icsk_ca_state != TCP_CA_Open ||
+	    !mptcp_penalise_throttle_ok(subflow))
+		return;
+
+Can a flag set while write_seq <= wnd_end be applied after write_seq has
+moved past wnd_end? One possible sequence:
+
+__mptcp_subflow_push_pending()
+   mptcp_subflow_delegate(subflow, MPTCP_DELEGATE_SEND)
+
+mptcp_sendmsg()
+   advances write_seq past wnd_end
+
+__mptcp_push_pending()->mptcp_sched_get_send()
+	mptcp_for_each_subflow(msk, subflow) {
+		if (READ_ONCE(subflow->scheduled))
+			return 0;
+	}
+
+mptcp_subflow_process_delegated()->__mptcp_subflow_push_pending() can
+also reach the same path.
+
+This looks consistent with the previous patch's design. There, msk-level
+inputs such as burst and fast_limited are snapshotted at scheduling time,
+and only subflow-local conditions are re-checked on apply. The worst case
+seems to be one extra cwnd halving, limited to once per RTT.
+
+Is it intended that the new window condition can go stale in the same way?
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261028-mptcp_penalise_send_v2-v5-0-32fb379ce117%40mpiricsoftware.com
