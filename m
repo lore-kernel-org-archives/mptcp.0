@@ -1,94 +1,61 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.53
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793323055;
-	b=lLYXDt1jbE/UUk+xKKJFItCpdZZb+I90G1GaFVqeiA85ECPZ1u9YXE5TnWmZJXP8Fv6+
-	 qyY31iS7FuBjgXNDLuA5kB3D5uSZu4o4pvEXY/6eUq3aFuFpAOfK6VcrFZp1QptKblVW5
-	 4afVTgyDbC755nJNN86n4G04mldNsyvhOO5RP6m+ui+xmf9h+MXEzEoFxUaTuSNk2t8vt
-	 5AuIPhwW2etvVwp/V8ElzyKqAy8gdVjeFXkG0padTzdmQ8Ha0WNT+HIrW2Ro0Qtsvpbnd
-	 y3lTMilHUe+YDO+xGytjaQUVbBDDwsxl1W4xCTGxM8Ky2qAkNdv2xYX6E0z8LbQDwKw==
+	t=1793324268;
+	b=I5tac5d7870xWfbke7j5jNy2D0u8VYWeWjtcUysWT7ax8Gv3QDa5p9Cs1Q00U4Qc+Og8
+	 FEpWeThFWSenA94EXU9rwsLy4XEtCegKPK8veDST9Z+IIBaq1Z2JU0eAqLjZ+Q52up3or
+	 ApJ82Tu+A6rXZOF8Z3YSZC1oPa4X1PERPJTM0SDIgRLn42FNJpWRYagfRm1PaNi5RqVMM
+	 hz/kKFYOHg0HDAfXbIyZXHatDe/5c91HqnpMg0eSMcRjqFDiyJ4xh7FxDHajZ9QgEP9k+
+	 45GrWiTcW3997oZXuTUawIH96yO3lc72SkTB0DyS5Kw81wws4Q4vJ0JcXBIRs0xC+kg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793323055;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
-	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
-	 Date:MIME-Version:Content-Type;
-	bh=hFz8yYBnd0DTkYl/OJ3UkKzxVYF1ezdcNQyukkEEqRQ=;
-	b=NeNRdhmkl4nUIF5NMnZ7TPYcuQYAGhrnxWnuy+PE+dJeOTPvFHgqGgNGMy4JFBlLNvOw
-	 Wf6BHZuuuznwqdLpTC85NCoJEfOkWKsZRAYdut+aByTSYtxSJ8wowpIfBZc55jQOM7Fe2
-	 TJw2dwhfb96i8lvuqUqvz2Q9XH/D2z7lKWYuNcZO/t6VyBR/hkPiHoeerOGQUVkCGFY7d
-	 uk0655YNJpsmjdeNhqypXTeesg54T0sMpPrE2ixxvi1rYqOpBWV1VAthmDqFEK+VMDNrc
-	 WkotkQBOdOTdi9cy9mAgTbLm8jpD8uXQ2XYYMnvaLV03Iep+XExMS6IiNTOoEUJ8v4w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793324268;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=9vnq8f4TI//I+l5dvZR0UGr7LdO7s9eGZCCWOaZhDdQ=;
+	b=XILJiWcRD9JRJzH3A07TMWkHj4u6gYzJ3pgaFR6Ss+cQQR0cjhxECmwnNrl2I5OCYKFh
+	 lLuL9qFU16VzMNT+i6NQZj0wJzzyuUeaBAzpMTFzOLv9N7AIXgO9R+Gs0JuQlKdGAmklQ
+	 UZ2jy4Sf0gW1PjcLiNuAag//mgDakVjlgfFGbuxGztqHIK/4iK6m8zzyYsWmayAj8H45C
+	 sscdmqZYavmEAmpJhzehlmCcMXyryw4vtSVIufWd4hzX65KZFSWh57sjHmOLI8FoynmNI
+	 cH87lcBrsvCCuKnAM2zS0Dk7baUVX1Gm6jowyPWuysS7iofjSHq/UbgdTd6cM2RMaXQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Dg0zBd5H;
-	arc=none smtp.remote-ip=74.125.82.53
-Received: from mail-dl1-f53.google.com (mail-dl1-f53.google.com [74.125.82.53])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=al0UWonc;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416D7606A31D
-	for <mptcp@lists.linux.dev>; Fri, 30 Oct 2026 01:17:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 416D7606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1FD606A31A
+	for <mptcp@lists.linux.dev>; Fri, 30 Oct 2026 01:37:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Dg0zBd5H
-Received: by mail-dl1-f53.google.com with SMTP id a92af1059eb24-181516de561so189499c88.1
-        for <mptcp@lists.linux.dev>; Thu, 29 Oct 2026 18:17:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793323054; x=1793927854; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=hFz8yYBnd0DTkYl/OJ3UkKzxVYF1ezdcNQyukkEEqRQ=;
-        b=Dg0zBd5HXyo17hONlZTkWuqF6lh7cGyxz9v31vfDTnCbX8k6UP7KSOFxQ8n71wDbJI
-         I6Hoj4D/MsZJuJe3YAOccmN3Jwh6h/E7RNJg0TMfvf93xTc1dOcBz/lPb4H8lQXxjVEf
-         KdHiFtG/ZA1XbAhqLEkjgESNjyQcgVCs5e9K39DQixyOoFTERvHJ7CNEGlEUq1nsdNXo
-         MbYYp23Zst92xZWen/4Vfq5Utt1ozCliPQXpo1RC4Qdu9Qsw822lcNc6yRZU6mZteeaR
-         QOyDaFyRkQlcZI1EyDPrks7YmZzSBHswE2VxB680eZam5gmONsagoOIMj0OIx/yjpuDL
-         ZgjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793323054; x=1793927854;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=hFz8yYBnd0DTkYl/OJ3UkKzxVYF1ezdcNQyukkEEqRQ=;
-        b=C+CTS94PU8s7nINTwza1kccK++pQIwzM94PmLFIwxczwzfrxODHsgOth6njWDDwEQn
-         dvj6/7TRA4+ComkRMzl/CKl5gnYv80P+ZcI0WtSp6Qriwxf5YAppokWoMgmm6iLws+yO
-         2tcdU8d81dvYXAgHuSC9Cyt1CBLmUvjdAzqyMtwd3mwjuTjZF2NMYIzr9yaoJuPCITfN
-         copXILszPEDquIWZwaTb1ptm+K+am0fZDmkM/A3CwHjPV5nWEFbhNUun5iW8hJdtOF3Q
-         Bx871x6huX3Ihh9pr2MqmAqgMrmLhEnVkD3OEGu+BYc952SzT3MnpqjNSY+/w8FFAajz
-         0TRw==
-X-Gm-Message-State: AFq9FYLPH6K9ekswADjoDsI9D7r0404ISoc21UfPZ2vMamzHzzVGSbaJ
-	MpGBtQo5+QYJgELg6pTJ5PlAnlyli+evLVVyut8wth7LYck0XZ3Lpdg=
-X-Gm-Gg: AYBFou3Mx7kl4SiQtUwHyr509Xhf4R+nfFXX1YYPgA9sW07FKi7JplIo57PJa6yduDI
-	FuM8IUU8OpIY2QSu5qniofnJIxUaGVCpPRbTLnzheUb/yVtmIvvCj8GKQbHVvcX/4Hv4mU4ms7n
-	grUnRxc2VO9l/KQFa3ESo3TuEeCq1r/9slUTXlJEzFCU30lGZnhGBxGJ4ovuWIbLZwCe3wOab5b
-	CvpBYQ5mTh55G69lG7hgXRUkEUVG3Wpt4aX3MNZG9YgaBKdnLfJGxUZcoa3/ph0w0s5JY+1PM3u
-	euPK5ttRP8KcQHCbDXw6/YT/qWgNJRChUPuD0/Z5pImu1lQGY7hi/o0CZnu9/V9WcXqlHOsvw/T
-	4qikXtgkyNPOqpSFSQxEgK3b4wqREZ/jVrtQVzwI5Gx087WC+I1rNDiAsmCjG1ZuSSpoRkuQ6hI
-	OzHK4plSKQNnz6lTE2UpUJ64G0uxJKTAsCnneKHo3MWo12CS/e93909Vt1YMKg6DCus488b409q
-	VcAph09Wh+SGsXd2fonDekUoJaGARsvimn7ujixcT24uGYhZpp06EbkfSpOLFSK8GpR6WC2G2oI
-	Zzx74tRtKtnAxzG9xBxjBk2YBrw9IIaVQsD3Pnxa
-X-Received: by 2002:a05:7023:a5b:20b0:14e:61bb:ec3d with SMTP id a92af1059eb24-1ac5b3fe092mr921645c88.16.1793323053971;
-        Thu, 29 Oct 2026 18:17:33 -0700 (PDT)
-Received: from github.com ([13.71.229.241])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1ac1b0a628bsm2129277c88.22.2026.10.29.18.17.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Oct 2026 18:17:33 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20261030-mptcp-reset-mpj-early-v2-0-90f119392263@kernel.org>
-References: <20261030-mptcp-reset-mpj-early-v2-0-90f119392263@kernel.org>
-Subject: Re: [PATCH mptcp-next v2 0/5] mptcp: reset fully_estab after
- fallback & reject MPJ earlier
-Message-ID: <0b111e41-fc66-3305-dad0-52aa309eef0d@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 01:17:32 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=al0UWonc
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA5B71F000C1;
+	Fri, 30 Oct 2026 01:37:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793324267;
+	bh=9vnq8f4TI//I+l5dvZR0UGr7LdO7s9eGZCCWOaZhDdQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=al0UWonc++21bu4sI1Sbyj2oJBqLg6vWdN7Dtim+8AeuGOj7e/9SsfAdJIpQCFfgj
+	 pHcdKUe5iCxeUouzJE8Pd4QOiPop8rNQlyXMs3L6y+EM0vIWgjRRM80BLt0AWjPv/f
+	 lPyxcniy8XvtCAqtVFabcx0qJ2hE/mLsq4ZTi1GQruh0oRVO8oaBOgznJhMszDb0IR
+	 Rmwciwfvoyvb34W7bIKXDUwqPDhPpqlTea3Nl7Cge32QMsgAaVl+tn1nNhJHum+34g
+	 o20YXajenr0XXVlYKLp/oBvVhMEAW+KnD5DRprCLg5sJNPOz2hPkZ7o1FjX6uYhB21
+	 GDNW4zLPkmPxA==
+Subject: Re: [PATCH mptcp-next v5 1/4] mptcp: sched: avoid truncating the
+ pacing rate in the scheduler
+From: netdev-bot+sashiko@kernel.org
+To: shardul.b@mpiricsoftware.com
+Cc: mptcp@lists.linux.dev, matttbe@kernel.org, janak@mpiric.us,
+ kalpan.jani@mpiricsoftware.com, shardulsb08@gmail.com, w453y.me@gmail.com,
+ kuba@kernel.org
+Date: Fri, 30 Oct 2026 01:37:46 +0000
+Message-ID: <179332426628.3132.5889522664662315602@kernel.org>
+In-Reply-To:
+ <20261028-mptcp_penalise_send_v2-v5-1-32fb379ce117@mpiricsoftware.com>
+References:
+ <20261028-mptcp_penalise_send_v2-v5-1-32fb379ce117@mpiricsoftware.com>
+X-sashiko-severity: Medium
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -98,58 +65,192 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 
-Hi Matthieu,
+Thank you for your contribution! Sashiko AI review found 3 potential
+issue(s) to consider.
 
-Thank you for your modifications, that's great!
+Critical: 0 · High: 0 · Medium: 1 · Low: 2
 
-Our CI did some validations and here is its report:
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Perf: Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_n=
-et-next/actions/runs/40975021307
+- [Medium] On 64-bit kernels, keeping the full-width pace makes
+  linger_time zero for every possible queue size when the pacing rate is…
+- [Low] The patch fixes the default scheduler mptcp_subflow_get_send()
+  (net/mptcp/protocol.c) but not its BPF port, bpf_burst_get_send() in…
+- [Low] TRACE_EVENT(mptcp_subflow_get_send) in
+  include/trace/events/mptcp.h fires on every loop iteration of…
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/78ffe8cb00=
-da
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1196695
+--
 
+mptcp: sched: avoid truncating the pacing rate in the scheduler
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+This commit changes the local pace variable in mptcp_subflow_get_send()
+from u32 to unsigned long, and computes the linger time with div64_u64().
+It also computes the running avg_pacing_rate average with
+mul_u64_u64_div_u64(), so the rate * bytes products no longer wrap.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 02a4f479d9d8c..886f00ee2a4d4 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1633,7 +1633,8 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+>  	struct subflow_send_info send_info[SSK_MODE_MAX];
+>  	struct mptcp_subflow_context *subflow;
+>  	struct sock *sk = (struct sock *)msk;
+> -	u32 pace, burst, wmem;
+> +	unsigned long pace;
+> +	u32 burst, wmem;
 
-For more details:
+[Severity: Low]
+Should the mptcp_subflow_get_send tracepoint get the same change?
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+trace_mptcp_subflow_get_send() runs for every subflow in this loop.
+However, TRACE_EVENT(mptcp_subflow_get_send) in
+include/trace/events/mptcp.h still stores the rate in a u32 and computes
+the ratio with the old formula:
 
+include/trace/events/mptcp.h:
+		__field(u32, pace)
+	...
+			__entry->pace = READ_ONCE(ssk->sk_pacing_rate);
+	...
+		if (ssk && sk_fullsock(ssk) && __entry->pace)
+			__entry->ratio = div_u64((u64)ssk->sk_wmem_queued << 32, __entry->pace);
+	...
+	TP_printk("active=%d free=%d snd_wnd=%u pace=%u backup=%u ratio=%llu",
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Take a 64-bit kernel with a subflow above 4 GB/s. The trace records a
+wrapped pace and a ratio that is too large, while the scheduler now uses
+the full-width rate. A fast subflow can look slow in the trace. If the low
+32 bits of the rate are zero, the trace shows pace=0 ratio=0.
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+A later patch in this series, "mptcp: sched: add penalise counters and
+tracepoint", adds a mptcp_subflow_penalise event with u64 pace fields.
+The mptcp_subflow_get_send event still has the u32 field at the end of
+the series. The event also reports sk_pacing_rate rather than
+avg_pacing_rate, but that predates this patch.
+
+>  	int i, nr_active = 0;
+>  	struct sock *ssk;
+>  	u64 linger_time;
+> @@ -1664,7 +1665,7 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+>  				continue;
+>  		}
+>  
+> -		linger_time = div_u64((u64)READ_ONCE(ssk->sk_wmem_queued) << 32, pace);
+> +		linger_time = div64_u64((u64)READ_ONCE(ssk->sk_wmem_queued) << 32, pace);
+>  		if (linger_time < send_info[backup].linger_time) {
+>  			send_info[backup].ssk = ssk;
+>  			send_info[backup].linger_time = linger_time;
+
+[Severity: Medium]
+On 64-bit kernels, what happens here when the pacing rate is effectively
+unlimited?
+
+Sockets start with an unlimited rate:
+
+net/core/sock.c:sock_init_data_uid() {
+    ...
+	sk->sk_pacing_rate = ~0UL;
+    ...
+}
+
+TCP only replaces this value in tcp_update_pacing_rate(), which is
+skipped when the congestion control provides cong_control:
+
+net/ipv4/tcp_input.c:tcp_cong_control() {
+    ...
+	if (icsk->icsk_ca_ops->cong_control) {
+		icsk->icsk_ca_ops->cong_control(sk, ack, flag, rs);
+		return;
+	}
+    ...
+}
+
+tcp_rcv_state_process() also skips the update in this case. In-tree BBR
+and ROCCET set sk_pacing_rate themselves. A BPF struct_ops congestion
+control that implements cong_control but never writes sk_pacing_rate
+leaves it at ULONG_MAX. avg_pacing_rate starts from that value, and the
+new mul_u64_u64_div_u64() average keeps it within one or two of
+ULONG_MAX.
+
+sk_wmem_queued is an int, so (u64)sk_wmem_queued << 32 is below 2^63.
+Dividing that by a pace near ULONG_MAX gives a linger_time of 0 for every
+queue size. Because the comparison above is strict, the first subflow in
+conn_list always wins the tie, even when its queue is full.
+
+If that subflow is not writable, the check further down returns NULL
+without looking at the other, empty subflow:
+
+	ssk = send_info[SSK_MODE_ACTIVE].ssk;
+	if (!ssk || !sk_stream_memory_free(ssk))
+		return NULL;
+
+mptcp_sched_default_get_send() turns the NULL into -EINVAL, and the push
+stops until the first subflow drains. When both subflows are writable,
+the first one still always wins, so traffic stays on a single path.
+
+Before this patch, pace was truncated to at most U32_MAX. That made
+(wmem << 32) / pace at least wmem, so a nonempty queue always got a
+positive linger_time.
+
+With this configuration, can a full subflow now be chosen over an empty
+subflow that is writable?
+
+> @@ -1697,9 +1698,12 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+>  		return ssk;
+>  
+>  	subflow = mptcp_subflow_ctx(ssk);
+> -	subflow->avg_pacing_rate = div_u64((u64)subflow->avg_pacing_rate * wmem +
+> -					   READ_ONCE(ssk->sk_pacing_rate) * burst,
+> -					   burst + wmem);
+> +	/* 64-bit arithmetic overflows at high rate with a large queue */
+> +	subflow->avg_pacing_rate =
+> +		mul_u64_u64_div_u64(subflow->avg_pacing_rate, wmem,
+> +				    burst + wmem) +
+> +		mul_u64_u64_div_u64(READ_ONCE(ssk->sk_pacing_rate), burst,
+> +				    burst + wmem);
+>  	msk->snd_burst = burst;
+>  	return ssk;
+>  }
+
+[Severity: Low]
+Does the BPF port of this scheduler need the same fix?
+
+bpf_burst_get_send() in tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
+copies mptcp_subflow_get_send(), but it still has the code this patch
+removes:
+
+static __always_inline __u64 div_u64(__u64 dividend, __u32 divisor)
+...
+	__u32 pace, burst, wmem;
+	...
+		pace = subflow->avg_pacing_rate;
+	...
+		linger_time = div_u64((__u64)ssk->sk_wmem_queued << 32, pace);
+	...
+	subflow->avg_pacing_rate = div_u64((__u64)subflow->avg_pacing_rate * wmem +
+					   ssk->sk_pacing_rate * burst,
+					   burst + wmem);
+
+In this port:
+
+  - pace still truncates avg_pacing_rate to 32 bits.
+  - The local div_u64() helper only takes a 32-bit divisor.
+  - avg_pacing_rate * wmem can still wrap.
+
+If a nonzero avg_pacing_rate has zero low 32 bits, the !pace check also
+resets the average from sk_pacing_rate. If that value also truncates to
+0, the subflow is skipped.
+
+test_burst() in tools/testing/selftests/bpf/prog_tests/mptcp.c loads this
+program through test_bpf_sched(). No patch in this series touches
+tools/testing/selftests/bpf/, so after this patch the port no longer
+matches the scheduler it copies.
+
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261028-mptcp_penalise_send_v2-v5-0-32fb379ce117%40mpiricsoftware.com
