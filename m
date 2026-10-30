@@ -1,94 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793369202;
-	b=1DuswjyTgCm3t5xdT20s+vt5qC7uu/fVaWmHUjH14OKL/GeKrcHCEQ9M/3TFzHO1YAwa
-	 qVZv4NBlcMXF4XYL7hRhjmeXC2L8YBmAHlIOzq8kwve62ho+ccm6C08pnEvcrYQAFWMsD
-	 xyU2J2p+CIGof8vR/NuxY6qdSYh9n4yHwgaRu3WFj42LmcB/xy1k/2PSTez5LkmPBg7bk
-	 PzE/6d0rmZUYn4QAbDucTmf9AfZzwGuQZclEN2TxTkkuW2jvHDhdfkDXeGbr50iWGue8d
-	 6A/dmZVjjvp/meAMSBLcXF/1Wxy73+HpLzu0NgkosCJP5Dgs9heMpEvACwKyAfaVGIA==
+	t=1793372556;
+	b=d92VIMB/fR6gN6zbzw6Mxgq3v5MmpxquGq4JM9o9LnAccx8NasfnGod4eXROg2oSOnC9
+	 XF9X6bUEMswRT7otQ44j4BlwVN88citcwh/btyd+ISGcsr+OQvdBusChGnwKjbFS9I1LT
+	 dDRLR3WNnCZVthzEwn7AQe4C+CGguqwMXXmNWFVWm3SyDpvHO1hdoT4OG+ObjHshTSHgq
+	 Pdn/2sSwtH/S4xF+103NolMlFqPIgnWXKuvJNERSFPlGSIioc2S693W9hPS0Uj9soJa1q
+	 56ZVnV/mwPZDNDHnmLQJsENWLl/b6tomkZJBcUCX74PyVhhcjd33LzTBCxDC+dmmekw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793369202;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
-	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
-	 Date:MIME-Version:Content-Type;
-	bh=zS4bi7hgVprdasquTY4ceT+IKsZqYVy/lTxBkStPEeM=;
-	b=cg3x9vwlOYc0C6fI+IWc1MM6bcQ1lOcqUpY4ibhWWjVlo1HO46ZYdWjW1Lc3ELoyjKGG
-	 ECCbyoig432hyn6xyflsyJ0iGS5ktKox463zvqJBzCvgWiCAc2mG5VJeZD5dVjuT8yK0Z
-	 ZojE8zJNtz7LhHAV2R/rFz+L8TcoEcTbNwb+2oLGXMrWGd6AEZT8R0dbdvQuCLewicvK7
-	 vXdy6IRPTi9xLA/bEVDMDxdbk966FtcYGMVZDt0zQG3toIVueyfHdSsOhaU7S7Bmghcp+
-	 SJny7fZmgcQuRvYSRQS6gAx7ZF2vYygTg4iCswbgdCkd5Tom3FDofypIKWv8YgVrVDw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793372556;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=f9ihZf6UqF+2d1Fz4DVdyw0ufLhdjjD5UhKkL6DYQ14=;
+	b=v9K4r4+o4kGMzcLZRa/PI1he8Jyx1Osq2tM7gxl159JPdBHSxUH7nhi/KdLKf7D7j368
+	 H0oNmVqoRLVFG6SSMqTIld7Pg7+0A8WDhsf2o8oEZhXKlMz6kMYmAohrOuDjJ6/YPYy5+
+	 TlmcrJF0oJlo6ZniLguuWztNzBCLdfYaRJXtmdQAwhkMSmw4W+pFZRfKXBAcPznBxZcuP
+	 vPSu//KGbD8piNwU+RGdkCP3dil/qa1efU0qURteclNpoelpeFUP2Fze3E/ZtdbZ+GH2f
+	 sESrrsJAGJk7R2cMDIe9A1DYi5OdoM+SYEH/GRWpVU8/Xoo1SExjoBQd0UhU+TllcnQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=u1wlhb0i;
-	arc=none smtp.remote-ip=209.85.160.169
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gJgdTTh7;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F7F0606A336
-	for <mptcp@lists.linux.dev>; Fri, 30 Oct 2026 14:06:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1F7F0606A336
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83920606A32D;
+	Fri, 30 Oct 2026 15:02:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=u1wlhb0i
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-53397554beaso9375681cf.3
-        for <mptcp@lists.linux.dev>; Fri, 30 Oct 2026 07:06:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793369201; x=1793974001; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=zS4bi7hgVprdasquTY4ceT+IKsZqYVy/lTxBkStPEeM=;
-        b=u1wlhb0izIE7IdeSvMjpG0tniKo1DDcPESU/osaRo68d/OOB5DvnYvY4YnQVgJaZmA
-         O1MBdSuu4+W80eR7q1VebvjF5ef8QU2QBP6bb30w1Lp7zBJt7xZoUsF5vIikS63BvRhp
-         Sjk4MBjIurkuhbXY8xS/EL0COaOcJwGpx7VIWxASG6+TZP4ois5bRHYQwN00mmLOTdSP
-         czXexpNX/Wik4UTa+FtR/ePxTzKi2k+2xLhfgeZS3XrhwfzotsF98tqW3RQmSGGAAPBb
-         9Cx4mz7tmj9hdQSQYpF/ExfpeTgKMIH4H+p081776RA9ku7A2qeblOgNZVGfmkwEA/Ik
-         6iig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793369201; x=1793974001;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=zS4bi7hgVprdasquTY4ceT+IKsZqYVy/lTxBkStPEeM=;
-        b=BBKT03M3QdvrRxgg6Zzt9rXB0DmLfMfnt3uAMdA0diuTXy4NOuZe4hc9GXod0v7Cpa
-         fSBKBjJej/O69F40h0epLUcpd1iCzor6qz0PlALvKmNlmhs4VznBX3su/SYIDQejvmeH
-         rnDAyYCaA3+SJodGlNq98AeF9eH2+PfuThSdpQXuatIgDsPuJJvQhXmWU0NptUf8bRVJ
-         C5268O0uaa2bJVUBME/qzExAr9eDIvpjmhf+TSaMvC2SeUvD9PtMpmgbDNYrPfpxacyV
-         M3BisLwN/WVoDJVwMTDytHaLv97l9pgEmtCo/++l9yzdL8RGEsbNMW0N5ZUpU21lrPne
-         aUnw==
-X-Gm-Message-State: AFq9FYK/aLFN4mAoYwfa0tOQw3Qa+FW6g2klo2lFlRr+Jt7PTB8rAoLi
-	ybMbAn/OUzSTYsiWwuN5nuvGhut/IkAHzNYZeVZlY+/l4cucz51hHtWL642x
-X-Gm-Gg: AYBFou03kAnPMWA0VdbG9oQpYo3t5Est+ZldlgS13tKF2KQmqDqv0nC6rzZ+XbdCOZ6
-	EAO3PUOrvU9uaUuScq1bmcs/5FsxUKZAT4UZI6f3aJM6raKwdQVhOrklxUfsqO8a1VMRhdYBssH
-	kE/XIhvv+zWyzqS13VuBN/q1olAEcvclg2I0YhtEBHqSxD6BMAjrL+emnc5htGto3clYvG9Eao7
-	zul12OV79zI1L0ZnB0MOnYfGO9ScCjEZ2vhZeGYUSWsKnMUuGrVwM3YFV/P0w99HqnD3AhtHXWx
-	0P773+B5MxhgfDJK5YND1wIS6kUgAwHIlE32HM35HHRCRNKAHHfvN9biNbpYnfJ5nWl5tfuEHcp
-	y3cF4i8QUuPavzvYhKrK1cDliay2+z9HQ+RTLV1unSPFq4mj77ohTHGZUOJu84/Eujk5sK0A7JD
-	OBerTVwu673+deXe/OEvSzIWR3XoKQJbIOr/AjW5yGP5zLm1XPBNlYgG9K3Nx9QHHNRUPrPJnNH
-	Cd1BmWlBb/epZg+UpeQ/WlXYw6ru2A2x7KARjituE1k6MxcOpdDvPpWBeyPKB3UgUfDNorVoKt6
-	mVYS5T7Nln7+/qZ+AZ/kWCdmJYU8bkj8evgMPHjS+Hg=
-X-Received: by 2002:ac8:6f12:0:b0:52d:3ccc:968b with SMTP id d75a77b69052e-542b405ba15mr35665151cf.9.1793369200775;
-        Fri, 30 Oct 2026 07:06:40 -0700 (PDT)
-Received: from github.com ([172.214.44.228])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-54311f75ff5sm14351841cf.10.2026.10.30.07.06.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Oct 2026 07:06:40 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1793361629.git.tanggeliang@kylinos.cn>
-References: <cover.1793361629.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v19 0/5] Reduce the differences between TCP
- and MPTCP for TLS usage
-Message-ID: <8d68becb-be97-b91b-666e-e65aae77c877@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 14:06:39 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gJgdTTh7
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BE061F00A20;
+	Fri, 30 Oct 2026 15:02:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793372556;
+	bh=f9ihZf6UqF+2d1Fz4DVdyw0ufLhdjjD5UhKkL6DYQ14=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=gJgdTTh7pmXUoTSGljkSP+sJ2OO2Dq/e+TiR2NJ56BmjrofA40JFsd/HQi8zS+BnT
+	 Hn1FshCe+bvumRGfgHVYLDlO9Eek52MIStST+rdACC/7u8rCN2veib1OFQgCUkl2YJ
+	 dVn0c0bj3UD/WBHJEaRY1ohuKdJuj2TQh2Kr95yj/kJCQJvTudRTMdZgWhtatJncJk
+	 SC4SILVQTAnJaSIsJudhcvOm6vzlyQ0+o7nPjAhbfBrG4mdyE2XYke+JDYgUaurFK1
+	 MMFrPRl9v8sj3aQz2L8crLUR7ExurH99LY2pZv3tUcLv6QHL1TVVZFvwyTM57sJKf6
+	 SDZn3e+ZVp+8g==
+Subject:
+ Re: [PATCH net v2] mptcp: protect listener backlog reads in diagnostics
+From: netdev-bot+sashiko@kernel.org
+To: zzzccc427@gmail.com
+Cc: matttbe@kernel.org, martineau@kernel.org, davem@davemloft.net,
+ edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, geliang@kernel.org,
+ horms@kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org, baijiaju1990@gmail.com, jjzuming@gmail.com
+Date: Fri, 30 Oct 2026 15:02:34 +0000
+Message-ID: <179337255481.3134.11373670095456215150@kernel.org>
+In-Reply-To:
+ <pm-mptcp-objects-candidate-0066-v5-4d1b83d62fcde2d57e8d@gmail.com>
+References:
+ <pm-mptcp-objects-candidate-0066-v5-4d1b83d62fcde2d57e8d@gmail.com>
+X-sashiko-severity: High
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -98,61 +66,123 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 
-Hi Geliang,
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue(s) to consider.
 
-Thank you for your modifications, that's great!
+Critical: 0 · High: 1 · Medium: 0 · Low: 0
 
-Our CI did some validations and here is its report:
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
 
-- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): selftest_simult_flows =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Unstable: 3 failed =
-test(s): bpftest_test_progs-cpuv4_mptcp bpftest_test_progs-no_alu32_mptcp =
-bpftest_test_progs_mptcp =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: btf-debug =
-(only bpftest_all): Unstable: 3 failed test(s): bpftest_test_progs-cpuv4_mp=
-tcp bpftest_test_progs-no_alu32_mptcp bpftest_test_progs_mptcp =
-=E2=9A=A0=EF=B8=8F=20
-- Perf: Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/41054949264
+- [High] The patch turns msk->first into an RCU-protected pointer for
+  diag readers, but the code that frees the first subflow still frees it…
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/b0f44e221b7b
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1197128
+--
 
+mptcp: protect listener backlog reads in diagnostics
 
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
+This patch puts the msk->first load and the listener backlog reads in
+mptcp_diag_get_info() under rcu_read_lock(). The goal is to fix a KASAN
+slab-use-after-free that happens when a token dump or
+mptcp_diag_dump_one() races with close() on an MPTCP socket that was
+put back into listen after connect(AF_UNSPEC). The fix depends on
+SOCK_RCU_FREE and the SLAB_TYPESAFE_BY_RCU TCP slab caches to keep the
+first subflow readable.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+> diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
+> index 136c2d05c0ee..28a42eee6651 100644
+> --- a/net/mptcp/mptcp_diag.c
+> +++ b/net/mptcp/mptcp_diag.c
+> @@ -200,8 +200,10 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+>  	r->idiag_wqueue = sk_wmem_alloc_get(sk);
+>  
+>  	if (inet_sk_state_load(sk) == TCP_LISTEN) {
+> -		struct sock *lsk = READ_ONCE(msk->first);
+> +		struct sock *lsk;
+>  
+> +		rcu_read_lock();
+> +		lsk = READ_ONCE(msk->first);
 
-For more details:
+[Severity: High]
+Is rcu_read_lock() here enough by itself? The writer in
+__mptcp_close_ssk() frees the subflow first and only then clears
+msk->first:
 
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+net/mptcp/protocol.c:__mptcp_close_ssk() {
+    ...
+	release_sock(ssk);
 
+	sock_put(ssk);
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+	if (ssk == msk->first)
+		WRITE_ONCE(msk->first, NULL);
+    ...
+}
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+On the path close() -> __mptcp_close() -> __mptcp_destroy_sock() ->
+mptcp_destroy() -> mptcp_destroy_common(), with free_first set, this
+sock_put() drops the last reference. The KASAN trace in the changelog
+shows exactly that. For a SOCK_RCU_FREE listener, sk_destruct() then
+queues call_rcu(__sk_destruct). msk->first is still published until the
+WRITE_ONCE() that follows.
+
+A grace period only covers readers that were already inside a read-side
+section when call_rcu() was called. The closer runs in sleepable process
+context, outside RCU. On a PREEMPT_RCU kernel, could it be preempted
+between sock_put() and WRITE_ONCE() long enough for both the
+__sk_destruct grace period and the later SLAB_TYPESAFE_BY_RCU (or
+SLUB_RCU_DEBUG) grace period to finish?
+
+The reader side has a matching gap. The TCP_LISTEN check above runs
+outside RCU, and both mptcp_diag_dump() and mptcp_diag_dump_one() can
+sleep. A reader could see TCP_LISTEN, get preempted, and enter
+rcu_read_lock() only after those grace periods. It would then load the
+stale msk->first and read sk_ack_backlog and sk_max_ack_backlog from
+freed or reused memory into idiag_rqueue/idiag_wqueue.
+
+Wouldn't that be the same slab-use-after-free shown in the KASAN report?
+
+There also seems to be a second path through mptcp_listen():
+
+	mptcp_set_state(sk, TCP_LISTEN);
+	sock_set_flag(sk, SOCK_RCU_FREE);
+
+	lock_sock(ssk);
+	err = __inet_listen_sk(ssk, backlog);
+
+The msk becomes TCP_LISTEN before the first subflow is hashed. The
+subflow only gets SOCK_RCU_FREE in __inet_hash(), after hashing
+succeeds. If listen fails, the subflow is later freed synchronously
+through __sk_destruct(), and again msk->first is cleared only after
+that.
+
+The changelog says SOCK_RCU_FREE plus the typesafe slab make this read
+safe. Doesn't that hold only if msk->first is unpublished before
+reclamation starts? mptcp_sk_clone_init() already uses that order:
+
+	list_del_init(&subflow->node);
+	WRITE_ONCE(msk->first, NULL);
+	sock_put(ssk);
+
+Would it close the remaining window to clear msk->first in
+__mptcp_close_ssk() before the final sock_put(ssk), and keep the
+rcu_read_lock() added here?
+
+>  		if (lsk) {
+>  			/* override with settings from tcp listener,
+>  			 * so Send-Q will show accept queue.
+> @@ -209,6 +211,7 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+>  			r->idiag_rqueue = READ_ONCE(lsk->sk_ack_backlog);
+>  			r->idiag_wqueue = READ_ONCE(lsk->sk_max_ack_backlog);
+>  		}
+> +		rcu_read_unlock();
+>  	}
+
+[ ... ]
+
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/pm-mptcp-objects-candidate-0066-v5-4d1b83d62fcde2d57e8d%40gmail.com
