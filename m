@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793325138;
-	b=1MGpB9Mg76hr526U6fUYSMEbJxfII0EMKXYjpU8WDGukY3ZWY4OeTkqRicX32RagE6MS
-	 fCRUC3jPMBuPrwK34R9hzlDgU1WygL5b4GGfwsLH96hBennD3uI0zZHKT/oka5Q4oAg7L
-	 afN1i9a+aF5J6FPm8Mm+AuWNSYm0vCMjxCIs53dQt2Ba3oqIEwzu3Zq5eJ0brMfjTvkfA
-	 JcrWIZfEpnBjv871oCwWAisyAwETyWwYXtLJnJJ4ad7C2Vcuzlc7z67k7fRgzxZtuLuAR
-	 YDNF4H8AzNjIIbnZlIq1+ijX/uVJd2ki7pVclddRoFJRgrG2imsYnGkJZRPY45+xjFw==
+	t=1793326379;
+	b=cg5s5ZnBzKpv2Vcc/Ij3ZzvHUPsVWfrVMrTAxcQN1umgz0/NbQ5YrGAaN70NvRcM0DqU
+	 MID8moxiMYNzIHlSEpY1TaYYvVo6l3vfGTy8Znxnc5QmsCnripUdpFLKPKYeeTo+KkBSJ
+	 btxLAVFn0dcQ60Lo8BbaPYZUU47Q/rOZVU5q42m+yGK8YnrMghez/jCuE4pBPCwkDOwq0
+	 8rl9AjNDto3aCX458oYw2Ikmvtk+42rw3gVN+b2gyid1BYLZuRg1h6Ynkonsg9K+EKb19
+	 QnV0gLSOL5AJLzcEZuG0junnB3yHp6JwiYDinKv+/wH7XRDUgOkx0Vekh443zs6UxBA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793325138;
-	h=Received:DKIM-Signature:Message-ID:Subject:From:To:Date:In-Reply-To:
-	 References:Content-Type:User-Agent:MIME-Version:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793326379;
+	h=Received:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
+	 In-Reply-To:References:Content-Type:User-Agent:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=XCRK/t0fqsobSLMsECuVBZ4MAnsbySSHyc4alXR7pyQ=;
-	b=xMATHP2EHVo1OJBaWDKD/poeT8Z4Foq3YrmxhS/tu4dtmpfGkTkGfOsz1UD8fB0UE2jV
-	 vUNI67API2AFa7rqbOyFl2b9mz+VcLkK1e2gdI6AnJJACV6qN87c4whS9gsT/q1usjP3F
-	 y6OGyH2uyarNALLLvA4/wVG7I/lLGuzlHNyRzgJBI9wA3n+rgHk6CcsceVBPWo03rj9Di
-	 I5gyvbYqNdOUTahZh1LsZ1oYOTWFm77BgFZBAZavCn5Drri8HlqBXOOhn59a+AE/Sffq+
-	 bPnJI7CJ0aERHDdp4/ESGrJMqpimcs9lOUZKahOGGrGa4rpZ9BH6tYnpUsSHnd9tzAg==
+	bh=7kjLlkeOPSQM1BlKKSk3ngLytlLkrptPT3QzAzwyUNQ=;
+	b=RFkUjDTuNfV9fgoHeePPYK99vjGrb7wEUANiSsuTMzeVeXfDtbviinEqtqMhnOCgX2Xr
+	 wKuLweNir4GbhZz6hpz1HQOMUz8iWBXMuguIrLHZ0qC1tYbYeZaPMszV1JIEFk8n5m7BB
+	 hoBPFlehFXodxqFsoWiE0rxJnW74iAx1q7QZdWshbrAVbSmAoPzhXr0nENGE+dzaD/5Qq
+	 ZUBoQB/rdzvgGuvBNnxBNiNRYpDzBdIZbrmgU7EtV3x5CxqavNOEpxNOy4ZDhLLpMa3T7
+	 qANmpsR16ypgHx4Rvkoj6sszhqZR3Grv8dNsw1ZkDN+eHfgE0CIRAHCIuEqNLWXbmRg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=owVnkuhV;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IFrgyc5c;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2114F606A31A
-	for <mptcp@lists.linux.dev>; Fri, 30 Oct 2026 01:52:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1877606A31A
+	for <mptcp@lists.linux.dev>; Fri, 30 Oct 2026 02:12:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=owVnkuhV
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 251181F000C1;
-	Fri, 30 Oct 2026 01:52:16 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IFrgyc5c
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 699AB1F000C1;
+	Fri, 30 Oct 2026 02:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793325137;
-	bh=XCRK/t0fqsobSLMsECuVBZ4MAnsbySSHyc4alXR7pyQ=;
-	h=Subject:From:To:Date:In-Reply-To:References;
-	b=owVnkuhV9Ekp1Ll5V6T5sqmal3eO0ErzcLX63tUy2P3amDQ0A/dlQUWlC6aY0Lwqa
-	 jfRv8UQ/2vfCv9Pcdic2lH4IG/pZEoWMAWveYl9WpU663Lw3PtfyEcL17z9TQnnpky
-	 nlf8ly7Iz4PHFvpnIuCM44DUCrzdUsHzdX/yGB1qCMQyU3l6f+aPEE4r+0xJaP076g
-	 5zFfZw+x5cHJG4piELLu1fGYMO4q5QfLuf5C2GiSeFmzbkwyzQt3XlCskxEkxan12J
-	 lr2asdVyBBVBhcOXpd0M0hm+FxYYbni2m/jb6BREYcEoBgEusVf0f7Cu+QT5Ed1qS+
-	 n/orpTSVHOo9A==
-Message-ID: <8fd964e5feefcdd389f8c85ce484ba6dbdaff4bc.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v3] selftests: mptcp: print stats before
- socket closure
+	s=k20260515; t=1793326378;
+	bh=7kjLlkeOPSQM1BlKKSk3ngLytlLkrptPT3QzAzwyUNQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=IFrgyc5cBn5WPhXQzszByMe/lDoNxu1NKIJWbJfDlELlIN6gKqj3CGbSKgFJY25SU
+	 5rL/6hTMqjsxywsVH7/FGqLikCU3TKIxWfyoUr7kp23BXgVBBlwDpcGkUpjwVB8MLp
+	 N4RUaQbB7lfSvf/8j5xs5xd7rI6heVI3n9JMHdGlf35Cd0LK1WPxIMd9xhCg0SxNwB
+	 fa2lKQCGL0VfhfrP3rejbm/0jAnUNXg2KokcmbAPBWywJXP3PR0ttlKBVbHW7oNJEC
+	 TFq+aCMmZvapCn5eeo5McLPAfjRePYIdTvWcuSRyq8seE1IH33+dHO1ODpZPhiFnDZ
+	 oLpn0QAI+JCag==
+Message-ID: <0a3dcc9785f4f067bb051edafd0a780bbe2231b5.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net v3] mptcp: pm: kernel: c-flag: keep
+ local_addr_used in sync
 From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, MPTCP Linux <mptcp@lists.linux.dev>
-Date: Fri, 30 Oct 2026 09:52:14 +0800
-In-Reply-To: <6995e688-db92-4291-a94d-18b03e517a73@kernel.org>
-References: <20260815-sft-mptcp-stats-b4-close-v3-1-ccd9af14cf73@kernel.org>
-	 <24e7da3ea0b33d5dca970449cf615a4c95ecceb8.camel@kernel.org>
-	 <735a6655-b3ac-4352-8a35-0e54ac2c7ffd@kernel.org>
-	 <7ad218abd5b68ac34bc34b607af3bb4c7163f60b.camel@kernel.org>
-	 <6995e688-db92-4291-a94d-18b03e517a73@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, MPTCP Linux
+	 <mptcp@lists.linux.dev>
+Cc: Yiming Qian <yimingqian591@gmail.com>
+Date: Fri, 30 Oct 2026 10:12:54 +0800
+In-Reply-To: <20261029-mptcp-pm-cflag-clear-when-used-v3-1-fa96c11f97b0@kernel.org>
+References: 
+	<20261029-mptcp-pm-cflag-clear-when-used-v3-1-fa96c11f97b0@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.2-10build1 
 X-Mailing-List: mptcp@lists.linux.dev
@@ -67,124 +66,109 @@ Content-Transfer-Encoding: 8bit
 
 Hi Matt,
 
-On Thu, 2026-10-22 at 09:58 +0200, Matthieu Baerts wrote:
-> Hi Geliang,
+On Thu, 2026-10-29 at 21:43 +0100, Matthieu Baerts (NGI0) wrote:
+> The ID was marked as used before incrementing local_addr_used counter
+> when the families were not matching.
 > 
-> Thank you for your patience.
-> 
-> On 21/09/2026 09:52, Geliang Tang wrote:
-> > Hi Matt,
-> > 
-> > Sorry for the delayed reply.
-> > 
-> > On Tue, 2026-09-08 at 19:52 +0200, Matthieu Baerts wrote:
-> > > Hi Geliang,
-> > > 
-> > > On 05/09/2026 10:26, Geliang Tang wrote:
-> > > > Hi Matt,
-> > > > 
-> > > > On Sat, 2026-08-15 at 00:28 +0200, Matthieu Baerts (NGI0)
-> > > > wrote:
-> > > > > In case of poll timeout, it might be too late to print the
-> > > > > stats
-> > > > > after
-> > > > > the socket closure.
-> > > > > 
-> > > > > Now, in case of poll timeout, 'ss' and 'nstat' are invoked
-> > > > > from
-> > > > > mptcp_connect to print the stats before exiting. This should
-> > > > > help
-> > > > > debugging poll timeout issues.
-> > > > > 
-> > > > > Note: for this "workaround", system() is used for debugging
-> > > > > purposes
-> > > > 
-> > > > This print_err_stats() implementation is basically the same as
-> > > > mptcp_lib_pr_err_stats() in the shell, right?
-> > > 
-> > > Correct.
-> > > 
-> > > > I think it's better to use mptcp_lib_pr_err_stats() in the
-> > > > shell to
-> > > > print the information. In mptcp_connect.c, when a poll timeout
-> > > > occurs,
-> > > > we send a signal to the shell and don't close the socket
-> > > > immediately -
-> > > > we wait for the shell to finish printing the information before
-> > > > closing
-> > > > it. What do you think of this approach? There's a reference
-> > > > implementation in the attachment, but I haven't tested it.
-> > > Thank you for your review. I agree that what you suggested is
-> > > better
-> > > for
-> > > a tool that would be used in production. But here with the
-> > > selftests,
-> > > I
-> > > don't think we need your long patch with a higher complexity,
-> > > just
-> > > for
-> > > the selftests. I think it is fine to have some "system()" calls
-> > > with
-> > > the
-> > > same ss/nstat commands compared to a patch of 50+ lines to get
-> > > the
-> > > same
-> > > result. No?
-> > 
-> > I agree with you - simplicity is a plus as well.
-> > 
-> > I tested it and it works. So LGTM!
-> > 
-> >     Reviewed-by: Geliang Tang <geliang@kernel.org>
-> > 
-> > 
-> > However, we need to handle something in mptcp_connect.sh
-> > afterwards.
-> > Otherwise, when a timeout occurs, we'll get two duplicate outputs:
-> > one
-> > from mptcp_connect, which is the log added by this patch, and one
-> > from
-> > mptcp_connect.sh, which is an invalid log. I think in this case we
-> > should ignore the latter, for example by adding the following to
-> > mptcp_connect.sh:
-> > 
-> > do_transfer()
-> > {
-> >   ...
-> >   mptcp_lib_pr_fail "client exit code $retc, server $rets"
-> >   if [ ${rets} -ne 2 ] && [ ${retc} -ne 2 ]; then
-> >     mptcp_lib_pr_err_stats "${listener_ns}" "${connector_ns}"
-> > "${port}"
-> >   fi
-> >   ...
-> > }
-> > 
-> > What do you think? If you don't have time, I can submit this
-> > follow-up
-> > patch as well.
-> 
-> Is it really an issue to have two stats outputs? They are not
-> duplicated: one is explicitly printing stats before socket closure,
-> and
-> the other one after.
-> 
-> Ignoring the 2nd output is easy, but this output can be valuable?
-> Also,
-> I don't think there will be a timeout issue on both the client and
+> Marking endpoints as used while they are not can have an impact on
 > the
-> server. Likely only one of them will timeout, and the additional
-> check
-> you suggest is not needed.
+> local_addr_used counter when endpoints not linked to the initial
+> subflow
+> are removed -- CAP_NET_ADMIN is required -- and active connections
+> have
+> such badly marked endpoints. In this case, the local counter will be
+> decremented while it shouldn't. If the counter was already at 0, this
+> warning will be emitted:
 > 
-> So OK like that?
+>   WARNING: net/mptcp/pm_kernel.c:1080 at
+> __mark_subflow_endp_available+0x46/0x50, CPU#0: a.out/149
+>   RIP: 0010:__mark_subflow_endp_available (net/mptcp/pm_kernel.c:1080
+> (discriminator 2) net/mptcp/pm_kernel.c:1076 (discriminator 2))
+>   Call Trace:
+>    mptcp_pm_nl_del_addr_doit (net/mptcp/pm_kernel.c:1112
+> net/mptcp/pm_kernel.c:1227)
+>    genl_family_rcv_msg_doit (net/netlink/genetlink.c:1114)
+> 
+> The fix is easy: increment local_addr_used similar to what is done in
+> mptcp_pm_create_subflow_or_signal_addr() for the non C-flag case.
+> 
+> Fixes: 4b1ff850e0c1 ("mptcp: pm: in-kernel: usable client side with
+> C-flag")
+> Reported-by: Yiming Qian <yimingqian591@gmail.com>
+> Closes:
+> https://lore.kernel.org/20261006114409.117190-1-yimingqian591@gmail.com
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-OK, let's keep this patch as is. Please merge it:
+Good catch. The fix correctly restores the consistency between
+id_avail_bitmap and local_addr_used, matching the non-C-flag path.
 
-Reviewed-by: Geliang Tang <geliang@kernel.org>
+Additionally, I don't think the Perf failure (Perf: Unstable: 1 failed
+test(s): error:sched-bbr) reported by the CI is related to this patch.
+
+	Reviewed-by: Geliang Tang <geliang@kernel.org>
 
 Thanks,
 -Geliang
 
+> ---
+> Changes in v3:
+> - Reword commit message: the issue was only with mismatched families.
+> - Link to v2:
+> https://patch.msgid.link/20261022-mptcp-pm-cflag-clear-when-used-v2-1-8c7fbe166b74@kernel.org
 > 
-> Cheers,
-> Matt
+> Changes in v2:
+> - Move the increment of local_addr_used before checking the family,
+>   similar to what is done for the non C-flag case.
+> - Link to v1:
+> https://patch.msgid.link/20261022-mptcp-pm-cflag-clear-when-used-v1-1-516c09b4ee65@kernel.org
+> ---
+> Note: this patch supersedes the patch mentioned above: the author
+> doesn't seem to be willing to send a v2. Because security@k.o was
+> Cc'ed
+> on public ML, that's forcing us not to wait, even if this fix is just
+> about a counter that will be wrongly decremented when MPTCP endpoints
+> are removed (requiring CAP_NET_ADMIN). Put the original author as
+> "Reported-by" following the recommendations given to maintainers in
+> such
+> cases.
+> ---
+>  net/mptcp/pm_kernel.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+> index d3014bf57bf3..fb611c4b3eb8 100644
+> --- a/net/mptcp/pm_kernel.c
+> +++ b/net/mptcp/pm_kernel.c
+> @@ -584,13 +584,15 @@ fill_local_addresses_vec_c_flag(struct
+> mptcp_sock *msk,
+>  
+>  		__clear_bit(local->addr.id, msk-
+> >pm.id_avail_bitmap);
+>  
+> -		if (!mptcp_pm_addr_families_match(sk, &local->addr,
+> remote))
+> -			continue;
+> -
+>  		if (local->addr.id == msk->mpc_endpoint_id)
+>  			continue;
+>  
+> +		/* Increment before checking families, similar to
+> non C-flag */
+>  		msk->pm.local_addr_used++;
+> +
+> +		if (!mptcp_pm_addr_families_match(sk, &local->addr,
+> remote))
+> +			continue;
+> +
+>  		msk->pm.extra_subflows++;
+>  		i++;
+>  
+> 
+> ---
+> base-commit: bcc5638fabf418e763621a432840cf55287e604d
+> change-id: 20261006-mptcp-pm-cflag-clear-when-used-ee817b26a553
+> 
+> Best regards,
+> --  
+> Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 
