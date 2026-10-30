@@ -1,51 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793349704;
-	b=nFMOHoqUIQ3YejWjsh/62bSFcLrtd+eCP/ihursJOzZNGQ9UXrjWF3AyqF0uglqJKiXG
-	 RyV1Nr1rFgl349GeGuCusMlewWh2OxkgLzpuQ0RWVdSJ2aWxNuZLil+Kpj3Aitk8nhW49
-	 DJGhC0s16924anDEH2aTA/mxxG+ys+qP8t7oZplZcIN/swVtU8PlJhStZwPVqkJH409bO
-	 N+TXeEWWzfm/0Ynq+zcygcO/Po9UlTRHxmMR7n+Ngja8lrJVb1lcMLLbr03izjuxc2cYY
-	 1yPHorhCVV8rVc64t28pqRRQ6SOMw8sdriQ24baMoUbqCwuh6qR2e1csn7qo7Hn75IA==
+	t=1793349705;
+	b=HkFww/wlImuy6t1+TF/Am37WepvnonGrAxloy1qDTMzs4gjo/1+7EQZyP7VBMjvsKyPT
+	 stAM0RNJhbrXm3hfijQYxxPxUxHqPsfdyfcQw/WdPLMZO/MlXVh65EbDlE0Zl/TR3FFQs
+	 gzK1otyf8+UU8ffDrQRMtcYz9hl+UCmW5q7Gg6DgQwW5XcKjXSw3cz/KY4+nBET19OA9h
+	 mxeRy9wh5DxSYeytHitUw6vR5B7HRTyvqJ1Ly8p2OQ48mG0ROJ+G4nQYytazpA1pp30zj
+	 uCL1m21bJ0hCr+DRIU9y7lH9XriPCgqeiCIlVozUPGfGxIyISsXoH8SOLUq0Z0I63Lg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793349704;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793349705;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=1J8C7pphSK2zVga48ZXLypGHUwLsv9JZ0n5GsGZOvyg=;
-	b=5XbTnNiAZzE2gjX2OtMasmPg2oOx+InEDl0989DnfmfpoSSDzCqer7ksRAvadV1uGTuk
-	 NLIE/RWtvJ/PmorESRL+1mr6H1y4n1jt9ER1r5dglH4KfjQEZ1puCzzIL2gVDXm7jmQN7
-	 yUTWwxwFNPo1obyCefUdyZWCQ0cX/ovMk1pnecLbvezE3+9RiYuzIVnbrqJdrhQOMocvz
-	 vqe0RI+COmyzdHhnqwOXBH0K4+NVyrtrz1y7oUBMW/DNtbgBVhqiVJFbK6s9jhGUyXNyN
-	 wFERVygpdrT4kqjKD83G2R2QUFL4hUXE5Wz9EqaVzyyX/I152Fb/tzrD0KpfYIe/mBA==
+	bh=8LXNcJyM5cQ19Ulzi5NmNfox6j6IGp/S2KY26EFzZ3M=;
+	b=R9j2ee8wARqyTTCXXVsmkvk55x7YpnEHyB2XnkpZ6jDQRqK7hRivMunbd4umtgF8YcLH
+	 ehB1Tgckbu+pJydDPmT+KRA40ZjfiWQWZ08uLxwO+yAll5TQARevfWsnbVKMjXEedeev4
+	 wmzi9BzUnzDmnzEwyHcqzxmPX1lorXOWcpDCjbom/PzDXvUKw+L8rMmxltEQwEuM1Yvs1
+	 lzVtpVJsmxvtWjq77dC9kc8gTgCMUkZiUfgOKDOluOlCZmTwD0p3SBoEw/DuARhQIAGC8
+	 ZxjHZzTWFfyi5pNhNvPUT3/w86YvZlXEgBaDUKHCJBGY66tDFR+jqpj4smR/I5wVMog==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SPp5olNV;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VC7750xK;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE7D606A31A
-	for <mptcp@lists.linux.dev>; Fri, 30 Oct 2026 08:41:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B2F606A31D
+	for <mptcp@lists.linux.dev>; Fri, 30 Oct 2026 08:41:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SPp5olNV
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53A001F0093A;
-	Fri, 30 Oct 2026 08:41:42 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VC7750xK
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C2631F000C1;
+	Fri, 30 Oct 2026 08:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793349703;
-	bh=1J8C7pphSK2zVga48ZXLypGHUwLsv9JZ0n5GsGZOvyg=;
+	s=k20260515; t=1793349705;
+	bh=8LXNcJyM5cQ19Ulzi5NmNfox6j6IGp/S2KY26EFzZ3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=SPp5olNVgIQn8SQ2ONiZzuzW08zGOfUP+qa1JGfh4vIvSsInan2mfcSSkY3ShqaO3
-	 Z8dvaHc239FAPL1O4BuorNpaRpvgBAREBarI3vX6r9LAFF6yKAZLQlN61i+3VqPRdb
-	 4Ro2zAMYBguQn8dUCbz8mgEIRxYb7EV+6Uk84ds3bKQYdcWK7BW5st/T3/tbXMFY3Y
-	 3ebDF+W2WD8kIgM79N3c/v4mEK8qZY45DlSmVfzIzaOkx8H+8AiicaVmikJsk+XCPk
-	 d2xFri/ft2UDoXTUvFVOMcrlunHZaraqTZ1sKybJnI4enrYQR6Evp4VSCydUZazLqi
-	 Hr1w+dNAHMDLw==
+	b=VC7750xKxlpUbZBddwHaP5gaoxHAzYgNrWPgVD06Z6bdyym0XBp4J6EeRQZHPWmCj
+	 Pf5ETHehiWx9a2m/LB7sSk6HVG1h/NxQAxM4yo7314N6HwkJKDJF7eZWOF275nF92y
+	 gMCLdZzy8fr52axQw2kNgMu+Dik/88YgA1ZoYnsktCOduYBIHj7rKSGciNSWKT3jjb
+	 fuYwbVFi0z7uKixEWOuAoWEHJ01NPq5+9xvd7Uy79/pfEeRHeCMxDZlsC2ZyBEdspA
+	 g7oMM0gItuNs8pZK85g2uXYhlhkpRHwCwssql8aYkc2ckUdJTSH8acIjgDuQavDcBT
+	 Nj5pGclIUQZvA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Paolo Abeni <pabeni@redhat.com>,
 	Geliang Tang <geliang@kernel.org>
-Subject: [PATCH mptcp-next v18 1/5] mptcp: drop the mptcp_ooo_try_coalesce() helper
-Date: Fri, 30 Oct 2026 16:41:22 +0800
-Message-ID: <2d215e3e2e2dd8d339239043810610a2618d31d6.1793349369.git.geliang@kernel.org>
+Subject: [PATCH mptcp-next v18 2/5] mptcp: drop the cant_coalesce CB field
+Date: Fri, 30 Oct 2026 16:41:23 +0800
+Message-ID: <dbff20aeb3b48f16b15f4ca82915a2cc4b0bcee4.1793349369.git.geliang@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <cover.1793349369.git.geliang@kernel.org>
 References: <cover.1793349369.git.geliang@kernel.org>
@@ -62,85 +62,202 @@ Content-Transfer-Encoding: 8bit
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-It's used to save an additional comparison for in-order skbs, but is
-also a barrier to remove CB offset. Remove the helper, let
-__mptcp_try_coalesce() always perform the sequence check and remove
-duplicate checks from the callers.
+Such field is used to ensure in-sequence processing in case of fastopen.
+Instead let's perform synchronization of the fastopen skb sequence
+when the IASN becomes available with the 3rd ack.
+
+When the `cant_coalesce` field has been introduced, commit f03afb3aeb9d
+("mptcp: drop __mptcp_fastopen_gen_msk_ackseq()") noted that updating the
+already queued skb for passive fastopen socket at 3rd ack time would be
+difficult and race prone. The main point is that such update don't need
+to be synchronously performed at 3rd ack time, but is sufficient to
+perform it before the next segment is introduced into the msk.
+
+To such extent, add an explicit test in __mptcp_move_skb(). Performance
+wise this trades a conditional in the fast path - in __mptcp_try_coalesce()
+- with a similar one in __mptcp_move_skb() and a couple more in slow paths.
+
+After this change the user-space will always observe consistent sequence
+numbers in the receive queue, even in the TFO dummy mapping case.
 
 Co-developed-by: Geliang Tang <geliang@kernel.org>
 Signed-off-by: Geliang Tang <geliang@kernel.org>
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/protocol.c | 21 ++++++---------------
- 1 file changed, 6 insertions(+), 15 deletions(-)
+ net/mptcp/fastopen.c |  6 ++++--
+ net/mptcp/protocol.c | 31 +++++++++++++++++++++++++++++--
+ net/mptcp/protocol.h |  4 +++-
+ net/mptcp/subflow.c  |  7 +++++++
+ 4 files changed, 43 insertions(+), 5 deletions(-)
 
+diff --git a/net/mptcp/fastopen.c b/net/mptcp/fastopen.c
+index f717750906ff..e18b31028e7e 100644
+--- a/net/mptcp/fastopen.c
++++ b/net/mptcp/fastopen.c
+@@ -9,6 +9,7 @@
+ void mptcp_fastopen_subflow_synack_set_params(struct mptcp_subflow_context *subflow,
+ 					      struct request_sock *req)
+ {
++	struct mptcp_sock *msk;
+ 	struct sock *sk, *ssk;
+ 	struct sk_buff *skb;
+ 	struct tcp_sock *tp;
+@@ -49,15 +50,16 @@ void mptcp_fastopen_subflow_synack_set_params(struct mptcp_subflow_context *subf
+ 	MPTCP_SKB_CB(skb)->end_seq = 0;
+ 	MPTCP_SKB_CB(skb)->offset = 0;
+ 	MPTCP_SKB_CB(skb)->has_rxtstamp = has_rxtstamp;
+-	MPTCP_SKB_CB(skb)->cant_coalesce = 1;
+ 
+ 	mptcp_data_lock(sk);
+ 	DEBUG_NET_WARN_ON_ONCE(sock_owned_by_user_nocheck(sk));
+ 
++	msk = mptcp_sk(sk);
++	msk->rcvd_dummy_seq = true;
+ 	mptcp_borrow_fwdmem(sk, skb);
+ 	skb_set_owner_r(skb, sk);
+ 	__skb_queue_tail(&sk->sk_receive_queue, skb);
+-	mptcp_sk(sk)->bytes_received += skb->len;
++	msk->bytes_received += skb->len;
+ 
+ 	sk->sk_data_ready(sk);
+ 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 02a4f479d9d8..528a72da646c 100644
+index 528a72da646c..fe154b181683 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -167,7 +167,8 @@ static bool __mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
- {
+@@ -168,7 +168,6 @@ static bool __mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
  	int limit = READ_ONCE(sk->sk_rcvbuf);
  
--	if (unlikely(MPTCP_SKB_CB(to)->cant_coalesce) ||
-+	if (MPTCP_SKB_CB(from)->map_seq != MPTCP_SKB_CB(to)->end_seq ||
-+	    unlikely(MPTCP_SKB_CB(to)->cant_coalesce) ||
+ 	if (MPTCP_SKB_CB(from)->map_seq != MPTCP_SKB_CB(to)->end_seq ||
+-	    unlikely(MPTCP_SKB_CB(to)->cant_coalesce) ||
  	    MPTCP_SKB_CB(from)->offset ||
  	    ((to->len + from->len) > (limit >> 3)) ||
  	    !skb_try_coalesce(to, from, fragstolen, delta))
-@@ -200,15 +201,6 @@ static bool mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
- 	return true;
+@@ -430,7 +429,6 @@ static void mptcp_init_skb(struct sock *ssk, struct sk_buff *skb, int offset,
+ 	MPTCP_SKB_CB(skb)->end_seq = MPTCP_SKB_CB(skb)->map_seq + copy_len;
+ 	MPTCP_SKB_CB(skb)->offset = offset;
+ 	MPTCP_SKB_CB(skb)->has_rxtstamp = has_rxtstamp;
+-	MPTCP_SKB_CB(skb)->cant_coalesce = 0;
+ 
+ 	__skb_unlink(skb, &ssk->sk_receive_queue);
+ 
+@@ -438,6 +436,26 @@ static void mptcp_init_skb(struct sock *ssk, struct sk_buff *skb, int offset,
+ 	skb_dst_drop(skb);
  }
  
--static bool mptcp_ooo_try_coalesce(struct mptcp_sock *msk, struct sk_buff *to,
--				   struct sk_buff *from)
--{
--	if (MPTCP_SKB_CB(from)->map_seq != MPTCP_SKB_CB(to)->end_seq)
--		return false;
--
--	return mptcp_try_coalesce((struct sock *)msk, to, from);
--}
--
- /* "inspired" by tcp_rcvbuf_grow(), main difference:
-  * - mptcp does not maintain a msk-level window clamp
-  * - returns true when  the receive buffer is actually updated
-@@ -348,7 +340,7 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
- 	/* with 2 subflows, adding at end of ooo queue is quite likely
- 	 * Use of ooo_last_skb avoids the O(Log(N)) rbtree lookup.
++void __mptcp_sync_rcv_sequence(struct sock *sk)
++{
++	struct mptcp_sock *msk = mptcp_sk(sk);
++	struct sk_buff *skb;
++	u32 offset;
++
++	if (likely(!msk->rcvd_dummy_seq))
++		return;
++
++	/* User space can have already received the TFO skb. */
++	msk->rcvd_dummy_seq = false;
++	skb = skb_peek_tail(&sk->sk_receive_queue);
++	if (!skb)
++		return;
++
++	offset = MPTCP_SKB_CB(skb)->offset;
++	MPTCP_SKB_CB(skb)->map_seq = msk->ack_seq - skb->len + offset;
++	MPTCP_SKB_CB(skb)->end_seq = msk->ack_seq;
++}
++
+ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
+ {
+ 	u64 copy_len = MPTCP_SKB_CB(skb)->end_seq - MPTCP_SKB_CB(skb)->map_seq;
+@@ -446,6 +464,12 @@ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
+ 
+ 	mptcp_borrow_fwdmem(sk, skb);
+ 
++	/* Be sure to sync the eventual fastopen dummy mapping before any other
++	 * skb lands into the msk.
++	 */
++	if (unlikely(msk->rcvd_dummy_seq))
++		__mptcp_sync_rcv_sequence(sk);
++
+ 	if (MPTCP_SKB_CB(skb)->map_seq == msk->ack_seq) {
+ 		/* in sequence */
+ insert:
+@@ -3680,6 +3704,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
+ 	msk->bytes_retrans = 0;
+ 	msk->rcvspace_init = 0;
+ 	msk->fastclosing = 0;
++	msk->rcvd_dummy_seq = false;
+ 	mptcp_init_rtt_est(msk);
+ 
+ 	/* for fallback's sake */
+@@ -3930,6 +3955,8 @@ static void mptcp_release_cb(struct sock *sk)
+ 			__mptcp_error_report(sk);
+ 		if (__test_and_clear_bit(MPTCP_SYNC_SNDBUF, &msk->cb_flags))
+ 			__mptcp_sync_sndbuf(sk);
++		if (__test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags))
++			__mptcp_sync_rcv_sequence(sk);
+ 	}
+ }
+ 
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 3be60da12924..c317d8b59fff 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -126,13 +126,13 @@
+ #define MPTCP_FLUSH_JOIN_LIST	5
+ #define MPTCP_SYNC_STATE	6
+ #define MPTCP_SYNC_SNDBUF	7
++#define MPTCP_SYNC_SEQ		8
+ 
+ struct mptcp_skb_cb {
+ 	u64 map_seq;
+ 	u64 end_seq;
+ 	u32 offset;
+ 	u8  has_rxtstamp;
+-	u8  cant_coalesce;
+ };
+ 
+ #define MPTCP_SKB_CB(__skb)	((struct mptcp_skb_cb *)&((__skb)->cb[0]))
+@@ -336,6 +336,7 @@ struct mptcp_sock {
+ 	bool		use_64bit_ack; /* Set when we received a 64-bit DSN */
+ 	bool		csum_enabled;
+ 	bool		allow_infinite_fallback;
++	bool		rcvd_dummy_seq;
+ 	u8		pending_state; /* A subflow asked to set this sk_state,
+ 					* protected by the msk data lock
+ 					*/
+@@ -1193,6 +1194,7 @@ void mptcp_event_pm_listener(const struct sock *ssk,
+ 			     enum mptcp_event_type event);
+ bool mptcp_userspace_pm_active(const struct mptcp_sock *msk);
+ 
++void __mptcp_sync_rcv_sequence(struct sock *sk);
+ void mptcp_fastopen_subflow_synack_set_params(struct mptcp_subflow_context *subflow,
+ 					      struct request_sock *req);
+ int mptcp_pm_genl_fill_addr(struct sk_buff *msg,
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 78e886b20258..49a000b8dcb8 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -515,6 +515,8 @@ static void subflow_set_remote_key(struct mptcp_sock *msk,
+ 				   struct mptcp_subflow_context *subflow,
+ 				   const struct mptcp_options_received *mp_opt)
+ {
++	struct sock *sk = (struct sock *)msk;
++
+ 	/* active MPC subflow will reach here multiple times:
+ 	 * at subflow_finish_connect() time and at 4th ack time
  	 */
--	if (mptcp_ooo_try_coalesce(msk, msk->ooo_last_skb, skb)) {
-+	if (mptcp_try_coalesce(sk, msk->ooo_last_skb, skb)) {
- 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_OFOMERGE);
- 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_OFOQUEUETAIL);
- 		return;
-@@ -394,7 +386,7 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
- 				MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_DUPDATA);
- 				goto merge_right;
- 			}
--		} else if (mptcp_ooo_try_coalesce(msk, skb1, skb)) {
-+		} else if (mptcp_try_coalesce(sk, skb1, skb)) {
- 			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_OFOMERGE);
- 			return;
- 		}
-@@ -777,8 +769,7 @@ static void __mptcp_add_backlog(struct sock *sk,
- 	if (!list_empty(&msk->backlog_list))
- 		tail = list_last_entry(&msk->backlog_list, struct sk_buff, list);
+@@ -533,6 +535,11 @@ static void subflow_set_remote_key(struct mptcp_sock *msk,
+ 	WRITE_ONCE(msk->ack_seq, subflow->iasn);
+ 	WRITE_ONCE(msk->can_ack, true);
+ 	atomic64_set(&msk->rcv_wnd_sent, subflow->iasn);
++
++	if (!sock_owned_by_user(sk))
++		__mptcp_sync_rcv_sequence(sk);
++	else
++		set_bit(MPTCP_SYNC_SEQ, &msk->cb_flags);
+ }
  
--	if (tail && MPTCP_SKB_CB(skb)->map_seq == MPTCP_SKB_CB(tail)->end_seq &&
--	    ssk == tail->sk &&
-+	if (tail && ssk == tail->sk &&
- 	    __mptcp_try_coalesce(sk, tail, skb, &fragstolen, &delta)) {
- 		skb->truesize -= delta;
- 		kfree_skb_partial(skb, fragstolen);
-@@ -902,7 +893,7 @@ static bool __mptcp_ofo_queue(struct mptcp_sock *msk)
- 
- 		end_seq = MPTCP_SKB_CB(skb)->end_seq;
- 		tail = skb_peek_tail(&sk->sk_receive_queue);
--		if (!tail || !mptcp_ooo_try_coalesce(msk, tail, skb)) {
-+		if (!tail || !mptcp_try_coalesce(sk, tail, skb)) {
- 			int delta = msk->ack_seq - MPTCP_SKB_CB(skb)->map_seq;
- 
- 			/* skip overlapping data, if any */
+ static void mptcp_propagate_state(struct sock *sk, struct sock *ssk,
 -- 
 2.55.0
 
