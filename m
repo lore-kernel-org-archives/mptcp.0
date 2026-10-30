@@ -1,61 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793363503;
-	b=xELGeHYtlaPemYHnTErfedE8gg6x5cStJlf8LFdeX2Mo3+YViZCzc83uJRPiA3tKgWyi
-	 iCfxiJgXI+BJSJpEFzkUN6fD0uPom573MAYj7/sRaGCOa9mFqQfUhBpHChGgTj2JQY7T3
-	 52dPu+F1MWJGIfDrnVUYET6SdZjH3wjthrjUFp7fQKhejzSKPcmQv3q+dDv7DM47gv2sG
-	 Cxly+Abed4R115McUSwZ0J0XKfmEVhL8bn5c+UXDNWNGLhKd7YJ7hNjxHyHvcjqpFAKOx
-	 MuMlV5kFId2XrbXwp5PvutAj6mxXWDhfCoudIbJ5uokwEzLt7kKwle0OmwtslFKCHKw==
+	t=1793363986;
+	b=WwxoghOorJmTdCNa5R/C+XWROIK76QQXxlRuWb0e1m5bLP7d6BWH20tIn2PRYq3Jmcq0
+	 N2dDDkEpXKBvVErVFxRZM8FTCBQ4eUk+E9pbYl4XLSCsuPsYLxVv4d531heMz12U6KtFC
+	 qSvXJv+KMHoUoliCfwGsIusLAkw8hVve1yMV4MeJQPLnH9RDQA0c12OV2DUzvBNLJyiVk
+	 oklNRy3B437C6ToQcLJSCKueZ+HlnEACaMQgIRluZOM8MwqmEM+PAdU2/0N3cn1BYAEut
+	 VFIDXxHuCAgztE6gpzHKYrz5ETDsZL1Jq3jigqt/cBTXJfHurDsMfZ2p9zcxuBfGkFQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793363503;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=UDoy5Y6pyUGkFvr6CnxyA/cvulZjeL9SSvBftaqkDcU=;
-	b=Cjly4DXfgd+lkv0jH5oTOiN02TEm6IlEL+N5nQwYJMJYsmMAXo7gxSG4xh6xoMK3WbDg
-	 HD7ZxwQrVRcTgAIeJgMa4fi6tZxcdrijPjqkYv8EoujLMZ7D0fwOWYT0Vs2CGPQqzUVqK
-	 WXQUOJYzLFkKg5DMLcXDhB2iJL2/j7BBGTjQ99B6+9Ccf60FLeNhVbVCsWCcljFS1AMnv
-	 LuhDoVvEWu40jmk5vW+LOd5StULEziSMYWea8syFDTm3ZMR3Hw5bqsPoU83gANoADdbEA
-	 cDLICAhDODe4ADL4QuhytgqGJp8gI/9crlNL4UZtuyRw8o9LhBCEV9szEyoo4x5PbJA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793363986;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=97it38aObATBvo3ucm1ZecoKdpetAxfjRXEwAvMrV5M=;
+	b=VcdqlrUinbM72bYft00xzgz4QuBtN8nRs1LnnR5qQhyB3049tpZMpCXvrxUbUj367uM2
+	 ejZWR7S/yzvOK65joD4/6dUypCT7CR4YnT+Slq/bSWOPa+dqpHtpNfC2mxxu+oGhQOwOp
+	 Ry3LFlCOxamAtccCX5my8nvkGIrnV24aFidrdVLVkfz/ORzq/8qi6UgbE3Q32Csc2Yh0L
+	 gdkEwVpK6h8FECP0hpW9h9evcIRYYccPPHpsUlzm3A87TQswKLY4jS7ky6w1JbbuulTck
+	 y72Qx88qSP6o8yGK9xs3/H9S1JZX0KuBZop8IlSR6bF68qRiOOd+U0dsiYz4DHlOCQA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gOiUAzAg;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dBkp1g8o;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C5C606A31A;
-	Fri, 30 Oct 2026 12:31:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF37606A31C
+	for <mptcp@lists.linux.dev>; Fri, 30 Oct 2026 12:39:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gOiUAzAg
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 212521F000C1;
-	Fri, 30 Oct 2026 12:31:42 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dBkp1g8o
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45E6F1F000C1;
+	Fri, 30 Oct 2026 12:39:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793363502;
-	bh=UDoy5Y6pyUGkFvr6CnxyA/cvulZjeL9SSvBftaqkDcU=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=gOiUAzAgalNmuspXqWNxd0/bC1ZC138HacRukovaykxAkYsZHWblCZ0FrGRo73d2U
-	 vU0uvwUNuLgfU49FnqhePn1b9FgSzI3Y2EAUx75qRSpMGMhR1GIi/WlK44GoHMp/Ft
-	 tyqySIhIIKeY2VasPDAZloVXXk9ZBwXy/pjOg+T0s3Fb4Q9ZopQvh43JW2FMW5x359
-	 brAasqxL3ZrqWf6Kjxa/IsXeGaezv4RimpHLjjCbyvPwRZohqUOOn4uUCt6JYTd0CN
-	 WwoHTMa0T3ZJSTLa3O0qtOkD/xuDp3Tu5q49j3ULyyOmfyUSehIKwKen5Wwu5o6G7q
-	 7HgFMPntQFuhQ==
-Subject: Re: [PATCH net] mptcp: protect listener backlog reads in diagnostics
-From: netdev-bot+sashiko@kernel.org
-To: zzzccc427@gmail.com
-Cc: matttbe@kernel.org, martineau@kernel.org, davem@davemloft.net,
- edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, geliang@kernel.org,
- horms@kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, baijiaju1990@gmail.com, jjzuming@gmail.com
-Date: Fri, 30 Oct 2026 12:31:41 +0000
-Message-ID: <179336350162.3134.14466007220476234920@kernel.org>
-In-Reply-To:
- <pm-mptcp-objects-candidate-0066-v3-73df72b7a543d4cada0e@gmail.com>
-References:
- <pm-mptcp-objects-candidate-0066-v3-73df72b7a543d4cada0e@gmail.com>
-X-sashiko-severity: Medium
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20260515; t=1793363985;
+	bh=97it38aObATBvo3ucm1ZecoKdpetAxfjRXEwAvMrV5M=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=dBkp1g8ou/nowWLasaYQcwcRkIDd6VAQiFVtkNSP6U2LP+ptiy5PjH8G8/BfGDxG7
+	 Z1ekZmSuGWIu3ucPchNZPpUzEfWH7JPj5FePzJsd+rTAaWNkG6+iztU3LRUICA/LAE
+	 83iaSr9vViATdmh5tw8zaAYa9tDphc3snoVcdv2rl1fbcikDI5qNT611znr6AMdfq6
+	 DkLl4MYEgKJBNz58tZdT9K/ddjbOGAUzqEAw0vJfKCXEltR96mNZQZvnHPD8pPzVP5
+	 /cXv34hcdA37TyCIVUwo4VFxl5AUGo5VqPGBjD+chKaeugqpdr314jDAidjdkaREX6
+	 7xyIPXxbL3NzA==
+Message-ID: <sashiko-outbox-191020@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH mptcp-next v19 4/5] mptcp: sync mptcp skb cb layout with
+ tcp one
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
+In-Reply-To: <1c928472a89719130041c92cadd7e0fb6dbf552a.1793361629.git.tanggeliang@kylinos.cn>
+References: <cover.1793361629.git.tanggeliang@kylinos.cn>
+ <1c928472a89719130041c92cadd7e0fb6dbf552a.1793361629.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 30 Oct 2026 12:39:44 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -64,116 +59,196 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue(s) to consider.
-
-Critical: 0 · High: 0 · Medium: 1 · Low: 0
-
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
-
-- [Medium] In net/mptcp/mptcp_diag.c, mptcp_diag_get_info() now only
-  applies the listener override when the socket is not owned: `if…
-
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [Critical] mptcp: subtracting offset from map_seq64 in mptcp_init_skb() c=
+orrupts OFO data
+- [High] mptcp: TFO sequence desync in mptcp_move_skbs() and mptcp_inq_hint=
+()
 --
 
-mptcp: protect listener backlog reads in diagnostics
+commit 078393e5a4729e83b409065c8fc8170a9248094b
+Author: Paolo Abeni <pabeni@redhat.com>
 
-This commit takes the MPTCP data lock in mptcp_diag_get_info() around the
-listener state check and the backlog reads. The override from msk->first
-is now applied only when no process owns the socket. The goal is to fix a
-use-after-free on the token based diag paths, which can race with a
-disconnect, re-listen and close of the same socket.
+mptcp: sync mptcp skb cb layout with tcp one
 
-> diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
-> index 136c2d05c0eeb..a71bcaee15c8d 100644
-> --- a/net/mptcp/mptcp_diag.c
-> +++ b/net/mptcp/mptcp_diag.c
-> @@ -199,7 +199,12 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
->  			  READ_ONCE(mptcp_sk(sk)->backlog_len);
->  	r->idiag_wqueue = sk_wmem_alloc_get(sk);
->  
-> -	if (inet_sk_state_load(sk) == TCP_LISTEN) {
-> +	/* The listener walk holds the listen hash lock: do not wait for a
-> +	 * socket owner that could be unhashing the first subflow.
-> +	 */
-> +	mptcp_data_lock(sk);
-> +	if (!sock_owned_by_user(sk) &&
-> +	    inet_sk_state_load(sk) == TCP_LISTEN) {
->  		struct sock *lsk = READ_ONCE(msk->first);
->  
->  		if (lsk) {
+This commit updates struct mptcp_skb_cb to store 32-bit map_seq and end_seq
+fields aligned with struct tcp_skb_cb alongside a 64-bit map_seq64 field, a=
+nd
+converts receive and out-of-order queue operations to use 32-bit sequence
+arithmetic after window validation.
 
-[Severity: Medium]
-mptcp_diag_get_info() is the shared idiag_get_info callback, so this new
-sock_owned_by_user() check also applies to mptcp_diag_dump_listeners().
-
-mptcp_listen() never inserts the msk into the token table. Isn't the
-listener walk then the main way a listening MPTCP socket gets reported?
-
-While a task holds lock_sock() on the listening msk, the override is
-skipped. That covers listen(), most mptcp_setsockopt() and
-mptcp_getsockopt() calls, shutdown and close, and the worker. In that
-case only the fallback values are reported:
-
-	r->idiag_rqueue = sk_rmem_alloc_get(sk) +
-			  READ_ONCE(mptcp_sk(sk)->backlog_len);
-	r->idiag_wqueue = sk_wmem_alloc_get(sk);
-
-For a listener these are normally 0/0, not the accept queue length and
-the max backlog. Could this make ss -Ml and accept queue monitoring show
-occasional 0/0 readings for MPTCP listeners?
-
-For comparison, tcp_diag_get_info() always reports sk_ack_backlog and
-sk_max_ack_backlog for TCP_LISTEN, with no ownership check:
-
-net/ipv4/tcp_diag.c:tcp_diag_get_info() {
-	if (inet_sk_state_load(sk) == TCP_LISTEN) {
-		r->idiag_rqueue = READ_ONCE(sk->sk_ack_backlog);
-		r->idiag_wqueue = READ_ONCE(sk->sk_max_ack_backlog);
-	...
-}
-
-The listener walk also looks like it was already memory safe before this
-patch:
-
-net/mptcp/mptcp_diag.c:mptcp_diag_dump_listeners() {
-	...
-		rcu_read_lock();
-		spin_lock(&ilb->lock);
-		sk_nulls_for_each(sk, node, &ilb->nulls_head) {
-			...
-			ret = sk_diag_dump(sk, skb, cb, r, net_admin);
-	...
-}
-
-Releasing the hashed listener subflow goes through
-tcp_set_state(TCP_CLOSE)->inet_unhash(), which takes the same ilb->lock.
-Hashed listeners are also SOCK_RCU_FREE.
-
-The use-after-free described in the commit message seems reachable only
-from the token based paths: the token iteration in mptcp_diag_dump() and
-mptcp_diag_dump_one(). On those paths TCP_LISTEN shows up only in the
-disconnect and re-listen race.
-
-The commit message accepts the tradeoff:
-
-  While a process owns the socket, the dump reports the MPTCP socket's
-  own queue values instead.
-
-It doesn't explain why the listener walk needs the check, though. Is the
-ownership check needed on the mptcp_diag_dump_listeners() path, or could
-it be limited to the token based callers?
-
-With this change, the existing comment inside the if (lsk) block, "so
-Send-Q will show accept queue", only holds while the socket is not owned.
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 3f967c4dc825f..3ff07b9de08c0 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
 
 [ ... ]
 
--- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/pm-mptcp-objects-candidate-0066-v3-73df72b7a543d4cada0e%40gmail.com
+> @@ -421,11 +430,13 @@ static void mptcp_init_skb(struct sock *ssk, struct=
+ sk_buff *skb, int offset)
+> =20
+>  	/* the skb map_seq accounts for the skb offset:
+>  	 * mptcp_subflow_get_mapped_dsn() is based on the current tp->copied_seq
+> -	 * value
+> +	 * value; note that end seq number is only available in 32bits format.
+>  	 */
+> -	MPTCP_SKB_CB(skb)->map_seq =3D mptcp_subflow_get_mapped_dsn(subflow) -
+> -				     offset;
+> +	MPTCP_SKB_CB(skb)->map_seq64 =3D mptcp_subflow_get_mapped_dsn(subflow) -
+> +				       offset;
+> +	MPTCP_SKB_CB(skb)->map_seq =3D (u32)MPTCP_SKB_CB(skb)->map_seq64;
+>  	MPTCP_SKB_CB(skb)->end_seq =3D MPTCP_SKB_CB(skb)->map_seq + skb->len;
+> +	MPTCP_SKB_CB(skb)->flags =3D 0;
+>  	MPTCP_SKB_CB(skb)->has_rxtstamp =3D has_rxtstamp;
+
+[Severity: Critical]
+As reported by Sashiko on v18 [1], can subtracting offset from map_seq64 and
+map_seq in mptcp_init_skb() corrupt out-of-order data when offset is non-ze=
+ro?
+
+In __mptcp_move_skbs_from_subflow(), offset =3D tp->copied_seq -
+TCP_SKB_CB(skb)->seq is non-zero when the leading [0, offset) bytes of the
+subflow skb were already consumed or discarded (for instance, when an skb
+straddles the end of a discarded DSS mapping in subflow_check_data_avail() =
+and
+the start of the next mapping, or when TCP queues a partially overlapping
+segment). In subflow_check_data_avail(), validate_mapping() and
+validate_data_csum() only validate the active mapping starting at
+tp->copied_seq, which corresponds to mapped_dsn =3D
+mptcp_subflow_get_mapped_dsn(subflow).
+
+Subtracting offset from map_seq64 without pulling the leading offset bytes
+assumes msk->ack_seq and msk->copied_seq have already reached mapped_dsn,
+which only holds for in-order data. When the active mapping is out of order
+(mapped_dsn > msk->ack_seq) and offset > 0:
+
+1. If mapped_dsn - offset <=3D msk->ack_seq, __mptcp_move_skb() sees map_se=
+q64
+   <=3D msk->ack_seq and treats the skb as in-sequence or partial data, que=
+ueing
+   or coalescing it into sk->sk_receive_queue and advancing msk->ack_seq
+   across the unreceived gap [msk->ack_seq, mapped_dsn). Both
+   __mptcp_recvmsg_mskq() and mptcp_recv_skb() then compute a read offset of
+   (u32)msk->copied_seq - MPTCP_SKB_CB(skb)->map_seq < offset and copy the
+   unmapped leading subflow bytes to user space.
+
+2. If mapped_dsn - offset > msk->ack_seq, mptcp_data_queue_ofo() inserts the
+   skb into out_of_order_queue covering [mapped_dsn - offset, mapped_dsn +
+   skb->len - offset). __mptcp_try_coalesce() can then coalesce those leadi=
+ng
+   [0, offset) prefix bytes into a preceding OFO skb ending at mapped_dsn -
+   offset, legitimate segments arriving for [mapped_dsn - offset, mapped_ds=
+n)
+   are dropped as MPTCP_MIB_DUPDATA, and __mptcp_ofo_queue() dequeues the s=
+kb
+   as soon as msk->ack_seq reaches mapped_dsn - offset.
+
+> =20
+>  	__skb_unlink(skb, &ssk->sk_receive_queue);
+> @@ -448,13 +459,14 @@ void __mptcp_sync_rcv_sequence(struct sock *sk)
+>  	if (!skb)
+>  		return;
+> =20
+> -	MPTCP_SKB_CB(skb)->map_seq =3D msk->tfo_iasn - skb->len;
+> +	MPTCP_SKB_CB(skb)->map_seq64 =3D msk->tfo_iasn - skb->len;
+> +	MPTCP_SKB_CB(skb)->map_seq =3D (u32)MPTCP_SKB_CB(skb)->map_seq64;
+>  	MPTCP_SKB_CB(skb)->end_seq =3D MPTCP_SKB_CB(skb)->map_seq + skb->len;
+>  }
+> =20
+>  static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
+>  {
+> -	u64 copy_len =3D MPTCP_SKB_CB(skb)->end_seq - MPTCP_SKB_CB(skb)->map_se=
+q;
+> +	u32 copy_len =3D MPTCP_SKB_CB(skb)->end_seq - MPTCP_SKB_CB(skb)->map_se=
+q;
+>  	struct mptcp_sock *msk =3D mptcp_sk(sk);
+>  	struct sk_buff *tail;
+> =20
+> @@ -466,7 +478,7 @@ static bool __mptcp_move_skb(struct sock *sk, struct =
+sk_buff *skb)
+>  	if (unlikely(msk->rcvd_dummy_seq))
+>  		__mptcp_sync_rcv_sequence(sk);
+
+[Severity: High]
+As reported by Sashiko on v18 [2], can __mptcp_move_skb() desynchronize the
+TFO skb's map_seq from msk->copied_seq when subflow_set_remote_key() runs
+while the msk socket is owned by user space?
+
+During passive TFO, mptcp_fastopen_subflow_synack_set_params() places the T=
+FO
+skb on sk->sk_receive_queue with map_seq64 =3D -(u64)skb->len, sets
+msk->rcvd_dummy_seq =3D true, and initializes msk->copied_seq =3D -(u64)skb=
+->len.
+
+If the third ACK carrying MP_CAPABLE arrives while sock_owned_by_user(sk) is
+true, subflow_set_remote_key() under mptcp_data_lock(sk) immediately updates
+msk->ack_seq and msk->tfo_iasn to subflow->iasn, and defers the
+msk->copied_seq update by setting MPTCP_SYNC_SEQ:
+
+net/mptcp/subflow.c:subflow_set_remote_key() {
+	...
+	WRITE_ONCE(msk->ack_seq, subflow->iasn);
+	WRITE_ONCE(msk->can_ack, true);
+	atomic64_set(&msk->rcv_wnd_sent, subflow->iasn);
+	msk->tfo_iasn =3D subflow->iasn;
+
+	if (!sock_owned_by_user(sk)) {
+		msk->copied_seq +=3D subflow->iasn;
+		__mptcp_sync_rcv_sequence(sk);
+	} else {
+		set_bit(MPTCP_SYNC_SEQ, &msk->cb_flags);
+	}
+}
+
+In mptcp_move_skbs(), MPTCP_SYNC_SEQ is only checked once before acquiring
+mptcp_data_lock(sk) and before the mptcp_can_spool_backlog() loop:
+
+net/mptcp/protocol.c:mptcp_move_skbs() {
+	if (test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags)) {
+		msk->copied_seq +=3D msk->tfo_iasn;
+		__mptcp_sync_rcv_sequence(sk);
+	}
+
+	mptcp_data_lock(sk);
+	while (mptcp_can_spool_backlog(sk, &skbs)) {
+		mptcp_data_unlock(sk);
+		enqueued |=3D __mptcp_move_skbs(sk, &skbs, &moved);
+
+		mptcp_data_lock(sk);
+	}
+	...
+}
+
+If subflow_set_remote_key() and an incoming data skb run after that initial
+test_and_clear_bit() (or while mptcp_data_lock(sk) is dropped inside the
+loop), __mptcp_move_skbs() -> __mptcp_move_skb() sees msk->rcvd_dummy_seq a=
+nd
+calls __mptcp_sync_rcv_sequence(sk). That updates the TFO skb's map_seq to
+(u32)(msk->tfo_iasn - skb->len) and clears msk->rcvd_dummy_seq while
+msk->copied_seq is still -(u64)skb->len and MPTCP_SYNC_SEQ remains pending.
+
+When mptcp_move_skbs() returns to mptcp_recv_skb() or mptcp_recvmsg() ->
+__mptcp_recvmsg_mskq(), the offset calculation:
+
+	offset =3D (u32)msk->copied_seq - MPTCP_SKB_CB(skb)->map_seq;
+
+evaluates to (u32)(-msk->tfo_iasn), which underflows to >=3D skb->len and c=
+auses
+mptcp_recv_skb() to drop the unread skb via mptcp_eat_recv_skb() and
+__mptcp_recvmsg_mskq() to skip it.
+
+In addition, while MPTCP_SYNC_SEQ is pending under lock_sock(sk) before
+release_sock(sk) runs mptcp_release_cb(), mptcp_inq_hint() computes
+READ_ONCE(msk->ack_seq) - READ_ONCE(msk->copied_seq) using the IASN-shifted
+msk->ack_seq and the unshifted msk->copied_seq, returning INT_MAX.
+
+[1] https://lore.kernel.org/r/ad478dff911f705f9d49c66a1a0ef1794b59c989.1793=
+349369.git.geliang@kernel.org
+[2] https://lore.kernel.org/r/ad478dff911f705f9d49c66a1a0ef1794b59c989.1793=
+349369.git.geliang@kernel.org
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1793361629.gi=
+t.tanggeliang@kylinos.cn?part=3D4
