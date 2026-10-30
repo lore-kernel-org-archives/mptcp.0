@@ -1,59 +1,59 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1793324268;
-	b=I5tac5d7870xWfbke7j5jNy2D0u8VYWeWjtcUysWT7ax8Gv3QDa5p9Cs1Q00U4Qc+Og8
-	 FEpWeThFWSenA94EXU9rwsLy4XEtCegKPK8veDST9Z+IIBaq1Z2JU0eAqLjZ+Q52up3or
-	 ApJ82Tu+A6rXZOF8Z3YSZC1oPa4X1PERPJTM0SDIgRLn42FNJpWRYagfRm1PaNi5RqVMM
-	 hz/kKFYOHg0HDAfXbIyZXHatDe/5c91HqnpMg0eSMcRjqFDiyJ4xh7FxDHajZ9QgEP9k+
-	 45GrWiTcW3997oZXuTUawIH96yO3lc72SkTB0DyS5Kw81wws4Q4vJ0JcXBIRs0xC+kg==
+	b=U4XtK7n2Y2N3XvqKvv81JKZMT4BdKtdU6/4ziS2dwsy59VVSyJbJrSyJoaxSxb6loLVD
+	 jTkvy5cMcyduZPi5JMzwHliKsYEVD/EjrxcsyZBDJE4bpTjHnTholtZupc/At4eCBMfBs
+	 j2LwPoICQqZHD73pbr8TQy3BSQjZxbW7jjOWjulJEsejgjj7wGoMBS+pM7+R4GDwxjxxg
+	 q/e9ASKVHDwC7AOaWZhtMx7y0AMNcvKGZq2trB4cf2ByFMRkWRtugoNjVJ8H3MupkJ6wC
+	 466kE1pS9jZzUfecvXzZRJTaz7C+g9Jshp9WHVyWGfzGrRYFjP5LGZemeToaPlwvC2A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1793324268;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=9vnq8f4TI//I+l5dvZR0UGr7LdO7s9eGZCCWOaZhDdQ=;
-	b=XILJiWcRD9JRJzH3A07TMWkHj4u6gYzJ3pgaFR6Ss+cQQR0cjhxECmwnNrl2I5OCYKFh
-	 lLuL9qFU16VzMNT+i6NQZj0wJzzyuUeaBAzpMTFzOLv9N7AIXgO9R+Gs0JuQlKdGAmklQ
-	 UZ2jy4Sf0gW1PjcLiNuAag//mgDakVjlgfFGbuxGztqHIK/4iK6m8zzyYsWmayAj8H45C
-	 sscdmqZYavmEAmpJhzehlmCcMXyryw4vtSVIufWd4hzX65KZFSWh57sjHmOLI8FoynmNI
-	 cH87lcBrsvCCuKnAM2zS0Dk7baUVX1Gm6jowyPWuysS7iofjSHq/UbgdTd6cM2RMaXQ==
+	bh=A1CDe/Vl1eF9+bi4pnuJBCoiuzCOxMXyWkqkbUzGmso=;
+	b=PCOVbwVNZ+0k9PyMB4Xi9be83DwoaaiCEVfN8xL+uABHeFwMpq5kJhKau446/lH4FIP1
+	 P57/xuL9mD7pjBoqCgnn1czwWhSTujglaxGhDKlDXW5W1oPy/wnS/EfAvb/j1cQFAY4R0
+	 zBu74hu6IFRRYc/k89T9f95UVvodTi1DAFa7xLfZr6qmn20zmrnTVD3igrT+z7yZ7wMtP
+	 9BtBXNi27Je4eOr80GiFsrfMcuSAAqs4RaZ1mfQZCIHr+g4AzBZ/9t57llsZVhHLd9EnH
+	 b6J555cEpgT+mMSxEFFMgwjwHyXbvFkIqFCMWmhGgOmXy3wEFZBKGpcW8YaJxZVB0Yg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=al0UWonc;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Uh9pjX3G;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1FD606A31A
-	for <mptcp@lists.linux.dev>; Fri, 30 Oct 2026 01:37:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656FE606A31A
+	for <mptcp@lists.linux.dev>; Fri, 30 Oct 2026 01:37:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=al0UWonc
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA5B71F000C1;
-	Fri, 30 Oct 2026 01:37:46 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Uh9pjX3G
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCF851F00919;
+	Fri, 30 Oct 2026 01:37:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793324267;
-	bh=9vnq8f4TI//I+l5dvZR0UGr7LdO7s9eGZCCWOaZhDdQ=;
+	s=k20260515; t=1793324268;
+	bh=A1CDe/Vl1eF9+bi4pnuJBCoiuzCOxMXyWkqkbUzGmso=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=al0UWonc++21bu4sI1Sbyj2oJBqLg6vWdN7Dtim+8AeuGOj7e/9SsfAdJIpQCFfgj
-	 pHcdKUe5iCxeUouzJE8Pd4QOiPop8rNQlyXMs3L6y+EM0vIWgjRRM80BLt0AWjPv/f
-	 lPyxcniy8XvtCAqtVFabcx0qJ2hE/mLsq4ZTi1GQruh0oRVO8oaBOgznJhMszDb0IR
-	 Rmwciwfvoyvb34W7bIKXDUwqPDhPpqlTea3Nl7Cge32QMsgAaVl+tn1nNhJHum+34g
-	 o20YXajenr0XXVlYKLp/oBvVhMEAW+KnD5DRprCLg5sJNPOz2hPkZ7o1FjX6uYhB21
-	 GDNW4zLPkmPxA==
-Subject: Re: [PATCH mptcp-next v5 1/4] mptcp: sched: avoid truncating the
- pacing rate in the scheduler
+	b=Uh9pjX3GLiq2XWNQW8kLu/s2RJlu+k5fbhwsAJsR5p839XsYEz/+G7jQwRFAObegh
+	 aU+nUHKtSOMkInjeVVKsTIS0kX1GTCaRhpBiJV/vDSPnyb4GRTEm0Q8bxNLsuxoRV7
+	 NTaU/a8/cjcDIlBoqd/mId/dIvWfzEE8yKV1NpoiuO/0lww0Tnx+v+Y79mwwrH0OSo
+	 N9NMYf27D18Gjd//atdiryp8zIayPkoSCrOB325YsF0gMUDtB6xepKLRGmqy+OCiYI
+	 /o54MJvFpKhIg5C4ff+6qfTZ2a1o4hYpnlD8VAfttvNfO7QjJcOYth8HfV0EDLEZ/u
+	 9+wqFM9Rt4kMw==
+Subject: Re: [PATCH mptcp-next v5 2/4] mptcp: sched: penalise a slow subflow
+ by halving its cwnd
 From: netdev-bot+sashiko@kernel.org
 To: shardul.b@mpiricsoftware.com
 Cc: mptcp@lists.linux.dev, matttbe@kernel.org, janak@mpiric.us,
  kalpan.jani@mpiricsoftware.com, shardulsb08@gmail.com, w453y.me@gmail.com,
  kuba@kernel.org
-Date: Fri, 30 Oct 2026 01:37:46 +0000
-Message-ID: <179332426628.3132.5889522664662315602@kernel.org>
+Date: Fri, 30 Oct 2026 01:37:47 +0000
+Message-ID: <179332426731.3132.5154849254860151673@kernel.org>
 In-Reply-To:
- <20261028-mptcp_penalise_send_v2-v5-1-32fb379ce117@mpiricsoftware.com>
+ <20261028-mptcp_penalise_send_v2-v5-2-32fb379ce117@mpiricsoftware.com>
 References:
- <20261028-mptcp_penalise_send_v2-v5-1-32fb379ce117@mpiricsoftware.com>
-X-sashiko-severity: Medium
+ <20261028-mptcp_penalise_send_v2-v5-2-32fb379ce117@mpiricsoftware.com>
+X-sashiko-severity: High
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -69,7 +69,7 @@ MIME-Version: 1.0
 Thank you for your contribution! Sashiko AI review found 3 potential
 issue(s) to consider.
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 2
+Critical: 0 · High: 1 · Medium: 0 · Low: 2
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -77,180 +77,158 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [Medium] On 64-bit kernels, keeping the full-width pace makes
-  linger_time zero for every possible queue size when the pacing rate is…
-- [Low] The patch fixes the default scheduler mptcp_subflow_get_send()
-  (net/mptcp/protocol.c) but not its BPF port, bpf_burst_get_send() in…
-- [Low] TRACE_EVENT(mptcp_subflow_get_send) in
-  include/trace/events/mptcp.h fires on every loop iteration of…
+- [High] The penalty feeds itself and drives a slow subflow's cwnd down
+  to a near-floor value.
+- [Low] The commit message has a 'Co-developed-by: Matthieu Baerts (NGI0)
+  <matttbe@kernel.org>' trailer, but no Signed-off-by from Matthieu…
+- [Low] mptcp_penalise_throttle_ok() (net/mptcp/protocol.c:1637-1643)
+  enforces 'not penalised in the last RTT' by comparing jiffy…
 
 --
 
-mptcp: sched: avoid truncating the pacing rate in the scheduler
+mptcp: sched: penalise a slow subflow by halving its cwnd
 
-This commit changes the local pace variable in mptcp_subflow_get_send()
-from u32 to unsigned long, and computes the linger time with div64_u64().
-It also computes the running avg_pacing_rate average with
-mul_u64_u64_div_u64(), so the rate * bytes products no longer wrap.
+With this commit, the default MPTCP packet scheduler flags the subflow it
+picks when that subflow's avg_pacing_rate is below half that of the
+fastest non-backup subflow, and that fastest subflow is cwnd-limited.
+The flagged subflow then gets its cwnd (and possibly its ssthresh) halved
+in __subflow_push_pending(), under its own socket lock. This happens at
+most once per RTT, and cwnd never goes below MPTCP_PENALISE_MIN_CWND.
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/345
+Link: https://github.com/multipath-tcp/mptcp/blob/825b62d597b5/net/mptcp/mptcp_sched.c#L300-L330
+
+> Co-developed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
+
+[Severity: Low]
+This isn't a bug, but shouldn't the Co-developed-by tag be followed by a
+Signed-off-by from Matthieu Baerts?
+
+Documentation/process/submitting-patches.rst says every Co-developed-by:
+must be immediately followed by a Signed-off-by: from the same co-author.
+checkpatch.pl warns about this.
+
+The later commits "mptcp: sched: do not penalise when
+receive-window-limited" and "mptcp: sched: add penalise counters and
+tracepoint" have the same trailer layout.
 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 02a4f479d9d8c..886f00ee2a4d4 100644
+> index 886f00ee2a4d4..395f9582ece89 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -1633,7 +1633,8 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
->  	struct subflow_send_info send_info[SSK_MODE_MAX];
->  	struct mptcp_subflow_context *subflow;
->  	struct sock *sk = (struct sock *)msk;
-> -	u32 pace, burst, wmem;
-> +	unsigned long pace;
-> +	u32 burst, wmem;
+> @@ -1624,6 +1624,45 @@ bool mptcp_subflow_active(struct mptcp_subflow_context *subflow)
+
+[ ... ]
+
+> +/* Rate-limit the penalty to at most once per subflow RTT, so the congestion
+> + * control can grow the window back between reductions.
+> + */
+> +static bool mptcp_penalise_throttle_ok(struct mptcp_subflow_context *subflow)
+> +{
+> +	struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+> +	u32 rtt = usecs_to_jiffies(READ_ONCE(tcp_sk(ssk)->srtt_us) >> 3);
+> +
+> +	return tcp_jiffies32 - subflow->last_penalise >= max_t(u32, rtt, 1);
 
 [Severity: Low]
-Should the mptcp_subflow_get_send tracepoint get the same change?
+Is the once-per-RTT limit actually enforced when srtt is shorter than one
+jiffy?
 
-trace_mptcp_subflow_get_send() runs for every subflow in this loop.
-However, TRACE_EVENT(mptcp_subflow_get_send) in
-include/trace/events/mptcp.h still stores the rate in a u32 and computes
-the ratio with the old formula:
+In that case rtt is 0 and the threshold becomes 1. A difference of one
+jiffy only means a tick boundary was crossed. A penalty late in jiffy N,
+followed by another pick of the same subflow early in jiffy N+1, would
+pass this check microseconds later with no ACK in between. That would
+quarter cwnd within a single RTT.
 
-include/trace/events/mptcp.h:
-		__field(u32, pace)
-	...
-			__entry->pace = READ_ONCE(ssk->sk_pacing_rate);
-	...
-		if (ssk && sk_fullsock(ssk) && __entry->pace)
-			__entry->ratio = div_u64((u64)ssk->sk_wmem_queued << 32, __entry->pace);
-	...
-	TP_printk("active=%d free=%d snd_wnd=%u pace=%u backup=%u ratio=%llu",
+This can happen on sub-millisecond paths at HZ=1000, below 4ms at HZ=250,
+or below 10ms at HZ=100. __mptcp_push_pending() calls the scheduler on
+every loop iteration, so picking the same subflow twice in a row is
+normal. For larger RTTs, the real gap can still be up to one jiffy
+shorter than srtt.
 
-Take a 64-bit kernel with a subflow above 4 GB/s. The trace records a
-wrapped pace and a ratio that is too large, while the scheduler now uses
-the full-width rate. A fast subflow can look slow in the trace. If the low
-32 bits of the rate are zero, the trace shows pace=0 ratio=0.
+Would a microsecond clock, such as tp->tcp_mstamp compared with
+srtt_us >> 3, match the documented limit better?
 
-A later patch in this series, "mptcp: sched: add penalise counters and
-tracepoint", adds a mptcp_subflow_penalise event with u64 pace fields.
-The mptcp_subflow_get_send event still has the u32 field at the end of
-the series. The event also reports sk_pacing_rate rather than
-avg_pacing_rate, but that predates this patch.
+> +}
+> +
+> +/* Halve cwnd, and ssthresh when cwnd is at or above it, under the subflow
+> + * socket lock: the scheduler only marks a candidate, the conditions on this
+> + * subflow are evaluated here, on current state.
+> + */
+> +static void mptcp_penalise_cwnd(struct sock *ssk)
+> +{
+> +	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+> +	struct tcp_sock *tp = tcp_sk(ssk);
+> +	u32 cwnd = tcp_snd_cwnd(tp);
+> +
+> +	subflow->penalise = false;
+> +	if (cwnd <= MPTCP_PENALISE_MIN_CWND ||
+> +	    inet_csk(ssk)->icsk_ca_state != TCP_CA_Open ||
+> +	    !mptcp_penalise_throttle_ok(subflow))
+> +		return;
+> +	subflow->last_penalise = tcp_jiffies32;
+> +	tcp_snd_cwnd_set(tp, max_t(u32, cwnd >> 1, MPTCP_PENALISE_MIN_CWND));
+> +	if (cwnd >= tp->snd_ssthresh)
+> +		tp->snd_ssthresh = max_t(u32, tp->snd_ssthresh >> 1, 2);
 
->  	int i, nr_active = 0;
->  	struct sock *ssk;
->  	u64 linger_time;
-> @@ -1664,7 +1665,7 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
->  				continue;
->  		}
->  
-> -		linger_time = div_u64((u64)READ_ONCE(ssk->sk_wmem_queued) << 32, pace);
-> +		linger_time = div64_u64((u64)READ_ONCE(ssk->sk_wmem_queued) << 32, pace);
->  		if (linger_time < send_info[backup].linger_time) {
->  			send_info[backup].ssk = ssk;
->  			send_info[backup].linger_time = linger_time;
+[Severity: High]
+Can the congestion control really grow the window back between
+reductions, as the comment above mptcp_penalise_throttle_ok() says?
 
-[Severity: Medium]
-On 64-bit kernels, what happens here when the pacing rate is effectively
-unlimited?
+Once ssthresh has also been halved, the subflow is in congestion
+avoidance. There, Reno grows by about one segment per RTT in
+tcp_cong_avoid_ai(). CUBIC limits growth to about cwnd/2 per RTT:
 
-Sockets start with an unlimited rate:
-
-net/core/sock.c:sock_init_data_uid() {
+net/ipv4/tcp_cubic.c:bictcp_update() {
     ...
-	sk->sk_pacing_rate = ~0UL;
+	ca->cnt = max(ca->cnt, 2U);
     ...
 }
 
-TCP only replaces this value in tcp_update_pacing_rate(), which is
-skipped when the congestion control provides cong_control:
+Halving every RTT outpaces both. It looks like cwnd would ratchet down
+towards MPTCP_PENALISE_MIN_CWND (3 -> 2, regrow to 3, halve again). In
+slow start, doubling per RTT against halving per RTT gives roughly zero
+net growth.
 
-net/ipv4/tcp_input.c:tcp_cong_control() {
-    ...
-	if (icsk->icsk_ca_ops->cong_control) {
-		icsk->icsk_ca_ops->cong_control(sk, ack, flag, rs);
-		return;
-	}
-    ...
-}
+The trigger also seems to feed itself. avg_pacing_rate is built from
+sk_pacing_rate, which tcp_update_pacing_rate() computes from:
 
-tcp_rcv_state_process() also skips the update in this case. In-tree BBR
-and ROCCET set sk_pacing_rate themselves. A BPF struct_ops congestion
-control that implements cong_control but never writes sk_pacing_rate
-leaves it at ULONG_MAX. avg_pacing_rate starts from that value, and the
-new mul_u64_u64_div_u64() average keeps it within one or two of
-ULONG_MAX.
+	rate *= max(tcp_snd_cwnd(tp), tp->packets_out);
 
-sk_wmem_queued is an int, so (u64)sk_wmem_queued << 32 is below 2^63.
-Dividing that by a pace near ULONG_MAX gives a linger_time of 0 for every
-queue size. Because the comparison above is strict, the first subflow in
-conn_list always wins the tie, even when its queue is full.
+divided by srtt. Each halving lowers the subflow's rate, so this check in
+mptcp_subflow_get_send() passes by a wider margin each time:
 
-If that subflow is not writable, the check further down returns NULL
-without looking at the other, empty subflow:
+	penal_cand = fastest && ssk != fastest &&
+		     subflow->avg_pacing_rate < max_pace / MPTCP_PENALISE_RATE_RATIO;
 
-	ssk = send_info[SSK_MODE_ACTIVE].ssk;
-	if (!ssk || !sk_stream_memory_free(ssk))
-		return NULL;
+Nothing here tells a slow path apart from a subflow that just has a small
+cwnd.
 
-mptcp_sched_default_get_send() turns the NULL into -EINVAL, and the push
-stops until the first subflow drains. When both subflows are writable,
-the first one still always wins, so traffic stays on a single path.
+For example, take a newly joined MP_JOIN subflow B on a path as good as
+A. B starts with cwnd 10 and sk_wmem_queued == 0, so linger_time is 0
+and the scheduler picks it. If A has a cwnd of around 100 and is
+cwnd-limited, B becomes a candidate.
 
-Before this patch, pace was truncated to at most U32_MAX. That made
-(wmem << 32) / pace at least wmem, so a nonempty queue always got a
-positive linger_time.
+B is in TCP_CA_Open, its cwnd of 10 is above 2, and last_penalise == 0
+passes the throttle. So B's cwnd is halved before B has sent any data:
 
-With this configuration, can a full subflow now be chosen over an empty
-subflow that is writable?
+mptcp_subflow_get_send()
+    subflow->penalise = burst && fast_limited;
+__subflow_push_pending()
+    mptcp_penalise_cwnd()
+        tcp_snd_cwnd_set()    /* cwnd 10 -> 5 */
 
-> @@ -1697,9 +1698,12 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
->  		return ssk;
->  
->  	subflow = mptcp_subflow_ctx(ssk);
-> -	subflow->avg_pacing_rate = div_u64((u64)subflow->avg_pacing_rate * wmem +
-> -					   READ_ONCE(ssk->sk_pacing_rate) * burst,
-> -					   burst + wmem);
-> +	/* 64-bit arithmetic overflows at high rate with a large queue */
-> +	subflow->avg_pacing_rate =
-> +		mul_u64_u64_div_u64(subflow->avg_pacing_rate, wmem,
-> +				    burst + wmem) +
-> +		mul_u64_u64_div_u64(READ_ONCE(ssk->sk_pacing_rate), burst,
-> +				    burst + wmem);
->  	msk->snd_burst = burst;
->  	return ssk;
->  }
+This would repeat every srtt, so B could not ramp up while A stays
+saturated. Would this keep slower or newly added subflows at a tiny cwnd
+and defeat bandwidth aggregation for bulk transfers with the default
+scheduler?
 
-[Severity: Low]
-Does the BPF port of this scheduler need the same fix?
+The later patches in this series don't seem to change this behaviour.
 
-bpf_burst_get_send() in tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
-copies mptcp_subflow_get_send(), but it still has the code this patch
-removes:
+> +}
 
-static __always_inline __u64 div_u64(__u64 dividend, __u32 divisor)
-...
-	__u32 pace, burst, wmem;
-	...
-		pace = subflow->avg_pacing_rate;
-	...
-		linger_time = div_u64((__u64)ssk->sk_wmem_queued << 32, pace);
-	...
-	subflow->avg_pacing_rate = div_u64((__u64)subflow->avg_pacing_rate * wmem +
-					   ssk->sk_pacing_rate * burst,
-					   burst + wmem);
-
-In this port:
-
-  - pace still truncates avg_pacing_rate to 32 bits.
-  - The local div_u64() helper only takes a 32-bit divisor.
-  - avg_pacing_rate * wmem can still wrap.
-
-If a nonzero avg_pacing_rate has zero low 32 bits, the !pace check also
-resets the average from sk_pacing_rate. If that value also truncates to
-0, the subflow is skipped.
-
-test_burst() in tools/testing/selftests/bpf/prog_tests/mptcp.c loads this
-program through test_bpf_sched(). No patch in this series touches
-tools/testing/selftests/bpf/, so after this patch the port no longer
-matches the scheduler it copies.
+[ ... ]
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261028-mptcp_penalise_send_v2-v5-0-32fb379ce117%40mpiricsoftware.com
