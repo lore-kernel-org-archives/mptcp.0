@@ -1,62 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793363113;
-	b=Z+oFkdnODUn7okFBvji/gXDGNt3uagfG3HeyhimWL0xqADKoS78F0CzJDaBkDsl0js1C
-	 mQ1hACAcs5tI3jzpy77s27evlAIp52DrcFGvvVZQ0C4ZvJ9ilQqwOhB4cUCFyp4zD+cMV
-	 vgJdgm3deP8Zndo4WiPkHxhRxKipLArM+wkIFhmH7bBEnQDP7xcqtonLHPmAL1jpJnqk/
-	 hvV4fMKCIl0zvrmSkITD0tFIzxAYgO5cs7U6nQMqKmkX8l6rISPPTu51U3udR6S+M12xD
-	 UlxoGDVdnwU37FOo67BUqTHAff3RZUjSpbeE5NrX14JsM0mV5xtXBirnrGDRVtUhKyQ==
+	t=1793363382;
+	b=MLVkXRWiluiv6bAEVakFKIpdA3bCgwKdAzv71NTmQ9AP5Wot3EKoqH5l0dpS4YgGR/iu
+	 x0L009h1Pu/1urYaMn0XUx1Oo8POn0yNdE3nW7Ukm6FMhw8FRO/Ji6GmzTyQl7nSAtEjl
+	 00QpJkFL01Y3qgNriMIorlFjbLFjJpfh2QRDysz9QaTOfuoYpou4thIgFcf0PuO1rzdwR
+	 tv6zcLImejbUYMrc1a/eiyiUu5JqmdQ6NL4s49jO8CfA/blnLVvIrwRQLiodhSSiQUS48
+	 0ZnK8sqsxho7E8kPVNucQ7b5GIK6AKn8MZaCUJseWKFvxIeQwxbRCofGmskhwQSfaag==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793363113;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=23LkiJqgraZQ3C0qET4DUDukldHjTQgox9RGCWz5tjE=;
-	b=xFE+SVf9AP6Vco9wQDlWp4/YO/ANSIxl83BRi3tiFCp2pLjA+iSviZDWDGBpkd5IDy50
-	 P526NXJrgEUlofLdv+AQnVH9cvxR++C21UsSmP1fMfBA+g4B8IjWtHQb5X4Y4PTUp2667
-	 f/ejZ4TBaM28UvCsRg2IC4V71gEX88W2VDzi8hUVQF/doB/NxZdNKt5w8URJslYS1M/RL
-	 w+sWIfnReNR+JPqOjZkUXCQ2QRTw2YzcWnDAWSVLawjuTCEkq6SlDELlUVyb+uQPSyqxK
-	 +9N7kQjulMAe6VoWVlek/eyj60um5w47QaSFbFdJVF1/+s9Vct+1MZpq7GXKRiAVsEg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793363382;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=zIyyl73uS6V7IYj1cpqzNCXMBckqWu7G2gEIpsVq2Xo=;
+	b=GTKjgYKCiarGOcxEmk7KtI88jlt9xneedGomvc9FDuOc5NJjja4WHvzOwMTTvhAa3LNa
+	 8fUZbBL6qtSPNwEz1+Zjo4ucyOTh5TmNWdbZaurmRW/GRjp3NRj7OIs3hAAh/oDSvNCMk
+	 J5mFZAipEr5TRSD/jI06UCEh+YOfKwO4y5GHOszARrZu+N7XMJExjRdDhufY1wo71G5iV
+	 fMWlCqFmspEPyyZ6Btlu94gU4F6b10/UVXx7n1lwUnaIvHqZhqDBEwAU9ekImYGXqSRNy
+	 3BjXUsVEpuTRWPt9HkhYhkLN9p1LDt01RKOiQgnAgvtbnj7nwYz9EgAp3iM9kC3ja/w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VPs9LOOb;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Kd08Z4i9;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD84F606A330;
-	Fri, 30 Oct 2026 12:25:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE67606A31C
+	for <mptcp@lists.linux.dev>; Fri, 30 Oct 2026 12:29:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VPs9LOOb
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3A721F0093A;
-	Fri, 30 Oct 2026 12:25:11 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Kd08Z4i9
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8FD01F000C1;
+	Fri, 30 Oct 2026 12:29:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793363112;
-	bh=23LkiJqgraZQ3C0qET4DUDukldHjTQgox9RGCWz5tjE=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=VPs9LOObafEAkIgfCh0KBUw6CV63pTxlaTrjmreenP3GVHcY8nfbQ0a2EqwgIvx1p
-	 vxtcTOTRFlqw0+18PjsGmzRu14e+4nw328HisPAd/kbb3VuS4onhM7YE1wx7Iw0U+P
-	 UZHrDv9EkPWFU8VJKpilPsRhGXgjYXb2NJoBqnfrClg0vxAtHNCeeh4RXer7uCHdMF
-	 4P4AtHLXXa9v8cCk+S3Y4qHCk6MWbG4XDHUIenPPJ3247kg5sq0lgPbhkJm2UIfbhB
-	 NETQrR3avszMOOpVRRBcNVD0uXz0gD6t9tPwGUkXasDFujCNcEeWRA65H/gYB9r4qa
-	 Lg91oUJ3GUrMw==
-Subject: Re: [PATCH net 2/2] mptcp: release the parent socket reference with
- the subflow context
-From: netdev-bot+sashiko@kernel.org
-To: zzzccc427@gmail.com
-Cc: matttbe@kernel.org, martineau@kernel.org, davem@davemloft.net,
- edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, geliang@kernel.org,
- horms@kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, baijiaju1990@gmail.com, jjzuming@gmail.com
-Date: Fri, 30 Oct 2026 12:25:11 +0000
-Message-ID: <179336311140.3134.6875927878730480019@kernel.org>
-In-Reply-To:
- <pm-mptcp-objects-candidate-0010-v3-14c229ea28a7d31f60a0-2@gmail.com>
-References:
- <pm-mptcp-objects-candidate-0010-v3-14c229ea28a7d31f60a0-2@gmail.com>
-X-sashiko-severity: Critical
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20260515; t=1793363382;
+	bh=zIyyl73uS6V7IYj1cpqzNCXMBckqWu7G2gEIpsVq2Xo=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=Kd08Z4i9qF7FtfknDNvEOp6Cg+Hr2HWKpcdtyHerG0U+/p1NyPyOhh0nwjqwpSWc/
+	 poElW53HtTOZE5DYdjPXHq+O389ntAlQPOqn28p+PHydBvhEtW+MzBsJjgQzVeaS5s
+	 cG2s9EEXtpEy4Nk3N8qZhY6ZN6plSHGxSuodFPssO+56g64NPd9pW0lx7u2QWazwx3
+	 FuY4D86WBRvemGv+yWpUU2JS9syeCdEcxlqK9O/WdCEFBXg9uGfAs9fko5f3QV8vY0
+	 jjLpW4tlx13PkPJmVyNXHQcKupnmxpDIe0LzkN7yKibzry95wzbnWwe8BEy6QVf5XP
+	 3lIe0hwVkLD/Q==
+Message-ID: <sashiko-outbox-191013@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH mptcp-next v19 2/5] mptcp: drop the cant_coalesce CB
+ field
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
+In-Reply-To: <0ad56f82094010d23ca6cb0fb8400e560ca2f454.1793361629.git.tanggeliang@kylinos.cn>
+References: <cover.1793361629.git.tanggeliang@kylinos.cn>
+ <0ad56f82094010d23ca6cb0fb8400e560ca2f454.1793361629.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 30 Oct 2026 12:29:41 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -65,248 +59,220 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 4 potential
-issue(s) to consider.
-
-Critical: 1 · High: 1 · Medium: 1 · Low: 1
-
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
-
-- [Critical] The new sock_put(ctx->conn) sits in subflow_ctx_destruct(),
-  and a TCP child cloned from a retired MPTCP listener subflow can…
-- [High] The fix is incomplete.
-- [Medium] The commit message presents the delegated-action use-after-
-  free as a live bug that this patch fixes: the second interleaving, the…
-- [Low] The comment in subflow_ulp_release()
-  (net/mptcp/subflow.c:2115-2118) says the context 'will be freed by…
-
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
+- [Medium] mptcp: unlocked MPTCP_SYNC_SEQ bitop on cb_flags in mptcp_move_s=
+kbs()
+- [Medium] mptcp: mptcp_inq_hint() seq mismatch when MPTCP_SYNC_SEQ is defe=
+rred
+- [Medium] mptcp: unreset tfo_iasn in mptcp_disconnect() corrupts passive T=
+FO fallback
 --
 
-I'm sending this review as a reply to the patch on the list. It has four inline comments:
+commit 6271a3eb665a4e03a0631758a5637752d3b353c9
+Author: Paolo Abeni <pabeni@redhat.com>
 
-- **Medium:** the commit message credits this patch with a fix that the previous commit in the series already makes.
-- **High:** mptcp_subflow_drop_ctx() still drops the parent reference immediately, so the fix is incomplete.
-- **Critical:** a possible double free of the subflow context when a child is cloned from a listener that is being closed.
-- **Low:** a stale comment.
+mptcp: drop the cant_coalesce CB field
 
-mptcp: release the parent socket reference with the subflow context
+This commit removes the cant_coalesce skb control buffer field and instead
+synchronizes the passive Fast Open skb sequence numbers with msk->tfo_iasn
+via __mptcp_sync_rcv_sequence() when the 3rd ACK arrives or before the next
+segment moves into the msk receive queue.
 
-This commit moves the sock_put() on the MPTCP parent socket from
-subflow_ulp_release() into subflow_ctx_destruct(). The parent reference
-then lives as long as the subflow socket. The aim is to fix use-after-free
-in bpf_skc_to_mptcp_sock() readers and in delegated action processing,
-building on the previous commit that keeps a retired context attached
-until sk_destruct.
-
-> A delegated action pins the TCP subflow socket, but
-> mptcp_subflow_process_delegated() locks and updates ctx->conn. A peer
-> reset followed by the application closing the MPTCP socket releases
-> the parent before mptcp_napi_poll() takes its data lock:
->
->   Delegation / NAPI                 Peer reset / application close
->   queue SEND or SNDBUF
->     sock_hold(ssk)
->                                     subflow_ulp_release(ssk)
->                                       sock_put(parent)
->                                     mptcp_close(parent)
->                                       last sock_put(parent)
->   mptcp_napi_poll()
->     mptcp_subflow_process_delegated()
->       mptcp_data_lock(parent)
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 528a72da646cc..e855aaa59da29 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
 
 [ ... ]
 
-> Fixes: b19bc2945b40 ("mptcp: implement delegated actions")
+> @@ -438,6 +436,24 @@ static void mptcp_init_skb(struct sock *ssk, struct =
+sk_buff *skb, int offset,
+>  	skb_dst_drop(skb);
+>  }
+> =20
+> +void __mptcp_sync_rcv_sequence(struct sock *sk)
+> +{
+> +	struct mptcp_sock *msk =3D mptcp_sk(sk);
+> +	struct sk_buff *skb;
+> +
+> +	if (likely(!msk->rcvd_dummy_seq))
+> +		return;
+> +
+> +	/* User space can have already received the TFO skb. */
+> +	msk->rcvd_dummy_seq =3D false;
+> +	skb =3D skb_peek_tail(&sk->sk_receive_queue);
+> +	if (!skb)
+> +		return;
+> +
+> +	MPTCP_SKB_CB(skb)->map_seq =3D msk->tfo_iasn - skb->len;
+> +	MPTCP_SKB_CB(skb)->end_seq =3D msk->tfo_iasn;
+> +}
+
+[ ... ]
+
+> @@ -2374,6 +2396,9 @@ static bool mptcp_move_skbs(struct sock *sk)
+>  	bool enqueued =3D false;
+>  	u32 moved =3D 0;
+> =20
+> +	if (test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags))
+> +		__mptcp_sync_rcv_sequence(sk);
+> +
+>  	mptcp_data_lock(sk);
+>  	while (mptcp_can_spool_backlog(sk, &skbs)) {
+>  		mptcp_data_unlock(sk);
 
 [Severity: Medium]
-Can this delegated action sequence still happen on the tree this patch
-applies to?
+As reported by Sashiko on v15 [1], can calling test_and_clear_bit() on
+msk->cb_flags and __mptcp_sync_rcv_sequence() here in mptcp_move_skbs()
+without holding mptcp_data_lock(sk) race with concurrent non-atomic updates
+to msk->cb_flags in BH or timer contexts?
 
-The previous commit in the series, "mptcp: keep delegated subflow contexts
-alive until socket release", added this guard to mptcp_napi_poll() in
-net/mptcp/protocol.c:
+While user space holds lock_sock(sk) and runs mptcp_move_skbs() (from
+mptcp_recvmsg(), mptcp_ioctl(), or mptcp_recv_skb()), the 3rd ACK can arrive
+in softirq on another CPU:
 
-	bh_lock_sock_nested(ssk);
-	if (unlikely(!READ_ONCE(inet_csk(ssk)->icsk_ulp_ops))) {
-		...
-		goto unlock;
-	}
+  check_fully_established()
+    mptcp_propagate_state()
+      mptcp_data_lock(sk);
+      subflow_set_remote_key()
+        msk->tfo_iasn =3D subflow->iasn;
+        set_bit(MPTCP_SYNC_SEQ, &msk->cb_flags);
+      __set_bit(MPTCP_SYNC_STATE, &msk->cb_flags);
+      mptcp_data_unlock(sk);
 
-Before this patch, the parent sock_put() ran in subflow_ulp_release().
-That function is called from tcp_cleanup_ulp() right before:
+Other BH and timer paths (__mptcp_data_acked(), __mptcp_check_push(),
+mptcp_retransmit_timer(), mptcp_finish_join(), and subflow_error_report())
+also modify msk->cb_flags with non-atomic __set_bit() under
+mptcp_data_lock(sk). If a BH handler loads msk->cb_flags while
+MPTCP_SYNC_SEQ is set and mptcp_move_skbs() executes unlocked
+test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags) before the BH CPU stores
+the modified word back, the store can resurrect MPTCP_SYNC_SEQ. That causes
+MPTCP_SYNC_SEQ to be processed a second time in mptcp_release_cb(), which in
+the subsequent patch ("mptcp: remove CB offset field") adds msk->tfo_iasn to
+msk->copied_seq twice.
 
-	icsk->icsk_ulp_ops = NULL;
+In addition, because set_bit() is a relaxed atomic operation without release
+semantics and mptcp_move_skbs() does not hold mptcp_data_lock(sk) here,
+could __mptcp_sync_rcv_sequence() observe a stale msk->tfo_iasn on weakly
+ordered architectures?
 
-At that point the subflow is owned by the user or bh-locked. So
-mptcp_napi_poll() sees one of three states:
+Finally, the commit message states that mptcp_move_skbs() checks
+MPTCP_SYNC_SEQ at each iteration before spooling the backlog, but the check
+is placed before mptcp_data_lock(sk) outside the while
+(mptcp_can_spool_backlog(sk, &skbs)) loop. Should the MPTCP_SYNC_SEQ check
+be moved inside the loop under mptcp_data_lock(sk) (using
+__test_and_clear_bit() across all msk->cb_flags accessors)?
 
-- An attached ULP, where ctx->conn still pins the parent.
-- An owned socket, where it only clears the scheduled bit.
-- NULL ops, where it skips the entry.
+> @@ -3680,6 +3705,7 @@ static int mptcp_disconnect(struct sock *sk, int fl=
+ags)
+>  	msk->bytes_retrans =3D 0;
+>  	msk->rcvspace_init =3D 0;
+>  	msk->fastclosing =3D 0;
+> +	msk->rcvd_dummy_seq =3D false;
+>  	mptcp_init_rtt_est(msk);
+> =20
+>  	/* for fallback's sake */
 
-Also, tcp_release_cb_override() isn't reached after the ULP release,
-because mptcp_subflow_ops_undo_override() restores sk_prot.
+[Severity: Medium]
+Does mptcp_disconnect() also need to reset msk->tfo_iasn =3D 0 (or initiali=
+ze
+it in __mptcp_init_sock())?
 
-If that's right, this patch only fixes the bpf_skc_to_mptcp_sock() case.
-For delegated actions it is defence in depth.
+If a client MPTCP socket connects and receives an MP_CAPABLE SYN-ACK,
+subflow_set_remote_key() sets msk->tfo_iasn to subflow->iasn. If the socket
+then disconnects via mptcp_disconnect() and is reused as a listener via
+mptcp_listen(), child sockets created by mptcp_sk_clone_init() inherit the
+non-zero msk->tfo_iasn via sk_clone_lock().
 
-Should the second interleaving, the second KASAN report and the
-b19bc2945b40 Fixes tag move to the previous commit instead?
+If a passive TFO connection on that listener receives a SYN with MP_CAPABLE
+and data (setting msk->rcvd_dummy_seq =3D true in
+mptcp_fastopen_subflow_synack_set_params()) and then falls back to TCP on
+the 3rd ACK in check_fully_established() without calling
+subflow_set_remote_key(), the next incoming segment in __mptcp_move_skb()
+calls __mptcp_sync_rcv_sequence(sk). Because msk->tfo_iasn still holds the
+previous connection's IASN instead of 0, __mptcp_sync_rcv_sequence() will
+overwrite the queued TFO skb's map_seq and end_seq with the stale
+msk->tfo_iasn, breaking skb coalescing and mptcp_inq_hint() (and causing
+__mptcp_recvmsg_mskq() and mptcp_recv_skb() to skip the TFO payload after
+the subsequent commit removing the CB offset field).
+
+[ ... ]
 
 > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 8dc0677dc5514..ebcface15661a 100644
+> index 78e886b202585..8a3ba490b5772 100644
 > --- a/net/mptcp/subflow.c
 > +++ b/net/mptcp/subflow.c
-
-[ ... ]
-
-> @@ -820,6 +822,8 @@ static void subflow_ctx_destruct(struct sock *ssk)
->
->  	rcu_assign_pointer(inet_csk(ssk)->icsk_ulp_data, NULL);
->  	ctx->tcp_sock_destruct(ssk);
-> +	if (ctx->conn)
-> +		sock_put(ctx->conn);
->  	kfree_rcu(ctx, rcu);
+> @@ -515,6 +515,8 @@ static void subflow_set_remote_key(struct mptcp_sock =
+*msk,
+>  				   struct mptcp_subflow_context *subflow,
+>  				   const struct mptcp_options_received *mp_opt)
+>  {
+> +	struct sock *sk =3D (struct sock *)msk;
+> +
+>  	/* active MPC subflow will reach here multiple times:
+>  	 * at subflow_finish_connect() time and at 4th ack time
+>  	 */
+> @@ -533,6 +535,12 @@ static void subflow_set_remote_key(struct mptcp_sock=
+ *msk,
+>  	WRITE_ONCE(msk->ack_seq, subflow->iasn);
+>  	WRITE_ONCE(msk->can_ack, true);
+>  	atomic64_set(&msk->rcv_wnd_sent, subflow->iasn);
+> +	msk->tfo_iasn =3D subflow->iasn;
+> +
+> +	if (!sock_owned_by_user(sk))
+> +		__mptcp_sync_rcv_sequence(sk);
+> +	else
+> +		set_bit(MPTCP_SYNC_SEQ, &msk->cb_flags);
 >  }
 
-[Severity: High]
-The commit message says "Every reference on the subflow socket then also
-keeps the parent alive". Does that hold for mptcp_subflow_drop_ctx()?
-That function still drops the parent reference right away when the ULP
-is attached:
+[Severity: Medium]
+As reported by Sashiko on v15 [2], when the 3rd ACK arrives in BH context
+while user space holds lock_sock(sk), subflow_set_remote_key() updates
+msk->ack_seq to subflow->iasn immediately while deferring
+__mptcp_sync_rcv_sequence() via MPTCP_SYNC_SEQ. Can this cause
+mptcp_inq_hint() to compute a bogus value before MPTCP_SYNC_SEQ is
+processed?
 
-net/mptcp/subflow.c:mptcp_subflow_drop_ctx() {
-	...
-	if (inet_csk(ssk)->icsk_ulp_ops) {
-		subflow_ulp_fallback(ssk, ctx);
-		if (ctx->conn)
-			sock_put(ctx->conn);
-	...
-}
+In net/mptcp/protocol.c, mptcp_inq_hint() computes:
 
-In that branch the TCP socket stays hashed as plain TCP, so a reference
-on it no longer pins the msk. bpf_mptcp_sock_from_subflow() returns
-ctx->conn without taking a reference of its own.
+	skb =3D skb_peek(&sk->sk_receive_queue);
+	if (skb) {
+		u64 hint_val =3D READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
 
-One way to reach it is closing a listener that has an unaccepted
-connection:
+		if (hint_val >=3D INT_MAX)
+			return INT_MAX;
 
-mptcp_check_listen_stop()
-  mptcp_subflow_queue_clean()
-    __mptcp_unaccepted_force_close(msk)
-      mptcp_do_fastclose(msk)        <- only sends RST, child stays in ehash
-      __mptcp_destroy_sock(msk)
-        mptcp_destroy()              <- sets free_first
-          mptcp_destroy_common()
-            __mptcp_close_ssk(first) <- in_accept_queue branch
-              mptcp_subflow_drop_ctx(first)
-                sock_put(msk)
-        sock_put(msk)
-    mptcp_cancel_work(msk)
-    sock_put(msk)                    <- msk freed
+		return (unsigned int)hint_val;
+	}
 
-Suppose a TC or SK_SKB program on another CPU called bpf_sk_lookup_tcp()
-on that 4-tuple, then bpf_skc_to_mptcp_sock(), before the fallback. It
-holds only the TCP reference. Wouldn't it then read the freed msk, the
-same way as in the first KASAN report?
+While MPTCP_SYNC_SEQ is still pending, MPTCP_SKB_CB(skb)->map_seq on the
+queued TFO skb is still the dummy value (-skb->len), whereas msk->ack_seq
+ has already been updated to subflow->iasn (and in the later commit
+"mptcp: remove CB offset field", msk->copied_seq remains -(u64)skb->len
+until MPTCP_SYNC_SEQ is processed).
 
-The dispose_child label in subflow_syn_recv_sock() looks like a second
-path. It is reached after:
+This state is reachable under lock_sock(sk) in three places before
+release_sock(sk) runs mptcp_release_cb():
 
-	ctx->conn = (struct sock *)owner;
+1. mptcp_recvmsg() -> __mptcp_recvmsg_mskq() -> mptcp_rcv_space_adjust()
+   calls mptcp_inq_hint(sk) before mptcp_move_skbs(sk), underflowing
+   copied -=3D mptcp_inq_hint(sk).
+2. In mptcp_recvmsg(), mptcp_move_skbs(sk) is only called when
+   !list_empty(&msk->backlog_list); if the 3rd ACK carries no data payload,
+   backlog_list is empty and the TCP_CM_INQ cmsg path calls
+   mptcp_inq_hint(sk) with MPTCP_SYNC_SEQ still pending, reporting INT_MAX
+   (or a corrupted value based on subflow->iasn) to user space.
+3. In mptcp_ioctl(SIOCINQ), if the 3rd ACK arrives in BH after
+   mptcp_move_skbs(sk) checks MPTCP_SYNC_SEQ and before mptcp_inq_hint(sk)
+   reads msk->ack_seq, SIOCINQ likewise returns a bogus value.
 
-and by then tcp_v4_syn_recv_sock() has already hashed the child.
+[1] https://lore.kernel.org/r/25f42bae1af43649a5c89ca10cfe0d962941c6f7.1792=
+718041.git.tanggeliang@kylinos.cn
+[2] https://lore.kernel.org/r/25f42bae1af43649a5c89ca10cfe0d962941c6f7.1792=
+718041.git.tanggeliang@kylinos.cn
 
-Does this put also need to be deferred, for example past an RCU grace
-period, or otherwise tied to the TCP socket's lifetime?
-
-[Severity: Critical]
-Can a TCP child cloned from a retired MPTCP listener subflow inherit
-subflow_ctx_destruct()? If so, it would run this new sock_put() on the
-listener's ctx.
-
-The comment on mptcp_subflow_ctx_release() from the previous commit says
-"TCP never clones such a socket". However, tcp_v4_rcv() checks the
-listener state without holding the listener lock:
-
-CPU1 (softirq)
-tcp_v4_rcv()
-  if (unlikely(sk->sk_state != TCP_LISTEN)) { ... }   <- passes
-  sock_hold(sk)
-  tcp_check_req()
-    ->syn_recv_sock()
-      inet_csk_clone_lock()
-        sk_clone_lock()
-
-CPU2
-mptcp_close()
-  mptcp_check_listen_stop()
-  __mptcp_destroy_sock()
-    mptcp_destroy()                  <- free_first = 1
-      __mptcp_close_ssk(listener ssk)
-        __tcp_close()
-          inet_csk_destroy_sock()
-            tcp_cleanup_ulp()
-              subflow_ulp_release()  <- release == true
-                mptcp_subflow_ctx_release()
-                  ssk->sk_destruct = subflow_ctx_destruct;
-              icsk->icsk_ulp_ops = NULL;
-
-tcp_cleanup_ulp() leaves icsk_ulp_data pointing at the listener's ctx.
-Suppose CPU2 gets this far before sk_clone_lock() copies the listener:
-
-- sk_clone_lock() keeps the inherited sk_destruct on success. It only
-  clears it on the failure path.
-- inet_clone_ulp() returns early because icsk_ulp_ops is NULL.
-
-The child then has sk_destruct == subflow_ctx_destruct, icsk_ulp_data
-pointing at the listener's ctx, and is_mptcp set.
-
-inet_csk_reqsk_queue_add() then sees that the listener is no longer
-TCP_LISTEN and calls inet_child_forget(). When the child is freed,
-subflow_ctx_destruct(child) runs ctx->tcp_sock_destruct, then
-sock_put(ctx->conn) on the listener msk, then kfree_rcu(ctx).
-
-Later the listener ssk is destroyed, and subflow_ctx_destruct() runs
-again on the same ctx. Wouldn't that call ctx->tcp_sock_destruct through
-a pointer read from memory that may already be freed? It would also put
-the listener msk a second time and kfree_rcu() the ctx twice.
-
-The destructor inheritance comes from the previous commit in this series.
-This patch adds the extra put on the listener msk on top of it.
-
-[ ... ]
-
-> @@ -2120,7 +2124,6 @@ static void subflow_ulp_release(struct sock *ssk)
->  		if (!release && !test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW,
->  						  &mptcp_sk(sk)->flags))
->  			mptcp_schedule_work(sk);
-> -		sock_put(sk);
->  	}
->
->  	mptcp_subflow_ops_undo_override(ssk);
-
-[Severity: Low]
-This isn't a bug, but the comment a few lines above in
-subflow_ulp_release() still says:
-
-	/* if the msk has been orphaned, keep the ctx
-	 * alive, will be freed by __mptcp_close_ssk(),
-	 * when the subflow is still unaccepted
-	 */
-
-After this series, __mptcp_close_ssk() only retires the context through
-mptcp_subflow_ctx_release(). The context is freed in subflow_ctx_destruct()
-when the subflow socket is destroyed, and with this patch the parent
-reference is dropped there too.
-
-Should this comment be updated?
-
--- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/pm-mptcp-objects-candidate-0010-v3-14c229ea28a7d31f60a0-0%40gmail.com
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1793361629.gi=
+t.tanggeliang@kylinos.cn?part=3D2
