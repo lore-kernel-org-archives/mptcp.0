@@ -1,93 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.161.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793405550;
-	b=T8aL6buNrZt5TYrWk6rsvzZFqtV6Ke1ELfY2/Z+CL2VTbLCGMv0lU77y/Og309wfMvi7
-	 IugMhAxxL+Qefv4RtlPdI8lZ5GoDESE0TkpkDKgIfgY61Zzw165656B4U130u/H0Uc+aM
-	 MdJvcMS+m97OFHL4vCDAM8c+OUvuIkZM/JKjwewntGsf5X5ihlFx6bK3n5HxWsqeKiorv
-	 AQiCMeeE7+E7k7GNysBa7HsSQnbBP8SWU8V/8XxVR45oyxwX9rTjBvbKTaB/tHWbbWN0v
-	 fKSyYXdDGs6zYkymcPK8w7cWb1HtUBHyupQTDfEjB+HsYd4W5OjwM1wspckBMjGkg0A==
+	t=1793440973;
+	b=PoP/Y95Zic3zmZKwf+dUrhBKRRR1AVjhvDi1AkJvY6tFiO8Rw8A623gupMft/u0yDztb
+	 w7HhGb8IsMHZIYoPegmqUbzv1h+J22UV3pl+jGomSNj5VtdXRwnjWat5ggrC3Fsc4sLeL
+	 qBcT2f5Kp/UC3oN7DFVm4RtTlKj+cORzh6qDJqppuokRL2LPhEXzk97UPHBw0XZgU3ryM
+	 aUh4K606ZgHxw53u5TFxlTbKxuOZPYcuD9/51yETEu0mcU9v/rxxE32DITaaGAKA8++Mx
+	 dzmMkhH8EnQvX1F4P17Vx0tkySPVCsodl5gixvHQnDZMxvMXDl1Yj4ZfThO3GXs2tdg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793405550;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
-	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
-	 Date:MIME-Version:Content-Type;
-	bh=3klrgDoBr07PG5w7bGp75eJUfzAwnjRr4s6jE5tG2mw=;
-	b=RM4oNHPreoWlDilZ7iD2/mXcBRi3QXw7MlLL8fBtt4HgnwJEUkRSra/WayP3UOFwtrpH
-	 9spz58PcFpEHQPRfluQKiEJkyg0pjkfdr6GykHHdvjMBggHRnNUrgRssyWIQ8BwGnL70P
-	 GrXU3z4SroZJiTlUaSNhnFFyx/bQl/fduj8FR1E0FZu7ag69qaNP/+CwHTCpKafH46Hy4
-	 0DoIwdj0M0g2HhzbLKcwUCUViBh+CgmQgWjZC1Ymfvl0nAxyqajeSX4Cx1xlAbjMq4OAz
-	 OxSEW9VVhWiGg1K7sVV271G1dMwugFV2gsQyK2QZ2MSEGK//l4IXIDE68pAU7d43M0Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793440973;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=6rV84S6eanCegLb0TzfzwLYY0wkXOw6dPHzz+4yboXQ=;
+	b=mJO1AIRdFZQXSVOCoIDYVzOUKqwpztCexqrLxWiFvgvIXsayMAJ936nCKPRQTVu6PM+/
+	 kVec/nysMX5vmsaUKE9V98dOw0TpYmxw7NRPVka9J6DqBIkez4twicnKOkvYbmXZKeHYr
+	 Bq8veGTMbjAcNMXzGpufunbZxjmUzAyQ2elrR3bDwaiB+vYBky1DSHoD2PxwHdJS0pt3o
+	 Ugf5W2D0nO4OJV5lbZUHT3Zd7/RXVfCoDvxGvpfSDOpzFOhHQ2ZgBTpoCAT/dSbt3Txnl
+	 uzyWRCMxZIFnJODRYvszauOTRVRaI+a1njXh+UCT04G6VxsrFkG2zqLeEaxqPhWwuuQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=DnXwNCXU;
-	arc=none smtp.remote-ip=209.85.161.42
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KlXA3vMG;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F10606A31A
-	for <mptcp@lists.linux.dev>; Sat, 31 Oct 2026 00:12:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 69F10606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D134606A31A
+	for <mptcp@lists.linux.dev>; Sat, 31 Oct 2026 10:02:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=DnXwNCXU
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-6df7f544919so863330eaf.1
-        for <mptcp@lists.linux.dev>; Fri, 30 Oct 2026 17:12:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793405549; x=1794010349; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=3klrgDoBr07PG5w7bGp75eJUfzAwnjRr4s6jE5tG2mw=;
-        b=DnXwNCXU/FbVszW3+QztvX0NhEDtT/qM+oMfduf45ikeDyK3OYEFhR49yPKD8Huuhx
-         SA2L8wCKBHP+EakH0l0qzUztUHIjPlwc86lz74WnND2eKUPbNM4Gat6o5hgpRJB0I7uz
-         lE1h3cP8jDSyq+VC4HeeZ2Y6OUbyJhMWlgwWJBFPwPerfYno843PRaP2+Je720CueLOO
-         C+OK7uOa6wWavCh6VU/p052AyUYRQZvYCp+pedAMU+YnSFq+R6HHa0gexJC4BQUu5PvR
-         IGJwBLjLICcGhrdjsnYEPmjaN5byysE45/bv10hyy22MMYXbyTsNJkZt2reMukyFfIrj
-         vNHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793405549; x=1794010349;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=3klrgDoBr07PG5w7bGp75eJUfzAwnjRr4s6jE5tG2mw=;
-        b=gx4pZvWB+z/5+lIUOtgFGmiZ3fG4p1dzdRtaC/0zdk3Ai0cpynNLb7icnu3q1rJHkO
-         izDoykhnEmDuSj/nzhS4iNK16vtc0mRKGktyADew9xJkd14CLcNmkE3PuaUpf1TQO3rM
-         ZXFG2UYbmP1KNo7C6tJsdAxWUwI/mKEr+Jbnwq8icZkmCxjgEUmOgHw/RvSvLzxWVzSZ
-         wEVDyb2xwOfwL4D/X0azXBfKRAs7KC7enM+z/Urgqp3GHX3Iyh0SdnOUEFYSJ8XeGdB2
-         2aRd3VqGHRaZHT7yS9L7geZwDvw6Pdj2uIJrvUQZzjWa/9ktxypvpIMvaiwP1xLozLk3
-         tlQw==
-X-Gm-Message-State: AFq9FYJ8+d81mpNsDz4XMoJOkOH8OIcTiuQ+rpSVADPq7bmbaaJ5t9F5
-	et8m8+EZZsqi6t4IIBO5wwbF9uNzGB7nz/rqPpnJOyr5dpn01x5lEpM=
-X-Gm-Gg: AYBFou1DHK5PeYizBjuJSo7221TrPikAsDa6FjIlGnR9lWNbRhB6SKlxeN527L6kkRd
-	cEo1erbYmmWN+pCraKz4JL99GWURZiFJ7npdYaYVD7HuFGEdY7aVFMUFumkc/rpzzi73SshbLY8
-	P5Ny7eOzEBGjlwPskZSRd2OyHWRo7TuIsD5vZj19MlSf+EkD0s7vxZIejC/bp1qbvwvryUOgMt2
-	bJTEWhyY2FQPKnQf8w+Vgd2Ewr0sN/XbaULLOQEviLPbGszMBuWqUgObSbpMS5WFq0MAan1DTCy
-	/72QKRO9C/HEgrfGqkKTovmi2NyFNeG7/6cju1UtiUSqEfHvbCAe5Ht/mufDvudcraQlDoLTJtJ
-	4kC7A8pCnQx0sDx9UE4IqBbzd7SjExEYlRe9rQTtmClf7Jh9XOxKjJL/AgU8C910GEY6M2G8Xmi
-	DFHlDwTpusBFhERuQ6zujuywksfWJAUoP8yuzmJDIISBVyt/8czhV87ro6zkAMFzeo4axcmL8mK
-	FQ26TiRYIQhC32OvqOyDMYT+y+YrdiHRVUenL76gVSX6DfnI+Bq7pALu57ZvWtlFW3MsZB6JjaD
-	QmI0PLqkWEMwjG3hAej51MGKrbxjeGWqWTewY3AsXA==
-X-Received: by 2002:a05:6820:1c93:b0:713:286a:3d36 with SMTP id 006d021491bc7-714f29c8b72mr2622081eaf.62.1793405549317;
-        Fri, 30 Oct 2026 17:12:29 -0700 (PDT)
-Received: from github.com ([4.151.214.108])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-85d354efebesm3213850a34.19.2026.10.30.17.12.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Oct 2026 17:12:28 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Yilin Zhang <yilinzhang@moonshot.ai>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20261030-mptcp-tfo-mpj-v4-1-e6eff2027342@kernel.org>
-References: <20261030-mptcp-tfo-mpj-v4-1-e6eff2027342@kernel.org>
-Subject: Re: [PATCH net v4] mptcp: do not use Fast Open on MP_JOIN subflows
-Message-ID: <d3078226-19b2-e1ba-a0f4-2391dea497dd@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 31 Oct 2026 00:12:27 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KlXA3vMG
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 886521F000C1;
+	Sat, 31 Oct 2026 10:02:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793440972;
+	bh=6rV84S6eanCegLb0TzfzwLYY0wkXOw6dPHzz+4yboXQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=KlXA3vMGx2Wo+50XgObLV1yADg9VKBZD//UTlLAto5nR2Yyis2YtvLVmVf5K9Tm1Q
+	 vyhdN5HTpJMd9ywQizQh4XlBcR/qXyh+A2b/DVCcVayIIkGK8w0z7BkvzBWgCQKGE5
+	 sKvEDMydDoE42L491rEztS+mXjE8fZlN9Iyn6dJlzdfCN/yEdfYJebtFDaKZgY+xTL
+	 U3BXD4vpDhPfbmDVQ6bFCXLKSGEnH7Ed5fI+8TtULAhuFq6Q9KrsaQpDazvNQO2E5u
+	 DfVdGOxy7D1VNekt3OWTnubDhxgNpA0P7lSu0ma2I10n5Po7ymoKGKHsH+jL9e9c8d
+	 bKm04ZZqroNcQ==
+Subject:
+ Re: [PATCH mptcp-next v3 2/3] mptcp: options: track invalid suboptions
+From: netdev-bot+sashiko@kernel.org
+To: matttbe@kernel.org
+Cc: mptcp@lists.linux.dev, kuba@kernel.org
+Date: Sat, 31 Oct 2026 10:02:52 +0000
+Message-ID: <179344097210.3128.4507803185066572219@kernel.org>
+In-Reply-To: <20261029-mptcp-mib-inval-opt-v3-2-428f42a35674@kernel.org>
+References: <20261029-mptcp-mib-inval-opt-v3-2-428f42a35674@kernel.org>
+X-sashiko-severity: Medium
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -97,60 +61,173 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 
-Hi Yilin,
+Thank you for your contribution! Sashiko AI review found 3 potential
+issue(s) to consider.
 
-Thank you for your modifications, that's great!
+Critical: 0 · High: 0 · Medium: 2 · Low: 1
 
-Our CI did some validations and here is its report:
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Unstable: 3 failed =
-test(s): bpftest_test_progs-cpuv4_mptcp bpftest_test_progs-no_alu32_mptcp =
-bpftest_test_progs_mptcp =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: btf-debug =
-(only bpftest_all): Unstable: 3 failed test(s): bpftest_test_progs-cpuv4_mp=
-tcp bpftest_test_progs-no_alu32_mptcp bpftest_test_progs_mptcp =
-=E2=9A=A0=EF=B8=8F=20
-- Perf: Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/41138587801
+- [Medium] The commit message says "receiving unsupported versions or
+  extensions can happen, so this part shouldn't be considered as…
+- [Medium] With CONFIG_MPTCP_IPV6 disabled, mptcp_parse_option()
+  (net/mptcp/options.c:276-297) counts valid RFC 8684 IPv6 ADD_ADDR…
+- [Low] In this commit, MPTCP_MIB_OPTINVALID is incremented once per
+  parse pass inside mptcp_parse_option() (options.c:430), and the…
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/a00b9355ed10
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1197522
+--
 
+mptcp: options: track invalid suboptions
 
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
+This commit adds a new MPTCP MIB counter, OptInvalid. mptcp_parse_option()
+increments it when a suboption is combined with other suboptions in an
+unexpected way, or has an invalid size. A struct sock pointer is now passed
+through mptcp_get_options() so that the counter can be updated in the right
+netns, and unsupported versions, extensions and unknown subtypes are left
+uncounted.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index cbc105199073e..10a150e2ad69e 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
 
-For more details:
+[ ... ]
 
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+> @@ -71,7 +71,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+>  		if (opsize != expected_opsize &&
+>  		    (expected_opsize != TCPOLEN_MPTCP_MPC_ACK_DATA ||
+>  		     opsize != TCPOLEN_MPTCP_MPC_ACK_DATA_CSUM))
+> -			break;
+> +			goto invalid;
+>  
+>  		/* try to be gentle vs future versions on the initial syn */
+>  		version = *ptr++ & MPTCP_VERSION_MASK;
 
+[Severity: Medium]
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+The commit message says:
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+  Note that receiving unsupported versions or extensions can happen, so
+  this part shouldn't be considered as invalid.
+
+Does this size check still count an MPTCPv0 (RFC 6824) SYN as invalid?
+
+On a SYN without ACK, expected_opsize is TCPOLEN_MPTCP_MPC_SYN, which is 4.
+A v0 MP_CAPABLE on a SYN carries the sender key and is 12 bytes. It fails
+this check and jumps to the invalid label before its version is read.
+
+So it never reaches the version handling just below, which was kept as a
+plain break:
+
+	version = *ptr++ & MPTCP_VERSION_MASK;
+	if (opsize != TCPOLEN_MPTCP_MPC_SYN) {
+		if (version != MPTCP_SUPPORTED_VERSION)
+			break;
+	} else if (version < MPTCP_SUPPORTED_VERSION) {
+		break;
+	}
+
+Every SYN to an MPTCP listener goes through
+subflow_check_req()->mptcp_get_options(). That means each connection
+attempt from a v0-only client increments MPTCP_MIB_OPTINVALID. The
+connection still falls back to TCP as before, so only the counter is
+affected.
+
+The code path and the counting are unchanged at the end of the series,
+after "mptcp: options: reset parsing in case of invalidity".
+
+Could the version be checked before the strict size check on SYNs, or
+could this case be left uncounted?
+
+[ ... ]
+
+> @@ -281,7 +283,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+>  				mp_opt->addr.family = AF_INET6;
+>  #endif
+>  			else
+> -				break;
+> +				goto invalid;
+>  		} else {
+>  			if (opsize == TCPOLEN_MPTCP_ADD_ADDR_BASE ||
+>  			    opsize == TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT)
+> @@ -292,7 +294,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+>  				mp_opt->addr.family = AF_INET6;
+>  #endif
+>  			else
+> -				break;
+> +				goto invalid;
+>  		}
+
+[Severity: Medium]
+
+When CONFIG_MPTCP_IPV6 is disabled, does a valid IPv6 ADD_ADDR now get
+counted as invalid?
+
+MPTCP_IPV6 depends on IPV6=y. On IPV6=n or IPV6=m builds, the branches that
+match TCPOLEN_MPTCP_ADD_ADDR6 (28) and TCPOLEN_MPTCP_ADD_ADDR6_PORT (30) are
+compiled out, so those lengths reach the first goto invalid. The echoed
+lengths TCPOLEN_MPTCP_ADD_ADDR6_BASE (20) and
+TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT (22) reach the second one.
+
+RFC 8684 lets a dual-stack peer announce an IPv6 address on an IPv4
+connection. That makes this legal input that is only unsupported locally,
+like the unsupported versions and the default case ("Not invalid: maybe used
+for experimentations"), which are not counted. Before this patch, the option
+was simply ignored.
+
+Later in the series, "mptcp: options: reset parsing in case of invalidity"
+means this case would also discard suboptions already parsed from the same
+packet, for example a DSS ack placed before the ADD_ADDR.
+
+[ ... ]
+
+> @@ -418,11 +420,17 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+>  		break;
+>  
+>  	default:
+> +		/* Not invalid: maybe used for experimentations */
+>  		break;
+>  	}
+> +
+> +	return;
+> +
+> +invalid:
+> +	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_OPTINVALID);
+>  }
+
+[Severity: Low]
+
+In this commit, can the same invalid option be counted more than once for
+a single skb?
+
+The counter goes up once per parse pass. On the passive side, the third ACK
+is parsed first in:
+
+  subflow_syn_recv_sock()->mptcp_get_options()
+
+and then again on the child in:
+
+  tcp_child_process()->tcp_rcv_state_process()->tcp_data_queue()
+    ->mptcp_incoming_options()->mptcp_get_options()
+
+With syncookies, mptcp_subflow_init_cookie_req() parses it a third time.
+
+If MPC_ACK or MPJ_ACK is still set after the invalid option, the child
+stays MPTCP and MPTCP_MIB_OPTINVALID goes up two or three times. One
+example is an MPC_ACK followed by a second MP_CAPABLE.
+
+This looks resolved later in the series by "mptcp: options: reset parsing
+in case of invalidity". That commit clears the parsed status at the first
+invalid option, so the subflow falls back or is reset and the later passes
+never run on that skb. The over-count is limited to this intermediate
+commit.
+
+[ ... ]
+
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261029-mptcp-mib-inval-opt-v3-0-428f42a35674%40kernel.org
