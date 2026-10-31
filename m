@@ -1,56 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793446228;
-	b=h2aCmoRADwFQZaMZwyt9aeTK8h0FsOf3ivBNjf0CjhQRtg/NPOztjLHBLZ55HzFAAQwc
-	 WwOuK5V6barUlZ0iGdWCK93d9N2NaxHzlhRgFzjRpPgbJsK4Q9MIfHf3Ak41le/Vrjezm
-	 Z0s/CoYF2U20FrINHx+kPtYabZKaBtDCNWX3g15sdlKjBGN5BTH3YwDbRvbqsJS8vNOv+
-	 fcFvXVB9AyRxBunOjRp5+MIf5sNZ33uzJ+IsP9+XLugWA7DTb1iLL+aLcx0qE4wdeOC2I
-	 +UaWd+pMi5UC5A3ljgnO3d1xMQzkcLtpKVLdO1wRO2sRZ4XdAy7zbZgzW6PipJXgOOA==
+	t=1793446229;
+	b=AOgO6RBjmtb2kBSM440Ki2Nu/IMEoJJ0PwoWwXjvy0SNhxH8aurQ2mRUaP1p1Oux9OK6
+	 VV3Id6vqw4WrZ3jyRH8LoblMvHCKjX8kHIlKMcKOtHl516N+RizJWA2dw0LVQ4RD+5V0f
+	 CFcUnwgafbJQ88xJa3rGVtltoFWCnSgwMOTfqg+tYtFQZiZKWC+9ULyDjzzUp2NtAC4Ac
+	 3afDCMWxaONv8+Y1AoC8992iBdDa9vjH23ohxRc8FKz5Jn3JmFnZhC4Z/hWfppNWBmhEJ
+	 a+muV70YiA2luLlzlLjt97YKL5ysA/9F9UMLBGcn+yWl3tf9Yf0/K25C6gPCg9k7FGA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793446228;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793446229;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=nQMmvoLLLmVw1KUXKBPiqc73bpjCvibc3n52n/9jfQs=;
-	b=1wtnSb7+o6rYzgjGtVjmvIiysFvQDCuoDIgHgPt0ihhlYCks6+/CFaSCNEdydGU3eEGt
-	 oD7t4mQmo+eu1sF+7PWuXY/24m+lfsszUj/y/6t6QsEgm/5k/pvOTqE/zudUZ99Ph9Iiv
-	 tIoPnVLyd4SPV0al7sp4u68mWWp52HZ5eqSJ/dgrVTzXSOVjWEg9dhdA4dUBmvn7uA1eL
-	 TFMi9HWyxM3nVuLKUIaQp0R1kLP+veME8kPqkQsaMBqGb16mS4HbljPxYvyrDMQYwBj5b
-	 1y4c6rHtBN97KFwUVBFA7Eb5ZlELJ8oqsULuI+rBXm2JnfyyIv+6N9XVaK4fwjxX3BQ==
+	bh=zROdvEZZHE2V0uz6KiPzw1+EaM3aePBftOpG6rkasv0=;
+	b=NkqOOm2iBJKDQPuYDSeszkIvUMVON+siX8IbOvCyzxflU2JS1NkGRemwr8UzypnD+zt4
+	 Nmmb0UY9cxmO3nfebbUaOunK3IVkuShCqG93new1Ib0ytO6crPdMEqLZQn/Fj1mg6US5d
+	 7nJ1YbjifSZB6cFvOgMSRKlePzlD4y2vbMTGyfp7eZsfEbgjpzBVX942PeCZR/LGBA7p+
+	 sY8nSf/9d/1sLVbMK8iSH0NxgcRa/gFDjJNiQ/AlwXUevNpl9TYIZXPOXuKxCy4+Znurl
+	 +n2cPo5ktimZHCo8fAhEO9p0fBv0BySoCblO3faiezPJc5GI+DBYcQ1RC1HPsar2WBw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WCn46hKE;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=K5jhsfbZ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564DC606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3342B606A31A
 	for <mptcp@lists.linux.dev>; Sat, 31 Oct 2026 11:30:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WCn46hKE
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D71321F00919;
-	Sat, 31 Oct 2026 11:30:27 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=K5jhsfbZ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A739A1F0093A;
+	Sat, 31 Oct 2026 11:30:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1793446228;
-	bh=nQMmvoLLLmVw1KUXKBPiqc73bpjCvibc3n52n/9jfQs=;
+	bh=zROdvEZZHE2V0uz6KiPzw1+EaM3aePBftOpG6rkasv0=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=WCn46hKEzqw4L45gRt9pOPUGv4GKuEjqot9UN1AXC3EL6ln/tEMvoHcU69EO6vc6Q
-	 oa2Ur4D2wXqgmFKVweYcI/Po3Hlfy9DsNYUhvg7i4JyNIBf1cgNtY56SiGmEGO5S6H
-	 RPcJEzYTH42Yz7j8WeX0oLlmO4fzkItRObjLqKSkw8uX3t8xfTua1gD0y5krOVE59v
-	 IxpLue22ym1xSllSj1a4QIEWx4+GNsCJs/ng3vL3azwhb7kf9xVJT+3Fhp6JGOBKDZ
-	 fVSfHtbVqEbEo0WT3DjaMqH4tH8SM+ISRpVKx8u+D+f1S2vRI/tCP/26zYayUJg9+V
-	 55m+Q2YNVwmLw==
-Subject: Re: [PATCH mptcp-net v4 2/8] mptcp: pm: userspace: lookup: match port
- in priority
+	b=K5jhsfbZwbKVzMvkEk9rjokfDEIv4GtzWGaBLiMPfuHSB4r8S/y88ubHMe8bLItE3
+	 sUROmhXMUc/tyRaKTIfczATppDdyjZR5ODjhvUM3lohUlSvnBqyc/cAMH+gyqPAtA/
+	 JSAqkUO3i1e3H90qPpEp5PdjQ/Rx6XuTt/cVaay5xKVPYfhxZTWCy3CXEyzCn/QPI2
+	 uZc1vUT/DsbrB0KmJs1H0r/uadJJv9QWDlZKwdhOLn6UQHBxylIlR+SvQwIww22vCL
+	 8yjW7hc35dCEPOHWGjvs+nL7rD3R0Yy0nSZL0N2DOPi9j0Lcrw0XCuhpPud9HIQ87e
+	 Z1SjJNYw6go4A==
+Subject: Re: [PATCH mptcp-net v4 3/8] mptcp: pm: userspace: ID0 is not part of
+ local_addr_used
 From: netdev-bot+sashiko@kernel.org
 To: matttbe@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Sat, 31 Oct 2026 11:30:27 +0000
-Message-ID: <179344622743.3128.16751096031438735678@kernel.org>
+Date: Sat, 31 Oct 2026 11:30:28 +0000
+Message-ID: <179344622821.3128.15562504925652529284@kernel.org>
 In-Reply-To:
- <20261029-mptcp-pm-userspace-id0-case-v4-2-555066fa4292@kernel.org>
+ <20261029-mptcp-pm-userspace-id0-case-v4-3-555066fa4292@kernel.org>
 References:
- <20261029-mptcp-pm-userspace-id0-case-v4-2-555066fa4292@kernel.org>
+ <20261029-mptcp-pm-userspace-id0-case-v4-3-555066fa4292@kernel.org>
 X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -64,10 +64,10 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 1 potential
+Thank you for your contribution! Sashiko AI review found 2 potential
 issue(s) to consider.
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 0
+Critical: 0 · High: 0 · Medium: 2 (1) · Low: 0
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -75,101 +75,161 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [Medium] Joins on a local address with a different port are now
-  rejected.
+- [Medium] Automatic local-ID allocation always fails while the initial
+  ID0 entry is in the list.
+- [Medium] If __mptcp_subflow_connect() fails,
+  mptcp_pm_nl_subflow_create_doit() calls…
+
+Pre-existing issues:
+- [Medium] mptcp_pm_nl_remove_doit() (non-zero ID path; after "mptcp: pm:
+  userspace: no ID0 exception for RM_ADDR", all IDs) unlinks the entry…
 
 --
 
-mptcp: pm: userspace: lookup: match port in priority
+mptcp: pm: userspace: ID0 is not part of local_addr_used
 
-This patch changes mptcp_userspace_pm_lookup_addr() so that, when the
-address matches, an entry with the exact same port is returned first.
-Otherwise it falls back to an entry where one of the two ports is 0. If
-both ports are non-zero and different, the lookup now returns NULL. The
-old lookup matched on the address alone.
+This commit stops the userspace PM's local_addr_used counter from
+counting the initial ID0 entry, matching the in-kernel PM. A new
+is_init_id0() helper skips the counter update both when a local address
+entry is appended and when it is deleted.
 
 > diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index 45faee894ac3d..68a02b15a4c53 100644
+> index 68a02b15a4c53..74969b86fb812 100644
 > --- a/net/mptcp/pm_userspace.c
 > +++ b/net/mptcp/pm_userspace.c
-> @@ -31,13 +31,19 @@ static struct mptcp_pm_addr_entry *
->  mptcp_userspace_pm_lookup_addr(struct mptcp_sock *msk,
->  			       const struct mptcp_addr_info *addr)
->  {
-> -	struct mptcp_pm_addr_entry *entry;
-> +	struct mptcp_pm_addr_entry *entry, *wildcard = NULL;
+
+[ ... ]
+
+> @@ -99,7 +104,9 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
 >
->  	mptcp_for_each_userspace_pm_addr(msk, entry) {
-> -		if (mptcp_addresses_equal(&entry->addr, addr, false))
-> -			return entry;
-> +		if (mptcp_addresses_equal(&entry->addr, addr, false)) {
-> +			if (addr->port == entry->addr.port)
-> +				return entry;
-> +
-> +			if (!wildcard && (!addr->port || !entry->addr.port))
-> +				wildcard = entry;
-> +		}
->  	}
-> -	return NULL;
-> +
-> +	return wildcard;
->  }
+>  		e->addr.id = id;
+>  		list_add_tail_rcu(&e->list, &msk->pm.userspace_pm_local_addr_list);
+> -		msk->pm.local_addr_used++;
+> +		/* Just to avoid this counter not to decrease when deleted */
+> +		if (!is_init_id0(e))
+> +			msk->pm.local_addr_used++;
 
 [Severity: Medium]
-With this change, can an incoming MP_JOIN to a local address with a
-different port be rejected?
+This isn't a bug introduced by this patch, but is this increment ever
+balanced when the address is removed with MPTCP_PM_CMD_REMOVE?
 
-Take a userspace PM connection where the daemon announced B:X (id 5,
-X != 0) on a non-initial address B. The peer then sends MP_JOIN to B:P,
-where P is the msk port (listener on a wildcard address). Before this
-patch, the lookup matched B:X on the address alone and the join got
-id 5. Now both ports are non-zero and different, so the lookup returns
-NULL.
+mptcp_pm_nl_remove_doit() unlinks and frees the entry and never touches
+local_addr_used:
 
-On a lookup miss, mptcp_pm_userspace_get_local_id() falls back to
-appending a new entry with needs_id set. The skc id is 0, because
-mptcp_pm_get_local_id() sets it that way:
+net/mptcp/pm_userspace.c:mptcp_pm_nl_remove_doit() {
+    ...
+	list_del_rcu(&match->list);
+	spin_unlock_bh(&msk->pm.lock);
 
-    if (skc->addr.port == msk_sport)
-        skc->addr.port = 0;
+	mptcp_userspace_pm_remove_addr_entry(msk, match);
 
-    return mptcp_userspace_pm_append_new_local_addr(msk, skc, true);
+	release_sock(sk);
 
-The parent commit added an ID0 entry to every userspace PM connection
-in mptcp_pm_userspace_created():
+	kfree_rcu_mightsleep(match);
+    ...
+}
 
-    memset(entry, 0, sizeof(*entry));
-    mptcp_local_address((struct sock_common *)ssk, &entry->addr);
-    entry->addr.port = 0; /* msk port */
+After an ANNOUNCE with id X and then a REMOVE with id X, would the counter
+stay one too high for the rest of the connection? Once the entry is gone,
+a later SUBFLOW_DESTROY can't balance it either. With "mptcp: pm:
+userspace: no ID0 exception for RM_ADDR" later in the series, every ID
+goes through this same path.
 
-In mptcp_userspace_pm_append_new_local_addr(), the loop reaches that
-ID0 entry with addr_match false (different address). Since the
-requested id is 0, id_match is true:
+mptcp_diag_fill_info() in net/mptcp/sockopt.c reports the stale value to
+userspace as mptcpi_local_addr_used.
 
-    id_match = (e->addr.id == entry->addr.id);
-    if (addr_match || id_match)
-        break;
+>  		ret = e->addr.id;
+>  	} else if (addr_match && id_match) {
+>  		ret = entry->addr.id;
 
-Neither the "!addr_match && !id_match" branch nor the
-"addr_match && id_match" branch applies after this, so the function
-returns -EINVAL without allocating an ID.
+[Severity: Medium]
+mptcp_pm_userspace_created() now adds the ID0 entry to
+userspace_pm_local_addr_list for every userspace PM connection. Can the
+automatic ID allocation in this function still succeed with that entry in
+the list?
 
-subflow_token_join_request() then sees the negative id and drops the
-join:
+When the lookup misses, mptcp_pm_userspace_get_local_id() calls this
+function with needs_id = true and skc->addr.id = 0. In the loop:
 
-    local_id = mptcp_pm_get_local_id(msk, (struct sock_common *)req);
-    if (local_id < 0) {
-        SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MPJOINNOIDFOUND);
+	mptcp_for_each_userspace_pm_addr(msk, e) {
+		addr_match = mptcp_addresses_equal(&e->addr, &entry->addr, true);
+		if (addr_match && entry->addr.id == 0 && needs_id)
+			entry->addr.id = e->addr.id;
+		id_match = (e->addr.id == entry->addr.id);
+		if (addr_match || id_match)
+			break;
+		__set_bit(e->addr.id, id_bitmap);
+	}
 
-Any subflow whose address only appears in entries with a different
-non-zero port would take the same path. The underlying problem is that
-the needs_id append matches id 0 against the ID0 entry. This patch is
-what turns the former lookup hit into a miss.
+When e is the ID0 entry, addr_match is false but id_match is true
+(0 == 0), so the loop breaks. Neither branch below runs. The function
+returns -EINVAL and never reaches find_next_zero_bit().
 
-No later patch in the series appears to change the append loop or the
-lookup. Only the local_addr_used accounting around it changes. Could
-the id 0 case be handled in the append loop, or could the lookup keep
-an address-only fallback for this case?
+Would subflow_token_join_request() then reject every incoming MP_JOIN to
+a local address that is neither the initial address nor already in the
+list, with MPTCP_MIB_MPJOINNOIDFOUND, even when non-zero IDs are free?
+subflow_chk_local_id() looks like it could hit the same failure.
+
+Before this series the list started empty, so this only happened if the
+daemon had explicitly created an id 0 entry. Nothing later in the series
+appears to change mptcp_userspace_pm_append_new_local_addr() or
+mptcp_pm_userspace_get_local_id().
+
+> @@ -125,12 +132,15 @@ static int mptcp_userspace_pm_delete_local_addr(struct mptcp_sock *msk,
+>  	if (!entry)
+>  		return -EINVAL;
+>
+> +	/* The initial address ID doesn't increment local_addr_used */
+> +	if (!is_init_id0(entry))
+> +		msk->pm.local_addr_used--;
+> +
+>  	/* TODO: a refcount is needed because the entry can
+>  	 * be used multiple times (e.g. fullmesh mode).
+>  	 */
+>  	list_del_rcu(&entry->list);
+>  	sock_kfree_s(sk, entry, sizeof(*entry));
+
+[Severity: Medium]
+This skips the counter decrement for the ID0 entry. Can the ID0 entry
+itself still be freed here while the initial subflow is alive?
+
+mptcp_pm_nl_subflow_create_doit() calls this function on any connect
+failure:
+
+	err = __mptcp_subflow_connect(sk, &local, &addr_r);
+	release_sock(sk);
+
+	if (err) {
+		GENL_SET_ERR_MSG_FMT(info, "connect error: %d", err);
+
+		spin_lock_bh(&msk->pm.lock);
+		mptcp_userspace_pm_delete_local_addr(msk, &entry);
+		spin_unlock_bh(&msk->pm.lock);
+	}
+
+Take a SUBFLOW_CREATE from the initial local address with port 0 and id 0
+(or no local id). mptcp_userspace_pm_append_new_local_addr() matches the
+ID0 entry from mptcp_pm_userspace_created() and takes the
+addr_match && id_match branch, so it allocates nothing.
+
+If __mptcp_subflow_connect() then fails synchronously, the ID0 entry is
+unlinked and freed: mptcp_userspace_pm_lookup_addr() returns it. Such
+failures include -ENOTCONN from the "sent the request too early" check, a
+bind error, or a connect error.
+
+At the end of the series, mptcp_pm_nl_remove_doit() for id 0 depends on
+mptcp_userspace_pm_lookup_addr_by_id(). Would RM_ADDR for ID0 then fail
+with "address with id 0 not found"?
+
+The ID0 reservation would also be lost, so another address could take
+id 0. Backup flags set on the initial address would no longer be stored.
+
+Before this series, the same error path already freed announced entries
+that it had only matched. The ID0 case comes from earlier patches in this
+series.
+
+Should this path only delete the entry when the append call actually
+allocated it?
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261029-mptcp-pm-userspace-id0-case-v4-0-555066fa4292%40kernel.org
