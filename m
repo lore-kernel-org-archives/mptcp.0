@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793487517;
-	b=c01Bx0Mzur8xxW+PN1EPFhnenQyRegLiJwBv9p261l/SEex0IVPh45yiP6CFlvkI7u0B
-	 osfKGimVmSbC1EzatGnFBbLOzvpRKiPzJnFGFRenTtA/7ucE5qBMgyW7O9Xs0QgYDEDb4
-	 6ZQahFJQU7nIt1ISzw7RF1k7y8c3RoYtqB2XbZ7QDXF5/3o/UOjFfukJ/jj8lfmSS903L
-	 vY4iQYUBt6jyAe+qxtzpRapHENwvYxHn5iLo8nrY36SJw23ab/3sWeQPybqqM6u8ktqFe
-	 KGKRqbsQbY64tM6dCV29tbRcayCv2fOoVGNYWjYJlAISk2Ox6EAWTjqPup6qbqkpJbQ==
+	t=1793488220;
+	b=wYEg6UPnWXlENg5ipXJ6gqxs8OncekKkn7+I+Io4VyVu0zIHg75Wbxlo+6X5JnhcbBZi
+	 RqIBRPTUtdQYNvxRcWv51PthsaTYVPGgxYsv7DostSVwTDP1SQI6h88ZDmuxNydgxWDDI
+	 kj5+tnpXFHV+UjQYWvuq5jIhFmNrY7bYcN2wm+chQWJXxAi57Gd1KUYmHBDsFp+xKIv0N
+	 rd17TJlS9luXUtX4mx/v8JgBEDxET0h+PHoOXjx8CCuIlFEZxcajaSdZDYcjETSj6yOt1
+	 zF73q75QpKBNPdJ7pRtZQmVC8PhZFPsa/l2cIgDqxstN3K3iSduZgm+NIJC2M8OsSAg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793487517;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793488220;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=bxwmnpYlLiDXl80c+WMGbI8gt8tNfehn5nc+UGRzbPE=;
-	b=D2NkdvJciz+kks844vaiKmPLeH0N1VgTFJQShuDP5RtG3sqGLCzeFfBnhVN6M8BwLayS
-	 7IUtAkC5mRx3RcqhSouGZIGPx+sz7qXbakNDcqF2XtP4E99MpTbNwpTsKr4PHRGFzhYqU
-	 gLHvEm11if6djf0Q1gt/VAz47A6BVB5g88B5los5ZjsOsJlcJ/p8jq4WaEHbnb0Sw4Bsi
-	 nhKDjLGdWbigKsVAreKWdf9nObWBOZs8fiBjFyR4bgCbKulspBAxsabS09M8d8kZ3R8s1
-	 cjdJlJg9es4mqTYciWe1XNgaZfnpAq0P3XNRMAl6pCbZK6SDKW+bGlNuv3MrqNzx62A==
+	bh=iXhC5kk5eUmbIZX7/k/LDvvrotaBrYEBlwK5GlCmqyc=;
+	b=FLEQ9kZfG9BVypgMz8G5dEF/BuuuLplDOHlolGHLKARg6rEUavQsxNmp9auoXdtY0iSX
+	 sZwfcVI2q2l8wlRzAGI26pHAuDdUBZzMb5W+ct9sUlAMm2xMJsvZ0JGgiQ4maeURt46f/
+	 DIwoh+FOPoykeGAWRzJnEFoQlgAD93KY1a3fk4hR0O8Pl4pyr8uxH+ULmqmSNFyGj8oyj
+	 +2DxlFek3PUPSS82+wvXHcdurlH36k7WdDAWIIasuDEKykNTR6cg0eDxfWPN8w75kC3A3
+	 Q+aSfIAk9qYno3dyMYaVP3q12NCy5+sjzs1Twbs7kf43bO8zEM5XqoITRlKxGpYF0KQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XnKEzgVf;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VUyt4SzA;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18BC2606A31A
-	for <mptcp@lists.linux.dev>; Sat, 31 Oct 2026 22:58:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2512606A31C
+	for <mptcp@lists.linux.dev>; Sat, 31 Oct 2026 23:10:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XnKEzgVf
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 966F11F000C1;
-	Sat, 31 Oct 2026 22:58:36 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VUyt4SzA
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20A421F000C1;
+	Sat, 31 Oct 2026 23:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793487516;
-	bh=bxwmnpYlLiDXl80c+WMGbI8gt8tNfehn5nc+UGRzbPE=;
+	s=k20260515; t=1793488219;
+	bh=iXhC5kk5eUmbIZX7/k/LDvvrotaBrYEBlwK5GlCmqyc=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=XnKEzgVfrUn12SYYkyDNsAdQ3j4+nXeU64btQOxHEnNdv/LQJL7Z6FFCvtlN8BpMs
-	 rAmQmaLdfCh4ONb9rRE6xyLk1FymGw7URWmYaskWM4/X+dcMNXnsnxZJgbwPepETWG
-	 g5i7NF6eyOk0Ro9+gCG9WLEgDgZ/wsxdoGSIds5AvVfI4Ehz+5Brd77ly8EyyDgrD3
-	 LTwNFyPk4xlYwH2r+M4E2IirqiEcI51Tp/0wdEDxG3jmyDMPIvnauihIHXqHwCnCmX
-	 gVpC8wUvZuK06brbP3+Pmea7+oW1KzXgcH9meohwox+42LofZIidDD6qJ2wMnsX0A4
-	 5o12bfG1y89ew==
-Message-ID: <sashiko-outbox-192215@kernel.org>
+	b=VUyt4SzA+MHheJ+M6r6kTufZ49+t5RpFo2w7IBJ+86LsBbQL+px/05IdwIUW/SVOL
+	 C1qjbAW4U1NMLOIlBn0qGmcFUs1by7wqZ4KJ30N6oorB36oyKSs3gNbaiZyQI5sJoX
+	 vNpxNUbse8C8qz0TaD0Zr5vlH9ptama6beDMjNXQjL5efo/lJ6KFDGAx43qJ2i2WY6
+	 gFYkXvOXNhY+m0qnQZBrOHvex+LfscR1D4u0sGNGlqX5sa2WJ8lTfk+lm8cfuIuVC7
+	 E4CVyVLazAPtM2bYnYOOm8AmIHYfJyuULgMbhDAQzilZzqJ43djDLYNpWXp1Ne7ywA
+	 36tyIFaNDXlig==
+Message-ID: <sashiko-outbox-192217@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v2 7/8] selftests: bpf: mptcp: test the send
- limit of a scheduler
+Subject: Re: [PATCH mptcp-next v2 5/8] mptcp: sched: reinject on an idle
+ subflow with the default scheduler
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>, "MPTCP
  Linux" <mptcp@lists.linux.dev>
-In-Reply-To: <20261031-mptcp-sched-opp-retrans-v2-7-e9c4a30f6841@kernel.org>
+In-Reply-To: <20261031-mptcp-sched-opp-retrans-v2-5-e9c4a30f6841@kernel.org>
 References: <20261031-mptcp-sched-opp-retrans-v2-0-e9c4a30f6841@kernel.org>
- <20261031-mptcp-sched-opp-retrans-v2-7-e9c4a30f6841@kernel.org>
+ <20261031-mptcp-sched-opp-retrans-v2-5-e9c4a30f6841@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 31 Oct 2026 22:58:36 +0000
+Date: Sat, 31 Oct 2026 23:10:18 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -63,85 +63,135 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Low] selftests/bpf: deprecated CHECK() macro used in test_limit()
-- [Low] selftests/bpf: non-standard multi-line comment style in mptcp limit=
- test
+- [Medium] mptcp: sched: u32 overflow and underflow in mptcp_sched_oppr_gai=
+n()
+- [Medium] mptcp: sched: false MPTCP_OPPR_GONE in mptcp_sched_oppr_gain()
 --
 
-commit fb18275d8cce4c512f78d41262ea65272c01b932
+commit dddb76c1077214e20753883f9b0151980b6f6ff0
 Author: Abdul Wasey <w453y.me@gmail.com>
 
-selftests: bpf: mptcp: test the send limit of a scheduler
+mptcp: sched: reinject on an idle subflow with the default scheduler
 
-This commit adds a bpf_limit round-robin MPTCP scheduler that sets send_lim=
-it
-to 4 KB on the selected subflow and a selftest verifying that no subflow
-receives more than 4 KB between two get_send calls when sending 64 KB chunk=
-s.
+This commit enables opportunistic reinjection on an idle subflow in the
+default MPTCP scheduler when another subflow is gone or slow enough that a
+copy would arrive at least one RTT of the idle subflow earlier, up to a
+256 KB budget.
 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testi=
-ng/selftests/bpf/prog_tests/mptcp.c
-> index d77c9f8c53c75..4302c16cb6bb4 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-[ ... ]
-> @@ -820,6 +821,109 @@ static void test_burst(void)
->  	mptcp_bpf_burst__destroy(skel);
+> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+> index 087b36381e7a4..b70e4a6908177 100644
+> --- a/net/mptcp/sched.c
+> +++ b/net/mptcp/sched.c
+> @@ -28,6 +28,9 @@ static int mptcp_sched_default_get_send(struct mptcp_so=
+ck *msk)
+>  	return 0;
 >  }
 > =20
-> +struct big_send_arg {
-> +	int lfd;
-> +	int err;
-> +};
+> +#define MPTCP_OPPR_BUDGET	(256 * 1024)
+> +#define MPTCP_OPPR_GONE		U32_MAX
 > +
-> +/* send total_bytes in 64 KB writes, so that data fragments get larger t=
-han
-> + * the scheduler's limit
+>  /* the active subflow with nothing to send or retransmit and the lowest =
+RTT */
+>  static struct sock *mptcp_sched_oppr_idle_ssk(struct mptcp_sock *msk)
+>  {
+> @@ -53,11 +56,98 @@ static struct sock *mptcp_sched_oppr_idle_ssk(struct =
+mptcp_sock *msk)
+>  	return pick;
+>  }
+> =20
+> +/* How much earlier, in us, a copy sent now on @idle would reach the peer
+> + * than the data held by @subflow: about half an RTT of each, the curren=
+t one
+> + * of @subflow and the base one of @idle, whose queue is empty. 0 if @su=
+bflow
+> + * holds nothing, is not slower than @idle, or if the copy would not sav=
+e at
+> + * least one RTT of @idle: with a smaller gain, the copies cost more tha=
+n they
+> + * save. MPTCP_OPPR_GONE if @subflow is gone.
 > + */
-> +static void *big_send(void *data)
-[ ... ]
-> +/* At most 4 KB per decision, also inside a data fragment: no subflow ge=
-ts
-> + * more than that between two calls of the scheduler.
-> + */
-> +static void test_limit(void)
-
-[Severity: Low]
-This isn't a bug, but in BPF code and selftests, should multi-line comments
-above big_send() and test_limit() place the opening /* on its own line with
-the comment text starting on the next line?
-
+> +static u32 mptcp_sched_oppr_gain(struct mptcp_subflow_context *subflow,
+> +				 const struct sock *idle)
 > +{
-[ ... ]
-> +	ASSERT_OK(arg.err, "send");
-> +	ASSERT_EQ(recvd, total_bytes, "recv");
-> +	CHECK(has_bytes_sent(ADDR_2), "limit", "should have bytes_sent on addr2=
-\n");
+> +	struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+> +	u32 srtt, min_rtt;
+> +
+> +	/* racy on a DATA_ACK, only a hint: the worker checks again */
+> +	if (ssk =3D=3D idle || data_race(tcp_rtx_and_write_queues_empty(ssk)))
+> +		return 0;
+> +
+> +	/* A joining subflow only holds its SYN, and a closed one nothing, even
+> +	 * if its queues look used: tcp_disconnect() moves the write_seq.
+> +	 */
+> +	if ((1 << inet_sk_state_load(ssk)) &
+> +	    (TCPF_SYN_SENT | TCPF_SYN_RECV | TCPF_CLOSE))
+> +		return 0;
+> +
+> +	if (!__mptcp_subflow_active(subflow))
+> +		return MPTCP_OPPR_GONE;
 
-[Severity: Low]
-Since CHECK() is deprecated in BPF selftests, could test_limit() use
-ASSERT_OK(has_bytes_sent(ADDR_2), "has_bytes_sent addr2") here instead,
-matching the other ASSERT_*() calls in this function?
+[Severity: Medium]
+Can mptcp_sched_oppr_gain() return a false MPTCP_OPPR_GONE for a subflow
+that holds no MPTCP data?
 
-> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_limit.c b/tools/=
-testing/selftests/bpf/progs/mptcp_bpf_limit.c
-> new file mode 100644
-> index 0000000000000..431f07d6b6696
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_limit.c
-> @@ -0,0 +1,94 @@
-[ ... ]
-> +/* An MPTCP-level retransmission is not one of our decisions: do not cou=
-nt
-> + * what it sends.
-> + */
-> +SEC("struct_ops")
-> +int BPF_PROG(bpf_limit_get_retrans, struct mptcp_sock *msk)
+When the initial subflow msk->first is closed while the MPTCP connection
+stays open on other subflows (for example via mptcp_pm_rm_addr_or_subflow(),
+mptcp_nl_cmd_sf_destroy(), or __mptcp_close_subflow() on a peer FIN),
+__mptcp_close_ssk() leaves msk->first in msk->conn_list when
+!msk->free_first and calls __mptcp_subflow_disconnect(). If msk->first is
+in TCP_ESTABLISHED or TCP_CLOSE_WAIT, __mptcp_subflow_disconnect() calls
+tcp_shutdown(ssk, SEND_SHUTDOWN), moving ssk to TCP_FIN_WAIT1 or
+TCP_LAST_ACK and queuing a TCP FIN skb on ssk->tcp_rtx_queue.
 
-[Severity: Low]
-Similarly, should the multi-line comment above bpf_limit_get_retrans() have
-the opening /* on its own line to follow BPF coding style?
+Even when msk->first holds only that unacknowledged TCP FIN and no MPTCP
+data, tcp_rtx_and_write_queues_empty(ssk) is false, its state is not in
+TCPF_SYN_SENT | TCPF_SYN_RECV | TCPF_CLOSE, and __mptcp_subflow_active()
+is false. Similarly, on the lockless DATA_ACK path in
+mptcp_sched_oppr_check(), an outgoing MP_JOIN subflow whose SYN was in
+tcp_rtx_queue when tcp_rtx_and_write_queues_empty(ssk) ran can transition
+to TCP_ESTABLISHED before inet_sk_state_load(ssk) while
+__mptcp_subflow_active(subflow) is still false waiting for the 4th ACK.
+
+When another active subflow has data in flight alongside an idle subflow,
+wouldn't this cause mptcp_sched_oppr_max_gain() to return MPTCP_OPPR_GONE,
+waking mptcp_worker on every DATA_ACK in mptcp_sched_oppr_check() and
+forcing reinject_limit to the full MPTCP_OPPR_BUDGET in
+mptcp_sched_oppr_default()?
+
+> +
+> +	/* A retransmission timeout without progress since: the subflow may
+> +	 * be broken, which the stale detection handles (it needs the
+> +	 * MPTCP-level timeouts that copies would avoid).
+> +	 */
+> +	if (READ_ONCE(inet_csk(ssk)->icsk_retransmits))
+> +		return 0;
+> +
+> +	srtt =3D READ_ONCE(tcp_sk(ssk)->srtt_us) >> 3;
+> +	/* same here, @idle is not locked */
+> +	min_rtt =3D data_race(tcp_min_rtt(tcp_sk(idle)));
+> +	if (READ_ONCE(ssk->sk_pacing_rate) >=3D READ_ONCE(idle->sk_pacing_rate)=
+ ||
+> +	    min_rtt =3D=3D ~0U || srtt <=3D 3 * min_rtt)
+> +		return 0;
+> +	return (srtt - min_rtt) / 2;
+> +}
+
+[Severity: Medium]
+Can 3 * min_rtt overflow u32 and cause (srtt - min_rtt) / 2 to underflow
+in mptcp_sched_oppr_gain()?
+
+In net/ipv4/tcp_input.c, tcp_ack_update_rtt() -> tcp_rtt_tsopt_us()
+accepts TCP Timestamp deltas up to INT_MAX / (USEC_PER_SEC / TCP_TS_HZ)
+(or INT_MAX us with microsecond timestamps), and tcp_update_rtt_min()
+stores the sample in tp->rtt_min without capping it to TCP_RTO_MAX.
+
+If idle's min_rtt is in [0x55555556, 0x5fffffff], 3 * min_rtt wraps around
+in 32-bit unsigned arithmetic to a small value. Any ssk whose srtt is
+larger than that wrapped value but smaller than min_rtt will bypass the
+srtt <=3D 3 * min_rtt check, and (srtt - min_rtt) / 2 will underflow u32
+into ~1.43 billion microseconds, saturating reinject_limit to
+MPTCP_OPPR_BUDGET in mptcp_sched_oppr_default().
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261031-mptcp-sche=
-d-opp-retrans-v2-0-e9c4a30f6841@kernel.org?part=3D7
+d-opp-retrans-v2-0-e9c4a30f6841@kernel.org?part=3D5
