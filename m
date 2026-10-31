@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793486694;
-	b=DSi6Po9dtSZ0ijy4lQPyEKqPZK0xKyL9De1a/i/28pvT6lk654Ny64xxXlwoTaLaQ5L3
-	 Zik6Vj4VT6FcUg+AHVhr8ENMULlRQko6uJTpzQnvnL7GgbCsSZFXUxC0jkeHimfVH6z+w
-	 7y331n2lrUg+ATecSyPA4YEQPpOklTD+uRVPLp03FZbPPFymJjuaWlM2F7Ra6T+sZPtMq
-	 a+8BMFdPuWjgvbzayEK0lvIMerZxBJURC4PDmtwKjHRqU+vwNot69T5DNBLNT386kRwcI
-	 kRsg4LPBaCInfKp5zJPIxhaXiHLcNYds4W+kVyO/kEhER+rFLekQUVbU4HCNMLXNoMQ==
+	t=1793486696;
+	b=ImLo0566eqvNI5kuS92GbG1VMlcg0jSiKza/tuq1UqDFjCZCQAinBfplXf7eBKi6RnZh
+	 Rfbn2HbYHAe0QEp27apmsiRFYbsf2byfY7mKubE6yreisNOfvza/cR0Elu8B7CxSxb+HZ
+	 IQiJHr1hwA3UGcX9zp/yF5uIKPZ2smKYmpaa8HaWODqrN2FQacFazwx/kXZkoVzQXi56K
+	 Lj3bGLQgu9Zx6c5keEYMWza/62E5u20d9Nz07nSdYkBavrO16ttdnmaKCjFKmw18dHGRL
+	 gIrUlfdKQwl/xwgJpOKlVRgCAX+yJuPNjT9t57S2mCL6coCNCcRfraWb6Vw1xsfsibw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793486694;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793486696;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=gkmLSQSFtv4tVo++I83+bIAIRTxcu5sERX3HH9RosCY=;
-	b=YIE027s0HVcANeduFKNypGgbKJxkK+sfadbjXQ4x3P6l3BL0a572ouKcfEya4vLWPaim
-	 Kwo0A3Ufu/CT4el/ATU2KHTt5KbZgzFeoyc+8bstZfFUlw05ZI/Af5zKre0mzsuYycMp9
-	 u7JksgALVfXPXVYOc10B/HrNoCvrmvsCxF+iimAH2XuhrG4xHvA0lnSjMYcooBaZQdaD6
-	 hUTtlXbbkNiKFxmMj9SvhxevJ3BZPFoqBbWUcpmFteoUSvlDiu9Qn3H9s0TfLzGcQItc/
-	 RfQxirtIOmrYTLQCgI5vMBDTMl9LdJj8+i8Ca/lvn5cRZpAnedmCrbZzjkSG436lvNQ==
+	bh=7/bh29xQqE8r8O9dTn62Z7e0qkplchHRC19jY7cOqlI=;
+	b=jJhUG07WDleSepXpqa44OzsmaRmfmQ2O9Dnp5olp/A0fXmBXMiHr13IzBgWjnjICC18q
+	 L39mtshPCKWTZhrJZfKC1ZTM8A9oPABZuvZmL9II6qi5CYU5n6dO74s4CzXdulAD0s1yS
+	 bSe906xJL4WKe6xn48Mqx1VnT75s58aOHjID3YapjBY50ugUEPBQUV4qplz/fFi3nIIHF
+	 AFQf1XmGgEi8M60gtE8XR12LWJj/w9QqqjRIXO9tnIWIEBqt5PtT3d5f0KgwvNjPxMhOl
+	 C9diydIpIRKwE2zdVLjw8bYOGdbcmt1j68GcMPo85ToIsnkXBbtmebNMwJteGXyzfzw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RPboL+m8;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JGqmZ3w6;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D423606A31A
-	for <mptcp@lists.linux.dev>; Sat, 31 Oct 2026 22:44:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1B9606A31A
+	for <mptcp@lists.linux.dev>; Sat, 31 Oct 2026 22:44:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RPboL+m8
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDD381F00919;
-	Sat, 31 Oct 2026 22:44:53 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JGqmZ3w6
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B607D1F000C1;
+	Sat, 31 Oct 2026 22:44:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793486694;
-	bh=gkmLSQSFtv4tVo++I83+bIAIRTxcu5sERX3HH9RosCY=;
+	s=k20260515; t=1793486695;
+	bh=7/bh29xQqE8r8O9dTn62Z7e0qkplchHRC19jY7cOqlI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=RPboL+m86KRM3XUT9I1OvhF+3Eioi5dKi6fN6fNwCztIBsdyTVP5+Lw3+K+0EEtm+
-	 48B5eikiuScIoOw0dn5+DINiEp9PJvBfL3FHrOSWewuSmbPeetkRyaPtZxEWv9WwXA
-	 Wk1YK9bYLjxV+6+llGC+Bd11z/ptytc92A6YfVhK3gmSsWi3nXp3jg1kr1O46ABpvr
-	 iMoBWeH+lDHYCnH1lZLDiU9uywZjjOlT4GHtnqhOKqkVNLWfmYKZ9xdGwr6K0miG+A
-	 iZ+dL3u7AHcwhPKwJC9oFZF+ojZl0pT4t3uhUWQ/tsWmn6lhxSgqmqdDEohjOi1NR/
-	 JTEQ3R+9mLZzg==
+	b=JGqmZ3w6/fgv57oo5hpTczUkZUYucHTo61hVzZph+z8aNHjMYBOhBJil6Aq/jPAs+
+	 QA7lwQ42bdSRrhuR0s7NvL14JWELnm4rfP8kftvXTj5aavLcSFcHS3RQtYF9Rcm5NK
+	 MBrbJ+PT/ftmcYqkJ8jrfdLtg71e9iqFznBZG6IvXXoJGIvo9sIjP+u31C0PweyZxC
+	 5s6B7S1FmQxlMA9449kaW3jrG3Tl2Y1IEqQEO8HokbIyHefjz+FzNmLFsOgSoA/a3S
+	 /4kGCwf7yJwKGacA4Xb4TndHGCOfclropeUQ4LrV+5hDUL4bFH+KvtwLs1u0C+yL0N
+	 G8m3xNE7og4UQ==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 31 Oct 2026 23:44:36 +0100
-Subject: [PATCH mptcp-next v2 4/8] mptcp: sched: look for an idle subflow
- on each DATA_ACK
+Date: Sat, 31 Oct 2026 23:44:37 +0100
+Subject: [PATCH mptcp-next v2 5/8] mptcp: sched: reinject on an idle
+ subflow with the default scheduler
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,142 +55,280 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261031-mptcp-sched-opp-retrans-v2-4-e9c4a30f6841@kernel.org>
+Message-Id: <20261031-mptcp-sched-opp-retrans-v2-5-e9c4a30f6841@kernel.org>
 References: <20261031-mptcp-sched-opp-retrans-v2-0-e9c4a30f6841@kernel.org>
 In-Reply-To: <20261031-mptcp-sched-opp-retrans-v2-0-e9c4a30f6841@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: Abdul Wasey <w453y.me@gmail.com>, 
  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4611; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=OsCOHoeDtDtpQmXvJ5g4TdLqv99XsnoE0atEHOeJLV4=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLKe5ce5rVgm1DPpdKVt54u5C1fphaQ17z2REGaimXnjg
- D6r4eKKjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgImolDD8U4p89jJ3QtielvdW
- PWUHeu59V2AKnTf1eoX/Rc3ypnf3djAyTJI7W3JkzYb4pFyuyKeb62tqZqndTdfbfXhyYIzqJP1
- ZzAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10330; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=mPer2Dt9JbZP4xvhLsgCxM7P3fH/vWFtvT4UR9qZzc0=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLKe5cf9s1sZwDvxneD1O+I3BFg0Em9yVottFMrgD9F/l
+ rvg0Iy0jlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIm8fcTwv25vgVnE+q9sAmJH
+ DQtEX/d8unS4ovb9juaTL0xkrI59fcjI0PLY83nt7V+xvdu821//zWeZ9PjBP4VfPT4FbFNWG91
+ 9wAkA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 From: Abdul Wasey <w453y.me@gmail.com>
 
-The reinjection added by the previous patch runs in the worker, which
-takes the msk socket lock and delays the receive path. Only wake it when
-it can do something: when a DATA_ACK leaves nothing new to send, with a
-subflow idle.
+Let the default scheduler use the reinjection added by the previous
+patches. On an IDLE reason, it picks the active non-backup subflow with
+nothing queued or in flight and the lowest RTT, and resends there only
+the data held by a subflow that is gone, or slower than the idle one
+with an RTT long enough for a copy to arrive at least one RTT of the
+idle subflow sooner. Below that, the copies cost the idle subflow more
+than they save, and on subflows of similar RTT nothing is resent. The
+limit is what the idle subflow can send in the time the copies save, at
+most 256 KB, or 256 KB when the slow subflow is gone.
 
-Checking the subflows on a DATA_ACK needs a stable subflow list, so only
-while no process owns the msk. Otherwise, defer the check to the release
-of the msk socket lock, as MPTCP_CLEAN_UNA does. Waking the worker
-instead would do it for most DATA_ACKs, even with only one subflow, and
-often before a subflow is idle.
+A subflow that had a retransmission timeout without progress since is
+not counted as slow: it may be broken, and the stale detection needs the
+MPTCP-level timeouts that copies would avoid.
 
+A subflow is gone when it cannot send anymore but still holds data: not
+when it is joining, as it only holds a SYN, nor when it is closed, even
+if its queues do not look empty after a tcp_disconnect().
+
+With more than two subflows, only what these subflows hold is resent,
+and the check on each DATA_ACK uses the same condition: the worker is
+only woken when there is something worth resending.
+
+Two subflows in netns, netem on both directions, one download, at least
+5 runs each, tcp_rmem max 6 MB:
+
+- 40M/10ms + 2M/250ms with 5% loss: BBR 27-30 -> 37-38 Mbit/s,
+  CUBIC 9-35 -> 37-38.
+- 400M/10ms + 15M/120ms: BBR 67-82 -> 320-332 Mbit/s, CUBIC 30-142 ->
+  322-345.
+- 1 MB request/response, p95 completion time in ms:
+  40M/10 + 2M/250 5%: 2396 -> 317; 400M/10 + 15M/120: 530 -> 104.
+  The copies are 1 to 3% of the bytes sent.
+- 50M/10 + 50M/10: nothing resent, results unchanged.
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/332
 Signed-off-by: Abdul Wasey <w453y.me@gmail.com>
 Co-developed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/options.c  |  1 +
- net/mptcp/protocol.c | 11 +++++++++++
- net/mptcp/protocol.h |  3 +++
- net/mptcp/sched.c    | 17 +++++++++++++++++
- 4 files changed, 32 insertions(+)
+ net/mptcp/sched.c | 140 +++++++++++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 128 insertions(+), 12 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index b0e8b1200cfe..626a1e2fc4de 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1161,6 +1161,7 @@ static void ack_update_msk(struct mptcp_sock *msk,
- 		__mptcp_data_acked(sk);
- 	}
- 	msk->last_ack_recv = tcp_jiffies32;
-+	__mptcp_check_oppr(sk);
- 	mptcp_data_unlock(sk);
- 
- 	trace_ack_update_msk(mp_opt->data_ack,
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 7117786e5251..800c2a4ae3a0 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -4057,6 +4057,15 @@ void __mptcp_check_push(struct sock *sk, struct sock *ssk)
- 		__set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->cb_flags);
- }
- 
-+/* the subflow list is only stable while no process owns the msk */
-+void __mptcp_check_oppr(struct sock *sk)
-+{
-+	if (!sock_owned_by_user(sk))
-+		mptcp_sched_oppr_check(sk);
-+	else
-+		__set_bit(MPTCP_OPPR_CHECK, &mptcp_sk(sk)->cb_flags);
-+}
-+
- #define MPTCP_FLAGS_PROCESS_CTX_NEED (BIT(MPTCP_PUSH_PENDING) | \
- 				      BIT(MPTCP_RETRANSMIT) | \
- 				      BIT(MPTCP_FLUSH_JOIN_LIST))
-@@ -4121,6 +4130,8 @@ static void mptcp_release_cb(struct sock *sk)
- 			__mptcp_error_report(sk);
- 		if (__test_and_clear_bit(MPTCP_SYNC_SNDBUF, &msk->cb_flags))
- 			__mptcp_sync_sndbuf(sk);
-+		if (__test_and_clear_bit(MPTCP_OPPR_CHECK, &msk->cb_flags))
-+			mptcp_sched_oppr_check(sk);
- 	}
- }
- 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 39dd56d882ce..32985f74ce35 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -127,6 +127,7 @@
- #define MPTCP_FLUSH_JOIN_LIST	5
- #define MPTCP_SYNC_STATE	6
- #define MPTCP_SYNC_SNDBUF	7
-+#define MPTCP_OPPR_CHECK	8
- 
- struct mptcp_skb_cb {
- 	u64 map_seq;
-@@ -930,6 +931,7 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk);
- struct sock *mptcp_subflow_get_retrans(struct mptcp_sock *msk);
- int mptcp_sched_get_send(struct mptcp_sock *msk);
- int mptcp_sched_get_retrans(struct mptcp_sock *msk);
-+void mptcp_sched_oppr_check(struct sock *sk);
- bool mptcp_sched_oppr_get(struct mptcp_sock *msk,
- 			  struct mptcp_sched_oppr *oppr);
- 
-@@ -1053,6 +1055,7 @@ static inline u64 mptcp_expand_seq(u64 old_seq, u64 cur_seq, bool use_64bit)
- }
- void __mptcp_check_push(struct sock *sk, struct sock *ssk);
- void __mptcp_data_acked(struct sock *sk);
-+void __mptcp_check_oppr(struct sock *sk);
- void __mptcp_error_report(struct sock *sk);
- bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq, bool use_64bit);
- static inline bool mptcp_data_fin_enabled(const struct mptcp_sock *msk)
 diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
-index da5fa8c0fb12..087b36381e7a 100644
+index 087b36381e7a..b70e4a690817 100644
 --- a/net/mptcp/sched.c
 +++ b/net/mptcp/sched.c
-@@ -341,6 +341,23 @@ static u8 mptcp_sched_oppr_reason(struct sock *sk)
- 	return MPTCP_SCHED_RETRANS_IDLE_APP;
+@@ -28,6 +28,9 @@ static int mptcp_sched_default_get_send(struct mptcp_sock *msk)
+ 	return 0;
  }
  
-+/* called on each DATA_ACK, or when the msk socket lock is released if a process
-+ * owned it: see __mptcp_check_oppr(). Under the msk data lock, with a stable
-+ * subflow list. The worker takes the msk socket lock, which delays the receive
-+ * path, so wake it only when the scheduler may reinject: if a subflow is idle.
++#define MPTCP_OPPR_BUDGET	(256 * 1024)
++#define MPTCP_OPPR_GONE		U32_MAX
++
+ /* the active subflow with nothing to send or retransmit and the lowest RTT */
+ static struct sock *mptcp_sched_oppr_idle_ssk(struct mptcp_sock *msk)
+ {
+@@ -53,11 +56,98 @@ static struct sock *mptcp_sched_oppr_idle_ssk(struct mptcp_sock *msk)
+ 	return pick;
+ }
+ 
++/* How much earlier, in us, a copy sent now on @idle would reach the peer
++ * than the data held by @subflow: about half an RTT of each, the current one
++ * of @subflow and the base one of @idle, whose queue is empty. 0 if @subflow
++ * holds nothing, is not slower than @idle, or if the copy would not save at
++ * least one RTT of @idle: with a smaller gain, the copies cost more than they
++ * save. MPTCP_OPPR_GONE if @subflow is gone.
 + */
-+void mptcp_sched_oppr_check(struct sock *sk)
++static u32 mptcp_sched_oppr_gain(struct mptcp_subflow_context *subflow,
++				 const struct sock *idle)
 +{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
++	struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++	u32 srtt, min_rtt;
 +
-+	if (!mptcp_sched_has_reinject(msk) || !mptcp_sched_oppr_reason(sk) ||
-+	    !mptcp_sched_oppr_idle_ssk(msk))
-+		return;
++	/* racy on a DATA_ACK, only a hint: the worker checks again */
++	if (ssk == idle || data_race(tcp_rtx_and_write_queues_empty(ssk)))
++		return 0;
 +
-+	if (!test_and_set_bit(MPTCP_WORK_OPPR, &msk->flags))
-+		mptcp_schedule_work(sk);
++	/* A joining subflow only holds its SYN, and a closed one nothing, even
++	 * if its queues look used: tcp_disconnect() moves the write_seq.
++	 */
++	if ((1 << inet_sk_state_load(ssk)) &
++	    (TCPF_SYN_SENT | TCPF_SYN_RECV | TCPF_CLOSE))
++		return 0;
++
++	if (!__mptcp_subflow_active(subflow))
++		return MPTCP_OPPR_GONE;
++
++	/* A retransmission timeout without progress since: the subflow may
++	 * be broken, which the stale detection handles (it needs the
++	 * MPTCP-level timeouts that copies would avoid).
++	 */
++	if (READ_ONCE(inet_csk(ssk)->icsk_retransmits))
++		return 0;
++
++	srtt = READ_ONCE(tcp_sk(ssk)->srtt_us) >> 3;
++	/* same here, @idle is not locked */
++	min_rtt = data_race(tcp_min_rtt(tcp_sk(idle)));
++	if (READ_ONCE(ssk->sk_pacing_rate) >= READ_ONCE(idle->sk_pacing_rate) ||
++	    min_rtt == ~0U || srtt <= 3 * min_rtt)
++		return 0;
++	return (srtt - min_rtt) / 2;
 +}
 +
- /* Add what @skb holds to @r, sorted by start. When @r is full, keep the lowest
-  * ones: the data at snd_una is the one the peer is waiting for.
++/* The largest gain of the subflows, 0 if nothing is worth resending on @idle */
++static u32 mptcp_sched_oppr_max_gain(struct mptcp_sock *msk,
++				     const struct sock *idle)
++{
++	struct mptcp_subflow_context *subflow;
++	u32 gain = 0;
++
++	mptcp_for_each_subflow(msk, subflow)
++		gain = max(gain, mptcp_sched_oppr_gain(subflow, idle));
++	return gain;
++}
++
++/* The default scheduler's choice on an MPTCP_SCHED_RETRANS_IDLE_* reason,
++ * whichever it is: the idle subflow with the lowest RTT, if another subflow
++ * holds data worth resending on it. The limit is what the idle subflow can
++ * send in the time the copies save; a subflow that is gone saves an MPTCP
++ * RTO.
++ */
++static struct sock *mptcp_sched_oppr_default(struct mptcp_sock *msk)
++{
++	struct sock *idle;
++	u64 limit;
++	u32 gain;
++
++	idle = mptcp_sched_oppr_idle_ssk(msk);
++	if (!idle)
++		return NULL;
++
++	gain = mptcp_sched_oppr_max_gain(msk, idle);
++	if (!gain)
++		return NULL;
++
++	limit = MPTCP_OPPR_BUDGET;
++	if (gain != MPTCP_OPPR_GONE)
++		limit = min_t(u64, limit,
++			      div_u64((u64)READ_ONCE(idle->sk_pacing_rate) * gain,
++				      USEC_PER_SEC));
++	mptcp_subflow_ctx(idle)->reinject_limit = limit;
++	return idle;
++}
++
+ static int mptcp_sched_default_get_retrans(struct mptcp_sock *msk)
+ {
+ 	struct sock *ssk;
+ 
+-	ssk = mptcp_subflow_get_retrans(msk);
++	if (msk->sched_retrans != MPTCP_SCHED_RETRANS_RTO)
++		ssk = mptcp_sched_oppr_default(msk);
++	else
++		ssk = mptcp_subflow_get_retrans(msk);
+ 	if (!ssk)
+ 		return -EINVAL;
+ 
+@@ -263,23 +353,36 @@ int mptcp_sched_get_retrans(struct mptcp_sock *msk)
+  * that already reached the peer.
+  *
+  * The scheduler decides on which subflow, and how much, through get_retrans
+- * with the reason in msk->sched_retrans. This is done at most once per
+- * snd_una value.
++ * with the reason in msk->sched_retrans. The default one resends only data
++ * held by a subflow that is gone, or that is slower than the idle one and
++ * whose RTT is long enough for a copy to arrive at least one RTT of the
++ * idle subflow sooner. Below that, the copies cost the idle subflow more
++ * than they save. This is done at most once per snd_una value, and at most
++ * what the idle subflow can send in the time saved, or MPTCP_OPPR_BUDGET for
++ * a subflow that is gone.
   */
+ #define MPTCP_OPPR_MIN		(16 * 1024)
+ 
++/* the in-kernel default scheduler */
++static bool mptcp_sched_is_default(const struct mptcp_sock *msk)
++{
++	const struct mptcp_sched_ops *sched = READ_ONCE(msk->sched);
++
++	return !sched || sched == &mptcp_sched_default;
++}
++
+ /* can the scheduler be asked to reinject: see mptcp_sched_get_reinject() */
+ static bool mptcp_sched_has_reinject(const struct mptcp_sock *msk)
+ {
+ 	const struct mptcp_sched_ops *sched = READ_ONCE(msk->sched);
+ 
+-	return sched && sched != &mptcp_sched_default && sched->get_retrans;
++	return !sched || sched->get_retrans;
+ }
+ 
+ /* Ask the scheduler where to resend the data other subflows hold, because a
+  * subflow is idle while nothing new can be sent, for @reason: see
+- * MPTCP_SCHED_RETRANS_IDLE_WND. Only a scheduler with its own get_retrans is
+- * asked; the default one does not reinject.
++ * MPTCP_SCHED_RETRANS_IDLE_WND. Only the default scheduler and one with its
++ * own get_retrans are asked.
+  */
+ static int mptcp_sched_get_reinject(struct mptcp_sock *msk, u8 reason)
+ {
+@@ -301,7 +404,10 @@ static int mptcp_sched_get_reinject(struct mptcp_sock *msk, u8 reason)
+ 		return -EOPNOTSUPP;
+ 
+ 	msk->sched_retrans = reason;
+-	err = msk->sched->get_retrans(msk);
++	if (mptcp_sched_is_default(msk))
++		err = mptcp_sched_default_get_retrans(msk);
++	else
++		err = msk->sched->get_retrans(msk);
+ 	msk->sched_retrans = MPTCP_SCHED_RETRANS_RTO;
+ 	return err;
+ }
+@@ -344,14 +450,20 @@ static u8 mptcp_sched_oppr_reason(struct sock *sk)
+ /* called on each DATA_ACK, or when the msk socket lock is released if a process
+  * owned it: see __mptcp_check_oppr(). Under the msk data lock, with a stable
+  * subflow list. The worker takes the msk socket lock, which delays the receive
+- * path, so wake it only when the scheduler may reinject: if a subflow is idle.
++ * path, so wake it only when the scheduler may reinject: when a subflow is idle
++ * and, for the default one, when mptcp_sched_oppr_default() would pick it.
+  */
+ void mptcp_sched_oppr_check(struct sock *sk)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
++	struct sock *idle;
+ 
+-	if (!mptcp_sched_has_reinject(msk) || !mptcp_sched_oppr_reason(sk) ||
+-	    !mptcp_sched_oppr_idle_ssk(msk))
++	if (!mptcp_sched_has_reinject(msk) || !mptcp_sched_oppr_reason(sk))
++		return;
++
++	idle = mptcp_sched_oppr_idle_ssk(msk);
++	if (!idle || (mptcp_sched_is_default(msk) &&
++		      !mptcp_sched_oppr_max_gain(msk, idle)))
+ 		return;
+ 
+ 	if (!test_and_set_bit(MPTCP_WORK_OPPR, &msk->flags))
+@@ -396,8 +508,9 @@ static int mptcp_sched_oppr_add_skb(const struct sk_buff *skb, u64 una,
+ }
+ 
+ /* The DSN ranges at or after @una that the subflows other than @idle still
+- * hold, sent or not: the data the peer is waiting for. Sorted by start, and
+- * merged: data resent before can sit on more than one subflow.
++ * hold, sent or not: the data the peer is waiting for. With the default
++ * scheduler, only from the subflows this is worth it for. Sorted by start,
++ * and merged: data resent before can sit on more than one subflow.
+  */
+ static int mptcp_sched_oppr_collect(struct mptcp_sock *msk, struct sock *idle,
+ 				    u64 una, struct mptcp_oppr_range *r)
+@@ -412,6 +525,9 @@ static int mptcp_sched_oppr_collect(struct mptcp_sock *msk, struct sock *idle,
+ 
+ 		if (ssk == idle)
+ 			continue;
++		if (mptcp_sched_is_default(msk) &&
++		    !mptcp_sched_oppr_gain(subflow, idle))
++			continue;
+ 
+ 		lock_sock(ssk);
+ 		skb_rbtree_walk(skb, &ssk->tcp_rtx_queue)
 
 -- 
 2.55.0
