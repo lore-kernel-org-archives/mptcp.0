@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793446232;
-	b=XAiXgixCxV1HBX5COvawUU14n0zwlV2ShsqJPGl3r1aoe2YVlnH0Aaas8i4hcUFTdMxL
-	 kKf0DMnmrgjxTRsXvMfwpag90w4ivSBiz8Eu8OvrVJxyQYxgdwE7CcRRu76qzIM51N6Dp
-	 WBbojlDqiEurOHFVr8MiYHGNiWoMWDoIu6zoNjGoqU8X3oGhf6LYzAKk1tMUjtGvGqgod
-	 DS2UCZQJxh+2ZwY+kbyNBu4hbkf1QtBia9n519q0ipU06KlYw6gU6Ukuqvtj0Ug8/d4K2
-	 tHrYuf+DDPF40LFQC+VhoH2uRRK9wGd+rYvv91VVvsSPjnUpC7gUXmcOxK8BF6W5mcQ==
+	t=1793446233;
+	b=ikWNgLMIsHIN+nfhOnKH8ugMpoLw8BEDhkazB1j4hGPOiuNrOwnrO1siqxYSzAKb6DNk
+	 +1HcFcvuHdmLUGo0mHSpPZ7l5JXzX1vivu8+41czBKWGL3n7VjQv6sk2nCyILbJPCB3Rx
+	 +Uu4ACOm1bh3w/ZdONJ2fZtWQq7qT38u8Vvy1Gr/WIHx+3b4xIg0I6Zff5fUJEm1mBlYo
+	 Q8iQT6i5xEjcsShfXjx8W4Rsu9rP1gUVuq2heD+zA4Ym4tixB94mjQu7r+cTO/3MD8LoQ
+	 FjZqzcMPyf+i9ukkvI3SkTTlFHvv7TGoklPWOhnY5YoCCTWUuMZEu4FF0n+HWvPByeQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793446232;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793446233;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=0vv0rAesrX4NQT3w9gG9/Xekp0H2PvXuBwVBYnqB/9E=;
-	b=dABFluHfylm7auvGlsJYSVzTn5eCV5bytggnSwBEmYTy6x1Cahr0xItCn1khMiVO14XB
-	 0xvDsZv+75D9IhDVfexaqCWzj/y+fBKG8lfD61STVl9ZYpo3v3t+Lei6SbrdqpQ+r8GKh
-	 RO5ELZmle/hI0OLtAJvO89q2esWchFmVLRO5d09VRvHx5plJHO6kdHt+DiB2wUL6YjEPc
-	 bNUnSzxLNnQH1cPxNcqHQVttgPwZhwGu/wmbJhDuoBi6apjNDWZuHUVX8EDmZzJvNx3NG
-	 P3haB1rii5tlOH/I4PmDkLA/R5KSOmXnaQ9e9Ejia/X2mBs6VvdPzsT+ZruRjejPSVg==
+	bh=P3no9wCO56ewSWdNb1TD1GksMzkMxCzdt1G3Ha/IcFM=;
+	b=KiZIEn6lkRPcsrReg573JXInHstt1jVeBHC2fGHAW8OuCv8M1uloXCX5/8BecnjauBjW
+	 t523cCCb5+SuNWDl/eBPZDg62T4gtKasynOZcKrT5TKkm7O9a3fckl2V/PMny+jTp3+G7
+	 t1bB0BUdOExQFWg48gymz2veHBf3UCHXk+uQjnhVQ2OKSoS0TAX24vxYclNEDYqXs5Vtp
+	 5bMuiFVPw4LgaDB6yrJnLdH5fqfT1Mx1Nsm5zHQ09sICZb8hoQ1O8/bUQGE6t9+IjqEK7
+	 +cSMpLTiwMin0w8GBlFJ6nndmx/8roQHgWaOv22PiF+ZE/r7H7odQImBi6vH4RZFwhQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KJm5CS5L;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Pkq6/CBt";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB53606A31A
-	for <mptcp@lists.linux.dev>; Sat, 31 Oct 2026 11:30:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA8E606A31A
+	for <mptcp@lists.linux.dev>; Sat, 31 Oct 2026 11:30:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KJm5CS5L
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A30691F00A1A;
-	Sat, 31 Oct 2026 11:30:31 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Pkq6/CBt
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6714D1F0093A;
+	Sat, 31 Oct 2026 11:30:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793446231;
-	bh=0vv0rAesrX4NQT3w9gG9/Xekp0H2PvXuBwVBYnqB/9E=;
+	s=k20260515; t=1793446232;
+	bh=P3no9wCO56ewSWdNb1TD1GksMzkMxCzdt1G3Ha/IcFM=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=KJm5CS5LpTF1ClFLRHQMXqpfdZAIgkquE3mm6BevRdziMr2LsEOAIlfCTbm4j/brV
-	 QzCFwwkIDlddmiJRFRi/ED4a8Zdw4Ox3MtFEHv/MerI8JRavlwDzfm7rxMd5hyuPcv
-	 V5H7DSFFjG2gn8Jlotxq80mF+VzQlzxrCGkp1qZERcyM3I1u9oa509XAyuwt5IEZZ9
-	 ZmfytEbweQxd87gpuRDil/Sp/m2/4ZRT96At5hsCHPudKvXbWR0iJgcRoCXUxt9Hfa
-	 RwsKhJp+NACtz2dNDfyeHWyP4ae4MV1x6GAisZ9mEdvTiVPf2dWBSY8FcpPmo/8/fJ
-	 NXTdlshP4VOew==
-Subject: Re: [PATCH mptcp-net v4 7/8] selftests: mptcp: join: new ID0 subflow
- from the right IP
+	b=Pkq6/CBtBsaRlaxfz8BPp5NE7oRlJuds4DaHUm1g7XG3qL3JaIs59JXVWuYoRQ2lw
+	 CFi97c3H5O5Tg/D5O74Ov9xr6gyOWBoqQoLPAeeIc4tncHuMbayk5iirLnlvcaaIsn
+	 Qj9K/pf9cZ/ikEe9GGz5KvOEo4kaumjDGc86m7nBwaZHffZUNlsBHqP2ztVyB2ewEC
+	 oTfGt02TAtb1bOoWbLXE7UF+OhgHxdyJTvuatY9Obfb2mSdJt9DJH4cDDRsnm+yHRc
+	 64ij+4cbMuV0bA8nEXdDXumalxfc/AVgHLz69AynpyKe0VP2xepMJUQw8mYCPiBUQO
+	 anFkNP1hwt8tQ==
+Subject: Re: [PATCH mptcp-net v4 8/8] mptcp: pm: restrict in-kernel worker
+ actions to this PM
 From: netdev-bot+sashiko@kernel.org
 To: matttbe@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Sat, 31 Oct 2026 11:30:31 +0000
-Message-ID: <179344623122.3128.4686293710004811543@kernel.org>
+Date: Sat, 31 Oct 2026 11:30:32 +0000
+Message-ID: <179344623200.3128.14617930354055063041@kernel.org>
 In-Reply-To:
- <20261029-mptcp-pm-userspace-id0-case-v4-7-555066fa4292@kernel.org>
+ <20261029-mptcp-pm-userspace-id0-case-v4-8-555066fa4292@kernel.org>
 References:
- <20261029-mptcp-pm-userspace-id0-case-v4-7-555066fa4292@kernel.org>
-X-sashiko-severity: Medium
+ <20261029-mptcp-pm-userspace-id0-case-v4-8-555066fa4292@kernel.org>
+X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -64,101 +64,124 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue(s) to consider.
+Thank you for your contribution! Sashiko AI review found more severe
+issue(s) in other patches of this series. This mail is only an FYI, in case
+you want to address the nit picks below when you respin.
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 0
+Low priority / nit picks for your consideration:
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
-
-- [Medium] In userspace_tests()
-  (tools/testing/selftests/net/mptcp/mptcp_join.sh, test "userspace pm…
+- [Low] The commit has a `Fixes:` tag (a49eb8ae95b8, "mptcp: pm: worker:
+  split in-kernel and common tasks") but fixes no reachable bug.
+- [Low] The new check in `mptcp_pm_worker()` (net/mptcp/pm.c:1158) uses
+  `msk->pm.pm_type` to decide whether the kernel-only status bits get…
 
 --
 
-selftests: mptcp: join: new ID0 subflow from the right IP
+mptcp: pm: restrict in-kernel worker actions to this PM
 
-This patch updates the "userspace pm create id 0 subflow" test so that the
-ID0 subflow is created from the initial address 10.0.1.2. It still tries
-10.0.3.2 first, which the kernel is now expected to reject. The expected
-dump output becomes an empty list, because the initial address is not
-dumped.
+This commit gates the call to __mptcp_pm_kernel_worker() in
+mptcp_pm_worker() so it only runs when the socket is not using the
+userspace PM.
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index c3ccce96b45b1..190ab48acbc61 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -4214,10 +4214,11 @@ userspace_tests()
->  		wait_event ns2 MPTCP_LIB_EVENT_ESTABLISHED 1
->  		chk_mptcp_info subflows 0 subflows 0
->  		chk_subflows_total 1 1
-> -		userspace_pm_add_sf $ns2 10.0.3.2 0
-> +		# from an IP not linked to ID0: failure expected, no new MPJ
-> +		userspace_pm_add_sf $ns2 10.0.3.2 0 2>/dev/null
-> +		userspace_pm_add_sf $ns2 10.0.1.2 0
->  		wait_event ns2 MPTCP_LIB_EVENT_SUB_ESTABLISHED 1
-> -		userspace_pm_chk_dump_addr "${ns2}" \
-> -			"id 0 flags subflow 10.0.3.2" "id 0 subflow"
-> +		userspace_pm_chk_dump_addr "${ns2}" "" "id 0 subflow"
->  		chk_join_nr 1 1 1
->  		chk_mptcp_info subflows 1 subflows 1
->  		chk_subflows_total 2 2
+> Fixes: a49eb8ae95b8 ("mptcp: pm: worker: split in-kernel and common tasks")
 
-[Severity: Medium]
-Does anything here check that the 10.0.3.2 request actually fails?
+[Severity: Low]
+Is this Fixes: tag needed? When pm_type and pm.ops both point to the
+userspace PM, __mptcp_pm_kernel_worker() seems to do nothing already,
+because none of the three bits it handles can be set.
 
-userspace_pm_add_sf() returns the exit status of pm_nl_ctl csf. That
-status is 1 when the kernel rejects the request. Here it is ignored and
-stderr goes to /dev/null. The status of the 10.0.1.2 call is not checked
-either.
+MPTCP_PM_ADD_ADDR_RECEIVED is only scheduled from the in-kernel branch of
+mptcp_pm_add_addr_received(). The userspace branch calls
+mptcp_pm_announce_addr() and mptcp_pm_add_addr_send_ack() instead.
 
-All the checks that follow only count subflows:
+MPTCP_PM_ESTABLISHED and MPTCP_PM_SUBFLOW_ESTABLISHED are only scheduled
+when pm->work_pending is true. mptcp_pm_data_reset() zeroes work_pending
+via the reset struct_group, and only mptcp_pm_kernel_init() sets it to
+true. mptcp_pm_subflow_check_next() also returns early for the userspace
+PM.
 
-    wait_event ns2 MPTCP_LIB_EVENT_SUB_ESTABLISHED 1
-    chk_join_nr 1 1 1
-    chk_mptcp_info subflows 1 subflows 1
-    chk_subflows_total 2 2
+Also, a49eb8ae95b8 only moved code around. The old mptcp_pm_worker() in
+pm_netlink.c already tested these bits for every PM type.
 
-So they cannot tell which of the two requests created the extra subflow.
+The commit message says:
 
-The new empty dump expectation cannot tell them apart either.
-mptcp_userspace_pm_dump_addr() skips every entry that matches
-is_init_id0(), and that check ignores the address:
+    No need to check them for the userspace PM.
 
-net/mptcp/pm_userspace.c:is_init_id0() {
-	return entry->addr.id == 0 && entry->addr.port == 0;
+That reads like a cleanup. Could the tag be dropped and the patch sent to
+net-next instead? If there is a real failure behind it, could the commit
+message describe it?
+
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index e9a538296200a..e38fe835abc0b 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -1154,7 +1154,9 @@ void mptcp_pm_worker(struct mptcp_sock *msk)
+>  		pm->status &= ~BIT(MPTCP_PM_RM_ADDR_RECEIVED);
+>  		mptcp_pm_rm_addr_recv(msk);
+>  	}
+> -	__mptcp_pm_kernel_worker(msk);
+> +
+> +	if (!mptcp_pm_is_userspace(msk))
+> +		__mptcp_pm_kernel_worker(msk);
+
+[Severity: Low]
+This check uses msk->pm.pm_type. The code that sets MPTCP_PM_ESTABLISHED
+and MPTCP_PM_SUBFLOW_ESTABLISHED uses pm->work_pending instead, and that
+flag follows msk->pm.ops. Can these two disagree?
+
+mptcp_pm_data_reset() reads pm_type and the path_manager string
+separately, without a lock:
+
+net/mptcp/pm.c:mptcp_pm_data_reset() {
+	const char *pm_name = mptcp_get_path_manager(net);
+	u8 pm_type = mptcp_get_pm_type(net);
+    ...
+	WRITE_ONCE(pm->pm_type, pm_type);
+
+	rcu_read_lock();
+	mptcp_pm_ops_init(msk, pm_name);
+    ...
 }
 
-Suppose the initial ID0 entry were missing from the userspace PM list.
-That can happen if the GFP_ATOMIC sock_kmalloc() in
-mptcp_pm_userspace_created() fails, or if a later change breaks that path.
-In that case, mptcp_userspace_pm_append_new_local_addr() would accept the
-10.0.3.2 request and create an ID0 subflow from the wrong IP. The
-10.0.1.2 request would then fail with -EINVAL, because the ID matches but
-the address does not.
+The string is only read later, in mptcp_pm_ops_init()->mptcp_pm_find().
+The sysctl handlers in net/mptcp/ctrl.c also update the two pernet fields
+with separate stores. proc_pm_type() stores pm_type through
+proc_dou8vec_minmax() and then calls mptcp_set_path_manager().
+proc_path_manager() does the same in the opposite order.
 
-Would every assertion above still pass in that case?
+Suppose a write of net.mptcp.pm_type=1 lands between those two reads. The
+socket then ends up with pm_type == MPTCP_PM_TYPE_USERSPACE and ops ==
+&mptcp_pm_kernel. mptcp_pm_kernel_init() sets work_pending without
+checking pm_type, even though its comment says:
 
-The commit message says the wrong IP is kept:
+net/mptcp/pm_kernel.c:mptcp_pm_kernel_init() {
+	/* pm->work_pending must be only be set to 'true' when
+	 * pm->pm_type is set to MPTCP_PM_TYPE_KERNEL
+	 */
+	WRITE_ONCE(pm->work_pending,
+    ...
+}
 
-    "to check that the kernel is correctly not allowing the creation of
-    an ID0 subflow with the wrong IP address"
+mptcp_pm_fully_established(), mptcp_pm_subflow_established() and
+mptcp_pm_add_addr_echoed() can then schedule MPTCP_PM_ESTABLISHED or
+MPTCP_PM_SUBFLOW_ESTABLISHED.
 
-As written, though, the test passes whether or not the kernel enforces
-this. It only fails if both requests succeed.
+Before this patch, mptcp_pm_worker() always cleared and handled those
+bits. With the new check, won't they stay set for the rest of the
+connection?
 
-Could the failure be asserted explicitly, for example:
+If so, mptcp_pm_schedule_work() would return false for them from then on,
+and the kernel PM would never act on that socket. Every later
+mptcp_pm_worker() call would also pass the MPTCP_PM_WORK_MASK test and
+take pm.lock for nothing.
 
-	if userspace_pm_add_sf $ns2 10.0.3.2 0 2>/dev/null; then
-		fail_test "ID0 subflow from wrong IP accepted"
-	fi
+The pm_type/ops mismatch itself is older than this patch. Would checking
+msk->pm.ops == &mptcp_pm_kernel here, or setting pm_type from the ops
+that actually get selected, keep both sides consistent?
 
-Alternatively, could the test check that the saddr4 of the SUB_ESTABLISHED
-event is 10.0.1.2?
+>  
+>  	spin_unlock_bh(&msk->pm.lock);
+>  }
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261029-mptcp-pm-userspace-id0-case-v4-0-555066fa4292%40kernel.org
