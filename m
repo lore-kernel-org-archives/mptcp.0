@@ -1,55 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793440974;
-	b=vQL6dPfoQMIiQcQZHiuc3b3ws/AdcOWF6wmfffUICD3JUyX5ybiaW/7uowN3OQNfXzUr
-	 X5KJSHQ8G0V6ziGqDWFRTJlEsnqkTmP6CF9oOz2fBujncSuIk3EWE1HwrO6MRn4DDl5me
-	 QeEAhNmO2h/v5Q0GbaQUCgt8nz5rNdotu53TLdnHe2mSQDM8TxhLzGiaBlUE7IU+/82QP
-	 5Gi/glnhItXLlPbGu2aFqXUVRlAkHtFfDfNQUhob2Lrj3XlbaKWovYHKHdkk7u3SctMwG
-	 J0jawUQ2k0rbOVKe2oG13u1lTX+If3sbd/dsaYIArHy8WOTxlXqMqJvxDGLvNM4yZMg==
+	t=1793446228;
+	b=QyN7EApJDpTw7Hyv3aRl49YqjkEmTa8PgbCTHkZRRDLog6n+4FXiotNHtTeq/P6v9lK3
+	 o8x2SwndCLEym7GiMb5BiZW6Oo/+s5baQMoxABr8//KgUus67dpnejZQkAuYrIaBVylkF
+	 okNSgz5AIPy8hNJm+1yykJhdMxpUAF7moxnebow3ZaH2sxJ/3tKk62SyIQMD+7n4cPIGT
+	 70o+ljRIqC950zt96QM3eOXvQTFEYqwTiMvswe9oYfEiCDz0JkQjcgvdOZ+rc5Xb1KGyg
+	 CDJDg08EsZKimiygRgWk11XOWDyezXzMsMQTzj4Sr5NbvcjcNMrX/Fb8uw/KPVyP03w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793440974;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793446228;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=ul4Ckqq/uAtOSl6NhGdiUEx2AveNDa8KvSavUe0ANmw=;
-	b=zEYbdNz3a18Dk5yxqPDkzCIuF14i6U2dcY1DDjzMGNYi60JMm9gZtD3jib7BsNWufOr2
-	 5i65V5A4j0iRsVNKgwIutxMRM4ulKvNoTjYQxu+i5qCDzYvBRuZX35iDoySwOwHzPNgg8
-	 ic2a+MYd6Qw4vwZuDXRF15qHnVyvdvgN8Lqs9OvcU8efd6Eqjt8/FnE6F6VQTyIfhSP0H
-	 +n9s4Ja3V/PO2kFo8Rf2FMNTfgitDi5KYruCS5PDxhY0fJmlt+pIF4ZDchQxe2NkgHl9C
-	 xqczXPRBLpRqCu3MidBqokvhTW5MEQtRoupyDkJUwMKNEqG//t8/gDXZa+1O8WdN3pw==
+	bh=cW3gluZr/eVnlqD0L6fkkOIy3pYeQB9YmvHYaipzgSA=;
+	b=E8E8ZFhrqDpvOOczeQrw9OdUadTJCVHI0U4AEvEPyc+wmy0+As1XIO3PyGZRuLqxDYQP
+	 WYKft7tNNHxqrqEdnVj/QnYuDR165jGCE45mu8p4gM9mfV3+L7J407e40+LSljw8jkV/p
+	 3NO0D/LT/y+7L/BmsBFFAnZVLyRMMfSC7EGyEXfouGt/1qn03cWcCl335QKw3mtHB87BD
+	 Wp2wc29ht2SCqHU/3KJ2eEEWxLo1heDdLProq3Ty6eNQZblaQCG7LML1NkV3LAcrTHQ25
+	 aga2MeMoVq2rj5vCZbVYHZCyVV1J6SyUJPGqeNLD0kgYNiT8QRZxTGLPKBjDDOOnxBw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aEBjzL00;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=T6B+Ucj1;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3E7606A31A
-	for <mptcp@lists.linux.dev>; Sat, 31 Oct 2026 10:02:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD64606A31A
+	for <mptcp@lists.linux.dev>; Sat, 31 Oct 2026 11:30:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aEBjzL00
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51CB41F0093A;
-	Sat, 31 Oct 2026 10:02:53 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=T6B+Ucj1
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E12F1F000C1;
+	Sat, 31 Oct 2026 11:30:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793440973;
-	bh=ul4Ckqq/uAtOSl6NhGdiUEx2AveNDa8KvSavUe0ANmw=;
+	s=k20260515; t=1793446227;
+	bh=cW3gluZr/eVnlqD0L6fkkOIy3pYeQB9YmvHYaipzgSA=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=aEBjzL00sqEoTXKlSGZlBtu37K+gnyEIQ9+b7YOW2RAwLZ4Tlumpevj5Hc6MYiCJY
-	 4vB42uJ2oi0KQ0o1wSU45GQRrtR6pojp4cj7YuOZ75XxJ9BL0F5R+fwR8eXvRQkK6b
-	 YERT0aYU1CL53OSXzlcXvXnO1Vrx/kV5L1gOgxRT2Ou8o5jPKF4UjmoVcK48qZoL/B
-	 Ul4E3AL6e5jXqA9MS2C0H/UDCJVLH27Up98Bv7kLy7t1nXFAWmsxft5VElbQmU/QUH
-	 Kxr0LATEfBHMOLy+qgS98e8y6AkDVHCTUV0Btj+QoAANdkiuBYN50MsBq1FP2nf+Xq
-	 rBC2qMfEQ/BTg==
-Subject: Re: [PATCH mptcp-next v3 3/3] mptcp: options: reset parsing in case
- of invalidity
+	b=T6B+Ucj1YkAiKoBsG6b+WBUG2m2sEuZbx8DB6XwjLCiOL9NbwED/bg44aSOKLWY1F
+	 edgV7Pyvho2KK+iQhP7qUj5uqKS/Rf6evImSHlj6f5XQigKJy0lD1veZU0Ai/khieI
+	 KzppiUunFxMMLCeiFv4JWJR91wuzlOpChERZAQUKDiDdWy5mUyAPAbLmKqdxR/XznU
+	 DmhqzXyADXYnstpOBkcprQtbEI2Y9Sx5OGQhvaZAP8Buik8EyvImMDv5gA+wYCMeaz
+	 vdP1ECCiGpNVc8Jg9Y+f4P7eovh4A7Tl97VPwYvdxeLOXMIURVt6hpk3iOM867u2dv
+	 FefdXDD9IVfqw==
+Subject: Re: [PATCH mptcp-net v4 1/8] mptcp: pm: userspace: properly handle
+ the ID0 case
 From: netdev-bot+sashiko@kernel.org
 To: matttbe@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Sat, 31 Oct 2026 10:02:52 +0000
-Message-ID: <179344097286.3128.8488107627745728800@kernel.org>
-In-Reply-To: <20261029-mptcp-mib-inval-opt-v3-3-428f42a35674@kernel.org>
-References: <20261029-mptcp-mib-inval-opt-v3-3-428f42a35674@kernel.org>
-X-sashiko-severity: Medium
+Date: Sat, 31 Oct 2026 11:30:26 +0000
+Message-ID: <179344622665.3128.3956279829893544629@kernel.org>
+In-Reply-To:
+ <20261029-mptcp-pm-userspace-id0-case-v4-1-555066fa4292@kernel.org>
+References:
+ <20261029-mptcp-pm-userspace-id0-case-v4-1-555066fa4292@kernel.org>
+X-sashiko-severity: High
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -62,10 +64,10 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 2 potential
+Thank you for your contribution! Sashiko AI review found 5 potential
 issue(s) to consider.
 
-Critical: 0 · High: 0 · Medium: 2 · Low: 0
+Critical: 0 · High: 1 · Medium: 1 · Low: 3
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -73,160 +75,190 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [Medium] On kernels built without CONFIG_MPTCP_IPV6, a well-formed IPv6
-  ADD_ADDR is now handled as a hostile option, and the valid suboptions…
-- [Medium] mptcp_get_options() passes MPTCP options with opsize == 2
-  (kind + length only, no subtype byte) to mptcp_parse_option(), and…
+- [High] A userspace-PM connection can no longer get a new local address
+  ID allocated automatically.
+- [Medium] The ID0 entry is shared by the initial subflow and by any
+  later subflow created from the initial IP with id 0.
+- [Low] mptcp_pm_userspace_created() appends the ID0 entry without
+  checking for an existing entry with the same address, and without…
+- [Low] Rejected after validation (baseline false).
+- [Low] Rejected after validation (baseline false).
 
 --
 
-mptcp: options: reset parsing in case of invalidity
+mptcp: pm: userspace: properly handle the ID0 case
 
-With this commit, mptcp_parse_option() returns false when it finds an
-invalid suboption combination or size. mptcp_get_options() then clears
-the whole status group and stops parsing. Any MPTCP option already
-parsed from the same packet is dropped.
+When a connection is created, this commit adds the initial local address
+(ID0, msk port) to the userspace PM local address list. ID0 can then be
+handled like any other entry instead of as a special case. Later patches
+in the series remove the existing ID0 exceptions.
 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 10a150e2ad69e..b068f4f1861e3 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index f723a134356f3..45faee894ac3d 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -707,6 +707,26 @@ int mptcp_userspace_pm_get_addr(u8 id, struct mptcp_pm_addr_entry *addr,
+>  	return ret;
+>  }
+>  
+> +/* Add the initial local address (ID0) to the local list: easier that way */
+> +void mptcp_pm_userspace_created(struct mptcp_sock *msk, const struct sock *ssk)
+> +{
+> +	struct mptcp_pm_addr_entry *entry;
+> +
+> +	entry = sock_kmalloc((struct sock *)msk, sizeof(*entry), GFP_ATOMIC);
+> +	/* Fine not to handle the ID0 case in memory pressure */
+> +	if (!entry)
+> +		return;
+> +
+> +	memset(entry, 0, sizeof(*entry));
+> +	mptcp_local_address((struct sock_common *)ssk, &entry->addr);
+> +	entry->addr.port = 0; /* msk port */
+> +
+> +	spin_lock_bh(&msk->pm.lock);
+> +	list_add_tail_rcu(&entry->list, &msk->pm.userspace_pm_local_addr_list);
+
+[Severity: High]
+Now that this entry sits first in userspace_pm_local_addr_list, can the
+kernel still allocate an implicit ID for a new local address?
+
+For any address other than the initial one, mptcp_pm_get_local_id() calls
+ops->get_local_id() with skc_local.addr.id = 0. Then
+mptcp_pm_userspace_get_local_id() calls
+mptcp_userspace_pm_append_new_local_addr(msk, skc, true). The first entry
+that loop sees is this ID0 entry:
+
+	mptcp_for_each_userspace_pm_addr(msk, e) {
+		addr_match = mptcp_addresses_equal(&e->addr, &entry->addr, true);
+		...
+		id_match = (e->addr.id == entry->addr.id);
+		if (addr_match || id_match)
+			break;
+		__set_bit(e->addr.id, id_bitmap);
+	}
+
+addr_match is false, but id_match is (0 == 0), so the loop breaks. The
+!addr_match && !id_match branch does not run, and neither does the
+addr_match && id_match branch. The function returns -EINVAL and never
+reaches find_next_zero_bit(..., 1).
+
+Would subflow_token_join_request() then reject an incoming MP_JOIN to any
+local address that is not the initial one and not already in the list,
+and bump MPTCP_MIB_MPJOINNOIDFOUND?
+
+The same seems to apply to outgoing subflows with an IPADDRANY local
+address (local_id -1). They go through
+subflow_chk_local_id()->mptcp_pm_get_local_id(), so they would fail in
+subflow_rebuild_header() whenever routing picks a source other than the
+initial address.
+
+The v2 changelog says "Handle needs_id where the addrs don't match, but
+the IDs (0) does". I couldn't find that handling in this commit, and the
+append loop looks unchanged at the end of the series.
+
+[Severity: Low]
+Can a second entry for the initial address end up in the list? This
+insertion doesn't look for an existing entry with the same address, and
+doesn't check MPTCP_PM_DESTROYING.
+
+The msk can be found by token before mptcp_pm_new_connection() runs:
+
+- On the client, mptcp_connect() calls mptcp_token_new_connect() at
+  connect() time. mptcp_pm_new_connection() only runs later, from
+  mptcp_finish_connect() after the SYN-ACK.
+
+- On the server, mptcp_sk_clone_init() calls mptcp_token_accept() shortly
+  before subflow_syn_recv_sock() calls mptcp_pm_new_connection().
+
+In that window, mptcp_userspace_pm_append_new_local_addr() would accept
+MPTCP_PM_CMD_ANNOUNCE {initial addr, id X}, because the list is still
+empty. This function would then add {initial addr, id 0} as well.
+
+Lookups would return the first match (id X), and a later SUBFLOW_CREATE
+{initial addr, id 0} would be rejected. Should the insertion check for a
+matching entry under pm.lock?
+
+> +	/* The initial address ID doesn't increment local_addr_used */
+
+[Severity: Medium]
+The initial subflow shares this entry with any later subflow created from
+the initial IP with id 0. mptcp_userspace_pm_delete_local_addr() still
+unlinks and frees whatever entry the lookup returns. Can the ID0 entry be
+freed while the initial subflow is still using ID0?
+
+The first case is mptcp_pm_nl_subflow_create_doit() with {initial addr,
+port 0, id 0}. That matches the existing entry (addr_match && id_match),
+so no new entry is created. If __mptcp_subflow_connect() then fails
+synchronously (for example with -ENETUNREACH), the error path runs:
+
+	if (err) {
+		GENL_SET_ERR_MSG_FMT(info, "connect error: %d", err);
+
+		spin_lock_bh(&msk->pm.lock);
+		mptcp_userspace_pm_delete_local_addr(msk, &entry);
+		spin_unlock_bh(&msk->pm.lock);
+	}
+
+This frees the pre-existing ID0 entry, which this call never allocated.
+
+The second case is mptcp_pm_nl_subflow_destroy_doit() on a secondary
+subflow from the initial IP that uses an ephemeral port. The
+port-agnostic lookup returns the ID0 entry, and it gets freed.
+
+In this commit, mptcp_userspace_pm_delete_local_addr() also decrements
+local_addr_used, which was never incremented for this entry. Later in the
+series, "mptcp: pm: userspace: ID0 is not part of local_addr_used" fixes
+that decrement, but not the free.
+
+Later in the series, "mptcp: pm: userspace: no ID0 exception for
+RM_ADDR" and "mptcp: pm: userspace: allow announcing ID0 addr" are
+applied. After that, once the entry is gone:
+
+- RM_ADDR id 0 fails with "address with id 0 not found".
+- ANNOUNCE or SUBFLOW_CREATE with {other addr, id 0} is accepted, even
+  though the initial address still owns ID0.
+
+Doesn't that bring back what the commit message says it prevents: "no
+other addresses and ports can get this special ID while the initial IP
+address and port is used"?
+
+> +	spin_unlock_bh(&msk->pm.lock);
+> +}
+
+[Severity: Low]
+With the ID0 entry in the list, SUBFLOW_CREATE with id 0 from a
+non-initial address now returns -EINVAL, because of the id-only match in
+mptcp_userspace_pm_append_new_local_addr(). The commit message describes
+this as intended.
+
+At this commit, though, the "userspace pm create id 0 subflow" test in
+tools/testing/selftests/net/mptcp/mptcp_join.sh still expects it to
+succeed. Would that break bisection?
+
+Later in the series, "selftests: mptcp: join: new ID0 subflow from the
+right IP" updates the test to expect the failure and to use 10.0.1.2 for
+the ID0 subflow.
+
+[Severity: Low]
+At this commit, the dump and GET output also include the new ID0 entry.
+That breaks the exact-match expectations in the "add & remove address"
+and "create destroy subflow" selftests.
+
+RM_ADDR id 0 also still goes through
+mptcp_userspace_pm_remove_id_zero_address(), which leaves this entry in
+the list.
+
+Both are addressed later in the series:
+
+- "mptcp: pm: userspace: don't dump initial ID0" skips is_init_id0()
+  entries in mptcp_userspace_pm_dump_addr().
+- "mptcp: pm: userspace: no ID0 exception for RM_ADDR" removes
+  mptcp_userspace_pm_remove_id_zero_address().
+
+Could the series be reordered so that each step stays consistent for
+bisection?
 
 [ ... ]
 
-> @@ -424,10 +418,11 @@ static void mptcp_parse_option(const struct sock *sk, const struct sk_buff *skb,
->  		break;
->  	}
->  
-> -	return;
-> +	return true;
-
-[Severity: Medium]
-Can a 2-byte MPTCP option get past the new reset here?
-
-Before calling the parser, mptcp_get_options() only checks that
-opsize >= 2. mptcp_parse_option() then reads the subtype without
-checking for opsize >= 3:
-
-    u8 subtype = *ptr >> 4;
-
-When opsize == 2, that byte belongs to the next TCP option, or lies
-after the TCP options. If it decodes to subtype 9-15, this case runs:
-
-	default:
-		/* Not invalid: maybe used for experimentations */
-		break;
-
-The function then returns true, so the status is not cleared.
-
-Here is an example. A valid MP_PRIO is followed by "TCPOPT_MPTCP, 2",
-which is followed by an option of kind 254 (TCPOPT_EXP, which decodes
-as subtype 0xf). OPTION_MPTCP_PRIO is kept and applied, even though a
-2-byte MPTCP option has an invalid size. The commit message says
-invalid sizes should drop everything.
-
-The DSS case also reads the flags byte before the expected_opsize
-check:
-
-		pr_debug("DSS\n");
-		ptr++;
-
-		flags = (*ptr++) & MPTCP_DSS_FLAG_MASK;
-
-With opsize 2 or 3, this reads up to two bytes past the option.
-
-The short option may be the last one in the header. In that case
-those bytes are past th->doff * 4, which is the most tcp_v4_rcv()
-guarantees to be linear. They may be tailroom or skb_shared_info
-rather than packet data.
-
-These out-of-option reads already existed before this patch. Only
-the reset bypass is new.
-
-Should opsize < 3 be treated as invalid before the subtype is read?
-That would close the reset bypass and also avoid the out-of-option
-reads.
-
->  
->  invalid:
->  	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_OPTINVALID);
-> +	return false;
->  }
->  
->  void mptcp_get_options(const struct sock *sk, const struct sk_buff *skb,
-> @@ -464,9 +459,12 @@ void mptcp_get_options(const struct sock *sk, const struct sk_buff *skb,
->  				return;
->  			if (opsize > length)
->  				return;	/* don't parse partial options */
-> -			if (opcode == TCPOPT_MPTCP)
-> -				mptcp_parse_option(sk, skb, ptr, opsize,
-> -						   mp_opt);
-> +			if (opcode == TCPOPT_MPTCP &&
-> +			    !mptcp_parse_option(sk, skb, ptr, opsize, mp_opt)) {
-> +				/* invalid option, drop previously parsed opt */
-> +				*(u32 *)&mp_opt->status = 0;
-> +				return;
-> +			}
-
-[Severity: Medium]
-On kernels built without CONFIG_MPTCP_IPV6, does this drop valid
-suboptions?
-
-In mptcp_parse_option(), the IPv6 ADD_ADDR sizes are only accepted
-under IS_ENABLED(CONFIG_MPTCP_IPV6):
-
-#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-			else if (opsize == TCPOLEN_MPTCP_ADD_ADDR6 ||
-				 opsize == TCPOLEN_MPTCP_ADD_ADDR6_PORT)
-				mp_opt->addr.family = AF_INET6;
-#endif
-			else
-				goto invalid;
-
-The echo path has the same pattern for the _BASE sizes.
-
-MPTCP_IPV6 depends on IPV6=y. With CONFIG_IPV6=m or n, a well-formed
-IPv6 ADD_ADDR now makes mptcp_parse_option() return false. The reset
-above then clears every option parsed before it, and parsing stops,
-so the options after it are skipped too. Before this patch, only the
-unsupported ADD_ADDR was ignored.
-
-A Linux peer can trigger this. In pm_kernel.c, select_signal_address()
-announces signal endpoints of any family. A dual-stack peer can
-therefore send an IPv6 ADD_ADDR on an IPv4 connection.
-
-mptcp_established_options() can also put ADD_ADDR and MP_PRIO in the
-same packet:
-
-	if (mptcp_established_options_add_addr(sk, skb, &opt_size, remaining,
-					       has_ts, opts)) {
-		...
-	}
-
-	if (mptcp_established_options_mp_prio(sk, &opt_size, remaining, opts)) {
-
-mptcp_write_options() writes MP_PRIO after ADD_ADDR and clears
-send_mp_prio:
-
-		subflow->send_mp_prio = 0;
-
-As a result, the MP_PRIO is never parsed and never resent. The subflow
-backup state then stays out of sync between the two hosts.
-
-The goto invalid for this case came with the previous patch in the
-series. Dropping the other options along with it is new here.
-
-The commit message says these packets come from "a buggy host, or an
-attacker". The previous patch, "mptcp: options: track invalid
-suboptions", says unsupported versions or extensions "shouldn't be
-considered as invalid".
-
-Should a kernel without IPv6 support treat an IPv6 ADD_ADDR as
-unsupported here, rather than invalid?
-
->  			ptr += opsize - 2;
->  			length -= opsize;
->  		}
-
 -- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261029-mptcp-mib-inval-opt-v3-0-428f42a35674%40kernel.org
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261029-mptcp-pm-userspace-id0-case-v4-0-555066fa4292%40kernel.org
