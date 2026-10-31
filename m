@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793458574;
-	b=E3peKj137Gk0ZKDqeax+IhX5JtnGT3bkWu7xgkE0yoeaBuvjnpQbEN/TBMy9zB69/iX7
-	 4i1PAwQ+pR91b842RoPhWMAB61TInf6oHKqhFSWWrEVv9cMSAKAy1Tql/5K+DknG5mdF2
-	 +IltHc9rcDpBl+Ymx52r0hNGYPU4zvW+LJ8oKcmq67fevHQz6jU7setMezDjHnrBwAsn+
-	 9uNPeDzK1g5MqFSUcHjWUgcg6nhWZpo7N2+etG8LzH7HhUtznJISG+0rC7uHE1q7kcAyB
-	 6XccESME+apNPec4XiOkqfwi2TmN4aXJqhE7bZZhaLlT4rEcNec120K4hcbCC8gzEWA==
+	t=1793458576;
+	b=YFF989WmLRz43FUPTmr35dFT4FIYefKAHB9v6YyNk8hsBHjqAAyqP+QP6xtN/3e38seI
+	 uLM9RS/2zMVxQFaqdmOx+KV61++vk0cpppER0dAsilbit96dfvBsCeIj/Lq7S6Xwpqdny
+	 EDpLs+n3CWwBoU6zBpxtX5v1zntzVjaC2lgV8oSHPcyOtCsrW38M9JDcKbEtrlKKZ8gu8
+	 wBK+4AYKdun1merzRwvMPfOMfp/c8QNZUnjZ1kk2T8+1BvGm6SoysO6dvQCIni6m5/fSw
+	 1f7UArnvQav9N1AeWD6JklX7/hzMOZWUKduM1luk7NIIh0pU7+cI4XT8O+RhKduAY1Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793458574;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793458576;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=bxN1Geud4VPlc18aM+IS3HRWl44qJIAfg962/6pZCxs=;
-	b=neWE/APBGJxRojFZHNZoxnN3A5YBwTszbDVibi7xlZSgH6I42fWkU2ccmGpQYcv7j0u9
-	 Vg+ExmMl6lcqY/3oF796/51547nDdph9VJJCZL9bx1fjgQK0WmwqHoWHcYvxUnOaggWXj
-	 JYJH5dkXXBzpu+bVSzOOBT4Y3DucInhgYvZ0xwWkTJWj2gHwruxCBOWNBPxHyIhPoXK6+
-	 tZpWXWX1/v/aXzkntz7QiXce8R8kw9T3v7n3yKJ1Bz97pxgR73esGLV3gT4z6jvvOnGej
-	 wIhbg3pDqUoXjm7JMAisl04JcXV4cJ2E6bW0JdRByplyuFiG7SAF10oVizFpKzr1oeA==
+	bh=yDsnxPCPwDvfH7jQTIC7U9licrwvkVUOmUPVD2tQqDs=;
+	b=WBf7V1tssV303z9Vn4FFpbSElgnyypxAJqCEhLejF++LK39ovkNLSg0t5Sk0I/M+jqyy
+	 +5aiF8UeznmvM6r5lWtZq/fVai6jqfTFkB2GS7ixw+mwpaLXI2u8jsYxuFFdiHPUakDSi
+	 JJ9ka9z6bXksn5Yu17O7uFDzA+Eo3VkxIDwUrTb0WtxnE109AETvI6HG7ilpN51M0Lt9T
+	 CeUPgRhzy6tMV+sUrZePCVah4V1wwYqP/vyC4YgSHQOtgMSoVv7CYsYpNsacttD+KNA/K
+	 ZmGbpa11lAy6ojOzrsThpxQX2ZigcNhXoyoHYJ6HuJWuDBgBMPl7zIfLw60P51P9KMw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=G0boYHFC;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FxY5TiO4;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2FF606A31C
-	for <mptcp@lists.linux.dev>; Sat, 31 Oct 2026 14:56:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3712606A31C
+	for <mptcp@lists.linux.dev>; Sat, 31 Oct 2026 14:56:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=G0boYHFC
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45B4C1F000C1;
-	Sat, 31 Oct 2026 14:56:14 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FxY5TiO4
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ED2A1F000C1;
+	Sat, 31 Oct 2026 14:56:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793458574;
-	bh=bxN1Geud4VPlc18aM+IS3HRWl44qJIAfg962/6pZCxs=;
+	s=k20260515; t=1793458575;
+	bh=yDsnxPCPwDvfH7jQTIC7U9licrwvkVUOmUPVD2tQqDs=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=G0boYHFCQjkaq60++t4+snmYi2bD3U74GI0qAkenoJjxM+c7Upd+qVEE8gsI4C3p3
-	 Ym0130AcZJ3FkQAm2VuCHOWyD+EXX2gAk9Vr94Jl2a5zh0whwBkjFua6Nd0DlpDkbA
-	 YvpEE/pA1GBJjMUvmo6L+aTIYM7qNmGnekDVd6N2r99SUhlGQVKbMLRbhyLoDRCrgx
-	 5fbGRtP2hZphXKcYNNRvFhmzkx9aKft4Ird5ay1ZFcIfrTw52Td1CoF+4NRDui77nS
-	 vZUJLzAtQ7CCP6NoA3Dc9sE39k7UY3I3nal7dlpnPvxw+ooWmuBwMddEhXF8CCR9vL
-	 dyrM1MgosCYCg==
+	b=FxY5TiO4G0S+Lb2CDD9kqsSntR5TkYQSjGBrF3+jKZfeE3dlVrkIrj/VIpKDSiVAy
+	 a1ZvuBwgPxG0o/GOfKNL6BG2ra5HE9XbE9FYpGEJ3KTMRyoEvjZEEEOX/cltkNWiks
+	 yVKTmBwpXNmlbrz0WcaKwlmjU8kfLX1ev3XNLquaLT1DzdE0SlqFCFKJDU8rJjfGRJ
+	 xSlHxTWmEkX6gcPenm6lbNC7f8ewPZMU/0TigfdAxRX13jnhxAhnc/DpSoHvXYf37K
+	 4+iEdtVP/1yWYCpQdc1U78nHajeb+0S+gEgBwA+gSdafL1qGrna40rceaeyFH5xkt7
+	 M+zXZ8MyIiGhw==
 Subject:
- Re: [PATCH mptcp-next v3 4/5] mptcp: track app-limited state in mptcp_sendmsg
+ Re: [PATCH mptcp-next v3 5/5] selftests: mptcp: sockopt: check app_limited
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, tanggeliang@kylinos.cn, kuba@kernel.org
-Date: Sat, 31 Oct 2026 14:56:13 +0000
-Message-ID: <179345857386.3128.591821758414475761@kernel.org>
-In-Reply-To: =?utf-8?q?=3C9fd8f849cbcb94b46bc2f59225dbdde81e8389d2=2E1793324?=
+Date: Sat, 31 Oct 2026 14:56:14 +0000
+Message-ID: <179345857465.3128.15418324477063692917@kernel.org>
+In-Reply-To: =?utf-8?q?=3C3067cbb56400f1c1c7d372b17e82c1fd61d3e102=2E1793324?=
  =?utf-8?q?316=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
-References: =?utf-8?q?=3C9fd8f849cbcb94b46bc2f59225dbdde81e8389d2=2E17933243?=
+References: =?utf-8?q?=3C3067cbb56400f1c1c7d372b17e82c1fd61d3e102=2E17933243?=
  =?utf-8?q?16=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
-X-sashiko-severity: Medium
+X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -64,124 +64,74 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issue(s) to consider.
+Thank you for your contribution! Sashiko AI review found more severe
+issue(s) in other patches of this series. This mail is only an FYI, in case
+you want to address the nit picks below when you respin.
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 1
+Low priority / nit picks for your consideration:
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
-
-- [Medium] In net/mptcp/protocol.c, mptcp_rate_check_app_limited()
-  decides whether MPTCP still has data to send using only…
-- [Low] Commit metadata mismatch for "mptcp: track app-limited state in
-  mptcp_sendmsg": the author is `Geliang Tang <geliang@kernel.org>`, but…
+- [Low] In connect_one_server()
+  (tools/testing/selftests/net/mptcp/mptcp_sockopt.c:639-641), the new…
 
 --
 
-mptcp: track app-limited state in mptcp_sendmsg
+selftests: mptcp: sockopt: check app_limited
 
-This adds mptcp_rate_check_app_limited(). It walks the subflows of an
-MPTCP socket and calls tcp_rate_check_app_limited() on each one, unless
-the msk still has unpushed or re-injected data. It is called from
-mptcp_sendmsg_locked() so that congestion controllers like BBR can ignore
-rate samples taken while the connection is application-limited.
+This adds an assertion to connect_one_server() in mptcp_sockopt.c. After
+a small data exchange, it checks that tcpi_delivery_rate_app_limited is
+still 1. The aim is to catch regressions in the subflow app-limited
+accounting added by the preceding mptcp_rate_check_app_limited() change.
 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> index b8158a1198eba..f7a45b93cbe06 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> @@ -635,6 +635,11 @@ static void connect_one_server(int fd, int pipefd)
+>  	do_getsockopts(&s, fd, total, total);
+>  
+>  	assert(s.mptcpi_rcv_delta == (uint64_t)total);
+> +
+> +	/* app-limited accounting requires a recent kernel */
+> +	if (expect_all_features())
+> +		assert(s.tcp_info.tcpi_delivery_rate_app_limited == 1);
 
 [Severity: Low]
-This isn't a bug, but the Signed-off-by address doesn't match the author
-address (Geliang Tang <geliang@kernel.org>). checkpatch reports
-FROM_SIGN_OFF_MISMATCH for this. It doesn't read .mailmap, so the
-existing .mailmap entry that maps these two addresses won't stop the
-warning.
+This isn't a bug, but a question about coverage. With this gate, the new
+check only runs when SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES=1 is set:
 
-Patch 1 of the series ("mptcp: update mptcp_check_readable") signs off
-with geliang@kernel.org. Could this one use the same address?
+static bool expect_all_features(void)
+{
+	char *env = getenv("SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES");
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 696cdba76bc94..f30e14a2775a2 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2038,6 +2038,24 @@ static void mptcp_rps_record_subflows(const struct mptcp_sock *msk)
->  	}
->  }
->  
-> +static void mptcp_rate_check_app_limited(struct sock *sk)
-> +{
-> +	struct mptcp_sock *msk = mptcp_sk(sk);
-> +	struct mptcp_subflow_context *subflow;
-> +
-> +	if (msk->write_seq != msk->snd_nxt || mptcp_send_head(sk))
-> +		return;
-
-[Severity: Medium]
-Does this check miss data that is waiting for an MPTCP-level
-retransmission?
-
-When the MPTCP RTO fires, mptcp_retransmit_timer() only defers the work:
-
-net/mptcp/protocol.c:mptcp_retransmit_timer() {
-    ...
-	if (!sock_owned_by_user(sk)) {
-		/* we need a process context to retransmit */
-		if (!test_and_set_bit(MPTCP_WORK_RTX, &msk->flags))
-			mptcp_schedule_work(sk);
-	} else {
-		/* delegate our work to tcp_release_cb() */
-		__set_bit(MPTCP_RETRANSMIT, &msk->cb_flags);
-	}
-    ...
+	return env && strcmp(env, "1") == 0;
 }
 
-Neither path changes write_seq, snd_nxt or first_pending.
+So a plain "make run_tests" or a default kselftest run never checks the
+subflow app-limited accounting. The comment says "requires a recent
+kernel", but the code only reads the environment variable. It does not
+probe the kernel.
 
-Later, __mptcp_retrans() reads the data straight from mptcp_rtx_head()
-and sends it with __mptcp_push_retrans(). It never sets
-msk->first_pending. The only path that sets first_pending = rtx_head is
-__mptcp_retransmit_pending_data(), which runs when a subflow is closed
-or goes stale.
+This looks deliberate and follows existing MPTCP selftest practice.
+pm_netlink.sh gates checks that only hold on newer kernels the same way:
 
-So suppose mptcp_sendmsg_locked() takes the msk lock after the RTO has
-fired but before mptcp_worker() or mptcp_release_cb() has run
-__mptcp_retrans(). Then write_seq == snd_nxt and mptcp_send_head() is
-NULL. The same holds if __mptcp_retrans() bailed out because
-mptcp_sched_get_retrans() found no suitable subflow and the data is
-still waiting.
+if mptcp_lib_expect_all_features; then
+	check "get_limits" "$(format_limits 0 2)" "defaults limits"
+fi
 
-In that window, won't the subflow loop below set tp->app_limited on idle
-subflows? That includes the one mptcp_subflow_get_retrans() is about to
-pick for the retransmission.
+mptcp_lib.sh also says the variable is set when validating against the
+latest kernel. As far as I can tell there is no runtime probe that could
+replace it. tcpi_delivery_rate_app_limited was in struct tcp_info long
+before MPTCP_TCPINFO existed, so the size of the tcp_info the kernel
+fills says nothing about whether mptcp_rate_check_app_limited() is
+present.
 
-Plain TCP avoids this with the tp->lost_out <= tp->retrans_out condition
-in tcp_rate_check_app_limited(). Nothing here does the same for data
-lost at the MPTCP level. BBR would then keep the recovery burst samples
-out of its max-bw filter in bbr_update_bw(), reset sampling in
-bbr_lt_bw_sampling(), and skip them for full-bandwidth detection.
-
-This also seems to contradict the commit message:
-
-    With this in place, subflow rate samples taken while the MPTCP
-    connection is genuinely application-limited are flagged as such
-
-Should the early return also cover a pending MPTCP_WORK_RTX or
-MPTCP_RETRANSMIT?
+Would it help to make the comment say the check is only enabled when
+SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES is set, so it is clear that
+default runs skip it?
 
 > +
-> +	mptcp_for_each_subflow(msk, subflow) {
-> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-> +		bool slow;
-> +
-> +		slow = lock_sock_fast_nested(ssk);
-> +		tcp_rate_check_app_limited(ssk);
-> +		unlock_sock_fast(ssk, slow);
-> +	}
-> +}
-
-[ ... ]
+>  	close(fd);
+>  }
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1793324316.git.tanggeliang%40kylinos.cn
