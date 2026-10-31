@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793487476;
-	b=jWFN9GS8P+++wq3144TLH2Imo/45rnDZHJ/RhFaU6mnIDshcRWfrCmXxosTex0yBbiBo
-	 SrfNB923HNAw2SSFWU9DjIW9XfOrqxmic5v1tCP00WHYaCyNjOqWzJzrelJY812ZFt6Zf
-	 T9gI1X7ONZgFqYNaDvVi2QIIzgDlYFP4QRTndCRitnB89CVDghHCVzIid2gv3ZYTA/ya0
-	 aqNU+64rreLKRsAJb6/aivH0E0mjXqb126Vk/N/e/4AO4j4WhHMNBCig4JDFTEIHW8ekl
-	 SR1PhQyTwBOwObOretbp/2uhXDRltlpcGIcZau4QV6bNZ2NYitTtTKy9eyudF9d2RRg==
+	t=1793487517;
+	b=c01Bx0Mzur8xxW+PN1EPFhnenQyRegLiJwBv9p261l/SEex0IVPh45yiP6CFlvkI7u0B
+	 osfKGimVmSbC1EzatGnFBbLOzvpRKiPzJnFGFRenTtA/7ucE5qBMgyW7O9Xs0QgYDEDb4
+	 6ZQahFJQU7nIt1ISzw7RF1k7y8c3RoYtqB2XbZ7QDXF5/3o/UOjFfukJ/jj8lfmSS903L
+	 vY4iQYUBt6jyAe+qxtzpRapHENwvYxHn5iLo8nrY36SJw23ab/3sWeQPybqqM6u8ktqFe
+	 KGKRqbsQbY64tM6dCV29tbRcayCv2fOoVGNYWjYJlAISk2Ox6EAWTjqPup6qbqkpJbQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793487476;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793487517;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=iGRJ4yg49hVy907co+S0rPLfB6OWrrKGGhVtYOYO4Jw=;
-	b=f5UlSMNXhst8JwkKBw20Uw+yNHoLVU1TTAbSHrlKXb34SeWRtQJO+LL6xLNuBj9Gj0lY
-	 LQQ2GkM2uGFcdtU5fxE4W0kpOCal3aNBHH5+JmJERaWUUiAwxw6ICb48IpXBll+8AXBTA
-	 ICQbCxe4mLwbIlPdh1AHMSYEWjRJoCWV8vN2CQeHSUIMOhWq3fko/a5/brA7V1+ZT2wbY
-	 MJQ6Nk07dS1+UM/wT/1a4wsuVsxZJlAZkK9LtjkgyFHTBpdVJiDo4Gg145RZxprZQmZZT
-	 19RyZP57h6/GmmeKqoe6GvX46jSXyI8+oUlAd5zcIfYfU1T9rR596bb+fp9cgAEUGKA==
+	bh=bxwmnpYlLiDXl80c+WMGbI8gt8tNfehn5nc+UGRzbPE=;
+	b=D2NkdvJciz+kks844vaiKmPLeH0N1VgTFJQShuDP5RtG3sqGLCzeFfBnhVN6M8BwLayS
+	 7IUtAkC5mRx3RcqhSouGZIGPx+sz7qXbakNDcqF2XtP4E99MpTbNwpTsKr4PHRGFzhYqU
+	 gLHvEm11if6djf0Q1gt/VAz47A6BVB5g88B5los5ZjsOsJlcJ/p8jq4WaEHbnb0Sw4Bsi
+	 nhKDjLGdWbigKsVAreKWdf9nObWBOZs8fiBjFyR4bgCbKulspBAxsabS09M8d8kZ3R8s1
+	 cjdJlJg9es4mqTYciWe1XNgaZfnpAq0P3XNRMAl6pCbZK6SDKW+bGlNuv3MrqNzx62A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="I4l/b2Eu";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XnKEzgVf;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6704D606A31A
-	for <mptcp@lists.linux.dev>; Sat, 31 Oct 2026 22:57:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18BC2606A31A
+	for <mptcp@lists.linux.dev>; Sat, 31 Oct 2026 22:58:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=I4l/b2Eu
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF9DF1F00919;
-	Sat, 31 Oct 2026 22:57:55 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XnKEzgVf
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 966F11F000C1;
+	Sat, 31 Oct 2026 22:58:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793487476;
-	bh=iGRJ4yg49hVy907co+S0rPLfB6OWrrKGGhVtYOYO4Jw=;
+	s=k20260515; t=1793487516;
+	bh=bxwmnpYlLiDXl80c+WMGbI8gt8tNfehn5nc+UGRzbPE=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=I4l/b2EuBlrcnyGHUzVGIi9yoduGQWD+qlRrMUjRllVRN3wBdGQbYXylimt0HHCVA
-	 /gzXU0gaaevK1TZXiRbYZrMMf9VJEiVgJwrXMOzvCDifLPyXMqVSHa2mCIxVkH2eyF
-	 S3XldMmWssukviQpRho31E/E0qe4y6/L2rZwgOuReYUL+RmjdlMab9qRlAJZVCjFCk
-	 H8LUYKiN7uoeGzjq3YDrAyw4FoIykEQ4WbOvcqhlbjgGJSYUwC7zDPSEuR6MLCEdx0
-	 vW00A+KdIkg4d50WR7NML6zAz5Z0QN6yUEQ7RzPTLqPZljXQTSFQ3IwjXyAH4oMRGX
-	 MNm4mkUDy8UbQ==
-Message-ID: <sashiko-outbox-192214@kernel.org>
+	b=XnKEzgVfrUn12SYYkyDNsAdQ3j4+nXeU64btQOxHEnNdv/LQJL7Z6FFCvtlN8BpMs
+	 rAmQmaLdfCh4ONb9rRE6xyLk1FymGw7URWmYaskWM4/X+dcMNXnsnxZJgbwPepETWG
+	 g5i7NF6eyOk0Ro9+gCG9WLEgDgZ/wsxdoGSIds5AvVfI4Ehz+5Brd77ly8EyyDgrD3
+	 LTwNFyPk4xlYwH2r+M4E2IirqiEcI51Tp/0wdEDxG3jmyDMPIvnauihIHXqHwCnCmX
+	 gVpC8wUvZuK06brbP3+Pmea7+oW1KzXgcH9meohwox+42LofZIidDD6qJ2wMnsX0A4
+	 5o12bfG1y89ew==
+Message-ID: <sashiko-outbox-192215@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v2 3/8] mptcp: sched: let get_retrans
- reinject on an idle subflow
+Subject: Re: [PATCH mptcp-next v2 7/8] selftests: bpf: mptcp: test the send
+ limit of a scheduler
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>, "MPTCP
  Linux" <mptcp@lists.linux.dev>
-In-Reply-To: <20261031-mptcp-sched-opp-retrans-v2-3-e9c4a30f6841@kernel.org>
+In-Reply-To: <20261031-mptcp-sched-opp-retrans-v2-7-e9c4a30f6841@kernel.org>
 References: <20261031-mptcp-sched-opp-retrans-v2-0-e9c4a30f6841@kernel.org>
- <20261031-mptcp-sched-opp-retrans-v2-3-e9c4a30f6841@kernel.org>
+ <20261031-mptcp-sched-opp-retrans-v2-7-e9c4a30f6841@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 31 Oct 2026 22:57:55 +0000
+Date: Sat, 31 Oct 2026 22:58:36 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -63,159 +63,85 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] mptcp: 32-bit overflow in __mptcp_oppr() and mptcp_oppr_send_ran=
-ge() budget math
-- [Medium] mptcp: __mptcp_oppr() continues to later DSN ranges after partia=
-l send failure
+- [Low] selftests/bpf: deprecated CHECK() macro used in test_limit()
+- [Low] selftests/bpf: non-standard multi-line comment style in mptcp limit=
+ test
 --
 
-commit be2c71f8537cecaea5b15cddbe5f79d5a824718f
+commit fb18275d8cce4c512f78d41262ea65272c01b932
 Author: Abdul Wasey <w453y.me@gmail.com>
 
-mptcp: sched: let get_retrans reinject on an idle subflow
+selftests: bpf: mptcp: test the send limit of a scheduler
 
-This commit extends the MPTCP scheduler get_retrans callback to support
-opportunistic reinjection on an idle subflow when no new data can be sent.
-The core collects the unacknowledged DSN ranges held by other subflows and
-resends them on the selected subflow up to reinject_limit and one cwnd.
+This commit adds a bpf_limit round-robin MPTCP scheduler that sets send_lim=
+it
+to 4 KB on the selected subflow and a selftest verifying that no subflow
+receives more than 4 KB between two get_send calls when sending 64 KB chunk=
+s.
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/332 [1]
-
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index d960ab9c76b32..7117786e52513 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -3057,6 +3057,92 @@ static int __mptcp_push_retrans(struct sock *sk, s=
-truct mptcp_data_frag *dfrag,
->  	return len;
+> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testi=
+ng/selftests/bpf/prog_tests/mptcp.c
+> index d77c9f8c53c75..4302c16cb6bb4 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+[ ... ]
+> @@ -820,6 +821,109 @@ static void test_burst(void)
+>  	mptcp_bpf_burst__destroy(skel);
 >  }
 > =20
-> +/* resend [start, end) on @ssk from the msk rtx queue; < 0 on a send err=
-or */
-> +static int mptcp_oppr_send_range(struct sock *sk, struct sock *ssk, u64 =
-start,
-> +				 u64 end, int budget,
-> +				 struct mptcp_sendmsg_info *info)
+> +struct big_send_arg {
+> +	int lfd;
+> +	int err;
+> +};
+> +
+> +/* send total_bytes in 64 KB writes, so that data fragments get larger t=
+han
+> + * the scheduler's limit
+> + */
+> +static void *big_send(void *data)
+[ ... ]
+> +/* At most 4 KB per decision, also inside a data fragment: no subflow ge=
+ts
+> + * more than that between two calls of the scheduler.
+> + */
+> +static void test_limit(void)
+
+[Severity: Low]
+This isn't a bug, but in BPF code and selftests, should multi-line comments
+above big_send() and test_limit() place the opening /* on its own line with
+the comment text starting on the next line?
+
 > +{
-> +	struct mptcp_data_frag *dfrag;
-> +	int copied =3D 0, ret;
-> +
-> +	list_for_each_entry(dfrag, &mptcp_sk(sk)->rtx_queue, list) {
-> +		if (!dfrag->already_sent || !before64(dfrag->data_seq, end))
-> +			break;
-> +		if (!after64(dfrag->data_seq + dfrag->already_sent, start))
-> +			continue;
-> +
-> +		info->sent =3D before64(dfrag->data_seq, start) ?
-> +			     start - dfrag->data_seq : 0;
-> +		info->limit =3D min_t(u64, dfrag->already_sent,
-> +				    end - dfrag->data_seq);
-> +		info->limit =3D min_t(u64, info->limit,
-> +				    info->sent + budget - copied);
-> +		while (info->sent < info->limit && copied < budget) {
-> +			ret =3D mptcp_sendmsg_frag(sk, ssk, dfrag, info);
-> +			if (ret <=3D 0)
-> +				return copied ? : -1;
-> +			copied +=3D ret;
-> +			info->sent +=3D ret;
-> +		}
-> +		if (copied >=3D budget)
-> +			break;
-> +	}
-> +	return copied;
-> +}
-> +
-> +/* Opportunistic reinjection: the scheduling part is in sched.c */
-> +static void __mptcp_oppr(struct sock *sk)
-> +{
-> +	struct mptcp_sendmsg_info info =3D { .data_lock_held =3D true, };
-> +	struct mptcp_sock *msk =3D mptcp_sk(sk);
-> +	int copied =3D 0, budget, ret, i;
-> +	struct mptcp_sched_oppr oppr;
-> +	struct sock *ssk;
-> +
-> +	mptcp_data_lock(sk);
-> +	__mptcp_clean_una_wakeup(sk);
-> +	oppr.una =3D msk->snd_una;
-> +	mptcp_data_unlock(sk);
-> +
-> +	if (!mptcp_sched_oppr_get(msk, &oppr))
-> +		return;
-> +
-> +	ssk =3D oppr.ssk;
-> +	lock_sock(ssk);
-> +	/* the scheduler's limit, and no more than one cwnd */
-> +	budget =3D min_t(u64, oppr.limit,
-> +		       tcp_snd_cwnd(tcp_sk(ssk)) * tcp_sk(ssk)->mss_cache);
+[ ... ]
+> +	ASSERT_OK(arg.err, "send");
+> +	ASSERT_EQ(recvd, total_bytes, "recv");
+> +	CHECK(has_bytes_sent(ADDR_2), "limit", "should have bytes_sent on addr2=
+\n");
 
-[Severity: Medium]
-Can the budget calculation in __mptcp_oppr() and mptcp_oppr_send_range()
-overflow 32-bit integers when a scheduler sets a large subflow->reinject_li=
-mit
-on a subflow with a large cwnd?
+[Severity: Low]
+Since CHECK() is deprecated in BPF selftests, could test_limit() use
+ASSERT_OK(has_bytes_sent(ADDR_2), "has_bytes_sent addr2") here instead,
+matching the other ASSERT_*() calls in this function?
 
-In __mptcp_oppr(), tcp_snd_cwnd(tcp_sk(ssk)) and tcp_sk(ssk)->mss_cache are
-both u32, so their multiplication is evaluated in 32-bit unsigned arithmetic
-before min_t(u64, ...) promotes the product to u64, wrapping if the product
-reaches 2^32.
+> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_limit.c b/tools/=
+testing/selftests/bpf/progs/mptcp_bpf_limit.c
+> new file mode 100644
+> index 0000000000000..431f07d6b6696
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_limit.c
+> @@ -0,0 +1,94 @@
+[ ... ]
+> +/* An MPTCP-level retransmission is not one of our decisions: do not cou=
+nt
+> + * what it sends.
+> + */
+> +SEC("struct_ops")
+> +int BPF_PROG(bpf_limit_get_retrans, struct mptcp_sock *msk)
 
-In addition, oppr.limit is u32 while budget and copied are signed int. If b=
-oth
-oppr.limit and the cwnd * mss_cache product are >=3D 0x80000000U (for examp=
-le
-when a scheduler sets reinject_limit =3D U32_MAX on a high-BDP path), assig=
-ning
-the min_t(u64, ...) result to signed int budget makes budget negative. The
-loop condition copied < budget in __mptcp_oppr() is then immediately false,
-skipping reinjection without updating msk->oppr_una.
-
-Similarly, in mptcp_oppr_send_range():
-
-	info->limit =3D min_t(u64, info->limit,
-			    info->sent + budget - copied);
-
-info->sent + budget - copied is evaluated as a signed 32-bit int before
-min_t(u64, ...) casts it to u64. If budget is near INT_MAX and info->sent >
-copied (such as when start > dfrag->data_seq), the signed addition overflows
-to a negative int, which sign-extends to a large u64 and fails to clamp
-info->limit to the remaining budget.
-
-> +
-> +	spin_lock_bh(&msk->fallback_lock);
-> +	if (__mptcp_check_fallback(msk) || !msk->allow_subflows)
-> +		goto unlock;
-> +
-> +	for (i =3D 0; i < oppr.n && copied < budget; i++) {
-> +		ret =3D mptcp_oppr_send_range(sk, ssk, oppr.r[i].start,
-> +					    oppr.r[i].end, budget - copied,
-> +					    &info);
-> +		if (ret < 0)
-> +			break;
-> +		copied +=3D ret;
-> +	}
-
-[Severity: Medium]
-If mptcp_sendmsg_frag() fails partway through sending a DSN range in
-mptcp_oppr_send_range(), should __mptcp_oppr() stop rather than continuing =
-to
-subsequent ranges in oppr.r[]?
-
-In mptcp_oppr_send_range(), when mptcp_sendmsg_frag() returns <=3D 0 (for
-example -ENOMEM from sk_wmem_schedule() or 0 when hitting mptcp_wnd_end(msk=
-))
-after an earlier fragment in the same range already sent data (copied > 0),
-it returns the positive copied count via:
-
-	if (ret <=3D 0)
-		return copied ? : -1;
-
-Because the loop in __mptcp_oppr() only breaks on ret < 0, a partial send on
-oppr.r[i] causes __mptcp_oppr() to advance to oppr.r[i + 1]. If a later,
-smaller range succeeds, higher-DSN data is transmitted while leaving an uns=
-ent
-gap in the earlier range that holds back snd_una, and msk->oppr_una is still
-recorded as oppr.una so the failed portion is not retried for this snd_una.
+[Severity: Low]
+Similarly, should the multi-line comment above bpf_limit_get_retrans() have
+the opening /* on its own line to follow BPF coding style?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261031-mptcp-sche=
-d-opp-retrans-v2-0-e9c4a30f6841@kernel.org?part=3D3
+d-opp-retrans-v2-0-e9c4a30f6841@kernel.org?part=3D7
