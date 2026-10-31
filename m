@@ -1,56 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1793446231;
-	b=qPrPwabtK6vqC0FI2HW8mNuRkQc0NRJLrkQEa4OwqGDCsXnJP0BaBgdmqHCeUJrMsc7s
-	 FF/D8YMWozV7cb6+l9N2Nn9BFrQQYh9mzNiiMhIqsEkxXitCjBH8PVWuEADBGKM25bGbe
-	 vLGg9ruzxobClsF5m8X/NiCiloHnlJkefcRjqzvhu4Q3X1AcomSyfghJWFG7PHVnFJAjE
-	 9h2Zxc/41I1nZYTz1uBmmCZP1RGH6/luQEV/wUlgbcS2nFClpzS5uvZf2I18KJlEUqBrI
-	 NXGc5px/feE5ds2wMDJvDSpUKmIfHJQHRjdsS1rUeDTK0dY5xjBpiiaRwcLvjVGOD0Q==
+	b=BAhel3wrt/7J7E/rPdAAFppUfQ3gABTVpsrFft6fNJ7iPwVDRliAr53VGaW/b0i5GMuG
+	 0pV+6Hla3q6PduqAyCH0ufpRmFPa6cjOzHk42O7JMzapxbWgE9pZg2BE0zCYk/tABpsbr
+	 xeRYCoijuJ+2NQUnfBizkJe2B8c/ePA/H+/phXfHtRk8H5NDtwppVF+Rzoi5t2DB8k1Sl
+	 cQXdkaT8silKkHJr4QOH5a9AMPB3Udc6YnXssdOl+/Gn9plaCAGPF3fgWkwISY/bbB01N
+	 +beneSfaPimTN5Rz061ga2WHuTC3VD5YMQ02dp6AG/9lmkkX/D09BJ3BVed+3oTJLhA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1793446231;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=Rld+QvZumWnEDU6Fjd2wPMdSnC6Wk0IgLpjRxBl9O6E=;
-	b=WSoe0v/qbaaHYK+v2pc0Lzsqt6W6iax9Z5i43ieT+ogqofIRnsmxlWOJvsZOkcHMBGo0
-	 WknQG/QoxPxKrqAawfD7UBsJG+e6lFHD1q0gwDqEsol3cRNf9SdJ8YFyTxbAcaP7n4znI
-	 O1np2OXfq7dze3rXh5imzpoZo+Q3dyqrcvij5i3GjPa6G/iR5l1OZW1z/cYQD/6HMhpxD
-	 Jbf8SYQvWE4bhyX3b6CVVf3AJLBVd6a//oCyVfHh/zuia7TovLh8T2phRmZl7xNU3pB9U
-	 x8OLEZWsJ2fJ3tHj8B+Cc8fWD2RaguCLXqkuPTUWBVUn3H1kMb5V0S9KlicMbwIxy8A==
+	bh=cvJ+zh6ILTT9UIbuV4UHpgGpU8uXRrIcgicMYbsEpIQ=;
+	b=vDEvx85wQftc2/mNosLmi4bYdUcFL1NxQNPI7Zwl1IlNVJ0YglGY2W8zZFdEI24CByKX
+	 +JQv1xdQCGZ1K98BoYQzzieiHmZKmfbQnxbCLsPc83wgA3FzQIXrTCWyo6PM+936ydLoE
+	 OxZehN0TIW6/kYV6ekqmadjheUIkJ0UsSGXhk25gWCPOXa21+DhEkT3MCTVktj6mp1Wxm
+	 Yv0nGVYUCPtltszPmpIgs7WJBs+jr3j/D7j0lIOhEYSVJvDytVXzVkCSNb8FzYwMPRiOA
+	 sokFF2z1gdHqioOgOrqUyDTz/WX0mGSQt21kHBhE03cEN9ERomdB8w1tBG2fQ2zdVNw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Oduv9jak;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="ZA/gmRVE";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC24B606A31C
-	for <mptcp@lists.linux.dev>; Sat, 31 Oct 2026 11:30:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69359606A31A
+	for <mptcp@lists.linux.dev>; Sat, 31 Oct 2026 11:30:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Oduv9jak
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AF531F000C1;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZA/gmRVE
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF1CB1F0093A;
 	Sat, 31 Oct 2026 11:30:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793446230;
-	bh=Rld+QvZumWnEDU6Fjd2wPMdSnC6Wk0IgLpjRxBl9O6E=;
+	s=k20260515; t=1793446231;
+	bh=cvJ+zh6ILTT9UIbuV4UHpgGpU8uXRrIcgicMYbsEpIQ=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=Oduv9jakE4/GVZYQXAJWSpCOSWmblHFvsY9jM2KeT8eqNd1s1VeJS2kRmtZu++1W0
-	 wqHYQLQFUFvxIOaqPDqjcpEGxR6TxhpShTZ5/r/3k/H3tP70Mw/atmPwAErFAf8wi9
-	 mQmOaE7haasr9ApiITLxPgHBvBp+9WNnjcIYqxjjiVkC74pESdgOH9Xoz0lq7zuP8c
-	 8jVUUS3K5SAtR/zJn2R2N4r7fZyVbXSdeK8uiy3LAtlLPx4rzvZlPfOXFCnrCFdqgB
-	 +fdAVN1i1jJVuRHONIxn8He13leT21ayKIFFxxHo7Bt6EVCKLgjLrQIGwijKpShqGx
-	 cUEBMGbUZ64UQ==
-Subject: Re: [PATCH mptcp-net v4 5/8] mptcp: pm: userspace: no ID0 exception
- for RM_ADDR
+	b=ZA/gmRVEDnAYEUYjx8GD0QD4lkF6GxKHFxqIj3vNtFZ4TA7IbRMBScAbOA6/Qjqmi
+	 UuYNqLW3qaIC6DMwgdI7ProeU/f8XIQFDHuuaS9m+UyplYW0PBN7EIlGMbh5It4ObL
+	 rT1q9++HY0tltr41bi0N2gFBayV+lrk4Z2MIIAoD9b0IzpMq/t/lZModXshtq3UD3a
+	 D6DEJygWYW6q7r/SLNbRULvutFErzHHRki90/meeeYS75KqgjQkkqUunzYwRkvex6o
+	 LHenUXb+xnLBNx+yhagmzxMjdrVq1Y8q8g7OuwlLdaznBX3v2WntK5o2FWu5zs8LiQ
+	 VsUKEYlT1IHug==
+Subject:
+ Re: [PATCH mptcp-net v4 6/8] mptcp: pm: userspace: don't dump initial ID0
 From: netdev-bot+sashiko@kernel.org
 To: matttbe@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Sat, 31 Oct 2026 11:30:29 +0000
-Message-ID: <179344622975.3128.8754884157681375701@kernel.org>
+Date: Sat, 31 Oct 2026 11:30:30 +0000
+Message-ID: <179344623049.3128.433912421519045672@kernel.org>
 In-Reply-To:
- <20261029-mptcp-pm-userspace-id0-case-v4-5-555066fa4292@kernel.org>
+ <20261029-mptcp-pm-userspace-id0-case-v4-6-555066fa4292@kernel.org>
 References:
- <20261029-mptcp-pm-userspace-id0-case-v4-5-555066fa4292@kernel.org>
+ <20261029-mptcp-pm-userspace-id0-case-v4-6-555066fa4292@kernel.org>
 X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -67,7 +67,7 @@ MIME-Version: 1.0
 Thank you for your contribution! Sashiko AI review found 2 potential
 issue(s) to consider.
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 1
+Critical: 0 · High: 0 · Medium: 2 · Low: 0
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -75,116 +75,111 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [Medium] This patch removes the `id_val == 0` special case in
-  `mptcp_pm_nl_remove_doit()` (net/mptcp/pm_userspace.c).
-- [Low] This patch carries `Fixes: 84c531f54ad9` (so stable tooling will
-  select it), but it only works on top of commit "mptcp: pm: userspace:…
+- [Medium] The commit message says "If the address is removed, then re-
+  added later with a new subflow, it can be dumped." The code does not…
+- [Medium] This patch hides the initial ID0 entry from
+  MPTCP_PM_CMD_GET_ADDR dumps to avoid changing previous behaviour and…
 
 --
 
-mptcp: pm: userspace: no ID0 exception for RM_ADDR
+mptcp: pm: userspace: don't dump initial ID0
 
-This commit removes the id 0 special case from mptcp_pm_nl_remove_doit().
-That special case scanned the subflows for local_id 0 and sent RM_ADDR(0).
-ID0 removal now uses the regular lookup in the userspace PM local address
-list, which relies on an earlier patch in the series adding the ID0 entry
-when the connection is created.
-
-> After the first patch of this series, the initial ID0 address is present
-> in the local addr list when the connection has been created.
-
-[Severity: Low]
-This patch has a Fixes: tag, so stable tooling may pick it up. It only
-works on top of "mptcp: pm: userspace: properly handle the ID0 case".
-Once the patch is in git history, will "the first patch of this series"
-still point to that prerequisite?
-
-Without the prerequisite, mptcp_pm_userspace_created() does not exist and
-no ID0 entry is added to userspace_pm_local_addr_list. In that case
-mptcp_pm_nl_remove_doit() would return -EINVAL for every REMOVE with
-id 0. The patch only deletes code, so it would still apply cleanly on its
-own.
-
-Could the prerequisite be named by subject or commit id, or recorded as a
-stable dependency?
+An earlier patch in the series adds the initial ID0 local address to the
+userspace PM local address list. This patch skips that entry in the
+MPTCP_PM_CMD_GET_ADDR dump, so the dump output stays as it was and matches
+the in-kernel PM.
 
 > diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index 66dbf67fd6d80..0f6400bc3bf8e 100644
+> index 0f6400bc3bf8e..282d7f57c32ab 100644
 > --- a/net/mptcp/pm_userspace.c
 > +++ b/net/mptcp/pm_userspace.c
-
-[ ... ]
-
-> @@ -343,11 +312,6 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
->  
->  	sk = (struct sock *)msk;
->  
-> -	if (id_val == 0) {
-> -		err = mptcp_userspace_pm_remove_id_zero_address(msk);
-> -		goto out;
-> -	}
-> -
+> @@ -637,7 +637,7 @@ int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
 >  	lock_sock(sk);
->  
 >  	spin_lock_bh(&msk->pm.lock);
+>  	mptcp_for_each_userspace_pm_addr(msk, entry) {
+> -		if (test_bit(entry->addr.id, bitmap->map))
+> +		if (is_init_id0(entry) || test_bit(entry->addr.id, bitmap->map))
 
 [Severity: Medium]
-Without this fallback, REMOVE with id 0 only works if
-mptcp_userspace_pm_lookup_addr_by_id(msk, 0) still finds the ID0 entry.
-The removed mptcp_userspace_pm_remove_id_zero_address() did not use the
-list. It sent RM_ADDR(0) whenever a subflow with local_id 0 existed.
+The commit message says:
 
-Is the ID0 entry guaranteed to be present while the initial subflow is
-alive? There seem to be three ways for it to go missing.
+  If the address is removed, then re-added later with a new subflow, it
+  can be dumped.
 
-First, mptcp_pm_userspace_created() ignores allocation failure:
+Does the code do that? is_init_id0() only checks the id and the port:
 
-net/mptcp/pm_userspace.c:mptcp_pm_userspace_created() {
-	entry = sock_kmalloc((struct sock *)msk, sizeof(*entry), GFP_ATOMIC);
-	/* Fine not to handle the ID0 case in memory pressure */
-	if (!entry)
-		return;
-	...
+static bool is_init_id0(struct mptcp_pm_addr_entry *entry)
+{
+	return entry->addr.id == 0 && entry->addr.port == 0;
 }
 
-mptcp_pm_new_connection() still emits MPTCP_EVENT_CREATED in that case.
-Is that comment still accurate after this patch?
+mptcp_pm_userspace_created() memsets the initial entry and sets port to 0.
+Nothing else marks it, so it looks the same as an ID0 entry that userspace
+adds later.
 
-Second, userspace can create a second subflow from the initial IP with
-id 0 and no port, as the "userspace pm create id 0 subflow" selftest
-does. mptcp_userspace_pm_append_new_local_addr() reuses the ID0 entry,
-and the new subflow gets local_id 0 with an ephemeral port. A
-SUBFLOW_DESTROY for that subflow then goes through:
+Take this sequence:
 
-mptcp_pm_nl_subflow_destroy_doit()
-  mptcp_userspace_pm_delete_local_addr()
-    mptcp_userspace_pm_lookup_addr()
+  MPTCP_PM_CMD_REMOVE, loc-id 0
+    mptcp_pm_nl_remove_doit() deletes the initial entry
 
-In the lookup, the port 0 ID0 entry matches as the wildcard:
+  MPTCP_PM_CMD_SUBFLOW_CREATE, laddr id 0, no local port
+  (or MPTCP_PM_CMD_ANNOUNCE, id 0, no port)
+    mptcp_pm_parse_entry() memsets the entry, port stays 0
+    mptcp_userspace_pm_append_new_local_addr(msk, &entry, false)
+      keeps id 0
 
-		if (!wildcard && (!addr->port || !entry->addr.port))
-			wildcard = entry;
+The re-added entry has id 0 and port 0. Wouldn't every dump skip it, even
+though GET by id, RM_ADDR and the local ID lookup still find it?
 
-So the ID0 entry is freed even though the initial subflow still uses it.
+The other claim, "Not to change the previous behaviour", also looks wrong
+for ID0 entries that userspace creates. Before this series, a
+SUBFLOW_CREATE with lid 0 and no port appeared in the dump. The old
+selftest checked for "id 0 flags subflow 10.0.3.2". With this patch that
+entry is never dumped. It is only dumped if userspace sets a non-zero
+local port.
 
-Third, a SUBFLOW_CREATE with the initial IP, id 0 and port 0 also reuses
-the ID0 entry. If __mptcp_subflow_connect() then fails, for example with
--ENOTCONN when the connection is not fully established yet,
-mptcp_pm_nl_subflow_create_doit() rolls back with:
+The v3 changelog says the v2 flag-based check was replaced by this id/port
+check, but the commit message wasn't updated. Could the initial entry be
+marked explicitly in mptcp_pm_userspace_created()? The other option is to
+reword the commit message to say that all ID0 entries with port 0 are
+hidden.
 
-		mptcp_userspace_pm_delete_local_addr(msk, &entry);
+A later patch in the series, "selftests: mptcp: join: new ID0 subflow from
+the right IP", changes the selftest to expect an empty dump. That fixes the
+selftest. It doesn't fix the mismatch between the code and the commit
+message, or the uAPI change that the message doesn't mention.
 
-This deletes the ID0 entry that it reused but did not create.
+>  			continue;
+>  
+>  		if (mptcp_pm_genl_fill_addr(msg, cb, entry) < 0)
 
-In each case, wouldn't the next REMOVE with id 0 fail with -EINVAL
-("address with id 0 not found")? Before this patch, the same request
-sent RM_ADDR(0). None of the later patches in the series seem to add a
-fallback or protect the ID0 entry.
+[Severity: Medium]
+Should mptcp_userspace_pm_get_addr() also filter the initial ID0? The do
+path of MPTCP_PM_CMD_GET_ADDR still looks up id 0 with no is_init_id0()
+check:
 
-Would it make sense to keep a subflow scan fallback for id 0 when no
-entry is found? Another option is to make the ID0 entry reliable: handle
-the allocation failure, and do not delete the entry through the wildcard
-or rollback paths while a local_id 0 subflow exists.
+net/mptcp/pm_userspace.c:mptcp_userspace_pm_get_addr() {
+    ...
+	entry = mptcp_userspace_pm_lookup_addr_by_id(msk, id);
+	if (entry) {
+		*addr = *entry;
+		ret = 0;
+	}
+    ...
+}
+
+mptcp_pm_userspace_created() now adds the initial address to the list. So
+a GET_ADDR with a token and id 0 always returns that address. Before this
+series, the same request failed with -EINVAL unless userspace had created
+an ID0 entry.
+
+The in-kernel PM never returns id 0 here. mptcp_pm_nl_get_addr() ->
+__lookup_addr_by_id() only searches the endpoints, and endpoint IDs start
+at 1.
+
+For the same connection, the dump now hides an entry that GET returns. Is
+that split intended? If it is, could the commit message say so? The
+"previous behaviour" and in-kernel PM reasons are only applied to the dump.
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261029-mptcp-pm-userspace-id0-case-v4-0-555066fa4292%40kernel.org
