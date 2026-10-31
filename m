@@ -1,56 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793454955;
-	b=1CbJM5njbospzXNb/DsKY0easNou7MzvXgsGoxUKBh5c9OTvbGOg+5SpMquJNf0odbD4
-	 VNFgHv9wBKyyl8y4MP28H0mltvQOKHkogYnaun7tcMV3i3TdYbzK40TmbMjeprp5OHFYR
-	 3expanS5a/ClxvWL8/y5tC+8GaH4CD2x3LjbXVJwDqK+FdM5MAUGkgaQAiyham9iI/mdL
-	 PAMeB2jIm5v+px1wgVXPDfsZV05cvJpLIOOaPxc5KImGVvuXbNmtNTPbAm9WuYexjLjxw
-	 IzxcQQFweN8VsSNbkfes3a224R1pn1YXzmHTTg7YEII/B38tol6xw88JupbNtJ06Bpw==
+	t=1793458574;
+	b=G0s6TG3+nO/RPSLrr5L4IfpuehhC1qNWyArS+cdoH7wSjLcjpNUB9ClWO2LGQRabqz2L
+	 e/+oDz4zn5qWGD1muwwTVE8sEbxdPuA8dcXggGR/fyz2eZA7mMCZUvTYbI/kjtFxAKvqz
+	 MZYsGGTP9kJUJL1O8ykHZWVDVgia0QFkauCrtzMcdD2/FLOdsT3t5jwxNA4x7dUijWO1h
+	 RKnjOxisVkxD0nmr5y3whoj1x6lLlTrhpkc8p1Z0B/dRQcTPlBH/Y738f4bBdyW8flSF5
+	 h+lvroJK1Yj48U96ZfN36MzYyB8Ujle3UYDnrOPv+gVW4wpDDBIH87dAmupwkzN9cxw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793454955;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793458574;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=0kGzQJxs8zPjHkzVXZx1RaxejgWdHaSDHJkTmOJG1C8=;
-	b=bY3nBkDfLz3lQmfJuVwlKvYXHOeLzbeI+6lQeR49Wk+Ql7MHUQy7S4G7ySnER1LwL/YG
-	 HrI3ADEH9gQa8VLVhe+BsfUEimq1FXtxwskarZv8/vIYrcEY4JLtpRzbDF+qbNOPwmr6i
-	 b4a2K3q5tgpfs+i9cw0Mox6Y/LJTGTg4tAYjsplxBnU02sP5H1JS+yEvpo4qNYf7UF2bq
-	 NegpSQz1Kn3kgBhsCERoHoAdhHJonqDy6cTYhTrI992imdmgunpQiLpre+4oko3uTPvKv
-	 g40bUprIdoqIPq/KWUJO9cdPYSlfBvbEplyqXG4gIsC50/6ymy7ckDdMJ3hyjIsg+Zg==
+	bh=pKemmHPInhyuI7mId1iXMjNg7pSTZj3yTXxmRaxPHAg=;
+	b=KpxuBh5htRBoDlmW2J8V6QS1CbFtjjVAoqdlHNP6kX+hObEY+oc98Uq3busYMQdPoqCz
+	 ZVX2mcbZHmAjxPjFWh8YOsMxM5AlKrNoxWucluaknkIC8hph1D4qZEp3CNSbiT1yuOHmS
+	 /QC+h7+MSt1jZDS7XwqOTPx5eCfgoU0PhOBdIgnWLiAlgFKCryv6JpsavO8qIFeQF1+uk
+	 hmz+Zk3sFlYX3FwyD8oaf40OUu2LWMhw1sba4fxElcmTZdFIKoAvws+qBEEzJfdRLJrnq
+	 yHaPKc1Pzsd+5H/JwHbjcyJpG2FTn9a2MroLoTOOqr09bqQLZc5qczxP3H15e5ibbtw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IRI+C8m2;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oPsepjSy;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B693606A31D
-	for <mptcp@lists.linux.dev>; Sat, 31 Oct 2026 13:55:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD90606A31D
+	for <mptcp@lists.linux.dev>; Sat, 31 Oct 2026 14:56:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IRI+C8m2
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C8561F00A02;
-	Sat, 31 Oct 2026 13:55:54 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oPsepjSy
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 753281F00919;
+	Sat, 31 Oct 2026 14:56:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793454954;
-	bh=0kGzQJxs8zPjHkzVXZx1RaxejgWdHaSDHJkTmOJG1C8=;
+	s=k20260515; t=1793458573;
+	bh=pKemmHPInhyuI7mId1iXMjNg7pSTZj3yTXxmRaxPHAg=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=IRI+C8m2rES/exkWNWHR/0KkxNMZYjcCGRKOlwtleAjHafpzJ2L2Odlbp+VRy90sq
-	 0Ai1Q6lrUlnVR3rSD+VGN+7HM3pGFIaN39VGonzLJpr2hXGgdkDHBqMVvwIgc+ohHV
-	 pPoMk2+4p1w34OTLfJvqHYCyRet0P92e91EO82UPRUO4kyfByjyYawXCQKJAlx5yWZ
-	 VzM1pNSM5pg6UkBHPGmtZWQOgdSDKMn05/6zeoEZwf90Bp8QOE2AgQrRoytqaB48BB
-	 +otMpnAymOTc6ND2CzNJwV9mKIhhJca5MPBAAtidM+8XlRsXvU0jIWaaJK3xLbUxVa
-	 7K9vyjqK55uIQ==
-Subject: Re: [PATCH mptcp-next v2 4/5] mptcp: pm: kernel: skip operating on
- closing connections
+	b=oPsepjSyJQUz/VBCGcOq11V6mVLeRHM3I9ujAbKijFblO9hSBtS7b8tjFVjuyfjfs
+	 eu5+pZvdLMu8DTRI9ZTYjUc//lcJ26pGytuLAidxLomTfprHmR/Ydi00hVJHRWkzix
+	 gtCiXm0DFewgSNxsFqRVBUA8Mg6kt/JD80YZDtPyWXNWJ7dBXx3tgauwLGaDYKmWww
+	 tEQaiSmml77IkPJlFSrFF+UcXzusg9HR+osw+QkIxnLFuvBZHdPLQae+mWG51VrFT0
+	 0TebcJY43wzRkA0ykSzNzgPgvTSwMIaDibTwsN9Q3OQqFmWtsF9zssHYvtMhLEBB8d
+	 YMoYKVPMRgYrA==
+Subject: Re: [PATCH mptcp-next v3 2/5] mptcp: implement peek_len for proto_ops
 From: netdev-bot+sashiko@kernel.org
-To: matttbe@kernel.org
-Cc: mptcp@lists.linux.dev, pabeni@redhat.com, chenguang.zhao@linux.dev,
- gang.yan@linux.dev, kuba@kernel.org
-Date: Sat, 31 Oct 2026 13:55:53 +0000
-Message-ID: <179345495390.3128.17275733038011770247@kernel.org>
-In-Reply-To: <20261030-mptcp-reset-mpj-early-v2-4-90f119392263@kernel.org>
-References: <20261030-mptcp-reset-mpj-early-v2-4-90f119392263@kernel.org>
-X-sashiko-severity: Medium
+To: geliang@kernel.org
+Cc: mptcp@lists.linux.dev, tanggeliang@kylinos.cn, kuba@kernel.org
+Date: Sat, 31 Oct 2026 14:56:12 +0000
+Message-ID: <179345857294.3128.2098446166917025433@kernel.org>
+In-Reply-To: =?utf-8?q?=3C792219afffb4d3cc71ba3286b648b90ea50b1c86=2E1793324?=
+ =?utf-8?q?316=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
+References: =?utf-8?q?=3C792219afffb4d3cc71ba3286b648b90ea50b1c86=2E17933243?=
+ =?utf-8?q?16=2Egit=2Etanggeliang=40kylinos=2Ecn=3E?=
+X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -63,276 +63,152 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 5 potential
-issue(s) to consider.
+Thank you for your contribution! Sashiko AI review found more severe
+issue(s) in other patches of this series. This mail is only an FYI, in case
+you want to address the nit picks below when you respin.
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 4
+Low priority / nit picks for your consideration:
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
+- [Low] The commit message describes the existing helper incorrectly.
+- [Low] The From: and Signed-off-by: email addresses do not match.
 
-- [Medium] In net/mptcp/pm_kernel.c,
-  mptcp_nl_add_subflow_or_signal_addr() now skips every msk that is not…
-- [Low] Commit message vs. code wording.
-- [Low] mptcp_pm_nl_set_flags_all() (net/mptcp/pm_kernel.c:1509-1516) now
-  skips msks whose initial subflow is TCP-established but where…
-- [Low] Per-msk kernel-PM endpoint accounting can be taken before
-  msk->fully_established is set, and the endpoint delete/flush paths now…
-- [Low] The patch adds a lockless `READ_ONCE(msk->fully_established)`
-  skip before lock_sock() in mptcp_nl_remove_subflow_and_signal_addr()…
+Pre-existing issues:
+- [Medium] This problem wasn't introduced by this patch, but the commit
+  message shows the author knows about it.
 
 --
 
-mptcp: pm: kernel: skip operating on closing connections
+mptcp: implement peek_len for proto_ops
 
-This patch adds msk->fully_established checks to the kernel PM loops
-that walk all MPTCP connections after an endpoint is removed, flushed,
-or has its flags changed. The add path now uses
-mptcp_is_fully_established(), which also requires the msk to be in
-TCP_ESTABLISHED.
+This commit adds mptcp_inq(), which uses mptcp_data_avail() to compute the
+readable bytes at the MPTCP level. It is wired into a new mptcp_peek_len()
+callback, which is assigned to .peek_len in both mptcp_stream_ops and
+mptcp_v6_stream_ops.
 
-> mptcp: pm: kernel: skip operating on closing connections
->
-> When iterating over each MPTCP connection after having manipulated MPTCP
-> endpoints, there is no need to operate on closing (or not ready)
-> connections.
+> Note: mptcp_inq() differs from mptcp_inq_hint() by returning 0 (not 1)
+> when value is 0, and using mptcp_data_avail() instead of ack_seq -
+> copied_seq with TCP_CLOSE/RCV_SHUTDOWN check, to correctly handle TFO
+> scenarios.
 
 [Severity: Low]
-This isn't a bug, but do the subject and this paragraph still match what
-the patch does?
+Is this description of mptcp_inq_hint() accurate? The helper takes the
+delta from the map_seq of the skb at the head of the queue, not from a
+copied_seq:
 
-Only mptcp_nl_add_subflow_or_signal_addr() checks the socket state,
-through mptcp_is_fully_established(). The other four loops only test
-READ_ONCE(msk->fully_established):
+net/mptcp/protocol.c:mptcp_inq_hint() {
+    ...
+	skb = skb_peek(&sk->sk_receive_queue);
+	if (skb) {
+		u64 hint_val = READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
+    ...
+}
 
-    mptcp_nl_remove_subflow_and_signal_addr()
-    mptcp_nl_remove_id_zero_address()
-    mptcp_nl_flush_addrs_list()
-    mptcp_pm_nl_set_flags_all()
+struct mptcp_sock has no copied_seq field. All the copied_seq references
+under net/mptcp/ are tcp_sk(ssk)->copied_seq on subflows.
 
-That flag is not cleared on close. Closing connections (FIN_WAIT*,
-CLOSE_WAIT, LAST_ACK, CLOSING) are therefore still processed in those
-loops, which the last paragraph of the commit message says is intended.
+Also, mptcp_inq_hint() already returns 0 on an empty, open connection. It
+returns 1 only as an EOF hint, when the queue is empty and the socket is
+closed or shut down for reading:
 
-__mptcp_try_fallback() does clear the flag on fallback. So what those
-four loops skip is connections that are not yet fully established or
-have fallen back.
+	if (sk->sk_state == TCP_CLOSE || (sk->sk_shutdown & RCV_SHUTDOWN))
+		return 1;
 
-The subject and first paragraph look left over from v1. Could they be
-reworded to describe what the remove, flush and set_flags hunks skip?
+	return 0;
 
-> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-> index d3014bf57bf3c..096ffea80f61f 100644
-> --- a/net/mptcp/pm_kernel.c
-> +++ b/net/mptcp/pm_kernel.c
-> @@ -969,7 +969,7 @@ static int mptcp_nl_add_subflow_or_signal_addr(struct net *net,
->  		struct sock *sk = (struct sock *)msk;
->  		struct mptcp_addr_info mpc_addr;
+The message also doesn't say what the "TFO overflow issues" are. It also
+doesn't mention that the SIOCINQ and TCP_INQ users of mptcp_inq_hint()
+keep the old computation.
+
+Could the note be reworded to match the code?
+
+> Co-developed-by: Zqiang <qiang.zhang@linux.dev>
+> Signed-off-by: Zqiang <qiang.zhang@linux.dev>
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+
+[Severity: Low]
+This isn't a bug, but the author line is Geliang Tang <geliang@kernel.org>
+while the sign-off uses tanggeliang@kylinos.cn. checkpatch.pl reports
+"From:/Signed-off-by: email address mismatch" for this.
+
+.mailmap maps both addresses to the same person. The earlier patch in the
+series, "mptcp: update mptcp_check_readable", signs off with
+geliang@kernel.org.
+
+Could the sign-off be made to match the From: line?
+
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 0caa31525b907..dbd6275963b88 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -4797,6 +4797,26 @@ static ssize_t mptcp_splice_read(struct socket *sock, loff_t *ppos,
+>  	return ret;
+>  }
 >  
-> -		if (!READ_ONCE(msk->fully_established) ||
-> +		if (!mptcp_is_fully_established(sk) ||
->  		    mptcp_pm_is_userspace(msk))
->  			goto next;
->  
+> +static int mptcp_inq(struct sock *sk)
+> +{
+> +	const struct mptcp_sock *msk = mptcp_sk(sk);
+> +	u64 avail;
+> +
+> +	if ((1 << sk->sk_state) & (TCPF_SYN_SENT | TCPF_SYN_RECV))
+> +		return 0;
+> +
+> +	avail = mptcp_data_avail(msk);
 
 [Severity: Medium]
-Does this check now skip the mpc_endpoint_id update for half-closed
-connections?
+This is a pre-existing issue and was not introduced by this patch. The
+commit message mentions TFO overflow, though, and mptcp_inq_hint() still
+seems to return INT_MAX on passive MPTCP TFO connections. Would it make
+sense to fix the shared helper rather than add a second computation here?
 
-mptcp_pm_create_subflow_or_signal_addr() already returns early when the
-msk is not in TCP_ESTABLISHED:
+The TFO skb is queued with a map_seq relative to an ack_seq of 0:
 
-    mptcp_mpc_endpoint_setup(msk);
-    if (!mptcp_is_fully_established(sk))
-        return;
-
-For CLOSE_WAIT, FIN_WAIT1/2, CLOSING or LAST_ACK connections, the only
-thing this hunk changes is that the following no longer runs:
-
-    if (mptcp_addresses_equal(addr, &mpc_addr, addr->port))
-        msk->mpc_endpoint_id = addr->id;
-
-The remove path still processes half-closed connections. It relies on
-mpc_endpoint_id through mptcp_endp_get_local_id():
-
-    return msk->mpc_endpoint_id == addr->id ? 0 : addr->id;
-
-Take a connection whose initial address had no endpoint when it became
-fully established. Deleting that endpoint, which resets mpc_endpoint_id
-to 0, leads to the same state.
-
-The peer sends a DATA_FIN and the msk moves to CLOSE_WAIT. An endpoint
-with ID N is then added for that address, and this loop skips the msk.
-MPTCP_PM_MPC_ENDPOINT_ACCOUNTED is already set, so
-mptcp_mpc_endpoint_setup() will not fix this later.
-
-When endpoint N is deleted, mptcp_nl_remove_subflow_and_signal_addr()
-gets N from mptcp_endp_get_local_id() instead of 0. RM_ADDR is sent with
-ID N, but the peer knows that address as ID 0.
-
-mptcp_pm_rm_subflow() with ID N then skips the initial subflow, whose
-local id is 0, in mptcp_pm_rm_addr_or_subflow():
-
-    if (rm_type == MPTCP_MIB_RMSUBFLOW && id != rm_id)
-        continue;
-
-Before this patch, the same steps sent RM_ADDR with ID 0 and closed the
-initial subflow.
-
-mptcp_pm_create_subflow_or_signal_addr() already handles the closing
-case. Would it be better to keep the READ_ONCE(msk->fully_established)
-check here?
-
-> @@ -1095,7 +1095,8 @@ static int mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
->  		struct sock *sk = (struct sock *)msk;
->  		bool remove_subflow;
->  
-> -		if (mptcp_pm_is_userspace(msk))
-> +		if (!READ_ONCE(msk->fully_established) ||
-> +		    mptcp_pm_is_userspace(msk))
->  			goto next;
->  
->  		lock_sock(sk);
-
-[Severity: Low]
-Can a connection reserve endpoint IDs before msk->fully_established is
-set, and then never release them because of this skip?
-
-If an out-of-order segment arrives before the connection is fully
-established, check_fully_established() returns subflow->mp_capable
-without setting the flag. mptcp_incoming_options() then still processes
-an ADD_ADDR.
-
-mptcp_pm_add_addr_received() has no fully established check, so the PM
-worker goes on to call:
-
-    mptcp_pm_nl_add_addr_received()
-      mptcp_mpc_endpoint_setup()
-
-That call does three things:
-
-- clears the MPC endpoint ID in pm.id_avail_bitmap
-- sets msk->mpc_endpoint_id
-- sets MPTCP_PM_MPC_ENDPOINT_ACCOUNTED
-
-In the fullmesh or c-flag variants, fill_local_addresses_vec() can also
-clear IDs and bump local_addr_used. This happens before
-__mptcp_subflow_connect() fails the mptcp_is_fully_established() check.
-
-Suppose the endpoint is deleted or flushed in that window. This loop,
-mptcp_nl_remove_id_zero_address() and mptcp_nl_flush_addrs_list() now
-all skip the msk. None of these cleanups runs for it:
-
-- the __set_bit() and __mark_subflow_endp_available() release
-- the mpc_endpoint_id = 0 reset
-- the bitmap_fill() and local_addr_used = 0 reset
-
-Once the connection becomes fully established, mptcp_mpc_endpoint_setup()
-returns early:
-
-    if (likely(msk->pm.status & BIT(MPTCP_PM_MPC_ENDPOINT_ACCOUNTED)) ||
-        !msk->first)
-        return;
-
-For the rest of that connection, a new endpoint that reuses the deleted
-ID is treated as unavailable. It can also be mapped to ID 0 through the
-stale mpc_endpoint_id.
-
-The window is about one RTT. Before this patch, the same deletion would
-have torn down the initial subflow instead.
-
-[Severity: Low]
-Is there an ordering issue with doing this lockless check before
-lock_sock()?
-
-Before this patch, lock_sock() was always taken after the endp_list
-update. The PM worker holds the same lock while reading endp_list. Now
-mptcp_pm_nl_del_addr_doit() does:
-
-    list_del_rcu(&entry->list);
-    __clear_bit(entry->addr.id, pernet->id_bitmap);
-    spin_unlock_bh(&pernet->lock);
-
-    mptcp_nl_remove_subflow_and_signal_addr(sock_net(skb->sk), entry);
-    synchronize_rcu();
-
-Between the list store and the fully_established load there is only the
-spin_unlock_bh() release, followed by rcu_read_lock() and
-refcount_inc_not_zero() in mptcp_token_iter_next().
-refcount_inc_not_zero() uses a relaxed cmpxchg.
-
-At the same time, on another CPU:
-
-    __mptcp_subflow_fully_established()
-      WRITE_ONCE(msk->fully_established, true);
+net/mptcp/fastopen.c:mptcp_fastopen_subflow_synack_set_params() {
     ...
-    PM worker reads endp_list under RCU
+	/* Only the sequence delta is relevant */
+	MPTCP_SKB_CB(skb)->map_seq = -skb->len;
+	MPTCP_SKB_CB(skb)->end_seq = 0;
+    ...
+}
 
-On weakly ordered CPUs such as arm64 or POWER, this loop could read
-fully_established == false and skip the msk while the worker still sees
-the deleted entry.
+When the MPC ACK arrives, ack_seq is set to iasn through
+set_fully_established()->__mptcp_subflow_fully_established()->
+subflow_set_remote_key():
 
-The worker could then set mpc_endpoint_id to the deleted ID, announce
-it, or create a subflow from it. Nothing would clean that up later.
-mptcp_pm_nl_set_flags_all() has the same pattern, where the worker could
-read stale entry->flags.
+net/mptcp/subflow.c:subflow_set_remote_key() {
+    ...
+	WRITE_ONCE(msk->ack_seq, subflow->iasn);
+    ...
+}
 
-RCU keeps this memory safe, and the add path already had the mirrored
-lockless check before this patch.
+Nothing rebases the map_seq of the queued skb. It only advances on
+partial reads.
 
-Is a full barrier needed between the endp_list update and these
-fully_established reads?
+While that skb is at the head of the queue, ack_seq - map_seq in
+mptcp_inq_hint() is iasn plus the remaining length. That is almost always
+>= INT_MAX, so the helper returns INT_MAX.
+
+That value reaches userspace through SIOCINQ in mptcp_ioctl():
+
+		*karg = mptcp_inq_hint(sk);
+
+It also reaches userspace through the TCP_INQ cmsg in mptcp_recvmsg(). It
+also feeds mptcp_rcv_space_adjust():
+
+	copied -= mptcp_inq_hint(sk);
+
+There it makes copied negative, so that receive buffer autotuning sample
+is skipped.
+
+With this patch applied, can ->peek_len and SIOCINQ return different
+values for the same passive TFO socket?
+
+> +	if (avail >= INT_MAX)
+> +		return 0;
+> +
+> +	return (unsigned int)avail;
+> +}
 
 [ ... ]
 
-> @@ -1502,7 +1506,9 @@ static void mptcp_pm_nl_set_flags_all(struct net *net,
->  	while ((msk = mptcp_token_iter_next(net, &s_slot, &s_num)) != NULL) {
->  		struct sock *sk = (struct sock *)msk;
->  
-> -		if (list_empty(&msk->conn_list) || mptcp_pm_is_userspace(msk))
-> +		if (list_empty(&msk->conn_list) ||
-> +		    !READ_ONCE(msk->fully_established) ||
-> +		    mptcp_pm_is_userspace(msk))
->  			goto next;
->  
->  		lock_sock(sk);
-
-[Severity: Low]
-Could a BACKUP flag change be lost for connections that are not yet
-fully established?
-
-On the client there is a window of about one RTT, between the third ACK
-and the first in-sequence DSS ack. During it, the initial subflow is
-already on conn_list and active, but msk->fully_established is still
-false.
-
-Before this patch, a BACKUP change reached mptcp_pm_mp_prio_send_ack()
-for such an msk, and MP_PRIO went out with the next ACK. Now the msk is
-skipped and the change is not recorded anywhere.
-
-The change is only picked up later if the PM worker runs
-mptcp_mpc_endpoint_setup(). mptcp_pm_fully_established() only schedules
-the worker when work_pending is set:
-
-    if (READ_ONCE(pm->work_pending) &&
-        !(pm->status & BIT(MPTCP_PM_ALREADY_ESTABLISHED)))
-        mptcp_pm_schedule_work(msk, MPTCP_PM_ESTABLISHED);
-
-mptcp_pm_kernel_init() leaves work_pending false when there are no
-signal endpoints and no usable subflow endpoints. One example is when
-the only endpoint marks the initial address as backup.
-
-Sending the same SET_FLAGS request again does not help, because
-mptcp_pm_nl_set_flags() then computes changed as 0:
-
-    changed = (local->flags ^ entry->flags) & mask;
-
-In that configuration, the MPC backup flag is not signalled for new
-connections either, so this extends an existing limitation. Turning the
-flag off and on again recovers it.
-
 -- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261030-mptcp-reset-mpj-early-v2-0-90f119392263%40kernel.org
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1793324316.git.tanggeliang%40kylinos.cn
