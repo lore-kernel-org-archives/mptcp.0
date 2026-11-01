@@ -1,90 +1,90 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.170
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.45
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793517659;
-	b=cah/z0Av6h4LVcVwdBtMgE5cfjT1+Lc0YAoM6gWkEhJvOlcLAjRCD51N1V3B6W9rFHSJ
-	 jehuv/IxzWdZCW342hsmwRQo8qYBKPfBipr4gCiWuIVt0aEBhq/2K3N9ln26wLCZoEeda
-	 7Et8NhVaDo9LsW+X8qrb18FRrrzvbVmwFIIaqFPpVkT04RIiZuOeQ/b8Jc68DaszPHWFG
-	 x8Szfz8KB7lyneuzAva//8OCrsmvF3MCVKnb25VKEpa3p5kHS6bh2zucCWmsDAXh+GnLn
-	 Z6FphzCpjacSWx2ATk1IMXfCovCCeWgrmPhuSG1WGgJPLiTcYFtX4dWdft2V8kcYMpQ==
+	t=1793517661;
+	b=SUyGzUQr24Mi1d7VySDAYW/RxopYlj+KTRrP8s+3e5R4MIgnkVUGDPWxQTKQ0AmHEiqK
+	 aizxLqLXavT9UAIShprQwSWYs6F6/cs4csl/14cFU5JvyUXLNjJV01eeV6Rv6iYGDaEcl
+	 ztIc1BDUjC+g1Zco+dfL4i9gy8y/cBHgZAOKY1jlLpX03MkePLxvF83A8g7AuYw/RENqw
+	 jIimc2yCnLGYA0XQRjlQxOdd4FovVCMWKZ25D7Di3tg2YhnmZR8vuIxLOmJ1TEUrA+1g5
+	 +VkyB9V1XAzHCVbWTZF5YqY99iLQ7xGZhhEcuO9pV/SDMWfeX6nP4HgN30td82hys7w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793517659;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793517661;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
 	 Date:Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=lvLN24gtIiDD108HbQ1hU9mpKtt6mQ07/LEzVwndxzA=;
-	b=n+K3Bn93nRLpw3MBO7hqQsZHybMW2WL2og9IFA14gCqUCvHHSqUTUCNMCVa64HaFAV66
-	 G+qr8vH8BzbadApRia/qx3EXNHTRdInXWdTAlN/GvJf1JJKa0Rpole5ewbu7Qzv0mzmCU
-	 DqgbXExC8RkIK41OisJDwyqFZQxxmV9IdagOvtfarRSoSIQ4OoANuAERgg9314xPmmYVE
-	 xDe/fGuw1uZ9SdIzWbcQr1S6Fx9LnNZQDCZAh0zN6wHM9ndUq364zBb271fxtAOqK9rZI
-	 fzk6EUXqzF2wITf22n0+s/haMQs2kMzZ6t39oFdJdzzV3TNqLzbJiR4X1LfYo9U8OYw==
+	bh=RhdWlyO5Sam//srEVeWFrjzifW9W6rttgI3RE0aHgEU=;
+	b=IagCUlJLwm8jDT8pA24YNNWITQvFjmfat0GD/9xIF6+8Oj8aj3zoASp1Hixns3rYEIRY
+	 2DOu1ZQSlYa6VJ64WMktEyap3onMC6zL14xfFwYyDKiGjBeyetsEG7hTvuDp1L6/d9VM1
+	 sX6d5xSXeklRDRQjJ6rLTjnILtNvzOemSUgfOaD1THK/tNYfQBx2deBHvBIYMGEtTI6Mf
+	 DIf1Xo5A0v/DKgNILqvEgOLrU4Ba+7XD2JcY3PGUEplbgm4dxqhhiXxr16Z6b0sDOMFzq
+	 Qqs8UhJS8fNJb1cNeKQ4pIClRut8D8BJm2hU371fhYH6eY3lDrEztwxVZD5TPpk9qNA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=deyrGIRt;
-	arc=none smtp.remote-ip=74.125.82.170
-Received: from mail-dy1-f170.google.com (mail-dy1-f170.google.com [74.125.82.170])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Rc9xZCr+;
+	arc=none smtp.remote-ip=74.125.82.45
+Received: from mail-dl1-f45.google.com (mail-dl1-f45.google.com [74.125.82.45])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3E3606A325
-	for <mptcp@lists.linux.dev>; Sun,  1 Nov 2026 07:20:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9F3E3606A325
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54A2606A325
+	for <mptcp@lists.linux.dev>; Sun,  1 Nov 2026 07:21:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B54A2606A325
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=deyrGIRt
-Received: by mail-dy1-f170.google.com with SMTP id 5a478bee46e88-3514b90bb89so4008191eec.1
-        for <mptcp@lists.linux.dev>; Sun, 01 Nov 2026 00:20:58 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Rc9xZCr+
+Received: by mail-dl1-f45.google.com with SMTP id a92af1059eb24-1a2761c69fbso2432837c88.0
+        for <mptcp@lists.linux.dev>; Sun, 01 Nov 2026 00:21:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793517658; x=1794122458; darn=lists.linux.dev;
+        d=gmail.com; s=20260707; t=1793517660; x=1794122460; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=lvLN24gtIiDD108HbQ1hU9mpKtt6mQ07/LEzVwndxzA=;
-        b=deyrGIRtwoYHYvICC/6ZfjlvRi7JI9LQ3pUvZIeOoYdO57W+luFqGcqnRjLzx68jXY
-         ucWpC+lQ9BEaSN0x47AbGZy6Uhl1lpUmV1l894/OzHNNV/dmIuvXSk0UpqOYvXjYhS8c
-         Ypt3ELbEV62OJiej+h1vxi9OKsMGCpiKjGD0S49EXaAKyqT0/HcsA6tMTpovg0OZmYL8
-         O+ETWM7jrWREo/Tbc+1Y/uLTD4hUAlohmGtYNSYvoXLYUgHO8I6UYftu9R6ayqcx/Yis
-         ouU1gAlXsuU5IHaW5cfhaQk1cxPsnRz8kgTEVuO5oWFhTNkCUDF2vDZ/Hh/XhrgsGT4C
-         eR9Q==
+        bh=RhdWlyO5Sam//srEVeWFrjzifW9W6rttgI3RE0aHgEU=;
+        b=Rc9xZCr+VAY8qiIntVp6ZJ+U0WI4uDGs1nv5fjwJVNCAMgJ2chHf8YACrBdlFGyHmp
+         uY4iVYD6z9OuzsnbiBIiTSPdpBLzWq3EEmHrVUSW9D5lLBRa2gJ+Ip4jow2zJ887k/yV
+         ETX2JNrvCSxru99+U0AiCLGc3loXrX7ngFZ/XD2J7H8gLxTHDqvOPzn7Sxt05MKKakaq
+         UxKmkae8RnylJNm3v75V6775ElrrMaVZwKipC55pBgOs1YE/j5Lz3qs+zlehzWCJCN6/
+         E9XyhW6l2rCeFWW+tKMkQuMrmjVlNUw7GXN6q8IPT4iHaHPF9Vfu5fOnpQA/QnVn6ST+
+         atqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793517658; x=1794122458;
+        d=1e100.net; s=20260707; t=1793517660; x=1794122460;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=lvLN24gtIiDD108HbQ1hU9mpKtt6mQ07/LEzVwndxzA=;
-        b=jVde6GE8HDsfTNw0fJFmzVeQbC8wb3zebhRHTVmzflq2TlQw9JGMzc4TCcFL2uniSF
-         c22thrKGDieAGOxyA5UV5sBoZreZuHref1EVBOTfT5tRgfZU7zaGAIr3f3wn+GVLPqfG
-         1L/NmNtJLQBIUhSiDUqSfsWLdPIhCJ+EL/yOwf2Eqy++z9QFzrjO+663yLRUibpSkobz
-         2kmhYk6QzUmxsAoVs44/U5oQjyzx4eyxKu6dofaV0ulI5YKtaadFuFQ4UlxKPKpqLjvn
-         D/ycPKdM2j3Sbe0r6SfNP65iRF5QANt9csjifMRdGS+m/R3ZxlrtOvPM/KAMPl9fB4JX
-         Mb8g==
-X-Gm-Message-State: AFq9FYKLvHGnxZ5YkcDo3n5HaD6foEUsU9PFVqKIT21SHvMNk9dfg3XC
-	EkHb4tDJqNzeb/Fcx5QErPL8iJcmGW/x3K9HD2sU3FXfKS9lOFAAoejB1r/mTQ==
-X-Gm-Gg: AYBFou3MHZB0bK42qnT3V7EX/4e+TH3J4CyWYrYOOgYNuTcYjktJ8hmV4kDYWW6jAMm
-	NUCowP31Wxxy9wa/VyTHsRBfU7NLgnV2Qls6fArdAQ6eAVKJV5jERiPsgw/HvJJRKMeWPtmpROt
-	ijoOQ9X4ac0+oXYAxSUN3wk24O3vsL74oGs6FEOWExGIy/q0psbTZ3DCwKgUICJFThLf+quWDhf
-	KcotpiiDPiNIpnzk3kTeN8uUZeYEYK0RJTNLn33E3uaizL6pT3H7xZQP2CgnPQnzx+xM+W880Xi
-	yx/C7mmZVSSrEG7gRrpHLwaFs6lWCcJymSN9+Z2Sdits386Y43gsHm04usb8L7Yx7LDIlkLzuOB
-	HJijAYlMK8SUlz1XFA/88cZ/j7ElNZif8SPov2gXfSdY2w51sU87RftEu9SUQJuBhZFRji/S+U5
-	JGcx1PkQZHi38CIe5eRr2j3NHbSxAKiZJMAXwq+CYTLfvGQIj17bU6jOr+8czkxdw+GAViAOOXK
-	exkKmdTqodT0nEPOYvyg0TNHvfG6cKYfP4dRBdB7hVEUuluSAfPK+u+Wjse0m3BFS7UBOmze1Rf
-	dhYxZ4jGrX0YiAIl4LzjB6pUavHHLjtCAMLN+krtfwQmrmWdZyrbRwiAFoosl881E17D57F9H0j
-	JAbDG1uOyABy374N+YBJ6Ii4blV2lsj3apLkxIO0aHq2lTLUG+p10d4FnwSnSIhXcH5mkfapXbw
+        bh=RhdWlyO5Sam//srEVeWFrjzifW9W6rttgI3RE0aHgEU=;
+        b=osKsn2MsMMFVFtM1UQGvLeBHbWp2QZIOhgJhEGc1YOPPPtXahb65eiqEg7N1/Py1En
+         TbS6TB5p3Ue8FyUHkmHGmpM0tpc6LUqonPx9BJKOX/xjT+r6cNoluXiktKyl9yrZlH/r
+         7XKNzBh1ADeMmbkltnjz5vv/hAyg5OEWDvCVyEZeo4L+kldE6WY3g+x6d+U9vqL7icjA
+         LJcLjAyZuMB5hv81mlEdcjkTwT+s9JPw2qaRXWWJ427qb9j5L6okwNQ2tir0n3ppiisi
+         E9YcsX/z9z5sduR2Z5vOEerOs6/IBfMedFrB4g9iNoSgsH6gVay39kehyowfP9VqPKSp
+         yQhA==
+X-Gm-Message-State: AFq9FYIYCREssx7dotGl9C1DcYjdhOyorbYOihUDa11cfcuqzZa/Zvns
+	B2PESlf9XzCLopjKqoIkWGuszCzkWlvvX7PWHGAWIsK5FISJFP8NdYE6Ovwtdw==
+X-Gm-Gg: AYBFou0BysKkrIDVzWjIlA3juwviruC02+VjbdVHCPgVkPlRmPCjuzSwaIUPHe0Xj6r
+	nLrzHETrZWxTKaZDYvTtQ5wiTyjEtZzk9Q1VPt7XP/gBNW3FZuB8AZruhvlGBFUbfBUcb0K6Xde
+	TKgfKEUiMNqCKDHvAG7V2YM6y7wJVr9cdHdR13DS66ecJKumdf/mLYO094OHJEhFZNBZfs/qIlG
+	NQ5bhN5dcI361oX2D4uzL7sEOETEjSP87AlMAdUv+xq9YLHj26y+PMxSiop+0qlTlLYacpqUZqm
+	v9swssVmbFl3/Yplyuse6KvR4x8PBpnbo1FfmNTdCAedw1xYyGL0uau/XKX+YFbjDoFmpkDbq/u
+	v6xh/wcuC7ZBjdTaNbwQV+V9kQFy6HKY/+mVRP3cl6F3VRF41cmcMO3GRUjCAtObDG6d41zRbdI
+	Un0UcmWCCkWEIoFk68xly/E7Z5xuVlEc3LWyrzfSNGcS41R6/LPodSNPLAQHoHLzwWSlF9lASB/
+	27s82VRA8iHT5NkRMRm120DIKKadF7+U+5J35SHd3Pfk7Hix7w9nrC/Iyb4HigEiJBqsDowEIQf
+	Jq1V1zRdJ/+87TVX9e6lDHcc6yIhQEwlh5m009BivHuzhxhVB5bzZPl3YmiHA37wRva/Yi2jyxD
+	G1zoW0ziGY36jK6oE/j/t7SiAJBkOmIFYbE+COlfCKhyE94Vr8lvbS11WGTblVhAPr+bxulHk/A
 	==
-X-Received: by 2002:a05:7022:5e09:b0:1a4:3169:cb with SMTP id a92af1059eb24-1ac5cfe5610mr9557267c88.17.1793517657572;
-        Sun, 01 Nov 2026 00:20:57 -0700 (PDT)
+X-Received: by 2002:a05:701b:4550:10b0:193:8116:f5bf with SMTP id a92af1059eb24-1ac59dd358fmr9627306c88.16.1793517659650;
+        Sun, 01 Nov 2026 00:20:59 -0700 (PDT)
 Received: from ramen-dev-security-2.asia-south1-c.c.ramen-dev-345017.internal (90.156.200.35.bc.googleusercontent.com. [35.200.156.90])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1ac1854da78sm29851495c88.6.2026.11.01.00.20.55
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1ac1854da78sm29851495c88.6.2026.11.01.00.20.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Nov 2026 00:20:57 -0700 (PDT)
+        Sun, 01 Nov 2026 00:20:59 -0700 (PDT)
 From: Anil Kaushik <anilkaushikwireless@gmail.com>
 To: mptcp@lists.linux.dev
 Cc: Anil Kaushik <anilkaushikwireless@gmail.com>
-Subject: [PATCH mptcp-next v14 1/6] selftests: mptcp: connect: retry write() on EAGAIN
-Date: Sun,  1 Nov 2026 07:20:46 +0000
-Message-Id: <20261101072051.3853492-2-anilkaushikwireless@gmail.com>
+Subject: [PATCH mptcp-next v14 2/6] netlink: specs: mptcp: add the subflow-retries attribute
+Date: Sun,  1 Nov 2026 07:20:47 +0000
+Message-Id: <20261101072051.3853492-3-anilkaushikwireless@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20261101072051.3853492-1-anilkaushikwireless@gmail.com>
 References: <20261101072051.3853492-1-anilkaushikwireless@gmail.com>
@@ -99,82 +99,147 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-mptcp_connect treats any write() error as fatal. But write() can fail
-with EAGAIN even after poll() said the socket was writable: the MPTCP
-send buffer shrinks when a subflow is closed.
+It will be used by the in-kernel PM to set the number of SYN
+retransmissions of a subflow re-created after a timeout, with the other
+limits: add it to the set-limits and get-limits commands.
 
-The tool then exits and the transfer fails on both sides. Instead, go
-back to poll() and wait for more space. If a poll timeout is set, still
-fail after as many 1 ms retries as the timeout in ms: poll() does not
-check every cause of EAGAIN.
+The uapi header and the generated files are updated with ynl-regen.
 
-Fixes: 048d19d444be ("mptcp: add basic kselftest for mptcp")
 Signed-off-by: Anil Kaushik <anilkaushikwireless@gmail.com>
 ---
 
 Notes:
-    v13:
-     - say how many retries are done with a poll timeout
-    v6:
-     - the comment says the limit only applies with a poll timeout (netdev
-       Sashiko)
+    v9:
+     - after a timeout, not any error, and about 4 hours with the default
+       RTO settings
+    v8:
+     - the default is the maximum, MAX_TCP_SYNCNT (127) (Matthieu)
+    v7:
+     - the doc gives the default value (netdev Sashiko)
+    v6 (netdev Sashiko):
+     - the policy checks the maximum value, 127 (MAX_TCP_SYNCNT)
+     - the doc says the value works like TCP_SYNCNT
     v5:
-     - no change
-    v4:
-     - count the EAGAIN retries, not ms (Sashiko)
-     - no limit when there is no poll timeout, -t 0 (Sashiko)
-    v3:
-     - do not wait forever on EAGAIN (Sashiko)
-     - wrap lines over 80 columns
-    v2:
-     - Fixes tag
+     - new, split from the retry patch (Matthieu)
 
- .../selftests/net/mptcp/mptcp_connect.c        | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ Documentation/netlink/specs/mptcp_pm.yaml | 13 +++++++++++++
+ include/uapi/linux/mptcp_pm.h             |  1 +
+ net/mptcp/mptcp_pm_gen.c                  | 10 ++++++----
+ net/mptcp/mptcp_pm_gen.h                  |  4 ++--
+ 4 files changed, 22 insertions(+), 6 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 178d98d91fea..49017d00ab69 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -638,6 +638,7 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
- 		.events = POLLIN | POLLOUT,
- 	};
- 	unsigned int total_wlen = 0, total_rlen = 0;
-+	int eagain_cnt = 0;
+diff --git a/Documentation/netlink/specs/mptcp_pm.yaml b/Documentation/netlink/specs/mptcp_pm.yaml
+index 39f3facc38e5..690d3c5dfdd2 100644
+--- a/Documentation/netlink/specs/mptcp_pm.yaml
++++ b/Documentation/netlink/specs/mptcp_pm.yaml
+@@ -196,6 +196,16 @@ attribute-sets:
+         name: addr-remote
+         type: nest
+         nested-attributes: address
++      -
++        name: subflow-retries
++        type: u32
++        checks:
++          max: 127
++        doc: |
++          SYN retries of a subflow re-created after a timeout, like the
++          TCP_SYNCNT socket option, so with tcp_syn_linear_timeouts on top.
++          The default is the maximum, MAX_TCP_SYNCNT (127), about 4 hours
++          with the default RTO settings. 0 to not re-create it.
+   -
+     name: event-attr
+     enum-name: mptcp-event-attr
+@@ -327,6 +337,7 @@ operations:
+           attributes:
+             - rcv-add-addrs
+             - subflows
++            - subflow-retries
+     -
+       name: get-limits
+       doc: Get protocol limits
+@@ -337,10 +348,12 @@ operations:
+           attributes:
+             - rcv-add-addrs
+             - subflows
++            - subflow-retries
+         reply:
+           attributes:
+             - rcv-add-addrs
+             - subflows
++            - subflow-retries
+     -
+       name: set-flags
+       doc: Change endpoint flags
+diff --git a/include/uapi/linux/mptcp_pm.h b/include/uapi/linux/mptcp_pm.h
+index fe9863d75350..43e9643deda9 100644
+--- a/include/uapi/linux/mptcp_pm.h
++++ b/include/uapi/linux/mptcp_pm.h
+@@ -102,6 +102,7 @@ enum {
+ 	MPTCP_PM_ATTR_TOKEN,
+ 	MPTCP_PM_ATTR_LOC_ID,
+ 	MPTCP_PM_ATTR_ADDR_REMOTE,
++	MPTCP_PM_ATTR_SUBFLOW_RETRIES,
  
- 	set_nonblock(peerfd, true);
+ 	__MPTCP_ATTR_AFTER_LAST
+ };
+diff --git a/net/mptcp/mptcp_pm_gen.c b/net/mptcp/mptcp_pm_gen.c
+index c180930a8e0e..e2d4af1bc1d5 100644
+--- a/net/mptcp/mptcp_pm_gen.c
++++ b/net/mptcp/mptcp_pm_gen.c
+@@ -44,15 +44,17 @@ const struct nla_policy mptcp_pm_flush_addrs_nl_policy[MPTCP_PM_ENDPOINT_ADDR +
+ };
  
-@@ -711,6 +712,22 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
+ /* MPTCP_PM_CMD_SET_LIMITS - do */
+-const struct nla_policy mptcp_pm_set_limits_nl_policy[MPTCP_PM_ATTR_SUBFLOWS + 1] = {
++const struct nla_policy mptcp_pm_set_limits_nl_policy[MPTCP_PM_ATTR_SUBFLOW_RETRIES + 1] = {
+ 	[MPTCP_PM_ATTR_RCV_ADD_ADDRS] = { .type = NLA_U32, },
+ 	[MPTCP_PM_ATTR_SUBFLOWS] = { .type = NLA_U32, },
++	[MPTCP_PM_ATTR_SUBFLOW_RETRIES] = NLA_POLICY_MAX(NLA_U32, 127),
+ };
  
- 				bw = do_rnd_write(peerfd, winfo->buf + winfo->off, winfo->len);
- 				if (bw < 0) {
-+					/* POLLOUT does not guarantee that
-+					 * the next write will not block:
-+					 * the MPTCP send buffer can shrink
-+					 * in between, e.g. when a subflow
-+					 * is closed. Wait for more space,
-+					 * but not forever if a poll timeout
-+					 * is set: poll() does not check
-+					 * every cause of EAGAIN.
-+					 */
-+					if (errno == EAGAIN &&
-+					    (poll_timeout < 0 ||
-+					     ++eagain_cnt <= poll_timeout)) {
-+						usleep(1000);
-+						continue;
-+					}
-+
- 					/* expected reset, continue to read */
- 					if (cfg_rcv_trunc &&
- 					    (errno == ECONNRESET ||
-@@ -723,6 +740,7 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
- 					return 111;
- 				}
+ /* MPTCP_PM_CMD_GET_LIMITS - do */
+-const struct nla_policy mptcp_pm_get_limits_nl_policy[MPTCP_PM_ATTR_SUBFLOWS + 1] = {
++const struct nla_policy mptcp_pm_get_limits_nl_policy[MPTCP_PM_ATTR_SUBFLOW_RETRIES + 1] = {
+ 	[MPTCP_PM_ATTR_RCV_ADD_ADDRS] = { .type = NLA_U32, },
+ 	[MPTCP_PM_ATTR_SUBFLOWS] = { .type = NLA_U32, },
++	[MPTCP_PM_ATTR_SUBFLOW_RETRIES] = NLA_POLICY_MAX(NLA_U32, 127),
+ };
  
-+				eagain_cnt = 0;
- 				winfo->off += bw;
- 				winfo->len -= bw;
- 				total_wlen += bw;
+ /* MPTCP_PM_CMD_SET_FLAGS - do */
+@@ -127,7 +129,7 @@ const struct genl_ops mptcp_pm_nl_ops[11] = {
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+ 		.doit		= mptcp_pm_nl_set_limits_doit,
+ 		.policy		= mptcp_pm_set_limits_nl_policy,
+-		.maxattr	= MPTCP_PM_ATTR_SUBFLOWS,
++		.maxattr	= MPTCP_PM_ATTR_SUBFLOW_RETRIES,
+ 		.flags		= GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+@@ -135,7 +137,7 @@ const struct genl_ops mptcp_pm_nl_ops[11] = {
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+ 		.doit		= mptcp_pm_nl_get_limits_doit,
+ 		.policy		= mptcp_pm_get_limits_nl_policy,
+-		.maxattr	= MPTCP_PM_ATTR_SUBFLOWS,
++		.maxattr	= MPTCP_PM_ATTR_SUBFLOW_RETRIES,
+ 	},
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_SET_FLAGS,
+diff --git a/net/mptcp/mptcp_pm_gen.h b/net/mptcp/mptcp_pm_gen.h
+index b9280bcb43f5..5b4dee8a0a34 100644
+--- a/net/mptcp/mptcp_pm_gen.h
++++ b/net/mptcp/mptcp_pm_gen.h
+@@ -23,9 +23,9 @@ extern const struct nla_policy mptcp_pm_get_addr_nl_policy[MPTCP_PM_ATTR_TOKEN +
+ 
+ extern const struct nla_policy mptcp_pm_flush_addrs_nl_policy[MPTCP_PM_ENDPOINT_ADDR + 1];
+ 
+-extern const struct nla_policy mptcp_pm_set_limits_nl_policy[MPTCP_PM_ATTR_SUBFLOWS + 1];
++extern const struct nla_policy mptcp_pm_set_limits_nl_policy[MPTCP_PM_ATTR_SUBFLOW_RETRIES + 1];
+ 
+-extern const struct nla_policy mptcp_pm_get_limits_nl_policy[MPTCP_PM_ATTR_SUBFLOWS + 1];
++extern const struct nla_policy mptcp_pm_get_limits_nl_policy[MPTCP_PM_ATTR_SUBFLOW_RETRIES + 1];
+ 
+ extern const struct nla_policy mptcp_pm_set_flags_nl_policy[MPTCP_PM_ATTR_ADDR_REMOTE + 1];
+ 
 -- 
 2.25.1
 
