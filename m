@@ -1,45 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793562685;
-	b=PhnE6dVc47/w5Nizpap9nFDa8K6wpyrQ4GgEru/EfPjJJuSCOsCgsSEbDZfIF4tQJbhi
-	 U55wegYPr7xeBudK33Q+f/dGuMHyjEUeNT1wBFKFu9x4XhuPlgnTSt98QxX9mB2LKHRIN
-	 KxuYv8zgPjpJ1PMNixENr8+nfJ4iBPNbXxzQYKqRssOJiivb48Wff4yGTD/lmi4ZpE+p0
-	 1c56wstqmey0B0/0dFgO6SNb2iMD7o5btp8nj/jykuv3d9Nq+0Sioech0ayp2JhYDfk35
-	 RuLSRI7F0I+JCwomYcvCUVNvxHEJr8mS7D6JdWfhYMy+jbugIx6cijwOf1WVGta/y2Q==
+	t=1793562692;
+	b=Q/ON6r/JlmD77s3IBT76NSxQfMpXw33OuszcugY1pCS+/ZRWBKUKOhRHRUkosRfrpp9S
+	 Jn2ZlmMkEyUc2nT++i4yeWRLjWzh8fJVQt532u2LzTF3PI3I3iFr3wwqeqpDcgBYLEpHR
+	 iwTmWZP6qILjiaz0PsxDJk7zQrqKYAdgb/Q/o91SkMKYE3TM0MagyZnrWSbKhizmYD+JH
+	 ogYMy7Rc/8oN/jV6hPq49kZbY5tqx5xMgwiF6hJ9i4kgkjU7PJrf/rpj/AynAiwTTdiMF
+	 +eYjStfPPJvshXJv5G6y7aP+yQwr/T+dKGzqFh7TM9e7GIRdmjWMOPDyEjkQiiOBIsA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793562685;
-	h=Received:DKIM-Signature:Content-Type:MIME-Version:Message-Id:
-	 In-Reply-To:References:Subject:From:To:Cc:Date;
-	bh=iokjdG797FeXAQ+3Wfvw3+QOdB4W3f5YjOsI6N9Kb0Q=;
-	b=vMq1KKTHxk5qjQyxEXtV1sZtRvHDLrGqr9vRRh7nS6N0GM/38AwmjIByBGoz1rXR2/pS
-	 rP+4WQuyv1jvpOh1xZsC7h8MOi+V+yi5+1qibbBPGIntuj5OAf2NbDPaXQmM4oNuMw1Ss
-	 SMRELR9x+o13RNfQebRDSn9ErM2SWVDhINBvdz6cr60HKbTK/Ds1oxHB4g31fPFBovhGE
-	 3PBihEFmWNZpLU+/V5igA5cmy+i6WNH3k0yhoPkykhP94YYJM0/qHwimMDiF5Q54akOR5
-	 tqo3RLmUvLk6i8P/5wUx8OyKD7tH17kuGJjtdeXbb2omI73RXuw57M1xr3z47k26JzA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793562692;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=Wd6vdJoJoTdbsx9YgvO2Dw0fkTJlHg8nzwaqaLBiMuc=;
+	b=CKkTgnzl/r8pRY3vL2HXeIj8hcUtA1Yq1HqY+1TyYzpwFmJcWlzyA3E5+yylZYPfecy9
+	 FlNXIsHQU9NAdIRX1C87eftMEp7N/+Sl1jUpv7ABGk/N7DwgCvZelBX0wYG2bWIhO38+P
+	 z3iOHFnlBp7uDjyya3l5efnPhHokKxoTPCfzoo5nwkUu6PYkXeF/5Nat+BlAKFY6tXHsZ
+	 Z+wHnPazfdsrcVBzEIPOmCfiMX0pMLOIEOgj1Ku2RGKpDi0O7GeQaABkPQu04Gwtx5jVC
+	 kxJq34FRf4sOLbQJnh0N+ZPqIiWKhzF4OOxZAe7PT6GpMXQgJlULcHw3ZgRFjn+L4MQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=A7O0MnEH;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Vj3KiK4a;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1782606A324;
-	Sun,  1 Nov 2026 19:51:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A146606A329;
+	Sun,  1 Nov 2026 19:51:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=A7O0MnEH
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DFA31F000C1;
-	Sun,  1 Nov 2026 19:51:24 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Vj3KiK4a
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2F521F000C1;
+	Sun,  1 Nov 2026 19:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793562684;
-	bh=iokjdG797FeXAQ+3Wfvw3+QOdB4W3f5YjOsI6N9Kb0Q=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date;
-	b=A7O0MnEH04CJBIzfVp5dIwmgAKMysCUExppUil1YQyVi2ft4BI4Sj115oIJRvmSaE
-	 hou19H38rZA3oX5DP8le1v5MxyzcrP/Wwfj467kMUxp86TgHnKyue5/UtzypyNIzDs
-	 MVP2osV/Hdyr3KgSofc4+Pz/jWm/559fA0ncphg00E4FyLewOfuG7NZnLhYzg2LGSu
-	 2bjRvknPt0YYCnEs4SEhLpuYaaXgwax242463Y+Q14qAwP7B9edw/ElnB7JgZ8BKct
-	 0ZG1+lVs3NB4X+TEOzkAmHFzPWNES8fDickrxJPCRyd7VTSCEUO6cHUsAbY+iqAM2U
-	 hXrspO/HHixfA==
-Content-Type: multipart/mixed; boundary="===============6389611518320040191=="
+	s=k20260515; t=1793562692;
+	bh=Wd6vdJoJoTdbsx9YgvO2Dw0fkTJlHg8nzwaqaLBiMuc=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Vj3KiK4aVkIT+1M/IqUJ7SR+olwBs07b3DA3Mi/gFKi0ED1rFyJ+TFL2O6+7F1+Yz
+	 SGJUQe9hRai+X1yYZeBNl6FUlGfJSgn6/MWM+gLjJdHi8B6hJ0JlfWBjS2OqCzwk52
+	 OOReFjrHKoWbLH/+ryfvDrVhVGB6gNZBMhcgNVTxJFLDzdZyV0oWKioCpUtFWm9q1C
+	 sbakRwife1BwiRAGpO3D+GxhNJzCbLxj3C7cX4kHtqsM+BQKPdTofQTTIDJKlmNkxR
+	 w9JyAKOU+Z1iqFzjCr8MJQejnbYt6EHS7y/yKH61hlo9qLo5FnmGQuoovCXPLz+RQV
+	 eSeuMyk+RqSMg==
+Message-ID: <sashiko-outbox-192637@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH bpf 06/15] bpf, sockmap: Give no progs to a TCP listener
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>, bpf@vger.kernel.org
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <20261101192057.2296489-7-alexei.starovoitov@gmail.com>
+References: <20261101192057.2296489-1-alexei.starovoitov@gmail.com>
+ <20261101192057.2296489-7-alexei.starovoitov@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 01 Nov 2026 19:51:31 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -48,114 +59,208 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-Message-Id: <052f66e46ffaaf2f61af6d5b54b9b3f817ae40f75f1d623ff49e46544411bd82@mail.kernel.org>
-In-Reply-To: <20261101192057.2296489-4-alexei.starovoitov@gmail.com>
-References: <20261101192057.2296489-4-alexei.starovoitov@gmail.com>
-Subject: Re: [PATCH bpf 03/15] bpf, sockmap: Don't let an SK_PASS verdict cover the next message
-From: bot+bpf-ci@kernel.org
-To: alexei.starovoitov@gmail.com,bpf@vger.kernel.org,netdev@vger.kernel.org
-Cc: daniel@iogearbox.net,andrii@kernel.org,eddyz87@gmail.com,memxor@gmail.com,john.fastabend@gmail.com,jakub@cloudflare.com,jiayuan.chen@linux.dev,davem@davemloft.net,edumazet@kernel.org,kuba@kernel.org,pabeni@redhat.com,horms@kernel.org,kuniyu@google.com,willemb@google.com,matttbe@kernel.org,mptcp@lists.linux.dev,mason@kernel.org,josef@toxicpanda.com,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
-Date: Sun,  1 Nov 2026 19:51:24 +0000 (UTC)
 
---===============6389611518320040191==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+s) to consider:
+- [Critical] bpf, sockmap: race in tcp_bpf_clone() skips resetting psock ca=
+llbacks
+- [High] bpf, sockmap: listener keeps psock sk_data_ready after tcp_disconn=
+ect()
+- [High] bpf, sockmap: sock_map_del_link() stops active progs after goto no=
+_progs
+- [Medium] bpf, sockmap: TOCTOU race on sk->sk_state in sock_map_link()
+--
 
-> bpf, sockmap: Don't let an SK_PASS verdict cover the next message
+commit 839857a435a21d698e4cce3b7a94e6c18f688106
+Author: Chris Mason <mason@kernel.org>
 
-TL;DR: In tcp_bpf_send_verdict(), if a failed push races with another sender,
-the new apply_bytes subtraction may reach 0 with eval still set, so the next
-message could skip the BPF program.
+bpf, sockmap: Give no progs to a TCP listener
+
+This commit skips attaching sockmap BPF programs to TCP sockets in the
+TCP_LISTEN state during sock_map_link() so listeners keep their default
+callbacks, and resets sk_data_ready and sk_write_space on cloned child
+sockets in tcp_bpf_clone().
+
+> diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+> index efe49551caba9..282c6a4b2b05f 100644
+> --- a/net/core/sock_map.c
+> +++ b/net/core/sock_map.c
+> @@ -228,6 +228,14 @@ static int sock_map_link(struct bpf_map *map, struct=
+ sock *sk)
+>  	struct sk_psock *psock;
+>  	int ret;
+> =20
+> +	/*
+> +	 * A listener receives no data. With the callbacks of a verdict program
+> +	 * or a parser it would no longer wake accept(), and its children would
+> +	 * copy them.
+> +	 */
+> +	if (sk_is_tcp(sk) && sk->sk_state =3D=3D TCP_LISTEN)
+> +		goto no_progs;
+
+[Severity: High]
+What happens in sock_map_del_link() when a socket linked into a map via
+this no_progs path is later removed from that map while also present in
+another map that did attach programs?
+
+Because goto no_progs leaves stream_verdict, stream_parser, skb_verdict,
+and msg_parser NULL, sock_map_link() skips the -EBUSY conflict check and
+still adds a link to the map on psock->link. If a socket inherits active
+programs from Map A while in TCP_ESTABLISHED and is also linked into Map B
+(which has its own programs) while in TCP_LISTEN, deleting the socket from
+Map B calls sock_map_unref() -> sock_map_del_link():
+
+net/core/sock_map.c:sock_map_del_link() {
+    ...
+			if (progs->stream_parser)
+				strp_stop =3D true;
+			if (progs->stream_verdict)
+				verdict_stop =3D true;
+			if (progs->skb_verdict)
+				verdict_stop =3D true;
+    ...
+		if (strp_stop)
+			sk_psock_stop_strp(sk, psock);
+		if (verdict_stop)
+			sk_psock_stop_verdict(sk, psock);
+    ...
+}
+
+Because sock_map_del_link() checks the unlinked map's progs rather than
+whether that map actually installed programs on psock, won't removing the
+socket from Map B stop Map A's active verdict or parser callbacks (and
+potentially call sk_psock_stop_strp() on an uninitialized strparser if
+Map B had a stream_parser while Map A only had a verdict program)?
+
+[Severity: Medium]
+Could sk->sk_state change between sock_map_sk_state_allowed() and this
+check in sock_map_link()?
+
+In sock_map_update_elem() (reachable from BPF iterator, reuseport, and
+sk_lookup programs), only bh_lock_sock(sk) is held without checking
+sock_owned_by_user(sk):
+
+net/core/sock_map.c:sock_map_update_elem() {
+    ...
+	bh_lock_sock(sk);
+	if (!sock_map_sk_state_allowed(sk))
+		ret =3D -EOPNOTSUPP;
+	else if (map->map_type =3D=3D BPF_MAP_TYPE_SOCKMAP)
+		ret =3D sock_map_update_common(map, *(u32 *)key, sk, flags);
+    ...
+}
+
+If a process-context caller holds lock_sock(sk) (where sk->sk_lock.owned
+is set and sk->sk_lock.slock is released), sk->sk_state can be observed as
+TCP_LISTEN by sock_map_sk_state_allowed() and then transition to TCP_CLOSE
+via tcp_disconnect() or the error rollback in inet_csk_listen_start()
+before sock_map_link() tests sk->sk_state =3D=3D TCP_LISTEN.
+
+Wouldn't sock_map_link() then see TCP_CLOSE instead of TCP_LISTEN, skip
+the goto no_progs branch, and attach the map's programs and callbacks to a
+socket that can subsequently re-enter TCP_LISTEN?
 
 > diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-> index d90bcc911b36..072ffd8347a6 100644
+> index b9761af139892..aa904ded816f8 100644
 > --- a/net/ipv4/tcp_bpf.c
 > +++ b/net/ipv4/tcp_bpf.c
-> @@ -457,8 +457,14 @@ static int tcp_bpf_send_verdict(struct sock *sk, struct sk_psock *psock,
->  
->  	switch (psock->eval) {
->  	case __SK_PASS:
-> +		/* The push may sleep without the socket lock, and it may fail */
-> +		if (!psock->apply_bytes)
-> +			psock->eval = __SK_NONE;
-> +		origsize = msg->sg.size;
->  		ret = tcp_bpf_push(sk, msg, tosend, flags, true);
->  		if (unlikely(ret)) {
-> +			/* A part of it may have gone out */
-> +			sk_msg_apply_bytes(psock, origsize - msg->sg.size);
->  			*copied -= sk_msg_free(sk, msg);
->  			break;
+> @@ -777,7 +777,18 @@ void tcp_bpf_clone(const struct sock *sk, struct soc=
+k *newsk)
+>  {
+>  	struct proto *prot =3D newsk->sk_prot;
+> =20
+> -	if (is_insidevar(prot, tcp_bpf_prots))
+> -		newsk->sk_prot =3D sk->sk_prot_creator;
+> +	if (!is_insidevar(prot, tcp_bpf_prots))
+> +		return;
 
-Can this subtraction bring psock->apply_bytes down to 0 while psock->eval is
-still __SK_PASS?
+[Severity: Critical]
+Is gating the callback reset on is_insidevar(prot, tcp_bpf_prots) safe
+against a concurrent sk_psock_drop() on the listening socket?
 
-The break skips the tail of tcp_bpf_send_verdict(), which is the only place
-the __SK_PASS path resets eval once apply_bytes reaches 0:
+When an incoming connection clones the listener via
+tcp_create_openreq_child() -> inet_csk_clone_lock() -> sk_clone_lock() ->
+sock_copy(), neither the listener's socket lock nor sk_callback_lock is
+held. In sock_copy(), sk_prot (before sk_dontcopy_begin) is copied in the
+first memcpy(), while sk_data_ready and sk_write_space (after
+sk_dontcopy_end) are copied in the second memcpy():
 
-    if (likely(!ret)) {
-        if (!psock->apply_bytes) {
-            psock->eval =  __SK_NONE;
-            ...
+net/core/sock.c:sock_copy() {
+    ...
+	memcpy(nsk, osk, offsetof(struct sock, sk_dontcopy_begin));
 
-With a single sender this looks fine, since a failed tcp_bpf_push() sends
-fewer than tosend bytes and tosend <= apply_bytes.
+	unsafe_memcpy(&nsk->sk_dontcopy_end, &osk->sk_dontcopy_end,
+		      prot->obj_size - offsetof(struct sock, sk_dontcopy_end),
+		      /* alloc is larger than struct, see sk_prot_alloc() */);
+    ...
+}
 
-However, tcp_bpf_push() can drop the socket lock in sk_stream_wait_memory(),
-and eval is deliberately left at __SK_PASS during the push when apply_bytes
-is not 0.  Another sender can lower psock->apply_bytes in the meantime, so
-origsize - msg->sg.size is subtracted from a stale value and
-sk_msg_apply_bytes() clamps the result at 0.
+Concurrently, if the listener is removed from the sockmap, sk_psock_drop()
+restores sk->sk_prot before restoring sk->sk_data_ready and
+sk->sk_write_space:
 
-Example with a prog that calls bpf_msg_apply_bytes(msg, 1000) and returns
-SK_PASS:
+net/core/skmsg.c:sk_psock_drop() {
+    ...
+	write_lock_bh(&sk->sk_callback_lock);
+	sk_psock_restore_proto(sk, psock);
+	rcu_assign_sk_user_data(sk, NULL);
+	if (psock->progs.stream_parser)
+		sk_psock_stop_strp(sk, psock);
+	else if (psock->progs.stream_verdict || psock->progs.skb_verdict)
+		sk_psock_stop_verdict(sk, psock);
+	write_unlock_bh(&sk->sk_callback_lock);
+    ...
+}
 
-  Thread A: sendmsg(4000), prog -> SK_PASS, apply_bytes = 1000, tosend = 1000
-            eval stays __SK_PASS (apply_bytes != 0)
-            tcp_bpf_push() queues 600 bytes, then blocks in
-            sk_stream_wait_memory() and drops the socket lock
-  Thread B: sendmsg(500), eval == __SK_PASS so the prog is not run
-            push succeeds, sk_msg_apply_bytes(psock, 500) -> apply_bytes = 500
-  Thread A: wakes up with a signal or SO_SNDTIMEO expiry, push fails
-            sk_msg_apply_bytes(psock, 600) -> apply_bytes = 0 (clamped)
-            break, eval is still __SK_PASS
-  Next sendmsg(64K): eval == __SK_PASS, so the prog is not run
-            apply_bytes == 0, so tosend = msg->sg.size
-            the whole sk_msg is pushed without a verdict from the prog
+If sock_copy() copies the already-restored sk_prot alongside the
+not-yet-restored sk_data_ready or sk_write_space, won't
+is_insidevar(prot, tcp_bpf_prots) evaluate to false in tcp_bpf_clone(),
+leaving the child socket with the psock callbacks and allowing the same
+unbounded self-recursion if the child is later added to a sockmap?
 
-Before this patch the failure path did not touch apply_bytes, so it stayed at
-500 after the same interleaving.  Only 500 bytes of the next message escaped
-the prog, then the tail reset eval and goto more_data ran the prog on the
-rest.  With this patch the whole next sk_msg escapes, which is the situation
-the commit message says it is meant to prevent.
+> +
+> +	newsk->sk_prot =3D sk->sk_prot_creator;
+> +	/*
+> +	 * sock_map_link() gives a listener no programs, but a socket which got
+> +	 * them in another state and listens now has the psock's sk_data_ready
+> +	 * and sk_write_space, and sock_copy() has copied them.
+> +	 * sk_psock_init() refuses a socket that has sk_user_data or a ULP, so
+> +	 * what the psock replaced were the defaults of a TCP socket.
+> +	 */
+> +	newsk->sk_data_ready =3D sock_def_readable;
+> +	newsk->sk_write_space =3D sk_stream_write_space;
 
-The new early reset also seems to open a second way in:
+[Severity: High]
+In the scenario described by this comment=E2=80=94where a socket got psock
+programs and callbacks in TCP_ESTABLISHED, disconnected via
+tcp_disconnect(), and then entered TCP_LISTEN via inet_listen()=E2=80=94doe=
+sn't
+the listening socket itself still have sk_psock_verdict_data_ready or
+sk_psock_strp_data_ready installed as sk->sk_data_ready?
 
-    if (!psock->apply_bytes)
-        psock->eval = __SK_NONE;
+While tcp_bpf_clone() restores the callbacks on newsk, the parent listener
+sk retains the psock sk_data_ready callback. When a child connection
+completes the handshake in tcp_child_process(), the stack notifies the
+parent listener without holding the parent's socket lock:
 
-While A sleeps, B sees eval == __SK_NONE, runs the prog, and installs its own
-verdict V (pass, redirect or drop) with apply_bytes = M.  If A's push then
-fails, A subtracts its sent bytes from B's apply_bytes.  If that reaches 0, V
-is left in psock->eval with apply_bytes == 0, and the next message is passed,
-redirected (psock->sk_redir is still held) or dropped whole without the prog
-running.
+net/ipv4/tcp_minisocks.c:tcp_child_process() {
+    ...
+		/* Wakeup parent, send SIGIO */
+		if (state =3D=3D TCP_SYN_RECV && child->sk_state !=3D state)
+			READ_ONCE(parent->sk_data_ready)(parent);
+    ...
+}
 
-On A's success path, the existing sk_msg_apply_bytes(psock, tosend) and the
-tail reset likewise cut B's verdict short by A's bytes, which B's verdict
-never covered.
+If parent->sk_data_ready is sk_psock_verdict_data_ready(), tcp_read_skb()
+sees TCP_LISTEN and returns -ENOTCONN without calling
+psock->saved_data_ready, so accept() is never woken. If
+parent->sk_data_ready is sk_psock_strp_data_ready(), it also fails to wake
+accept() and calls strp_data_ready(&psock->strp) without holding parent's
+socket lock, violating sk_psock_strp_data_ready()'s locking requirement.
 
-Should the failure path reset psock->eval (and clean up psock->sk_redir as
-the tail does) when apply_bytes ends up 0?  Or could it skip the subtraction
-when this thread already gave up the verdict before the push?
+How does a socket that transitions from TCP_ESTABLISHED to TCP_LISTEN while
+remaining in a sockmap wake up accept() when new connections arrive?
 
-No later patch in this series changes the __SK_PASS failure path.
-
-
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/41341848185
---===============6389611518320040191==--
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261101192057.2296=
+489-1-alexei.starovoitov@gmail.com?part=3D6
