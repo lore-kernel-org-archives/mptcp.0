@@ -1,102 +1,48 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793636333;
-	b=NqXkIRE0iuvsF9OaAbRBrsPVV1VM09tTBYpCz/eig75Ogqh04vZw58EZQTPjHk6pNMd/
-	 kEWwk+nW2hSF41uzb22CRVn5C9yODMkSrNMO5b7n+c6CmFBp4xwT2zNBYprw0rlEZ5QHm
-	 iHOM4OV32CDmLAI7rygL1djp4pRRwmq5qk9ZmS1uIJ4rYw3DlaD4A+Wn0q3z36UiupZsn
-	 v8qxf1ZAegtHej/l0F/MrS1QanJRJIBcumiiCqkDJ+V4IEsjWoa6ohvH8Oa8KedBayA7k
-	 4FWU6j6oqxJdAsEBlmVltFkHiXQpkU4xRwOGnkol8tDDc59F1yJvsmNl9DAkgrpRYsg==
+	t=1793637919;
+	b=PxxHbtmBbet+8gE8VV0dIk9xqR/Ria0sJ4rohkHROG/BTvrSJVvoxHwUDRut9zC1SPOV
+	 MwlZB9nvBSjdjI7iGC/epaTyc7HkFCWpzSqan3drAXTzOugOiVmKQtKfMRkXvBVFn9uc7
+	 X4qfHN/En7h+NGXePuugQjwbA4XK9ESlguGi+G3M93fWK2WiGHRcu1DYUCGxCPu/ktPO9
+	 lls0bf6UIn8c/Py4ZNoZ4dh1xk56F93n+Gns+ujdUSe2jTnXlmQpXtf0S8AqF89DR03pz
+	 5hR/FU4viYsAlW5bUZRLqsjYwak88mzot2XZCBpLXLB6MnDKfC5xAWrdmBX0vc3Oalg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793636333;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Content-Type:Date:Message-Id:Cc:Subject:From:To:In-Reply-To:
-	 References:Content-Transfer-Encoding:MIME-Version;
-	bh=FmIcFldBwSvZofS3KE00AHPHUf+fTzDL1zSxVEgBLFU=;
-	b=UF3h3Bk+MWLCET+i74QYqoGsZMDql++3N9HnkMotd0Y56FHBJhHqDakYsXmrAg9Y+E7m
-	 bxQP5/dqwq//HPBhlerTelVRPnFWsiRaLeftiTk06MLeBSx+dApCdUZQs4w82WLwO7b6D
-	 AEq6BLlMe3nlNVba5D4LpoW5uwIJ+/lc82Gw0U3+eUHvdvR/+YWekJ+2QTHnFjsj3SjTL
-	 gaEjJ7OJwstlw764yj/tQ4PQwH8gR4HB5kQwAFlCuPYXq/sh5KbFKh2xMgdPviq1ghDD6
-	 aNf/85VE89vIgReUbnv4A7WpoFdLNa9pT8i4mF37SHEmz11WQ2xbR7zDIrNcA2S8bKg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793637919;
+	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:
+	 X-Mailer:X-Developer-Signature:X-Developer-Key;
+	bh=T/sOVNzi5Dfoa2OxIv/A39rx3iPvBk+pen4rP9vKfWU=;
+	b=JuoWA106bkyFxN7ZnVhWL8eUu3dM0cFgZvmjmK2JGoN0RaksAKW7lPoGOxV8UrOS+9hF
+	 DsS3en7Mcte7bmk9Oztxh6W8eRO0XXruakzSWLg/G0m9DslH/FFMxaq5qTQ8ZC/AFyk5E
+	 ffS0EOgD24XukDg/LfFzDm0+0ITZZxLbO9GT/7j9q72fBSvZcrflqGKPvjeA9Zrio0rni
+	 wYfjnJZmG79yM2UbLl/jcD5mu23zfp2e5qhPzzHrE7IWDoNtaJMzy+NG95HKGXVCQe5cN
+	 +REFAvfOQa3s+iLOcNCHQxc41MCnXjV+bhzxIfnCL3ZB4lc0LtSdcsK83Tp16sSvpHw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=IOghAqiM;
-	arc=none smtp.remote-ip=209.85.210.176
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UWi4pziV;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236B0606A912
-	for <mptcp@lists.linux.dev>; Mon,  2 Nov 2026 16:18:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 236B0606A912
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F7360A8841
+	for <mptcp@lists.linux.dev>; Mon,  2 Nov 2026 16:45:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=IOghAqiM
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-89f639ba307so1141059b3a.3
-        for <mptcp@lists.linux.dev>; Mon, 02 Nov 2026 08:18:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793636332; x=1794241132; darn=lists.linux.dev;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:to
-         :from:subject:cc:message-id:date:content-type:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=FmIcFldBwSvZofS3KE00AHPHUf+fTzDL1zSxVEgBLFU=;
-        b=IOghAqiMOxvCt0yRmlkZGve1KQPIis1zWBEiJnZ3DvSjM3bjg09sCc6muLOxmBf9Gw
-         BYas2JSAfppkI7m45H5bjMulbJ+6zX1jamD47GCUEls6kdUcOo4OaOOst4lywEKkrrms
-         aQDJG1CxjB5PKGhA1TdooDeS7KrQjaQFa73OWJ8OH8Zaa9764JKvd99Yqi5dVs9aOJ02
-         097pwZ8njvJlyaaPLtMi4MKG/Kk1XJh2q8pmcdn1f74WZBalnJlbi6lVMVkwO3XQLBcn
-         ttQFXAicMj2BdUCL2sWYRB4m2dprpWsPy/THh2xQxRCxDbtmGoKaqGeNAC/vk3P9S+TV
-         oBrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793636332; x=1794241132;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:to
-         :from:subject:cc:message-id:date:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=FmIcFldBwSvZofS3KE00AHPHUf+fTzDL1zSxVEgBLFU=;
-        b=VRpzwGw9JBwJevawQKAkrYHAp91+34j8VZN4EZHCXf0WGlsQp+ps6SU5zSvnOvkmsy
-         lymbEU9JZr8rSKpbe0J/AEu1JWl4gD/An/snclgJdYrsErBEj4Zl/4CGBbRZjHvDVK+A
-         OtVPhy1lzhEj/CzbyudkMSs9b7d9MxKx7hMmRZS5EKDVjGnHIM3QnnO2fChXtmVEOolG
-         rgtx0CvQLYdOPFd0bU6WdS8uasj18GIBn2N8rkPhH1/BZvP1uKq1KnjivoE8Yo6m7lwS
-         eomiTGBds8zt3/meP5JjKqaT3a85vad2i4XbDv0kcVW8/ZZqNypCTz8yFazDHX6I+62/
-         XXQw==
-X-Forwarded-Encrypted: i=1; AKwUvBwA1y+ijYYiC375ojSBQI6h9HphsE8KJ9RSkw9rZlP/OwV9Yx7UFZ3valdggIeGKRo2r/kJyA==@lists.linux.dev
-X-Gm-Message-State: AFq9FYJJ4obSQMHOllBNL/I5QirFnyCI4sd9jSiSJ9cS+6h3Vng9tJtq
-	fx+i6jG7CRItp4QrEnjbz/8PcKk/k0OrxNAst+O9/9fKuZVky8OWCDwi
-X-Gm-Gg: AYBFou1zZF5+oU3ZbI4/clk0eLdmpVIu8BiyZbBS1Tqt4GkxdSrUmzDq0Xm3UFClGFc
-	x+N4QgjDE/Bj42qOk2CSlGOa8SqpMCPBY8xtnyB+njzqb3fowbcEbRqMoxBD0rKaBAmjp/+7amQ
-	p8D1zn4gdYYbBCqo3H5r8aJms2yySK13Zuah0NVKISMkWAp4i4FR74mWO9EQrpqb9WWPWDXTuK5
-	sXPKFDn2clWnsmoEueji9n+ix6kyhPUWThhpXVI5XwKPK63I7GWZFRRy14SU/Q0nMJzcCHswqHF
-	5e1koYoxdsgyOTPmFsfX3wCXG/pvxaRNiuoE5UjyuJ+mQWMDfRrQ6e2CGoY8vTd6bdOJB/eMYSg
-	kS2EcjpcXbrt/AT+9Il3nxe1KtH99bTBLA4BqWIjBzQWb7nppAqIQRNrUhJsc3NsQK6nHD60jMg
-	UnW16SzHsoNwuTXwQRSOYvHS0aD6GyzQcdnBlmXvjOmNasXYSHDpuIxC5xHu2D6sDcmnBjTk5Oi
-	Mzp7jseLQBzG/WVbESnpGsRxTJRNUeLs0ZpDs3vm6BoGlhBsI1J5+dIAs4uSm1mXQACdRJDK2r6
-	9zg7j2QPvYSUPL1i3j2w3zm1udDbEzcaodW048M9vvvVBn6hxwaZ/OAc6Oxkaxep+Jtx2skIU9o
-	IECP1FbDF5raNpq9ixCWvVoonOoU6+pJll+DRa3mogYBIjw88I5Z5iTo=
-X-Received: by 2002:a05:6300:8047:b0:3e1:7b85:5a95 with SMTP id adf61e73a8af0-3e928ce91b7mr8254146637.28.1793636332340;
-        Mon, 02 Nov 2026 08:18:52 -0800 (PST)
-Received: from localhost ([153.61.198.248])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8aad9d03424sm2308383b3a.24.2026.11.02.08.18.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Nov 2026 08:18:51 -0800 (PST)
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 02 Nov 2026 16:18:50 +0000
-Message-Id: <DMKV0IW3XAU1.3KSPCJSXR3Z3K@gmail.com>
-Cc: <daniel@iogearbox.net>, <andrii@kernel.org>, <eddyz87@gmail.com>,
- <memxor@gmail.com>, <john.fastabend@gmail.com>, <jakub@cloudflare.com>,
- <davem@davemloft.net>, <edumazet@kernel.org>, <kuba@kernel.org>,
- <pabeni@redhat.com>, <horms@kernel.org>, <kuniyu@google.com>,
- <willemb@google.com>, <matttbe@kernel.org>, <mptcp@lists.linux.dev>,
- <mason@kernel.org>, <josef@toxicpanda.com>
-Subject: Re: [PATCH bpf v2 07/15] bpf, sockmap: Check the target of an
- egress redirect before each send
-From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-To: "Jiayuan Chen" <jiayuan.chen@linux.dev>, <bpf@vger.kernel.org>,
- <netdev@vger.kernel.org>
-In-Reply-To: <69e66c9c-f2ab-41a7-972d-d1562a6387b8@linux.dev>
-References: <20261102072112.4160195-1-alexei.starovoitov@gmail.com> <20261102072112.4160195-8-alexei.starovoitov@gmail.com> <69e66c9c-f2ab-41a7-972d-d1562a6387b8@linux.dev>
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UWi4pziV
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67A851F00A17;
+	Mon,  2 Nov 2026 16:45:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793637918;
+	bh=T/sOVNzi5Dfoa2OxIv/A39rx3iPvBk+pen4rP9vKfWU=;
+	h=From:Date:Subject:To:Cc;
+	b=UWi4pziVLtXe/LXPT8Xci4UNGkV8u7u7aFVUKXHTijzmEzzCW2rl8Fc9OiWyoGnHc
+	 Sp5xy2Hq4IW6UED+yGciPQ5/390ovM9nBm33LtnwTARHI/548qCHOyGXYmmo2k/Kxj
+	 QMKCU0k7nJBztfFVmPAAxgFjS7zAf5MZF2G39ckNXVPGRRzLhvrTIrVGyjkq/5po9h
+	 avmWkoZ+gyZbUPAuoGJKzNik+BgAf0ZFKLcCkUu56IUvWb73zAhhBICFhNg2TSHuW8
+	 /TdWcuOq5sEAkCPWSwjqf+L/m2CJgVR6kHBdfyPPnhG9aKay3kM8LZ1RKR4oKQSO5f
+	 NkCT74NcZllaQ==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Mon, 02 Nov 2026 17:45:10 +0100
+Subject: [PATCH mptcp-next] Squash to "bpf: Add mptcp_subflow bpf_iter"
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -106,15 +52,70 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261102-mptcp-bpf-kf-iter-ret-indep-v1-1-dd262e520168@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXM0QrCMAyF4VcZuTaw1jnBVxEv1jbVKNaQRhmMv
+ bvVXf4czrdAJWWqcOoWUPpw5Vdp4XYdxNtUroScWoPv/ehc7/EpFgWDZHxkZCNFJUMuiQRdPAw
+ pHNOwHwM0QZQyz3/9DNux0Gxw2bb6DneK9uNhXb8bcGmEiwAAAA==
+X-Change-ID: 20261102-mptcp-bpf-kf-iter-ret-indep-1c54db7d436b
+To: MPTCP Linux <mptcp@lists.linux.dev>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1892; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=Sc5BfbdoKeLv5hK/JLVZK73WTZN7aPD/+PWJB07bBcg=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJe7JNlPN1hO9894PDVexuP9vxMV/BJ+ORx17qzPaV9+
+ 8V1rUX7OkpZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACbybzPD/6KU2t7Djm+nrqpv
+ 1p/DJPeOfaHQ6+ZmMU/r1ZsrVu3b/oHhf9CFb2ePu2SxhC9okm5+9/XIZ4Hts+foVJnKx6fYTVV
+ awwUA
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On Mon, Nov 02, 2026 at 04:32 AM Jiayuan Chen <jiayuan.chen@linux.dev> wrote:
-> I can trigger it by redirecting data to a non-accept sk.
->
-> ==================================================================
-> BUG: KASAN: null-ptr-deref in tcp_sendmsg_locked+0xfb8/0x4550
-> Write of size 8 at addr 0000000000000008 by task repro/488
+Since commit d09c2aa3109f ("bpf: Track borrowed iterator results by
+default"), the verifier ties a struct pointer returned by an iterator's
+next kfunc to the current element by default: it is invalidated by the
+following "next" call, and by "destroy".
 
-Thanks for testing.
-All patches have reproducers.
-I didn't share them, hough it's a weak defense.
-Anyone can build a repro from the patch.
+That breaks the MPTCP BPF schedulers tests, keeping a subflow after
+advancing the iterator: bpf_rr keeps the first subflow, and bpf_burst
+keeps the "best" ones to use them after the loop. Both are now rejected
+at load time:
+
+  R1 type=scalar expected=ptr_, trusted_ptr_, rcu_ptr_
+  (...)
+  # test_rr:FAIL:open_and_load: rr unexpected error: -13
+
+The returned subflow is not tied to the iterator position: next only
+walks msk->conn_list, destroy is empty, and no per-element protection
+is dropped. In fact, the subflow is still valid thanks to the held msk
+lock. Then declare it with KF_ITER_RET_INDEPENDENT.
+
+Link: https://lore.kernel.org/20261024100647.2579244-2-xyx2021@mail.ustc.edu.cn
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ net/mptcp/bpf.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+index 53111d7a9eee..74648ca1e99b 100644
+--- a/net/mptcp/bpf.c
++++ b/net/mptcp/bpf.c
+@@ -298,7 +298,8 @@ __bpf_kfunc_end_defs();
+ 
+ BTF_KFUNCS_START(bpf_mptcp_iter_kfunc_ids)
+ BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_new, KF_ITER_NEW)
+-BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_next, KF_ITER_NEXT | KF_RET_NULL)
++BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_next,
++	     KF_ITER_NEXT | KF_RET_NULL | KF_ITER_RET_INDEPENDENT)
+ BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_destroy, KF_ITER_DESTROY)
+ BTF_KFUNCS_END(bpf_mptcp_iter_kfunc_ids)
+ 
+
+---
+base-commit: 2a3ce18c1f6d771195394b1d564947524ce774ad
+change-id: 20261102-mptcp-bpf-kf-iter-ret-indep-1c54db7d436b
+
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
