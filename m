@@ -1,51 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793588344;
-	b=id3H2k23FGijwO2QoEQOyvUdU+BdLprtTe4KShgGACeLQlGdELktJUQBBP85ABoDE1tD
-	 F6kl+BIjlcqeIHDJ+7HYv4dp3ELpWJQ6hRHT1K65mCY3Phe0q6bL/IciXT0QafNAqxTdO
-	 3t2wCpV+CJ0KVB+q/4WMoqcvefV/K9e7UdOcg6uLtPXxRSSr379+YwjYdYFo9obfjpnoW
-	 J9hPchJRlTpqblll7ZcSzIZp4Eyb00AqUrjiAqlN2jw1CHgCtWhqf3rdf/1MOdt+php//
-	 DkaV20lha36Z4o46Uw/syo3g8VJSXRm6Fk6C9PWRm/3EfvZbbtByIcm7vWjZUn1v5yw==
+	t=1793588346;
+	b=uNhrImORjLguFRY30Ll0E0VFH65uw7PNYdO58KNiEcGa1/1y5BMpJQ3O3aFVIZ/4mefU
+	 TlWp3BnnO9y59MKIquV8w3i8jcK56TIYfWL7RoFC/O/TzKwD1gf5vuxiBRrR9YK6QCFfk
+	 FNb/9OvZIhHV8TAHTJOp60MvXk8iUyJouSa75X3zo1MIlK32LZUWWMdto3Cy9tow+E/mK
+	 YsOc63qTQQeBKq8e0wbydO7KOvkOsgu2q2H4F34RZg9MDyW/GDaUSL+i9iJ8ZTaS+fh1I
+	 nEq/z74mvcG0b9NYLuhk1JMr6tfUue++JKHscZPf6OXJ2XzcoKW4rMdIZzUxcAxyMBA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793588344;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793588346;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=jOD8nhp5mxZ3H/++COyRosvjHUww0SYlul4ovzk0/2o=;
-	b=W9GOmf2GWZgPtO/+ijM7hKuJ/OKFBvI7ro5cEGrNd8e/tAjJ8JU2W9R0zgEVsw/twnqC
-	 vjLb4cywgZsybLIC58KkNDiyHJhpMxQGNIyeUYemXGd51bJz+EZgBFjYzdQoJVT3btSFg
-	 LrXtVApwqc4fF79b613/rsJzzW6FKVanaIcvfu0xVBkZ3oBrFulB4bkJJnyLqux8u3GPj
-	 3MiH25FOrdr3aB8+Fw53mjYr1/wYVQ708P7ylvpdBV6eA20LXErw6G60oyfTP8Ssu7UWG
-	 VyDF2eATdaOAQea004H6Z4De8DO1Qz71ulF/p6NyysSKi44nEgqi5bdXqDqjuRdgDhg==
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+	bh=FcyZ/23EO9wCaimpG8uixyj/1tWZ+pqjTJz3x+0Dc/c=;
+	b=vbl/fM6QBL4YkVzWEHLw1XGisiHY10UmTkofNfdhdjxusPNs+pEpQ4B7ijHY9AyjS0HB
+	 6rSEo025jAYvjBgNIl2sJv8CzuNmeOoyzt4hSmiNlO71oU6AcyK1DbV3zXdRfBI62ewED
+	 TGZQRZcXA1L023kkXfkDqBJqIO47XfUqNbmOy8QY9zpGMTUZGOiInQ5ShkigVKyszrtxd
+	 EZGIyKl5idr577n2q0gXX2YoC5Q7lwnkS9X5lxaL+pyvGi0AKWxnvIW/xEyuz/W7xtLqL
+	 wKJR0AflcUaEUW86qsqz1+kJzk8S7My7hxzoO5NvJqtJKihFdcw8IRo6B2m5sSH6Uhg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CQp9AweQ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TEOqH5ni;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F635606A324
-	for <mptcp@lists.linux.dev>; Mon,  2 Nov 2026 02:59:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5E5606A324
+	for <mptcp@lists.linux.dev>; Mon,  2 Nov 2026 02:59:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CQp9AweQ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0620E1F000C1;
-	Mon,  2 Nov 2026 02:59:02 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TEOqH5ni
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA9B21F00919;
+	Mon,  2 Nov 2026 02:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793588344;
-	bh=jOD8nhp5mxZ3H/++COyRosvjHUww0SYlul4ovzk0/2o=;
-	h=From:To:Cc:Subject:Date;
-	b=CQp9AweQDkxhunsoPT7lrRMRHf+P48OgkEv3sygtnCdttl6gXOAkSQpRoDBO2MnUK
-	 5mjMMz2j1VEC+NuAQG+cF7sxff4CKFV09vgTTQc+fk+0LRCk3bQvH0a4PhE00TTk60
-	 TJ3WaiOQeuLQEwh9nn5nVbbZpOgJGa6yeFTVCJB0tLqCtIZu3l37IYiOwpWspBdfSy
-	 +k5wxp6TN5i3+lzOK3qvnhFFIO3TZgpx/EnDZCOaakmlw9UwBGwLgtcIRMgorr9yKn
-	 zv9Ng+Ws/KN6Trl6emjJxluRlIIohhogJ04a1rP5TdLf6BLiEUX+4IvsXu8uUmkJzB
-	 iWnv2G7cMdJcQ==
+	s=k20260515; t=1793588345;
+	bh=FcyZ/23EO9wCaimpG8uixyj/1tWZ+pqjTJz3x+0Dc/c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=TEOqH5ni7CWZV9tz4xnNGfBDPtyVFG6N9ssS2HALUAIh1oP3I/xrs2vEuJw3jax8g
+	 LimWJE640DJl9VDBCBeWGV7g/xtZQ/3hbqaVV4uF3ml8rBzHm6MXHYd/d0wCMwSAum
+	 e1k2F2sJiynak3wM4g4/B694sctkALxwNjjOxmkS6mFGen4IRU58HJFLcmJKJe/gwD
+	 Sl4PjiBMIv5cwdY9rKuqdC5jpsNquNwBuFKnTfqQ4XFiPDxEFCjttzUW8JKNTwD3N0
+	 99wXyXlHanI9A1Xkluzk5U15sbUthnViYQjAWOpP9L3fHi9vg53QKFUSytQxr7wElC
+	 FU949jIJWh1lA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v4 0/5] prepare interfaces for kTLS and sockmap support
-Date: Mon,  2 Nov 2026 10:58:53 +0800
-Message-ID: <cover.1793588257.git.tanggeliang@kylinos.cn>
+Cc: Gang Yan <yangang@kylinos.cn>,
+	Geliang Tang <geliang@kernel.org>
+Subject: [PATCH mptcp-next v4 1/5] mptcp: update mptcp_check_readable
+Date: Mon,  2 Nov 2026 10:58:54 +0800
+Message-ID: <79b5374c1e38dcbc2b50f129b4269340352fb44f.1793588257.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <cover.1793588257.git.tanggeliang@kylinos.cn>
+References: <cover.1793588257.git.tanggeliang@kylinos.cn>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -57,88 +60,48 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+From: Gang Yan <yangang@kylinos.cn>
 
-v4:
- - patch 2: fix mptcp_inq_hint() to return 0 instead of INT_MAX on
-   passive TFO overflow (ack_seq - map_seq >= INT_MAX).
- - patch 4: add mptcp_rtx_head(sk) to the early-return check in
-   mptcp_rate_check_app_limited() so pending retransmissions also
-   prevent false app-limited marking.
- - patch 5: update comment message.
+This patch makes mptcp_check_readable() aligned with TCP, and renames it to
+mptcp_stream_is_readable(). It will be used in the case of KTLS, because
+'prot' will be modified, tls_sw_sock_is_readable() is expected to be called
+from prot->sock_is_readable().
 
-v3:
- - patch 2: drop DATA_FIN subtraction in mptcp_inq(), remove the
-   intermediate 'answ' variable and return (unsigned int)avail
-   directly. Update commit message accordingly.
- - https://patchwork.kernel.org/project/mptcp/cover/cover.1793324316.git.tanggeliang@kylinos.cn/
+Co-developed-by: Geliang Tang <geliang@kernel.org>
+Signed-off-by: Geliang Tang <geliang@kernel.org>
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
+---
+ net/mptcp/protocol.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-v2:
- - drop the patch "prevent dummy DATA_FIN on RST in fallback mode".
- - keep mptcp_inq_hint in mptcp_ioctl unchanged.
- - use mptcp_data_avail in mptcp_inq.
- - add msk_owned_by_me check in mptcp_sendmsg_locked.
- - https://patchwork.kernel.org/project/mptcp/cover/cover.1793258749.git.tanggeliang@kylinos.cn/
-
-v1:
- - https://patchwork.kernel.org/project/mptcp/cover/cover.1792999988.git.tanggeliang@kylinos.cn/
-
-This series was previously posted as part of "Reduce the differences
-between TCP and MPTCP for TLS usage" v15. It creates the mptcp_inq()
-and mptcp_sendmsg_locked() interfaces that are required for the upcoming
-MPTCP kTLS and MPTCP sockmap implementations.
-
-The series has been rebased and no longer depends on Paolo's CB layout
-refactoring patches (mptcp: drop the mptcp_ooo_try_coalesce() helper,
-mptcp: drop the cant_coalesce CB field, mptcp: remove CB offset field,
-mptcp: sync mptcp skb cb layout with tcp one, mptcp: defer read_sock
-cleanup to mptcp_worker). Those patches are more complex and will be
-sent in a separate series.
-
-Patch overview:
-
-1. mptcp: update mptcp_check_readable
- - Align with TCP's sock_is_readable for better TLS compatibility
-
-2. mptcp: prevent dummy DATA_FIN on RST in fallback mode
- - Fix semantic issue where RST on fallback connections would create
-   dummy DATA_FIN, causing unnecessary state transitions
- - Add sk_err check to subflow_is_done() to distinguish abortive
-   closes (RST) from clean closes (FIN)
-
-3. mptcp: implement peek_len for proto_ops
- - Add mptcp_inq() to report readable bytes at MPTCP level
- - Wire into .peek_len proto_ops for both IPv4 and IPv6
- - Handle 32-bit torn reads by returning 0 instead of INT_MAX
- - Prepare for TLS strparser integration
-
-4. mptcp: add sendmsg_locked to proto_ops
- - Split mptcp_sendmsg() into locked/unlocked variants
- - Expose .sendmsg_locked in proto_ops for TLS send path
-
-5. mptcp: track app-limited state in mptcp_sendmsg
- - Add mptcp_rate_check_app_limited() to mark subflows as app-limited
- - Bail out when MPTCP has unsent data (write_seq != snd_nxt or
-   mptcp_send_head() != NULL) to avoid false app-limited marking
- - Enable accurate delivery rate estimation for BBR
-
-6. selftests: mptcp: sockopt: check app_limited
- - Add regression test for app-limited accounting
- - Verify tcpi_delivery_rate_app_limited == 1 after small transfers
-
-Gang Yan (1):
-  mptcp: update mptcp_check_readable
-
-Geliang Tang (4):
-  mptcp: implement peek_len for proto_ops
-  mptcp: add sendmsg_locked to proto_ops
-  mptcp: track app-limited state in mptcp_sendmsg
-  selftests: mptcp: sockopt: check app_limited
-
- net/mptcp/protocol.c                          | 75 +++++++++++++++++--
- .../selftests/net/mptcp/mptcp_sockopt.c       |  5 ++
- 2 files changed, 72 insertions(+), 8 deletions(-)
-
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 02a4f479d9d8..0caa31525b90 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3476,9 +3476,11 @@ void __mptcp_unaccepted_force_close(struct sock *sk)
+ 	__mptcp_destroy_sock(sk);
+ }
+ 
+-static __poll_t mptcp_check_readable(struct sock *sk)
++static bool mptcp_stream_is_readable(struct sock *sk)
+ {
+-	return mptcp_epollin_ready(sk) ? EPOLLIN | EPOLLRDNORM : 0;
++	if (mptcp_epollin_ready(sk))
++		return true;
++	return sk_is_readable(sk);
+ }
+ 
+ static void mptcp_check_listen_stop(struct sock *sk)
+@@ -4580,7 +4582,8 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
+ 		mask |= EPOLLIN | EPOLLRDNORM | EPOLLRDHUP;
+ 
+ 	if (state != TCP_SYN_SENT && state != TCP_SYN_RECV) {
+-		mask |= mptcp_check_readable(sk);
++		if (mptcp_stream_is_readable(sk))
++			mask |= EPOLLIN | EPOLLRDNORM;
+ 		if (shutdown & SEND_SHUTDOWN)
+ 			mask |= EPOLLOUT | EPOLLWRNORM;
+ 		else
 -- 
 2.55.0
 
