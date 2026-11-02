@@ -1,94 +1,103 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.167.173
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.173
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793568639;
-	b=YNWBcJtFqz4ZJbQB11SWIOYQTzz+ArWu2qu9Fvwd94Ai34XrW559ZWbUGZ+7FBct6veN
-	 edIv2UFDe75RR3Bzdxo+zXGvOWm0wqiobwlRHjOL0Bl5Rf0N4lsHGrWgJi5ojIXoqcUTG
-	 5rDNicqwQDhlamje++nf349av6j+olLywB7x/D6+Ngy3ag/iKBTjjC+sHq8hAqD5peq15
-	 qixRkcRpZ8ahXN+RJAgIjLCCGlOll0nwpa2PG4c0GWIVSij5RSvwgz09+wx00kReRwlyU
-	 EGx+u4dttfvOGe3mtID05mdrUu2ioW3TBYkhEQVzpPoZ27NXOfn2nFgxAzxcbBeD0Xg==
+	t=1793578564;
+	b=vOvJxKgFII+cOR1f5b3BILo5eCR/ZL7NgI7d3Mlpm/EoNuNSU7NsCyIWe+3gmUlk8/Zd
+	 4DaQEzBQVTpEWm9JVNioJ50WchbcldEH7hX5gnJGVGr6UUfFblL1252d+b0yLIscxkqwb
+	 XfG53TFvDGdztgS6ICrUGs4imGY3r0A0dcZqCOX8c/eIRJkD2rBVNkDpvFC7K7tndA8t4
+	 kouTpAyjAolEt+Yhw9p8GKOE+R+HZkpOs2nS9y+rx0TU8vPqjBaODYuqR2QZYFOKyxmVD
+	 PYSHhFTY6m5UkzIM2PvZLs/Fq8cXAtsjzPWWkUA1OSw5dBUj7pPirrtWOaEoN8ytS6A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793568639;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793578564;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
-	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
-	 Date:MIME-Version:Content-Type;
-	bh=s3j3OPfA+LBuXpdOzOR8iLpoS3ivlfY7RkHziERaA+Y=;
-	b=e4nKnyOC0nbv1z22ItV06I6LhInFDH492Z7gL8x2U6ImnW8zrqy6a3gMoTwLRC4YONlX
-	 pRfnBXqH/+DRApbGBq10Cgmxp+4P7iZDGbNdedW9J5DbX+5p4EMphYaPk5UGJymqOdCmF
-	 2h9jskf35+6mL2a8SKR6kC3/fjnBdlrmC9AoY5wk7Qkwv+vM8ARUIbloHTUnaoUJXdR+p
-	 io1RgIs6njkzgkLPGZieAvDAP0+zEUmUwzi3KBULwxlRucZwgJjSC4pYCfCu/pXr2HBT3
-	 kDlQuVSZagnCN5x3b8x/vklOpYzApiYFVndsb5Yl5Lf3/YhH3ijZ3a6lZbS4cJ8lSbw==
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Content-Type:Date:Message-Id:Cc:Subject:From:To:In-Reply-To:
+	 References:Content-Transfer-Encoding:MIME-Version;
+	bh=gOTk+4QV9R7r+hqcOhyi+ZUpTGPG1XQYb6SJ4CrnYRs=;
+	b=gmOKiZ2d6Qdl6DeOEwZ81UsVCqx2yu/6pBAYRTvPnGN10WUdwvfYOn/iXO5W9l8aZ34N
+	 yEbtUmZr9ZSAXBwcrliHIKr8B4ESQ1bZsfcIw2PJcOoj32Ne+RS1B2A9w9xc4HxlSgKOj
+	 cQyzRSTHQWdxYC4knmqbdN169iAN5oXBZ19ySsr0yLu5VZkD6dcIWrbax6PPZvBfFXjV6
+	 1PiOREsz/IulIOk9MI1nb+woAVMxYkWoC34lb6lUgjHQD/6jlYtsoHeT1ERB6mIIrN0Sy
+	 6vOhyGpbqF3U8y0a77ArwE1ueplYXcmhyhc3FMcZtnPBosvK+DReLsay+/cx1uRtE2g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=rPJaLVfA;
-	arc=none smtp.remote-ip=209.85.167.173
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=nxKcnIn4;
+	arc=none smtp.remote-ip=209.85.214.173
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02651606A324
-	for <mptcp@lists.linux.dev>; Sun,  1 Nov 2026 21:30:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 02651606A324
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D089E606A326
+	for <mptcp@lists.linux.dev>; Mon,  2 Nov 2026 00:15:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D089E606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=rPJaLVfA
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-4b28d9537bcso1766530b6e.0
-        for <mptcp@lists.linux.dev>; Sun, 01 Nov 2026 13:30:38 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=nxKcnIn4
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2eb0f1b592bso7892225ad.1
+        for <mptcp@lists.linux.dev>; Sun, 01 Nov 2026 16:15:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793568638; x=1794173438; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=s3j3OPfA+LBuXpdOzOR8iLpoS3ivlfY7RkHziERaA+Y=;
-        b=rPJaLVfAIVBDXshcSIrIlM3y2KHj1MPNakhvJIVnbnQvKR+WQXZsnundvtEvpCojH6
-         zxiqWDc0TDgwdDbIqFYTA1k0iBb/mIsyQg/WPYxIqVxH9DCw5QWjdicD7+iDr7fV5mxw
-         nK9TpEvlU3Euo0Bf/HjcQG28hM9IE3LDikZcMnAAecAckDSPPvYL8ZBkn9o2aEXkKrhR
-         UeeOl1+hqW99TR/K4XaGQnVXfGGsoJSubwUMlTtwJ0pGpGgZL8ORuoepuz+KeWCY68Vu
-         6gypU3BuLP4K+LUJA2DU2D9SfI7gR8VQhttnotUuUTL1iMKRy9ukshPkxxip5ym0b318
-         8z8Q==
+        d=gmail.com; s=20260707; t=1793578558; x=1794183358; darn=lists.linux.dev;
+        h=mime-version:content-transfer-encoding:references:in-reply-to:to
+         :from:subject:cc:message-id:date:content-type:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=gOTk+4QV9R7r+hqcOhyi+ZUpTGPG1XQYb6SJ4CrnYRs=;
+        b=nxKcnIn46+Xg8m72uozvBotk8ebKw8Zx5+kAO68YmWHTfAKzW6I//1pCyy1FJqsS9M
+         lkwIqoVE6BEVMh5wJZioJx3GbYydRAT7av8tFOFuTlTtHj8te6pSDoyWXoBojLADTbRl
+         Qs8kCS4XqAhqCHhO7Oo+MsHm9Q5xUm9HXs8A+fD5sNiOC9KwBWW5JRBWo4MVoZ6GXuJT
+         JylXOgtOTe7YxjcJeJffQXqxGOsOJu+dolKTasJ2T0P5zxPFa/0gUZrbIMLKA3lkIZRk
+         VPpdyu2AOSYeSUrd19+E4uMY+6y4NKjF7/fKrKnKsmOfmgVFrPlfbSL5FfxNW/cPNBGp
+         RIbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793568638; x=1794173438;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+        d=1e100.net; s=20260707; t=1793578558; x=1794183358;
+        h=mime-version:content-transfer-encoding:references:in-reply-to:to
+         :from:subject:cc:message-id:date:content-type:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=s3j3OPfA+LBuXpdOzOR8iLpoS3ivlfY7RkHziERaA+Y=;
-        b=UyBv4xmxRFabSGfJgYnLHXefAC9N5JbHuiLv94YY8LZrAGclEqZ7YYn/g3fErgyLC3
-         sMXvesrjZCLmjssHLVyE0rwv11Jc1L2t3qX17Tm521vllf9wdSHIiMU86DsJGEn+32oF
-         glpODc2rXbclIv5ZB9YNbsOElYrFxd8OL4OrjqAOMnZuI664wnD1Ui64TpKcUZuIeqQt
-         i0QOnavnsqJRNqNgG1k37mnvfF4VmDxLH8kw7mT1A92uGCrsDo3uHdC9zw/HrT3KQm6q
-         unEnqB+2bW7i49cm8Qi2u/D2sQdpBfnPHb1+Y5l6Wt70kmOX/rwhBDsUw/hUdyFvTMw4
-         RJpA==
-X-Gm-Message-State: AFq9FYIsMwGIkg/FQUEEEWrakmjSsiYb8a7aSQaQccQp/k5/iAdg5aNS
-	fOMpTn5IfHYsQJ/38bv4R3gl2pOiAhk5kTbDkVnIAoXhg1w4BNLCvNc=
-X-Gm-Gg: AYBFou13WXxv5iMLvQd8BIog9bfkAOgZ8izLo6ZeNBmEJ3hUSY0XF6RJ+mWjVztOIex
-	HRiEMljZuJUbgRlMdexnfD3O5SxNoOt9RD1pVLKyHsY0VB6ocm+lk+3ava7yk6MUoTW/ixplNZ9
-	gBKAm6xxuG0dbxMQD8Sa5Mdh/BsSplsV+JKHpoadaYdYiqSAfsUpuQjvSrl/vxSOzi6fLUU4mY9
-	nnRcyWX7tZs0kb0XQ4QkOwlEIP70lwoTQcN/rbzWfK+vhwmazxpBGcCWorI6SvdmKFjFj4VkVZ0
-	C7d7j6hR/9Y07pO1iJ5ljww6BJbG2GJ4huP35cdKl3MWYfXB6c55ZA3fQ3tG8yV9u5ZQYVEZ6JU
-	vcN/ailzryUrhxHlV2x0JMYltqmrK3l5F9pf3+r+5AoiakShW4vQxlNtUgjM8dFLkVxBb+RUxWG
-	37RQUwlrqq1I+BaZZEgODwtDZn65nUmIggKr9pHluAjz6O+ZDynXHlegiyqeP8/d8JZK+Bpubrc
-	+fYbnd5JDWAav+bXX4MEmSl29Kn4sTtxTh/i2bY4YpWctTiOGKt4rzMI3mJ7BrSH2Xd1cfnR+G/
-	fUbCqzyRuENFdm5qjo4MSOEoDN7cLTe7acrASVV2Gw==
-X-Received: by 2002:a05:6808:178b:b0:4a4:c95a:38d1 with SMTP id 5614622812f47-5640db2ba7fmr3592623b6e.4.1793568637747;
-        Sun, 01 Nov 2026 13:30:37 -0800 (PST)
-Received: from github.com ([40.116.73.178])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-5640fd93451sm6448490b6e.3.2026.11.01.13.30.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Nov 2026 13:30:36 -0800 (PST)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Alexei Starovoitov <ast@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20261101192057.2296489-1-alexei.starovoitov@gmail.com>
-References: <20261101192057.2296489-1-alexei.starovoitov@gmail.com>
-Subject: Re: [PATCH bpf 00/15] bpf, sockmap: Fixes for verdicts, redirects,
- corks and recvmsg()
-Message-ID: <ebf9060f-17b1-3b5b-4e03-5a9b3313dfad@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 01 Nov 2026 21:30:35 +0000
+        bh=gOTk+4QV9R7r+hqcOhyi+ZUpTGPG1XQYb6SJ4CrnYRs=;
+        b=uJKPNKPwG1F2rFnLVmC0aG9C0yVirrxthY5z5XPJcbPOvycsZB35TQERVhtDu+GTWR
+         TzCrR+Lx3xcvLrp/IP7XGI1h67PVfk/FiY8kHQaq1BvCBmEQC/lMcy5hPmvKZTb5Gc1B
+         7ZxvDWdEKOdq1B1lLPHY7sv37st9yUk6lVPAoi8I3viXQq9oTgqGBmfncnR8GAWoXyyI
+         LEbQ3U2AyUh+j2wXhkMCpSZpC+ZgU6LLHtFlx2H49vUs94RLwnecbyKrL5LoGQAaZc7I
+         ERjFJDxeUjqPBHcC1YaDe8xG5jA64i4y6cXN1HXb4ZBOaxu+mjrIGFA8sIPdFQUHogmp
+         8QXA==
+X-Forwarded-Encrypted: i=1; AKwUvBw/C/9A2CGGqh3Pl4bTW54hgdP64/4x3e1LfMkXkl7LdCdHD27I3U0e1txkH2BI0hD+xHcogA==@lists.linux.dev
+X-Gm-Message-State: APuU4Z9Leh7iHpwmLL5s9xzeevXV4JIRkPPP5sgGQkUKx3UrPngeHVka
+	moOZDnX8RNQlQTaXEqsu8eWjN8B6wadPN0w3b7K4uSw6FDCPgsfqxFe0
+X-Gm-Gg: AYBFou07Ihculx1+yGRd1TwXb55lGT8qBGEniB+Y3kSQpuS8j6GzkH9v7H57dOTnQy+
+	hD23nFW0mMalwfY5pK3Ls6gUujN3VdO2BdNOwluzwTF4kR/e1rDWos4mR25KLAHhiOaGtP7lH2w
+	umHz4TMv5GWYVRSNVXOb0tGcGHwz0QMr59GzAOLmSK7c3MEWGb0xJYLZrhZgbCQX2YMCmgqKOYH
+	0mPz2o54Ktya4hIgpdPiYdPIE4ISXdqtXsj8sSdGH1Efwg+K7oLJsMtTgBgwFtYsRMaGy/vl6Pc
+	bt2DujqZvjCg5p1R9qAsqmyDCSNl/SLbURH+qc65Hgydwan6UQEgu40mhqJ6cpubj0Hewl344F1
+	V9t7obVNV3QTkJiaHTcwn9I7mSbUgfjJRYsuD9OjVMKft9wYeKAXrERJQx7i80fRLiI/0snN7pt
+	lJZfe12GTgNaBo2CZzwPM72TOWjqg++qtVo/BFUz8upl2eCBGfzNzbRig58zbQOcXr12kZjLhiD
+	QzcFkUNlPHnc6AdHEllKKS6SecigfxAvSyt/Z2N5K5s+PiA7ZGbksF599/fKLnau5yEmYejCUz5
+	QtFQ3ZjmqfszQ9fALB+DIpqv7RSsG8HJMjUVqva5oESSOP2DUIlVQrmHrjL8OkS3XWZQZo7L0pG
+	MXBl2btGgQq3PUXIcFz5eJMwOGkKjTWfIHwRaexQemMFvVXp/YzSUfeIs
+X-Received: by 2002:a17:902:ce04:b0:2df:9a7e:d41b with SMTP id d9443c01a7336-2eb36462d49mr84627265ad.37.1793578557953;
+        Sun, 01 Nov 2026 16:15:57 -0800 (PST)
+Received: from localhost ([153.61.198.242])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eb39052ec9sm20149455ad.6.2026.11.01.16.15.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 01 Nov 2026 16:15:57 -0800 (PST)
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 02 Nov 2026 00:15:56 +0000
+Message-Id: <DMKAJA4HTOBN.O8XO807UAB6Z@gmail.com>
+Cc: <daniel@iogearbox.net>, <andrii@kernel.org>, <eddyz87@gmail.com>,
+ <memxor@gmail.com>, <john.fastabend@gmail.com>, <jakub@cloudflare.com>,
+ <jiayuan.chen@linux.dev>, <davem@davemloft.net>, <edumazet@kernel.org>,
+ <kuba@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>,
+ <kuniyu@google.com>, <willemb@google.com>, <matttbe@kernel.org>,
+ <mptcp@lists.linux.dev>, <mason@kernel.org>, <josef@toxicpanda.com>,
+ <martin.lau@kernel.org>, <yonghong.song@linux.dev>,
+ <ihor.solodrai@linux.dev>
+Subject: Re: [PATCH bpf 02/15] bpf, sockmap: Don't let an SK_DROP verdict
+ stick
+From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
+To: <bot+bpf-ci@kernel.org>, <bpf@vger.kernel.org>, <netdev@vger.kernel.org>
+In-Reply-To: <0dd29e75d62b7190a9808444743fc5dcebd3fd42ebff15602c7eef5a9313784f@mail.kernel.org>
+References: <20261101192057.2296489-3-alexei.starovoitov@gmail.com> <0dd29e75d62b7190a9808444743fc5dcebd3fd42ebff15602c7eef5a9313784f@mail.kernel.org>
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -98,61 +107,14 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 
-Hi Alexei,
+On Sun, Nov 01, 2026 at 11:39 AM bot+bpf-ci@kernel.org <bot+bpf-ci@kernel.org> wrote:
+> Now that an exhausted SK_DROP verdict resets psock->eval, the prog runs again
+> for each later message.  Does that make an older accounting problem in this
+> branch happen on every message instead of once per socket?
 
-Thank you for your modifications, that's great!
+Only between patches 2 and 4.
+The wrong return value is an old bug. Call 1 hits it without this patch.
+Calls 2..N return -EACCES today only because the prog doesn't run again.
+That's the bug that this patch fixes.
 
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Unstable: 3 failed =
-test(s): bpftest_test_progs-cpuv4_mptcp bpftest_test_progs-no_alu32_mptcp =
-bpftest_test_progs_mptcp =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: btf-debug =
-(only bpftest_all): Unstable: 3 failed test(s): bpftest_test_progs-cpuv4_mp=
-tcp bpftest_test_progs-no_alu32_mptcp bpftest_test_progs_mptcp =
-=E2=9A=A0=EF=B8=8F=20
-- Perf: Unstable: 1 failed test(s): =
-error:sched-mem-pressure =E2=9A=A0=EF=B8=8F=20
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/41343383116
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/072b58d52e7a
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1198251
-
-
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
