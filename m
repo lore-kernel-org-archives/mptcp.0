@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793638642;
-	b=nTxhICA7fSi0U8Br65vOb7ijBZeiWcppUoEF9RsqtqnYiBX4uDux7BN10ICNdI2HHbJV
-	 Kkew8t1BC2czncocgm1xshNKwGja97F7pYOSgHNDxq8iIJqEKFeqCrInx9HlJF+1uOaY/
-	 dzqbnRvWqdOY4kcpQPWvrvJBlGf1lFgjwPieZ3SylQOtPYmMOlKc8+mcqLRORbCDJtpbl
-	 lVmcKY6vyKuuOxDFMIL63NIoamwPwuimuHr/arojqcd+5mucARECvCvOh60ifv1dTYUim
-	 CqKO6FaVoQRj43ZgPAUgJkEh3/I9gy6FGdludKYcN8DirMHVJ/tPWsk+TLpXQU1Bh6Q==
+	t=1793642838;
+	b=Kj8duNY7S+1rbqKcOVg/C+/919Vba+xlzmoZuCfPThHuyZsReeYKIzvGXCTLUflMPM6E
+	 sYdQaAlrZwP5EeSKqcJUpsypKAUN2J1C2PapRj2ZPRHVG0YZeiNAS1BgozpCFTULsgJRQ
+	 EN/27pKuovTRLGZ6KdIlkB8PY+q6U8+8l5+WQE6MyHi14XfX+pC3NS7WSGfacg7kjGaX6
+	 D16RVl72wGle+nbU6H1rdjMwJsfYCoEZgfPfSdXUDiwtP2NIUT5WYIrY2/KQ1lVjORSRJ
+	 jNxcq7yY5xDNZVWnQ6jrjtu9uEThqV/f9yCRwdmZm13SaBa0SqGbhOZIzLxnwgdHpLQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793638642;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793642838;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=+O6Iy0v5LIlh9LxTg5ei7m9/hyPO3svpQLvT7K7vZn4=;
-	b=dFWCZBx51/ohfQK6Uqum7SWfSWuECtVu/wocfQ8pxkMjPvbEHJ7RkGVaVEWNWPdpnWm6
-	 7KsYzNBg1aXPwZiJ1S/bdXpi4Bj4X5LAEJHzuhpN8xwPyaO7hQtJZb+9ct4JduUKESrKr
-	 ZiQX4GnGQRocEIGXE9fxzRP5eQJflOTDMG04vOy7JtK4ru/VTpZrcJKJp1btLew65fIHl
-	 guMUCJiES3l0o5YpgIaaIUJOPtOfcFV1jo2VoyxKrOwZ39XHhE6RVPE5ub8fNn/ydYULx
-	 MGsTxTi38f1nnNnjSlaNW/763kILMOPpRYzDjLkUpLUc5EZ8TDgz8lOFzG9WWQ84IJA==
+	bh=agAvZaMsii/M7oBGgfwhInzi1SJ/3NKHTvsHEi6370s=;
+	b=N4Jo0ji4agthnxnZ1pBxsBG9kJsiD1M11oZO7NVqtyzq3wuwgLs3qLisQ3+4vqATF/ZH
+	 Dnk1ClZV2OmsyysDEZbYeEfy7vNfxKASTrvZVEN8YiMt516qUCUBIYoaRAMr4zbcZ70jq
+	 T27q8HTLzUE9IsogzJQHCK59P2sxfwlGfBKGLP4vGdLzTKHo0Y+4crD4YmXzVxmMCCB19
+	 fS0KPub7FRKqQVy6GH7LdarTM2xu6SSNGFSKJr+cftjBvvbvy5qHHttzd7jpYfATENRzx
+	 nEvQFsEVU05ivOWDP1aF0O5QRWyan0cJiRH7peEK5bPXodxJ0qLVNGEpnEFI3x2tAuA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=W+YvMTEt;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HmyTQFbI;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E65607B421;
-	Mon,  2 Nov 2026 16:57:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85733606A326;
+	Mon,  2 Nov 2026 18:07:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=W+YvMTEt
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ACF71F00A16;
-	Mon,  2 Nov 2026 16:57:16 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HmyTQFbI
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E084A1F00A16;
+	Mon,  2 Nov 2026 18:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793638641;
-	bh=+O6Iy0v5LIlh9LxTg5ei7m9/hyPO3svpQLvT7K7vZn4=;
+	s=k20260515; t=1793642838;
+	bh=agAvZaMsii/M7oBGgfwhInzi1SJ/3NKHTvsHEi6370s=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=W+YvMTEt1D1G5HRvKYZ4cXex2SOu+GwwhlHaH5l4H3Kq2he+dq1DF2nG31bCxInXp
-	 3jz5zkrA467S2Fn3oOv0kxXoDm9Yk2uRKT+KUGvQG1ScOUuxQPFp8sZmk4aPJT4Hed
-	 hubU7cmja5puMMNREDrbl3/yVHAgFw+oWGa4ZFYR0EpuyDIRGxkRfOKcb3WiOcA+Et
-	 fPV0Hz9bdgXG0TfLHP91kuv7ernbYa1NKUZIptSqaT9Y863SBVSZqMyW6+lVEXjgor
-	 Hr26IkrZgB1xsiWXgCvBXdYxdah130vRdBeL8iy08sB1VPjPVLYHs1twbGtYgXy2fQ
-	 wAHWredSeEgfg==
-Message-ID: <c1118f2b-46d4-4ed1-98b2-ff1c5cb00fc2@kernel.org>
-Date: Mon, 2 Nov 2026 17:57:13 +0100
+	b=HmyTQFbIPJL2tO/fGsNC+7kD4bLxJNYclE/KDhy0Rv6Bwz5EfLqzDrNmll7PFlhjK
+	 64uMPARI85h12wbROqXKmx7GYkuUtpzgz99GxydS+Vc9znLlbK8CawvOJXpkHBy3p+
+	 npZhAap+7PIDvJLGbK8fmNs8i4mW3oBpyixijw2N8C5YUqf7g+OQ0kYR4h/RQHiSH/
+	 mFmuLV4ReSLBbIkOLQpJF7vjWtMAph7T5T5CLSGTvhSMAy4BTKRMiAzUbJsWeN4R08
+	 vNmZ0uF6HzpcRP9Pghtsr9pi/m6eyQ9wTrrKShQ6GNKLksRNwqB/UH9DSQ+6W24c5L
+	 Z1gyUjd70rbow==
+Message-ID: <d34469ed-1e6a-498d-beab-1c4900ad2afb@kernel.org>
+Date: Mon, 2 Nov 2026 19:07:14 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,18 +52,13 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH bpf v2 09/15] bpf, sockmap: Check the TCP state in
- recvmsg()
+Subject: Re: [PATCH] mptcp: pm: kernel: use RCU to free endpoint listeners
 Content-Language: fr
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>, mason@kernel.org
-Cc: bpf@vger.kernel.org, netdev@vger.kernel.org, daniel@iogearbox.net,
- andrii@kernel.org, eddyz87@gmail.com, memxor@gmail.com,
- john.fastabend@gmail.com, jakub@cloudflare.com, jiayuan.chen@linux.dev,
- davem@davemloft.net, edumazet@kernel.org, kuba@kernel.org,
- pabeni@redhat.com, horms@kernel.org, kuniyu@google.com, willemb@google.com,
- mptcp@lists.linux.dev, josef@toxicpanda.com
-References: <20261102072112.4160195-1-alexei.starovoitov@gmail.com>
- <20261102072112.4160195-10-alexei.starovoitov@gmail.com>
+To: Kyle Zeng <kylebot@openai.com>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ outbounddisclosures@openai.com
+References: <20261030042255.74216-1-kylebot@openai.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -109,35 +104,31 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20261102072112.4160195-10-alexei.starovoitov@gmail.com>
+In-Reply-To: <20261030042255.74216-1-kylebot@openai.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Alexei, Chris,
+Hi Kyle,
 
-Thank you for the fix!
-
-On 02/11/2026 08:21, Alexei Starovoitov wrote:
-> From: Chris Mason <mason@kernel.org>
+On 30/10/2026 05:22, Kyle Zeng wrote:
+> mptcp_pm_nl_create_listen_socket() starts the TCP listener directly
+> instead of going through mptcp_listen(). It consequently misses setting
+> SOCK_RCU_FREE on the parent MPTCP socket.
 > 
-> With an sk_skb verdict prog, tcp_bpf_recvmsg_parser() copies data from the
-> psock. Then it calls __tcp_cleanup_rbuf() to calculate the receive window
-> and to send an ACK. The window and the ACK need a connection on the socket.
-> But tcp_disconnect() keeps the socket in the sockmap and the data on the
-> psock. For a TCP socket sock_map_redirect_allowed() rejects only
-> TCP_LISTEN. Thus the psock can also get data after tcp_disconnect().
+> tcp_child_process() can invoke the listener's subflow_data_ready()
+> callback without holding the MPTCP parent lock or a reference to the
+> parent. An authenticated MP_JOIN racing with endpoint teardown can
+> therefore access the parent after its last reference has been dropped.
+> The ADD_ADDR error path can also close an already published listener.
 > 
-> __tcp_select_window() divides by icsk_ack.rcv_mss, which can be 0 in
-> TCP_CLOSE. In TCP_SYN_SENT the new peer can get an ACK with the sequence
-> numbers of the old connection.
-> 
-> Call __tcp_cleanup_rbuf() only when tcp_can_send_ack() returns true.
-> recvmsg() returns the data as before. Move tcp_can_send_ack() from MPTCP to
-> tcp.h.
+> Set SOCK_RCU_FREE before __inet_listen_sk() publishes the TCP listener,
+> matching mptcp_listen(). This protects the parent on every subsequent
+> close path, including a failed endpoint addition.
+Thank you for the fix, it looks good to me!
 
-Good idea!
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+@Net maintainers: this patch can be applied in -net directly.
 
 Cheers,
 Matt
