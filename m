@@ -1,92 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.47
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793648198;
-	b=QAaNHzOAOsaWzvP0v4wJH8+CkGa8grJsnFw5W6c83Z4aFxQ9RA3S/agGQciWk4PKOlb1
-	 OBxTWvxugfO3X8NX0/dxNZjlXrUrQlnEHNmww83+Pl5nxdzgAIDtu9PHA5AS/8qrPCxEV
-	 vB2FplcfJrux505u8bypXbDOpYb08tAcpAUEVMv+/b+nt9UXSz8QJ1vfmGkaKjBehLiQv
-	 UNL7x2p1+bLKnGU1GOw4CPS7MB6ka2xjwA7BfaZuv9YLESJesN18/nJnKydmzjIrowGT+
-	 Sv8MjZbaZhGvO9lIJq5jdHEOBenCp2COFhZ4zUMD4Y12ZkJ7SQBx5QoLlg1HTlrY/uA==
+	t=1793650279;
+	b=HIEDQNUiETd3cvaeUZiklPth7IJMTNsQWrA2Cq2ZCU2dL5gWUFwDUi2XW7oFojx+if1D
+	 vda774IBg0kYGd5a/xijnx+b+V3T1trkXgAy6SHeFwef4AMVb5x9hHPMO9HOEU9nu885v
+	 UAF5TxSawpieNpv9AxHX/EEYPej3Vt6GASa3dpgC0MIt/2cm82G6uFKRXJXHcbid14/TG
+	 Nxc5eADcph0vYYufNBOODhJtzxO8wM/w9wOMpDBvdWav6qIIKw4HmQM+JenM8w4cS6J3K
+	 Kg97+b7BnExp6emwRXA5QrOv9dMpYBhaOYFRam2I4D1ltSPKM1i2X7zo/aF6FZ/bRcQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793648198;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793650279;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Date:From:To:Cc:
-	 Subject:User-Agent:References:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type;
-	bh=z+7iqYy4OkIb8W2YjxUcaoM9qADwsgWhehmQGnSdoNY=;
-	b=QaG8pVzcpdLco/UyKcG8E2PdKmhLdu7oCZjFH0ZEulzw+52m8UA9bwXfmmsds9aWu4mG
-	 TI32qm0PP4bJxCLa5UdQDebmvSbpcVzHbsVWFWV1VKeBCeWpw1jlfbfzJrpoLdeUc5rL7
-	 bUsaTuenCCvso7D2zwVtEy26qVWkjZPb6qpcHRQ0rOzVPteAMCBMe49aQnfL3p8v5VZCM
-	 xdlhui7WC6n5FPJ2XwxHlEye+i6iKYaQbtggJ8w0XF6Ef1oGqeyw6jLZ6yOJZTtbjqv/y
-	 +bRk+cVo7ujYO8hG0J3xnJ+cab4x3+G2RV32Wrxa4Ehe9Dy6yOPxk/1cXzP56uNGtMw==
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To;
+	bh=RcymY4D4UF/8ph33P0OPdwCWekGZodgPY8AEN9x8u9A=;
+	b=KIpmxv8RgYRuw7coEIixTPg4+tLEi7+hQTmOXmdj/lbjafXmjLTXeE7NVcR8ENcZVuMH
+	 W+aQBxTiPh1rAnHLQnQqNMbH4OfcZQDhquJXiv75Bade7hQkCBdTlkXjkkuFGNf5A4IEo
+	 X9brKBl1UsTvXECIagjwujmHmTHzz52DK2l90k1bvl9BFgO9FBMeqT4SsQDW7atWm4c/b
+	 jhT1cqQr/EgjhuVfrkRRfTUDm9WsMnchPCUs7oBxM3DybKmGQN0+dA0FOZ4w28EwJzEWU
+	 BIZV0SDQ6Jnkfot9mfqOue6yjgHUmpYdn5nmQ1ksb3AaVmxAk8SJOsvwZByqrjDcHtw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=k65se+Hf;
-	arc=none smtp.remote-ip=209.85.214.172
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Ft1i+nxM;
+	arc=none smtp.remote-ip=209.85.216.47
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738B5606A32D
-	for <mptcp@lists.linux.dev>; Mon,  2 Nov 2026 19:36:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 738B5606A32D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19DD606A327
+	for <mptcp@lists.linux.dev>; Mon,  2 Nov 2026 20:11:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A19DD606A327
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=k65se+Hf
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2e985106c0cso32104955ad.2
-        for <mptcp@lists.linux.dev>; Mon, 02 Nov 2026 11:36:38 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Ft1i+nxM
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3ab41538192so2814342a91.0
+        for <mptcp@lists.linux.dev>; Mon, 02 Nov 2026 12:11:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793648198; x=1794252998; darn=lists.linux.dev;
-        h=content-type:content-transfer-encoding:mime-version:message-id
-         :in-reply-to:references:user-agent:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=z+7iqYy4OkIb8W2YjxUcaoM9qADwsgWhehmQGnSdoNY=;
-        b=k65se+HfcTxqWijElxGKrVvovHStL0g2rGZBhCqKKTs8Y3oHjkqmlbqIyOWCPbLUI2
-         ifEdPLkdDVuEk8dSu2pX+c/I24O8NloNLJAJWh45iz5V3in6pDXZ8xqLRTWNUOuQdn+R
-         MYpFLTWtwz/EIMzQl4agPDhSHGpLRkhCZ9/t7LUfVCMD0JqaWkNlwOsJIx7uN+jN8kZ2
-         aZTDP9yKP+0XlEk0E2qgGaWgDb2EX10Tq5MlbsEY+eDMjFM092A+CDAN5xTyQWVLBUDg
-         FD7/Bvbg8szYVvjmT9VR8AMWB7RFi/PVu/KiGzIAcx+X9bQ0tBSQrzX2mnNlXrMOdlyR
-         xCEg==
+        d=gmail.com; s=20260707; t=1793650278; x=1794255078; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=RcymY4D4UF/8ph33P0OPdwCWekGZodgPY8AEN9x8u9A=;
+        b=Ft1i+nxMCOdCn21o912Z2OUOYG4sEWnQ/+OitELzrDZqQt9EP8sGxSJcwnQKJxixwu
+         TwbpSr+E3Hh+jy/GJUCEzljRT5O1Y4Vf2KkycDfKlZR3IzTe3rqbXrb3o0SSct0uuvfG
+         Eo180XvKDIaJATuFjjkjBqkbZMW3OGZgs6GJfy/vd8YxZfnDRZ4qzTU1WsDcNPO79xLq
+         MJE+A/YogZ4sBzmfC4Ywp4mto92S2Gt+yILfk42DzwfthlbPOn1TUz1clFXMfYoQrK/I
+         AUr4pxNg0TlixoFe6n9CA0XtQGKevLyYdbB3sQTWywMTeIkoyH0ur4J0fgXa7KNBGlUo
+         qkRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793648198; x=1794252998;
-        h=content-type:content-transfer-encoding:mime-version:message-id
-         :in-reply-to:references:user-agent:subject:cc:to:from:date:x-gm-gg
+        d=1e100.net; s=20260707; t=1793650278; x=1794255078;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=z+7iqYy4OkIb8W2YjxUcaoM9qADwsgWhehmQGnSdoNY=;
-        b=1DbwugzKrmPgw7wXv2IZXehbq4M5K+Eka/tQv5kgIBHLZt9u6N+/hMn7L3ua5Jn/Ry
-         VsZK117g6ii4sff8VjqFjN3tgCpuL4jRZvXzPFpX2LpCzxd09l/g4E5HjdfexAd13T3Z
-         uUIFyUUMqlhwDojrk1YkYMLjy+FkOs0oRJ5/fy69IXhgVMzdZw4c02CeBWcgZTpaM5AU
-         bEp/EMa3WTi7BQVQ0EiRGfXTbFy0coxQmtg10BJikX7RDl3MsjqJXDdHtGm5x3qA2kHC
-         dJG1HcuPrHLvrwTbNxD3piIxxcdmtk8gKUUd9z/j8+4XW1XzuvBlgLAgqaWsc0B6/JzK
-         RVsw==
-X-Gm-Message-State: APuU4Z8FdPvvcHW4SYfjhbqMsuribZQ3eHPNkNs/8Z2Vb36k11E5/Iyq
-	3y2s5NkwZldRAlAEj9YTtHUKLwmkqeBwBvJjGQY/ZpIUvvSwhrkp/Z0EYWEgvA==
-X-Gm-Gg: AYBFou0XHGuqDHipCg3EtGx2gQZ2tz5o8AEXLNLKt7ggGSk3MDSEsTGA8c/pG5SHUQb
-	dxp5l0DzTFzcuXADkPYIZEoLvqH75/oVu+Fv2/gXErfFbwAF59+TM18W6xMDbrezc5hjh7P7YQv
-	BqzpBcT/gMUF5z8jE1mSfqkGcMyp8oY7ihybse4wpQmfUQIICBck5nym/CsiQ04/wy8X+wBOiyS
-	Swxv0MYdkvMsOVdqFaHR8Mi2DwBSl9ISgTn5hxgAkNbHNP/PtmeIkcGSzH5Vw6p3HD0F8wY7nJ6
-	wCxKzXsTaggYXI3IXo83ywxK21lEfYXMCLZD0dMmY5mhZabNBb0fQIqicHO/ZUzU8Rzg/JgE1sm
-	R4my9wYXpjfjOHZP/ZoZFikZPzkWkS58XRj+8FBrVGmLfvQKnwySyCvgRSQUTYKA2B5PJI7uRCK
-	325Tb5ENBPaR54v77o0pl/7YWODIrXlASJato43rwUNUQqxQVC57SQ2+3aWA+3yDTjD12V9mgR4
-	6VmTL8fIbJlU3x334NHFYI0vlb/NfAJHCWOhq+/8DLvYKZ3e+qufPH2T7FlF4i9qILPyHBvhfuh
-	1TYp+9jz6BM1FFCHJFjj3eAk0I7Z244ZCB9qdfFBUgmyjPSOcytQwoIGkfJ3kolk61Qy
-X-Received: by 2002:a17:902:e5c1:b0:2d6:e9f3:9305 with SMTP id d9443c01a7336-2eb36414ef0mr104248555ad.5.1793648197830;
-        Mon, 02 Nov 2026 11:36:37 -0800 (PST)
-Received: from meli-email.org ([98.97.42.147])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eb392965fesm31536785ad.59.2026.11.02.11.36.36
+        bh=RcymY4D4UF/8ph33P0OPdwCWekGZodgPY8AEN9x8u9A=;
+        b=WCZl6O6KKxRnkJ5qCZXW2RI0Jp/eaIscZwyiy1ydRjY4bXT7y7k9hQ0tlWY+NSAMHD
+         O2j5g0piZTdAvmHB5ujvXdfZr/cCqi1rpMkm3DV3rmCVoq9nuIycjJFQiw0Wlii3LpiV
+         9/c2eC14SlP4TaWW9wdaYmGpR7DcF+OAKQ3JgC9vHELoNE5l23niZj5f+r4Kln/H8UzS
+         KiIBLBETqLpNocqpVJuj7M8mD0mwWd0kmU6b4un8aRDsNq0FyyWKwIadgw2nVPD6my6a
+         3Xtrr3flEFplEOwzZUnY2CarPXsMgO2WmfxmsHJIBWGKMHtQNyUH6zxa7NdXJ5YseO0P
+         2qAw==
+X-Forwarded-Encrypted: i=1; AKwUvByNEpYcKV4I8asPEjZyobkUF1L68G2nSZpViAhgQtaCMAT3PgVqu5mGAykm5/eJ71PKkAecTw==@lists.linux.dev
+X-Gm-Message-State: APuU4Z8RYsU6MRahZwMWeZNAfvFkPAbCcoxFqznxxqZ1Fvt/yfjdiRKV
+	aZ7+LrhBB+IVZpOczxYOF4jKP7Ud/v5MhkrNhQjohhuc9Ynx9GelYfMI
+X-Gm-Gg: AYBFou2W0CLDW/Foqb2zue0e9uGD/nGIgAhDtNgyxTqOcryDU/ItmG42f9XVuBOG/AZ
+	4iJ+lYUdJtmsrQg4moUOpVOHEiGRuJD3d7zIPjlopfttJx9ISYIEWu38yTBG3ZWS/OA1m16JKOV
+	u7S5Yzy7Qb+ICD+9yZYYJd0lhI2FKee23+lq6gAXFk1XNifed0Qiiydyor+XZy+Wj2AXp3FvFOh
+	OxyP4JPPqFBBPYaUMbnVAz+dT4zjFOZ7YZLwC9m9YzUqGJsCAh3u/BanRAfRwdMn4Jh3CDzZ7NO
+	PGRvo9K7SnmVSiGjv4bS3ty8AVGVcKkMomYb0ApNNT67PJuwED06prJb3j1EwYgQ6HBLfMFPn89
+	YrgNZB5ehaSutGRE7EctOwQjE65HbIC8gHrBnY7vl/EnVIjm0vsMQOD409vjuzLDtrg4f1twzKI
+	mEZBfH/SIBnkaUltwmUFiYU5WvdwbJPq/tBsPiUEbn5+Q8TuhHCQil4CoJubSJO4ysRsGWhKPne
+	HEfA5EOnwaKELSt/tpXBAmIGguGtOutzTglFCMoKMCS7/hSnYNvTBKdiz7/MwvahYscdj50xE33
+	i3DoB75RdlUVzA7pm5CZ8A0jL6QVdusorQ9qzVFOq3tg5EjOzCpg8NMXNR0pLq2+F9/TH4SbcMX
+	ujx0=
+X-Received: by 2002:a17:90b:2742:b0:3a4:b418:94cf with SMTP id 98e67ed59e1d1-3ae897158ddmr9622591a91.14.1793650277913;
+        Mon, 02 Nov 2026 12:11:17 -0800 (PST)
+Received: from john-p8 ([98.97.42.147])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b07c29e619sm780797a91.0.2026.11.02.12.11.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Nov 2026 11:36:36 -0800 (PST)
-Date: Mon, 02 Nov 2026 12:36:01 -0700
+        Mon, 02 Nov 2026 12:11:17 -0800 (PST)
+Date: Mon, 2 Nov 2026 12:11:15 -0800
 From: John Fastabend <john.fastabend@gmail.com>
-To: mptcp@lists.linux.dev, Alexei Starovoitov <alexei.starovoitov@gmail.com>, bpf@vger.kernel.org, netdev@vger.kernel.org
-Cc: daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com, memxor@gmail.com, john.fastabend@gmail.com, jakub@cloudflare.com, jiayuan.chen@linux.dev, davem@davemloft.net, edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, kuniyu@google.com, willemb@google.com, matttbe@kernel.org, mptcp@lists.linux.dev, mason@kernel.org, josef@toxicpanda.com
-Subject: Re: [PATCH bpf v2 07/15] bpf, sockmap: Check the target of an egress redirect before each send
-User-Agent: meli/0.9.0
-References: <20261102072112.4160195-1-alexei.starovoitov@gmail.com> <20261102072112.4160195-8-alexei.starovoitov@gmail.com>
-In-Reply-To: <20261102072112.4160195-8-alexei.starovoitov@gmail.com>
-Message-ID: <tnw3t0.mxmnzrgt0n6o@gmail.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: bpf@vger.kernel.org, netdev@vger.kernel.org, daniel@iogearbox.net, 
+	andrii@kernel.org, eddyz87@gmail.com, memxor@gmail.com, jakub@cloudflare.com, 
+	jiayuan.chen@linux.dev, davem@davemloft.net, edumazet@kernel.org, kuba@kernel.org, 
+	pabeni@redhat.com, horms@kernel.org, kuniyu@google.com, willemb@google.com, 
+	matttbe@kernel.org, mptcp@lists.linux.dev, mason@kernel.org, josef@toxicpanda.com
+Subject: Re: [PATCH bpf v2 00/15] bpf, sockmap: Fixes for verdicts,
+ redirects, corks and recvmsg()
+Message-ID: <aujuOJCs5zZyon2k@john-p8>
+References: <20261102072112.4160195-1-alexei.starovoitov@gmail.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -96,40 +101,28 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20261102072112.4160195-1-alexei.starovoitov@gmail.com>
 
-On Mon, 02 Nov 2026 00:21, Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
->From: Chris Mason <mason@kernel.org>
+On Mon, Nov 02, 2026 at 07:20:57AM +0000, Alexei Starovoitov wrote:
+>From: Alexei Starovoitov <ast@kernel.org>
 >
->tcp_sendmsg_locked() expects a caller that has the socket open. It uses
->sk->sk_socket and the wait queue sk->sk_wq. For an egress redirect of an
->sk_msg prog the sender calls it on the target without a reference to the
->target's file. Both pointers are NULL before accept() and after close().
->close() can occur while the sender sleeps. Then the kernel crashes.
+>These patches fix bugs in sockmap:
 >
->Fail the redirect when the target has no struct socket, or when the sender
->has to wait for the connection. The error is EINVAL. After close() it is
->EPIPE, as today. sk_stream_wait_connect() calls remove_wait_queue() without
->a test of SOCK_DEAD. sk_stream_wait_memory() has this test, but it can
->still use sk_wq after the sleep. This patch does not change that. The
->target can change while the sender sleeps there. Thus do both checks before
->each call of tcp_sendmsg_locked(). Clear MSG_FASTOPEN, so that the sender
->does not call the connect code of the target, which uses both pointers.
+>  patches  area
+>  -------  ----------------------------------------------------------------
+>  01       recvmsg() after a fault
+>  02-04    the verdict of an sk_msg prog and the return value of sendmsg()
+>  05       the backlog of a stopped psock
+>  06       TCP listeners
+>  07-08    the target of an egress redirect
+>  09       the TCP state in recvmsg()
+>  10-14    corks and the redirect target
+>  15       bpf_msg_push_data() and bpf_msg_pop_data()
 >
->Today the sender can send before accept() and waits in SYN_SENT. send()
->with MSG_FASTOPEN sends the data. Today it fails with EISCONN. When the
->redirect of a cork fails, send() returns success and the kernel drops the
->data, as today.
->
->The Fixes tags are for the two checks and for MSG_FASTOPEN, in this order.
->
+>8 of the patches are from Chris Mason and Josef Bacik.
+
+Thanks everyone lgtm. For the series.
 
 Reviewed-by: John Fastabend <john.fastabend@gmail.com>
-
->Fixes: 4f738adba30a ("bpf: create tcp_bpf_ulp allowing BPF to monitor socket TX/RX data")
->Fixes: b8b8315e39ff ("bpf, sockmap: Remove unhash handler for BPF sockmap usage")
->Fixes: c5c37af6ecad ("tcp: Convert do_tcp_sendpages() to use MSG_SPLICE_PAGES")
->Signed-off-by: Chris Mason <mason@kernel.org>
->Signed-off-by: Alexei Starovoitov <ast@kernel.org>
->---
