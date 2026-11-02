@@ -1,96 +1,92 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.161.41
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.48
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793645723;
-	b=0aL6KqXn0xYxJfFrp+7ja63oAs38aC2l8Cvo3VaHWsm0sHiKKmElLu1rb/0L/KRn9lSe
-	 spzBj/YsNRWoV4+loHXAxnwdWjVHbgr1LPNsCGCzdTENwlWryA90KFQ4lt9wvvPrfrYKl
-	 BrbW3+QMf8ISjrDpuX157V3cp8kBbaDLjaQskoGSLPwWKKMgF1fLBOdhefkFvXsLShAWR
-	 sJdsPMaRTDlz2ejqFSHWhMhXZw0s4w1FZwa/IE4uJodV0BGmJ5EDGoAmG3Hc0wUOTk2Cq
-	 Ie6nqM9d6oyoPmVT/Z/i/kQisBY5Q/Q4J0Gdee7xqHN1uzJn2ozF9mTc8LgUAZGRSyA==
+	t=1793646795;
+	b=jfOygm7FyZ6Urg+71hMYGuyv8+b9g2weWS80qtdrPO5gSGdH0RpEpyH1KejgbYcsfund
+	 wRAAH1BsV2Wou1Ioxdb95IQiH9QNOYkf43IXjXl8X7cVE5oDIB/TTKIJa4xb2UacAp1Dc
+	 NbnO/Xuw96Uhl7ggIPryrdTk9okW1WwYJ1im95b34JQbx5U7j7qAVok8GewgZ1SpqlEFl
+	 J1o4a1faoiV3PMNYN6f7s8H6fZUdol2lUgdmrW/I1xyRHpbHRNr+GY27We5u+6rf3WSnr
+	 aeCTng4dIPDA+ldJB8j/frTvbi99nQ21o9r6pBzsJYNvlNU/tPHk4Q+U7eDeYDOeSZA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793645723;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793646795;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
-	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
-	 Date:MIME-Version:Content-Type;
-	bh=jXgdxgZW3NnuPU9D4V+upsxH1fMo94PDUzgnUW34sDY=;
-	b=SuqtBz/1PlCgpSkISkIcDHaMc0nBkOrsLJxg6M1qpxo2yMlxITGh7HTqajY9QlZtQPv3
-	 /Sokp9OAefytQEIyaPG9wMbdxnYdS1eQTft3Amc0SQQS50NsuVkqNvs01/EXVAok+zgkC
-	 99dV7WUjIYbpmJxfODaFe1ioSKUEo9obyChC8BsJv5lw+CXJ0/OcXX9bCg3csFMwiv9U2
-	 TySO4sv6eb3s37hb6WjswFhRErsU3DmTm3GYVjvWyK6cYsZDNkAT5tmuz6UENw1WmIINL
-	 zbdOAQE77HIBUz/+Bro5D4jXpi2vVs+39+VnPhrrUBzcNKq5N8xH9OrmU4caRg3tcJQ==
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Date:From:To:Cc:
+	 Subject:User-Agent:References:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type;
+	bh=qWSc3wxeA0aUeT06xpUv57ACRWiYfD6BXLwXzl7b/xU=;
+	b=0DNE8QLBHwOcslKhi1M11Yl45HO66NXx05EO1N9OFxMxfXFe6B0Z3av/3FYL090n3+OB
+	 4dWzYkbGewuls7IqftbeY87x42gRhZKdCUpnJF10yrkbUjQIKJZMm0cWhp5boc6XK3979
+	 V5ZoAjObearhyoK3hit30Yxrv4bt9FGCClkRtKqd9+Ee2yrhcIgAZewHa60XUCasvnBfY
+	 dwy0SrGZ4lJGlpJD3qkNeVxeA7Ws9lrEs5ePrpOmDmg3iUEXPS2TnVjuDPy/8V0cHkc9Y
+	 iQwcTyXDxBJjnseDoy4WFFBXGMKd1CJDg40PqYdLA25Yc23STJ9seqfAC92RR26x7GA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=D55CGCSm;
-	arc=none smtp.remote-ip=209.85.161.41
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=0PlNE3Tu;
+	arc=none smtp.remote-ip=209.85.216.48
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66236606A33E
-	for <mptcp@lists.linux.dev>; Mon,  2 Nov 2026 18:55:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 66236606A33E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6A0606A326
+	for <mptcp@lists.linux.dev>; Mon,  2 Nov 2026 19:13:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CB6A0606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=D55CGCSm
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-6de2f213b7aso1448014eaf.0
-        for <mptcp@lists.linux.dev>; Mon, 02 Nov 2026 10:55:23 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=0PlNE3Tu
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3ab2cb8d577so2450174a91.1
+        for <mptcp@lists.linux.dev>; Mon, 02 Nov 2026 11:13:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793645722; x=1794250522; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=jXgdxgZW3NnuPU9D4V+upsxH1fMo94PDUzgnUW34sDY=;
-        b=D55CGCSmfoiBXqapSY6KS6KldU5IW/elpqOc8/J6EEAvBiV2y0tOvBhs/PZJn6s1Jq
-         VzhDpCMnrjuQKTN/hoxlw9AWLrDTX5QKM1Vzx5fDqsJS77DEFB4J6VKUpZnZ2vkd7L4I
-         cJTFKuZqMs7VR2WI8wQ28iHnNzAGL++r/5o0TAiKe1TdguVir2OZm/e0BDU0oc2hoJLX
-         RQU8J2O82u6NPmJ56D/r1S4doKTfGWUMCAfzrVTRUQYrfM1lj4G7Cw0yrL2KtmJ+6HBS
-         hg0XZ//VzD2kKy06wVUM0TpUq0OfYkQIljhhSStZ2pUJduipyWkpQhsfxBkHsvtbNJXj
-         B6ew==
+        d=gmail.com; s=20260707; t=1793646794; x=1794251594; darn=lists.linux.dev;
+        h=content-type:content-transfer-encoding:mime-version:message-id
+         :in-reply-to:references:user-agent:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=qWSc3wxeA0aUeT06xpUv57ACRWiYfD6BXLwXzl7b/xU=;
+        b=0PlNE3TutdnACV0ujyavEIOskBq5QcZPWYhEfm55qjw7zwYAlGuCaD2Cu3c1JqAD2V
+         3QmHyYWACcWVHL7v0Q5OosRxQUVkWGwAxeEfCqPSle44v7qnpsuWClR6GZO0DfwcX0kH
+         jA7zE49uHtzMvw/OML6owgB4FGBG3527Z8+4oV/eDEOYHNYS5O+7WXmMAWzfOXDx+B76
+         WmDCITUUrTVcXBb/tZr3iWMxJ7iKGHCSiL/RgV1DVOPfJLPcuFQPK7NuKb9Alq540Mhi
+         3cAQ6/IEq8XGR84xr5rK4ZBxYbQMUHq8KQnnJiGCzZVbTJ+tXo1eotJaHirWzHIFyc0v
+         IezQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793645722; x=1794250522;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+        d=1e100.net; s=20260707; t=1793646794; x=1794251594;
+        h=content-type:content-transfer-encoding:mime-version:message-id
+         :in-reply-to:references:user-agent:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=jXgdxgZW3NnuPU9D4V+upsxH1fMo94PDUzgnUW34sDY=;
-        b=esv37U6IEj1lCvODH4CKD9posHBqIXfV9uwX2ocZgVKqOZExMxnqpkhdwbKWKoK8if
-         WvhfIqN+aqtKsCiO1T8ZU0YYc3Z49yKBkEz64LtBbGsRPVpRMjm6rp+zPrF5Tmeom/q+
-         eJ6myWzXKQXdxsk9A9m8VVo388XakVIsHUS9Sir03izWV2J4m+q5h3bpHBwu3qQlySmV
-         IFFzbjXfwP7Z/UDW1JzubID0pGL6lfF/4Y49oXB5kz+oLcwdJvuSIPIFPwC5vbKFc4e8
-         gm6ucidDr3ZjCj0rU0BcFKY8wD1kTvmiBGMXL9L9WWhUIbmgc6KBz7v5no5x5c7X3N8p
-         21Ow==
-X-Gm-Message-State: AFq9FYK0Jr+aUIAzlHEWgf3AIq1jjBaa9/DZKE0FScSzSzWaVFuLwf6V
-	7BvEhEFvR8V6uXQIxDMsjzkIhmCwKVzocW0tcLoJzIpMz++DFtfJkMo=
-X-Gm-Gg: AYBFou3pg0Vm55ALKt3vj72QcToBeX1PjUFUie19Evc00k4Q+5UPnh68IJk1HxBU6Wy
-	AujVdQfvtPYEasWnwAxtPQIIH48EADerNsy5sCNw6WgoNgro/tj3+dci2/91+RP/A6tK728FmC/
-	m0o7zeJm8LU9XB2p2I0ks4zDKGMKTMjzTrNy2vrQdTFa9A00ZjnR0xGCRAR29iJLoYrgVNXA06+
-	DdwWkTNbuai8mDNjlF0YC1qV+WDbuZHpL5IEP3OVw8LjQuqshWgDbCHtEEDGwpY3W9h1xHLipFj
-	mOcxPUsLcfeUxlosru536fHVTkckudbEE64MYjJQ6g/kthI15mc7rn8wbsHix/FQzoLYnBNw5Nv
-	c5xIqMSPyx6/DyBEEeO+STDSwEVtV8TTI6DZfsvzmOU1XPTb1JPB5jay3MdwfbWeNhYfZv3MBWG
-	GKtdGBeOqVKvoY/x9Ufxr4sRckBz30kFIavpM/fZZYTzF0b6X2Pma959rsdtjGbTWq3swAxnwFU
-	WEfcwDgAlM5qTMNAo2TjB3YuzpTzO4j0Cr6OscSUD35XNhCfG2YJ7frPmdrffCrIxMw4gy4xlVh
-	gTTeD+HppgjB0B4SOW8zWPnoaU3ynF2LRWpcReVmgxC/
-X-Received: by 2002:a05:6820:3401:20b0:70e:2878:8d7f with SMTP id 006d021491bc7-714f2ae690bmr4148883eaf.90.1793645722333;
-        Mon, 02 Nov 2026 10:55:22 -0800 (PST)
-Received: from github.com ([52.165.251.240])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4a921a80881sm7847472fac.17.2026.11.02.10.55.21
+        bh=qWSc3wxeA0aUeT06xpUv57ACRWiYfD6BXLwXzl7b/xU=;
+        b=YVrCnpbfwfdDpt7c3BGalohZA0e13kRLuBZS59yGhdU4jtlB5WiYWoxYyfNb0yfWti
+         Ll0nk83S+zslyFqOyAvFJVay+FrQV5OrAFj/NFHVu1UnlFGtr8MNsAOW6SOWEofEJOd6
+         fE8hx315/bFjY6eNPI5jaoOAFFLlZPEpjJ/ngHYQzpTziN6+0mI71rWkzEFCx0ThhHNP
+         D+9AYAzzKgfJJypsd06McM7Z1mc77SHC1TrQ2JYhOCaHa3nG9ChPCNytEGPi1oy3oiV6
+         AzXE0j41wi37SS622bi5BVBMGPib5fcUssgGROBgLfAVLnW6GAu3gLuDgkwMWM1CY3hR
+         O7Tg==
+X-Gm-Message-State: APuU4Z89QuZHlakdl3APrKS0xHfvvEwi/EsGuaUhFatSt51gul6Jxo91
+	s5bM/r+AxF54bfMR23nLUuYYHhCI1/FHI9ikpooXMezyhYPsa24P4V0boWjmpw==
+X-Gm-Gg: AYBFou26p715a2skNb2yV8Yn/ZcwptiWSSNjn8rqHpsjwFTasQJjtikjqEVPc0Nf90b
+	XlyL0rShimugrpXvsGvUSnaA3hjS9rN2Y1ppvST5dL2ksxiu/wl6/VBbxhpzj/rtghPy+6fvxaU
+	ebPXXaTmEK+2YXY5ZXZxnRbb1AxGD7471JiyXd+LCiAAdtrrPksB1SfYAwL7T7rPWuQQv3n/oEg
+	Q+tA9KgutPO62Ab1JmqT6wbJBA3RE2X44Tkt6VKhTlhcov7G61YmOAx1Sxop0YkMF34NcavZI4m
+	KA/g+GDUbaCpGi8TM1OgWyIrwscVDSF2JRt3aMi0djY4tMaxdilhjBNNuFRbuzpPT/Bvc51wKcr
+	j3B/gCTK9hos+dDXbbWkpi2i/pS6pnK7BCDYQeBvDnxhkhCZwWp+LFN03Yy6z9AhFeiVTlqIDQW
+	fMQuD1SUZ12UwlXuccrK/VlU6tr3aDsilgAXSSd/23MUWUED1uMBgnL1cVsyvdrQm0jVd5gPZQ7
+	BP8DRjHM2n5D66fLyGLByYW1PFxhYeb0Pudh5Tni9c1rOA5YDA65IuZrE/Vchj60x78WfJFAsSx
+	csux+ldeCnlwVJezLCu4afZS4lsiktB0xJt8Cz7kx2769HtdGpY+UqYVBaudkKLJlu3O
+X-Received: by 2002:a17:90b:3d4b:b0:3ad:eb4c:26fb with SMTP id 98e67ed59e1d1-3ae897c87acmr9116933a91.23.1793646794112;
+        Mon, 02 Nov 2026 11:13:14 -0800 (PST)
+Received: from meli-email.org ([98.97.42.147])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b07c7dea24sm451194a91.5.2026.11.02.11.13.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Nov 2026 10:55:21 -0800 (PST)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20261102-mptcp-bpf-kf-iter-ret-indep-v1-1-dd262e520168@kernel.org>
-References:
- <20261102-mptcp-bpf-kf-iter-ret-indep-v1-1-dd262e520168@kernel.org>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_mptcp-next=5D_Squash_to_?=
- =?UTF-8?Q?=22bpf=3A_Add_mptcp=5Fsubflow_bpf=5Fiter?= =?UTF-8?Q?=22?=
-Message-ID: <541c3ce7-6d2f-db7a-1735-64746badfef1@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 02 Nov 2026 18:55:20 +0000
+        Mon, 02 Nov 2026 11:13:13 -0800 (PST)
+Date: Mon, 02 Nov 2026 12:12:46 -0700
+From: John Fastabend <john.fastabend@gmail.com>
+To: mptcp@lists.linux.dev, Alexei Starovoitov <alexei.starovoitov@gmail.com>, bpf@vger.kernel.org, netdev@vger.kernel.org
+Cc: daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com, memxor@gmail.com, john.fastabend@gmail.com, jakub@cloudflare.com, jiayuan.chen@linux.dev, davem@davemloft.net, edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, kuniyu@google.com, willemb@google.com, matttbe@kernel.org, mptcp@lists.linux.dev, mason@kernel.org, josef@toxicpanda.com
+Subject: Re: [PATCH bpf v2 04/15] bpf, sockmap: Subtract all dropped bytes from the return value
+User-Agent: meli/0.9.0
+References: <20261102072112.4160195-1-alexei.starovoitov@gmail.com> <20261102072112.4160195-5-alexei.starovoitov@gmail.com>
+In-Reply-To: <20261102072112.4160195-5-alexei.starovoitov@gmail.com>
+Message-ID: <tnw2q0.1tgt7zq8oeb0@gmail.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -100,59 +96,25 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
 
-Hi Matthieu,
+On Mon, 02 Nov 2026 00:21, Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+>From: Alexei Starovoitov <ast@kernel.org>
+>
+>When an sk_msg prog returns SK_DROP, tcp_bpf_send_verdict() frees the full
+>message. It then subtracts tosend bytes from *copied, the return value of
+>sendmsg(). But tosend is the number of bytes that the verdict applies to.
+>After bpf_msg_apply_bytes() tosend can be less than the message size. Then
+>sendmsg() reports dropped bytes as sent.
+>
+>Subtract the number of bytes that sk_msg_free() frees. After an error the
+>SK_PASS branch already does this. The SK_REDIRECT branch does the same if
+>the message is not the cork. Nothing changes when tosend is equal to the
+>message size. Otherwise sendmsg() now returns -EACCES if it sends nothing.
+>
+>Fixes: ca70b8baf2bd ("tcp_bpf: Fix the sk_mem_uncharge logic in tcp_bpf_sendmsg")
+>Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+>---
 
-Thank you for your modifications, that's great!
-
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Perf: Unstable: 1 failed test(s): error:sched-weak-secondary =
-=E2=9A=A0=EF=B8=8F=20
-- Task: https://github.com/multipath-tcp/mptcp_net-ne=
-xt/actions/runs/41489872178
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/b0837827f3=
-d4
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1199267
-
-
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Reviewed-by: John Fastabend <john.fastabend@gmail.com>
