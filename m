@@ -1,85 +1,85 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.43
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793604163;
-	b=e+ULwiuooavXwM8MY0k/sxziiTnzbqeFgkdGDQLnWn+iUzOloQzBIBQsxwDdeZoJW/14
-	 rJVSFU7EVHGVz1P+/vXm6rZdtnIlrYfrowUlyB5Q7xpwyQcco+6bmpQMIENy1bHTccXFP
-	 BPHI/v/0dbCTrgCnlYKqYXAMaj4tjhLklMTUuuh/+xl0Z9fpmP76UeQCzu9QMbO/tK8Ay
-	 7vOTdlMHf/8y3rhnJW4+AcrlNmKwEFmMpfVGb6F976YzGyhxTa3qoUhuEhLYjMNukbxtf
-	 /xEUptS5akPPx/ld/tLfbeX+IcFaeKxszmIymKkM0Lo/FoEj5s6lKtrHWT6/5KxJBUQ==
+	t=1793604170;
+	b=kmlIQtUsCtr1XctDjOHG5eqkvcAcKAkftgLW3sHggloM2dd/mOOXuBDhvAyJsnkfmGUb
+	 4yiQuX6bvv1nfMOHdnaBwTOSYBcPaQAV8APqY2RnwLcOtoBboHFxOKp0p8DviNTOLtkc5
+	 frEVMofihoF4JwY2aGY4nKNDGfIlserbWCTsEQDJ68rngl0NNJ6mnglwRNbjcKi6JRQVy
+	 lhO4sYfnsGrNp+xx9ru84dtj8Jlg7PXRRuz2CsgAiSG11Ezx1Lsy+eJLxAhmPFhP0L7SV
+	 XD5qXtgm8Uppc/jYPQo3TYDln9sGp5vl+wIogFBPZJW8ZOW6JtS3frgbBgt+otLZm+A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793604163;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793604170;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=kV0Z1USHTSrdHd41dgedNKXyUstH61hWM+CBeGfT+gI=;
-	b=P/COVGt5VxnuMOvuNuicTsHhJ/P7DToIpQwzlTTGr0XWbP6A+FtvnW1waCtqe49gL00A
-	 Z7gM1D6Bx11ivFwM86JHiDAFlkWRgCTz3CvwAW1bovEHWUyBMa4xHOA4b5feqetryCznB
-	 Axr8jj5kg5SVlnU/0xGef2GiMtHtED3b1Qd4T3eqiPULpslixbaFEQGD7HQFTcHnAPVLg
-	 eNpujlExUUb6A6FolIe81eqtbhli98mVSRzguE5O+UfyD7qAoxE2exSt8KZ1SziKwlywN
-	 ztmoLUaxY0hK9ZGcZMdGRJuPOwcHYo+YoE9dBP24kvYMi+3MyKZ7rC10Do4iSpiQhVA==
+	bh=NDzvE7/RY4XbRl2y4tH5HHBBw1sRz/QLmpS0WsHMYoQ=;
+	b=oG5y4f2Bw9SZn2qdrJ0AuiGrL61TeeslVi69xJ3HZ45PmtHRDTm4zxpZvQEEDez/Wpi/
+	 z1y5r3y/EXZHu5DYYZDToYCtJfVeO0wm7kA9G5ulo7ROgW/Vsq4YW2BU4+QJC9iuERV7i
+	 uhbfdN3rnpp8E+tNlOyzid3sbba4gQyaSOgc9IKQBxd6Z/ZnvI5tjaRyngfwc2xFupglq
+	 gpCOzdg3JyH+dLzgYOu4z4f00rvju9mAZECkNqX4NAbs0SitvV8CXATLI9vh4qogikDzv
+	 uMu7dJ8S++oORnBlLNV/xWo3E2EI7C1EXpsO6FwYaxwJj90xL/9DHHAFWjLr6QIEjPA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=VRZcfMop;
-	arc=none smtp.remote-ip=209.85.216.52
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=cGYcF6rC;
+	arc=none smtp.remote-ip=209.85.216.43
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F8F606A32C
-	for <mptcp@lists.linux.dev>; Mon,  2 Nov 2026 07:22:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C6F8F606A32C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA695606A33D
+	for <mptcp@lists.linux.dev>; Mon,  2 Nov 2026 07:22:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AA695606A33D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=VRZcfMop
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3acb11973c3so2018393a91.3
-        for <mptcp@lists.linux.dev>; Sun, 01 Nov 2026 23:22:42 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=cGYcF6rC
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-3adf5f6833cso1355716a91.0
+        for <mptcp@lists.linux.dev>; Sun, 01 Nov 2026 23:22:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793604162; x=1794208962; darn=lists.linux.dev;
+        d=gmail.com; s=20260707; t=1793604169; x=1794208969; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=kV0Z1USHTSrdHd41dgedNKXyUstH61hWM+CBeGfT+gI=;
-        b=VRZcfMopDc7vfyx9Yh1khBVtutR5PE0gvFGIL45QRN54J48VZCgEgPuNsE1jaikjGb
-         pKjwnWIH/jS9vcayZ94RjYj4dUL0w2u+NVmnflea0645ZUYupXlZ3V1C0zJ7ty5V5DEN
-         MGH2JHRIm84SJKzGyl8+c/qfji4uvJVL43NsP87ZoJtdE5mt1upghVp6BhnXRkAYHqs5
-         DAJc1C+Vx48/Q3doKBnRV61mGvwFgAp1W2Fc/odHrNEtHMu2BDB6szO/Ppn7gZcNzqDf
-         M9exvaECxA4uQxhY2ovAN6z2sFtyi5QbYo2C3enzNELaDyhko7omBn9hdGED3xite+UT
-         IfqA==
+        bh=NDzvE7/RY4XbRl2y4tH5HHBBw1sRz/QLmpS0WsHMYoQ=;
+        b=cGYcF6rCoqAOr95SFSknGxluRI/zYLdOnhWcDnYCkGD/cSEuSzJ/KIRBp57t1zvz35
+         xcc1DuaJMPgHjeFzipVidNRUBg9ouLb8rYMALS5YFVijTyDclshkI1R+8qYv8pW+fPsI
+         LVl3i+dRH6LZOPchAr4MDtm6FqAgL7HaB4mc0ePp1UyIIXozyha/dUgrDvPbuk2yDTp5
+         EuQj/KZACIi1XP0XphENXcNiaetIOsv7arMHxVUPcn4fRabAHvYwc7uqAu4nvih82ur8
+         m7bqDR3X+g7MTcLn42El/00xPdOQE9HKavSI1Oe0WylkpxypiLmSijN3cpQxQ9WlPFfl
+         /yiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793604162; x=1794208962;
+        d=1e100.net; s=20260707; t=1793604169; x=1794208969;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=kV0Z1USHTSrdHd41dgedNKXyUstH61hWM+CBeGfT+gI=;
-        b=ihDE+oL3/DxJ8p04bjV/dbIBbsJTi5JCcHoOQvWEPCszF/HJh9V4U8Ef1OQ/+wWm+R
-         oubRObYhtzm+7RlLk68qHBMFthAm/vX8Voc0vEUlCDee6YkaqWphk74j0ZRobis/UYS/
-         zX2FR5lnGMlTmNuULsWKJjUs6thgZaLyZ1IQuzbNnTBvy3T+cCMh27ucLuTBmHXY9qSl
-         foD08Oc9uv6WElPDeUpwEYSXkIMafBITpURVqMKWkLQ7R6hL0FoeduNBscPCsq6m/ezB
-         3F++rxTsGpU451vNGOacwkPhV3Ly3dkZzE0SqgGW2EIjHYVai+KiJdd6EOxHqe3sxLyA
-         0Ncg==
-X-Forwarded-Encrypted: i=1; AKwUvBxycQjku9/H/BW7JWxDPyCDqT1VdH20SedfsI7Ybb8U4L7/FuhIa56302deGCmr61+633dgKg==@lists.linux.dev
-X-Gm-Message-State: APuU4Z9D8yIp7WHm2PbpfsqMxJ5axKpSM7a3xX0s4jKvj8WlWYCMMCX2
-	qaWcofF/sFckgm12Md8bRDdEJa0Gp0FsIJ+KbGAU/YXUz6cr/v4tklhz
-X-Gm-Gg: AYBFou0pgnM2m8B0qcKjEOHDcNCAOhMmnjYL/c6S8y6vTODqtB06tF9tN1sGxsX0Eq7
-	hsZ/xYU1jVaPdmQM9VXjanYxU8X9Fcids07lSV/72xRvhWoyXI8knmH/7b72I9bOEdqReX78Rcr
-	HkAcFaPT6xwekefltfBJ9ZnhffskoRQQK4sghQsfZgJY7Df3OON7vp9sLcUdpBqMw+Ya6kTKKOL
-	8yIDn/CJlz7VtQ9DfGfuwPm47cKyYODug6bRzzVDqwWncR9p7PNcuK3CBjdNTdIt1CdTNCWBEzj
-	MNzjNoipGSyEPweFv8wyjdV58GqOiUwwbbk4IiiVnhNvna57VvV4mRzUqfCqHJjMRsiLvJqisSm
-	si9/hYgqFbO9pnVWEp7K1sR4Xn/6Qu2fwCyKXLO9JOvnw5xEzCp0HfIVY3Ib9UkQmual4J0Q6wm
-	CkOZxy6deKSC+kcObtSmPHh9pMbOau2dKX2+/otO233N32RED0KBeLL42f33poXE2Vsf9B164y0
-	dSJW3JCuqyNXFuOTacsvKpou/NBfMd0hz1XdOIeDBZJ0WNmNHlpgYWK7vxNkuJjapEvvu0BGHdU
-	120nV8yTNH5OpT3qia6vs5xhfzWokfevn7Ax6SJ8x1Qo/Hdp9tb2wFpdM5sAD334og+JSWz0v5+
-	kxVEprDuwVjTcG5RwsGmBlKjZp+eS4Ns8N6Qyo0STpS25G6/4s6UmhoHnSg7HCWWvmWMAZTZ/Og
-	==
-X-Received: by 2002:a17:90a:d2ce:b0:3ac:9176:e83c with SMTP id 98e67ed59e1d1-3ae89720616mr8312885a91.12.1793604162098;
-        Sun, 01 Nov 2026 23:22:42 -0800 (PST)
-Received: from coder-ast-ast-dev-ml-0.tail2dda0.ts.net ([153.61.198.242])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ae845df666sm13045987a91.14.2026.11.01.23.22.40
+        bh=NDzvE7/RY4XbRl2y4tH5HHBBw1sRz/QLmpS0WsHMYoQ=;
+        b=RGR7k0SuTp+VS7r4q/lq8ZfX6/PWqfyxA2o1m+lwtvX8SaVBSpcEtljhd7grHLXD/B
+         EYex30bQAStuTMgnfAvXqpJSw3JMfdDq7iPqYNZLnE1lbJ/aphNA3D4XBbmhZGHu1co8
+         i7QFKlhdmBDUP7pX2uVSTAKgfpQ3FFPJeOSZT9a6148GFyVFO9/j0l2WOG2L7vQgkoKE
+         Zp+hF1yJCnZ4uMlUpA7VaTPDHRr5U21YdW+xZBeVqcNpkbtTpw2doc50fulsvWB+HGeX
+         c9sv1IbmenkuLaTq2HeTSh+0WPnH7hDcEIqzRlaCks6ddn6WklBU7AaLEdoGLH/KmfSh
+         uWEQ==
+X-Forwarded-Encrypted: i=1; AKwUvBz6oHm0cnTFuzYpbPFvTfz2K1Q4fB0LU+FL+Mm6vCJnK+/AyTNMAadH8lL0jxBbveIDK5y4BA==@lists.linux.dev
+X-Gm-Message-State: APuU4Z+yzf9Pwknx+duegaMh9U4TDh6qIb/YWjRFx78Tl27ztRav3Ht/
+	H1pcXWT60QB//MYmsC9sYn0a7DvdxU/WUvoQRzY6hGzELojnLouEOCaI
+X-Gm-Gg: AYBFou3JJPbI+r1FPDyUDDfSCd5xvihoS9YGIHNhQxoUgYhOylf/OGiUfjxt0Ace+RF
+	lO9BzoH6l9LvurbydFNZbfRUQZJyDEfqMt48CzNVaM05KG8dm9l8BuyeNxWLzOZPKYvj1TzS7oU
+	yKSs99+U35OpajiTSvajSGFK1jow8YhXiH0YOfQE4rNonaEpHIk+TdpvkOmmOel8HCZkeagcDud
+	KMQoEAWpJ0qHdHxkxbjijo1IWX/5QQh0Vk3iPNXty2pf5ftklRbfgW6BHZA36Dnf2ZPvkVijVUm
+	TGvt8dZ2QrdlZ3B3XTq+g+3uIFT3M/7HGEavuI6HwZAywBRTsUJY1tB+72Sql+offjzRFUZ5NrO
+	+V6w5TFkn9OmHbn45+iCv60vaEW/gpABI/4AS4hO7c46NOElPWlJrTMqhhcbXCn7xN5mYCew3Mq
+	EbQ1pjc/LBcuds/U5tR6w5rBxYHs8rztvI87hUfqSwiAxmNVpRcUcYAu8vto/ow+6RUmZZLhs/O
+	RiReuMqS0PoKdiY0fwkcna4+2oWqCdy149x2SfV614XdFn+OyvLvNYFc7QNV1vdHEDBlriGYTQx
+	PFldhp9EwPJKDisawLoKj4wTJJ83eQM1tyVWnzc87NevvrlAHBbxorFAVjJs5pFSTwJEBaOVhFN
+	72+e3VuQB1BQE5vFHpxIYfhkIoW4pL+5tGuLbbZczNhtf+lyN+sqCI29pUiqTJ9/aFFk+bcyxY0
+	c=
+X-Received: by 2002:a17:90a:e187:b0:3ac:77c8:ac29 with SMTP id 98e67ed59e1d1-3ae896f862emr6963704a91.15.1793604168982;
+        Sun, 01 Nov 2026 23:22:48 -0800 (PST)
+Received: from coder-ast-ast-dev-ml-0.tail2dda0.ts.net ([153.61.198.240])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3aec233ba08sm3293330a91.0.2026.11.01.23.22.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Nov 2026 23:22:41 -0800 (PST)
+        Sun, 01 Nov 2026 23:22:48 -0800 (PST)
 From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
 To: bpf@vger.kernel.org,
 	netdev@vger.kernel.org
@@ -101,9 +101,9 @@ Cc: daniel@iogearbox.net,
 	mptcp@lists.linux.dev,
 	mason@kernel.org,
 	josef@toxicpanda.com
-Subject: [PATCH bpf v2 13/15] bpf, sockmap: Check that the redirected message is the cork
-Date: Mon,  2 Nov 2026 07:21:10 +0000
-Message-ID: <20261102072112.4160195-14-alexei.starovoitov@gmail.com>
+Subject: [PATCH bpf v2 14/15] bpf, sockmap: Keep the rest of the cork after a redirect
+Date: Mon,  2 Nov 2026 07:21:11 +0000
+Message-ID: <20261102072112.4160195-15-alexei.starovoitov@gmail.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261102072112.4160195-1-alexei.starovoitov@gmail.com>
 References: <20261102072112.4160195-1-alexei.starovoitov@gmail.com>
@@ -120,43 +120,46 @@ Content-Transfer-Encoding: 8bit
 
 From: Alexei Starovoitov <ast@kernel.org>
 
-In tcp_bpf_send_verdict(), msg is psock->cork or the sk_msg on the stack of
-tcp_bpf_sendmsg(). If psock->cork is not NULL, the SK_REDIRECT branch sets
-it to NULL before release_sock() and calls kfree(msg) after the redirect.
-Thus the branch assumes that a cork is msg.
+After bpf_msg_apply_bytes() a verdict can apply to a part of the message.
+Then tcp_bpf_send_verdict() sends this part and goes to more_data, and the
+sk_msg prog runs on the rest. The SK_REDIRECT branch does not go there if
+the message is the cork. It removes the cork from the psock before it
+releases the socket lock. After the redirect it frees the cork together
+with the rest. Thus the rest is lost, and sendmsg() reports it as sent.
 
-This is not true after release_sock(), because a second sender on the same
-socket can make a cork. The first sender can run the branch again, and then
-psock->cork is not its msg. Nobody sends or frees the cork of the second
-sender. kfree() gets the sk_msg on the stack, and the kernel crashes.
+If bytes remain after the redirect, put the cork back into the psock. Then
+the prog runs on the rest, as after SK_PASS. If the new verdict is SK_DROP
+or the push fails, sendmsg() now returns a smaller value or the error.
 
-Compare psock->cork with msg. Nothing changes for one sender, because
-psock->cork is then NULL or msg. The other branches do not change, and a
-cork is still not safe for two senders on one socket.
+msg->cork_bytes keeps its value, thus the rest can stay in the cork. If the
+psock has a new cork after lock_sock(), the kernel still frees the rest. If
+the redirect of a cork fails, sendmsg() still returns success and frees it.
 
 Fixes: 4f738adba30a ("bpf: create tcp_bpf_ulp allowing BPF to monitor socket TX/RX data")
 Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 ---
- net/ipv4/tcp_bpf.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ net/ipv4/tcp_bpf.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-index d8e29b09818c..b1071b0960cf 100644
+index b1071b0960cf..788ce08eef4d 100644
 --- a/net/ipv4/tcp_bpf.c
 +++ b/net/ipv4/tcp_bpf.c
-@@ -517,7 +517,11 @@ static int tcp_bpf_send_verdict(struct sock *sk, struct sk_psock *psock,
- 			psock->eval = __SK_NONE;
- 			psock->sk_redir = NULL;
+@@ -544,6 +544,14 @@ static int tcp_bpf_send_verdict(struct sock *sk, struct sk_psock *psock,
+ 			if (!cork)
+ 				*copied -= free;
  		}
--		if (psock->cork) {
 +		/*
-+		 * Another thread can make a cork while this one sends msg
-+		 * without the socket lock. Leave that cork alone.
++		 * The verdict was for tosend bytes. The rest goes back, unless
++		 * another thread made a new cork while the lock was released.
 +		 */
-+		if (psock->cork == msg) {
- 			cork = true;
- 			psock->cork = NULL;
- 		}
++		if (cork && msg->sg.size && !psock->cork) {
++			psock->cork = msg;
++			cork = false;
++		}
+ 		if (cork) {
+ 			sk_msg_free(sk, msg);
+ 			kfree(msg);
 -- 
 2.55.0
 
