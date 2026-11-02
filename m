@@ -1,54 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.72
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.246
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793620852;
-	b=r8sdoH5OlmAb5Evl52Dh0nRBKwoipfUrTlNEa/AVyvci43CPooJs3uVUPlel72v5xE8w
-	 xFMJ7WEVbhTJeo9smwVsMxHd5dqSw0rLsuRYrYTu2DkgtKtciEc/GYfj4nqUAuaU/ghZl
-	 nZPKkYI1kuGUGFR1a53qRPOw4z40ZRSpqa3cFGOwvNBRFMLQEjXag492Rs601YJisT/2I
-	 cpRxO9NNDLJwrGHQF2bX1EhlrmXVuQ0Od3EiE4D/GSpb1ng5HHnnoTzKxhCA0hxZAX3Bw
-	 n/Bj9UeT4bpOxIkngWV35+3DMf+5kyNfd8uDE3xTzko84Ov5BinlJkVmWNupjIacukA==
+	t=1793622758;
+	b=q5pxwes1gqQpUtQwAhlm1vFrDrnbmVAzQSGc/T8hO4zA0k2wJmgNpHvtnnDVBC8Vmq8n
+	 dwfngWv95TLyD6/YxyKYz5z6pv+hxocMksEJQMRWCQSDQUCzYjqS31LyitW5A6KLQICdt
+	 0a6yx0+hBZ5GKEg6t4++VDOsQLc9P0t4ES6eszOppCx/x2oC9eCa0V863b5QwLKKXvc97
+	 oI9nzROlMXw+yBujQoGc85j/JREoIZz1h0BXPy5zwYhV8+yDQfIStvxnFzni96idEjDLV
+	 tcMdm3Gh7jhNOLDGXpBnwJBBkdhNFxwcQeoVgyOAaVBKAcDsCiTHFien+iGgc1Tc66g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793620852;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793622758;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:To:Cc:References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=MEoaEaicZ8UabmGzlYhn/6ARhms0F79uQ8/+EuSSrl0=;
-	b=zNptnO1csucsxCsjGtXxi5EEbSw4pb1NidRj9HzOtsXfMQ2CY0ey+P2nV7KcRuu31Jxs
-	 zjgAsKWc9eDHBmxCfA9DEEQE7c5fRzPEwdr99NJmVoTNFtiajZhIc6JO5kqYIUxD77R81
-	 Qtm6Ja/5U3aXB6pBWYgJSXEGmnZdWxBUXYjK4YC4igCfp6By+8V5OyQ0DBI7mTEvyi55A
-	 bc2mAs024mU6PSj+hbBmQiGYPDLejCFL3vYip5ZBcmC0OSrHd3q1RGsx/ysoGIBCoETkC
-	 n1GPQN1xEOtzLJfsgbXduRWkVDKBi0IAjVsQAF5e5l0U37ODComitQ715hM+EUKWfdw==
+	bh=w6jqiUBD5ibgJFs0ugALEEDB7b768frs2A7MQ2xTHQM=;
+	b=yw7g3Zz1BeELDHIypaW4bAlKLAFUqMuc2OA74beg5dnrTrDt9nM2fDMmV1+UPBWpDzWL
+	 cUWimXf8Rv4MUt0Z+RAw/CH8pEiIqpLnq+ewwJs8aY+fKoy5M6N23ADNxo33SfXtS3lml
+	 4hLLNXzenp0D/44QvgieilxWSgUzyELll6C6MoamPsXvueYz5druIzyXnC7bjZ6pqRNsw
+	 nF8iD+XiPksfGTVfzsCk64TwK/gd8LqZrlJi7J/St2MQH71XwCZSzy58Rj1+3dIRGSLCy
+	 QECh+RQ+7cCzFs8JX8gGZExK2rqCfxgKKhLx5szBgtnINfaXhDZ04sFNtWh+ZvUV5zg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=m6VHEImO;
-	arc=none smtp.remote-ip=95.215.58.72
-Received: from mta1.migadu.com (out-72.mta1.migadu.com [95.215.58.72])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=cL9ESvBY;
+	arc=none smtp.remote-ip=91.218.175.246
+Received: from mta0.migadu.com (out-246.mta0.migadu.com [91.218.175.246])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5191E606A330
-	for <mptcp@lists.linux.dev>; Mon,  2 Nov 2026 12:00:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5191E606A330
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77330606A33D
+	for <mptcp@lists.linux.dev>; Mon,  2 Nov 2026 12:32:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 77330606A33D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=m6VHEImO
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=cL9ESvBY
 X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=7gLJfEV4JiyV472NGbIbZrTv/A7Ww4dsXKKMsPQL+jc=;
+DKIM-Signature: a=rsa-sha256; bh=SiiP3R6iGc96rRdu87RGjK9ajivgC01xWOp9SC3ZPUw=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793620849; v=1; x=1794225649;
- b=m6VHEImOTkeTThdA8cWZkoQG3TcYT2x2HnT3qqxNRLGtBbjXbinH+/LzmUn21dtKQ5c6ISeZ
- DutDDRta/1ca2Ko4VAHl73xKc9sMFUqMsOW26dsqfJje3zb7C8gKcRveVa9Cnddxe2+IZyPoiUB
- mPwK5ozgtllNKrBtZPzmKn/o=
+ t=1793622754; v=1; x=1794227554;
+ b=cL9ESvBYAL63kpZebLoC7cMqDXiUTe+XViIZ37bDaSZ1Q0a0JYe1iNSmZibWd9qWMknh82ox
+ +sJiP+jk4U4LQOo4MKjH4kFkR/e3J8KhK1a8fMaCfur/n4+t6U8TYvgWeqAbtbaXIgi/RG7n2Nn
+ IgCgEQpNcYUnpO4gLchGeCIA=
 X-Envelope-To: mptcp@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 626a1368d0b9c9a1;
-	Mon, 02 Nov 2026 12:00:49 +0000
-X-Mizu-Trace-ID: 626a1368d0b9c9a1
+Received: by smtp.migadu.com with ESMTPS id b39a93dc725c8c73;
+	Mon, 02 Nov 2026 12:32:34 +0000
+X-Mizu-Trace-ID: b39a93dc725c8c73
 X-Migadu-Flow: FLOW_OUT
-Message-ID: <dff8a7bd-f819-401e-8dea-04ba2b9415ac@linux.dev>
-Date: Mon, 2 Nov 2026 20:00:39 +0800
+Message-ID: <69e66c9c-f2ab-41a7-972d-d1562a6387b8@linux.dev>
+Date: Mon, 2 Nov 2026 20:32:24 +0800
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -59,8 +59,8 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf v2 06/15] bpf, sockmap: Give no progs to a TCP
- listener
+Subject: Re: [PATCH bpf v2 07/15] bpf, sockmap: Check the target of an egress
+ redirect before each send
 To: Alexei Starovoitov <alexei.starovoitov@gmail.com>, bpf@vger.kernel.org,
  netdev@vger.kernel.org
 Cc: daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com,
@@ -70,122 +70,109 @@ Cc: daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com,
  matttbe@kernel.org, mptcp@lists.linux.dev, mason@kernel.org,
  josef@toxicpanda.com
 References: <20261102072112.4160195-1-alexei.starovoitov@gmail.com>
- <20261102072112.4160195-7-alexei.starovoitov@gmail.com>
+ <20261102072112.4160195-8-alexei.starovoitov@gmail.com>
 From: Jiayuan Chen <jiayuan.chen@linux.dev>
-In-Reply-To: <20261102072112.4160195-7-alexei.starovoitov@gmail.com>
+In-Reply-To: <20261102072112.4160195-8-alexei.starovoitov@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 On 11/2/26 3:21 PM, Alexei Starovoitov wrote:
 > From: Chris Mason <mason@kernel.org>
 >
-> A psock with a verdict prog replaces sk_data_ready and sk_write_space of
-> its socket. It saves the old callbacks, and the new callbacks call them.
-> sock_map_link() does this to a TCP listener too. Its new sk_data_ready
-> cannot read and does not call the old one. Thus it does not wake accept().
+> tcp_sendmsg_locked() expects a caller that has the socket open. It uses
+> sk->sk_socket and the wait queue sk->sk_wq. For an egress redirect of an
+> sk_msg prog the sender calls it on the target without a reference to the
+> target's file. Both pointers are NULL before accept() and after close().
+> close() can occur while the sender sleeps. Then the kernel crashes.
 >
-> sk_clone() copies the new callbacks to each child, but not the psock.
-> tcp_bpf_clone() restores only sk_prot. Without a psock the child loses data
-> or does not wake its reader. If it gets a psock, the psock saves the copies
-> as the old callbacks. Then sk_psock_verdict_data_ready() calls itself until
-> the stack overflows. sk_psock_write_space() calls itself too, without end.
+> Fail the redirect when the target has no struct socket, or when the sender
+> has to wait for the connection. The error is EINVAL. After close() it is
+> EPIPE, as today. sk_stream_wait_connect() calls remove_wait_queue() without
+> a test of SOCK_DEAD. sk_stream_wait_memory() has this test, but it can
+> still use sk_wq after the sleep. This patch does not change that. The
+> target can change while the sender sleeps there. Thus do both checks before
+> each call of tcp_sendmsg_locked(). Clear MSG_FASTOPEN, so that the sender
+> does not call the connect code of the target, which uses both pointers.
 >
-> Give no progs to a TCP listener, as before the first commit below. A
-> listener receives and sends no data. It stays in the map and keeps its own
-> callbacks. Add this exception to map_sockmap.rst. A listener no longer gets
-> -EBUSY from a second map with progs of the same kind.
+> Today the sender can send before accept() and waits in SYN_SENT. send()
+> with MSG_FASTOPEN sends the data. Today it fails with EISCONN. When the
+> redirect of a cork fails, send() returns success and the kernel drops the
+> data, as today.
 >
-> Since the second commit below, a socket keeps its psock when TCP unhashes
-> it. sock_map_link() does not see the state that the socket gets later. Do
-> not depend on TCP to keep such a socket out of TCP_LISTEN. Set both
-> callbacks in tcp_bpf_clone() to the TCP defaults.
+> The Fixes tags are for the two checks and for MSG_FASTOPEN, in this order.
 >
-> Fixes: 0c48eefae712 ("sock_map: Lift socket state restriction for datagram sockets")
+> Fixes: 4f738adba30a ("bpf: create tcp_bpf_ulp allowing BPF to monitor socket TX/RX data")
 > Fixes: b8b8315e39ff ("bpf, sockmap: Remove unhash handler for BPF sockmap usage")
+> Fixes: c5c37af6ecad ("tcp: Convert do_tcp_sendpages() to use MSG_SPLICE_PAGES")
 > Signed-off-by: Chris Mason <mason@kernel.org>
 > Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 > ---
->  Documentation/bpf/map_sockmap.rst |  4 +++-
->  net/core/sock_map.c               |  9 +++++++++
->  net/ipv4/tcp_bpf.c                | 15 +++++++++++++--
->  3 files changed, 25 insertions(+), 3 deletions(-)
+>  net/ipv4/tcp_bpf.c | 24 +++++++++++++++++++++++-
+>  1 file changed, 23 insertions(+), 1 deletion(-)
 >
-> diff --git a/Documentation/bpf/map_sockmap.rst b/Documentation/bpf/map_sockmap.rst
-> index 2d630686a00b..eb466b86df17 100644
-> --- a/Documentation/bpf/map_sockmap.rst
-> +++ b/Documentation/bpf/map_sockmap.rst
-> @@ -33,7 +33,9 @@ of ``__SK_DROP``, ``__SK_PASS``, or ``__SK_REDIRECT``.
->  
->  When a socket is inserted into one of these maps, its socket callbacks are
->  replaced and a ``struct sk_psock`` is attached to it. Additionally, this
-> -``sk_psock`` inherits the programs that are attached to the map.
-> +``sk_psock`` inherits the programs that are attached to the map. A TCP listener
-> +is an exception. It gets a ``struct sk_psock``, but it keeps its callbacks and
-> +inherits no programs.
->  
->  A sock object may be in multiple maps, but can only inherit a single
->  parse or verdict program. If adding a sock object to a map would result
-> diff --git a/net/core/sock_map.c b/net/core/sock_map.c
-> index efe49551caba..282c6a4b2b05 100644
-> --- a/net/core/sock_map.c
-> +++ b/net/core/sock_map.c
-> @@ -228,6 +228,14 @@ static int sock_map_link(struct bpf_map *map, struct sock *sk)
->  	struct sk_psock *psock;
->  	int ret;
->  
-> +	/*
-> +	 * A listener receives no data. With the callbacks of a verdict program
-> +	 * or a parser it would no longer wake accept(), and its children would
-> +	 * copy them.
-> +	 */
-> +	if (sk_is_tcp(sk) && sk->sk_state == TCP_LISTEN)
-> +		goto no_progs;
-> +
->  	stream_verdict = READ_ONCE(progs->stream_verdict);
->  	if (stream_verdict) {
->  		stream_verdict = bpf_prog_inc_not_zero(stream_verdict);
-> @@ -262,6 +270,7 @@ static int sock_map_link(struct bpf_map *map, struct sock *sk)
->  		}
->  	}
->  
-> +no_progs:
->  	psock = sock_map_psock_get_checked(sk);
->  	if (IS_ERR(psock)) {
->  		ret = PTR_ERR(psock);
 > diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-> index 36d1bf46353a..fd443350f9b8 100644
+> index fd443350f9b8..ef2e15de0fe3 100644
 > --- a/net/ipv4/tcp_bpf.c
 > +++ b/net/ipv4/tcp_bpf.c
-> @@ -785,7 +785,18 @@ void tcp_bpf_clone(const struct sock *sk, struct sock *newsk)
->  {
->  	struct proto *prot = newsk->sk_prot;
+> @@ -88,6 +88,24 @@ static int bpf_tcp_ingress(struct sock *sk, struct sk_psock *psock,
+>  	return ret;
+>  }
 >  
-> -	if (is_insidevar(prot, tcp_bpf_prots))
-> -		newsk->sk_prot = sk->sk_prot_creator;
-> +	if (!is_insidevar(prot, tcp_bpf_prots))
-> +		return;
+> +/*
+> + * The target of a redirect belongs to somebody else. A child that nobody has
+> + * accepted yet, and an orphan, have no struct socket and no wait queue.
+> + * tcp_sendmsg_locked() needs both. See sendmsg_locked() in skbuff.c.
+> + * The sender holds no reference to the file of the target, which can be closed
+> + * whenever tcp_sendmsg_locked() sleeps. sk_stream_wait_connect() and
+> + * inet_wait_for_connect() go back to the wait queue when they wake up, so the
+> + * sender must not wait for a connect.
+> + */
+> +static bool tcp_bpf_redir_allowed(const struct sock *sk)
+> +{
+> +	if (!sk->sk_socket)
+> +		return false;
+> +	if ((1 << sk->sk_state) & (TCPF_SYN_SENT | TCPF_SYN_RECV))
+> +		return tcp_passive_fastopen(sk);
+> +	return true;
+> +}
 > +
-> +	newsk->sk_prot = sk->sk_prot_creator;
-> +	/*
-> +	 * sock_map_link() gives a listener no programs, but a socket which got
-> +	 * them in another state and listens now has the psock's sk_data_ready
-> +	 * and sk_write_space, and sock_copy() has copied them.
-> +	 * sk_psock_init() refuses a socket that has sk_user_data or a ULP, so
-> +	 * what the psock replaced were the defaults of a TCP socket.
-> +	 */
-> +	newsk->sk_data_ready = sock_def_readable;
-> +	newsk->sk_write_space = sk_stream_write_space;
-
-
+>  static int tcp_bpf_push(struct sock *sk, struct sk_msg *msg, u32 apply_bytes,
+>  			int flags, bool uncharge)
+>  {
+> @@ -109,6 +127,10 @@ static int tcp_bpf_push(struct sock *sk, struct sk_msg *msg, u32 apply_bytes,
+>  		page = sg_page(sge);
+>  
+>  retry:
+> +		/* Only a redirect sends data which is not charged to sk */
+> +		if (!uncharge && unlikely(!tcp_bpf_redir_allowed(sk)))
+> +			return sock_flag(sk, SOCK_DEAD) ? -EPIPE : -EINVAL;
+> +
 
 
 Reviewed-by: Jiayuan Chen <jiayuan.chen@linux.dev>
 
+I can trigger it by redirecting data to a non-accept sk.
 
-I guess the scenario is: connect(AF_UNSPEC) unhashes a connected socket
-that is still in the map, then listen() turns it into a listener. Since
-we no longer have an unhash handler to drop the psock, the callbacks have
-to be reset in tcp_bpf_clone().
+==================================================================
+BUG: KASAN: null-ptr-deref in tcp_sendmsg_locked+0xfb8/0x4550
+Write of size 8 at addr 0000000000000008 by task repro/488
+Tainted: [W]=WARN
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x91/0xf0
+ print_report+0x442/0x630
+ kasan_report+0xf3/0x130
+ kasan_check_range+0x11c/0x200
+ __kasan_check_write+0x14/0x30
+ tcp_sendmsg_locked+0xfb8/0x4550
+ tcp_bpf_push+0x3d0/0xbc0
+ tcp_bpf_sendmsg_redir+0x639/0x1050
+ tcp_bpf_sendmsg+0xa32/0x1b90
+ inet_sendmsg+0xdf/0x100
+ __sys_sendto+0x3ed/0x4f0
+ __x64_sys_sendto+0xe0/0x1b0
+ x64_sys_call+0x1375/0x27e0
+ do_syscall_64+0xe5/0x610
 
 
