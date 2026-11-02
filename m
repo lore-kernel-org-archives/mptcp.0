@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793642838;
-	b=Kj8duNY7S+1rbqKcOVg/C+/919Vba+xlzmoZuCfPThHuyZsReeYKIzvGXCTLUflMPM6E
-	 sYdQaAlrZwP5EeSKqcJUpsypKAUN2J1C2PapRj2ZPRHVG0YZeiNAS1BgozpCFTULsgJRQ
-	 EN/27pKuovTRLGZ6KdIlkB8PY+q6U8+8l5+WQE6MyHi14XfX+pC3NS7WSGfacg7kjGaX6
-	 D16RVl72wGle+nbU6H1rdjMwJsfYCoEZgfPfSdXUDiwtP2NIUT5WYIrY2/KQ1lVjORSRJ
-	 jNxcq7yY5xDNZVWnQ6jrjtu9uEThqV/f9yCRwdmZm13SaBa0SqGbhOZIzLxnwgdHpLQ==
+	t=1793644642;
+	b=JUE8k3mZTwJl+V2UUfdDw3fgqBffFlEkoWtXoDh4aVS4Q78YsfdVXD+kZemGI9P4UNm/
+	 JbMQSlueynjFSvX6GJ61YvL2yjl5gTHHZc47uxo3CGDQUpnfstBQdV0tnH3tlQYmVjBSP
+	 zIf2M4V7nzbVO7Ubu6nwK9wZW9lfPEIqSVpWwNNLQQ76j7Dt9Bw8Pkd24AulIoMWIsxFa
+	 2/bLtCJJLM9DHDSEcwr0Z6SJazyZf7TNmjN7IQw8RnmQZLy8CHe8lzsyDZuKN4eUuP3sp
+	 ueT0v+Z0WLYLwmC4uVBv9VlEg84AnI23+tk+2jgVtx4cNQLOT6eecqdWMKQ6oZJfN3A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793642838;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793644642;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=agAvZaMsii/M7oBGgfwhInzi1SJ/3NKHTvsHEi6370s=;
-	b=N4Jo0ji4agthnxnZ1pBxsBG9kJsiD1M11oZO7NVqtyzq3wuwgLs3qLisQ3+4vqATF/ZH
-	 Dnk1ClZV2OmsyysDEZbYeEfy7vNfxKASTrvZVEN8YiMt516qUCUBIYoaRAMr4zbcZ70jq
-	 T27q8HTLzUE9IsogzJQHCK59P2sxfwlGfBKGLP4vGdLzTKHo0Y+4crD4YmXzVxmMCCB19
-	 fS0KPub7FRKqQVy6GH7LdarTM2xu6SSNGFSKJr+cftjBvvbvy5qHHttzd7jpYfATENRzx
-	 nEvQFsEVU05ivOWDP1aF0O5QRWyan0cJiRH7peEK5bPXodxJ0qLVNGEpnEFI3x2tAuA==
+	bh=7Vj6VEkb09HDpE3bTc9wyTUrFrzv7GTaDWeqHSvwUYc=;
+	b=HRLRdr7tHUBgVZBi/qlxOorFT4rvLACUljc2INYSxoYC7SB54NvyKjZHkLkOGoualuN9
+	 iu4FWt/RXpnGwMwKDgX+eUmjJgv/jofmOmwqmTXUVru53SZdc46yibf5LfcINeq4dSvLk
+	 ZLHmqn5L/lxWB56undOu6POdxdPGYhyWjHP4sJfIeqnFpShehTcglZIcZXLGSFwgPaBCw
+	 kMjR3YVucGZz/AS+bbmCQOW/Qw+NUcdqlwIGVI/vO0FhoBhTVaTvdvLlqyMkg9+fdYjyO
+	 PYw4wt4GZiKotL3qTKeyBgh2QEoBI56jjX9NOxpf9x9/M0ovGs8WDWFGfBTOSeTxExA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HmyTQFbI;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WDY2ujiH;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85733606A326;
-	Mon,  2 Nov 2026 18:07:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0F0606A324
+	for <mptcp@lists.linux.dev>; Mon,  2 Nov 2026 18:37:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HmyTQFbI
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E084A1F00A16;
-	Mon,  2 Nov 2026 18:07:16 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WDY2ujiH
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E19A1F00A16;
+	Mon,  2 Nov 2026 18:37:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793642838;
-	bh=agAvZaMsii/M7oBGgfwhInzi1SJ/3NKHTvsHEi6370s=;
+	s=k20260515; t=1793644642;
+	bh=7Vj6VEkb09HDpE3bTc9wyTUrFrzv7GTaDWeqHSvwUYc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=HmyTQFbIPJL2tO/fGsNC+7kD4bLxJNYclE/KDhy0Rv6Bwz5EfLqzDrNmll7PFlhjK
-	 64uMPARI85h12wbROqXKmx7GYkuUtpzgz99GxydS+Vc9znLlbK8CawvOJXpkHBy3p+
-	 npZhAap+7PIDvJLGbK8fmNs8i4mW3oBpyixijw2N8C5YUqf7g+OQ0kYR4h/RQHiSH/
-	 mFmuLV4ReSLBbIkOLQpJF7vjWtMAph7T5T5CLSGTvhSMAy4BTKRMiAzUbJsWeN4R08
-	 vNmZ0uF6HzpcRP9Pghtsr9pi/m6eyQ9wTrrKShQ6GNKLksRNwqB/UH9DSQ+6W24c5L
-	 Z1gyUjd70rbow==
-Message-ID: <d34469ed-1e6a-498d-beab-1c4900ad2afb@kernel.org>
-Date: Mon, 2 Nov 2026 19:07:14 +0100
+	b=WDY2ujiH9JzzyoaHvav+iHi6Pr7OByy82rZX725HRXX12Xfp1J1FXeM7b6+3ovqz3
+	 GpKHB8Uw+uU8l3LPIkwiwG9dy+1eOKrzk5luaieGPfjHFhVQXnkg1gXUdnkrePU0Uv
+	 L8VyxN3FdRR7AQXp56R0Ze7UOXrqhHhhQE6r7GKvaqDtUtYAW2hRi0jznIBqfTK2S4
+	 ztOwwzq0Hv846496fHkE5t8jh7JuQQaFYnrojDlk6Rh0n5KeDRmSji8mUfZ0sBH+tH
+	 0JrWxGnMeD6YuNGDdZaPkZvKOIjRzC/bgVUhVBB9ZmxqKIc5ZxompHZUEeQZwJT0fW
+	 6+eb7re/Skmhg==
+Message-ID: <7da5435c-bddf-4134-8fa7-1df661fa1046@kernel.org>
+Date: Mon, 2 Nov 2026 19:37:19 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,13 +52,13 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH] mptcp: pm: kernel: use RCU to free endpoint listeners
+Subject: Re: [PATCH mptcp-next v5 0/4] mptcp: sched: penalise a slow subflow
 Content-Language: fr
-To: Kyle Zeng <kylebot@openai.com>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- outbounddisclosures@openai.com
-References: <20261030042255.74216-1-kylebot@openai.com>
+To: Shardul Bankar <shardul.b@mpiricsoftware.com>
+Cc: mptcp@lists.linux.dev, Janak Patel <janak@mpiric.us>,
+ Kalpan Jani <kalpan.jani@mpiricsoftware.com>,
+ Shardul Bankar <shardulsb08@gmail.com>, Abdul Wasey <w453y.me@gmail.com>
+References: <20261028-mptcp_penalise_send_v2-v5-0-32fb379ce117@mpiricsoftware.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -104,31 +104,78 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20261030042255.74216-1-kylebot@openai.com>
+In-Reply-To: <20261028-mptcp_penalise_send_v2-v5-0-32fb379ce117@mpiricsoftware.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Kyle,
+Hi Shardul,
 
-On 30/10/2026 05:22, Kyle Zeng wrote:
-> mptcp_pm_nl_create_listen_socket() starts the TCP listener directly
-> instead of going through mptcp_listen(). It consequently misses setting
-> SOCK_RCU_FREE on the parent MPTCP socket.
+On 28/10/2026 12:15, Shardul Bankar wrote:
+> A subflow that is slow relative to the others can soak up connection
+> resources and cause head-of-line blocking of the aggregate stream. This
+> series lets the packet scheduler send less than such a subflow's
+> congestion window by halving it, and leaves the congestion control to
+> raise it again. It implements issue #345 [1]. This is a deliberately
+> simple first form.
 > 
-> tcp_child_process() can invoke the listener's subflow_data_ready()
-> callback without holding the MPTCP parent lock or a reference to the
-> parent. An authenticated MP_JOIN racing with endpoint teardown can
-> therefore access the parent after its last reference has been dropped.
-> The ADD_ADDR error path can also close an already published listener.
+> - Patch 1: a prerequisite fix. The scheduler truncates the pacing rate to a
+>   u32, which skews subflow selection on fast paths (Fixes).
+> - Patch 2: penalise a slow subflow by halving its cwnd, triggered on its
+>   pacing rate and gated on the fast path being cwnd-limited.
+> - Patch 3: skip the penalty when the transfer is receive-window-limited,
+>   where it would otherwise slow the transfer.
+> - Patch 4: MPTcpExt counters and a dedicated mptcp_subflow_penalise
+>   tracepoint for observability.
 > 
-> Set SOCK_RCU_FREE before __inet_listen_sk() publishes the TCP listener,
-> matching mptcp_listen(). This protects the parent on every subsequent
-> close path, including a failed endpoint addition.
-Thank you for the fix, it looks good to me!
+> Validation, baseline versus this series (test helper, its run_matrix.sh
+> base-vs-patch driver, and run steps are in [2]):
+> - No regression in the mptcp selftests.
+> - No regression versus baseline across the buffer-limited transfers
+>   (send-buffer, receive-window, both, sndbuf>rcvbuf): the two-path completion
+>   time with the penalty enabled matches the unpatched kernel. Where the
+>   slow subflow is beneficial (send-buffer-limited), the two-path transfer
+>   stays faster than the fast path alone.
+> - Patch 3's gate keeps the penalty from firing when receive-window-limited,
+>   where halving cwnd would slow the transfer.
+> - With a bufferbloated slow path, the penalty roughly halves the slow path's
+>   queueing latency (subflow srtt), with the transfer time unchanged. It does
+>   not reduce the aggregate out-of-order volume or move data off the slow
+>   path; that is the role of issue #332 [3], and the two are complementary.
+> - The conditions above do not catch one case: with the buffers left to
+>   autotuning and a subflow that is slow because of latency rather than limited
+>   bandwidth, penalising it costs throughput, and the cost grows as the added
+>   delay grows.
+> 
+> Used LLM for design, review, coding assistance.
+> 
+> [1] https://github.com/multipath-tcp/mptcp_net-next/issues/345
+> [2] https://github.com/shardulsdk-mpiric/linux/blob/e0f78406d921/tools/testing/selftests/net/mptcp/mptcp_sched_penalise.sh
+>     (run_matrix.sh + runs.conf are alongside it in the same directory)
+> [3] https://github.com/multipath-tcp/mptcp_net-next/issues/332
+> 
+> Changes in v5:
+> - Rebased on the current export; no code change.
+> - Dropped the Assisted-by tags, which the kernel docs no longer describe;
+>   tool use is noted in this cover letter instead.
+> - Collected Abdul Wasey's Tested-by, thanks:
+>   https://lore.kernel.org/all/20261025192320.1831707-1-w453y.me@gmail.com/
+> - Link to v4: https://patch.msgid.link/20260911-mptcp_penalise_send_v2-v4-0-820f2be4a8fe@mpiricsoftware.com
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Thank you for the new version!
 
-@Net maintainers: this patch can be applied in -net directly.
+I just noticed that Abdul's v2 series that I recently sent [1] didn't
+get reviewed by Clashiko because it doesn't support dependences yet
+(Sashiko does) [2]. Just to avoid both working on the same thing: are
+you already working on a new version addressing / rejecting the last
+review comments sent here? No rush at all, but if you didn't start yet,
+and you prefer me to look at it, I can try to do that this week. I would
+then send a version including your patches with fixes (if I can) and the
+ones I recently sent. Otherwise, there is no urgency, and I can wait.
+
+[1]
+https://lore.kernel.org/20261031-mptcp-sched-opp-retrans-v2-0-e9c4a30f6841@kernel.org
+[2]
+https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261031-mptcp-sched-opp-retrans-v2-0-e9c4a30f6841@kernel.org
 
 Cheers,
 Matt
