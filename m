@@ -1,56 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.179
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793655495;
-	b=3EgM8BvaML+iu1Hj76IRoicbO7ycHID11YmbkcZQ1Yz4VtfjCgD/+oo5fL5aR0fxApnJ
-	 Lr/kXZn1GGa1lAuAnbeuKuwzEoWe3F0lR8313tD+gmU5OeS3c3zUMcXx7DVlTAI4/GcXm
-	 hSPqMcB2hmjFrxz3jRmV8pYjsy7kU3s8vZVHI3SURR/LSbvIOfRxA5BH2eefg+JKO3hj3
-	 ziuYFii514/9xVyHFVUaliicwJ1C49vdAV0Il5AJoZexh5Pgp8Zmyd0ZW8Cmv6nVTxsxS
-	 6JTiDSP1wXjoma11gypRDAP5Ridx5D1RDhX3drVq6kEQywHGCkHsWbyMJ57hF29xfEw==
+	t=1793659500;
+	b=1A3tWBpoKfcDInqOVzwB6tFdi0YRwx8Jam4zmRZL/4qcrmakYalvtFkpg/9+yhnOSvoj
+	 jJGcY5x6+0OjHNKVzoFvBb4nwVGeFLwhEvNedt2nAUFTjZTxQdTh25zFX3nNtCo/EJXdO
+	 NWiLR6yLaSaaqy+4CGUuhv9D3H2fpYWQsum0f/zc1Aeew11yHNeBQJbwJMDBQmYubnl48
+	 qfgR/TVxOmaOv2YQxtuB5Ay3vdw0QSO7JKsBUrTZ2jKh/8qeQwtCmzOQZBp58HZNBJtIz
+	 I5ojqJ9U5Al5YEN3a3G3HpvfY/K49D7DGEW4GYX7CXkpSCYtJSjjtzrifd6RlDOvXEQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793655495;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=v5MYJG5Dp3x5MMNzuAsgImVDlzSR0rO/l9oQh8GUFqw=;
-	b=0TRK+ClKQSKh4Nl2kQgf9VaMNYgmhZovPSaghCDHwmYFnaGdA9JBxawA3M8sZ2IPQx4K
-	 OegGNvGMOUkg5boZmv8dtQg2RysftG5ypg/Zr2eEOQ5+24cU/M/j6GEORsrl0/tOz0iBZ
-	 /7izAK65UzzKdE4kO/uE6D/iLir+JKp2mP0VNDyZea8p+yG4w0VnviOy7caLYNbuHKVri
-	 pNpIHG+LzwqTRQOo9RymeGq0qKoNgp56trkCifGoIY8ASLxHYcn8G48/9GvFZ0qzNsDi6
-	 gJNPia0/o4g0d/vVyRu9HH/Qe6riTw5IFVu1fsRy8Ke8WBFLM1skUG9IHXLaBII1b3Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793659500;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Content-Type:Date:Message-Id:Cc:Subject:From:To:In-Reply-To:
+	 References:Content-Transfer-Encoding:MIME-Version;
+	bh=3QmP7DYfeKMX6W+XMxlm7nFN+GTZmZT7AU7by44PL8A=;
+	b=bwtDfudRtQApIOPMxtg9BGMTiengGdXsUq2zzn9eVC37I9HOkq9EC67Kvqa6vQBjaa3g
+	 J5qxZm8CgEtBLl+KNoAYLm7UvEMenGAI2vfbtdgc1PrKJIsNpeXDllXSt5NXWnoD1Beg0
+	 nolPK1VaBp4g6jdyaI9nMdQBvst31pseWlkeHsr6QZS3zjf4F8Kj04uzaPQgpjG4PToH7
+	 6BKafNpG7Vjdd0lcs+wHilKQtD6p6NzPBp3fmmHteqoT3+d/WMjitwyiCRKpHc/QMHWOt
+	 j7x0u/N63Qtqp4xljEx6/wLzov7bPpxvM9K6BaMVvZgXBEH5CXs1ZlCRNAW789Ii7CA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="DDzDDwZ/";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=wYrWBF2v;
+	arc=none smtp.remote-ip=209.85.210.179
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB510606A324
-	for <mptcp@lists.linux.dev>; Mon,  2 Nov 2026 21:38:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16641606A329
+	for <mptcp@lists.linux.dev>; Mon,  2 Nov 2026 22:44:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 16641606A329
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DDzDDwZ/
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E4CC1F00A17;
-	Mon,  2 Nov 2026 21:38:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793655494;
-	bh=v5MYJG5Dp3x5MMNzuAsgImVDlzSR0rO/l9oQh8GUFqw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=DDzDDwZ/G7B8OLEb/8CQtptgekn91WcfrPLSR7JYbsX7F3kIVjoF1slNTdwKW6KwP
-	 LtFj0oOzX8guLnqRn6yEvhMJDdPANMzZNUKKQHPvZYEwYUaDHqgVTy4H16cVpod3Hj
-	 moPIZZUPZ9XEqr8SfoSmk3FqXGjtPDJlRIrPL5EdndsYMIVNHSUDQNFln6kJEEA8H2
-	 PzmE14HEMeynC4Yhhcakkae9+KsnZ2NnIeO+vMmcTf+o9JzPR225DupN1nzVcmXYtB
-	 g9CabHv6BvTqSpcMNGryITlD5kQ/gGIo0Qo1Y4X2PQITyAuw4UaQKkfL/7r+TIG+Fu
-	 smjBJcTOzOfOg==
-Subject: Re: [PATCH mptcp-next v14 6/6] selftests: mptcp: join: validate
- subflow retry after link failure
-From: netdev-bot+sashiko@kernel.org
-To: anilkaushikwireless@gmail.com
-Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Mon, 02 Nov 2026 21:38:13 +0000
-Message-ID: <179365549394.3128.324852138483087912@kernel.org>
-In-Reply-To: <20261101072051.3853492-7-anilkaushikwireless@gmail.com>
-References: <20261101072051.3853492-7-anilkaushikwireless@gmail.com>
-X-sashiko-severity: Medium
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=wYrWBF2v
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-8a05e3f0d23so1462688b3a.0
+        for <mptcp@lists.linux.dev>; Mon, 02 Nov 2026 14:44:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793659499; x=1794264299; darn=lists.linux.dev;
+        h=mime-version:content-transfer-encoding:references:in-reply-to:to
+         :from:subject:cc:message-id:date:content-type:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=3QmP7DYfeKMX6W+XMxlm7nFN+GTZmZT7AU7by44PL8A=;
+        b=wYrWBF2vwGmo3N5IG9uAhC3DcpbAV+IIjAlXYx3Rm6l2TE5+0FDpdKfptPuPlXzXu1
+         x56QE7a5w54Szc3LE1gzL97DrfGqXrdOw/Hu2uod0LzngzEE6PSWD7n0DWM3XQry5aPo
+         zN0Hg0Qtosg3DfaNljUpADZ6tXQViv+gl5kQvVEU1MWvZtMVcTU0D5DJTPjcR/789ats
+         95BquTxNu5af4hIlQaKeYEfhUs5BqAULY5fRIk10/gIW5IgLycppfU01Rf7BqvRjCzuD
+         qMD/JQoX0Qo7sdoY14rtoZtljSHSJk/CLqwzUSd5E7Nnb8P8Hk21oU68hmpkYxngsIkh
+         6Plg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793659499; x=1794264299;
+        h=mime-version:content-transfer-encoding:references:in-reply-to:to
+         :from:subject:cc:message-id:date:content-type:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=3QmP7DYfeKMX6W+XMxlm7nFN+GTZmZT7AU7by44PL8A=;
+        b=RE7zrdJlPFnEjtEKAZCLp/QOBJISNiIh2YT4UCDwzq2H5dRSWXBasgtznOZxg5aBio
+         v4yOhB0cjc/BdNYCQ2VQ8DdrrXfeXaFdFCvyeB7dhFtUlPIN2kZ73+K609sk3e94+mBq
+         Xfv21ZIP126ot/iWlYrri/0vrsFbmCPo+VBmRq5HO2zPBpFWtbQwoK9mJAlFhfWrfVdr
+         oDCBXX5NkZa2huzhVv8YqDS2BcQrXA0bax/mhx4wrxTFtYk1A1iD+ZFAUl3PRiadPI+N
+         a6lOs5fyHabjOrLDIkG0wPSVb1346vUdIvjvQEBoSu7Sygyu6YySLUBr7teX6idxfh6a
+         C3zA==
+X-Forwarded-Encrypted: i=1; AKwUvByyL6p+TCacbcDhfgE6/679oKGRhoTnLVYDB7YQHky/3waUqq0I6ddDqe/nNbNzOTrO96zNwg==@lists.linux.dev
+X-Gm-Message-State: AFq9FYKBWEAY3tDoluHT0VPMS+8JZ4OW2qGk0Tzhe2PLbbi39tJNTOia
+	NSwIraOIjDuxM0zURMwv41/vfYX3xw3OBeSQS5y2fpjmkNJDThK6TZ+1
+X-Gm-Gg: AYBFou1o27B494WYR69ZBxH9lUXM1ALNSTim2l7ikfGoV9a3Vj1ycI1QTodCgs0e/q9
+	wMf6RA2DHf8uclshOlWJ8SM/bCmxQAaT7SzI1DGnc8x9nG5GhPDBBFisqJmPkP2GBN2+o847NR1
+	24WZIILAt+KrerlhccJX2645KhdGHRM22t2pBdt707jFWce7vUyrnHAwF2ypopVR0x2PAs41FqE
+	hQR8LdC/Ym3+BTtfclPlmRXi9vwIxIbwXtSK5qHfF5cuXbfW47BtTsr97QyfEj8qUWJ00FFQQsm
+	zdy1L2DWczo7TYfPtI/W/TEYjWKUua88c8Y4rS23OpOAyykB332QA+E8aV8PvTPqLOfKgKUsd40
+	s7uFlCCoESEzrfQrjl0iQJcG+lo9iZWtEffuK4L15N1PKbWLr0/gvM1jqmebXLqms+6jEn+bfgB
+	bb8QT/LIpRK4ksUAHu8IiRCPd5UgUyMvW9BNL7zs3rdhdYXBB5e+COLak58TbcC41asn8sTWQC5
+	/IjW8V9bp8UyF002oQez+/kuuBC8ydXJAAYqlCY4o/kWYY2R1WYmwvaK6iCzDexQFC532pB+yBQ
+	uRu5AIR2NS26w78MhKvrb/u4cffAffVS2BtwZQjNidlKVP8rTf20pyWw15kgWDiPFYGg06t4Zb1
+	eH88BD1LufnSOMEoq+n8gPDrCMuvt47957A==
+X-Received: by 2002:a05:6a21:4e03:b0:3de:79fe:13f with SMTP id adf61e73a8af0-3e928d4d2bdmr9749200637.38.1793659499362;
+        Mon, 02 Nov 2026 14:44:59 -0800 (PST)
+Received: from localhost ([153.61.198.253])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cdb364cb821sm358389a12.29.2026.11.02.14.44.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Nov 2026 14:44:59 -0800 (PST)
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 02 Nov 2026 22:44:58 +0000
+Message-Id: <DML3865PENEX.2KBDIHWGWBJ7N@gmail.com>
+Cc: <daniel@iogearbox.net>, <andrii@kernel.org>, <eddyz87@gmail.com>,
+ <memxor@gmail.com>, <jakub@cloudflare.com>, <jiayuan.chen@linux.dev>,
+ <davem@davemloft.net>, <edumazet@kernel.org>, <kuba@kernel.org>,
+ <pabeni@redhat.com>, <horms@kernel.org>, <kuniyu@google.com>,
+ <willemb@google.com>, <matttbe@kernel.org>, <mason@kernel.org>,
+ <josef@toxicpanda.com>
+Subject: Re: [PATCH bpf v2 03/15] bpf, sockmap: Don't let an SK_PASS verdict
+ cover the next message
+From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
+To: "John Fastabend" <john.fastabend@gmail.com>, <mptcp@lists.linux.dev>,
+ <bpf@vger.kernel.org>, <netdev@vger.kernel.org>
+In-Reply-To: <tnw1v9.qyjuvdc9kq45@gmail.com>
+References: <20261102072112.4160195-1-alexei.starovoitov@gmail.com> <20261102072112.4160195-4-alexei.starovoitov@gmail.com> <tnw1v9.qyjuvdc9kq45@gmail.com>
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -62,114 +107,18 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue(s) to consider.
+On Mon, Nov 02, 2026 at 10:51 AM John Fastabend <john.fastabend@gmail.com> wrote:
+>>+			/* A part of it may have gone out */
+>>+			sk_msg_apply_bytes(psock, origsize - msg->sg.size);
+>>+			/* Another sender can use up the rest during the push */
+>
+> Interesting. We've never hit this with http parsers. We do use this to
+> skip payloads some times.
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 0
-
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
-
-- [Medium] The first new test, "subflow retry after link failure" in
-  link_failure_tests()…
-
---
-
-selftests: mptcp: join: validate subflow retry after link failure
-
-This adds four mptcp_join.sh tests for the subflow-retries limit. Each one
-uses netfilter rules in ns2 to drop a path's packets without taking the
-link down, until the subflow times out and is re-created. The tests cover:
-
-  - re-creating the additional subflow, then the initial one
-  - closing the connection while a subflow is being re-created
-  - not re-creating the only subflow
-  - falling back to the next endpoint when bind() fails
-
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index c3ccce96b45b1..b95a96f975cdb 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-
-[ ... ]
-
-> +sf_retry_after_block()
-> +{
-> +	local before ack_rx syn_tx
-> +
-
-[ ... ]
-
-> +	# read before the block: the subflow can be re-created right after it
-> +	syn_tx=$(mptcp_lib_get_counter $ns2 "MPTcpExtMPJoinSynTx")
-> +	# a short timeout only while the path is blocked: the other one must
-> +	# not time out on losses
-> +	ip netns exec $ns2 sysctl -q net.ipv4.tcp_retries2=3
-> +	if ! nft_drop_from "${1}"; then
-> +		fail_test "unable to drop the packets from ${1}"
-> +		return
-> +	fi
-> +	if ! wait_counter_ge "${timeout_poll}" $ns2 "MPTcpExtMPJoinSynTx" \
-> +	     $((syn_tx + 1)); then
-> +		ip netns exec $ns2 nft flush chain ip filter OUTPUT
-> +		fail_test "subflow from ${1} not re-created"
-> +		return
-> +	fi
-> +	ip netns exec $ns2 sysctl -q net.ipv4.tcp_retries2=15
-
-[Severity: Medium]
-Does the first test actually keep the short timeout to the block window,
-as this comment and the v14 note ("tcp_retries2 is only lowered while a
-path is blocked in the first test") say?
-
-sf_retry_init() already sets it for the whole ns2 netns, before run_tests
-starts in the background:
-
-sf_retry_init()
-    ...
-	ip netns exec $ns2 sysctl -q net.ipv4.tcp_retries2=3
-
-The "subflow retry after link failure" test in link_failure_tests() then
-goes straight to the first block. Nothing resets the value to 15 in
-between:
-
-		sf_retry_init
-		{ timeout_test=600 test_linkfail=131072 \
-			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
-		...
-			sf_retry_after_block 10.0.3.2
-			sf_retry_after_block 10.0.1.2
-
-So both paths run with tcp_retries2=3 from connection setup until the
-first block. They do this on 4mbit netem links with "limit 30", which
-drop packets by design. The "close while connecting" and "creation error"
-tests set tcp_retries2=15 explicitly, but the first test does not.
-
-Also, tcp_retries2 is a per-netns sysctl. During the block window, won't
-the unblocked path, which carries all the data and reinjections, use
-retries2=3 as well?
-
-The two early returns above ("unable to drop the packets from ..." and
-"subflow from ... not re-created") also skip the restore to 15. Because
-sf_retry_after_block() returns no status, the second call for 10.0.1.2
-still runs with the short timeout.
-
-If an RTO timeout hits an unblocked subflow in one of these windows, the
-PM would re-create it. That adds an extra MP_JOIN and an extra SUB_CLOSED
-event. Could that make these fixed expectations fail on a correct kernel?
-
-		join_syn_tx=3 chk_join_nr 3 3 3
-		...
-		chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_ESTABLISHED 3
-		chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_CLOSED 2 error 2
-
-Would it match the intent to set tcp_retries2=15 right after
-sf_retry_init() in the first test, as the other tests do, and to restore
-it on the early return paths? If not, the comment and the changelog note
-may need updating.
-
--- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261101072051.3853492-1-anilkaushikwireless%40gmail.com
+That one needs two senders on one socket.
+With one sender per socket you can't hit it.
+A non-blocking send() fills sndbuf in the middle of the push.
+N bytes go out and tcp_bpf_push() returns -EAGAIN.
+Today apply_bytes still includes these N bytes.
+Then the prog doesn't see the first N bytes after the payload.
+There is no error and no splat, so it's easy to miss.
