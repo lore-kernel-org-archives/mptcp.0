@@ -1,85 +1,85 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.173
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793604104;
-	b=qEhAzTz6e/Mh9tS6t8mlRFy/PAwDNmZqnJKBGoqOULnOkCQFavuqscHMxACEayajhM/7
-	 laZFZzrrTqDQIs1JsTfTwZr1sMybyQ5zKusoxOTM4gUWWdG5RvD+LdYYeKrIFfwp2bfGA
-	 Tclb2OEU94+t936kZm3lrC+J1jdn2bzfcP7iOROxu/Gi6tAmQX+SEwoiMkrYNyWEYFFIR
-	 ArWxgZMo+ysuK7aNqagFt2cBCZw2mqCaALwHmX5IPIAQlIwcucT7SGuzIJLwOYb/mPNG5
-	 zTX+Ep4GbrQvDdVfse7UMrO5PKh/bNhUOz4dCi/CaXDhNbIpb19L81bkirHAnEC3YxQ==
+	t=1793604111;
+	b=Ch9l/wy70EXFQ09eac1s3rl+xKWyXnJP+tKIEWnTL4cdMTqDk2vIH/CzJ1B9X7R6uA5g
+	 PXJFtfv8NMGc8wg25b/ihoEJ2gNwNJTJp4mtj2ygi6ACKyeVe/uFS7r1/XlDFI4/Zh5RQ
+	 yZFpCD7MNr47fB3l0tRpHfwGHcXsfZ4WzZEaD1DirmgI9VBg+czXcdYXadl2qpB9yXVJL
+	 iRKFYFwmFabLUP0TGfkhz3mg2rzgxXDNTGHaEL7WbutkD+SjHz0phB8D/qGzksKyOxdJk
+	 9BRuvG9DBjY2/BPE7fGSxClgIPScwbFuETMDBd77QDfu5Dusoc7YuvbKukBo9b9xIdw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793604104;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793604111;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=Lw6EOCCC6sbUctDXo+tERpXOU4fD8zFY96sMocjjruQ=;
-	b=MItQ9pWQlkw+N7s6OdSo2l5FvSu364hQTFyvaSXkW1E4PStQuRjo5maq64gWtqDFb/iJ
-	 XrqwBr8ZvDVAaPl/BflRMYjLj7P/pB1bArY9Dnhhstaszd3cmHyBlsMR/3TlLwNH+3Cvf
-	 bPxNFURBGWeYirEJJH2XyYM3/VMClcEotsJWpOMcNTEpbpshUgJ2CupItCt1WpwupyGnO
-	 qEVR7aYCB3AS7SIlmo+GwTBd8KikvhuVgyqJPEZx3+6kiy/VJKVEiY/DTgRzMjpzMCQ1y
-	 /TcC8VtLkIXMJMTVBfJ/tIOcWekBOkhRA+QMREqqq01cfTAk9LmnHCB9WJR+69KnrRg==
+	bh=0ivwDO8RmSZboOluSZSZngxFUW4tZlFEXHx0gIyw2xc=;
+	b=y+yH6wxWL+clOjHgtmBqOwoCz7FxQ+QJf0qri6VaIV+oirdOE2JTT98wF5rxpHstAkPT
+	 NPAvwPD9c1wI042kN3kt5W6/oiZ4Sxbs711u2K2DDOGU3qj0MzUS/En289cOhhtU3GgVL
+	 Ia99/BaAHfk5Ys02dPEn9zis33gmwEtLxGMnoYadzDgHNx7buB4MDXoOgE73XAPcOJUO+
+	 FHT/iLtyVKOyxFAw04T1wlg8Cse+Oh279/wj5CVtbj7lgILSxpv5VA4Hy05xXg7MdlQIx
+	 BdgQPeQNCLeP6QiEKvd4lRxGG9bKO/84CdiOYBw+eP6KFqAp0JSHyKgS++daqy8URiw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=luIqRAt6;
-	arc=none smtp.remote-ip=209.85.214.169
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=yW+PwhyJ;
+	arc=none smtp.remote-ip=209.85.214.173
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A224F606A32C
-	for <mptcp@lists.linux.dev>; Mon,  2 Nov 2026 07:21:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A224F606A32C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0194606A339
+	for <mptcp@lists.linux.dev>; Mon,  2 Nov 2026 07:21:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D0194606A339
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=luIqRAt6
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2e987b4a710so19496315ad.1
-        for <mptcp@lists.linux.dev>; Sun, 01 Nov 2026 23:21:43 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=yW+PwhyJ
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2ea7987517aso17811445ad.0
+        for <mptcp@lists.linux.dev>; Sun, 01 Nov 2026 23:21:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793604103; x=1794208903; darn=lists.linux.dev;
+        d=gmail.com; s=20260707; t=1793604110; x=1794208910; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Lw6EOCCC6sbUctDXo+tERpXOU4fD8zFY96sMocjjruQ=;
-        b=luIqRAt6IQRez7+ZRL+qzBM/7jLO9IKHB8d1exKPvOEQy+IUvuI0rmj+sdgtFus40x
-         oHqPYQIrkJFT0dMwpP2KYp13JO8CnmZ7SPQguvy1GmqicALV9n6Xc1x+roIC5896ngOI
-         nGJwehX5VhAlyhGmRVKPnMAsBSVMiBIgR05QbdseBz3UqKc+RdHD5EzWtmIiZ49e3cyO
-         JJF5cz88iB/P7NlAbSwOVp9GWhs2JfpdypZhG1CLzqWHXX8LRCicoCvTSjkp2PjnW9uM
-         8APhU4LRUPz54nJAo5eqxavlSsFlrqefJDdYkDucnEdS/yVO88ej8/u6VHgn1tMQQ4D5
-         i/vg==
+        bh=0ivwDO8RmSZboOluSZSZngxFUW4tZlFEXHx0gIyw2xc=;
+        b=yW+PwhyJ2R0TcVW4owG8m1wKAFCx178GbRcK46L6rdWcVADxUVzAlFNrEM5q9TXIpQ
+         1RRqTw23uaYAskykgquNcKESYhpnBObdSkBGQKepi4VeCdixyqaZJnTLhIwsiIv489ba
+         8jy6JpjoAcS37EZE28ZCVcY/Nch5YMx99e/fZEiOjGYhspaWEk7IsAOGodBM6PcKOJ02
+         FfhIHNzaSQ6lw45BNEFWyh2KtASZJjw+dWPF+vh0tcHvEbOs6NzvKERvdsDV7uJ3zolA
+         qvyYhGLJQXNv5SYYpA0U/pP+s0QQ/E/pa5aYTIoniobkpEblzVaf0pezcT4uEKcdVjhH
+         eJGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793604103; x=1794208903;
+        d=1e100.net; s=20260707; t=1793604110; x=1794208910;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Lw6EOCCC6sbUctDXo+tERpXOU4fD8zFY96sMocjjruQ=;
-        b=Bmgtgyw0wnSY0rmRcEx9fcgIEDNM8tAYWmuG6Iw4OZ2TncdLK8qtrWc6IYF84olGGO
-         a9rXaSMkv6qub3nl2IrGnbXc2ns5Rtk0oKK5Umnr7DgQK5wmK0nD6p4e96Drbxrzr4cF
-         Fv1u7L9Y+jMv4bfm6sQaMFNpIrucS8zVDQ2mMp+5qhCG3O3gT4LY3gu4srSAExCwTjK5
-         jDDbKX5/Nb0hyckwpcCaX3R25QHl5eREKVXvmh0hIr1iULAMxSq9TLSl6/9wy+1KdA57
-         HBuEPyPCPifYvvFc3SsFUVf4m/ZfDMisJkN1h5ifFh/wy/SQe8OqFHHPUojpB2NbPLLY
-         M+ow==
-X-Forwarded-Encrypted: i=1; AKwUvBxIANAD/k63MvtzdSg6YRmI7ks4BvnHCA3R+RvTZicibyIjgkUg4lGQIh17lsiL8AATLqPnwA==@lists.linux.dev
-X-Gm-Message-State: APuU4Z+oweNJK/Hw8XdNqHNiYJ/R9D5pAljaCKtNHbEn3HvfcKxISVyZ
-	6MjtEVDFdSdzuwplG1HzDQdBb2X/f60I5gOMTd0NXv8gFE6jg2bVVoyM
-X-Gm-Gg: AYBFou1hJbIbYgrqPmjx6lsPihlafkXZVW5ugFkKe5rq7V0MDqu61JMMQNvDVhAmvs5
-	jtY6ZKWbDUiNInipAecirM7sJJcq2l1sUK2AtJx2fabPXuzGrWuVE1OdLvwHaU6rdFFYjTDurBl
-	L8oJY5+W4ys3s2jvRq6YEElRO9VaH74KpgB/ERmfSelRSB61oWyoPEG9fMBwswbyYG4aK8mNHar
-	0xs1p9gobJnVVc04qfjWlTxMYZy2c5rQzL7+b5ZDkkczPjfb5Cz3swenJeb9WERF95g+Ut/6uHF
-	fOc6OBptaE9wvHoJh4iRoGL+biIQ0QPe2LghjQwIHlaNuCwoGbVSSdNJxwAxtDyTyzcYMCcFCS3
-	nM5UK9jJ29cHB/PBwjptd4dR99c9sMk23NH4KwclLeorFLnxzQT5t4xZgXA7L3Pu0Aify7q4+43
-	DqiNTjOh/bCQOAyl3cK6YLYJX6B/1TxCKtrtrVh/cXofkiE9G7iUJbWtStcaurDzcVUDxzvQ8lp
-	yqPL6TtlBvb9bwQRVp3o/PFwEZkS4xzr+uvHv+SUrU58kDODFI7Ixf5HLcRPPWvzWb+UwB+YtdH
-	8adCRUdRDkzIuYwGoX+qK5uke669ZZHSPx0h+GAr/pvezqNevP5FHly6HnoZ/vD2g/V8DlsFnbw
-	TYSmEOvhjrBV+wQgFhHdMvsGYJBt9/Og9BLyJnNgH2lW2fJS6Ol7OPhCMonf3ANpKs/GOyo93kG
-	4=
-X-Received: by 2002:a17:90a:dfc7:b0:3ac:6e91:3f1f with SMTP id 98e67ed59e1d1-3ae6f00cccemr7838997a91.37.1793604103048;
-        Sun, 01 Nov 2026 23:21:43 -0800 (PST)
-Received: from coder-ast-ast-dev-ml-0.tail2dda0.ts.net ([153.61.198.246])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cdb09814cb9sm2753697a12.24.2026.11.01.23.21.42
+        bh=0ivwDO8RmSZboOluSZSZngxFUW4tZlFEXHx0gIyw2xc=;
+        b=n37Sf32AcfrkzIrgd2/6nZ9WGALjOOji2i3417aLH+NxemitPQly+HOhyaHAObqnSN
+         b+/Y9q/6B69XN6jGeCYprj0dGrA7h9rutA80+RqyKStV7nlz0qLZGkQoDY4ah8Lz0Qkf
+         XqnGC/X1A/98og9YWQo7rL5hEgOFBiBk2gTgU6y/jUDoWuj4D0BqIuJtkUiKHZKDmkvq
+         sAN7u6AtfeT4G4EcF4P/TXBLTBqQCxUvBcWZh0GRa7sGSeFDmuIi+vfrcI9YG4ZsRHQU
+         yjYBTsNp6zrStRSZJXVxuUyRlSBM7lpo8etyee8SaDcP+s42cT85itOp89409WW8QHKM
+         iOPg==
+X-Forwarded-Encrypted: i=1; AKwUvBwbd8NPkqXS3JpC+Fzan4PnYlKDckeSQW6uUgFa9131Si8ZlG3znVmSs4Vt5ojANY5JgPN5OQ==@lists.linux.dev
+X-Gm-Message-State: APuU4Z9r+g9RJLz7WEcywWqPFkhzX2FGmqiLcGDC/iWG8I06REiJtK/x
+	hd9QMR4RAaI/jHBfYxxtJ5fpeCI6N+zpsmPaaxI0+nZXC1FB4owLgFJB
+X-Gm-Gg: AYBFou3F6WfteB+b3tq+BhPxu+5yiSktKbxg6v15PSWiUyyUskcb2MELUQaqV0cyBtg
+	F3Nn9wkvkzpVpeytCDJjZgCDibN+oR867GuJUhvc/v+AyDCMX6zJNduzj4Njafg1SZkZHweuo38
+	Y39jTOQ3cKp/KSMkpGiP97rCLW8REgo+o2Z4KVudEAvFDn4pvgacyU3VzsvVJt4LviLX7gDVOlD
+	cS7qjshPxv0WFs/kx53JZwFW5WuGaEaJPugmrJlJjwDB+YMxjf4o+RJ7+ige8ctC2AN0g9j7laU
+	cGqVztuh8+qwC5ctVY3cD8gLuhLgSF2VsfNLbEpe12y5QrjPiTQI55u13BCmhqa3h014hW5noXA
+	LO62dARV64mpA1OnHvx+3oN6UTRlvZL5OxNGVGGyGVQRdBriv0i/c6fQNsNrV2f8brWf7tswHZ/
+	ZKOXWKT8kSnRPvWyPXooWflMPemxqHw+ZUJR1E82uBSzy31BnLbQIBYMiPvjGtRPJOW0almgnbv
+	bitaV6jtnL3Y39yPYo1deO5RxvArYrfSuMJ3ALj5GnbEWWyIKMXhkq+urMy403gbMsniVWQT8+F
+	M2WlhSmNS0P3zqD3fDZXr5nVg7aMExkgztm+8K57yn5Mv8NuqdGWmVR58BmPbzjyKp/gDmP4J06
+	WkqFN7O9sCA+07MtsowrrSgZBVDqoWaZdpB9cjbbViyWYolZ+9YwuSnuPtg7Dy2RSjhMWxGkUhA
+	==
+X-Received: by 2002:a17:902:fda7:b0:2e9:c569:7050 with SMTP id d9443c01a7336-2eb365116demr91088175ad.47.1793604109917;
+        Sun, 01 Nov 2026 23:21:49 -0800 (PST)
+Received: from coder-ast-ast-dev-ml-0.tail2dda0.ts.net ([153.61.198.248])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eb392ae546sm23619805ad.70.2026.11.01.23.21.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Nov 2026 23:21:42 -0800 (PST)
+        Sun, 01 Nov 2026 23:21:48 -0800 (PST)
 From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
 To: bpf@vger.kernel.org,
 	netdev@vger.kernel.org
@@ -101,9 +101,9 @@ Cc: daniel@iogearbox.net,
 	mptcp@lists.linux.dev,
 	mason@kernel.org,
 	josef@toxicpanda.com
-Subject: [PATCH bpf v2 04/15] bpf, sockmap: Subtract all dropped bytes from the return value
-Date: Mon,  2 Nov 2026 07:21:01 +0000
-Message-ID: <20261102072112.4160195-5-alexei.starovoitov@gmail.com>
+Subject: [PATCH bpf v2 05/15] bpf, sockmap: Clear the resume state of a stopped psock
+Date: Mon,  2 Nov 2026 07:21:02 +0000
+Message-ID: <20261102072112.4160195-6-alexei.starovoitov@gmail.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261102072112.4160195-1-alexei.starovoitov@gmail.com>
 References: <20261102072112.4160195-1-alexei.starovoitov@gmail.com>
@@ -118,44 +118,44 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Alexei Starovoitov <ast@kernel.org>
+From: Josef Bacik <josef@toxicpanda.com>
 
-When an sk_msg prog returns SK_DROP, tcp_bpf_send_verdict() frees the full
-message. It then subtracts tosend bytes from *copied, the return value of
-sendmsg(). But tosend is the number of bytes that the verdict applies to.
-After bpf_msg_apply_bytes() tosend can be less than the message size. Then
-sendmsg() reports dropped bytes as sent.
+sk_psock_backlog() passes the skbs of psock->ingress_skb to the socket of
+the psock. When the socket has no room, the function saves the length and
+offset of the remaining data in psock->work_state. A later run continues at
+this offset and clears the state when the skb is complete.
 
-Subtract the number of bytes that sk_msg_free() frees. After an error the
-SK_PASS branch already does this. The SK_REDIRECT branch does the same if
-the message is not the cork. Nothing changes when tosend is equal to the
-message size. Otherwise sendmsg() now returns -EACCES if it sends nothing.
+sk_psock_skb_state() saves and clears the state, but only while
+SK_PSOCK_TX_ENABLED is set. sk_psock_backlog() does not test this flag for
+each skb. If the socket closes during the loop, sk_psock_stop() clears the
+flag. The loop continues, but the state of the completed skb stays. The
+loop uses this state for all subsequent skbs and sends only part of their
+data. A closing socket may lose the end of a stream, but not the middle.
 
-Fixes: ca70b8baf2bd ("tcp_bpf: Fix the sk_mem_uncharge logic in tcp_bpf_sendmsg")
+The state belongs to the skb at the head of ingress_skb. Always clear the
+state when this skb is complete. A stopped psock still saves no new state.
+
+Fixes: 3b4f14b79428 ("bpf, sockmap: fix duplicated data transmission")
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 ---
- net/ipv4/tcp_bpf.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/core/skmsg.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-index b016aa419fb2..36d1bf46353a 100644
---- a/net/ipv4/tcp_bpf.c
-+++ b/net/ipv4/tcp_bpf.c
-@@ -521,12 +521,12 @@ static int tcp_bpf_send_verdict(struct sock *sk, struct sk_psock *psock,
- 		break;
- 	case __SK_DROP:
- 	default:
--		sk_msg_free(sk, msg);
-+		/* All of it is thrown away, not only tosend bytes */
-+		*copied -= sk_msg_free(sk, msg) + delta;
- 		sk_msg_apply_bytes(psock, tosend);
- 		/* The verdict holds for apply_bytes, not for ever */
- 		if (!psock->apply_bytes)
- 			psock->eval = __SK_NONE;
--		*copied -= (tosend + delta);
- 		return -EACCES;
+diff --git a/net/core/skmsg.c b/net/core/skmsg.c
+index f03519468ad1..a5d498982848 100644
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -664,7 +664,8 @@ static void sk_psock_skb_state(struct sk_psock *psock,
+ 			       int len, int off)
+ {
+ 	spin_lock_bh(&psock->ingress_lock);
+-	if (sk_psock_test_state(psock, SK_PSOCK_TX_ENABLED)) {
++	/* No new state once the psock is stopped, but never keep an old one */
++	if (!len || sk_psock_test_state(psock, SK_PSOCK_TX_ENABLED)) {
+ 		state->len = len;
+ 		state->off = off;
  	}
- 
 -- 
 2.55.0
 
