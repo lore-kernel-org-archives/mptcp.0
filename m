@@ -1,54 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.133
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.152
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793672740;
-	b=GgQKkDCWqwtfPuQ3dlvlwxP1foB4vm8vwxjinw4P93bmED9NwwqtztR1mfAjhXUPNGg4
-	 7+ZgkVUoLi0t457nJ+mdoMJ8pyMTHwekmCoheL3pN2WuD9N3L3SApEPuPNkFMkl+OIL2o
-	 ec9Z8jip1cGpIbx+yaHxyz1ooVhRDsBqmvZs+LLjek273QNJ0SoXEg6GC1Rnd8c5mQxUL
-	 HHZchHyp6lE7sccXXE9IIWZWK4dfuUGZnFW2H3LSFRWfbxyuj0oQqnbRjnogqGt27FEgW
-	 woqFUCiCtnEibWD68vSNsQB0C3K6uusPgHSVGt/vTjxJhAsr3HLZ2NBe2gGXOYE19Pw==
+	t=1793674303;
+	b=hYnpMDRDfmY/mSrGRvwN0mtPW4StbJCSHJfyrfnY7vfP7OWS7Lkb2fCHrKNuqCLX7+Ka
+	 9cbAeYmBWGW7ZHnfP6hwc/UI+KW9H27Hj5vskPgapcwcPKmPufoVax6YoZAVY+UVbZnPq
+	 vx8Zy1t3nJ/OgMhXUVv1DR8rFO79ZrBTZfKQSrOuKurnFATQgdIYNxbrR7xQYWGuJRutm
+	 zLcmB9pmZpa9L7ri90ie5EhlwZJQUlFhvtKVwjgMW8iYYmipYovlrVk8g/0QAanfctNIB
+	 NEJ2A3idKpYpuaJvrBEAkM+RlRomrJuibeA5+KaA8kPqEgblz9s+0wFjdlLCERiCLSw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793672740;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793674303;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:To:Cc:References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=IvOE97nqCYOuKLVpMLw0btVRPz7o5pR9mipwEI05Wt4=;
-	b=U081e0Es3Ky3RbUHvm1ma36YS2RoTsrHPUReFKB2OcrjKxm/RDMI4wHxrDPnztH2FMP6
-	 yU9dOw6XaSbUT1P5u37l+9TOUMHRY7fLx7yIlNTYtSswpWBZge6yxa4xocRvv6rFaQrUp
-	 pcYhtGlx5IxJa/+Qc/SSQytR9GyLlRtIOnqalHv0v7HJQ4L8ukZOYOoWCUDGSu1i8uISx
-	 VrYs+uGSGMbr5f3QLztxKv78aYRkeW+lF7phGxxjAcNKWL9nq/KBXHbK8hMNnDh03e3w+
-	 uhstHTmMiSdpgxZNpKpQT54EEVzdD/kYIUpnNUp7zqui8NaLVzDoU6O4xjowppqchwQ==
+	bh=utwUhk9+7VPzUXEYzNonE0Edk/uShvzq3IaEsS1QgV8=;
+	b=dKkHWsRIuws/HzC05inNSb4g2WgFeaNjNOAEL5nsJ09qRPQjz9f1oGX6Y+6m+lqP1VMc
+	 hoBgLZIfT1zh+oDai4bJr2RWyjPGbJXMkHIizpOgDGFkPRgW9fMvLf/gIAnayfmgFSvJW
+	 z9UBQzZ7MwdSzJAlvNLw7SDHA8iUSroFqQNXAn48uY+12RiCnb42iUhsXFlwcbvX7nbQl
+	 YZEUM2eGo6a4AVWHUIqskqZM3efaFwLArc16F2UnSw2SFhwKOC+0RiHMS2tvt+//GH7EI
+	 zXK/u0PEtEfjhwXWt09Ik6PCvKQqwfstHYhZpRoFHcexFIckJveiNjg2Cgc4555z0pA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b="I5SSa/hB";
-	arc=none smtp.remote-ip=95.215.58.133
-Received: from mta1.migadu.com (out-133.mta1.migadu.com [95.215.58.133])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=id4W5LpY;
+	arc=none smtp.remote-ip=91.218.175.152
+Received: from mta0.migadu.com (out-152.mta0.migadu.com [91.218.175.152])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD5E606A327
-	for <mptcp@lists.linux.dev>; Tue,  3 Nov 2026 02:25:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5AD5E606A327
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD59F606A32C
+	for <mptcp@lists.linux.dev>; Tue,  3 Nov 2026 02:51:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AD59F606A32C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=I5SSa/hB
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=id4W5LpY
 X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=IvOE97nqCYOuKLVpMLw0btVRPz7o5pR9mipwEI05Wt4=;
+DKIM-Signature: a=rsa-sha256; bh=ZcPdpIiVqTYoAsjDU4Us1BMEE8qTlTBCdbodw93yRjw=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793672736; v=1; x=1794277536;
- b=I5SSa/hBkeH/5TPTeuN4X07ju8nimjMubtSxy3YDqbsZhEDXwfvyXC6MLzr5m+4WTeH6YWl1
- 5rQ6R5/95ZCsT+JnqTUDRVVFWUMFrFnuCiHacr9bTC82WWKt8l09zoQx9sGf3T36x3UNzzUPRwl
- x1p1nzzCBuYxH7Fp8cytOjlc=
+ t=1793674299; v=1; x=1794279099;
+ b=id4W5LpYlhLzo74b3IC8L4iqxW2CCLNO9S2PAcoan9efMPryUQPX7QTuAW4P2g6z4gWNOu/w
+ m72QNiDNCpQrELRfRrB4RskiIkmYs0EuEkzMGCRV3kKnuje3lsOSIXczxQ2WDyYRGlHBJOgzfC+
+ MiEhi7G5H159Q6LxuJCI1G70=
 X-Envelope-To: mptcp@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 736ecbeae81c178a;
-	Tue, 03 Nov 2026 02:25:36 +0000
-X-Mizu-Trace-ID: 736ecbeae81c178a
+Received: by smtp.migadu.com with ESMTPS id ecb1f28cdbe85820;
+	Tue, 03 Nov 2026 02:51:39 +0000
+X-Mizu-Trace-ID: ecb1f28cdbe85820
 X-Migadu-Flow: FLOW_OUT
-Message-ID: <fc5a153e-f1d8-4b2f-a1ee-646ac5d8d8e4@linux.dev>
-Date: Tue, 3 Nov 2026 10:25:24 +0800
+Message-ID: <428e6bf2-9e6b-4f7e-a36f-cd6a6dbb2122@linux.dev>
+Date: Tue, 3 Nov 2026 10:51:16 +0800
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -59,8 +59,8 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf v2 14/15] bpf, sockmap: Keep the rest of the cork
- after a redirect
+Subject: Re: [PATCH bpf v2 15/15] bpf, sockmap: Clear the end mark of elements
+ added by push and pop
 To: Alexei Starovoitov <alexei.starovoitov@gmail.com>, bpf@vger.kernel.org,
  netdev@vger.kernel.org
 Cc: daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com,
@@ -70,9 +70,9 @@ Cc: daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com,
  matttbe@kernel.org, mptcp@lists.linux.dev, mason@kernel.org,
  josef@toxicpanda.com
 References: <20261102072112.4160195-1-alexei.starovoitov@gmail.com>
- <20261102072112.4160195-15-alexei.starovoitov@gmail.com>
+ <20261102072112.4160195-16-alexei.starovoitov@gmail.com>
 From: Jiayuan Chen <jiayuan.chen@linux.dev>
-In-Reply-To: <20261102072112.4160195-15-alexei.starovoitov@gmail.com>
+In-Reply-To: <20261102072112.4160195-16-alexei.starovoitov@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -80,24 +80,50 @@ Content-Transfer-Encoding: 7bit
 On 11/2/26 3:21 PM, Alexei Starovoitov wrote:
 > From: Alexei Starovoitov <ast@kernel.org>
 >
-> After bpf_msg_apply_bytes() a verdict can apply to a part of the message.
-> Then tcp_bpf_send_verdict() sends this part and goes to more_data, and the
-> sk_msg prog runs on the rest. The SK_REDIRECT branch does not go there if
-> the message is the cork. It removes the cork from the psock before it
-> releases the socket lock. After the redirect it frees the cork together
-> with the rest. Thus the rest is lost, and sendmsg() reports it as sent.
+> The elements of an sk_msg are in a ring of scatterlist slots. A free slot
+> can have the end mark, because sk_msg_init() marks the last slot of the
+> ring. Also, sg_init_table() in tcp_bpf_push() marks each emptied slot. Thus
+> sk_msg_alloc() and sk_msg_page_add() clear the mark of a new element.
 >
-> If bytes remain after the redirect, put the cork back into the psock. Then
-> the prog runs on the rest, as after SK_PASS. If the new verdict is SK_DROP
-> or the push fails, sendmsg() now returns a smaller value or the error.
+> bpf_msg_push_data() and bpf_msg_pop_data() fill a free slot with
+> sg_set_page(), which keeps the mark. Then the sk_msg can have an end mark
+> before its last element. bpf_tcp_ingress() copies the mark. Since the
+> commit below, __sk_msg_recvmsg() stops at the mark and frees the sk_msg.
+> The data after the mark is lost, and its pages and memory charge leak.
 >
-> msg->cork_bytes keeps its value, thus the rest can stay in the cork. If the
-> psock has a new cork after lock_sock(), the kernel still frees the rest. If
-> the redirect of a cork fails, sendmsg() still returns success and frees it.
+> Clear the mark after the two sg_set_page() calls that can fill a free slot.
+> A free slot keeps its mark, as today. tcp_bpf_push() does not read the
+> mark, thus SK_PASS and egress redirect do not change.
 >
-> Fixes: 4f738adba30a ("bpf: create tcp_bpf_ulp allowing BPF to monitor socket TX/RX data")
+> Fixes: 9974d37ea75f ("skmsg: Fix invalid last sg check in sk_msg_recvmsg()")
 > Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 
 
 Reviewed-by: Jiayuan Chen <jiayuan.chen@linux.dev>
 
+
+> ---
+>  net/core/filter.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/net/core/filter.c b/net/core/filter.c
+> index 50c0cda778db..d68b52150405 100644
+> --- a/net/core/filter.c
+> +++ b/net/core/filter.c
+> @@ -2995,6 +2995,8 @@ BPF_CALL_4(bpf_msg_push_data, struct sk_msg *, msg, u32, start,
+>  	msg->sg.size += len;
+>  	sk_msg_clear_elem_copy(msg, new);
+>  	sg_set_page(&msg->sg.data[new], page, len + copy, 0);
+> +	/* A free slot can have the end mark */
+> +	sg_unmark_end(&msg->sg.data[new]);
+>  	if (rsge.length) {
+>  		get_page(sg_page(&rsge));
+>  		sk_msg_iter_var_next(new);
+> @@ -3128,6 +3130,7 @@ BPF_CALL_4(bpf_msg_pop_data, struct sk_msg *, msg, u32, start,
+>  				sg_set_page(nsge,
+>  					    sg_page(sge),
+>  					    b, sge->offset + pop + a);
+> +				sg_unmark_end(nsge);
+>  				sk_msg_set_elem_copy(msg, i, sge_copy);
+>  			} else {
+>  				struct page *page, *orig;
