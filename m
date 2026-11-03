@@ -1,56 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.47
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793702630;
-	b=ARdGqMDFA2KC+DyRqDX92j3HloGw6/q9wV98cPcIM9r2E/jWp0R78W1WSAaqjs3yvnWh
-	 urJDMlYTdV8vIGHocAGLmErUmprPEAVX2h1WtZ6nwzj5UwBmSypmedU25yNAgVQpWOwFr
-	 io5IXEjsxeZfYdURhCsHX0Y0M971mdVFMCzAwKtkHJjguVCQiN81L0Z7t7EohAoflUb9r
-	 xO+nxR/oZUU/MOszetdvHPQro0UXPoFiCHfPxrTLYmO8NubpJ68/gmp5sV16NhHrVjZIq
-	 Fuy8SFPQ0w27qPgJ6YN5OREi/EpGXwqA1Vq7AOyLGJmWBiwDVbDha2MH7lx/VVC/PlA==
+	t=1793703371;
+	b=P4k/xBdQ0quPXGW5kdFz2GTHLSAvCEnQ67+4waGrDmBXmSaPBbwzn+95652pxfVNwv/S
+	 t9QEHomlXmsDZznrSGzshnBasjja6wrIXtCMB9sOKX3EaAnCI2OvK6H8tiFOFAAcVBCqn
+	 gCPPw67u1fX9Qs8LQWfXU79oPJy0rqzbDjZAYQ9Ldtsw4p3q8gItPntH7Sp9NxA7TNepU
+	 zqA05sj0w7kcuhLj8YQxyhFK8mwRyGu+IPOUe/X7NlKic6ye4uZEGKCufhSI0IYa3dhDl
+	 bcTK6O7YNlwXcQkMHLPEQkDxWrLrB1jvQ22t/NIPhc69uLdB7Lzg8qqR3TCrZ23UCRg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793702630;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=RnOEyUJfaS7jg8NvRx3VnZW93rQ2vvALyI01Dspuobc=;
-	b=UmPPCOefAB7mord37iKhwOR/ZG/UI7h8Kv1XLft8hevICnAj2eHR8goEERcaVRZqinBY
-	 HTGARu0IJpPlU8JIR0R0F/QYnV+UGBQccsdQ15pvvxpZW4k64TWvg8F0EAkHw6gYLnUwI
-	 fFIpNPkbLTFkVFkMQgLS9kiPIlI07ZJxZKNE+gdyPIufdMuB0pXUh4ydd7BbtxmHmez17
-	 DWZik1VXlCBDUrmvbd3PeO/SUE0VQPBaWAGkfoMv+GavzqUHLyOFdI78WDJN4ljBqvtxK
-	 wicov0lxCrGI7FBT1mOm7FS4sOj8m72C0rmy76Bc/6RGzlgQWJDM1QMU9AMAJmCAx2Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793703371;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
+	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
+	 Date:MIME-Version:Content-Type;
+	bh=LRQ+ZRXY34sBy4J/+5+Z1mMpvw6fim8aUfWxHCiuy9M=;
+	b=yP7n2rIDBSwwpEjzfzhE3HTi0CzbhpedvgSGpx9UH2RE0VU3yJSDSChFlz8KtO5weG9W
+	 CFwJWcBBGK6oePk2IA37AKU4j59/bGSDoLUvNCzTIMUao2tcHAGPG9U/odntrSQtYL5c0
+	 xgrkVZzY2T4i+FQ/BaciHl8O7ix+bVvKozWFXpZcotC3S+YY1eXIyAq6g/szcgB0PqGBn
+	 hWlu/P9dpf3Kb8KAqivLcBViMOkAVziYpdH6A3we1a8D4hyAZPAT4bhiwmVWy6/CDdgcW
+	 ndsagq53Zq1xTeSCAZNQWOwYVA0wn/7k9ltHGbSc6uYPhl2rWIL08FbP9mpiSFIGXrw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cd7qWEX5;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QjgXGhR0;
+	arc=none smtp.remote-ip=209.85.210.47
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593CC606F7F2
-	for <mptcp@lists.linux.dev>; Tue,  3 Nov 2026 10:43:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15655606EEA8
+	for <mptcp@lists.linux.dev>; Tue,  3 Nov 2026 10:56:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 15655606EEA8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cd7qWEX5
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A16F1F000C1;
-	Tue,  3 Nov 2026 10:43:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793702630;
-	bh=RnOEyUJfaS7jg8NvRx3VnZW93rQ2vvALyI01Dspuobc=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=cd7qWEX5FDBLoVgDfJII6rBzlLGLZQqm6pbBcfC0Do/T1l5kOZMFSNer92dDmJMf2
-	 ZJj1keHylan92kI3Jew0XE+AJXxyTsUaeLcEdmXrncZt71cBawFHJJbMLnE8xD1nvk
-	 z4t4TiXzOLqVzJxf0Yf4t/GLkpWm3Cg7MEtrpqNrcMiVZsRHM7+DPwxiFDTYcs0+hY
-	 WcDglDY0/fo00iw+pVTtmozxFXXTY0R3AJlj7knL8wphfQ0UVKotu3ERseCrcFae93
-	 QXzjhI+iHRviBea5mtaQc6YthBCiH2a0ANuMjhzqnRNZLDmF6vWeoMFZsqtajdosuM
-	 bNVAVLgVYnqmw==
-Message-ID: <sashiko-outbox-195063@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v20 5/6] mptcp: sync mptcp skb cb layout with
- tcp one
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <cf2994ec4440d24183bea5c407c1962270392c32.1793695518.git.tanggeliang@kylinos.cn>
-References: <cover.1793695518.git.tanggeliang@kylinos.cn>
- <cf2994ec4440d24183bea5c407c1962270392c32.1793695518.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=utf-8
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QjgXGhR0
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-82109f51565so2000839a34.2
+        for <mptcp@lists.linux.dev>; Tue, 03 Nov 2026 02:56:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793703370; x=1794308170; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=LRQ+ZRXY34sBy4J/+5+Z1mMpvw6fim8aUfWxHCiuy9M=;
+        b=QjgXGhR08/G4iKp57ebpHGQ17AjeDiU8IZ4UjZeWe/YVmbkkJ8gPNULrqcUV91G3sH
+         aYVqibG5wv+lx8LZUgyYcYelL/AzUK8yAr+8LQnuJHxih4ru9fc2IW2SBVaTmhd++wxJ
+         UFn8ib98F43ohnbBcuxBxNvnig2BBBAImfYvLmn4BZySBgQDxtXnj7V0d87o0PP619sM
+         s2nilHPosxqWqMwrh8dLFqRx06EsTkuoN7LMwiNtxlN3xri2KZUns5BHMSKVjiP+p1aD
+         vcbdZVvKi/RFHAV0MxvCaltdS5Y0r+xk9Xg1eNV/D/SWSacRa1XmAqBYhsjbmDXHjEz7
+         5wTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793703370; x=1794308170;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=LRQ+ZRXY34sBy4J/+5+Z1mMpvw6fim8aUfWxHCiuy9M=;
+        b=PBb2Tt52nTpnYZZWhnk3FJk6cTcySFXOqrCnIYm1u8TpA7r4oKWQ6oxTigp0ZUpkRn
+         egSN5ud5WDMZgv3Eca107LQ/wSVoKTLXWGKyYxd669GwcX4fVq6sX0uSgTNm1ditU+AT
+         k16jGeEM5wizf9s6GlEm80M5ZXby9b2OqHWg+tBblgeT9yYUMPPHN3+HNtgpmLQp9w7K
+         SQ2h+cHxc7vbgP352vmgmU/U34ZNe5uaFdUGO4lQHxrrWqRWyjqnf/olOYBfPwMoONz1
+         t2gb6qvzyYmppLV6xDNaSTWVB+Lyw74SzIM00YGx9nsdSAcrGOjh3kIx0vLAaePhzTOL
+         crnw==
+X-Gm-Message-State: APuU4Z8RPuy5+sEIceZQxGEvk9JIIlejCYppyO5TLGWkT1g0ijxRFmDm
+	kXpyKw6BpKb63n2GWo1uG2BhbKYOvYn1WVeSVQ+wbYAZRF6mB0UTt9NL271EIqlmhQ==
+X-Gm-Gg: AYBFou2Lpg0x1cNi5iKEbGfoOMkf4S1y9IMijY2DK8jr3mDOl9t32RX1fKE7rsCHmTY
+	ZZ72WQzwKyij0duoOJyqfhyYZcUZzpryOuaJIaAWg6//lDJP+/p4rmnEzfdEOTf/EFZLrBueIm0
+	Q+I8Bsk9qFutNAtP2ulCjnS8vBkj9aD27j+FQqmLcO1FH3aHr0VW3g37Pjo7XoRXw1RXQjupbZG
+	5VMcqDiA8S8Zioxl0NBpPu6YEw2dMhXBPbj3r1FZnj2E3f3EIohZ4e4xOnQergWg5H324lY7H+X
+	E/gT8hF3EvavPm7BweLR5yODwAXAPal4jJ0ZHWUfrBD3mEBjJ4wKCEGBPm/zohw15JSv65d4KSw
+	Y0m7feuwFCOowJVBVP6ug1A/kwTYbBq1t/c0s2KtLc0+KEd8nXwbPH8QUzDf5+OvRQojvYEAMTz
+	XC4nGV8+UO/As66Nl4UGZIIKdlRGTb+Lj/pQZnA07hcUnWiIFV8+NZrDYx8/gL5QdHGLRcG0zyF
+	msiCepj75xVkacAWHV9MrbXclgIKz3lx324qk9fm/gsX/rmZme1AAbF4UHC+M0KUFFm2+0S4TfI
+	ofxMmABHS0v3MjxoKBMVREIiX1KQ+HrRTiHl/GWkiQ==
+X-Received: by 2002:a05:6808:192a:b0:504:5fe1:c8d4 with SMTP id 5614622812f47-5640de7456amr9280858b6e.59.1793703369900;
+        Tue, 03 Nov 2026 02:56:09 -0800 (PST)
+Received: from github.com ([158.23.93.163])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-5640fe423fasm10681949b6e.16.2026.11.03.02.56.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Nov 2026 02:56:08 -0800 (PST)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Anil Kaushik <anilkaushikwireless@gmail.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20261103085244.23064-1-anilkaushikwireless@gmail.com>
+References: <20261103085244.23064-1-anilkaushikwireless@gmail.com>
+Subject: Re: [PATCH mptcp-next v15 0/7] mptcp: pm: in-kernel: retry
+ subflows closed after an error
+Message-ID: <429b2de6-d3d6-e353-5976-044ff40bf61e@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 10:43:49 +0000
+Date: Tue, 03 Nov 2026 10:56:07 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -59,139 +97,60 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Critical] mptcp: subtracting offset in mptcp_init_skb() corrupts out-of-=
-order data
-- [High] mptcp: 64-bit ack_seq minus 32-bit map_seq overflow in mptcp_inq_h=
-int()
---
+Hi Anil,
 
-commit 0495d49fc9571bbbbcc61fc3640dabeb8f98b52b
-Author: Paolo Abeni <pabeni@redhat.com>
+Thank you for your modifications, that's great!
 
-mptcp: sync mptcp skb cb layout with tcp one
+Our CI did some validations and here is its report:
 
-This commit aligns struct mptcp_skb_cb with struct tcp_skb_cb by narrowing
-map_seq and end_seq to 32-bit sequence numbers and adding a 64-bit
-map_seq64 field for receive window admission and coalescing checks.
+- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): selftest_simult_flows =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf: Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_n=
+et-next/actions/runs/41609998274
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 3bd7d38ce78c4..3e10b06b7772d 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/d3511b76cc=
+ff
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1200003
 
-[ ... ]
 
-> @@ -425,10 +434,14 @@ static void mptcp_init_skb(struct sock *ssk, struct=
- sk_buff *skb, int offset)
->  	 *
->  	 * This is correct even when offset > 0 and mapping is out-of-order,
->  	 * because consumed prefix bytes are part of the same logical DSN range.
-> +	 *
-> +	 * Note that end seq number is only available in 32bits format.
->  	 */
-> -	MPTCP_SKB_CB(skb)->map_seq =3D mptcp_subflow_get_mapped_dsn(subflow) -
-> -				     offset;
-> +	MPTCP_SKB_CB(skb)->map_seq64 =3D mptcp_subflow_get_mapped_dsn(subflow) -
-> +				       offset;
-> +	MPTCP_SKB_CB(skb)->map_seq =3D (u32)MPTCP_SKB_CB(skb)->map_seq64;
->  	MPTCP_SKB_CB(skb)->end_seq =3D MPTCP_SKB_CB(skb)->map_seq + skb->len;
-> +	MPTCP_SKB_CB(skb)->flags =3D 0;
->  	MPTCP_SKB_CB(skb)->has_rxtstamp =3D has_rxtstamp;
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-[Severity: Critical]
-As reported by Sashiko on v19 [1], when offset > 0 in mptcp_init_skb() and
-the active DSS mapping is out of order at the MPTCP level
-(mptcp_subflow_get_mapped_dsn(subflow) > msk->ack_seq), can subtracting
-offset from map_seq64 and map_seq without stripping the [0, offset) prefix
-from skb corrupt the MPTCP receive stream?
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-On a subflow where data is multiplexed across multiple subflows,
-consecutive DSS mappings do not have contiguous DSNs. If the leading
-[0, offset) bytes of the head skb on ssk->sk_receive_queue belonged to a
-previous DSS mapping (for example after mptcp_subflow_discard_data() in
-subflow_check_data_avail() discards an already-received mapping and
-advances to the next mapping in the same skb) or an overlapping TCP
-retransmission, those prefix bytes are not part of the active mapping
-starting at tp->copied_seq and are not covered by its DSS checksum in
-validate_data_csum().
+For more details:
 
-Setting map_seq64 =3D mapped_dsn - offset and end_seq =3D map_seq + skb->len
-assigns the fabricated DSN range [mapped_dsn - offset, mapped_dsn) to the
-unpulled [0, offset) prefix bytes:
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-- If mapped_dsn - offset <=3D msk->ack_seq < mapped_dsn, __mptcp_move_skb()
-  treats the skb as covering msk->ack_seq, queues or coalesces it into
-  sk->sk_receive_queue, and advances msk->ack_seq across the unreceived
-  gap. __mptcp_recvmsg_mskq() and mptcp_recv_skb() then compute a read
-  offset of (u32)msk->copied_seq - MPTCP_SKB_CB(skb)->map_seq < offset and
-  copy the stale [0, offset) subflow bytes to user space.
 
-- If mapped_dsn - offset > msk->ack_seq, mptcp_data_queue_ofo() inserts the
-  skb into msk->out_of_order_queue starting at mapped_dsn - offset, where
-  __mptcp_try_coalesce() can coalesce the stale prefix into a preceding OFO
-  skb, real segments arriving for [mapped_dsn - offset, mapped_dsn) are
-  dropped as duplicate data, and __mptcp_ofo_queue() dequeues the skb once
-  msk->ack_seq reaches mapped_dsn - offset.
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 7878e6ac6c0b6..fa54f70ab501d 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -129,9 +129,12 @@
->  #define MPTCP_SYNC_SEQ		8
-> =20
->  struct mptcp_skb_cb {
-> -	u64 map_seq;
-> -	u64 end_seq;
-> +	u32 map_seq;
-> +	u32 end_seq;
-> +	u32 unused;
-> +	u16 flags;
->  	u8  has_rxtstamp;
-> +	u64 map_seq64;
->  };
-
-[Severity: High]
-Now that MPTCP_SKB_CB(skb)->map_seq is a u32, does mptcp_inq_hint()
-overflow when subtracting it from the 64-bit msk->ack_seq?
-
-In net/mptcp/protocol.c:mptcp_inq_hint():
-
-	skb =3D skb_peek(&sk->sk_receive_queue);
-	if (skb) {
-		u64 hint_val =3D READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
-
-		if (hint_val >=3D INT_MAX)
-			return INT_MAX;
-
-		return (unsigned int)hint_val;
-	}
-
-Because READ_ONCE(msk->ack_seq) is a u64 and MPTCP_SKB_CB(skb)->map_seq is
-zero-extended from u32 to u64, the upper 32 bits of msk->ack_seq remain in
-hint_val (or the subtraction underflows across a 32-bit wrap), causing
-hint_val >=3D INT_MAX to evaluate to true whenever sk->sk_receive_queue is
-non-empty and msk->ack_seq has non-zero upper 32 bits.
-
-In addition to returning INT_MAX for SIOCINQ in mptcp_ioctl() and
-TCP_CM_INQ in mptcp_recvmsg(), mptcp_rcv_space_adjust() does:
-
-	copied =3D msk->rcvq_space.copied;
-	copied -=3D mptcp_inq_hint(sk);
-	if (copied <=3D msk->rcvq_space.space)
-		goto new_measure;
-
-When mptcp_inq_hint() returns INT_MAX, copied becomes negative and jumps to
-new_measure, preventing mptcp_rcvbuf_grow() from auto-tuning the MPTCP and
-subflow receive buffers. Should mptcp_inq_hint() use 32-bit sequence
-arithmetic (or subtract msk->copied_seq from msk->ack_seq) instead?
-
-[1] https://lore.kernel.org/r/1c928472a89719130041c92cadd7e0fb6dbf552a.1793=
-361629.git.tanggeliang@kylinos.cn
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1793695518.gi=
-t.tanggeliang@kylinos.cn?part=3D5
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
