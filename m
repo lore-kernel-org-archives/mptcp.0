@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793741879;
-	b=Wwn/0yTJEx/vxlswl53v2sxhJoo3V7P6eAJcjfP13nxj7m5M4zpKxOg4U5c6XpXcPYtP
-	 4T+t8UCgstZcWi2+3LIMFxicLoJzOLbyJT+Jiyv3UzO5TPywptny7gF/M117M8ZCCs2eI
-	 c1A3S3ZiWLbxk98BFqK4BbPk+aFfAIoDTZLDa5OESSfXalbXLxF3KcKFyCf3QSCvAkYyn
-	 lcYIKuf2AA18kwlbzySgirpP2VeVwu9COUSfWcv6O1R8DBbihosF4JgsqdQWCI+9SRAxJ
-	 WMun4zYe60NxEcV0crAA/rh+vJqmi12JZEpQFm8STZmRXKf49V54CHrR2j5dvHh9rXg==
+	t=1793741880;
+	b=rK4omgWAIdX2BHzhJ2+4eF7HO6mDyjQTj7gA2Wa1/wmtCGyxIm7EjesDin+TeF8O6g0K
+	 3Mi9C5Z+cscYj1iqIWhd7QWvHdWZ5QlaS67dlKEcdG1lmGYPWnohSCf4r9J4uSLOwVsXD
+	 yInA5i2HYSPmwxvP6su8OBj9WLiKuZ3IOjC0YFQtxvc8W15DTzmoT61SdP0yDdM5WPx5O
+	 r6eW9meX9lracRuOEc/c6gcwUZlJbByVuXX045+FXdOBkpwKuKtGck88RHdq97fxjBCNR
+	 tcJ3W9baS5AKBTGhaELRiXNK+RIQg2er+1nFq9iLbq1wIn1ElU/W/DFKW1mnx1XxBYQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793741879;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793741880;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=uyJDo7OV7DfHD/HxsDJJ2zC/feoJdSr9R7W6gWr18ck=;
-	b=XeOeCm6QX6AZGBqzUzmZJVevU5yRDntIqMrxFkcEsuicldtf6jPpzzN52KrEL+s9eR0l
-	 BfpL+kupRIKDBD+nl8bjkOYgrL1fx+pKiwrrMnwElmz/+Wf0NiWuF2FUalptniXnMow2Z
-	 SMTwegw8QbcO2ve0jaNfMbvsHe9/HHTWJMhohVWR03RqI9b4vckcaHx5zGQwWvLfQ1pYF
-	 5CX0sb7KYQavkxe2lcPqhYnL3QHdhMq3sTyFqDRIPoT2Ovo2elJCQTzZz1HQbIBWdT8Jo
-	 xxlUtz4lOPZ8726nelxh7KhRxsL/779jxx0O1KamgjiTxiDaHmoYxOgVoNhYs1bJ8YA==
+	bh=gtM1vVlA4eUdy9KzKaA5nW7tGQMPQv+qiqwZbi8D3kk=;
+	b=4CW/rbOOaTqSmPlTSuJmunNEItLRRpUgB05X7i1x2M5onZmNAKoVBoYfdPK347uzK/h9
+	 J5vmcSqBZNyorZ0Aa5YJc+3kWSROXWKkK/mCAaERoLndIPpF6hTnR6RaJvwIGIOnhrkJp
+	 kOfGPov4LfHts6i/u5Bjl9WvNe+Fm6toZWxa/ziIAsgcInDZN1JLiB76et7/3LrwPGFnj
+	 UFFaiV5x/KzJpNbFewJmMRYgEz9Saoz2pkT1S7Tqa7YYhV8Knxsp0v9rKTlslHIBt0Ifs
+	 Prhs8+H2H0OX3dUpUUEL1ioYKO9Mf8Vs55tCyLhw+e4bkPFn0HZfoGDvhMp4aWiJgQg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hIJArRi2;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="A0Df5/Up";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9512606A31B;
-	Tue,  3 Nov 2026 21:37:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900C2606A328;
+	Tue,  3 Nov 2026 21:38:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hIJArRi2
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AB691F000C1;
-	Tue,  3 Nov 2026 21:37:57 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=A0Df5/Up
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CA381F000C1;
+	Tue,  3 Nov 2026 21:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793741878;
-	bh=uyJDo7OV7DfHD/HxsDJJ2zC/feoJdSr9R7W6gWr18ck=;
+	s=k20260515; t=1793741880;
+	bh=gtM1vVlA4eUdy9KzKaA5nW7tGQMPQv+qiqwZbi8D3kk=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=hIJArRi2YVu09RgrD/mUwF8RfI9DkQ9kkT6QVdGMxl/dlcT/A8K/spx2KN5HGHyP9
-	 iGkLckfXrhuhi3aLIgNRuGPoAkZDPNkEtmNmZSD4oOHrbExzJxlZk/DeSMgxbF6eU1
-	 SUnRvoqOYDNKJCc273KMtIUj2Idk5zjf8L5JN2tpymzlIdATbZfJZ7GGDGLVCJ+8LI
-	 BhEVijWe0vNrBCF7yYojkNzCAV+SwSb3PofPuCBbN/NSG5FLsNBFXQi8EJNKX4+Hug
-	 mL4ZBUb+iLKPyHjzCiVqC/7Gmgp1FU4NMo+FN+J+Uc9c7ilZIvAxOLKflKL0ImkyzK
-	 lCGf2wqKmUxnw==
-Subject: Re: [PATCH bpf v2 03/15] bpf, sockmap: Don't let an SK_PASS verdict
- cover the next message
+	b=A0Df5/UpYAIhUerMAqadTJO1erLorsRlwoMpmlwFh/dw4vvvNrTF14QjnNU31JFua
+	 /0GwJjKEopVIXqYQqFViTcGWokqDwpUVxjgVUUiGAVOrTmgh1TAREoGLfj9k+c3phx
+	 qwXfc3vViktZos6fsJ8cTD7k6vlwSyLE+Qn65Yx9dCkpaeumVoAVi0hCZUjhX/8rlE
+	 vC0fzecyADEgl+O6iWBBBM9+2oRCOXoZI73VF1T4thLbdlC5OVx2l3z2VWomwAIfNc
+	 4WwGiPtwhJXLUybmDTLdWp+2KxtKqDnVnwFRLoGl5fUX16yDU1xs3xG8FIyz2/ZT49
+	 KleAX8yiGIa5g==
+Subject:
+ Re: [PATCH bpf v2 06/15] bpf, sockmap: Give no progs to a TCP listener
 From: netdev-bot+sashiko@kernel.org
 To: alexei.starovoitov@gmail.com
 Cc: bpf@vger.kernel.org, netdev@vger.kernel.org, daniel@iogearbox.net,
@@ -50,11 +50,11 @@ Cc: bpf@vger.kernel.org, netdev@vger.kernel.org, daniel@iogearbox.net,
  davem@davemloft.net, edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com,
  horms@kernel.org, kuniyu@google.com, willemb@google.com, matttbe@kernel.org,
  mptcp@lists.linux.dev, mason@kernel.org, josef@toxicpanda.com
-Date: Tue, 03 Nov 2026 21:37:57 +0000
-Message-ID: <179374187706.488855.8366350890804573396@kernel.org>
-In-Reply-To: <20261102072112.4160195-4-alexei.starovoitov@gmail.com>
-References: <20261102072112.4160195-4-alexei.starovoitov@gmail.com>
-X-sashiko-severity: Critical
+Date: Tue, 03 Nov 2026 21:37:58 +0000
+Message-ID: <179374187870.488855.7800063583184291863@kernel.org>
+In-Reply-To: <20261102072112.4160195-7-alexei.starovoitov@gmail.com>
+References: <20261102072112.4160195-7-alexei.starovoitov@gmail.com>
+X-sashiko-severity: High
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -70,7 +70,7 @@ MIME-Version: 1.0
 Thank you for your contribution! Sashiko AI review found 3 potential
 issue(s) to consider.
 
-Critical: 1 · High: 1 · Medium: 1 · Low: 0
+Critical: 0 · High: 2 · Medium: 0 · Low: 1 (1)
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -78,193 +78,242 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [Critical] Use-after-free of psock->cork.
-- [High] The fix is incomplete when the verdict has a byte budget
-  (psock->apply_bytes != 0).
-- [Medium] The patch resets eval early, which lets one sender's bytes be
-  charged against another sender's verdict and end that verdict early.
+- [High] The patch does not fix the listener-side bug that its commit
+  message names first: a TCP listener carrying the psock's sk_data_ready…
+- [High] tcp_bpf_clone() decides whether to reset the child's callbacks
+  only by checking whether the copied sk_prot is a tcp_bpf proto…
+- [Low] The helper descriptions still promise that every inserted socket
+  inherits the map's programs, which contradicts the new TCP-listener…
+
+Pre-existing issues:
+- [Low] This problem wasn't introduced by this patch, but the
+  sockmap_listen child-clone tests do not test what their comments…
 
 --
 
-bpf, sockmap: Don't let an SK_PASS verdict cover the next message
+bpf, sockmap: Give no progs to a TCP listener
 
-This commit changes the __SK_PASS branch of tcp_bpf_send_verdict(). When
-psock->apply_bytes is 0, it now resets psock->eval to __SK_NONE before
-tcp_bpf_push(). When the push fails, it subtracts the bytes that went out
-from apply_bytes and ends the verdict if apply_bytes reaches 0.
+This patch makes sock_map_link() skip program inheritance for TCP sockets
+in TCP_LISTEN. Such a listener gets a psock but keeps its own
+sk_data_ready and sk_write_space. It also makes tcp_bpf_clone() reset the
+child's sk_data_ready and sk_write_space to the TCP defaults, and it
+documents the listener exception in map_sockmap.rst.
 
-> diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-> index d90bcc911b36b..b016aa419fb2d 100644
-> --- a/net/ipv4/tcp_bpf.c
-> +++ b/net/ipv4/tcp_bpf.c
-> @@ -457,8 +457,22 @@ static int tcp_bpf_send_verdict(struct sock *sk, struct sk_psock *psock,
+> diff --git a/Documentation/bpf/map_sockmap.rst b/Documentation/bpf/map_sockmap.rst
+> index 2d630686a00ba..eb466b86df170 100644
+> --- a/Documentation/bpf/map_sockmap.rst
+> +++ b/Documentation/bpf/map_sockmap.rst
+> @@ -33,7 +33,9 @@ of ``__SK_DROP``, ``__SK_PASS``, or ``__SK_REDIRECT``.
 >  
->  	switch (psock->eval) {
->  	case __SK_PASS:
-> +		/* The push may sleep without the socket lock, and it may fail */
-> +		if (!psock->apply_bytes)
-> +			psock->eval = __SK_NONE;
+>  When a socket is inserted into one of these maps, its socket callbacks are
+>  replaced and a ``struct sk_psock`` is attached to it. Additionally, this
+> -``sk_psock`` inherits the programs that are attached to the map.
+> +``sk_psock`` inherits the programs that are attached to the map. A TCP listener
+> +is an exception. It gets a ``struct sk_psock``, but it keeps its callbacks and
+> +inherits no programs.
+
+[Severity: Low]
+
+This isn't a bug, but a few other places still describe inheritance as
+unconditional. bpf_sock_map_update() and bpf_sock_hash_update() in
+include/uapi/linux/bpf.h still say:
+
+ *		If the *map* has eBPF programs (parser and verdict), those will
+ *		be inherited by the socket being added. If the socket is
+ *		already attached to eBPF programs, this results in an error.
+
+The bpf_sock_map_update() and bpf_sock_hash_update() helper sections
+further down in map_sockmap.rst say the same thing.
+
+After this patch, a TCP_LISTEN socket inherits no programs and no longer
+gets -EBUSY. Should these descriptions, and the bpf-helpers man page that
+is generated from the UAPI header, mention the listener exception too?
+
+> diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+> index efe49551caba9..282c6a4b2b05f 100644
+> --- a/net/core/sock_map.c
+> +++ b/net/core/sock_map.c
+> @@ -228,6 +228,14 @@ static int sock_map_link(struct bpf_map *map, struct sock *sk)
+>  	struct sk_psock *psock;
+>  	int ret;
+>  
+> +	/*
+> +	 * A listener receives no data. With the callbacks of a verdict program
+> +	 * or a parser it would no longer wake accept(), and its children would
+> +	 * copy them.
+> +	 */
+> +	if (sk_is_tcp(sk) && sk->sk_state == TCP_LISTEN)
+> +		goto no_progs;
 
 [Severity: High]
 
-When psock->apply_bytes is not 0, eval stays __SK_PASS during the push.
-The budget is still debited only after tcp_bpf_push() returns. Can a
-second sender on the same socket still get past the prog here?
+This only checks sk_state at insert time. Can a socket that was inserted
+while ESTABLISHED still become a listener that carries the psock's
+sk_data_ready?
 
-This call chain releases the socket lock:
+sock_map_sk_state_allowed() accepts an ESTABLISHED TCP socket. In that
+case sock_map_link() gives it the map's programs, and
+sk_psock_start_verdict() or sk_psock_start_strp() replaces sk_data_ready.
+tcp_bpf_prots override neither disconnect nor unhash, so the psock
+survives this sequence:
 
-tcp_bpf_push()->tcp_sendmsg_locked()->sk_stream_wait_memory()->sk_wait_event()
+  connect(AF_UNSPEC)
+    __inet_stream_connect()
+      err = sk->sk_prot->disconnect(sk, flags);
+      sock->state = err ? SS_DISCONNECTING : SS_UNCONNECTED;
+  listen()
+    __inet_listen_sk()    /* TCP_CLOSE is accepted */
 
-While sender A sleeps there, sender B can enter tcp_bpf_send_verdict(). B
-sees eval == __SK_PASS, so the prog doesn't run, and B computes its tosend
-from the budget before A's bytes are taken out:
+When a handshake completes, parent->sk_data_ready() is
+sk_psock_verdict_data_ready():
 
-	tosend = msg->sg.size;
-	if (psock->apply_bytes && psock->apply_bytes < tosend)
-		tosend = psock->apply_bytes;
-
-A's bytes are subtracted only later, by sk_msg_apply_bytes(psock, tosend)
-on success or by the new sk_msg_apply_bytes(psock, origsize -
-msg->sg.size) on failure.
-
-If both pushes succeed, a verdict that bpf_msg_apply_bytes() limited to N
-bytes covers up to 2N bytes. If A's message alone uses up the budget, B's
-message is the next message, and it passes without running the prog.
-
-The commit message says:
-
-    When apply_bytes is not 0, eval stays __SK_PASS during the push, and
-    the prog does not run for another message, as today. The verdict must
-    still cover the bytes that a failed push does not send. But such a
-    message also lowers apply_bytes.
-
-But B's message is sized against the budget before A's in-flight bytes
-are removed from it. Would it be better to reserve the budget before the
-push? That means debiting tosend, and ending the verdict when the budget
-reaches 0, before calling tcp_bpf_push(), instead of subtracting after a
-failure.
-
-The __SK_PASS branch also looks unchanged at the end of the series.
-
-> +		origsize = msg->sg.size;
->  		ret = tcp_bpf_push(sk, msg, tosend, flags, true);
-
-[Severity: Critical]
-
-Can another sender free msg while this push sleeps?
-
-msg can be psock->cork here. tcp_bpf_sendmsg() picks it up with:
-
-		if (psock->cork) {
-			msg_tx = psock->cork;
-
-The __SK_REDIRECT branch detaches psock->cork before release_sock(). The
-__SK_PASS branch leaves it attached during tcp_bpf_push(). tcp_bpf_push()
-keeps sge and page pointing into the cork's sg ring across
-tcp_sendmsg_locked(), and that call can sleep in sk_stream_wait_memory()
-without the socket lock.
-
-With this patch and apply_bytes == 0 (the default), eval is __SK_NONE
-during that sleep. Sender B can take the lock, reuse the same psock->cork,
-append to it, and run the prog on A's partly sent cork. If the prog
-returns SK_REDIRECT, B's __SK_REDIRECT branch does:
-
-		if (psock->cork) {
-			cork = true;
-			psock->cork = NULL;
-		}
+net/core/skmsg.c:sk_psock_verdict_data_ready() {
+    ...
+	copied = ops->read_skb(sk, sk_psock_verdict_recv);
+	if (copied >= 0) {
 		...
-		if (cork) {
-			sk_msg_free(sk, msg);
-			kfree(msg);
+			sk_psock_data_ready(sk, psock);
+		...
+	}
+}
 
-When A resumes, tcp_bpf_push() writes into the freed struct sk_msg:
+On a listener, tcp_read_skb() always fails:
 
-		msg->sg.size -= ret;
-		sge->offset += ret;
-		sge->length -= ret;
-
-It may also retry with, or call put_page() on, a page that was already
-released. If the push failed, the new failure path reads msg->sg.size and
-calls sk_msg_free(sk, msg) on the freed object.
-
-If B's prog returns SK_DROP instead, sk_msg_free() in the __SK_DROP branch
-drops page references that A is still using.
-
-The shared-cork problem with two PASS senders already existed. The kfree()
-variant used to need a third sender to end a byte-limited verdict. The
-early reset makes it reachable with only two senders.
-
-The later commit "bpf, sockmap: Check that the redirected message is the
-cork" also says that "a cork is still not safe for two senders on one
-socket". The __SK_PASS branch is unchanged at the end of the series.
-
-Is it safe to reset eval here while psock->cork is still attached and
-being pushed?
-
->  		if (unlikely(ret)) {
-> +			/* A part of it may have gone out */
-> +			sk_msg_apply_bytes(psock, origsize - msg->sg.size);
-> +			/* Another sender can use up the rest during the push */
-> +			if (!psock->apply_bytes) {
-> +				psock->eval = __SK_NONE;
-> +				if (psock->sk_redir) {
-> +					sock_put(psock->sk_redir);
-> +					psock->sk_redir = NULL;
-> +				}
-> +			}
-
-[Severity: Medium]
-
-With the early reset, can sender A's bytes be charged against a verdict
-that another sender installed?
-
-When apply_bytes is 0 on entry, A's tosend is its whole message. eval is
-now __SK_NONE while A sleeps in tcp_sendmsg_locked(). Sender B can take
-the socket lock and run the prog, which installs B's verdict:
-
-net/core/skmsg.c:sk_psock_msg_verdict() {
+net/ipv4/tcp.c:tcp_read_skb() {
     ...
-	psock->apply_bytes = msg->apply_bytes;
-	if (ret == __SK_REDIRECT) {
-    ...
-		psock->sk_redir = msg->sk_redir;
-		sock_hold(psock->sk_redir);
+	if (sk->sk_state == TCP_LISTEN)
+		return -ENOTCONN;
     ...
 }
 
-If B's apply_bytes is larger than B's message, B's verdict (PASS, DROP or
-REDIRECT) stays active with some budget left. When A resumes, it
-subtracts its bytes from B's budget, even though A's own verdict had no
-byte limit. On success that happens through the unchanged
-sk_msg_apply_bytes(psock, tosend). On failure it happens through the new
-call above.
+As a result the saved sock_def_readable never runs. Wouldn't a blocking
+accept(), or poll/epoll on the listener, then never be woken? The
+strparser variant looks the same, because tcp_read_sock_noack() also
+returns -ENOTCONN on TCP_LISTEN.
 
-If that brings apply_bytes to 0, either this new block or the common block
-at the end of tcp_bpf_send_verdict() sets eval to __SK_NONE and drops
-psock->sk_redir:
+The new comment in tcp_bpf_clone() describes exactly this socket, but
+only newsk gets repaired. The commit message names "does not wake
+accept()" as the bug and tags b8b8315e39ff for the listen-later case.
 
-	if (likely(!ret)) {
-		if (!psock->apply_bytes) {
-			psock->eval =  __SK_NONE;
-			if (psock->sk_redir) {
-				sock_put(psock->sk_redir);
-				psock->sk_redir = NULL;
-			}
-		}
+Would the listener's callbacks need to be restored or stripped when it
+moves to TCP_LISTEN, or that transition be refused?
 
-That ends B's verdict before it has covered the bytes B's prog asked for.
-Later bytes that should have been dropped or redirected get a fresh prog
-run instead.
+For this socket, the new map_sockmap.rst sentence "it keeps its callbacks
+and inherits no programs" also doesn't hold.
 
-Before this patch, eval stayed __SK_PASS during A's push, so this needed a
-third sender. Could A record locally whether its verdict had a byte limit
-on entry? Then it would touch psock->apply_bytes, eval and sk_redir only
-when that is true and the verdict is still its own.
+[ ... ]
 
->  			*copied -= sk_msg_free(sk, msg);
->  			break;
->  		}
+> diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
+> index 36d1bf46353a9..fd443350f9b81 100644
+> --- a/net/ipv4/tcp_bpf.c
+> +++ b/net/ipv4/tcp_bpf.c
+> @@ -785,7 +785,18 @@ void tcp_bpf_clone(const struct sock *sk, struct sock *newsk)
+>  {
+>  	struct proto *prot = newsk->sk_prot;
+>  
+> -	if (is_insidevar(prot, tcp_bpf_prots))
+> -		newsk->sk_prot = sk->sk_prot_creator;
+> +	if (!is_insidevar(prot, tcp_bpf_prots))
+> +		return;
+
+[Severity: High]
+
+The callback reset only happens when the copied sk_prot is a tcp_bpf
+proto. Can a child copy the restored sk_prot together with a stale psock
+sk_data_ready?
+
+sk_psock_drop() restores sk_prot before it restores sk_data_ready:
+
+net/core/skmsg.c:sk_psock_drop() {
+	write_lock_bh(&sk->sk_callback_lock);
+	sk_psock_restore_proto(sk, psock);
+	rcu_assign_sk_user_data(sk, NULL);
+	if (psock->progs.stream_parser)
+		sk_psock_stop_strp(sk, psock);
+	else if (psock->progs.stream_verdict || psock->progs.skb_verdict)
+		sk_psock_stop_verdict(sk, psock);
+	write_unlock_bh(&sk->sk_callback_lock);
+	...
+}
+
+sk_psock_restore_proto()->tcp_bpf_update_proto(restore=true) publishes
+the original proto with sock_replace_proto(). Only later does
+sk_psock_stop_verdict() write back saved_data_ready.
+
+The clone side takes neither sk_callback_lock nor the listener's lock:
+
+tcp_v4_rcv()    /* TCP_NEW_SYN_RECV */
+  tcp_check_req()
+    syn_recv_sock()
+      tcp_create_openreq_child()
+        sk_clone()
+          sock_copy()    /* skc_prot and sk_data_ready copied locklessly */
+
+A child cloned between those two steps would get sk_prot == tcp_prot and
+sk_data_ready == sk_psock_verdict_data_ready (or
+sk_psock_strp_data_ready). tcp_bpf_clone() then returns early here and
+the stale callback stays. sk_user_data is not copied, so the child has
+no psock.
+
+The precondition is a listener that still has psock callbacks, such as
+the listen-later socket described above. The window opens in
+sk_psock_drop() when sock_map_del_link() did not stop the verdict first.
+That happens if the map's programs were detached before the socket was
+deleted or closed:
+
+net/core/sock_map.c:sock_map_del_link() {
+    ...
+	if (!strp_stop && !verdict_stop)
+		return;
+    ...
+}
+
+After accept(), sk_psock_verdict_recv() on the child finds no psock. It
+drops the received data and the reader is never woken. If the child is
+later added to a sockmap, sk_psock_start_verdict() does:
+
+	psock->saved_data_ready = sk->sk_data_ready;
+	WRITE_ONCE(sk->sk_data_ready, sk_psock_verdict_data_ready);
+
+That saves sk_psock_verdict_data_ready as its own saved_data_ready, so
+sk_psock_data_ready() would recurse until the stack overflows. This is
+the case the commit message says it closes.
+
+Would it be more robust to check for the psock callbacks themselves
+(sk_psock_verdict_data_ready, sk_psock_strp_data_ready,
+sk_psock_write_space) instead of sk_prot? Or to order the teardown so a
+lockless clone cannot see a mismatched pair?
+
+> +
+> +	newsk->sk_prot = sk->sk_prot_creator;
+> +	/*
+> +	 * sock_map_link() gives a listener no programs, but a socket which got
+> +	 * them in another state and listens now has the psock's sk_data_ready
+> +	 * and sk_write_space, and sock_copy() has copied them.
+> +	 * sk_psock_init() refuses a socket that has sk_user_data or a ULP, so
+> +	 * what the psock replaced were the defaults of a TCP socket.
+> +	 */
+> +	newsk->sk_data_ready = sock_def_readable;
+> +	newsk->sk_write_space = sk_stream_write_space;
+
+[Severity: Low]
+
+This is a pre-existing issue, not one introduced by this patch, but does
+any test exercise this reset?
+
+test_accept_after_delete() and test_accept_before_delete() in
+tools/testing/selftests/bpf/prog_tests/sockmap_listen.c say the child is
+"cloned without parent psock state or callbacks". However, test_ops()
+runs them with:
+
+	t->fn(skel, family, sotype, map_fd);
+
+No verdict or parser program is attached, so the listener's sk_data_ready
+and sk_write_space are never replaced. Those tests would still pass if
+the new resets in tcp_bpf_clone() were removed.
+
+>  }
+>  #endif /* CONFIG_BPF_SYSCALL */
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261102072112.4160195-1-alexei.starovoitov%40gmail.com
