@@ -1,47 +1,62 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793733055;
-	b=kADxQKht78WAn5Kt0nBuXOz0RWg5Q9L34oeqP7udZwA24cYYtxVOTHBXGqzysJjAjJ0j
-	 Uwx9qtF606x91KWey+KI3Wnm0PlgzbFG2XHb/rJ2ExbXsXp2Nl5wGa1OUGEbg3isdu801
-	 0xv07fLEaUX/R2oHGp2aT0+UaVBvxqtChjF/ZaoSJQXndvylDz1l6utxDkgh5dGGCf3cQ
-	 8gVBfbI9tlaBhnjq4hP/J+Pc2A+oJi9QAyCF0quFDcDqaUZyFP3QbG7JhJQ0wfCK2azRi
-	 Esvr43UThP7U4IVYrHSn4rgIG6kQhCIX6KoF3WxNeJCqvW+8PqfS+6Q8pb++HcOO3bQ==
+	t=1793741879;
+	b=Wwn/0yTJEx/vxlswl53v2sxhJoo3V7P6eAJcjfP13nxj7m5M4zpKxOg4U5c6XpXcPYtP
+	 4T+t8UCgstZcWi2+3LIMFxicLoJzOLbyJT+Jiyv3UzO5TPywptny7gF/M117M8ZCCs2eI
+	 c1A3S3ZiWLbxk98BFqK4BbPk+aFfAIoDTZLDa5OESSfXalbXLxF3KcKFyCf3QSCvAkYyn
+	 lcYIKuf2AA18kwlbzySgirpP2VeVwu9COUSfWcv6O1R8DBbihosF4JgsqdQWCI+9SRAxJ
+	 WMun4zYe60NxEcV0crAA/rh+vJqmi12JZEpQFm8STZmRXKf49V54CHrR2j5dvHh9rXg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793733055;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:References:From:Cc:Autocrypt:Organization:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=QyWBxapMUa0WuTLlV0i0w5jEM+UyoC/bju7nN0VUS3I=;
-	b=qDezbi2ogBhh7n4Q9OC+vy7NdFEOl+Sp+mq+LCNIxM/Bb9qPigUl32/sh6NXLtrKXC6e
-	 yuAk9g7XDxHPClZidBISkH3+71Fp8CFyM7ebppkZePTH2lbqdKfN7jlbZzY58PX2rPno6
-	 fp8cvgpJghvJaMNvemO/jweOiU2PYknz1ohp03ES0QdgoyxJWzsjqZ6AgDIj2HEiSXlBP
-	 AghVLLMZslv7i+Yv3/mO0sczMJHbgJ4QBmeVQveKjhpBr2jnhNqySxViTg37iE+zfTA0w
-	 9cAZjapI679tG9VbBpWUzN6vwOGutfcW17C/XykMq54q3rJR6c7/gpg94bw0c8GHdBA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793741879;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=uyJDo7OV7DfHD/HxsDJJ2zC/feoJdSr9R7W6gWr18ck=;
+	b=XeOeCm6QX6AZGBqzUzmZJVevU5yRDntIqMrxFkcEsuicldtf6jPpzzN52KrEL+s9eR0l
+	 BfpL+kupRIKDBD+nl8bjkOYgrL1fx+pKiwrrMnwElmz/+Wf0NiWuF2FUalptniXnMow2Z
+	 SMTwegw8QbcO2ve0jaNfMbvsHe9/HHTWJMhohVWR03RqI9b4vckcaHx5zGQwWvLfQ1pYF
+	 5CX0sb7KYQavkxe2lcPqhYnL3QHdhMq3sTyFqDRIPoT2Ovo2elJCQTzZz1HQbIBWdT8Jo
+	 xxlUtz4lOPZ8726nelxh7KhRxsL/779jxx0O1KamgjiTxiDaHmoYxOgVoNhYs1bJ8YA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mehRqVJZ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hIJArRi2;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFEC9606A324
-	for <mptcp@lists.linux.dev>; Tue,  3 Nov 2026 19:10:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9512606A31B;
+	Tue,  3 Nov 2026 21:37:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mehRqVJZ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8DE31F00919;
-	Tue,  3 Nov 2026 19:10:53 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hIJArRi2
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AB691F000C1;
+	Tue,  3 Nov 2026 21:37:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793733054;
-	bh=QyWBxapMUa0WuTLlV0i0w5jEM+UyoC/bju7nN0VUS3I=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To;
-	b=mehRqVJZANRn7Hs6ZtxP1A3vm2/t7VYrWsYP3PDdxQEiutOEggRD6Pxd6GP719tBR
-	 +pNLNRRhTFEPvDBSsrD4IwyVYz3TlnUoY3/q+yi/zspExjE48O2Lu7e1CU6rItnOgC
-	 YoMJ4JIyo9gRFAzg271xoHbJYDxF4z52wQOn/5tfVuVe/AVwD2JMvjFXzwEAgQf2gQ
-	 MJ7qGpz57HWm3Mp9JjfJjCamL5QGOrFPhUrwuwRORS2i5gGdwYfLtj0Qd7E/BiB3IE
-	 oP+9KKfoOTL+8OL2w4Ta/f8NzE5WAHeqRvlXGouHTeXlMys7s4HCycUbBRfPt/PJwa
-	 pDF1cy3sgeEkQ==
-Message-ID: <95b7fa18-19a1-465b-ba2f-649b93d0cedf@kernel.org>
-Date: Tue, 3 Nov 2026 20:10:51 +0100
+	s=k20260515; t=1793741878;
+	bh=uyJDo7OV7DfHD/HxsDJJ2zC/feoJdSr9R7W6gWr18ck=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=hIJArRi2YVu09RgrD/mUwF8RfI9DkQ9kkT6QVdGMxl/dlcT/A8K/spx2KN5HGHyP9
+	 iGkLckfXrhuhi3aLIgNRuGPoAkZDPNkEtmNmZSD4oOHrbExzJxlZk/DeSMgxbF6eU1
+	 SUnRvoqOYDNKJCc273KMtIUj2Idk5zjf8L5JN2tpymzlIdATbZfJZ7GGDGLVCJ+8LI
+	 BhEVijWe0vNrBCF7yYojkNzCAV+SwSb3PofPuCBbN/NSG5FLsNBFXQi8EJNKX4+Hug
+	 mL4ZBUb+iLKPyHjzCiVqC/7Gmgp1FU4NMo+FN+J+Uc9c7ilZIvAxOLKflKL0ImkyzK
+	 lCGf2wqKmUxnw==
+Subject: Re: [PATCH bpf v2 03/15] bpf, sockmap: Don't let an SK_PASS verdict
+ cover the next message
+From: netdev-bot+sashiko@kernel.org
+To: alexei.starovoitov@gmail.com
+Cc: bpf@vger.kernel.org, netdev@vger.kernel.org, daniel@iogearbox.net,
+ andrii@kernel.org, eddyz87@gmail.com, memxor@gmail.com,
+ john.fastabend@gmail.com, jakub@cloudflare.com, jiayuan.chen@linux.dev,
+ davem@davemloft.net, edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, kuniyu@google.com, willemb@google.com, matttbe@kernel.org,
+ mptcp@lists.linux.dev, mason@kernel.org, josef@toxicpanda.com
+Date: Tue, 03 Nov 2026 21:37:57 +0000
+Message-ID: <179374187706.488855.8366350890804573396@kernel.org>
+In-Reply-To: <20261102072112.4160195-4-alexei.starovoitov@gmail.com>
+References: <20261102072112.4160195-4-alexei.starovoitov@gmail.com>
+X-sashiko-severity: Critical
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -51,79 +66,205 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH] selftests: mptcp: pm_nl_ctl: print sizeof() with %zu
-Content-Language: fr
-To: mptcp@lists.linux.dev
-References: <20261103155506.534973-1-sashal@kernel.org>
- <5836bdb1-d1cc-5821-4a23-0b84990f30e9@gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Cc: MPTCP CI <wpasupplicant.patchew@gmail.com>,
- Sasha Levin <sashal@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <5836bdb1-d1cc-5821-4a23-0b84990f30e9@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-On 03/11/2026 18:35, MPTCP CI wrote:
-> Our CI did some validations and here is its report:
-> 
-> - KVM Validation: normal (except selftest_mptcp_join): Success! ✅
-> - KVM Validation: normal (only selftest_mptcp_join): Success! ✅
-> - KVM Validation: debug (except selftest_mptcp_join): Success! ✅
-> - KVM Validation: debug (only selftest_mptcp_join): Success! ✅
-> - KVM Validation: btf-normal (only bpftest_all): Success! ✅
-> - KVM Validation: btf-debug (only bpftest_all): Success! ✅
-> - Perf: Unstable: 9 failed test(s): error:mptcp-perf error:sched-baseline(18) error:sched-bbr(14) error:sched-clientlim(12) (...)
-GitHub Actions couldn't access github.com :)
+Thank you for your contribution! Sashiko AI review found 3 potential
+issue(s) to consider.
 
-Please ignore this, I'm going to send a fix for that.
+Critical: 1 · High: 1 · Medium: 1 · Low: 0
 
-Cheers,
-Matt
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
+
+- [Critical] Use-after-free of psock->cork.
+- [High] The fix is incomplete when the verdict has a byte budget
+  (psock->apply_bytes != 0).
+- [Medium] The patch resets eval early, which lets one sender's bytes be
+  charged against another sender's verdict and end that verdict early.
+
+--
+
+bpf, sockmap: Don't let an SK_PASS verdict cover the next message
+
+This commit changes the __SK_PASS branch of tcp_bpf_send_verdict(). When
+psock->apply_bytes is 0, it now resets psock->eval to __SK_NONE before
+tcp_bpf_push(). When the push fails, it subtracts the bytes that went out
+from apply_bytes and ends the verdict if apply_bytes reaches 0.
+
+> diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
+> index d90bcc911b36b..b016aa419fb2d 100644
+> --- a/net/ipv4/tcp_bpf.c
+> +++ b/net/ipv4/tcp_bpf.c
+> @@ -457,8 +457,22 @@ static int tcp_bpf_send_verdict(struct sock *sk, struct sk_psock *psock,
+>  
+>  	switch (psock->eval) {
+>  	case __SK_PASS:
+> +		/* The push may sleep without the socket lock, and it may fail */
+> +		if (!psock->apply_bytes)
+> +			psock->eval = __SK_NONE;
+
+[Severity: High]
+
+When psock->apply_bytes is not 0, eval stays __SK_PASS during the push.
+The budget is still debited only after tcp_bpf_push() returns. Can a
+second sender on the same socket still get past the prog here?
+
+This call chain releases the socket lock:
+
+tcp_bpf_push()->tcp_sendmsg_locked()->sk_stream_wait_memory()->sk_wait_event()
+
+While sender A sleeps there, sender B can enter tcp_bpf_send_verdict(). B
+sees eval == __SK_PASS, so the prog doesn't run, and B computes its tosend
+from the budget before A's bytes are taken out:
+
+	tosend = msg->sg.size;
+	if (psock->apply_bytes && psock->apply_bytes < tosend)
+		tosend = psock->apply_bytes;
+
+A's bytes are subtracted only later, by sk_msg_apply_bytes(psock, tosend)
+on success or by the new sk_msg_apply_bytes(psock, origsize -
+msg->sg.size) on failure.
+
+If both pushes succeed, a verdict that bpf_msg_apply_bytes() limited to N
+bytes covers up to 2N bytes. If A's message alone uses up the budget, B's
+message is the next message, and it passes without running the prog.
+
+The commit message says:
+
+    When apply_bytes is not 0, eval stays __SK_PASS during the push, and
+    the prog does not run for another message, as today. The verdict must
+    still cover the bytes that a failed push does not send. But such a
+    message also lowers apply_bytes.
+
+But B's message is sized against the budget before A's in-flight bytes
+are removed from it. Would it be better to reserve the budget before the
+push? That means debiting tosend, and ending the verdict when the budget
+reaches 0, before calling tcp_bpf_push(), instead of subtracting after a
+failure.
+
+The __SK_PASS branch also looks unchanged at the end of the series.
+
+> +		origsize = msg->sg.size;
+>  		ret = tcp_bpf_push(sk, msg, tosend, flags, true);
+
+[Severity: Critical]
+
+Can another sender free msg while this push sleeps?
+
+msg can be psock->cork here. tcp_bpf_sendmsg() picks it up with:
+
+		if (psock->cork) {
+			msg_tx = psock->cork;
+
+The __SK_REDIRECT branch detaches psock->cork before release_sock(). The
+__SK_PASS branch leaves it attached during tcp_bpf_push(). tcp_bpf_push()
+keeps sge and page pointing into the cork's sg ring across
+tcp_sendmsg_locked(), and that call can sleep in sk_stream_wait_memory()
+without the socket lock.
+
+With this patch and apply_bytes == 0 (the default), eval is __SK_NONE
+during that sleep. Sender B can take the lock, reuse the same psock->cork,
+append to it, and run the prog on A's partly sent cork. If the prog
+returns SK_REDIRECT, B's __SK_REDIRECT branch does:
+
+		if (psock->cork) {
+			cork = true;
+			psock->cork = NULL;
+		}
+		...
+		if (cork) {
+			sk_msg_free(sk, msg);
+			kfree(msg);
+
+When A resumes, tcp_bpf_push() writes into the freed struct sk_msg:
+
+		msg->sg.size -= ret;
+		sge->offset += ret;
+		sge->length -= ret;
+
+It may also retry with, or call put_page() on, a page that was already
+released. If the push failed, the new failure path reads msg->sg.size and
+calls sk_msg_free(sk, msg) on the freed object.
+
+If B's prog returns SK_DROP instead, sk_msg_free() in the __SK_DROP branch
+drops page references that A is still using.
+
+The shared-cork problem with two PASS senders already existed. The kfree()
+variant used to need a third sender to end a byte-limited verdict. The
+early reset makes it reachable with only two senders.
+
+The later commit "bpf, sockmap: Check that the redirected message is the
+cork" also says that "a cork is still not safe for two senders on one
+socket". The __SK_PASS branch is unchanged at the end of the series.
+
+Is it safe to reset eval here while psock->cork is still attached and
+being pushed?
+
+>  		if (unlikely(ret)) {
+> +			/* A part of it may have gone out */
+> +			sk_msg_apply_bytes(psock, origsize - msg->sg.size);
+> +			/* Another sender can use up the rest during the push */
+> +			if (!psock->apply_bytes) {
+> +				psock->eval = __SK_NONE;
+> +				if (psock->sk_redir) {
+> +					sock_put(psock->sk_redir);
+> +					psock->sk_redir = NULL;
+> +				}
+> +			}
+
+[Severity: Medium]
+
+With the early reset, can sender A's bytes be charged against a verdict
+that another sender installed?
+
+When apply_bytes is 0 on entry, A's tosend is its whole message. eval is
+now __SK_NONE while A sleeps in tcp_sendmsg_locked(). Sender B can take
+the socket lock and run the prog, which installs B's verdict:
+
+net/core/skmsg.c:sk_psock_msg_verdict() {
+    ...
+	psock->apply_bytes = msg->apply_bytes;
+	if (ret == __SK_REDIRECT) {
+    ...
+		psock->sk_redir = msg->sk_redir;
+		sock_hold(psock->sk_redir);
+    ...
+}
+
+If B's apply_bytes is larger than B's message, B's verdict (PASS, DROP or
+REDIRECT) stays active with some budget left. When A resumes, it
+subtracts its bytes from B's budget, even though A's own verdict had no
+byte limit. On success that happens through the unchanged
+sk_msg_apply_bytes(psock, tosend). On failure it happens through the new
+call above.
+
+If that brings apply_bytes to 0, either this new block or the common block
+at the end of tcp_bpf_send_verdict() sets eval to __SK_NONE and drops
+psock->sk_redir:
+
+	if (likely(!ret)) {
+		if (!psock->apply_bytes) {
+			psock->eval =  __SK_NONE;
+			if (psock->sk_redir) {
+				sock_put(psock->sk_redir);
+				psock->sk_redir = NULL;
+			}
+		}
+
+That ends B's verdict before it has covered the bytes B's prog asked for.
+Later bytes that should have been dropped or redirected get a fresh prog
+run instead.
+
+Before this patch, eval stayed __SK_PASS during A's push, so this needed a
+third sender. Could A record locally whether its verdict had a byte limit
+on entry? Then it would touch psock->apply_bytes, eval and sk_redir only
+when that is true and the verdict is still its own.
+
+>  			*copied -= sk_msg_free(sk, msg);
+>  			break;
+>  		}
+
 -- 
-Sponsored by the NGI0 Core fund.
-
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261102072112.4160195-1-alexei.starovoitov%40gmail.com
