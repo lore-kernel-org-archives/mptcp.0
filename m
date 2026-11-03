@@ -1,50 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793676626;
-	b=kG+LafvEyaiAvCla+mz7noo/8ppFx1Osjqf1hoD95/qRI6iBAovbuOG0N6gN1VGIM886
-	 EBIDrhhBB61RiMR58HLVGvm3loXeUWn4PRkEkUFDgnMj0vF4d/3cJ0k/Qci05e3vuuZsn
-	 q3w+90Zp5OFJXUWhyhcnXiLoRWo1bJeZcBJcZjZ9lBzhbJnRb084a7M7G/Rl3cFcJt4RS
-	 MGSm9YVtQs60B5h3wNJmFGBQBtcJdDvnoY6Y+2c+5bn1nHk3cmCh1frMPv4msygeYaPDD
-	 suglTmjhFK7NMucg6WY9gzdq3SRnjlDmvJLY0Assf+3OAZ1l9G83NY24hvCWTUjM+0A==
+	t=1793676629;
+	b=n/IpGFVY2fR2TQPtw5ELJE3uMm4YSkb4DvnEpTUVpgIvJ0sVaXPWcaN7WzHFDGJg2101
+	 ewSPToMK141nQ27lTJ42YpmB0sE+n3eixwi+VNEVXFS5x9wuLVmU7Re+gMCZ+UT4E/nHB
+	 86vWEDQnko218kH7N5gosF/aFTK4KobSf0xHax0fRid8kcvIpY+T7s4WK/yJ8bxahHjpW
+	 FuQx5YMiXxx54fSlSNyEsSVllurxTNIq7UNx6Ox5kYekYaddb5EO+JO8O/ZGTz0JXAqPs
+	 v76vcO/0ljcdMZvToz1meq8RkDl2zYCaQE8uIqmCr2JVX7oq7li4EcOYZ3LBGDZ67gQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793676626;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793676629;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=tmoAdzwj29KU6V05GPs/kWh7gb1ozKF2dUQMQmJSD8E=;
-	b=byHpSQAqBbByzeKKKpyV+CWYhrJfOzzCc0Hp7vyHKhLrDaoVkf64r2EBRmnVh1paeazK
-	 25L4JlNDIPA2shjLtfMYBJQCZb2eNNGrFidEHAwqdl3lyUm2xU+kWtaf5u/zWaZtylcyg
-	 9FaqVjsZp+Wh6OY90HBFszJSwlIoEkEI5NYX4NOmJL1DhDgctHy71TI4FKFG6o/VXc7F0
-	 UStH3AyrSZPx/5rFSpcMDKO51FFGRqPpc/ArA/OdbKXR2eC5E5dy2cdWYPvsy6r9J4GS8
-	 lVz6nRYqOKg6zHtg+YFrJc6qYK2+bqzqHdaSx2Oipz+sPgIJst6w4Tryn4ZoB3MVmbA==
+	bh=LuZLAKAg0bvLrM7X8UV5lVXuZgaYJtROK65eNV+J8J8=;
+	b=Qj+NsGRy0S8ztD8OgNzA8Jxpj0fXR1MmFWIis07XahiCVNJHGNOI2E4LBZV5gduZvOxy
+	 ewz6qGYSuvqfdM/0tAB3olWlQsOZlPxmILGUkNRBE92Enf8qu9C5rVtM+w15qNvXk24+s
+	 hmIuSG3fwpjdUfVd3ldus7sS9DsEI1cslAdJldmktGHSKHhsUbzEZ/8UxvkPFI050x0QM
+	 TSZVv3YcnUKgAAnKWbGL7nIgapeYuRIy9/mm8EZvSgnKtHrhwtLAlxKdirGcjqZvSXIaF
+	 eqilHBeHXQNa0R9NCzM/YaGgzR+II6gL2ZLxkMCGPlJNHszpojO3TvJD5MGbLlqtfGg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fkYXcMWS;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NFNd9qbh;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEACB606A33E
-	for <mptcp@lists.linux.dev>; Tue,  3 Nov 2026 03:30:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 136C5606D815
+	for <mptcp@lists.linux.dev>; Tue,  3 Nov 2026 03:30:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fkYXcMWS
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 841AF1F00A02;
-	Tue,  3 Nov 2026 03:30:24 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NFNd9qbh
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BC141F00A18;
+	Tue,  3 Nov 2026 03:30:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793676625;
-	bh=tmoAdzwj29KU6V05GPs/kWh7gb1ozKF2dUQMQmJSD8E=;
+	s=k20260515; t=1793676628;
+	bh=LuZLAKAg0bvLrM7X8UV5lVXuZgaYJtROK65eNV+J8J8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=fkYXcMWSmThguSL95bu78V1lqoBOWnr03DWDwlhKdFGpxIwl12QWqM2xQ33/Qo2cO
-	 x54bB5n6V/titdiMrw+wk4tZR3elNWANc0rXD15JY+mpHIZpQ9NwZN7jlv0+5cIhJ8
-	 9RtGRMZ5aD+r8wC5/ymgmo484DxWWnFxgkBJcU3KORzECy64ttXiZmL2zKbQ3NIwPC
-	 PEd+u/Pdrn7J4n2zMTO36JSntBMnYPxMGrqSXfQcGhogxu587Hy0PkKkB0p/HJhujs
-	 UmruI8VAqj2stUFB/PQjgrOJmj6X9AP5EWG33LsGYxEYK7BKOpjtpuQcD+gO+dQwnt
-	 3Fk1jXkpWQE0Q==
+	b=NFNd9qbhuR09rxgZsXOjxQmRMBG6XFM6NOCE2wuZZqK8JyxA8YI6vz6/uHSVbkabg
+	 HHn+Q1oMIEk9S1W5UC1HMVyt24DM5jb50utLTuq3WBoGx1BWIPwm6lSrEZ9jfxn7X1
+	 40dVLLwlsUH+eT1GzYI71WG94EvpR9pZMUjT8kFUNSS+NuMKJWfZamQKpeXQnxjqXJ
+	 wf3eRGmhl1IbDmFljvGuaFF9ORTIDCQlu54XxpdHOMKiC2mBxoYen55L9EFYkByLxy
+	 R/U7Yh8ZYupFucYermKiQPiwQM7KB/CWE54S0kcV43XBCZGOK4Cbxfbw4I7fIyLkD8
+	 xlyzbDQ8bZEeg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v5 3/7] selftests: mptcp: connect: check TFO SIOCINQ overflow
-Date: Tue,  3 Nov 2026 11:29:52 +0800
-Message-ID: <b56df4ffba6a0af45ccda5d6be2da1d74acad265.1793676064.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	Zqiang <qiang.zhang@linux.dev>
+Subject: [PATCH mptcp-next v5 4/7] mptcp: implement peek_len for proto_ops
+Date: Tue,  3 Nov 2026 11:29:53 +0800
+Message-ID: <52dd6aede4a899de3ab622bf7329a95521e9770f.1793676064.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <cover.1793676064.git.tanggeliang@kylinos.cn>
 References: <cover.1793676064.git.tanggeliang@kylinos.cn>
@@ -61,46 +62,70 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Add a check in mptcp_connect's server mode to detect TFO SIOCINQ overflow.
-When a TFO connection is accepted, wait for data to arrive using poll(),
-then check if SIOCINQ returns INT_MAX. This detects the overflow bug
-where mptcp_inq_hint() incorrectly returns INT_MAX for TFO connections
-due to map_seq sign extension issues.
+Add mptcp_inq() to compute readable bytes at the MPTCP level using
+mptcp_data_avail() (bytes_received - bytes_consumed). Returns 0 during
+handshake (TCPF_SYN_SENT/TCPF_SYN_RECV), INT_MAX when avail >= INT_MAX,
+otherwise the actual byte count.
 
-The check is performed immediately after accept() and before opening
-cfg_input, ensuring we catch the overflow in the initial TFO state.
+Wire into mptcp_peek_len() and assign .peek_len in both mptcp_stream_ops
+and mptcp_v6_stream_ops.
 
+This prepares for upcoming kTLS and sockmap support.
+
+Co-developed-by: Zqiang <qiang.zhang@linux.dev>
+Signed-off-by: Zqiang <qiang.zhang@linux.dev>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ net/mptcp/protocol.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 178d98d91fea..b12afca2ce30 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -1207,6 +1207,21 @@ int main_loop_s(int listensock)
- 		check_sockaddr(pf, &ss, salen);
- 		check_getpeername(remotesock, &ss, salen);
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 1704e689bc93..aed25c901e4b 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -4791,6 +4791,26 @@ static ssize_t mptcp_splice_read(struct socket *sock, loff_t *ppos,
+ 	return ret;
+ }
  
-+		if (cfg_sockopt_types.mptfo) {
-+			int avail;
++static int mptcp_inq(struct sock *sk)
++{
++	const struct mptcp_sock *msk = mptcp_sk(sk);
++	u64 avail;
 +
-+			/* Wait for TFO data to arrive */
-+			polls.fd = remotesock;
-+			polls.events = POLLIN;
-+			poll(&polls, 1, 1000);
-+			if (ioctl(remotesock, SIOCINQ, &avail) == 0 &&
-+			    avail == INT_MAX) {
-+				fprintf(stderr, "TFO SIOCINQ overflow\n");
-+				close(remotesock);
-+				return 1;
-+			}
-+		}
++	if ((1 << sk->sk_state) & (TCPF_SYN_SENT | TCPF_SYN_RECV))
++		return 0;
 +
- 		if (cfg_input) {
- 			fd = open(cfg_input, O_RDONLY);
- 			if (fd < 0)
++	avail = mptcp_data_avail(msk);
++	if (avail >= INT_MAX)
++		return INT_MAX;
++
++	return (unsigned int)avail;
++}
++
++static int mptcp_peek_len(struct socket *sock)
++{
++	return mptcp_inq(sock->sk);
++}
++
+ static const struct proto_ops mptcp_stream_ops = {
+ 	.family		   = PF_INET,
+ 	.owner		   = THIS_MODULE,
+@@ -4813,6 +4833,7 @@ static const struct proto_ops mptcp_stream_ops = {
+ 	.set_rcvlowat	   = mptcp_set_rcvlowat,
+ 	.read_sock	   = mptcp_read_sock,
+ 	.splice_read	   = mptcp_splice_read,
++	.peek_len	   = mptcp_peek_len,
+ };
+ 
+ static struct inet_protosw mptcp_protosw = {
+@@ -4925,6 +4946,7 @@ static const struct proto_ops mptcp_v6_stream_ops = {
+ 	.set_rcvlowat	   = mptcp_set_rcvlowat,
+ 	.read_sock	   = mptcp_read_sock,
+ 	.splice_read	   = mptcp_splice_read,
++	.peek_len	   = mptcp_peek_len,
+ };
+ 
+ static struct proto mptcp_v6_prot;
 -- 
 2.55.0
 
