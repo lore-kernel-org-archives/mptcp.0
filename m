@@ -1,93 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.177
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793695989;
-	b=tICI95toq0GGsd4wjnXh1PGizjnvV20ZCkIe6qjSK8kb+dzfN6dSEi6fxqThuts/pymP
-	 9uKxBEMdqjJHyJtaSBheDoxEYs5MnShwQ/0LNNpOTikwpPKFVkXc8U+kmH2JQbD9OhGMK
-	 MK8hRflnkjoPGlvfRej8BQzpsj0lOUEpnSx/6H+t9iqfz8JnBq5FtEalMRGasaElgLYyD
-	 0Hof+vqH0duDV90lD8EG5AHg3J1QcvZ0X1YUB6AZ6vu2lzFRcGgADGWjqXgoDtyHPHtC8
-	 cn/4Y+aruK9eYof4KZnV5nLZ8TRWyk+se4oS2h46YptOSgCI05o9e7G4yqi3001of1Q==
+	t=1793696250;
+	b=48XKXdfY3hvQJSAVrEoTTwRqrScPSlsqPul+SNx30gZvPOk7Gd8DOwk1OTbfXb2ArqIf
+	 li/U7mn+kCSA9X6rHr0X59M/Nv/B6D+kjetrJZj5nTlFpV99K7FcyYo8a8kWamTSXpXX6
+	 qpeeWMLIZSFCQ9vxHRp/D+IWhqjQitSC6KgTfbiP9iwyvUv99s/dO8H/0+OYDwtuyqb+u
+	 GvfS4A5Hh+tDcGCt7aToQnQTQIpqvO41qUgOII93nePP16s0rnLLauMkLOW0Bo1qK52EF
+	 +m470oqKXYFF8mJ6vXITrUb82d7BKNOJOCHwPdG5dz9GUepMTQ9sKCagZoN5v67Ehpg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793695989;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=jk7Y1AW17LZtNIUFq1ncquOOo12/Cf1+ZOKhEDQbK50=;
-	b=emPg/JmJ5LK+K5bUY/0BhQIktZSe0+1lWY2IW9+E/JQxXR+s2P87ysj6paUi7DUH2Ro+
-	 7dcoG8uGsyLwN7c0w111S6fz3RYLY+tD2B3vyJKgjz05egQNxdA727vqz3sy5vhBPhtsJ
-	 PRN509hdZ4cXNjMlfTejdhA2CLtZjQG3+JRhNFcqpAEcqyJol0tfkhCODCy7rJrThnKjU
-	 5P6lqYic/t5GTCvgsEyduMDix9BInj8xCkx+7+aovTwoGJDlZRO5HsGf3dvaabTkImL3v
-	 IRy29817An6GQ+pm8Gik6pP8pNczffasB13p2CAaTimVLZj2apGcl8YieYx5LnJIvUg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793696250;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=GsKZtkthG0hXKvXgew8/K+ciNRZ0ierh8Y0C6oP0e2w=;
+	b=CaykIU5hmIrvh7V6IQ+1kI7Mi9w6rVJDQD50Zb1d1IND0pMmT1ks1182ofV0aTQNR/YA
+	 K/dtCEsB2CQHVulD3niksMFNCwp8B2C/x8AsLUDsojfZpEmC2pOz735y/GCYWbqXZCm75
+	 h9CqbNelCcPeoQnoTfQ0+Z/qr29xBjNc8AlniBK5h7MnTJryVIwwGmBrgsINYevJrsu9g
+	 9QKOF6qfpxZsEeQBoaVq+Xya3CGesV6+EtQM88W8BEQNnkSTVhkIefIVgWoS8jLWVPJOX
+	 V7p2TYnbJ0NARpl1DXe8tVO/5d4PcfFuls0dw3s9lGBuNLUFNAe01/rmtaMM/cK0iYA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="eFT4/a7w";
-	arc=none smtp.remote-ip=74.125.82.177
-Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=chUS91Ww;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958B1606A324
-	for <mptcp@lists.linux.dev>; Tue,  3 Nov 2026 08:53:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 958B1606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F12A606A326
+	for <mptcp@lists.linux.dev>; Tue,  3 Nov 2026 08:57:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=eFT4/a7w
-Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-33fb4680717so6450937eec.1
-        for <mptcp@lists.linux.dev>; Tue, 03 Nov 2026 00:53:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793695988; x=1794300788; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=jk7Y1AW17LZtNIUFq1ncquOOo12/Cf1+ZOKhEDQbK50=;
-        b=eFT4/a7w934PYn5rxP/jGvT8i6Se5GbUPS8xLe7DR9ICiFLkj0X19HIOgV2QQSMXxb
-         x0HzMgXloIqbw21UzAkft5L86lfqF02xvs/+vw6soQNhhdeQ+KU7jK+LP/KJyWdlIUIQ
-         npjlj0gK4a3zATm3EY9OSUSmFgkpn5nXLyVmoVaPfSqezrd8xS9yCEIP2yIlbigomZpb
-         OjWtlG7FQszN2Pz5T227ms13alCfKuX8Pdw9EYelzOYLdn8Hi3+bAzmhsb5o6dpxl/kY
-         ejPNdv6bzQeAPHw0cqB9CaPyR5WjnHo/7w2OMg6fVXW7VZbLJtnQB3Ast4Gifho5K+P2
-         pGvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793695988; x=1794300788;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=jk7Y1AW17LZtNIUFq1ncquOOo12/Cf1+ZOKhEDQbK50=;
-        b=Ru2qXKbf6EvHKyslWGz66kh4w3P8Fi0MvcfCoD10NhR3MN9JNb/44yG+6zci8/s97I
-         mIqummEmC4Nan18GtnMRPY6xg5ajd5yxyC6LpwoUkINFkfhxwKxm+AzJ9zfRaB5C78ly
-         rQRbtvIU0gLbn5IRBopwcGAn5YGWyseFO/ckdEsLQNvRs0wV+jodRoBHHhxHDCFgdymU
-         hLiZNlq2n8aNWz9MSPayE2jHHnyuscOQd4FkvtvncgJ0BlbHFh5SBAB6Dkk4nHgoZlA+
-         EuvoMU7GPGHBFN5gmRgSJUMitqOxlSOvWVp5VCnfsZgnfFoVQdJlrivA56+E7WiRV9nr
-         d0wQ==
-X-Gm-Message-State: APuU4Z8ER0S5k3APo2j+ckwS8lKVd68PtmFXhhDZuJSdxPjjVD1xKOU9
-	kVlvQ9sk/oG5g3c0Nv8zg3JqxSLZFh7azUSJrsI+WSHqzevTiNGdNm3MgDnSrg==
-X-Gm-Gg: AYBFou14zH8v0dS060dv+I8sWlRLw0m8tpnJtZS2Mwwo/5pnO2GzUCBGNeSwDKEjS8B
-	stLAftib9LH4NE4xoc+GkFvwsTrjoZp/VZHKsAUsSAnF3epSHWnFEltIlLj9BLzyhQYCuos0Qfd
-	ifoDe3nB5VeRGfC/6A5t7ntslAZoTmyP2iZopqMiE+wm+cK7OpELntRM3S6WvWKQ4rSTLIaloRq
-	wiy+EqHfJiP3K7cHDEJx2r0ABAcXFrRLpZmUhEbdk8JrSDfoP6WQC0Cu62bufA7QZtbKFOVU7V8
-	FqUPwA5ZdMe7R9RaZE1lGAMFcS7BruqY5ZrmGlwFV5iDDliaWflMBqp1atdxGsnScXAsGtsawDf
-	DBnjyUOMbwgJ1bIjHrj9pxDZGcQ4odUKfWdV4gA6OSg3cgOM++DdjhtQp4ECa1pJB+ITK4InOlA
-	tvSEG8TojElaFGmwBF52nWtqmBWSV9rADbJY+DlPptB4TdH3bAW3e1bBUHCMz9o7EXDxdtARNI9
-	uhljqEedpTWO09+nI0cK0Oau3iqe14n+EpDk75uzbT1UPV3SyiiiXjxUqhWR8B/wWkjs/qZInE5
-	3OXa7pOBfaXpBxInDyUZaztLSKrGw9a/96eVkJ7kebp3D3w4T0xZUco86xsw66+ui3S9b19jV59
-	XTf3I81u3Sy00ry/KT++ub8YftQuasZqmrthFdi/PBahfvUyv1RBos25vrtZtQl711Sn7vcGhzw
-	==
-X-Received: by 2002:a05:7300:a8f:b0:368:4c93:544e with SMTP id 5a478bee46e88-36a422084d2mr19393341eec.1.1793695982738;
-        Tue, 03 Nov 2026 00:53:02 -0800 (PST)
-Received: from ramen-dev-security-2.asia-south1-c.c.ramen-dev-345017.internal (90.156.200.35.bc.googleusercontent.com. [35.200.156.90])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36a42a6f7f9sm53065635eec.25.2026.11.03.00.53.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Nov 2026 00:53:02 -0800 (PST)
-From: Anil Kaushik <anilkaushikwireless@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=chUS91Ww
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5B0C1F000C1;
+	Tue,  3 Nov 2026 08:57:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793696249;
+	bh=GsKZtkthG0hXKvXgew8/K+ciNRZ0ierh8Y0C6oP0e2w=;
+	h=From:To:Cc:Subject:Date;
+	b=chUS91WwitlobSSoJ52efnglWVJYGghTLZKaeBJAjpRojBaoKnwHQh3fz6qeuCgUa
+	 ptklDdLO7N3SXKQ9O9MPa7Ek7MeM40Coxe/R38L4G84s7L9wWjy+D9bzEglufJrN1S
+	 2qnfh3Ao2iFeVenNekNAzBoDs1XRGeJqOXbTFQ4a/eg0fehU8L/y3eN3lVlWsdD6J7
+	 GoVpF3PAVBbJTKCsLea6HHEfd/JRZdIh8BPz6tNSfSS7PAUNUKCd5OtRy+J0Xi3ow4
+	 Xr48SGku+12oy1KFn8skJXi+00aNs6OcxdO2IsVPeP/6sgDbgh1NnaGAZeG8X0cqJ8
+	 8AAwuGzYeOfZA==
+From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Anil Kaushik <anilkaushikwireless@gmail.com>
-Subject: [PATCH mptcp-next v15 7/7] selftests: mptcp: join: validate subflow retry after link failure
-Date: Tue,  3 Nov 2026 08:52:44 +0000
-Message-Id: <20261103085244.23064-8-anilkaushikwireless@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20261103085244.23064-1-anilkaushikwireless@gmail.com>
-References: <20261103085244.23064-1-anilkaushikwireless@gmail.com>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v20 0/6] Reduce the differences between TCP and MPTCP for TLS usage
+Date: Tue,  3 Nov 2026 16:57:19 +0800
+Message-ID: <cover.1793695518.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.55.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -99,617 +57,322 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Test the subflow-retries limit, with its default value, and a long
-connection in the background: drop the packets the client sends from
-the additional subflow address with netfilter, without bringing the link
-down, until the subflow is closed and re-created. Let them through again
-once the SYN of the new subflow has been retransmitted more times than
-tcp_syn_retries allows, and check the subflow comes back from the same
-address. Then do the same with the initial subflow.
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-A second test closes the connection while a subflow is being re-created,
-and checks the netlink events. Only the client sends data: the server
-reads it all first, in sendfile mode, and keeps its side open. The
-client gets a big MPTCP send buffer compared to its subflows, and both
-paths are blocked: the data left in it is never sent, nor the DATA_FIN,
-so only the close of the MPTCP socket can stop the subflow being
-re-created. Only the client is closed: it has nothing left to read, so
-the connection is not closed with a fastclose, which would reset all the
-subflows anyway. The check is skipped if a fastclose happens. The big
-files used for the long connection are emptied at the end.
+v20:
+ - patch 2: fix Medium issues from review. Move MPTCP_SYNC_SEQ check
+   inside the loop under mptcp_data_lock() protection to avoid race with
+   concurrent non-atomic cb_flags updates. Change from atomic
+   test_and_clear_bit() to non-atomic __test_and_clear_bit() since we're
+   under lock. Add msk->tfo_iasn = 0 reset in mptcp_disconnect() to
+   prevent stale tfo_iasn from corrupting passive TFO fallback.
+ - patch 3: new patch. Fix TFO map_seq sign extension in fastopen.c by
+   casting to u64 before negation: -(u64)skb->len instead of -skb->len.
+ - patch 4: updated from v19 patch 3. Moved the -(u64)skb->len fix to
+   patch 3. Added comment in mptcp_init_skb() explaining why offset > 0
+   with out-of-order mapping is correct: mptcp_subflow_get_mapped_dsn()
+   returns the DSN for the byte at tp->copied_seq (position 'offset' in
+   the skb), and consumed prefix bytes are part of the same logical DSN
+   range.
+ - patch 6: updated from v19 patch 5. Replace msk_owned_by_me() assertion
+   with DEBUG_NET_WARN_ON_ONCE using lockdep_sock_is_held() for both
+   process and BH contexts. Add conditional defer logic: inline cleanup
+   when caller owns socket lock, defer to worker when caller doesn't.
 
-A third test checks the only subflow is not re-created: there is no
-other subflow to send data.
+v19:
+ - Replace mptcp_iasn() computed function with msk->tfo_iasn immutable
+   snapshot (set in subflow_set_remote_key()), removing tfo_skb_len field
+   and the DATA_FIN off-by-one concern.
+ - Move MPTCP_SYNC_SEQ handling (test_and_clear_bit + copied_seq update)
+   out of __mptcp_sync_rcv_sequence() into callers, since the function
+   can be called without the socket lock held.
+ - Patch 2: move MPTCP_SYNC_SEQ check in mptcp_release_cb() from
+   post-loop to loop start (before backlog spooling). Add the same
+   check in mptcp_move_skbs() to sync copied_seq before backlog
+   processing when user holds the socket lock.
+ - Patch 4: clamp max_seq to ack_seq in mptcp_data_queue_ofo() to
+   prevent 64-bit after64() wrap-around when ack_seq > rcv_wnd_sent.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1793361629.git.tanggeliang@kylinos.cn/
 
-A fourth test removes the address of the additional subflow while its
-packets are dropped: the subflow times out, the new one cannot be
-created, bind() fails, and the PM uses the next endpoint instead.
+v18:
+ - Re-add patch 2 "mptcp: drop the cant_coalesce CB field".
+ - Patch 3: simplify TFO sync by relying on patch 2's __mptcp_sync_rcv_sequence()
+   instead of complex copied_seq checks. Use copied_seq += mptcp_iasn(msk).
+ - Patch 4: move subflow.c changes to patch 2, use map_seq64 for TFO init.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1793349369.git.geliang@kernel.org/
 
-The tests are skipped if pm_nl_ctl does not show the new limit, or if the
-filter chain cannot be created.
+v17:
+ - Patch 2: add TFO synchronization: subflow_set_remote_key() preserves
+   partial read progress by checking copied_seq against the initial TFO
+   value before updating. Add WRITE_ONCE/READ_ONCE for ordering between
+   BH (3rd ACK processing) and user-space readers. Add underflow guard
+   (copied_seq >= map_seq) before offset subtraction in
+   __mptcp_recvmsg_mskq() to protect MSG_PEEK traversals. Skip skbs
+   entirely before copied_seq. Update subflow.c to set both map_seq
+   (u32) and map_seq64 (u64) for TFO.
+ - Patch 3: adapt to the new map_seq (u32) + map_seq64 (u64) layout
+   introduced in patch 2.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1793326853.git.tanggeliang@kylinos.cn/
 
-Signed-off-by: Anil Kaushik <anilkaushikwireless@gmail.com>
----
+v16:
+ - Simplified the series to retain only the core changes required by both
+   kTLS and sockmap: drop the CB offset field, add copied_seq tracking,
+   and sync the MPTCP skb CB layout with the TCP one.
+ - Dropped patch 2, leaving the fastopen code unchanged.
+ - Moved patches 6-11 into a separate series "prepare interfaces for kTLS
+   and sockmap support".
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1793255126.git.tanggeliang@kylinos.cn/
 
-Notes:
-    v15:
-     - the first test really starts with tcp_retries2=15: only lowered while
-       a path is blocked, and restored on errors. It is per netns, so the
-       other path has the short timeout during that window (netdev Sashiko)
-     - the second test also only lowers tcp_retries2 just before the block
-     - the skip condition in the commit message matches the code
-     - the first and fourth tests wait for the last events before stopping the
-       listener, like the two others
-    v14:
-     - new test: the subflow cannot be re-created, the next endpoint is
-       used instead
-     - check the join counters before killing the transfer, which can send
-       MP_RST, counted with -C (netdev Sashiko)
-     - tcp_retries2 is lowered while a path is blocked in the first test
-    v13:
-     - wait for the SUB_CLOSED event before stopping the listener
-       (netdev Sashiko on v12)
-     - the first test stops if no additional subflow got established,
-       the third one waits for the SUB_CLOSED event, and say why the
-       tcp_wmem min value is above the max
-    v12:
-     - wait for the client side of a re-created subflow to be fully
-       established before going on: the close would close it too
-       otherwise (netdev Sashiko)
-     - the third test only checks the subflow is not re-created, say
-       only that (netdev Sashiko)
-    v11:
-     - the third test checks the only subflow is not re-created, and the
-       path-back test is gone: a subflow is only re-created while another
-       one can send data
-     - the close test keeps the initial subflow while checking: without the
-       fix, it would no longer pass when the initial subflow closes after
-       a few retransmissions; a SUB_CLOSED event for the re-created subflow
-    v10:
-     - new test: the path of the only subflow comes back before the
-       close timeout, and the connection stays open (sashiko.dev)
-       The path comes back as soon as the subflow is re-created, with a
-       30s close timeout, longer than the SYN backoff, and its transfer
-       has a longer poll timeout, with no data at all while the only path
-       is blocked: both are needed on a slow debug kernel
-    v9:
-     - wait for absolute counter values, read before blocking the path,
-       or 0 and 1 in the new netns: the subflow can be re-created before
-       a later read (netdev Sashiko)
-     - check that the connection is established before blocking it, in
-       the close test and the new one (netdev Sashiko)
-     - the close test blocks the other path too, with a big msk send
-       buffer: the pending data and the DATA_FIN no longer close the
-       subflow being re-created, only the close of the MPTCP socket can.
-       Checked: both the close test and the new test fail without their
-       fix
-     - new test: the only subflow is re-created, and the connection is
-       still closed after the close timeout
-     - $sinfail as the server input, kill errors ignored, clearer failure
-       message, $cout and $sout emptied too
-     - the server of the second test reads all the data from the client
-       first, in sendfile mode, instead of blocking on a FIFO in poll
-       mode: the client always has data in flight (netdev Sashiko)
-    v8:
-     - comment in run_tests() matching the new condition (netdev Sashiko)
-     - a separate test closes the connection while a subflow is
-       re-created: the server sends nothing but keeps its side open, and
-       only the client is closed, so there is no fastclose, which would
-       reset all the subflows anyway; the check is skipped if one happens
-       (netdev Sashiko)
-    v7 (netdev Sashiko):
-     - the test_linkfail=1/2 modes regenerate the shared files when they
-       are empty, e.g. when running link_failure_tests() twice
-     - read the MP_JOIN ACK counter before letting the packets through,
-       and do not compare the ports, they can be reused
-    v6 (Sashiko):
-     - use the slowwait helpers from net/lib.sh
-     - longer first wait, while the 128 MB files are created
-     - skip if the filter rules cannot be set, check each drop rule
-       (netdev Sashiko)
-     - empty the big files at the end, cinsent too, keep the variables
-       (netdev Sashiko)
-    v5 (Matthieu):
-     - skipped if pm_nl_ctl does not show the new limit
-     - wait for the SYN retransmissions instead of a sleep, with
-       tcp_syn_linear_timeouts=0
-     - helper for the check after the close
-     - slower links with short queues, so the transfer lasts the whole
-       test on any machine, longer timeout (killed at the end)
-    v4:
-     - default limit, no sysctl or MIB counter
-     - more SYN retransmissions than tcp_syn_retries
-     - close the connection while a subflow is re-created
-     - check the netlink events
-     - check the waits and the new subflow port, remove the big files at
-       the end (Sashiko)
-    v3:
-     - check the subflow address, create the files before the background job
-    v2:
-     - one test, with netfilter
+v15:
+ - Patch 2: drop mptcp_data_lock() in mptcp_inq_hint(), use READ_ONCE()
+   and __test_and_clear_bit() instead. This issue is unrelated to this
+   series and will be addressed in a separate patch later.
+ - Patch 5: Guard mptcp_cleanup_rbuf() with read_copied > 0. Initialize/
+   reset msk->read_copied. Drop redundant mptcp_recv_skb() in
+   __mptcp_read_sock().
+ - Patch 6: simplify memory ordering, drop smp_mb()/smp_rmb(), keep
+   existing smp_mb__before_atomic(). Check SOCK_DONE inline.
+ - Patch 9: drop tcp_sock_rate_check_app_limited() split, call
+   tcp_rate_check_app_limited() directly as Paolo suggested. Add
+   write_seq != snd_nxt early bail-out.
+ - Patch 10: wrap assertion behind expect_all_features().
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1792718041.git.tanggeliang@kylinos.cn/
 
- .../testing/selftests/net/mptcp/mptcp_join.sh | 420 +++++++++++++++++-
- 1 file changed, 412 insertions(+), 8 deletions(-)
+v14:
+ - v13 can no longer be applied to the export branch, so it has been
+   rebased here with the following corrections:
+ - Patch 2: move locking in mptcp_inq_hint() to avoid races with ack_seq
+   change from patch 3 to here. Update commit log.
+ - Patch 3: add mptcp_data_lock() in __mptcp_move_skb() around copied_seq
+   update. Remove local delta variable in __mptcp_ofo_queue(). Initialize
+   msk->copied_seq to 0 in mptcp_propagate_state() fallback path.
+ - Patch 4: add map_seq64 comparison in __mptcp_try_coalesce() for 64-bit
+   sequence consistency.
+ - New patch 11: rename mptcp_check_readable to mptcp_stream_is_readable,
+   and align with TCP by calling sk_is_readable() for KTLS support.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1790734083.git.tanggeliang@kylinos.cn/
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index c3ccce96b45b..82240addfec4 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -52,6 +52,7 @@ nr_blank=6
- # These var are used only in some tests, make sure they are not already set
- unset FAILING_LINKS
- unset test_linkfail
-+unset server_in
- unset addr_nr_ns1
- unset addr_nr_ns2
- unset cestab_ns1
-@@ -1038,7 +1039,12 @@ do_transfer()
- 	fi
- 
- 	extra_srv_args="$extra_args $extra_srv_args"
--	if [ "$test_linkfail" -gt 1 ];then
-+	if [ -n "${server_in}" ]; then
-+		# the server reads all the data from the client before sending
-+		# this file: it does not block on its input
-+		extra_srv_args="$extra_srv_args -m sendfile"
-+		listener_in="${server_in}"
-+	elif [ "$test_linkfail" -gt 1 ]; then
- 		listener_in="${sinfail}"
- 	fi
- 	ip netns exec ${listener_ns} \
-@@ -1135,9 +1141,9 @@ run_tests()
- 			cinfail=$(mktemp)
- 		fi
- 		make_file "$cinfail" "client" $size
--	# create the input file for the failure test when
--	# the first failure test run
--	elif [ "$test_linkfail" -ne 0 ] && [ -z "$cinfail" ]; then
-+	# create the input file for the failure test, when
-+	# it is missing or has been emptied
-+	elif [ "$test_linkfail" -ne 0 ] && [ ! -s "$cinfail" ]; then
- 		# the client file must be considerably larger
- 		# of the maximum expected cwin value, or the
- 		# link utilization will be not predicable
-@@ -1146,23 +1152,27 @@ run_tests()
- 		size=$((size*8192))
- 		size=$((size + ( RANDOM % 8192) ))
- 
--		cinfail=$(mktemp)
-+		if [ -z "$cinfail" ]; then
-+			cinfail=$(mktemp)
-+		fi
- 		make_file "$cinfail" "client" $size
- 	fi
- 
--	if [ "$test_linkfail" -gt 2 ]; then
-+	if [ "$test_linkfail" -gt 2 ] && [ -z "${server_in}" ]; then
- 		size=$test_linkfail
- 
- 		if [ -z "$sinfail" ]; then
- 			sinfail=$(mktemp)
- 		fi
- 		make_file "$sinfail" "server" $size
--	elif [ "$test_linkfail" -eq 2 ] && [ -z "$sinfail" ]; then
-+	elif [ "$test_linkfail" -eq 2 ] && [ ! -s "$sinfail" ]; then
- 		size=$((RANDOM%16))
- 		size=$((size+1))
- 		size=$((size*2048))
- 
--		sinfail=$(mktemp)
-+		if [ -z "$sinfail" ]; then
-+			sinfail=$(mktemp)
-+		fi
- 		make_file "$sinfail" "server" $size
- 	fi
- 
-@@ -2151,6 +2161,210 @@ wait_attempt_fail()
- 	return 1
- }
- 
-+# $1: timeout in seconds ; $2: ns ; $3: counter ; $4: increment, 1 by default
-+wait_counter_inc()
-+{
-+	slowwait_for_counter "${1}" "${4:-1}" \
-+		mptcp_lib_get_counter "${2}" "${3}" >/dev/null
-+}
-+
-+# $1: timeout ; $2: ns ; $3: counter ; $4: value to reach
-+wait_counter_ge()
-+{
-+	slowwait "${1}" until_counter_is ">= ${4}" \
-+		mptcp_lib_get_counter "${2}" "${3}" >/dev/null
-+}
-+
-+# $1: client address ; prints the local address and port of its subflow
-+sf_from()
-+{
-+	ip netns exec $ns2 ss -tnH state established src "${1}" |
-+		awk '{ print $3; exit }'
-+}
-+
-+# the client got the 4th ACK of the MP_JOIN
-+sf_fully_established()
-+{
-+	ip netns exec $ns2 ss -tniH state established src "${1}" |
-+		grep -q "tcp-ulp-mptcp flags:[A-Za-z]*e"
-+}
-+
-+has_subflow_retries()
-+{
-+	ip netns exec $ns2 ./pm_nl_ctl limits | grep -q "^subflow_retries"
-+}
-+
-+# the client packets are dropped with rules in this chain
-+init_nft_filter()
-+{
-+	init_nftables
-+	if ! ip netns exec $ns2 nft list chain ip filter OUTPUT \
-+	     &>/dev/null; then
-+		mark_as_skipped "unable to set the filter rules"
-+		return 1
-+	fi
-+}
-+
-+# $1: client address
-+nft_drop_from()
-+{
-+	ip netns exec $ns2 nft add rule ip filter OUTPUT ip saddr "${1}" drop
-+}
-+
-+# $1: client address to block
-+#
-+# The link stays up, but the client packets from this address are dropped:
-+# the subflow using it is closed after a few retransmissions, and re-created.
-+# The packets go through again once the SYN has been retransmitted more times
-+# than tcp_syn_retries allows: the new subflow still connects thanks to the
-+# subflow-retries limit.
-+sf_retry_after_block()
-+{
-+	local before ack_rx syn_tx
-+
-+	before=$(sf_from "${1}")
-+
-+	print_check "subflow from ${1}"
-+	if [ -z "${before}" ]; then
-+		fail_test "no established subflow from ${1} before the block"
-+		return
-+	fi
-+
-+	# read before the block: the subflow can be re-created right after it
-+	syn_tx=$(mptcp_lib_get_counter $ns2 "MPTcpExtMPJoinSynTx")
-+	# a short timeout only while the path is blocked: it is per netns, so
-+	# keep this window short, the other path could time out on losses
-+	ip netns exec $ns2 sysctl -q net.ipv4.tcp_retries2=3
-+	if ! nft_drop_from "${1}"; then
-+		ip netns exec $ns2 sysctl -q net.ipv4.tcp_retries2=15
-+		fail_test "unable to drop the packets from ${1}"
-+		return
-+	fi
-+	if ! wait_counter_ge "${timeout_poll}" $ns2 "MPTcpExtMPJoinSynTx" \
-+	     $((syn_tx + 1)); then
-+		ip netns exec $ns2 nft flush chain ip filter OUTPUT
-+		ip netns exec $ns2 sysctl -q net.ipv4.tcp_retries2=15
-+		fail_test "subflow from ${1} not re-created"
-+		return
-+	fi
-+	ip netns exec $ns2 sysctl -q net.ipv4.tcp_retries2=15
-+	# tcp_syn_retries=1: one more retransmission than allowed
-+	if ! wait_counter_inc "${timeout_poll}" \
-+		$ns2 "TcpExtTCPSynRetrans" 2; then
-+		ip netns exec $ns2 nft flush chain ip filter OUTPUT
-+		fail_test "SYN from ${1} not retransmitted enough"
-+		return
-+	fi
-+	# read before the flush: the next SYN can be sent right after it
-+	ack_rx=$(mptcp_lib_get_counter $ns1 "MPTcpExtMPJoinAckRx")
-+	ip netns exec $ns2 nft flush chain ip filter OUTPUT
-+
-+	if ! wait_counter_ge "${timeout_poll}" $ns1 "MPTcpExtMPJoinAckRx" \
-+	     $((ack_rx + 1)); then
-+		fail_test "re-created subflow from ${1} not established"
-+		return
-+	fi
-+
-+	# before a close, which would close it too if not fully established
-+	if ! slowwait "${timeout_poll}" sf_fully_established "${1}"; then
-+		fail_test "no fully established subflow from ${1}"
-+	else
-+		print_ok
-+	fi
-+}
-+
-+# $1: ns ; prints the number of MP_FASTCLOSE sent and received
-+fastclose_nr()
-+{
-+	local tx rx
-+
-+	tx=$(mptcp_lib_get_counter "${1}" "MPTcpExtMPFastcloseTx")
-+	rx=$(mptcp_lib_get_counter "${1}" "MPTcpExtMPFastcloseRx")
-+	echo $((${tx:-0} + ${rx:-0}))
-+}
-+
-+no_sf_connecting()
-+{
-+	! ip netns exec $ns2 ss -tnH state syn-sent | grep -q .
-+}
-+
-+# The client has nothing left to read: it closes the connection without a
-+# fastclose, which would reset all the subflows anyway.
-+kill_client()
-+{
-+	local pid
-+
-+	for pid in $(ip netns pids $ns2); do
-+		if [ "$(cat "/proc/${pid}/comm" 2>/dev/null)" = mptcp_connect ]
-+		then
-+			kill "${pid}" 2>/dev/null
-+		fi
-+	done
-+}
-+
-+# $1: why the subflow is not being re-created before the close, if it is not
-+# $2: number of MP_FASTCLOSE before the close
-+chk_no_sf_connecting()
-+{
-+	local closed
-+
-+	print_check "no subflow connecting after close"
-+	if [ -n "${1}" ]; then
-+		fail_test "${1}"
-+		return
-+	fi
-+
-+	# closed with the MPTCP socket
-+	slowwait "${timeout_poll}" no_sf_connecting
-+	closed=$?
-+	if [ "$(fastclose_nr $ns2)" -gt "${2}" ]; then
-+		print_skip "closed with a fastclose, resetting all the subflows"
-+	elif [ "${closed}" -eq 0 ]; then
-+		print_ok
-+	else
-+		fail_test "subflow still connecting after close"
-+	fi
-+}
-+
-+# Slow links with short queues: the transfer lasts the whole test on any
-+# machine, and the blocked subflow always has data in flight.
-+sf_retry_init()
-+{
-+	local i
-+
-+	# link 4: the next endpoint of the "creation error" test
-+	for i in 1 3 4; do
-+		tc -n $ns1 qdisc add dev ns1eth$i root netem \
-+			rate 4mbit limit 30 delay 1ms
-+		tc -n $ns2 qdisc add dev ns2eth$i root netem \
-+			rate 4mbit limit 30 delay 1ms
-+	done
-+	ip netns exec $ns2 sysctl -q net.ipv4.tcp_retries2=3
-+	ip netns exec $ns2 sysctl -q net.ipv4.tcp_syn_retries=1
-+	ip netns exec $ns2 sysctl -q net.ipv4.tcp_syn_linear_timeouts=0
-+	pm_nl_set_limits $ns1 0 4
-+	pm_nl_set_limits $ns2 0 2
-+	pm_nl_add_endpoint $ns2 10.0.3.2 dev ns2eth3 flags subflow
-+	# created here, not in the background job, for cleanup()
-+	if [ -z "$cinfail" ]; then
-+		cinfail=$(mktemp)
-+	fi
-+	if [ -z "$sinfail" ]; then
-+		sinfail=$(mktemp)
-+	fi
-+}
-+
-+sf_retry_cleanup()
-+{
-+	ip netns exec $ns2 nft flush chain ip filter OUTPUT
-+	# big files: empty them, the next tests write their own content
-+	: > "$cinfail"
-+	: > "$sinfail"
-+	: > "$cinsent"
-+	: > "$cout"
-+	: > "$sout"
-+}
-+
- set_userspace_pm()
- {
- 	local ns=$1
-@@ -2585,6 +2799,196 @@ link_failure_tests()
- 		chk_stale_nr $ns2 1 -1 2
- 		chk_link_usage $ns2 ns2eth3 $cinsent 50
- 	fi
-+
-+	# subflows closed after a silent link failure, then re-created: the
-+	# additional one, then the initial one
-+	if reset_with_events "subflow retry after link failure" &&
-+	   continue_if has_subflow_retries && init_nft_filter; then
-+		sf_retry_init
-+		# lowered by sf_retry_after_block() while a path is blocked
-+		ip netns exec $ns2 sysctl -q net.ipv4.tcp_retries2=15
-+		# killed at the end: the timeout only stops a stuck test
-+		{ timeout_test=600 test_linkfail=131072 \
-+			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
-+		local tests_pid=$!
-+
-+		# the 128 MB files are created first, that can take a while
-+		if wait_counter_ge $((timeout_poll * 4)) \
-+		   $ns1 "MPTcpExtMPJoinAckRx" 1; then
-+			sf_retry_after_block 10.0.3.2
-+			sf_retry_after_block 10.0.1.2
-+		else
-+			print_check "additional subflow"
-+			fail_test "no additional subflow before the blocks"
-+		fi
-+		# before the kill, which can send MP_RST (checked with -C)
-+		join_syn_tx=3 chk_join_nr 3 3 3
-+		mptcp_lib_kill_group_wait $tests_pid
-+		# the listener could be stopped before it got the last events
-+		wait_event ns2 MPTCP_LIB_EVENT_SUB_ESTABLISHED 3
-+		wait_event ns2 MPTCP_LIB_EVENT_SUB_CLOSED 2
-+		kill_events_pids
-+
-+		chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_ESTABLISHED 3
-+		chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_CLOSED 2 error 2
-+		sf_retry_cleanup
-+	fi
-+
-+	# close the connection while a subflow is being re-created
-+	if reset_with_events "subflow retry, close while connecting" &&
-+	   continue_if has_subflow_retries && init_nft_filter; then
-+		sf_retry_init
-+		# lowered just before the block: both paths are used until then
-+		ip netns exec $ns2 sysctl -q net.ipv4.tcp_retries2=15
-+		# A big msk send buffer, compared to the subflow ones: when the
-+		# client is closed, some data is not given to any subflow yet,
-+		# so the DATA_FIN, which would also close the subflow being
-+		# re-created, is not sent. The min value is above the max on
-+		# purpose: __mptcp_sync_sndbuf() adds it to the subflow ones.
-+		ip netns exec $ns2 sysctl -q \
-+			net.ipv4.tcp_wmem="1048576 65536 262144"
-+		# The server reads until the client closes, and sends nothing:
-+		# the client has nothing to read, and the connection stays
-+		# established. The transfer is stopped on purpose, its result
-+		# is not checked.
-+		: > "$sinfail"
-+		{ timeout_test=600 test_linkfail=131072 server_in="$sinfail" \
-+			run_tests $ns1 $ns2 10.0.1.1 >/dev/null & } 2>/dev/null
-+		local tests_pid=$!
-+
-+		local not_ready="" syn_tx
-+		if ! wait_counter_ge $((timeout_poll * 4)) \
-+		     $ns1 "MPTcpExtMPJoinAckRx" 1; then
-+			not_ready="no additional subflow before the block"
-+		else
-+			# read before the block: the subflow can be re-created
-+			# right after it
-+			syn_tx=$(mptcp_lib_get_counter $ns2 \
-+				"MPTcpExtMPJoinSynTx")
-+			ip netns exec $ns2 sysctl -q net.ipv4.tcp_retries2=3
-+			if ! nft_drop_from 10.0.3.2; then
-+				not_ready="unable to drop the packets"
-+			elif ! wait_counter_ge "${timeout_poll}" \
-+			     $ns2 "MPTcpExtMPJoinSynTx" $((syn_tx + 1)); then
-+				not_ready="no subflow re-created before close"
-+			fi
-+		fi
-+		# Block the other path too, so this data is never sent: only
-+		# the close of the MPTCP socket can then stop the subflow being
-+		# re-created. The initial subflow is no longer closed after a
-+		# few retransmissions: that would close it too.
-+		ip netns exec $ns2 sysctl -q net.ipv4.tcp_retries2=15
-+		if [ -z "${not_ready}" ] && ! nft_drop_from 10.0.1.2; then
-+			not_ready="unable to drop the packets"
-+		fi
-+		local fc_before
-+		fc_before=$(fastclose_nr $ns2)
-+		# before the kill, which can send MP_RST (checked with -C)
-+		join_syn_tx=2 chk_join_nr 1 1 1
-+		kill_client
-+		chk_no_sf_connecting "${not_ready}" "${fc_before}"
-+		mptcp_lib_kill_group_wait $tests_pid
-+		# the listener could be stopped before it got the last event
-+		wait_event ns2 MPTCP_LIB_EVENT_SUB_CLOSED 2
-+		kill_events_pids
-+
-+		chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_ESTABLISHED 1
-+		# the re-created subflow, closed with the MPTCP socket
-+		chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_CLOSED 2 error 1
-+		sf_retry_cleanup
-+	fi
-+
-+	# the only subflow is not re-created
-+	if reset_with_events "subflow retry, no other subflow" &&
-+	   continue_if has_subflow_retries && init_nft_filter; then
-+		sf_retry_init
-+		pm_nl_flush_endpoint $ns2
-+		{ timeout_test=600 test_linkfail=131072 \
-+			run_tests $ns1 $ns2 10.0.1.1 >/dev/null & } 2>/dev/null
-+		local tests_pid=$!
-+
-+		print_check "not re-created"
-+		if ! wait_counter_ge $((timeout_poll * 4)) \
-+		     $ns1 "MPTcpExtMPCapableACKRX" 1; then
-+			fail_test "connection not established"
-+		elif ! nft_drop_from 10.0.1.2; then
-+			fail_test "unable to drop the packets"
-+		elif ! wait_counter_ge "${timeout_poll}" \
-+		     $ns2 "TcpExtTCPAbortOnTimeout" 1; then
-+			fail_test "subflow not closed"
-+		else
-+			# the worker decides right after it reports the close
-+			wait_event ns2 MPTCP_LIB_EVENT_SUB_CLOSED 1
-+			sleep 1
-+			local syn_tx
-+			syn_tx=$(mptcp_lib_get_counter $ns2 \
-+				 "MPTcpExtMPJoinSynTx")
-+			if [ "${syn_tx}" != 0 ]; then
-+				fail_test "subflow re-created"
-+			else
-+				print_ok
-+			fi
-+		fi
-+		# before the kill, which can send MP_RST (checked with -C)
-+		join_syn_tx=0 chk_join_nr 0 0 0
-+		mptcp_lib_kill_group_wait $tests_pid
-+		kill_events_pids
-+
-+		chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_CLOSED 1 error 1
-+		sf_retry_cleanup
-+	fi
-+
-+	# the subflow cannot be re-created: the next endpoint takes its place
-+	if reset_with_events "subflow retry, creation error" &&
-+	   continue_if has_subflow_retries && init_nft_filter; then
-+		sf_retry_init
-+		pm_nl_set_limits $ns2 0 1
-+		pm_nl_add_endpoint $ns2 10.0.4.2 dev ns2eth4 flags subflow
-+		ip netns exec $ns2 sysctl -q net.ipv4.tcp_retries2=15
-+		{ timeout_test=600 test_linkfail=131072 \
-+			run_tests $ns1 $ns2 10.0.1.1 >/dev/null & } 2>/dev/null
-+		local tests_pid=$!
-+
-+		print_check "next endpoint used"
-+		if ! wait_counter_ge $((timeout_poll * 4)) \
-+		     $ns1 "MPTcpExtMPJoinAckRx" 1; then
-+			fail_test "no additional subflow before the block"
-+		elif [ -z "$(sf_from 10.0.3.2)" ]; then
-+			fail_test "no subflow from 10.0.3.2 before the block"
-+		else
-+			# The subflow times out, then the new one cannot be
-+			# created: its address is gone, bind() fails.
-+			ip netns exec $ns2 sysctl -q net.ipv4.tcp_retries2=3
-+			if ! nft_drop_from 10.0.3.2; then
-+				fail_test "unable to drop the packets"
-+			elif ! ip -n $ns2 addr del 10.0.3.2/24 dev ns2eth3; then
-+				fail_test "unable to remove 10.0.3.2"
-+			elif ! wait_counter_ge "${timeout_poll}" $ns2 \
-+			     "MPTcpExtMPJoinSynTxBindErr" 1; then
-+				fail_test "subflow from 10.0.3.2 not re-created"
-+			elif ! wait_counter_ge "${timeout_poll}" $ns1 \
-+			     "MPTcpExtMPJoinAckRx" 2; then
-+				fail_test "next endpoint not used"
-+			elif ! slowwait "${timeout_poll}" \
-+			     sf_fully_established 10.0.4.2; then
-+				fail_test "10.0.4.2 not fully established"
-+			else
-+				print_ok
-+			fi
-+			ip netns exec $ns2 sysctl -q net.ipv4.tcp_retries2=15
-+		fi
-+		# before the kill, which can send MP_RST (checked with -C)
-+		join_syn_tx=2 join_bind_err=1 chk_join_nr 2 2 2
-+		mptcp_lib_kill_group_wait $tests_pid
-+		# the listener could be stopped before it got the last events
-+		wait_event ns2 MPTCP_LIB_EVENT_SUB_ESTABLISHED 2
-+		wait_event ns2 MPTCP_LIB_EVENT_SUB_CLOSED 1
-+		kill_events_pids
-+
-+		chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_ESTABLISHED 2
-+		chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_CLOSED 1 error 1
-+		sf_retry_cleanup
-+	fi
- }
- 
- add_addr_timeout_tests()
+v13:
+ - use smp_mb instead of smp_mb__before_atomic in mptcp_check_data_fin.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1788245079.git.tanggeliang@kylinos.cn/
+
+v12:
+ - Move sock_set_flag(SOCK_DONE) to after smp_mb__before_atomic() in
+   mptcp_check_data_fin() and reuse the existing barrier rather than adding
+   a new smp_wmb().
+ - Sample SOCK_DONE before smp_rmb() in mptcp_inq_hint() and mptcp_inq(),
+   so the smp_rmb() only orders SOCK_DONE read relative to the subsequent
+   ack_seq/copied_seq reads.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1788171508.git.tanggeliang@kylinos.cn/
+
+v11:
+ - __mptcp_move_skb(): gate __mptcp_sync_rcv_sequence() on
+   test_and_clear_bit(MPTCP_SYNC_SEQ) so the dummy mapping is only re-based
+   after ack_seq = iasn.
+ - a new patch to set and test SOCK_DONE.
+ - use SOCK_DONE in mptcp_inq_hint() and mptcp_inq().
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1788099847.git.tanggeliang@kylinos.cn/
+
+v10:
+ - Drop "mptcp: use atomic64_t for locklessly accessed u64 fields"
+   (v9 patch 1) and the squash to bpf_burst test (v9 patch 11).
+   Series reduced from 11 to 9 patches.
+ - Revert all atomic64_read()/atomic64_set() on msk->ack_seq back to
+   plain reads and WRITE_ONCE() in patches 1-4. Remove the local u64
+   ack_seq variables that only existed to hold atomic64_read() results.
+ - mptcp_inq_hint: move test_bit(MPTCP_SYNC_SEQ) inside mptcp_data_lock()
+   to close the race between the flag check and the ack_seq read. Revert
+   atomic64_read() to plain msk->ack_seq under the lock.
+ - mptcp_inq (patch 6): use READ_ONCE() for both ack_seq and copied_seq
+   instead of atomic64_read(). Add comment for the FIN subtraction,
+   mirroring tcp_inq(). Update commit log.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787888115.git.tanggeliang@kylinos.cn/
+
+v9:
+ - Extend atomic64_t conversion from only msk->ack_seq to all locklessly
+   accessed u64 fields: write_seq, snd_nxt, snd_una, wnd_end,
+   bytes_received, bytes_consumed.
+ - Add mptcp_data_lock() in mptcp_inq_hint() to read ack_seq and
+   copied_seq atomically.
+ - Add read_copied field and drain it under mptcp_data_lock() in
+   mptcp_read_complete() to fix the BH vs worker data race.
+ - New patches: mptcp_inq/peek_len and sendmsg_locked proto_ops.
+ - Squash to "selftests/bpf: Add bpf_burst scheduler & test".
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787827525.git.tanggeliang@kylinos.cn/
+
+v8:
+ - check MPTCP_SYNC_SEQ in mptcp_inq_hint:
+       if (hint_val >= INT_MAX) {
+               if (test_bit(MPTCP_SYNC_SEQ, &msk->cb_flags))
+                       return 0;
+               return INT_MAX;
+       }
+ - rename mptcp_sock_rate_check_app_limited to
+   mptcp_rate_check_app_limited.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787644449.git.tanggeliang@kylinos.cn/
+
+v7:
+ - Patch 1 is a new one to fix the existing issue Sashiko mentioned -
+   using atomic64_t for msk->ack_seq.
+ - Fix the map_subflow_seq setting in fallback mode in patch 4.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787537436.git.tanggeliang@kylinos.cn/
+
+v6:
+ - Memory ordering for MPTCP_SYNC_SEQ: Add smp_wmb() before set_bit() in
+   subflow_set_remote_key() and smp_rmb() after test_and_clear_bit() in
+   __mptcp_move_skb() and mptcp_release_cb() to prevent data races on
+   weakly-ordered architectures, ensuring ack_seq updates are visible
+   before the flag is set and readers see the updated sequence after
+   observing the flag.
+ - Lockdep nested locking: Use lock_sock_fast_nested(ssk) instead of
+   lock_sock_fast(ssk) in mptcp_sock_rate_check_app_limited() to suppress
+   false positive recursive locking warnings when acquiring subflow socket
+   locks while holding the parent MPTCP socket lock.
+ - Receive window advertisement order: Swap mptcp_rcv_space_adjust() and
+   mptcp_cleanup_rbuf() in mptcp_read_complete() to expand the receive
+   buffer before evaluating window updates, ensuring ACKs advertise the
+   new (larger) window size instead of delaying the advertisement until
+   the next cycle.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787446274.git.tanggeliang@kylinos.cn/
+
+v5:
+ - only patch 3 changed.
+ - Fallback offset underflow: Initialize MPTCP sequence space to 0 in
+   mptcp_propagate_state() when mp_opt == NULL, ensuring SKB's map_seq
+   starts from 0 to match msk->copied_seq and prevent offset calculation
+   underflow in fallback mode.
+ - Stale peek_seq: Move peek_seq recomputation into the mptcp_move_skbs()
+   continue path and add another recomputation after sk_wait_data(),
+   ensuring peek_seq stays synchronized with msk->copied_seq updates from
+   MPTCP_SYNC_SEQ processing in both paths.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787368526.git.tanggeliang@kylinos.cn/
+
+v4:
+ - mptcp_recvmsg: move the peek_seq recompute from after sk_wait_data()
+   to before the mptcp_move_skbs() continue check.
+   mptcp_move_skbs() -> __mptcp_move_skb() may shift the head skb's
+   map_seq to the IASN frame via __mptcp_sync_rcv_sequence(); if
+   'continue' then exits the loop, the recompute is skipped, and the
+   next __mptcp_recvmsg_mskq() computes offset with peek_seq in the old
+   frame minus map_seq in the new frame. The underflow makes the offset
+   test fail and the skb is skipped (and mptcp_recv_skb() actually frees
+   the TFO skb via mptcp_eat_recv_skb()).
+ - Make all three MPTCP_SYNC_SEQ bit accesses atomic:
+   - subflow_set_remote_key:   __set_bit            -> set_bit
+   - __mptcp_move_skb:         __test_and_clear_bit -> test_and_clear_bit
+   - mptcp_release_cb:         __test_and_clear_bit -> test_and_clear_bit
+   The flag is set in BH under mptcp_data_lock() (msk slock held) and
+   cleared in user context under lock_sock() slow path (only owned=1,
+   slock not held). The non-atomic RMW on the two sides races, which can
+   lose the IASN sync.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787295147.git.tanggeliang@kylinos.cn/
+
+v3:
+ - Patch 2, handle "offset" in __mptcp_sync_rcv_sequence().
+ - Patch 3, update __mptcp_move_skb() in response to Sashiko comments:
+
+ 	if (__test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags))
+		msk->copied_seq += mptcp_iasn(msk);
+
+ - Patch 4, replace after64() to after() in mptcp_prune_ofo_queue(). The
+   pre-existing issue raised by Sashiko regarding changing the type of
+   ack_seq to atomic64_t is not addressed in this series.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1786445142.git.tanggeliang@kylinos.cn/
+
+v2:
+ - Patch 3, updated in response to Sashiko comments:
+
+        if (unlikely(msk->rcvd_dummy_seq)) {
+                msk->copied_seq += mptcp_iasn(msk);
+                __mptcp_sync_rcv_sequence(sk);
+                /* Release cb() would otherwise re-base copied_seq
+                 * again.
+                 */
+                test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags);
+        }
+
+        /* Skip the already peeked data. */
+        if (offset >= skb->len) {
+                *last = skb;
+                continue;
+        }
+ - Patch 5, replaced with Paolo's patch.
+ - Patch 6, 7, new patches addressing app-limited conditions.
+ - The patch "trim the duplicated skb head at receive enqueue" has been
+   dropped, as it is no longer needed after Paolo updated the "mptcp:
+   out-of-order queue pruning" series.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1786158416.git.tanggeliang@kylinos.cn/
+
+v1:
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1785150300.git.tanggeliang@kylinos.cn/
+
+The goal of this series is to reduce the differences between TCP and MPTCP
+for TLS usage, in preparation for adding TLS over MPTCP support in the
+future.
+
+In previous versions [1], a struct tls_prot_ops was defined to represent
+the interface differences between TCP and MPTCP, which contained the
+following callbacks:
+
+	struct sk_buff *(*recv_skb)(struct sock *sk, u32 *off);
+	bool (*lock_is_held)(struct sock *sk);
+	void (*read_done)(struct sock *sk, size_t len);
+	u32 (*get_skb_seq)(struct sk_buff *skb);
+	int (*skb_get_header)(const struct sk_buff *skb, int offset,
+	                      void *to, int len);
+	bool (*epollin_ready)(const struct sock *sk);
+	void (*check_app_limited)(struct sock *sk);
+
+In reality, some of these callbacks are unnecessary. This series aims to
+eliminate the get_skb_seq(), skb_get_header(), and lock_is_held()
+callbacks.
+
+The first four patches come from Paolo's "mptcp: address stall under memory
+pressure" series v5 [2], with only minor cleanup from my side.
+
+They remove the CB offset field and sync the MPTCP skb CB layout with the
+TCP one, so that we can obtain the TCP or MPTCP sequence number in a
+unified way, e.g.:
+
+	struct tls_skb_cb {
+	    u32 seq;
+	};
+
+	#define TLS_SKB_CB(__skb) ((struct tls_skb_cb *)&((__skb)->cb[0]))
+
+This eliminates the need for a separate get_skb_seq() callback.
+
+Building on the removal of the CB offset field, I also added patch 5 that
+trims the duplicated skb head at receive enqueue. With that in place, KTLS
+can retrieve the record header via skb_copy_bits() directly, so there is no
+longer any need for a dedicated MPTCP helper like mptcp_skb_get_header().
+The skb_get_header() callback can thus be removed.
+
+Patch 6 defers sk_data_ready to the worker, which avoids recursive locking
+when TLS calls back into MPTCP under mptcp_data_lock(). With this change,
+the lock_is_held() callback is no longer needed and can be removed.
+
+[1]
+https://patchwork.kernel.org/project/mptcp/cover/cover.1782123118.git.tanggeliang@kylinos.cn/
+[2]
+https://patchwork.kernel.org/project/mptcp/cover/cover.1778446731.git.pabeni@redhat.com/
+
+Geliang Tang (2):
+  mptcp: fix TFO map_seq sign extension in fastopen
+  mptcp: defer read_sock cleanup to mptcp_worker
+
+Paolo Abeni (4):
+  mptcp: drop the mptcp_ooo_try_coalesce() helper
+  mptcp: drop the cant_coalesce CB field
+  mptcp: remove CB offset field
+  mptcp: sync mptcp skb cb layout with tcp one
+
+ net/mptcp/fastopen.c |  16 ++-
+ net/mptcp/protocol.c | 262 +++++++++++++++++++++++++++----------------
+ net/mptcp/protocol.h |  16 ++-
+ net/mptcp/subflow.c  |  19 +++-
+ 4 files changed, 208 insertions(+), 105 deletions(-)
+
 -- 
-2.25.1
+2.55.0
 
