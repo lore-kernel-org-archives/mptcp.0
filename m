@@ -1,55 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.44
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793701307;
-	b=VQhWjqLfom1MmFNDpvqn2faYHO9PFep2ck3iweHjXLDnwKttgHcR04XdnDWzB1YIhhXU
-	 Q+EBJ0XijzckVXonvO3dBm3e3wtqjYfFkXOrO37I8I4npudOatOA8uooydaAcZlQSttrp
-	 Ia4Gn5Ja0mkIZTVfskItciIbveMLkkGh1lL4R41FLLfQUKgjttKpf8tgRklUjC0PqUHbv
-	 C4Hl1JCDP4jngSQfv8Pp8uoy/hxBsOmvWzhHNWeIGO6arOE3xG77Mol9Ys+MY9p5KhR5H
-	 V2cnPZz9ptHySj0+2u8pwFiYtNLPQCkMYiqrfvuH/ZSmhMBE7/UL5ckvxycof7wMEwg==
+	t=1793701356;
+	b=qAmG79f3y0op9XoeuAAElmgW/UhW4TwHS/qqUWdGgKw1RURGHuLLsPprgy2Z0Qvb4DQ9
+	 ul8jW9VRmBeVnx8cMFBl4QmhH+nqwsox5LZZndMyJ+jeYDmim7qn23fgTNBtQFk3ZGS/Z
+	 n7uLRXxAASW4qDEhs2XuSV1rWALwUZqxl+MtWxO2TsD1gP2+NFKJKz9jsdy9Siz6rj8rT
+	 dCcP/W2Ah+BaJmgsWTXOdgghvE0w81gvGXS7OKIijpBfmVNikCNWcF7EIHsVd8Qv7wCMM
+	 HD6F4wvQUQr1Qt4uk6t2QA5YXGuTdHZSO2orrHfWe6xTKDrd1TX3GYN1mJr2c62KMxg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793701307;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=9SDMxHFxUL+ogmtys/7ONVduqGB0/dkY/RtmKhUklo4=;
-	b=Covioizpx2eD2B2NsiZ1JqR2Dl70wDy+UcQKXfTFxaB3NclS+e5MDlGuDKw0MJc7lNxV
-	 6MhzczSIDkcb2OOvhImV9HBYzxHD5WiQMmvj2Fmkmg6NyFFUJ/zKYbAamirwApLpNMezP
-	 eSQDiNUQb0Sv94ijxKSKHo2KhsYJ2CIhCsXnHJ6LGc+td8j6RyDMhZCcJSXINc/y+HKz0
-	 aGC10kZhRkKMYvyDIn0hiKe9sd/if6Co5VjuN517udUSZMF5yHJm5ljxGGywAiP8AzhJ5
-	 35pxfatqiHrrwPiGhZsbK+yct4vrmyEodZsG0lmLe3W4PAouPOjEaZckjnHrrbDzFng==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793701356;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
+	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
+	 Date:MIME-Version:Content-Type;
+	bh=BC5zyg3LtIphv0227gEa7qbdtopU611rbmMZiHIGECU=;
+	b=mYeq91rhHPqwvxCb5rf+1AxNmeYXMuHcmFkN0NCpu+/nWSm9o35EzqhuQRqRgZUoWN33
+	 bSmYn4qVeGHztDiOLXrNWp9pbjzrVgYJ7pku7DQvKwroLQEikWG/CLPuWAiR5alADDh6G
+	 0nxVZoV4XE0rp4slzu8/H1+NqTugW3ckaVcLqnimaEzvyJXgFW7uu5iKylrZnlUne5PEt
+	 EpB028Y/+bLsy+1EDCXivJ+S7ny31o/sU1OIZO6tlCfv9ST/DfeFwtQzvDWirLahiDYcG
+	 jPSB+1L0hCBJLUzr1HqGWSuW/93/1NNLBoARKKLfPZ9oxc/8jUJk5nDRGTWplDJWCxA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DoBV4QMl;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Lht7sRk3;
+	arc=none smtp.remote-ip=209.85.210.44
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80B3606D801
-	for <mptcp@lists.linux.dev>; Tue,  3 Nov 2026 10:21:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E46606A33C
+	for <mptcp@lists.linux.dev>; Tue,  3 Nov 2026 10:22:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A9E46606A33C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DoBV4QMl
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ECE31F000C1;
-	Tue,  3 Nov 2026 10:21:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793701306;
-	bh=9SDMxHFxUL+ogmtys/7ONVduqGB0/dkY/RtmKhUklo4=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=DoBV4QMlcn9bURv9YK0V9cewWrxm+HeSueDk59KuyOFK6JwZVVORWOF2xX6r7UrzV
-	 KCiGvWyEReoFIvF8J21dm8KHdrKeMYPwB+ETpv0LZ2qeUjTfDiHnDPhSHZzUELN8e6
-	 s/O42pgfTWVyWPOml9kjOTWBMYxiwlnMTz8lZjSewcN9ExeEi30jITg4PACd3sRPnF
-	 C8itTQu1H0WXZvKsPd8I57iShzxy7RGwY6qo0khN82L1COgZH58JW131l2UY/QtS83
-	 YlBud+bWuJp1J+o3l7WGOOz7/4BY5G/xFMZiYZPm4e7a+nLA8dyEniadQzzbOm3rTG
-	 mtb5wDKaTUQzw==
-Message-ID: <sashiko-outbox-195035@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v20 4/6] mptcp: remove CB offset field
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <866f86ad2ea894fc21af7546ed0cf6f8b9d816de.1793695518.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Lht7sRk3
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-85c1135c286so2561960a34.1
+        for <mptcp@lists.linux.dev>; Tue, 03 Nov 2026 02:22:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793701354; x=1794306154; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=BC5zyg3LtIphv0227gEa7qbdtopU611rbmMZiHIGECU=;
+        b=Lht7sRk3y7enZQNF8gUAY38Efp6ydXf+G5mqOAC1eNtV0feCJZR1SSX8clk3t3P+Hi
+         A2kn1xouh2Sp3lA7VD2bC98lCdE24+gBYagu2Stb64/XPcvBY+V8MmUptPo98mr0RSMB
+         Mk0K3hOuqjaIPfWHQbXWIkfhFgK3jcMLD0H47qMvXHsP6Gkd5TIvssp3HHaoGMTpXfb7
+         X8N9jf7UyES0MdYaYC35xqul8rmnSzDsYrv41JxE06tM9YoK5bac4dvyLb+5nTedBjQg
+         PamPJww93GE9fPc+bVaKAjDxvlj2ULJTsS2a04p/G7W/c1/5Lk/8/9bmOk5TfQKfxXiT
+         kyHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793701354; x=1794306154;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=BC5zyg3LtIphv0227gEa7qbdtopU611rbmMZiHIGECU=;
+        b=fb63DWBygBukvGHVXVhZcWIwHgDNJwDnpbfECilq4Gf+Jfr6LXHkRM4F9PBpthADfG
+         DO7Fq9XU1je21HjwzE5cHBoOkTypAYSUKzJW+tcPEzROzSIbHygE4LP/1xYVjIU040GE
+         4RtWNco0mIVk5o+rr3qp+xq6JCqD0XF9LGh7EhBM9JQKuXWK6f/l5mzt++5DgB5V6MHQ
+         BPw1v1f330JX7eP+y7QI/nj0QaV6chQW76qforuJ5sLfQSAM0ix15eEEO4tdzO6r2pxF
+         txjiS+eY5MygxVc1Hm4nY82YOeA1jWZhvcKP2HX/G/kxRCb4dvrLZtFnR3Y7G9KzSIfH
+         nYCQ==
+X-Gm-Message-State: APuU4Z9W5dTKzOHzcKSj7jp+BN/bJNd60b96+0wLW1HqVjA92EpjbFNF
+	LrDPMvs7cd1hvBHLEA0wKiVzr9wYgfDdOtHkYnGmiHuvuf55O+XuhHsRpvzt
+X-Gm-Gg: AYBFou0wgV8hIh/kAWsObiPahSnWFaMfKamYuiTPqSI2XUE1cyexapuwQ3Ow6pnktMo
+	BFfAFNvtb8bEEFzps6km9QdgaHmb3p7cJOJYyD/k/a1rfogqS8uOOzkqlNeCppWz3i7tjrw5oPr
+	kl1xj48dhznQF0G1UapHqZRTqoosp2cWHpwpeb8AgBNixElAAZ8S8JZ0TGgcnf+2UjmfOJyxpEJ
+	e+5K01f8WH0e4wic41ovzt/xWqR8fqy/5sV18u5AC47bXQXRZt49+rVC37qB4YmA/RFgKPGZcPf
+	kVovXs5BexhXoJvkqU4gBNFsHHUpaTer2qnALZjsrzZrzSwiwNWLMi3o+sJbIGb+wcHFaAFBH8/
+	8xhmVQuSazI6PhW6nihCuD94OKHIvpnTFTner71hrY6o4VxZ5gWeoYy5N80n4pALOerKA16Kph9
+	iijBpANA1zevRQ9qr44xA0RiF0alIrU5nNV9DZPUOAWSgo+DM63NpQ7hSjBpB1SD9Blu6NmF/MP
+	+imfe9Tu0boCv7DX9J5yBOKe+nM/JWe4BcAfBRTjn/LJQO7zhVA3SjyGB8MeW+MDTNGnyKIx+Xx
+	S5GIN9f4JMQEJdOkRI2AWFovx4WbuZ+UvLRt7GTIhA==
+X-Received: by 2002:a05:6808:2207:b0:4e8:92e5:db5b with SMTP id 5614622812f47-5640de625e5mr8874285b6e.54.1793701354545;
+        Tue, 03 Nov 2026 02:22:34 -0800 (PST)
+Received: from github.com ([20.186.239.47])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-5640fc49880sm10765995b6e.2.2026.11.03.02.22.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Nov 2026 02:22:33 -0800 (PST)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1793695518.git.tanggeliang@kylinos.cn>
 References: <cover.1793695518.git.tanggeliang@kylinos.cn>
- <866f86ad2ea894fc21af7546ed0cf6f8b9d816de.1793695518.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=utf-8
+Subject: Re: [PATCH mptcp-next v20 0/6] Reduce the differences between TCP
+ and MPTCP for TLS usage
+Message-ID: <ee74287e-34b0-acf4-edb8-85adb19bd043@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 10:21:46 +0000
+Date: Tue, 03 Nov 2026 10:22:32 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -58,250 +97,65 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] mptcp: stale map_seq subtraction in mptcp_inq_hint() after removin=
-g CB offset
-- [High] mptcp: stream corruption in mptcp_init_skb() on non-zero subflow o=
-ffset
---
+Hi Geliang,
 
-commit 698eb6e054556fc8ba45c463c10e26a894f29975
-Author: Paolo Abeni <pabeni@redhat.com>
+Thank you for your modifications, that's great!
 
-mptcp: remove CB offset field
+Our CI did some validations and here is its report:
 
-This commit removes the offset field from struct mptcp_skb_cb and introduces
-copied_seq in struct mptcp_sock to track consumed bytes across receive skbs.
+- KVM Validation: normal (except selftest_mptcp_join): Script error! =
+=E2=9D=93
+- KVM Validation: normal (only selftest_mptcp_join): Script error=
+! =E2=9D=93
+- KVM Validation: debug (except selftest_mptcp_join): Success! =
+=E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =
+=E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Script error! =
+=E2=9D=93
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Perf: Unstable: 0 failed test(s):  =E2=9A=A0=EF=B8=8F=20
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/416098=
+65581
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index f3b07b303f555..3bd7d38ce78c4 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -168,7 +168,6 @@ static bool __mptcp_try_coalesce(struct sock *sk, str=
-uct sk_buff *to,
->  	int limit =3D READ_ONCE(sk->sk_rcvbuf);
-> =20
->  	if (MPTCP_SKB_CB(from)->map_seq !=3D MPTCP_SKB_CB(to)->end_seq ||
-> -	    MPTCP_SKB_CB(from)->offset ||
->  	    ((to->len + from->len) > (limit >> 3)) ||
->  	    !skb_try_coalesce(to, from, fragstolen, delta))
->  		return false;
-> @@ -415,8 +414,7 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *m=
-sk, struct sk_buff *skb)
->  	skb_set_owner_r(skb, sk);
->  }
-> =20
-> -static void mptcp_init_skb(struct sock *ssk, struct sk_buff *skb, int of=
-fset,
-> -			   int copy_len)
-> +static void mptcp_init_skb(struct sock *ssk, struct sk_buff *skb, int of=
-fset)
->  {
->  	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
->  	bool has_rxtstamp =3D TCP_SKB_CB(skb)->has_rxtstamp;
-> @@ -424,10 +422,13 @@ static void mptcp_init_skb(struct sock *ssk, struct=
- sk_buff *skb, int offset,
->  	/* the skb map_seq accounts for the skb offset:
->  	 * mptcp_subflow_get_mapped_dsn() is based on the current tp->copied_seq
->  	 * value
-> +	 *
-> +	 * This is correct even when offset > 0 and mapping is out-of-order,
-> +	 * because consumed prefix bytes are part of the same logical DSN range.
->  	 */
-> -	MPTCP_SKB_CB(skb)->map_seq =3D mptcp_subflow_get_mapped_dsn(subflow);
-> -	MPTCP_SKB_CB(skb)->end_seq =3D MPTCP_SKB_CB(skb)->map_seq + copy_len;
-> -	MPTCP_SKB_CB(skb)->offset =3D offset;
-> +	MPTCP_SKB_CB(skb)->map_seq =3D mptcp_subflow_get_mapped_dsn(subflow) -
-> +				     offset;
-> +	MPTCP_SKB_CB(skb)->end_seq =3D MPTCP_SKB_CB(skb)->map_seq + skb->len;
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/8b0ebaec7c2e
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1200005
 
-[Severity: High]
-As reported by Sashiko on v19 [1], can subtracting offset from
-mptcp_subflow_get_mapped_dsn(subflow) in mptcp_init_skb() corrupt the recei=
-ve
-stream when a subflow skb has a non-zero offset at the start of a new DSS
-mapping?
 
-In __mptcp_move_skbs_from_subflow(), the head skb on ssk->sk_receive_queue =
-can
-have offset =3D tp->copied_seq - TCP_SKB_CB(skb)->seq > 0 while starting a =
-new
-DSS mapping M2 at tp->copied_seq.
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-For example, in subflow_check_data_avail() -> get_mapping_status(), a single
-TCP skb can carry the tail of an earlier mapping M1 in skb->data[0..offset-=
-1]
-and a new mapping M2 in its SKB_EXT_MPTCP extension starting at offset:
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-net/mptcp/subflow.c:get_mapping_status() {
-	...
-		if (skb_is_fully_mapped(ssk, skb)) {
-			MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSNOMATCH);
-			return MAPPING_INVALID;
-		}
+For more details:
 
-		/* will validate the next map after consuming the current one */
-		goto validate_csum;
-	...
-}
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-When the remaining bytes of M1 have already been acknowledged at the MPTCP
-level, mptcp_subflow_discard_data() advances tp->copied_seq by offset witho=
-ut
-eating the skb and resets subflow->map_valid =3D 0. On the next loop iterat=
-ion
-in subflow_check_data_avail(), get_mapping_status() installs M2 starting at
-tp->copied_seq (offset bytes into the skb). The same situation also occurs
-when tcp_data_queue() or tcp_ofo_queue() queues a partially overlapping TCP
-segment whose first offset bytes overlap the end of M1 and whose remaining
-bytes start M2 at tp->copied_seq.
 
-Because MPTCP stripes data across multiple subflows, M1 and M2 are contiguo=
-us
-only in subflow sequence space, not in data sequence space when intervening
-DSNs [mapped_dsn - offset, mapped_dsn) were sent on another subflow. Setting
-MPTCP_SKB_CB(skb)->map_seq =3D mapped_dsn - offset assigns the DSN range
-[mapped_dsn - offset, mapped_dsn) to the stale M1 prefix bytes in
-skb->data[0..offset-1]:
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-1. When M2 is out-of-order at the MPTCP level (mapped_dsn > msk->ack_seq)
-   because [msk->ack_seq, mapped_dsn) is in flight on another subflow, and
-   mapped_dsn - offset <=3D msk->ack_seq < mapped_dsn, __mptcp_move_skb() s=
-ees
-   MPTCP_SKB_CB(skb)->map_seq <=3D msk->ack_seq. It treats the skb as
-   in-sequence (or partial in-sequence), advances msk->ack_seq across the
-   unreceived gap [msk->ack_seq, mapped_dsn), delivers the stale M1 prefix
-   bytes from skb->data[0..offset-1] to user space via __mptcp_recvmsg_mskq=
-()
-   and mptcp_recv_skb(), and drops the genuine data arriving on the other
-   subflow as MPTCP_MIB_DUPDATA.
-
-2. Because __mptcp_try_coalesce() no longer checks MPTCP_SKB_CB(from)->offs=
-et,
-   whenever mapped_dsn - offset equals MPTCP_SKB_CB(to)->end_seq in
-   __mptcp_add_backlog(), __mptcp_move_skb(), mptcp_data_queue_ofo(), or
-   __mptcp_ofo_queue(), skb_try_coalesce() appends all from->len bytes
-   starting at byte 0 (including the stale M1 prefix in from->data[0..offse=
-t-1])
-   onto to.
-
-3. When mapped_dsn - offset > msk->ack_seq, mptcp_data_queue_ofo() inserts =
-the
-   skb into msk->out_of_order_queue under the falsified start DSN
-   mapped_dsn - offset, where it can coalesce with or replace legitimate
-   out-of-order segments covering [mapped_dsn - offset, mapped_dsn) and be
-   dequeued prematurely by __mptcp_ofo_queue().
-
-[ ... ]
-
-> @@ -2252,14 +2237,12 @@ static int __mptcp_recvmsg_mskq(struct sock *sk, =
-struct msghdr *msg,
->  		}
-> =20
->  		copied +=3D count;
-> +		*seq +=3D count;
-> =20
->  		if (!(flags & MSG_PEEK)) {
->  			msk->bytes_consumed +=3D count;
-> -			if (count < data_len) {
-> -				MPTCP_SKB_CB(skb)->offset +=3D count;
-> -				MPTCP_SKB_CB(skb)->map_seq +=3D count;
-> +			if (count < data_len)
->  				break;
-> -			}
-> =20
->  			mptcp_eat_recv_skb(sk, skb);
->  		} else {
-
-[ ... ]
-
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 8a3ba490b5772..71c3b148cf04a 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -537,10 +537,12 @@ static void subflow_set_remote_key(struct mptcp_soc=
-k *msk,
->  	atomic64_set(&msk->rcv_wnd_sent, subflow->iasn);
->  	msk->tfo_iasn =3D subflow->iasn;
-> =20
-> -	if (!sock_owned_by_user(sk))
-> +	if (!sock_owned_by_user(sk)) {
-> +		msk->copied_seq +=3D subflow->iasn;
->  		__mptcp_sync_rcv_sequence(sk);
-> -	else
-> +	} else {
->  		set_bit(MPTCP_SYNC_SEQ, &msk->cb_flags);
-> +	}
->  }
-
-[Severity: High]
-As reported by Sashiko on v15 [2], does mptcp_inq_hint() still compute the
-unread byte count using MPTCP_SKB_CB(skb)->map_seq instead of msk->copied_s=
-eq?
-
-The commit message notes that this change fixes and simplifies
-mptcp_inq_hint() via the new ack_seq - copied_seq hint, but mptcp_inq_hint()
-in net/mptcp/protocol.c still reads:
-
-net/mptcp/protocol.c:mptcp_inq_hint() {
-	const struct mptcp_sock *msk =3D mptcp_sk(sk);
-	const struct sk_buff *skb;
-
-	skb =3D skb_peek(&sk->sk_receive_queue);
-	if (skb) {
-		u64 hint_val =3D READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
-
-		if (hint_val >=3D INT_MAX)
-			return INT_MAX;
-
-		return (unsigned int)hint_val;
-	}
-	...
-}
-
-Because __mptcp_recvmsg_mskq(), __mptcp_read_sock(), __mptcp_move_skb(), and
-__mptcp_ofo_queue() no longer advance MPTCP_SKB_CB(skb)->map_seq as bytes a=
-re
-consumed or overlapped, and mptcp_init_skb() subtracts offset from map_seq,
-MPTCP_SKB_CB(skb)->map_seq stays at the start of the head skb while
-msk->copied_seq advances. Whenever the head skb in sk->sk_receive_queue is
-partially read (count < data_len) or has a non-zero offset, mptcp_inq_hint()
-over-counts unread bytes by msk->copied_seq - MPTCP_SKB_CB(skb)->map_seq for
-SIOCINQ in mptcp_ioctl(), TCP_CM_INQ in mptcp_recvmsg(), and receive buffer
-auto-tuning in mptcp_rcv_space_adjust().
-
-In addition, on a passive TFO socket when the peer's 3rd ACK arrives while
-sock_owned_by_user(sk) is true, subflow_set_remote_key() updates msk->ack_s=
-eq
-to subflow->iasn immediately while deferring msk->copied_seq +=3D msk->tfo_=
-iasn
-and __mptcp_sync_rcv_sequence(sk) via MPTCP_SYNC_SEQ. If mptcp_inq_hint() r=
-uns
-before MPTCP_SYNC_SEQ is processed (for example in __mptcp_recvmsg_mskq() ->
-mptcp_rcv_space_adjust(), at out_err in mptcp_recvmsg() when msk->backlog_l=
-ist
-is empty, in __mptcp_read_sock() -> mptcp_rcv_space_adjust(), or in
-mptcp_ioctl() if the 3rd ACK arrives after mptcp_move_skbs()), it subtracts
-the pre-IASN sequence from the post-IASN msk->ack_seq and returns INT_MAX.
-
-Furthermore, a later patch in this series (commit 0495d49fc957, "mptcp: sync
-mptcp skb cb layout with tcp one") narrows MPTCP_SKB_CB(skb)->map_seq from =
-u64
-to u32, which will cause READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_s=
-eq
-to return INT_MAX whenever the upper 32 bits of msk->ack_seq are non-zero.
-
-Should mptcp_inq_hint() use msk->copied_seq (while accounting for any pendi=
-ng
-MPTCP_SYNC_SEQ adjustment) instead of MPTCP_SKB_CB(skb)->map_seq?
-
-[1] https://lore.kernel.org/r/1dac839fffd26114e35382b256fdee9923c0949b.1793=
-361629.git.tanggeliang@kylinos.cn
-[2] https://lore.kernel.org/r/25f42bae1af43649a5c89ca10cfe0d962941c6f7.1792=
-718041.git.tanggeliang@kylinos.cn
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1793695518.gi=
-t.tanggeliang@kylinos.cn?part=3D4
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
