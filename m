@@ -1,54 +1,53 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793677019;
-	b=i1Pva0HwUhomxxTshNgGMOR+h2qXF50kH5Zua3K5+s/ke5frNsSFUynUZiur24Njv6Bt
-	 KCq8FtPbhI8RQhl+cEkltVBQo6kHK0WClNMIxnLuGjRlGs/2FlgLzNrF8wkE7udseI6zb
-	 svI2fb2snPeH5yMr5gvdMkyL27UWGaNnxG91vXreLZWrHaSPM+p+gtMCb4VvXREZ1Y+Wb
-	 BeOKtYBCXCX4z/6bjWYJSQqm51xkvPDj//lt79cEv0o6LnZDCuKKyoeLwY5txKb3nLRIs
-	 TTN5ghoAIt6oIZezE7WnhLRr53PCPBYIN5gUK/2ibz4EZoY6gHHuTwi3QywE5k7EbPA==
+	t=1793677476;
+	b=C+Z1gzAE+mus+lXnSnwyZTYMbgcVIRC3UmAnmxyxo9IRQKDWGZ4T7XlJl8lIhcZ1L+zx
+	 xuIHZOFX8yyu0P2GYxPacJ4sLCgru+AIz1O9wmYN813u6nE1nMjRi65g0lc0svkOrCVCu
+	 3qagctkPj+mYPo/Lt+rjrioe7NVl44HMK9NrG5Y0QZqHdmFbm93+CalLLrsIMtEWiyllj
+	 nroRS08QpNiXW77+jiST8f2uL/MVbbG8NcEAs0PuJS2RWBy5Ohs9BEzfkrMZpbTld21q/
+	 c5217e8/XSBLX+uDwzKyGCuOpx1EIpOPas83g+oISPi78P6sV80/dTtxkl1CGtkdg4w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793677019;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793677476;
 	h=Received:DKIM-Signature:Message-ID:Subject:From:To:Date:In-Reply-To:
 	 References:Content-Type:User-Agent:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=UXkkIGJVjExvAFXO4tJHpLawZxryMapmjOafXs5vUrw=;
-	b=xdg9osx/UNjWUeWgtTUfzeVPTTd3AxYQG0vmHfMS7CmDO8pEAZnPTbq+lcGV6lZflL3A
-	 jpVmn4LsxeOKIqowGpy6MU6FfUrQHbsh16/A1RJKdjExL/rU6NyNm+4rucngYsOqrBHL6
-	 aHbdBJz0vE4I95T7PUkfEIHDit9mbYLeWW9ydcSOWbWRv7sOZISPUWaS52fxepyDzn2Y7
-	 8/ssnjDBXPHUEuNmK7MCf9/xcJ3ZVqGn7K8H6SFgNajo40+N3Cb/0pSzUWngUvK1DIJpN
-	 i2gBJUrB/YpYeoWsQ0q0hsViBtPxVyDZmJ3cJb00eUoOlCVaK2Wnem76mPm0hGB42AQ==
+	bh=iKeakN6DDHiDdyA5AttBwZ2kI2tYOtobNd8R6DiDfj8=;
+	b=YE+8LUIQjIkBdH/5h1gUrCwhTeBYgphbczbR64A73h2AlyJ0aTEYfenmTKG+oSppDHKm
+	 XCFTgQuQoRmCMOcFalj3R/pDtQEL7d0FLMqnUwxRXCV3h81wt3xUg5nuh5+nOGc6kBPwx
+	 HI0QjjJRyZMKOjaPQSHgpTvL1xSM6X36JFL5yymPTdKHf6PO+7GgfgLllQLyl+DMJ3fL6
+	 kSLIsnq1aS4/pnt0D3l5yqQYpa0Q9rwBFrOYDJ7W/Adg62SCU/NHcF0fhGZ2yOMCQOxoY
+	 42CnyNqESG5PZ9ee4Y2l0gojFPSXchtatpk8cMk7mrBaoKBAX26H3awgdi8YfAR3apg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bH1F9MBN;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iI5VT6+X;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DBDF606A326
-	for <mptcp@lists.linux.dev>; Tue,  3 Nov 2026 03:36:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D01E606A32F
+	for <mptcp@lists.linux.dev>; Tue,  3 Nov 2026 03:44:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bH1F9MBN
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 523761F000C1;
-	Tue,  3 Nov 2026 03:36:57 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iI5VT6+X
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 449D21F0093A;
+	Tue,  3 Nov 2026 03:44:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793677019;
-	bh=UXkkIGJVjExvAFXO4tJHpLawZxryMapmjOafXs5vUrw=;
+	s=k20260515; t=1793677475;
+	bh=iKeakN6DDHiDdyA5AttBwZ2kI2tYOtobNd8R6DiDfj8=;
 	h=Subject:From:To:Date:In-Reply-To:References;
-	b=bH1F9MBNfI/3E2iknr8X8G9dwZEIGNa3meDO0g9mpxDqUBXHDDja6w7hYLRJ38/gS
-	 WUV7KKC10/AJFRNtTXGyHU5Lsg9PqRr4jdcVhozmvnIuDb4KdWI6H8qByCS5LTWkc0
-	 Qj2MwPK1Pv50ooYp05Le9cxtAUTmXQetmjFgDsEo7F5ZNKOD1cfdR7sw6fAsoZvvPN
-	 Q1aVUgbMj4wVgcf+QYLLpLLnHBGXVxEuOWVuZdHgzhiuvgt5nJ65vjVBbjrllmYlQW
-	 aOsSLvP1d518n84zNhCt0JyeThGjpMbF9WjQyG9z/bdvEaRHlQ8hOx3fcnT+Vz91jI
-	 31GVTB+3jnD4Q==
-Message-ID: <fc1a3f23c29819adce277e0b19c466bf63fea693.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next] Squash to "bpf: Add mptcp_subflow bpf_iter"
+	b=iI5VT6+X19TvpEV1PRGZ6dceb7ttyxuwIAuV8GdP7NFCR7QciiE2rR0g8QjKXkTrE
+	 gMdBR0uy8gJ2V5CqhBEGlP18HwB8FUFIdsfutVyJZAhzfiOpvNwbGctltvzfNAlFDl
+	 N2c1gzPCjz95qRqiJ9SrFKKrH1np/POiIPoUEjqDJojwXhc0QBvyN3+5NXtXmxorbM
+	 nQ7IhVPQnNi+TTx19Q+RAleidOo8cupbCSa6jc2w+OMXMNPeKRjXhHl7J2t5u5LJTH
+	 ili2aqbZtBu56rGKKFFHwmOkDOcDaIoweO/A39QI2AsKOzSOApg+YCNgsqW541IVO7
+	 l6OxaH3mxKD7w==
+Message-ID: <0466fe04a8987c271e81f739d8e6eaf24f3309d6.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v7 0/6] mptcp: avoid data-races around the
+ sysctls
 From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, MPTCP Linux <mptcp@lists.linux.dev>
-Date: Tue, 03 Nov 2026 11:36:56 +0800
-In-Reply-To: <46f86900-a7aa-4ffd-8c34-a15fa8c8d460@kernel.org>
-References: 
-	<20261102-mptcp-bpf-kf-iter-ret-indep-v1-1-dd262e520168@kernel.org>
-	 <46f86900-a7aa-4ffd-8c34-a15fa8c8d460@kernel.org>
+To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
+Date: Tue, 03 Nov 2026 11:44:33 +0800
+In-Reply-To: <cover.1790147728.git.yangang@kylinos.cn>
+References: <cover.1790147728.git.yangang@kylinos.cn>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.2-10build1 
 X-Mailing-List: mptcp@lists.linux.dev
@@ -62,51 +61,86 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Matt,
+Hi Gang,
 
-On Mon, 2026-11-02 at 19:52 +0100, Matthieu Baerts wrote:
-> Hello,
+On Wed, 2026-09-23 at 17:49 +0800, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
 > 
-> On 02/11/2026 17:45, Matthieu Baerts (NGI0) wrote:
-> > Since commit d09c2aa3109f ("bpf: Track borrowed iterator results by
-> > default"), the verifier ties a struct pointer returned by an
-> > iterator's
-> > next kfunc to the current element by default: it is invalidated by
-> > the
-> > following "next" call, and by "destroy".
-> > 
-> > That breaks the MPTCP BPF schedulers tests, keeping a subflow after
-> > advancing the iterator: bpf_rr keeps the first subflow, and
-> > bpf_burst
-> > keeps the "best" ones to use them after the loop. Both are now
-> > rejected
-> > at load time:
-> > 
-> >   R1 type=scalar expected=ptr_, trusted_ptr_, rcu_ptr_
-> >   (...)
-> >   # test_rr:FAIL:open_and_load: rr unexpected error: -13
-> > 
-> > The returned subflow is not tied to the iterator position: next
-> > only
-> > walks msk->conn_list, destroy is empty, and no per-element
-> > protection
-> > is dropped. In fact, the subflow is still valid thanks to the held
-> > msk
-> > lock. Then declare it with KF_ITER_RET_INDEPENDENT.
-> 
-> It looks like it fixes the issue reported by the CI. I suggest
-> applying
-> it now, not to impact other devs. I can always change this later if
-> needed.
+> Changlog:
+> v7:
+> Patch 5:
+>  - Rephrase the commit message accoding to sashiko's comments.[1]
 
-I've just reproduced the issue and confirmed that this patch fixes it.
-Please apply this patch.
-
-    Reviewed-by: Geliang Tang <geliang@kernel.org>
+Sashiko is still reporting some issues. Please fix them first. I've set
+this series to "Changes Requested".
 
 Thanks,
 -Geliang
 
 > 
-> Cheers,
-> Matt
+> Patch 6:
+>  - Fix the use-after-free reported by sashiko [2]: the module
+> reference is
+>    now taken inside the same RCU read section as the pointer fetch in
+>    mptcp_pm_data_reset(), so the ops cannot be freed between the
+>    rcu_read_unlock() and the bpf_try_module_get() that previously
+>    lived in mptcp_pm_ops_init(). The fallback to mptcp_pm_kernel now
+>    takes a reference as well, fixing a pre-existing refcount
+>    underflow when MPTCP is built as a module.
+>  - Fix the reported use-after-free in [2]: take the module reference
+> inside
+>    the same RCU read section as the pointer fetch.
+>  - The remaining of [2] are not actual issues, along with the
+>    "scheduling while atomic" one which does not apply: lock_sock()
+>    has mutex semantics, no spinlock is held across synchronize_rcu().
+>  - Clear the pm.ops inherited by cloned sockets before re-selecting
+>    it: the clone entered the swap logic with a reference it never
+>    took, and the grace period wait could run in RX softirq.
+>  - Wait for a grace period before releasing the retired ops in all
+>    cases (same-ops reuse and final destruction included).
+> v6:
+>  Link:
+> https://patchwork.kernel.org/project/mptcp/cover/20260904093531.20023-1-gang.yan@linux.dev/
+> v5:
+>  Link:
+> https://patchwork.kernel.org/project/mptcp/cover/20260828060643.14397-1-gang.yan@linux.dev/
+> 
+> v4:
+>  Link:
+> https://patchwork.kernel.org/project/mptcp/cover/20260824073625.57471-1-gang.yan@linux.dev/
+> 
+> v3:
+>  Link:
+> https://patchwork.kernel.org/project/mptcp/cover/20260819125629.49823-1-gang.yan@linux.dev/
+> 
+> v2:
+>  Link:
+> https://patchwork.kernel.org/project/mptcp/cover/20260818094825.48446-1-gang.yan@linux.dev/
+> 
+> v2:
+>  Link:
+> https://patchwork.kernel.org/project/mptcp/cover/20260817012452.7519-1-gang.yan@linux.dev/
+> 
+> [1]
+> https://sashiko.dev/#/patchset/20260904093531.20023-1-gang.yan@linux.dev?part=5
+> [2]
+> https://sashiko.dev/#/patchset/20260904093531.20023-1-gang.yan@linux.dev?part=6
+> 
+> Gang Yan (5):
+>   mptcp: sched: change scheduler sysctl atomically
+>   mptcp: pm: change path_manager sysctl atomically
+>   mptcp: pm: use WRITE_ONCE() for the pm_type sysctl
+>   Squash-to "mptcp: pm: init and release mptcp_pm_ops"
+>   Squash to previous one
+> 
+> Matthieu Baerts (NGI0) (1):
+>   mptcp: use READ_ONCE() over sysctls
+> 
+>  net/mptcp/ctrl.c     | 141 ++++++++++++++++++++++++++++++++---------
+> --
+>  net/mptcp/pm.c       |  64 ++++++++++++++------
+>  net/mptcp/protocol.c |   7 ++-
+>  net/mptcp/protocol.h |   9 +--
+>  net/mptcp/sched.c    |   2 +-
+>  net/mptcp/subflow.c  |   9 ++-
+>  6 files changed, 171 insertions(+), 61 deletions(-)
