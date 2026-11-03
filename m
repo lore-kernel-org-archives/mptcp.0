@@ -1,56 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.173
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793704110;
-	b=2Myr4540rgaxRwLNFoyM0Cbm+iTCw9ZZakiaMfr+djVIhExlByjY0xBCe/LFteEFHbv4
-	 194Koscf7bAHfmhH9BlaGbuGDvwIjdlDGitpQn4a0F5ngRa8dtRr7bBx9t9ej+jtUGdgl
-	 O87gRme8f71UzLINBworudXlG1L7xcGHQibgJN7cz2+tmXUHORfJJpeVpjcn9882M2D+f
-	 YC8xPME3DY4goUYllHPiGwZy2so1obt1L/V5L19Mn3Z5UhWw2oh0rV+0SVfx05NjB625a
-	 m2rXIs/5WA//gC0perkI9RgO5vVe9/gKm7y/S9JYMs4XtyRJPwGTytC6O3WspXnc6DQ==
+	t=1793709213;
+	b=zIqJiOteCeWpfKIoFVkWi6Q4sn1baIXLZY0//WYIZZgUkMpn+PHENwuj5RCBVsMS0Jze
+	 OVLOY9j+tC0Dkc9Lf2auwJpBI30AL4ZOqdrIQTewLjvPMniuw/3M98Cpq2GOQ1F1YhJW8
+	 FzccLcmSDmZh2aYXjKKZFrJJHwCk2N+G9jmwGa2UtFPY0y2/OaGk2vgxWGk0LH3V2PAf5
+	 ds754BiBWTirGl0hA6Hw5KzDTiidoxZ2gUy+s+k8zgVnPptbI1YJ39g7ryEU30OqiSIuc
+	 TqRGHZFIyPb0qvCB+ZlW4rSUCPBgCCurvtTHPoQuCO85dw8ViA/2ZoUh87UgpIUxczA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793704110;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=EmrQEDyP1TWjI+8EeQGWOr11fiq6UxGbr7QjBWJ5c0E=;
-	b=mBZq3qg/x2p3oK49MZvfQ3tHGhu9hg5fOp10kqqKaymI6/5kVf3hZ6O3k8ZK6tdv51z9
-	 Dxl40tsDInOR8bIEtIcs+ci03DklQqkrvUxNZ4488SpBZskrZ4uiLKYTW8ntObaGCaDqp
-	 N6H8GP4fM18aOw9e5dplK3az1fKoLx5pl0pjPDXqtrxknN4SDO9MnxvU4WQHIZsrWCrI9
-	 rRi2J3CiN+SNfizI38blcksUAQJ28Mzgqy66+dT6J5ApP0dAVuQoY0vCzOSYkdkk7e4nF
-	 TMz3AygeWmYCDzkIaj7UElyiIAJ0svYrfbh4BonTxQGf8Kt/Dub323FlqDCvW4vyoIw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793709213;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
+	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
+	 Date:MIME-Version:Content-Type;
+	bh=0lK1ZvxZYqVmCwiIzWUGooGlT5AzX6d0/TqjwVUaftI=;
+	b=dm8R7n0K6TyN52tajQDSkUEM2fOKIv3KSrECtZXMdAVpwD6f/G+S1YO0PT/hfePHLy7P
+	 J1W1CxxKsHR76XAj9oT43J4qoVoJtf/RoQ+qvg+NlA0Xq2znH0EpXzyg3V2zkovE56p46
+	 QaEewjFKADM83PdGhWzUO3YeLTSuQiMX2QtcRAIMe6jDnJxceTMpTXQE5hFH20ZLnyI0s
+	 xsMuAxtKWVLZeADWuXR+PXT4lZQnE2OU/WaneJ4lr6pBSHQVWOikKCr0CZUmufwzJIKur
+	 lfZrr9bLhbu+knYnQDSzJ3YT3yo+dPRsG+9BU+rCAmgZBUKi+EMRHI2kc1t9AzRCwIQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eL7rUcdH;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=GbuafRxv;
+	arc=none smtp.remote-ip=209.85.214.173
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A328D606A830
-	for <mptcp@lists.linux.dev>; Tue,  3 Nov 2026 11:08:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1380E606A337
+	for <mptcp@lists.linux.dev>; Tue,  3 Nov 2026 12:33:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1380E606A337
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eL7rUcdH
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6311C1F000C1;
-	Tue,  3 Nov 2026 11:08:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793704109;
-	bh=EmrQEDyP1TWjI+8EeQGWOr11fiq6UxGbr7QjBWJ5c0E=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=eL7rUcdH68sdHL/byY9W4CZflFQHUP++AxcFWykwssegiaWEbCvQXurX77nJFT+hb
-	 s+H8jUKiFBm3eMJcmeTQUuU4OhLkXNB0lOUK5uWt51gkEbP5Nf4B1ddbsVk74NmDGX
-	 5O4FpmdMERNpijxeRaqmc8Hslc+gDwIvV37Kox9CsslQCyvP5urRi5b93SLRlzIKFL
-	 tGlDRYmepS2bFdQYmjneDJ1pNpbyqDjCiV83iVIpBH/b8KHPpPPjZ4lhDygSYLK5pF
-	 pbRlrwqZS0zRFdIMVXtco8k/No2vRSJk9Y5JV7J4jlXWSaAYmIxFOoDP6z/9zSErqF
-	 J6h7vh+d66WPQ==
-Message-ID: <sashiko-outbox-195115@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v20 6/6] mptcp: defer read_sock cleanup to
- mptcp_worker
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <278ffcf759c109e3753112e62cb7c53b58159650.1793695518.git.tanggeliang@kylinos.cn>
-References: <cover.1793695518.git.tanggeliang@kylinos.cn>
- <278ffcf759c109e3753112e62cb7c53b58159650.1793695518.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=utf-8
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=GbuafRxv
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2e9d7791b00so32565425ad.0
+        for <mptcp@lists.linux.dev>; Tue, 03 Nov 2026 04:33:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793709212; x=1794314012; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=0lK1ZvxZYqVmCwiIzWUGooGlT5AzX6d0/TqjwVUaftI=;
+        b=GbuafRxvxspbwSIGC/m02yZmHA0elOjtODz5SvUjCj8LOhaY4ioGUQxRtqs3Zx0O9K
+         6pLLQ1GGXjoR31r2YgF638X+pxhZEiVF8SMFjkqZyoJEpOGac76C43uaRA+fV6rVqm7V
+         9nsTtP2mkHVGa/YZ/+aUBoygyn/C47tlYgXEpMPZ0CiwaL4pmELEGklC/saJ9OWP17Yy
+         mrKlfOfDKh4aD1g69ZJ0cIfakoWP6kFSGNGkwl88ENkrUlsV8y+AkJ7GmQ20SyYXBFEi
+         rYXpYT7nBnRprVEoKmRuAdB91hBbEfJJaYmAmLgmnshZmotEtUb+LVNsx8MQKKFdIxsb
+         o7kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793709212; x=1794314012;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=0lK1ZvxZYqVmCwiIzWUGooGlT5AzX6d0/TqjwVUaftI=;
+        b=0K8U0x7e0A0xwz2J5TFZZfK5KoiNQZnT8nIyCDFCZGCNv9Jf0nWyYDSwg/TdKOsaG6
+         RXoqozfIbuj/zcfV0p0rKyy48QX2eRpsnMQXWX1E6fHrF5DJBNc+/yBvxzEUT7eW9fbf
+         vbBPNOdVR8LUzBMnx2aXh+pxMFO/wpKqZOJ92vNsvffZyyxSOWzO5KFBOaB4m7F7OdWm
+         Cgi+R/F2tAh8qWOWb6YLTr0GYcy3ZczG/mRghwa8y0/7JGwpPzVhrwedJN+HVxhtFetC
+         IHYKgAqKdFfUB1KC1lNZssch/m0wmg8tV5jTLBIO70r0e/2lg8FstlVhYLuxPMNlR6KF
+         p2EA==
+X-Gm-Message-State: APuU4Z/9/TraQ+xqSKRqcsZzu74MFQ3RHx1R5eWVpku3BF0uJk5nKIpG
+	npDC9SqjTg/ji+Eq6RTLBsrdUzNrhCTNIcE/MBF91QBPyjXEKE5h1+HKz/a1goc=
+X-Gm-Gg: AYBFou1trhjfFPtzw/GRxxCDmdF86Spg6HulQ29jxC+OYYu9ahq1UmbfsMoiZ2OWw85
+	neXMhzT0pAJVqHiV3MH6F+E6AO46k0R/JwByeG+b1LIXvk7apbk+IagKy4BGDFLrBTPqKMxlOY+
+	ymHLO6MKydloaj15w7KYRgAOBy34L+Lz41MzlaQAVKaRMieWbYNg4MvM/dz5plJg4o8XDLDpa6Q
+	1wkCEU6tpzSHQo9wy7Zfv6fcDPw2+C1LH37xcOaiKxtFiuS2g2fUCBV/c+UXv1EPS0oqVn7ujLX
+	4aOIJW3QrBgG8NBxMFmavckbcN6uB+UE2uGMGy0wrzcG92z/oqnjqDHXdLdLh17K9kmSCohD3m9
+	GU2KsMUxiEhS6OxpUk+M4+RDon1gnwrBgeJQS6PQBq5oX5fw9sCZt5qM+o5sJc+Fq46AW8u5/GI
+	tOXMCGkAjZwkTSgOJ7iYGfKVvvBgDE/c9uwm36xV6S+30tLMVOcoxvzSQaDz+o8HYEU9HcAP4JM
+	oakW8WVXh2XD8v0S8tE78eTJKbzUwUVfB35hpr0ByMJsJ7lHbT2Zk8P68eASfeKCerZQPu4R8+6
+	U5iertCqvZBIqF8Q91eyvbjpf6/6InuQkbWtWAgRMqM=
+X-Received: by 2002:a17:903:37c7:b0:2e9:6972:54d7 with SMTP id d9443c01a7336-2eb364e19ddmr116325785ad.52.1793709212224;
+        Tue, 03 Nov 2026 04:33:32 -0800 (PST)
+Received: from github.com ([52.234.40.194])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eb3922f62asm41167185ad.22.2026.11.03.04.33.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Nov 2026 04:33:31 -0800 (PST)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Eric Dumazet <edumazet@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20261103103633.2707416-1-zhiyuzhang999@gmail.com>
+References: <20261103103633.2707416-1-zhiyuzhang999@gmail.com>
+Subject: Re: [PATCH net v3] tcp: prevent cross-family skb processing after
+ disconnect
+Message-ID: <5d0e528a-8364-3591-a97c-2ffb5d6a5f07@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 11:08:28 +0000
+Date: Tue, 03 Nov 2026 12:33:30 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -59,297 +97,59 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
-- [High] mptcp: broken mptcp_inq_hint() 32-bit map_seq subtraction and MSG_=
-PEEK sync
-- [High] mptcp: data corruption in mptcp_init_skb() when subtracting non-ze=
-ro offset
-- [Medium] mptcp: link failure in __mptcp_read_sock() when CONFIG_LOCKDEP=
-=3Dn
-- [Low] mptcp: redundant mptcp_recv_skb() call retained in __mptcp_read_soc=
-k()
---
+Hi Eric,
 
-commit db7d508291f7183730bd0d3c5939151c2b4d01c3
-Author: Geliang Tang <geliang@kernel.org>
+Thank you for your modifications, that's great!
 
-mptcp: defer read_sock cleanup to mptcp_worker
+Our CI did some validations and here is its report:
 
-This commit defers mptcp_rcv_space_adjust() and mptcp_cleanup_rbuf() from
-__mptcp_read_sock() to mptcp_worker() via MPTCP_WORK_READ_COMPLETE when cal=
-led
-in BH context, while keeping cleanup inline when the user owns the socket
-lock. It also updates the socket lock check in __mptcp_read_sock() and remo=
-ves
-the backlog flush from mptcp_recv_skb().
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf: Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_n=
+et-next/actions/runs/41624308450
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 3e10b06b7772d..25f0d10373d22 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -3156,6 +3156,21 @@ static void mptcp_backlog_purge(struct sock *sk)
->  	sk_mem_reclaim(sk);
->  }
-> =20
-> +static void mptcp_read_complete(struct sock *sk)
-> +{
-> +	struct mptcp_sock *msk =3D mptcp_sk(sk);
-> +	int read_copied;
-> +
-> +	mptcp_data_lock(sk);
-> +	read_copied =3D msk->read_copied;
-> +	msk->read_copied =3D 0;
-> +	mptcp_data_unlock(sk);
-> +
-> +	mptcp_rcv_space_adjust(msk, read_copied);
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/e83ee2ab78=
+33
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1200179
 
-[Severity: High]
-As reported by Sashiko on v19 [1], does mptcp_rcv_space_adjust() ->
-mptcp_inq_hint() break receive buffer autotuning here (as well as SIOCINQ a=
-nd
-TCP_CM_INQ) due to subtracting the 32-bit MPTCP_SKB_CB(skb)->map_seq from t=
-he
-64-bit msk->ack_seq?
 
-In commit 698eb6e05455 ("mptcp: remove CB offset field"),
-MPTCP_SKB_CB(skb)->map_seq stopped being advanced on partial reads, which
-instead advance msk->copied_seq, and commit 0495d49fc957 ("mptcp: sync mptcp
-skb cb layout with tcp one") then narrowed MPTCP_SKB_CB(skb)->map_seq from =
-u64
-to u32:
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-net/mptcp/protocol.h:
-struct mptcp_skb_cb {
-	u32 map_seq;
-	u32 end_seq;
-	u32 unused;
-	u16 flags;
-	u8  has_rxtstamp;
-	u64 map_seq64;
-};
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-However, mptcp_inq_hint() still subtracts MPTCP_SKB_CB(skb)->map_seq from
-msk->ack_seq:
+For more details:
 
-net/mptcp/protocol.c:mptcp_inq_hint() {
-	skb =3D skb_peek(&sk->sk_receive_queue);
-	if (skb) {
-		u64 hint_val =3D READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-		if (hint_val >=3D INT_MAX)
-			return INT_MAX;
 
-		return (unsigned int)hint_val;
-	}
-}
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-Because MPTCP_SKB_CB(skb)->map_seq is zero-extended from u32 to u64 while
-msk->ack_seq is a 64-bit sequence number whose upper 32 bits are non-zero on
-nearly all MPTCP connections (or 0 while a passive TFO packet has map_seq =
-=3D
-(u32)-skb->len), hint_val retains non-zero upper 32 bits and returns INT_MAX
-whenever any skb is present in sk->sk_receive_queue. Even when the upper 32
-bits of msk->ack_seq happen to be zero, MPTCP_SKB_CB(skb)->map_seq does not
-account for bytes already consumed via msk->copied_seq.
-
-In mptcp_rcv_space_adjust(), subtracting INT_MAX causes copied to become
-negative and skip mptcp_rcvbuf_grow():
-
-net/mptcp/protocol.c:mptcp_rcv_space_adjust() {
-	copied =3D msk->rcvq_space.copied;
-	copied -=3D mptcp_inq_hint(sk);
-	if (copied <=3D msk->rcvq_space.space)
-		goto new_measure;
-}
-
-Additionally, in mptcp_recvmsg(), peek_seq is only updated when
-mptcp_move_skbs(sk) returns true:
-
-net/mptcp/protocol.c:mptcp_recvmsg() {
-		if (!list_empty(&msk->backlog_list) && mptcp_move_skbs(sk)) {
-			if (flags & MSG_PEEK)
-				peek_seq =3D msk->copied_seq + copied;
-			continue;
-		}
-}
-
-If the third ACK arrives with an out-of-order or duplicate segment while
-lock_sock(sk) is held during MSG_PEEK, mptcp_move_skbs(sk) processes
-MPTCP_SYNC_SEQ (adding msk->tfo_iasn to msk->copied_seq and updating the TFO
-skb map_seq) but returns false, leaving peek_seq unsynchronized in the
-pre-IASN sequence space. Should mptcp_inq_hint() subtract msk->copied_seq f=
-rom
-READ_ONCE(msk->ack_seq), and should mptcp_recvmsg() also resynchronize
-peek_seq when MPTCP_SYNC_SEQ runs?
-
-[ ... ]
-
-> @@ -4643,9 +4663,6 @@ static struct sk_buff *mptcp_recv_skb(struct sock *=
-sk, u32 *off)
->  	struct sk_buff *skb;
->  	u32 offset;
-> =20
-> -	if (!list_empty(&msk->backlog_list))
-> -		mptcp_move_skbs(sk);
-> -
->  	while ((skb =3D skb_peek(&sk->sk_receive_queue)) !=3D NULL) {
->  		offset =3D (u32)msk->copied_seq - MPTCP_SKB_CB(skb)->map_seq;
-
-[Severity: High]
-As reported by Sashiko on v19 [2], can subtracting a non-zero subflow offset
-in mptcp_init_skb() corrupt data delivery when an out-of-order subflow skb =
-has
-a discarded prefix?
-
-In subflow_check_data_avail(), when a TCP skb on ssk->sk_receive_queue
-contains the tail of an already-acknowledged DSS mapping in bytes 0..offset
-and the start of a new DSS mapping at offset (which get_mapping_status()
-allows when !skb_is_fully_mapped(ssk, skb)), mptcp_subflow_discard_data()
-advances tp->copied_seq by offset, clears subflow->map_valid, and loops to
-activate the new DSS mapping on the same skb:
-
-net/mptcp/subflow.c:subflow_check_data_avail() {
-		if (unlikely(before64(ack_seq, old_ack))) {
-			mptcp_subflow_discard_data(ssk, skb, old_ack - ack_seq);
-			continue;
-		}
-}
-
-When __mptcp_move_skbs_from_subflow() then initializes the skb via
-mptcp_init_skb(), it subtracts offset from mptcp_subflow_get_mapped_dsn():
-
-net/mptcp/protocol.c:mptcp_init_skb() {
-	MPTCP_SKB_CB(skb)->map_seq64 =3D mptcp_subflow_get_mapped_dsn(subflow) -
-				       offset;
-	MPTCP_SKB_CB(skb)->map_seq =3D (u32)MPTCP_SKB_CB(skb)->map_seq64;
-	MPTCP_SKB_CB(skb)->end_seq =3D MPTCP_SKB_CB(skb)->map_seq + skb->len;
-}
-
-Because MPTCP stripes mappings across subflows, the new mapping starting at
-offset in skb can have an out-of-order DSN (mapped_dsn > msk->ack_seq) that=
- is
-not contiguous with the discarded bytes in 0..offset. Subtracting offset
-assigns the unreceived DSN range [mapped_dsn - offset, mapped_dsn) to the
-stale discarded prefix in 0..offset:
-
-net/mptcp/protocol.c:__mptcp_move_skb() {
-	if (MPTCP_SKB_CB(skb)->map_seq64 =3D=3D msk->ack_seq) {
-		/* in sequence */
-insert:
-...
-	} else if (after64(MPTCP_SKB_CB(skb)->map_seq64, msk->ack_seq)) {
-		mptcp_data_queue_ofo(msk, skb);
-		return false;
-	}
-
-	/* Partial packet */
-	if (after64(MPTCP_SKB_CB(skb)->map_seq64 + skb->len, msk->ack_seq)) {
-		copy_len =3D MPTCP_SKB_CB(skb)->end_seq - (u32)msk->ack_seq;
-		goto insert;
-	}
-}
-
-If mapped_dsn - offset <=3D msk->ack_seq < mapped_dsn, __mptcp_move_skb() s=
-ees
-map_seq64 <=3D msk->ack_seq, queues the out-of-order skb onto
-sk->sk_receive_queue, and advances msk->ack_seq across the missing DSN gap,
-causing mptcp_recv_skb() and __mptcp_recvmsg_mskq() to deliver the discarded
-prefix bytes from 0..offset to user space. If mapped_dsn - offset >
-msk->ack_seq, mptcp_data_queue_ofo() queues the skb into
-msk->out_of_order_queue as covering [mapped_dsn - offset, mapped_dsn +
-skb->len - offset), dropping legitimate segments for [mapped_dsn - offset,
-mapped_dsn) as duplicates and delivering the stale prefix once msk->ack_seq
-reaches mapped_dsn - offset.
-
-> @@ -4660,6 +4677,7 @@ static struct sk_buff *mptcp_recv_skb(struct sock *=
-sk, u32 *off)
->  /*
->   * Note:
->   *	- It is assumed that the socket was locked by the caller.
-> + *	- Can be invoked in BH scope.
->   */
->  static int __mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
->  			     sk_read_actor_t recv_actor, bool noack)
-> @@ -4669,7 +4687,7 @@ static int __mptcp_read_sock(struct sock *sk, read_=
-descriptor_t *desc,
->  	int copied =3D 0;
->  	u32 offset;
-> =20
-> -	msk_owned_by_me(msk);
-> +	DEBUG_NET_WARN_ON_ONCE(!lockdep_sock_is_held(sk));
-
-[Severity: Medium]
-Does replacing msk_owned_by_me(msk) with
-DEBUG_NET_WARN_ON_ONCE(!lockdep_sock_is_held(sk)) cause a link failure when
-CONFIG_DEBUG_NET=3Dy and CONFIG_LOCKDEP=3Dn?
-
-In include/net/sock.h, lockdep_sock_is_held(sk) calls lockdep_is_held() on
-both sk->sk_lock and sk->sk_lock.slock:
-
-include/net/sock.h:lockdep_sock_is_held() {
-	return lockdep_is_held(&sk->sk_lock) ||
-	       lockdep_is_held(&sk->sk_lock.slock);
-}
-
-When CONFIG_LOCKDEP=3Dn, include/linux/lockdep.h only declares lockdep_is_h=
-eld()
-as a dummy extern prototype with no definition, relying on dead-code
-elimination. Because CONFIG_DEBUG_NET does not depend on CONFIG_LOCKDEP,
-enabling CONFIG_DEBUG_NET=3Dy with CONFIG_LOCKDEP=3Dn expands
-DEBUG_NET_WARN_ON_ONCE(!lockdep_sock_is_held(sk)) to WARN_ON_ONCE() and lea=
-ves
-an undefined reference to lockdep_is_held at link time.
-
-Note that msk_owned_by_me(msk) calls sock_owned_by_me(sk):
-
-include/net/sock.h:sock_owned_by_me() {
-#ifdef CONFIG_LOCKDEP
-	WARN_ON_ONCE(!lockdep_sock_is_held(sk) && debug_locks);
-#endif
-}
-
-Since sock_owned_by_me(sk) already checks lockdep_sock_is_held(sk) for both
-process and BH contexts while guarding on CONFIG_LOCKDEP and debug_locks, c=
-an
-msk_owned_by_me(msk) be kept here as-is?
-
-> =20
->  	if (sk->sk_state =3D=3D TCP_LISTEN)
->  		return -ENOTCONN;
-> @@ -4701,11 +4719,18 @@ static int __mptcp_read_sock(struct sock *sk, rea=
-d_descriptor_t *desc,
->  	if (noack)
->  		goto out;
-> =20
-> -	mptcp_rcv_space_adjust(msk, copied);
-> -
->  	if (copied > 0) {
-> -		mptcp_recv_skb(sk, &offset);
-> -		mptcp_cleanup_rbuf(msk, copied);
-> +		if (sock_owned_by_user(sk)) {
-> +			/* Process context: inline cleanup */
-> +			mptcp_rcv_space_adjust(msk, copied);
-> +			mptcp_recv_skb(sk, &offset);
-
-[Severity: Low]
-The commit message states:
-
-  Also remove the backlog flush from mptcp_recv_skb() (covered by
-  mptcp_release_cb()) and drop the redundant mptcp_recv_skb() call after
-  the main loop.
-
-Should this mptcp_recv_skb(sk, &offset) call in the sock_owned_by_user(sk)
-branch be dropped to match the commit message, since the main loop already
-calls mptcp_eat_recv_skb() on fully consumed skbs and mptcp_recv_skb() no
-longer flushes msk->backlog_list?
-
-[1] https://lore.kernel.org/r/90a300d74f44443759ebe14be70c07385267db5b.1793=
-361629.git.tanggeliang@kylinos.cn
-[2] https://lore.kernel.org/r/90a300d74f44443759ebe14be70c07385267db5b.1793=
-361629.git.tanggeliang@kylinos.cn
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1793695518.gi=
-t.tanggeliang@kylinos.cn?part=3D6
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
