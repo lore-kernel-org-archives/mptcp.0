@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793741884;
-	b=5IhDQiXF14919KXjnsIQ2GQ0Hv7I63x6ld5dy9f9hK1IXSyL7NhzsM8W/fdvELc4VpJ6
-	 z/BwQ8TEv+IaSTQJ5BZgvPckT/WPjDmBXL8DVIQitN3WHDWUaV+G2xqyvYviMiuUaHhlR
-	 wojutnu2z1y/ncrZ9EtEA5gQQ89YG0ui0zQ0tITDIoCJ5iZJ/PPhLHvRwCVTlJLhA00f9
-	 t9NJIDpqjKJvikZvpKZCA5ifvTkaNfjV1vv2eQJtH/dduoZhj6IserFvBZWkCAmMs5xSZ
-	 CDYkgkOPlOlilFu+bVMn3XgBkuwZMIeL6ACsgIz5GU8P8i1bmcfJzLLheZLZWXyRlcQ==
+	t=1793741886;
+	b=DAnfG4cbw861ruMkkOmW6Lf12IE+I7T0bKsrYW81TDCtWx1+nApB/MWllDhPUiIsWe4u
+	 1NFRwx/ecoXgRpYgeYQgt833lMhnk55NOJt9ojtdJ9PjKYUQilZ2kTmGnoM+tn9T06k+8
+	 V3EKqGCJsfMUWGwAb4S2hLoHpCn5h27XCHxsq5ZxD1pF0oD0JtWcleTWrxLOf8oSiV2G6
+	 eLCKfU8FU5jth6mWGjpsMU2RkpMjrqjd283zHXRGrmKT2sSLLCjGKWLrX4vlKNnK+pfzU
+	 NE5vfYVjtOvQOo9X37qQydBaIfInvLTQYsVrpynSOc3kEtjvFpwyicIihJMTdQf0g+Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793741884;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793741886;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=et4jFj+lepmfD4AHQKMWafbOpDrJ6bouMC1wng41lQ4=;
-	b=TmjIlTdWFEesIzXBu8eeuDHuFh299UKLjkZ3Xf/nRKSkxlky2FzUFVaJ4/PnjsUGVZ8j
-	 z2RAzWhGz4ySPsi91bKM28PUMuICZccbyKcaUVwHaBzDu/Ka1CeMBmBgxChDgyw95PT4H
-	 bQcf8ajn99CM/yvCm0g9t4NLE0301xo/Gvg+ZbwAXirJhA4STzsfNSrAUp9ZgHCiSSPhb
-	 LvfybR+f1BUFjmhsKDqaNiMd0L6FzSVHCKwEkTyJOxlL3GZFOFJcJlptAcLM161qlunU/
-	 Ij5RDKSGja+2qbFR77bEmJ84pa6THsdsUgpZruD2X3+yPdxr7lawnba/lQrRul/L5mA==
+	bh=V0jZpNRgfyM4S6HujGRZUQQH6VN4jrKq+NmC0BZso4U=;
+	b=OLGlYUFVyY50XsiU2TCkWr96y8LQNyAAwus0f52LHp3pLz7C2OkBjn0yLBPbLvoqqCi9
+	 xk209Q9xDfQXEj6+J8SPj2PBOAiCVrK82/ReHvZXbnWwX9kPRIA7jaqixfQKQeGsSRjyz
+	 ZmfaHKBdDoUlDQTqjvkuv/rMoRI/b600GVSeup/SCbiGtEjWNKZczqgsRh7hi+Mm98QPI
+	 Oi3qzDjgsIyWfvLy/U7LWzKg8WsDAJJ8pB8Q/cgD8JNIGeyw24K6n43mHGeotvYDpxGCk
+	 BQQ6NMnBW4A4VVmbykPXPzFli3x2Nh0CwclDPvDhzZtw6elC2whnEF3EsSemw9hdqwQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KfJezgtP;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iJuEyAnJ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56457606A32C;
-	Tue,  3 Nov 2026 21:38:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F379B606A335;
+	Tue,  3 Nov 2026 21:38:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KfJezgtP
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED56B1F000C1;
-	Tue,  3 Nov 2026 21:38:02 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iJuEyAnJ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DE1E1F00A02;
+	Tue,  3 Nov 2026 21:38:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793741884;
-	bh=et4jFj+lepmfD4AHQKMWafbOpDrJ6bouMC1wng41lQ4=;
+	s=k20260515; t=1793741885;
+	bh=V0jZpNRgfyM4S6HujGRZUQQH6VN4jrKq+NmC0BZso4U=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=KfJezgtPeJuhdphudtslfqfLb5Hj1S4cf34NMIx8XJLv2ZXVgiIFzMiT7s1WL4mco
-	 8s9UjPUifC69RcESghSDGjKDcGEJ3cyZThSPnFJn2LHU9O15gELOTtWfok35lHeRfe
-	 PFOMSfiOIi59Ug5/v2x0pQDYrYJTIeSkgxV8WNMrhHsI2L5rhUrcO1KpPOzgvyUn/N
-	 K08MCds7UqE9IlGONzne6uFN7KvznmFyTchVqTPqvv6wuYpCrU9YD/vqMZPXr0eYLv
-	 ubMmqC+B7KAZP2au7uOSjJhZ6itCXevTw82/TscMzNmX4SzNQU42Ka5oTvC52+OwJS
-	 ltY4VhUK+6ygg==
-Subject:
- Re: [PATCH bpf v2 09/15] bpf, sockmap: Check the TCP state in recvmsg()
+	b=iJuEyAnJJ2gsXvsBkrQuweQKj+FH5d1q11FTCkY2BVUoRBanzqGMlEd+0U4SgHKex
+	 IRLugICuaTmhWMO3uVljk+AkcEBtoors19sI9MWwqya7M2rfn7hhDT0LP/+SQfPLMB
+	 urtYM0JenjKyut84aVkMBtr4kbOW1xLt6JAvyqEXgzXDwQUUCeOn9Yz6HqxjHf5Wx6
+	 NzUIiD9F8+rGPq4k3tjpCraae8IuSyJqnYD9SE5bQVM+TSVnMkP73XUX0vHiR1W8nG
+	 M53zlfLN+kldgJHxa/+rpOT8QrvX0BIi55k12G+JlyLzgMaLco0vfI1Nw0SsNXE1sI
+	 h/6zg+/wXB06w==
+Subject: Re: [PATCH bpf v2 14/15] bpf, sockmap: Keep the rest of the cork
+ after a redirect
 From: netdev-bot+sashiko@kernel.org
 To: alexei.starovoitov@gmail.com
 Cc: bpf@vger.kernel.org, netdev@vger.kernel.org, daniel@iogearbox.net,
@@ -50,11 +50,11 @@ Cc: bpf@vger.kernel.org, netdev@vger.kernel.org, daniel@iogearbox.net,
  davem@davemloft.net, edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com,
  horms@kernel.org, kuniyu@google.com, willemb@google.com, matttbe@kernel.org,
  mptcp@lists.linux.dev, mason@kernel.org, josef@toxicpanda.com
-Date: Tue, 03 Nov 2026 21:38:02 +0000
-Message-ID: <179374188255.488855.9131092470801455035@kernel.org>
-In-Reply-To: <20261102072112.4160195-10-alexei.starovoitov@gmail.com>
-References: <20261102072112.4160195-10-alexei.starovoitov@gmail.com>
-X-sashiko-severity: Low
+Date: Tue, 03 Nov 2026 21:38:04 +0000
+Message-ID: <179374188416.488855.8465787275984951547@kernel.org>
+In-Reply-To: <20261102072112.4160195-15-alexei.starovoitov@gmail.com>
+References: <20261102072112.4160195-15-alexei.starovoitov@gmail.com>
+X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -67,132 +67,239 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found more severe
-issue(s) in other patches of this series. This mail is only an FYI, in case
-you want to address the nit picks below when you respin.
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue(s) to consider.
 
-Low priority / nit picks for your consideration:
+Critical: 0 (1) · High: 0 · Medium: 1 (3) · Low: 0
 
-- [Low] Concern (commit message accuracy): the concern says the commit
-  message wrongly claims icsk_ack.rcv_mss "can be 0 in TCP_CLOSE",…
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
+
+- [Medium] The fix is incomplete: the cork tail is still lost when
+  another sender installs a new cork while the lock is dropped.
 
 Pre-existing issues:
-- [High] This problem wasn't introduced by this patch, but psock data
-  from an old connection still advances tp->copied_seq of the next…
+- [Critical] This problem wasn't introduced by this patch, but the
+  SK_PASS branch of `tcp_bpf_send_verdict()` pushes a message that is…
+- [Medium] This problem wasn't introduced by this patch, but the selftest
+  `test_txmsg_cork_hangs()` in…
+- [Medium] This problem wasn't introduced by this patch, but when
+  `tcp_bpf_sendmsg_redir()` fails for a cork in…
+- [Medium] This problem wasn't introduced by this patch, but in the
+  __SK_REDIRECT branch of `tcp_bpf_send_verdict()`,…
 
 --
 
-bpf, sockmap: Check the TCP state in recvmsg()
+bpf, sockmap: Keep the rest of the cork after a redirect
 
-This commit makes tcp_bpf_recvmsg_parser() call __tcp_cleanup_rbuf() only
-when tcp_can_send_ack() returns true. The reason is that psock data can
-outlive the connection it arrived on, for example after tcp_disconnect().
-tcp_can_send_ack() moves from net/mptcp/protocol.c to include/net/tcp.h so
-both users can share it.
-
-> __tcp_select_window() divides by icsk_ack.rcv_mss, which can be 0 in
-> TCP_CLOSE.
-
-[Severity: Low]
-This isn't a bug, and the statement looks accurate. Still, a reader may
-wonder how rcv_mss gets to 0 in TCP_CLOSE, because tcp_disconnect()
-explicitly guards against it:
-
-net/ipv4/tcp.c:tcp_disconnect() {
-    ...
-	inet_csk_delack_init(sk);
-	/* Initialize rcv_mss to TCP_MIN_MSS to avoid division by 0
-	 * issue in __tcp_select_window()
-	 */
-	icsk->icsk_ack.rcv_mss = TCP_MIN_MSS;
-    ...
-}
-
-It seems to happen when a later listen() on the disconnected socket fails.
-inet_csk_listen_start() calls inet_csk_delack_init(), which zeroes rcv_mss.
-If get_port() or hash() then fails, the socket returns to TCP_CLOSE with
-rcv_mss still 0:
-
-net/ipv4/inet_connection_sock.c:inet_csk_listen_start() {
-    ...
-	inet_csk_delack_init(sk);
-    ...
-	err = sk->sk_prot->get_port(sk, inet->inet_num);
-    ...
-	inet_sk_set_state(sk, TCP_CLOSE);
-	return err;
-}
-
-Would it help to mention this path, and that TCP_LISTEN is covered as
-well, in the commit message?
+When a verdict covers only part of a cork after bpf_msg_apply_bytes(),
+the SK_REDIRECT branch of tcp_bpf_send_verdict() used to free the bytes
+that were left over along with the cork. This patch puts the cork back
+into psock->cork when bytes remain, unless another thread installed a
+new cork, so the sk_msg program runs again on the rest.
 
 > diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-> index ef2e15de0fe3b..3d703f1517d88 100644
+> index b1071b0960cf5..788ce08eef4d7 100644
 > --- a/net/ipv4/tcp_bpf.c
 > +++ b/net/ipv4/tcp_bpf.c
-> @@ -343,7 +343,8 @@ static int tcp_bpf_recvmsg_parser(struct sock *sk,
->  	if (!peek)
->  		WRITE_ONCE(tcp->copied_seq, seq);
->  	tcp_rcv_space_adjust(sk);
-> -	if (copied > 0)
-> +	/* Data on the psock outlives the connection that it came in on */
-> +	if (copied > 0 && tcp_can_send_ack(sk))
->  		__tcp_cleanup_rbuf(sk, copied);
+> @@ -544,6 +544,14 @@ static int tcp_bpf_send_verdict(struct sock *sk, struct sk_psock *psock,
+>  			if (!cork)
+>  				*copied -= free;
+>  		}
 
-[Severity: High]
-This is a pre-existing issue and was not introduced by this patch, but the
-new comment points at it. If psock data outlives the connection, do the
-copied_seq and tcp_rcv_space_adjust() updates just above the new check
-still charge bytes from the old connection to the new one?
+[Severity: Medium]
+This is a pre-existing issue, but what happens when tcp_bpf_sendmsg_redir()
+fails for a cork here?
 
-SK_PASS data is tagged as self-originated in sk_psock_skb_ingress_self():
+The ret < 0 path frees the whole sk_msg. It skips the *copied adjustment
+because cork is true. The new restore check is then skipped because
+msg->sg.size is 0, and the if (cork) block runs:
 
-	msg->sk = sk;
+    sk_msg_free(sk, msg);
+    kfree(msg);
+    msg = NULL;
+    ret = 0;
 
-tcp_read_skb() does not advance copied_seq for these skbs. Instead,
-tcp_bpf_recvmsg_parser() adds them later:
+tcp_bpf_sendmsg() then returns copied > 0 ? copied : err with copied
+unchanged. So sendmsg() reports success for bytes that this call put into
+the cork and that were then thrown away. A non-cork message with the same
+failure lowers *copied and returns the error.
 
-	seq += copied_from_self;
+Failures that can get here include -EPIPE when the target has no psock,
+-EINVAL/-EPIPE from tcp_bpf_redir_allowed() in tcp_bpf_push(), -ENOMEM
+from bpf_tcp_ingress(), and errors from tcp_sendmsg_locked().
+
+The commit message says this stays unchanged ("If the redirect of a cork
+fails, sendmsg() still returns success and frees it."). So does the earlier
+patch "bpf, sockmap: Check the target of an egress redirect before each
+send".
+
+Should the cork case also subtract the freed bytes from *copied and keep
+the error?
+
+> +		/*
+> +		 * The verdict was for tosend bytes. The rest goes back, unless
+> +		 * another thread made a new cork while the lock was released.
+> +		 */
+> +		if (cork && msg->sg.size && !psock->cork) {
+
+[Severity: Medium]
+Is the tail still lost if another sender installs a new cork while the lock
+is dropped?
+
+Earlier in the __SK_REDIRECT branch, the cork is detached and the lock is
+released:
+
+    if (psock->cork == msg) {
+        cork = true;
+        psock->cork = NULL;
+    }
+    release_sock(sk);
+
+A second thread in tcp_bpf_sendmsg() on the same socket then sees
+psock->cork == NULL and uses the on-stack tmp. The first thread's call to
+sk_msg_apply_bytes(psock, tosend) used up apply_bytes, so psock->eval was
+reset to __SK_NONE and the prog runs on tmp. If the prog calls
+bpf_msg_cork_bytes() with a size larger than tmp, the top of
+tcp_bpf_send_verdict() allocates a new psock->cork.
+
+When the first thread takes the lock again, this check is false. The
+if (cork) block then frees the unsent tail with ret = 0 and does not reduce
+*copied, and tcp_bpf_sendmsg() returns the positive copied count.
+
+That is the symptom the commit message describes ("the rest is lost, and
+sendmsg() reports it as sent"). The prog also never runs on those bytes,
+although bpf_msg_apply_bytes() says it should.
+
+The commit message acknowledges this ("If the psock has a new cork after
+lock_sock(), the kernel still frees the rest"). The earlier patch "bpf,
+sockmap: Check that the redirected message is the cork" also says corks are
+not safe for two senders.
+
+Is this case meant to stay out of scope, or should *copied at least be
+reduced by the freed tail?
+
+> +			psock->cork = msg;
+> +			cork = false;
+> +		}
+
+[Severity: Critical]
+This isn't a bug introduced by this patch, but putting the tail back here
+adds a new way into a race that already exists in the SK_PASS branch. Can
+a restored cork be freed while tcp_bpf_push() is still using it?
+
+After this code runs, we reach more_data with psock->cork == msg. If the
+next verdict is SK_PASS:
+
+tcp_bpf_send_verdict()
+    case __SK_PASS:
+        if (!psock->apply_bytes)
+            psock->eval = __SK_NONE;
+        ...
+        ret = tcp_bpf_push(sk, msg, tosend, flags, true);
+            tcp_sendmsg_locked()
+                sk_stream_wait_memory()
+                    sk_wait_event()  <- drops and re-takes the socket lock
+
+The cork stays in psock->cork during the push. A second sender in
+tcp_bpf_sendmsg() can take the lock and pick it up:
+
+    if (psock->cork) {
+        msg_tx = psock->cork;
+
+psock->cork_bytes is 0 and psock->eval is __SK_NONE, so the second sender
+runs the prog on the shared msg:
+
+- On SK_REDIRECT it detaches the cork, redirects it without the lock, and
+  later calls kfree(msg).
+- On SK_PASS it pushes the same element, then calls put_page() and
+  sg_init_table() on it.
+
+The first thread then wakes up in tcp_bpf_push() with stale sge, page, off
+and size locals, and runs:
+
+    msg->sg.size -= ret;
+    sge->offset += ret;
+    sge->length -= ret;
     ...
-	if (!peek)
-		WRITE_ONCE(tcp->copied_seq, seq);
+    if (!sge->length) {
+        put_page(page);
 
-tcp_disconnect() purges sk_receive_queue and sets copied_seq to rcv_nxt.
-It leaves psock->ingress_msg alone, and the socket stays in the sockmap.
-A later connect() resets copied_seq to the new rcv_nxt.
+Could this cause a use-after-free of the kfree()d sk_msg and a double
+put_page(), and send the same bytes twice?
 
-Here is a possible sequence:
+The earlier patch "bpf, sockmap: Check that the redirected message is the
+cork" already says "a cork is still not safe for two senders on one
+socket".
 
-  socket in a sockmap with an sk_skb stream_verdict prog returning SK_PASS
-  data is received but not read (D bytes in psock->ingress_msg)
-  connect(AF_UNSPEC) -> tcp_disconnect()
-  connect() to a new peer, reaches ESTABLISHED
-  recvmsg() -> tcp_bpf_recvmsg_parser() reads the D stale bytes
+Would it fix this to detach psock->cork in the SK_PASS branch before any
+push that can drop the lock, and attach it again under the lock afterwards,
+as the SK_REDIRECT branch does?
 
-After this, copied_seq is new rcv_nxt + D and stays D bytes ahead for the
-rest of the connection.
+[Severity: Medium]
+This is a pre-existing issue, but now that the tail goes to more_data, can
+some of the restored bytes get a different verdict than the program asked
+for?
 
-tcp_rcv_space_adjust() then computes inq = rcv_nxt - copied_seq = -D. That
-inflates copied on every measurement and grows sk_rcvbuf and window_clamp
-through tcp_rcvbuf_grow() for no reason.
+In the __SK_REDIRECT branch, the whole planned tosend is charged before
+the redirect runs:
 
-If the socket later leaves the sockmap and falls back to
-tcp_recvmsg_locked(), offset = *seq - TCP_SKB_CB(skb)->seq starts at D.
-Wouldn't that silently skip the first D bytes of the new connection's
-data? Or, when D is not less than skb->len, wouldn't it trigger the
-"TCP recvmsg seq # bug 2" WARN in tcp_recvmsg_locked() or the
-"cleanup rbuf bug" WARN in tcp_cleanup_rbuf()?
+    sk_msg_apply_bytes(psock, tosend);
+    if (!psock->apply_bytes) {
+        /* Clean up before releasing the sock lock. */
+        eval = psock->eval;
+        psock->eval = __SK_NONE;
+        psock->sk_redir = NULL;
+    }
 
-No later patch in the series seems to change how copied_seq is updated
-here.
+bpf_tcp_ingress() can move only part of it. Once one element has moved, a
+later __sk_rmem_schedule() failure breaks out with ret == 0, because copied
+is not zero:
 
-Should data that arrived on an earlier connection be kept out of the
-copied_seq update too, and not only out of __tcp_cleanup_rbuf()?
+    if (!__sk_rmem_schedule(sk, size, false)) {
+        if (!copied)
+            ret = -ENOMEM;
+        break;
+    }
 
->  
->  unlock:
+For example, take an 8192-byte cork with apply_bytes 6144 where only the
+first 4096-byte element moves. The prog run at more_data then decides all
+4096 remaining bytes, including 2048 that the redirect verdict covered.
 
-[ ... ]
+Non-cork messages already have the same accounting problem. Should
+sk_msg_apply_bytes() be charged with the bytes actually sent rather than
+tosend?
+
+>  		if (cork) {
+>  			sk_msg_free(sk, msg);
+>  			kfree(msg);
+
+[Severity: Medium]
+This is a pre-existing issue in the selftests, but is there a test that
+would catch the data loss this patch fixes?
+
+The third case in test_txmsg_cork_hangs() in
+tools/testing/selftests/bpf/test_sockmap.c reaches this path:
+
+    txmsg_redir = 1;
+    txmsg_apply = 4097;
+    txmsg_cork = 4097;
+    test_send_large(opt, cgrp);
+
+With txmsg_cork set, msg_loop() waits only 300ms per select(). An
+incomplete receive becomes errno = -EIO. The rx child in sendmsg_test()
+then hides that error:
+
+    if (err && err != -EDATAINTEGRITY && txmsg_cork)
+        err = 0;
+
+So the test passes both when the cork tail is freed (before this patch)
+and when it is put back and sent (after this patch).
+
+Could a test be added that checks how many bytes the peer receives?
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261102072112.4160195-1-alexei.starovoitov%40gmail.com
