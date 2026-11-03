@@ -1,57 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793723566;
-	b=SMpdUQ9ixkl27yaPQX9u6YvEk9Pqu7nNp9r0/+xlwA6JpElFiQEDqdWOwIyA/mennooB
-	 CEkafgVZ3U66SjDFBsPmVfUU7jhXVXW8JdpW0fb4JB/ZU4jbsRl56iTRSDy2IvwPOpMlb
-	 hA+C2b56eYqJzdzvHoYB5ZXlhVosLvbgdENM3bMUxwqfz93h7MmOX/tytRM5Xqa5UjLKS
-	 BuO7BqimWvqYIJhU1mdg2c1lyjqCPhByY4HRz4hQgmGiEShgisnlUjpKWjT0Zfp7k5oWx
-	 We0jjkvDt0DDe7MNbgUH61ARtR7f1NTW9nPDU3y+Zm0W4Ni+r/Gr9GB01C2aqqme/fg==
+	t=1793725829;
+	b=bjLnXAvNOfOm6eYxc6TCjGy52Gcg0dux4+dW5M3JTbmXKcqMl2L0f3o4uall0guhMDPW
+	 yinNfr7qv22JN+AsAopIZuVHVxUcErynEVVPePyeaMuslnCvOuYxrZ1odJ7vf2d55g1gr
+	 q3O77XrYUSgYZHmZZhT/tmrjHyGRwHJTTLSFf+S/HsOmGPbpZYYSVSXTbWQmKn9Tf2MzG
+	 Gs54cja1B/UxPl0uyJnRes/R4keOjED4ndLzYnwIYv6ZGSnuBtI9CobE8THU562hHSvqf
+	 16D2OoNESJSyrXMD7VP+06rseFXC7Ri5oh2mW3nTtjHWWfp2pDWPwelWtRJ1NvcnEag==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793723566;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=vj1HCU3XWCIaIaTQYwUhjHef3P4wf4DKLNnhdpanu8c=;
-	b=bncxDH/NonobV+cx2umvBZSIF7Rvkc73v/daUCufFpIwvLAxKB9QlINm8+ytBZLjEIKM
-	 tHk+hQVTrIK2WQ8ilKVVfcJ29e5Qo2uR+gHdpTE60iSQXYUYtZiRfHi4ju+n2dvQZ7rLi
-	 fw3bBrqlIlx7uSI9Tg8PHqyqz4FxdG9oZObZNgQTZT6hWoF2peqTOn7s+LXGwdui8/kCm
-	 k34ehUvDJeCKEE3sk/b7r0a6hS+MEQPMLNMVE2HMyIGCRjK2fJhPi7Ik2RbnnI67vkP44
-	 MI6fR0agShA10xRuhDwt/gn5V0a6Q7CGhpvovRsT3ylXLJvQ0LhaADNE6s8PjJfiifg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793725829;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=Ip/T2QHMM1U7PlZWA82V3rfXa8D3fyu28S4r/+LgVzM=;
+	b=k29uOszd8lFpi67Y3Eo9PsbaCr3fESSCMReuKuNDCvEcOGn5BaRtM6WwkGNWn9k2hOvr
+	 Ne/QM6fH4OL2vRzVvz38cxn4GQE1wffA382rYokuKU6OurQwCBitmCIhOFC0a8ab1ooVk
+	 BX5s60hadWMhGm3Ih6NwAYd82TGdrtzRPQ0QjPSddZ9S02/Cl8P1Vsmzb0TcR9r1q0KGs
+	 E/juU2BHm0V9UhLOnue58+qn14xlspHGBOuIBBNtlniYMQvvkxaWcoXFldzu0B2yxHnbc
+	 E9KfGX1vYbZzvBfRGvxLcBL+bzYDlxg+ENaTvZ/q8gFJ/+9abavCBh6JiUqEji0W1iQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="A+xRPj/R";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FFkRmAG6;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C743606A32E
-	for <mptcp@lists.linux.dev>; Tue,  3 Nov 2026 16:32:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D2A4606A332;
+	Tue,  3 Nov 2026 17:10:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=A+xRPj/R
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0DC81F00A18;
-	Tue,  3 Nov 2026 16:32:45 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FFkRmAG6
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 279A71F0093A;
+	Tue,  3 Nov 2026 17:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793723566;
-	bh=vj1HCU3XWCIaIaTQYwUhjHef3P4wf4DKLNnhdpanu8c=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=A+xRPj/RxQEnOqWuk/nNry1QFTBrsgN/c8o4eZBvEjxwnQxQxgYS1MWJvHD4SDUgW
-	 93oaMQQfBrav1tyD/jqfjwu/IaPv7CJHO/1dRRbVQ0SP1SxbQfF1c6qUjusBioiNap
-	 +fUpqwY9S8b9+igmvmaYhZfRIOFFxcKV4Wqtj/e3w/7IQYanIvoqrAJig6gX/7pTow
-	 3jGKEt2befaGgL7HM8DWauKsBR8N8im2aAkEOcXmPXsd6zzvTDfe0EAeTiCmTYAkbR
-	 KDgi+oqbQ2odEIygfnfgv2BhM5LG3LB/WGXZdG2HQvged/bZo/+AZIUhUQAYShfikd
-	 bwYu2wc/8Pl7A==
-Subject:
- Re: [PATCH mptcp-next v4 4/5] mptcp: track app-limited state in mptcp_sendmsg
-From: netdev-bot+sashiko@kernel.org
-To: geliang@kernel.org
-Cc: mptcp@lists.linux.dev, tanggeliang@kylinos.cn, kuba@kernel.org
-Date: Tue, 03 Nov 2026 16:32:45 +0000
-Message-ID: <179372356543.488855.12796870901080741390@kernel.org>
-In-Reply-To: <b3d85544ac84b3c83617f72a5cfc893bac2a6304.1793588257.git.tanggeliang@kylinos.cn>
-References: <b3d85544ac84b3c83617f72a5cfc893bac2a6304.1793588257.git.tanggeliang@kylinos.cn>
-X-sashiko-severity: Medium
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20260515; t=1793725828;
+	bh=Ip/T2QHMM1U7PlZWA82V3rfXa8D3fyu28S4r/+LgVzM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=FFkRmAG6LkkqN0fW62sNlkPULJy+l7owdtI62XDAYAYLNCQb9jFm3WYPu7t1IHikJ
+	 ChbiNyC5dqw5wzgjb1LQ9ylj5jzfeud3M/nH4xF7eM703wLiHhxTW3sT2x61CQaR9e
+	 phxUKqZMYtS72O6mcg6ITVwhFkLK8SQGxvUNL8UrhADz13c0+eCCdIStZfGsCYpJZu
+	 RwIHzHcAyF842gRK7H2MsoS95EULovEG1RO62N6aWjLtevxGxnXElXWegWJOc2llww
+	 wdnV/MT9Rz0VfZ4jy8lNqhJmbpwCVLopK8tcGYeJr7V+9OhfTof1VHpEWrII4n4ZHP
+	 Y3MHC92O58DBw==
+Message-ID: <58a5f4aa-0410-455b-9e3b-f1a4676a5359@kernel.org>
+Date: Tue, 3 Nov 2026 18:10:22 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -61,154 +51,85 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH] selftests: mptcp: pm_nl_ctl: print sizeof() with %zu
+Content-Language: fr
+To: Sasha Levin <sashal@kernel.org>
+Cc: Mat Martineau <martineau@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@kernel.org>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Geliang Tang <geliang@kernel.org>, Simon Horman <horms@kernel.org>,
+ Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20261103155506.534973-1-sashal@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20261103155506.534973-1-sashal@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential
-issue(s) to consider.
+Hi Sasha,
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 2
+On 03/11/2026 16:55, Sasha Levin wrote:
+> On 32-bit architectures size_t is an unsigned int, and printing
+> sizeof(struct nlmsgerr) with %ld warns:
+> 
+>   pm_nl_ctl.c:73:71: warning: format '%ld' expects argument of type 'long int', but argument 5 has type 'unsigned int' [-Wformat=]
+> 
+> Use %zu.
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
+Thank you for the fix, it looks good to me:
 
-- [Medium] mptcp_rate_check_app_limited()
-  (net/mptcp/protocol.c:2041-2058) returns early when mptcp_rtx_head(sk)…
-- [Low] The commit 'mptcp: track app-limited state in mptcp_sendmsg'
-  lists 'Geliang Tang <geliang@kernel.org>' as Author, but its only…
-- [Low] mptcp_rate_check_app_limited() calls mptcp_rtx_head(sk) while
-  holding only the msk's owner lock (lock_sock in mptcp_sendmsg), not…
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
---
+@Net maintainers: please apply this patch to net-next directly.
 
-mptcp: track app-limited state in mptcp_sendmsg
-
-This patch adds mptcp_rate_check_app_limited(), which runs
-tcp_rate_check_app_limited() on every subflow under the subflow socket
-lock. It returns early when MPTCP still has unsent, queued or
-retransmittable data. The helper is called from mptcp_sendmsg_locked()
-so that BBR and similar controllers can ignore app-limited rate samples.
-
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-
-[Severity: Low]
-This isn't a bug, but the Author line is Geliang Tang
-<geliang@kernel.org>, and the only Signed-off-by is
-<tanggeliang@kylinos.cn>. No sign-off matches the From: identity, so
-checkpatch reports "From:/Signed-off-by: email address mismatch".
-
-The other Geliang-authored patches in the series have the same mismatch:
-"mptcp: implement peek_len for proto_ops", "mptcp: add sendmsg_locked to
-proto_ops" and "selftests: mptcp: sockopt: check app_limited".
-
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 7ccb1c7506a37..ab7de11a448ce 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2038,6 +2038,25 @@ static void mptcp_rps_record_subflows(const struct mptcp_sock *msk)
->  	}
->  }
->  
-> +static void mptcp_rate_check_app_limited(struct sock *sk)
-> +{
-> +	struct mptcp_sock *msk = mptcp_sk(sk);
-> +	struct mptcp_subflow_context *subflow;
-> +
-> +	if (msk->write_seq != msk->snd_nxt ||
-> +	    mptcp_send_head(sk) || mptcp_rtx_head(sk))
-> +		return;
-
-[Severity: Medium]
-Does the mptcp_rtx_head() check do what the commit message says? The
-commit message describes it as:
-
-  data awaiting retransmission (mptcp_rtx_head)
-
-However, mptcp_rtx_head() returns non-NULL whenever any data is still
-unacked at the DATA level:
-
-net/mptcp/protocol.h:mptcp_rtx_head() {
-	...
-	if (msk->snd_una == msk->snd_nxt)
-		return NULL;
-
-	return list_first_entry_or_null(&msk->rtx_queue, struct mptcp_data_frag, list);
-}
-
-rtx_queue holds every sent dfrag until __mptcp_clean_una() sees snd_una
-move past its end. So this guard returns early whenever any MPTCP-level
-data is in flight. Subflows only get marked when the connection is fully
-idle, with write_seq == snd_nxt == snd_una.
-
-The TCP call site in tcp_sendmsg_locked() has no such gate. The wrapped
-tcp_rate_check_app_limited() already allows marking while packets are in
-flight below cwnd, and it checks lost_out <= retrans_out per subflow.
-
-Pending reinjection also looks like it is already covered by
-mptcp_send_head(), because __mptcp_retransmit_pending_data() sets
-msk->first_pending = rtx_head.
-
-That means the common app-limited case is never marked: an application
-that writes slower than the path, where each write is sent at once while
-earlier data is still unacked. Since snd_una only advances on DATA_ACK,
-an idle subflow is also not marked while another subflow has unacked
-data.
-
-Those low-rate samples then reach bbr_update_bw():
-
-	if (!rs->is_app_limited || bw >= bbr_max_bw(sk)) {
-		/* Incorporate new sample into our max bw filter. */
-		minmax_running_max(&bbr->bw, bbr_bw_rtts, bbr->rtt_cnt, bw);
-
-The bandwidth estimate can then decay toward the application rate.
-The fully idle case, which the series selftest checks, does work. The
-remaining patch in the series only touches selftests, so this code is
-unchanged at the end of the series.
-
-Should the mptcp_rtx_head() check be dropped, or replaced with a test for
-data that is actually pending retransmission? If the restriction is
-intended, could the commit message describe and justify it?
-
-[Severity: Low]
-Can the plain read of msk->snd_una in mptcp_rtx_head() race with
-ack_update_msk()? Here mptcp_rtx_head() is called with only the msk
-socket owned, not under mptcp_data_lock().
-
-In softirq, ack_update_msk() takes mptcp_data_lock(sk) and updates
-snd_una even when the msk is owned by user:
-
-net/mptcp/options.c:__mptcp_snd_una_update() {
-	msk->bytes_acked += new_snd_una - msk->snd_una;
-	WRITE_ONCE(msk->snd_una, new_snd_una);
-}
-
-Only the rtx_queue cleanup is deferred, through MPTCP_CLEAN_UNA when
-sock_owned_by_user(). So the list access is fine, but the snd_una
-comparison is not serialized.
-
-The existing mptcp_rtx_head() callers (__mptcp_clean_una(),
-__mptcp_retransmit_pending_data() and __mptcp_retrans()) all hold the
-data lock. Other lockless snd_una readers use READ_ONCE().
-
-KCSAN would report this race. On 32-bit, the 64-bit read could tear and
-give a wrong app-limited decision.
-
-Would READ_ONCE() work here? Another option is taking mptcp_data_lock()
-around the check and releasing it before taking the subflow locks.
-
-> +
-> +	mptcp_for_each_subflow(msk, subflow) {
-> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-> +		bool slow;
-> +
-> +		slow = lock_sock_fast_nested(ssk);
-> +		tcp_rate_check_app_limited(ssk);
-> +		unlock_sock_fast(ssk, slow);
-> +	}
-> +}
-
-[ ... ]
-
+Cheers,
+Matt
 -- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1793588257.git.tanggeliang%40kylinos.cn
+Sponsored by the NGI0 Core fund.
+
