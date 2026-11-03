@@ -1,53 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793676635;
-	b=l9TlwCUiJtcjl+JnS2MT6OEQz+5v4pdfP3c+gAObWXD3w2b/woTVUSlIjwnnWjmeJVr4
-	 Oc8ImGE5gsYLSZeW44SuyxvAMGzD+zXrMuEiDUTtiO3++cjJgdVVkC6T3NXAz4Od3b+Nn
-	 Z0uo71aLbOmSjisiV3fLu+Pu+H11r3+Pxc93B8tuIE0IvbS3XpgasHJ8pY/gkZmQi0SHI
-	 zK2+2+2WIV0t/ZwoDLZteJ2ZsvGLOFWde0dKGxpdavll/CawUWF7xy36k5dQyyWHu7jRC
-	 hZh3ecq/47io1dPBLZ4Wr3uQEMYtne+/81QsuU1PnwJu218opGUeAdeaGigLpdx3Kow==
+	t=1793677019;
+	b=i1Pva0HwUhomxxTshNgGMOR+h2qXF50kH5Zua3K5+s/ke5frNsSFUynUZiur24Njv6Bt
+	 KCq8FtPbhI8RQhl+cEkltVBQo6kHK0WClNMIxnLuGjRlGs/2FlgLzNrF8wkE7udseI6zb
+	 svI2fb2snPeH5yMr5gvdMkyL27UWGaNnxG91vXreLZWrHaSPM+p+gtMCb4VvXREZ1Y+Wb
+	 BeOKtYBCXCX4z/6bjWYJSQqm51xkvPDj//lt79cEv0o6LnZDCuKKyoeLwY5txKb3nLRIs
+	 TTN5ghoAIt6oIZezE7WnhLRr53PCPBYIN5gUK/2ibz4EZoY6gHHuTwi3QywE5k7EbPA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793676635;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=7+j85nzl2zC+6eFpOE4tO71tHI7dTH1G+8o1HEDJfMA=;
-	b=An+mgFGKPoFzXRJFpI7yVy7/FRCz6OTy9dmiVXUR7NPgAdYZOcw2oUrVLXZh9IwNnoG9
-	 5WyKNTzPLRXv+QnlQOQJXJHzLsWkYl5uwXuQKgC/IJhf4X4iehKw6bm6sKFbeiIY0MQBn
-	 eMlMTceDL3iAmQgLZbocBsDHIBTurCdGh8+Iq9gkji4ZBtIL4chnUtRTL62OW90Uevl4o
-	 tFXK3z+xP8HHsIBxamhmaZOlarwKut6VR+gl0huH9ffKM2VZshkb1CimA2IozStOWo02Z
-	 M9XeCPUEGOl8ak8j7L4Ma9GJPIFl2dQwsIHit9G4LZSBxbfDv9KVBy6ychqEUWhnkVA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793677019;
+	h=Received:DKIM-Signature:Message-ID:Subject:From:To:Date:In-Reply-To:
+	 References:Content-Type:User-Agent:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=UXkkIGJVjExvAFXO4tJHpLawZxryMapmjOafXs5vUrw=;
+	b=xdg9osx/UNjWUeWgtTUfzeVPTTd3AxYQG0vmHfMS7CmDO8pEAZnPTbq+lcGV6lZflL3A
+	 jpVmn4LsxeOKIqowGpy6MU6FfUrQHbsh16/A1RJKdjExL/rU6NyNm+4rucngYsOqrBHL6
+	 aHbdBJz0vE4I95T7PUkfEIHDit9mbYLeWW9ydcSOWbWRv7sOZISPUWaS52fxepyDzn2Y7
+	 8/ssnjDBXPHUEuNmK7MCf9/xcJ3ZVqGn7K8H6SFgNajo40+N3Cb/0pSzUWngUvK1DIJpN
+	 i2gBJUrB/YpYeoWsQ0q0hsViBtPxVyDZmJ3cJb00eUoOlCVaK2Wnem76mPm0hGB42AQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RxTdwWo6;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bH1F9MBN;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B625606D82A
-	for <mptcp@lists.linux.dev>; Tue,  3 Nov 2026 03:30:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DBDF606A326
+	for <mptcp@lists.linux.dev>; Tue,  3 Nov 2026 03:36:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RxTdwWo6
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7F8E1F00A1B;
-	Tue,  3 Nov 2026 03:30:33 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bH1F9MBN
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 523761F000C1;
+	Tue,  3 Nov 2026 03:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793676634;
-	bh=7+j85nzl2zC+6eFpOE4tO71tHI7dTH1G+8o1HEDJfMA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=RxTdwWo6Zkinn6CkM4D8iUHrbzFrFeNqKNRLehKXYbSqlTvRjLlylg6wa09YBuso5
-	 v7xfz7D47yDBPAWOL/IyqAlQFN7M6CC/RxpASHDyIdSb2BS7ea4eee2oLzqRSvi6DH
-	 f1lnj9H6E5BugF7c8xlSEbxxI79uN8lQahMkA3pFUPyaIkwI3MmyTCIYVZh0S19qB7
-	 RUBvWJfMHDSgVOZkp4rK5dHuh6CX8d3yg2oe8CwL674ELIlKTgt4weBrLRov2LJrUc
-	 alLm6rcYzadNK8zIlaPse9JPC+IptPczqpTvehPVFKXYAfQgfwT6UYjc/fBrJdv29p
-	 4kyN4o4N7/0tA==
+	s=k20260515; t=1793677019;
+	bh=UXkkIGJVjExvAFXO4tJHpLawZxryMapmjOafXs5vUrw=;
+	h=Subject:From:To:Date:In-Reply-To:References;
+	b=bH1F9MBNfI/3E2iknr8X8G9dwZEIGNa3meDO0g9mpxDqUBXHDDja6w7hYLRJ38/gS
+	 WUV7KKC10/AJFRNtTXGyHU5Lsg9PqRr4jdcVhozmvnIuDb4KdWI6H8qByCS5LTWkc0
+	 Qj2MwPK1Pv50ooYp05Le9cxtAUTmXQetmjFgDsEo7F5ZNKOD1cfdR7sw6fAsoZvvPN
+	 Q1aVUgbMj4wVgcf+QYLLpLLnHBGXVxEuOWVuZdHgzhiuvgt5nJ65vjVBbjrllmYlQW
+	 aOsSLvP1d518n84zNhCt0JyeThGjpMbF9WjQyG9z/bdvEaRHlQ8hOx3fcnT+Vz91jI
+	 31GVTB+3jnD4Q==
+Message-ID: <fc1a3f23c29819adce277e0b19c466bf63fea693.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next] Squash to "bpf: Add mptcp_subflow bpf_iter"
 From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v5 7/7] selftests: mptcp: sockopt: check app_limited
-Date: Tue,  3 Nov 2026 11:29:56 +0800
-Message-ID: <7f5deed2c76c4470c30cce0571574568dce05a01.1793676064.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <cover.1793676064.git.tanggeliang@kylinos.cn>
-References: <cover.1793676064.git.tanggeliang@kylinos.cn>
+To: Matthieu Baerts <matttbe@kernel.org>, MPTCP Linux <mptcp@lists.linux.dev>
+Date: Tue, 03 Nov 2026 11:36:56 +0800
+In-Reply-To: <46f86900-a7aa-4ffd-8c34-a15fa8c8d460@kernel.org>
+References: 
+	<20261102-mptcp-bpf-kf-iter-ret-indep-v1-1-dd262e520168@kernel.org>
+	 <46f86900-a7aa-4ffd-8c34-a15fa8c8d460@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-10build1 
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -59,39 +62,51 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Matt,
 
-After a small data exchange, assert tcpi_delivery_rate_app_limited == 1.
+On Mon, 2026-11-02 at 19:52 +0100, Matthieu Baerts wrote:
+> Hello,
+> 
+> On 02/11/2026 17:45, Matthieu Baerts (NGI0) wrote:
+> > Since commit d09c2aa3109f ("bpf: Track borrowed iterator results by
+> > default"), the verifier ties a struct pointer returned by an
+> > iterator's
+> > next kfunc to the current element by default: it is invalidated by
+> > the
+> > following "next" call, and by "destroy".
+> > 
+> > That breaks the MPTCP BPF schedulers tests, keeping a subflow after
+> > advancing the iterator: bpf_rr keeps the first subflow, and
+> > bpf_burst
+> > keeps the "best" ones to use them after the loop. Both are now
+> > rejected
+> > at load time:
+> > 
+> >   R1 type=scalar expected=ptr_, trusted_ptr_, rcu_ptr_
+> >   (...)
+> >   # test_rr:FAIL:open_and_load: rr unexpected error: -13
+> > 
+> > The returned subflow is not tied to the iterator position: next
+> > only
+> > walks msk->conn_list, destroy is empty, and no per-element
+> > protection
+> > is dropped. In fact, the subflow is still valid thanks to the held
+> > msk
+> > lock. Then declare it with KF_ITER_RET_INDEPENDENT.
+> 
+> It looks like it fixes the issue reported by the CI. I suggest
+> applying
+> it now, not to impact other devs. I can always change this later if
+> needed.
 
-rate_app_limited starts at 1 (tcp_init_sock) and is cleared only by
-non-app-limited rate samples. The preceding commit makes
-mptcp_rate_check_app_limited() set tp->app_limited on subflows when
-MPTCP has no pending data, marking outgoing skbs as app-limited so rate
-samples don't clear rate_app_limited.
+I've just reproduced the issue and confirmed that this patch fixes it.
+Please apply this patch.
 
-This guards against regressions in subflow app-limited accounting.
+    Reviewed-by: Geliang Tang <geliang@kernel.org>
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Thanks,
+-Geliang
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index b8158a1198eb..9517c530ba21 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -635,6 +635,11 @@ static void connect_one_server(int fd, int pipefd)
- 	do_getsockopts(&s, fd, total, total);
- 
- 	assert(s.mptcpi_rcv_delta == (uint64_t)total);
-+
-+	/* app-limited accounting only checked under EXPECT_ALL_FEATURES */
-+	if (expect_all_features())
-+		assert(s.tcp_info.tcpi_delivery_rate_app_limited == 1);
-+
- 	close(fd);
- }
- 
--- 
-2.55.0
-
+> 
+> Cheers,
+> Matt
