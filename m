@@ -1,89 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.219.48
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793760729;
-	b=p34Xmwp+N27Qrn+brlf3n6cz6wnbfEpwTODIOFHhpCRmjpgXpGlrAY3g0ILqckHt37h2
-	 RbL5pdTHqjUFzspd1ikPn+ja3/KIMe/UtS+HwH6bF00xxZFF7DWbpNremRfCw6D95m0w1
-	 4Zj795BzkgMeO9VZiAIMJcLnRoqOw+vY65tf0MREOY2W6oZS4WUKcjUX3ku38Be1EbMyg
-	 mPNBuZU/QxrQbbEhleFrAjfQlfof3ixHjTfK6RiyWbsOZAS8JbqpfZZuV/Yp4wvaYE2SW
-	 z4PlpkIpfrQ8M3r47ARvQ2gruSp2lvP+3IQPbInatonXxDev4x2LIe5TyjXWFqU1vgw==
+	t=1793766380;
+	b=qmrF24NB8ms0TJkI1P/FIEhvlKOuJWg94iPmwxQw6+hFSW0GnfY43WpKhwocMDQnQIN5
+	 RrO2Q3Gr2uT3qJ80Sj+/+RNjhInYH9jn/b4QYvubOxy7VQ+zqoQboz4oJmcHCGcBaIwOk
+	 FHXRFjnF5jzo9NGNsxGymRQa37ZJ9Et0WIZNPp+wPh34D4IquLwAplwADHVq3aEWPY4+/
+	 Px5S4L2qjzjJvpQdj1rs18XzGpJSc08fI6HW8erdXDnBd93GZLIm33mLhDF2zphOsF0/5
+	 w4wW0xmykkQbGnuYGSIEqmLgiJyuODejjhprcPSPvhVJfJge+xy/vCnBLTlTxYpzS2Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793760729;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793766380;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:MIME-Version:Content-Type:Content-Disposition;
-	bh=YOIB/NuvjxdYC3jB9HzBeV3ersJ2Dya87F36PEImkS0=;
-	b=MIsQZFoi/U+UsqSD9QXTtRZFs4YpFat5oZo5XgwVQGxuCk63j1T/vBiJdDPZ8Q/DQ1r0
-	 5nIzx5HfNICY0g/2usHlfRjeWNiOgE/8fLoUgLcsi4ma5AL8MlAW8leaOKTmPe9TCwp2X
-	 x8JPtSwhdOu0JZ5BhqVpAhpvvVYBuNHFdarWpEI2YB0Vidz4yTNveAIzAFDsfo//zLZLn
-	 DnBLYPFXhfcsagcy+oakCz1HlbrlTMk3xVZw96S0DzSiBivSkaPTDfg9tXXqDrmysyTf6
-	 W3iTksh7armAF1bctt3ey1/9Gz3Fsf7tVrFZRe+8NZL5XxRyoGgaQzYMs949wbTKekA==
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
+	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
+	 Date:MIME-Version:Content-Type;
+	bh=yH8TP4qnZjGEZc3NaKcKkQWE2fYLrpBH3QaIFKxCFBA=;
+	b=DNJ9mfIztzHdAmIkpeV4SIE3uE0yTcSdtDIImiS3bkEW5UCcOyMxf61hq1yXht4DVtYr
+	 SY7u7P0lHaRh3DqEHLI9ORKOctCKcZQZog4TyDw1pnEBRRncDXVdqilXTDIqOf+ovErtI
+	 xSgXhs9VFK+IagbbcApr8SgIg3IG3zsGZosC3QUcSKHn25oqudPqUBBVDqPQAZbuRWr3j
+	 bitVaw4GnquM+tCTSZzlmVcFKXRjxYKhvi4Icrfm4NsDS959X89X6GFjRwoUZXdfAyxpi
+	 XDPjlDgoRBrd9BKmMY6fOiabto5ziZU9tfs+kyxN28uV8t8sOQQBvhx/pwWwNtlhs6w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=PCzRWK3j;
-	arc=none smtp.remote-ip=74.125.82.172
-Received: from mail-dy1-f172.google.com (mail-dy1-f172.google.com [74.125.82.172])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=mFqBiy40;
+	arc=none smtp.remote-ip=209.85.219.48
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA37606D830
-	for <mptcp@lists.linux.dev>; Wed,  4 Nov 2026 02:52:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2AA37606D830
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531F0606A326
+	for <mptcp@lists.linux.dev>; Wed,  4 Nov 2026 04:26:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 531F0606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=PCzRWK3j
-Received: by mail-dy1-f172.google.com with SMTP id 5a478bee46e88-369f33df08eso360712eec.0
-        for <mptcp@lists.linux.dev>; Tue, 03 Nov 2026 18:52:07 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=mFqBiy40
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-91c162febb9so3411306d6.3
+        for <mptcp@lists.linux.dev>; Tue, 03 Nov 2026 20:26:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793760727; x=1794365527; darn=lists.linux.dev;
-        h=content-disposition:content-type:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=YOIB/NuvjxdYC3jB9HzBeV3ersJ2Dya87F36PEImkS0=;
-        b=PCzRWK3jVp6Cm7Oo5eqquxj6O9u6F4BhduTXveBYXWz0grSSGAMz7qa9TSpB+80qpB
-         cVxSKcwv1W5ekN7DZNwQNE1wJ8wcZ9HyM2GbSuxUVDuyCVrqsHqibqi7Gns+yCO0s/q0
-         UOICbdxr77MeibjsebagsHAgbTPry59W+K5cAqjk9YX1gdSMRfwLarsnY89fQYp7AgFe
-         tm4LO31zNr4nD/jRUBmU0Da8VnwNDfeFu388vYzN/rZXdlvnsdYaEljLIRUKK8NV1ZlI
-         b9q23F2TsPM0gzhQgk5/gpEQqpo6mExz/UQccg0XcUeuAcFMWjl+ozEMNbyVtl4xJpaK
-         u3bg==
+        d=gmail.com; s=20260707; t=1793766379; x=1794371179; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=yH8TP4qnZjGEZc3NaKcKkQWE2fYLrpBH3QaIFKxCFBA=;
+        b=mFqBiy40Tjnbw03ihwtpGcsBoww3sUh425uVjbSPUFYLEvr1vZzCCR8dFcMNQElKKl
+         XJZZcLoOwPHAbnkq86Vl7A5NQZ093Z9ti5jcGF19k+KwF5JyNBpJUSUNNgX6vc7X+WEK
+         BOBg2o8mMkHZqGAxe7Q5rU4OaEI/gP52GUbZ18V/EedV7S9woAOxhNfGFjMdqzYYata4
+         fnpPOhL/vxnoX5F8Kuz8fu3bs7YsH69yHBENqTopK/Z/DxA0ZgkhFFyJptBQW/aGGToK
+         LPqgdwRYLduKTc6dyji2A1NAURnkZLnRrDOws4zuAqr+tvypS35dtPv0y3Jh54rzvGiq
+         07ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793760727; x=1794365527;
-        h=content-disposition:content-type:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=YOIB/NuvjxdYC3jB9HzBeV3ersJ2Dya87F36PEImkS0=;
-        b=PIdNr9EyOkTzWW1z+xbsIIKO9xuPo4tu73H22l35kUOt7jouQHvrrjfdd6ADyteavI
-         W7xT/tVgLrtHv0zc9RoIMKcRBaEFEJVmdC0tCWGcsUGwEGeqjdaP6astjWfAqZAkYbRw
-         V75gD4xzCsMW18jMKFQtEZYxD7VdNiqlRfkqo3IhLQyuGC0RFk9+kz/MKpK3LJhtzorI
-         aynaI9zDT0fszUVc2U3isBHWRItlNa86VZCA1SJabIp2gKQHUHTMOXfsDbTS0h3Cjz5q
-         u2epaaJLNiAhkr/dnghAFr4wZAsF05ZD4pC9g7a+eE7Dp7Yu2Xj+EPx+1fE4WIpYWFax
-         LcPw==
-X-Gm-Message-State: APuU4Z8ADOvhS2D9cHi88jfpTCm4em1h3iEXvt/ca1NXb26AyRXKdPr3
-	IdC6nUNLNB3RQRvzaySrZks2gv4B8s7h0uRPsoGoSHla/BXg6vWKx/Cf
-X-Gm-Gg: AYBFou2D0QKo8BJIiiRBc1U4MrxjCgS4c3tfujoq6BY+jrgo3B8uhL3WyvC4bqWTAXu
-	NndVzj2ANRHx/Lj0uUdQrnqvlO19ZSB1ieoE6ExnRsOSwHF+LNvQrZ7pxnuHhJaziKEdL3YBJPY
-	iCRCAp/bBOHax6toj4iKFTLTFSCOTUMyV9eb3Nug4XNyu6iHuIWHK0DMN1+bnaCPhRrxqaAq686
-	zUbTw9VzVEeHcGW+WOZ4RudsvdoBVMOgA8jOUYmqdvNnmsIPPvrWtEpw9VGb9WFi6Ymag9qzZCG
-	KWtkZblGHn9F3DlRcY27dRK8pR6jDyBZqlkVusmagGDuMaLQR+H+AXi9x/TDXNAwWvKPIfZoMw9
-	2qStJDCUKZJ8M1ijryi0UC7zm8V0k1cYhzVrzt/8UPomeG/9/hkazWXF9xu4i5CIGMpdcYvi+MJ
-	FpypHhoHxR5upngUJkjN0TB2UQpCoHPMPenbVhpqmOs1YtBJqWTvS59JcghGXkx3agB4r4YZHhQ
-	PvgyrVV5XoAb9vtS8a6tTwGLhSVghAO4qm5XLjT3rhB02+g4bA9hmTpMCVAmhn7NiOaKEsTRfmE
-	4cePkpzcEpiutOfirzapzCa/dKYFoX3/qahusyB9R4VROi0=
-X-Received: by 2002:a05:693c:895c:20b0:359:ef9:9be3 with SMTP id 5a478bee46e88-36a4236a466mr21802378eec.11.1793760726448;
-        Tue, 03 Nov 2026 18:52:06 -0800 (PST)
-Received: from v4bel ([58.123.110.97])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36ca3966daasm3275791eec.23.2026.11.03.18.52.03
+        d=1e100.net; s=20260707; t=1793766379; x=1794371179;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=yH8TP4qnZjGEZc3NaKcKkQWE2fYLrpBH3QaIFKxCFBA=;
+        b=oMXr33QdgOFarQhFSn+La4T9zH8uLkuB5bDWnUlj0oF0JZLmprupqYC3phJPFuVdsO
+         TO35T9FE8paXRhwuv58dneMFRKeYqFteTjFsdmiXOwd61q4/EgsGaUru8jkK5Yzjg4pG
+         ihSx5gId3DzE+OuWulG8IpILXJBx1vVgHSnTUccjXIR4Cqr6n0prJ5+Fa6kvr5Stqx+W
+         HDs4yhKSofhUwfMFXlig37l42VaNRJ+1JiPoGLvhaz/ceCQv3ylPLbmjGLG9AxQ2y5tI
+         xjYIdg2/hF0CAVVRWpix8OVRj84C0gIXR3DVzIa7Y0217LtxIcuQ/72fUKkshkIvefgC
+         emsQ==
+X-Gm-Message-State: APuU4Z/nGp8wlFJOw5tyIzJerl5EWWBPAgyTqz3GjXJ3f0/oBJli8EbQ
+	PXRRFpPk4/M/fdOGWdIJbzOZCWmx0plF6CZiDa9UKX2DjF3HiLj+m+133+YRnAxBXQ==
+X-Gm-Gg: AYBFou1s8reqUJdeTn+IbQD0pclA6J+tDZCPZE7j2f42fiu+kpYq8hAEUeXkj1QtO8C
+	fLw04BPewyz2IPnhDZgn5fyAdXM1qnD7kxmnkzQlfjDUfA7BDgIRdvdc+hQLIdBL4t9jJQjaQvY
+	2FPULlL1jzZZPVV+O/blYjfIGDdd+slRbaPaD/QY5lhlAFuaG5TAvEVs61smnR+3bmqdppoq9uJ
+	xDxO69b2sOcezPNa95tv9ZC7Vdc7ZIvN1/K2Rqtq2QxnLdifCAW+DAW/b7hNFwLBxxItM88sUXa
+	q8BNhAtFIRH1SEdu/cstOTyBxxuISvlfMyp7ZEHkQjHld97Noak3+7flzD3v/i1JA7C+FuB6Oj9
+	ORJm97Xn1dhFfZDfzkpBazyh20VPhHd/thYne1icVACbLjUCRO1bj8d0yjg1qxHX18rgzmabemK
+	uGf+dfHRWT8BQGU7J6DXq1GKhHOE6FoCPskzDK6OY4VsU5Jn59/atCuuOTTL75kzrRv934NxooN
+	rjqCIJ6fFvBW91g8xFb89xOaVz6j8zKG35BBVgtr/INf1eJLfSLFeuqqLD8lAzBUBmoPHiY9drQ
+	F2Jf4eduZTtt18Ztc8zWTJml24Hszquu/ifGGYr6Kg==
+X-Received: by 2002:a05:620a:838b:b0:93b:d7a0:d9e5 with SMTP id af79cd13be357-944217c8512mr2416925185a.63.1793766379163;
+        Tue, 03 Nov 2026 20:26:19 -0800 (PST)
+Received: from github.com ([48.217.35.166])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-945d468fbe9sm105809485a.3.2026.11.03.20.26.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Nov 2026 18:52:05 -0800 (PST)
-Date: Wed, 4 Nov 2026 11:52:02 +0900
-From: Hyunwoo Kim <imv4bel@gmail.com>
-To: matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
-	pabeni@redhat.com
-Cc: mptcp@lists.linux.dev, netdev@vger.kernel.org, imv4bel@gmail.com
-Subject: [PATCH mptcp-net v2] mptcp: fix use-after-free of the subflow
+        Tue, 03 Nov 2026 20:26:18 -0800 (PST)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Hyunwoo Kim <imv4bel@gmail.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <auqd0rAI95jDSMvu@v4bel>
+References: <auqd0rAI95jDSMvu@v4bel>
+Subject: Re: [PATCH mptcp-net v2] mptcp: fix use-after-free of the subflow
  context on the delegated list
-Message-ID: <auqd0rAI95jDSMvu@v4bel>
+Message-ID: <3b3977d7-a1a4-a906-6254-f101a91c9ae9@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 04 Nov 2026 04:26:17 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -93,368 +98,187 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=utf-8
 
-mptcp_subflow_delegate() links the subflow context into a per-CPU napi
-list and takes a reference on the subflow socket. The context is a
-separate allocation, reached through icsk_ulp_data, and the list holds
-no reference to it.
+Hi Hyunwoo,
 
-inet_csk_destroy_sock() runs sk_prot->destroy() regardless of the
-outstanding references. That path ends in tcp_cleanup_ulp(), which calls
-subflow_ulp_release(). subflow_ulp_release() frees the context with
-kfree_rcu() but does not remove it from the list. Once the grace period
-elapses and the context is actually freed, the next mptcp_napi_poll()
-dequeues that entry and mptcp_subflow_delegated_next() writes to the
-freed context with list_del_init(). That is the use-after-free.
+Thank you for your modifications, that's great!
 
-The decoded KASAN trace is:
+Our CI did some validations and here is its report:
 
- ==================================================================
- BUG: KASAN: slab-use-after-free in __list_del_entry_valid_or_report (lib/list_debug.c:49)
- Read of size 8 at addr ffff88800cc13cc8 by task poc/88
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf: Unstable: 9 failed test(s): error:mptcp-perf =
+error:sched-baseline(18) error:sched-bbr(14) error:sched-clientlim(12) =
+error:sched-cpu-preempt(2) error:sched-mem-pressure(9) error:sched-rmem(16)=
+ error:sched-serverlim(28) error:sched-weak-secondary(12) - Critical: =
+mptcp-perf/01-Test_1/client.log: Global Timeout - Critical: =
+sched-baseline/01-slow_primary/client.log: Global Timeout - Critical: =
+sched-baseline/02-tiny_primary/client.log: Global Timeout - Critical: =
+sched-baseline/03-fast_both/client.log: Global Timeout - Critical: =
+sched-baseline/04-balanced/client.log: Global Timeout - Critical: =
+sched-baseline/05-slow_near_primary/client.log: Global Timeout - Critical: =
+sched-baseline/06-slow_secondary/client.log: Global Timeout - Critical: =
+sched-baseline/07-very_fast/client.log: Global Timeout - Critical: =
+sched-baseline/08-shallow_primary/client.log: Global Timeout - Critical: =
+sched-baseline/09-high_lat_primary/client.log: Global Timeout - Critical: =
+sched-baseline/10-huge_lat_primary/client.log: Global Timeout - Critical: =
+sched-baseline/11-high_lat_secondary/client.log: Global Timeout - Critical:=
+ sched-baseline/12-huge_lat_secondary/client.log: Global Timeout - =
+Critical: sched-baseline/13-bloated_primary/client.log: Global Timeout - =
+Critical: sched-baseline/14-bloated_secondary/client.log: Global Timeout - =
+Critical: sched-baseline/15-slow_primary_upload/client.log: Global Timeout =
+- Critical: sched-baseline/16-balanced_upload/client.log: Global Timeout - =
+Critical: sched-baseline/17-slow_primary_parallel_4/client.log: Global =
+Timeout - Critical: sched-baseline/18-balanced_parallel_4/client.log: =
+Global Timeout - Critical: sched-bbr/01-slow_primary_bbr/client.log: Global=
+ Timeout - Critical: sched-bbr/02-balanced_bbr/client.log: Global Timeout -=
+ Critical: sched-bbr/03-slow_near_primary_bbr/client.log: Global Timeout - =
+Critical: sched-bbr/04-high_lat_primary_bbr/client.log: Global Timeout - =
+Critical: sched-bbr/05-huge_lat_primary_bbr/client.log: Global Timeout - =
+Critical: sched-bbr/06-high_lat_secondary_bbr/client.log: Global Timeout - =
+Critical: sched-bbr/07-huge_lat_secondary_bbr/client.log: Global Timeout - =
+Critical: sched-bbr/08-slow_secondary_bbr/client.log: Global Timeout - =
+Critical: sched-bbr/09-very_fast_bbr/client.log: Global Timeout - Critical:=
+ sched-bbr/10-bloated_secondary_bbr/client.log: Global Timeout - Critical: =
+sched-bbr/11-bloated_slow_secondary_bbr/client.log: Global Timeout - =
+Critical: sched-bbr/12-very_bloated_secondary_bbr/client.log: Global =
+Timeout - Critical: sched-bbr/13-bad_secondary_bbr/client.log: Global =
+Timeout - Critical: sched-bbr/14-far_secondary_bbr/client.log: Global =
+Timeout - Critical: sched-clientlim/01-slow_primary_bw_5/client.log: Global=
+ Timeout - Critical: sched-clientlim/02-balanced_bw_5/client.log: Global =
+Timeout - Critical: sched-clientlim/03-huge_lat_primary_bw_5/client.log: =
+Global Timeout - Critical: sched-clientlim/04-slow_secondary_bw_5/client.=
+log: Global Timeout - Critical: sched-clientlim/05-slow_primary_bw_10/clien=
+t.log: Global Timeout - Critical: sched-clientlim/06-balanced_bw_10/client.=
+log: Global Timeout - Critical: sched-clientlim/07-huge_lat_primary_bw_10/c=
+lient.log: Global Timeout - Critical: sched-clientlim/08-slow_secondary_bw_=
+10/client.log: Global Timeout - Critical: sched-clientlim/09-slow_primary_b=
+w_50/client.log: Global Timeout - Critical: sched-clientlim/10-balanced_bw_=
+50/client.log: Global Timeout - Critical: sched-clientlim/11-huge_lat_prima=
+ry_bw_50/client.log: Global Timeout - Critical: sched-clientlim/12-slow_sec=
+ondary_bw_50/client.log: Global Timeout - Critical: =
+sched-cpu-preempt/01-shallow_primary/client.log: Global Timeout - Critical:=
+ sched-cpu-preempt/02-shallow_primary_cpu_hog/client.log: Global Timeout - =
+Critical: sched-mem-pressure/01-bloated_slow_secondary_receiver_tcp_mem_par=
+allel_1/client.log: Global Timeout - Critical: sched-mem-pressure/02-bloate=
+d_slow_secondary_receiver_tcp_mem_parallel_16/client.log: Global Timeout - =
+Critical: sched-mem-pressure/03-bloated_slow_secondary_receiver_tcp_mem_par=
+allel_99/client.log: Global Timeout - Critical: sched-mem-pressure/04-very_=
+bloated_primary_both_tcp_mem_parallel_1/client.log: Global Timeout - =
+Critical: sched-mem-pressure/05-slow_primary_both_tcp_mem_parallel_1/client=
+.log: Global Timeout - Critical: sched-mem-pressure/06-balanced_both_tcp_me=
+m_parallel_1/client.log: Global Timeout - Critical: =
+sched-mem-pressure/07-very_bloated_primary_both_tcp_mem_parallel_10/client.=
+log: Global Timeout - Critical: sched-mem-pressure/08-slow_primary_both_tcp=
+_mem_parallel_10/client.log: Global Timeout - Critical: =
+sched-mem-pressure/09-balanced_both_tcp_mem_parallel_10/client.log: Global =
+Timeout - Critical: sched-rmem/01-slow_primary_rmem_200/client.log: Global =
+Timeout - Critical: sched-rmem/02-balanced_rmem_200/client.log: Global =
+Timeout - Critical: sched-rmem/03-huge_lat_primary_rmem_200/client.log: =
+Global Timeout - Critical: sched-rmem/04-bloated_primary_rmem_200/client.=
+log: Global Timeout - Critical: sched-rmem/05-slow_primary_rmem_800/client.=
+log: Global Timeout - Critical: sched-rmem/06-balanced_rmem_800/client.log:=
+ Global Timeout - Critical: sched-rmem/07-huge_lat_primary_rmem_800/client.=
+log: Global Timeout - Critical: sched-rmem/08-bloated_primary_rmem_800/clie=
+nt.log: Global Timeout - Critical: sched-rmem/09-slow_primary_rmem_2000/cli=
+ent.log: Global Timeout - Critical: sched-rmem/10-balanced_rmem_2000/client=
+.log: Global Timeout - Critical: sched-rmem/11-huge_lat_primary_rmem_2000/c=
+lient.log: Global Timeout - Critical: sched-rmem/12-bloated_primary_rmem_20=
+00/client.log: Global Timeout - Critical: sched-rmem/13-slow_primary_rmem_6=
+000/client.log: Global Timeout - Critical: sched-rmem/14-balanced_rmem_6000=
+/client.log: Global Timeout - Critical: sched-rmem/15-huge_lat_primary_rmem=
+_6000/client.log: Global Timeout - Critical: sched-rmem/16-bloated_primary_=
+rmem_6000/client.log: Global Timeout - Critical: sched-serverlim/01-slow_pr=
+imary_bw_5_burst_10/client.log: Global Timeout - Critical: =
+sched-serverlim/02-balanced_bw_5_burst_10/client.log: Global Timeout - =
+Critical: sched-serverlim/03-huge_lat_primary_bw_5_burst_10/client.log: =
+Global Timeout - Critical: sched-serverlim/04-slow_secondary_bw_5_burst_10/=
+client.log: Global Timeout - Critical: sched-serverlim/05-slow_primary_bw_5=
+_burst_250/client.log: Global Timeout - Critical: sched-serverlim/06-balanc=
+ed_bw_5_burst_250/client.log: Global Timeout - Critical: =
+sched-serverlim/07-huge_lat_primary_bw_5_burst_250/client.log: Global =
+Timeout - Critical: sched-serverlim/08-slow_secondary_bw_5_burst_250/client=
+.log: Global Timeout - Critical: sched-serverlim/09-slow_primary_bw_10_burs=
+t_10/client.log: Global Timeout - Critical: sched-serverlim/10-balanced_bw_=
+10_burst_10/client.log: Global Timeout - Critical: sched-serverlim/11-huge_=
+lat_primary_bw_10_burst_10/client.log: Global Timeout - Critical: =
+sched-serverlim/12-slow_secondary_bw_10_burst_10/client.log: Global Timeout=
+ - Critical: sched-serverlim/13-slow_primary_bw_10_burst_250/client.log: =
+Global Timeout - Critical: sched-serverlim/14-balanced_bw_10_burst_250/clie=
+nt.log: Global Timeout - Critical: sched-serverlim/15-huge_lat_primary_bw_1=
+0_burst_250/client.log: Global Timeout - Critical: sched-serverlim/16-slow_=
+secondary_bw_10_burst_250/client.log: Global Timeout - Critical: =
+sched-serverlim/17-slow_primary_bw_50_burst_10/client.log: Global Timeout -=
+ Critical: sched-serverlim/18-balanced_bw_50_burst_10/client.log: Global =
+Timeout - Critical: sched-serverlim/19-huge_lat_primary_bw_50_burst_10/clie=
+nt.log: Global Timeout - Critical: sched-serverlim/20-slow_secondary_bw_50_=
+burst_10/client.log: Global Timeout - Critical: sched-serverlim/21-slow_pri=
+mary_bw_50_burst_250/client.log: Global Timeout - Critical: =
+sched-serverlim/22-balanced_bw_50_burst_250/client.log: Global Timeout - =
+Critical: sched-serverlim/23-huge_lat_primary_bw_50_burst_250/client.log: =
+Global Timeout - Critical: sched-serverlim/24-slow_secondary_bw_50_burst_25=
+0/client.log: Global Timeout - Critical: sched-serverlim/25-slow_primary_bw=
+_10_burst_10_wmem_6000/client.log: Global Timeout - Critical: =
+sched-serverlim/26-balanced_bw_10_burst_10_wmem_6000/client.log: Global =
+Timeout - Critical: sched-serverlim/27-slow_primary_bw_50_burst_10_wmem_600=
+0/client.log: Global Timeout - Critical: sched-serverlim/28-balanced_bw_50_=
+burst_10_wmem_6000/client.log: Global Timeout - Critical: =
+sched-weak-secondary/01-weak_secondary/client.log: Global Timeout - =
+Critical: sched-weak-secondary/02-bad_secondary/client.log: Global Timeout =
+- Critical: sched-weak-secondary/03-far_secondary/client.log: Global =
+Timeout - Critical: sched-weak-secondary/04-bloated_secondary/client.log: =
+Global Timeout - Critical: sched-weak-secondary/05-bloated_slow_secondary/c=
+lient.log: Global Timeout - Critical: sched-weak-secondary/06-very_bloated_=
+secondary/client.log: Global Timeout - Critical: sched-weak-secondary/07-we=
+ak_secondary_backup/client.log: Global Timeout - Critical: =
+sched-weak-secondary/08-bad_secondary_backup/client.log: Global Timeout - =
+Critical: sched-weak-secondary/09-far_secondary_backup/client.log: Global =
+Timeout - Critical: sched-weak-secondary/10-bloated_secondary_backup/client=
+.log: Global Timeout - Critical: sched-weak-secondary/11-bloated_slow_secon=
+dary_backup/client.log: Global Timeout - Critical: sched-weak-secondary/12-=
+very_bloated_secondary_backup/client.log: Global Timeout =E2=9D=8C
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/417659=
+50382
 
- CPU: 3 UID: 65534 PID: 88 Comm: poc Not tainted 7.2.0-rc7 #1 PREEMPT(lazy)
- Hardware name: QEMU Ubuntu 24.04 PC v2 (i440FX + PIIX, arch_caps fix, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
- Call Trace:
-  <IRQ>
-  dump_stack_lvl (lib/dump_stack.c:94 lib/dump_stack.c:120)
-  print_report (mm/kasan/report.c:378 mm/kasan/report.c:482)
-  ? __pfx__raw_spin_lock_irqsave (include/asm-generic/qrwlock.h:122 (discriminator 4))
-  ? __list_del_entry_valid_or_report (lib/list_debug.c:49)
-  kasan_report (mm/kasan/report.c:595)
-  ? __list_del_entry_valid_or_report (lib/list_debug.c:49)
-  __list_del_entry_valid_or_report (lib/list_debug.c:49)
-  mptcp_napi_poll (include/linux/list.h:132 include/linux/list.h:246 include/linux/list.h:318 net/mptcp/protocol.h:787 net/mptcp/protocol.c:4620)
-  ? call_timer_fn (kernel/time/timer.c:1748)
-  __napi_poll (net/core/dev.c:7735)
-  ? __pfx_delayed_work_timer_fn (include/linux/list.h:404 (discriminator 2))
-  net_rx_action (net/core/dev.c:7798 net/core/dev.c:7955)
-  ? __pfx_net_rx_action (include/net/gro.h:525)
-  ? _raw_spin_lock_irq (include/linux/instrumented.h:55 include/linux/atomic/atomic-instrumented.h:1301 include/asm-generic/qspinlock.h:111 include/linux/spinlock.h:187 include/linux/spinlock_api_smp.h:143 kernel/locking/spinlock.c:174)
-  ? __pfx__raw_spin_lock_irq (kernel/locking/spinlock.c:183)
-  ? try_to_wake_up (include/linux/spinlock.h:571 kernel/sched/core.c:4292)
-  handle_softirqs (kernel/softirq.c:622)
-  ? __pfx_handle_softirqs (include/linux/wait_bit.h:77)
-  ? __hrtimer_rearm_deferred (kernel/time/hrtimer.c:707 kernel/time/hrtimer.c:2141 kernel/time/hrtimer.c:2161)
-  do_softirq (kernel/softirq.c:523 (discriminator 20) kernel/softirq.c:510 (discriminator 20))
-  </IRQ>
-  <TASK>
-  __local_bh_enable_ip (kernel/softirq.c:450)
-  inet_stream_connect (net/ipv4/af_inet.c:756)
-  __sys_connect (net/socket.c:2154)
-  ? __pfx___sys_connect (net/socket.c:2136)
-  ? __sys_setsockopt (include/linux/file.h:63 include/linux/file.h:83 net/socket.c:2385)
-  __x64_sys_connect (net/socket.c:2160 net/socket.c:2157 net/socket.c:2157)
-  ? fpregs_assert_state_consistent (include/linux/instrumented.h:82 include/asm-generic/bitops/instrumented-non-atomic.h:141 include/linux/thread_info.h:133 arch/x86/kernel/fpu/core.c:912)
-  do_syscall_64 (arch/x86/entry/syscall_64.c:63 arch/x86/entry/syscall_64.c:94)
-  entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:121)
- RIP: 0033:0x4216eb
- Code: 48 89 e5 48 83 ec 10 89 55 f8 48 89 75 f0 89 7d fc e8 b9 ec 02 00 8b 55 f8 48 8b 75 f0 41 89 c0 8b 7d fc b8 2a 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 2d 44 89 c7 89 45 fc e8 12 ed 02 00 8b 45 fc
-All code
-========
-   0:	48 89 e5             	mov    %rsp,%rbp
-   3:	48 83 ec 10          	sub    $0x10,%rsp
-   7:	89 55 f8             	mov    %edx,-0x8(%rbp)
-   a:	48 89 75 f0          	mov    %rsi,-0x10(%rbp)
-   e:	89 7d fc             	mov    %edi,-0x4(%rbp)
-  11:	e8 b9 ec 02 00       	call   0x2eccf
-  16:	8b 55 f8             	mov    -0x8(%rbp),%edx
-  19:	48 8b 75 f0          	mov    -0x10(%rbp),%rsi
-  1d:	41 89 c0             	mov    %eax,%r8d
-  20:	8b 7d fc             	mov    -0x4(%rbp),%edi
-  23:	b8 2a 00 00 00       	mov    $0x2a,%eax
-  28:	0f 05                	syscall
-  2a:*	48 3d 00 f0 ff ff    	cmp    $0xfffffffffffff000,%rax		<-- trapping instruction
-  30:	77 2d                	ja     0x5f
-  32:	44 89 c7             	mov    %r8d,%edi
-  35:	89 45 fc             	mov    %eax,-0x4(%rbp)
-  38:	e8 12 ed 02 00       	call   0x2ed4f
-  3d:	8b 45 fc             	mov    -0x4(%rbp),%eax
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/a266ac33c6a5
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1201254
 
-Code starting with the faulting instruction
-===========================================
-   0:	48 3d 00 f0 ff ff    	cmp    $0xfffffffffffff000,%rax
-   6:	77 2d                	ja     0x35
-   8:	44 89 c7             	mov    %r8d,%edi
-   b:	89 45 fc             	mov    %eax,-0x4(%rbp)
-   e:	e8 12 ed 02 00       	call   0x2ed25
-  13:	8b 45 fc             	mov    -0x4(%rbp),%eax
- RSP: 002b:00007fbe0147b1d0 EFLAGS: 00000293 ORIG_RAX: 000000000000002a
- RAX: ffffffffffffffda RBX: 000000000000000a RCX: 00000000004216eb
- RDX: 0000000000000010 RSI: 00007fbe0147b200 RDI: 000000000000000a
- RBP: 00007fbe0147b1e0 R08: 0000000000000000 R09: 0000000000000000
- R10: 00007fbe0147b1f8 R11: 0000000000000293 R12: 00007fbe0147b1f8
- R13: 00007fbe0157b678 R14: 00007fbe0147b1f4 R15: 00007fffd4bc16c0
-  </TASK>
 
- Allocated by task 90:
-  kasan_save_stack (mm/kasan/common.c:57)
-  kasan_save_track (mm/kasan/common.c:78)
-  __kasan_kmalloc (mm/kasan/common.c:398 mm/kasan/common.c:415)
-  __kmalloc_cache_noprof (include/linux/kasan.h:263 mm/slub.c:5489)
-  subflow_create_ctx (include/linux/slab.h:988 include/linux/slab.h:1309 net/mptcp/subflow.c:1845)
-  subflow_ulp_init (net/mptcp/subflow.c:1977)
-  tcp_set_ulp (net/ipv4/tcp_ulp.c:146 net/ipv4/tcp_ulp.c:167)
-  mptcp_subflow_create_socket (net/mptcp/subflow.c:1806)
-  __mptcp_nmpc_sk.part.0 (net/mptcp/protocol.c:111 net/mptcp/protocol.c:143)
-  mptcp_connect (net/mptcp/protocol.c:139 net/mptcp/protocol.c:4009)
-  __inet_stream_connect (net/ipv4/af_inet.c:684)
-  inet_stream_connect (net/ipv4/af_inet.c:755)
-  __sys_connect (net/socket.c:2154)
-  __x64_sys_connect (net/socket.c:2160 net/socket.c:2157 net/socket.c:2157)
-  do_syscall_64 (arch/x86/entry/syscall_64.c:63 arch/x86/entry/syscall_64.c:94)
-  entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:121)
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
- Freed by task 22:
-  kasan_save_stack (mm/kasan/common.c:57)
-  kasan_save_track (mm/kasan/common.c:78)
-  kasan_save_free_info (mm/kasan/generic.c:584)
-  __kasan_slab_free (mm/kasan/common.c:253 mm/kasan/common.c:285)
-  kvfree_rcu_cb (include/linux/kasan.h:235 mm/slub.c:2677 mm/slub.c:6377 mm/slub.c:6662)
-  rcu_core (kernel/rcu/tree.c:2645 kernel/rcu/tree.c:2897)
-  handle_softirqs (kernel/softirq.c:622)
-  run_ksoftirqd (kernel/softirq.c:1076 kernel/softirq.c:1068)
-  smpboot_thread_fn (kernel/smpboot.c:160)
-  kthread (kernel/kthread.c:436)
-  ret_from_fork (arch/x86/kernel/process.c:158)
-  ret_from_fork_asm (arch/x86/entry/entry_64.S:245)
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
- Last potentially related work creation:
-  kasan_save_stack (mm/kasan/common.c:57)
-  kasan_record_aux_stack (mm/kasan/generic.c:556)
-  __call_rcu_common.constprop.0 (kernel/rcu/tree.c:3159)
-  tcp_cleanup_ulp (net/ipv4/tcp_ulp.c:124)
-  tcp_v4_destroy_sock (net/ipv4/tcp_ipv4.c:2437)
-  inet_csk_destroy_sock (net/ipv4/inet_connection_sock.c:1282)
-  __tcp_close (net/ipv4/tcp.c:3299)
-  __mptcp_close_ssk (net/mptcp/protocol.c:2648)
-  mptcp_destroy_common (net/mptcp/protocol.c:3442 (discriminator 1))
-  mptcp_destroy (net/mptcp/protocol.c:3651)
-  __mptcp_destroy_sock (net/mptcp/protocol.c:3284)
-  __mptcp_close (net/mptcp/protocol.c:3386)
-  mptcp_close (net/mptcp/protocol.c:3401)
-  inet_release (net/ipv4/af_inet.c:442)
-  __sock_release (net/socket.c:710)
-  sock_close (net/socket.c:1501 (discriminator 1))
-  __fput (fs/file_table.c:512)
-  fput_close_sync (fs/file_table.c:617)
-  __x64_sys_close (fs/open.c:1511 fs/open.c:1496 fs/open.c:1496)
-  do_syscall_64 (arch/x86/entry/syscall_64.c:63 arch/x86/entry/syscall_64.c:94)
-  entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:121)
+For more details:
 
- Second to last potentially related work creation:
-  kasan_save_stack (mm/kasan/common.c:57)
-  kasan_record_aux_stack (mm/kasan/generic.c:556)
-  kvfree_call_rcu (mm/slab_common.c:1288)
-  tcp_cleanup_ulp (net/ipv4/tcp_ulp.c:124)
-  tcp_v4_destroy_sock (net/ipv4/tcp_ipv4.c:2437)
-  inet_csk_destroy_sock (net/ipv4/inet_connection_sock.c:1282)
-  __tcp_close (net/ipv4/tcp.c:3299)
-  __mptcp_close_ssk (net/mptcp/protocol.c:2648)
-  mptcp_destroy_common (net/mptcp/protocol.c:3442 (discriminator 1))
-  mptcp_destroy (net/mptcp/protocol.c:3651)
-  __mptcp_destroy_sock (net/mptcp/protocol.c:3284)
-  __mptcp_close (net/mptcp/protocol.c:3386)
-  mptcp_close (net/mptcp/protocol.c:3401)
-  inet_release (net/ipv4/af_inet.c:442)
-  __sock_release (net/socket.c:710)
-  sock_close (net/socket.c:1501 (discriminator 1))
-  __fput (fs/file_table.c:512)
-  fput_close_sync (fs/file_table.c:617)
-  __x64_sys_close (fs/open.c:1511 fs/open.c:1496 fs/open.c:1496)
-  do_syscall_64 (arch/x86/entry/syscall_64.c:63 arch/x86/entry/syscall_64.c:94)
-  entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:121)
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
- The buggy address belongs to the object at ffff88800cc13c00
-  which belongs to the cache kmalloc-512 of size 512
- The buggy address is located 200 bytes inside of
-  freed 512-byte region [ffff88800cc13c00, ffff88800cc13e00)
 
- The buggy address belongs to the physical page:
- page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0xcc10
- head: order:2 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
- flags: 0x100000000000040(head|node=0|zone=1)
- page_type: f5(slab)
- raw: 0100000000000040 ffff888007042c80 dead000000000100 dead000000000122
- raw: 0000000000000000 0000000000100010 00000000f5000000 0000000000000000
- head: 0100000000000040 ffff888007042c80 dead000000000100 dead000000000122
- head: 0000000000000000 0000000000100010 00000000f5000000 0000000000000000
- head: 0100000000000002 ffffffffffffff01 00000000ffffffff 00000000ffffffff
- head: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
- page dumped because: kasan: bad access detected
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
- Memory state around the buggy address:
-  ffff88800cc13b80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff88800cc13c00: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- >ffff88800cc13c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                               ^
-  ffff88800cc13d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88800cc13d80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ==================================================================
-
-The freeing path cannot dequeue the entry itself: the list is per-CPU
-and only the CPU that queued the subflow may touch it, as
-tcp_release_cb_override() already notes.
-
-Delay the free instead. Add MPTCP_DELEGATE_DEAD.
-mptcp_subflow_free_ctx() sets it and frees the context only if the
-subflow is not scheduled, while mptcp_napi_poll() frees it if the dead
-bit is set when it clears the scheduled bit. Either
-mptcp_subflow_free_ctx() gets there first, sees the scheduled bit and
-leaves the free to mptcp_napi_poll(), or mptcp_napi_poll() gets there
-first, does not see the dead bit and mptcp_subflow_free_ctx() does the
-free.
-
-Also skip mptcp_subflow_process_delegated() once the dead bit is set.
-subflow_ulp_release() has already dropped the msk reference by then, so
-the pending actions must not run.
-
-Finally, move delegated_status out of struct_group(reset).
-mptcp_subflow_ctx_reset() clears that group on disconnect, and clearing
-the scheduled bit while the entry is still queued would let
-mptcp_subflow_free_ctx() free a context the napi list still points to.
-delegated_node is already outside the group.
-
-Fixes: b19bc2945b40 ("mptcp: implement delegated actions")
-Cc: stable@vger.kernel.org
-Signed-off-by: Hyunwoo Kim <imv4bel@gmail.com>
----
-Changes in v2:
-- Rebase the patch. (Matthieu Baerts)
-- Add the decoded KASAN trace without timestamps. (Matthieu Baerts)
-- Clear stale action bits in mptcp_subflow_ctx_reset() to prevent old
-  actions from running after a disconnect.
-v1: https://lore.kernel.org/all/aoWBrkNwebJe-koh@v4bel/
----
- net/mptcp/protocol.c | 13 ++++++++++---
- net/mptcp/protocol.h | 18 ++++++++++++++++--
- net/mptcp/subflow.c  |  4 ++--
- 3 files changed, 28 insertions(+), 7 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 7a22e9388e0e9..60bb16305e656 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2705,7 +2705,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 	 */
- 	if (!inet_csk(ssk)->icsk_ulp_ops) {
- 		WARN_ON_ONCE(!sock_flag(ssk, SOCK_DEAD));
--		kfree_rcu(subflow, rcu);
-+		mptcp_subflow_free_ctx(subflow);
- 	} else {
- 		/* otherwise tcp will dispose of the ssk and subflow ctx */
- 		__tcp_close(ssk, 0);
-@@ -4791,10 +4791,13 @@ static int mptcp_napi_poll(struct napi_struct *napi, int budget)
- 	delegated = container_of(napi, struct mptcp_delegated_action, napi);
- 	while ((subflow = mptcp_subflow_delegated_next(delegated)) != NULL) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+		long status;
- 
- 		bh_lock_sock_nested(ssk);
- 		if (!sock_owned_by_user(ssk)) {
--			mptcp_subflow_process_delegated(ssk, xchg(&subflow->delegated_status, 0));
-+			status = xchg(&subflow->delegated_status, 0);
-+			if (!(status & BIT(MPTCP_DELEGATE_DEAD)))
-+				mptcp_subflow_process_delegated(ssk, status);
- 		} else {
- 			/* tcp_release_cb_override already processed
- 			 * the action or will do at next release_sock().
-@@ -4802,11 +4805,15 @@ static int mptcp_napi_poll(struct napi_struct *napi, int budget)
- 			 * CPU that scheduled it.
- 			 */
- 			smp_wmb();
--			clear_bit(MPTCP_DELEGATE_SCHEDULED, &subflow->delegated_status);
-+			status = set_mask_bits(&subflow->delegated_status,
-+					       BIT(MPTCP_DELEGATE_SCHEDULED), 0);
- 		}
- 		bh_unlock_sock(ssk);
- 		sock_put(ssk);
- 
-+		if (status & BIT(MPTCP_DELEGATE_DEAD))
-+			kfree_rcu(subflow, rcu);
-+
- 		if (++work_done == budget)
- 			return budget;
- 	}
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 011e73d04ee60..6140c82347b42 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -553,8 +553,10 @@ DECLARE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions);
- #define MPTCP_DELEGATE_SEND		1
- #define MPTCP_DELEGATE_ACK		2
- #define MPTCP_DELEGATE_SNDBUF		3
-+#define MPTCP_DELEGATE_DEAD		4
- 
--#define MPTCP_DELEGATE_ACTIONS_MASK	(~BIT(MPTCP_DELEGATE_SCHEDULED))
-+#define MPTCP_DELEGATE_ACTIONS_MASK	(~(BIT(MPTCP_DELEGATE_SCHEDULED) | \
-+					   BIT(MPTCP_DELEGATE_DEAD)))
- /* MPTCP subflow context */
- struct mptcp_subflow_context {
- 	struct	list_head node;/* conn_list of subflows */
-@@ -628,11 +630,11 @@ struct mptcp_subflow_context {
- 
- 	u32	subflow_id;
- 
--	long	delegated_status;
- 	unsigned long	fail_tout;
- 
- 	);
- 
-+	long	delegated_status;
- 	struct	list_head delegated_node;   /* link into delegated_action, protected by local BH */
- 
- 	u32	setsockopt_seq;
-@@ -671,6 +673,8 @@ mptcp_subflow_ctx_reset(struct mptcp_subflow_context *subflow)
- 	memset(&subflow->reset, 0, sizeof(subflow->reset));
- 	subflow->request_mptcp = 1;
- 	WRITE_ONCE(subflow->local_id, -1);
-+	set_mask_bits(&subflow->delegated_status,
-+		      MPTCP_DELEGATE_ACTIONS_MASK, 0);
- }
- 
- /* Convert reset reasons in MPTCP to enum sk_rst_reason type */
-@@ -808,6 +812,16 @@ mptcp_subflow_delegated_next(struct mptcp_delegated_action *delegated)
- 	return ret;
- }
- 
-+static inline void mptcp_subflow_free_ctx(struct mptcp_subflow_context *subflow)
-+{
-+	long old = set_mask_bits(&subflow->delegated_status, 0,
-+				 BIT(MPTCP_DELEGATE_DEAD));
-+
-+	/* a scheduled subflow is owned by mptcp_napi_poll(), which will free it */
-+	if (!(old & BIT(MPTCP_DELEGATE_SCHEDULED)))
-+		kfree_rcu(subflow, rcu);
-+}
-+
- void __mptcp_inherit_memcg(struct sock *sk, struct sock *ssk, gfp_t gfp);
- void __mptcp_inherit_cgrp_data(struct sock *sk, struct sock *ssk);
- 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 78e886b202585..32afd9e8865d9 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -828,7 +828,7 @@ void mptcp_subflow_drop_ctx(struct sock *ssk)
- 			sock_put(ctx->conn);
- 	}
- 
--	kfree_rcu(ctx, rcu);
-+	mptcp_subflow_free_ctx(ctx);
- }
- 
- void __mptcp_subflow_fully_established(struct mptcp_sock *msk,
-@@ -2087,7 +2087,7 @@ static void subflow_ulp_release(struct sock *ssk)
- 
- 	mptcp_subflow_ops_undo_override(ssk);
- 	if (release)
--		kfree_rcu(ctx, rcu);
-+		mptcp_subflow_free_ctx(ctx);
- }
- 
- static void subflow_ulp_clone(const struct request_sock *req,
--- 
-2.43.0
-
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
