@@ -1,63 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.52
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793786950;
-	b=1bZ8xVnn81ev5KKoPZ7jT8S3b+ffDOMDhb1xDycvEzRQ+1w9AXI9cfZv5umOzu37hmGf
-	 449CIjLRD3cuQEWaEVa7vFZd1iGhzMkHMpSORyiB18vUG2crhWpBZsUWCRprCcEClXycL
-	 SOD6XRa0hVv0Hl1vx+ECJIzGUDR7FGXoQg4MgO7qBseK+Gzw+lszjI5m25Uu9SrRewW+w
-	 96tS482yeKFOgg/MhelzjEZCKx3VnFF5/Skw7mVg0FJGRR+4TXhRt45YSOd6lg+5QrWox
-	 1KQQqT+nci9pcl0yLypr4n+ZOAVm7xw71zik3Si71IUNGHcfxDo4VH7IXVH0V33uXlg==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793786950;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
-	 Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:
-	 User-Agent:MIME-Version:X-ZohoMailClient;
-	bh=7M2awz5bxi+ND42rLaoMSCegd95IJwki7qYpjmXF4C8=;
-	b=2OkyYusK1bqkG2io5OMlxg5HNR548YXJxeopfM2V3rqkCmNOz9FZ0vTtwMTf7QItZEi0
-	 y+EXxFyi7FJYnC+FrDLq3jMWN+rD0F33u9dplSlS7p8hQPdIRsjhEUaS63vgvDab6VAse
-	 Izf1yXzcMrPPzrBReEFSX1gNb30Y2HhNun8+RUyVn0P8M0np5QmzscMNTtAsieKoLldlI
-	 jnqriJkz6URaRhEQN+ZHd2mok1LohN6CTcpaVptu+WccPA40+0Lkg8rk15OhKcgAKlzjo
-	 esGtQODbYFU6oXmF+RdrySI0PBVxUb5Ffnp7EVwLNXJ5wQFaa+ouePUCgnI4FWOBOfQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=mpiricsoftware.com;
-	spf=pass smtp.mailfrom=mpiricsoftware.com;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.52
-Received: from sender6-of-o52.zoho.com (sender6-of-o52.zoho.com [165.173.180.52])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793788839;
+	b=AN5u97DfyasUqu/R0/MJwtS5W4rt3zQvRc1bURvSgSAyBaXAbPxEICzFMOyaXB+wXx6M
+	 WALY83Xm6jg6Ke4259I3/zY5bHXBxr+HL+bfWPv3+nPJSzoyE9JfJ0IRXByf56TwKnrSF
+	 sg9tPtKDD6FCDj+KtLJQ7FrtwGZjwzVxauStGB4+AEQ5ObErFQGbmILyQ6PRRk35HRm1c
+	 gNbK/rtXKkWca9cQTvWP2gL+7D5kAK1ad3F40Jo+BbQoIyOwv4jZDi8Jx3gC1ZND9QAIo
+	 5oswQzDVVZSppfOm06eCR/d1RG2nMfXnb1FSqnZtnni+QWQjb0wc4lvn8eoALbHRQcQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793788839;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=Ck8VypfKwhGzxES7dzxPe8wJIspLo1GpOopw33TGXmE=;
+	b=FKzdrlM5aLPmw0WI0+H3vBav6m7ZxONL9HNnf8837FSJwK/7mHNdQ1kiX4c768d5op9G
+	 MV1BG+AiSqn/uPsbAe4JDeNZcS1B+rle8soBYjj43+VmB9NlFmFEpXIgXofDqzTkiB/Pg
+	 l/1aPcICuHjgDup0hBvCVQgNF9Mxd1rfWaPjR421jWVt3itQq8Cbj/4+93ZUiapBElKRH
+	 iHS7h5V77ECUROHkBIZF0TcqnGY3+yTeJl9c+/mQZs8CotezcJR5z+yO9ICyOAdOu2Asj
+	 7U1Kg3yJLJqchsHNmGZ5yzTrVF+KpuCuezhoKWuY6ElaVjgmfRdh9z3NE23NBWo4m6g==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="a/HLTCfB";
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC578606A31B
-	for <mptcp@lists.linux.dev>; Wed,  4 Nov 2026 10:09:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BC578606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
-ARC-Seal: i=1; a=rsa-sha256; t=1793786945; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=mdb8yoCbvdkIXgZMWISmWEkLk3Q7tdcJPxuZTCwD2m4dSsS8fWsbP1t1NF8NmiioeM/M2nCUTpVJK89bY+mZG4HLQJMeLhGdckaGcC7nMURW4sLHidVDw3Z2+em5akyMyR4375R9q0meDvX+Smyv3GtI2p/uFmzOA9oHaWt0Fao=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1793786945; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=7M2awz5bxi+ND42rLaoMSCegd95IJwki7qYpjmXF4C8=; 
-	b=CkZwyyYuVGc0wws5Eb+uYChy0J8f4tNz47MDEX8K4df6KTGhd4C1+S16JbfxlT7crBM1I+at5OL55mKpl5MuEuC5CkdAqTON23c8PX/Ieo1ZLR2OOFWfn1SN2ScmD0QE0SyZAXDJeHGqt8L0FLKXQFN2NN4BV3oLm8NIzBbdDlY=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=mpiricsoftware.com;
-	spf=pass  smtp.mailfrom=shardul.b@mpiricsoftware.com;
-	dmarc=pass header.from=<shardul.b@mpiricsoftware.com>
-DKIM-Signature: a=rsa-sha256; b=k9vvZ0B5TBuRgaWeoj2S3wGpUZzzXUZA4dVtYAB1q+DgwVNxngvgJL66cQlwcnQP7DAEcWVJiQF1POgG9MHypsiScFZI37z8+CEj4JlVDgbq80IHrnJdajUJcrtRVqa/grlpzKjF4r1NulCHjv6ANpyN/2G7mkBZr1Mym4qFGiM=; c=relaxed/relaxed; s=mpiric; d=mpiricsoftware.com; v=1; bh=7M2awz5bxi+ND42rLaoMSCegd95IJwki7qYpjmXF4C8=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1793786943266781.1426524156063;
-	Wed, 4 Nov 2026 02:09:03 -0800 (PST)
-Message-ID: <81edb1804fcc5a5ebc1432e73740546fcb4af431.camel@mpiricsoftware.com>
-Subject: Re: [PATCH mptcp-next v5 0/4] mptcp: sched: penalise a slow subflow
-From: Shardul Bankar <shardul.b@mpiricsoftware.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, Janak Patel <janak@mpiric.us>, Kalpan Jani
-	 <kalpan.jani@mpiricsoftware.com>, Abdul Wasey <w453y.me@gmail.com>
-Date: Wed, 04 Nov 2026 15:38:52 +0530
-In-Reply-To: <7da5435c-bddf-4134-8fa7-1df661fa1046@kernel.org>
-References: 
-	<20261028-mptcp_penalise_send_v2-v5-0-32fb379ce117@mpiricsoftware.com>
-	 <7da5435c-bddf-4134-8fa7-1df661fa1046@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20487606A331
+	for <mptcp@lists.linux.dev>; Wed,  4 Nov 2026 10:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a/HLTCfB
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D6CF1F00919;
+	Wed,  4 Nov 2026 10:40:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793788838;
+	bh=Ck8VypfKwhGzxES7dzxPe8wJIspLo1GpOopw33TGXmE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=a/HLTCfBvQaQ0cao1illOkdDLnxe3Se5kw1EMSgWV2GOrHquWbSOdPfXqRqO9UmYf
+	 jn3HyoAS2pzLCgUr1ti3LdMgF8vyQ+Sh9lrcgFMgirE0teAVJKreEF/HKPbV+xEcC3
+	 2BICqcm303ZGy8MwNWhIkFnnh6P8ZbEL1oANdEu9Cy4dUxvmVPuTFl4fC6q34p+v8X
+	 qZf8WZ5xsW+bVZSAeZ4HtybxvBiWUVYbL/5nHhts8OaHKyWjg7IUsuT8gXbsmgzdTU
+	 NzpQSrWX14p5HoCSFb8wD8ljg8aotjHcuHvrt1HUkrxkOpDsNxlr9cSjVK7qjXsQd4
+	 xP/ocik98HWAw==
+Message-ID: <sashiko-outbox-197107@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH net v3] tcp: prevent cross-family skb processing after
+ disconnect
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Zhiyu Zhang" <zhiyuzhang999@gmail.com>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <20261103103633.2707416-1-zhiyuzhang999@gmail.com>
+References: <20261103103633.2707416-1-zhiyuzhang999@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2.1 
+Date: Wed, 04 Nov 2026 10:40:38 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -66,125 +59,152 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-X-ZohoMailClient: External
 
-On Mon, 2026-11-02 at 19:37 +0100, Matthieu Baerts wrote:
-> Hi Shardul,
->=20
-> On 28/10/2026 12:15, Shardul Bankar wrote:
-> > A subflow that is slow relative to the others can soak up
-> > connection
-> > resources and cause head-of-line blocking of the aggregate stream.
-> > This
-> > series lets the packet scheduler send less than such a subflow's
-> > congestion window by halving it, and leaves the congestion control
-> > to
-> > raise it again. It implements issue #345 [1]. This is a
-> > deliberately
-> > simple first form.
-> >=20
-> > - Patch 1: a prerequisite fix. The scheduler truncates the pacing
-> > rate to a
-> > =C2=A0 u32, which skews subflow selection on fast paths (Fixes).
-> > - Patch 2: penalise a slow subflow by halving its cwnd, triggered
-> > on its
-> > =C2=A0 pacing rate and gated on the fast path being cwnd-limited.
-> > - Patch 3: skip the penalty when the transfer is receive-window-
-> > limited,
-> > =C2=A0 where it would otherwise slow the transfer.
-> > - Patch 4: MPTcpExt counters and a dedicated mptcp_subflow_penalise
-> > =C2=A0 tracepoint for observability.
-> >=20
-> > Validation, baseline versus this series (test helper, its
-> > run_matrix.sh
-> > base-vs-patch driver, and run steps are in [2]):
-> > - No regression in the mptcp selftests.
-> > - No regression versus baseline across the buffer-limited transfers
-> > =C2=A0 (send-buffer, receive-window, both, sndbuf>rcvbuf): the two-path
-> > completion
-> > =C2=A0 time with the penalty enabled matches the unpatched kernel. Wher=
-e
-> > the
-> > =C2=A0 slow subflow is beneficial (send-buffer-limited), the two-path
-> > transfer
-> > =C2=A0 stays faster than the fast path alone.
-> > - Patch 3's gate keeps the penalty from firing when receive-window-
-> > limited,
-> > =C2=A0 where halving cwnd would slow the transfer.
-> > - With a bufferbloated slow path, the penalty roughly halves the
-> > slow path's
-> > =C2=A0 queueing latency (subflow srtt), with the transfer time
-> > unchanged. It does
-> > =C2=A0 not reduce the aggregate out-of-order volume or move data off th=
-e
-> > slow
-> > =C2=A0 path; that is the role of issue #332 [3], and the two are
-> > complementary.
-> > - The conditions above do not catch one case: with the buffers left
-> > to
-> > =C2=A0 autotuning and a subflow that is slow because of latency rather
-> > than limited
-> > =C2=A0 bandwidth, penalising it costs throughput, and the cost grows as
-> > the added
-> > =C2=A0 delay grows.
-> >=20
-> > Used LLM for design, review, coding assistance.
-> >=20
-> > [1] https://github.com/multipath-tcp/mptcp_net-next/issues/345
-> > [2]
-> > https://github.com/shardulsdk-mpiric/linux/blob/e0f78406d921/tools/test=
-ing/selftests/net/mptcp/mptcp_sched_penalise.sh
-> > =C2=A0=C2=A0=C2=A0 (run_matrix.sh + runs.conf are alongside it in the s=
-ame
-> > directory)
-> > [3] https://github.com/multipath-tcp/mptcp_net-next/issues/332
-> >=20
-> > Changes in v5:
-> > - Rebased on the current export; no code change.
-> > - Dropped the Assisted-by tags, which the kernel docs no longer
-> > describe;
-> > =C2=A0 tool use is noted in this cover letter instead.
-> > - Collected Abdul Wasey's Tested-by, thanks:
-> > =C2=A0
-> > https://lore.kernel.org/all/20261025192320.1831707-1-w453y.me@gmail.com=
-/
-> > - Link to v4:
-> > https://patch.msgid.link/20260911-mptcp_penalise_send_v2-v4-0-820f2be4a=
-8fe@mpiricsoftware.com
->=20
-> Thank you for the new version!
->=20
-> I just noticed that Abdul's v2 series that I recently sent [1] didn't
-> get reviewed by Clashiko because it doesn't support dependences yet
-> (Sashiko does) [2]. Just to avoid both working on the same thing: are
-> you already working on a new version addressing / rejecting the last
-> review comments sent here? No rush at all, but if you didn't start
-> yet,
-> and you prefer me to look at it, I can try to do that this week. I
-> would
-> then send a version including your patches with fixes (if I can) and
-> the
-> ones I recently sent. Otherwise, there is no urgency, and I can wait.
->=20
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [Critical] tcp: stale IPv6 skb processed on v4-mapped socket in tcp_v6_do=
+_rcv()
+- [Critical] tcp: rtable/rt6_info type confusion in tcp_v4_do_rcv() after r=
+econnect
+--
 
-Hi Matt,
+commit b8863396ea09db4835f451ceb38563e379ce7144
+Author: Eric Dumazet <edumazet@kernel.org>
 
-Thank you for the offer. I have not started on a new version yet, so
-please go ahead and include my patches in your series, with the fixes
-you think are needed. Feel free to reach out if I can help with
-anything.
+tcp: prevent cross-family skb processing after disconnect
 
-Cheers,
-Shardul
+This commit adds tcp_v6_disconnect() to restore IPv6 socket handlers when
+disconnecting a v4-mapped IPv6 socket, routes MPTCP subflow disconnects
+through sk_prot->disconnect, and drops non-IPv4 packets in tcp_v4_do_rcv().
 
-> [1]
-> https://lore.kernel.org/20261031-mptcp-sched-opp-retrans-v2-0-e9c4a30f684=
-1@kernel.org
-> [2]
-> https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261031-mptcp-sched-=
-opp-retrans-v2-0-e9c4a30f6841@kernel.org
->=20
-> Cheers,
-> Matt
+Link: https://lore.kernel.org/netdev/CALf2hKvp0NPVLwr=3Da3+jUHtPohxbra8gox+=
+aYAfWathJnn-J+Q@mail.gmail.com/
 
+> diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+> index a7f9242f1e429..8fa6564d2b602 100644
+> --- a/net/ipv4/tcp_ipv4.c
+> +++ b/net/ipv4/tcp_ipv4.c
+> @@ -1836,6 +1836,11 @@ int tcp_v4_do_rcv(struct sock *sk, struct sk_buff =
+*skb)
+>  {
+>  	enum skb_drop_reason reason;
+> =20
+> +	if (unlikely(skb->protocol !=3D htons(ETH_P_IP))) {
+> +		reason =3D SKB_DROP_REASON_INVALID_PROTO;
+> +		goto err_discard;
+> +	}
+> +
+
+[Severity: Critical]
+Does this check in tcp_v4_do_rcv() still miss the non-backlogged path when a
+socket reconnects from native IPv6 to a v4-mapped address?
+
+In tcp_v6_rcv(), if the user thread completes connect(AF_UNSPEC), reconnects
+to a v4-mapped address, and finishes release_sock(sk) before tcp_v6_rcv()
+acquires bh_lock_sock_nested(sk), sock_owned_by_user(sk) will be false:
+
+net/ipv6/tcp_ipv6.c:tcp_v6_rcv() {
+	...
+	bh_lock_sock_nested(sk);
+	tcp_segs_in(tcp_sk(sk), skb);
+	ret =3D 0;
+	if (!sock_owned_by_user(sk)) {
+		ret =3D tcp_v6_do_rcv(sk, skb);
+	} else {
+		drop_reason =3D tcp_add_backlog(sk, skb);
+	...
+}
+
+Instead of going through sk->sk_backlog_rcv (tcp_v4_do_rcv), tcp_v6_rcv()
+calls tcp_v6_do_rcv(sk, skb) directly. Because tcp_v6_do_rcv() only redirec=
+ts
+ETH_P_IP packets and does not verify whether sk was switched to v4-mapped m=
+ode
+(sk->sk_backlog_rcv =3D=3D tcp_v4_do_rcv), it processes the stale ETH_P_IPV=
+6 skb
+while icsk->icsk_af_ops is ipv6_mapped.
+
+When sk is in TCP_ESTABLISHED (or reaches tcp_finish_connect() in
+TCP_SYN_SENT), tcp_rcv_established() then runs before sequence validation:
+
+net/ipv4/tcp_input.c:tcp_rcv_established() {
+	...
+	if (unlikely(!rcu_access_pointer(sk->sk_rx_dst)))
+		inet_csk(sk)->icsk_af_ops->sk_rx_dst_set(sk, skb);
+	...
+}
+
+This invokes inet_sk_rx_dst_set() on the IPv6 skb and caches its rt6_info in
+sk->sk_rx_dst of the v4-mapped socket, which tcp_v4_early_demux() can then
+attach to subsequent IPv4 packets. Should tcp_v6_do_rcv() also reject
+non-ETH_P_IP packets when sk->sk_backlog_rcv =3D=3D tcp_v4_do_rcv?
+
+> diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
+> index e006a30360eae..a93410aab66e6 100644
+> --- a/net/ipv6/tcp_ipv6.c
+> +++ b/net/ipv6/tcp_ipv6.c
+[ ... ]
+> @@ -2093,6 +2099,19 @@ static int tcp_v6_init_sock(struct sock *sk)
+>  	return 0;
+>  }
+> =20
+> +static int tcp_v6_disconnect(struct sock *sk, int flags)
+> +{
+> +	int ret =3D tcp_disconnect(sk, flags);
+> +
+> +	/* A socket used for a v4-mapped connection must not keep IPv4
+> +	 * handlers when it is reused for listen() or a native IPv6 connect().
+> +	 */
+> +	if (sk->sk_backlog_rcv =3D=3D tcp_v4_do_rcv)
+> +		tcp_v6_restore_af_ops(sk);
+> +
+> +	return ret;
+> +}
+
+[Severity: Critical]
+With tcp_v6_disconnect() restoring icsk->icsk_af_ops to ipv6_specific and
+sk->sk_backlog_rcv to tcp_v6_do_rcv, can a racing IPv4 packet cause
+rtable/rt6_info type confusion when the socket is reconnected to a native I=
+Pv6
+peer?
+
+If tcp_v4_rcv() looks up a v4-mapped AF_INET6 socket via __inet_lookup_skb()
+and the socket is disconnected and reconnected to a native IPv6 address bef=
+ore
+bh_lock_sock_nested(sk), the in-flight ETH_P_IP skb still reaches
+tcp_v4_do_rcv(sk, skb) either directly from tcp_v4_rcv() when
+!sock_owned_by_user(sk), or from release_sock() via tcp_v6_do_rcv():
+
+net/ipv6/tcp_ipv6.c:tcp_v6_do_rcv() {
+	...
+	if (skb->protocol =3D=3D htons(ETH_P_IP))
+		return tcp_v4_do_rcv(sk, skb);
+	...
+}
+
+In tcp_v4_do_rcv(), skb->protocol !=3D htons(ETH_P_IP) passes because the p=
+acket
+is IPv4, while sk is now a native IPv6 socket with icsk->icsk_af_ops set to
+ipv6_specific. When tcp_rcv_established() (or tcp_finish_connect()) calls
+icsk->icsk_af_ops->sk_rx_dst_set(sk, skb), it invokes inet6_sk_rx_dst_set()=
+ on
+an IPv4 rtable:
+
+net/ipv6/tcp_ipv6.c:inet6_sk_rx_dst_set() {
+	struct dst_entry *dst =3D skb_dst(skb);
+
+	if (dst && dst_hold_safe(dst)) {
+		rcu_assign_pointer(sk->sk_rx_dst, dst);
+		sk->sk_rx_dst_ifindex =3D skb->skb_iif;
+		sk->sk_rx_dst_cookie =3D rt6_get_cookie(dst_rt6_info(dst));
+	}
+}
+
+Can this cast the IPv4 rtable to rt6_info in rt6_get_cookie() (dereferencing
+rt->from if the overlapping sernum bytes are zero) and cache an IPv4 rtable=
+ in
+sk->sk_rx_dst of the native IPv6 socket?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103103633.2707=
+416-1-zhiyuzhang999@gmail.com?part=3D1
