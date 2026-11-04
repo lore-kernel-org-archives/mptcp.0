@@ -1,94 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793766380;
-	b=qmrF24NB8ms0TJkI1P/FIEhvlKOuJWg94iPmwxQw6+hFSW0GnfY43WpKhwocMDQnQIN5
-	 RrO2Q3Gr2uT3qJ80Sj+/+RNjhInYH9jn/b4QYvubOxy7VQ+zqoQboz4oJmcHCGcBaIwOk
-	 FHXRFjnF5jzo9NGNsxGymRQa37ZJ9Et0WIZNPp+wPh34D4IquLwAplwADHVq3aEWPY4+/
-	 Px5S4L2qjzjJvpQdj1rs18XzGpJSc08fI6HW8erdXDnBd93GZLIm33mLhDF2zphOsF0/5
-	 w4wW0xmykkQbGnuYGSIEqmLgiJyuODejjhprcPSPvhVJfJge+xy/vCnBLTlTxYpzS2Q==
+	t=1793769826;
+	b=1M+a/x7CUAAHKeD7+M85dlkRelgJW4QeYSHnVj6HlrN/6xVfagQPeuG6iu5FPTdDXQv8
+	 SaTuQdSowXFPeq//kUcUoPMH5S1QaZrO+Pt+JWnoX8NXshfeL/SsoQSB4spUOqgEo4sjH
+	 c+sXCBwZdtqf9bQ2Py7Fzd2lnjqSX6hYWoyznXEnQ8Fe3GaUW5vzZQmTsoE/ymwQLrDsn
+	 EDx+Z2felAvCRo8ngwSEdRgUXgswX3zexhIESIW+M5x4AHRk0Tcvb4j5eQmTrCwzsUfIm
+	 OIqN4hpD+r4Ob1s0Ce5AzTnW0MT2nJZ6Zsi4uN4fFu7kK/reyr4sfes6tYwdDGFdnJA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793766380;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
-	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
-	 Date:MIME-Version:Content-Type;
-	bh=yH8TP4qnZjGEZc3NaKcKkQWE2fYLrpBH3QaIFKxCFBA=;
-	b=DNJ9mfIztzHdAmIkpeV4SIE3uE0yTcSdtDIImiS3bkEW5UCcOyMxf61hq1yXht4DVtYr
-	 SY7u7P0lHaRh3DqEHLI9ORKOctCKcZQZog4TyDw1pnEBRRncDXVdqilXTDIqOf+ovErtI
-	 xSgXhs9VFK+IagbbcApr8SgIg3IG3zsGZosC3QUcSKHn25oqudPqUBBVDqPQAZbuRWr3j
-	 bitVaw4GnquM+tCTSZzlmVcFKXRjxYKhvi4Icrfm4NsDS959X89X6GFjRwoUZXdfAyxpi
-	 XDPjlDgoRBrd9BKmMY6fOiabto5ziZU9tfs+kyxN28uV8t8sOQQBvhx/pwWwNtlhs6w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793769826;
+	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=Qn8NAtZoDb7HH34IWyK2VCQA4luhbTedxXM4sKwZuRo=;
+	b=fmnczAu9RdiwfK+3WeKxk7u/m261VG0fuVL6wRogi59VBwoIPq67Z2Vu7sADKb+cTj0I
+	 EjbVNbfif/Nv3dSkNo8V+7stLs54gfFa8xl/TCq6xKzoXIFQh3sx6JeAgXsDqZXYjUjKV
+	 k5t/gqGriU/2pTX2xEEB4Yu0/zMZgtrhKLC5d2O8e2//Xre1C8rh48EbppGDbOefbjaBi
+	 aiN9KYyEO9Ol6Gr9e5xkqTsgxdlzKcxW/xBLvb5CsHbRv5o//D7GHmWGIgaq54cX7hf74
+	 zN5bOOTuMEcIes+DmMh2Kkbml+kxoKqt6jEUDMyNRGzQiu1rbd2l2LTHov3+RIEfJGg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=mFqBiy40;
-	arc=none smtp.remote-ip=209.85.219.48
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oC27qxmL;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531F0606A326
-	for <mptcp@lists.linux.dev>; Wed,  4 Nov 2026 04:26:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 531F0606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C126606A31B
+	for <mptcp@lists.linux.dev>; Wed,  4 Nov 2026 05:23:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=mFqBiy40
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-91c162febb9so3411306d6.3
-        for <mptcp@lists.linux.dev>; Tue, 03 Nov 2026 20:26:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793766379; x=1794371179; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=yH8TP4qnZjGEZc3NaKcKkQWE2fYLrpBH3QaIFKxCFBA=;
-        b=mFqBiy40Tjnbw03ihwtpGcsBoww3sUh425uVjbSPUFYLEvr1vZzCCR8dFcMNQElKKl
-         XJZZcLoOwPHAbnkq86Vl7A5NQZ093Z9ti5jcGF19k+KwF5JyNBpJUSUNNgX6vc7X+WEK
-         BOBg2o8mMkHZqGAxe7Q5rU4OaEI/gP52GUbZ18V/EedV7S9woAOxhNfGFjMdqzYYata4
-         fnpPOhL/vxnoX5F8Kuz8fu3bs7YsH69yHBENqTopK/Z/DxA0ZgkhFFyJptBQW/aGGToK
-         LPqgdwRYLduKTc6dyji2A1NAURnkZLnRrDOws4zuAqr+tvypS35dtPv0y3Jh54rzvGiq
-         07ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793766379; x=1794371179;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=yH8TP4qnZjGEZc3NaKcKkQWE2fYLrpBH3QaIFKxCFBA=;
-        b=oMXr33QdgOFarQhFSn+La4T9zH8uLkuB5bDWnUlj0oF0JZLmprupqYC3phJPFuVdsO
-         TO35T9FE8paXRhwuv58dneMFRKeYqFteTjFsdmiXOwd61q4/EgsGaUru8jkK5Yzjg4pG
-         ihSx5gId3DzE+OuWulG8IpILXJBx1vVgHSnTUccjXIR4Cqr6n0prJ5+Fa6kvr5Stqx+W
-         HDs4yhKSofhUwfMFXlig37l42VaNRJ+1JiPoGLvhaz/ceCQv3ylPLbmjGLG9AxQ2y5tI
-         xjYIdg2/hF0CAVVRWpix8OVRj84C0gIXR3DVzIa7Y0217LtxIcuQ/72fUKkshkIvefgC
-         emsQ==
-X-Gm-Message-State: APuU4Z/nGp8wlFJOw5tyIzJerl5EWWBPAgyTqz3GjXJ3f0/oBJli8EbQ
-	PXRRFpPk4/M/fdOGWdIJbzOZCWmx0plF6CZiDa9UKX2DjF3HiLj+m+133+YRnAxBXQ==
-X-Gm-Gg: AYBFou1s8reqUJdeTn+IbQD0pclA6J+tDZCPZE7j2f42fiu+kpYq8hAEUeXkj1QtO8C
-	fLw04BPewyz2IPnhDZgn5fyAdXM1qnD7kxmnkzQlfjDUfA7BDgIRdvdc+hQLIdBL4t9jJQjaQvY
-	2FPULlL1jzZZPVV+O/blYjfIGDdd+slRbaPaD/QY5lhlAFuaG5TAvEVs61smnR+3bmqdppoq9uJ
-	xDxO69b2sOcezPNa95tv9ZC7Vdc7ZIvN1/K2Rqtq2QxnLdifCAW+DAW/b7hNFwLBxxItM88sUXa
-	q8BNhAtFIRH1SEdu/cstOTyBxxuISvlfMyp7ZEHkQjHld97Noak3+7flzD3v/i1JA7C+FuB6Oj9
-	ORJm97Xn1dhFfZDfzkpBazyh20VPhHd/thYne1icVACbLjUCRO1bj8d0yjg1qxHX18rgzmabemK
-	uGf+dfHRWT8BQGU7J6DXq1GKhHOE6FoCPskzDK6OY4VsU5Jn59/atCuuOTTL75kzrRv934NxooN
-	rjqCIJ6fFvBW91g8xFb89xOaVz6j8zKG35BBVgtr/INf1eJLfSLFeuqqLD8lAzBUBmoPHiY9drQ
-	F2Jf4eduZTtt18Ztc8zWTJml24Hszquu/ifGGYr6Kg==
-X-Received: by 2002:a05:620a:838b:b0:93b:d7a0:d9e5 with SMTP id af79cd13be357-944217c8512mr2416925185a.63.1793766379163;
-        Tue, 03 Nov 2026 20:26:19 -0800 (PST)
-Received: from github.com ([48.217.35.166])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-945d468fbe9sm105809485a.3.2026.11.03.20.26.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Nov 2026 20:26:18 -0800 (PST)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Hyunwoo Kim <imv4bel@gmail.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <auqd0rAI95jDSMvu@v4bel>
-References: <auqd0rAI95jDSMvu@v4bel>
-Subject: Re: [PATCH mptcp-net v2] mptcp: fix use-after-free of the subflow
- context on the delegated list
-Message-ID: <3b3977d7-a1a4-a906-6254-f101a91c9ae9@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 04:26:17 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oC27qxmL
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9493E1F00919
+	for <mptcp@lists.linux.dev>; Wed,  4 Nov 2026 05:23:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793769825;
+	bh=Qn8NAtZoDb7HH34IWyK2VCQA4luhbTedxXM4sKwZuRo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=oC27qxmLddM+EFhnLVgpy/VmEZXINf+xmHMuE4FdR6WRBLVsnWvH4KjVNHVFraJuO
+	 /8MkqE97l3jpwOqC3pKUzDOHT9ZRJ1DXXVzgBzKn9ZKDZfJsxzGxxh2bMHJWSUoO4P
+	 Iw9Rl2YyPuajJcU8OJRvCxTdBU9IleHw9W+6i52qbeVTRP/a4YmrOt01ifcx6sjGHh
+	 ZJUmeQWpsSTW5zqXezbe306mtiwtYW/T/dYIHro4eFD8m5+H6WJxonqCYrmAb1qqy0
+	 h4YEOzoU8ZjAqpOXrGwZ3Owi4CViRUiQdQ7ALC9gsPHBJny2GXKyd3FzwjFZ+u3zSd
+	 pjJPF6FRZ9MwA==
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-49429181ce9so295266fac.0
+        for <mptcp@lists.linux.dev>; Tue, 03 Nov 2026 21:23:45 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AKwUvBw7FukWJ0gKoFrC8bFuMXMI4D8wUlj9meecvC/tkbc9s+lZfL23RAD/dhMKY2f5SMzSmzgAIg==@lists.linux.dev
+X-Gm-Message-State: APuU4Z9mnav/78ylMd/6+gjCmlsfpbFnagu+H9lQZRD7qdV6Pq5Y+ZsV
+	SBoY9NsMs9XLCEJYgI/Ud3y1Bg+sojCKxrj2S8tb/xH85MekBuw+GiuuOBvYNKoL/p/0hIHC48Y
+	/3OWTrfVFIZXPqWBC7RFfxiyjQIfmtu4=
+X-Received: by 2002:a05:6870:e988:b0:485:d1ab:793c with SMTP id
+ 586e51a60fabf-4a90769be04mr9501691fac.29.1793769824978; Tue, 03 Nov 2026
+ 21:23:44 -0800 (PST)
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -98,187 +59,114 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20261102072112.4160195-1-alexei.starovoitov@gmail.com> <20261102072112.4160195-9-alexei.starovoitov@gmail.com>
+In-Reply-To: <20261102072112.4160195-9-alexei.starovoitov@gmail.com>
+From: Eric Dumazet <edumazet@kernel.org>
+Date: Wed, 4 Nov 2026 06:23:34 +0100
+X-Gmail-Original-Message-ID: <CAL4Wiiq+QX8quVBjEZK5qipki6Yt7vx4=tt2L4o+FwO9zD-5=g@mail.gmail.com>
+X-Gm-Features: AclHuK_M_LLkqH56WlWzBGN8TVZ6lnrAKJmZVwCPt2OMDTAdOmG-v8JtUt35WrY
+Message-ID: <CAL4Wiiq+QX8quVBjEZK5qipki6Yt7vx4=tt2L4o+FwO9zD-5=g@mail.gmail.com>
+Subject: Re: [PATCH bpf v2 08/15] net: Leave sk_stream_wait_memory() once the
+ socket is dead
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: bpf@vger.kernel.org, netdev@vger.kernel.org, daniel@iogearbox.net, 
+	andrii@kernel.org, eddyz87@gmail.com, memxor@gmail.com, 
+	john.fastabend@gmail.com, jakub@cloudflare.com, jiayuan.chen@linux.dev, 
+	davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, 
+	kuniyu@google.com, willemb@google.com, matttbe@kernel.org, 
+	mptcp@lists.linux.dev, mason@kernel.org, josef@toxicpanda.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Hyunwoo,
+Le lun. 2 nov. 2026 =C3=A0 08:22, Alexei Starovoitov
+<alexei.starovoitov@gmail.com> a =C3=A9crit :
+>
+> From: Alexei Starovoitov <ast@kernel.org>
+>
+> When an sk_msg prog redirects data to the egress of another socket, the
+> sender calls tcp_sendmsg_locked() on that socket. The sender holds a
+> reference to the sock, but not to its file. Thus __tcp_close() can call
+> sock_orphan() while the sender sleeps in sk_stream_wait_memory().
+> sock_orphan() sets SOCK_DEAD and sets sk_wq to NULL.
+>
+> After the sleep the loop continues and does not test SOCK_DEAD. The
+> subsequent sk_set_bit() can dereference the NULL sk_wq. The tests of sk_e=
+rr
+> and sk_shutdown do not always stop the sender. sock_error() clears sk_err=
+,
+> and __tcp_close() can call tcp_disconnect(), which clears sk_shutdown. Th=
+e
+> sender then adds data to the write queue of the dead socket, and
+> inet_sock_destruct() warns.
+>
+> Leave the loop with -EPIPE when the socket is dead after the sleep. The
+> function already tests SOCK_DEAD before remove_wait_queue() for the same
+> reason. A caller that has the socket open never sees SOCK_DEAD.
+>
+> Fixes: 4f738adba30a ("bpf: create tcp_bpf_ulp allowing BPF to monitor soc=
+ket TX/RX data")
+> Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+> ---
+>  net/core/stream.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/net/core/stream.c b/net/core/stream.c
+> index cb255e2a3a5d..334124d683a7 100644
+> --- a/net/core/stream.c
+> +++ b/net/core/stream.c
+> @@ -150,7 +150,11 @@ int sk_stream_wait_memory(struct sock *sk, long *tim=
+eo_p)
+>                                     (sk_stream_memory_free(sk) && !vm_wai=
+t),
+>                                     &wait);
+>                 sk->sk_write_pending--;
+> -               if (ret < 0)
+> +               /*
+> +                * A sender which sockmap has redirected to sk does not k=
+eep it
+> +                * open. A dead socket has no sk_wq.
+> +                */
+> +               if (ret < 0 || sock_flag(sk, SOCK_DEAD))
+>                         goto do_error;
 
-Thank you for your modifications, that's great!
+This is fine, but it only helps a sender that wakes up.
 
-Our CI did some validations and here is its report:
+As you said in your reply to the bot on patch 07, nothing wakes it.
+__tcp_close() sets sk_shutdown and calls sock_orphan() without a wakeup
+on sk_sleep(sk), and once sk_wq is NULL, sk_stream_write_space() cannot
+reach the sleeper either.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Perf: Unstable: 9 failed test(s): error:mptcp-perf =
-error:sched-baseline(18) error:sched-bbr(14) error:sched-clientlim(12) =
-error:sched-cpu-preempt(2) error:sched-mem-pressure(9) error:sched-rmem(16)=
- error:sched-serverlim(28) error:sched-weak-secondary(12) - Critical: =
-mptcp-perf/01-Test_1/client.log: Global Timeout - Critical: =
-sched-baseline/01-slow_primary/client.log: Global Timeout - Critical: =
-sched-baseline/02-tiny_primary/client.log: Global Timeout - Critical: =
-sched-baseline/03-fast_both/client.log: Global Timeout - Critical: =
-sched-baseline/04-balanced/client.log: Global Timeout - Critical: =
-sched-baseline/05-slow_near_primary/client.log: Global Timeout - Critical: =
-sched-baseline/06-slow_secondary/client.log: Global Timeout - Critical: =
-sched-baseline/07-very_fast/client.log: Global Timeout - Critical: =
-sched-baseline/08-shallow_primary/client.log: Global Timeout - Critical: =
-sched-baseline/09-high_lat_primary/client.log: Global Timeout - Critical: =
-sched-baseline/10-huge_lat_primary/client.log: Global Timeout - Critical: =
-sched-baseline/11-high_lat_secondary/client.log: Global Timeout - Critical:=
- sched-baseline/12-huge_lat_secondary/client.log: Global Timeout - =
-Critical: sched-baseline/13-bloated_primary/client.log: Global Timeout - =
-Critical: sched-baseline/14-bloated_secondary/client.log: Global Timeout - =
-Critical: sched-baseline/15-slow_primary_upload/client.log: Global Timeout =
-- Critical: sched-baseline/16-balanced_upload/client.log: Global Timeout - =
-Critical: sched-baseline/17-slow_primary_parallel_4/client.log: Global =
-Timeout - Critical: sched-baseline/18-balanced_parallel_4/client.log: =
-Global Timeout - Critical: sched-bbr/01-slow_primary_bbr/client.log: Global=
- Timeout - Critical: sched-bbr/02-balanced_bbr/client.log: Global Timeout -=
- Critical: sched-bbr/03-slow_near_primary_bbr/client.log: Global Timeout - =
-Critical: sched-bbr/04-high_lat_primary_bbr/client.log: Global Timeout - =
-Critical: sched-bbr/05-huge_lat_primary_bbr/client.log: Global Timeout - =
-Critical: sched-bbr/06-high_lat_secondary_bbr/client.log: Global Timeout - =
-Critical: sched-bbr/07-huge_lat_secondary_bbr/client.log: Global Timeout - =
-Critical: sched-bbr/08-slow_secondary_bbr/client.log: Global Timeout - =
-Critical: sched-bbr/09-very_fast_bbr/client.log: Global Timeout - Critical:=
- sched-bbr/10-bloated_secondary_bbr/client.log: Global Timeout - Critical: =
-sched-bbr/11-bloated_slow_secondary_bbr/client.log: Global Timeout - =
-Critical: sched-bbr/12-very_bloated_secondary_bbr/client.log: Global =
-Timeout - Critical: sched-bbr/13-bad_secondary_bbr/client.log: Global =
-Timeout - Critical: sched-bbr/14-far_secondary_bbr/client.log: Global =
-Timeout - Critical: sched-clientlim/01-slow_primary_bw_5/client.log: Global=
- Timeout - Critical: sched-clientlim/02-balanced_bw_5/client.log: Global =
-Timeout - Critical: sched-clientlim/03-huge_lat_primary_bw_5/client.log: =
-Global Timeout - Critical: sched-clientlim/04-slow_secondary_bw_5/client.=
-log: Global Timeout - Critical: sched-clientlim/05-slow_primary_bw_10/clien=
-t.log: Global Timeout - Critical: sched-clientlim/06-balanced_bw_10/client.=
-log: Global Timeout - Critical: sched-clientlim/07-huge_lat_primary_bw_10/c=
-lient.log: Global Timeout - Critical: sched-clientlim/08-slow_secondary_bw_=
-10/client.log: Global Timeout - Critical: sched-clientlim/09-slow_primary_b=
-w_50/client.log: Global Timeout - Critical: sched-clientlim/10-balanced_bw_=
-50/client.log: Global Timeout - Critical: sched-clientlim/11-huge_lat_prima=
-ry_bw_50/client.log: Global Timeout - Critical: sched-clientlim/12-slow_sec=
-ondary_bw_50/client.log: Global Timeout - Critical: =
-sched-cpu-preempt/01-shallow_primary/client.log: Global Timeout - Critical:=
- sched-cpu-preempt/02-shallow_primary_cpu_hog/client.log: Global Timeout - =
-Critical: sched-mem-pressure/01-bloated_slow_secondary_receiver_tcp_mem_par=
-allel_1/client.log: Global Timeout - Critical: sched-mem-pressure/02-bloate=
-d_slow_secondary_receiver_tcp_mem_parallel_16/client.log: Global Timeout - =
-Critical: sched-mem-pressure/03-bloated_slow_secondary_receiver_tcp_mem_par=
-allel_99/client.log: Global Timeout - Critical: sched-mem-pressure/04-very_=
-bloated_primary_both_tcp_mem_parallel_1/client.log: Global Timeout - =
-Critical: sched-mem-pressure/05-slow_primary_both_tcp_mem_parallel_1/client=
-.log: Global Timeout - Critical: sched-mem-pressure/06-balanced_both_tcp_me=
-m_parallel_1/client.log: Global Timeout - Critical: =
-sched-mem-pressure/07-very_bloated_primary_both_tcp_mem_parallel_10/client.=
-log: Global Timeout - Critical: sched-mem-pressure/08-slow_primary_both_tcp=
-_mem_parallel_10/client.log: Global Timeout - Critical: =
-sched-mem-pressure/09-balanced_both_tcp_mem_parallel_10/client.log: Global =
-Timeout - Critical: sched-rmem/01-slow_primary_rmem_200/client.log: Global =
-Timeout - Critical: sched-rmem/02-balanced_rmem_200/client.log: Global =
-Timeout - Critical: sched-rmem/03-huge_lat_primary_rmem_200/client.log: =
-Global Timeout - Critical: sched-rmem/04-bloated_primary_rmem_200/client.=
-log: Global Timeout - Critical: sched-rmem/05-slow_primary_rmem_800/client.=
-log: Global Timeout - Critical: sched-rmem/06-balanced_rmem_800/client.log:=
- Global Timeout - Critical: sched-rmem/07-huge_lat_primary_rmem_800/client.=
-log: Global Timeout - Critical: sched-rmem/08-bloated_primary_rmem_800/clie=
-nt.log: Global Timeout - Critical: sched-rmem/09-slow_primary_rmem_2000/cli=
-ent.log: Global Timeout - Critical: sched-rmem/10-balanced_rmem_2000/client=
-.log: Global Timeout - Critical: sched-rmem/11-huge_lat_primary_rmem_2000/c=
-lient.log: Global Timeout - Critical: sched-rmem/12-bloated_primary_rmem_20=
-00/client.log: Global Timeout - Critical: sched-rmem/13-slow_primary_rmem_6=
-000/client.log: Global Timeout - Critical: sched-rmem/14-balanced_rmem_6000=
-/client.log: Global Timeout - Critical: sched-rmem/15-huge_lat_primary_rmem=
-_6000/client.log: Global Timeout - Critical: sched-rmem/16-bloated_primary_=
-rmem_6000/client.log: Global Timeout - Critical: sched-serverlim/01-slow_pr=
-imary_bw_5_burst_10/client.log: Global Timeout - Critical: =
-sched-serverlim/02-balanced_bw_5_burst_10/client.log: Global Timeout - =
-Critical: sched-serverlim/03-huge_lat_primary_bw_5_burst_10/client.log: =
-Global Timeout - Critical: sched-serverlim/04-slow_secondary_bw_5_burst_10/=
-client.log: Global Timeout - Critical: sched-serverlim/05-slow_primary_bw_5=
-_burst_250/client.log: Global Timeout - Critical: sched-serverlim/06-balanc=
-ed_bw_5_burst_250/client.log: Global Timeout - Critical: =
-sched-serverlim/07-huge_lat_primary_bw_5_burst_250/client.log: Global =
-Timeout - Critical: sched-serverlim/08-slow_secondary_bw_5_burst_250/client=
-.log: Global Timeout - Critical: sched-serverlim/09-slow_primary_bw_10_burs=
-t_10/client.log: Global Timeout - Critical: sched-serverlim/10-balanced_bw_=
-10_burst_10/client.log: Global Timeout - Critical: sched-serverlim/11-huge_=
-lat_primary_bw_10_burst_10/client.log: Global Timeout - Critical: =
-sched-serverlim/12-slow_secondary_bw_10_burst_10/client.log: Global Timeout=
- - Critical: sched-serverlim/13-slow_primary_bw_10_burst_250/client.log: =
-Global Timeout - Critical: sched-serverlim/14-balanced_bw_10_burst_250/clie=
-nt.log: Global Timeout - Critical: sched-serverlim/15-huge_lat_primary_bw_1=
-0_burst_250/client.log: Global Timeout - Critical: sched-serverlim/16-slow_=
-secondary_bw_10_burst_250/client.log: Global Timeout - Critical: =
-sched-serverlim/17-slow_primary_bw_50_burst_10/client.log: Global Timeout -=
- Critical: sched-serverlim/18-balanced_bw_50_burst_10/client.log: Global =
-Timeout - Critical: sched-serverlim/19-huge_lat_primary_bw_50_burst_10/clie=
-nt.log: Global Timeout - Critical: sched-serverlim/20-slow_secondary_bw_50_=
-burst_10/client.log: Global Timeout - Critical: sched-serverlim/21-slow_pri=
-mary_bw_50_burst_250/client.log: Global Timeout - Critical: =
-sched-serverlim/22-balanced_bw_50_burst_250/client.log: Global Timeout - =
-Critical: sched-serverlim/23-huge_lat_primary_bw_50_burst_250/client.log: =
-Global Timeout - Critical: sched-serverlim/24-slow_secondary_bw_50_burst_25=
-0/client.log: Global Timeout - Critical: sched-serverlim/25-slow_primary_bw=
-_10_burst_10_wmem_6000/client.log: Global Timeout - Critical: =
-sched-serverlim/26-balanced_bw_10_burst_10_wmem_6000/client.log: Global =
-Timeout - Critical: sched-serverlim/27-slow_primary_bw_50_burst_10_wmem_600=
-0/client.log: Global Timeout - Critical: sched-serverlim/28-balanced_bw_50_=
-burst_10_wmem_6000/client.log: Global Timeout - Critical: =
-sched-weak-secondary/01-weak_secondary/client.log: Global Timeout - =
-Critical: sched-weak-secondary/02-bad_secondary/client.log: Global Timeout =
-- Critical: sched-weak-secondary/03-far_secondary/client.log: Global =
-Timeout - Critical: sched-weak-secondary/04-bloated_secondary/client.log: =
-Global Timeout - Critical: sched-weak-secondary/05-bloated_slow_secondary/c=
-lient.log: Global Timeout - Critical: sched-weak-secondary/06-very_bloated_=
-secondary/client.log: Global Timeout - Critical: sched-weak-secondary/07-we=
-ak_secondary_backup/client.log: Global Timeout - Critical: =
-sched-weak-secondary/08-bad_secondary_backup/client.log: Global Timeout - =
-Critical: sched-weak-secondary/09-far_secondary_backup/client.log: Global =
-Timeout - Critical: sched-weak-secondary/10-bloated_secondary_backup/client=
-.log: Global Timeout - Critical: sched-weak-secondary/11-bloated_slow_secon=
-dary_backup/client.log: Global Timeout - Critical: sched-weak-secondary/12-=
-very_bloated_secondary_backup/client.log: Global Timeout =E2=9D=8C
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/417659=
-50382
+"A signal or SO_SNDTIMEO of the target ends it" does not look enough to
+me. tcp_sendmsg_locked() takes the timeout from sock_sndtimeo() of the
+target, a socket the sender does not own and cannot configure. With the
+default MAX_SCHEDULE_TIMEOUT, a blocking sendmsg() on the sender's own
+socket never returns, and the sender's sock_hold() pins the dead target
+until then.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/a266ac33c6a5
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1201254
+Since this patch makes SOCK_DEAD a reason to leave, one wakeup before
+sock_orphan(), while the socket is still owned by the closer, should be
+enough. The sender can only get the socket lock back after
+sock_orphan(), so it sees SOCK_DEAD. Nothing walks the wait queue after
+sock_orphan(), so skipping remove_wait_queue() stays safe.
 
+Something like this (untested). sk_wq can be NULL here for MPTCP
+subflows, hence skwq_has_sleeper():
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ void __tcp_close(struct sock *sk, long timeout)
+ adjudge_to_death:
+  state =3D sk->sk_state;
+  sock_hold(sk);
++ /* A sockmap egress redirect can sleep in sk_stream_wait_memory()
++ * without a reference on our file. Let it see SOCK_DEAD.
++ */
++ rcu_read_lock();
++ wq =3D rcu_dereference(sk->sk_wq);
++ if (skwq_has_sleeper(wq))
++ wake_up_interruptible_all(&wq->wait);
++ rcu_read_unlock();
+  sock_orphan(sk);
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+This can be a follow-up and does not need to block the series.
