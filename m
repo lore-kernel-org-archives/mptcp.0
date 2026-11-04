@@ -1,49 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793804407;
-	b=lXJqZesWWEpRknyVwfDWdMnIuCrGoTjK5QFIta1iHdUBaApbhGOpsTkegIwqq5LeZkIc
-	 7MVir3HSsYvDAvbCmCqVtsdtiTtTaGjuoTgvgt7VjvtTMAS0FHNcwt6Aay1YjsQmXDq3J
-	 4ZedB20NIVO3hlrSf7Qv+ZRp6TvQn4SsWBUnOagU0qD+y46qvQ3QvtWRKdknRqFtCMghK
-	 tkd3uqW1dms+60LPn88bRL0fJXP5Oi3sQSZWMxz6LP6yiufutSUzgSyWOnBwl1ZOvcWmZ
-	 IurWkQLP2gqI2H4JE2umjI5bulYOR5jJIz057kHsIQgJkM7vZP6HZ73rLmY96TvK6Fw==
+	t=1793812595;
+	b=xZDPRt58+kZZOLT8wzKm29BwUz1OodvLyXQn8nS0yrGw1Xzn9BOvq6hCq6P7aRZqCKWq
+	 ZYoh07D6qRd+dQWLz3GN/YvIifW39EiCEiPei7c5R+nzr1fBNowISb+y1O66bKDvqtTX/
+	 Y459KfoFJa9OaHwpjmjENdTgmHXLPBe2FiXIRD3jFHCgjbTr4z+seBhq1xdUIYpbcY8eO
+	 4vEJm19Ftfif7ol4PUMwf296MUTX/Eb/QymL5QUA1MITjibApG7+bztzZlMlDtTJe5xcd
+	 Oh2EraSTj5XL3w/Hvm7jtrbSb4TfbycG7cyNgQjoix69OxNAIsabS+mDHwzUXIGjj9A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793804407;
-	h=Received:DKIM-Signature:Received:Content-Type:MIME-Version:
-	 Content-Transfer-Encoding:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc;
-	bh=H3zrIwsM5Od3j/ojrupK60k2PACGT3gOchQyhe+f38Y=;
-	b=vu3AVgxTjNOtJQtjW5evpghxL4Nl5Ry/BQn/D6Ie5ZL6DqvI72dGi/soHruFYaNP25ak
-	 8KKUDoWt4vom5AAB+5vdZmm41wl+AeF/ZSy6yyBe8d9+NbZ5/wAjdHnCpQMJgB0GgPsYC
-	 h2vCFRStKB28py5hyu+i8tBwRBN05srv5yXsXi9cpPb9sftsukArwvgmeJ73iLplpr+uy
-	 d9O08qqWzV7PE6TgMH2j6gbskFQWUdhc9eIc18AowXdwik6PY+NhTl4osae5cYnse6j3N
-	 GalPHwrtj75baznD7iUlsL8eY45jM2tkTr8umDMgZGLOjn0O61lPfsJwNbg5GvnIo0g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793812595;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=EtC9BAovXvbpIUzYqXLDGjzbaCHksPMgZRoHS0i9mhE=;
+	b=CgCyh7attYxwqWECmasjdBjhFr0lXL3N16Nz0f3IWTJbQ0ttXWTWoHIeFTnMmPWYoCXX
+	 A5iE61rHmy5sUKSz0GpxKheag6OghsxyGeOEUI3zEU1zjPDZOETMq6lzoVcmvtVXJ5RFz
+	 ImX+A5TdRoL4SvNmCc1TjMX9FHa+WZRznEaKseyHBpjVZvuBsf7EcX5EUvAZ+ETMMNtXN
+	 fJ+yKy8ykoy8OZr4WiCYo2jVDkFd1mBeUy/JlCosiY9aJ0NvaiAsc6VgSu7+ctgyvPWM+
+	 u0lbAKzF8JmmhYXJXNIlCXEHgUJRW4oKjqVzyU+GRA/72GmiOsUOhiqZiDAfIK7Bc8g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HdkH4MMI;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jRnLJ3Ad;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F9C606A330;
-	Wed,  4 Nov 2026 15:00:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF2D606A31B
+	for <mptcp@lists.linux.dev>; Wed,  4 Nov 2026 17:16:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HdkH4MMI
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 573E91F00A16;
-	Wed,  4 Nov 2026 15:00:06 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jRnLJ3Ad
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA1BC1F000C1;
+	Wed,  4 Nov 2026 17:16:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793804406;
-	bh=H3zrIwsM5Od3j/ojrupK60k2PACGT3gOchQyhe+f38Y=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=HdkH4MMIbxzv2hIRAOO9odLEbDeDKHSz8toPVfBNt1MtbFLccnBUgKS8Eq20/HQA1
-	 4Y7srQbYuqddoczaHFJ1k1UIvoHYRu70CPfsT6KQ2LHzzn29vgpRbQlyyRRQhLcGsl
-	 xFD8ZBnO3DvI1kS8Ox5+wRMsn8hsljEKlGwm8IfQmLbLkC4mjZev/0HT5bgzhB5tgR
-	 2CF61pon1h59Ach8QJhhfr4WbSD94esGYG0F+SGbgVKeal+NChOj3AW9PvnZw5hvD1
-	 JZGvmk/thfPinS0TNzuhcJmz+Vnxgqo6/EKzMUFt4q88JPGzTAG0+l47aHhjI44C3H
-	 oeIpyAO6n+xWg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 4024E39E8A48;
-	Wed,  4 Nov 2026 15:00:06 +0000 (UTC)
+	s=k20260515; t=1793812594;
+	bh=EtC9BAovXvbpIUzYqXLDGjzbaCHksPMgZRoHS0i9mhE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=jRnLJ3AdeJxzo/bSc8SYcqMuMVPXH9c1gi7WADHkuYX8kp7ZQf25rbIIz556SaiCG
+	 0pnN2qRUnyuy/6Ailf6/VTHURpGtAl1xyHDx+IDXRaL17nEY6zWwpwTyMTzR3OIs7h
+	 6xooh9hgKFNgIRALjoGiIxY/osoi/JX/hjKC1jzuRwREq8f81qghsXhn4PqbckSKrT
+	 s1sppsfO6JQMwaINaiqQ1otL2wuuiCGxVyAM2I06RV5OJ6J0wGYH76n/h8V9hJ+mFZ
+	 g96VCODGJ6CZPHePNzg2oebsUaG5wukapHmVbTihKZaZgut0D1s+e+ZlHLLtzZZWuJ
+	 IJtEiT+iEMHNg==
+Subject:
+ Re: [PATCH mptcp-next v5 2/7] mptcp: use mptcp_data_avail in mptcp_inq_hint
+From: netdev-bot+sashiko@kernel.org
+To: geliang@kernel.org
+Cc: mptcp@lists.linux.dev, tanggeliang@kylinos.cn, kuba@kernel.org
+Date: Wed, 04 Nov 2026 17:16:34 +0000
+Message-ID: <179381259415.488855.12809260822038100854@kernel.org>
+In-Reply-To: <ccd9f70eddb3df2c311b75f559d9acea3233295f.1793676064.git.tanggeliang@kylinos.cn>
+References: <ccd9f70eddb3df2c311b75f559d9acea3233295f.1793676064.git.tanggeliang@kylinos.cn>
+X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -53,44 +61,77 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v4] mptcp: do not use Fast Open on MP_JOIN subflows
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <179380440480.2875940.5423974447556647917.git-patchwork-notify@kernel.org>
-Date: Wed, 04 Nov 2026 15:00:04 +0000
-References: <20261030-mptcp-tfo-mpj-v4-1-e6eff2027342@kernel.org>
-In-Reply-To: <20261030-mptcp-tfo-mpj-v4-1-e6eff2027342@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
- edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- cpaasch@openai.com, mason@kernel.org, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, yilinzhang@moonshot.ai,
- stable@vger.kernel.org, bug-report@moonshot.ai, jiayuan.chen@linux.dev
 
-Hello:
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue(s) to consider.
 
-This patch was applied to netdev/net.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+Critical: 0 · High: 0 · Medium: 1 · Low: 0
 
-On Fri, 30 Oct 2026 23:03:51 +0100 you wrote:
-> From: Yilin Zhang <yilinzhang@moonshot.ai>
-> 
-> tcp_fastopen_create_child() hands the SYN packet itself to
-> subflow_syn_recv_sock(). For an MP_JOIN request this takes the
-> fatal fallback: the cloned child is destroyed and handed back with
-> drop_req flagged, but tcp_fastopen_create_child() does not check
-> the flag and queues it, so accept() can expose the freed child.
-> 
-> [...]
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
 
-Here is the summary with links:
-  - [net,v4] mptcp: do not use Fast Open on MP_JOIN subflows
-    https://git.kernel.org/netdev/net/c/6d2cf411aba2
+- [Medium] This patch fixes a real, user-visible regression, but the
+  commit message describes it as an alignment/consistency change that…
 
-You are awesome, thank you!
+--
+
+mptcp: use mptcp_data_avail in mptcp_inq_hint
+
+This commit changes mptcp_inq_hint() to compute the available bytes with
+mptcp_data_avail() (bytes_received - bytes_consumed). Previously it
+subtracted the head skb's map_seq from msk->ack_seq. The hint value of 1
+for closed or shut-down sockets with no pending data is kept.
+
+> This change aligns mptcp_inq_hint() with mptcp_inq() and provides more
+> consistent behavior across different connection types, including passive
+> TFO connections where the TFO skb has map_seq set to -skb->len (data
+> before IASN). Using mptcp_data_avail() avoids potential overflow issues
+> when ack_seq is set to iasn.
+
+[Severity: Medium]
+
+The code change looks correct. Is "potential overflow issues" the right
+description, though? This seems to fix a concrete regression on passive
+TFO sockets.
+
+mptcp_fastopen_subflow_synack_set_params() queues the SYN data skb with:
+
+    MPTCP_SKB_CB(skb)->map_seq = -skb->len;
+
+When the third ACK arrives, subflow_set_remote_key() does:
+
+    WRITE_ONCE(msk->ack_seq, subflow->iasn);
+
+Before commit f03afb3aeb9d ("mptcp: drop
+__mptcp_fastopen_gen_msk_ackseq()"), __mptcp_fastopen_gen_msk_ackseq()
+added msk->ack_seq to the queued skb's map_seq and end_seq at that point.
+Since that commit, the old mptcp_inq_hint() computes:
+
+    READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq
+
+That value is iasn + len, which is almost always >= INT_MAX, so the
+function returns INT_MAX.
+
+As a result, SIOCINQ/FIONREAD through mptcp_ioctl() and the TCP_CM_INQ
+cmsg in mptcp_recvmsg() report INT_MAX, and mptcp_rcv_space_adjust()
+subtracts INT_MAX from copied. This lasts until the TFO skb is fully
+consumed, because partial reads only advance map_seq by the copied
+amount.
+
+The selftest later in this series ("selftests: mptcp: connect: check TFO
+SIOCINQ overflow") checks for exactly this case, where mptcp_inq_hint()
+returns INT_MAX for TFO connections.
+
+Should this patch carry the following tag?
+
+Fixes: f03afb3aeb9d ("mptcp: drop __mptcp_fastopen_gen_msk_ackseq()")
+
+Could the commit message also describe the actual symptom, so the patch
+can go to net and be picked up by stable kernels that contain
+f03afb3aeb9d?
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1793676064.git.tanggeliang%40kylinos.cn
