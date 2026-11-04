@@ -1,61 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.46
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793741886;
-	b=DAnfG4cbw861ruMkkOmW6Lf12IE+I7T0bKsrYW81TDCtWx1+nApB/MWllDhPUiIsWe4u
-	 1NFRwx/ecoXgRpYgeYQgt833lMhnk55NOJt9ojtdJ9PjKYUQilZ2kTmGnoM+tn9T06k+8
-	 V3EKqGCJsfMUWGwAb4S2hLoHpCn5h27XCHxsq5ZxD1pF0oD0JtWcleTWrxLOf8oSiV2G6
-	 eLCKfU8FU5jth6mWGjpsMU2RkpMjrqjd283zHXRGrmKT2sSLLCjGKWLrX4vlKNnK+pfzU
-	 NE5vfYVjtOvQOo9X37qQydBaIfInvLTQYsVrpynSOc3kEtjvFpwyicIihJMTdQf0g+Q==
+	t=1793752106;
+	b=zeNrUc7UlgKEExODohqwTW9asHL1UPMjCHuxIa/f5fcuCWVBBH7sShnlM/+TlklFQDlb
+	 wJ3oeEIcMxGEX9rCPM+yy/C+0vGvCzkyO2nLNKEbPwBXdE4gXUmvJYNcAFIOeGj8jCDR8
+	 nVByZSwHcwK4udaRplcFrWyxrxPKjk1lMRvMF3qRUZ7sfutl24KYaVaMdt4dgkiDhQcA1
+	 E1HlSUCxPts7AwsmRGHtPPKdFiAko2Vtb5FRIUQIAPLd10iC/AwRQkPNk0EnWszMZrhXq
+	 /1EmxYv1xmyRzJzos1ZdTyWQeumw5D3qB9znkGlbPLio+zTSKrREgCPcnjNWdgoCfxg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793741886;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=V0jZpNRgfyM4S6HujGRZUQQH6VN4jrKq+NmC0BZso4U=;
-	b=OLGlYUFVyY50XsiU2TCkWr96y8LQNyAAwus0f52LHp3pLz7C2OkBjn0yLBPbLvoqqCi9
-	 xk209Q9xDfQXEj6+J8SPj2PBOAiCVrK82/ReHvZXbnWwX9kPRIA7jaqixfQKQeGsSRjyz
-	 ZmfaHKBdDoUlDQTqjvkuv/rMoRI/b600GVSeup/SCbiGtEjWNKZczqgsRh7hi+Mm98QPI
-	 Oi3qzDjgsIyWfvLy/U7LWzKg8WsDAJJ8pB8Q/cgD8JNIGeyw24K6n43mHGeotvYDpxGCk
-	 BQQ6NMnBW4A4VVmbykPXPzFli3x2Nh0CwclDPvDhzZtw6elC2whnEF3EsSemw9hdqwQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793752106;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Content-Type:Date:Message-Id:Cc:Subject:From:To:In-Reply-To:
+	 References:Content-Transfer-Encoding:MIME-Version;
+	bh=N9u2giWdwIjOfoxPhFOBtJJGKmXk1nnXCe77BsBVdFw=;
+	b=dMyo/fZeR/3bKSl/bjHl6q7LJNYIf8u0AsL9EjNFZVdp2rErVEr33vEWVLLbgUXm7qq+
+	 t9h7SB0MT3MtnEwCMkanLkwLwax4Onil7vXl+E5tTSwHO/vQjasApV432B8M+02sjY0Ap
+	 clV6xliwBeA8yh+WM5S0T+M6EiAcZw8sZJMaAo8KosSzSvFPfmlGd8ePrEcErQe/m7nm3
+	 he57U3DO/gosw0t0Hy8f27GzMgxxNhxNOP+KJEYrgXC8M9di6NcAx+fbnInKDbdW/Su9d
+	 OEwEQaXZi+VBrIE2O5HDHgFeZL0/nzyfxz5YzZAIXWxN367ooj9QaKt/Jj883PJ1KdA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iJuEyAnJ;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=JMFdv+A+;
+	arc=none smtp.remote-ip=209.85.216.46
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F379B606A335;
-	Tue,  3 Nov 2026 21:38:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A902606A324
+	for <mptcp@lists.linux.dev>; Wed,  4 Nov 2026 00:28:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5A902606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iJuEyAnJ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DE1E1F00A02;
-	Tue,  3 Nov 2026 21:38:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793741885;
-	bh=V0jZpNRgfyM4S6HujGRZUQQH6VN4jrKq+NmC0BZso4U=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=iJuEyAnJJ2gsXvsBkrQuweQKj+FH5d1q11FTCkY2BVUoRBanzqGMlEd+0U4SgHKex
-	 IRLugICuaTmhWMO3uVljk+AkcEBtoors19sI9MWwqya7M2rfn7hhDT0LP/+SQfPLMB
-	 urtYM0JenjKyut84aVkMBtr4kbOW1xLt6JAvyqEXgzXDwQUUCeOn9Yz6HqxjHf5Wx6
-	 NzUIiD9F8+rGPq4k3tjpCraae8IuSyJqnYD9SE5bQVM+TSVnMkP73XUX0vHiR1W8nG
-	 M53zlfLN+kldgJHxa/+rpOT8QrvX0BIi55k12G+JlyLzgMaLco0vfI1Nw0SsNXE1sI
-	 h/6zg+/wXB06w==
-Subject: Re: [PATCH bpf v2 14/15] bpf, sockmap: Keep the rest of the cork
- after a redirect
-From: netdev-bot+sashiko@kernel.org
-To: alexei.starovoitov@gmail.com
-Cc: bpf@vger.kernel.org, netdev@vger.kernel.org, daniel@iogearbox.net,
- andrii@kernel.org, eddyz87@gmail.com, memxor@gmail.com,
- john.fastabend@gmail.com, jakub@cloudflare.com, jiayuan.chen@linux.dev,
- davem@davemloft.net, edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, kuniyu@google.com, willemb@google.com, matttbe@kernel.org,
- mptcp@lists.linux.dev, mason@kernel.org, josef@toxicpanda.com
-Date: Tue, 03 Nov 2026 21:38:04 +0000
-Message-ID: <179374188416.488855.8465787275984951547@kernel.org>
-In-Reply-To: <20261102072112.4160195-15-alexei.starovoitov@gmail.com>
-References: <20261102072112.4160195-15-alexei.starovoitov@gmail.com>
-X-sashiko-severity: Medium
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=JMFdv+A+
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-3ad787e0593so99719a91.3
+        for <mptcp@lists.linux.dev>; Tue, 03 Nov 2026 16:28:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793752106; x=1794356906; darn=lists.linux.dev;
+        h=mime-version:content-transfer-encoding:references:in-reply-to:to
+         :from:subject:cc:message-id:date:content-type:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=N9u2giWdwIjOfoxPhFOBtJJGKmXk1nnXCe77BsBVdFw=;
+        b=JMFdv+A+nLVRX7TTKXLy3YVCmcjukmmouwKE9qb1/7XuXzNNiit2kl+woSiRoTPrMZ
+         waKNYO+VUGCWRZwzLDDauIvM0xJadQTOXNqFKueZQRsaBccDnKNCF2ik6Br59K/Hf4oM
+         +wRJ7LNJJ3J900rDFQfW/aYxvbRYd2YST6Mm43R2hUAEA3JUB1ClGqoVESL6Wc5bMrI5
+         ZVIopzvBNWStTwftP98XDFoeGE8MI9H8OKFnzcyQ71mWHk1I0B0sIbZdNuFPmUpr6Ort
+         mJBO4bvHbRaMpw1K6jIVxoSaUTswld90XGZAj0gka4LE8S3884rS/6EEvCGn1z2l5LNW
+         4jIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793752106; x=1794356906;
+        h=mime-version:content-transfer-encoding:references:in-reply-to:to
+         :from:subject:cc:message-id:date:content-type:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=N9u2giWdwIjOfoxPhFOBtJJGKmXk1nnXCe77BsBVdFw=;
+        b=2eAvmNXz0/GxGrBXg/nMW+a82+Q9JEiFhMlnIYvzaciyn3V93Bdmi2y6Jm1gGsWeR+
+         QhMVtekQSXsH6x4/VCacUSFKLKuB/O7oXh/0+zrtMZMlvCz/c0Pcbr/XcHnmN7Tlzwcj
+         Z6NscRwdX77jvaKwa/pHFvLAUEZKPxJy/aO4vLZjE69oSlyplcodjE88/CVXoUUkv6QT
+         fodwJ/ElbKw1envc/YSbkV9/DJpK0uOpelZv2xuQAgsQF8hrNYG7aRmBvR39tCQLvHGb
+         nxL8ofsDiQjw1dkvCG8OKr09nwCHmob9sSuLnWH50PFyZZMtTfoF/C45THzzEjnn9rD2
+         q7oQ==
+X-Forwarded-Encrypted: i=1; AKwUvBx3Ykzd3HuYBn7oLGh7d/yVX9ah+6X4c6KQklTkuW0t2vESxBgNdVlAcGVPQa0jTteo4ijHXg==@lists.linux.dev
+X-Gm-Message-State: APuU4Z95o3uk5Pg5auzzEpsnmkAGHtTJQlLeCaHf4PWHv9IxuXs/W9Ts
+	YN8v2njKVexycFZMBw9bd8zL4f2UKgqv/v/BlxaRB11+Fa/QFUgwev1H
+X-Gm-Gg: AYBFou2c37fufFTM7+6jQh16AQHLdx3u2vv5jTvsx4FKxWAgei6m8j6F/vDJjtnp0Vx
+	s6mfkH4B9LAiLNMI7XIcWbb5Jf/G93r4ctyCRAx0F0fUNIIvWHPkwNLw77qiIp/oHLofr1JCf6b
+	2Qhm+ICTpRTwQADz6PtTH57lj/2rQ0IaXfIdf5XdI42yDN+JgShg2gglbB0629Uu1utPMCA4Ncb
+	lLcXawLDiC2CGGGuwyOvVv1H7aAuzKT9LSXafrU4DbVl0TF7gh4vFqLl4IvWOilg5xBcegHhFJH
+	dc8+i1E2ZQkZtZsEKRhlTesLPmqUtccYsoNmr4Tvh3NCa5Nvg+TGxsgumquL4gUGlVyii6M5k2s
+	ozfPe6TPZbU5WahtNcHmWcQERc2diPmras9VZWvvXP5BzYCdtMhsjgnipix7/hA8x0cPA6g5vZU
+	1dZv2UrUp8k7WMxSqUpWGrnubd6WL5ZiVtowt1Z9yrhOQi9aeNoL0Cz/bjk1lrMHAE/7gfddKy/
+	FBhTbWqbqNIxI1Ttd1vJfdAbsWS4QkSwsPZTftP5L3pHFgIprioPYHfv2YoliMpJvDtSx7224nW
+	VCaUQ6WI9CxRm999ypLJiuRM2mE05PCQlxOW04SvWx3RW9XFnchEdqJ0KCNUvXQQ75losp7kqCu
+	thlbEqtcmbZF3ruEa4nxDNjIBciJg1a3k+A==
+X-Received: by 2002:a17:90b:2741:b0:3ac:7556:8eda with SMTP id 98e67ed59e1d1-3ae897b955emr11276403a91.26.1793752105586;
+        Tue, 03 Nov 2026 16:28:25 -0800 (PST)
+Received: from localhost ([153.61.198.245])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b093d481a3sm1165337a91.1.2026.11.03.16.28.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Nov 2026 16:28:25 -0800 (PST)
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 04 Nov 2026 00:28:24 +0000
+Message-Id: <DMM01WTK5E12.1RIGV9OGW23PZ@gmail.com>
+Cc: <bpf@vger.kernel.org>, <netdev@vger.kernel.org>, <daniel@iogearbox.net>,
+ <andrii@kernel.org>, <eddyz87@gmail.com>, <memxor@gmail.com>,
+ <john.fastabend@gmail.com>, <jakub@cloudflare.com>,
+ <jiayuan.chen@linux.dev>, <davem@davemloft.net>, <edumazet@kernel.org>,
+ <kuba@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>,
+ <kuniyu@google.com>, <willemb@google.com>, <matttbe@kernel.org>,
+ <mptcp@lists.linux.dev>, <mason@kernel.org>, <josef@toxicpanda.com>
+Subject: Re: [PATCH bpf v2 03/15] bpf, sockmap: Don't let an SK_PASS verdict
+ cover the next message
+From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
+To: <netdev-bot+sashiko@kernel.org>
+In-Reply-To: <179374187706.488855.8366350890804573396@kernel.org>
+References: <20261102072112.4160195-4-alexei.starovoitov@gmail.com> <179374187706.488855.8366350890804573396@kernel.org>
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -67,239 +107,39 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue(s) to consider.
+On Tue, Nov 03, 2026 at 01:37 PM netdev-bot+sashiko@kernel.org <netdev-bot+sashiko@kernel.org> wrote:
+>> +		if (!psock->apply_bytes)
+>> +			psock->eval = __SK_NONE;
+>
+> When psock->apply_bytes is not 0, eval stays __SK_PASS during the push.
+> The budget is still debited only after tcp_bpf_push() returns. Can a
+> second sender on the same socket still get past the prog here?
 
-Critical: 0 (1) · High: 0 · Medium: 1 (3) · Low: 0
+Yes, as today. It's already explained in the commit log.
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
+> But B's message is sized against the budget before A's in-flight bytes
+> are removed from it. Would it be better to reserve the budget before the
+> push? That means debiting tosend, and ending the verdict when the budget
+> reaches 0, before calling tcp_bpf_push(), instead of subtracting after a
+> failure.
 
-- [Medium] The fix is incomplete: the cork tail is still lost when
-  another sender installs a new cork while the lock is dropped.
+No. That breaks the single sender. After -EAGAIN the verdict has to
+cover the bytes that the push didn't send. A refund after the failed
+push can land on B's verdict.
 
-Pre-existing issues:
-- [Critical] This problem wasn't introduced by this patch, but the
-  SK_PASS branch of `tcp_bpf_send_verdict()` pushes a message that is…
-- [Medium] This problem wasn't introduced by this patch, but the selftest
-  `test_txmsg_cork_hangs()` in…
-- [Medium] This problem wasn't introduced by this patch, but when
-  `tcp_bpf_sendmsg_redir()` fails for a cork in…
-- [Medium] This problem wasn't introduced by this patch, but in the
-  __SK_REDIRECT branch of `tcp_bpf_send_verdict()`,…
+> The shared-cork problem with two PASS senders already existed. The kfree()
+> variant used to need a third sender to end a byte-limited verdict. The
+> early reset makes it reachable with only two senders.
 
---
+yeah. It's an old bug, not from this patch.
+Two senders are enough today too. B's first message goes out with A's
+verdict, and the code after the switch resets eval. The prog runs on B's
+second message. SK_REDIRECT frees the cork that A still pushes.
+The log of patch 13 says that a cork is not safe for two senders.
+Jiayuan proposed to serialize the senders in the reply to that patch.
 
-bpf, sockmap: Keep the rest of the cork after a redirect
+> With the early reset, can sender A's bytes be charged against a verdict
+> that another sender installed?
 
-When a verdict covers only part of a cork after bpf_msg_apply_bytes(),
-the SK_REDIRECT branch of tcp_bpf_send_verdict() used to free the bytes
-that were left over along with the cork. This patch puts the cork back
-into psock->cork when bytes remain, unless another thread installed a
-new cork, so the sk_msg program runs again on the rest.
-
-> diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-> index b1071b0960cf5..788ce08eef4d7 100644
-> --- a/net/ipv4/tcp_bpf.c
-> +++ b/net/ipv4/tcp_bpf.c
-> @@ -544,6 +544,14 @@ static int tcp_bpf_send_verdict(struct sock *sk, struct sk_psock *psock,
->  			if (!cork)
->  				*copied -= free;
->  		}
-
-[Severity: Medium]
-This is a pre-existing issue, but what happens when tcp_bpf_sendmsg_redir()
-fails for a cork here?
-
-The ret < 0 path frees the whole sk_msg. It skips the *copied adjustment
-because cork is true. The new restore check is then skipped because
-msg->sg.size is 0, and the if (cork) block runs:
-
-    sk_msg_free(sk, msg);
-    kfree(msg);
-    msg = NULL;
-    ret = 0;
-
-tcp_bpf_sendmsg() then returns copied > 0 ? copied : err with copied
-unchanged. So sendmsg() reports success for bytes that this call put into
-the cork and that were then thrown away. A non-cork message with the same
-failure lowers *copied and returns the error.
-
-Failures that can get here include -EPIPE when the target has no psock,
--EINVAL/-EPIPE from tcp_bpf_redir_allowed() in tcp_bpf_push(), -ENOMEM
-from bpf_tcp_ingress(), and errors from tcp_sendmsg_locked().
-
-The commit message says this stays unchanged ("If the redirect of a cork
-fails, sendmsg() still returns success and frees it."). So does the earlier
-patch "bpf, sockmap: Check the target of an egress redirect before each
-send".
-
-Should the cork case also subtract the freed bytes from *copied and keep
-the error?
-
-> +		/*
-> +		 * The verdict was for tosend bytes. The rest goes back, unless
-> +		 * another thread made a new cork while the lock was released.
-> +		 */
-> +		if (cork && msg->sg.size && !psock->cork) {
-
-[Severity: Medium]
-Is the tail still lost if another sender installs a new cork while the lock
-is dropped?
-
-Earlier in the __SK_REDIRECT branch, the cork is detached and the lock is
-released:
-
-    if (psock->cork == msg) {
-        cork = true;
-        psock->cork = NULL;
-    }
-    release_sock(sk);
-
-A second thread in tcp_bpf_sendmsg() on the same socket then sees
-psock->cork == NULL and uses the on-stack tmp. The first thread's call to
-sk_msg_apply_bytes(psock, tosend) used up apply_bytes, so psock->eval was
-reset to __SK_NONE and the prog runs on tmp. If the prog calls
-bpf_msg_cork_bytes() with a size larger than tmp, the top of
-tcp_bpf_send_verdict() allocates a new psock->cork.
-
-When the first thread takes the lock again, this check is false. The
-if (cork) block then frees the unsent tail with ret = 0 and does not reduce
-*copied, and tcp_bpf_sendmsg() returns the positive copied count.
-
-That is the symptom the commit message describes ("the rest is lost, and
-sendmsg() reports it as sent"). The prog also never runs on those bytes,
-although bpf_msg_apply_bytes() says it should.
-
-The commit message acknowledges this ("If the psock has a new cork after
-lock_sock(), the kernel still frees the rest"). The earlier patch "bpf,
-sockmap: Check that the redirected message is the cork" also says corks are
-not safe for two senders.
-
-Is this case meant to stay out of scope, or should *copied at least be
-reduced by the freed tail?
-
-> +			psock->cork = msg;
-> +			cork = false;
-> +		}
-
-[Severity: Critical]
-This isn't a bug introduced by this patch, but putting the tail back here
-adds a new way into a race that already exists in the SK_PASS branch. Can
-a restored cork be freed while tcp_bpf_push() is still using it?
-
-After this code runs, we reach more_data with psock->cork == msg. If the
-next verdict is SK_PASS:
-
-tcp_bpf_send_verdict()
-    case __SK_PASS:
-        if (!psock->apply_bytes)
-            psock->eval = __SK_NONE;
-        ...
-        ret = tcp_bpf_push(sk, msg, tosend, flags, true);
-            tcp_sendmsg_locked()
-                sk_stream_wait_memory()
-                    sk_wait_event()  <- drops and re-takes the socket lock
-
-The cork stays in psock->cork during the push. A second sender in
-tcp_bpf_sendmsg() can take the lock and pick it up:
-
-    if (psock->cork) {
-        msg_tx = psock->cork;
-
-psock->cork_bytes is 0 and psock->eval is __SK_NONE, so the second sender
-runs the prog on the shared msg:
-
-- On SK_REDIRECT it detaches the cork, redirects it without the lock, and
-  later calls kfree(msg).
-- On SK_PASS it pushes the same element, then calls put_page() and
-  sg_init_table() on it.
-
-The first thread then wakes up in tcp_bpf_push() with stale sge, page, off
-and size locals, and runs:
-
-    msg->sg.size -= ret;
-    sge->offset += ret;
-    sge->length -= ret;
-    ...
-    if (!sge->length) {
-        put_page(page);
-
-Could this cause a use-after-free of the kfree()d sk_msg and a double
-put_page(), and send the same bytes twice?
-
-The earlier patch "bpf, sockmap: Check that the redirected message is the
-cork" already says "a cork is still not safe for two senders on one
-socket".
-
-Would it fix this to detach psock->cork in the SK_PASS branch before any
-push that can drop the lock, and attach it again under the lock afterwards,
-as the SK_REDIRECT branch does?
-
-[Severity: Medium]
-This is a pre-existing issue, but now that the tail goes to more_data, can
-some of the restored bytes get a different verdict than the program asked
-for?
-
-In the __SK_REDIRECT branch, the whole planned tosend is charged before
-the redirect runs:
-
-    sk_msg_apply_bytes(psock, tosend);
-    if (!psock->apply_bytes) {
-        /* Clean up before releasing the sock lock. */
-        eval = psock->eval;
-        psock->eval = __SK_NONE;
-        psock->sk_redir = NULL;
-    }
-
-bpf_tcp_ingress() can move only part of it. Once one element has moved, a
-later __sk_rmem_schedule() failure breaks out with ret == 0, because copied
-is not zero:
-
-    if (!__sk_rmem_schedule(sk, size, false)) {
-        if (!copied)
-            ret = -ENOMEM;
-        break;
-    }
-
-For example, take an 8192-byte cork with apply_bytes 6144 where only the
-first 4096-byte element moves. The prog run at more_data then decides all
-4096 remaining bytes, including 2048 that the redirect verdict covered.
-
-Non-cork messages already have the same accounting problem. Should
-sk_msg_apply_bytes() be charged with the bytes actually sent rather than
-tosend?
-
->  		if (cork) {
->  			sk_msg_free(sk, msg);
->  			kfree(msg);
-
-[Severity: Medium]
-This is a pre-existing issue in the selftests, but is there a test that
-would catch the data loss this patch fixes?
-
-The third case in test_txmsg_cork_hangs() in
-tools/testing/selftests/bpf/test_sockmap.c reaches this path:
-
-    txmsg_redir = 1;
-    txmsg_apply = 4097;
-    txmsg_cork = 4097;
-    test_send_large(opt, cgrp);
-
-With txmsg_cork set, msg_loop() waits only 300ms per select(). An
-incomplete receive becomes errno = -EIO. The rx child in sendmsg_test()
-then hides that error:
-
-    if (err && err != -EDATAINTEGRITY && txmsg_cork)
-        err = 0;
-
-So the test passes both when the cork tail is freed (before this patch)
-and when it is put back and sent (after this patch).
-
-Could a test be added that checks how many bytes the peer receives?
-
--- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261102072112.4160195-1-alexei.starovoitov%40gmail.com
+Not a bug. eval, apply_bytes and sk_redir belong to the socket, not to
+a thread. B's verdict ends early and the prog runs again for the rest.
