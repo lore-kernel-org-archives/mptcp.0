@@ -1,53 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793812597;
-	b=cHwUhV7pjKa/EWiKlQkmDClVP286MITS/doHg6w68pitIFRa7WMES50IC76NBI/+BJ+7
-	 zvSk/KUKg0/u3EhLAFKmgJW3QN8Xmy5FW9LZ4SRoceaRSyuRLQwMbn9LO47U1sxopKwGe
-	 9dO+lZ1KcuP4GKP1ma2RJUg9cPtT17/m3knx6GjfvyxMJ99IrQ9Q+kL5NaQFF9aEiN5X/
-	 ZYMYpqF+tu3kEBbzZd2hZjCwFUceFyhA0hSF15pwGWNqU6zfDCf1z2FDKjie9MGIML5r5
-	 us3l5CpLeAUF1O+ynjmNTiLDYP9HOVdCnbJY4dDpmF/1HrWMZKOvZ6xjDz5LG0+Lplg==
+	t=1793812598;
+	b=vd046rUhWQu24BbiR/GuETd/gtWBObfOGtBfTC+4ZkGJt9w53uCVaO6cw+I0OtO1utIR
+	 9IBqpsRUs45xd4cWJD8YiBgbetCQLhjCsD1zoEAmf+kNYNkFIGkAKCa2C8SkrErKjn3NZ
+	 vKNUQzxo7LYAkj7lOmku8KKeXLABZ2851LyxZn00DmXayzNIAKxuXzUbQZspqaZzO/0ve
+	 9h2L2KOM1TdIVwONLHrBYDPxVXDgJP2PNN++zEqsFDCelM3sM/oNCZEwZ+Iu6HX1t+d07
+	 KUIXDK2vY/WoOzahTrli8j+Q2P/vB42l0PKC/n77JHWhC+hitUVpIiZMjzgF3+MzqtA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793812597;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793812598;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=lxeEhd30M0sTJZ1pznmonnPabPV7DzIFIuDxou7v1MI=;
-	b=iBepeSAbsiqi3vwW6xaSqalDXzOEB8DbmPMe4tnvciX2U5qV+zzEgPH6nmc2XRah6ytS
-	 Os+y13InSEf/VS8ermSQCkBwdepEIUWWlMiOvR8QRIJ8JfVT0Xg4G73NRVVhylJ2csDzx
-	 3ivOcbK/Z82AjowJCcIeSMeIBBi9FDwFYy+YDVwAW4/YPTHrifJiOgtfAKrH6co5r7JH3
-	 HQg2xN5u/8ZuLjBAJm/PP0Z/TA7FzJ6eLhntYqPSAFmYm7QBywQLyIUvDKLCX0etVwhO8
-	 lE/Bwp2t06rZUnI1fIHO2s7airm3atS6ya8PyOx2HNhHZQC3O/d4uo1xikKDHzVQXdg==
+	bh=0s2nBtbnWuH0ZTycLq7X4He/EdWkh8IOfg7xgNOECno=;
+	b=BsfLBMW2Ixv1zgxn00hvR6pC43PsmoBfFvO+sY0IM1RvmcFAdl0qniHFjo1Talxdy2Cu
+	 wUdPBSv+my0okiVu2BRHh/wsaL7WwQCBUr/0jXfNZuIRIwzqGlh4BuNzAD1KKyjxCLrzS
+	 OFqqsxqvcYW44beBkyoR/OmvHPSH4TtxIN8uzfUkttUOe+tVKmSPxWviUuZ0yQ5qun8Ha
+	 2dZ8KDL3ulJ1nycCW+kas0VblVuGXyolown6A7cJKffjmvigwjw934I8wCZvgDXSmy4D4
+	 sRsevlnBTk79wHzXaBpkOuuhZ1rHMoKFEHNbe+i/r7PFZw2QdDMM42CR+rAguqQ3iyw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Bl6295R1;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IW1IdsIa;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC5F606A328
-	for <mptcp@lists.linux.dev>; Wed,  4 Nov 2026 17:16:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7310606A328
+	for <mptcp@lists.linux.dev>; Wed,  4 Nov 2026 17:16:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Bl6295R1
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5419C1F000C1;
-	Wed,  4 Nov 2026 17:16:36 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IW1IdsIa
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25CEF1F000C1;
+	Wed,  4 Nov 2026 17:16:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793812596;
-	bh=lxeEhd30M0sTJZ1pznmonnPabPV7DzIFIuDxou7v1MI=;
+	s=k20260515; t=1793812597;
+	bh=0s2nBtbnWuH0ZTycLq7X4He/EdWkh8IOfg7xgNOECno=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=Bl6295R1YoH5u8bjKyGbNgACZGgnjlnuJdXhndPBC30D0CMCKasBBhLBJGixGavu5
-	 u4u1mYqUvI4LGgESHtc5eOfWzPZNxa2Dw5mIGqd8lHTAZ7qtOzjzkJ7oSJsD9o5peI
-	 AtG2hNJs62obKNMgFkh3nxh9605Inq9wY/0xZHmB3+hLzvOlH8mDQnl6oh2SVrECCx
-	 IFbVhhzfuuClt/e/kyp7fK3/8WYrel9k7GLLDmgo08+oMKzr+x/giKALmsAb+Rg6Lp
-	 vpnIbeWU9GQkC2ttxsg7jddU7FdUzVcVbZD5erAFBXUc7/fK6wJYS0R1lAOUGXlTzG
-	 kQdyGAPme4NBQ==
-Subject: Re: [PATCH mptcp-next v5 4/7] mptcp: implement peek_len for proto_ops
+	b=IW1IdsIazPL20MGQmzw0XykCFhwHc7X2j8qYOFzgaXLfDjYSVOXmVsdq9O/G3SvVZ
+	 rSw7CnZCHaPqVAS26yALjRYY3c39QEuvfBxBjq0zFDaB1GMUJV0e32/S9IZFCBLXlj
+	 4psYqAghrsUVR5p3PycbyYMTyF6RKHuefOKjWRFlrgQOotsdOT9PBkgJ4DwMCqslAo
+	 yvpncTtnD6sQd0R4rnRAOxUU9BVFjERIlwlsOsnFx7T3nnW6Hcz+OjwuhIXPhP2Vho
+	 mPbOBYB9McWKSf/GD0QJDMnhvvdQPHHwpRSurz7CDPGxBSqHSLfNzMNHeto+GHnDwB
+	 XRGsGn83kodAg==
+Subject:
+ Re: [PATCH mptcp-next v5 6/7] mptcp: track app-limited state in mptcp_sendmsg
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, tanggeliang@kylinos.cn, kuba@kernel.org
-Date: Wed, 04 Nov 2026 17:16:35 +0000
-Message-ID: <179381259589.488855.387291530229407590@kernel.org>
-In-Reply-To: <52dd6aede4a899de3ab622bf7329a95521e9770f.1793676064.git.tanggeliang@kylinos.cn>
-References: <52dd6aede4a899de3ab622bf7329a95521e9770f.1793676064.git.tanggeliang@kylinos.cn>
+Date: Wed, 04 Nov 2026 17:16:36 +0000
+Message-ID: <179381259673.488855.3588626927456217680@kernel.org>
+In-Reply-To: <eb467edffa6bd66e1c4bcc7939a131066b1c21a6.1793676064.git.tanggeliang@kylinos.cn>
+References: <eb467edffa6bd66e1c4bcc7939a131066b1c21a6.1793676064.git.tanggeliang@kylinos.cn>
 X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -67,122 +68,160 @@ you want to address the nit picks below when you respin.
 
 Low priority / nit picks for your consideration:
 
-- [Low] The new mptcp_inq() in net/mptcp/protocol.c (used only by the new
-  mptcp_peek_len() for proto_ops.peek_len) repeats the core of the…
-- [Low] The commit author is `Geliang Tang <geliang@kernel.org>`, but
-  Geliang's only Signed-off-by on commit "mptcp: implement peek_len for…
+- [Low] The commit message for "mptcp: track app-limited state in
+  mptcp_sendmsg" says mptcp_rate_check_app_limited() bails out on "skbs…
+- [Low] The commit author is "Geliang Tang <geliang@kernel.org>", but the
+  only Signed-off-by is "Geliang Tang <tanggeliang@kylinos.cn>".
+- [Low] mptcp_sendmsg_locked() now calls mptcp_rate_check_app_limited()
+  unconditionally (protocol.c:2092).
+- [Low] mptcp_rate_check_app_limited() reads msk->cb_flags with
+  test_bit(MPTCP_RETRANSMIT, &msk->cb_flags) (protocol.c:2048) without…
 
 --
 
-mptcp: implement peek_len for proto_ops
+mptcp: track app-limited state in mptcp_sendmsg
 
-This commit adds mptcp_inq(), which uses mptcp_data_avail() to compute the
-readable bytes at the MPTCP level. It wires mptcp_inq() into a new
-mptcp_peek_len() callback set in both mptcp_stream_ops and
-mptcp_v6_stream_ops. It prepares for upcoming kTLS and sockmap support.
+This commit adds mptcp_rate_check_app_limited(). The helper walks every
+subflow and calls tcp_rate_check_app_limited() under each subflow socket
+lock, unless the msk still has unsent data, pending dfrags or a pending
+retransmission. It is called from mptcp_sendmsg_locked() so that BBR and
+similar congestion controllers can ignore rate samples taken while the
+connection is application-limited.
 
-> Co-developed-by: Zqiang <qiang.zhang@linux.dev>
-> Signed-off-by: Zqiang <qiang.zhang@linux.dev>
+> The
+> helper bails out early when MPTCP still has data to send: unsent data
+> (write_seq != snd_nxt), skbs on the send queue (mptcp_send_head), or
+> pending retransmission (MPTCP_WORK_RTX or MPTCP_RETRANSMIT flags).
+
+[Severity: Low]
+Is "skbs on the send queue" accurate here? mptcp_send_head() returns a
+dfrag pointer, not an skb:
+
+net/mptcp/protocol.h:mptcp_send_head() {
+	const struct mptcp_sock *msk = mptcp_sk(sk);
+
+	return msk->first_pending;
+}
+
+msk->first_pending is a struct mptcp_data_frag pointing at the first
+unsent dfrag on msk->rtx_queue. The msk itself has no skb send queue.
+
+The check is still needed even though write_seq != snd_nxt is also
+tested. __mptcp_retransmit_pending_data() resets first_pending without
+moving snd_nxt:
+
+	msk->first_pending = rtx_head;
+
+Could the message describe this check as pending or re-injected dfrags
+at the msk level?
+
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 
 [Severity: Low]
-This isn't a bug, but the author line is Geliang Tang <geliang@kernel.org>,
-while Geliang's only sign-off here uses tanggeliang@kylinos.cn. checkpatch
-reports this as FROM_SIGN_OFF_MISMATCH.
+This isn't a bug, but this Signed-off-by does not match the author
+address "Geliang Tang <geliang@kernel.org>". checkpatch.pl flags this as
+a From:/Signed-off-by: mismatch.
 
-The first patch in the series ("mptcp: update mptcp_check_readable") signs
-off with geliang@kernel.org.
-
-Could the addresses be made consistent? Either a matching Signed-off-by or
-an in-body From: line would work.
+Other patches in this series, such as "mptcp: update
+mptcp_check_readable", sign off as geliang@kernel.org. Could the trailer
+be changed to match the From: address, or a matching Signed-off-by be
+added?
 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 1704e689bc938..aed25c901e4b1 100644
+> index b9c7b0bb6f742..c0a0b28f6af16 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -4791,6 +4791,26 @@ static ssize_t mptcp_splice_read(struct socket *sock, loff_t *ppos,
->  	return ret;
+> @@ -2038,6 +2038,26 @@ static void mptcp_rps_record_subflows(const struct mptcp_sock *msk)
+>  	}
 >  }
 >  
-> +static int mptcp_inq(struct sock *sk)
+> +static void mptcp_rate_check_app_limited(struct sock *sk)
 > +{
-> +	const struct mptcp_sock *msk = mptcp_sk(sk);
-> +	u64 avail;
+> +	struct mptcp_sock *msk = mptcp_sk(sk);
+> +	struct mptcp_subflow_context *subflow;
 > +
-> +	if ((1 << sk->sk_state) & (TCPF_SYN_SENT | TCPF_SYN_RECV))
-> +		return 0;
-> +
-> +	avail = mptcp_data_avail(msk);
-> +	if (avail >= INT_MAX)
-> +		return INT_MAX;
-> +
-> +	return (unsigned int)avail;
-> +}
+> +	if (msk->write_seq != msk->snd_nxt || mptcp_send_head(sk) ||
+> +	    test_bit(MPTCP_WORK_RTX, &msk->flags) ||
+> +	    test_bit(MPTCP_RETRANSMIT, &msk->cb_flags))
+> +		return;
 
 [Severity: Low]
-Does this need to be a separate copy of mptcp_inq_hint()? The core of that
-existing helper in net/mptcp/protocol.c does the same computation:
+Is it safe to read msk->cb_flags here without the msk data lock? Every
+other access to cb_flags in net/mptcp happens under sk->sk_lock.slock and
+uses non-atomic read-modify-write. For example, mptcp_retransmit_timer()
+does this under bh_lock_sock():
 
-net/mptcp/protocol.c:mptcp_inq_hint() {
-	u64 hint_val = mptcp_data_avail(msk);
+	} else {
+		/* delegate our work to tcp_release_cb() */
+		__set_bit(MPTCP_RETRANSMIT, &msk->cb_flags);
+	}
+	bh_unlock_sock(sk);
 
-	if (hint_val >= INT_MAX)
-		return INT_MAX;
+mptcp_release_cb() is __must_hold(slock), and it clears the bits with:
 
-	if (!hint_val &&
-	    (sk->sk_state == TCP_CLOSE || (sk->sk_shutdown & RCV_SHUTDOWN)))
-		return 1;
+	msk->cb_flags &= ~flags;
 
-	return (unsigned int)hint_val;
-}
+mptcp_sendmsg_locked() only owns the msk (msk_owned_by_me()). The timer
+softirq on another CPU can therefore run the __set_bit() at the same time
+as this test_bit(). This seems to be the only lockless reader of
+cb_flags, and KCSAN may report it.
 
-The two helpers differ in ways the commit message does not mention.
+The check also runs only once, before the subflow loop. If the
+retransmit timer fires during the loop, tp->app_limited still ends up
+set on every subflow. Taking mptcp_data_lock() here would not close that
+window, because the lock cannot be held across lock_sock_fast_nested().
 
-mptcp_inq() returns 0 in SYN_SENT/SYN_RECV and leaves out the end-of-file
-hint of 1. That matches tcp_inq(), so it looks right for peek_len, but the
-difference isn't documented.
-
-SIOCINQ also drains the backlog before it reads the counters:
-
-net/mptcp/protocol.c:mptcp_ioctl() {
-	...
-	case SIOCINQ:
-		...
-		lock_sock(sk);
-		if (mptcp_move_skbs(sk))
-			mptcp_cleanup_rbuf(msk, 0);
-		*karg = mptcp_inq_hint(sk);
-		release_sock(sk);
-	...
-}
-
-mptcp_peek_len()->mptcp_inq() reads mptcp_data_avail() without the socket
-lock and without draining msk->backlog_list.
-
-While skbs are still waiting on the backlog, can peek_len report fewer bytes
-than SIOCINQ for the same socket? For TCP, tcp_peek_len() and SIOCINQ both
-return tcp_inq(), so the two values cannot differ this way.
-
-For a consumer such as strp_peek_len(), this would only delay parsing until
-the next data_ready. There is also no in-tree MPTCP user of peek_len yet.
-
-Separately, the earlier commit "mptcp: use mptcp_data_avail in
-mptcp_inq_hint" says it "aligns mptcp_inq_hint() with mptcp_inq()".
-However, mptcp_inq() is only added by this patch, and the two helpers are
-still separate copies at the end of the series.
-
-Could mptcp_inq_hint() be built on mptcp_inq() plus the end-of-file hint?
-If not, could the reasons for leaving the backlog drain and the end-of-file
-hint out of peek_len be documented?
+Could the read be annotated as an intentionally racy heuristic, with
+data_race() or READ_ONCE()? The other option is to take mptcp_data_lock()
+around the msk-level checks.
 
 > +
-> +static int mptcp_peek_len(struct socket *sock)
-> +{
-> +	return mptcp_inq(sock->sk);
+> +	mptcp_for_each_subflow(msk, subflow) {
+> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+> +		bool slow;
+> +
+> +		slow = lock_sock_fast_nested(ssk);
+> +		tcp_rate_check_app_limited(ssk);
+> +		unlock_sock_fast(ssk, slow);
+> +	}
 > +}
 > +
+>  static int mptcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t len)
+>  {
+>  	struct mptcp_sock *msk = mptcp_sk(sk);
+> @@ -2068,6 +2088,9 @@ static int mptcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t len)
+>  
+>  	timeo = sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
+>  
+> +	/* is sending application-limited? */
+> +	mptcp_rate_check_app_limited(sk);
+> +
 
-[ ... ]
+[Severity: Low]
+Does this add a lock round trip per subflow to every sendmsg() on an
+idle msk? This call is unconditional. When there is no unsent or
+re-injected data and no retransmit flag is pending,
+mptcp_rate_check_app_limited() calls lock_sock_fast_nested() and
+unlock_sock_fast() on every ssk in msk->conn_list.
+
+Each one costs a spin_lock_bh()/spin_unlock_bh() pair. If the ssk is
+owned, it costs a full lock_sock()/release_sock() with backlog
+processing instead.
+
+Small-write and request/response workloads usually hit this state on
+every call, because the previous send has already been pushed
+(write_seq == snd_nxt and first_pending == NULL). The equivalent check
+in tcp_sendmsg_locked() is plain arithmetic on a socket the caller
+already owns. Here the work is done even when no subflow uses a
+rate-sample consumer such as BBR.
+
+The number of subflows is bounded, and __mptcp_push_pending() already
+locks subflows on this path, so the impact is probably small. Could the
+commit message mention this cost, or include a measurement?
+
+>  	if ((1 << sk->sk_state) & ~(TCPF_ESTABLISHED | TCPF_CLOSE_WAIT)) {
+>  		ret = sk_stream_wait_connect(sk, &timeo);
+>  		if (ret)
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1793676064.git.tanggeliang%40kylinos.cn
