@@ -1,54 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793871858;
-	b=Bcm5f2qi8bS6xLAzWuLXqiIzeJenyFv9FLyI6MS6pO0yQkbGUEmxGVQofoLsUVoivBgP
-	 a0kXwQhK1yYT9hRiLQK7f34xGcq57EPelKIzfl+9LTRMYRg8GqN5MXjUXNUs/uHORw65Y
-	 uMjDrjccbepRAqJcZLvveTuDiFahH+BMeqMrJNUKrypnEhLnQqWV/Eba60yIZLWc2HhVO
-	 C0Kh+wt6j1WBcY9Witrn4WDpXP763h8BNbSz1W5P2pJ7P3skTQPnhxdbkE3/doJeN584K
-	 UJD+HWzDic7hM5/Q7ChWk2RgYxpWLqh8Vb33kxOb3xyF1wlcydeLjBUb2Ddp0CpDJpQ==
+	t=1793873602;
+	b=ZGVj3vxoG8IWredu4z7+/o3O7gzaiQdz2Ujf+nBBQxuXbZGU+9iDazjUeHnYqaiUs8zJ
+	 WcyNtHjM0atDSfgBhjPSNG+LFGigLroNxlXC4huZoMQxyPdb1CddivPCHEOJntnd1l7mX
+	 gK4tgkcYqAfK45sxSLn3mBoPM/FDSRy8lEMorm44o1N8Qf6gDsH4J0MhI8DKN4MAyK9Z0
+	 OB6Olx90g9V+r/1zuji4NpdF5cywT3nTGE88lw7fbVyNashxByACmz1o2ShYdft22/RNO
+	 oNvU9/FaNh+MrKrc4LPm+09mGnFg57TRIr6ZlB755SOz/wh4C2ownUXAbzqEjql26ng==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793871858;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=pylb5ysTjHV779EJ2syKVg8GxW0T4sYz0SkiuhduLb8=;
-	b=cnPjpermbqZS7sjXHC5+8VHVCh1rQcIn44d/kn49tWFVqFs0OzyzmuRP0lqxHT1exPS+
-	 irIzkg0xGzkoEPb08+fokA9DkjhLWCLWyQdxJ2hz677rP2AwuROuvQjtd7OMqscM0V4d7
-	 rs3GV7NzJIvb0h658FYydo6VWQ+Nh0KXAGbyP2dueJbMoegjuuyV3y5GftDjYPT4VNQ3u
-	 FjaADz0xJWC3JUrO6YEdjOJvG1Mrc3S3pogrJaRj5HivvKNXXs+GrR9n4u5tHvFwvhTT+
-	 jfFyRPtEvGdUw46Ey6/IKnkuj/FUNfyEmZOBpNSmgsGMos85sbhsqeY5r0s+2BO+MIQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793873602;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=G8iyKKbBaIp6Kgr/PWIrGteHhZQWaRvUjRYiseE5tFY=;
+	b=Ae4ZQ6xAJqQge9Kzf/G4bxV4rvKc53VaKDj82qffPrEfxv5eAJl44JIFKGPjbGyP6jnO
+	 Ld07V4U/FealTYdPD2bs5gh2k7vCTqkXpUypPogjLWB71RFiRCUNdWP8UInyCU2zCHR3M
+	 g8QG722mkMyQhnRRX/XsJkptT24ozMd+wKMWSxN1QMf6OHrNXp8aFhirJLDTrDH8vSC4r
+	 g/EVidzXfrFP9hu1PDF7VT0eI26Op2bRKJ2EUI/kepEhNoXH2V/6CMG8vLS6ouocOQntC
+	 DclIunHglvmTLoYHWMFSrNgSfoXY5PGHhZFLVv2WgDufeeKJ8UHJ3o1xO4hweAKxPLg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fIOnpFNv;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VMeiIKzs;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14E8606A326
-	for <mptcp@lists.linux.dev>; Thu,  5 Nov 2026 09:44:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C011606EE9E
+	for <mptcp@lists.linux.dev>; Thu,  5 Nov 2026 10:13:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fIOnpFNv
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 584881F00A1E;
-	Thu,  5 Nov 2026 09:44:16 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VMeiIKzs
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C7741F000C1;
+	Thu,  5 Nov 2026 10:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793871857;
-	bh=pylb5ysTjHV779EJ2syKVg8GxW0T4sYz0SkiuhduLb8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=fIOnpFNv3gioNRk9M1tQ3xSEHoQd391b2Ha4hQu4dtyFrc8H/M7uW4fZ9hiZ0uE4u
-	 PSJYHkqm1zeoAMwM5WRCHipmMzi3Y9qrWlxSj8b7YHlL9gGoeNZjrRwqTR/W+ZS9H7
-	 F1lSCV51csqdbV19LbJZNthHmliHxjbRHhGWAQd0YoGbcNJ9Rw3y8ONRNwmAARD46m
-	 9rgUGU0I4sdvT9/kb99P9SB7HYqonnY2zVII4fvGc1LqcqqkPMVtgIPGK+I/Lz1oJu
-	 WPAno4GbEO84YqUoLhWR+pynr+EYI56uS5lvnDL9WXVxu3Gm1Q1tsBkuoniShfRCUx
-	 9pw43AtrTWs/w==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH mptcp-next v21 9/9] mptcp: defer read_sock cleanup to mptcp_worker
-Date: Thu,  5 Nov 2026 17:43:52 +0800
-Message-ID: <4d7cdcdd8a8aaed326244a33324f86ab54ed1d11.1793870710.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <cover.1793870710.git.tanggeliang@kylinos.cn>
+	s=k20260515; t=1793873601;
+	bh=G8iyKKbBaIp6Kgr/PWIrGteHhZQWaRvUjRYiseE5tFY=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=VMeiIKzsbdBbtk3yK45UUibjH4VkpZ6BErvGZ+0rCJS0r7OHo5PAXu/rDGtk/Efip
+	 h0K0WrjgPV+wvkXWBD2SYiUgEBYKo3A1r+tS4jJAEJslIC4Dza1m4c5IeJROUS/bi7
+	 GYc+R74tc6CsHOe/3TwEgn1bpMMCgjZlCLfy7WW1bAsJZ8UEdBQDkXSjBNbFDLAZfm
+	 Iz5/K+iu2Nrv7m3dZkeHSbt2G7CG0xxFGe3FwCT3sqNZtNNPwXCUUfnORn9RgEl9F7
+	 D/PoCR4nckeImnpEk1wBfUeA4Vaj3gkgv4v5cej3CyfO9Tu7Kc0IgaDNZHkUP59ECk
+	 BZCqpnNYZU2kg==
+Message-ID: <sashiko-outbox-198824@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH mptcp-next v21 7/9] mptcp: remove CB offset field
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
+In-Reply-To: <c458572345b51e9de3dd7731c9ee6437a230a146.1793870710.git.tanggeliang@kylinos.cn>
 References: <cover.1793870710.git.tanggeliang@kylinos.cn>
+ <c458572345b51e9de3dd7731c9ee6437a230a146.1793870710.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 05 Nov 2026 10:13:20 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -57,154 +58,138 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [Critical] mptcp: kernel BUG in mptcp_init_skb() when pulling nonlinear s=
+kb
+- [High] mptcp: 32-bit sequence wrap bug in mptcp_init_skb() boundary check
+--
 
-This patch prepares __mptcp_read_sock() for future TLS-over-MPTCP support,
-where it may be reached from BH context (via tls_strp_read_copyin() ->
-sk->sk_read_sock()). In that case, calling mptcp_rcv_space_adjust() and
-mptcp_cleanup_rbuf() is not safe as both expect process context.
+commit 1950bbe60e98f6cc91ceb0674f4d63a6b8018ce9
+Author: Paolo Abeni <pabeni@redhat.com>
 
-Note: The BH call path does not exist in the current tree. This is
-groundwork for the upcoming TLS-over-MPTCP series. Currently, the only
-callers are mptcp_splice_read() and svc_tcp_read_msg(), both of which
-hold lock_sock() and run in process context.
+mptcp: remove CB offset field
 
-Conditionally defer cleanup to mptcp_worker(): when the caller doesn't
-own the socket lock (BH context), accumulate consumed bytes in
-msk->read_copied and signal the worker through MPTCP_WORK_READ_COMPLETE.
-When the caller owns the lock (process context), perform inline cleanup
-to avoid delaying window updates and autotuning.
+This commit removes the offset field from struct mptcp_skb_cb and replaces =
+it
+with a new copied_seq field in struct mptcp_sock to track bytes already
+consumed inside each skb. It also adds a mapping boundary check in
+mptcp_init_skb() to strip already-consumed prefix bytes belonging to a
+previous DSS mapping via skb_pull().
 
-Also remove the backlog flush from mptcp_recv_skb() (covered by
-mptcp_release_cb()). The mptcp_recv_skb() call remains in the
-sock_owned_by_user() branch for inline cleanup.
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index dd612e9b2b262..0666bbfdf2cb8 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
 
-Initialize msk->read_copied in __mptcp_init_sock() and reset it in
-mptcp_disconnect().
+[ ... ]
 
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- net/mptcp/protocol.c | 39 ++++++++++++++++++++++++++++++++-------
- net/mptcp/protocol.h |  2 ++
- 2 files changed, 34 insertions(+), 7 deletions(-)
+> @@ -415,19 +414,34 @@ static void mptcp_data_queue_ofo(struct mptcp_sock =
+*msk, struct sk_buff *skb)
+>  	skb_set_owner_r(skb, sk);
+>  }
+> =20
+> -static void mptcp_init_skb(struct sock *ssk, struct sk_buff *skb, int of=
+fset,
+> -			   int copy_len)
+> +static void mptcp_init_skb(struct sock *ssk, struct sk_buff *skb, int of=
+fset)
+>  {
+>  	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
+>  	bool has_rxtstamp =3D TCP_SKB_CB(skb)->has_rxtstamp;
+> =20
+> +	/* Detect mapping boundary: skb spans multiple mappings */
+> +	if (unlikely(offset > 0 &&
+> +		     TCP_SKB_CB(skb)->seq - subflow->ssn_offset <
+> +		     subflow->map_subflow_seq)) {
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 705b28219883..b15100a67672 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3161,6 +3161,21 @@ static void mptcp_backlog_purge(struct sock *sk)
- 	sk_mem_reclaim(sk);
- }
- 
-+static void mptcp_read_complete(struct sock *sk)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	int read_copied;
-+
-+	mptcp_data_lock(sk);
-+	read_copied = msk->read_copied;
-+	msk->read_copied = 0;
-+	mptcp_data_unlock(sk);
-+
-+	mptcp_rcv_space_adjust(msk, read_copied);
-+	if (read_copied > 0)
-+		mptcp_cleanup_rbuf(msk, read_copied);
-+}
-+
- static void mptcp_do_fastclose(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow, *tmp;
-@@ -3236,6 +3251,9 @@ static void mptcp_worker(struct work_struct *work)
- 	if (test_and_clear_bit(MPTCP_WORK_RTX, &msk->flags))
- 		__mptcp_retrans(sk);
- 
-+	if (test_and_clear_bit(MPTCP_WORK_READ_COMPLETE, &msk->flags))
-+		mptcp_read_complete(sk);
-+
- 	fail_tout = msk->first ? READ_ONCE(mptcp_subflow_ctx(msk->first)->fail_tout) : 0;
- 	if (fail_tout && time_after(jiffies, fail_tout))
- 		mptcp_mp_fail_no_response(msk);
-@@ -3279,6 +3297,7 @@ static void __mptcp_init_sock(struct sock *sk)
- 	msk->last_data_sent = tcp_jiffies32;
- 	msk->last_data_recv = tcp_jiffies32;
- 	msk->last_ack_recv = tcp_jiffies32;
-+	msk->read_copied = 0;
- 
- 	mptcp_pm_data_init(msk);
- 	spin_lock_init(&msk->fallback_lock);
-@@ -3726,6 +3745,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
- 	msk->fastclosing = 0;
- 	msk->tfo_iasn = 0;
- 	msk->rcvd_dummy_seq = false;
-+	msk->read_copied = 0;
- 	mptcp_init_rtt_est(msk);
- 
- 	/* for fallback's sake */
-@@ -4648,9 +4668,6 @@ static struct sk_buff *mptcp_recv_skb(struct sock *sk, u32 *off)
- 	struct sk_buff *skb;
- 	u32 offset;
- 
--	if (!list_empty(&msk->backlog_list))
--		mptcp_move_skbs(sk);
--
- 	while ((skb = skb_peek(&sk->sk_receive_queue)) != NULL) {
- 		offset = (u32)msk->copied_seq - MPTCP_SKB_CB(skb)->map_seq;
- 		if (offset < skb->len) {
-@@ -4665,6 +4682,7 @@ static struct sk_buff *mptcp_recv_skb(struct sock *sk, u32 *off)
- /*
-  * Note:
-  *	- It is assumed that the socket was locked by the caller.
-+ *	- Can be invoked in BH scope.
-  */
- static int __mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
- 			     sk_read_actor_t recv_actor, bool noack)
-@@ -4706,11 +4724,18 @@ static int __mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
- 	if (noack)
- 		goto out;
- 
--	mptcp_rcv_space_adjust(msk, copied);
--
- 	if (copied > 0) {
--		mptcp_recv_skb(sk, &offset);
--		mptcp_cleanup_rbuf(msk, copied);
-+		if (sock_owned_by_user(sk)) {
-+			/* Process context: inline cleanup */
-+			mptcp_rcv_space_adjust(msk, copied);
-+			mptcp_recv_skb(sk, &offset);
-+			mptcp_cleanup_rbuf(msk, copied);
-+		} else {
-+			/* BH context: defer to worker */
-+			msk->read_copied += copied;
-+			set_bit(MPTCP_WORK_READ_COMPLETE, &msk->flags);
-+			mptcp_schedule_work(sk);
-+		}
- 	}
- out:
- 	return copied;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index fa54f70ab501..3580cf66f303 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -117,6 +117,7 @@
- #define MPTCP_FALLBACK_DONE	2
- #define MPTCP_WORK_CLOSE_SUBFLOW 3
- #define MPTCP_RTX_ENABLED	4
-+#define MPTCP_WORK_READ_COMPLETE 5
- 
- /* MPTCP socket release cb flags */
- #define MPTCP_PUSH_PENDING	1
-@@ -326,6 +327,7 @@ struct mptcp_sock {
- 	u32		last_data_sent;
- 	u32		last_data_recv;
- 	u32		last_ack_recv;
-+	int		read_copied;
- 	unsigned long	timer_ival;
- 	u32		token;
- 	u64		tfo_iasn;
--- 
-2.55.0
+[Severity: High]
+As reported by Sashiko on v20 [1], should this comparison use before()
+instead of raw unsigned < for 32-bit modular relative subflow sequence
+numbers, matching validate_mapping() in net/mptcp/subflow.c?
 
+net/mptcp/subflow.c:validate_mapping() {
+	u32 ssn =3D tcp_sk(ssk)->copied_seq - subflow->ssn_offset;
+
+	if (unlikely(before(ssn, subflow->map_subflow_seq))) {
+		...
+}
+
+TCP_SKB_CB(skb)->seq, subflow->ssn_offset, and subflow->map_subflow_seq are
+all u32 values. Using unsigned < causes regressions in two scenarios:
+
+First, on passive TFO subflows, mptcp_fastopen_subflow_synack_set_params()
+in net/mptcp/fastopen.c advances subflow->ssn_offset past the TFO SYN data:
+
+	tp->copied_seq +=3D skb->len;
+	subflow->ssn_offset +=3D skb->len;
+
+If a peer sends an overlapping segment starting in the TFO SYN data range
+where TCP_SKB_CB(skb)->seq < subflow->ssn_offset < TCP_SKB_CB(skb)->end_seq,
+or when relative subflow sequence numbers wrap around 2^32 across two
+mappings, TCP_SKB_CB(skb)->seq - subflow->ssn_offset wraps near U32_MAX whi=
+le
+subflow->map_subflow_seq is small. The unsigned < check evaluates to false,
+leaving the old prefix bytes in skb and setting MPTCP_SKB_CB(skb)->map_seq =
+to
+mptcp_subflow_get_mapped_dsn(subflow) - offset, which corrupts the receive
+stream.
+
+Second, if a single DSS mapping starts near U32_MAX and wraps past 0, an skb
+within that same mapping whose relative sequence number has wrapped past 0
+with offset > 0 will satisfy unsigned < against subflow->map_subflow_seq and
+falsely trigger the boundary branch.
+
+> +		pr_debug("spans mappings seq=3D%u map_subflow_seq=3D%u offset=3D%d ssn=
+_offset=3D%u\n",
+> +			 TCP_SKB_CB(skb)->seq, subflow->map_subflow_seq,
+> +			 offset, subflow->ssn_offset);
+> +
+> +		/* prefix bytes belong to old mapping, remove them and start
+> +		 * from current mapping
+> +		 */
+> +		WARN_ON_ONCE(offset >=3D skb->len);
+> +		skb_pull(skb, offset);
+> +		offset =3D 0;
+> +	}
+
+[Severity: Critical]
+Can calling skb_pull(skb, offset) in __mptcp_move_skbs_from_subflow() ->
+mptcp_init_skb() trigger a kernel BUG() when the subflow receive skb is
+non-linear?
+
+When TCP queues incoming segments onto ssk->sk_receive_queue in
+tcp_data_queue(), the TCP header has already been pulled via __skb_pull().
+For non-linear skbs where payload bytes reside in skb_shinfo(skb)->frags[]
+(such as packets sent by mptcp_sendmsg_frag() over loopback or veth, GRO
+packets, page_pool RX packets, or segments coalesced via tcp_try_coalesce()=
+),
+skb_headlen(skb) is 0 or smaller than offset.
+
+Calling skb_pull() invokes __skb_pull() in include/linux/skbuff.h:
+
+static inline void *__skb_pull(struct sk_buff *skb, unsigned int len)
+{
+	skb->len -=3D len;
+	if (unlikely(skb->len < skb->data_len)) {
+#if defined(CONFIG_DEBUG_NET)
+		skb->len +=3D len;
+		pr_err("__skb_pull(len=3D%u)\n", len);
+		skb_dump(KERN_ERR, skb, false);
+#endif
+		BUG();
+	}
+	return skb->data +=3D len;
+}
+
+When offset > skb_headlen(skb), skb->len becomes smaller than skb->data_len
+and __skb_pull() hits BUG(). Would pskb_pull() or __pskb_pull_tail() be
+needed here, or can the offset be handled without pulling paged data?
+
+[1] https://lore.kernel.org/r/866f86ad2ea894fc21af7546ed0cf6f8b9d816de.1793=
+695518.git.tanggeliang@kylinos.cn
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1793870710.gi=
+t.tanggeliang@kylinos.cn?part=3D7
