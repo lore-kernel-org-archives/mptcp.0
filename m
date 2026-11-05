@@ -1,51 +1,50 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793860695;
-	b=0UkO2xEsTqFPF+jz8hDiuq75s0C3mK6VebDd1JG/yqKj9teKsTdBv5GdA8MNjTOCCLgZ
-	 y0Tx8/w90rPd8ShIPhuN0o/iHt+MS6JUMqcyi9nQhQ7GE8H0FGDclrCz7qK3BlFu0eBM8
-	 bxcP/IoYleIrR+yGZWAbz+OOvCw2deBv6IJwtBiWsgFOOW6qz1k8mIEipqa3U269AcDRs
-	 fQ82Kly6xvKvJpfW22o6jKdN/KR4+oDiOJVDkhY7TYd7xYvyQ+h4/CKBC28A7JMYbRr2S
-	 u3dnpGNNlJEHXL/bpnwAhp+ugqzkASHN5uTYvdbhxEnphl+hKLURkOXd41qmu1TkO3A==
+	t=1793860697;
+	b=45MfEpCj+bcEvclVRsINFBRtBbohuakgOaywKd1+7pHZ/xKN5xamUCEaQGnM4p95sBi9
+	 rAKwqsJIoJal2wSzYiz3JO//4lUrhVpbDipeW6ZquUN54f6rVKFT0PjkMIM8uH6q2/vST
+	 MSN4DcnEH5xSOX0qMDSqhru/aSOwJBZnVFdK3iqd8HzOd5kni0XtWW3Hx4TAXHGE1yNu4
+	 7dG99drA4VV89z9mjBq6QbA7yq9A6QaIExvMhwAs68etnMXk5z9H6wQlSNbPzpPFp5zA+
+	 /1pUhwc72+DL5Wch5K3tJykIvebPbExYtpnX1EDdZFnOnL9RZzAZcmISG53KJ3AcBvw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793860695;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793860697;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=FcyZ/23EO9wCaimpG8uixyj/1tWZ+pqjTJz3x+0Dc/c=;
-	b=OZzCeEkQdtypgVB5sk8QypUgehUCVv+PCyXOWb8e14tymQ2vgurDaQ7gEHk8OcrJcE/Y
-	 72oZpEwpbFtZ6gV0IeZz46109ZdsD9g1141Wecvt9P734yvVxiBv7OBD24Gh6WQWq0WzY
-	 Nin+jXJmw2mAYCS9h5HhLs+mxMvg/bh/qYwwuAVopkihm2+wu2frfRLELm1vRDPpjkTyr
-	 /hsbA4l5RuROQe87Jgnxvo2vvYza1wqCphKVZesFyfZejz9cix6JtEXxCMtDV7fG55FXg
-	 zRYpy39i7FVkushj6p919TTPkOUh+Hz7YnvXceRiHda8GqpWidcogAPV6KLehg7X0+A==
+	bh=BT2H3AwvlOxV/NjMDugv3TJakxSEpI35PB+owd5wmnY=;
+	b=YRtdxTzFe4vF6qNlrh85EFn444kIMCiqusPC1yjqijMcY1v2ZekN7sGlnhbet4n8SkCI
+	 C0PwWHg1EaoxBPIbgcXzYdqrNWxJSEeXjXnbabWsfXptlHiYIfcYnAnqGGPZbGdxjpbYJ
+	 87Gz6RhQEWrpI1jXEvPbg33slsfqz3hWxeD72yIgxiY3TKHJCW0IKnsPV3I4k7AuPQDNt
+	 q2V8ywEVD/XyH+2m9OHECc9/SnVL8o6BzjW4Tld5g7sZnZkc0AkPXB0BuIq50mH//MhZ0
+	 VYUqrD6mI+gu5cIU81wslLQOQ2sHYhzwzEHyAXfVSFdxDSu2RMEaV+oZBrmldW5lFdw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=N+dcnhZb;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=heDCvH3r;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7F1606A31B
-	for <mptcp@lists.linux.dev>; Thu,  5 Nov 2026 06:38:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F38606A31B
+	for <mptcp@lists.linux.dev>; Thu,  5 Nov 2026 06:38:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=N+dcnhZb
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 018A81F00919;
-	Thu,  5 Nov 2026 06:38:13 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=heDCvH3r
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83E891F000C1;
+	Thu,  5 Nov 2026 06:38:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793860695;
-	bh=FcyZ/23EO9wCaimpG8uixyj/1tWZ+pqjTJz3x+0Dc/c=;
+	s=k20260515; t=1793860696;
+	bh=BT2H3AwvlOxV/NjMDugv3TJakxSEpI35PB+owd5wmnY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=N+dcnhZbXv9+SSZIzJfYN2fjbqhC0AgpW9kEheek6VoLryiZzA4YL7eDNmp4awF/Y
-	 7tu5Rmi2w1E+b0SpMhh1XirCidtN7+Qkwc58Hr/zXfMvLkNkqKT1SEjJMqukeCHflA
-	 Db18/6h1G4YCEz82YtGzrvZqkpHkzFNTqAwG9/7h36F44sBdwUMRio6ZgcsVeOLAGz
-	 WEmib49VmKKu3/DDOhNWSad+vENVI8kdY8Gybj5SmzinWUmNVThTrnqcQOF26RhobR
-	 QE4/Lp7FxJ9huJns1MK8yzlb6TbYagsqfaBK+0BVhI+fmaFgwS+HtMnhv8DQCinLB6
-	 ogkWRT6mBf8UQ==
+	b=heDCvH3r1vTyHfdKcPa4E361R0VghWtcDkjOYpxskqQHNQt9zWtGvvPCtzYSCFQWK
+	 m1YFg/xxnfHfsZkRncjPliclS7M5Na2sZwz6eUK1F1A1wQhmfusVsV/QYMC/SSmKEU
+	 DpZSBT0apGm9xX9mi2GB03iv37CC8GeCG1/8dbIuDuJ1SQs59beV2Y94Edodkd9Dq7
+	 SDMCadYkd1zEcNAy8pAuvrhY8VrLxDaV3C3bA2WADTNzPm9CCsHviho42GqKNKGOE9
+	 cdNqTZ2dbAXqn6BZHhDyx10Qd9ry3GIV8pxECfeZGP4WUFqSvspZxNG9DmUe3lrlnd
+	 Srh52IOvAS9WQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>,
-	Geliang Tang <geliang@kernel.org>
-Subject: [PATCH mptcp-next v6 1/7] mptcp: update mptcp_check_readable
-Date: Thu,  5 Nov 2026 14:37:57 +0800
-Message-ID: <39dbcb8350a0dc436687a4b27af6ba1007d11710.1793860134.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-net v6 2/7] mptcp: fix TFO SIOCINQ overflow in mptcp_inq_hint
+Date: Thu,  5 Nov 2026 14:37:58 +0800
+Message-ID: <be320c98076afd0dc17be24a8ad89b6ca9a59a09.1793860134.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <cover.1793860134.git.tanggeliang@kylinos.cn>
 References: <cover.1793860134.git.tanggeliang@kylinos.cn>
@@ -60,48 +59,70 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Gang Yan <yangang@kylinos.cn>
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch makes mptcp_check_readable() aligned with TCP, and renames it to
-mptcp_stream_is_readable(). It will be used in the case of KTLS, because
-'prot' will be modified, tls_sw_sock_is_readable() is expected to be called
-from prot->sock_is_readable().
+Fix mptcp_inq_hint() to compute available bytes using mptcp_data_avail()
+(bytes_received - bytes_consumed) instead of ack_seq minus the head skb's
+map_seq.
 
-Co-developed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
+On passive TFO connections, the TFO skb has map_seq set to -skb->len
+(representing data before IASN). When the third ACK arrives,
+subflow_set_remote_key() sets msk->ack_seq to subflow->iasn. Before
+commit f03afb3aeb9d ("mptcp: drop __mptcp_fastopen_gen_msk_ackseq()"),
+that function adjusted the TFO skb's map_seq. Since then, mptcp_inq_hint()
+computes ack_seq - map_seq = iasn + len, which is almost always >= INT_MAX,
+causing the function to return INT_MAX.
+
+As a result, SIOCINQ/FIONREAD through mptcp_ioctl() and the TCP_CM_INQ
+cmsg in mptcp_recvmsg() report INT_MAX instead of the actual byte count,
+and mptcp_rcv_space_adjust() subtracts INT_MAX from copied. This lasts
+until the TFO skb is fully consumed.
+
+Using mptcp_data_avail() avoids this regression by tracking bytes directly
+without depending on map_seq.
+
+The EOF hint behavior (returning 1 when socket is closed with no data)
+is preserved.
+
+Fixes: f03afb3aeb9d ("mptcp: drop __mptcp_fastopen_gen_msk_ackseq()")
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ net/mptcp/protocol.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 02a4f479d9d8..0caa31525b90 100644
+index 0caa31525b90..1704e689bc93 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -3476,9 +3476,11 @@ void __mptcp_unaccepted_force_close(struct sock *sk)
- 	__mptcp_destroy_sock(sk);
- }
- 
--static __poll_t mptcp_check_readable(struct sock *sk)
-+static bool mptcp_stream_is_readable(struct sock *sk)
+@@ -2402,22 +2402,16 @@ static bool mptcp_move_skbs(struct sock *sk)
+ static unsigned int mptcp_inq_hint(const struct sock *sk)
  {
--	return mptcp_epollin_ready(sk) ? EPOLLIN | EPOLLRDNORM : 0;
-+	if (mptcp_epollin_ready(sk))
-+		return true;
-+	return sk_is_readable(sk);
+ 	const struct mptcp_sock *msk = mptcp_sk(sk);
+-	const struct sk_buff *skb;
++	u64 hint_val = mptcp_data_avail(msk);
+ 
+-	skb = skb_peek(&sk->sk_receive_queue);
+-	if (skb) {
+-		u64 hint_val = READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
++	if (hint_val >= INT_MAX)
++		return INT_MAX;
+ 
+-		if (hint_val >= INT_MAX)
+-			return INT_MAX;
+-
+-		return (unsigned int)hint_val;
+-	}
+-
+-	if (sk->sk_state == TCP_CLOSE || (sk->sk_shutdown & RCV_SHUTDOWN))
++	if (!hint_val &&
++	    (sk->sk_state == TCP_CLOSE || (sk->sk_shutdown & RCV_SHUTDOWN)))
+ 		return 1;
+ 
+-	return 0;
++	return (unsigned int)hint_val;
  }
  
- static void mptcp_check_listen_stop(struct sock *sk)
-@@ -4580,7 +4582,8 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
- 		mask |= EPOLLIN | EPOLLRDNORM | EPOLLRDHUP;
- 
- 	if (state != TCP_SYN_SENT && state != TCP_SYN_RECV) {
--		mask |= mptcp_check_readable(sk);
-+		if (mptcp_stream_is_readable(sk))
-+			mask |= EPOLLIN | EPOLLRDNORM;
- 		if (shutdown & SEND_SHUTDOWN)
- 			mask |= EPOLLOUT | EPOLLWRNORM;
- 		else
+ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
 -- 
 2.55.0
 
