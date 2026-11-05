@@ -1,100 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.161.47
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793820008;
-	b=TPQreQUiXGLZVfha5RXOWpZA2wbFPRkLDXvCasIe/pJ92oYt39KBWQ0LuceNI5bML/xK
-	 fSt0xHpyVyltoEB33W072s/uxHDKlei4uzgV2Z+1ellC2hRBaS6Or4Bi8CZpuHt7o1bGC
-	 QcnYM3RHvTG0EMp34pR3CB2+7a6LTspFW1vtNqkmyIx4FhmSI1X2lPCjlXJ0oEoPA5pGX
-	 P6g5NlBrUBo6HI5K2ktk4CNN46Kb8/z4E5CKe+CnpKPJV+W7HZtd3p+JFFIF6hqZcif2B
-	 Ff8eeutapGTh8o985AeFlFdhUiyelAXMh8t6IEH1WKhTUWL8yfhbYKlI5oSaPUST+JQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793820008;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=3pchkY95SlYVMfXzEW7d1/IDKmFrvcEI7YIYQHnUSg4=;
-	b=MooM+ZAqC7oiydroC+aV9ylwTs2fxd3BNckZ0TJUWa2awMby+l6EFqiyjqRzo+ESG8N2
-	 B5ivFH1DrQcSr771eBRC3sfzmbzSPr4w3X3ThUS3xmwI3Jp1+vwz5I39mdcsZf4SMLaH6
-	 LgxHqXkuRILGvvk85bqfl+ZNhln6nMqg7USMcc9Kcd6xzRldKM00TJeavBLhJ09wERSWx
-	 AmQrJgeaedTehb3RMIv2Tpyb1y55yaJtXMnnD6q2GVUnLYNTRzpTDdP8evoT2IsxIxenp
-	 BWROorKBHW3wTXPs2OrIoRe0Uj+keHcCr7Hbrtt6Kcxf6ZCEfu3dXRcE89ssMvrtxyA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ydZ3RXNH;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.161.47
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793839262;
+	b=C/12nomYsw1vfKFDdpzwCSf78YWqgK60new3SBEWcxcSHxc2tIOeWFnNPUICTDwt7jSK
+	 jW+2lnvwDCoYGJTdQeaXmEeHWD6S9uaz6tc72mLlq3XZbph96RF2rLaNEQe6BdtV/BiEl
+	 PEFZ7dMOjcCKS7prMgy7KMrY6Gw3lDs2+KTaYQrJEvYdGFfbKUiQ0zrVIU2r4dz1CAm4p
+	 2bIhTCJxM5BOxV2bEqc5HVR3VmRA5kxJiPxgGhupBDN5JEODS19AXvy4v5l49x2jExq3+
+	 0HZMZT+6/z3VkK8rBHWFb2XZYK/aDzv+o85XbW/JqD9vdmeANm4uEx4xc+GArdVduvg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793839262;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=y5JPVd1xeDlxOSf4lwUE+QOdLJb10FSGSCe/p4YZejM=;
+	b=N1qTmATe1FPofTW0Vp6R+TjgpMq0eWkrDDa19YCYgcicB/IFBWJoL8YZGk1Uez3nfto9
+	 QkUwAXKaLFkrBx2TflUXn56fPz+XtRoQVxJ4w468ROw/vK3kozr9B7iaiZiIXtgWx5sOj
+	 GlevR7u2/8nMq2ZWa5wOD3qBDYFyc4z4Q6okInIQXP4CZNosEFSniHyH68jZInF6YU1yJ
+	 0PmowCXHZFEe8HyhnykMuqOsHaspY3WAaGjobrLnfltpJYh8/9agApXljYaHqwWcRyOs4
+	 vZk48FjP7zQizefOi8QSLq+2LeWCL46+MPuSCdvEwaJVPFpLcbbCQThbk6/VLKFpgng==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Srya1R2G;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C33A60A5BE0
-	for <mptcp@lists.linux.dev>; Wed,  4 Nov 2026 19:20:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8C33A60A5BE0
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC954606A31B
+	for <mptcp@lists.linux.dev>; Thu,  5 Nov 2026 00:41:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ydZ3RXNH
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-6f8a519e215so942372eaf.1
-        for <mptcp@lists.linux.dev>; Wed, 04 Nov 2026 11:20:08 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1793820007; cv=none;
-        d=google.com; s=arc-20260327;
-        b=ZhGeeuJkNux2QdO0+kE8B/dXABZabH3XsBBkpBLscGDndYE42cUBIsy3iKCm02xTRw
-         yzHMfiOQSpTdihuGFv01c68HIQGWPaho5R3b0RdxsYPSurd1xvjmuUEXD/KTq5VXwpQR
-         NydN4lRbCn/ClL9YyA5U6qSDB21Zg1SbvztJAYnj5ptGyWLy0N0YbwluYFETPbJRLr47
-         0q9l7GB+Us6LYUrC4+tWv+TTUDleJIxLtHglb/ZAyKMKgw93W014lCOJLYCgbIGs5zXE
-         01XV0WHQgOlKIhNy54pvWGrG+DNTRYfNJfV8ZSgdyhRpUd3obrRAm6EieJVXClwMqPwj
-         C12g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=3pchkY95SlYVMfXzEW7d1/IDKmFrvcEI7YIYQHnUSg4=;
-        fh=yV5d+VrMl8sLBnCABms29gVnZkXQYDDw08/9CyJblSo=;
-        b=TUln7tMznVSB9xS4m2kiqbFAIUreY3nqPGdfPKIi78RCG1YpRVixa9rSDZ4z6iScRW
-         /OS8A6jCHkERjF7KsPDwaaCQaCW92phAmB+siGzbrG2atwRkbZXr2ScwKjXc5mFhfY2H
-         2e38D+UEMwLTWBftuD4F2ugjF+5qHSkuJvAxDC0IM5sWQEL22ISPr+zkgWEk466EEzds
-         XbEdlgsgGHi0tUux3U/Js3yqOqxq/wM3w+miJ4sLPlKcQpJgf76ZmLpPFoQLmU8ZIx3x
-         DtFIXcfji39KAIBP8igP/odFXr6miRiBy8T4v4NtvBMuLV/sSQaYNcZelJhtmAQ3TAQp
-         682w==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793820007; x=1794424807; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=3pchkY95SlYVMfXzEW7d1/IDKmFrvcEI7YIYQHnUSg4=;
-        b=ydZ3RXNHpxWbwZGMmXfBsgbwQAf2+sviGrE2U/QXjFyOIYacqsDU0D34LFAmcpb5IA
-         ++WIt7gR2DdzGXnMzdaezFS+eBXjsm1p8YyRVXkGR16AkBcLJK3qWDYnNzPvNMBCXBtt
-         tlyys4WX/CdGvidfzwVGzdpPiFliIaNvNvfEJzqvrs2Zihut3RMEFtpexRkDkqW2cxx+
-         7moXX0bIv/rInfe6OKfK+hk4JIA6KA9wOn9+NLUqLSbtCGksurNV7rmt3WofPjkBGlUg
-         /3yddj6LkzXQMZDk8ATT6OQpMqNzLnFZD6hKbJmTyrmZn6CNyTw6Z282HSWZzYdRvpJV
-         Rg/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793820007; x=1794424807;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=3pchkY95SlYVMfXzEW7d1/IDKmFrvcEI7YIYQHnUSg4=;
-        b=zAGjqtfWGELuj9a8NXSJDo6rwJdwxrf9hn6FbME+qer06z79rr0uRlebmV9wYZPpxZ
-         PYG0Zq6KHUoj89FxSyN2E2jDFMKUFihwoXX6AN5scM0w4hcXIDQh/2Uayi1uA0SW1vp1
-         I2JFEQuGGnkPGDluqqXhP+U9gMaZEZ1jS/FN76rHE8WqgY7aeIB9EvYHtHbk0/udCLPp
-         VKllAHUs4+5IvonVdxh3gRJ99Nesn77PSaq3fZnRxVtLbk903kUszImFNKXoU7MlAIWs
-         dGcBfxhsjORE0VRRKofZSDnhmiJhF024aI0NUWenQZNANLmS26M5kAd6vUp7hcnvae+u
-         l2oQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxGYeVs7EBP+PDEubysXnzlhwCdkd/7xa2s8r0dSAiNqaxJZFvjag6+uu4S+Pu3koO6dJdo8g==@lists.linux.dev
-X-Gm-Message-State: APuU4Z+TEWEr6nKLjrItVlyUc2pcdbEfKK/zTsCp4LbF2gUeliXBCZ2P
-	HlfOjbqaaNMIeKZPr+MmFoe8jqYGOC6hfYBdmywK4Xrcj6jupEZe/XZHtgWf+BtWCCYutqPiTRs
-	7iEhGhhilSIPnt4SVwUswn69CbsSfvMg=
-X-Gm-Gg: AYBFou0Ddug54bITUoVe3I6YErR1DNhOtkaSBXRGmkLMmltCs//SMrV8qEZXP/+EAEI
-	E5PKDMdsA2szbf3zei2p1i5hr6s+Cm3Ijy0xnHbEWfm+HPVeL/cunIOr8rEIyjgW+YQR+ZNcw1W
-	49AcXzUTR7FTWjlmPjL6BHZX/B0Eopn/F6d8EE4BOM0rX03Dp6Gwg/JG4CP+P2cGritsx+KekUi
-	VPIhyOSdoX1ZO0EbjKGj2v48GNKXHgb+eplX8ArL8D5AnsTA97TZWqpYgDu2r82+7tW88EJNVki
-	l5B7lVwLUw+S1XRCV3IUD+wqrdqL8P/yYjZViDvrirqOIJbmMDjIWuGnuwc2wII7tfYkegD9H79
-	zsiUdyzcBvk6Ei24CceTa3vt4mgfxiiPFRRDLdCpMCkbI256sNWEogWzNFY/u
-X-Received: by 2002:a05:6820:60a:b0:716:c870:7eb9 with SMTP id
- 006d021491bc7-716d1ed0d87mr313916eaf.17.1793820007417; Wed, 04 Nov 2026
- 11:20:07 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Srya1R2G
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ECE11F000C1;
+	Thu,  5 Nov 2026 00:41:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793839261;
+	bh=y5JPVd1xeDlxOSf4lwUE+QOdLJb10FSGSCe/p4YZejM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=Srya1R2G/orwPh/E0dIyDS1O0bm3NCTFQ5Ygkd4iYqt8XJhohxf/IuC6V4zanmWka
+	 JiKbP2hjA+asS+JCPh/gPCOUHvV6xzpzbuExTshKvot+NJSDuJnNTZroPo2azHG0T7
+	 c4fm4X6CUGIG3tbkLR3DHwYLJsLt5CY2IEfgvYoPTve++EcDhGe4zf0B0GHKIoP7Kh
+	 hCoiITS6/yhlg9DZKUcrtLzLX7pCDSMH79TQYzK+O4SpaZcoFuuhM6ctdzNInuGJ+Z
+	 Wufez6n+67gVn9bsSydM+B2KkgG+iRrZHkjUOAHq4Eq5ovVgsXMhxfyD/NyzFnh73c
+	 Vj/LBE3vG4L/w==
+Subject: Re: [PATCH mptcp-next v20 2/6] mptcp: drop the cant_coalesce CB field
+From: netdev-bot+sashiko@kernel.org
+To: geliang@kernel.org
+Cc: mptcp@lists.linux.dev, tanggeliang@kylinos.cn, pabeni@redhat.com,
+ kuba@kernel.org
+Date: Thu, 05 Nov 2026 00:41:00 +0000
+Message-ID: <179383926067.488855.17372066216647293147@kernel.org>
+In-Reply-To: <9bd00acf2721c30b79fd852167b5b1343a2d67a0.1793695518.git.tanggeliang@kylinos.cn>
+References: <9bd00acf2721c30b79fd852167b5b1343a2d67a0.1793695518.git.tanggeliang@kylinos.cn>
+X-sashiko-severity: Medium
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -104,92 +61,133 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <20261103103633.2707416-1-zhiyuzhang999@gmail.com> <CAL4Wiip0RPZkfrwHeuNp6ntVWarpkL=wJ-wW6sUvNzYWS68s3Q@mail.gmail.com>
-In-Reply-To: <CAL4Wiip0RPZkfrwHeuNp6ntVWarpkL=wJ-wW6sUvNzYWS68s3Q@mail.gmail.com>
-From: Zhiyu Zhang <zhiyuzhang999@gmail.com>
-Date: Thu, 5 Nov 2026 03:19:55 +0800
-X-Gm-Features: AclHuK_BR4-6TIohRJS_zawjA7_IVa0Ao4YBLhd308J7rBy_Y8iFzOZsQJyitaI
-Message-ID: <CALf2hKvGy9_wFYcmhdegEHW3OrDovJQ_t7_B98ZwE8erwyykWg@mail.gmail.com>
-Subject: Re: [PATCH net v3] tcp: prevent cross-family skb processing after disconnect
-To: Eric Dumazet <edumazet@kernel.org>
-Cc: Kuniyuki Iwashima <kuniyu@google.com>, Neal Cardwell <ncardwell@google.com>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, Matthieu Baerts <matttbe@kernel.org>, 
-	Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, netdev@vger.kernel.org, 
-	mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Tong Liu <lyutoon@gmail.com>, Qi Tang <tpluszz77@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Eric Dumazet <edumazet@kernel.org> =E4=BA=8E2026=E5=B9=B411=E6=9C=883=E6=97=
-=A5=E5=91=A8=E4=BA=8C 19:03=E5=86=99=E9=81=93=EF=BC=9A
->
-> We do not want to add yet another check in TCP IPv4 fast path,
-> for a problem that only exists for IPv6 sockets.
->
-> tcp_v6_do_rcv() already dispatches IPv4 skbs to tcp_v4_do_rcv().
->
-> Simply stop changing sk->sk_backlog_rcv for v4-mapped sockets
-> (tcp_v6_connect() and tcp_v6_mapped_child_init()),
-> so that skbs found in the backlog are always handled by the correct path.
->
-> tcp_v6_disconnect() can then test
-> inet_csk(sk)->icsk_af_ops->net_header_len =3D=3D sizeof(struct iphdr)
-> (this also covers subflow_v6m_specific).
->
-> Thanks.
->
-> Untested patch:
+Thank you for your contribution! Sashiko AI review found 2 potential
+issue(s) to consider.
 
-Hi Eric,
+Critical: 0 · High: 0 · Medium: 1 · Low: 1
 
-Thanks. I applied your untested patch as-is on top of 5838f10563d5.
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
 
-I agree that keeping tcp_v6_do_rcv() as the backlog handler for
-AF_INET6 sockets is cleaner than adding another check to the IPv4 fast
-path.
+- [Medium] mptcp: mptcp_inq_hint() seq mismatch when MPTCP_SYNC_SEQ is
+  deferred
+- [Low] The commit message says MPTCP_SYNC_SEQ is consumed "using
+  test_and_clear_bit() since __mptcp_sync_rcv_sequence() can also be…
 
-The patch fixes the reported bug in my tests. In the native IPv6 to
-v4-mapped race, the stale IPv6 skb no longer reaches
-tcp_v4_send_reset(). The disconnect/reconnect tests also pass for both
-TCP and MPTCP.
+--
 
-I also checked the two races reported by Sashiko. On one v3 run with
-400 reconnects in each direction, both races were hit four times.
+mptcp: drop the cant_coalesce CB field
 
-For a native IPv6 to v4-mapped reconnect, I observed:
+This commit removes the cant_coalesce field from the MPTCP skb control
+block. The passive fastopen skb's dummy mapping is now synced from the
+IASN stored in msk->tfo_iasn before any other skb lands in the msk. When
+the msk is owned by user space at 3rd ack time, the sync is deferred via
+the new MPTCP_SYNC_SEQ cb_flags bit.
 
-  tcp_v6_rcv()
-    tcp_v6_do_rcv()
-      tcp_rcv_established()
-        inet_sk_rx_dst_set()          /* IPv6 skb */
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 528a72da646cc..f3b07b303f555 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
 
-For the reverse reconnect, I observed:
+[ ... ]
 
-  tcp_v4_rcv()
-    tcp_v4_do_rcv()
-      tcp_rcv_established()
-        inet6_sk_rx_dst_set()         /* IPv4 skb */
+> @@ -2375,6 +2397,8 @@ static bool mptcp_move_skbs(struct sock *sk)
+>  	u32 moved = 0;
+>  
+>  	mptcp_data_lock(sk);
+> +	if (__test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags))
+> +		__mptcp_sync_rcv_sequence(sk);
+>  	while (mptcp_can_spool_backlog(sk, &skbs)) {
+>  		mptcp_data_unlock(sk);
+>  		enqueued |= __mptcp_move_skbs(sk, &skbs, &moved);
 
-I added probes after the rcu_assign_pointer(sk->sk_rx_dst, dst)
-instructions and confirmed that the mismatched dst was actually stored.
-Both cases can also be reproduced with your patch.
+[Severity: Medium]
+On a passive TFO socket, what happens if the 3rd ack arrives while
+user space holds the msk socket lock? It looks like msk->ack_seq and
+the queued TFO skb are then out of sync until release_sock().
 
-So the receive paths and the cross-family dst assignments are real.
-However, I have not reproduced the Critical outcome suggested by the
-review. I saw no warning, oops or panic, and did not observe an IPv6
-skb reaching ip_local_deliver() or an IPv4 skb reaching ip6_input().
-For the local IPv4 input route in this test, the bytes overlapping
-rt6_info::sernum are non-zero due to rtable::rt_type/rt_is_input, so
-the invalid rt->from dereference did not occur.
+subflow_set_remote_key() moves msk->ack_seq to subflow->iasn right
+away. The TFO skb queued by mptcp_fastopen_subflow_synack_set_params()
+keeps its dummy mapping (map_seq = -skb->len, end_seq = 0) until
+MPTCP_SYNC_SEQ is consumed by mptcp_move_skbs() or mptcp_release_cb().
 
-Given that, I think your patch is still the right fix for the reported
-header.h6/header.h4 bug. I would post it as v4 with that scope, and
-handle the stale skb/sk_rx_dst race separately instead of adding the
-IPv4 fast-path check back.
+In that window mptcp_inq_hint() still peeks that skb and computes:
 
-Does that sound like the right split, or do you think the sk_rx_dst
-race should be addressed before v4 or should not even take care?
+	u64 hint_val = READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
 
-Thanks,
-Zhiyu
+That evaluates to subflow->iasn + skb->len. It is almost always above
+INT_MAX, so user space gets INT_MAX as the inq value. When the IASN
+happens to be small, it gets a bogus value derived from it instead.
+
+All of the following run under lock_sock(sk) and can reach
+mptcp_inq_hint() while the bit is still pending:
+
+  - mptcp_recvmsg() -> __mptcp_recvmsg_mskq() ->
+    mptcp_rcv_space_adjust(), before mptcp_move_skbs() has run. If I
+    read it correctly, the copied -= mptcp_inq_hint(sk) there would
+    underflow as well.
+  - the TCP_CM_INQ cmsg in mptcp_recvmsg(). When the 3rd ack carries
+    no data, msk->backlog_list is empty and mptcp_move_skbs() is
+    skipped, so the flag is only consumed later by mptcp_release_cb().
+  - mptcp_ioctl(SIOCINQ). The 3rd ack can land in BH after
+    mptcp_move_skbs() drops the data lock and before mptcp_inq_hint()
+    reads msk->ack_seq.
+
+A partial read or MSG_PEEK of the TFO data that races with the peer's
+3rd ack should be enough to trigger this. The point of this patch is
+to keep the TFO skb mapping consistent with msk->ack_seq, but the
+deferred path still leaves a window where it is not.
+
+Since these callers already own the socket, could they consume
+MPTCP_SYNC_SEQ under mptcp_data_lock() before peeking at
+sk->sk_receive_queue? Or is there another way to make the msk->ack_seq
+update and the TFO skb resync visible together to the lock owner?
+
+[Severity: Low]
+This isn't a bug, but the commit message doesn't seem to match the code
+here. It says:
+
+    mptcp_move_skbs() and mptcp_release_cb() check MPTCP_SYNC_SEQ at each
+    iteration before spooling the backlog, using test_and_clear_bit() since
+    __mptcp_sync_rcv_sequence() can also be called without the socket lock
+    held.
+
+Both mptcp_move_skbs() and mptcp_release_cb() use the non-atomic
+__test_and_clear_bit(). The only producer, subflow_set_remote_key() in
+net/mptcp/subflow.c, uses the atomic variant:
+
+	else
+		set_bit(MPTCP_SYNC_SEQ, &msk->cb_flags);
+
+The other cb_flags producers use __set_bit(). Examples are
+mptcp_propagate_state() setting MPTCP_SYNC_STATE and __mptcp_data_acked()
+setting MPTCP_CLEAN_UNA.
+
+The non-atomic consumers look correct, because every access to
+MPTCP_SYNC_SEQ appears to be serialized by the msk spinlock
+(sk_lock.slock):
+
+  - check_fully_established() wraps __mptcp_subflow_fully_established()
+    in mptcp_data_lock()/mptcp_data_unlock() on the 3rd ack path
+  - mptcp_propagate_state() holds mptcp_data_lock()
+  - mptcp_sk_clone_init() runs under bh_lock_sock(nsk)
+  - mptcp_move_skbs() holds mptcp_data_lock()
+  - mptcp_release_cb() runs with sk_lock.slock held
+
+The "without the socket lock" wording seems to refer only to the owner
+lock. The spinlock is what actually protects cb_flags.
+
+Could the commit message say that the msk data lock is what protects
+MPTCP_SYNC_SEQ? Could subflow_set_remote_key() also use __set_bit(), like
+the other cb_flags producers?
+
+The same mismatch is still there at the end of the series. After
+"mptcp: remove CB offset field", both consumers still use
+__test_and_clear_bit() and subflow_set_remote_key() still uses set_bit().
+
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1793695518.git.tanggeliang%40kylinos.cn
