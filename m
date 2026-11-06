@@ -1,55 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793994800;
-	b=sKz1oyA64HbGqsWl6+KfR6T22BEY+z9pDGW1ROGm3TbzKG5gsADnC0RYzE6w56iF0+rf
-	 NsdYHYaBOz/uo6F5c8F+7WF/EjCgT3RCEtCGnxqyndKf0nTdc60ArCt8M7Pw9xwR5DWON
-	 4Dj62VNjjV2CRpPImzbdtyD5wVbLFhziOEeDQ9IlTqJrirSKiuUq2zOGs+8ick9GAILVr
-	 nEqAhYX8jFmiKL73WB9VWpVenVjPgycL2totwmUUIzFCqU17TR8+e7yscdltcVZnxMp4B
-	 XPSFlvDMDH+BFVFFWyjUTZa068pOTfN89iePeRGtkgRrzafioBCNSusOJqARBwb1NVw==
+	t=1793994801;
+	b=ZiQyepvvvVn2xvefC+w1My95pcNaTnrhmBHy5AaKnY6saYZq3pcIhWpZedWzsDOjNgxm
+	 qOmv10usKSqrfSW09/Ffgm30G9d1pU+GzqWwsjWcdO2FpGYQQTbnR6uk25zRpiXiYF48N
+	 FUIW29epOWdnOJa1VgjTIwxSBWxOPm3pgwFqvv/hPyVO6ROOJY/Mx+dUjve8fY6kG6HLa
+	 jZMlE6oN+3z2FsAGT6aJegEYUP9nxToyPnW2ju5wzsMktCfQw3OsRAzytTkvTHexshBtk
+	 1alcmFelLhiDokL6h9qJaRRH803KEfBTjFVHrYNue4KX3bngrDal9/zJFM/uRfrYOhg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793994800;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793994801;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=4ZUB8bf6LHrVl0VxZU+se3CmGfc5aMHtWbMby52ZA+Y=;
-	b=mJw+yk4cOPnuqpj+yCYt7Dnhl/buoqQzivkL0C9DUE+cdVzCRzdmklcDjYs6wvqd2sor
-	 +HtniqIQUfGwgwHnUMm9mL2keM9zI0KUq/ymxDOE0XhHnPa0fe5hDm+rjBmgEj3HH9Vzo
-	 fR+SsRY1oVPTG9+rlTLozAfiXsGjQ1yFimvkkjgvi7UygFQXcKxhOqPLrktXg/GPkrEG7
-	 rmp1o7Xq32rMtSA5ctNrh7YPTQ7321lgum2gst9joF90qu7SrWFmSt089BgdSTsv6hFDK
-	 kHWi806QG7Zioq0awK5CSr39VGkGCR8tFNDtMsl0zalQ23OtUys/UCEhCPEU21c1lsg==
+	bh=PgzLC6zq6SGycR3W2sR3JTz0Yi8U+dYq5qhvOQWu1ao=;
+	b=hAVPVYDgYiokq80HyM9+2SVU04mqLNukt6vJX6A01qtVsroaVagWgmEAKaJ2NZuO3i/k
+	 gZBL6wTbAJw92uk+s4rvjWJ8XaI6LJzzgJunBDP2YqShNTswEyscu0xy8DKznE9CQp2Ke
+	 vRcHx3xWPDat7iqR+K8rL3QfhlF526hWYFJ4tTUuo7UqzgRQ0Pl492ofU/BBalhm7mP7F
+	 IJpHsUTQyntQv0iPBPa5Kp9GfDOMKE8yp7Nq00ol1EmzdZkVsikNAWG9dpP4IS2yv9fiO
+	 5xr72KGXtDkbu9SGZSTNQrel6rgpRuiSKAq+d61wtOrTxtuPQ1/Nn6iopejvs8NK74Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HQlwlNgJ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eiudMY3e;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1792606A329
-	for <mptcp@lists.linux.dev>; Fri,  6 Nov 2026 19:53:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F9D606A32F
+	for <mptcp@lists.linux.dev>; Fri,  6 Nov 2026 19:53:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HQlwlNgJ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 347671F00900;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eiudMY3e
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07F471F00902;
 	Fri,  6 Nov 2026 19:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793994799;
-	bh=4ZUB8bf6LHrVl0VxZU+se3CmGfc5aMHtWbMby52ZA+Y=;
+	s=k20260515; t=1793994800;
+	bh=PgzLC6zq6SGycR3W2sR3JTz0Yi8U+dYq5qhvOQWu1ao=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=HQlwlNgJqL9XpeMbYmLBiUef0f26EBTTXgYL0/hTGI1YwQEnfhwy9yxelCL1rg81z
-	 sA1bBzl12HPxyGzxxgvagXQY28IHrFHcCli2nXL7KuI4psfJknKvuyzmWXgczGbFSU
-	 uIMUSVDuE92cTRVpv7JCulSCBKgoS/WX/n9Mt1VIaCD50xGqAES0K4yaQDde9bvg5E
-	 YsKJfXnCgb/e2+7Gwh2IOp/RkPNKDXz6ozax4GLqKFjWaKrNjg3wXgS+2Y1qMT8jnT
-	 YHeFZYK2/MKJhtF+KiD5ncgiaI4gCXXWZuDQ36NdBsia9M+z1IkW0b60UtIEBPTzNZ
-	 qxFjTki1Swl2w==
-Subject: Re: [PATCH mptcp-next v6 3/7] selftests: mptcp: connect: check TFO
- SIOCINQ overflow
+	b=eiudMY3eE7b4kpPlRvAWQmEXh3cszHE+agfRhGuKZkQ9bWN/23Vj5eiFSYiUQRqCs
+	 8tedFg+C+SkcNEp/wqewalT5HlyN71KCjeNF+ycK7GMpFPnhJ6NCmNDDol+iVT76zz
+	 n60aNmsskmSqwsBLIkIqSAgiuLwMwJmi8sfdjWXqceyVxaQ4gwI+/41l7NsO53TYg9
+	 nqSW6WBcoH4G5ukdjiuZvdYl7d74Ciqole9BaTcy55B/r84eTUFd+oTvotqhMspYx8
+	 67ARV5opL83h5Ng+GXYHIH6vC9HUEHHX/rvyuZxxoRuXjt2XkLl82dsjkf0B5nZp+3
+	 ELttUwDhZ+u4g==
+Subject: Re: [PATCH mptcp-next v6 4/7] mptcp: implement peek_len for proto_ops
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, tanggeliang@kylinos.cn, kuba@kernel.org
-Date: Fri, 06 Nov 2026 19:53:18 +0000
-Message-ID: <179399479878.488855.5287583160072363228@kernel.org>
-In-Reply-To: <da22fd79c625e4eed90e83cf91bdddcb165a4a78.1793860134.git.tanggeliang@kylinos.cn>
-References: <da22fd79c625e4eed90e83cf91bdddcb165a4a78.1793860134.git.tanggeliang@kylinos.cn>
-X-sashiko-severity: Medium
+Date: Fri, 06 Nov 2026 19:53:19 +0000
+Message-ID: <179399479958.488855.5313761673616598380@kernel.org>
+In-Reply-To: <0033cad94cccd9808f0f7eae563bf6d27f414205.1793860134.git.tanggeliang@kylinos.cn>
+References: <0033cad94cccd9808f0f7eae563bf6d27f414205.1793860134.git.tanggeliang@kylinos.cn>
+X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -62,116 +61,146 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issue(s) to consider.
+Thank you for your contribution! Sashiko AI review found more severe
+issue(s) in other patches of this series. This mail is only an FYI, in case
+you want to address the nit picks below when you respin.
 
-Critical: 0 · High: 0 · Medium: 2 · Low: 0
+Low priority / nit picks for your consideration:
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
-
-- [Medium] The commit message for "selftests: mptcp: connect: check TFO
-  SIOCINQ overflow" describes code that the patch does not contain.
-- [Medium] selftests: mptcp: SIOCINQ check in main_loop_s() races with
-  TFO third ACK
+- [Low] The commit message for "mptcp: implement peek_len for proto_ops"
+  gets several of its TCP and mptcp_inq_hint() comparisons wrong.
+- [Low] The commit message says the patch 'prepares for upcoming kTLS and
+  sockmap support', but kTLS never calls sock->ops->peek_len.
 
 --
 
-selftests: mptcp: connect: check TFO SIOCINQ overflow
+mptcp: implement peek_len for proto_ops
 
-This adds a check to the server side of mptcp_connect. When the MPTFO
-sockopt is set, it reads ioctl(SIOCINQ) on the accepted socket and fails
-the test if the value is INT_MAX. The aim is to catch mptcp_inq_hint()
-returning INT_MAX for passive TFO connections.
+This adds mptcp_inq(), which returns the readable bytes at the MPTCP level
+based on mptcp_data_avail(). It is wired up through a new mptcp_peek_len()
+callback, set as .peek_len in both mptcp_stream_ops and
+mptcp_v6_stream_ops.
 
-> selftests: mptcp: connect: check TFO SIOCINQ overflow
+> Add mptcp_inq() to compute readable bytes at the MPTCP level using
+> mptcp_data_avail() (bytes_received - bytes_consumed). This aligns with
+> TCP's design where tcp_inq() is used by peek_len and tcp_inq_hint() is
+> used by SIOCINQ.
 >
-> Add a check in mptcp_connect's server mode to detect TFO SIOCINQ overflow.
-> When a TFO connection is accepted, poll for data to arrive, then check if
-> SIOCINQ returns INT_MAX. This detects the regression where mptcp_inq_hint()
-> incorrectly returns INT_MAX for passive TFO connections.
->
-> The check runs when the MPTFO sockopt is set. It polls the accepted socket
-> for up to one second, then uses ioctl(SIOCINQ) to verify the available
-> byte count. If SIOCINQ returns INT_MAX, the test fails.
+> Like tcp_inq(), mptcp_inq() returns 0 during handshake (TCPF_SYN_SENT/
+> TCPF_SYN_RECV), INT_MAX when avail >= INT_MAX, otherwise the actual byte
+> count. Unlike mptcp_inq_hint() (which mirrors tcp_inq_hint()), this helper
+> does not include the EOF hint (returning 1 when socket is closed with no
+> data) because peek_len is used by upper layers like strp that only need
+> the data length, not connection state information. It also does not drain
+> the backlog before reading counters, as peek_len provides a heuristic
+> value for rate limiting rather than an exact count for userspace queries.
 
-[Severity: Medium]
-Does this description match the code? The commit message says the test
-polls the accepted socket for up to one second before reading SIOCINQ.
-The hunk below has no poll(), no timeout and no other wait.
+[Severity: Low]
+Are the comparisons to TCP and mptcp_inq_hint() here accurate?
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> index 178d98d91fea2..83db495704fec 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> @@ -1207,6 +1207,17 @@ int main_loop_s(int listensock)
->  		check_sockaddr(pf, &ss, salen);
->  		check_getpeername(remotesock, &ss, salen);
->
-> +		if (cfg_sockopt_types.mptfo) {
-> +			int avail;
-> +
-> +			if (ioctl(remotesock, SIOCINQ, &avail) == 0 &&
-> +			    avail == INT_MAX) {
+On the TCP side, SIOCINQ in tcp_ioctl() calls tcp_inq(), which is the same
+helper tcp_peek_len() uses:
 
-[Severity: Medium]
-Can this check miss the regression it is meant to catch? It reads
-SIOCINQ once, right after accept(), and nothing guarantees that the
-third ACK from the client has been processed at that point.
+net/ipv4/tcp.c:tcp_ioctl() {
+    ...
+		slow = lock_sock_fast(sk);
+		answ = tcp_inq(sk);
+		unlock_sock_fast(sk, slow);
+    ...
+}
 
-For a passive TFO connection, mptcp_sk_clone_init() creates the msk
-from the SYN, where mp_opt->suboptions only has OPTION_MPTCP_MPC_SYN,
-so msk->ack_seq stays 0. subflow_prep_synack() then calls
-mptcp_fastopen_subflow_synack_set_params(), which queues the SYN
-payload on sk_receive_queue with MPTCP_SKB_CB(skb)->map_seq set to
--skb->len. The child is put on the listener accept queue as soon as
-the SYN-ACK goes out.
+int tcp_peek_len(struct socket *sock)
+{
+	return tcp_inq(sock->sk);
+}
 
-If accept() returns in that window, mptcp_inq_hint() on an unfixed
-kernel computes 0 - (-skb->len), which is just skb->len, and the test
-passes. The hint only reaches INT_MAX after the third ACK carrying
-OPTION_MPTCP_MPC_ACK goes through check_fully_established() and
-subflow_set_remote_key() sets msk->ack_seq to subflow->iasn. So
-whether the test fails on a broken kernel depends on whether the
-client ACK was processed before the server called accept().
+tcp_inq_hint() is only used for msg_inq / TCP_CM_INQ in tcp_recvmsg() and
+for zc.inq in the zerocopy receive path. So TCP uses one helper for both
+peek_len and SIOCINQ. With this patch, MPTCP uses mptcp_inq_hint() for
+SIOCINQ and mptcp_inq() for peek_len, which does not match TCP.
 
-The poll() described in the commit message would not close this
-window either. The TFO data is already on sk_receive_queue before the
-child is accepted, so POLLIN on remotesock is reported right away.
+Also, tcp_inq() has no INT_MAX clamp. It subtracts 1 when a FIN has been
+received and handles urgent data, and mptcp_inq() does neither:
 
-Would it work to wait for the msk to be fully established before
-reading SIOCINQ, for example by polling getsockopt(MPTCP_INFO) until
-MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED is set in mptcpi_flags? Or is
-there a better way to make sure the third ACK has been seen before
-the check runs?
+include/net/tcp.h:tcp_inq() {
+    ...
+		answ = tp->rcv_nxt - tp->copied_seq;
 
-In main_loop_s(), ioctl(remotesock, SIOCINQ, &avail) is called once,
-right after accept(), check_sockaddr() and check_getpeername().
+		/* Subtract 1, if FIN was received */
+		if (answ && sock_flag(sk, SOCK_DONE))
+			answ--;
+	} else {
+		answ = tp->urg_seq - tp->copied_seq;
+	}
+    ...
+}
 
-Later patches in the series do not touch mptcp_connect.c, so the
-mismatch is still there at the end of the series.
+On the backlog point, mptcp_inq_hint() does not drain the backlog either.
+That happens in its caller, mptcp_ioctl():
 
-As far as I can tell, the missing wait does not change the result. In
-subflow_prep_synack(), mptcp_fastopen_subflow_synack_set_params() queues
-the TFO skb on the msk before the child socket goes into the accept
-queue. On an unfixed kernel, the old hint also comes out at INT_MAX or
-more before the third ACK arrives. So only the description seems to be
-off.
+net/mptcp/protocol.c:mptcp_ioctl() {
+    ...
+		lock_sock(sk);
+		if (mptcp_move_skbs(sk))
+			mptcp_cleanup_rbuf(msk, 0);
+		*karg = mptcp_inq_hint(sk);
+    ...
+}
 
-Could the commit message drop the poll description, or should the
-described poll() be added to the check?
+Last, strparser does not seem to use peek_len for rate limiting.
+strp_data_ready() and strp_recv() compare it against the bytes still
+missing from the current message:
 
-> +				fprintf(stderr, "TFO SIOCINQ overflow\n");
-> +				close(remotesock);
-> +				return 1;
-> +			}
-> +		}
-> +
+net/strparser/strparser.c:strp_data_ready() {
+    ...
+	if (strp->need_bytes) {
+		if (strp_peek_len(strp) < strp->need_bytes)
+			return;
+	}
+    ...
+}
 
-[ ... ]
+This checks whether the whole message is already queued, and decides
+whether to set need_bytes and wait.
+
+Could the commit message be reworded to describe these points accurately?
+
+> This prepares for upcoming kTLS and sockmap support.
+
+[Severity: Low]
+Does this patch actually help kTLS?
+
+The only caller of sock->ops->peek_len seems to be strp_peek_len() in
+net/strparser/strparser.c, which sockmap and KCM use:
+
+static inline int strp_peek_len(struct strparser *strp)
+{
+	struct socket *sock = strp->sk->sk_socket;
+
+	return sock->ops->peek_len(sock);
+}
+
+The kTLS receive and device offload paths call tcp_inq() directly on the
+socket, not through peek_len. For example:
+
+net/tls/tls_strp.c:tls_strp_read_sock() {
+    ...
+	inq = tcp_inq(strp->sk);
+	if (inq < 1)
+		return 0;
+    ...
+}
+
+There are similar direct tcp_inq() calls in tls_strp_check_queue_ok(),
+tls_sw.c and tls_device.c. They are unchanged at the end of this series.
+
+On an MPTCP msk, those tcp_inq() calls would read tcp_sock fields
+(rcv_nxt, copied_seq, urg_data) from a struct mptcp_sock. Also,
+mptcp_inq() is static, so later kTLS work cannot reuse it without further
+changes.
+
+Should the commit message mention only sockmap/strparser, since the new
+.peek_len hook is not reached by kTLS?
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1793860134.git.tanggeliang%40kylinos.cn
