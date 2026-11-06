@@ -1,49 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794005417;
-	b=aEUTparQtTz8mjMOzI6iYi2xLAY8lctHXugswv51nGdOpm0629o8OLUPdpyPsyuLe0Oo
-	 +9+Mp6hVWz/GJKHYEdwQUxmSFa0dj0e2s8tbK9yxV/6yzu6P2cyJ/X62Sa+Bw8C33/igG
-	 a/17HCMOurRFzqHexc5E/Yo9lW+gzcHq0yOKiM/lYX2NveI9HTv3cvlrkn+NAnpM20KSW
-	 uji6HJPNHMKIzPX6JA17rP6TXnPgKs/nEBgiL98KiiAwJ4DFN7ezBtC/aH3fQWxYEsYz6
-	 g/DC/yYGBQXcsk3zRa6zIUsT8EVbR4gtwD5BfP/wiavZvyaFRXEIub9TiCB7vEo/Pxw==
+	t=1794006427;
+	b=uILL0kBS7H9dxstu2ipAofroItsfgeCV9W9zi2vqBLMfXgbvQqe81M6WOR/6fW07Znvl
+	 YmvhGe+Dc93Yr+FkJIpUympG1FH3SvXsHU3ENRABmd0u1HSrDUyWM5Fsp9JqYigYbyu9D
+	 XX+BcGf22cGkla/T3sJLl2ly8OLniW/2y88vmb0k/5WeCACN3X/1ie2sYULJ8u1164gbV
+	 KmC8hWwc6ok8TjIFoeZwQvTFFmYy5RZVt2E+I9+IrMgbDuJ3ecXiDUECJto27vi1KJgH1
+	 7K18A9SNRvlet9GKIs/TiL7TA5lm9vYiCNPo3CXn3qYHB7G9YIan9fmUrPYpIRbEJxQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794005417;
-	h=Received:DKIM-Signature:Received:Content-Type:MIME-Version:
-	 Content-Transfer-Encoding:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc;
-	bh=3giCpB1XcB69Iln8AtM/TTiv8S3XH9oxLUpr5QNMg4g=;
-	b=S7dS0o8yHmXIBaaxeo7/qJGFedJTSbqU/tNaA8l5TTcRsB5wd3cDp4ppnHhV/S5+RmPw
-	 BMsTR7ZkeaP5+DrUnTj86HHlRfmYDrOeZNreg0FWC6w5AQX9+xnPr3PJg7IxdbyaolxUh
-	 vuq8LZMTCm5lLTkiQpUogI4G2pmeqE653Y1mq9IaBFCwuD0MwiZpmyEAxcehvpRftogBh
-	 fi9t7TFnbk2V98fF32nfHJDk669wSVKRDS7/gYcIq+jyPlowDROYpxsQ/M3fbEcvP6t/e
-	 mP6bTpGF7clo3K+O2BDmd9f5/fKzajcGkooz8uT5/GSLiNt2CFXE/fY2EKCwAc/ev8A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794006427;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=N2/pToDt33HxOVO59r96LUcjUeaupMIi+lrTwE64C30=;
+	b=UAp6JNFubP0dk9q6DQTAtCXuQpX97U9xyXvtxiMizxp83r0TyYxbJ3K/yQpcbIgPyBtP
+	 aezqc1RDB9J6cbCClix/UGrM2K+guJ1wAWB45aCX19p1bFqyDIaTj72HDvMi+FACdVyIQ
+	 ifG944mX2o22Okktc7+2fB8F2P6mDERIcj032XJ7YpgXg1de3u7NgIoeWdj5u1KfvXbvh
+	 NqDpcm71CcS1gIifePpgM/9UgqIbK3/R3z5C1nI+cs/yzlxXoHnh8i3vIN7mdeZA4r4aL
+	 0FLUhoxLlXpe6sK1V16AuIBFCG0UrWOGK+TGHMpUolUhYzfGic/wr7VrPR7fhLpvy0w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Z8yDa9fu;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PpyKk0K3;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B36F606D810;
-	Fri,  6 Nov 2026 22:50:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3792606A326
+	for <mptcp@lists.linux.dev>; Fri,  6 Nov 2026 23:07:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Z8yDa9fu
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A471E1F008A1;
-	Fri,  6 Nov 2026 22:50:16 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PpyKk0K3
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35C761F0089F;
+	Fri,  6 Nov 2026 23:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794005416;
-	bh=3giCpB1XcB69Iln8AtM/TTiv8S3XH9oxLUpr5QNMg4g=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=Z8yDa9fulsDXFDCmWmOIgg4F1fcWqL0lcxG93SBkW7kLacfaWyKtO0o79p7wTTYlA
-	 cTAIS/qz8F+0I5iQ8KBL4wFb4ceFW07xC9nqjLmUSsKqsUf88zcfPYVU0iWc2bz+rG
-	 qzxTFRTtDAzH7/RLCTNdbg2D/IRhxn6s70N876QMb8Y2lpmrTl9l5bX/q2gephR09N
-	 mwEfmXxydO6FCIw0uZ8f/UiP7YWHdLLdwhH0n1u6/5BdaeC4WP0KLCfgCQ1CqzXXAV
-	 /9SSdkiw3wCd/K9wkuDDRbWsqQabntseOaTUWGSncWjnd3HqkDJ43LoTKXeYlJ1Gtw
-	 VQpRT83Ylbi9A==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 9B1A33A55EC2;
-	Fri,  6 Nov 2026 22:50:16 +0000 (UTC)
+	s=k20260515; t=1794006426;
+	bh=N2/pToDt33HxOVO59r96LUcjUeaupMIi+lrTwE64C30=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=PpyKk0K3+NsIoQIWV7uljclWkTz+XfANkC2fYfcd/y3y07zIyqHH85uqkCORTYNGU
+	 LfQc587Ru3L0c4fPtgMtvUY+/mhLCM9Sw2i8QCLlBQtrfEMFn2MQUjWkHzmJROmvj1
+	 BnizuRQ5K66gzK4Y34D5v1ROFmccZWI26e+kYLF8wP1griWGQOmvnB1hWDeA/uzu2s
+	 iA59XT1B1pPSaONE6cNsDMkbbFG9FSXKBx41zt4E1PhQ6cqlGuMbzWRyjvVvNWt343
+	 ft1WbJdHovrfxRj22pH13KLZaUqrgQrut3Tx4gAHJGTTqH1PUCF7SyxB55P7jAGzqf
+	 e+4WcOzwJe8ZA==
+Subject: Re: [PATCH mptcp-net v21 1/9] mptcp: fix TFO SIOCINQ overflow in
+ mptcp_inq_hint
+From: netdev-bot+sashiko@kernel.org
+To: geliang@kernel.org
+Cc: mptcp@lists.linux.dev, tanggeliang@kylinos.cn, pabeni@redhat.com,
+ kuba@kernel.org
+Date: Fri, 06 Nov 2026 23:07:05 +0000
+Message-ID: <179400642577.488855.2112552052031185753@kernel.org>
+In-Reply-To: <51891fd171100f37f87178ab753337140e462941.1793870710.git.tanggeliang@kylinos.cn>
+References: <51891fd171100f37f87178ab753337140e462941.1793870710.git.tanggeliang@kylinos.cn>
+X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -53,43 +62,84 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] selftests: mptcp: pm_nl_ctl: print sizeof() with %zu
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <179400541516.914342.11201062556187243075.git-patchwork-notify@kernel.org>
-Date: Fri, 06 Nov 2026 22:50:15 +0000
-References: <20261103155506.534973-1-sashal@kernel.org>
-In-Reply-To: <20261103155506.534973-1-sashal@kernel.org>
-To: Sasha Levin <sashal@kernel.org>
-Cc: matttbe@kernel.org, martineau@kernel.org, davem@davemloft.net,
- edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, geliang@kernel.org,
- horms@kernel.org, shuah@kernel.org, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
 
-Hello:
+Thank you for your contribution! Sashiko AI review found more severe
+issue(s) in other patches of this series. This mail is only an FYI, in case
+you want to address the nit picks below when you respin.
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Low priority / nit picks for your consideration:
 
-On Tue,  3 Nov 2026 10:55:06 -0500 you wrote:
-> On 32-bit architectures size_t is an unsigned int, and printing
-> sizeof(struct nlmsgerr) with %ld warns:
-> 
->   pm_nl_ctl.c:73:71: warning: format '%ld' expects argument of type 'long int', but argument 5 has type 'unsigned int' [-Wformat=]
-> 
-> Use %zu.
-> 
-> [...]
+- [Low] In net/mptcp/protocol.c, mptcp_inq_hint() now returns
+  mptcp_data_avail() (bytes_received - bytes_consumed) instead of…
 
-Here is the summary with links:
-  - selftests: mptcp: pm_nl_ctl: print sizeof() with %zu
-    https://git.kernel.org/netdev/net-next/c/1146fbb8024b
+--
 
-You are awesome, thank you!
+mptcp: fix TFO SIOCINQ overflow in mptcp_inq_hint
+
+This changes mptcp_inq_hint() so it computes the hint from
+mptcp_data_avail() (bytes_received - bytes_consumed) and no longer uses
+ack_seq minus the head skb's map_seq. The goal is to stop passive TFO
+connections from reporting INT_MAX through SIOCINQ/FIONREAD and
+TCP_CM_INQ. The EOF hint of 1 is kept for the empty-queue case.
+
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 02a4f479d9d8c..fc4ffa3263176 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2402,22 +2402,16 @@ static bool mptcp_move_skbs(struct sock *sk)
+>  static unsigned int mptcp_inq_hint(const struct sock *sk)
+>  {
+>  	const struct mptcp_sock *msk = mptcp_sk(sk);
+> -	const struct sk_buff *skb;
+> +	u64 hint_val = mptcp_data_avail(msk);
+
+[Severity: Low]
+This change also affects non-TFO MPTCP sockets once a DATA_FIN has been
+received. Was that intended?
+
+When an in-sequence DATA_FIN is processed, mptcp_check_data_fin() bumps
+ack_seq, but bytes_received stays the same:
+
+net/mptcp/protocol.c:mptcp_check_data_fin() {
+    ...
+	if (mptcp_pending_data_fin(sk, &rcv_data_fin_seq)) {
+		WRITE_ONCE(msk->ack_seq, msk->ack_seq + 1);
+    ...
+}
+
+Elsewhere, __mptcp_move_skb() and __mptcp_ofo_queue() advance
+bytes_received and ack_seq together. Partial reads also advanced the head
+skb's map_seq. So with N > 0 bytes still unread after a DATA_FIN, the old
+ack_seq - map_seq gave N + 1, and mptcp_data_avail() now gives N.
+
+That change shows up in SIOCINQ/FIONREAD from mptcp_ioctl(), in the
+TCP_CM_INQ cmsg from mptcp_recvmsg(), and in the value that
+mptcp_rcv_space_adjust() subtracts from copied.
+
+The new value doesn't line up with TCP on both interfaces. On TCP,
+tcp_inq() subtracts 1 when FIN was received, so SIOCINQ reports N, and the
+new MPTCP SIOCINQ now matches that. tcp_inq_hint() uses
+rcv_nxt - copied_seq and does not subtract the FIN, so TCP_CM_INQ reports
+N + 1. The old MPTCP TCP_CM_INQ matched TCP here, and the new one does not.
+
+The commit message says:
+
+    The EOF hint behavior (returning 1 when socket is closed with no data)
+    is preserved.
+
+That is true for the empty-queue case. Could the commit message also
+mention the N + 1 to N change for non-TFO connections after DATA_FIN, and
+whether it is intended? This matters for stable backports of this Fixes:
+patch.
+
+>  
+> -	skb = skb_peek(&sk->sk_receive_queue);
+> -	if (skb) {
+> -		u64 hint_val = READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
+> +	if (hint_val >= INT_MAX)
+> +		return INT_MAX;
+
+[ ... ]
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1793870710.git.tanggeliang%40kylinos.cn
