@@ -1,61 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793918374;
-	b=HPGinegUs5QK+3AidZnd1saD/DKAOxBsDayM8OkSX8QHb86eVVIpWR+jXPSqY4BzSw9h
-	 ptJmym7I5G8YKcS8UejK70MpUtaAusbrxjmqMBuvl6fMjXXfu3OCudya8LBOS/IcHhtSB
-	 rP7QCK72HJBdpan0sjncxdip4/p6z27WmqpRu4sNQLYrs/W39prNpN2PKsL+O5dyx1T6d
-	 NqzZOS9ZfXOdZeEUHAV+gi0Ymeu7wCDVrxsfR26FY2wHesXcxSX3oz3uSs79vB+evBPHJ
-	 xWr00JeoIMtK32Cr1wW6oqpz1cbOyt+NZbVjrqRFxm7wpkX0tRJeJXkR+4YfiuwfzTQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793918374;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=/QGtANsqVzWW7lMh8V1+HQMX0rdYIU6nvwiqbuN0l4A=;
-	b=m+7bMTGho4sJOSDAWbCQXmnJ3aZy9TppV13uNFZDF4yp3PRkGpaXWZeFIHk1OLc1Z/Ce
-	 sqUAkgO8JtabrNPESxv1b0t1B0+Z8LTrhAWsj74hmrQ4UQTS8AqImcx6EvAJUg2r+X/4T
-	 8GPqg2mSkztJkHG2ABvlC7XdTn/diJtKgQdH8qEmB5W96vFRD6Xh8FBa4T2F8is5OoVHp
-	 v1C8+NJD53n8WxIvP2+pXV/dvlUdQu91ybND+wJdsmrWyQ8DQWufOmq9vxDORmXWXdicE
-	 BQZStCHtJ32MAWlm8JhMM2RdkdElKGT4w/PoUvV581if89CAMnsctVzLyHY9pKqGslg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KXPLpT7L;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.54
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793963821;
+	b=ucfXoVLu1UeOtfO/wi4OS1fiN0qi6YTI2953wIetaWigBYT0Enqz/hHoitipWpYT6IH+
+	 8R+a02bgTN5bOsUOrdrYLOOokMEE9DxWX2nNIzsZVzGK1S4s5ijPfVjcWHgbk9l5iVc7o
+	 KGwa79RvW2j4pb/GnkydI7yiWJXsF2kiTlu6ltdAhYRzLM9uBcYTdt1tMWKlYZcuvRJal
+	 EGG5TLReQNahqwbXzoCOLG4i10wYbOdpDq72fNg+44DfaiqyTUlOJ3Mx89CSj6Y2E+rHX
+	 lvOxhNBcaz5H8H3GE3tMkUZu4Kcawr+PILNTwxX9LnYuImGxzp3akeyXJdqVgc++kBw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793963821;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 X-ZohoMailClient;
+	bh=cwGH8Evc1SAVfmlRxY9B22vYUgw0i2hZd7M8QHRkkLY=;
+	b=PDp6By44MtyI9b1UstslJ0xWT3jc1z6hyMRux8UOgfcEVM1Er4JvTNHiPmEW8YJDXLFi
+	 Vnv4aeu1Q5krh9ofOx5lqIzrZq6twrYzYOmK8ve8maaQO4S4AiuvjstDdzs7DAulPFUeW
+	 Tqs6CD3rZTXOMdO7UnYr0JXFVqp2b5BdmLaYKbyOPLhL6ax0YORPLloI7f4foKbPHW3wR
+	 pz8ZADnNs481W9n9P+MjhoQ0nq51CB3SPpCNdhS93wM6K3pUUILKVrtVhyNetxjZGQNvD
+	 8pMH3lgRefem0DNxcXW2FMqh8p/y6CefwfSXPS40Jk7+1SRSBAC8pzDX+EaynprZGkA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=mpiricsoftware.com;
+	spf=pass smtp.mailfrom=mpiricsoftware.com;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.54
+Received: from sender6-of-o54.zoho.com (sender6-of-o54.zoho.com [165.173.180.54])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ECFE606A31B;
-	Thu,  5 Nov 2026 22:39:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KXPLpT7L
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED5E91F0089F;
-	Thu,  5 Nov 2026 22:39:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793918373;
-	bh=/QGtANsqVzWW7lMh8V1+HQMX0rdYIU6nvwiqbuN0l4A=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=KXPLpT7LWSb58yZgoi41kTcT+3VUj/SSZvxBvb2ewMiBV4+VDgqi639Pk2rOum62y
-	 5yfKH/Kuv3n/St4GomZ5qx2jeZctJo2xxYEZOVkTi885FDI2CE1F3RJsDdndvSSODx
-	 xhYni29Opz5ZWvGyGC2yEGyxzdxDZLfhB+hNf+EP9TIaS5oexvngoMeVI99o+rysP5
-	 8CLevhT1aq/1BFOKYzy6jvhETT7t4OxfT6KaYhnKNhEpWJj+mPQBeq907xGS6iakQU
-	 IOkUfuO1O5OFOJ8STrLS+SGcH+UXJ9pqokdRj+C5BG9OjEP0699lkAEwmsI2da6eMp
-	 rxt9VSRDWRzYw==
-Subject:
- Re: [PATCH net v3] tcp: prevent cross-family skb processing after disconnect
-From: netdev-bot+sashiko@kernel.org
-To: zhiyuzhang999@gmail.com
-Cc: edumazet@kernel.org, kuniyu@google.com, ncardwell@google.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- lyutoon@gmail.com, tpluszz77@gmail.com
-Date: Thu, 05 Nov 2026 22:39:32 +0000
-Message-ID: <179391837250.994134.9616228003361553058@kernel.org>
-In-Reply-To: <20261103103633.2707416-1-zhiyuzhang999@gmail.com>
-References: <20261103103633.2707416-1-zhiyuzhang999@gmail.com>
-X-sashiko-severity: High
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7199E606A326
+	for <mptcp@lists.linux.dev>; Fri,  6 Nov 2026 11:17:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7199E606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
+ARC-Seal: i=1; a=rsa-sha256; t=1793963817; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=lR2oEoUdgkq68nryoOxs4/JwXph1zhCzNSTEDvv4QALIt9qXrKLJe2VmL1KDFTi1pfSBr6FRkYgoPq0HWlXJqO1IwU/1lP/e7nelrxHK90nU8oCf9q4uB9hx3SlVuwFiBEakuUwRTAgp7bcNG0i7QYdVd5K9lBoBrRL5Z51L1E0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1793963817; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=cwGH8Evc1SAVfmlRxY9B22vYUgw0i2hZd7M8QHRkkLY=; 
+	b=H3W4RsPPvkQqvPiTxFDkLchen9NB/2qxlzfscUmGP1UPDJAZEwvfiPbobFSJ3RHBTniuIl7BZMJ0c019Kx4zmgggEl6CbFlh20eQWTWEhjaCWITNfuHmNsTpusnySdh3BFPVjjoCN5dRXBKi9v700F9t2caeM79ezuijRiy/IKQ=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
+	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
+DKIM-Signature: a=rsa-sha256; b=sXxzjJLx2lZMf6t9DIHsDNDVzaZERzjmGhl0ScLsZMgRi6YaaPOryCU+Ps26vH4mj15qu9Ippwp5Vh+7qV1hhnIFhTHtsHKEV1z6MWJJ6u1uQwlRrd/Thx2x2eT5v3vnZFaQJ2caons/JabOfmE6EkTY2pxpQ76j8v8TZa/Xd+8=; c=relaxed/relaxed; s=mpiric; d=mpiricsoftware.com; v=1; bh=cwGH8Evc1SAVfmlRxY9B22vYUgw0i2hZd7M8QHRkkLY=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1793963816572483.56885533266245;
+	Fri, 6 Nov 2026 03:16:56 -0800 (PST)
+From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+To: mptcp@lists.linux.dev
+Cc: shardul.b@mpiricsoftware.com,
+	janak@mpiric.us,
+	kalpanjani009@gmail.com,
+	Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Subject: [RFC net-next v12] mptcp: normalize sequence numbers using socket address
+Date: Fri,  6 Nov 2026 16:46:45 +0530
+Message-ID: <20261106111645.786225-1-kalpan.jani@mpiricsoftware.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -65,182 +63,325 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issue(s) to consider.
+Use the MPTCP socket address as an offset when reporting write_seq,
+snd_una, ack_seq and map_seq. This removes the need to maintain
+separate local_idsn and remote_idsn fields for sequence number
+normalization.
 
-Critical: 0 · High: 1 · Medium: 1 · Low: 0
+With normalized sequence numbers available in MPTCP diagnostics,
+remove the masking of MPTCP-level sequence fields for unprivileged
+users while retaining the existing net_admin checks for sensitive
+subflow diagnostic attributes.
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
+Update the inet_diag get_info callback signature accordingly across
+the affected protocol implementations.
 
-- [High] The patch blocks only one direction of the stale-skb race (an
-  IPv6 skb reaching tcp_v4_do_rcv()).
-- [Medium] The commit message says that in the native-to-mapped race the
-  stale IPv6 skb 'belongs to the disconnected connection, so drop it'.
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/445
+Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+---
+Changes since v11:
+- Replace CAP_NET_ADMIN-based sequence counter masking with
+  sequence-number normalization using the MPTCP socket address.
+- Remove the net_admin argument from idiag_get_info callbacks,
+  as MPTCP-level sequence counters are now normalized.
+- Remove local_idsn and remote_idsn fields and their assignments.
+- Normalize MPTCP subflow map_seq using the MPTCP socket address
+  instead of remote_idsn.
+- Consolidate the previous two-patch approach into a single
+  sequence-number normalization patch.
 
---
+v11: https://lore.kernel.org/all/20261028082704.1609493-1-kalpan.jani@mpiricsoftware.com/
+---
+ include/linux/inet_diag.h |    2 +-
+ net/ipv4/inet_diag.c      |    6 +++---
+ net/ipv4/raw_diag.c       |    2 +-
+ net/ipv4/tcp_diag.c       |    2 +-
+ net/ipv4/udp_diag.c       |    2 +-
+ net/mptcp/diag.c          |    5 ++---
+ net/mptcp/mptcp_diag.c    |    9 +--------
+ net/mptcp/protocol.c      |    4 ----
+ net/mptcp/protocol.h      |    2 --
+ net/mptcp/sockopt.c       |   13 ++++---------
+ net/mptcp/subflow.c       |    1 -
+ net/sctp/diag.c           |    6 +++---
+ 12 files changed, 17 insertions(+), 37 deletions(-)
 
-tcp: prevent cross-family skb processing after disconnect
-
-This commit adds tcp_v6_disconnect(), which puts back the IPv6 af_ops,
-backlog_rcv and af_specific handlers after a v4-mapped socket is
-disconnected. It also makes tcp_v4_do_rcv() drop skbs that are not
-ETH_P_IP, and sends the MPTCP subflow teardown paths through
-sk_prot->disconnect.
-
-Link: https://lore.kernel.org/netdev/CAL4WiiqFJpmcV4=TWRpukCq6q=-729658FwGvieNcPXe97kLvQ@mail.gmail.com/
-
-> diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-> index a7f9242f1e429..8fa6564d2b602 100644
-> --- a/net/ipv4/tcp_ipv4.c
-> +++ b/net/ipv4/tcp_ipv4.c
-> @@ -1836,6 +1836,11 @@ int tcp_v4_do_rcv(struct sock *sk, struct sk_buff *skb)
->  {
->  	enum skb_drop_reason reason;
->  
-> +	if (unlikely(skb->protocol != htons(ETH_P_IP))) {
-> +		reason = SKB_DROP_REASON_INVALID_PROTO;
-> +		goto err_discard;
-> +	}
-> +
-
-[Severity: Medium]
-The commit message says:
-
-  In the reverse race, the skb belongs to the disconnected connection, so
-  drop it instead of redirecting it to the IPv6 receive path.
-
-Is the skb dropped when the socket is not owned by the user? This check
-only runs when the skb goes through sk->sk_backlog_rcv. The unowned branch
-of tcp_v6_rcv() calls tcp_v6_do_rcv() directly:
-
-net/ipv6/tcp_ipv6.c:tcp_v6_rcv() {
-    ...
-	bh_lock_sock_nested(sk);
-	tcp_segs_in(tcp_sk(sk), skb);
-	ret = 0;
-	if (!sock_owned_by_user(sk)) {
-		ret = tcp_v6_do_rcv(sk, skb);
-    ...
-}
-
-tcp_v6_do_rcv() only diverts ETH_P_IP skbs:
-
-	if (skb->protocol == htons(ETH_P_IP))
-		return tcp_v4_do_rcv(sk, skb);
-
-Take an IPv6 skb that was looked up before connect(AF_UNSPEC), where the
-socket is reconnected to a v4-mapped peer before bh_lock_sock_nested().
-That skb goes through tcp_v6_do_rcv() and tcp_rcv_state_process() on the
-new connection, whose icsk_af_ops is now &ipv6_mapped.
-
-In SYN_SENT, can an IPv6 SYN-ACK carrying the new ISN (old write_seq +
-max_window + 2) complete the mapped connection? If so, tcp_finish_connect()
-calls:
-
-	icsk->icsk_af_ops->sk_rx_dst_set(sk, skb);
-
-For ipv6_mapped that callback is inet_sk_rx_dst_set(), so an IPv6 rt6_info
-gets cached as sk_rx_dst on the v4-mapped socket.
-
-The __ip_options_echo() overflow is not reached on this path, because
-resets go out through tcp_v6_send_reset(). I could not confirm whether the
-cached IPv6 dst is later reused for IPv4 skbs. That depends on
-ip6_dst_check() accepting a zero cookie.
-
-Even so, the stale skb can still change the state of the new connection.
-That contradicts the drop described in the commit message.
-
-> diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-> index e006a30360eae..a93410aab66e6 100644
-> --- a/net/ipv6/tcp_ipv6.c
-> +++ b/net/ipv6/tcp_ipv6.c
-
-[ ... ]
-
-> @@ -2093,6 +2099,19 @@ static int tcp_v6_init_sock(struct sock *sk)
->  	return 0;
->  }
->  
-> +static int tcp_v6_disconnect(struct sock *sk, int flags)
-> +{
-> +	int ret = tcp_disconnect(sk, flags);
-> +
-> +	/* A socket used for a v4-mapped connection must not keep IPv4
-> +	 * handlers when it is reused for listen() or a native IPv6 connect().
-> +	 */
-> +	if (sk->sk_backlog_rcv == tcp_v4_do_rcv)
-> +		tcp_v6_restore_af_ops(sk);
-
-[Severity: High]
-After this restore, can a stale IPv4 skb be processed with IPv6 af_ops?
-The new check in tcp_v4_do_rcv() only looks at skb->protocol. It does not
-check whether the socket is still in v4-mapped mode.
-
-A possible sequence:
-
-1. An AF_INET6 socket is connected to a v4-mapped peer. tcp_v4_rcv() looks
-   it up for an IPv4 segment.
-
-2. tcp_v4_rcv() runs tcp_inbound_hash() and tcp_filter() before
-   bh_lock_sock_nested(). A socket filter can widen this window, as the
-   commit message describes.
-
-3. Inside that window, connect(AF_UNSPEC) calls tcp_v6_disconnect(). That
-   restores ipv6_specific, tcp_v6_do_rcv and tcp_sock_ipv6_specific. The
-   socket is then connected to a native IPv6 peer.
-
-4. The stale IPv4 skb reaches tcp_v4_do_rcv() in one of two ways. If the
-   socket is not owned, tcp_v4_rcv() calls it directly. Otherwise the
-   backlog drain goes through tcp_v6_do_rcv(), which forwards any ETH_P_IP
-   skb without checking the socket's mode:
-
-	if (skb->protocol == htons(ETH_P_IP))
-		return tcp_v4_do_rcv(sk, skb);
-
-5. The skb really is IPv4, so the new ETH_P_IP check lets it through.
-
-On a SYN-ACK in SYN_SENT, tcp_finish_connect() calls
-icsk_af_ops->sk_rx_dst_set(sk, skb). tcp_rcv_established() makes the same
-call before any sequence check when sk_rx_dst is NULL:
-
-	if (unlikely(!rcu_access_pointer(sk->sk_rx_dst)))
-		inet_csk(sk)->icsk_af_ops->sk_rx_dst_set(sk, skb);
-
-After the restore, that callback is inet6_sk_rx_dst_set():
-
-	if (dst && dst_hold_safe(dst)) {
-		rcu_assign_pointer(sk->sk_rx_dst, dst);
-		sk->sk_rx_dst_ifindex = skb->skb_iif;
-		sk->sk_rx_dst_cookie = rt6_get_cookie(dst_rt6_info(dst));
-	}
-
-This stores an IPv4 rtable as sk_rx_dst and reads it as an rt6_info in
-rt6_get_cookie().
-
-Could later IPv6 segments then get this IPv4 dst attached through early
-demux? ipv4_dst_check() ignores the cookie, so dst_input() could end up
-calling ip_local_deliver() on IPv6 packets. I have not traced this last
-step completely.
-
-Before this patch, the socket kept ipv6_mapped ops, so an IPv4 skb still
-matched them. With the restore on the normal disconnect path, an IPv4 skb
-can now meet IPv6 af_ops, and nothing guards against that.
-
-Would it be better to compare the skb family against the socket's
-mapped/native mode? For example, ETH_P_IP skbs could be rejected on a
-non-listening AF_INET6 socket whose icsk_af_ops != &ipv6_mapped.
-Alternatively, the socket could be revalidated after bh_lock_sock_nested().
-
-> +
-> +	return ret;
-> +}
-
-[ ... ]
-
+diff --git a/include/linux/inet_diag.h b/include/linux/inet_diag.h
+index 85f6278d5db1d..704fd415c2b49 100644
+--- a/include/linux/inet_diag.h
++++ b/include/linux/inet_diag.h
+@@ -18,7 +18,7 @@ struct inet_diag_handler {
+ 
+ 	void		(*idiag_get_info)(struct sock *sk,
+ 					  struct inet_diag_msg *r,
+-					  void *info, bool net_admin);
++					  void *info);
+ 
+ 	int		(*idiag_get_aux)(struct sock *sk,
+ 					 bool net_admin,
+diff --git a/net/ipv4/inet_diag.c b/net/ipv4/inet_diag.c
+index 362161bf39fe3..34b77aa87d0a4 100644
+--- a/net/ipv4/inet_diag.c
++++ b/net/ipv4/inet_diag.c
+@@ -276,7 +276,7 @@ int inet_sk_diag_fill(struct sock *sk, struct inet_connection_sock *icsk,
+ 	}
+ 
+ 	if (!icsk) {
+-		handler->idiag_get_info(sk, r, NULL, net_admin);
++		handler->idiag_get_info(sk, r, NULL);
+ 		goto out;
+ 	}
+ 
+@@ -327,7 +327,7 @@ int inet_sk_diag_fill(struct sock *sk, struct inet_connection_sock *icsk,
+ 			goto errout;
+ 	}
+ 
+-	handler->idiag_get_info(sk, r, info, net_admin);
++	handler->idiag_get_info(sk, r, info);
+ 
+ 	if (ext & (1 << (INET_DIAG_INFO - 1)) && handler->idiag_get_aux)
+ 		if (handler->idiag_get_aux(sk, net_admin, skb) < 0)
+@@ -1027,7 +1027,7 @@ int inet_diag_handler_get_info(struct sk_buff *skb, struct sock *sk)
+ 	if (attr)
+ 		info = nla_data(attr);
+ 
+-	handler->idiag_get_info(sk, r, info, false);
++	handler->idiag_get_info(sk, r, info);
+ 	inet_diag_unlock_handler(handler);
+ 
+ 	nlmsg_end(skb, nlh);
+diff --git a/net/ipv4/raw_diag.c b/net/ipv4/raw_diag.c
+index 264912d0cb9fc..943e5998e0ad5 100644
+--- a/net/ipv4/raw_diag.c
++++ b/net/ipv4/raw_diag.c
+@@ -185,7 +185,7 @@ static void raw_diag_dump(struct sk_buff *skb, struct netlink_callback *cb,
+ }
+ 
+ static void raw_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+-			      void *info, bool net_admin)
++			      void *info)
+ {
+ 	r->idiag_rqueue = sk_rmem_alloc_get(sk);
+ 	r->idiag_wqueue = sk_wmem_alloc_get(sk);
+diff --git a/net/ipv4/tcp_diag.c b/net/ipv4/tcp_diag.c
+index cac32575282e3..ba1fdbe9807fd 100644
+--- a/net/ipv4/tcp_diag.c
++++ b/net/ipv4/tcp_diag.c
+@@ -19,7 +19,7 @@
+ #include <net/tcp.h>
+ 
+ static void tcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+-			      void *_info, bool net_admin)
++			      void *_info)
+ {
+ 	struct tcp_info *info = _info;
+ 
+diff --git a/net/ipv4/udp_diag.c b/net/ipv4/udp_diag.c
+index 5a1fa627cbee8..f4b24e628cf8d 100644
+--- a/net/ipv4/udp_diag.c
++++ b/net/ipv4/udp_diag.c
+@@ -142,7 +142,7 @@ static void udp_diag_dump(struct sk_buff *skb, struct netlink_callback *cb,
+ }
+ 
+ static void udp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+-		void *info, bool net_admin)
++		void *info)
+ {
+ 	r->idiag_rqueue = udp_rqueue_get(sk);
+ 	r->idiag_wqueue = sk_wmem_alloc_get(sk);
+diff --git a/net/mptcp/diag.c b/net/mptcp/diag.c
+index 590cdee419ef9..66695d17a63cc 100644
+--- a/net/mptcp/diag.c
++++ b/net/mptcp/diag.c
+@@ -16,7 +16,7 @@ static int subflow_get_info(struct sock *sk, struct sk_buff *skb, bool net_admin
+ {
+ 	struct mptcp_subflow_context *sf;
+ 	struct nlattr *start;
+-	u64 map_seq;
++	u64 map_seq = 0;
+ 	u32 flags = 0;
+ 	bool slow;
+ 	int err;
+@@ -36,10 +36,9 @@ static int subflow_get_info(struct sock *sk, struct sk_buff *skb, bool net_admin
+ 		goto nla_failure;
+ 	}
+ 
+-	map_seq = 0;
+ 	if (sf->conn && sf->map_seq)
+ 		map_seq = sf->map_seq -
+-			  READ_ONCE(mptcp_sk(sf->conn)->remote_idsn);
++			  (unsigned long)mptcp_sk(sf->conn);
+ 
+ 	if (sf->mp_capable)
+ 		flags |= MPTCP_SUBFLOW_FLAG_MCAP_REM;
+diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
+index d526b1015da16..136c2d05c0eeb 100644
+--- a/net/mptcp/mptcp_diag.c
++++ b/net/mptcp/mptcp_diag.c
+@@ -190,7 +190,7 @@ static void mptcp_diag_dump(struct sk_buff *skb, struct netlink_callback *cb,
+ }
+ 
+ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+-				void *_info, bool net_admin)
++				void *_info)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	struct mptcp_info *info = _info;
+@@ -215,13 +215,6 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+ 		return;
+ 
+ 	mptcp_diag_fill_info(msk, info);
+-
+-	if (!net_admin) {
+-		/* Hide data sequence numbers from unprivileged users. */
+-		info->mptcpi_write_seq = 0;
+-		info->mptcpi_snd_una = 0;
+-		info->mptcpi_rcv_nxt = 0;
+-	}
+ }
+ 
+ static const struct inet_diag_handler mptcp_diag_handler = {
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index e59209b6fc41c..f22d64ab1c53b 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3216,8 +3216,6 @@ static void __mptcp_init_sock(struct sock *sk)
+ 	INIT_WORK(&msk->work, mptcp_worker);
+ 	msk->out_of_order_queue = RB_ROOT;
+ 	msk->first_pending = NULL;
+-	WRITE_ONCE(msk->local_idsn, 0);
+-	WRITE_ONCE(msk->remote_idsn, 0);
+ 
+ 	/* msk does not go through tcp_init_sock(); seed RTO bounds. */
+ 	icsk->icsk_rto_min =
+@@ -3765,7 +3763,6 @@ struct sock *mptcp_sk_clone_init(const struct sock *sk,
+ 
+ 	msk = mptcp_sk(nsk);
+ 	WRITE_ONCE(msk->local_key, subflow_req->local_key);
+-	WRITE_ONCE(msk->local_idsn, subflow_req->idsn);
+ 	WRITE_ONCE(msk->token, subflow_req->token);
+ 	msk->in_accept_queue = 1;
+ 	WRITE_ONCE(msk->fully_established, false);
+@@ -4204,7 +4201,6 @@ static int mptcp_connect(struct sock *sk, struct sockaddr_unsized *uaddr,
+ 					     MPTCP_MIB_TOKENFALLBACKINIT);
+ 	}
+ 
+-	WRITE_ONCE(msk->local_idsn, subflow->idsn);
+ 	WRITE_ONCE(msk->write_seq, subflow->idsn);
+ 	WRITE_ONCE(msk->snd_nxt, subflow->idsn);
+ 	WRITE_ONCE(msk->snd_una, subflow->idsn);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index fc6858863fa89..3d250e8204d52 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -288,8 +288,6 @@ struct mptcp_sock {
+ 						 * lockless access read
+ 						 */
+ 	u64		remote_key;		/* same as above */
+-	u64		local_idsn;
+-	u64		remote_idsn;
+ 	u64		write_seq;
+ 	u64		bytes_sent;
+ 	u64		snd_nxt;
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index b20263b4cd55c..6ee9dcfea5c79 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -1047,7 +1047,7 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
+ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ {
+ 	struct sock *sk = (struct sock *)msk;
+-	u64 local_idsn = 0, remote_idsn = 0;
++	u64 offset = (unsigned long)msk;
+ 	u32 flags = 0;
+ 	bool slow;
+ 	u32 now;
+@@ -1085,11 +1085,9 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ 	info->mptcpi_flags = flags;
+ 
+ 	slow = lock_sock_fast(sk);
+-	local_idsn = READ_ONCE(msk->local_idsn);
+-
+ 	info->mptcpi_csum_enabled = READ_ONCE(msk->csum_enabled);
+ 	info->mptcpi_token = msk->token;
+-	info->mptcpi_write_seq = msk->write_seq - local_idsn;
++	info->mptcpi_write_seq = msk->write_seq - offset;
+ 	info->mptcpi_retransmits = inet_csk(sk)->icsk_retransmits;
+ 	info->mptcpi_bytes_sent = msk->bytes_sent;
+ 	info->mptcpi_bytes_received = msk->bytes_received;
+@@ -1102,20 +1100,17 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ 	unlock_sock_fast(sk, slow);
+ 
+ 	mptcp_data_lock(sk);
+-	if (READ_ONCE(msk->can_ack))
+-		remote_idsn = READ_ONCE(msk->remote_idsn);
+ 	info->mptcpi_last_ack_recv = jiffies_to_msecs(now - msk->last_ack_recv);
+-	info->mptcpi_snd_una = msk->snd_una - local_idsn;
+-	info->mptcpi_rcv_nxt = msk->ack_seq - remote_idsn;
++	info->mptcpi_snd_una = msk->snd_una - offset;
++	info->mptcpi_rcv_nxt = msk->ack_seq - offset;
+ 	info->mptcpi_bytes_acked = msk->bytes_acked;
+ 	mptcp_data_unlock(sk);
+-
+ }
+ EXPORT_SYMBOL_GPL(mptcp_diag_fill_info);
+ 
+ static int mptcp_getsockopt_info(struct mptcp_sock *msk, char __user *optval, int __user *optlen)
+ {
+ 	struct mptcp_info m_info = {};
+ 	int len;
+ 
+ 	if (get_user(len, optlen))
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 39c7422afa779..55de605226ad0 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -490,12 +490,11 @@ static void subflow_set_remote_key(struct mptcp_sock *msk,
+ 	subflow->map_seq = subflow->iasn;
+ 
+ 	WRITE_ONCE(msk->remote_key, subflow->remote_key);
+-	WRITE_ONCE(msk->remote_idsn, subflow->iasn - 1);
+ 	WRITE_ONCE(msk->ack_seq, subflow->iasn);
+ 	WRITE_ONCE(msk->can_ack, true);
+ 	atomic64_set(&msk->rcv_wnd_sent, subflow->iasn);
+ 
+ 	/* publish last, once iasn and the fields above are fully populated */
+ 	subflow->remote_key_valid = 1;
+ }
+ 
+diff --git a/net/sctp/diag.c b/net/sctp/diag.c
+index ab6c560fde053..c2a0de2adf6fd 100644
+--- a/net/sctp/diag.c
++++ b/net/sctp/diag.c
+@@ -20,7 +20,7 @@
+ #include <net/sctp/sctp.h>
+ 
+ static void sctp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+-			       void *info, bool net_admin);
++			       void *info);
+ 
+ /* define some functions to make asoc/ep fill look clean */
+ static void inet_diag_msg_sctpasoc_fill(struct inet_diag_msg *r,
+@@ -200,7 +200,7 @@ static int inet_sctp_diag_fill(struct sock *sk, struct sctp_association *asoc,
+ 	}
+ 	infox.sctpinfo = (struct sctp_info *)info;
+ 	infox.asoc = asoc;
+-	sctp_diag_get_info(sk, r, &infox, net_admin);
++	sctp_diag_get_info(sk, r, &infox);
+ 
+ 	addr_list = asoc ? &asoc->base.bind_addr.address_list
+ 			 : &ep->base.bind_addr.address_list;
+@@ -412,7 +412,7 @@ static int sctp_ep_dump(struct sctp_endpoint *ep, void *p)
+ 
+ /* define the functions for sctp_diag_handler*/
+ static void sctp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+-			       void *info, bool net_admin)
++			       void *info)
+ {
+ 	struct sctp_infox *infox = (struct sctp_infox *)info;
+ 
 -- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261103103633.2707416-1-zhiyuzhang999%40gmail.com
+2.43.0
