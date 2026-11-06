@@ -1,54 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793965043;
-	b=R8HVmgGSCMibYcACd6CkHOUEMx89O/v8ORIFQsOJi9I78j58iFu77hEjGY+g+RJAdSNf
-	 3H29Zog145rEz4eXe+Ex2EKOYOhoYkMR1pDGw6yjDtn8By483MPkCiEibyvZIeOflFk3D
-	 uHZaSX6nHO1yLxCHM0kgZJL3TlW+e8P+1bcVq3magX1KXY/St51k0IJkLO39nmJNhVmEO
-	 h6tcZTNid9sOtMZMQ8e+xPloWI6vXSRXxPtPHXrWivne3dxdJwKGt8hOk196C6twQdRjQ
-	 KUmX4FQZskwOZ2ySIEGX92qf7eNFG29ewMAOX7iqBObXaIj/hWPcI/5k1lEAsVEkr0g==
+	t=1793965901;
+	b=o9WIE7TwKihxW2tnHVuM0PIWTWRQO1yov6kiQErvhsRHotP5bYjN6m5hJtOa8z7+5vXC
+	 OMBjULYjvLWVOrs39rSL6Vqg050Ewdn2KlncGDsdtuW486R4MVUyka+glA4/3ZrhJYYu/
+	 hzif8TYKX8DPY3dei562XwV/yOYSg5dPNFFRLnw5mmIpbWKgkzj/kzodFvZosqyISqVmI
+	 RdaZW4XTANcJJ4SDlxKaJ75laZg3p1L19TiPRyUaBXHZeBQ4BcsRsx4Amvx+FDXQsuDzP
+	 /mSbbH3/nScJyhrACMikOXx6JKZ3NEoFiciTR5gZZ0nO4pp+3IGZeoBSgAUgbOmbbIQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793965043;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=ghjivGT3KkRvOjBl9IdXDkTaN0jLumS52KQXvBF/FOA=;
-	b=nfyuAmvR3Alcaqy1W1WJib/OTJbBW6VU7jLYPF6ElW+PZcjtW+bMKT/rFXF0bWOAqssG
-	 8xHGSsZp3/VY0IKG9j3ReLywztGwSr1HRJ1CaDq0LHFirz6NVBULTQpZC+py/XqOIAyyL
-	 BA6L29ThnNln+KbSoaStJmLb2q0gKndmUpvKDtnn3BoNX00Yl79DbV0h4RtIBVal3xJ+w
-	 qH9RW+MBMA/yni0vv0Yyme4oKvbn6cs6TzFPpgp79mbg9LEYZO2TaFfeGcszQhUkjZFrE
-	 Hay8nKbPxsAXusSsvqgs2K+NruUyBOYJ6kDfaYWBBRVL31HF+JlYjrUdVe8XqW/QNGw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793965901;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=jNLoI6tUaDiQqX/B9uwX+x/mQD0Fp7Oqk1/Nnz4be5g=;
+	b=JCwb1A+sokspcM+QqiZ4RRbuoS84BQyj9qfVIo6owd9kKl53cb2PBTVK8JHgLh53PAFt
+	 m1RzoRTmB2wGa69nSnf/eAdR9PI7J2DfQuUIT0VflTN3WlVjEmvsXh0xucEmZWeLAD5cP
+	 UNoFXxBkr9YYuuMQXXAPnFYLTz85z4Fu1oNaiqO7puxwwhWbhVnBk3OtaWRgcnvXTGEyL
+	 MFEllMhtfORd7k3iBlrg5K/yCG68HhPG6L1fe+t8aaDzfqr49ybXGlmsz4ndvVINq4xVo
+	 4/xkgLMm5UEQKf3YyrUNpuNGpBrSAqHmGpUUCHZkdjNFCHlz21XeQRHvpYWrnx9vG9g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=G5XXZhPQ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Hsi/dJYD";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E863A606C6FA
-	for <mptcp@lists.linux.dev>; Fri,  6 Nov 2026 11:37:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0AE606A326
+	for <mptcp@lists.linux.dev>; Fri,  6 Nov 2026 11:51:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=G5XXZhPQ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD9031F008A1;
-	Fri,  6 Nov 2026 11:37:21 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Hsi/dJYD
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DF001F0089F;
+	Fri,  6 Nov 2026 11:51:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793965042;
-	bh=ghjivGT3KkRvOjBl9IdXDkTaN0jLumS52KQXvBF/FOA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=G5XXZhPQTl54mAXLjAzG/fjretsK6G5hZd+ZKe1LDeDOJl9Lz46TdxXhTiF+9D587
-	 Vqr6jtmmW0fY9BbWW1uT2UkaB1DCnIzxdpLXCKKU1UVkbxyFFOFKd8PGToX+nQ06Tw
-	 L7Zo3LfOyFVNvVLrZbE18vUgwom6Xduhun75IBk1kHdQ6TYXft2GZhREv7ZOtwp7aQ
-	 xhp/mTC3svz1bgW9OoNRqiLUgetLz7zUxYwhGUJqKpZXZ+I3Tmcwgc7nqaQHQCn/GC
-	 WrSsVEx1JgzEclSqgdmDdUMLg+BjLdUy8MaOiNZPk9rtU0WSnFZQUAAQokOYFCjBgi
-	 TL7XFZmuLUG1g==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH mptcp-next v22 8/8] mptcp: defer read_sock cleanup to mptcp_worker
-Date: Fri,  6 Nov 2026 19:37:04 +0800
-Message-ID: <2ad403ceaeb4a85913979b39448f90e2cc3a91b1.1793964796.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <cover.1793964796.git.tanggeliang@kylinos.cn>
+	s=k20260515; t=1793965900;
+	bh=jNLoI6tUaDiQqX/B9uwX+x/mQD0Fp7Oqk1/Nnz4be5g=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=Hsi/dJYDNuq1u/gMJXdq08Z2mKG61QA0FAu/wO3hlwoddr47GgxyoF+h3VA/j5wiD
+	 +nDYf1XqXIsZDD5F7SZvqNWvnN1jwsl1VpzQ4NmVxvEFKJpHWpRXVDkahjMUKckKV5
+	 aoBcGyLw8hv1lnWszmnb04WlaJmwFLLSuibnju6YRPcwk9K7BKjVnOaXx5/ZUnA/Zb
+	 WQkmJkfLknNRTkczjdXrpllGBty3tZ8EJY4FWQiIuSkTfcx5KNvwux9FhdXk4n7phr
+	 m2vW97YsyhcwywN1DzmshesNLLksmMwpUeEieGbpBXwlZWyxhRh1C7g9dkj3+WTuwG
+	 /gqgzDKbD8eFQ==
+Message-ID: <sashiko-outbox-201363@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH mptcp-next v22 2/8] selftests: mptcp: connect: check TFO
+ SIOCINQ overflow
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
+In-Reply-To: <db502fd327a473221aef9a5bf2995cf627ec187f.1793964796.git.tanggeliang@kylinos.cn>
 References: <cover.1793964796.git.tanggeliang@kylinos.cn>
+ <db502fd327a473221aef9a5bf2995cf627ec187f.1793964796.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 06 Nov 2026 11:51:39 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -57,154 +59,102 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Thank you for your contribution! Sashiko AI review found 2 potential
+issues to consider:
+- [Low] selftests: mptcp: wait_for_remote_key() fails on TCP and
+  fallback sockets
+- [Low] selftests: mptcp: missing SOL_MPTCP fallback macro in
+  mptcp_connect.c
+--
 
-This patch prepares __mptcp_read_sock() for future MPTCP TLS support,
-where it may be reached from BH context. In that case, calling
-mptcp_rcv_space_adjust() and mptcp_cleanup_rbuf() is not safe as both
-expect process context.
+commit 4c8b1264330b7ada03e819d1d1820de00d3fda02
+Author: Geliang Tang <geliang@kernel.org>
 
-Note: The BH call path does not exist in the current tree. This is
-groundwork for the upcoming TLS-over-MPTCP series. Currently, the only
-callers are mptcp_splice_read() and svc_tcp_recvfrom(), both of which
-hold lock_sock() and run in process context.
+selftests: mptcp: connect: check TFO SIOCINQ overflow
 
-Conditionally defer cleanup to mptcp_worker(): when the caller doesn't
-own the socket lock (BH context), accumulate consumed bytes in
-msk->read_copied and signal the worker through MPTCP_WORK_READ_COMPLETE.
-When the caller owns the lock (process context), perform inline cleanup
-to avoid delaying window updates and autotuning.
+This commit adds a check in mptcp_connect's server loop to wait for the
+remote key on MPTFO connections and verify that SIOCINQ does not return
+INT_MAX.
 
-Restore the backlog flush in mptcp_recv_skb() with a sock_owned_by_user()
-check. This ensures process context callers flush the backlog before
-processing skbs, while future BH context callers skip it to avoid
-deadlock on mptcp_data_lock().
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/te=
+sting/selftests/net/mptcp/mptcp_connect.c
+> index 178d98d91fea2..41eff818e950e 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
 
-Initialize msk->read_copied in __mptcp_init_sock() and reset it in
-mptcp_disconnect().
+[ ... ]
 
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- net/mptcp/protocol.c | 38 +++++++++++++++++++++++++++++++++-----
- net/mptcp/protocol.h |  2 ++
- 2 files changed, 35 insertions(+), 5 deletions(-)
+> @@ -1176,6 +1177,24 @@ static void maybe_close(int fd)
+>  		close(fd);
+>  }
+> =20
+> +static bool wait_for_remote_key(int fd)
+> +{
+> +	struct mptcp_info info;
+> +	int retries =3D 10;
+> +	socklen_t olen;
+> +
+> +	while (retries > 0) {
+> +		olen =3D sizeof(info);
+> +		if (getsockopt(fd, SOL_MPTCP, MPTCP_INFO, &info, &olen) < 0)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index ced34e8cd25c..b23159d9044c 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3162,6 +3162,21 @@ static void mptcp_backlog_purge(struct sock *sk)
- 	sk_mem_reclaim(sk);
- }
- 
-+static void mptcp_read_complete(struct sock *sk)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	int read_copied;
-+
-+	mptcp_data_lock(sk);
-+	read_copied = msk->read_copied;
-+	msk->read_copied = 0;
-+	mptcp_data_unlock(sk);
-+
-+	mptcp_rcv_space_adjust(msk, read_copied);
-+	if (read_copied > 0)
-+		mptcp_cleanup_rbuf(msk, read_copied);
-+}
-+
- static void mptcp_do_fastclose(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow, *tmp;
-@@ -3237,6 +3252,9 @@ static void mptcp_worker(struct work_struct *work)
- 	if (test_and_clear_bit(MPTCP_WORK_RTX, &msk->flags))
- 		__mptcp_retrans(sk);
- 
-+	if (test_and_clear_bit(MPTCP_WORK_READ_COMPLETE, &msk->flags))
-+		mptcp_read_complete(sk);
-+
- 	fail_tout = msk->first ? READ_ONCE(mptcp_subflow_ctx(msk->first)->fail_tout) : 0;
- 	if (fail_tout && time_after(jiffies, fail_tout))
- 		mptcp_mp_fail_no_response(msk);
-@@ -3280,6 +3298,7 @@ static void __mptcp_init_sock(struct sock *sk)
- 	msk->last_data_sent = tcp_jiffies32;
- 	msk->last_data_recv = tcp_jiffies32;
- 	msk->last_ack_recv = tcp_jiffies32;
-+	msk->read_copied = 0;
- 
- 	mptcp_pm_data_init(msk);
- 	spin_lock_init(&msk->fallback_lock);
-@@ -3727,6 +3746,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
- 	msk->fastclosing = 0;
- 	msk->tfo_iasn = 0;
- 	msk->rcvd_dummy_seq = false;
-+	msk->read_copied = 0;
- 	mptcp_init_rtt_est(msk);
- 
- 	/* for fallback's sake */
-@@ -4649,7 +4669,7 @@ static struct sk_buff *mptcp_recv_skb(struct sock *sk, u32 *off)
- 	struct sk_buff *skb;
- 	u32 offset;
- 
--	if (!list_empty(&msk->backlog_list))
-+	if (sock_owned_by_user(sk) && !list_empty(&msk->backlog_list))
- 		mptcp_move_skbs(sk);
- 
- 	while ((skb = skb_peek(&sk->sk_receive_queue)) != NULL) {
-@@ -4666,6 +4686,7 @@ static struct sk_buff *mptcp_recv_skb(struct sock *sk, u32 *off)
- /*
-  * Note:
-  *	- It is assumed that the socket was locked by the caller.
-+ *	- Can be invoked in BH scope.
-  */
- static int __mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
- 			     sk_read_actor_t recv_actor, bool noack)
-@@ -4707,11 +4728,18 @@ static int __mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
- 	if (noack)
- 		goto out;
- 
--	mptcp_rcv_space_adjust(msk, copied);
--
- 	if (copied > 0) {
--		mptcp_recv_skb(sk, &offset);
--		mptcp_cleanup_rbuf(msk, copied);
-+		if (sock_owned_by_user(sk)) {
-+			/* Process context: inline cleanup */
-+			mptcp_rcv_space_adjust(msk, copied);
-+			mptcp_recv_skb(sk, &offset);
-+			mptcp_cleanup_rbuf(msk, copied);
-+		} else {
-+			/* BH context: defer to worker */
-+			msk->read_copied += copied;
-+			set_bit(MPTCP_WORK_READ_COMPLETE, &msk->flags);
-+			mptcp_schedule_work(sk);
-+		}
- 	}
- out:
- 	return copied;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index fa54f70ab501..3580cf66f303 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -117,6 +117,7 @@
- #define MPTCP_FALLBACK_DONE	2
- #define MPTCP_WORK_CLOSE_SUBFLOW 3
- #define MPTCP_RTX_ENABLED	4
-+#define MPTCP_WORK_READ_COMPLETE 5
- 
- /* MPTCP socket release cb flags */
- #define MPTCP_PUSH_PENDING	1
-@@ -326,6 +327,7 @@ struct mptcp_sock {
- 	u32		last_data_sent;
- 	u32		last_data_recv;
- 	u32		last_ack_recv;
-+	int		read_copied;
- 	unsigned long	timer_ival;
- 	u32		token;
- 	u64		tfo_iasn;
--- 
-2.55.0
+[Severity: Low]
+Does SOL_MPTCP need a fallback definition in mptcp_connect.c?  SOL_MPTCP is
+not defined in the UAPI headers, so building against older libc headers
+(prior to glibc 2.34) will fail with an undeclared identifier error unless
+it is guarded with #ifndef SOL_MPTCP like IPPROTO_MPTCP and TCP_ULP at the
+top of this file (and SOL_MPTCP in mptcp_inq.c and mptcp_sockopt.c).
 
+> +			return false;
+> +		if (info.mptcpi_flags & MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED)
+> +			return true;
+> +		usleep(10000);
+> +		retries--;
+> +	}
+> +	return false;
+> +}
+> +
+>  int main_loop_s(int listensock)
+>  {
+>  	struct sockaddr_storage ss;
+> @@ -1207,6 +1226,24 @@ int main_loop_s(int listensock)
+>  		check_sockaddr(pf, &ss, salen);
+>  		check_getpeername(remotesock, &ss, salen);
+> =20
+> +		if (cfg_sockopt_types.mptfo) {
+> +			int avail;
+> +
+> +			if (!wait_for_remote_key(remotesock)) {
+> +				fprintf(stderr,
+> +					"TFO: timeout waiting for third ACK\n");
+> +				close(remotesock);
+> +				return 1;
+> +			}
+
+[Severity: Low]
+Will wait_for_remote_key() fail when remotesock is a plain TCP socket or an
+MPTCP socket that fell back to TCP?
+
+In mptcp_connect.sh, run_tests_mptfo() passes "-o MPTFO" to run_tests_lo(),
+which also runs MPTCP->TCP, TCP->MPTCP, and TCP->TCP transfers when invoked
+with -t:
+
+tools/testing/selftests/net/mptcp/mptcp_connect.sh:run_tests_lo() {
+    ...
+	do_transfer ${listener_ns} ${connector_ns} MPTCP TCP \
+		    ${connect_addr} ${local_addr} "${extra_args}"
+    ...
+	do_transfer ${listener_ns} ${connector_ns} TCP MPTCP \
+		    ${connect_addr} ${local_addr} "${extra_args}"
+    ...
+}
+
+On a TCP listener (-s TCP) or an MPTCP listener accepting a connection from
+a TCP client, getsockopt(fd, SOL_MPTCP, MPTCP_INFO, ...) fails immediately
+with ENOPROTOOPT, causing wait_for_remote_key() to return false and abort
+the test with "TFO: timeout waiting for third ACK".
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1793964796.gi=
+t.tanggeliang@kylinos.cn?part=3D2
