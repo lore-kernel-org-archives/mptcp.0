@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1794006428;
-	b=rTk51iXg/NF1j3J+hnFsd9NVsT8ssQllIU13HG+ZvaqZPu2LTvssDlZW4H6KFG+0LJlZ
-	 yUtfJ5C0dsfZsZVS91JcyM20G2xTXSLXrfyDd1CSsQIlkPYuiWl5+A13YcLkoVP4HmuvN
-	 N45fH6zab4/ag/8X9dPEdeZx3iWJtznSS7hHDJ1UAFMPQRJ3Ibwl/waoziQNN8hkuvGUi
-	 txf81jHGgiiKJmSvkr/zhhuzmJmdTp3idZ5tcXv6wg4uQuVovF2PDDUCz12tgoNjESn1d
-	 /X8mtLlDYCdSsb7OjkfpfDCGIx3ZpGdmIEIBsIGbFLSdQoQHxWUwA9Mb/M7LENe9IuQ==
+	b=UMiCBLAq9RcmioAiE8BoMgAU2kT/YpB/PxSkPXiQxDo2fU10Q5XmhY7VNbUKZpm48QtT
+	 7SwW7MaTwJap2aqyb0xWEOBEueqCkrEG0LSVp8jQNF4aVGDooXq7V6QdF3/sFnAnhl9Mg
+	 fBRsY2swdd2pbs/e5Q/zBVpvGyy0HLmdks34ZFWm7KrZTKfJuuBGqNgNXt/MRwW5t9hHj
+	 k9VhzS8LYxloaHava1oR/1Y4WKq6NwkCVjiJgc+FsELGSMyI2lrPuitWrfMWX/KORvTUc
+	 8vdGPImeq1gcWv8GFaCAr74AJsDI7JbmB3BhaNrvOF8cQDylqNwWOnw72fkUPOLW45w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1794006428;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=3BBkQCLMsBMq0t0OgbNouylGl/vTr9lMRiQNd0li8S0=;
-	b=Q0yDvfbBPbZSmexZm3tyJxjkDMJTu4Eus1oRNyy5HYw5Vq5rppyFvAbQdmUfZh8ANmDP
-	 /ZzsIPFUsTmXUKy7ErdtFpa4rez8+DY2iw9tZi6o6Yqd9VCT3iPdvTxEoU5qhjcJ1gNOU
-	 8Hj07jTLk1U63p7UEUmX+dz1/d4tT6SpywnX7lB4U1tYgO8iXpNVDi0Z68kQH7G429ri1
-	 r2oFJrD04Mli41r2KXEa1sEo3Nl7Nsl65Q3ej1kqmFDc2Q6DgsJZ1xdq9XsaXU7Vr9B2C
-	 nBop0vbyrznuhxlLju0ezd244jb7GZN/Mbz8jQb14IwXx4dph+UsK7sJ7swbzN0y3XQ==
+	bh=DU4zorIhvQ2VweNBSnnMX2aSAw1OafuLdTrwrNXUqTE=;
+	b=nrBTGD1EooUjy03SQzMYxt+kAEhS6Wa/rtz6uVEDXGKSSREHBYd9xsz3HlCYVT4rrxox
+	 NQcqWXjAXagX5AB0cxrlgsiJJXIaVCkg9w8Ag+AFVVfUJUKxen/0yJoEi443/yoYbiMzW
+	 0d+OaIIyeJDQ1VPbw7HmUJrvPxfuSUauUAkNHZ55TjpfyEvJyIdunOdV7Rsc1TCEO/Rnj
+	 sNL7mh6Ty9gLMtG9ovq/2WWzwaVg2OucFAefgptV3hpLl4ehPmtC/AJP8UyJdf7x4GY0C
+	 tXRS0N9ddqImbk12/y1tYWgSgbqPoPff0L46Xh0SUpqwxlQbJj9U50ta0a5+CXfyPSQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RjyPqpR3;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kPuqkfqR;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8ECF606A326
-	for <mptcp@lists.linux.dev>; Fri,  6 Nov 2026 23:07:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73105606A326
+	for <mptcp@lists.linux.dev>; Fri,  6 Nov 2026 23:07:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RjyPqpR3
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 159671F008A1;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kPuqkfqR
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 057051F0089F;
 	Fri,  6 Nov 2026 23:07:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794006427;
-	bh=3BBkQCLMsBMq0t0OgbNouylGl/vTr9lMRiQNd0li8S0=;
+	s=k20260515; t=1794006428;
+	bh=DU4zorIhvQ2VweNBSnnMX2aSAw1OafuLdTrwrNXUqTE=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=RjyPqpR3TyjkrCPQINfLKt3YPwIHvOXhuZfHIkDcyZzVU373IICDZQZt5zuTNga8r
-	 m+YCjNBf54hREZti8Hio2GAsNeDTTis5HLbxmOkNCuau4l/10q5lQFt1RQYUcR3k4J
-	 +n2oi1kVKlzKqpqHr05eaVOKxCmlrUIkG/06iLMqb/CyaqJyGcmPqZbmVcehg+9y5V
-	 uLwNc7AYjrdToDjrQWjJlOrCcheIpLkxxHdGcxy8dTA7MrFGd/du5g7dIKH4DbtcH+
-	 UFjTwu4Ah7rWC+gmNCoVWpVi5MwBDgHNPr8Jmd+umya3CKQRyamCF40iPjGy6MGiR6
-	 DarAKBfmNXeuA==
-Subject: Re: [PATCH mptcp-next v21 2/9] selftests: mptcp: connect: check TFO
- SIOCINQ overflow
+	b=kPuqkfqRQwBiYkkrP5ggWoJp3Q2tCCsGZ9ZHn3cS2JqpE86wX43YjErk3BFXDJ7YX
+	 NvMEFbcqfSdh27BkF7ZLKXYjN0KL77hDLNAIwaO3hlLQH0fTWuCYb31+Pk37K0YaTI
+	 MpH1b7Y4P2O5Mr1/ALZvBfccBWJbocrLlXphvj8sFjnUPaxMP7N54PjBV1obSXpHfv
+	 lHzlmf/jNNQcWw4BpUiLFP43Co9aWXIdMtQ2uGShzoK/8EI/xJ8tWhcISlNFMDcDIs
+	 rszC9daOuVv02+AbSnTR2wkXF0h9CbYq2AmmrpGzV9VqpMuIEBd8bdiAXgN9VimITg
+	 eHQxaailxzQ6Q==
+Subject: Re: [PATCH mptcp-net v21 3/9] mptcp: fix TFO map_seq sign extension
+ in fastopen
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, tanggeliang@kylinos.cn, pabeni@redhat.com,
  kuba@kernel.org
-Date: Fri, 06 Nov 2026 23:07:06 +0000
-Message-ID: <179400642663.488855.14553445307814665064@kernel.org>
-In-Reply-To: <922016b6ad6c68e0ead315b54c6849e4e76ce2c7.1793870710.git.tanggeliang@kylinos.cn>
-References: <922016b6ad6c68e0ead315b54c6849e4e76ce2c7.1793870710.git.tanggeliang@kylinos.cn>
+Date: Fri, 06 Nov 2026 23:07:07 +0000
+Message-ID: <179400642753.488855.12799140902151687721@kernel.org>
+In-Reply-To: <46b31cc96bd3ed1cd5afd2c3e0e7a5f1581d16a5.1793870710.git.tanggeliang@kylinos.cn>
+References: <46b31cc96bd3ed1cd5afd2c3e0e7a5f1581d16a5.1793870710.git.tanggeliang@kylinos.cn>
 X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -74,91 +74,73 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [Medium] The new SIOCINQ regression check in main_loop_s()
-  (tools/testing/selftests/net/mptcp/mptcp_connect.c) depends on timing,…
+- [Medium] The commit message of "mptcp: fix TFO map_seq sign extension
+  in fastopen" describes a user-visible bug that cannot happen in the…
 
 --
 
-selftests: mptcp: connect: check TFO SIOCINQ overflow
+mptcp: fix TFO map_seq sign extension in fastopen
 
-This adds a SIOCINQ check to main_loop_s() in mptcp_connect for runs where
-the MPTFO sockopt is set. After accept(), the server sleeps 10ms so the
-third ACK can be processed. The test fails if ioctl(SIOCINQ) returns
-INT_MAX.
+This commit changes mptcp_fastopen_subflow_synack_set_params() in
+net/mptcp/fastopen.c so the TFO skb's map_seq is set to -(u64)skb->len
+instead of -skb->len. The value then becomes a proper 64-bit negative
+offset from an assumed IASN of 0. The commit message says this fixes
+mptcp_inq_hint() returning INT_MAX before the MPC 3rd ACK.
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> index 178d98d91fea2..e30a6900d01f5 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> @@ -1207,6 +1207,20 @@ int main_loop_s(int listensock)
->  		check_sockaddr(pf, &ss, salen);
->  		check_getpeername(remotesock, &ss, salen);
->  
-> +		if (cfg_sockopt_types.mptfo) {
-> +			int avail;
-> +
-> +			/* Wait for third ACK to be processed */
-> +			usleep(10000);  /* 10ms */
-> +
-> +			if (ioctl(remotesock, SIOCINQ, &avail) == 0 &&
-> +			    avail == INT_MAX) {
+> This causes mptcp_inq_hint() to return INT_MAX before the MPC 3rd ACK
+> arrives. On a passive TFO msk, msk->ack_seq is still 0 until the 3rd
+> ACK. Without the cast to u64, the computation 0ULL - (u32)(-len)
+> underflows and clamps to INT_MAX. This incorrect value is returned to
+> user space through SIOCINQ/FIONREAD in mptcp_ioctl(), the TCP_CM_INQ
+> cmsg in mptcp_recvmsg(), and also affects receive buffer auto-tuning in
+> mptcp_rcv_space_adjust().
 
 [Severity: Medium]
-Is a fixed 10ms sleep enough to make this check reliable?
+Does this description still match the tree this patch applies to?
 
-With passive TFO, the child socket is put on the accept queue while the
-SYN is being handled. That means accept() can return before the MPC third
-ACK has been processed. msk->ack_seq only changes later, in softirq:
+An earlier patch in this series, "mptcp: fix TFO SIOCINQ overflow in
+mptcp_inq_hint", already rewrote mptcp_inq_hint() in net/mptcp/protocol.c:
 
-__mptcp_subflow_fully_established()
-    subflow_set_remote_key()
-        WRITE_ONCE(msk->ack_seq, subflow->iasn);
-        WRITE_ONCE(msk->can_ack, true);
+static unsigned int mptcp_inq_hint(const struct sock *sk)
+{
+	const struct mptcp_sock *msk = mptcp_sk(sk);
+	u64 hint_val = mptcp_data_avail(msk);
+	...
 
-At this commit, mptcp_fastopen_subflow_synack_set_params() still does:
+That function no longer reads msk->ack_seq or the head skb's map_seq.
+The 0ULL - (u32)(-len) calculation described above is no longer in the
+code.
 
-    MPTCP_SKB_CB(skb)->map_seq = -skb->len;
+The other readers of the TFO skb's map_seq don't depend on its absolute
+value either. The skb has cant_coalesce set, so __mptcp_try_coalesce()
+rejects it before it compares map_seq or end_seq:
 
-So the old mptcp_inq_hint() returns INT_MAX even before the third ACK, and
-timing does not matter yet.
+	if (unlikely(MPTCP_SKB_CB(to)->cant_coalesce) ||
 
-Later in the series, "mptcp: fix TFO map_seq sign extension in fastopen"
-changes this to -(u64)skb->len. After that, the old ack_seq - map_seq
-formula gives the correct value (skb->len) while ack_seq is still 0. A
-reintroduced mptcp_inq_hint() regression would then only show up if the
-third ACK has been processed before ioctl() runs. No later patch in the
-series changes this test.
+The only remaining accesses are map_seq += count on partial reads and
+pr_debug() output.
 
-On a loaded CI host, or on a debug kernel with KASAN, lockdep or
-kmemleak, can the third ACK arrive after the 10ms window? If so, the check
-reads a correct value and passes on a broken kernel.
+The cast is harmless. It looks like it only becomes necessary later in
+the series, once msk->copied_seq is seeded from map_seq64 and tfo_iasn
+is added to it.
 
-Would it be more deterministic to poll getsockopt(SOL_MPTCP, MPTCP_INFO)
-until MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED is set, with a bounded timeout
-that fails loudly on expiry? mptcp_diag_fill_info() sets that flag from
-msk->can_ack, which is written right after ack_seq.
+Could the commit message describe that dependency instead of the
+SIOCINQ/TCP_CM_INQ symptom, which the earlier patch already fixed?
 
-Two smaller points about the same check:
+> Fix by casting to u64 before negation: -(u64)skb->len. This ensures
+> proper 64-bit two's complement representation, so the hint correctly
+> returns skb->len before the 3rd ACK.
 
-It only rejects avail == INT_MAX. It does not check that ioctl()
-succeeded, or that avail matches the size of the SYN payload.
+The only tag here is Fixes: 36b122baf6a8. Could this mislead stable
+backports into treating this patch as the fix for SIOCINQ returning
+INT_MAX?
 
-Nothing confirms that passive TFO with SYN data actually happened.
-run_tests_mptfo() in mptcp_connect.sh runs each address family twice:
+Take a tree that has f03afb3aeb9d but not the mptcp_inq_hint() rewrite.
+There, this patch alone would only cover the window before the 3rd ACK.
 
-    run_tests_lo "$ns1" "$ns2" 10.0.1.1 0 "-o MPTFO"
-    run_tests_lo "$ns1" "$ns2" 10.0.1.1 0 "-o MPTFO"
-
-The first run only fetches the TFO cookie and sends no SYN data, so the
-new check passes trivially on that run.
-
-> +				fprintf(stderr, "TFO SIOCINQ overflow\n");
-> +				close(remotesock);
-> +				return 1;
-> +			}
-> +		}
-
-[ ... ]
+After the 3rd ACK, ack_seq becomes iasn while the TFO skb's map_seq stays
+at -(u64)len. So ack_seq - map_seq = iasn + len, which would still clamp
+to INT_MAX.
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1793870710.git.tanggeliang%40kylinos.cn
