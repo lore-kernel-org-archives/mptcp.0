@@ -1,94 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.180
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793977269;
-	b=i8Zl4XwyMlLqiGPhr/oAD8aXpWUtRPP0wtqQ/f6GcO2Yp8TC4CCVUMi1m8+DZBCJXXQA
-	 QOLp6IpBXSqakNEHNChulnovwdINns4arupW8kSaAZ03e7S0GjtcsU0rFZ/4Z7u+2jfbc
-	 Z+4sagxmF2SdOAKNEqTWE8wMrxuz87PW1gA9sEqOly1kmfkqiujzT1HdYXaUsz9Z/xCPw
-	 VuDpWqrmozeUVwOrdLuRHsLTs04ukO/gZcLcSo24JiCYOr9/oAwgiV2oMaupXb29hoEsV
-	 IdmAU/fuu3BLqWwmrlxNL5jJXvNcr6MQGhCFO9wkxk9Z4vbf4onlV4UjuCMt/upo/Pg==
+	t=1793994799;
+	b=IAW6yV4duHjVu8vw+C66YpPLPmMs96ah55I5LwiAEKUDjBob7sWf6O7zPrrN63w/VgRQ
+	 MhVENFVzgxC0hIRH9lc5ig6gj3lvdn05dnfZ6f5QPr2mmYomVQMK2qXCfOX7WItX3TazJ
+	 Rg/BrczTh+Q6z0nHTbQ28OeY0GnPeZSp2OKzRaNT0TxffMgRgKj3ljdjXYlpOBdJ0F0vT
+	 4vh/zusucRDm8tgZBKfuVYkXfh4iI2QGGDA9PlK9qTOSW8Zjtt4fGrJUydniEwWXM8syi
+	 iZS9D35v0I6ABE4lcfoolPNdy34pVOy6PdnXjd5lX5allrzQFeSVoHgITvnZtc9NEAg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793977269;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
-	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
-	 Date:MIME-Version:Content-Type;
-	bh=M5MPDOAaXbMJ1OyMeKZyyri3Ta5QKkxKtSqeINlRiiM=;
-	b=gIhlYMQwg8NgHy8sp8fk7eoE64vwTajUetNzBt14jSdFdL10m8+uHT7tToKTt+r6CKLL
-	 fErQDPzaHHC48Wp9DuRHecvxJWl4aJIjJFud4xJrdvVnOYHi3JMpggbnutTwOcOn79OR1
-	 d7XKtGv75sgyk8GXMDSxvlACNhHBZe0d1iigAWF2c4HpFfw0ek99x+lAJglN8Gaizp8Ur
-	 JP9/ICawdd8voDvA6D7GOhy1dCi+VHySxdRRSaQS06je82MtVBbkrkVgXVQXAQSx48Smw
-	 uj1TdgLZnDsxWDYXMgEqYG5ZrUcNHwRpV9cUtmYROFGZkQgSQ1hCQHCVEElU05/o9/w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793994799;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=BnGa5cBVkYEM7YekUmBy3rHRj16j5PpMfPO9h+w82kU=;
+	b=nEI/AZ5xMxdSzJ3pxiZoyRhTj5yzSfABgHXj00f+djOq9shQf1gEMJ74WOUkZS0JyFmo
+	 VH4QM2V04wZhzMX6jrJi25sn16eFi6YtWI6ynUUaGJCFhXV8qCMCFGFxLZcy4CN34NrTq
+	 pGNdMVkcBisfHBd5kHbcu3yMD83SRjkDkCwJBqPiC8++UqXX4/iB9sF5pjNSEBzGBKSiB
+	 oqcKItlPAQHBWOhu7pr2JdZz2T/V8bQU+b+plZRo+T9whO6swhX4N7AzShfD+IWCzjqPr
+	 sRJ7XiFDV9SAwpr+saPv5v2HxqT88v6Cdo5YwL0xxvMeOcsJB/Mhv3oTG7yqjQvep9A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=bkjnlcvq;
-	arc=none smtp.remote-ip=209.85.221.180
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Sp+QrPvW;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F58606A326
-	for <mptcp@lists.linux.dev>; Fri,  6 Nov 2026 15:01:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 09F58606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FA3606A32E
+	for <mptcp@lists.linux.dev>; Fri,  6 Nov 2026 19:53:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=bkjnlcvq
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-5eae1276409so288600e0c.3
-        for <mptcp@lists.linux.dev>; Fri, 06 Nov 2026 07:01:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793977268; x=1794582068; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=M5MPDOAaXbMJ1OyMeKZyyri3Ta5QKkxKtSqeINlRiiM=;
-        b=bkjnlcvqVEWMqN9ty3Cd0J7evW3BXeCFe8REgBWY3x9oW0bKWAfYj2rlO6pXWiNgVK
-         PF/YBbLNkG+0/gsazF3GcKbVwEI6TbUUZJav4lGlwQc5NMiBcBp6NHPwbqqwKmkfqHJE
-         9LdAjH+WQDdxiPd8UXtdLIshY6heS2t5krG2HLBaL+Xv9yOsahWGX0Tvxza8Tu16B6n2
-         dj6v0TFHD1urf0N3KDfJ0QbdJYONsH2J8AsmaSfoy3W7so0p+PCdRIuphBXr/0ZsN63A
-         vThry0J7UCatQDP6N0x3vSaJcuirlMPqdb9pAsTyqsNIgcB1YqYwzZcH+eUNMDbnKuhH
-         oOrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793977268; x=1794582068;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=M5MPDOAaXbMJ1OyMeKZyyri3Ta5QKkxKtSqeINlRiiM=;
-        b=HRC1XCc5NfoJ0d0EUuPLLhxpAm8pOQ8hnTGYnsKSMllmtF1yJ6I60SqRbPVQshmMHD
-         j2p9/XlTz0hIRyFJ46Byg99TjG2Gq2SszylRulM1ZHxrP5pz2+TzKxcqWthwlSp+XhT9
-         DUDDmCHcjxWmNY8fYxa7ZGNsh2xFQ5Qe3bDJj8xe/WxceNeLFfV85/9QuG9K3mEVdQxH
-         iSKYu3euTmbYP12WOMpd6v3OXLKUbf7Ru7RAxNVX6+YIMUE2IoJAxBoS5KrNHRkIZbPv
-         65IA8EN2f+92meBTRT2dAjgvs7sC5aqjg44GMMTBR96a1ik0nhF4T3C3j1WEYQzUq53c
-         4hdQ==
-X-Gm-Message-State: APuU4Z/uzJmvwM+BClwBeYuv4kJ9HBIjDd64iONqujzgkKizD2pQibuZ
-	iiWZjDNXMggjeN/eGzr0yjVj8XWVJTFcO/G3engsT8k25Sg7OLRhGs6tXgd8xyzSiw==
-X-Gm-Gg: AYBFou0e/dHCYpUoapAZed4YGXQKm43N46mMNMW4GJmifNI+EPpEhcPHNSw7eSryshH
-	GlDKUD8TIhbjTkzP7+QWVGeNcfXahJlZNcHWV1sYK0VvAOICRR+6UJ3b3x2sGe6w2a0Ns4YTwfB
-	6cg/OZBl8cUmqrbpdyA9EttBbgHK78AxKnIOer+Fq1CR0QMVXoLljGCSjeG8lep9ouapXlezkyj
-	ALX20j4Wqk1CSJhWynolVUy3Hm7+Inz1uJWZwjlaRoGm/Q4dWvaJIDPOXHZuSNhGiRXO2Vf2RbG
-	mohIxt5PW97DUfgGZyn2Hn1MOop4n3B8OsL74Xg+/VKU8VeOx1l3cMFulbabVoGzjsYtu4pk5sH
-	Pyd8vxkygK2FZJPHQmb9odPfSi40gsf7qZJiUMgDDWcvx67ZFHpyiEG97aXhJd+hEmetN0/U20+
-	WXNC3T5PPc3jbtVGemHoDcHTI/YedbMXS/OhNIKySwJlIf6+dV2ufLXCkRtZZpGPkEnC6zXt3i1
-	Q9dir1bSBJxqWYgIqr+9qqNkNLuNyI4gjmc3exmsrx1lNyuuUdAH4JUY3+8TNDkgGJSxD3QCrKb
-	Tk/sbMz2iIGV2eBFf6OqYtaUm3KftPPYzGsxyukDfw==
-X-Received: by 2002:a05:6122:8b8c:b0:5ea:c6c1:8dd4 with SMTP id 71dfb90a1353d-5ecc43bb9d5mr1236395e0c.5.1793977267706;
-        Fri, 06 Nov 2026 07:01:07 -0800 (PST)
-Received: from github.com ([20.104.156.187])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-99badbceebdsm1925344241.3.2026.11.06.07.01.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Nov 2026 07:01:06 -0800 (PST)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1793969127.git.tanggeliang@kylinos.cn>
-References: <cover.1793969127.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v23 0/8] Reduce the differences between TCP
- and MPTCP for TLS usage
-Message-ID: <fe35d1b5-5eb1-c42b-84a4-f79fca2f5990@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Nov 2026 15:01:05 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Sp+QrPvW
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6356B1F0089F;
+	Fri,  6 Nov 2026 19:53:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793994798;
+	bh=BnGa5cBVkYEM7YekUmBy3rHRj16j5PpMfPO9h+w82kU=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=Sp+QrPvW3qCTQH/jQ6lt0SNZrWtdW8cqjUK2W+PyWc37NUTL98Q23oX3wU80e7eZQ
+	 9Z7tszfnNEv4LMDFcByr/IlpjOD/2/AvHUTJhm+XXdKElGSMgUbl9PIhJp+2EZ+ed/
+	 XI0k07U2/3OnvASg/iQ8bn3ZwJdyBDt3ait1hgxQuzsWRKA4EELmXNdPBGsBHpxXkc
+	 5n/6vsK0l2bMlW+sxxTb78u7E5PyfS1SGjb0jnhdtLE+OhAuhJLuC4g5NCGujkD6HB
+	 oQBaPaWLmYTlkCcrPu1Ttlm6xGraYRQ04FEeUbLbBbClrllrXral6eAqjrL4oEUJl6
+	 nubfFJz1DiIrw==
+Subject: Re: [PATCH mptcp-net v6 2/7] mptcp: fix TFO SIOCINQ overflow in
+ mptcp_inq_hint
+From: netdev-bot+sashiko@kernel.org
+To: geliang@kernel.org
+Cc: mptcp@lists.linux.dev, tanggeliang@kylinos.cn, kuba@kernel.org
+Date: Fri, 06 Nov 2026 19:53:17 +0000
+Message-ID: <179399479791.488855.16706068166152583136@kernel.org>
+In-Reply-To: <be320c98076afd0dc17be24a8ad89b6ca9a59a09.1793860134.git.tanggeliang@kylinos.cn>
+References: <be320c98076afd0dc17be24a8ad89b6ca9a59a09.1793860134.git.tanggeliang@kylinos.cn>
+X-sashiko-severity: Low
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -98,58 +61,44 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 
-Hi Geliang,
+Thank you for your contribution! Sashiko AI review found more severe
+issue(s) in other patches of this series. This mail is only an FYI, in case
+you want to address the nit picks below when you respin.
 
-Thank you for your modifications, that's great!
+Low priority / nit picks for your consideration:
 
-Our CI did some validations and here is its report:
+- [Low] The author and the Signed-off-by line on commit "mptcp: fix TFO
+  SIOCINQ overflow in mptcp_inq_hint" use different email addresses.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Perf: Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_n=
-et-next/actions/runs/42224796804
+--
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/1e352901ae=
-cd
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1204169
+mptcp: fix TFO SIOCINQ overflow in mptcp_inq_hint
 
+This commit changes mptcp_inq_hint() to compute the available bytes with
+mptcp_data_avail() instead of ack_seq minus the head skb's map_seq. On
+passive TFO connections, the old calculation could return INT_MAX until
+the TFO skb was fully consumed. The EOF hint of returning 1 is kept.
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+> Fixes: f03afb3aeb9d ("mptcp: drop __mptcp_fastopen_gen_msk_ackseq()")
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+[Severity: Low]
+This isn't a bug, but the Signed-off-by address doesn't match the author
+address. The author is:
 
-For more details:
+  Geliang Tang <geliang@kernel.org>
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+and the only sign-off is:
 
+  Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+checkpatch reports this as FROM_SIGN_OFF_MISMATCH.
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+The previous patch in the series, "mptcp: update mptcp_check_readable",
+is signed off with geliang@kernel.org. Could the sign-off here be changed
+to match the author address, or could a matching Signed-off-by be added,
+before this is applied?
+
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1793860134.git.tanggeliang%40kylinos.cn
