@@ -1,50 +1,50 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1793965035;
-	b=S/FKZKhf2Mmy/VjEcl4VJf0+yPYSO/AYKEka9ymTjpZu7P8T1k1K7gqLPwOea5Fd4yM1
-	 SdUm8HEDS8GqrHPXQxzrjRQCQAK3ZjoTeNNDT33hQScSdDG1nCNRu+Uqbkn33SJLhwi5X
-	 Io3K1fMWCIjh3La8nU4Avj4i0yKld4Ra3+xgYHNyGRY8eg2StyEtjQKd2DeNzoQav2hJx
-	 xpzVyr8huLtEzbvPInlksCl3uIQJIorUm70yiOeIWsvHvhc5uBmX2G2T9z/eG0Rj/zWK+
-	 ZxomAJdO1927/0iTAAhDDv3xVuXOwc6gg2HbVGNomxWGX0XhQww1aT6C5/1lpJnm2Yw==
+	b=wgaIbZq5PgkLJyY7zLDtUkqez+OKU4lsL+Wqz3Jbn3NYqaOn2EUVlV/WgM80v81D+mWS
+	 PzyLusXweQWHIwpWrcO5lUyS9fEoVd+M9tHxqk607xsbJDXwyEv+bngckVdq0QH/Y5wlQ
+	 kd2aHmrMVrWAFp5ggQAWX1jwdSpUAA1fbvI79EYDkSFWpBylLZJXdWA+MQbclf8mp3YPI
+	 yCME55rbayFu2GVde5zIZvoTP3f2XG22e4hKUXq7cftRnNjIwve/WaJNwpVmhthh92aAQ
+	 yj6r8vrdT9AwEUzy1c5kMFMfOMUx520D0UE7Q7J7bjWO8Q9W2CFqmQufVzMDJsUp27w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1793965035;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=6K3VF7qe7xqCuJ7XT+tgtmwumtm+zZmrEQTMAoysf3M=;
-	b=LJwp32Dsq8PAdzIoWmstqBdc0sKXPDDw0MFyaRoL/wwTx/dtYOZz+ePe4UOQI0auBe4c
-	 3I0MEdccAEX3BVsDqenQ31P0e7QIhWH69ExTrc3445oX7UctAM9seAjjIazXKv0Ojwtbo
-	 J4VQuyYO5EKVZ2riotDhmXqCfCbvkrQWlnMgSyZ1IZz9y8Fn2KALTZJkoXrOcqCh2ZpFA
-	 Jn/2SiFkMIrGA9ZkiuQOKUEEZKghBnAZk+A3MkrBEAYzJlLktAzLpdbss5D0voIR3DNFI
-	 aeDB0Ah85rXVoat1kXvCzcqhBdoC0pyRKgYuadyNsYnd1MlNcHvcBiycoKGnSegsrXw==
+	bh=K0ucOvjIjrcBa4o4gYqu3rYj0YatnSeO8vFYHsOpG+k=;
+	b=hS3mISkhgy55OA4nv0+bxp+vEbs36VUx2L0xMfYVo4U07s1mogT41wEVy8QhVS+ynNNH
+	 nEzA7XeXR8ZdjOCDE10n8PyufHKiBI3oGM1siOrQ976SZJuo3HoJLKWZbb8J01yAxA2+D
+	 TZf8lOdyX97x9C6JXLJj5Z/K0aMCIiIdPEo92BpMi+7ggL2r1QHpds0C9h9+GQzvSKmAx
+	 Q7sAP56cDnzmuZWb3cyCI0cD4bWWkmGubIOMzp06hW4BWQp/8c09JBJzJzwT7G9LONJKH
+	 gxxW82TcGbhLBB2Y3GqDNiO0AV1JbamPF9jDLEo68F3Mkf58IAc24EvTbNghM4HZHUg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lv1M0yp9;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=blsPHWGQ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A1F606C6F4
-	for <mptcp@lists.linux.dev>; Fri,  6 Nov 2026 11:37:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E362606C6C9
+	for <mptcp@lists.linux.dev>; Fri,  6 Nov 2026 11:37:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lv1M0yp9
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DBB31F008BE;
-	Fri,  6 Nov 2026 11:37:13 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=blsPHWGQ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A95FB1F008A3;
+	Fri,  6 Nov 2026 11:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793965034;
-	bh=6K3VF7qe7xqCuJ7XT+tgtmwumtm+zZmrEQTMAoysf3M=;
+	s=k20260515; t=1793965035;
+	bh=K0ucOvjIjrcBa4o4gYqu3rYj0YatnSeO8vFYHsOpG+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=lv1M0yp92wjg1PMym4/gYDsugCm9ofsMVbwAkRSXNHmf7e+3/HzDXgHVqJpu0CRKa
-	 9cOkSsZLMrw9zBxfruy5WD2XcdKBlMTDsd8NtdGwb464ylQbKiS4pjlVh2JtMq/1qY
-	 MAjcblSXcUpJHnl+SL+lx04Op7afOnAbHBG3VP8LvKxUJ43LpolO2vtkOMSLQUDQN2
-	 c/k1joGDzardQEWiRJSZ7I5PYj83SiZ3/Q+Kt81ZK5HH7lKf+eBvq4sfVir0AJtU52
-	 MNcDvsXgPA6NjNR9t4sEJQe3RE0OL6kJy+GbJR/DElypGwwUgF1I8iU+8qRasBe1/u
-	 9PQbjeUjmBx8g==
+	b=blsPHWGQiwFSIJVLjN568aBhuNHolyxDXWpJbK+froq4Mg2iEb8nsJEUROnUCGi11
+	 YCQjs5DWfB6e0IG+4UKCZBsC1WHO0TeD/TsqlqHuubMjep+KD9K8diUu7igaCLmOwS
+	 hMBWo73kzBh/9nhzr2Ae++YvylEGFoyZseVPLIIAAhI+9kYrqNeZ7q8ktWQGiijoM7
+	 dmaAuzwWgBRKET3Dq6y6Bs6Z8tekvDyJE30JkyOFsCHhuytKFzKJwzG/jI19G1sniB
+	 yuDPeUuSYupQw0ZDscX6SHXRpvb0KjWPT9O3VNwecs+QIuQAKquOj6yaNtvlYrwtlC
+	 0ZNDKVK/5Brjg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v22 2/8] selftests: mptcp: connect: check TFO SIOCINQ overflow
-Date: Fri,  6 Nov 2026 19:36:58 +0800
-Message-ID: <db502fd327a473221aef9a5bf2995cf627ec187f.1793964796.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-net v22 3/8] mptcp: fix fallback dummy mapping anchor
+Date: Fri,  6 Nov 2026 19:36:59 +0800
+Message-ID: <978cce15c0b5e46acfcdcad736d4bb7fc3367eaf.1793964796.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <cover.1793964796.git.tanggeliang@kylinos.cn>
 References: <cover.1793964796.git.tanggeliang@kylinos.cn>
@@ -61,82 +61,38 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Add a SIOCINQ check in mptcp_connect's server mode when the MPTFO socket
-option is enabled to detect TFO SIOCINQ overflow regressions.
+Commit 2834f8edd74d ("mptcp: cleanup fallback dummy mapping generation")
+anchored map_seq at the DSN of skb->seq but left map_subflow_seq
+anchored at copied_seq. This caused mptcp_subflow_get_mapped_dsn() to
+return the DSN at skb->seq instead of copied_seq.
 
-When a TFO connection is accepted, the test polls MPTCP_INFO until the
-MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED flag is set (with 100ms timeout),
-ensuring the third ACK has been processed. It then checks if SIOCINQ
-returns INT_MAX, which would indicate the regression where mptcp_inq_hint()
-incorrectly returns INT_MAX for passive TFO connections.
+When TCP queues a partially overlapping segment (seq < rcv_nxt), the skb
+starts before copied_seq, giving offset > 0. mptcp_init_skb() then sets
+map_seq to the wrong DSN, causing __mptcp_move_skb() to skip data or
+drop the skb, leaving a hole in the stream.
 
+Fix by anchoring map_subflow_seq at TCP_SKB_CB(skb)->seq, ensuring
+mptcp_subflow_get_mapped_dsn() returns the correct DSN at copied_seq.
+
+Fixes: 2834f8edd74d ("mptcp: cleanup fallback dummy mapping generation")
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../selftests/net/mptcp/mptcp_connect.c       | 37 +++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ net/mptcp/subflow.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 178d98d91fea..41eff818e950 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -34,6 +34,7 @@
- #include <linux/time_types.h>
- #include <linux/sockios.h>
- #include <linux/compiler.h>
-+#include <linux/mptcp.h>
- 
- extern int optind;
- 
-@@ -1176,6 +1177,24 @@ static void maybe_close(int fd)
- 		close(fd);
- }
- 
-+static bool wait_for_remote_key(int fd)
-+{
-+	struct mptcp_info info;
-+	int retries = 10;
-+	socklen_t olen;
-+
-+	while (retries > 0) {
-+		olen = sizeof(info);
-+		if (getsockopt(fd, SOL_MPTCP, MPTCP_INFO, &info, &olen) < 0)
-+			return false;
-+		if (info.mptcpi_flags & MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED)
-+			return true;
-+		usleep(10000);
-+		retries--;
-+	}
-+	return false;
-+}
-+
- int main_loop_s(int listensock)
- {
- 	struct sockaddr_storage ss;
-@@ -1207,6 +1226,24 @@ int main_loop_s(int listensock)
- 		check_sockaddr(pf, &ss, salen);
- 		check_getpeername(remotesock, &ss, salen);
- 
-+		if (cfg_sockopt_types.mptfo) {
-+			int avail;
-+
-+			if (!wait_for_remote_key(remotesock)) {
-+				fprintf(stderr,
-+					"TFO: timeout waiting for third ACK\n");
-+				close(remotesock);
-+				return 1;
-+			}
-+
-+			if (ioctl(remotesock, SIOCINQ, &avail) == 0 &&
-+			    avail == INT_MAX) {
-+				fprintf(stderr, "TFO SIOCINQ overflow\n");
-+				close(remotesock);
-+				return 1;
-+			}
-+		}
-+
- 		if (cfg_input) {
- 			fd = open(cfg_input, O_RDONLY);
- 			if (fd < 0)
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 00677fb3efcd..6f07544bfe40 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1496,7 +1496,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 	skb = skb_peek(&ssk->sk_receive_queue);
+ 	subflow->map_valid = 1;
+ 	subflow->map_data_len = skb->len;
+-	subflow->map_subflow_seq = tcp_sk(ssk)->copied_seq - subflow->ssn_offset;
++	subflow->map_subflow_seq = TCP_SKB_CB(skb)->seq - subflow->ssn_offset;
+ 	subflow->map_seq = __mptcp_expand_seq(subflow->map_seq,
+ 					      subflow->iasn +
+ 					      TCP_SKB_CB(skb)->seq -
 -- 
 2.55.0
 
