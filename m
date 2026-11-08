@@ -1,55 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794123447;
-	b=J1d1PTU0wI5xpFDoEzFfE71ktvwwH47OkUr61yHxa3gXGscAYKfQ1KzEMZ73py65bJzV
-	 uiav1tugOF+szLyaYjEYP7w+MkYjxLil/gqS2FGMksW1CM4p38hAgkW2jkJ3mrOsUTiMs
-	 6YUEe3RIAm+HPDNFtn0oXrpgGQaAJFeFQIL1ctmH63p/72Mem3egEnXorDLgICwEFBf4i
-	 Iv0E+j9w6R+HIQPayZLRBVgW4GXTEHyUwnyKty1Z6Yl98S3Ks7cIDQnvELkGCJxwWfQfH
-	 k81FXB6RzbX+XH7x9+dmDuJLFCox6wFyVY30cCr2d9P6ikjraD7GpWf3SfA3vDJWA+Q==
+	t=1794123448;
+	b=4YJGfa6bMw3lxGvYUk3uioMbt1zZVcNZJteqmOQb0uwAOn4rpfC9QXbj52OR+MpqIOBZ
+	 zOSAdOUx/Z2EYk/xDS7UxrGROJLKOAY49mlyGLpEOHQDWa+Kfve1jWKhl3Zg4rSjzOw8w
+	 vX5j9zyAfkvFl86iXagnhzZSzr7l0O2tIVS95mRslSeEZVEN1qSgmmTiuqqI0ajfJRUAP
+	 iskaq4OHrYo0gImtZyVkA6HhgLewbfJuiTfNwMpby98NMD4DpIgz7C7318o85Uk89oVVx
+	 cIW46/NEKuTYpGH9/KGHT4dLXaAcSgwrn9LBg1ucdCUtKc7kqX6OPNaOOz2/MzIUjBw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794123447;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794123448;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=MmbJZXRV/rmwUou2PQTnf74DPb29LnFo0GC5bS8lXlU=;
-	b=grW+Ur9HpMH8hQa6/nnSk3vUCpd6lrC+2MD6XKDAPpo5Fx6GDFCczrOp/PWathFnbJrI
-	 GQiOHI/gL3CDqSOnHF8Yebv0oHUWH4HmiqA4VzWexp3wVBK6gRqzC+FOKSWqIiWgKlFok
-	 rmbyc8OLz6gbE4VXlQs6sDurjkleDJQIk2bxZa5+TvWGJ9GlEWdWf3/AD9YrGZHWCS1ZQ
-	 vHRxDntyKjCjCSRKAKE/JWQdXmqvdIc9itVutInIYBapjCU49ynf1knenYu4rJS4rUSZ6
-	 aXYKncsDzILTZEJgOQMjG2DEYip2PL2SIUNRBG9cUXUnV3oQwsa/2LK+JwWtPIqLNXQ==
+	bh=0pYlguSOsSeqX2zIJ2YuxhuDCgzA761R7GnrZEP672k=;
+	b=Ng5qO7zc4SkzxD6DFfpqeZoY4dWbKVzswnCu/z89ZCxhZ8eBlnp+kR1akZqDwEuebjd5
+	 i2snx6CVq1hSebtaIdm7hPxqBtqtFa4hPvcXiy0D5q9jhd5MXE5cYsEQQ+tpMFfgjgH5A
+	 GLcF9oD4llnJkXO7KPq6hGOqd4zJDg0iFtgf/smrFd0xH1wbatfUd+g5sZmNqMBbz2MRQ
+	 sHQo/Py7a5pC/qe74Npq9XnGkSppSSm/sa7Se0dJlQGKYXRWbffGpRvDcs98/pudnSahe
+	 Uw+4CvuZfhFDMnipDrRHpaXAPexT7G1SYmS1z+6SdyUVnRzln03ERCngGoI6F6GA+mA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nUZtj9Lc;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LNX6jM0u;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7C1606A31C
-	for <mptcp@lists.linux.dev>; Sun,  8 Nov 2026 07:37:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE5C606A31C
+	for <mptcp@lists.linux.dev>; Sun,  8 Nov 2026 07:37:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nUZtj9Lc
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13BE71F008A5;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LNX6jM0u
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD41E1F0089F;
 	Sun,  8 Nov 2026 07:37:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794123447;
-	bh=MmbJZXRV/rmwUou2PQTnf74DPb29LnFo0GC5bS8lXlU=;
+	s=k20260515; t=1794123448;
+	bh=0pYlguSOsSeqX2zIJ2YuxhuDCgzA761R7GnrZEP672k=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=nUZtj9LcD+n7Boza4aSEjtSYcE2UDe2Ia+3ohufTCzdBOd0Sqs7QAvh7eau4lWh5O
-	 1y7hQWZHwC+TDs+AAVpgF1vYKU/kSG4dHSXaxFK0I3CU73RPK6vaaTX1laOj22UF7u
-	 wmX0RTdA0hZxmV/sibDgLvkfCA+bxd0OHbE1kBf0cW4L6P/G21HzQHMv4lkaYNkjxa
-	 /PUuDRxE6ja/G6eeOpQwykh9IMXHblu1qy+jj6jRxBKCGyXfGwUMPndxiyctwhjv0w
-	 QXsc5qjO6LsjSd6E6TNI6UIEChjal05atdodFEcHC9vR5/1w9C82298WEn6AQ0c0vk
-	 ElBOBBjkn+zkw==
-Subject: Re: [PATCH mptcp-next v23 6/8] mptcp: remove CB offset field
+	b=LNX6jM0u3JRwBp3rLvwHP8qZI/UpYVfF/rTABiRE619+42L1TM+fUSfc/FK64m1DG
+	 8LMmgkgxIiPM7VA1eAP8/bpj62gz/TPhQJCRGFq1hJLojf2gAQshWKM2bue9jfPRrp
+	 11nyw2/i9aYz95YUvQvCQMkMA8NlSnWQxiLqkYoAb9ZeZ8M0XxNh0NUIRRgatmWSj3
+	 2HIHY/LMf0ZoainNhpMT+BpmacUNvaCSyfT86bVVUwHENH+A4lIZ9IxJcFRcvasOnE
+	 bbd8H8DHSOBV7//FXpbohEQ4kK/Hcegdpv3FuJdpaKNqji74gz+Vkxr31lNZVfDnP1
+	 2YUhzTrMWz1jA==
+Subject:
+ Re: [PATCH mptcp-next v23 7/8] mptcp: sync mptcp skb cb layout with tcp one
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, tanggeliang@kylinos.cn, pabeni@redhat.com,
  kuba@kernel.org
-Date: Sun, 08 Nov 2026 07:37:26 +0000
-Message-ID: <179412344663.488855.11908782610872352577@kernel.org>
-In-Reply-To: <bf2faa4c21a3faf79fece4448402bfd726fbf9e4.1793969127.git.tanggeliang@kylinos.cn>
-References: <bf2faa4c21a3faf79fece4448402bfd726fbf9e4.1793969127.git.tanggeliang@kylinos.cn>
-X-sashiko-severity: High
+Date: Sun, 08 Nov 2026 07:37:27 +0000
+Message-ID: <179412344748.488855.16186251375492820658@kernel.org>
+In-Reply-To: <e1a5c5e94eb9436da539e2f4f4f67c70f0325df9.1793969127.git.tanggeliang@kylinos.cn>
+References: <e1a5c5e94eb9436da539e2f4f4f67c70f0325df9.1793969127.git.tanggeliang@kylinos.cn>
+X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -62,206 +63,128 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issue(s) to consider.
+Thank you for your contribution! Sashiko AI review found more severe
+issue(s) in other patches of this series. This mail is only an FYI, in case
+you want to address the nit picks below when you respin.
 
-Critical: 0 · High: 1 · Medium: 1 · Low: 0
+Low priority / nit picks for your consideration:
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
-
-- [High] mptcp: truesize corruption after pskb_pull() in mptcp_init_skb()
-- [Medium] mptcp_init_skb() (net/mptcp/protocol.c) gains a new mapping-
-  boundary branch.
+- [Low] The commit message says the new layout makes "fields with a
+  corresponding TCP-level data use the same area inside the CB itself".
 
 --
 
-mptcp: remove CB offset field
+mptcp: sync mptcp skb cb layout with tcp one
 
-The patch drops the per-skb MPTCP_SKB_CB(skb)->offset field. Bytes
-already consumed inside each skb are now tracked by a new msk-level
-copied_seq field, as plain TCP does. When an skb spans multiple DSS
-mappings, mptcp_init_skb() now strips the consumed prefix with
-pskb_pull(), and it returns false if the pull fails.
+This commit shrinks the MPTCP-level map_seq and end_seq CB fields to 32
+bits. It also adds a map_seq64 field holding the full 64-bit DSN and a
+flags field, and moves most receive path sequence comparisons to the
+32-bit before()/after() helpers. Build-time checks are added so that some
+MPTCP CB fields stay aligned with their tcp_skb_cb counterparts.
 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index a6c4bad0a8b96..f75297c4d6b0d 100644
+> index f75297c4d6b0d..2a99b5ced3b0c 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
 
 [ ... ]
 
-> @@ -415,25 +414,38 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
->  	skb_set_owner_r(skb, sk);
+> @@ -4896,11 +4906,23 @@ static int mptcp_napi_poll(struct napi_struct *napi, int budget)
+>  	return work_done;
 >  }
 >  
-> -static void mptcp_init_skb(struct sock *ssk, struct sk_buff *skb, int offset,
-> -			   int copy_len)
-> +static bool mptcp_init_skb(struct sock *ssk, struct sk_buff *skb, int offset)
+> +#define CHK_CB_FIELD(mptcp_field, tcp_field)	\
+> +	({					\
+> +		BUILD_BUG_ON(offsetof(struct mptcp_skb_cb, mptcp_field) !=    \
+> +			     offsetof(struct tcp_skb_cb, tcp_field));	      \
+> +		BUILD_BUG_ON(offsetofend(struct mptcp_skb_cb, mptcp_field) != \
+> +			     offsetofend(struct tcp_skb_cb, tcp_field));      \
+> +	})
+> +
+>  void __init mptcp_proto_init(void)
 >  {
->  	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
->  	bool has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
+>  	struct mptcp_delegated_action *delegated;
+>  	int cpu;
 >  
-> +	/* Detect mapping boundary: skb spans multiple mappings */
-> +	if (unlikely(offset > 0 &&
-> +		     before(TCP_SKB_CB(skb)->seq - subflow->ssn_offset,
-> +			    subflow->map_subflow_seq))) {
-> +		if (offset >= skb->len || !pskb_pull(skb, offset)) {
-> +			WARN_ON_ONCE(1);
-> +			sk_eat_skb(ssk, skb);
-> +			return false;
-> +		}
-> +		offset = 0;
-> +	}
-
-[Severity: High]
-Does this pskb_pull() leave skb->truesize out of sync with the head
-size?
-
-At this point the skb is still on ssk->sk_receive_queue and still owned
-by the subflow, so skb->sk is ssk and skb->destructor is sock_rfree.
-When offset exceeds skb_headlen(), pskb_pull() goes through
-__pskb_pull_tail(). That calls pskb_expand_head() when tailroom is
-short or the skb is cloned.
-
-pskb_expand_head() only fixes up truesize for skbs that are orphaned:
-
-net/core/skbuff.c:pskb_expand_head() {
-    ...
-	if (!skb->sk || skb->destructor == sock_edemux)
-		skb->truesize += size - osize;
-    ...
-}
-
-So skb_end_offset(skb) grows and skb->truesize stays the same.
-pskb_pull() then advances skb->data by the whole offset. That leaves
-skb_headlen(skb) == 0, with all remaining payload in frags.
-
-Now suppose this skb later becomes the from argument of
-skb_try_coalesce(). That can happen through __mptcp_try_coalesce() from
-__mptcp_move_skb(), __mptcp_add_backlog(), mptcp_data_queue_ofo() or
-__mptcp_ofo_queue(). The headlen == 0 branch there computes:
-
-	delta = from->truesize - SKB_TRUESIZE(skb_end_offset(from));
-
-This delta is now short by the head expansion. It can fall below
-from->len, or go negative, and trip WARN_ON_ONCE(delta < len).
-
-The wrong delta is then added to to->truesize and charged through
-mptcp_try_coalesce() into sk->sk_rmem_alloc and the msk forward memory.
-On the backlog path it also feeds into the ssk rmem and
-msk->backlog_len accounting. So the receive memory accounting drifts
-for the rest of the connection's life. Even without coalescing, the
-skb is under-charged when its truesize is moved to the msk.
-
-As described for the other pskb_pull() concern, a peer can reach this
-branch with a segment that partially overlaps already consumed data and
-carries a DSS mapping starting in its middle. With GRO-merged or
-coalesced paged skbs, this looks remotely triggerable.
-
-How should this be fixed? One option is to uncharge or orphan the skb
-from ssk before modifying it, and recompute truesize after the pull.
-Another is to avoid reshaping the skb in this path at all. Which one
-did you have in mind?
-
-[Severity: Medium]
-Can this pskb_pull() fail under normal runtime conditions and then WARN
-and drop data?
-
-When offset is larger than skb_headlen(), pskb_pull() goes through
-__pskb_pull_tail(). That function returns NULL in two cases:
-
-net/core/skbuff.c:__pskb_pull_tail() {
-    ...
-	if (!skb_frags_readable(skb))
-		return NULL;
-
-	if (eat > 0 || skb_cloned(skb)) {
-		if (pskb_expand_head(skb, 0, eat > 0 ? eat + 128 : 0,
-				     GFP_ATOMIC))
-			return NULL;
-	}
-    ...
-}
-
-The first is any skb with unreadable (devmem/netmem) frags. The second
-is a GFP_ATOMIC failure when the skb has no tailroom or is cloned, for
-example while a packet tap is active.
-
-So an ordinary atomic allocation failure in softirq hits WARN_ON_ONCE(1).
-On hosts with panic_on_warn, that becomes a crash.
-
-Can a remote peer steer packets into this branch?
-
-validate_mapping() in net/mptcp/subflow.c compares tp->copied_seq, not
-the skb start, against the mapping:
-
-	u32 ssn = tcp_sk(ssk)->copied_seq - subflow->ssn_offset;
-
-	if (unlikely(before(ssn, subflow->map_subflow_seq))) {
-
-Suppose [S, S+100) has already been consumed. The peer can then send a
-partially overlapping segment [S+50, S+200) whose DSS mapping starts at
-S+100. tcp_data_queue() queues that segment untrimmed, and
-mptcp_init_skb() is then called with offset > 0 on an skb that starts
-before map_subflow_seq.
-
-Even when the pull succeeds, the receiver may have to reallocate a
-(possibly high-order) linear head in softirq. It then copies up to a
-GRO-merged skb's worth of paged data (around 64KB) into it, only to
-throw that data away.
-
-The previous code handled the same case without any allocation by
-recording MPTCP_SKB_CB(skb)->offset.
-
->  	/* the skb map_seq accounts for the skb offset:
->  	 * mptcp_subflow_get_mapped_dsn() is based on the current tp->copied_seq
+> +	CHK_CB_FIELD(map_seq, seq);
+> +	CHK_CB_FIELD(end_seq, end_seq);
+> +	CHK_CB_FIELD(flags, tcp_flags);
+> +
 
 [ ... ]
 
-> @@ -855,7 +863,10 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
->  		if (offset < skb->len) {
->  			size_t len = skb->len - offset;
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 7878e6ac6c0b6..fa54f70ab501d 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -129,9 +129,12 @@
+>  #define MPTCP_SYNC_SEQ		8
 >  
-> -			mptcp_init_skb(ssk, skb, offset, len);
-> +			if (!mptcp_init_skb(ssk, skb, offset)) {
-> +				seq += len;
-> +				goto out;
-> +			}
+>  struct mptcp_skb_cb {
+> -	u64 map_seq;
+> -	u64 end_seq;
+> +	u32 map_seq;
+> +	u32 end_seq;
+> +	u32 unused;
+> +	u16 flags;
+>  	u8  has_rxtstamp;
+> +	u64 map_seq64;
+>  };
 
-On the failure path, is it intended that tp->copied_seq moves past the
-skb that sk_eat_skb() just freed?
+[Severity: Low]
+The commit message says this change allows:
 
-Those bytes have already been acked at the TCP level, but msk->ack_seq
-never covers them. They are dropped without bumping any MIB counter. The
-goto also skips the map_remaining < len DSS-corruption check below.
+  "updating the MPTCP CB layout so that fields with a corresponding
+  TCP-level data use the same area inside the CB itself."
 
-The MPTCP stream would then stall until MPTCP-level retransmission or
-reinjection fills the hole.
+Is that accurate for has_rxtstamp? map_seq, end_seq and flags line up
+with seq, end_seq and tcp_flags in struct tcp_skb_cb. has_rxtstamp does
+not, although TCP has a field with the same name and meaning.
 
-The commit message only says:
+In struct mptcp_skb_cb, the u8 has_rxtstamp sits at byte 14. In struct
+tcp_skb_cb, byte 14 is the sacked byte:
 
-    When pskb_pull() fails,
-    the caller updates seq and jumps to the cleanup path to ensure
-    tp->copied_seq and more_data_avail are properly updated.
+include/net/tcp.h:struct tcp_skb_cb {
+    ...
+	__u16		tcp_flags;	/* TCP header flags (tcp[12-13])*/
 
-It does not mention the WARN or the dropped data.
+	__u8		sacked;		/* State flags for SACK.	*/
+	__u8		ip_dsfield;	/* IPv4 tos or IPv6 dsfield	*/
+    ...
+	__u8		txstamp_ack:2,	/* Record TX timestamp for ack? */
+			eor:1,		/* Is skb MSG_EOR marked? */
+			has_rxtstamp:1,	/* SKB has a RX timestamp	*/
+			unused:4;
+	__u32		ack_seq;	/* Sequence number ACK'd	*/
+    ...
+}
 
->  
->  			if (own_msk) {
->  				mptcp_subflow_lend_fwdmem(subflow, skb);
-> @@ -878,6 +889,7 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
->  			}
->  		}
->  
-> +out:
->  		WRITE_ONCE(tp->copied_seq, seq);
->  		more_data_avail = mptcp_subflow_data_available(ssk);
+TCP's has_rxtstamp bit is in byte 16. In the MPTCP struct, the new u64
+map_seq64 covers bytes 16-23. It therefore overlaps both the
+txstamp_ack/eor/has_rxtstamp byte and ack_seq.
 
-[ ... ]
+The CHK_CB_FIELD() checks in mptcp_proto_init() only cover map_seq/seq,
+end_seq/end_seq and flags/tcp_flags. offsetof() also can't be applied to
+the has_rxtstamp bitfield, so nothing at build time would catch this.
+
+As far as I can tell, no current path reads these bytes through
+TCP_SKB_CB() on msk-level skbs:
+
+  - mptcp_init_skb() and mptcp_fastopen_subflow_synack_set_params() copy
+    TCP_SKB_CB(skb)->has_rxtstamp into a local before rewriting the CB.
+  - __mptcp_recvmsg_mskq() reads it via MPTCP_SKB_CB().
+
+Suppose a TCP helper is later run on skbs in the msk receive or OFO
+queue and reads TCP_SKB_CB(skb)->has_rxtstamp, ->eor or ->sacked.
+Wouldn't it silently get bits of map_seq64 or of the MPTCP has_rxtstamp
+byte?
+
+Would it make sense to do one of these?
+
+  - Narrow the commit message, including the "shared fields" wording
+    about the build time check, to seq, end_seq and flags.
+  - Place has_rxtstamp and map_seq64 so they don't collide with the TCP
+    fields, and document the overlap.
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1793969127.git.tanggeliang%40kylinos.cn
