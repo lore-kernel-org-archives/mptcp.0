@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794216262;
-	b=utSPuB8YdC+YoDlJZEOlSgD98CE0aJbi/yMO7/l0S/RqDWZHmlNHPz0dSg6D/a2BKU0k
-	 yc432rvk0CHLa9bfjgB/iKge0bNOl4ehBOLe8GN7seKoGrCO6SzH0XSeMrWFiNj4mmtVB
-	 PkbsuE9aoFqlxgjN2qwo2+D/pauS+rOQ6xivYmrXh3TnWo+1toix2kAxdgWqFXMGdGehx
-	 cG55XKafqj+suDUab+EHOJJ1i4PUG/EqwHsRi3EMWGDMATTlKBrzJ5xZEwEzTjoeBqs36
-	 TmYj18+hSBMVJNLARBRpXSmu45OVcoNryKcFz2ttrVpaB9g5ZYz0imx3HObZuxHtgLw==
+	t=1794216264;
+	b=hftLdq24FagoBClgHhLyvotivR7TaoicBoiuzF6iHMcjXPXlpROWg587rVI7ChHm+MoD
+	 KIWtCCtY3nUKW/kIq5gVdbkO5CplOBw9UvAT458n/jKidvUQzPzPbRcv7nEYJYt7m46Bo
+	 aUZ60C8XRziIy+VrUOJvn0ShxABcQXeLU7pz8sQpczRvcskWYmmIcetAUAAYZ0DCSnSrW
+	 cQihLSMkSZ1VUNQt6hG4yp6iLGY/XkodpxUOUJ9zc7DF4Sh0yZb26IWDGdO/yPsXNNsWg
+	 buifYPqxhga737QYFSMlzfsLL7P6UDxXeptnMYWfxLi8QEFD7neqWTRNE1yKZgNybSg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794216262;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794216264;
 	h=Received:DKIM-Signature:From:To:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=G08kbPvIyf7eqm25qFFDIscdysBw9bpxI/7rJVk/EY8=;
-	b=2AJzT3ze6ccLnK4dZxOyMbR44faye5swiHYUvEizBk9AmTVJlEf9NohtShHxTNQIRh1j
-	 WIceElhvkqwIXq2wgPNnZL8jlxGCSSvuCkB63dSyNs0bhKDb8VCEUNSlPfsHWZvap6E6Q
-	 IILTeeBWKvCwYER3GpnBJEwnll4l1VG1inVkwCchqWFNmSrDspovBZCHvrmntzePinVsR
-	 cAASHbMohTY2a8wQvbDeMA0qMffQEptefuFPBfp6kF9fUUDB1zEpn6UucoMwdwXtGhoD/
-	 a/AvhjjYaXEh6AF10L/55sah9B+LnFva0mA7e31SBWVPZ5hDSM/sacutJJo8foA0/+A==
+	bh=K0ucOvjIjrcBa4o4gYqu3rYj0YatnSeO8vFYHsOpG+k=;
+	b=JeTxYQeTHPvr/q8e3iGlQ+BkRdvwRe1JIqjDshiB8HteUcv3gbEzDCQYtYdcKjnuRt9P
+	 P+QLP+Wk6z5XxTfmuD5Ltz1pjUwWBbJI7ooE0npWQSbKHmnbQaEY/fuWQuRDpW9Xy2t7U
+	 W67maj8kkcmYrMcdDKb5kMZZ7Hhfrj4UZTdNaqYzMk6ADBBvZoeibg8Obvr8EUntCE6oS
+	 BH/cWgtCLarVB+I8YoDrZEiJo3sc/lNJZedEDAaWcZGB6+/rScu0qgt9lzp1qXk3lAUlO
+	 wr12hpRzSCZW5F7qcoc0RscRvuyCESH+6xd3eSgxNlLErACFyeIKR4FzFxyq4hh3clQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QJCxqCqr;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mmqCKNhV;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568B3606D807
-	for <mptcp@lists.linux.dev>; Mon,  9 Nov 2026 09:24:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA6CF606EEBF
+	for <mptcp@lists.linux.dev>; Mon,  9 Nov 2026 09:24:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QJCxqCqr
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BDC91F008A7
-	for <mptcp@lists.linux.dev>; Mon,  9 Nov 2026 09:24:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mmqCKNhV
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDA2E1F008A3
+	for <mptcp@lists.linux.dev>; Mon,  9 Nov 2026 09:24:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794216262;
-	bh=G08kbPvIyf7eqm25qFFDIscdysBw9bpxI/7rJVk/EY8=;
+	s=k20260515; t=1794216263;
+	bh=K0ucOvjIjrcBa4o4gYqu3rYj0YatnSeO8vFYHsOpG+k=;
 	h=From:To:Subject:Date:In-Reply-To:References;
-	b=QJCxqCqrSniPkFX/Jni5GhiygPOIjwemkH5bmd2mBX8Pso2cIsTkqyJzexXvBOEST
-	 016kAu5HxjNyEFRxAUeSPh+lTXrYzGLT8IVpPuSed8T/aWOyh1d88Ga96DcfLXCg4e
-	 g6AKtJrGiRrMRQfX26H/LDFG4azoA8+g3SOH0dUeTwr1BQvLGFwxbJUhv3qOReezQs
-	 56eqKyO5zI2YKKTQZVpacos283t/LqoOf4DNjHwMg4WyhGi5lQkfOcokNINf7d5VcX
-	 VQciZQ6LoEjdKIeLLTUz25NHN/WLdt3LLkpldK8XXRKQEQ7amPxzxV/L/bb5TQ3cs4
-	 bgHMumCBcpf/Q==
+	b=mmqCKNhV9H36LsNGL7WvVWjTwIzyLq2W1uzy0bctN6psCmT0PFQY1eS6OHspTEXup
+	 NdE7p70J/2KbKVleD+vxVIDRIGk33L+iTnK//tW+PwKi3lSRjI8KQUhMPOM4GKpbLr
+	 xUiOcWYpP65jfo8n6jJPlAwkX7Fc4od/S4MJNg1GGJjbGLsa3IblshzmtM3l7jAQr8
+	 GST5ubpd1hCoN9k5xKszRa7HHfb+41UvykcQ5RknDTsK/iNbSxnGHPAL86ylCZvtX+
+	 P8vrWDNh4MNHIvPeQirMHvcChRmHsPzYz6+fTqJuPj5CbfGasXc9u6PDMwrfTBxPfx
+	 3z54CPkxl5akQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v24 2/8] selftests: mptcp: connect: check TFO SIOCINQ overflow
-Date: Mon,  9 Nov 2026 17:24:04 +0800
-Message-ID: <7062643d703b5143ba7bd56bc819d7e7854fdc9b.1794215614.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-net v24 3/8] mptcp: fix fallback dummy mapping anchor
+Date: Mon,  9 Nov 2026 17:24:05 +0800
+Message-ID: <e435ea3e016f626c2738cfd9d5172c198ceb5b65.1794215614.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <cover.1794215614.git.tanggeliang@kylinos.cn>
 References: <cover.1794215614.git.tanggeliang@kylinos.cn>
@@ -60,105 +60,38 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Add a SIOCINQ check in mptcp_connect's server mode when the MPTFO socket
-option is enabled to detect TFO SIOCINQ overflow regressions.
+Commit 2834f8edd74d ("mptcp: cleanup fallback dummy mapping generation")
+anchored map_seq at the DSN of skb->seq but left map_subflow_seq
+anchored at copied_seq. This caused mptcp_subflow_get_mapped_dsn() to
+return the DSN at skb->seq instead of copied_seq.
 
-When a TFO connection is accepted, the test polls MPTCP_INFO until the
-MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED flag is set (using poll_timeout,
-default 10s), ensuring the third ACK has been processed. It then checks
-if SIOCINQ returns INT_MAX, which would indicate the regression where
-mptcp_inq_hint() incorrectly returns INT_MAX for passive TFO connections.
+When TCP queues a partially overlapping segment (seq < rcv_nxt), the skb
+starts before copied_seq, giving offset > 0. mptcp_init_skb() then sets
+map_seq to the wrong DSN, causing __mptcp_move_skb() to skip data or
+drop the skb, leaving a hole in the stream.
 
-Add SOL_MPTCP fallback definition for compatibility with older libc
-headers. Handle ENOPROTOOPT and EOPNOTSUPP errors from getsockopt() to
-skip the wait for TCP sockets or MPTCP sockets that fell back to TCP.
-Print a warning if the remote key does not arrive within the timeout, but
-continue with the SIOCINQ check rather than failing the test.
+Fix by anchoring map_subflow_seq at TCP_SKB_CB(skb)->seq, ensuring
+mptcp_subflow_get_mapped_dsn() returns the correct DSN at copied_seq.
 
+Fixes: 2834f8edd74d ("mptcp: cleanup fallback dummy mapping generation")
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../selftests/net/mptcp/mptcp_connect.c       | 47 +++++++++++++++++++
- 1 file changed, 47 insertions(+)
+ net/mptcp/subflow.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 178d98d91fea..da35a5ce1541 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -34,6 +34,7 @@
- #include <linux/time_types.h>
- #include <linux/sockios.h>
- #include <linux/compiler.h>
-+#include <linux/mptcp.h>
- 
- extern int optind;
- 
-@@ -43,6 +44,9 @@ extern int optind;
- #ifndef TCP_ULP
- #define TCP_ULP 31
- #endif
-+#ifndef SOL_MPTCP
-+#define SOL_MPTCP 284
-+#endif
- 
- static int  poll_timeout = 10 * 1000;
- static bool listen_mode;
-@@ -1176,6 +1180,28 @@ static void maybe_close(int fd)
- 		close(fd);
- }
- 
-+static int wait_for_remote_key(int fd)
-+{
-+	struct mptcp_info info;
-+	socklen_t olen;
-+	int elapsed = 0;
-+
-+	while (elapsed < poll_timeout || poll_timeout < 0) {
-+		olen = sizeof(info);
-+		if (getsockopt(fd, SOL_MPTCP, MPTCP_INFO, &info, &olen) < 0) {
-+			/* Not an MPTCP socket (TCP or fallback), skip wait */
-+			if (errno == ENOPROTOOPT || errno == EOPNOTSUPP)
-+				return 0;
-+			return -1;
-+		}
-+		if (info.mptcpi_flags & MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED)
-+			return 0;
-+		usleep(10000);
-+		elapsed += 10;
-+	}
-+	return 1;
-+}
-+
- int main_loop_s(int listensock)
- {
- 	struct sockaddr_storage ss;
-@@ -1207,6 +1233,27 @@ int main_loop_s(int listensock)
- 		check_sockaddr(pf, &ss, salen);
- 		check_getpeername(remotesock, &ss, salen);
- 
-+		if (cfg_sockopt_types.mptfo) {
-+			int ret = wait_for_remote_key(remotesock);
-+			int avail;
-+
-+			if (ret < 0) {
-+				perror("TFO: getsockopt(MPTCP_INFO)");
-+				close(remotesock);
-+				return 1;
-+			}
-+			if (ret > 0)
-+				fprintf(stderr,
-+					"TFO: timeout waiting for remote key\n");
-+
-+			if (ioctl(remotesock, SIOCINQ, &avail) == 0 &&
-+			    avail == INT_MAX) {
-+				fprintf(stderr, "TFO SIOCINQ overflow\n");
-+				close(remotesock);
-+				return 1;
-+			}
-+		}
-+
- 		if (cfg_input) {
- 			fd = open(cfg_input, O_RDONLY);
- 			if (fd < 0)
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 00677fb3efcd..6f07544bfe40 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1496,7 +1496,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 	skb = skb_peek(&ssk->sk_receive_queue);
+ 	subflow->map_valid = 1;
+ 	subflow->map_data_len = skb->len;
+-	subflow->map_subflow_seq = tcp_sk(ssk)->copied_seq - subflow->ssn_offset;
++	subflow->map_subflow_seq = TCP_SKB_CB(skb)->seq - subflow->ssn_offset;
+ 	subflow->map_seq = __mptcp_expand_seq(subflow->map_seq,
+ 					      subflow->iasn +
+ 					      TCP_SKB_CB(skb)->seq -
 -- 
 2.55.0
 
