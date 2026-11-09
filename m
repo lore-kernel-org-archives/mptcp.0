@@ -1,57 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.21
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794186925;
-	b=4Y5pFikW+wlniMlPaeWFZODlqF6CY/bQbYzJDz3PfwS18RedG/hij2sQjQUKVTY2MJAT
-	 zVDWuZglBgxqn1lRK6t5PbQgwpl9MwE0FLx4VFDZiamSyz6dGxZc7PeHp+CcLwZAagLiT
-	 kIhNvrFe4nKieRMLdIUqEKFdQ1TLQ/rGX36kMynQn6NswjXMrQHQZ9KuSsRbkye4MyPBk
-	 JKHIMxv954Fm+UyPJyUXUO41sPLV5NnUULUlCeEWOqshvCfbkFd9AlT+vai/9ygEL20Fs
-	 tkNu+yNswt2/7tbH7wV1BzX5ytKt7I20vsB07EEdfMPhjSasAOQs+EViOGrstl+lmZw==
+	t=1794192897;
+	b=zI+DLs0hYaLn6mSg7zS9NSMUABeJg+ZOdC7cGuNjG60BXmiUrVvL+38qcWx9M0zqbJ7r
+	 Qn5XfiKUdm1gyeOvFx5q2+BPtSmMYBB+/Ts8vIRJlXMSfvJkafdImQLv0wwHQwV16JE3n
+	 qhO2HDbunkLTCL6Rkuq7DYd+7EE831UQYwgIhtSw59clucOWOoVHE9Q5keKhIs+w24T0K
+	 gow8SzxZ3Y50H0dICewh1a2vWPMeeZzoqkimxlZAy0rlIesSNYV84SzF55ut+LgUKYtBC
+	 hbx2Bqk6/uv3QAoLSFXgHICnNRorJczuNfL5zi3k55YElQc4OeoHtBf9Qd0mph3h6KA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794186925;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=G6Mzw56DWkrUhn/kgV3DP01ARhi/XkKLUQyL6zGrpPI=;
-	b=lVGZLsgudC9+/8VbVeoK6HLH73DcfilgJoRwmJDbNVtH3uyLkRb7xGStg6K04HMqwrmD
-	 Lrp6TD4VEDsESQlVtSUKU01itf3U5wgergifsH6zJjvpIC4vmPzY4ESPeDbfFT8ozebvO
-	 xShWv4+AEBV1wPLSVaNHIK3OjfRVwgYpAdhFSZGPSARezjdD6D7kf7Xl2YTTgnxKZ4Aux
-	 q/RoBJ96eWDMxPTQ9nQkkDA0Y2E/pmLDzMUqwiHM2GFrcgbx/0RwjkgThrIda/BroTc2p
-	 nP0DJQj0Z5ygSrFAcSRAZ+uPPtKCu1k706U920Z/LRz9MDWWagZDVRe+Oc5Bx8NI83Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794192897;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=hYrJTFeeaJTcrWxyWoGWMilmtuo78RKW5cGiyhOt/fM=;
+	b=wW++JiCjWJ+r++pYXBhanXrP49N1QnXujqfpgkjhMPLa4lzLP6pvUMMtJuzj8lcbEA0m
+	 K+JxNupLhWPoJFtz0O0Q2+VCw9KCzIRVkST8Nn3cHrYLe6msZ9NGIu/DjjF7Nk4Wt5AJF
+	 rKLpoIPtGET6wR4LGMi6AmGhO27XDfZqR57SRkS9Rt3sssf7naP/YFIleV8wSIU9/n5cN
+	 DHxeFZ8wUgmoI/Z3Y5rv1We2dMxPGLaox1E9QdTCFKXhZJrty4MQCkotBAaAEnFBoxWdA
+	 UuODNMzayjwvUqZuTwpSoW5NW3mmQcu564wW1OqoRjRaBhwqXZ+HeIL/P/bdi7LnPUA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="i3xU0gq/";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=o8byScok;
+	arc=none smtp.remote-ip=91.218.175.21
+Received: from mta0.migadu.com (out-21.mta0.migadu.com [91.218.175.21])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFFA606A31C
-	for <mptcp@lists.linux.dev>; Mon,  9 Nov 2026 01:15:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A11606A330
+	for <mptcp@lists.linux.dev>; Mon,  9 Nov 2026 02:54:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A9A11606A330
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=i3xU0gq/
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64A691F008A1;
-	Mon,  9 Nov 2026 01:15:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794186924;
-	bh=G6Mzw56DWkrUhn/kgV3DP01ARhi/XkKLUQyL6zGrpPI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=i3xU0gq/jThBluz1KRq69oUAvXe8jaSlij0+AycSadYG6zBeZFoleV3ZOWiapUuao
-	 Ex74XDtgpAodlC69dok+x73Nwwo7jPcaZ2pc+qB7R++ibskKorWGGPVPtF5w4rvIf3
-	 nZ/gUCTmqSjutQAzRcksK5qnWd6JbteBYakKRbyyAlMn+jmNNhhToQbA3gPBV0Gbgy
-	 DkSVRiB6xtsQM0/8vi3OMLG+CN/9YYC4EKBxGxyGZA+6N7G0lgvq/lPD3sfNjP70Jn
-	 gEdEX0pt6kUwp/Dm/qPfz9S7iVTa52z6zKScT73VShUhtVLtfTf3thigvxkefTrL8G
-	 YIZw7g5zmcZ9w==
-Subject:
- Re: [PATCH mptcp-next v7 5/7] mptcp: track app-limited state in mptcp_sendmsg
-From: netdev-bot+sashiko@kernel.org
-To: geliang@kernel.org
-Cc: mptcp@lists.linux.dev, yangang@kylinos.cn, kuba@kernel.org
-Date: Mon, 09 Nov 2026 01:15:23 +0000
-Message-ID: <179418692392.488855.3746637988097114791@kernel.org>
-In-Reply-To: <4e7579752a4e3425830d8f66df284ca7ce61bdf1.1794053683.git.tanggeliang@kylinos.cn>
-References: <4e7579752a4e3425830d8f66df284ca7ce61bdf1.1794053683.git.tanggeliang@kylinos.cn>
-X-sashiko-severity: Low
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=o8byScok
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=AklJRutHnCjXFhvSqdKi7qHVk0KLDVHRQgdOQp8cMPo=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1794192894; v=1; x=1794797694;
+ b=o8byScokjp+ULsxsEcyZI40PKGlyJqSpGRqP4vcSIwCXSrrhBoDONhExVlJxSlTTdikAeYQC
+ xhln6Y4vnRwQLa49NRuuEVKNyJk2DmR/vJ6tJYRvyuPAOT298kMqpfrXh9/kkeOtD8X8m+nGLFc
+ sabLDu4xDbC2LSZYG4cZKbsA=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 89474d14179b70cf;
+	Mon, 09 Nov 2026 02:54:54 +0000
+X-Mizu-Trace-ID: 89474d14179b70cf
+X-Migadu-Flow: FLOW_OUT
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: netdev@vger.kernel.org
+Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
+	David Ahern <dsahern@kernel.org>,
+	Ido Schimmel <idosch@nvidia.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Florian Westphal <fw@strlen.de>,
+	Phil Sutter <phil@nwl.cc>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Paul Moore <paul@paul-moore.com>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	Julian Anastasov <ja@ssi.bg>,
+	Allison Henderson <achender@kernel.org>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>,
+	"D. Wythe" <alibuda@linux.alibaba.com>,
+	Dust Li <dust.li@linux.alibaba.com>,
+	Sidraya Jayagond <sidraya@linux.ibm.com>,
+	Mahanta Jambigi <mjambigi@linux.ibm.com>,
+	Tony Lu <tonylu@linux.alibaba.com>,
+	Wen Gu <guwen@linux.alibaba.com>,
+	linux-kernel@vger.kernel.org,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	bridge@lists.linux.dev,
+	linux-security-module@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	lvs-devel@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	rds-devel@oss.oracle.com,
+	linux-sctp@vger.kernel.org,
+	linux-s390@vger.kernel.org
+Subject: [PATCH net-next 00/14] net: annotate data-races around sysctl knobs
+Date: Mon,  9 Nov 2026 10:51:59 +0800
+Message-ID: <20261109025425.328445-1-jiayuan.chen@linux.dev>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -61,45 +98,114 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found more severe
-issue(s) in other patches of this series. This mail is only an FYI, in case
-you want to address the nit picks below when you respin.
+While testing the recent sysctl range fixes I noticed that a lot of our
+sysctl knobs are read with plain loads while the handlers update them
+with WRITE_ONCE() and no lock, so KCSAN reports them as data races. I
+then used an LLM to go through every ctl_table under net/ and list the
+readers that were left behind. This series annotates them with
+READ_ONCE(), and adds WRITE_ONCE() to a few custom handlers and netlink
+paths that store to the same fields with plain writes. Most of it is a
+plain READ_ONCE() at each read; where a function reads the same knob
+twice to make one decision, it now reads it once into a local, so the
+comparison and the value it acts on cannot come from two different
+writes.
 
-Low priority / nit picks for your consideration:
+There are no Fixes tags. Done one knob per patch this would be well over
+a hundred commits, so I grouped them by subsystem and feature instead to
+keep the review manageable. If maintainers prefer, I can split it up
+further with a Fixes tag on each one, as several smaller series.
 
-- [Low] The From: address and the Signed-off-by address of commit "mptcp:
-  track app-limited state in mptcp_sendmsg" do not match.
+No functional change. KCSAN does hit these, e.g. toggling
+net.ipv6.icmp.echo_ignore_all while receiving ICMPv6 echo requests:
 
---
+  BUG: KCSAN: data-race in icmpv6_rcv / proc_dou8vec_minmax
 
-mptcp: track app-limited state in mptcp_sendmsg
+  write (marked) to 0xffffffff8ee2940d of 1 bytes by task 504 on cpu 0:
+   proc_dou8vec_minmax+0x1ab/0x1f0
+   proc_sys_call_handler+0x282/0x3a0
+   proc_sys_write+0x13/0x20
+   ...
 
-This commit adds mptcp_rate_check_app_limited(), which walks the subflows
-and calls tcp_rate_check_app_limited() on each one when the MPTCP send
-queue is empty and no retransmission is pending. It is called from
-mptcp_sendmsg_locked(), so BBR and similar congestion controllers can
-ignore rate samples taken while the connection is application-limited.
+  read to 0xffffffff8ee2940d of 1 bytes by interrupt on cpu 3:
+   icmpv6_rcv+0x99d/0xd40
+   ip6_protocol_deliver_rcu+0x787/0x9a0
+   ip6_input_finish+0xb0/0x1b0
+   ip6_input+0xa8/0x250
+   ipv6_rcv+0x14b/0x1c0
+   ...
 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+  value changed: 0x01 -> 0x00
 
-[Severity: Low]
-This isn't a bug, but the From: and Signed-off-by: addresses don't match.
+Jiayuan Chen (14):
+  ipv4: annotate data-races around ip_rt_* sysctls
+  inet: frags: annotate data-races around fqdir->timeout and
+    fqdir->max_dist
+  ipv6: annotate data-races around addrconf sysctls
+  ipv6: annotate data-races around icmpv6 reply sysctls
+  calipso: annotate data-races around cache sysctls
+  sctp: annotate data-races around sctp sysctls
+  mptcp: annotate data-races around pernet sysctls
+  rds: annotate data-races around core rds sysctls
+  netfilter: conntrack: annotate data-races around conntrack sysctls
+  netfilter: bridge: annotate data-races around br_netfilter and nf_log
+    sysctls
+  ipvs: annotate data-races around lblc_expiration and lblcr_expiration
+  net/smc: annotate data-races around smc sysctls
+  netfilter: conntrack: annotate data-races around timeout and tcp
+    sysctls
+  netfilter: cttimeout: annotate data-races around the default timeouts
 
-The author is recorded as:
-
-  Author: Geliang Tang <geliang@kernel.org>
-
-but the only trailer is:
-
-  Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-
-checkpatch.pl reports this as FROM_SIGN_OFF_MISMATCH. The last patch in
-this series, "mptcp: update mptcp_check_readable", uses the kernel.org
-address in its Signed-off-by.
-
-Could this be resent with a matching From:, or with an extra
-Signed-off-by: for geliang@kernel.org?
+ include/net/ipv6.h                            |   2 +-
+ include/net/netfilter/nf_conntrack_acct.h     |   6 +-
+ .../net/netfilter/nf_conntrack_timestamp.h    |   2 +-
+ net/bridge/br_netfilter_hooks.c               |  20 ++--
+ net/bridge/netfilter/ebt_log.c                |   2 +-
+ net/ipv4/inet_fragment.c                      |   2 +-
+ net/ipv4/ip_fragment.c                        |   6 +-
+ net/ipv4/route.c                              |  34 +++---
+ net/ipv6/addrconf.c                           |  22 ++--
+ net/ipv6/calipso.c                            |   6 +-
+ net/ipv6/icmp.c                               |  10 +-
+ net/ipv6/ndisc.c                              |   2 +-
+ net/ipv6/route.c                              |   8 +-
+ net/mptcp/ctrl.c                              |  18 +--
+ net/netfilter/ipvs/ip_vs_lblc.c               |   2 +-
+ net/netfilter/ipvs/ip_vs_lblcr.c              |   2 +-
+ net/netfilter/nf_conntrack_core.c             |   8 +-
+ net/netfilter/nf_conntrack_ecache.c           |   2 +-
+ net/netfilter/nf_conntrack_expect.c           |   2 +-
+ net/netfilter/nf_conntrack_netlink.c          |   2 +-
+ net/netfilter/nf_conntrack_proto.c            |   6 +-
+ net/netfilter/nf_conntrack_proto_generic.c    |   8 +-
+ net/netfilter/nf_conntrack_proto_gre.c        |  20 ++--
+ net/netfilter/nf_conntrack_proto_icmp.c       |  12 +-
+ net/netfilter/nf_conntrack_proto_icmpv6.c     |  12 +-
+ net/netfilter/nf_conntrack_proto_sctp.c       |  13 ++-
+ net/netfilter/nf_conntrack_proto_tcp.c        | 110 +++++++++---------
+ net/netfilter/nf_conntrack_proto_udp.c        |  24 ++--
+ net/netfilter/nf_flow_table_core.c            |   4 +-
+ net/netfilter/nf_log_syslog.c                 |   2 +-
+ net/rds/recv.c                                |   2 +-
+ net/rds/send.c                                |   8 +-
+ net/rds/threads.c                             |   4 +-
+ net/sctp/associola.c                          |   2 +-
+ net/sctp/bind_addr.c                          |   2 +-
+ net/sctp/endpointola.c                        |  14 +--
+ net/sctp/input.c                              |   2 +-
+ net/sctp/sm_make_chunk.c                      |   6 +-
+ net/sctp/sm_sideeffect.c                      |   2 +-
+ net/sctp/sm_statefuns.c                       |   6 +-
+ net/sctp/socket.c                             |  46 ++++----
+ net/sctp/sysctl.c                             |  16 +--
+ net/sctp/transport.c                          |   6 +-
+ net/smc/af_smc.c                              |   8 +-
+ net/smc/smc_clc.c                             |   8 +-
+ net/smc/smc_core.c                            |   2 +-
+ net/smc/smc_tx.c                              |   2 +-
+ 47 files changed, 259 insertions(+), 246 deletions(-)
 
 -- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1794053683.git.tanggeliang%40kylinos.cn
+2.43.0
+
