@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794186922;
-	b=vDvpbgJYGjN5E23mmYu0ZK9/yZZZ2zCElCeJkFFo1SsXbBQ7Y0OYhegQ5kq5kOFSL/ZM
-	 wk6urJhgoOFTU3MDoiHi1u0RpD5CVBFBa32nzvLVjIcef/fFAqtM3GzpTFFUTi3KQYoC3
-	 /T2POnbNlfkI8Ciw3Bq0YfZxvMjylDOUDWip60hdiWHb0+sUSqvyJwjy2M/yVntJnv4fg
-	 J7VwIDQ34LSfbw+jIeTmsxzocY3FoKSKLFu3OItzAubdQbIO2dVCK6/hMoGhJWDnXMChk
-	 ijS4+mVEpfHZYOnJ8n72cfYPXPen4ano5FUH/UFpcuVBztPtXejKRKOFMjmNaJEgH+w==
+	t=1794186923;
+	b=JRtmDWrXerabsgYzQwKjauGHJ8pNjZ9ASeiJUyLqq/bl2r+3LaOnwzMkdqGYGS03EZ64
+	 bWgGj7kkZJ8FT3xV1i+KvsQCSZHaWnsSaJQCZXX9Blisiv4gyavRcouwtN/mjlp0XWxXC
+	 8GUHwtlQ4pI6pad3RgNhmEeN29cyRcm3cq7plce/zMhdw15yYuhJZGh1IjJv4lL4a/H5f
+	 f3BaOEmZRmeUSZg+KHL85tLVDxdms3wMrUCTqcCdZnmenERcdGNTTxJPEymNActoTghFG
+	 Rljdgqpp6UTmrJXAQcZaHq05q1PoV45nRD3AsdFZWIWdUjG28BsXNpn7mUD5RQVsIfA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794186922;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794186923;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=ZuIUQwT1MCKSZ873RR+VJtLYIPE6upEGvbontEfsrBA=;
-	b=LRpBeyqhUKOLgokv4SOWmmuG5tUbleb8SfAW+FZUNzxtM6DeO9jYpjIHtanGv3mScBYf
-	 wcpbe94LhrJXFeOTpm3WR91EVufrqgzq9WJYykaefddcNQ6+UUOWduRZ1scwLHTU2C4SE
-	 1zIzrc6bUvDtbAEKT4Qa9f0GMBEi5Z3BmvB/Ukflm8xYytn8YZUCI1oEDrngHzoCWbTey
-	 TkR9jHecmhVUDnK+ZvoXzIWLB76kUKZ4VK+rYDZrN+4mXcZmcYraQywr9B4RvYNOEMBsw
-	 WC6bfo6dZ+aSgpcTrUaGhEKXMZlFvoH3U9eDskh54hyin9PfctHHkazZTwxdH/lA3fg==
+	bh=NO+ZqaualRhtzBzg+J37+exva1v4SUGt7pt1/FXJoYo=;
+	b=I6CdFSI0KvQKMAI04Ks6021QnVhb5B5MobpbWkz8Lw1J+ae6VZIgwljV80mJMIlleskR
+	 vFG1YHTbmHsXjgydOP9wEhpjcaQiJ8vuH28cyrdg4E0DfrAYID5q4VWrrVZekY2Ymxt4Y
+	 K7n9p98wUqYCEYWShjJ2CRQynR7ZS+RCdHKjkozrQON0zmrA5gVXC3sqP9le72+oBE4dZ
+	 RxjS+pdig7K7Xj4bLfbVzgqHR7MDZSZ7h7GtjCa1g2qttbP4zHni2/d0oXh72ErpalLWq
+	 4qgCDKYscne2q6BWG+RSfhtb66WHiIeuE6B4UdY0CFR4fC2bEsuwb95OLFeDUNgwzGw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hekLDFOW;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=j6Oh4LQM;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC31606A322
-	for <mptcp@lists.linux.dev>; Mon,  9 Nov 2026 01:15:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAFB606A31C
+	for <mptcp@lists.linux.dev>; Mon,  9 Nov 2026 01:15:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hekLDFOW
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD9AE1F0089F;
-	Mon,  9 Nov 2026 01:15:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=j6Oh4LQM
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7BE81F008A1;
+	Mon,  9 Nov 2026 01:15:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1794186922;
-	bh=ZuIUQwT1MCKSZ873RR+VJtLYIPE6upEGvbontEfsrBA=;
+	bh=NO+ZqaualRhtzBzg+J37+exva1v4SUGt7pt1/FXJoYo=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=hekLDFOW+wWeSVWA/TIeb4tiUXx08NL2BYjyH9SI0ta6jO4U3sqCNphRhHE3/6+0H
-	 nZLH75Da1DRrprgzAarmzHwbglwPBO6rJaqPazZVardh0zPI4ze78PpIl3M6m7dW/H
-	 Q50gS+w1xaKRjzkQOv2Rde/nGHvdxtZe84SeIDavUCyqX83WhmFoMPgo6iAaqA9d5e
-	 rKItdhDH0WpVMo4A3sPPKjCc8Mceg78Ez80Jl9MC98ypUGN81Q9500annB3+llg/wS
-	 MDXyUHi/fjmfKVvpcjTcqaeVoLh03NOZvVMjm/0A/3tjmVPg7xC/0A/qa0HyKnhjy5
-	 gwXF3xFHP0ztA==
-Subject: Re: [PATCH mptcp-net v7 1/7] mptcp: fix TFO SIOCINQ overflow in
- mptcp_inq_hint
+	b=j6Oh4LQMGRcSGFp9CPrlgqGSnhsZTvfYFwl9FaWkYyL2+2clCCIKFKyNHvcJ1gqyF
+	 fq+CxA3CPm9PMIuqwYI0fNdJ/SDsEZh45NpoVf09YllAUzTi9j2VvcYdS4rHbNnF5d
+	 JDmj/MQYT7RmQyzBIgp17PBTZhYFQ7U24VELGx1HWkTiA8yTcJIdh8ZXAHX1DzlikU
+	 SaXFaxAmdYfZzJEPT5JNVaUjm9c426rmzCXpy6nOQswJxcwSVfpELLc2i50MU1ZWUY
+	 lN94wUN58ij3T8sZ7BPcomXxfwfM5d1H8itsc7MUaXJzhuLb+L8ziRcRrSqlInbDGi
+	 f/MXxUjZdZZbA==
+Subject: Re: [PATCH mptcp-next v7 2/7] selftests: mptcp: connect: check TFO
+ SIOCINQ overflow
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, yangang@kylinos.cn, kuba@kernel.org
-Date: Mon, 09 Nov 2026 01:15:21 +0000
-Message-ID: <179418692133.488855.8515356263563798707@kernel.org>
-In-Reply-To: <2f671ecca0dbe9268e6ac8b36e24914be91d5749.1794053683.git.tanggeliang@kylinos.cn>
-References: <2f671ecca0dbe9268e6ac8b36e24914be91d5749.1794053683.git.tanggeliang@kylinos.cn>
+Date: Mon, 09 Nov 2026 01:15:22 +0000
+Message-ID: <179418692223.488855.3861560686142168497@kernel.org>
+In-Reply-To: <e09a65432d53e0ba14816efdd83b075b9681044f.1794053683.git.tanggeliang@kylinos.cn>
+References: <e09a65432d53e0ba14816efdd83b075b9681044f.1794053683.git.tanggeliang@kylinos.cn>
 X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -62,10 +62,10 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 2 potential
+Thank you for your contribution! Sashiko AI review found 1 potential
 issue(s) to consider.
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 1
+Critical: 0 · High: 0 · Medium: 1 · Low: 0
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -73,114 +73,93 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [Medium] In net/mptcp/protocol.c, mptcp_inq_hint() now adds 1 whenever
-  RCV_SHUTDOWN is set (`if (sk->sk_shutdown & RCV_SHUTDOWN)…
-- [Low] The commit author is `Geliang Tang <geliang@kernel.org>`, but the
-  only Signed-off-by is `Geliang Tang <tanggeliang@kylinos.cn>`.
+- [Medium] The new MPTFO SIOCINQ check in
+  tools/testing/selftests/net/mptcp/mptcp_connect.c only waits 100 ms…
 
 --
 
-mptcp: fix TFO SIOCINQ overflow in mptcp_inq_hint
+selftests: mptcp: connect: check TFO SIOCINQ overflow
 
-This commit changes mptcp_inq_hint() to compute the available bytes with
-mptcp_data_avail() instead of ack_seq minus the head skb's map_seq. The
-goal is to stop reporting INT_MAX on passive TFO connections. It also adds
-1 to the result when RCV_SHUTDOWN is set, to account for the DATA_FIN byte.
+This adds a SIOCINQ check to mptcp_connect's server mode when the MPTFO
+socket option is enabled. After accept(), the server polls MPTCP_INFO for
+MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED for up to 100ms. It then fails the test
+if SIOCINQ returns INT_MAX.
 
-> Fixes: f03afb3aeb9d ("mptcp: drop __mptcp_fastopen_gen_msk_ackseq()")
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> index 178d98d91fea2..f9f9c02016877 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
 
-[Severity: Low]
-This isn't a bug, but the Author: line is Geliang Tang <geliang@kernel.org>
-while the only Signed-off-by is Geliang Tang <tanggeliang@kylinos.cn>.
-checkpatch reports this as FROM_SIGN_OFF_MISMATCH.
+[ ... ]
 
-Could the author and Signed-off-by identities be made to match?
-
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 02a4f479d9d8c..421df3af1ef93 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2402,22 +2402,18 @@ static bool mptcp_move_skbs(struct sock *sk)
->  static unsigned int mptcp_inq_hint(const struct sock *sk)
->  {
->  	const struct mptcp_sock *msk = mptcp_sk(sk);
-> -	const struct sk_buff *skb;
-> +	u64 hint_val = mptcp_data_avail(msk);
+> @@ -1176,6 +1180,28 @@ static void maybe_close(int fd)
+>  		close(fd);
+>  }
 >  
-> -	skb = skb_peek(&sk->sk_receive_queue);
-> -	if (skb) {
-> -		u64 hint_val = READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
-> +	if (hint_val >= INT_MAX)
-> +		return INT_MAX;
->  
-> -		if (hint_val >= INT_MAX)
-> -			return INT_MAX;
-> +	if (sk->sk_shutdown & RCV_SHUTDOWN)
-> +		hint_val++;
+> +static bool wait_for_remote_key(int fd)
+> +{
+> +	struct mptcp_info info;
+> +	int retries = 10;
+> +	socklen_t olen;
+> +
+> +	while (retries > 0) {
+> +		olen = sizeof(info);
+> +		if (getsockopt(fd, SOL_MPTCP, MPTCP_INFO, &info, &olen) < 0) {
+> +			/* Not an MPTCP socket (TCP or fallback), skip wait */
+> +			if (errno == ENOPROTOOPT || errno == EOPNOTSUPP)
+> +				return true;
+> +			return false;
+> +		}
+> +		if (info.mptcpi_flags & MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED)
+> +			return true;
+> +		usleep(10000);
+> +		retries--;
+> +	}
+> +	return false;
+> +}
 
 [Severity: Medium]
-Can RCV_SHUTDOWN be relied on here to mean that a DATA_FIN was received?
+Can this fixed budget of 10 x 10ms cause false MPTFO failures on slow
+machines?
 
-The commit message says:
+On a passive TFO connection, accept() returns once the SYN with data has
+been processed. That is before the client's third ACK arrives.
 
-  When RCV_SHUTDOWN is set (DATA_FIN received), add 1 to include the FIN
-  byte, matching the previous ack_seq - map_seq behavior.
+The flag polled here comes from msk->can_ack in mptcp_diag_fill_info().
+The only place can_ack gets set is subflow_set_remote_key():
 
-As far as I can tell, mptcp_check_data_fin() is the only path that sets
-RCV_SHUTDOWN and also bumps ack_seq for the FIN byte:
-
-net/mptcp/protocol.c:mptcp_check_data_fin() {
+net/mptcp/subflow.c:subflow_set_remote_key() {
     ...
-	if (mptcp_pending_data_fin(sk, &rcv_data_fin_seq)) {
-		WRITE_ONCE(msk->ack_seq, msk->ack_seq + 1);
-		...
-		WRITE_ONCE(sk->sk_shutdown, sk->sk_shutdown | RCV_SHUTDOWN);
+	WRITE_ONCE(msk->can_ack, true);
     ...
 }
 
-At least two other paths seem to set RCV_SHUTDOWN without a DATA_FIN,
-while unread data is still sitting in sk_receive_queue.
+That code runs only when the client's MPC third ACK, or its first MPC+DSS
+data segment, goes through __mptcp_subflow_fully_established().
 
-The first is a local shutdown(fd, SHUT_RD). mptcp_stream_ops.shutdown is
-inet_shutdown(), which does sk->sk_shutdown |= how. mptcp_shutdown() only
-acts on SEND_SHUTDOWN.
+Nothing synchronizes the server-side wait with the peer's ACK except
+elapsed time. The SYN-ACK -> third ACK round trip in ns2 can take more
+than 100ms, for example on debug kernels with KASAN, lockdep or kmemleak,
+in nested VMs, or on loaded CI hosts. The key can also arrive only with a
+later segment or a retransmit. In those cases this helper returns false,
+and main_loop_s() does:
 
-The second is a peer MP_FASTCLOSE, through
-mptcp_worker()->mptcp_check_fastclose():
+	fprintf(stderr, "TFO: timeout waiting for third ACK\n");
+	close(remotesock);
+	return 1;
 
-net/mptcp/protocol.c:mptcp_check_fastclose() {
-    ...
-	mptcp_set_state(sk, TCP_CLOSE);
-	WRITE_ONCE(sk->sk_shutdown, SHUTDOWN_MASK);
-    ...
-}
+As a result, the MPTFO group in mptcp_connect.sh would be marked failed
+on a kernel that does not have the SIOCINQ overflow.
 
-This path does not purge the msk receive queue.
+Any getsockopt() error other than ENOPROTOOPT or EOPNOTSUPP also returns
+false here, and that gets reported as the same timeout.
 
-Suppose N bytes are unread in either case. The old code returned
-ack_seq - map_seq = N, because ack_seq was never bumped for a FIN. Won't
-the new code return bytes_received - bytes_consumed + 1 = N + 1?
+The harness sets timeout_poll=30 and passes "-t ${timeout_poll}" to the
+listener (poll_timeout), but this wait does not use that value.
 
-That value reaches userspace through mptcp_ioctl() for SIOCINQ/FIONREAD
-and through the TCP_CM_INQ cmsg in mptcp_recvmsg(). It is also subtracted
-from rcvq_space.copied in mptcp_rcv_space_adjust().
-
-For comparison, plain TCP bases its FIN adjustment on SOCK_DONE, not on
-RCV_SHUTDOWN:
-
-include/net/tcp.h:tcp_inq() {
-    ...
-		/* Subtract 1, if FIN was received */
-		if (answ && sock_flag(sk, SOCK_DONE))
-			answ--;
-    ...
-}
-
-So TCP still reports N after SHUT_RD.
-
-Would it be better to base the +1 on the DATA_FIN actually having been
-received, rather than on RCV_SHUTDOWN?
+Could the wait be based on poll_timeout instead? Another option is to
+skip the SIOCINQ check with a notice, rather than returning 1, when the
+key does not arrive in time.
 
 [ ... ]
 
