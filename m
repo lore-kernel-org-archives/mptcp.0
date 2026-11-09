@@ -1,94 +1,48 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.173
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794223290;
-	b=ZmhoiXlYae9J2pDQpwkRBy3wKbKgTSifxDlJ2KExkmeHRNdm88WIK5FtTJCYsnxv57qc
-	 DPrwPZj8w6JTsYiXOq9bGHayhO5ceTExXUOiHE/zN6jdwRrNqY6cLI820/WS2/esPVWY4
-	 AEwuKPcj8cxG6OPC8b2ewDsHuBR7F8ZA3qaC4Hi3IL60MIG9eLn+eCidaDzM2OK7t6omN
-	 6Ef6lXUN+tch5gT6TiBDjjs5xvw/kIfV4F/6EjYWcJH+rHz6lVl233b9SBJFTfa5YiOT6
-	 ShJ4GcogqXQfC9JN+8gO2wZc9Ctp7vunozOLaXW1pLIy80wlX0zWLtj7YVt3X26BNNQ==
+	t=1794224889;
+	b=3y+42dDj7H8juC0EhoU3R2OUhNaUypMbLWxT6yF6Vd99QstQNdgXBQB2SD01wFacWD71
+	 DbFxsPZdHxyuolJPYJAxXxxGooaAVXU7nWcVHIU7RosWA7B/7MgjXxbSdg/s/eqTPMGFC
+	 PbF+5mdkkEbWBKOyYAKKfB4+p0zYO7HlZmq/DO5tdNIo2+xrM1fsdfxFVRfZLkAKta3g3
+	 GvtDfEw655+NErHBUrgjyIQ/oXjLTuW/lxf3KMVhVUK0AFr5fQ6JiTsY3aVMf2piFQo+0
+	 S/G9vqUJAclwrfklgkby+6Rmi6Fr5u3CjLLM7f41YrA7aV41ASXcC/iP6VftBQcqrsw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794223290;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
-	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
-	 Date:MIME-Version:Content-Type;
-	bh=WUKoyEdMOFMig1BvKxo1M/BYMu6alxBUyrfz0aCkZU0=;
-	b=lXXcc+guYVmuMFR6EpcoV002vuxwjUoMKCI8cdAjL5BVl0APPLpxDwn1Wfnl5aPBpibg
-	 VMW+auwqNgZL9Q24yRou0SqN1hOFkNcvQX7YiqicQfKsLjW/yLOa9XUjqnJ8UrA5CRmhg
-	 mFodb7ncONJIS3SIpnbHKS8kNi+IXUupr+QpispsIfjaJfU8udId7akboJmsgUIXtctZA
-	 mDtEIyvNfEJE4/n5Jv851EBUeBp4DOrGLDfzpgQGKevNhQR14tR5OvurpJjVs5x9/tldK
-	 VZLNToPNFAWqzO7DuHILWwlb+paCvOY0eoMHNLm6wMKATwcuDGqWPAcMliuU549qf/Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794224889;
+	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:
+	 X-Mailer:X-Developer-Signature:X-Developer-Key;
+	bh=dLR3tt7szd0TGb4S6lGS4WgHmWKCFdUs6WqirA3PsmA=;
+	b=rTZ4YH9cheaqO9l6JPK+nSO+VEUeuoTsxbN7IBfymiK+pURkgV94TrSaRX+D53FKUYNN
+	 H7tzSUhvBiWAQTSa5s3FMUU2upTcOKekfiRorIA+N6tJKvrOmRWCwLYaAMk49dfmgENBh
+	 7n6ZYh5BFXTbIJgRN+ta9T0RD6sp/T/nYgJAtwtRS/oaA5k7s/JeGR6Tx5mmo0TXnwRRl
+	 IP/Q2ZkDM0zEtD04w6pXWMWit6Wr8oxNLuum6vDxoIdU9kEjmmGa4zPTtid6ap3Ypf3rO
+	 GbA/yb3dGWOK90Xqry2cDCiCiBE+iVzqNJGIAphzWdbrTc9PN6QpXYW5Jz/fFqsXZRA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Q09JALmM;
-	arc=none smtp.remote-ip=74.125.82.173
-Received: from mail-dy1-f173.google.com (mail-dy1-f173.google.com [74.125.82.173])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=k2YpDqpu;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FFF7606A321
-	for <mptcp@lists.linux.dev>; Mon,  9 Nov 2026 11:21:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5FFF7606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E7A606A331;
+	Mon,  9 Nov 2026 11:48:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Q09JALmM
-Received: by mail-dy1-f173.google.com with SMTP id 5a478bee46e88-3645f0f3fcdso1453815eec.0
-        for <mptcp@lists.linux.dev>; Mon, 09 Nov 2026 03:21:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794223289; x=1794828089; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=WUKoyEdMOFMig1BvKxo1M/BYMu6alxBUyrfz0aCkZU0=;
-        b=Q09JALmMo8FSSlZemDU8uMGCYiqja+o0BWs+VHFMyJd9V0PFFmgibn/hu3ZdbV+X+f
-         qyDf30RiGW1+GLwFEK7jXMB+jR8XP7u4n0e2w2ryuVcYMA+uU6f+wibEJ3qSjHY+nO4p
-         R8g8re2SAtGfZSct/QkiNOnTt+Yc+kvUddIDQ3bR1wu4O64FYVMDtrR6Mk/SAtgxqC75
-         aNqiRS9Y3yQIZSVUo1fTx4kSUoVAaynJEHIbC3754HpudP1Sgqje9vGXkcYpNhCGZsgH
-         t/8gPsBUctXpJwT/GgyB9B1K2EEHmOYh0Ys3vbz7QchNPuhISQWeIJY5cF8QMmAjFLPJ
-         cBGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794223289; x=1794828089;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=WUKoyEdMOFMig1BvKxo1M/BYMu6alxBUyrfz0aCkZU0=;
-        b=rmm8KZYr/62d4cIz+haIlPi6Bb448PpY7eYuC6vREeo6xG0SyCz2nsxMMJinWKN1Mx
-         bxTf/4QQSZsUY1LrnRoZEwPp1VYYQ1gk9UkVBof6VrDwmO0Fhlw1BbFJbayiicHMc0Cg
-         aXWLMsdNzBOSW53wCAHih+LJ5VvBrI3GNeXZ6fqOFulhPADbIQth/s8/1W0mwypuOPpo
-         oa3N2YfzVPN2kYrlkEP9Ai/julz/qeGo9NMw1PYSm09qzSL9IrXOdPknY2szGHSM1Ers
-         YiWOK9wY5esgQdfz1rOd6a7bgV76jiPfdWBeolfvk0hKPJlj78jUSkTyI0jiWsuvyXf6
-         7/Mw==
-X-Gm-Message-State: APuU4Z8sdmyJdjyNbN4bc7inOL8st+E47ThoIb0gRTJrH99MJMsErifP
-	4CaD3Rw5qj4aBt6HQ2EJiyhbuWGtX+hbjmZGXFwV1h4EVYaihc8dQd2vkkR+
-X-Gm-Gg: AYBFou1jDCwQR+BVU+pdJBhO0+vOERhoy+ntVv55ZGkF0RfyuGaJrlWST6mqZ44ER0B
-	03058Dd7pxJdo1pzJ+RA0I1Mel1helWFES3O2pgi4lW3T0tBP7GJePbzMV+O2iZoz6CCvBADMNc
-	QsI/st/yex4ateJKHEStENk6OeFUP4h8szw4bXJ/Lb9LAEf/7ULuFFr2QXKcWUUNzm3nw/1E0ou
-	pdHltN53ztpOmihosd0DXHwdf0gDsXsefVZ/RgAwDNtZCRR5ieLbs3dnRv4qLb4az9/OjeUtgEw
-	EutPPxH7/v2aipgzq5UPOnZNepn2QX2l7lK+wKXrzsTZ1KkYzLNsd4KtWYbs03t58abpQGQTWsb
-	HPGrV9psBQVurLzodZx6oOxKXvUVW0CSvHxJBJ6mMd6biTc3fTAQhRf0ruG8eBPEf1KdHMB/KaU
-	ka1AYGJOIiTUtYmFIOAGoNbcDgbC3qVrBt80qqC+PsJqKM1VCjPuxOf4foLYDvBxYJeDY/Yzt5R
-	+6lUbGqJyuhIabchnCJkO5jME0XoavY4s9eVQBJ5Sj7AkEwcMXbjxqUElYwLDUV73HMYZjjyzg6
-	qpF8NL7SKROesry89dZm0nK95GmrIUboPOaiiWd2dA==
-X-Received: by 2002:a05:7301:530b:b0:36c:da71:37e0 with SMTP id 5a478bee46e88-37252f30000mr6735473eec.2.1794223289132;
-        Mon, 09 Nov 2026 03:21:29 -0800 (PST)
-Received: from github.com ([128.24.163.66])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-373920a0219sm7445756eec.9.2026.11.09.03.21.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Nov 2026 03:21:28 -0800 (PST)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1794215614.git.tanggeliang@kylinos.cn>
-References: <cover.1794215614.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v24 0/8] Reduce the differences between TCP
- and MPTCP for TLS usage
-Message-ID: <59982f40-6d73-db4a-419c-dcfdbb3f80ad@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 09 Nov 2026 11:21:27 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=k2YpDqpu
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 861661F0089F;
+	Mon,  9 Nov 2026 11:48:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794224888;
+	bh=dLR3tt7szd0TGb4S6lGS4WgHmWKCFdUs6WqirA3PsmA=;
+	h=From:Date:Subject:To:Cc;
+	b=k2YpDqpunDxbXTKheHuhlfv2XOrJFFgY6jW1HZShoaqiqZUi8/zosif5k2yrb3yXd
+	 qTsACoA5kCZop/JmGsEDY6XIy1ODzo+3kG2q4hx286F+TAsTyXja3+/H3PXX74eLf7
+	 SmvukGAmFHi2iDsUea/ltdfCL8mWhVkeyE7nTULYI8KK+vvQpQQxiBBlwUQn8VYLlN
+	 WIPVvh/3RAaC5I2gF+gLre4lzsoMCYR8gAMYBvnqPNN4VD+sb68je1Dn4ztdF6R/ub
+	 H8pksf+QAmpbpbp3wN3TErRC2XoPbVC8y2CXaKFsdUVTOjCr9eYmZM1hP7y8noeQx0
+	 Yrq3vcbNUr2kg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Mon, 09 Nov 2026 12:47:26 +0100
+Subject: [PATCH iproute2-net v2] mptcp: limits: fix JSON support
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -98,60 +52,86 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261109-mptcp-limits-json-v2-1-ad8d20051515@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/32OwQ6CMBBEf8Xs2TWlKqAn/8NwKGWBRWibthAN4
+ d8FvHuczLyZmSGQZwpwP8zgaeLA1qxCHg+gW2UaQq5WDVLINBHyhoOL2mHPA8eAXbAG61ToXJZ
+ pntUKVs55qvm9dz6BnbdjJImGIhQ/N4xlRzputVu+5RCt/+wXpmSn/qxNCSaYKZ2ddaVKcb08X
+ uQN9SfrGyiWZfkCSQgdXNMAAAA=
+X-Change-ID: 20261029-mptcp-limits-json-f60c82b687fa
+To: Stephen Hemminger <stephen@networkplumber.org>, 
+ David Ahern <dsahern@kernel.org>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1966; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=zy7+Fbeo8gWBYR6XZE0iheb26AvJ8im34GrTrSSazQ8=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLI+bvq+J/HwzBUzSm/zzxHhfNE/R1d32wPG7WkB7aWXd
+ Fes3vF7eUcpC4MYF4OsmCKLdFtk/sznVbwlXn4WMHNYmUCGMHBxCsBEnFYyMuzKXzA5cXnsW4by
+ HJfrG1YKOrzI+eYWw9Q75cJjxmNJCd8ZfrNMzuls3y9cZDtrS5wf/4s5jetCWB2XtG3lrM6rcFp
+ 6kAEA
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Geliang,
+print_mptcp_limit() was trying to open a JSON sub-object and closing it,
+but no JSON object was actually created before.
 
-Thank you for your modifications, that's great!
+Because of that, JSON support was not working with the MPTCP limits:
 
-Our CI did some validations and here is its report:
+  $ ip -j -p mptcp limits show
+  add_addr_accepted 0 subflows 2
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Perf: Unstable: 3 failed test(s): error:sched-mem-pressure(2) =
-validation:sched-baseline validation:sched-weak-secondary =
-=E2=9A=A0=EF=B8=8F=20
-- Task: https://github.com/multipath-tcp/mptcp_net-ne=
-xt/actions/runs/42596050890
+Create a "plain" object before calling print_mptcp_limit: the MPTCP
+limits are different from what is usually seen in IP commands. Indeed,
+this object doesn't list multiple items with different attributes, but
+only a bunch of attributes. With this _plain() helpers, an extra array
+is not going to be added: it is not needed and doesn't make sense here.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/5138147a86=
-16
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1205871
+After this modification, we now have:
 
+  $ ip -j -p mptcp limits show
+  {
+      "add_addr_accepted": 0,
+      "subflows": 2
+  }
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v2:
+- Explain why _plain() is used here. (Stephen's LLM review)
+- Add missing 'not' in the commit message. (Stephen's LLM review)
+- (No code change.)
+- Link to v1: https://patch.msgid.link/20261029-mptcp-limits-json-v1-1-7ac73cdab054@kernel.org
+---
+ ip/ipmptcp.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
+index 02cf72ce..54976c08 100644
+--- a/ip/ipmptcp.c
++++ b/ip/ipmptcp.c
+@@ -446,7 +446,14 @@ static int mptcp_limit_get_set(int argc, char **argv, int cmd)
+ 
+ 	ret = 0;
+ 	if (do_get) {
++		/* This object is different from what is usually seen in IP
++		 * commands: it doesn't list multiple items with different
++		 * attributes, but only a bunch of attributes. Use _plain()
++		 * because an array is not needed and doesn't make sense here.
++		 */
++		new_json_obj_plain(json);
+ 		ret = print_mptcp_limit(answer, stdout);
++		delete_json_obj_plain();
+ 		free(answer);
+ 	}
+ 
 
-For more details:
+---
+base-commit: d95f66508b32fb2c51e70a9127dffd1db8623614
+change-id: 20261029-mptcp-limits-json-f60c82b687fa
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
