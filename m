@@ -1,47 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.180
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794310765;
-	b=jwp33Hy1ecWlihmGoPDI2JoD0FDqDRVAXBQCCb0jcvg0ibo5roMN2u/NjwWUBn+tl56e
-	 ewnDaDO3YG0PpLJjcy34p6qNI/Bde8nQMydhA7BDv59iyz89nfPsQuBZLgWSFPQXk/OuY
-	 kVZBYySAXCoP8e8RaTSwb0qhmlCF9UyaGNT+UDUC5SaFPmG1fElCbbf8kqa8Yg9/v2G65
-	 t9tAIH4m9f5KWQYI8LZkp3FrQ+eLu5NjE5lFm8x7ppiHYfl1diYJ/ztRt2dBnXakSgGsl
-	 ENM1aPgEkRpucGkwq0xTgOzPqptyKzy+08Ke3GIEGT8TU7G1Fb4s0oe3FS0tkb6HH2g==
+	t=1794312370;
+	b=FTXCjON/G4Puf2TJ2pl07JS0ee7gUs2JBsGC1RcfWHWoGCibP3at4oMeSfEkDm7sPkpD
+	 zjiOSG9svgLNGUKb8IRt6QHDJZR62pgCf8m0z4qMiKjJrmjoP/7elZrtKlSrQJw8Vtmwr
+	 FE9j8p9/Ods46PHTO/QCWSrQzpaD7E1Th+j4M4VJ1OWekggX8KQ7mruUdqIMt/vZB6zjR
+	 Oxznv50IskVlpTU3T85wbGeSNdFhw66BLm1saWSHz77bY5+V4Opj9n+vzbQD9Tna+0qCj
+	 wN5pCBkUMb6WfOaMlXQsBPq8rqUzu4MveD2l5EUwoqUsnCvyTdVWkv0mzWhWkX7XGew==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794310765;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=61iXqObBoRbHUHb9L4kL8O8fx5dOAyzxdr1sttsno+Q=;
-	b=gh1QRi/iTOhcifhp28L3oQ129fPqmtyNdZ68G4wkiJs/KxXthaddgzIECIrTouPatEhd
-	 xIV3gv1ixJoZzj3N2AjYqXhQ4k08QsY5eX9C0oWFiq70zMOjmdSTr2jRHDI9Ik3060+Gt
-	 CCI2Vi2tjtgSiBalVJK7SdDWBCpK1jxtxzFpSTLa4Wb0OoxEihOkcOClm7zgwb0lWTsl6
-	 VyfOL8Ls7/3qu8cJm9BK8rwmV5vGBdcSrlSDWlQ2cvCB5C5eU9SUzMzHmywdrPoCOXXJ5
-	 Z3wRxgzSXhIqk3xJ4xqO1WfufCorj5FYFzmCJAb3sWcVtEcWnPMNWb10FDBIDhLt/4A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794312370;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
+	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
+	 Date:MIME-Version:Content-Type;
+	bh=uWkl38cEsjca5p5sKhmOllQhO1+XF69pwmXQcxf/lwE=;
+	b=41hNoC0iLQKhZNRDKSctcf2bdGypezr7/GtU0pYK8sC+Jb8lRJwG6SIwWHSUOKsCTyY7
+	 3dd0i+PX4BbiLRKthJR1eA/wOw6ulV7VZm2pPm/mvDvkTJ4H+KEvfBXz2PVjQCrQVrryE
+	 9RMNtZEYa5eE89PrhoE6OjYnSaTzlr+IUvjsUTaz+cirq3JETy3ehLM5b+RMM4HiVqAtB
+	 pUtKJE9jVkSwGWEYZPGkv4LGZCPpnR4SGWu/SEu4FDjwJdgWlTXrJqbNyURcGFUfIZcBk
+	 cCRoNXjENDOrigMiY48KymyT0kvOUjSAGhpAEVuRSjHX2QsYfQ/16LBpu+yTMkIo4aQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FlmAFEMc;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="ugPvA/B0";
+	arc=none smtp.remote-ip=209.85.128.180
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA995606A325;
-	Tue, 10 Nov 2026 11:39:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4398606A31C
+	for <mptcp@lists.linux.dev>; Tue, 10 Nov 2026 12:06:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A4398606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FlmAFEMc
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73A651F008A4;
-	Tue, 10 Nov 2026 11:39:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794310764;
-	bh=61iXqObBoRbHUHb9L4kL8O8fx5dOAyzxdr1sttsno+Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=FlmAFEMco9/vwwZbY1x8fMa9VkyGo8Df7nTFSSqeQhLgEQHtOi6cU4wOqdby450d6
-	 BWgQypHzu6Tos01Zo4HfEFhVTLrDFkvBgMu9pXyZD6WE5RlrnEolFRedJG7co7Rd6D
-	 0E3Yf9cD2hiPF+GWkagrC9FcY/1LSy70+xSkIRQDKD2q621tDE90SNpLywhUAe8RJJ
-	 +sq5bHADVIvLUGE06ap5bvJWFWD9Ato/I9Hvbcvhegtd7Hy+2067KShGC4KW+zMq1Y
-	 IU5Ml58hrfpv3lUf5lnV1DakoACGL3zC1olgnaTv0YwnuAJnOJrtJ+p0Q1sYAaW2jC
-	 ib3VCUivyMPGg==
-Message-ID: <f3949fb9-8f4c-488a-810b-1f5be8044a42@kernel.org>
-Date: Tue, 10 Nov 2026 12:39:20 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ugPvA/B0
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-8b305e10ac7so19309097b3.0
+        for <mptcp@lists.linux.dev>; Tue, 10 Nov 2026 04:06:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794312368; x=1794917168; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=uWkl38cEsjca5p5sKhmOllQhO1+XF69pwmXQcxf/lwE=;
+        b=ugPvA/B0vf7Cu+Fi/TRgIGF9y9ItX+rczqwe1drDBM1AutO/aGF1exRQ4srliIYStP
+         XiSjHKdP8koRsK28kUKiuxg5eQ84PcxkXpv3mzS5VaLyDytU8cWUZT7d33ImRSB6NrKE
+         KLRtpKSItWUTo0DH07SNbMMGhPFwtto+b52Q0QBAk21Yn+Wu/acHp88OmkktqrNBbSxM
+         h1Wh9xe3oDE0nUGxQ/AI3rXh4/jymAXp0Fv53ZcaiuX6D054xICKbxsqraWMsFzhRS+j
+         JCjoFUCgUcTNgegRyP5ZkavnnjRUMYz3bk+0hMVtNBGbQ5zkLVI7bMMxZ6TwY5Wf2SLD
+         qAQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794312368; x=1794917168;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=uWkl38cEsjca5p5sKhmOllQhO1+XF69pwmXQcxf/lwE=;
+        b=HQFnlpOukkHzNoftQWqM8uAJMGSEV9q9NHV5XJXo0TM8V4PdXykDX/wG8W1GPku7pm
+         GdXCCtYkcTWmd0C+Rt51Cidlpax4ZJxYe1HU70HngxPGlRK9wA5sOwI0tgndGC6vcmkI
+         0UH934RVz57aVHKAllccmTHYRDORpEgjeHqtD+l4khyVkkPls8XCuOISPdCvJy1uH9MX
+         ba7halG0V850+LRfpbFuadOZQn87EZfmyrze9jQ+4gKpa4pcwBEPioW5hpY5ndVPBRT7
+         r3J6Q0DmF5g2cFp4wZMYtN6fEDlK1iDFnGQf5IxHjX+X38crrzZ9oHhux+Z3hHdv1wpK
+         jVyA==
+X-Gm-Message-State: APuU4Z/qA6G2RuMl0TRq7FJ+Fn4yhJ+Ulfr5xgwdooVraCEj9mgrCG8Q
+	NMKoChu/Sg9jbJd/uy1+iIoaxVquupMniMYQ/AqvX387NHciQ7VSXr5BchYf
+X-Gm-Gg: AYBFou1ANI87YMK+fkfZeYMgB3VaNVdYjhI9V2+gy4juPmFsJl/QJpuLG+YWxDveNUY
+	kyyzvHbhSHnTo/jX2X6d6GvDKk0yGccau29OKqVQAeJ1RHHMrJq9iiGfKgvAnyjE3D4lBtvMH8u
+	G/LsqlDhUxIBc//c1bqgs3nBPSyfe+G4LbVj852Omu9a8/E6rtB0NSez/4H4nFp5dAyfQuQDitb
+	I8YHRc9Lg6VrI/erEnjEzM/fxBm9XrjUZLYXbltHuYSOqZHBZ7XrAcGuBPrgY3oOZwP1mtc60By
+	6kdUMR0YH4VPmic8ET+6naruupaHUIe6K/DWODgLL0iCpl+h/pUV0JUGmFhcAxcQ7u9mUmkj6Cs
+	uQVq+B8ylr4WWOKwxywVlUCgG20+BQ/xrqPjt7iLrTIcNRRm6/jnEGbfdoXnyKiP6hduiGnPtz/
+	gUNxttK+oG+YGCai5llpBV2fhKbLzC9d0PvHmNEot5IkBe0B/aHoLj1wiLDW84xKK8T39ghQaPn
+	xU0aphDzZ9ER4sRuAKi8EE65HPz75iV1LpdkPWnPAYxmlRQ9DYP7iw4Z+2dM0OcLXQhMG49+mls
+	xj0hpuEXLv9Ea3jjZPoXNMSgzoamXN66owGHvfqr/rQ=
+X-Received: by 2002:a05:690c:c142:b0:8a8:6fac:1525 with SMTP id 00721157ae682-8b392b7e93dmr15532597b3.46.1794312368279;
+        Tue, 10 Nov 2026 04:06:08 -0800 (PST)
+Received: from github.com ([134.138.53.242])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-8b39324bf79sm17715987b3.2.2026.11.10.04.06.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Nov 2026 04:06:07 -0800 (PST)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1794304840.git.tanggeliang@kylinos.cn>
+References: <cover.1794304840.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v25 0/8] Reduce the differences between TCP
+ and MPTCP for TLS usage
+Message-ID: <e12926d2-2420-e92b-1f69-17ed1b051790@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 10 Nov 2026 12:06:07 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -51,227 +98,58 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v7 6/6] Squash to previous one
-Content-Language: fr
-To: gang.yan@linux.dev
-Cc: sashiko-reviews@lists.linux.dev, mptcp@lists.linux.dev
-References: <cover.1790147728.git.yangang@kylinos.cn>
- <6a1cbdd1a0f4866ff6cda3b8679450172c203f5b.1790147728.git.yangang@kylinos.cn>
- <20260923101140.E62E41F000FF@smtp.kernel.org>
- <da961f27c729d9232a59e509e8e3c2f50bc1db00@linux.dev>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <da961f27c729d9232a59e509e8e3c2f50bc1db00@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 
-Hi Gang,
+Hi Geliang,
 
-On 24/09/2026 03:53, gang.yan@linux.dev wrote:
-> September 23, 2026 at 6:11 PM, sashiko-bot@kernel.org mailto:sashiko-bot@kernel.org  wrote:
-> 
-> 
->>
->> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
->> - [High] mptcp: uaf and uninitialized access in pm_ops during disconnect
->> --
->>
->> commit 89b80a47ef923bdc04a9069fdcf06de447841c5b
->> Author: Gang Yan <yangang@kylinos.cn>
->>
->> Squash to previous one
->>
->> This patch applies RCU discipline to msk->pm.ops, moving its initialization,
->> publication, and release to better align with RCU patterns. It updates readers
->> to use rcu_dereference() and writers to use rcu_assign_pointer() under the
->> PM lock.
->>
->> Link: https://sashiko.dev/#/patchset/20260819125629.49823-1-gang.yan@linux.dev?part=5
->>
->>>
->>> mptcp_destroy(), the final close path: mptcp_token_destroy() has
->>>  already removed the socket from the token hash by then, so no new
->>>  reader can find the msk anymore.
->>>  
->>>  Note that rcu_assign_pointer() before pm_ops->init(msk) does not
->>>  publish a partially initialised object: the ops are registered
->>>  immutable, init() only prepares the per-socket state, and the msk is
->>>  not reachable by readers until its token is registered.
->>>
->> [Severity: High]
->> Is this assumption accurate? A concurrent SoftIRQ can receive an MP_JOIN
->> request, look up the socket via mptcp_token_get_sock(), increment its refcnt,
->> and drop the RCU read lock. Concurrently, the socket could be disconnected,
->> calling mptcp_disconnect() -> mptcp_pm_data_reset() -> mptcp_pm_ops_init().
->>
->> The SoftIRQ thread could then re-acquire the RCU read lock and call
->> mptcp_pm_get_local_id(), accessing the actively tearing down or uninitialized
->> per-socket state.
-> 
-> The concurrent softirq reader you describe does exist -- that is
-> exactly the race this patch fixes. But note what that reader
-> consumes: mptcp_pm_get_local_id() consults the per-net endpoint
-> table (inside its own RCU section) and the msk addresses; it does
-> not read any of the per-socket state managed by init()/release()
-> (pm->work_pending, accept_addr, ...), which is only consumed by
-> the PM worker under the socket lock. So the reader cannot observe
-> the teardown/reset of the fields those callbacks manage. It's safe
-> for now.
-> 
->>
->> [ ... ]
->>
->>>
->>> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
->>>  index 64244a1a01bca..66fb7c3d9c827 100644
->>>  --- a/net/mptcp/pm.c
->>>  +++ b/net/mptcp/pm.c
->>>
->> [ ... ]
->>
->>>
->>> @@ -1158,23 +1166,39 @@ void mptcp_pm_worker(struct mptcp_sock *msk)
->>>  static void mptcp_pm_ops_init(struct mptcp_sock *msk,
->>>  struct mptcp_pm_ops *pm_ops)
->>>  {
->>>  - if (!pm_ops || !bpf_try_module_get(pm_ops, pm_ops->owner)) {
->>>  - pr_warn_once("pm %s fails, fallback to default pm", pm_ops->name);
->>>  - pm_ops = &mptcp_pm_kernel;
->>>  + struct mptcp_pm_ops *old;
->>>  +
->>>  + spin_lock_bh(&msk->pm.lock);
->>>  + old = rcu_dereference_protected(msk->pm.ops,
->>>  + lockdep_is_held(&msk->pm.lock));
->>>  + if (old != pm_ops)
->>>  + rcu_assign_pointer(msk->pm.ops, pm_ops);
->>>
->> [Severity: High]
->> Does this publish the new ops to readers before its state is initialized via
->> init(msk) below? If a reader finds the socket, it could access the new ops
->> before its per-socket state is ready.
->>
-> 
-> On the publish-before-init concern: pm_ops->init(msk) prepares
-> the per-socket state, not the ops -- the ops are registered
-> immutable, their callbacks are valid from registration. A reader
-> entering between the assign and init() would call valid ops code
-> and read fields it does not consume (see comments above); this
-> ordering also matches the previous, non-RCU code.
-> 
->>>
->>> + spin_unlock_bh(&msk->pm.lock);
->>>  +
->>>  + if (old) {
->>>  + synchronize_rcu();
->>>  + if (old->release)
->>>  + old->release(msk);
->>>
->> [Severity: High]
->> If old == pm_ops, we skip the rcu_assign_pointer() above, meaning the ops
->> are still actively published in msk->pm.ops. Does calling old->release(msk)
->> here violate RCU removal rules by releasing the ops state while it is still
->> reachable by readers?
->>
-> 
-> On releasing the still-installed ops when old == pm_ops: no
-> in-tree PM defines release() today, so this is currently dead
-> code. For a future PM that does define it, the synchronize_rcu()
-> in front guarantees no in-flight reader is executing the ops when
-> release() runs, so no RCU removal rule is violated. It's also an old
-> issue raised by sashiko before, this code can address it correctly I
-> think (call .release before remove it).
-> 
->>>
->>> + bpf_module_put(old, old->owner);
->>>  }
->>>  
->>>  - msk->pm.ops = pm_ops;
->>>  - if (msk->pm.ops->init)
->>>  - msk->pm.ops->init(msk);
->>>  + if (pm_ops->init)
->>>  + pm_ops->init(msk);
->>>  
->>>  pr_debug("pm %s initialized\n", pm_ops->name);
->>>  }
->>>
->> [ ... ]
->>
->>>
->>> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
->>>  index 14aa82647c3d1..4953cfa329e81 100644
->>>  --- a/net/mptcp/subflow.c
->>>  +++ b/net/mptcp/subflow.c
->>>  @@ -94,14 +94,17 @@ static struct mptcp_sock *subflow_token_join_request(struct request_sock *req)
->>>  return NULL;
->>>  }
->>>  
->>>  + rcu_read_lock();
->>>  local_id = mptcp_pm_get_local_id(msk, (struct sock_common *)req);
->>>
->> [Severity: High]
->> This is where a concurrent reader accesses the PM ops using a cached msk
->> reference. Does this disprove the assumption in the commit message that
->> the socket is unreachable, since the reader already holds a reference to msk?
->>
-> 
-> It's the misleading of the commit message, as the first comment of this letter
-> said.
-> 
-> @Matt, @Geliang
-> So for now, I think all the patches in this series are ready for review. It’s
-> not urgent, so please take a look when you have time.
+Thank you for your modifications, that's great!
 
-Thank you for having replied to Sashiko.
+Our CI did some validations and here is its report:
 
-After a quick look, the series looks good to me. Do you mind sending a
-new version after a rebase and having squashed 5/6 and 6/6 together, please?
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf: Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_n=
+et-next/actions/runs/42799457969
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/2aedf58162=
+f0
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1207103
+
+
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
