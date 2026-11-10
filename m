@@ -1,16 +1,16 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.23.70
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794325679;
-	b=H8OB9kg4DxmxnVfkEWskHcuqAPEod95+4GYPpTEwvY/OLoX3eYY3/icmCFNAxh7ME1c5
-	 nYiI+/VqvX26ZqbyZMyJN2y9Ys0PWd17kDMa6uP5W9RKQGBIJIuXW22bqaw2NAXuGoggv
-	 ZpRoFTpyu1NRpeotx9Y4b981DAhrRIZYIr5cH0LQD8tqBnfjcHRmGXB+5OmrcJStEt+0z
-	 MKdtEjDRK9EgjUwWIHgmXhdwM7Hmyh4iFLUqfcllM/rUz4PTY4hmVymU2e92h+ESX7DGm
-	 aDgJvdHyI624//eMDBwfzyPgRquLfNYA2Isd8F6y2nncP7RTh5/7w5+dNVjiTuZTjIA==
+	t=1794325680;
+	b=XLjia86PGY8SEIFajm1LtPX/P/a2/1rC7wH/IVLNofdmoZ9vV1pHHEbIM4aTZpdfeQfo
+	 U9+fUdgkll+Co7JMS3gIQwpbTs3XAkY8JJPc6M3VsZ543CfhLbgeXFWLBECQHGco2KQpH
+	 2M5j1EuRhQYrAqAzIa/3a+vo/eYDM4550M/xn5ukB+nd9QAiDXq5ea4ZL2HLxBx1Y3N6w
+	 sPQp3rEnpmlojUt6OyC7Tpyr1JSn+CG9LcD5ox+AhSnr2iWcN3oLXPqc8zhVyQBL9+JTl
+	 +/bcER6WDDlZixbWXqAawhEsVR+Ewu7ET1PrNHJXnRmCl9Ecsrfhf4iddLufnr81hqw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794325679;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794325680;
 	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:CC:Subject:
-	 Thread-Topic:Thread-Index:Date:Message-ID:Accept-Language:
-	 Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
+	 Thread-Topic:Thread-Index:Date:Message-ID:References:In-Reply-To:
+	 Accept-Language:Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
 	 x-ms-publictraffictype:x-ms-traffictypediagnostic:
 	 x-ms-office365-filtering-correlation-id:x-microsoft-antispam:
 	 x-microsoft-antispam-message-info:
@@ -25,50 +25,50 @@ ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	 X-MS-Exchange-CrossTenant-id:
 	 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg:
 	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=MBD8OTpbfb3Cko2+Fm7mVxj/RngcPsjPd/G7Mkm6GU4=;
-	b=AT+kUWJNHOZMvr4ne9rrE30/N5dSQQQJgQKaPV4EG9+DsDqj7rXgOVMeJscbML+HXFfj
-	 go0QjCUDPIhyHdyetQdkPvCuX61Yhq0nhMmdtEN8+2VjjrPLEu+ICcUll3ZBiDwUAP95V
-	 pTVeMS2IranyMePfkbDvb8cy3MDMTlaBzl3cUpAHsfmXmiBW3uVUTShBIYj48RjN1XXid
-	 uBeqOVw1rZhok34DQoi4ehqYLU7zPW1P026Q3iECqhA4yJ++SClvu4EH0r8qsYcctFq5X
-	 +qjIeTnPYfLz+xSJftIBh4nQXXcwTIfd/kmKTrvubmfYgIgEoxmprOHfuPU/f0wBXDg==
+	bh=58Df+rIzBq5xgTYTiEYK5PU8HD9/K/WFi6VRDWxHkts=;
+	b=PlObVe/rg1LCmmMwzIz2lO14jAnGmIYp1ChYu0xfF6e7vmNMgnXVm74N7YPjGDOYnUo3
+	 QnOlmkT2BCUi6md+ku2s9XO+oB1ttt55MAaKttMZ4Nk0L97AEH+5mtQG1+DuA/H9rv227
+	 Is7jwAIgxIuPXFuvTf3zOi4pwfMkq6TKHwvRfNxztSsZDvrkUPTV8S0MOi3ig3IDQuiZi
+	 lkFTl44gKgLyc+fLv9JfaMHPshr1EtpH0up2IEfs29mAun/YbiVfzbrxGKH9/lREL15vw
+	 0VShHuN9Hx97HqiK/FA5xb8SoJiALcR1XO+Bjkbzn7g+eXLgDUzPB0qpvYjaJnkB4Bw==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=outlook.com;
 	spf=pass smtp.mailfrom=outlook.com;
-	dkim=pass header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=OCWtTKBl;
+	dkim=pass header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=mAqWHQc+;
 	arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.23.70
 Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azolkn19011070.outbound.protection.outlook.com [52.103.23.70])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48472606A325
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8478606A32A
 	for <mptcp@lists.linux.dev>; Tue, 10 Nov 2026 15:47:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 48472606A325
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D8478606A32A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=OCWtTKBl
+	dkim=pass (2048-bit key, unprotected) header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=mAqWHQc+
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=j0dJi+llzbxTSnG3Ew789tKmTuTjZut/9oVaFFbTE6MFjaH9ocmGatzOCaxKOuu8/gwQDOcZEMumrdogGA0BiTyeIYkjVRZsl3S70YC9TvmGnePYM1JClqpKjXx6dd+9EvNcaMJBxMjo5qqV4OmYuzXd92MGt5yRJiJYxTL8+7s2YNduTqiF2lTxRv2cW1u7sVDZ1T7rsIcU8WfxWoadAzK7jW+LJP8q2ICxmSCMtjUo7ibPFeq+UxJ+VpxQxYu68fund6sjj1eEHRK5HaxNP3jTa2rPna+CSNkZyQDKXJGqY8BF9qkDeXLpcSUxz4Zq84RrocIAap3tt4YAYAV0Ww==
+ b=gZFcB5duvhPMkIM6XvEaCvfRqV1lKsXlKhAbH1NvVIfliZGeiHvR8eo7SI1w7Np/FjfYY/Zd2Fvl3x7vd8KSvr+jnmukMPAdVdnAxoJ8gQueMpIyXJmCMU9yBxwvhh5/RL9JirJG7BhCJNwiXhDb9H31oZCP6+kcFDHw04NdFwO8NiqpquA8ON9pRL7Q8loWYkoToRWBVF6Z/8ik2cMSelt6qpzAL7MEPG5I3LFVFqdDEBAB3fUOrVBV+8PJaD+DTA5YuFaxCICJJ+r+vT7LG6/NWRgSlgWJ8GCkVgVd7Ox1wZpUVCCO/Y5WqjZvsPB3QUWcZTXKomSvaWcBaHWfnA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=MBD8OTpbfb3Cko2+Fm7mVxj/RngcPsjPd/G7Mkm6GU4=;
- b=wJOUB/CQH+0a71qZoNN/ZEYDlHTVfxg/zyCD8GAfeXqe+AiP/t6e3269pmIPyiUUSptEHtsun6Fm+YTgNj8pfFNF4Rp02tAFMSu+B0JQFDjOryE/jyQ4XtnvamhRroIC8U+Gq1sxFU3OpK+/zq+LMkVI7iVIqOYRFW+e84+E2KR20MDTp3gkAGb1JAzad1oV5Basz6RK1aFQTkzk7pAlDIfho8p5EghpnHY/o+wiJEL1Ev6SQ+SIukWX1YDzU2grnwJKQKUqsg7Gwer/7UjPEQ6Cq9gS0gg5ljFiU1byj3CJXsebX4pC1LxWTit8UJEKqxr5bc0d+YU0MzTyExlE2w==
+ bh=58Df+rIzBq5xgTYTiEYK5PU8HD9/K/WFi6VRDWxHkts=;
+ b=ZFmaTfE7m5ANaMkyoLJjF/mVgMjAsx+Bs04zCJiF15CFs432mgkMh++Emvass2eBEWXhyxW0QD+T6LHmFdoZkD6SgdkG/UDjAyx77Jzaj6s7x29WaNPWybz1/0K2mEHi7T7f/0y/1bJSl0ePwVyl/rxE4k7qdNACbkO3CVONBBbvmImkNmFGRy059VW9sg9JOb2zVholK8a7tdeqK6vkMBpcX0GvGqNxiLOrCRoNtsmPyjGCuwy6qM2CClmvGhLijjEfDrCChYS/QAGdjTT4lX2V5aH/hywAsCme1pTIoE8r+K0bUSP8aiaf2qOG+N8UX+GSDWRLE+rlkuwgI1IExg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MBD8OTpbfb3Cko2+Fm7mVxj/RngcPsjPd/G7Mkm6GU4=;
- b=OCWtTKBlhDHruBf/HMRL39gVopRWos4ubjqgbhyW2xAw7zGmEyflJFtdRQiz1DnYBNVymo/2fG2vEiy/Gf3WvV9GaMLdluzo7yRSicrtjH83SZjWwo0qG7hzWuPoC7kSTEt7l8V+Wv3E3ugxf24qtq6dxItRItfIbec25l/WAH7S9RtNE9mBQr7xS5WdlmczFukzhY8m83udBeAFLakhuPpDzySm1jsCMWL3uBejN8F/ufAtb/IoLaTUMrHSNTQlqs99iBciXfcN/HnMyWWmJCx9RdFQIK5I+VOnCinjagFZ6hXq0rxJsrelJQbOzVHJK6D3CnPxjFCGvv+jY3vcPQ==
+ bh=58Df+rIzBq5xgTYTiEYK5PU8HD9/K/WFi6VRDWxHkts=;
+ b=mAqWHQc+mbiSyZCBIdS2WzJkX96ZJopUi68sss6Lfn8Bk84K96YdL8/jQ4mGfQ6IgNOYb8ZoeLOgJ9r2kxjWqTajY4medafJHQB2T5wDoPkTLzUC4v5Mr4QgHRZ5/P2VSNwTAcqhi7Nqp+0zi7xAHb7hdLOK/d5UC5Ucj11Jnq5aB+kGMV+CxB9q6jE8969negimB/icYWjIhsDJUxDXzYGzcBAeALF7fYTZXXzNzlC3fq/dfvCJe6FcJ5+2Lgd/UevzbAONuQ15cmbKUULUHI9KFz61wk6Rbo6tWGFgPwvkmrkzOab41fqD9fplHzMHVPpd6iWMHVI8O24u5ATv2A==
 Received: from SA3PR05MB10385.namprd05.prod.outlook.com
  (2603:10b6:806:39d::17) by SN7PR05MB7775.namprd05.prod.outlook.com
  (2603:10b6:806:105::5) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.8; Tue, 10 Nov
- 2026 15:47:56 +0000
+ 2026 15:47:58 +0000
 Received: from SA3PR05MB10385.namprd05.prod.outlook.com
  ([fe80::e22f:a0f5:fcb0:9b0d]) by SA3PR05MB10385.namprd05.prod.outlook.com
  ([fe80::e22f:a0f5:fcb0:9b0d%6]) with mapi id 15.21.0615.007; Tue, 10 Nov 2026
- 15:47:56 +0000
+ 15:47:58 +0000
 From: Yingjie Wang <x-professor@outlook.com>
 To: "netdev@vger.kernel.org" <netdev@vger.kernel.org>
 CC: "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>,
@@ -80,70 +80,73 @@ CC: "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>,
 	"horms@kernel.org" <horms@kernel.org>, "matttbe@kernel.org"
 	<matttbe@kernel.org>, "martineau@kernel.org" <martineau@kernel.org>,
 	"geliang@kernel.org" <geliang@kernel.org>, "ycheng@google.com"
-	<ycheng@google.com>, "weiwan@google.com" <weiwan@google.com>
-Subject: [PATCH net 0/2] tcp/mptcp: prevent blackhole timeout arithmetic
- wraparound
-Thread-Topic: [PATCH net 0/2] tcp/mptcp: prevent blackhole timeout arithmetic
- wraparound
-Thread-Index: AQHdcSra+844o4e65Uy62frlOoREyg==
-Date: Tue, 10 Nov 2026 15:47:56 +0000
-Message-ID: <cover.1794325665.git.x-professor@outlook.com>
+	<ycheng@google.com>, "weiwan@google.com" <weiwan@google.com>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: [PATCH net 1/2] tcp: avoid wrapping Fast Open blackhole timeout
+Thread-Topic: [PATCH net 1/2] tcp: avoid wrapping Fast Open blackhole timeout
+Thread-Index: AQHdcSrbrMBlKf22GkaKiF/PgIzGQQ==
+Date: Tue, 10 Nov 2026 15:47:58 +0000
+Message-ID:
+ <340d9f1f96e235642e8b47b5e7c836a18de8dd56.1794325665.git.x-professor@outlook.com>
+References: <cover.1794325665.git.x-professor@outlook.com>
+In-Reply-To: <cover.1794325665.git.x-professor@outlook.com>
 Accept-Language: en-US, zh-CN
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: SA3PR05MB10385:EE_|SN7PR05MB7775:EE_
-x-ms-office365-filtering-correlation-id: 1df778a8-30c3-476d-ba65-08df3f41fd37
+x-ms-office365-filtering-correlation-id: bb530568-1b35-4e9e-96f5-08df3f41fe6b
 x-microsoft-antispam:
- BCL:0;ARA:14566002|4140399003|24021099003|25010399006|31061999003|38102599003|24121999003|22091999003|8060799015|8062599012|19110799012|15080799012|40105399003|52005399003|26121999007|102099032|440099028|3412199025;
+ BCL:0;ARA:14566002|4140399003|24021099003|25010399006|31061999003|38102599003|24121999003|22091999003|41001999006|51005399006|8060799015|8062599012|19110799012|15080799012|40105399003|30101999006|26121999007|102099032|440099028|3412199025;
 x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?1p0aNObSCSr6A9SiHIEGL9Yzf8ecjrw0I5Z2kCU3hrugVbRsHbQPC/oZXB?=
- =?iso-8859-1?Q?Apz1HG1MyjmJxI4UvryeFthpIl/hFfJW/NkTrvs39HCd+hcQ0JiRruBv/f?=
- =?iso-8859-1?Q?mP07UFiQ/3RY3Ftv7m5TNgrgJKypSTeK4bzzBkMcKmeEea8Lch39E+nSCi?=
- =?iso-8859-1?Q?9j5k3SyNqArpe6CDVozpy8v0+P64eRiDpxLJfKT1n8htZN3goU+WyJL+xs?=
- =?iso-8859-1?Q?6SY8+0VZ6Wx3NhhliIsRv8JOxjLENf4TW5FuG8Jyc0ZD5+ZhVCrmO2scfZ?=
- =?iso-8859-1?Q?Slg+rgbctMm4+GHvR4EpHSeKAQsvA/P+OT+jQsBOsZmbZqgsI2wk+NK7U9?=
- =?iso-8859-1?Q?OxtwOeuu7WDWaEQuQfZJrYrzAe1UKzdDxM5IZZ5IZpkRHtzHe52TMo3HuJ?=
- =?iso-8859-1?Q?o3gJqT/mQuItFR1rTD/68LKyrNJR8zuqbq4R9TEZLCS/HgrV2zAEYzLYRe?=
- =?iso-8859-1?Q?TJuP/1LwgnmiaOZ5ASW7U1GPnAHIEuYA6OeLAFFBXV6KHxh3B4VdpbL8wG?=
- =?iso-8859-1?Q?a76NWiJHA/hmkJVthatNBgEoakJVeDdPj4uNChRIwM2BhA6X5Ihh/RCpBc?=
- =?iso-8859-1?Q?4ynaNlAAr35/2BgZiegBEGJ2R0roujD9fjDd9tbDaQp/nTik0GwqvB2tyf?=
- =?iso-8859-1?Q?Okb8mUcB2YRHvSbBsqgnXgoP7p/n/LapqrRjFJ4WPOK+I0WzxkrKorPAhS?=
- =?iso-8859-1?Q?dfUzZMNXqQsNYkXkrL0HdxRU++j72zIksWnN+vtU6uRAhv+K0HIWGeEEnA?=
- =?iso-8859-1?Q?piE/GZkcfHkwyHaDrsszbOkOKcBgIjchEMxksaFzOFBFaQpTJT6zJLfkVD?=
- =?iso-8859-1?Q?G1Z9bAW/I5K2T1bQDzrr/zLx+yJYTF6BOwbEaW1rUZz/cD2cSVi53+56t1?=
- =?iso-8859-1?Q?CgKxTsAzBI1EACx8S4jwrPIcKkqCOkVty4RatYufVi+eAsT35OydTZSqU9?=
- =?iso-8859-1?Q?uNRrc7+Uaw3aB4ouI/JsZUpk+e/sqPuJFhEQ0VRKG2HSIy7u1qQZDkcATh?=
- =?iso-8859-1?Q?OCeYj7wfepZa43LqocQIRWX7KLWg4mTcr2JMcJlofU3BpTYlGNhKZ9XmTr?=
- =?iso-8859-1?Q?HZsJnENySHm+fg6LB7OocZpaVY2GP80hV+kFpyQLWrTR?=
+ =?iso-8859-1?Q?OpxACHBxDS8TCxaqjjmt0x8p4TYmkwhz67/fsOJJulrrTfN+VXAjgltooj?=
+ =?iso-8859-1?Q?syaX8rFYfv1gjvXPPYOi6/Z8YxB8lxwE6oEkPLb7lwIWaVLCLi+luMAaEh?=
+ =?iso-8859-1?Q?MGn+42W/I/QkNYivdx98qvPl3hGDbVcUmmkE5lxLrW8+W9xqfRJHgaYEAX?=
+ =?iso-8859-1?Q?fhvKhAxuUquRdxhUhLGprKavrzwkvmz0a9yPxltlm96W2dbV7crCk1/uTu?=
+ =?iso-8859-1?Q?L4VGXSw38q+6n6Ljbt0XYA3ayGTa12FM2CfwfyqF2HmFNdR6TcBIRKP7pF?=
+ =?iso-8859-1?Q?M2DFvNdhpVWFgiHmkzj6OPyjcYXdMmBKV/nDXlMace2yUGAY2fu447FuKG?=
+ =?iso-8859-1?Q?ccmsdKTDqLrbMQEmdvvqLzTyg7voog9R3jXaavOeaj9hslTzzNNKIZ6XXb?=
+ =?iso-8859-1?Q?BMoVr68OvQypONqzAOtg25ooSJo7Kmg7hGKARG4nS5U2M05tUWxVrp41I5?=
+ =?iso-8859-1?Q?224weBx11Tk7WvLhUUxbNw3vkMCUsTJJ0iNrIpAIAiKqzIOEncEj9Ugx+W?=
+ =?iso-8859-1?Q?/T1+c6h5cijJQpUyJQ+CrsXLWySu8xoJLuowgwileu7n7tIRpPbnJmf6Kf?=
+ =?iso-8859-1?Q?pp/13Hkno8YeFP4qah5OnZBaIXo4aWfLlmcrgANqzBBzYpg7VK5Ju2/AUT?=
+ =?iso-8859-1?Q?vAQD7/cZBnGl4corJvRjDCPHHLCYSGa9pRfTL+yL/yUoVvw0jp/ytHIYXP?=
+ =?iso-8859-1?Q?EEACBz71oVWTGFYfqDAPKf/EUsfSl4HlED5DwxIAV6Z2wrNkMLwXo1iQzt?=
+ =?iso-8859-1?Q?64bzeZwADMw77O133aoQ+GIAODwJtRdP4IX5MnTQ14jV40CIB88q35zTct?=
+ =?iso-8859-1?Q?GxfD5ehhpUNDE4sJ2Dxrx6gsm3Ap5xYNyx75vKV1KCgamD0iDRM1cFXL7k?=
+ =?iso-8859-1?Q?Llhq2z5jaZQgDDRIYzQlW7jiC+qlXlrHbgWSH6ZRYCpLcum5XVXDHGqYzA?=
+ =?iso-8859-1?Q?aOZkssQ+AFGTuzbBvxOYjYu3xQotQnKMQerXRmrxAp7AGWOHvE8721jdtT?=
+ =?iso-8859-1?Q?jrf6ZW6gB0Ml5w0IFXMtB8u7OaJ+GFngfEzVCboH+/UWLQ3H/TgF57PEfe?=
+ =?iso-8859-1?Q?6aGkaAT557lAjRsWI+/f1Sp4D55SaSR3XJ66IAqdVe6WPkru2yEzI+PPik?=
+ =?iso-8859-1?Q?YC16RrbjoRIUQFXIknm3WrknIHTVDnr6/FXv9XtxvcmGtishDl?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?p65eNPpE7+CFndWZb+ea7AUikqMPCfC9Zw56DkvIeU+zx1bpqghewsGC9o?=
- =?iso-8859-1?Q?8E6Hgq6+SbpfN1cJmrdWWJkroECpo2i8Pruris63VGb8VcAzz5SgobEsHN?=
- =?iso-8859-1?Q?TRpjLetsI8TSkPXhrVjvObGO079zT252q4kUSKg6/Rol50iUAw/zmADctz?=
- =?iso-8859-1?Q?+RAaBggQxM4iFXBQAG9Dxd0OscTlP8Y/N8HNyL/AYANx8b0bJ3jyOAjmPn?=
- =?iso-8859-1?Q?N/54IW950lGulHoUOY7LeV1z3si2iIkv0g0OUywnrEOJgLZUXA4bs7EBOn?=
- =?iso-8859-1?Q?g/u3QbzElvJyRTi0WcY2T/qDP1tNI6lqTCjPCWt3F6asnevNLFfHzWu5oo?=
- =?iso-8859-1?Q?AzouHIRGDysMrH8L3qwwTQX/xKHcIcsESKbXWVMeXnS+gic+xPGYAQrQUQ?=
- =?iso-8859-1?Q?g2ymwr8AJXJOj7VnCpxWjrCsogrJ7F5pMpBjBqcotxhyffnFCtqAdlIMKq?=
- =?iso-8859-1?Q?cOCqHO6DavV3JqSsF36HyKItusfGlLNaBCGGUUoSg2+JqkRhTb1UXJQ/9C?=
- =?iso-8859-1?Q?Ke8FfPyRsqgDXTGKG7KdBHyQOErNMW7At0STLWe5yGEOb9H5bcOCSj0o7g?=
- =?iso-8859-1?Q?YUsxe2RAh3u4m0kuq4nVWx+Bebv6oHQJc1EjRzkn4z+AvN4xMHypJtxpV0?=
- =?iso-8859-1?Q?la//CBn05UODRSNULfMrww6uNbbqxfk9WsEqv9ldiwr5mzK8Vqs0ges0vE?=
- =?iso-8859-1?Q?2b6+noWJ/paxA1CxhLuT0H5ZiP7gv5v+VGkE1ZCQrtrLPPz3UiGkI/ynKW?=
- =?iso-8859-1?Q?OgxR7wsCPgx4tfX8ptg1zoiua7sDHTIGXdDh9b7KtUFwViImutKyWf+5sZ?=
- =?iso-8859-1?Q?XqJXIMG1I6QhsWQMYh3mU6HlJvcusCGHX3Zefxh6+mCYv0tvfVnmTG+5Ri?=
- =?iso-8859-1?Q?vEGLL49Nd3gSeavuoO8OuEuopfAxqzVHAdpTWtmKOGZXliXTXmCmomgms3?=
- =?iso-8859-1?Q?rFUMHOeja5yLTQaPEZom2Vd1T/nLTtZ8XX0Aw6i1D1P8QkWiD/Z+9NRHgr?=
- =?iso-8859-1?Q?sbMsfDwNm6lN+87JfSIh82fz7NYBWUl7BRRGuGyMoytr8sB+buJER1leGX?=
- =?iso-8859-1?Q?g+/RENuqRsC4PCnMly/r1TNMCkhIquiJSnMoXzl3usO5DGxn40rGOEBjwy?=
- =?iso-8859-1?Q?RaOrOddKSGXmoKnXnmwQu2IoVER0H6sXbIIwoVroC/m2zdPigG8n3PwlsF?=
- =?iso-8859-1?Q?QU9WuNf2BLT7wLUvPZvK57ypgs4Rju8HrgvYhrLkHi07DcGOq0svc+DrAX?=
- =?iso-8859-1?Q?iB+iJ13fvZhMgYVqdauOEWB1/1AGqw+8d/xevvLspRQhrCaS2qowGC4cWN?=
- =?iso-8859-1?Q?jsNQsAYTDvAXZ4S2CfJDB6h0hX8/DcPW0shFllcd0xILHW6eSsO22OrZaW?=
- =?iso-8859-1?Q?95f8HumO7jfg3cbhKhEhhraxjcR2NwVAeyVxG31amdK7i9MwPdokryr6ud?=
- =?iso-8859-1?Q?gbAAmxB7hF7MxWdn?=
+ =?iso-8859-1?Q?HrQTqy3F8syBNbG1Mtl/iviUWptll6bw8Isidd5lZH2bCKSwq/YpRegJch?=
+ =?iso-8859-1?Q?c/UWRz5e66omXB/vtJj9gktVpmoVOR56vkDJERw72j+HOgjBXvr2ZNWa+R?=
+ =?iso-8859-1?Q?uD2U7oONY8LFVaXXicQi36JT9d4p9pn/VIbIlUCUeSl/ynQEZYHpfk06oE?=
+ =?iso-8859-1?Q?NvnILRwm1/sSHIlzimdScmZK/AeS2RGKLyb1LeWRqLy+cwp+rJ0jcfclQ2?=
+ =?iso-8859-1?Q?EZvN7DmEkvVJLqP3LQ9gI+YHcTa5QdS+HEEKXv3QvkINvM2iip4OW+WbsX?=
+ =?iso-8859-1?Q?0AYiLiK0xLAJ8lg4b7Dw+JNKThd0P2Uv+QrxltzG9pXeMGFdwzMsJAhHZs?=
+ =?iso-8859-1?Q?vmqnBgHBrPMBmlLIiiKWhjXSDir8kvl1DxLSOOdWy5OiozLRVHhLOvfkPF?=
+ =?iso-8859-1?Q?rc3vgyIGo6QsAAFLm8sC5/3Pkrm5nGx+llFwRdA+fIWPpFPDJnAgEF6fdJ?=
+ =?iso-8859-1?Q?kASyPRLpgOd9oKn+WEIZO/qvGjx57biNeHHsOEj4x1bgbDhbIALECSPZTI?=
+ =?iso-8859-1?Q?zBJfASQGpA3QOOfm4lx3mTMIfIREAspKs/wfiq3rtB5T5YrON/MKX6pUwq?=
+ =?iso-8859-1?Q?CWWXNM8TN2E2nIh/ByqXM8QVKMWt8/DMiCafvGXX07CIkjnXkV9/uo2RCK?=
+ =?iso-8859-1?Q?/UU7g8Gqh694bZb/eq85Bz2nEXCk2zT7lt6MS4OvSU1GNIdnh47nzToz3w?=
+ =?iso-8859-1?Q?j/N/zjMnHuKJ46/QWmlubveeOcbDNvXr2Vuee0BQk5Upl+EeTtZZjb8o9y?=
+ =?iso-8859-1?Q?t4Waishg3wMfEBNgAwdQ8zuW+TnPZaJEboReRnWIF8h+RdQJ+kz857PT7k?=
+ =?iso-8859-1?Q?8BeOqdVO/+vUf39Zp/ZDNREeVlB0+MblgcpYaanTEMTcfdFViTU+fRXUuI?=
+ =?iso-8859-1?Q?VWbgdBy4+DI6Nu1kYHqSWRUNhnJl1QL7+rTI3FL+yowQpsvOtUiJPFfgHD?=
+ =?iso-8859-1?Q?JOsQvZRJxgK7E+4VxM3Zl3Za7KvSwyeGrSz57l6R9KqHhI/24+iFcG+E2J?=
+ =?iso-8859-1?Q?9UdGgacUXGPpgvkaqIXWq5D61/BXGwruXWbgJc6KnTZBNXK+pFMpvZM6jj?=
+ =?iso-8859-1?Q?yXDu1k9Ad4IyGz5Bna0cS1jtxFRNra2oDt+C7mewjAJQHkeSU4LzRGa+dS?=
+ =?iso-8859-1?Q?sfigrFCUVdzeZY2jWCfvcc46fh34EPmvzOM8Y0bBNUuSWHabNFhGsYSuyi?=
+ =?iso-8859-1?Q?Z4PHej5rraOunYTxIg7cklZmEWbUmegNYE3KReZecb+mY4rXvdVcEnJbip?=
+ =?iso-8859-1?Q?7PkbRC7huh3yo73duK460aH389fL6Psz2MzlOlX9NLM/rsqF1ArLSzP+E4?=
+ =?iso-8859-1?Q?dSMKVFnkPG3MtrmWAzhZLaShuvRu9l8YaUlzoVYFxeCZE0jhoOoQfAjs3j?=
+ =?iso-8859-1?Q?o+Te515+pvdMFFd/mZ/lCPFZqwZUDuLSMceg8CwgD2FU+Dw/OlCkdN9jxz?=
+ =?iso-8859-1?Q?1J8Mx3i7IJpqGFAV?=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 X-Mailing-List: mptcp@lists.linux.dev
@@ -159,64 +162,71 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SA3PR05MB10385.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1df778a8-30c3-476d-ba65-08df3f41fd37
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Nov 2026 15:47:56.3146
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb530568-1b35-4e9e-96f5-08df3f41fe6b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Nov 2026 15:47:58.3763
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR05MB7775
 
-The TCP Fast Open and MPTCP blackhole handlers multiply writable timeout=0A=
-sysctl values before adding the result to a jiffies timestamp. The=0A=
-multiplication is performed in 32-bit unsigned arithmetic, so a large=0A=
-value can wrap into a short delay even on a 64-bit kernel.=0A=
+tcp_fastopen_active_should_disable() calculates the active-disable=0A=
+interval as multiplier * tfo_bh_timeout * HZ. Since all operands are=0A=
+32-bit, a large tcp_fastopen_blackhole_timeout_sec can wrap the delay=0A=
+even on 64-bit kernels and re-enable active Fast Open too soon.=0A=
 =0A=
-With HZ=3D1000, a timeout of 6912213 seconds and the maximum multiplier of=
+For example, with HZ=3D1000, a timeout of 6912213 seconds and the maximum=
 =0A=
-64 should produce 442381632000 jiffies, but the current calculations=0A=
-truncate the result to 512 jiffies. Both patches compute the delay in u64=
+multiplier of 64 should produce 442381632000 jiffies, but the current=0A=
+calculation truncates it to 512 jiffies.=0A=
 =0A=
-and cap it at MAX_JIFFY_OFFSET before adding it to the saved timestamp.=0A=
+This issue was found using a static analysis tool. A loopback reproducer=0A=
+induced 12 Fast Open blackholes and waited 1.2 seconds before opening=0A=
+another connection. The unpatched kernel retried active Fast Open, while=0A=
+the patched kernel kept Fast Open disabled and used a regular TCP=0A=
+handshake. The reproducer required neither kernel modifications nor=0A=
+fault injection.=0A=
 =0A=
-The issues were found using a static analysis tool. A loopback reproducer=
+Compute the interval in u64 and cap it at MAX_JIFFY_OFFSET before adding=0A=
+it to the saved timestamp. This preserves the existing exponential=0A=
+backoff for representable intervals and prevents large values from=0A=
+wrapping into short timeouts.=0A=
 =0A=
-induced 12 blackholes, waited 1.2 seconds, and then made a new connection:=
-=0A=
-=0A=
-  TFO:   base probe 1.026 s, TCPFastOpenActiveFail +1;=0A=
-         fixed probe 0.000 s, TCPFastOpenActiveFail +0.=0A=
-  MPTCP: base probe 3.087 s, MPCapableSYNTXDisabled +0;=0A=
-         fixed probe 0.000 s, MPCapableSYNTXDisabled +1.=0A=
-=0A=
-The TFO counter records another failed active Fast Open attempt. The=0A=
-MPTCP counter records a connection that skips MP_CAPABLE and falls back=0A=
-to TCP while active MPTCP is disabled.=0A=
-=0A=
-The base and fixed kernels used the same x86-64 HZ=3D1000 configuration.=0A=
-The changed objects also build cleanly with W=3D1 under i386 defconfig,=0A=
-with MPTCP, IPv6, and sysctl enabled. The i386 objects have no undefined=0A=
-64-bit multiplication or division helper.=0A=
-=0A=
-The current objects have identical disassembly and relocations to the=0A=
-min_t() version on both architectures; the x86-64 objects also match=0A=
-those from the runtime-tested kernel.=0A=
-=0A=
-The runtime configuration had KASAN and UBSAN disabled. No BUG, WARNING,=0A=
-or Oops diagnostic appeared. TCP and MPTCP selftests were not run.=0A=
-=0A=
-The patches are independent and have separate Fixes tags.=0A=
-=0A=
-Yingjie Wang (2):=0A=
-  tcp: avoid wrapping Fast Open blackhole timeout=0A=
-  mptcp: avoid wrapping blackhole timeout=0A=
-=0A=
+Fixes: cf1ef3f0719b ("net/tcp_fastopen: Disable active side TFO in certain =
+scenarios")=0A=
+Cc: stable@vger.kernel.org=0A=
+Signed-off-by: Yingjie Wang <x-professor@outlook.com>=0A=
+---=0A=
  net/ipv4/tcp_fastopen.c | 4 +++-=0A=
- net/mptcp/ctrl.c        | 4 +++-=0A=
- 2 files changed, 6 insertions(+), 2 deletions(-)=0A=
+ 1 file changed, 3 insertions(+), 1 deletion(-)=0A=
 =0A=
-=0A=
-base-commit: 30c71476d842b094651bd7712f6c8ee8716147d0=0A=
+diff --git a/net/ipv4/tcp_fastopen.c b/net/ipv4/tcp_fastopen.c=0A=
+index 7f7eb3cc1c04..aeefd605414f 100644=0A=
+--- a/net/ipv4/tcp_fastopen.c=0A=
++++ b/net/ipv4/tcp_fastopen.c=0A=
+@@ -613,6 +613,7 @@ bool tcp_fastopen_active_should_disable(struct sock *sk=
+)=0A=
+ 	unsigned long timeout;=0A=
+ 	int tfo_da_times;=0A=
+ 	int multiplier;=0A=
++	u64 delay;=0A=
+ =0A=
+ 	if (!tfo_bh_timeout)=0A=
+ 		return false;=0A=
+@@ -626,10 +627,11 @@ bool tcp_fastopen_active_should_disable(struct sock *=
+sk)=0A=
+ =0A=
+ 	/* Limit timeout to max: 2^6 * initial timeout */=0A=
+ 	multiplier =3D 1 << min(tfo_da_times - 1, 6);=0A=
++	delay =3D (u64)multiplier * tfo_bh_timeout * HZ;=0A=
+ =0A=
+ 	/* Paired with the WRITE_ONCE() in tcp_fastopen_active_disable(). */=0A=
+ 	timeout =3D READ_ONCE(sock_net(sk)->ipv4.tfo_active_disable_stamp) +=0A=
+-		  multiplier * tfo_bh_timeout * HZ;=0A=
++		  min(delay, MAX_JIFFY_OFFSET);=0A=
+ 	if (time_before(jiffies, timeout))=0A=
+ 		return true;=0A=
+ =0A=
 -- =0A=
 2.43.0=0A=
 =0A=
