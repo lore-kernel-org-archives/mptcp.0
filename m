@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794310098;
-	b=K22t4274AhAO3XoN28g7i4MbbWIerbTWu9Jr4/C7s43Cvl5ZADWnIRZ27S/Mf4JyVZZ0
-	 fxxVRir7WO+HL5Ua/1d3WxbTCrwXlCaJrgkdsNrogLHUQGzH8EaSIQVWLcNfjWuMtiuJY
-	 F2vyh+wk6XvxHhHW54GNrVPnB2aCZrtRnjBaKC/L1hdJ5GbZN7ukkn7Y+y5Pk+Ru1UJ3r
-	 BFO3LsPjT5ZxhvMdK5JWyccRGmxMogTA/9wA7gohnEkiiQ0aBBwsQ2nCvIZk+nNyEaY1h
-	 7pVHYjnmh5rob+W6NhLVLIiRistuWEVljzuqvkdwSHgH4ELSKEV4B6d149rqrinUj6A==
+	t=1794310765;
+	b=jwp33Hy1ecWlihmGoPDI2JoD0FDqDRVAXBQCCb0jcvg0ibo5roMN2u/NjwWUBn+tl56e
+	 ewnDaDO3YG0PpLJjcy34p6qNI/Bde8nQMydhA7BDv59iyz89nfPsQuBZLgWSFPQXk/OuY
+	 kVZBYySAXCoP8e8RaTSwb0qhmlCF9UyaGNT+UDUC5SaFPmG1fElCbbf8kqa8Yg9/v2G65
+	 t9tAIH4m9f5KWQYI8LZkp3FrQ+eLu5NjE5lFm8x7ppiHYfl1diYJ/ztRt2dBnXakSgGsl
+	 ENM1aPgEkRpucGkwq0xTgOzPqptyKzy+08Ke3GIEGT8TU7G1Fb4s0oe3FS0tkb6HH2g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794310098;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794310765;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=Bow83wIczwiYl+mYNYisPcBsNVqLXF/ekH8fXtAJVuI=;
-	b=h0SevbFsdJemG+3oXqjiA8a2+gtxr2gBleTipfwHqX22JlqfJSiqu18Vy1PouNlchpB6
-	 MWuYZun5GLHdZAIMsaeK9RmdPp7r553zpE5RHDIY44500WN7xwEGsF4lOmNa+ZpJJTNye
-	 ViFYhAljQoXF+WTTk+OXNKqEzCeomKK4f784i/7Oy2MVGkals/sHkXJM0zzqwjObU92WE
-	 HSGA3o2VJGsVCS4Ufh9qPu0M0uNvMxffCQj4kbpg8hT83VjIgUpvaeGV0hmjJ9mfNmLCH
-	 8du29KiwWEN89e/rjjFVt7FuCIfanhm9edw/rDXWZWqY86IR7TDMQPkcJdZt800JMIg==
+	bh=61iXqObBoRbHUHb9L4kL8O8fx5dOAyzxdr1sttsno+Q=;
+	b=gh1QRi/iTOhcifhp28L3oQ129fPqmtyNdZ68G4wkiJs/KxXthaddgzIECIrTouPatEhd
+	 xIV3gv1ixJoZzj3N2AjYqXhQ4k08QsY5eX9C0oWFiq70zMOjmdSTr2jRHDI9Ik3060+Gt
+	 CCI2Vi2tjtgSiBalVJK7SdDWBCpK1jxtxzFpSTLa4Wb0OoxEihOkcOClm7zgwb0lWTsl6
+	 VyfOL8Ls7/3qu8cJm9BK8rwmV5vGBdcSrlSDWlQ2cvCB5C5eU9SUzMzHmywdrPoCOXXJ5
+	 Z3wRxgzSXhIqk3xJ4xqO1WfufCorj5FYFzmCJAb3sWcVtEcWnPMNWb10FDBIDhLt/4A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dDeiScvo;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FlmAFEMc;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F74F606A32E;
-	Tue, 10 Nov 2026 11:28:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA995606A325;
+	Tue, 10 Nov 2026 11:39:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dDeiScvo
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2808E1F008A1;
-	Tue, 10 Nov 2026 11:28:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FlmAFEMc
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73A651F008A4;
+	Tue, 10 Nov 2026 11:39:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794310097;
-	bh=Bow83wIczwiYl+mYNYisPcBsNVqLXF/ekH8fXtAJVuI=;
+	s=k20260515; t=1794310764;
+	bh=61iXqObBoRbHUHb9L4kL8O8fx5dOAyzxdr1sttsno+Q=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=dDeiScvozPtJL2n8qM+O8IYSe4tDr75pEKgeDQV/2HtafsTURojPSPpvFqmo1cN2s
-	 GNA4CAxFdnwnUocGJO/qkY33Wkvh0iDQp0ti8/bl7tM6+cAE9Im6fH1wkgORmxv7pT
-	 /S4BrOAaIH0J1PG7YF+XMYDaCFdQvToy8iw0IssbHfxidsoHXgcOXQuRjh46ndqltW
-	 NaTufVAhNVRcEw9a/2txcKtAOUtXBDjh0dxAReVTdLVenPqGQhEHuFaY+JL6er0vAm
-	 UJjsI7NNM6mTUthKYkQvyQBwAByiK1w3j6G37bIPZu/ksTBjjoa7b8kHtqbcmrHbrs
-	 EEaMiN0YqAZ8Q==
-Message-ID: <35051734-9f07-47f3-88c6-f603b8263df6@kernel.org>
-Date: Tue, 10 Nov 2026 12:28:01 +0100
+	b=FlmAFEMco9/vwwZbY1x8fMa9VkyGo8Df7nTFSSqeQhLgEQHtOi6cU4wOqdby450d6
+	 BWgQypHzu6Tos01Zo4HfEFhVTLrDFkvBgMu9pXyZD6WE5RlrnEolFRedJG7co7Rd6D
+	 0E3Yf9cD2hiPF+GWkagrC9FcY/1LSy70+xSkIRQDKD2q621tDE90SNpLywhUAe8RJJ
+	 +sq5bHADVIvLUGE06ap5bvJWFWD9Ato/I9Hvbcvhegtd7Hy+2067KShGC4KW+zMq1Y
+	 IU5Ml58hrfpv3lUf5lnV1DakoACGL3zC1olgnaTv0YwnuAJnOJrtJ+p0Q1sYAaW2jC
+	 ib3VCUivyMPGg==
+Message-ID: <f3949fb9-8f4c-488a-810b-1f5be8044a42@kernel.org>
+Date: Tue, 10 Nov 2026 12:39:20 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,32 +52,14 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next 07/14] mptcp: annotate data-races around pernet
- sysctls
+Subject: Re: [PATCH mptcp-next v7 6/6] Squash to previous one
 Content-Language: fr
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: netdev@vger.kernel.org, David Ahern <dsahern@kernel.org>,
- Ido Schimmel <idosch@nvidia.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Pablo Neira Ayuso <pablo@netfilter.org>, Florian Westphal <fw@strlen.de>,
- Phil Sutter <phil@nwl.cc>, Nikolay Aleksandrov <razor@blackwall.org>,
- Paul Moore <paul@paul-moore.com>, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, Julian Anastasov <ja@ssi.bg>,
- Allison Henderson <achender@kernel.org>,
- Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
- Xin Long <lucien.xin@gmail.com>, "D. Wythe" <alibuda@linux.alibaba.com>,
- Dust Li <dust.li@linux.alibaba.com>, Sidraya Jayagond
- <sidraya@linux.ibm.com>, Mahanta Jambigi <mjambigi@linux.ibm.com>,
- Tony Lu <tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>,
- linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org, bridge@lists.linux.dev,
- linux-security-module@vger.kernel.org, mptcp@lists.linux.dev,
- lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org,
- rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org,
- linux-s390@vger.kernel.org
-References: <20261109025425.328445-1-jiayuan.chen@linux.dev>
- <20261109025425.328445-8-jiayuan.chen@linux.dev>
+To: gang.yan@linux.dev
+Cc: sashiko-reviews@lists.linux.dev, mptcp@lists.linux.dev
+References: <cover.1790147728.git.yangang@kylinos.cn>
+ <6a1cbdd1a0f4866ff6cda3b8679450172c203f5b.1790147728.git.yangang@kylinos.cn>
+ <20260923101140.E62E41F000FF@smtp.kernel.org>
+ <da961f27c729d9232a59e509e8e3c2f50bc1db00@linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -123,38 +105,170 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20261109025425.328445-8-jiayuan.chen@linux.dev>
+In-Reply-To: <da961f27c729d9232a59e509e8e3c2f50bc1db00@linux.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Jiayuan,
+Hi Gang,
 
-Thank you for the patch!
+On 24/09/2026 03:53, gang.yan@linux.dev wrote:
+> September 23, 2026 at 6:11 PM, sashiko-bot@kernel.org mailto:sashiko-bot@kernel.org  wrote:
+> 
+> 
+>>
+>> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+>> - [High] mptcp: uaf and uninitialized access in pm_ops during disconnect
+>> --
+>>
+>> commit 89b80a47ef923bdc04a9069fdcf06de447841c5b
+>> Author: Gang Yan <yangang@kylinos.cn>
+>>
+>> Squash to previous one
+>>
+>> This patch applies RCU discipline to msk->pm.ops, moving its initialization,
+>> publication, and release to better align with RCU patterns. It updates readers
+>> to use rcu_dereference() and writers to use rcu_assign_pointer() under the
+>> PM lock.
+>>
+>> Link: https://sashiko.dev/#/patchset/20260819125629.49823-1-gang.yan@linux.dev?part=5
+>>
+>>>
+>>> mptcp_destroy(), the final close path: mptcp_token_destroy() has
+>>>  already removed the socket from the token hash by then, so no new
+>>>  reader can find the msk anymore.
+>>>  
+>>>  Note that rcu_assign_pointer() before pm_ops->init(msk) does not
+>>>  publish a partially initialised object: the ops are registered
+>>>  immutable, init() only prepares the per-socket state, and the msk is
+>>>  not reachable by readers until its token is registered.
+>>>
+>> [Severity: High]
+>> Is this assumption accurate? A concurrent SoftIRQ can receive an MP_JOIN
+>> request, look up the socket via mptcp_token_get_sock(), increment its refcnt,
+>> and drop the RCU read lock. Concurrently, the socket could be disconnected,
+>> calling mptcp_disconnect() -> mptcp_pm_data_reset() -> mptcp_pm_ops_init().
+>>
+>> The SoftIRQ thread could then re-acquire the RCU read lock and call
+>> mptcp_pm_get_local_id(), accessing the actively tearing down or uninitialized
+>> per-socket state.
+> 
+> The concurrent softirq reader you describe does exist -- that is
+> exactly the race this patch fixes. But note what that reader
+> consumes: mptcp_pm_get_local_id() consults the per-net endpoint
+> table (inside its own RCU section) and the msk addresses; it does
+> not read any of the per-socket state managed by init()/release()
+> (pm->work_pending, accept_addr, ...), which is only consumed by
+> the PM worker under the socket lock. So the reader cannot observe
+> the teardown/reset of the fields those callbacks manage. It's safe
+> for now.
+> 
+>>
+>> [ ... ]
+>>
+>>>
+>>> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+>>>  index 64244a1a01bca..66fb7c3d9c827 100644
+>>>  --- a/net/mptcp/pm.c
+>>>  +++ b/net/mptcp/pm.c
+>>>
+>> [ ... ]
+>>
+>>>
+>>> @@ -1158,23 +1166,39 @@ void mptcp_pm_worker(struct mptcp_sock *msk)
+>>>  static void mptcp_pm_ops_init(struct mptcp_sock *msk,
+>>>  struct mptcp_pm_ops *pm_ops)
+>>>  {
+>>>  - if (!pm_ops || !bpf_try_module_get(pm_ops, pm_ops->owner)) {
+>>>  - pr_warn_once("pm %s fails, fallback to default pm", pm_ops->name);
+>>>  - pm_ops = &mptcp_pm_kernel;
+>>>  + struct mptcp_pm_ops *old;
+>>>  +
+>>>  + spin_lock_bh(&msk->pm.lock);
+>>>  + old = rcu_dereference_protected(msk->pm.ops,
+>>>  + lockdep_is_held(&msk->pm.lock));
+>>>  + if (old != pm_ops)
+>>>  + rcu_assign_pointer(msk->pm.ops, pm_ops);
+>>>
+>> [Severity: High]
+>> Does this publish the new ops to readers before its state is initialized via
+>> init(msk) below? If a reader finds the socket, it could access the new ops
+>> before its per-socket state is ready.
+>>
+> 
+> On the publish-before-init concern: pm_ops->init(msk) prepares
+> the per-socket state, not the ops -- the ops are registered
+> immutable, their callbacks are valid from registration. A reader
+> entering between the assign and init() would call valid ops code
+> and read fields it does not consume (see comments above); this
+> ordering also matches the previous, non-RCU code.
+> 
+>>>
+>>> + spin_unlock_bh(&msk->pm.lock);
+>>>  +
+>>>  + if (old) {
+>>>  + synchronize_rcu();
+>>>  + if (old->release)
+>>>  + old->release(msk);
+>>>
+>> [Severity: High]
+>> If old == pm_ops, we skip the rcu_assign_pointer() above, meaning the ops
+>> are still actively published in msk->pm.ops. Does calling old->release(msk)
+>> here violate RCU removal rules by releasing the ops state while it is still
+>> reachable by readers?
+>>
+> 
+> On releasing the still-installed ops when old == pm_ops: no
+> in-tree PM defines release() today, so this is currently dead
+> code. For a future PM that does define it, the synchronize_rcu()
+> in front guarantees no in-flight reader is executing the ops when
+> release() runs, so no RCU removal rule is violated. It's also an old
+> issue raised by sashiko before, this code can address it correctly I
+> think (call .release before remove it).
+> 
+>>>
+>>> + bpf_module_put(old, old->owner);
+>>>  }
+>>>  
+>>>  - msk->pm.ops = pm_ops;
+>>>  - if (msk->pm.ops->init)
+>>>  - msk->pm.ops->init(msk);
+>>>  + if (pm_ops->init)
+>>>  + pm_ops->init(msk);
+>>>  
+>>>  pr_debug("pm %s initialized\n", pm_ops->name);
+>>>  }
+>>>
+>> [ ... ]
+>>
+>>>
+>>> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+>>>  index 14aa82647c3d1..4953cfa329e81 100644
+>>>  --- a/net/mptcp/subflow.c
+>>>  +++ b/net/mptcp/subflow.c
+>>>  @@ -94,14 +94,17 @@ static struct mptcp_sock *subflow_token_join_request(struct request_sock *req)
+>>>  return NULL;
+>>>  }
+>>>  
+>>>  + rcu_read_lock();
+>>>  local_id = mptcp_pm_get_local_id(msk, (struct sock_common *)req);
+>>>
+>> [Severity: High]
+>> This is where a concurrent reader accesses the PM ops using a cached msk
+>> reference. Does this disprove the assumption in the commit message that
+>> the socket is unreachable, since the reader already holds a reference to msk?
+>>
+> 
+> It's the misleading of the commit message, as the first comment of this letter
+> said.
+> 
+> @Matt, @Geliang
+> So for now, I think all the patches in this series are ready for review. It’s
+> not urgent, so please take a look when you have time.
 
-On 09/11/2026 03:52, Jiayuan Chen wrote:
-> enabled, add_addr_timeout, checksum_enabled, allow_join_initial_addr_port,
-> stale_loss_cnt, close_timeout, pm_type and syn_retrans_before_tcp_fallback
-> are read by their ctrl.c helpers without any lock while the sysctl
-> handlers update them with WRITE_ONCE(), and the path_manager handler
-> stores pm_type with a plain write. Add READ_ONCE() to the readers and
-> WRITE_ONCE() to that handler.
-I have the same patch on the MPTCP ML (the WRITE_ONCE() is split in
-another one):
+Thank you for having replied to Sashiko.
 
-
-https://lore.kernel.org/e8335e14eff144774aec63393f5cce13e69dddc0.1790147728.git.yangang@kylinos.cn
-
-So that's good to me:
-
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
-Note that my patch was still in review because Sashiko kept complaining
-that this was not fixing all issues, e.g. the new WRITE_ONCE() you
-introduced is not enough. Gang has a fix for that [1], and that's not
-blocking your patch.
-
-[1]
-https://lore.kernel.org/c9f533ea507e6a88d3401768785153a63790c3d8.1790147728.git.yangang@kylinos.cn
+After a quick look, the series looks good to me. Do you mind sending a
+new version after a rebase and having squashed 5/6 and 6/6 together, please?
 
 Cheers,
 Matt
