@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794353544;
-	b=eKeItr8vWi3AhBJHJ9OkfLP7HOdJbc73fvefqoVCcxLR+WY+PF+OzMriCg/S+14shn3f
-	 xnXgzs3Z671QyrzWT/x/hTCWYRdlszm9HiIhvUO6Zdd5Zd9rGmMxZkl8PQDk0w+y+c2Nu
-	 vI+pbPqsGolzvYEtUVcdxqoM8uRbn6roN/Cq0a2PQ1nyCZZ4NgnHZbnOFr7dn+QgGlLzW
-	 dQVK7Jtw/x8JlG0jfF6oQXoA2B+9ulbwpF6MzZEaacF0aJdJAvMLjwQzegXXpZEJ48XMW
-	 NGK+T+QGJ7fc6au9usQ4X62mOoMfXiHiqj8/kJ/IDfrFqWSBW11Y1IpA3M0ak0rvZeQ==
+	t=1794353545;
+	b=xN2yei2tRbBA5cJgle4pcBOpowCba2ocDeryTCAzAW8rYnP1XZYR+7RYFb80qi6Xmb1w
+	 0cEPwz9J6YEng0bALPESHeK19O/PnwCzxLStczNQz1DiYa/ZztkBUvFJqmA32RBeYpkzm
+	 TYqA7LvMjKSpX8gWKvy9BvOoWDCSfuRjS73ZNqeFvZtMH03eDlYlnnhNipu6QkvVuMJ/n
+	 h1skN11eCGIAHHlhccliVQ7/Yf2rsPA2VwSGpNFDcdo1vDtU4Ec/AlaTZWeXiURtsvZpf
+	 S5S18D4lyKjVkzqzdpf9W/O6FAH5BTVzEg/am4pR4lJfPboNg3IUsPTQjqD9hYbIhag==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794353544;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794353545;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=B2hx3G7JY2a02VL7ZjsWkp+8bYy+uMwmCOtRFuMVSaQ=;
-	b=d+UTzKqbl/X5wVFWB9gHoMaoYPmfLmYJq98vQuHJIft9mJbfBseHxPlixjOcwn9ClHiB
-	 Jry4aFcp1SRg3nH/fpRU+3FdwIh/CHmHNWbow4HW5kPJhaoAelWIS/yT53V6uV021Nh/P
-	 i9xiTkxnbVkiRjRkPyKyXQPgzhnftCk0loG4pEpy0YUFnLt9ytGpdvxrKGCdgYvQjmIhZ
-	 aL1Yfgp366DL3eu1YG6oBKhAkMKLowam7Q8SxWFuL1ENqrGg1osmnTEfD2h4wWwDpLQyL
-	 jGjHiFo8ykij8sYAtrzZWzxtzZPq+CNNW8pTQM9MsmX3HigPjFv+UnmhJwKpvBnngCA==
+	bh=oWIhhzbEF8GtEkDmzLxeTxV6Y7keBahxeJCJHzXg+LY=;
+	b=zUWbDLkTb/Mg33YD3ZRHGeQkyRKO7ktI4hebjTPTWmRHOFqeknsxqq2CPGvkEYUQKJAu
+	 7Jyd964OZZmCZzfq2WOowg0+0jUIS7llGhETIcKVmxjw7mN/IWw054/LifB4ate0OvSnb
+	 r6O2Z9R/w6/XeF7wvVa99vLknyIdwctcsTsN+t9dGjernsfRVvnYZPZQBEC01dz9BsnVM
+	 v4L9JAQwCgRY25PVytn8Z6ZrMOfsr+fS3hGFNSH35f1g7257sLwRIhVV+o7b6I/kiI1UN
+	 /sUXLHaAuV22yYRSOcFNgtiVj9dOFcEU3JB6cZ2cVPEK3+GkC/FJtJJGEGai27vP8Ew==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=enuXwnVj;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=e0jKX5aW;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F2A606A321
-	for <mptcp@lists.linux.dev>; Tue, 10 Nov 2026 23:32:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246CC606A31C
+	for <mptcp@lists.linux.dev>; Tue, 10 Nov 2026 23:32:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=enuXwnVj
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E8E31F00A04;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=e0jKX5aW
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC4521F00A04;
 	Tue, 10 Nov 2026 23:32:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794353544;
-	bh=B2hx3G7JY2a02VL7ZjsWkp+8bYy+uMwmCOtRFuMVSaQ=;
+	s=k20260515; t=1794353545;
+	bh=oWIhhzbEF8GtEkDmzLxeTxV6Y7keBahxeJCJHzXg+LY=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=enuXwnVjZc8hNFsrBZU3wb/ic9AMaRN3lIr8kjU8yghlmmxmvRDFfEtpHulaZ5+Fs
-	 TwHoCZAHDeYLqejTveGgIVh6RmBcvTWi8dwV31wHUbSVFKQLsB0RwhWejwWIt/4/Mj
-	 +fd298wG/2cYe5WbcUtx3+XwGeLx/4flkm62MeiOkb8FizSHb/CIShjwxikbXqeyQj
-	 h+yJqBF2w6aIaJwhhy7u4wYx2l3QzH7bMb9r1EhoKmJO5hObNzgCfvJCsFn6Eugs8d
-	 8ljpkMWSYe+VrOhogPyrXZr5bK/Go06a9Ur9SLbyBHNQTvJJoURoShj3bomkti9U0r
-	 vPM8XiRelrDzA==
+	b=e0jKX5aWDB5nQ+t7suU2q2ETVJAwdUrYL/DhJEXdY+dWWnKTYu4iiH4vNlmvVcL83
+	 zNK1v094N+u1PTWI7SiJ6fOHCLn24kJP/YRq+8kO5s9I39j+0ngoyel/cHSm9GdgHe
+	 hGJsVkSioaQlNTezneOvxkUVbTi35j3Oth2MoxskOQR1JIr11bNawAqNTNXvgdKqrE
+	 MQ/1689v5qsRpSl9lnyNtVu+AjAauMa3goNpZlfLDHhso7GmqZENQxt1JEgHPwsDhS
+	 ZJM4HYfE5F3XhrbicGQB6W3hNRNrB++NH+s4k5VuG6SvL9V0j9lZSgUmtAtgLLrhjf
+	 16XclM6WsEjlg==
 Subject:
- Re: [PATCH mptcp-next v24 7/8] mptcp: sync mptcp skb cb layout with tcp one
+ Re: [PATCH mptcp-next v24 8/8] mptcp: defer read_sock cleanup to mptcp_worker
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Tue, 10 Nov 2026 23:32:23 +0000
-Message-ID: <179435354363.488855.16913226200081069114@kernel.org>
-In-Reply-To: <3ba0e47d2142efad6579687bb74379dcd779a42d.1794215614.git.tanggeliang@kylinos.cn>
-References: <3ba0e47d2142efad6579687bb74379dcd779a42d.1794215614.git.tanggeliang@kylinos.cn>
+Date: Tue, 10 Nov 2026 23:32:24 +0000
+Message-ID: <179435354437.488855.2718889717172311369@kernel.org>
+In-Reply-To: <c47e1e62a4cc0166578a001304309fe9cbdbfdda.1794215614.git.tanggeliang@kylinos.cn>
+References: <c47e1e62a4cc0166578a001304309fe9cbdbfdda.1794215614.git.tanggeliang@kylinos.cn>
 X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -68,137 +68,103 @@ you want to address the nit picks below when you respin.
 
 Low priority / nit picks for your consideration:
 
-- [Low] The commit message never says why the MPTCP CB layout must match
-  TCP's.
-- [Low] The patch puts mptcp_skb_cb.flags at the same offset and width as
-  tcp_skb_cb.tcp_flags (u16 at offset 12) and adds a BUILD_BUG_ON for it.
+- [Low] The patch adds a deferred-cleanup path that nothing in the
+  current tree can reach.
+- [Low] The Signed-off-by address does not match the author.
 
 --
 
-mptcp: sync mptcp skb cb layout with tcp one
+mptcp: defer read_sock cleanup to mptcp_worker
 
-This commit shrinks the MPTCP skb cb map_seq and end_seq fields to 32
-bits so that map_seq, end_seq and flags share offsets with tcp_skb_cb's
-seq, end_seq and tcp_flags. It adds map_seq64 to hold the full 64-bit
-DSN, and the receive path now uses 32-bit before()/after() comparisons,
-with map_seq64 used for window admission and coalescing checks. A
-build-time check in mptcp_proto_init() enforces the shared offsets.
+This patch prepares __mptcp_read_sock() for a future BH context caller
+(TLS over MPTCP). When the socket lock isn't owned, it defers
+mptcp_rcv_space_adjust() and mptcp_cleanup_rbuf() to mptcp_worker() using
+a new msk->read_copied counter and the MPTCP_WORK_READ_COMPLETE flag. It
+also gates the backlog flush in mptcp_recv_skb() on sock_owned_by_user().
+
+> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+
+[Severity: Low]
+This isn't a bug, but the Signed-off-by address doesn't match the commit
+author:
+
+  Author: Geliang Tang <geliang@kernel.org>
+  Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+
+checkpatch.pl reports this as FROM_SIGN_OFF_MISMATCH. Could the From:
+address be changed, or a Signed-off-by with the matching address be added?
 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 30933dd9f0b1d..683ffa8f6c7a2 100644
+> index 683ffa8f6c7a2..3f81a55e6e00a 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
 
 [ ... ]
 
-> @@ -4918,11 +4927,23 @@ static int mptcp_napi_poll(struct napi_struct *napi, int budget)
->  	return work_done;
->  }
+> @@ -4731,11 +4752,18 @@ static int __mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
+>  	if (noack)
+>  		goto out;
 >  
-> +#define CHK_CB_FIELD(mptcp_field, tcp_field)	\
-> +	({					\
-> +		BUILD_BUG_ON(offsetof(struct mptcp_skb_cb, mptcp_field) !=    \
-> +			     offsetof(struct tcp_skb_cb, tcp_field));	      \
-> +		BUILD_BUG_ON(offsetofend(struct mptcp_skb_cb, mptcp_field) != \
-> +			     offsetofend(struct tcp_skb_cb, tcp_field));      \
-> +	})
-> +
->  void __init mptcp_proto_init(void)
->  {
->  	struct mptcp_delegated_action *delegated;
->  	int cpu;
->  
-> +	CHK_CB_FIELD(map_seq, seq);
-> +	CHK_CB_FIELD(end_seq, end_seq);
-> +	CHK_CB_FIELD(flags, tcp_flags);
-> +
+> -	mptcp_rcv_space_adjust(msk, copied);
+> -
+>  	if (copied > 0) {
+> -		mptcp_recv_skb(sk, &offset);
+> -		mptcp_cleanup_rbuf(msk, copied);
+> +		if (sock_owned_by_user(sk)) {
+> +			/* Process context: inline cleanup */
+> +			mptcp_rcv_space_adjust(msk, copied);
+> +			mptcp_recv_skb(sk, &offset);
+> +			mptcp_cleanup_rbuf(msk, copied);
+> +		} else {
+> +			/* BH context: defer to worker */
+> +			msk->read_copied += copied;
+> +			set_bit(MPTCP_WORK_READ_COMPLETE, &msk->flags);
+> +			mptcp_schedule_work(sk);
+> +		}
 
 [Severity: Low]
+This isn't a bug, but can anything in the current tree reach this else
+branch? It only runs when sock_owned_by_user(sk) is false.
 
-The commit message says:
+Every ->read_sock caller on an MPTCP socket takes the socket lock first:
 
-  This allows updating the MPTCP CB layout so that key fields with
-  corresponding TCP-level data (map_seq/seq, end_seq/end_seq,
-  flags/tcp_flags) use the same offsets inside the CB itself.
+mptcp_splice_read()
+    lock_sock(sk);
+    __mptcp_splice_read()->mptcp_read_sock()->__mptcp_read_sock()
 
-It doesn't say why these fields need to share offsets. Could the
-changelog say which code is expected to read msk-level skbs through
-TCP_SKB_CB()?
-
-Nothing in this patch does that. Nothing up to the end of the series
-("mptcp: defer read_sock cleanup to mptcp_worker") does either. Every
-TCP_SKB_CB() user in net/mptcp/ works on subflow skbs before
-mptcp_init_skb() rewrites the cb.
-
-The only hint is the "upcoming TLS-over-MPTCP" mention in the last patch
-of the series. net/tls/ only reads TCP_SKB_CB(skb)->seq, so why do flags
-and tcp_flags also need to alias?
-
-The subject says "sync mptcp skb cb layout with tcp one", but only three
-fields line up. has_rxtstamp at offset 14 sits on tcp_skb_cb's sacked.
-map_seq64 at offset 16 covers the txstamp_ack/eor/has_rxtstamp bitfield
-byte and ack_seq. Would a narrower subject be more accurate?
-
-[ ... ]
-
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index fd3326518ee5c..8c868bcbafb8c 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -131,10 +131,12 @@
->  #define MPTCP_SKB_CB_F_OFFSET	0x01
->  
->  struct mptcp_skb_cb {
-> -	u64 map_seq;
-> -	u64 end_seq;
-> +	u32 map_seq;
-> +	u32 end_seq;
-> +	u32 unused;
->  	u16 flags;
->  	u8  has_rxtstamp;
-> +	u64 map_seq64;
->  };
-
-[Severity: Low]
-
-MPTCP_SKB_CB_F_OFFSET is 0x01, which is the same bit as TCPHDR_FIN:
-
-include/net/tcp.h:
-    #define TCPHDR_FIN	BIT(0)
-
-Now that flags sits on top of tcp_flags, mptcp_init_skb() writes a value
-that TCP would read as FIN:
-
-net/mptcp/protocol.c:mptcp_init_skb() {
+net/sunrpc/svcsock.c:svc_tcp_recvfrom() {
     ...
-	MPTCP_SKB_CB(skb)->flags = offset ? MPTCP_SKB_CB_F_OFFSET : 0;
+	lock_sock(sock->sk);
+	len = sock->ops->read_sock(sock->sk, &desc, svc_tcp_recv_actor);
     ...
 }
 
-These skbs keep the flag when they land in the msk OFO queue or in
-sk_receive_queue. Suppose a TCP-style reader later handles msk-level
-skbs with a check like the one in tcp_recv_skb()/tcp_read_sock():
+strparser can't be attached to an MPTCP socket either. KCM requires
+csk->sk_protocol == IPPROTO_TCP, and sockmap requires sk_is_tcp().
 
-	if (TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN)
+The commit message says the same thing:
 
-Would it treat these skbs as FIN, then account seq wrongly or stop
-reading early?
+  "The BH call path does not exist in the current tree. This is
+  groundwork for the upcoming TLS-over-MPTCP series."
 
-CHK_CB_FIELD(flags, tcp_flags) in mptcp_proto_init() checks only offsets
-and sizes, not whether the bits mean the same thing.
+That means MPTCP_WORK_READ_COMPLETE is never set and msk->read_copied stays
+zero. As a result, mptcp_read_complete() is never called from
+mptcp_worker().
 
-Could F_OFFSET use a value that doesn't collide with the TCPHDR_* bits?
-Alternatively, could the code document that tcp_flags must not be read
-on msk skbs?
+Without the TLS caller, it is hard to judge whether the deferred path is
+complete. For example, it skips the trailing mptcp_recv_skb() call that
+eats fully consumed skbs. It also delays window updates and autotuning
+until the worker runs. No test covers this path either.
 
-There is a similar overlap with map_seq64. At offset 16 it covers the
-txstamp_ack/eor/has_rxtstamp bitfield byte of tcp_skb_cb. On
-little-endian systems those bits would come from the low byte of the
-peer-chosen DSN.
+Would it be better to post this patch in the same series as the
+TLS-over-MPTCP changes that first use it?
 
-No in-tree code reads TCP_SKB_CB() on msk-level skbs today (net/tls only
-reads ->seq), so this only matters for future users of the shared
-layout.
+>  	}
+>  out:
+>  	return copied;
+
+[ ... ]
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1794215614.git.tanggeliang%40kylinos.cn
