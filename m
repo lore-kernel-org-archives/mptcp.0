@@ -1,59 +1,70 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794279694;
-	b=2awWNb/XCscco1nmtsNf+yZ5HTyweBuAfj8vS7RanO6KE8o9HjGvOXUMPSmTb5J4RARj
-	 OMgjn16lI6L85m2D36oPKMifx8oAQE6vfxR3imD1rglEjhFzeV2vErpFHkhjkTlsoXTKw
-	 vQDrnwgJjsaTfxLeQd+sMhRnuFekcyTOVemItzJ3CrsvmeVxOratMXZI/4Sh1plHJlhuD
-	 Ne8npMFhsJFRIqLOcrdiOwEShl7mdJU9ANtq1HnCp/72JCgVqX/kKkFE6usqV9Y7f3NYs
-	 p3xPiE4vAJExdPb7J19pLh2dxoqNMp+76Y85HZlvIhGE8akvRBut7aUSCchA4UXIr6g==
+	t=1794290000;
+	b=KKxBg+BwNx0M0ohQrO6dQb8xcsiPEy+WnGx1P58xzWrbS9rTpCv0IpWMiI7Xb/qtBl/O
+	 aex8ySMgJBfoKRwzco4xgxNaCRhnfV7x2tVVNCOOLzpw9PPoyeI/mq5RUB4DkShpgTwqq
+	 2wXIQQdWybTHl5NJA/HKnJtzMeV3EELcZHGAMTjDDM0smdG4JPaqDkS0ak7NCSZjktqAK
+	 petx8+iwx5eSIyaHdvBwa3G4KUrddmtJFEXK1PR7W7JUQh6GN8Ya88XDIj87ezvpm3Fb+
+	 Oz5zaFoyJTfCud03FYLS+1es11nFONjW0w+Pc2HDiic1YEi4M7nqpOyyHAkH6xMB0yg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794279694;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=TpCKN/2yh1ur457aULpCJWS16KHIeGzGnAVkxiJzJMM=;
-	b=jD7jY3kaAGirqD1c/dgut2prSaaldcjMYo5s1jrqyF/vqxr3oC0MUY/Md+R9X7ulAZIY
-	 oy9nz1aiU6tCbb/aWdgRyg7h84oBuoBL1ENfEDB7ArrdzNVNx0e55LPlWzmTzykWKvWTS
-	 rdYVLu9qX4Rd7NmWycGNgJej7l7IOocBZ+5x/ZO7sxef56zvvmcAooW1Bqi+iCIh2eSm/
-	 O9Px7nt4pCJPjPVRdU0orqri8U9iJoWB/TcVpjiHXnQ8LKU6R9qxRX+NM+pYbM4NA/OId
-	 7AlH3NEchkGOKiIsk7XE8yAeTjnGfYg5Hx017UqDjL7WRhndzCeVSax6MflxK+PV88A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794290000;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=Z89xSOnIYbQe/BnbwEDddihQE8DlZZ6KBDFpfIcDInE=;
+	b=E7UQK56IF1CRdYnM2A0egTNzONHiwrTEYb/J6XQh6yb2v1c21FpFqQOCJDCk2+8v3r+a
+	 FvKz52ZgaUti7bWWjlPDdPb+XgUGk4AK76Pb0HHzpWloyoy9O23yWSbA4IZ9FH3HoM/I9
+	 ozc+JlLeSySpIdK4OcjKMFzVrpM4CK19kR5OPA6rxvmFL+7hQiB0YQfi3Sc/6McOphzv9
+	 FEWjL6vDdjl66HfnMmkUE2oId1VlrDEtu7YNmgf7Gc6U2jSrUN/lWN8yr2JZk+tm5lYKB
+	 GSoRvT0VMQkdZp8rVJ9dewMn4elK2VtfmH05Qp9KyysnkbpKBv+RIadgnm53ZsMd57Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="h09/OA7P";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lyQ9UJ+R;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64321606A32A;
-	Tue, 10 Nov 2026 03:01:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70C2606A33D;
+	Tue, 10 Nov 2026 05:53:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=h09/OA7P
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96BA21F008A1;
-	Tue, 10 Nov 2026 03:01:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lyQ9UJ+R
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97FC11F008A1;
+	Tue, 10 Nov 2026 05:53:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794279694;
-	bh=TpCKN/2yh1ur457aULpCJWS16KHIeGzGnAVkxiJzJMM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=h09/OA7PrY6gNIqExAeFFOP2uHXv1qgpMzrQxXerE8HKO0oU5oPaBDjXJuOqI3s/A
-	 5ZVBYQ5ACsmnAp3IYBcyv4PoCYGkK505tLhI0GesctF9qNER5bM0tit5oo12mIEvuS
-	 sW53mzJVQG4PQdAVxEOp8DLS4ux/Fbf/eCOojasb6fWLYQq+wKOHtkyPkOnPiq/Npd
-	 KbcOf2StnoIgmp0IPKHah98xVIXqIcrwAPvITVbipjyrXBBCtb26ATeiaS7PbFvaFC
-	 IsDTXXYAHhbUfLUa2tmQRTuQfJpefm/YqHxIpXJggcGRQX+8vTzFqKD0NWr/+ts0Lg
-	 rFE+m9x+iWu0A==
-Message-ID: <sashiko-outbox-206086@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH net-next 13/14] netfilter: conntrack: annotate
- data-races around timeout and tcp sysctls
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Cc: linux-security-module@vger.kernel.org, mptcp@lists.linux.dev, linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org, "Heiko
- Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
- Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261109025425.328445-14-jiayuan.chen@linux.dev>
-References: <20261109025425.328445-1-jiayuan.chen@linux.dev>
- <20261109025425.328445-14-jiayuan.chen@linux.dev>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 10 Nov 2026 03:01:33 +0000
+	s=k20260515; t=1794289999;
+	bh=Z89xSOnIYbQe/BnbwEDddihQE8DlZZ6KBDFpfIcDInE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=lyQ9UJ+RnJfZYHoAs6Z6tYh7JPfwTK3ToP1JPzFXHVxRoGly7DdXrxmH8BkTgETl/
+	 Obeh0mUbgS/9wHFArLQHNJbDUBgCKXQSlvTaWY79Ji4XmGotyU05XuFkzwhC4WBCzj
+	 +9+UuLPufHMh9G0g5ohqhboSCWLSpUGD7a+jna9Fs/VkP+pzpv5mAlQUTLJJFd4I+q
+	 e8dDiUk75aoT2UJ9hFCSJWvRtlwGTmKa8naEaX8es02v59SLHeqnzJq9+z6rhjZ5wq
+	 k3Pv1LDYHv/WqQJZFk3Wj3opFF2+oCRjqFjIG4XzRUq5ucUrD7lUfqbJ+GtqEZNDS1
+	 wzIkaWWQN7pGw==
+Subject:
+ Re: [PATCH net-next 01/14] ipv4: annotate data-races around ip_rt_* sysctls
+From: netdev-bot+sashiko@kernel.org
+To: jiayuan.chen@linux.dev
+Cc: netdev@vger.kernel.org, dsahern@kernel.org, idosch@nvidia.com,
+ davem@davemloft.net, edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, pablo@netfilter.org, fw@strlen.de, phil@nwl.cc,
+ razor@blackwall.org, paul@paul-moore.com, matttbe@kernel.org,
+ martineau@kernel.org, geliang@kernel.org, ja@ssi.bg, achender@kernel.org,
+ marcelo.leitner@gmail.com, lucien.xin@gmail.com, alibuda@linux.alibaba.com,
+ dust.li@linux.alibaba.com, sidraya@linux.ibm.com, mjambigi@linux.ibm.com,
+ tonylu@linux.alibaba.com, guwen@linux.alibaba.com,
+ linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
+ coreteam@netfilter.org, bridge@lists.linux.dev,
+ linux-security-module@vger.kernel.org, mptcp@lists.linux.dev,
+ lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org,
+ rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org,
+ linux-s390@vger.kernel.org
+Date: Tue, 10 Nov 2026 05:53:17 +0000
+Message-ID: <179428999715.994134.14310277652030711794@kernel.org>
+In-Reply-To: <20261109025425.328445-2-jiayuan.chen@linux.dev>
+References: <20261109025425.328445-2-jiayuan.chen@linux.dev>
+X-sashiko-severity: Low
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -62,68 +73,91 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found no new issues
-in this patch, but noticed 1 related pre-existing issue it does not
-introduce:
-- [Medium] netfilter: conntrack: data race in destroy_sibling_or_exp()
-  [1]
+Thank you for your contribution! Sashiko AI review found more severe
+issue(s) in other patches of this series. This mail is only an FYI, in case
+you want to address the nit picks below when you respin.
+
+Low priority / nit picks for your consideration:
+
+- [Low] In __ip_rt_update_pmtu() (net/ipv4/route.c), the patch adds two
+  separate READ_ONCE() loads of net->ipv4.ip_rt_min_pmtu.
+
 --
 
-commit 90b17fe93bcd168d06092c32e88d6764be57b60b
-Author: Jiayuan Chen <jiayuan.chen@linux.dev>
+ipv4: annotate data-races around ip_rt_* sysctls
 
-netfilter: conntrack: annotate data-races around timeout and tcp sysctls
+This adds READ_ONCE() to the lockless readers of several ip_rt_* route
+sysctls in net/ipv4/route.c. Their sysctl handlers write them with
+WRITE_ONCE(). The change was prompted by a KCSAN report on
+net.ipv4.route.min_adv_mss in ipv4_default_advmss().
 
-This commit adds READ_ONCE() annotations to packet-path readers of conntrack
-timeout and TCP sysctls to avoid data races with concurrent sysctl updates.
+> diff --git a/net/ipv4/route.c b/net/ipv4/route.c
+> index d0a5f6d77094c..83f49b2d4c36a 100644
+> --- a/net/ipv4/route.c
+> +++ b/net/ipv4/route.c
 
 [ ... ]
 
-> diff --git a/net/netfilter/nf_conntrack_proto_gre.c b/net/netfilter/nf_co=
-nntrack_proto_gre.c
-> index 616ab1e2fc5ed..d8bca1e29797b 100644
-> --- a/net/netfilter/nf_conntrack_proto_gre.c
-> +++ b/net/netfilter/nf_conntrack_proto_gre.c
-> @@ -279,8 +279,8 @@ int nf_conntrack_gre_packet(struct nf_conn *ct,
-> =20
->  		/* initialize to sane value.  Ideally a conntrack helper
->  		 * (e.g. in case of pptp) is increasing them */
-> -		ct->proto.gre.stream_timeout =3D timeouts[GRE_CT_REPLIED];
-> -		ct->proto.gre.timeout =3D timeouts[GRE_CT_UNREPLIED];
-> +		ct->proto.gre.stream_timeout =3D READ_ONCE(timeouts[GRE_CT_REPLIED]);
-> +		ct->proto.gre.timeout =3D READ_ONCE(timeouts[GRE_CT_UNREPLIED]);
+> @@ -1063,14 +1066,14 @@ static void __ip_rt_update_pmtu(struct rtable *rt, struct flowi4 *fl4, u32 mtu)
+>  
+>  	rcu_read_lock();
+>  	net = dst_dev_net_rcu(dst);
+> -	if (mtu < net->ipv4.ip_rt_min_pmtu) {
+> +	if (mtu < READ_ONCE(net->ipv4.ip_rt_min_pmtu)) {
+>  		lock = true;
+> -		mtu = min(old_mtu, net->ipv4.ip_rt_min_pmtu);
+> +		mtu = min(old_mtu, READ_ONCE(net->ipv4.ip_rt_min_pmtu));
+
+[Severity: Low]
+READ_ONCE() is volatile, so __ip_rt_update_pmtu() now always does two
+separate loads of ip_rt_min_pmtu. If net.ipv4.route.min_pmtu is written
+between them, can the check and the clamp see different values?
+
+For example, take old_mtu=1500 and an ICMP FRAG_NEEDED carrying mtu=300:
+
+  first load sees min_pmtu=552   -> lock = true
+  sysctl write sets min_pmtu=68  (accepted, extra1 is ip_min_valid_pmtu)
+  second load sees 68            -> mtu = min(1500, 68) = 68
+
+update_or_create_fnhe() would then store pmtu=68 with fnhe_mtu_locked set,
+and it stays that way for ip_rt_mtu_expires. The old setting would give
+552 locked, and the new setting would give 300 unlocked.
+
+Before this patch, the compiler could merge the two plain loads into one.
+Only a privileged writer can trigger this, because min_pmtu is not exported
+to netns owned by non-init user namespaces. Later patches in the series
+don't seem to change this.
+
+Could the value be read once into a local? This patch already does that
+in ip_error() with burst and cost.
+
+A smaller case of the same pattern affects ip_rt_mtu_expires in the same
+function. It is re-read for the freshness check:
+
+	    time_before(jiffies, READ_ONCE(dst->expires) -
+				 READ_ONCE(net->ipv4.ip_rt_mtu_expires) / 2))
+
+It is read again for each nexthop in the multipath loop, and once more for
+the single-path update_or_create_fnhe() call. Could nexthops updated in
+one call get different expiries?
+
+ip_rt_redirect_number is also read twice in ip_rt_send_redirect():
+
+	if (peer->n_redirects >= READ_ONCE(ip_rt_redirect_number)) {
+	...
+		    peer->n_redirects == READ_ONCE(ip_rt_redirect_number))
+
+The second read only gates the "ignores redirects" warning, so there the
+only effect is on logging. Should these be loaded into locals once as
+well?
+
 >  	}
-> =20
->  	status =3D READ_ONCE(ct->status);
+>  
+>  	if (rt->rt_pmtu == mtu && !lock &&
 
-[Severity: Medium]
-This problem wasn't introduced by this patch, but can destroy_sibling_or_ex=
-p()
-cause a data race [1] with nf_conntrack_gre_packet() on
-proto.gre.timeout and proto.gre.stream_timeout?
+[ ... ]
 
-During PPTP teardown, gre_pptp_destroy_siblings() calls
-destroy_sibling_or_exp(), which looks up the active GRE conntrack entry with
-nf_conntrack_find_get() and zeroes sibling->proto.gre.timeout and
-sibling->proto.gre.stream_timeout without synchronization while
-nf_conntrack_gre_packet() reads them on another CPU:
-
-CPU0                                    CPU1
-gre_pptp_destroy_siblings()             nf_conntrack_gre_packet()
-  destroy_sibling_or_exp()
-    h =3D nf_conntrack_find_get(...)
-    sibling =3D nf_ct_tuplehash_to_ctrack(h)
-    sibling->proto.gre.timeout =3D 0;
-                                          nf_ct_refresh_acct(...,
-                                            ct->proto.gre.timeout);
-                                            <-- data race
-
-This unlocked modification can cause inconsistent timeout updates on the
-GRE conntrack entry during concurrent traffic.
-
-[1] https://sashiko.dev/#/bug/linux-414ef1d4-4293-47c0-80d0-e03e321aacc5
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261109025425.3284=
-45-1-jiayuan.chen@linux.dev?part=3D13
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261109025425.328445-1-jiayuan.chen%40linux.dev
