@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794353542;
-	b=Dg7NHYKWWojXI6dOHvkGoveb8qhQmzA+Hqdtou+mdOiCfr/Z3dPoUmyyOQfBCxuTa9yy
-	 wtj4w1H3tnVv6c4j6i3Onu2J42AsMzVltcSrjS5FEcpRZabFM70JOPzXITk9QpEGOLd9k
-	 TXtReDhnEeBTCOAa81Fk0mp75zY4oN6ydDSaBCR344C5WFMh/YAuzNuWMTBaFfK8KIaTk
-	 BC3cCzXf9zwyNcAOXUKukvNkIhlATgvZzi1Nu0MLWyfSIFL9+oICgGC3aBjEV60iKOrc9
-	 +Cn29qEOTwBassHdu28y5WUOuSAbSrHEGSC0D065QR4hRDwamG7K8YoNZAxOg4Mwm4A==
+	t=1794353543;
+	b=MNgf05eZ485I8KHjIQkBm5mQqXAMsuiDmeQwhFSHm+YA+urykuJSI5wvoxahGe9btmDr
+	 oGL0v50Yu/z3YUp/Vl+9+U9tLmWVo8QcukasM05Be3rtnPmFD1ifxuIbu0wTXrvVmb0YT
+	 8ID42folG5ArcLog5c54GC1RayqKylBPk4CNfzewYrAhHNE6kRDHo0ojwtey9Dn3WhMhD
+	 0KY2zJEhWAZ1HXucXpK5EDQ7/nivF6JkG69D2240DE+H+6IhDdFn5xipHGbd90NqpHu7g
+	 aVsFgD+jAgMCOJgpSirPfnl76ebD0lC5bDQ5CbJnQubJZ+B8BnLWk84sjV2uoCBpOsg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794353542;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794353543;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=ra6ekiHPTB/ydYcf61EpUEFbVCAt1w39IwBccOdjc18=;
-	b=CIqw8B/okeayZa+DQ5b6N/WZnpa13ngkWGCskxbdozm6LVPUcsgqzJ/MH4cGTpWT5DQO
-	 ql/1fmeRxDN2KKjaNhzpusmltSsO3F47lk8veMUytsITYmuD+2yoPv+XDZs8wxr/zBbCQ
-	 nyHspUf1gMMSKdEkU7ADjYii7g6SuXOgfzRgAGKFfln1jSQ0uUxbgn2SgsLCRYtb5tPHn
-	 HU6C/upZnoMojuLp+pve/OzGwecWQcChqv/eanv7hM0xBt/TF7gVkqJ3nsNL7fVvtCwNd
-	 C2VGmjXquB90j02rqB9RDTnETho0Uu0RFuqApciTRrhCKBv7n0DD+rXYDonF2Cq8Htw==
+	bh=Dc1Wjjmot5stqlAH4s44fpzlxOLvoBKWeCCncEb2PwM=;
+	b=ohD96iiBjW8a72awcjKJmUDUXHIzWaI3rqFoRvPRVZEl9Mrt1zqignK//xproetgrxYO
+	 4CN44tOfXpeM3S+iDLKjEANleyMPOyaqUJLuygyjj3gMN9aDQJILQpCLheo+NFvcMmDZ1
+	 Z8cbICog+T/Do3uFHsih305TvorySqa8DeCmqxu9gty+63U6ZzU8N2xqb0N5lN5PyEwbP
+	 ExApQfB3bavc+DXyvgIHwXtyDyw+10M8oBrlPs3oWjhuFT4b0nto5AVHHyGSApDYEfxPQ
+	 T6iph5Csh9Cf/OD/j57fvV29XerO5A0ZBAUS07AjDtmz5tfttcpFJ2e3iS0IoW6KYQA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mq1tGnR3;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RWwPGsjw;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10AD5606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39948606A31C
 	for <mptcp@lists.linux.dev>; Tue, 10 Nov 2026 23:32:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mq1tGnR3
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B769F1F0093C;
-	Tue, 10 Nov 2026 23:32:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RWwPGsjw
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86D7D1F00A04;
+	Tue, 10 Nov 2026 23:32:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794353541;
-	bh=ra6ekiHPTB/ydYcf61EpUEFbVCAt1w39IwBccOdjc18=;
+	s=k20260515; t=1794353542;
+	bh=Dc1Wjjmot5stqlAH4s44fpzlxOLvoBKWeCCncEb2PwM=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=mq1tGnR3KPsjoY2PeXv1zdBaZn+FqEjmXPhmZBPtj2EDap/bzylq/8mkGCKwNRve+
-	 989r6FgV2EXnRwVvCQ5zuCB08GKpbiDM3OdbJQbFlzrYvDhCHQ4Kel/Ckpyjc3BnuC
-	 5QZgrKZwrvqSxanTvI20Jci2e0ApOeqZmqPL9WVw+imwGSSANWKmRNUVTxcgbVF9UV
-	 Cb6Jgf87pzBrOw2HnWnAlBuG7n1eBk1ziIgLTHXvRxR0AyBws2+/AzrywHH/+yGZv1
-	 Sf2U8h6Xxfm3Q3JtpDXDw3YMYSM3m8e7TRlV5HucRHY9aSVEE2LjH4Dh5BeiDs3u72
-	 y8K9njpqDG4Kg==
-Subject: Re: [PATCH mptcp-net v24 1/8] mptcp: fix TFO SIOCINQ overflow in
- mptcp_inq_hint
+	b=RWwPGsjwzXjxSdQyTYccLrzh/w6Ie1xTKcDJip/5wD/W5IQe038jYfvH1Cmpz7/3u
+	 L8gdkGVpP9kNyxOl/j36xgs7nZ+zOvHcXL+KbuMwsssuak4Rbw5k0CnBJK9ZIM7ZvF
+	 hv7jlgvTUSE2mUYJBb6XXAiQONHy+Oa2OmJbMBIXZBxmJqG4fOYz8zvWgRuH0xmjNY
+	 wWRF//RizfTXoavWbeW+lwZ9QrNrY1kifbdfuRuDHPUl/VEOe4QvGvc/Wb5hCrqEIf
+	 daBrFSskRDTOsrW7vhWg2YYAJU2TrMzzxb7tXi3c1Zq1eSAk6nUbXZPgTqZJtor6eg
+	 xFaB1pY4gPdxA==
+Subject: Re: [PATCH mptcp-next v24 2/8] selftests: mptcp: connect: check TFO
+ SIOCINQ overflow
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Tue, 10 Nov 2026 23:32:21 +0000
-Message-ID: <179435354125.488855.3194775514742361661@kernel.org>
-In-Reply-To: <3965b9beff100e81b43980484fd1c8d9297274ff.1794215614.git.tanggeliang@kylinos.cn>
-References: <3965b9beff100e81b43980484fd1c8d9297274ff.1794215614.git.tanggeliang@kylinos.cn>
+Date: Tue, 10 Nov 2026 23:32:22 +0000
+Message-ID: <179435354208.488855.15120241187558911095@kernel.org>
+In-Reply-To: <7062643d703b5143ba7bd56bc819d7e7854fdc9b.1794215614.git.tanggeliang@kylinos.cn>
+References: <7062643d703b5143ba7bd56bc819d7e7854fdc9b.1794215614.git.tanggeliang@kylinos.cn>
 X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -68,112 +68,100 @@ you want to address the nit picks below when you respin.
 
 Low priority / nit picks for your consideration:
 
-- [Low] In net/mptcp/protocol.c, mptcp_inq_hint() now returns
-  mptcp_data_avail() (bytes_received - bytes_consumed) for every caller.
-- [Low] The commit message names only SIOCINQ/FIONREAD and TCP_CM_INQ as
-  hit by the bogus INT_MAX hint.
-- [Low] Author and sign-off addresses differ.
+- [Low] wait_for_remote_key() in
+  tools/testing/selftests/net/mptcp/mptcp_connect.c can loop forever.
 
 --
 
-mptcp: fix TFO SIOCINQ overflow in mptcp_inq_hint
+selftests: mptcp: connect: check TFO SIOCINQ overflow
 
-This commit changes mptcp_inq_hint() to compute the available bytes with
-mptcp_data_avail() (bytes_received - bytes_consumed) instead of ack_seq
-minus the head skb's map_seq. This fixes a bogus INT_MAX hint on passive
-TFO connections, where the TFO skb has map_seq set to -skb->len.
+This adds a SIOCINQ check to the mptcp_connect server mode when the
+MPTFO socket option is enabled. After accept(), the server polls
+MPTCP_INFO until MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED is set (bounded by
+poll_timeout), then fails the test if SIOCINQ reports INT_MAX.
 
-> On passive TFO connections, the TFO skb has map_seq set to -skb->len.
-> Without the removed __mptcp_fastopen_gen_msk_ackseq() to adjust the TFO
-> skb's map_seq, mptcp_inq_hint() computes "ack_seq - map_seq = iasn + len",
-> almost always >= INT_MAX, causing SIOCINQ/FIONREAD and TCP_CM_INQ to
-> report INT_MAX.
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> index 178d98d91fea2..da35a5ce15419 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+
+[ ... ]
+
+> @@ -1176,6 +1180,28 @@ static void maybe_close(int fd)
+>  		close(fd);
+>  }
+>  
+> +static int wait_for_remote_key(int fd)
+> +{
+> +	struct mptcp_info info;
+> +	socklen_t olen;
+> +	int elapsed = 0;
+> +
+> +	while (elapsed < poll_timeout || poll_timeout < 0) {
+> +		olen = sizeof(info);
+> +		if (getsockopt(fd, SOL_MPTCP, MPTCP_INFO, &info, &olen) < 0) {
+> +			/* Not an MPTCP socket (TCP or fallback), skip wait */
+> +			if (errno == ENOPROTOOPT || errno == EOPNOTSUPP)
+> +				return 0;
+> +			return -1;
+> +		}
+> +		if (info.mptcpi_flags & MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED)
+> +			return 0;
+> +		usleep(10000);
+> +		elapsed += 10;
+> +	}
+> +	return 1;
+> +}
 
 [Severity: Low]
-Should this list also mention receive buffer autotuning? Another caller of
-mptcp_inq_hint(), mptcp_rcv_space_adjust() in net/mptcp/protocol.c, got
-the same bogus value:
+Can wait_for_remote_key() loop forever when poll_timeout is negative?
 
-net/mptcp/protocol.c:mptcp_rcv_space_adjust() {
+main() sets poll_timeout to -1 for any -t value <= 0:
+
+main() {
     ...
-	copied = msk->rcvq_space.copied;
-	copied -= mptcp_inq_hint(sk);
-	if (copied <= msk->rcvq_space.space)
-		goto new_measure;
+	case 't':
+		poll_timeout = atoi(optarg) * 1000;
+		if (poll_timeout <= 0)
+			poll_timeout = -1;
     ...
 }
 
-On a passive TFO socket, after the remote key arrives, the TFO skb at the
-head of the receive queue has map_seq = -skb->len. That value is set in
-mptcp_fastopen_subflow_synack_set_params(). The old hint was clamped to
-INT_MAX, so copied went negative, the code jumped to new_measure, and
-mptcp_rcvbuf_grow() was never called.
+With poll_timeout == -1 the while condition is always true. The loop
+then only exits if REMOTE_KEY_RECEIVED shows up or getsockopt() fails.
+Nothing in the loop checks whether the connection is still alive (no
+poll() for POLLHUP/POLLERR, no SO_ERROR, no MPTCP_INFO_FLAG_FALLBACK
+check).
 
-A partial read only advances map_seq by count in __mptcp_recvmsg_mskq().
-So the hint stayed wrong, and autotuning stayed off until the whole TFO
-skb had been read.
+For a passive TFO socket, accept() returns at SYN time, before the MPC
+third ACK. Suppose that subflow gets reset, or the third ACK never
+arrives, for example because the client exits early and its kernel
+answers the SYN-ACK with an RST. The msk is not marked as fallback in
+that case, so mptcp_getsockopt() keeps reaching
+mptcp_getsockopt_sol_mptcp() and MPTCP_INFO keeps succeeding.
 
-This patch fixes that path as well. Could the commit message say so? It
-would help stable backporters judge the fix.
+REMOTE_KEY_RECEIVED stays clear, because msk->can_ack is only set in
+subflow_set_remote_key():
 
-> Fixes: f03afb3aeb9d ("mptcp: drop __mptcp_fastopen_gen_msk_ackseq()")
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+	WRITE_ONCE(msk->can_ack, true);
 
-[Severity: Low]
-This isn't a bug, but the author address (geliang@kernel.org) does not
-match the only Signed-off-by address (tanggeliang@kylinos.cn).
-checkpatch.pl reports this as FROM_SIGN_OFF_MISMATCH.
+and that code needs the MPC ACK to be processed first.
 
-Could the author address be updated, or a matching Signed-off-by be added?
+Without this patch, the same dead connection would reach poll(-1) in
+copyfd_io(), which wakes on HUP/ERR and returns. With this patch, the
+server just keeps sleeping 10ms per iteration.
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 02a4f479d9d8c..fc4ffa3263176 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2402,22 +2402,16 @@ static bool mptcp_move_skbs(struct sock *sk)
->  static unsigned int mptcp_inq_hint(const struct sock *sk)
+With a finite timeout (the in-tree scripts pass -t 30), the same case
+stalls the server for the whole timeout before copyfd_io() sees the
+error.
+
+Could the loop also check for a dead socket, e.g. with a short poll()
+for POLLHUP/POLLERR, or by stopping once the subflow is closed?
+
+> +
+>  int main_loop_s(int listensock)
 >  {
->  	const struct mptcp_sock *msk = mptcp_sk(sk);
-> -	const struct sk_buff *skb;
-> +	u64 hint_val = mptcp_data_avail(msk);
-
-[Severity: Low]
-mptcp_inq_hint() feeds more than SIOCINQ. It also supplies the TCP_CM_INQ
-cmsg in mptcp_recvmsg():
-
-	unsigned int inq = mptcp_inq_hint(sk);
-
-	put_cmsg(msg, SOL_TCP, TCP_CM_INQ, sizeof(inq), &inq);
-
-Does this change move TCP_CM_INQ away from TCP after a DATA_FIN?
-
-bytes_received never counts the DATA_FIN. mptcp_check_data_fin() only
-bumps ack_seq:
-
-	WRITE_ONCE(msk->ack_seq, msk->ack_seq + 1);
-
-So with N bytes still unread after a DATA_FIN, the TCP_CM_INQ value
-reported by mptcp_recvmsg() drops from N+1 to N.
-
-Plain TCP fills TCP_CM_INQ from tcp_inq_hint() in net/ipv4/tcp.c. That
-value still includes the FIN:
-
-	inq = rcv_nxt - copied_seq;
-	...
-	if (inq == 0 && sock_flag(sk, SOCK_DONE))
-		inq = 1;
-
-So TCP reports N+1 here, which is also what MPTCP reported before this
-patch.
-
-The commit message calls the N+1 to N change "aligning with TCP's SIOCINQ
-behavior". That holds for SIOCINQ, because tcp_inq() subtracts 1 when
-SOCK_DONE is set. For TCP_CM_INQ it is a user-visible change away from
-TCP, and the message does not mention it. The same code is still in place
-at the end of the series.
-
-Should the commit message cover the TCP_CM_INQ change? Or should the cmsg
-path keep reporting N+1?
+>  	struct sockaddr_storage ss;
 
 [ ... ]
 
