@@ -1,54 +1,53 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794459577;
-	b=PEc3U+CJpj0elpvrLL4YV+1ZZ+52uXc43QaSAzjTRxwJe7ID+RDvNLb3TmtnvhnXIjK8
-	 bNKR3k3uAM11SXzT/IxYDMnVt23X3ENtUdy5Iyqn8uL2iRsz/7D2nyuM33EUh/c/w/yqk
-	 hasJ71orQ+fsj1j4tR/pHC+J8iDk78EAz4DDSJv14/8fEtv6Auel3+MzydsdD5gt/5lmD
-	 U0PU0Ym77xHiBuFe3cGilpW9MPJZYjMZ3BFddaDvq+5QLBjZXgvVapmLlq0svmpiKdJSH
-	 UyNUX8kiEtTAOvbYfuwj89GdCg6EmVI2uuVvGlz0/jadtMwZ+bdIGetmgb/OnUfqDiA==
+	t=1794459578;
+	b=IbGWrFTtfq2ehddlBC/0rwRgQU3OcMzwGp9QOOL+1IknYgE4c3bY2F2ohKiI5fWjlqc7
+	 khMh9N6pT8EEXw3JgwM6x0BNB1Fbwypj3uC7F408+7bWeOkTb8bcbPJcafwmoXM2wWNwY
+	 wXnXUuVf3v1v/OTHm3Q+DWIiRnYM5fom75ba7E81yfyazvVJSLIYxSRYf6sw1VOzfAe+r
+	 yZ7YAF28X9BWXEozXz3SK5PPUZpm1DRkWDVCu4ZViw2/wgnPV2S/P3iyGiKF4mgd/zJdU
+	 1rSj8GbeUjWDYjQdkHx6N92facZbqJwA1FxK1nn+XNZmyHTp/CnTWMdFt1hbkSfCnIw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794459577;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794459578;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=R8T6/lRGFFAchc8P7lE50tYeAbtsKxMgk5HMrsCkV3Y=;
-	b=MzmuEqyAV8vEAWX6TmqcKw/ljhcxuauagLDlTQO0JzqV7gwhvBZaeejRu0H0xYwwyUqJ
-	 lCZcBZSDXVXigI+hwKHtec0vKPVw0cxmX/sT9YptkxwKpbY4pKNIv0asxf1CAoh92bi4o
-	 A92B+CaVBAZalM0tHG6sd3/+yeuLzql5mEJ3ECb9O9x1KDYdURlwI4VMMZy+lUYRoHcIt
-	 zsaCKGorp3QWwEMbkgxW1yvMb3DoqXz8xHlDPY/fm32DIpRxXXgLziAGfEgZc/xif3ZXS
-	 BNDHrcusLoxnmkP+uVa+B5ZyX0pz6/E9JmnmtvJd22zZjaV7TM1XrZUbtX34N1w4l/g==
+	bh=wOGZR2m/eV8MGabRLFVuYYPQwF0RucjX32JggI3MOjs=;
+	b=XuZgAHlYmSFDquVYMJ8Y0+G+/wLhWxCkoF6rPgJucL1+YfhzdzFTM0tMb0VAbwc1P89c
+	 McgkquTb59BVkIW+zuLV442BcprEmqcgK7d7uhuvZFVn5ihCDhSOO1Tx1MH1Gl/yHLl0N
+	 2EdErd4+rsugAfl9ZHBQnK/a6fBpadr2DF7Lk8uG7V99Jj8WbJFRxE0AxdrINoi2cLUEC
+	 IRu7QENRZq3z3yVQoYzDsiABlRF+iPRab32oWPgXBe36S5+olCgRMs0tufL86dFonF1Xo
+	 fTeJzRBr4ONgqLwNCijG0BRL8U/Qpeh9IVWCRQaSkt478xCS9XjHKkCTYHoFeEJJfkA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UH5B7KHv;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nSoxZcmk;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80FB8606A323
-	for <mptcp@lists.linux.dev>; Thu, 12 Nov 2026 04:59:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED4A606A323
+	for <mptcp@lists.linux.dev>; Thu, 12 Nov 2026 04:59:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UH5B7KHv
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFA201F00A05;
-	Thu, 12 Nov 2026 04:59:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nSoxZcmk
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFA891F00A05;
+	Thu, 12 Nov 2026 04:59:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1794459577;
-	bh=R8T6/lRGFFAchc8P7lE50tYeAbtsKxMgk5HMrsCkV3Y=;
+	bh=wOGZR2m/eV8MGabRLFVuYYPQwF0RucjX32JggI3MOjs=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=UH5B7KHv7CtBbtNQ65k6EqsgVpxcGfR5qMQbMghtjiul7+6CGz//Wwe0Nx8B5AzA/
-	 E6HvYDJTUJ5tnyKjCqcH6EyIM85VgVBlDRj/LnC2I+VfF6ybYyz/29RCziAGbS9uAW
-	 4L+7TA+BBLFr/teXGxB6ENroemB55rcVYd7biU7m3E1deb9/zrvVAOdgW2bf6IlXrD
-	 6eTSLeesOVDTCs427OlQPOyjz+4eeWr6pd6Z5GtI78lZnSmeLGjJFoHIgh8OAeuUvc
-	 EOV0RfXrxpYscXZO9qWqbKMaQYJMWMo5+ducyJA6GQiFMzItMk/rrYkVZ69esu37Jx
-	 m4MHCRHdUGwPQ==
-Subject: Re: [PATCH mptcp-next v25 2/8] selftests: mptcp: connect: check TFO
- SIOCINQ overflow
+	b=nSoxZcmk1s1ZFOAHONohB3gpDbnGqWgZUgdpRvs5E3Nd1uWank71+hM3ma4VJjRsJ
+	 k4iz+0BooEvd2++qmhbt5ICrxqp6nBxcF/gcU5IL7IIU1GOvGyB8uCyKoeQtU04Io+
+	 wGoR9n+HFo6yl1cw+gG8DHkFtNM1HdazgENdD5QrN3LxaCsVemNYMXg1hQ4RTUbU7H
+	 aSJ8drOBgXE8KnjPtktBBzouj13oN4zqQjk+ZbNqDa9eKOShVRLEBFQPX9J5fG2Gw+
+	 ryKHrHgAEeaQ8OX1HzzQjpu8dXtJPqap6u5wp3XjWbAdbVtI/9G/swBuV2rInBT/M1
+	 VcJnzb55aEJ8A==
+Subject: Re: [PATCH mptcp-next v25 5/8] mptcp: drop the cant_coalesce CB field
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Thu, 12 Nov 2026 04:59:36 +0000
-Message-ID: <179445957634.488855.13661562039649445742@kernel.org>
-In-Reply-To: <58a7c022d24c1fcbcba1dcafc62182ada49f5f35.1794304840.git.tanggeliang@kylinos.cn>
-References: <58a7c022d24c1fcbcba1dcafc62182ada49f5f35.1794304840.git.tanggeliang@kylinos.cn>
+Date: Thu, 12 Nov 2026 04:59:37 +0000
+Message-ID: <179445957722.488855.4899104040151515864@kernel.org>
+In-Reply-To: <61e30a5ecaa111377f7dfa573983f89d52af3df9.1794304840.git.tanggeliang@kylinos.cn>
+References: <61e30a5ecaa111377f7dfa573983f89d52af3df9.1794304840.git.tanggeliang@kylinos.cn>
 X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -68,93 +67,87 @@ you want to address the nit picks below when you respin.
 
 Low priority / nit picks for your consideration:
 
-- [Low] In tools/testing/selftests/net/mptcp/mptcp_connect.c,
-  wait_for_remote_key() returns -1 for three different failures: (1)…
+- [Low] In this commit, __mptcp_sync_rcv_sequence()
+  (net/mptcp/protocol.c) rewrites the queued TFO skb's mapping as…
 
 --
 
-selftests: mptcp: connect: check TFO SIOCINQ overflow
+mptcp: drop the cant_coalesce CB field
 
-This adds a SIOCINQ check to mptcp_connect's server mode when the MPTFO
-socket option is enabled. After a TFO connection is accepted, the test
-uses poll() and getsockopt(MPTCP_INFO) to wait for
-MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED. It then fails if SIOCINQ returns
-INT_MAX.
+This commit removes the cant_coalesce CB field, which kept the fastopen
+skb from being coalesced. Instead, a new __mptcp_sync_rcv_sequence()
+rewrites the TFO skb map_seq and end_seq using the IASN once the 3rd ack
+arrives. When the msk is owned by user space, the sync is deferred via
+MPTCP_SYNC_SEQ.
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> index 178d98d91fea2..5b002dad25d7a 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 71f5b0209192b..ce0f9c2e6fd1a 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
 
 [ ... ]
 
-> @@ -1176,6 +1180,41 @@ static void maybe_close(int fd)
->  		close(fd);
+> @@ -438,6 +436,24 @@ static void mptcp_init_skb(struct sock *ssk, struct sk_buff *skb, int offset,
+>  	skb_dst_drop(skb);
 >  }
 >  
-> +static int wait_for_remote_key(int fd)
+> +void __mptcp_sync_rcv_sequence(struct sock *sk)
 > +{
-
-[ ... ]
-
-> +	while (elapsed < poll_timeout || poll_timeout < 0) {
-> +		ret = poll(&pfd, 1, timeout_ms);
-> +		if (ret < 0)
-> +			return -1;
+> +	struct mptcp_sock *msk = mptcp_sk(sk);
+> +	struct sk_buff *skb;
 > +
-> +		if (pfd.revents & (POLLHUP | POLLERR))
-> +			return -1;
+> +	if (likely(!msk->rcvd_dummy_seq))
+> +		return;
 > +
-> +		olen = sizeof(info);
-> +		if (getsockopt(fd, SOL_MPTCP, MPTCP_INFO, &info, &olen) < 0) {
-> +			/* Not an MPTCP socket (TCP or fallback), skip wait */
-> +			if (errno == ENOPROTOOPT || errno == EOPNOTSUPP)
-> +				return 0;
-> +			return -1;
-> +		}
-
-[ ... ]
-
-> @@ -1207,6 +1246,27 @@ int main_loop_s(int listensock)
->  		check_sockaddr(pf, &ss, salen);
->  		check_getpeername(remotesock, &ss, salen);
->  
-> +		if (cfg_sockopt_types.mptfo) {
-> +			int ret = wait_for_remote_key(remotesock);
-> +			int avail;
+> +	/* User space can have already received the TFO skb. */
+> +	msk->rcvd_dummy_seq = false;
+> +	skb = skb_peek_tail(&sk->sk_receive_queue);
+> +	if (!skb)
+> +		return;
 > +
-> +			if (ret < 0) {
-> +				perror("TFO: getsockopt(MPTCP_INFO)");
+> +	MPTCP_SKB_CB(skb)->map_seq = msk->tfo_iasn - skb->len;
+> +	MPTCP_SKB_CB(skb)->end_seq = MPTCP_SKB_CB(skb)->map_seq + skb->len;
 
 [Severity: Low]
-Is this diagnostic accurate for every -1 that wait_for_remote_key()
-returns?
+Should this take MPTCP_SKB_CB(skb)->offset into account?
 
-wait_for_remote_key() returns -1 in three cases:
+mptcp_fastopen_subflow_synack_set_params() queues the TFO skb with
+offset = 0 and calls sk->sk_data_ready(). So user space can read part of
+the SYN data before subflow_set_remote_key() runs, or before
+mptcp_move_skbs() or mptcp_release_cb() handles the deferred
+MPTCP_SYNC_SEQ.
 
-  - poll() fails, for example with EINTR from the SIGUSR1 handler
-  - poll() succeeds but pfd.revents has POLLHUP or POLLERR set
-  - getsockopt(SOL_MPTCP, MPTCP_INFO) fails with some other errno
+A partial read in __mptcp_recvmsg_mskq() advances offset and map_seq
+together:
 
-In the POLLHUP/POLLERR case, poll() succeeded and getsockopt() was never
-called. That means errno is left over from an earlier call, and perror()
-would print a getsockopt(MPTCP_INFO) failure with unrelated strerror text.
+    if (count < data_len) {
+        MPTCP_SKB_CB(skb)->offset += count;
+        MPTCP_SKB_CB(skb)->map_seq += count;
+        break;
+    }
 
-mptcp_poll() sets EPOLLHUP when the socket is fully shut down or in
-TCP_CLOSE, and EPOLLERR when sk_err is set. Those are the "connection is
-reset or the client exits early" cases the commit message says this
-poll()-based wait is meant to catch.
+After the sync, end_seq is still correct because it equals tfo_iasn.
+However, map_seq is now off by offset bytes, and end_seq - map_seq is
+skb->len instead of skb->len - offset.
 
-The test still fails correctly, but the log would point at the wrong cause.
-Could the hangup/error path print its own message, or return a distinct
-value that main_loop_s() reports separately? A poll() failure would also
-get the "getsockopt" label, although its errno is correct.
+That breaks the invariant kept by mptcp_init_skb() and the partial read
+path, where map_seq is the DSN of the byte at offset. Would something
+like this be closer?
 
-> +				close(remotesock);
-> +				return 1;
-> +			}
+    MPTCP_SKB_CB(skb)->end_seq = msk->tfo_iasn;
+    MPTCP_SKB_CB(skb)->map_seq = msk->tfo_iasn - skb->len +
+                                 MPTCP_SKB_CB(skb)->offset;
 
-[ ... ]
+As far as I can tell, nothing in this commit acts on the wrong value.
+__mptcp_try_coalesce() compares from->map_seq against to->end_seq, which
+is correct. to->map_seq is only read by the pr_debug() there, and the
+read paths use offset instead of map_seq.
+
+Later in the series, "mptcp: remove CB offset field" drops the CB offset
+and tracks read progress in msk->copied_seq. There, subflow_set_remote_key()
+and the MPTCP_SYNC_SEQ handlers add tfo_iasn to copied_seq, and the
+arithmetic gives the right offset after a partial read. So this looks to
+be fixed later in the series, but the intermediate state is inconsistent.
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1794304840.git.tanggeliang%40kylinos.cn
