@@ -1,93 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.46
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794607128;
-	b=zZNX90MWBfjcIXnJRZNWEwA1qR46tUi1cxPO0Fb6HIyUMIA8qK7KC0C4X8EhcrqKXeR3
-	 z4Xdv80TJHNHqMB8I24clkE2vpgP4nUXoQTIyf7dkDzjrD7Si0RRsbRa5U3e1A/DoRTn6
-	 DucXvQpkw9+eEwcxxh8Czh5UCkZXpT2nr8PN4O1CXuWE51T5gRm85XJ4wl6q+7KVqJskU
-	 z7SMI2F7ycIAPx+8Lr+22Uzfpv86dfJKfh+OAXKypHxsVFvhSg+zdC77M+cQaGyd2lT2/
-	 cVrGSfYxNet0PRuCEau7Riuyq/PzuV2Qa4vK79H910xF8ruk2VHTTQoiygNmc8UwgNg==
+	t=1794608944;
+	b=pWAUQV2lR/Oy3YgjqgY1HtwZhRZf/omorcG2xzqJicpGbIQliowmnsvc8funV7HAkzAZ
+	 mfSNvLiUA9L+0TWRasT8/OO0Uwfm4IBnJ58adFuXrd7ZATEx42BZcIY7Fe/aH8shBJ2ZH
+	 jeZlgdz3Bd7b9VeaOc067QHbueGh+uP4nW1bXKcWQZw4X8iC5DlVagdSmRn4CblMThuv8
+	 z/nfd4wgvGRbBL6LabUTUG+IWgbcpWTCF7NjtyDqu+ecFqb1JyLmyGIzCdNTfY46ckz7v
+	 e97P+qQDx7fkRnh+5M/T5sGFwe9fqyixbei7fAdFsLqz0dkwTJUHz5BWjuWetY04q9Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794607128;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
-	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
-	 Date:MIME-Version:Content-Type;
-	bh=WkEbVrEpR7ybTGHN1J5a9sl49vo/SBzIoK5bT1t5GYQ=;
-	b=JTIYFRy2UOxPhJsApuQCwFZwFmYzPZw/wYYFMXt7ipjSiEHLR8eLjXR+6RzrQwOHIvR1
-	 xSAnpLQAlU5pGGc1spmfeU+soKaDVnrJJMKPZB9aqjer3qjh9zJ6BdZzc/YdRtR09APf9
-	 puc+1k1uFD9+2aVLFpkmRYpigvLG/lV6YT0oHEBiQDzIqEiU/tqu2YEeEVMoV0ybDo+of
-	 9PLqhqlpMsXtisogGhW3/etFWiXAYh2N18w0umhZaNLm1cc5rbPCh2SGbXBmRBZB7lWO6
-	 bhPZo7cIlkzxIK1gMizBJ8UiZyj+Sn9rm/qUMzHaPPCbAeHFKVgCBbkqs58+SHwODWQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794608944;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=FNVZB1CY4tJysHh2H5y2f1mII/Xri40a4e8UbckTiw0=;
+	b=hIoSZyWiQKrG2D7fDcrLxiaMpra5BwFbj4mg/OqY6ezorRnKZB/LlyL93TxBnUhe2N8j
+	 fcmJV/j24cGoltSxW/cVJ+VrXWHkzNMAj8T9PTnXOf2qCd/uq8yzRokbWdOYxSGsQzSHf
+	 l3/Gj177OiBzZInNGjbRnnf64r3QK3mo8hrda+S3fw9ixLycsbfKTXt5xhhtBo3vzW5vR
+	 MgahP4o+kOTxmGHdhlooaj1t8V086IxGummkgEVf8B2/yEBXx94nAZKqLEiiBPUI5Dfsn
+	 FKuJ7PCHqwzM4XJ8XLfK6v+wGYjC+RjARQD2OtEfBfQ5d+p3E2JQ44+WlMuZf8Na7iQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=RegbBgw2;
-	arc=none smtp.remote-ip=74.125.82.46
-Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lQJ4xUeK;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7325F606A32D
-	for <mptcp@lists.linux.dev>; Fri, 13 Nov 2026 21:58:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7325F606A32D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B0A606A88A
+	for <mptcp@lists.linux.dev>; Fri, 13 Nov 2026 22:29:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=RegbBgw2
-Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-1b244fb7fffso1638345c88.1
-        for <mptcp@lists.linux.dev>; Fri, 13 Nov 2026 13:58:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794607128; x=1795211928; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=WkEbVrEpR7ybTGHN1J5a9sl49vo/SBzIoK5bT1t5GYQ=;
-        b=RegbBgw2CNhGWHDzJUqEet3gWYRzaVXApld8g/KafVYlRIV6IpySDVcVEtRAn3E9IH
-         qWawcMUkhVqkgTQxqk/KPRNm8681Ls3RMrBRjDqpLHDRRaO2aBeMvZQNTCyrWw0quoOh
-         eK3OnhC/YwtNtg0rys1U7c5PG7/5c2glOUBOey6F5fxAG4eUF58cttEBWAyHDHec2sm/
-         uJ8K7VGTuypkMihvEzJJn06SD+a/Q1C4AshcC8wyTTzSbCpmTfVGbsOv2LSYkZDXHjvE
-         fgz4zusw1MTs5saupkVR547W09xQTiBHy3sYkG9vdSgsNxJDyEFnxS6uk2JLtGCdP2Fz
-         +udg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794607128; x=1795211928;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=WkEbVrEpR7ybTGHN1J5a9sl49vo/SBzIoK5bT1t5GYQ=;
-        b=mJT8l5QQmtksh2EoS8o3Tks+RyTBqda0sUXQkVptI4Q5gR2tof+lC1GN6/nLTEio5t
-         FVQrjK6Rf7JeXMfcZ/tz8oEVkOzl+M5rehHZFQaXLi8Hu+qopKA3gc/N8DpsefPsWgNi
-         YXVp18B6j9cRD+OznXipZqe1EuGKPj3dMDe73U5NKBsm1SGHYS5kdiYLHfEl8xAc8zaC
-         LFVCAeNOpKX8HMbLerfNiudpbJ3sx4DjGJt9Sa9+Ys4TgBYpM/0nBj29JH8WmqgVOpFk
-         VMZ8eEqqm7rjoFe0Xv3nMIV0qoxnYdYiU1JVHUErgVnMiNu6PNeehOV0yDpJ0HVDNZQt
-         jwog==
-X-Gm-Message-State: APuU4Z8GSibghlpwhb8gYGT/bjzgw+BvuiqNU5IgdMj0BZ7s8zbjslDU
-	CcyM0auYLufnbS+dCM58CS4o3jAqY+SqzdfrRduUN8LuCnpAW5M1XXE2wESE
-X-Gm-Gg: AYBFou2I3/6oqxW1T2Xz8xX/NQDv128uzGrEKXWRHldypwy2uOqGgZTpMDHiS7Q+JVz
-	ka9SVT5+RfctYVPzgMVOAgjqSO7DeQGVlZk7vvKuMoEz/PxdkZCJrQ5xiattNf6jGfmbqeC945a
-	PAXubsx7e+TWIwtizIAjBYuxECpyQi6XYP6hwN8nTqXX8rLYli3sp4pGfu4+giuMs45+3SIQRon
-	MiKmQQo+cSCf5gJbk9DoXZPshwzmBiUD3DKb64FaKflEJkC9eV4xQFCDcd+SF9aFq9CpI35hAIm
-	xrsPFxv7ODp+HW0Mmp9tgKgJq1OJ7CYFKcxSmwnnmj4862FNx45V9QTd8UchoSfjVQ438oyJUQJ
-	BbqeaD2Jnfz9lfak8gi7RqvcVljXtmymTqq3VSwJudjM75fRGLQ/qB0cztHS2JJYpu/2MhVZ6nh
-	QkI3RqlYfmNigzjr3mtM6/jgDYM0UQTC0GqfJ6o9eO/Y544S6w7b4oFKStw9M2lqQGFxnq5Dtxe
-	aiNZrALU0oKqGBYhEe8to0+EJso1lnasUqxhM6uMViJPkjyBeNfldSErDueczuiyoS/R+6H26hY
-	lngaHMNa1YUKvlBVfAh5YCuu8j0HnHOSCeuD5fvbRs4N
-X-Received: by 2002:a05:7022:b905:b0:1a9:d04f:1b55 with SMTP id a92af1059eb24-1b50311e3efmr3094643c88.26.1794607127470;
-        Fri, 13 Nov 2026 13:58:47 -0800 (PST)
-Received: from github.com ([172.184.211.246])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b50316d9c2sm8874335c88.7.2026.11.13.13.58.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Nov 2026 13:58:47 -0800 (PST)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20261113-mptcp-cmason-fixes-v1-0-9205b77e9a2f@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lQJ4xUeK
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 940501F000C4;
+	Fri, 13 Nov 2026 22:29:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794608943;
+	bh=FNVZB1CY4tJysHh2H5y2f1mII/Xri40a4e8UbckTiw0=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=lQJ4xUeKrJFbUIE0MCpFtae2ByElyX/OKgSTH+5PyxXy67/V/0F1FdB43uD2Lx6DY
+	 ki4WHzxkpzFYG/MQbXv6K0SefMNmtvHi9LiVbg2UDTKpoMa210ZWAsxoRHn+5fP51i
+	 YYzLZ3sBnzNyRSUaaUGFek6Hqqs7BdpmRF9jMBGMBncB6Xb7HB31SQc95Pp0pHwdMe
+	 fmWiAmTKEnH0eZzVWyeZpnX5yQfvCFk+IDH8M1JgRDF9bQCzgtchGLhOA4kvI3sNGm
+	 DBkysFXjkyXISfbe92NoLVANpT1pYBwMc50uwgjhfNqCPlk/vMSl90sWwFtyiuLUZT
+	 vGGvFDYViPg6Q==
+Message-ID: <sashiko-outbox-213809@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH mptcp-net 19/34] mptcp: do not fallback while old data
+ is in flight
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>, "MPTCP
+ Linux" <mptcp@lists.linux.dev>
+In-Reply-To: <20261113-mptcp-cmason-fixes-v1-19-9205b77e9a2f@kernel.org>
 References: <20261113-mptcp-cmason-fixes-v1-0-9205b77e9a2f@kernel.org>
-Subject: Re: [PATCH mptcp-net 00/34] mptcp: misc fixes
-Message-ID: <2c25d512-2944-ffd4-a43f-cddd97e08bbe@gmail.com>
+ <20261113-mptcp-cmason-fixes-v1-19-9205b77e9a2f@kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 13 Nov 2026 21:58:46 +0000
+Date: Fri, 13 Nov 2026 22:29:02 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -96,64 +60,91 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 
-Hi Matthieu,
+Thank you for your contribution! Sashiko AI review found no new issues
+in this patch, but noticed 1 related pre-existing issue it does not
+introduce:
+- [High] mptcp: infinite map emission stall in
+  mptcp_pm_mp_fail_received() [1]
+--
 
-Thank you for your modifications, that's great!
+commit 4c9a52a9f4dc2474ec08fa066289f109db0a1859
+Author: Chris Mason <mason@kernel.org>
 
-Our CI did some validations and here is its report:
+mptcp: do not fallback while old data is in flight
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): selftest_diag =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: debug (only =
-selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only=
- bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Perf: Unstable: 1 failed test(s): =
-validation:sched-weak-secondary =E2=9A=A0=EF=B8=8F=20
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/435018=
-66652
+This commit prevents an MPTCP connection from falling back to plain TCP
+while a zero window probe or reinjected data is still in flight on the
+subflow, avoiding duplicate data delivery on the receiver.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/c88781081116
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1210925
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 8f954a752797d..7329deb43c622 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
 
+[ ... ]
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+> @@ -1582,7 +1594,10 @@ static int mptcp_sendmsg_frag(struct sock *sk, str=
+uct sock *ssk,
+>  out:
+>  	if (READ_ONCE(msk->csum_enabled))
+>  		mptcp_update_data_checksum(skb, copy);
+> -	if (mptcp_subflow_ctx(ssk)->send_infinite_map)
+> +
+> +	/* the infinite map implies a fallback: wait for old data acks */
+> +	if (mptcp_subflow_ctx(ssk)->send_infinite_map &&
+> +	    !mptcp_subflow_ctx(ssk)->old_data_pending)
+>  		mptcp_update_infinite_map(msk, ssk, mpext);
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+[Severity: High]
+This problem wasn't introduced by this patch, but can subflow->send_infinit=
+e_map
+remain pending forever [1] when an MP_FAIL arrives while the connection
+has unacknowledged data and no unsent data left on the send queue?
 
-For more details:
+mptcp_pm_mp_fail_received() sets subflow->send_infinite_map =3D 1 and
+msk->allow_subflows =3D false:
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+net/mptcp/pm.c:mptcp_pm_mp_fail_received() {
+	...
+	msk->allow_subflows =3D false;
+	spin_unlock_bh(&msk->fallback_lock);
 
+	if (!subflow->fail_tout) {
+		pr_debug("send MP_FAIL response and infinite map\n");
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+		subflow->send_mp_fail =3D 1;
+		subflow->send_infinite_map =3D 1;
+		tcp_send_ack(sk);
+	}
+	...
+}
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Attaching the infinite map in mptcp_sendmsg_frag() requires sending a data
+skb.  When there is no unsent data, mptcp_send_head(sk) is NULL so
+__mptcp_subflow_push_pending() does not call mptcp_sendmsg_frag().  Meanwhi=
+le,
+the MPTCP retransmission timer cannot retransmit the unacknowledged data to
+carry the infinite map because __mptcp_push_retrans() aborts when
+!msk->allow_subflows:
+
+net/mptcp/protocol.c:__mptcp_push_retrans() {
+	...
+			spin_lock_bh(&msk->fallback_lock);
+			if (__mptcp_check_fallback(msk) ||
+			    !msk->allow_subflows) {
+				spin_unlock_bh(&msk->fallback_lock);
+				release_sock(ssk);
+				return -1;
+			}
+	...
+}
+
+As a result, the infinite map is never transmitted and the connection stalls
+indefinitely.
+
+[1] https://sashiko.dev/#/bug/linux-906f0960-8875-45cb-8066-cc9808d83b26
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113-mptcp-cmas=
+on-fixes-v1-0-9205b77e9a2f@kernel.org?part=3D19
