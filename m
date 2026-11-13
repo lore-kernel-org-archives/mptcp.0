@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794600543;
-	b=Iq2vr1gIfovIysH9iguKcBYgW8HvNoT0jY+OtO5yZh4/qkabDdDjtSj/r920wNWUlMXT
-	 yU3Np8SYlRBm0btuvx9MN5CckTzQY/i/WP90yjjNOTJyhDKx6X9hSMCMUI5fpAer4wDpt
-	 JDY/+S1yfoV4AWgJxXZ6EV4lmB8kOCFERrEzUMJcG/qVxdV6UOl6D4ssrgYOeQzBMHyas
-	 +/fOv8tqMydxBOkRzMELOHfa7qYgVhjS7pxmfOXnxWfdZuHPq1oK87VAvxG9Es+lks5Um
-	 4I3N+2YGp4vxbDbF8+9tN45nosMasZU31Ej8vxxI/fQb61HosxMfXW+ew1pftvz3cvA==
+	t=1794600787;
+	b=GMdJEmg2vdP164zGetOR4EZzkonGY3ZklypISa1QhX7wbwKekD2Hc6Efgyn5qFpKNIUl
+	 usYhEDqpRKadimaaS2hFDqjI0zruCZdZyHwtwXhbJx69UCYALbLlAIWCUxcQZfzMyAU5y
+	 n4VVuVRKNdoQOxTSHTIN3JztDc9gGyXiJktZ/2ZdvCluArRUFek+hzeExopT4ub/fY+f5
+	 97skXbPcND7YeE7JNiFZGwa6GR6fbI3Krl/OBopwiGd7YaOMPSK5eqCZ9YarDCuAjsRUm
+	 vuefdkIF1bVSMWRh/skRimtFboCz1hDzQvFFfmf6QPNOjDrpq/kxDjpPKHnrWK+JB6w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794600543;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794600787;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=7kzwSSLXuXQxsvNZCFJAdvJ/NOpZiwmegi2MqUHBXFE=;
-	b=OKVDq9U9M23846YgdlcBwRD6grSCMUGPSoSa1KBhTJGJmv7Yz5HtISD31OqDicY64gAQ
-	 LFh98rVbezPxQFxn4p3aptnUsdrRlAFgrfFb7hVIAXXs1tLqIgwH7nFZWF5yzjArbKAIa
-	 tgWIqix/4vUuckN4QoIfmT9yJxmk75rTxiEZIrMbYSPdTbk+i2dKUJuB5UWUZUmrHY8aN
-	 yn+AhlveQyJ/bqr3qxwtt5VmplRm/mxEyMt6eQQSf+iVBwCQpFIug1hzc4SIRWl4SwtGZ
-	 9Awb0v7TrWyTfUquJiq3Q8dNCZ3MpVhZIRGG0BYewvVYz6rgS7TZxn4RAfVRrmBwnyw==
+	bh=G529l611Q6y5q+nTlLQ2tRV//FiazeVsP8dac4kaRko=;
+	b=vXadNVNbc/cqW1teQdvG/OHC/L7TrlHsL46homqNyXAb01Ea6SPHBSQmvbTDThDHIrxk
+	 e3c/nsEFJT/GQd9qyYDN2ZPGi/axAj0Ieu9GvZXEGXJLbn7TXc2m4OR7uhNowfc7uawqc
+	 jQujNoK9zeTx1AtwYqPquUO0QtkZF6A7bZl0+DRwOMwh6nVKZ4sPf980ln7BC6PDPZDQG
+	 G9aQQn+ALeyPJ+1+ReBcse5X5QSPvHUQ6dHSOwjroyJr1yZ6mgn+WZ1JFH5sbF+u/OsqX
+	 TWsUlWWgzsJe9SoyIfCYSVAjhUrQuGrlxR6bJzbEAKOydO+gnZwtHmboQdHQvZ0WFWQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="PDweu/OR";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AmmaaUkm;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A01606A891
-	for <mptcp@lists.linux.dev>; Fri, 13 Nov 2026 20:09:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0A1D606A327
+	for <mptcp@lists.linux.dev>; Fri, 13 Nov 2026 20:13:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PDweu/OR
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 263991F000CB;
-	Fri, 13 Nov 2026 20:09:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AmmaaUkm
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E392B1F000C8;
+	Fri, 13 Nov 2026 20:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794600543;
-	bh=7kzwSSLXuXQxsvNZCFJAdvJ/NOpZiwmegi2MqUHBXFE=;
+	s=k20260515; t=1794600787;
+	bh=G529l611Q6y5q+nTlLQ2tRV//FiazeVsP8dac4kaRko=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=PDweu/ORW758JdonUirWm8kUga8NnBlgpS7GiRH3DIwb0ykMpaebbQrHgof3rXzYK
-	 hMHg8UypSJbNpktENigfgYwv6kJFhv2bFS98UIU5bRBR+en9tkwWUOkZrqonestblX
-	 6fI7t5SQcQMeDshd5YL4IYlXNOskfrsI0mmX7vvwOtFp33GnqFTWjIykvcKmrlduG8
-	 sew13oABXfw4KC+Mn4Ryy4JCrnWeW11a07mlbTalKBRj0gK/JkUzspMXi6+qyqXri0
-	 d4nLlsa9/nNWhhZx1R9+M789b4fC+tCmTzchiP8KruSMVokXD9EizyYSw1k4vcySR8
-	 kpk4XvsQ//rfQ==
-Message-ID: <sashiko-outbox-213616@kernel.org>
+	b=AmmaaUkm22dLWbqs5DimYdWJ02DovRShbPAdEM/b3UY66ozeVIyP38B7q+vOzf2Qr
+	 wZXblpW3zTxxYDBfE1/tpTdtLtnvvdWyqDz8LE3t0B0DLhRmYsUH8EIQG9NyFUCbBy
+	 2LbtgNXnU/egkhKbLKJ7JWoVueoDfWPHhkxqrO+18X/iMFYOjFQwnUDtxyNm9t17vd
+	 XddsMPa5KF5IG0iQzXqWOPm6sHN+tXj9nolPT+2ciVJtAH+wsWeK7XzAfYNoAv1rsw
+	 AoRANQH6xpderb4fTPE/fJoUNW3PxJbKpjkB/zVxwdE4l9zjKCqimg8A3ItCvyeiKU
+	 esbth8T6J0M1g==
+Message-ID: <sashiko-outbox-213627@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-net 08/34] mptcp: force the charge for the first
- skb of a subflow
+Subject: Re: [PATCH mptcp-net 02/34] mptcp: drain the queues of a listen()
+ that fails
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>, "MPTCP
  Linux" <mptcp@lists.linux.dev>
-In-Reply-To: <20261113-mptcp-cmason-fixes-v1-8-9205b77e9a2f@kernel.org>
+In-Reply-To: <20261113-mptcp-cmason-fixes-v1-2-9205b77e9a2f@kernel.org>
 References: <20261113-mptcp-cmason-fixes-v1-0-9205b77e9a2f@kernel.org>
- <20261113-mptcp-cmason-fixes-v1-8-9205b77e9a2f@kernel.org>
+ <20261113-mptcp-cmason-fixes-v1-2-9205b77e9a2f@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 13 Nov 2026 20:09:02 +0000
+Date: Fri, 13 Nov 2026 20:13:04 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -64,77 +64,66 @@ Precedence: list
 Thank you for your contribution! Sashiko AI review found no new issues
 in this patch, but noticed 1 related pre-existing issue it does not
 introduce:
-- [Critical] mptcp: cross-subflow state leak in __mptcp_push_pending()
-  [1]
+- [High] mptcp: missing inuse add and state reset in
+  mptcp_pm_nl_create_listen_socket() [1]
 --
 
-commit 045933b0c1ae73b56c16499f1fb80d8244a44751
+commit 2094b28eb838bd9f43ac4fd932bbfb028ce12096
 Author: Chris Mason <mason@kernel.org>
 
-mptcp: force the charge for the first skb of a subflow
+mptcp: drain the queues of a listen() that fails
 
-This commit forces the memory charge when allocating the first skb on an
-empty MPTCP subflow and uses tcp_wmem_schedule() to bound the payload copy
-when charging subflow write memory in mptcp_sendmsg_frag().
+This commit cleans up the subflow accept queue and Fast Open RST queue in
+mptcp_listen() when __inet_listen_sk() fails and leaves the subflow in
+TCP_CLOSE.
 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index dc8cdda31a984..8d6ed293f6e58 100644
+> index 50de5cedfd0fb..dd9fb803cad5f 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-[ ... ]
-> @@ -1449,6 +1453,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, stru=
-ct sock *ssk,
->  	bool reuse_skb =3D true;
->  	struct sk_buff *skb;
->  	size_t copy;
-> +	int avail;
->  	int i;
+> @@ -4381,6 +4381,11 @@ static int mptcp_listen(struct socket *sock, int b=
+acklog)
 > =20
->  	pr_debug("msk=3D%p ssk=3D%p sending dfrag at seq=3D%llu len=3D%u alread=
-y sent=3D%u\n",
+>  	lock_sock(ssk);
+>  	err =3D __inet_listen_sk(ssk, backlog);
+> +	if (err && ssk->sk_state =3D=3D TCP_CLOSE) {
+> +		/* inet_csk_listen_start() leaves this drain to MPTCP */
+> +		mptcp_subflow_queue_clean(sk, ssk);
+> +		inet_csk_listen_stop(ssk);
+> +	}
+>  	release_sock(ssk);
+>  	mptcp_set_state(sk, inet_sk_state_load(ssk));
+> =20
 
-[Severity: Critical]
-This problem wasn't introduced by this patch, but can __mptcp_push_pending()
-leak stale info.mss_now and info.size_goal across subflows [1] when
-mptcp_sendmsg_frag() returns early?
+[Severity: High]
+This problem wasn't introduced by this patch, but does the other
+__inet_listen_sk() caller in mptcp_pm_nl_create_listen_socket() [1]
+miss updating newsk's state and sock_prot_inuse_add()?
 
-__mptcp_push_pending() shares a single struct mptcp_sendmsg_info across its
-subflow loop without resetting it when switching subflows:
-
-net/mptcp/protocol.c:__mptcp_push_pending() {
-	struct mptcp_sendmsg_info info =3D {
-				.flags =3D flags,
-	};
-    ...
-		mptcp_for_each_subflow(msk, subflow) {
-			if (READ_ONCE(subflow->scheduled)) {
-    ...
-				if (ssk !=3D prev_ssk) {
-					if (prev_ssk)
-						mptcp_push_release(prev_ssk, &info);
-					lock_sock(ssk);
-				}
-    ...
-				ret =3D __subflow_push_pending(sk, ssk, &info);
-				if (ret <=3D 0) {
-    ...
-					continue;
-				}
-    ...
-	if (ssk)
-		mptcp_push_release(ssk, &info);
+net/mptcp/pm_kernel.c:mptcp_pm_nl_create_listen_socket() {
+	...
+	inet_sk_state_store(newsk, TCP_LISTEN);
+	sock_set_flag(newsk, SOCK_RCU_FREE);
+	lock_sock(ssk);
+	WRITE_ONCE(mptcp_subflow_ctx(ssk)->pm_listener, true);
+	err =3D __inet_listen_sk(ssk, backlog);
+	if (!err)
+		mptcp_event_pm_listener(ssk, MPTCP_EVENT_LISTENER_CREATED);
+	release_sock(ssk);
+	return err;
 }
 
-After mptcp_sendmsg_frag() populates info.mss_now and info.size_goal for one
-subflow, a subsequent subflow can fail in mptcp_sendmsg_frag() at
-!__tcp_can_send(ssk) before tcp_send_mss() overwrites those fields.  When
-mptcp_push_release() runs for that second subflow, it sees the first
-subflow's non-zero info.mss_now and calls tcp_push() with the wrong
-mss_now and size_goal, causing tcp_write_xmit() to segment queued frames
-with another subflow's segment size and exceed the path mtu.
+Unlike mptcp_listen(), mptcp_pm_nl_create_listen_socket() does not call
+sock_prot_inuse_add() on success or reset newsk from ssk's state when
+__inet_listen_sk() fails.  When the PM listener socket is later closed via
+__mptcp_pm_release_addr_entry() -> __mptcp_close() ->
+mptcp_check_listen_stop(), seeing newsk in TCP_LISTEN decrements the
+per-netns protocol in-use counter without a matching increment and triggers
+WARN_ON_ONCE(inet_sk_state_load(ssk) !=3D TCP_LISTEN) if __inet_listen_sk()
+failed and left ssk in TCP_CLOSE.
 
-[1] https://sashiko.dev/#/bug/linux-3f08f285-058d-4038-8cd3-6d287fea7814
+[1] https://sashiko.dev/#/bug/linux-2c383603-dae6-4f8b-a0ea-d210d6d43b44
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113-mptcp-cmas=
-on-fixes-v1-0-9205b77e9a2f@kernel.org?part=3D8
+on-fixes-v1-0-9205b77e9a2f@kernel.org?part=3D2
