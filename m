@@ -1,61 +1,67 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794575112;
-	b=FzctZ2lC86mydcPko9FHXYVI0wSUMfHVfkPuog4xfTldPj9WzSSKibgyRCE+d9UU+lAU
-	 sH56HZuNQEyRiG0bgjN0HxwI/ncMbNped8BS44JQjPffjKR872SIXtvNBmz8PVed1m9fo
-	 or2KJ5fxA7au1eXqmMy9Bs+s8VMbkGz1rJ7zyyTEHxIM1zfT1vdZy72o/J/hLFBZx6xWH
-	 rDZBN0AhCn4CtxnFaXxgRhyXAm9Mm4wxTEStWLgbVENhdJwlTVZQMRwwSH5hVOrGenUsM
-	 Uq1dib/JflqkqblEcNRm+mDcG1AiMJC4UjaSEvZE7xTrGTrUNkreiRAm9lGnOap9QYg==
+	t=1794589770;
+	b=CLOBm8pYrmxBAZygHJ9p/9mD2ZurtwlZYitZY89egasxY6kxpfU/qVpVLiE6pn97w7dj
+	 jJje2M2omCaGQvQGeYnbrCRMDbtGvGA5xwFUbiOyTx3A6M8nyQghY+N/W3wtel9SDetoS
+	 0pcpxZgdOed+EZmWFUvWyS2RCdFMucuubp9mhZXLec2voC9cc2IIc1ySSzYNzNGXNzCEz
+	 +/actRkPfWBNN6np+DOq5dPcwd03LHUvgnMAsOA/UDJe5jjwZYjV0lcX1pIjxpPG5RfY/
+	 d3dFQdzvB+EJJyxdSk8ci1BIMRslY7ba8q8RYcD6wXR3/buHaTgpHU9VBJaJOwdYU9Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794575112;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=l9v3zwMWD2nkh/ZKIRfl7G0ROqQEok64RLBR5wNEh5I=;
-	b=caiTG0cqtC6lEokyoEq1fSgRle67N0VFYbFUR6pBxz9hIQtTHZ6RYMGeZxgyw5+zvCSL
-	 xWQP39bi0/Bm/Ol5oUNzwAfqjo+o/BA8jYTDnmM3P+IfET7CA/Gnw9Z2Xpbz2yyN0Y/c0
-	 RNIwJj0HkxaIr1+fDToYVwEkEy8ixyAURp3XW+LFn7x9ueAds4SrZwv2iUUrgsKiqCybX
-	 87ffX2ydFxp0Si1L1P9BbcybkrkW9ADeZw8uGL90iI4b3tpcchZeBbeo6+38/cTd3Dqxo
-	 KRPt6ye8f9K2mLtL/Vk9uYvwuTN00qaNKv9ggUPWwyqbx+QSNZ4RERCpiU2welrnkCQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794589770;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=+F0Iks+dE4n0hg1LkpvcmSNuXnlApLyi+gzeheXSIZs=;
+	b=rSL+iKdAEPTok6Fk10TEX+2/rwZpMSaPL2Djfxx9JGEHcE2R6lAhYdtZM72BNp89CSEZ
+	 gX60vh1RJjKvtxJgQkON4dhh2TDJ9nP0Ca66y00DI0gF6Nk7lakwax5ag41xLmzJVddRW
+	 O6DZtjl3g0Dbo+BT8NEfj7nk0ySte7BxT+TNbtlUxqPNX0+Sxkwu8GjMX7/JVOORJalyy
+	 rMcMiyp6+7TrQPcosOEnq3LqpvDBmJmWNXVDSxqtRV0Bkr3+Gn/4XKzmPK1AHS7kEDqCN
+	 Blcjt1dvk3XtMf4CxTDDNXDwxdP9IDt03nFYWA2jEBQO2kkq6exFp2OL1vwBGcXuTOQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Px8Cxf1H;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HPT0Paig;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE37606A89B;
-	Fri, 13 Nov 2026 13:05:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5326606A323;
+	Fri, 13 Nov 2026 17:09:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Px8Cxf1H
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3A661F000C4;
-	Fri, 13 Nov 2026 13:05:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HPT0Paig
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 755101F000C4;
+	Fri, 13 Nov 2026 17:09:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794575112;
-	bh=l9v3zwMWD2nkh/ZKIRfl7G0ROqQEok64RLBR5wNEh5I=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=Px8Cxf1Hxtkyyn3O8M7ApHDT1lRij38hb+z4J454s13ojdy6ZOij5HTe9Groa/gT2
-	 yLan5U4EMd266Xnc7i/1Kx2zkHRctMunDsY1sMrkN77+JKcCHYzpb0J1BOE9J+6pq9
-	 0Z9ginPxEv0uwPueUCOZhA7M0FjjBLgbO/26SwDz85Pu1jELebiqmA1kVLGkd3CANu
-	 OCd8fliUGFriMRX0w0FXYbVKU/u05NxaE/yC9JrrDKaZ9BUUMI/F7XWKKWPeuLVRhQ
-	 ZXddcOJMmdmgmQitvy8XsxcYJfzYC4jD6PxplJIUrx6VGhvfmRvGMyKqY+De3xfpV7
-	 o0h/P7dYKsmaQ==
-Subject: Re: [PATCH net 2/2] net: core: take the reuseport migration reference
- with acquire ordering
-From: netdev-bot+sashiko@kernel.org
-To: 2122295973@qq.com
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, matttbe@kernel.org,
- martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
- edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- kuniyu@google.com, willemb@google.com, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Date: Fri, 13 Nov 2026 13:05:11 +0000
-Message-ID: <179457511118.2199510.8206170775718086732@kernel.org>
-In-Reply-To: <tencent_AE3D481F5F51E98E657317C2F664C4FA4F08@qq.com>
-References: <tencent_AE3D481F5F51E98E657317C2F664C4FA4F08@qq.com>
-X-sashiko-severity: Medium
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20260515; t=1794589770;
+	bh=+F0Iks+dE4n0hg1LkpvcmSNuXnlApLyi+gzeheXSIZs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=HPT0Paiglm/dpF3vAkvP2m1DeBK60ryjcJJq5eOVcYz+aNI8HRhNEUVzl3Iab+yeS
+	 kJ0/ylOSqptlMKQ8aBol6kMFNJdwhJRUnFtTJjaqqQOZCAUTNcebSQUdal8X/HlUV+
+	 0z1idE4x8FeUqhMiiKWD06yx4XPTPmX03PmKC6nbru70aAwUcsnmd9HfOqd/ZIWhxX
+	 CvORQZDtkGkXvuUQqAbZ+dG78sO9qo2l4EUxdf14GE1Kh3HqDbqMA53SM7iMQ7vFcI
+	 KmWmNJ62tm3BfXmiYpZvFgKcVk/4BAmCC52gtvTpVnw7BRJ69AXRgGAQfEWi5RNU8B
+	 9V8pYZPYmRTAg==
+Date: Fri, 13 Nov 2026 17:09:22 +0000
+From: Simon Horman <horms@kernel.org>
+To: netdev-bot+sashiko@kernel.org
+Cc: jiayuan.chen@linux.dev, netdev@vger.kernel.org, dsahern@kernel.org,
+	idosch@nvidia.com, davem@davemloft.net, edumazet@kernel.org,
+	kuba@kernel.org, pabeni@redhat.com, pablo@netfilter.org,
+	fw@strlen.de, phil@nwl.cc, razor@blackwall.org, paul@paul-moore.com,
+	matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
+	ja@ssi.bg, achender@kernel.org, marcelo.leitner@gmail.com,
+	lucien.xin@gmail.com, alibuda@linux.alibaba.com,
+	dust.li@linux.alibaba.com, sidraya@linux.ibm.com,
+	mjambigi@linux.ibm.com, tonylu@linux.alibaba.com,
+	guwen@linux.alibaba.com, linux-kernel@vger.kernel.org,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+	bridge@lists.linux.dev, linux-security-module@vger.kernel.org,
+	mptcp@lists.linux.dev, lvs-devel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
+	linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH net-next 01/14] ipv4: annotate data-races around ip_rt_*
+ sysctls
+Message-ID: <20261113170922.GL18859@horms.kernel.org>
+References: <20261109025425.328445-2-jiayuan.chen@linux.dev>
+ <179428999715.994134.14310277652030711794@kernel.org>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -65,131 +71,91 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <179428999715.994134.14310277652030711794@kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issue(s) to consider.
+On Tue, Nov 10, 2026 at 05:53:17AM +0000, netdev-bot+sashiko@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found more severe
+> issue(s) in other patches of this series. This mail is only an FYI, in case
+> you want to address the nit picks below when you respin.
+> 
+> Low priority / nit picks for your consideration:
+> 
+> - [Low] In __ip_rt_update_pmtu() (net/ipv4/route.c), the patch adds two
+>   separate READ_ONCE() loads of net->ipv4.ip_rt_min_pmtu.
+> 
+> --
+> 
+> ipv4: annotate data-races around ip_rt_* sysctls
+> 
+> This adds READ_ONCE() to the lockless readers of several ip_rt_* route
+> sysctls in net/ipv4/route.c. Their sysctl handlers write them with
+> WRITE_ONCE(). The change was prompted by a KCSAN report on
+> net.ipv4.route.min_adv_mss in ipv4_default_advmss().
+> 
+> > diff --git a/net/ipv4/route.c b/net/ipv4/route.c
+> > index d0a5f6d77094c..83f49b2d4c36a 100644
+> > --- a/net/ipv4/route.c
+> > +++ b/net/ipv4/route.c
+> 
+> [ ... ]
+> 
+> > @@ -1063,14 +1066,14 @@ static void __ip_rt_update_pmtu(struct rtable *rt, struct flowi4 *fl4, u32 mtu)
+> >  
+> >  	rcu_read_lock();
+> >  	net = dst_dev_net_rcu(dst);
+> > -	if (mtu < net->ipv4.ip_rt_min_pmtu) {
+> > +	if (mtu < READ_ONCE(net->ipv4.ip_rt_min_pmtu)) {
+> >  		lock = true;
+> > -		mtu = min(old_mtu, net->ipv4.ip_rt_min_pmtu);
+> > +		mtu = min(old_mtu, READ_ONCE(net->ipv4.ip_rt_min_pmtu));
+> 
+> [Severity: Low]
+> READ_ONCE() is volatile, so __ip_rt_update_pmtu() now always does two
+> separate loads of ip_rt_min_pmtu. If net.ipv4.route.min_pmtu is written
+> between them, can the check and the clamp see different values?
+> 
+> For example, take old_mtu=1500 and an ICMP FRAG_NEEDED carrying mtu=300:
+> 
+>   first load sees min_pmtu=552   -> lock = true
+>   sysctl write sets min_pmtu=68  (accepted, extra1 is ip_min_valid_pmtu)
+>   second load sees 68            -> mtu = min(1500, 68) = 68
+> 
+> update_or_create_fnhe() would then store pmtu=68 with fnhe_mtu_locked set,
+> and it stays that way for ip_rt_mtu_expires. The old setting would give
+> 552 locked, and the new setting would give 300 unlocked.
+> 
+> Before this patch, the compiler could merge the two plain loads into one.
+> Only a privileged writer can trigger this, because min_pmtu is not exported
+> to netns owned by non-init user namespaces. Later patches in the series
+> don't seem to change this.
+> 
+> Could the value be read once into a local? This patch already does that
+> in ip_error() with burst and cost.
+> 
+> A smaller case of the same pattern affects ip_rt_mtu_expires in the same
+> function. It is re-read for the freshness check:
+> 
+> 	    time_before(jiffies, READ_ONCE(dst->expires) -
+> 				 READ_ONCE(net->ipv4.ip_rt_mtu_expires) / 2))
+> 
+> It is read again for each nexthop in the multipath loop, and once more for
+> the single-path update_or_create_fnhe() call. Could nexthops updated in
+> one call get different expiries?
+> 
+> ip_rt_redirect_number is also read twice in ip_rt_send_redirect():
+> 
+> 	if (peer->n_redirects >= READ_ONCE(ip_rt_redirect_number)) {
+> 	...
+> 		    peer->n_redirects == READ_ONCE(ip_rt_redirect_number))
+> 
+> The second read only gates the "ignores redirects" warning, so there the
+> only effect is on logging. Should these be loaded into locals once as
+> well?
+> 
+> >  	}
+> >  
+> >  	if (rt->rt_pmtu == mtu && !lock &&
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 1
-
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
-
-- [Medium] The commit message says the reuseport_migrate_sock() refcount
-  change prevents a listener that is concurrently removed from the…
-- [Low] The comment in inet_reqsk_clone()
-  (net/ipv4/inet_connection_sock.c:925) says its sock_put(sk) on the…
-
---
-
-net: core: take the reuseport migration reference with acquire ordering
-
-This commit changes reuseport_migrate_sock() to take the reference on the
-selected listener with refcount_inc_not_zero_acquire() instead of
-refcount_inc_not_zero(). The stated goal is to stop callers from observing
-a listener in a half-torn-down state when it is removed from the reuseport
-group at the same time. The patch carries Fixes: and Cc: stable tags.
-
-> diff --git a/net/core/sock_reuseport.c b/net/core/sock_reuseport.c
-> index b9e5648fa4c51..56230aa55a3e2 100644
-> --- a/net/core/sock_reuseport.c
-> +++ b/net/core/sock_reuseport.c
-> @@ -667,7 +667,8 @@ struct sock *reuseport_migrate_sock(struct sock *sk,
->  	if (!nsk)
->  		nsk = reuseport_select_sock_by_hash(reuse, hash, socks);
->  
-> -	if (IS_ERR_OR_NULL(nsk) || unlikely(!refcount_inc_not_zero(&nsk->sk_refcnt))) {
-> +	if (IS_ERR_OR_NULL(nsk) ||
-> +	    unlikely(!refcount_inc_not_zero_acquire(&nsk->sk_refcnt))) {
-
-[Severity: Medium]
-What does the acquire ordering on this increment order against? The commit
-message says:
-
-  A listener removed from the reuseport group concurrently with that
-  lookup must not be observed in a half-torn-down state after the
-  reference was successfully taken.
-
-reuseport_migrate_sock() picks nsk from reuse->socks[] while holding
-rcu_read_lock(). Every hashed listener gets SOCK_RCU_FREE in
-__inet_hash():
-
-net/ipv4/inet_hashtables.c:__inet_hash() {
-    ...
-	sock_set_flag(sk, SOCK_RCU_FREE);
-    ...
-}
-
-So the listener's memory cannot be freed or reused for another socket
-inside this RCU section. Also, nothing after the increment re-validates
-nsk. There is no sk_state or sk_reuseport_cb re-check before nsk is
-returned.
-
-The contract for the helper in include/linux/refcount.h limits it to that
-reuse case:
-
-  refcount_{add|inc}_not_zero_acquire() and refcount_set_release() provide
-  acquire and release ordering for cases when the memory occupied by the
-  object might be reused to store another object. This is important for the
-  cases where secondary validation is required to detect such reuse, e.g.
-  SLAB_TYPESAFE_BY_RCU. The secondary validation checks have to happen after
-  the refcount is taken, hence acquire order is necessary.
-
-Neither condition holds here. Commit 5b5d8f351dd9, cited as precedent, only
-changed sites where the socket is validated again after the reference is
-taken. __inet_lookup_established() re-runs inet_match() and checks the
-unhashed state, and inet_twsk_purge() re-checks check_net(). Its
-bpf_sk_assign() change had a separate justification: a BTF socket pointer
-obtained without a reference.
-
-A listener that is being closed is torn down while the closer still holds
-its own reference. That teardown is not published through a release on
-sk_refcnt. So even with the acquire, can't a caller still see the closing
-listener?
-
-Callers already handle that state with an explicit check, for example in
-inet_csk_reqsk_queue_add():
-
-	spin_lock(&queue->rskq_lock);
-	if (unlikely(sk->sk_state != TCP_LISTEN)) {
-		inet_child_forget(sk, req, child);
-
-The same pattern also exists elsewhere and is left alone. inet_lookup(),
-inet6_lookup(), and nf_tproxy_get_sock_v4()/nf_tproxy_get_sock_v6() all
-take a reference on an unreferenced listener with plain
-refcount_inc_not_zero() and then use it. Those sites look correct for the
-same RCU-stable reason, which suggests this one is correct as well without
-the change.
-
-Given that, are the Fixes: fb041bb7c0a9 and Cc: stable tags justified?
-Could the commit message name a concrete load that can see stale data here,
-or include a reproducer? As written, the patch adds a barrier on weakly
-ordered architectures but does not change what callers can observe.
-
->  		nsk = NULL;
->  		goto failure;
->  	}
-
-[Severity: Low]
-This isn't a bug, but the comment on the matching release in
-inet_reqsk_clone() still names the old primitive:
-
-net/ipv4/inet_connection_sock.c:inet_reqsk_clone() {
-    ...
-	if (!nreq) {
-		__NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPMIGRATEREQFAILURE);
-
-		/* paired with refcount_inc_not_zero() in reuseport_migrate_sock() */
-		sock_put(sk);
-		return NULL;
-	}
-    ...
-}
-
-Should this comment be updated if the switch to
-refcount_inc_not_zero_acquire() is kept?
-
--- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/tencent_28A2BD1631FE531992E91753BA6419FFC506%40qq.com
+I think it would be best to address this issue.
