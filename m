@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794599674;
-	b=3eTl6nR9RcO8LTSP/P3TIGu4C8UQJJ9bWsAquoOSqC07p6eBjVE4QGCw+PpSZhnxo9do
-	 XsrCTml1NO6qz187iZ0bDvNR9uHv98++C7a/Slr28YxI22vlQZPQ+lFSzR8EmWboRlZXM
-	 KVpKAoZNcO6NkIxh2gruYfH6Dpt1dzlcI58K5qF9y585VBEJflZ/2mVSvIcMLOxFU2U9T
-	 TKR4e6kuKk1z71bqvA3Bc//y+dMZA50PvVqmUWYdS9bn+CCexFrUqU5Y524vt9Y3O9JQ/
-	 HWny5A4KRDwcjDhXfYkj6GVG/dKDi+rfAu0HVw3nowgqgTbSoHbQF0b+sI1EAXwzAYw==
+	t=1794599675;
+	b=v4E2vxuHP6txmxcqcmMw6qPaEwG5XLbq/Zl5RoLVPph5vEoPcXg0csE9yBKCqwal3SQ5
+	 yJUK7/GsiooY44RXDYCMARMVMOGob1S5/I+3sTW7mU8S0G/U4VWqjSXbZ+qj/DJ2u1XOs
+	 k6EHlupb/IWC13qvR/qQnsu9tsdDcOm8kZTy4kb1HuJ6QdS6aD5SKK2tQUZW2ubIC9MIh
+	 9HbX7DZ9r1l6pJ7pFuz4hZrOcMllg/Tf0/dUvRUD3J14dhIQp7k1K+yJUdaC51b08E67f
+	 cOi0bZUJCElUOO+JdDRcJ0FtO6vgTgogcUOrlzE5mhzMkIhx1o6+JnoyJutc/isg/JA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794599674;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794599675;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=430RsdtDu/QEoIdJjfe0DmpeHGPaJFmwxePSN63kwmw=;
-	b=JwXsmCcJzyPXLnywge55MuvWqlzwsXE2wr5ojhak572L2BzuVWoUENsY2+6BRNIxjt7y
-	 tWnVNcYxYq5CygFOjPhlmvWXAOc4EPFKXOVT4kwS6F+4a4vTQw7DwqYHyoS4t8rflQwwN
-	 tpgn81B1p9ug/axsecTcDIGicXLqrvzo4U0FfK0EuEve8wnV4T5U5bN1le4vC078XqNRP
-	 EADOXHrJPWCs4Wn8IQQFn7FzSuGsiYHOgKDeT6c/3fCHd6+jX2RO8ryIbfqODkG8w2CwU
-	 r8CDUHPjFGyOvDxWKaHcj3lgypvgCRiv32NNjkazgRm5zpmq1WDa5qsANPUNXe0WAmw==
+	bh=8Lxk2leFGI5ZQWF4W1kNNO2MPur9K1wnOp9pbPXwSHs=;
+	b=Q2ITb63K9Mnxcb259IzL5TAicPXe5icn9brftkHPC0rc+Hb+5D+k/8IHfacKMGvDdYdp
+	 C2UTs6zB5THaQcNoxAoqAqniD2WkwXBIBfMKUoFYs9Bq0Cm41YxLcWGK5jukrfUdWMxtj
+	 ILtMjPZgZDbXJodFOeSA6TB8q27T2G2qUqK6SVdswWC/NRcPCyzhMiZEbf5h2CA80jLpd
+	 tfWYNJpD3uDc+O9opq+tcb7mGOdFrIak+DntTlxWreQnWYoB9P0sjYHkmKAZhvFZSR+ik
+	 w3L1BJhn9bdLHjLqP3fWKrBwk2JzPdluGLeJF2BCXTfvbQ4G8U7xDmlC3W86I2h2PhQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OXs43PAn;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mzB86FiN;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B4E606F373
-	for <mptcp@lists.linux.dev>; Fri, 13 Nov 2026 19:54:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE16606F37A
+	for <mptcp@lists.linux.dev>; Fri, 13 Nov 2026 19:54:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OXs43PAn
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC2861F000C5;
-	Fri, 13 Nov 2026 19:54:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mzB86FiN
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA9CD1F000C4;
+	Fri, 13 Nov 2026 19:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794599674;
-	bh=430RsdtDu/QEoIdJjfe0DmpeHGPaJFmwxePSN63kwmw=;
+	s=k20260515; t=1794599675;
+	bh=8Lxk2leFGI5ZQWF4W1kNNO2MPur9K1wnOp9pbPXwSHs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=OXs43PAnfHQhv2+BW2mPaOfjWtYhWV/n/+iT0K6bQ+BQof8GVyOVFrBMxTyIredJ9
-	 1nY5uClHRCd/Eqqxg9KGZW3Jv1/eA6riH9O/VjEUNlqZMnQqUV/4k75Tpz47r13A7m
-	 uYqTYVOXAB3ALqihFlkSoGyeacImkmJaVd3+7tYm+48uxYD90H7MD5/KimVnTF8VUv
-	 ITXYyD6et+0EGGanH+H+iVZVp54eS5cPQK7OJhRgboxM3gm9SAnFPzXXZyBo+CWdDe
-	 h0GAPSGCWRnQ6HqdxYIdPPTw3lgF6a71l5JcoTnt0VLdP6eU1ZQr9lIPOKSJDXz4Si
-	 qNEEjykSAGPRQ==
+	b=mzB86FiN38pRZj+Ke1IuOkmB2wwd+Id1aADCkSeQ+Uk8OWj5G1j/FDT9J3tXsCI/y
+	 Rpi5GLV1ysEi9E1x+iCxYKa2PozGAFHmNRP+qRzzJsA+OuxbEyGcZCp9r31LP/jVtV
+	 ZcawDzv7oI+8ZHdeTkGeiK3T+j7S2fxA5T6nk6i/SU7cqadddfS9oisyMd3mmAZGQ3
+	 m93Ug2ZYRa/un/DILeKpzNzKpO7h/pOj6Yv+v5gRHHzKYp/gBEel+OguB6u6uLw+Ld
+	 GHb5WI4dgY7YTt+rFp2O5hx/fZYBCFk1r4pIZNESO6hHUGTwURzxYcPGWieDWr3k/m
+	 SDPvon84bsrFw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 13 Nov 2026 20:53:48 +0100
-Subject: [PATCH mptcp-net 10/34] mptcp: don't leak an orphan when the PM
- closes its last subflow
+Date: Fri, 13 Nov 2026 20:53:49 +0100
+Subject: [PATCH mptcp-net 11/34] mptcp: do not use a raised snd_wnd for the
+ send window
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,85 +55,105 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261113-mptcp-cmason-fixes-v1-10-9205b77e9a2f@kernel.org>
+Message-Id: <20261113-mptcp-cmason-fixes-v1-11-9205b77e9a2f@kernel.org>
 References: <20261113-mptcp-cmason-fixes-v1-0-9205b77e9a2f@kernel.org>
 In-Reply-To: <20261113-mptcp-cmason-fixes-v1-0-9205b77e9a2f@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: Chris Mason <mason@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3150; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=A1+RHb/uwhq+6tQZFUBnEU5KPZvenDGb9DWa57H0lDM=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLK+Z92IEw/oYFu5xPyJQfCcVhvjC7dsubZmPtc+MylY5
- t3popgzHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABO51Mzwv26qeUHqIRe/YrXC
- s0WhPvuDC1Y3bHJnqq+IqyrsuDP/LcP/sBrNh5tu+p86eGjN4gQFT40JB2yz5VbsVX1+yOxxr6U
- fLwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3683; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=y4cht3Zrr/MZq0iXxTj59uQzUB0cKXZS8Asa5QTlug4=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLK+Z9387SSVKtBX4v7O2c1nbr78nlKFd/ztvbuW/bE46
+ 3jo9kfHjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIlE/mFkeKKfMaGu7nncwyUc
+ v5pdmbqt/gWrPFmpOqE6Mdk+SnDud4b/GffV30pN9FjHFc1XULSy5GlWlKX5gtCXj9VKLQL2Ot5
+ nBQA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Once close() has returned, an orphaned MPTCP socket is only destroyed by
-mptcp_worker(), in the run that sees it in TCP_CLOSE: later on, the
-worker returns at once for an msk in this state, and
-mptcp_schedule_work() no longer queues it.
+ack_update_msk() sets the right edge of the MPTCP send window from the
+DATA_ACK and tcp_sk(ssk)->snd_wnd, but this is not always what the peer
+announced: mptcp_check_allowed_size() raises it to
+window_end - data_seq, so that TCP lets through what the MPTCP-level
+window allows.
 
-__mptcp_close_ssk() moves an orphan to TCP_CLOSE when, after the closure
-of a subflow, only the initial one remains, and it is closed. This
-function is not only called by the worker: path manager commands also
-close subflows of any msk of the netns, orphans included, under the msk
-lock: e.g. 'ip mptcp endpoint delete' or 'flush' with the in-kernel PM,
-or MPTCP_PM_CMD_SUBFLOW_DESTROY with the userspace one. In this case,
-nothing destroys the orphan: it stays in TCP_CLOSE until the reboot,
-with its token, its initial subflow, and its reference to the netns,
-which is then never freed.
+That is fine for new data. For data sent again, data_seq can be below
+snd_una, and snd_wnd ends up too large by the difference. TCP only
+overwrites it when an ACK moves things forward on this subflow, see
+tcp_may_update_window(). If a DATA_ACK moved by another subflow comes in
+on this subflow before that, wnd_end goes past what the peer offered. It
+only moves forward, so it stays there.
 
-This can happen when the initial subflow has been reset or has timed
-out, and the connection is closed -- the orphan then waits for the end
-of the DATA_FIN exchange, up to TCP_TIMEWAIT_LEN -- before the endpoint
-used by another subflow is removed, e.g. when an interface goes down.
+The sender then transmits data beyond the peer's window: the peer drops
+it (MPTCP_MIB_NODSSWINDOW) after TCP acked it, and only an MPTCP-level
+retransmission can recover it, which raises snd_wnd again. The
+connection can then stay stuck at a low rate for several seconds, with
+nothing in flight on any subflow.
 
-Only the worker can close an orphan, as it must then destroy it. So
-here, mark its close timeout as expired, and queue the worker, like it
-is done for an msk in the accept queue. The worker then closes the
-orphan with mptcp_do_fastclose() -- nothing is sent: the only subflow
-left is closed -- and destroys it. If __mptcp_close_ssk() was called by
-the worker, this happens later in the same run.
+This raise has been added by commit b713d0067574 ("mptcp: really share
+subflow snd_wnd"), but snd_wnd could already be too large before: when
+nothing moves at the TCP level, tcp_may_update_window() ignores a lower
+non-zero window, while the peer can announce one with a DATA_ACK that
+moved, keeping the same right edge.
 
-This issue has been found by an AI code review agent, while reviewing
-the code of the commit "mptcp: leave an orphan's DATA_FIN to the
-worker", and confirmed with a new Packetdrill test: the initial subflow
-of an orphan waiting for the end of the DATA_FIN exchange is reset, then
-the endpoint of the other subflow is removed. Without this patch, the
-orphan stayed:
+Use the window announced in the packet carrying the DATA_ACK instead.
 
-  UNCONN 0      0      192.168.0.1:8080 192.0.2.1:39933
-  kernel_orphan_last_subflow.pkt:39: error executing `! ss -HMan | grep -v LISTEN` command: non-zero status 1
+In my case with BBR, a small TCP rmem, and a second path with a much
+higher latency, a lower throughput and some losses, this small change
+can double the throughput in the worst cases.
 
-Fixes: 27e5ccc2d5a5 ("mptcp: fix dangling connection hang-up")
+The issue has been reproduced with a new Packetdrill test, on a single
+subflow: the data is acked by TCP, then by MPTCP with a lower window,
+keeping the same right edge. Without this patch, the 2000 bytes written
+next were sent, instead of the 1280 bytes up to this right edge:
+
+  dss_dack_window_server.pkt:23: error handling packet: live packet payload: expected 1280 bytes vs actual 2000 bytes
+
+Fixes: 6f8a612a33e4 ("mptcp: keep track of advertised windows right edge")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/protocol.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ net/mptcp/options.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 16824bed85b4..6dc55a3f027b 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2794,8 +2794,13 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 71579238a951..b4b3292fb4dc 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -1121,9 +1121,11 @@ static void rwin_update(struct mptcp_sock *msk, struct sock *ssk,
+ 
+ static void ack_update_msk(struct mptcp_sock *msk,
+ 			   struct sock *ssk,
++			   const struct sk_buff *skb,
+ 			   struct mptcp_options_received *mp_opt)
+ {
+ 	u64 new_wnd_end, new_snd_una, old_snd_una;
++	u32 win = ntohs(tcp_hdr(skb)->window);
+ 	struct sock *sk = (struct sock *)msk;
+ 	u64 snd_nxt;
+ 
+@@ -1144,7 +1146,12 @@ static void ack_update_msk(struct mptcp_sock *msk,
+ 		     after64(new_snd_una, snd_nxt)))
+ 		new_snd_una = old_snd_una;
+ 
+-	new_wnd_end = new_snd_una + tcp_sk(ssk)->snd_wnd;
++	/* What the peer announced: tcp_sk(ssk)->snd_wnd can be larger, see
++	 * mptcp_check_allowed_size(), and is not always updated.
++	 */
++	if (likely(!tcp_hdr(skb)->syn))
++		win <<= tcp_sk(ssk)->rx_opt.snd_wscale;
++	new_wnd_end = new_snd_una + win;
+ 
+ 	if (after64(new_wnd_end, msk->wnd_end))
+ 		WRITE_ONCE(msk->wnd_end, new_wnd_end);
+@@ -1314,7 +1321,7 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+ 	 * monodirectional flows will stuck
  	 */
- 	if (list_is_singular(&msk->conn_list) && msk->first &&
- 	    inet_sk_state_load(msk->first) == TCP_CLOSE) {
--		if (sk->sk_state != TCP_ESTABLISHED ||
--		    msk->in_accept_queue || sock_flag(sk, SOCK_DEAD)) {
-+		if (sock_flag(sk, SOCK_DEAD)) {
-+			/* let the worker close and destroy the orphan */
-+			mptcp_set_close_tout(sk, tcp_jiffies32 -
-+					     (mptcp_close_timeout(sk) + 1));
-+			mptcp_schedule_work(sk);
-+		} else if (sk->sk_state != TCP_ESTABLISHED ||
-+			   msk->in_accept_queue) {
- 			mptcp_set_state(sk, TCP_CLOSE);
- 			mptcp_close_wake_up(sk);
- 		} else {
+ 	if (mp_opt.use_ack)
+-		ack_update_msk(msk, sk, &mp_opt);
++		ack_update_msk(msk, sk, skb, &mp_opt);
+ 	rwin_update(msk, sk, skb);
+ 
+ 	/* Zero-data-length packets are dropped by the caller and not
 
 -- 
 2.55.0
