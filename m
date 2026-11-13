@@ -1,68 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794590445;
-	b=O4GiBB2cwTEIVWbIKGBef60NpOBwT4lYTYMZFWObpzeZUJjZDB+1RLm9R8JaLpODhzZX
-	 g8Kwt9vZDgyKuN8ysVBNlncPIH0sIXsP/7E6Ibn78XmgcZCaVTbeAAOftIV7+Fl6fd0bw
-	 g9efJCJ/mD3qA7bRBQtgmbtmFB1vvwqvXXKHvuUnULOD65vyI9ocNf7Xym1xlkt14e7/0
-	 lpnPo+Ab6afSPFzPK244vklEJzMqa22V5RTq3RlFMDcVXILAXgPReJ5WNQQ0Q73uCFn5U
-	 3zbiJF3JVPQzcQaMhL+zUnljNmG0j3MIsD5x03CgCvKHZ56JjmDHTIsD5I/fyXXCmBA==
+	t=1794599662;
+	b=hUozLjFXmlp8//prbxrS3M2DWJ92CmQLuOZIYT/WgvDspBlA1M2fSiS6vxOTaSkI1Xv9
+	 H2F9rRMCoF7N4wkD9PlZF5VzAzyFRaa8AMOQATpScw07On4P2iisbAaze6o6dYm58d0qF
+	 iP99pzG7ol7FiJIR7AjTo3X8H1GyYnf8m8TVwee+KaVqobm4nNtz7QA7dD8wjTC6zJznz
+	 EPReD/05hehXh+iCh+LafshS9datai7OXLTSu/ZjmzdzwmTgQMtXxOgCUz3tmeeDxL1Us
+	 6kGH2VMvNKWzgbL0m0Z0b2XMxUgT5VZfbXhJMpCS2E9t0RRQOdaweSfwYYo80XO0LiA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794590445;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding:In-Reply-To;
-	bh=+k0lqC5iZylsBxTYDQ63TRyQvvV+TPUwb4IvUKy1hP4=;
-	b=CmuUT925COvKAIyxkLX2eqsixWo5DSAg+ey6aOU+xJZACCwe6h3m5cZVCPJUp0/V0bK2
-	 O4uej3QXN1lio2Zdd1uDpMOIIQxgpgvvduD8oIe/QoG1BGrz/48dMxRya+n4w947kXrfo
-	 WiOwnytMAGlwmOjmMaepwti7aGjcly32JCrXMnpGQ2JNcDGcJ5uc8lOmxlzNXUi+FyzS0
-	 jqn+0R9gjnEbKFy0NtnvJN3LYXEycAKFIfp5rmpibBOTlafBsbddZLphUUIWxwz4mA4cE
-	 zrYzzxM/Ck8HLma029qM9YtEIZ1bEQOk8f2uHZHg3HLbDHaTotZn/Xxu0bCmJyENrgg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794599662;
+	h=Received:DKIM-Signature:From:Subject:Date:Message-Id:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:
+	 Cc:X-Mailer:X-Developer-Signature:X-Developer-Key;
+	bh=drUh5Ee5kguQt8Pkev3+FuoKbVbuNmmJcvCeXgBei+g=;
+	b=VpVd2o6zgh71ambOZ/doyhGSjkBHIIm9PgzMf8EzqpDYF/CHTyeEwD/4FvuRa877c0zl
+	 hS9H7DpRq4KU38w8psMRSFQMcHUnZUP0+nUz8eX3meOAj84wq3bx9JTf2taPd+DfmtwQt
+	 eZAJslBH+yot4TsD1I0CCOoSFdCLRZdJRKuTe0lUGh3Uxo9O/uxiRXAzYRugxfshrQh8C
+	 y5kxbFbNY40zWDoAdnosbL0xSeeRU6OhlGk99tq5vSWwkQWBcGpI1XCRhGLHj6WymhITz
+	 zT8MMfKWZggRdpUMS+M3e5Sz/voYsMTvHZLt12bpLQUBvgGMshQUkDxed82uxsepsmA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n5Muh8jS;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MoKF61Hz;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5546460703EC;
-	Fri, 13 Nov 2026 17:20:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27FD60A6F56
+	for <mptcp@lists.linux.dev>; Fri, 13 Nov 2026 19:54:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n5Muh8jS
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCEEE1F000C4;
-	Fri, 13 Nov 2026 17:20:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MoKF61Hz
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 587F11F000C4;
+	Fri, 13 Nov 2026 19:54:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794590444;
-	bh=+k0lqC5iZylsBxTYDQ63TRyQvvV+TPUwb4IvUKy1hP4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=n5Muh8jSgVmkNwqxcUlVS3OCHfJbmgFlvueQBcwmyX4XUknjc9caIY94yJXAz76fj
-	 ULkdD71jXxojR41jlEXhcEWDtan5DFpbap3wY0mF3VU0xKRjcDIlqXYKUK6tqrL1Mi
-	 xskqn8VYAffU/Y4LS92Z2pyfhtg1NlBR+zGrU0kkVBptLtpoMpUcP6SFTvGTQ+12WQ
-	 wl8FM7AfsdDASl2HM7NkacojDcIugzZnkoz8hTAqXa0yBEyH+g7hztvx+FUOb88gJW
-	 MaznShSFrgbPVqlg2WdR0aeaTcnnBk7dUqqh+i/GZ4rlTAxxy3U2QWoo4sRiLZMbrZ
-	 1cfJgBZiOaABQ==
-Date: Fri, 13 Nov 2026 17:20:36 +0000
-From: Simon Horman <horms@kernel.org>
-To: netdev-bot+sashiko@kernel.org
-Cc: jiayuan.chen@linux.dev, netdev@vger.kernel.org, dsahern@kernel.org,
-	idosch@nvidia.com, davem@davemloft.net, edumazet@kernel.org,
-	kuba@kernel.org, pabeni@redhat.com, pablo@netfilter.org,
-	fw@strlen.de, phil@nwl.cc, razor@blackwall.org, paul@paul-moore.com,
-	matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
-	ja@ssi.bg, achender@kernel.org, marcelo.leitner@gmail.com,
-	lucien.xin@gmail.com, alibuda@linux.alibaba.com,
-	dust.li@linux.alibaba.com, sidraya@linux.ibm.com,
-	mjambigi@linux.ibm.com, tonylu@linux.alibaba.com,
-	guwen@linux.alibaba.com, linux-kernel@vger.kernel.org,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-	bridge@lists.linux.dev, linux-security-module@vger.kernel.org,
-	mptcp@lists.linux.dev, lvs-devel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
-	linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH net-next 14/14] netfilter: cttimeout: annotate data-races
- around the default timeouts
-Message-ID: <20261113172036.GW18859@horms.kernel.org>
-References: <20261109025425.328445-15-jiayuan.chen@linux.dev>
- <179429000729.994134.16108041301574145842@kernel.org>
+	s=k20260515; t=1794599662;
+	bh=drUh5Ee5kguQt8Pkev3+FuoKbVbuNmmJcvCeXgBei+g=;
+	h=From:Subject:Date:To:Cc;
+	b=MoKF61HzXTlETSqDnv+j+JATTwxGRrUzGk3gQXEeXVQGDp/xRvq06e03XCFh91Sdh
+	 B77st2qPDUADYwufv+kur3H17SGzXRcgC7WK57E6EcTKMKJ/BRIz6tImn4SecIxgdD
+	 DCaqitBT6aERRVboZlVZTBWpeTW0cTTMfTiMSlczdLd6F8C76FPAoI1clRvbH3liCc
+	 Ypcuwh/1sPpiyN+1Vj+q98xxoVTyAt27diKx6Ct5JTtBdy/bWpbcfdFHtulzka2rwP
+	 NhyBcbie5jKdV+X5o5fFLhIUUEqneRb4IbQYXOxn51mAyBw0T0/x6L9/rcO8KDXF0z
+	 lT1gxSZE9Oq/A==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-net 00/34] mptcp: misc fixes
+Date: Fri, 13 Nov 2026 20:53:38 +0100
+Message-Id: <20261113-mptcp-cmason-fixes-v1-0-9205b77e9a2f@kernel.org>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -72,106 +53,153 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <179429000729.994134.16108041301574145842@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWM0QrCMBAEf6XcsweXolL8FfEhnque0DTkUhFK/
+ 91oH4fZ2YUcxeB06hYqeJvblBqEXUf6jOkBtltj6qU/hhCEx1w1s47Rp8R3+8AZUJHDXodBIrU
+ wF/xF68607RMqXTbl8/UFrb9TWtcvSHvLm4EAAAA=
+X-Change-ID: 20261110-mptcp-cmason-fixes-eec0054c880a
+To: MPTCP Linux <mptcp@lists.linux.dev>
+Cc: Chris Mason <mason@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Josef Bacik <josef@toxicpanda.com>, Petar Sakic <petar.sakic@ink.fish>, 
+ T S Rameshkumar <rameshkumar.t@phytecembedded.in>, 
+ Geliang Tang <geliang@kernel.org>
+X-Mailer: b4 0.17-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6048; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=owOAciXYuzIPBL4BL+LanfKw2OuKDKLRiciueatEapc=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLK+Z12c/9525s4q1ZXlD3hzmo5yvax47tHho5Sq9Idt8
+ mQ3Z3arjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIkI7GH47z9zT7r21OTJi78f
+ 3sjvmbh+cZr++uYutaz3CWelI89JnGf473Ytj0FE8MsFK73myY/ry+68Wv7qZl3gsaWyr4t3CSq
+ kMwIA
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On Tue, Nov 10, 2026 at 05:53:27AM +0000, netdev-bot+sashiko@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential
-> issue(s) to consider.
-> 
-> Critical: 0 · High: 0 · Medium: 1 · Low: 0
-> 
-> If you believe none of the issues are legitimate, please reply to each
-> issue of Medium severity or higher and explain why the AI is wrong.
-> If any of them are legitimate and you plan to respin, please let patchwork
-> know by including "pw-bot: cr" as a separate line at the end of your reply
-> (one such reply per series is enough).
-> 
-> - [Medium] A concurrent sysctl write to a default conntrack timeout can
->   still be silently undone.
-> 
-> --
-> 
-> netfilter: cttimeout: annotate data-races around the default timeouts
-> 
-> This commit changes the l4proto nlattr_to_obj() and obj_to_nlattr()
-> timeout callbacks to use WRITE_ONCE() and READ_ONCE() instead of plain
-> accesses. It targets races between cttimeout_default_set() and
-> cttimeout_default_get(), the conntrack packet path, and the
-> nf_conntrack_*_timeout* sysctl handlers, which all touch the same
-> per-netns default timeout arrays.
-> 
-> > diff --git a/net/netfilter/nf_conntrack_proto_udp.c b/net/netfilter/nf_conntrack_proto_udp.c
-> > index 99eedaa2b1183..777b21da3bcff 100644
-> > --- a/net/netfilter/nf_conntrack_proto_udp.c
-> > +++ b/net/netfilter/nf_conntrack_proto_udp.c
-> > @@ -155,16 +155,16 @@ static int udp_timeout_nlattr_to_obj(struct nlattr *tb[],
-> >  		timeouts = un->timeouts;
-> >  
-> >  	/* set default timeouts for UDP. */
-> > -	timeouts[UDP_CT_UNREPLIED] = un->timeouts[UDP_CT_UNREPLIED];
-> > -	timeouts[UDP_CT_REPLIED] = un->timeouts[UDP_CT_REPLIED];
-> > +	WRITE_ONCE(timeouts[UDP_CT_UNREPLIED], READ_ONCE(un->timeouts[UDP_CT_UNREPLIED]));
-> > +	WRITE_ONCE(timeouts[UDP_CT_REPLIED], READ_ONCE(un->timeouts[UDP_CT_REPLIED]));
-> 
-> [Severity: Medium]
-> 
-> Can a concurrent sysctl write still be lost here?
-> 
-> cttimeout_default_set() passes a NULL destination:
-> 
-> net/netfilter/nfnetlink_cttimeout.c:cttimeout_default_set() {
->     ...
-> 	ret = ctnl_timeout_parse_policy(NULL, l4proto, info->net,
-> 					cda[CTA_TIMEOUT_DATA]);
->     ...
-> }
-> 
-> So udp_timeout_nlattr_to_obj() sets timeouts to un->timeouts, and the
-> default copy turns into a self-copy of the live per-netns array:
-> 
-> 	WRITE_ONCE(un->timeouts[UDP_CT_REPLIED],
-> 		   READ_ONCE(un->timeouts[UDP_CT_REPLIED]));
-> 
-> That is still a separate load and store. The sysctl handler writes the
-> same field through proc_dointvec_jiffies() and does not take the nfnl
-> mutex. Take a request that carries only CTA_TIMEOUT_UDP_UNREPLIED, sent
-> while nf_conntrack_udp_timeout_stream is being written:
-> 
-> CPU0 (IPCTNL_MSG_TIMEOUT_DEFAULT_SET)
->   old = READ_ONCE(un->timeouts[UDP_CT_REPLIED])
-> 
-> CPU1 (sysctl write)
->   WRITE_ONCE(un->timeouts[UDP_CT_REPLIED], new)
-> 
-> CPU0
->   WRITE_ONCE(un->timeouts[UDP_CT_REPLIED], old)
-> 
-> The sysctl value gets reverted, even though the netlink request never
-> named that attribute.
-> 
-> The second KCSAN splat in the commit message (proc_int_u2k_conv_uop vs
-> udp_timeout_nlattr_to_obj) comes from this access pair. Once both sides
-> are marked, KCSAN stops reporting it, but the update can still be lost.
-> 
-> The same self-copy happens in these places:
-> 
->   tcp_timeout_nlattr_to_obj(), where timeouts = tn->timeouts and the
->   loop covers all TCP_CONNTRACK_TIMEOUT_MAX entries
->   sctp_timeout_nlattr_to_obj(), where timeouts = sn->timeouts
->   gre_timeout_nlattr_to_obj(), where timeouts = gre_get_timeouts(net)
->   the else branch of generic_timeout_nlattr_to_obj(), when timeout is
->   &gn->timeout
->   the else branch of icmpv6_timeout_nlattr_to_obj(), when timeout
->   falls back to icmpv6_get_timeouts(net)
-> 
-> When the destination already points at the per-netns array, could the
-> default copy be skipped, so that fields missing from the request are
-> never stored?
+Here are various fixes, mostly from Chris Mason and Josef Bacik:
 
-This also looks like it should be addressed.
+- Patches 1-2: drain the queues of a TCP or MPTCP socket when listen()
+  fails, not to leak sockets and their netns. Fixes for v3.7 and v5.11.
 
--- 
-pw-bot: changes-requested
+- Patch 3: clear inet_opt in the child of an IPv6 listener, to avoid a
+  double free with SELinux and NetLabel. A fix for v5.6.
+
+- Patches 4-6: do not lose an RM_ADDR, when received in a row, or sent
+  with a pending ADD_ADDR echo. Fixes for v5.13, v5.10 and v5.15.
+
+- Patches 7-8: do not leave data unsent after a memory shortage. Fixes
+  for another fix introduced in v6.19 and targeting v5.15, and for
+  v5.11.
+
+- Patches 9-10: do not leak an orphan moved to the CLOSE state outside
+  the worker. Fixes for v6.15, and for another fix introduced in v6.6
+  and targeting v5.11.
+
+- Patch 11: do not send data beyond the window announced by the peer. A
+  fix for v5.11.
+
+- Patch 12: drop the ACKs with a SYN cookie and no MP_JOIN on PM
+  listeners, which could stop accepting new subflows. A fix for v5.12.
+
+- Patches 13-14: do not let PM listeners pin their netns, leaked
+  otherwise. A fix for v5.12.
+
+- Patch 15: close a subflow reset because of a bad mapping, not to keep
+  the MPTCP socket established without subflows. A fix for v5.12.
+
+- Patch 16: initialize drop_req, not to leak sockets with SO_REUSEPORT
+  migration. A fix for v5.14.
+
+- Patches 17-18: count MPTCP listeners correctly in /proc/net/protocols,
+  and send their creation event once. Fixes for another fix introduced
+  in v6.4 and targeting v5.17, and for v6.2.
+
+- Patches 19-20: avoid data delivered twice around a fallback to TCP,
+  with old data in flight, or resent to a peer that fell back. Fixes for
+  v5.19, and for another fix introduced in v6.12 and targeting v5.13.
+
+- Patches 21-22: do not count a signal+subflow ID 0 endpoint as used at
+  each re-creation, and validate it. A fix for other fixes introduced in
+  v6.11 and v7.0, and targeting v6.0 and v6.11.
+
+- Patches 23-26: with TFO, send the data written by a server before the
+  third ACK as soon as this ACK arrives, also in case of fallback to
+  TCP, even if the connection was shut down. Fixes for v6.2 and v5.19.
+
+- Patch 27: do not pass a BPF request sock to an MPTCP listener, to
+  avoid a slab-out-of-bounds write. A fix for v6.9.
+
+- Patches 28-31: reclaim the forward memory after coalescing skbs, and
+  do not overcharge the memcg at accept(). Fixes for v6.19.
+
+- Patches 32-33: after a fallback, fix the dummy mapping of overlapping
+  segments, and continue the last mapping. Fixes for v6.19.
+
+- Patch 34: RFC for mptcp-next: reset the subflow when the DSS
+  disappears after a DATA_ACK, instead of a fallback to TCP, as
+  suggested by RFC 8684.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Chris Mason (16):
+      tcp: drain the queues of a listen() that fails
+      mptcp: drain the queues of a listen() that fails
+      mptcp: clear inet_opt in the child of an IPv6 listener
+      mptcp: arm the rtx timer if a push leaves data behind
+      mptcp: force the charge for the first skb of a subflow
+      mptcp: leave an orphan's DATA_FIN to the worker
+      mptcp: drop non-MP_JOIN cookie ACKs on PM listeners
+      mptcp: close a subflow reset for a bad mapping
+      mptcp: initialize drop_req in subflow_init_req()
+      mptcp: do not fallback while old data is in flight
+      mptcp: stop resending data to a peer that fell back
+      tcp: do not pass a BPF reqsk to an MPTCP listener
+      mptcp: reclaim forward memory after coalescing skbs
+      mptcp: don't charge a shared page twice at accept()
+      mptcp: don't charge the backlog twice at accept()
+      mptcp: continue the last mapping after a fallback
+
+Geliang Tang (1):
+      mptcp: fix dummy mapping of overlapping segments
+
+Josef Bacik (5):
+      mptcp: pm: work on a copy of the received RM_ADDR list
+      mptcp: pm: don't drop an RM_ADDR behind a pending one
+      mptcp: pm: don't drop an RM_ADDR because of an ADD_ADDR
+      mptcp: pm: don't let listeners pin their netns
+      mptcp: pm: kernel: don't count signal+subflow ID 0 endp
+
+Matthieu Baerts (NGI0) (12):
+      mptcp: don't leak an orphan when the PM closes its last subflow
+      mptcp: do not use a raised snd_wnd for the send window
+      net: add __sk_net_refcnt_upgrade() with a GFP mask
+      mptcp: pm: kernel: count endpoint listeners as sockets in use
+      mptcp: count a listener once when listen() is called again
+      selftests: mptcp: join: check re-adding signal+subflow ID 0 endp
+      mptcp: use sk instead of casting msk in check_fully_established()
+      mptcp: push queued data on passive TFO subflows becoming established
+      mptcp: push queued data on passive TFO subflows falling back to TCP
+      mptcp: don't send a FIN before the pending data on fallback
+      mptcp: don't charge a subflow twice when it joins during accept()
+      [RFC mptcp-next] mptcp: reset when the DSS disappears after a DATA_ACK
+
+ include/net/sock.h                              |   1 +
+ net/core/sock.c                                 |   9 +-
+ net/ipv4/inet_connection_sock.c                 |   8 +-
+ net/ipv4/syncookies.c                           |   3 +-
+ net/mptcp/options.c                             |  39 +++++-
+ net/mptcp/pm.c                                  |  24 +++-
+ net/mptcp/pm_kernel.c                           |   7 +-
+ net/mptcp/protocol.c                            | 175 ++++++++++++++++--------
+ net/mptcp/protocol.h                            |  23 +++-
+ net/mptcp/subflow.c                             |  81 +++++++++--
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |  10 +-
+ 11 files changed, 290 insertions(+), 90 deletions(-)
+---
+base-commit: 168bc9ace0731cc00cfabb8198231e577df8efaf
+base-tree: https://github.com/multipath-tcp/mptcp_net-next.git t/upstream
+change-id: 20261110-mptcp-cmason-fixes-eec0054c880a
+
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
