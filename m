@@ -1,57 +1,61 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794573971;
-	b=J13TucVE0bbKuSMA7V7vdCjnfSo29lMzJpK/8NoClzOGoU+MUVIwXv7UKQgXOYjXokTw
-	 gOyJUwynJxBKGnt6Xa6fyswWyKydpiVWAg8aF6qEhKVm8ocmHmj15nMgKZa9FmZoVU9Ra
-	 gwK7k3Vwc/6+W/hFOvu2WNcfiHPefdnvo1lxjETkzjADYPjIf0jTp4vdF1IKNACcChJ4M
-	 fjgoKdp8iJoh8REXj7/+Z/FU0V3YzQMmu5GJkxjeaqBFz+rdThymqaCYJl3Dh869Pxa7g
-	 X7rdQ42RUnjchNllSNOY9DAuFRscfD/WVD0RzxiP8tTzK7ZwRcT5pCGbzg5qkWaxE1A==
+	t=1794575111;
+	b=skBol4w4jKeTcTMHhRVdpO+BdqA7rbuQbaMV4MPirTDH2QaRp0Kg17QKNRVNqJ0KrPTu
+	 wcVF+Cz6uYFda9UE/LiFUrrM4+gKGJpU8il+h9KnvNU6d1TOIPNp/LqwVYwl2xaRoOVP6
+	 SVaTpywrUSyz0wo7W6xq57ZqGZLrNwJIVFkLMZ9/Q02fWQj95kDyIidRe+hJQ8lK70UUt
+	 mBh6r2UTq+woI7lOJHnQKZhjN319Jmhg+FawHBcxv26EUqPtrYIVknu9y3FBg0FoD4UnF
+	 5WTVT3YSIlU+CDLlalWvOrvJKKM/ki0uobJGEzH4LXUUi/I1omYqrY1/1gQTJCd568Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794573971;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=4nqWdqHCfxOMp9mxgkaKiVFe2SFwaO+vyP0Q56SK6rs=;
-	b=PFRMM3hDJf2FcHoNAG3s5Aq7kGNOCICbQ/hVHq+pldbq3VAvsgLwiBtaiew4ZBZPQogX
-	 b+Dw1QBkANYnunVvLayFuM1KUdsom721Y+KkLQswHV6/BMquzCCLk4aIGLkIMh7v9IHxS
-	 bVvDtbsOkbVpGOgpXnNp95Y7OOOPJRjtEM4sww2DtkneYLkgKi2/l/7P8LbyCiXcNl7Gc
-	 spO0D5I0NTF/AAKWZ4EMzpAzHZa5mlNa+pI86I/IGPIto7fuoJoFi1YA8ti1X2zef+Ibh
-	 EW/nPvSMpqX4EdoWv/h++PoRkcLrrIBztfJhNW5VKHZ6SPN3Jiu+SWimd3zznTMvfbw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794575111;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=EM8ZnpnsteTstTOFyEqAfs+v+bqrEfRmWvONaNCLxe8=;
+	b=RWPr5bgiA5Cxy2X6+twzaIS027nkUqdxYQNlsHhorVSROnoxSRk5mS/pRW/jA/a2NA/W
+	 tsfPRjuUCYKKCQAcCFAApNvbX5nLBfH9SP1hNvVVVnhUAo0YJ2nuGzepnLjAsAhr/DmrH
+	 iMpcH7F5c2QHnnHVZQFgxVxnkKJAckFvrrxlHgJbKxJsJdr8bDJXPMfoy+SEeJUGYjlC/
+	 iOQ4KQO51xpl1iCpTILZgEAf3viKhtqKkHLlBghs3mGH6s7gS1U0+ctwQNQ1lzeQJpqCE
+	 7LKspB+z7W3pDTzqxPRLZjZSNsX8UlSZmLZLZnHVMwcKviUl/C8biRHoieYkHot1Rgg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CGtF0XIK;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jlJaOQGR;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6103A606A32D
-	for <mptcp@lists.linux.dev>; Fri, 13 Nov 2026 12:46:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4E4606A32E;
+	Fri, 13 Nov 2026 13:05:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CGtF0XIK
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 155751F000C5;
-	Fri, 13 Nov 2026 12:46:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jlJaOQGR
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 444531F000C4;
+	Fri, 13 Nov 2026 13:05:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794573971;
-	bh=4nqWdqHCfxOMp9mxgkaKiVFe2SFwaO+vyP0Q56SK6rs=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CGtF0XIKDlmVKJuueCX6CFKfSb0zAHpODGwZup0qBqKVomfQzDz41QWO0JUsSM8es
-	 WjpiScEnSffAyvM4DmvsAxaagT5z2kKP/MQByTVFTTCNgjF8PsKn6XIvnMyOBgfzXj
-	 mWQPKg9Tk9IMH0b4o+5gNJgnmIfvzom0u5n4fqvbG/wPv5RRBScCBxl5HYabZ8L0T5
-	 jp5449sLiEA/BAb3cPPAuagekKWDRPK8Am0Q00dMmRukSsiLZmd+n80z75Gtz+ihZi
-	 KSNvZgz6Uqv9v/W0uuMtCLDVCEdyfVEqdIDINYF4F7jnIrlvRXhEnV+d2g/8Y9IgaK
-	 eoV0O8n7miuIg==
-Message-ID: <sashiko-outbox-212784@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH net 2/2] net: core: take the reuseport migration
- reference with acquire ordering
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Hang Nan" <2122295973@qq.com>
-Cc: mptcp@lists.linux.dev
-In-Reply-To: <tencent_AE3D481F5F51E98E657317C2F664C4FA4F08@qq.com>
-References: <20261112124547.193812-1-2122295973@qq.com>
- <tencent_AE3D481F5F51E98E657317C2F664C4FA4F08@qq.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 13 Nov 2026 12:46:10 +0000
+	s=k20260515; t=1794575111;
+	bh=EM8ZnpnsteTstTOFyEqAfs+v+bqrEfRmWvONaNCLxe8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=jlJaOQGRUOYVxQEoQtS2xwULbwTBBVEQRnJhTJK82AZQc2WDH5QTQJpbPfVBX7YD+
+	 BNB2PEFo0hxpfCLTkvvA6HRbPVGr2AkXeJp0GE9SQKDJ1RFA2QCRIJ6rz7IO9QM146
+	 NiprzNTOpYfX+t7bd7rS1Czxzn6NmpLJ7S/nxKPXktcmAiAlcRKmsoQ/M15VAJWitA
+	 +2fvErObhF/4tOShepwObLyFwWwF4ia8KSamBoWjdmCNVdUR0tVcmlOg9XSlsVAuQr
+	 iSi9ysECkFDhYqIB9alCprSEN3vM5NnvxO7pYrMm1waDn0KKDgAlJ1h6Zty5tyQMdg
+	 BvVFAZa7xS9YQ==
+Subject: Re: [PATCH net 1/2] net: mptcp: take token lookup references with
+ acquire ordering
+From: netdev-bot+sashiko@kernel.org
+To: 2122295973@qq.com
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, matttbe@kernel.org,
+ martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
+ edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ kuniyu@google.com, willemb@google.com, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+Date: Fri, 13 Nov 2026 13:05:09 +0000
+Message-ID: <179457510979.2199510.5244757217297725488@kernel.org>
+In-Reply-To: <tencent_28A2BD1631FE531992E91753BA6419FFC506@qq.com>
+References: <tencent_28A2BD1631FE531992E91753BA6419FFC506@qq.com>
+X-sashiko-severity: High
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -60,76 +64,220 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Low] net: invalid acquire rationale and Fixes tag in
-  reuseport_migrate_sock()
+Thank you for your contribution! Sashiko AI review found 4 potential
+issue(s) to consider.
+
+Critical: 0 · High: 2 · Medium: 1 · Low: 1
+
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
+
+- [High] mptcp_token_get_sock() uses the token value as its only liveness
+  check, but it accepts a requested token of 0.
+- [High] mptcp_token_iter_next() re-checks only net_eq() after taking the
+  reference (token.c:376).
+- [Medium] The commit message gives the wrong reason for the change, and
+  it never mentions the race the change actually closes.
+- [Low] net: mptcp: Fixes trailer cites commit predating token.c lockless
+  lookups
+
 --
 
-commit 7417b1ab930b0d5e78b0d25b1f59ad89404b15b1
-Author: Hang Nan <2122295973@qq.com>
+net: mptcp: take token lookup references with acquire ordering
 
-> net: core: take the reuseport migration reference with acquire ordering
->
-> reuseport_migrate_sock() returns a listener with a reference held, and
-> every caller immediately reads that listener: tcp_v4_rcv() and
-> tcp_v6_rcv() pass it to tcp_filter() and tcp_check_req(), and the
-> request-socket paths clone its state.  A listener removed from the
-> reuseport group concurrently with that lookup must not be observed in a
-> half-torn-down state after the reference was successfully taken.
->
-> refcount_inc_not_zero() lost its acquire ordering in the refcount_t
-> consolidation (fb041bb7c0a9), so these subsequent reads are not ordered
-> against the reference acquisition.  Use
-> refcount_inc_not_zero_acquire(), as was done for the established-socket
-> lookups, inet_twsk_purge() and bpf_sk_assign() in 5b5d8f351dd9.
->
-> No behaviour change on strongly ordered architectures.
->
-> Fixes: fb041bb7c0a9 ("locking/refcount: Consolidate implementations of re=
-fcount_t")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Hang Nan <2122295973@qq.com>
-> ---
-> diff --git a/net/core/sock_reuseport.c b/net/core/sock_reuseport.c
-> index b9e5648fa4c51..56230aa55a3e2 100644
-> --- a/net/core/sock_reuseport.c
-> +++ b/net/core/sock_reuseport.c
-> @@ -667,7 +667,8 @@ struct sock *reuseport_migrate_sock(struct sock *sk,
->  	if (!nsk)
->  		nsk =3D reuseport_select_sock_by_hash(reuse, hash, socks);
->
-> -	if (IS_ERR_OR_NULL(nsk) || unlikely(!refcount_inc_not_zero(&nsk->sk_ref=
-cnt))) {
-> +	if (IS_ERR_OR_NULL(nsk) ||
-> +	    unlikely(!refcount_inc_not_zero_acquire(&nsk->sk_refcnt))) {
->  		nsk =3D NULL;
->  		goto failure;
->  	}
+This patch changes mptcp_token_get_sock() and mptcp_token_iter_next() to
+use refcount_inc_not_zero_acquire() instead of refcount_inc_not_zero().
+The aim is to order the re-validation of msk->token and sock_net() after
+the reference is taken, as 5b5d8f351dd9 did for the inet lookups.
+
+> mptcp_token_get_sock() validates the token and the network namespace,
+> takes a reference on the socket and then validates them again.  The
+> second validation only rejects a socket that is being torn down if it is
+> ordered after the reference acquisition: mptcp_token_destroy() unlinks
+> the socket and does WRITE_ONCE(msk->token, 0), so a reader that observes
+> the token before the acquisition can return a socket whose token has
+> already been cleared.
+
+[Severity: Medium]
+Is this the race that the acquire ordering actually closes?
+
+mptcp_token_destroy() clears the token without touching sk_refcnt:
+
+net/mptcp/token.c:mptcp_token_destroy() {
+    ...
+	spin_unlock_bh(&bucket->lock);
+	WRITE_ONCE(msk->token, 0);
+}
+
+That leaves no release on the refcount for
+refcount_inc_not_zero_acquire() to pair with. With or without acquire,
+the re-check can still read the old token. mptcp_token_destroy() can also
+run right after the re-check succeeds.
+
+The case the acquire does fix looks like object reuse. mptcp_prot uses
+SLAB_TYPESAFE_BY_RCU and only listeners set SOCK_RCU_FREE. So an
+established msk can be freed and reallocated while an RCU reader still
+holds a pointer to it. The new owner publishes the refcount in
+sock_init_data_uid():
+
+	smp_wmb();
+	refcount_set(&sk->sk_refcnt, 1);
+
+Without acquire, the re-check loads of msk->token and sock_net() can be
+satisfied before the increment. They would return the old object's values
+while the increment succeeds on the new object. The lookup could then
+return an msk from a different connection, possibly in a different netns.
+include/linux/refcount.h documents this case as the reason for the
+acquire variants.
+
+Since this is tagged for stable, could the commit message describe the
+SLAB_TYPESAFE_BY_RCU reuse case instead of the teardown race?
+
+> diff --git a/net/mptcp/token.c b/net/mptcp/token.c
+> index e0f2823f92efb..3429b43a9f7c3 100644
+> --- a/net/mptcp/token.c
+> +++ b/net/mptcp/token.c
+> @@ -309,7 +309,7 @@ struct mptcp_sock *mptcp_token_get_sock(struct net *net, u32 token)
+>  		    !net_eq(sock_net(sk), net))
+>  			continue;
+>  
+> -		if (!refcount_inc_not_zero(&sk->sk_refcnt))
+> +		if (!refcount_inc_not_zero_acquire(&sk->sk_refcnt))
+>  			goto not_found;
+>  
+>  		if (READ_ONCE(msk->token) != token ||
 
 [Severity: Low]
-Does acquire ordering on nsk->sk_refcnt actually prevent callers of
-reuseport_migrate_sock() from observing a closing listener?
+The Fixes tag points at fb041bb7c0a9 ("locking/refcount: Consolidate
+implementations of refcount_t"), which landed in v5.5-rc1. At that
+point net/mptcp/token.c did not exist yet, so there was no MPTCP code
+for that commit to break.
 
-In __tcp_close(), listener teardown (tcp_set_state(sk, TCP_CLOSE) and
-inet_csk_listen_stop()) runs while sk->sk_refcnt is still non-zero, before
-tcp_close() drops the final reference with sock_put(sk).  An acquire barrier
-on sk_refcnt only orders the caller's subsequent loads after the increment;
-it does not synchronize with __tcp_close() and cannot prevent observing a
-half-torn-down listener, which is instead handled under rskq_lock in
-inet_csk_reqsk_queue_add().
+The lockless lookup in mptcp_token_get_sock() came in with
+2c5ebd001d4f ("mptcp: refactor token container"). That is the
+refcount_inc_not_zero() on sk->sk_refcnt followed by the token and
+netns re-check.
 
-Unlike the SLAB_TYPESAFE_BY_RCU lookups updated in 5b5d8f351dd9 ("net:
-restore refcount ordering for lockless socket access"),
-reuseport_migrate_sock() does no post-increment re-validation of nsk, and
-sk_destruct() always defers destruction via call_rcu() when SOCK_RCU_FREE or
-sk_reuseport_cb is set.  Also, reuseport_migrate_sock() was introduced in
-1cd62c21572c ("tcp: Add reuseport_migrate_sock() to select a new listener."=
-),
-after fb041bb7c0a9 ("locking/refcount: Consolidate implementations of
-refcount_t").
+mptcp_token_iter_next() came in with 96d890daad05 ("mptcp: add msk
+interations helper"). That added its refcount_inc_not_zero() and the
+net_eq() re-check.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/tencent_28A2BD1631F=
-E531992E91753BA6419FFC506@qq.com?part=3D2
+Both of those are in v5.9-rc1.
+
+Stable tooling uses the Fixes tag to decide which trees get the
+backport. Pointing at a v5.5 locking commit would have it try v5.5
+through v5.8. In those trees this file is either missing or has no
+lockless lookup at all.
+
+Could the tags be changed to:
+
+Fixes: 2c5ebd001d4f ("mptcp: refactor token container")
+Fixes: 96d890daad05 ("mptcp: add msk interations helper")
+
+[Severity: High]
+What happens in mptcp_token_get_sock() when the requested token is 0?
+
+Token 0 is never assigned, because __token_bucket_busy() treats it as
+busy:
+
+	return !token || t->chain_len >= TOKEN_MAX_CHAIN_LEN ||
+
+However, 0 is exactly what mptcp_token_destroy() writes into a dying msk.
+It is also what a newly reallocated msk holds, since sk_alloc() zeroes
+the object. For token == 0, both the first check and this re-check pass
+on a cleared or recycled msk. So the "socket whose token has already been
+cleared" case from the commit message can still happen with this patch.
+
+The token comes from the wire. mptcp_parse_option() copies the MP_JOIN
+SYN token without checking it, and then:
+
+subflow_check_req()
+  subflow_token_join_request()
+    mptcp_token_get_sock(net, 0)
+
+Suppose an RCU reader holds a pointer to an msk on bucket 0's chain while
+that msk is unhashed, freed and reallocated by inet_create() in the same
+netns. Between sock_init_data() and sk_prot->init(), the new msk has
+refcount 1, token 0 and the matching netns. It would pass both checks and
+be returned.
+
+subflow_check_req() then calls subflow_use_different_sport(). That sees
+an inet_sport of 0 and calls mptcp_pm_announced_has_ssk():
+
+	list_for_each_entry(entry, &msk->pm.anno_list, list) {
+
+pm.anno_list is not initialised until mptcp_pm_data_init() runs from
+__mptcp_init_sock(), so head->next is still NULL. Can this oops in
+softirq?
+
+Even without reuse, a torn-down msk whose token was just cleared would be
+returned to the join path and pinned by the request socket.
+mptcp_diag_dump_one() with idiag_cookie[0] == 0 and the userspace PM
+token lookup seem to have the same problem.
+
+Should mptcp_token_get_sock() return early for token 0, for example:
+
+	if (!token)
+		return NULL;
+
+or should the re-check also confirm the msk is still hashed?
+
+> @@ -370,7 +370,7 @@ struct mptcp_sock *mptcp_token_iter_next(const struct net *net, long *s_slot,
+>  			if (num <= *s_num)
+>  				continue;
+>  
+> -			if (!refcount_inc_not_zero(&sk->sk_refcnt))
+> +			if (!refcount_inc_not_zero_acquire(&sk->sk_refcnt))
+>  				continue;
+>  
+>  			if (!net_eq(sock_net(sk), net)) {
+
+[Severity: High]
+The commit message says the iterator "has the same shape and is converted
+as well". The re-check in mptcp_token_iter_next() only looks at net_eq(),
+though. Can it reject an msk that was torn down or recycled in the same
+netns?
+
+With SLAB_TYPESAFE_BY_RCU, a preempted RCU reader in
+mptcp_token_iter_next() can hold a pointer to an msk while it is
+unhashed, freed and reallocated by inet_create() in the same netns.
+
+There is a window between sock_init_data_uid() publishing the refcount:
+
+	smp_wmb();
+	refcount_set(&sk->sk_refcnt, 1);
+
+and __mptcp_init_sock() running:
+
+	INIT_LIST_HEAD(&msk->conn_list);
+
+In that window the msk has refcount 1, the same netns, and zeroed
+conn_list and pm state. A zeroed pm.pm_type looks like
+MPTCP_PM_TYPE_KERNEL.
+
+The iterator would take the reference, pass the net_eq() check and return
+this msk. An endpoint delete then does:
+
+mptcp_nl_remove_subflow_and_signal_addr()
+  lock_sock(sk)
+  mptcp_pm_has_subflow_saddr()
+    mptcp_for_each_subflow(msk, subflow)
+
+Would this walk the zeroed conn_list and dereference a near-NULL entry?
+
+The other iterator users, mptcp_nl_flush_addrs_list(),
+mptcp_pm_nl_set_flags_all() and mptcp_nl_remove_id_zero_address(), would
+also act on a half-built or unrelated msk.
+
+Should the re-check after the acquire also confirm the msk is still
+hashed in this slot, for example:
+
+	!sk_unhashed(sk) && (READ_ONCE(msk->token) & token_mask) == slot
+
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/tencent_28A2BD1631FE531992E91753BA6419FFC506%40qq.com
