@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794599671;
-	b=oeM7tbC0XeyVDVPZSeIqNpMmarVMrCrpq8ViR118zZiE1mK3Eph6uuAk06fnhpWCqDcG
-	 z0xLN3g/qC3O7ZSBGm+kJniiCppMZt/dLF6vzk9C1iOAceYBdA6/xLxGQuH4kWQwTA9AR
-	 wwU6DlP6x0brCUmf5Tjks/rPugOKOeeJ/EOgZlDjjxxLuaw79QDq2neOyEmB6uxrfmApA
-	 f7++FfgJgf2BvrhBeHuMxuX+DitoA3dfO4u01lwAuTEx7/paYC5z4rrK6mBk06nIdFijn
-	 y6YELtAkWPNZGeBzO1M4ZzE9zkiMRJhc+cvbpEYyu1+oLZ9ch/xwB8cKrG5+9x39I7g==
+	t=1794599672;
+	b=R/mq0DIAcEnP/THqt9gWgBJG6RAM2HjkOuvp/YGJqHxq1EArE84k+k0xPcN5jESCjAW8
+	 Pihq5B2E2cVrAatUlgdwBaDMYDQ/JQEuvmPKu11o4r/Q19JuPnMs3WlMaVT7X79lZ4kat
+	 86qkwXYxFXZvx26GEO+PQW/AnlDtyg2J8qTpTsUdH32z4wiyBS5d6HljXWk4lBM59JrW9
+	 5QDWnXzXmGj/JiZDsiw7l6svQhWvZ8vvM/ghfie4v7kYQ27T+aXt78/6nHbKr+yrhPBV+
+	 JrgRZfXhV1KAYdYGA/+GeuIg9SZUHxRawrk5PQIYz8WuWXUZ25dKRlilhfyzNYikmsA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794599671;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794599672;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=j4HmeUuNQnA4qL5jaOPeeDkBW1vR58287ymOw7+6L0U=;
-	b=Efgh0x58nbuy2Ik0tw27XFMcOLa3aZ/CYNrUJzidYETNkeJ4/aFGTrPuJC117CqUyVyL
-	 PWq+EFC6TPmuxK1oFu57TMhK5z+exhdrHTsYC7N31us9IaosLGad202nlePMpLM8QGYdn
-	 qkbYAqc9Hk0cu7EABzgEw8tHDPDHhZYGTvHsNvVERxkbqxKVTzSJqosrKvVwIen4VDsC3
-	 CsagZSF9UiIpkdy0L69SkEYjqxRSLBKRbotpqId5U2ubdWZmqCUR5+jr8wLwuOQAfJ46Z
-	 oiNvYwFpZl7CLA4YQdfMhxkxSp9YeAL2Hsd0Sik5F5zRQ1h0P8f3Ae1Fvzt8lvQt0fA==
+	bh=/G5+PMtTvr+Lji9tNex0mMGBnXcKq+n71breNybFLwI=;
+	b=NcP6rBH/KBAGqs38/jdlH5EgFGN1zDHGyoUm6WT286PFnhv9miB+FxaT43/Cfssr5iCR
+	 GzjPE1H+UBt6UQNe8W63PwG1afS1rJAbb6/duL+VDkj5gf4epzJvsWfmzlxtyT7/jbqf2
+	 /ZzfnusHTYuSm1jw1knT2LtnZxu6u5dt40rYVy9a3VOwBiw9MBo6PZQFBPwjAPYLwMgFG
+	 cadQtj20tEh9SKLwK5IamJIglGQGKcV7TWL3GrJgStDFiN1I/bg7s7U1enW7Sb5TvVjE/
+	 4Eou6Vuab0cist1fEBNBzzvfm2rtjBq1ZS8FNUBsvu86NG5Dr9QtTlMqdhUs/pgKPXg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TB53D8bh;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Z8SLv2IG;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30852606F34A
-	for <mptcp@lists.linux.dev>; Fri, 13 Nov 2026 19:54:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F11C606F35C
+	for <mptcp@lists.linux.dev>; Fri, 13 Nov 2026 19:54:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TB53D8bh
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F1511F000C9;
-	Fri, 13 Nov 2026 19:54:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Z8SLv2IG
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EC881F000C4;
+	Fri, 13 Nov 2026 19:54:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794599671;
-	bh=j4HmeUuNQnA4qL5jaOPeeDkBW1vR58287ymOw7+6L0U=;
+	s=k20260515; t=1794599672;
+	bh=/G5+PMtTvr+Lji9tNex0mMGBnXcKq+n71breNybFLwI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=TB53D8bhB/Q51lNPU8H2Jn5LsiZWX5oxZwqueUzUNmx/pD7aTP9dhOh076gwokuJ0
-	 +5R5LXR9am+NPHY9oqecToDYgB+4t0ek1Hbcg/h/iX6jQg2HcwmUVewbGE74CVp+RW
-	 zirkB3p+3knfRp9KJRpcOZyVOknsXk8g4SlETxncWm+wIDhUB4Ij6EuF5bQrmn6g5E
-	 VJgkeiWI+DyOoj/7Kr+vXCSatzehh0R/Cc87GDNYXAMT1jNv6HTWPGxbrCvaX27zT+
-	 lIF9KWDLxTYyKL/MR8Ef6gqJpELUvI36XMGM1hZOs5WqGEMB/4wktNjVJhezgQqoHs
-	 vulJvZ5ET0/QQ==
+	b=Z8SLv2IGmYK+uxrEcZ1z5VerYUGjZWI32XjyaYzM+sWtPuOuNnOl0BEqXqA6wvbbK
+	 puZJcxzws9JrmkOvq5VqOYbfBRoiV5RoKadUnXSyYH0Xh7aWvprQjl0zFU8nHEXvYV
+	 JfX/SpqmByscbLSJuMS5h9pG97DbQHOElPdYqrldqAkZzG1AmwPy8PbzA+qBSNwrIu
+	 mc7WB8NCtNjMaYYgUMlg73H9dVlY/LkQN1EGg1Xccwznvp9gtz/Eyyd6q0b8FviLit
+	 Cfh+CoBF+uWB43yc8vYQ8tSCmuXFPVUq5ahTGsQzEXeOdi1bWWe/a73zcRYz3eYIlv
+	 S3q8y0kwYdHAQ==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 13 Nov 2026 20:53:45 +0100
-Subject: [PATCH mptcp-net 07/34] mptcp: arm the rtx timer if a push leaves
- data behind
+Date: Fri, 13 Nov 2026 20:53:46 +0100
+Subject: [PATCH mptcp-net 08/34] mptcp: force the charge for the first skb
+ of a subflow
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,110 +55,123 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261113-mptcp-cmason-fixes-v1-7-9205b77e9a2f@kernel.org>
+Message-Id: <20261113-mptcp-cmason-fixes-v1-8-9205b77e9a2f@kernel.org>
 References: <20261113-mptcp-cmason-fixes-v1-0-9205b77e9a2f@kernel.org>
 In-Reply-To: <20261113-mptcp-cmason-fixes-v1-0-9205b77e9a2f@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: Chris Mason <mason@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3705; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=4oOMglXua13HpL5PPzR7A1yA1MdsNmkJBBBLtc6om/I=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLK+Z117NT1f52lR+7tnPO0KAXcizRaX9Jw7HC7efaDk0
- G6B3+7POkpZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACbi28bI0HL7ySPX9TE3Lev1
- TpYsFc3jZQ0stjFat9ot98eTkidpFxn+6cied+mRfXRU6/3C1/sX8f6fZ/xVn0HzmuHVvED+7T2
- KHAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4156; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=JV1b3vfWEhvSWda0MnQVjLNbR4EdsNIPeWXIobkd0Tw=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLK+Z13nOfPrc+/e78fz2pNZF5jxNH5Z/eTZpCcSgUx3p
+ 7S2tc2a01HKwiDGxSArpsgi3RaZP/N5FW+Jl58FzBxWJpAhDFycAjARuZMMf0V3bF5zo2FdlX2x
+ 3f446T9n407u388TLav1QcXlmL6urTLD/zJxJ1l1prk1SYcdT/Y/WPfp9JPiRIF7ywrdPkzIU1m
+ 4lx0A
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 From: Chris Mason <mason@kernel.org>
 
-In a memory shortage, send() on an idle MPTCP socket can succeed but
-leave its data unsent, and the connection stays stalled after the
-shortage has ended.
+After a fallback to TCP, an MPTCP connection can stay stalled once TCP
+memory use is back below the hard limit of net.ipv4.tcp_mem, and above
+that limit send() on an idle MPTCP socket can leave its data unsent.
 
-send() puts its data in the write queue of the MPTCP socket, and the
-push to a subflow leaves the data there if the memory charge to the
-subflow is refused or no skb can be allocated. A push that leaves data
-in the write queue has to be tried again, on the acknowledgment of data
-in flight or from the handler of the MPTCP retransmission (rtx) timer.
-But __mptcp_push_pending() and __mptcp_subflow_push_pending() arm that
-timer only if they have pushed data, so with no data in flight and no
-timer pending, the data waits for another event, such as the next
-send().
+A push moves data from the write queue of the MPTCP socket to a subflow,
+and charges the subflow twice: for a new skb in __mptcp_alloc_tx_skb()
+and for the payload in mptcp_sendmsg_frag(). On an idle socket, with
+nothing queued, TCP forces both charges past the limit, in
+tcp_stream_alloc_skb() and tcp_wmem_schedule(), since no ACK would ever
+restart such a socket. But a push forces neither, so above the hard
+limit both can be refused, and the push then moves no data.
 
-The fix used here is to also arm the timer, in both functions, if unsent
-data is left in the write queue.
+The earlier commit "mptcp: arm the rtx timer if a push leaves data
+behind" repeats such a push from the MPTCP retransmission (rtx) timer.
+But each attempt fails while memory use stays above the limit. After a
+fallback that timer is disabled, so the data stays unsent until another
+event, such as the next send(), repeats the push.
 
-This does not help a socket that has fallen back to TCP, as its rtx
-timer is disabled since commit e2ab913f68c7 ("mptcp: do not reschedule
-the RTX timer for fallback sockets"). "mptcp: force the charge for the
-first skb of a subflow" avoids a refused charge in this case, but not a
-failed skb allocation.
+The fix used here is to:
+- force the charge for the skb if the subflow has nothing queued
+- charge the payload with tcp_wmem_schedule()
+- send only the bytes that tcp_wmem_schedule() grants
+
+The first skb of an MPTCP-level reinjection is then forced too, as it is
+sent on a subflow with nothing queued. This is bounded the same way.
 
 This issue has been found with the help of an LLM, and reproduced in a
-VM, with the reproducer shared with the original version of this patch,
-with fault injection: one skb allocation made to fail during a send().
-Without this patch, the data accepted by this send() was only sent with
-the next one, 60 seconds later here:
+VM, with the reproducer shared with the original version of this patch:
+a TCP memory shortage, for 30 seconds, during which each of ten idle
+MPTCP clients calls send() once. Without this patch, only 5 of them had
+their answer during the shortage, versus 8 with it: the 2 others are
+blocked in send() during the shortage, which is not fixed here. Some
+answers only came after the next send(), 300 seconds later, because of
+the issue fixed by the previous commit:
 
-  3.007 s: CLIENT send() of 1,000 bytes returned 1000. Allocations that were made to fail in it: 1
-  [...]
-  63.008 s: CLIENT the second send(), of 100 bytes, returned 100
-  63.008 s: SERVER has 1200 bytes
-  RESULT-FAILSLAB [...] the_1000_bytes_at_the_server_at=never [...]
-  [...] arrived_before_the_second_send=no [...]
+  IDLE label=behind-the-second-send t=338.9 conn=0 [...] answer_at=336.4
+  IDLE label=behind-the-second-send t=338.9 conn=1 [...] answer_at=4.2
 
-Fixes: 2ea6190f42d0 ("mptcp: schedule rtx timer only after pushing data")
+Fixes: 724cfd2ee8aa ("mptcp: allocate TX skbs in msk context")
 Signed-off-by: Chris Mason <mason@kernel.org>
-[ Shorter comment. Commit message: sockets that fell back to TCP are not
-  covered + how the issue was found, and its symptoms. ]
+[ Shorter comments. Commit message: the first skb of a reinjection is
+  forced too + how the issue was found, and its symptoms. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/protocol.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ net/mptcp/protocol.c | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index e484f7edad49..dc8cdda31a98 100644
+index dc8cdda31a98..8d6ed293f6e5 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1850,14 +1850,11 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
- 	if (ssk)
- 		mptcp_push_release(ssk, &info);
+@@ -1387,13 +1387,17 @@ static struct sk_buff *__mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, g
+ 	if (!skb)
+ 		return NULL;
  
--	/* Avoid scheduling the rtx timer if no data has been pushed; the timer
--	 * will be updated on positive acks by __mptcp_cleanup_una().
--	 */
--	if (copied) {
--		if (!mptcp_rtx_timer_pending(sk))
--			mptcp_reset_rtx_timer(sk);
-+	/* also retry later if unsent data is left: no ack may trigger it */
-+	if ((copied || mptcp_send_head(sk)) && !mptcp_rtx_timer_pending(sk))
-+		mptcp_reset_rtx_timer(sk);
-+	if (copied)
- 		mptcp_check_send_data_fin(sk);
--	}
- }
- 
- static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool first)
-@@ -1919,13 +1916,15 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool
- 	if (copied) {
- 		tcp_push(ssk, 0, info.mss_now, tcp_sk(ssk)->nonagle,
- 			 info.size_goal);
--		if (!mptcp_rtx_timer_pending(sk))
--			mptcp_reset_rtx_timer(sk);
- 
- 		if (msk->snd_data_fin_enable &&
- 		    msk->snd_nxt + 1 == msk->write_seq)
- 			mptcp_schedule_work(sk);
+-	if (likely(sk_wmem_schedule(ssk, skb->truesize))) {
+-		tcp_skb_entail(ssk, skb);
+-		return skb;
++	/* like TCP, force the charge if nothing is queued */
++	if (tcp_rtx_and_write_queues_empty(ssk)) {
++		sk_forced_mem_schedule(ssk, skb->truesize);
++	} else if (unlikely(!sk_wmem_schedule(ssk, skb->truesize))) {
++		tcp_skb_tsorted_anchor_cleanup(skb);
++		kfree_skb(skb);
++		return NULL;
  	}
+-	tcp_skb_tsorted_anchor_cleanup(skb);
+-	kfree_skb(skb);
+-	return NULL;
 +
-+	/* see __mptcp_push_pending() */
-+	if ((copied || mptcp_send_head(sk)) && !mptcp_rtx_timer_pending(sk))
-+		mptcp_reset_rtx_timer(sk);
++	tcp_skb_entail(ssk, skb);
++	return skb;
  }
  
- static int mptcp_disconnect(struct sock *sk, int flags);
+ static struct sk_buff *mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk, bool data_lock_held)
+@@ -1449,6 +1453,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 	bool reuse_skb = true;
+ 	struct sk_buff *skb;
+ 	size_t copy;
++	int avail;
+ 	int i;
+ 
+ 	pr_debug("msk=%p ssk=%p sending dfrag at seq=%llu len=%u already sent=%u\n",
+@@ -1522,10 +1527,14 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 	}
+ 
+ 	copy = min_t(size_t, copy, info->limit - info->sent);
+-	if (!sk_wmem_schedule(ssk, copy)) {
++
++	/* like TCP, allow some progress up to tcp_wmem[0] */
++	avail = tcp_wmem_schedule(ssk, copy);
++	if (avail <= 0) {
+ 		tcp_remove_empty_skb(ssk);
+ 		return -ENOMEM;
+ 	}
++	copy = avail;
+ 
+ 	if (can_coalesce) {
+ 		skb_frag_size_add(&skb_shinfo(skb)->frags[i - 1], copy);
 
 -- 
 2.55.0
