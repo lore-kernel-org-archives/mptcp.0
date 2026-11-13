@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794600787;
-	b=GMdJEmg2vdP164zGetOR4EZzkonGY3ZklypISa1QhX7wbwKekD2Hc6Efgyn5qFpKNIUl
-	 usYhEDqpRKadimaaS2hFDqjI0zruCZdZyHwtwXhbJx69UCYALbLlAIWCUxcQZfzMyAU5y
-	 n4VVuVRKNdoQOxTSHTIN3JztDc9gGyXiJktZ/2ZdvCluArRUFek+hzeExopT4ub/fY+f5
-	 97skXbPcND7YeE7JNiFZGwa6GR6fbI3Krl/OBopwiGd7YaOMPSK5eqCZ9YarDCuAjsRUm
-	 vuefdkIF1bVSMWRh/skRimtFboCz1hDzQvFFfmf6QPNOjDrpq/kxDjpPKHnrWK+JB6w==
+	t=1794604253;
+	b=mDFaiZE2X3sUbVadc117B85ucFrLPlCzttGoC/6oxbYH+ecVUklKt3BUh1jPEGzvFyXJ
+	 986qKoWlcyoBR/I38wPkmq9H4wPMSzYkNgNb+Ok/m/D8e/Uvy73fY4PzJS4dHPEXpummI
+	 iZLWUomjEuxejh/v5j3fcLNwHdkkNtTokdjUmLx+hdIl8TJWXmqHS4qvpctjY24PUSseR
+	 oNcklLKkGlCcAD8VMANTmrRz7x8wUsltmWRauqKZrlS6toJHJeYgq6zhJG66i8Xewu4ia
+	 1CyetwUsZssHaIDKc/w+YKQvjeD+Wf9H2D0mztxjqNS8SCQ83Mm+nhOtZ6cf01i0FaA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794600787;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794604253;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=G529l611Q6y5q+nTlLQ2tRV//FiazeVsP8dac4kaRko=;
-	b=vXadNVNbc/cqW1teQdvG/OHC/L7TrlHsL46homqNyXAb01Ea6SPHBSQmvbTDThDHIrxk
-	 e3c/nsEFJT/GQd9qyYDN2ZPGi/axAj0Ieu9GvZXEGXJLbn7TXc2m4OR7uhNowfc7uawqc
-	 jQujNoK9zeTx1AtwYqPquUO0QtkZF6A7bZl0+DRwOMwh6nVKZ4sPf980ln7BC6PDPZDQG
-	 G9aQQn+ALeyPJ+1+ReBcse5X5QSPvHUQ6dHSOwjroyJr1yZ6mgn+WZ1JFH5sbF+u/OsqX
-	 TWsUlWWgzsJe9SoyIfCYSVAjhUrQuGrlxR6bJzbEAKOydO+gnZwtHmboQdHQvZ0WFWQ==
+	bh=2CzPkly5TAHP9Fv1AQbj6xjOxCWCEZcaB2/H9XsLG9k=;
+	b=V/xHYTJWOEiWfYqrO/EkW8T0i9jvkjWa19CMqEIWfeXR4ne3x9DFSMMoXf3knBwIhvT8
+	 QJ8gRKBSRnlDkwECuaQdCHC8LQ0Icx8M8VHwM9KFvJ87aplognBCD6dX3ayDY6C3CNRum
+	 anPqXFqD1g7UZ2E/8zFHmeLgYgLAH37c+mlFsIJZ9FuZ9wzl2Ojvfs0Cz8b0dV+58LFe3
+	 JTS6nzOycuhIcroJp5L9BmyQM+y3h51+t4U1OTUbb+4l5jXlYdZyv9DIR9WnmkObWEEn+
+	 D/jbMmUL9NguKg+pDt4wHV1l5iZf9n3YbI3Bwpv2Vxkd/ZYTM2FwV6QJJTXu4A3lXAQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AmmaaUkm;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="njnI/8rj";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0A1D606A327
-	for <mptcp@lists.linux.dev>; Fri, 13 Nov 2026 20:13:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0F4606A332
+	for <mptcp@lists.linux.dev>; Fri, 13 Nov 2026 21:10:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AmmaaUkm
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E392B1F000C8;
-	Fri, 13 Nov 2026 20:13:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=njnI/8rj
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C01351F000C5;
+	Fri, 13 Nov 2026 21:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794600787;
-	bh=G529l611Q6y5q+nTlLQ2tRV//FiazeVsP8dac4kaRko=;
+	s=k20260515; t=1794604253;
+	bh=2CzPkly5TAHP9Fv1AQbj6xjOxCWCEZcaB2/H9XsLG9k=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=AmmaaUkm22dLWbqs5DimYdWJ02DovRShbPAdEM/b3UY66ozeVIyP38B7q+vOzf2Qr
-	 wZXblpW3zTxxYDBfE1/tpTdtLtnvvdWyqDz8LE3t0B0DLhRmYsUH8EIQG9NyFUCbBy
-	 2LbtgNXnU/egkhKbLKJ7JWoVueoDfWPHhkxqrO+18X/iMFYOjFQwnUDtxyNm9t17vd
-	 XddsMPa5KF5IG0iQzXqWOPm6sHN+tXj9nolPT+2ciVJtAH+wsWeK7XzAfYNoAv1rsw
-	 AoRANQH6xpderb4fTPE/fJoUNW3PxJbKpjkB/zVxwdE4l9zjKCqimg8A3ItCvyeiKU
-	 esbth8T6J0M1g==
-Message-ID: <sashiko-outbox-213627@kernel.org>
+	b=njnI/8rjuDwUs8NXzLnjbq61WgCpQNtkWSVnxR9PENIpHPNaHuyWVDW+BFf7YlSWn
+	 HeFkvT9RSQQOCf8WiA9xNErkeoJzY0O6wDU4ZCP1K2ylC/y62zDbbyxxcc7hTn/OrD
+	 /xWFipx7IpbEfJfGT1Uz4uiGjaEJaBLb1zn83q0N/cS1NKS1YG6Wj0Yrv930Zmw9Vr
+	 j3lSo/ZXQY2tSptlKiEVd3cA6ON44M9HeRRzS4lz1Ou10dR94C51tZ+kpR2ovzkP8c
+	 joYw0uKqlX7hKI9lKd2zzhlYfOek5zE7mrahjRd0oZDjt0AkovKJDEDNJzomcp8ei4
+	 mFFg45Jx5XxaQ==
+Message-ID: <sashiko-outbox-213692@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-net 02/34] mptcp: drain the queues of a listen()
- that fails
+Subject: Re: [PATCH mptcp-net 10/34] mptcp: don't leak an orphan when the PM
+ closes its last subflow
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>, "MPTCP
  Linux" <mptcp@lists.linux.dev>
-In-Reply-To: <20261113-mptcp-cmason-fixes-v1-2-9205b77e9a2f@kernel.org>
+In-Reply-To: <20261113-mptcp-cmason-fixes-v1-10-9205b77e9a2f@kernel.org>
 References: <20261113-mptcp-cmason-fixes-v1-0-9205b77e9a2f@kernel.org>
- <20261113-mptcp-cmason-fixes-v1-2-9205b77e9a2f@kernel.org>
+ <20261113-mptcp-cmason-fixes-v1-10-9205b77e9a2f@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 13 Nov 2026 20:13:04 +0000
+Date: Fri, 13 Nov 2026 21:10:52 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -64,66 +64,85 @@ Precedence: list
 Thank you for your contribution! Sashiko AI review found no new issues
 in this patch, but noticed 1 related pre-existing issue it does not
 introduce:
-- [High] mptcp: missing inuse add and state reset in
-  mptcp_pm_nl_create_listen_socket() [1]
+- [High] mptcp: skipped TCP_CLOSE cleanup for msk->first in
+  mptcp_close_ssk() [1]
 --
 
-commit 2094b28eb838bd9f43ac4fd932bbfb028ce12096
-Author: Chris Mason <mason@kernel.org>
+commit 9c49fccbfab6fbc60fdc19e95bb13b504edf3ebc
+Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-mptcp: drain the queues of a listen() that fails
+mptcp: don't leak an orphan when the PM closes its last subflow
 
-This commit cleans up the subflow accept queue and Fast Open RST queue in
-mptcp_listen() when __inet_listen_sk() fails and leaves the subflow in
-TCP_CLOSE.
+This commit expires the close timeout and schedules mptcp_worker() when
+__mptcp_close_ssk() leaves an orphaned MPTCP socket with only a closed
+initial subflow, instead of moving it directly to TCP_CLOSE.
 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 50de5cedfd0fb..dd9fb803cad5f 100644
+> index 16824bed85b42..6dc55a3f027bd 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -4381,6 +4381,11 @@ static int mptcp_listen(struct socket *sock, int b=
-acklog)
-> =20
->  	lock_sock(ssk);
->  	err =3D __inet_listen_sk(ssk, backlog);
-> +	if (err && ssk->sk_state =3D=3D TCP_CLOSE) {
-> +		/* inet_csk_listen_start() leaves this drain to MPTCP */
-> +		mptcp_subflow_queue_clean(sk, ssk);
-> +		inet_csk_listen_stop(ssk);
-> +	}
->  	release_sock(ssk);
->  	mptcp_set_state(sk, inet_sk_state_load(ssk));
-> =20
+> @@ -2794,8 +2794,13 @@ static void __mptcp_close_ssk(struct sock *sk, str=
+uct sock *ssk,
+>  	 */
+>  	if (list_is_singular(&msk->conn_list) && msk->first &&
+>  	    inet_sk_state_load(msk->first) =3D=3D TCP_CLOSE) {
+> -		if (sk->sk_state !=3D TCP_ESTABLISHED ||
+> -		    msk->in_accept_queue || sock_flag(sk, SOCK_DEAD)) {
+> +		if (sock_flag(sk, SOCK_DEAD)) {
+> +			/* let the worker close and destroy the orphan */
+> +			mptcp_set_close_tout(sk, tcp_jiffies32 -
+> +					     (mptcp_close_timeout(sk) + 1));
+> +			mptcp_schedule_work(sk);
+> +		} else if (sk->sk_state !=3D TCP_ESTABLISHED ||
+> +			   msk->in_accept_queue) {
+>  			mptcp_set_state(sk, TCP_CLOSE);
+>  			mptcp_close_wake_up(sk);
+>  		} else {
 
 [Severity: High]
-This problem wasn't introduced by this patch, but does the other
-__inet_listen_sk() caller in mptcp_pm_nl_create_listen_socket() [1]
-miss updating newsk's state and sock_prot_inuse_add()?
+This problem wasn't introduced by this patch, but can mptcp_close_ssk() skip
+this TCP_CLOSE cleanup for msk->first when it is half-closed first [1]?
 
-net/mptcp/pm_kernel.c:mptcp_pm_nl_create_listen_socket() {
-	...
-	inet_sk_state_store(newsk, TCP_LISTEN);
-	sock_set_flag(newsk, SOCK_RCU_FREE);
-	lock_sock(ssk);
-	WRITE_ONCE(mptcp_subflow_ctx(ssk)->pm_listener, true);
-	err =3D __inet_listen_sk(ssk, backlog);
-	if (!err)
-		mptcp_event_pm_listener(ssk, MPTCP_EVENT_LISTENER_CREATED);
-	release_sock(ssk);
-	return err;
+When msk->first is gracefully closed before reaching TCP_CLOSE (for example,
+on a subflow-level FIN without DATA_FIN or via mptcp_pm_rm_addr_or_subflow(=
+))
+while msk->free_first and msk->fastclosing are false, mptcp_close_ssk() sets
+subflow->close_event_done =3D true and __mptcp_close_ssk() calls
+__mptcp_subflow_disconnect(), which only runs tcp_shutdown(ssk, SEND_SHUTDO=
+WN)
+before jumping to out: while msk->first is still not in TCP_CLOSE:
+
+net/mptcp/protocol.c:__mptcp_subflow_disconnect() {
+	if (((1 << ssk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN)) ||
+	    fastclosing) {
+    ...
+		WARN_ON_ONCE(tcp_disconnect(ssk, 0));
+		mptcp_subflow_ctx_reset(subflow);
+	} else {
+		tcp_shutdown(ssk, SEND_SHUTDOWN);
+	}
 }
 
-Unlike mptcp_listen(), mptcp_pm_nl_create_listen_socket() does not call
-sock_prot_inuse_add() on success or reset newsk from ssk's state when
-__inet_listen_sk() fails.  When the PM listener socket is later closed via
-__mptcp_pm_release_addr_entry() -> __mptcp_close() ->
-mptcp_check_listen_stop(), seeing newsk in TCP_LISTEN decrements the
-per-netns protocol in-use counter without a matching increment and triggers
-WARN_ON_ONCE(inet_sk_state_load(ssk) !=3D TCP_LISTEN) if __inet_listen_sk()
-failed and left ssk in TCP_CLOSE.
+net/mptcp/protocol.c:mptcp_close_ssk() {
+	if (subflow->close_event_done || READ_ONCE(subflow->local_id) < 0)
+		return;
 
-[1] https://sashiko.dev/#/bug/linux-2c383603-dae6-4f8b-a0ea-d210d6d43b44
+	subflow->close_event_done =3D true;
+    ...
+	__mptcp_close_ssk(sk, ssk, subflow, MPTCP_CF_PUSH);
+}
+
+When the FIN handshake later completes and msk->first reaches TCP_CLOSE,
+__mptcp_close_subflow() calls mptcp_close_ssk() again, which returns early
+because subflow->close_event_done is already set.  As a result, msk->first =
+is
+never disconnected or reset, and if it is the last subflow in msk->conn_lis=
+t,
+the parent msk never starts its close timeout timer or transitions to
+TCP_CLOSE.
+
+[1] https://sashiko.dev/#/bug/linux-47cd2e29-62e6-4ad6-9246-4044e6d4b0e9
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113-mptcp-cmas=
-on-fixes-v1-0-9205b77e9a2f@kernel.org?part=3D2
+on-fixes-v1-0-9205b77e9a2f@kernel.org?part=3D10
