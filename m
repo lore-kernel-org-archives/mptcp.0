@@ -1,48 +1,48 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794599687;
-	b=IBCmtJlLSEetIYYtmmLkrcMSKkfTCDgGxbC9H9up/Ovp2oOY83EcxjkgZuP31N2bncpc
-	 jDv2KmVUmISXCclXr9cO+Bp+2mCKPHsXAhUGQvMsYXWYSM33nhWbn4jJ9xWmm4b8QyDdP
-	 S83WqI1C8kwRYaFMqo3CXWc8kjR5r4thgJXs/CgBh0lFFfewxS56HZnPUIrrFuwxUa9bq
-	 ch3XFt9wk5x9Y9MvA+syRa9VYXvp5MG1FtLumVTt0GsGqjwp7wUtAkQ9zVQpd78j6QjmK
-	 bAaXAJVnjs0m4THAf1ND8O/4gzse2TJC7Etvda5b00j3wo1dyHx5H5Ppdm+Bf+OIU1Q==
+	t=1794599688;
+	b=nndEBA2TECMe5D0IZi8OJnum6HRZ9HHY1Z3KoVnjCCaqGMDtZ+LddkZzZ97ZbLzQwOtY
+	 8twm0+rTwVHJq9L+ZuR0Rzw7PYrgpikzxQTcMcd2KQeNH7hSMwNbBOFK3A3JGL7e2rqS4
+	 j/domG13Yr0F9BNE4QY0aijRSLZ/dLvRPXKGQ2QLtWhDuEmb2w1PFPcfD8Maj7NxU7S1A
+	 PYbrcy0U8COXX8cOyR+MnmRCPWowHWyuR5AFO2r9YW67P2gPvvru+R2aSD2qp7HZlCYoZ
+	 G8bHk4/ynvuPvfj/f90650GV2ECPcl2AxRQLqkGAKQ9ik4uYYK42423vWj7yAKHp5CQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794599687;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794599688;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=LtykvKAuB/k2zHXEydM4TKa/vTDWgr+HDiamPibVH1Y=;
-	b=cUV01gWdOmfTdpiUk49p0vU0V16ytj53IXz/E2iaRJKjw0vfLqF6+tCTc4/J0rojVBaL
-	 t5vaSRAcCT7WpokLhMbGyqDi79s4M6iiX3YyE/7h4t35U73hm1CDqocINep/7ipvqsPAM
-	 K5egvfr5V3Rs/EqpGq77gE/p/CjPBilbRGWJbdFvYTb8V/Eu6msTkgSvKPmrgyVmZ11N8
-	 xZsT/oNBVSIgXbBH6r6JNAjm9h4QDwuvcKgNzwKXerOFYzlEKFHKHQmTVKLC0fUhKg3gG
-	 De7MrbOTwdh9cYlTzH9iuosWf6i3iXEkEaEx46ILwB+eVLew1EqPARgkVmhwLSMVRxw==
+	bh=lMRIQVsONxIKglrvSyqr5H/29Al6TnhbZxn2Kyw6k9w=;
+	b=nsjRRQ3aHul29dj2KfMmkJZ8kgN9lx7gJApr1DcfvYu1u3eHNPkdzVBhrliGw3QGgzsO
+	 6ipZ9v2NxOPhCJS4sa/moWkXdj9+31D8uoz4sffpMsafCSFNCqF1pSgr89jeEHQr8CSEP
+	 wBZbqnmMxO7cEhuBRS4dscYJsUyZDYQfjrjtlB2PcLw7166w0QSTUSqKQManK4UOaR+9K
+	 J6yC9WgYTETYg6+slb2M2fWh6+9aywTee9iPM70qXPvAXP2Yh2/W/HL9lHcieeWa+v+Rn
+	 A1DEQahm9CeiOzi84PYbQF7MuRrG8unywnTr0GMpZxLGWDND6yg9iNCZzTXtQKQ/fGA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YJaQlfmt;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EyyQor6H;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44AE7606D0C2
-	for <mptcp@lists.linux.dev>; Fri, 13 Nov 2026 19:54:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A888A606D0D1
+	for <mptcp@lists.linux.dev>; Fri, 13 Nov 2026 19:54:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YJaQlfmt
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FB501F000C8;
-	Fri, 13 Nov 2026 19:54:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EyyQor6H
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 831381F000C5;
+	Fri, 13 Nov 2026 19:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794599687;
-	bh=LtykvKAuB/k2zHXEydM4TKa/vTDWgr+HDiamPibVH1Y=;
+	s=k20260515; t=1794599688;
+	bh=lMRIQVsONxIKglrvSyqr5H/29Al6TnhbZxn2Kyw6k9w=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=YJaQlfmtm7SVVmD7knMrnw44vvyJT8o57wATdanHV2cfzufy4XZBf/2UIWgao86rr
-	 laqF7lCHyz5k6YL/+HJZle9lvozYKVKI/mGoPm24ZBpQAbLqwE29VVpUP3/A0cKQt3
-	 l59Km3F1FrLu+6Lvh2gXrprYGtNdlhELqYk5bYEnyH1m6HoKxsNNmn/W5MsvekMaCt
-	 7eh5zWkZJ6iTl0qbL7Ojpy/FQmh9dSlGwlJJCDXxVBjo2xcaaOakIxWsgYmxsXZorz
-	 1h+VuuTBfRqUQsMdlNVXjj0zmyg9xj4UbtkUS08218c0u8ggdjNG51Dj7/fAn72RKO
-	 sPnUiwba0s4Ng==
+	b=EyyQor6HXmT/yJx5Wbxa+Tl6d2e+cuZ95bKX9+YsJ+HofTSuKWKyQdSKGSzu7yPa8
+	 KvwF7BtDQ0YqMSk0mTWP7rfPRBAPE/C521UYjSXJUpgZx1cSk+ku/ORtjKwgTIVddg
+	 5muXc2tLo8DbgIFQHjuCAkslfpC8IiDKuPjsP7oTNkeoX2lnYH49KSAObX3ei/veCz
+	 1vAoqBwbc/atptZa/x9zXRYfws0l6HkBwA42kIuuW71XgtlWBh5ZSW919aUkKbp2yd
+	 TbCstqvzzx+GtyUe8g604NxUHAXjQst0xnlYjQ8LCkLGvAa73lOZ+QjIiJWcBgizy3
+	 2Q1f9bO4MpUQw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 13 Nov 2026 20:53:59 +0100
-Subject: [PATCH mptcp-net 21/34] mptcp: pm: kernel: don't count
+Date: Fri, 13 Nov 2026 20:54:00 +0100
+Subject: [PATCH mptcp-net 22/34] selftests: mptcp: join: check re-adding
  signal+subflow ID 0 endp
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -55,89 +55,80 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261113-mptcp-cmason-fixes-v1-21-9205b77e9a2f@kernel.org>
+Message-Id: <20261113-mptcp-cmason-fixes-v1-22-9205b77e9a2f@kernel.org>
 References: <20261113-mptcp-cmason-fixes-v1-0-9205b77e9a2f@kernel.org>
 In-Reply-To: <20261113-mptcp-cmason-fixes-v1-0-9205b77e9a2f@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: Chris Mason <mason@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Josef Bacik <josef@toxicpanda.com>
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2991; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=8X/pgFm5oMi6uqXYBW1J615qsTAMQvVMjuctgZ1KHek=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLK+Zz3YYLStq9JK9XbQ43mWR07dWXB326fJBtcfzlrF1
- LpIb1PAm45SFgYxLgZZMUUW6bbI/JnPq3hLvPwsYOawMoEMYeDiFICJWG1l+J/xa/u9Ium9iqla
- qW+2bD23JP7uqaRZndy985ynpRkEB61nZOh45Py9eqauyp737nFvhOoVV29qvT837/7ylleau1W
- kGlkB
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2754; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=TjBpwuHhNzRS1ipzelTDYXpHBFaY0+qGHmTDuX/fwbc=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLK+Zz3smPVupV9/yYJ7Hl5Hrjv/sg9OYr4Zq6n8rzPiU
+ rdh3/e+jlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIlopDEyLPx5es2VDHX7nR+s
+ 1ub/dFxwvbTROtK2YU/VrEnP7tYt5mVkmMQlsGRqyGuTkj79DXOk52Y8MjsdlrhaSD7sv4v5xJt
+ L+QA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Josef Bacik <josef@toxicpanda.com>
+This test extends "delete and re-add" to validate the previous commit:
+when the endpoint linked to the initial subflow (ID 0) had both the
+signal and subflow flags, it was counted as used each time it was
+re-added, while this counter is not decremented for this special
+endpoint. Once the counter reached the number of subflow endpoints, no
+more subflows were created.
 
-local_addr_used must not be incremented for the endpoint of the initial
-subflow, because __mark_subflow_endp_available() does not decrement it
-for ID 0. mptcp_pm_create_subflow_or_signal_addr() tells that endpoint
-by local.addr.id == msk->mpc_endpoint_id, in the loop that creates the
-subflows and after it.
+From the second round, this endpoint is now re-added with the signal
+flag too: without the previous commit, the subflow is not re-created at
+the third round.
 
-For an endpoint with both the signal and the subflow flag that
-comparison comes too late: the part that announces the address has
-replaced local.addr.id by 0 already. So the counter goes up each time
-such an endpoint is removed and added again while a connection that
-started from its address is alive, and never comes down. When it has
-reached the number of subflow endpoints, the connection does not use any
-new endpoint: after four rounds local_addr_used was 5 instead of 1, and
-an endpoint added then got no subflow.
+The ADD_ADDR sent at these two rounds are dropped, and not
+retransmitted: if the server received them before the new subflow, it
+would try to connect back to the address and port of the client, and
+fail, which would change the counters.
 
-ID 0 can't be the ID of any other endpoint: look at that, after the
-replacement.
-
-This issue has been found with the help of an LLM. It has been
-reproduced with the modified "delete and re-add" subtest of
-mptcp_join.sh, from the next commit: without this patch, the subflow of
-the ID 0 endpoint was not created again at the third round,
-local_addr_used being above local_addr_max:
-
-  # 002 delete and re-add
-  [...]
-  #       after re-add id 0 (3)               [FAIL] got 2:2 subflows expected 3
-  [...]
-  [...] subflows:2 [...] local_addr_used:4 local_addr_max:3 [...]
+The 'Fixes' tags here below are the same as the ones from the previous
+commit: this patch here is not fixing anything wrong in the selftests,
+but it validates the previous fix for an issue introduced by these
+commit IDs.
 
 Fixes: 9366922adc6a ("mptcp: pm: fix ID 0 endp usage after multiple re-creations")
 Fixes: 579a752464a6 ("mptcp: pm: in-kernel: always mark signal+subflow endp as used")
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-[ Keep the original one-line comment. Commit message: 'behind it' ->
-  'after it' + how the issue was found, and its symptoms. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/pm_kernel.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-index 4955c928ea32..976d72565bda 100644
---- a/net/mptcp/pm_kernel.c
-+++ b/net/mptcp/pm_kernel.c
-@@ -411,7 +411,9 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 		/* Special case for ID0: set the correct ID */
- 		if (local.addr.id == msk->mpc_endpoint_id)
- 			local.addr.id = 0;
--		else /* local_addr_used is not decr for ID 0 */
-+
-+		/* local_addr_used is not decr for ID 0 */
-+		if (local.addr.id)
- 			msk->pm.local_addr_used++;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index c3ccce96b45b..6cd187577479 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -4387,17 +4387,23 @@ endpoint_tests()
+ 		ip netns exec "${ns2}" nft insert rule ip filter OUTPUT \
+ 			ip saddr 10.0.1.2 meta l4proto tcp \
+ 			"${RM_ADDR_OFFSETS}" drop || nft=0
+-		local i
++		# No ADD_ADDR to ns1: it could try to connect back to ns2's port
++		ip netns exec "${ns2}" sysctl -q net.mptcp.add_addr_timeout=0
++		ip netns exec "${ns2}" nft insert rule ip filter OUTPUT \
++			meta l4proto tcp \
++			tcp option mptcp subtype add-addr drop || nft=0
++		local i flags="subflow"
+ 		for i in $(seq 3); do
+ 			pm_nl_del_endpoint $ns2 1 10.0.1.2
+ 			sleep 0.5
+ 			chk_subflow_nr "after delete id 0 ($i)" 2
+ 			chk_mptcp_info subflows 2 subflows 2 # only decr for additional sf
  
- 		nr = fill_remote_addresses_vec(msk, &local.addr, fullmesh,
-@@ -432,7 +434,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 	 * case. This avoids issues later when removing the endpoint and calling
- 	 * __mark_subflow_endp_available(), which expects the increment here.
- 	 */
--	if (signal_and_subflow && local.addr.id != msk->mpc_endpoint_id)
-+	if (signal_and_subflow && local.addr.id)
- 		msk->pm.local_addr_used++;
+-			pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow
++			pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags "${flags}"
+ 			wait_mpj $((3 + i))
+ 			chk_subflow_nr "after re-add id 0 ($i)" 3
+ 			chk_mptcp_info subflows 3 subflows 3
++			flags="signal,subflow" # ID 0 not counted as used either
+ 		done
+ 		[ "${nft}" = 1 ] && ip netns exec "${ns2}" nft flush chain ip filter OUTPUT
  
- 	mptcp_pm_nl_check_work_pending(msk);
 
 -- 
 2.55.0
