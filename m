@@ -1,95 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.45
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.48
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794644537;
-	b=3PCo/oS67+b+VspuMyZpMu4VazdkOT04WUcP7y1FW8JdZCQtO9lbec+aukKkyDAR5HB7
-	 fd9SGV/rWrca3Gb70VDLd4V8w/u+neqQkjdKAHZ61n1tNfqmOwp82AdoRc25+YA3bcp5t
-	 DHpc+eD1U/fczaq4bumklU8k7Vv+QfyGl9vy8EeupHgvWBtYm9yMcvOA3xlW43BZeL2gi
-	 qm1c6Nabq/sxY3uLHYAGK9f8sswRb7G2bNWYFUaour+DJ6WMZ8XF9r50icUMwVzBsr5g3
-	 LGlOAwbfQcP4tFYxaAbzrRbM0D+jgCRWjiMRvUDneNWTiA6NMauzNCQVKlhL5zL2Dog==
+	t=1794660138;
+	b=zWmiAm+6X/cOOUudRJlEMcad3xy8t0z9hNqYRK0KvBGcSLimzIcB6yRhUxWiiJIl3L39
+	 4O0tGhDVFnABIciqEPlqKp6a8T4wIgyjh2BWbaSFZKmfPahTLwfp3ubaoeWvA3cAFyQZI
+	 TwYja4EXofbJElD4hdEkVheEll0GwrlJqp2gceXFMlRxFfJaRmNiegcYQVCTlyRFlrXaE
+	 1mleWFD36olJc0U3XhuiBmEjSwxCOooHanGAleQty5UKbZKKTVYzY0x94tiM+sMQ/5yFP
+	 GypLD6rb4D56/RADsv9UmiEJBxgzvGQeW1szIBdH7IwUkBuWPQYwxj8gwJIdyhvAWHw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794644537;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794660138;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=Tfs9s4KINOXHCd+tSmfq6jFMNmE+uM0ebKd1llZq3aw=;
-	b=sVzrfDcmghZ2I2ZhyqL5TRiCQ5fVaakQpSjGkU56MKOGrtX/odcXLB0BlIlS6mEC0KuA
-	 IoEppHl8rCPyYH3CjR8TG6jsub4dd3HIaBB+kvusa2/kk9Q1J0Bi8fSlXrZrvQUWCH2U6
-	 I5z02HrZHiyIFEHfBxsDebuUrRnlv2zsV3Caz8zRSMPxt9uMi663HpZ92e5foB1LoY+4n
-	 4sBJqZapnNWLdsorR8u2Odeu+0yAdVFYwMRs7fPk3n6RQX2HCR0+jAwdrO/eRjrHegy+B
-	 y9fCmOk4kZ9uDzJ17eCVqHoHXIT9KGQFs9sYQV0oXM1k2DveH+cIqUbTb7c/V4gIZQw==
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Content-Transfer-Encoding:Message-Id:References:To:X-Mailer;
+	bh=C4WPmCztPH+KoFhzb/uCAJwlkmrIRFMhr6hpJOKutGM=;
+	b=T/rwsOdsqKTv8qi5NXohCnwUbLml4vQWx2jYrFP3ZMRkizAMe+3KnPLv6EdddBywJ/yg
+	 jRuKixt0WG40OxPaBuvBjLnv51QXHOcEaAp3TcbRpaTRK5ckiSev78ElIueGoRhXHkFYH
+	 +Uibht/CpTMBh4+suQ4F7KUI2x89ygeFALKwLmXcZIPSVlAuePWo/mu3aIVZmP81ri2c8
+	 a+NfG7eAIVubmB7lqE6MwMKaLKef6zK1fkT/tomBuV3tzZMjwE4JYzqsCNynsxiD1giAx
+	 tkI0OHFEqLww6/1Yu+u0mvMz2OKpggHeY53oMRjbU2pVVLn/38UPfneIYwu04OuDXmQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=YpRH1Jq3;
-	arc=none smtp.remote-ip=74.125.82.45
-Received: from mail-dl1-f45.google.com (mail-dl1-f45.google.com [74.125.82.45])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=GHV5258C;
+	arc=none smtp.remote-ip=74.125.82.48
+Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF76D606A323
-	for <mptcp@lists.linux.dev>; Sat, 14 Nov 2026 08:22:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CF76D606A323
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A746606A331
+	for <mptcp@lists.linux.dev>; Sat, 14 Nov 2026 12:42:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3A746606A331
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=YpRH1Jq3
-Received: by mail-dl1-f45.google.com with SMTP id a92af1059eb24-1a3c08d6928so2395038c88.0
-        for <mptcp@lists.linux.dev>; Sat, 14 Nov 2026 00:22:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=GHV5258C
+Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-1aefd1bf74aso1408980c88.1
+        for <mptcp@lists.linux.dev>; Sat, 14 Nov 2026 04:42:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794644536; x=1795249336; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Tfs9s4KINOXHCd+tSmfq6jFMNmE+uM0ebKd1llZq3aw=;
-        b=YpRH1Jq357osfRD1odXTPBvP+qdX3YIowqRuLLaSw+q7iu2R6vV9MfQmf26ogCvvS1
-         jwwDDgmKcigBeS1HdlkBPxDczJqJyLWNbdiyhT4IzKRG2026FDlM0nh7EXJ+cBuXNW87
-         W5UdxtDtkaQn26xIqaQ3HXeupXkzhHJIyx3UTPla4ElVxgWfz8a3BzcVGMSCQzLq3kC4
-         O38Vgj/pqgCDlkJ4A6I0iDMv/4N2UIQ9cJj2OTbp5TF/9DdMnSRFtRQWafoRW33nnnKy
-         KTHk5JRsX1nOmE5NabTYmQWSERtzGKelZAuvSnLBUQtsbDH2gUz5VgtyR1nr6gtaEGlF
-         +i4g==
+        d=gmail.com; s=20260707; t=1794660137; x=1795264937; darn=lists.linux.dev;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:content-type:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=C4WPmCztPH+KoFhzb/uCAJwlkmrIRFMhr6hpJOKutGM=;
+        b=GHV5258CL6KT7X5l7CHHHxfyJSuDt6fIrC5+ka6oDQzYzrCpWZw9YuEcMrpawXNCmZ
+         rVabOvli+/GyFoMRdh7vQSpPChrnexHJqFOnPK8E59UTOPb6bfq+7ky3xi7dtLovoaQY
+         T/5H+VzdJt7CiI5gqALnN6gTfoW8xNDWBfHqJneEeMk4/uXrGHfVBkKF2RdemZghVyzA
+         GSCIz5HTWWsoj06SC3hMo2bUdww1/csa+5CYJSQQ2MSndAT+1iEaBplHoFv+kNRbFOti
+         rK193JrFzUStVnKtZwJkELgSdhEXqeBj0jLMpZUQAaDVbxmOJk89FqVDqqhzyNLgPLcc
+         yZWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794644536; x=1795249336;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Tfs9s4KINOXHCd+tSmfq6jFMNmE+uM0ebKd1llZq3aw=;
-        b=MrCY6KZ6cB7cTCsF2WwxOIzvr82x37AWa3Uj3dsHx6YDfnEC6WB2dUhcQiK4yALlCj
-         6a9LyFx3oNeUufgflpOs7PAvR1rDMcNbnMgQIck+W9/CsfZS30rIwC/Yu7aS4of0Okxi
-         2m+fcbaUY7BOL77zqUSbgxyBMEuLx/ythtJCtFec3s2eBToFzRuHuJ+mRX1kbURFXwnQ
-         ZJ+VJFtF+oV9X1dluFMzQQLfPI+K6Bp3uhlMaZ42J/UICozBjC+oeIPHZexpmgaGM7s6
-         GM5tVv73oNs9uUq051B6DwTFKuG2Es12PEUWZkoMxapK8hfWoCCGzSEjsLkbeIXFJKpK
-         Sd/Q==
-X-Gm-Message-State: APuU4Z9fzNSxJWxvnbSzF7tL9LSXvDwom7isvf+bHIRyspLYEMThMgRr
-	Esw/7vDLKj8v4odWIULpahSmUyoU779A442eL6Ts4u4MnYSpG1ihCtqykcBOOA==
-X-Gm-Gg: AYBFou35gw9pO7Ud5KaPpHeGCwGumMWxZffaweyVF4Lar2c9xfhmDCkB4ErXgZ+wK8I
-	xjRthU34dhlGwy4FF+/mSiWclc6u7z+5wiRNQHv0P+Z6oQ8XylfKT2UoarnuelYDWrPexlKCVNn
-	34PxbLx5oNFVAvAH0snAcsZlGGqiJVALR8H495ZQ6smH4Kj+RhwMA+CqHwuYBp2xpJqlu1yuhYr
-	I7NDeXGYC2CX3vxXOt6io66/rssEOp1PVx5BJqd/rlrJlDLB9ERNiofyevTgXKtQ/H4jvqzxC+I
-	KTCeMsESAYln4QfGBoM6qPT3eCSvtnE65Kasa+AauwB1UAV+nYJ0YlpmMgrBWPVnJjW8S+D4WZe
-	3JaJO8M2LXYi8Ws9oaw0d6WyS4yEtXdy4GIldtyur7dU8IK0Jb5y16InUFbDWSKC6qdStsECGxg
-	YgBMs/l55yQnBAwufuvyKK3PHv9Xf58SVOFS5a0JZ5LATmQwmXfrtTtX8E6ReQJ7hpJTXMBM30a
-	gg81w6OyB3KZD/j9yncT54tZatMB5t03rWunPGbE9oYKpnL6Dr2CcAkCkMesFwoUeYCw93WEc7a
-	u6fYhEUHynckdEJ3b/S54d6X2mBu8+9P3muMfql2uezQEce5P5HtvyrubQ==
-X-Received: by 2002:a05:693c:41c7:20b0:36f:2e77:93e2 with SMTP id 5a478bee46e88-379681c6815mr4735704eec.28.1794644535629;
-        Sat, 14 Nov 2026 00:22:15 -0800 (PST)
-Received: from mptcp-lab.w453y.xyz ([59.164.88.43])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-379553316f2sm14684645eec.9.2026.11.14.00.22.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Nov 2026 00:22:15 -0800 (PST)
-From: Abdul Wasey <w453y.me@gmail.com>
-To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	"Mohit P. Tahiliani" <tahiliani@nitk.edu.in>
-Subject: Re: [PATCH mptcp-net v8 0/2] mptcp: pm: in-kernel: fullmesh: re-add of the initial subflow endp
-Date: Sat, 14 Nov 2026 08:22:09 +0000
-Message-ID: <20261114082210.3439645-1-w453y.me@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261024111842.1069878-1-w453y.me@gmail.com>
-References: <20261024111842.1069878-1-w453y.me@gmail.com>
+        d=1e100.net; s=20260707; t=1794660137; x=1795264937;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:content-type:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=C4WPmCztPH+KoFhzb/uCAJwlkmrIRFMhr6hpJOKutGM=;
+        b=rGfHajYbMH4KEJ6hMzxppOPlvhHECi5dpV6XbJnLcLcVvmFHDujqfbeUTUCJ12/OQo
+         4gHWNGF1TFb9rLa9v+iunPSLL+6yWemkM4G1B77Qu6put0lL2XoWFgvuGWcNcGqJJf1D
+         Gt5QDF5Bi74bjDCGRr/9Y9r2sHx5DlfiIbxrzQTsM9h5L8BwwqvEdu6d/F3DXfM3OfJV
+         TKVDsEq8TAKN81FIaW0HKLpm1b7dVQeUCpXT5Tz7eHrNYl/2oCairx2cq2uloZsdO6OA
+         WI/61udOz97eD1CoLUW5WgYIU4qdYh3dRV81oup2eR979/BTP3TU7yLwoPlx09Tk1NNO
+         hI1Q==
+X-Forwarded-Encrypted: i=1; AL+hErEhhle+TSz1Pcvm8ImFXxWj4kZOfF6TFjhZ8xki/vxvqRE02SM40W/jME/uFkcdt4Q3R17avQ==@lists.linux.dev
+X-Gm-Message-State: APuU4Z/20OX2uvv9talWkR/ybzPgSPU+24WM6ORgHMEnZ9R+vCwMrQcN
+	sn7v4HGg0aJnfCdT+bVlVDAFYNEH+DTG8UXy48CjRNvKM/9kZqRvG6bw
+X-Gm-Gg: AYBFou1l07a60vL/9QU2wNM8xaMFSuxxsr6fIFtNo/3ZAtKhpi9DMNJuobxYGQ4L4LG
+	8tm4R6EC+DlBt4hUlKOVTOff1T4vzBXCLljMBGfOsadCoqRpg8vP3BIuv2zpFm8vb4ZN3TGOBPf
+	RDLPj1HR7wXKBUa2yh+Qx9ePscAEZHjnImV/M78qF9oB5KozXcbW3/G2pVdd5zRdKH/hJQY6LBS
+	/iPlSgxF76qmMhdpRw3bZM/7iyoad5TBFFpo73nXZiwfbC17xaoHhpvVfdWxdfweOrCl8qXqHyT
+	DSk+pOE0R3hHAC9kOhlornJ+S+svZ5KJ1DH5M2O+DRrisN+EN4mTWuG37Ko9nc2ZuPuMVujDxe4
+	Eeg3GrqJtv7zF6q/6EVAQcFU4YmuAGb+XSUeIHSmEdNLba2mt9K43hVlkcC9Nx6A2xrvFC73jhf
+	tcsMMfLtBIJNveVcGy7gF+QEPN04eHGpu025OVlPjpZFZRUJ/hHdS1IJtkMm44aG+oOlads4v66
+	mgG2bGDvphqPNq+wwpy2tW6p4vUgzwKV2xHjmcSYRtFaSpXPZ5SKVEyQHFiXdy7vXTtJhu6rlX8
+	zQhz7iVGnEZqX/SASN/FXvEBPIA6d0XJASNDIJM1fqL51R0gyZ5lt90Xr9nnlxF6SoA=
+X-Received: by 2002:a05:701b:4294:10b0:1b3:b3d5:566f with SMTP id a92af1059eb24-1b5030990dbmr5086025c88.11.1794660137166;
+        Sat, 14 Nov 2026 04:42:17 -0800 (PST)
+Received: from smtpclient.apple (v133-18-180-162.vir.kagoya.net. [133.18.180.162])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b5031b98e5sm16550060c88.14.2026.11.14.04.42.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 14 Nov 2026 04:42:16 -0800 (PST)
+Content-Type: text/plain;
+	charset=us-ascii
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -98,29 +89,53 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3901.200.71.1.16\))
+Subject: Re: [PATCH net 1/2] tcp: avoid wrapping Fast Open blackhole timeout
+From: Esko Mobius <echoowall@gmail.com>
+In-Reply-To: <avVX-3s3AYwtxQe7@google.com>
+Date: Sat, 14 Nov 2026 20:41:59 +0800
+Cc: Yingjie Wang <x-professor@outlook.com>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "edumazet@kernel.org" <edumazet@kernel.org>,
+ "ncardwell@google.com" <ncardwell@google.com>,
+ "davem@davemloft.net" <davem@davemloft.net>,
+ "kuba@kernel.org" <kuba@kernel.org>,
+ "pabeni@redhat.com" <pabeni@redhat.com>,
+ "horms@kernel.org" <horms@kernel.org>,
+ "matttbe@kernel.org" <matttbe@kernel.org>,
+ "martineau@kernel.org" <martineau@kernel.org>,
+ "geliang@kernel.org" <geliang@kernel.org>,
+ "ycheng@google.com" <ycheng@google.com>,
+ "weiwan@google.com" <weiwan@google.com>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <EE7A0514-C23D-43C0-9C38-CF15CFCF8AEF@gmail.com>
+References: <cover.1794325665.git.x-professor@outlook.com>
+ <340d9f1f96e235642e8b47b5e7c836a18de8dd56.1794325665.git.x-professor@outlook.com>
+ <avVX-3s3AYwtxQe7@google.com>
+To: Kuniyuki Iwashima <kuniyu@google.com>
+X-Mailer: Apple Mail (2.3901.200.71.1.16)
 
-Hi Matthieu,
-
-On Sat, 24 Oct 2026 11:18:40 +0000, Abdul Wasey wrote:
-> With fullmesh endpoints, removing and re-adding the endpoint used by the
-> initial subflow never creates a new subflow from it: the closed initial
-> subflow stays in the conn_list, and makes the PM think the remote ID 0
-> is already used, or picks its reset remote address. If the initial
-> subflow was the only one, no address is left for the remote ID 0 at all.
+On Thu, 12 Nov 2026 06:15:12 +0000, Kuniyuki Iwashima wrote:
+> No one wants to configure 80 days blackhole timeout.
 >
-> Patch 1 fixes that, patch 2 adds tests for it.
+> Please apply a sane limit in proc_tfo_blackhole_detect_timeout().
 
-A gentle ping on this one, in case it got lost. The MPTCP CI and both
-Sashiko reviews of v8 were clean.
+When picking the limit, note that the product wraps long before 80 days.
+With HZ=1000 and the maximum multiplier of 64, 64 * timeout * HZ exceeds
+UINT_MAX once the timeout reaches 67109 seconds, about 18.6 hours. A
+limit of one day would still wrap.
 
-I saw patches 21 and 22 of your misc fixes series touch the same part of
-pm_kernel.c and the same "delete and re-add" test. I checked that they
-and this series apply on today's export-net, in either order, without
-conflicts.
+On 32-bit, time_before() also needs the interval to stay below 2^31
+jiffies, so the current expression is only safe up to INT_MAX / HZ / 64
+seconds, which is 33554 seconds (about 9.3 hours) with HZ=1000. So
+either the limit is derived from that, or the u64 computation with a
+clamp has to stay.
 
-If something in it should change, I can send a v9.
+The same applies to net.mptcp.blackhole_timeout in patch 2, which uses
+the same expression.
 
 Thanks,
-Abdul Wasey
+Yongjian
