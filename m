@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794616071;
-	b=Ty4/A3l0rifZ6ZEmj0EvksQXmu8hBbkgOsVeppIutvmc0bsgZ4QWkIKE4uJmDwLPqQP6
-	 DtdhQs9e8QkRve1oEndj0JmugqJIffuJRfiTx4EKOAZo4qWG1Wffy4FZpLdRN3rqabnjV
-	 zJbkq10gjBejbqznrgpqW/UhQcVaIhfB4YK2m2c292+yN81/i6T2+CZgpctZalXbg8Z5U
-	 gZeGHXH3OcuTWp0I5SOappDpyT5btt1B+x5hq4uhbHBPGGQN2eu8rzGR6+zJjozslP/w9
-	 nS/kg0tLGes3fkShqDG7UW5kv1GsQ6709M/Xroi+ueV/yY7/tz+xUCPYMmGzun0y3bw==
+	t=1794617041;
+	b=MlJcLl7zOYjuKkCNHT1I9TT+FL0hyw7+T64QXCjYWaeIawYsZe3nEB20j0wqVuTm67J1
+	 LtsMO2JeUiTbgYN1P2QHYh9xu8QdjG9a7sjyMARL3z4T2uyAD+Te+1BC13fHArRDz6O2H
+	 2Fh2v30qNZkaP+KoS+tuLQS791qXZH6sZ7qbVc2po7qqpK42t2c0oSop2NDONIPd+QBeP
+	 MhJikrsofnlUBnQINAQMF46RWgpEjBqEuOWa/qykult/k0zybLz2gNNWmXM370IHBG+Mo
+	 b8d0NabYLRZ9pSx0AW/WIyvb1t953k08576489yhayq+99J4A2Pd2JioqOCYYIOxy1A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794616071;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794617041;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=Bu4gBqJEjXl4+TFcNFFkj6jTB0X1tmGxJkOhCe/aqEg=;
-	b=QLdjGAZyDHX03uyQ0Uq9F1/sm0apqnEesMUQTby/M9ZqdwQpXrN86STGAIHx6tHWvJnv
-	 mFTIan0G8bKa4qKFRLbXzhkqs7wmfBw5mFK+2iDnkS+/rUTd9YgJupvX3nWWxNAqo0vuW
-	 at66PN39fxK2MOxdfCI/94XracymFJa7B3Hl5U6FI+9bJICuq5f1L4IZfkA74OnMJccDv
-	 91nAwf3V6XP4CTv/b9I295aSoWE8gVOctTLFwutM/r5JTGMTmK089Xwauea3DpNoLqw88
-	 8QIAjeeFNMCTUjw1vrkoqu/zLKKkoRg88NpQBpTaNZqcm/7dXeZmcKPzELo7C9Qh58w==
+	bh=H4mY5ZRs2JHdPhUTbfpC1mkZGXB3v407FL9a8i/myIQ=;
+	b=gxgv2QXktzCeDYDTg7Fr4V3PHjs4AjYYbaXVf3PbC8JqsjAJ3FF/TNAbZyaTeUZXDHrE
+	 yH2jebDoK8hdugdhBszuJjn/Qd5WmeH5dbNCWA/jaJj7zsce5YQ+ELCL/moehVdxERQuO
+	 lcK3pAyQbUCLbNq4jfJEv/IK6szyxGUwSahZbgCy1yecZgT5JbVL6kEwovD+ARg85ZKBD
+	 gvwjcHYyB4Luj19C4Vwv98j39BsiX8IZgG63otOsj65UGuBdQ4HUtVMkoXjJYl6+OhtE9
+	 6C5ILY3kWMxQCkdXEg2OkVZPDxZ9NBc3oC8iJUziCRDvo1hORo5JyjRSedmocjqUSmA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fi0yoD0i;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CBLmSI4E;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066AE606A329
-	for <mptcp@lists.linux.dev>; Sat, 14 Nov 2026 00:27:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8BA1606A333
+	for <mptcp@lists.linux.dev>; Sat, 14 Nov 2026 00:44:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fi0yoD0i
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B97E61F000C4;
-	Sat, 14 Nov 2026 00:27:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CBLmSI4E
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62B311F000C5;
+	Sat, 14 Nov 2026 00:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794616070;
-	bh=Bu4gBqJEjXl4+TFcNFFkj6jTB0X1tmGxJkOhCe/aqEg=;
+	s=k20260515; t=1794617040;
+	bh=H4mY5ZRs2JHdPhUTbfpC1mkZGXB3v407FL9a8i/myIQ=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=fi0yoD0iOR9uPIsMM8yrkmpWwmWrm36DZR7KNGN2OxhsgZ8dnG4N9KRfteG/ZdMrA
-	 kOXeQbYjMCjfg8e2mBFpAuSZGlV5glKhkJ4FAasM/qK7+na4ILq4y1CXaBrri+kXlu
-	 jYe2p48WAI1syc4tK3iccsUT4etIjLoxMLaNwHGQMsj5bk8UCewoDHj5GOhPoSQdp+
-	 JpLqLA8wF7eGj/C/nD2au0LYa/3ONzEcAHA/pyjVKTjNYCsM5yDjEvIvphXL9jGMud
-	 zdicwQZ8OtaT/irMk4v3CgE1q8zxsoqfQi5rwFqZ13YzOHUJEnYmQ2faI6fa+/2mQ7
-	 SB8j08F5Zg3iQ==
-Message-ID: <sashiko-outbox-213924@kernel.org>
+	b=CBLmSI4EHbzo843qRZXNiqnXAQQ3LanKanIAhpnIxz/qQ4YvUP7TKjyjWR+M9Ke2+
+	 nYY8zhwgOd/kkJRt9s2d40duY+v6s6b5Ge1NI78ndR7joBjZVhUhvhwiErgHf9vHAc
+	 cx+CbRwwl9uOia4bR5+zffgk+wqDAjOf6R7y1VrwuMCZ8ThQH8g7yAEJzDAABPAyXi
+	 KZi5fr7oiSncHLC9wWXkQKNi4Kt5fJqf3kLDjjO3LgX4huAPGQjl5oudvR+/ocUCEu
+	 9AZ02SWa+561VEMmdR8UTu+pOM94c4S+ul4s08oWSYkibJIRuwaDdThM9g78H8ZYKm
+	 D4BYQolnEFfCw==
+Message-ID: <sashiko-outbox-213944@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-net 26/34] mptcp: don't send a FIN before the
- pending data on fallback
+Subject: Re: [PATCH mptcp-net 27/34] tcp: do not pass a BPF reqsk to an
+ MPTCP listener
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>, "MPTCP
  Linux" <mptcp@lists.linux.dev>
-In-Reply-To: <20261113-mptcp-cmason-fixes-v1-26-9205b77e9a2f@kernel.org>
+In-Reply-To: <20261113-mptcp-cmason-fixes-v1-27-9205b77e9a2f@kernel.org>
 References: <20261113-mptcp-cmason-fixes-v1-0-9205b77e9a2f@kernel.org>
- <20261113-mptcp-cmason-fixes-v1-26-9205b77e9a2f@kernel.org>
+ <20261113-mptcp-cmason-fixes-v1-27-9205b77e9a2f@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 14 Nov 2026 00:27:50 +0000
+Date: Sat, 14 Nov 2026 00:43:59 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -61,111 +61,52 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issues to consider:
-- [Medium] mptcp: missing TCP FIN in mptcp_try_fallback() after data
-  reinjection
-- [Medium] mptcp: stalled pending data and FIN after fallback in
-  mptcp_try_fallback()
+Thank you for your contribution! Sashiko AI review found no new issues
+in this patch, but noticed 1 related pre-existing issue it does not
+introduce:
+- [Medium] tcp: uninitialized AccECN bitfields in
+  cookie_tcp_reqsk_init() [1]
 --
 
-commit a99710492ed63fdd9aa5e8bcc3f5436e41a0c574
-Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+commit 60c8cb4a139f552e38c9eee24fcc2376af54953b
+Author: Chris Mason <mason@kernel.org>
 
-mptcp: don't send a FIN before the pending data on fallback
+tcp: do not pass a BPF reqsk to an MPTCP listener
 
-This commit updates mptcp_try_fallback() to skip shutting down the subflow
-at fallback time when mptcp_send_head(sk) is non-NULL, deferring the TCP
-FIN until the pending data has been pushed.
+This commit rejects MPTCP listeners in cookie_bpf_check() so a plain TCP
+request socket allocated by bpf_sk_assign_tcp_reqsk() is not passed to
+mptcp_subflow_init_cookie_req() when SO_REUSEPORT selects an MPTCP listener.
 
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index e61b6a3a955de..d76eaed4f01eb 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -1339,7 +1339,10 @@ static inline bool mptcp_try_fallback(struct sock =
-*ssk, int fb_mib)
+> diff --git a/net/ipv4/syncookies.c b/net/ipv4/syncookies.c
+> index 4e0ff3b820627..8433c856a7d8e 100644
+> --- a/net/ipv4/syncookies.c
+> +++ b/net/ipv4/syncookies.c
+> @@ -308,7 +308,8 @@ struct request_sock *cookie_bpf_check(struct sock *sk=
+, struct sk_buff *skb)
+>  	skb->sk =3D NULL;
+>  	skb->destructor =3D NULL;
 > =20
->  	if (!__mptcp_try_fallback(msk, fb_mib))
->  		return false;
-> -	if (READ_ONCE(msk->snd_data_fin_enable) && !(ssk->sk_shutdown & SEND_SH=
-UTDOWN)) {
-> +
-> +	/* no FIN before pending data: see mptcp_check_send_data_fin() */
-> +	if (READ_ONCE(msk->snd_data_fin_enable) && !mptcp_send_head(sk) &&
-> +	    !(ssk->sk_shutdown & SEND_SHUTDOWN)) {
->  		gfp_t saved_allocation =3D ssk->sk_allocation;
-> =20
->  		/* we are in a atomic (BH) scope, override ssk default for data
+> -	if (cookie_tcp_reqsk_init(sk, skb, req)) {
+> +	/* reuseport can pick an MPTCP listener: req is too small for it */
+> +	if (sk_is_mptcp(sk) || cookie_tcp_reqsk_init(sk, skb, req)) {
+>  		reqsk_free(req);
+>  		req =3D NULL;
+>  	}
 
 [Severity: Medium]
-Can this regression skip sending a TCP FIN altogether if
-__mptcp_retransmit_pending_data() has reset msk->first_pending after
-mptcp_check_send_data_fin() already ran?
+This problem wasn't introduced by this patch, but does
+cookie_tcp_reqsk_init() [1] leave the saw_accecn_opt,
+accecn_fail_mode, syn_ect_rcv, and syn_ect_snt bitfields of struct
+tcp_request_sock uninitialized?
 
-Once all data is pushed to the initial subflow and the socket is shut
-down, mptcp_check_send_data_fin() sets msk->snd_nxt =3D msk->write_seq.
-If an unestablished MP_JOIN subflow then closes via __mptcp_close_ssk(),
-__mptcp_retransmit_pending_data() resets msk->first_pending to rtx_head
-without changing msk->snd_nxt.  If the initial subflow falls back to TCP
-before that reinjected data is processed, !mptcp_send_head(sk) is false
-and mptcp_try_fallback() skips tcp_shutdown(ssk, SEND_SHUTDOWN) even
-though ssk already has all data below msk->snd_nxt in its write queue.
+When ECN is enabled and the third ACK negotiates AccECN so cookie_v4_check()
+or cookie_v6_check() sets treq->accecn_ok, tcp_ecn_openreq_child() copies
+those uninitialized slab bits into the child struct tcp_sock, corrupting the
+connection's initial AccECN state and exposing the uninitialized bits to
+userspace via TCP_INFO in tcpi_accecn_fail_mode and tcpi_accecn_opt_seen.
 
-Later, mptcp_sendmsg_frag() skips all bytes below msk->snd_nxt and
-clears msk->first_pending back to NULL, but mptcp_check_send_data_fin()
-will never run again because msk->snd_nxt =3D=3D msk->write_seq:
-
-net/mptcp/protocol.c:mptcp_check_send_data_fin() {
-	if (!msk->snd_data_fin_enable || msk->snd_nxt + 1 !=3D msk->write_seq ||
-	    mptcp_send_head(sk))
-		return;
-
-	WRITE_ONCE(msk->snd_nxt, msk->write_seq);
-    ...
-}
-
-As a result, the subflow never sends a TCP FIN and stays in
-TCP_ESTABLISHED while the MPTCP socket remains stuck in TCP_FIN_WAIT2.
-Allowing the shutdown when mptcp_data_fin_enabled(msk) is true (i.e.
-!mptcp_send_head(sk) || mptcp_data_fin_enabled(msk)) would avoid this.
-
-[Severity: Medium]
-Can this regression also leave both the pending data and the TCP FIN
-unsent when a non-TFO subflow falls back while both sent unacknowledged
-data and unsent queued data exist?
-
-Suppose mptcp_rtx_head(sk) has dfrag->already_sent > 0, unsent data
-remains queued at mptcp_send_head(sk), and the application calls
-shutdown(SHUT_WR).  When the peer sends a TCP ACK without MPTCP options
-that acks the in-flight TCP data on ssk, check_fully_established() (when
-!tcp_sk(ssk)->syn_fastopen_child) or subflow_check_data_avail() calls
-mptcp_try_fallback() without updating msk->snd_una or calling
-__mptcp_check_push(sk, ssk):
-
-net/mptcp/options.c:check_fully_established() {
-    ...
-		if (!mptcp_try_fallback(ssk, MPTCP_MIB_MPCAPABLEACTFALLBACK))
-			goto Inevitable;
-
-		if (tcp_sk(ssk)->syn_fastopen_child) {
-			mptcp_data_lock(sk);
-			__mptcp_check_push(sk, ssk);
-			mptcp_data_unlock(sk);
-		}
-		return false;
-    ...
-}
-
-mptcp_try_fallback() clears MPTCP_RTX_ENABLED and skips
-tcp_shutdown(ssk, SEND_SHUTDOWN) because mptcp_send_head(sk) is
-non-NULL.  When the MPTCP retransmit timer later fires, msk->snd_una is
-still below msk->snd_nxt, so __mptcp_retrans() sees
-dfrag->already_sent > 0 after fallback, gets -1 from
-__mptcp_push_retrans(), and jumps to clear_scheduled without calling
-mptcp_check_and_set_pending(sk).  With ssk's TCP write queue empty and
-the peer waiting for the remaining data and FIN, nothing ever pushes
-mptcp_send_head(sk) or sends the FIN, stalling the connection.
+[1] https://sashiko.dev/#/bug/linux-ed19fae6-fc32-4f5d-a0ad-dc03d9ce058f
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113-mptcp-cmas=
-on-fixes-v1-0-9205b77e9a2f@kernel.org?part=3D26
+on-fixes-v1-0-9205b77e9a2f@kernel.org?part=3D27
