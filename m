@@ -1,66 +1,67 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=203.205.221.190
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=203.205.221.221
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794661784;
-	b=TES3yreKOo9hsJOaKLvKVvYBrw5Gd3dn30BArhknqINSuPQrTTJf1Cc32NlPfGCVgLni
-	 PTK63DX8t+7PGvx94pH2YCpjnjDyqtZTUfeKOB3VIqsCVUZD1fHobm28KdvZ58Et7Yalv
-	 o5exIO32fgq6TfhIoTr0zZpi9kzQIQB4NmRNFfE9JjtgUc6nAsiBdNyjJIeNMs5GqCpgt
-	 7mv9OKiaiYEo7ZcYtDVyAj/2AW+ZOvmcA5BwNYPnTy9lZWOqLft4ogTRjlsq5Xz+C8wod
-	 HAMs0wq7XUUazrVwZvtZz2IEUnUGSUV/QFUV2P75T0mWDtM82Qq/3rVUP96Js7q/oaQ==
+	t=1794661785;
+	b=Ln5aNuUJZZgj4onITC5FJYx92dlPFe2542IPXq2497joNC8zBiq+BPsXRIS1C3J6EIyt
+	 tZ5LzPf5Uhj1mfkE23SPqq3wF0mxN0xoak2ZFh3jR8rlzmLOkADLuSI8zivlgy+JeAnHk
+	 4thSwmisgOq8fYtB+g2wIXiRSQfG3AlfyBCyBhKPox7Lqcqyv7aHjzJpkqkqTnmrVoYrl
+	 eelRp/SbFzXt3mo/rKenT8wl5ntOQyNJuEOtijQJwCMsnXFCjkkTrK+a/jgZlm9FOLPRB
+	 4rbgejqCwWEvvtzjK3BrlM6vVyqjJtaPI4notdbhSHVthOyq8OTP8Ty5J5cnj5RtyZg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794661784;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794661785;
 	h=DMARC-Filter:DKIM-Signature:Received:X-QQ-mid:Message-ID:
 	 X-QQ-XMAILINFO:X-QQ-XMRINFO:From:To:Cc:Subject:Date:X-OQ-MSGID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=yTztLTqw12rdN7/Uw5DEdcju+OrXmRfrHG3yaxKlPWM=;
-	b=4kC5pq9/QgN2QBN74x9DT9DdYYAfOnO01op5lsap4mgkDNIdDW0KPw8XhGlZJk8s1fQp
-	 FmUcNMNwTmMwGI0TiUp0Rq5BlpHip3pf7YSWYmxLBBKsBK85IVJrqXCYDWpbO2T7H/fYf
-	 APQeH022ZTjHq4oznaVvX6/m+5rStSX2rCE8Q6VmcC1ydrijyr9daaCGLH7nMge320+sB
-	 saXUmBJWX34l1zOJ/Kd5I7U9GspOIQ5NuBoGJOykY1iHXuw5+fJJsqZaUvjtWpDdMSSK+
-	 VrRx2zsnwr1tGekkFWO7sd028hPUTtpDt8pLihjwha85FiPKeTJm4nNj+QLd6R1QcSg==
+	bh=P6Yuh683q5aNH3HN18bjb0/+LSo0udXf08N/NrFxA9s=;
+	b=iyDiL6wKqXts5LVjdJ4WKRpJ+ZO05bLD0WsZto6KnrFnwHk0cQMUZvdqKcw92NYO52RJ
+	 m10OVUotOouHRNTOcF2sa3YJE7ODCq1zEsk8FX97vao+AUbXIZtyV0eZYgkTrnrXTXeOY
+	 0o6yo13jvydLtUheu6iV182nyHhgekD0yM6TGEWjLuR2i4kQzSam05MxXYQDdnsE2/VWu
+	 l3RxqvY5++xgUn0iTt+N+OapdCnykt9M4YqsgOn8t+h7DCPq4MfBq8BMq5Q5Jxdyshit5
+	 YUIGiBaGT29l2DQaQd1EgWLd17/gRUN1QyQfjxv07Tb3lTZ8ZXHDeMFd+ktQJdJZp4w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=qq.com;
 	spf=pass smtp.mailfrom=qq.com;
-	dkim=pass header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b="JLH/p4+a";
-	arc=none smtp.remote-ip=203.205.221.190
-Received: from out203-205-221-190.mail.qq.com (out203-205-221-190.mail.qq.com [203.205.221.190])
+	dkim=pass header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=aFa5JwqW;
+	arc=none smtp.remote-ip=203.205.221.221
+Received: from out203-205-221-221.mail.qq.com (out203-205-221-221.mail.qq.com [203.205.221.221])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236B8606E0F5
-	for <mptcp@lists.linux.dev>; Sat, 14 Nov 2026 13:09:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 236B8606E0F5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF1C60A6F5F
+	for <mptcp@lists.linux.dev>; Sat, 14 Nov 2026 13:09:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5AF1C60A6F5F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=JLH/p4+a
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=aFa5JwqW
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1794661775; bh=yTztLTqw12rdN7/Uw5DEdcju+OrXmRfrHG3yaxKlPWM=;
+	t=1794661782; bh=P6Yuh683q5aNH3HN18bjb0/+LSo0udXf08N/NrFxA9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=JLH/p4+aEBwFkkI32rUuo+ynCUteBbQVDFloAkKjfk5naEvFQH4l8QDZxBxQcy1en
-	 EU318Hj9JIKq+NGER6D49rODtRpTgjyZOmrbL+5/GRQpwnX7MUFClbOQpZyx0IlYqg
-	 RwrAQ0TtnRZoNwT31efc8UrvPXEBLXgl4lARqPYA=
+	b=aFa5JwqWvTYPesigACA0Omj4TNQendrt8W6ZBKDd6oVeNVU0ysB7AO9PR+7xuHxBl
+	 D0uMi3vq5Pzo1dVyoZwpMZl8F83VVzp5CXVGYspKaXN3MsGfq461rMmsM9wPa2PE1T
+	 YxJ9PmRzmnZEiWPkRJtW6HoI9M/T+lMQLwqAD6eo=
 Received: from localhost.localdomain ([2409:8d5c:8f0:65e5:7443:873c:1230:8af8])
 	by newxmesmtplogicsvrsza73-0.qq.com (NewEsmtp) with SMTP
 	id 25C3B2E4; Sat, 14 Nov 2026 21:09:28 +0800
-X-QQ-mid: xmsmtpt1794661771tdqou28dd
-Message-ID: <tencent_CCBF2706A4D1AFF8F48632FE8B56FB67E207@qq.com>
-X-QQ-XMAILINFO: NXvILt21hDllwcpAvgNDyJaP3Mj2Oh3Q+AM5iYKyy9Ic5OJiZvts7IvEZZIi7y
-	 MkaIJPwVXaXBc8Bk2BaznScevLgueoqpT/7ArIHa/FoABY/8Du9wMa8ldUAda2F9SPSrplr6SlDw
-	 arQwl310dptb7AP3phS/0dsbBEy+MBvUEsN5ZzkV7wcRUG0LaOqtfzVSEkgDstL1mWbgTmt2THl2
-	 HazgXxt1UpcAz/XpJGwpfZEHd9fECsA6FehL8vFzFUST4hEtC/syyNmkyAnAQ7evqZwEO/7w1TK0
-	 59+URA7mG95/8eTDkVIddn28x1XAbcwZqOPB2BbdmhwaBFhy/8jgA0z16a8vkfisEjEU/YU0WKzK
-	 PzWj/ADlKZnf9Zk3fHHSn7BrXHPm9llMPjj5p1+4WosOvuqCuJic/cOhtPL+XYF4kobYAjm9asxZ
-	 f7+T1dxfnNmasTDDYnT/XhCCE0nKtS0To8+H1BAC87h3rOEgqWu8Mk4lfKdRlR8MJJzP3daOjME+
-	 Tr6QDPEsZgJ8cMKtIPKwCjUC3HbT+AeIUjDQu0JQz3Ch46QyjLKBM4MNSrBIzRoQ+tnp2m5xRR9N
-	 +eLeCdtM63JqmkbtZW7Gpc7HmRZ3Zs9BctCna2K7XwSHFZj5oqZzhxU+hHvy+qPgQ4E0SIKwg2Yj
-	 8fGx+Ic+x1J0guK/OPXFN5CEdyl+AP/fhDSaEUjb10CIXiEd7ofaQxD8rXXTx9WeQ9NCzweL73F1
-	 c+yAawEhtKTIku+a4OM9oRrVCatZlApkSKobi2yB+YWgTThBX/uc18FbYCzv8u3wt37xoZjLdOyH
-	 i8diLSFkymjsPiVbykWy9NRIS2SJd+/mf3fHjgszfodI/r45TBC+XHZ2cKk7vvvZMCV3Ru4QTgkD
-	 af0ExYRXoiJ8l0NP1tAUbWGExPxhyRG4Iob+MpXjLoyLM10aYE4B2Z/QevA1MMZF/mAhsOIZmnJj
-	 4iVy9HfAaT4ZodUuiwxYcJdPXMXwYtWIlmG71zmAUjwJMC9Hioefijn/5MvKtetBWs6drTDYDbU7
-	 +28mKYxvljXbtL86GZBj8fKJaAsZxu1JiIl8t6ev190i05neFvx3AWeyWy0wziNpRnj5f9/43RuW
-	 XLJrvBT0EAsVPRaF/u5MMXAZqXT7W8VshYntxXEIYoF2CQkJiflu7URo+k2L4JugK5osuz
-X-QQ-XMRINFO: OD9hHCdaPRBwH5bRRRw8tsiH4UAatJqXfg==
+X-QQ-mid: xmsmtpt1794661778tlw5bgnh1
+Message-ID: <tencent_735D19C1C588FD2DF1F0532892DDD768FA06@qq.com>
+X-QQ-XMAILINFO: MaHcj0GmOzv95xuNXONc1Jg81SNQTcimdqmtrArM4YNP3GhGawe0+rkXxacuuW
+	 OGyR6zQmTJo0MXiKM4cOAj3xqBuE2Aesu1uE2PybsgbAp9yNZLTGc7og2ZjF8MBC22J13jXyRcQX
+	 ar9mZ0fkdhHJjzgz6H8lALrgYP6Ob+g0cVOMU+iT2hpyOSfsnYMI7o8bRTm7SXNH1FwkRkH9UuMz
+	 gND/z69qSsl8wWplAPy01mwzYJMiNfEQF5+9NDNcDYs2rsgCTf+sskzjlKefRLZZY/CtuyH/3QXb
+	 KUgrp69poRt8PHmsNl/lU528vtztdcdUaSMvgvuJ+0aLDeRMXXAcjeXMUWOHsrMX737zMzApV7ar
+	 AvojxUCg5qO9TebCn6kyg85ZxgWprMhDM7kKZfqIJeWUj+/YX+p1fxTGjQd2Iovbs+MSD6vkUSFq
+	 MpkGduln6LkIxoIxmXMryHHO1c7A+wD5VBOzAsym/saxAN36NySuzm4EpPCVNPysyPvAse1BaSFl
+	 dCJz94pnMSQ+bjm11nwzVrhySH3/eIsrlcXNBxi9+VAUUlQMOLi8WkNfq5RNzm32bAqfemwJaqg0
+	 kB1pgQIzNkXIf8IFZ5HA2uoWnEEE62uPPJ3y+EvULQInHmziV31QwKmfKl20CzVOB+nWMmbjIDE7
+	 fzkiaLx63bPbViGThR7XQ4ApajM0FxtmMQrab6qSUwfR+ptEuskpllltNmnBHsnTT7o/5IbbtqQv
+	 Pd3mI7pcZtmUuqQ2WQfb4ZTe5brIiro89Vs8yAlIawg5jW4i32rttZ50W1kfekaLCOng0aou36Hx
+	 NZHvWs/BOQckZCxTUubBbVOpv+xgM+0L1RDkkeHQxgUPAteJLVxYtsY4w+TQO1dP3VEdsW1qPZB/
+	 xLls3032JpUUbfR1Qiy4yvpNMoFwfCIUpc675rHC3bJCJTEySH0m2iwUKIAoHjSRrgP9yDMVcPdA
+	 DOBz+UmNrAuXGdTbanYcZnksudzu1NMSU7jYEKY3EAxd0GPDYdk3jlbxQQZDBKO+xXFdCOzZKeNG
+	 FB/s6zfok1Sqp8oXQ3lWUCfwdmqLB6BhEHbA03CFpeQ1vuB+kiaE6nYi1Qp1FHvNnweQMwGW05Jd
+	 jieRZyZ7Bp77FElj6/14MbZZzBlV/Ru4WxUtUHiZSNkzw3hcHftaXU3u2L8ptK+zisWqTkdH6+zf
+	 0e9/A=
+X-QQ-XMRINFO: Nq+8W0+stu50tPAe92KXseR0ZZmBTk3gLg==
 From: Hang Nan <2122295973@qq.com>
 To: netdev@vger.kernel.org
 Cc: mptcp@lists.linux.dev,
@@ -77,9 +78,9 @@ Cc: mptcp@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org,
 	2122295973@qq.com
-Subject: [PATCH net v3 1/4] net: mptcp: take token lookup references with acquire ordering
-Date: Sat, 14 Nov 2026 21:09:24 +0800
-X-OQ-MSGID: <20261114130927.91839-2-2122295973@qq.com>
+Subject: [PATCH net v3 4/4] net: mptcp: verify the token slot in mptcp_token_iter_next()
+Date: Sat, 14 Nov 2026 21:09:27 +0800
+X-OQ-MSGID: <20261114130927.91839-5-2122295973@qq.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20261114130927.91839-1-2122295973@qq.com>
 References: <20261114130927.91839-1-2122295973@qq.com>
@@ -94,69 +95,47 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-mptcp_token_get_sock() and mptcp_token_iter_next() take a reference on a
-socket found on an RCU-protected hash chain and then re-read state to
-decide whether that socket is the one they were looking for.  The
-re-validation is only meaningful if it is ordered after the reference
-acquisition.
+mptcp_token_iter_next() takes a reference on a socket found on the chain
+of the slot it is walking and then re-checks only net_eq().  A socket
+that was freed and whose memory has been reused by a new msk in the same
+network namespace passes that check while it is still zeroed, and the
+callers - mptcp_diag and the userspace path manager - then use mptcp_pm
+state that has not been initialised yet.
 
-The sockets come from mptcp_prot.slab, which is SLAB_TYPESAFE_BY_RCU, so
-the memory a reader still points at can be freed and reallocated as a new
-mptcp socket while the reader is between the chain walk and the
-increment.  The new owner publishes itself in sock_init_data_uid() with
+The token of a socket on a chain always hashes to the slot being walked,
+and token 0 is never assigned, so re-read the token after the acquisition
+and drop the socket unless it is non-zero and still maps to this slot.
 
-	smp_wmb();
-	refcount_set(&sk->sk_refcnt, 1);
-
-and initialises the rest of the socket only afterwards.  A reader whose
-increment does not carry acquire ordering can have the re-read of
-msk->token and sock_net(sk) satisfied before the increment, that is
-against the old object's contents, while the increment itself succeeds on
-the new one.  The lookup would then hand back a socket that belongs to a
-different connection, or one that is not initialised yet.
-
-refcount_inc_not_zero() has not provided that ordering since
-commit fb041bb7c0a9 ("locking/refcount: Consolidate implementations of refcount_t"),
-which removed the ordering the previous atomic_add_unless() based
-implementation gave; refcount.h names this exact case as the reason the
-acquire variants exist.
-
-commit 5b5d8f351dd9 ("net: restore refcount ordering for lockless socket access")
-restored the ordering for the IPv4/IPv6 established lookups,
-inet_twsk_purge() and bpf_sk_assign().  These two mptcp sites have the
-same shape and are converted as well.  There is no behaviour change on
-strongly ordered CPUs.
-
-Fixes: 2c5ebd001d4f ("mptcp: refactor token container")
 Fixes: 96d890daad05 ("mptcp: add msk interations helper")
 Cc: stable@vger.kernel.org
 Signed-off-by: Hang Nan <2122295973@qq.com>
 ---
- net/mptcp/token.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/mptcp/token.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/net/mptcp/token.c b/net/mptcp/token.c
-index e0f2823f92ef..3429b43a9f7c 100644
+index 8a603fc8dc05..48470d6e751d 100644
 --- a/net/mptcp/token.c
 +++ b/net/mptcp/token.c
-@@ -309,7 +309,7 @@ struct mptcp_sock *mptcp_token_get_sock(struct net *net, u32 token)
- 		    !net_eq(sock_net(sk), net))
- 			continue;
+@@ -355,6 +355,7 @@ struct mptcp_sock *mptcp_token_iter_next(const struct net *net, long *s_slot,
+ 	struct mptcp_sock *ret = NULL;
+ 	struct hlist_nulls_node *pos;
+ 	int slot, num = 0;
++	u32 token;
  
--		if (!refcount_inc_not_zero(&sk->sk_refcnt))
-+		if (!refcount_inc_not_zero_acquire(&sk->sk_refcnt))
- 			goto not_found;
- 
- 		if (READ_ONCE(msk->token) != token ||
-@@ -370,7 +370,7 @@ struct mptcp_sock *mptcp_token_iter_next(const struct net *net, long *s_slot,
- 			if (num <= *s_num)
+ 	for (slot = *s_slot; slot <= token_mask; *s_num = 0, slot++) {
+ 		struct token_bucket *bucket = &token_hash[slot];
+@@ -377,7 +378,9 @@ struct mptcp_sock *mptcp_token_iter_next(const struct net *net, long *s_slot,
+ 			if (!refcount_inc_not_zero_acquire(&sk->sk_refcnt))
  				continue;
  
--			if (!refcount_inc_not_zero(&sk->sk_refcnt))
-+			if (!refcount_inc_not_zero_acquire(&sk->sk_refcnt))
+-			if (!net_eq(sock_net(sk), net)) {
++			token = READ_ONCE(mptcp_sk(sk)->token);
++			if (!token || (token & token_mask) != slot ||
++			    !net_eq(sock_net(sk), net)) {
+ 				sock_put(sk);
  				continue;
- 
- 			if (!net_eq(sock_net(sk), net)) {
+ 			}
 -- 
 2.47.3
 
