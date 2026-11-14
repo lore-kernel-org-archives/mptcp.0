@@ -1,86 +1,81 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.48
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=203.205.221.191
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794660138;
-	b=zWmiAm+6X/cOOUudRJlEMcad3xy8t0z9hNqYRK0KvBGcSLimzIcB6yRhUxWiiJIl3L39
-	 4O0tGhDVFnABIciqEPlqKp6a8T4wIgyjh2BWbaSFZKmfPahTLwfp3ubaoeWvA3cAFyQZI
-	 TwYja4EXofbJElD4hdEkVheEll0GwrlJqp2gceXFMlRxFfJaRmNiegcYQVCTlyRFlrXaE
-	 1mleWFD36olJc0U3XhuiBmEjSwxCOooHanGAleQty5UKbZKKTVYzY0x94tiM+sMQ/5yFP
-	 GypLD6rb4D56/RADsv9UmiEJBxgzvGQeW1szIBdH7IwUkBuWPQYwxj8gwJIdyhvAWHw==
+	t=1794661764;
+	b=WV6c0DzTTXo99GyWn7t/jPLxQUl6n4x9xDkeC2vwBpcihWIpq9uJYzrlfjHdIxg5cBvx
+	 j6C7nZyldG9mdoUNb67a85/0FoXs1V57Rwf4CDck51lk3cwfJeU61KHRVbnM4v6X3watT
+	 wUubYEf9VcEvPO6FOsj7L2xGC+ltnHSnASOsngOtO1nTkrpFvVh2XueL2UQhfvDQvd/cz
+	 earZhKFiGXKDbfo8jOgwSZPFxWD1mudIX9u6OInhsC74wRgJPO9h4+6Mf+Hnu8ZR9ryqu
+	 ZpZ8nE72j/zKkATJjRMYV2JqG41IsBkGrFcdcG6uWn65AGtM1TJ0CUQ7iw6rC/r6cpQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794660138;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Content-Transfer-Encoding:Message-Id:References:To:X-Mailer;
-	bh=C4WPmCztPH+KoFhzb/uCAJwlkmrIRFMhr6hpJOKutGM=;
-	b=T/rwsOdsqKTv8qi5NXohCnwUbLml4vQWx2jYrFP3ZMRkizAMe+3KnPLv6EdddBywJ/yg
-	 jRuKixt0WG40OxPaBuvBjLnv51QXHOcEaAp3TcbRpaTRK5ckiSev78ElIueGoRhXHkFYH
-	 +Uibht/CpTMBh4+suQ4F7KUI2x89ygeFALKwLmXcZIPSVlAuePWo/mu3aIVZmP81ri2c8
-	 a+NfG7eAIVubmB7lqE6MwMKaLKef6zK1fkT/tomBuV3tzZMjwE4JYzqsCNynsxiD1giAx
-	 tkI0OHFEqLww6/1Yu+u0mvMz2OKpggHeY53oMRjbU2pVVLn/38UPfneIYwu04OuDXmQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794661764;
+	h=DMARC-Filter:DKIM-Signature:Received:X-QQ-mid:Message-ID:
+	 X-QQ-XMAILINFO:X-QQ-XMRINFO:From:To:Cc:Subject:Date:X-OQ-MSGID:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:
+	 MIME-Version;
+	bh=9QHmD6CbC3B8E4Fu+2pBtpNfJsF3diLcnyMXeoB/6ZA=;
+	b=5gLeZcDFWzTYdgIw+trL/gRi3Pj1XFkf9tGjSBDaEvRGrruPUCP45SGE+c9P9LzkHCKL
+	 LvObIhGJNXZ/p/e/DbLC4R7+RsVuKNLLEImnf4MmAh/Q1jlzm2TU0lAHo7ij/Sjmo8XcQ
+	 EXqIZiynQSFPm0WDPW685mLdG813ldPKVjn0/e3ZSK2QLkbDREVaiC4QZWwXiJlZWBHTA
+	 AsDkRLnaiA+tN6C9U6l/8WxIopLUlH+0XOH9eHdg6UXBx0zU0itqKUWo98LNJY6Z2pKAg
+	 dJDitFuEXZG+Of5DtNO+UAIyqJqwZqpi0nF11IHaJRDDZ0oEBd82CsrQUDVnqw6bPgQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=GHV5258C;
-	arc=none smtp.remote-ip=74.125.82.48
-Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=qq.com;
+	spf=pass smtp.mailfrom=qq.com;
+	dkim=pass header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=hBpyChmy;
+	arc=none smtp.remote-ip=203.205.221.191
+Received: from out203-205-221-191.mail.qq.com (out203-205-221-191.mail.qq.com [203.205.221.191])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A746606A331
-	for <mptcp@lists.linux.dev>; Sat, 14 Nov 2026 12:42:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3A746606A331
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE8896075C62
+	for <mptcp@lists.linux.dev>; Sat, 14 Nov 2026 13:09:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EE8896075C62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=GHV5258C
-Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-1aefd1bf74aso1408980c88.1
-        for <mptcp@lists.linux.dev>; Sat, 14 Nov 2026 04:42:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794660137; x=1795264937; darn=lists.linux.dev;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:content-type:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=C4WPmCztPH+KoFhzb/uCAJwlkmrIRFMhr6hpJOKutGM=;
-        b=GHV5258CL6KT7X5l7CHHHxfyJSuDt6fIrC5+ka6oDQzYzrCpWZw9YuEcMrpawXNCmZ
-         rVabOvli+/GyFoMRdh7vQSpPChrnexHJqFOnPK8E59UTOPb6bfq+7ky3xi7dtLovoaQY
-         T/5H+VzdJt7CiI5gqALnN6gTfoW8xNDWBfHqJneEeMk4/uXrGHfVBkKF2RdemZghVyzA
-         GSCIz5HTWWsoj06SC3hMo2bUdww1/csa+5CYJSQQ2MSndAT+1iEaBplHoFv+kNRbFOti
-         rK193JrFzUStVnKtZwJkELgSdhEXqeBj0jLMpZUQAaDVbxmOJk89FqVDqqhzyNLgPLcc
-         yZWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794660137; x=1795264937;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=C4WPmCztPH+KoFhzb/uCAJwlkmrIRFMhr6hpJOKutGM=;
-        b=rGfHajYbMH4KEJ6hMzxppOPlvhHECi5dpV6XbJnLcLcVvmFHDujqfbeUTUCJ12/OQo
-         4gHWNGF1TFb9rLa9v+iunPSLL+6yWemkM4G1B77Qu6put0lL2XoWFgvuGWcNcGqJJf1D
-         Gt5QDF5Bi74bjDCGRr/9Y9r2sHx5DlfiIbxrzQTsM9h5L8BwwqvEdu6d/F3DXfM3OfJV
-         TKVDsEq8TAKN81FIaW0HKLpm1b7dVQeUCpXT5Tz7eHrNYl/2oCairx2cq2uloZsdO6OA
-         WI/61udOz97eD1CoLUW5WgYIU4qdYh3dRV81oup2eR979/BTP3TU7yLwoPlx09Tk1NNO
-         hI1Q==
-X-Forwarded-Encrypted: i=1; AL+hErEhhle+TSz1Pcvm8ImFXxWj4kZOfF6TFjhZ8xki/vxvqRE02SM40W/jME/uFkcdt4Q3R17avQ==@lists.linux.dev
-X-Gm-Message-State: APuU4Z/20OX2uvv9talWkR/ybzPgSPU+24WM6ORgHMEnZ9R+vCwMrQcN
-	sn7v4HGg0aJnfCdT+bVlVDAFYNEH+DTG8UXy48CjRNvKM/9kZqRvG6bw
-X-Gm-Gg: AYBFou1l07a60vL/9QU2wNM8xaMFSuxxsr6fIFtNo/3ZAtKhpi9DMNJuobxYGQ4L4LG
-	8tm4R6EC+DlBt4hUlKOVTOff1T4vzBXCLljMBGfOsadCoqRpg8vP3BIuv2zpFm8vb4ZN3TGOBPf
-	RDLPj1HR7wXKBUa2yh+Qx9ePscAEZHjnImV/M78qF9oB5KozXcbW3/G2pVdd5zRdKH/hJQY6LBS
-	/iPlSgxF76qmMhdpRw3bZM/7iyoad5TBFFpo73nXZiwfbC17xaoHhpvVfdWxdfweOrCl8qXqHyT
-	DSk+pOE0R3hHAC9kOhlornJ+S+svZ5KJ1DH5M2O+DRrisN+EN4mTWuG37Ko9nc2ZuPuMVujDxe4
-	Eeg3GrqJtv7zF6q/6EVAQcFU4YmuAGb+XSUeIHSmEdNLba2mt9K43hVlkcC9Nx6A2xrvFC73jhf
-	tcsMMfLtBIJNveVcGy7gF+QEPN04eHGpu025OVlPjpZFZRUJ/hHdS1IJtkMm44aG+oOlads4v66
-	mgG2bGDvphqPNq+wwpy2tW6p4vUgzwKV2xHjmcSYRtFaSpXPZ5SKVEyQHFiXdy7vXTtJhu6rlX8
-	zQhz7iVGnEZqX/SASN/FXvEBPIA6d0XJASNDIJM1fqL51R0gyZ5lt90Xr9nnlxF6SoA=
-X-Received: by 2002:a05:701b:4294:10b0:1b3:b3d5:566f with SMTP id a92af1059eb24-1b5030990dbmr5086025c88.11.1794660137166;
-        Sat, 14 Nov 2026 04:42:17 -0800 (PST)
-Received: from smtpclient.apple (v133-18-180-162.vir.kagoya.net. [133.18.180.162])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b5031b98e5sm16550060c88.14.2026.11.14.04.42.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 14 Nov 2026 04:42:16 -0800 (PST)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=hBpyChmy
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1794661760; bh=9QHmD6CbC3B8E4Fu+2pBtpNfJsF3diLcnyMXeoB/6ZA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=hBpyChmybMm5aVI4drzPni8AuleG5XZwrboiosTTwWexsaIoAt1WJPEuLLepvv0gT
+	 mA8XCSWpadDMHCFT3ncTLtUCUdH/X5/Bp4cu4iErjNZJvPNVnasN5rPTAVsSlY9/Vt
+	 UBJBAik6tU4UJIbdq1NXLUGgaqsO+5S/f+CbK61o=
+Received: from [127.0.0.1] ([2409:8d5c:8f0:65e5:7443:873c:1230:8af8])
+	by newxmesmtplogicsvrszc43-0.qq.com (NewEsmtp) with SMTP
+	id 24F86472; Sat, 14 Nov 2026 21:09:15 +0800
+X-QQ-mid: xmsmtpt1794661755twccmgsz6
+Message-ID: <tencent_D60B0B7B6362D7A729A4FEAFFDF4D8328107@qq.com>
+X-QQ-XMAILINFO: OATpkVjS499uL2TWbxEEsFke5p/dO2hZuv9UzZTpEyVpZFZr0fMQ5/Be7DDHSE
+	 iwge78Q/cUM0f/Pn4F+DbXY1UOlESf2fEjA2ol1RUMZo7wUZCjtP2M126E2J48m5aY05T/BUmyfc
+	 DVxnfO8x5TUxaJPAyf6M9W1vXtIFmh44hS9uadpYPBK/DZ8g00UTQAPeUd5qcT7uSyAQANeB9v/K
+	 72dP75mtuKAWrjldn/zSw8NXOE4spmXwd1CQ9Sw2kcW11jWSNfYGrYg6D0kjw82JUMD28dq1Lip7
+	 589nLyX9Mi8jXl2QfR0UlxNyKyRWixafkXMhGOlvnu+aA2gMRidu0lLV9WQ7i7D9UaibLRUNRHKj
+	 xMimR7b6JpTXNDRD8/8o8sIabsxzj/nyBQT/YvVGzXPngIA078MgXxJNRD/5QdhUdwjcHJl3YcBF
+	 r/BW/9RNjssm48e0joFoylp6PNcG6MscJQ+mEE6Rhom+qWAkSM4KPXaPipU8vdEEIZVvUhmgnO7o
+	 MrlYaufuhn4sE19G8dDp1ovwxc9SVZRGzOVsBj211HaDpuVV+DCg9TDLzxTEyjU8mSFTGyfyJm/s
+	 GI/nS4S5qTPJpd3XMNDZOfwYDpluQHIcnP4erEjAxbOyoMLBtAf2+M0h02nAo+c2xR0rXFerXz6T
+	 dyh8giwUKeCoMepmVNVmYwIfbo4iFL1vK7vhD+pED9zMmIey/qbclE40szrW22JBkXkWr8VtrJMx
+	 knT5iTSRCG1e8VXLXHFkgNqKMZykF7+9tDhDrJNhJMXdq20W3O5mSwZiaifWPsvEn7hy5XiuiL/r
+	 JQ3LFtfR84K3ysaI90xnSAeJkKs+zWdM/eP+i9xyO/LDcxxEnR02gWgBLy4PqYxR06qg0AivJ808
+	 dSH/hW62P/S/f2i4csTZ5YyOnIt+mPxKjBLkOOxa+d3rdkzVDrKdOCbsMYD5l38vdwWsBUT4Fqkg
+	 26rZFHEEq/I0o6dnVGZtYATCUX7lYKq5yz3vcimP/xqMPzUxJeevm4NJN+XKXxkk/KMK9qp2m+23
+	 /WZkOGYFqMj1TG1eHntzU4Je1uCrh21gIP/FQMtsA2bf3q0tZU2z4k1AZs3gfFfR5bIRPMHw==
+X-QQ-XMRINFO: OD9hHCdaPRBwH5bRRRw8tsiH4UAatJqXfg==
+From: Hang Nan <2122295973@qq.com>
+To: sashiko-bot@kernel.org
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, matttbe@kernel.org,
+ martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
+ edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ kuniyu@google.com, willemb@google.com, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, 2122295973@qq.com
+Subject: Re: [PATCH net 1/2] net: mptcp: take token lookup references with
+ acquire ordering
+Date: Sat, 14 Nov 2026 21:09:14 +0800
+X-OQ-MSGID: <179466175477.91732.2161918558371491672@qq.com>
+In-Reply-To: <179448794830.196117.14284634941387773647@qq.com>
+References: <20261112124547.193812-1-2122295973@qq.com>
+ <179448794830.196117.14284634941387773647@qq.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -89,53 +84,72 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3901.200.71.1.16\))
-Subject: Re: [PATCH net 1/2] tcp: avoid wrapping Fast Open blackhole timeout
-From: Esko Mobius <echoowall@gmail.com>
-In-Reply-To: <avVX-3s3AYwtxQe7@google.com>
-Date: Sat, 14 Nov 2026 20:41:59 +0800
-Cc: Yingjie Wang <x-professor@outlook.com>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "edumazet@kernel.org" <edumazet@kernel.org>,
- "ncardwell@google.com" <ncardwell@google.com>,
- "davem@davemloft.net" <davem@davemloft.net>,
- "kuba@kernel.org" <kuba@kernel.org>,
- "pabeni@redhat.com" <pabeni@redhat.com>,
- "horms@kernel.org" <horms@kernel.org>,
- "matttbe@kernel.org" <matttbe@kernel.org>,
- "martineau@kernel.org" <martineau@kernel.org>,
- "geliang@kernel.org" <geliang@kernel.org>,
- "ycheng@google.com" <ycheng@google.com>,
- "weiwan@google.com" <weiwan@google.com>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Transfer-Encoding: 7bit
-Message-Id: <EE7A0514-C23D-43C0-9C38-CF15CFCF8AEF@gmail.com>
-References: <cover.1794325665.git.x-professor@outlook.com>
- <340d9f1f96e235642e8b47b5e7c836a18de8dd56.1794325665.git.x-professor@outlook.com>
- <avVX-3s3AYwtxQe7@google.com>
-To: Kuniyuki Iwashima <kuniyu@google.com>
-X-Mailer: Apple Mail (2.3901.200.71.1.16)
+MIME-Version: 1.0
 
-On Thu, 12 Nov 2026 06:15:12 +0000, Kuniyuki Iwashima wrote:
-> No one wants to configure 80 days blackhole timeout.
->
-> Please apply a sane limit in proc_tfo_blackhole_detect_timeout().
+Thanks.  All four points are correct; respun as v3 with two additional
+patches.  Details below.
 
-When picking the limit, note that the product wraps long before 80 days.
-With HZ=1000 and the maximum multiplier of 64, 64 * timeout * HZ exceeds
-UINT_MAX once the timeout reaches 67109 seconds, about 18.6 hours. A
-limit of one day would still wrap.
+[High] token 0 accepted by mptcp_token_get_sock()
 
-On 32-bit, time_before() also needs the interval to stay below 2^31
-jiffies, so the current expression is only safe up to INT_MAX / HZ / 64
-seconds, which is 33554 seconds (about 9.3 hours) with HZ=1000. So
-either the limit is derived from that, or the u64 computation with a
-clamp has to stay.
+Agreed, and it is a real defect rather than a consequence of the missing
+ordering.  Both validations compare the socket's token with the requested
+one, and for a requested token of 0 that comparison is satisfied by
+exactly the states a socket must not be accepted in: the value
+mptcp_token_destroy() stores, and the zeroed state of a newly allocated
+msk.  The ordering change does not help there, because the comparison
+itself is vacuous.
 
-The same applies to net.mptcp.blackhole_timeout in patch 2, which uses
-the same expression.
+What I verified statically before sending v3:
 
-Thanks,
-Yongjian
+  - mptcp_parse_option() copies the MP_JOIN SYN token with
+    get_unaligned_be32() and does not reject 0;
+  - subflow_token_join_request() passes the result straight to
+    mptcp_pm_get_local_id(), and for a subflow with a different source
+    port to mptcp_pm_announced_has_ssk(), which walks
+    msk->pm.anno_list under msk->pm.lock;
+  - that list is initialised from mptcp_pm_data_init(), i.e. well after
+    a socket can be found on a chain.
+
+Patch 3 now rejects token 0 before walking the chain.  I did not manage
+to reproduce the resulting crash, so I am not claiming to have observed
+it: the description in the patch is a static argument, and the Fixes: tag
+points at the commit that introduced the lookup, not at an observed
+failure.
+
+[High] mptcp_token_iter_next() re-checks only net_eq()
+
+Agreed.  Patch 4 re-reads the token after the acquisition and drops the
+socket unless it is non-zero and still hashes to the slot being walked.
+A socket on a chain always hashes to that slot, so the check only rejects
+objects whose memory has been reused in the meantime.  I kept the
+severity assessment lower than the one above because both consumers
+(mptcp_diag, the userspace path manager) are netlink paths that require
+privileges in the target network namespace, so the bad state is reached
+locally rather than from the wire.
+
+[Medium] the commit message gives the wrong reason
+
+Agreed, and the correction is in patch 1.  The acquire does not pair with
+anything in mptcp_token_destroy(): that function does not touch
+sk_refcnt.  What it pairs with is the publication in
+sock_init_data_uid(), smp_wmb() followed by refcount_set(&sk->sk_refcnt,
+1), in the SLAB_TYPESAFE_BY_RCU reuse window, which is the case
+refcount.h documents.  The message now says that, and keeps the teardown
+comment only as background for what the re-check is looking at.
+
+[Low] Fixes: trailer
+
+Agreed, and corrected in v2 (now v3): 2c5ebd001d4f and 96d890daad05 for
+the two mptcp sites, and 1cd62c21572c for the reuseport patch, whose site
+also postdates the consolidation.
+
+On testing: the ordering change itself has no runtime observable on
+x86-64 (both variants compile to lock cmpxchg) and we have no way to
+observe the reordering on the hardware at hand, so patches 1 and 2 carry
+an instruction-level argument only (on arm64 the CAS becomes CASA; I can
+include the disassembly if useful).  Patches 3 and 4 are plain
+functional checks and both objects build; I have not run a KUnit case
+for token 0 yet.
+
+pw-bot: cr
+
