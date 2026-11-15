@@ -1,56 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794739986;
-	b=wyxN/HuJhAdRD1h2pB7lW9dLFtyZzNDDpyBSPgz+7ujEeatCbYgfOsxV9C3WIWtJ26qk
-	 C/DW/g6sZ9j8XpvvZvZExIa0jmW0a2Z6kTvu72iK+7MPPCLTeXCyUoKPj9kgsv3yQMdWy
-	 OVqH2aVbVFfh868XMux4au0qXWEAkfVlGKCC9ihOqYvbcmluy5ZtSzim67WdQRdgzlxpD
-	 vqDdrOfSRVNbHkCuR65FTKWy+LwtDoU6LMsHRUFjShtfRAqw791DiHk+DvBnOW3FtuJLh
-	 Fx6svvwGcXCpY0XiyHzLne2pW9t1gc+dk86H1uEFygHohJgNSHoD9t+quYSRWixravw==
+	t=1794739987;
+	b=p1QqslEnygr7L+07XUbRzgfdnnYoMswDhPKZSU4ANC9Rn2RFcw/8VhOVF6Uv/qWdqf+D
+	 Lx0kRTdQLwC2dY31DuFIzn4qhkdoa3NajYa/qGXOLsuJfy1gbHWQu5Qm0neju29WtQRvt
+	 pV9EYQNMQIFZFhwFXdVWyvUPsLh1gdkLaS2IgASTvqrRFKcyNuJpUwwenGEAG/KwUbiS/
+	 JrFPsroOEOYXGfrQxUN81MQq/Jx4ZPYluj1eaJQmXD15XPqAyS2gxzSoUtV8e5ilrLMaH
+	 A9wgwDjeJ2ABZtjykuE5rop5hUyEg9/Q4irNR93Ld1m3BEAMOYIKKie3ijRPJLXB/tg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794739986;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794739987;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=Q+f96FDTyFOhNCgx3ovmOG6bsbjSAjjNrm7nuyoIl2o=;
-	b=ttsxbrtH8OuiYUGSc97Tt8hi8kJrsUW5AQnw34yca3l4FuF9/+IHVsuvzijzxAO8MDwg
-	 iVqPdv7voPae4c/Ulv83o50QqCGCzpcGNYDaM06j/9q/U42l4A5Eovint7QVm6wPVBZeg
-	 XaPdNfZaflW309f8Tns9BTnEB4nt0AywSyCdJvcOO/qHCf++Gh3waJuT4XQv9xqTJzVlf
-	 pSIxYpPh8Ba/7wvzAU/0ad6Qfg/z914FBN1ozOyDpf8T0qXoVPmFJ+4VC8/lGNCxhubSk
-	 6X0WpOZHxhSnvQv5Ihm3WZ3LQ/e8KeQW7ujTzf4Z+9V5NG8SlZHdMpbNQnrAcmTtbUg==
+	bh=uaz5n234OHtBXckYcH8rYYXtqRvahtirVV86tNYyZ1w=;
+	b=HSBhD41L8/YmrQi0m3fPofSs7rrRa4eRGn/VzA2160z4Y302RQaSJ05DkLgecsfWW8mo
+	 jvUfwiD9wssZix2y8urdeX9llTGk+XnlbULyy+zA8pkSkdmzEZl6qdPYx9V8hDchjYvMR
+	 VU/wkPBvq7B5DVbaWGN/5j5OrImqqqhQwPpRN+SRF3RoHxxkaFigz4KfRRCTgQs3/GZ6d
+	 L72XKJyrUg8L5tyxITh6A7kJMy0p+gHSO9+Rf+aCs/oGIX7JcsS6LeQOYsR17GhG+PI+K
+	 zuJmfoPXugzR0aWVGTcmzPwfMylVWWLCNmWGDpsiIbw6Tccwmi6FdRPUc/VCXat3kIA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="TKy/axda";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mEymcB1U;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B1A606A31D
-	for <mptcp@lists.linux.dev>; Sun, 15 Nov 2026 10:53:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F092606A31A
+	for <mptcp@lists.linux.dev>; Sun, 15 Nov 2026 10:53:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TKy/axda
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C239C1F000C5;
-	Sun, 15 Nov 2026 10:53:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mEymcB1U
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A289E1F000C7;
+	Sun, 15 Nov 2026 10:53:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1794739986;
-	bh=Q+f96FDTyFOhNCgx3ovmOG6bsbjSAjjNrm7nuyoIl2o=;
+	bh=uaz5n234OHtBXckYcH8rYYXtqRvahtirVV86tNYyZ1w=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=TKy/axda9xh0RIU/SEU5Zdu4qNVs5nY1WuhMmD5EqEyo43XwVp5NHFHwjxuKjdXmN
-	 HVcXj2TTTxQq0TUsSrfErnGJDaFEjgmJdbQUrZHKPVRpYMTMXexmmjQQE4Wo9HV98i
-	 04QXoYDLzQYt3KbxqXGUHe7QSNr8mKv2M9ydiqZ/2lYZv454HECB9bmjBQUZESelVF
-	 3C/xvHhM+59q32/umLv8VpAgQolUCgg041WKgzNUMZKK+A4KA1yJtzC4xHxrX631t4
-	 F+Kw4LJuiW5SRGmbZ347V0wxWVUW6u78EQkfYHxTKRJE7ALQGIP6NyNXP6EfqDd/Z3
-	 UccBzXl6sRO7A==
-Subject:
- Re: [PATCH mptcp-net 01/34] tcp: drain the queues of a listen() that fails
+	b=mEymcB1URQ/xCHzNKm1+Z3SmbUTQLF0e9ewKtb3UYHx6C6xt8iRDb9Qky7xAOyFaQ
+	 9N+kp+OEb7YEvCvgB1qoHnxUEt0Je7MODoXfaXPKFPdhhLP8+6vBv3U38BVChY7yDi
+	 HKuJItLShW8p9nc3bXxmikCvPS3AqhjDCuIq35X23JADL1M4Z7qE9VqnqiIWOfm+57
+	 85FE0DOjt/fT19HibsXoEX/uN1CCkYokUJCWfa9VeOfHjIYEY1hR5AKe9HVr+O2JHi
+	 YuhBdWUbiAsDAnf3kzJp33u5mIqQfaV/L72Qvq0adgJje1R8f2kGTSHjxdanHdH72m
+	 dN8P+SuaeQGDg==
+Subject: Re: [PATCH mptcp-net 05/34] mptcp: pm: don't drop an RM_ADDR behind a
+ pending one
 From: netdev-bot+sashiko@kernel.org
 To: matttbe@kernel.org
 Cc:
  mptcp@lists.linux.dev, mason@kernel.org, pabeni@redhat.com, kuba@kernel.org
-Date: Sun, 15 Nov 2026 10:53:05 +0000
-Message-ID: <179473998528.488855.7816958320444264036@kernel.org>
-In-Reply-To: <20261113-mptcp-cmason-fixes-v1-1-9205b77e9a2f@kernel.org>
-References: <20261113-mptcp-cmason-fixes-v1-1-9205b77e9a2f@kernel.org>
-X-sashiko-severity: High
+Date: Sun, 15 Nov 2026 10:53:06 +0000
+Message-ID: <179473998624.488855.11483341374426124974@kernel.org>
+In-Reply-To: <20261113-mptcp-cmason-fixes-v1-5-9205b77e9a2f@kernel.org>
+References: <20261113-mptcp-cmason-fixes-v1-5-9205b77e9a2f@kernel.org>
+X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -66,7 +66,7 @@ MIME-Version: 1.0
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue(s) to consider.
 
-Critical: 0 · High: 1 · Medium: 0 · Low: 0
+Critical: 0 · High: 0 · Medium: 1 · Low: 0
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -74,107 +74,83 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [High] The new error-path drain in inet_csk_listen_start() can still
-  miss an RST-queue entry, so the TFO leak this commit says it closes…
+- [Medium] In net/mptcp/pm.c, mptcp_pm_rm_addr_received() sends an
+  MPTCP_EVENT_REMOVED genl event for every id in the incoming RM_ADDR…
 
 --
 
-tcp: drain the queues of a listen() that fails
+mptcp: pm: don't drop an RM_ADDR behind a pending one
 
-This patch changes the error path of inet_csk_listen_start() to call
-inet_csk_listen_stop() after it sets TCP_CLOSE again. Children and TFO
-RST-queue entries that reqs from an earlier listen() add during the
-temporary TCP_LISTEN window are then freed. MPTCP subflows are skipped
-here and left to mptcp_listen(), which a following patch handles.
+When an RM_ADDR arrives before the PM worker has consumed the previous
+one, this patch merges the new remote ids into the pending rm_list_rx
+instead of dropping the whole option. Only ids that do not fit in the
+MPTCP_RM_IDS_MAX slots are dropped, and RmAddrDrop is counted in that
+case.
 
-> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
-> index 5807067083c90..3d9cc189c8075 100644
-> --- a/net/ipv4/inet_connection_sock.c
-> +++ b/net/ipv4/inet_connection_sock.c
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index cdc8bab0eaf80..32885e80486ee 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
 
 [ ... ]
 
-> @@ -1371,6 +1371,10 @@ int inet_csk_listen_start(struct sock *sk)
->  	}
+> @@ -852,8 +853,20 @@ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk,
 >  
->  	inet_sk_set_state(sk, TCP_CLOSE);
+>  	spin_lock_bh(&pm->lock);
+>  	if (mptcp_pm_schedule_work(msk, MPTCP_PM_RM_ADDR_RECEIVED))
+> -		pm->rm_list_rx = *rm_list;
+> -	else
+> +		pm->rm_list_rx.nr = 0;
 > +
-> +	/* MPTCP subflows are drained by mptcp_listen() */
-> +	if (!sk_is_mptcp(sk))
-> +		inet_csk_listen_stop(sk);
+> +	/* the worker may not have got to the previous RM_ADDR yet */
+> +	for (i = 0; i < rm_list->nr; i++) {
+> +		if (memchr(pm->rm_list_rx.ids, rm_list->ids[i],
+> +			   pm->rm_list_rx.nr))
+> +			continue;
+> +		if (pm->rm_list_rx.nr == MPTCP_RM_IDS_MAX) {
+> +			drop = true;
+> +			break;
+> +		}
 
-[Severity: High]
-Can this new drain still miss an entry on the TFO RST queue?
+[Severity: Medium]
+Can ids that hit this overflow branch still get an MPTCP_EVENT_REMOVED
+event for an address whose subflows are kept?
 
-inet_csk_listen_stop() checks whether to drain the RST queue without
-taking fastopenq.lock:
+Earlier in mptcp_pm_rm_addr_received(), before pm->lock is taken, an
+event is sent for every received id:
 
-net/ipv4/inet_connection_sock.c:inet_csk_listen_stop() {
-    ...
-	if (queue->fastopenq.rskq_rst_head) {
-		/* Free all the reqs queued in rskq_rst_head. */
-		spin_lock_bh(&queue->fastopenq.lock);
-    ...
-}
+	for (i = 0; i < rm_list->nr; i++)
+		mptcp_event_addr_removed(msk, rm_list->ids[i]);
 
-The writer is reqsk_fastopen_remove(). tcp_check_req() calls it when an
-accepted TFO child in SYN_RECV receives a valid RST. It runs in the
-child's context and holds only fastopenq->lock:
+Once pm->rm_list_rx.nr reaches MPTCP_RM_IDS_MAX, the remaining ids are
+never queued. mptcp_pm_worker()->mptcp_pm_rm_addr_recv() then never
+closes their subflows, but user space has already been told they are
+gone.
 
-net/ipv4/tcp_fastopen.c:reqsk_fastopen_remove() {
-    ...
-	spin_lock_bh(&fastopenq->lock);
-    ...
-	if (!reset || lsk->sk_state != TCP_LISTEN) {
-    ...
-	if (fastopenq->rskq_rst_head == NULL)
-		fastopenq->rskq_rst_head = req;
-	else
-		fastopenq->rskq_rst_tail->dl_next = req;
-    ...
-	spin_unlock_bh(&fastopenq->lock);
-}
+The netlink spec for the removed event in mptcp_pm.yaml says "An address
+has been lost by the peer". The commit message describes this mismatch
+as the bug being fixed:
 
-Is this interleaving possible?
+  "counted as RmAddrDrop and forgotten, although the netlink events for
+  its ids have been sent already ... The subflows to the second address
+  stay."
 
-CPU0 (failing listen())            CPU1 (child receives RST)
-inet_sk_state_store(TCP_LISTEN)
-                                   tcp_check_req()
-                                     reqsk_fastopen_remove(sk, req, true)
-                                       spin_lock_bh(&fastopenq->lock)
-                                       sees lsk->sk_state == TCP_LISTEN
-get_port() fails
-inet_sk_set_state(TCP_CLOSE)
-inet_csk_listen_stop()
-  accept queue loop (rskq_lock only)
-  reads rskq_rst_head == NULL,
-  skips the drain
-                                       fastopenq->rskq_rst_head = req
-                                       spin_unlock_bh(&fastopenq->lock)
+The peer can trigger this. Two or more RM_ADDR options with more than 8
+distinct ids in total, arriving before the worker runs, leave the extra
+ids in this state.
 
-After that, nothing frees the req. close() drains the queues only in
-TCP_LISTEN. The next listen() calls reqsk_queue_alloc(), which sets
-rskq_rst_head and rskq_rst_tail to NULL.
+Would it work to send the events after the merge loop, and only for ids
+that were actually queued or were already pending?
 
-The req holds a reference on req->rsk_listener. The listener socket and
-its netns would then stay pinned, which is the same leak the commit
-message describes.
+A smaller related point: an id that is already pending and skipped by
+the memchr() check above still gets a second removed event, although
+only one removal happens. Is that intended?
 
-The accept queue does not appear to have this problem, because
-inet_csk_reqsk_queue_add() and reqsk_queue_remove() both run under
-rskq_lock. The MPTCP error path added by "mptcp: drain the queues of a
-listen() that fails" calls the same inet_csk_listen_stop(), so it seems
-to have the same race.
-
-Could inet_csk_listen_stop() drop the lockless pre-check and instead read
-and clear rskq_rst_head under spin_lock_bh(&queue->fastopenq.lock)?
-
-TCP_CLOSE is stored before that lock is taken. A reqsk_fastopen_remove()
-that took the lock first would have its insertion seen and freed by the
-drain. One that takes the lock later would see TCP_CLOSE and call
-reqsk_put() itself.
-
->  	return err;
+> +		pm->rm_list_rx.ids[pm->rm_list_rx.nr++] = rm_list->ids[i];
+> +	}
+> +	if (drop)
+>  		__MPTCP_INC_STATS(sock_net((struct sock *)msk), MPTCP_MIB_RMADDRDROP);
+>  	spin_unlock_bh(&pm->lock);
 >  }
 
 -- 
