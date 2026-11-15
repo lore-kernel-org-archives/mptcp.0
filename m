@@ -1,94 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.174
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794723761;
-	b=BWfLhAgZ649BBhix5sjpxV5q8/AyvJrrQuLXsjNANki8pJMs0hudLoBrpISPJ/p0baPo
-	 BA1PbMsMpMGTNFcKS7wUWH+aiS1hkYveafobEzDiFNszhoU6BjbFQGM07W3Omgc05NT0x
-	 /Js3U5St0YVj1vPZgeqbzuGwBil71DFSM7rFCieDQTM07gFUeV0QfT/JXrPz13joQmz7f
-	 69OppNE5BjCHBs/QRoyOkpOslYYsBR8L0CMZ+Ox+AvjVlBU/8IN7peLwR+PHxNX9stXRT
-	 dd05CaHm2mrbEh5k4rn9YfLd1ztVtVNRN7WHNPNkTuvstuD8WHZhLVhwEQh+FGxM2hQ==
+	t=1794731056;
+	b=KxdaEVl0+B31II3pn+PQVCo8+/qsPSXDw+nloymj65aVJEZgXKZ9truih0TZ4ZUNYZ0t
+	 TZxaeiZqzGVCWELbZVo8y2iH7kC3kk0eeC8YpFnI0zbcQ1TfBpoR/bXxrXgn9SjBthzbC
+	 ZftjQh7dZTYWwqbY7EPx9HngfmBSSJCbsIdCi7nV4RfzCTPApj1NaUvoM8djxpA/oHBL2
+	 DzkEn7L6+LN8BrfSiNGXmriGhMbTBERjJqXfUyPTGvhMDRdjQts2969xf0C4Z6ovWX0jt
+	 V0yQ0IWSAcmvsgcGp/VyDLx2Cqe+UGW6QdCzXtlMAIXMIHTqNBdRH84xU3MkdfwWkzA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794723761;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
-	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
-	 Date:MIME-Version:Content-Type;
-	bh=wEksqh3EByggfB6duZ8wS+MRXuqzcuAL07aQnxz75ac=;
-	b=3N5crcs74opTsizMraqc/8cGQAAK+AXMSbHs3jlzacBiNHOwuYiUinAk1S5Q94xcod3l
-	 Xtq4cEgdwHxK43hS/rkLnBOQx9c0b+u8eh5lTpGBHT5ddy0FpumJyD58l3i1wBJ/7Ncfl
-	 LP15JYS8a9Sx6T80QRbGrr3NQZ8KL/Ziq63rKc3Pn43eH0VI6c2vzADdgO6MY7G0sfmVF
-	 4gL6H8rFXLMj0In5p03gy3bLAYYN1+19sf+0uKnLn37zbHSbBw+L99caXhOq/PfDvC7zu
-	 fkp9WgZ7q7NRGbIZN+qXF2ixchyyxTFBsogsRJqqTPNuSc23Rm5PVSqRvAJGQGie/Ew==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794731056;
+	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=Hq186HcHzYDaq7zOMRjbrOqIIwfSHvf8FBnXTnHKzXM=;
+	b=vOJeRzxkOjg810jqBlblYXhtW69ANN1DSf7YQgbzem1LsdLIDGVt/WwpP6MfO0vQT0Wy
+	 +NWR3CH2PCIPqiLxGsuIaK/ZZYFB/eTr26q78DL/T9v100Bj+72xsv77x/2S1VYmjcd9y
+	 JvxQ1LUPxGxhbLrssK36cYHA3J8EbIgMoKF7s4cPXEngNcczME5sT9ZSoy8/YFMowiKNF
+	 e0lgkBgWk8WMpjWpFvSPpuIhm3hxjSL6ag4W1id/V3ruqU2BuqHCBWaxoCVVHtdCtF3sp
+	 YpT9tM5uHS3+en6oNvPd12NCqNBN8A969kQoEPdl1sVOqlLXu8UcT/TrsWLdaL9L1ug==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QJpwhfTe;
-	arc=none smtp.remote-ip=74.125.82.174
-Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EQ8gElEn;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA1E606A323
-	for <mptcp@lists.linux.dev>; Sun, 15 Nov 2026 06:22:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EEA1E606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA01606A33E
+	for <mptcp@lists.linux.dev>; Sun, 15 Nov 2026 08:24:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QJpwhfTe
-Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-36e99cf7bb3so3124041eec.0
-        for <mptcp@lists.linux.dev>; Sat, 14 Nov 2026 22:22:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794723760; x=1795328560; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=wEksqh3EByggfB6duZ8wS+MRXuqzcuAL07aQnxz75ac=;
-        b=QJpwhfTeEvFHswz2HPdBkaVv70Mqc5DcNqJwQRl9cnnp9N3jrIcBGybXtoHbB5N/IK
-         9k7E83oFGJuky+HvPhkNKEmu6Ed1mjji65rS9othp8f+Id7m7B+AqkQPi36pEfzaRvF1
-         iY1kr+JkoXrdi93tzKANo5LXYMuucraqutjrscL1TKmtUyeuXKB9qH7X0cctknWCPNy0
-         SFR4igrXzmgfPH44dDhQ9NuhWx6oCbgpD3hMu4KPdhIxFJgxPeB3NaTgdOw99EzkOeQV
-         pqYDoBORH8b2WVkhEJ4IvYOg7xIIjE8rFSWoG0JOh7EpTc5Pj29+k8e3oEHBrUI6NAmX
-         zIlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794723760; x=1795328560;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=wEksqh3EByggfB6duZ8wS+MRXuqzcuAL07aQnxz75ac=;
-        b=XsNBtZ8GhoZQQwCQfmGLIrKeO2dd6EUYMnk5ryErBWM/JYEhV6WwK0F+YJZ1wVX/dm
-         QzZwDdx4EE1HybxK3Us7Mp11Jcq2zZc0wrIlqlEFNh3MJnYsUDFlwEqcCgjt+h+xCxvd
-         lfS5U9Kux8mJsO9tKpAcul9euqJ4cHCyW8v9T64VMxYEkWUb4LyK1Vx+QTpao9TbBK85
-         wYaP5pixEkebI2w3g+nZYxxBCbxVAs+wFCmOhp3Fvdni4twrBqIMMvwqPD2XKxoYR7Ml
-         VY6F5TF1HesxQnQDyyj1gRbiDD6mtpiyfrWV6ZznxyzHU5ogfP9j8ohf+STDEV5o6sCt
-         i5FA==
-X-Gm-Message-State: APuU4Z/HtJ+DeYpAgXPlBrDeqAPfDHAPrObP9v0uyRkE67NH7G75vN+W
-	yVUUL7AG3E7WMmH3zGJD+/fBFhISd57G/SYEpUfHHhXdJWEWZJziBWJB8JVS
-X-Gm-Gg: AYBFou0IpxDZAwV9rWbNyxtvM75172/WukreVAA23TcyyyCSK20Sd6LuaNsyZLYw1N5
-	juiK4MvsrwEyfZ5XFjfaniMdBmUFzO7uJMKz0WoDzot9WUiNbZT1WKWcPMpQIw3XshlKgTh/IFq
-	ocAR+rrtoVPD2j6d1FSDEWdJEui1P+i1SzD+dXUCafXzXMyazVTZChoVxd0/i/zRXF6FXwq2X7P
-	zEwM/cGJGZdrnxHPajO7lbVVFffDhmANSWMKcjcHqbfRXPk6YpHEpOY3Mh/yVUfPU0BVCK2r33f
-	TwVwCMOkQWvmqpx+wXIjavpji0jHFS8HzEG32zWIjo55DKuG7/1TjHSyLG0DFjV+0uD6DkoMXV0
-	Q2jcRKoVpwX/L+bvCniKITOYBAoiF/odA6TstKuXgqWljYyLMdHexkqNSGM1xVIKpnKrJ9Gu2y+
-	FmZB3n35pMC2p4zBjYHBj+qmgyHdjMysYyxiGho880Xqi7ZmdTMBQhimT79a0kydDwdWhS6pLJl
-	PGU00irGsG2zGd3V0O9Rvzv9Gnpp6bbopt2nJ2eoevJtFW+h+cX7FMUhtmPrK9iLUvaw7DWnCVK
-	jhsA0xD6gKAF/89X6Ug9T0OAubMNHt9/cP21iEE=
-X-Received: by 2002:a05:693c:2585:b0:369:ef63:ea95 with SMTP id 5a478bee46e88-37966e3a7e4mr6112637eec.6.1794723759878;
-        Sat, 14 Nov 2026 22:22:39 -0800 (PST)
-Received: from github.com ([4.242.195.33])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-37955ffcbc9sm32755959eec.18.2026.11.14.22.22.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Nov 2026 22:22:39 -0800 (PST)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20261114-mptcp-wunsequenced-v1-1-707a73a6c172@kernel.org>
-References: <20261114-mptcp-wunsequenced-v1-1-707a73a6c172@kernel.org>
-Subject: Re: [PATCH net] mptcp: Avoid unsequenced accesses to jiffies in
- mptcp_reset_tout_timer()
-Message-ID: <e98769a1-4b10-03fd-4db0-06389fdab070@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 15 Nov 2026 06:22:38 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EQ8gElEn
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89C171F000C8
+	for <mptcp@lists.linux.dev>; Sun, 15 Nov 2026 08:24:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794731055;
+	bh=Hq186HcHzYDaq7zOMRjbrOqIIwfSHvf8FBnXTnHKzXM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=EQ8gElEn+s4NqzNS5KqWN3kSvI6ph+XLoMLW4SuYbcAC77irL5Rw71hMl13khtfUC
+	 w/gIGMyyc+vrbb7oLdzYstdCjZfP9/gMb9wiiQKElbVXKIKfIVdst8L0/+kydgakjs
+	 qXw08gATlgXosPffII6Y1uup1yPUH+oOmv6+5B414pvzBSbaY3KWV4vtkrtB48mABm
+	 CwE2LQA/C5nsXoPliB+lWKfZsFLgBQop65lbqrGoj/L3yqoFkcilsUandcT3MTiLyg
+	 iXLECPul4Vq06LWyyG3MokQoMrqwKQ1QuQpv3zWbTGjiOr0RgfupJLBjp2yFcHqPfX
+	 E8T7MWklGOt1Q==
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-6d68de53053so1511049eaf.0
+        for <mptcp@lists.linux.dev>; Sun, 15 Nov 2026 00:24:15 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AL+hErF9tdDYj5rJtV7d6wHOlwTVvSLQgHdik8XyWTHCj3vIiuo3IT341NGXOoI4WBzQ196wi/uJGw==@lists.linux.dev
+X-Gm-Message-State: APuU4Z/yptPVuGNeXf3q+1DcEmqDNmFn+zZysHGBvNiAmOCj/Uow4FWZ
+	SwPSazPAlcrISVFSmqRWBWmCUIjeDBAhKoEGfr+nSP2Hhohs/kqrV6j2tdHU8QtUEBIGTFrkT1b
+	0+ujfjw9M0fmpbyo9jziCTnxM/gZabCM=
+X-Received: by 2002:a05:6820:a70c:10b0:71a:eea9:8173 with SMTP id
+ 006d021491bc7-71aeea9868fmr74562eaf.85.1794731054847; Sun, 15 Nov 2026
+ 00:24:14 -0800 (PST)
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -98,62 +59,137 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <cover.1794672619.git.x-professor@outlook.com>
+In-Reply-To: <cover.1794672619.git.x-professor@outlook.com>
+From: Eric Dumazet <edumazet@kernel.org>
+Date: Sun, 15 Nov 2026 09:24:04 +0100
+X-Gmail-Original-Message-ID: <CAL4WiirENP_SBccpu3qq51f6u4E7BwFoadEARZctwm0CGNCusg@mail.gmail.com>
+X-Gm-Features: AclHuK-t99I7UXoH9TmlU6O0jB4ekfdvLqJegkYIbqioWircJJ73o_0Q7EGKhbQ
+Message-ID: <CAL4WiirENP_SBccpu3qq51f6u4E7BwFoadEARZctwm0CGNCusg@mail.gmail.com>
+Subject: Re: [PATCH net v2 0/2] tcp/mptcp: prevent blackhole timeout
+ arithmetic wraparound
+To: Yingjie Wang <x-professor@outlook.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "corbet@lwn.net" <corbet@lwn.net>, 
+	"skhan@linuxfoundation.org" <skhan@linuxfoundation.org>, "rdunlap@infradead.org" <rdunlap@infradead.org>, 
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "ncardwell@google.com" <ncardwell@google.com>, 
+	"gang.yan@linux.dev" <gang.yan@linux.dev>, "kuniyu@google.com" <kuniyu@google.com>, 
+	"davem@davemloft.net" <davem@davemloft.net>, "kuba@kernel.org" <kuba@kernel.org>, 
+	"pabeni@redhat.com" <pabeni@redhat.com>, "horms@kernel.org" <horms@kernel.org>, 
+	"matttbe@kernel.org" <matttbe@kernel.org>, "martineau@kernel.org" <martineau@kernel.org>, 
+	"geliang@kernel.org" <geliang@kernel.org>, "ycheng@google.com" <ycheng@google.com>, 
+	"weiwan@google.com" <weiwan@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Nathan,
+Le sam. 14 nov. 2026 =C3=A0 17:12, Yingjie Wang <x-professor@outlook.com> a=
+ =C3=A9crit :
+>
+> The TCP Fast Open and MPTCP blackhole handlers multiply writable timeout
+> sysctl values before adding the result to a jiffies timestamp. The
+> multiplication is performed in 32-bit unsigned arithmetic, so a large
+> value can wrap into a short delay even on a 64-bit kernel.
+>
+> With HZ=3D1000, a timeout of 6912213 seconds and the maximum multiplier o=
+f
+> 64 should produce 442,381,632,000 jiffies, but the current calculations
+> truncate the result to 512 jiffies. Both patches compute the delay in u64
+> and cap it at MAX_JIFFY_OFFSET before adding it to the saved timestamp.
+>
+> The issues were found using a static analysis tool. In the v1 arithmetic
+> A/B tests, loopback reproducers induced 12 blackholes, waited 1.2 seconds=
+,
+> and then made a new connection:
+>
+>   TFO:   base probe 1.026 s, TCPFastOpenActiveFail +1;
+>          fixed probe 0.000 s, TCPFastOpenActiveFail +0.
+>   MPTCP: base probe 3.087 s, MPCapableSYNTXDisabled +0;
+>          fixed probe 0.000 s, MPCapableSYNTXDisabled +1.
+>
+> The TFO counter records another failed active Fast Open attempt. The
+> MPTCP counter records a connection that skips MP_CAPABLE and falls back t=
+o
+> TCP while active MPTCP is disabled.
+>
+> Changes since v1:
+>
+> - Add a reasonable upper bound for the TCP Fast Open sysctl, as requested
+>   by Kuniyuki Iwashima. This version proposes one day (86400 seconds),
+>   using the existing IPv4 one_day_secs bound, and documents that limit.
+>   Keep the existing MPTCP sysctl input range.
 
-Thank you for your modifications, that's great!
+The one day limit, the u64 computation and the clamp look fine to me
+for the TCP side: with HZ=3D1000, 64 * 86400 * HZ still does not fit in
+32 bits, and 32-bit kernels need the interval to stay below 2^31 jiffies
+for time_before().
 
-Our CI did some validations and here is its report:
+Why is MPTCP left alone? Kuniyuki's remark applies equally to
+net.mptcp.blackhole_timeout: nobody needs a multi-day initial timeout
+there either. I will let MPTCP maintainers decide, but having the two
+sysctls behave differently looks odd.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): selftest_diag =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: debug (only =
-selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only=
- bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Perf: Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/436786=
-70075
+> - Clarify that the multiplier is limited to 64 and the final delay is
+>   separately capped for safe jiffies comparisons on 32-bit systems,
+>   addressing Gang Yan's comment. Keep the READ_ONCE/WRITE_ONCE pairing
+>   annotations next to the timestamp reads.
+> - Identify the original runtime results as v1 evidence in both commits.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/416e13255167
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1211666
+Please do not do that. The changelog of each patch should describe the
+problem and the fix. Version history and test notes ("In the v1
+arithmetic-only test...", "On the v2 kernel...") belong in the cover
+letter or after the --- marker, not in the commit message.
 
+> - Retain Gang Yan's Reviewed-by tag on the unchanged MPTCP arithmetic fix=
+.
+>
+> v1: https://lore.kernel.org/r/cover.1794325665.git.x-professor@outlook.co=
+m
+>
+> On the final v2 x86-64 HZ=3D1000 kernel, TCP accepts 86400 and rejects 86=
+401;
+> MPTCP still accepts 86401 and INT_MAX. Boundary tests also cover zero,
+> negative and oversized values, failed-write preservation, defaults, and
+> network namespace isolation. The large timeout used in the v1 TFO test
+> is now rejected by the TCP sysctl limit.
+>
+> The MPTCP blackhole test was rerun on this v2 kernel: all 12 clients
+> completed, and the probe used TCP fallback directly (0.000 s,
+> MPCapableSYNTXDisabled +1). The full x86-64 kernel build and affected
+> object builds on x86-64 and i386 passed. The upstream TCP and MPTCP
+> selftest suites were not run. Full allyesconfig/allmodconfig W=3D1 builds
+> stopped at warnings promoted to
+> errors in unchanged lockdep, coda, and x86 callthunks code;
+> the affected objects passed W=3D1 KCFLAGS=3D-Werror in both configuration=
+s.
+>
+> The patches are independent and have separate Fixes tags.
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+About the Fixes/stable tags:
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+This needs an admin to set a timeout nobody would use, and the only
+consequence is that active TFO (or MPTCP) is retried sooner than
+requested.
 
-For more details:
+Also patch 1 now makes the TCP sysctl reject values that were accepted
+before. I do not think we want that in stable trees.
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+Please drop the Cc: stable and target net-next.
 
+Thanks.
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+>
+> Yingjie Wang (2):
+>   tcp: avoid wrapping Fast Open blackhole timeout
+>   mptcp: avoid wrapping blackhole timeout
+>
+>  Documentation/networking/ip-sysctl.rst |  1 +
+>  net/ipv4/sysctl_net_ipv4.c             |  1 +
+>  net/ipv4/tcp_fastopen.c                | 12 +++++++++---
+>  net/mptcp/ctrl.c                       | 12 +++++++++---
+>  4 files changed, 20 insertions(+), 6 deletions(-)
+>
+>
+> base-commit: 30c71476d842b094651bd7712f6c8ee8716147d0
+> --
+> 2.43.0
+>
