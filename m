@@ -1,56 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1794739994;
-	b=p4/WKpRTygOAE4z3SjlXsZWHzXegVCuGUzrtEZ9v87rGa2IcfnGKWKR2ClFC+ghJRD8d
-	 OT/iUCFVooKXZB64M6TdCzEClgCTn6ycgWmClZWWBh6mKDhFNYuK7Z7GyHNdXdq2M5MvF
-	 gq8tbd2i0myYeqO0kZK4hMTy1FBfM6OPVoYFPrbgd/FTIlrmyO7PZQTkmVefNNRF/UKOz
-	 M4rdpYoS2YlpVfwPa1nHpDAgZJgeeaaLpe/avhMz8KkTInQDWDGSMWFoIqsdBDSlG2NHE
-	 U5sj7KsDx0aVMhWbAfeHgCatNslHvcTUbkMfeIcFX4q1/h6kTW6kD6ihUgUlU+XCuIQ==
+	b=dA56obeCSW7cye4xo1HnyJwqCLDpUkips1qJsO3i0xEbEZIqFOoSb5+eiMtNHO0esVS8
+	 YsDQFhjs2Egzf3i1oCL44HzCPLh5GfxSbOphX8/ed0WxDLCrb6WI+lvh8hobMrzdH95JN
+	 R1K2/+9JG53OUUxPhfb1f+0nFOWVbI2RK7ISTET97Ka+LFuGgRmWqN3xpXg/S1fvSvEUT
+	 vPAYBK9yVYkVLQzjdsRkh6aBM2fAz+9IAUIxxxa3uEG5TX+hpLsv6p0fvlva4wAp8ONI4
+	 7lYybf4bI6kRYgFVQ+sv9QRdWB+tqjHBVbTkw7cJCtLV3C0EPE2M36wDKGhOijFOO5A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1794739994;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=KbQ6rOX3dd66aLBll3DcLedoKFf24tiVXx/AEK//lBw=;
-	b=bJzInvBpZT7rzE0vEP4Jo+aTUQI03fjRZc2O/dnTiyYiClVpf1Qpp74cOwJ83y/OyLj6
-	 qYLeBXN0LUByL0m/jhCpY+xNsEuzToZ7bbf1pNm24Wg9Vcr6ozvn9w0qerhwGIU329nz3
-	 e0DPYxnm26i/4uJNV4vfO6YWmAhIoj8gp05iP+WBpseZeFYQXV+e7lpkf3y0qAzMLIRiY
-	 MAr+Fjlf+2A2V2B2Px6jiH+Sdi655gcIpduod8c2BNofina0QJ1pOnZtOG9JQAB9tbwWe
-	 Xxd83RYtGO68jyyuM75lj54Bmnj1BfynHmPXn/zznBhBvrDhWRO4Mv72uyuotzlDmaQ==
+	bh=prK7Q4kALKUb31VOWLKs0XD390ziw7dvyk1iBtvg5yc=;
+	b=lNQcqgK7DxL3y4srBJvfQUEh1mRQXD4XqEKj/MUDiI2cRnCtkuyUOF0oxgnWF2LfyphI
+	 b4PxAiGfTu7XVlDfRZSWFYK57kP3s6M8SOfCrNY8RMxhwKod3/jN6f4b2h9uLirEhoeYR
+	 v1PTJtQ4xHLs2dUu3MxGdm7XtjURBL/OqkUaeVSRwVXHaWzHehZVUUhpVLoU4g0NOOWKj
+	 Q5m7TyQH/LZmrKLPalo9Q30JbLekweV6Wc0pGQD55aFE76Rk0JnONTJQSVVr3i+GirGb+
+	 MAMQhTYAPk2mplzSR0Yzkys2I++we2jSepjwDhpJ9Fy0RfMTra8lWwc15TDqRDWj20A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="IKpz/JLJ";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CamBC5Ii;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC540606A329
-	for <mptcp@lists.linux.dev>; Sun, 15 Nov 2026 10:53:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4780606A32D
+	for <mptcp@lists.linux.dev>; Sun, 15 Nov 2026 10:53:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IKpz/JLJ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85D6A1F000CC;
-	Sun, 15 Nov 2026 10:53:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CamBC5Ii
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DFF31F000CC;
+	Sun, 15 Nov 2026 10:53:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794739993;
-	bh=KbQ6rOX3dd66aLBll3DcLedoKFf24tiVXx/AEK//lBw=;
+	s=k20260515; t=1794739994;
+	bh=prK7Q4kALKUb31VOWLKs0XD390ziw7dvyk1iBtvg5yc=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=IKpz/JLJPOgR8g0HDLwrFrwtmY966K7HOV9AlXfD0De+AxNXdwejXK3xtldjCMtch
-	 8U3NmodFGJCyQ+aKzpN4QQUITVYYSBkJ6Lzu4+QGsYn7mREIW6bEayakpDTkNvX5I7
-	 aJsBmC9mnJB0zMudrPvA8fMq4vzEO+WJ++PCBkmCBJgqUnOPz+2n3zOqj4BER4zb6q
-	 uCoNGYQM/lqnTYpkR9E7/i1JKoWDEnNL64KMnlCgGjGYyF6l9Z+yAPAR9WbViGTnl3
-	 Fm90lD/TW5VSGdqPVBdj1FkvTEs5z9G72Eblewcu+ucyDFmWNgfDL55dIReDQzzBGY
-	 6GAIVTBk99lDA==
-Subject:
- Re: [PATCH mptcp-net 33/34] mptcp: continue the last mapping after a fallback
+	b=CamBC5IiJ53TazR+Ixe+pBFsfCnNKkEWtsdmYyYsrvtxZbbn5F1N8U40pQxTi7wyt
+	 K/nQ/6TRcj/4eABgXxXDEmj3rQYK5RvqkKCAQvn6luqir7F1gDRnq3vdtef3wy1BAP
+	 zVWv/0SXP655O9eVwlWb3LCE6aiDVSXj/SsahUKqls8jsseYdI7qKFl9vtCKm3EttB
+	 8tq/Fr6TYIn0Xif2sxa1fKamXONYXy4NNnYHXe4JuvA9M0pQhmg4GKrFy1Za8nVEuk
+	 spTTwghAazFC58PtWI0h7WUGfVYt+AENJh67JBhlIzEvyf+x+AAx5W6FNjP2sbHH1Y
+	 Rd0f4KPBbfgLw==
+Subject: Re: [PATCH RFC mptcp-next mptcp-net 34/34] mptcp: reset when the DSS
+ disappears after a DATA_ACK
 From: netdev-bot+sashiko@kernel.org
 To: matttbe@kernel.org
 Cc:
  mptcp@lists.linux.dev, mason@kernel.org, pabeni@redhat.com, kuba@kernel.org
 Date: Sun, 15 Nov 2026 10:53:13 +0000
-Message-ID: <179473999309.488855.6325364258827719226@kernel.org>
-In-Reply-To: <20261113-mptcp-cmason-fixes-v1-33-9205b77e9a2f@kernel.org>
-References: <20261113-mptcp-cmason-fixes-v1-33-9205b77e9a2f@kernel.org>
-X-sashiko-severity: High
+Message-ID: <179473999399.488855.4522554783315767219@kernel.org>
+In-Reply-To: <20261113-mptcp-cmason-fixes-v1-34-9205b77e9a2f@kernel.org>
+References: <20261113-mptcp-cmason-fixes-v1-34-9205b77e9a2f@kernel.org>
+X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -66,7 +66,7 @@ MIME-Version: 1.0
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue(s) to consider.
 
-Critical: 0 · High: 1 · Medium: 0 · Low: 0
+Critical: 0 · High: 0 (1) · Medium: 1 · Low: 0
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -74,120 +74,171 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [High] After a fallback that only the receiver makes,
-  net/mptcp/subflow.c:subflow_check_data_avail() hands the sender's…
+- [Medium] subflow_nodss_is_fatal() (net/mptcp/subflow.c) treats any
+  MAPPING_NODSS as fatal once subflow->dss_confirmed is set and…
+
+Pre-existing issues:
+- [High] This problem wasn't introduced by this patch, but the patch
+  still leaves it reachable.
 
 --
 
-mptcp: continue the last mapping after a fallback
+mptcp: reset when the DSS disappears after a DATA_ACK
 
-This patch tracks two values per MPC subflow. dsn_base is the DSN - SSN
-offset of the peer's last mapping, and dsn_end is the highest end of the
-peer's mappings so far. After a fallback, the dummy mappings are built from
-dsn_base instead of iasn. mptcp_try_fallback() now refuses to fall back
-while the peer's last mapping ends below dsn_end.
+This patch resets a subflow with MPTCP_RST_EMIDDLEBOX, instead of falling
+back to TCP, when data without DSS arrives after a DATA_ACK on that
+subflow has acknowledged locally sent data, following RFC 8684 section 3.7.
+A new dss_confirmed bit tracks this condition. An MP_FAIL exchange, which
+clears allow_subflows, still allows the fallback.
 
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 64e8f5c36415e..728b27be1ad04 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/519
 
-[ ... ]
-
-> @@ -1434,6 +1436,17 @@ static bool mptcp_subflow_fail(struct mptcp_sock *msk, struct sock *ssk)
->  	return true;
->  }
->  
-> +/* Fallback: dummy maps go on from the last valid one, unless it is old */
-> +static void subflow_update_dsn_base(struct mptcp_subflow_context *subflow)
-> +{
-> +	u32 end = subflow->map_seq + subflow->map_data_len;
-> +
-> +	subflow->dsn_base = subflow->map_seq - subflow->map_subflow_seq + 1;
-> +	subflow->map_old = before(end, subflow->dsn_end);
-> +	if (!subflow->map_old)
-> +		subflow->dsn_end = end;
-> +}
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index c56ca5e4df14b..ccd30e110934c 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
 
 [ ... ]
 
-> @@ -1528,9 +1544,8 @@ static bool subflow_check_data_avail(struct sock *ssk)
->  	subflow->map_data_len = skb->len;
->  	subflow->map_subflow_seq = TCP_SKB_CB(skb)->seq - subflow->ssn_offset;
->  	subflow->map_seq = __mptcp_expand_seq(subflow->map_seq,
-> -					      subflow->iasn +
-> -					      TCP_SKB_CB(skb)->seq -
-> -					      subflow->ssn_offset - 1);
-> +					      subflow->dsn_base +
-> +					      subflow->map_subflow_seq - 1);
+> @@ -1335,8 +1338,8 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+>  	/* we can't wait for recvmsg() to update the ack_seq, otherwise
+>  	 * monodirectional flows will stuck
+>  	 */
+> -	if (mp_opt.use_ack)
+> -		ack_update_msk(msk, sk, skb, &mp_opt);
+> +	if (mp_opt.use_ack && ack_update_msk(msk, sk, skb, &mp_opt))
+> +		subflow->dss_confirmed = 1; /* MPTCP opts pass both ways */
 
 [Severity: High]
-If only the receiver falls back, can this pass duplicated bytes to the
-application?
+This is a pre-existing issue and was not introduced by this patch, but the
+patch still leaves it reachable. What happens on a host that only receives
+data on this subflow?
 
-Once MPTCP_FALLBACK_DONE is set on the receiver, get_mapping_status()
-returns before it reads the mpext:
+dss_confirmed is only set when ack_update_msk() advances msk->snd_una. A
+pure receiver never sets it. In that case subflow_nodss_is_fatal() returns
+false, and subflow_check_data_avail() still calls mptcp_try_fallback(). On
+a single subflow with map_old and old_data_pending clear, that call
+succeeds.
 
-	if (mptcp_check_fallback(ssk))
-		return MAPPING_DUMMY;
+Once the receiver has fallen back, it sends no MPTCP options:
 
-So every later skb gets a dummy DSN of dsn_base + SSN - 1 here. This
-happens even when the sender has not fallen back and still put a valid DSS
-on the skb.
+net/mptcp/options.c:mptcp_established_options() {
+    ...
+	if (unlikely(__mptcp_check_fallback(msk) && !mptcp_check_infinite_map(skb)))
+    ...
+}
 
-Here is a sequence with a zero window probe:
+So the sender gets no DATA_ACK and does not notice the fallback.
+check_fully_established() returns early for it, and
+mptcp_incoming_options() returns at the
+!(mp_opt.suboptions & OPTION_MPTCP_DSS) check.
 
-1. The sender sends DSN [iasn, iasn + 1000) at SSN 1..1000.
+The sender's msk snd_una then stops moving. __mptcp_retrans() resends on
+the same subflow, because allow_subflows is still true there. The check in
+mptcp_sendmsg_frag() only stops resending on the next old-data send, after
+the first retransmission has been TCP-acked:
 
-2. The sender sends a probe at DSN iasn + 999, SSN 1001.
+net/mptcp/protocol.c:mptcp_sendmsg_frag() {
+    ...
+	if (unlikely(before64(data_seq, msk->snd_nxt) &&
+		     subflow->old_data_pending &&
+		     !before(tcp_sk(ssk)->snd_una, subflow->old_data_end))) {
+    ...
+}
 
-3. The receiver handles the probe map as MAPPING_OK. In
-   subflow_update_dsn_base(), dsn_base becomes iasn - 1. The probe ends
-   exactly at dsn_end, so map_old = before(iasn + 1000, iasn + 1000) is
-   false. The probe byte is dropped as a duplicate. The receiver's ack
-   still carries a DSS, which clears old_data_pending on the sender.
+On the receiver that has fallen back, get_mapping_status() returns
+MAPPING_DUMMY. The retransmitted bytes are then mapped at
+dsn_base + SSN - 1, which is past ack_seq.
 
-4. A middlebox strips the DSS from new data at DSN [iasn + 1000,
-   iasn + 2000), SSN 1002, and the receiver gets MAPPING_NODSS.
-   subflow_nodss_is_fatal() returns false because dss_confirmed is 0, for
-   example on a unidirectional flow. mptcp_try_fallback() passes both the
-   map_old and old_data_pending checks. The dummy DSN here, iasn + 1000, is
-   correct.
+Could the receiving application then read this first MPTCP-level
+retransmission as new data, so the stream contains duplicated bytes?
 
-5. The receiver now acks without MPTCP options, so the MPTCP rtx timer
-   fires on the sender. __mptcp_push_retrans() resends DSN iasn + 1000 at
-   SSN 2002. Because old_data_pending is 0, mptcp_sendmsg_frag() does not
-   reset the subflow.
+The commit message notes this limit ("closes the case above, but only for
+a receiver whose data has been acknowledged"). The duplicated-data path is
+still open for pure receivers, though.
 
-6. The receiver maps SSN 2002 to dsn_base + 2002 - 1 = iasn + 2000. That
-   equals msk->ack_seq, so __mptcp_move_skb() takes the in-sequence path:
+>  	rwin_update(msk, sk, skb);
+>  
+>  	/* Zero-data-length packets are dropped by the caller and not
 
-	if (MPTCP_SKB_CB(skb)->map_seq == msk->ack_seq) {
+[ ... ]
 
-   The application then reads the same 1000 bytes twice.
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 728b27be1ad04..68a9fe29a5e88 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1447,6 +1447,22 @@ static void subflow_update_dsn_base(struct mptcp_subflow_context *subflow)
+>  		subflow->dsn_end = end;
+>  }
+>  
+> +/* RFC 8684, 3.7: no fallback once a DATA_ACK acked our data, except MP_FAIL */
+> +static bool subflow_nodss_is_fatal(struct mptcp_sock *msk,
+> +				   const struct mptcp_subflow_context *subflow)
+> +{
+> +	bool fatal;
+> +
+> +	if (!subflow->dss_confirmed)
+> +		return false;
+> +
+> +	/* before a fallback, only an MP_FAIL clears allow_subflows */
+> +	spin_lock_bh(&msk->fallback_lock);
+> +	fatal = msk->allow_subflows;
 
-The subflow is only reset later, the next time the sender tries to send
-old data from mptcp_sendmsg_frag(). A reinjection whose map ends exactly
-at dsn_end appears to follow the same path.
+[Severity: Medium]
+Is a true allow_subflows enough to know that the peer has not fallen back
+on its own?
 
-Before this patch, the dummy DSN after the probe was one too high. The data
-stayed in the out-of-order queue and the reader stalled.
+A Linux peer with allow_infinite_fallback set can fall back silently, with
+no MP_FAIL and no infinite mapping, when get_mapping_status() returns
+MAPPING_INVALID. For example:
 
-The commit message acknowledges this:
+net/mptcp/subflow.c:get_mapping_status() {
+    ...
+	if (!validate_mapping(ssk, skb)) {
+		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSTCPMISMATCH);
+		return MAPPING_INVALID;
+	}
+    ...
+}
 
-    One case is left: if only the receiver falls back after a zero window
-    probe or a reinjection, it now delivers the first MPTCP-level
-    retransmission of data that was new when first sent, as new data, before
-    the sender resets the subflow
+The DSSNOMATCH and csum_reqd mismatch cases also return MAPPING_INVALID.
+mptcp_dss_corruption() is another silent path.
 
-Should silent duplication in the byte stream really replace the stall
-here?
+On the peer, all of these go through the unchanged
+!mptcp_try_fallback(ssk, MPTCP_MIB_DSSFALLBACK) branch. After that,
+mptcp_established_options() sends the peer's data without DSS.
 
-The later patch "mptcp: reset when the DSS disappears after a DATA_ACK"
-only covers MAPPING_NODSS when dss_confirmed is set. Unidirectional flows,
-and fallbacks caused by MAPPING_INVALID, still look exposed at the end of
-the series. Could the receiver keep using the DSS on retransmitted data
-after a receiver-only fallback, or reset the subflow in that case?
+On this side, dss_confirmed was set permanently when the peer earlier
+DATA_ACKed our data, and allow_subflows is still true. So the new check
+skips mptcp_try_fallback() and resets the subflow with
+MPTCP_RST_EMIDDLEBOX.
+
+Before this patch, the fallback would have succeeded here and the
+connection would have continued as plain TCP. Now, on a single subflow,
+the msk can be left without a subflow until net.mptcp.close_timeout.
+
+Does this contradict this part of the commit message?
+
+  "Except after an MP_FAIL, Linux falls back without sending an infinite
+  mapping, then sends data without DSS: the other side can only fall back
+  too, as before."
+
+That statement only seems to hold when the peer's earlier DATA_ACKs
+acknowledged none of our data.
+
+A related question: only MAPPING_NODSS consults dss_confirmed. Suppose a
+MAPPING_INVALID arrives after confirmation, for example because a middlebox
+resegments the data. Could a receiver whose data was acknowledged still
+fall back alone? It could then deliver the sender's first MPTCP-level
+retransmission as new data, which is the case the commit message says is
+closed for such receivers.
+
+> +	spin_unlock_bh(&msk->fallback_lock);
+> +	return fatal;
+> +}
+> +
+
+[ ... ]
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261113-mptcp-cmason-fixes-v1-0-9205b77e9a2f%40kernel.org
