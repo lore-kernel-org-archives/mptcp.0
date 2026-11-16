@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794866941;
-	b=K6kVO5PHTuF/7iIjNwlkeu9Sngp4kqbjND7gkPHp4WJKxiUeOPVLO2Uy+W42vxWMMGJ9
-	 SMVZeD4KyDOXf+AYh13FxxzscZDoBj5T+ga6t14YsIRUTyYjTWImPdjqYuAJ4HBgiB2PY
-	 9v1h/jrgvnU8pYk1Uj30bVivtK2uMnz0A9x6B8Kp2TUMazfEwtjuoAO7st7l9zc9hCqyz
-	 woHPf5jsYoHFY7YRPVs6fS8kwOuTt2JVgfNItUHciWNQ/S7nhdXkOgL4VyqI+IaGG0Ccb
-	 mQQ1lMKtHoFCC2Mu99pWsbAkpz+PeYt3KJSVFyiKcm9WJB3CbqLYbF0mb4wtetBOXHA==
+	t=1794866944;
+	b=4zOvreMmBvfFUuH/YWIlJkDbkixZH4LoMjB3IMTr2Wv4FzVh9JEr0T3OtwX0Ae+649/A
+	 M6HCBo7hmDAGEb5dVgPk/N8U6z4zSW50SgBh5Er97XwaUNaO39KtILIJZA7A+k2jIeF98
+	 63dF1KbYR8BW1pRzMGO5M819SXW5/qDT6r9pVTryDCALqD7ltp3xFYHAWRU8UtHZJM8Y/
+	 7JURQS6rG+68Rq4bmiMyC6acBL+pLE4d38AjqLz+IxnA13+OuB6PlT9eUdMys9XXPRkkF
+	 3KpaiglcDO9lj9ZIqqw4H79cB3hWT+V1ir61e8C1KASjEUOpCQDuL8ywYW0F9MF2uYQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794866941;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794866944;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=XeFi5cCNjQ75ncJcr9kVqUiYUHdBVb+5baL45/OqCQM=;
-	b=KejOOaa/s6nzTQZPsNMQ74X3UHLWMrnZkWrVJLtn0px5hKxL1O5KyJuQyILZMQhE6Gde
-	 GTY8i6ar+0oQ9shrgnljok8QzAijEAwnCIsq/1Aw7m4Kw6Hg/H3TXUDA4GGMN7m7QhY4R
-	 9rhNb41P2BURujzzu54FUDQHGxQAmf34+sykg+Ree36O/70fL0XxHIdeVcWrr31ygT0sI
-	 44eDAN1cPKN55wO0C7vsLpqtpykVSZEaOjAG1xOMpyFFUMU2EJRqpzjTjedkSqDGc4I7D
-	 drVQc1+KAD/AYaJ8kLz7XspRshSdGyvcNzgO9CfC3ehhoRy6gFSta0A5hIf12G2uOZg==
+	bh=7mgC9jL8NBJ5pYS7EFVo2spVfEdDqKdaGi7rc+pAARY=;
+	b=VZzdT1ToLGI25HhxhNQ5pkR7na1oPdT6iC/30dfWJFHDS5uMtuQslU40qpuSlQRLW6vd
+	 7TyqEgQWxKNfFWoY01aCqQFTTk64WxI5Y9ZtNgH9AZczf+RKuhJ4rC47QTEFc8tfit97n
+	 GpBYhcppM3yrBvSfLaeCX55u9DmGLd2RrBliNGt1LqJU0gJe0uahCLZjKgJiedId3gxch
+	 02VeU7ZfSHpuh20NTZrDyzclQOEHDmPEpEDaUGkCnXr+fJsGL5alhQJz0jQOhLFJBJ5wJ
+	 BLcUpc1wbPMt7b1o+6uKefzz8NJbxVmjOHGfhA/YIPx986/l0kCl+vbIZ+Xpgac60Lw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="LFaGbaB/";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hetkCGdD;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A74606A332;
-	Mon, 16 Nov 2026 22:09:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF6A606A8B9;
+	Mon, 16 Nov 2026 22:09:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LFaGbaB/
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02F791F000D2;
-	Mon, 16 Nov 2026 22:08:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hetkCGdD
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A74BB1F000C4;
+	Mon, 16 Nov 2026 22:09:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794866941;
-	bh=XeFi5cCNjQ75ncJcr9kVqUiYUHdBVb+5baL45/OqCQM=;
+	s=k20260515; t=1794866944;
+	bh=7mgC9jL8NBJ5pYS7EFVo2spVfEdDqKdaGi7rc+pAARY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=LFaGbaB/5yuL0F57HTHlahpbnmd2QMFDWhqRTJfYgGxgvbV+DbF54DHK1mTz1as5R
-	 FQvdzBsSUTl+Ejd89z+9PqUtWsOx20Hpn03fYpqMH4oi06vz5u3z7bqcKOxlBLZbVt
-	 lqYuLujbOYTy29hK3hsMePSTBFOA+Ab6LqBJM5O8+6MLpmYBaXW5jpplVwF/cooH+F
-	 LwdMgvAgaUsKLaktxhIyUnpwJQrftB1Lwv4sngaxVXKleb7MyMNyom/MpYzFoMv09I
-	 6Vvc+Xb35PZbmAspXQ61s2lDwa9FjdNKlBDAd9w3Yq3atrykcKFbMSzZOqyA17IpyQ
-	 12XSf3mhNTz9A==
+	b=hetkCGdDXEkm2883ua7V0ixFQK5QSPIpIaWy78Hd4Iwo4hmZDI2Yoloe5w/YmIqVf
+	 XudrZ0hzES6OovQtMHnR9psf+FQ4VmEcUuTT4kIC50ZOw9xyzhGD3OP8xFxYsKClGC
+	 Qz9blZXLb3/YEk0lCBL6Hgln6WNh2Ht/j0zU9QsqXHaJ0Pi2t+muHZXwidOqJhEwUP
+	 +Y5WANWD9vvclNWiNdgabAGpmYozJYPT+AXeryQ7528KsP2um0jSFpKuf9oXG4mY6D
+	 VCAzzm7+c9qlVcHN0AVBuqCGPYRB8/HYWqLbF3eAevaV9j1EkiaHLl5/hf7CEsaPnp
+	 Ns37YVyfZ7XYA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 16 Nov 2026 23:06:12 +0100
-Subject: [PATCH net 5/7] mptcp: push queued data on subflows falling back
- at the handshake
+Date: Mon, 16 Nov 2026 23:06:13 +0100
+Subject: [PATCH net 6/7] mptcp: don't send a FIN before the pending data on
+ fallback
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,7 +55,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-5-bf7656de653e@kernel.org>
+Message-Id: <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-6-bf7656de653e@kernel.org>
 References: <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-0-bf7656de653e@kernel.org>
 In-Reply-To: <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-0-bf7656de653e@kernel.org>
 To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
@@ -67,80 +67,73 @@ Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
  linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
  stable@vger.kernel.org
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3208; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=bBQ+7q7jKXtl+hia6u5vrQe80TFZSnB3h5CQQ2i9hd8=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJ+173Y/NbQ8TZHM5elrKuC+gSp7TUh7yYw8m2e6a5+f
- otog9WMjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIl8lGBk2FvmVnshfE/29W9c
- iVIbtf+xPg2fkSh0uGeB7pWGxZfNyhh+MVtveMYy+8Fn4c4LPgLX/r+3+f/M/2DT3LWFU3OObBI
- R5QEA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2987; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=yQZm9eVkTr9yeWS98qWO8sSUzC9QPTMsOrDIzUhNZrk=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJ+171corI61OYN99UWA846j3qGcw+zHISrOBZO+BTaw
+ PDA/7hnRykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwERmVjEy3FuZdWlJ6b6dOWfO
+ zFxw9N+CE0X2Kq90ojoqpu7Mio92MmH4n81eNunyehVJy7fCVYcfxLoyicbxb5YvDvPfkpoU8iO
+ VCQA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-With TCP Fast Open, the data written by an MPTCP server before the 3rd
-ACK is not sent when this ACK arrives without MPTCP options, but only
-when another event triggers a push, e.g. new data from the peer.
+When an MPTCP connection falls back to TCP after having been shut down,
+the data that is still in the write queue of the MPTCP socket is lost:
+a FIN is sent at fallback time, and this data cannot be sent after it.
+This can happen with TCP Fast Open (TFO), when a server writes data and
+shuts the connection down before the third ACK, and this ACK has no
+MPTCP options.
 
-The previous commit pushes this data when the third ACK, with the
-MP_CAPABLE option, makes a passive TFO subflow fully established. If
-this ACK has no MPTCP options, e.g. because a middlebox removed them,
-check_fully_established() falls back to TCP, and returns before this
-push. The fallback case of mptcp_incoming_options(), which pushes the
-pending data, is only reached with the next packets.
+When the MPTCP socket has been shut down, mptcp_try_fallback() also
+shuts the subflow down: if the DATA_FIN had already been sent, nothing
+would send a FIN on this subflow otherwise. The commit introducing this
+only considered the case where all the data had already been pushed to
+the subflow.
 
-The fix used here is to push the pending data after this fallback too.
-Not only for the passive TFO subflows: data can also be pending on the
-client side, when the first ACK from the server has no MPTCP options,
-e.g. if the window announced by the SYN+ACK was too small for it. Same
-here, this data was then only sent when another event triggered a push.
+The fix used here is to only shut the subflow down at fallback time if
+no new data is pending, i.e. if all the data before the DATA_FIN has
+already been sent. Otherwise, mptcp_check_send_data_fin() will do it
+once this data has been pushed, e.g. by the previous commit. Pending
+data that has been reinjected, e.g. after the failure of another
+subflow, is not new: it is already in this subflow.
 
-This issue has been found by an AI code review agent (Clashiko), while
-reviewing an earlier version of the previous commit. It has been
-reproduced with a new Packetdrill test, where the MPTCP options are
-removed from the third ACK. Without this patch, and before the earlier
-commit "mptcp: arm the rtx timer if a push leaves data behind", this
-data was not sent:
+This issue has been found by an AI code review agent, while reviewing
+the code of the previous commit, and confirmed with a new Packetdrill
+test, where the server writes data and shuts the connection down before
+the third ACK, from which the MPTCP options are removed. Without this
+patch, a FIN was sent right after this ACK, and the data was never
+sent:
 
-  server-tfo-fallback-write-before-3rd-ack.pkt:26: error handling packet: Timed out waiting for packet
+  inbound injected packet:  0.240127 . 501:501(0) ack 4103187975 win 450
+  outbound sniffed packet:  0.240207 F. 4103187975:4103187975(0) ack 501 win 1050
+  outbound sniffed packet:  1.347800 F. 4103187975:4103187975(0) ack 501 win 1050
+  outbound sniffed packet:  2.499829 F. 4103187975:4103187975(0) ack 501 win 1050
+  outbound sniffed packet:  4.739843 F. 4103187975:4103187975(0) ack 501 win 1050
+  server-tfo-fallback-shutdown-before-3rd-ack.pkt:27: error handling packet: Timed out waiting for packet
 
-Since this earlier commit, this data is sent, but only when the MPTCP
-retransmission timer fires, here after one second, as the test increases
-its interval:
-
-  server-tfo-fallback-write-before-3rd-ack.pkt:26: error handling packet: timing error: expected outbound packet at 0.235869 sec but happened at 1.144189 sec; tolerance 0.100000 sec
-
-The client side case has been reported by Sashiko, while reviewing an
-earlier version of this commit, and confirmed with another new
-Packetdrill test, where the client writes more data than the window of
-the SYN+ACK, before an ACK without MPTCP options. Without this patch:
-
-  v1_connect_fallback_pending_data.pkt:30: error handling packet: timing error: expected outbound packet at 0.251394 sec but happened at 1.195904 sec; tolerance 0.100000 sec
-
-Two Fixes tags: the passive TFO case comes from the first commit, and
-the client side one from the second one.
-
-Fixes: 36b122baf6a8 ("mptcp: add subflow_v(4,6)_send_synack()")
-Fixes: 6f8a612a33e4 ("mptcp: keep track of advertised windows right edge")
+Fixes: d51991e2e314 ("mptcp: fix shutdown vs fallback race")
 Cc: stable@vger.kernel.org
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/options.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ net/mptcp/protocol.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index bcf3440d1901..617358ff7f99 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1035,6 +1035,10 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
- 			MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_FALLBACKFAILED);
- 			goto reset;
- 		}
-+		/* this ACK will not reach the fallback path: push from here */
-+		mptcp_data_lock(sk);
-+		__mptcp_check_push(sk, ssk);
-+		mptcp_data_unlock(sk);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 011e73d04ee6..7d226ee38315 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -1333,7 +1333,11 @@ static inline bool mptcp_try_fallback(struct sock *ssk, int fb_mib)
+ 	msk = mptcp_sk(sk);
+ 	if (!__mptcp_try_fallback(msk, fb_mib))
  		return false;
- 	}
+-	if (READ_ONCE(msk->snd_data_fin_enable) && !(ssk->sk_shutdown & SEND_SHUTDOWN)) {
++
++	/* no FIN before new data: see mptcp_check_send_data_fin() */
++	if (READ_ONCE(msk->snd_data_fin_enable) &&
++	    !before64(READ_ONCE(msk->snd_nxt) + 1, READ_ONCE(msk->write_seq)) &&
++	    !(ssk->sk_shutdown & SEND_SHUTDOWN)) {
+ 		gfp_t saved_allocation = ssk->sk_allocation;
  
+ 		/* we are in a atomic (BH) scope, override ssk default for data
 
 -- 
 2.55.0
