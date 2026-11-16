@@ -1,94 +1,50 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794818035;
-	b=n+a1sPPWVIQZXkCy3vBtBHHtVRJzBYkfYVNeYDx7o88m2s4MPkpZNeT8pxnYv0krL8XH
-	 HTUzuZVHSFUm5w+iaZiJye0bUviLwEneJ8eCZkap4STkl5IbgtTirf6esuSgZEsDlXEjk
-	 VQ0o8ofh/mC4H7zD3CzLt46Jn5if3KwzT7wrowqPUgBwM8MAFpIYn5EaHZPLNiXjkEgl7
-	 GXLjHh/GuDxrqcv63H2B3nr4MPoQaJZ66+AO0ascQ5IjjnPyXZP/ucxAs2Qg5fj6mMd93
-	 P5+TrDjFbiJlyo6Ks7Nog4XTyt89n8I2XXmYvmcCCHX5W8sWuQHfh3p28WbVV50RaZA==
+	t=1794826671;
+	b=M2emkK+Unt2Y3FiJOp3LZ80cxrDzGF5MFDc/GW88MplwywgFxInplP01LjjGWR/cY8Cr
+	 eCeuK4v15coq046Lvesvrq2tFloBnYuVqE0wNQOWcfiKOn2OehtiJ0ZZlSAc6UYwQ0HEB
+	 JCnmtsfB7Ztdeef3T+Nk0028GmuCsYKHJcd5nTCU6p1aYb6UuDNInhxHhIAgv+g6FhqaW
+	 5JoB7yts/Qc9YLMI23gs3djzlMvo09yUIgoESQy5QlVlioQB+R6/DOt5mnH6zNSqhetXa
+	 UYtB8Aci+oKo+3LkbcPjCL/MlsN3Gjejf/tgP8hhpsg2wmCoeDGKkR50vDzDdbWf70A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794818035;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
-	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
-	 Date:MIME-Version:Content-Type;
-	bh=lmi3jAItBnPlbkdV5NxHe9GQITzMV4B3dsG4mWhxoUY=;
-	b=o+TC/0KTDodcqBOXHUM9DT24aTrhzXEwNvxV8vXz3bSetv7R9bwULkg6feG0rkrXuegC
-	 /iMRmCwTK6uVaC6Gbv4haV4oNiB6QsF3vnH7R0XjP7omdcdYXsgS7I44dCG0rLfeP8AQi
-	 2G/1Y1/UzRD4WyrLiBVzQ0Fyvp9R0wljKlq4z/kZ7OuL8c0bLY4wVsIQKTD1YUpX4hfKj
-	 JGXqq1Y2kCoUnRAC1eyxt3GKX0LYS8/+nmxkF2TlK9fmsOWvUpQ86wz2I155zfT+MF21j
-	 bkMMXc3sv+XDdUwUOwBTkTEyl9yjxQzNBR/eI73yDCxlikDK/hXWtPbRSaY0PxX7qFQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794826671;
+	h=Received:DKIM-Signature:From:To:Subject:Date:Message-ID:X-Mailer:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=5bvLkya9c9sXwawH7UjaRizMdJ+XTqfRW44Ty5bx/RA=;
+	b=GighVY9B8iH2ADxsu64nAbc13JzlX4RylLnojUQEWrQyhBad70CBecfHoJ9wdXY+Juy3
+	 wYtos223dz4ZdrLPZsOtXb9BKMIU7gQQd2MhUI6BBJL5o0tVEyRIgRJep3dyrFSwAGI1D
+	 ItAAcoe8EKBiAwWvS11tDy2RKg9RDrmd87kA2xMs8Rq3td32NIHR01mvlnWgsmbgBAoEC
+	 FYtJckx2sbDcVgS2ZmQsnSypEHTDuwhjtVsZmK0dKduOZpxjGEQ/oATuoLAETOevxC2At
+	 OekEp9ijNhEJUWk85ZVq9syS3FjMV4gKzhyrtqfw1qD4Zxl+XzjcdMDqy64T/DIw00g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ENuReaVV;
-	arc=none smtp.remote-ip=209.85.216.54
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=boJHNNK8;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CFFE606A31C
-	for <mptcp@lists.linux.dev>; Mon, 16 Nov 2026 08:33:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0CFFE606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3974C606A323
+	for <mptcp@lists.linux.dev>; Mon, 16 Nov 2026 10:57:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ENuReaVV
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-3ac78f4c10bso1606937a91.1
-        for <mptcp@lists.linux.dev>; Mon, 16 Nov 2026 00:33:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794818034; x=1795422834; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=lmi3jAItBnPlbkdV5NxHe9GQITzMV4B3dsG4mWhxoUY=;
-        b=ENuReaVVVq1N0bWYUKqOjGI/rm182qW3r9mfDze3irwSyebrQ+sWM2ZAuVjXP7oO5M
-         i7urA5MET5YO5XGGUtTH9kgXezDYxD19hScmOwBDhrOSwlJLnkqsV/ILe3MGLktOgtGm
-         jYlsADoEAS5lwoZbXIMik3WAfWYtC8prM0xJp4CTHxyw2TS5xc2qOohLV33+l4BC1VAo
-         rFrr0AdVnT/FM8XQdkQACBcX80klASm7kbhiCAMUo1ZXOMYRg7PqAKp2j2tgjNyop5V9
-         xYG+EEPm9h0mdEuCutDjgUK53jZw5CJj4oZHy3973ioIVkUSCsKw2zkbS38lGwoTdh9g
-         yWZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794818034; x=1795422834;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=lmi3jAItBnPlbkdV5NxHe9GQITzMV4B3dsG4mWhxoUY=;
-        b=yiQs3M+bL3LArBprb9pNrCMVrDZjxwR7xWLee4eZWzi+FLL6R58D8SgHqpoLxMbZMm
-         W1clpBYK57s2G85SU9sxwZhxmdeLDZRsCwup7QheDIt8w4ZvaobA6vvVc8NNDMn8M4j7
-         ak1EVEntfClGKrpPSRFYlefZm7kZ4b6R9g0IWW91HVclnOs+Tg8n+KFbO4CdVNcLPBhm
-         Pcf4DeLCrXGOVtKd9bRglxqogrjTOhVOy9u98a7PFjN6u9e9H6HV12PsCXcTDARm0xeM
-         ki0RMlkutTEq0CTEAmb0RCTpQaC831+rGcMI4qHjEJPZGyUlxJjIfnBx5ULhrlNOXiKe
-         W4BA==
-X-Gm-Message-State: APuU4Z8bJnCAb+mV1UcHyIpnpURpq+aMri65b3okPU8LVegTXaHVmrp+
-	50exKNYvlCSXWNBybeAQUfx0cu3N+R2LH+nbyEemB9Vn2kroPPvS/FM9OtYc
-X-Gm-Gg: AZFdTZf11L2rZFQkHAF1N/oCSAgwpQOGkReKGHgy85L2qwOqjGHwvw4DW+e2LxMl/IC
-	K1dEdVaLcjj5ECdzhpJh1F9i9mQ8wjHx3VGV5uGyc7EBl3azGagXNtQMJgOxwiQn8Xy42Ph0tre
-	t/G64Qqyf6nD0dwNV01JARkaUdhhKK0r0OqPz8lPkXs+qqjhLAALMN4UP4A8oOUEI9z042xwA55
-	+6ET9/A/2HSW8nZlLFRfYP9D0vU+/8kwhQXzK6ZnVK2sQT8HMVSVFlaYgL3ZxKgk5xJyu5FGWr4
-	OIxaaegunFLE1ereTSqK5f2PvchWSS0wrFSr/rBCtEZ63dqH+g43AoC5MmQZWiCZYBm/KcrQa7Q
-	sCfxjeybQkrt62M4J9W4S2hCnF6BkzkeUmScgf/UQtcxOOOFXcVnAph+WWIrIz0/bEa/EJFTpqI
-	iqA5/6cAjpNiD/+E1H3p3BlbYbFf357AgCoqFmptPmD83hixj9ecKKuNfmhs2vP7d5lvfWoXxWN
-	KTGoGocgNWCi+Fk4mffbXQctpi9a0av85DthbFhm4pvNfosWvgDUEUew7HalduvYDwluBGpkSRf
-	NJSfM6BKDBg2hnkq3L/JIv0U66ycnfYapEwVdoEt
-X-Received: by 2002:a17:90b:5627:b0:3ab:17b6:9a93 with SMTP id 98e67ed59e1d1-3b1b0ba8ec8mr10378017a91.52.1794818034225;
-        Mon, 16 Nov 2026 00:33:54 -0800 (PST)
-Received: from github.com ([4.246.71.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b197b76ccesm20686860a91.0.2026.11.16.00.33.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Nov 2026 00:33:53 -0800 (PST)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1794810809.git.tanggeliang@kylinos.cn>
-References: <cover.1794810809.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v28 00/11] Reduce the differences between
- TCP and MPTCP for TLS usage
-Message-ID: <9063ffe1-9e85-24d5-efdb-a842f1e80e2f@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 16 Nov 2026 08:33:52 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=boJHNNK8
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EFD81F000C4
+	for <mptcp@lists.linux.dev>; Mon, 16 Nov 2026 10:57:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794826670;
+	bh=5bvLkya9c9sXwawH7UjaRizMdJ+XTqfRW44Ty5bx/RA=;
+	h=From:To:Subject:Date;
+	b=boJHNNK8NE4k3OLxsHdmKMTiUQO7YBj5TUmMeTz/tWwjm91Tt3izTlptV+I4AT/09
+	 mRLYto9AEcsPp8nQhnZiTK3G1yY+Nht+EHJr33EOD1i1M8fDoq/36LV1rCdS1pvYTs
+	 x+tSd+Mgm5LRdB4bTbZEOYnFr6+aTZd5A4dllXyOC++PM/lfNpqn/3a8jxMkhvWVru
+	 2x+TL/5R34fY0zUMaE35dXiwitjJY/Sf5OhmUr7nQBfyymxzxR4rH20ajJbOmw8OcC
+	 Q/8DefRjLYiK3JBJQwB6j/P1q5+XvzPzHiPWdwg7q+uEoDBAoKHJ6wxA5LhwzhmEwK
+	 7LBhHfHC/yeAw==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next v8 0/7] prepare interfaces for kTLS and sockmap support
+Date: Mon, 16 Nov 2026 18:57:38 +0800
+Message-ID: <cover.1794826541.git.geliang@kernel.org>
+X-Mailer: git-send-email 2.55.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -98,67 +54,131 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+v8:
+ - patch 1: change mptcp_inq_hint() to maintain TCP semantics by adding 1
+   to hint_val when RCV_SHUTDOWN is set or sk_state is TCP_CLOSE, matching
+   TCP behavior where FIN consumes a sequence number.
+ - patch 2: update the test.
+ - patches 3-7: no changes.
 
-Thank you for your modifications, that's great!
+v7:
+ - patch 1: add 1 to hint_val when RCV_SHUTDOWN is set to include the FIN
+   byte, matching the previous ack_seq - map_seq behavior. Simplify the
+   EOF condition accordingly.
+ - patch 2: replace poll()-based check with a wait_for_remote_key() helper
+   that polls MPTCP_INFO until MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED is set,
+   ensuring the third ACK has been processed before checking SIOCINQ. Add
+   SOL_MPTCP fallback definition and handle ENOPROTOOPT/EOPNOTSUPP for
+   TCP or fallback sockets.
+ - patches 3-7: no changes.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1794053683.git.tanggeliang@kylinos.cn/
 
-Our CI did some validations and here is its report:
+v6:
+ - patch 2: add Fixes tag, and use '-net' prefix.
+ - patch 3: remove poll() call, check SIOCINQ directly after accept().
+ - patch 6: add READ_ONCE() for msk->flags and msk->cb_flags reads in
+   mptcp_rate_check_app_limited() to annotate intentionally racy accesses.
+ - update commit logs.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1793860134.git.tanggeliang@kylinos.cn/
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Perf: Unstable: 1 failed test(s): error:sched-mem-pressure - Critical: =
-mptcp-perf/01-Test_1/client.log: 1 Call Trace(s) - Critical: =
-sched-baseline/15-slow_primary_upload/server.log: 1 Call Trace(s) - =
-Critical: sched-baseline/16-balanced_upload/server.log: 1 Call Trace(s) - =
-Critical: sched-baseline/18-balanced_parallel_4/client.log: 1 Call Trace(s)=
- - Critical: sched-mem-pressure/03-bloated_slow_secondary_receiver_tcp_mem_=
-parallel_99/client.log: 1 Call Trace(s) - Critical: =
-sched-mem-pressure/09-balanced_both_tcp_mem_parallel_10/client.log: 1 Call =
-Trace(s) - Critical: sched-weak-secondary/01-weak_secondary/client.log: 1 =
-Call Trace(s) =E2=9D=8C
-- Task: https://github.com/multipath-tcp/mptcp_net-=
-next/actions/runs/43820031687
+v5:
+ - patch 2: new patch - rewrite mptcp_inq_hint() to use mptcp_data_avail()
+   instead of ack_seq - map_seq, completely avoiding TFO overflow issues.
+ - patch 3: new patch - add TFO SIOCINQ overflow detection in
+   mptcp_connect test to catch INT_MAX returns on TFO connections.
+ - patch 4: mptcp_inq() now returns INT_MAX instead of 0 when avail >=
+   INT_MAX. Removed mptcp_inq_hint() changes (moved to patch 2).
+ - patch 6: replace mptcp_rtx_head() check with MPTCP_WORK_RTX and
+   MPTCP_RETRANSMIT flag checks in mptcp_rate_check_app_limited() to
+   properly detect pending retransmissions without data race issues.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1793676064.git.tanggeliang@kylinos.cn/
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/6ed4908217=
-c2
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1212327
+v4:
+ - patch 2: fix mptcp_inq_hint() to return 0 instead of INT_MAX on
+   passive TFO overflow (ack_seq - map_seq >= INT_MAX).
+ - patch 4: add mptcp_rtx_head(sk) to the early-return check in
+   mptcp_rate_check_app_limited() so pending retransmissions also
+   prevent false app-limited marking.
+ - patch 5: update comment message.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1793588257.git.tanggeliang@kylinos.cn/
 
+v3:
+ - patch 2: drop DATA_FIN subtraction in mptcp_inq(), remove the
+   intermediate 'answ' variable and return (unsigned int)avail
+   directly. Update commit message accordingly.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1793324316.git.tanggeliang@kylinos.cn/
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+v2:
+ - drop the patch "prevent dummy DATA_FIN on RST in fallback mode".
+ - keep mptcp_inq_hint in mptcp_ioctl unchanged.
+ - use mptcp_data_avail in mptcp_inq.
+ - add msk_owned_by_me check in mptcp_sendmsg_locked.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1793258749.git.tanggeliang@kylinos.cn/
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+v1:
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1792999988.git.tanggeliang@kylinos.cn/
 
-For more details:
+This series was previously posted as part of "Reduce the differences
+between TCP and MPTCP for TLS usage" v15. It creates the mptcp_inq()
+and mptcp_sendmsg_locked() interfaces that are required for the upcoming
+MPTCP kTLS and MPTCP sockmap implementations.
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+The series has been rebased and no longer depends on Paolo's CB layout
+refactoring patches (mptcp: drop the mptcp_ooo_try_coalesce() helper,
+mptcp: drop the cant_coalesce CB field, mptcp: remove CB offset field,
+mptcp: sync mptcp skb cb layout with tcp one, mptcp: defer read_sock
+cleanup to mptcp_worker). Those patches are more complex and will be
+sent in a separate series.
 
+Patch overview:
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+1. mptcp: update mptcp_check_readable
+ - Align with TCP's sock_is_readable for better TLS compatibility
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+2. mptcp: prevent dummy DATA_FIN on RST in fallback mode
+ - Fix semantic issue where RST on fallback connections would create
+   dummy DATA_FIN, causing unnecessary state transitions
+ - Add sk_err check to subflow_is_done() to distinguish abortive
+   closes (RST) from clean closes (FIN)
+
+3. mptcp: implement peek_len for proto_ops
+ - Add mptcp_inq() to report readable bytes at MPTCP level
+ - Wire into .peek_len proto_ops for both IPv4 and IPv6
+ - Handle 32-bit torn reads by returning 0 instead of INT_MAX
+ - Prepare for TLS strparser integration
+
+4. mptcp: add sendmsg_locked to proto_ops
+ - Split mptcp_sendmsg() into locked/unlocked variants
+ - Expose .sendmsg_locked in proto_ops for TLS send path
+
+5. mptcp: track app-limited state in mptcp_sendmsg
+ - Add mptcp_rate_check_app_limited() to mark subflows as app-limited
+ - Bail out when MPTCP has unsent data (write_seq != snd_nxt or
+   mptcp_send_head() != NULL) to avoid false app-limited marking
+ - Enable accurate delivery rate estimation for BBR
+
+6. selftests: mptcp: sockopt: check app_limited
+ - Add regression test for app-limited accounting
+ - Verify tcpi_delivery_rate_app_limited == 1 after small transfers
+
+Gang Yan (1):
+  mptcp: update mptcp_check_readable
+
+Geliang Tang (6):
+  mptcp: fix TFO SIOCINQ overflow in mptcp_inq_hint
+  selftests: mptcp: connect: check TFO SIOCINQ overflow
+  mptcp: implement peek_len for proto_ops
+  mptcp: add sendmsg_locked to proto_ops
+  mptcp: track app-limited state in mptcp_sendmsg
+  selftests: mptcp: sockopt: check app_limited
+
+ net/mptcp/protocol.c                          | 95 +++++++++++++++----
+ .../selftests/net/mptcp/mptcp_connect.c       | 64 +++++++++++++
+ .../selftests/net/mptcp/mptcp_sockopt.c       |  5 +
+ 3 files changed, 145 insertions(+), 19 deletions(-)
+
+-- 
+2.55.0
+
