@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794866930;
-	b=ZBTa2aOzENuvUDdo2y9YCANN1d3Zxw7hjclePo6hSLOWBydEadRZoHpDzZ2myiw2ghbc
-	 abqaDeJwsJ48iJpb5HAOijQNwtRrfoPmB8OayqdKINy2e+lbuBJoQjxTFVsED45K6i2dc
-	 rWFqKuvjgF3xR0/cQao2uZhuat4wrOPdyAj0J5Xh/dBF2ABlVU8CbSGPIGBcdDwRcWyNN
-	 sIXqItxeNUABi2r6Hp0Mxu7iKW5IVpKDqcQmUHgKg/F316KLRV0mCDwZeVokoycKANkoV
-	 iJwXEob9Qb/Q9C6kzGObFr04G98vYSDa4pMP0ZcowLGY02uKWAVp8Vkr1QujrJZw7qA==
+	t=1794866933;
+	b=VUsKr1+p6/Dmy/PPXUowfJRd4/deR4qgpVPUYnnrwUCKoTowaY7yFlAMoYiOA2iH7i0n
+	 /X3l0oPs7ejOgsyUMI61+eRRIpI0kAKeEVGIdrY4Sn4lBBKbO8cmgVgauO2+1ZB0+pTBq
+	 vmgurGoe53nfBLyihDnPmixTYKNky2Xq42Pm9BDkdD9lIcksJhH4k1kPHm1vI62SqN2zo
+	 1l2L7QT0RakRHdRfaqy6lYDya1jXWgwhUWPay9r8vkvQDwe3K07HRSMmCbmbeKs9s1Yqg
+	 h8kIsPXvYqbeC3RELFpTeg43I9luRiP8gInD8OB4ozA6fywTIKMY0tp7CDuMqCartiw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794866930;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794866933;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=uMYq6JE8xuNZqyVh9m0VgbWr7vZYU9GSmfyKxFS5D+A=;
-	b=1Bb74MJsS8T7VPi33zKfdUsTD4eeEe/cU3c5FfJZyXAppyywOD156cCfsvZOc8rPBy2U
-	 VZNaTkV3X6HdGR25wb6bhp3ohFHB3+TaAN1awXcOdydWjQnPlZfosaTRVi/HGGcFxRrht
-	 b97eLstj9zcTY4nk5Y+X/2c8kGLVanDJiDcaE7YgBC3EI24o9TxH7bslGQ4t+tezvZAYM
-	 PoPSzdoZGvdtvGsIqKoP4fK0AGpD56Dpl9kV8HqxnIJtqFXZ9GTUTRcbA4pxXgRZMB9ZV
-	 genZ30XYpQO8J0JDac9lhx20z0msp+RtGrFzhCp5l3IVL/FDXLTZwas56EZJaOOAYnA==
+	bh=fASJVZS6eae9LxRGOU8UXTUuLY6ysPWMoGJyRiEOZic=;
+	b=NX1VddIGftNBF4CoDYo5Eusiq2XPmgHkeGjQPjHJZL/2RBYgbbtD18HPOBGdfZduUoRx
+	 w55zOrZiJFU0Tb70w67i4s1nKMrbMxfo1aqrqTnUxMvMlOAKKRJe4YodGT5BlMQj+zaSy
+	 wBICqG1FSjxyjIq+XjLHfbY33r6WFkGAfed5FUWlBhu4lyaouQ5+K8yyUsR3RsrRTageb
+	 Kvy9CO5zIHXYrmdCvhCeMK7tYtovzAKitdtP7qu5GE7IVfaBXzW9c3gcQaQ4MR2H00QMH
+	 nox8L5TOnzvH8DQR4QkZ5PShOjWswzxdNo1tzbq/prPGZ7FBV1JFE5wdUB+g9EaiVew==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DLidWKMH;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CdHzTetm;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773A6606A330;
-	Mon, 16 Nov 2026 22:08:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACB660A2611;
+	Mon, 16 Nov 2026 22:08:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DLidWKMH
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA7BA1F000C4;
-	Mon, 16 Nov 2026 22:08:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CdHzTetm
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BCD61F000C5;
+	Mon, 16 Nov 2026 22:08:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794866930;
-	bh=uMYq6JE8xuNZqyVh9m0VgbWr7vZYU9GSmfyKxFS5D+A=;
+	s=k20260515; t=1794866932;
+	bh=fASJVZS6eae9LxRGOU8UXTUuLY6ysPWMoGJyRiEOZic=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=DLidWKMHgkte+wcx8XviGctfDknmqXQhV6a00gH3EIHqU7Afe13izKrBMzLE+ahf6
-	 SHtdWjtSQGVabAvD+hROIl3Z1XeYFgI8CZ/B2+ZIYcitEPqOIUJsdv5PgGY1Gek+OP
-	 KzBi5m2FWAoHqC+q+Xg8PZIDQYRzyV4tSA8lwRAt3jfAcd20LZhq0XHAM4fs+EoiTt
-	 mUFOrjYuMshD/iMSmvXxQtCMk/y4DCDWIy1oIu2FrWHpcu2W11ZYI+yeJ7Vf+JqzdE
-	 t6jFyXF6WTGmDDqXQmwqHz67UIp/6BmkRUB5gDmIjuzRtlNaXTT2ZTlhE9acaRpSSe
-	 wZ/q+ng1XXUdw==
+	b=CdHzTetmXjvIW8qs4EVDVmVG1L1/YPkaKGG0pMK9+A71bd7ABaBGMD/70Kh1ZgcjF
+	 0oyAFVHZoftAdWEZ4Y0SXyc732qSDx8TGxst2IYoK6yg5iGMth5G/E914nod2dL6U9
+	 zM1HrXHnJ6dZktsvX68n9sTNlcLv9Q5ttOYVMTpiVkhjqXPc/zzbX092JSCl5BtlIS
+	 CNOMeWAJBvRPNzpN5q5q5CU3Bd7QBTcMvHZnEGwzFnIhu9ve2zfwVhmM190kcU7NGL
+	 /kuV78xrpGJOGvExGOFAPkCriPumEaQX2VSL7Ev9zeAYvxj4bGMWdYO9qV8o9lPkjg
+	 riHAfybjO8HdA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 16 Nov 2026 23:06:08 +0100
-Subject: [PATCH net 1/7] mptcp: do not use a raised snd_wnd for the send
- window
+Date: Mon, 16 Nov 2026 23:06:09 +0100
+Subject: [PATCH net 2/7] mptcp: push pending data after a sendmsg copy
+ fault
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,7 +55,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-1-bf7656de653e@kernel.org>
+Message-Id: <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-2-bf7656de653e@kernel.org>
 References: <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-0-bf7656de653e@kernel.org>
 In-Reply-To: <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-0-bf7656de653e@kernel.org>
 To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
@@ -65,101 +65,64 @@ To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
  Dmytro Shytyi <dmytro@shytyi.net>
 Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
  linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- stable@vger.kernel.org
+ Quanye Yang <quanyeyang@proton.me>, stable@vger.kernel.org
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3711; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=7zDQSYKcpnKhli3dcbyFsT9TAjx17AqSPorjk+qb/hU=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJ+1z2bodi3o0M+f3vSn0sBImwn/iz4FNWxe9NV0U2PP
- iQeZGiX7yhlYRDjYpAVU2SRbovMn/m8irfEy88CZg4rE8gQBi5OAZjInY+MDCff+5y5OeHnv7yd
- x9JPXfq3/9bpx9eXbbEItUjeWN//79oXhv9ufTeVH62qmh948c+K8mPq8xym/kxg7HytLaUa5ls
- 3/yc3AA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1670; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=306+4uW4TpE7s0K8Pmzi6N99z+xxvTfHEkxIyFliHBs=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJ+1z3TEZUzmZ025YbSqe9leQcnZbQ0iB5U2rnzSae44
+ czvagHRHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABO5V8LIsKuF/adz9akHs4sl
+ 8y6lhj+Zrlp/Z4rF+ys1H/J37phq4MfI0Nx09Lk+d/b094a36usF9rmlsftN2Nz3Z2fE7e3XdD0
+ 3sQAA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-ack_update_msk() sets the right edge of the MPTCP send window from the
-DATA_ACK and tcp_sk(ssk)->snd_wnd, but this is not always what the peer
-announced: mptcp_check_allowed_size() raises it to
-window_end - data_seq, so that TCP lets through what the MPTCP-level
-window allows.
+From: Quanye Yang <quanyeyang@proton.me>
 
-That is fine for new data. For data sent again, data_seq can be below
-snd_una, and snd_wnd ends up too large by the difference. TCP only
-overwrites it when an ACK moves things forward on this subflow, see
-tcp_may_update_window(). If a DATA_ACK moved by another subflow comes in
-on this subflow before that, wnd_end goes past what the peer offered. It
-only moves forward, so it stays there.
+mptcp_sendmsg() copies into the msk write queue first, then
+__mptcp_push_pending() on the success path. tcp_sendmsg_locked()
+does the opposite: its do_error path jumps to out, and out
+calls tcp_push() when copied > 0.
 
-The sender then transmits data beyond the peer's window: the peer drops
-it (MPTCP_MIB_NODSSWINDOW) after TCP acked it, and only an MPTCP-level
-retransmission can recover it, which raises snd_wnd again. The
-connection can then stay stuck at a low rate for several seconds, with
-nothing in flight on any subflow.
+A later iovec fault (copy_from_iter / -EFAULT) after a successful
+iteration therefore returns the partial byte count but leaves the
+already-queued dfrag on rtx_queue. No subflow packet is sent, no
+retransmission timer is armed, and DATA_FIN stays blocked on
+first_pending.
 
-This raise has been added by commit b713d0067574 ("mptcp: really share
-subflow snd_wnd"), but snd_wnd could already be too large before: when
-nothing moves at the TCP level, tcp_may_update_window() ignores a lower
-non-zero window, while the peer can announce one with a DATA_ACK that
-moved, keeping the same right edge.
+Push in do_error when copied is already non-zero. Do not move
+the push to out: copied is a size_t, and sk_stream_error()
+stores a negative errno there.
 
-Use the window announced in the packet carrying the DATA_ACK instead.
+The issue was spot by Sashiko, but easy to reproduce with Packetdrill:
 
-In my case with BBR, a small TCP rmem, and a second path with a much
-higher latency, a lower throughput and some losses, this small change
-can double the throughput in the worst cases.
+  writev(4, [{..., 32728}, {NULL, 4096}], 2) = 32728
 
-The issue has been reproduced with a new Packetdrill test, on a single
-subflow: the data is acked by TCP, then by MPTCP with a lower window,
-keeping the same right edge. Without this patch, the 2000 bytes written
-next were sent, instead of the 1280 bytes up to this right edge:
-
-  dss_dack_window_server.pkt:23: error handling packet: live packet payload: expected 1280 bytes vs actual 2000 bytes
-
-Fixes: 6f8a612a33e4 ("mptcp: keep track of advertised windows right edge")
+Fixes: 69800e516e96 ("mptcp: propagate fastclose error")
 Cc: stable@vger.kernel.org
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/640
+Signed-off-by: Quanye Yang <quanyeyang@proton.me>
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/options.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ net/mptcp/protocol.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 02e785a14b8a..a1e65309171e 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1120,9 +1120,11 @@ static void rwin_update(struct mptcp_sock *msk, struct sock *ssk,
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 8968db58083e..b67096ee131b 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2130,8 +2130,10 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 	return copied;
  
- static void ack_update_msk(struct mptcp_sock *msk,
- 			   struct sock *ssk,
-+			   const struct sk_buff *skb,
- 			   struct mptcp_options_received *mp_opt)
- {
- 	u64 new_wnd_end, new_snd_una, old_snd_una;
-+	u32 win = ntohs(tcp_hdr(skb)->window);
- 	struct sock *sk = (struct sock *)msk;
- 	u64 snd_nxt;
+ do_error:
+-	if (copied)
++	if (copied) {
++		__mptcp_push_pending(sk, msg->msg_flags);
+ 		goto out;
++	}
  
-@@ -1143,7 +1145,12 @@ static void ack_update_msk(struct mptcp_sock *msk,
- 		     after64(new_snd_una, snd_nxt)))
- 		new_snd_una = old_snd_una;
- 
--	new_wnd_end = new_snd_una + tcp_sk(ssk)->snd_wnd;
-+	/* What the peer announced: tcp_sk(ssk)->snd_wnd can be larger, see
-+	 * mptcp_check_allowed_size(), and is not always updated.
-+	 */
-+	if (likely(!tcp_hdr(skb)->syn))
-+		win <<= tcp_sk(ssk)->rx_opt.snd_wscale;
-+	new_wnd_end = new_snd_una + win;
- 
- 	if (after64(new_wnd_end, msk->wnd_end))
- 		WRITE_ONCE(msk->wnd_end, new_wnd_end);
-@@ -1313,7 +1320,7 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
- 	 * monodirectional flows will stuck
- 	 */
- 	if (mp_opt.use_ack)
--		ack_update_msk(msk, sk, &mp_opt);
-+		ack_update_msk(msk, sk, skb, &mp_opt);
- 	rwin_update(msk, sk, skb);
- 
- 	/* Zero-data-length packets are dropped by the caller and not
+ 	copied = sk_stream_error(sk, msg->msg_flags, ret);
+ 	goto out;
 
 -- 
 2.55.0
