@@ -1,47 +1,80 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=162.62.58.216
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794840008;
-	b=ZazUgzXDj72zXREDMTuRcTl3CeHfmVyuRyDdVWpO12wCqLKXBeO8Vgj8g85uzr/JTXto
-	 d79zSuOy9mlIg72X1v8pW3R6Kcs+t4f2a4A7vor46T46RnUQLPrfmrlwzS9b0f3P7Tf/g
-	 jpkYzcLe9KBABe4BzfyWZbMqc4Op1laarM5dYFWTei6idszf0uDYksAQrB+7ONf9s7AEq
-	 ii4XlbaBC0DR0BPH3UfQ724icUOsehNtL11waUdduKqQt5+I9hoBgbjz4A8EmWAiI44dB
-	 m8Z2T2OuWqbFzFfEyYgs03oie4rZ8bmbXFuWWTSMWXOannyg8Yod2KuT/PdZBhByYGA==
+	t=1794841114;
+	b=wQ/llRqDyThVYe8VUIhp1ptWDGaQnsM+cXBaeYRrjDP2K/UMsi/3CX1LqFuIppzTNXLO
+	 MjQrdmCVyFGy2McOYCbNS4i2dQmHweo0wRoeWSLZ1Agz4UO5vQx4hVf/G8Fr6Jk72CcOh
+	 CxT6R+kMXJKeLVkvrzeqsn8dqft2+oZZrlXEfCkIqUdDxS5+g6fAC8QN3p5mMNPMcelP/
+	 OiK6vChKW+cJnpPiBcU0stca8kemKjtpjNFYrCMBdRh/TkRmno2DDmuEDaw7jo2ld8tSw
+	 dW2ULUy2WbU+QzTU1VEWEt/AO2bza5HUtudqGxysMWXsHJHrgQxaHRtY7rPqBcOSyWQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794840008;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=l2EBpH08xKGjJnPxYpGviTvnZuT+6vV8X+V/VrgfnoA=;
-	b=BlkCvQxIz9tpI/q13meTlPvQj+9Bukmqn0UAux0BwYz7HwUwDWw9oXPPBPcsw9fZk5G1
-	 Wxv9TnKXX/SsDJurH10XNaIrOWFalpV5FkkWrfEyoPCFeji4uPtjYBrdx5J2UvrreI/cA
-	 bMvr39+o4MsaCSxklxe/1RRCMvG5CxEjhY1QecFcUvO6Vq9rxkd2wAtCwEhJIlf2p0jry
-	 fJTob/Ox+uR230XQ2mKp+6yZlb40rHixo2BC8MGVu8gjdZedg/wdE8F4jZa+VgSR0QMdv
-	 EwjSq1YZoA7PPxYzBiUFcCPHUF7HlB5+9UUO/SGKI5339ploMxbvIu6/nGc+RbGdLRg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794841114;
+	h=DMARC-Filter:DKIM-Signature:Received:X-QQ-mid:Message-ID:
+	 X-QQ-XMAILINFO:X-QQ-XMRINFO:From:To:Cc:Subject:Date:X-OQ-MSGID:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:
+	 MIME-Version;
+	bh=Uy9Jdn7rHshegnnAyKS/HqBRnthchAJC4iehP0NQYws=;
+	b=FA4chB8yHQmmm6o8RojTNZtEzYxb66qIJBrrVjSW+yp9PY/g/GcFI1u7gyi5GfPsDvof
+	 aZ16PTyWDpuiEsqARwxitbrHdaz6KlZ5eBIxkyyDxVYesxSn5/iGPlGNtnGIz6jzERc/4
+	 ZwKVH9L8U6tahAi3XbDfQbfQw6KWzSc7ikI2/Z+opqqJlx4/th5+YuEw59oyGKSqISUNS
+	 LTCcc7RDVmZLXgM16bGoyYtm9ihv4D9suf9o14InVv7kej6qYc1S3EIZaxUl/rVPItQSk
+	 sLI840SWtd0CLoVlcPPYFDyK+XfR79yWfZPsO8E6LekhbOb1M4nR9J/TQcb8ezi2F/g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="EzD/GQvN";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=qq.com;
+	spf=pass smtp.mailfrom=qq.com;
+	dkim=pass header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b="xPyiu6U/";
+	arc=none smtp.remote-ip=162.62.58.216
+Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FD3606A32C;
-	Mon, 16 Nov 2026 14:40:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1FF5606A32A
+	for <mptcp@lists.linux.dev>; Mon, 16 Nov 2026 14:58:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B1FF5606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EzD/GQvN
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E2921F000C4;
-	Mon, 16 Nov 2026 14:40:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794840007;
-	bh=l2EBpH08xKGjJnPxYpGviTvnZuT+6vV8X+V/VrgfnoA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=EzD/GQvNR1otlSd8m8+eabMhI+h/azuepFBT9Ub3NmseDVOzAH7kWm0cTfaBVrwZN
-	 PYJa3KDrymDi8ElGdVUSB8ndLE1YlG64gmRyaFpm3SBlFmbXXYB3W//ePI8DFTSdpc
-	 vUN/AJ9yR4oSGMoTq4wmKbFkJBeP+LiFP+naYrQrTQdSU1wFI+wEPYyn6Wc+ACYm4q
-	 96X5AjYy+bOd81oyk8a61CxLWXFLnPWlu4Dtkx9fSZkGIM8pbH7cmR5O0O3QhMlVGW
-	 AGWdA9F9RAKNPbig7CQgrlVocvp9yPH0k3kMd3cQulE9G0WxQIEZ/bTDw2eDbg6VsY
-	 l5fteDhN/fhhQ==
-Message-ID: <1d43222e-b864-44a3-a159-575fc1a9b388@kernel.org>
-Date: Mon, 16 Nov 2026 15:40:01 +0100
+	dkim=pass (1024-bit key, unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=xPyiu6U/
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1794841107; bh=Uy9Jdn7rHshegnnAyKS/HqBRnthchAJC4iehP0NQYws=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=xPyiu6U/ezAhtobXj5TzROOPTG3diexHqVgKVOUmvV4TmHaMCOyD5ozVHO6FMGfTp
+	 vRdmpV58utbbWQTJ9Y9mIJVRTCAwEADArp6SiOGybEAwfn5LZpQZPArFRTJWmV4TdO
+	 ctgkT1sQuQXlUdZaqAhU56giOmCOsgq7sxO3sRjQ=
+Received: from [127.0.0.1] ([2409:8d5c:8f0:65e5:2979:aa1c:9ec4:8698])
+	by newxmesmtplogicsvrszc43-0.qq.com (NewEsmtp) with SMTP
+	id E96286B1; Mon, 16 Nov 2026 22:58:22 +0800
+X-QQ-mid: xmsmtpt1794841102t6r8bc3kf
+Message-ID: <tencent_5497455DD4DAF310EB3F8121517EE9A69B0A@qq.com>
+X-QQ-XMAILINFO: M5g+bqkaOkZD92jABezB/5b/8BgAI0UxkFinwmlwcm1KMAW0IqCQlcBXdRq9bw
+	 62pW9W2/M48jfxvJXuO14RlFm1CWNIC9tokp/rZekYPIaC4Rs/YcUgNmxszg7NbS7ZvBGTefF2yC
+	 xzlpcnn0bb6JjV5SCLxYEQpemGg9BEQ8N+JX9DBVV2Yx0Yi8RoKzJa9L6C+1a/1eDv7cIvC4fDQe
+	 OFIhBIi+eoshao5gVX0o+cJ2vz2DRrQl80ep5oPkERphmLzk+GLoJkTjwOuNe7dQULDWNbeGei4o
+	 txU9TMtTzJ2nsGlX74o0UhrAh7mQUBOAv4v2ZNBC0SVF5QVnH2tkU0VbRjB/921NwnQxyPvZw0Fh
+	 KWnqKT9vFihyhTzhrOcyR8hWOo9Yg/npInzw74Yxlolh8F9PCZc8gcU5We/6L1BkEVwnR4KQYg76
+	 QVqm99V88lQdube3fTOLdTWeF4dIhyfd4LG0VaElgjhQgW0KcxbFnvKAEDKR4KJXiUb3G7eaBahX
+	 /ThmYvNidNGg1heoG8lLkhoEm8aNe8dm4YWfigK8JJ/owofAuN5mDMde1xqtcckiXp25A658liRL
+	 IxN0yf4CHFT/irS7JgHZ2EhgC0FcMwUonCEC6msxy4P00RWUTqPJXLhaFSzUahv99c4cA9obh53l
+	 ph14Fi3xBvCkx1DMSldexVvuIsjTa7mHaZBP7eW1rEjk6qMDTjUhRvCQnoKvgnkoduKTXH0TDZ9V
+	 dEVU1DkN2KdbOsD8/tgFhaMzyKQ/anF6kkYKfK2+AWShdpIQi0uEYi4HngismnTyZrJnO82Jj+xQ
+	 OLODqeFp2Jyr0XL7SSJNguQYmFa08V/wiKsvUQn94GU6j8jS+TVa05xg0yJnYGBwQxdX/e3IMMWL
+	 i+UlCKePhvXa1iMkDagJYVjeULPKol00DBGX8vmEqeN1XzSIxhp1q7J6TyFY+0HxTV2ZKW+PDqP3
+	 ZxQlD0xL8TER2DEW1pptOqqp7ZvrJJND93AxX++CjSpSFtgNNdkOhFKVy8aUikP/MjRnR4HuU0ri
+	 O76g71RCtsAqkJJygE2gCnuXIcX77zOLKPBvHj7fpW4KZBpGi/HJ+qOK+idPE4+MIObN6kf8HcpU
+	 oCHoj7QI6WuKoNFAfm+hueghwc65I/310Snvm4vsr+nXdiLFo=
+X-QQ-XMRINFO: Mp0Kj//9VHAxzExpfF+O8yhSrljjwrznVg==
+From: Hang Nan <2122295973@qq.com>
+To: netdev-bot+sinfo@kernel.org
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, matttbe@kernel.org,
+ martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
+ edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ kuniyu@google.com, willemb@google.com, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, 2122295973@qq.com
+Subject: Re: [PATCH net v4 0/3] mptcp token hash ordering and token 0 lookups
+Date: Mon, 16 Nov 2026 22:58:20 +0800
+X-OQ-MSGID: <179484110033.96825.12925688433349630389@qq.com>
+In-Reply-To: <20261115155747.178858-1-2122295973@qq.com>
+References: <20261115155747.178858-1-2122295973@qq.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -51,95 +84,47 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net] mptcp: Avoid unsequenced accesses to jiffies in
- mptcp_reset_tout_timer()
-Content-Language: fr
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@kernel.org>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
- stable@vger.kernel.org
-References: <20261114-mptcp-wunsequenced-v1-1-707a73a6c172@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20261114-mptcp-wunsequenced-v1-1-707a73a6c172@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Nathan,
+Thanks.  The missing information is now in the cover letter of v5, which I
+am posting for a different reason as well (a new KUnit case, see below),
+so this is not a repost just to answer this mail.
 
-On 15/11/2026 05:30, Nathan Chancellor wrote:
-> After a recent improvement in clang to warn on unsequenced accesses to
-> volatile variables [1], an instance appears in mptcp_reset_tout_timer(),
-> which can break the build with CONFIG_WERROR=y / W=e:
-> 
->   net/mptcp/protocol.c:3044:20: error: unsequenced accesses to volatile qualified 'jiffies' [-Werror,-Wunsequenced]
->    3044 |                         tcp_jiffies32 + jiffies + mptcp_close_timeout(sk);
->         |                         ~~~~~~~~~~~~~   ^
-> 
-> Per C11 5.1.2.3.2, accessing a volatile object is a side effect. Per C11
-> 6.5.2, unsequenced side effects on the same scalar object are undefined
-> behavior. Per C11 6.5.3, unless otherwise specified, side effects and
-> value computations of subexpressions are unsequenced within expressions.
-> 
-> Add an explicit sequence point by splitting the addition expression in
-> half, eliminating the undefined behavior and clearing up the warning.
+Short version, per patch:
 
-Thank you for the fix, it looks good to me:
+1/3 acquire ordering: theoretical.  No syzbot report, no KCSAN splat, no
+    reproducer.  KCSAN cannot observe it (it does not model reordering of
+    marked accesses), and on x86-64 both variants compile to the same
+    lock cmpxchg, so there is nothing to observe on that hardware.  The
+    evidence is instruction level: on arm64 the CAS becomes CASA.
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+2/3 token 0: theoretical, found by static analysis.  It now carries a
+    KUnit case, which is the closest thing to a trigger that exists
+    without winning the race: the test builds the state a dying or
+    freshly allocated socket presents to a reader (hashed in bucket 0,
+    carrying token 0) and asserts that the lookup does not return it.
 
-@Net maintainers: this can be applied in net directly (simple, safe, and
-avoid build break with -Werror on newer version of clang).
+      # Subtest: mptcp-token
+      ok 1 mptcp_token_test_req_basic
+      ok 2 mptcp_token_test_msk_basic
+      ok 3 mptcp_token_test_accept
+      ok 4 mptcp_token_test_destroyed
+      ok 5 mptcp_token_test_zero
+      # mptcp-token: pass:5 fail:0 skip:0 total:5
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+    With the guard reverted, the same kernel reports
+
+      # mptcp_token_test_zero: EXPECTATION FAILED at net/mptcp/token_test.c:1=
+80
+      not ok 5 mptcp_token_test_zero
+      # mptcp-token: pass:4 fail:1 skip:0 total:5
+
+    so the case does fail without the fix; it is not a test that passes
+    either way.
+
+3/3 iterator slot check: theoretical as well, and the consumers are
+    netlink paths that need privileges in the target network namespace.
+
+Both runs are a defconfig x86-64 kernel with CONFIG_MPTCP=3Dy and
+CONFIG_MPTCP_KUNIT_TEST=3Dy, booted under qemu with
+kunit.filter_glob=3Dmptcp-token.
 
