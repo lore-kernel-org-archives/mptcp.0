@@ -1,54 +1,53 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794800666;
-	b=ZwpNbbsv1xi+Gwex+tTWj96+uAvkaOOEoSqubCrkQDdFUdN+w5AAhc4j65Q0VImvqqyk
-	 ZwvR1tLwcZwM5fkznx4WLQc7HdV4qAgqtvDEmPJAvxpUgVJMbABSFJ1M+p5yOJe8GKu0V
-	 9BJFZoXKd+0ASLsnu7TKCScZ0adzHphiksluigMA2Zvzksvdd/ELKMH/F55p7z1cjyiLi
-	 Wu7iX1OmqKS0pr2uVju1yM3AOYaQcvmXDyj7Ha5r6aIJoFfUkBFt/Shb8mPIFQHcNlPYW
-	 zMG4MSCREy7TegIEfGD20EjXMdwMnl/5yFQzWJ3eH0OYjiVIi08vGA3/0cS2tMurGZw==
+	t=1794800667;
+	b=haTOfQ8FTpQzJfqouChDlFQiN2/j9vZ8IGq7k+T+jBNZeeA+IY09FmVB3eh/NQkDP1Oe
+	 /8E+8ih2tY4tixtaxosTLNV26jhKN9h1SnNIkkFW9yEqlT3trBLB7WWk6WpIZV0U3cekR
+	 fg5y1ECAoAC7CKo04xzAoyPIV5kwWBqXJ80nnEUJZmVFLH5dstcJCwYtPeQwYWswtVPno
+	 aCDPbOas7vtk6qhdD3XnbfpAqzQc5Yuh0B+WvY/TOps+1KhD9yHQcgO1vHgb+fVG5YKy4
+	 tmZ5wYusFoY8JBaf2HslJN68oO+V0rrnzJRFbflkiwnGHibbXC6WlJtD3KQyTzCmcDQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794800666;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794800667;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=TLF94ouYI+B6sP72k8e2y3GFn+pAf+PC6QFaW22DcBw=;
-	b=kYi+Jve1IA1bDBQ7hn8fL+hUatMPxlhj925SUFz9l2DzL8+8W/5yETkaW4DBk9UAzbMH
-	 Gqs/O6PrV8pudAnOFpDTWj3z2AB1nsUAuMz0GQAy0y99mxssFxNMLi6hg1gRJv8MYX1ks
-	 6SN4Z5U1XxnZE6bF6AbAV2NJpGpQdVrZgpncS0x+oIt1vOuE8ZENdM++USZ85B8Dk8OU7
-	 890UhRr1F79XSLfqwSFcLtVG8/Uz9Jiumzdzvhtb4gdCdscKyEKMGdnZuxTXqelkVXvq9
-	 o63BiHmPxtEEqufciIQNInB0HSNwuVwcn5Ktf7Rhg4OvndCwjNw6Xh01OGYB9S0aesQ==
+	bh=SpFJZXe87ZHwnTNTRBHTKpxyab9mSDsfByQ6/9MmGk4=;
+	b=YA1FEMpR9KQDLsuL1WuidMksCbJB7LY8ZfA1TfdoWEaAwN61yg+Tybpr2y/3DctZokmW
+	 iNuuio1pFsLZgaZftuoHnqrb83yCQnOIogSfv3sN9k7nMONmeyiBl1TQqgI1Ca+u5fWxX
+	 HmVy8y+faV3A/LV7V4NsVdCJGRC6nCDv/L3Wjxh8tpsIgQCn2YezNsm2L2FuAtro6BIdV
+	 3lXX0VOM5AZ/omnkkK+z8TXM5PlPLgMaF4JU/kuYTSesw270CKbhIioMYMnMqOw0XXAp7
+	 GozxX/mJFR+ilU8QrM+qibyOcLTVXJtHzHV4rRyd0S2YoA0igM/Q0p6KleBm85asi+Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=olt3mEfc;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JFkgyDAC;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A564606A333
-	for <mptcp@lists.linux.dev>; Mon, 16 Nov 2026 03:44:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C765606A337
+	for <mptcp@lists.linux.dev>; Mon, 16 Nov 2026 03:44:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=olt3mEfc
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A0211F000C4;
-	Mon, 16 Nov 2026 03:44:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JFkgyDAC
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 265F81F000C5;
+	Mon, 16 Nov 2026 03:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794800666;
-	bh=TLF94ouYI+B6sP72k8e2y3GFn+pAf+PC6QFaW22DcBw=;
+	s=k20260515; t=1794800667;
+	bh=SpFJZXe87ZHwnTNTRBHTKpxyab9mSDsfByQ6/9MmGk4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=olt3mEfcZ8anfJ95lZzh61XLgUTfJFrg2cNnvpcskF7epmiVpRWo9Kjud/Kkn6Gyf
-	 qkI0vGcC9ig9++pJ0CvO4NVoN4Hl0mTfLrpjaXaBL9j9QwvzZEn/O/6YOnVHuPPiAp
-	 5xQHe7U6C9A+52wl8gVFBhACtQWFNJ2TPtPu9U8zUUELBbicb5N4K/zjTFVex2qhmx
-	 gkThZy/y54azi6n3zykfi50BGpUG9qK8eSDwGsHJA3a5/piR9EQs+rmoqOwT0E6sEL
-	 vDu1dg0eSsqJQeitC1Vpzr4rX/eIvj2APc9tBkOqU08CQS21fwvFDQaEEVA4rFadkP
-	 IGrcdv8hAnEYg==
-Subject: Re: [PATCH mptcp-next v27 2/8] selftests: mptcp: connect: check TFO
- SIOCINQ overflow
+	b=JFkgyDACSaA7Tfkacy+z6DKOR9l0OSxRMgRnoI2rgqZAaX//mF1Fov+xWTeJiEvlD
+	 CoCqyJLD39V/thIq7BXS3OsrEwmIoDxKxVe/BTMNgd/3xoK2dChJBcD4HRDR+gFK8X
+	 iOlObEnF64YbOe793AX+ke9bQylxuNcN1ppag3Q5HAYf/9/CiU7UkQfusK3SZvZH1L
+	 E4WDtzHMGU7K/50340GTi2wNOu+m8xekOJ1HxrGlG0fnbztCdT6LiDoAlfoyGAV40O
+	 NmnHhllNp5DSU4wSywPtkvBC0Lj5+e+j6fEbqGN7oPlCnSfJEBl9adkqa430XL4Mcp
+	 OUwtlDrd9jjGQ==
+Subject: Re: [PATCH mptcp-next v27 5/8] mptcp: drop the cant_coalesce CB field
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Mon, 16 Nov 2026 03:44:25 +0000
-Message-ID: <179480066581.3133.2291623347932821892@kernel.org>
-In-Reply-To: <ac3de6c2e3d3593a1737af35c3681cc129c5e552.1794663678.git.tanggeliang@kylinos.cn>
-References: <ac3de6c2e3d3593a1737af35c3681cc129c5e552.1794663678.git.tanggeliang@kylinos.cn>
+Date: Mon, 16 Nov 2026 03:44:26 +0000
+Message-ID: <179480066666.3133.7423698266063058153@kernel.org>
+In-Reply-To: <fa94d3136758974ad5a26837ee39da26e5c24f12.1794663678.git.tanggeliang@kylinos.cn>
+References: <fa94d3136758974ad5a26837ee39da26e5c24f12.1794663678.git.tanggeliang@kylinos.cn>
 X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -68,132 +67,83 @@ you want to address the nit picks below when you respin.
 
 Low priority / nit picks for your consideration:
 
-- [Low] When the remote key never arrives, the new TFO SIOCINQ check
-  passes without testing anything.
-- [Low] The TCP_CM_INQ check in mptcp_connect.c is now out of step with
-  the kernel's new inq semantics.
+- [Low] In net/mptcp/subflow.c, subflow_set_remote_key() defers the TFO
+  sequence sync with the atomic set_bit(MPTCP_SYNC_SEQ, &msk->cb_flags).
 
 --
 
-selftests: mptcp: connect: check TFO SIOCINQ overflow
+mptcp: drop the cant_coalesce CB field
 
-This commit adds a SIOCINQ check to the server mode of mptcp_connect
-when the MPTFO socket option is enabled. After accepting a connection,
-the server polls MPTCP_INFO until MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED is
-set, bounded by poll_timeout. It then fails if SIOCINQ returns INT_MAX.
+This patch removes the cant_coalesce MPTCP skb CB field. In its place, the
+TFO skb's map_seq and end_seq are fixed up using the IASN once the 3rd ack
+arrives. The fixup runs either directly or, when the msk is owned by the
+user, it is deferred via a new MPTCP_SYNC_SEQ cb_flags bit that is handled
+in mptcp_move_skbs() and mptcp_release_cb().
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> index 178d98d91fea2..152976d39d464 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-
-[ ... ]
-
-> @@ -1176,6 +1180,47 @@ static void maybe_close(int fd)
->  		close(fd);
->  }
->  
-> +static int wait_for_remote_key(int fd)
-> +{
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 6f07544bfe40b..f9dfb6662e3c8 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
 
 [ ... ]
 
-> +	while (elapsed < poll_timeout || poll_timeout < 0) {
-
-[ ... ]
-
-> +		if (info.mptcpi_flags & MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED)
-> +			return 0;
+> @@ -537,6 +539,12 @@ static void subflow_set_remote_key(struct mptcp_sock *msk,
+>  	WRITE_ONCE(msk->ack_seq, subflow->iasn);
+>  	WRITE_ONCE(msk->can_ack, true);
+>  	atomic64_set(&msk->rcv_wnd_sent, subflow->iasn);
+> +	msk->tfo_iasn = subflow->iasn;
 > +
-> +		elapsed += timeout_ms;
-> +	}
-> +	fprintf(stderr, "TFO: timeout waiting for remote key\n");
-> +	return 0;
-> +}
+> +	if (!sock_owned_by_user(sk))
+> +		__mptcp_sync_rcv_sequence(sk);
+> +	else
+> +		set_bit(MPTCP_SYNC_SEQ, &msk->cb_flags);
 
 [Severity: Low]
-On timeout, wait_for_remote_key() returns 0, which is also what it
-returns when the key arrives. Can main_loop_s() then report a pass on a
-kernel that still has the regression?
+This isn't a bug, but should this be __set_bit() rather than set_bit()?
 
-On the unfixed kernel, mptcp_inq_hint() computes
-ack_seq - head->map_seq. mptcp_fastopen_subflow_synack_set_params() sets
-a dummy map_seq:
+Every other place that sets an msk->cb_flags bit uses the non-atomic
+__set_bit() while holding the msk data lock. One example is the caller,
+mptcp_propagate_state(), a few lines further down:
 
-    MPTCP_SKB_CB(skb)->map_seq = -skb->len;
-
-msk->ack_seq stays 0 until subflow_set_remote_key() runs:
-
-    WRITE_ONCE(msk->ack_seq, subflow->iasn);
-    WRITE_ONCE(msk->can_ack, true);
-
-MPTCP_INFO reports can_ack as MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED. Before
-the key arrives, the old hint is 0 - (-len) = len, not INT_MAX. So the
-avail == INT_MAX check in main_loop_s() cannot fire on the timeout path.
-
-The commit message says this is intentional:
-
-  "Print a warning if the remote key does not arrive within the timeout,
-  but continue with the SIOCINQ check rather than failing the test."
-
-In that case, though, the SIOCINQ check can never fail.
-
-Would it be better to skip or fail the test when the key never arrives
-on a socket that is still MPTCP and has not fallen back to TCP?
-
->  int main_loop_s(int listensock)
->  {
->  	struct sockaddr_storage ss;
-> @@ -1207,6 +1252,22 @@ int main_loop_s(int listensock)
->  		check_sockaddr(pf, &ss, salen);
->  		check_getpeername(remotesock, &ss, salen);
->  
-> +		if (cfg_sockopt_types.mptfo) {
-> +			int avail;
-> +
-> +			if (wait_for_remote_key(remotesock) < 0) {
-> +				close(remotesock);
-> +				return 1;
-> +			}
-> +
-> +			if (ioctl(remotesock, SIOCINQ, &avail) == 0 &&
-> +			    avail == INT_MAX) {
-> +				fprintf(stderr, "TFO SIOCINQ overflow\n");
-> +				close(remotesock);
-> +				return 1;
-> +			}
-> +		}
-
-[Severity: Low]
-This is outside the hunk, but this patch is the selftest update for the
-series. Should do_recvmsg_cmsg() in mptcp_connect.c also be updated for
-the new inq semantics?
-
-The earlier patch "mptcp: fix TFO SIOCINQ overflow in mptcp_inq_hint"
-makes mptcp_inq_hint() return mptcp_data_avail(). With N bytes unread
-after DATA_FIN, the hint is now N instead of N+1. It returns 1 only when
-nothing is queued and the socket is closed or has RCV_SHUTDOWN.
-
-do_recvmsg_cmsg() still assumes the TCP-style N+1 rule:
-
-	if (cfg_cmsg_types.tcp_inq) {
-		if ((size_t)ret < len && last_hint > (unsigned int)ret) {
-			if (ret + 1 != (int)last_hint) {
-				...
-			} else {
-				tcp_inq.expect_eof = true;
-			}
-		}
+net/mptcp/subflow.c:mptcp_propagate_state() {
+	mptcp_data_lock(sk);
+	if (mp_opt) {
+		...
+		subflow_set_remote_key(msk, subflow, mp_opt);
 	}
 
-The hint now equals exactly the queued in-order bytes. A short read
-therefore returns at least last_hint bytes, so last_hint > ret can never
-be true for MPTCP. As a result, the expect_eof branch never runs, and
-neither does the later "expected EOF" check.
+	if (!sock_owned_by_user(sk)) {
+		__mptcp_sync_state(sk, ssk->sk_state);
+	} else {
+		msk->pending_state = ssk->sk_state;
+		__set_bit(MPTCP_SYNC_STATE, &msk->cb_flags);
+	}
+	mptcp_data_unlock(sk);
+}
 
-The only in-tree TCPINQ user is do_transfer() in mptcp_sockopt.sh, which
-runs MPTCP on both ends. So in-tree runs no longer exercise this check.
-No later patch in the series seems to change it either.
+The same pattern holds for MPTCP_CLEAN_UNA, MPTCP_PUSH_PENDING,
+MPTCP_RETRANSMIT, MPTCP_SYNC_SNDBUF, MPTCP_FLUSH_JOIN_LIST and
+MPTCP_ERROR_REPORT.
+
+The new consumers in mptcp_move_skbs() and mptcp_release_cb() clear the bit
+with the non-atomic __test_and_clear_bit(). The commit message says this is
+fine "since the cb_flags are protected by the msk data lock".
+mptcp_release_cb() also does a plain read-modify-write on cb_flags.
+
+All three callers of subflow_set_remote_key() already hold sk_lock.slock:
+
+  mptcp_propagate_state() takes mptcp_data_lock()
+  the options.c path wraps __mptcp_subflow_fully_established() in
+    mptcp_data_lock()/mptcp_data_unlock()
+  mptcp_sk_clone_init() holds bh_lock_sock(nsk)
+
+Nothing races today, so the atomic set_bit() is redundant. Mixing it with
+the non-atomic clears makes the locking rule less clear. The set_bit() is
+still present at the end of the series as well.
+
+>  }
+>  
+>  static void mptcp_propagate_state(struct sock *sk, struct sock *ssk,
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1794663678.git.tanggeliang%40kylinos.cn
