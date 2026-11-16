@@ -1,48 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.200
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794866947;
-	b=5gXKwJatX3ampyC8bxYvsIimqIK0DtYiiUAAsuXrNC6NO3XAigHfZdEiz6IVEDaHMvis
-	 sjDQdaTb80X9CB4zz5oF4AFD64oPdDwHPr7PinjokDk6nAG0SrZJxfChOibMBVmdatPe2
-	 ilAG6ZIQNFXH7ALiTPk4PL0Cy8aLp4HR9kR4yg/XnjEOS0XuRqQVI5UETtjSSCZYTsNS9
-	 e0Oy2DhsC/lJoyrcdB+kS/7HYFSkPzfzYyXlJrpeGpQCI6xbDVVU/t/uoD6SaVMhPt1fv
-	 0KjUQB74zO/Mmc9P/jnSgmEkbJyXk9utHiYT3qJMaodVMDxpkWBwNraOvttLC4JGBRg==
+	t=1794870359;
+	b=XtQWBobSao/EJuqUnR6FpRktBUbVzJe76I6nkiUSOKzjw7xvh9/lcNz78Y3p4ORXfhXX
+	 vCnq4ttRK2MNQ046wcgRvxhzNt2V4wRHNpb3l09S1csejFnqu/d6dLC9aiZ7vb9oqDyew
+	 7xyzSrcX0kX3UR+dvy9+CNKdOt32LxIYAXMiXlpO985RaxUIhAYnaOyJyz1rZXVVjacVO
+	 ep1xT9wFpEIpYfPieDjU3K3Uk9w3XQBEDsY4bgUVVKrkxoLl0/6NKfabyQlRldqA28XWl
+	 zmdCrWJiEhNph1tYrHkC/PzeMHuo8nQOySbnP1/AX4bjuFbs8yzInrRcuX1a6qbOkwg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794866947;
-	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
-	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=1S2JG0K8dQlVY7uMvfgeH0EUxwYxdfh4NPdqZIEsOw8=;
-	b=C6WRoopyuZqGgTwt0s7TTWhU1Ux1jpGNb7AbEx1nMxn/Oay+XVoO/srODG2BlEMloqSN
-	 NyWyAB3qDB0sMLBTWgr+U0LjPrGW/7B2sgBhY2j0W/12UGCWxYumUvaTjpsYXV7lMrPEv
-	 7Ar4rWIMHNiSuX1y5KJhm2X5xm4CABBly/NQWHrcs7lYl+4GuIwwp/VIwMrxRT4nLbuNy
-	 8HjfNhFLhrdm9Yqc01wUfym6mvFCQPHXo4/EBJV335v83ZTpjRflr2W2s2L93n0PFPkuf
-	 Chw/AlHCaSYtuR3oTQKqFkhKKQfnXvtrsqqSrxHvWWrzjSq0DDfCaneMWMLfhxGHTng==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794870359;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:Mime-Version:
+	 X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
+	bh=g/6+wyu9qz354Ltln9/JyzH/JPOQeQrdOSPG0Vge1TE=;
+	b=JZ72X/aDoiUcFJ1RD86TOYy9WbsgStr23lYZJ3iWI9VjnFf0JawlFVWnMshpP8Uo0a6T
+	 QMv59YBvIheDs+gnZai4wRmgMHs3TTsYRPgf3vFHS6XQdFTvZA0vv7NKVWwB+hmCeCbQv
+	 FdmSUJgXIL2vWBy1otrA2k4jFO1erKnni8y/70wkg+zkhCXjjJpMXrUVXluUx+fdKge82
+	 U8q8EWZPYM1KLRdFz6fhL9rwGU3AxLx8LN0T58f6nDz6AdNjNZaEderJn16oIrUntylex
+	 bL8MueFgV04NBM0x1BBOO6SA2uC7EPZlJDI9EVlEjUsSeeSbgUlARwiCouVjnbBYHRA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gzdAzHls;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=czJ67qDQ;
+	arc=none smtp.remote-ip=209.85.214.200
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3242E606A887;
-	Mon, 16 Nov 2026 22:09:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B2A606A32A
+	for <mptcp@lists.linux.dev>; Mon, 16 Nov 2026 23:05:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C5B2A606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gzdAzHls
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C6651F000C4;
-	Mon, 16 Nov 2026 22:09:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794866946;
-	bh=1S2JG0K8dQlVY7uMvfgeH0EUxwYxdfh4NPdqZIEsOw8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=gzdAzHlst/oVpS2s52CTsRAoa5D07MLUNCHLzFdWrKucjLubUDdeskYoYJURjWazw
-	 L3boWOY4zd7fFouLxIG3xRnJ2N4puO/xi682567esA27euPBYW22iTr/YvOBd4NMLF
-	 AQEF9jHvz7PDJNynNyLtb2Go3K7DqFaA8xfaM1m0z6FwEmH/ltJ2dU8o+9wjqG72Az
-	 95kjOaC4dVv3Y5F5II7wLilSvp0MsUDZw+qR/OaZLwd0y8WEic8vhLrsdyHvQDmjUC
-	 a12wEPm4OjK1+49nAUNSfIC0qazDuSCMSe0G+pR18OBL2kg5elzOIR/qPV5Er5RGYg
-	 zr/6KOnDtqrmA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 16 Nov 2026 23:06:14 +0100
-Subject: [PATCH net 7/7] mptcp: fix dummy mapping of overlapping segments
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=czJ67qDQ
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2ed05b3eaecso28615955ad.1
+        for <mptcp@lists.linux.dev>; Mon, 16 Nov 2026 15:05:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1794870358; x=1795475158; darn=lists.linux.dev;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=g/6+wyu9qz354Ltln9/JyzH/JPOQeQrdOSPG0Vge1TE=;
+        b=czJ67qDQNWD2+Eh9sHC643i4TLqiErbASn8G1ZNR8OwVCtDk56gXFJh2W1RNpOd0Es
+         B+JQVPXVTvG3MK27dKC+1IRTC0gxF53Ah9LPdS81aBuA7uwyF/lvVqH6/U4mLl4BGDYS
+         YKvmwqFmDVUN/cuzz3SEKPjCx5WyrVSbGlsr0q/sQPjiryy1flP8uvz3iqWNKPEB52b8
+         CJrnlJM4PF9DjpaRb90ZsN1pcyZHBYoRSiLwwOAzYlTX8RSQMuZ8kCfFZ+bwI7WGlmTF
+         11YKwFEaPkWIT4RGExh517PxN9G0gF49B1swg+963g5mnFJZPdi5NLgxlvnsORzM7fuq
+         UOAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794870358; x=1795475158;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=g/6+wyu9qz354Ltln9/JyzH/JPOQeQrdOSPG0Vge1TE=;
+        b=doiaktccGFfUlarhv6Mdps5LWWRosXsgBfWjjYu402MuiA+7CNlg//M9SiMDVoDVj1
+         fBcMPg06WtLqidlzyG1TZ+tsPhmfjnmmdHueJ1fw+Vw1s2guudq34YFpTry8zHsoggAP
+         4HnpxRlN9o7TZeGXKlQCnrJgHDjoDI7jexhOyIQULq/43gGSyee/+hl9+QSwe/7y2YsL
+         RrTGYj7oPHRxlrljnt5EjrbPCKv2+Ss1gILkt/y353id2/dEsTFNrN2dRQ9pfSizQrdT
+         iMPi8RJjV5UN5EcD8WTauusNHpzzfCKRIJNC0A3pdR0jpnwWTND65qjWubmPiZfg36JO
+         Alxg==
+X-Forwarded-Encrypted: i=1; AL+hErGHUCOrwidvduxzKM2N9ZhYuskA1myGot/MOf06XVusrm2r8AwBW99DIDpzFYAkcC6Cx8hhtQ==@lists.linux.dev
+X-Gm-Message-State: APuU4Z/AXuwUro81C1hGhh/UlyfBC0TYG/hYLwZChioFf0+7DMFEWyP4
+	0rAiI4ILBwUqSyvg6gDA2GmeXuPuBOvTZXjCI8C7Eu/L/tQs6uxCd2pz9r3TRj7oo6KFCqorMgj
+	NpNXExw==
+X-Received: from plbmi14.prod.google.com ([2002:a17:902:fcce:b0:2ef:d548:58a9])
+ (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:3903:b0:2e9:7ff5:5459
+ with SMTP id d9443c01a7336-2ee0de0eaaamr116231095ad.15.1794870357672; Mon, 16
+ Nov 2026 15:05:57 -0800 (PST)
+Date: Mon, 16 Nov 2026 23:05:24 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -51,105 +75,75 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-7-bf7656de653e@kernel.org>
-References: <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-0-bf7656de653e@kernel.org>
-In-Reply-To: <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-0-bf7656de653e@kernel.org>
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@kernel.org>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Florian Westphal <fw@strlen.de>, 
- Dmytro Shytyi <dmytro@shytyi.net>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- stable@vger.kernel.org, Chris Mason <mason@kernel.org>, 
- Geliang Tang <geliang@kernel.org>
-X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3846; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=cZPOlHWTnOxbxMx5o66RJt82bkh/T4a/OuHPb6biV0g=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJ+170K8mA6VbLamnGrkQnDZYE/W5XW5nOwv1204/F3z
- nleU9cc7ihlYRDjYpAVU2SRbovMn/m8irfEy88CZg4rE8gQBi5OAZjITT6GPxxS+TPv8658373f
- s7DLK7H33yHuD/zsy8/pemYsmtfQMZ/hv9faeRss84vu7j28jMdT9fpGjTCXtg22infvM607sqL
- pLBcA
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.0.679.gc527c65306-goog
+Message-ID: <20261116230555.2305867-1-kuniyu@google.com>
+Subject: [PATCH v2 net-next 0/7] tcp: Prevent tcp_collapse() from bloating queue.
+From: Kuniyuki Iwashima <kuniyu@google.com>
+To: Eric Dumazet <edumazet@kernel.org>, Neal Cardwell <ncardwell@google.com>, 
+	"David S . Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>
+Cc: Simon Horman <horms@kernel.org>, Kuniyuki Iwashima <kuniyu@google.com>, 
+	Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org, mptcp@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+This is a follow-up for commit 031c403d13e5 ("tcp: do not let
+tcp_collapse() drive sk_forward_alloc negative").
 
-An MPTCP socket that has fallen back to TCP can silently lose received
-data if a segment partly overlaps data received earlier, and recv() then
-blocks, returning neither later data nor end of file.
+The core algorithm in tcp_collapse() is so simple and has not
+been changed since commit 1da177e4c3f4 ("Linux-2.6.12-rc2");
+finding a collapsible skb and repacking it into up-to-SKB_MAX_ORDER()
+skb.
 
-After a fallback, subflow_check_data_avail() makes up a dummy mapping
-for the skb at the head of the subflow's receive queue, in which map_seq
-and map_subflow_seq must describe the same byte. But since commit
-2834f8edd74d ("mptcp: cleanup fallback dummy mapping generation"), it
-computes map_seq from the first byte of the skb, while map_subflow_seq
-is still computed from copied_seq, the next unread byte.
-mptcp_subflow_get_mapped_dsn() then returns the data sequence number
-(DSN) of the first byte of the skb, instead of the one of copied_seq.
+Now that we use 4K MSS and tp->scaling_ratio, the simple algorithm
+does not work well, and it could even end up consuming more memory
+contrary to the intention.
 
-These two bytes differ for a segment that starts before rcv_nxt and ends
-after it, since TCP does not trim it. mptcp_init_skb() then gives the
-new bytes of this skb a DSN that is too low, and __mptcp_move_skb()
-skips some of them as old data, leaving a hole in the stream:
+For example, the scaling ratio of SKB_MAX_ORDER() is 222, but
+typically tp->scaling_ratio for 4K MSS flow is 252, and repacking
+data rather bloats high-density skb.
 
-    bytes 0 to 999 are received, the skb holds bytes 900 to 1499
-      byte 1000 gets the DSN of byte 900: too low by the 100 old bytes
-        that is 100 below ack_seq, the next DSN that MPTCP expects
-          __mptcp_move_skb() skips bytes 1000 to 1099 as old data
-            ack_seq is the DSN of byte 1400, copied_seq is byte 1500
-              later data starts at the DSN of byte 1500: out of order
-                the TCP FIN becomes a dummy DATA_FIN after the last byte
-                  ack_seq does not reach it, so there is no end of file
+Also, once a low-density skb starts collapsing, it drags all the
+following skbs into collapsing regardless of the density.
 
-Fix this by computing map_subflow_seq from the first byte of the skb as
-well: mptcp_subflow_get_mapped_dsn() then returns the DSN of copied_seq.
+This series changes the algorithm so that it skips high-density
+skb and a single low-density skb between high-density skbs, batches
+memory accounting at the end, and removes sk_forced_mem_schedule().
 
-Chris Mason sent the same fix in private, and found this issue with the
-help of an LLM. It has been reproduced in a VM, with the reproducer he
-shared, and with a new Packetdrill test: after a fallback to TCP, a
-segment overlapping data already received is injected. Without this
-patch, the new bytes at the beginning of this segment were lost, and the
-connection stalled, with no end of file:
+This series still keeps linear SKB_MAX_ORDER(0, 0) skbs as the
+collapse target, and Eric is working on a follow-up patch to
+store the collapsed payload in order-0 page frags instead.
 
-  reader   30.64: conn 1 BREAK: at my offset 1000 the bytes claim offset 1100: A GAP OF 100 BYTES
-  reader   30.64: READ-TOTAL conn 1 outcome iii-gap-or-repeat bytes 1400 of 2500 [...]
-  [...] end: hang: no data and no end of file for 30 s
+https://lore.kernel.org/netdev/CAL4WiiqekjxZw3EoDYXLc0Phd3i0GStE2ZHWQkH2iAkSM5D8TQ@mail.gmail.com/
 
-And with the Packetdrill test:
 
-  dss_fallback_overlap_client.pkt:24: runtime error in read call: Expected result 2500 but got 1400 with errno 115 (Operation now in progress)
+Changes:
+  v2:
+    * Patch 1: Describe SYN/FIN behaviour change
+    * Patch 3: Describe behavioural change for MPTCP
+    * Patch 4: Add compute_skb_truesize() instead of macro
+    * Patch 7: Rename test to tcp_rcv_collapse_bloated.pkt
 
-Fixes: 2834f8edd74d ("mptcp: cleanup fallback dummy mapping generation")
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/4c48d016490d43b6892c622cbae858b48f176cff.1794304840.git.tanggeliang@kylinos.cn [1]
-Co-developed-by: Chris Mason <mason@kernel.org>
-Signed-off-by: Chris Mason <mason@kernel.org>
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-[ Combine the commit messages of Geliang's [1] and Chris's versions.
-  Commit message: how the issue was found, and its symptoms. ]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/subflow.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  v1: https://lore.kernel.org/netdev/20261114040101.1043546-1-kuniyu@google.com/
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 00677fb3efcd..6f07544bfe40 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1496,7 +1496,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 	skb = skb_peek(&ssk->sk_receive_queue);
- 	subflow->map_valid = 1;
- 	subflow->map_data_len = skb->len;
--	subflow->map_subflow_seq = tcp_sk(ssk)->copied_seq - subflow->ssn_offset;
-+	subflow->map_subflow_seq = TCP_SKB_CB(skb)->seq - subflow->ssn_offset;
- 	subflow->map_seq = __mptcp_expand_seq(subflow->map_seq,
- 					      subflow->iasn +
- 					      TCP_SKB_CB(skb)->seq -
+
+Kuniyuki Iwashima (7):
+  tcp: Refactor the first loop in tcp_collapse().
+  tcp: Don't collapse high density skb.
+  tcp: Stop collapsing if not bloated.
+  tcp: Skip collapsing if collapsed skb is less-dense.
+  tcp: Allocate all new skb before collapsing.
+  tcp: Batch memory accounting in tcp_collapse().
+  selftest: packetdrill: Add test for tcp_collapse().
+
+ include/linux/skbuff.h                        |   2 +
+ net/core/skbuff.c                             |  26 ++-
+ net/ipv4/tcp_input.c                          | 171 +++++++++++++-----
+ .../selftests/net/packetdrill/ksft_runner.sh  |   9 +
+ .../packetdrill/tcp_rcv_collapse_bloated.pkt  | 135 ++++++++++++++
+ 5 files changed, 292 insertions(+), 51 deletions(-)
+ create mode 100644 tools/testing/selftests/net/packetdrill/tcp_rcv_collapse_bloated.pkt
 
 -- 
-2.55.0
+2.56.0.679.gc527c65306-goog
 
