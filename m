@@ -1,58 +1,80 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=203.205.221.190
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794827127;
-	b=VyxF+Dxkui1aVd55yKVEAWz0lY73lejAYW1Nb25Dky5kHGqK250h5XLx051JIVOWjUH7
-	 lmQUARh4hgxtIoIdRdE6Tap1voxr4OKEM2W9+xgWknRVV2W+VRBUknzuj6WTQcv6Le6Bh
-	 v3x9i7SllGX60d+q5eLS2YbxKKrcbE8EDx0xDNG3pxLgSeV8tIkBzodkjrM0eXHmKX6la
-	 UG8Ty+fAxkGot9fVsxJ+gFjBq204bzmy/91ov3aam0Ms6Xs9qsF7TWoDe9b8lgvtW6IYR
-	 kXsjWIZQhjfMj/vFcqj4HI5fprP2M+10yTGRsj+lhrYaR/crL77OxGj+w3fFbyFY8KA==
+	t=1794831640;
+	b=5LC1SZU1rknordWJethK42lU5EaFgfy9OiAcc3Svf9Tzzasy/OW3VWS//xq5BqL8Z63P
+	 qlINe4D5UawA2gY4ycAWTujzUGRNL8GrxRV+CTCarpXZjRpgUu18WpTbBiPLAX+FEYsu4
+	 Pp9g5PE3nNjddZwqD/33q5z0/KO8o511wGjuBnm9sddN26abvPmU2vTImW9bV80osbNXU
+	 0DJUHxa9so69b/fzIo6v5yS34oHz26C3+yszWpVRkdg/oep0numbKv492p//unlcn9oUw
+	 8EreD7QO13BsohEFPvH6c54dh3soEMhGyAbYIfa9s+PDLLbuYOQdes0tuCoo2l8+Tvw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794827127;
-	h=Received:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
-	 In-Reply-To:References:Content-Type:User-Agent:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=zCkUSbVaC99ocvtWd6PzxMceqATxYZB4lstxrT642MU=;
-	b=JOWOdA3AV4xbI8Q87cXGo9L78srjYwmqTwzau+wLsBCDR0BoANAveu82xOKHQmZBi4Nx
-	 YoP7/UMjiEGds37sk1wUD/SfEQI79h8vn4eqo4ndrdjGTunQjEvsVisUOlYlDQUPnzIMY
-	 +w2CFXp6HA20bnU+PvXDkYc1+IpjAm61sq4FD2JyScsIoCrPRQq0wjdEZMB3BJyt6mni7
-	 nhNygmE+mTrz0P07Ka1odD2nJVKQcxJIIlAYIu16xdSL1qNAjXSpi4WvR/PX6wJFl8t7l
-	 9d7YYk+xoYKBrW0w6TY6tKMCD9uZq3iZJXaSVjDvvM/7p+2z7G3ICTSjjY/ZJxYjXiA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794831640;
+	h=DMARC-Filter:DKIM-Signature:Received:X-QQ-mid:Message-ID:
+	 X-QQ-XMAILINFO:X-QQ-XMRINFO:From:To:Cc:Subject:Date:X-OQ-MSGID:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:
+	 MIME-Version;
+	bh=4MCroR/sjsq4mO+nQ3f/SHJLqA9hA+O6cA4sBYcKkZg=;
+	b=bo1tXvAmwhJ39+ENCNB4ZhOaoq4TPt7iP1xALDcNUESXvZY41nEsjsGDH8c0ozKPfPQu
+	 Ql5gxXvB5rASaUwfJ+0UbRycBSE5+GNL7IvyghrxreB9VUm8ctznXbt/33hH2JQw0VLgj
+	 hnmDGHDIsbeE00O+P+N2W27seAQzAOttWSRoCONY71lW8JwnA7fVTgWPfi709Uc7REb9C
+	 aojxMjBELkp1jdBjvuH+Iy6YyV44/FkCeAfB7iYUsMp0P0nEGClviTrph2sHcJhjj4SsY
+	 N70NJ2aRRHRgjLlAKsHQeVdU8s0OLuS29vjadIBr6DiCDtBLTofevJCm5vpIGYhgrsw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iQI8mHez;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=qq.com;
+	spf=pass smtp.mailfrom=qq.com;
+	dkim=pass header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b="nF/UyUSR";
+	arc=none smtp.remote-ip=203.205.221.190
+Received: from out203-205-221-190.mail.qq.com (out203-205-221-190.mail.qq.com [203.205.221.190])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FDE606A88D
-	for <mptcp@lists.linux.dev>; Mon, 16 Nov 2026 11:05:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AA2606A32F
+	for <mptcp@lists.linux.dev>; Mon, 16 Nov 2026 12:20:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 59AA2606A32F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iQI8mHez
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 440601F0181A;
-	Mon, 16 Nov 2026 11:05:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794827126;
-	bh=zCkUSbVaC99ocvtWd6PzxMceqATxYZB4lstxrT642MU=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=iQI8mHez+KYCOXf0rVzi5Dqkf6CrBI334vVfETye75Cw2INIgl+iiMbNPgjoKVuQ7
-	 ugwYhSOLpP55kv18sxAWxMQnfsuGHh0crSuPQI4ok/dh8jvh9hNm1uWXoRvFjBxCdY
-	 o8w0F+8WQ82GV+1zYo458elFsyntsQ//KDqX1/KvV0Cjx8PePziPuMeSGSDjXLQKYD
-	 B6L+cWDUXy0+HlLP4m65MSixJeLHNfPrelZXv+bhWGzYL9hyHJwiPs+sgK9gDpyfRp
-	 pF2ZP8WxeSkRO/Yhta05bbKxlbomcgVedU1zOuv/ITQnxYD2slEl1e8gPycNlSfKjc
-	 9gN9jYwdlTJgw==
-Message-ID: <c504da100dc5c5028bda391a6aabf0485464145c.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net 32/34] mptcp: fix dummy mapping of overlapping
- segments
-From: Geliang Tang <geliang@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, MPTCP Linux
-	 <mptcp@lists.linux.dev>
-Cc: Chris Mason <mason@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Date: Mon, 16 Nov 2026 19:05:22 +0800
-In-Reply-To: <20261113-mptcp-cmason-fixes-v1-32-9205b77e9a2f@kernel.org>
-References: <20261113-mptcp-cmason-fixes-v1-0-9205b77e9a2f@kernel.org>
-	 <20261113-mptcp-cmason-fixes-v1-32-9205b77e9a2f@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.2-10build1 
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=nF/UyUSR
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1794831630; bh=4MCroR/sjsq4mO+nQ3f/SHJLqA9hA+O6cA4sBYcKkZg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=nF/UyUSR0bYZHL1EW8l3asisTFTPGviv8Eu5gqVRoo59ZrHeswUdya8UcQB1+pJO6
+	 lyAxJNB+Op2iDiXD3HFZ4lnBRenC7FvgLLtNFxaTPRTfP1W+GXrG9e4w4MXzRDcGir
+	 98O/MkCu6nKj8Qu7abPHlxZ50l5E14RedIKR4bIo=
+Received: from [127.0.0.1] ([2409:8d5c:8f0:65e5:2979:aa1c:9ec4:8698])
+	by newxmesmtplogicsvrszb51-1.qq.com (NewEsmtp) with SMTP
+	id 5199FA81; Mon, 16 Nov 2026 20:20:25 +0800
+X-QQ-mid: xmsmtpt1794831625txwxrqa5i
+Message-ID: <tencent_5B7B9ECE9036BE72D331CB2A2E4AEC5F8909@qq.com>
+X-QQ-XMAILINFO: NC4p7XQIBeahMxe7Nis9QgS3xrmsPlhKDX17WXMQD2D8PIOyxhm1Gb53FHXytD
+	 4YzNWcq2zfLEL3ipFJGuhhitYhPI+x449ysiTJGcDUJuZaxDIUDAJArVe3MX5CLxEqc03cv6OlHI
+	 h2OywKU/9gLYeVck2/zsWvqglFzU8HRH6YtHmafnQQkvaQdFfL0qeEgBK2GCgU+RBMi6wY7S8Pmc
+	 iejgiTM7doW4zq4NVdbnSe707CfGZ8u44KMRhci5VXIPDFrpAFtqHUhhAaQlB59HlkBixCoaBeZI
+	 6EsSxbZwlZ/E8ebdJjGNSpA0nZCZ/yIOI7ZIv3jGOXh2n3J25ewX0uJNPxdExMN5Nobnk0nqSvR9
+	 rGGQ5+utxN+WifW+ZGQyXGeuY3H+78jgTtmhqYeiHB8EFLLIix0jccSKPYbeAjSz1LM70iJtTr/c
+	 f86bXmxjKq3K/g/j1Uee6sCMVJYfaKEeagxB3bg7sk37SzlcatPKQvKD8Ac5ZbIRqB+5IwsuAmG9
+	 F3smTEFUZOhQ93Bo9Ggrztx+C3YEYKrxEaY93Ootkc3sL91qYHMFwkQJxxp3MetEPm3TYOKEPUZO
+	 9lqI/70VxBYW9Y6T3DPY6wynJjV0N473wyveWP44fXnTJopKHKUjwN5ABNtjjju1jDm30kZCy8Xx
+	 lpGHle5g5QmIhiWnEdYkbAomPggm2BQJRNjF16krS3W6/u/ClgCKcdRSgSexjoiiekjFuh3owqsO
+	 5lWQc5bDj/jaZ6bqPf6mFg+DZqAwJdblrtBuvO/mTygc8M1O9aKZacg7aomeuyAcpHb9uBs+RKyk
+	 LV7lOoN9saLS6wdWuml54knc5SghDkQra0etDu81vMA/Hes/KiI6jtE8np7P2Um71SPRAvSkfuwn
+	 x+FV9jaQUF89ybMxaxV9UFPC1bL1rLdg/5oQHbAdE28otxHx6sVJ6kfjAFu6Qb0+u/R03kRjgxgq
+	 poTep0wR1rXt8uMeMOGdkt53nKZr8ZSm9lpm28SZ6VgekJC15d0j/Ukvj2ioeiutJMsW+RGY+Ke0
+	 s+DOceTR8MaxSMsg7lZmAW/TQH2cg06j92Y9ZLWAj66jrMQMz0dyKPLbtah+1re2iqQPbf7LrrKH
+	 Xj0wjW
+X-QQ-XMRINFO: Nq+8W0+stu50tPAe92KXseR0ZZmBTk3gLg==
+From: Hang Nan <2122295973@qq.com>
+To: netdev-bot+sinfo@kernel.org
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, matttbe@kernel.org,
+ martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
+ edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ kuniyu@google.com, willemb@google.com, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, 2122295973@qq.com
+Subject: Re: [PATCH net v4 0/3] mptcp token hash ordering and token 0 lookups
+Date: Mon, 16 Nov 2026 20:20:25 +0800
+X-OQ-MSGID: <179483162524.42663.16445873285874492835@qq.com>
+In-Reply-To: <20261115155747.178858-1-2122295973@qq.com>
+References: <20261115155747.178858-1-2122295973@qq.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -62,90 +84,47 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 
-Hi Matt,
+Thanks for the prompt.  Honest answer up front: none of the three patches
+has a runtime trigger.  All three are theoretical, and this is what I
+should have put in the commit messages.
 
-On Fri, 2026-11-13 at 20:54 +0100, Matthieu Baerts (NGI0) wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> An MPTCP socket that has fallen back to TCP can silently lose received
-> data if a segment partly overlaps data received earlier, and recv() then
-> blocks, returning neither later data nor end of file.
-> 
-> After a fallback, subflow_check_data_avail() makes up a dummy mapping
-> for the skb at the head of the subflow's receive queue, in which map_seq
-> and map_subflow_seq must describe the same byte. But since commit
-> 2834f8edd74d ("mptcp: cleanup fallback dummy mapping generation"), it
-> computes map_seq from the first byte of the skb, while map_subflow_seq
-> is still computed from copied_seq, the next unread byte.
-> mptcp_subflow_get_mapped_dsn() then returns the data sequence number
-> (DSN) of the first byte of the skb, instead of the one of copied_seq.
-> 
-> These two bytes differ for a segment that starts before rcv_nxt and ends
-> after it, since TCP does not trim it. mptcp_init_skb() then gives the
-> new bytes of this skb a DSN that is too low, and __mptcp_move_skb()
-> skips some of them as old data, leaving a hole in the stream:
-> 
->     bytes 0 to 999 are received, the skb holds bytes 900 to 1499
->       byte 1000 gets the DSN of byte 900: too low by the 100 old bytes
->         that is 100 below ack_seq, the next DSN that MPTCP expects
->           __mptcp_move_skb() skips bytes 1000 to 1099 as old data
->             ack_seq is the DSN of byte 1400, copied_seq is byte 1500
->               later data starts at the DSN of byte 1500: out of order
->                 the TCP FIN becomes a dummy DATA_FIN after the last byte
->                   ack_seq does not reach it, so there is no end of file
-> 
-> Fix this by computing map_subflow_seq from the first byte of the skb as
-> well: mptcp_subflow_get_mapped_dsn() then returns the DSN of copied_seq.
-> 
-> Chris Mason sent the same fix in private, and found this issue with the
-> help of an LLM. It has been reproduced in a VM, with the reproducer he
-> shared, and with a new Packetdrill test: after a fallback to TCP, a
-> segment overlapping data already received is injected. Without this
-> patch, the new bytes at the beginning of this segment were lost, and the
-> connection stalled, with no end of file:
-> 
->   reader   30.64: conn 1 BREAK: at my offset 1000 the bytes claim offset 1100: A GAP OF 100 BYTES
->   reader   30.64: READ-TOTAL conn 1 outcome iii-gap-or-repeat bytes 1400 of 2500 [...]
->   [...] end: hang: no data and no end of file for 30 s
-> 
-> And with the Packetdrill test:
-> 
->   dss_fallback_overlap_client.pkt:24: runtime error in read call: Expected result 2500 but got 1400 with errno 115 (Operation now in progress)
-> 
-> Fixes: 2834f8edd74d ("mptcp: cleanup fallback dummy mapping generation")
-> Link: https://lore.kernel.org/4c48d016490d43b6892c622cbae858b48f176cff.1794304840.git.tanggeliang@kylinos.cn [1]
-> Co-developed-by: Chris Mason <mason@kernel.org>
-> Signed-off-by: Chris Mason <mason@kernel.org>
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> [ Combine the commit messages of Geliang's [1] and Chris's versions.
->   Commit message: how the issue was found, and its symptoms. ]
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+1/3 net: mptcp: take token lookup references with acquire ordering
+   Theoretical.  There is no syzbot report, no KCSAN splat and no
+   reproducer.  KCSAN cannot observe this class of defect at all:
+   Documentation/dev-tools/kcsan.rst is explicit that watchpoints are
+   only set up for plain accesses ("KCSAN never sets up a watchpoint on
+   marked accesses") and that "reordering of marked accesses is not
+   modeled", and the reordering in question involves a marked refcount
+   operation.  On x86-64 there is nothing to observe anyway: both
+   variants compile to the same lock cmpxchg.  The evidence is
+   instruction-level: on arm64 the CAS becomes CASA
+   (88a37c02 cas -> 88e17c43 casa), which I can attach if wanted.  What
+   I did confirm is only reachability of the lookup path from the wire
+   (mptcp_parse_option() -> subflow_token_join_request() ->
+   mptcp_token_get_sock()), which is a static reading, not a runtime
+   demonstration of the reordering.
 
-This fix LGTM! - sashiko has no complaints about it too. Could you please apply
-this patch to the export branch first, so that I don't have to carry it along in
-every iteration of the "Reduce the differences between TCP and MPTCP for TLS
-usage" series? Also, Chris and I both sent out this same fix at different times,
-which further confirms from another angle that this fix works.
+2/3 net: mptcp: reject token 0 in mptcp_token_get_sock()
+   Theoretical, and found by static analysis while addressing a review
+   comment on 1/3, not by fuzzing.  The crash path I describe
+   (subflow_check_req() -> mptcp_pm_announced_has_ssk() walking
+   msk->pm.anno_list before mptcp_pm_data_init() has run) is argued from
+   code; I have not triggered it and have no stack trace or KASAN
+   report for it.  What is verified is the input side: the token is
+   copied from the MP_JOIN option without validation, and 0 is never
+   assigned to a live connection, so a lookup for 0 relies entirely on
+   the two comparisons that cannot distinguish it.
 
-Thanks,
--Geliang
+3/3 net: mptcp: verify the token slot in mptcp_token_iter_next()
+   Theoretical as well.  Both consumers (mptcp_diag and the userspace
+   path manager) are netlink paths that need privileges in the target
+   network namespace, so this is not a remote attack surface in the
+   first place.
 
-> ---
->  net/mptcp/subflow.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 543368cfc890..64e8f5c36415 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1526,7 +1526,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
->  	skb = skb_peek(&ssk->sk_receive_queue);
->  	subflow->map_valid = 1;
->  	subflow->map_data_len = skb->len;
-> -	subflow->map_subflow_seq = tcp_sk(ssk)->copied_seq - subflow->ssn_offset;
-> +	subflow->map_subflow_seq = TCP_SKB_CB(skb)->seq - subflow->ssn_offset;
->  	subflow->map_seq = __mptcp_expand_seq(subflow->map_seq,
->  					      subflow->iasn +
->  					      TCP_SKB_CB(skb)->seq -
+For 2/3 I will add a KUnit case to net/mptcp/token_test.c
+(mptcp_token_get_sock(&init_net, 0) must return NULL) in the next
+revision, so at least the guard has a regression test.  I am not
+reposting only for this message; if reviewers want the above folded into
+the cover letter, I will include it with the next respin.
+
