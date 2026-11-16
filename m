@@ -1,63 +1,50 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794806506;
-	b=q97fLDVIKyvcMofK44QSdjl8DibpsFSzj6fS2DXToX62GagCYqmwAjiB1A0FltaWcSpR
-	 Zas6kjP0+/UEYoJ+ptaxKQvpbhd0PLcy2LPfE8OJ6XiFwET3xftaPT1YZPa79vFIRHHp3
-	 Mkr5awwml7OsWpaMeOaP4gdTlPxT/SZRj6l5Nm6RYbp+oGlIJatPGgy93dB3f9lzAsd8G
-	 gqPqz/H72io1YX73q+vAvidtqscmaSoCf71fp8DE+FJa3q/7Di/5UNOncfBKeIizngTZW
-	 gCbR5adAkX4yUjkSp9YTJRcv6XZcdbG7Yi9sYdtt3cV/TLXkqdbSIRzhSIWUiVcyf5A==
+	t=1794811148;
+	b=n3oyr81xuB6iJ9vaQnuUTqm/XyevOXGCmul8zj1I2AgbSYeyQRil1HRjwf8IMhEeD4uG
+	 +oTvkbMEyZiXUE23uTK8q46L/RjEkOvh8LrQoEcJhKbRARPGyvQDZDlofNbBbgso/UIUm
+	 rQsFfwmq09CSbVpvhd5r357Y9nzztPgPniBJFsgR+gP1ZhvoLbsiis2hbFQW8RNIqThbx
+	 Ae6nyrAZSEmFqatW7dgHHxfcx5fHlQf8CZvVxdBAiu0a1K702116IkXUL3gw4id9jYoSy
+	 Hqsk3jaIw01kSWvtUBKt51WHvF2rbAqepuHY1u60CWQlhlXgVQannvlahYsISGc02Sg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794806506;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=jEfV+JQF7FD38ojElSzO1mtu8Ghpnr4QfBw1VO2XPSQ=;
-	b=q2FSFaQcKAH7o/aGzNmQDG7Y9PrzUVqBseWKS7xhs+AgrHrNX9KgknePMQoRtObuZdRL
-	 DpiwxmxWQwnTZ7DB6bnP024oVMByWSrJWHvrwkpr7Z1Vu4OzlzuggUGvOWK5SHBnM1wik
-	 FBzGOipQ/1IAA2kc1qfkh8u5n0e3hFhqBADeFjGi0mJ+ts6swwdZeaRqCHM2ksIbyrDgc
-	 x7aFdkNiTSKOAPniKAg0o8Z5D0eWIMI8scSgn0EZ6Ly7+4udQcOcwjFUfY1fgnUcDAByT
-	 HEcFyyd5iNEqI7jiXHQdSNzs9kOC+25AzL5hGnFHQpA7ClfgWroD1R9vRFvaSM1Gbgg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794811148;
+	h=Received:DKIM-Signature:From:To:Subject:Date:Message-ID:X-Mailer:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=F+C8l5Df7Dcrs6Y2Armbu0L9VO+Xk6Znj804XbIVNuk=;
+	b=Wdfnn4VW4sX28zqK+4k4/36cp6OqU4j0mHnLP8Od46+v7oFNU68PARzfsZKsYQEqrpEE
+	 tGrZjDfEGQP3CtyJrKGOOMkWKd/qqSon3LdLbNGD3ZM2GmuKPu+6SOv7FI2PorR7t5xaz
+	 FaMMuTKhjb5UMXh068VtiB1HOym0Iwn7H41p3nT4/ipLXXBY71GIl/ve0N4WKj1l3gMnG
+	 h9A+WShSEWBl0GM3gPl9c927BaidzuPSB+QkK9lJR8O9MI+fEZZC3YHgyMShtqPxaljHM
+	 IIbP+3Yo6jMo/FsfL2NjFxbO1e6wldggg87mK6EulntdSAJXi4s69EvsPJZwZ7eMR+g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M9xEqbK8;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bDQev0E7;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5A5606A334;
-	Mon, 16 Nov 2026 05:21:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4811606A335
+	for <mptcp@lists.linux.dev>; Mon, 16 Nov 2026 06:39:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M9xEqbK8
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6C991F000C4;
-	Mon, 16 Nov 2026 05:21:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bDQev0E7
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 968831F000C4
+	for <mptcp@lists.linux.dev>; Mon, 16 Nov 2026 06:39:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794806506;
-	bh=jEfV+JQF7FD38ojElSzO1mtu8Ghpnr4QfBw1VO2XPSQ=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=M9xEqbK8ku6TWTxTq5yvkeE98zgiMdOubhckbSmZq2fehatceTUvvOt6B/Xg+69Mq
-	 TtsweDShv4do/NIiGebsAFq4Gj+Fgd14ptYRa7T3a3nF8pQ/Ym5lR9apF4tMSFsDAX
-	 SttAb/pY9sDt06vkKNvxUlKJJHxwAApReIfRY3niXP58rZ4ZLCoNpAwR5fzHCtKS4v
-	 yHbVDJaQ65eOb9t9Qytur1d5G5fwN0JMZ+ziI55498x3vyY0wS6SdbPncYXzajmgkF
-	 TkE3heWXrvUJ8lmc4zQ8DgVRSwcMpYA0iFsCSTTDfYJpo/UACiYi4HF4SpXUTekeBN
-	 eDRGq+q1xgg6A==
-Subject: Re: [PATCH net v2 2/2] mptcp: avoid wrapping blackhole timeout
-From: netdev-bot+sashiko@kernel.org
-To: x-professor@outlook.com
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, corbet@lwn.net, skhan@linuxfoundation.org,
- rdunlap@infradead.org, linux-doc@vger.kernel.org, edumazet@kernel.org,
- ncardwell@google.com, gang.yan@linux.dev, kuniyu@google.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
- ycheng@google.com, weiwan@google.com, stable@vger.kernel.org,
- yangang@kylinos.cn
-Date: Mon, 16 Nov 2026 05:21:44 +0000
-Message-ID: <179480650425.3133.15313880518132043396@kernel.org>
-In-Reply-To: <070c69fa36f83fe47a5eb6d1434f543dabe930e7.1794672619.git.x-professor@outlook.com>
-References: <070c69fa36f83fe47a5eb6d1434f543dabe930e7.1794672619.git.x-professor@outlook.com>
-X-sashiko-severity: Low
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20260515; t=1794811147;
+	bh=F+C8l5Df7Dcrs6Y2Armbu0L9VO+Xk6Znj804XbIVNuk=;
+	h=From:To:Subject:Date;
+	b=bDQev0E7hP9TSniGuN5Xi64iXd6h3i/UYOFsT92ZXutDXmDV3U78jiuOBuPWKyvFi
+	 1B0r9sQyq5ry7qAcilHUXpR7qO7Mq6E9a/SJEUyQ16rCX10iTLV1Cho+2jw7lTeOOw
+	 QoZPsscrLHqpYmZFEyIOgPKd7HKWiM0paRXFCIYDKSa0ULgD2E3YKPofIqYcDp+dXL
+	 ucsqI+ewaGJ+Qwx5Hle1x7EQVFi2pntJ0c6IyKyXSuMIT7mE38ITVY2SLX+aAQdo5F
+	 +EsYKWFzrmEst7+vb5YOW9EC5h1+gP4xnPkweHKa7dzJGfhpLhpImD2D3RPRpVJ369
+	 Hc12C9ZpXXowQ==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next v28 00/11] Reduce the differences between TCP and MPTCP for TLS usage
+Date: Mon, 16 Nov 2026 14:38:53 +0800
+Message-ID: <cover.1794810809.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.55.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -67,127 +54,463 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found more severe
-issue(s) in other patches of this series. This mail is only an FYI, in case
-you want to address the nit picks below when you respin.
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Low priority / nit picks for your consideration:
+v28:
+ - Split "mptcp: remove CB offset field" into 5 patches.
+ - patch 2: fix wait_for_remote_key() to return 1 on timeout instead of 0,
+   and update caller to handle timeout as skip case. Add MPTCP expect_eof
+   branch in do_recvmsg_cmsg() for new inq semantics.
+ - patch 5: change set_bit() to __set_bit() in subflow_set_remote_key() to
+   match other cb_flags operations under msk data lock.
+ - patch 6: add flags field and MPTCP_SKB_CB_F_OFFSET flag (new patch).
+ - patch 7: encapsulate DSN access with helpers (new patch).
+ - patch 8: add copied_seq tracking (new patch).
+ - patch 10: move DATA_FIN check from __mptcp_move_skb() to
+   __mptcp_move_skbs_from_subflow() before mptcp_init_skb(). Add
+   mptcp_dsn_after_fin() helper. Use sk_eat_skb() instead of mptcp_drop().
+   Combine conditions using len variable.
 
-- [Low] The commit message body refers to earlier revisions of this
-  patch: "In the v1 arithmetic-only test, the unpatched kernel retried…
-- [Low] mptcp_active_should_disable() (net/mptcp/ctrl.c:514-515) now
-  silently clamps the disable interval to MAX_JIFFY_OFFSET.
+v27:
+ - patch 6: introduce mptcp_dsn() and mptcp_end_dsn() helpers, replacing
+   all direct MPTCP_SKB_CB(skb)->map_seq and end_seq accesses throughout
+   the receive path. Check both from and to skbs for MPTCP_SKB_CB_F_OFFSET
+   in __mptcp_try_coalesce() instead of only from. Restructure
+   __mptcp_recvmsg_mskq() to skip and free already-consumed skbs for
+   non-MSG_PEEK reads. Drop the DATA_FIN validation check from v26.
+ - patch 7: use mptcp_dsn() and mptcp_end_dsn() helpers instead of direct
+   field accesses. Switch from before64()/after64() to 32-bit before()/
+   after() with explicit (u32) casts.
+   Update mptcp_end_dsn() to return map_seq64 + skb->len.
+ - patch 8: change read_copied type from int to u32.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1794663678.git.tanggeliang@kylinos.cn/
 
---
+v26:
+ - patch 2: move error printing into wait_for_remote_key() for accurate
+   diagnostics. Simplify return values: 0 for success/timeout/skip,
+   -1 for fatal errors.
+ - patch 5: add offset parameter to __mptcp_sync_rcv_sequence() to
+   correctly handle partial reads of TFO skb before sync.
+ - patch 6: add DATA_FIN validation in __mptcp_move_skb() to reject skbs
+   with map_seq64 >= rcv_data_fin_seq, preventing offset calculation
+   underflow when a protocol-violating peer sends data after DATA_FIN.
+ - patch 7: update DATA_FIN check to use map_seq64 instead of map_seq.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1794563432.git.tanggeliang@kylinos.cn/
 
-mptcp: avoid wrapping blackhole timeout
+v25:
+ - patch 2: replace usleep() with poll() in wait_for_remote_key() to
+   detect dead connections via POLLHUP/POLLERR, preventing infinite loops
+   when the connection is reset or the client exits early.
+ - patch 6: instead of rewinding map_seq by offset (which caused OFO
+   merge_right to replace validated data with unvalidated prefix), keep
+   map_seq pointing to the actual start of new data (mapped_dsn). Set
+   end_seq = map_seq + copy_len to exclude consumed prefix bytes. Add
+   mptcp_offset() helper to compute prefix length on-the-fly as
+   skb->len - (end_seq - map_seq), used in recvmsg path to skip prefix
+   bytes. Remove mapping boundary pull logic (no longer needed). Remove
+   OFO traversal F_OFFSET check (no longer needed with non-rewound
+   map_seq). Keep F_OFFSET flag only for __mptcp_try_coalesce() to
+   prevent coalescing skbs with prefix. Change MPTCP_SKB_CB_F_OFFSET from
+   0x01 to 0x0100 to avoid collision with TCPHDR_FIN when flags field
+   aliases tcp_flags.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1794304840.git.tanggeliang@kylinos.cn/
 
-This commit computes the active-disable interval in
-mptcp_active_should_disable() in u64, so multiplier * blackhole_timeout *
-HZ no longer wraps in 32-bit arithmetic. The result is capped at
-MAX_JIFFY_OFFSET before it is added to active_disable_stamp.
+v24:
+ - patch 1: fix mptcp_inq_hint() EOF hint logic. Only return 1 when
+   queue is empty AND (TCP_CLOSE OR RCV_SHUTDOWN), not unconditionally
+   when RCV_SHUTDOWN is set. This avoids returning N+1 instead of N when
+   there is unread data after local shutdown or MP_FASTCLOSE.
+ - patch 2: fix IPv4 TCP socket handling in wait_for_remote_key() by
+   checking EOPNOTSUPP in addition to ENOPROTOOPT. Use poll_timeout
+   instead of fixed 100ms timeout to avoid false failures on slow CI
+   systems. Return different values for success/timeout/error to provide
+   better diagnostics. Timeout is now a warning, not a failure, allowing
+   the SIOCINQ check to proceed.
+ - patch 6: fix pskb_pull() truesize corruption in mptcp_init_skb() when
+   offset > skb_headlen(). Use skb_orphan() before pskb_pull() to allow
+   pskb_expand_head() to properly update truesize, then recompute truesize
+   manually and reattach with skb_set_owner_r(). Separate linear pull
+   (skb_pull) from paged pull (pskb_pull) handling. Add MPTCP_MIB_RCVPRUNED
+   counter for failure tracking. Fix failure path in
+   __mptcp_move_skbs_from_subflow() to increment seq and maintain TCP/MPTCP
+   state consistency, allowing MPTCP retransmission to fill gaps.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1794215614.git.tanggeliang@kylinos.cn/
 
-> This issue was found using a static analysis tool. A loopback reproducer
-> induced 12 MPTCP blackholes and waited 1.2 seconds before opening another
-> connection. In the v1 arithmetic-only test, the unpatched kernel retried
-> MP_CAPABLE, while the fixed kernel used TCP fallback directly. The
-> reproducer required neither kernel modifications nor fault injection.
+v23:
+ - patch 2: add SOL_MPTCP fallback definition for compatibility with
+   older libc headers. Handle ENOPROTOOPT error from getsockopt() to
+   skip the wait for TCP sockets or MPTCP sockets that fell back to TCP.
+ - patch 5: move end_seq calculation change from patch 6 to patch 5,
+   using MPTCP_SKB_CB(skb)->map_seq + skb->len instead of msk->tfo_iasn
+   in __mptcp_sync_rcv_sequence().
+ - patch 6: fix error handling in __mptcp_move_skbs_from_subflow() when
+   mptcp_init_skb() fails. Instead of using continue which skips updating
+   seq and more_data_avail, update seq and jump to the cleanup path to
+   ensure tp->copied_seq and more_data_avail are properly updated.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1793969127.git.tanggeliang@kylinos.cn/
 
-[ ... ]
+v22:
+ - Squashed "mptcp: fix TFO map_seq sign extension in fastopen" into patch
+   6 "mptcp: remove CB offset field" (series reduced from 9 to 8 patches).
+ - patch 1: add RCV_SHUTDOWN check to increment hint_val by 1 when
+   DATA_FIN is received, matching the previous ack_seq - map_seq behavior
+   that included the FIN byte.
+ - patch 2: replace fixed 10ms sleep with MPTCP_INFO polling for
+   MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED flag. Add timeout handling with
+   retries to ensure third ACK is processed before checking SIOCINQ.
+ - patch 6: use before() for wrap-safe sequence comparison in mapping
+   boundary detection. Use pskb_pull() instead of skb_pull() to handle
+   non-linear skbs safely. Add bool return value to indicate
+   success/failure.
+ - patch 8: restore backlog flush in mptcp_recv_skb() with
+   sock_owned_by_user() check to maintain existing behavior for process
+   context callers while avoiding deadlock for future BH context callers.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1793964796.git.tanggeliang@kylinos.cn/
 
-> On the v2 kernel, the loopback blackhole reproducer completed all 12
-> clients and the probe used TCP fallback directly instead of retrying
-> MP_CAPABLE.
+v21:
+ - patch 1: new patch. Fix mptcp_inq_hint() to use mptcp_data_avail()
+   which computes bytes_received - bytes_consumed instead of
+   ack_seq - map_seq. This fixes INT_MAX overflow on passive TFO
+   connections before the MPC 3rd ACK arrives.
+ - patch 2: new patch. Add selftest to check TFO SIOCINQ doesn't return
+   INT_MAX after accept().
+ - patch 4: new patch. Fix fallback dummy mapping anchor in
+   subflow_check_data_avail() by anchoring map_subflow_seq at
+   TCP_SKB_CB(skb)->seq instead of copied_seq. This ensures
+   mptcp_subflow_get_mapped_dsn() returns the correct DSN at copied_seq.
+ - patch 7: added mapping boundary detection in mptcp_init_skb(). When
+   offset > 0 and skb starts before current mapping, prefix bytes are
+   removed via skb_pull() to prevent data corruption. Removed redundant
+   fallback initialization in mptcp_propagate_state().
+ - patch 9: kept msk_owned_by_me() assertion (reverted the
+   DEBUG_NET_WARN_ON_ONCE replacement from v20).
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1793870710.git.tanggeliang@kylinos.cn/
 
-[Severity: Low]
-This isn't a bug, but the changelog refers to earlier revisions of the
-patch ("In the v1 arithmetic-only test" and "On the v2 kernel"). After the
-patch is merged, v1 and v2 mean nothing in git log. This is also tagged
-for stable, so backporters will read it without the mailing list thread.
+v20:
+ - patch 2: fix Medium issues from review. Move MPTCP_SYNC_SEQ check
+   inside the loop under mptcp_data_lock() protection to avoid race with
+   concurrent non-atomic cb_flags updates. Change from atomic
+   test_and_clear_bit() to non-atomic __test_and_clear_bit() since we're
+   under lock. Add msk->tfo_iasn = 0 reset in mptcp_disconnect() to
+   prevent stale tfo_iasn from corrupting passive TFO fallback.
+ - patch 3: new patch. Fix TFO map_seq sign extension in fastopen.c by
+   casting to u64 before negation: -(u64)skb->len instead of -skb->len.
+ - patch 4: updated from v19 patch 3. Moved the -(u64)skb->len fix to
+   patch 3. Added comment in mptcp_init_skb() explaining why offset > 0
+   with out-of-order mapping is correct: mptcp_subflow_get_mapped_dsn()
+   returns the DSN for the byte at tp->copied_seq (position 'offset' in
+   the skb), and consumed prefix bytes are part of the same logical DSN
+   range.
+ - patch 6: updated from v19 patch 5. Replace msk_owned_by_me() assertion
+   with DEBUG_NET_WARN_ON_ONCE using lockdep_sock_is_held() for both
+   process and BH contexts. Add conditional defer logic: inline cleanup
+   when caller owns socket lock, defer to worker when caller doesn't.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1793695518.git.tanggeliang@kylinos.cn/
 
-Could the reproducer results be described once, against the final code,
-with the per-version history moved below the --- line?
+v19:
+ - Replace mptcp_iasn() computed function with msk->tfo_iasn immutable
+   snapshot (set in subflow_set_remote_key()), removing tfo_skb_len field
+   and the DATA_FIN off-by-one concern.
+ - Move MPTCP_SYNC_SEQ handling (test_and_clear_bit + copied_seq update)
+   out of __mptcp_sync_rcv_sequence() into callers, since the function
+   can be called without the socket lock held.
+ - Patch 2: move MPTCP_SYNC_SEQ check in mptcp_release_cb() from
+   post-loop to loop start (before backlog spooling). Add the same
+   check in mptcp_move_skbs() to sync copied_seq before backlog
+   processing when user holds the socket lock.
+ - Patch 4: clamp max_seq to ack_seq in mptcp_data_queue_ofo() to
+   prevent 64-bit after64() wrap-around when ack_seq > rcv_wnd_sent.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1793361629.git.tanggeliang@kylinos.cn/
 
-The numbers themselves check out. 64 * 6912213 * 1000 = 442,381,632,000,
-which is 512 mod 2^32. With 12 blackholes the multiplier is
-1 << min(11, 6) = 64, and a 1.2 second wait is longer than 512 jiffies at
-HZ=1000.
+v18:
+ - Re-add patch 2 "mptcp: drop the cant_coalesce CB field".
+ - Patch 3: simplify TFO sync by relying on patch 2's __mptcp_sync_rcv_sequence()
+   instead of complex copied_seq checks. Use copied_seq += mptcp_iasn(msk).
+ - Patch 4: move subflow.c changes to patch 2, use map_seq64 for TFO init.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1793349369.git.geliang@kernel.org/
 
-> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-> index 63c5747f0f63c..0b10e94e7f43c 100644
-> --- a/net/mptcp/ctrl.c
-> +++ b/net/mptcp/ctrl.c
+v17:
+ - Patch 2: add TFO synchronization: subflow_set_remote_key() preserves
+   partial read progress by checking copied_seq against the initial TFO
+   value before updating. Add WRITE_ONCE/READ_ONCE for ordering between
+   BH (3rd ACK processing) and user-space readers. Add underflow guard
+   (copied_seq >= map_seq) before offset subtraction in
+   __mptcp_recvmsg_mskq() to protect MSG_PEEK traversals. Skip skbs
+   entirely before copied_seq. Update subflow.c to set both map_seq
+   (u32) and map_seq64 (u64) for TFO.
+ - Patch 3: adapt to the new map_seq (u32) + map_seq64 (u64) layout
+   introduced in patch 2.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1793326853.git.tanggeliang@kylinos.cn/
 
-[ ... ]
+v16:
+ - Simplified the series to retain only the core changes required by both
+   kTLS and sockmap: drop the CB offset field, add copied_seq tracking,
+   and sync the MPTCP skb CB layout with the TCP one.
+ - Dropped patch 2, leaving the fastopen code unchanged.
+ - Moved patches 6-11 into a separate series "prepare interfaces for kTLS
+   and sockmap support".
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1793255126.git.tanggeliang@kylinos.cn/
 
-> @@ -501,12 +502,17 @@ bool mptcp_active_should_disable(struct sock *ssk)
->  	/* Paired with smp_mb__before_atomic() in mptcp_active_disable() */
->  	smp_rmb();
->  
-> -	/* Limit timeout to max: 2^6 * initial timeout */
-> +	/* Limit the backoff multiplier to 64. */
->  	multiplier = 1 << min(disable_times - 1, 6);
-> +	delay = (u64)multiplier * blackhole_timeout * HZ;
->  
-> -	/* Paired with the WRITE_ONCE() in mptcp_active_disable(). */
-> +	/*
-> +	 * Cap the delay for safe jiffies comparisons on 32-bit systems.
-> +	 * The timestamp read is paired with WRITE_ONCE() in
-> +	 * mptcp_active_disable().
-> +	 */
->  	timeout = READ_ONCE(pernet->active_disable_stamp) +
-> -		  multiplier * blackhole_timeout * HZ;
-> +		  min(delay, MAX_JIFFY_OFFSET);
+v15:
+ - Patch 2: drop mptcp_data_lock() in mptcp_inq_hint(), use READ_ONCE()
+   and __test_and_clear_bit() instead. This issue is unrelated to this
+   series and will be addressed in a separate patch later.
+ - Patch 5: Guard mptcp_cleanup_rbuf() with read_copied > 0. Initialize/
+   reset msk->read_copied. Drop redundant mptcp_recv_skb() in
+   __mptcp_read_sock().
+ - Patch 6: simplify memory ordering, drop smp_mb()/smp_rmb(), keep
+   existing smp_mb__before_atomic(). Check SOCK_DONE inline.
+ - Patch 9: drop tcp_sock_rate_check_app_limited() split, call
+   tcp_rate_check_app_limited() directly as Paolo suggested. Add
+   write_seq != snd_nxt early bail-out.
+ - Patch 10: wrap assertion behind expect_all_features().
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1792718041.git.tanggeliang@kylinos.cn/
 
-[Severity: Low]
-On 32-bit kernels MAX_JIFFY_OFFSET is ((LONG_MAX >> 1) - 1), which is
-0x3ffffffe jiffies, or about 12.4 days at HZ=1000. Does this clamp
-silently shorten blackhole_timeout values that the sysctl still accepts?
+v14:
+ - v13 can no longer be applied to the export branch, so it has been
+   rebased here with the following corrections:
+ - Patch 2: move locking in mptcp_inq_hint() to avoid races with ack_seq
+   change from patch 3 to here. Update commit log.
+ - Patch 3: add mptcp_data_lock() in __mptcp_move_skb() around copied_seq
+   update. Remove local delta variable in __mptcp_ofo_queue(). Initialize
+   msk->copied_seq to 0 in mptcp_propagate_state() fallback path.
+ - Patch 4: add map_seq64 comparison in __mptcp_try_coalesce() for 64-bit
+   sequence consistency.
+ - New patch 11: rename mptcp_check_readable to mptcp_stream_is_readable,
+   and align with TCP by calling sk_is_readable() for KTLS support.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1790734083.git.tanggeliang@kylinos.cn/
 
-The sysctl entry only sets a lower bound:
+v13:
+ - use smp_mb instead of smp_mb__before_atomic in mptcp_check_data_fin.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1788245079.git.tanggeliang@kylinos.cn/
 
-net/mptcp/ctrl.c:mptcp_sysctl_table[] {
-	...
-	{
-		.procname = "blackhole_timeout",
-		.maxlen = sizeof(unsigned int),
-		.mode = 0644,
-		.proc_handler = proc_blackhole_detect_timeout,
-		.extra1 = SYSCTL_ZERO,
-	},
-	...
-}
+v12:
+ - Move sock_set_flag(SOCK_DONE) to after smp_mb__before_atomic() in
+   mptcp_check_data_fin() and reuse the existing barrier rather than adding
+   a new smp_wmb().
+ - Sample SOCK_DONE before smp_rmb() in mptcp_inq_hint() and mptcp_inq(),
+   so the smp_rmb() only orders SOCK_DONE read relative to the subsequent
+   ack_seq/copied_seq reads.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1788171508.git.tanggeliang@kylinos.cn/
 
-So values up to INT_MAX are accepted. Anything above about 1,073,741
-seconds is cut short even on the first blackhole (multiplier 1). Smaller
-values stop doubling before they reach the 64x factor.
+v11:
+ - __mptcp_move_skb(): gate __mptcp_sync_rcv_sequence() on
+   test_and_clear_bit(MPTCP_SYNC_SEQ) so the dummy mapping is only re-based
+   after ack_seq = iasn.
+ - a new patch to set and test SOCK_DONE.
+ - use SOCK_DONE in mptcp_inq_hint() and mptcp_inq().
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1788099847.git.tanggeliang@kylinos.cn/
 
-time_before() handles deltas up to LONG_MAX, so the cap is half of what
-the comparison can take. The old code compared intervals between 2^30 and
-2^31-1 jiffies correctly, and those are now shortened.
+v10:
+ - Drop "mptcp: use atomic64_t for locklessly accessed u64 fields"
+   (v9 patch 1) and the squash to bpf_burst test (v9 patch 11).
+   Series reduced from 11 to 9 patches.
+ - Revert all atomic64_read()/atomic64_set() on msk->ack_seq back to
+   plain reads and WRITE_ONCE() in patches 1-4. Remove the local u64
+   ack_seq variables that only existed to hold atomic64_read() results.
+ - mptcp_inq_hint: move test_bit(MPTCP_SYNC_SEQ) inside mptcp_data_lock()
+   to close the race between the flag check and the ack_seq read. Revert
+   atomic64_read() to plain msk->ack_seq under the lock.
+ - mptcp_inq (patch 6): use READ_ONCE() for both ack_seq and copied_seq
+   instead of atomic64_read(). Add comment for the FIN subtraction,
+   mirroring tcp_inq(). Update commit log.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787888115.git.tanggeliang@kylinos.cn/
 
-For example, take HZ=1000, blackhole_timeout = 2000000 and a first
-blackhole. The old code disabled active MPTCP for 2e9 jiffies (about 23
-days). The new code disables it for 1,073,741,822 jiffies (about 12.4
-days).
+v9:
+ - Extend atomic64_t conversion from only msk->ack_seq to all locklessly
+   accessed u64 fields: write_seq, snd_nxt, snd_una, wnd_end,
+   bytes_received, bytes_consumed.
+ - Add mptcp_data_lock() in mptcp_inq_hint() to read ack_seq and
+   copied_seq atomically.
+ - Add read_copied field and drain it under mptcp_data_lock() in
+   mptcp_read_complete() to fix the BH vs worker data race.
+ - New patches: mptcp_inq/peek_len and sendmsg_locked proto_ops.
+ - Squash to "selftests/bpf: Add bpf_burst scheduler & test".
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787827525.git.tanggeliang@kylinos.cn/
 
-The commit message says:
+v8:
+ - check MPTCP_SYNC_SEQ in mptcp_inq_hint:
+       if (hint_val >= INT_MAX) {
+               if (test_bit(MPTCP_SYNC_SEQ, &msk->cb_flags))
+                       return 0;
+               return INT_MAX;
+       }
+ - rename mptcp_sock_rate_check_app_limited to
+   mptcp_rate_check_app_limited.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787644449.git.tanggeliang@kylinos.cn/
 
-    Preserve the existing sysctl input range and backoff
-    for representable intervals.
+v7:
+ - Patch 1 is a new one to fix the existing issue Sashiko mentioned -
+   using atomic64_t for msk->ack_seq.
+ - Fix the map_subflow_seq setting in fallback mode in patch 4.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787537436.git.tanggeliang@kylinos.cn/
 
-But this interval is representable and still gets shortened.
+v6:
+ - Memory ordering for MPTCP_SYNC_SEQ: Add smp_wmb() before set_bit() in
+   subflow_set_remote_key() and smp_rmb() after test_and_clear_bit() in
+   __mptcp_move_skb() and mptcp_release_cb() to prevent data races on
+   weakly-ordered architectures, ensuring ack_seq updates are visible
+   before the flag is set and readers see the updated sequence after
+   observing the flag.
+ - Lockdep nested locking: Use lock_sock_fast_nested(ssk) instead of
+   lock_sock_fast(ssk) in mptcp_sock_rate_check_app_limited() to suppress
+   false positive recursive locking warnings when acquiring subflow socket
+   locks while holding the parent MPTCP socket lock.
+ - Receive window advertisement order: Swap mptcp_rcv_space_adjust() and
+   mptcp_cleanup_rbuf() in mptcp_read_complete() to expand the receive
+   buffer before evaluating window updates, ensuring ACKs advertise the
+   new (larger) window size instead of delaying the advertisement until
+   the next cycle.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787446274.git.tanggeliang@kylinos.cn/
 
-Documentation/networking/mptcp-sysctl.rst, and the zh_CN translation,
-still describe blackhole_timeout as an initial period that will "grow
-exponentially", with no upper bound mentioned.
+v5:
+ - only patch 3 changed.
+ - Fallback offset underflow: Initialize MPTCP sequence space to 0 in
+   mptcp_propagate_state() when mp_opt == NULL, ensuring SKB's map_seq
+   starts from 0 to match msk->copied_seq and prevent offset calculation
+   underflow in fallback mode.
+ - Stale peek_seq: Move peek_seq recomputation into the mptcp_move_skbs()
+   continue path and add another recomputation after sk_wait_data(),
+   ensuring peek_seq stays synchronized with msk->copied_seq updates from
+   MPTCP_SYNC_SEQ processing in both paths.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787368526.git.tanggeliang@kylinos.cn/
 
-Should the clamp be documented, or should the sysctl get an upper bound
-that matches it?
+v4:
+ - mptcp_recvmsg: move the peek_seq recompute from after sk_wait_data()
+   to before the mptcp_move_skbs() continue check.
+   mptcp_move_skbs() -> __mptcp_move_skb() may shift the head skb's
+   map_seq to the IASN frame via __mptcp_sync_rcv_sequence(); if
+   'continue' then exits the loop, the recompute is skipped, and the
+   next __mptcp_recvmsg_mskq() computes offset with peek_seq in the old
+   frame minus map_seq in the new frame. The underflow makes the offset
+   test fail and the skb is skipped (and mptcp_recv_skb() actually frees
+   the TFO skb via mptcp_eat_recv_skb()).
+ - Make all three MPTCP_SYNC_SEQ bit accesses atomic:
+   - subflow_set_remote_key:   __set_bit            -> set_bit
+   - __mptcp_move_skb:         __test_and_clear_bit -> test_and_clear_bit
+   - mptcp_release_cb:         __test_and_clear_bit -> test_and_clear_bit
+   The flag is set in BH under mptcp_data_lock() (msk slock held) and
+   cleared in user context under lock_sock() slow path (only owned=1,
+   slock not held). The non-atomic RMW on the two sides races, which can
+   lose the IASN sync.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1787295147.git.tanggeliang@kylinos.cn/
 
-64-bit kernels are not affected, because MAX_JIFFY_OFFSET there is far
-above 64 * INT_MAX * HZ.
+v3:
+ - Patch 2, handle "offset" in __mptcp_sync_rcv_sequence().
+ - Patch 3, update __mptcp_move_skb() in response to Sashiko comments:
+
+ 	if (__test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags))
+		msk->copied_seq += mptcp_iasn(msk);
+
+ - Patch 4, replace after64() to after() in mptcp_prune_ofo_queue(). The
+   pre-existing issue raised by Sashiko regarding changing the type of
+   ack_seq to atomic64_t is not addressed in this series.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1786445142.git.tanggeliang@kylinos.cn/
+
+v2:
+ - Patch 3, updated in response to Sashiko comments:
+
+        if (unlikely(msk->rcvd_dummy_seq)) {
+                msk->copied_seq += mptcp_iasn(msk);
+                __mptcp_sync_rcv_sequence(sk);
+                /* Release cb() would otherwise re-base copied_seq
+                 * again.
+                 */
+                test_and_clear_bit(MPTCP_SYNC_SEQ, &msk->cb_flags);
+        }
+
+        /* Skip the already peeked data. */
+        if (offset >= skb->len) {
+                *last = skb;
+                continue;
+        }
+ - Patch 5, replaced with Paolo's patch.
+ - Patch 6, 7, new patches addressing app-limited conditions.
+ - The patch "trim the duplicated skb head at receive enqueue" has been
+   dropped, as it is no longer needed after Paolo updated the "mptcp:
+   out-of-order queue pruning" series.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1786158416.git.tanggeliang@kylinos.cn/
+
+v1:
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1785150300.git.tanggeliang@kylinos.cn/
+
+The goal of this series is to reduce the differences between TCP and MPTCP
+for TLS usage, in preparation for adding TLS over MPTCP support in the
+future.
+
+In previous versions [1], a struct tls_prot_ops was defined to represent
+the interface differences between TCP and MPTCP, which contained the
+following callbacks:
+
+	struct sk_buff *(*recv_skb)(struct sock *sk, u32 *off);
+	bool (*lock_is_held)(struct sock *sk);
+	void (*read_done)(struct sock *sk, size_t len);
+	u32 (*get_skb_seq)(struct sk_buff *skb);
+	int (*skb_get_header)(const struct sk_buff *skb, int offset,
+	                      void *to, int len);
+	bool (*epollin_ready)(const struct sock *sk);
+	void (*check_app_limited)(struct sock *sk);
+
+In reality, some of these callbacks are unnecessary. This series aims to
+eliminate the get_skb_seq(), skb_get_header(), and lock_is_held()
+callbacks.
+
+The first four patches come from Paolo's "mptcp: address stall under memory
+pressure" series v5 [2], with only minor cleanup from my side.
+
+They remove the CB offset field and sync the MPTCP skb CB layout with the
+TCP one, so that we can obtain the TCP or MPTCP sequence number in a
+unified way, e.g.:
+
+	struct tls_skb_cb {
+	    u32 seq;
+	};
+
+	#define TLS_SKB_CB(__skb) ((struct tls_skb_cb *)&((__skb)->cb[0]))
+
+This eliminates the need for a separate get_skb_seq() callback.
+
+Building on the removal of the CB offset field, I also added patch 5 that
+trims the duplicated skb head at receive enqueue. With that in place, KTLS
+can retrieve the record header via skb_copy_bits() directly, so there is no
+longer any need for a dedicated MPTCP helper like mptcp_skb_get_header().
+The skb_get_header() callback can thus be removed.
+
+Patch 6 defers sk_data_ready to the worker, which avoids recursive locking
+when TLS calls back into MPTCP under mptcp_data_lock(). With this change,
+the lock_is_held() callback is no longer needed and can be removed.
+
+[1]
+https://patchwork.kernel.org/project/mptcp/cover/cover.1782123118.git.tanggeliang@kylinos.cn/
+[2]
+https://patchwork.kernel.org/project/mptcp/cover/cover.1778446731.git.pabeni@redhat.com/
+
+Geliang Tang (7):
+  mptcp: fix TFO SIOCINQ overflow in mptcp_inq_hint
+  selftests: mptcp: connect: check TFO SIOCINQ overflow
+  mptcp: fix fallback dummy mapping anchor
+  mptcp: add flags field to mptcp_skb_cb
+  mptcp: encapsulate CB DSN field access with helpers
+  mptcp: drop data after DATA_FIN before skb init
+  mptcp: defer read_sock cleanup to mptcp_worker
+
+Paolo Abeni (4):
+  mptcp: drop the mptcp_ooo_try_coalesce() helper
+  mptcp: drop the cant_coalesce CB field
+  mptcp: remove CB offset field
+  mptcp: sync mptcp skb cb layout with tcp one
+
+ include/trace/events/mptcp.h                  |   2 +-
+ net/mptcp/fastopen.c                          |  12 +-
+ net/mptcp/options.c                           |   1 +
+ net/mptcp/protocol.c                          | 292 +++++++++++-------
+ net/mptcp/protocol.h                          |  29 +-
+ net/mptcp/subflow.c                           |  12 +-
+ .../selftests/net/mptcp/mptcp_connect.c       |  69 +++++
+ 7 files changed, 302 insertions(+), 115 deletions(-)
 
 -- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1794672619.git.x-professor%40outlook.com
+2.55.0
+
