@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794811152;
-	b=5REpUtqC3gdAHUpL6C6IMmzdiZkd07E3bIQ4kMQ+fJ6rcSy2uxGKn2zcg2i50KR1qaPv
-	 d5f7FBaZ/CNEi4B6kypp8yWcJuclb9VXIIQOnwPUInIDkGG0kO1XYGmacEUMXqv/X9qDc
-	 BbNc6CSYGhDsQbCb0Tuxn3vbzQqDuH1IUQ0CIylN6/jso8jeGdhUQOSxYQJz31kWC2XVM
-	 3NbeozIkGwrElqk/6aP3hghG8hsLVZ7YhL/PL3PPBxIAhVOUor7lQug7cex6PuHvVVETM
-	 lt4YZ2wUH/2bqXn6if0h+hOEJPnjOd4/LPtZm2yeD2QXtjEqwhIALQhwCFmYV0pLPDg==
+	t=1794811153;
+	b=k54O7kVT9ChK/JtRtY0/zGUzfKd9VQ2gi+iInnElnagQQmDs0ZQs4X/GtJok4rvnAVsn
+	 wukpNkMBJwGhNEDLY+l2H9pyseX8h3Jp6R6WhQHfKEkHDKks8t+UK1zMN9hPEgLiJ7i0k
+	 LpNbbzRSNfU3FfRpU6CaqJvaf6SioRybtOhJCnXC0Zb1zKVPxWHlgBMImovFxFRhp1eio
+	 1m3KGMnZghhMkwTCNoNCf0C6OYgSPpb+oCYbwcuQLuNUrIU5YpLQztPsdMYZyMy1rkzh2
+	 q8s7iFVcqXGbIt18Nfalbk7YWrCJWf0HQRgqh69pjx3TrnEgP0/g4+VCGOVwQBCV0KQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794811152;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794811153;
 	h=Received:DKIM-Signature:From:To:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=K0ucOvjIjrcBa4o4gYqu3rYj0YatnSeO8vFYHsOpG+k=;
-	b=gUfqiRTKSPDy5pl1kBCPI8esv7cuFcU8VFnUOQOI6JltNx2CpU1/4R9TyJDh94FUCMnT
-	 ByQxumpRjJa032essFD69NBBWF2mFAhc6WzsD0oz7VMcGDn/C4AyQSiaAD13o3xSYL6dg
-	 kElAPZz/elbGEku1k591IyhEwGX4yrwUQbor51h5oBeLvGY1A5KwwB9w6W+sxjJE0EcGV
-	 IHzOD66Bl637ook4suHrdRm8GpcKOy/QBth7CjtPrvRsWn2z+1PUD2xjr8HaGycQM1qdY
-	 7JeyolwwrsMQfy2ZZQvSTmr5J7yeJlSA7PisQUR6s6zAhKvzZPnu8YaZPLwZwfr7W1g==
+	bh=5/Kp05SKHtNtpk3tmxGUxvBUWZJxCkxUzpNm5CkanUI=;
+	b=gxsMSX8Tyj3v+pL5l+5e0Nz513xMj1WcCnR1KBseeQZaNuKrAzKMofp7wjCBVTHqLz4y
+	 dFIL1m1gqtUPdsvr3mhgo6jLraZPCp79uw2yTXHWg7Z7p+7MO7cgWgH+8xLEaR5wlFLin
+	 uKQC6it//VO6Qg89dAXKzg7EROju2RbUZkBaGuThbOOddqRqxCVeXtbSktd+lhvXwEtNK
+	 r+LSy70W6yQJ9gQ0X9LB6xaDMqItZMTGy2fAVvlNaRFUII3JHCsdx5lDWXCPpEtQQT6Aq
+	 C8FsS0/MwPWB8TUQVmCAVM7+5/8dZx0YM5JckrqS8sgpeP02w5OhDn9gygdQmnqulIA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NDq5yzHK;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Mt98LVmp;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232DB606A32A
-	for <mptcp@lists.linux.dev>; Mon, 16 Nov 2026 06:39:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78389606A32A
+	for <mptcp@lists.linux.dev>; Mon, 16 Nov 2026 06:39:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NDq5yzHK
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DEEB1F000C8
-	for <mptcp@lists.linux.dev>; Mon, 16 Nov 2026 06:39:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Mt98LVmp
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0B571F000C9
+	for <mptcp@lists.linux.dev>; Mon, 16 Nov 2026 06:39:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794811152;
-	bh=K0ucOvjIjrcBa4o4gYqu3rYj0YatnSeO8vFYHsOpG+k=;
+	s=k20260515; t=1794811153;
+	bh=5/Kp05SKHtNtpk3tmxGUxvBUWZJxCkxUzpNm5CkanUI=;
 	h=From:To:Subject:Date:In-Reply-To:References;
-	b=NDq5yzHKp9VZsfepPsZo3PVzhGStPW7ArZg6grfMR1pmteuazvxKnqnLhWupF+R4v
-	 /9Cf9G+YEF+16OjYepvWsj/gP4Q3+D8aQNeB1WNB9Y5hCMLxbz55E86zCTNvImPnMD
-	 OeADPCHZA6VkP/Xjuj02r/1sF7Su0gIf0VdhWDSXKplAbRf7cSYdCapqxpgYGYly28
-	 7GDXPD+TK1yT/ZRdgJpbWwAAE7AXn9aDikIUKWwQRVyTL+EOnXadlr5lu7GElRkZaJ
-	 BAjTTfa0v1syoapwRBfnkXdKs3ExbfJLvbOhoI3Vs6NDU1z+QDmvawqaJXX2DU/iRG
-	 2ECRnBtUed+rw==
+	b=Mt98LVmpQQTIuO/RPP6WVQnnYBt6faRTiUi9tkmPkmo3HgLMAHXYdQUFCuj0L7eGD
+	 QIHmrQFKWg5PsSVkqML/ttcdJeU5Dujk1k9Q4F18jkVQCICwhkXtjHa0DuT9zEigl9
+	 R7boFNs1cBVAOB4IZeTRqVeMj0L7P5SUlnGaqVwUKNgbKkwoKTSDtg1uXtM9SeqXFT
+	 8zlkccqj1tj/0WoMVpP/g0XKnGN6Y1GCslf3FB1dytu8R6jAC9SkXiqjwG7WT0TvdR
+	 dTitLK+a23iWIpCIJQIIVjO693hOzOZoXxuZvMQM9FL/T1bdlMmXKwJmQ+tNvqQIn3
+	 D1XENo+J4LvfQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net v28 03/11] mptcp: fix fallback dummy mapping anchor
-Date: Mon, 16 Nov 2026 14:38:56 +0800
-Message-ID: <b68947ec4cd5282818c54039eb367d31b72bd7a3.1794810809.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v28 04/11] mptcp: drop the mptcp_ooo_try_coalesce() helper
+Date: Mon, 16 Nov 2026 14:38:57 +0800
+Message-ID: <38dc8bef455cb79a9e548a1a6a69f2da89b174b1.1794810809.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <cover.1794810809.git.tanggeliang@kylinos.cn>
 References: <cover.1794810809.git.tanggeliang@kylinos.cn>
@@ -58,40 +58,87 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+From: Paolo Abeni <pabeni@redhat.com>
 
-Commit 2834f8edd74d ("mptcp: cleanup fallback dummy mapping generation")
-anchored map_seq at the DSN of skb->seq but left map_subflow_seq
-anchored at copied_seq. This caused mptcp_subflow_get_mapped_dsn() to
-return the DSN at skb->seq instead of copied_seq.
+It's used to save an additional comparison for in-order skbs, but is
+also a barrier to remove CB offset. Remove the helper, let
+__mptcp_try_coalesce() always perform the sequence check and remove
+duplicate checks from the callers.
 
-When TCP queues a partially overlapping segment (seq < rcv_nxt), the skb
-starts before copied_seq, giving offset > 0. mptcp_init_skb() then sets
-map_seq to the wrong DSN, causing __mptcp_move_skb() to skip data or
-drop the skb, leaving a hole in the stream.
-
-Fix by anchoring map_subflow_seq at TCP_SKB_CB(skb)->seq, ensuring
-mptcp_subflow_get_mapped_dsn() returns the correct DSN at copied_seq.
-
-Fixes: 2834f8edd74d ("mptcp: cleanup fallback dummy mapping generation")
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+Co-developed-by: Geliang Tang <geliang@kernel.org>
+Signed-off-by: Geliang Tang <geliang@kernel.org>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/subflow.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mptcp/protocol.c | 21 ++++++---------------
+ 1 file changed, 6 insertions(+), 15 deletions(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 00677fb3efcd..6f07544bfe40 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1496,7 +1496,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 	skb = skb_peek(&ssk->sk_receive_queue);
- 	subflow->map_valid = 1;
- 	subflow->map_data_len = skb->len;
--	subflow->map_subflow_seq = tcp_sk(ssk)->copied_seq - subflow->ssn_offset;
-+	subflow->map_subflow_seq = TCP_SKB_CB(skb)->seq - subflow->ssn_offset;
- 	subflow->map_seq = __mptcp_expand_seq(subflow->map_seq,
- 					      subflow->iasn +
- 					      TCP_SKB_CB(skb)->seq -
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index f2644e7a6a05..16b81e8dc90e 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -167,7 +167,8 @@ static bool __mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
+ {
+ 	int limit = READ_ONCE(sk->sk_rcvbuf);
+ 
+-	if (unlikely(MPTCP_SKB_CB(to)->cant_coalesce) ||
++	if (MPTCP_SKB_CB(from)->map_seq != MPTCP_SKB_CB(to)->end_seq ||
++	    unlikely(MPTCP_SKB_CB(to)->cant_coalesce) ||
+ 	    MPTCP_SKB_CB(from)->offset ||
+ 	    ((to->len + from->len) > (limit >> 3)) ||
+ 	    !skb_try_coalesce(to, from, fragstolen, delta))
+@@ -200,15 +201,6 @@ static bool mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
+ 	return true;
+ }
+ 
+-static bool mptcp_ooo_try_coalesce(struct mptcp_sock *msk, struct sk_buff *to,
+-				   struct sk_buff *from)
+-{
+-	if (MPTCP_SKB_CB(from)->map_seq != MPTCP_SKB_CB(to)->end_seq)
+-		return false;
+-
+-	return mptcp_try_coalesce((struct sock *)msk, to, from);
+-}
+-
+ /* "inspired" by tcp_rcvbuf_grow(), main difference:
+  * - mptcp does not maintain a msk-level window clamp
+  * - returns true when  the receive buffer is actually updated
+@@ -348,7 +340,7 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
+ 	/* with 2 subflows, adding at end of ooo queue is quite likely
+ 	 * Use of ooo_last_skb avoids the O(Log(N)) rbtree lookup.
+ 	 */
+-	if (mptcp_ooo_try_coalesce(msk, msk->ooo_last_skb, skb)) {
++	if (mptcp_try_coalesce(sk, msk->ooo_last_skb, skb)) {
+ 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_OFOMERGE);
+ 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_OFOQUEUETAIL);
+ 		return;
+@@ -394,7 +386,7 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
+ 				MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_DUPDATA);
+ 				goto merge_right;
+ 			}
+-		} else if (mptcp_ooo_try_coalesce(msk, skb1, skb)) {
++		} else if (mptcp_try_coalesce(sk, skb1, skb)) {
+ 			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_OFOMERGE);
+ 			return;
+ 		}
+@@ -777,8 +769,7 @@ static void __mptcp_add_backlog(struct sock *sk,
+ 	if (!list_empty(&msk->backlog_list))
+ 		tail = list_last_entry(&msk->backlog_list, struct sk_buff, list);
+ 
+-	if (tail && MPTCP_SKB_CB(skb)->map_seq == MPTCP_SKB_CB(tail)->end_seq &&
+-	    ssk == tail->sk &&
++	if (tail && ssk == tail->sk &&
+ 	    __mptcp_try_coalesce(sk, tail, skb, &fragstolen, &delta)) {
+ 		skb->truesize -= delta;
+ 		kfree_skb_partial(skb, fragstolen);
+@@ -902,7 +893,7 @@ static bool __mptcp_ofo_queue(struct mptcp_sock *msk)
+ 
+ 		end_seq = MPTCP_SKB_CB(skb)->end_seq;
+ 		tail = skb_peek_tail(&sk->sk_receive_queue);
+-		if (!tail || !mptcp_ooo_try_coalesce(msk, tail, skb)) {
++		if (!tail || !mptcp_try_coalesce(sk, tail, skb)) {
+ 			int delta = msk->ack_seq - MPTCP_SKB_CB(skb)->map_seq;
+ 
+ 			/* skip overlapping data, if any */
 -- 
 2.55.0
 
