@@ -1,57 +1,61 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794953357;
-	b=rg1KOOgfZDBx3kghwT51KAwbx1ZbSWo54HVpvJl/KmTxl9YdrTfSlebKrPaEO7KNiJCQ
-	 /v6U+iIzVf7f9S4tyDFoM7n5ivfOWPGnPW1qLsxCm2wmt2z10nBEAq930iXP4hh+cF1q/
-	 hZnqn70NpmivGmlGdNv7bXqrEvjOOBCys0dYNLZaOe1px9tRQdOJ8Ue3VN9TcyNy20B+d
-	 OkfiOpCkxNa+AWEQdnrpIsdHELjI4yQB1YbpSIrJL7iIuysGfean45zcLhhY8Hv9Ckj13
-	 7aSUnbJy2q5DYPRumH/amPuPWAjNjGEupS6zFNWpqFwquXjiGII2NnfWTB/QOa49IKA==
+	t=1794954588;
+	b=WgaGQSx30vJ1KroUmBIfizpl9x6X9mT2jGn5TJN0etiVB6k3OgCCysrNriWuep7bB76u
+	 hYBLdE//IVybYOd3dlh75OO5sBMFxwfaV0AYT+HwlnCdtRuO10XCEzxNJDwwdfeRqHxzD
+	 eCuyRp7+j/4vCxicVWfuPcefpxSl8mXsFD1+AxUuHTEmBgrGJmAafR3J0nifuh3bWUbJB
+	 YPopyJjWBwdYLElH4tTGI76zxc3KQnNrC5mCE7By+nFBSBH/8PYa6vhL2rQz+UqjjsCYj
+	 9jKSNUtuJeLS+2N0g5aZORBi8y5LL1qN/8WnQNueSFWRp6j6cpn/flbkvU5wi++MPYw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794953357;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=wa8GPK9dMoA+HzC0HX/7/z9KIR65enqsEwBAERbo630=;
-	b=Y1IgGu1sjBIbP6B9Jczi/OFUVXDLirQrN7LzYe7MmJ/m1CJZgerXCgb4yos45eoyuRFM
-	 yBPO+df6F7D/m+eFA1AuwubSidyPY3CFgHffFaVltJfIRGbIbSs9nnULJQT6ToELdZipQ
-	 vrag0gcG4U3aNjczLxZtbveBhwGg+Z20km9rm1qlxXVbpptu4MddnNT8oixBTcKOl8DZU
-	 UyoW1m+4TjD5UEwxf89+/AJgjdyW9YXRbphm7dg2ow34jmr1l2oVWcS9Z34bUUvswfzgv
-	 bHlIiTcGSeeJFKV+LTDFodh2rdZsvZt09KsjsgSrDlq9l/GbN1NonDnz6DvQhCPAFhQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794954588;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=nJ50dWwrw6eP7lM7PGnaKKuzHTxZuNFJv4CpyDCuR8k=;
+	b=BKYnd4xBE6Igjmw2+7kNRSXFP7U3D7GKolcu25qoYCMD5h9vGEY+cwDTDQzXKBv1QR2K
+	 3HPOxa9mClihXy7g7LLKI7Gta0k0S0xDqU6UDHT2qdJxgXe2BU971QTjs41NnJJCpG+A9
+	 XrCLDWaTPquiUnw6wm3HfnXYhOrG90om9IZcieZuqWAzR5ddz7jN/ZMHBy/jhHN5XsMwe
+	 7dxq/Txrim5fPm0KoDe343metrO34HAe94Ul76dWoOE+o36oVzZw+V3oFTQs8aJdc6QVD
+	 vVDI1GiZv+x1VBTLv/8UZXX7sxffW6FXdCQ3+HvtvMW3uLaLKst3pqtopbjSUATPg2A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MAZYwqLM;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NP0byFfJ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839CB606A32A
-	for <mptcp@lists.linux.dev>; Tue, 17 Nov 2026 22:09:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67EA7606A31C;
+	Tue, 17 Nov 2026 22:29:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MAZYwqLM
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40F6A1F000CB;
-	Tue, 17 Nov 2026 22:09:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NP0byFfJ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2749D1F000C5;
+	Tue, 17 Nov 2026 22:29:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794953357;
-	bh=wa8GPK9dMoA+HzC0HX/7/z9KIR65enqsEwBAERbo630=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=MAZYwqLMaHVo8cwU/eLOy8AXTBeJpBlURKRBdxl47zb1sjw4ExNB88pR4GeOTkFEC
-	 Om+kTnbvzQc3I9WgG0WNvZqzNlaDkuZxbf9xYi+RrmU/XzQAoY1xw67YFzkjC0TkgL
-	 EOqXZWYAikuLfhPVjrFrxE5JCYkKKcglL0Gg/ZuMfMGkBerFpmySaakw1rD4cavh1c
-	 pRTWwZhllZ1mhfefeTYTatDd8bBMuipNZngsg7mgF/oE5CCOJNpWv85dQCtUGizg/V
-	 qrkz1KrGfRmUKh48g33EqIrCd1ek8LlKdMREOdFncEcmLNMVh5lJBEzOow/lYNC3kC
-	 bvz0fBUR3b0ug==
-Message-ID: <sashiko-outbox-219732@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH net 6/7] mptcp: don't send a FIN before the pending data
- on fallback
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-In-Reply-To: <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-6-bf7656de653e@kernel.org>
-References: <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-0-bf7656de653e@kernel.org>
- <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-6-bf7656de653e@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 17 Nov 2026 22:09:16 +0000
+	s=k20260515; t=1794954588;
+	bh=nJ50dWwrw6eP7lM7PGnaKKuzHTxZuNFJv4CpyDCuR8k=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=NP0byFfJqLTtWq80K5MV0KlEcn0WEW2Rx+QgjSnN87b+LnlHAf36CoNWloi6fuaUs
+	 q1fZ1cgA5ogofiTUNcodn4b5M4/aAMOiWNLxi8gCMqQLxfrkdlgFAwqRdHCvUHky2N
+	 Kecif7O9nGcpWldlVwnvSllXRUoj5yG6MKdv6jeWosC8+/K5HH+urfrkbuZJZek9ex
+	 fbIcriHJgHiZ8tmYiXgwmV/5fMdYzTDKeHvM0U7zjrrk0STAL0rBtrVMT0z6pXHR6E
+	 8Lyocfw8S4M9dBegu7Tby1F+9Jv5k3TBopuVfQ8SuorFgv9ElwpwTGqVp8RxpUkzPp
+	 SJyRxF3p+hHzg==
+Subject:
+ Re: [PATCH net 2/7] mptcp: push pending data after a sendmsg copy fault
+From: netdev-bot+sashiko@kernel.org
+To: matttbe@kernel.org
+Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
+ edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ fw@strlen.de, dmytro@shytyi.net, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ mason@kernel.org
+Date: Tue, 17 Nov 2026 22:29:46 +0000
+Message-ID: <179495458661.3136.9219707272531758975@kernel.org>
+In-Reply-To: <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-2-bf7656de653e@kernel.org>
+References: <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-2-bf7656de653e@kernel.org>
+X-sashiko-severity: Low
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -60,104 +64,57 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issues to consider:
-- [Medium] mptcp: unadvanced snd_nxt in mptcp_try_fallback() with
-  reinjected data
-- [Medium] mptcp: missing pending data push after fallback in
-  subflow_check_data_avail()
+Thank you for your contribution! Sashiko AI review found more severe
+issue(s) in other patches of this series. This mail is only an FYI, in case
+you want to address the nit picks below when you respin.
+
+Low priority / nit picks for your consideration:
+
+- [Low] mptcp: Fixes trailer in commit message cites 69800e516e96 instead
+  of d9ca1de8c0cd
+
 --
 
-commit 7f5ccb63dcef4623a742b8e41a51358adb229738
-Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2130,8 +2130,10 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+>  	return copied;
+>  
+>  do_error:
+> -	if (copied)
+> +	if (copied) {
+> +		__mptcp_push_pending(sk, msg->msg_flags);
+>  		goto out;
+> +	}
+>  
+>  	copied = sk_stream_error(sk, msg->msg_flags, ret);
+>  	goto out;
+>
 
-mptcp: don't send a FIN before the pending data on fallback
+[Severity: Low]
+The Fixes tag looks off to me. Before 69800e516e96 ("mptcp: propagate
+fastclose error"), a copy fault in mptcp_sendmsg() already set
+ret = -EFAULT and jumped straight to out. The out label sat after the
+if (copied) __mptcp_push_pending() block and returned copied ? : ret.
 
-This commit avoids shutting down the subflow at fallback time when unsent
-data is still pending in the MPTCP write queue, so that a TCP FIN is not
-sent before the pending data.
+So with copied > 0, the already queued dfrag was left on rtx_queue
+without a push even back then. 69800e516e96 only introduced do_error
+to pass ret through sk_stream_error() when copied == 0. It kept the
+existing if (copied) goto out; behaviour.
 
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 011e73d04ee60..7d226ee38315d 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -1333,7 +1333,11 @@ static inline bool mptcp_try_fallback(struct sock =
-*ssk, int fb_mib)
->  	msk =3D mptcp_sk(sk);
->  	if (!__mptcp_try_fallback(msk, fb_mib))
->  		return false;
-> -	if (READ_ONCE(msk->snd_data_fin_enable) && !(ssk->sk_shutdown & SEND_SH=
-UTDOWN)) {
-> +
-> +	/* no FIN before new data: see mptcp_check_send_data_fin() */
-> +	if (READ_ONCE(msk->snd_data_fin_enable) &&
-> +	    !before64(READ_ONCE(msk->snd_nxt) + 1, READ_ONCE(msk->write_seq)) &&
-> +	    !(ssk->sk_shutdown & SEND_SHUTDOWN)) {
->  		gfp_t saved_allocation =3D ssk->sk_allocation;
-> =20
->  		/* we are in a atomic (BH) scope, override ssk default for data
+As far as I can tell, skipping the push on a partial copy error goes
+back to d9ca1de8c0cd ("mptcp: move page frag allocation in
+mptcp_sendmsg()"). That commit made mptcp_sendmsg() queue everything
+first and only push after the loop.
 
-[Severity: Medium]
-Can mptcp_try_fallback() leave msk->snd_nxt at msk->write_seq - 1 when
-reinjected data is still in msk->first_pending?
+With the current tag, stable tooling would miss kernels that have
+d9ca1de8c0cd but not 69800e516e96.
 
-If an unjoined additional subflow closes and __mptcp_close_ssk() calls
-__mptcp_retransmit_pending_data(), msk->first_pending is reset while
-msk->snd_nxt stays at msk->write_seq.  If the application then shuts down
-the write side before the initial subflow re-pushes that reinjected data,
-__mptcp_wr_shutdown() increments msk->write_seq by 1, and
-mptcp_check_send_data_fin() returns early without advancing msk->snd_nxt:
+Could you double check, and if you agree, point the Fixes tag at
+d9ca1de8c0cd instead?
 
-net/mptcp/protocol.c:mptcp_check_send_data_fin() {
-	if (!msk->snd_data_fin_enable || msk->snd_nxt + 1 !=3D msk->write_seq ||
-	    mptcp_send_head(sk))
-		return;
-
-	WRITE_ONCE(msk->snd_nxt, msk->write_seq);
-    ...
-}
-
-When mptcp_try_fallback() runs next, msk->snd_nxt + 1 =3D=3D msk->write_seq
-holds, so it sets SEND_SHUTDOWN on ssk without advancing msk->snd_nxt to
-msk->write_seq.  Setting SEND_SHUTDOWN stops __subflow_push_pending() from
-pushing the reinjected data and calling mptcp_check_send_data_fin().  On
-subsequent packets, mptcp_incoming_options() only advances msk->snd_una to
-READ_ONCE(msk->snd_nxt) (msk->write_seq - 1), so
-mptcp_pending_data_fin_ack() never sees msk->snd_una =3D=3D msk->write_seq =
-and
-a half-closed MPTCP socket stays stuck in TCP_FIN_WAIT1.
-
-[Severity: Medium]
-Does skipping tcp_shutdown() here stall connection termination when
-fallback is triggered after the handshake in subflow_check_data_avail() or
-mptcp_dss_corruption()?
-
-When unsent data is queued and the socket has been shut down,
-mptcp_try_fallback() now defers the FIN, relying on the caller to push the
-pending data so mptcp_check_send_data_fin() can send the FIN afterward.
-Unlike check_fully_established(), subflow_check_data_avail() and
-mptcp_dss_corruption() run after mptcp_incoming_options() has already
-finished (and returned early when OPTION_MPTCP_DSS was absent), and neither
-calls __mptcp_check_push() after mptcp_try_fallback():
-
-net/mptcp/subflow.c:subflow_check_data_avail() {
-    ...
-		if (!mptcp_try_fallback(ssk, MPTCP_MIB_DSSFALLBACK)) {
-			/* fatal protocol error, close the socket */
-			subflow->reset_transient =3D 0;
-			subflow->reset_reason =3D MPTCP_RST_EMPTCP;
-			goto reset;
-		}
-    ...
-}
-
-If the head of msk->rtx_queue also has unacknowledged already-sent data,
-__mptcp_retrans() sees the fallback in __mptcp_push_retrans() and jumps to
-clear_scheduled without calling mptcp_check_and_set_pending(sk).  If the
-peer sends no more packets, the pending data and the deferred FIN are never
-transmitted.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261116-net-mptcp-=
-misc-fixes-7-4-rc4-v1-0-bf7656de653e@kernel.org?part=3D6
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261116-net-mptcp-misc-fixes-7-4-rc4-v1-0-bf7656de653e%40kernel.org
