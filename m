@@ -1,56 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794957220;
-	b=mwAiZMIx23tEZzPshhsJq6d47M56xAnepu/6fw9ezcJWdfNkoL4E/qTw55b6JSWC16V1
-	 61m5LWSXv+Xj+96jxYqC9AMl8MVMwBd9Z//n+26Rw5mGMLsvR4r/jY40L9SUTsXiL/j2b
-	 su0ex2GHqmqprLQiTYuiozbpC0GmmImCiwidYDOrkdG5+uOK4m3d1ED+p7fAw+qjyho51
-	 OoemwxeI1Wpa9jWMY1K+lycBideLzlZ2tfoMZXzc+z2ftstjsMhvNJOrE0nyNr+XclOfV
-	 V7YPplTKIrdS3lnqfLwAq6aUjxMQIZ9PX7ZvJCAMvsDnHoNrXnFXn7oEUo4bh0VVD5w==
+	t=1794957221;
+	b=pMo+VpYqKRNwZSuO7Ih4KTolfojJFXPIHkVzzcxJkqwR2Mx7PeqLeShljVvaTUdX8vJD
+	 v+4Zxs7ndZybhNSUbamUNzZWhNFWZ67kebgowbpoqT+BQ8x9vxzzQVcJQvEHqCzo/8MFP
+	 ZLFTTNOhEpEVZWE8enjrgfl17zkJhal6Ru3opmTD7jXSL2RUlwdIsxiTGTDOWt6wvDUM3
+	 gzStqrNP/LFQfaOiC9+Dw0GJNntQDX0dbWhh8NEKpAGA9cRu6dVJR9KZGYDuENKAAbNrx
+	 7ly09GXEgbRPRZdK/ILyd6QqNWodRV5SfqBPkKKzW3w5GbRrpPCGQYTkf8E1hW4r1Eg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794957220;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794957221;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=pBjRRd4rZRfs86HYcxJrhsM6qV0fJXwEq+1E1vlj4w8=;
-	b=QyFskRt16SQayRwWKX6u0ta6JakiZ5TcHGL/iI2G2ybG/78GV00fDO5J0SAAEkCE+/TZ
-	 kzGkCspgOcCCT+CtlIHaFiMbA5o2XfYnhHayoHG/gn+Mg+M0kmfhTTvZNqHBVSKmuWoLR
-	 j97KSfza8p9WtpJx4OMYAiJRfTTokjOi4vdyq70xiPkKDdpOMxLTAaJFs9M8aZCc7YWaa
-	 Me4MnH4auSHPc2BE8VMVJhXEyt4ajP3VkxrLnlpwGjikXL9sC1t4P/o9bTn1+gfh/KdEJ
-	 n0x0O8hmokkqx4TsbdjtogAsEs9SquphVJXjqKuk+utPEpeUqYqz3IYVncfO5oht+Sg==
+	bh=AWIMa0ygDuVqH17MMOqdCGLShtW1ekZiV8aTkIfR0Gk=;
+	b=Kn+RgMOZ4Be7lMqMpqmgDnPBJ1oH60DiMgzhTd7wDq0JsdWc9K7lIpoOccxYIM64W8dO
+	 JXkqsDzmxsqkW5KxhTM41xvGDWn0HDNcrWlef1CKSktXA5F+aa7eaJGqMw05nAggGchmR
+	 KX9JH93SHdqXwhsot3T/qGjQegEGiwYDbWm0tYZlkrnR9N2vmtOzd3/eDnO4dX56bIPZW
+	 Zw/0YHFP0y2KikEuzV0ZkNLzsW5HYw+jlvLuNd9o+lhag17cC5Bb1FdqyX1iPjTGfSPYA
+	 3Vy5vbkJ06geASdJLq8PS7gWvtPX+lNFr89AZb7l3ScRaMIwaeTLevPBpo+CL1lUmSA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BvtTxcID;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FynJ+w4g;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0391A606A31C;
-	Tue, 17 Nov 2026 23:13:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9341606A334;
+	Tue, 17 Nov 2026 23:13:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BvtTxcID
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3D4A1F000C4;
-	Tue, 17 Nov 2026 23:13:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FynJ+w4g
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 242551F000C5;
+	Tue, 17 Nov 2026 23:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794957219;
-	bh=pBjRRd4rZRfs86HYcxJrhsM6qV0fJXwEq+1E1vlj4w8=;
+	s=k20260515; t=1794957220;
+	bh=AWIMa0ygDuVqH17MMOqdCGLShtW1ekZiV8aTkIfR0Gk=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=BvtTxcIDgqbM+e+wTLbqmfx/0br6280fGM7+aBqHdsh2jjqvufgGMT2/gXulaInNz
-	 7K5TlHa9bhth/pKRsz17PAT/gvvydzuUGRqDMT5NXDuSK6BjlfZnqrEpoqrjXa8RJg
-	 JsQbqtYBDMrwqnmmtsp72LCTQjamujlrZfwcqAOSxk7nv7Xn14DMwimSAAxhRGbNU+
-	 Sf6IxTKrfq5QwjzlQUGBpc+R2hPsKFUYaytPl8K608KpW3lygMB4WurMabntn5wUpE
-	 rRXejQEdKLx5l/WA3oGnhqN7SuDOxLXLTCz9jkH+I4fy4Kh8KSCJoq3NPRNKdjJrsW
-	 d0KKi4rVuSsIg==
-Subject: Re: [PATCH v2 net-next 2/7] tcp: Don't collapse high density skb.
+	b=FynJ+w4gGMX4VQ0jDP6XaEA6DNb5QnmjjVA4982A9Ur9seV+Pkk79fVOccSKHcsn7
+	 R6u2ARdAHimxvN9e0OMq0sIOiY9k3SrgQTgfGsv3/hbfE9mUFWh/TFOrdVa/Sr78Jx
+	 kwJe/3K0Q+PYKucVVT/lI6oQaPZ440twj5aYLSGGhWTiTd8AgI1DRIpDAA6PAUiL19
+	 AymhaD+DppgZNL6SFWYhLzaz08yvve3Y3GEQy2eoivQhQ7noKYFS24CWmkIUCJbK7G
+	 8EqT/ycH6By1bw37Jg5U9IzlnzthO+NtYwAQMD9JKg+idcIEoiHNeEupmshjLn6xpw
+	 cxFuD2Zs0S24g==
+Subject: Re: [PATCH v2 net-next 3/7] tcp: Stop collapsing if not bloated.
 From: netdev-bot+sashiko@kernel.org
 To: kuniyu@google.com
 Cc: edumazet@kernel.org, ncardwell@google.com, davem@davemloft.net,
  kuba@kernel.org, pabeni@redhat.com, matttbe@kernel.org, martineau@kernel.org,
  horms@kernel.org, kuni1840@gmail.com, netdev@vger.kernel.org,
  mptcp@lists.linux.dev
-Date: Tue, 17 Nov 2026 23:13:38 +0000
-Message-ID: <179495721836.3136.13013697525497561871@kernel.org>
-In-Reply-To: <20261116230555.2305867-3-kuniyu@google.com>
-References: <20261116230555.2305867-3-kuniyu@google.com>
+Date: Tue, 17 Nov 2026 23:13:39 +0000
+Message-ID: <179495721972.3136.4014039511718024400@kernel.org>
+In-Reply-To: <20261116230555.2305867-4-kuniyu@google.com>
+References: <20261116230555.2305867-4-kuniyu@google.com>
 X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -70,62 +70,72 @@ you want to address the nit picks below when you respin.
 
 Low priority / nit picks for your consideration:
 
-- [Low] The commit message describes a real regression, but the patch has
-  no Fixes: tag.
+- [Low] The header comment of tcp_collapse() in net/ipv4/tcp_input.c now
+  reads "Collapse contiguous sequence of skbs head..tail with sequence…
 
 --
 
-tcp: Don't collapse high density skb.
+tcp: Stop collapsing if not bloated.
 
-This patch caps the scaling_ratio that tcp_collapse() uses at the highest
-ratio a collapsed skb can reach (222 with 4K pages). It also changes the
-bloat check so it only looks at the bytes left unread after start. With
-this, tcp_collapse() no longer collapses an skb it just produced, and it
-no longer collapses a dense GRO skb just because a few bytes of it were
-read.
+With this change, tcp_collapse() starts collapsing only at a bloated skb.
+It extends the range over consecutive collapsible skbs that are bloated
+or overlapping, copies that sub-range, and then restarts to look for the
+next one. The end parameter is dropped from tcp_collapse(), and both
+callers are updated.
 
-> If 4K-MSS GRO skb updates tp->scaling_ratio, it can be larger
-> than 222.
->
-> Then, even the newly collapsed skb could be detected as bloated
-> by the next tcp_collapse().
+> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> index 598d4ff3e1f4b..d2d4796984f39 100644
+> --- a/net/ipv4/tcp_input.c
+> +++ b/net/ipv4/tcp_input.c
+> @@ -5839,7 +5839,7 @@ static struct sk_buff *tcp_collapse_one(struct sock *sk, struct sk_buff *skb,
+>  }
+>  
+>  /* Collapse contiguous sequence of skbs head..tail with
+> - * sequence numbers start..end.
+> + * sequence numbers start..sub_end.
 
 [Severity: Low]
+This isn't a bug, but could the header comment of tcp_collapse() be
+reworded?
 
-This describes a regression in tcp_collapse(). Should the patch carry a
-Fixes: tag?
+sub_end is not a parameter. It is a local variable that the second loop
+recomputes for each sub-range, so callers never see it.
 
-The re-collapse seems to have become possible with commit dfa2f0483360
-("tcp: get rid of sysctl_tcp_adv_win_scale"). That commit made
-tcp_win_from_space() use the per-socket scaling_ratio. For dense skbs,
-tcp_measure_rcv_mss() can raise that ratio as high as 255:
+The comment also still describes collapsing a single contiguous range.
+After this patch, one call can collapse several separate sub-ranges
+between head and tail, with uncollapsed skbs left between them:
 
-net/ipv4/tcp_input.c:tcp_measure_rcv_mss() {
-    ...
-			u64 val = (u64)skb->len << TCP_RMEM_TO_WIN_SCALE;
-    ...
-			do_div(val, skb->truesize);
-			tcp_sk(sk)->scaling_ratio = val ? val : 1;
-    ...
-}
+	/* Second, find consecutive collapsible skb. */
+	sub_end = TCP_SKB_CB(skb)->end_seq;
+	...
+	goto restart;
 
-Take a full collapsed skb (len 3776, truesize 4352) and a ratio of 230.
-The old check in tcp_collapse() gives 4352 * 230 >> 8 = 3910, which is
-greater than 3776. So the skb counts as bloated and is copied again on
-every prune.
+The comment stays the same through the rest of the series, up to
+"selftest: packetdrill: Add test for tcp_collapse()."
 
-Before dfa2f0483360, the default adv_win_scale=1 reduced the check to
-truesize / 2 > len. That gives 2176 > 3776, which is false, so collapsed
-skbs never matched.
+>   *
+>   * If tail is NULL, this means until the end of the queue.
+>   *
 
-Documentation/process/maintainer-netdev.rst says the Fixes: tag is
-required for fixes, regardless of the tree. Would adding the following
-help with tracking?
+[ ... ]
 
-  Fixes: dfa2f0483360 ("tcp: get rid of sysctl_tcp_adv_win_scale")
+> +	/* Second, find consecutive collapsible skb. */
+> +	sub_end = TCP_SKB_CB(skb)->end_seq;
+> +
+> +	for (n = tcp_skb_next(skb, list); n && n != tail; n = tcp_skb_next(n, list)) {
 
-If the patch is meant only as a heuristic improvement for net-next, could
-the commit message say that?
+[ ... ]
+
+> +		sub_end = TCP_SKB_CB(n)->end_seq;
+> +	}
+
+[ ... ]
+
+> +
+> +	goto restart;
+>  end:
+>  	skb_queue_walk_safe(&tmp, skb, n)
+>  		tcp_rbtree_insert(root, skb);
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261116230555.2305867-1-kuniyu%40google.com
