@@ -1,59 +1,167 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.54
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.43.25
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794892099;
-	b=QXVgFPKe4md1sHw9BEcUCfRJCsF7VGQITysM2l41eYQcCPtgclhpIE9e0hj7iTxiFX6q
-	 xeGQQ4X940UqecdzogIIl3AQfGsrYRwKdUrmgqJoCXE4WXuz/i7MvR0xIQJ3lJUfD/77x
-	 cAR4UMP+7YhiRXIkXCdjYD/7CGmZeHMj1ywuyzE6w5Rb1hIiRbMq8xtLhZazvVBklIMgv
-	 L91zhgQhoRQIaabl4CyGFMoZJc8S1cXvHzEIuHJR4jltXERUgvi6RHSZvSR/QKUoDI99C
-	 N4xVvadBiLZfQ/zsfvGDtqypZPNd0vGLO7r6jxdqg8q1aX5iVYCJXCONM5HkmpyqHjg==
+	t=1794892930;
+	b=sP60v8UkS9QpAjnLwLTs0bxpo1P00wq2w0MMvg8mrumqtdEA4HO/3f+ighjDKwOFlh8p
+	 smQbKecpo5emQpBLfIZ8QloqT2DBAS0O9YxJcRy845d1gVnQ2UJvq2jyhrBSmPC6Syy/M
+	 uQfJ35PpdTBuF7RruDLel3uDX+g36Teh+ttc9t23CDWNfeUGSA/sjxHMSosK/8R6L5/VF
+	 cRydlD0kgTk5/aLTWVJJPMUPU7tA+ZoZSGX49tZq3vJhUjRgUVQuxBnVk56dhHLFREXx9
+	 cEFkd9NrrASdpgNWRgEj+HPPTYevE0frufEGUShqc+dFbrm1WpaV+ZNvOCwotz64ZwQ==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794892099;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding:
-	 X-ZohoMailClient;
-	bh=H4d7KIJkFIObITZTnujX4CPyQB6DJwd3Cw2HatXHVSA=;
-	b=MQ8ubzFE809TVDQ/qojP97b8PzwR5sGwKzqD7mEdWnFw0wD6p7WhmaVNnDyk4hV5rWE6
-	 PKUQeEVEPgm75NSNLNBC8p8bi40FcOIPNHxkm2DyKgI2sGhJCBuJ4ycUDaPrjUjH/8nzS
-	 mia8rA0O/NIXCfoh8cz4mjz7DDMbN132oFdM/J/sjN7LGCOKEUGxHQCKatXf9KfeBHOXy
-	 h8uyCyesfbOCQgN7rCO8m2wFmrSljwjXHNCoNPsE8CK/yXowHntmEsotTvGUQTKP9H8w9
-	 KAPSrrR5FW/tKcfPyrEPQwQjcBgtiyywdpJtesjGp3U+2dy0iLHq7lvnQ6byrU44uyw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794892930;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:CC:Subject:
+	 Thread-Topic:Thread-Index:Date:Message-ID:Accept-Language:
+	 Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
+	 x-ms-publictraffictype:x-ms-traffictypediagnostic:
+	 x-ms-office365-filtering-correlation-id:
+	 x-ms-exchange-slblob-mailprops:x-microsoft-antispam:
+	 x-microsoft-antispam-message-info:
+	 x-ms-exchange-antispam-messagedata-chunkcount:
+	 x-ms-exchange-antispam-messagedata-0:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-AuthAs:X-MS-Exchange-CrossTenant-AuthSource:
+	 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-originalarrivaltime:
+	 X-MS-Exchange-CrossTenant-fromentityheader:
+	 X-MS-Exchange-CrossTenant-id:
+	 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=AtPXspBFoldQZArR/vy3lqSvE4jnfR+hEQChp3xUhB0=;
+	b=hnH2q6MfibeC7CXHDhBKp63NtMvDloIqRy9UcvkfhDFvsTeoWvtg1SGxJHgsyhngYCyC
+	 FuYr+37VfrXsfLQC9MHjAhR2QSCtyYuN60rvJvR7TRVR+OyJh0PGhnocOhai7PcWZXXrS
+	 W2OrCKDz0M3z/CgA/aazV8YugsnlJB4LPkC6gdrkXEz1OwIB2LVLKuqF0SxGynqOL2ISe
+	 kG4FD6Kp6OTnV+j4o11uRwcqeKlnwll1kWYTmRQXxZ4n5fIjUL8RgLHeV/w6NrxevFY/d
+	 sifNd1zMuPFaD9CkwOE43k2aNV6ho7Rb26hoeWJksngtEKTyN0Iu6Q7hvgyYfBBA++w==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=mpiricsoftware.com;
-	spf=pass smtp.mailfrom=mpiricsoftware.com;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.54
-Received: from sender5-of-o54.zoho.com (sender5-of-o54.zoho.com [165.173.182.54])
+	dmarc=pass header.from=outlook.com;
+	spf=pass smtp.mailfrom=outlook.com;
+	dkim=pass header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=cX+zJYMY;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.43.25
+Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazolkn19011025.outbound.protection.outlook.com [52.103.43.25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8317606A32A
-	for <mptcp@lists.linux.dev>; Tue, 17 Nov 2026 05:08:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C8317606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
-ARC-Seal: i=1; a=rsa-sha256; t=1794892095; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ilUffvG1oN7iRNBlJ6c3iisHcF0sO6HKzkiclcc11nVc6Nxk6Ol5CBUJMtn19LcSS0ITRdpDNrftrpsttpuRLKfnOzkNY0DbOM12NhXkBMfNKuq9TE7SOPPk4+NPAA+tY8djxumTyXTW8B/oiiztXWfeDgK0TAIMEWb079VL/pc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1794892095; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=H4d7KIJkFIObITZTnujX4CPyQB6DJwd3Cw2HatXHVSA=; 
-	b=X2f6RY86X/rWFeE43o2p3SVSqYJzx4JOWuugSXSjsnniv3PZhZ03KdujBSXNMh0cgjCavUutEcHOxnOXjdX9HncbzLOe/4nSJS7mvBE5Tx+SsSwdtYdK5K1/MVeLOZUFn7mictlVPLn4pSAls5lv8ILZWkAklX7z/u35SpVeI7U=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=mpiricsoftware.com;
-	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
-	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
-DKIM-Signature: a=rsa-sha256; b=mswkJPeUEUTaTu/jTlvuL3ecySwkLEYRopB2Ppll5dQ/0JN+vUz7kx47hmMwQKBaANrqe/w0aGG1iivKPGfOADKvSeqw2IxSdf9I74w67NJ6UGNDjI2fNQdkGA3zdlLsjf0pYTClXVwrL1tcRKNdwLqSN7xRp+ZrJmsv6eC0Ld4=; c=relaxed/relaxed; s=mpiric; d=mpiricsoftware.com; v=1; bh=H4d7KIJkFIObITZTnujX4CPyQB6DJwd3Cw2HatXHVSA=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1794892094659683.8001736071109;
-	Mon, 16 Nov 2026 21:08:14 -0800 (PST)
-From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-To: mptcp@lists.linux.dev
-Cc: shardul.b@mpiricsoftware.com,
-	janak@mpiric.us,
-	kalpanjani009@gmail.com,
-	Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-Subject: [PATCH mptcp-net v13] mptcp: hide sequence numbers in Netlink diagnostics
-Date: Tue, 17 Nov 2026 10:38:04 +0530
-Message-ID: <20261117050804.134954-1-kalpan.jani@mpiricsoftware.com>
-X-Mailer: git-send-email 2.43.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E22606A32F
+	for <mptcp@lists.linux.dev>; Tue, 17 Nov 2026 05:22:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C2E22606A32F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=cX+zJYMY
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RsnJePWuU6agyBXKenEVp+QxL4EBk7331OyOYEnDC83qKDO6Mo3UCu5PGJdfA3rWZxEbLPnC/zKl1aMxGy7nI72CdiBDaYAH3q/dxQ+uk3ZQ85tN35Sk5CkdaU+QqNR4+FxqEXqD7IuA9J2GeENXjW2HpcBgHhEOTnv9sH1GodOE5I3rBQDU+DYUoY0cY4xJ9cpUdycvoWbEb1g64PIEemaz7IUilYBx/BWOwulecCO6+KOf8bCescllwYzMK+4JTlU2TMpvuh9W6l6mdk2axGzomeZpRoKNVk1wudcvIi6Oh/90cr3K1LrKEdLOWtnhw6ApRa+Npw3vDkGKcqbtDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AtPXspBFoldQZArR/vy3lqSvE4jnfR+hEQChp3xUhB0=;
+ b=j56kawqht0pIEJE1DvUWtTCknYKDvhVhH5k2gxM8p8q6d1/dbfDPhgTbIdT3NuAvqjllmE6BIGkYaXu4MBkBep6S9o8fHW1XltbN1jufbLSWCps9OL6641tTpvo1i7q2L0M4lUcb4rvCNaOocGzzSm2/vgFYgRoh2gEaiuvJxHoL+ble3SO9d7twNV53rrA4Qi5A10a0BIh1eyn7DHME9OH2BFS3x//1AZAIWu3TsOaIH6fB8WqMEeyDUlwdr93oRpb3OSrDundnOoHH5WPlthgM9yipZn3Di1lJ8e50HO+XmzSq4ZFebpY+kLdakBEJbZezwj9NVGbWHj/JnCIuUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AtPXspBFoldQZArR/vy3lqSvE4jnfR+hEQChp3xUhB0=;
+ b=cX+zJYMY8cDva+ohQfyX1+ZLc0Mg/UO6oqkCt5/OrYmdBkaTHh/qsNhYpV1TKfEW8GjpOquYtYXmVCjvdPeGWBwsfQd3aivzQDeMmiCWtN6IkLADYA8ZjJ3ycCFV1BUtRPddKm1Mi9AoKAyrezq4WLbq0u9g+KmpQsfx2N83ewDV2/atJQt3T1M1itiWhu72Noq5MKqUUCJj4Iymq9RWAN2swWCIfRUdAHUbaadxfBca9xxKgI576UJbGet/efQXrH8/1jtp+Lxu2vvo78Qm2uo9YG2yBJ+DMFaYYTd10TNqLoSkdLkQPBiw6SVERmwg/TJE0R2I/zvfmuyF2qB6Cg==
+Received: from TYCPR01MB8485.jpnprd01.prod.outlook.com (2603:1096:400:156::12)
+ by TYCPR01MB6654.jpnprd01.prod.outlook.com (2603:1096:400:9b::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.14; Tue, 17 Nov
+ 2026 05:22:02 +0000
+Received: from TYCPR01MB8485.jpnprd01.prod.outlook.com
+ ([fe80::a16a:9b73:98b9:56b8]) by TYCPR01MB8485.jpnprd01.prod.outlook.com
+ ([fe80::a16a:9b73:98b9:56b8%5]) with mapi id 15.21.0615.013; Tue, 17 Nov 2026
+ 05:22:01 +0000
+From: lei lei <llleigoing@outlook.com>
+To: "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC: "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>, "edumazet@kernel.org"
+	<edumazet@kernel.org>, "ncardwell@google.com" <ncardwell@google.com>,
+	"kuniyu@google.com" <kuniyu@google.com>, "davem@davemloft.net"
+	<davem@davemloft.net>, "kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>, "horms@kernel.org"
+	<horms@kernel.org>, "matttbe@kernel.org" <matttbe@kernel.org>,
+	"martineau@kernel.org" <martineau@kernel.org>, "geliang@kernel.org"
+	<geliang@kernel.org>
+Subject: [PATCH net 0/3] tcp, mptcp: fix receive buffer sizing and peek
+ accounting
+Thread-Topic: [PATCH net 0/3] tcp, mptcp: fix receive buffer sizing and peek
+ accounting
+Thread-Index: AQHddlOSXoObisX9jkWyMmZ84+e/wg==
+Date: Tue, 17 Nov 2026 05:22:00 +0000
+Message-ID: <20261117052200.1507847-1-llleigoing@outlook.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYCPR01MB8485:EE_|TYCPR01MB6654:EE_
+x-ms-office365-filtering-correlation-id: 585d3158-26b7-45c4-58fb-08df446ab561
+x-ms-exchange-slblob-mailprops:
+ EgT5Wr3QDKyfJ5ctroE+AnoJKQNH7uyZDOL7zsQ7JQH1carqJBzdpZ6ACa2Yd19WPqzDH2Rs7eYthHcJrw8kSkuLHagXBcZvTYb0G9IdtQoVpmqDgIfjHASePbqvOftdfGBv2z81OAfItOv0bHH4nhwSd2JksKBLCUtGZ92S/96jBxs4Ko8bBhLfYKntRpQqbUgKeCsGT5f2z710eC1kAoDzES2/qlbWfZQ8m5sL9eRUv3Vq+WQpxEcLc/y7unVnJmkAl/db22pF6IHz3uHZqAUuBJ5xA6+uNs8ePR7P3bd9vdi1kxv+nIu1MHZ00KzADcBthGn++j30lk0QsxaIZgymXqBzjKJpdfq+2xY64hqHDB03qAOVLdGP0Ogt2+DP3igi/7AasYnRO8i3zMMt95pRMv7rJGNxMQgspFKtKyK5kjqH9ikjbnQmJYjMM9H46UFoF/4NQi7jpegkxH+MJVZUryTGvqbFn3Np4RIiKoXaVn36PM7zXS+Q9mqD2GbzmickkOf6IByd7GDOBh9BtbmmWV6VmWpAVxcAgmyBVUlGjcZPxaO1aZnDdf5r7xPMiWjZWMT9K0pSI2V7uDFuPOs/jy8+rn5+dxSPQwd/tlXcyYUKLn+bKfHQJSddYBQWHHOxwEVo+i3xlaPYywEwVmIiHt6/Qz/nbIuxrMrdJYL6Lcv6TVAwGsi2N5eKMH9ltx7ok3UMSqTXJQlIubRXcTEjTHJvtUhwTnqNAZakNqM=
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|41001999006|8062599012|8060799015|39105399006|19110799012|38102599003|15080799012|37011999003|4140399003|20031999006|24021099003|31061999003|25010399006|40105399003|41105399003|102099032|3412199025|440099028;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?N0dEOTRYRVRSZnRQY1RHTUZYWFNQQ2tOcFRpUENtVlJzVzNrdHc3Z0RJME9k?=
+ =?utf-8?B?ektGUGVVRkJobDRSWDhubWVjVVdKYmYrMkxWSVUwb2tmSlJnY2Vwbm9hU0Rv?=
+ =?utf-8?B?V2FsSjNsZlhzUDB3aDNuTmRLMkNrWE54QnZuNXgrb1FOdVNhVFpuM013Y1dJ?=
+ =?utf-8?B?N3lZaW83MlNPczI5QlNJcXJjQi9UUTh6VUJFYXJqK0U5QUN2MHJ2eHdDTUF5?=
+ =?utf-8?B?QTlxbUFNZ2RBR2llR1ZMMTNLeUZvV0VQRXNOa2ZCbEpJcDBwei9iVTFnK3N6?=
+ =?utf-8?B?cHJCdTRJWEljOXBWZHZHWTVBTzdmdmlDOHBxdWpSY0J4bWlWVVF2TnhHdnVK?=
+ =?utf-8?B?YURsNmZMU3djbEdDQm56clo0aFZ0OGVWSzFFcCtlTjc2M2pWZDBtVVZtbmF3?=
+ =?utf-8?B?TzAxR1huZW4wWTc1RE9ZN1Qvd3hJRnJjU2gyWDl4LzZzZjlhWFZxclpZMGlR?=
+ =?utf-8?B?WllmcXVSUkhaQ2NqT3BDU1ZiOU5YYnRWQWVNYVc2ZGRiQ0JaNUV2RGRISWpH?=
+ =?utf-8?B?RDhuVGlaS1RaQlI5TzB1WGpSSWZxNzZKSHFUSE4xdzlxenJsTFBDc0VKMkVU?=
+ =?utf-8?B?d2haNkdZK2ZuSTZQZ2c3VVExcnVGa29QdWtPYm9FS3NFWEtLMzEyQlpCMm1v?=
+ =?utf-8?B?MXRIVjJnT0svUWw4SFJmSGJMVmU0VXlTVGxpb0JkRG5WSlk1QVdGcG5OL3lp?=
+ =?utf-8?B?azl2dWQzSlgzUlFKTXdUUVBGdjNyU1V1RlBaZkN3VERjeW04YW9yekRJQ25W?=
+ =?utf-8?B?RloyUzlvVWZjR2twcXVBbldNQkQ5djZ6RTFDNlY5QkUrMlp1QUR1eVRPendr?=
+ =?utf-8?B?cUVOeEhaMThWSGxaR29jRmkzN0ZSZUVxM2xXanZUU1haWEhjUUtDNk5kc3Fj?=
+ =?utf-8?B?WExnYTFjV1hZdG5McVFmRnhxWUpIdDFmbnhHbG1IS3Nqc0FnQTRsWE1Ya0RZ?=
+ =?utf-8?B?Y3FBa0RjckhXVjN4SDZycGxOdEUrN1pXRmljR01JS2RrSERNRkZQVlFqbDhZ?=
+ =?utf-8?B?cmhidGhMaGFXWHJLZHhWZGVORkRxTXFSdlo1Ylpody9RUkZpU05td3V2RWhm?=
+ =?utf-8?B?ZW84QmJBeFNGTk9RcnlEaU9PZmhwbnFuTm5GVXZ2ZG8wRE1DeVJibFIvN1N4?=
+ =?utf-8?B?OE1mODNjdm5aenJuL0dDUlVwbEFhR2xQTDUwTjJ1MG83TDF2UzBNblhWWDhD?=
+ =?utf-8?B?TTNVYnJXZlpscERsR2dzS3UyNC95VmZRbHdadGNzTC9GYm1JbTFTaWl5U3BE?=
+ =?utf-8?B?RWlmRDVHT2tVd2VzV0N2TVRHZDlhVGlpakxyMUtBQmVJbENJVlUyL1ZwZ3NE?=
+ =?utf-8?B?MnJ6dFhBUWVwOE55V2Q5UHRlK054UGZvbVBRZ0pTUkZjSkVsSGVnd0thK0Va?=
+ =?utf-8?B?VTE5NmxYdTE2QWJNbW9QTUQzbkhuNDZ0VzlLS2MvUnFTKzVzSGpGNytUTXcw?=
+ =?utf-8?B?WTRCYytDNXFWbkdCVDk3QVM3WFJKZW1HTnhmZU9mUVZOVGVIVWRETHUzN1d1?=
+ =?utf-8?Q?oBw7rA=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?aXFxMEMvTTMvclF0Um1QZmlDYktIYmZ6K2dMN05WMjJwNHRiN1BPTWtDK2wv?=
+ =?utf-8?B?dDZlUGVMMTdYWWs5dHRQbG10cnlzTXNsSFJFVGM5cVIrUU04TUFGS1Z2VDh6?=
+ =?utf-8?B?YjVyektNMGJjZ1FFdENORmlEd3FpQlJmckVUVzVxVlZBYzV4SXZwSUJwNGxj?=
+ =?utf-8?B?Y2dydHVnWXpveVZnalMvc0JaZ2x1WGdVcEJiRFhUbzFVMjYvN2xkZnh2R3Bp?=
+ =?utf-8?B?bHVvY2hSOTc1QjhhSnFJa1N4ZWprT01yUnNGbUhyVVp5TXV1SHp5UDdFelJu?=
+ =?utf-8?B?MmpzMVRKc0lGaTZGOVNreThwczNjdlhEY1NRV1ZXN2ZwbG5TakRXNjJ5RTBn?=
+ =?utf-8?B?ME5KM2VLbDhpWFdJdDlWVFFlQkg5dEJSRFQzMTFXYmxHa25lS0p5c3d4Z0Nn?=
+ =?utf-8?B?Z0krbGw4ZE5hTTUwUWxiZ0dZOTFGUFRVUHVwNUh2T2xnTUl1djBUay9nMTkx?=
+ =?utf-8?B?azRyaCs1Mmlmc0FUNU8rcTJwS0Ric0dSbTdaVm9jMzE3RWljZGp6UDV2MnRq?=
+ =?utf-8?B?R05PM3NRblkzdHRNRVRSa0RvcVFMT2VjSHd5N3pNblpLZ2NWSmRheHhUTmpl?=
+ =?utf-8?B?bENvRXZsUjZ3cmZXTXQzWDg0azg5SUdLYy8wTUF4QnJuNXg0TllmSXRGYXR4?=
+ =?utf-8?B?SVNEZG42UG1JY1RxL3liNWxZVkxoMDBjdFZwVzlHbWl0YVZabldUSUxCcGl1?=
+ =?utf-8?B?amZuakpSZkJpa09IdFVIWXdnQmJkS3FvVXR5cm1xc2JkUk1ZRUZyTUs3YkRz?=
+ =?utf-8?B?eDJZc0RJV2Rob21JVEVZV0F5S0ZGMktBZHhCdktCQmxzbjVoUVcvQm1PUkhS?=
+ =?utf-8?B?ZlBhc21HblVvb1ROc1N6ZnVKL1kySDBPYWJVeGIzNnNrVDZ1N3VQb1M3d2pM?=
+ =?utf-8?B?OFFSRXpvYU42VzJBV0FISlE1aVhqQWNSRkxwOUxCQWZPMXR6UVdKc2M5MFV4?=
+ =?utf-8?B?eXJYSFVhRjRjYXRHNUVNdjB2OC9reWJWbzlGOXJIbkRhS1h5bXVob05OS2xx?=
+ =?utf-8?B?M1VBdWtTdlhSMkxxSTJ2SjJVWThUdVRBUFkyMWxDME1hM09hWVFvQnlhM2ts?=
+ =?utf-8?B?UEtQSmIvRGp0djY2OWZ2THA5b09OVGxEK25qZWVkRzk2OFdWWTNyd1RybFhM?=
+ =?utf-8?B?VWFlMVhUZ0F2bTFONXhneHNyZkthYnd6bVF1T29iRHQwemlwVFdjdCtpaHB4?=
+ =?utf-8?B?VURQSWpvUmtESVExdXZ3VFBXT3l4SDVrdC9FdExXUWhmRU1PWGgzTVRzSm5o?=
+ =?utf-8?B?eHV4am1RT2I5RzBFajNETnd3NkZJWGJKTzZlWGgrUWRuUU43MlBvcEhBaytv?=
+ =?utf-8?B?dlhwc1JRSlJQVVFVSE1qdStnYzRFSEkvOExqN3VIcG9PQW1vd2dndEYxZ3J4?=
+ =?utf-8?B?RXRrT3cyb0lmTjdmTFNpWU1yYitzWWNpZ21leVgvRWpBMDVuRmswWk8xZGJU?=
+ =?utf-8?B?K2UvWC9NcGhZdWg2QXY5dlZyN0sxSjNGVU5UZk51eDNQeXNmWjNUbFBadDNs?=
+ =?utf-8?B?dGJZSUtjRVFsY1MxbjE2UUNrZlNDN096N0tlUm91djZtRTBoTHllT3RkeDhO?=
+ =?utf-8?B?bzF2bFptL3Z4TWp1SUVKcnp1b1pRdUVoRDhnQm0yQzNwYVhkcGRWczRZRUs4?=
+ =?utf-8?B?cjNOTXlWQ2M4bjMreE5TYTFRT0RVOEpNcVVNelJ1M0dQQmRCbnZnUDRuTDNI?=
+ =?utf-8?B?bDBqdjV2eTFDQ2JIZW52K21IbW1KS2tEOWdvakxKd3FGcFBMaEdVNUcreFda?=
+ =?utf-8?B?eVZCOWlEVmVOVWVMbnlkd2c3VjlqakNBME8zclBkbEN6NFFIbWVLV1dzVFp2?=
+ =?utf-8?B?MENRcysrKzBqcUpJWnVhMGdRWEN2QjBic2tZSDdNL2dmNXlydzZ3N1RYUHpi?=
+ =?utf-8?Q?b6qwZ3bIgTd+o?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -63,304 +171,53 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB8485.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 585d3158-26b7-45c4-58fb-08df446ab561
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Nov 2026 05:22:00.9963
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB6654
 
-MPTCP Netlink diagnostics expose sequence numbers that can reveal
-internal connection state.
-
-Clear mptcpi_write_seq, mptcpi_snd_una and mptcpi_rcv_nxt in the
-Netlink diagnostic callback.
-
-Keep the getsockopt() interface and its reported sequence numbers
-unchanged.
-
-Add a selftest to verify that the sequence-number fields are zero in
-Netlink diagnostic responses.
-
-Fixes: ac3b45f60954 ("mptcp: add MPTCP socket diag interface")
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/445
-Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
----
-Changes since v12:
-- Drop address-based sequence number normalization.
-- Zero the three sequence-number fields in the Netlink diagnostic callback.
-- Preserve sequence-number values reported through getsockopt().
-- Add a selftest verifying zero sequence-number fields in Netlink diagnostics.
-- Check NLMSG_DONE error status in the Netlink selftest.
-
-v12: https://lore.kernel.org/all/20261106111645.786225-1-kalpan.jani@mpiricsoftware.com/
----
- net/mptcp/mptcp_diag.c                        |   4 +
- tools/testing/selftests/net/mptcp/diag.sh     |  13 ++
- .../testing/selftests/net/mptcp/mptcp_diag.c  | 122 ++++++++++++++----
- 3 files changed, 115 insertions(+), 24 deletions(-)
-
-diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
-index 136c2d05c0eeb..fe1603ce80162 100644
---- a/net/mptcp/mptcp_diag.c
-+++ b/net/mptcp/mptcp_diag.c
-@@ -215,6 +215,10 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
- 		return;
- 
- 	mptcp_diag_fill_info(msk, info);
-+
-+	info->mptcpi_write_seq = 0;
-+	info->mptcpi_snd_una = 0;
-+	info->mptcpi_rcv_nxt = 0;
- }
- 
- static const struct inet_diag_handler mptcp_diag_handler = {
-diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-index 27cbda68144e8..abe732a5c1c37 100755
---- a/tools/testing/selftests/net/mptcp/diag.sh
-+++ b/tools/testing/selftests/net/mptcp/diag.sh
-@@ -205,6 +205,7 @@ chk_dump_one()
- 	local ss_token
- 	local token
- 	local msg
-+	local zero_msg
- 
- 	ss_token="$(ss -inmHMN $ns |
- 		    mptcp_lib_get_info_value "token" "token")"
-@@ -223,6 +224,18 @@ chk_dump_one()
- 		mptcp_lib_result_fail "${msg}"
- 		ret=${KSFT_FAIL}
- 	fi
-+
-+	zero_msg="....chk dump_one zero sequence fields"
-+	mptcp_lib_print_title "$zero_msg"
-+	if [ -n "$ss_token" ] &&
-+	   ip netns exec "$ns" ./mptcp_diag -z -t "$ss_token"; then
-+		mptcp_lib_pr_ok
-+		mptcp_lib_result_pass "${zero_msg}"
-+	else
-+		mptcp_lib_pr_fail "MPTCP diagnostic sequence fields are not zero"
-+		mptcp_lib_result_fail "${zero_msg}"
-+		ret=${KSFT_FAIL}
-+	fi
- }
- 
- chk_dump_subflow()
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-index 3b8d2c8a62160..6f72ca30d7c20 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_diag.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-@@ -3,6 +3,7 @@
- 
- #include <errno.h>
- #include <stdio.h>
-+#include <stdbool.h>
- #include <stdlib.h>
- #include <string.h>
- #include <unistd.h>
-@@ -29,6 +30,7 @@
- 			    NLA_F_NESTED))
- 
- struct params {
-+	bool check_zero_seq;
- 	__u32 target_token;
- 	char subflow_addrs[1024];
- };
-@@ -101,6 +103,7 @@ static void die_usage(int r)
- {
- 	fprintf(stderr, "Usage:\n"
- 			"mptcp_diag -t <token>\n"
-+			"mptcp_diag -z -t <token>  (check zero sequence fields)\n"
- 			"mptcp_diag -s \"<saddr>:<sport> <daddr>:<dport>\"\n");
- 	exit(r);
- }
-@@ -170,6 +173,22 @@ static void parse_rtattr_flags(struct rtattr *tb[], int max, struct rtattr *rta,
- 	}
- }
- 
-+static bool check_zero_seq(struct mptcp_info *info)
-+{
-+	if (info->mptcpi_write_seq ||
-+	    info->mptcpi_snd_una ||
-+	    info->mptcpi_rcv_nxt) {
-+		fprintf(stderr,
-+			"Unexpected sequence values: write_seq=%llu snd_una=%llu rcv_nxt=%llu\n",
-+			(unsigned long long)info->mptcpi_write_seq,
-+			(unsigned long long)info->mptcpi_snd_una,
-+			(unsigned long long)info->mptcpi_rcv_nxt);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- static void print_info_msg(struct mptcp_info *info)
- {
- 	printf("Token & Flags\n");
-@@ -262,7 +281,7 @@ static void print_subflow_info(struct rtattr *tb[])
- 	printf("\n");
- }
- 
--static void parse_nlmsg(struct nlmsghdr *nlh, __u32 proto)
-+static void parse_nlmsg(struct nlmsghdr *nlh, __u32 proto, bool check_zero, bool *seen_info)
- {
- 	struct inet_diag_msg *r = NLMSG_DATA(nlh);
- 	struct rtattr *tb[INET_DIAG_MAX + 1];
-@@ -284,6 +303,11 @@ static void parse_nlmsg(struct nlmsghdr *nlh, __u32 proto)
- 			info = RTA_DATA(tb[INET_DIAG_INFO]);
- 		}
- 		print_info_msg(info);
-+		if (check_zero) {
-+			*seen_info = true;
-+			if (!check_zero_seq(info))
-+				exit(EXIT_FAILURE);
-+		}
- 	}
- 	if (proto == IPPROTO_TCP && tb[INET_DIAG_ULP_INFO]) {
- 		struct rtattr *ulpinfo[INET_ULP_INFO_MAX + 1] = { 0 };
-@@ -303,10 +327,10 @@ static void parse_nlmsg(struct nlmsghdr *nlh, __u32 proto)
- 	}
- }
- 
--static void recv_nlmsg(int fd, __u32 proto)
-+static void recv_nlmsg(int fd, __u32 proto, bool check_zero)
- {
- 	char rcv_buff[8192];
--	struct nlmsghdr *nlh = (struct nlmsghdr *)rcv_buff;
-+	struct nlmsghdr *nlh;
- 	struct sockaddr_nl rcv_nladdr = {
- 		.nl_family = AF_NETLINK
- 	};
-@@ -320,28 +344,70 @@ static void recv_nlmsg(int fd, __u32 proto)
- 		.msg_iov = &rcv_iov,
- 		.msg_iovlen = 1
- 	};
--	int len;
--
--	len = recvmsg(fd, &rcv_msg, 0);
--
--	while (NLMSG_OK(nlh, len)) {
--		if (nlh->nlmsg_type == NLMSG_DONE) {
--			printf("NLMSG_DONE\n");
--			break;
--		} else if (nlh->nlmsg_type == NLMSG_ERROR) {
--			struct nlmsgerr *err;
-+	bool seen_info = false;
-+	bool done = false;
-+
-+	while (!done) {
-+		int len;
-+
-+		nlh = (struct nlmsghdr *)rcv_buff;
-+		len = recvmsg(fd, &rcv_msg, 0);
-+		if (len < 0)
-+			die_perror("Netlink recvmsg");
-+		if (!len) {
-+			fprintf(stderr, "Empty Netlink response\n");
-+			exit(EXIT_FAILURE);
-+		}
- 
--			err = (struct nlmsgerr *)NLMSG_DATA(nlh);
--			printf("Error %d:%s\n",
--			       -(err->error), strerror(-(err->error)));
--			break;
-+		while (NLMSG_OK(nlh, len)) {
-+			if (nlh->nlmsg_type == NLMSG_DONE) {
-+				int error = 0;
-+
-+				if (nlh->nlmsg_len >= NLMSG_LENGTH(sizeof(error)))
-+					memcpy(&error, NLMSG_DATA(nlh), sizeof(error));
-+
-+				if (error) {
-+					fprintf(stderr, "Netlink dump failed: %s\n",
-+						strerror(-error));
-+					exit(EXIT_FAILURE);
-+				}
-+
-+				done = true;
-+				break;
-+			} else if (nlh->nlmsg_type == NLMSG_ERROR) {
-+				struct nlmsgerr *err;
-+
-+				err = (struct nlmsgerr *)NLMSG_DATA(nlh);
-+				if (err->error) {
-+					fprintf(stderr,
-+						"Netlink request failed: %s\n",
-+						strerror(-err->error));
-+					exit(EXIT_FAILURE);
-+				}
-+			} else {
-+				parse_nlmsg(nlh, proto, check_zero, &seen_info);
-+
-+				/*
-+				 * Single-socket diagnostic responses are not
-+				 * multipart and do not end with NLMSG_DONE.
-+				 */
-+				if (!(nlh->nlmsg_flags & NLM_F_MULTI)) {
-+					done = true;
-+					break;
-+				}
-+			}
-+
-+			nlh = NLMSG_NEXT(nlh, len);
- 		}
--		parse_nlmsg(nlh, proto);
--		nlh = NLMSG_NEXT(nlh, len);
-+	}
-+
-+	if (check_zero && !seen_info) {
-+		fprintf(stderr, "No MPTCP diagnostic info received\n");
-+		exit(EXIT_FAILURE);
- 	}
- }
- 
--static void get_mptcpinfo(__u32 token)
-+static void get_mptcpinfo(__u32 token, bool check_zero)
- {
- 	struct inet_diag_req_v2 r = {
- 		.sdiag_family           = AF_INET,
-@@ -358,7 +424,7 @@ static void get_mptcpinfo(__u32 token)
- 		die_perror("Netlink socket");
- 
- 	send_query(fd, &r, proto);
--	recv_nlmsg(fd, proto);
-+	recv_nlmsg(fd, proto, check_zero);
- 
- 	close(fd);
- }
-@@ -394,7 +460,7 @@ static void get_subflow_info(char *subflow_addrs)
- 	inet_pton(AF_INET, saddr, &r.id.idiag_src);
- 	inet_pton(AF_INET, daddr, &r.id.idiag_dst);
- 	send_query(fd, &r, IPPROTO_TCP);
--	recv_nlmsg(fd, IPPROTO_TCP);
-+	recv_nlmsg(fd, IPPROTO_TCP, false);
- }
- 
- static void parse_opts(int argc, char **argv, struct params *p)
-@@ -404,8 +470,11 @@ static void parse_opts(int argc, char **argv, struct params *p)
- 	if (argc < 2)
- 		die_usage(1);
- 
--	while ((c = getopt(argc, argv, "ht:s:")) != -1) {
-+	while ((c = getopt(argc, argv, "ht:s:z")) != -1) {
- 		switch (c) {
-+		case 'z':
-+			p->check_zero_seq = true;
-+			break;
- 		case 'h':
- 			die_usage(0);
- 			break;
-@@ -429,8 +498,13 @@ int main(int argc, char *argv[])
- 
- 	parse_opts(argc, argv, &p);
- 
-+	if (p.check_zero_seq && !p.target_token) {
-+		fprintf(stderr, "-z requires -t <token>\n");
-+		return EXIT_FAILURE;
-+	}
-+
- 	if (p.target_token)
--		get_mptcpinfo(p.target_token);
-+		get_mptcpinfo(p.target_token, p.check_zero_seq);
- 
- 	if (p.subflow_addrs[0] != '\0')
- 		get_subflow_info(p.subflow_addrs);
--- 
-2.43.0
-
+VGhpcyBzZXJpZXMgZml4ZXMgcmVjZWl2ZS1idWZmZXIgc2l6aW5nIGFuZCBhY2NvdW50aW5nIGVy
+cm9ycyBpbiBUQ1AKYW5kIE1QVENQLgoKVGhlIGZpcnN0IHR3byBwYXRjaGVzIHByZXZlbnQgaW50
+ZWdlciB0cnVuY2F0aW9uIGZyb20gcHJvZHVjaW5nIGFuCnVuZGVyc2l6ZWQgcmVjZWl2ZS1tZW1v
+cnkgYnVkZ2V0LiBfX3RjcF9zcGFjZV9mcm9tX3dpbigpIGNhbiByZXR1cm4gYQp0cnVuY2F0ZWQg
+aW50LCB3aGlsZSB0Y3BfcmN2YnVmX2dyb3coKSBhbmQgbXB0Y3BfcmN2YnVmX2dyb3coKSBjYW4g
+d3JhcAphIHUzMiB3aW5kb3cgcHJlZGljdGlvbi4gVGhlIGZpeGVzIHNhdHVyYXRlIHRoZSBjb252
+ZXJzaW9uIHJlc3VsdCBhdApJTlRfTUFYIGFuZCBrZWVwIGdyb3d0aCBwcmVkaWN0aW9ucyBpbiB1
+NjQgdW50aWwgdGhleSBhcmUgYm91bmRlZCBmb3IKdGhlIGV4aXN0aW5nIGhlbHBlciBpbnRlcmZh
+Y2UuIFBhdGNoIDIgZGVwZW5kcyBvbiBwYXRjaCAxLgoKVGhlIHRoaXJkIHBhdGNoIHJlc3RvcmVz
+IHRoZSBNU0dfUEVFSyBleGNsdXNpb24gZnJvbSBNUFRDUCByZWNlaXZlCmF1dG90dW5pbmcuIFJl
+cGVhdGVkIHBlZWtzIGN1cnJlbnRseSBjb3VudCB0aGUgc2FtZSBxdWV1ZWQgYnl0ZXMgYXMKYXBw
+bGljYXRpb24gY29uc3VtcHRpb24sIHdoaWNoIGNhbiBpbmZsYXRlIHRoZSByZWNlaXZlLW1lbW9y
+eSBidWRnZXQKd2l0aG91dCB0aGUgYXBwbGljYXRpb24gZHJhaW5pbmcgdGhlIHF1ZXVlLgoKVmFs
+aWRhdGlvbiB1c2VkIHRhcmdldGVkIElQdjQgbG9vcGJhY2sgc29ja2V0IHRlc3RzIG9uIHVucGF0
+Y2hlZCBhbmQKcGF0Y2hlZCBrZXJuZWxzIGluIHg4Nl82NCBRRU1VL0tWTSBndWVzdHMuIEdDQyAx
+My4zIGJ1aWxkcyBjb21wbGV0ZWQKd2l0aG91dCB3YXJuaW5ncy4gVGhlIHRlc3RzIGNvbmZpcm1l
+ZCB0aGF0LCB3aXRoIHRoZSBmaXhlcyBhcHBsaWVkOgoKICAtIExhcmdlIFNPX1JDVkxPV0FUIHNl
+dHRpbmdzIG9uIFRDUCBhbmQgTVBUQ1AgY29ycmVjdGx5IGluY3JlYXNlIHRoZQogICAgcmVjZWl2
+ZS1tZW1vcnkgYnVkZ2V0IHRvIElOVF9NQVggd2hlbiB0Y3Bfcm1lbVsyXSBpcyBJTlRfTUFYIGFu
+ZAogICAgdGhlIHdpbmRvdy10by1tZW1vcnkgY29udmVyc2lvbiBleGNlZWRzIHRoZSByZXByZXNl
+bnRhYmxlIHJhbmdlLgogIC0gRm9yIHF1ZXVlZCBidXJzdHMgd2hvc2UgcHJlZGljdGVkIHdpbmRv
+dyBleGNlZWRzIDMyIGJpdHMsIFRDUCBhbmQKICAgIE1QVENQIHJlY2VpdmUgYnVkZ2V0cyBub3cg
+cmVhY2ggdGhlIGNvbmZpZ3VyZWQgNjQgTWlCIGxpbWl0LgogIC0gUmVwZWF0ZWQgTVNHX1BFRUsg
+Y2FsbHMgbGVhdmUgYm90aCBhIGZpeGVkIDMyIEtpQiBNUFRDUCByZWNlaXZlCiAgICBxdWV1ZSBh
+bmQgaXRzIG1lbW9yeSBidWRnZXQgdW5jaGFuZ2VkLiBBIHN1YnNlcXVlbnQgY29uc3VtaW5nIHJl
+YWQKICAgIHJldHVybnMgdGhlIG9yaWdpbmFsIGRhdGEgaW50YWN0LgoKVGhlIGludmVzdGlnYXRp
+b24gYmVnYW4gd2l0aCBza19yY3ZidWYgZmFpbGluZyB0byBncm93IGRlc3BpdGUKYXBwbGljYXRp
+b24gcmVhZHMgZHVyaW5nIG5vcm1hbCB1c2UsIGNvbnN0cmFpbmluZyB0aGUgYWR2ZXJ0aXNlZApy
+ZWNlaXZlIHdpbmRvdy4KCk9wZW5BSSBDb2RleCBhc3Npc3RlZCB3aXRoIGRlc2lnbmluZyB0cmln
+Z2VyIGNvbmRpdGlvbnMgYW5kIHNvY2tldAp0ZXN0cyBmb3IgcmVwcm9kdWN0aW9uIGFuZCB2YWxp
+ZGF0aW9uLgoKbGxsZWkgKDMpOgogIHRjcDogc2F0dXJhdGUgd2luZG93LXRvLW1lbW9yeSBjb252
+ZXJzaW9ucyBhdCBJTlRfTUFYCiAgbmV0OiBib3VuZCByZWNlaXZlIHdpbmRvdyBwcmVkaWN0aW9u
+cyBiZWZvcmUgbmFycm93aW5nCiAgbXB0Y3A6IGV4Y2x1ZGUgTVNHX1BFRUsgZnJvbSByZWNlaXZl
+IGJ1ZmZlciBhdXRvdHVuaW5nCgogaW5jbHVkZS9uZXQvdGNwLmggICAgfCAgMiArLQogbmV0L2lw
+djQvdGNwX2lucHV0LmMgfCAxMSArKysrKystLS0tLQogbmV0L21wdGNwL3Byb3RvY29sLmMgfCAx
+MiArKysrKysrLS0tLS0KIDMgZmlsZXMgY2hhbmdlZCwgMTQgaW5zZXJ0aW9ucygrKSwgMTEgZGVs
+ZXRpb25zKC0pCgoKYmFzZS1jb21taXQ6IGFhNDBhZmE4MzFlYmZlNDVlNDBhMjM3MjE3MTEwNTlm
+MmFjNTg0ZDQKLS0gCjIuNDMuMAoK
