@@ -1,94 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.161.44
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794879475;
-	b=VLTEdHEbT+jlkcQq9QIRRYqr9co0A69M4st7BRj3jYWi8solUQ4bzuwdvHxESxLMl13W
-	 2qSYLNoXpPGFwy2Dj2CoIXkZn92tptOrrdzKSKsYXleBi9HvCxeor4y9AlwvtCvW1JnY2
-	 5O3hPRnryn99efJQfONLTtQycjEbtyG2Ki7QlMbsSccOtKK4tbBLl7fRvn6/Vd3HbqEKQ
-	 9E+W5zkZiC3+mPeq1J5Blfretg4CUt2PQGSS1NUE7WerK5wu+MFUCOhwsocWpBPNdeWNK
-	 WAhKGG66HVR9eV/EJ6vKRBKt4bZD+Ira651I5WeiqkY5XnZys+V3EgXr4Vbrk2fsLvA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794879475;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
-	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
-	 Date:MIME-Version:Content-Type;
-	bh=aRJEo7tPWkr19BGiu2Fnd/PX8UkgI8hfSuInHie5Oqo=;
-	b=kroKctQ9CROobn6n5WVNSOJyvVzuoDLnFfZMu2313bI4K8jhjjVTJMVrs/xkvgh4HBKx
-	 W/nm/m/GRRbZ/YD3z+cwGJNpz6JhRrXYC/IWkcFOhS5O9tCP2ONrMTm6JJfs0PKfHpG/W
-	 wkfbNItn5ULN5dzKghLllhbrkSFrEBmzuH0cX1Cg9R07Lwi2nDLmWBWCsLQTQop8HIJWr
-	 vMkrXu+rQDExVkitECEzgjRsCxuF2uQclyXMEq2l4T1UAEwW8CGED4WRLduakHWdI8lUf
-	 d4flb4rhNkdjhQfdsvdpH+qFyenCWMyxTk0Hftstle5vuguXSOU5f1U9uAVFkMYadmg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="S9Vy/DoX";
-	arc=none smtp.remote-ip=209.85.161.44
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.54
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794892099;
+	b=QXVgFPKe4md1sHw9BEcUCfRJCsF7VGQITysM2l41eYQcCPtgclhpIE9e0hj7iTxiFX6q
+	 xeGQQ4X940UqecdzogIIl3AQfGsrYRwKdUrmgqJoCXE4WXuz/i7MvR0xIQJ3lJUfD/77x
+	 cAR4UMP+7YhiRXIkXCdjYD/7CGmZeHMj1ywuyzE6w5Rb1hIiRbMq8xtLhZazvVBklIMgv
+	 L91zhgQhoRQIaabl4CyGFMoZJc8S1cXvHzEIuHJR4jltXERUgvi6RHSZvSR/QKUoDI99C
+	 N4xVvadBiLZfQ/zsfvGDtqypZPNd0vGLO7r6jxdqg8q1aX5iVYCJXCONM5HkmpyqHjg==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794892099;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 X-ZohoMailClient;
+	bh=H4d7KIJkFIObITZTnujX4CPyQB6DJwd3Cw2HatXHVSA=;
+	b=MQ8ubzFE809TVDQ/qojP97b8PzwR5sGwKzqD7mEdWnFw0wD6p7WhmaVNnDyk4hV5rWE6
+	 PKUQeEVEPgm75NSNLNBC8p8bi40FcOIPNHxkm2DyKgI2sGhJCBuJ4ycUDaPrjUjH/8nzS
+	 mia8rA0O/NIXCfoh8cz4mjz7DDMbN132oFdM/J/sjN7LGCOKEUGxHQCKatXf9KfeBHOXy
+	 h8uyCyesfbOCQgN7rCO8m2wFmrSljwjXHNCoNPsE8CK/yXowHntmEsotTvGUQTKP9H8w9
+	 KAPSrrR5FW/tKcfPyrEPQwQjcBgtiyywdpJtesjGp3U+2dy0iLHq7lvnQ6byrU44uyw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=mpiricsoftware.com;
+	spf=pass smtp.mailfrom=mpiricsoftware.com;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.54
+Received: from sender5-of-o54.zoho.com (sender5-of-o54.zoho.com [165.173.182.54])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5274606A329
-	for <mptcp@lists.linux.dev>; Tue, 17 Nov 2026 01:37:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B5274606A329
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=S9Vy/DoX
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-716b58a4365so2675064eaf.3
-        for <mptcp@lists.linux.dev>; Mon, 16 Nov 2026 17:37:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794879473; x=1795484273; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=aRJEo7tPWkr19BGiu2Fnd/PX8UkgI8hfSuInHie5Oqo=;
-        b=S9Vy/DoXKg4A9t8L15/BItdeHe784+E/ah5icXsByLsihoiUq074YVtk38wsFv66XP
-         oPWm8Z3vmrrWlnmLdzjHCIjvVSJ/IC6PSK4HRbhO0gHePK+/n/EU54Dw6R9XtSevhxzJ
-         J657NVvh7tlTCoJWYbvzLRPV1tzKrg9zy+RHhEDk+WV6sTW4JoZQUTD2khogtNMweQhl
-         w6BAuZOtxizmWknzqDlQp6ALru2T/HIe1CaEx8Ax5I5M7ADfwlYPdFOLkgqSF2jVNJgO
-         bmIDzUNSSNfV/j8NNdk6p9k82YaUGH9TvPy8NyEoA4S4StBY3EUEvqDTLbA/yH2SJ6ju
-         uqwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794879473; x=1795484273;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=aRJEo7tPWkr19BGiu2Fnd/PX8UkgI8hfSuInHie5Oqo=;
-        b=Fz4WfTESv52XLuRoYwuWxY8Pqeha7j1ectLmeMZo6OUBa/EKVOYPHvcsMV1IxR0tWJ
-         LGKRyXelOVjafj6yAE8NCbv4Mm7bi9A7JD9X74TnuJoDlWpfHJKZAMH59hKdwWNFtD5q
-         Wvub54vUBe9IOa0SRW9EH6GvuqGObJCZx5kNi7lQErB/ocJnfSo2lYybTi0wp2/gon9U
-         0eEgp50KgcFtXtb40B2W4EgwOAl/MUP0kW9M4zUzTGoR29WizEp0i4xJ5ahK9paKzc9C
-         iEx8z9xqeq6h4W0T2SxxN2aMXmeI3C5JqRyIl57RJxSZrPsTKO/YikrwQDl8BF+r6OdD
-         4FEw==
-X-Gm-Message-State: APuU4Z9wCfiJ4AT6EOoRWkTCYcvJ0Zl+BRWNh2b5SW9s4FO3HFUTO9dt
-	1+pn99bFVkDN0JVQXeSv6tJNGZIgTh3aCzmcotVQXe4O4Tq1bH9s2EY=
-X-Gm-Gg: AYBFou2ZedQ9KK0cp17bolAWZRrD2uqhO++rYON5wwJt9QI4VTLguxudO9QMn6VlQQo
-	7jTlxacO5+/Yu7Jw0xUz+EmJJnnnxkuS95HAsb7a3NYVPr9RPDT/jmu5+iKageu8u8M50hY1jRX
-	3ptbaMS3KAJUTZeUMT7kElz3Fx0oC8SBfAZbDYe8yx/4whRHj61/W2Wt8vtviaMDY9DgNn049/e
-	Awj4SGBEllh+ZyNNIVSpv0JmdirCJNv0clH14IzsZn9JlQA4jyNFafIHHcZsYLwDzoTHEWFF8Mm
-	iS1MDsnUdkL7CMXlSQRJX6fIQoYwE2dk/YLOQ8L9zJSxA2UGtqv5zwfsB5spOsIADUuV60xN7DR
-	pxpM98gr3/+pzNoHcdVM/0KjfWZouu4rNPFz6QfzcjJXUbW74WFGr5g9lPJv4eLOuy1v87vSXmK
-	DEdgNH05+qpwda9cHpBsoanrwX4opySHQbAKYwOZ1FxfpCkoewEiMjHdOoTeQ4p0+k/nPly7ScE
-	L0JhW+iFBAZOroAvqquGwr+1Xm9jP6SMbif3XuzElbtGob5j7Uo51iGjhkPzlLAw5x+TBIQDSiy
-	i8SKhilFRbnj0/BlndfR4lfYW06hHG2SlgdahLxMfA==
-X-Received: by 2002:a05:6820:83da:10b0:71a:f082:3c7b with SMTP id 006d021491bc7-71af0823eb8mr2624494eaf.52.1794879473465;
-        Mon, 16 Nov 2026 17:37:53 -0800 (PST)
-Received: from github.com ([20.118.39.253])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-71ae860ebd7sm5432989eaf.8.2026.11.16.17.37.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Nov 2026 17:37:52 -0800 (PST)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Kuniyuki Iwashima <kuniyu@google.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20261116230555.2305867-1-kuniyu@google.com>
-References: <20261116230555.2305867-1-kuniyu@google.com>
-Subject: Re: [PATCH v2 net-next 0/7] tcp: Prevent tcp_collapse() from
- bloating queue.
-Message-ID: <8d71699b-58db-c174-2c07-b4b2a1a62037@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 17 Nov 2026 01:37:51 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8317606A32A
+	for <mptcp@lists.linux.dev>; Tue, 17 Nov 2026 05:08:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C8317606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
+ARC-Seal: i=1; a=rsa-sha256; t=1794892095; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ilUffvG1oN7iRNBlJ6c3iisHcF0sO6HKzkiclcc11nVc6Nxk6Ol5CBUJMtn19LcSS0ITRdpDNrftrpsttpuRLKfnOzkNY0DbOM12NhXkBMfNKuq9TE7SOPPk4+NPAA+tY8djxumTyXTW8B/oiiztXWfeDgK0TAIMEWb079VL/pc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1794892095; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=H4d7KIJkFIObITZTnujX4CPyQB6DJwd3Cw2HatXHVSA=; 
+	b=X2f6RY86X/rWFeE43o2p3SVSqYJzx4JOWuugSXSjsnniv3PZhZ03KdujBSXNMh0cgjCavUutEcHOxnOXjdX9HncbzLOe/4nSJS7mvBE5Tx+SsSwdtYdK5K1/MVeLOZUFn7mictlVPLn4pSAls5lv8ILZWkAklX7z/u35SpVeI7U=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
+	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
+DKIM-Signature: a=rsa-sha256; b=mswkJPeUEUTaTu/jTlvuL3ecySwkLEYRopB2Ppll5dQ/0JN+vUz7kx47hmMwQKBaANrqe/w0aGG1iivKPGfOADKvSeqw2IxSdf9I74w67NJ6UGNDjI2fNQdkGA3zdlLsjf0pYTClXVwrL1tcRKNdwLqSN7xRp+ZrJmsv6eC0Ld4=; c=relaxed/relaxed; s=mpiric; d=mpiricsoftware.com; v=1; bh=H4d7KIJkFIObITZTnujX4CPyQB6DJwd3Cw2HatXHVSA=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1794892094659683.8001736071109;
+	Mon, 16 Nov 2026 21:08:14 -0800 (PST)
+From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+To: mptcp@lists.linux.dev
+Cc: shardul.b@mpiricsoftware.com,
+	janak@mpiric.us,
+	kalpanjani009@gmail.com,
+	Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Subject: [PATCH mptcp-net v13] mptcp: hide sequence numbers in Netlink diagnostics
+Date: Tue, 17 Nov 2026 10:38:04 +0530
+Message-ID: <20261117050804.134954-1-kalpan.jani@mpiricsoftware.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -98,63 +63,304 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Hi Kuniyuki,
+MPTCP Netlink diagnostics expose sequence numbers that can reveal
+internal connection state.
 
-Thank you for your modifications, that's great!
+Clear mptcpi_write_seq, mptcpi_snd_una and mptcpi_rcv_nxt in the
+Netlink diagnostic callback.
 
-Our CI did some validations and here is its report:
+Keep the getsockopt() interface and its reported sequence numbers
+unchanged.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): selftest_diag =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: debug (only =
-selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only=
- bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Perf: Unstable: 1 failed test(s): =
-validation:sched-weak-secondary =E2=9A=A0=EF=B8=8F=20
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/439843=
-29957
+Add a selftest to verify that the sequence-number fields are zero in
+Netlink diagnostic responses.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/2bc9687ac49a
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1213235
+Fixes: ac3b45f60954 ("mptcp: add MPTCP socket diag interface")
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/445
+Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+---
+Changes since v12:
+- Drop address-based sequence number normalization.
+- Zero the three sequence-number fields in the Netlink diagnostic callback.
+- Preserve sequence-number values reported through getsockopt().
+- Add a selftest verifying zero sequence-number fields in Netlink diagnostics.
+- Check NLMSG_DONE error status in the Netlink selftest.
 
+v12: https://lore.kernel.org/all/20261106111645.786225-1-kalpan.jani@mpiricsoftware.com/
+---
+ net/mptcp/mptcp_diag.c                        |   4 +
+ tools/testing/selftests/net/mptcp/diag.sh     |  13 ++
+ .../testing/selftests/net/mptcp/mptcp_diag.c  | 122 ++++++++++++++----
+ 3 files changed, 115 insertions(+), 24 deletions(-)
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
+index 136c2d05c0eeb..fe1603ce80162 100644
+--- a/net/mptcp/mptcp_diag.c
++++ b/net/mptcp/mptcp_diag.c
+@@ -215,6 +215,10 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+ 		return;
+ 
+ 	mptcp_diag_fill_info(msk, info);
++
++	info->mptcpi_write_seq = 0;
++	info->mptcpi_snd_una = 0;
++	info->mptcpi_rcv_nxt = 0;
+ }
+ 
+ static const struct inet_diag_handler mptcp_diag_handler = {
+diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
+index 27cbda68144e8..abe732a5c1c37 100755
+--- a/tools/testing/selftests/net/mptcp/diag.sh
++++ b/tools/testing/selftests/net/mptcp/diag.sh
+@@ -205,6 +205,7 @@ chk_dump_one()
+ 	local ss_token
+ 	local token
+ 	local msg
++	local zero_msg
+ 
+ 	ss_token="$(ss -inmHMN $ns |
+ 		    mptcp_lib_get_info_value "token" "token")"
+@@ -223,6 +224,18 @@ chk_dump_one()
+ 		mptcp_lib_result_fail "${msg}"
+ 		ret=${KSFT_FAIL}
+ 	fi
++
++	zero_msg="....chk dump_one zero sequence fields"
++	mptcp_lib_print_title "$zero_msg"
++	if [ -n "$ss_token" ] &&
++	   ip netns exec "$ns" ./mptcp_diag -z -t "$ss_token"; then
++		mptcp_lib_pr_ok
++		mptcp_lib_result_pass "${zero_msg}"
++	else
++		mptcp_lib_pr_fail "MPTCP diagnostic sequence fields are not zero"
++		mptcp_lib_result_fail "${zero_msg}"
++		ret=${KSFT_FAIL}
++	fi
+ }
+ 
+ chk_dump_subflow()
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c b/tools/testing/selftests/net/mptcp/mptcp_diag.c
+index 3b8d2c8a62160..6f72ca30d7c20 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_diag.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
+@@ -3,6 +3,7 @@
+ 
+ #include <errno.h>
+ #include <stdio.h>
++#include <stdbool.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <unistd.h>
+@@ -29,6 +30,7 @@
+ 			    NLA_F_NESTED))
+ 
+ struct params {
++	bool check_zero_seq;
+ 	__u32 target_token;
+ 	char subflow_addrs[1024];
+ };
+@@ -101,6 +103,7 @@ static void die_usage(int r)
+ {
+ 	fprintf(stderr, "Usage:\n"
+ 			"mptcp_diag -t <token>\n"
++			"mptcp_diag -z -t <token>  (check zero sequence fields)\n"
+ 			"mptcp_diag -s \"<saddr>:<sport> <daddr>:<dport>\"\n");
+ 	exit(r);
+ }
+@@ -170,6 +173,22 @@ static void parse_rtattr_flags(struct rtattr *tb[], int max, struct rtattr *rta,
+ 	}
+ }
+ 
++static bool check_zero_seq(struct mptcp_info *info)
++{
++	if (info->mptcpi_write_seq ||
++	    info->mptcpi_snd_una ||
++	    info->mptcpi_rcv_nxt) {
++		fprintf(stderr,
++			"Unexpected sequence values: write_seq=%llu snd_una=%llu rcv_nxt=%llu\n",
++			(unsigned long long)info->mptcpi_write_seq,
++			(unsigned long long)info->mptcpi_snd_una,
++			(unsigned long long)info->mptcpi_rcv_nxt);
++		return false;
++	}
++
++	return true;
++}
++
+ static void print_info_msg(struct mptcp_info *info)
+ {
+ 	printf("Token & Flags\n");
+@@ -262,7 +281,7 @@ static void print_subflow_info(struct rtattr *tb[])
+ 	printf("\n");
+ }
+ 
+-static void parse_nlmsg(struct nlmsghdr *nlh, __u32 proto)
++static void parse_nlmsg(struct nlmsghdr *nlh, __u32 proto, bool check_zero, bool *seen_info)
+ {
+ 	struct inet_diag_msg *r = NLMSG_DATA(nlh);
+ 	struct rtattr *tb[INET_DIAG_MAX + 1];
+@@ -284,6 +303,11 @@ static void parse_nlmsg(struct nlmsghdr *nlh, __u32 proto)
+ 			info = RTA_DATA(tb[INET_DIAG_INFO]);
+ 		}
+ 		print_info_msg(info);
++		if (check_zero) {
++			*seen_info = true;
++			if (!check_zero_seq(info))
++				exit(EXIT_FAILURE);
++		}
+ 	}
+ 	if (proto == IPPROTO_TCP && tb[INET_DIAG_ULP_INFO]) {
+ 		struct rtattr *ulpinfo[INET_ULP_INFO_MAX + 1] = { 0 };
+@@ -303,10 +327,10 @@ static void parse_nlmsg(struct nlmsghdr *nlh, __u32 proto)
+ 	}
+ }
+ 
+-static void recv_nlmsg(int fd, __u32 proto)
++static void recv_nlmsg(int fd, __u32 proto, bool check_zero)
+ {
+ 	char rcv_buff[8192];
+-	struct nlmsghdr *nlh = (struct nlmsghdr *)rcv_buff;
++	struct nlmsghdr *nlh;
+ 	struct sockaddr_nl rcv_nladdr = {
+ 		.nl_family = AF_NETLINK
+ 	};
+@@ -320,28 +344,70 @@ static void recv_nlmsg(int fd, __u32 proto)
+ 		.msg_iov = &rcv_iov,
+ 		.msg_iovlen = 1
+ 	};
+-	int len;
+-
+-	len = recvmsg(fd, &rcv_msg, 0);
+-
+-	while (NLMSG_OK(nlh, len)) {
+-		if (nlh->nlmsg_type == NLMSG_DONE) {
+-			printf("NLMSG_DONE\n");
+-			break;
+-		} else if (nlh->nlmsg_type == NLMSG_ERROR) {
+-			struct nlmsgerr *err;
++	bool seen_info = false;
++	bool done = false;
++
++	while (!done) {
++		int len;
++
++		nlh = (struct nlmsghdr *)rcv_buff;
++		len = recvmsg(fd, &rcv_msg, 0);
++		if (len < 0)
++			die_perror("Netlink recvmsg");
++		if (!len) {
++			fprintf(stderr, "Empty Netlink response\n");
++			exit(EXIT_FAILURE);
++		}
+ 
+-			err = (struct nlmsgerr *)NLMSG_DATA(nlh);
+-			printf("Error %d:%s\n",
+-			       -(err->error), strerror(-(err->error)));
+-			break;
++		while (NLMSG_OK(nlh, len)) {
++			if (nlh->nlmsg_type == NLMSG_DONE) {
++				int error = 0;
++
++				if (nlh->nlmsg_len >= NLMSG_LENGTH(sizeof(error)))
++					memcpy(&error, NLMSG_DATA(nlh), sizeof(error));
++
++				if (error) {
++					fprintf(stderr, "Netlink dump failed: %s\n",
++						strerror(-error));
++					exit(EXIT_FAILURE);
++				}
++
++				done = true;
++				break;
++			} else if (nlh->nlmsg_type == NLMSG_ERROR) {
++				struct nlmsgerr *err;
++
++				err = (struct nlmsgerr *)NLMSG_DATA(nlh);
++				if (err->error) {
++					fprintf(stderr,
++						"Netlink request failed: %s\n",
++						strerror(-err->error));
++					exit(EXIT_FAILURE);
++				}
++			} else {
++				parse_nlmsg(nlh, proto, check_zero, &seen_info);
++
++				/*
++				 * Single-socket diagnostic responses are not
++				 * multipart and do not end with NLMSG_DONE.
++				 */
++				if (!(nlh->nlmsg_flags & NLM_F_MULTI)) {
++					done = true;
++					break;
++				}
++			}
++
++			nlh = NLMSG_NEXT(nlh, len);
+ 		}
+-		parse_nlmsg(nlh, proto);
+-		nlh = NLMSG_NEXT(nlh, len);
++	}
++
++	if (check_zero && !seen_info) {
++		fprintf(stderr, "No MPTCP diagnostic info received\n");
++		exit(EXIT_FAILURE);
+ 	}
+ }
+ 
+-static void get_mptcpinfo(__u32 token)
++static void get_mptcpinfo(__u32 token, bool check_zero)
+ {
+ 	struct inet_diag_req_v2 r = {
+ 		.sdiag_family           = AF_INET,
+@@ -358,7 +424,7 @@ static void get_mptcpinfo(__u32 token)
+ 		die_perror("Netlink socket");
+ 
+ 	send_query(fd, &r, proto);
+-	recv_nlmsg(fd, proto);
++	recv_nlmsg(fd, proto, check_zero);
+ 
+ 	close(fd);
+ }
+@@ -394,7 +460,7 @@ static void get_subflow_info(char *subflow_addrs)
+ 	inet_pton(AF_INET, saddr, &r.id.idiag_src);
+ 	inet_pton(AF_INET, daddr, &r.id.idiag_dst);
+ 	send_query(fd, &r, IPPROTO_TCP);
+-	recv_nlmsg(fd, IPPROTO_TCP);
++	recv_nlmsg(fd, IPPROTO_TCP, false);
+ }
+ 
+ static void parse_opts(int argc, char **argv, struct params *p)
+@@ -404,8 +470,11 @@ static void parse_opts(int argc, char **argv, struct params *p)
+ 	if (argc < 2)
+ 		die_usage(1);
+ 
+-	while ((c = getopt(argc, argv, "ht:s:")) != -1) {
++	while ((c = getopt(argc, argv, "ht:s:z")) != -1) {
+ 		switch (c) {
++		case 'z':
++			p->check_zero_seq = true;
++			break;
+ 		case 'h':
+ 			die_usage(0);
+ 			break;
+@@ -429,8 +498,13 @@ int main(int argc, char *argv[])
+ 
+ 	parse_opts(argc, argv, &p);
+ 
++	if (p.check_zero_seq && !p.target_token) {
++		fprintf(stderr, "-z requires -t <token>\n");
++		return EXIT_FAILURE;
++	}
++
+ 	if (p.target_token)
+-		get_mptcpinfo(p.target_token);
++		get_mptcpinfo(p.target_token, p.check_zero_seq);
+ 
+ 	if (p.subflow_addrs[0] != '\0')
+ 		get_subflow_info(p.subflow_addrs);
+-- 
+2.43.0
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
