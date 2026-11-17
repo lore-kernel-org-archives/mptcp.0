@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794955271;
-	b=GLL+cIhrERj9quFgVTrsofJeoAfFfKlNvdqrvyJ2DI7mAAurh2auvoNqtytNTFM4tudn
-	 M8viEwzyHIWEC/ngT1eTXNATcCvXTSWn/HdUbOK45m8e/WA3gz/+LlWjfxarvdlKsZvu3
-	 2LVUT3PVr1Q7cRhHp+qSJEI8ul9Kia3uNYo+fhhosyaYEmdLhpqkb7lEM2UkmMWN4phDT
-	 WtMLwQvqbH5EENwVjGDtNd+YTupSeMkfo5vS80DHSSzYBwOG/YqyJscMvmn3ydYsyw4hs
-	 eVehzq3snM5HWZdqQqt3WKln275YFXdsi7U9/tmAGQB7ME6LFlKs50tuPHhSRcEjeKQ==
+	t=1794955272;
+	b=cuia679aOUG9T9x5Kh1hvTZIe99adNy23In21a5VTkfvOCdjgALTgg2/cbUkToElsFaz
+	 EOJQaWElTAH3ImQ1pszfTwq2uoutbCUUKxWrBGbNhwgjCZqPvotox2++l7ClRwn3rPZSo
+	 VHXrb7pZHxbociL2QynISedkNsBOVTQzzdP7iXeyZ7vCUkQDkHal3AXy6ymo5vxpmyey4
+	 FnntO06qo7rBQufMDiIgLz8T69X0fpEL70ACwH3lcrjgIVg3jjBcCeDJW45V2kn5K3NLo
+	 wA/F4PL2lzDBC8YKQ7YrOZHcAYohJaPIcke+0w6xXiDxRw0nbzoKiBZ8t3fr0GBYHTg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794955271;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794955272;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=mntSLj8mnvBuXCjyXeJgHaIqqdgUouJ+FaJVz3u3yg0=;
-	b=wIm7oljOzU1Wn1/O57FST4q8DBwFOT+2oEnAPODbHyuGambMU3tUQQcvUu9aXgAGQB9b
-	 Fktz5Ku65Dd6/FT0TTY5jxTC8N/fIawd8NI5N5t1Aqb7LBRsilM8jAwtXzolmzDqCzUlT
-	 cu0EegDiTMOXgZy9kEZQs4Ksdk8VSfxU6x3zxrCxcjyrsmaW/wWCiXoO/Of3+T5RA8p7/
-	 q45FGTV5Sjcbh1jYVPFwrjeyJRL951rCK18dl2Bbwvc6eieRNAh+PFRszytt4wRf72GJe
-	 Gxd5MgL+LdBw0f7X9X0yoXnHVcw6+WXMVjBT/1L4CmkTwj4af4TAeCCvI+7JOz0qlBA==
+	bh=lVJxOLKddUnyqhch9nznUYi4uJQEBdD9MX5+sMfekkA=;
+	b=elz7fHw+LYM2r14klV/DpYGv8aKu/DcrN9K8g2dtDtwyfMrRSiuUNzldmNdRwclzyV2f
+	 Xz1iIhvGhmdnCqSSho7ToidP8ccLxV9bh5qodcKTqTaTbYJ+eKMxGt05Fk//5I2I5fWB+
+	 X1HSFwHUcmAYfBLl6wLIT6r7EKbayFgJnGfMTHFNVyTEvOR4/9bqoB+LLSTNTgjkv/0wm
+	 2TCJJvasScrl9lP5mOe9T8pORSQJVu3mtMxfTTTkP4Q5APDsad0AMUjVNaTyQ8y+PYAuz
+	 498pRVqX+m3yNiVTR/c3BButFrHDhwIKwZYbQ1lksF5tZx4BkaPbGzPfjmrG8guV3hA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NsdZo2yz;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="nw0/TtTe";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF32606A31C
-	for <mptcp@lists.linux.dev>; Tue, 17 Nov 2026 22:41:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147C2606A31C
+	for <mptcp@lists.linux.dev>; Tue, 17 Nov 2026 22:41:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NsdZo2yz
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E91041F000C7;
-	Tue, 17 Nov 2026 22:41:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nw0/TtTe
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B994B1F000C4;
+	Tue, 17 Nov 2026 22:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1794955271;
-	bh=mntSLj8mnvBuXCjyXeJgHaIqqdgUouJ+FaJVz3u3yg0=;
+	bh=lVJxOLKddUnyqhch9nznUYi4uJQEBdD9MX5+sMfekkA=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=NsdZo2yzTNOnLo07VV4lj5G3lQvGthbT8q51ZeMJLh2OgswO8ZwYzICGGZ2iy/Ve6
-	 +sZK69p6FSg1Yiw21ioeUE2ShC0bdvOt1vUsF+ATiKjWSMCEsNLWIoqNNtioNH47mt
-	 e52HoCGSetOEj11QVtOULDDP3i7FtOVGfGa0RZefq0z6EKlJQRgt15KauM6vjY1Ug/
-	 RvJgMG0qObFYKQe6AdLwImrwwLi9ueiwH1F2BIAPzUAAeqBJbmTeNvxtGe4EMTfdsm
-	 vFghiHyHR2qeEohKfG4ChYxXjBE0asrILTQdW6rEh/q1VHrPx8EkiEACCn0U7itaW+
-	 nrsvCLluQP5EQ==
-Subject: Re: [PATCH mptcp-next v28 02/11] selftests: mptcp: connect: check TFO
- SIOCINQ overflow
+	b=nw0/TtTeeuEZFTThMEyINhfOY+zJvH81LitdcynsXkp08ZUEAhPkdsFW9xznThRkL
+	 bx21RZr+eytza+fQ6USMa4u4dEN2B6IRFHQnwvZtS7gwcMIaYr2jPZpPTcBSUXjM2K
+	 8YPOvAXU7J085yezLhjdv0WKL7DVQMdmortojT038pMIIsmj9yaDUPryZP9aKsB0vJ
+	 xfoyPwuePEezv/6mmzlKXTRFyj0E3Tds1FZYPMPabHqjxucXr4IzbLBb2hJMSHAUvi
+	 BSpWyppxJtfXCh3GaBIduWTtZpccuOj/gLEMcUaHyp3mtGS1Hqbz/rUt7q84Qt9YnW
+	 8sbtX81WFuO6g==
+Subject:
+ Re: [PATCH mptcp-next v28 06/11] mptcp: add flags field to mptcp_skb_cb
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Tue, 17 Nov 2026 22:41:10 +0000
-Message-ID: <179495527047.3133.8487046866212562258@kernel.org>
-In-Reply-To: <b10fc6fab784ca954d079569f58ed19155961e5d.1794810809.git.tanggeliang@kylinos.cn>
-References: <b10fc6fab784ca954d079569f58ed19155961e5d.1794810809.git.tanggeliang@kylinos.cn>
-X-sashiko-severity: Medium
+Date: Tue, 17 Nov 2026 22:41:11 +0000
+Message-ID: <179495527130.3133.4607719757932776867@kernel.org>
+In-Reply-To: <f31e23f95b08c864e69ad13f1d794795b24ead1a.1794810809.git.tanggeliang@kylinos.cn>
+References: <f31e23f95b08c864e69ad13f1d794795b24ead1a.1794810809.git.tanggeliang@kylinos.cn>
+X-sashiko-severity: Critical
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -62,10 +62,10 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 1 potential
+Thank you for your contribution! Sashiko AI review found 2 potential
 issue(s) to consider.
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 0
+Critical: 1 · High: 0 · Medium: 0 · Low: 1
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -73,100 +73,129 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [Medium] In do_recvmsg_cmsg()
-  (tools/testing/selftests/net/mptcp/mptcp_connect.c, lines 578-582),…
+- [Critical] In net/mptcp/protocol.c, __mptcp_try_coalesce() used to
+  refuse coalescing when `MPTCP_SKB_CB(from)->offset` was non-zero.
+- [Low] The commit message says MPTCP_SKB_CB_F_OFFSET marks "skbs with a
+  non-zero offset".
 
 --
 
-selftests: mptcp: connect: check TFO SIOCINQ overflow
+mptcp: add flags field to mptcp_skb_cb
 
-This commit adds a SIOCINQ check to mptcp_connect's server mode when
-MPTFO is enabled. Before it checks whether SIOCINQ returns INT_MAX, it
-waits for MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED. It also adds a new
-expect_eof branch to do_recvmsg_cmsg() for the new inq semantics.
-
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> index 178d98d91fea2..3ae018a2a2155 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+This commit adds a flags field to struct mptcp_skb_cb and a
+MPTCP_SKB_CB_F_OFFSET flag. mptcp_init_skb() sets the flag when the skb
+has a non-zero offset. __mptcp_try_coalesce() now tests this flag on both
+skbs instead of testing from->offset directly, as preparation for removing
+the offset field later in the series.
 
 [ ... ]
 
-> @@ -571,6 +575,10 @@ static ssize_t do_recvmsg_cmsg(const int fd, char *buf, const size_t len)
->  			} else {
->  				tcp_inq.expect_eof = true;
->  			}
-> +		} else if ((size_t)ret < len &&
-> +			   last_hint == (unsigned int)ret &&
-> +			   tcp_inq.last == 0) {
-> +			tcp_inq.expect_eof = true;
->  		}
->  	}
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 41fc2429d2fed..395bdcd0080c1 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -168,7 +168,8 @@ static bool __mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
+>  	int limit = READ_ONCE(sk->sk_rcvbuf);
 >  
+>  	if (MPTCP_SKB_CB(from)->map_seq != MPTCP_SKB_CB(to)->end_seq ||
+> -	    MPTCP_SKB_CB(from)->offset ||
+> +	    (MPTCP_SKB_CB(from)->flags | MPTCP_SKB_CB(to)->flags) &
+> +	     MPTCP_SKB_CB_F_OFFSET ||
+>  	    ((to->len + from->len) > (limit >> 3)) ||
+>  	    !skb_try_coalesce(to, from, fragstolen, delta))
+>  		return false;
 
-[Severity: Medium]
-Can this new branch in do_recvmsg_cmsg() mark a live connection as
-finished?
+[Severity: Critical]
+Can this coalesce an skb whose prefix the msk has already received?
 
-The companion kernel change ("mptcp: fix TFO SIOCINQ overflow in
-mptcp_inq_hint") makes mptcp_inq_hint() report 1, not 0, for an empty
-queue at EOF:
+The flag is only computed in mptcp_init_skb(). The partial packet branch
+of __mptcp_move_skb() raises offset after that, leaves flags alone, and
+then jumps to the coalesce attempt:
 
-net/mptcp/protocol.c:mptcp_inq_hint() {
+net/mptcp/protocol.c:__mptcp_move_skb() {
     ...
-	if (!hint_val &&
-	    (sk->sk_state == TCP_CLOSE || (sk->sk_shutdown & RCV_SHUTDOWN)))
-		return 1;
-
-	return (unsigned int)hint_val;
+	/* Partial packet */
+	if (after64(MPTCP_SKB_CB(skb)->end_seq, msk->ack_seq)) {
+		copy_len = MPTCP_SKB_CB(skb)->end_seq - msk->ack_seq;
+		MPTCP_SKB_CB(skb)->offset += msk->ack_seq -
+					     MPTCP_SKB_CB(skb)->map_seq;
+		MPTCP_SKB_CB(skb)->map_seq += msk->ack_seq -
+					      MPTCP_SKB_CB(skb)->map_seq;
+		goto insert;
+	}
+    ...
+insert:
+    ...
+		tail = skb_peek_tail(&sk->sk_receive_queue);
+		if (tail && mptcp_try_coalesce(sk, tail, skb))
+			return true;
+    ...
 }
 
-So a post-read hint of 0 only means the receive queue was drained while
-the connection is still open. The in-tree mptcp_inq.c test relies on the
-same rule in process_one_client():
+At that point from->map_seq equals the old ack_seq, which is also
+tail->end_seq, and both flags are 0. Before this patch the from->offset
+test refused the merge. Now skb_try_coalesce() appends all from->len bytes
+to the tail, already-received prefix included.
 
-	/* tcp_inq should be 1 due to received fin. */
-	assert(tcp_inq == 1);
+__mptcp_recvmsg_mskq() and mptcp_read_sock() copy skb->len - offset bytes
+from the tail. Wouldn't userspace then get the overlapping bytes twice in
+the middle of the stream? bytes_consumed could also grow past
+bytes_received, so mptcp_data_avail() could wrap.
 
-do_rnd_read() picks its read size with cap = rand() & 0xffff. That
-makes this sequence look possible:
+One way to reach this is while the msk is owned by the user. In that case
+mptcp_data_ready() puts subflow skbs on the backlog without advancing
+msk->ack_seq. The old-data discard in subflow_check_data_avail() then
+compares against a stale ack_seq.
 
-read A: cap is smaller than the queued data, X bytes stay queued,
-        tcp_inq.last = X
-read B: cap > X, recvmsg() returns exactly X, no new data has arrived,
-        hint is 0
-        -> tcp_inq.expect_eof = true
-read C: the peer's next chunk arrives, recvmsg() returns > 0
-        -> xerror("expected EOF, last_hint %u, now %u\n", ...)
+Suppose the peer sends DSN [0,1000) on one subflow and [500,1500) on
+another, either as a normal reinjection or through a crafted DSS. When the
+backlog is spooled, the second skb takes the partial path: offset goes
+from 0 to 500, flags stays 0, and the whole skb is coalesced into the
+first one.
 
-mptcp_sockopt.sh runs mptcp_connect with -r 20 and
--c TIMESTAMPNS,TCPINQ. In that mode do_rnd_write() sends 20-byte chunks
-and sleeps 200ms after each one, so the receiver often drains the queue
-before more data arrives.
+This looks resolved later in the series by "mptcp: remove CB offset
+field". There, the partial path no longer modifies offset or map_seq, and
+the from->map_seq != mptcp_end_dsn(to) check rejects the partial skb. The
+window is limited to this commit and "mptcp: encapsulate CB DSN field
+access with helpers".
 
-Could this make the test fail now and then, even though the kernel
-behaves correctly? Before this patch, that state matched neither branch
-and the test passed.
+Could this commit keep the from->offset test, or set MPTCP_SKB_CB_F_OFFSET
+in the partial path? Then a bisect that lands here would not hit the
+duplicated data.
 
-Is the new branch needed at all? After DATA_FIN, reading the last bytes
-leaves a post-read hint of 1. If DATA_FIN has not been processed yet,
-the hint is 0. The existing EOF check already accepts both cases:
+> @@ -428,6 +429,7 @@ static void mptcp_init_skb(struct sock *ssk, struct sk_buff *skb, int offset,
+>  	MPTCP_SKB_CB(skb)->map_seq = mptcp_subflow_get_mapped_dsn(subflow);
+>  	MPTCP_SKB_CB(skb)->end_seq = MPTCP_SKB_CB(skb)->map_seq + copy_len;
+>  	MPTCP_SKB_CB(skb)->offset = offset;
+> +	MPTCP_SKB_CB(skb)->flags = offset ? MPTCP_SKB_CB_F_OFFSET : 0;
+>  	MPTCP_SKB_CB(skb)->has_rxtstamp = has_rxtstamp;
 
-	if (ret == 0 && cfg_cmsg_types.tcp_inq)
-		if (last_hint != 1 && last_hint != 0)
-			xerror("EOF but last tcp_inq hint was %u\n", last_hint);
+[Severity: Low]
+This isn't a bug, but the commit message says:
 
-The commit message also says:
+    Add a flags field to mptcp_skb_cb and define MPTCP_SKB_CB_F_OFFSET to
+    mark skbs with a non-zero offset.
 
-    Add MPTCP expect_eof branch in do_recvmsg_cmsg() for new inq semantics:
-    set expect_eof when short read consumes exactly last_hint bytes and
-    tcp_inq.last becomes 0.
+At this commit the flag only records whether offset was non-zero when
+mptcp_init_skb() ran. Several places still raise MPTCP_SKB_CB(skb)->offset
+later without updating flags:
 
-Nothing limits the branch to MPTCP sockets. Its premise, that a hint of
-0 means EOF, also doesn't match mptcp_inq_hint().
+- __mptcp_move_skb(), on the partial packet path
+- __mptcp_ofo_queue()
+- __mptcp_recvmsg_mskq(), on partial reads
+- mptcp_read_sock(), on partial reads
 
-No later patch in the series touches mptcp_connect.c, so this branch is
-still there at the end of the series.
+Could the description say that the flag reflects the offset at init time?
+
+Two smaller points. The new to->flags test goes further than the old check,
+which only looked at from. It costs a few coalescing opportunities. Also,
+the reason for the value TCPHDR_FLAGS_MASK + 1 is only given in the later
+"mptcp: sync mptcp skb cb layout with tcp one" patch.
+
+Both points go away once "mptcp: remove CB offset field" removes the offset
+field. This is only about the wording of this intermediate commit.
+
+[ ... ]
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1794810809.git.tanggeliang%40kylinos.cn
