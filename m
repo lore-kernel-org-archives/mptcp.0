@@ -1,75 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.200
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.161.44
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794870365;
-	b=28vbKK3TWjqpLnYnWDp+u67ymhzmODB6JS+4Fo/NqU4mC54E364ZLo0ib2Or/nm8iEyx
-	 ckSJB5JQhrsqEffeFb3gIwq0X/67VkCHOOI8lOR7v33qfE918GuKCGRNy43Xdns7wYlyJ
-	 WVwdO2YLWoaMW+0ULHEljgMYkTE5ULZEUah4iskJ0nW7VsgTKimcdKBdqYLZgNd9++XCq
-	 gMYuEzGGCnQa5WYnvgzvfQ+DrY7/N9BeO7hIxMx8aZGnNm7I2zRZALP3CRgBOS8sR6x1f
-	 Dtkm8Jn3i2zrO6tNMJJk6NPiMq2srY8sALL30klv1QBAOKc9KYe+dV3uWRivUinVeCg==
+	t=1794879475;
+	b=VLTEdHEbT+jlkcQq9QIRRYqr9co0A69M4st7BRj3jYWi8solUQ4bzuwdvHxESxLMl13W
+	 2qSYLNoXpPGFwy2Dj2CoIXkZn92tptOrrdzKSKsYXleBi9HvCxeor4y9AlwvtCvW1JnY2
+	 5O3hPRnryn99efJQfONLTtQycjEbtyG2Ki7QlMbsSccOtKK4tbBLl7fRvn6/Vd3HbqEKQ
+	 9E+W5zkZiC3+mPeq1J5Blfretg4CUt2PQGSS1NUE7WerK5wu+MFUCOhwsocWpBPNdeWNK
+	 WAhKGG66HVR9eV/EJ6vKRBKt4bZD+Ira651I5WeiqkY5XnZys+V3EgXr4Vbrk2fsLvA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794870365;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794879475;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
-	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
-	 Content-Type;
-	bh=jv4M7a0nbU2bS4cFmSjQv+EpzgY561iWKyksbxiqZK8=;
-	b=KzaLDKabZF0LXk8GYXH/70ibeCFMv8z4OjfBxNtWBavnG0uiEW8qgLTDFkpCfW5ubaFv
-	 sQEmEuI+qIwnJ2vKMXT1wlgsV8gYCaRVIm5F1UNSs+q2ADbqbF0QiGJMaJTix1Ly9GvK6
-	 AWcrpCaUdtw+TwoFrnB9WP3qlVBOH13fvYjmC6mNvtoPnl4J4U/NDHIGNSt1xXAm9MZSs
-	 u7EUAv8RR9AqxWjgAaNWFcAywX/+7GdmCGsmf9haP95QwNqxMPTyGlRsl9XvxSSsKMR5f
-	 J6T4J99vooV1ltCkbAMFbg12rT5iAFxCD+CSzM68++CLxZDUqE9xrAC5weZayoxx8Mg==
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
+	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
+	 Date:MIME-Version:Content-Type;
+	bh=aRJEo7tPWkr19BGiu2Fnd/PX8UkgI8hfSuInHie5Oqo=;
+	b=kroKctQ9CROobn6n5WVNSOJyvVzuoDLnFfZMu2313bI4K8jhjjVTJMVrs/xkvgh4HBKx
+	 W/nm/m/GRRbZ/YD3z+cwGJNpz6JhRrXYC/IWkcFOhS5O9tCP2ONrMTm6JJfs0PKfHpG/W
+	 wkfbNItn5ULN5dzKghLllhbrkSFrEBmzuH0cX1Cg9R07Lwi2nDLmWBWCsLQTQop8HIJWr
+	 vMkrXu+rQDExVkitECEzgjRsCxuF2uQclyXMEq2l4T1UAEwW8CGED4WRLduakHWdI8lUf
+	 d4flb4rhNkdjhQfdsvdpH+qFyenCWMyxTk0Hftstle5vuguXSOU5f1U9uAVFkMYadmg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=olnGKwNy;
-	arc=none smtp.remote-ip=209.85.214.200
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="S9Vy/DoX";
+	arc=none smtp.remote-ip=209.85.161.44
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950E3606A31C
-	for <mptcp@lists.linux.dev>; Mon, 16 Nov 2026 23:06:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 950E3606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5274606A329
+	for <mptcp@lists.linux.dev>; Tue, 17 Nov 2026 01:37:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B5274606A329
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=olnGKwNy
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2eaf3f829b3so33614505ad.3
-        for <mptcp@lists.linux.dev>; Mon, 16 Nov 2026 15:06:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=S9Vy/DoX
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-716b58a4365so2675064eaf.3
+        for <mptcp@lists.linux.dev>; Mon, 16 Nov 2026 17:37:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794870364; x=1795475164; darn=lists.linux.dev;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=jv4M7a0nbU2bS4cFmSjQv+EpzgY561iWKyksbxiqZK8=;
-        b=olnGKwNyguynKViLDIs/8MYqVN4Q14DF+a9aJd6OGeQsggIl+agWFg+1s284ibjdxN
-         pZ15st+2RThpVFofm+szxRCLJOHvxtYiz3ILyVNJlJf1iYblb0Pvwjv6qKlIMXU4gxId
-         OyRG6qz+Di5z8bVNAAahrglZLR7go3rl2ubwMyhJjyyrFohgWGbXUIh83duq5Xlhrj0m
-         cDT1tjnsY6U2LOMxq5UqA9Q0Ngf68da1scFY4oBao4yL5LIorwRYV59hb7dg7wZTGKEV
-         9Uwdy7A6NbwaLK50nu4GTBmsQyNK+A0C/pbyaKa9DcTlI2AFHvhDDTQueaW9A0W0ehFd
-         amCw==
+        d=gmail.com; s=20260707; t=1794879473; x=1795484273; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=aRJEo7tPWkr19BGiu2Fnd/PX8UkgI8hfSuInHie5Oqo=;
+        b=S9Vy/DoXKg4A9t8L15/BItdeHe784+E/ah5icXsByLsihoiUq074YVtk38wsFv66XP
+         oPWm8Z3vmrrWlnmLdzjHCIjvVSJ/IC6PSK4HRbhO0gHePK+/n/EU54Dw6R9XtSevhxzJ
+         J657NVvh7tlTCoJWYbvzLRPV1tzKrg9zy+RHhEDk+WV6sTW4JoZQUTD2khogtNMweQhl
+         w6BAuZOtxizmWknzqDlQp6ALru2T/HIe1CaEx8Ax5I5M7ADfwlYPdFOLkgqSF2jVNJgO
+         bmIDzUNSSNfV/j8NNdk6p9k82YaUGH9TvPy8NyEoA4S4StBY3EUEvqDTLbA/yH2SJ6ju
+         uqwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794870364; x=1795475164;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=jv4M7a0nbU2bS4cFmSjQv+EpzgY561iWKyksbxiqZK8=;
-        b=h7sou0Azunr70vu38rlvQpiSrELfTmUT5r9BKGh1xHXRJt5NFgoVokjrBzBWp5g1Gy
-         GOZQR57r/1stAO3ncBuqzbtly0fZ/m/VW6zsGNiEyKBceB9M1+s+OSkWZLnu4b+anKBG
-         c4jonUDLeUdSLE4PE474645Z9vHuMgEbgGU85e4TwMIwKF4Exx7fVFknBh8cgPlFjs25
-         1nwKY5HDsv7IJd9U5wQKvClRSg5zVGA4yz9BsI3h9FITw+MmqTge5D5Kod8O3xnQEYNG
-         tbL9BnC3If0FOO4zDpxKPKyApoehLy7GuJrri8ZziM9QksnKNj/iaFvySryrU9cqGyCf
-         ScIQ==
-X-Forwarded-Encrypted: i=1; AL+hErEp9TG3a3l1noMK0zeyu8XumAllJVEaKrP3pzMWgG+3TATHNjl1NmCIu3iqSiWfb3iiku8LWQ==@lists.linux.dev
-X-Gm-Message-State: APuU4Z8xNZKnRLFgA6q2aVrfZeQuN9EEBFI1LClAdDeDyxFlqm6lYa7/
-	/f9PNZ+CtBV4zwRTW26f+9t4itBG0jpbo7fQn+nQzt6pmWnx7/7IVXnqc9b3DUfYpRNOgysFrx5
-	pV1JYXw==
-X-Received: from plbjy6.prod.google.com ([2002:a17:903:42c6:b0:2e8:7c73:6eb4])
- (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d590:b0:2dd:c053:82f6
- with SMTP id d9443c01a7336-2ee0dc06de5mr102245185ad.45.1794870363434; Mon, 16
- Nov 2026 15:06:03 -0800 (PST)
-Date: Mon, 16 Nov 2026 23:05:31 +0000
+        d=1e100.net; s=20260707; t=1794879473; x=1795484273;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=aRJEo7tPWkr19BGiu2Fnd/PX8UkgI8hfSuInHie5Oqo=;
+        b=Fz4WfTESv52XLuRoYwuWxY8Pqeha7j1ectLmeMZo6OUBa/EKVOYPHvcsMV1IxR0tWJ
+         LGKRyXelOVjafj6yAE8NCbv4Mm7bi9A7JD9X74TnuJoDlWpfHJKZAMH59hKdwWNFtD5q
+         Wvub54vUBe9IOa0SRW9EH6GvuqGObJCZx5kNi7lQErB/ocJnfSo2lYybTi0wp2/gon9U
+         0eEgp50KgcFtXtb40B2W4EgwOAl/MUP0kW9M4zUzTGoR29WizEp0i4xJ5ahK9paKzc9C
+         iEx8z9xqeq6h4W0T2SxxN2aMXmeI3C5JqRyIl57RJxSZrPsTKO/YikrwQDl8BF+r6OdD
+         4FEw==
+X-Gm-Message-State: APuU4Z9wCfiJ4AT6EOoRWkTCYcvJ0Zl+BRWNh2b5SW9s4FO3HFUTO9dt
+	1+pn99bFVkDN0JVQXeSv6tJNGZIgTh3aCzmcotVQXe4O4Tq1bH9s2EY=
+X-Gm-Gg: AYBFou2ZedQ9KK0cp17bolAWZRrD2uqhO++rYON5wwJt9QI4VTLguxudO9QMn6VlQQo
+	7jTlxacO5+/Yu7Jw0xUz+EmJJnnnxkuS95HAsb7a3NYVPr9RPDT/jmu5+iKageu8u8M50hY1jRX
+	3ptbaMS3KAJUTZeUMT7kElz3Fx0oC8SBfAZbDYe8yx/4whRHj61/W2Wt8vtviaMDY9DgNn049/e
+	Awj4SGBEllh+ZyNNIVSpv0JmdirCJNv0clH14IzsZn9JlQA4jyNFafIHHcZsYLwDzoTHEWFF8Mm
+	iS1MDsnUdkL7CMXlSQRJX6fIQoYwE2dk/YLOQ8L9zJSxA2UGtqv5zwfsB5spOsIADUuV60xN7DR
+	pxpM98gr3/+pzNoHcdVM/0KjfWZouu4rNPFz6QfzcjJXUbW74WFGr5g9lPJv4eLOuy1v87vSXmK
+	DEdgNH05+qpwda9cHpBsoanrwX4opySHQbAKYwOZ1FxfpCkoewEiMjHdOoTeQ4p0+k/nPly7ScE
+	L0JhW+iFBAZOroAvqquGwr+1Xm9jP6SMbif3XuzElbtGob5j7Uo51iGjhkPzlLAw5x+TBIQDSiy
+	i8SKhilFRbnj0/BlndfR4lfYW06hHG2SlgdahLxMfA==
+X-Received: by 2002:a05:6820:83da:10b0:71a:f082:3c7b with SMTP id 006d021491bc7-71af0823eb8mr2624494eaf.52.1794879473465;
+        Mon, 16 Nov 2026 17:37:53 -0800 (PST)
+Received: from github.com ([20.118.39.253])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-71ae860ebd7sm5432989eaf.8.2026.11.16.17.37.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Nov 2026 17:37:52 -0800 (PST)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Kuniyuki Iwashima <kuniyu@google.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
 In-Reply-To: <20261116230555.2305867-1-kuniyu@google.com>
+References: <20261116230555.2305867-1-kuniyu@google.com>
+Subject: Re: [PATCH v2 net-next 0/7] tcp: Prevent tcp_collapse() from
+ bloating queue.
+Message-ID: <8d71699b-58db-c174-2c07-b4b2a1a62037@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 17 Nov 2026 01:37:51 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -78,218 +97,64 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
-Mime-Version: 1.0
-References: <20261116230555.2305867-1-kuniyu@google.com>
-X-Mailer: git-send-email 2.56.0.679.gc527c65306-goog
-Message-ID: <20261116230555.2305867-8-kuniyu@google.com>
-Subject: [PATCH v2 net-next 7/7] selftest: packetdrill: Add test for tcp_collapse().
-From: Kuniyuki Iwashima <kuniyu@google.com>
-To: Eric Dumazet <edumazet@kernel.org>, Neal Cardwell <ncardwell@google.com>, 
-	"David S . Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>
-Cc: Simon Horman <horms@kernel.org>, Kuniyuki Iwashima <kuniyu@google.com>, 
-	Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org, mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-tcp_collapse() now does not collapse high-density skbs and a
-low-density skb sandwiched by high-density skbs.
+Hi Kuniyuki,
 
-tcp_rcv_collapse_bloated.pkt verifies the behaviour by
+Thank you for your modifications, that's great!
 
- 1. set a large SO_RCVBUF
- 2. send one high-density skb with 100 bytes read()
- 3. send one high-density skb
- 4. send one low-density skb
- 5. send one high-density skb
- 6. send 30 low-density skbs
- 7. send one high-density skb
- 8. set a small SO_RCVBUF
- 9. send a small data to trigger tcp_collapse()
-10. check TcpExtTCPRcvCollapsed via nstat
+Our CI did some validations and here is its report:
 
-Without the series, the first high-density skb is collapsed.
-In addition, the first low-density skb drags the following
-high-density skb into collapsing, consuming more memory.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): selftest_diag =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: debug (only =
+selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only=
+ bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only =
+bpftest_all): Success! =E2=9C=85
+- Perf: Unstable: 1 failed test(s): =
+validation:sched-weak-secondary =E2=9A=A0=EF=B8=8F=20
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/439843=
+29957
 
-If we remove sk_forced_mem_schedule() without this series,
-sk->sk_forward_alloc becomes negative at the end of tcp_collapse().
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/2bc9687ac49a
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1213235
 
-Note that 30 segments are to make the memory savings large
-enough so that the margin can absorb minor size delta of
-struct sk_buff or L1_CACHE_BYTES across configs.
 
-skb truesize, TCP_COLLAPSE_MAX_SIZE, TCP_COLLAPSE_SCALING_RATIO
-depend on PAGE_SIZE being 4K, so the test is skipped if getconf
-returns non-4K PAGE_SIZE.
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-Signed-off-by: Kuniyuki Iwashima <kuniyu@google.com>
----
- .../selftests/net/packetdrill/ksft_runner.sh  |   9 ++
- .../packetdrill/tcp_rcv_collapse_bloated.pkt  | 135 ++++++++++++++++++
- 2 files changed, 144 insertions(+)
- create mode 100644 tools/testing/selftests/net/packetdrill/tcp_rcv_collapse_bloated.pkt
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-diff --git a/tools/testing/selftests/net/packetdrill/ksft_runner.sh b/tools/testing/selftests/net/packetdrill/ksft_runner.sh
-index 0a97d5ae3469..250d143bb9f7 100755
---- a/tools/testing/selftests/net/packetdrill/ksft_runner.sh
-+++ b/tools/testing/selftests/net/packetdrill/ksft_runner.sh
-@@ -44,6 +44,15 @@ if [ -z "$(which packetdrill)" ]; then
- 	exit "$KSFT_SKIP"
- fi
- 
-+page_size=$(grep -E '^--define="?PAGE_SIZE=' $script | sed -E 's/.*PAGE_SIZE="?([0-9]+)"?.*/\1/')
-+if [[ -n "$page_size" ]]; then
-+	cur_page_size=$(getconf PAGESIZE 2>/dev/null)
-+	if [[ "$cur_page_size" != "$page_size" ]]; then
-+		ktap_skip_all "requires PAGE_SIZE=$page_size (current: ${cur_page_size:-unknown})"
-+		exit "$KSFT_SKIP"
-+	fi
-+fi
-+
- declare -a optargs
- failfunc=ktap_test_fail
- 
-diff --git a/tools/testing/selftests/net/packetdrill/tcp_rcv_collapse_bloated.pkt b/tools/testing/selftests/net/packetdrill/tcp_rcv_collapse_bloated.pkt
-new file mode 100644
-index 000000000000..90e8be86968f
---- /dev/null
-+++ b/tools/testing/selftests/net/packetdrill/tcp_rcv_collapse_bloated.pkt
-@@ -0,0 +1,135 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Test that tcp_collapse() only collapses bloated skb runs, skips leading
-+// and trailing high-density skbs, skips isolated bloated skbs when collapsing
-+// them would not shrink truesize, and properly recovers receive buffer space.
-+
-+--mss=1000
-+--define="PAGE_SIZE=4096"
-+
-+`./defaults.sh`
-+
-+// Establish a connection with a large receive buffer.
-+// __sock_set_rcvbuf() doubles, so 2000000
-+   +0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
-+   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
-+   +0 setsockopt(3, SOL_SOCKET, SO_RCVBUF, [1000000], 4) = 0
-+   +0 bind(3, ..., ...) = 0
-+   +0 listen(3, 1) = 0
-+
-+   +0 < S 0:0(0) win 32792 <mss 1000,nop,nop,sackOK,nop,wscale 7>
-+   +0 > S. 0:0(0) ack 1 win 65535 <mss 1460,nop,nop,sackOK,nop,wscale 4>
-+   +0 < . 1:1(0) ack 1 win 65535
-+
-+   +0 accept(3, ..., ...) = 4
-+
-+// 1. Queue two high-density 62,000 B segments (each adds 15 pages of frag
-+// truesize with enough margin across NET_SKB_PAD, L1_CACHE_BYTES, and
-+// MAX_SKB_FRAGS configs).
-+// Read 100 bytes from the first one so before(skb->seq, tp->copied_seq) is true.
-+   +0 < P. 1:62001(62000) ack 1 win 65535
-+    * > .  1:1(0) ack 62001
-+   +0 read(4, ..., 100) = 100
-+
-+   +0 < P. 62001:124001(62000) ack 1 win 65535
-+    * > .  1:1(0) ack 124001
-+
-+// 2. Queue an isolated bloated 1,000 B segment.
-+   +0 < P. 124001:125001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 125001
-+
-+// 3. Queue another high-density 62,000 B segment.
-+   +0 < P. 125001:187001(62000) ack 1 win 65535
-+    * > .  1:1(0) ack 187001
-+
-+// 4. Queue a run of 30 bloated 1,000 B segments.
-+   +0 < P. 187001:188001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 188001
-+   +0 < P. 188001:189001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 189001
-+   +0 < P. 189001:190001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 190001
-+   +0 < P. 190001:191001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 191001
-+   +0 < P. 191001:192001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 192001
-+   +0 < P. 192001:193001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 193001
-+   +0 < P. 193001:194001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 194001
-+   +0 < P. 194001:195001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 195001
-+   +0 < P. 195001:196001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 196001
-+   +0 < P. 196001:197001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 197001
-+   +0 < P. 197001:198001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 198001
-+   +0 < P. 198001:199001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 199001
-+   +0 < P. 199001:200001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 200001
-+   +0 < P. 200001:201001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 201001
-+   +0 < P. 201001:202001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 202001
-+   +0 < P. 202001:203001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 203001
-+   +0 < P. 203001:204001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 204001
-+   +0 < P. 204001:205001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 205001
-+   +0 < P. 205001:206001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 206001
-+   +0 < P. 206001:207001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 207001
-+   +0 < P. 207001:208001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 208001
-+   +0 < P. 208001:209001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 209001
-+   +0 < P. 209001:210001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 210001
-+   +0 < P. 210001:211001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 211001
-+   +0 < P. 211001:212001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 212001
-+   +0 < P. 212001:213001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 213001
-+   +0 < P. 213001:214001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 214001
-+   +0 < P. 214001:215001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 215001
-+   +0 < P. 215001:216001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 216001
-+   +0 < P. 216001:217001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 217001
-+
-+// 5. Queue a trailing high-density 62,000 B segment.
-+   +0 < P. 217001:279001(62000) ack 1 win 65535
-+    * > .  1:1(0) ack 279001
-+
-+// Reset SNMP counters.
-+   +0 `nstat -n`
-+
-+// Shrink SO_RCVBUF so sk_rcvbuf (320,000) is smaller than current
-+// sk_rmem_alloc (334,592 on x86_64 default), but larger than sk_rmem_alloc
-+// after collapsing the 30 bloated skbs (300,288 on x86_64 default).
-+   +0 setsockopt(4, SOL_SOCKET, SO_RCVBUF, [160000], 4) = 0
-+
-+// Inject the next 1,000 B segment with a changed window to bypass
-+// header prediction.  This triggers tcp_prune_queue() -> tcp_collapse().
-+// Only the 30 bloated segments should be collapsed; the high-density
-+// segments and the isolated bloated segment are skipped.  sk_rmem_alloc
-+// shrinks below sk_rcvbuf, so tcp_can_ingest() succeeds and the packet
-+// is accepted.
-+   +0 < P. 279001:280001(1000) ack 1 win 65534
-+    * > .  1:1(0) ack 280001
-+
-+// Verify exactly 30 skbs were collapsed.
-+   +0 `nstat -s | grep TcpExtTCPRcvCollapsed | grep -q " 30 "`
-+
-+// Verify no packets were dropped.
-+   +0 `test -z "$(nstat -s | grep TcpExtTCPRcvQDrop)"`
-+
-+// Read all remaining queued data to verify data integrity.
-+   +0 read(4, ..., 300000) = 279900
--- 
-2.56.0.679.gc527c65306-goog
+For more details:
 
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
