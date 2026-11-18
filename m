@@ -1,53 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1794963947;
-	b=FuPUKCqlndOGUUAUsi11YCItI7Rjpuy4KXlAvvrTZOxfYpJm+1CaiXaeuURaoT2FAKtD
-	 SCdfZ894CEbSnZkrLPaE9cIkVT4AsPwSJW4gQxBa9HU+afRiDeAxwqT0MtF/RXRc0+PBG
-	 wf3V9nhBpQjp15CEQ+jmwxtwwibceou57+Gz/w7N2MKjYG/za8t6VR5bKoyhbc6KGdAp/
-	 GlNYKF8GatYEgSB1SuJl0xuGOD8xn2DkwiyZi7NAjwTEGeMkVW0641q8YLM4bd/7kg1C0
-	 5UhCaPeBTP8zwUmtPG3n1wGMyt3b24Ra7szIVQwVtzfRyBEN2cy5o5U+CH+v1JVeHpw==
+	b=nY/vzvth6V7HUnIt37dHCEb2u4fnuGTA/E+SJKWHun4O4XcqxEq9c4mnCnvlQoQh/XG8
+	 hqJTs18s1taO2aHxgeqlgKdBY/E5K/z0JqP6tTyDiYDN457o+I6B2R2Rv4WiB4bMV+jLW
+	 c9wsfiO26F4F792QwOsDXfznOr8x96G5p+vZnCQn63GI9ugA8xU77TI5fUeRRRdcmm4z+
+	 2+kfE4wtvYsuDY2vd4+E86GzU9dWJsGocMUxizUKl/NBkRmYuNBVY/WfItmRarkRw9TwT
+	 nm8E9EnFEG1oYMHilkaFJ7gvyk3D8eRsps55M62Qd8BBBH6bUD2+gwBKomsHjJ2K8nA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1794963947;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=5UMruVWXJtXhhsASd0xTwxA8k9CedJTw+YW5Iru8yZk=;
-	b=GpSWTJr0sPboZ097hrwtepVfR7Q9X4Vs0AxJWTLpw9ufdhdjfYbKVuRQ4qxrSAJM3ChG
-	 buolz7L8aXJU9YR3uqQ5GCqGP+ztcwndSMldwh6tAhbOEUfvRPUMo3NHtr/BSHFsfJN6h
-	 tw5VYB+2NHvYA0WsELSkkw/D7sIKdH79IcLoLa612XpM6X9dw4vQ1M0GKtFJd6dkuuDL8
-	 AF1MOQSZ5p+Bi5dL5oKUOySXaXZQQizaiM1yQBmC8Tgj/kxjBdrzz9v2JJ2GrStrgx79e
-	 c8I9TLu5nKWO27EOAEXjRWAxS5/ht+Ccojl9y4FWPYqILM/ypX6tmRqBoW1HWEcKbow==
+	bh=bCuZddctHOM/V8gM3ibzvbVJWPKAcoK8Qz6+5a3iibw=;
+	b=JIf3uCOiknyuvHmKv0Jb5d/hzEsus0CfS6QZ4AwEiMlv1SSOJywi0U8GAYQpUHR29cEZ
+	 nqaS1vQam4ZosVEIk/U3Iv9SDIu/5A9otlepBc9HA+DaYGB5m3XAHaIJHbEIE4uDXF/f1
+	 6Zr2iKVq6APPfojq9my0rdONNSYmWcgIBIBWyXjc54lWvfie7NQ8ErF8LHaOpw4vd/N0L
+	 J1wH+v5UTnX/WKMqofnSRV2OgY+udzkZ1K03S8THDEvo37jEnuZ83nsavUm86//YMeZoW
+	 tShDYwvxoyMPqbSzYnfcv4Inurk7ZgQK8xvbBD3bYX1E2XcE6PbKvPq85fOH9EHgPgg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IpkFC0Uh;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="cPm/pkK0";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1B8606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9D2606A31C
 	for <mptcp@lists.linux.dev>; Wed, 18 Nov 2026 01:05:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IpkFC0Uh
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B65721F000C7;
-	Wed, 18 Nov 2026 01:05:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cPm/pkK0
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F8121F000C7;
+	Wed, 18 Nov 2026 01:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794963946;
-	bh=5UMruVWXJtXhhsASd0xTwxA8k9CedJTw+YW5Iru8yZk=;
+	s=k20260515; t=1794963947;
+	bh=bCuZddctHOM/V8gM3ibzvbVJWPKAcoK8Qz6+5a3iibw=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=IpkFC0UhSQo6WM4wX++oky66XafAW0QNJ5aoIgFidTUqPei55K1GDLbm6eXTgajEk
-	 nW0OYxiFXpIZxTFBCDDvXgiIe+IDnEe1BOXnhRA3AeANHs8IzuHAJvBNMojPjKC2Hr
-	 d4RoLQ84WHnf1JPuXMN7YUWemMQNWVTyU4ZXoWLnbrdL6ymdT+f3Jz0TONV9FXmQ8Y
-	 k8oiKEftxgspKCOv9GdbRQ5F9JYLzdD1EUYaM5F2HoVqGF2RnMGFIxg3XMmeeABZAP
-	 KuWCxo2JoSWnkoMahG/JtFCkG9Czynjv0t/SbJcjnGeDOY0qBXHxvptQ/w6sl90xbP
-	 Kg65TDLzwV6rg==
-Subject: Re: [PATCH mptcp-next v8 4/7] mptcp: add sendmsg_locked to proto_ops
+	b=cPm/pkK0LA5ZQCvcSirASzYF1QUnBNMvgCyB3ozUpNz0Bv1hfzRBxmkk6v3gQsNc0
+	 1tj0vXZq4T0KGyg7Gh15hTbKof1UyBXqurPa7V+J4bmGbQnH0czFKWK2LzvK2Gt4pV
+	 RZKPPAsSq/GwbWCILROScCYajzLtDCRz9gw0cLJIq7FCpeiK95iXUli1LWN5yGt+cA
+	 q03BQfkbH6B1iDswCR8l+P8/fqLJmshyDe8NhjOVy6KcjKcVB1GPRrE+WeQr22VZCu
+	 w9FNeAiI+M1/uw7K5rdSMqo5Rm0jNL0VcbuF8TW9ZNBb4J+Yo1zP5Q67AVu7MJaHdW
+	 YuMZ+b2JLGgyg==
+Subject:
+ Re: [PATCH mptcp-next v8 5/7] mptcp: track app-limited state in mptcp_sendmsg
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Wed, 18 Nov 2026 01:05:46 +0000
-Message-ID: <179496394632.3133.4263841148082085477@kernel.org>
-In-Reply-To: <2d180799564c49dc62ab876fbcb358670ece3a29.1794826541.git.geliang@kernel.org>
-References: <2d180799564c49dc62ab876fbcb358670ece3a29.1794826541.git.geliang@kernel.org>
+Date: Wed, 18 Nov 2026 01:05:47 +0000
+Message-ID: <179496394705.3133.17806116170570871608@kernel.org>
+In-Reply-To: <f23d8a957314196249b5ca0e3b36be8bb0a755e2.1794826541.git.geliang@kernel.org>
+References: <f23d8a957314196249b5ca0e3b36be8bb0a755e2.1794826541.git.geliang@kernel.org>
 X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -67,88 +68,93 @@ you want to address the nit picks below when you respin.
 
 Low priority / nit picks for your consideration:
 
-- [Low] The patch adds `.sendmsg_locked = mptcp_sendmsg_locked` to
-  `mptcp_stream_ops` and `mptcp_v6_stream_ops`, but no in-tree caller…
-- [Low] The commit author is 'Geliang Tang <geliang@kernel.org>', but the
-  only Signed-off-by is 'Geliang Tang <tanggeliang@kylinos.cn>'.
+- [Low] mptcp_rate_check_app_limited() (net/mptcp/protocol.c:2042-2064)
+  runs unconditionally from mptcp_sendmsg_locked() (line 2097).
 
 --
 
-mptcp: add sendmsg_locked to proto_ops
+mptcp: track app-limited state in mptcp_sendmsg
 
-This commit splits mptcp_sendmsg() into mptcp_sendmsg_locked(), which
-expects the caller to hold the msk socket lock, and a small
-mptcp_sendmsg() wrapper that takes the lock. It also sets
-mptcp_sendmsg_locked() as the .sendmsg_locked hook in both
-mptcp_stream_ops and mptcp_v6_stream_ops.
-
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-
-[Severity: Low]
-This isn't a bug, but the author is Geliang Tang <geliang@kernel.org>,
-while the only sign-off uses tanggeliang@kylinos.cn. checkpatch.pl reports
-this as FROM_SIGN_OFF_MISMATCH.
-
-Could a Signed-off-by for the author address be added, or the author
-address be changed to match?
+This commit adds mptcp_rate_check_app_limited(). It walks every subflow
+and calls tcp_rate_check_app_limited() under each subflow's socket lock,
+unless the MPTCP level still has unsent data or a retransmission pending.
+It is called from mptcp_sendmsg_locked() so that BBR and similar
+congestion controllers can ignore rate samples taken while the
+connection is application-limited.
 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index a0ad28f5a3851..83abdf39c4e54 100644
+> index 83abdf39c4e54..b9d080121f782 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-
-[ ... ]
-
-> @@ -4832,6 +4842,7 @@ static const struct proto_ops mptcp_stream_ops = {
->  	.read_sock	   = mptcp_read_sock,
->  	.splice_read	   = mptcp_splice_read,
->  	.peek_len	   = mptcp_peek_len,
-> +	.sendmsg_locked	   = mptcp_sendmsg_locked,
->  };
+> @@ -2039,6 +2039,30 @@ static void mptcp_rps_record_subflows(const struct mptcp_sock *msk)
+>  	}
+>  }
+>  
+> +static void mptcp_rate_check_app_limited(struct sock *sk)
+> +{
+> +	struct mptcp_sock *msk = mptcp_sk(sk);
+> +	struct mptcp_subflow_context *subflow;
+> +	unsigned long flags, cb_flags;
+> +
+> +	flags = READ_ONCE(msk->flags);
+> +	cb_flags = READ_ONCE(msk->cb_flags);
+> +
+> +	if (msk->write_seq != msk->snd_nxt || mptcp_send_head(sk) ||
+> +	    test_bit(MPTCP_WORK_RTX, &flags) ||
+> +	    test_bit(MPTCP_RETRANSMIT, &cb_flags))
+> +		return;
+> +
+> +	mptcp_for_each_subflow(msk, subflow) {
+> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+> +		bool slow;
+> +
+> +		slow = lock_sock_fast_nested(ssk);
+> +		tcp_rate_check_app_limited(ssk);
+> +		unlock_sock_fast(ssk, slow);
+> +	}
+> +}
 
 [Severity: Low]
-Is there an in-tree caller that can reach this hook for an MPTCP socket?
+Is this loop acceptable on the sendmsg() fast path?
 
-The only generic caller of proto_ops->sendmsg_locked seems to be
-sendmsg_locked() in net/core/skbuff.c. It is reached only through
-__skb_send_sock(), from skb_send_sock_locked() and
-skb_send_sock_locked_with_flags(). Only espintcp and ovpn call those
-helpers.
+The early return only happens while MPTCP-level data is still pending.
+For request/response, interactive or paced senders, __mptcp_push_pending()
+has usually pushed out the previous write by the time the next one
+arrives. So write_seq equals snd_nxt, first_pending is NULL and no RTX
+flag is set. In that steady state the walk runs on every call.
 
-ovpn_socket_attach() in drivers/net/ovpn/socket.c rejects any protocol
-other than UDP and TCP:
+Each sendmsg() then takes the socket lock of every subflow on conn_list.
+That includes backup, stale or idle subflows the scheduler will not use.
+This comes on top of the subflow locking that __mptcp_push_pending()
+already does for the subflows it schedules.
 
-	if (sock->sk->sk_protocol == IPPROTO_UDP)
-		return ovpn_udp_socket_attach(ovpn_sock, sock, peer->ovpn);
-	else if (sock->sk->sk_protocol == IPPROTO_TCP)
-		return ovpn_tcp_socket_attach(ovpn_sock, peer);
+The other subflow walk on the same path is gated, so it costs nothing
+when it is not needed:
 
-	return -EOPNOTSUPP;
+net/mptcp/protocol.c:mptcp_rps_record_subflows() {
+	if (!rfs_is_needed())
+		return;
+    ...
+}
 
-espintcp needs the TCP ULP, and mptcp_setsockopt_sol_tcp() in
-net/mptcp/sockopt.c refuses it:
+The new call in mptcp_sendmsg_locked() has no gate:
 
-	case TCP_ULP:
-		return -EOPNOTSUPP;
+	/* is sending application-limited? */
+	mptcp_rate_check_app_limited(sk);
 
-As the commit message itself says, kTLS and sockmap still call
-tcp_sendmsg_locked() directly.
+Could this be gated in a similar way? Other options would be to do the
+check in the push path, where the subflow lock is already held, or to
+skip subflows that cannot send.
 
-The commit message also says:
+The commit message says:
 
-    However, certain upper layers need to call the sendmsg method while
-    the socket lock is already held.
+    The per-subflow locking only occurs
+    when the MPTCP send queue is empty, which is the correct scenario to
+    mark the connection as application-limited.
 
-Which upper layer does this refer to? I could not find anything in this
-patch or in the rest of the series (app-limited tracking, the
-mptcp_check_readable update, selftests) that calls .sendmsg_locked on an
-msk. So the new entry here, and the matching one in mptcp_v6_stream_ops,
-look unused.
-
-Could the commit message name the intended consumer? Alternatively, could
-this patch be merged together with the series that adds that consumer?
-
-[ ... ]
+For the workloads this patch targets, an empty send queue is the normal
+state. Are there any measurements of the added overhead, or of the BBR
+benefit?
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1794826541.git.geliang%40kernel.org
