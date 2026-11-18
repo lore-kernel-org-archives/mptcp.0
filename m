@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795039448;
-	b=gtyCONIevq1J/3uh2W+Yt/wcU28DK4AqRWQbT09AYjLlm8HMMo+udUQqFTrH5fnZ5jx/
-	 tsH4FIHqId95iXapK6lGzH2JO633PEhzD8lNv51K5L1GKCYe+c0B8U2r+9kJmYMGknWl3
-	 IccToBVd1pc4Mo/gbtKFSVq6FQtGdZ0zwFsK/BTLJggMjlD8/NomrTAcWMSW/f46s+1kg
-	 iN/uBmM4/2FfPHjpgbsI2BMMswwmZ0hdb5VRzsOpxH5kppvK95GPuYUWY0PnujuHjluSD
-	 IlrpvbnT/+bTcGu1Tr/Cps26CBHULORV/cbBx7bdNkoZVmsapq8Rsn3cp3x8oZO6SYQ==
+	t=1795039530;
+	b=bOX2rj6+sEORkB/CLfmNplPuh9rmEQBs6I41x+JBQSgNv+2IoCdKGqSfHw6lhqgvl5ZS
+	 mPFBduhPZKWFKNOT83Zirt/5HLPh/X+Mecg7u7DBECj1F3LecrWctSSulUbqBH9+OzNxz
+	 ez96JWjeUqgtVOUlTqnLamOh3BAS2e4rjKMFv22VxsQfyONaYtaTpSdt2tHSn6g+eFxx5
+	 7u6+StD83QUaefcT1uQbqVj1IwyuUvV1wqdO4dMAcwhWcVfEG7J0jV6WBkZFSkK1Uvtx+
+	 RgCZEWfgB4HMrD2wPucs10k9ssyhRxX9AXDrsvxb0nETf7Uxd1W+OjyzK0+nv6A3sQA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795039448;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795039530;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=F99TcS6GS6LcOdl28JA1aAD6HB54WK+n8tF0clR+7AI=;
-	b=AeGrWUQhW/QSj7btltwtyCWHhqg2dVy32rjckHFOMiPa4dv+0Pih8YiP0jSqsIEaRHke
-	 qJ5Ix5XS5XMoIjVycVBDF+rhksIIS2eZWHPfEWA/cp0Q1vqqr01xS6vr2/ZW3uMgYDFJ3
-	 lJ/4uQ1m8WBAFoz80Xl1VWWMZgrIkzDyOa7/yLPHRv1FWWX3xUivp5ovaIo+k1veueyWV
-	 MfOfQfHV54h/5AIvFQCMW2P/KosmMWmvoj7K8MrJIb31Flmxjiq9dfshz2nczUsi/7SV8
-	 yRWT7QAy6h6B5GETtQ75mVJXMhHSCH5EJrWoq45OARkzhrkn51AP/SjrEWUyHGYu0RQ==
+	bh=lYSpAsZU1uhdZAAtBJFpsRRLLeq9hhkppud65AaR9cA=;
+	b=e1iJS3kAcCqRxY+XLjBmDy6R0/Y7bFC7ZmksoLQCmeoqUClhhET/jz3bH3Zz69blpzKM
+	 cWQRYduBmvHO4OwAPK3l1jFQAqC1FKk91g5QO1isbV8EUwKYiiLY87NvRFBoBCnB7MY/+
+	 V+Grn5/9zhMsbJpkCiMg2VD9wB3h+FFJzx+W2cZzGQx8Xx6vmw8lIamfiHSqdlc81Dtfi
+	 Vc6HT0mw8kPlgqm9sDTEbJLaoL5RUZl13bvGJEs7zbguTug/eY9cHLWFb+/bxaqGDl0+Q
+	 azqeECMJEzsOY+00GDntrAl8avQoUG3F+n7uuu1B/io+SPlUUmrwDf2V3T28qbkwKuw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MGgJeIAF;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ti0DHdro;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D6B606A32F;
-	Wed, 18 Nov 2026 22:04:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D806606A320;
+	Wed, 18 Nov 2026 22:05:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MGgJeIAF
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A58E61F000C6;
-	Wed, 18 Nov 2026 22:04:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ti0DHdro
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 351A91F000C8;
+	Wed, 18 Nov 2026 22:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795039448;
-	bh=F99TcS6GS6LcOdl28JA1aAD6HB54WK+n8tF0clR+7AI=;
+	s=k20260515; t=1795039530;
+	bh=lYSpAsZU1uhdZAAtBJFpsRRLLeq9hhkppud65AaR9cA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=MGgJeIAFYJOLUucACRpOikWVSrTX5JBCW6ZfRp6krQF2Ae7+TKTq1JhwKRodhqJrj
-	 Cnz06N7E/NljW4ayIMf0ATaGXdF6Wc7w9a2G2C3TCe7wLlxtzTkj5GPE/fjlsdD5s6
-	 j9wLTPRxsP6VVTfhko7oAl+gr7DpjQ05wE6QyZ761TOqxLhcGwJhcVvCNpS/OpnC/C
-	 FWGkfKNSmJ8R7m67ji0C+5B8hAZFsZoHe2iKONS9G0UZ63GUfbDjEszEydwgXnucQN
-	 xnfjgqJw3CkDtl6YYhS49OpBBUkE7JG3WrCQMRU8uzfrsmb4tFTb4PWqK/NHtwm64u
-	 RvyFG3AhepxCA==
-Message-ID: <4c783bb9-d988-48c3-8849-8ec0c9ea1eb3@kernel.org>
-Date: Wed, 18 Nov 2026 23:04:02 +0100
+	b=Ti0DHdronxSKKfnKPOs+U0PtffzU+gmTxJbs3wxwFbIjJrwjwcHCqXF99pXofjfE6
+	 NYGNMlbskNthkbtM5az7pE25aM2thEyocvyRXxKbDevIJIZ9TUpNMGsfwh3lsWqTOR
+	 PO7c63/GXOZgDDAs6ZyoRe4diByuyVRWnF495nI4mb3zNFSpNPMVzdfhYg38/60F/1
+	 QkkRZeriW+wOTlY+JqbirteuzamKyAxJ9I/epGii1erQHIEm1Hg7FEE4Usf/rq7Fx2
+	 kJVqBMdvtFe2YJX3ypysB9Nr5WzRKNClQ4Icgrx0KW+q4zVoN+mNBndUuq2Iz163v6
+	 zh5gn+5Nm1Klg==
+Message-ID: <869ba3ad-381e-41b1-adfe-2ef86fef5ad7@kernel.org>
+Date: Wed, 18 Nov 2026 23:05:24 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,16 +52,19 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net 7/7] mptcp: fix dummy mapping of overlapping segments
+Subject: Re: [PATCH net 0/7] mptcp: misc fixes for v7.4-rc4
 Content-Language: fr
-To: netdev-bot+sashiko@kernel.org
-Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
- edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- fw@strlen.de, dmytro@shytyi.net, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- mason@kernel.org
-References: <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-7-bf7656de653e@kernel.org>
- <179495459243.3136.9349092580555178374@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Geliang Tang <geliang@kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@kernel.org>,
+ Simon Horman <horms@kernel.org>, Florian Westphal <fw@strlen.de>,
+ Dmytro Shytyi <dmytro@shytyi.net>, mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ Quanye Yang <quanyeyang@proton.me>, Petar Sakic <petar.sakic@ink.fish>,
+ T S Rameshkumar <rameshkumar.t@phytecembedded.in>,
+ Chris Mason <mason@kernel.org>, Mat Martineau <martineau@kernel.org>,
+ netdev@vger.kernel.org
+References: <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-0-bf7656de653e@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -107,55 +110,34 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <179495459243.3136.9349092580555178374@kernel.org>
+In-Reply-To: <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-0-bf7656de653e@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi Jakub, Paolo,
 
-On 17/11/2026 23:29, netdev-bot+sashiko@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found more severe
-> issue(s) in other patches of this series. This mail is only an FYI, in case
-> you want to address the nit picks below when you respin.
+On 16/11/2026 23:06, Matthieu Baerts (NGI0) wrote:
+> Here are some unrelated fixes:
 > 
-> Low priority / nit picks for your consideration:
+> - Patch 1: do not send data beyond the window announced by the peer. A
+>   fix for v5.11.
+> 
+> - Patch 2: push pending data after a sendmsg copy fault. A fix for v6.1.
+> 
+> - Patches 3-6: with TFO, send the data written by a server before the
+>   third ACK as soon as this ACK arrives, also in case of fallback to
+>   TCP, even if the connection was shut down. Fixes for v6.2 and v5.19.
+> 
+> - Patch 7: after a fallback, fix the dummy mapping of overlapping
+>   segments. A fix for v6.19.
 
-(...)
+TL;DR regarding the AI reviews: they are not blocking (to me): all "Low"
+except on patch 6, but that's pre-existing and not a regression.
 
-> Link: https://lore.kernel.org/4c48d016490d43b6892c622cbae858b48f176cff.1794304840.git.tanggeliang@kylinos.cn [1]
-> 
->> Author: Geliang Tang <geliang@kernel.org>
-> 
-> [ ... ]
-> 
->> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> [Severity: Low]
-> This isn't a bug, but the author address and the address in the author's
-> sign-off are different. The author is geliang@kernel.org, and the only
-> sign-off from Geliang uses tanggeliang@kylinos.cn. No sign-off uses the
-> author address.
-> 
-> scripts/checkpatch.pl reports this as a FROM_SIGN_OFF_MISMATCH warning
-> ("From:/Signed-off-by: email address mismatch"). The names match exactly
-> but the addresses do not, and checkpatch does not look at .mailmap.
-> 
-> .mailmap already maps the two addresses to the same person:
-> 
->     Geliang Tang <geliang@kernel.org> <tanggeliang@kylinos.cn>
-> 
-> So this only affects the consistency of the tags. The DCO itself is not
-> in question.
-> 
-> Since this carries Cc: stable, could the author be set to the kylinos.cn
-> address, or the sign-off use geliang@kernel.org (changed or added), before
-> the patch is applied?
-
-False positive: the author is tanggeliang@kylinos.cn, see the "From:"
-line at the top of the email body. geliang@kernel.org comes from
-.mailmap.
-
-This looks like a bug in Clashiko, Sashiko didn't report that.
+Note that patch 2 should have another Fixes tag (sent in my reply to
+Clashiko). Sorry for that, Sashiko/Clashiko didn't notice that before.
+If changing it when applying the patches is causing troubles, could you
+please drop this patch 2/7 and apply the rest?
 
 Cheers,
 Matt
