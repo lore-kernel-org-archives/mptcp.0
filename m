@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795039423;
-	b=XEAmzPpwbZAKpWOPbeAmpVjPvwpcJ0yHeOSujITGzZnMCnEgSr6eDqugTXLb1DQvQ5XS
-	 gLpCxrB565cpicnixiD+6iWyJZT0Py4oEbahrEC3HsywF1yn6dYb/S9MogTGf2hRnPWcm
-	 A4po+KIyJp+AEg7wdvCYMD6mIzl4Oxo2OfiWA21C0fIcmmqjAhGcrhvfbi46jtT0RP7N3
-	 nx7TQ83n0e7560o+yy79pw6iY5huWais51cMiCcwIEB273B+52Vzsv+miOjeM5pi1Z+LR
-	 I+MwpygpO81gkqEhpBE64xws/HoQOuu9QikTJY+Q5uXse5SKOS8NWDOYruChe7KZrvg==
+	t=1795039448;
+	b=gtyCONIevq1J/3uh2W+Yt/wcU28DK4AqRWQbT09AYjLlm8HMMo+udUQqFTrH5fnZ5jx/
+	 tsH4FIHqId95iXapK6lGzH2JO633PEhzD8lNv51K5L1GKCYe+c0B8U2r+9kJmYMGknWl3
+	 IccToBVd1pc4Mo/gbtKFSVq6FQtGdZ0zwFsK/BTLJggMjlD8/NomrTAcWMSW/f46s+1kg
+	 iN/uBmM4/2FfPHjpgbsI2BMMswwmZ0hdb5VRzsOpxH5kppvK95GPuYUWY0PnujuHjluSD
+	 IlrpvbnT/+bTcGu1Tr/Cps26CBHULORV/cbBx7bdNkoZVmsapq8Rsn3cp3x8oZO6SYQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795039423;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795039448;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=oFrBCJah7w3imnVbLeDvOxFUWcthQiQzvQDbtTXDpYg=;
-	b=JiZkvi0qha7LM/aRzpEXFMvUL4Fy8ijdpIlyz9fiTcOsUFjGQNZqFLAekPYBpUL7wR6U
-	 r1bTJ16diD7JkewA8g/vSCXyIGOpPjsaDDktoH/tc1Xfxx5j8M5MO1KWe0epg/7PbjY6W
-	 bQqiPSelB9eE5gZqCzwfl9VrRba/3iZvyaGEV7QULI2FtGN1+1E0DmyFTTNSXSveMM/13
-	 vxPWrbpFTcxnbHEfvAPKSp/CYiYaGFWBIwOxO5owutYB9mqMRPeVUPRP48PbJ/FMg1Hg9
-	 zyReJMw8IhRQgCwT4yBhpDMTgoZBhpPwtaUz+OkqaNlteamYsXyxjAXcgJ4e4fGFx0Q==
+	bh=F99TcS6GS6LcOdl28JA1aAD6HB54WK+n8tF0clR+7AI=;
+	b=AeGrWUQhW/QSj7btltwtyCWHhqg2dVy32rjckHFOMiPa4dv+0Pih8YiP0jSqsIEaRHke
+	 qJ5Ix5XS5XMoIjVycVBDF+rhksIIS2eZWHPfEWA/cp0Q1vqqr01xS6vr2/ZW3uMgYDFJ3
+	 lJ/4uQ1m8WBAFoz80Xl1VWWMZgrIkzDyOa7/yLPHRv1FWWX3xUivp5ovaIo+k1veueyWV
+	 MfOfQfHV54h/5AIvFQCMW2P/KosmMWmvoj7K8MrJIb31Flmxjiq9dfshz2nczUsi/7SV8
+	 yRWT7QAy6h6B5GETtQ75mVJXMhHSCH5EJrWoq45OARkzhrkn51AP/SjrEWUyHGYu0RQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F4WHDeKd;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MGgJeIAF;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA38606A31C;
-	Wed, 18 Nov 2026 22:03:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D6B606A32F;
+	Wed, 18 Nov 2026 22:04:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F4WHDeKd
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 554881F000C6;
-	Wed, 18 Nov 2026 22:03:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MGgJeIAF
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A58E61F000C6;
+	Wed, 18 Nov 2026 22:04:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795039423;
-	bh=oFrBCJah7w3imnVbLeDvOxFUWcthQiQzvQDbtTXDpYg=;
+	s=k20260515; t=1795039448;
+	bh=F99TcS6GS6LcOdl28JA1aAD6HB54WK+n8tF0clR+7AI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=F4WHDeKd5F6tWs6uf57JVeNysViadpbhtro9k3xjl3gkGAcU2F/EergybTl5g23cH
-	 8dh4fzSlLZyNZAqdzm/qe/jFr7w2ekBQ3DlccbhiKJqypCqaroWvVmth+2mDgVv/0L
-	 npttaG9RTrXuYZ6lagikQfB6GSw7uwWZBmXUMSqZrxK8kKyeX9Kv0Jw9Ifoz6iZMxE
-	 zHy9T0GyU8V5wNc6KfLE7hNxa7+5UdcfEvNatCq4qr3mRZPwhkIgqCVqLZ5H/8Snld
-	 dZBjKJ8rHnhWwUpajpb1ZoPLnFnOi+gGnoNewdVZqSnvQdtV9RHtr0fIp7lalRGvv+
-	 atdn/Ji2FGLtQ==
-Message-ID: <a25b7f89-88e4-419e-83cc-83c5d1776421@kernel.org>
-Date: Wed, 18 Nov 2026 23:03:37 +0100
+	b=MGgJeIAFYJOLUucACRpOikWVSrTX5JBCW6ZfRp6krQF2Ae7+TKTq1JhwKRodhqJrj
+	 Cnz06N7E/NljW4ayIMf0ATaGXdF6Wc7w9a2G2C3TCe7wLlxtzTkj5GPE/fjlsdD5s6
+	 j9wLTPRxsP6VVTfhko7oAl+gr7DpjQ05wE6QyZ761TOqxLhcGwJhcVvCNpS/OpnC/C
+	 FWGkfKNSmJ8R7m67ji0C+5B8hAZFsZoHe2iKONS9G0UZ63GUfbDjEszEydwgXnucQN
+	 xnfjgqJw3CkDtl6YYhS49OpBBUkE7JG3WrCQMRU8uzfrsmb4tFTb4PWqK/NHtwm64u
+	 RvyFG3AhepxCA==
+Message-ID: <4c783bb9-d988-48c3-8849-8ec0c9ea1eb3@kernel.org>
+Date: Wed, 18 Nov 2026 23:04:02 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,8 +52,7 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net 6/7] mptcp: don't send a FIN before the pending data
- on fallback
+Subject: Re: [PATCH net 7/7] mptcp: fix dummy mapping of overlapping segments
 Content-Language: fr
 To: netdev-bot+sashiko@kernel.org
 Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
@@ -61,8 +60,8 @@ Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
  fw@strlen.de, dmytro@shytyi.net, netdev@vger.kernel.org,
  mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, stable@vger.kernel.org,
  mason@kernel.org
-References: <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-6-bf7656de653e@kernel.org>
- <179495459093.3136.11317086858664422664@kernel.org>
+References: <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-7-bf7656de653e@kernel.org>
+ <179495459243.3136.9349092580555178374@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -108,168 +107,55 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <179495459093.3136.11317086858664422664@kernel.org>
+In-Reply-To: <179495459243.3136.9349092580555178374@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hello,
 
 On 17/11/2026 23:29, netdev-bot+sashiko@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential
-> issue(s) to consider.
+> Thank you for your contribution! Sashiko AI review found more severe
+> issue(s) in other patches of this series. This mail is only an FYI, in case
+> you want to address the nit picks below when you respin.
 > 
-> Critical: 0 · High: 0 · Medium: 2 · Low: 0
-> 
-> If you believe none of the issues are legitimate, please reply to each
-> issue of Medium severity or higher and explain why the AI is wrong.
-
-Please see below.
+> Low priority / nit picks for your consideration:
 
 (...)
 
->> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
->> index 011e73d04ee60..7d226ee38315d 100644
->> --- a/net/mptcp/protocol.h
->> +++ b/net/mptcp/protocol.h
->> @@ -1333,7 +1333,11 @@ static inline bool mptcp_try_fallback(struct sock *ssk, int fb_mib)
->>  	msk = mptcp_sk(sk);
->>  	if (!__mptcp_try_fallback(msk, fb_mib))
->>  		return false;
->> -	if (READ_ONCE(msk->snd_data_fin_enable) && !(ssk->sk_shutdown & SEND_SHUTDOWN)) {
->> +
->> +	/* no FIN before new data: see mptcp_check_send_data_fin() */
->> +	if (READ_ONCE(msk->snd_data_fin_enable) &&
->> +	    !before64(READ_ONCE(msk->snd_nxt) + 1, READ_ONCE(msk->write_seq)) &&
->> +	    !(ssk->sk_shutdown & SEND_SHUTDOWN)) {
+> Link: https://lore.kernel.org/4c48d016490d43b6892c622cbae858b48f176cff.1794304840.git.tanggeliang@kylinos.cn [1]
 > 
-> [Severity: Medium]
-> With this change, the subflow FIN is deferred while new data is still
-> pending, and mptcp_check_send_data_fin() is expected to send it once
-> that data has been pushed. check_fully_established() now calls
-> __mptcp_check_push() after a successful fallback, so that path is
-> covered. What about the other mptcp_try_fallback() callers?
+>> Author: Geliang Tang <geliang@kernel.org>
 > 
-> subflow_check_data_avail() falls back on MAPPING_NODSS and
-> MAPPING_DUMMY:
+> [ ... ]
 > 
-> net/mptcp/subflow.c:subflow_check_data_avail() {
->     ...
-> 		if (!mptcp_try_fallback(ssk, MPTCP_MIB_DSSFALLBACK)) {
->     ...
-> }
+>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> mptcp_dss_corruption() does the same on a corrupted mapping:
+> [Severity: Low]
+> This isn't a bug, but the author address and the address in the author's
+> sign-off are different. The author is geliang@kernel.org, and the only
+> sign-off from Geliang uses tanggeliang@kylinos.cn. No sign-off uses the
+> author address.
 > 
-> net/mptcp/protocol.c:mptcp_dss_corruption() {
->     ...
-> 	if (!mptcp_try_fallback(ssk, MPTCP_MIB_DSSCORRUPTIONFALLBACK)) {
->     ...
-> }
+> scripts/checkpatch.pl reports this as a FROM_SIGN_OFF_MISMATCH warning
+> ("From:/Signed-off-by: email address mismatch"). The names match exactly
+> but the addresses do not, and checkpatch does not look at .mailmap.
 > 
-> In both cases, mptcp_incoming_options() has already run for this packet
-> while MPTCP_FALLBACK_DONE was still clear. Without a DSS option, it
-> returns early, before ack_update_msk() and __mptcp_check_push() are
-> reached. Neither caller pushes the pending data once the fallback has
-> succeeded.
+> .mailmap already maps the two addresses to the same person:
 > 
-> Before this patch, the FIN was sent here unconditionally. The data was
-> lost, but the connection could still be closed. Now the FIN is skipped.
-> If the peer doesn't send anything else, what pushes the data from
-> msk->first_pending and then calls mptcp_check_send_data_fin()?
+>     Geliang Tang <geliang@kernel.org> <tanggeliang@kylinos.cn>
 > 
-> The retransmit timer doesn't seem to help either. If there is unacked
-> data at the head of the rtx_queue, __mptcp_push_retrans() returns -1
-> on a fallen-back msk, and __mptcp_retrans() jumps to clear_scheduled:
+> So this only affects the consistency of the tags. The DCO itself is not
+> in question.
 > 
-> net/mptcp/protocol.c:__mptcp_retrans() {
->     ...
-> 		/* Can fail only in case of fallback. */
-> 		len = __mptcp_push_retrans(sk, dfrag, retrans_seq);
-> 		if (len < 0)
-> 			goto clear_scheduled;
->     ...
-> }
-> 
-> This skips mptcp_check_and_set_pending(sk), so the pending data isn't
-> scheduled from there either.
-> 
-> Couldn't the connection then be left with both the pending data and
-> the deferred FIN stuck, so the shutdown never completes? Should
-> subflow_check_data_avail() and mptcp_dss_corruption() also trigger a
-> push after a successful fallback, like check_fully_established() does?
-> Or is another path expected to flush this data?
+> Since this carries Cc: stable, could the author be set to the kylinos.cn
+> address, or the sign-off use geliang@kernel.org (changed or added), before
+> the patch is applied?
 
-Somehow pre-existing: Before this patch, this pending data was lost: the
-peer silently got a truncated stream. Now, the data and the FIN are sent
-at the next push, e.g. on the next ACK or window update from the peer.
-This is the same as for pending data without shutdown, which was already
-not pushed after these fallbacks: this is a pre-existing issue, not a
-regression. It can be handled in a follow-up, if a stall can be
-reproduced, but I didn't manage to reproduce it so far.
+False positive: the author is tanggeliang@kylinos.cn, see the "From:"
+line at the top of the email body. geliang@kernel.org comes from
+.mailmap.
 
-> [Severity: Medium]
-> Is this lockless check ordered against the writer?
-> 
-> mptcp_try_fallback() can run in BH context with only the ssk lock held.
-> One example is check_fully_established(), when the 3rd ACK arrives without
-> MPTCP options:
-> 
-> net/mptcp/options.c:check_fully_established() {
->     ...
-> 	if (!mptcp_try_fallback(ssk, MPTCP_MIB_MPCAPABLEDATAFALLBACK)) {
->     ...
-> }
-> 
-> The writer is __mptcp_wr_shutdown(), called from mptcp_shutdown() and
-> mptcp_close(). It holds only the msk socket lock, not the ssk lock or
-> msk->fallback_lock:
-> 
-> net/mptcp/protocol.c:__mptcp_wr_shutdown() {
->     ...
-> 	WRITE_ONCE(msk->write_seq, msk->write_seq + 1);
-> 	WRITE_ONCE(msk->snd_data_fin_enable, 1);
->     ...
-> }
-> 
-> Nothing orders these two stores. Nothing orders the three READ_ONCE()
-> loads in mptcp_try_fallback() either. The spin_lock_bh() on
-> msk->fallback_lock in __mptcp_try_fallback() doesn't help, because the
-> writer never takes that lock.
-> 
-> On a weakly ordered CPU such as arm64 or POWER, could the BH reader see
-> snd_data_fin_enable == 1 together with the old write_seq?
-> 
-> Suppose exactly one byte of new data is still unsent, so snd_nxt + 1
-> equals the old write_seq. The new check then evaluates to true, and
-> tcp_shutdown(ssk) sends the FIN before that byte.
-> 
-> After that, mptcp_check_send_data_fin() returns early on the writer side:
-> 
-> net/mptcp/protocol.c:mptcp_check_send_data_fin() {
->     ...
-> 	if (!msk->snd_data_fin_enable || msk->snd_nxt + 1 != msk->write_seq ||
-> 	    mptcp_send_head(sk))
-> 		return;
->     ...
-> }
-> 
-> The byte can't be pushed later either. The subflow is now in FIN_WAIT1 or
-> LAST_ACK, so __tcp_can_send() fails in __mptcp_subflow_active().
-> 
-> Wouldn't this truncate the stream in the same way this patch is meant to
-> prevent, only within a narrower window?
-
-This is theoretical: it needs a weakly ordered CPU, a shutdown racing
-with a fallback, and exactly one byte left unsent. Without this patch,
-the stream is always truncated in this case, so not a regression, and I
-don't think it is worth blocking this patch for this theoretical reason.
-
-> Would it close the window to publish snd_data_fin_enable with
-> smp_store_release() after the write_seq update, and read it with
-> smp_load_acquire() in mptcp_try_fallback()? An smp_wmb()/smp_rmb() pair
-> would also work.
-
-A release/acquire pair is cheap: I can send a follow-up later on.
+This looks like a bug in Clashiko, Sashiko didn't report that.
 
 Cheers,
 Matt
