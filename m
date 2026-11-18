@@ -1,51 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.89
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.102
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794977533;
-	b=JyjmBNRB7x34S3135/k6rVeOEKgV3lVuU4z7Jh0iP0gcNq/SHCu5cOi7ALa4gFFQ2avj
-	 8FUeKIPtegOwxysm30HCjvRXZkurAi1fxoffYf7anJ71m3kugA1UARr2VmpI7gKgo9u+6
-	 6PV/QjAntGVWc/j9Zmkp6b2xqxsu0u3+9yuhYkqVsWPa1CUvY2peGwSiriIFHQqn+0qcb
-	 Ec04zmWGCk8DB97Wj90+UVYSrCcqitBNBXR+orAjo52TfImEXg7l+StLlVcYyfOnqUnqJ
-	 R6h3rvMIv5YWLekufB7hiTBIxw/S5EArQAslBsANSy0gJCSfHtqd5kjpEbHpEc7x75A==
+	t=1794977548;
+	b=GNb7N3B6nt6rD01S6VgSG9eQFXNtiv11KVAM0vf9yg8J+pOenyAvrNaMBnZSs+xXTRtT
+	 VRAG/UmCs4qhpBPj2iiQYBcn8B6H3HZw/DtfWkhH5HYnTl/qppxMB159B/ZGrsgkoDtTu
+	 zlXGthMXEmiUOgAPjnfkAG1h3MmNxMdMiFUD98SpZIlYAFFEqJTPVGiYzCRhWntKKMd3k
+	 REWSD4mis4W/IRDIcItceTb4/3/VuxPbMBnj/l+WxQ5nJUieR9BqvnWgHi+KGFlh1//sR
+	 PdTiqdggF8VAsgSOBm5xGytQABZtTqudjMkq8veUJSIiWQ51eaaR+NjvjNSY9yxJOgg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794977533;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794977548;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=D4Glb/phafOO2J4NO7289AZtRKHSGknHG2wh1OwjCi4=;
-	b=jqrS9GsjaNS+7QRFch2qP1TbacYFgCYQHfJRfV4KX7hIhxJ49XxWho+Y9IP35nxSY7Qt
-	 tgSIKP4YH4HOuk2dtE+Wh+xCy2uaHT4L8xEVDv6SLwmfqmawtZT4hv22RrsBRRD0FIS5K
-	 oHCd+bNrHyHullMrDWFGcqU8xZNlBNLtkq4ZiMwqbFwCrlP3Ip1ZRKSQBWJjxt1Fn21kq
-	 elDoPCSoX7xRpXT1rg9Jf2F6rC3hEgnVL21i2CSqRbGU2ROnUf1LvFbrw6mQXZ7BqnJCk
-	 Iyo0SOEgSkqTgGjwnVAjJKu0rFdoCkQhni9ERfWXlLBoAEGhJYOsn0I38ECfhd9qwhQ==
+	bh=owJsBBfTcY32+grwyBsW4Ys1YOwRE9098kbEal4OQ/o=;
+	b=h32dnhFJz4FkzbzFxVoxcXdN1AgRw3iCc987xGugSBEfmYVBXda7hYCJwjJNTBEzD91t
+	 5vdMlFzqINbmLGE2HOXUd8VNbyn/uPCCKJx8+QeQH79J6eQFdbyhOxp6OECMCfkqN8Q1d
+	 AJtnWPegZ80tC/5O1f065YD1QdF9NC7HVxOtcqmJQ7/uRfz2/6qIUzZ2HyCWSEahcOnTY
+	 tG9LVULFThTc6NHQP4YMGm0V5NfLG/enCITjhMKo3YI+XK14wW63167GdBKayRqm5aTh1
+	 6bLVstw9WlSps7XbdNHyn6blsvAHiAkyWFwrbvBccV1CO2Oc6OY4e7NeVdr+D1brdyw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=qHk+1IWp;
-	arc=none smtp.remote-ip=95.215.58.89
-Received: from mta1.migadu.com (out-89.mta1.migadu.com [95.215.58.89])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=PSXEZ5qh;
+	arc=none smtp.remote-ip=95.215.58.102
+Received: from mta1.migadu.com (out-102.mta1.migadu.com [95.215.58.102])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E091E606A325
-	for <mptcp@lists.linux.dev>; Wed, 18 Nov 2026 04:52:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E091E606A325
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C8A606A32A
+	for <mptcp@lists.linux.dev>; Wed, 18 Nov 2026 04:52:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 18C8A606A32A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=qHk+1IWp
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=PSXEZ5qh
 X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=D3DeV3YkG5u10TKSbuUfjvJgZyIgkf+zdkPJkso3qVI=;
+DKIM-Signature: a=rsa-sha256; bh=CxsJqg6NZ0rJSY+q+jjFAXoCxrwiTWX2Qt+1al6xkL4=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1794977531; v=1; x=1795582331;
- b=qHk+1IWpFiYNCgRhRAelEnhQmvIkckZ8ZqfVdS5K2Vt0WdBoMSxfrgCpCETdXgMTlCFJ0euE
- oQS4GhrheBzYA+ru98V59USQr8qrUSQaao1SjIlasYWaXrR7fS9HSMS+SvLMLKrK7mQMQTxpEjO
- BWysdS1ye+jAjxR6ZOTWVllg=
+ t=1794977545; v=1; x=1795582345;
+ b=PSXEZ5qh2CPt4jhX1cxa2kYflDj2botNZiqNxXY6aXPyNo8bzvDmeyQUqLLHeNKt4kpaeTL9
+ 7y6TeWyWkIzfDSS5Ntd18oDxwK4V6DkstAYP6ZX3rtumx6bXj11z/QU1dBhGhLQ+FDlkcFBcXKz
+ sWsBznP/18kQbXLMe7L6PIFA=
 X-Envelope-To: mptcp@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 9116fc7c9e291cd0;
-	Wed, 18 Nov 2026 04:52:10 +0000
-X-Mizu-Trace-ID: 9116fc7c9e291cd0
+Received: by smtp.migadu.com with ESMTPS id 77474746f915bd0c;
+	Wed, 18 Nov 2026 04:52:25 +0000
+X-Mizu-Trace-ID: 77474746f915bd0c
 X-Migadu-Flow: FLOW_OUT
 From: Jiayuan Chen <jiayuan.chen@linux.dev>
 To: netdev@vger.kernel.org
@@ -72,9 +72,9 @@ Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
 	linux-rdma@vger.kernel.org,
 	rds-devel@oss.oracle.com,
 	linux-s390@vger.kernel.org
-Subject: [PATCH net-next v2 1/5] inet: frags: annotate data-races around fqdir->timeout and fqdir->max_dist
-Date: Wed, 18 Nov 2026 12:51:16 +0800
-Message-ID: <20261118045137.174026-2-jiayuan.chen@linux.dev>
+Subject: [PATCH net-next v2 2/5] ipv6: annotate data-races around icmpv6 reply sysctls
+Date: Wed, 18 Nov 2026 12:51:17 +0800
+Message-ID: <20261118045137.174026-3-jiayuan.chen@linux.dev>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20261118045137.174026-1-jiayuan.chen@linux.dev>
 References: <20261118045137.174026-1-jiayuan.chen@linux.dev>
@@ -89,61 +89,92 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-fqdir->timeout and fqdir->max_dist are read without any lock while their
-sysctl handlers update them with WRITE_ONCE(). Add READ_ONCE() to the
-readers.
+icmpv6_echo_ignore_all, icmpv6_echo_ignore_multicast,
+icmpv6_echo_ignore_anycast, anycast_src_echo_reply and fwmark_reflect are
+read without any lock while their sysctl handlers update them with
+WRITE_ONCE(). Add READ_ONCE() to the readers.
+
+KCSAN reports it when net.ipv6.icmp.echo_ignore_all is changed while
+ICMPv6 echo requests are received:
+
+  BUG: KCSAN: data-race in icmpv6_rcv / proc_dou8vec_minmax
+
+  write (marked) to 0xffffffff8ee2940d of 1 bytes by task 504 on cpu 0:
+   proc_dou8vec_minmax+0x1ab/0x1f0
+   proc_sys_call_handler+0x282/0x3a0
+   proc_sys_write+0x13/0x20
+   ...
+
+  read to 0xffffffff8ee2940d of 1 bytes by interrupt on cpu 3:
+   icmpv6_rcv+0x99d/0xd40
+   ip6_protocol_deliver_rcu+0x787/0x9a0
+   ip6_input_finish+0xb0/0x1b0
+   ip6_input+0xa8/0x250
+   ipv6_rcv+0x14b/0x1c0
+   __netif_receive_skb_one_core+0x8f/0xe0
+   ...
+
+  value changed: 0x01 -> 0x00
 
 Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
 Reviewed-by: Simon Horman <horms@kernel.org>
 ---
- net/ipv4/inet_fragment.c | 2 +-
- net/ipv4/ip_fragment.c   | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ include/net/ipv6.h |  2 +-
+ net/ipv6/icmp.c    | 10 +++++-----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/net/ipv4/inet_fragment.c b/net/ipv4/inet_fragment.c
-index f330d0a398233..8143162eb9f53 100644
---- a/net/ipv4/inet_fragment.c
-+++ b/net/ipv4/inet_fragment.c
-@@ -416,7 +416,7 @@ static struct inet_frag_queue *inet_frag_create(struct fqdir *fqdir,
- 		inet_frag_putn(q, 2);
- 		return NULL;
- 	}
--	mod_timer(&q->timer, jiffies + fqdir->timeout);
-+	mod_timer(&q->timer, jiffies + READ_ONCE(fqdir->timeout));
- 	spin_unlock_bh(&q->lock);
- 	return q;
- }
-diff --git a/net/ipv4/ip_fragment.c b/net/ipv4/ip_fragment.c
-index ef7fd61284a3f..5ac69d716da2a 100644
---- a/net/ipv4/ip_fragment.c
-+++ b/net/ipv4/ip_fragment.c
-@@ -89,7 +89,7 @@ static void ip4_frag_init(struct inet_frag_queue *q, const void *a)
+diff --git a/include/net/ipv6.h b/include/net/ipv6.h
+index 579df1516d251..b77dc5c3ea268 100644
+--- a/include/net/ipv6.h
++++ b/include/net/ipv6.h
+@@ -199,7 +199,7 @@ struct sk_buff *ip6_frag_next(struct sk_buff *skb,
+ 			      struct ip6_frag_state *state);
  
- 	q->key.v4 = *key;
- 	qp->ecn = 0;
--	if (q->fqdir->max_dist) {
-+	if (READ_ONCE(q->fqdir->max_dist)) {
- 		rcu_read_lock();
- 		p = inet_getpeer_v4(net->ipv4.peers, key->saddr, key->vif);
- 		if (p && !refcount_inc_not_zero(&p->refcnt))
-@@ -220,7 +220,7 @@ static struct ipq *ip_find(struct net *net, struct iphdr *iph,
- static int ip_frag_too_far(struct ipq *qp)
- {
- 	struct inet_peer *peer = qp->peer;
--	unsigned int max = qp->q.fqdir->max_dist;
-+	unsigned int max = READ_ONCE(qp->q.fqdir->max_dist);
- 	unsigned int start, end;
+ #define IP6_REPLY_MARK(net, mark) \
+-	((net)->ipv6.sysctl.fwmark_reflect ? (mark) : 0)
++	(READ_ONCE((net)->ipv6.sysctl.fwmark_reflect) ? (mark) : 0)
  
- 	int rc;
-@@ -242,7 +242,7 @@ static int ip_frag_too_far(struct ipq *qp)
+ #include <net/sock.h>
  
- static int ip_frag_reinit(struct ipq *qp)
- {
--	if (!mod_timer_pending(&qp->q.timer, jiffies + qp->q.fqdir->timeout))
-+	if (!mod_timer_pending(&qp->q.timer, jiffies + READ_ONCE(qp->q.fqdir->timeout)))
- 		return -ETIMEDOUT;
+diff --git a/net/ipv6/icmp.c b/net/ipv6/icmp.c
+index 4122ce3055e49..abfe2893c18f4 100644
+--- a/net/ipv6/icmp.c
++++ b/net/ipv6/icmp.c
+@@ -946,17 +946,17 @@ static enum skb_drop_reason icmpv6_echo_reply(struct sk_buff *skb)
+ 	u8 type;
  
- 	inet_frag_queue_flush(&qp->q, SKB_DROP_REASON_FRAG_TOO_FAR);
+ 	if (ipv6_addr_is_multicast(&ipv6_hdr(skb)->daddr) &&
+-	    net->ipv6.sysctl.icmpv6_echo_ignore_multicast)
++	    READ_ONCE(net->ipv6.sysctl.icmpv6_echo_ignore_multicast))
+ 		return reason;
+ 
+ 	saddr = &ipv6_hdr(skb)->daddr;
+ 
+ 	acast = ipv6_anycast_destination(skb_dst(skb), saddr);
+-	if (acast && net->ipv6.sysctl.icmpv6_echo_ignore_anycast)
++	if (acast && READ_ONCE(net->ipv6.sysctl.icmpv6_echo_ignore_anycast))
+ 		return reason;
+ 
+ 	if (!ipv6_unicast_destination(skb) &&
+-	    !(net->ipv6.sysctl.anycast_src_echo_reply && acast))
++	    !(READ_ONCE(net->ipv6.sysctl.anycast_src_echo_reply) && acast))
+ 		saddr = NULL;
+ 
+ 	if (icmph->icmp6_type == ICMPV6_EXT_ECHO_REQUEST)
+@@ -1160,11 +1160,11 @@ static int icmpv6_rcv(struct sk_buff *skb)
+ 
+ 	switch (type) {
+ 	case ICMPV6_ECHO_REQUEST:
+-		if (!net->ipv6.sysctl.icmpv6_echo_ignore_all)
++		if (!READ_ONCE(net->ipv6.sysctl.icmpv6_echo_ignore_all))
+ 			reason = icmpv6_echo_reply(skb);
+ 		break;
+ 	case ICMPV6_EXT_ECHO_REQUEST:
+-		if (!net->ipv6.sysctl.icmpv6_echo_ignore_all &&
++		if (!READ_ONCE(net->ipv6.sysctl.icmpv6_echo_ignore_all) &&
+ 		    READ_ONCE(net->ipv4.sysctl_icmp_echo_enable_probe))
+ 			reason = icmpv6_echo_reply(skb);
+ 		break;
 -- 
 2.43.0
 
