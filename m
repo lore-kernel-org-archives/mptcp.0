@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794979340;
-	b=mo31EEIy+AP4AkWBCQaQvmREq6VzYZqJLK9x7CX7VG3JsXdS1/horfjjCIwOcXMJZoT8
-	 ztqyyopTcPse6anrQrDPFHpmNQ0bXn9k1iTGevlrEyupu/tRV71PJl6diti7PzY7fiQdQ
-	 1mNQ0VXxd9iigZY0toOGaB4rGMsclyW0uDrDrHrP31D3/zrz9ltD7AcqnKvgFslsCx2UG
-	 +jLsEYfWZtCuFHHCRXG/zeYC9jcrnzpzWYVN8qb1Olj0peyji8WPEJTRQ4ZUh2kXoAq4a
-	 R0+3mHdtwniZmZ5aeTTj3r0tW5F8xAZPjNVRAgYBFRgQ1YRmWfv3Picwa/qSjO6WGNA==
+	t=1794979341;
+	b=mtexxm/1/dplE7dA4tcAGCMSpe1pvBBDSdZRICt0sOynyjMgSxFErb8Tstl64t4FFZx5
+	 GfVBMR93ReiK0OCZa3ptmkCdY+EYpoOqU0Yxmjnqm4tg96nBUyfL30LfqRbtTOyoKvM94
+	 HaKH9InQd+u3XJQv9rVwZ9sXABK3uGYRPicMkWa0/aIjfRHPfk5dxJlk87FCaQuTbCdQ8
+	 qwxEgNq7H11JChBJ+JXL73Yy9ZFtCmsopajuG56I/uVeXljDR9b9q6y/ciX3exdO4Ht9w
+	 UlK5y7eb6IrkkXpzgNaAThhHzlJPyz8bjEAoGnLB0m0t+8wAvdnqCV1nqL1EphfvTrA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794979340;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794979341;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=haQg/B4V2EP/4GzpF0dupjRqUlXc84/hvrYZPMtkeGk=;
-	b=IqGQlZjdOyDXZIkBmrPP9+zVYBYxpqvzpvX8lDiuog1N27L1LqAtcDV3BoPWj78xsmNi
-	 CGTykcNwQPZLa3NjWOxiGn2xDU62Wdqq0yILBS8eMpm+8Yrh2V6VOzcYfBDR2Y4OR+uQq
-	 HY73gQYVqYi2fryuw7h7Ndm8OOIaKLJFX+xXpwEkBpdFNb51ij3m9SgLC/+h+WhrYfF45
-	 7JiR2tg6mveGMiyLlhv0JIb0DpjWfC9XtCU9NaMRymdBz/WIpMHmNdvvbQiCds580dSUq
-	 tyU73B/jAMDPamuedEgcqc3+SLcGZilqBPKodIAclukyDfIRS4+yGO3eltA/eKKGFjg==
+	bh=JK/wSIqENk3uGHJxtgKTesz1KtVMquWy35xeqYmTLwU=;
+	b=ePYfpd7wOuYN5Vn3RmbTScHJO/vJPWi/P8Z50rFfvbDEFFMIDyeFykj2+2S3lGSSDFNo
+	 D8Ju8a56I56nyFoicg5SzFqn9RgGGBaUDTVHrr8RqczLni19yqH7pwqUYcR0HSgqWSD9k
+	 gsiI/7lFrZXq28eLEI5hpWvhRWhDgdJVSWxh+NTjPFfyp+oM7MjCMrTFBWVCZJx2E1+Vg
+	 RrKoX+uZSEq829Hu67WiJZTjk+ZJpukP/4vQKm8N1M/wnIhUU6D4zTG37IYhqIt2Wo60p
+	 pmUxbPZuptCj2KJcrnKjC7uSjJtvk5h609CGgaOn2+Ry742ylD+cO9QUCqtVDUo9gAg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X9O6miAA;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="J/15B4IO";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD02606A32A
-	for <mptcp@lists.linux.dev>; Wed, 18 Nov 2026 05:22:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA4F606A32A
+	for <mptcp@lists.linux.dev>; Wed, 18 Nov 2026 05:22:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X9O6miAA
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BAFE1F000C5;
-	Wed, 18 Nov 2026 05:22:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=J/15B4IO
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B7A71F000C7;
+	Wed, 18 Nov 2026 05:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794979340;
-	bh=haQg/B4V2EP/4GzpF0dupjRqUlXc84/hvrYZPMtkeGk=;
+	s=k20260515; t=1794979341;
+	bh=JK/wSIqENk3uGHJxtgKTesz1KtVMquWy35xeqYmTLwU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=X9O6miAAfWj8tirgSVFs2yDihxdYtRw37Iy5ZKQncMwxfxZFRWohse+kQ9zsBUiJK
-	 BuB7P6HMyG/HhycUY1aCXAS2xz0A7hvIIm/OR7kxvLz496XiBs3/S+Rf8p7z3nbmm1
-	 ZeUirwI2g6u9D4eG98zXmwri6MwiuCu3cjXNmTi4qGJ53pmS4aa25+0kPPzgydZkQA
-	 DpUKYtp4T2o10z3xPXEW9Ph9wT3epkG3IUMlXBx0HcxooOKTQJ9EUGZlMHs38u3ECf
-	 K3svHlDEPvBVyRP3xQEBMB+DjKc1IOipnS+xy402VpcP6Ol9nkSVRnm5RPfGXov5HO
-	 LFsf8vWnf/snQ==
-Message-ID: <sashiko-outbox-220155@kernel.org>
+	b=J/15B4IOA7/gpOAEm40aeufAwKT4v/D2zPaNZOR58qP9xPJUkG7Dbnl4pyNZV8tFU
+	 fnbXyJNexRFMSouKCXoDmEEy/qRiKGFRIGVwWw3HjjwcbA27+7ggva1Id2BMNBWfnT
+	 7ZsX48axoMCE2hi+a9f5npsBQ/JTMlLOZ+K9uqQjjyqIjGxTBKuCxuMkKPcG19Fl0+
+	 pferVlkCNN/IUa9QTNy/o+S9eFSnjHhM5p22aCLg421VNZMkgpg72mdYI7ZGwpkzkK
+	 QfEZV+J+88ZTCLaAr6Lm6i58GZoe4bBF6ZP7DypqrHlwgAcLbbjDtXD38caKn+8U0I
+	 peZrAwM/dG/5A==
+Message-ID: <sashiko-outbox-220156@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH net 2/3] net: bound receive window predictions before
- narrowing
+Subject: Re: [PATCH net 3/3] mptcp: exclude MSG_PEEK from receive buffer
+ autotuning
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "lei lei" <llleigoing@outlook.com>
 Cc: =?utf-8?b?bXB0Y3BAbGlzdHMubGludXguZGV2?= <mptcp@lists.linux.dev>
-In-Reply-To: <20261117052200.1507847-3-llleigoing@outlook.com>
+In-Reply-To: <20261117052200.1507847-4-llleigoing@outlook.com>
 References: <20261117052200.1507847-1-llleigoing@outlook.com>
- <20261117052200.1507847-3-llleigoing@outlook.com>
+ <20261117052200.1507847-4-llleigoing@outlook.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Date: Wed, 18 Nov 2026 05:22:20 +0000
@@ -63,44 +63,42 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue to consider:
-- [High] net: invalid handle and author mismatch in Signed-off-by
-  trailer
+- [High] mptcp: invalid Signed-off-by trailer using handle instead of
+  real name
 --
 
-commit 0e17123a2c1e28d81f7aa6b0170c8d97f7b356e5
+commit bf35feefb3ca938f4410fd363b5311a7fad1ae8f
 Author: lei lei <llleigoing@outlook.com>
 
-> net: bound receive window predictions before narrowing
+> mptcp: exclude MSG_PEEK from receive buffer autotuning
 >
-> tcp_rcvbuf_grow() and mptcp_rcvbuf_grow() compute growth terms in u64 but
-> accumulate the predicted receive window in u32. The prediction can wrap
-> before conversion to a memory budget and application of tcp_rmem[2].
+> __mptcp_recvmsg_mskq() passes bytes copied by MSG_PEEK to
+> mptcp_rcv_space_adjust(), although those bytes remain in the receive
+> queue. Repeated peeks count the same data as new application
+> consumption and can inflate the receive-memory budget. Subtracting the
+> unread queue at a measurement boundary cannot undo that repeated count.
 >
-> For example, oldval=3D16 KiB and newval=3D4104 KiB produce a slow-start
-> window prediction of 4 GiB + 8 MiB. Storing it in u32 leaves only 8 MiB,
-> so the memory limit is applied to an already truncated prediction.
+> The receive path originally skipped this adjustment for MSG_PEEK.
+> Commit 581302298524 ("mptcp: error out earlier on disconnect") moved
+> the adjustment calls without preserving that check.
 >
-> Keep rcvwin in u64 and promote newval before the initial shift. Clamp
-> the completed prediction at INT_MAX before passing it to the existing
-> int-input window-to-memory helpers. Since scaling_ratio is a nonzero
-> u8, the required memory is at least as large as the window. Predictions
-> above INT_MAX therefore already require a saturated receive budget.
-> The helpers' return saturation and the existing tcp_rmem[2] limit then
-> provide the appropriate memory bound.
+> Only adjust receive space for non-peeking reads. Keep the returned
+> byte count unchanged.
 >
-> TCP and MPTCP loopback tests using small warm-up reads followed by a
-> queued burst of about 4 MiB previously left the budget below the
-> configured 64 MiB limit. With this change, both reach that limit.
+> A loopback test leaves a fixed 32 KiB queue unread and peeks 4096 times.
+> Before this change, sk_rcvbuf grows to the configured 8 MiB limit.
+> Afterwards, both the budget and the queue remain unchanged, and a
+> subsequent consuming read returns the original data intact.
 >
-> Fixes: aa251c84636c ("tcp: fix too slow tcp_rcvbuf_grow() action")
+> Fixes: 581302298524 ("mptcp: error out earlier on disconnect")
 > Signed-off-by: lllei <llleigoing@outlook.com>
 
 [Severity: High]
-The Signed-off-by trailer uses the single-word handle "lllei" instead of a
-real human name and does not match the commit Author header ("lei lei").
-Documentation/process/submitting-patches.rst requires a full real name in
-Signed-off-by that matches the commit author.
+The Signed-off-by trailer uses the single-word handle "lllei" instead of
+a real full human name and does not match the commit Author header ("lei
+lei"), which violates the Developer's Certificate of Origin requirements
+in Documentation/process/submitting-patches.rst.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261117052200.1507=
-847-1-llleigoing@outlook.com?part=3D2
+847-1-llleigoing@outlook.com?part=3D3
