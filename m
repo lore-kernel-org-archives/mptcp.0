@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795039342;
-	b=i1qPXW/pb5qH19eNfIyLDFtgJoD1FOlJl8UWgv7p+l9YWNM3spICUYBJXOg1UAcVXM/A
-	 W1IE2I214Stq8aEOWKpmYWZTvqQRLkPXOexB/HIPO/DTPOMLghWadAeh00jicLxQcLFie
-	 GspPkR+CoyBNoc5QqiS8zzolaePhJpd3h1ndNZuNilV3ym3nihAwbmTt4JTBhTT6ChgMV
-	 4eDQizMGZ3W6TWUFPG6BlnJUYRsXifbTzxydTAXsKO9b1igu4+Dz9MziRQC6B4KDkS13f
-	 zu12hSjGnLAOgQ6ojgQqO7gFOdIheGp77AoBDKyqFPwCwoQAVzQiXjBTyC4x1gaTsUQ==
+	t=1795039363;
+	b=Iy+83+YOS5xWzdMIyAuKX0Em0q9dr0dyTYb4tH+HI/YrGwPTxYnM1kJ9+b0Qh3gRGgVp
+	 fdo8+lpyTz6bEGMVnrM1KCv+cXWgTjDM9HXYEL6/2w2NJrzCRElEl26vvH1I36AE9aR/G
+	 2o87HNdo7YHqSfEEoLcFnH57Ouq5OATYPoq2cgAWTczE8MsfOLyMsf4J3MQSzUybPl9Nt
+	 niH85xofFP5/KtMqJT2o8YTQaDaR2+H7nuex5OCcYkeJDLOur5534QaKbnVC8r3uuU7bd
+	 KY4ZOxMB1gO5ON/78ZV/5C5BeZ4m76pWY/2Zr9O/O48VabmSKXBEbiMvJknmKapED6w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795039342;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795039363;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=JNbK+3JtDqoK1DC4+sM6KcHPLLUlIMyOj7/0GNQRg9o=;
-	b=p9cTl5PiL2GWngk2NuZesyHEJAA1zVLNEAxbEqUudybaQrZBLL+6miU9jQzEyAWVfzYo
-	 30tD/TfpdZZqJOVJzAYnE6EWNBV2At1q+nLjTjD6+lMrLm1q5dsjvyx9uQEohZx9NG7mH
-	 f4SxFGBFNMEB2XYcgk8FSnZj9BDwYTn4AtfZPJqGjH9Mq1SY6ppBmptk5EFXyZ1bvXlM+
-	 mlLECnuVYeuyseHh8jy1xhe+lJLUTd4AmT/7VyCopt1kqiQogdw33OWT+yxqzq+lDMikm
-	 F6TvviaRZg+kTqWYBZadTHJ0yxdu2PpE9Mpmx3zrBmGv+h0HbfQFtx51FaoS+B27iCg==
+	bh=6os2g+z1tMBaF6iqz5Lyq2juOd9q1htz9kTo3G2VzzI=;
+	b=TQhewSvwY2sDgSAloVEU4btklaD1w0UrPn6KwhCrBuyP2YpkCHFK8mPnAbRTjKoXHxgv
+	 qMSli15GYJHfCbMaIMH9cL3Cq9tiKI9vBugndibHS3xRRLEkRxTk6yrReSTpFieqeNRjR
+	 TUJK6OZv4tijAPbfsodo2zwBUdHgfTilic81R/6VVJ9UnaCr5Wl3jixP7o0Gud405F5Oc
+	 +pKp0/WBuKgKp7xXMN0eU06kxzxMzX4IQGIe3LRHKQh8+hYkZzZwKdBpBtp0vEqmWCe30
+	 lG8bFS4HNiq3gb2sq0JqQkOxo3BCR9wwNkPl95DXcF8zbjNooXuTHns5odf/IfxMiRQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=h5AWqwya;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QAOatE4b;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1ED5606A320;
-	Wed, 18 Nov 2026 22:02:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83972606A320;
+	Wed, 18 Nov 2026 22:02:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=h5AWqwya
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ADC21F000C6;
-	Wed, 18 Nov 2026 22:02:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QAOatE4b
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43A891F000C5;
+	Wed, 18 Nov 2026 22:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795039341;
-	bh=JNbK+3JtDqoK1DC4+sM6KcHPLLUlIMyOj7/0GNQRg9o=;
+	s=k20260515; t=1795039363;
+	bh=6os2g+z1tMBaF6iqz5Lyq2juOd9q1htz9kTo3G2VzzI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=h5AWqwyaLkpnx1Dat2WKTSuLfiHi2KKRnny+PfMi6vomGWtyHxq7/5MMXMyNwN4wz
-	 4iIxrzRE+l9skcBvpEYX2jzyU7UwdQ30WFFTy6uAWrBU2qVuzA3iO8BqmoO67As3Y/
-	 i5PR4K8fV5ZZIkxosqxZT3OMLTp4v21ssHudFCvuOnHWjJxfqHDhODbkddAdDRVZpL
-	 LSU4WIreeu/eG/bXskVbkjO6Mo8mmRyXy9lgF2XQTFh3SOqzM3zQvWUYvNfmRpcZTR
-	 30LppC9Meek5+6l1ZSIt4kx9rXSBQtYQFGDel2jd5RvoL40bWBDXjRa79EUPcRJen2
-	 LVt22gQIuF0ww==
-Message-ID: <bb65c26d-06de-4d4e-9eaa-9e8a48df4a3e@kernel.org>
-Date: Wed, 18 Nov 2026 23:02:15 +0100
+	b=QAOatE4bxGYZFCxuu8IcB2KAKl+QeiMcyaydqKJNSonf237pkgUrZUfIx4DjeyUkm
+	 m+RCYb0KEwryQkbvKOrmHttlSWzjSi8nNrXTwXoXOvVBDd+UjJGcXQSeLEUbLDTv+f
+	 gI4db76GM0ktJvZDuk6cl4RABwXmVsf+gKAkqxWoCp7h24cTty3lrP6d4jEeXXlA2p
+	 Pu9lKpsa3LGmb6byyDCYYSGDU+Bfexitz+q7lf+G/W/cImAJMZMxBtL1pXeD5tNZTJ
+	 A89rdi6KQw+27aBDo1QIGnpij8rzQXOTITuuwvEEsP6IPuC3HTxol44iEmb8QD60OG
+	 NCeqS5epGiV3Q==
+Message-ID: <2007d883-a0bd-46f9-80d6-e7cc1e0d5a86@kernel.org>
+Date: Wed, 18 Nov 2026 23:02:37 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,8 +52,8 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net 4/7] mptcp: push queued data on passive TFO subflows
- becoming established
+Subject: Re: [PATCH net 5/7] mptcp: push queued data on subflows falling back
+ at the handshake
 Content-Language: fr
 To: netdev-bot+sashiko@kernel.org
 Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
@@ -61,8 +61,8 @@ Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
  fw@strlen.de, dmytro@shytyi.net, netdev@vger.kernel.org,
  mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, stable@vger.kernel.org,
  mason@kernel.org
-References: <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-4-bf7656de653e@kernel.org>
- <179495458816.3136.11667924714644178222@kernel.org>
+References: <20261116-net-mptcp-misc-fixes-7-4-rc4-v1-5-bf7656de653e@kernel.org>
+ <179495458948.3136.10805605417711396515@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -108,7 +108,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <179495458816.3136.11667924714644178222@kernel.org>
+In-Reply-To: <179495458948.3136.10805605417711396515@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -123,28 +123,14 @@ On 17/11/2026 23:29, netdev-bot+sashiko@kernel.org wrote:
 
 (...)
 
->> Without this patch, and before the
->> earlier commit "mptcp: arm the rtx timer if a push leaves data behind",
->> this data was not sent:
->>
->>   server-tfo-write-before-3rd-ack.pkt:24: error handling packet: Timed out waiting for packet
->>
->> Since this earlier commit, this data is sent, but only when the MPTCP
->> retransmission timer fires, here after one second, as the tests increase
->> its interval:
-> 
 > [Severity: Low]
-> Which tree is "mptcp: arm the rtx timer if a push leaves data behind" in?
+> Can this push also run while an incoming RST is being processed?
 
-Arf, I forgot to remove that when I cherry-picked this fix. That's a
-detail, it's a fix pending on the MPTCP ML, not applied yet:
-
-
-https://lore.kernel.org/20261113-mptcp-cmason-fixes-v1-7-9205b77e9a2f@kernel.org
-
-There is no dependency: in this tree, the data was never sent, as
-described for the case "before this earlier commit". I suggest ignoring
-that, it's not directly linked, and this patch will come soon.
+This is not new: the fallback block at the top of mptcp_incoming_options
+already does the same push, RST or not. At worst, data is queued then
+purged, or sent within the TCP window just before the reset, and the
+peer replies with a reset. This is harmless. If really needed (I don't
+think so) a follow-up patch can be sent, but to -next I suppose.
 
 Cheers,
 Matt
