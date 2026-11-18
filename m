@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794997111;
-	b=tuuglmIe3GHydCq0Ac34seopQ0P0PykWjLim/RVorxYgRWtMImyiNVaM2ey1Uh3V9jUB
-	 lWIYADyy7CLvE2oHUdHx6kDbH8by0IbSvFI0wMWYNxUyQwTukHD3t1SxhkRK8Q1QSgka7
-	 XG/OPldrwtiyXOQteLClru1M8yOHvdsh2HBYfLGUTixY/fIFlqPv3QF98HPDGKTw2brzI
-	 747LHO0HJJ0DjpnfufUT+339iVg02sqSGilxYs8PyOhhm76558bm9tfzz48nfSUsMVBmZ
-	 RUJ9TSpSwBGGX0nUnxlqVJoxIW7SM10C6TnVY0NOmIxwMnvQFiNVvlc4gxtthaZTNnA==
+	t=1794997112;
+	b=nJqvb9jiHb4LSCZAV0CF5zxrPiHgYz8g287eTRiY/vUnp3ZAK+VOZGmg+qIdjo+te9T8
+	 okhY6tsQQYgFiVAajezUEPG9PULa+EFlgVp7GVljGEltyjBgSrGtipWLFFSDC/STaABLt
+	 B4UHBU2n4QmIkttjpR6mhyInAnBzzeHnWGJLvM2/Om24BOgf3Z+g/VMH+D8ifC+Gq6aeX
+	 1at9v7w24y10il2EZrEYzPxiuuA9PYV/8jQIn3UBgv8fLIaEeNNUQQwfWQYcMF31gxunb
+	 hw18bttYMzTtBn/Hbx2uKQnir1pA5w9rHcflYcqy9xMvJhaT+aZUUjH4dg9e9HM1S2Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794997111;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794997112;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=fXItq9GGroIycGnu7b0OzPVvdIkBKPoNJa40AjB5LJ8=;
-	b=ZJ3jlbrE0NF2i10yOWRl7hbArbQJamJN2/gAaVjHW4hHGcWI8Fe1i5K6pRh07OSha6pb
-	 QmecBOnMBWd11jCwJr44RMzQ0rH4hdK7bvYWU3Z8iJeQNQmZYEtD4kiTqQKDgpiWD8wCW
-	 gjMSoSzWzVEE5bG9BKWCilZarGvrQChdSIDdDjBDQwzp6SwnaPfHjwpR0oKfurcBcvtc5
-	 viJf8xxUOl0VJaGtn2P7hRUnBopXW2qCo03huIdl10XodrvQCrRTTJ3wyrAyedWuZwKX1
-	 xq7rQ06k5+1J7qUC5H2V0GzeFUWWLH2ibThYa8yDmIkUnLHnrllyxwSEOCyZjWC/Qtw==
+	bh=uqhJcMfhfWT0sFiGINInImwjXlnsWK/MxEoWUZc7rPo=;
+	b=zen4BiJhN+o27crFLOLg+iaoPqEdeDszLQlq7s2UL+0RRR2joZ/7Fa/ztLWRejofeBYV
+	 A4aiiOYiNxsly2oBeVjj//pGJd90K4iJ1b5YmRnSfHxYlxKkHAFpBT6xLVUXHnCqflWYG
+	 NptE2dXREprljHc6GPPBt9jVuq8KClZgngzP64JLjPyPiOWwWn1S4kBYFgwCCuBLTpt/T
+	 urJH5b+eESOS9O+zAzSzSUK9O9p859u1AhUipguELNtMz1SF5fy1Z+tzwm5gba6bi3BjI
+	 3xxkKXkU1I0KQwxFwFg8iQn5bUZbCBPu6nFgyNW6c1PGCz1yfChTzzHAhEqM+2tduTg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hmNw3AR0;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ictou5nP;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779C2606A31C
-	for <mptcp@lists.linux.dev>; Wed, 18 Nov 2026 10:18:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD624606A31C
+	for <mptcp@lists.linux.dev>; Wed, 18 Nov 2026 10:18:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hmNw3AR0
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C08121F000C4;
-	Wed, 18 Nov 2026 10:18:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ictou5nP
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 020301F000C7;
+	Wed, 18 Nov 2026 10:18:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794997111;
-	bh=fXItq9GGroIycGnu7b0OzPVvdIkBKPoNJa40AjB5LJ8=;
+	s=k20260515; t=1794997112;
+	bh=uqhJcMfhfWT0sFiGINInImwjXlnsWK/MxEoWUZc7rPo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=hmNw3AR0TBDp98ktD7AvBslmPYSC4yvsvX872BbhnHYd7lFFWPL4HQEr+z040T926
-	 GyangioH+b3PFKq8Hb1ThW44AyaWUP0IdMkW68LXSfp0Ahh/C2WvG48frfTTwrqiQE
-	 FVmoDytJFLNfoupJN9mZVh53t174T+5Vua5LEzSZ8K/yOOMmc9KGBADBgXrjCs49/w
-	 1LydaDKCEwOxluAFc7iCKIOKl4R1mDPurwJqzZSBWS3FhwZYwQzquIEzpGvX3W9/uK
-	 fuwMu+gyk1HkgRUu+DhOpGcDUjTEWicZUHz0RP99mfsUSblLwShbaaYLLzQ+pejvkE
-	 Ma2WNAQBhSwTQ==
-Message-ID: <e78c7751-80ca-4026-a3b1-a782d82e09af@kernel.org>
-Date: Wed, 18 Nov 2026 11:18:27 +0100
+	b=ictou5nP7yRxeiv9b4vyQJPLuMeDkfl+N++qBiS36qmnyXM20Fd6g01BSCjY83u2b
+	 2gNo5ZEb/c/8qHIq7f2upRhI6VnaVHkKlkpCCgkIcD5f1N6r/tGWEUc8AujVECQNJI
+	 fPtGADimSAJjrfLdyvbVvfH6UdPqmnF0nMYaoy8TYQLGcHYkqjDiztV9Sek9wyOcH+
+	 z1WjirxHfn8OAxZQ8Qiz+iYs6UwiERwTAcfI+uSH4pnOOVddnKbrywRqPMIi5xTYDD
+	 0URgcmWp6NvRNWXfWIKgn+/qrn5t3jWR/2semZwV0fFnnCDnYYFGElRK6RmFuVL1kU
+	 q34eugcNkyfUw==
+Message-ID: <f8f4a21d-2a27-4533-afe7-387cd1347775@kernel.org>
+Date: Wed, 18 Nov 2026 11:18:31 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,15 +52,13 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: Gentle Reminder: Review Request for MPTCP Issue #349 (v5 Patch
- Series)
+Subject: Re: [PATCH mptcp-next v15 0/7] mptcp: pm: in-kernel: retry subflows
+ closed after an error
 Content-Language: fr
-To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-Cc: Mptcp <mptcp@lists.linux.dev>, pabeni <pabeni@redhat.com>,
- "shardul.b" <shardul.b@mpiricsoftware.com>,
- Mpiric Private Limited <janak@mpiric.us>,
- kalpanjani009 <kalpanjani009@gmail.com>
-References: <1a1e7f71a64.801c4dc0528499.8854228492193794083@mpiricsoftware.com>
+To: Anil Kaushik <anilkaushikwireless@gmail.com>
+Cc: mptcp@lists.linux.dev
+References: <20261103085244.23064-1-anilkaushikwireless@gmail.com>
+ <20261118015746.1766470-1-anilkaushikwireless@gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -106,29 +104,28 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <1a1e7f71a64.801c4dc0528499.8854228492193794083@mpiricsoftware.com>
+In-Reply-To: <20261118015746.1766470-1-anilkaushikwireless@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Kalpan,
+Hi Anil,
 
-On 17/11/2026 06:24, Kalpan Jani wrote:
-> I would like to kindly follow up on my v5 patch series for Issue #349.
-> 
-> Link: https://lore.kernel.org/all/20260915093506.465110-1-
-> kalpan.jani@mpiricsoftware.com/
+On 18/11/2026 02:57, Anil Kaushik wrote:
+> Gentle reminder on this series.
 
 Thank you for your reminder, and for your patience. On my side, my plan
 is to finish all the series I have in progress, especially the fixes
 ones, but I will try to do some reviews in between.
 
-> The patch series has passed the Sashiko tests and CI runs. I would
-> appreciate it if you could take a look whenever you get a chance.
+> One question: I would also like to add the new subflow-retries limit
+> to "ip mptcp limits" in iproute2. Should I send that now, or wait
+> until this series is accepted?
 
-When you have a chance, do you mind rebasing it, and re-sending the last
-version? In between we got netdev sashiko doing some more advanced
-cross-reviews, and we don't want to be blocked by items it would find
-when sending this series upstream later on.
+Yes, that would be good if you can send those. You can already do that
+by sending a patch (on top of upstream iproute2) only to our ML. If you
+need to add entries in the copied kernel headers, please do that in a
+separated patch: we will need to wait for the iproute2 maintainers to do
+the copy themselves before sending your future patch upstream.
 
 Cheers,
 Matt
