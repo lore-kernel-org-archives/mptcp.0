@@ -1,47 +1,67 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794999028;
-	b=ONMzY2Tsdo+r+674ACBd/8jgbrWq+Y853wn++j0SWxIpYuJxJko9KILMFNpDWtD6GS+l
-	 ai1SDAPKMb8+does7e6flFOK/uqWTVn6K/XsSY1CquVnhnjaRfz70+YzBuendW1BXYdOI
-	 f+SRDOeR+piPRDkc4i2TVMRxIc8qcWTsOF1DTEFirx+yoszKZv2jABq3bpssjHOv0uc2M
-	 mv1yRdf2mmFkRcF2zsAYZDnPjjf2CA8Hcf7IvYdbr97GkRk5mosIOnEB6ePPtlKbwY0Lq
-	 ZsCw92fN1c3pihObxZQdIIKVLFk1NaGgFs9qU+2juNC3d1vv00U4woGIOJ+luuSKWbg==
+	t=1795006285;
+	b=mKIeR/2tBVCcVXjnKGzBy6jlosCEWHHKx43ij0h0r25g/FD84eYvC5DtSi+2Iw5cYlLs
+	 VW/Nc1zEL3mLy7UM5P8uh0aRGfZjIGN+vNXnVFjm06fPbewrCIiEOIBmGa5jwDcVachQl
+	 8wwARgZFyOZVoxHbn/bzAYp73Vx0m/kBEy8IsSSlIFQrg07dvZbLA4f6TPynyUz0r9gEo
+	 YaIrbFwJNsHVE/cA516I2cVmrABcf+zwYvP7b+dYMmRbFw+rRVYmHjlQ656tfS8U+/JB5
+	 TffJl7C8rk7ezX5Bm3GoJ0RMhzEX82IYmUfZjvcpfmdWqm9cUZVP3xxFB0geMHyInIQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794999028;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=2tyJQEQnFeWwomXQ5IRkBcHcwvd362+cG6pq/T5Bwi4=;
-	b=QU+yJIIvXQV/elyx2dUWg7yLpPk08YeGVf8zfcMDKa/yFYCJmEJGNriLdAICIKo1KZVk
-	 aZQImw1nX1eFKRA4CIJdYGPorSQXYmYdptOb6ycG5bi+nkXLEb91i8QbJUpBNGnzgKsSH
-	 iFAJzzswYNDXhctf3Qu0+tW26oDbxo3y4nPb3jCeCWJmUNLPv6oPDgBRmT4rUgh4y0g7H
-	 0r2wEDP6HSYx6o4xCK9z+b+A5RllK/zRri2nvNT/xelBLmyuV3O5sSiFLtTcid/BPZ5Ld
-	 uGw7fj6QvMYl3WiQlAqzLu4+mQIUQzKMD0t/I5/cNzi/9JWUm7J48W+pMzrhJXqzFpw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795006285;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=nYuOjm8xQJMsBWaOOrKGxnekKQWVnD5kRNJ5Ku24pwI=;
+	b=RnNqH9/DnfpwM0g4EPBqR0LCZKbDsxQ0yh01eMwodegqnYSmed6UpCuAglyNqq1ccwoW
+	 hAMyllVGS3C7zyacPdtnleaAsfqqVFF01P6IZB2vV2vVRjLIP0t1vs5ewzP4IPNb+SjOa
+	 uZ5ugcIiiGzsB5tRSm/kM5myC/H1wRni+Pa1EJvYSjW/lFf3WXn8Nkn4aE4sw77v24IKv
+	 wpa3MhNKRKgnJMkHAADSNAtiTVzEGLBtiDInm4BvQLB7ldozwn7OAs5ywMq063h9vj287
+	 RcjhcMTo3wb/mO/tFDezxnMhH6i68dq9AMeaJtktrHvoDm2E1VpEgRAdkCXS9brkbSg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Pr//q/Y8";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=IVNLBgFz;
+	arc=none smtp.remote-ip=95.215.58.18
+Received: from mta1.migadu.com (out-18.mta1.migadu.com [95.215.58.18])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78383606A31C;
-	Wed, 18 Nov 2026 10:50:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC3F606A320
+	for <mptcp@lists.linux.dev>; Wed, 18 Nov 2026 12:51:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4CC3F606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Pr//q/Y8
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03ABB1F000C5;
-	Wed, 18 Nov 2026 10:50:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794999028;
-	bh=2tyJQEQnFeWwomXQ5IRkBcHcwvd362+cG6pq/T5Bwi4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Pr//q/Y8OiVPLDdAT5oOmIcmCL8xXTs8vFj8sUFKQYdCvGikTJ0MxLgfNrOxR0Ta7
-	 AvTRZmLuVgJcBFYzqHm6BJF+z8/n8NgYxsuIdIhK3XrCehTmx4m77tW024J0HY7NaN
-	 TCsXb/wtvXkZ97WVBVrd5ZNfmeNPReiJukadaoCOGcU0xmTOwygDw8RetcGwRI83bA
-	 EZDxFtJH54PQVrXoaFNElTjvs939KZH+QAnzmgH2xqETia+5LNJUHTvcsosMOdFE3J
-	 NPf/f7/QyQoOlw81m8LAQrJSKwq5Z1SVPncq6MUyzIBgRZRfIv3KsUzMGyCy4bVghB
-	 bBpHjPargRbJg==
-Message-ID: <aa9a2189-71e5-409e-b89d-c14441bccb72@kernel.org>
-Date: Wed, 18 Nov 2026 11:50:20 +0100
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=IVNLBgFz
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=S4tIs0eXTP8/ESlTI3EDlKJDy7qEJ4aWifgLG6CtFzY=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1795006282; v=1; x=1795611082;
+ b=IVNLBgFzmRuyK7s18N4RsxnDzheqIxrl0fZ9T2nZNi5FOD5Q9zBdnc2YDgdZY1E336446/ny
+ +jBxgZoZAumntV9/mRzfLpWHoVOkIwt0E11iG2oJdfRGPXzqgM/Nkarlc/ya/b+WRxKRVdBT0hB
+ aOo+87CphSW7QQyhCTwb1vKk=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id f2a36f7fe13e4e18;
+	Wed, 18 Nov 2026 12:51:22 +0000
+X-Mizu-Trace-ID: f2a36f7fe13e4e18
+X-Migadu-Flow: FLOW_OUT
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: mptcp@lists.linux.dev,
+	matttbe@kernel.org,
+	stable@vger.kernel.org,
+	pabeni@redhat.com
+Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 5.15.y v1 0/1] minimal mptcp UAF fix for 5.15
+Date: Wed, 18 Nov 2026 20:50:30 +0800
+Message-ID: <20261118125032.200934-1-jiayuan.chen@linux.dev>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -51,99 +71,118 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net v5 0/3] mptcp token hash ordering and token 0 lookups
-Content-Language: fr
-To: Hang Nan <2122295973@qq.com>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, martineau@kernel.org,
- geliang@kernel.org, davem@davemloft.net, edumazet@kernel.org,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, kuniyu@google.com,
- willemb@google.com, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <tencent_50E9A78F95855D54DA67136F3D8520017F0A@qq.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <tencent_50E9A78F95855D54DA67136F3D8520017F0A@qq.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Hang Nan,
+We encountered an MPTCP-associated use-after-free in kernel 5.15. The
+affected applications do not enable MPTCP on purpose: Go turns MPTCP on
+for listening sockets by default, so any Go service that calls Listen()
+ends up with an MPTCP listener without the application opting in, and even
+when the client speaks plain TCP.
 
-On 16/11/2026 15:58, Hang Nan wrote:
-> This series restores acquire ordering for the mptcp token lookup and fixes
-> two pre-existing defects in that hash table which ordering alone cannot
-> cover.
+In mptcp_close() the listener subflow is orphaned (marked SOCK_DEAD) before
+__tcp_close() -> inet_csk_listen_stop() runs on it. A connection whose 3-way
+handshake completes in that window is cloned from the already SOCK_DEAD
+listener subflow and inherits SOCK_DEAD; a following RST then frees that child
+via tcp_done() -> inet_csk_destroy_sock() while it is still linked in the
+listener accept queue, and inet_csk_listen_stop() later walks onto the freed
+socket.
 
-I didn't do a full review of this series because of the build failures,
-but here are just a couple of quick notes:
 
-- The patches you send are not linked to the cover-letter, see the
-  In-Reply-To [1] pointing to a different Message-ID than the
-  cover-letter [2]. Your messages ID are probably modified when sent.
+time line:
+close(listen_fd):                            3-way handshake & rst (plain TCP client)
 
-- Please wait for Netdev Sashiko [3] before sending new versions.
+mptcp_close
+  // mark ssk as SOCK_DEAD
+  sock_orphan(ssk);
+  __mptcp_destroy_sock
+    // ssk in conn_list is listen sk
+    __mptcp_close_ssk
+                                             // in 3-way handshake
+                                             tcp_v4_syn_recv_sock
+                                               // inherit SOCK_DEAD state from listen ssk
+                                               inet_csk_clone_lock
+                                             // process RST
+                                             tcp_reset
+                                               tcp_done
+                                               // sk is SOCK_DEAD
+                                               inet_csk_destroy_sock
+                                                   sock_put(sk); // freed
+      __tcp_close(ssk, 0)
+        // free child
+        inet_csk_listen_stop()
+            process child        <==== process freed sk
 
-- Use 'mptcp:' prefix instead of 'net: mptcp:'
 
-- Split the new kunit tests from the modification in the code to ease
-  backports.
 
-- (Honestly, a test for a !token guard is probably not worth 50 lines.
-   The first KUNIT_EXPECT_PTR_EQ on the empty table, or no new test at
-   all seems more reasonable.)
 
-- (I agree that the Token 0 is never assigned... in Linux: the RFC8684
-   accepts it, but the Linux implementation don't. Maybe mention that in
-   the commit message to avoid confusions.)
+Upstream closed this window with commit 57fc0f1ceaa40 ("mptcp: ensure listener
+is unhashed before updating the sk status"), so that would be the one to
+backport. But it does not fit 5.15 well:
 
-[1] https://lore.kernel.org/tencent_BB8DA72524E32FD374B8B2950B247B62E207@qq.com
-[2] https://lore.kernel.org/tencent_50E9A78F95855D54DA67136F3D8520017F0A@qq.com
-[3] https://netdev-ai.bots.linux.dev/sashiko/
+1. It calls mptcp_subflow_queue_clean() and mptcp_event_pm_listener(), which
+   are not in 5.15.
+2. Its mptcp_disconnect() hunk relies on commit b29fcfb54cd7 ("mptcp: full
+   disconnect implementation"), which is not in 5.15 either. Without it,
+   shutdown(SHUT_RD) on a listener leaves the msk in TCP_LISTEN with the
+   subflow already in TCP_CLOSE, and the WARN_ON_ONCE() in
+   mptcp_check_listen_stop() fires on close().
+3. It needs the follow-up commit 3fffa15bfef4 ("mptcp: ensure subflow is
+   unhashed before cleaning the backlog") to get the unhash order right.
 
-Cheers,
-Matt
+The simplest fix for 5.15 is this patch: in mptcp_close(), unhash the listener
+subflow and drain its accept queue before it is orphaned. A better backport is
+welcome.
+
+This may become much easier to hit once services move to a newer Go.
+
+A reproducer (written by an LLM) is at:
+https://gist.github.com/mrpre/053f1849b5accec13c0fe9c569739fd7
+
+
+------------[ cut here ]------------
+refcount_t: addition on 0; use-after-free.
+WARNING: CPU: 59 PID: 404175 at lib/refcount.c:25 refcount_warn_saturate+0x12e/0x150
+RIP: 0010:refcount_warn_saturate+0x12e/0x150
+RSP: 0018:ffffad3c8a2d7b68 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffffad3c8a2d7b70 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff88f3421c2300
+R13: ffff88d43e13b508 R14: ffff88f3421c26f0 R15: ffff88d3df5d4900
+FS:  0000000000000000(0000) GS:ffff89127fd40000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000c04e5f8000 CR3: 00000005dfaba004 CR4: 00000000007706e0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ inet_csk_listen_stop+0x3e1/0x530
+ __tcp_close+0x3bc/0x440
+ __mptcp_close_ssk+0xb9/0x210
+ __mptcp_destroy_sock+0x11c/0x280
+ mptcp_close+0x25d/0x3b0
+ inet_release+0x44/0x90
+ __sock_release+0x42/0xb0
+ __fput+0x98/0x270
+ ____fput+0xe/0x20
+ task_work_run+0x6d/0xb0
+ do_exit+0x1e7/0x3c0
+ do_group_exit+0x3b/0xb0
+ get_signal+0x17a/0x940
+ arch_do_signal_or_restart+0xba/0x130
+ exit_to_user_mode_loop+0xae/0x160
+ exit_to_user_mode_prepare+0xad/0xc0
+ irqentry_exit_to_user_mode+0x9/0x20
+ irqentry_exit+0x21/0x40
+ exc_page_fault+0x93/0x190
+ asm_exc_page_fault+0x27/0x30
+
+
+Jiayuan Chen (1):
+  mptcp: fix UAF of child socket on listener close
+
+ net/mptcp/protocol.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
 -- 
-Sponsored by the NGI0 Core fund.
+2.43.0
 
