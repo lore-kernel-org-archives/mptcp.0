@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794997112;
-	b=nJqvb9jiHb4LSCZAV0CF5zxrPiHgYz8g287eTRiY/vUnp3ZAK+VOZGmg+qIdjo+te9T8
-	 okhY6tsQQYgFiVAajezUEPG9PULa+EFlgVp7GVljGEltyjBgSrGtipWLFFSDC/STaABLt
-	 B4UHBU2n4QmIkttjpR6mhyInAnBzzeHnWGJLvM2/Om24BOgf3Z+g/VMH+D8ifC+Gq6aeX
-	 1at9v7w24y10il2EZrEYzPxiuuA9PYV/8jQIn3UBgv8fLIaEeNNUQQwfWQYcMF31gxunb
-	 hw18bttYMzTtBn/Hbx2uKQnir1pA5w9rHcflYcqy9xMvJhaT+aZUUjH4dg9e9HM1S2Q==
+	t=1794997289;
+	b=RuQJ8fnCkpBM56REaLq/NFfa+WpWt9/NHtEakUOYDHd7TNlvHxilnBM8WmHT4Wvlstu1
+	 0skJeWgO/Bv25WX+vMMEANbVUmrsMOn/sh8GJaPCZxWV2D1KfwLd8VTN2vXwYG472VHtZ
+	 ZtvDlyQq6AqqxjD4vb7DIwTmxi+Xmjw5qjzKaRI1FxgGKodCevk5yy7Eix4jKwfA6f8NS
+	 +4vq9K99J1UmkkMqVczraI4o1LH3H+IHvc3cfzOTzy08rgg82lUz1Ff4Ge50QzDhuawYo
+	 /nBh5mNgox8P6bANTeDdT9vK1yctbjM+3XqjD2wU+V/0qtxhLyrcluuHKrFdQ4QOKuw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794997112;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794997289;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=uqhJcMfhfWT0sFiGINInImwjXlnsWK/MxEoWUZc7rPo=;
-	b=zen4BiJhN+o27crFLOLg+iaoPqEdeDszLQlq7s2UL+0RRR2joZ/7Fa/ztLWRejofeBYV
-	 A4aiiOYiNxsly2oBeVjj//pGJd90K4iJ1b5YmRnSfHxYlxKkHAFpBT6xLVUXHnCqflWYG
-	 NptE2dXREprljHc6GPPBt9jVuq8KClZgngzP64JLjPyPiOWwWn1S4kBYFgwCCuBLTpt/T
-	 urJH5b+eESOS9O+zAzSzSUK9O9p859u1AhUipguELNtMz1SF5fy1Z+tzwm5gba6bi3BjI
-	 3xxkKXkU1I0KQwxFwFg8iQn5bUZbCBPu6nFgyNW6c1PGCz1yfChTzzHAhEqM+2tduTg==
+	bh=5JwEdw7oQnNfqJ3rJ8GXUaWGc0jOb4+cV+iqaXyWC9A=;
+	b=zqWqXhss/hwPFKDNwqIGWfVwFEgFhh2u3XtAxUKQti3HQS8jzl8zGGCwIZl5w3jjNb3q
+	 jOMmbS09pzg0s2nB71sxfejYATUBoT6TrzIzhDQtuKvnl+vhRyrhpw9acD2s3yg7NWnhU
+	 NGREyUBVaAWQxKU1UEW0dK+4ozUn1dSbWkfmRp8Wqr9PBoEIGjsjoq3i2LDZsLOc/9sQF
+	 RaMwk/ukmGe7N0YS2DoO9kFnTdfAU3G8J7m/OpusAMgP3a1o3jxMXoMqZaN15x+nemZ9+
+	 eFxXDXlj8L1TSof/7czd/JacTXSQ8gyVbgOs4CuY1ywAum7kfrEtY16YA1MW8pmj4Ig==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ictou5nP;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BuQ8BFuY;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD624606A31C
-	for <mptcp@lists.linux.dev>; Wed, 18 Nov 2026 10:18:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE977606A320
+	for <mptcp@lists.linux.dev>; Wed, 18 Nov 2026 10:21:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ictou5nP
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 020301F000C7;
-	Wed, 18 Nov 2026 10:18:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BuQ8BFuY
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 567221F000C4;
+	Wed, 18 Nov 2026 10:21:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794997112;
-	bh=uqhJcMfhfWT0sFiGINInImwjXlnsWK/MxEoWUZc7rPo=;
+	s=k20260515; t=1794997289;
+	bh=5JwEdw7oQnNfqJ3rJ8GXUaWGc0jOb4+cV+iqaXyWC9A=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=ictou5nP7yRxeiv9b4vyQJPLuMeDkfl+N++qBiS36qmnyXM20Fd6g01BSCjY83u2b
-	 2gNo5ZEb/c/8qHIq7f2upRhI6VnaVHkKlkpCCgkIcD5f1N6r/tGWEUc8AujVECQNJI
-	 fPtGADimSAJjrfLdyvbVvfH6UdPqmnF0nMYaoy8TYQLGcHYkqjDiztV9Sek9wyOcH+
-	 z1WjirxHfn8OAxZQ8Qiz+iYs6UwiERwTAcfI+uSH4pnOOVddnKbrywRqPMIi5xTYDD
-	 0URgcmWp6NvRNWXfWIKgn+/qrn5t3jWR/2semZwV0fFnnCDnYYFGElRK6RmFuVL1kU
-	 q34eugcNkyfUw==
-Message-ID: <f8f4a21d-2a27-4533-afe7-387cd1347775@kernel.org>
-Date: Wed, 18 Nov 2026 11:18:31 +0100
+	b=BuQ8BFuY105bg7g6nADgOlVFza8Ih7F5DPTknZq0Zmv9S9QYbtfi5WmeBXroq/QkW
+	 ICe+sNmT8GLPH/4wnG0Un/4HAfVy9H3wmpMZ/oDkJrlyWVu+NSFSn4HtRwYb7aWin0
+	 OeTbLgREoexRUGNb92z2QRc2TszSfLN0GUDz30G2SbpFI5kQ8f1/1QpFH8Nsdhakxj
+	 eIoXckt3yMz3Imw0IWN97DXR8ZXEW3UHH8t9QnhX+Qv6c5BrrD0wC2CSi/iHvPt3QE
+	 tO1Fd5NWBt6KSNduKWK8cMAG7E7eVsoWO2Lcm8L96L+2kGQIwbbr1kqiPcNdyeOIuT
+	 gMbS2BGwkOifA==
+Message-ID: <e5b05d4e-a3e0-4e77-a608-b58d0b89e87a@kernel.org>
+Date: Wed, 18 Nov 2026 11:21:26 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,13 +52,15 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v15 0/7] mptcp: pm: in-kernel: retry subflows
- closed after an error
+Subject: Re: [PATCH mptcp-net v8 0/2] mptcp: pm: in-kernel: fullmesh: re-add
+ of the initial subflow endp
 Content-Language: fr
-To: Anil Kaushik <anilkaushikwireless@gmail.com>
-Cc: mptcp@lists.linux.dev
-References: <20261103085244.23064-1-anilkaushikwireless@gmail.com>
- <20261118015746.1766470-1-anilkaushikwireless@gmail.com>
+To: Abdul Wasey <w453y.me@gmail.com>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ "Mohit P. Tahiliani" <tahiliani@nitk.edu.in>
+References: <20261024111842.1069878-1-w453y.me@gmail.com>
+ <20261114082210.3439645-1-w453y.me@gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -104,28 +106,38 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20261118015746.1766470-1-anilkaushikwireless@gmail.com>
+In-Reply-To: <20261114082210.3439645-1-w453y.me@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Anil,
+Hi Abdul,
 
-On 18/11/2026 02:57, Anil Kaushik wrote:
-> Gentle reminder on this series.
+On 14/11/2026 09:22, Abdul Wasey wrote:
+> On Sat, 24 Oct 2026 11:18:40 +0000, Abdul Wasey wrote:
+>> With fullmesh endpoints, removing and re-adding the endpoint used by the
+>> initial subflow never creates a new subflow from it: the closed initial
+>> subflow stays in the conn_list, and makes the PM think the remote ID 0
+>> is already used, or picks its reset remote address. If the initial
+>> subflow was the only one, no address is left for the remote ID 0 at all.
+>>
+>> Patch 1 fixes that, patch 2 adds tests for it.
+> 
+> A gentle ping on this one, in case it got lost. The MPTCP CI and both
+> Sashiko reviews of v8 were clean.
 
-Thank you for your reminder, and for your patience. On my side, my plan
-is to finish all the series I have in progress, especially the fixes
-ones, but I will try to do some reviews in between.
+Thank you for your reminder, and for your patience.
 
-> One question: I would also like to add the new subflow-retries limit
-> to "ip mptcp limits" in iproute2. Should I send that now, or wait
-> until this series is accepted?
+> I saw patches 21 and 22 of your misc fixes series touch the same part of
+> pm_kernel.c and the same "delete and re-add" test. I checked that they
+> and this series apply on today's export-net, in either order, without
+> conflicts.
+> 
+> If something in it should change, I can send a v9.
 
-Yes, that would be good if you can send those. You can already do that
-by sending a patch (on top of upstream iproute2) only to our ML. If you
-need to add entries in the copied kernel headers, please do that in a
-separated patch: we will need to wait for the iproute2 maintainers to do
-the copy themselves before sending your future patch upstream.
+Thank you for having checked that. On my side, my plan is to finish all
+the series I have in progress, especially the fixes ones (and the v2 of
+this series you mentioned is getting huge...), but I will try to do some
+reviews in between.
 
 Cheers,
 Matt
