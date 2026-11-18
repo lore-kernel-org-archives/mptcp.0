@@ -1,53 +1,53 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794963946;
-	b=MPm1S6QUyk29uZqeVXTuXtzN0hxRo5RQvTUnCDF4z1YabT+FZO7qwjeqrA451y12KHT/
-	 A7ktgrTir6NE2fWzaIYyNiFUPfdUcCULPsRkMjbwM9AN/hWYXTdBCkA2QsVdnQqCKjM6e
-	 ooCW+EL+Pa82UvZVSJaZvFu71F8XDoxb3ZYUxp/a/7+kbOYLl1sjXh2qbld9pFVQzUbz3
-	 80nlTfjOCkczv11IADCoa6SDcTUJg4cYsq/+BVbNs1iiVM74J9b4M5AZ+L7Jfm+zuwlRF
-	 cTQ+F/rq6GoT3boRt5Dm/uGbx8Pb20dwLz491IE6dexXdiehSssFJoz9FnGn2SDY05Q==
+	t=1794963947;
+	b=FuPUKCqlndOGUUAUsi11YCItI7Rjpuy4KXlAvvrTZOxfYpJm+1CaiXaeuURaoT2FAKtD
+	 SCdfZ894CEbSnZkrLPaE9cIkVT4AsPwSJW4gQxBa9HU+afRiDeAxwqT0MtF/RXRc0+PBG
+	 wf3V9nhBpQjp15CEQ+jmwxtwwibceou57+Gz/w7N2MKjYG/za8t6VR5bKoyhbc6KGdAp/
+	 GlNYKF8GatYEgSB1SuJl0xuGOD8xn2DkwiyZi7NAjwTEGeMkVW0641q8YLM4bd/7kg1C0
+	 5UhCaPeBTP8zwUmtPG3n1wGMyt3b24Ra7szIVQwVtzfRyBEN2cy5o5U+CH+v1JVeHpw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794963946;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794963947;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=uhAiREtGIH/iR4IX6JKi+W/CAy37Yqb8AVLq76n6WkY=;
-	b=u2jZRK7JBui/3J1hSvy0ZIZzSYm0fPDTzJvap8jVc33381GT0m9r6EeBgcpgSUdiFNG3
-	 rmaZ5tFAplcpe6mZrPBZ9Faby1vLBUddEgGc0o/u5goCN7gaupH0Uszl0X/Oh0rT6mc3V
-	 psdNG72cWBfY8F/Ui4E0ETbW1GPy90+XSooYKTWvtsQ5OHd5yy/MZ9qMeV4RoqhZEzV5M
-	 gTOrj9x524Zs8+SDJZhK1llHvVlMGEucgDf05JssrhqE5sf/SDhx86BSh/2F+2XkEHTAa
-	 G+FHOBCrwLluvi1oqaOKq/V7b8+HoeDcgWG7vEGTTNUDH1Gcl3Jtz1+nj5EHj9XFt9A==
+	bh=5UMruVWXJtXhhsASd0xTwxA8k9CedJTw+YW5Iru8yZk=;
+	b=GpSWTJr0sPboZ097hrwtepVfR7Q9X4Vs0AxJWTLpw9ufdhdjfYbKVuRQ4qxrSAJM3ChG
+	 buolz7L8aXJU9YR3uqQ5GCqGP+ztcwndSMldwh6tAhbOEUfvRPUMo3NHtr/BSHFsfJN6h
+	 tw5VYB+2NHvYA0WsELSkkw/D7sIKdH79IcLoLa612XpM6X9dw4vQ1M0GKtFJd6dkuuDL8
+	 AF1MOQSZ5p+Bi5dL5oKUOySXaXZQQizaiM1yQBmC8Tgj/kxjBdrzz9v2JJ2GrStrgx79e
+	 c8I9TLu5nKWO27EOAEXjRWAxS5/ht+Ccojl9y4FWPYqILM/ypX6tmRqBoW1HWEcKbow==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="UgF/0+Tl";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IpkFC0Uh;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4893F606A31C
-	for <mptcp@lists.linux.dev>; Wed, 18 Nov 2026 01:05:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1B8606A31C
+	for <mptcp@lists.linux.dev>; Wed, 18 Nov 2026 01:05:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UgF/0+Tl
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F12181F000C4;
-	Wed, 18 Nov 2026 01:05:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IpkFC0Uh
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B65721F000C7;
+	Wed, 18 Nov 2026 01:05:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1794963946;
-	bh=uhAiREtGIH/iR4IX6JKi+W/CAy37Yqb8AVLq76n6WkY=;
+	bh=5UMruVWXJtXhhsASd0xTwxA8k9CedJTw+YW5Iru8yZk=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=UgF/0+TlUqY4CUqUhzSHsoIKfQ3y9Eco575dTR+sV2T3rw7hIgi/W/POdRB6uJwDO
-	 1hU4qxwmfvUtZnBR+7PrlBPDvb/c2aUdjCS87Xi828eJbDa5UeZAKsuv07ZI8M1NdL
-	 sbVpLfDAU6tntYNz2S9s/X0tLRwCW1D276TiBE3/1EoUBolbdeCkYNITAsQkUrAGFT
-	 G6Ed7Dc0igQ6U02Kcgs906SgGAdfGH85x2/n+Pnw1btnFYdZqlqFdlR8g8iWLd7tlP
-	 84fcTp0iddd7A+jaOU3GWQS7ox/FgQ6VNQtWdnmnA03XQB6c4TxnJIvbCoPDPPCzwl
-	 bzrcAy07tGVeg==
-Subject: Re: [PATCH mptcp-next v8 3/7] mptcp: implement peek_len for proto_ops
+	b=IpkFC0UhSQo6WM4wX++oky66XafAW0QNJ5aoIgFidTUqPei55K1GDLbm6eXTgajEk
+	 nW0OYxiFXpIZxTFBCDDvXgiIe+IDnEe1BOXnhRA3AeANHs8IzuHAJvBNMojPjKC2Hr
+	 d4RoLQ84WHnf1JPuXMN7YUWemMQNWVTyU4ZXoWLnbrdL6ymdT+f3Jz0TONV9FXmQ8Y
+	 k8oiKEftxgspKCOv9GdbRQ5F9JYLzdD1EUYaM5F2HoVqGF2RnMGFIxg3XMmeeABZAP
+	 KuWCxo2JoSWnkoMahG/JtFCkG9Czynjv0t/SbJcjnGeDOY0qBXHxvptQ/w6sl90xbP
+	 Kg65TDLzwV6rg==
+Subject: Re: [PATCH mptcp-next v8 4/7] mptcp: add sendmsg_locked to proto_ops
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Wed, 18 Nov 2026 01:05:45 +0000
-Message-ID: <179496394553.3133.12238622788939082283@kernel.org>
-In-Reply-To: <0ecc320bbed2cf5713fd0e23c71bbb7127370a70.1794826541.git.geliang@kernel.org>
-References: <0ecc320bbed2cf5713fd0e23c71bbb7127370a70.1794826541.git.geliang@kernel.org>
+Date: Wed, 18 Nov 2026 01:05:46 +0000
+Message-ID: <179496394632.3133.4263841148082085477@kernel.org>
+In-Reply-To: <2d180799564c49dc62ab876fbcb358670ece3a29.1794826541.git.geliang@kernel.org>
+References: <2d180799564c49dc62ab876fbcb358670ece3a29.1794826541.git.geliang@kernel.org>
 X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -67,91 +67,88 @@ you want to address the nit picks below when you respin.
 
 Low priority / nit picks for your consideration:
 
-- [Low] The new mptcp_peek_len() (net/mptcp/protocol.c), wired into
-  mptcp_stream_ops and mptcp_v6_stream_ops, has no caller that can reach…
+- [Low] The patch adds `.sendmsg_locked = mptcp_sendmsg_locked` to
+  `mptcp_stream_ops` and `mptcp_v6_stream_ops`, but no in-tree caller…
+- [Low] The commit author is 'Geliang Tang <geliang@kernel.org>', but the
+  only Signed-off-by is 'Geliang Tang <tanggeliang@kylinos.cn>'.
 
 --
 
-mptcp: implement peek_len for proto_ops
+mptcp: add sendmsg_locked to proto_ops
 
-This adds mptcp_inq(), which uses mptcp_data_avail() to report how many
-bytes can be read at the MPTCP level. It also wires mptcp_inq() into a new
-mptcp_peek_len() callback. That callback is set as .peek_len in both
-mptcp_stream_ops and mptcp_v6_stream_ops, to prepare for kTLS and sockmap
-support.
+This commit splits mptcp_sendmsg() into mptcp_sendmsg_locked(), which
+expects the caller to hold the msk socket lock, and a small
+mptcp_sendmsg() wrapper that takes the lock. It also sets
+mptcp_sendmsg_locked() as the .sendmsg_locked hook in both
+mptcp_stream_ops and mptcp_v6_stream_ops.
+
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+
+[Severity: Low]
+This isn't a bug, but the author is Geliang Tang <geliang@kernel.org>,
+while the only sign-off uses tanggeliang@kylinos.cn. checkpatch.pl reports
+this as FROM_SIGN_OFF_MISMATCH.
+
+Could a Signed-off-by for the author address be added, or the author
+address be changed to match?
 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 574eba9989a8d..a0ad28f5a3851 100644
+> index a0ad28f5a3851..83abdf39c4e54 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -4789,6 +4789,26 @@ static ssize_t mptcp_splice_read(struct socket *sock, loff_t *ppos,
->  	return ret;
->  }
->  
-> +static int mptcp_inq(struct sock *sk)
-> +{
 
 [ ... ]
 
-> +}
-> +
-> +static int mptcp_peek_len(struct socket *sock)
-> +{
-> +	return mptcp_inq(sock->sk);
-> +}
+> @@ -4832,6 +4842,7 @@ static const struct proto_ops mptcp_stream_ops = {
+>  	.read_sock	   = mptcp_read_sock,
+>  	.splice_read	   = mptcp_splice_read,
+>  	.peek_len	   = mptcp_peek_len,
+> +	.sendmsg_locked	   = mptcp_sendmsg_locked,
+>  };
 
 [Severity: Low]
-Can anything call mptcp_peek_len() on an MPTCP socket, either at this
-commit or later in the series?
+Is there an in-tree caller that can reach this hook for an MPTCP socket?
 
-I can only find two users of ->peek_len. One is strp_peek_len() in
-net/strparser/strparser.c, called from strp_recv() and strp_data_ready().
-The other is drivers/vhost/net.c, and vhost-net only accepts AF_PACKET or
-tap sockets through get_raw_socket() and get_tap_socket().
+The only generic caller of proto_ops->sendmsg_locked seems to be
+sendmsg_locked() in net/core/skbuff.c. It is reached only through
+__skb_send_sock(), from skb_send_sock_locked() and
+skb_send_sock_locked_with_flags(). Only espintcp and ovpn call those
+helpers.
 
-The strparser users don't seem to accept MPTCP sockets. sock_map_link()
-only sets up the strparser for TCP:
+ovpn_socket_attach() in drivers/net/ovpn/socket.c rejects any protocol
+other than UDP and TCP:
 
-net/core/sock_map.c:sock_map_link() {
-    ...
-	if (stream_parser && stream_verdict && !psock->saved_data_ready) {
-		if (sk_is_tcp(sk))
-			ret = sk_psock_init_strp(sk, psock);
-		else
-			ret = -EOPNOTSUPP;
-    ...
-}
+	if (sock->sk->sk_protocol == IPPROTO_UDP)
+		return ovpn_udp_socket_attach(ovpn_sock, sock, peer->ovpn);
+	else if (sock->sk->sk_protocol == IPPROTO_TCP)
+		return ovpn_tcp_socket_attach(ovpn_sock, peer);
 
-sk_is_tcp() requires sk_protocol == IPPROTO_TCP. kcm_attach() also
-rejects any csk->sk_protocol other than IPPROTO_TCP.
+	return -EOPNOTSUPP;
 
-The commit message says:
+espintcp needs the TCP ULP, and mptcp_setsockopt_sol_tcp() in
+net/mptcp/sockopt.c refuses it:
 
-    This prepares for upcoming kTLS and sockmap support.
+	case TCP_ULP:
+		return -EOPNOTSUPP;
 
-Is the kTLS part accurate? kTLS receive doesn't use net/strparser. It has
-its own parser in net/tls/tls_strp.c, which calls tcp_inq(), tcp_sk() and
-tcp_read_sock() directly on strp->sk and never calls sock->ops->peek_len:
+As the commit message itself says, kTLS and sockmap still call
+tcp_sendmsg_locked() directly.
 
-net/tls/tls_strp.c:tls_strp_read_sock() {
-    ...
-	inq = tcp_inq(strp->sk);
-	if (inq < 1)
-		return 0;
-    ...
-}
+The commit message also says:
 
-The commit message also uses a consumer that isn't in this series to
-justify some specific choices: no EOF hint, no backlog drain, and
-returning 0 in TCP_SYN_SENT/TCP_SYN_RECV.
+    However, certain upper layers need to call the sendmsg method while
+    the socket lock is already held.
 
-None of the later patches in the series seem to add a caller either. That
-covers "mptcp: add sendmsg_locked to proto_ops", "mptcp: track app-limited
-state in mptcp_sendmsg", "mptcp: update mptcp_check_readable" and the
-selftests.
+Which upper layer does this refer to? I could not find anything in this
+patch or in the rest of the series (app-limited tracking, the
+mptcp_check_readable update, selftests) that calls .sendmsg_locked on an
+msk. So the new entry here, and the matching one in mptcp_v6_stream_ops,
+look unused.
 
-Could this patch be merged together with its first user? Those choices
-could then be checked against how the callback is actually used.
+Could the commit message name the intended consumer? Alternatively, could
+this patch be merged together with the series that adds that consumer?
+
+[ ... ]
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1794826541.git.geliang%40kernel.org
