@@ -1,72 +1,76 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.69
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.198
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795116123;
-	b=aHIN9lSdu8KTkYDky3eoQl/lTs227OrwUkTqn3WJEw/Mp35DPFCNIxX92z1nQFGfs2TZ
-	 nj7Yhi1NW4O8wsq2tIfpCMZZq7WS2o7FPiIVMOMpShpFlWH/UXz9qUhBF1hrALpIztZ6Q
-	 C/CWe4aux/G0I9Tv1bXPO6p4tkXeQZAe/B/0XDCFrOUXEm8kN2bC23eOo8nN1xzikoZ11
-	 qQ8hiKwjBGwpDEvr+sqwxv3pXU7XvaMi/XFCJULP6x3Rd5OBWvzR+F/0TdIIrUYYA1Fup
-	 mqkplzKZvl1eF0WpIDycW3OQanwf45F2oY8Z9S6JfXB8eC0Wv7yg5gAmDLwY9aOOd6g==
+	t=1795118581;
+	b=TAEVNVNZdQJ6XR6uAEFRO7gNkeTWldGVxzaiiQ+I/z9wb7Yj3x0S2ZJMZj5gcxnjjggD
+	 9M95dn164quoY0toadKYzqxC6sBR/G+VTUSaOsRDH8n1Qsx9rueKVQ0N88QoqAG5VHf78
+	 hUEBOVQ8PhCRx4noBrbqmBQWkGTfyiPz3bas1x1/RCrWBCPMPRx8YSbzjCvOCQnPha4wW
+	 6RL9sC9yr+/SXGsficCT8/Pchy8iHLI//Qs/U816B99MQQjauWqJgcc5Im7w7NavmtZbY
+	 y2WbWAL1JkOvLSj0i2Q+yZIldrSm51linClYsTt5aWV37+qU9WzxsDduEzvrExZXn4Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795116123;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795118581;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:Mime-Version:
-	 X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=gIWylxu69Ioq+u8Mm1LXBIh3r/He82QwlSQoOVn3GZY=;
-	b=NVVtVICpmYi1SyVNs9wkaWhnGlnIGJF6L5RX9ta+h4b4U92sRwZYVDiI1ECG6Rs6/VCK
-	 sJdW17ezJPBbII03HbS+QMoaqHLe4Yvyans7PyAdbD/YKxt9ixFKqGPADvxP1Zk2zyVti
-	 EPh3seZ8M9OPcvp1c21QtxrdrUXnul71pEVW/+TBO+pp0Dsv/aSjl+1LfDJXipujg1Uwb
-	 fuh3NfSzntQkT3o2i+6jMPBIJ5/3f9N5s+7gx/6dmZKoTXzqZSt8AJZjTQ2odq3md3Uzi
-	 V27zunP0bpq4NNoy/XQmskAhqJa9OvR6Y/x/O5H/dCx4AsSCyhWVN7JN9I9iXK72DMg==
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
+	 Mime-Version:References:Message-ID:Subject:From:To:Cc:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=Rr0Z5WvcKf5NSVmC1WPGt7a3UvHYdwGXeBU+EHjgpEE=;
+	b=ZKKvIDyC5LQmOC2zgDwv1ZOthJVEcWMXWOUBv5HcmMvNIOkfCaI9tq219dqOHA7MhNav
+	 cNoWsNmAMsRMH0gikLrZX2gHLUKtcmqL7xKdWl44trhZky7FZMpmYbFCAqg1a0yb3d7uE
+	 V5p5tC5AaoKWcVbJFgtPzd593c9NI2LORDTVnfAJYS/BV45D4OxO1LqmV0NfiTrxTt+FO
+	 Vp7k8ZdoFx4r5ghaFeB9VNNj9cNtxaIVg9OOJXe+OZLj/nMorLzf+3Epm3KEmYS3toy18
+	 lKmocP0iFmr/gSmPs9+GWwAHyktzoQ0PlrREnl1bZm5acuZnosQlQMayFLjL1yEbQhQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--dmnk.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=eqRRDtni;
-	arc=none smtp.remote-ip=209.85.221.69
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+	spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=P2hvhlnq;
+	arc=none smtp.remote-ip=209.85.214.198
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEBF6606A32C
-	for <mptcp@lists.linux.dev>; Thu, 19 Nov 2026 19:22:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BEBF6606A32C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBDD606A326
+	for <mptcp@lists.linux.dev>; Thu, 19 Nov 2026 20:03:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9EBDD606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dmnk.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=eqRRDtni
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-49337a224a8so19547f8f.3
-        for <mptcp@lists.linux.dev>; Thu, 19 Nov 2026 11:22:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=P2hvhlnq
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2e94f72fb9fso1016265ad.1
+        for <mptcp@lists.linux.dev>; Thu, 19 Nov 2026 12:03:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795116121; x=1795720921; darn=lists.linux.dev;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=gIWylxu69Ioq+u8Mm1LXBIh3r/He82QwlSQoOVn3GZY=;
-        b=eqRRDtnih2s7Hgkfo5hTIa3hgTxx80TP/PXUS+4PUEZ7K7pIW3skbjX1sgOLkWB7oQ
-         qIBNvnqZ7s1FMVJ1FImKz1QI11GoQZLbx3UHdgJahgwoNYIyQER7NRpjxU+iS9wtZasJ
-         oF0KbLONgyB56vpx/Sx7flzGPN3dnhdnrEONrpJa1DB3UvWaftobbb4pWHPjC7LEwO6I
-         nbiChV+2231onAna826KQToIBTxVWst+e/DcPofKrEocQvV8Gap7K3LmswwnO9UftpSA
-         JXWOBzFn8ucVDCf7FKV4GfhBf7HfxTNcvMongmK4OT6epc2wGTkEIgJPJQPx59Bmws7M
-         OlLA==
+        d=google.com; s=20260707; t=1795118580; x=1795723380; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:from:subject
+         :message-id:references:mime-version:in-reply-to:date:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=Rr0Z5WvcKf5NSVmC1WPGt7a3UvHYdwGXeBU+EHjgpEE=;
+        b=P2hvhlnqO1+mTy0toKtVku83w3ufz5Tism+HirpH+w6ESMZLsaoL2gzUDQ2XCmPeNM
+         i5Jxop3MG2gJh8YkOhglHs6wp+g8iPX1mCFVwMN/SiH7EcutojjYc6z6BojFkcTFo8LY
+         t+Q+QH7DXP82aGB3dBXGri90yTPR6JMSR0vLx1MZYPHR5GDi9lJ6eoHL59V3sCFnEjae
+         oFXP3RIuA7LStxyzvBiCuyzlPiPMIVv7mhtSjrQ6b/Dy9VX3kss8Yhhq58Qshz4sn3Yi
+         RiOvVFYzsfOTluNzpUVeqYbyEjb4Y6/he0fWjEb0Te5QT/AHyjBlddeeU7kDNg3FQ3IA
+         Ltew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795116121; x=1795720921;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
+        d=1e100.net; s=20260707; t=1795118580; x=1795723380;
+        h=content-transfer-encoding:content-type:cc:to:from:subject
+         :message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=gIWylxu69Ioq+u8Mm1LXBIh3r/He82QwlSQoOVn3GZY=;
-        b=dDWAWIc9ta++JAVnGh4nMPZQnwZKrsOODF98CI/oCXP35NiKkZ5pTL91N5MpMC7UeI
-         1MsQGbfqkEXThokgUsSOpDiALOndJ3czbZnlJhbuoMF/n6Ffiap4PBes5+PXARHStIi4
-         Cu3oPItxRKIg81X5c2T4bEf60EhdGJwbaMzAYnzhCkZFRIbcMLj4Znd/yGKVsOMzHNFr
-         R1nYoQcdN4u92J7b3BcTxEdW1NcUmaF0XttB4UV75z/+TszJ2vH/6IrTuxEgzMfVOyub
-         bADomIQqY/dhfnb04g31BSRIRMFp88hN1+4gTYiqZP6LyNCVM5Be0SPjL2eMtcoqgq23
-         rnEA==
-X-Forwarded-Encrypted: i=1; AL+hErHNd0Ldssr5JAkR8Z0jD0hQfSsYRQRPh/ahigbaxBcSFoc90c/RBwmuDzhmmrl83JMuyDD5lQ==@lists.linux.dev
-X-Gm-Message-State: APuU4Z9Sw34/ILRzUQvSW6UtF3HRqQfW6HepeKUm0XRr16k8IdmYUsUu
-	vk2vF8aq5ElqifcCN7RJlCr9P4mLwSNgkWsE1vtB7BYZApe121vTZio0jWqKd5oOK78y39xzpQ=
-	=
-X-Received: from wrmt2.prod.google.com ([2002:adf:e442:0:b0:48e:4e20:1349])
- (user=dmnk job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:4b0f:b0:48e:d7c:4bc8
- with SMTP id ffacd0b85a97d-4abad6a1782mr866576f8f.7.1795116120877; Thu, 19
- Nov 2026 11:22:00 -0800 (PST)
-Date: Thu, 19 Nov 2026 20:21:59 +0100
+        bh=Rr0Z5WvcKf5NSVmC1WPGt7a3UvHYdwGXeBU+EHjgpEE=;
+        b=Epmnfn6XfalRY52dNNugKkODkg0eUhMQyZS+H8Dw8CkZp3kWZurP/yDY+Ura/QWZON
+         sUqsCmMfJEMmwY6Mx/vhPGi9+TVLCmeyQM0XGlFnpJxNR/70fbfEByu693vx+/CxNfPV
+         G1MwHqZN4zKPC7ZkImy8bIAWjL4rgLpFi9r1vgoFtKXBEy+aAQa/IAxFfPSrS99ux6jz
+         awfGy9BU6MpqeyofipOKocCzbIJMwZoF3bQEdzwRqXOFWiJl2pag9Z+Q/dvwoWVVivMB
+         /Vj3t1IswMsAjNy7hHlOhmpxaznojorfI2WQhkQ2BxcaJGkplCQsLxs7B8Sln/SHVp4P
+         swKg==
+X-Forwarded-Encrypted: i=1; AL+hErGWq/8ugA8pYASpe3lGn2PGYQa/BWeuGO0js/5v/86M2iPT7EcoaRFLP7wo8bNpwPfcAMCHWA==@lists.linux.dev
+X-Gm-Message-State: APuU4Z/h2LPoGnhBh+lxm/5VfItRK4ng6lSOU2YBhckiC/Iruu6nyuD7
+	3TNSiQ8tgm3H7siPVx95O4Cz8TodHEdzyCDREup9dYgcdmqhJLXiKqKMGADr3xqUdMNRk8MZ4Op
+	lz4GyVg==
+X-Received: from plbja3.prod.google.com ([2002:a17:902:efc3:b0:2e1:326b:da73])
+ (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:b4b:b0:2ef:f51c:7b09
+ with SMTP id d9443c01a7336-2f03f19075bmr8876235ad.28.1795118579760; Thu, 19
+ Nov 2026 12:02:59 -0800 (PST)
+Date: Thu, 19 Nov 2026 20:02:59 +0000
+In-Reply-To: <CAL4WiioNduj1AybypLPDs6HuW2F9Y9zw3B2ycLSogRMnfzBk9g@mail.gmail.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -76,108 +80,155 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 Mime-Version: 1.0
-X-Mailer: git-send-email 2.56.1.809.ga0b61035b5-goog
-Message-ID: <20261119192159.2646113-1-dmnk@google.com>
-Subject: [PATCH mptcp-net] mptcp: gate diag sequence counters on CAP_NET_ADMIN
-From: Dominik Maier <dmnk@google.com>
-To: Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>
-Cc: Geliang Tang <geliang@kernel.org>, Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev, 
-	netdev@vger.kernel.org, dmnk+artist@google.com, 
-	Dominik Maier <dmnk@google.com>
-Content-Type: text/plain; charset="UTF-8"
+References: <20261119071649.374106-1-kuniyu@google.com> <20261119071649.374106-6-kuniyu@google.com>
+ <CAL4WiioNduj1AybypLPDs6HuW2F9Y9zw3B2ycLSogRMnfzBk9g@mail.gmail.com>
+Message-ID: <av9U9w4wGpO7HmDY@google.com>
+Subject: Re: [PATCH v3 net-next 5/7] tcp: Allocate all new skb before collapsing.
+From: Kuniyuki Iwashima <kuniyu@google.com>
+To: Eric Dumazet <edumazet@kernel.org>
+Cc: Neal Cardwell <ncardwell@google.com>, "David S . Miller" <davem@davemloft.net>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
+	Simon Horman <horms@kernel.org>, Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org, 
+	mptcp@lists.linux.dev
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-In net/mptcp/diag.c, subflow_get_info() restricts MPTCP sequence-related
-subflow attributes (rel_write_seq, map_seq, map_subflow_seq, ssn_offset)
-to callers holding CAP_NET_ADMIN in the network namespace.
+On Thu, 19 Nov 2026 08:44:54 +0100, Eric Dumazet wrote:
+> Le jeu. 19 nov. 2026 =C3=A0 08:17, Kuniyuki Iwashima <kuniyu@google.com> =
+a =C3=A9crit :
+> >
+> > At the final stage, tcp_collapse() iterates over collapsible
+> > candidate skbs and repacks them to new skbs.
+> >
+> > In each iteration, a new skb is allocated and inserted to the
+> > receive queue or a temporary list for RB tree.
+> >
+> > If alloc_skb() fails while splitting a large bloated skb across
+> > multiple new skbs, the partially-copied skb is not removed and
+> > new skbs remain in the queue as duplicates, consuming more memory.
+> >
+> > It is only when all candidates are properly collapsed that
+> > we can save memory.
+> >
+> > To avoid complicated rollback, let's preallocate skbs before
+> > collapsing.
+> >
+> > Now all skb in [start, sub_end) must be allocated in a batch,
+> > so the section size is capped at TCP_COLLAPSE_MAX_TOTAL_SIZE
+> > (16 skbs), except for the first single skb.
+> >
+> > Once the size exceeds the limit, the remaining skbs are
+> > re-evaluated from restart:.
+> >
+> > Legitimate overlaps (retransmits with a different segmentation)
+> > only involve a few skbs, so if an overlapping OOO chain reaches
+> > the limit, we simply skip it.
+> >
+> > Note that the next skb can be skipped if its density already meets
+> > tp->scaling_ratio, and each cut adds at most one remainder skb
+> > (~3.4% worst-case truesize overhead on 4 KiB pages), which is a
+> > small tradeoff to bound the temporary allocation.
+> >
+> > Signed-off-by: Kuniyuki Iwashima <kuniyu@google.com>
+> > ---
+> > v3: Make TCP_COLLAPSE_MAX_TOTAL_SIZE hard-limit for multiple skbs
+> > ---
+> >  net/ipv4/tcp_input.c | 41 ++++++++++++++++++++++++++++++++---------
+> >  1 file changed, 32 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> > index 27ed9ba11ec9..990e34896373 100644
+> > --- a/net/ipv4/tcp_input.c
+> > +++ b/net/ipv4/tcp_input.c
+> > @@ -5822,6 +5822,11 @@ static struct sk_buff *tcp_skb_next(struct sk_bu=
+ff *skb, struct sk_buff_head *li
+> >  #define TCP_COLLAPSE_SCALING_RATIO                             \
+> >         ((TCP_COLLAPSE_MAX_SIZE << TCP_RMEM_TO_WIN_SCALE) /     \
+> >          (SKB_TRUESIZE(TCP_COLLAPSE_MAX_SIZE)))
+> > +/* Cap pool preallocation per sub-range to at most 16 skbs in seq
+> > + * space.  A single first skb exceeding this is still collapsed,
+> > + * whereas an exceeding overlapping ofo range is skipped.
+> > + */
+> > +#define TCP_COLLAPSE_MAX_TOTAL_SIZE (TCP_COLLAPSE_MAX_SIZE * 16)
+> >
+> >  static bool tcp_collapse_skb_bloated(const struct sk_buff *skb,
+> >                                      u32 start, u8 scaling_ratio)
+> > @@ -5862,8 +5867,9 @@ tcp_collapse(struct sock *sk, struct sk_buff_head=
+ *list, struct rb_root *root,
+> >  {
+> >         unsigned int old_truesize, new_truesize;
+> >         struct sk_buff *skb =3D head, *n;
+> > -       struct sk_buff_head tmp;
+> > +       struct sk_buff_head tmp, pool;
+> >         int remainder, nskbs;
+> > +       struct sk_buff *nskb;
+> >         u8 scaling_ratio;
+> >         u32 sub_end;
+> >
+> > @@ -5871,6 +5877,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head=
+ *list, struct rb_root *root,
+> >                             TCP_COLLAPSE_SCALING_RATIO);
+> >
+> >         __skb_queue_head_init(&tmp);
+> > +       __skb_queue_head_init(&pool);
+> >
+> >         /* First, check that queue is collapsible and find
+> >          * the point where collapsing can be useful.
+> > @@ -5926,8 +5933,9 @@ tcp_collapse(struct sock *sk, struct sk_buff_head=
+ *list, struct rb_root *root,
+> >                 }
+> >
+> >                 if (!overlap &&
+> > -                   !tcp_collapse_skb_bloated(n, sub_end,
+> > -                                             TCP_COLLAPSE_SCALING_RATI=
+O))
+> > +                   (TCP_SKB_CB(n)->end_seq - start >=3D TCP_COLLAPSE_M=
+AX_TOTAL_SIZE ||
+> > +                    !tcp_collapse_skb_bloated(n, sub_end,
+> > +                                              TCP_COLLAPSE_SCALING_RAT=
+IO)))
+> >                         break;
+> >
+> >                 sub_end =3D TCP_SKB_CB(n)->end_seq;
+> > @@ -5935,25 +5943,38 @@ tcp_collapse(struct sock *sk, struct sk_buff_he=
+ad *list, struct rb_root *root,
+> >                 n =3D tcp_skb_next(n, list);
+> >         }
+> >
+> > +       if (sub_end !=3D TCP_SKB_CB(skb)->end_seq &&
+> > +           sub_end - start >=3D TCP_COLLAPSE_MAX_TOTAL_SIZE)
+> > +               goto skip;
+>=20
+> This is fine for now, but note that a single 64K GRO skb overlapping
+> a bloated skb is enough to reach the limit, and the bloated skb is
+> then never collapsed. The range is walked again at every
+> tcp_collapse_ofo_queue() call, for no gain.
+>=20
+> A possible followup would be to cut the range instead of skipping it.
+>=20
+> When @n overlaps and we do not want (or can not) merge it, we know
+> that @n already contains [TCP_SKB_CB(n)->seq, sub_end), because
+> skbs with end_seq <=3D sub_end were removed earlier in the loop.
+>=20
+> So we could do :
+>=20
+>         sub_end =3D TCP_SKB_CB(n)->seq;
+>=20
+> and collapse [start, sub_end) only, as long as sub_end is after start.
+>=20
+> All new skbs would then have a seq smaller than TCP_SKB_CB(n)->seq,
+> so the rbtree ordering is preserved, and we would not need to drag
+> @n into the range.
+>=20
+> After the copy, the skbs of the range that were not fully consumed
+> would have to be freed, since the rest of their payload is in @n.
+>=20
+> The same trick would also work for the unmergeable overlapping skb
+> case added in patch 3.
+>=20
+> I have not tested this, and this can be done later.
 
-However, mptcp_diag_get_info() unconditionally exports mptcpi_write_seq,
-mptcpi_snd_una, and mptcpi_rcv_nxt via INET_DIAG_INFO because
-.idiag_get_info does not receive the caller's net_admin status. Any
-unprivileged local user can therefore dump or query cross-UID MPTCP
-sockets by token via SOCK_DIAG_BY_FAMILY and read live 64-bit MPTCP Data
-Sequence Numbers.
+Ah, this sounds good too, I'll follow up after your frag series.
 
-Emit INET_DIAG_INFO from an .idiag_get_aux callback in mptcp_diag (which
-already receives net_admin from inet_sk_diag_fill(), while msk never
-sets icsk_ca_ops so netlink attribute ordering is unchanged) and zero
-mptcpi_write_seq, mptcpi_snd_una, and mptcpi_rcv_nxt when !net_admin.
-getsockopt(SOL_MPTCP, MPTCP_INFO) for the socket owner and token-based
-lookup in mptcp_diag_dump_one() remain unchanged.
-
-This issue was discovered with an AI-assisted code review tool (ARTIST)
-and reproduced in QEMU/KVM on an unmodified v7.4-rc3 kernel without
-kernel modifications or error injection; a standalone reproducer is
-available on request. This revised .idiag_get_aux patch was
-compile-tested with -Werror and checked with checkpatch.pl --strict; it
-has not yet been runtime-tested against the reproducer or the MPTCP diag
-selftests.
-
-Fixes: ac3b45f60954 ("mptcp: add MPTCP socket diag interface")
-Cc: stable@vger.kernel.org
-Signed-off-by: Dominik Maier <dmnk@google.com>
----
- net/mptcp/mptcp_diag.c | 28 +++++++++++++++++++++++-----
- 1 file changed, 23 insertions(+), 5 deletions(-)
-
-diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
-index 136c2d0..62d8f1f 100644
---- a/net/mptcp/mptcp_diag.c
-+++ b/net/mptcp/mptcp_diag.c
-@@ -193,10 +193,9 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
- 				void *_info)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
--	struct mptcp_info *info = _info;
- 
- 	r->idiag_rqueue = sk_rmem_alloc_get(sk) +
--			  READ_ONCE(mptcp_sk(sk)->backlog_len);
-+			  READ_ONCE(msk->backlog_len);
- 	r->idiag_wqueue = sk_wmem_alloc_get(sk);
- 
- 	if (inet_sk_state_load(sk) == TCP_LISTEN) {
-@@ -210,11 +209,29 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
- 			r->idiag_wqueue = READ_ONCE(lsk->sk_max_ack_backlog);
- 		}
- 	}
-+}
- 
--	if (!info)
--		return;
-+static int mptcp_diag_get_aux(struct sock *sk, bool net_admin,
-+			      struct sk_buff *skb)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct mptcp_info *info;
-+	struct nlattr *attr;
- 
-+	attr = nla_reserve_64bit(skb, INET_DIAG_INFO,
-+				 sizeof(struct mptcp_info), INET_DIAG_PAD);
-+	if (!attr)
-+		return -EMSGSIZE;
-+
-+	info = nla_data(attr);
- 	mptcp_diag_fill_info(msk, info);
-+	/* Only export seq related counters to user with CAP_NET_ADMIN */
-+	if (!net_admin) {
-+		info->mptcpi_write_seq = 0;
-+		info->mptcpi_snd_una = 0;
-+		info->mptcpi_rcv_nxt = 0;
-+	}
-+	return 0;
- }
- 
- static const struct inet_diag_handler mptcp_diag_handler = {
-@@ -222,8 +239,9 @@ static const struct inet_diag_handler mptcp_diag_handler = {
- 	.dump		 = mptcp_diag_dump,
- 	.dump_one	 = mptcp_diag_dump_one,
- 	.idiag_get_info  = mptcp_diag_get_info,
-+	.idiag_get_aux	 = mptcp_diag_get_aux,
- 	.idiag_type	 = IPPROTO_MPTCP,
--	.idiag_info_size = sizeof(struct mptcp_info),
-+	.idiag_info_size = 0,
- };
- 
- static int __init mptcp_diag_init(void)
--- 
-2.56.1.750.gf70dc682cf-goog
-
+Thank you !
