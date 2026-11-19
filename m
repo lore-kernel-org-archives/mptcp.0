@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795115307;
-	b=BKZrhFhp+XPchjn/1tS7ah+D9zHYIvWusDThI1Kl/IajS1mNy0IvAQAkxS0i4TQ91SFq
-	 GBExlCX7x3MTXao6keUQockcXouVxg/iT29aEQTZFgwPxw2qk0yzp1wz22KGquk4pwHZj
-	 yv9PiNJ7FmBv6hsDQ6omkJNLrzfcRg9YoTgI4dodqIc2AYGXCdec+exKwgkmizfVG3ExY
-	 Kf07QUm5v5AAKwlZYvIsrEriKLd6zCObXyUDYoy2KCCX1kmBqwqeCIioFrT/NlkgszlZT
-	 yB3HXuELkvuJODsa5DZsCeCQ7b2wDAH/7rF/pGYS13ePRLuk12gQIOPkvns6jV7/rYQ==
+	t=1795115607;
+	b=EQxcymzY7Okp42guRoblJj5gjKjqqvBq/r2XI4Rkn9nAsfY7XcaVdH0W/bOItoGqaaYE
+	 FYKycrgNVqh9YaPk0ORl6cQYNyP4GLmbczCUr0jUKNVJ6xJmjv0YzjLSOoGcnVb6kaSp2
+	 x69XyShALmWPyhd7VkprM4rZBZVZAkefO5TyhkTA0TD7iMn8GG+BYoLOc+9BTjlxNvnaA
+	 GdAMh1N1A8fk02fqHh4JC220D34WMkBjAMJbmZvSoT7Vs2aiDawB6goZTbFvF0naPjaj9
+	 fSh1Db65sXsiU6m2O1AHocS2asO9YEIbeNxap8CwA6SvEyNLahonPwy5r5pXyUCaf6A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795115307;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795115607;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=nDfU60/+6X969jmzlAI7Zz64zuiRF4it/HoyjlZB9+A=;
-	b=ydzdJKBD/8ZmDct74IGfOCAFiRy5TKqgGIrleL5kJ3V1VQhtwiilmQcGsV9VsEuMsrHS
-	 Ef0EvwEbKmI/pE6PLSkYCcW3LBJVqbJDaPq20E5mA6ddMuOO24/a5eSkxXlAEoRfhCQOZ
-	 +V+xn7VnnmzHkDSA6H9uWA0FdFdzjeIIbqDMQw2pYKldN0fNOPvDuoKV+A+dvSON7HI68
-	 7La8yhxDo3Xamew/o/wL9YBTz6UOcYloHBVgLOhjbi7DV+/j+Nt8yBEuze6om8FxkUxhl
-	 o+mjwvSRHs/mNMqyuXlZk4Ti55OwIvcDCpjUMaR8Wlq0jdTofv9+obh+g5A+uBHN8Tw==
+	bh=MvW/Jus/Vy01lP2emx24/z5kIpS0Aon4QH2fAoEv36c=;
+	b=qdFqhvWW7NwE1YEdJCdq5cBp6CTR7s6F6I3nLAsgVPZRtX1jZvtHCt86l5OX+LWCQt24
+	 RJXv7hbiICf+h9WZenCtfaZacdrTvvd4murfajHJRy/5VjfmEp8EZ6oDwcYTJ67613S/B
+	 tbCLZHwyXyHHC5hdahn2gcsf5zUzqopcU4G0kGDI0NfeNQb1E0YroCIOLWBchn/qecbIF
+	 QycWRtRiaw9CZtg+wJVqF1bHwqjqewmCbfM7sEOJkVFn5/6sHzA/+hWWX3xZjXWruynTc
+	 j5VVhh6jYE5DVgHj8tjsEPhVQdhY17XCuqxaVUx+ap1tuaNY1K1lK/hnKqUYkNH/NuA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Bc65WvQr;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DMHgwxll;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA726606A320
-	for <mptcp@lists.linux.dev>; Thu, 19 Nov 2026 19:08:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C457606A326;
+	Thu, 19 Nov 2026 19:13:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Bc65WvQr
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 909C01F000C5;
-	Thu, 19 Nov 2026 19:08:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DMHgwxll
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87F761F000C4;
+	Thu, 19 Nov 2026 19:13:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795115307;
-	bh=nDfU60/+6X969jmzlAI7Zz64zuiRF4it/HoyjlZB9+A=;
+	s=k20260515; t=1795115607;
+	bh=MvW/Jus/Vy01lP2emx24/z5kIpS0Aon4QH2fAoEv36c=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Bc65WvQrt9iWIcaxXvaNzDMulKwKIWB1yb8bTuypSF2g5U1s4cgjriv9UrKcU1T+o
-	 iTZgY73jqqaskJ7uvcuClxrNEj2XEHCGE9TcI4g8PbP4ZrS+JIL9+Eh8UGeHs2N2dG
-	 vzUvzMrWmV1rb4VE6e7hrZTwyPUvYF/SuG+e95wdseK4U1Wm5pxJGWRuvJYr8q9hM/
-	 XVXpt2b0cqZhx5gT5UxSt3O25zdUIl212lwt2sle1ModvBAtxZKVv/Ict6op7dRUXt
-	 XNBolUf8+3uCUEzAkKvAExuPHkB7CRuJr1OFin6D7ufXG1kY0el7dVwzDVZuTaen92
-	 /g50rqPnWlnAQ==
-Message-ID: <487f100c-3a38-4267-98d3-a3fb41413890@kernel.org>
-Date: Thu, 19 Nov 2026 20:08:24 +0100
+	b=DMHgwxllkYhaRHRdCwNqXYuwf1Bw0e+myLQ26IS/qULLAoAqqNqvJNYFHqUcMk3PP
+	 GbOt/KQCzxzNHJ8BVjlfWj8hYn/+95FKcxMM8NYP9Yk/ybga2kMXthTMPRpH7Apps3
+	 11c1vNCBvrrU/+HNEmeToQ2z4m7Esg/COKoFAEoumPYm6lk+DE3vEZYH0MOO2tH3Fi
+	 6b0BP5KMm0gtqmOGq9LMQwpihumPobgRnL5TsoPxQEv1+n0tF9s2ZAa0tayYm/Z+Je
+	 1aQcswkGk4wgwZYbO4B0BzqrBwZPXJRiRnnXkUctjQBfj2sMMcAeCRmgxueiYrpgV0
+	 mupAJbl20p/Pg==
+Message-ID: <4e209707-bdc4-415a-923b-4ac1d2006ecf@kernel.org>
+Date: Thu, 19 Nov 2026 20:13:23 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,13 +52,13 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v3] mptcp: pm: kernel: c-flag: keep
- local_addr_used in sync
+Subject: Re: [PATCH mptcp-net v2] mptcp: fix use-after-free of the subflow
+ context on the delegated list
 Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>, Yiming Qian <yimingqian591@gmail.com>
-References: <20261029-mptcp-pm-cflag-clear-when-used-v3-1-fa96c11f97b0@kernel.org>
- <0a3dcc9785f4f067bb051edafd0a780bbe2231b5.camel@kernel.org>
+To: Hyunwoo Kim <imv4bel@gmail.com>
+Cc: martineau@kernel.org, geliang@kernel.org, pabeni@redhat.com,
+ mptcp@lists.linux.dev, netdev@vger.kernel.org
+References: <auqd0rAI95jDSMvu@v4bel>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -104,69 +104,37 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <0a3dcc9785f4f067bb051edafd0a780bbe2231b5.camel@kernel.org>
+In-Reply-To: <auqd0rAI95jDSMvu@v4bel>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Hyunwoo,
 
-On 30/10/2026 03:12, Geliang Tang wrote:
-> Hi Matt,
+On 04/11/2026 03:52, Hyunwoo Kim wrote:
+> mptcp_subflow_delegate() links the subflow context into a per-CPU napi
+> list and takes a reference on the subflow socket. The context is a
+> separate allocation, reached through icsk_ulp_data, and the list holds
+> no reference to it.
 > 
-> On Thu, 2026-10-29 at 21:43 +0100, Matthieu Baerts (NGI0) wrote:
->> The ID was marked as used before incrementing local_addr_used counter
->> when the families were not matching.
->>
->> Marking endpoints as used while they are not can have an impact on
->> the
->> local_addr_used counter when endpoints not linked to the initial
->> subflow
->> are removed -- CAP_NET_ADMIN is required -- and active connections
->> have
->> such badly marked endpoints. In this case, the local counter will be
->> decremented while it shouldn't. If the counter was already at 0, this
->> warning will be emitted:
->>
->>   WARNING: net/mptcp/pm_kernel.c:1080 at
->> __mark_subflow_endp_available+0x46/0x50, CPU#0: a.out/149
->>   RIP: 0010:__mark_subflow_endp_available (net/mptcp/pm_kernel.c:1080
->> (discriminator 2) net/mptcp/pm_kernel.c:1076 (discriminator 2))
->>   Call Trace:
->>    mptcp_pm_nl_del_addr_doit (net/mptcp/pm_kernel.c:1112
->> net/mptcp/pm_kernel.c:1227)
->>    genl_family_rcv_msg_doit (net/netlink/genetlink.c:1114)
->>
->> The fix is easy: increment local_addr_used similar to what is done in
->> mptcp_pm_create_subflow_or_signal_addr() for the non C-flag case.
->>
->> Fixes: 4b1ff850e0c1 ("mptcp: pm: in-kernel: usable client side with
->> C-flag")
->> Reported-by: Yiming Qian <yimingqian591@gmail.com>
->> Closes:
->> https://lore.kernel.org/20261006114409.117190-1-yimingqian591@gmail.com
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> 
-> Good catch. The fix correctly restores the consistency between
-> id_avail_bitmap and local_addr_used, matching the non-C-flag path.
-> 
-> Additionally, I don't think the Perf failure (Perf: Unstable: 1 failed
-> test(s): error:sched-bbr) reported by the CI is related to this patch.
+> inet_csk_destroy_sock() runs sk_prot->destroy() regardless of the
+> outstanding references. That path ends in tcp_cleanup_ulp(), which calls
+> subflow_ulp_release(). subflow_ulp_release() frees the context with
+> kfree_rcu() but does not remove it from the list. Once the grace period
+> elapses and the context is actually freed, the next mptcp_napi_poll()
+> dequeues that entry and mptcp_subflow_delegated_next() writes to the
+> freed context with list_del_init(). That is the use-after-free.
 
-Indeed.
+Thank you for this new version, it looks good to me:
 
-> 	Reviewed-by: Geliang Tang <geliang@kernel.org>
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Thank you for the review!
+Sorry for the delay. Please next time either use 'mptcp-ne(x)t' prefix
+and send the patch only to the MPTCP mailing list (without netdev), or
+use the 'net(-next)' one with the netdev ML.
 
-New patches for t/upstream-net and t/upstream:
-- 3d3d69e81e35: mptcp: pm: kernel: c-flag: keep local_addr_used in sync
-- Results: 7b224f1d89a9..11f82b7f71e5 (export-net)
-- Results: 6d74f37dcbe7..b17f0edeea4e (export)
-
-Tests are now in progress:
-
-- export-net: https://github.com/multipath-tcp/mptcp_net-next/commit/09ec755949ab4b5821fb9c830b3047c61605f26f/checks
-- export: https://github.com/multipath-tcp/mptcp_net-next/commit/e1edd6bbff8ff5f16743f58a41193e327149903d/checks
+@Net maintainers: If it is not OK to apply this patch directly in -net
+because it is too late or because netdev maintainers have not been CCed
+(which I understand), I can send it later with other fixes, no problem.
 
 Cheers,
 Matt
