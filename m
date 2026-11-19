@@ -1,47 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.69
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795116080;
-	b=Lt098TPcQ/AadfaPkWx/BMAl0u+MMg5HwRidjlM2xcGH96RaFvfgOmaBegpvyZ/YSNE3
-	 +/OtQLSaIAbg+whGZyNornLLeP38nHsGdJckUCRXooXalOrbUBpd1KRHYzvuVHK6sybXP
-	 OgABZ8lJliDGzkXorYvY58ZjupBI4xCtk/QFJZQuosqkWVjtS+vO/vVm0OaBB1PXZKTnY
-	 iLk85r9PoRZXvbqpnVNYMRj1/A3gk8J92F88hUGD6n/BeF/PKX6ctBu3AjzGawlhHvm95
-	 Tn6h+xnYipvm1Om3DZ5r2CGRboX4euVNQ3ann3jYNOc49+TE/jEqZizk++SQlmWbWhg==
+	t=1795116123;
+	b=aHIN9lSdu8KTkYDky3eoQl/lTs227OrwUkTqn3WJEw/Mp35DPFCNIxX92z1nQFGfs2TZ
+	 nj7Yhi1NW4O8wsq2tIfpCMZZq7WS2o7FPiIVMOMpShpFlWH/UXz9qUhBF1hrALpIztZ6Q
+	 C/CWe4aux/G0I9Tv1bXPO6p4tkXeQZAe/B/0XDCFrOUXEm8kN2bC23eOo8nN1xzikoZ11
+	 qQ8hiKwjBGwpDEvr+sqwxv3pXU7XvaMi/XFCJULP6x3Rd5OBWvzR+F/0TdIIrUYYA1Fup
+	 mqkplzKZvl1eF0WpIDycW3OQanwf45F2oY8Z9S6JfXB8eC0Wv7yg5gAmDLwY9aOOd6g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795116080;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:References:From:Cc:Autocrypt:Organization:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=Em0Y9pITS7kpeBBv3+6G6o1mDE6kRsNy01wLNB+MOno=;
-	b=it6kpbE7S+d3NTx0yluxRRDn5InfEivUYhxpPFMjuRWnNiIg/Ao5qlvnKDCPDuAliJmS
-	 wSlV7ZB9izGwYRQW54VDjvCMtmhJnMmkOYbJVHuFnk7GoMN0EDp0HND0ji7ug2uya8zio
-	 Nx/+RX1gVWN9x+DnQ6HvjU9aiGGA6GWvu00KO2vJbt4Ezat7io3H/b6HUwNMzI1hK1RL2
-	 /arPGzA+yR7fe7s9994o/VqTcverU32rllAV/DCx0mH8Vlo3mjuOgoPCJWa8UgzbB+8uJ
-	 EpKWquy+1QkQMCgLKg6/kESTy1cn0v3rzKveensrJlG+fL7MDVXVTYIp42K55OvKxVg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795116123;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:Mime-Version:
+	 X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
+	bh=gIWylxu69Ioq+u8Mm1LXBIh3r/He82QwlSQoOVn3GZY=;
+	b=NVVtVICpmYi1SyVNs9wkaWhnGlnIGJF6L5RX9ta+h4b4U92sRwZYVDiI1ECG6Rs6/VCK
+	 sJdW17ezJPBbII03HbS+QMoaqHLe4Yvyans7PyAdbD/YKxt9ixFKqGPADvxP1Zk2zyVti
+	 EPh3seZ8M9OPcvp1c21QtxrdrUXnul71pEVW/+TBO+pp0Dsv/aSjl+1LfDJXipujg1Uwb
+	 fuh3NfSzntQkT3o2i+6jMPBIJ5/3f9N5s+7gx/6dmZKoTXzqZSt8AJZjTQ2odq3md3Uzi
+	 V27zunP0bpq4NNoy/XQmskAhqJa9OvR6Y/x/O5H/dCx4AsSCyhWVN7JN9I9iXK72DMg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CSxjJUWQ;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=flex--dmnk.bounces.google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=eqRRDtni;
+	arc=none smtp.remote-ip=209.85.221.69
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC07606A324
-	for <mptcp@lists.linux.dev>; Thu, 19 Nov 2026 19:21:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEBF6606A32C
+	for <mptcp@lists.linux.dev>; Thu, 19 Nov 2026 19:22:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BEBF6606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dmnk.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CSxjJUWQ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 591D31F000C4;
-	Thu, 19 Nov 2026 19:21:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795116079;
-	bh=Em0Y9pITS7kpeBBv3+6G6o1mDE6kRsNy01wLNB+MOno=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To;
-	b=CSxjJUWQ3jNAL+woOIG2IEdIfXS0XZtLWGXsmOAEUcBXR7PPBZi94Q5h0I9/qvmcJ
-	 NT80dgguvcWITU2mM/Wqihdd0WHJre7CDo7g9onKBLcvn6Iszi66wpdgmdoMwS7Q4t
-	 gCUdq+ZAx+D+AvIR4vEdyRlYieCQsAJRmW/vt3wWr0OTFFKf9uwDGI5wSrngZRYj3q
-	 Irnk3QYv69gI6ONJVPigDhrANbjQo9E2xtYa7ojUCbJRuqXx4iugrUl/XkN4fZqzV4
-	 9CDgP3EPGcn6lcdEO+aHT6HJN+TTbg5Bdcw34RpqT5OmozG13x/FTZ19PHdBS12qfQ
-	 PCs7I1y+1QmzA==
-Message-ID: <74cf0906-cc11-4cdb-8997-af79bb21231f@kernel.org>
-Date: Thu, 19 Nov 2026 20:21:17 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=eqRRDtni
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-49337a224a8so19547f8f.3
+        for <mptcp@lists.linux.dev>; Thu, 19 Nov 2026 11:22:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1795116121; x=1795720921; darn=lists.linux.dev;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=gIWylxu69Ioq+u8Mm1LXBIh3r/He82QwlSQoOVn3GZY=;
+        b=eqRRDtnih2s7Hgkfo5hTIa3hgTxx80TP/PXUS+4PUEZ7K7pIW3skbjX1sgOLkWB7oQ
+         qIBNvnqZ7s1FMVJ1FImKz1QI11GoQZLbx3UHdgJahgwoNYIyQER7NRpjxU+iS9wtZasJ
+         oF0KbLONgyB56vpx/Sx7flzGPN3dnhdnrEONrpJa1DB3UvWaftobbb4pWHPjC7LEwO6I
+         nbiChV+2231onAna826KQToIBTxVWst+e/DcPofKrEocQvV8Gap7K3LmswwnO9UftpSA
+         JXWOBzFn8ucVDCf7FKV4GfhBf7HfxTNcvMongmK4OT6epc2wGTkEIgJPJQPx59Bmws7M
+         OlLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795116121; x=1795720921;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=gIWylxu69Ioq+u8Mm1LXBIh3r/He82QwlSQoOVn3GZY=;
+        b=dDWAWIc9ta++JAVnGh4nMPZQnwZKrsOODF98CI/oCXP35NiKkZ5pTL91N5MpMC7UeI
+         1MsQGbfqkEXThokgUsSOpDiALOndJ3czbZnlJhbuoMF/n6Ffiap4PBes5+PXARHStIi4
+         Cu3oPItxRKIg81X5c2T4bEf60EhdGJwbaMzAYnzhCkZFRIbcMLj4Znd/yGKVsOMzHNFr
+         R1nYoQcdN4u92J7b3BcTxEdW1NcUmaF0XttB4UV75z/+TszJ2vH/6IrTuxEgzMfVOyub
+         bADomIQqY/dhfnb04g31BSRIRMFp88hN1+4gTYiqZP6LyNCVM5Be0SPjL2eMtcoqgq23
+         rnEA==
+X-Forwarded-Encrypted: i=1; AL+hErHNd0Ldssr5JAkR8Z0jD0hQfSsYRQRPh/ahigbaxBcSFoc90c/RBwmuDzhmmrl83JMuyDD5lQ==@lists.linux.dev
+X-Gm-Message-State: APuU4Z9Sw34/ILRzUQvSW6UtF3HRqQfW6HepeKUm0XRr16k8IdmYUsUu
+	vk2vF8aq5ElqifcCN7RJlCr9P4mLwSNgkWsE1vtB7BYZApe121vTZio0jWqKd5oOK78y39xzpQ=
+	=
+X-Received: from wrmt2.prod.google.com ([2002:adf:e442:0:b0:48e:4e20:1349])
+ (user=dmnk job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:4b0f:b0:48e:d7c:4bc8
+ with SMTP id ffacd0b85a97d-4abad6a1782mr866576f8f.7.1795116120877; Thu, 19
+ Nov 2026 11:22:00 -0800 (PST)
+Date: Thu, 19 Nov 2026 20:21:59 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -50,198 +75,109 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3] selftests: mptcp: print stats before socket
- closure
-Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>
-References: <20260815-sft-mptcp-stats-b4-close-v3-1-ccd9af14cf73@kernel.org>
- <24e7da3ea0b33d5dca970449cf615a4c95ecceb8.camel@kernel.org>
- <735a6655-b3ac-4352-8a35-0e54ac2c7ffd@kernel.org>
- <7ad218abd5b68ac34bc34b607af3bb4c7163f60b.camel@kernel.org>
- <6995e688-db92-4291-a94d-18b03e517a73@kernel.org>
- <8fd964e5feefcdd389f8c85ce484ba6dbdaff4bc.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <8fd964e5feefcdd389f8c85ce484ba6dbdaff4bc.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.1.809.ga0b61035b5-goog
+Message-ID: <20261119192159.2646113-1-dmnk@google.com>
+Subject: [PATCH mptcp-net] mptcp: gate diag sequence counters on CAP_NET_ADMIN
+From: Dominik Maier <dmnk@google.com>
+To: Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>
+Cc: Geliang Tang <geliang@kernel.org>, Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev, 
+	netdev@vger.kernel.org, dmnk+artist@google.com, 
+	Dominik Maier <dmnk@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Geliang,
+In net/mptcp/diag.c, subflow_get_info() restricts MPTCP sequence-related
+subflow attributes (rel_write_seq, map_seq, map_subflow_seq, ssn_offset)
+to callers holding CAP_NET_ADMIN in the network namespace.
 
-On 30/10/2026 02:52, Geliang Tang wrote:
-> Hi Matt,
-> 
-> On Thu, 2026-10-22 at 09:58 +0200, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> Thank you for your patience.
->>
->> On 21/09/2026 09:52, Geliang Tang wrote:
->>> Hi Matt,
->>>
->>> Sorry for the delayed reply.
->>>
->>> On Tue, 2026-09-08 at 19:52 +0200, Matthieu Baerts wrote:
->>>> Hi Geliang,
->>>>
->>>> On 05/09/2026 10:26, Geliang Tang wrote:
->>>>> Hi Matt,
->>>>>
->>>>> On Sat, 2026-08-15 at 00:28 +0200, Matthieu Baerts (NGI0)
->>>>> wrote:
->>>>>> In case of poll timeout, it might be too late to print the
->>>>>> stats
->>>>>> after
->>>>>> the socket closure.
->>>>>>
->>>>>> Now, in case of poll timeout, 'ss' and 'nstat' are invoked
->>>>>> from
->>>>>> mptcp_connect to print the stats before exiting. This should
->>>>>> help
->>>>>> debugging poll timeout issues.
->>>>>>
->>>>>> Note: for this "workaround", system() is used for debugging
->>>>>> purposes
->>>>>
->>>>> This print_err_stats() implementation is basically the same as
->>>>> mptcp_lib_pr_err_stats() in the shell, right?
->>>>
->>>> Correct.
->>>>
->>>>> I think it's better to use mptcp_lib_pr_err_stats() in the
->>>>> shell to
->>>>> print the information. In mptcp_connect.c, when a poll timeout
->>>>> occurs,
->>>>> we send a signal to the shell and don't close the socket
->>>>> immediately -
->>>>> we wait for the shell to finish printing the information before
->>>>> closing
->>>>> it. What do you think of this approach? There's a reference
->>>>> implementation in the attachment, but I haven't tested it.
->>>> Thank you for your review. I agree that what you suggested is
->>>> better
->>>> for
->>>> a tool that would be used in production. But here with the
->>>> selftests,
->>>> I
->>>> don't think we need your long patch with a higher complexity,
->>>> just
->>>> for
->>>> the selftests. I think it is fine to have some "system()" calls
->>>> with
->>>> the
->>>> same ss/nstat commands compared to a patch of 50+ lines to get
->>>> the
->>>> same
->>>> result. No?
->>>
->>> I agree with you - simplicity is a plus as well.
->>>
->>> I tested it and it works. So LGTM!
->>>
->>>     Reviewed-by: Geliang Tang <geliang@kernel.org>
->>>
->>>
->>> However, we need to handle something in mptcp_connect.sh
->>> afterwards.
->>> Otherwise, when a timeout occurs, we'll get two duplicate outputs:
->>> one
->>> from mptcp_connect, which is the log added by this patch, and one
->>> from
->>> mptcp_connect.sh, which is an invalid log. I think in this case we
->>> should ignore the latter, for example by adding the following to
->>> mptcp_connect.sh:
->>>
->>> do_transfer()
->>> {
->>>   ...
->>>   mptcp_lib_pr_fail "client exit code $retc, server $rets"
->>>   if [ ${rets} -ne 2 ] && [ ${retc} -ne 2 ]; then
->>>     mptcp_lib_pr_err_stats "${listener_ns}" "${connector_ns}"
->>> "${port}"
->>>   fi
->>>   ...
->>> }
->>>
->>> What do you think? If you don't have time, I can submit this
->>> follow-up
->>> patch as well.
->>
->> Is it really an issue to have two stats outputs? They are not
->> duplicated: one is explicitly printing stats before socket closure,
->> and
->> the other one after.
->>
->> Ignoring the 2nd output is easy, but this output can be valuable?
->> Also,
->> I don't think there will be a timeout issue on both the client and
->> the
->> server. Likely only one of them will timeout, and the additional
->> check
->> you suggest is not needed.
->>
->> So OK like that?
-> 
-> OK, let's keep this patch as is. Please merge it:
+However, mptcp_diag_get_info() unconditionally exports mptcpi_write_seq,
+mptcpi_snd_una, and mptcpi_rcv_nxt via INET_DIAG_INFO because
+.idiag_get_info does not receive the caller's net_admin status. Any
+unprivileged local user can therefore dump or query cross-UID MPTCP
+sockets by token via SOCK_DIAG_BY_FAMILY and read live 64-bit MPTCP Data
+Sequence Numbers.
 
-Thank you for your patience and your review:
+Emit INET_DIAG_INFO from an .idiag_get_aux callback in mptcp_diag (which
+already receives net_admin from inet_sk_diag_fill(), while msk never
+sets icsk_ca_ops so netlink attribute ordering is unchanged) and zero
+mptcpi_write_seq, mptcpi_snd_una, and mptcpi_rcv_nxt when !net_admin.
+getsockopt(SOL_MPTCP, MPTCP_INFO) for the socket owner and token-based
+lookup in mptcp_diag_dump_one() remain unchanged.
 
-New patches for t/upstream:
-- 346552d92b9d: selftests: mptcp: print stats before socket closure
-- Results: 4dad6ca3fd56..f196cd99f3dd (export)
+This issue was discovered with an AI-assisted code review tool (ARTIST)
+and reproduced in QEMU/KVM on an unmodified v7.4-rc3 kernel without
+kernel modifications or error injection; a standalone reproducer is
+available on request. This revised .idiag_get_aux patch was
+compile-tested with -Werror and checked with checkpatch.pl --strict; it
+has not yet been runtime-tested against the reproducer or the MPTCP diag
+selftests.
 
-Tests are now in progress:
+Fixes: ac3b45f60954 ("mptcp: add MPTCP socket diag interface")
+Cc: stable@vger.kernel.org
+Signed-off-by: Dominik Maier <dmnk@google.com>
+---
+ net/mptcp/mptcp_diag.c | 28 +++++++++++++++++++++++-----
+ 1 file changed, 23 insertions(+), 5 deletions(-)
 
-- export: https://github.com/multipath-tcp/mptcp_net-next/commit/85e5bb627afc7749558bb522d64e1163b87f0913/checks
-
-Cheers,
-Matt
+diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
+index 136c2d0..62d8f1f 100644
+--- a/net/mptcp/mptcp_diag.c
++++ b/net/mptcp/mptcp_diag.c
+@@ -193,10 +193,9 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+ 				void *_info)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+-	struct mptcp_info *info = _info;
+ 
+ 	r->idiag_rqueue = sk_rmem_alloc_get(sk) +
+-			  READ_ONCE(mptcp_sk(sk)->backlog_len);
++			  READ_ONCE(msk->backlog_len);
+ 	r->idiag_wqueue = sk_wmem_alloc_get(sk);
+ 
+ 	if (inet_sk_state_load(sk) == TCP_LISTEN) {
+@@ -210,11 +209,29 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+ 			r->idiag_wqueue = READ_ONCE(lsk->sk_max_ack_backlog);
+ 		}
+ 	}
++}
+ 
+-	if (!info)
+-		return;
++static int mptcp_diag_get_aux(struct sock *sk, bool net_admin,
++			      struct sk_buff *skb)
++{
++	struct mptcp_sock *msk = mptcp_sk(sk);
++	struct mptcp_info *info;
++	struct nlattr *attr;
+ 
++	attr = nla_reserve_64bit(skb, INET_DIAG_INFO,
++				 sizeof(struct mptcp_info), INET_DIAG_PAD);
++	if (!attr)
++		return -EMSGSIZE;
++
++	info = nla_data(attr);
+ 	mptcp_diag_fill_info(msk, info);
++	/* Only export seq related counters to user with CAP_NET_ADMIN */
++	if (!net_admin) {
++		info->mptcpi_write_seq = 0;
++		info->mptcpi_snd_una = 0;
++		info->mptcpi_rcv_nxt = 0;
++	}
++	return 0;
+ }
+ 
+ static const struct inet_diag_handler mptcp_diag_handler = {
+@@ -222,8 +239,9 @@ static const struct inet_diag_handler mptcp_diag_handler = {
+ 	.dump		 = mptcp_diag_dump,
+ 	.dump_one	 = mptcp_diag_dump_one,
+ 	.idiag_get_info  = mptcp_diag_get_info,
++	.idiag_get_aux	 = mptcp_diag_get_aux,
+ 	.idiag_type	 = IPPROTO_MPTCP,
+-	.idiag_info_size = sizeof(struct mptcp_info),
++	.idiag_info_size = 0,
+ };
+ 
+ static int __init mptcp_diag_init(void)
 -- 
-Sponsored by the NGI0 Core fund.
+2.56.1.750.gf70dc682cf-goog
 
