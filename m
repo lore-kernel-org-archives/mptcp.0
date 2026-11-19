@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795114461;
-	b=lmxBedDslIs32pa/QSe8XSMmSUq+VI0sdWKwtaYJFOXcWdOS7ZgFJBSurvkYpKfYHMYQ
-	 uQbI9A9UokcZZ27tgI2gaY1NLGjhISkYXydbpfVKnLsiIksLZIuQSS/O59GtDMn5ToIo9
-	 1WPiew4YINgHpxcY6E2/fVlPK3jpGyFsdEHvMcQ0/AwrTh9Ehhq2na4j/rTA8eNXn2x5h
-	 LFNxUfU3+IXWdIERthv8PHnKhnaTtugJ/RVpJXdguERifR3+Rjxy1g7gg88/nEYm+s6Kh
-	 80Ka3PmqImWp9KUBk9+2rk5uRNUlUAbw4OAdbyCgHV54vsI+3L74l09NehoYLFf3cxw==
+	t=1795115307;
+	b=BKZrhFhp+XPchjn/1tS7ah+D9zHYIvWusDThI1Kl/IajS1mNy0IvAQAkxS0i4TQ91SFq
+	 GBExlCX7x3MTXao6keUQockcXouVxg/iT29aEQTZFgwPxw2qk0yzp1wz22KGquk4pwHZj
+	 yv9PiNJ7FmBv6hsDQ6omkJNLrzfcRg9YoTgI4dodqIc2AYGXCdec+exKwgkmizfVG3ExY
+	 Kf07QUm5v5AAKwlZYvIsrEriKLd6zCObXyUDYoy2KCCX1kmBqwqeCIioFrT/NlkgszlZT
+	 yB3HXuELkvuJODsa5DZsCeCQ7b2wDAH/7rF/pGYS13ePRLuk12gQIOPkvns6jV7/rYQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795114461;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795115307;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:References:From:Cc:Autocrypt:Organization:
+	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=xfET0PvzLjOAM5dHUXPtRtzrhbf3bMMeKErauiT+dZ8=;
-	b=jApH6L1aDUdkE/1UqcUSjjdkIQ+KP7MfZAgBwg//RgDN5OmqdWNQXTNRK5Zf9lENMzkr
-	 KI2tHAw7v4iQIg5fyvzE3yEX2KARIQsR5NT5KEyw6/vcfpqVpFLSwlRLsPT7iwu3hiITG
-	 8aHqnh5lh1Uysmn5MLU8OXCaTyJlXXCi9wyt5shoB2NL6yH2xsSLbLwEwzoQ4gR/qg8Fz
-	 IHbUKSWJIaZmHC0kYC5Kibv5Dj9RiaY8aN0GlbMuvLdrjvGOuliyb/ECb8pFJ5FwPUrYv
-	 6KzQozjKoQBPKcvJ5OyCOSVNDor7UhWeXqSjST2gWsgHfuKOTXb4UdV9wueIlwxgkTw==
+	bh=nDfU60/+6X969jmzlAI7Zz64zuiRF4it/HoyjlZB9+A=;
+	b=ydzdJKBD/8ZmDct74IGfOCAFiRy5TKqgGIrleL5kJ3V1VQhtwiilmQcGsV9VsEuMsrHS
+	 Ef0EvwEbKmI/pE6PLSkYCcW3LBJVqbJDaPq20E5mA6ddMuOO24/a5eSkxXlAEoRfhCQOZ
+	 +V+xn7VnnmzHkDSA6H9uWA0FdFdzjeIIbqDMQw2pYKldN0fNOPvDuoKV+A+dvSON7HI68
+	 7La8yhxDo3Xamew/o/wL9YBTz6UOcYloHBVgLOhjbi7DV+/j+Nt8yBEuze6om8FxkUxhl
+	 o+mjwvSRHs/mNMqyuXlZk4Ti55OwIvcDCpjUMaR8Wlq0jdTofv9+obh+g5A+uBHN8Tw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=W+L1Z5Eq;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Bc65WvQr;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27005606AAAD
-	for <mptcp@lists.linux.dev>; Thu, 19 Nov 2026 18:54:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA726606A320
+	for <mptcp@lists.linux.dev>; Thu, 19 Nov 2026 19:08:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=W+L1Z5Eq
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 351E41F00937;
-	Thu, 19 Nov 2026 18:54:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Bc65WvQr
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 909C01F000C5;
+	Thu, 19 Nov 2026 19:08:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795114460;
-	bh=xfET0PvzLjOAM5dHUXPtRtzrhbf3bMMeKErauiT+dZ8=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To;
-	b=W+L1Z5EqNOyMCcDFkmeO7kW5yGV01vpE9BX4UokQlHjfH1MwoWgw0jpGvKhfdX766
-	 l+Q9eJEy+fabepkoPXu2F7V/xN3X71HN+OtiRElcwjPlfXXvd/i41P2guwPAG/JGsd
-	 I/gE3cMK05EzRJMRrctz+lClDlRJQ/8EyVgjThJBsIUZtnw0alH6m/LR+fqj49rNBU
-	 WGbbHhjWOcO796Un6KHOfQR5hk76n+YryIFvPeKFXW4rqg9V8QJAy4dDWxtoBz4Azo
-	 ETgV/fYH9jot8e9I4uldQTKccUBPbtjXtyCKDT8in4QFcrbFqCQrO/sVN2zg3HQyeE
-	 z2Szjq/uRpBgA==
-Message-ID: <b943c883-cff2-42ca-9299-729d8423f99e@kernel.org>
-Date: Thu, 19 Nov 2026 19:54:18 +0100
+	s=k20260515; t=1795115307;
+	bh=nDfU60/+6X969jmzlAI7Zz64zuiRF4it/HoyjlZB9+A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=Bc65WvQrt9iWIcaxXvaNzDMulKwKIWB1yb8bTuypSF2g5U1s4cgjriv9UrKcU1T+o
+	 iTZgY73jqqaskJ7uvcuClxrNEj2XEHCGE9TcI4g8PbP4ZrS+JIL9+Eh8UGeHs2N2dG
+	 vzUvzMrWmV1rb4VE6e7hrZTwyPUvYF/SuG+e95wdseK4U1Wm5pxJGWRuvJYr8q9hM/
+	 XVXpt2b0cqZhx5gT5UxSt3O25zdUIl212lwt2sle1ModvBAtxZKVv/Ict6op7dRUXt
+	 XNBolUf8+3uCUEzAkKvAExuPHkB7CRuJr1OFin6D7ufXG1kY0el7dVwzDVZuTaen92
+	 /g50rqPnWlnAQ==
+Message-ID: <487f100c-3a38-4267-98d3-a3fb41413890@kernel.org>
+Date: Thu, 19 Nov 2026 20:08:24 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,12 +52,14 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH iproute2-next 0/2] mptcp: limits: add subflow_retries
+Subject: Re: [PATCH mptcp-net v3] mptcp: pm: kernel: c-flag: keep
+ local_addr_used in sync
 Content-Language: fr
-To: Anil Kaushik <anilkaushikwireless@gmail.com>
-References: <20261119184507.1954726-1-anilkaushikwireless@gmail.com>
+To: Geliang Tang <geliang@kernel.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>, Yiming Qian <yimingqian591@gmail.com>
+References: <20261029-mptcp-pm-cflag-clear-when-used-v3-1-fa96c11f97b0@kernel.org>
+ <0a3dcc9785f4f067bb051edafd0a780bbe2231b5.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -102,45 +104,69 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20261119184507.1954726-1-anilkaushikwireless@gmail.com>
+In-Reply-To: <0a3dcc9785f4f067bb051edafd0a780bbe2231b5.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Anil,
+Hi Geliang,
 
-On 19/11/2026 19:45, Anil Kaushik wrote:
-> This adds the new subflow-retries limit of the in-kernel path manager to
-> "ip mptcp limits", as Matt suggested on the kernel series:
+On 30/10/2026 03:12, Geliang Tang wrote:
+> Hi Matt,
 > 
-> https://lore.kernel.org/mptcp/20261103085244.23064-1-anilkaushikwireless@gmail.com/
+> On Thu, 2026-10-29 at 21:43 +0100, Matthieu Baerts (NGI0) wrote:
+>> The ID was marked as used before incrementing local_addr_used counter
+>> when the families were not matching.
+>>
+>> Marking endpoints as used while they are not can have an impact on
+>> the
+>> local_addr_used counter when endpoints not linked to the initial
+>> subflow
+>> are removed -- CAP_NET_ADMIN is required -- and active connections
+>> have
+>> such badly marked endpoints. In this case, the local counter will be
+>> decremented while it shouldn't. If the counter was already at 0, this
+>> warning will be emitted:
+>>
+>>   WARNING: net/mptcp/pm_kernel.c:1080 at
+>> __mark_subflow_endp_available+0x46/0x50, CPU#0: a.out/149
+>>   RIP: 0010:__mark_subflow_endp_available (net/mptcp/pm_kernel.c:1080
+>> (discriminator 2) net/mptcp/pm_kernel.c:1076 (discriminator 2))
+>>   Call Trace:
+>>    mptcp_pm_nl_del_addr_doit (net/mptcp/pm_kernel.c:1112
+>> net/mptcp/pm_kernel.c:1227)
+>>    genl_family_rcv_msg_doit (net/netlink/genetlink.c:1114)
+>>
+>> The fix is easy: increment local_addr_used similar to what is done in
+>> mptcp_pm_create_subflow_or_signal_addr() for the non C-flag case.
+>>
+>> Fixes: 4b1ff850e0c1 ("mptcp: pm: in-kernel: usable client side with
+>> C-flag")
+>> Reported-by: Yiming Qian <yimingqian591@gmail.com>
+>> Closes:
+>> https://lore.kernel.org/20261006114409.117190-1-yimingqian591@gmail.com
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > 
-> Patch 1 adds the new attribute to the copied uapi header. It is only
-> needed until the iproute2 maintainers update the headers, once the
-> kernel part is merged.
+> Good catch. The fix correctly restores the consistency between
+> id_avail_bitmap and local_addr_used, matching the non-C-flag path.
 > 
-> Patch 2 adds "subflow_retries" to "ip mptcp limits set" and "show", and
-> to the man page.
+> Additionally, I don't think the Perf failure (Perf: Unstable: 1 failed
+> test(s): error:sched-bbr) reported by the CI is related to this patch.
 
-I didn't review this in details, but I'm just thinking that you might
-also want to expose the new limit_subflow_retries counter in ss.
+Indeed.
 
-Just note that ss.c is probably going to be split, see:
+> 	Reviewed-by: Geliang Tang <geliang@kernel.org>
 
-https://lore.kernel.org/20261119024049.3109143-1-stephen@networkplumber.org
+Thank you for the review!
 
-(if you send a v2, please use [iproute2-mptcp] prefix, just not to
-confuse with the ones that will be sent upstream)
+New patches for t/upstream-net and t/upstream:
+- 3d3d69e81e35: mptcp: pm: kernel: c-flag: keep local_addr_used in sync
+- Results: 7b224f1d89a9..11f82b7f71e5 (export-net)
+- Results: 6d74f37dcbe7..b17f0edeea4e (export)
 
-> With this ip, "pm_netlink.sh -i" from the v15 kernel series fails the
-> "set limits" check, because ip now shows the new limit. I have a fix for
-> the selftest, which also runs the subflow-retries checks with ip. I can
-> squash it in the pm_netlink.sh patch of the next version of the series.
-Ah yes, good point. Yes, we will need it. I didn't review v15 yet, it
-can wait or feel free to send a v16 if you already have it.
+Tests are now in progress:
 
-Note that the selftests ideally need to support older kernel version (so
-without recent features) and older tools, e.g. IPRoute2 without your
-patch. (except if thing get unreadable)
+- export-net: https://github.com/multipath-tcp/mptcp_net-next/commit/09ec755949ab4b5821fb9c830b3047c61605f26f/checks
+- export: https://github.com/multipath-tcp/mptcp_net-next/commit/e1edd6bbff8ff5f16743f58a41193e327149903d/checks
 
 Cheers,
 Matt
