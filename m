@@ -1,47 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.48
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795113209;
-	b=K4q7wbk+aKfbfVXjLzRJBhz1H4u6IM4RgeR+VPPw9Ucddt/v0aazU5OegjkcQQQCyWUQ
-	 57rBreiINmQtit1LO4R97wr2Vh2oEZwWDpeLZoGe4hXNptkDGeryGiOBjqFEGNdjgjKvY
-	 gwlCudhcXHK5idE8U6nud+lgI8Cm3p13gcmlHoKRlYL9RyF6rgXfToZD6hxm5eJRPfw6S
-	 d8Nt2SivLXGUbnGX5GsNGqy7mqK5/autwp4PqX46WqSRZIhVLTt2PDpZNk8LR4Ndg8oMt
-	 Eocsj8i4G1HToiR4m+11VgaO80EE9EN+dAuRa6obE8WKg+T2Riknk7Y1FsmGamIEphA==
+	t=1795113913;
+	b=krM3uCno+SGlE7cVGIBUGiZAVvVxv1iA+w4Rnz6tK2dpl93GGyE5yuasdlWFALWwdp7Q
+	 +NF4W3OChZn1nMVI1bMQ7vcYm1NW3VmUl7Py0bEmP7JLbC1wV2U3znts+yGhksePuZnHV
+	 1ypt9L9zbnJdgTj+UmUEcJdS5Bt9aAuzaiDALiGNQpuJu3JW8MrqMQ6QGdAamttKDM5hI
+	 h4F5TUUtq6PNhF0EvkIzm5NUwA6VXKhaqa0TmsmSlpLORzuTp/9dwH/D99SB1ZZQAZmK5
+	 NILk+kUpOKK+EvJUkTQiNpLo/1NKLvBsXMjXZ7Sgw4lQ3ysMdw3/WFK/zmeJsQe2QFg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795113209;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=cW1Gp/SLXYhxx5A9Q5dr7GIRM3j5LjmrWw0BlEu5f0M=;
-	b=ygigcAZcL6aF8wRoiTmJfrM4yKjctM/a0FLmSKEYQ55ltNawG2zW+1gJoJTvFeQdQI/2
-	 m8aGwe+15QtGSWas8l2XnNAHpHf7QYT+onxPlBh0JNhQpHSqpDaeG7dtIn5/3Fk/Hjo0p
-	 dCvns3D+31t5jwhDHu3SeGSWYQH8XNBjBmm2FLlm27OmryTXlC21TwzC8pbJFT4WpoKKv
-	 LPP8SZSo2udppk1sHryXFxHbiIHEEYG6kr43UHIRhOWWgIZGnDU8fltUfCewzwkyD4rTT
-	 fq71wotNaKh2QaJgP01z5qlokMvfrZmaWCftc6AmFnw+TL3N3HvEodbzDR8p2RRDH8g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795113913;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=milo0i9re+RHuON7oLYDAwFnoxQe6QkQnp9iffBjSWQ=;
+	b=DyXpwmbYZHWE1P8W2OF0jUNdd5Rt/6T5aDBtxY1x/VHf3xBgDsrdxSSOOmeSpXhzW9Le
+	 nksId6LD8CkJAnAH0YalBZgfsNsbq2fwYlEjaZh39ItRNNbnUBIXwobkLrQiRwTOqKwS9
+	 pjuNJULsmPYcoRT0SG9SrzxGhzrkXHNnu6ryDZ8T+aXlPNgNhBp+No5+6Zt22kFvxClOH
+	 dqJLhzBlGofxycT9NG5+G2IqQPBI1BNvF9ptMTwOC5QOj0MjzQFa596zYMFmTqXHULaWR
+	 dpYptKiDz/mUWaxMY9o9H6egHC5A2pmYd+tn5EGOWRWSVTyc/Jt0S2YRX585VlArUIw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LftXorVd;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=hbujP9P9;
+	arc=none smtp.remote-ip=74.125.82.48
+Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C36F606A324;
-	Thu, 19 Nov 2026 18:33:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9BE6606A326
+	for <mptcp@lists.linux.dev>; Thu, 19 Nov 2026 18:45:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C9BE6606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LftXorVd
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C08C1F000C7;
-	Thu, 19 Nov 2026 18:33:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795113208;
-	bh=cW1Gp/SLXYhxx5A9Q5dr7GIRM3j5LjmrWw0BlEu5f0M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=LftXorVdYWkIH/eKEEiACZdlDi2wHbqiibu28g6YGHfvZtuH+Yr3N6hOUSovVKTwv
-	 mziTPULqd4/+RbUap3VPHM661ho0Ttdz0nxZZ8N9ZDwBpQ2uq0V8+PfXTrFSMuXajj
-	 pXuP2GtQO6zhyRYzbgpgpJPUrdEFnYSFfl3gDdAz5+siFiDn8Gj5pRdRcM55jc0w/1
-	 wMSXH6NqCwoF9vTnCceN4Pa0FtOoTviSnHGYs1jGzhem1zhnlNGiB6wYM315U3QsYW
-	 4k5fOUjyOBMtpWx/V1WxnQ8qVg4iyumUE+R9mYHttnCGnGrHZruHR8fkOhWpe9j5Bi
-	 2JdA39KfX1kYA==
-Message-ID: <cab39a1c-056f-488f-b217-194af2056db2@kernel.org>
-Date: Thu, 19 Nov 2026 19:33:23 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=hbujP9P9
+Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-1b3a05f8b5bso57559c88.1
+        for <mptcp@lists.linux.dev>; Thu, 19 Nov 2026 10:45:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795113912; x=1795718712; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=milo0i9re+RHuON7oLYDAwFnoxQe6QkQnp9iffBjSWQ=;
+        b=hbujP9P9BprFEIO/wCeGK9qG5/qdFaGnJA/w5AWr3jtzwv3S0FUbhVXvqJcaZZGsTz
+         vfTJLibFh0Z3lYUIZJ/4akqKMp8/C0rNUSyAesYPBPTe2r5YFgc9wYp32MGarlO4Phph
+         ChKRRgAWeQGy5pQi+ZEw7pI9jmUZ6gK3FxqsZPxMqhtuhHbujBezCpRUcIaqh6GKGjLA
+         uppA8hdIoTEq2bId34C+al1qzWo0shOfKmLRZcOFKcgEDlDxIWg8f728H+V9F5W7L9OI
+         HUvn64DnvgPhiUoMdWzS9Kuc2eVAd5iGENeXGwZw5EBV1h8+KtZDW4rzLAXPQTLLuEMn
+         ngfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795113912; x=1795718712;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=milo0i9re+RHuON7oLYDAwFnoxQe6QkQnp9iffBjSWQ=;
+        b=UKQMCrxdC84W/vHwkXuHt+GORdh9a+VO332dywZVfgoHx0Kn+xBehz7h1mieJPx9wS
+         mP8skwHW6U7I3au/ZmOix4MrIeXpKd2p9dPkI3bHvithKm4Q10jpS90LcRHJk9/CixBv
+         YR2JQdWCcADhq4b1/26SxV9XMXFYov9g6JQibHUDYQLJ8gXCqt4xrSFgRsL5+293wF6Z
+         55HH/V81lbmRmFrWZFOOuWcgFvXoIvPmAoU/3WJN5uep0wGCPfR8nsqf0S7Kl0A0pY5E
+         Wnil8nWLZS9eKexIsSjyEQoVnKN6IdUzDMR6WgizhoxytghPg7qN+2qdcPM4nKtjSRQi
+         efQA==
+X-Gm-Message-State: APuU4Z8GHz7y6XO+0SRthZtJzxLvsMtUmnQA5QA7WYGyRkwX7YEmEYjC
+	pvLYVXTtMc9Cfmpw/v0em27v18vRP6OwWH5YyUYx71bHwCr9VCbZZLzXhJdSmg==
+X-Gm-Gg: AZFdTZdq8Xf0bQBO1mnfzBqt4uBN9WjbOhWElxPJs3x5pgG2U/7oBERKfQleh3jK8k/
+	9MpNA+XSyw/RIrZtW77Byof0EJk5m0pJpNPRrwQLJrtfp8SNgzodp5zuswWSW9XYbzix53gWyle
+	efAfI7u+xDjxMcu9TDXHPYwvSz5FHp6jX5QIpYKJQuyScqz2O9x4fzliiMYI4npc5LHP67BSFwO
+	TRj/E9Xvs3ce3y1tHJq3SNr9I4dx7V5sNaRibh2/PuFQAfulKXOjBrriI2zV4nY5bolbE/1TLgl
+	j4zeiqdWw9YRSXbm989h6q3kgvXYzCAYTS1l3TZXiL9p/FI5Irqbg4jy5OD1PO17XY+7SABcztR
+	FhFXEZ6Qw6K5RvTJ70qn+C63EHQmM/h8IxqvropXdJ4XYFl7JuOSzyzY/Jk2hjuRrFdZUfIfKdY
+	lbcYotm9967gxEfHTtbz081wGjNAsiCaG5eDJXG53S/0+BQXl1TgFSWYEKi+drlQ3IJxXfNB2kU
+	bgg/oHIO2GhG3NfjT+6sUN8p2yBJQnYGfvbZ2/t8FgUAPE5bF0dDPvI4y7jTdKirvdMmtmJ6h/x
+	gKGXs5dgjhHpxn8Jxu/d2wPK5jnlmukT2KF3qhMF8K/XCo/0jkrbv2XXD+YKfFstiGyvrNHIuPg
+	QbFpLQ2O0k3BI2ToRGa59CwZ/IlDcrmxl9WaiqL4jcd2/7Kmf06Xqn/C/iqyCAairTaAc1z7m5A
+	==
+X-Received: by 2002:a05:693c:87d6:20b0:376:40db:faec with SMTP id 5a478bee46e88-3856f65f251mr177305eec.10.1795113911513;
+        Thu, 19 Nov 2026 10:45:11 -0800 (PST)
+Received: from ramen-dev-security-2.asia-south1-c.c.ramen-dev-345017.internal (90.156.200.35.bc.googleusercontent.com. [35.200.156.90])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-38567abb870sm542607eec.25.2026.11.19.10.45.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Nov 2026 10:45:10 -0800 (PST)
+From: Anil Kaushik <anilkaushikwireless@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: anilkaushikwireless@gmail.com
+Subject: [PATCH iproute2-next 0/2] mptcp: limits: add subflow_retries
+Date: Thu, 19 Nov 2026 18:45:05 +0000
+Message-Id: <20261119184507.1954726-1-anilkaushikwireless@gmail.com>
+X-Mailer: git-send-email 2.25.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -51,171 +93,43 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net 3/3] mptcp: exclude MSG_PEEK from receive buffer
- autotuning
-Content-Language: fr
-To: Eric Dumazet <edumazet@kernel.org>
-Cc: lei lei <llleigoing@outlook.com>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>,
- "ncardwell@google.com" <ncardwell@google.com>,
- "kuniyu@google.com" <kuniyu@google.com>,
- "davem@davemloft.net" <davem@davemloft.net>,
- "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com"
- <pabeni@redhat.com>, "horms@kernel.org" <horms@kernel.org>,
- "martineau@kernel.org" <martineau@kernel.org>,
- "geliang@kernel.org" <geliang@kernel.org>
-References: <20261117052200.1507847-1-llleigoing@outlook.com>
- <20261117052200.1507847-4-llleigoing@outlook.com>
- <CAL4WiioFmJXhfGSY7rs7aR3FA_xC_f0sjuArBo7CBjV_tXTbTw@mail.gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <CAL4WiioFmJXhfGSY7rs7aR3FA_xC_f0sjuArBo7CBjV_tXTbTw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Eric, Lei,
+This adds the new subflow-retries limit of the in-kernel path manager to
+"ip mptcp limits", as Matt suggested on the kernel series:
 
-Thank you for the patch, and for the review!
+https://lore.kernel.org/mptcp/20261103085244.23064-1-anilkaushikwireless@gmail.com/
 
-On 19/11/2026 08:59, Eric Dumazet wrote:
-> Le mar. 17 nov. 2026 à 06:22, lei lei <llleigoing@outlook.com> a écrit :
->>
->> __mptcp_recvmsg_mskq() passes bytes copied by MSG_PEEK to
->> mptcp_rcv_space_adjust(), although those bytes remain in the receive
->> queue. Repeated peeks count the same data as new application
->> consumption and can inflate the receive-memory budget. Subtracting the
->> unread queue at a measurement boundary cannot undo that repeated count.
->>
->> The receive path originally skipped this adjustment for MSG_PEEK.
->> Commit 581302298524 ("mptcp: error out earlier on disconnect") moved
->> the adjustment calls without preserving that check.
->>
->> Only adjust receive space for non-peeking reads. Keep the returned
->> byte count unchanged.
-> 
-> This one looks good to me.
-> 
-> mptcp_rcv_space_adjust() accumulates @copied in msk->rcvq_space.copied,
-> and mptcp_inq_hint() is subtracted once per measurement, so N peeks
-> of the same bytes are indeed counted N times.
-> 
-> (TCP also calls tcp_rcv_space_adjust() for MSG_PEEK, but it uses
-> tp->copied_seq, which is not changed by a peek, so it has no such
-> issue.)
-> 
-> The Fixes: tag is correct, commit 581302298524 removed the
-> "if (!(flags & MSG_PEEK))" test.
+Patch 1 adds the new attribute to the copied uapi header. It is only
+needed until the iproute2 maintainers update the headers, once the
+kernel part is merged.
 
-It looks good to me too, please send a v2 with the Signed-off-by:
+Patch 2 adds "subflow_retries" to "ip mptcp limits set" and "show", and
+to the man page.
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Tested in a VM with the kernel series applied: show, set, a partial set
+keeping the other limits, JSON output, and the maximum (127 accepted,
+128 refused by the kernel).
 
->> A loopback test leaves a fixed 32 KiB queue unread and peeks 4096 times.
->> Before this change, sk_rcvbuf grows to the configured 8 MiB limit.
->> Afterwards, both the budget and the queue remain unchanged, and a
->> subsequent consuming read returns the original data intact.
-> 
-> It would be nice to have this test in
-> tools/testing/selftests/net/mptcp/ (or as a packetdrill test),
-> MPTCP maintainers can tell you what they prefer.
+With this ip, "pm_netlink.sh -i" from the v15 kernel series fails the
+"set limits" check, because ip now shows the new limit. I have a fix for
+the selftest, which also runs the subflow-retries checks with ip. I can
+squash it in the pm_netlink.sh patch of the next version of the series.
 
-Good idea! We prefer a packetdrill test here, using the MPTCP fork [1]:
-such tests are usually shorter and easier to read than a new selftest,
-and our CI
-runs them.
+I used an LLM to help write and review these patches. I checked and
+tested every change myself.
 
-@Lei: could you open a PR on this separate repository with a new test,
-please? For example in gtests/net/mptcp/syscalls/recv_peek_rcvbuf.pkt,
-next to recv_peek_waitall.pkt. Feel free to use the following script if
-it works on your side. You can test it with:
+Anil Kaushik (2):
+  uapi: mptcp: add MPTCP_PM_ATTR_SUBFLOW_RETRIES
+  mptcp: limits: add subflow_retries
 
-  ./packetdrill/run_all.py -lv mptcp/syscalls/recv_peek_rcvbuf.pkt
+ include/uapi/linux/mptcp_pm.h |  1 +
+ ip/ipmptcp.c                  | 21 ++++++++++++++++++++-
+ man/man8/ip-mptcp.8           | 10 ++++++++++
+ 3 files changed, 31 insertions(+), 1 deletion(-)
 
 
-------------------------- 8< -------------------------
-  // MSG_PEEK must not be counted as consumed data by the rcvbuf autotuning
-  --tolerance_usecs=100000
-  `../common/defaults.sh`
-
-  // Small initial rcvbuf: without the fix, a few peeks are enough to grow it
-  +0.0  `sysctl -q net.ipv4.tcp_rmem="4096 8192 15728640"`
-
-  +0.0  socket(..., SOCK_STREAM, IPPROTO_MPTCP) = 3
-  +0.0  setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
-  +0.0  bind(3, ..., ...) = 0
-  +0.0  listen(3, 1) = 0
-
-  // With TS, the first data gives an RTT sample (~100ms), needed by autotuning
-  +0.0    <  S   0:0(0)                win 65535  <mss 1460, sackOK, TS val 100 ecr 0,   nop, wscale 8, mpcapable v1 flags[flag_h] nokey>
-  +0.0    >  S.  0:0(0)        ack 1              <mss 1460, sackOK, TS val 700 ecr 100, nop, wscale 8, mpcapable v1 flags[flag_h] key[skey]>
-  +0.1    <   .  1:1(0)        ack 1     win 256  <nop, nop,         TS val 200 ecr 700,                mpcapable v1 flags[flag_h] key[ckey=2, skey]>
-  +0.0  accept(3, ..., ...) = 4
-
-  +0.0    <  P.  1:1001(1000)  ack 1     win 256  <nop, nop,         TS val 300 ecr 700,                mpcapable v1 flags[flag_h] key[skey, ckey] mpcdatalen 1000, nop, nop>
-  +0.0    >   .  1:1(0)        ack 1001           <nop, nop,         TS val 700 ecr 300,                dss dack8=1001 dll=0 nocs>
-
-  // Peek the same data multiple times within one RTT...
-  +0.0  recv(4, ..., 1000, MSG_PEEK) = 1000
-  +0.0  recv(4, ..., 1000, MSG_PEEK) = 1000
-  +0.0  recv(4, ..., 1000, MSG_PEEK) = 1000
-  +0.0  recv(4, ..., 1000, MSG_PEEK) = 1000
-  +0.0  recv(4, ..., 1000, MSG_PEEK) = 1000
-
-  // ... then once more after one RTT: nothing consumed, the rcvbuf is unchanged
-  +0.2  recv(4, ..., 1000, MSG_PEEK) = 1000
-  +0.0  getsockopt(4, SOL_SOCKET, SO_RCVBUF, [8192], [4]) = 0
-
-------------------------- 8< -------------------------
-
-[1] https://github.com/multipath-tcp/packetdrill
-
-Cheers,
-Matt
+base-commit: 87cb3f4198507331b9308689d4a726d17db63dd3
 -- 
-Sponsored by the NGI0 Core fund.
+2.25.1
 
