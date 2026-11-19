@@ -1,75 +1,82 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.70
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.156.1
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795072619;
-	b=XoFNIthznCRJO+5EUPiYxnAPzLvdnMCh+usRDmBia5w+caj9FsL5V/1ucb/KFv3Tc/ur
-	 IaTfBHIz2fImSz5OD7nNnuGIjlbOH83xPn97Ja7wNAS6g2xtU8R6zn3BGnvLpgM2uWVof
-	 m85x9BlTlEOprDTHIkeiv9GW0k8yNAyzc2EYMagwhFbKgx+Gz5vjLxr7+8Bg0xIjyw4Au
-	 2NhqM3tnCF2Yb28Mj6JzzMHJwb4JKl5daWgwDJgm5lDCtzw20IZ3LzxLxe7I4hujiUmKV
-	 hlC76m2VmKsHUyWIBIkDliIFIiGvKv0VmybdBmIRPOVzO0VlUS6rdczAMY3srZXlRHQ==
+	t=1795073044;
+	b=LbPzjwf15Zs0IJ4hz+X33U9K0AX9KMW+brDpeD+r/AOZvHPJspPbDfqpezcEWFY6Uq2D
+	 a6uoFjSMSn7d3VxM5sFfKdKPHOzoDXJDDReEisXMnHNfrobXjfv4jcSRJsicnEinDlppk
+	 LuOGMm66UsdsrCW5vYNqz3tIdxOofaa99uU4zofkZ4wPBKcNr4TIE0BbaW0/sAWt56XWb
+	 Jec73X3U3np0q2FsKeM2zT0LZhuVrXoj7FGl3cqM1lJw8vUspoL4l5rsMaFH26YrF7Jj8
+	 EEjK4RVtzzjiNV14cKbmi44jlIbPwj9KbKVVdMSw5sLMiSdwiqf6VKKBr1AJM24MGbQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795072619;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
-	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
-	 Content-Type;
-	bh=g7Mi1EJ8K+x+qtLPs0vy1b0AVcFesnmBsbWRRhaRZuI=;
-	b=efpKT5fsfi5PSMkMW7jBfwKXyi6bqb5yLdx5iVmt7JMOKsm1OW+m68bKBj6fBQ5im6Jv
-	 31U7TnXpUFWdBNrRp2T+AeEN+yOP0cyJ7BRxYPNAGAKSRzshScvVMI949s9oBHVY9JJYm
-	 PpqCYEbz9yYa5UbO993aoZ4qunXW9eehYkJ2MgQEpMdXyJ5R/qsZ4ZnaenGGq+fsxlMsX
-	 xfMwzgq5Kxz5MABA/RHSQeHiRhy5s+7xESyu6P217lKfPdzllqxAkvcRElQB6w9atLYou
-	 /8g+yMC9ZATdPN20PKKSFdiEhqLv23+cX1dEv2FaRE2gHdrHVPEalkoNKpLoa1MjA0A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795073044;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received:Received:Received:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-TM-AS-GCONF:
+	 X-Proofpoint-Reinject:X-Proofpoint-GUID:X-Authority-Analysis:
+	 X-Proofpoint-Spam-Info:X-Proofpoint-ORIG-GUID:
+	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-Virus-Version:
+	 X-Proofpoint-Spam-Details;
+	bh=PpA7Huyl4HsN6y6lBWysCvDrGPcB8h4nS9rilJdNIn8=;
+	b=uIOijQcUFX/nO9YNlnbZ0LzHU0s9N8T8RAvgRsXIu8yVgeVmRALwBKuI1mTr5kK13DU1
+	 3wUG7Xj89mhRiPnKm6mcb9ckwipSvt9nfSkLRsDnJkhytOgVpEEzzNmuA8jx5hJ4XIWtl
+	 RoABj2m4KTnTHe+hIO9Z7WSRHlEq8IkrWAEHNFWC5KwlV3M9A/tF1WxzbYoUvCVxnYYQT
+	 89NgTE5vPSMy2THM4Sx6Tq+npmNVi77GYWtZPfqpYj9wKkKcHuz2xKwa+mAo8DbZtfHTD
+	 vR8TTK2y4pMAeCyjxsJDt8bLUgcDXumZPlW0mzHlX9ib1hD5zlm6MBHTb5FSTNXMsNw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Ukeph01H;
-	arc=none smtp.remote-ip=209.85.216.70
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=linux.ibm.com;
+	spf=pass smtp.mailfrom=linux.ibm.com;
+	dkim=pass header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=K46uLKNl;
+	arc=none smtp.remote-ip=148.163.156.1
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C96D60A2615
-	for <mptcp@lists.linux.dev>; Thu, 19 Nov 2026 07:16:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1C96D60A2615
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A70B8606A324
+	for <mptcp@lists.linux.dev>; Thu, 19 Nov 2026 07:24:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A70B8606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Ukeph01H
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-3b3b74351a4so2060172a91.2
-        for <mptcp@lists.linux.dev>; Wed, 18 Nov 2026 23:16:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795072618; x=1795677418; darn=lists.linux.dev;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=g7Mi1EJ8K+x+qtLPs0vy1b0AVcFesnmBsbWRRhaRZuI=;
-        b=Ukeph01HZBUuFjH750D6qOAQD1TWEh4nWBWBdV0JE1lHM1Dda9HRvjP2ZOCqkCFAU+
-         ZbFVUzLKI2TrGNh1hc8MQy+kFIObXoE/g70MYjofUfLPTW/QOe+2T7FJQvBua+FLIV7X
-         32VspJatpyVm1Yfccs4nzbdHedblj6tq9rX14/m0CAOfkYfnoZ+dsfR8PlA+bQcieR4k
-         ApTqbE6wLccne37xs1s5C6NS7pa8IIQBY2PLtsywxaPfuFyclG/f91lUQaOWG4AhHPQi
-         9DxHkEvlHoZ0GjxoiTiF0LNSp78V4mvktAiMs/OJA4DXq1iKUViKQqtNIySCLDjbqgBj
-         9A8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795072618; x=1795677418;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=g7Mi1EJ8K+x+qtLPs0vy1b0AVcFesnmBsbWRRhaRZuI=;
-        b=vVOatdRU+qLwq00ZLZygosq2iU5CgOm0lK+cSuv09dDZgmKNz2Woea9tpxZjC8JhpK
-         mxxgDlQRTlSqwAad70SEFcutZ/LjF+YUIBwjE33LqC8mM/FFZrBlr/lQKDSJBHtxfxfl
-         66Y601M49jiqqjRk/c6am/tKked5swRqs0hR/jSMkefJG8O8+XuI5bi/FZsX+a1ybv2W
-         FfemZP3y4jyf2SUWQ/In68FV/k/Ni6F6U1vRL/AB2dH6ovq65l9b4ZwTkFW9Jxutv6NU
-         tPdiTnsK8RxgC/0KxU2h4B9NCh7s5LcfzaK4s2k7yGHSbpPH/3N5nOGS77odflnRl8lH
-         gbPQ==
-X-Forwarded-Encrypted: i=1; AL+hErEr4NrXGvnQxqOaw76tNtdjzDYCyvx3s5xLNgqV9oGb9ZXqpNP7UnXLRrYwf6n+mojnlH5q/w==@lists.linux.dev
-X-Gm-Message-State: APuU4Z9aRX3wfsiZDTpasUR9cxiNWP2RQfio1LyDIlopsv8YsdlCbdzW
-	i5vrMs3eRSxClNvF4pTAmBSNw3IU2DAJaSz++Y87IqYNRZsI49R2OclIbSyARlrMolaOwLA67/S
-	XkH2Zgg==
-X-Received: from pjnx12.prod.google.com ([2002:a17:90a:8a8c:b0:3b1:7f3c:405d])
- (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:448f:b0:3b3:c04e:4b61
- with SMTP id 98e67ed59e1d1-3b3d07abdb6mr5408294a91.47.1795072618233; Wed, 18
- Nov 2026 23:16:58 -0800 (PST)
-Date: Thu, 19 Nov 2026 07:15:59 +0000
-In-Reply-To: <20261119071649.374106-1-kuniyu@google.com>
+	dkim=pass (2048-bit key, unprotected) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=K46uLKNl
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AJ6uVlO1805523;
+	Thu, 19 Nov 2026 07:23:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=PpA7Hu
+	yl4HsN6y6lBWysCvDrGPcB8h4nS9rilJdNIn8=; b=K46uLKNlSBGrqZcTNdrHjH
+	ZSsTM9MmKU/1EuSA09S8auoe7ewdgrakfhKF92BOIxBvzf9Asekp5CdgCMNQ+mLa
+	QrPXi82CT6Y/OyH8Nmr+r9xRI3GRXupvcLsBrBtbtf3+QKGploW8MIoY6wqrpNIA
+	oTai/Rlgcti7PA3I+ye+Q+Eyu7FaYRtQRg5Vq5gmMEsQ7+O3Y3ignraeaipQv/Fa
+	BpDTDZ3VACxcJh001yWYoKIlrTkvMczLdnDjsnSDnKqNj3xIjhHHSJlrh9jcG4qs
+	+5IdMNSOda+HTswmQArlYDURAjoX8ON5U+89FQP1aR9gfvhn5sfKHq/lXi5AfdtA
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4j105rq8m9-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Thu, 19 Nov 2026 07:23:58 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 6AJ75C433327282;
+	Thu, 19 Nov 2026 07:23:57 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4j1bb5c7au-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 19 Nov 2026 07:23:57 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6AJ7NtXk42074492
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 19 Nov 2026 07:23:55 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 611332004D;
+	Thu, 19 Nov 2026 07:23:55 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 556C720040;
+	Thu, 19 Nov 2026 07:23:51 +0000 (GMT)
+Received: from [9.123.13.84] (unknown [9.123.13.84])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 19 Nov 2026 07:23:51 +0000 (GMT)
+Message-ID: <e9389120-778a-46f2-93e3-aad966bd148c@linux.ibm.com>
+Date: Thu, 19 Nov 2026 12:53:50 +0530
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -78,218 +85,178 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
-Mime-Version: 1.0
-References: <20261119071649.374106-1-kuniyu@google.com>
-X-Mailer: git-send-email 2.56.1.708.g77570a6a1d-goog
-Message-ID: <20261119071649.374106-8-kuniyu@google.com>
-Subject: [PATCH v3 net-next 7/7] selftest: packetdrill: Add test for tcp_collapse().
-From: Kuniyuki Iwashima <kuniyu@google.com>
-To: Eric Dumazet <edumazet@kernel.org>, Neal Cardwell <ncardwell@google.com>, 
-	"David S . Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>
-Cc: Simon Horman <horms@kernel.org>, Kuniyuki Iwashima <kuniyu@google.com>, 
-	Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org, mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2 5/5] net/smc: annotate data-races around smc
+ sysctls
+To: Jiayuan Chen <jiayuan.chen@linux.dev>, netdev@vger.kernel.org
+Cc: Dust Li <dust.li@linux.alibaba.com>, David Ahern <dsahern@kernel.org>,
+        Ido Schimmel <idosch@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+        Matthieu Baerts <matttbe@kernel.org>,
+        Mat Martineau <martineau@kernel.org>,
+        Geliang Tang <geliang@kernel.org>,
+        Allison Henderson <achender@kernel.org>,
+        "D. Wythe" <alibuda@linux.alibaba.com>,
+        Mahanta Jambigi <mjambigi@linux.ibm.com>,
+        Tony Lu
+ <tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>,
+        linux-kernel@vger.kernel.org, mptcp@lists.linux.dev,
+        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
+        linux-s390@vger.kernel.org
+References: <20261118045137.174026-1-jiayuan.chen@linux.dev>
+ <20261118045137.174026-6-jiayuan.chen@linux.dev>
+Content-Language: en-US
+From: Sidraya Jayagond <sidraya@linux.ibm.com>
+In-Reply-To: <20261118045137.174026-6-jiayuan.chen@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-GUID: d_pMhtpwwfHRBcOOG4J3TNdurOevL0_9
+X-Authority-Analysis: v=2.4 cv=e8uT2qp/ c=1 sm=1 tr=0 ts=6afea40e cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=SRrdq9N9AAAA:8
+ a=VnNF1IyMAAAA:8 a=3S7D6mjnOIgGY85eZR4A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTE5MDAyNyBTYWx0ZWRfX2eVJ+/+IxlE7
+ W+BE+rUAtrGYMJflvUMIkc0soy6L0enk48XAQSEVygx2VVnZZvnFX2aPyViyQbzjQ1577O4Rkvo
+ HZK9RL0k+M/Qa579S+rWoPsOB1I1+Zc=
+X-Proofpoint-ORIG-GUID: C6HuRQ26zw5MJH3TAq5joplAzXr2-CMF
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTE5MDAyNyBTYWx0ZWRfX3cNfb6jiVM8D
+ mfpJaV/VkGJobFNS7IXa9q6OVxa6ACnLSmgQ99qI1gL4DfWZS6aCQ3ElldLIrRyUjdnDzZFE4UE
+ oRZNhCYOnJXrVWT+HqHH718BrfppYVflPBNAJq/JOg/PqCewSgO/VurZ/xIhNHaD5zB+j+CYi/A
+ VxaCAXf5E7oDm8AQqbU4KLI8UO+uvjwF954uOoolfc+fz9eM+yte1w6x2FwdfOwCjJmkxDLZ5yQ
+ PJb+4uCfTkQrnLN1XUgUH+jAdEK0saKP1Kj1Kzz9RFUOk/2btj+0blmhxV7kLfnxENdLJAOLIDC
+ ZfN1OKNsOWA2SwTEFwhbjgpOURJzLkIKoIntQKfR7JkCthxT5qO2hawMhtuPv/iLE+ZPhs9H1lS
+ 23YWitNnp4X4GX9/ved77zUb7Qp9yXNi8fbiARvo84vbfDHBEunSvH7+CYea+4Q25HWz80qfIT4
+ HZKDb3f1SLoVbLCychg==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-11-19_02,2026-11-16_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 priorityscore=1501 suspectscore=0 phishscore=0
+ lowpriorityscore=0 adultscore=0 spamscore=0 bulkscore=0 malwarescore=0
+ impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2611040001
+ definitions=main-2611190027
 
-tcp_collapse() now does not collapse high-density skbs and a
-low-density skb sandwiched by high-density skbs.
 
-tcp_rcv_collapse_bloated.pkt verifies the behaviour by
 
- 1. set a large SO_RCVBUF
- 2. send one high-density skb with 100 bytes read()
- 3. send one high-density skb
- 4. send one low-density skb
- 5. send one high-density skb
- 6. send 30 low-density skbs
- 7. send one high-density skb
- 8. set a small SO_RCVBUF
- 9. send a small data to trigger tcp_collapse()
-10. check TcpExtTCPRcvCollapsed via nstat
+On 18/11/26 10:21 am, Jiayuan Chen wrote:
+> autocorking_size, smcr_buf_type, smcr_max_links_per_lgr,
+> smcr_max_conns_per_lgr and limit_smc_hs are read without any lock while
+> their sysctl handlers update them with WRITE_ONCE(), and the SMC netlink
+> handlers toggle limit_smc_hs with plain writes. Add READ_ONCE() to the
+> readers and WRITE_ONCE() to those handlers.
+> 
+> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+> Acked-by: Dust Li <dust.li@linux.alibaba.com>
+> ---
+>  net/smc/af_smc.c   | 8 ++++----
+>  net/smc/smc_clc.c  | 8 ++++----
+>  net/smc/smc_core.c | 2 +-
+>  net/smc/smc_tx.c   | 2 +-
+>  4 files changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
+> index bfc0c7e71a12b..1d3eae064fe0d 100644
+> --- a/net/smc/af_smc.c
+> +++ b/net/smc/af_smc.c
+> @@ -88,7 +88,7 @@ int smc_nl_dump_hs_limitation(struct sk_buff *skb, struct netlink_callback *cb)
+>  		return -ENOMEM;
+>  
+>  	if (nla_put_u8(skb, SMC_NLA_HS_LIMITATION_ENABLED,
+> -		       sock_net(skb->sk)->smc.limit_smc_hs))
+> +		       READ_ONCE(sock_net(skb->sk)->smc.limit_smc_hs)))
+>  		goto err;
+>  
+>  	genlmsg_end(skb, hdr);
+> @@ -102,13 +102,13 @@ int smc_nl_dump_hs_limitation(struct sk_buff *skb, struct netlink_callback *cb)
+>  
+>  int smc_nl_enable_hs_limitation(struct sk_buff *skb, struct genl_info *info)
+>  {
+> -	sock_net(skb->sk)->smc.limit_smc_hs = true;
+> +	WRITE_ONCE(sock_net(skb->sk)->smc.limit_smc_hs, true);
+>  	return 0;
+>  }
+>  
+>  int smc_nl_disable_hs_limitation(struct sk_buff *skb, struct genl_info *info)
+>  {
+> -	sock_net(skb->sk)->smc.limit_smc_hs = false;
+> +	WRITE_ONCE(sock_net(skb->sk)->smc.limit_smc_hs, false);
+>  	return 0;
+>  }
+>  
+> @@ -411,7 +411,7 @@ void smc_sk_init(struct net *net, struct sock *sk, int protocol)
+>  	spin_lock_init(&smc->conn.send_lock);
+>  	mutex_init(&smc->clcsock_release_lock);
+>  	smc_init_saved_callbacks(smc);
+> -	smc->limit_smc_hs = net->smc.limit_smc_hs;
+> +	smc->limit_smc_hs = READ_ONCE(net->smc.limit_smc_hs);
+>  	smc->use_fallback = false; /* assume rdma capability first */
+>  	smc->fallback_rsn = 0;
+>  	smc_close_init(smc);
+> diff --git a/net/smc/smc_clc.c b/net/smc/smc_clc.c
+> index 014d527d5462d..df0afeef67cbd 100644
+> --- a/net/smc/smc_clc.c
+> +++ b/net/smc/smc_clc.c
+> @@ -990,8 +990,8 @@ int smc_clc_send_proposal(struct smc_sock *smc, struct smc_init_info *ini)
+>  	}
+>  	if (smcr_indicated(ini->smc_type_v2)) {
+>  		memcpy(v2_ext->roce, ini->smcrv2.ib_gid_v2, SMC_GID_SIZE);
+> -		v2_ext->max_conns = net->smc.sysctl_max_conns_per_lgr;
+> -		v2_ext->max_links = net->smc.sysctl_max_links_per_lgr;
+> +		v2_ext->max_conns = READ_ONCE(net->smc.sysctl_max_conns_per_lgr);
+> +		v2_ext->max_links = READ_ONCE(net->smc.sysctl_max_links_per_lgr);
+>  	}
+>  
+>  	pclc_base->hdr.length = htons(plen);
+> @@ -1272,12 +1272,12 @@ int smc_clc_srv_v2x_features_validate(struct smc_sock *smc,
+>  
+>  	if (ini->smcr_version & SMC_V2) {
+>  		ini->max_conns = min_t(u8, pclc_v2_ext->max_conns,
+> -				       net->smc.sysctl_max_conns_per_lgr);
+> +				       READ_ONCE(net->smc.sysctl_max_conns_per_lgr));
+>  		if (ini->max_conns < SMC_CONN_PER_LGR_MIN)
+>  			return SMC_CLC_DECL_MAXCONNERR;
+>  
+>  		ini->max_links = min_t(u8, pclc_v2_ext->max_links,
+> -				       net->smc.sysctl_max_links_per_lgr);
+> +				       READ_ONCE(net->smc.sysctl_max_links_per_lgr));
+>  		if (ini->max_links < SMC_LINKS_ADD_LNK_MIN)
+>  			return SMC_CLC_DECL_MAXLINKERR;
+>  	}
+> diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
+> index a3164201c1420..2db3a87054835 100644
+> --- a/net/smc/smc_core.c
+> +++ b/net/smc/smc_core.c
+> @@ -1010,7 +1010,7 @@ static int smc_lgr_create(struct smc_sock *smc, struct smc_init_info *ini)
+>  		lgr->net = smc_ib_net(lnk->smcibdev);
+>  		lgr_list = &smc_lgr_list.list;
+>  		lgr_lock = &smc_lgr_list.lock;
+> -		lgr->buf_type = lgr->net->smc.sysctl_smcr_buf_type;
+> +		lgr->buf_type = READ_ONCE(lgr->net->smc.sysctl_smcr_buf_type);
+>  		atomic_inc(&lgr_cnt);
+>  	}
+>  	smc->conn.lgr = lgr;
+> diff --git a/net/smc/smc_tx.c b/net/smc/smc_tx.c
+> index 0f0c6df3bf2ce..30bffe79d06a3 100644
+> --- a/net/smc/smc_tx.c
+> +++ b/net/smc/smc_tx.c
+> @@ -148,7 +148,7 @@ static bool smc_should_autocork(struct smc_sock *smc)
+>  	int corking_size;
+>  
+>  	corking_size = min_t(unsigned int, conn->sndbuf_desc->len >> 1,
+> -			     sock_net(&smc->sk)->smc.sysctl_autocorking_size);
+> +			     READ_ONCE(sock_net(&smc->sk)->smc.sysctl_autocorking_size));
+>  
+>  	if (atomic_read(&conn->cdc_pend_tx_wr) == 0 ||
+>  	    smc_tx_prepared_sends(conn) > corking_size)
 
-Without the series, the first high-density skb is collapsed.
-In addition, the first low-density skb drags the following
-high-density skb into collapsing, consuming more memory.
+Reviewed-by: Sidraya Jayagond <sidraya@linux.ibm.com>
 
-If we remove sk_forced_mem_schedule() without this series,
-sk->sk_forward_alloc becomes negative at the end of tcp_collapse().
-
-Note that 30 segments are to make the memory savings large
-enough so that the margin can absorb minor size delta of
-struct sk_buff or L1_CACHE_BYTES across configs.
-
-skb truesize, TCP_COLLAPSE_MAX_SIZE, TCP_COLLAPSE_SCALING_RATIO
-depend on PAGE_SIZE being 4K, so the test is skipped if getconf
-returns non-4K PAGE_SIZE.
-
-Signed-off-by: Kuniyuki Iwashima <kuniyu@google.com>
----
- .../selftests/net/packetdrill/ksft_runner.sh  |   9 ++
- .../packetdrill/tcp_rcv_collapse_bloated.pkt  | 135 ++++++++++++++++++
- 2 files changed, 144 insertions(+)
- create mode 100644 tools/testing/selftests/net/packetdrill/tcp_rcv_collapse_bloated.pkt
-
-diff --git a/tools/testing/selftests/net/packetdrill/ksft_runner.sh b/tools/testing/selftests/net/packetdrill/ksft_runner.sh
-index 0a97d5ae3469..250d143bb9f7 100755
---- a/tools/testing/selftests/net/packetdrill/ksft_runner.sh
-+++ b/tools/testing/selftests/net/packetdrill/ksft_runner.sh
-@@ -44,6 +44,15 @@ if [ -z "$(which packetdrill)" ]; then
- 	exit "$KSFT_SKIP"
- fi
- 
-+page_size=$(grep -E '^--define="?PAGE_SIZE=' $script | sed -E 's/.*PAGE_SIZE="?([0-9]+)"?.*/\1/')
-+if [[ -n "$page_size" ]]; then
-+	cur_page_size=$(getconf PAGESIZE 2>/dev/null)
-+	if [[ "$cur_page_size" != "$page_size" ]]; then
-+		ktap_skip_all "requires PAGE_SIZE=$page_size (current: ${cur_page_size:-unknown})"
-+		exit "$KSFT_SKIP"
-+	fi
-+fi
-+
- declare -a optargs
- failfunc=ktap_test_fail
- 
-diff --git a/tools/testing/selftests/net/packetdrill/tcp_rcv_collapse_bloated.pkt b/tools/testing/selftests/net/packetdrill/tcp_rcv_collapse_bloated.pkt
-new file mode 100644
-index 000000000000..90e8be86968f
---- /dev/null
-+++ b/tools/testing/selftests/net/packetdrill/tcp_rcv_collapse_bloated.pkt
-@@ -0,0 +1,135 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Test that tcp_collapse() only collapses bloated skb runs, skips leading
-+// and trailing high-density skbs, skips isolated bloated skbs when collapsing
-+// them would not shrink truesize, and properly recovers receive buffer space.
-+
-+--mss=1000
-+--define="PAGE_SIZE=4096"
-+
-+`./defaults.sh`
-+
-+// Establish a connection with a large receive buffer.
-+// __sock_set_rcvbuf() doubles, so 2000000
-+   +0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
-+   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
-+   +0 setsockopt(3, SOL_SOCKET, SO_RCVBUF, [1000000], 4) = 0
-+   +0 bind(3, ..., ...) = 0
-+   +0 listen(3, 1) = 0
-+
-+   +0 < S 0:0(0) win 32792 <mss 1000,nop,nop,sackOK,nop,wscale 7>
-+   +0 > S. 0:0(0) ack 1 win 65535 <mss 1460,nop,nop,sackOK,nop,wscale 4>
-+   +0 < . 1:1(0) ack 1 win 65535
-+
-+   +0 accept(3, ..., ...) = 4
-+
-+// 1. Queue two high-density 62,000 B segments (each adds 15 pages of frag
-+// truesize with enough margin across NET_SKB_PAD, L1_CACHE_BYTES, and
-+// MAX_SKB_FRAGS configs).
-+// Read 100 bytes from the first one so before(skb->seq, tp->copied_seq) is true.
-+   +0 < P. 1:62001(62000) ack 1 win 65535
-+    * > .  1:1(0) ack 62001
-+   +0 read(4, ..., 100) = 100
-+
-+   +0 < P. 62001:124001(62000) ack 1 win 65535
-+    * > .  1:1(0) ack 124001
-+
-+// 2. Queue an isolated bloated 1,000 B segment.
-+   +0 < P. 124001:125001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 125001
-+
-+// 3. Queue another high-density 62,000 B segment.
-+   +0 < P. 125001:187001(62000) ack 1 win 65535
-+    * > .  1:1(0) ack 187001
-+
-+// 4. Queue a run of 30 bloated 1,000 B segments.
-+   +0 < P. 187001:188001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 188001
-+   +0 < P. 188001:189001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 189001
-+   +0 < P. 189001:190001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 190001
-+   +0 < P. 190001:191001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 191001
-+   +0 < P. 191001:192001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 192001
-+   +0 < P. 192001:193001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 193001
-+   +0 < P. 193001:194001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 194001
-+   +0 < P. 194001:195001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 195001
-+   +0 < P. 195001:196001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 196001
-+   +0 < P. 196001:197001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 197001
-+   +0 < P. 197001:198001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 198001
-+   +0 < P. 198001:199001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 199001
-+   +0 < P. 199001:200001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 200001
-+   +0 < P. 200001:201001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 201001
-+   +0 < P. 201001:202001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 202001
-+   +0 < P. 202001:203001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 203001
-+   +0 < P. 203001:204001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 204001
-+   +0 < P. 204001:205001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 205001
-+   +0 < P. 205001:206001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 206001
-+   +0 < P. 206001:207001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 207001
-+   +0 < P. 207001:208001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 208001
-+   +0 < P. 208001:209001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 209001
-+   +0 < P. 209001:210001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 210001
-+   +0 < P. 210001:211001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 211001
-+   +0 < P. 211001:212001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 212001
-+   +0 < P. 212001:213001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 213001
-+   +0 < P. 213001:214001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 214001
-+   +0 < P. 214001:215001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 215001
-+   +0 < P. 215001:216001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 216001
-+   +0 < P. 216001:217001(1000) ack 1 win 65535
-+    * > .  1:1(0) ack 217001
-+
-+// 5. Queue a trailing high-density 62,000 B segment.
-+   +0 < P. 217001:279001(62000) ack 1 win 65535
-+    * > .  1:1(0) ack 279001
-+
-+// Reset SNMP counters.
-+   +0 `nstat -n`
-+
-+// Shrink SO_RCVBUF so sk_rcvbuf (320,000) is smaller than current
-+// sk_rmem_alloc (334,592 on x86_64 default), but larger than sk_rmem_alloc
-+// after collapsing the 30 bloated skbs (300,288 on x86_64 default).
-+   +0 setsockopt(4, SOL_SOCKET, SO_RCVBUF, [160000], 4) = 0
-+
-+// Inject the next 1,000 B segment with a changed window to bypass
-+// header prediction.  This triggers tcp_prune_queue() -> tcp_collapse().
-+// Only the 30 bloated segments should be collapsed; the high-density
-+// segments and the isolated bloated segment are skipped.  sk_rmem_alloc
-+// shrinks below sk_rcvbuf, so tcp_can_ingest() succeeds and the packet
-+// is accepted.
-+   +0 < P. 279001:280001(1000) ack 1 win 65534
-+    * > .  1:1(0) ack 280001
-+
-+// Verify exactly 30 skbs were collapsed.
-+   +0 `nstat -s | grep TcpExtTCPRcvCollapsed | grep -q " 30 "`
-+
-+// Verify no packets were dropped.
-+   +0 `test -z "$(nstat -s | grep TcpExtTCPRcvQDrop)"`
-+
-+// Read all remaining queued data to verify data integrity.
-+   +0 read(4, ..., 300000) = 279900
--- 
-2.56.1.708.g77570a6a1d-goog
-
+Regards,
+Sidraya
