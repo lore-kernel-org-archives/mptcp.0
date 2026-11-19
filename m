@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795115607;
-	b=EQxcymzY7Okp42guRoblJj5gjKjqqvBq/r2XI4Rkn9nAsfY7XcaVdH0W/bOItoGqaaYE
-	 FYKycrgNVqh9YaPk0ORl6cQYNyP4GLmbczCUr0jUKNVJ6xJmjv0YzjLSOoGcnVb6kaSp2
-	 x69XyShALmWPyhd7VkprM4rZBZVZAkefO5TyhkTA0TD7iMn8GG+BYoLOc+9BTjlxNvnaA
-	 GdAMh1N1A8fk02fqHh4JC220D34WMkBjAMJbmZvSoT7Vs2aiDawB6goZTbFvF0naPjaj9
-	 fSh1Db65sXsiU6m2O1AHocS2asO9YEIbeNxap8CwA6SvEyNLahonPwy5r5pXyUCaf6A==
+	t=1795116080;
+	b=Lt098TPcQ/AadfaPkWx/BMAl0u+MMg5HwRidjlM2xcGH96RaFvfgOmaBegpvyZ/YSNE3
+	 +/OtQLSaIAbg+whGZyNornLLeP38nHsGdJckUCRXooXalOrbUBpd1KRHYzvuVHK6sybXP
+	 OgABZ8lJliDGzkXorYvY58ZjupBI4xCtk/QFJZQuosqkWVjtS+vO/vVm0OaBB1PXZKTnY
+	 iLk85r9PoRZXvbqpnVNYMRj1/A3gk8J92F88hUGD6n/BeF/PKX6ctBu3AjzGawlhHvm95
+	 Tn6h+xnYipvm1Om3DZ5r2CGRboX4euVNQ3ann3jYNOc49+TE/jEqZizk++SQlmWbWhg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795115607;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795116080;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
+	 Subject:Content-Language:To:References:From:Cc:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=MvW/Jus/Vy01lP2emx24/z5kIpS0Aon4QH2fAoEv36c=;
-	b=qdFqhvWW7NwE1YEdJCdq5cBp6CTR7s6F6I3nLAsgVPZRtX1jZvtHCt86l5OX+LWCQt24
-	 RJXv7hbiICf+h9WZenCtfaZacdrTvvd4murfajHJRy/5VjfmEp8EZ6oDwcYTJ67613S/B
-	 tbCLZHwyXyHHC5hdahn2gcsf5zUzqopcU4G0kGDI0NfeNQb1E0YroCIOLWBchn/qecbIF
-	 QycWRtRiaw9CZtg+wJVqF1bHwqjqewmCbfM7sEOJkVFn5/6sHzA/+hWWX3xZjXWruynTc
-	 j5VVhh6jYE5DVgHj8tjsEPhVQdhY17XCuqxaVUx+ap1tuaNY1K1lK/hnKqUYkNH/NuA==
+	bh=Em0Y9pITS7kpeBBv3+6G6o1mDE6kRsNy01wLNB+MOno=;
+	b=it6kpbE7S+d3NTx0yluxRRDn5InfEivUYhxpPFMjuRWnNiIg/Ao5qlvnKDCPDuAliJmS
+	 wSlV7ZB9izGwYRQW54VDjvCMtmhJnMmkOYbJVHuFnk7GoMN0EDp0HND0ji7ug2uya8zio
+	 Nx/+RX1gVWN9x+DnQ6HvjU9aiGGA6GWvu00KO2vJbt4Ezat7io3H/b6HUwNMzI1hK1RL2
+	 /arPGzA+yR7fe7s9994o/VqTcverU32rllAV/DCx0mH8Vlo3mjuOgoPCJWa8UgzbB+8uJ
+	 EpKWquy+1QkQMCgLKg6/kESTy1cn0v3rzKveensrJlG+fL7MDVXVTYIp42K55OvKxVg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DMHgwxll;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CSxjJUWQ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C457606A326;
-	Thu, 19 Nov 2026 19:13:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC07606A324
+	for <mptcp@lists.linux.dev>; Thu, 19 Nov 2026 19:21:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DMHgwxll
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87F761F000C4;
-	Thu, 19 Nov 2026 19:13:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CSxjJUWQ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 591D31F000C4;
+	Thu, 19 Nov 2026 19:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795115607;
-	bh=MvW/Jus/Vy01lP2emx24/z5kIpS0Aon4QH2fAoEv36c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=DMHgwxllkYhaRHRdCwNqXYuwf1Bw0e+myLQ26IS/qULLAoAqqNqvJNYFHqUcMk3PP
-	 GbOt/KQCzxzNHJ8BVjlfWj8hYn/+95FKcxMM8NYP9Yk/ybga2kMXthTMPRpH7Apps3
-	 11c1vNCBvrrU/+HNEmeToQ2z4m7Esg/COKoFAEoumPYm6lk+DE3vEZYH0MOO2tH3Fi
-	 6b0BP5KMm0gtqmOGq9LMQwpihumPobgRnL5TsoPxQEv1+n0tF9s2ZAa0tayYm/Z+Je
-	 1aQcswkGk4wgwZYbO4B0BzqrBwZPXJRiRnnXkUctjQBfj2sMMcAeCRmgxueiYrpgV0
-	 mupAJbl20p/Pg==
-Message-ID: <4e209707-bdc4-415a-923b-4ac1d2006ecf@kernel.org>
-Date: Thu, 19 Nov 2026 20:13:23 +0100
+	s=k20260515; t=1795116079;
+	bh=Em0Y9pITS7kpeBBv3+6G6o1mDE6kRsNy01wLNB+MOno=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To;
+	b=CSxjJUWQ3jNAL+woOIG2IEdIfXS0XZtLWGXsmOAEUcBXR7PPBZi94Q5h0I9/qvmcJ
+	 NT80dgguvcWITU2mM/Wqihdd0WHJre7CDo7g9onKBLcvn6Iszi66wpdgmdoMwS7Q4t
+	 gCUdq+ZAx+D+AvIR4vEdyRlYieCQsAJRmW/vt3wWr0OTFFKf9uwDGI5wSrngZRYj3q
+	 Irnk3QYv69gI6ONJVPigDhrANbjQo9E2xtYa7ojUCbJRuqXx4iugrUl/XkN4fZqzV4
+	 9CDgP3EPGcn6lcdEO+aHT6HJN+TTbg5Bdcw34RpqT5OmozG13x/FTZ19PHdBS12qfQ
+	 PCs7I1y+1QmzA==
+Message-ID: <74cf0906-cc11-4cdb-8997-af79bb21231f@kernel.org>
+Date: Thu, 19 Nov 2026 20:21:17 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,14 +52,18 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2] mptcp: fix use-after-free of the subflow
- context on the delegated list
+Subject: Re: [PATCH mptcp-next v3] selftests: mptcp: print stats before socket
+ closure
 Content-Language: fr
-To: Hyunwoo Kim <imv4bel@gmail.com>
-Cc: martineau@kernel.org, geliang@kernel.org, pabeni@redhat.com,
- mptcp@lists.linux.dev, netdev@vger.kernel.org
-References: <auqd0rAI95jDSMvu@v4bel>
+To: Geliang Tang <geliang@kernel.org>
+References: <20260815-sft-mptcp-stats-b4-close-v3-1-ccd9af14cf73@kernel.org>
+ <24e7da3ea0b33d5dca970449cf615a4c95ecceb8.camel@kernel.org>
+ <735a6655-b3ac-4352-8a35-0e54ac2c7ffd@kernel.org>
+ <7ad218abd5b68ac34bc34b607af3bb4c7163f60b.camel@kernel.org>
+ <6995e688-db92-4291-a94d-18b03e517a73@kernel.org>
+ <8fd964e5feefcdd389f8c85ce484ba6dbdaff4bc.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -104,37 +108,137 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <auqd0rAI95jDSMvu@v4bel>
+In-Reply-To: <8fd964e5feefcdd389f8c85ce484ba6dbdaff4bc.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Hyunwoo,
+Hi Geliang,
 
-On 04/11/2026 03:52, Hyunwoo Kim wrote:
-> mptcp_subflow_delegate() links the subflow context into a per-CPU napi
-> list and takes a reference on the subflow socket. The context is a
-> separate allocation, reached through icsk_ulp_data, and the list holds
-> no reference to it.
+On 30/10/2026 02:52, Geliang Tang wrote:
+> Hi Matt,
 > 
-> inet_csk_destroy_sock() runs sk_prot->destroy() regardless of the
-> outstanding references. That path ends in tcp_cleanup_ulp(), which calls
-> subflow_ulp_release(). subflow_ulp_release() frees the context with
-> kfree_rcu() but does not remove it from the list. Once the grace period
-> elapses and the context is actually freed, the next mptcp_napi_poll()
-> dequeues that entry and mptcp_subflow_delegated_next() writes to the
-> freed context with list_del_init(). That is the use-after-free.
+> On Thu, 2026-10-22 at 09:58 +0200, Matthieu Baerts wrote:
+>> Hi Geliang,
+>>
+>> Thank you for your patience.
+>>
+>> On 21/09/2026 09:52, Geliang Tang wrote:
+>>> Hi Matt,
+>>>
+>>> Sorry for the delayed reply.
+>>>
+>>> On Tue, 2026-09-08 at 19:52 +0200, Matthieu Baerts wrote:
+>>>> Hi Geliang,
+>>>>
+>>>> On 05/09/2026 10:26, Geliang Tang wrote:
+>>>>> Hi Matt,
+>>>>>
+>>>>> On Sat, 2026-08-15 at 00:28 +0200, Matthieu Baerts (NGI0)
+>>>>> wrote:
+>>>>>> In case of poll timeout, it might be too late to print the
+>>>>>> stats
+>>>>>> after
+>>>>>> the socket closure.
+>>>>>>
+>>>>>> Now, in case of poll timeout, 'ss' and 'nstat' are invoked
+>>>>>> from
+>>>>>> mptcp_connect to print the stats before exiting. This should
+>>>>>> help
+>>>>>> debugging poll timeout issues.
+>>>>>>
+>>>>>> Note: for this "workaround", system() is used for debugging
+>>>>>> purposes
+>>>>>
+>>>>> This print_err_stats() implementation is basically the same as
+>>>>> mptcp_lib_pr_err_stats() in the shell, right?
+>>>>
+>>>> Correct.
+>>>>
+>>>>> I think it's better to use mptcp_lib_pr_err_stats() in the
+>>>>> shell to
+>>>>> print the information. In mptcp_connect.c, when a poll timeout
+>>>>> occurs,
+>>>>> we send a signal to the shell and don't close the socket
+>>>>> immediately -
+>>>>> we wait for the shell to finish printing the information before
+>>>>> closing
+>>>>> it. What do you think of this approach? There's a reference
+>>>>> implementation in the attachment, but I haven't tested it.
+>>>> Thank you for your review. I agree that what you suggested is
+>>>> better
+>>>> for
+>>>> a tool that would be used in production. But here with the
+>>>> selftests,
+>>>> I
+>>>> don't think we need your long patch with a higher complexity,
+>>>> just
+>>>> for
+>>>> the selftests. I think it is fine to have some "system()" calls
+>>>> with
+>>>> the
+>>>> same ss/nstat commands compared to a patch of 50+ lines to get
+>>>> the
+>>>> same
+>>>> result. No?
+>>>
+>>> I agree with you - simplicity is a plus as well.
+>>>
+>>> I tested it and it works. So LGTM!
+>>>
+>>>     Reviewed-by: Geliang Tang <geliang@kernel.org>
+>>>
+>>>
+>>> However, we need to handle something in mptcp_connect.sh
+>>> afterwards.
+>>> Otherwise, when a timeout occurs, we'll get two duplicate outputs:
+>>> one
+>>> from mptcp_connect, which is the log added by this patch, and one
+>>> from
+>>> mptcp_connect.sh, which is an invalid log. I think in this case we
+>>> should ignore the latter, for example by adding the following to
+>>> mptcp_connect.sh:
+>>>
+>>> do_transfer()
+>>> {
+>>>   ...
+>>>   mptcp_lib_pr_fail "client exit code $retc, server $rets"
+>>>   if [ ${rets} -ne 2 ] && [ ${retc} -ne 2 ]; then
+>>>     mptcp_lib_pr_err_stats "${listener_ns}" "${connector_ns}"
+>>> "${port}"
+>>>   fi
+>>>   ...
+>>> }
+>>>
+>>> What do you think? If you don't have time, I can submit this
+>>> follow-up
+>>> patch as well.
+>>
+>> Is it really an issue to have two stats outputs? They are not
+>> duplicated: one is explicitly printing stats before socket closure,
+>> and
+>> the other one after.
+>>
+>> Ignoring the 2nd output is easy, but this output can be valuable?
+>> Also,
+>> I don't think there will be a timeout issue on both the client and
+>> the
+>> server. Likely only one of them will timeout, and the additional
+>> check
+>> you suggest is not needed.
+>>
+>> So OK like that?
+> 
+> OK, let's keep this patch as is. Please merge it:
 
-Thank you for this new version, it looks good to me:
+Thank you for your patience and your review:
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+New patches for t/upstream:
+- 346552d92b9d: selftests: mptcp: print stats before socket closure
+- Results: 4dad6ca3fd56..f196cd99f3dd (export)
 
-Sorry for the delay. Please next time either use 'mptcp-ne(x)t' prefix
-and send the patch only to the MPTCP mailing list (without netdev), or
-use the 'net(-next)' one with the netdev ML.
+Tests are now in progress:
 
-@Net maintainers: If it is not OK to apply this patch directly in -net
-because it is too late or because netdev maintainers have not been CCed
-(which I understand), I can send it later with other fixes, no problem.
+- export: https://github.com/multipath-tcp/mptcp_net-next/commit/85e5bb627afc7749558bb522d64e1163b87f0913/checks
 
 Cheers,
 Matt
