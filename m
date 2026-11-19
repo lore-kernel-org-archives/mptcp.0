@@ -1,76 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.198
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.224.53
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795118581;
-	b=TAEVNVNZdQJ6XR6uAEFRO7gNkeTWldGVxzaiiQ+I/z9wb7Yj3x0S2ZJMZj5gcxnjjggD
-	 9M95dn164quoY0toadKYzqxC6sBR/G+VTUSaOsRDH8n1Qsx9rueKVQ0N88QoqAG5VHf78
-	 hUEBOVQ8PhCRx4noBrbqmBQWkGTfyiPz3bas1x1/RCrWBCPMPRx8YSbzjCvOCQnPha4wW
-	 6RL9sC9yr+/SXGsficCT8/Pchy8iHLI//Qs/U816B99MQQjauWqJgcc5Im7w7NavmtZbY
-	 y2WbWAL1JkOvLSj0i2Q+yZIldrSm51linClYsTt5aWV37+qU9WzxsDduEzvrExZXn4Q==
+	t=1795125349;
+	b=NZW3Hjyr+YW3owjVE71hIIaDBag53bMnGFEWLvwOWfJUHMcEexsJlG96jcbddihSD7uG
+	 6tqZnAbRtqH8kjn5YX4GeoG3fkJdPoglr3qdfoiNuz3J6GU+HYsiYUnli977eNnD5dcfE
+	 HmRW1tUEJumXM15IFHPDH1ZhcKEqDB2s/D15hzM+Rha8QKXtgPyCcXbdlJC76WKm0BURi
+	 MZwrnOsdx/GO1joNvA5DJGKXxf83zYbd/8VcwBLdhEn+AccZVIQ+oJoUpkLGKQcux5e8k
+	 8vxq2tthdv0SsAfmF8vPYcHrD0qWQ4QHMbxzgeFq39K1QQwo1GshTCH6pAtL3BDqNkw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795118581;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795125349;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
-	 Mime-Version:References:Message-ID:Subject:From:To:Cc:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=Rr0Z5WvcKf5NSVmC1WPGt7a3UvHYdwGXeBU+EHjgpEE=;
-	b=ZKKvIDyC5LQmOC2zgDwv1ZOthJVEcWMXWOUBv5HcmMvNIOkfCaI9tq219dqOHA7MhNav
-	 cNoWsNmAMsRMH0gikLrZX2gHLUKtcmqL7xKdWl44trhZky7FZMpmYbFCAqg1a0yb3d7uE
-	 V5p5tC5AaoKWcVbJFgtPzd593c9NI2LORDTVnfAJYS/BV45D4OxO1LqmV0NfiTrxTt+FO
-	 Vp7k8ZdoFx4r5ghaFeB9VNNj9cNtxaIVg9OOJXe+OZLj/nMorLzf+3Epm3KEmYS3toy18
-	 lKmocP0iFmr/gSmPs9+GWwAHyktzoQ0PlrREnl1bZm5acuZnosQlQMayFLjL1yEbQhQ==
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
+	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
+	 Date:MIME-Version:Content-Type;
+	bh=xVYHgEeO62eBbtaH8d/LKvgTYdqe1NyIrewuc65N5tE=;
+	b=lS7i4hfh4VI2iGSX3CJLxi1uBvWWvuRCeiy2Dde4QYPQwTB7sdiyhyeDmPi3Gbqv212g
+	 o178Y9IGpqE044dipCxEgDWmxk6sNNAkLd0aArFlIiedonkp0etsTpXS7aXJ72WpEI9Yv
+	 ZHNxV157qoH3WNv8O0koS0aCYOwJDlEnlvfwDY4SVbHXfvsdseSU6RRrrzN+jErrGIvsR
+	 8PQHeNKZDM34Ub0OmNlFQcYtRGs35LzOmM2V2skHyipDekJJnJDCZ06PMPOolEZG1RZyq
+	 7l9N0qRg2zy2nU/+HfkCWNvi1fbnfX/HxVhB1oCOUfaM1XpRX3Cd10BT1xCIaiyzx3g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=P2hvhlnq;
-	arc=none smtp.remote-ip=209.85.214.198
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ov1ekfbJ;
+	arc=none smtp.remote-ip=74.125.224.53
+Received: from mail-yx1-f53.google.com (mail-yx1-f53.google.com [74.125.224.53])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBDD606A326
-	for <mptcp@lists.linux.dev>; Thu, 19 Nov 2026 20:03:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9EBDD606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E813606A320
+	for <mptcp@lists.linux.dev>; Thu, 19 Nov 2026 21:55:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9E813606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=P2hvhlnq
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2e94f72fb9fso1016265ad.1
-        for <mptcp@lists.linux.dev>; Thu, 19 Nov 2026 12:03:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ov1ekfbJ
+Received: by mail-yx1-f53.google.com with SMTP id 956f58d0204a3-675617e81f9so388789d50.3
+        for <mptcp@lists.linux.dev>; Thu, 19 Nov 2026 13:55:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795118580; x=1795723380; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:from:subject
-         :message-id:references:mime-version:in-reply-to:date:from:to:cc
+        d=gmail.com; s=20260707; t=1795125348; x=1795730148; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=Rr0Z5WvcKf5NSVmC1WPGt7a3UvHYdwGXeBU+EHjgpEE=;
-        b=P2hvhlnqO1+mTy0toKtVku83w3ufz5Tism+HirpH+w6ESMZLsaoL2gzUDQ2XCmPeNM
-         i5Jxop3MG2gJh8YkOhglHs6wp+g8iPX1mCFVwMN/SiH7EcutojjYc6z6BojFkcTFo8LY
-         t+Q+QH7DXP82aGB3dBXGri90yTPR6JMSR0vLx1MZYPHR5GDi9lJ6eoHL59V3sCFnEjae
-         oFXP3RIuA7LStxyzvBiCuyzlPiPMIVv7mhtSjrQ6b/Dy9VX3kss8Yhhq58Qshz4sn3Yi
-         RiOvVFYzsfOTluNzpUVeqYbyEjb4Y6/he0fWjEb0Te5QT/AHyjBlddeeU7kDNg3FQ3IA
-         Ltew==
+        bh=xVYHgEeO62eBbtaH8d/LKvgTYdqe1NyIrewuc65N5tE=;
+        b=ov1ekfbJitjUUSSvOJjlDWYiycnF7e7MkSfWkh+6Oh45YKMUJizAs8kPbmvC6mVIWu
+         /8YdvBJjWbkBVqlQ5jMPavil/JU1iXQIKB+8JFv41SQolqHM6IySw43Uk4+nvWGmoox1
+         kEx+p68Pt2EbV24zzuDEPbpJAOEatQ2cc7D7T7f/CSD4BrhEPNs/R0Zs77O95CY1KhE/
+         TYfu4x2a0So/g4n+hukSJghVdAq4Q+Hjb4v1VJ94y9gYxTUIt1rpSJBkxSUuSI8hm7dg
+         q+kwGHNKgh1XfPdP6ZjxIp4KPuiPlcYT5tVsvixfFEfPiRIBKwga681u7mG42va853GC
+         Hbnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795118580; x=1795723380;
-        h=content-transfer-encoding:content-type:cc:to:from:subject
-         :message-id:references:mime-version:in-reply-to:date
+        d=1e100.net; s=20260707; t=1795125348; x=1795730148;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Rr0Z5WvcKf5NSVmC1WPGt7a3UvHYdwGXeBU+EHjgpEE=;
-        b=Epmnfn6XfalRY52dNNugKkODkg0eUhMQyZS+H8Dw8CkZp3kWZurP/yDY+Ura/QWZON
-         sUqsCmMfJEMmwY6Mx/vhPGi9+TVLCmeyQM0XGlFnpJxNR/70fbfEByu693vx+/CxNfPV
-         G1MwHqZN4zKPC7ZkImy8bIAWjL4rgLpFi9r1vgoFtKXBEy+aAQa/IAxFfPSrS99ux6jz
-         awfGy9BU6MpqeyofipOKocCzbIJMwZoF3bQEdzwRqXOFWiJl2pag9Z+Q/dvwoWVVivMB
-         /Vj3t1IswMsAjNy7hHlOhmpxaznojorfI2WQhkQ2BxcaJGkplCQsLxs7B8Sln/SHVp4P
-         swKg==
-X-Forwarded-Encrypted: i=1; AL+hErGWq/8ugA8pYASpe3lGn2PGYQa/BWeuGO0js/5v/86M2iPT7EcoaRFLP7wo8bNpwPfcAMCHWA==@lists.linux.dev
-X-Gm-Message-State: APuU4Z/h2LPoGnhBh+lxm/5VfItRK4ng6lSOU2YBhckiC/Iruu6nyuD7
-	3TNSiQ8tgm3H7siPVx95O4Cz8TodHEdzyCDREup9dYgcdmqhJLXiKqKMGADr3xqUdMNRk8MZ4Op
-	lz4GyVg==
-X-Received: from plbja3.prod.google.com ([2002:a17:902:efc3:b0:2e1:326b:da73])
- (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:b4b:b0:2ef:f51c:7b09
- with SMTP id d9443c01a7336-2f03f19075bmr8876235ad.28.1795118579760; Thu, 19
- Nov 2026 12:02:59 -0800 (PST)
-Date: Thu, 19 Nov 2026 20:02:59 +0000
-In-Reply-To: <CAL4WiioNduj1AybypLPDs6HuW2F9Y9zw3B2ycLSogRMnfzBk9g@mail.gmail.com>
+        bh=xVYHgEeO62eBbtaH8d/LKvgTYdqe1NyIrewuc65N5tE=;
+        b=QMA9ofI9uKbWqF9HFJUwx11cxAWDJi8QUBxZp+d0rHI47p8XXHo5UMo2bEIWHUrFRr
+         rN/NdD33CIkrDJx5ONoRqry365lHCZRhETcOUQJDMhl92Pag4L+ZFvXw7vp4G78j1klF
+         XXKfLIvnBn7JiK9aKpnHJ+8ZVF3V1HDFP0r3HCsFG54jRHt79jRqGuEXCyIR/zwjxof4
+         6krRJ5ghnAoa5cvMZHpekICVzvLWE5sUZ2Y/5EIINsemx8IT5yNUDKkAz2bvYhXNjwcw
+         yNvXCfF5aw80rTezfkuL8lgfSb+8HuIUYXBK1kxbosMg+Vfa+vIbMLu9uDAwlBI05uW0
+         9NJQ==
+X-Gm-Message-State: APuU4Z+yKglyWxgLNSTcFvpNVnXsqW2RsSuTv/vihMVLtUYjceTLY3kw
+	NWVV8uGPfwulfi7x4M+RK8SYpKig16sLD1hHL1S5dutbl6gUjhvoapE=
+X-Gm-Gg: AZFdTZf7zvZYdaUfnXlO+K6zQQHmsmHgcT6/rWSWLOhfIi1MOQN/7aDN38MqHTsEAPi
+	lg1cklS8XL85xcE/UvuVRvHGS7wtw8cmOQLvTMhki52Aobi2XDN219/di5j/6X6gHqMP6SCjVyU
+	4wRNTzTLM9UO2nOpBSzuKKj/WZan0rknz8bFMMjXxsN+WTwaxTUaK9x7aiJXhac4pOQAtf28u8Z
+	VYf25IjLaSM64QDrJruzgY/KNon2sjYoJKONmbAaaMZxnZ4YQsKo3HnC8mf0WVLcmVEfIxnnB3X
+	MhUEkwxC5IonBvCQQLWOwCEWVBgoYrTKn87mCNzMYfyzLMjh4HDfZ+Eq8hJw786l4kIGGq0xss6
+	Nz5SYRXEA7YbMWd+/w1G3tWsmdnXpiebNbvXiSckAJ63YWQWS8XS6P4lmZ8aDWtGeYh5ZDNMzsY
+	9ykYvN30gWtFsvHZiV9s1DdlgSfQPHp5Iosccef2zk3nMcDB6ddZnXmXKvfqnTOwTq6ZYJ6slR2
+	Q+FWZw33hssKlW7mK+YcShxtQvGA++jla8SgxmowOtDVO+/EWBlGUUYJLVxMqxlFF0uhTywhL6a
+	CEN1eN/bobgjVnkoC0d8r4V1zRVs+afD8TFSlcGfR7qk
+X-Received: by 2002:a05:690e:128e:b0:67d:beb0:e484 with SMTP id 956f58d0204a3-67df43ce345mr414409d50.27.1795125347448;
+        Thu, 19 Nov 2026 13:55:47 -0800 (PST)
+Received: from github.com ([134.138.61.163])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-8b5202d7769sm5846947b3.25.2026.11.19.13.55.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Nov 2026 13:55:46 -0800 (PST)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Dominik Maier <dmnk@google.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20261119192159.2646113-1-dmnk@google.com>
+References: <20261119192159.2646113-1-dmnk@google.com>
+Subject: Re: [PATCH mptcp-net] mptcp: gate diag sequence counters on
+ CAP_NET_ADMIN
+Message-ID: <8aeb11a0-4c69-38a6-283d-10d6c0f1e7f5@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 19 Nov 2026 21:55:46 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -79,156 +97,62 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
-Mime-Version: 1.0
-References: <20261119071649.374106-1-kuniyu@google.com> <20261119071649.374106-6-kuniyu@google.com>
- <CAL4WiioNduj1AybypLPDs6HuW2F9Y9zw3B2ycLSogRMnfzBk9g@mail.gmail.com>
-Message-ID: <av9U9w4wGpO7HmDY@google.com>
-Subject: Re: [PATCH v3 net-next 5/7] tcp: Allocate all new skb before collapsing.
-From: Kuniyuki Iwashima <kuniyu@google.com>
-To: Eric Dumazet <edumazet@kernel.org>
-Cc: Neal Cardwell <ncardwell@google.com>, "David S . Miller" <davem@davemloft.net>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
-	Simon Horman <horms@kernel.org>, Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org, 
-	mptcp@lists.linux.dev
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-On Thu, 19 Nov 2026 08:44:54 +0100, Eric Dumazet wrote:
-> Le jeu. 19 nov. 2026 =C3=A0 08:17, Kuniyuki Iwashima <kuniyu@google.com> =
-a =C3=A9crit :
-> >
-> > At the final stage, tcp_collapse() iterates over collapsible
-> > candidate skbs and repacks them to new skbs.
-> >
-> > In each iteration, a new skb is allocated and inserted to the
-> > receive queue or a temporary list for RB tree.
-> >
-> > If alloc_skb() fails while splitting a large bloated skb across
-> > multiple new skbs, the partially-copied skb is not removed and
-> > new skbs remain in the queue as duplicates, consuming more memory.
-> >
-> > It is only when all candidates are properly collapsed that
-> > we can save memory.
-> >
-> > To avoid complicated rollback, let's preallocate skbs before
-> > collapsing.
-> >
-> > Now all skb in [start, sub_end) must be allocated in a batch,
-> > so the section size is capped at TCP_COLLAPSE_MAX_TOTAL_SIZE
-> > (16 skbs), except for the first single skb.
-> >
-> > Once the size exceeds the limit, the remaining skbs are
-> > re-evaluated from restart:.
-> >
-> > Legitimate overlaps (retransmits with a different segmentation)
-> > only involve a few skbs, so if an overlapping OOO chain reaches
-> > the limit, we simply skip it.
-> >
-> > Note that the next skb can be skipped if its density already meets
-> > tp->scaling_ratio, and each cut adds at most one remainder skb
-> > (~3.4% worst-case truesize overhead on 4 KiB pages), which is a
-> > small tradeoff to bound the temporary allocation.
-> >
-> > Signed-off-by: Kuniyuki Iwashima <kuniyu@google.com>
-> > ---
-> > v3: Make TCP_COLLAPSE_MAX_TOTAL_SIZE hard-limit for multiple skbs
-> > ---
-> >  net/ipv4/tcp_input.c | 41 ++++++++++++++++++++++++++++++++---------
-> >  1 file changed, 32 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> > index 27ed9ba11ec9..990e34896373 100644
-> > --- a/net/ipv4/tcp_input.c
-> > +++ b/net/ipv4/tcp_input.c
-> > @@ -5822,6 +5822,11 @@ static struct sk_buff *tcp_skb_next(struct sk_bu=
-ff *skb, struct sk_buff_head *li
-> >  #define TCP_COLLAPSE_SCALING_RATIO                             \
-> >         ((TCP_COLLAPSE_MAX_SIZE << TCP_RMEM_TO_WIN_SCALE) /     \
-> >          (SKB_TRUESIZE(TCP_COLLAPSE_MAX_SIZE)))
-> > +/* Cap pool preallocation per sub-range to at most 16 skbs in seq
-> > + * space.  A single first skb exceeding this is still collapsed,
-> > + * whereas an exceeding overlapping ofo range is skipped.
-> > + */
-> > +#define TCP_COLLAPSE_MAX_TOTAL_SIZE (TCP_COLLAPSE_MAX_SIZE * 16)
-> >
-> >  static bool tcp_collapse_skb_bloated(const struct sk_buff *skb,
-> >                                      u32 start, u8 scaling_ratio)
-> > @@ -5862,8 +5867,9 @@ tcp_collapse(struct sock *sk, struct sk_buff_head=
- *list, struct rb_root *root,
-> >  {
-> >         unsigned int old_truesize, new_truesize;
-> >         struct sk_buff *skb =3D head, *n;
-> > -       struct sk_buff_head tmp;
-> > +       struct sk_buff_head tmp, pool;
-> >         int remainder, nskbs;
-> > +       struct sk_buff *nskb;
-> >         u8 scaling_ratio;
-> >         u32 sub_end;
-> >
-> > @@ -5871,6 +5877,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head=
- *list, struct rb_root *root,
-> >                             TCP_COLLAPSE_SCALING_RATIO);
-> >
-> >         __skb_queue_head_init(&tmp);
-> > +       __skb_queue_head_init(&pool);
-> >
-> >         /* First, check that queue is collapsible and find
-> >          * the point where collapsing can be useful.
-> > @@ -5926,8 +5933,9 @@ tcp_collapse(struct sock *sk, struct sk_buff_head=
- *list, struct rb_root *root,
-> >                 }
-> >
-> >                 if (!overlap &&
-> > -                   !tcp_collapse_skb_bloated(n, sub_end,
-> > -                                             TCP_COLLAPSE_SCALING_RATI=
-O))
-> > +                   (TCP_SKB_CB(n)->end_seq - start >=3D TCP_COLLAPSE_M=
-AX_TOTAL_SIZE ||
-> > +                    !tcp_collapse_skb_bloated(n, sub_end,
-> > +                                              TCP_COLLAPSE_SCALING_RAT=
-IO)))
-> >                         break;
-> >
-> >                 sub_end =3D TCP_SKB_CB(n)->end_seq;
-> > @@ -5935,25 +5943,38 @@ tcp_collapse(struct sock *sk, struct sk_buff_he=
-ad *list, struct rb_root *root,
-> >                 n =3D tcp_skb_next(n, list);
-> >         }
-> >
-> > +       if (sub_end !=3D TCP_SKB_CB(skb)->end_seq &&
-> > +           sub_end - start >=3D TCP_COLLAPSE_MAX_TOTAL_SIZE)
-> > +               goto skip;
->=20
-> This is fine for now, but note that a single 64K GRO skb overlapping
-> a bloated skb is enough to reach the limit, and the bloated skb is
-> then never collapsed. The range is walked again at every
-> tcp_collapse_ofo_queue() call, for no gain.
->=20
-> A possible followup would be to cut the range instead of skipping it.
->=20
-> When @n overlaps and we do not want (or can not) merge it, we know
-> that @n already contains [TCP_SKB_CB(n)->seq, sub_end), because
-> skbs with end_seq <=3D sub_end were removed earlier in the loop.
->=20
-> So we could do :
->=20
->         sub_end =3D TCP_SKB_CB(n)->seq;
->=20
-> and collapse [start, sub_end) only, as long as sub_end is after start.
->=20
-> All new skbs would then have a seq smaller than TCP_SKB_CB(n)->seq,
-> so the rbtree ordering is preserved, and we would not need to drag
-> @n into the range.
->=20
-> After the copy, the skbs of the range that were not fully consumed
-> would have to be freed, since the rest of their payload is in @n.
->=20
-> The same trick would also work for the unmergeable overlapping skb
-> case added in patch 3.
->=20
-> I have not tested this, and this can be done later.
+Hi Dominik,
 
-Ah, this sounds good too, I'll follow up after your frag series.
+Thank you for your modifications, that's great!
 
-Thank you !
+Our CI did some validations and here is its report:
+
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Perf: Unstable: 4 failed test(s): regression:sched-bbr =
+regression:sched-mem-pressure(2) regression:sched-rmem =
+regression:sched-serverlim(2) =E2=9A=A0=EF=B8=8F  (2 improvements, 777 new =
+outliers to review)
+- Task: https://github.com/multipath-tcp/mptcp_net-next=
+/actions/runs/44601177439
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/6d4173053b=
+74
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1216597
+
+
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
