@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795210216;
-	b=uW/lDIrorOUzgMKi/4vTq2CJMCRNy0Ot7XdzCpcLzsOYWlNUDnCEI5vJ1H5/vBpYo0tm
-	 ejJrr0VE9z9hcGP8sJNLQqawh1pSQUqfwX7t5E9ihZugJ2hQPF5jJqzc2brBklf2IJwRh
-	 vFINFR0LDIHvi/WJYg6we3qRWLSwjvr7bUdDMMIAozT7Ol+nMhyObmOFAFPZpTWHX5MKy
-	 LVzZxi0sK3TDnkNXzaJuTTm8yHn0Cd8vibAxv+ajOIbgI4Bb0BYsjB4OD7c4+7PrC7DMi
-	 6Hrv839zAdd5SYh1jYCTJLchWQ3eBbf0TXzcb55jINBZWXpIRfmqb7DREBZ32cvGGvw==
+	t=1795210229;
+	b=XAqytNBHVLmarwkNl5nxPo4YQSh5++Nuq5ACA3D0ZJAplBHFiLTq+WHXJmdIa11TVVxF
+	 XaqpWYsQFk0BrRzRCbo7sE6KVHsj5mb3T6nufGw39wHWMbuaf/TXhEg+IhLe8W1JwbXzR
+	 cXhoQuObuPF5EYkHkhnBhA8b8qvKJKmqD0Ovh8JS5yqG+ZHlpsk2DYb4+4BISo6TRlsfX
+	 2V6C8ncwkEmmaKV77PByJcpl1aZ5TB1zCyfaJ/Oy7O8KZ/fHxQmDU1sjooao2h0K9XCGX
+	 8R6i8y4eKkYDomCevegMLC9PNUHl0/qAbhhCJIPXwT/SCwRPoiONOFiAFZPwmSHQNig==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795210216;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795210229;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=zVMPNS9d+k0WzK5AcTZvqCESA9rhwI1dzla95MLvaAU=;
-	b=O2hv1/JImPkEj3eIdjpZoLbSKiYqLy9aDkw2iMmeOJ694kKyQ/gBdyL5q4cIuQLLDezL
-	 z60M3thAtlOpmjOwv+x7Z6AewjmkxjaZv4vTpMUxdrtdSrri6eIBpRHPR9MBrX6Z2InR/
-	 cgUWoSouqcOVIIhBk8N/A9Hvy45c/CX7l/TdCbnjRIe3ImfGvA7EmT4H8B2ThPZRXXhSd
-	 cnnIRfT7vdFjIuBI1JDrTNb/Ij+9NQ0RcwmNk5c5ucRGP9PWPlj6VbsFROUxTEuxseJuh
-	 4j4oCPra+b/7OHzNexHWDO677PN+aY0lRzYawfjaj+d51xDf+ESROmyxsDG8a1ucYGw==
+	bh=n1FExJ2YYOcMBjxKbzlEbZLCmz73/PfKMECGOdwKHZ4=;
+	b=QNerugSa1dSlkaj29+7coPXU6pQu32ULyRSK2m7xjIiq15+Oc8+bOL4gmhPHXp/zvcE6
+	 BBymjpsa3kQLRw8v1vA6444a3I0aBzbsf7qconJRcO1T2eh9NI+zirDtd0UvRPelguyyT
+	 UlzCbSwt9deamsonYlqHspG1YiSMhaKqwwEZtwgdwR5d0nciT48K3h4DUb9tGC6ZFOzI/
+	 30bXYyD0qeckUFGBdMHeLxGjVCLPIvN5UOiqLYdQRzQW3peaS3zk98VOfEBAbpiJ3cVs/
+	 4AY7yYZZd6b896CvKJkpbLmcyeSbHeP4PM6ZMyEOwfb9EatjDDhUbXl5/eeLnKTIT8Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RvqRRR1L;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DGJ2dXSK;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E9E606A6A6;
-	Fri, 20 Nov 2026 21:30:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0F7606A6B8;
+	Fri, 20 Nov 2026 21:30:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RvqRRR1L
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4A5A1F000C0;
-	Fri, 20 Nov 2026 21:30:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DGJ2dXSK
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02FDD1F000E0;
+	Fri, 20 Nov 2026 21:30:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795210216;
-	bh=zVMPNS9d+k0WzK5AcTZvqCESA9rhwI1dzla95MLvaAU=;
+	s=k20260515; t=1795210228;
+	bh=n1FExJ2YYOcMBjxKbzlEbZLCmz73/PfKMECGOdwKHZ4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=RvqRRR1LN7Ne9+SOccNFlpczKOQXNtrYX9XYLZ8ENMacJj1v7YIDY7NKVBAIAR+ZZ
-	 /Chm0AlH7AnweE5An0iLxg+lAxeDf/vLd8JMzeCyNgSEXS/F9+jv6TmWsuxebfy4Xv
-	 x8270VC6vD6ONpnOaMoZg4Mj2H582jBURGLlD+aek2Q3URXkube2DTKG8BqsJaGxfR
-	 NWFuhE0TxdiwANrPAzD+7GICa9I6r7aj8lTg4UbP3ZI6uY5hihmq8CIKhnbA32Zh4E
-	 hnZNFS78GLtCK0eDL9eFLTOma7leaD2+RcGk/B8giL4HR+2V/fncyqkN6L3mM4IB9q
-	 gMmKyd8KkAx0g==
-Message-ID: <cff77c51-64d1-4cc0-9da3-41832d3015b5@kernel.org>
-Date: Fri, 20 Nov 2026 22:30:07 +0100
+	b=DGJ2dXSKcMyS7zYe1iaZ1FoWLjdXOHgpDLM2FlrUdOGCsnej0rvhOPzFOsam/88c2
+	 SLtHiUjjsNBJuCuWyhrjDDIlmpL8rmHs/2C13eERhmuLDZemLigJYn0LEo+ISLq3HN
+	 li++buSPJwvFolr4WT70hbSQkt7LODWYJMWHzgSlFuNRD8R2V4GTP3loRrF8gkf6Rh
+	 jokLMWdhmGK9Pdq8vQs2EBmdgE+3gCoBOQk98PtXlDOE5bFrbspEBL9ejKA/pxyao7
+	 y96eKwPdX1mHcE9Vor6kj2b5cunJqUb8zGvtvnbH6cY7Vg+15bjyqW+5EasBqf4KRW
+	 rLNZZn2fZeg7g==
+Message-ID: <38afe45e-7c7d-4b91-9436-020ded6ca6fc@kernel.org>
+Date: Fri, 20 Nov 2026 22:30:21 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,7 +52,7 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next v3 2/3] mptcp: avoid wrapping blackhole timeout
+Subject: Re: [PATCH net-next v3 3/3] mptcp: limit blackhole_timeout to one day
 Content-Language: fr
 To: Yingjie Wang <x-professor@outlook.com>
 Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
@@ -72,9 +72,9 @@ Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
  "martineau@kernel.org" <martineau@kernel.org>,
  "geliang@kernel.org" <geliang@kernel.org>,
  "ycheng@google.com" <ycheng@google.com>,
- "weiwan@google.com" <weiwan@google.com>, Gang Yan <yangang@kylinos.cn>
+ "weiwan@google.com" <weiwan@google.com>
 References: <cover.1794847474.git.x-professor@outlook.com>
- <33f003b094444e37f11f9328c783d8c5a42e841a.1794847474.git.x-professor@outlook.com>
+ <568bf901e401ab7186ba2af8fabdaeb6cadfd800.1794847474.git.x-professor@outlook.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -120,83 +120,71 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <33f003b094444e37f11f9328c783d8c5a42e841a.1794847474.git.x-professor@outlook.com>
+In-Reply-To: <568bf901e401ab7186ba2af8fabdaeb6cadfd800.1794847474.git.x-professor@outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Yingjie,
 
 On 16/11/2026 17:46, Yingjie Wang wrote:
-> mptcp_active_should_disable() calculates the active-disable interval as
-> multiplier * blackhole_timeout * HZ. Since all operands are 32-bit, a
-> large blackhole_timeout can wrap the delay, even on 64-bit kernels, and
-> make active MPTCP available again while the blackhole is still present.
+> net.mptcp.blackhole_timeout accepts any non-negative int as the initial
+> period for disabling active MPTCP after a blackhole, and the period can
+> then grow 64-fold. A multi-day initial period is not useful, and on
+> 32-bit kernels, values above about 1,073,741 seconds at HZ=1000 are
+> shortened by the MAX_JIFFY_OFFSET cap even on the first blackhole.
 > 
-> With HZ=1000 and the maximum multiplier of 64, any timeout above 67108
-> seconds wraps. For example, 67109 seconds should produce 4,294,976,000
-> jiffies (about 50 days), but the calculation truncates it to 8,704
-> jiffies (8.7 seconds).
+> Limit the writable value to one day, matching
+> net.ipv4.tcp_fastopen_blackhole_timeout_sec, and document the limit. The
+> default of 3600 seconds is unchanged.
 > 
-> This issue was found using a static analysis tool. It was confirmed with
-> a loopback reproducer that induces 12 MPTCP blackholes and opens another
-> connection 10 seconds later: with a 67109 second timeout, the unpatched
-> kernel retried MP_CAPABLE. The reproducer needs neither kernel
-> modifications nor error injection.
-> 
-> Compute the interval in u64 and cap it at MAX_JIFFY_OFFSET before adding
-> it to the saved timestamp. On 32-bit kernels, the cap keeps the interval
-> within the range that time_before() can compare. The sysctl input range
-> is unchanged; values whose interval exceeds the cap are shortened to it.
-> 
-> With this patch, the same reproducer fell back to TCP without retrying
-> MP_CAPABLE. The MPTCP selftests were not run; none of them sets this
-> sysctl.
-> 
-> Fixes: 27069e7cb3d1 ("mptcp: disable active MPTCP in case of blackhole")
-> Reviewed-by: Gang Yan <yangang@kylinos.cn>
+> Writes above 86400 seconds, which were previously accepted, now fail
+> with -EINVAL and leave the current value unchanged.
+
+Why did you split this patch in 2 for MPTCP, while it is in a single
+patch for TCP? Can you avoid the split for MPTCP.
+
+> Suggested-by: Eric Dumazet <edumazet@kernel.org>
 > Signed-off-by: Yingjie Wang <x-professor@outlook.com>
 > ---
->  net/mptcp/ctrl.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
+>  Documentation/networking/mptcp-sysctl.rst | 1 +
+>  net/mptcp/ctrl.c                          | 2 ++
+>  2 files changed, 3 insertions(+)
 > 
+> diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
+> index b9b5f58e0625..ca00253c8ae9 100644
+> --- a/Documentation/networking/mptcp-sysctl.rst
+> +++ b/Documentation/networking/mptcp-sysctl.rst
+> @@ -63,6 +63,7 @@ blackhole_timeout - INTEGER (seconds)
+>  	blackhole issue goes away.
+>  
+>  	0 to disable the blackhole detection. This is a per-namespace sysctl.
+> +	The maximum value is one day (86400 seconds).
+>  
+>  	Default: 3600
+>  
 > diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-> index 63c5747f0f63..0b10e94e7f43 100644
+> index 0b10e94e7f43..1f167f72c1f5 100644
 > --- a/net/mptcp/ctrl.c
 > +++ b/net/mptcp/ctrl.c
-> @@ -487,6 +487,7 @@ bool mptcp_active_should_disable(struct sock *ssk)
->  	unsigned long timeout;
->  	int disable_times;
->  	int multiplier;
-> +	u64 delay;
+> @@ -20,6 +20,7 @@ static int mptcp_pernet_id;
 >  
->  	pernet = mptcp_get_pernet(net);
->  	blackhole_timeout = READ_ONCE(pernet->blackhole_timeout);
-> @@ -501,12 +502,17 @@ bool mptcp_active_should_disable(struct sock *ssk)
->  	/* Paired with smp_mb__before_atomic() in mptcp_active_disable() */
->  	smp_rmb();
+>  #ifdef CONFIG_SYSCTL
+>  static int mptcp_pm_type_max = __MPTCP_PM_TYPE_MAX;
+> +static int mptcp_blackhole_timeout_max = 24 * 3600;
+>  #endif
 >  
-> -	/* Limit timeout to max: 2^6 * initial timeout */
-> +	/* Limit the backoff multiplier to 64. */
->  	multiplier = 1 << min(disable_times - 1, 6);
-> +	delay = (u64)multiplier * blackhole_timeout * HZ;
->  
-> -	/* Paired with the WRITE_ONCE() in mptcp_active_disable(). */
-> +	/*
-> +	 * Cap the delay for safe jiffies comparisons on 32-bit systems.
-> +	 * The timestamp read is paired with WRITE_ONCE() in
-> +	 * mptcp_active_disable().
-> +	 */
+>  struct mptcp_pernet {
+> @@ -350,6 +351,7 @@ static struct ctl_table mptcp_sysctl_table[] = {
+>  		.mode = 0644,
+>  		.proc_handler = proc_blackhole_detect_timeout,
+>  		.extra1 = SYSCTL_ZERO,
+> +		.extra2 = &mptcp_blackhole_timeout_max,
 
-Same here: no need to modify the comment here.
+Could we also use a variable called one_day_secs like with TCP?
 
-pw-bot: cr
-
->  	timeout = READ_ONCE(pernet->active_disable_stamp) +
-> -		  multiplier * blackhole_timeout * HZ;
-> +		  min(delay, MAX_JIFFY_OFFSET);
->  
->  	return time_before(jiffies, timeout);
->  }
+>  	},
+>  	{
+>  		.procname = "syn_retrans_before_tcp_fallback",
 
 Cheers,
 Matt
