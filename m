@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795186720;
-	b=q8lCYBOYnzM5TpAcXN3UskqH9p+5O8WvUUGtO7KWJxFGrf2TOJId6i0cEn2MxN+PZyrb
-	 xkzYsyzWQzdYQY5d5klLzVXeKuGBNivz/ArCKVl/EXQZSga/GHbdNXtORRytIkzXcdXEz
-	 wB48u2+mqY51XwUa2j2kcA2sXZpA4WsFpx8Bby0XdN7yAt8YS8B+SL+Rw4SfaE20tnaKo
-	 j53YWQnQpBhH3Tkqy0dfUXYCg8OxdhCccNFUiSGz5OX9k/FzwO/4xb//XaOUkdVoWrtMv
-	 zKIIgjUOEuVuVXUV9pvHDWATzf7NKh6FyTl009W3NNTvnGxjztpBaEACBBSbLnU26+w==
+	t=1795187714;
+	b=y7h0r+BxR/nKIrpdJqvJWt1FTr8w/uSb6qz21EK43lEiD0VwQ1UCVcVJP/DO/5A+52hs
+	 slTDyMlYc1SOeJ19qRECV9jtvIFWkeEfDtVxNP42NWZyZ1qA1juIutLeylcRFgneZvDHD
+	 /MyzzxDx4p/1uveAujDXbcoBkbv/gf9x65c04lGynVb+N7D+1bkYxCTuHY2woR8xmZTn2
+	 lmPhkcqy700oCoIIDVk/zMQBXbB5LOviJZ2S1ehlSdAhZDoMri50IUzd1Ap0m1xsf95i7
+	 HDl0nY1/fE70DKB7zp+QKQS8GqFStDzXe7uXYRtNp6nKQpJVHHVy0NA7wFdC6dBoAZw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795186720;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795187714;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=ffzCtB1XDBdjH4GLa/H0NDzYUrlRWJv6NL3GPNbLVuk=;
-	b=l5c23LizbKNYEvhWOIn5L4sxLLzC7XguBl5XGrGACN/uUM5kSEo2U1ml7TAkrcjrwWOs
-	 FUNA1gQTodb+X7qBMW9fCMoEXSO9pQiBZURwWOVQZ4skAiLn/rqbcgJ9s+2aRdaeXM4oM
-	 NzxGbf4KAfTWxON8fgB9nvCHhyBfmm/MQWFnv8TIXy19eypUi3DNNy++JXBsTvE4X/fcu
-	 AibWBayE9Ia6uNwMIlX73E+Ubrl8OuJY2A427uIlqC4OuCQFYn8Qn6BZ0aSahkHUUqgrb
-	 HlXie6vu7pzuo0T4dzJxqx13Wtz9VI90BcMCLxXp6gX7JwhT6N+P9cbDeft7a+114tw==
+	bh=3u1hRTzKKw3sNe/+ZfnzsYivSKTWTcllBNK0iRaqwlo=;
+	b=NXtRGNGbzlLoONskWZTqPXScOoBs+LiIYVI8syC2NRMdMw7ZQU8q/Uhq7uW652EqljhV
+	 csB+tgYCatcWWQ+C1ziPgCf1De+/Y+6bE6PIH0qhF8ocFiRlRqWLUATdGB1DxP0pr33zm
+	 DQbuIdzLinn5CZgqxTQGlm0hru73xHKJmPO7Igk/968U+aCGJwHOW0FB52OpxCFwZCizz
+	 WNFTIoaLRTivllTmx5bOpRnIAPj6Gref9GvIPnW+Y2P5EF1zTm3hxu4MSkIgGGR6dbJi9
+	 /RYiwzrcbCmVn6yHzxpmUHKT8h4mCC9c23Xbf28nRjdWCjR46D9dItqHMEOfCIr+ETg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lcH5oTjo;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JP3vGiWE;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90AF0606A336;
-	Fri, 20 Nov 2026 14:58:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E29606A325
+	for <mptcp@lists.linux.dev>; Fri, 20 Nov 2026 15:15:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lcH5oTjo
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C97161F00A00;
-	Fri, 20 Nov 2026 14:58:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JP3vGiWE
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C8141F000C0;
+	Fri, 20 Nov 2026 15:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795186720;
-	bh=ffzCtB1XDBdjH4GLa/H0NDzYUrlRWJv6NL3GPNbLVuk=;
+	s=k20260515; t=1795187714;
+	bh=3u1hRTzKKw3sNe/+ZfnzsYivSKTWTcllBNK0iRaqwlo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=lcH5oTjoE6ZZrSnyQq04PwTyKInBI7yU2CJHG9d1Fb+vsWOz8CEYeYxGejVHG+PJ3
-	 e5KX1tjOi9vF6vJGOpIUAOSVd9Kxr3wLVpvlfSHMffY55PkSGLr4QP0dOJEcCCbNO6
-	 wcZyiYQvCaBAQ2rqU0RXs6jhGetZweaai4XI+bhWBlhiYTYH57zieFo2zQfjKQH3vG
-	 DNCQ6wEouN7cjkCWNSHsFwIkeB8WOcTQx4j1OmG6HxvWJGnFGzIDmCHqQn0xeFHO/d
-	 o53nzMuwJTFeoYL9bc/Hm7AWYNMnr1Bm6OPAs7vlGw7kF6ddSzxcgAL77CJ3IqbxJS
-	 eAqP0nwy/Aq+Q==
-Message-ID: <929c8f04-182f-49a4-8190-f21fc2aae881@kernel.org>
-Date: Fri, 20 Nov 2026 15:58:35 +0100
+	b=JP3vGiWENQV/+0YohCRY1XRYsYDPP/hdxJiu9NMiXy9dHvlz1/vG9f7CiPdHkggM5
+	 +r5gj8uIher51MdnDM4AlZpnxBrmjm8IaDxUSoFmfME5g5FMR0TtxF52Pik76ujp3v
+	 b29uc9FBLp//AuBLB3tKUhmjH7ZtRbtUSGghfXN+FYkNYfmIkAxa3VHAyMrBJB0mef
+	 nI9xnvhoE79hcdqGGM+Gr9s/zKgRSLkzH4XdlGk+i/ScN/vjr8UGfSxcgdfbhN3SEN
+	 o7dAVfxz6PKv8lSeae4iGD8GAoUgaBAXNAcKt7fqA7i81iUQBN3qmTZK2Kol74Spxc
+	 BATiaPPpjYApw==
+Message-ID: <575687c9-2cb0-4a45-b9c8-2d83cae11482@kernel.org>
+Date: Fri, 20 Nov 2026 16:15:08 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,16 +52,13 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v3 net-next 3/7] tcp: Stop collapsing if not bloated.
+Subject: Re: [PATCH mptcp-net v13] mptcp: hide sequence numbers in Netlink
+ diagnostics
 Content-Language: fr
-To: Kuniyuki Iwashima <kuniyu@google.com>
-Cc: Eric Dumazet <edumazet@kernel.org>, Neal Cardwell <ncardwell@google.com>,
- "David S . Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>,
- Simon Horman <horms@kernel.org>, Kuniyuki Iwashima <kuni1840@gmail.com>,
- netdev@vger.kernel.org, mptcp@lists.linux.dev
-References: <20261119071649.374106-1-kuniyu@google.com>
- <20261119071649.374106-4-kuniyu@google.com>
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Cc: mptcp@lists.linux.dev, shardul.b@mpiricsoftware.com, janak@mpiric.us,
+ kalpanjani009@gmail.com
+References: <20261117050804.134954-1-kalpan.jani@mpiricsoftware.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -107,50 +104,33 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20261119071649.374106-4-kuniyu@google.com>
+In-Reply-To: <20261117050804.134954-1-kalpan.jani@mpiricsoftware.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Kuniyuki,
+Hi Kalpan,
 
-On 19/11/2026 08:15, Kuniyuki Iwashima wrote:
-> Even when a skb is not bloated, tcp_collapse() starts collapsing
-> if the next skb has overlapping data.
+On 17/11/2026 06:08, Kalpan Jani wrote:
+> MPTCP Netlink diagnostics expose sequence numbers that can reveal
+> internal connection state.
 > 
-> Also, tcp_collapse() does not stop until it reaches the tail or
-> unmergable skb (SYN/FIN, unreadable frags).
-
-(...)
-
-> On the other hand, if an overlapping skb on the OOO rbtree cannot
-> be collapsed, we skip the range instead of breaking out, as
-> splitting the range could insert the tail nskb after that skb and
-> break the same rbtree ordering.
-
-Thank you for having added this ...
-
-> Another notable thing is that tcp_skb_can_collapse_rx() now checks
-> candidates against the first skb before mptcp_skb_ext_move(),
-> not against each nskb.
+> Clear mptcpi_write_seq, mptcpi_snd_una and mptcpi_rcv_nxt in the
+> Netlink diagnostic callback.
 > 
-> When a skb with an MPTCP ext spans multiple nskbs, collapsing
-> previously stopped at the next skb with the same ext because later
-> nskbs lacked the ext.
-> 
->    skb1 (ext A),                  skb2 (ext A)
->   nskb1 (ext A), nskb2 (no ext)             ^
->                         ^- not collapsible -'
-> 
-> Now such skbs are also collapsed with the redundant ext dropped,
-> while the first nskb still carries the same mapping in sequence
-> order.
-> 
->    skb1 (ext A),                  skb2 (ext A)
->   nskb1 (ext A), nskb2 (no ext) <-' collapsed into nskb2
+> Keep the getsockopt() interface and its reported sequence numbers
+> unchanged.
 
-... and that!
+Thank you for the new version!
 
-Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Add a selftest to verify that the sequence-number fields are zero in
+> Netlink diagnostic responses.
+
+I really don't think it is worth it to add ~110 lines just to check that
+some values you explicitly set to 0 are indeed shown as is.
+
+In general, you should split the code from the tests, (except eventually
+if a modification breaks the tests, but I don't think that's the case
+here). But especially here: that makes the fix hard to backport.
 
 Cheers,
 Matt
