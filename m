@@ -1,94 +1,78 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.41
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=162.62.57.210
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795169753;
-	b=IBV3yFTNw9n4k34rglthzh+WqgM8+8Jnj9ToojiP4g8qNJ9n+eNmvht8yH7T6U8lcSiT
-	 WZDMdC2MzNvNQhzU4fhkujMvyTciKpnwtez8GWR9L4wrl/2vg/ao2be6eTy0WLdZxNgcW
-	 uUqUHW7BA3IiMINjzwdHW1Zb+OPTNyEgO93LbE6FNsgqo9oJzar+61x9dXRBFIrl9rkrl
-	 xFKK3YyS7lo7ZoNRHzu0lxmCXP/WsIuWReBxyWrZ0WaruHr7NOv3ZqSobRdng6uTuthNq
-	 AFY8fwYwI7dBJr7pZpSG6PL461dEDX7+cCXQDWFs2ILuB+cAp0XFqXQOlMWjPVyZBUA==
+	t=1795177088;
+	b=C8qS2+kV7Sj8qeR2ynFhIL9AiqA9WCVNvJGgThG0b2t43X2+193/dv42T3QoB1dxyYUg
+	 qK++8Oj7oHqT9BZVRVe4ZYadwj9UBXgQmHMynytdO+kXchHNaZeJOzxwFf7pGuLRPerEc
+	 yRETRiUE99kYmVLq9YsVjjdRBLB2/aCdKYsbu5XZ+/sPMBDbxBKE8O0Py0JKEZe1zXsBz
+	 Dg5VZ35299PEdgnr/lEprw1tr/IrxtgPGp/Sprqy9NtzVgPgwNy+HCZGtt2FLGOCldiPm
+	 EGy9bT4xMfyaB1Ss/nx2MHGlT1sg1DcngM1BYWL1uLik5+PVNK1fRsvzO8BamsqZsEA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795169753;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
-	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
-	 Date:MIME-Version:Content-Type;
-	bh=Qp3AF3QsY28QpTy6KPJhjbaWxrTHY1IRhHMOPsrb0G4=;
-	b=SLUUNBUrOUCvwJdz7tTuu2B4yGRunO5d2A6U6rB/rSOnaf1YBzBeH/5oUcMbQlhz0CHl
-	 c3ruWudl6cLvG17hrEVU/O776xAZhmnQsMfW/8cd+nDBtx/FpmxQO90/o3PudooP7Sjir
-	 rk74/5y3N+rrvc3hldtN6fYU7P0ocho0NdSK2orLA1PD8tNHFyX+0ideDSlYP6fW0Jw/o
-	 WHhIrSF9gJY53aDzYpkRcF+t3J+I8G5J0NJCKwqK3K/NnOnNSbnHGohCf4C44sDrxJkyH
-	 n3CCLrWlYypx8DzYDmik3lI07HiJ7zCK0TXYa0QUJgQ3kzrmRTdo5Z2F7y5yr8Ijx0Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795177088;
+	h=DMARC-Filter:DKIM-Signature:Received:X-QQ-mid:Message-ID:
+	 X-QQ-XMAILINFO:X-QQ-XMRINFO:From:To:Cc:Subject:Date:X-OQ-MSGID:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:
+	 MIME-Version;
+	bh=bMm8H+yvAuVuYABF/zltzdQZ92nZTYXGeyLMpgEqP9U=;
+	b=eJTdIoe40MjAc0k+8e3XVk4oQtE3D4uPLlPK4A9bwM2bCsv1brKyfLL56a7zFqMqYsKe
+	 THu9IQSrOjwWlxN8aInMkDkUqvUTUWYdWKcS9T19LV7PNMH9GEemPk1kY0301kZBin7Ce
+	 upR8GoaGTRNeZMz4hXryYxhSszDIFg5To5rMaHxry/yoUsT72qXaLPTNhErwbFiLLhOTg
+	 JU6/AMkj2t7tGFNGnd+1JDrf4ZQV+Dscndhc9mk9pQfTp8au+zUKQzD7NYOwU5k7PuTOO
+	 GlTbFswM4v6mGD4uYagBBBGpjziPS5yWfJ57o1lVLOtrgz232C7kKKnA9hsnl2R+UHQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=gQccLrBh;
-	arc=none smtp.remote-ip=209.85.210.41
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=qq.com;
+	spf=pass smtp.mailfrom=qq.com;
+	dkim=pass header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b="IoQlr+/t";
+	arc=none smtp.remote-ip=162.62.57.210
+Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E59606A320
-	for <mptcp@lists.linux.dev>; Fri, 20 Nov 2026 10:15:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B0E59606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E692A606A320
+	for <mptcp@lists.linux.dev>; Fri, 20 Nov 2026 12:18:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E692A606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=gQccLrBh
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-86298f9267fso448156a34.0
-        for <mptcp@lists.linux.dev>; Fri, 20 Nov 2026 02:15:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795169752; x=1795774552; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=Qp3AF3QsY28QpTy6KPJhjbaWxrTHY1IRhHMOPsrb0G4=;
-        b=gQccLrBhj6CDb/VXZIgX9ykj2OTyfWasawPwPeT7INm8KGGLjnSQC5EjciDwMqbc3z
-         QpF1ZGRigwZdzojVC/4G+caooNal8GAnjDmRcDG1mpS3+eGESegmWYcXzPLlVcwmKnX2
-         dH5AM0ro4L1pmhu6+XRFTUidjN6t6a0ezdnaO5nfycHu5M5+enT/FA1Fa90xBr9ngfcg
-         /kQ82BjiLogRIS8y6sKQ+9pVv47mR7XzrxQeL/qFVuC8mN/JRIVJR8TwEmJQM2gFcgQ8
-         EPsvBRDN3qe3mbUWA+YL5MWAVt9/dfETc7EJq7/6fAjrnrfBtq5BLNtX20d8rjUcKwFu
-         Nqyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795169752; x=1795774552;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Qp3AF3QsY28QpTy6KPJhjbaWxrTHY1IRhHMOPsrb0G4=;
-        b=WlMfLUGE2Gj8efEJhPzQC7IjEUK34JLK1Km1isnDVYYgGrYT1zllDEaAI+kCHrH4gt
-         ZNFg4tGol60u45+Qjsb3TKRS9bPE9vpaKQGRBSKhFKr5qN8Dso2u7seAqqR9TcESXH44
-         /+/xay+usBC65kD/Xo203yoVyEVM+gdWskAPT8tsXRLuGYqv1WEkE2dZz9ou6jHXXwqm
-         kR3pr4bvCYYbBmwgRbPo14ZmrHyQ7eQ8zYEx9zo+1jKtyUwcL26lUp8JCydRrNVgy6cl
-         zhIfjpeqdlYrb4eh2Y4CW1MzsHuDdFqWa/rsgsTwNm+gsf1v7my6ELfL3ovMojUT7f7Z
-         anOA==
-X-Gm-Message-State: APuU4Z+3zYKcAo5l2Z/Sr+mhUsefgtkJm3xarKunTU4QniHd5yEC37XD
-	MW7mDx8hQ5oZ1aXDWhIMVWkUJ+5YwL7Q0xjAg9qXUIynjWQQCaY+/t8=
-X-Gm-Gg: AYBFou2Vlb9mAbalt/tm0ThmYS50K9GWem3K/evwaBavJjNrHaqzvsd4JRnwGSkE0tz
-	MDOyp4zi119RGmMPhFPWg3/OcdhzUCHFn6i3WxeFRjT6nWVGZ6WY6OGT55U1htDq2NpsxBUt8oB
-	oUrOfxNGHC2eWwxzvc81/Ko9R1GS03iQCWYrKRq+tHyIn8ScndWbZuw+oyJjGuk+n5Aozt9c6Qa
-	zv6l6Da7SXHNU8V8b3NGG7P0HGnDSCpSzig5hA5PW9bn3g4jF8WWVZonMDzf2LZCjhenbhspUmQ
-	sZvE7qOdEDURJtnDkLUzep57PG2DzO+RyqJvwqoGpFaZkwIeLWnoTGo+ZgNJGwohoGSQeWZlsOF
-	E2VnpWZSFh0AgV1NhUbmDW2Mbx38cTrdhJRZdQXVqQUuuw3Docv+uSFs2mvVFT4ixxW5vK8Gue/
-	60zW0cSsaBvZhQSAyEztJZp5gfHeblbNvckW3JsPpXNB9d05AXki06ccJuZpqfku2dm7LeHegQj
-	vkzT1BcY7ucA28oarqaB4YSojS3ewCPc5AN6fFr7rbD9vV7rWVY49hb2sLFjqD0gvo6F9JNiJHS
-	mI5rRa6BaCeAFQl3Wdcf9hDSFg5vfQsBs6o0vhF0FCM=
-X-Received: by 2002:a05:6808:178e:b0:4f5:1cd4:d2be with SMTP id 5614622812f47-57a035c3e91mr3355157b6e.0.1795169751622;
-        Fri, 20 Nov 2026 02:15:51 -0800 (PST)
-Received: from github.com ([135.119.110.72])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4bc5f7ae7dcsm2353854fac.8.2026.11.20.02.15.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Nov 2026 02:15:50 -0800 (PST)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Lin Lei <llleigoing@gmail.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20261120075459.2862977-1-llleigoing@gmail.com>
-References: <20261120075459.2862977-1-llleigoing@gmail.com>
-Subject: Re: [PATCH net v2] mptcp: exclude MSG_PEEK from receive buffer
- autotuning
-Message-ID: <f7cdcd96-5c83-08a0-e0bd-8ad8de0b7810@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 20 Nov 2026 10:15:49 +0000
+	dkim=pass (1024-bit key, unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=IoQlr+/t
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1795177081; bh=bMm8H+yvAuVuYABF/zltzdQZ92nZTYXGeyLMpgEqP9U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=IoQlr+/tU+IsIFdlXvM3yq8cxvYY0tpwZPbsNEaHerUHDkUdK6K6sagyb9g/v0nMb
+	 IP262ZyD0zVnPw0fSokbQPlFU/8bJ24/GzGa911tt7aVVoYaRY3q6nt6xyFvANNR2t
+	 Q/0d1+crRDcCXRZ1nFUcM7+5H9dYXhDG372uCnus=
+Received: from [127.0.0.1] ([2409:8d5c:8f0:65e5:65c9:1ea4:b234:d5d4])
+	by newxmesmtplogicsvrszb51-1.qq.com (NewEsmtp) with SMTP
+	id 47914255; Fri, 20 Nov 2026 20:17:57 +0800
+X-QQ-mid: xmsmtpt1795177077t38y1pdw9
+Message-ID: <tencent_F83D2E71F8533412D7D7477A7ED9F6459B06@qq.com>
+X-QQ-XMAILINFO: M1rD3f8svNznHmnIW8AmHMMUTl1dcnq/33/oxmXjr/dj6SajJEFYV2PaN9bftC
+	 L969/tGIebhk3akw3EZFbp4AlCrn1JN/S8sSnm4O9UrKnx8jkyRwbWsNFbcOrOJXiZcgexHrTMxk
+	 z6wjfOitR4QCkiXB+UNAyeeG5hHi9xUd7ipcAib3eOulEt+TxdYJKEOpnqtw8vvUm57i0jKzL/97
+	 V6QmsxSPtq27uWkPtO3FFxe7D4SiyRe8LDaFxpPOHm+1/yPS4YVUbnkubMHXV5a+MxA1NRI4n9HV
+	 IK2XQ5DcDhSTp0pEMA66m+M5nJD/nX/2ZQOO9guFXHFAhzc7K9Rb7ZaqLjQz/n+XeDii/JW9z8b3
+	 9f2xfiqhywuom6qqTfVUcLNQQ0SN8y9Phf3m8xVbX/3fDKTswj9BjI5DYOoCbWjQOvJl+FPseVHw
+	 BJzTwMRdBsaxiHhc/Zgcr9evBetOhr8KPuLDDOz2i4mNIuUinwEpNkRivzk5ozu32msL3Ees4xsY
+	 ENWHI8NfBCZzgbZhffNwLOjjDv1bdQ788mnHL1xCrmxOQd1MNkuXLZQ5vd5Wclk/rl2TwPFfDvYu
+	 EArgY5Z7tGeisegTLzTBBtr7ghW0dSIiWc4XmYexY39xZldvdCVSvzZJuyQZ90TV7zYNlkSfI6pM
+	 SkPHjRqpBwz4RETbsxRHjlU99bXV/rBsjijrwiyy0suTWFwmRKZOPl7feid+npqC0OJSL1C8Dtex
+	 CbkMjhWQ6D3BisGc078QqaL1DkQzkeMGsNavpQdTg58XVtMoAbLnKIsqdA/xOA/ft5Pp/GhleMKw
+	 3gTRKPSKLMjn71fXpHVH/Z/wLzbQtR4cT0+gsZ9Ba+U2+8tIoRakkVMIgpDCoeq9EsqD3oSG5tc3
+	 CO2iAU8reX3pjCEENanUiswSfDrmTAiVJoVlyDwNb36+xG+bxqK2vIqidy+NqclLO/vV7ocupUby
+	 VdfAN1vW5yw1da1RyHzQL2I90vCSzNyVc2LRzLXBzD/mkA9JqjPkTv5tpP7Cbc7I37zrNRfiddmQ
+	 HbDQxwnalETgj3DxfQDQpIdY34A/Vu6pNbMVYovitRpPXJ3QrAvmNdRinMg4C2mq2qw05Fgg==
+X-QQ-XMRINFO: MSVp+SPm3vtSI1QTLgDHQqIV1w2oNKDqfg==
+From: Hang Nan <2122295973@qq.com>
+To: matttbe@kernel.org
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, martineau@kernel.org,
+ geliang@kernel.org, davem@davemloft.net, edumazet@kernel.org, kuba@kernel.org,
+ pabeni@redhat.com, horms@kernel.org, kuniyu@google.com, willemb@google.com,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, 2122295973@qq.com
+Subject: Re: [PATCH net v5 0/3] mptcp token hash ordering and token 0 lookups
+Date: Fri, 20 Nov 2026 20:17:56 +0800
+X-OQ-MSGID: <179517707644.56974.16674613746518125542@qq.com>
+In-Reply-To: <20261116145829.96849-1-2122295973@qq.com>
+References: <20261116145829.96849-1-2122295973@qq.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -98,58 +82,50 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 
-Hi Lin,
+Hi Matt,
 
-Thank you for your modifications, that's great!
+thanks, all points taken.  v6 is prepared but not sent: I will wait for
+Netdev Sashiko to finish, as you asked.
 
-Our CI did some validations and here is its report:
+- Threading: I see the same thing you do on lore.  The patches are sent
+  with git send-email, which sets In-Reply-To to the Message-ID it assigned
+  to the cover letter, but our relay rewrites Message-ID on the way out
+  (the tencent_*... IDs on lore are not the ones the client wrote), so the
+  children end up pointing at an ID that never existed publicly.  I have
+  not found a way to make that relay preserve the header; if you have a
+  suggestion that works with such a relay I would take it, otherwise I will
+  send the next version in a way that does not depend on the rewritten ID.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Perf: Unstable: 6 failed test(s): regression:sched-baseline(3) =
-regression:sched-bbr regression:sched-clientlim regression:sched-rmem(4) =
-regression:sched-serverlim validation:sched-loss(2) =E2=9A=A0=EF=B8=8F  (1 =
-improvements, 90 new outliers to review)
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/44702283372
+- Prefix: switched to "mptcp: " in v6.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/5ac9fdbe3174
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1217034
+- KUnit test: dropped.  Beyond your point that a !token guard is not worth
+  50 lines, it also caused the build failure the test robot reported - the
+  case used mptcp_token_exists(), which is not exported, so
+  mptcp_token_test.ko failed at modpost when the test is built as a module.
+  The pre-existing token tests pass with the series: pass:4 fail:0.
 
+- For backports I kept the code changes as three separate commits (ordering,
+  hash-membership check, token 0), so none of them carries test code.
 
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
+- token 0: v6 says explicitly that no connection gets token 0 from this
+  implementation, and that the RFC 8684 token field does allow zero, so the
+  rejection is a Linux-side property, not a protocol one.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Two things I folded in from the Sashiko review of the same series, which
+you may want to look at when you do the full review:
 
-For more details:
+- [High] The acquire ordering does not cover the passive-open path, where
+  sk_clone() publishes the refcount before mptcp_sk_clone_init() sets the
+  token.  v6 adds a separate patch that drops a socket which is no longer
+  on the chain after the increment, the way __inet_lookup_established()
+  does.
 
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+- [Low] The stable tag now names the dependency:
+  "Cc: stable@vger.kernel.org" plus a sentence pointing at
+  7f8ceea0c580 ("refcount: provide ops for cases when object's memory can
+  be reused") in the body.
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+Hang
+
