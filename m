@@ -1,58 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795162973;
-	b=5f18B5yKGTL+i8dBuMvF+KzrzUNTKoTo7Ze/cOL1znQ2oZwd3RQ8taGp2na0HgLw4enR
-	 nRQHurtEnDGCwWOs7IXs62g7KyZBq8tWMOpwKPH1VFMSo8XhG7mzwRK3mhyJx1iz9fDcc
-	 0LVYhJhI5MR1OtgYYpFrMh8DvJSWuhbmjd3/JoeZKg7of5yNvImK3Mvq/CFAesiG1zYyA
-	 nOQt4Y0vqg+++KW04GTNKXM+TQQOrX0GD3h+d0a5ifW4AiO4ybfAmUuck9f7gV2ayAVAy
-	 OgljEmGsCeJl82dIEv8hYa4mWnr8L0Z5NAft7A2j6dQx5a7VBx2jA4sHbK2kMV96Pnw==
+	t=1795162974;
+	b=Hq7dwwPQCeB17Lfl995ciwembS3KcqX/gRxAlz/ewfoHY5vSuOLovC4Lh2V2qr2voQZH
+	 ZReKmvtubIrPyEljeXSD9hllQmIOwIBDBd4g3cOFgFyArccPqj+9OlAwyq04Ig5XJeccI
+	 AwsFP5ExmwsvO0OME1HjMV4Azx83xeYhWS7u00KXbuQmbmlrgZwjoZfCRpj0yZ3SfdGkO
+	 vE5CYfiKixKvHEjxqYaj8j51+JUUKgMZf5peP0iXCis06m/41e2sy9g6H878cNRtUSFdV
+	 aTl6bIwW6jz+GdPf3TUgJGOZGJJpNSIjIOYK041DCMYIipjjhfzTH8GPsFUeMU9UfSA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795162973;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795162974;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=3vWMBt0s/L/45awvvzkr2FzxSFl2LojKDoemfm2EGkY=;
-	b=3sw0k2nVLeBrNtTgDV62AptE5WdXQEixKLILQXUe8BF9CttuXaZ4TYEYSAdifcOoR2N+
-	 SxUw4+uXIB4bNR7rX5JqnbrNKg85VnA2yaDUmu3q9otWsFvL6D70jhs/B4EeN95vD0Ca9
-	 mS9+6iwi4GbxRRodPFwIq66wRBi962ywsV/zOITcvirJHcI6uyH6LfwgGeGvkOjiM0Frc
-	 Ph00RK064GyC93oJgiN1ln7Fe9CVkIPxebBnWW2/zx1yxE3W/+8A1mkOcn4uqRKv4I9X4
-	 3Jce5XNG3dKTMX6MOfbjtJrtiJ+MVlnDUuwwiJHHUmu6dkgd76nNqoh9ILZaQbAwnDw==
+	bh=itdZZyugtbVor8Nz/NNjMIX62HxSZgWL08Ie13eHCus=;
+	b=ZZFZmmtJrzSbgE/KqZlO+uygdyYhC+pgpePazEnC5yFG7HLQR8sRKS3NrVNAd/CGwJC5
+	 OtsLfDBiJrF2SPGEmTcu7S9UbrXjqobXK5IUly7TwdRd0QK7s1uW9aBqUeID6aUeaGuDn
+	 GJHU5oPHViCO+iTcjiTreGmeaBREcod/VgPdWZtkNqX9ji5JSKu+g5L6SqBqxQio1Tcmm
+	 qGTdqgUAlW+KSbzr+SSGlL9obcViKMGQ+AktsRj1v82XqYDtp/JwCiIQqbNLx4BslHZhH
+	 KCXkBweFzRDMolnsewZskF/Qzo4DQyyhZPQKEE80TCsx2bICHk8+0QZvfed0ntrHMRQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lxZ0cHOR;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TlMA85qa;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2F0606A325;
-	Fri, 20 Nov 2026 08:22:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABCAF606A320;
+	Fri, 20 Nov 2026 08:22:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lxZ0cHOR
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91A211F000C4;
-	Fri, 20 Nov 2026 08:22:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TlMA85qa
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAEAD1F000D0;
+	Fri, 20 Nov 2026 08:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795162973;
-	bh=3vWMBt0s/L/45awvvzkr2FzxSFl2LojKDoemfm2EGkY=;
+	s=k20260515; t=1795162974;
+	bh=itdZZyugtbVor8Nz/NNjMIX62HxSZgWL08Ie13eHCus=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=lxZ0cHOR8stjKP+qY7bf5HLLBB87DkJUoGITtpsHZLcoA1an6lssiwvt9sJFRa1oA
-	 eaEaACc0NOTh6FRUcpFo7fj30gqeyx246AapVEDcBkRUSyRRuwCPjUtpdU+lVIwWgF
-	 ZbenfpMyAnoONYY/WNISsMehroEet3P0wnkgnGr0Y3OWaskJtH3JWScW/niaFFDN9B
-	 F/mFh6vEtSKMb/AXUeS8m7Lk6qo7p8PjVhNifLXTlj20qWfsAfedl8dbNetEdG/fSn
-	 hn0JT/QZoDCn1X9lLY609Y2bBxdJbkyjnRwo/rsR8okLqCfURoPt3BNnuxpVVXhGde
-	 gHISol2R1S4Wg==
+	b=TlMA85qaAe4MKlEjA4cKr5y1JYj05gDsPx1RbWLjNxH0Yi+62GbkiE7Qius+r6vgt
+	 bnBwERT3ORIRJjpRQth4ufKSimQJcCjSIoemtL5rP0PDzPW+M5RjwMO4udwoWWjcA+
+	 utESPVAxl2QTQxUEIFedL+tki0Feo3X2imv/rC0smS3Ja+tjkUjIKRMBCaM+aBznMm
+	 I5jFm1OqPgemZxT7wBCEFVLySo+s5xDHK30MAEMkBEHWBtboi6w9zN819hbypkqrRG
+	 wpggX254ubRDrCb3OhzdRgaGYTAlFKKsWUZzaHwde0YqLo8GAdTwrTilNNhTh77qxy
+	 2fGjYjR+9OnKw==
 Subject:
- Re: [PATCH net 1/3] tcp: saturate window-to-memory conversions at INT_MAX
+ Re: [PATCH net 2/3] net: bound receive window predictions before narrowing
 From: netdev-bot+sashiko@kernel.org
 To: llleigoing@outlook.com
 Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, edumazet@kernel.org,
  ncardwell@google.com, kuniyu@google.com, davem@davemloft.net, kuba@kernel.org,
  pabeni@redhat.com, horms@kernel.org, matttbe@kernel.org, martineau@kernel.org,
  geliang@kernel.org
-Date: Fri, 20 Nov 2026 08:22:52 +0000
-Message-ID: <179516297210.3136.8495911905614638988@kernel.org>
-In-Reply-To: <20261117052200.1507847-2-llleigoing@outlook.com>
-References: <20261117052200.1507847-2-llleigoing@outlook.com>
-X-sashiko-severity: Low
+Date: Fri, 20 Nov 2026 08:22:53 +0000
+Message-ID: <179516297347.3136.13553293180683672285@kernel.org>
+In-Reply-To: <20261117052200.1507847-3-llleigoing@outlook.com>
+References: <20261117052200.1507847-3-llleigoing@outlook.com>
+X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -65,96 +65,124 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found more severe
-issue(s) in other patches of this series. This mail is only an FYI, in case
-you want to address the nit picks below when you respin.
+Thank you for your contribution! Sashiko AI review found 2 potential
+issue(s) to consider.
 
-Low priority / nit picks for your consideration:
+Critical: 0 · High: 0 · Medium: 1 · Low: 1
 
-- [Low] The author and DCO sign-off names do not match.
-- [Low] (Baseline decision: not a valid regression; kept only because
-  requires_validation=true.) The concern: when scaling_ratio < 128 and…
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
+
+- [Medium] In tcp_rcvbuf_grow() (net/ipv4/tcp_input.c), the slow-start
+  growth term multiplies by `(newval - oldval)`.
+- [Low] The From:/Signed-off-by: names do not match.
 
 --
 
-tcp: saturate window-to-memory conversions at INT_MAX
+net: bound receive window predictions before narrowing
 
-This commit caps the u64 result of __tcp_space_from_win() at INT_MAX
-before it is returned as an int. Without the cap, large results can wrap
-when narrowed. That lets the TCP and MPTCP SO_RCVLOWAT handlers accept a
-large low watermark without raising sk_rcvbuf.
+This patch changes rcvwin in tcp_rcvbuf_grow() and mptcp_rcvbuf_grow()
+from u32 to u64, so the predicted receive window no longer wraps before it
+is converted to a memory budget. The prediction is then clamped at INT_MAX
+before it is passed to tcp_space_from_win() or mptcp_space_from_win().
 
-> Fixes: dfa2f0483360 ("tcp: get rid of sysctl_tcp_adv_win_scale")
+> Fixes: aa251c84636c ("tcp: fix too slow tcp_rcvbuf_grow() action")
 > Signed-off-by: lllei <llleigoing@outlook.com>
 
 [Severity: Low]
-This isn't a bug, but the Signed-off-by name does not match the From
-name. The author is "lei lei <llleigoing@outlook.com>" and the sign-off
-is "lllei <llleigoing@outlook.com>". The email is the same but the names
-differ, and checkpatch.pl reports this as FROM_SIGN_OFF_MISMATCH.
+The Author line is "lei lei <llleigoing@outlook.com>", but the sign-off
+is "lllei <llleigoing@outlook.com>". The email addresses match and the
+names don't. Could the names be made consistent? checkpatch will flag
+the mismatch. The other patches in the series have the same mismatch.
 
-The other two patches in the series have the same mismatch:
+> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> index a2074a1af4222..6d5950dbe6638 100644
+> --- a/net/ipv4/tcp_input.c
+> +++ b/net/ipv4/tcp_input.c
 
-  net: bound receive window predictions before narrowing
-  mptcp: exclude MSG_PEEK from receive buffer autotuning
+[ ... ]
 
-Could the series be resent with one consistent identity?
-
-> diff --git a/include/net/tcp.h b/include/net/tcp.h
-> index 5c9203aae8341..09827f1ae0a72 100644
-> --- a/include/net/tcp.h
-> +++ b/include/net/tcp.h
-> @@ -1799,7 +1799,7 @@ static inline int __tcp_space_from_win(u8 scaling_ratio, int win)
->  	u64 val = (u64)win << TCP_RMEM_TO_WIN_SCALE;
+> @@ -961,10 +961,10 @@ void tcp_rcvbuf_grow(struct sock *sk, u32 newval)
+>  		 * It might take few additional ms to reach 'line rate',
+>  		 * but will avoid sk_rcvbuf inflation and poor cache use.
+>  		 */
+> -		grow = div_u64((u64)rcvwin * rtt_us, rtt_threshold);
+> +		grow = div_u64(rcvwin * rtt_us, rtt_threshold);
+>  	} else {
+>  		/* slow start: allow the sender to double its rate. */
+> -		grow = div_u64(((u64)rcvwin << 1) * (newval - oldval), oldval);
+> +		grow = div_u64((rcvwin << 1) * (newval - oldval), oldval);
+>  	}
+>  	rcvwin += grow;
 >  
->  	do_div(val, scaling_ratio);
-> -	return val;
-> +	return min_t(u64, val, INT_MAX);
->  }
+> @@ -973,6 +973,7 @@ void tcp_rcvbuf_grow(struct sock *sk, u32 newval)
+>  
+>  	cap = READ_ONCE(net->ipv4.sysctl_tcp_rmem[2]);
+>  
+> +	rcvwin = min_t(u64, rcvwin, INT_MAX);
+>  	rcvbuf = min_t(u32, tcp_space_from_win(sk, rcvwin), cap);
+>  	if (rcvbuf > sk->sk_rcvbuf) {
+>  		WRITE_ONCE(sk->sk_rcvbuf, rcvbuf);
 
-[Severity: Low]
-This probably isn't a regression, but one side effect of the saturation
-is worth checking.
+[Severity: Medium]
+Can this clamp turn an underflowed prediction into a fully saturated
+subflow receive buffer?
 
-When scaling_ratio is below 128 and val is around tcp_rmem[2] >> 1, the
-result saturates to INT_MAX. Then __tcp_win_from_space(ratio, INT_MAX)
-is smaller than val, so sk_rcvbuf no longer covers sk_rcvlowat.
+The slow-start branch above computes (newval - oldval) in u32, and
+tcp_rcvbuf_grow() never checks that newval > oldval. For MPTCP subflows,
+mptcp_rcv_space_adjust() only compares copied against the msk-level space.
+It then calls tcp_rcvbuf_grow() on every subflow:
 
-__tcp_set_rcvlowat() in net/ipv4/tcp.c still stores the full watermark
-and raises window_clamp to val:
+net/mptcp/protocol.c:mptcp_rcv_space_adjust() {
+    ...
+	if (copied <= msk->rcvq_space.space)
+		goto new_measure;
+    ...
+	if (mptcp_rcvbuf_grow(sk, copied)) {
+		...
+		mptcp_for_each_subflow(msk, subflow) {
+			...
+			if (tcp_sk(ssk)->rcvq_space.space)
+				tcp_rcvbuf_grow(ssk, copied);
+    ...
+}
 
-	WRITE_ONCE(sk->sk_rcvlowat, val ? : 1);
-	...
-	space = tcp_space_from_win(sk, val);
-	if (space > sk->sk_rcvbuf) {
-		WRITE_ONCE(sk->sk_rcvbuf, space);
+The msk space comes from a single subflow. mptcp_rcv_space_init() sets it
+to min(rcv_wnd, TCP_INIT_CWND * advmss) of msk->first or the accepted ssk.
+A join subflow sets its own space in tcp_init_buffer_space(), from its own
+advmss and window.
 
-		if (tp->window_clamp && tp->window_clamp < val)
-			WRITE_ONCE(tp->window_clamp, val);
-	}
+For example, a first subflow with advmss 1460 gives an msk space of 14600.
+A join subflow on a 9000 MTU path starts at around 62720. Both values only
+grow after that, so the gap stays.
 
-mptcp_set_rcvlowat() in net/mptcp/sockopt.c does the same for the msk
-and each subflow.
+Suppose copied lands between those two values, e.g. copied=30000. That
+already gives an msk prediction of about 186 KB, above the default
+128 KiB sk_rcvbuf, so mptcp_rcvbuf_grow() returns true. For the join
+subflow, newval - oldval then wraps to about 2^32. If that subflow's
+rtt_us >> 3 is at least tcp_rcvbuf_low_rtt, the slow-start grow term is
+around 1e10.
 
-This seems harmless:
+Before this patch, the u32 truncation gave an arbitrary result. With
+newval == oldval / 2 the sum was exactly 2^33, so nothing changed.
 
-  - __tcp_select_window() takes min_t(int, tp->window_clamp,
-    allowed_space), so the larger clamp is never advertised.
+Now that rcvwin is u64 and clamped at INT_MAX, every such underflow sets
+sk_rcvbuf to tcp_rmem[2] on that subflow. window_clamp then becomes
+tcp_win_from_space(sk, tcp_rmem[2]).
 
-  - For TCP, tcp_epollin_ready() falls back to tcp_rmem_pressure(), so a
-    watermark the buffer cannot reach does not stall the reader.
+The commit message says:
 
-  - The SOCK_RCVBUF_LOCK branch already accepts a watermark that the
-    buffer cannot back.
+    Predictions above INT_MAX therefore already require a saturated
+    receive budget.
 
-  - Before this patch the budget was not raised at all.
+That assumes the prediction is meaningful, which isn't true when
+newval < oldval.
 
-mptcp_epollin_ready() has no rmem-pressure fallback. That limitation
-predates this patch and can also be reached through the SOCK_RCVBUF_LOCK
-path.
-
-Should the commit message say that sk_rcvbuf can still be too small for
-the requested SO_RCVLOWAT once it saturates?
+The subtraction was already there before this patch. Would it make sense
+to skip the slow-start growth when newval <= oldval?
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261117052200.1507847-1-llleigoing%40outlook.com
