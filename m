@@ -1,57 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795200115;
-	b=QAobyf+w1IjtI1KU2DxyU4jfoQ1KkuvcKVLgPwc3qUe8bytsZI+UW0xP0DVDUkVm0jHt
-	 o1Pr6+XZfBuJQZtf2pXFtioY/LeYojrQ1KnJi7BOFdzzpw+88Qm5sezMlXg2X5SDQMTje
-	 JXsYrOnQbwWcyBbS5pCfsmrygbc6GBlvlHe6VXtOcyMomAPjNhNpn3eC5XrNv4EFpGaMp
-	 vFCn54myUe2VcpYYR190bmfEnroJExVg5LMzooexUMm4QZXDMH9jBxDn10MyxH4D65t/z
-	 YLr4+FTRJQMsqGX2Tms9tU6NV+1MEOppo9i/J/eiTWLcsx1TKmhEVQD+qtC4UnI/ybg==
+	t=1795210211;
+	b=xFdamHWe4TY9QT7Ur7+nCNtGdjF178mc6aMGk7wEMtP7imLapoFc9LcthrLfJ2oeMaZF
+	 NB7w0m5jiGQkQK+SAHS9yQv6HDCH1aqUmvVtZOf9s5pDbAJKh5OwzZz0yheKMQpxa1RYo
+	 uiJFbFRvvmdZgL/R5IqVv/Hh8KEbpdD48voxWflgYYjc1kmnsgzSBxoV2g3fN0+3ulq3g
+	 DaFR1EjUtSt3EJy/LsGULZU/HUiChrmTrsPyOna+6pCc2XNIb745Is/9riqOLzIYea9Oh
+	 esgMVRcD0TNiGHx6eBc5ZiyFPrMF35X4skougy+r1eJBLJB6ykxxzTiAs62zZXi3YGA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795200115;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=9WYJIGMO6UMsOO4DWsh9c9BGKtW19+cg1kSblwmy4fU=;
-	b=y7ghKrPyNG2VnRarzHuatTcQJZ0FbFxrQj0PUp5iFvOh1WRPq/DG9XlnudhOcoRpa3Lw
-	 ebQHtBF7VNfn13qYwqlIYHo5upjeFixIBBez24BItjzDJXe0CuE3t9v1Nky9v32hxfIUW
-	 Sd5Rhz7eq9znsJTGk+hyPtYg2emZOpzDbn2d4o+FJqM9eMnOPmw4t+t2UFfjN3QOdDih9
-	 5QaAndIfLJQjFgd5OAeAsmpgWRriQqChOAg5qNtLnxRrgqkPNYz9N+Q4NIwOeEti+7BPX
-	 IZu53+EVC1QVCr7CJcIoDL5UD3kKpZFEP5zgIan4H2ed5A65P5DiGNVALqGhbumbD1A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795210211;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=sw31mzwT+UqmrkUG9lWyVe9VpMnfxIYOQHb/oNJWdSM=;
+	b=CZUWH3c0w2MYAkAwERVOqxBiUnAvt/bp+UvYK3K49Ft1ouHKl+U6ENqOqqH4fFGhHoNc
+	 zGfzZL549g1ZGA1f0gW70hO1s/C2F7Bv4ylymYy7PSjX/fdW4/S4eBVBBvjDbGJpBh2gM
+	 uRJG9jSRbMl3q2SjnrteqvGqdNylDCOMt/lgVfDql6l0Yx4KMK5lql83Jfz3jX20bTuw/
+	 1pA1ajI9RAQP02pyPa0/B6u+5DcAZwAvf9NPnB7UeclFO2Qg2CJA6tpY4071jeH7r+oP/
+	 vbV8Vx7BLSWQ+PoL2tQYbkrzJ3mVYu6GXMq83GBT5jBW/WPjjFoLSTiifFOlIjNUVKQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FEPI1b6E;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CVHlY6ck;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2D160A2623
-	for <mptcp@lists.linux.dev>; Fri, 20 Nov 2026 18:41:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F452606A335;
+	Fri, 20 Nov 2026 21:30:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FEPI1b6E
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C4841F000C0;
-	Fri, 20 Nov 2026 18:41:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CVHlY6ck
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C1CB1F000CF;
+	Fri, 20 Nov 2026 21:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795200114;
-	bh=9WYJIGMO6UMsOO4DWsh9c9BGKtW19+cg1kSblwmy4fU=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=FEPI1b6EY3f2aOkzLqT0zzIMAq3p7vHBq8kCGAu54ZPol7i1eUZUPHtk48zLg1wQJ
-	 Kk5N0MRYpj4iY5x9b4ncqc1PDH3+v5dhDExQzP/qmL9KrJy0D8FrMCjjhh/4iTAbZi
-	 5UrGZ9/LHRZp2K7FlOsoT/L0d/xRoBpAbpepWN5HFkWGO3xFCHNJisOXY7N1ugJhsw
-	 3p6FAuF6VsllPkF3Tlw8sFbrn5bS/FqMJWs5bXZ/jZyiG1auddorKZnI+B71E6XBJH
-	 Ubo+6uZKaraL5vQU3nOabmCpLMSOfr9dee/uZE96kLXSV+G/M48w4bDOx6JWF9Te9J
-	 QGqLYJ0zCS+4w==
-Subject:
- Re: [PATCH mptcp-next v29 7/8] mptcp: sync mptcp skb cb layout with tcp one
-From: netdev-bot+sashiko@kernel.org
-To: geliang@kernel.org
-Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Fri, 20 Nov 2026 18:41:53 +0000
-Message-ID: <179520011363.3133.7044883277405636164@kernel.org>
-In-Reply-To: <f53cc2e63e8ae9a8e1d1918b247cd65368ee4b8e.1795063943.git.tanggeliang@kylinos.cn>
-References: <f53cc2e63e8ae9a8e1d1918b247cd65368ee4b8e.1795063943.git.tanggeliang@kylinos.cn>
-X-sashiko-severity: High
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20260515; t=1795210211;
+	bh=sw31mzwT+UqmrkUG9lWyVe9VpMnfxIYOQHb/oNJWdSM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=CVHlY6ckQW+B8DeE7Y5kZ1gXkFtA6laawbursrs25Wzkgv26yQAzria8BE55QHvV8
+	 UGO5+nHU37RqSmx9TCbMa93IrXvSDncgtddF4WPyNvl39LE9ONq9hM+Cb3UoogjLxO
+	 peZYTzIud0fKNxWJ9tTm/rE+2tHC3jwH9KQ2yiRHBuXU2NIce/nfnki2iPHnAQvmHc
+	 pLpU4UCoRcF+/eYJ0Nz8poNqbOtWqlMlEpK96JK4eXKfLLW862uQz7ziou+ihyQxq4
+	 i/uEC8kPzX9D65w9AEe9MECWKppE5iqWr/3kus44fzGU3o9zi2hqGiR9i1QQXKfjmw
+	 aY75os8wqoc9g==
+Message-ID: <656870cc-3a3b-433c-ba8a-dc883c4fb414@kernel.org>
+Date: Fri, 20 Nov 2026 22:29:57 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -61,182 +51,192 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net-next v3 1/3] tcp: avoid wrapping Fast Open blackhole
+ timeout
+Content-Language: fr
+To: Yingjie Wang <x-professor@outlook.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "corbet@lwn.net" <corbet@lwn.net>,
+ "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
+ "rdunlap@infradead.org" <rdunlap@infradead.org>,
+ "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+ "edumazet@kernel.org" <edumazet@kernel.org>,
+ "ncardwell@google.com" <ncardwell@google.com>,
+ "gang.yan@linux.dev" <gang.yan@linux.dev>,
+ "kuniyu@google.com" <kuniyu@google.com>,
+ "davem@davemloft.net" <davem@davemloft.net>,
+ "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com"
+ <pabeni@redhat.com>, "horms@kernel.org" <horms@kernel.org>,
+ "martineau@kernel.org" <martineau@kernel.org>,
+ "geliang@kernel.org" <geliang@kernel.org>,
+ "ycheng@google.com" <ycheng@google.com>,
+ "weiwan@google.com" <weiwan@google.com>
+References: <cover.1794847474.git.x-professor@outlook.com>
+ <963cd91054a37f6308da9a327d9bb027a0306cb6.1794847474.git.x-professor@outlook.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <963cd91054a37f6308da9a327d9bb027a0306cb6.1794847474.git.x-professor@outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issue(s) to consider.
+Hi Yingjie,
 
-Critical: 0 · High: 1 · Medium: 0 · Low: 1
+On 16/11/2026 17:46, Yingjie Wang wrote:
+> tcp_fastopen_active_should_disable() calculates the active-disable
+> interval as multiplier * tfo_bh_timeout * HZ. Since all operands are
+> 32-bit, a large tcp_fastopen_blackhole_timeout_sec can wrap the delay,
+> even on 64-bit kernels, and re-enable active Fast Open too soon.
+> 
+> With HZ=1000 and the maximum multiplier of 64, any timeout above 67108
+> seconds wraps. For example, 67109 seconds should produce 4,294,976,000
+> jiffies (about 50 days), but the calculation truncates it to 8,704
+> jiffies (8.7 seconds).
+> 
+> This issue was found using a static analysis tool. It was confirmed with
+> a loopback reproducer that induces 12 Fast Open blackholes and opens
+> another connection 10 seconds later: with a 67109 second timeout, the
+> unpatched kernel retried active Fast Open. The reproducer needs neither
+> kernel modifications nor error injection.
+> 
+> Compute the interval in u64 and cap it at MAX_JIFFY_OFFSET before adding
+> it to the saved timestamp. On 32-bit kernels, the cap keeps the interval
+> within the range that time_before() can compare, which limits the longest
+> backoff there to about 12.4 days at HZ=1000.
+> 
+> Also limit the writable initial timeout to one day, so the exponential
+> backoff does not start from an impractically long period. Writes above
+> 86400 seconds, which were previously accepted, now fail with -EINVAL and
+> leave the current value unchanged. The wider calculation is still needed
+> below that limit, as the 67109 second example shows.
+> 
+> With this patch, the same reproducer kept active Fast Open disabled, and
+> the sysctl accepts 86400 and rejects 86401. The TCP selftests were not
+> run; none of them sets this sysctl.
+> 
+> Fixes: cf1ef3f0719b ("net/tcp_fastopen: Disable active side TFO in certain scenarios")
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
+I guess you can drop the Fixes tag, not to backport this to stable as it
+somehow changes the behaviour as Eric said in the v2. Same ton the later
+patches.
 
-- [High] A remote MPTCP peer can bypass the receive-window check and
-  desync the msk receive state.
-- [Low] The commit message for "mptcp: sync mptcp skb cb layout with tcp
-  one" says what changes but not why.
-
---
-
-mptcp: sync mptcp skb cb layout with tcp one
-
-This commit changes the MPTCP skb control block so that map_seq, end_seq
-and flags line up with the matching fields of struct tcp_skb_cb. It adds a
-separate map_seq64 field that holds the full 64-bit DSN, converts most
-receive path sequence comparisons to the 32-bit before()/after() helpers,
-and adds a build time check for the shared field layout.
-
-> The MPTCP protocol uses a significantly different CB layout WRT TCP, as it
-> includes different information and uses 64 bits for the sequence numbers.
-
-[ ... ]
-
-> The receive path now uses 32-bit before()/after() helpers for most sequence
-> comparisons, while map_seq64 is used for window validation and coalescing
-> checks. __mptcp_try_coalesce() gains a map_seq64 contiguity check to ensure
-> skbs are truly adjacent in the 64-bit DSN space.
-
-[Severity: Low]
-This isn't a bug, but could the commit message explain why the layout
-needs to match the TCP one?
-
-In net/mptcp, every TCP_SKB_CB() access is on subflow or TX skbs, and that
-is still true at the end of the series. Nothing in tree reads msk receive
-queue skbs through TCP_SKB_CB(). The only hint is in the next patch's
-message ("groundwork for the upcoming MPTCP TLS series").
-
-The change does have a cost. The DSN is now stored twice, and every writer
-has to keep map_seq = (u32)map_seq64 in sync by hand. That happens in
-mptcp_init_skb(), __mptcp_sync_rcv_sequence() and
-mptcp_fastopen_subflow_synack_set_params(). Several receive path
-comparisons also become 32-bit, and their safety depends on the window
-bound discussed below.
-
-Also, is the "gains a map_seq64 contiguity check" wording accurate? The
-pre-patch __mptcp_try_coalesce() already had the same 64-bit test, because
-map_seq was u64:
-
-	if (MPTCP_SKB_CB(from)->map_seq != mptcp_end_dsn(to) ||
-
-This patch only renames the field to map_seq64.
-
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 1ed232a4e8b4d..707a40850ada5 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-
-[ ... ]
-
-> @@ -302,14 +302,15 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
->  {
->  	struct sock *sk = (struct sock *)msk;
->  	struct rb_node **p, *parent;
-> -	u64 seq, end_seq, max_seq;
-> +	u64 end_seq, max_seq;
->  	struct sk_buff *skb1;
-> +	u32 seq;
+> Signed-off-by: Yingjie Wang <x-professor@outlook.com>
+> ---
+>  Documentation/networking/ip-sysctl.rst |  1 +
+>  net/ipv4/sysctl_net_ipv4.c             |  1 +
+>  net/ipv4/tcp_fastopen.c                | 12 +++++++++---
+>  3 files changed, 11 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/networking/ip-sysctl.rst b/Documentation/networking/ip-sysctl.rst
+> index 0b7bfbd98a92..dc33f82a8997 100644
+> --- a/Documentation/networking/ip-sysctl.rst
+> +++ b/Documentation/networking/ip-sysctl.rst
+> @@ -1055,6 +1055,7 @@ tcp_fastopen_blackhole_timeout_sec - INTEGER
+>  	get detected right after Fastopen is re-enabled and will reset to
+>  	initial value when the blackhole issue goes away.
+>  	0 to disable the blackhole detection.
+> +	The maximum value is one day (86400 seconds).
 >  
-> -	seq = mptcp_dsn(skb);
-> +	seq = (u32)mptcp_dsn(skb);
->  	end_seq = mptcp_end_dsn(skb);
->  	max_seq = atomic64_read(&msk->rcv_wnd_sent);
+>  	By default, it is set to 0 (feature is disabled).
 >  
-> -	pr_debug("msk=%p seq=%llx limit=%llx empty=%d\n", msk, seq, max_seq,
-> +	pr_debug("msk=%p seq=%x limit=%llx empty=%d\n", msk, seq, max_seq,
->  		 RB_EMPTY_ROOT(&msk->out_of_order_queue));
->  	if (after64(end_seq, max_seq)) {
->  		/* out of window */
+> diff --git a/net/ipv4/sysctl_net_ipv4.c b/net/ipv4/sysctl_net_ipv4.c
+> index 9df93ad219db..fb0f3124836d 100644
+> --- a/net/ipv4/sysctl_net_ipv4.c
+> +++ b/net/ipv4/sysctl_net_ipv4.c
+> @@ -1152,6 +1152,7 @@ static const struct ctl_table ipv4_net_table[] = {
+>  		.mode		= 0644,
+>  		.proc_handler	= proc_tfo_blackhole_detect_timeout,
+>  		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= &one_day_secs,
+>  	},
+>  #ifdef CONFIG_IP_ROUTE_MULTIPATH
+>  	{
+> diff --git a/net/ipv4/tcp_fastopen.c b/net/ipv4/tcp_fastopen.c
+> index 7f7eb3cc1c04..883f0f1e7e07 100644
+> --- a/net/ipv4/tcp_fastopen.c
+> +++ b/net/ipv4/tcp_fastopen.c
+> @@ -613,6 +613,7 @@ bool tcp_fastopen_active_should_disable(struct sock *sk)
+>  	unsigned long timeout;
+>  	int tfo_da_times;
+>  	int multiplier;
+> +	u64 delay;
+>  
+>  	if (!tfo_bh_timeout)
+>  		return false;
+> @@ -624,12 +625,17 @@ bool tcp_fastopen_active_should_disable(struct sock *sk)
+>  	/* Paired with smp_mb__before_atomic() in tcp_fastopen_active_disable() */
+>  	smp_rmb();
+>  
+> -	/* Limit timeout to max: 2^6 * initial timeout */
+> +	/* Limit the backoff multiplier to 64. */
+>  	multiplier = 1 << min(tfo_da_times - 1, 6);
+> +	delay = (u64)multiplier * tfo_bh_timeout * HZ;
+>  
+> -	/* Paired with the WRITE_ONCE() in tcp_fastopen_active_disable(). */
+> +	/*
+> +	 * Cap the delay for safe jiffies comparisons on 32-bit systems.
+> +	 * The timestamp read is paired with WRITE_ONCE() in
+> +	 * tcp_fastopen_active_disable().
+> +	 */
 
-[Severity: High]
-Now that the code after this point uses 32-bit comparisons, can a remote
-peer get past this window check?
+I don't think modifying the comment is worth it. If someone wants more
+details about the capping, they can already you long message, no need to
+add noise everywhere with long LLM generated comments.
 
-The commit message says "For OFO queue skbs, sequence numbers are
-validated against rcv_wnd_sent in mptcp_data_queue_ofo()". That
-validation is a single signed 64-bit comparison, and it wraps for DSNs
-about 2^63 ahead of ack_seq.
+>  	timeout = READ_ONCE(sock_net(sk)->ipv4.tfo_active_disable_stamp) +
+> -		  multiplier * tfo_bh_timeout * HZ;
+> +		  min(delay, MAX_JIFFY_OFFSET);
+>  	if (time_before(jiffies, timeout))
+>  		return true;
+>  
 
-The peer controls the DSN. With dsn64=1, get_mapping_status() uses it
-unchanged:
-
-net/mptcp/subflow.c:get_mapping_status() {
-    ...
-	map_seq = mptcp_expand_seq(READ_ONCE(msk->ack_seq), mpext->data_seq, mpext->dsn64);
-    ...
-}
-
-subflow_check_data_avail() only rejects before64(ack_seq, old_ack), so
-there is no upper bound.
-
-Let A = msk->ack_seq, W = rcv_wnd_sent - A, and c = the skb payload
-length. Say the peer sends a mapping with DSN = A + 2^63 - k, where
-1 <= k < c - W:
-
-__mptcp_move_skb()
-  after64(dsn, msk->ack_seq) is true
-  -> mptcp_data_queue_ofo()
-       (s64)(max_seq - end_seq) == (s64)(2^63 - (c - W - k)) > 0
-       so the after64(end_seq, max_seq) drop is skipped
-       seq = (u32)mptcp_dsn(skb) == (u32)A - k
-
-2^63 is 0 mod 2^32, so in 32-bit space the skb now looks k bytes behind
-ack_seq. __mptcp_ofo_queue() then promotes it:
-
-	if (after((u32)mptcp_dsn(skb), ack_seq))            /* false */
-		break;
-	...
-	if (unlikely(!after((u32)mptcp_end_dsn(skb), ack_seq)))  /* false */
-	...
-	seq_delta = (u32)mptcp_end_dsn(skb) - ack_seq;      /* c - k */
-
-The skb is appended to sk_receive_queue. It can't coalesce because the
-map_seq64 values differ. Both ack_seq and bytes_received advance by c - k.
-
-__mptcp_recvmsg_mskq() then does this, and mptcp_recv_skb() does the same:
-
-	if (unlikely(before64(*seq, MPTCP_SKB_CB(skb)->map_seq64))) {
-		*seq = mptcp_end_dsn(skb);
-		msk->bytes_consumed += skb->len;
-
-copied_seq jumps to about A + 2^63, and bytes_consumed grows by c, which
-is k more than was received.
-
-The next legitimate skb, at DSN A + c - k, then gives
-copied_seq - map_seq64 == 2^63. That skb is also skipped and its data is
-silently dropped.
-
-After that, bytes_consumed stays k above bytes_received, so
-mptcp_data_avail() underflows:
-
-	return READ_ONCE(msk->bytes_received) - READ_ONCE(msk->bytes_consumed);
-
-Wouldn't that cause the following?
-
-- mptcp_epollin_ready() and mptcp_check_readable() report EPOLLIN while
-  the receive queue is empty, so poll users busy-loop.
-- mptcp_inq_hint() returns INT_MAX for SIOCINQ and TCP_CM_INQ, and the
-  bad value also feeds receive-buffer autotuning.
-- mptcp_close() takes the fastclose path.
-
-The 32-bit overlap checks later in mptcp_data_queue_ofo(), including the
-merge_right loop, can also drop legitimate in-window OFO segments as
-DUPDATA.
-
-Before this patch, the after64(mptcp_dsn(skb), msk->ack_seq) test in
-__mptcp_ofo_queue() kept such an skb in the OFO tree, so it never reached
-the receive queue.
-
-The next patch in the series ("mptcp: defer read_sock cleanup to
-mptcp_worker") doesn't touch this code, so the problem seems to remain at
-the end of the series.
-
-Could the DSN be bounded in full 64-bit terms before the 32-bit
-arithmetic is relied on? For example, the skb could be rejected when the
-unsigned distance end_seq - ack_seq is larger than max_seq - ack_seq.
-
-[ ... ]
-
+Cheers,
+Matt
 -- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1795063943.git.tanggeliang%40kylinos.cn
+Sponsored by the NGI0 Core fund.
+
