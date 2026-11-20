@@ -1,53 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795200111;
-	b=s1FkklWCXBNy83mDfNtd2W6PMpb3x7ZEXEzTDavtbKpdIofGlUzkiG4AYFQtNrJsGy3W
-	 6BdZpP/twK3TCsvwJN2FBz3GXPm9yZvTLGxMY9NqLdsQ6memD0LlkTv7h3UNGFgm0twrg
-	 VEOFfRoFBYe/5xwrj6ISKpt4P+oJhzxnN0dKMksGhoG1lfPUfidzGUZqZI+UAvS8CqZZV
-	 WBMVxUxRvoFFQ7DCBsOaYiyLj2finLkp5O1FsmpcKB3JB37FYi4nJoSHnumi4kVXUDCQy
-	 puKSOSc6xTQMwRszB6SHWj5D8PbDP6HOXqBTS1GfKi11g43HqU72LRmx9mtn4DEAgmw==
+	t=1795200112;
+	b=EQZQUQ/T7Uy+Oo2jK4mq7GKh865UNAkQh4SWQXFRCd78g8N6EQabeFRddlXZEUWjrg4X
+	 xDZJwzrVpsfi+DbB/PIoFeELniNZY0J3pgeXAGwlvumbzjJ32zi/Jn3lbM3jchSh00Xic
+	 sIBcbl3Qmq7LqFCSfrkR+Cl5oLc4gQszmH6OtYll83qODn7s6uww4fhj9554AOTcXZH2f
+	 vDG0nyGbVg2gCvN9ugPJuBSXWc6ZcqlQ3ljiZMM/UwYRWCWPoZq+m2LCeJvh7gQqWp7OA
+	 J001OI3dhq6CtbO/J6YR0hT9VX2IiOx/D1avy5/FjVuzDaoQwr55R76uDUtRpeDz85g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795200111;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795200112;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=+n2ybfzFoSzhI5NZKMpYloy6kTM/NAdhQ83d6aapkHU=;
-	b=ugJeSZOXObwaffr6RjEdIOQJQFl9DcYQUJEBpfA1NZyHMhmvAUphnhMStd9J3GaREVWD
-	 133ZoHnFX26wF87gSvv3VD1hyMB4xmAsP/zX5X3ep0haGUjP/rtOQDzD3VT9K7KLTUhpd
-	 9gTGwwSwuUeQOoX8pwWzalTvb4ywqpHdECYV4vZlLHvTzHJsi3LvcG4aY6L3juuP15Lqs
-	 dfWGL0CCEzzxcaDud2U6yo18r/vagg9a4Drnw8WjQKX/xbdEc+g149WUrePB6D8pUtW2J
-	 A7DqatU/Oxh/1MhYdHYxKMzCEsTVI3Khs/AU5RU5eMI/hHbwHbi3H1byXjALfV2/FSg==
+	bh=PnhCgrs7ISkCCdwI2rNtk5stzcwYqIxcVHWJei4HhJ8=;
+	b=tJgGLwX1UEwZIrWdjOJdcQktfU4mXZHWklWDyH2uRlEpfo/xY8L9MPrCGQDplcD8vZgQ
+	 j37QpPFsyNO+IztKGqgXlDbytU17vanGltHFJv+yF03wzAq3VXtKNc1YYkTT07f+8m5cG
+	 NTsMHQ/S6xKHOzK1EV+f6U3PsHFhNFhoIr0GARxJcgNLb9OZRQFgntc+oMRAplmu5VQKK
+	 hypZNqAFZ58hP56+TwW68sLMGsbmygg5m2dos08fAPKBXOEWQH5IFg79kGtjj0PJ+EjTq
+	 1WPMC7yQF4et/7pNsiFoOT0GkU7tw+Er4ABM50ydxxzRyvR6eQQTI9QeZSyLZYx+wHA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FaDjM94a;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jdKYiLTh;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA9660A260C
-	for <mptcp@lists.linux.dev>; Fri, 20 Nov 2026 18:41:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BBB2606A33B
+	for <mptcp@lists.linux.dev>; Fri, 20 Nov 2026 18:41:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FaDjM94a
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 780FE1F000C0;
-	Fri, 20 Nov 2026 18:41:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jdKYiLTh
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CB641F000D4;
+	Fri, 20 Nov 2026 18:41:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795200110;
-	bh=+n2ybfzFoSzhI5NZKMpYloy6kTM/NAdhQ83d6aapkHU=;
+	s=k20260515; t=1795200111;
+	bh=PnhCgrs7ISkCCdwI2rNtk5stzcwYqIxcVHWJei4HhJ8=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=FaDjM94a9neRHNgOb6j/kjx1+oJUZzE7FsFP5+EOmFutmoShdgl2pBcV3Ejl6pGqw
-	 jXhjd74CZ2RHzQesG9hsjR4jbk+2xvwZjsofTmLzzHTKPHazAv5Yoi4Tc9NAOTuWvV
-	 9bVSRynXwIvsyXvu1RFblsZ/XM7TfTInluxiAGoTkcalbDUJKrTVvsQU0x23SHhzb0
-	 cm1d0pwlf3oZtP/tpu3gQkg6OrJlEeWIjAWT0SffvJi2tWW4R/d6YdHJxwQ38MgzNR
-	 GfcuNPDHzIVAeGmBo7DYwjOTxkylQds8aok7rP63aSseToqW/YRNsCF7GE9dfnkrcD
-	 nmt53X/ZZCeVA==
-Subject: Re: [PATCH mptcp-next v29 4/8] mptcp: drop the cant_coalesce CB field
+	b=jdKYiLTh1tfwvXd0vFo2aEBXDIzJQJFBvw13OYTRyrcj46Z2NeRKetPhatzgCqWui
+	 91Lb3rA+mlGIf/PmFUFoubvJQ2S2YnfEHSr2YGdeHnA9s9ZI0dog4DFwyhyrQZlmTm
+	 QaBDU6a1VBUriXleSCB9EuRTbXOeNI4kUqrFVqzXi8pvLZg+a4kfwgXgGtK5MYUBhv
+	 77Tpc2PoxOHIPLSs/F5bTyk1dcpbVHhIi/wWHW8ai6JdZpiBlfU0ZwgE92+RSHlwBL
+	 1T3FUaJwGdEACrpIIZY4/Fp49cWuOhjdRgxwhH7D6yeMXM1wSvyX/aNFBVr+5053hv
+	 JR9Pwvc8sj+qw==
+Subject: Re: [PATCH mptcp-next v29 5/8] mptcp: encapsulate CB DSN field access
+ with helpers
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Fri, 20 Nov 2026 18:41:50 +0000
-Message-ID: <179520011006.3133.16319687060684256580@kernel.org>
-In-Reply-To: <d93502137d925de91e85c9b4c41ef492f70aa7e9.1795063943.git.tanggeliang@kylinos.cn>
-References: <d93502137d925de91e85c9b4c41ef492f70aa7e9.1795063943.git.tanggeliang@kylinos.cn>
+Date: Fri, 20 Nov 2026 18:41:51 +0000
+Message-ID: <179520011112.3133.14475010950011269195@kernel.org>
+In-Reply-To: <93f8727507735aefbf0794b1af5b555993249a5e.1795063943.git.tanggeliang@kylinos.cn>
+References: <93f8727507735aefbf0794b1af5b555993249a5e.1795063943.git.tanggeliang@kylinos.cn>
 X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -67,69 +68,43 @@ you want to address the nit picks below when you respin.
 
 Low priority / nit picks for your consideration:
 
-- [Low] The commit message for "mptcp: drop the cant_coalesce CB field"
-  has three problems.
+- [Low] The From:/Signed-off-by: identities don't match in commit "mptcp:
+  encapsulate CB DSN field access with helpers".
 
 --
 
-mptcp: drop the cant_coalesce CB field
+mptcp: encapsulate CB DSN field access with helpers
 
-This patch removes the cant_coalesce field from struct mptcp_skb_cb. The
-passive TFO skb is no longer blocked from coalescing. Instead, its map_seq
-and end_seq are rewritten from the IASN (stored in msk->tfo_iasn) before
-any further skb lands in the msk. When the msk is owned by user space, the
-update is deferred through the new MPTCP_SYNC_SEQ cb_flags bit.
+This commit adds the mptcp_dsn() and mptcp_end_dsn() helpers. They return
+the start and end DSN from the MPTCP skb CB. Direct accesses to
+MPTCP_SKB_CB(skb)->map_seq and end_seq in protocol.c and in the
+mptcp_rcvbuf_grow tracepoint now go through these helpers, so the CB
+layout can change in later commits.
 
-> mptcp: drop the cant_coalesce CB field
->
-> Such field is used to ensure in-sequence processing in case of fastopen.
-> Instead let's perform synchronization of the fastopen skb sequence
-> when the IASN becomes available with the 3rd ack.
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 
 [Severity: Low]
-Does this describe the removed field accurately?
+This isn't a bug, but the author address and the sign-off address don't
+match. The commit author is:
 
-Before this patch, the only reader of cant_coalesce is
-__mptcp_try_coalesce() in net/mptcp/protocol.c. There it stops new data
-from being merged into the passive TFO skb, which carries the dummy mapping
-(map_seq = -len, end_seq = 0).
+  Author: Geliang Tang <geliang@kernel.org>
 
-The field plays no part in the in-sequence, out-of-order or old-data
-decision in __mptcp_move_skb(). That decision compares the incoming skb's
-mapping against msk->ack_seq.
+The only trailer is:
 
-Commit f03afb3aeb9d ("mptcp: drop __mptcp_fastopen_gen_msk_ackseq()"),
-which added the field, says it prevents "collapsing to the first skb of a
-fastopen connect". Would similar wording be clearer here?
+  Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 
-The message also doesn't give a reason for the change. struct
-mptcp_skb_cb uses well under the 48 bytes of skb->cb, so space doesn't
-explain it. To replace the one-byte field, the patch adds:
+No Signed-off-by uses the author address. checkpatch.pl reports this as
+FROM_SIGN_OFF_MISMATCH. Documentation/process/submitting-patches.rst
+expects the author to sign off.
 
-  tfo_iasn and rcvd_dummy_seq in struct mptcp_sock
-  the MPTCP_SYNC_SEQ cb_flags bit
-  a per-skb branch in __mptcp_move_skb()
-  new checks in mptcp_move_skbs() and mptcp_release_cb()
+The series isn't consistent about this either. "mptcp: remove CB offset
+field" and "mptcp: sync mptcp skb cb layout with tcp one" use
+Signed-off-by: Geliang Tang <geliang@kernel.org>. This patch, "mptcp:
+clear rcv_data_fin_seq in mptcp_disconnect" and "mptcp: defer read_sock
+cleanup to mptcp_worker" sign off only with the kylinos.cn address.
 
-If this prepares for the later "mptcp: remove CB offset field" and "mptcp:
-sync mptcp skb cb layout with tcp one" patches in the series, could the
-message say so?
-
-Finally, there is a change in behaviour that the message doesn't
-describe. After __mptcp_sync_rcv_sequence() sets the TFO skb's end_seq to
-tfo_iasn, the next in-sequence skb (map_seq == ack_seq == iasn) passes
-this check in __mptcp_try_coalesce():
-
-	if (MPTCP_SKB_CB(from)->map_seq != MPTCP_SKB_CB(to)->end_seq ||
-	    MPTCP_SKB_CB(from)->offset ||
-	    ...
-
-skb_try_coalesce() can then merge it into the TFO skb, which cant_coalesce
-used to prevent.
-
-The new behaviour looks correct, because tfo_iasn - len + offset keeps
-map_seq - offset consistent across partial reads. Could the commit message
-mention this coalescing change?
+Could a Signed-off-by for the kernel.org address be added, or the From:
+header be changed to the kylinos.cn address?
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1795063943.git.tanggeliang%40kylinos.cn
