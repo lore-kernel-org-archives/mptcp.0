@@ -1,103 +1,60 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795161972;
-	b=yYOdVME30HGgQlLnkvrBcplTDaNiT4Qgd69xjfApJOH3j6NdGOlypgQPtFtZwg3Wdu+Z
-	 w3qgJuEWjJu5M5Whws7hBahXr2KoM76rqZr+eQkMBlLwG9LZWhJkR+OaB8KZJiNLk4nHk
-	 hm2L746Gt/cHwGqpXSR/I3vkH+C8KSIZpWPgJrbX8makl1HDqt9v3I+VExLc9BMiGk7yR
-	 RSdpWX9QtdQ3WJTaLeysfZN5fgcntpV9RCbEUtOH6XqB42SUPoCZBuCLPRlzPBsmHcuo1
-	 uH6jApakg9o5WGoL0rC/2VHyN6OQAwko3s0KJApIpqIr4bT/MRV5shI4S8363/CnAcw==
+	t=1795162973;
+	b=5f18B5yKGTL+i8dBuMvF+KzrzUNTKoTo7Ze/cOL1znQ2oZwd3RQ8taGp2na0HgLw4enR
+	 nRQHurtEnDGCwWOs7IXs62g7KyZBq8tWMOpwKPH1VFMSo8XhG7mzwRK3mhyJx1iz9fDcc
+	 0LVYhJhI5MR1OtgYYpFrMh8DvJSWuhbmjd3/JoeZKg7of5yNvImK3Mvq/CFAesiG1zYyA
+	 nOQt4Y0vqg+++KW04GTNKXM+TQQOrX0GD3h+d0a5ifW4AiO4ybfAmUuck9f7gV2ayAVAy
+	 OgljEmGsCeJl82dIEv8hYa4mWnr8L0Z5NAft7A2j6dQx5a7VBx2jA4sHbK2kMV96Pnw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795161972;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=VsLypriGHYKlhMV5iYD5eFrEKHOuZT3YxctC/v+kE4I=;
-	b=CNCuiQUgvfGTqxa/P2HywJ3RKDHolc+ZncP5O15N7zUC7ewECNFUutKFzAlGDHZPtfKc
-	 1XomSbr8h3KB7zn7U60frdgndl2N2kkmFdh8LS8TxgKNswXO3zuhNJ4gUsByqStsOcRhl
-	 OC499gVWFVrAr+pxSwWUHNfY8A+sVFQIGAs2APkNRS/vX9dijWZoCvQkXQkN/TpGcZ62n
-	 xPA4kGgu0cqs7UCDuGwfSVvIyKBSSNmEZdW+3x1+ZHUZLVPZzH7uK2yCUFys2IXHAUyZz
-	 uxAz8hhTIJHm9PxdkYhwYVhkqgK/wEUxiZtx9wdsPRM5PD12u/RXWyKnFIcIArmuIug==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795162973;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=3vWMBt0s/L/45awvvzkr2FzxSFl2LojKDoemfm2EGkY=;
+	b=3sw0k2nVLeBrNtTgDV62AptE5WdXQEixKLILQXUe8BF9CttuXaZ4TYEYSAdifcOoR2N+
+	 SxUw4+uXIB4bNR7rX5JqnbrNKg85VnA2yaDUmu3q9otWsFvL6D70jhs/B4EeN95vD0Ca9
+	 mS9+6iwi4GbxRRodPFwIq66wRBi962ywsV/zOITcvirJHcI6uyH6LfwgGeGvkOjiM0Frc
+	 Ph00RK064GyC93oJgiN1ln7Fe9CVkIPxebBnWW2/zx1yxE3W/+8A1mkOcn4uqRKv4I9X4
+	 3Jce5XNG3dKTMX6MOfbjtJrtiJ+MVlnDUuwwiJHHUmu6dkgd76nNqoh9ILZaQbAwnDw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=xqQlTPgf;
-	arc=none smtp.remote-ip=209.85.215.179
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lxZ0cHOR;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387C1606A326
-	for <mptcp@lists.linux.dev>; Fri, 20 Nov 2026 08:06:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 387C1606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2F0606A325;
+	Fri, 20 Nov 2026 08:22:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=xqQlTPgf
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-cdb684859cbso385316a12.1
-        for <mptcp@lists.linux.dev>; Fri, 20 Nov 2026 00:06:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795161971; x=1795766771; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=VsLypriGHYKlhMV5iYD5eFrEKHOuZT3YxctC/v+kE4I=;
-        b=xqQlTPgf6YFDMPtpc45PxelOpaTdQETZJTiS8XZ+cxrMT3uEEnQ9sh5gxNRfks+fHG
-         EQQUEqZLIpMcZ3Em1jkeEPa4KWq1GjZnruSuZZL0K1IOkVpLAOov1JzmUsC1LqskGfr7
-         ZkJvZONhW21KpFFQlRVKGsPgcgVEWa9lt48JLMmJB+xAwY4Allkl2CjuuXmPqR59tEim
-         n4E2TbamBwjU8XjtAzr826IcuLUmDnZCRuwBF+jWH/puqJXQIoY2ooA6wV7f9CNphA1N
-         T78rAfXVg/NYcYuGCALeFBNu24En9k+dGeT872zvK/S4eJ8LD3hEETvLwJJDG9JWGsrO
-         cL1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795161971; x=1795766771;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=VsLypriGHYKlhMV5iYD5eFrEKHOuZT3YxctC/v+kE4I=;
-        b=1OL27UICztLJiyeZ/00C1bmmDo2Mswvt4XQ2wYVgAVOm47QO7cQs7eA36uezi2szpU
-         lPKiwTKHmLSbDbStOeWBvUfX5Pj51debaR4zv2ft11IXiic4u0MmICrlpoI9GxUBixOB
-         JvVIvbTjWjjzUKzabUz0yjaV1MjU8DQyqfL/Bk5I5KqQWsB7AM21WrxQa/q+/jPNni4o
-         zYOjELUJJjYXYrPQpmfIwWLDbcKAZxsaNj9CX86uRn5Y58DyVQhJjcczRfhJiiVu7ZEt
-         lFOg1qS1xXKiSRhpC7JZF1nScqZyp65TyjJjkoNfIYNJfiFX5G43J2XAF5mfbBbHsMuN
-         n8gw==
-X-Forwarded-Encrypted: i=1; AL+hErGO6QA279dbIyzcFC3nY5w0sw2yAkK/ipnpCyT8mbp5cX5LSsnTWMgeJfa/pEg69pbbTYbXVw==@lists.linux.dev
-X-Gm-Message-State: APuU4Z89XaSpI467+3o9sUbSNJlfKR4FU3dBZ5q6gHYdnjL8eUf8V2+P
-	WJakI2ADRiwMMbJ9GtuVZl5eGojY9a8S0Ppn2D0J5+P/DjgTAgZEl3Wv
-X-Gm-Gg: AZFdTZcBKHSgP1CkkVcGy3kjVc+LvUehf7rEWtt6OPn79UaIXKgz2OAT3MiBdM0FvMW
-	Hu58ldOxEku2Rrv3439Yjq7CyaZtK1kTxCrRW7Rq1udGAc/FyhySMYT8Mo7LRN9hXeB2sqaIxRe
-	4NOtzw+9AOJJIksl33+X6weZVFvIQWy7nhrWTnueK3Az+f0M9p7dgL0YR8BggC34UhT4pWe3EIf
-	SqZwUbKOxV8qVSRnb7eWr5CgrXYRKAMqMXZJ8gtEPgyYk5iwBELXwoBNeHyE+A24N+weSc89gDF
-	PM0PrAzLosA8kv13e0hW45AYcUwfn+e3+cSRJH4F9wfsOMbKab6Ob0TF1o7yuhXYre9/gm61eHW
-	qIDXMM7wjtEtbWxifRwcAkmOCpsT5ul82l5rggvrBsJanT8J89R2DrY5NHlwuNk2frhsBcPiI/G
-	BqgzGa1S+TXryCuf4cQHENhoDfbvsBTwBOTGrobFGu9lA1HPMz2MNdsRdaTQzO6XYb1qd9YgJcT
-	UZSBAhvIjoPTzGQ4XRc0HTK6kMKdaYr/ZM8tfdBIjWWhEjj7C1dZg1+KWqqaajl9LGlh5PH6FId
-	bGtHsasH3L9JkJwcrr0nqHEms0rPA0OXeT+H8PjlbPzb9g==
-X-Received: by 2002:a17:90b:2fd0:b0:3ac:a521:95c with SMTP id 98e67ed59e1d1-3b41cb235aemr2207271a91.58.1795161971489;
-        Fri, 20 Nov 2026 00:06:11 -0800 (PST)
-Received: from revrse.tailec2828.ts.net ([166.111.83.77])
-        by smtp.googlemail.com with ESMTPSA id 41be03b00d2f7-cde6d0285c3sm948556a12.20.2026.11.20.00.06.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Nov 2026 00:06:11 -0800 (PST)
-From: Lin Lei <llleigoing@gmail.com>
-To: matttbe@kernel.org
-Cc: edumazet@kernel.org,
-	llleigoing@outlook.com,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	ncardwell@google.com,
-	kuniyu@google.com,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	martineau@kernel.org,
-	geliang@kernel.org
-Subject: Re: [PATCH net 3/3] mptcp: exclude MSG_PEEK from receive buffer autotuning
-Date: Fri, 20 Nov 2026 08:05:58 +0000
-Message-ID: <20261120080558.2866468-1-llleigoing@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cab39a1c-056f-488f-b217-194af2056db2@kernel.org>
-References: <cab39a1c-056f-488f-b217-194af2056db2@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lxZ0cHOR
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91A211F000C4;
+	Fri, 20 Nov 2026 08:22:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795162973;
+	bh=3vWMBt0s/L/45awvvzkr2FzxSFl2LojKDoemfm2EGkY=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=lxZ0cHOR8stjKP+qY7bf5HLLBB87DkJUoGITtpsHZLcoA1an6lssiwvt9sJFRa1oA
+	 eaEaACc0NOTh6FRUcpFo7fj30gqeyx246AapVEDcBkRUSyRRuwCPjUtpdU+lVIwWgF
+	 ZbenfpMyAnoONYY/WNISsMehroEet3P0wnkgnGr0Y3OWaskJtH3JWScW/niaFFDN9B
+	 F/mFh6vEtSKMb/AXUeS8m7Lk6qo7p8PjVhNifLXTlj20qWfsAfedl8dbNetEdG/fSn
+	 hn0JT/QZoDCn1X9lLY609Y2bBxdJbkyjnRwo/rsR8okLqCfURoPt3BNnuxpVVXhGde
+	 gHISol2R1S4Wg==
+Subject:
+ Re: [PATCH net 1/3] tcp: saturate window-to-memory conversions at INT_MAX
+From: netdev-bot+sashiko@kernel.org
+To: llleigoing@outlook.com
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, edumazet@kernel.org,
+ ncardwell@google.com, kuniyu@google.com, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com, horms@kernel.org, matttbe@kernel.org, martineau@kernel.org,
+ geliang@kernel.org
+Date: Fri, 20 Nov 2026 08:22:52 +0000
+Message-ID: <179516297210.3136.8495911905614638988@kernel.org>
+In-Reply-To: <20261117052200.1507847-2-llleigoing@outlook.com>
+References: <20261117052200.1507847-2-llleigoing@outlook.com>
+X-sashiko-severity: Low
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -107,28 +64,97 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Hi Matthieu and Eric,
+Thank you for your contribution! Sashiko AI review found more severe
+issue(s) in other patches of this series. This mail is only an FYI, in case
+you want to address the nit picks below when you respin.
 
-> It looks good to me too, please send a v2 with the Signed-off-by:
+Low priority / nit picks for your consideration:
 
-Thanks for the reviews. I sent the fix as a standalone v2 with my
-corrected sign-off and both of your Reviewed-by tags:
+- [Low] The author and DCO sign-off names do not match.
+- [Low] (Baseline decision: not a valid regression; kept only because
+  requires_validation=true.) The concern: when scaling_ratio < 128 and…
 
-https://lore.kernel.org/all/20261120075459.2862977-1-llleigoing@gmail.com/
+--
 
-> @Lei: could you open a PR on this separate repository with a new test,
-> please?
+tcp: saturate window-to-memory conversions at INT_MAX
 
-Thanks for the script, Matthieu. I used it as the basis for the test
-and opened the PR here:
+This commit caps the u64 result of __tcp_space_from_win() at INT_MAX
+before it is returned as an int. Without the cap, large results can wrap
+when narrowed. That lets the TCP and MPTCP SO_RCVLOWAT handlers accept a
+large low watermark without raising sk_rcvbuf.
 
-https://github.com/multipath-tcp/packetdrill/pull/214
+> Fixes: dfa2f0483360 ("tcp: get rid of sysctl_tcp_adv_win_scale")
+> Signed-off-by: lllei <llleigoing@outlook.com>
 
-I ran the test three times each on IPv4, IPv6 and IPv4-mapped IPv6.
-Before the fix, SO_RCVBUF grew from 8192 to 50237 bytes in all nine
-runs. With the fix, it stayed at 8192 bytes in all nine.
+[Severity: Low]
+This isn't a bug, but the Signed-off-by name does not match the From
+name. The author is "lei lei <llleigoing@outlook.com>" and the sign-off
+is "lllei <llleigoing@outlook.com>". The email is the same but the names
+differ, and checkpatch.pl reports this as FROM_SIGN_OFF_MISMATCH.
 
-Thanks,
-Lin
+The other two patches in the series have the same mismatch:
+
+  net: bound receive window predictions before narrowing
+  mptcp: exclude MSG_PEEK from receive buffer autotuning
+
+Could the series be resent with one consistent identity?
+
+> diff --git a/include/net/tcp.h b/include/net/tcp.h
+> index 5c9203aae8341..09827f1ae0a72 100644
+> --- a/include/net/tcp.h
+> +++ b/include/net/tcp.h
+> @@ -1799,7 +1799,7 @@ static inline int __tcp_space_from_win(u8 scaling_ratio, int win)
+>  	u64 val = (u64)win << TCP_RMEM_TO_WIN_SCALE;
+>  
+>  	do_div(val, scaling_ratio);
+> -	return val;
+> +	return min_t(u64, val, INT_MAX);
+>  }
+
+[Severity: Low]
+This probably isn't a regression, but one side effect of the saturation
+is worth checking.
+
+When scaling_ratio is below 128 and val is around tcp_rmem[2] >> 1, the
+result saturates to INT_MAX. Then __tcp_win_from_space(ratio, INT_MAX)
+is smaller than val, so sk_rcvbuf no longer covers sk_rcvlowat.
+
+__tcp_set_rcvlowat() in net/ipv4/tcp.c still stores the full watermark
+and raises window_clamp to val:
+
+	WRITE_ONCE(sk->sk_rcvlowat, val ? : 1);
+	...
+	space = tcp_space_from_win(sk, val);
+	if (space > sk->sk_rcvbuf) {
+		WRITE_ONCE(sk->sk_rcvbuf, space);
+
+		if (tp->window_clamp && tp->window_clamp < val)
+			WRITE_ONCE(tp->window_clamp, val);
+	}
+
+mptcp_set_rcvlowat() in net/mptcp/sockopt.c does the same for the msk
+and each subflow.
+
+This seems harmless:
+
+  - __tcp_select_window() takes min_t(int, tp->window_clamp,
+    allowed_space), so the larger clamp is never advertised.
+
+  - For TCP, tcp_epollin_ready() falls back to tcp_rmem_pressure(), so a
+    watermark the buffer cannot reach does not stall the reader.
+
+  - The SOCK_RCVBUF_LOCK branch already accepts a watermark that the
+    buffer cannot back.
+
+  - Before this patch the budget was not raised at all.
+
+mptcp_epollin_ready() has no rmem-pressure fallback. That limitation
+predates this patch and can also be reached through the SOCK_RCVBUF_LOCK
+path.
+
+Should the commit message say that sk_rcvbuf can still be too small for
+the requested SO_RCVLOWAT once it saturates?
+
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261117052200.1507847-1-llleigoing%40outlook.com
