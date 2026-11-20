@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795187714;
-	b=y7h0r+BxR/nKIrpdJqvJWt1FTr8w/uSb6qz21EK43lEiD0VwQ1UCVcVJP/DO/5A+52hs
-	 slTDyMlYc1SOeJ19qRECV9jtvIFWkeEfDtVxNP42NWZyZ1qA1juIutLeylcRFgneZvDHD
-	 /MyzzxDx4p/1uveAujDXbcoBkbv/gf9x65c04lGynVb+N7D+1bkYxCTuHY2woR8xmZTn2
-	 lmPhkcqy700oCoIIDVk/zMQBXbB5LOviJZ2S1ehlSdAhZDoMri50IUzd1Ap0m1xsf95i7
-	 HDl0nY1/fE70DKB7zp+QKQS8GqFStDzXe7uXYRtNp6nKQpJVHHVy0NA7wFdC6dBoAZw==
+	t=1795187718;
+	b=RDSXSdmXnWNcPP0IUIlzhnKqdB1es0zZ3LiPY46RLNIXseW52Dm6jlLcPo0XLDbv8pIO
+	 PiUq6ROBDTSoIUpONWo8Hzih8ycJEjsuIi7Y7GEoKYP9tUkjFhgIyqNBBBTQ5aVgmXP6d
+	 sr1ivgXCPXN0vD0wuH9JuUzTyP5qbxM5a9j1bnkmuh/XUZGP3XD8HSWQZjjHLh1a+dOPF
+	 NAeEMORWvzlZW4stfEM8KCCmOVq2qIt3G8lAblfMUWMp79k/MG8Sm6Cor59SR2hKSbrt7
+	 FtU3MlOjxLNTKaf76h1tUlmhkgN9zf0ulzRZEV4S6pSfL2RhQ6DeLihWHBii9MnbTPQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795187714;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795187718;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=3u1hRTzKKw3sNe/+ZfnzsYivSKTWTcllBNK0iRaqwlo=;
-	b=NXtRGNGbzlLoONskWZTqPXScOoBs+LiIYVI8syC2NRMdMw7ZQU8q/Uhq7uW652EqljhV
-	 csB+tgYCatcWWQ+C1ziPgCf1De+/Y+6bE6PIH0qhF8ocFiRlRqWLUATdGB1DxP0pr33zm
-	 DQbuIdzLinn5CZgqxTQGlm0hru73xHKJmPO7Igk/968U+aCGJwHOW0FB52OpxCFwZCizz
-	 WNFTIoaLRTivllTmx5bOpRnIAPj6Gref9GvIPnW+Y2P5EF1zTm3hxu4MSkIgGGR6dbJi9
-	 /RYiwzrcbCmVn6yHzxpmUHKT8h4mCC9c23Xbf28nRjdWCjR46D9dItqHMEOfCIr+ETg==
+	bh=wZ4iGx1hB6JaY8F2+fZrPaRW+jYVtG/e8ODGjd7WFls=;
+	b=fzr+cJ31kMLZBSayi4szqs/E1KSIRXXBJQnYBLYgSBhIRdtyQ8YT6qkip1N0KIG+5mnE
+	 rMZz8HsJgFGqixpkX/Ra76eKjL4jmqCh2T26NYjWIgCRVWAkmHRWsSQ35Fbk7+I/cj1fr
+	 SMyy0Aw4lWeSZYkwe3N6UrnvefF8+IqJz91WwQUWxkPrOAvJuahBciK0Bx3DuAwjtYJSu
+	 pQIAImG1IDurmt+j7TwbXlVvsrHnwsFMlLWftvDbilwqx6giqXSeXTY9snfxxlCOFwciS
+	 77c6kfiqrOTTE5VOoU7Za6CEDfr1ZoVXgqSi8J2rl9wtGraD6mu1EbZwoykHhY+Te4A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JP3vGiWE;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MBV+Dod2;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E29606A325
-	for <mptcp@lists.linux.dev>; Fri, 20 Nov 2026 15:15:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E07B606A33C
+	for <mptcp@lists.linux.dev>; Fri, 20 Nov 2026 15:15:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JP3vGiWE
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C8141F000C0;
-	Fri, 20 Nov 2026 15:15:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MBV+Dod2
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 777811F000CA;
+	Fri, 20 Nov 2026 15:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795187714;
-	bh=3u1hRTzKKw3sNe/+ZfnzsYivSKTWTcllBNK0iRaqwlo=;
+	s=k20260515; t=1795187717;
+	bh=wZ4iGx1hB6JaY8F2+fZrPaRW+jYVtG/e8ODGjd7WFls=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=JP3vGiWENQV/+0YohCRY1XRYsYDPP/hdxJiu9NMiXy9dHvlz1/vG9f7CiPdHkggM5
-	 +r5gj8uIher51MdnDM4AlZpnxBrmjm8IaDxUSoFmfME5g5FMR0TtxF52Pik76ujp3v
-	 b29uc9FBLp//AuBLB3tKUhmjH7ZtRbtUSGghfXN+FYkNYfmIkAxa3VHAyMrBJB0mef
-	 nI9xnvhoE79hcdqGGM+Gr9s/zKgRSLkzH4XdlGk+i/ScN/vjr8UGfSxcgdfbhN3SEN
-	 o7dAVfxz6PKv8lSeae4iGD8GAoUgaBAXNAcKt7fqA7i81iUQBN3qmTZK2Kol74Spxc
-	 BATiaPPpjYApw==
-Message-ID: <575687c9-2cb0-4a45-b9c8-2d83cae11482@kernel.org>
-Date: Fri, 20 Nov 2026 16:15:08 +0100
+	b=MBV+Dod27GB93vYn2zJhW2+60skBwC+g62sQhTPDcZuS3cI4sOayC8lU8C/IeoTf6
+	 AsdCT8YSANfqRYJA0Pp5qDOLm9BXZl7CqQEH2RYZpn4nHtrvaoDssBcfth3jQ2cIZd
+	 YKF6B6xQbqEYBVrum2zuQDl23fSvRxS0QEoeILyPWgooCocTkNU3umLr+OVpVkB2IR
+	 RQScgab47XO4Eo2mPkagWJvGFZhcOsCazzvB57XSq8XLFphNzIvjQ0AbjgTEnCX1/c
+	 mJRi09friZdFPRIzQx7+zutH24ohwbuxZxr5gqTcUdDE5u51CLRsDVGjau25M9W9Iw
+	 3gC0uMrm18wKw==
+Message-ID: <e4f8f699-9f92-41b7-92fc-4b8ab1750254@kernel.org>
+Date: Fri, 20 Nov 2026 16:15:11 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -56,9 +56,11 @@ Subject: Re: [PATCH mptcp-net v13] mptcp: hide sequence numbers in Netlink
  diagnostics
 Content-Language: fr
 To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-Cc: mptcp@lists.linux.dev, shardul.b@mpiricsoftware.com, janak@mpiric.us,
- kalpanjani009@gmail.com
+Cc: kalpan.jani@mpiricsoftware.com, mptcp@lists.linux.dev,
+ shardul.b@mpiricsoftware.com, janak@mpiric.us, kalpanjani009@gmail.com,
+ kuba@kernel.org, netdev-bot+sashiko@kernel.org
 References: <20261117050804.134954-1-kalpan.jani@mpiricsoftware.com>
+ <179502798858.3133.4822986587776409521@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -104,33 +106,150 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20261117050804.134954-1-kalpan.jani@mpiricsoftware.com>
+In-Reply-To: <179502798858.3133.4822986587776409521@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Kalpan,
 
-On 17/11/2026 06:08, Kalpan Jani wrote:
-> MPTCP Netlink diagnostics expose sequence numbers that can reveal
-> internal connection state.
+On 18/11/2026 19:53, netdev-bot+sashiko@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 5 potential
+> issue(s) to consider.
 > 
-> Clear mptcpi_write_seq, mptcpi_snd_una and mptcpi_rcv_nxt in the
-> Netlink diagnostic callback.
+> Critical: 0 · High: 0 · Medium: 2 · Low: 3
 > 
-> Keep the getsockopt() interface and its reported sequence numbers
-> unchanged.
+> If you believe none of the issues are legitimate, please reply to each
+> issue of Medium severity or higher and explain why the AI is wrong.
+> If any of them are legitimate and you plan to respin, please let patchwork
+> know by including "pw-bot: cr" as a separate line at the end of your reply
+> (one such reply per series is enough).
+> 
+> - [Medium] In net/mptcp/mptcp_diag.c, mptcp_diag_get_info() now always
+>   sets mptcpi_write_seq, mptcpi_snd_una and mptcpi_rcv_nxt to 0 in…
+> - [Medium] The new 'chk dump_one zero sequence fields' subtest in
+>   tools/testing/selftests/net/mptcp/diag.sh:chk_dump_one() hard-FAILs…
+> - [Low] The commit message does not say who the change protects against
+>   or what users will see change.
+> - [Low] diag.sh:chk_dump_one() calls `ip netns exec "$ns" ./mptcp_diag -z
+>   -t "$ss_token"` with no stdout redirect, between mptcp_lib_print_title…
+> - [Low] struct mptcp_info (include/uapi/linux/mptcp.h) is a single uAPI
+>   object with two producers that now disagree.
+> 
+> --
+> 
+> mptcp: hide sequence numbers in Netlink diagnostics
+> 
+> This commit zeroes mptcpi_write_seq, mptcpi_snd_una and mptcpi_rcv_nxt in
+> the MPTCP sock_diag INET_DIAG_INFO reply. The getsockopt() interface is
+> left unchanged. The mptcp_diag selftest helper gets a -z mode, and diag.sh
+> gets a subtest that checks these fields are zero.
+> 
+> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/445
+> 
+>> MPTCP Netlink diagnostics expose sequence numbers that can reveal
+>> internal connection state.
+> 
+> [Severity: Low]
+> This isn't a bug, but could the commit message say who this change
+> protects against? For example, unprivileged users in the same netns
+> reading data-level sequence numbers of other users' MPTCP sockets through
+> sock_diag.
+> 
+> The message also doesn't say that these three fields become 0 over
+> netlink for every requester, including root and tools like ss -M. It only
+> says getsockopt() is unchanged.
 
-Thank you for the new version!
+I guess the commit message can indeed be clearer: "sequence numbers that
+can reveal internal connection state" is a bit vague. We can say that
+the TCP seq num are not exposed for the same reasons: not to let someone
+else on the machine getting access to them which can eventually be used
+to mess with the connection by injecting some specific packets.
 
-> Add a selftest to verify that the sequence-number fields are zero in
-> Netlink diagnostic responses.
+>> diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
+>> index 136c2d05c0eeb..fe1603ce80162 100644
+>> --- a/net/mptcp/mptcp_diag.c
+>> +++ b/net/mptcp/mptcp_diag.c
+>> @@ -215,6 +215,10 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+>>  		return;
+>>  
+>>  	mptcp_diag_fill_info(msk, info);
+>> +
+>> +	info->mptcpi_write_seq = 0;
+>> +	info->mptcpi_snd_una = 0;
+>> +	info->mptcpi_rcv_nxt = 0;
+> 
+> [Severity: Medium]
+> Does this also hide the values from CAP_NET_ADMIN callers? The fields are
+> cleared in mptcp_diag_get_info() for every sock_diag requester. Root
+> running ss -M -i, or a monitoring daemon, now always gets 0 where it used
+> to get the real msk-level data sequence values.
+> 
+> The subflow side of the same reply family already uses a different rule:
+> 
+> net/mptcp/diag.c:subflow_get_info() {
+> 	...
+> 	/* Only export seq related counters to user with CAP_NET_ADMIN */
+> 	if (net_admin &&
+> 	    (nla_put_u32(skb, MPTCP_SUBFLOW_ATTR_RELWRITE_SEQ,
+> 			 sf->rel_write_seq) ||
+> 	     nla_put_u64_64bit(skb, MPTCP_SUBFLOW_ATTR_MAP_SEQ, sf->map_seq,
+> 	...
+> }
+> 
+> The privilege bit is already in scope. mptcp_diag_dump_one() passes
+> netlink_net_capable(in_skb, CAP_NET_ADMIN) into inet_sk_diag_fill(), but
+> inet_sk_diag_fill() only hands it to idiag_get_aux():
+> 
+> net/ipv4/inet_diag.c:inet_sk_diag_fill() {
+> 	...
+> 	handler->idiag_get_info(sk, r, info);
+> 
+> 	if (ext & (1 << (INET_DIAG_INFO - 1)) && handler->idiag_get_aux)
+> 		if (handler->idiag_get_aux(sk, net_admin, skb) < 0)
+> 	...
+> }
+> 
+> If the concern is unprivileged readers, would it fit better to gate these
+> fields on net_admin, as the subflow attributes are?
+> 
+> If the concern is all readers, a privileged user still receives
+> MPTCP_SUBFLOW_ATTR_MAP_SEQ, which is in the same data sequence space. Is
+> the hiding complete in that case?
+> 
+> The new selftest runs as root and requires zeros, so it would lock in the
+> unconditional behaviour. The Fixes: tag also carries this into stable.
 
-I really don't think it is worth it to add ~110 lines just to check that
-some values you explicitly set to 0 are indeed shown as is.
+The commit message can explain why: ideally, it would be good to only
+reset these fields for unprivileged readers, but with the current
+architecture, we cannot distinguish the different readers. So we keep
+this fix small for the moment.
 
-In general, you should split the code from the tests, (except eventually
-if a modification breaks the tests, but I don't think that's the case
-here). But especially here: that makes the fix hard to backport.
+> [Severity: Low]
+> Is it intended that struct mptcp_info now has two producers that disagree?
+> getsockopt(MPTCP_INFO) and getsockopt(MPTCP_FULL_INFO) go through
+> mptcp_diag_fill_info() in net/mptcp/sockopt.c and still report the real
+> values:
+> 
+> 	info->mptcpi_write_seq = msk->write_seq;
+> 	...
+> 	info->mptcpi_snd_una = msk->snd_una;
+> 	info->mptcpi_rcv_nxt = msk->ack_seq;
+> 
+> INET_DIAG_INFO now always reports 0 for the same fields. Nothing in
+> include/uapi/linux/mptcp.h or in mptcpi_flags marks the values as
+> suppressed.
+> 
+> How would a netlink consumer tell a hidden value from a real 0? A
+> TCP_LISTEN msk, for example, really does report 0, because
+> mptcp_diag_fill_info() returns right after the memset(). The in-tree
+> print_info_msg() also still prints these fields as if they were real.
+> 
+> Should the per-interface meaning of these fields be documented?
+
+Also for the commit message: yes, that's intended. That's OK, the seq
+nums shouldn't have been exposed initially, and don't have a lot of
+value for Netlink readers. Instead, they can have access to other info
+from TCP subflows, or the bytes sent/received.
 
 Cheers,
 Matt
