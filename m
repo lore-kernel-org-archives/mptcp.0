@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795256520;
-	b=3c2PY9LkdRM05clK3FT1TNzCa+CZW4zQthU4Uw8jdqhLnEpn6wUa1SlmfAx8QSFhEFFU
-	 dgBGylFsRJAjz2sz5wLiag2BP0AXukWJb3bVxDmEWjeQRQVieQtOzJvZ1LvAftfZ2ZQfa
-	 pFOPOUlRZ4JjTUmWHVlcTEhuRCPtGoP5oPWmZ1I73T0JZjM8Gub6DHpr+mvQlU3WfBgMB
-	 U2/AEJUn2uLSFSslwyxu5KeOnejt5VN6UmoDm/0kd1xahjFyeh/r/lpl2knToeX8XIXBc
-	 6VfQP6+xyHWs0ITjccB3G5mJU6WY0CZ+7vYCXs4kyPZlM9y/wKK4rFyWM1KnfVaLqwA==
+	t=1795256742;
+	b=z6XRJeIOSlZ/Gb8UdD7mgVAE+ZXD5pDpL6MAtO7xjpcKDJYKKovLhhbNakpj68zkLT6x
+	 JwOOjyw+jRRdE6sZP085uiggFOthqatWCqZX66KBQtR4XQ8Rognw+fdq/fFyregw0TcMY
+	 aRJfwgE0G67jRB+gAWvkhJ08yFRr7hQ5oKZ3OUkqnL6wNuoBxVt/svpbBGCG+tsTFujS8
+	 4d1EEy5RssN9pdWtY0/X88HnSoyRbMHbMAqJzXpAPogqPoK9GwUd8aGoufZSgk/LVwLzh
+	 DvR1IPPcD/Na0F5g/BPiThfXLJUwRUepckApiapjFQaKBQ2SXkyjIu4cww+UgCdWuqA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795256520;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795256742;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=DegIV/8hteCpQ4FUm7Or6Y5vwlyTUxm91+1kUR4MKEw=;
-	b=TaX9H1FYS8xAYlco9U00GtU49otbQUtB6HJmkeLgrVzch2mQ0EI4lw967hu8F1e9JRu8
-	 0oGJ1mPk7ww+JZLfx8/ACAy3TiztRNO+zPcREY+tpI7ICRKbabFWCFcQQ1X0KnPpolW9K
-	 vuf2LLgkT4bpHGpM/BSV8l7iMCMdlumJsCLksHnVGRG2b5GCg2OKLPj1Ffdulaeg3keGE
-	 dQ9dM6W9TDAjcMzOqJJdVcTD06PU2FO2uDRL9Sg1k+109cyYnn3dp2jWO2N6MS3oeXFRM
-	 Ba1PD7Hct2PsRsWmkbxNRG+CZiAHcncNuog/vjBIHXUdv6c3XJLhWF1uiLx7jbRS+rg==
+	bh=BRz8u6nG28WdcWlYMWcuwhTU79E7cBtJBo5Iu3Bf+gA=;
+	b=sTnbjHKdEA8tYiSp3sRJTYAv+jKa6TmCfzOKXKWM9xqI/5tKpZuS0KtrC9bCoZu2YwF5
+	 R3KvYfNkSkVU8Eqkx7503enjAYwVu1ujUoOw7N+a1asAkav5Cb9XIcIERIBtF5SAbsUbA
+	 r3hh2WztglfqbM8IRE/zDmaR4RZtiy7wXe2T9OJ8FnNArUTVtd7JPDWSnznKKkBH/ySrS
+	 1TzpH1jjKwApzH9qiASLp0aFPP6j6+MF6AaT3Nx4lbZYok1szOM93SgFHPC1KZRUQoJBu
+	 8D2oBUwhJg2j/rClSy8cgXZl1SrJCf9HtxoBY1kuDN9Rh5gd6i39mZVLa5eR3eAdCRA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IxpE7EpW;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fMiLoZJQ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95CAB606A320
-	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 10:22:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6B9606A320
+	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 10:25:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IxpE7EpW
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 549061F000CA;
-	Sat, 21 Nov 2026 10:22:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fMiLoZJQ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAD361F000C0;
+	Sat, 21 Nov 2026 10:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795256520;
-	bh=DegIV/8hteCpQ4FUm7Or6Y5vwlyTUxm91+1kUR4MKEw=;
+	s=k20260515; t=1795256741;
+	bh=BRz8u6nG28WdcWlYMWcuwhTU79E7cBtJBo5Iu3Bf+gA=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=IxpE7EpWh878ubCtaOW177+JuVPrO6jNjm2AvyFFIb5TCmmHJjIbjAp0/IwwVFKkx
-	 Rdesxuh5wJw54vLA67BvrQ+y76bmcAdMYEfj0zJ8HYDkaqDyIXOc717m91pgZVVjGh
-	 Eni/ABKEn3gp6SjAhgl24MU2lr2wzwaYbvXYB2VrFUe8oYnLpksCilodb16/sPbhom
-	 F8ZWgbOy3iKJ62b0x8M3sAXtIHtkZeGVompOITG0d0/mYlNwdhE1twS9eGxGdLkrSR
-	 jhOtLJLuxSDRckK6yMY9XD56fknI9zmlnZvAIw0e8oqTZCutTkZ9mHG64GncF1ZrlZ
-	 MBPBfnnHfnGPw==
-Message-ID: <sashiko-outbox-226938@kernel.org>
+	b=fMiLoZJQ5UhBsTV1IlH0Db/mrTHr/BSYARj7OlDKhjaAztRQgaVtYkYNu7EwF2a7z
+	 sC3Q0ZOJiH6mb0YCsTkZ6e+dXSioBLJUnEbptybwlJr1bGcD0xXmwsHX0AUrcnSbLW
+	 IlBprevnDdVVp/o0w6Sw5tiIy+Ki4C/nPh7GaK8nqRRJFLgZLea+keS1e6oG+cCeFE
+	 eDAKwpUHstFaWPAAEep6UWAQQdhdxRm1aMLKfCm5QceOsKqgCjRPFkKWuAoPkPl1LT
+	 nAvTOCbmdtyuEiS/HWZKO8QYLqFHejaVy/yMWDTb8abAwb/4exXD33UuhKUcieo6Db
+	 uCATAXWMLz3PQ==
+Message-ID: <sashiko-outbox-226939@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-net v2 59/62] Squash to "bpf: Export mptcp packet
- scheduler helpers"
+Subject: Re: [PATCH mptcp-net v2 15/62] mptcp: return EOF after a DATA_FIN,
+ as TCP does
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>, "MPTCP
  Linux" <mptcp@lists.linux.dev>
-In-Reply-To: <20261121-mptcp-cmason-fixes-v2-59-00327fd1de1f@kernel.org>
+In-Reply-To: <20261121-mptcp-cmason-fixes-v2-15-00327fd1de1f@kernel.org>
 References: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
- <20261121-mptcp-cmason-fixes-v2-59-00327fd1de1f@kernel.org>
+ <20261121-mptcp-cmason-fixes-v2-15-00327fd1de1f@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 21 Nov 2026 10:21:59 +0000
+Date: Sat, 21 Nov 2026 10:25:41 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -61,64 +61,143 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Medium] mptcp: mptcp_sched_get_send() skips mptcp_set_timeout() if
-  already scheduled
+Thank you for your contribution! Sashiko AI review found 2 potential
+issues to consider:
+- [Medium] mptcp: mptcp_check_data_fin() misses SOCK_DONE after subflow
+  disconnect
+- [Medium] mptcp: early return in mptcp_check_fastclose() skips subflow
+  close in FIN_WAIT2
 --
 
-commit be05849933557cf4aa59c7bd40312183567d8767
+commit b22772fa5573efd7e1960e51f06a318dfce6573b
 Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Squash to "bpf: Export mptcp packet scheduler helpers"
+mptcp: return EOF after a DATA_FIN, as TCP does
 
-This commit calls mptcp_set_timeout() in mptcp_sched_get_send() before
-invoking a custom packet scheduler so that msk->timer_ival is initialized.
+This commit sets SOCK_DONE on the MPTCP socket when a DATA_FIN (or a TCP FIN
+after fallback) is processed and checks SOCK_DONE before sock_error() in
+mptcp_recvmsg() so that a subsequent reset still returns EOF after the queu=
+ed
+data.
 
-> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
-> index 1e59072d478c9..2f685986698b7 100644
-> --- a/net/mptcp/sched.c
-> +++ b/net/mptcp/sched.c
-> @@ -189,6 +189,9 @@ int mptcp_sched_get_send(struct mptcp_sock *msk)
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/647
+
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 9e297fa08bfed..91639ae0c8a02 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -714,6 +714,10 @@ static void mptcp_check_data_fin(struct sock *sk)
+>  		WRITE_ONCE(msk->rcv_data_fin, 0);
 > =20
->  	if (msk->sched =3D=3D &mptcp_sched_default || !msk->sched)
->  		return mptcp_sched_default_get_send(msk);
-> +
-> +	/* as the default scheduler: the rtx timer needs an interval */
-> +	mptcp_set_timeout((struct sock *)msk);
->  	return msk->sched->get_send(msk);
->  }
+>  		WRITE_ONCE(sk->sk_shutdown, sk->sk_shutdown | RCV_SHUTDOWN);
+> +		/* on fallback, also emulated after a reset: check for a FIN */
+> +		if (!__mptcp_check_fallback(msk) ||
+> +		    (msk->first && sock_flag(msk->first, SOCK_DONE)))
+> +			sock_set_flag(sk, SOCK_DONE);
+>  		smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
+> =20
+>  		switch (sk->sk_state) {
+> @@ -972,6 +976,9 @@ static bool __mptcp_subflow_error_report(struct sock =
+*sk, struct sock *ssk)
+>  	 * destroy the msk as needed.
+>  	 */
+>  	ssk_state =3D inet_sk_state_load(ssk);
+> +	/* a FIN received before still leads to EOF, as with TCP */
+> +	if (sock_flag(ssk, SOCK_DONE) && mptcp_pending_data_fin(sk, NULL))
+> +		sock_set_flag(sk, SOCK_DONE);
+>  	if (ssk_state =3D=3D TCP_CLOSE && !sock_flag(sk, SOCK_DEAD))
+>  		mptcp_set_state(sk, ssk_state);
+>  	WRITE_ONCE(sk->sk_err, -err);
 
 [Severity: Medium]
-Can mptcp_sched_get_send() still leave msk->timer_ival at 0 when a subflow
-already has subflow->scheduled set?
+On a fallback connection, can __mptcp_close_ssk() clear SOCK_DONE on
+msk->first via tcp_disconnect() before mptcp_check_data_fin() or
+__mptcp_subflow_error_report() observes it?
 
-Right above this hunk, mptcp_sched_get_send() returns 0 early if any
-subflow has subflow->scheduled set:
+mptcp_worker                      <softirq>
+lock_sock(sk)
+                                  tcp_fin(ssk)
+                                    sock_set_flag(ssk, SOCK_DONE)
+                                  mptcp_data_ready()
+                                    __mptcp_move_skbs_from_subflow()
+                                      /* queued to msk->backlog_list */
+                                      subflow_sched_work_if_closed()
+                                        msk->rcv_data_fin =3D 1
+                                        set_bit(MPTCP_WORK_CLOSE_SUBFLOW)
+                                  tcp_reset(ssk)
+                                    subflow_error_report()
+                                      __set_bit(MPTCP_ERROR_REPORT)
+mptcp_check_data_fin(sk)
+  /* backlog not spooled yet:
+   * ack_seq < rcv_data_fin_seq
+   */
+__mptcp_close_subflow(sk)
+  __mptcp_close_ssk()
+    /* ssk =3D=3D msk->first: !dispose_it */
+    __mptcp_subflow_disconnect()
+      tcp_disconnect(ssk, 0)
+        sock_reset_flag(ssk, SOCK_DONE)
+    goto out;
+release_sock(sk)
+  mptcp_release_cb()
+    __mptcp_move_skbs()
+      mptcp_check_data_fin()
+        sock_flag(msk->first, SOCK_DONE)  <-- false
+    __mptcp_error_report()
+      __mptcp_subflow_error_report()
+        sock_flag(ssk, SOCK_DONE)         <-- false
 
-net/mptcp/sched.c:mptcp_sched_get_send() {
-	...
-	mptcp_for_each_subflow(msk, subflow) {
-		if (READ_ONCE(subflow->scheduled))
-			return 0;
-	}
-	...
+Because msk->backlog_list is not spooled before mptcp_worker() runs
+mptcp_check_data_fin() and __mptcp_close_subflow(), ssk->sk_receive_queue is
+already empty while msk->ack_seq has not yet caught up to
+msk->rcv_data_fin_seq.  __mptcp_close_ssk() then disconnects msk->first and
+clears SOCK_DONE on ssk before mptcp_release_cb() processes the backlog and
+MPTCP_ERROR_REPORT, leaving SOCK_DONE unset on sk so mptcp_recvmsg() returns
+the reset error instead of EOF.
+
+[ ... ]
+
+> @@ -2938,6 +2948,11 @@ static void mptcp_check_fastclose(struct mptcp_soc=
+k *msk)
+>  	if (likely(!READ_ONCE(msk->rcv_fastclose)))
+>  		return;
+> =20
+> +	/* a DATA_FIN received before still leads to EOF, as with TCP */
+> +	if (READ_ONCE(msk->rcv_data_fin))
+> +		mptcp_move_skbs(sk);
+> +	mptcp_check_data_fin(sk);
+> +
+>  	mptcp_token_destroy(msk);
+> =20
+>  	mptcp_for_each_subflow_safe(msk, subflow, tmp) {
+
+[Severity: Medium]
+When sk is in TCP_FIN_WAIT2 and has both a pending DATA_FIN and an
+MP_FASTCLOSE, does calling mptcp_check_data_fin(sk) here cause
+mptcp_check_fastclose() to return early without setting
+MPTCP_WORK_CLOSE_SUBFLOW?
+
+In TCP_FIN_WAIT2, mptcp_check_data_fin(sk) calls mptcp_shutdown_subflows(ms=
+k)
+and mptcp_send_ack(msk) (queuing a TCP FIN and transmitting FIN/ACK segments
+on subflows that are about to be reset) and transitions sk->sk_state to
+TCP_CLOSE:
+
+net/mptcp/protocol.c:mptcp_check_data_fin() {
+    ...
+		case TCP_FIN_WAIT2:
+			mptcp_shutdown_subflows(msk);
+			mptcp_set_state(sk, TCP_CLOSE);
+			break;
+    ...
 }
 
-When a BPF scheduler marks multiple subflows as scheduled (such as
-bpf_red), the active subflow can drain mptcp_send_head(sk) and delegate
-the remaining scheduled subflow.  Because mptcp_send_head(sk) is now NULL,
-__mptcp_subflow_push_pending() does not enter its send loop on the
-delegated subflow and leaves subflow->scheduled set to true.
-
-Once all in-flight data is acknowledged, mptcp_stop_rtx_timer() resets
-msk->timer_ival to 0.  On the next send, mptcp_sched_get_send() takes the
-early return above without calling mptcp_set_timeout().  If
-__subflow_push_pending() then stops after the first fragment because
-msk->snd_burst <=3D 0 (or fails under memory pressure), it exits before its
-own mptcp_set_timeout() call, and mptcp_reset_rtx_timer() arms the
-retransmit timer with a 0 interval, firing every jiffy.
+After the subflow loop sends active resets and calls tcp_set_state(tcp_sk,
+TCP_CLOSE), switch (sk->sk_state) in mptcp_check_fastclose() hits case
+TCP_CLOSE and returns before setting MPTCP_WORK_CLOSE_SUBFLOW, leaving the
+subflow sockets uncleaned on msk->conn_list until the parent MPTCP socket is
+closed.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261121-mptcp-cmas=
-on-fixes-v2-0-00327fd1de1f@kernel.org?part=3D59
+on-fixes-v2-0-00327fd1de1f@kernel.org?part=3D15
