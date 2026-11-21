@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795254166;
-	b=PKBuH5UWqzX7PwZ5Bse/utoUonGFj/yzoxJDropR4c/jdEQRJqW6rKVOG4soHnJOoQ7/
-	 ACAEj1dBvvD+fOsZWz4PBJojXa9KnyLBH7pgiMExnr3aDMsYsJ3nfLrzSF5Sz+sBLefdh
-	 /BmTYdUS2yqc9396ooeBOjfI1U6yPw6MKOqZU47PvRFQ2+R03PiJ9Yr06G86hkmNSl53o
-	 I1S3CIIEinU4rjhB2719PsZ/fS4JbmbsAsC4dzGP3WPe1DaheL27Ecz6c5+jrdGkUPagl
-	 4lfS8PrgXmlGvgYyEN628XFRcxqZSkDfaki77YJb5g9/Ian+Z5O/Kq3yi3e1rm6ncBA==
+	t=1795254167;
+	b=b34yrKPPTENaM5cwMOaCvaLtdl9896wduMHpyca4sGGSoo3z5/5/NqBh9Z/ElcBAppwP
+	 jpSO7S9nMrnHAOsLe9Z9C85EgLLJ6mOSEBAA+G5Scvr00Hmn/2B7dS2cPxawQruaC6Ss0
+	 0+lzMaWjAlBvFitWImskdVBu1ZJoJXLi7TBxdeDYIRyOQs9uOrv3+KZZ4X6zIJj4cKGMX
+	 itlvdhtGpF9LL9+58S3dydWWc44V9pUUq1Zm0svy2RqJSscC9vcVAlK/lL2ppFCcELF7B
+	 sg69saEDivOeNjVgIuIDn2blgCd1gx1KBVJ0pvnHRLpveUKb4JMPMTjlT8Gl5VK4C8Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795254166;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795254167;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=0y7f5/sxZjXJqgSd5XI2WbJo591UdVzTTtgmbftrFRg=;
-	b=4JOOI205sbsu11QD12ZsMWIu39XgyM5myKzBoGz3Qh5U4Y6IJ5nnsS29oWXeI8IVrMW/
-	 SiaJjv/8OP0MVLcLUJ1q/FiuRdOqcU6YEVzG8DGtsEFn7YqJVa6FjEjXY0Fq8uV7uGb4y
-	 XgMVxqrMGKiHLfNxI5sF+S6pe3MyQjJL85WMxZkTA9rqaKk7qE+tHD1Dqegfj5lPQOBV5
-	 qlYwo84OXinwRsxzKMk0oqenIwFco6elLf2/FMZh+TQoMG8g7d4K5uY5XUn2Lbr44Pu1B
-	 QETAQGzLPJzeMGjOUT2oVE2Kclt1CRCmAlrKHAVbA2UVgCu6o2erp5U0D2Px4nii6mg==
+	bh=kELscjjjenegsl0ivrV1O4RHg0+yzJhDByyvQsds5yk=;
+	b=Y16DEyPTX+I+QKunKw6q2mm7xrZ0+zmmTMovLazPcTHz94d4CIARE8yibn3ZecLTH5wD
+	 bIrveHGsZ2Q0eQSWIyBndMKHWVJ6x7H8bspZBc3FbipCYxtuha/9Cv8DvdylIOuilrAaH
+	 px0tD3cXyT5dmD/3JXcrLabVRScX8q84Q3wo0k3wc31nRB7W54cuJsYqnnFhxW4WnVON/
+	 QRIQKg8eAkl+35SD7H8RQ9Jt8zftqu88PKd6QF2HXSwB4ZQnXwGdhvrcj+Z5pNSoPVbG8
+	 3/55wj8QpIcb1xX23STPZmx8gNStMazhNPo1sgx+NIomwMr2v05GZaJzFUUbeKZ/cfg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FrEAST3l;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=abdlJqyA;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23686606A320
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32696606A320
 	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:42:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FrEAST3l
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 690661F000C6;
-	Sat, 21 Nov 2026 09:42:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=abdlJqyA
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 608C21F000D4;
+	Sat, 21 Nov 2026 09:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1795254166;
-	bh=0y7f5/sxZjXJqgSd5XI2WbJo591UdVzTTtgmbftrFRg=;
+	bh=kELscjjjenegsl0ivrV1O4RHg0+yzJhDByyvQsds5yk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=FrEAST3lLko0N6QPOWVC6DY4zsLy6Ggx+veojba8LCZsHVDfI+goArwIwKncu/E+p
-	 sWtL99uJ8jR2hJFs4qzv1jY4DWrXPV7TSHYLJs/X5VF9h7viw2pUIBqNX9ap4aQlHI
-	 DI1vpTmLuYxCuPAVF4a9Ew635Kkm0cgiXD25seNW/Kvm+1nXG4W0KF6KA8DqVsHGSq
-	 CrKa8SSTry7t5El6sdPuhVBk2kKnkjatKZYqAKLwhPX3rO5p9pku1eLk6AXXLBQi+p
-	 5flpP+6gFpc7TVad9bkcGQyVdMwZ3sm0pktkOCeC4E29tuHPJTGelgUNvSNifCWqN+
-	 ezJheS5bRK20A==
+	b=abdlJqyAltEycsqWjty4TkKJLTDe10of7S3IQWzhXM8+UWy1IdwJOPcFR+2tAKalf
+	 qsCLvhZSoXRJwD/AERsbOWoP+Qgy9BECsfG/oJNV4dC3E+meXCmWYM02wErZGm2GH9
+	 tkUUgAWu1PMgizp8IaaO9+f7tdttu37F6Aevzh7z52u0rkA+Lul4OyPecI4RFvZ9m4
+	 AtOM36f656plEE05HpbiOlmFyYDmZMUTxo6SCB0864zAFEKg68K4z/XhHUrPvp30aG
+	 kM7xH5u9CClp4fftuPOP/jilUqoV8H0o5mmYwSJN5ujPHjHXrr+KIZnnAa5G1nTOmj
+	 s7WBGQ3fnl7rw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 21 Nov 2026 10:41:29 +0100
-Subject: [PATCH mptcp-net v2 31/62] mptcp: drop non-MP_JOIN cookie ACKs on
- PM listeners
+Date: Sat, 21 Nov 2026 10:41:30 +0100
+Subject: [PATCH mptcp-net v2 32/62] net: add __sk_net_refcnt_upgrade() with
+ a GFP mask
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,83 +55,82 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261121-mptcp-cmason-fixes-v2-31-00327fd1de1f@kernel.org>
+Message-Id: <20261121-mptcp-cmason-fixes-v2-32-00327fd1de1f@kernel.org>
 References: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 In-Reply-To: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Chris Mason <mason@kernel.org>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2846; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=mvP9dPvMO9WcK5n0ED/hpdYpE2ahF96caseeY0WKWyY=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ0+OPVkjO+furOqNBX9bC4La90W23l89df++Sivr+z
- nO5bsORjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIlwnWNk2Glu7bB0rtHpDKP9
- /359f8MZ9KVmdZNy0U7pp29FL7jWvGL4pzxvbYPBvOTHurVLz05dtMdMjpH1w03GD05B8e86fr8
- v4QcA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2373; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=2VIvHnRwU8IB+vMrv4KyFTHkq8/NNiY0Q/ImiNY1neY=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ0+PZ93ybKWKwrfXmjVlrjpV+5lRlmyM6L7BkRX+Yy
+ N8FNssYO0pYGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACZy4Q4jw4eiuOpNm1/P5es9
+ d+yESv/nLV+/dk0t98le4xQyjb3nsT7DN/W1vPY9t+ec22pz+ZtPWe29+da6vvlTBHdcnT3tuvs
+ sJgA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Chris Mason <mason@kernel.org>
+sk_net_refcnt_upgrade() gives a kernel socket a reference on its network
+namespace, with a netns tracker allocated with GFP_KERNEL. The next
+commit needs to do that for a socket created in atomic context: the
+child of a kernel MPTCP listener, created when an MP_JOIN request is
+accepted.
 
-With SYN cookies enabled, a port-based MPTCP signal endpoint can stop
-accepting new subflows until it is deleted.
+Add __sk_net_refcnt_upgrade(), taking the GFP mask to use, and make
+sk_net_refcnt_upgrade() call it with GFP_KERNEL: no functional change
+for the existing callers.
 
-Nobody calls accept() on the listener that the in-kernel path manager
-opens for such an endpoint, so it must create only MP_JOIN subflows,
-which never enter the accept queue. The listener is marked pm_listener,
-and since commit 3d041393ea8c ("mptcp: prevent MPC handshake on
-port-based signal endpoints") subflow_check_req() refuses a SYN with no
-MP_JOIN option on it. But a SYN cookie does not record the MPTCP option
-of the SYN, so mptcp_subflow_init_cookie_req() picks the kind of child
-from the options of the ACK, without looking at pm_listener:
-
-    ACK with a valid cookie and no MP_JOIN option
-      creates a plain TCP child, or an MPTCP one if it has MP_CAPABLE
-        which stays on the accept queue until the endpoint is deleted
-          once the queue is full, the listener drops MP_JOIN SYNs too
-
-The fix used here is to refuse an ACK with no MP_JOIN option on such a
-listener in mptcp_subflow_init_cookie_req(), so that the request sock is
-freed and the ACK is dropped.
-
-This issue has been found with the help of an LLM, and reproduced in a
-VM, with the reproducer shared with the original version of this patch:
-a client sent 1025 ACKs with valid SYN cookies and no MP_JOIN to the
-listener of such an endpoint. Without this patch, its accept queue
-stayed full, and another client could not create its additional subflow,
-even 130 seconds later:
-
-  TCP: request_sock_subflow_v4: Possible SYN flooding on port 10.9.0.2:6666. Sending cookies.
-  [...]
-  C2         4.007  [130 s after C1 has gone] RESULT: subflows established 1, in SYN_SENT 1, the service works
-  --- V, after that try of C2
-      listener 10.9.0.2:6666 Recv-Q 1025 Send-Q 1024
+The 'Fixes' tag here below is the same as the one from the next commit:
+this patch is needed to fix the issue introduced by this commit ID.
 
 Fixes: 1729cf186d8a ("mptcp: create the listening socket for new port")
-Signed-off-by: Chris Mason <mason@kernel.org>
-[ Shorter comment, the details are in the commit message. Commit
-  message: how the issue was found, and its symptoms. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/subflow.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ include/net/sock.h | 1 +
+ net/core/sock.c    | 9 +++++++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 0c97a5ce2d0c..f9ed4cfa4b33 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -312,6 +312,11 @@ int mptcp_subflow_init_cookie_req(struct request_sock *req,
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 5a203809218a..953bd0060fae 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -1869,6 +1869,7 @@ static inline bool sock_allow_reclassification(const struct sock *csk)
+ struct sock *sk_alloc(struct net *net, int family, gfp_t priority,
+ 		      struct proto *prot, int kern);
+ void sk_free(struct sock *sk);
++void __sk_net_refcnt_upgrade(struct sock *sk, gfp_t gfp);
+ void sk_net_refcnt_upgrade(struct sock *sk);
+ void sk_destruct(struct sock *sk);
+ struct sock *sk_clone(const struct sock *sk, const gfp_t priority, bool lock);
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 6d143faeccc3..832e335d7448 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -2407,7 +2407,7 @@ static void __sk_destruct(struct rcu_head *head)
+ 	sk_prot_free(sk->sk_prot_creator, sk);
+ }
  
- 	opt_mp_capable = !!(mp_opt.suboptions & OPTION_MPTCP_MPC_ACK);
- 	opt_mp_join = !!(mp_opt.suboptions & OPTION_MPTCP_MPJ_ACK);
+-void sk_net_refcnt_upgrade(struct sock *sk)
++void __sk_net_refcnt_upgrade(struct sock *sk, gfp_t gfp)
+ {
+ 	struct net *net = sock_net(sk);
+ 
+@@ -2415,9 +2415,14 @@ void sk_net_refcnt_upgrade(struct sock *sk)
+ 	__netns_tracker_free(net, &sk->ns_tracker, false);
+ 	net_passive_dec(net);
+ 	sk->sk_net_refcnt = 1;
+-	get_net_track(net, &sk->ns_tracker, GFP_KERNEL);
++	get_net_track(net, &sk->ns_tracker, gfp);
+ 	sock_inuse_add(net, 1);
+ }
 +
-+	/* PM listeners only take MP_JOIN, like in subflow_check_req() */
-+	if (unlikely(listener->pm_listener) && !opt_mp_join)
-+		return subflow_reset_req_endp(req, skb);
-+
- 	if (opt_mp_capable && listener->request_mptcp) {
- 		if (mp_opt.sndr_key == 0)
- 			return -EINVAL;
++void sk_net_refcnt_upgrade(struct sock *sk)
++{
++	__sk_net_refcnt_upgrade(sk, GFP_KERNEL);
++}
+ EXPORT_SYMBOL_GPL(sk_net_refcnt_upgrade);
+ 
+ void sk_destruct(struct sock *sk)
 
 -- 
 2.55.0
