@@ -1,48 +1,48 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795254180;
-	b=lFD5PTDCBKLP6knBJ+I9fUpO+B6bGD+gUf4hrWixvaixcPJGVE5pN3BSBCkwQBpcye+z
-	 mU6ELUYMUHGpmIG1I9y9TNlkcyb7zZQEn7cbQVXdw0lvCpVHF8XIOsirU7qtZCap/lQfh
-	 ossKnzg0suO2A04xEUzN2UHLuXCoTAOrE7yZGdu0LfuVO0PydDZ6r2N1w5kNV/UlP3OGE
-	 NMtUJ7cj32bSXMz/ip7tq0vmnXVfRV5w18pEsA3N6PF9HBAQn+TBX4+lLMIiL2zkvxHwk
-	 S494ODP4YUUCHmZZMWibQGW6COpI5NklEqkTEbi0+J7EiVWvuvVzKr//Chi68X2/AaA==
+	t=1795254181;
+	b=O35FNuzFBcNvLoqje078MIeBLqXzXRpNrHDeVpjVBl5dFRozPQYOGguLMGfC9Afz3vfV
+	 VqZSsCSMo9ugzFbEZ5YIVQpd+gJ8Cf8eSTizGRK9egJuWFx1UIiukafauf5okTKrJYlFO
+	 tbf6rJfWnXSpIO8jRH15OHCfTs4Ti/qO0V0yndLoF2mRUdfg+Uvsysx+meEMrDbmXI82I
+	 cLaXupA49FWDJjU/D1QFMwSHGzZnzJ5TNRLzn29ExVDX9UPw7ToMRTWSfRtNPq1TR3212
+	 ECedAI02hdFJUq6LgfLPcWlbo2B1QDkLlJlUuiUAQe92LfhvCTBHDzo1BTYG9hqMAKA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795254180;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795254181;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=7/HssDqYXm1u1Wsa6uTcQ5R6aXEkIN38D1UHL5H30uc=;
-	b=ye7Swu1Zs8ch0SeDspaHHECE6U1wpbrMQHHQ6DL5VW2/1T593PvvMesP70vKr4bkFBx0
-	 I48lXW+NfY0MDyicrv8SewurTuYBjUgbXk58CKRD9ihX7ZGehG9Wz7+ATcZ6bSZmdKu3D
-	 /hoFVQIMFRp40fW4QwK4ppuZq5Js9Bq/0jAAS9kS/w878NVRAH7E4sGr3ZhUMCc8jxTOI
-	 yRC4QCbW9LTjKAs47WX420zGebukIUOWsw53QMD6u04jdmo/NYmtWyGdzlJmnJBj6rYk7
-	 dODAgEb+tmgrZ1xHUNJIMREWdJ6sg8SEmRPcYW1Ato3ULScp6E9hvME6kkzUV8oEowQ==
+	bh=L1gvAJYNOqbRb4bvNcN6DGiZGp3u5no0S21usfmnpGk=;
+	b=NAY4/g1HTKnGss0+vbfIR0XSCbKdjN/EAj8k69MEei2FV1FOwWfnSCBGWZ0kap4BaAYC
+	 57zUG1qbB+OPN6uxCPY9NIHL6HCmfe/C6keytLcxpAPyonVpxn+WLKo8lXFuZeKWMe90Y
+	 RTY3mdBPPIjal4Z5Grpebs642u7Ue12TVmfHllTJLCo7gYneholavyIEnqoeMhs94A8Fl
+	 8FVd2d7J4VG2aTsDn6Vp6X4GEtgdGW76WkdnEUiYt7PcVw7EocKHWisCtMUJMXm1DBFiV
+	 xWdqR0d48XfzmQnkdciTm5x9W9ad9JeVmiHvaoZ85DLYdJ31pya6VxCjJWa8uOmc2Sw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fB7nx8sO;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=izxvMkbs;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA902606A320
-	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:43:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A334F606A320
+	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:43:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fB7nx8sO
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECC381F000D2;
-	Sat, 21 Nov 2026 09:42:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=izxvMkbs
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8A6E1F000C4;
+	Sat, 21 Nov 2026 09:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795254180;
-	bh=7/HssDqYXm1u1Wsa6uTcQ5R6aXEkIN38D1UHL5H30uc=;
+	s=k20260515; t=1795254181;
+	bh=L1gvAJYNOqbRb4bvNcN6DGiZGp3u5no0S21usfmnpGk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=fB7nx8sOFFkbiUzSFFRnzFImG+fFhYse/JX/24JaXLiiK8nH9MH+sP/7TGagZgmd+
-	 zZn+8L18hEmKYzts89JxnUZIgOfGDvkVgBeaEuP3+ehKtIxchmOwtuVR2j8V/BHHJF
-	 wEMHRZZDkkYzNebD8VDxUOgPQ7H7oZJeRlyg4Iaqsej633BC3bR/bsJEEPQymYR3VE
-	 ZNS0JgNKJmaRVztnhu6I0dnf4X0TmYF/9YWbN6b7cG/oIvrv5w07KMUyY0XaIPek0n
-	 WXPi7ilPAuCaYaiz/TKv6tPDQ6CqGpvJA+E8F/A270OSrT/vuWkjBaObFo1n/wbeBz
-	 bwdIqJSJ5R7Gg==
+	b=izxvMkbswof5IgbyMZDgqqcmjbtq+8ltaAmgQpihEJolutEfctJvvVPMbpbVQ+vgs
+	 ZemfFOwBPkbvFiaNs/o2FBuulbC9tKzbuL0OjF1Z6btcdZn7rolqgKPHWt47Cjxn0N
+	 li3WmcHRGSeJT+HpfBiTNmbNHBOhK2/JWZJSj1cffAhcBLPE0JdKTWzTJ7t7nPje+M
+	 pTDtuuGML8QNxC2+RF43ulrSb65jwGcO29fV5HsbfIzQiaepueWKPvM75rvTytchR/
+	 NcESFamFUxkm0/z2vFPBVgnsb9D1wQf04tit6S7dwa7fNoZNhWN0PnJkY64Z/heCEm
+	 W5+MLoDHuaEAA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 21 Nov 2026 10:41:45 +0100
-Subject: [PATCH mptcp-net v2 47/62] mptcp: don't charge a shared page twice
+Date: Sat, 21 Nov 2026 10:41:46 +0100
+Subject: [PATCH mptcp-net v2 48/62] mptcp: don't charge the backlog twice
  at accept()
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -55,116 +55,151 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261121-mptcp-cmason-fixes-v2-47-00327fd1de1f@kernel.org>
+Message-Id: <20261121-mptcp-cmason-fixes-v2-48-00327fd1de1f@kernel.org>
 References: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 In-Reply-To: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
  Chris Mason <mason@kernel.org>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3722; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=h52eSB0F+fnjFpvY/1FtzqfP4n1qIZI8hKG4iYA7i2w=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ03PYmG5O/PbMq8Glp/k02yRv45c3Hpy/vDva22dzB
- J9PrfyDjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIkkTWT4yTj9V5jhhxXPVotE
- xh25dmLmhxN99vKnxM6vddUXfSyzppeR4WtOlCLXvw2ljXyfshwufr6/TzZdw5LnMIuN+/cXWU6
- /WAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5181; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=Y6+xTjfUbeJYg+bBesSZxSAYvxzjy5tMgpZ5jslWtdg=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ03Mc0sUF5Nhq+jeHPRFazDjvesydy8dCfs6avKPr5
+ dw33/12dpSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAExk4SKGv1J//hS3cT9o5uKs
+ mrZyxqUN5kdD5l6Z/N/Do7licYrvs5UM/6tXTJ+wW3rKvAJXjtTt299PmRZUmXPcQ79vQ5rMtFc
+ vbfkA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 From: Chris Mason <mason@kernel.org>
 
-accept() of an MPTCP connection that has already received data can leak
-one page of memory cgroup charge, and the leaked charges can get the
-server OOM killed.
+accept() can permanently overcharge the memory cgroup of an MPTCP
+server, so the server can be OOM killed, if the new connection received
+data while its MPTCP socket was locked.
 
-At accept(), __inet_accept() charges the MPTCP socket (msk) for the
-memory that it holds, rounded up to whole pages, and
-mptcp_graft_subflows() does the same for each subflow. A page is
-uncharged only once, when the socket that holds it releases it, so
-rounding up each socket on its own is only correct while each page
-belongs to one socket. But for each skb that the msk takes over from a
-subflow, it borrows skb->truesize bytes from the pages that the subflow
-reserved, so the two can share a page:
+The sockets of an MPTCP connection have no memory cgroup before
+accept(), which then charges the sk_forward_alloc and the sk_rmem_alloc
+of the MPTCP socket (msk) and of each subflow. mptcp_graft_subflows()
+also charges msk->backlog_unaccounted: the truesize of the skbs that
+__mptcp_add_backlog() queued while the socket lock of the msk was held
+and their subflow had no memory cgroup. But the first charge already
+covers each of these skbs that has not been freed, in the sk_rmem_alloc
+of its subflow or of the msk, so no later uncharge matches the extra
+charge.
 
-    reserved by the subflow      4096 bytes  1 page
-      now held by the msk         896 bytes  charged for 1 page
-      still held by the subflow  3200 bytes  charged for 1 page
-
-The fix used here is to keep a running sum of what the msk and its
-subflows hold, and to let the new mptcp_charge_subflow() charge each
-subflow only for the pages that it adds to the rounded-up sum.
+The fix used here is to remove msk->backlog_unaccounted, its charge in
+mptcp_graft_subflows() and the warning that tests it in
+mptcp_can_spool_backlog(). An RFC patch [1] removes the same lines, as
+part of another approach.
 
 This issue has been found with the help of an LLM, and reproduced in a
-VM, with the reproducer shared with the original version of this patch:
-an MPTCP server in a memory cgroup, the first byte of the client
-arriving before accept(). Without this patch, 4096 bytes stayed charged
-to the memory cgroup for each connection, after its end:
+VM, with the reproducer shared with the original version of this patch,
+on a kernel with the previous patch: 100,000 connections to an MPTCP
+server in a memory cgroup. Without this patch, about 63 MB stayed
+charged to this memory cgroup once all the connections were closed, and
+to its parent after its removal:
 
-  SNAP label=after-1000 rounds=1000 sockets_left_in_srv=0 [...] c_sock=4096000 [...]
-  SNAP label=after-5000 rounds=5000 sockets_left_in_srv=0 [...] c_sock=20480000 [...]
+  SNAP label=after-100000 rounds=100000 sockets_left_in_srv=0 tcp_mem_pages=0 [...] c_sock=63295488 [...]
+  [...]
+  SNAP label=c-removed rounds=100000 sockets_left_in_srv=0 tcp_mem_pages=0 c=removed [...] p_sock=63295488 [...]
 
-With a memory limit, the original version of this patch reported that
-the server was killed by the OOM killer after about 14,400 connections.
+And about 12 MB with only 50 connections, each getting 20,000 duplicates
+of a byte before accept(), beside bare ACKs with RM_ADDR, which make the
+MPTCP worker take the socket lock:
 
-Fixes: 9db5b3cec4ec ("mptcp: borrow forward memory from subflow")
+  SNAP label=after-50 rounds=50 sockets_left_in_srv=0 tcp_mem_pages=256 [...] c_sock=12881920 [...]
+
+Fixes: 6228efe0cc01 ("mptcp: leverage the backlog for RX packet processing")
+Link: https://lore.kernel.org/all/20260924080219.1036588-4-caixinchen1@huawei.com/ [1]
 Signed-off-by: Chris Mason <mason@kernel.org>
-[ Shorter comment. Commit message: how the issue was found, and its
-  symptoms. ]
+[ No comment change: the commit message explains why the backlog is
+  covered. Commit message: refer to the RFC [1] removing the same lines
+  + how the issue was found, and its symptoms. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/protocol.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.c | 35 +----------------------------------
+ net/mptcp/protocol.h |  1 -
+ 2 files changed, 1 insertion(+), 35 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index adae675227df..8749ba146363 100644
+index 8749ba146363..9f5e8b5cde60 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -4636,10 +4636,26 @@ static int mptcp_listen(struct socket *sock, int backlog)
- 	return err;
+@@ -802,12 +802,6 @@ static void __mptcp_add_backlog(struct sock *sk,
+ 
+ account:
+ 	WRITE_ONCE(msk->backlog_len, msk->backlog_len + delta);
+-
+-	/* Possibly not accept()ed yet, keep track of memory not CG
+-	 * accounted, mptcp_graft_subflows() will handle it.
+-	 */
+-	if (!mem_cgroup_from_sk(ssk))
+-		msk->backlog_unaccounted += delta;
  }
  
-+/* The msk and its subflows share pages: charge their rounded-up sum */
-+static int mptcp_charge_subflow(struct sock *sk, struct sock *ssk, int mem)
-+{
-+	int new_mem = mem + ssk->sk_forward_alloc +
-+		      atomic_read(&ssk->sk_rmem_alloc);
-+	int amt = sk_mem_pages(new_mem) - sk_mem_pages(mem);
-+	gfp_t gfp = GFP_KERNEL | __GFP_NOFAIL;
-+
-+	mem_cgroup_sk_inherit(sk, ssk);
-+	if (amt > 0)
-+		mem_cgroup_sk_charge(ssk, amt, gfp);
-+	kmem_cache_charge(ssk, gfp);
-+	return new_mem;
-+}
-+
- static void mptcp_graft_subflows(struct sock *sk)
+ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+@@ -2454,12 +2448,6 @@ static bool mptcp_can_spool_backlog(struct sock *sk, struct list_head *skbs)
  {
- 	struct mptcp_subflow_context *subflow;
  	struct mptcp_sock *msk = mptcp_sk(sk);
-+	int mem;
  
- 	if (mem_cgroup_sockets_enabled) {
- 		LIST_HEAD(join_list);
-@@ -4657,6 +4673,9 @@ static void mptcp_graft_subflows(struct sock *sk)
- 		__mptcp_flush_join_list(sk, &join_list);
- 	}
+-	/* After CG initialization, subflows should never add skb before
+-	 * gaining the CG themself.
+-	 */
+-	DEBUG_NET_WARN_ON_ONCE(msk->backlog_unaccounted && sk->sk_socket &&
+-			       mem_cgroup_from_sk(sk));
+-
+ 	if (list_empty(&msk->backlog_list))
+ 		return false;
  
-+	/* What __inet_accept() just charged for the msk, before rounding up. */
-+	mem = sk->sk_forward_alloc + atomic_read(&sk->sk_rmem_alloc);
-+
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 
-@@ -4672,7 +4691,7 @@ static void mptcp_graft_subflows(struct sock *sk)
- 			goto unlock;
- 
- 		__mptcp_inherit_cgrp_data(sk, ssk);
--		__mptcp_inherit_memcg(sk, ssk, GFP_KERNEL);
-+		mem = mptcp_charge_subflow(sk, ssk, mem);
- 
+@@ -4663,8 +4651,7 @@ static void mptcp_graft_subflows(struct sock *sk)
+ 		/* Subflows joining after __inet_accept() will get the
+ 		 * mem CG properly initialized at mptcp_finish_join() time,
+ 		 * but subflows pending in join_list need explicit
+-		 * initialization before flushing `backlog_unaccounted`
+-		 * or MPTCP can later unexpectedly observe unaccounted memory.
++		 * initialization by the loop below.
+ 		 */
+ 		mptcp_data_lock(sk);
+ 		list_splice_init(&msk->join_list, &join_list);
+@@ -4696,26 +4683,6 @@ static void mptcp_graft_subflows(struct sock *sk)
  unlock:
  		release_sock(ssk);
+ 	}
+-
+-	if (mem_cgroup_sk_enabled(sk)) {
+-		gfp_t gfp = GFP_KERNEL | __GFP_NOFAIL;
+-		int amt;
+-
+-		/* Account the backlog memory; prior accept() is aware of
+-		 * fwd and rmem only.
+-		 */
+-		mptcp_data_lock(sk);
+-		amt = sk_mem_pages(sk->sk_forward_alloc +
+-				   msk->backlog_unaccounted +
+-				   atomic_read(&sk->sk_rmem_alloc)) -
+-		      sk_mem_pages(sk->sk_forward_alloc +
+-				   atomic_read(&sk->sk_rmem_alloc));
+-		msk->backlog_unaccounted = 0;
+-		mptcp_data_unlock(sk);
+-
+-		if (amt)
+-			mem_cgroup_sk_charge(sk, amt, gfp);
+-	}
+ }
+ 
+ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index d0ae782c9ade..9a9dbab672af 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -394,7 +394,6 @@ struct mptcp_sock {
+ 
+ 	struct list_head backlog_list;	/* protected by the data lock */
+ 	u32		backlog_len;
+-	u32		backlog_unaccounted;
+ };
+ 
+ #define mptcp_data_lock(sk) spin_lock_bh(&(sk)->sk_lock.slock)
 
 -- 
 2.55.0
