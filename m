@@ -1,93 +1,60 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.167.175
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795263086;
-	b=L7SaQ/8YjRAPZkiHARlcLmOUUdgUDOlD5AaKw/qlbkmtjEwCG12bI90ucnhFEig9rrDy
-	 ZidzwmWFFd4yCIkybLrFwLAzvToTGXE/gcuIgO426cCGzxDTOHYeFxh3hUL9sr/cJO8v2
-	 rI2c27s/OmH13AmTwP9qxaruwSvxkPLhSLXRTZcHBJ0CYwerikRbpPpzdp89mb/r6ae34
-	 ohGBMRYocX4mOhcn9z0NzR2wN5PB0UhgRSrqIPMDyqxP2/FNfs4ugmuovW08Sb9qhW8IY
-	 A3BhbqIe7d+dYTCPs+jyM0Q7iFBdcsL8zzs3Gi3NlnRYbLG5xVR707dcqNTuUU8LTqg==
+	t=1795286928;
+	b=5ez2RcrGoy4uUDXFpQDhacZ1XBTB6d/RuCEkRwumIKXo+4QM2J4CUK73LYma9uCtrLhK
+	 /cF/DtsrORuNCeQg/MrmR6rddLB/Y+tIrIKD2kXSZYljU1COeJxOk3iojPKuvq9vLucAk
+	 r4/x3H9hIWjn6/ZBT8kRsHb08b4Ucv0NlKPpbJwzwAtDB94X6uYqGo1QkJMC1M8O2ORv0
+	 0CDyvA74L2ZN4NklsQQqr/46VimCzzt15RMU/EGDm+pbJoKCtxdrGaO/BH5u+4URwYFXm
+	 8cgAMPsy4d/Vw4kfJTgHkvCxz3oltGjYgKfrH2koyCa4FiNe6sCiDjizVgkBPsqCCNQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795263086;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
-	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
-	 Date:MIME-Version:Content-Type;
-	bh=5OJJOtxTNPpKMqDKcmcvurtWufMeBPZmCO+RRGTRL8w=;
-	b=XkhG1vdqS1RlubDhUSrJGuePjrrN0a8vz3Re9bI7VPPLoN0Vgq9L2mTMUPY9ofbBrwRp
-	 IQQFSUIhQ4HSgUN/s+g/X7McoLelaY+gEPIQlE5bcSYHXrzuYaAmdDLkvjqk1UK/0F9A/
-	 ipHnPGMQumgggJ9ec7B02S4dbrtjVqILeKHlsV/OYdlRkOFhAC1xHrEbShq8IIslpzsq5
-	 tPFf6oy1pRBobzMeNyrSeCdEyr7gCW333A/xJuLxET5cmkQWNjGkVgwVU2kBJexCJe+eA
-	 U0ByguyLJ9lQtaqKrRYRA63xm1ku5fyNd0xYgoF2P+IdAKpPWw7ADIoIJAaC/VQ6R4g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795286928;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=cyGBZWRFo7khWBx16+BXqfWWwxYQto9azSudfKDY96Q=;
+	b=xB7x1JrKCMwWi3REecRhSB3m4qzOpTuqtN1kkX5pHFD1q5Hf3pH9RF2WPZO85UjpYdUU
+	 z2HNBBfp7YCwrBdEaPZ0i+2nJedFq4nVsf7i3s6SFzFlYBGggr95xBzjDT31+WkyRvUzN
+	 SQG/YMafAWaRJJ+C4hQEQCaxVhU4H5gKZ5hv0YyDobMkJIUXB6IQILmPvhAB6vvhX9D8k
+	 F/c+6SI7/Mg7b3nulcu18/RMsTQR9pZ4cTEtjMkX2dTOTIf4emf6LcRGRJNCYnd8Oewtv
+	 bBf4qNhEAjAzrAw0+ADLI/sIi9T1pXoy/sUkDsoakBZ+Te7Hb6nX2FfuuGaNEmQgXrA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=nIthUpZu;
-	arc=none smtp.remote-ip=209.85.167.175
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UszwaTW+;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1619B606A32A
-	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 12:11:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1619B606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BF9606A320;
+	Sat, 21 Nov 2026 18:48:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=nIthUpZu
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-4d198f1a591so1761534b6e.2
-        for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 04:11:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795263085; x=1795867885; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=5OJJOtxTNPpKMqDKcmcvurtWufMeBPZmCO+RRGTRL8w=;
-        b=nIthUpZuUMXmXY2klIewv38QaO9LVAUbOhmeVNV6iJH7tT+Qd9SThF1nu4s4Ej0hUN
-         ZK2qAFiH7u8RaHCtIZI6gGEZpuVZGYBDszw8II6yLyDUOLv6i0C15jm4iw4E0ihTecvg
-         U5vntUTHb4CE6PfSX/fJMQJ3VDlXK9Zxn9XJebHoz9EiTi7aVR3D8czNqQmR2aa8TirE
-         vwCGP6phMFMEiC8TYELWsjOrw8r0szb5gAmfu2A59oT8C22LpA5JCeRhnNgcIT03n2P0
-         qQYxZtJt/FQNLMH/buOxMALK+eFnE/e2RNMNIOnTMIOi24w743nen9cZU0LAJ1xwggTp
-         d6tQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795263085; x=1795867885;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=5OJJOtxTNPpKMqDKcmcvurtWufMeBPZmCO+RRGTRL8w=;
-        b=Bb/cb26Y2B12nRfNLsuAML9zHpIoc5HHX7LggHP2B00q1ionVUqsSZZJLKLGrQn+64
-         RYuHiJwzDLiTGuESol4R88a6QY7RjarAfBC/1LHxFyhy8HlaUi9eEJw9d7tsTYCOcFyF
-         AXG/BzTw6e8uU42vfpNgOuDMXMgQYELw7Ayo6c3tPipeVEyvDm3iRdPu567SNon7a39C
-         rXJlPU+gqIvhtIY7FqmkXsneJ75MdulIBK2rpwTYlQzrDprasU2RTxaBjujwKLtqZ6jF
-         fAr5qEMY6msWr85lDG1QQ0S5fNq1uIbj8cBQF9ywcFjMqGkg81Lhe1QDTRi1kZOtkjnV
-         KkeA==
-X-Gm-Message-State: APuU4Z/coSfiudZdrLeEZmwm3vlwbErQxoPkMbRtlGNOIoZEeB/IODO2
-	wze7w8FaIYKE4eCs6IvdH/Z+2sD4H89EhIezqtXnmCRyW8B/M8ZMYXU=
-X-Gm-Gg: AZFdTZdD7A02IdoHabBZSBRJ0dBu8dOuzhrScFweoM4786RJGolf4Q8NouFIZJ4xsP9
-	TGQY9TjRqsi1outZ9Ff0GdgzpbYE3t9zTC79ykOud1JNTTuv8bSYRgw+CCmT74UXlthP6Rnj5kh
-	rIAXNAEpXgmnkv3jX+xbVq8Kn2S3OZkwLyoVZtZsqnP2R+WF1WsGUAxhZhIdag2QcsEYwRfCisD
-	Z0T9jfICjkF7QKR8yzRsXJaq3vi4DxSrjKX5MWRxx30rhGukUc0x5RPYAOjZT9VuL4hgUf1/gFw
-	JxFWszs97LXqhAGMgClYE6uWPkRWDjYKhXFQdEMoeC0kVTOBWbikxPmZMGJYILkOHYJbF7WXh5g
-	NSrKevbIxROkia9LGoc7eUVdi1B/6BN3CoqiHRCDvu5nH/Y1hq3gCPhz1u35y7rw+haqvvHlQcf
-	BP9/kslq/wMz43f0DJtvIQ0B8OWL3XhsnLEOl68LwfBw/UfCRUjMTe5YKxCOTfCtEFAZ0Jr6Ik0
-	DhvRSYsfxXBIZh89VvrADvnQGVs/YAxPwIKrUPQk6Zw6bNY4xzmshcDz86t/85+gM1q1Djfed2/
-	cpkQohpNbnYFeaMOUFPyaBeOm0tgJYKZIlSAEgtrvOwfFR5DgzDcyG/V9XbXq4bsZw==
-X-Received: by 2002:a05:6808:c1ac:b0:532:d9f5:1de6 with SMTP id 5614622812f47-57a0c09624amr6423989b6e.65.1795263084906;
-        Sat, 21 Nov 2026 04:11:24 -0800 (PST)
-Received: from github.com ([172.169.255.129])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-57a362575fbsm4705919b6e.17.2026.11.21.04.11.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Nov 2026 04:11:23 -0800 (PST)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
-References: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
-Subject: Re: [PATCH mptcp-net v2 00/62] mptcp: misc fixes
-Message-ID: <c0e653d7-0591-629f-a1ca-22b3ce371751@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 21 Nov 2026 12:11:21 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UszwaTW+
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EC9D1F000C6;
+	Sat, 21 Nov 2026 18:48:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795286928;
+	bh=cyGBZWRFo7khWBx16+BXqfWWwxYQto9azSudfKDY96Q=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=UszwaTW+nuXUpn2RGGvprRlwg6zzC7vIzrLwvumzQX7ePqukvZ8TS8t1n5MbxOvzf
+	 aGXM7zjahByikBTnNpyx4rDzmzdxrZyFvbaJTM0nS4ltfPMuR6LViMaJpWK4yc3KH4
+	 tU/lDP0kug/vAbBLPUsVjsszWUTmEPtZ1QSjVS6h6Ue2Tg39Z06dZA5uzstWcZ1nYR
+	 NAEzDSdZwoAiZromzEUHHuBuDt8oaFJhY/sIvNafXglOc/ZH3bcM7tYMNMy4fWROM3
+	 ILtfSAPpPiGJ6mvjweZPqqz+2FmzYwhH6Qs6aNfyd3fDICkENWt1X68Y9Y5vDWxKfC
+	 4tJuFR8BDmpEQ==
+Subject:
+ Re: [PATCH v3 net-next 1/7] tcp: Refactor the first loop in tcp_collapse().
+From: netdev-bot+sashiko@kernel.org
+To: kuniyu@google.com
+Cc: edumazet@kernel.org, ncardwell@google.com, davem@davemloft.net,
+ kuba@kernel.org, pabeni@redhat.com, matttbe@kernel.org, martineau@kernel.org,
+ horms@kernel.org, kuni1840@gmail.com, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev
+Date: Sat, 21 Nov 2026 18:48:46 +0000
+Message-ID: <179528692693.3135.11505988142988648858@kernel.org>
+In-Reply-To: <20261119071649.374106-2-kuniyu@google.com>
+References: <20261119071649.374106-2-kuniyu@google.com>
+X-sashiko-severity: Low
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -97,59 +64,123 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 
-Hi Matthieu,
+Thank you for your contribution! Sashiko AI review found more severe
+issue(s) in other patches of this series. This mail is only an FYI, in case
+you want to address the nit picks below when you respin.
 
-Thank you for your modifications, that's great!
+Low priority / nit picks for your consideration:
 
-Our CI did some validations and here is its report:
+- [Low] The commit "tcp: Refactor the first loop in tcp_collapse()" is
+  titled as a refactor.
+- [Low] In tcp_collapse() (net/ipv4/tcp_input.c), the patch merges the
+  `!skb_frags_readable(skb)` test into the condition directly below the…
 
-- KVM Validation: normal (except selftest_mptcp_join): Unstable: 2 failed =
-test(s): packetdrill_fastopen packetdrill_regressions =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Perf: Unstable: 5 failed test(s): regression:sched-baseline =
-regression:sched-mem-pressure regression:sched-rmem(3) =
-regression:sched-weak-secondary(3) validation:sched-loss =E2=9A=A0=EF=B8=8F=
-  (105 new outliers to review)
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/44893077071
+--
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/ae8564eb0766
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1218014
+tcp: Refactor the first loop in tcp_collapse().
 
+This patch restructures the first loop in tcp_collapse(). SYN/FIN skbs
+and skbs with unreadable frags now go to skip_this, which removes
+end_of_skbs and the rechecks after the loop. The skb_frags_readable()
+test also moves below the fully-covered check, and the v2 note documents
+the SYN/FIN overlap behaviour change.
 
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
+> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> index d35048c363be5..838d4f470c944 100644
+> --- a/net/ipv4/tcp_input.c
+> +++ b/net/ipv4/tcp_input.c
+> @@ -5849,23 +5849,17 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *list, struct rb_root *root,
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+[ ... ]
 
-For more details:
+>  restart:
+> -	for (end_of_skbs = true; skb != NULL && skb != tail; skb = n) {
+> +	for (; skb && skb != tail; skb = n) {
+>  		n = tcp_skb_next(skb, list);
+>  
+> -		if (!skb_frags_readable(skb))
+> -			goto skip_this;
+> -
+>  		/* No new bits? It is possible on ofo queue. */
+>  		if (!before(start, TCP_SKB_CB(skb)->end_seq)) {
+>  			skb = tcp_collapse_one(sk, skb, list, root);
+> -			if (!skb)
+> -				break;
+>  			goto restart;
+>  		}
 
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+[Severity: Low]
+In tcp_collapse(), the skb_frags_readable() test now runs after the "No
+new bits?" check. Should the commit message describe what this changes
+for unreadable (devmem/net_iov) skbs?
 
+Before this patch, an unreadable skb that was fully covered by start
+always went to skip_this. It stayed in the receive queue or the ofo
+rbtree, and this line could move start backwards:
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+    start = TCP_SKB_CB(skb)->end_seq;
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+With this patch, the same skb reaches tcp_collapse_one() first. It is
+unlinked or rb_erase()d and freed, and start only moves forward.
+
+The commit message only says:
+
+    Also, skb_frags_readable() should be tested after the fully
+    overlapping check.
+
+It gives no reason for the move. It also does not say that fully covered
+unreadable skbs are now freed.
+
+The v2 note already covers the SYN/FIN change. Could it also cover this
+one? The new behaviour looks fine to me, so this is only about the commit
+message.
+
+> @@ -5874,27 +5868,25 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *list, struct rb_root *root,
+>  		 * - bloated or contains data before "start" or
+>  		 *   overlaps to the next one and mptcp allow collapsing.
+>  		 */
+> -		if (!(TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)) &&
+> -		    (tcp_win_from_space(sk, skb->truesize) > skb->len ||
+> -		     before(TCP_SKB_CB(skb)->seq, start))) {
+> -			end_of_skbs = false;
+> +		if (!skb_frags_readable(skb) ||
+> +		    TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN))
+> +			goto skip_this;
+> +
+> +		if (tcp_win_from_space(sk, skb->truesize) > skb->len ||
+> +		    before(TCP_SKB_CB(skb)->seq, start))
+>  			break;
+> -		}
+>  
+>  		if (n && n != tail && skb_frags_readable(n) &&
+>  		    tcp_skb_can_collapse_rx(skb, n) &&
+> -		    TCP_SKB_CB(skb)->end_seq != TCP_SKB_CB(n)->seq) {
+> -			end_of_skbs = false;
+> +		    TCP_SKB_CB(skb)->end_seq != TCP_SKB_CB(n)->seq)
+>  			break;
+> -		}
+
+[Severity: Low]
+This isn't a bug, but the readability test now sits directly under the
+comment in tcp_collapse() that lists the conditions for the first skb to
+collapse:
+
+    /* The first skb to collapse is:
+     * - not SYN/FIN and
+     * - bloated or contains data before "start" or
+     *   overlaps to the next one and mptcp allow collapsing.
+     */
+
+The comment does not say that the skb's frags must be readable. It also
+does not mention the skb_frags_readable(n) requirement in the overlap
+check.
+
+A later patch in the series rewrites this comment as "not SYN/FIN and
+the unread portion starting from "start" is bloated". That version still
+leaves out readability.
+
+Would it be worth adding the readability requirement to the comment?
+
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261119071649.374106-1-kuniyu%40google.com
