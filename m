@@ -1,57 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795286929;
-	b=UQcLT0+feg+tGJvqqbMIIg2oenHEfTBaFv4PBRtEPzoFGnSyP8nJ+fNogmWnw2zHB059
-	 N/eHHpga/4LFuXmAetWpuoSg2nNHoYGFTueFmUj8VxzFfifZVWmOsiydk1kbNWRl/Nse2
-	 lf0h9n48oESeXlmAAYdinTp4jzydl5gFCvdDpRRCTPtHSttT3V9N+KA335nDHmGqSI7qd
-	 qUxs4/5JBzSTiu5KDS7262qRXYk5gky7XW2GqY3chTpkPeVAZt7AK58BJgdSJy4lOPQP5
-	 eUZW9NPiqju6hfjNQp/Ag3kXBDF4o9TILcwf/3Bnxo9boKU1DmnUlztoqRrN2y/eutw==
+	t=1795286930;
+	b=r7mL5/s4iGS/2UJOJThoA++9GXvsqgm7YrWV65sEFi3Xe95GKVdDGnszc27DvRSRVBNu
+	 ++h5oXILXA2OW6P0Uw95mQmkc2ntDlDplHRdtie9ywwFrc8ZvHY7a/UUHhfNuo8TRY6af
+	 XXjA0oW/TkFdHZfSGqR3KUc2nrglNo8C2BEPOmdL/MN4VEbZFvUVq8I4wvBKWEIw/y5JC
+	 5pYABmZMtrVQ6VQeg4FdMTFLO4sfjeQf4/PNdolo0txvkko0xxUOZoSENbMn6wPKNO2+N
+	 c46ZgM5nB6FbHlVSRhbd0zcO4rSTc1AH2SBDL4S8jtpIhf1W1hkFDVZAzvd04a4xjqA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795286929;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795286930;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=LvE/5lLzSA3kBIgfVFY53of7yDlw+Ma3kInHk6d+oL0=;
-	b=unLb6MNFxxmwEWXGfqBqMBvX9ibx16aEAfaWWbsITkYJy2c7gDOpeMnfIG82TGOoxSd1
-	 Jd9UWyn6hAaflfpHb3heF7IKhlIHLgALXDuSXebnZgGodrRNOCQti+kV0wXrQPUdLAkZ9
-	 ZCNoDe+ECHPEp4+aTqH3kVlWVVuD/E/ZzYJTFEcm7hifmZ58fik6owkmII25WHFWU0/8b
-	 K6/6fYSq/p9E2s3dHChYPOS6cwfjrUAk2s8jTVOtz6UkD7QzCpxkEu5HJA46GJWWGN+ks
-	 E2p9WBHvORzRjKYHA++QFMnmyTPU61Kr1ur9Fa4k/lUut8UZzIDxfNAQRLZQJoy48mQ==
+	bh=16lpQsPZNjjC3ijLF2uUeyUfA1Z8rss5BZS9YEea6oI=;
+	b=KBpDeabRtad8rfuGsrIJxm4zVcMn34poqM7doRmNd34rKW6JmTUGs9fgttvSvRXoSBRy
+	 oAjze8cRcCBEpxNdRm+457HVby6LIrQUkgwp2FJ7vR0YAqUJ2sd4gBDnimg3bCQ7h13xP
+	 efi2LHx3lrcEj9kgUTSHBBTsPwAXspx2DGyUJeqJ2xqQpSb3h7+HCCN3TdFTgMgdsXXH9
+	 a7uhOBdGNP+hwJ9fpHAkBVb+rzTMGlAdPMjKzdQo51QT8Dwx35VhGhxQ3KW/4sFTxuUGV
+	 St5x02+/DkGWP7wu3d2GfRspMk262w+JsJWVrfcxcTVLQzc+GleYvSkUU7TrChroa6A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jz300aHP;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oh5HrPqG;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5CF2606A337;
-	Sat, 21 Nov 2026 18:48:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4E0606A331;
+	Sat, 21 Nov 2026 18:48:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jz300aHP
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C8EC1F000C6;
-	Sat, 21 Nov 2026 18:48:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oh5HrPqG
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 006491F000C6;
+	Sat, 21 Nov 2026 18:48:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795286929;
-	bh=LvE/5lLzSA3kBIgfVFY53of7yDlw+Ma3kInHk6d+oL0=;
+	s=k20260515; t=1795286930;
+	bh=16lpQsPZNjjC3ijLF2uUeyUfA1Z8rss5BZS9YEea6oI=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=jz300aHPGSQulcL3tnS+E5ZZNbAk0C/RApZQxCO5OHlwajhEZtLOTtxClkOq4AkYX
-	 M0xeY24f52Ao6VI6mOTCVU6JWO/eC/ErTU8djGrGCyshwGFBfwT+ytcs9UCQe2JqWV
-	 0cIf0wgBR4JdvB8TZwpUmwUtY8hFs4E1yzgO8ttnvE63nfbEsmh4cvNzUYIzfxa9A2
-	 E/tJY0RQf2Ab4V0Xn7ave5fPmVPw7dHSpwSuLwKAMc+U68sTzGzbOLkTGcUQQerV8B
-	 0y8FyceeEzRd2yK/aKnPbqskXGCkg+MYyDyceAmECmgPcZ6PCJ+j3ShBn+gyiR1Kx2
-	 ziEgYl03IIpag==
-Subject: Re: [PATCH v3 net-next 3/7] tcp: Stop collapsing if not bloated.
+	b=oh5HrPqGRkyO7ppJt6h4uSXlrvmNrWHNchgqdd6z6gxcKAeBPxGpJJyaFE2exta+c
+	 8+Q1E8EcmvWswkOCt4RtRHKWOL0uja/zXXE2A0aKMuMlaBB+16sxSGI8Txwyuu6ytY
+	 CdijdiMLqAWDs0g9B67aKg8C5r2T2qOzAnqs3BA9R7o0tFSq9LOc54Yj5n7DWkaeOr
+	 Ex2YbDX4fI+VKowl9EldRvcTFFTW5p30eXeoscGmU4Oy4EZsXoPP7k5CMLy3MLhpx2
+	 OG7jy5sFRh8hgLzo38Fstay8YIYP7uiurNCExNBP2fOoSHpSy9xe3jrYNzhRjW99Wt
+	 qKu4PEbt+A3Bg==
+Subject:
+ Re: [PATCH v3 net-next 5/7] tcp: Allocate all new skb before collapsing.
 From: netdev-bot+sashiko@kernel.org
 To: kuniyu@google.com
 Cc: edumazet@kernel.org, ncardwell@google.com, davem@davemloft.net,
  kuba@kernel.org, pabeni@redhat.com, matttbe@kernel.org, martineau@kernel.org,
  horms@kernel.org, kuni1840@gmail.com, netdev@vger.kernel.org,
  mptcp@lists.linux.dev
-Date: Sat, 21 Nov 2026 18:48:48 +0000
-Message-ID: <179528692814.3135.815253982622168176@kernel.org>
-In-Reply-To: <20261119071649.374106-4-kuniyu@google.com>
-References: <20261119071649.374106-4-kuniyu@google.com>
-X-sashiko-severity: Low
+Date: Sat, 21 Nov 2026 18:48:49 +0000
+Message-ID: <179528692954.3135.2145920714638368553@kernel.org>
+In-Reply-To: <20261119071649.374106-6-kuniyu@google.com>
+References: <20261119071649.374106-6-kuniyu@google.com>
+X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -64,109 +65,112 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found more severe
-issue(s) in other patches of this series. This mail is only an FYI, in case
-you want to address the nit picks below when you respin.
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue(s) to consider.
 
-Low priority / nit picks for your consideration:
+Critical: 0 · High: 0 · Medium: 1 · Low: 0
 
-- [Low] This patch changes what tcp_collapse() does, but the comments
-  describing it are now out of date.
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
+
+- [Medium] In tcp_collapse() (net/ipv4/tcp_input.c), the new
+  TCP_COLLAPSE_MAX_TOTAL_SIZE overlap check throws away the whole…
 
 --
 
-tcp: Stop collapsing if not bloated.
+tcp: Allocate all new skb before collapsing.
 
-This patch changes tcp_collapse() to look for sub-ranges that start with
-a bloated skb. Each range stops at the first dense, non-overlapping skb,
-and collapsing repeats for every such range. On the OOO rbtree,
-overlapping skbs are still merged whatever their density, and a range is
-skipped when an overlapping skb cannot be merged.
+This commit changes tcp_collapse() to preallocate every new skb for a
+sub-range into a temporary pool before copying. An alloc_skb() failure
+then no longer leaves partially collapsed duplicates in the queue. To
+bound that preallocation, the sub-range is capped at
+TCP_COLLAPSE_MAX_TOTAL_SIZE, except when the range is a single first skb.
+Overlapping OOO ranges that go over the cap are skipped.
 
 > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> index b4e3d623c4a21..5df60dd35afed 100644
+> index 27ed9ba11ec9c..990e348963734 100644
 > --- a/net/ipv4/tcp_input.c
 > +++ b/net/ipv4/tcp_input.c
-> @@ -5848,8 +5848,8 @@ static struct sk_buff *tcp_collapse_one(struct sock *sk, struct sk_buff *skb,
->  	return next;
->  }
+> @@ -5822,6 +5822,11 @@ static struct sk_buff *tcp_skb_next(struct sk_buff *skb, struct sk_buff_head *li
+>  #define TCP_COLLAPSE_SCALING_RATIO				\
+>  	((TCP_COLLAPSE_MAX_SIZE << TCP_RMEM_TO_WIN_SCALE) /	\
+>  	 (SKB_TRUESIZE(TCP_COLLAPSE_MAX_SIZE)))
+> +/* Cap pool preallocation per sub-range to at most 16 skbs in seq
+> + * space.  A single first skb exceeding this is still collapsed,
+> + * whereas an exceeding overlapping ofo range is skipped.
+> + */
+> +#define TCP_COLLAPSE_MAX_TOTAL_SIZE (TCP_COLLAPSE_MAX_SIZE * 16)
 >  
-> -/* Collapse contiguous sequence of skbs head..tail with
-> - * sequence numbers start..end.
-> +/* Collapse bloated sub-ranges in contiguous sequence of skbs
-> + * head..tail starting from sequence number start.
->   *
->   * If tail is NULL, this means until the end of the queue.
->   *
+>  static bool tcp_collapse_skb_bloated(const struct sk_buff *skb,
+>  				     u32 start, u8 scaling_ratio)
 
 [ ... ]
 
-> @@ -5882,38 +5885,59 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *list, struct rb_root *root,
-
-[ ... ]
-
-> +	/* Second, find consecutive collapsible skb. */
-> +	sub_end = TCP_SKB_CB(skb)->end_seq;
-> +	n = tcp_skb_next(skb, list);
-> +
-> +	while (n && n != tail) {
-> +		bool overlap;
-> +
-> +		if (!after(TCP_SKB_CB(n)->end_seq, sub_end)) {
-> +			n = tcp_collapse_one(sk, n, list, root);
-> +			continue;
-> +		}
-> +
-> +		/* seq and end_seq must increase monotonically for rbtree. */
-> +		overlap = !list && before(TCP_SKB_CB(n)->seq, sub_end);
-> +
-> +		if (!skb_frags_readable(n) ||
-> +		    TCP_SKB_CB(n)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN) ||
-> +		    !tcp_skb_can_collapse_rx(skb, n)) {
-> +			if (overlap)
-> +				goto skip;
-> +			break;
-> +		}
+> @@ -5926,8 +5933,9 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *list, struct rb_root *root,
+>  		}
 >  
-> -	while (before(start, end)) {
-> -		int copy = min_t(int, TCP_COLLAPSE_MAX_SIZE, end - start);
-> +		if (!overlap &&
-> +		    !tcp_collapse_skb_bloated(n, sub_end,
-> +					      TCP_COLLAPSE_SCALING_RATIO))
-> +			break;
+>  		if (!overlap &&
+> -		    !tcp_collapse_skb_bloated(n, sub_end,
+> -					      TCP_COLLAPSE_SCALING_RATIO))
+> +		    (TCP_SKB_CB(n)->end_seq - start >= TCP_COLLAPSE_MAX_TOTAL_SIZE ||
+> +		     !tcp_collapse_skb_bloated(n, sub_end,
+> +					       TCP_COLLAPSE_SCALING_RATIO)))
+>  			break;
+>  
+>  		sub_end = TCP_SKB_CB(n)->end_seq;
+> @@ -5935,25 +5943,38 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *list, struct rb_root *root,
+>  		n = tcp_skb_next(n, list);
+>  	}
+>  
+> +	if (sub_end != TCP_SKB_CB(skb)->end_seq &&
+> +	    sub_end - start >= TCP_COLLAPSE_MAX_TOTAL_SIZE)
+> +		goto skip;
 
-[Severity: Low]
-This isn't a bug, but are the comments around tcp_collapse() still
-accurate after this change?
+[Severity: Medium]
+Does this goto skip discard the whole [start, sub_end) range in
+tcp_collapse()? That would include the bloated non-overlapping skbs
+gathered before the overlapping one.
 
-The new tcp_collapse() header says it collapses "bloated sub-ranges".
-On the OOO rbtree, though, this loop does more than that:
+In the second loop, the new size cap is only checked when overlap is
+false. An OOO skb where
 
-  - it pulls in non-bloated skbs when overlap is true, because the
-    tcp_collapse_skb_bloated() check is skipped
-  - it frees skbs that sub_end fully covers, via tcp_collapse_one()
-  - it skips the whole range with goto skip when an overlapping skb
-    can't be merged
+    overlap = !list && before(TCP_SKB_CB(n)->seq, sub_end);
 
-These overlap rules keep the rbtree ordered. Right now they are only
-described in the commit message and the one-line inline comment.
+is true gets added to sub_end with no size check. If that pushes
+sub_end - start past TCP_COLLAPSE_MAX_TOTAL_SIZE, skip sets
+start = sub_end and skb = n. None of the earlier skbs get collapsed,
+even though they were collapsed before this patch.
 
-The comment above tcp_collapse_ofo_queue() is also unchanged:
+Would it work to collapse only the prefix and stop before the skb that
+the overlapping one overlaps? tcp_data_queue_ofo() inserts a partial
+overlap after its predecessor, so the rbtree ordering should still hold.
 
-/* Collapse ofo queue. Algorithm: select contiguous sequence of skbs
- * and tcp_collapse() them until all the queue is collapsed.
- */
+TCP_COLLAPSE_MAX_TOTAL_SIZE is 16 * SKB_MAX_ORDER(0, 0). With 4 KiB pages
+that is 60416 bytes of sequence space, which is less than one 64 KB
+GRO/TSO skb. Can a single overlapping retransmit that was re-segmented
+or GRO-aggregated trigger this?
 
-With this patch, tcp_collapse() repacks only sub-ranges that start at a
-bloated skb, and it leaves dense skbs in place. So the queue is no
-longer fully collapsed.
+As an example, take contiguous bloated OOO skbs A1..A15 (about 22 KB),
+followed by B, which partially overlaps A15 and extends about 40 KB
+further.
 
-Both comments are still unchanged at the end of the series. By then,
-tcp_collapse() also skips ranges whose repacked skbs would not be denser,
-and it caps the total size with TCP_COLLAPSE_MAX_TOTAL_SIZE.
+Before this patch the range is collapsed, saving roughly 16 KB of
+truesize. After it, nothing is collapsed, and the same thing happens on
+every prune while B stays queued. tcp_prune_queue() then falls back to
+tcp_prune_ofo_queue(), which drops OOO data.
 
-Could these two comments be updated to describe the sub-range and
-overlap behavior?
+The commit message says:
+
+    Legitimate overlaps (retransmits with a different segmentation)
+    only involve a few skbs, so if an overlapping OOO chain reaches
+    the limit, we simply skip it.
+
+Is this accurate, given that the check counts bytes and not skbs? The
+message also doesn't mention that the non-overlapping skbs before the
+overlap are skipped as well.
 
 [ ... ]
 
