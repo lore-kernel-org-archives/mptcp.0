@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795254144;
-	b=L+2RPoTLfcZwMOP7XnNKqzbIRtHfReTR2lP2KVPJuAKP9c7f8cwOVFacvfaFDlGVUjb9
-	 h8ax8IRmZpzKIHXsc12+UWp7Y+6GaABi/KelfV8KwRfdg+mEHwzBcZONGXa9G11FbOb62
-	 63Buxw21pwotemaEqACbVNp3+LudMJ+5MzLwENYei3njcSFw6S7cEuIM81OceF0vLodhB
-	 M2NMUfntXxeBTtOiySfpjNZYbgMZANKDeTctVagIAzjL52TK8ojIpghh7jD0UvZMeJ+7u
-	 pbWVZeZ0kWyk99OGqwDhiXEc7N+2ofRKbLciRzLOWor05uwAtJfM8v3a4WYPAjzq1Rg==
+	t=1795254145;
+	b=zTUnjAZKSVgEw5Ig3l8e0n8G+r17Pwe4N6Z4SewBhMWQdmLUga1sBE1zNxeSC+O8Vndo
+	 N6P7P4+D4mXBCkjEuotRy34u5o++LaHjqeWuQ39uK+CIbs8Pp5BEY1YS5tUxNP+ojt9qo
+	 OTfwqVXBEeocOwKmt08GSfMSs+Im7b07pZLR6wIsdRfGS3jsZT91FuPBxOI7pQVx/v6pT
+	 b8MvG1ax0gsBjLiIamFHzmyEKEHAR7qnQMVpsipIs/QtRTcI6SsmKu3WbilPHuwM36DmP
+	 YHyQlJnTHpALrspx1UUGRbgZMVdoNrPpCO69PRwOt6PbiiP9S5Vo8N87lBneeRAfeZg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795254144;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795254145;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=cr4CNsbsVoztQq7JO0OWsEvUzbN7PEmSYtrgGym3LyU=;
-	b=T1zQR5CHAXSZ02gPwqv074o/VHWsMuLrjFjNe6GP6BIAY7HaLq6+F+zOmzv2QhDKHQYR
-	 2D44rq49Mtc/rIlDTuz2ltbSIADov1JzDMk9rLxYb0pNbl0H2Oied93OPMVQjDOsvRvPY
-	 g9eIP1s2TnkmF160Lr1zRQMOmO8VrjfJgz76uJ7/GhrkM/lrJdnXFl/aZyxC2hKLrCWey
-	 sp4s0dP5hLlC97n4dKdefzbWXNp/1AN3243KCrk/iOpzWHnAcJmMMQKXyiwIKee+xpsG7
-	 mwndIuED7KiZ7jyWHLocyGgvEQuTk/Cd69rJDm/yQUqsNeWu/ss9XH/Sp8om6ChgRBQ==
+	bh=NrHRiJJjs6LTRsR4S/VnHtaXqyEMNcfnoaoksDZJkCg=;
+	b=cAiDDU5KddeyNFy6dk+32o1bzDQ0vUGxPlZUeWibtLpKL5nzsbvnuNfkB+22aEm0+5V2
+	 h3UGSOhxhxBspRQrzjnwF0U1rbZVoN9LoGzgZtqHTDnCemHBISytg+mikxLy6hEag5agm
+	 kaKlFFXaTNSjgYruLCzbulrSOmZNTdXbAifhIjiUzeWknGN6TvILYW7AYQPQkc5Db4jes
+	 vyjNKtWjhF7smTgF7JIMFFfO8MiGgF/ubW4VMMrrZg0K5DUdvs4j5HdkNVtuNJ/KKbI9h
+	 lohA03wJDsyECnljnqkelpjgsUUV+++MVaoBHXj3ZMXdufjut5Go/AHqTinJSCaTDZg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HVd4rjbC;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mdv8MGu2;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78208606A320
-	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:42:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E081606A320
+	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:42:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HVd4rjbC
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C39A1F000C0;
-	Sat, 21 Nov 2026 09:42:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mdv8MGu2
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 737F41F000C4;
+	Sat, 21 Nov 2026 09:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795254144;
-	bh=cr4CNsbsVoztQq7JO0OWsEvUzbN7PEmSYtrgGym3LyU=;
+	s=k20260515; t=1795254145;
+	bh=NrHRiJJjs6LTRsR4S/VnHtaXqyEMNcfnoaoksDZJkCg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=HVd4rjbCCyXoS+ezdImrxgO54guvA8dcX+Vgg2jBCtYXpI9fCcGWI+BTHMPhrx97U
-	 Ws04xLfI4ntezC0QRfPm1a/ElexPxA0/zpNGzvkMA+2KwwnPAR8s94WfUGHn2YtDRr
-	 pTmvMQk+gEx1QZxL52bDRbY6H9xPJ9nl4F5fCoLlBguziJPWYfQAVapN5UgHzYC3ML
-	 f/xYKoHIlIVQFoc1bKksGcG/9iOpF7mh+7MuJ13YSxrEp2JnY2Vo9SNBAbpeBsboQP
-	 LvoTOuvtSIV78kKhNj8hz6P5DU3+NkLPdJA4rcO9U9DQ5VERm5FPH0zKga7BVys36R
-	 YkiE7xD0hRKhA==
+	b=mdv8MGu2CyOn3FU/j27JGutw9X4asVtO9Y9siKFw8VWaw3CB0KG2sc7OhNf8D/0J3
+	 /vahS+MAL50Vs3m0+t5NY0cHQnsnI5MPKfiMw9XNdjhUaQ3JHXRe1Ar9fVwPXp8Kwf
+	 LyxOa2lIe1N+SK9zQGuqElCH0iYqaXvO9zKexxPVev9sUEcb8g+8fPbKGPAvnwRK01
+	 S83hhuibz3kQ/i/vt2FEjLrs11fLqMUXQDLTfdNRBpzBVCivYQMap+npcWpz0r+z7e
+	 IyzxN5TbGXqtcqchiCSJeNOQ/NjvfcODEumInkOavfg86f3uqMKhTDLtpP8/GjSWsW
+	 o9MEirDVQsb7g==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 21 Nov 2026 10:41:03 +0100
-Subject: [PATCH mptcp-net v2 05/62] mptcp: pm: don't drop an RM_ADDR behind
- a pending one
+Date: Sat, 21 Nov 2026 10:41:04 +0100
+Subject: [PATCH mptcp-net v2 06/62] mptcp: pm: don't drop an RM_ADDR
+ because of an ADD_ADDR
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,98 +55,104 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261121-mptcp-cmason-fixes-v2-5-00327fd1de1f@kernel.org>
+Message-Id: <20261121-mptcp-cmason-fixes-v2-6-00327fd1de1f@kernel.org>
 References: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 In-Reply-To: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
  Josef Bacik <josef@toxicpanda.com>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2967; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=VWdDK5KC2XQ0B/Gz98UUdDiaS7ljfPigv0yw2cJSFtU=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ033Wf97xVornPGfVFUWrH/Mt9WJnFwRp3VxtXhNgs
- lNiKpNSRykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwETaLzAyPNj7+PiWC20fpu46
- +HXd7j8n8hjy7LuYJqpvtOaeLvnUagsjQ6/+z1SR/Zce6b9xOfff7om+ZPO6P5vfpRZvYu2atut
- IDSsA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3702; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=RhpWiFJOubzzETB5WHE8QdEog8R7ekloOjGRrIx0VK8=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ032+T6uZXZpSUVWnzKJ+ipWve7Fisa2x9bXWnDtzH
+ nvlaKV2lLIwiHExyIopski3RebPfF7FW+LlZwEzh5UJZAgDF6cATOTLaYa/MpYld+dWxDvOf+W3
+ /xp/+bmJnTonzjl4lk2fp/PISairheF/+CX3jrvP2J0nSG9gWvZl46I5E7iq/3Quq7t/yyb62ud
+ UHgA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 From: Josef Bacik <josef@toxicpanda.com>
 
-There is room for one received list of address ids.  An RM_ADDR that
-arrives before the worker has taken the previous one is counted as
-RmAddrDrop and forgotten, although the netlink events for its ids have
-been sent already.  Two options follow each other at once if, for
-instance, the path manager in user space of the peer removes two of its
-addresses.  The subflows to the second address stay.
+mptcp_pm_remove_addr() gives up, and counts RmAddrTxDrop, if any bit of
+pm.addr_signal is set. That dates from the time when the byte was
+cleared as a whole after a signal had been sent. Since
+commit 119c022096f5 ("mptcp: fix ADD_ADDR and RM_ADDR maybe flush
+addr_signal each other") an ADD_ADDR, an echo and an RM_ADDR each clear
+their own bit, and they have storage of their own: pm.local, pm.remote
+and pm.rm_list_tx. mptcp_pm_announce_addr() looks at its own bit only.
 
-Add the new ids to the pending list.  Only the ids that do not fit in
-the list of MPTCP_RM_IDS_MAX ids are dropped, and the RM_ADDR is then
-counted as RmAddrDrop.  The netlink events are not sent for the
-dropped ids, and they are sent before the worker can act on the others.
+The callers have updated their state by then and ignore the result: the
+endpoint is gone, the announcement is forgotten, and the peer never
+learns that the address is not valid any more.
+
+When the bit of an echo is set at the arrival of the peer's ADD_ADDR,
+it stays set until the PM worker has sent the ACK. An endpoint that is
+removed in between loses its RM_ADDR.
+
+Only a pending RM_ADDR stands in the way, as rm_list_tx would be
+overwritten. A pure ACK carries the pending ADD_ADDR or echo first: up
+to three ACKs are then sent at once, preferably on a subflow that is not
+being removed, until one carries the RM_ADDR, and as long as they carry
+one of these signals. Otherwise, the RM_ADDR would go with the next
+packet, which could be sent on a subflow being removed, or after an
+ADD_ADDR re-announcing the same ID.
 
 This issue has been found with the help of an LLM. It has not been
-reproduced: the second RM_ADDR has to be processed before the PM worker
-gets to the first one, a window that a Packetdrill script cannot
+reproduced: the endpoint has to be removed before the PM worker sends
+the pending ADD_ADDR or echo, a window that a Packetdrill script cannot
 target. This fix is based on code inspection only, which is acceptable
-here: the issue is clear from the code, and the fix is simple.
+here: the issue is clear from the code, and the fix is small.
 
-Fixes: d0876b2284cf ("mptcp: add the incoming RM_ADDR support")
+Fixes: 119c022096f5 ("mptcp: fix ADD_ADDR and RM_ADDR maybe flush addr_signal each other")
 Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-[ Commit message: only the ids that do not fit are dropped + how the
-  issue was found, and why it is fine without a reproducer. No netlink
-  event for the dropped ids. ]
+[ Use mptcp_pm_should_rm_signal() instead of a comment. Fixes tag:
+  119c022096f5 instead of 42842a425ad6. Commit message: remove the
+  number of attempts, say which packet carries the RM_ADDR then, and
+  when the echo bit is set + how the issue was found, and why it is fine
+  without a reproducer. Send the RM_ADDR at once, with up to three ACKs,
+  instead of with the next packet. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v2: no netlink event for the dropped ids (Clashiko), but still for the
-    next pending ones (Sashiko)
-
-Note (Clashiko on v1): as before, an event is sent for each id of each
-received RM_ADDR, even if this id is already pending.
+v2: send the RM_ADDR at once, not with the next packet (Clashiko)
 ---
- net/mptcp/pm.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+ net/mptcp/pm.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index cdc8bab0eaf8..f1f4b13c5459 100644
+index f1f4b13c5459..cdd62433e0a6 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
-@@ -843,17 +843,30 @@ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk,
- 			       const struct mptcp_rm_list *rm_list)
+@@ -526,10 +526,11 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+ int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_list *rm_list)
  {
- 	struct mptcp_pm_data *pm = &msk->pm;
-+	bool drop = false;
- 	u8 i;
+ 	u8 rm_addr = READ_ONCE(msk->pm.addr_signal);
++	int i;
  
- 	pr_debug("msk=%p remote_ids_nr=%d\n", msk, rm_list->nr);
+ 	pr_debug("msk=%p, rm_list_nr=%d\n", msk, rm_list->nr);
  
--	for (i = 0; i < rm_list->nr; i++)
--		mptcp_event_addr_removed(msk, rm_list->ids[i]);
--
- 	spin_lock_bh(&pm->lock);
- 	if (mptcp_pm_schedule_work(msk, MPTCP_PM_RM_ADDR_RECEIVED))
--		pm->rm_list_rx = *rm_list;
--	else
-+		pm->rm_list_rx.nr = 0;
+-	if (rm_addr) {
++	if (mptcp_pm_should_rm_signal(msk)) {
+ 		MPTCP_ADD_STATS(sock_net((struct sock *)msk),
+ 				MPTCP_MIB_RMADDRTXDROP, rm_list->nr);
+ 		return -EINVAL;
+@@ -538,7 +539,16 @@ int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_list *rm_
+ 	msk->pm.rm_list_tx = *rm_list;
+ 	rm_addr |= BIT(MPTCP_RM_ADDR_SIGNAL);
+ 	WRITE_ONCE(msk->pm.addr_signal, rm_addr);
+-	mptcp_pm_addr_send_ack_avoid_list(msk, rm_list);
 +
-+	/* the worker may not have got to the previous RM_ADDR yet */
-+	for (i = 0; i < rm_list->nr; i++) {
-+		u8 id = rm_list->ids[i];
++	/* pending ADD_ADDR and echo take the first ACKs: one more each */
++	for (i = 0; i < 3 && mptcp_pm_should_rm_signal(msk); i++) {
++		u8 signal = READ_ONCE(msk->pm.addr_signal);
 +
-+		if (!memchr(pm->rm_list_rx.ids, id, pm->rm_list_rx.nr)) {
-+			if (pm->rm_list_rx.nr == MPTCP_RM_IDS_MAX) {
-+				drop = true;
-+				continue;
-+			}
-+			pm->rm_list_rx.ids[pm->rm_list_rx.nr++] = id;
-+		}
-+		/* not for the dropped ids, and before the worker acts */
-+		mptcp_event_addr_removed(msk, id);
++		mptcp_pm_addr_send_ack_avoid_list(msk, rm_list);
++		/* no signal sent, e.g. after a fallback: no more ACKs */
++		if (READ_ONCE(msk->pm.addr_signal) == signal)
++			break;
 +	}
-+	if (drop)
- 		__MPTCP_INC_STATS(sock_net((struct sock *)msk), MPTCP_MIB_RMADDRDROP);
- 	spin_unlock_bh(&pm->lock);
+ 	return 0;
  }
+ 
 
 -- 
 2.55.0
