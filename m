@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795286928;
-	b=5ez2RcrGoy4uUDXFpQDhacZ1XBTB6d/RuCEkRwumIKXo+4QM2J4CUK73LYma9uCtrLhK
-	 /cF/DtsrORuNCeQg/MrmR6rddLB/Y+tIrIKD2kXSZYljU1COeJxOk3iojPKuvq9vLucAk
-	 r4/x3H9hIWjn6/ZBT8kRsHb08b4Ucv0NlKPpbJwzwAtDB94X6uYqGo1QkJMC1M8O2ORv0
-	 0CDyvA74L2ZN4NklsQQqr/46VimCzzt15RMU/EGDm+pbJoKCtxdrGaO/BH5u+4URwYFXm
-	 8cgAMPsy4d/Vw4kfJTgHkvCxz3oltGjYgKfrH2koyCa4FiNe6sCiDjizVgkBPsqCCNQ==
+	t=1795286929;
+	b=UQcLT0+feg+tGJvqqbMIIg2oenHEfTBaFv4PBRtEPzoFGnSyP8nJ+fNogmWnw2zHB059
+	 N/eHHpga/4LFuXmAetWpuoSg2nNHoYGFTueFmUj8VxzFfifZVWmOsiydk1kbNWRl/Nse2
+	 lf0h9n48oESeXlmAAYdinTp4jzydl5gFCvdDpRRCTPtHSttT3V9N+KA335nDHmGqSI7qd
+	 qUxs4/5JBzSTiu5KDS7262qRXYk5gky7XW2GqY3chTpkPeVAZt7AK58BJgdSJy4lOPQP5
+	 eUZW9NPiqju6hfjNQp/Ag3kXBDF4o9TILcwf/3Bnxo9boKU1DmnUlztoqRrN2y/eutw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795286928;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795286929;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=cyGBZWRFo7khWBx16+BXqfWWwxYQto9azSudfKDY96Q=;
-	b=xB7x1JrKCMwWi3REecRhSB3m4qzOpTuqtN1kkX5pHFD1q5Hf3pH9RF2WPZO85UjpYdUU
-	 z2HNBBfp7YCwrBdEaPZ0i+2nJedFq4nVsf7i3s6SFzFlYBGggr95xBzjDT31+WkyRvUzN
-	 SQG/YMafAWaRJJ+C4hQEQCaxVhU4H5gKZ5hv0YyDobMkJIUXB6IQILmPvhAB6vvhX9D8k
-	 F/c+6SI7/Mg7b3nulcu18/RMsTQR9pZ4cTEtjMkX2dTOTIf4emf6LcRGRJNCYnd8Oewtv
-	 bBf4qNhEAjAzrAw0+ADLI/sIi9T1pXoy/sUkDsoakBZ+Te7Hb6nX2FfuuGaNEmQgXrA==
+	bh=LvE/5lLzSA3kBIgfVFY53of7yDlw+Ma3kInHk6d+oL0=;
+	b=unLb6MNFxxmwEWXGfqBqMBvX9ibx16aEAfaWWbsITkYJy2c7gDOpeMnfIG82TGOoxSd1
+	 Jd9UWyn6hAaflfpHb3heF7IKhlIHLgALXDuSXebnZgGodrRNOCQti+kV0wXrQPUdLAkZ9
+	 ZCNoDe+ECHPEp4+aTqH3kVlWVVuD/E/ZzYJTFEcm7hifmZ58fik6owkmII25WHFWU0/8b
+	 K6/6fYSq/p9E2s3dHChYPOS6cwfjrUAk2s8jTVOtz6UkD7QzCpxkEu5HJA46GJWWGN+ks
+	 E2p9WBHvORzRjKYHA++QFMnmyTPU61Kr1ur9Fa4k/lUut8UZzIDxfNAQRLZQJoy48mQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UszwaTW+;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jz300aHP;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BF9606A320;
-	Sat, 21 Nov 2026 18:48:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5CF2606A337;
+	Sat, 21 Nov 2026 18:48:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UszwaTW+
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EC9D1F000C6;
-	Sat, 21 Nov 2026 18:48:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jz300aHP
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C8EC1F000C6;
+	Sat, 21 Nov 2026 18:48:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795286928;
-	bh=cyGBZWRFo7khWBx16+BXqfWWwxYQto9azSudfKDY96Q=;
+	s=k20260515; t=1795286929;
+	bh=LvE/5lLzSA3kBIgfVFY53of7yDlw+Ma3kInHk6d+oL0=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=UszwaTW+nuXUpn2RGGvprRlwg6zzC7vIzrLwvumzQX7ePqukvZ8TS8t1n5MbxOvzf
-	 aGXM7zjahByikBTnNpyx4rDzmzdxrZyFvbaJTM0nS4ltfPMuR6LViMaJpWK4yc3KH4
-	 tU/lDP0kug/vAbBLPUsVjsszWUTmEPtZ1QSjVS6h6Ue2Tg39Z06dZA5uzstWcZ1nYR
-	 NAEzDSdZwoAiZromzEUHHuBuDt8oaFJhY/sIvNafXglOc/ZH3bcM7tYMNMy4fWROM3
-	 ILtfSAPpPiGJ6mvjweZPqqz+2FmzYwhH6Qs6aNfyd3fDICkENWt1X68Y9Y5vDWxKfC
-	 4tJuFR8BDmpEQ==
-Subject:
- Re: [PATCH v3 net-next 1/7] tcp: Refactor the first loop in tcp_collapse().
+	b=jz300aHPGSQulcL3tnS+E5ZZNbAk0C/RApZQxCO5OHlwajhEZtLOTtxClkOq4AkYX
+	 M0xeY24f52Ao6VI6mOTCVU6JWO/eC/ErTU8djGrGCyshwGFBfwT+ytcs9UCQe2JqWV
+	 0cIf0wgBR4JdvB8TZwpUmwUtY8hFs4E1yzgO8ttnvE63nfbEsmh4cvNzUYIzfxa9A2
+	 E/tJY0RQf2Ab4V0Xn7ave5fPmVPw7dHSpwSuLwKAMc+U68sTzGzbOLkTGcUQQerV8B
+	 0y8FyceeEzRd2yK/aKnPbqskXGCkg+MYyDyceAmECmgPcZ6PCJ+j3ShBn+gyiR1Kx2
+	 ziEgYl03IIpag==
+Subject: Re: [PATCH v3 net-next 3/7] tcp: Stop collapsing if not bloated.
 From: netdev-bot+sashiko@kernel.org
 To: kuniyu@google.com
 Cc: edumazet@kernel.org, ncardwell@google.com, davem@davemloft.net,
  kuba@kernel.org, pabeni@redhat.com, matttbe@kernel.org, martineau@kernel.org,
  horms@kernel.org, kuni1840@gmail.com, netdev@vger.kernel.org,
  mptcp@lists.linux.dev
-Date: Sat, 21 Nov 2026 18:48:46 +0000
-Message-ID: <179528692693.3135.11505988142988648858@kernel.org>
-In-Reply-To: <20261119071649.374106-2-kuniyu@google.com>
-References: <20261119071649.374106-2-kuniyu@google.com>
+Date: Sat, 21 Nov 2026 18:48:48 +0000
+Message-ID: <179528692814.3135.815253982622168176@kernel.org>
+In-Reply-To: <20261119071649.374106-4-kuniyu@google.com>
+References: <20261119071649.374106-4-kuniyu@google.com>
 X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -71,116 +70,105 @@ you want to address the nit picks below when you respin.
 
 Low priority / nit picks for your consideration:
 
-- [Low] The commit "tcp: Refactor the first loop in tcp_collapse()" is
-  titled as a refactor.
-- [Low] In tcp_collapse() (net/ipv4/tcp_input.c), the patch merges the
-  `!skb_frags_readable(skb)` test into the condition directly below the…
+- [Low] This patch changes what tcp_collapse() does, but the comments
+  describing it are now out of date.
 
 --
 
-tcp: Refactor the first loop in tcp_collapse().
+tcp: Stop collapsing if not bloated.
 
-This patch restructures the first loop in tcp_collapse(). SYN/FIN skbs
-and skbs with unreadable frags now go to skip_this, which removes
-end_of_skbs and the rechecks after the loop. The skb_frags_readable()
-test also moves below the fully-covered check, and the v2 note documents
-the SYN/FIN overlap behaviour change.
+This patch changes tcp_collapse() to look for sub-ranges that start with
+a bloated skb. Each range stops at the first dense, non-overlapping skb,
+and collapsing repeats for every such range. On the OOO rbtree,
+overlapping skbs are still merged whatever their density, and a range is
+skipped when an overlapping skb cannot be merged.
 
 > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> index d35048c363be5..838d4f470c944 100644
+> index b4e3d623c4a21..5df60dd35afed 100644
 > --- a/net/ipv4/tcp_input.c
 > +++ b/net/ipv4/tcp_input.c
-> @@ -5849,23 +5849,17 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *list, struct rb_root *root,
+> @@ -5848,8 +5848,8 @@ static struct sk_buff *tcp_collapse_one(struct sock *sk, struct sk_buff *skb,
+>  	return next;
+>  }
+>  
+> -/* Collapse contiguous sequence of skbs head..tail with
+> - * sequence numbers start..end.
+> +/* Collapse bloated sub-ranges in contiguous sequence of skbs
+> + * head..tail starting from sequence number start.
+>   *
+>   * If tail is NULL, this means until the end of the queue.
+>   *
 
 [ ... ]
 
->  restart:
-> -	for (end_of_skbs = true; skb != NULL && skb != tail; skb = n) {
-> +	for (; skb && skb != tail; skb = n) {
->  		n = tcp_skb_next(skb, list);
->  
-> -		if (!skb_frags_readable(skb))
-> -			goto skip_this;
-> -
->  		/* No new bits? It is possible on ofo queue. */
->  		if (!before(start, TCP_SKB_CB(skb)->end_seq)) {
->  			skb = tcp_collapse_one(sk, skb, list, root);
-> -			if (!skb)
-> -				break;
->  			goto restart;
->  		}
+> @@ -5882,38 +5885,59 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *list, struct rb_root *root,
 
-[Severity: Low]
-In tcp_collapse(), the skb_frags_readable() test now runs after the "No
-new bits?" check. Should the commit message describe what this changes
-for unreadable (devmem/net_iov) skbs?
+[ ... ]
 
-Before this patch, an unreadable skb that was fully covered by start
-always went to skip_this. It stayed in the receive queue or the ofo
-rbtree, and this line could move start backwards:
-
-    start = TCP_SKB_CB(skb)->end_seq;
-
-With this patch, the same skb reaches tcp_collapse_one() first. It is
-unlinked or rb_erase()d and freed, and start only moves forward.
-
-The commit message only says:
-
-    Also, skb_frags_readable() should be tested after the fully
-    overlapping check.
-
-It gives no reason for the move. It also does not say that fully covered
-unreadable skbs are now freed.
-
-The v2 note already covers the SYN/FIN change. Could it also cover this
-one? The new behaviour looks fine to me, so this is only about the commit
-message.
-
-> @@ -5874,27 +5868,25 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *list, struct rb_root *root,
->  		 * - bloated or contains data before "start" or
->  		 *   overlaps to the next one and mptcp allow collapsing.
->  		 */
-> -		if (!(TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)) &&
-> -		    (tcp_win_from_space(sk, skb->truesize) > skb->len ||
-> -		     before(TCP_SKB_CB(skb)->seq, start))) {
-> -			end_of_skbs = false;
-> +		if (!skb_frags_readable(skb) ||
-> +		    TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN))
-> +			goto skip_this;
+> +	/* Second, find consecutive collapsible skb. */
+> +	sub_end = TCP_SKB_CB(skb)->end_seq;
+> +	n = tcp_skb_next(skb, list);
 > +
-> +		if (tcp_win_from_space(sk, skb->truesize) > skb->len ||
-> +		    before(TCP_SKB_CB(skb)->seq, start))
->  			break;
-> -		}
+> +	while (n && n != tail) {
+> +		bool overlap;
+> +
+> +		if (!after(TCP_SKB_CB(n)->end_seq, sub_end)) {
+> +			n = tcp_collapse_one(sk, n, list, root);
+> +			continue;
+> +		}
+> +
+> +		/* seq and end_seq must increase monotonically for rbtree. */
+> +		overlap = !list && before(TCP_SKB_CB(n)->seq, sub_end);
+> +
+> +		if (!skb_frags_readable(n) ||
+> +		    TCP_SKB_CB(n)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN) ||
+> +		    !tcp_skb_can_collapse_rx(skb, n)) {
+> +			if (overlap)
+> +				goto skip;
+> +			break;
+> +		}
 >  
->  		if (n && n != tail && skb_frags_readable(n) &&
->  		    tcp_skb_can_collapse_rx(skb, n) &&
-> -		    TCP_SKB_CB(skb)->end_seq != TCP_SKB_CB(n)->seq) {
-> -			end_of_skbs = false;
-> +		    TCP_SKB_CB(skb)->end_seq != TCP_SKB_CB(n)->seq)
->  			break;
-> -		}
+> -	while (before(start, end)) {
+> -		int copy = min_t(int, TCP_COLLAPSE_MAX_SIZE, end - start);
+> +		if (!overlap &&
+> +		    !tcp_collapse_skb_bloated(n, sub_end,
+> +					      TCP_COLLAPSE_SCALING_RATIO))
+> +			break;
 
 [Severity: Low]
-This isn't a bug, but the readability test now sits directly under the
-comment in tcp_collapse() that lists the conditions for the first skb to
-collapse:
+This isn't a bug, but are the comments around tcp_collapse() still
+accurate after this change?
 
-    /* The first skb to collapse is:
-     * - not SYN/FIN and
-     * - bloated or contains data before "start" or
-     *   overlaps to the next one and mptcp allow collapsing.
-     */
+The new tcp_collapse() header says it collapses "bloated sub-ranges".
+On the OOO rbtree, though, this loop does more than that:
 
-The comment does not say that the skb's frags must be readable. It also
-does not mention the skb_frags_readable(n) requirement in the overlap
-check.
+  - it pulls in non-bloated skbs when overlap is true, because the
+    tcp_collapse_skb_bloated() check is skipped
+  - it frees skbs that sub_end fully covers, via tcp_collapse_one()
+  - it skips the whole range with goto skip when an overlapping skb
+    can't be merged
 
-A later patch in the series rewrites this comment as "not SYN/FIN and
-the unread portion starting from "start" is bloated". That version still
-leaves out readability.
+These overlap rules keep the rbtree ordered. Right now they are only
+described in the commit message and the one-line inline comment.
 
-Would it be worth adding the readability requirement to the comment?
+The comment above tcp_collapse_ofo_queue() is also unchanged:
+
+/* Collapse ofo queue. Algorithm: select contiguous sequence of skbs
+ * and tcp_collapse() them until all the queue is collapsed.
+ */
+
+With this patch, tcp_collapse() repacks only sub-ranges that start at a
+bloated skb, and it leaves dense skbs in place. So the queue is no
+longer fully collapsed.
+
+Both comments are still unchanged at the end of the series. By then,
+tcp_collapse() also skips ranges whose repacked skbs would not be denser,
+and it caps the total size with TCP_COLLAPSE_MAX_TOTAL_SIZE.
+
+Could these two comments be updated to describe the sub-range and
+overlap behavior?
+
+[ ... ]
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261119071649.374106-1-kuniyu%40google.com
