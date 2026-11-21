@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1795254179;
-	b=me/G5gL367BxPmnrPupcWnU7LcH3RhbKij8TuYyeZZ4cSpwkQHGnI99+ACxTq9+FN/GP
-	 cTXkOkXEJvX2pVPV5KWJWXuGfwIYo+5LKwJtYx5UIUQOgq6LXmGVu/vJlgZbkiDU5pS4t
-	 fDu5AxgxzE6VgNc7ftdTEHUUX93Bl8PPgDbtqdXlS0x22rTj+oxuEf61irj2XF273YyiM
-	 GIsBGi+LYnJlO9pNdX+FB0vM6t6KJ10AejrsOSBBZ1hJYhEnVFWvHFr3eWASBC9I5xgwv
-	 rCQxPGXDCLdC/S4Rms1qXb2Qhlf2/a7emJUp+nShOhbwSHUFYuHR5gv4EXlqGoivBHA==
+	b=sHiRVZTm6L5oMntl5RRirxz6NX5HYMBkK1qOiY7sfElFAo72Sdu29SYs2X9JypZ+4nEm
+	 xGF6B2pITCWgGUvwF6hshWW1rP2AyNWZCIWa0FXLpUGY+X3YDdLXZU39P5sV9tgMxXy5u
+	 +foVNL2rcT0z+qnVpac3HJUaWL3FR7mXydKUxLgd2sMBcbfrqrBBBjJu/wlv8ICyDL9yu
+	 LTjID2jv6tMKhavTNyvbI6vd5OmrCgu5O0ehSHGmRYHd0UjXFXjj4fZ2ZjaJGvU06p7nI
+	 Bf++rB8zN+69yO5Ktiea62e5Aot+F8oVhWl+s6bNuaI1FUKPmpOQEc/slHSoTwJkKEg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1795254179;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=pcGYtyAO23yCx1qQ7SYJ3TqxAJFut2PkCGt0Of2CmX8=;
-	b=WciVxHIX1DlSDVhn8utK4kr4n+C+KuShRQQdIAgOlJ6AyT4iNmKk5uqQBcquWf/x27Rv
-	 KhMyo3+VTVRhnxa+kLBiHerpMpYr820Zhp5Up/3/1dKYdPySquXhet64z24Yxoy4GlmFI
-	 FrnzmWJhFZrMEFVgZ/gFpdfUSwqAmtW3gVicpbMnJpL1nsndarLV02F2pU0zfUoyRWgf8
-	 JXKmbAf5+D28ABDX6uWYGez4ZpG6i4mUrm7OURzrKCB9TAnnnHzN+YqH5W5C6j5819V2U
-	 cqEka+phQO6hCBGuVF3tdMxQ3yaG3mFRQFGK8CfWmJoTfjt16wDKTEZI9WEEHR95vWA==
+	bh=3nozOWYPt0ZJfig0o0Xjewlw0ahJe0nGI2u2sVRmmdU=;
+	b=rrfywwY9/Us0v1qtV6f/j+4nwf4gAgzar2juBsSGbYq6zoc504BEGbLOAm5OPorulIoi
+	 gybBez5OVXVqblexiaxvyMrhvZRfCd5Rgt8frLUm1a8dgWhOCpmLfcHBK3QoArT0Zy1+N
+	 xc0lP1HvAfy6YcjxmOTRGSku8LnMd7sFtpOOqoWG5qHCb/KusTqxY5foFX3/y7dfSCv+t
+	 apNcRblHJRnxqANcaPlOcXLHVYVimRB+fUd9b3aS20T55JyvH8pElKdhcgO7VPNFtsyIg
+	 qRHD1AudIID8M9tG5thIXIhrOxgsBkFu4UIpnPcIVVSczLVGRe2WX6AgMEU3L63K/Ag==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mUXUKlsy;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="c+Ytnq/z";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34EE606A320
-	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:42:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD714606A320
+	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:42:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mUXUKlsy
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 085061F000D3;
-	Sat, 21 Nov 2026 09:42:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=c+Ytnq/z
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00CC31F000D2;
+	Sat, 21 Nov 2026 09:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795254178;
-	bh=pcGYtyAO23yCx1qQ7SYJ3TqxAJFut2PkCGt0Of2CmX8=;
+	s=k20260515; t=1795254179;
+	bh=3nozOWYPt0ZJfig0o0Xjewlw0ahJe0nGI2u2sVRmmdU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=mUXUKlsyb9R/LVnkO5LYl0xbfrk2GIAsfi/QY1mKiLde+1wnNxsDTcgM5ZE/qXe7R
-	 jEyK+N7FR7U9CWQx4diMRyUcQrAARxqYqCW59j7jtSz2NudZB3QMIhtGtWUZouaO18
-	 ius1B9the/RiCzValYdhtvC4sG1wdl+w8u4EPlcheEq9kQuJwlhD4mC+c+4mic4XaZ
-	 xJ9tEuxMrbOHBB5s4yi5aSziTioZT2LEIr05gfATpOuvjRoFTWWljlSWxXbnzv+R8P
-	 YKapUdxDCqaSAkXCcYgMo27xMcBYG7L+Ta+SpVoFKLVIDbOSAu87Sz24Z9wWmp+WU0
-	 joa82Bm2Rcl3w==
+	b=c+Ytnq/z79hx8HEZUvTHeiCo967zzfg+g3dv2y6z/PyesoP8CLd8f5I6IcARtYQbF
+	 TkAVkhlgblUQ1f0Z9G5DfLq8vPCH5GSSAXZLFb2/SDg0qr0PS2LN/E9yo92MiaMPh/
+	 9G7LdyQHSN4xads25HpqWZdpKUHQsj5D5THmzgRBjKuKy4B6ZWejkqaR3YcWjvsbSn
+	 Z8JpW3dePNqATyjjQGgiDIZka1nUkZbwfaUhlqkCqp9k/zbm++Exxov520CQAwzmyh
+	 irSnFp/tByoedspE6C8JGRlDbjeoxskOuV3ysdFkWnXer0c6k4jx4e+OkMKSjLTvwa
+	 xNcjx/JVwNG4A==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 21 Nov 2026 10:41:43 +0100
-Subject: [PATCH mptcp-net v2 45/62] tcp: do not pass a BPF reqsk to an
- MPTCP listener
+Date: Sat, 21 Nov 2026 10:41:44 +0100
+Subject: [PATCH mptcp-net v2 46/62] mptcp: reclaim forward memory after
+ coalescing skbs
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,100 +55,89 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261121-mptcp-cmason-fixes-v2-45-00327fd1de1f@kernel.org>
+Message-Id: <20261121-mptcp-cmason-fixes-v2-46-00327fd1de1f@kernel.org>
 References: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 In-Reply-To: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
  Chris Mason <mason@kernel.org>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3160; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=IvmeQ7gqSRSQdSaAIMgmjaWuhmb4ljyQU4wUOq4a0R4=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ07Pcc4qeaLRPkaztnVGaxnPs8KrW8043+w/W3Qm/x
- 6PY8L2yo5SFQYyLQVZMkUW6LTJ/5vMq3hIvPwuYOaxMIEMYuDgFYCKcXgz/Qz+obnHc3rh76YoH
- /Z+7ngd8E9TgFTWc9XZxm1vIVt6d2xgZdq9aubE3znbWiZRqO2vbD3dDZkS/u7CenSPTZ2nLekk
- JbgA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2957; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=FmparkxhIMbiohGafjtjBYSkpw+HWVpI4C7QSx/bhV0=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ07OP7dgi5jP3ZgunYn30xSy1erXG73PMU/833/hxv
+ uGDwuEVHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABOZLMrwz6h47qaw1ytUdkqq
+ 3Za3drT/tHVFk+26ffXtPTcc31w+wcDI8CJg/+m6II4X8Z8nPf1xUZIp62RrcNdTjfzKDysDHT7
+ d4QIA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 From: Chris Mason <mason@kernel.org>
 
-A slab-out-of-bounds write and a panic can occur if a tc BPF program
-that validates SYN cookies assigns an ACK to a TCP listener, and the ACK
-then goes to an MPTCP listener of the same SO_REUSEPORT group.
+If MPTCP sockets receive many small segments whose data stays queued,
+TCP can stall on the whole host, and an MPTCP server can be OOM killed
+in its memory cgroup, although almost no memory is in use.
 
-bpf_sk_assign_tcp_reqsk() attaches a plain TCP request sock to the skb,
-and returns -EINVAL if the program passes in an MPTCP listener. But
-inet_steal_sock() and inet6_steal_sock() select a listener again from
-the SO_REUSEPORT group of the listener that was passed in, and the
-result can be an MPTCP listener. cookie_bpf_check() then passes the
-request sock to mptcp_subflow_init_cookie_req(), which writes to members
-of the larger struct mptcp_subflow_request_sock, so the writes can land
-in the next object of the slab.
+When the MPTCP socket (msk) takes over an skb from a subflow,
+mptcp_borrow_fwdmem() adds skb->truesize to the sk_forward_alloc of the
+msk, and the subflow reserves new memory for the next skb. Both
+sk_forward_alloc and sk_rmem_alloc count against tcp_mem and the memory
+cgroup, but only sk_rmem_alloc has a limit, sk_rcvbuf, so what queueing
+the skb does not move to sk_rmem_alloc has to be released. But
+mptcp_try_coalesce() moves only the increase in truesize of the skb that
+receives the data, and skb_condense() in mptcp_data_queue_ofo() can
+lower skb->truesize, so the rest piles up in sk_forward_alloc.
 
-The fix used here is to drop the segment in cookie_bpf_check() if the
-listener is an MPTCP listener.
+The fix used here is to return every whole page of sk_forward_alloc with
+sk_mem_reclaim(), in mptcp_try_coalesce() once the merged skb is freed,
+and in mptcp_data_queue_ofo() once the skb is queued.
 
 This issue has been found with the help of an LLM, and reproduced in a
 VM, with the reproducer shared with the original version of this patch:
-a tc BPF program validating SYN cookies -- the one from the BPF
-selftests -- and an SO_REUSEPORT group with a TCP listener and an MPTCP
-one, the latter being selected. With KASAN, the original version of this
-patch reported:
+a remote peer sends 33000 segments of one byte after a hole in the data
+sequence, which are merged in the out-of-order queue. Without this
+patch, the memory forward-allocated by the MPTCP socket -- msk_f -- grew
+with each merged segment, above 29 MB, versus 3200 bytes with it:
 
-  BUG: KASAN: slab-out-of-bounds in mptcp_subflow_init_cookie_req
-  Write of size 1 at addr ... by task python3
-   mptcp_subflow_init_cookie_req
-   cookie_bpf_check
-   cookie_v4_check
-   tcp_v4_do_rcv
-   tcp_v4_rcv
+  SNAP label=stage1-1-connections tcp_mem_pages=7168 [...] msk_f=29445248 [...]
+  [...] OFOQueue=33000 OFOMerge=32862 [...]
 
-Without debug options, and with request sockets of half-open connections
-next to the corrupted one, the kernel panicked a second later, when the
-timer of a request socket fired:
+With more connections, the original version of this patch reported that
+the TCP memory went above tcp_mem[2], stalling the other TCP
+connections, or that the memory cgroup went above its limit.
 
-  BUG: kernel NULL pointer dereference, address: 000000000000058f
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  Oops: Oops: 0000 [#1] SMP NOPTI
-  CPU: 3 UID: 0 PID: 0 Comm: swapper/3 Not tainted 7.4.0-rc1+ #1 PREEMPT(lazy)
-  RIP: 0010:tcp_syn_ack_timeout+0xd/0x30
-  Call Trace:
-   <IRQ>
-   reqsk_timer_handler+0x22e/0x500
-   call_timer_fn+0x2a/0x140
-   __run_timers+0x1f7/0x280
-   run_timer_softirq+0x49/0xf0
-   handle_softirqs+0xfa/0x300
-   __irq_exit_rcu+0xb5/0xf0
-   sysvec_apic_timer_interrupt+0x73/0x80
-   </IRQ>
-  Kernel panic - not syncing: Fatal exception in interrupt
-
-Fixes: e472f88891ab ("bpf: tcp: Support arbitrary SYN Cookie.")
+Fixes: 9db5b3cec4ec ("mptcp: borrow forward memory from subflow")
 Signed-off-by: Chris Mason <mason@kernel.org>
-[ Shorter comment. Commit message: how the issue was found, and its
-  symptoms. ]
+[ Shorter comment. Commit message: the rest of the borrowed amount has
+  to be released + how the issue was found, and its symptoms. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/ipv4/syncookies.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/net/ipv4/syncookies.c b/net/ipv4/syncookies.c
-index 89169c82431c..f39600ee3f17 100644
---- a/net/ipv4/syncookies.c
-+++ b/net/ipv4/syncookies.c
-@@ -312,7 +312,8 @@ struct request_sock *cookie_bpf_check(struct sock *sk, struct sk_buff *skb)
- 	skb->sk = NULL;
- 	skb->destructor = NULL;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index d90e6a5cc9ff..adae675227df 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -197,6 +197,9 @@ static bool mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
+ 	sk_mem_charge(sk, delta);
+ 	kfree_skb_partial(from, fragstolen);
  
--	if (cookie_tcp_reqsk_init(sk, skb, req)) {
-+	/* reuseport can pick an MPTCP listener: req is too small for it */
-+	if (sk_is_mptcp(sk) || cookie_tcp_reqsk_init(sk, skb, req)) {
- 		reqsk_free(req);
- 		req = NULL;
- 	}
++	/* release what is left of the borrowed 'from' truesize */
++	sk_mem_reclaim(sk);
++
+ 	return true;
+ }
+ 
+@@ -422,6 +425,9 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
+ end:
+ 	skb_condense(skb);
+ 	skb_set_owner_r(skb, sk);
++
++	/* skb_condense() can shrink the truesize borrowed from the subflow */
++	sk_mem_reclaim(sk);
+ }
+ 
+ static void mptcp_init_skb(struct sock *ssk, struct sk_buff *skb, int offset,
 
 -- 
 2.55.0
