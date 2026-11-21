@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1795254149;
-	b=HxyYhyyoaa/y04caohj8wtUvmxoR0aNrNWycUr27r5Dtkcihul7iIObA3Igcmvy3mtdM
-	 g/XHapqRWGMroVitYNAzagQeOvwEnJwkqpbigcBKgSnhSKeTqJlFf/NJRreoj1zYSr51v
-	 aDlyLzUrDOCWaCC9uwkmRw1uBJO2Sgp7ipC69EahEwr5inWDHutfPo4u64YKpMc4iHYJe
-	 yb/4DuX5Dihk1C8dK8BVRnxeZl3X08hzOBe0JBvIjShNWSUtEjQwuURCMxSsTxCVjiV8m
-	 zOrDLdd53CoDDa8a+Tq+mFNJOMJlniQ2cTPXmy7uBBxDUhVACA252M1q9+HZaBUUM+w==
+	b=GyA30sPr+/XlWWtX0JdR4xEw8JcOPYKQgsiD+WE6F8pVLjJ63xfGLfidCbB5A4/KueS4
+	 F8sqWO1WcF19zdMynvpX8xUogbh1Ko1IN8yQFsektXonH4DfIjLet48NTKKWwDcff8Qt4
+	 9SH5ExjqZwqRKif+XDJfzVga2ra7ShicI+8AKbQ80qTOcsg8CxIfOTc1sM07au3SXCrlT
+	 3IKNGOzbgKSKMLN26nw9R0/5eylvGlGlIbE1e26Wu68ggoXGZd+kYNCTyhg0ctN120Bxm
+	 2qkmxr5jPAV7Lst7mmvQ5ME27uyiQ3kfskimVUBsBo3TBoTqk4ilAaasF8RjhUpIBvA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1795254149;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=1f7An4Hb+QOdkzOwYoQKBvA2ae7xx/jJtrVwvgtdcLg=;
-	b=wuYw9ux0Z91nd+LpkKwlRowEEhB1oclxnvO5cpwC1tR4ez8AV0qOG3ijrHnzjWob/byE
-	 ig8QfplmyzbaxYuYHbyy1/bjjgxoFPUGWiNx7Mpgzgnzn1d5LIyiA5BqRDACHpTu8JhZ4
-	 f/ACzExv6Q+UNwCRLPgGv73e6Kw1Rkfe9cQhfCBGw3YaAu6aZs/fj13Ch8xWm79W4H21a
-	 T9ghe4ist40mTtbi1ctCgycZjxqJK34vne1PohQrnd1eq/tL/XxaMdMqPUl6j4bMneh+H
-	 v97BcHM6HVEVki+POwyxjaAjmUx/WD+UWzWuXrioF9XZj6U1vxsOvajf6FoSQRttD8g==
+	bh=aDdQtZguyY/2cZoXgdqkFPYNOi0VWM3eNkRFzvdZ5tQ=;
+	b=WBw73RSIbanZtqzVyvHl5gFUaOAM12abZ3cjSAyGvRwaekfa7RFuJqwHnbHjePVT2bI3
+	 /vHZulIJAXZSjJhqIemBKI4CWBu0aM8MW5aKnlumRcXRLf14BPj9OWzt906/oMGt4OhS/
+	 SgEWVJIfVlKepXivbN8k0M1M/xNGQjZh+8+khWhTNvGKS4SntXPzlciT9uWEtGV7ijhrb
+	 uRWUwkQ87Dt/erMQ3OufOHPf5Ad2rXKD3+Pinamewnz7q4Ij816qcClTJtIaIMWYT62WD
+	 eXXSv8pgYcksu22Ql2mAnvO7J4+Fdmoxpr19fGgk7BHFNWZu4tv1nCEvWshsJWxu2Tw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aMKxqBdc;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CjyP+JWq;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE658606A320
-	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:42:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32AA606A320
+	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:42:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aMKxqBdc
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 341591F000C4;
-	Sat, 21 Nov 2026 09:42:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CjyP+JWq
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AFFB1F000C0;
+	Sat, 21 Nov 2026 09:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795254148;
-	bh=1f7An4Hb+QOdkzOwYoQKBvA2ae7xx/jJtrVwvgtdcLg=;
+	s=k20260515; t=1795254149;
+	bh=aDdQtZguyY/2cZoXgdqkFPYNOi0VWM3eNkRFzvdZ5tQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=aMKxqBdcxBLi6n0fdhZbldytBayqhyhqCzL0oblngjDsJ3Ys/XoVA+x5mly5RKva9
-	 zOKycOTQR92MvVK+4W3VkklwG3pABSef3yLI7YFlapnXAUq66G2A+UOS/VNwPFEBf5
-	 Thxs/4SlQxo6xSljlkgGZRvrRtNvcfkgIXwWr9AOWqW99f+hszfAufPaNH5ZvZ8ZFj
-	 +0PCPAy1TwYZ3vUMtNa+MHxCv0S8YKBBeBn+/SuQwQ8lajZIlGdzC2utI5VA4aFnZM
-	 9MyfZSpDQnorNa8tQAzGLE1VVO3+oYwgI2lnZxligW2y18NooSMakQbn8QKcrZkYqu
-	 df/Xc9Ex126wQ==
+	b=CjyP+JWqMRbAFUO5YWyn10FpzIYlO9BKAzXueeOfvuJvEcWkJb+n3AeKyyqQkDwJ4
+	 cKVK+hRylfmAYXKwVUTTo3tpRJodluZ+sdPt1mzqBpt9SubBZuoznHGDwpkMEDFwwu
+	 NoJtkCxnl0MEPq74XPwD22hymyo4z/CwJMnpckm5+qH4QJ9w6DTfhpRZzcXaVeKEF2
+	 XTDdeP62yNKPEOoXrTeJFWpjKb/Rjgo6ktYu70V1rwsbnnFSfsg9lU+kh4AgdqMpZG
+	 YewGG70RampUjwap1mErRnppP/hE5vt0dWQFJdxq3VOo/gUSD72HYIXKs4l5kgfnsn
+	 xih1H6FgMMUfQ==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 21 Nov 2026 10:41:08 +0100
-Subject: [PATCH mptcp-net v2 10/62] mptcp: leave an orphan's DATA_FIN to
- the worker
+Date: Sat, 21 Nov 2026 10:41:09 +0100
+Subject: [PATCH mptcp-net v2 11/62] mptcp: don't leak an orphan when the PM
+ closes its last subflow
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,96 +55,84 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261121-mptcp-cmason-fixes-v2-10-00327fd1de1f@kernel.org>
+Message-Id: <20261121-mptcp-cmason-fixes-v2-11-00327fd1de1f@kernel.org>
 References: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 In-Reply-To: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Chris Mason <mason@kernel.org>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3194; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=/G9M7hFeReWrFECsxUjtUr0Cr4ovpysIvD7RDt8ltYg=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ0wN4sgLXNTgt9A3o/PhV8Vjqa9agRU+2eL2cKaPl/
- Wnewf7fHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABP57sLI0PF+Af9JtjlBHefz
- hZfHv/CXF8x9pfJtRaVL+kllG9mTExgZjj1/zftIv3S3nKt8eUJGUPGHGy1K1+fmsK+6W/h0+VJ
- rJgA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3150; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=GjPt2W6y/Y4VVZf45pUA/dmGKQTmmSGadM4E00uKWgQ=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ0wOk2hn3qYmafshdFCEwKbx/R997izNlU+acubFAZ
+ vvZ9qzgjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgInIhjEyPPV4V1/5/KbFZktx
+ P04/AbfebVzOn2autqybWfdEPmaJJiND68szetsE/81+fdhKeMUXJ5MPapOs2Cf+3fqiqFIsdrc
+ vEwA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Chris Mason <mason@kernel.org>
+Once close() has returned, an orphaned MPTCP socket is only destroyed by
+mptcp_worker(), in the run that sees it in TCP_CLOSE: later on, the
+worker returns at once for an msk in this state, and
+mptcp_schedule_work() no longer queues it.
 
-Closed MPTCP sockets can leak until reboot, with the data in their
-receive queues, which can exhaust tcp_mem and stall other TCP
-connections.
+__mptcp_close_ssk() moves an orphan to TCP_CLOSE when, after the closure
+of a subflow, only the initial one remains, and it is closed. This
+function is not only called by the worker: path manager commands also
+close subflows of any msk of the netns, orphans included, under the msk
+lock: e.g. 'ip mptcp endpoint delete' or 'flush' with the in-kernel PM,
+or MPTCP_PM_CMD_SUBFLOW_DESTROY with the userspace one. In this case,
+nothing destroys the orphan: it stays in TCP_CLOSE until the reboot,
+with its token, its initial subflow, and its reference to the netns,
+which is then never freed.
 
-Once close() has returned, only mptcp_worker() destroys an orphaned msk,
-and only in the run that moves it to TCP_CLOSE: a later run returns at
-once, and mptcp_schedule_work() queues no work for an msk in that state.
-The receive path, in softirq, puts data on the backlog while the msk is
-owned, and release_sock() calls mptcp_release_cb(), which passes the
-backlog to __mptcp_move_skbs(). But __mptcp_move_skbs() calls
-mptcp_check_data_fin(), which can move the msk to TCP_CLOSE, and by then
-the lock owner, here the worker, no longer looks at the state:
+This can happen when the initial subflow has been reset or has timed
+out, and the connection is closed -- the orphan then waits for the end
+of the DATA_FIN exchange, up to TCP_TIMEWAIT_LEN -- before the endpoint
+used by another subflow is removed, e.g. when an interface goes down.
 
-    receive path, softirq             mptcp_worker()
-    =====================             ==============
-                                      not in TCP_CLOSE: no destroy
-    last data, with the DATA_FIN
-      the msk is owned: backlog
-                                      release_sock()
-                                        mptcp_release_cb()
-                                          __mptcp_move_skbs()
-                                            mptcp_check_data_fin()
-                                              TCP_CLOSE, never destroyed
+Only the worker can close an orphan, as it must then destroy it. So
+here, mark its close timeout as expired, and queue the worker, like it
+is done for an msk in the accept queue. The worker then closes the
+orphan with mptcp_do_fastclose() -- nothing is sent: the only subflow
+left is closed -- and destroys it. If __mptcp_close_ssk() was called by
+the worker, this happens later in the same run.
 
-The fix used here is to queue the worker in __mptcp_move_skbs() if an
-orphaned msk has a DATA_FIN to handle, instead of calling
-mptcp_check_data_fin().
+This issue has been found by an AI code review agent, while reviewing
+the code of the commit "mptcp: leave an orphan's DATA_FIN to the
+worker", and confirmed with a new Packetdrill test: the initial subflow
+of an orphan waiting for the end of the DATA_FIN exchange is reset, then
+the endpoint of the other subflow is removed. Without this patch, the
+orphan stayed:
 
-This issue has been found with the help of an LLM, and reproduced in a
-VM, with the reproducer shared with the original version of this patch:
-200,000 connections in which the server accept()s and close()s, while
-the client reads the end of file, sends one byte, and closes. Without
-this patch, some MPTCP sockets of the server stayed in the CLOSE state
-for good, with their network namespace:
+  UNCONN 0      0      192.168.0.1:8080 192.0.2.1:39933
+  kernel_orphan_last_subflow.pkt:39: error executing `! ss -HMan | grep -v LISTEN` command: non-zero status 1
 
-  === connections so far : MPTCP sockets of the server in the state CLOSE: 200000:722,
-  [...]
-  RESULT [...] | left 300 s behind the end: slab_MPTCP=722 sockets_MPTCP=722 [...]
-  [...] | veth_end_left=1 slab_net_namespace_left=2 | [...]
-
-Fixes: bc68b0efa1bf ("mptcp: move the whole rx path under msk socket lock protection")
-Signed-off-by: Chris Mason <mason@kernel.org>
-[ Shorter comment. Commit message: how the issue was found, and its
-  symptoms. ]
+Fixes: 27e5ccc2d5a5 ("mptcp: fix dangling connection hang-up")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/protocol.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ net/mptcp/protocol.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 90fbfb258b79..803ed1f9c413 100644
+index 803ed1f9c413..d64e04245963 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2364,9 +2364,15 @@ static bool __mptcp_move_skbs(struct sock *sk, struct list_head *skbs, u32 *delt
- 	}
- 
- 	__mptcp_ofo_queue(msk);
--	if (moved)
--		mptcp_check_data_fin((struct sock *)msk);
--	return moved;
-+	if (!moved)
-+		return false;
-+
-+	/* Only the worker can close an orphan, as it must then destroy it */
-+	if (!sock_flag(sk, SOCK_DEAD))
-+		mptcp_check_data_fin(sk);
-+	else if (mptcp_pending_data_fin(sk, NULL))
-+		mptcp_schedule_work(sk);
-+	return true;
- }
- 
- static bool mptcp_can_spool_backlog(struct sock *sk, struct list_head *skbs)
+@@ -2795,8 +2795,13 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 	 */
+ 	if (list_is_singular(&msk->conn_list) && msk->first &&
+ 	    inet_sk_state_load(msk->first) == TCP_CLOSE) {
+-		if (sk->sk_state != TCP_ESTABLISHED ||
+-		    msk->in_accept_queue || sock_flag(sk, SOCK_DEAD)) {
++		if (sock_flag(sk, SOCK_DEAD)) {
++			/* let the worker close and destroy the orphan */
++			mptcp_set_close_tout(sk, tcp_jiffies32 -
++					     (mptcp_close_timeout(sk) + 1));
++			mptcp_schedule_work(sk);
++		} else if (sk->sk_state != TCP_ESTABLISHED ||
++			   msk->in_accept_queue) {
+ 			mptcp_set_state(sk, TCP_CLOSE);
+ 			mptcp_close_wake_up(sk);
+ 		} else {
 
 -- 
 2.55.0
