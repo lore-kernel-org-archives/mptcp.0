@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795256448;
-	b=Lv916Y/UniX5SZ572oSv897RkYm9DPIjGgLuzHWU2aQdJe4ZYVj2/8VwtLHm1dGilQqJ
-	 w5B/ejNMtOY2IzL9cRqh0T/SZJKbsGsytw1Zb9UaoEGg0jzE1O++keOoM6Ali0tSfbk9J
-	 TtK0+4mBfRiImoZyvbQTnqc+kl4baDcU9sVN6pei3X2XDUKcNvhsMBtgYrWfNNiYeQvLO
-	 69KdfmTVopAPk0BSSI+/fl5GJFKqW6ekZsYIiOK36DmD9Iv2sXr243hwMpcb7Tcophd1B
-	 aorOFas3BS1kpbiREhOaGJu7xleYzcwwAg8395cZrfaNNOuUaNpqnvd8MAff44J5DmQ==
+	t=1795256520;
+	b=3c2PY9LkdRM05clK3FT1TNzCa+CZW4zQthU4Uw8jdqhLnEpn6wUa1SlmfAx8QSFhEFFU
+	 dgBGylFsRJAjz2sz5wLiag2BP0AXukWJb3bVxDmEWjeQRQVieQtOzJvZ1LvAftfZ2ZQfa
+	 pFOPOUlRZ4JjTUmWHVlcTEhuRCPtGoP5oPWmZ1I73T0JZjM8Gub6DHpr+mvQlU3WfBgMB
+	 U2/AEJUn2uLSFSslwyxu5KeOnejt5VN6UmoDm/0kd1xahjFyeh/r/lpl2knToeX8XIXBc
+	 6VfQP6+xyHWs0ITjccB3G5mJU6WY0CZ+7vYCXs4kyPZlM9y/wKK4rFyWM1KnfVaLqwA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795256448;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795256520;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=2GlGXK8Jx09r5DlDh1fvRSeVM6bM5SwhRHhB20F+iJo=;
-	b=bu7ANuJ3Ii1I03/ngXGH564cVX+AoL1CesyzaYnl6EIEI3/9VqL+YMA/FcgauBQae7BH
-	 RewGaGrrqRcS8GY4G/P3Uu7akyvnkfuD+MqVCAgOwnPQVY4SYSjB2uSD5cHrjTIg0MQTi
-	 EBKuk78Nn0JSjS2MHG/ySknDpukC/20HFgKJMNNBFIspYkRq8ZkNqTLlOFewQwv/ID3YB
-	 kABtYx0ZEv8odoZLBZR9ZQOn7qwwwOlwoYYeN32Aqsce/Xby3nZaHQtB0aIt96ixJCQan
-	 yAHzqvL5VkdX0f2xJrpOqD7YjOhYOWXB1BWVZHMBT/wWJphqsvrvHiN2F9W83EfgL6Q==
+	bh=DegIV/8hteCpQ4FUm7Or6Y5vwlyTUxm91+1kUR4MKEw=;
+	b=TaX9H1FYS8xAYlco9U00GtU49otbQUtB6HJmkeLgrVzch2mQ0EI4lw967hu8F1e9JRu8
+	 0oGJ1mPk7ww+JZLfx8/ACAy3TiztRNO+zPcREY+tpI7ICRKbabFWCFcQQ1X0KnPpolW9K
+	 vuf2LLgkT4bpHGpM/BSV8l7iMCMdlumJsCLksHnVGRG2b5GCg2OKLPj1Ffdulaeg3keGE
+	 dQ9dM6W9TDAjcMzOqJJdVcTD06PU2FO2uDRL9Sg1k+109cyYnn3dp2jWO2N6MS3oeXFRM
+	 Ba1PD7Hct2PsRsWmkbxNRG+CZiAHcncNuog/vjBIHXUdv6c3XJLhWF1uiLx7jbRS+rg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gmhGSkcl;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IxpE7EpW;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABE2606A32A
-	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 10:20:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95CAB606A320
+	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 10:22:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gmhGSkcl
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C1D21F000C6;
-	Sat, 21 Nov 2026 10:20:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IxpE7EpW
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 549061F000CA;
+	Sat, 21 Nov 2026 10:22:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795256448;
-	bh=2GlGXK8Jx09r5DlDh1fvRSeVM6bM5SwhRHhB20F+iJo=;
+	s=k20260515; t=1795256520;
+	bh=DegIV/8hteCpQ4FUm7Or6Y5vwlyTUxm91+1kUR4MKEw=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=gmhGSkcljDf3sa4rsoMjy+ra1By8Fi6aAZjRKJVlrk++GYb+ZBXUpOaqA8xhmrSir
-	 T5v756BD1JVhURsTKt3KcxUEs6w/jPgG8U6wraV7PP9WJ2Ex2sMlgFc0QIRn5J1JHN
-	 t5AvQ9j/J3B5iUxVtH2TNc3AqsVLVwAJY8yPAA6X9ootC+Te1CVHu1VTV2UvVlaC1l
-	 Fd2+MD203Zjhzf0TQGdOtKd5IyobhH07DrF/6wB2MldaD1PAeRwF01sGhwvgB8K85M
-	 TnfM5JvnMaXNSi7J6dHs2SvkWHmy2m3HZg3U9AFq/2oIoEwu6lxUWRYq9SW/h+wOBQ
-	 Fe6fei2nqm0Yg==
-Message-ID: <sashiko-outbox-226935@kernel.org>
+	b=IxpE7EpWh878ubCtaOW177+JuVPrO6jNjm2AvyFFIb5TCmmHJjIbjAp0/IwwVFKkx
+	 Rdesxuh5wJw54vLA67BvrQ+y76bmcAdMYEfj0zJ8HYDkaqDyIXOc717m91pgZVVjGh
+	 Eni/ABKEn3gp6SjAhgl24MU2lr2wzwaYbvXYB2VrFUe8oYnLpksCilodb16/sPbhom
+	 F8ZWgbOy3iKJ62b0x8M3sAXtIHtkZeGVompOITG0d0/mYlNwdhE1twS9eGxGdLkrSR
+	 jhOtLJLuxSDRckK6yMY9XD56fknI9zmlnZvAIw0e8oqTZCutTkZ9mHG64GncF1ZrlZ
+	 MBPBfnnHfnGPw==
+Message-ID: <sashiko-outbox-226938@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-net v2 20/62] mptcp: start close timeout on
- initial sf shutdown
+Subject: Re: [PATCH mptcp-net v2 59/62] Squash to "bpf: Export mptcp packet
+ scheduler helpers"
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>, "MPTCP
  Linux" <mptcp@lists.linux.dev>
-In-Reply-To: <20261121-mptcp-cmason-fixes-v2-20-00327fd1de1f@kernel.org>
+In-Reply-To: <20261121-mptcp-cmason-fixes-v2-59-00327fd1de1f@kernel.org>
 References: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
- <20261121-mptcp-cmason-fixes-v2-20-00327fd1de1f@kernel.org>
+ <20261121-mptcp-cmason-fixes-v2-59-00327fd1de1f@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 21 Nov 2026 10:20:47 +0000
+Date: Sat, 21 Nov 2026 10:21:59 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -63,64 +63,62 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue to consider:
-- [Medium] mptcp: incomplete state handling on initial sf shutdown in
-  __mptcp_close_ssk()
+- [Medium] mptcp: mptcp_sched_get_send() skips mptcp_set_timeout() if
+  already scheduled
 --
 
-commit 3ae1ff0e0bee2b5a84597ed1abd7a652f3bfc9b1
+commit be05849933557cf4aa59c7bd40312183567d8767
 Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-mptcp: start close timeout on initial sf shutdown
+Squash to "bpf: Export mptcp packet scheduler helpers"
 
-This commit starts the MPTCP close timeout in __mptcp_close_ssk() when
-only the shut-down initial subflow remains in the connection list and is
-not yet in TCP_CLOSE.
+This commit calls mptcp_set_timeout() in mptcp_sched_get_send() before
+invoking a custom packet scheduler so that msk->timer_ival is initialized.
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 835796fd4f771..d3a793e96c9cc 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2823,6 +2823,14 @@ static void __mptcp_close_ssk(struct sock *sk, str=
-uct sock *ssk,
->  		} else {
->  			mptcp_start_tout_timer(sk);
->  		}
-> +	} else if (list_is_singular(&msk->conn_list) && msk->first &&
-> +		   mptcp_subflow_ctx(msk->first)->closing &&
-> +		   !inet_csk(sk)->icsk_mtup.probe_timestamp &&
-> +		   sk->sk_state !=3D TCP_CLOSE) {
-> +		/* The initial subflow has only been shut down, and its later
-> +		 * close will be ignored: start the close timeout now.
-> +		 */
-> +		mptcp_start_tout_timer(sk);
->  	}
+> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+> index 1e59072d478c9..2f685986698b7 100644
+> --- a/net/mptcp/sched.c
+> +++ b/net/mptcp/sched.c
+> @@ -189,6 +189,9 @@ int mptcp_sched_get_send(struct mptcp_sock *msk)
+> =20
+>  	if (msk->sched =3D=3D &mptcp_sched_default || !msk->sched)
+>  		return mptcp_sched_default_get_send(msk);
+> +
+> +	/* as the default scheduler: the rtx timer needs an interval */
+> +	mptcp_set_timeout((struct sock *)msk);
+>  	return msk->sched->get_send(msk);
 >  }
 
 [Severity: Medium]
-Should this branch fold `mptcp_subflow_ctx(msk->first)->closing` into the
-`inet_sk_state_load(msk->first) =3D=3D TCP_CLOSE` condition above so that
-`SOCK_DEAD`, `sk->sk_state !=3D TCP_ESTABLISHED`, and `msk->in_accept_queue`
-are handled the same way?
+Can mptcp_sched_get_send() still leave msk->timer_ival at 0 when a subflow
+already has subflow->scheduled set?
 
-Because `mptcp_close_ssk()` already set `subflow->close_event_done =3D true`
-when shutting down `msk->first`, the later transition of `msk->first` to
-`TCP_CLOSE` will return early in `mptcp_close_ssk()` and never run the
-`TCP_CLOSE` branch:
+Right above this hunk, mptcp_sched_get_send() returns 0 early if any
+subflow has subflow->scheduled set:
 
-- If `sk->sk_state !=3D TCP_ESTABLISHED` (for instance `TCP_CLOSE_WAIT` or
-  `TCP_FIN_WAIT1`), no new subflows can join, yet `sk` waits for the full
-  close timeout instead of moving to `TCP_CLOSE` immediately.
-- If `msk->in_accept_queue` is set when the peer sends a TCP FIN without
-  `DATA_FIN`, starting the timer instead of closing `sk` leaves the
-  unaccepted socket in `TCP_ESTABLISHED`; if the peer ACKs our FIN before
-  `accept()`, `mptcp_stream_accept()` later sees `msk->first` in
-  `TCP_CLOSE`, sets `newsk` to `TCP_CLOSE`, and calls `mptcp_close_ssk()`,
-  which returns early without setting `SEND_SHUTDOWN`.
-- If `sock_flag(sk, SOCK_DEAD)` is set, `__mptcp_close()` already set
-  `icsk_mtup.probe_timestamp`, so `!inet_csk(sk)->icsk_mtup.probe_timestamp`
-  is false and the orphan waits for the full close timeout instead of
-  expiring immediately.
+net/mptcp/sched.c:mptcp_sched_get_send() {
+	...
+	mptcp_for_each_subflow(msk, subflow) {
+		if (READ_ONCE(subflow->scheduled))
+			return 0;
+	}
+	...
+}
+
+When a BPF scheduler marks multiple subflows as scheduled (such as
+bpf_red), the active subflow can drain mptcp_send_head(sk) and delegate
+the remaining scheduled subflow.  Because mptcp_send_head(sk) is now NULL,
+__mptcp_subflow_push_pending() does not enter its send loop on the
+delegated subflow and leaves subflow->scheduled set to true.
+
+Once all in-flight data is acknowledged, mptcp_stop_rtx_timer() resets
+msk->timer_ival to 0.  On the next send, mptcp_sched_get_send() takes the
+early return above without calling mptcp_set_timeout().  If
+__subflow_push_pending() then stops after the first fragment because
+msk->snd_burst <=3D 0 (or fails under memory pressure), it exits before its
+own mptcp_set_timeout() call, and mptcp_reset_rtx_timer() arms the
+retransmit timer with a 0 interval, firing every jiffy.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261121-mptcp-cmas=
-on-fixes-v2-0-00327fd1de1f@kernel.org?part=3D20
+on-fixes-v2-0-00327fd1de1f@kernel.org?part=3D59
