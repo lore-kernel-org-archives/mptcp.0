@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795254182;
-	b=aV4TP/xOOKNQ///fS00Y9y2xXwQSx3YEu3cnPnUFZ1MC922CoSj2ILf36STu3Zq2e0iJ
-	 KK1Bp6fpOVYELCqNZbtQF9VFw3MykgO1IisAWfVHrgkJs1Jm+/bxdimPWB/QvBmDH9aAp
-	 QHbfSElI24vdzmGSIjI+sPPgLSV4HKKKGfYkMQmaxu1TWHJrlkq31zoq6fL/lLuSxMFwM
-	 TBz9kX0j/Ti3xffVf7SvvtoCy7HVOsj71nbxcpMflr+osqLXkHw7qdUoE05h8+Oglz5bY
-	 7b+dG1aRuQ/XFwSwM8SL6GtucnUjQfZ7hVO5mEWTwztB53m5N0G2oDaveFsjrqt0n5g==
+	t=1795254183;
+	b=E0JH5YFWGA+fIIIHXq0T1ayUJsHvlhclrD9V/0Jx/3cCkoPtQ05Gv7y8FGhbnNk0zF8c
+	 iF4fSsz1rC7aM1Wn/FZvIJoW7u508zFq9jKFOI2Jy/4B2bQMnhdEY+wiW24znlwha+aDA
+	 exDUkdpUklcy8T/nv4zhaVY+LDOY20WpDjaiE6BXb0KyTVobcAsLbtikcRDHyftbN2pRv
+	 Gi49eCKg45bMB4FuWRxoctaCXivk9+gsUmigSewKErbUEFbrao9fbBKyO/SM7Lz9+CxM+
+	 WigCY2MwdX6gijZ7+KGauSWzEKLezaCcp9d7SS+AO15HE20FgmmntblNzJ6pcQ6onNg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795254182;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795254183;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=ia1DWgqWy0P2JKk9je9n1B4CFCgpK4MUxLPC6PKr19c=;
-	b=4Nkt7iRS+B+BSPDo2VjsuDq0zV0k8YV1WWKTB7WImF5mT5ETTY5/8GT2vbCgk3/T4kZJ
-	 yTOJvPe9AEeyJHywistxTG9B9zWCQYf891eQmCMom+2ZTvC3i60mEJTJ+Hb/bz/+OeQ6g
-	 EVrfbaRcsxE8M5frtYYCJD+vyUpF1YDSpkowtTHG1LPuGZ6m2HYjmr1/j+y9GPPNtHzEb
-	 7io6qCPrZR1ba2kZe/AdQkDO5uavsGXrJagW9HYlqXs3hUgDnjp2qwQz8X3u8W3FIESSy
-	 VLrdAqFIYBLFRnLOyegOuNZE7cbo9eifRSZ0renvHwo042k0xByWbQEG5BRjbzjewGg==
+	bh=vAQGhJrCV5IG3lvwme56F6NxYM2qgvwa3eHcPNT3CQE=;
+	b=Pbl7Lp/y5NgQjYIFV5+YBDS62NYEWcdQ76jRzhrDSgBBRdft8PzLfFFxkSoIuKvZyhCi
+	 eAJxBsZyg1rgNU2lB+RnwonwsV8hN2Eoj5gVB4eD+AZdCXWwKdjf31r9s94BEaLuiiNcx
+	 wT9+GOb/4sc90qLKC5k7okw6cNUW/50GDNL+1yFDasrUqeHUIW/8zwe5WK1W4p6M5klUX
+	 pf6aihiefSQk1Akm3ycASnN6qtU0nMZYWCB/MMx7bK4o0hrvlWuDN4gflllV0SNmJvGhe
+	 kR4XLfbDjl/VowYMvLUwQVsYNMDdS2kz4cnoCsAJO25OThl51i+hJKY36CGCZFy34jA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X07U3eWG;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PnMH8LGd;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B93606A320
-	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:43:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B24B8606A320
+	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:43:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X07U3eWG
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0C7C1F000C0;
-	Sat, 21 Nov 2026 09:43:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PnMH8LGd
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B45541F000C0;
+	Sat, 21 Nov 2026 09:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795254182;
-	bh=ia1DWgqWy0P2JKk9je9n1B4CFCgpK4MUxLPC6PKr19c=;
+	s=k20260515; t=1795254183;
+	bh=vAQGhJrCV5IG3lvwme56F6NxYM2qgvwa3eHcPNT3CQE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=X07U3eWGWV0svxA9Vjocz8Hx8wec2DS5UxX09140SRoOnoVvos/lW1SHNXeYYjNHv
-	 yyqxCIGXIXvYnW0dCqiWPfo0Pn9Cxu62xJyY1xyvaZCmbKfA5RRzueedTtcy2otZRS
-	 UP2auyMSfmkf5dsuLH5W6DFvnH0c9FbGyWw7SxvbUuVcaynPJf0gkloGF5ydTA07oA
-	 IsqvFdoEX88ZBELaj12U1/WW2i74Yk9sIPs4qs6oPSndf7ooeKoraR2/sT9mm1dvFP
-	 n7eNDyOuwa8q6EAsJUWqOIUDEGJUeGvuxpuAUAVxO/2tb+zqj2OU+XhODAj18ViUbf
-	 mkVUvLuMXoq1w==
+	b=PnMH8LGdCPRrapY48JGVHCAMu5lUjnTVwKUJt+txccqNiqBHm+C04tttqmoECQx92
+	 1bv+g1UC+ZG7Myu0hHA0knOPMRZWdhL1PEjGgfSjDTUWrQ2G6tuwtl9AHrP1p6ILOl
+	 jVZsKZWDsOXbf+2SWIrZ3+UuRavZFffKWzQMZ22+4oIy9dUCXQY7RiabmOBxPUnIni
+	 XYblEI45VCFCppCwk2aGXCokEk7GT528buflR40Mn+UGZZdtDLQttPjjHNm3v2blwX
+	 c3IQfNmlSCRAfSNRwABCjrUKqPq2dwZMe6H7zxdkwH7Wcj03GBeZSUDKjAlREYUtcu
+	 qE2vBVOVVzitg==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 21 Nov 2026 10:41:47 +0100
-Subject: [PATCH mptcp-net v2 49/62] mptcp: don't charge a subflow twice
- when it joins during accept()
+Date: Sat, 21 Nov 2026 10:41:48 +0100
+Subject: [PATCH mptcp-net v2 50/62] mptcp: continue the last mapping after
+ a fallback
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,89 +55,191 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261121-mptcp-cmason-fixes-v2-49-00327fd1de1f@kernel.org>
+Message-Id: <20261121-mptcp-cmason-fixes-v2-50-00327fd1de1f@kernel.org>
 References: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 In-Reply-To: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Chris Mason <mason@kernel.org>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3140; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=5AP99MUQejesCJErjrK2RKdoKAWEdYHHwBLGL5uDdc8=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ03Mlwo4a2vP+PtqT1fHo6M7Q16v/MdkeXL92nf49g
- ahn5ZZWHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABOZ+YXhF/PRb1c9t804NTvn
- hVpOzo1nr5Vm6e08Pz1PTmpq89y2j88ZGe5+PbCwyKjfvvTRr+/TD9ne7bvaVzH3V++00mPx917
- 1qLMDAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7426; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=/U6+Z5USACg0YDqahTDOT7x5LuI+zo6AQQvC/eBvMaQ=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ0/OUfaLLuJde3jJt1uvrux0fWjWuVL/NuSDvTs/xE
+ ymvWu1VO0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACbiK8bwh/N8brzDg+QPs7SD
+ iq2yFKf93xqw66nWMlOXF9dDw2wOVjH8FTk70Ws/c/BGkds8Pld3sm1eZdvAfmxjzbLrkuzHisr
+ uMwIA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-A subflow that joins an MPTCP connection while accept() runs can be
-charged twice to the memory cgroup of the server, for the memory that
-it already holds when accept() charges it. Nothing removes this extra
-charge.
+From: Chris Mason <mason@kernel.org>
 
-At accept(), __inet_accept() gives the MPTCP socket (msk) the memory
-cgroup of the caller, then sets its sk_socket. From then on,
-mptcp_finish_join() gives this memory cgroup to a joining subflow, via
-mptcp_sock_check_graft(), and each page that the subflow reserves is
-charged. Because accept() owns the msk, such a subflow is added to the
-join list, which mptcp_graft_subflows() moves to the subflow list
-before charging each subflow for the memory that it holds. A subflow
-that joined in between is then charged a second time for this memory,
-which will be uncharged only once.
+An established MPTCP connection that falls back to TCP after a zero
+window probe or a reinjection can stall in one direction, so that recv()
+returns neither the remaining data nor end of file.
 
-The window is short: from the end of __inet_accept() to the start of
-mptcp_graft_subflows(). And the extra charge is not zero only if data
-was received on the new subflow before mptcp_graft_subflows() gets to
-it, while a peer must not send data on it before the fourth ACK
-(RFC 8684, section 3.2).
+After a fallback, subflow_check_data_avail() gives each skb a dummy
+mapping, at the data sequence number (DSN) iasn + SSN - 1, where iasn is
+the DSN of the peer's first byte and SSN is the subflow sequence number.
+This is right only as long as DSNs and SSNs advance together, but a zero
+window probe or a reinjection maps old data a second time, which takes
+new SSNs and no new DSN. Each later dummy mapping is then too high, so
+__mptcp_move_skb() treats all further data as out of order:
 
-The fix used here is to skip, in mptcp_graft_subflows(), the subflows
-that already have a memory cgroup: they got it when they joined, and
-their memory has been charged since then.
+    data    SSN 1 to 1000    DSN iasn to iasn + 999
+    probe   SSN 1001         DSN iasn + 999, dropped
+    ack_seq                  iasn + 1000, the next DSN expected
+    dummy   SSN 1002         DSN iasn + 1001
 
-This issue has been found by an AI code review agent, while reviewing
-the code of the commit "mptcp: don't charge a shared page twice at
-accept()". It cannot be triggered on demand: the window is too narrow.
-It has been reproduced with a 500 ms sleep added after __inet_accept(),
-to widen it, and a Packetdrill script sending 1000 bytes on a subflow
-joining during accept(). Without this patch, a page stayed charged to
-the memory cgroup once all the sockets were freed, and none with it:
+The fix used here is to:
+- keep in the new member dsn_base of the subflow context the first DSN
+  of the peer's last mapping, minus its first SSN, plus 1
+- compute the DSN of a dummy mapping as dsn_base + SSN - 1
+- keep in the new member dsn_end the highest end of a mapping of the
+  peer so far
+- make mptcp_try_fallback() fail while the peer's last mapping ends
+  below dsn_end, so that the caller resets the subflow
 
-  memcg sock: 4096 bytes
+32 bits are enough for both: the dummy mapping only takes the lower 32
+bits of its DSN, see __mptcp_expand_seq(), and the end of a mapping
+stays within a window of dsn_end.
 
-Fixes: 6228efe0cc01 ("mptcp: leverage the backlog for RX packet processing")
+One case is left: if only the receiver falls back after a zero window
+probe or a reinjection, it now delivers data resent at the MPTCP level
+as new data, unless the sender resets the subflow before, as it does
+since "mptcp: don't resend data acked without MPTCP opts". Without this
+patch, the receiver stalled instead.
+
+This issue has been found with the help of an LLM, and reproduced in a
+VM, with the reproducer shared with the original version of this patch,
+and with a new Packetdrill test: between two unmodified Linux hosts,
+nftables removing the MPTCP options after a zero window probe, a DSS
+checksum failure, or a failed MP_JOIN. Without this patch, the reader
+stalled for good, the data staying in the out-of-order queue:
+
+  receiver  22.764: READ-TOTAL outcome ii-right-so-far-then-nothing bytes 2670592 of 8388608 [...]
+  [...] end: hang: no data and no end of file for 20 s
+  RESULT [...] R: DssFallback=1 [...] OFOQueue=204 NoDSSInWindow=145 [...]
+
+And with the Packetdrill test:
+
+  dss_fallback_after_probe_server.pkt:25: runtime error in read call: Expected result 2000 but got 1000 with errno 22 (Invalid argument)
+
+Fixes: 2834f8edd74d ("mptcp: cleanup fallback dummy mapping generation")
+Signed-off-by: Chris Mason <mason@kernel.org>
+[ dsn_base and dsn_end on 32 bits: struct mptcp_subflow_context grows by
+  8 bytes instead of 16, and lent_mem_frag stays in the same cacheline.
+  Shorter comments. Moved after "mptcp: stop resending data to a peer
+  that fell back": alone, this patch turns a stall into data delivered
+  twice, when only the receiver falls back after a probe or a
+  reinjection. Commit message: mention the remaining case + how the
+  issue was found, and its symptoms. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v2: update a comment (Clashiko)
----
- net/mptcp/protocol.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+v2: msg: the sender now resets in the remaining case (Clashiko)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 9f5e8b5cde60..c16daa461290 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -4650,8 +4650,8 @@ static void mptcp_graft_subflows(struct sock *sk)
+Note (Sashiko): the remaining case, when only the receiver falls back,
+needs a sender not resetting the subflow, e.g. with an older kernel: the
+data is then delivered twice, instead of a stall before this patch. The
+RFC at the end of this series resets instead of falling back.
+---
+ net/mptcp/protocol.h |  9 ++++++++-
+ net/mptcp/subflow.c  | 21 ++++++++++++++++++---
+ 2 files changed, 26 insertions(+), 4 deletions(-)
+
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 9a9dbab672af..7cdd0a7e8296 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -582,6 +582,8 @@ struct mptcp_subflow_context {
+ 	__wsum	map_data_csum;
+ 	u32	map_csum_len;
+ 	u32	prev_rtt_seq;
++	u32	dsn_base;	    /* MPC: DSN - SSN + 1 of peer's last map */
++	u32	dsn_end;	    /* MPC: highest end of the peer's maps */
+ 	u32	request_mptcp : 1,  /* send MP_CAPABLE */
+ 		request_join : 1,   /* send MP_JOIN */
+ 		request_bkup : 1,
+@@ -606,7 +608,8 @@ struct mptcp_subflow_context {
+ 		mpc_drop : 1,	    /* the MPC option has been dropped in a rtx */
+ 		resetting : 1,	    /* subflow is resetting */
+ 		old_data_pending : 1, /* old data not acked with MPTCP opts */
+-		__unused : 8;
++		map_old : 1,	    /* MPC: peer's last map is below dsn_end */
++		__unused : 7;
+ 	bool	data_avail;
+ 	bool	scheduled;
+ 	bool	pm_listener;	    /* a listener managed by the kernel PM? */
+@@ -1350,6 +1353,10 @@ static inline bool mptcp_try_fallback(struct sock *ssk, int fb_mib)
  
- 		/* Subflows joining after __inet_accept() will get the
- 		 * mem CG properly initialized at mptcp_finish_join() time,
--		 * but subflows pending in join_list need explicit
--		 * initialization by the loop below.
-+		 * even if pending in join_list. The ones that joined before
-+		 * need explicit initialization by the loop below.
- 		 */
- 		mptcp_data_lock(sk);
- 		list_splice_init(&msk->join_list, &join_list);
-@@ -4674,7 +4674,8 @@ static void mptcp_graft_subflows(struct sock *sk)
- 		if (!ssk->sk_socket)
- 			mptcp_sock_graft(ssk, sk->sk_socket);
+ 	msk = mptcp_sk(sk);
  
--		if (!mem_cgroup_sk_enabled(sk))
-+		/* Got the memcg when joining: its memory is already charged */
-+		if (!mem_cgroup_sk_enabled(sk) || mem_cgroup_from_sk(ssk))
- 			goto unlock;
++	/* the peer might still be resending old data */
++	if (subflow->map_old && !__mptcp_check_fallback(msk))
++		return false;
++
+ 	/* queued old data would be sent without mapping after a fallback */
+ 	if (subflow->old_data_pending && !__mptcp_check_fallback(msk))
+ 		return false;
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 3590c1207e88..f73e4b8deca4 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -540,6 +540,8 @@ static void subflow_set_remote_key(struct mptcp_sock *msk,
  
- 		__mptcp_inherit_cgrp_data(sk, ssk);
+ 	/* for fallback's sake */
+ 	subflow->map_seq = subflow->iasn;
++	subflow->dsn_base = subflow->iasn;
++	subflow->dsn_end = subflow->iasn;
+ 
+ 	WRITE_ONCE(msk->remote_key, subflow->remote_key);
+ 	WRITE_ONCE(msk->ack_seq, subflow->iasn);
+@@ -1438,6 +1440,17 @@ static bool mptcp_subflow_fail(struct mptcp_sock *msk, struct sock *ssk)
+ 	return true;
+ }
+ 
++/* Fallback: dummy maps go on from the last valid one, unless it is old */
++static void subflow_update_dsn_base(struct mptcp_subflow_context *subflow)
++{
++	u32 end = subflow->map_seq + subflow->map_data_len;
++
++	subflow->dsn_base = subflow->map_seq - subflow->map_subflow_seq + 1;
++	subflow->map_old = before(end, subflow->dsn_end);
++	if (!subflow->map_old)
++		subflow->dsn_end = end;
++}
++
+ static bool subflow_check_data_avail(struct sock *ssk)
+ {
+ 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+@@ -1471,6 +1484,8 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 		if (unlikely(!READ_ONCE(msk->can_ack)))
+ 			goto fallback;
+ 
++		subflow_update_dsn_base(subflow);
++
+ 		old_ack = READ_ONCE(msk->ack_seq);
+ 		ack_seq = mptcp_subflow_get_mapped_dsn(subflow);
+ 		pr_debug("msk ack_seq=%llx subflow ack_seq=%llx\n", old_ack,
+@@ -1501,6 +1516,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 				subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
+ 				goto reset;
+ 			}
++			subflow_update_dsn_base(subflow);
+ 			WRITE_ONCE(subflow->data_avail, true);
+ 			return true;
+ 		}
+@@ -1532,9 +1548,8 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 	subflow->map_data_len = skb->len;
+ 	subflow->map_subflow_seq = TCP_SKB_CB(skb)->seq - subflow->ssn_offset;
+ 	subflow->map_seq = __mptcp_expand_seq(subflow->map_seq,
+-					      subflow->iasn +
+-					      TCP_SKB_CB(skb)->seq -
+-					      subflow->ssn_offset - 1);
++					      subflow->dsn_base +
++					      subflow->map_subflow_seq - 1);
+ 	WRITE_ONCE(subflow->data_avail, true);
+ 	return true;
+ }
 
 -- 
 2.55.0
