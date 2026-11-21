@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795254171;
-	b=g6y+/smIOZ3qwG9XncnMKpEAj7IhfKWiK3zhFiobsn7jDGrUX+CkY8ucEfRFwqmNE6e2
-	 bOgWnFjY+NhOn1/og6vaC08VLm0+Nl5AhU2awKaa6L4CO0/eHI7nGo9Wb4KtYk5UqYbiX
-	 qZF23L2tVVtmWqd/kt9CczndxZchRGWPvo1Y6W8263AF3ei78rw1hQPTIyfk+0COVePe3
-	 srQKHtW/Agmp+ZNkEdnqGZfrdsbZeidw949vaiAT9z44JpdOaA1sddjH8TjLNLS87D8om
-	 B/b1zBkdhXGtcDdX+r/U9m9fQ5N2Xu9n1T8ImtwEHDHcDq3hZc4EBRyXqRC+HLUxBnQ==
+	t=1795254172;
+	b=EwBw8obdOqQtnxd8jMczZrAWEWP9SeqAkAYiz+EieKJixRTtxuzHSco9NgrjA36MOQRb
+	 8CP55dQwY6FxfcmEZhmADtNYI14ubAas1jpUcrqs4cyr7rtZuz6v9tAhN2yZiA35DeHjh
+	 c5Hzj+W+bqRd99wX7FxHrAI3wvuQeegxIJuPqJLidUP0PQzAxA5uUuKrxgLHRGEqLjlkN
+	 77Z/nGCrnYrxdXLF4jBDLc1+ETbHfgLuTzmSAGfhl6ZDtIETUQzuZv6EHzLfznf2/zIup
+	 McvSSUxJwGXtHMlglQI6FGhJfq3PZ070tPrwRUPwT8gUTlAsdSBsdL0HgKmFXBkhuFQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795254171;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795254172;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=DXNq2NBTnuP6KEZgPzVF9BPAHUhB0yg2Yu54Jzvl4Dc=;
-	b=kfHEEkgtMNCHh0eSTgGuRhFin62BkNIrVIwNArE0Ms18bhckrwwGwnsApYcQpx9x+C/s
-	 cUqFAcZkqlh/Mfb6kN3Hf7R6dgaqBDY8pxRwKd+8Olr9OXhMQNkA/qRBSEY5Jp6oRt02B
-	 uF4B9+kAQljkIs6RgJ4f8u/aDaIOU69cVdbCHNCmF+JoQbjJZoJDTJYKMORInnhmO2S+n
-	 iD3c/jXTVQ9wmdrtgn5ZObq7SULxXXIF47tyLSRoeDzCzPVfJfyUdkeEwWQJWxay8NXkw
-	 WSQkphd3FvH2gTfr9YkOOhhtUh8KClLCRqNPwa9vpeZqCphjaPeGmIeYD6dw+QDeJCg==
+	bh=IMWIfMLbTgOU68PETiIOO4Z0jSGD0f3GiD0SqFWMpb8=;
+	b=AYP8mRDrwA20AAzw4Gv/+2BQGql0YJcWWzIKEFFbdeV2gUp4a2wjF/TN6tGiMh+XP14U
+	 cEJ+dcGW/hrpsGoEbRYSHmAsGrzOrC1vFVZUvxh5t30ZDTT5vbZcJMtfOd0rcLYMesMaf
+	 Q+UAbOGaphyYxrCX0PyHVWiUt5zhCEx0MdfUH8+DyryBi9PyPt/UKb/qcmEDbgzBOqHEF
+	 yXBnEJARXwUONUAadjkU0yhDKWYq8Qt0SfRkkLLgdjFrIL/RF7oBIqZIY5ZzsbT26wlHU
+	 yGP11PY1CpnZUr751W0Gy3oYVw+2kLLIEK1eKKwfWFkO3RNAsN80c7wf2kmJZDcuPdw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MWBDZYcS;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gyzl2GWS;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D8C606A320
-	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:42:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABED3606A320
+	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:42:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MWBDZYcS
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1117F1F000C0;
-	Sat, 21 Nov 2026 09:42:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gyzl2GWS
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6C181F000C4;
+	Sat, 21 Nov 2026 09:42:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795254171;
-	bh=DXNq2NBTnuP6KEZgPzVF9BPAHUhB0yg2Yu54Jzvl4Dc=;
+	s=k20260515; t=1795254172;
+	bh=IMWIfMLbTgOU68PETiIOO4Z0jSGD0f3GiD0SqFWMpb8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=MWBDZYcSI2tSDf9zNd0sE6ZQxPi9vxUB4Dq9gg+zAob1VQB6iQudlT0H3xuSmQI+l
-	 tL5k2LsI9Xkjx1GSsEXqsqP9EAAGC+ESJ6jx20BK1PzEMTcwKc4Rj+NrRDO1GuIcls
-	 jqYofdkbOXyCuj24QB7s+yDP9qAVEi7j3E8gL+RhhPTdCsKhcpOvd9dTRX26ns7e46
-	 IA8IAZZLfne/IIiCFghmiZR9Jkm4ibAm685unrNzpqNbR1JdsjzvIaqyP6QP0gFN4P
-	 rwdgQJFD0NLRrFE6k3S9r9Z8eoio9/cn+w31Gb1RSvCQvW7Q8RVMxSWstCakeW/NSD
-	 J6GQ5vjYVtdHA==
+	b=gyzl2GWSnEpgFzpG/ABBb5HJaJG/yanE/o4YJY6J0lg+7keiRUK7jzpZ5cFVsYWIU
+	 CpnoP3u6DsBUFUsUzZDcC2z/eEqL4Ykmc83BLAaYohWlJ75LhKM0EzznOFbZ3jRmNC
+	 0MrX/DZQerY3hhrZ3tguj6KN82XWOwo8rduzZlben4aprUrLmKieIYUNTl1mNtwZmp
+	 FBl1GL/416spBO0crHu7lM2QnxssfKo7aiykVnyV3az6UG4Q4kot0T1wLemgKB2a5W
+	 b/z9KQvTeUeXll8vK54O9gWVLoADua4y3pvAJvjSqjm2diINOFux+2Wn8WnjAMBEm9
+	 hMZXOuYGgpEkA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 21 Nov 2026 10:41:35 +0100
-Subject: [PATCH mptcp-net v2 37/62] mptcp: count a listener once when
- listen() is called again
+Date: Sat, 21 Nov 2026 10:41:36 +0100
+Subject: [PATCH mptcp-net v2 38/62] mptcp: send the infinite map in a
+ single segment
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,88 +55,93 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261121-mptcp-cmason-fixes-v2-37-00327fd1de1f@kernel.org>
+Message-Id: <20261121-mptcp-cmason-fixes-v2-38-00327fd1de1f@kernel.org>
 References: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 In-Reply-To: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2837; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=aAO3v21i2NZQBA5RaoNlk3u9ADhknoHelAikiRDnBDk=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ01Pm8bmyRz+ov/Hz6e6JDveW+n1K/yzWWrJ3wsKkL
- VrmdeISHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABN5V8HwP9h3I68A170+ewmz
- 7+whT4s0XXNTFt+7t7BPRT6W18z7AiPDSaPmi5vjglcF6h+Ysf/k9r1fC4rU6itFRTzSru+ZtVy
- KGwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3236; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=rzBxndB8ksKv8c8dj3HUIdQOHI4xG2yif+Eg2PP5mLU=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ01MYbidG7t1x1d37n3kvn8VXX/Frl6cYt2xnmCkfe
+ eiG1YTDHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhvCxSkAE5lzjuGvwOVvVn4MQvlvzx7d
+ Y7Rw07ZPx6L3nIsy+Gb4VvZaTJz5VUaG474TJbK8eZqL96iHP8rMd0z60vkm9tDf+TIsdbvd3zg
+ wAwA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-listen() on a listening MPTCP socket only updates its backlog, as with
-TCP. But mptcp_listen() then counts this socket once more in the
-"sockets" column of the MPTCP or MPTCPv6 row of /proc/net/protocols, and
-sends a new MPTCP_EVENT_LISTENER_CREATED event, while only one decrement
-and one MPTCP_EVENT_LISTENER_CLOSED event are done when it is closed.
-Each extra listen() call then leaves the counter one above the number of
-MPTCP sockets in use, for the lifetime of the netns, and a userspace
-path manager can see two listeners created for one closed.
+After an MP_FAIL with a single subflow, mptcp_sendmsg_frag() puts the
+infinite mapping on the next skb with new data, then falls back to TCP.
+This skb can be bigger than one MSS: it is sized with the size goal
+computed before the fallback, from an MSS reserving the space for the
+DSS option.
+After the fallback, this space is no longer reserved when the MSS is
+computed, but this skb still carries a DSS option, which is copied to
+each of its segments: with the new MSS, they are bigger than the MTU.
 
-With TCP, the socket is only counted when it is hashed, which is not
-done again for a listening socket.
+The new MSS is used for the next transmissions, e.g. when only a part of
+the skb can be sent at first, or for a retransmission, and it can also
+be used for the first one, when more data is pushed in the same batch.
+The IP layer drops such segments, as DF is set, and sends an ICMP
+"Fragmentation Needed" to the local host, which doesn't change the PMTU:
+the transfer stalls.
 
-The fix used here is to only count the socket, and send the event, if it
-was not already listening.
+This issue was causing the "Infinite map" subtest from mptcp_join.sh to
+be flaky, with the client counting these ICMPs as OutOfWindowIcmps, and
+its subflow stuck with unsent data:
 
-This issue has been found by an AI code review agent, while reviewing
-the code of the commit "mptcp: pm: kernel: count endpoint listeners as
-sockets in use", and confirmed with a new Packetdrill test, and with a
-script calling listen() twice. Without this patch:
+  copyfd_io_poll: poll timed out (events: POLLIN 1, POLLOUT 0)
+  (...)
+    TcpExtOutOfWindowIcmps          134
+  (...)
+  tcp FIN-WAIT-1 (...) timer:(persist,21sec,7) (...) notsent:98333 (...)
+  (...)
+        infi rx server       [FAIL] got 0 infinite map[s] RX expected 1
 
-  listen_listen.pkt:12: error executing `test $(awk '/^MPTCP/ { n += $3 } END { print n }' /proc/net/protocols) -eq 1` command: non-zero status 1
+The root cause has been confirmed with a Packetdrill script, a variant
+of the new dss_infinite_map_mss_server.pkt test from the MPTCP
+Packetdrill tests, with an MP_FAIL received before any data, and a cwnd
+of 1: without this fix, the rest of the infinite mapping, after the
+first MSS, was never sent:
 
-  inuse: relisten: listening: 2 (expected 1)
-  inuse: relisten: closed: 1 (expected 0)
+  IpFragFails                     2                  0.0
+  (...) timer:(persist,305ms,1) (...) cwnd:2 (...) notsent:1564 (...)
+  infinite_map_stall-v4.pkt:27: error handling packet: Timed out waiting for packet
 
-The extra event comes from the commit below, and the extra count from
-commit c558246ee73e ("mptcp: add statistics for mptcp socket in use"),
-which is in all the stable versions having the commit below.
+To fix this issue, limit the skb carrying the infinite mapping to one
+MSS, as computed before the fallback.
 
-Fixes: f8c9dfbd875b ("mptcp: add pm listener events")
+A side effect: when the last unsent skb is bigger than one MSS, the
+infinite mapping is now put on a new skb. This unsent skb is then sent
+without DSS after the fallback, as it was already the case for the ones
+before it, and the peer falls back before receiving the infinite
+mapping.
+
+Fixes: 1e39e5a32ad7 ("mptcp: infinite mapping sending")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v2: commit message: explain the two Fixes tags
+v2: new, for an issue causing a flaky selftest
 ---
- net/mptcp/protocol.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 9202b14c030e..d16269d27b1d 100644
+index d16269d27b1d..e2fb81f52df2 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -4540,6 +4540,7 @@ static int mptcp_listen(struct socket *sock, int backlog)
- 	struct mptcp_sock *msk = mptcp_sk(sock->sk);
- 	struct sock *sk = sock->sk;
- 	struct sock *ssk;
-+	bool listening;
- 	int err;
+@@ -1483,6 +1483,12 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 	info->mss_now = tcp_send_mss(ssk, &info->size_goal, info->flags);
+ 	copy = info->size_goal;
  
- 	pr_debug("msk=%p\n", msk);
-@@ -4556,6 +4557,7 @@ static int mptcp_listen(struct socket *sock, int backlog)
- 		goto unlock;
- 	}
- 
-+	listening = sk->sk_state == TCP_LISTEN;
- 	set_bit(MPTCP_RTX_ENABLED, &msk->flags);
- 	mptcp_set_state(sk, TCP_LISTEN);
- 	sock_set_flag(sk, SOCK_RCU_FREE);
-@@ -4570,7 +4572,8 @@ static int mptcp_listen(struct socket *sock, int backlog)
- 	release_sock(ssk);
- 	mptcp_set_state(sk, inet_sk_state_load(ssk));
- 
--	if (!err) {
-+	/* only the backlog changes when listening already */
-+	if (!err && !listening) {
- 		sock_prot_inuse_add(sock_net(sk), sk->sk_prot, 1);
- 		mptcp_copy_inaddrs(sk, ssk);
- 		mptcp_event_pm_listener(ssk, MPTCP_EVENT_LISTENER_CREATED);
++	/* After the fallback, the MSS no longer includes the DSS option of the
++	 * infinite mapping: send it in a single segment.
++	 */
++	if (unlikely(mptcp_subflow_ctx(ssk)->send_infinite_map))
++		copy = info->mss_now;
++
+ 	skb = tcp_write_queue_tail(ssk);
+ 	if (skb && copy > skb->len) {
+ 		/* Limit the write to the size available in the
 
 -- 
 2.55.0
