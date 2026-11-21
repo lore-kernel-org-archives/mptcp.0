@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795256742;
-	b=z6XRJeIOSlZ/Gb8UdD7mgVAE+ZXD5pDpL6MAtO7xjpcKDJYKKovLhhbNakpj68zkLT6x
-	 JwOOjyw+jRRdE6sZP085uiggFOthqatWCqZX66KBQtR4XQ8Rognw+fdq/fFyregw0TcMY
-	 aRJfwgE0G67jRB+gAWvkhJ08yFRr7hQ5oKZ3OUkqnL6wNuoBxVt/svpbBGCG+tsTFujS8
-	 4d1EEy5RssN9pdWtY0/X88HnSoyRbMHbMAqJzXpAPogqPoK9GwUd8aGoufZSgk/LVwLzh
-	 DvR1IPPcD/Na0F5g/BPiThfXLJUwRUepckApiapjFQaKBQ2SXkyjIu4cww+UgCdWuqA==
+	t=1795257013;
+	b=CAUSVRdxF8i24j/M944BceH6ByLrhe17s4JT7qYHfhHfkIs+Ar1DlzOj/+8SLidD17H3
+	 Sh6JvhKNj4sw3/tboZtuAFnTJWA30P2XDXeDm2Q0DU526uHFqhw7QA+sO3qMqmXqD5Itu
+	 ycuzyBJUEqlwlYD4Kz+ML4MpjMb/lfx91B+Ie6LmSE6V4yd7AGBSCYdZWXWo9uvpMQcKL
+	 FRhhJUvy8euLJO3spRnMqBN5LuahsvmK4r55e30E2e73KgBHenOShLLAkTdLvyrZ9tka7
+	 c4eJ7BSH7lw5dKhMF2zWn8aFVg+R04+CKL6pSIyuBGUdEbmamykWlrkt/Ckt8JWEWGA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795256742;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795257013;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=BRz8u6nG28WdcWlYMWcuwhTU79E7cBtJBo5Iu3Bf+gA=;
-	b=sTnbjHKdEA8tYiSp3sRJTYAv+jKa6TmCfzOKXKWM9xqI/5tKpZuS0KtrC9bCoZu2YwF5
-	 R3KvYfNkSkVU8Eqkx7503enjAYwVu1ujUoOw7N+a1asAkav5Cb9XIcIERIBtF5SAbsUbA
-	 r3hh2WztglfqbM8IRE/zDmaR4RZtiy7wXe2T9OJ8FnNArUTVtd7JPDWSnznKKkBH/ySrS
-	 1TzpH1jjKwApzH9qiASLp0aFPP6j6+MF6AaT3Nx4lbZYok1szOM93SgFHPC1KZRUQoJBu
-	 8D2oBUwhJg2j/rClSy8cgXZl1SrJCf9HtxoBY1kuDN9Rh5gd6i39mZVLa5eR3eAdCRA==
+	bh=CFR2Aut3TXiSUhYNK88t1NJ+2VCpD97wmLJMRNaNfQc=;
+	b=bUZTTvZGTimqszMgS4lya/bjd2ThtkzpfZOlTW5wqKaX4i1K/64Hl2YUdJLHJvmMPAuO
+	 HFVWpSYLOiii+iMf35FE6i2WNi3LvpxGkTlI0JKKdVRax3HZ/TQr5420TcA30LDdb4zGb
+	 Vike8UNNLCR+0kOTISieem8Uq+K8ChOAFE4gSs1LB19N8iAuQWYLwo6SROuGj/FFTiz6N
+	 wrHpAp2d8DjhJnNz35PfngylHt0PYe2bNkabXPqYypuSXjRKJqdqSk5eNFisyaANFQgdq
+	 tgFfhJhldA/1g66ZEWA3DH73OSi94B6DYSdBUGVofKm45AV25YscniFhBwwUT2OyQVA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fMiLoZJQ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oYfl6wtq;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6B9606A320
-	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 10:25:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C458606A325
+	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 10:30:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fMiLoZJQ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAD361F000C0;
-	Sat, 21 Nov 2026 10:25:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oYfl6wtq
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8F3D1F000C0;
+	Sat, 21 Nov 2026 10:30:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795256741;
-	bh=BRz8u6nG28WdcWlYMWcuwhTU79E7cBtJBo5Iu3Bf+gA=;
+	s=k20260515; t=1795257013;
+	bh=CFR2Aut3TXiSUhYNK88t1NJ+2VCpD97wmLJMRNaNfQc=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=fMiLoZJQ5UhBsTV1IlH0Db/mrTHr/BSYARj7OlDKhjaAztRQgaVtYkYNu7EwF2a7z
-	 sC3Q0ZOJiH6mb0YCsTkZ6e+dXSioBLJUnEbptybwlJr1bGcD0xXmwsHX0AUrcnSbLW
-	 IlBprevnDdVVp/o0w6Sw5tiIy+Ki4C/nPh7GaK8nqRRJFLgZLea+keS1e6oG+cCeFE
-	 eDAKwpUHstFaWPAAEep6UWAQQdhdxRm1aMLKfCm5QceOsKqgCjRPFkKWuAoPkPl1LT
-	 nAvTOCbmdtyuEiS/HWZKO8QYLqFHejaVy/yMWDTb8abAwb/4exXD33UuhKUcieo6Db
-	 uCATAXWMLz3PQ==
-Message-ID: <sashiko-outbox-226939@kernel.org>
+	b=oYfl6wtqmJEf4K6DsknQTpcoMoiVWquYCBfKdNqKNkhuUSKSSvPNrVttullluf2tS
+	 LYgB86VessLQj3fQ0XiCqv5A7Oy3QKSFIeRZpyxOdfhlZYOcCytXVvt/FUW5hBOF0Z
+	 ME+igtxFB9sKRAOhtFGjMgDrpaCsC2xSYHDaGUPj/Ou17X5d59X5RbnD7IqfuUVyVl
+	 x/mLDaHJhO+Y7f9vWUduKbqYW5raetQAWUx0FoE/6K/X6dSYC7+z2AKoC80gD4DaB0
+	 tivcLR+yWqavdLqEW8LdYMPwVBLXgb3KVx8HMM6b5h9o5B3aMBL6EU47LBxaUbi1s8
+	 WkPnnKmwIOaRA==
+Message-ID: <sashiko-outbox-226941@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-net v2 15/62] mptcp: return EOF after a DATA_FIN,
- as TCP does
+Subject: Re: [PATCH mptcp-next mptcp-net v2 61/62] mptcp: report errors as
+ TCP does when closing
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>, "MPTCP
  Linux" <mptcp@lists.linux.dev>
-In-Reply-To: <20261121-mptcp-cmason-fixes-v2-15-00327fd1de1f@kernel.org>
+In-Reply-To: <20261121-mptcp-cmason-fixes-v2-61-00327fd1de1f@kernel.org>
 References: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
- <20261121-mptcp-cmason-fixes-v2-15-00327fd1de1f@kernel.org>
+ <20261121-mptcp-cmason-fixes-v2-61-00327fd1de1f@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 21 Nov 2026 10:25:41 +0000
+Date: Sat, 21 Nov 2026 10:30:12 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -61,143 +61,206 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 2 potential
+Thank you for your contribution! Sashiko AI review found 4 potential
 issues to consider:
-- [Medium] mptcp: mptcp_check_data_fin() misses SOCK_DONE after subflow
-  disconnect
-- [Medium] mptcp: early return in mptcp_check_fastclose() skips subflow
-  close in FIN_WAIT2
+- [Medium] mptcp: premature TCP_CLOSE and wakeup before
+  mptcp_close_err() on timeout
+- [Medium] mptcp: tcp_disconnect() clears SOCK_DONE before
+  mptcp_check_rcv_close()
+- [Medium] mptcp: dummy fallback DATA_FIN changes state before
+  mptcp_close_last_err()
+- [Medium] mptcp: missing mptcp_check_data_fin_ack() before
+  mptcp_close_last_err()
 --
 
-commit b22772fa5573efd7e1960e51f06a318dfce6573b
+commit 0c5fc2bb3f82340912e87636cc6d5fef891b87cb
 Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-mptcp: return EOF after a DATA_FIN, as TCP does
+mptcp: report errors as TCP does when closing
 
-This commit sets SOCK_DONE on the MPTCP socket when a DATA_FIN (or a TCP FIN
-after fallback) is processed and checks SOCK_DONE before sock_error() in
-mptcp_recvmsg() so that a subsequent reset still returns EOF after the queu=
-ed
-data.
+This commit updates MPTCP socket closure on close timeouts and last-subflow
+closure to set SHUTDOWN_MASK and populate sk_err based on the subflow error
+or MPTCP socket state, matching tcp_done_with_error().
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/647
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/648
 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 9e297fa08bfed..91639ae0c8a02 100644
+> index 1088caa788f60..5733ab548d12d 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -714,6 +714,10 @@ static void mptcp_check_data_fin(struct sock *sk)
->  		WRITE_ONCE(msk->rcv_data_fin, 0);
-> =20
->  		WRITE_ONCE(sk->sk_shutdown, sk->sk_shutdown | RCV_SHUTDOWN);
-> +		/* on fallback, also emulated after a reset: check for a FIN */
-> +		if (!__mptcp_check_fallback(msk) ||
-> +		    (msk->first && sock_flag(msk->first, SOCK_DONE)))
-> +			sock_set_flag(sk, SOCK_DONE);
->  		smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
-> =20
->  		switch (sk->sk_state) {
-> @@ -972,6 +976,9 @@ static bool __mptcp_subflow_error_report(struct sock =
-*sk, struct sock *ssk)
->  	 * destroy the msk as needed.
->  	 */
->  	ssk_state =3D inet_sk_state_load(ssk);
-> +	/* a FIN received before still leads to EOF, as with TCP */
-> +	if (sock_flag(ssk, SOCK_DONE) && mptcp_pending_data_fin(sk, NULL))
-> +		sock_set_flag(sk, SOCK_DONE);
->  	if (ssk_state =3D=3D TCP_CLOSE && !sock_flag(sk, SOCK_DEAD))
->  		mptcp_set_state(sk, ssk_state);
->  	WRITE_ONCE(sk->sk_err, -err);
-
-[Severity: Medium]
-On a fallback connection, can __mptcp_close_ssk() clear SOCK_DONE on
-msk->first via tcp_disconnect() before mptcp_check_data_fin() or
-__mptcp_subflow_error_report() observes it?
-
-mptcp_worker                      <softirq>
-lock_sock(sk)
-                                  tcp_fin(ssk)
-                                    sock_set_flag(ssk, SOCK_DONE)
-                                  mptcp_data_ready()
-                                    __mptcp_move_skbs_from_subflow()
-                                      /* queued to msk->backlog_list */
-                                      subflow_sched_work_if_closed()
-                                        msk->rcv_data_fin =3D 1
-                                        set_bit(MPTCP_WORK_CLOSE_SUBFLOW)
-                                  tcp_reset(ssk)
-                                    subflow_error_report()
-                                      __set_bit(MPTCP_ERROR_REPORT)
-mptcp_check_data_fin(sk)
-  /* backlog not spooled yet:
-   * ack_seq < rcv_data_fin_seq
-   */
-__mptcp_close_subflow(sk)
-  __mptcp_close_ssk()
-    /* ssk =3D=3D msk->first: !dispose_it */
-    __mptcp_subflow_disconnect()
-      tcp_disconnect(ssk, 0)
-        sock_reset_flag(ssk, SOCK_DONE)
-    goto out;
-release_sock(sk)
-  mptcp_release_cb()
-    __mptcp_move_skbs()
-      mptcp_check_data_fin()
-        sock_flag(msk->first, SOCK_DONE)  <-- false
-    __mptcp_error_report()
-      __mptcp_subflow_error_report()
-        sock_flag(ssk, SOCK_DONE)         <-- false
-
-Because msk->backlog_list is not spooled before mptcp_worker() runs
-mptcp_check_data_fin() and __mptcp_close_subflow(), ssk->sk_receive_queue is
-already empty while msk->ack_seq has not yet caught up to
-msk->rcv_data_fin_seq.  __mptcp_close_ssk() then disconnects msk->first and
-clears SOCK_DONE on ssk before mptcp_release_cb() processes the backlog and
-MPTCP_ERROR_REPORT, leaving SOCK_DONE unset on sk so mptcp_recvmsg() returns
-the reset error instead of EOF.
 
 [ ... ]
 
-> @@ -2938,6 +2948,11 @@ static void mptcp_check_fastclose(struct mptcp_soc=
-k *msk)
->  	if (likely(!READ_ONCE(msk->rcv_fastclose)))
->  		return;
-> =20
-> +	/* a DATA_FIN received before still leads to EOF, as with TCP */
-> +	if (READ_ONCE(msk->rcv_data_fin))
-> +		mptcp_move_skbs(sk);
-> +	mptcp_check_data_fin(sk);
-> +
->  	mptcp_token_destroy(msk);
-> =20
->  	mptcp_for_each_subflow_safe(msk, subflow, tmp) {
+> @@ -2905,13 +2957,15 @@ static void __mptcp_close_ssk(struct sock *sk, st=
+ruct sock *ssk,
+>  			mptcp_set_close_tout(sk, tcp_jiffies32 -
+>  					     (mptcp_close_timeout(sk) + 1));
+>  			mptcp_schedule_work(sk);
+> +		} else if (sk->sk_state =3D=3D TCP_CLOSE) {
+> +			mptcp_close_wake_up(sk);
+>  		} else if (sk->sk_state !=3D TCP_ESTABLISHED ||
+>  			   msk->in_accept_queue) {
+>  			mptcp_check_rcv_close(sk);
+> -			mptcp_set_state(sk, TCP_CLOSE);
+> -			WRITE_ONCE(sk->sk_shutdown,
+> -				   sk->sk_shutdown | SEND_SHUTDOWN);
+> -			mptcp_close_wake_up(sk);
+> +			if (sk->sk_state =3D=3D TCP_CLOSE)
+> +				mptcp_close_wake_up(sk);
+> +			else
+> +				mptcp_close_last_err(sk, ssk_err);
+>  		} else {
+>  			mptcp_start_tout_timer(sk);
+>  		}
 
 [Severity: Medium]
-When sk is in TCP_FIN_WAIT2 and has both a pending DATA_FIN and an
-MP_FASTCLOSE, does calling mptcp_check_data_fin(sk) here cause
-mptcp_check_fastclose() to return early without setting
-MPTCP_WORK_CLOSE_SUBFLOW?
+Can a fallback socket closed by a clean FIN report EPIPE or ECONNRESET
+from recv() instead of EOF here?
 
-In TCP_FIN_WAIT2, mptcp_check_data_fin(sk) calls mptcp_shutdown_subflows(ms=
-k)
-and mptcp_send_ack(msk) (queuing a TCP FIN and transmitting FIN/ACK segments
-on subflows that are about to be reset) and transitions sk->sk_state to
-TCP_CLOSE:
+When ssk is msk->first and dispose_it is false, earlier in
+__mptcp_close_ssk() the call to __mptcp_subflow_disconnect() ->
+tcp_disconnect() clears SOCK_DONE on msk->first.  When
+mptcp_check_rcv_close() then drains the backlog and calls
+mptcp_check_data_fin(), sock_flag(msk->first, SOCK_DONE) is already false:
 
 net/mptcp/protocol.c:mptcp_check_data_fin() {
     ...
-		case TCP_FIN_WAIT2:
-			mptcp_shutdown_subflows(msk);
-			mptcp_set_state(sk, TCP_CLOSE);
-			break;
+		/* on fallback, also emulated after a reset: check for a FIN */
+		if (!__mptcp_check_fallback(msk) ||
+		    (msk->first && sock_flag(msk->first, SOCK_DONE)))
+			sock_set_flag(sk, SOCK_DONE);
     ...
 }
 
-After the subflow loop sends active resets and calls tcp_set_state(tcp_sk,
-TCP_CLOSE), switch (sk->sk_state) in mptcp_check_fastclose() hits case
-TCP_CLOSE and returns before setting MPTCP_WORK_CLOSE_SUBFLOW, leaving the
-subflow sockets uncleaned on msk->conn_list until the parent MPTCP socket is
-closed.
+Because SOCK_DONE is not copied to sk, and mptcp_close_last_err() then sets
+sk->sk_err to EPIPE or ECONNRESET (when sk transitions to TCP_CLOSE_WAIT or
+TCP_CLOSING), mptcp_recvmsg() sees !sock_flag(sk, SOCK_DONE) and returns
+the error instead of 0.
+
+[Severity: Medium]
+Does calling mptcp_check_rcv_close() without also checking
+mptcp_check_data_fin_ack() cause a cleanly closed connection to report
+ECONNRESET?
+
+If sk is in TCP_LAST_ACK, TCP_CLOSING, or TCP_FIN_WAIT1 and the peer's
+DATA_ACK acknowledging our DATA_FIN has already updated msk->snd_una in
+softirq before __mptcp_close_ssk() runs, mptcp_check_rcv_close() only
+checks rcv_data_fin and rcv_fastclose.  Without mptcp_check_data_fin_ack()
+advancing sk->sk_state to TCP_CLOSE (or to TCP_FIN_WAIT2 before
+mptcp_check_data_fin() moves it to TCP_CLOSE), sk->sk_state !=3D TCP_CLOSE
+remains true and mptcp_close_last_err() sets sk->sk_err to ECONNRESET even
+though the DATA_FIN handshake completed cleanly.
+
+Also, because this branch is skipped when sk->sk_state =3D=3D TCP_ESTABLISH=
+ED,
+an accepted socket in TCP_ESTABLISHED that receives final data, DATA_FIN
+(or MP_FASTCLOSE), and subflow close in its backlog while locked by
+mptcp_worker() will skip mptcp_check_rcv_close() and start the close
+timeout timer instead of processing the backlog and closing immediately.
+
+> @@ -3085,20 +3139,10 @@ static void mptcp_check_fastclose(struct mptcp_so=
+ck *msk)
+>  		unlock_sock_fast(tcp_sk, slow);
+>  	}
+> =20
+> -	/* Mirror the tcp_reset() error propagation */
+> -	switch (sk->sk_state) {
+> -	case TCP_SYN_SENT:
+> -		WRITE_ONCE(sk->sk_err, ECONNREFUSED);
+> -		break;
+> -	case TCP_CLOSE_WAIT:
+> -		WRITE_ONCE(sk->sk_err, EPIPE);
+> -		break;
+> -	case TCP_CLOSE:
+> +	if (sk->sk_state =3D=3D TCP_CLOSE)
+>  		return;
+> -	default:
+> -		WRITE_ONCE(sk->sk_err, ECONNRESET);
+> -	}
+> =20
+> +	WRITE_ONCE(sk->sk_err, mptcp_reset_err(sk));
+>  	mptcp_set_state(sk, TCP_CLOSE);
+>  	WRITE_ONCE(sk->sk_shutdown, SHUTDOWN_MASK);
+>  	smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
+> @@ -3416,8 +3460,7 @@ static void mptcp_worker(struct work_struct *work)
+>  		mptcp_do_fastclose(sk);
+>  		mptcp_for_each_subflow_safe(msk, subflow, tmp)
+>  			__mptcp_close_ssk(sk, subflow->tcp_sock, subflow, 0);
+> -		WRITE_ONCE(sk->sk_shutdown, sk->sk_shutdown | SEND_SHUTDOWN);
+> -		mptcp_close_wake_up(sk);
+> +		mptcp_close_err(sk, ETIMEDOUT);
+>  	}
+
+[Severity: Medium]
+Can a thread in mptcp_poll() or getsockopt(SO_ERROR) be woken on close
+timeout before mptcp_close_err() publishes ETIMEDOUT and SHUTDOWN_MASK?
+
+kworker                               CPU1
+mptcp_worker()
+  mptcp_do_fastclose(sk)
+    mptcp_set_state(sk, TCP_CLOSE)
+  __mptcp_close_ssk(sk, ...)
+    if (sk->sk_state =3D=3D TCP_CLOSE)
+      mptcp_close_wake_up(sk)
+                                      mptcp_poll()
+                                        state =3D=3D TCP_CLOSE
+                                        sk_shutdown =3D=3D 0, sk_err =3D=3D=
+ 0
+                                        <-- misses EPOLLERR/EPOLLIN/EPOLLOUT
+  mptcp_close_err(sk, ETIMEDOUT)
+
+mptcp_close_err() writes sk_err and SHUTDOWN_MASK before setting TCP_CLOSE
+and waking waiters so lockless pollers see a consistent state.  However, on
+close timeout, mptcp_do_fastclose() already sets TCP_CLOSE, and
+__mptcp_close_ssk() then hits the new sk->sk_state =3D=3D TCP_CLOSE branch =
+and
+calls mptcp_close_wake_up() while sk_err and sk_shutdown are still 0.  In
+mptcp_check_fastclose() above, mptcp_set_state(sk, TCP_CLOSE) is likewise
+called before WRITE_ONCE(sk->sk_shutdown, SHUTDOWN_MASK).
+
+> @@ -4768,8 +4811,11 @@ static int mptcp_stream_accept(struct socket *sock=
+, struct socket *newsock,
+>  		 */
+>  		if (unlikely(inet_sk_state_load(msk->first) =3D=3D TCP_CLOSE)) {
+>  			if (unlikely(list_is_singular(&msk->conn_list))) {
+> +				int err =3D READ_ONCE(msk->first->sk_err);
+> +
+>  				mptcp_check_rcv_close(newsk);
+> -				mptcp_set_state(newsk, TCP_CLOSE);
+> +				if (newsk->sk_state !=3D TCP_CLOSE)
+> +					mptcp_close_last_err(newsk, err);
+>  			}
+>  			mptcp_close_ssk(newsk, msk->first,
+>  					mptcp_subflow_ctx(msk->first));
+
+[Severity: Medium]
+On a fallback socket closed by a TCP reset or timeout without a FIN, does
+mptcp_check_rcv_close() corrupt the state before mptcp_close_last_err()
+maps the error?
+
+When a fallback subflow reaches TCP_CLOSE, subflow_sched_work_if_closed()
+emulates a dummy rcv_data_fin =3D 1 even if no FIN was received:
+
+net/mptcp/subflow.c:subflow_sched_work_if_closed() {
+    ...
+	if (__mptcp_check_fallback(msk) && subflow_is_done(ssk) &&
+	    msk->first =3D=3D ssk &&
+	    mptcp_update_rcv_data_fin(msk, subflow->map_seq +
+				      subflow->map_data_len, true))
+		mptcp_schedule_work(sk);
+    ...
+}
+
+When mptcp_check_data_fin() processes that dummy rcv_data_fin (here in
+mptcp_stream_accept(), in __mptcp_close_ssk(), or earlier in
+mptcp_worker()), it leaves SOCK_DONE unset on sk because msk->first lacks
+SOCK_DONE, yet it still advances sk->sk_state from TCP_ESTABLISHED to
+TCP_CLOSE_WAIT, or from TCP_FIN_WAIT2 to TCP_CLOSE.  As a result, a TCP RST
+in TCP_ESTABLISHED sees TCP_CLOSE_WAIT in mptcp_close_last_err() and
+reports EPIPE instead of ECONNRESET, and a reset or timeout in
+TCP_FIN_WAIT2 sees sk->sk_state =3D=3D TCP_CLOSE and skips
+mptcp_close_last_err() completely.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261121-mptcp-cmas=
-on-fixes-v2-0-00327fd1de1f@kernel.org?part=3D15
+on-fixes-v2-0-00327fd1de1f@kernel.org?part=3D61
