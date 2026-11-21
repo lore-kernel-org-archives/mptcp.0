@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795254154;
-	b=KiKG+uuD0+8EJJ71adHG8n+MUX3Xl34Sf2/uFdI5AcM01oZzORbZExpRRBTlmNhBAsPL
-	 rs0jVpybz5lZICH6J8dXYcNFSueZcnlDttuT3JDtSnAgZGg0TDrtJtQYbBWqzmPmAk7Wy
-	 Yq/sZToW9Up4AP93FDTUqzVdD7k7nwuj7AoIdAZQIE8BkRnO63Bo54z1p6mquaEq2hImE
-	 CgzP9hFmqQ1OuLzTKuDN0GCt0uW5Yo26rpTgGY0v+eSxcr+WEqZxO8IEJoz9L1QunFdDl
-	 ekCCt4PJi+Gh5IT5ffnqGCZNxCT1+z+0cvUzLiaAUYB9DI8+tdp6TNp1XUuvmAAO9vA==
+	t=1795254155;
+	b=iGiCUW0lXlMeNW9+d7rHwBEAcVvaaNl3BLnK+V+LYO062NvTFKHqk4EsuPM56V8euSOn
+	 w/DFUtM2YonS7RgfKvepN49o72nxmkNpQXx3j8wHpW22KBhrkXUjvs0l316G1g+s2TLeD
+	 5/9gJuzvHOJq4PgbwkfTYfhF68YOozFvkU1aYVWeFx3YxqIW+7QtztEMzCrNQ1X0637Qm
+	 uVxATINaUebm8igRntRRctMOX7SAiHW/SI0zyPLFFR2RuN76oswP+Gyb4J01GBaS6jmSS
+	 vCMrog0fYBXjsU1KnpIdLTOtunx3Ib+rj584EIZzF6z3sLR7pTiCRIMKNkVOpN4TJqA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795254154;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795254155;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=6qXs6K/0c2om8ks3+LZuoCm1mZz32FbP1xscDNAlqZ0=;
-	b=K7OR0XRXpqJfVAZt9Iq9qPnuPaU/1o0uM12+ZQX/QMDg1F3AUvlILN5yMt7+vi7cXMCW
-	 mR4loKLVxdLeuIBkGkkJqhQ6CxD6qZNA4qMn6EwU5sVOcvQbyg6pHfWVgX/3GPqVh1Cfh
-	 /PEySm0ZBZeLSo0d1ULynvSZkpkgH5lwxhQhLtj/H5M5J/Wr0otLFm1vcPm6cer34Mgb3
-	 KWeehGc1cTNhMq62DL2IeUUEmZyCNPUQXriSWgS8D8v1LiPjDxTbs21D8bcJy8j/ZaGHl
-	 4jPY1mTGMEw3YfwDfnOT/Mz6KQCE/whe2aGnOwU5NgC5SBDokTu/8Xx6noavNX37OuQ==
+	bh=dtUNF7R/JZvAJATR0vh3jjl5HRWPOWIAHa7/Y+xlL+I=;
+	b=j4cffRsJtnkwcovhS8RAkRDcoV+91NoPe2oq4qrfhEJMEEmQdboNTn4jiUwBKzWxg9vI
+	 AM2UXL6+/o4/75AvgWgHEoPAglskKBIbZx8tVBt31Ut7+CElrsk1tT3MBkbx5Npv7DanJ
+	 AxPayZHMcYBby2c9bpngQuWk6d0RKlma/OwvK5xBk2OkCOWhTjluLQ36e11CdHQZ4JHDf
+	 14Zq/90Iy/N32CIu7GJr3o8GkyI4C9EjIY60KhWBxxHg55IwVAlvNbtI4h2zDuYQ3TaRs
+	 3YVkklLONN0SYtKD1EUlfWAyg6NI6tnFOUXT6NEJKBjzSdpV1ylEXDzOLCjnmSZo8Xw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CzQk7kHd;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OypNrYrH;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D58606A320
-	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:42:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B03C606A320
+	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:42:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CzQk7kHd
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 105111F000C6;
-	Sat, 21 Nov 2026 09:42:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OypNrYrH
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D65E41F000C4;
+	Sat, 21 Nov 2026 09:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795254154;
-	bh=6qXs6K/0c2om8ks3+LZuoCm1mZz32FbP1xscDNAlqZ0=;
+	s=k20260515; t=1795254155;
+	bh=dtUNF7R/JZvAJATR0vh3jjl5HRWPOWIAHa7/Y+xlL+I=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=CzQk7kHdnfLcKJ0MPv3bnRXMc/0LJywVvsKhzQYg3Iv5JExKvi7Tw54C+TSI30R92
-	 kCewEZ+sLL46xgGsPXnAjVHeZ3zZidZCjagVbKXqWl1zzG6HTFwEIzx34dWPZfKClI
-	 ywd9xfZpZXXvYlKHA9FZ0IQhonNm64mnE0RMHx7OZEIg1sXKLvjpFapm6HDZ/mdlUb
-	 sE9kEMsRyB9Brsgf2OxRlOPcmZIoDJV/3fmm5rM24z+ewzG8V2DTFQ3LchPZI7fqjn
-	 6yCwGteEA/2AF0TOhdVdgEsVVfNidYqn8Eo/LWueH0AqGVeiVKffQ2xltQBCTDwbRx
-	 7chrv9GeJQjJQ==
+	b=OypNrYrHczZVrmfjkKJYJchn8Qp8ulfU95VJrnPRku48Fd0KrkiKRV7ZBAkKMpqCs
+	 3VC4i9UrUxP2J60yTdbXM8Z2b2AwguR9Rns6GPPOEmzlHYS6pjIbOaVi1U8VcvcPE5
+	 U+ei+IUXUBAkTciyhyNFCMJgLd2Z7u4aFeoSzB6SVQYhfYv5zLr4H1ze8FVagiSoSy
+	 G1dM5K5oxM1Otygte7626Wl/LiuOGHjhipSqV6PvKvI61eENK7nh0bD59/tREE4nn5
+	 rWqAKk1nKc+8opIlrp3BRrf4fFPEPg3ittJzvZdvZbvwOv1y5AChhYiTW9Xp61AKWC
+	 1DurvjuPnZP0Q==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 21 Nov 2026 10:41:15 +0100
-Subject: [PATCH mptcp-net v2 17/62] mptcp: reset the subflow on abort after
- fallback
+Date: Sat, 21 Nov 2026 10:41:16 +0100
+Subject: [PATCH mptcp-net v2 18/62] mptcp: wake up blocked senders when no
+ sf left
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,64 +55,72 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261121-mptcp-cmason-fixes-v2-17-00327fd1de1f@kernel.org>
+Message-Id: <20261121-mptcp-cmason-fixes-v2-18-00327fd1de1f@kernel.org>
 References: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 In-Reply-To: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1990; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=uwaAtsk/k6ZJsP6boV94Mf2V+eEhVKCU4Dlfa1D+rv4=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ00OTGfatXH1+l4Gk5Lff88OXX1C8sj8yRmTC/c6Li
- bceFdoLdJSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEwkNJyR4XLtM/9/2su7tYuM
- pSYKiZW+WZyQ9P+u0NqWnoMpVruupzD8LxBiXeG2x/JwYFjLju2HWWSe9szxKIhi8knguBB8jUu
- CAwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2404; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=3bqr5cktdwQRnklbcG7PaFogLt5S2kbO83/lAGFS9As=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ08OqE6bNqJi99uXqsKrQyKZZYt2NLx6cOqvKrpfZO
+ DsndEZ8RykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwER2ljH8j6lcynTmQUxlrMOz
+ heejquY3zNSZ+8hiR/hinblCfeufsDH8d2K/I/Z/+WLjmAjOBt8rC/+dfGnfx8R2P3HNqyKhg3/
+ YuQE=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-After a fallback to TCP, closing an MPTCP socket with unread data, or
-with SO_LINGER and a zero timeout, did not reset the connection as TCP
-does: the data still in the MPTCP send queue was dropped, and the
-subflow was closed with a FIN. The peer then got a truncated stream,
-followed by EOF, without error.
+When an MPTCP socket moves to TCP_CLOSE because its last subflow is
+closed, after the close timeout or not, sk_shutdown was not updated, and
+no error was set in most cases. A thread blocked in send() was then
+never woken up for good.
 
-mptcp_do_fastclose() sends a reset on each subflow, except after a
-fallback: send it in this case too. No MPTCP option is added after a
-fallback: this is a plain TCP reset. Its other callers, on disconnect()
-and when the close timeout of an orphan expires, were already resetting
-the subflow after a fallback, via tcp_disconnect(), in most states: the
-reset is now sent as without a fallback.
+Set SEND_SHUTDOWN in these cases: no more data can be sent. The blocked
+send() then returns EPIPE, as a send() called after the close timeout
+already does. Reporting another error first, e.g. ETIMEDOUT as TCP does
+after a timeout, would change the behaviour seen by the applications:
+this is left for net-next.
 
-This issue has been found by an AI code review agent, while reviewing
-another fix, and confirmed with a new Packetdrill test: an MPTCP client
-falls back to TCP, receives data, and closes the socket without reading
-it. Without this patch, a FIN was sent instead of a reset:
+This was reported on GitHub, with a reproducer: the only subflow dies by
+RTO, and send() was never woken up, while it returned ETIMEDOUT after a
+few seconds with TCP. With this patch, send() returns EPIPE after the
+subflow timeout (like TCP) and the close timeout (by default at 60
+seconds). This is also validated with new Packetdrill tests, with the
+close timeout, and with a reset received in CLOSE_WAIT. Without this
+patch, send() stayed blocked in both cases:
 
-  v1_connect_tcpfallback_close_unread_data.pkt:19: error handling packet: live packet field tcp_fin: expected: 0 (0x0) vs actual: 1 (0x1)
+  close_timeout_blocked_send.pkt:24: runtime error: exiting while a blocking system call is in progress
+  close_wait_reset_blocked_send.pkt:25: runtime error: exiting while a blocking system call is in progress
 
-Fixes: ae155060247b ("mptcp: fix duplicate reset on fastclose")
+Fixes: 27e5ccc2d5a5 ("mptcp: fix dangling connection hang-up")
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/648
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v2: new, for an issue found by a review agent
+v2: new, for issue #648 reported on GitHub
 ---
- net/mptcp/protocol.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ net/mptcp/protocol.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 541bf23d1bda..201e77772bdd 100644
+index 201e77772bdd..b0f8a3d2e8b7 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -3245,10 +3245,7 @@ static void mptcp_do_fastclose(struct sock *sk)
- 	mptcp_backlog_purge(sk);
- 	msk->fastclosing = 1;
- 
--	/* Explicitly send the fastclose reset as need */
--	if (__mptcp_check_fallback(msk))
--		return;
--
-+	/* Explicitly send the fastclose reset, a plain one after a fallback */
- 	mptcp_for_each_subflow_safe(msk, subflow, tmp) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+@@ -2813,6 +2813,8 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 		} else if (sk->sk_state != TCP_ESTABLISHED ||
+ 			   msk->in_accept_queue) {
+ 			mptcp_set_state(sk, TCP_CLOSE);
++			WRITE_ONCE(sk->sk_shutdown,
++				   sk->sk_shutdown | SEND_SHUTDOWN);
+ 			mptcp_close_wake_up(sk);
+ 		} else {
+ 			mptcp_start_tout_timer(sk);
+@@ -3306,6 +3308,7 @@ static void mptcp_worker(struct work_struct *work)
+ 		mptcp_do_fastclose(sk);
+ 		mptcp_for_each_subflow_safe(msk, subflow, tmp)
+ 			__mptcp_close_ssk(sk, subflow->tcp_sock, subflow, 0);
++		WRITE_ONCE(sk->sk_shutdown, sk->sk_shutdown | SEND_SHUTDOWN);
+ 		mptcp_close_wake_up(sk);
+ 	}
  
 
 -- 
