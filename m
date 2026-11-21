@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1795254168;
-	b=wWh+s2jfYPHgq+I40aBqsS8NUAyDg3XnHUs7d1ywhpOK8KvLc4F3ZDqCSdexx2X+T0uB
-	 +pQ0DMGhdMqIdZ/cI9f0vAnnxbrG6b+Dy5wstmtNuUwWjH7HtV7OZVIC66AGHxAeAHBz9
-	 +2+vvz1GrfCZ+M/oXY5223NqwxFpOqC/LYLp1aKUKMcqSm+GbxpBNbwTimOClUj67nFI6
-	 Fn5KtJc8U3j/fYQkU6MeIQzMxKdqivIvNmmumvRrzLzHK/hAuK5yUlWbozvup+3diT8iP
-	 +e/zOapnndhgvijm8mTshMEZoZm5U4Degk1Rv0AGg5LBes2jT/PNAgUpbjAPoCm+wSA==
+	b=YuDMrSwii216iFgCRNkNIkMuDG7GMDNmhS3oSzPguUirjEObYqc8QKyANEV17lkMgBfj
+	 KwypqbkMpaJOuxx4j+sxYnCADfzdu2pfOthrx79qECdd7L6Dw5zvE1zVNlikLj+gFlRz2
+	 xA939fzMk4FVoBERTjZx3GFSlLg8WQM/gUFY1Nie/Z6D57O65u8wDMSmxdJ+1HFAbjtY2
+	 zWqqDw/V4lUaMwiE21+m/uXrUqRnX2pOVeAwbHSbYwobAGGC3UN98mF5tWDRL2PlFYi31
+	 +s7FlGbp4MpO7uWm9NrA9aArVjmzIpSEZKAHNwu68DHW1brS1ZZ+/j4CzQY00VfQw2w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1795254168;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=xwjNMh6i+YF8TulJrAnkm2qhBUAl92Y56moGun4RQ+8=;
-	b=LZw+nUxIKEhBKKeIVaCWeVEC7W5bpm7z2UDf3ZMDniHawRsGJRhZEY2nKmXiT/eDP8eK
-	 KM9BpoBv34EmojPF77G1PKuzneqVbnYuFrsZE9de5yTkkTHDk0/MIIDr0UEp0WWXnFXug
-	 7JY+qyF9zAHdMNP3YzuCiz6Iwi+gKEQCPTfztgnDt9enV396/7f7x70dB13/dAuHw4Skj
-	 dbalAwNdcOqtOG3m5kG0UxyAykLmeCe+5cRWa3XuUn5cj5k9Yp8jHQNgCwVSaDJ/zOqzF
-	 qPspt4UJSEa/2bNhklXectFvxfcNN5DWqrd+oMz5Ve2XrZMccUWPHUGx8TtiMNrploA==
+	bh=DKiOJLmt91Al6Fs+halFYbdfB7gKkP2q/ZnjT8wthyw=;
+	b=va3dRbSPyLpgUjWgsUsttwQX+qDePt8BCWPWFKPZfU8CLgCl8dGjha3FoOzOYU9pskMu
+	 HsqO6YAnjMEPjRK0G9rSpTKJTXsJcFi2Q70NzszH9nMEKzMkHMn6Pn1nSeI15+0gV6pbl
+	 BM2rzi3USgoRtS1gNdR7X/PaTCyRSyVXRzpkhxE82SOR33GkysxJs+uEvd7rme+9q1H7o
+	 sK1EW3QC4HHkWUR5qt7ZvVxhUQyJXKNx/oqE6zpcIsASrAXlm186HRuLki3pPRWWgR9rx
+	 Itn/z9Y020Z0bcYSB5wghB6diWWDu4k4WPk0zjm3ylwlSx0Bl5lQeVb+6yE89jH/sXg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KkMDxj0B;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GLO6BaEg;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E072A606A320
-	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:42:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9552606A320
+	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:42:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KkMDxj0B
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 329921F000D1;
-	Sat, 21 Nov 2026 09:42:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GLO6BaEg
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A4D71F000C4;
+	Sat, 21 Nov 2026 09:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795254167;
-	bh=xwjNMh6i+YF8TulJrAnkm2qhBUAl92Y56moGun4RQ+8=;
+	s=k20260515; t=1795254168;
+	bh=DKiOJLmt91Al6Fs+halFYbdfB7gKkP2q/ZnjT8wthyw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=KkMDxj0BKcTZ5x3eob8Ud92XBVKJ4ETDoOgeEIwsVWuvvLwOVaG2u8IvpV9mZNfHC
-	 kuJOgoA0VPV2++zbB4UoCjBJMC1FkT6BXI7fkqsop0YGqzO2LP8ImGAStQNwgB4ue9
-	 /gTRONG6sKKT/QxMOQpCT3lJlc/D7IB3jFlE/X5YoK75pstYwuLWMrS/8HxZrHegPe
-	 tEIcwbK4fI6mAJNPOy8ORWgGgPjq8/2JHvFreldj4V9yMhYk/+erGNUwxKQHrD3LIy
-	 pjVV4Ljv1XxuyfEQNRtSc0TzpHyHuqjeBDWlpM/raoX4E1rW5VD8uN+IV8lBd4hU+l
-	 H6BdX90IbZRgg==
+	b=GLO6BaEgoV5O3B5Zucad2KyRqAj/oD4mBiussTPl/rr7+WbBIGxx+nHxAKO3hpMKH
+	 CDceL+D1sxjhiVDxzhaxGUriZCVuYhknaGCT3MXxCQrgE8h793DVOW6GcgJnrVFRSL
+	 zCXNChL/cG03dvy7MtI8/cIkipApfUFQ4/TGRFu+HZ7wdeL2xEamXGMM1xj2PvrhON
+	 ZlbT34fSAYQWVb8bJ0BVXd3uuUlnfx9m/iobTsZGA0J0wXjbvLo0P9RW1A0mPI0FT/
+	 0ivMrcrpw1S4z/Mkls/TOIZfZmbv55Z0r/7q/1f989TKlXnHO3pb/B/+Px2YP0lq+M
+	 YAJx0pJnZyvCA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 21 Nov 2026 10:41:31 +0100
-Subject: [PATCH mptcp-net v2 33/62] mptcp: pm: don't let listeners pin
- their netns
+Date: Sat, 21 Nov 2026 10:41:32 +0100
+Subject: [PATCH mptcp-net v2 34/62] mptcp: close a subflow reset for a bad
+ mapping
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,127 +55,86 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261121-mptcp-cmason-fixes-v2-33-00327fd1de1f@kernel.org>
+Message-Id: <20261121-mptcp-cmason-fixes-v2-34-00327fd1de1f@kernel.org>
 References: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 In-Reply-To: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Josef Bacik <josef@toxicpanda.com>
+ Chris Mason <mason@kernel.org>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4426; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=fbn+R/IWHgV7AsM7NBLw8bKORxWwKwmnmJDEYy+lbk8=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ0xM0Nm+Qeue0KciyX13Gm6n1zB9Hj62FrL1dx+7fe
- P3uwE+tjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgInUMjD896wXmr26gtEnjGHN
- KcsLM++/CVY75dpR6Bnxjq9TorXMiOGf0YeK/X8/haYdfN5edSwu+gxj25RnFoFs7bOeHepmFmT
- iAwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2949; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=vDSonjHJLvEYRw0B6TXnfiH/4XWAJbqSWPE+t3ePBJM=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ0xPllVgmtgfMf738t+Jqm8MRkYdvbsjySJT6tbhly
+ cvfPLdPdZSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEyk7iLDP72od3/UotLz/Rmf
+ rFyhzt2geNejnvfM3ljJ7QEZN3qSnjMyvFtnPfvaXPaSki8hGpqTuXZqT7BwVi7MfshuemfJuQf
+ OPAA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Chris Mason <mason@kernel.org>
 
-For a "signal" endpoint with a port, the in-kernel path manager creates a
-listening MPTCP socket with sock_create_kern(). This socket is released
-when the endpoint is deleted or, failing that, by pm_nl_exit_net() when the
-network namespace is dismantled.
+An MPTCP socket can stay in the ESTABLISHED state after MPTCP has reset
+its only subflow because of data with no valid mapping, and recv() and
+send() then block with no error.
 
-The MPTCP socket itself holds no reference on the namespace. But its first
-subflow is created by mptcp_subflow_create_socket(), which always calls
-sk_net_refcnt_upgrade(). So the namespace cannot be dismantled before
-the listener is released, and the listener is not released before the
-namespace is dismantled: unless somebody deletes the endpoint, both stay
-around for ever once the last process of the namespace is gone.
+If data arrives with no valid mapping and a fallback to TCP is not
+possible, subflow_check_data_avail() resets the subflow: it moves the
+TCP socket to TCP_CLOSE with tcp_set_state() and sends a RST. The MPTCP
+worker then has to close the subflow in __mptcp_close_subflow(), and
+closing the last subflow starts a timer that moves the MPTCP socket to
+TCP_CLOSE. But the worker only calls that function if the bit
+MPTCP_WORK_CLOSE_SUBFLOW is set, and this reset neither sets the bit nor
+schedules the worker.
 
-  unshare -Urn sh -c 'ip link set lo up;
-                      ip mptcp endpoint add 127.0.0.1 port 4321 signal'
-
-leaks a namespace, with everything it contains, each time it is run. It
-remains charged to the user's max_net_namespaces limit.
-
-Only take the reference if the MPTCP socket has one. A listening TCP
-socket has no timer of its own, and request sockets of a dead namespace are
-taken care of by inet_twsk_purge().
-
-The sockets cloned from that listener for incoming MP_JOIN requests do
-need the reference, for their timers, but inherit sk_net_refcnt == 0. Take
-it when they are created, with __sk_net_refcnt_upgrade(), from the
-previous commit, as this is done in atomic context, and drop the
-connection request if the namespace is already going away.
-
-The TCP listener of such an endpoint is now a plain kernel socket, like
-the MPTCP socket it belongs to: it is not counted in "sockets: used" in
-/proc/net/sockstat any more, and its destruction is not broadcast to the
-listeners of the SKNLGRP_INET*_TCP_DESTROY sock_diag groups.
+The fix used here is to call subflow_sched_work_if_closed() after the
+reset, which sets the bit and schedules the worker. This also covers
+the reset done after a bad checksum, when MP_FAIL cannot be used.
 
 This issue has been found with the help of an LLM, and reproduced in a
-VM, with the reproducer shared with the original version of this patch:
-the command above, run 1000 times by an unprivileged user. Without this
-patch, all the network namespaces were leaked:
+VM, with the reproducer shared with the original version of this patch,
+and with a new Packetdrill test: data without DSS while the fallback is
+not possible, here because of out-of-order data at the MPTCP level.
+Without this patch, the subflow was reset, but the MPTCP socket stayed
+established, with no subflow: read() returned EAGAIN and send() timed
+out, for good:
 
-  result: 1000 network namespaces made, 0 taken down, 1000 are left
+  dss_drop_ooo_reset_server.pkt:30: runtime error in read call: Expected errno 107 (Transport endpoint is not connected) but got 11 (Resource temporarily unavailable)
 
-Fixes: 1729cf186d8a ("mptcp: create the listening socket for new port")
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-[ Use __sk_net_refcnt_upgrade(), from the previous commit, instead of an
-  open-coded copy of sk_net_refcnt_upgrade(), with maybe_get_net() like
-  rds_tcp_tune(). Shorter comments, and describe the condition: any
-  kernel msk. Commit message: how the issue was found, and its
-  symptoms. ]
+Fixes: 40947e13997a ("mptcp: schedule worker when subflow is closed")
+Signed-off-by: Chris Mason <mason@kernel.org>
+[ Add a Fixes tag. Moved before "mptcp: continue the last mapping after
+  a fallback", which makes this reset path reachable in more cases.
+  Commit message: how the issue was found, and its symptoms. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/subflow.c | 25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
+v2: commit msg: the reset after a bad checksum too (Sashiko)
+---
+ net/mptcp/subflow.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index f9ed4cfa4b33..8163731a9366 100644
+index 8163731a9366..62a6dc18005b 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -849,6 +849,22 @@ void __mptcp_subflow_fully_established(struct mptcp_sock *msk,
- 	WRITE_ONCE(msk->fully_established, true);
- }
+@@ -1502,8 +1502,8 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 		}
  
-+/* Children of a kernel listener need a netns ref for their timers */
-+static bool subflow_child_get_net(struct sock *child)
-+{
-+	struct net *net = sock_net(child);
-+
-+	if (likely(child->sk_net_refcnt))
-+		return true;
-+
-+	if (!maybe_get_net(net))
-+		return false;
-+
-+	__sk_net_refcnt_upgrade(child, GFP_ATOMIC);
-+	put_net(net);
-+	return true;
-+}
-+
- static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 					  struct sk_buff *skb,
- 					  struct request_sock *req,
-@@ -917,6 +933,11 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 
- 		tcp_rsk(req)->drop_req = false;
- 
-+		if (!subflow_child_get_net(child)) {
-+			subflow_add_reset_reason(skb, MPTCP_RST_EUNSPEC);
-+			goto dispose_child;
-+		}
-+
- 		/* we need to fallback on ctx allocation failure and on pre-reqs
- 		 * checking above. In the latter scenario we additionally need
- 		 * to reset the context to non MPTCP status.
-@@ -1868,8 +1889,10 @@ int mptcp_subflow_create_socket(struct sock *sk, unsigned short family,
- 	/* kernel sockets do not by default acquire net ref, but TCP timer
- 	 * needs it.
- 	 * Update ns_tracker to current stack trace and refcounted tracker.
-+	 * Not for a kernel msk, e.g. a PM listener: it would pin the netns.
- 	 */
--	sk_net_refcnt_upgrade(sf->sk);
-+	if (sk->sk_net_refcnt)
-+		sk_net_refcnt_upgrade(sf->sk);
- 	err = tcp_set_ulp(sf->sk, "mptcp");
- 	if (err)
- 		goto err_free;
+ 		if (!mptcp_try_fallback(ssk, MPTCP_MIB_DSSFALLBACK)) {
+-			/* fatal protocol error, close the socket.
+-			 * subflow_error_report() will introduce the appropriate barriers
++			/* fatal protocol error, reset the subflow and let the
++			 * worker close it
+ 			 */
+ 			subflow->reset_transient = 0;
+ 			MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSRESET);
+@@ -1518,6 +1518,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 				sk_eat_skb(ssk, skb);
+ 			mptcp_send_active_reset_reason(ssk);
+ 			WRITE_ONCE(subflow->data_avail, false);
++			subflow_sched_work_if_closed(msk, ssk);
+ 			return false;
+ 		}
+ 	}
 
 -- 
 2.55.0
