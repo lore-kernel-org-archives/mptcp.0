@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795254141;
-	b=V+EQuO+cXYECLA43uvk0A++K0TziLZeWAWAWfxnVmcOfs6Od3CvdTDX9QEisdWAGJdsu
-	 EqADFwkWFQY7vw2dmZceYJ0ky5FReT6l3HSlGcm547tH0cC+vE49Zg1M0IqW8BAUNKc1B
-	 7kt9NUWv4YDClp9xfuoYzwvFv4sDJpHu9QvGLXHO2UZNgsZAo2PzFUpXr+RrOSBippmg5
-	 hQyIYiYiYhb67AYi1TtW6kiKwhhMMU3MBdxArrx3UaZylFPsABm8CWqQjprgRYe0hc+Wm
-	 iv1DbCVTu4yIcOcqAxxWKV3A2m04B4mbnQzFayNqdO1FSg82SfcfK5N9ymO8FcWxykQ==
+	t=1795254142;
+	b=tyxIC21XoW9A1pXWLEjWcaqCFImNoHIfV/CW9N+957LCnOX60j1Btew7xZywhdf6pzLX
+	 +fG9OgUUDAWUhUXLhgNWWpCu1kDjncEk3llTGnlC1CGHseD0QZBAX2RFNjoQDw6N4HWtZ
+	 If8boIKTunH5+i0Z+MGecDrB1aeXldw41YlbgPIuC3M6aG6VOP4hOiN7LfExHoHH1c7V2
+	 S2rzKXqrOa1FdUxy3kGnwGEixVsBmmzVJwWAGkvi4pFHY5kLyUka1U6cHlzXyFGbMAy87
+	 Ylzrr9V3C/qKixJkp+L3RABzeh/ZKDDZRTaNlwejxOxlVpgIVy6wK1mkerS7J2lh1iA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795254141;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795254142;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=WxsmbNMicaVwMZEG5JHAy06m1AL8tBuQiO8AbzOL7eE=;
-	b=VzhvuANLxVV0CVQs6XISPj2g5mJ+r9SPgOjRzA7psLZi3zj6LKXef282kXn7TrC979hx
-	 CwfMRGvU1L9dPp8OGVMxYs7iv/MOLDK6Bd/BxgfEKoWUx462i5i/HFOOfnKQJrKD/1acC
-	 nWlm160b66VDLCIBGCHzDJiHlca7uERfY992JJjGxwsq85QxRzC2C8762I03GdDvEdiM4
-	 FFcV+qDwji07g2wtPn1MMLmc05Vd4ieszukmG4Nc9i3MNOReIUTPr0ZcrHHRZR/GH1uJR
-	 M391ijbF6bSPMdYyS+s+GQGB0FHZXwwt3tPbS7iEFlxCNYxDGHu+JrjJpYKaHitg/2A==
+	bh=mwizWJC4vbYxbo/rfWwMiJAXiRSi3rcOVXN6YPXeJ8c=;
+	b=nVYnxZarzsPeCvr8OZz/HAGQmw22SwUPFEIW5aog3OtEkbqWsmInDsEWywwCOve2GdCV
+	 zPHnO3kLOraLS0ZyJyxryprBCskpbQStJo09lHeoeP2X9vdysF1Mch5LfkIDjeGCx8ZzP
+	 6eW10pLKT3eE6IPZIIIw+WUKX46dqPbZNrqOzuzMypwkI1iUWR3N3F73ElBchu2NZuNtj
+	 kpp1mnrd2K1JyssKFb8nkrn9ZrjaMX5Ad9lRQyvVZhM1wsfbcC0CYU9UhOVe7Dwj5gFoU
+	 BveS4FErjLy/uI4pzS5MbwqK/t+UUtBXCgLdlur2WRTLOb8Mqnquk2kSa1ga2hjHW3A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nO51gOnk;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="NLbMgq7/";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B274606A320
-	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:42:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F42606A320
+	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:42:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nO51gOnk
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 966F31F000C4;
-	Sat, 21 Nov 2026 09:42:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NLbMgq7/
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E5B21F000C0;
+	Sat, 21 Nov 2026 09:42:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795254141;
-	bh=WxsmbNMicaVwMZEG5JHAy06m1AL8tBuQiO8AbzOL7eE=;
+	s=k20260515; t=1795254142;
+	bh=mwizWJC4vbYxbo/rfWwMiJAXiRSi3rcOVXN6YPXeJ8c=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=nO51gOnkZTmFLCT+ZsBRwBCjMHHsB/ftZawy0r1aCb5pxf8MgJ6DONhJOmgKTWpfc
-	 UeRqcYKVLUbwGSMS62Y07ZnbyGmIGihxzuL32gHf2aIGoUJ/Aq1hrCVzERZ0VZxsuf
-	 Cnjqzinl0ILy87b5R8j7B/qR5RU9nTxVTap+2IQbbhjJaQuImXkYFx+VHbb+TZb7pZ
-	 YyLOfMrEY1RONxFdtmGzvXfN7S8lhIynvYqkBV74eFVg3MY1Jo9j1O+Li1QEC9YXbE
-	 8WbMB3xRiLhYRehmoslaMDTSMrjY6B0/ADpbBAS29xtA2arS4gH4DdGKvTD/wKYLEH
-	 /NUswAGlIRakA==
+	b=NLbMgq7/fa9dEzztwsxyteF44b+xoUJmBHlYcbjeHpT+1wqESKEgDhTts3DaT0kT9
+	 lZgesa1AFPseInKeH9zlipDDKruho/0ogNBO1WNeWXgzBOQfyrp3i2LDJkzpBYa/hr
+	 FKG5bbr5AJhTGfb967FXfonwJOQuD0KfLxc7whfN8QHLBJNPKITI2JrZECZHlibEBs
+	 NT1Ei/iN6crl5d+wFprZt5Uu8wkdgIOd2WFtitllJ7S0/l4k3ZhkOnSOGZdi7slyTR
+	 3MDmly2e6KHKzOmVVKV7vOM4H2C1FRLPbdrUxpddblv3H1q6kXIny0DybGr2T1eZPi
+	 +DEFb4/PniFNw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 21 Nov 2026 10:41:00 +0100
-Subject: [PATCH mptcp-net v2 02/62] mptcp: drain the queues of a listen()
- that fails
+Date: Sat, 21 Nov 2026 10:41:01 +0100
+Subject: [PATCH mptcp-net v2 03/62] mptcp: clear inet_opt in the child of
+ an IPv6 listener
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,80 +55,128 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261121-mptcp-cmason-fixes-v2-2-00327fd1de1f@kernel.org>
+Message-Id: <20261121-mptcp-cmason-fixes-v2-3-00327fd1de1f@kernel.org>
 References: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 In-Reply-To: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
  Chris Mason <mason@kernel.org>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2495; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=8rExIGGyB9E4T4HHurHBbodR4Zj5UvBwD2NP5qj7ZoA=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ0z3zcz21Hv2fO3nRjYinL2tjvl/k05zn/Xm17KZZy
- e85ff6ydZSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEyEw4iRYVmbCs8t/Z0T+SJa
- ZgS8fVly6vj7u3e6M2+W/OYsPygo4svIcECldA3DCZ/282uVD4R4v/Z0mBm4i5/nRmXh1u0Vjr5
- xjAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4179; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=RpKcXJ5+ychxfYTZbCru/7OJbFKn+vDQg7Vc2/Ieo1U=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ073CI1xFmXtUNryT4blfl/1WaamR5FE+rXaT7q+fu
+ IM2+xztKGVhEONikBVTZJFui8yf+byKt8TLzwJmDisTyBAGLk4BmEjrP0aGF7Okb090D9+RJFQS
+ ztr6Vc5GPLBmWUD/xU+OXUuYylMcGP576LT65XcaTTVs45341GnlSdutglesH08+Ero37J914g4
+ GAA==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 From: Chris Mason <mason@kernel.org>
 
-Sockets and their network namespace can leak, if a handshake completes
-while listen() fails on an MPTCP socket that has listened before.
+With SELinux, an IPv6 MPTCP listener and its children can cause a double
+free of one CIPSO option, and then a use-after-free read of it, if
+NetLabel uses CIPSO for IPv4 and selects the IPv6 labels by address.
 
-mptcp_listen() passes the first subflow through __inet_listen_sk() to
-inet_csk_listen_start(), which sets TCP_LISTEN, then calls get_port()
-and hash(), and sets TCP_CLOSE again if either fails. Until then the
-subflow is in TCP_LISTEN, so a request sock of a previous listen() that
-still points to it can get a new child and be added to the subflow's
-accept queue. But neither close() nor the next listen() frees what is
-queued, and the earlier commit "tcp: drain the queues of a listen() that
-fails" only purges the RST queue of an MPTCP subflow, which needs
-mptcp_subflow_queue_clean() before a drain.
+mptcp_sk_clone_init() creates the child of a listener with
+sk_clone_lock(), as a byte copy of the listener, so each pointer in the
+copy that the socket destructor frees has to be replaced or cleared.
+mptcp_copy_ip_options() duplicates inet_opt, the IPv4 options, for
+AF_INET, and mptcp_copy_ip6_options() duplicates the IPv6 options for
+AF_INET6. But an AF_INET6 socket has an inet_opt pointer too, and its
+child keeps the listener's pointer.
 
-The fix used here is to call mptcp_subflow_queue_clean() and then
-inet_csk_listen_stop() on the subflow in mptcp_listen(), if
-__inet_listen_sk() returns an error with the subflow in TCP_CLOSE.
+MPTCP does not support setsockopt(IP_OPTIONS), so that pointer is
+usually NULL. But if connect() gets a struct sockaddr_in,
+netlbl_conn_setattr() does not look at the family of the socket, so the
+connect() hook of SELinux can store a CIPSO option in inet_opt of an
+AF_INET6 MPTCP listener. inet_sock_destruct() then passes that option to
+kfree_rcu() for each child and again for the listener, and after a child
+has freed it, another such connect() on the listener reads it in
+cipso_v4_sock_setattr().
+
+The fix used here is to clear inet_opt of the child in
+mptcp_copy_ip6_options().
 
 This issue has been found with the help of an LLM, and reproduced in a
-VM, with the reproducer of the previous commit, modified to use MPTCP
-sockets, on both sides. Without this patch, sockets were leaked, and
-network namespaces too when each round was in its own one, without any
-message from the kernel:
+VM, with the reproducer shared with the original version of this patch,
+with SELinux, NetLabel -- CIPSO for some IPv4 addresses, and the
+address-based selection used for IPv6 too -- and KASAN: an unprivileged
+user calls connect() with an IPv4 address on an IPv6 MPTCP listener.
+Without this patch, an object is freed twice:
 
-  result: request socks: 10000 made, 1151 left. Sockets: 64982 made, 5755 left
+  BUG: KASAN: double-free in rcu_free_sheaf+0x23/0x100
+  Free of addr ffff888012c27a80 by task kworker/1:1/50
+  CPU: 1 UID: 0 PID: 50 Comm: kworker/1:1 Not tainted 7.4.0-rc1+ #1 PREEMPT(full)
+  Workqueue: events mptcp_worker
+  Call Trace:
+   <IRQ>
+   kasan_report_invalid_free+0xd4/0x1b0
+   check_slab_allocation+0xc2/0xf0
+   __rcu_free_sheaf_prepare+0x102/0x2a0
+   rcu_free_sheaf+0x23/0x100
+   rcu_do_batch+0x29a/0xf80
+   rcu_core+0x33c/0x830
+   handle_softirqs+0x212/0x980
+   do_softirq+0xb4/0xf0
+   </IRQ>
+   <TASK>
+   __local_bh_enable_ip+0x11c/0x150
+   mptcp_token_destroy+0x1c9/0x360
+   mptcp_destroy_common+0x2d9/0x430
+   mptcp_destroy+0x86/0x110
+   __mptcp_destroy_sock+0x176/0x350
+   mptcp_worker+0xbb5/0xf80
   [...]
-  result: namespaces: 1000 made, 923 taken down, 77 left
+  Allocated by task 176:
+  [...]
+   cipso_v4_sock_setattr+0x9b/0x3d0
+   netlbl_conn_setattr+0x3ac/0x500
+   selinux_netlbl_socket_connect_locked+0x102/0x210
+   selinux_netlbl_socket_connect+0x23/0x40
+   security_socket_connect+0x2e/0x60
+   __sys_connect_file+0xcb/0x200
+  [...]
 
-Fixes: 76e2a55d1625 ("mptcp: better msk-level shutdown.")
+In another case, the CIPSO option is used after having been freed:
+
+  BUG: KASAN: slab-use-after-free in cipso_v4_sock_setattr+0x3c7/0x3d0
+  Read of size 1 at addr ffff8880161c2f18 by task python3/177
+  CPU: 1 UID: 65534 PID: 177 Comm: python3 Not tainted 7.4.0-rc1+ #1 PREEMPT(full)
+  Call Trace:
+   <TASK>
+   kasan_report+0x101/0x140
+   cipso_v4_sock_setattr+0x3c7/0x3d0
+   netlbl_conn_setattr+0x3ac/0x500
+   selinux_netlbl_socket_connect_locked+0x102/0x210
+   selinux_netlbl_socket_connect+0x23/0x40
+   security_socket_connect+0x2e/0x60
+   __sys_connect_file+0xcb/0x200
+   __sys_connect+0xfd/0x130
+   __x64_sys_connect+0x72/0xd0
+  [...]
+
+Fixes: cf7da0d66cc1 ("mptcp: Create SUBFLOW socket for incoming connections")
 Signed-off-by: Chris Mason <mason@kernel.org>
-[ Shorter comment. Add a Fixes tag. Commit message: how the issue was
-  found, and its symptoms. ]
+[ Commit message: how the issue was found, and its symptoms ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v2: commit msg: reproduced, with MPTCP sockets. Only the accept queue is
-left, after commit 342e62fd34c2 ("tcp: purge Fast Open RST queue when
-listen() fails").
----
- net/mptcp/protocol.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/mptcp/protocol.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index be23768b6d05..08c3b005949d 100644
+index 08c3b005949d..54782bdce5fb 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -4383,6 +4383,11 @@ static int mptcp_listen(struct socket *sock, int backlog)
+@@ -3720,6 +3720,9 @@ static void mptcp_copy_ip6_options(struct sock *newsk, const struct sock *sk)
  
- 	lock_sock(ssk);
- 	err = __inet_listen_sk(ssk, backlog);
-+	if (err && ssk->sk_state == TCP_CLOSE) {
-+		/* inet_csk_listen_start() leaves this drain to MPTCP */
-+		mptcp_subflow_queue_clean(sk, ssk);
-+		inet_csk_listen_stop(ssk);
-+	}
- 	release_sock(ssk);
- 	mptcp_set_state(sk, inet_sk_state_load(ssk));
+ 	newnp = inet6_sk(newsk);
  
++	/* The IPv4 options belong to the listener, which frees them */
++	RCU_INIT_POINTER(inet_sk(newsk)->inet_opt, NULL);
++
+ 	rcu_read_lock();
+ 	opt = rcu_dereference(np->opt);
+ 	if (opt) {
 
 -- 
 2.55.0
