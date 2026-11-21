@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795254170;
-	b=rIBeTrPOirqQtc16TmD0K1BB3DIR7Gv0J91ZcAubafitd3kTJaNvp7e5Fx2rtMsOux2Z
-	 OKrqZIo+9mSL34V0CtN/voIrmJNiFLmJokSGjxCIIPosMQqng/IECGeD5wtcFL9m/QkZ5
-	 +ZLO5g2FTPpWQ/3EkpaGnaLhxgglqSlZYT/q82WZAcRlDjcXVufH8zxiFZ98HujkK4gih
-	 qd1P8e2y5r0XiQZBXS/hNse3hjg5W8GXUuyL5n6gfnL/2fRAI1+x2zuP6j1TbYbl/sN2+
-	 MAaNahZr9fo/iVT5OSR5npA9VeCgChH+VCHfPuWYzo1EmhxXwhzPtuSRDIXD1OOGALw==
+	t=1795254171;
+	b=g6y+/smIOZ3qwG9XncnMKpEAj7IhfKWiK3zhFiobsn7jDGrUX+CkY8ucEfRFwqmNE6e2
+	 bOgWnFjY+NhOn1/og6vaC08VLm0+Nl5AhU2awKaa6L4CO0/eHI7nGo9Wb4KtYk5UqYbiX
+	 qZF23L2tVVtmWqd/kt9CczndxZchRGWPvo1Y6W8263AF3ei78rw1hQPTIyfk+0COVePe3
+	 srQKHtW/Agmp+ZNkEdnqGZfrdsbZeidw949vaiAT9z44JpdOaA1sddjH8TjLNLS87D8om
+	 B/b1zBkdhXGtcDdX+r/U9m9fQ5N2Xu9n1T8ImtwEHDHcDq3hZc4EBRyXqRC+HLUxBnQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795254170;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795254171;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=CBbmcC3SquL/sUh0/0abO4UmG3Cbv//EVoTMLeRnei4=;
-	b=LB32NziSiNVS4p6Tnw8SnUQO4ELR8ZqWn7V/m5EoozRbF2fAGrUQmFPTlXl2jYe1DkGZ
-	 iXJNJoUKEbT/5f+yQ/z/YeYvorbeJC6tnSCdkO6TeIXEhhAlg9fpihcbtNpUSO3yzUfVs
-	 OfvaSdJFANLLv/abNJSAXnuKyJloWTq2jXvF3SY4mYjZZ2aHxuAzS+y8w/dtOwRg0nEqp
-	 a8ALrlRwgBKrfZZwt6shaAtXmqnnHAMPOOa2WN1Eb3FhiFAfc9FiQemIQ+17j3wYPve7y
-	 PCEsKzejthK9Ohn3i1hwmIgtvf7bNpLWBv9pZ0srynhB8QumD4JsvNrZZN8epVjJgVg==
+	bh=DXNq2NBTnuP6KEZgPzVF9BPAHUhB0yg2Yu54Jzvl4Dc=;
+	b=kfHEEkgtMNCHh0eSTgGuRhFin62BkNIrVIwNArE0Ms18bhckrwwGwnsApYcQpx9x+C/s
+	 cUqFAcZkqlh/Mfb6kN3Hf7R6dgaqBDY8pxRwKd+8Olr9OXhMQNkA/qRBSEY5Jp6oRt02B
+	 uF4B9+kAQljkIs6RgJ4f8u/aDaIOU69cVdbCHNCmF+JoQbjJZoJDTJYKMORInnhmO2S+n
+	 iD3c/jXTVQ9wmdrtgn5ZObq7SULxXXIF47tyLSRoeDzCzPVfJfyUdkeEwWQJWxay8NXkw
+	 WSQkphd3FvH2gTfr9YkOOhhtUh8KClLCRqNPwa9vpeZqCphjaPeGmIeYD6dw+QDeJCg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mNqK26TI;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MWBDZYcS;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80B6606A320
-	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:42:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D8C606A320
+	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:42:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mNqK26TI
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A39C1F000C0;
-	Sat, 21 Nov 2026 09:42:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MWBDZYcS
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1117F1F000C0;
+	Sat, 21 Nov 2026 09:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795254170;
-	bh=CBbmcC3SquL/sUh0/0abO4UmG3Cbv//EVoTMLeRnei4=;
+	s=k20260515; t=1795254171;
+	bh=DXNq2NBTnuP6KEZgPzVF9BPAHUhB0yg2Yu54Jzvl4Dc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=mNqK26TI3hQVXeB3oUOWRlcoXSt1DV6ZI3PCnqjK3VYK10tqIMOVohOdYcazD0Oge
-	 7VUMoAILBTNNkJ4WH6GJfMJ73vRtIdoVOAShJ1s/KOmpfufmNss/IJ8SpQIVDM2IcU
-	 o1ALz0kf0A6cTSKwFKeGmVcbrOpNPGU6d0uwkT9p8I2K2p2qmrObBetR9UTNCbT/y9
-	 UB0jUm9y2I0wxkLq9tfJa3dcMR6FA0MEya/bSDcbDotnlalSlCaVFaM2GyOq/gUu9R
-	 KKFE2/IcCo4zO9CaFWdF5w6BZO264pwZ8ewSoHKdHxfiCwYAheva5kBPEzZr/pZF5g
-	 1+h8AJaXhIKzA==
+	b=MWBDZYcSI2tSDf9zNd0sE6ZQxPi9vxUB4Dq9gg+zAob1VQB6iQudlT0H3xuSmQI+l
+	 tL5k2LsI9Xkjx1GSsEXqsqP9EAAGC+ESJ6jx20BK1PzEMTcwKc4Rj+NrRDO1GuIcls
+	 jqYofdkbOXyCuj24QB7s+yDP9qAVEi7j3E8gL+RhhPTdCsKhcpOvd9dTRX26ns7e46
+	 IA8IAZZLfne/IIiCFghmiZR9Jkm4ibAm685unrNzpqNbR1JdsjzvIaqyP6QP0gFN4P
+	 rwdgQJFD0NLRrFE6k3S9r9Z8eoio9/cn+w31Gb1RSvCQvW7Q8RVMxSWstCakeW/NSD
+	 J6GQ5vjYVtdHA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 21 Nov 2026 10:41:34 +0100
-Subject: [PATCH mptcp-net v2 36/62] mptcp: pm: kernel: count endpoint
- listeners as sockets in use
+Date: Sat, 21 Nov 2026 10:41:35 +0100
+Subject: [PATCH mptcp-net v2 37/62] mptcp: count a listener once when
+ listen() is called again
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,107 +55,88 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261121-mptcp-cmason-fixes-v2-36-00327fd1de1f@kernel.org>
+Message-Id: <20261121-mptcp-cmason-fixes-v2-37-00327fd1de1f@kernel.org>
 References: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 In-Reply-To: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Kyuwon Cho <kyuwoncho18@gmail.com>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3964; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=OPRvotvx8HNkyVDGOs6cqb6T0ZZWlYYOMAuy5o5R+7w=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ05MvKrcd6dLM3mGlyCaa1Fq042rd58lTmyWe5Qbf3
- qZUqMHZUcrCIMbFICumyCLdFpk/83kVb4mXnwXMHFYmkCEMXJwCMBGXIwz/TE3ZXh0LurFmlSFT
- eLJkv0PXkVcyX7hNOiztLSPldE+dYGRYlfoy9aPyg1O7NjfKdC6+9je105rvkM2tefbMoS7ahww
- ZAQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2837; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=aAO3v21i2NZQBA5RaoNlk3u9ADhknoHelAikiRDnBDk=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ01Pm8bmyRz+ov/Hz6e6JDveW+n1K/yzWWrJ3wsKkL
+ VrmdeISHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABN5V8HwP9h3I68A170+ewmz
+ 7+whT4s0XXNTFt+7t7BPRT6W18z7AiPDSaPmi5vjglcF6h+Ysf/k9r1fC4rU6itFRTzSru+ZtVy
+ KGwA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The listener that the in-kernel path manager creates for a "signal"
-endpoint with a port is not counted in the "sockets" column of the MPTCP
-or MPTCPv6 row of /proc/net/protocols, but it is uncounted when it is
-closed. Each removal of such an endpoint then hides one MPTCP socket of
-the same family from this column, for the lifetime of the netns.
+listen() on a listening MPTCP socket only updates its backlog, as with
+TCP. But mptcp_listen() then counts this socket once more in the
+"sockets" column of the MPTCP or MPTCPv6 row of /proc/net/protocols, and
+sends a new MPTCP_EVENT_LISTENER_CREATED event, while only one decrement
+and one MPTCP_EVENT_LISTENER_CLOSED event are done when it is closed.
+Each extra listen() call then leaves the counter one above the number of
+MPTCP sockets in use, for the lifetime of the netns, and a userspace
+path manager can see two listeners created for one closed.
 
-mptcp_check_listen_stop() decrements this counter for any MPTCP socket
-closed in TCP_LISTEN state, and mptcp_listen() increments it when
-listen() succeeds. But mptcp_pm_nl_create_listen_socket() sets its MPTCP
-socket in TCP_LISTEN state without incrementing it. This socket is
-closed when the endpoint is deleted or flushed, when adding the endpoint
-fails after the creation of the listener, e.g. because its ID is already
-used, and when the netns is dismantled.
+With TCP, the socket is only counted when it is hashed, which is not
+done again for a listening socket.
 
-Nothing depends on this counter, it is only displayed. But it is wrong
-once such an endpoint has been added: its listener is not counted while
-"ss -Ml" lists it, and after its removal, the total is one below the
-number of MPTCP sockets of the same family in use, a negative total
-being displayed as 0 by sock_prot_inuse_get().
-
-The counter was introduced by commit c558246ee73e ("mptcp: add
-statistics for mptcp socket in use"), when only the subflow of this
-socket was in TCP_LISTEN state. Commit 57fc0f1ceaa4 ("mptcp: ensure
-listener is unhashed before updating the sk status") then set this
-socket in TCP_LISTEN state too, without counting it.
-
-The fix used here is to increment the counter when __inet_listen_sk()
-succeeds, as mptcp_listen() does. If it fails, the subflow is back in
-TCP_CLOSE: move this socket back to this state too, also as
-mptcp_listen() does. It was left in TCP_LISTEN, which triggered a
-warning when it was released, e.g. after a socket in TCP repair mode
-had been bound to the same address and port in between, as reported by
-Sashiko:
-
-  WARNING: net/mptcp/protocol.c:3542 at mptcp_check_listen_stop.part.0+0x4f/0xb0, CPU#0: ip/2816
-  Call Trace:
-   __mptcp_close+0x2bf/0x310
-   mptcp_close+0x23/0x80
-   inet_release+0x43/0x80
-   sock_release+0x24/0x70
-   mptcp_pm_nl_add_addr_doit+0x266/0x3b0
+The fix used here is to only count the socket, and send the event, if it
+was not already listening.
 
 This issue has been found by an AI code review agent, while reviewing
-the code of the commit "mptcp: pm: don't let listeners pin their netns",
-and confirmed with a new Packetdrill test, and with a shell script
-adding and flushing such an endpoint 3 times in a new netns, then
-creating 3 MPTCP listeners. Without this patch:
+the code of the commit "mptcp: pm: kernel: count endpoint listeners as
+sockets in use", and confirmed with a new Packetdrill test, and with a
+script calling listen() twice. Without this patch:
 
-  kernel_listener_inuse.pkt:15: error executing `test $(awk '/^MPTCP/ { n += $3 } END { print n }' /proc/net/protocols) -eq 2` command: non-zero status 1
+  listen_listen.pkt:12: error executing `test $(awk '/^MPTCP/ { n += $3 } END { print n }' /proc/net/protocols) -eq 1` command: non-zero status 1
 
-  inuse: endpoint 1 present: 0 (expected 1)
-  [...]
-  inuse: 3 user listeners: 0 (expected 3)
+  inuse: relisten: listening: 2 (expected 1)
+  inuse: relisten: closed: 1 (expected 0)
 
-Fixes: 57fc0f1ceaa4 ("mptcp: ensure listener is unhashed before updating the sk status")
-Reported-by: Kyuwon Cho <kyuwoncho18@gmail.com>
-Closes: https://lore.kernel.org/mptcp/179502042942.2742790.17887994424282536144@gmail.com
+The extra event comes from the commit below, and the extra count from
+commit c558246ee73e ("mptcp: add statistics for mptcp socket in use"),
+which is in all the stable versions having the commit below.
+
+Fixes: f8c9dfbd875b ("mptcp: add pm listener events")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v2: count the listener once listen() succeeded, and restore TCP_CLOSE
-    otherwise, to avoid a warning (Sashiko, then reported by Kyuwon Cho)
+v2: commit message: explain the two Fixes tags
 ---
- net/mptcp/pm_kernel.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-index 2680d4672d58..73261685ae4c 100644
---- a/net/mptcp/pm_kernel.c
-+++ b/net/mptcp/pm_kernel.c
-@@ -915,7 +915,14 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
- 	if (!err)
- 		mptcp_event_pm_listener(ssk, MPTCP_EVENT_LISTENER_CREATED);
- 	release_sock(ssk);
--	return err;
-+	if (err) {
-+		/* the subflow is back in TCP_CLOSE: like in mptcp_listen() */
-+		inet_sk_state_store(newsk, TCP_CLOSE);
-+		return err;
-+	}
-+
-+	sock_prot_inuse_add(sock_net(newsk), newsk->sk_prot, 1);
-+	return 0;
- }
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 9202b14c030e..d16269d27b1d 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -4540,6 +4540,7 @@ static int mptcp_listen(struct socket *sock, int backlog)
+ 	struct mptcp_sock *msk = mptcp_sk(sock->sk);
+ 	struct sock *sk = sock->sk;
+ 	struct sock *ssk;
++	bool listening;
+ 	int err;
  
- static int mptcp_pm_kernel_get_local_id(struct mptcp_sock *msk,
+ 	pr_debug("msk=%p\n", msk);
+@@ -4556,6 +4557,7 @@ static int mptcp_listen(struct socket *sock, int backlog)
+ 		goto unlock;
+ 	}
+ 
++	listening = sk->sk_state == TCP_LISTEN;
+ 	set_bit(MPTCP_RTX_ENABLED, &msk->flags);
+ 	mptcp_set_state(sk, TCP_LISTEN);
+ 	sock_set_flag(sk, SOCK_RCU_FREE);
+@@ -4570,7 +4572,8 @@ static int mptcp_listen(struct socket *sock, int backlog)
+ 	release_sock(ssk);
+ 	mptcp_set_state(sk, inet_sk_state_load(ssk));
+ 
+-	if (!err) {
++	/* only the backlog changes when listening already */
++	if (!err && !listening) {
+ 		sock_prot_inuse_add(sock_net(sk), sk->sk_prot, 1);
+ 		mptcp_copy_inaddrs(sk, ssk);
+ 		mptcp_event_pm_listener(ssk, MPTCP_EVENT_LISTENER_CREATED);
 
 -- 
 2.55.0
