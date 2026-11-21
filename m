@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795254159;
-	b=bO4QDnbPXMJhML04Sxq6WhG3l9szvIXDG9nQWDafQRqScJuvOWRJGyS3MsZz8WbranrN
-	 mUf96Cbfvod1EMBOJ2QJPZUSH7m9pmXdUrZz2LGf1Hxt75OMmLCIoaE0hjkLV5he8/P8O
-	 vS9BeDXWHYqDCCLVX4se2BIpNHCYcvffJPRciD84xidNmFLqJbr3M1wQ4DbIvpEv0OSwf
-	 yuEa0uVH3KT5zpNTv5CnOCC/ZvG5HBSXEa/twVYDeDq9SGFGpmIuVwyEdNMu7eY6hOCk9
-	 fAECYU1F7fouTs3hfUjHSmZI41xrsLtb1dBez0fkC1RmIVCRIk8kchxN7r6m/AqJgrA==
+	t=1795254160;
+	b=pYNA04EmDAy/dbdoYP4NNx8rp3hRgnJB7tbGaAdLFASp2zfIfF8miWsVVsMClFgN+Vd7
+	 aqZF0spdV/OyMGqwyuVdeLqoXeTsGOirAzRLL6FCS5/C2EOKhdCIDseM4DrHz7CChwD58
+	 ZRgKflj6LjXjhxZYEcL5xwCKdvE/qCS3gmXKmLGtgn8MMeFn1gghSOM8lLGZIfgVMFaMN
+	 ZBWi75uGtlQBLQpNNsLHBOodL1g8WcTc1qpieVzBaC4W18WGpGfCQmhkOeWXevNkmpF9r
+	 Hn+1yu6FKn0LYqrgC4rb90eiAgxaQb08QQcFw01sKcpVTdsvUDRhRVwDnKJqubIrnxg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795254159;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795254160;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=CtbWRyess2ATG6qwk5OdH0TNhgCsOg/N7yxVVkwRqmk=;
-	b=ARHThXeNB71wTFrp3BMxj8UXGAKX9Qixsg6eFYSpsM7dzpVDPHysqY9L0D0qBvD3YT66
-	 zDNuhAWbsGxRiynuPYMDdjm44rTlUrhhI2PVK49RHx45yhRSLcY75Hi9v0JGifi/LY6D6
-	 OXh+p4oWMT/fhocc3E9Vnuy6yliJsx+gWsl5nLE2sw+N4Nl9X6sekzIvETUom0EOWxmw6
-	 zsRKldEk1WUhgQdwxs455YbSHazL99qFnm3uogRqlylKytT3eyqrJkUjKUndCu8+mXvAy
-	 gWKJq+zEE2rtd3SYIqGx9CNTpjIdtJ7BtVpRCph3N79fAqNUNhAHRvpb8f7bpubbdZA==
+	bh=1yzzdBxRNXwXwFRGHrVaGLBPDR7oDdyW2VC62tjTlZM=;
+	b=TgW2pn4TfCH6jkyLl5Uz0NOfhplrktkoxT0oKrZdn5+Mt7f56Z3OpTlVi/E0EJb1/yoo
+	 P9mtPX1rGl7h84lke2j2HPk4yjzP81L4jnmRHViO9vrpJk0+6PvkGRIO2w45E7A1VJrIn
+	 k8dek5vKP1cBWaqUgkhRVoIWf/p4yeJkItxXu9pJ+BIX5CFTcrgNzX6wzbfdETN9lhoAY
+	 79mh7hvnuPew8RUU2mxIox2xEJLh6Fe4LrsOkYWmrXg+BWeeqF2BMlYVdfvEQ/AocvkWL
+	 CbIrfUYR2PFrA16KPFrg4LQ/Yn2n0b2xsvRXo/j/HqPQMohVuqaGMd8WKVsTJBHcKsA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BAIFNPik;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d9IdP5Es;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D9A606A320
-	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:42:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E53606A320
+	for <mptcp@lists.linux.dev>; Sat, 21 Nov 2026 09:42:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BAIFNPik
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4A611F000C0;
-	Sat, 21 Nov 2026 09:42:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d9IdP5Es
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B63231F000C0;
+	Sat, 21 Nov 2026 09:42:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795254159;
-	bh=CtbWRyess2ATG6qwk5OdH0TNhgCsOg/N7yxVVkwRqmk=;
+	s=k20260515; t=1795254160;
+	bh=1yzzdBxRNXwXwFRGHrVaGLBPDR7oDdyW2VC62tjTlZM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=BAIFNPikmoyoCWFExjHl2O+x0iDaYr9IZ2R02mW24i1QM97V+y1CvxXvqnhZHrP/p
-	 bMG8recajJa5DRLoxh3Sd3DlI9iX47zYE1B5QvtL1381ZsQPxVxpjBJHhVPxbpZz7s
-	 Q1zpJWFJaw8j2J1OPViep37SDlXCwgEPfHctU0FxPP/hs13p7KDJblH08SPCQB8WLc
-	 nN8VJo4kKkHX6J2XLDgPtNpR0GRk5Iu7GCphb7uanmmjE1+ORC8Fps6wt3jQSeENQc
-	 aDkJWBLx4Xu3wOUqH3m71IWp83R40QEOGsNcvNVLnl/SUTCJS0W86fzkXDibnxXhM/
-	 vcFYjwiUuQrAQ==
+	b=d9IdP5Es5E/4J5/dE5kn4bI+RsFjMbDCDoEkAyRZSHb7gag9o2hDsz02BbXcjrfQ7
+	 SuYy6d7Btv3AseBA/AGV/5xFuzoNjC7aQZ8T1HH+EhthlLl+WiItQcaKDrHtwa05EH
+	 0D5Ei61hbVYBBL72yKLzTaNpvmWBoAizLJ6aoknbzuv/fcwDr5uhwRlNZyo+wqCRW6
+	 E5o8bW4QmibdpcBy1xx7d5znTMhl5OiUKWddBvPKlLEg5A1p7Jp0hGCizUE4Uzyn/W
+	 iwGl6V5kZssMhaHTUs9mVknEskqqBmlzDrzXcbvfjzSkGVEeE6MCQDxVL9Bh0idore
+	 GTEJoTpElY/5Q==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 21 Nov 2026 10:41:21 +0100
-Subject: [PATCH mptcp-net v2 23/62] mptcp: no sf left: process pending
- DATA_FIN
+Date: Sat, 21 Nov 2026 10:41:22 +0100
+Subject: [PATCH mptcp-net v2 24/62] mptcp: process pending close events at
+ accept()
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,116 +55,72 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261121-mptcp-cmason-fixes-v2-23-00327fd1de1f@kernel.org>
+Message-Id: <20261121-mptcp-cmason-fixes-v2-24-00327fd1de1f@kernel.org>
 References: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 In-Reply-To: <20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4223; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=QRCW1lC8/L7YhV7EbzYVbBVtj1oJG9WFmH92ukOfyJg=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ0yPv584IiZPROXZ5z4vFp5f1Wf2rrNoXtr1ZIeFSe
- Ky3GO/7jlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIlkLmP4K9kj2dH3wPTm7GsL
- J9+avb4mmJ9v9+vNR87vXn7tiKL35k6Gf+qXN1/I8/9/tvDBXiXWB4915s6eMlm98M+JkPsvgkQ
- kfjABAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2432; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=PXMzScb/ikkOHhotgT0uVp1mVlCO6ryzxXyKVDqp2tI=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIZ06M+X76wfEevEZ+QzhXLWxX3JZR+FOeeum+5o/zSt
+ Zdl2Zd3dZSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAExkigEjwwf+hgdGfy4rCNhe
+ TXm87pCc9YeSTYc2vDqZGG2b5L0lxYbhv19Lz6P0zRyqiaGsv2adrrxV4/bTNKh3+u2NW55/rQi
+ v4gUA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-When the last subflow is closed while the MPTCP socket is no longer in
-the ESTABLISHED state, e.g. after a shutdown(SHUT_WR), the MPTCP socket
-moves to TCP_CLOSE. But the peer's DATA_FIN -- or FIN, after a fallback
-to TCP -- might not have been processed yet: e.g. if the last data was
-received while the worker owned the MPTCP socket, this data is still in
-the backlog, and the DATA_FIN can only be processed once the data before
-it is in. When the backlog is spooled later on, mptcp_check_data_fin()
-ignores the DATA_FIN, the socket being closed. RCV_SHUTDOWN is then
-never set: after the remaining data, poll() reports EPOLLHUP, but
-neither EPOLLIN nor EPOLLRDHUP, and recv() returns ENOTCONN instead of
-EOF.
+When the only subflow of a new MPTCP socket has been closed before
+accept(), e.g. reset by the peer, mptcp_stream_accept() moves this
+socket to the CLOSE state, then closes the subflow. A DATA_FIN or an
+MP_FASTCLOSE received before, but not processed yet by the worker, was
+then ignored: the code processing them before closing an MPTCP socket
+without subflows, and the worker, skip a socket already closed.
 
-Before the commit using the MPTCP-level backlog for the RX path, the
-data received while the MPTCP socket was owned was left in the subflow,
-and a subflow with data in its receive queue was not closed.
+recv() then returned ENOTCONN after the data, instead of EOF after a
+DATA_FIN, or ECONNRESET after an MP_FASTCLOSE alone, as TCP does.
 
-This issue was causing the "Infinite map" subtest from mptcp_join.sh to
-be flaky: the server only got EPOLLHUP after having received all the
-data, and spun until the timeout:
+This race has been found by a review agent, and confirmed with
+Packetdrill scripts and a debug patch delaying the worker of the MPTCP
+sockets in the accept queue: data, a DATA_FIN or not, then a reset with
+an MP_FASTCLOSE are received before accept(). Without this patch, the
+second read() returned ENOTCONN in both cases:
 
-  timeout
-  (...)
-  tcp   TIME-WAIT 0      0      [::ffff:10.0.1.1]:10123 [::ffff:10.0.1.2]:51790 (...)
-  mptcp UNCONN    0      0      [::ffff:10.0.1.1]:10123 [::ffff:10.0.1.2]:51790 (...)
-     (...) fallback (...) bytes_sent:131100 bytes_received:131100 (...)
-  (...)
-  [FAIL] client exit code 0, server 143
+  With DATA_FIN: runtime error in read call: Expected result 0 but got -1 with errno 107 (Transport endpoint is not connected)
+  Without DATA_FIN: runtime error in read call: Expected errno 104 (Connection reset by peer) but got 107 (Transport endpoint is not connected)
 
-The same issue was causing the 'peek mode' and 'full disconnect'
-subtests from mptcp_connect.sh to be flaky, in the MPTCP to TCP cases,
-so after a fallback at the connection: the client never got the end of
-file:
+To fix this, process them before moving to the CLOSE state, with
+mptcp_check_rcv_close(), as done when closing the MPTCP socket without
+subflows.
 
-  64 ns1 MPTCP -> ns1 (10.0.1.1:20002      ) TCP       main_loop_s: timed out
-  (...)
-  mptcp UNCONN    0      0           10.0.1.1:35046     10.0.1.1:20002 (...) <--
-     (...) fallback (...) bytes_sent:714380 bytes_received:714380 (...)
-  (...) [FAIL] client exit code 143, server 2
+Note for the backports: before v6.19, this helper, added by the previous
+commit, is not available, and mptcp_stream_accept() closes the subflow
+before moving to the CLOSE state.
 
-The root cause has been confirmed with a debug patch keeping the worker
-in FIN_WAIT2 after a fallback, until the subflow is closed: the same
-failures have been seen in the "Infinite map" subtest, and in the 'peek
-mode' and 'full disconnect' parts of mptcp_connect.sh, with the socket
-closed before the DATA_FIN:
-
-  (...) closed with a pending DATA_FIN, state=5 ack_seq=11784643520213419601 data_fin_seq=11784643520213452397 backlog=35484
-
-To fix this, spool the backlog and process the pending DATA_FIN before
-the close, if the socket is still in use. This is done in a new helper,
-mptcp_check_rcv_close(), also processing a pending MP_FASTCLOSE: the
-next commit uses it at accept() time too. With the same debug patch,
-these subtests no longer failed.
-
-Fixes: 6228efe0cc01 ("mptcp: leverage the backlog for RX packet processing")
+Fixes: 63740448a32e ("mptcp: fix accept vs worker race")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v2: new, for an issue causing flaky selftests
+v2: new, for an issue found by a review agent
 ---
- net/mptcp/protocol.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ net/mptcp/protocol.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 518321aedd1e..a4dbe6d3a466 100644
+index a4dbe6d3a466..7700265a13ce 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2707,6 +2707,18 @@ static void mptcp_cleanup_ssk_backlog(struct sock *sk, struct sock *ssk)
- 
- static void mptcp_check_fastclose(struct mptcp_sock *msk);
- 
-+/* After the close, a pending DATA_FIN or MP_FASTCLOSE would be ignored */
-+static void mptcp_check_rcv_close(struct sock *sk)
-+{
-+	/* process the DATA_FIN after the data still in the backlog */
-+	if (READ_ONCE(mptcp_sk(sk)->rcv_data_fin)) {
-+		mptcp_move_skbs(sk);
-+		mptcp_check_data_fin(sk);
-+	}
-+
-+	mptcp_check_fastclose(mptcp_sk(sk));
-+}
-+
- /* subflow sockets can be either outgoing (connect) or incoming
-  * (accept).
-  *
-@@ -2818,9 +2830,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 			mptcp_schedule_work(sk);
- 		} else if (sk->sk_state != TCP_ESTABLISHED ||
- 			   msk->in_accept_queue) {
--			/* After the close, an MP_FASTCLOSE would be ignored */
--			mptcp_check_fastclose(msk);
--
-+			mptcp_check_rcv_close(sk);
- 			mptcp_set_state(sk, TCP_CLOSE);
- 			WRITE_ONCE(sk->sk_shutdown,
- 				   sk->sk_shutdown | SEND_SHUTDOWN);
+@@ -4679,8 +4679,10 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+ 		 * deal with bad peers not doing a complete shutdown.
+ 		 */
+ 		if (unlikely(inet_sk_state_load(msk->first) == TCP_CLOSE)) {
+-			if (unlikely(list_is_singular(&msk->conn_list)))
++			if (unlikely(list_is_singular(&msk->conn_list))) {
++				mptcp_check_rcv_close(newsk);
+ 				mptcp_set_state(newsk, TCP_CLOSE);
++			}
+ 			mptcp_close_ssk(newsk, msk->first,
+ 					mptcp_subflow_ctx(msk->first));
+ 		}
 
 -- 
 2.55.0
