@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795349259;
-	b=W8fKzU14nrovP4VvvNy6DQE/ng78HiPY3Wqp3A1Bo96L6kHHzaf2nV5WNm18VCIZlyGc
-	 aWNiopoab79kmNLGQl+KU3jODesGnj2DJrfD+BGNWI/+QJbSzqd2pQNsrmDOh/NnZmcK9
-	 FaXe0Ohxw3nEuRYq2bhT6p+UIlvrcQ8aMbO0cPSwQZlqF8Sl/Tg+R47d4m6EjaKPsKF0K
-	 NBROldA4yBrFYD2oumjWoI2fJv/MLqpzISeEMdgX1KXtPRjSXzPxHqSVtE/xOq4kSCDG1
-	 apCadBAGFhQK53pTFPsoFjLx+cR9QQ06fVTl2KrZxMEQaQRCmY3cVUsfMSFPLnAyA3g==
+	t=1795349260;
+	b=IDwkgzb+nCn6kJiu0vPouk+KjKw+LUmIWkricSpAZqQ2d7F7Ed1d94HJg2Wp6diC/yoM
+	 5XSA6165yg6mw23AVs9UhrXdjR5sQnDNadojtj2XCEdYtK62kHAKlc3HxL7BGF4bjmaxh
+	 TY4FZXm01qXQK7eBzMs1PSCCX/cxFfpYQ+0WlnVae6dMw76pMjdHjqrh/X9cL/d9wu066
+	 ASAsJD1CUJCdc4AWhPJUnUSy4NJU6jrcMiPOA0b8URTgb6IscJMr0ppk8iJoLwh4RTCDG
+	 AVQDimymbWSWkIUaJgnndg0urkiL9eyFZlrO011QUEL9J/Q0U9zbZcOOXEQWIXVcECg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795349259;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795349260;
 	h=Received:DKIM-Signature:From:To:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=iQMjcctNUG+A8H7VmGn2gEZGJF02qAlZqZTFdPpDdTA=;
-	b=1Ly49vbBlEvyCPt0Buzpg5aKhe0Xic60kA40cS6BTX6B0CVdPSiotytgT/qbXgVRnt+U
-	 aEmMPYiwAZ2AOd2vELyXF+PALQuG9zLLrNloErOS0QXJ0pJVy1hXPXoqp0Mm3e+k5UzIs
-	 ZVEdxJm7e9e5Xf19es2sJHNkfm439rpjjRXuBE0CvRo4bB6PDkCzOrBtegQZT1vC8MKhQ
-	 21MVfJ45Itg6NkMms6T0bEc96mlhHuFkMNmgM83e6XQcjGRRui4bqRjYCjXZdbZxkvtse
-	 vVwRphNQ6tr6p0t1nLMOgmzih4iXQaRII9/VRO5b3B8vPwovKRBgsz290BG43YWscag==
+	bh=O7lf08FVe4tZkEXfWK3D8/W3/EafIGa+KgJjFCnkhRc=;
+	b=kwyO7m0sRChyzHJ2+X8+2NYiSOzEECYUIk3MIEG7AQkoyWOEsM/dB9GEPaN6uMU9qY8b
+	 mravznj3i2ilKgGkGkWFQcjcpEn3lC7JehTQNVoVETKAxjwM12dpsYb6p94oZn8xmRcUJ
+	 gJJsXrRTWD4baBs7RuwhY2sGzJxvuI8r2l5kkmWsq0SdNJtvDMpzDDSeXRQgoWHI822BX
+	 cSts1RetRqyqcT/OB+9F7FulnHu0PsWE307sg88GvFD9FjWdlG9G3ywBdc0i0RIfKULy5
+	 9URXQ9kj5caZNGbAQsszqzJQMC3gb4gF15kkmOciQgH9IWCWZzQ9qPANKoeXlgnn5Mg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MuTsleXy;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hgvbTyKC;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0217606A32C
-	for <mptcp@lists.linux.dev>; Sun, 22 Nov 2026 12:07:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E4F606A320
+	for <mptcp@lists.linux.dev>; Sun, 22 Nov 2026 12:07:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MuTsleXy
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C62BC1F000C0
-	for <mptcp@lists.linux.dev>; Sun, 22 Nov 2026 12:07:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hgvbTyKC
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54EE41F000D4
+	for <mptcp@lists.linux.dev>; Sun, 22 Nov 2026 12:07:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795349258;
-	bh=iQMjcctNUG+A8H7VmGn2gEZGJF02qAlZqZTFdPpDdTA=;
+	s=k20260515; t=1795349260;
+	bh=O7lf08FVe4tZkEXfWK3D8/W3/EafIGa+KgJjFCnkhRc=;
 	h=From:To:Subject:Date:In-Reply-To:References;
-	b=MuTsleXy9ia70d0NJbIKcq+rvhgfjd3Aby4weI51SV1oWuVRaDx+3i8UjmsL5XEZg
-	 zu/K642dqAnV5C7eriHHUzGevEp7KUzdJDrqdw9M6tasrANjUIszY808tN180a0sq6
-	 Y9GYOgET1ES3fqJz6duE/Bl6WJlLIgODTyBCO7GcStRAgLYxnQfHot0YfgCWGR+gx1
-	 Q3VM7GzdkOOsyEqy1lPNel6Ili42oC4H8vlBBcc2NJZltmIMSTmhR9U0gpF1acQcS8
-	 edbEa20DJT3+iOyPGvxYjZ1GRUm00yVIsIHn7jhI2Pe1ZSLXd6YU6h0zaaxzF5qZjf
-	 ixlpvY91GqDKg==
+	b=hgvbTyKC/D+zxpWS8JLfRI6Ha+sND89YQQgMqSQFfwUmxi4U2ELmSyo6+3TyfW0ai
+	 kns0GcE4fSe3gtsnAERJ4IBedGN7dk3t+pBCGVigvCyhdIezqbMAjSG2hS0Js0fZyi
+	 AqH355pwJKJbxBOGdyy41LP9lILleDSiMgmb9MbNwhn+109u56Z4zFO2XK35rZXtML
+	 E0Ile3D1K96GFEN5xP/GwGD96cW2WrDpJ+QbhpUPAZdESFVPnOKIQXTo1pkmp7N4cb
+	 D2RhZsT6TpXkf2dgLsq3MHxIhV+y74Vu61ZFdY4BzZjyX11yF5EwaR24Iy0RqZXuJy
+	 DYmpE/ilpdIcg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net v2 3/4] mptcp: fix TFO SIOCINQ overflow in mptcp_inq_hint
-Date: Sun, 22 Nov 2026 20:07:28 +0800
-Message-ID: <692168c4f75bdb59bc8a9ec9ed116674747c3898.1795348666.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-net v2 4/4] mptcp: add mptcp_inq() for SIOCINQ
+Date: Sun, 22 Nov 2026 20:07:29 +0800
+Message-ID: <66c8d6fa77da5d076888ad6199f1699bf513fa28.1795348666.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <cover.1795348666.git.tanggeliang@kylinos.cn>
 References: <cover.1795348666.git.tanggeliang@kylinos.cn>
@@ -60,116 +60,59 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Fix mptcp_inq_hint() to compute available bytes using mptcp_data_avail()
-(bytes_received - bytes_consumed) instead of ack_seq minus the head skb's
-map_seq.
+Add mptcp_inq() to compute readable bytes at the MPTCP level using
+mptcp_data_avail() (bytes_received - bytes_consumed). It returns 0 during
+handshake (TCPF_SYN_SENT/TCPF_SYN_RECV), INT_MAX when avail >= INT_MAX,
+otherwise the actual byte count.
 
-On passive TFO connections, the TFO skb has map_seq set to -skb->len.
-Without the removed __mptcp_fastopen_gen_msk_ackseq() to adjust the TFO
-skb's map_seq, mptcp_inq_hint() computes "ack_seq - map_seq = iasn + len",
-almost always >= INT_MAX, causing SIOCINQ/FIONREAD and TCP_CM_INQ to
-report INT_MAX. This also breaks receive buffer autotuning, as
-mptcp_rcv_space_adjust() uses mptcp_inq_hint() to measure consumed data.
-The bogus hint prevents mptcp_rcvbuf_grow() from being called until the
-entire TFO skb has been read.
+Unlike mptcp_inq_hint(), mptcp_inq() does not include the FIN byte. Switch
+SIOCINQ from mptcp_inq_hint() to mptcp_inq() so that FIONREAD reports N
+(not N+1) when N bytes are unread with DATA_FIN pending, matching TCP's
+tcp_ioctl() which subtracts the FIN byte.
 
-Using mptcp_data_avail() avoids this by tracking bytes directly. Introduce
-a mptcp_data_fin() helper to check if ack_seq has passed rcv_data_fin_seq.
-The FIN byte (+1) is guarded by checking rcv_data_fin, TCP_CLOSE, or
-RCV_SHUTDOWN before calling mptcp_data_fin(). Also reset rcv_data_fin_seq
-to 0 in mptcp_disconnect().
-
-Fixes: f03afb3aeb9d ("mptcp: drop __mptcp_fastopen_gen_msk_ackseq()")
-Co-developed-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Fixes: 644807e3e462 ("mptcp: add SIOCINQ, OUTQ and OUTQNSD ioctls")
+Co-developed-by: Zqiang <qiang.zhang@linux.dev>
+Signed-off-by: Zqiang <qiang.zhang@linux.dev>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 47 +++++++++++++++++++++++---------------------
- 1 file changed, 25 insertions(+), 22 deletions(-)
+ net/mptcp/protocol.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index ac7ee8deedc7..846b6ab9d6eb 100644
+index 846b6ab9d6eb..b2fc0dcc6849 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -559,6 +559,21 @@ static void mptcp_check_data_fin_ack(struct sock *sk)
- 	}
+@@ -4182,6 +4182,21 @@ static int mptcp_ioctl_outq(const struct mptcp_sock *msk, u64 v)
+ 	return (int)delta;
  }
  
-+static bool mptcp_data_fin(const struct mptcp_sock *msk, u64 *seq)
++static int mptcp_inq(struct sock *sk)
 +{
-+	u64 rcv_data_fin_seq;
++	const struct mptcp_sock *msk = mptcp_sk(sk);
++	u64 avail;
 +
-+	smp_rmb(); /* pair with smp_wmb() in mptcp_update_rcv_data_fin() */
-+	rcv_data_fin_seq = READ_ONCE(msk->rcv_data_fin_seq);
-+	if (!before64(READ_ONCE(msk->ack_seq), rcv_data_fin_seq)) {
-+		if (seq)
-+			*seq = rcv_data_fin_seq;
++	if ((1 << sk->sk_state) & (TCPF_SYN_SENT | TCPF_SYN_RECV))
++		return 0;
 +
-+		return true;
-+	}
-+	return false;
++	avail = mptcp_data_avail(msk);
++	if (avail >= INT_MAX)
++		return INT_MAX;
++
++	return (unsigned int)avail;
 +}
 +
- /* can be called with no lock acquired */
- static bool mptcp_pending_data_fin(struct sock *sk, u64 *seq)
+ static int mptcp_ioctl(struct sock *sk, int cmd, int *karg)
  {
-@@ -567,16 +582,7 @@ static bool mptcp_pending_data_fin(struct sock *sk, u64 *seq)
- 	if (READ_ONCE(msk->rcv_data_fin) &&
- 	    ((1 << inet_sk_state_load(sk)) &
- 	     (TCPF_ESTABLISHED | TCPF_FIN_WAIT1 | TCPF_FIN_WAIT2))) {
--		u64 rcv_data_fin_seq;
--
--		smp_rmb(); /* pair with smp_wmb in mptcp_update_rcv_data_fin */
--		rcv_data_fin_seq = READ_ONCE(msk->rcv_data_fin_seq);
--		if (!before64(READ_ONCE(msk->ack_seq), rcv_data_fin_seq)) {
--			if (seq)
--				*seq = rcv_data_fin_seq;
--
--			return true;
--		}
-+		return mptcp_data_fin(msk, seq);
- 	}
- 
- 	return false;
-@@ -2407,22 +2413,18 @@ static bool mptcp_move_skbs(struct sock *sk)
- static unsigned int mptcp_inq_hint(const struct sock *sk)
- {
- 	const struct mptcp_sock *msk = mptcp_sk(sk);
--	const struct sk_buff *skb;
--
--	skb = skb_peek(&sk->sk_receive_queue);
--	if (skb) {
--		u64 hint_val = READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
-+	u64 hint_val = mptcp_data_avail(msk);
- 
--		if (hint_val >= INT_MAX)
--			return INT_MAX;
-+	if (hint_val >= INT_MAX)
-+		return INT_MAX;
- 
--		return (unsigned int)hint_val;
-+	if (READ_ONCE(msk->rcv_data_fin) ||
-+	    sk->sk_state == TCP_CLOSE || (sk->sk_shutdown & RCV_SHUTDOWN)) {
-+		if (mptcp_data_fin(msk, NULL))
-+			hint_val += 1;
- 	}
- 
--	if (sk->sk_state == TCP_CLOSE || (sk->sk_shutdown & RCV_SHUTDOWN))
--		return 1;
--
--	return 0;
-+	return (unsigned int)hint_val;
- }
- 
- static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
-@@ -3682,6 +3684,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
- 	WRITE_ONCE(msk->can_ack, false);
- 	WRITE_ONCE(msk->fully_established, false);
- 	WRITE_ONCE(msk->rcv_data_fin, false);
-+	WRITE_ONCE(msk->rcv_data_fin_seq, 0);
- 	WRITE_ONCE(msk->snd_data_fin_enable, false);
- 	WRITE_ONCE(msk->rcv_fastclose, false);
- 	WRITE_ONCE(msk->use_64bit_ack, false);
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+@@ -4195,7 +4210,7 @@ static int mptcp_ioctl(struct sock *sk, int cmd, int *karg)
+ 		lock_sock(sk);
+ 		if (mptcp_move_skbs(sk))
+ 			mptcp_cleanup_rbuf(msk, 0);
+-		*karg = mptcp_inq_hint(sk);
++		*karg = mptcp_inq(sk);
+ 		release_sock(sk);
+ 		break;
+ 	case SIOCOUTQ:
 -- 
 2.55.0
 
