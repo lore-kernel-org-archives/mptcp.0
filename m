@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795415548;
-	b=vYPZw8LzZQx2Kc+q03gPyt503Bk1JQsGRGsCbewNogzBWExIIJY8iOo4beCVNR+X3Jlg
-	 n2/4mljz/IthvZVdcks/gmNnQAiyCJD5lHmnc7bDP0FN14hZn1hsHB7PghhY4v2PH14bD
-	 a914w6x/B1YGvf9o2p5eyCbHL6vYYEMfMl+O7ed17OQF/JgH1h+UWWnF1TvopDPzvb0FO
-	 dVLYDFQqEO10f/VvM41ND7VhJVek8gdM2sGfFvJUTMp/jXiPqHjO1DhtyQLjouzbmHMUm
-	 kBk7xO1jpgfzzGm+N5L/qb9o2DmbxprD6ty7MHZLvf+bFUZiUMZL/d+2TtJ5bHEMKTQ==
+	t=1795415549;
+	b=Zjbp+lFXbf/2Rw6t/4PHaFY1k216E0c5kZIWWeTG7Rh51wCzfe2X+TBBIhfCFbPjmwrn
+	 1NhZE8y4DLiaRbmmRTRXNKBhqPgfNbjMzJzqvm3rc1hp+vQ1Qphh6pmGNcCLgzlOtYOUF
+	 Km33SOJGP0DXemx13np8MP/w++/XArM3LTvEpFy+9M6rUKdSufk5LB/6dLpE5FU1zu8mu
+	 rTYgcIzxsCtoHjJtzKycR7NZ0hbem1ezoBa3PSsdEG5sZh4NRj64mDYtoDZllvDfGV8Vn
+	 m4N7NfM3jz4UBz96KP4JD2SOF9oGxDLAR+/HNPhs8Xl6DN4FlZ3v3Mo126tBaqcEI+g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795415548;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795415549;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=TN31z62ZOcSg3aNtsNAr1oDiHL0vQtqpoCM153FPDAc=;
-	b=txUDekjFw43/DzXJVFRlTdCKxL4ehNEnrr5nRqdIpMk3qBfoHAObYWATC3JBDPOjZwru
-	 y7IqfWtpj0iJjBZ+rAz0hUFB17cmY6j8SxGgnRLtszEa+XxVxq+A24jD/36MGAxmjFHvM
-	 rnetRP9qeo5fCRmXGH7OHGVv27nh497kOXz/aPftCqbwnpHfVxm7AjWc0KFRc1WnybROq
-	 GdWrNlSIVJl/Tu1sC2dctj5VXvUTi0s38IGNotB8ak5N2rN9Hs+Z6H3J5z+A7FTgtMh+N
-	 FSjvAdtC0vPhS7ZcPVh00Yj20/9CQTdgRgweDfq+OCKdNiR51B+s1dys9rTdpMfE2NA==
+	bh=fJEoVx8U5gOvwMmFrnlyJiBalqDUbhg8/fLlethv5Qg=;
+	b=w4uS/oK2zMiri/SLw/p1iMqnN/0/n4a989pOUOD5C+CCpc2t5cjQ3A4Ycp2fuCbXRU3V
+	 9VzV/iuSUgINL1hi/vu6T3KjnKPLcJg/s4zdhwXw8mwd7mlaVBQG7J2DJiB5nynhWMKv8
+	 uoYo1IPFnFN7FZH3DoQiZ2kqVt1L1SAOqbQnke++j7a8thmmJfn6N3uFQHxTJNnzsgUH2
+	 EjcmOlHm5eGC9rWKwpKer7pEAEzs5x1yNoQqbm9bdHJ40XoafM3+7p0ajVFmRiOfEtHqh
+	 KqZbMQK/8VfD7Dfw9VUZjkZZJgHmYntj4klhfT/tJJTDiDmLPYMJeLPpEMykgTON4og==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fBeDTEKw;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fMJinekc;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A47606A31A
-	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 06:32:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B7C4606A31A
+	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 06:32:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fBeDTEKw
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA95D1F000C4;
-	Mon, 23 Nov 2026 06:32:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fMJinekc
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 092E11F000CF;
+	Mon, 23 Nov 2026 06:32:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795415548;
-	bh=TN31z62ZOcSg3aNtsNAr1oDiHL0vQtqpoCM153FPDAc=;
+	s=k20260515; t=1795415549;
+	bh=fJEoVx8U5gOvwMmFrnlyJiBalqDUbhg8/fLlethv5Qg=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=fBeDTEKwMbGPYdZWgR8zZGIHIJxvUBUIYdVhTuvbsMA6F/HbE+dBAcFMiICZoy0pU
-	 9A/pHTjy2bMF7pzsciAuF/Yy8hdiecfiCauYIrjRgLmoMNQEsLegr76Zki+AYs0V4h
-	 +/E9OFk69RAjUIlzoAAiE0kKFATlrkn62W39krGPEmNNXmSjNy76l00lbl/hGnonRI
-	 4wXHlPElh3GuH+XdTceZWzKMuaC3+DeLu8Ozq5Z4QfRAKwLcgVwLONZDcZiDHD1RLx
-	 JrmI0cNG48UoadavA3+3vZw5Ujo2YpVvVzuwndD8pjLQ4YoFt+tUV8jz1t13g42euH
-	 NfuITPtHt7lpQ==
-Subject: Re: [PATCH mptcp-net v2 17/62] mptcp: reset the subflow on abort
- after fallback
+	b=fMJinekcPDKYTQj//ymFF4q6P0ju5o514mdPA0xj9hrzENopSfg9MMDVFzz//kI7b
+	 BZt7NQIClOQdwY0pRJaY5lR+/1u9Nj4nvsbG0Bo+2hic0l7R0dGM9JCbLNp8xiIRWF
+	 9ZdCnCLlkZTb/546GMhQIuFbA48d5vdbpJOSojZbJqOsA9d6GFLfsXG1o7OxPp9oYY
+	 M39h0EvzEaSklU90rZm7B8J1Vyc+VkGsNz4dgNzTa58V1CBsi0qf7b7CZ7JrCfV5Q9
+	 PkgZx/3namiODQIdwNBF0bDY0vRWZpy3Vnw4cGKCLE9hDe+cL9x8lTXhTJx+nxvvk+
+	 7dJjP9Py4uvQA==
+Subject: Re: [PATCH mptcp-net v2 20/62] mptcp: start close timeout on initial
+ sf shutdown
 From: netdev-bot+sashiko@kernel.org
 To: matttbe@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Mon, 23 Nov 2026 06:32:27 +0000
-Message-ID: <179541554737.3133.824367187193234355@kernel.org>
-In-Reply-To: <20261121-mptcp-cmason-fixes-v2-17-00327fd1de1f@kernel.org>
-References: <20261121-mptcp-cmason-fixes-v2-17-00327fd1de1f@kernel.org>
-X-sashiko-severity: Low
+Date: Mon, 23 Nov 2026 06:32:28 +0000
+Message-ID: <179541554861.3133.16159737553641124171@kernel.org>
+In-Reply-To: <20261121-mptcp-cmason-fixes-v2-20-00327fd1de1f@kernel.org>
+References: <20261121-mptcp-cmason-fixes-v2-20-00327fd1de1f@kernel.org>
+X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -62,148 +62,140 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found more severe
-issue(s) in other patches of this series. This mail is only an FYI, in case
-you want to address the nit picks below when you respin.
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue(s) to consider.
 
-Low priority / nit picks for your consideration:
+Critical: 0 · High: 0 · Medium: 1 · Low: 0
 
-- [Low] After this patch, an unaccepted MPTCP child that has fallen back
-  to TCP sends two plain RSTs when its listener is closed.
-- [Low] Fallen-back subflows now get an RST in states where TCP would not
-  send one.
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
+
+- [Medium] In __mptcp_close_ssk() (net/mptcp/protocol.c:2826-2834), the
+  new else-if arms the close timeout for every msk state except…
 
 --
 
-mptcp: reset the subflow on abort after fallback
+mptcp: start close timeout on initial sf shutdown
 
-This commit removes the fallback early return in mptcp_do_fastclose().
-After a fallback to TCP, aborting an MPTCP socket now sends a plain TCP
-reset on each subflow. As a result, close() with unread data, or with
-SO_LINGER and a zero timeout, resets the connection instead of sending a
-FIN.
+This patch adds a branch to __mptcp_close_ssk() that starts the MPTCP
+close timeout when the initial subflow is the only one left and has been
+shut down but not closed. Without it, an msk whose peer sent a FIN without
+DATA_FIN on the only subflow could keep send() or recv() blocked forever.
 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 541bf23d1bda1..201e77772bdd2 100644
+> index 835796fd4f771..d3a793e96c9cc 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -3245,10 +3245,7 @@ static void mptcp_do_fastclose(struct sock *sk)
->  	mptcp_backlog_purge(sk);
->  	msk->fastclosing = 1;
->  
-> -	/* Explicitly send the fastclose reset as need */
-> -	if (__mptcp_check_fallback(msk))
-> -		return;
-> -
-> +	/* Explicitly send the fastclose reset, a plain one after a fallback */
->  	mptcp_for_each_subflow_safe(msk, subflow, tmp) {
->  		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
->  
+> @@ -2823,6 +2823,14 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+>  		} else {
+>  			mptcp_start_tout_timer(sk);
+>  		}
+> +	} else if (list_is_singular(&msk->conn_list) && msk->first &&
+> +		   mptcp_subflow_ctx(msk->first)->closing &&
+> +		   !inet_csk(sk)->icsk_mtup.probe_timestamp &&
+> +		   sk->sk_state != TCP_CLOSE) {
+> +		/* The initial subflow has only been shut down, and its later
+> +		 * close will be ignored: start the close timeout now.
+> +		 */
+> +		mptcp_start_tout_timer(sk);
 
-[Severity: Low]
-With this early return gone, can an unaccepted child that fell back to
-TCP send two plain RSTs when its listener is closed?
+[Severity: Medium]
+Should this branch use the same per-state handling as the branch just
+above it? That branch covers the same "only the initial subflow is left"
+case, but it treats each msk state differently:
 
-The path looks like this:
+net/mptcp/protocol.c:__mptcp_close_ssk() {
+    ...
+	 * For established sockets, allow an additional timeout before closing,
+	 * as the protocol can still create more subflows.
+	 */
+	if (list_is_singular(&msk->conn_list) && msk->first &&
+	    inet_sk_state_load(msk->first) == TCP_CLOSE) {
+		if (sock_flag(sk, SOCK_DEAD)) {
+			...
+		} else if (sk->sk_state != TCP_ESTABLISHED ||
+			   msk->in_accept_queue) {
+			mptcp_set_state(sk, TCP_CLOSE);
+			...
+		} else {
+			mptcp_start_tout_timer(sk);
+		}
+    ...
+}
 
-mptcp_check_listen_stop()
-  mptcp_subflow_queue_clean()
-    __mptcp_unaccepted_force_close()
-      sock_set_flag(sk, SOCK_DEAD);
-      mptcp_do_fastclose(sk);
-        tcp_send_active_reset(ssk, ...);  <- RST #1, ssk stays ESTABLISHED
-      __mptcp_destroy_sock(sk);
-        ...
-          __mptcp_close_ssk()
+The new branch arms the timer in every state except TCP_CLOSE. That
+includes msks still in the accept queue and msks that are not
+ESTABLISHED.
 
-__mptcp_close_ssk() then takes the early accept-queue branch:
+Take an msk that has not been accepted yet: it is ESTABLISHED, with
+in_accept_queue set by mptcp_sk_clone_init(). If the peer sends a FIN
+without DATA_FIN on the MP_CAPABLE subflow before accept(), this path
+seems reachable:
 
-	if (msk->in_accept_queue && msk->first == ssk &&
-	    (sock_flag(sk, SOCK_DEAD) || sock_flag(ssk, SOCK_DEAD))) {
-		...
-		mptcp_subflow_drop_ctx(ssk);
-		goto out_release;
-	}
+subflow_sched_work_if_closed()
+  -> MPTCP_WORK_CLOSE_SUBFLOW
+mptcp_worker()
+  __mptcp_close_subflow()
+    mptcp_close_ssk()
+      __mptcp_close_ssk()
+        __mptcp_subflow_disconnect()  /* only tcp_shutdown(), closing = 1 */
+        mptcp_start_tout_timer(sk)    /* new branch */
 
-That branch skips the transition that ae155060247b relies on to avoid
-duplicate resets:
+Before this patch, a live in_accept_queue msk never had probe_timestamp
+set.
 
-	if (subflow->send_fastclose && ssk->sk_state != TCP_CLOSE)
-		tcp_set_state(ssk, TCP_CLOSE);
+If accept() is not called within close_timeout (60s by default),
+mptcp_worker() then calls mptcp_do_fastclose(). With fastclosing set,
+__mptcp_close_ssk(..., 0) reaches this code:
 
-Back in mptcp_check_listen_stop(), inet_csk_listen_stop() ->
-inet_child_forget() -> tcp_disconnect() still sees the child in
-ESTABLISHED. tcp_need_reset() is true, so a second RST is sent.
+__mptcp_subflow_disconnect() {
+    ...
+		WARN_ON_ONCE(tcp_disconnect(ssk, 0));
+		mptcp_subflow_ctx_reset(subflow);
+    ...
+}
 
-Before this patch, a fallback msk returned early here and only the
-tcp_disconnect() RST went out. A peer can force the fallback on an
-unaccepted server socket by sending data without a DSS mapping, via
-subflow_check_data_avail() -> mptcp_try_fallback().
+At that point the child socket is still in the TCP listener's accept
+queue. Is that sequence safe? Tracing accept() and listener teardown
+after it did not show a crash. Still, no pre-patch path did this for
+in_accept_queue msks.
 
-The same double reset already happened without a fallback (MP_FASTCLOSE
-RST, then a plain RST). This patch extends it to fallback sockets, which
-works against the goal of the commit in the Fixes: tag. The duplicate RST
-is still present at the end of the series.
+Now take an accepted msk that is not ESTABLISHED, for example FIN_WAIT1/2
+after shutdown(SHUT_WR), or CLOSE_WAIT, LAST_ACK or CLOSING. The initial
+subflow can be shut down instead of disposed through
+mptcp_pm_rm_addr_or_subflow(). That happens on a peer RM_ADDR for id 0 or
+on a userspace PM subflow destroy. The new branch then waits the full
+close_timeout before the fastclose.
 
-Related to this, the commit message says:
+__mptcp_finish_join() refuses new subflows unless the msk is
+ESTABLISHED:
 
-    Its other callers, on disconnect()
-    and when the close timeout of an orphan expires, were already resetting
-    the subflow after a fallback, via tcp_disconnect(), in most states: the
-    reset is now sent as without a fallback.
+	if (sk->sk_state != TCP_ESTABLISHED)
+		return false;
 
-Should it also mention __mptcp_unaccepted_force_close()? The same goes
-for the orphan-OOM caller in __mptcp_close(), added earlier in this
-series:
+So nothing can recover the connection during that wait, and send() or
+recv() stays blocked for the whole timeout. In the same states, the
+branch above closes the msk as soon as the subflow reaches TCP_CLOSE.
 
-	if (mptcp_orphan_oom(sk))
-		mptcp_do_fastclose(sk);
+This also differs from Documentation/networking/mptcp-sysctl.rst. It
+says close_timeout applies "in absence of any close or shutdown syscall"
+and "after the last subflow removal".
 
-After a fallback, that path used to close the subflow with a FIN through
-__tcp_close(), and it now sends an RST. That matches TCP's handling of
-orphans under OOM, but the commit message doesn't describe the change.
+Could the new branch follow the branch above? That would mean arming the
+timer only for an accepted ESTABLISHED msk, not for in_accept_queue, and
+closing the other states once the subflow reaches TCP_CLOSE.
 
-[Severity: Low]
-Does this also send an RST on fallback subflows in LAST_ACK or CLOSING,
-where plain TCP would not?
+If the different handling is intended, could the commit message say so?
+It currently only says "start the close timeout, if it is not running
+yet". The code comment and the sysctl documentation would also need an
+update.
 
-Before this patch, fallback subflows reached tcp_disconnect() through
-__mptcp_subflow_disconnect() and followed its ABORT rule:
-
-	} else if (tcp_need_reset(old_state)) {
-		tcp_send_active_reset(sk, SK_RST_REASON_TCP_STATE);
-		...
-	} else if (tp->snd_nxt != tp->write_seq &&
-		   (1 << old_state) & (TCPF_CLOSING | TCPF_LAST_ACK)) {
-
-Now they go through the filter in mptcp_do_fastclose(), which only skips
-TCPF_LISTEN | TCPF_CLOSE:
-
-	if ((1 << ssk->sk_state) & (TCPF_LISTEN | TCPF_CLOSE))
-		goto unlock;
-
-For example:
-
-1. After a fallback, the peer sends a FIN.
-2. The application calls shutdown(SHUT_WR). The subflow sends its FIN
-   and enters LAST_ACK with snd_nxt == write_seq.
-3. Before the final ACK arrives, the application calls close() with
-   SO_LINGER {1, 0}.
-
-__mptcp_close() then takes the linger-0 branch and calls
-mptcp_do_fastclose(), which sends an RST on the LAST_ACK subflow.
-connect(AF_UNSPEC) in the same state does the same through
-mptcp_disconnect(). Plain TCP in that state sends no RST, and neither
-did MPTCP after a fallback before this patch.
-
-The SYN_SENT case is fixed later in this series by "mptcp: no fastclose
-reset from SYN_SENT subflows". CLOSING and LAST_ACK are still affected at
-the end of the series.
-
-The commit message describes the change as resetting "as TCP does".
-Should the filter follow tcp_need_reset() and the unsent-data check for
-fallback subflows? If not, should the commit message mention this
-difference?
+>  	}
+>  }
+>
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f%40kernel.org
