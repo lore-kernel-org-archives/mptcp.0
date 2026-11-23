@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795415541;
-	b=MFv1BHeScZ2NNbvoJfbqW2KRl663H1TJvGjySHXeU7mlKQZMgFz/D1ltSMsURfDUovAU
-	 LJwC9/QEHgyuEKo4kMJK5AsEhXBg6qjB4S4nnmOBw5sDliwLHFPHcWjjlaE8Yrk5ewsi4
-	 vkDQf/m1XeG7sDdwzck8DQMm7k9JRpOCt/U9EwZiXSJ1195r8ytCxwred/qZW9O3uz8Go
-	 +a9FQUAtJMq7Yvu+J4fAHlpbnkr9w3uG4JjZImjfie0lEvsHWvGlQJnHAuZ/QCBXBOT+g
-	 Di+iQrGhhvwJH0G9OQlk6ImYtLXA81Xp7uurMTgri+xG7Oyx1DSiZAsKOAz2D3h8AmA==
+	t=1795415543;
+	b=QSP3gdsbKUTnPFceZeMETXNSGRm10c+WggTJd1IMiQYviWDpiVN2rwfmmfyxHqJ4rE9E
+	 XvB83MQM69vGoj0YEJl5E4rF1UgoPkx1fOXu/GQnEmPT92koOtL3BkHffniYlxZ9FvP8a
+	 QTXw5TjrdR0ilD9UJBwgtslFwz9024h07b3nX8PF1EqBL66AyAKLnW8i+n7E/63DxBfCv
+	 JigEzLmF44xC7pgCBsxtaIPizNXEzzHIuGFKZARlG2Mx/mXzWUCcP/v3tI8uyogkeZ0pi
+	 PwJ1lJ67rEcGbVPYCRb0+nzMc1cC9UID3vMSMkO51tXR9VO/opcN0Pd7Lmu+bGxrqYA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795415541;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795415543;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=77AKUs7nQVrvfD+JltN663SChrUH2+SoLD+kEPWx+lY=;
-	b=3efvQMHlRES8+8C38Mc2mlhjgjy5y6SEUKfGdkB65FVqveqHVlNYh52EP3tyJLeu/G0E
-	 X6zHJoqQBMyRN+1HC8lyBBHzTDZaRPubI2pHiwTw9zEzpL2XFlFOYlI+ZGKX076y9SpRE
-	 ToKEbDoSazeyMAcmYnS2edOGVqnFisN3GaUnkpPMQEMOnGEu/VkqNQ6Hhfwa0VqIMa8xH
-	 Ybbvzc3KatLNAr08KrBl7BPIstQbYZXyk3bcnPtrgyGreOPAs7fvh/omtULdkwB0rn3O9
-	 skrvjIZayTXwbDKTdu9SrIr/L0mQe4kNkEhyP5iaOi4UTMpdSXMBrOXT3hg7KUaUkaQ==
+	bh=YSsPe+LBQ5F7KUn6HqrcWeyU/FJahAnloY45d49k1lU=;
+	b=FPeBcuYMYXYNH9fJ7oK490SLCWqQvpArevEzA9Acf1qqTucHyN0L/ZmiMh1sc4xAb4iH
+	 GvZMAOFqc1BMtYG+k0DBORFbdn7u5qP4aMXE9fuRUM1DL1N2oKHa1ONcbBf9dQJ69rqDa
+	 SpQLK9NtkB9hR8OFhXrC5luvalgkWnusroKb0FL4LS+mcCqTLGb0pu0Op/bqI8ZD5m7DW
+	 BdpIUsmfeLTNej4EJYZMRVswtDnzS/rCps2/+iNtTRwuYPTscQ7aIu2MKdIizwjECAdYA
+	 JV/8A0VfkUif3zwLQH/4u1x3X5FK8P1fleAVmefvwosIXHQeWC9kTSCOaolCzij+d/A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dkkXJ+ib;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OvJIZVVs;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC089606A31A
-	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 06:32:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49451606A321
+	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 06:32:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dkkXJ+ib
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E3281F000D8;
-	Mon, 23 Nov 2026 06:32:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OvJIZVVs
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B78961F000D4;
+	Mon, 23 Nov 2026 06:32:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795415541;
-	bh=77AKUs7nQVrvfD+JltN663SChrUH2+SoLD+kEPWx+lY=;
+	s=k20260515; t=1795415542;
+	bh=YSsPe+LBQ5F7KUn6HqrcWeyU/FJahAnloY45d49k1lU=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=dkkXJ+iboomrP2QMb3PvjB6P06YclKY8t2u32YxAsSCtdp+qTSv3DMqyRIdlC//zo
-	 BjTG5hkFqhD76Xyd3vIa4+E2wMaI35Ug3uFZW4+XtdpxyY3FI4cKMoT/oKO62sy6P9
-	 ZrwViW++t6NPK6/ariL3Cs82UEv5MR8+XOurkzfex0fCJVN8HhACL1E1/pAss5gM5X
-	 93pL3CB25xh1i+KlZxM24RqqMfw6OHj/RzZ0R1tn+rCPCnnmkIVB9cNT4R92ltIiib
-	 ZwnG/C8imflr2CxTbPn7IcCgg7iviGOfLUSlHY9CMveoG0uQ+ZfSMSjYzgoY0/Ri54
-	 GY9i5JyA9MMBg==
-Subject: Re: [PATCH mptcp-net v2 12/62] mptcp: keep an orphan while it can
- send its data
+	b=OvJIZVVs4v8/7s87XhRBh4bi59MTF2/OGkahM6pMwy21WYXFJ1tn1pPLIpxe49uuJ
+	 ZPdYG9HSvcHQ3CpoatuWI0KgMap/cDP6Q1zRlr2dlZcvcTOMWUmUC58AZF0bmM+9LP
+	 C0XnHlymwJSdm/f8MKnLYzVQuiIPJO/vjvVA69aR5iDz23+UpcXRXsqaIHfOUbLcFI
+	 9mLIrLPFtIKcC0571wwHa9dxrGz6UPM6t+6ncFvjKtF0AUgxs+lO2KBHf888m8xPAU
+	 nDYRmwuu/Xf5WstSoYZBwGCR0Ui53dAi9gQacUNtkNPmSGwaTqEXjR0zDDxzsDB9YF
+	 siDiWYl+9uJfg==
+Subject:
+ Re: [PATCH mptcp-net v2 13/62] mptcp: limit an orphan probing a zero window
 From: netdev-bot+sashiko@kernel.org
 To: matttbe@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Mon, 23 Nov 2026 06:32:20 +0000
-Message-ID: <179541554087.3133.1709563113530925995@kernel.org>
-In-Reply-To: <20261121-mptcp-cmason-fixes-v2-12-00327fd1de1f@kernel.org>
-References: <20261121-mptcp-cmason-fixes-v2-12-00327fd1de1f@kernel.org>
-X-sashiko-severity: Low
+Date: Mon, 23 Nov 2026 06:32:22 +0000
+Message-ID: <179541554231.3133.10776173874685565@kernel.org>
+In-Reply-To: <20261121-mptcp-cmason-fixes-v2-13-00327fd1de1f@kernel.org>
+References: <20261121-mptcp-cmason-fixes-v2-13-00327fd1de1f@kernel.org>
+X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -62,109 +62,148 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found more severe
-issue(s) in other patches of this series. This mail is only an FYI, in case
-you want to address the nit picks below when you respin.
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue(s) to consider.
 
-Low priority / nit picks for your consideration:
+Critical: 0 · High: 0 · Medium: 1 · Low: 0
 
-- [Low] The patch adds an unconditional close-timeout restart for orphans
-  in mptcp_check_send_data_fin() (net/mptcp/protocol.c:3479-3481).
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
+
+- [Medium] mptcp_subflow_probe_timed_out()
+  (net/mptcp/protocol.c:2875-2898) can only report a timeout while the…
 
 --
 
-mptcp: keep an orphan while it can send its data
+mptcp: limit an orphan probing a zero window
 
-Before this patch, the close timeout of an orphaned MPTCP socket ran from
-close() and reset the connection when it expired, even if data was still
-waiting for the peer's window to open. The patch restarts the timeout when
-the DATA_FIN is sent. It also restarts the timeout and pushes the pending
-data again when the timeout expires before the DATA_FIN, as long as an
-active subflow has recently heard from the peer.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/647
+This patch adds mptcp_subflow_probe_timed_out(). It reports whether TCP
+would have aborted a subflow that is probing a zero window, or that has
+data in flight after the peer shrank its window to zero. mptcp_orphan_keep()
+uses the new helper so that such an orphan is no longer kept once its close
+timeout expires.
 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index d64e04245963c..944c9d11d2116 100644
+> index 944c9d11d2116..ff71f19540771 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
+> @@ -2871,6 +2871,32 @@ static bool mptcp_close_tout_expired(const struct sock *sk)
+>  		  inet_csk(sk)->icsk_mtup.probe_timestamp + mptcp_close_timeout(sk));
+>  }
+>  
+> +/* Would TCP abort this subflow if it were an orphan probing a zero window? */
+> +static bool mptcp_subflow_probe_timed_out(struct sock *ssk)
+> +{
 
 [ ... ]
 
-> @@ -3449,6 +3476,10 @@ static void mptcp_check_send_data_fin(struct sock *sk)
->  
->  	WRITE_ONCE(msk->snd_nxt, msk->write_seq);
->  
-> +	/* an orphan's close timeout is for the DATA_FIN exchange */
-> +	if (sock_flag(sk, SOCK_DEAD))
-> +		mptcp_start_tout_timer(sk);
+> +	slow = lock_sock_fast_nested(ssk);
+> +	limit = tcp_rto_max(ssk);
+> +	if (tp->packets_out) {
+> +		ret = !tp->snd_wnd && icsk->icsk_rto >= limit;
+> +	} else {
+> +		if (icsk->icsk_backoff < retries2)
+> +			limit *= 2;
+> +		/* a shift of 32 already exceeds the limit */
+> +		when = (u64)icsk->icsk_rto << min_t(u8, icsk->icsk_backoff, 32);
+> +		ret = tcp_send_head(ssk) && when >= limit;
+> +	}
+> +	unlock_sock_fast(ssk, slow);
+> +
+> +	return ret;
+> +}
 > +
 
-[Severity: Low]
-Can this restart overwrite the forced expiry that __mptcp_close_ssk() sets
-when the last subflow of an orphan reaches TCP_CLOSE?
+[ ... ]
 
-__mptcp_close_ssk() expects the worker to destroy the orphan on its next
-run:
+> @@ -2886,7 +2912,8 @@ static bool mptcp_orphan_keep(struct sock *sk)
+>  		/* a live peer acks at least the probes, every TCP_RTO_MAX */
+>  		if (__mptcp_subflow_active(subflow) &&
+>  		    tcp_jiffies32 - READ_ONCE(tcp_sk(ssk)->rcv_tstamp) <
+> -		    2 * TCP_RTO_MAX)
+> +		    2 * TCP_RTO_MAX &&
+> +		    !mptcp_subflow_probe_timed_out(ssk))
+>  			return true;
+>  	}
 
-net/mptcp/protocol.c:__mptcp_close_ssk() {
+[Severity: Medium]
+
+Can a remote peer still keep this orphan forever if the subflow is idle
+at TCP level?
+
+mptcp_subflow_probe_timed_out() only returns true when the subflow has
+data at TCP level. That means either data in flight with a zero snd_wnd,
+or a send head. With packets_out == 0 and tcp_send_head() == NULL, ret is
+always false.
+
+Consider a peer that TCP-ACKs all subflow data with an open TCP window but
+never moves its DATA_ACK. msk->snd_una stays fixed, so the msk fills up to
+wnd_end and stops sending. mptcp_sendmsg_frag() then queues no MPTCP zero
+window probe:
+
+net/mptcp/protocol.c:mptcp_sendmsg_frag() {
     ...
-		if (sock_flag(sk, SOCK_DEAD)) {
-			/* let the worker close and destroy the orphan */
-			mptcp_set_close_tout(sk, tcp_jiffies32 -
-					     (mptcp_close_timeout(sk) + 1));
-			mptcp_schedule_work(sk);
+		if (snd_una != msk->snd_nxt || skb->len ||
+		    skb != tcp_send_head(ssk)) {
+			tcp_remove_empty_skb(ssk);
+			return 0;
+		}
     ...
 }
 
-In mptcp_worker(), mptcp_pm_worker() runs before
-mptcp_check_send_data_fin(), and both run before the
-mptcp_close_tout_expired() checks.
+The subflow therefore stays idle at TCP level. Reinjections from
+__mptcp_retrans() are TCP-ACKed as well, and __mptcp_retrans() never gives
+up.
 
-When an orphan's last data is pushed from BH, __mptcp_subflow_push_pending()
-leaves the DATA_FIN to the worker:
+The peer can also pass the "live peer" check cheaply. tcp_ack() refreshes
+tp->rcv_tstamp on any non-old ACK, including a pure duplicate ACK. One
+segment sent more often than every 2 * TCP_RTO_MAX is enough.
 
-		if (msk->snd_data_fin_enable &&
-		    msk->snd_nxt + 1 == msk->write_seq)
-			mptcp_schedule_work(sk);
+mptcp_worker() then re-arms the close timeout each time it expires:
 
-Suppose an RM_ADDR from the peer is queued before that worker runs. A
-userspace PM subflow destroy has the same effect. Then a single worker run
-does this:
-
-mptcp_worker()
-  mptcp_pm_worker()
-    mptcp_pm_rm_addr_recv()
-      mptcp_pm_rm_addr_or_subflow()
-        mptcp_close_ssk()
-          __mptcp_close_ssk()
-            /* last subflow to TCP_CLOSE, close tout forced into the past */
-  mptcp_check_send_data_fin()
-    /* gate still open, snd_nxt = write_seq, SOCK_DEAD set */
-    mptcp_start_tout_timer()
-      /* probe_timestamp = tcp_jiffies32 */
-  mptcp_close_tout_expired()
-    /* now false, so __mptcp_destroy_sock() is skipped */
-
-Without this patch the orphan was destroyed in that same worker run. With
-it, the msk and its rtx queue stay around for another TCP_TIMEWAIT_LEN,
-although no subflow is left to carry the DATA_FIN exchange the new comment
-refers to. The orphan is freed only when the tout timer fires, because
-mptcp_orphan_keep() then returns false (snd_nxt == write_seq).
-
-The delay is bounded and happens only once, so this is not a leak.
-
-Would it make sense to restart only if the timeout has not already expired,
-for example:
-
-	if (sock_flag(sk, SOCK_DEAD) && !mptcp_close_tout_expired(sk))
+	if (mptcp_close_tout_expired(sk) && mptcp_orphan_keep(sk)) {
 		mptcp_start_tout_timer(sk);
+		__mptcp_push_pending(sk, 0);
+	}
 
-or to restart only while a subflow can still send?
+None of these checks look at progress at the MPTCP level (snd_una or
+DATA_ACK).
 
->  	mptcp_for_each_subflow(msk, subflow) {
->  		struct sock *tcp_sk = mptcp_subflow_tcp_sock(subflow);
->
+There is a related case. mptcp_orphan_keep() returns true for the first
+subflow that passes the checks. Could an idle MP_JOIN subflow kept fresh
+this way keep the orphan alive after the probing subflow has timed out?
+
+Before this series, these orphans were freed when the close timeout
+(TCP_TIMEWAIT_LEN) expired. The later patch "mptcp: count orphans as TCP
+does" caps the total through tcp_check_oom() (tcp_max_orphans and
+tcp_mem[2]). Below those limits, each orphan can still be kept as long as
+the peer wants, together with its subflows and queued send data.
+
+The commit message also says:
+
+  Two corner cases needing non-default settings are not covered, which is
+  fine: an idle subflow refreshed by keepalives still keeps the orphan
+  when the stale detection is disabled, and tcp_orphan_retries is ignored.
+
+Is this accurate? mptcp_pm_chk_stale() in net/mptcp/pm.c skips idle
+subflows:
+
+		/* No data outstanding at TCP level? not stale */
+		if (tcp_rtx_and_write_queues_empty(ssk))
+			continue;
+
+Also, mptcp_orphan_keep() uses __mptcp_subflow_active(), which does not
+check subflow->stale. So the idle subflow case seems to happen with default
+settings too.
+
+The commit message also says "It is now reset as TCP does, respecting
+tcp_retries2." TCP gives up through tcp_write_timeout() when its data is
+never acknowledged. Here, MPTCP-level data that is never DATA_ACKed does
+not lead to a reset. Should either the check or the commit message be
+updated?
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f%40kernel.org
