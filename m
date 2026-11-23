@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795415555;
-	b=tnjl19FG501AWTrTqrluOjT7Mkv25110bJuwxe460KUVVlL72+azo27DxJrXSx1Wrzl3
-	 Ht4UXdQelcgqu1AvDufctcK+BVxz9f/Yu1gL3U0m8AnmhOBie91U3MZrECuBTVC43JDmU
-	 RBZScoPyVD0pSXdmU8NxqkTZolwFQiVCFtrrQd4NCN4AF1/QV8WLZYPhTdxYLjb6/NkAE
-	 JjMCW2s6ncFpsrqv2zaJxaixiKYaKd/gC7gnHsAAn3BxIYg0wphUTLoggQeDhqEe5oaFH
-	 bDdmkH14CWZ75dKsG4YpOusrzmH3JXwtt1V4S6rc9xqIxbIo1l3xwUsRx15zbmyO8CQ==
+	t=1795415556;
+	b=aQm56tVvVrdFArP3jvCIcbo+rVm2g7bs3zDpx0J0wiEh1LjpCO4Mj7AQMvoadhN5N/k5
+	 KrvaauwgGSm3tmhBVIFyjN3Oo5mSfEHkk6oHL2Q1uH7sDDrMpjw/Rztd+cp6zEeWjE2yN
+	 pBXHWNfsYpQgWuXYkogQKuVlZ/9/l8ZLeL6f/aCYbPhy+WqD3wvzNI7qyhl1Tf9YnhqWn
+	 dG423e5eaNmvw7qKmOspAlCvdeGd7m+35kKbDcCIC09IgOCPOK0qMi+i/mzx7Ap29RUuV
+	 FNgoneRMW7qoikfGj6rtDyVKuDkA14OlC18G78JNzOa/u+60bMZU0/peKRqD+Z/vZwg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795415555;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795415556;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=rcz9FiQg7TdbYrSK2DxbpPuSlBg7VN9x4AsPSrOXpw4=;
-	b=TFucKX+1r9p5XUSN9NMe9jGorXjazgr+PHAwANoZb+6PKsMPtkT7EmzeLiY2BHPkNBO8
-	 jOLTAYfmwgPN/UVEzXqKTqlPlmNIViHfNhEL9cFErpoT4jFvyT44GFvWuWEUSLKQy/01d
-	 urMjfwbTgduiBoDEMJRO/L7GXIfvTNqbfk0OcvoWjbNPCWEy4q5HAw62iAWV+fscSDTie
-	 Fxchl7WDO6ixaUTMRedsKTn3KIDJgM37+kydqj8lm23X2NgIrevtQ0XkjSbJHrOPHqLnV
-	 Qd3FHJT/ScqWBrgoas4ihaHnTd/oH5o7EBjVgA+9HkPxKu3tKzRA+ih52+D7osjB5AQ==
+	bh=jJxVoZmRxuJiFA2KtTDeQRpcbdkvIPFPvvAxOx9C7To=;
+	b=bGbxTnjXTaUh+98LqHPwMTsQV/91dh7jqY5U5LmLDoHzUHTu16Zcfvv9/KEZq3PVL/ce
+	 oOFwR92mlwRghPRoDE7E/30rd4x1wq2ZvIwkxS0HBFP1y0FGN0K6zzJRrIYRkcE3qnufZ
+	 LJuCv3tBXFx1hneCzUPcGf+r1tVzPaOj+LbTvC31gITLg53Y/P8+Z3AQR73hm3IJYmOaX
+	 j75TDXFLLNmLIo7AJm78E3QDYglfNppSWp43uu7+i83NYrmGGnU6/1ITFJEGuM2GzrQQo
+	 pZC072Hjx0p9v8xataC7cNzOlyR68IRlLGxNpbYbkrjBYp+HFtrEHSmj3Solj3kEF1w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Jmu0OybS;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F+m7heP9;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D990606A31A
-	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 06:32:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F42606A31A
+	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 06:32:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Jmu0OybS
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB9901F000CA;
-	Mon, 23 Nov 2026 06:32:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F+m7heP9
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF33C1F000C0;
+	Mon, 23 Nov 2026 06:32:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795415554;
-	bh=rcz9FiQg7TdbYrSK2DxbpPuSlBg7VN9x4AsPSrOXpw4=;
+	s=k20260515; t=1795415556;
+	bh=jJxVoZmRxuJiFA2KtTDeQRpcbdkvIPFPvvAxOx9C7To=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=Jmu0OybSNsfH19P6mCXGI5pxGYQXp9MWMpdT8aF0IqjHgm3uFAAzdopwmocUVRe2e
-	 TXJxBImtfJTlkNrVgIRSq7O50MfHWZlehuo95lYcpiazABrG7QABte0wGjdopkRljz
-	 B2XRyjNu0ANfYWWDn9SSOzuiVs+F/F28Y+y4Xw2HqjrgbInaEM48JQrf0fmGt7SVmJ
-	 q/UKd5XSYu26oL8MYYH5ttspCs71g+8VDIKC/ReJcfpcR7kn+JN5+IrOfgM4v0h1xx
-	 oQFltKc6q28qMZSVnIokU3VrtIFV4d3MQTMW7oAjNBLS0qnAV19GYW2kVTXDiASLFN
-	 HP1OXz6lDhDoQ==
-Subject: Re: [PATCH mptcp-net v2 38/62] mptcp: send the infinite map in a
- single segment
+	b=F+m7heP9XRJp9SxCBBC17MKpWQ+aVyvbVNqQdsuuHdXk3xFhRb0ngy36Os8dbF/AZ
+	 Fw//ZabBgJy9jJor09Fl9vFteygvzuiPhYqMAzUfdleBkjBKwc7enP8C1KNSM2wqVC
+	 wwgoDQ8QAHV61zVPR8NnsrcDQhJwQUMbGQmJxAr9RGH4WG8V7HhBvBtvChpGGKhf/o
+	 RORpIA6rDK75HYaZSKidtf0pW7WqzyTOKDJYvxlM8Tq6WkUK4pCs/88nFNFU9PipeR
+	 39/omCGck9jY9z3sQeoG1ylpxxuMok1xkQXigUSSOkXjoQVvQu56fXliguORVHyi04
+	 AK5wtnYh4SDYQ==
+Subject: Re: [PATCH mptcp-net v2 39/62] mptcp: keep room for infinite map
+ after fallback
 From: netdev-bot+sashiko@kernel.org
 To: matttbe@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Mon, 23 Nov 2026 06:32:34 +0000
-Message-ID: <179541555434.3133.14142600677566167518@kernel.org>
-In-Reply-To: <20261121-mptcp-cmason-fixes-v2-38-00327fd1de1f@kernel.org>
-References: <20261121-mptcp-cmason-fixes-v2-38-00327fd1de1f@kernel.org>
-X-sashiko-severity: High
+Date: Mon, 23 Nov 2026 06:32:35 +0000
+Message-ID: <179541555542.3133.1334953870830856164@kernel.org>
+In-Reply-To: <20261121-mptcp-cmason-fixes-v2-39-00327fd1de1f@kernel.org>
+References: <20261121-mptcp-cmason-fixes-v2-39-00327fd1de1f@kernel.org>
+X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -65,7 +65,7 @@ MIME-Version: 1.0
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue(s) to consider.
 
-Critical: 0 · High: 1 · Medium: 0 · Low: 0
+Critical: 0 · High: 0 · Medium: 1 · Low: 0
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -73,93 +73,106 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [High] The fix holds only while the subflow MSS never drops below the
-  pre-fallback MSS.
+- [Medium] The DSS reservation only lasts while
+  subflow->send_infinite_map is set, and that flag is cleared before the…
 
 --
 
-mptcp: send the infinite map in a single segment
+mptcp: keep room for infinite map after fallback
 
-This commit caps the skb that carries the MPTCP infinite mapping at one
-MSS in mptcp_sendmsg_frag(), using the MSS computed before the fallback.
-Before this change, the skb could be sized with the pre-fallback size
-goal. After the fallback, its segments still carried a DSS option and
-could exceed the MTU, which stalled the transfer.
+After a fallback, mptcp_established_options() now keeps reserving room for
+the DSS option when the MSS is computed (skb == NULL), as long as
+subflow->send_infinite_map is set. Without this, the skb carrying the
+infinite mapping could be sized without DSS room. Its segments would then
+be bigger than the MTU and the connection would stall.
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index d16269d27b1da..e2fb81f52df2e 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1483,6 +1483,12 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
->  	info->mss_now = tcp_send_mss(ssk, &info->size_goal, info->flags);
->  	copy = info->size_goal;
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 736e55532296b..6b1a3994fb494 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -891,9 +891,11 @@ int mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+>  	opts->suboptions = 0;
 >  
-> +	/* After the fallback, the MSS no longer includes the DSS option of the
-> +	 * infinite mapping: send it in a single segment.
-> +	 */
-> +	if (unlikely(mptcp_subflow_ctx(ssk)->send_infinite_map))
-> +		copy = info->mss_now;
+>  	/* Force later mptcp_write_options(), but do not use any actual
+> -	 * option space.
+> +	 * option space, except for an infinite mapping still to be sent.
+>  	 */
+> -	if (unlikely(__mptcp_check_fallback(msk) && !mptcp_check_infinite_map(skb)))
+> +	if (unlikely(__mptcp_check_fallback(msk) &&
+> +		     !mptcp_check_infinite_map(skb) &&
+> +		     (skb || !subflow->send_infinite_map)))
+>  		return 0;
 
-[Severity: High]
+[Severity: Medium]
+Is send_infinite_map the right flag to base this reservation on? The flag
+seems to be cleared before the infinite-map skb is ever sent, while
+mptcp_sendmsg_frag() is still building it:
 
-Does this keep the infinite mapping in a single segment only while the
-subflow MSS stays at or above the pre-fallback info->mss_now?
+net/mptcp/protocol.c:mptcp_update_infinite_map() {
+    ...
+	mpext->infinite_map = 1;
+	mpext->data_len = 0;
 
-Right after this skb is queued, mptcp_update_infinite_map() clears the
-flag:
+	if (!mptcp_try_fallback(ssk, MPTCP_MIB_INFINITEMAPTX)) {
+		...
+	}
 
 	mptcp_subflow_ctx(ssk)->send_infinite_map = 0;
+}
 
-After that, MSS computations call mptcp_established_options() with
-skb == NULL, and it reserves no option space:
+After that, tcp_write_xmit(), __tcp_retransmit_skb() and
+tcp_write_wakeup() all call tcp_current_mss(). That goes through
+tcp_established_options(sk, NULL, ...), and this check now returns 0
+MPTCP option bytes.
 
-	if (unlikely(__mptcp_check_fallback(msk) && !mptcp_check_infinite_map(skb)))
-		return 0;
+However, __tcp_transmit_skb() on the same skb still sees
+mptcp_check_infinite_map(skb) == true. It then emits the 24 or 28 byte
+DSS.
 
-The queued skb still has mpext->infinite_map = 1, though. It is still
-sent with a DSS option, about 28 bytes with ack64.
+The single-segment cap from "mptcp: send the infinite map in a single
+segment" (copy = mss_now) seems to hold only if nothing changes between
+building the skb and its last (re)transmission. Can either of these cases
+still produce segments bigger than the MTU?
 
-The PMTU can drop while this skb is unsent or unacked. One example is an
-ICMP Frag-Needed for this very segment, which can be the first full-size
-segment when MP_FAIL arrives before any data. In that case, would the
-retransmission path split the skb with an MSS that has no room for the
-DSS?
+(A) The PMTU drops while the infinite-map skb is not yet acked. Then
+tcp_current_mss()->tcp_sync_mss() returns an MSS with no DSS room, and
+__tcp_retransmit_skb() splits the skb at that cur_mss:
 
-tcp_v4_mtu_reduced()
-  tcp_sync_mss()
-  tcp_simple_retransmit()
-...
 __tcp_retransmit_skb()
-  cur_mss = tcp_current_mss(sk);   /* no DSS room after the fallback */
-  tcp_fragment(sk, TCP_FRAG_IN_RTX_QUEUE, skb, len, cur_mss, GFP_ATOMIC)
-    mptcp_skb_ext_copy(buff, skb); /* infinite_map copied to each piece */
+    cur_mss = tcp_current_mss(sk);
+    ...
+    tcp_fragment(sk, TCP_FRAG_IN_RTX_QUEUE, skb, len, cur_mss, GFP_ATOMIC)
+        mptcp_skb_ext_copy(buff, skb);
 
-tso_fragment() copies the extension in the same way. Each piece is then
-cur_mss plus the DSS option, which is larger than the new PMTU.
+Both fragments keep the infinite_map ext and emit the DSS, so each one is
+the new MSS plus the DSS. If no split happens, the skb is still sized for
+the old MTU.
 
-With DF set, ip_fragment() drops the piece. The local ICMP carries the
-same MTU, so icsk_pmtu_cookie is not lowered.
+Either way, DF is set, so IP drops the packets. The local frag-needed
+reports the same MTU, so the MSS never shrinks. The subflow then keeps
+retransmitting oversized packets until it times out.
 
-Would every RTO retransmission be rebuilt the same way, so that the
-connection stalls until tcp_retries2 is reached?
+(B) Timestamps are off, and SACK or DSACK blocks appear between building
+the skb and sending or resending it.
 
-A smaller overshoot also looks possible when TCP timestamps are not
-negotiated. The skb is sized for the DSS option without SACK. If SACK
-blocks appear later, the post-fallback MSS reserves room only for the
-SACK blocks. The DSS option plus SACK blocks could then put the segment
-4 to 12 bytes over the MTU.
+At build time the 28 byte DSS is counted and there is no SACK, so
+skb->len = mss_cache - 28. At transmit time only the 12 byte SACK is
+counted, so mss_now = mss_cache - 12, which is larger than skb->len, and
+no split happens.
 
-The later patch "mptcp: keep room for infinite map after fallback"
-reserves DSS space only while send_infinite_map is set. That is before
-this skb is created, so the gap seems to remain at the end of the series.
+The real options are 28 + 12 = 40 bytes, so the segment is 12 bytes over
+the MTU. This repeats as long as the SACK state lasts, for example while
+the skb is waiting on cwnd or rwnd, or is being retransmitted.
 
-Would it be more robust to keep the DSS space reserved in the MSS
-calculation (skb == NULL) until the infinite-map skb has been acked? That
-would also make this cap unnecessary.
+Both cases look like the same stall that the commit message says is fixed:
 
->  	skb = tcp_write_queue_tail(ssk);
->  	if (skb && copy > skb->len) {
->  		/* Limit the write to the size available in the
+  "Keep room for the DSS option while the infinite mapping is still to be
+  sent, when computing the MSS."
+
+Should the reservation last as long as an infinite-map skb is still
+unacked, instead of ending once that skb has been built? The code at the
+end of the series appears to use the same logic, so a later patch does
+not seem to address this.
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f%40kernel.org
