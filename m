@@ -1,55 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795423605;
-	b=Wp0k0VImj/J+DaVY77MA2tzBkydtsB2VNo0mKVW9Bt0Ezws7HPjiBVjN8DcGhH0ADRSR
-	 RvCCfVQIA6c9fu8GgmZg4a/0sTuAJg/YRzqRq3HwpQZRVDP65+fzAwwplaN8+QdZVKNST
-	 Afv+K3JSH1xF1mLLkXXHyzBTMX0gKtojIwid3B0SFMR/+g9iqxqwGJ9vssXo0LxTe2ug7
-	 MVauFLv6tp/uueChLKr5Ko711J+k+fMvdaJNsIF/7ZvrEWK43BmQqL+gQr///4X3srNTP
-	 VjkJjMjFOHoJGYmjOCQLU4NBr7cfKR14NaGS26uValhVaQqk1+8PfvFjiqe6AM07yCg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795423605;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=ubDtjEZ2KQBuK/eWXuSlRLImUDucHugez+BTOkcblEI=;
-	b=vP9MKWRy1u0h2/pxg9zeaDqFuuAJEKCNzQ0AorYgSDqnUXP2ih7oNYeY3F3k7w6fF5rv
-	 zAJXkgdBB4u8z90BjJ2TDHrET4EIDbaGvuUmaaIRqk+jFQU768De0B5C5anLkD76lS230
-	 gE0bdAokDOD2u/fvnzVZtGlBrnpi7Xta2h/rIydp/WdbsfgUJbHLOfw64h0m+Ztot9fDK
-	 +wKGojRcr7Gm+UqT/hgjWKT5qbXCaSJJsXVpPTmRv49/4Vvb2nlhYXS0ahwZfihQYv67U
-	 Z0v8r9xU2MdPMTBa4tm8audNl8PPhlzq1QmigCUSo/Ied4qVytqykbYsLXT9O27mCLQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Gw1ns0qB;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.54
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795423739;
+	b=3uVVZ024UADzN6+SBGUGfal8QWdF38BiZuyjckeqBJ66T6REMIT/d5+wuSXnUdfTRuLn
+	 4Pofn1NwQu+X/8QoQvBYdfGZu4lvQcVzBZVomfyJbavrz+l24pE0PfpTNk3A5VpP6YNO8
+	 33HVuUkohyR5JQegBVGpXgu4knudoITcIXvWHGaYDiI8uoMr65O75B47m7M6zg+KEOWCp
+	 NcjMwkNHut8Sc3Tz3hqPBXVeQ72fYmjqsmbaj+xGC7j7lgvSrE8+uQ0eyJ7VRGTU04LjA
+	 DfH9c2xNfhlSjGia+EmUWDm55baAoY/x2VMrlE90ib2caujS+j/SIBuDVndOCcupnNw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795423739;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 X-ZohoMailClient;
+	bh=whAkf6Qv7gIpDeRv0NIG64Kqe6Qjtq1vilssO6ivlfw=;
+	b=XDmV/pvJnpIJqXxjOTeShznB6FTsnMsR6lA8z9dvuaGoHsHz6dvyHamOIVgaJZOWF80U
+	 nCUIrUwO10TxZ3IX5YJTF5ybXmEXH+s/zo1DiGkqhdUE4Sq6JLUW7+lejJOlQYHRKsqJt
+	 6ulI6oUFRojbymUdLI/b3F1fV1e5l6tUajG+IuCATOArZgrtRYekaO5fo25ZAOKBaTM6F
+	 zPL65rOxBJwqJjKc9GgrlbsjXdhumxBqdrc2glgW8LZFeZlvD9VhfHOyfW1M3zaPmaQ8W
+	 yjFBRZoZq68jmgvLLMWAalDJydCvBMlPScNSH8j5gqNm8o0qIYlxnftiqrE6M6exBXQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=mpiricsoftware.com;
+	spf=pass smtp.mailfrom=mpiricsoftware.com;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.54
+Received: from sender5-of-o54.zoho.com (sender5-of-o54.zoho.com [165.173.182.54])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E51D606A31A
-	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 08:46:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Gw1ns0qB
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3853A1F000C0;
-	Mon, 23 Nov 2026 08:46:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795423605;
-	bh=ubDtjEZ2KQBuK/eWXuSlRLImUDucHugez+BTOkcblEI=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=Gw1ns0qBQ5LLpHvYVSU5cKOvgyNQc63rbMs/QIpDq39YLWwVkny2p+0tOK75hDAIC
-	 vZIkIP11XthwWiPmwcGbZ6WIpKHnb4ZesvfAmeEOtVOCdHfxuXkcv01lkyglO7u4mr
-	 cPGHgbFRvGQhKPN1bW/bjITLTRyvjmO0boE626oJG806WXpP8eAf3ooIu8EulbDV8/
-	 lOT5gDOrKdrHU0Sc+oWiWh8TkjIdXkFANGMV/zwyYHI8txufeK+o6BTw4Ck35qfgFm
-	 445YbWTAegS27waEVmRpB5GzF5zFiWTfUEQ0oVD5aV6gtwtGOoipt4rres/mEsQH6q
-	 nVRQuYthkbujQ==
-Message-ID: <sashiko-outbox-228911@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v8 4/7] mptcp: add MSG_ZEROCOPY support
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <3f30ee2209176e73f716ad379bb6385145b05fa8.1795421388.git.tanggeliang@kylinos.cn>
-References: <cover.1795421388.git.tanggeliang@kylinos.cn>
- <3f30ee2209176e73f716ad379bb6385145b05fa8.1795421388.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 23 Nov 2026 08:46:44 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D5A606A31E
+	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 08:48:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 30D5A606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
+ARC-Seal: i=1; a=rsa-sha256; t=1795423734; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=dV07CxvQ3B26jfhJq4X/S7Jr+I07jgiwD5pEMxfCP0AjkBBcDYpusxib+3UIar0ULMSx3Ae5D3awyTYaXH/fvuLi8H+HyEHc6kGcb3LQQDCAUZZx1fP1C8Pv0bhbOs88Y8hkrDUhpskdc4KHJszD/XXb1oAqpEkG78zZAgpeLj4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1795423734; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=whAkf6Qv7gIpDeRv0NIG64Kqe6Qjtq1vilssO6ivlfw=; 
+	b=GJRJWCTSrjwp88sUhXs3RENn+diHu1hkisfWE1VhQ+DW2Cqtmmr7A0JV9D2tNSaeYGpHYIldhR6io6DvIqcBq5XJYnsocHJR3oDuZ1uGs77+fRQVV6LRy5+dKcIrBc8X+pJYUhEkKjW05qOMvBmo1LvibMw9UGe/7LIWjlM4fYk=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
+	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
+DKIM-Signature: a=rsa-sha256; b=B52WGgwzJi0bo9MyuywaIE9ptLVr5Pxd2mQg+s95n/+jBJciGTJEPtKuZ0vr63S+mw2ciUjWBSW1pyQYRYzojCwjLEDDj27ckWTveEaMGFmLDpw9/31oZcXjSTdKmXocp6m80NjwAVC4FK4WCEoHHWMlFKF5bn9+eCdlPFUyyjA=; c=relaxed/relaxed; s=mpiric; d=mpiricsoftware.com; v=1; bh=whAkf6Qv7gIpDeRv0NIG64Kqe6Qjtq1vilssO6ivlfw=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1795423726558420.823498279158;
+	Mon, 23 Nov 2026 00:48:46 -0800 (PST)
+From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+To: mptcp@lists.linux.dev
+Cc: shardul.b@mpiricsoftware.com,
+	janak@mpiric.us,
+	kalpanjani009@gmail.com,
+	Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Subject: [PATCH mptcp-next v7] mptcp: bpf: fix NULL deref and UAF in bpf_mptcp_sock_from_subflow()
+Date: Mon, 23 Nov 2026 14:18:36 +0530
+Message-ID: <20261123084836.1704274-1-kalpan.jani@mpiricsoftware.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -58,226 +62,266 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Thank you for your contribution! Sashiko AI review found 4 potential
-issues to consider:
-- [High] mptcp: off-by-one U16_MAX check in
-  mptcp_sendmsg_zerocopy_iter()
-- [Medium] mptcp: unbalanced sk_wmem_schedule() in
-  mptcp_sendmsg_zerocopy_iter()
-- [Medium] mptcp: missing DEFER_CONNECT check for MSG_ZEROCOPY in
-  mptcp_sendmsg()
-- [Medium] mptcp: missing zerocopy notification on copy fallback in
-  mptcp_sendmsg()
---
+bpf_mptcp_sock_from_subflow() is reachable from BPF programs via
+bpf_skc_to_mptcp_sock() on an arbitrary socket, without the subflow
+socket lock held. It assumes sk_is_mptcp(sk) implies a valid subflow
+context whose ->conn points to a live parent mptcp_sock. That invariant
+does not hold in three windows:
 
-commit 6f18d9c0894cba580b4859b23fbe02de7c4fe368
-Author: Geliang Tang <geliang@kernel.org>
+- Fallback: subflow_ulp_fallback() clears icsk_ulp_data via
+  rcu_assign_pointer(..., NULL) before clearing tcp_sk(sk)->is_mptcp, so a
+  concurrent reader can observe is_mptcp == 1 with a NULL context.
 
-mptcp: add MSG_ZEROCOPY support
+- Init: subflow_ulp_init() sets is_mptcp = 1 while ->conn is still NULL;
+  ->conn is only assigned later in subflow_syn_recv_sock() or
+  mptcp_subflow_create_socket(). On CONFIG_DEBUG_NET, mptcp_sk()
+  dereferences its argument in a WARN_ON(), so mptcp_sk(NULL) faults.
 
-This commit adds MSG_ZEROCOPY support to MPTCP sockets by pinning user pages
-into mptcp_data_frag entries and tracking completion across both the MPTCP
-retransmission queue and subflow skbs.
+- Teardown: subflow_ulp_release() drops the subflow-owned parent
+  reference without clearing ->conn. A lockless reader can therefore
+  access a parent socket after its reference has been dropped.
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 84848cb0a5e9c..9cd3e12d5546c 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1186,9 +1186,11 @@ static bool mptcp_frag_can_collapse_to(const struc=
-t mptcp_sock *msk,
->  		df->data_seq + df->data_len =3D=3D msk->write_seq;
->  }
-> =20
-> -static void dfrag_uncharge(struct sock *sk, int len)
-> +static void dfrag_uncharge(struct sock *sk, int len,
-> +			   struct mptcp_data_frag *dfrag)
->  {
-> -	sk_mem_uncharge(sk, len);
-> +	if (!dfrag->ubuf)
-> +		sk_mem_uncharge(sk, len);
->  	sk_wmem_queued_add(sk, -len);
->  }
+Load the context with rcu_dereference_check() and the parent socket
+with smp_load_acquire(). Publish ->conn with smp_store_release() in
+the MP_CAPABLE, MP_JOIN and outgoing subflow paths. Clear ->conn
+with a release store before dropping the subflow-owned reference.
 
-[ ... ]
+Give the parent msk RCU-grace lifetime by setting SOCK_RCU_FREE in
+the shared __mptcp_init_sock(), covering both active and passive
+paths, and dropping the reset in mptcp_sk_clone_init(). This ensures
+a reader that obtains the parent under the applicable RCU protection
+does not access freed memory.
 
-> @@ -2040,22 +2065,110 @@ static void mptcp_rps_record_subflows(const stru=
-ct mptcp_sock *msk)
->  	}
->  }
-> =20
-> +static ssize_t mptcp_sendmsg_zerocopy_iter(struct sock *sk, struct msghd=
-r *msg,
-> +					   struct ubuf_info *ubuf,
-> +					   u32 copy_limit)
-> +{
-> +	struct mptcp_sock *msk =3D mptcp_sk(sk);
-> +	struct mptcp_data_frag *dfrag;
-> +	struct page *pages[1] =3D {};
-> +	size_t pg_off =3D 0;
-> +	ssize_t pg_len;
-> +
-> +	pg_len =3D iov_iter_get_pages2(&msg->msg_iter, pages,
-> +				     copy_limit, 1, &pg_off);
-> +	if (pg_len < 0)
-> +		return pg_len;
-> +	/* pg_len =3D=3D 0 means the iterator is exhausted */
-> +	if (pg_len =3D=3D 0)
-> +		return -EFAULT;
-> +
-> +	if (pg_len > U16_MAX) {
-> +		iov_iter_revert(&msg->msg_iter, pg_len - U16_MAX);
-> +		pg_len =3D U16_MAX;
-> +	}
-> +
-> +	if (pg_off > U16_MAX) {
-> +		iov_iter_revert(&msg->msg_iter, pg_len);
-> +		put_page(pages[0]);
-> +		return -EFAULT;
-> +	}
-> +
-> +	if (pg_off + pg_len > U16_MAX) {
-> +		size_t len =3D U16_MAX - pg_off;
-> +
-> +		iov_iter_revert(&msg->msg_iter, pg_len - len);
-> +		pg_len =3D len;
-> +		if (WARN_ON_ONCE(!pg_len)) {
-> +			put_page(pages[0]);
-> +			return -EFAULT;
-> +		}
-> +	}
+Keep bpf_skc_to_mptcp_sock() available to non-sleepable tracing
+programs for compatibility, while rejecting sleepable tracing
+programs because classic RCU does not protect the parent socket
+through sleepable execution.
 
-[Severity: High]
-Does pg_off + pg_len > U16_MAX trigger WARN_ON_ONCE(!pg_len) and return
--EFAULT whenever pg_off reaches U16_MAX on a kernel with PAGE_SIZE >=3D 64 =
-KiB?
+Fixes: 3bc253c2e652 ("bpf: Add bpf_skc_to_mptcp_sock_proto")
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/622
+Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+---
+Changes since v6:
+- Add needs_rcu metadata to struct bpf_func_proto to identify helpers requiring RCU protection.
+- Validate RCU protection in the verifier for RCU-dependent helpers called from sleepable BPF contexts.
+- Mark bpf_skc_to_mptcp_sock_proto as requiring RCU protection.
+- Set SOCK_RCU_FREE on subflow sockets in subflow_create_ctx() to defer socket destruction until after an RCU grace period.
 
-On a 64 KiB page kernel, sending a 64 KiB page-aligned buffer caps the first
-dfrag at U16_MAX (65535) bytes and leaves msg->msg_iter at page offset 65535
-with 1 byte left.  On the next iteration, pg_off is U16_MAX, so pg_off >
-U16_MAX is false and len =3D U16_MAX - pg_off is 0.
+v6: https://lore.kernel.org/all/20261118084011.4051683-1-kalpan.jani@mpiricsoftware.com/
+---
+ include/linux/bpf.h      |  1 +
+ kernel/bpf/verifier.c    |  8 ++++++++
+ kernel/trace/bpf_trace.c |  2 +-
+ net/core/filter.c        |  1 +
+ net/mptcp/bpf.c          | 15 +++++++++++++--
+ net/mptcp/protocol.c     |  6 +++++-
+ net/mptcp/subflow.c      | 31 ++++++++++++++++++++++++-------
+ 7 files changed, 53 insertions(+), 11 deletions(-)
 
-Since dfrag->offset and dfrag->data_len are u16 and partial-ACK advancement=
- in
-__mptcp_clean_una() only adds delta < dfrag->data_len, capping pg_off + pg_=
-len
-at U16_MAX + 1 avoids overflowing either field while allowing the final byte
-at offset 65535.
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index cd191c5fdb0a..8cc3323ec200 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -963,6 +963,7 @@ struct bpf_func_proto {
+ 	};
+ 	int *ret_btf_id; /* return value btf_id */
+ 	bool (*allowed)(const struct bpf_prog *prog);
++	bool needs_rcu;
+ };
+ 
+ /* bpf_context is intentionally undefined structure. Pointer to bpf_context is
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 7fb88e1cd7c4..11527de6af8e 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -10333,6 +10333,14 @@ static int check_helper_call(struct bpf_verifier_env *env, struct bpf_insn *insn
+ 		return -EINVAL;
+ 	}
+ 
++	if (fn->needs_rcu && in_sleepable(env) &&
++	    !env->cur_state->active_rcu_locks) {
++		verbose(env,
++			"helper %s#%d requires bpf_rcu_read_lock() in sleepable context\n",
++			func_id_name(func_id), func_id);
++		return -EINVAL;
++	}
++
+ 	/* Track non-sleepable context for helpers. */
+ 	if (!in_sleepable_context(env))
+ 		env->insn_aux_data[insn_idx].non_sleepable = true;
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index a02bd258677e..ea489edbecec 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1715,7 +1715,7 @@ tracing_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 	case BPF_FUNC_skc_to_unix_sock:
+ 		return &bpf_skc_to_unix_sock_proto;
+ 	case BPF_FUNC_skc_to_mptcp_sock:
+-		return &bpf_skc_to_mptcp_sock_proto;
++		return prog->sleepable ? NULL : &bpf_skc_to_mptcp_sock_proto;
+ 	case BPF_FUNC_sk_storage_get:
+ 		return &bpf_sk_storage_get_tracing_proto;
+ 	case BPF_FUNC_sk_storage_delete:
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 80439767e0ee..8dfb83d72503 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -12091,6 +12091,7 @@ const struct bpf_func_proto bpf_skc_to_mptcp_sock_proto = {
+ 	.ret_type	= RET_PTR_TO_BTF_ID_OR_NULL,
+ 	.arg1_type	= ARG_PTR_TO_SOCK_COMMON,
+ 	.ret_btf_id	= &btf_sock_ids[BTF_SOCK_TYPE_MPTCP],
++	.needs_rcu	= true,
+ };
+ 
+ BPF_CALL_1(bpf_sock_from_file, struct file *, file)
+diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+index 08bb037f0951..f43f9a2acc3f 100644
+--- a/net/mptcp/bpf.c
++++ b/net/mptcp/bpf.c
+@@ -193,8 +193,19 @@ static struct bpf_struct_ops bpf_mptcp_sched_ops = {
+ 
+ struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *sk)
+ {
+-	if (sk && sk_fullsock(sk) && sk_is_tcp(sk) && sk_is_mptcp(sk))
+-		return mptcp_sk(mptcp_subflow_ctx(sk)->conn);
++	struct mptcp_subflow_context *ctx;
++	struct sock *conn;
++
++	if (sk && sk_fullsock(sk) && sk_is_tcp(sk) && sk_is_mptcp(sk)) {
++		ctx = rcu_dereference_check(inet_csk(sk)->icsk_ulp_data,
++					    lockdep_sock_is_held(sk));
++		if (ctx) {
++			/* Pair with release stores publishing or clearing ctx->conn. */
++			conn = smp_load_acquire(&ctx->conn);
++			if (conn)
++				return mptcp_sk(conn);
++		}
++	}
+ 
+ 	return NULL;
+ }
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index a4f7e99b30db..fa85ad0dc5a8 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3177,6 +3177,11 @@ static void __mptcp_init_sock(struct sock *sk)
+ 	mptcp_pm_data_init(msk);
+ 	spin_lock_init(&msk->fallback_lock);
+ 
++	/* the returned parent msk may be handed to lockless readers
++	 * (bpf_skc_to_mptcp_sock()); free it after an RCU grace period
++	 */
++	sock_set_flag(sk, SOCK_RCU_FREE);
++
+ 	/* re-use the csk retrans timer for MPTCP-level retrans */
+ 	timer_setup(&sk->mptcp_retransmit_timer, mptcp_retransmit_timer, 0);
+ 	timer_setup(&msk->sk.mptcp_tout_timer, mptcp_tout_timer, 0);
+@@ -3712,7 +3717,6 @@ struct sock *mptcp_sk_clone_init(const struct sock *sk,
+ 	/* passive msk is created after the first/MPC subflow */
+ 	msk->subflow_id = 2;
+ 
+-	sock_reset_flag(nsk, SOCK_RCU_FREE);
+ 	security_inet_csk_clone(nsk, req);
+ 
+ 	/* this can't race with mptcp_close(), as the msk is
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 8e386899ceb9..54ac450af6f6 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -780,6 +780,7 @@ static void subflow_ulp_fallback(struct sock *sk,
+ void mptcp_subflow_drop_ctx(struct sock *ssk)
+ {
+ 	struct mptcp_subflow_context *ctx = mptcp_subflow_ctx(ssk);
++	struct sock *conn;
+ 
+ 	if (!ctx)
+ 		return;
+@@ -787,8 +788,12 @@ void mptcp_subflow_drop_ctx(struct sock *ssk)
+ 	list_del(&mptcp_subflow_ctx(ssk)->node);
+ 	if (inet_csk(ssk)->icsk_ulp_ops) {
+ 		subflow_ulp_fallback(ssk, ctx);
+-		if (ctx->conn)
+-			sock_put(ctx->conn);
++		conn = ctx->conn;
++		if (conn) {
++			/* Clear the pointer before dropping its reference. */
++			smp_store_release(&ctx->conn, NULL);
++			sock_put(conn);
++		}
+ 	}
+ 
+ 	kfree_rcu(ctx, rcu);
+@@ -861,6 +866,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+ 
+ 	if (child && *own_req) {
+ 		struct mptcp_subflow_context *ctx = mptcp_subflow_ctx(child);
++		struct sock *conn;
+ 
+ 		tcp_rsk(req)->drop_req = false;
+ 
+@@ -880,12 +886,14 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+ 		ctx->setsockopt_seq = listener->setsockopt_seq;
+ 
+ 		if (ctx->mp_capable) {
+-			ctx->conn = mptcp_sk_clone_init(listener->conn, &mp_opt, child, req);
+-			if (!ctx->conn)
++			conn = mptcp_sk_clone_init(listener->conn, &mp_opt, child, req);
++			if (!conn)
+ 				goto fallback;
+ 
++			/* Publish the initialized parent socket to lockless readers. */
++			smp_store_release(&ctx->conn, conn);
+ 			ctx->subflow_id = 1;
+-			owner = mptcp_sk(ctx->conn);
++			owner = mptcp_sk(conn);
+ 
+ 			if (mp_opt.deny_join_id0)
+ 				WRITE_ONCE(owner->pm.remote_deny_join_id0, true);
+@@ -920,7 +928,8 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+ 
+ 			/* move the msk reference ownership to the subflow */
+ 			subflow_req->msk = NULL;
+-			ctx->conn = (struct sock *)owner;
++			/* Publish the parent socket to lockless readers. */
++			smp_store_release(&ctx->conn, (struct sock *)owner);
+ 
+ 			if (subflow_use_different_sport(owner, sk)) {
+ 				pr_debug("ack inet_sport=%d %d\n",
+@@ -1827,7 +1836,8 @@ int mptcp_subflow_create_socket(struct sock *sk, unsigned short family,
+ 
+ 	*new_sock = sf;
+ 	sock_hold(sk);
+-	subflow->conn = sk;
++	/* Publish the parent socket after taking its reference. */
++	smp_store_release(&subflow->conn, sk);
+ 	mptcp_subflow_ops_override(sf->sk);
+ 
+ 	return 0;
+@@ -1848,6 +1858,8 @@ static struct mptcp_subflow_context *subflow_create_ctx(struct sock *sk,
+ 	if (!ctx)
+ 		return NULL;
+ 
++	/* BPF readers may access the subflow socket under RCU. */
++	sock_set_flag(sk, SOCK_RCU_FREE);
+ 	rcu_assign_pointer(icsk->icsk_ulp_data, ctx);
+ 	INIT_LIST_HEAD(&ctx->node);
+ 	INIT_LIST_HEAD(&ctx->delegated_node);
+@@ -2024,6 +2036,11 @@ static void subflow_ulp_release(struct sock *ssk)
+ 		if (!release && !test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW,
+ 						  &mptcp_sk(sk)->flags))
+ 			mptcp_schedule_work(sk);
++
++		/* hide the parent from lockless readers (e.g. BPF) before
++		 * dropping the subflow-owned reference
++		 */
++		smp_store_release(&ctx->conn, NULL);
+ 		sock_put(sk);
+ 	}
+ 
+-- 
+2.43.0
 
-> +
-> +	dfrag =3D kzalloc_obj(*dfrag, GFP_KERNEL_ACCOUNT);
-> +	if (!dfrag) {
-> +		iov_iter_revert(&msg->msg_iter, pg_len);
-> +		put_page(pages[0]);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	if (!sk_wmem_schedule(sk, pg_len + sizeof(*dfrag))) {
-> +		kfree(dfrag);
-> +		iov_iter_revert(&msg->msg_iter, pg_len);
-> +		put_page(pages[0]);
-> +		return -EAGAIN;
-> +	}
-
-[Severity: Medium]
-Should mptcp_sendmsg_zerocopy_iter() skip sk_wmem_schedule() here, the same
-way mptcp_sendmsg_frag() skips it for zerocopy dfrags?
-
-Calling sk_wmem_schedule(sk, pg_len + sizeof(*dfrag)) raises
-sk->sk_forward_alloc and charges protocol memory, but this path never deduc=
-ts
-it with sk_mem_charge() or sk_forward_alloc_add(), and dfrag_uncharge() ski=
-ps
-sk_mem_uncharge() when dfrag->ubuf is set.  The forward-allocated pages stay
-pinned on sk until the socket closes, and zerocopy sends can fail with -EAG=
-AIN
-under socket memory pressure even though zerocopy pages bypass socket memory
-accounting.
-
-[ ... ]
-
-> @@ -2062,15 +2175,27 @@ static int mptcp_sendmsg(struct sock *sk, struct =
-msghdr *msg, size_t len)
-> =20
->  	/* silently ignore everything else */
->  	msg->msg_flags &=3D MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL |
-> -			  MSG_FASTOPEN | MSG_EOR;
-> +			  MSG_FASTOPEN | MSG_EOR | MSG_ZEROCOPY;
-> =20
->  	lock_sock(sk);
-> =20
->  	mptcp_rps_record_subflows(msk);
-> =20
-> +	if (msg->msg_flags & MSG_FASTOPEN || !sock_flag(sk, SOCK_ZEROCOPY))
-> +		msg->msg_flags &=3D ~MSG_ZEROCOPY;
-> +
-> +	if ((msg->msg_flags & MSG_ZEROCOPY) && len) {
-> +		ubuf =3D msg_zerocopy_realloc(sk, len, NULL, false);
-> +		if (!ubuf) {
-> +			ret =3D -ENOBUFS;
-> +			goto do_error;
-> +		}
-> +		zc =3D true;
-> +	}
-> +
->  	if (unlikely(inet_test_bit(DEFER_CONNECT, sk) ||
->  		     msg->msg_flags & MSG_FASTOPEN)) {
-
-[Severity: Medium]
-Does the MSG_ZEROCOPY downgrade check also need to test
-inet_test_bit(DEFER_CONNECT, sk)?
-
-When TCP_FASTOPEN_CONNECT sets DEFER_CONNECT and sendmsg() is called with
-MSG_ZEROCOPY (without MSG_FASTOPEN), mptcp_sendmsg() allocates ubuf and then
-enters mptcp_sendmsg_fastopen(), which passes NULL for uarg to
-tcp_sendmsg_fastopen():
-
-net/mptcp/protocol.c:mptcp_sendmsg_fastopen() {
-    ...
-	ret =3D tcp_sendmsg_fastopen(ssk, msg, copied_syn, len, NULL);
-    ...
-}
-
-The SYN payload is copied without taking a reference on ubuf or clearing
-ubuf->zerocopy, so when mptcp_sendmsg() jumps to out: and calls
-net_zcopy_put(ubuf), it immediately queues a zerocopy completion notificati=
-on
-while the SYN data is still in flight.
-
-[ ... ]
-
-> @@ -2094,6 +2207,25 @@ static int mptcp_sendmsg(struct sock *sk, struct m=
-sghdr *msg, size_t len)
->  		if (!copy_limit)
->  			goto wait_for_memory;
-> =20
-> +		if (zc) {
-> +			ret =3D mptcp_sendmsg_zerocopy_iter(sk, msg, ubuf,
-> +							  copy_limit);
-> +			if (ret =3D=3D -EAGAIN || ret =3D=3D -ENOMEM)
-> +				goto wait_for_memory;
-> +			if (ret =3D=3D -EFAULT) {
-> +				if (copied)
-> +					goto do_error;
-> +				net_zcopy_put_abort(ubuf, true);
-> +				zc =3D false;
-> +				ubuf =3D NULL;
-
-[Severity: Medium]
-Does calling net_zcopy_put_abort() before falling back to the regular copy
-path suppress the required MSG_ZEROCOPY completion notification when the co=
-py
-succeeds?
-
-net_zcopy_put_abort() decrements sk->sk_zckey and zeroes uarg->len, so when
-the loop falls through to do_copy_data_nocache() and returns a positive byte
-count, no SO_EE_ORIGIN_ZEROCOPY notification (with SO_EE_CODE_ZEROCOPY_COPI=
-ED)
-is queued on sk->sk_error_queue.  Applications waiting for a completion per
-successful MSG_ZEROCOPY sendmsg() call will lose track of sk_zckey or hang =
-on
-MSG_ERRQUEUE.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1795421388.gi=
-t.tanggeliang@kylinos.cn?part=3D4
