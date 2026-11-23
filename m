@@ -1,59 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.54
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795423739;
-	b=3uVVZ024UADzN6+SBGUGfal8QWdF38BiZuyjckeqBJ66T6REMIT/d5+wuSXnUdfTRuLn
-	 4Pofn1NwQu+X/8QoQvBYdfGZu4lvQcVzBZVomfyJbavrz+l24pE0PfpTNk3A5VpP6YNO8
-	 33HVuUkohyR5JQegBVGpXgu4knudoITcIXvWHGaYDiI8uoMr65O75B47m7M6zg+KEOWCp
-	 NcjMwkNHut8Sc3Tz3hqPBXVeQ72fYmjqsmbaj+xGC7j7lgvSrE8+uQ0eyJ7VRGTU04LjA
-	 DfH9c2xNfhlSjGia+EmUWDm55baAoY/x2VMrlE90ib2caujS+j/SIBuDVndOCcupnNw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795423739;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding:
-	 X-ZohoMailClient;
-	bh=whAkf6Qv7gIpDeRv0NIG64Kqe6Qjtq1vilssO6ivlfw=;
-	b=XDmV/pvJnpIJqXxjOTeShznB6FTsnMsR6lA8z9dvuaGoHsHz6dvyHamOIVgaJZOWF80U
-	 nCUIrUwO10TxZ3IX5YJTF5ybXmEXH+s/zo1DiGkqhdUE4Sq6JLUW7+lejJOlQYHRKsqJt
-	 6ulI6oUFRojbymUdLI/b3F1fV1e5l6tUajG+IuCATOArZgrtRYekaO5fo25ZAOKBaTM6F
-	 zPL65rOxBJwqJjKc9GgrlbsjXdhumxBqdrc2glgW8LZFeZlvD9VhfHOyfW1M3zaPmaQ8W
-	 yjFBRZoZq68jmgvLLMWAalDJydCvBMlPScNSH8j5gqNm8o0qIYlxnftiqrE6M6exBXQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=mpiricsoftware.com;
-	spf=pass smtp.mailfrom=mpiricsoftware.com;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.54
-Received: from sender5-of-o54.zoho.com (sender5-of-o54.zoho.com [165.173.182.54])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795426212;
+	b=rYwQnNx6WYgj63Lm0J7b04+kO/x8N9wmANSNYCtg8ZzExCM6jfXgv6IXe6S0QXbfEZG3
+	 spjAFixJPz1yU6v1AeEXlt9vYQqvorsEO/3TH81c/SIo0vnJpYQX5R+YlGOccR4gRrVmN
+	 RpZN0Wn5GN/5UtAclTElTrd7qX1HjguctL59wyy+PXhVYI/VhkVDzK97kwD5XfnNXTiot
+	 Wy7z/KId4oTlstgtTacYtOic4WAEREc+DPTUNbDReXwfm0I/zoUvHxwDrgx+u15RQBesn
+	 L7zTicZYeGIkpOQBPKUTdtOZZ0gs8J5Pk44XVm3t1vg2zBCyC5S6ofpkiw3ncERSxog==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795426212;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=Y0dcZzE5PYWnSyhhAQw+jR5ki5g3iIuGW62hn6AQhDk=;
+	b=UJdndHkUHeORm8BYRUnxhqYfP8KxXQ1B4oBjlMkSEV4Di5UY48TNQGyhjeUChwKpauUX
+	 4r4ZSmzfUXJbSYi8cwcL1MmOe2cbxFI1zcnsh/U3QqNU05IN+qyVwvuyk4jdt9ZZJ8BGs
+	 OPv0QoxhL3cFyUJ2kG5mhz6BzR3Ckad4ihzymd2zjmyV7CGvDSzrJegGRfPpZuYGVQG5I
+	 hap1p9eW3eXeS2O0AnM1w1pbDqY+n6vSCS9Ltz3hX7Qqg56muvrF5pIg0xfJHwWikmego
+	 h6GuzkqolrA95qCzz25O/03CyZHIY+62gr3/daUP8NO2+qaDHeV9JV7BRBufEuPKrLA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mzuq5skw;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D5A606A31E
-	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 08:48:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 30D5A606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
-ARC-Seal: i=1; a=rsa-sha256; t=1795423734; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=dV07CxvQ3B26jfhJq4X/S7Jr+I07jgiwD5pEMxfCP0AjkBBcDYpusxib+3UIar0ULMSx3Ae5D3awyTYaXH/fvuLi8H+HyEHc6kGcb3LQQDCAUZZx1fP1C8Pv0bhbOs88Y8hkrDUhpskdc4KHJszD/XXb1oAqpEkG78zZAgpeLj4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1795423734; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=whAkf6Qv7gIpDeRv0NIG64Kqe6Qjtq1vilssO6ivlfw=; 
-	b=GJRJWCTSrjwp88sUhXs3RENn+diHu1hkisfWE1VhQ+DW2Cqtmmr7A0JV9D2tNSaeYGpHYIldhR6io6DvIqcBq5XJYnsocHJR3oDuZ1uGs77+fRQVV6LRy5+dKcIrBc8X+pJYUhEkKjW05qOMvBmo1LvibMw9UGe/7LIWjlM4fYk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=mpiricsoftware.com;
-	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
-	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
-DKIM-Signature: a=rsa-sha256; b=B52WGgwzJi0bo9MyuywaIE9ptLVr5Pxd2mQg+s95n/+jBJciGTJEPtKuZ0vr63S+mw2ciUjWBSW1pyQYRYzojCwjLEDDj27ckWTveEaMGFmLDpw9/31oZcXjSTdKmXocp6m80NjwAVC4FK4WCEoHHWMlFKF5bn9+eCdlPFUyyjA=; c=relaxed/relaxed; s=mpiric; d=mpiricsoftware.com; v=1; bh=whAkf6Qv7gIpDeRv0NIG64Kqe6Qjtq1vilssO6ivlfw=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1795423726558420.823498279158;
-	Mon, 23 Nov 2026 00:48:46 -0800 (PST)
-From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-To: mptcp@lists.linux.dev
-Cc: shardul.b@mpiricsoftware.com,
-	janak@mpiric.us,
-	kalpanjani009@gmail.com,
-	Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-Subject: [PATCH mptcp-next v7] mptcp: bpf: fix NULL deref and UAF in bpf_mptcp_sock_from_subflow()
-Date: Mon, 23 Nov 2026 14:18:36 +0530
-Message-ID: <20261123084836.1704274-1-kalpan.jani@mpiricsoftware.com>
-X-Mailer: git-send-email 2.43.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9369606A31A
+	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 09:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mzuq5skw
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81AE21F000C6;
+	Mon, 23 Nov 2026 09:30:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795426212;
+	bh=Y0dcZzE5PYWnSyhhAQw+jR5ki5g3iIuGW62hn6AQhDk=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=mzuq5skweNR4Mh/rLy/zOtMKEH6Mf2K+g+UOoDhAlZ9sQLET8y/hSy8jgliWIABCz
+	 rPayG3Wn2ORNZpb02FiHB5yqZMJe5B2WlYO620pDeAlAOCG4Vi43oMHvcdE/d8um5g
+	 5kt8y/MEhSKye2p8Em8vjPKlStkvMzsis3tgRGjnr0g6Hc86TimHZ3+vCWMAZPmPQB
+	 7/Z/xUNtYWpkuB4pUpWvPVls0jRFsp3sXVOfkyGbmeZRnClyfNPQ3TaZTTP6C7mJNw
+	 xx2wkZEJx+vft42RLf3kt459WVgTP8Cnzq5Sqgxhy1lw4LympGrPqpGDO7Mb5x4AK+
+	 dIJao9JXLjnxw==
+Message-ID: <sashiko-outbox-228974@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH mptcp-next v7] mptcp: bpf: fix NULL deref and UAF in
+ bpf_mptcp_sock_from_subflow()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Kalpan Jani" <kalpan.jani@mpiricsoftware.com>, mptcp@lists.linux.dev
+In-Reply-To: <20261123084836.1704274-1-kalpan.jani@mpiricsoftware.com>
+References: <20261123084836.1704274-1-kalpan.jani@mpiricsoftware.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 23 Nov 2026 09:30:12 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -62,266 +58,223 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
 
-bpf_mptcp_sock_from_subflow() is reachable from BPF programs via
-bpf_skc_to_mptcp_sock() on an arbitrary socket, without the subflow
-socket lock held. It assumes sk_is_mptcp(sk) implies a valid subflow
-context whose ->conn points to a live parent mptcp_sock. That invariant
-does not hold in three windows:
+Thank you for your contribution! Sashiko AI review found 5 potential
+issues to consider:
+- [High] bpf: missing MEM_RCU tagging and sleepable gate in
+  check_helper_call()
+- [High] mptcp: NULL deref in mptcp_subflow_process_delegated() after
+  ULP release
+- [High] mptcp: setting SOCK_RCU_FREE in subflow_create_ctx() leaks
+  socket refs
+- [High] mptcp: NULL deref in subflow_data_ready() racing with listener
+  close
+- [Medium] mptcp: bpf: UAF on subflow ctx due to uncleared icsk_ulp_data
+--
 
-- Fallback: subflow_ulp_fallback() clears icsk_ulp_data via
-  rcu_assign_pointer(..., NULL) before clearing tcp_sk(sk)->is_mptcp, so a
-  concurrent reader can observe is_mptcp == 1 with a NULL context.
+commit f52b13bf0febdfcc37197ba78c9e6dab39011b6b
+Author: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
 
-- Init: subflow_ulp_init() sets is_mptcp = 1 while ->conn is still NULL;
-  ->conn is only assigned later in subflow_syn_recv_sock() or
-  mptcp_subflow_create_socket(). On CONFIG_DEBUG_NET, mptcp_sk()
-  dereferences its argument in a WARN_ON(), so mptcp_sk(NULL) faults.
+mptcp: bpf: fix NULL deref and UAF in bpf_mptcp_sock_from_subflow()
 
-- Teardown: subflow_ulp_release() drops the subflow-owned parent
-  reference without clearing ->conn. A lockless reader can therefore
-  access a parent socket after its reference has been dropped.
+This commit uses RCU and release/acquire ordering to synchronize
+bpf_mptcp_sock_from_subflow() with subflow creation, fallback and teardown,
+sets SOCK_RCU_FREE on parent and subflow sockets, and adds a needs_rcu
+helper check in the BPF verifier.
 
-Load the context with rcu_dereference_check() and the parent socket
-with smp_load_acquire(). Publish ->conn with smp_store_release() in
-the MP_CAPABLE, MP_JOIN and outgoing subflow paths. Clear ->conn
-with a release store before dropping the subflow-owned reference.
+> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> index 5f874979b8d75..15f3136fafa52 100644
+> --- a/kernel/bpf/verifier.c
+> +++ b/kernel/bpf/verifier.c
+> @@ -10912,6 +10912,14 @@ static int check_helper_call(struct bpf_verifier=
+_env *env, struct bpf_insn *insn
+>  		return -EINVAL;
+>  	}
+> =20
+> +	if (fn->needs_rcu && in_sleepable(env) &&
+> +	    !env->cur_state->active_rcu_locks) {
+> +		verbose(env,
+> +			"helper %s#%d requires bpf_rcu_read_lock() in sleepable context\n",
+> +			func_id_name(func_id), func_id);
+> +		return -EINVAL;
+> +	}
+> +
+>  	/* Track non-sleepable context for helpers. */
+>  	if (!in_sleepable_context(env))
+>  		env->insn_aux_data[insn_idx].non_sleepable =3D true;
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 29260951aa871..c6032fe843627 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -1746,7 +1746,7 @@ tracing_prog_func_proto(enum bpf_func_id func_id, c=
+onst struct bpf_prog *prog)
+>  	case BPF_FUNC_skc_to_unix_sock:
+>  		return &bpf_skc_to_unix_sock_proto;
+>  	case BPF_FUNC_skc_to_mptcp_sock:
+> -		return &bpf_skc_to_mptcp_sock_proto;
+> +		return prog->sleepable ? NULL : &bpf_skc_to_mptcp_sock_proto;
+>  	case BPF_FUNC_sk_storage_get:
+>  		return &bpf_sk_storage_get_tracing_proto;
+>  	case BPF_FUNC_sk_storage_delete:
 
-Give the parent msk RCU-grace lifetime by setting SOCK_RCU_FREE in
-the shared __mptcp_init_sock(), covering both active and passive
-paths, and dropping the reset in mptcp_sk_clone_init(). This ensures
-a reader that obtains the parent under the applicable RCU protection
-does not access freed memory.
+[Severity: High]
+Does check_helper_call() leave the returned mptcp_sock pointer untagged with
+MEM_RCU when fn->needs_rcu is true?
 
-Keep bpf_skc_to_mptcp_sock() available to non-sleepable tracing
-programs for compatibility, while rejecting sleepable tracing
-programs because classic RCU does not protect the parent socket
-through sleepable execution.
+When a sleepable context such as a bpf_wq or bpf_task_work callback calls
+bpf_skc_to_mptcp_sock() inside bpf_rcu_read_lock(), check_helper_call() sets
+R0 to PTR_TO_BTF_ID | ret_flag without MEM_RCU.  On bpf_rcu_read_unlock(),
+invalidate_rcu_protected_refs() only demotes registers carrying MEM_RCU to
+PTR_UNTRUSTED, so the BPF program can keep using the unreferenced mptcp_sock
+pointer after the RCU read section ends and trigger a use-after-free.
 
-Fixes: 3bc253c2e652 ("bpf: Add bpf_skc_to_mptcp_sock_proto")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/622
-Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
----
-Changes since v6:
-- Add needs_rcu metadata to struct bpf_func_proto to identify helpers requiring RCU protection.
-- Validate RCU protection in the verifier for RCU-dependent helpers called from sleepable BPF contexts.
-- Mark bpf_skc_to_mptcp_sock_proto as requiring RCU protection.
-- Set SOCK_RCU_FREE on subflow sockets in subflow_create_ctx() to defer socket destruction until after an RCU grace period.
+In addition, tracing_prog_func_proto() returns NULL whenever prog->sleepable
+is set, which rejects bpf_skc_to_mptcp_sock() in sleepable tracing, LSM and
+syscall programs before check_helper_call() reaches the fn->needs_rcu check,
+even when the call is wrapped in bpf_rcu_read_lock().
 
-v6: https://lore.kernel.org/all/20261118084011.4051683-1-kalpan.jani@mpiricsoftware.com/
----
- include/linux/bpf.h      |  1 +
- kernel/bpf/verifier.c    |  8 ++++++++
- kernel/trace/bpf_trace.c |  2 +-
- net/core/filter.c        |  1 +
- net/mptcp/bpf.c          | 15 +++++++++++++--
- net/mptcp/protocol.c     |  6 +++++-
- net/mptcp/subflow.c      | 31 ++++++++++++++++++++++++-------
- 7 files changed, 53 insertions(+), 11 deletions(-)
+[ ... ]
 
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index cd191c5fdb0a..8cc3323ec200 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -963,6 +963,7 @@ struct bpf_func_proto {
- 	};
- 	int *ret_btf_id; /* return value btf_id */
- 	bool (*allowed)(const struct bpf_prog *prog);
-+	bool needs_rcu;
- };
- 
- /* bpf_context is intentionally undefined structure. Pointer to bpf_context is
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 7fb88e1cd7c4..11527de6af8e 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -10333,6 +10333,14 @@ static int check_helper_call(struct bpf_verifier_env *env, struct bpf_insn *insn
- 		return -EINVAL;
- 	}
- 
-+	if (fn->needs_rcu && in_sleepable(env) &&
-+	    !env->cur_state->active_rcu_locks) {
-+		verbose(env,
-+			"helper %s#%d requires bpf_rcu_read_lock() in sleepable context\n",
-+			func_id_name(func_id), func_id);
-+		return -EINVAL;
-+	}
-+
- 	/* Track non-sleepable context for helpers. */
- 	if (!in_sleepable_context(env))
- 		env->insn_aux_data[insn_idx].non_sleepable = true;
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index a02bd258677e..ea489edbecec 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1715,7 +1715,7 @@ tracing_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	case BPF_FUNC_skc_to_unix_sock:
- 		return &bpf_skc_to_unix_sock_proto;
- 	case BPF_FUNC_skc_to_mptcp_sock:
--		return &bpf_skc_to_mptcp_sock_proto;
-+		return prog->sleepable ? NULL : &bpf_skc_to_mptcp_sock_proto;
- 	case BPF_FUNC_sk_storage_get:
- 		return &bpf_sk_storage_get_tracing_proto;
- 	case BPF_FUNC_sk_storage_delete:
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 80439767e0ee..8dfb83d72503 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -12091,6 +12091,7 @@ const struct bpf_func_proto bpf_skc_to_mptcp_sock_proto = {
- 	.ret_type	= RET_PTR_TO_BTF_ID_OR_NULL,
- 	.arg1_type	= ARG_PTR_TO_SOCK_COMMON,
- 	.ret_btf_id	= &btf_sock_ids[BTF_SOCK_TYPE_MPTCP],
-+	.needs_rcu	= true,
- };
- 
- BPF_CALL_1(bpf_sock_from_file, struct file *, file)
-diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-index 08bb037f0951..f43f9a2acc3f 100644
---- a/net/mptcp/bpf.c
-+++ b/net/mptcp/bpf.c
-@@ -193,8 +193,19 @@ static struct bpf_struct_ops bpf_mptcp_sched_ops = {
- 
- struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *sk)
- {
--	if (sk && sk_fullsock(sk) && sk_is_tcp(sk) && sk_is_mptcp(sk))
--		return mptcp_sk(mptcp_subflow_ctx(sk)->conn);
-+	struct mptcp_subflow_context *ctx;
-+	struct sock *conn;
-+
-+	if (sk && sk_fullsock(sk) && sk_is_tcp(sk) && sk_is_mptcp(sk)) {
-+		ctx = rcu_dereference_check(inet_csk(sk)->icsk_ulp_data,
-+					    lockdep_sock_is_held(sk));
-+		if (ctx) {
-+			/* Pair with release stores publishing or clearing ctx->conn. */
-+			conn = smp_load_acquire(&ctx->conn);
-+			if (conn)
-+				return mptcp_sk(conn);
-+		}
-+	}
- 
- 	return NULL;
- }
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index a4f7e99b30db..fa85ad0dc5a8 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3177,6 +3177,11 @@ static void __mptcp_init_sock(struct sock *sk)
- 	mptcp_pm_data_init(msk);
- 	spin_lock_init(&msk->fallback_lock);
- 
-+	/* the returned parent msk may be handed to lockless readers
-+	 * (bpf_skc_to_mptcp_sock()); free it after an RCU grace period
-+	 */
-+	sock_set_flag(sk, SOCK_RCU_FREE);
-+
- 	/* re-use the csk retrans timer for MPTCP-level retrans */
- 	timer_setup(&sk->mptcp_retransmit_timer, mptcp_retransmit_timer, 0);
- 	timer_setup(&msk->sk.mptcp_tout_timer, mptcp_tout_timer, 0);
-@@ -3712,7 +3717,6 @@ struct sock *mptcp_sk_clone_init(const struct sock *sk,
- 	/* passive msk is created after the first/MPC subflow */
- 	msk->subflow_id = 2;
- 
--	sock_reset_flag(nsk, SOCK_RCU_FREE);
- 	security_inet_csk_clone(nsk, req);
- 
- 	/* this can't race with mptcp_close(), as the msk is
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 8e386899ceb9..54ac450af6f6 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -780,6 +780,7 @@ static void subflow_ulp_fallback(struct sock *sk,
- void mptcp_subflow_drop_ctx(struct sock *ssk)
- {
- 	struct mptcp_subflow_context *ctx = mptcp_subflow_ctx(ssk);
-+	struct sock *conn;
- 
- 	if (!ctx)
- 		return;
-@@ -787,8 +788,12 @@ void mptcp_subflow_drop_ctx(struct sock *ssk)
- 	list_del(&mptcp_subflow_ctx(ssk)->node);
- 	if (inet_csk(ssk)->icsk_ulp_ops) {
- 		subflow_ulp_fallback(ssk, ctx);
--		if (ctx->conn)
--			sock_put(ctx->conn);
-+		conn = ctx->conn;
-+		if (conn) {
-+			/* Clear the pointer before dropping its reference. */
-+			smp_store_release(&ctx->conn, NULL);
-+			sock_put(conn);
-+		}
- 	}
- 
- 	kfree_rcu(ctx, rcu);
-@@ -861,6 +866,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 
- 	if (child && *own_req) {
- 		struct mptcp_subflow_context *ctx = mptcp_subflow_ctx(child);
-+		struct sock *conn;
- 
- 		tcp_rsk(req)->drop_req = false;
- 
-@@ -880,12 +886,14 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 		ctx->setsockopt_seq = listener->setsockopt_seq;
- 
- 		if (ctx->mp_capable) {
--			ctx->conn = mptcp_sk_clone_init(listener->conn, &mp_opt, child, req);
--			if (!ctx->conn)
-+			conn = mptcp_sk_clone_init(listener->conn, &mp_opt, child, req);
-+			if (!conn)
- 				goto fallback;
- 
-+			/* Publish the initialized parent socket to lockless readers. */
-+			smp_store_release(&ctx->conn, conn);
- 			ctx->subflow_id = 1;
--			owner = mptcp_sk(ctx->conn);
-+			owner = mptcp_sk(conn);
- 
- 			if (mp_opt.deny_join_id0)
- 				WRITE_ONCE(owner->pm.remote_deny_join_id0, true);
-@@ -920,7 +928,8 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 
- 			/* move the msk reference ownership to the subflow */
- 			subflow_req->msk = NULL;
--			ctx->conn = (struct sock *)owner;
-+			/* Publish the parent socket to lockless readers. */
-+			smp_store_release(&ctx->conn, (struct sock *)owner);
- 
- 			if (subflow_use_different_sport(owner, sk)) {
- 				pr_debug("ack inet_sport=%d %d\n",
-@@ -1827,7 +1836,8 @@ int mptcp_subflow_create_socket(struct sock *sk, unsigned short family,
- 
- 	*new_sock = sf;
- 	sock_hold(sk);
--	subflow->conn = sk;
-+	/* Publish the parent socket after taking its reference. */
-+	smp_store_release(&subflow->conn, sk);
- 	mptcp_subflow_ops_override(sf->sk);
- 
- 	return 0;
-@@ -1848,6 +1858,8 @@ static struct mptcp_subflow_context *subflow_create_ctx(struct sock *sk,
- 	if (!ctx)
- 		return NULL;
- 
-+	/* BPF readers may access the subflow socket under RCU. */
-+	sock_set_flag(sk, SOCK_RCU_FREE);
- 	rcu_assign_pointer(icsk->icsk_ulp_data, ctx);
- 	INIT_LIST_HEAD(&ctx->node);
- 	INIT_LIST_HEAD(&ctx->delegated_node);
-@@ -2024,6 +2036,11 @@ static void subflow_ulp_release(struct sock *ssk)
- 		if (!release && !test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW,
- 						  &mptcp_sk(sk)->flags))
- 			mptcp_schedule_work(sk);
-+
-+		/* hide the parent from lockless readers (e.g. BPF) before
-+		 * dropping the subflow-owned reference
-+		 */
-+		smp_store_release(&ctx->conn, NULL);
- 		sock_put(sk);
- 	}
- 
--- 
-2.43.0
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index f0a6725d2c376..d8721d38467ec 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
 
+[ ... ]
+
+> @@ -1857,6 +1867,8 @@ static struct mptcp_subflow_context *subflow_create=
+_ctx(struct sock *sk,
+>  	if (!ctx)
+>  		return NULL;
+> =20
+> +	/* BPF readers may access the subflow socket under RCU. */
+> +	sock_set_flag(sk, SOCK_RCU_FREE);
+>  	rcu_assign_pointer(icsk->icsk_ulp_data, ctx);
+>  	INIT_LIST_HEAD(&ctx->node);
+>  	INIT_LIST_HEAD(&ctx->delegated_node);
+
+[Severity: High]
+Does setting SOCK_RCU_FREE on full TCP subflow sockets break
+sk_is_refcounted() and leak socket references on BPF lookups?
+
+include/net/sock.h:sk_is_refcounted() {
+	/* Only full sockets have sk->sk_flags. */
+	return !sk_fullsock(sk) || !sock_flag(sk, SOCK_RCU_FREE);
+}
+
+When a BPF program looks up an established or connecting subflow socket via
+bpf_sk_lookup_tcp() or bpf_skc_lookup_tcp(), __inet_lookup_established()
+increments sk->sk_refcnt.  Because SOCK_RCU_FREE is now set on the subflow
+socket, sk_is_refcounted(sk) returns false, so bpf_sk_release() skips
+sock_gen_put(sk) and permanently leaks the socket reference.  bpf_sk_assign=
+()
+also relies on sk_is_refcounted(sk) and will skip taking a reference on the
+subflow socket.
+
+> @@ -2040,6 +2052,11 @@ static void subflow_ulp_release(struct sock *ssk)
+>  		if (!release && !test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW,
+>  						  &mptcp_sk(sk)->flags))
+>  			mptcp_schedule_work(sk);
+> +
+> +		/* hide the parent from lockless readers (e.g. BPF) before
+> +		 * dropping the subflow-owned reference
+> +		 */
+> +		smp_store_release(&ctx->conn, NULL);
+>  		sock_put(sk);
+>  	}
+> =20
+
+[Severity: High]
+Can clearing ctx->conn here and in mptcp_subflow_drop_ctx() cause a NULL
+pointer dereference in mptcp_subflow_process_delegated()?
+
+CPU0                                  CPU1
+mptcp_subflow_delegate(ssk,
+  MPTCP_DELEGATE_SEND)
+  set_bit(MPTCP_DELEGATE_SEND,
+    &subflow->delegated_status)
+  list_add_tail(&subflow->delegated_node,
+    &delegated->head)
+                                      __mptcp_close_ssk(..., ssk, ...)
+                                        __tcp_close(ssk, 0)
+                                          inet_csk_destroy_sock(ssk)
+                                            ...
+                                              subflow_ulp_release(ssk)
+                                                smp_store_release(&ctx->con=
+n,
+                                                  NULL)
+                                                mptcp_subflow_ops_undo_over=
+ride(ssk)
+                                        release_sock(ssk)
+mptcp_napi_poll()
+  mptcp_subflow_process_delegated(ssk,
+    xchg(&subflow->delegated_status, 0))
+    sk =3D subflow->conn
+    mptcp_data_lock(sk)  <-- NULL pointer dereference
+
+Once mptcp_subflow_delegate() queues ssk on the per-CPU
+mptcp_delegated_actions list, only mptcp_napi_poll() on that CPU dequeues i=
+t.
+When subflow_ulp_release() runs first, it clears ctx->conn and restores
+ssk->sk_prot, so release_sock(ssk) no longer runs tcp_release_cb_override()
+to drain delegated_status.  mptcp_napi_poll() then calls
+mptcp_subflow_process_delegated() with pending status bits and a NULL
+subflow->conn.
+
+[Severity: High]
+Can clearing ctx->conn in subflow_ulp_release() also cause a NULL pointer
+dereference in subflow_data_ready() when racing with listener close?
+
+CPU0 (<softirq>)                      CPU1
+tcp_v4_rcv()
+  tcp_child_process(listener_ssk, ...)
+                                      __mptcp_destroy_sock()
+                                        ...
+                                          __mptcp_close_ssk(..., listener_s=
+sk, ...)
+                                            __tcp_close(listener_ssk, 0)
+                                              ...
+                                                subflow_ulp_release(listene=
+r_ssk)
+                                                  smp_store_release(&ctx->c=
+onn,
+                                                    NULL)
+    listener_ssk->sk_data_ready(listener_ssk)
+      subflow_data_ready(listener_ssk)
+        parent =3D subflow->conn
+        msk =3D mptcp_sk(parent)
+        parent->sk_data_ready(parent)  <-- NULL pointer dereference
+
+tcp_child_process() calls parent->sk_data_ready(parent) under rcu_read_lock=
+()
+without holding the listener socket lock.  Because subflow_ulp_release() se=
+ts
+ctx->conn to NULL while leaving sk_data_ready set to subflow_data_ready(),
+subflow_data_ready() loads a NULL parent pointer and dereferences it in
+mptcp_sk(parent) (when CONFIG_DEBUG_NET is enabled) or
+parent->sk_data_ready(parent).
+
+[Severity: Medium]
+Can bpf_mptcp_sock_from_subflow() still read a freed subflow context after
+kfree_rcu(ctx, rcu)?
+
+net/mptcp/subflow.c:subflow_ulp_release() {
+	...
+	mptcp_subflow_ops_undo_override(ssk);
+	if (release)
+		kfree_rcu(ctx, rcu);
+}
+
+subflow_ulp_release() (as well as __mptcp_close_ssk() and
+mptcp_subflow_drop_ctx() when icsk_ulp_ops has already been cleared by
+tcp_cleanup_ulp()) frees ctx via kfree_rcu() without clearing
+inet_csk(ssk)->icsk_ulp_data or tcp_sk(ssk)->is_mptcp.  If ssk outlives ctx=
+'s
+RCU grace period, such as while in-flight TX skbs still hold
+ssk->sk_wmem_alloc, a BPF program calling bpf_skc_to_mptcp_sock(ssk) will
+observe sk_is_mptcp(ssk) =3D=3D 1 and dereference the dangling icsk_ulp_data
+pointer at smp_load_acquire(&ctx->conn).
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261123084836.1704=
+274-1-kalpan.jani@mpiricsoftware.com?part=3D1
