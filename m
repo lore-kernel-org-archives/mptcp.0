@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795415556;
-	b=aQm56tVvVrdFArP3jvCIcbo+rVm2g7bs3zDpx0J0wiEh1LjpCO4Mj7AQMvoadhN5N/k5
-	 KrvaauwgGSm3tmhBVIFyjN3Oo5mSfEHkk6oHL2Q1uH7sDDrMpjw/Rztd+cp6zEeWjE2yN
-	 pBXHWNfsYpQgWuXYkogQKuVlZ/9/l8ZLeL6f/aCYbPhy+WqD3wvzNI7qyhl1Tf9YnhqWn
-	 dG423e5eaNmvw7qKmOspAlCvdeGd7m+35kKbDcCIC09IgOCPOK0qMi+i/mzx7Ap29RUuV
-	 FNgoneRMW7qoikfGj6rtDyVKuDkA14OlC18G78JNzOa/u+60bMZU0/peKRqD+Z/vZwg==
+	t=1795415557;
+	b=kVwXpP+D4QARyEHAnGKV4WAaoWC/wSH30ebPpBf39Yh1YVk8FDcklHRHyoqLPRXvJ3EZ
+	 93aOzL5trTdFHhFQkXuSyKelHcqgVneEQvy5KBhNauqR0swk/B+mvaiT0jFIicIdDAByg
+	 3uuc7MggybNSL0lK+4oqxHdK5ymqEMP8hEkT7NHjjozbeJzS4K6sdpyj5VtuJwgj6N6up
+	 +vr0lsrxDFR6sDEu2Z87ddJGBAAn8vWPxd9K68D2bqfbJHKnOGGGEx7odS5Nuwdme8KpP
+	 ml/+M4J9lClz9EA8HHnDGcG55c5KohG+HDYyEHzyxHm+dbQl7BysD5Ikyaz1C/L3OrQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795415556;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795415557;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=jJxVoZmRxuJiFA2KtTDeQRpcbdkvIPFPvvAxOx9C7To=;
-	b=bGbxTnjXTaUh+98LqHPwMTsQV/91dh7jqY5U5LmLDoHzUHTu16Zcfvv9/KEZq3PVL/ce
-	 oOFwR92mlwRghPRoDE7E/30rd4x1wq2ZvIwkxS0HBFP1y0FGN0K6zzJRrIYRkcE3qnufZ
-	 LJuCv3tBXFx1hneCzUPcGf+r1tVzPaOj+LbTvC31gITLg53Y/P8+Z3AQR73hm3IJYmOaX
-	 j75TDXFLLNmLIo7AJm78E3QDYglfNppSWp43uu7+i83NYrmGGnU6/1ITFJEGuM2GzrQQo
-	 pZC072Hjx0p9v8xataC7cNzOlyR68IRlLGxNpbYbkrjBYp+HFtrEHSmj3Solj3kEF1w==
+	bh=L/xeqxjlXAddYFJaEndYC4GELMcrPXXuTTumc77uhPY=;
+	b=u1N4+jPSt7APQ9cmrK/LGXBfwwIM9wL8eYCMIe+dMth5mEJtpnMsNMWtq/SdUqQdoOtH
+	 /kPykiRkQtizix7ZJOg344OZmeT+7zrdxPpCHpRKHnDZlfcLLhKN8HDxvrAWfPf10zrCj
+	 qUVeiCXeD/76NznIETnWNXg7KisWyI+BEbsEIt0drRtKndJQlo91zrxL+4E1kJ8FMFqB4
+	 0M1RQVW4ki1YahI0VS3CPVdIzHOrSB4pNJcx5sA4EQC1WyTZzes3n3aKD9WoDwbcnSl+b
+	 zXcHRpNtSED0Gjj5qkLTcwyqhx+7mrBtbkYQ9AXqXknm5LIfhhpBjLquRv6kdr+fKJA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F+m7heP9;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="LL+bw/p8";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F42606A31A
-	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 06:32:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5DDC606A31A
+	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 06:32:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F+m7heP9
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF33C1F000C0;
-	Mon, 23 Nov 2026 06:32:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LL+bw/p8
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 285981F000EB;
+	Mon, 23 Nov 2026 06:32:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795415556;
-	bh=jJxVoZmRxuJiFA2KtTDeQRpcbdkvIPFPvvAxOx9C7To=;
+	s=k20260515; t=1795415557;
+	bh=L/xeqxjlXAddYFJaEndYC4GELMcrPXXuTTumc77uhPY=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=F+m7heP9XRJp9SxCBBC17MKpWQ+aVyvbVNqQdsuuHdXk3xFhRb0ngy36Os8dbF/AZ
-	 Fw//ZabBgJy9jJor09Fl9vFteygvzuiPhYqMAzUfdleBkjBKwc7enP8C1KNSM2wqVC
-	 wwgoDQ8QAHV61zVPR8NnsrcDQhJwQUMbGQmJxAr9RGH4WG8V7HhBvBtvChpGGKhf/o
-	 RORpIA6rDK75HYaZSKidtf0pW7WqzyTOKDJYvxlM8Tq6WkUK4pCs/88nFNFU9PipeR
-	 39/omCGck9jY9z3sQeoG1ylpxxuMok1xkQXigUSSOkXjoQVvQu56fXliguORVHyi04
-	 AK5wtnYh4SDYQ==
-Subject: Re: [PATCH mptcp-net v2 39/62] mptcp: keep room for infinite map
- after fallback
+	b=LL+bw/p8N0lUj7tYJ9Q5WPqcMK+gbqK+1nuVyguNPjgFJtLaeIU2c/mPb74lEvwDp
+	 uYxxZBh/9/Wza0VGx1YiD3RT2XwBkeWUHyUbDuP97Eluz/7uTPqeIiy5nLzbtr3VcT
+	 GOgIi0aqmJwPbdXUvVcyEEDhWYSXv8sTP7cNFlDK2Hy4HuC2XwClQgDeUpTW4RO6Xj
+	 YRWI/yWfQOct2E3rSpYl74ENoYS1rESvX2Zv3IY2AK0c/fkUzH5HOtDOZvYRM6Mb+q
+	 IYCXoybuC+eBAAzCE+BwjJeW9nKAq0Jd+RUqtVf+75lleyfKqp/Y7jQ55q7D5WZf5f
+	 mF5ClaTVadW+A==
+Subject: Re: [PATCH mptcp-net v2 45/62] tcp: do not pass a BPF reqsk to an
+ MPTCP listener
 From: netdev-bot+sashiko@kernel.org
 To: matttbe@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Mon, 23 Nov 2026 06:32:35 +0000
-Message-ID: <179541555542.3133.1334953870830856164@kernel.org>
-In-Reply-To: <20261121-mptcp-cmason-fixes-v2-39-00327fd1de1f@kernel.org>
-References: <20261121-mptcp-cmason-fixes-v2-39-00327fd1de1f@kernel.org>
-X-sashiko-severity: Medium
+Date: Mon, 23 Nov 2026 06:32:36 +0000
+Message-ID: <179541555672.3133.11473610487670710088@kernel.org>
+In-Reply-To: <20261121-mptcp-cmason-fixes-v2-45-00327fd1de1f@kernel.org>
+References: <20261121-mptcp-cmason-fixes-v2-45-00327fd1de1f@kernel.org>
+X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -62,117 +62,97 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue(s) to consider.
+Thank you for your contribution! Sashiko AI review found more severe
+issue(s) in other patches of this series. This mail is only an FYI, in case
+you want to address the nit picks below when you respin.
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 0
+Low priority / nit picks for your consideration:
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
-
-- [Medium] The DSS reservation only lasts while
-  subflow->send_infinite_map is set, and that flag is cleared before the…
+- [Low] The patch fixes the slab-out-of-bounds write: cookie_bpf_check()
+  now frees the BPF reqsk and returns NULL whenever reuseport re-…
 
 --
 
-mptcp: keep room for infinite map after fallback
+tcp: do not pass a BPF reqsk to an MPTCP listener
 
-After a fallback, mptcp_established_options() now keeps reserving room for
-the DSS option when the MSS is computed (skb == NULL), as long as
-subflow->send_infinite_map is set. Without this, the skb carrying the
-infinite mapping could be sized without DSS room. Its segments would then
-be bigger than the MTU and the connection would stall.
+This commit fixes a slab-out-of-bounds write in
+mptcp_subflow_init_cookie_req(). The write happens when a plain TCP
+request sock assigned by BPF reaches an MPTCP listener, because
+inet_steal_sock() selects again from the SO_REUSEPORT group. With the
+fix, cookie_bpf_check() frees the reqsk and drops the segment when the
+listener is MPTCP.
 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 736e55532296b..6b1a3994fb494 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -891,9 +891,11 @@ int mptcp_established_options(struct sock *sk, struct sk_buff *skb,
->  	opts->suboptions = 0;
+> diff --git a/net/ipv4/syncookies.c b/net/ipv4/syncookies.c
+> index 89169c82431c1..f39600ee3f172 100644
+> --- a/net/ipv4/syncookies.c
+> +++ b/net/ipv4/syncookies.c
+> @@ -312,7 +312,8 @@ struct request_sock *cookie_bpf_check(struct sock *sk, struct sk_buff *skb)
+>  	skb->sk = NULL;
+>  	skb->destructor = NULL;
 >  
->  	/* Force later mptcp_write_options(), but do not use any actual
-> -	 * option space.
-> +	 * option space, except for an infinite mapping still to be sent.
->  	 */
-> -	if (unlikely(__mptcp_check_fallback(msk) && !mptcp_check_infinite_map(skb)))
-> +	if (unlikely(__mptcp_check_fallback(msk) &&
-> +		     !mptcp_check_infinite_map(skb) &&
-> +		     (skb || !subflow->send_infinite_map)))
->  		return 0;
+> -	if (cookie_tcp_reqsk_init(sk, skb, req)) {
+> +	/* reuseport can pick an MPTCP listener: req is too small for it */
+> +	if (sk_is_mptcp(sk) || cookie_tcp_reqsk_init(sk, skb, req)) {
+>  		reqsk_free(req);
+>  		req = NULL;
+>  	}
 
-[Severity: Medium]
-Is send_infinite_map the right flag to base this reservation on? The flag
-seems to be cleared before the infinite-map skb is ever sent, while
-mptcp_sendmsg_frag() is still building it:
+[Severity: Low]
+This closes the out-of-bounds write. Is the resulting drop persistent for
+the affected flows, though?
 
-net/mptcp/protocol.c:mptcp_update_infinite_map() {
+When cookie_bpf_check() returns NULL, cookie_v4_check() drops the segment
+without sending a RST:
+
+net/ipv4/syncookies.c:cookie_v4_check() {
     ...
-	mpext->infinite_map = 1;
-	mpext->data_len = 0;
-
-	if (!mptcp_try_fallback(ssk, MPTCP_MIB_INFINITEMAPTX)) {
-		...
+	if (!req) {
+		SKB_DR_SET(reason, NO_SOCKET);
+		goto out_drop;
 	}
-
-	mptcp_subflow_ctx(ssk)->send_infinite_map = 0;
+    ...
 }
 
-After that, tcp_write_xmit(), __tcp_retransmit_skb() and
-tcp_write_wakeup() all call tcp_current_mss(). That goes through
-tcp_established_options(sk, NULL, ...), and this check now returns 0
-MPTCP option bytes.
+With the default hash-based reuseport selection, the BPF program and
+inet_steal_sock() can pick different listeners. This mismatch looks fixed
+for a given 4-tuple.
 
-However, __tcp_transmit_skb() on the same skb still sees
-mptcp_check_infinite_map(skb) == true. It then emits the 24 or 28 byte
-DSS.
+The selftest program finds its listener like this:
 
-The single-segment cap from "mptcp: send the infinite map in a single
-segment" (copy = mss_now) seems to hold only if nothing changes between
-building the skb and its last (re)transmission. Can either of these cases
-still produce segments bigger than the MTU?
+bpf_skc_lookup_tcp()
+  __inet_lookup(skb == NULL)
+    __inet_lookup_listener()
 
-(A) The PMTU drops while the infinite-map skb is not yet acked. Then
-tcp_current_mss()->tcp_sync_mss() returns an MSS with no DSS room, and
-__tcp_retransmit_skb() splits the skb at that cur_mss:
+For listeners bound to a wildcard address, the second lookup pass in
+__inet_lookup_listener() hashes with INADDR_ANY as daddr:
 
-__tcp_retransmit_skb()
-    cur_mss = tcp_current_mss(sk);
-    ...
-    tcp_fragment(sk, TCP_FRAG_IN_RTX_QUEUE, skb, len, cur_mss, GFP_ATOMIC)
-        mptcp_skb_ext_copy(buff, skb);
+	result = inet_lhash2_lookup(net, ilb2, skb, doff,
+				    saddr, sport, htonl(INADDR_ANY), hnum,
+				    dif, sdif);
 
-Both fragments keep the infinite_map ext and emit the DSS, so each one is
-the new MSS plus the DSS. If no split happens, the skb is still sized for
-the old MTU.
+inet_steal_sock() then selects again using the real daddr:
 
-Either way, DF is set, so IP drops the packets. The local frag-needed
-reports the same MTU, so the MSS never shrinks. The subflow then keeps
-retransmitting oversized packets until it times out.
+	reuse_sk = inet_lookup_reuseport(net, sk, skb, doff,
+					 saddr, sport, daddr, ntohs(dport),
+					 ehashfn);
 
-(B) Timestamps are off, and SACK or DSACK blocks appear between building
-the skb and sending or resending it.
+The two hashes differ. Wouldn't a fixed set of 4-tuples always get the TCP
+listener from the program and the MPTCP listener from the second
+selection? A reuseport BPF program that only acts when skb != NULL would
+split flows the same way.
 
-At build time the 28 byte DSS is counted and there is no SACK, so
-skb->len = mss_cache - 28. At transmit time only the 12 byte SACK is
-counted, so mss_now = mss_cache - 12, which is larger than skb->len, and
-no split happens.
+For these flows the client has already received a SYN-ACK and thinks the
+connection is established. Each retransmitted ACK carries the same valid
+cookie. bpf_sk_assign_tcp_reqsk() returns 0, inet_steal_sock() picks the
+MPTCP listener again, and the segment is dropped again. The client waits
+until its retransmission timeout, and the BPF program never gets an error.
 
-The real options are 28 + 12 = 40 bytes, so the segment is 12 bytes over
-the MTU. This repeats as long as the SACK state lasts, for example while
-the skb is waiting on cwnd or rwnd, or is being retransmitted.
+In inet_steal_sock(), the original sk is still the compatible TCP listener
+that the program chose. Could the code fall back to that listener when the
+newly selected socket is MPTCP, so these connections can complete?
 
-Both cases look like the same stall that the commit message says is fixed:
-
-  "Keep room for the DSS option while the infinite mapping is still to be
-  sent, when computing the MSS."
-
-Should the reservation last as long as an infinite-map skb is still
-unacked, instead of ending once that skb has been built? The code at the
-end of the series appears to use the same logic, so a later patch does
-not seem to address this.
+If the drop is intended, could the commit message say that the fix turns
+the memory corruption into a connection failure for these 4-tuples?
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f%40kernel.org
