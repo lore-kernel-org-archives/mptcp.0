@@ -1,52 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795422009;
-	b=sdQhMvaLoC8JddzLHdYFHp3J2yxMD+rRPEfeWZl+Coo1bfCRxJO5ligm4jCYN1LUNg4j
-	 Nx3nWGMzekqxgEhBrOSqPuhOj/zFylOwFOiooX+hawl+XsOKmFH2gRF7WRd1yfDlTXHBO
-	 VxVBUeSvI7Db3H1CaMIewjoc7v/h9KXy9irerf/Ect4Qs4b08osqQmrhgG8qBK21UuBpX
-	 WN3Zqlo5EIt97lilONLySaF3597k8D+5VvBGnA/cATxEp6xom0Z8t/Sh8jZsLLAzFkKaE
-	 8TudhadIHgZm3RRjgGzSNRnb6eh74KqZqoYSjZ0edREiovnxfCi1w4jhfFbeUy/Re8g==
+	t=1795423011;
+	b=MDf5Ac03QSxLeIPo+U4Qle6wcgyY7iDktJBoNskAeuiAav20ppt+4V4IR95idWsq5lf3
+	 8MoAPLOkxLklB9Lfd/9IypCkHTu9PY+kKiws03r7VH3MtfxNdokoKFk+Y+insIjdm17Oh
+	 Bbl+7G5ptRzoAvFLh8SsmEARtVlfE8oKg0C+BM6Z5PwXPdgBlHfcZ2WWP+o5nbsIjaP3h
+	 Y+M4nDHWUTQE6hJr69k4OnTmsuooKP0SjlLga9gDFfxciKB2krFYVw6EoU0UJeqa32R2P
+	 wM+UOmFekYVKJ0cqDuoX1P3GsNBwnd4szosX5QcA1+Qmapusg1TbqTWprYgBpz1K4pQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795422009;
-	h=Received:DKIM-Signature:From:To:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=LLBeeZz5CEeAN6PHCVcSZWIb/bLDca4LEe5dPKpuzw8=;
-	b=Ygu46Fd29scZmHfe5idHsOitKE1ThHIdUbRrK0ngO1Z06BrPi499KiZ0e7BhKE8QsgII
-	 2svsJTDaCvdc76WDwg9VXnHrLb465gxBIylWauok8IgIZBy5zcwI1pUjm1k8BvkqLS88+
-	 ODRhG7Lmcx/JibTkdx/M08HUiiv+lus3dDkXiQ2Oat2OcYlOPpuI1uSU/UO1ZI79vNZfs
-	 R+nuTQwj+kKMFVvTTikT4rCa8AWrQsYwLGXSUwfP3zmEQmDCHg1xzpedKw07UedsQq6u0
-	 WR0vFesuZrZOwU6rkRcMGsJ24JUlBUIPoluEuPZEitzJUHkXJ/yCWGHJDNckabB8Dgg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795423011;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=7UeuLbFnO4C209RBZnp//m9tcTDY+itsPFkTX+Vrq6I=;
+	b=RGI6sCrLaavNDMI23HyBjegW6x5m0RxSQmY2v0CT5m8JMzQPsPoWSBJAc5SEmtvAYGVG
+	 Fo/FCfDq1dhfHG1e+s17Zy01UtoKfn+QM3TDKR5Jyq2ziPvfUbUCZwsuZIHqzjxnDPyme
+	 DObdL0E1b9bum1qvVPl+DXU6xKbuaEPhsxCC3Ho2pJyJTNAlztb94JbMPr2OtT8SBN5WJ
+	 lP+vIOgs/2nrvepvGWeDndVb1b3EH60lhRm0X3iCkxZybJlf0yJ079lbVceDlBqOTfM4V
+	 DIP/8knzWgafIQRJu4h/+j+MHY08+cJyhgEYaSmhEig6Ci9Br/DzS//15S05Qk5Bv0A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ULdifIzF;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="DeqI/srH";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E05F606A32C
-	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 08:20:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB9B606A31A
+	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 08:36:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ULdifIzF
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE1DB1F000EF
-	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 08:20:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DeqI/srH
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5727B1F000CF;
+	Mon, 23 Nov 2026 08:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795422008;
-	bh=LLBeeZz5CEeAN6PHCVcSZWIb/bLDca4LEe5dPKpuzw8=;
-	h=From:To:Subject:Date:In-Reply-To:References;
-	b=ULdifIzFsXqxIQfnW+NLdq/VdbXNCgFfYm5bLTgSAxC61W25yTFfP1Z7P39qGf1In
-	 7gLyc9UhORRNA63EFrTb35flgnxOkm1btFq2wOIc40MYGjKg4S2tJduV+qBCnh4rxm
-	 ZUYfjmDeua7F3LzjqQ93gDSK61YWH6e14d6hUgw4ncSZMzkSzqP5n5Y0++YQ6yiOwL
-	 j/4C4aLoUtlWwqQkVySRNPZ1BlRHqCVb8/LWKwkqIs1kZNLR6Gfrzs/aE2aUWeb4Zu
-	 L7dV0L62YGMKWxs196uhufTh8gYtbQcsmWJ5vtEJis5+DfDRD6LPdsfnPj2gJWQ+zE
-	 6c6CyRwARwN5g==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v8 7/7] selftests: mptcp: connect: cover zerocopy mode
-Date: Mon, 23 Nov 2026 16:19:50 +0800
-Message-ID: <0f5e8a01d62f02de8f2b7af3bd49c9e70b960c58.1795421388.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <cover.1795421388.git.tanggeliang@kylinos.cn>
+	s=k20260515; t=1795423010;
+	bh=7UeuLbFnO4C209RBZnp//m9tcTDY+itsPFkTX+Vrq6I=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=DeqI/srH36D3JuH03J2NaZCzlQ62lp4+PKOh2g2gaq6O+bdmTHzU+Pnla6tD0aztC
+	 roN6QqiUybAGTAmB04yuCnCEkUs8bE5R95YwoqmH8B4vvNQK5s7sWxtfwSkofDqPDw
+	 ekw8C7KCf54VSn/SXKkaiT0LXNC36E/FDYDVENMAVeSvpWsY4blPy6WYoa2H9nz4Xm
+	 ashruWTVf2DvoizTU1Hl4g8UocYVQJhHQ66YmZtUNoQLo1PwTMzCXg8mXkrCmiwLPf
+	 3wTQ08QDA2D+o3ACR/nelt6Nd/OFHZ7dBRr8TLmC+RK4GqgXPKBFK2HavdPk0MWeqp
+	 kt12dM6QdUs9g==
+Message-ID: <sashiko-outbox-228906@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH mptcp-next v8 5/7] mptcp: handle SO_ZEROCOPY in
+ setsockopt
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
+In-Reply-To: <154898fde8a9acdf6562d2adda67ebfe3ddd7246.1795421388.git.tanggeliang@kylinos.cn>
 References: <cover.1795421388.git.tanggeliang@kylinos.cn>
+ <154898fde8a9acdf6562d2adda67ebfe3ddd7246.1795421388.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 23 Nov 2026 08:36:49 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,49 +59,58 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Medium] mptcp: SO_ZEROCOPY lost on passive TCP fallback in
+  mptcp_stream_accept()
+--
 
-Add a new test script mptcp_connect_zerocopy.sh to run the mptcp_connect
-selftest with the zerocopy I/O mode. This ensures the MSG_ZEROCOPY path
-is exercised in the regular test suite.
+commit 9eb510c1b5396bee88c876458fbf9feb12e69c9b
+Author: Geliang Tang <geliang@kernel.org>
 
-The script follows the same pattern as the existing mmap, sendfile, and
-splice test wrappers, invoking mptcp_connect.sh with the -m zerocopy
-option.
+mptcp: handle SO_ZEROCOPY in setsockopt
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/Makefile                  | 1 +
- tools/testing/selftests/net/mptcp/mptcp_connect_zerocopy.sh | 5 +++++
- 2 files changed, 6 insertions(+)
- create mode 100755 tools/testing/selftests/net/mptcp/mptcp_connect_zerocopy.sh
+This commit adds SO_ZEROCOPY support to MPTCP setsockopt by setting
+SOCK_ZEROCOPY on the MPTCP socket.
 
-diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
-index 22ba0da2adb8..9e47ecfe58e2 100644
---- a/tools/testing/selftests/net/mptcp/Makefile
-+++ b/tools/testing/selftests/net/mptcp/Makefile
-@@ -12,6 +12,7 @@ TEST_PROGS := \
- 	mptcp_connect_mmap.sh \
- 	mptcp_connect_sendfile.sh \
- 	mptcp_connect_splice.sh \
-+	mptcp_connect_zerocopy.sh \
- 	mptcp_join.sh \
- 	mptcp_sockopt.sh \
- 	pm_netlink.sh \
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect_zerocopy.sh b/tools/testing/selftests/net/mptcp/mptcp_connect_zerocopy.sh
-new file mode 100755
-index 000000000000..0220d29ad68e
---- /dev/null
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect_zerocopy.sh
-@@ -0,0 +1,5 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+MPTCP_LIB_KSFT_TEST="$(basename "${0}" .sh)" \
-+	"$(dirname "${0}")/mptcp_connect.sh" -m zerocopy "${@}"
--- 
-2.55.0
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index 922f6ae5c80cb..889c17da3f773 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -184,6 +184,19 @@ static int mptcp_setsockopt_sol_socket_tstamp(struct=
+ mptcp_sock *msk, int optnam
+>  	return 0;
+>  }
+> =20
+> +static int mptcp_setsockopt_sol_socket_zerocopy(struct mptcp_sock *msk, =
+int val)
+> +{
+> +	struct sock *sk =3D (struct sock *)msk;
+> +
+> +	if (val !=3D 0 && val !=3D 1)
+> +		return -EINVAL;
+> +
+> +	lock_sock(sk);
+> +	sock_valbool_flag(sk, SOCK_ZEROCOPY, val);
+> +	release_sock(sk);
+> +	return 0;
+> +}
 
+[Severity: Medium]
+Does setting SOCK_ZEROCOPY only on msk lose the option when a listening
+MPTCP socket accepts a non-MP_CAPABLE peer and falls back to plain TCP?
+
+On passive fallback, subflow_syn_recv_sock() clones the child socket from
+the listening TCP subflow (msk->first) rather than from msk, and
+mptcp_stream_accept() grafts that plain TCP child onto newsock with plain
+TCP ops.  Because mptcp_setsockopt_sol_socket_zerocopy() and
+sync_socket_options() do not propagate SOCK_ZEROCOPY to subflows, the
+accepted fallback socket has SOCK_ZEROCOPY cleared: subsequent
+getsockopt(SO_ZEROCOPY) returns 0 and sendmsg(MSG_ZEROCOPY) silently falls
+back to copying in tcp_sendmsg_locked() without queuing completion
+notifications on MSG_ERRQUEUE.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1795421388.gi=
+t.tanggeliang@kylinos.cn?part=3D5
