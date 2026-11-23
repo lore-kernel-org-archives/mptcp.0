@@ -1,56 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795429113;
-	b=ekmF0ZzntUEFW/xO7JVQpfs+9NZiVIVXpH3dUz0AzZcurOGXNY97UaqBlGKSNcJgcN0Z
-	 YOCOvLdXlGjD+TxokBtPrge3dekb+qKEYo+TFk+aqL/8+8ns3iJrzBaGQLBz4QeE/Xk1q
-	 EHTIJ1MJ0bdlPRtRN0lKwpWWnkTCkCCQbcE2xaJqPr0A07uSaqsbKQPQ8GCPSnNghBuZX
-	 c3jqorFmOtiEa+iHeh4p4MTTrF62xopu01PxUkOiWOgItBxQA66oLXu3btN80jMoNJpJW
-	 WFQhMCqLjF2NU4ip8ulZDogkRrQozAh8tle+NV/YrvjyWfVkCwRA7z4G/J8l4AfpPoQ==
+	t=1795429382;
+	b=VT/by4DPJ+M496pKfy3u+G9hJEzFJ6cEpzJm0UpTo89ElICdPP+MU5cRisoplJ9pPnwO
+	 /avFCFziBsHkwI0t9FtAiusmKIGZ314rsL6drQ2h3XMqS88Gu5FLuv7Jn7rCTxMi3idhO
+	 GPxw+57hmaQx02ALb/ktdX+pHzxAblc2OzYWpYYWG/ukwYxmT8U8oYo/NF8chQKQtVIw7
+	 A1vA+Huwv+HrvYkoxbZ7cU2pN1oenxMsV7vOIId2b65AMAU93YQ9BtwPJBetxK4GqqbCd
+	 xmL4YMkA5oYooWPpcQ1BhNzYdb/MKBbW6rdStPBBGu/SvOzyPngFzsNjGTv6XkbrWug==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795429113;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=3hwiQYBMtUFszNgRO0EOSdLPgtWj+YxlrObcZCODYx4=;
-	b=B6Ej/WJ3rGcVA+zWm5OWvfnMPKT/cbD+QdurxHbI7eCK87sW1irzVVj6cGjQLC2wqnps
-	 y/20zcANLVIOBjHYQjnuCEEgig0RRFy0ub7AtmKw3b1AzJEG3PRRYlosyuAzRfu8dKZX7
-	 ESowDrUqxPnQR3mrcsGI9V/V/CVA8dY3vNSKJBNCLXP7ecQhg93ZTbbaT4cRq/3FC/6NU
-	 cbf1UNT3uUTJ4JYxQmae6Y9NQTHlfD02qkg5tTJtjTVh8idgp7vckFtUAm2jw7XBEJERf
-	 my8EOYkrWiETrfGB+pM81x3Q5Q+Y4/JP2jWuaxtrW7IMcfMsPDq23rqhNMKG0TDKWPg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795429382;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=2mFJiZupdfnD8dz60RnhnxAnekGRmDhttG9lRs/NZPA=;
+	b=p4UlkGnzZ42wrC0CDUce8Y1QoxVVLdptlROc/O1k2twnhf3QIEm4LQDNT6A2dvf/EWKW
+	 mF7BnZ9FBOUBW/GoqOoKAu+Rd15NlxmEQ4yeb5kmcssAHEskBI9wknuwXOPAfwmppV17X
+	 7UKE5Uo1uDih6tnuX6Yu3KjsYA7BbDfxS17Y8H81j2VvLMn/UD8dNRXNAb7DpuffgXFSz
+	 q1jyOGhRHeNeUdeMrlG2aRsJ68mLoOyBbjwF2pMcnqJ2BTimse20liePG2W4E5p1WIPkQ
+	 qsyTAUfCj0ymrOLxM4FhBq6lhFRimMp/LRM/ejKXEKhjOvMeYHDQscazsYJW5dOFyCg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="XcGwOD/q";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="P/RPhrNX";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C42606A31F
-	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 10:18:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08558606A31E
+	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 10:23:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XcGwOD/q
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0313A1F000F4;
-	Mon, 23 Nov 2026 10:18:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=P/RPhrNX
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D65E51F000C0;
+	Mon, 23 Nov 2026 10:23:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795429113;
-	bh=3hwiQYBMtUFszNgRO0EOSdLPgtWj+YxlrObcZCODYx4=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=XcGwOD/q3ZLg0kCT0U8OT26z2UFeypGV+uIpYGowL8ip/i+y9GsdpoXyYzNrs4kCi
-	 vYWVzcfm2G/pZRITNiFupDCy6yxCOHOrSyVn35G0MFFAQgTlpdZtKcv0gV2J+cwFuR
-	 nvDD+Lovt7rTtbrRECT2rCJ4AQefcU1oQuCqf++cVLkihc0dcK3wZ91+S4mNaF3Lc5
-	 fBpGBN5JLq9qaND2ui4mGn3P5hlFTrZBxTOcXMAJe04nr3Y56pV1p4qBKBzPiNvHU8
-	 6pjFmiFUBetm/o3rD7ElxBNpW7UfQZFgo0Xu6fYewsaWSFGc7ThCi0ND0l10+Y5ZWn
-	 hKcZMyvPokJQQ==
-Message-ID: <sashiko-outbox-229032@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v6 1/2] mptcp: sched: add subflow avoid flag
- and enforce it in default sched
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Kalpan Jani" <kalpan.jani@mpiricsoftware.com>, mptcp@lists.linux.dev
-In-Reply-To: <20261123100821.2228839-2-kalpan.jani@mpiricsoftware.com>
-References: <20261123100821.2228839-1-kalpan.jani@mpiricsoftware.com>
- <20261123100821.2228839-2-kalpan.jani@mpiricsoftware.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 23 Nov 2026 10:18:31 +0000
+	s=k20260515; t=1795429381;
+	bh=2mFJiZupdfnD8dz60RnhnxAnekGRmDhttG9lRs/NZPA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=P/RPhrNXoiv1hXnMprDYy9xgZSmgpmocW1ivdjSQrRS8mDduQMQxNeHG5TtxGUMIa
+	 A2aBSkpCSQKdPDLnF68Gtlf1NEd+QsUubqJkfChvP7cfGNi65jiQDIY1dWd5z5sJKc
+	 UIwfk45qvdR51n6ckU7vG4ICE8CPXbLJPCsqsd9EuluFQbClLJnG1KzQGpxFgAXqKA
+	 FCfKItDwtPrtupmBsPxJ9R3l7uZgTeuPQItIFsKg9yLEol2SkxPh85pAOkmSIiz44a
+	 Wa/Bk+xJwVz03KFva712PtzWQQBVWT9+5FG/1kQMg80DuVzd596+5Wg+gpgKoAFKLr
+	 dG0LI2mXZ+FGw==
+Message-ID: <c0c5cd54-4ca2-4be1-9874-c454f560ec6c@kernel.org>
+Date: Mon, 23 Nov 2026 11:22:59 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -59,68 +50,103 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net v2 06/62] mptcp: pm: don't drop an RM_ADDR
+ because of an ADD_ADDR
+Content-Language: fr
+To: netdev-bot+sashiko@kernel.org
+Cc: mptcp@lists.linux.dev, kuba@kernel.org
+References: <20261121-mptcp-cmason-fixes-v2-6-00327fd1de1f@kernel.org>
+ <179541553975.3133.677293475472069830@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <179541553975.3133.677293475472069830@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Medium] mptcp: sched: unreachable subflow->avoid checks in default
-  scheduler
---
+Hello,
 
-commit 581a16fad32148d403da6646a8629a080cac8614
-Author: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+On 23/11/2026 07:32, netdev-bot+sashiko@kernel.org wrote:
+>> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+>> index f1f4b13c54590..cdd62433e0a6d 100644
+>> --- a/net/mptcp/pm.c
+>> +++ b/net/mptcp/pm.c
+> 
+> [ ... ]
+> 
+>> @@ -538,7 +539,16 @@ int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_list *rm_
+>>  	msk->pm.rm_list_tx = *rm_list;
+>>  	rm_addr |= BIT(MPTCP_RM_ADDR_SIGNAL);
+>>  	WRITE_ONCE(msk->pm.addr_signal, rm_addr);
+>> -	mptcp_pm_addr_send_ack_avoid_list(msk, rm_list);
+>> +
+>> +	/* pending ADD_ADDR and echo take the first ACKs: one more each */
+>> +	for (i = 0; i < 3 && mptcp_pm_should_rm_signal(msk); i++) {
+>> +		u8 signal = READ_ONCE(msk->pm.addr_signal);
+>> +
+>> +		mptcp_pm_addr_send_ack_avoid_list(msk, rm_list);
+>> +		/* no signal sent, e.g. after a fallback: no more ACKs */
+>> +		if (READ_ONCE(msk->pm.addr_signal) == signal)
+>> +			break;
+> 
+> [Severity: Medium]
+> Can this comparison see an ABA on the echo bit and stop after an ACK
+> that did carry a signal?
 
-mptcp: sched: add subflow avoid flag and enforce it in default sched
+Mmh, I shouldn't have changed this patch to address a comment from
+Clashiko from v1 that was not really important. It is fine to delay
+RM_ADDR or drop it at the end of the connection in case of ADD_ADDR
+(echo) to send first: a very rare/unlucky situation, it is not a big
+deal if a RM_ADDR is missed.
 
-This commit adds an avoid flag to mptcp_subflow_context, exposes
-mptcp_subflow_set_avoid() as a BPF kfunc for custom packet schedulers,
-reports the flag via MPTCP diag, and skips avoided subflows in
-mptcp_subflow_get_send() and mptcp_subflow_get_retrans().
+Back to v1 then.
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/349
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-[ ... ]
-
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index be23768b6d051..8a2894293e70c 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1650,7 +1650,7 @@ struct sock *mptcp_subflow_get_send(struct mptcp_so=
-ck *msk)
-> =20
->  		trace_mptcp_subflow_get_send(subflow);
->  		ssk =3D  mptcp_subflow_tcp_sock(subflow);
-> -		if (!mptcp_subflow_active(subflow))
-> +		if (!mptcp_subflow_active(subflow) || READ_ONCE(subflow->avoid))
->  			continue;
-> =20
->  		tout =3D max(tout, mptcp_timeout_from_subflow(subflow));
-> @@ -2575,7 +2575,7 @@ struct sock *mptcp_subflow_get_retrans(struct mptcp=
-_sock *msk)
->  	mptcp_for_each_subflow(msk, subflow) {
->  		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-> =20
-> -		if (!__mptcp_subflow_active(subflow))
-> +		if (!__mptcp_subflow_active(subflow) || READ_ONCE(subflow->avoid))
->  			continue;
-> =20
->  		/* still data outstanding at TCP level? skip this */
-
-[Severity: Medium]
-Can subflow->avoid ever be true in mptcp_subflow_get_send() or
-mptcp_subflow_get_retrans()?
-
-mptcp_subflow_set_avoid() has no in-kernel callers and
-bpf_mptcp_common_kfunc_filter() restricts it to bpf_mptcp_sched_ops
-programs.  An MPTCP socket binds msk->sched once at creation and only
-clears it in mptcp_release_sched().  When a custom BPF scheduler is
-attached, mptcp_sched_get_send() and mptcp_sched_get_retrans() dispatch to
-msk->sched->get_send() and msk->sched->get_retrans() rather than the
-default scheduler, and neither mptcp_subflow_get_send() nor
-mptcp_subflow_get_retrans() is exported as a BPF kfunc.  Conversely, when
-msk->sched is &mptcp_sched_default, no bpf_mptcp_sched_ops program runs on
-the socket to set subflow->avoid, making both checks unreachable dead
-code.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261123100821.2228=
-839-1-kalpan.jani@mpiricsoftware.com?part=3D1
