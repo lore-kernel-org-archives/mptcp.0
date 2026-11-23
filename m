@@ -1,50 +1,52 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795397239;
-	b=gXn8Rp1U+wpd17qh4Zq6Euvhr3F6vYOmaykpLg7jzwcxRJ8bQdpmJ5X9AkIJIVbo+Ip0
-	 A1O0SDY72BTKqrzWuoGLOIHh4RMM/Kk84YRSG/HeVWOXjoRjmkOW92Lq4+4IlvZkxey4/
-	 6ERH0Eed2IKExKxHN3tCwkTFoRgfI6DKtwprccj/dGztgc/PbPze9+PxEDpYozuhKZWDg
-	 jJcx2qeEjJLXsf5ht4yNpHPs/sE8CDH9MdxoHga5vX4Ja/ddZtbCZGsywjBHhJZP80Ek0
-	 +gPRanhdD3++P+hlNNtSKdGrtsL7Jja0SCVBNwURYmMJfa1DKQrhsEK/HlT8ju8tpVA==
+	t=1795397241;
+	b=3rGjw0QZye1IxQ5f6yhpKOV3P8cIXXDjL64qHiLtEiciDte9WcgmFH2wv0MRyxPRF4/W
+	 8fKkFSlvTWS+WJLmpTWXTw63B4GUvic3p/jADwzgYRt0W8EJXaXQ6NxLP9pJl4k66jzLZ
+	 EwqwvYiSywzNKHqFGHBbHhhvM53T/MwszFwUNTA7v5PjuTv7Toj12ibw5LY97yBhZ4rwr
+	 ytc/ReZaYC0MtboCyahJMrkjRjF0agPZlFXPLxV7z56lw7TbZECiYHr/mbftqYYb1nkWB
+	 sRx5DCSBeRiuycek5/Vs71U6bVoHw3HCA8dMIqMTbHRlR3U2so9OCoilENSfN9s+4MA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795397239;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795397241;
 	h=Received:DKIM-Signature:From:To:Subject:Date:Message-ID:X-Mailer:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=Da/pLBaGlrSmp2X5BKsBvROFSfhRJgjd7VBFwZOmVV4=;
-	b=GJAYkogoR9hS3nI3U2RFsCWQzFhr1iesxRUmBCvepaOoazp2CI/LmRN5NzsFTQnerES5
-	 gnl2nQDPpWrcuEGUbtR3dJdq9wtIUPH0G2ELgUen+zN12vaT9ompX1w0jlzKZIsptgPF9
-	 c8Wqfn8hf+nfDiWj12oSKBFb1Hgy9aR2YBQkK9pYPxV/RuNtjjhnFIP/CL+IFhdK72ZXI
-	 J6WyhJV2HbLO4WpialXqJGSxdDUY7VWqRV9Jz0mUNsAKjc/vV3PkFWQHEwJ+K69Teho3a
-	 OB5R/NLmpMEyh3LrJSvP6orkSdpwa1PYdQ+9IwM6iR22aYcEvCzP8E//3TswznG61nw==
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+	bh=Xzgdi6tixpENAajuTDo2lKhr0psohkrbZKpP6EdA4a8=;
+	b=sbaCR9QzcX0XxEhhrM0tNBMY/w25ehPXKwLd2kC9p36euYBAfcg1A/d9+mwNsd33xpA6
+	 KpA4D0gK8CerPZBjJ6wHFSEeggTX6F1Mxc2jXihYbhw8sILx2tOkce/Lzy2ZaLq3ru5/W
+	 qYkfsJerSV69vqgbb3SiJppcJVoqfGpLjt0/DG+KzNpcn8MB7HbRvrkHquQxHEYMgCNL6
+	 0oLAzdh5mZv6XXSi577mWewmSqTD751EgiAWcSwv/Y9VlFJDJiZtuQrkmjdYOF9U3P2pj
+	 wQyJ3OnDd361N43MJPudCjmvcKumGpLPD97mfhW3FIPtgL/bLqNuNCy52BvrWb4GtvQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="d/NyNyrR";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="M0iSSjR/";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8122606A31A
-	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 01:27:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C56606A31A
+	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 01:27:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d/NyNyrR
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9FC71F000C0
-	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 01:27:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M0iSSjR/
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F31841F000CA
+	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 01:27:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795397238;
-	bh=Da/pLBaGlrSmp2X5BKsBvROFSfhRJgjd7VBFwZOmVV4=;
-	h=From:To:Subject:Date;
-	b=d/NyNyrRk/BhadHwccmKYYRs6TpmW/UH6TC7lC/0HWgW4hD0NTE06cJ0weISdKk7A
-	 uo+6Nwp/YZ86N/nL2U6jMYbke757yE7pEzVxO5R7TusIKLs//oPzHgR8sdBjZv6Iqx
-	 IEtGc/iVzETcN07DBmQY2iPSeO2o1fn8We1+hB9xEWjV3xYbJNu9AhoOFq13ZfnOe1
-	 S8lvl1/tG5V0ca7tyvsnGx4+3P8o31+818KGIO+N7WwEjtwlIjygokqy3e1o7EbtST
-	 McbplfeUCOwjz1EQ+AaaWk9eE1Gstwa96BJhRYZbAnD+4XW5UL0pXqjTz03/ngwKuS
-	 OyddFJ+evihNw==
+	s=k20260515; t=1795397240;
+	bh=Xzgdi6tixpENAajuTDo2lKhr0psohkrbZKpP6EdA4a8=;
+	h=From:To:Subject:Date:In-Reply-To:References;
+	b=M0iSSjR/uFb+PAGlqjWvKH7V6NBX5Qqw7QxBTI3eP9Gvq/CPEQ52TVodcRXBkqAa1
+	 sJIK1KIzF1KgpATSTYhQvXVN5LK/aoGwMvSQ+/xNHYmzhxHscaOhFIWZOxl4Y//c6r
+	 LzNE2LsIVYMKAmy4qa6Wvre8SMb/2HMLLizHZU/yYY2ORyqWp4V98vXxgji01ckqml
+	 yCjeSaxsacaH2ZV5whdEVhxqFFQSlvH9sFOwlUWysP+dlJrXUgk8vrDWXnnvlGadPI
+	 ItkWSrk/qR6YAUUm86Aiuh5zqhkZXnLQhAxkU6u22ma6rGOb7bf5dWqH1ooZnlbErX
+	 hAQ1j+o7NsG5Q==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net v3 0/4] mptcp: fixes for SIOCINQ
-Date: Mon, 23 Nov 2026 09:27:10 +0800
-Message-ID: <cover.1795396910.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-net v3 1/4] mptcp: handle ack_seq advancing past rcv_data_fin_seq
+Date: Mon, 23 Nov 2026 09:27:11 +0800
+Message-ID: <84d2d4f05df024cd45c1936a3d53ea1d2797ae2a.1795396910.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <cover.1795396910.git.tanggeliang@kylinos.cn>
+References: <cover.1795396910.git.tanggeliang@kylinos.cn>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -58,45 +60,39 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-v3:
- - patch 3: fix Sashiko AI review comment
-   avoid comparing ack_seq with unset rcv_data_fin_seq (0)
-   check TCP_CLOSE/RCV_SHUTDOWN directly, only call mptcp_data_fin() when
-   rcv_data_fin is true, exclude MP_FASTCLOSE from +1
+Change mptcp_pending_data_fin() to check if ack_seq >= rcv_data_fin_seq
+instead of ack_seq == rcv_data_fin_seq. This handles the case where
+out-of-order segments in the OFO queue advance ack_seq past
+rcv_data_fin_seq before mptcp_pending_data_fin() runs.
 
-v2:
- - patch 3: drop mptcp_data_fin_seq(), reuse mptcp_data_fin()
-   - u64 return couldn't distinguish "no DATA_FIN" from "DATA_FIN at seq 0"
-   - mptcp_inq_hint() checks rcv_data_fin/TCP_CLOSE/RCV_SHUTDOWN first
+With the strict equality check, if ack_seq advances past rcv_data_fin_seq
+due to OFO processing, the DATA_FIN would never be processed. In
+ESTABLISHED state, this causes read() to never return EOF since
+RCV_SHUTDOWN is not set. In FIN_WAIT1 or TCP_FIN_WAIT2, the connection
+hangs until the close timer expires.
 
-The goal of this series is to make MPTCP's SIOCINQ fully consistent with
-TCP's: both report the number of readable data bytes, excluding the FIN
-byte.
+The new check using !before64(ack_seq, rcv_data_fin_seq) ensures DATA_FIN
+is processed even when ack_seq has moved past it.
 
-Patch 1 fixes mptcp_pending_data_fin() to use >= instead of == so that
-DATA_FIN is processed when ack_seq advances past rcv_data_fin_seq due to
-OFO queue processing.
+Fixes: 3721b9b64676 ("mptcp: Track received DATA_FIN sequence number and add related helpers")
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ net/mptcp/protocol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Patch 2 adds missing smp_wmb/smp_rmb barriers for rcv_data_fin_seq on
-weakly-ordered architectures.
-
-Patch 3 fixes mptcp_inq_hint() INT_MAX overflow on passive TFO by using
-mptcp_data_avail() instead of ack_seq minus map_seq, and reuses
-mptcp_data_fin() to guard the FIN byte (+1).
-
-Patch 4 adds mptcp_inq() that excludes the FIN byte, matching TCP's
-tcp_inq() behavior, and switches SIOCINQ to it.
-
-Geliang Tang (4):
-  mptcp: handle ack_seq advancing past rcv_data_fin_seq
-  mptcp: add missing memory barriers for rcv_data_fin_seq
-  mptcp: fix TFO SIOCINQ overflow in mptcp_inq_hint
-  mptcp: add mptcp_inq() for SIOCINQ
-
- net/mptcp/options.c  |  1 +
- net/mptcp/protocol.c | 63 ++++++++++++++++++++++++++++----------------
- 2 files changed, 42 insertions(+), 22 deletions(-)
-
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index be23768b6d05..5ade9c25d0fb 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -569,7 +569,7 @@ static bool mptcp_pending_data_fin(struct sock *sk, u64 *seq)
+ 	     (TCPF_ESTABLISHED | TCPF_FIN_WAIT1 | TCPF_FIN_WAIT2))) {
+ 		u64 rcv_data_fin_seq = READ_ONCE(msk->rcv_data_fin_seq);
+ 
+-		if (READ_ONCE(msk->ack_seq) == rcv_data_fin_seq) {
++		if (!before64(READ_ONCE(msk->ack_seq), rcv_data_fin_seq)) {
+ 			if (seq)
+ 				*seq = rcv_data_fin_seq;
+ 
 -- 
 2.55.0
 
