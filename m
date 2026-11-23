@@ -1,56 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795423049;
-	b=ERg1VMPRxLQL4Mjv2KtYR2Q0NwPbtwDMxUG4xnV4rjdcH/58g8Z7YSl2wrHRdz8VNcUR
-	 9FXSqJZq5SM11+wIWqMEfGose72FCFxixv9AKYpyTvZ2cDwvPtx5ju9GiDXvYHRWnv51L
-	 rtSJKH8/Pqy/yv+STi9SW5Og5QvdY3BHCLnIt3IfjMw2+avMfrf7NffHKH3ZO+rhz//wl
-	 WgqR0CQPGvgX4qvyo6RQsmieIjyc4zYmMKawjESZCVVILyENRl3qQ1oKPjUynLruLNNL0
-	 gQDbDutIHHhNsTcV81FsVq96AEzpU3PV5EGu47tR8W2wC8T8rHQlzqYEugK78TBRWeA==
+	t=1795423605;
+	b=Wp0k0VImj/J+DaVY77MA2tzBkydtsB2VNo0mKVW9Bt0Ezws7HPjiBVjN8DcGhH0ADRSR
+	 RvCCfVQIA6c9fu8GgmZg4a/0sTuAJg/YRzqRq3HwpQZRVDP65+fzAwwplaN8+QdZVKNST
+	 Afv+K3JSH1xF1mLLkXXHyzBTMX0gKtojIwid3B0SFMR/+g9iqxqwGJ9vssXo0LxTe2ug7
+	 MVauFLv6tp/uueChLKr5Ko711J+k+fMvdaJNsIF/7ZvrEWK43BmQqL+gQr///4X3srNTP
+	 VjkJjMjFOHoJGYmjOCQLU4NBr7cfKR14NaGS26uValhVaQqk1+8PfvFjiqe6AM07yCg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795423049;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795423605;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=mLZS0o3kdU1hv6VH06LquZXnsRC4MaDNUztC+4lCzbQ=;
-	b=K2Tol804i2FkPRw10vOfgh2w1xtGOdcG1vws+/JwYSPoCYhhuLyudSCrK2GTyls04rBm
-	 ubPugKeGNupeF8/jZaCfM+Wwb90HhoqdyxhAFQdggCLg4CP3WX9u4hQj+QtugNqJKJn6V
-	 JoETLYK3znq8bMPix7nbRmDDBdlGeTS5J+hgYSXqlgckwxVvGBg6aawTVUxOdzXP22TVQ
-	 adAhZTqajizN6hz+KwcpRXqdgi2C4M0eKRMMv7bOxk5EnjUsNptCY8r5J+tCl6DKjPsnE
-	 Psed02PxI68wJFOWxCHTy5/cpa6g3NthWiJMj+ztsC6oldWPqnVwrKw69r0PGDyOM9Q==
+	bh=ubDtjEZ2KQBuK/eWXuSlRLImUDucHugez+BTOkcblEI=;
+	b=vP9MKWRy1u0h2/pxg9zeaDqFuuAJEKCNzQ0AorYgSDqnUXP2ih7oNYeY3F3k7w6fF5rv
+	 zAJXkgdBB4u8z90BjJ2TDHrET4EIDbaGvuUmaaIRqk+jFQU768De0B5C5anLkD76lS230
+	 gE0bdAokDOD2u/fvnzVZtGlBrnpi7Xta2h/rIydp/WdbsfgUJbHLOfw64h0m+Ztot9fDK
+	 +wKGojRcr7Gm+UqT/hgjWKT5qbXCaSJJsXVpPTmRv49/4Vvb2nlhYXS0ahwZfihQYv67U
+	 Z0v8r9xU2MdPMTBa4tm8audNl8PPhlzq1QmigCUSo/Ied4qVytqykbYsLXT9O27mCLQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DAvZN2YJ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Gw1ns0qB;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A047606A31A
-	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 08:37:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E51D606A31A
+	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 08:46:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DAvZN2YJ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 570671F000CA;
-	Mon, 23 Nov 2026 08:37:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Gw1ns0qB
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3853A1F000C0;
+	Mon, 23 Nov 2026 08:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795423048;
-	bh=mLZS0o3kdU1hv6VH06LquZXnsRC4MaDNUztC+4lCzbQ=;
+	s=k20260515; t=1795423605;
+	bh=ubDtjEZ2KQBuK/eWXuSlRLImUDucHugez+BTOkcblEI=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=DAvZN2YJmI8bLqMdVwTvx3j77rd1S0u70pTB/mHayXzekQDrxCoFAANzd/3hCJ2Y7
-	 jXPryQ+bWQ//vgTmFeonb+1pSf8GvjTkMk+0S5LN62Ms1+ICN5hbax3dy17DSr2i6j
-	 koJGISoOfxdbkMdi/0CM23AC8OyI9+3rHAl9xM2HF7z6PU0ovQsLq3I5lTqCOJE6Ob
-	 SZ5tDkGiUgtwe7KRCKfT/jfNBIP7yZFOupYuQ7YEWfwIhqZiJvyKPV89Uv/DKT1TL9
-	 5xGK20iThKXIbIx2nXNZUlDnOresoyP1zWmATqW2EyGS2bvLuNM/5ZmxIXsxwvf5va
-	 gVLEeV63Hj9Xg==
-Message-ID: <sashiko-outbox-228908@kernel.org>
+	b=Gw1ns0qBQ5LLpHvYVSU5cKOvgyNQc63rbMs/QIpDq39YLWwVkny2p+0tOK75hDAIC
+	 vZIkIP11XthwWiPmwcGbZ6WIpKHnb4ZesvfAmeEOtVOCdHfxuXkcv01lkyglO7u4mr
+	 cPGHgbFRvGQhKPN1bW/bjITLTRyvjmO0boE626oJG806WXpP8eAf3ooIu8EulbDV8/
+	 lOT5gDOrKdrHU0Sc+oWiWh8TkjIdXkFANGMV/zwyYHI8txufeK+o6BTw4Ck35qfgFm
+	 445YbWTAegS27waEVmRpB5GzF5zFiWTfUEQ0oVD5aV6gtwtGOoipt4rres/mEsQH6q
+	 nVRQuYthkbujQ==
+Message-ID: <sashiko-outbox-228911@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v8 6/7] selftests: mptcp: connect: add
- zerocopy io mode
+Subject: Re: [PATCH mptcp-next v8 4/7] mptcp: add MSG_ZEROCOPY support
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <9d10433a1bc453357a5994906ff3029f0e1f76a1.1795421388.git.tanggeliang@kylinos.cn>
+In-Reply-To: <3f30ee2209176e73f716ad379bb6385145b05fa8.1795421388.git.tanggeliang@kylinos.cn>
 References: <cover.1795421388.git.tanggeliang@kylinos.cn>
- <9d10433a1bc453357a5994906ff3029f0e1f76a1.1795421388.git.tanggeliang@kylinos.cn>
+ <3f30ee2209176e73f716ad379bb6385145b05fa8.1795421388.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 23 Nov 2026 08:37:27 +0000
+Date: Mon, 23 Nov 2026 08:46:44 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -60,267 +59,225 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 5 potential
+Thank you for your contribution! Sashiko AI review found 4 potential
 issues to consider:
-- [Medium] selftests: mptcp: premature buffer free in do_sendmsg_zc()
-  after first cmsg
-- [Medium] selftests: mptcp: undersized msg_control buffer in
-  drain_errqueue_zc()
-- [Medium] selftests: mptcp: ignored zc errors and wait on 0 sent in
-  do_sendmsg_zc()
-- [Medium] selftests: mptcp: unconditional set_sndbuf() and 0-size MPTFO
-  in copyfd_io_zc()
-- [Low] selftests: mptcp: int overflow in size * 2 and unlooped read in
-  do_sendmsg_zc()
+- [High] mptcp: off-by-one U16_MAX check in
+  mptcp_sendmsg_zerocopy_iter()
+- [Medium] mptcp: unbalanced sk_wmem_schedule() in
+  mptcp_sendmsg_zerocopy_iter()
+- [Medium] mptcp: missing DEFER_CONNECT check for MSG_ZEROCOPY in
+  mptcp_sendmsg()
+- [Medium] mptcp: missing zerocopy notification on copy fallback in
+  mptcp_sendmsg()
 --
 
-commit 0f0d4fe1bd34bb0fc128a15413afd453172d8483
+commit 6f18d9c0894cba580b4859b23fbe02de7c4fe368
 Author: Geliang Tang <geliang@kernel.org>
 
-selftests: mptcp: connect: add zerocopy io mode
+mptcp: add MSG_ZEROCOPY support
 
-This commit adds a 'zerocopy' I/O mode to the mptcp_connect selftest that
-transmits data using sendmsg() with MSG_ZEROCOPY and drains completion
-notifications from the socket error queue.
+This commit adds MSG_ZEROCOPY support to MPTCP sockets by pinning user pages
+into mptcp_data_frag entries and tracking completion across both the MPTCP
+retransmission queue and subflow skbs.
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/te=
-sting/selftests/net/mptcp/mptcp_connect.c
-> index 8c788977e5947..08fd505132030 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-
-[ ... ]
-
-> @@ -1014,6 +1016,180 @@ static int copyfd_io_splice(int infd, int peerfd,=
- int outfd, unsigned int size,
->  	return err;
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 84848cb0a5e9c..9cd3e12d5546c 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1186,9 +1186,11 @@ static bool mptcp_frag_can_collapse_to(const struc=
+t mptcp_sock *msk,
+>  		df->data_seq + df->data_len =3D=3D msk->write_seq;
 >  }
 > =20
-> +static bool process_cmsg_zc(struct msghdr *errmsg)
-> +{
-> +	struct sock_extended_err *serr;
-> +	struct cmsghdr *cm;
-> +
-> +	for (cm =3D CMSG_FIRSTHDR(errmsg); cm; cm =3D CMSG_NXTHDR(errmsg, cm)) {
-> +		if (cm->cmsg_level !=3D SOL_IP && cm->cmsg_level !=3D SOL_IPV6)
-> +			continue;
-> +		if (cm->cmsg_type !=3D IP_RECVERR &&
-> +		    cm->cmsg_type !=3D IPV6_RECVERR)
-> +			continue;
-> +
-> +		serr =3D (struct sock_extended_err *)CMSG_DATA(cm);
-> +		if (serr->ee_origin =3D=3D SO_EE_ORIGIN_ZEROCOPY)
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +static bool drain_errqueue_zc(int peerfd)
-> +{
-> +	size_t ctl_len =3D CMSG_SPACE(sizeof(struct sock_extended_err));
-> +	struct msghdr errmsg =3D {};
-> +	bool found =3D false;
-> +	char *ctl;
-> +
-> +	ctl =3D malloc(ctl_len);
-
-[Severity: Medium]
-Is ctl_len large enough for the control messages queued on the error
-queue?
-
-ip_recv_error() and ipv6_recv_error() append an offender sockaddr_in or
-sockaddr_in6 after struct sock_extended_err, so a buffer of
-CMSG_SPACE(sizeof(struct sock_extended_err)) triggers MSG_CTRUNC on every
-recvmsg(MSG_ERRQUEUE) call.  They also call sock_recv_timestamp() before
-queuing IP_RECVERR or IPV6_RECVERR, so running with -c TIMESTAMPNS fills
-the entire 32-byte control buffer with the timestamp cmsg and drops the
-zero-copy completion cmsg, leaving wait_for_completions_zc() to stall
-until timeout.
-
-> +	if (!ctl) {
-> +		perror("malloc ctl");
-> +		return false;
-> +	}
-> +
-> +	errmsg.msg_control =3D ctl;
-> +
-> +	while (!found) {
-> +		errmsg.msg_controllen =3D ctl_len;
-> +		if (recvmsg(peerfd, &errmsg, MSG_ERRQUEUE) < 0)
-> +			break;
-> +
-> +		found =3D process_cmsg_zc(&errmsg);
-> +	}
-> +
-> +	free(ctl);
-> +	return found;
-> +}
-> +
-> +static void wait_for_completions_zc(int peerfd)
-> +{
-> +	struct pollfd pfd =3D { .fd =3D peerfd, .events =3D POLLERR };
-> +	struct timespec start, now;
-> +	int timeout_ms =3D 5000;
-> +
-> +	if (cfg_time > 0)
-> +		timeout_ms =3D cfg_time;
-> +
-> +	clock_gettime(CLOCK_MONOTONIC, &start);
-> +	for (;;) {
-> +		long elapsed_ms, remaining_ms;
-> +
-> +		if (drain_errqueue_zc(peerfd))
-> +			break;
-
-[Severity: Medium]
-Does wait_for_completions_zc() return as soon as the first
-SO_EE_ORIGIN_ZEROCOPY notification arrives rather than waiting for all
-issued sendmsg(MSG_ZEROCOPY) calls to complete?
-
-Each sendmsg() in do_sendmsg_zc() allocates a new notification ID in
-mptcp_sendmsg() via msg_zerocopy_realloc() (and in TCP whenever the 512 KB
-byte limit is exceeded), so transfers larger than SO_SNDBUF (clamped to
-sysctl_wmem_max) produce multiple completion IDs.  Stopping after the
-first cmsg without checking the completed [serr->ee_info, serr->ee_data]
-range against the number of sendmsg() calls causes do_sendmsg_zc() to call
-free(buf) while later zero-copy segments are still pinned and in flight,
-and leaves unread notifications on sk_error_queue.
-
-> +
-> +		clock_gettime(CLOCK_MONOTONIC, &now);
-> +		elapsed_ms =3D (now.tv_sec - start.tv_sec) * 1000L +
-> +			     (now.tv_nsec - start.tv_nsec) / 1000000L;
-> +		if (elapsed_ms >=3D timeout_ms)
-> +			break;
-> +
-> +		remaining_ms =3D timeout_ms - elapsed_ms;
-> +		if (remaining_ms > 200)
-> +			remaining_ms =3D 200;
-> +		if (poll(&pfd, 1, remaining_ms) < 0)
-> +			break;
-> +	}
-> +}
-> +
-> +static int do_sendmsg_zc(int infd, int peerfd, size_t size,
-> +			 struct wstate *winfo)
-> +{
-> +	struct iovec iov =3D {};
-> +	struct msghdr msg =3D {
-> +		.msg_iov =3D &iov,
-> +		.msg_iovlen =3D 1,
-> +	};
-> +	size_t sent =3D 0;
-> +	ssize_t ret;
-> +	void *buf;
-> +	int err;
-> +
-> +	err =3D spool_buf(peerfd, winfo);
-> +	if (err)
-> +		return err;
-> +
-> +	buf =3D malloc(size);
-> +	if (!buf) {
-> +		perror("malloc");
-> +		return 1;
-> +	}
-> +
-> +	if (read(infd, buf, size) !=3D (ssize_t)size) {
-> +		perror("read input");
-> +		err =3D 1;
-> +		goto out;
-> +	}
-
-[Severity: Low]
-Can a single unlooped read(infd, buf, size) fail on partial reads or EINTR
-for large input files?  In addition, set_sndbuf(peerfd, size * 2) in
-copyfd_io_zc() multiplies unsigned int size by 2, which overflows signed
-int in setsockopt(SO_SNDBUF) when size exceeds INT_MAX / 2.
-
-> +
-> +	while (sent < size) {
-> +		iov.iov_base =3D buf + sent;
-> +		iov.iov_len =3D size - sent;
-> +
-> +		ret =3D sendmsg(peerfd, &msg, MSG_ZEROCOPY);
-> +		if (ret <=3D 0) {
-> +			if (ret < 0) {
-> +				perror("sendmsg MSG_ZEROCOPY");
-> +				err =3D 1;
-> +			}
-> +			break;
-> +		}
-> +		sent +=3D ret;
-> +	}
-> +	if (sent !=3D size)
-> +		fprintf(stderr, "sendmsg short: %zu/%zu bytes queued\n",
-> +			sent, size);
-> +
-> +	if (size > 0)
-> +		wait_for_completions_zc(peerfd);
-
-[Severity: Medium]
-Should do_sendmsg_zc() check sent > 0 instead of size > 0 before calling
-wait_for_completions_zc(), and propagate completion and short-send
-failures?
-
-If the first sendmsg() fails (for example with ENOBUFS when RLIMIT_MEMLOCK
-is exceeded), sent is 0 and no completion will ever be queued, yet
-wait_for_completions_zc() still blocks for the full 5000 ms timeout.
-Furthermore, wait_for_completions_zc() returns void (ignoring poll_timeout
-from -t) so completion timeouts, poll() errors, and malloc() failures in
-drain_errqueue_zc() return 0 from do_sendmsg_zc(); process_cmsg_zc() does
-not check serr->ee_errno or SO_EE_CODE_ZEROCOPY_COPIED; and a 0 return
-from sendmsg() with sent < size logs "sendmsg short" without setting
-err =3D 1.
-
-> +
-> +out:
-> +	free(buf);
-> +	return err;
-> +}
-> +
-> +static int copyfd_io_zc(int infd, int peerfd, int outfd, unsigned int si=
-ze,
-> +			bool *in_closed_after_out, struct wstate *winfo)
-> +{
-> +	socklen_t len;
-> +	int on =3D 1;
-> +	int err;
-> +
-> +	set_sndbuf(peerfd, size * 2);
+> -static void dfrag_uncharge(struct sock *sk, int len)
+> +static void dfrag_uncharge(struct sock *sk, int len,
+> +			   struct mptcp_data_frag *dfrag)
+>  {
+> -	sk_mem_uncharge(sk, len);
+> +	if (!dfrag->ubuf)
+> +		sk_mem_uncharge(sk, len);
+>  	sk_wmem_queued_add(sk, -len);
+>  }
 
 [ ... ]
 
-> @@ -1054,6 +1230,17 @@ static int copyfd_io(int infd, int peerfd, int out=
-fd, bool close_peerfd, struct
->  				       &in_closed_after_out, winfo);
->  		break;
+> @@ -2040,22 +2065,110 @@ static void mptcp_rps_record_subflows(const stru=
+ct mptcp_sock *msk)
+>  	}
+>  }
 > =20
-> +	case CFG_MODE_ZEROCOPY:
-> +		file_size =3D get_infd_size(infd);
-> +		if (file_size < 0)
-> +			return file_size;
-> +		if (cfg_sockopt_types.mptfo && winfo->total_len &&
-> +		    file_size >=3D winfo->total_len)
-> +			file_size -=3D winfo->total_len;
-> +		ret =3D copyfd_io_zc(infd, peerfd, outfd, file_size,
-> +				   &in_closed_after_out, winfo);
-> +		break;
+> +static ssize_t mptcp_sendmsg_zerocopy_iter(struct sock *sk, struct msghd=
+r *msg,
+> +					   struct ubuf_info *ubuf,
+> +					   u32 copy_limit)
+> +{
+> +	struct mptcp_sock *msk =3D mptcp_sk(sk);
+> +	struct mptcp_data_frag *dfrag;
+> +	struct page *pages[1] =3D {};
+> +	size_t pg_off =3D 0;
+> +	ssize_t pg_len;
+> +
+> +	pg_len =3D iov_iter_get_pages2(&msg->msg_iter, pages,
+> +				     copy_limit, 1, &pg_off);
+> +	if (pg_len < 0)
+> +		return pg_len;
+> +	/* pg_len =3D=3D 0 means the iterator is exhausted */
+> +	if (pg_len =3D=3D 0)
+> +		return -EFAULT;
+> +
+> +	if (pg_len > U16_MAX) {
+> +		iov_iter_revert(&msg->msg_iter, pg_len - U16_MAX);
+> +		pg_len =3D U16_MAX;
+> +	}
+> +
+> +	if (pg_off > U16_MAX) {
+> +		iov_iter_revert(&msg->msg_iter, pg_len);
+> +		put_page(pages[0]);
+> +		return -EFAULT;
+> +	}
+> +
+> +	if (pg_off + pg_len > U16_MAX) {
+> +		size_t len =3D U16_MAX - pg_off;
+> +
+> +		iov_iter_revert(&msg->msg_iter, pg_len - len);
+> +		pg_len =3D len;
+> +		if (WARN_ON_ONCE(!pg_len)) {
+> +			put_page(pages[0]);
+> +			return -EFAULT;
+> +		}
+> +	}
+
+[Severity: High]
+Does pg_off + pg_len > U16_MAX trigger WARN_ON_ONCE(!pg_len) and return
+-EFAULT whenever pg_off reaches U16_MAX on a kernel with PAGE_SIZE >=3D 64 =
+KiB?
+
+On a 64 KiB page kernel, sending a 64 KiB page-aligned buffer caps the first
+dfrag at U16_MAX (65535) bytes and leaves msg->msg_iter at page offset 65535
+with 1 byte left.  On the next iteration, pg_off is U16_MAX, so pg_off >
+U16_MAX is false and len =3D U16_MAX - pg_off is 0.
+
+Since dfrag->offset and dfrag->data_len are u16 and partial-ACK advancement=
+ in
+__mptcp_clean_una() only adds delta < dfrag->data_len, capping pg_off + pg_=
+len
+at U16_MAX + 1 avoids overflowing either field while allowing the final byte
+at offset 65535.
+
+> +
+> +	dfrag =3D kzalloc_obj(*dfrag, GFP_KERNEL_ACCOUNT);
+> +	if (!dfrag) {
+> +		iov_iter_revert(&msg->msg_iter, pg_len);
+> +		put_page(pages[0]);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	if (!sk_wmem_schedule(sk, pg_len + sizeof(*dfrag))) {
+> +		kfree(dfrag);
+> +		iov_iter_revert(&msg->msg_iter, pg_len);
+> +		put_page(pages[0]);
+> +		return -EAGAIN;
+> +	}
 
 [Severity: Medium]
-What happens when -o MPTFO is used with an input file of 8192 bytes or
-smaller, or when -S is passed to configure SO_SNDBUF?
+Should mptcp_sendmsg_zerocopy_iter() skip sk_wmem_schedule() here, the same
+way mptcp_sendmsg_frag() skips it for zerocopy dfrags?
 
-When MPTFO is enabled and the input file fits in winfo->buf (8192 bytes),
-sock_connect_mptcp() reads the entire file into winfo->buf, so
-file_size -=3D winfo->total_len reduces size to 0; copyfd_io_zc() then calls
-set_sndbuf(peerfd, 0) and do_sendmsg_zc() calls malloc(0), which fails the
-test on libcs where malloc(0) returns NULL.  In addition, calling
-set_sndbuf(peerfd, size * 2) unconditionally in copyfd_io_zc() overrides
-any -S cfg_sndbuf option and sets SOCK_SNDBUF_LOCK, disabling TCP and
-MPTCP send buffer autotuning.
+Calling sk_wmem_schedule(sk, pg_len + sizeof(*dfrag)) raises
+sk->sk_forward_alloc and charges protocol memory, but this path never deduc=
+ts
+it with sk_mem_charge() or sk_forward_alloc_add(), and dfrag_uncharge() ski=
+ps
+sk_mem_uncharge() when dfrag->ubuf is set.  The forward-allocated pages stay
+pinned on sk until the socket closes, and zerocopy sends can fail with -EAG=
+AIN
+under socket memory pressure even though zerocopy pages bypass socket memory
+accounting.
+
+[ ... ]
+
+> @@ -2062,15 +2175,27 @@ static int mptcp_sendmsg(struct sock *sk, struct =
+msghdr *msg, size_t len)
+> =20
+>  	/* silently ignore everything else */
+>  	msg->msg_flags &=3D MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL |
+> -			  MSG_FASTOPEN | MSG_EOR;
+> +			  MSG_FASTOPEN | MSG_EOR | MSG_ZEROCOPY;
+> =20
+>  	lock_sock(sk);
+> =20
+>  	mptcp_rps_record_subflows(msk);
+> =20
+> +	if (msg->msg_flags & MSG_FASTOPEN || !sock_flag(sk, SOCK_ZEROCOPY))
+> +		msg->msg_flags &=3D ~MSG_ZEROCOPY;
+> +
+> +	if ((msg->msg_flags & MSG_ZEROCOPY) && len) {
+> +		ubuf =3D msg_zerocopy_realloc(sk, len, NULL, false);
+> +		if (!ubuf) {
+> +			ret =3D -ENOBUFS;
+> +			goto do_error;
+> +		}
+> +		zc =3D true;
+> +	}
+> +
+>  	if (unlikely(inet_test_bit(DEFER_CONNECT, sk) ||
+>  		     msg->msg_flags & MSG_FASTOPEN)) {
+
+[Severity: Medium]
+Does the MSG_ZEROCOPY downgrade check also need to test
+inet_test_bit(DEFER_CONNECT, sk)?
+
+When TCP_FASTOPEN_CONNECT sets DEFER_CONNECT and sendmsg() is called with
+MSG_ZEROCOPY (without MSG_FASTOPEN), mptcp_sendmsg() allocates ubuf and then
+enters mptcp_sendmsg_fastopen(), which passes NULL for uarg to
+tcp_sendmsg_fastopen():
+
+net/mptcp/protocol.c:mptcp_sendmsg_fastopen() {
+    ...
+	ret =3D tcp_sendmsg_fastopen(ssk, msg, copied_syn, len, NULL);
+    ...
+}
+
+The SYN payload is copied without taking a reference on ubuf or clearing
+ubuf->zerocopy, so when mptcp_sendmsg() jumps to out: and calls
+net_zcopy_put(ubuf), it immediately queues a zerocopy completion notificati=
+on
+while the SYN data is still in flight.
+
+[ ... ]
+
+> @@ -2094,6 +2207,25 @@ static int mptcp_sendmsg(struct sock *sk, struct m=
+sghdr *msg, size_t len)
+>  		if (!copy_limit)
+>  			goto wait_for_memory;
+> =20
+> +		if (zc) {
+> +			ret =3D mptcp_sendmsg_zerocopy_iter(sk, msg, ubuf,
+> +							  copy_limit);
+> +			if (ret =3D=3D -EAGAIN || ret =3D=3D -ENOMEM)
+> +				goto wait_for_memory;
+> +			if (ret =3D=3D -EFAULT) {
+> +				if (copied)
+> +					goto do_error;
+> +				net_zcopy_put_abort(ubuf, true);
+> +				zc =3D false;
+> +				ubuf =3D NULL;
+
+[Severity: Medium]
+Does calling net_zcopy_put_abort() before falling back to the regular copy
+path suppress the required MSG_ZEROCOPY completion notification when the co=
+py
+succeeds?
+
+net_zcopy_put_abort() decrements sk->sk_zckey and zeroes uarg->len, so when
+the loop falls through to do_copy_data_nocache() and returns a positive byte
+count, no SO_EE_ORIGIN_ZEROCOPY notification (with SO_EE_CODE_ZEROCOPY_COPI=
+ED)
+is queued on sk->sk_error_queue.  Applications waiting for a completion per
+successful MSG_ZEROCOPY sendmsg() call will lose track of sk_zckey or hang =
+on
+MSG_ERRQUEUE.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1795421388.gi=
-t.tanggeliang@kylinos.cn?part=3D6
+t.tanggeliang@kylinos.cn?part=3D4
