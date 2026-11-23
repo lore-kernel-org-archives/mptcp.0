@@ -1,59 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.54
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795412636;
-	b=vqEZrR93PTrDCZkxtH/McjXke0vOSBpKg08qMD03iw7B8OE9SN32/LUl5PiQ72KRIPll
-	 8eeUmyivBAhdEoHuRlc0qMkI3DXW5t3QV77f62ottG6Z1Jb5JHNaVaRuhOj1bYU509sMc
-	 AUF3vGy8qw7mXIx+A3/9LqvcSQF97BFhz2aW0MplQ5EcvFV2CrdluSkc+Ew8UDdAtBR6f
-	 PLHpbnETMM9WGH4RT2S6QPkl1qSee5heDL3vhFhtVdg6rhg53R0Dm3bb6TC4AKs8G2MSA
-	 d4xJ5rNETJVr933f27izgLfXJmlljifd1Kb1qOYukPVqoiggFMPcIWyKcKNeXmI2OXA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795412636;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding:
-	 X-ZohoMailClient;
-	bh=6hfyw7WhHFchEd16y0nHkupG7B36TqiBWqvjOIMwFnA=;
-	b=N08VxIpokl/4ygNGqqk6ljm9lkJYoCQmn+1qtX20Wu1ZxNvV/3QJII6q4x2+90hspLuq
-	 KaXMkbZpnXlSQNFMKLCWhojVECIKI6R7ea0JoXQokmcnTPMx7BoOb1YwddQvHzaJGTfrq
-	 nqosSBrn/QDJm11O+WF/bnETEx6IdL6QeDCzdmtYzZl9AIWuXNFm/7wjJmW+8gyRpXQdW
-	 +WUS+3I2nrXZefSFZpKhnQw3AYnmHewetq38srckpGHP5oHah1RsJufLn3IYRTGqjSVNc
-	 bYaApWePMpt+h1Z6dYiMhrcD452ZZYu1PIbNKebQlUjB4jsjl2cvEn0ejQKJ9dWc1/w==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=mpiricsoftware.com;
-	spf=pass smtp.mailfrom=mpiricsoftware.com;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.54
-Received: from sender5-of-o54.zoho.com (sender5-of-o54.zoho.com [165.173.182.54])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795415541;
+	b=En7TaF4H68O8MYj0gDNifQ/7UV5nseMRfbc0MNCPCSjhRLqbkifowEXfAoKqd4YFyy/H
+	 8fREpsXmBlZ1P5u0B/8Eg84xgKUYRpl98/wXBj/4IEsS43vW+7nYMxDSuf6pD6mYGkJ/F
+	 cGUX6xexnKe30f9RWLK9IWNRBaL1elq0EASbk9GHi96TlBlB5QTuWrwBt88FDhvid7qbl
+	 zB+UAD7M7JKXnivBGSgqB3F7sq666NAxf1y+rPrxVIYXv9pRJ4jodNh6IEKDoskLxCWj3
+	 mvdZ0/JBOFsRTmS5dzE9yp7n3RmgHPFiUYWMjLIVhP97RpIYNwaTIHmNqn9B99F9OeA==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795415541;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=TYglbUN6uIaZovIVLIQw1cNaiPlcrsvWmUmnrLfoMTY=;
+	b=d0fsKvH+NaM1gUf/r4qoBT2MF3M5pX1Q+hD+nOrKwypuRC1y8RP0US7VUrY51xkYbdcR
+	 BEyk2kEl1D8I5/RrruDzM4cNVTs0YdrYRTzHgCeAoamVxw2j+C67tZ9iMP0jKAghvKED2
+	 fSVpxqiieArkiPx9XlZVwpdFHIlxV/ipPJnlnGCMVoq4N0/ug+GxHKgaWwG/dXcJRC5j9
+	 ZNFBf84xjbF0qtB0cWoO7AJWtDUJBWQf7ZRtiAMx/EjGSR+Vrn6zY9+GJch4nZI8eedaS
+	 oS5yIjlGgA70ud5YRqPQ2mP8zAr2lykt+3yO4na/OqqpmxEF7oSay1K8Wl3Nv1zgJZw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iQdWC37P;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42043606A31E
-	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 05:43:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 42043606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
-ARC-Seal: i=1; a=rsa-sha256; t=1795412629; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=SKy+gL/o2lI4DaUDgKZqLw/nZS130q+MfvTGg4YL1kcjpaL+ewJ4ovsuwf+ol4sxGPI5qRbP/JYf4DpaVASgMWWfgSF7N7QkX71zqMlwqy6jE8IONrjIpemQkAva15fK8wH+80uI8cEmCHekeaFDPHu/2ahtBkxshT2kX6muytM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1795412629; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=6hfyw7WhHFchEd16y0nHkupG7B36TqiBWqvjOIMwFnA=; 
-	b=XvA62QMHKI9xt9u+rNcIiPsUgCzwQw2iwLOVWbrbtTb2w98yoo3pFkEzJgnYDlbZ4Z18cWJfC8/Hg36RBPnOv7RBOPIg3tDD+A24Ps9Shc2hEIngTakq+P3EQV4cwm9zGmWaDQcTWanJqIMt75TG1woOi21PYFwnhYHUUzbOWYg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=mpiricsoftware.com;
-	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
-	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
-DKIM-Signature: a=rsa-sha256; b=tfu3qXAMkQ0u7VBO1CbFlbQUUFRwlcRhLkVxp+43KFaiThUHcq69m40LbbNDmnh8DbWuY0Rp+IHGNH+/BXGXOzNz9vwo9Yn2ncyU7MT4jTvxxWKIf9spVo9yVjDyZRdDjRE8+/94BqMUg0CQgR/82yMXmcrTkX0LKQiHnQTEnw4=; c=relaxed/relaxed; s=mpiric; d=mpiricsoftware.com; v=1; bh=6hfyw7WhHFchEd16y0nHkupG7B36TqiBWqvjOIMwFnA=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1795412622235369.2728429522964;
-	Sun, 22 Nov 2026 21:43:42 -0800 (PST)
-From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-To: mptcp@lists.linux.dev
-Cc: shardul.b@mpiricsoftware.com,
-	janak@mpiric.us,
-	kalpanjani009@gmail.com,
-	Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-Subject: [PATCH mptcp-net v14] mptcp: hide sequence numbers in Netlink diagnostics
-Date: Mon, 23 Nov 2026 11:13:24 +0530
-Message-ID: <20261123054324.561321-1-kalpan.jani@mpiricsoftware.com>
-X-Mailer: git-send-email 2.43.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2B1606A31A
+	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 06:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iQdWC37P
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B8831F000C6;
+	Mon, 23 Nov 2026 06:32:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795415540;
+	bh=TYglbUN6uIaZovIVLIQw1cNaiPlcrsvWmUmnrLfoMTY=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=iQdWC37PzcnaB8QSrt6iyUpi5nNMKumjYS5NmlxuJ8I2zmZtT6ZzxF6xgMu7bBfX1
+	 Hq5BV6/Ym0xgnC47fnIBvy+OUwXiDRBX0ildkSgTxVreZXCf8YCfvZszIVxQg375Gq
+	 EPrkX4oc+v0OF96WPxxNzQvbHEjl9RJWv82mfMKocNUViYuT6ETu2nEADJ3itSvxES
+	 YWW2+8iGDn8iWoOH+gc77uQdrtSuhi1m0LNWc78mgBtSaiI2N0h3e4CJwtG93ajZtE
+	 TLa7RT//xidKQfKGVfitrS0Sr/hncmK3yI0zMTo6RJxwWeTCcx1nY7wMWLv8wQ7DY6
+	 FSx39ea5Vxn3g==
+Subject: Re: [PATCH mptcp-net v2 06/62] mptcp: pm: don't drop an RM_ADDR
+ because of an ADD_ADDR
+From: netdev-bot+sashiko@kernel.org
+To: matttbe@kernel.org
+Cc: mptcp@lists.linux.dev, kuba@kernel.org
+Date: Mon, 23 Nov 2026 06:32:19 +0000
+Message-ID: <179541553975.3133.677293475472069830@kernel.org>
+In-Reply-To: <20261121-mptcp-cmason-fixes-v2-6-00327fd1de1f@kernel.org>
+References: <20261121-mptcp-cmason-fixes-v2-6-00327fd1de1f@kernel.org>
+X-sashiko-severity: Medium
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -63,62 +61,106 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
 
-TCP sequence numbers are not exposed through TCP diagnostics to
-prevent other users on the same machine from obtaining information
-that could be used to interfere with existing connections by
-injecting specific packets.
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue(s) to consider.
 
-MPTCP Netlink diagnostics currently expose data-level sequence
-numbers through INET_DIAG_INFO.
+Critical: 0 · High: 0 · Medium: 1 · Low: 0
 
-Clear mptcpi_write_seq, mptcpi_snd_una and mptcpi_rcv_nxt in
-mptcp_diag_get_info() to prevent these values from being exposed
-through Netlink diagnostics.
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
 
-Ideally, these fields would only be hidden from unprivileged
-requesters. However, the current diagnostic callback does not
-provide the privilege information needed to distinguish requesters.
-Therefore, these fields are cleared for all requesters, including
-privileged users.
+- [Medium] In mptcp_pm_remove_addr() (net/mptcp/pm.c:543-551), the new
+  loop decides that an ACK carried no signal by comparing the whole…
 
-The getsockopt(MPTCP_INFO) and getsockopt(MPTCP_FULL_INFO)
-interfaces remain unchanged and continue to report the actual
-sequence numbers.
+--
 
-Fixes: ac3b45f60954 ("mptcp: add MPTCP socket diag interface")
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/445
-Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
----
-Changes since v13:
-- Remove the additional selftest for zero sequence-number fields following maintainer feedback.
-- Clarify the security motivation for hiding MPTCP sequence numbers in Netlink diagnostics.
-- Explain why sequence-number fields are cleared for all Netlink requesters, including privileged users.
-- Preserve the existing getsockopt() behaviour.
+mptcp: pm: don't drop an RM_ADDR because of an ADD_ADDR
 
-v13: https://lore.kernel.org/all/20261117050804.134954-1-kalpan.jani@mpiricsoftware.com/
----
+With this patch, mptcp_pm_remove_addr() only refuses an RM_ADDR when
+another RM_ADDR is already pending. A pending ADD_ADDR or echo no longer
+blocks it. Up to three pure ACKs are then sent right away so that the
+RM_ADDR goes out after any pending ADD_ADDR or echo, preferably on a
+subflow that is not being removed.
 
- net/mptcp/mptcp_diag.c | 4 ++++
- 1 file changed, 4 insertions(+)
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index f1f4b13c54590..cdd62433e0a6d 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
 
-diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
-index 136c2d05c0eeb..fe1603ce80162 100644
---- a/net/mptcp/mptcp_diag.c
-+++ b/net/mptcp/mptcp_diag.c
-@@ -215,6 +215,10 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
- 		return;
- 
- 	mptcp_diag_fill_info(msk, info);
-+
-+	info->mptcpi_write_seq = 0;
-+	info->mptcpi_snd_una = 0;
-+	info->mptcpi_rcv_nxt = 0;
- }
- 
- static const struct inet_diag_handler mptcp_diag_handler = {
+[ ... ]
+
+> @@ -538,7 +539,16 @@ int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_list *rm_
+>  	msk->pm.rm_list_tx = *rm_list;
+>  	rm_addr |= BIT(MPTCP_RM_ADDR_SIGNAL);
+>  	WRITE_ONCE(msk->pm.addr_signal, rm_addr);
+> -	mptcp_pm_addr_send_ack_avoid_list(msk, rm_list);
+> +
+> +	/* pending ADD_ADDR and echo take the first ACKs: one more each */
+> +	for (i = 0; i < 3 && mptcp_pm_should_rm_signal(msk); i++) {
+> +		u8 signal = READ_ONCE(msk->pm.addr_signal);
+> +
+> +		mptcp_pm_addr_send_ack_avoid_list(msk, rm_list);
+> +		/* no signal sent, e.g. after a fallback: no more ACKs */
+> +		if (READ_ONCE(msk->pm.addr_signal) == signal)
+> +			break;
+
+[Severity: Medium]
+Can this comparison see an ABA on the echo bit and stop after an ACK
+that did carry a signal?
+
+mptcp_pm_addr_send_ack_avoid_list() ends up in mptcp_pm_send_ack(), and
+that function drops pm.lock while the ACK is sent:
+
+net/mptcp/pm.c:mptcp_pm_send_ack() {
+	spin_unlock_bh(&msk->pm.lock);
+	__mptcp_pm_send_ack(msk, subflow, prio, backup);
+	spin_lock_bh(&msk->pm.lock);
+}
+
+Say the loop starts with signal == ECHO|RM. The pure ACK carries the echo
+first, and mptcp_pm_add_addr_signal() clears ECHO. While pm.lock is
+dropped, another HMAC-valid ADD_ADDR from the peer could arrive on a
+different CPU, for example a retransmission because our echo was late.
+mptcp_pm_add_addr_received() handles it in softirq under pm.lock. On the
+userspace PM path or the in-kernel reject path it calls:
+
+	mptcp_pm_announce_addr(msk, addr, true);
+	mptcp_pm_add_addr_send_ack(msk);
+
+mptcp_pm_announce_addr() only checks BIT(MPTCP_ADD_ADDR_ECHO), so this
+succeeds and ECHO is set again.
+
+Once the loop takes the lock back, addr_signal is again ECHO|RM, which
+is equal to signal. The loop then breaks on the "no signal sent" path
+while the RM_ADDR is still pending. The same thing can happen with
+SIG|ECHO|RM pending.
+
+In mptcp_nl_remove_subflow_and_signal_addr(), mptcp_pm_rm_subflow() runs
+right after this. mptcp_subflow_shutdown() then sends a pure ACK on the
+subflow being removed. That ACK takes the re-set echo, so the RM_ADDR is
+left for the next packet on that subflow, such as its FIN.
+
+The commit message describes the v2 loop as avoiding exactly this:
+
+  Otherwise, the RM_ADDR would go with the next packet, which could be
+  sent on a subflow being removed
+
+If that path is dead, which is a common reason to remove an endpoint,
+the peer would never learn about the RM_ADDR. TCP retransmissions would
+not resend it, because the signal bit has already been cleared.
+
+Would it be more robust to check whether progress was made, for example
+with a counter of sent signals, or by checking the RM bit itself, instead
+of comparing the whole byte? Even with such a check, the fixed limit of
+three ACKs could still run out if new signals keep being set.
+
+> +	}
+>  	return 0;
+>  }
+
 -- 
-2.43.0
-
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f%40kernel.org
