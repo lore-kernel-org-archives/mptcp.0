@@ -1,55 +1,160 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795426212;
-	b=rYwQnNx6WYgj63Lm0J7b04+kO/x8N9wmANSNYCtg8ZzExCM6jfXgv6IXe6S0QXbfEZG3
-	 spjAFixJPz1yU6v1AeEXlt9vYQqvorsEO/3TH81c/SIo0vnJpYQX5R+YlGOccR4gRrVmN
-	 RpZN0Wn5GN/5UtAclTElTrd7qX1HjguctL59wyy+PXhVYI/VhkVDzK97kwD5XfnNXTiot
-	 Wy7z/KId4oTlstgtTacYtOic4WAEREc+DPTUNbDReXwfm0I/zoUvHxwDrgx+u15RQBesn
-	 L7zTicZYeGIkpOQBPKUTdtOZZ0gs8J5Pk44XVm3t1vg2zBCyC5S6ofpkiw3ncERSxog==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795426212;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=Y0dcZzE5PYWnSyhhAQw+jR5ki5g3iIuGW62hn6AQhDk=;
-	b=UJdndHkUHeORm8BYRUnxhqYfP8KxXQ1B4oBjlMkSEV4Di5UY48TNQGyhjeUChwKpauUX
-	 4r4ZSmzfUXJbSYi8cwcL1MmOe2cbxFI1zcnsh/U3QqNU05IN+qyVwvuyk4jdt9ZZJ8BGs
-	 OPv0QoxhL3cFyUJ2kG5mhz6BzR3Ckad4ihzymd2zjmyV7CGvDSzrJegGRfPpZuYGVQG5I
-	 hap1p9eW3eXeS2O0AnM1w1pbDqY+n6vSCS9Ltz3hX7Qqg56muvrF5pIg0xfJHwWikmego
-	 h6GuzkqolrA95qCzz25O/03CyZHIY+62gr3/daUP8NO2+qaDHeV9JV7BRBufEuPKrLA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mzuq5skw;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.14.71
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795426488;
+	b=lRwJyGxhc/YSqKsWWfVl9WEe5O9tc3Ui7aUCNSkf99aynBKT5bynEKZquhFsoRvnDClu
+	 14IcKDnMjb7ezYjvX9AFN5qLtSKJuiTNfwGhSJQW/djB2IzYBF+eF3zLhFn7S7TzCc4zt
+	 33TXyH0wWAIqqlW0W9qyw9Ohj+oNTYxfVArXtFp97KsNca2EHFvGmmAvPzvvBDZCDX41u
+	 uoEJ62ZhLMwvOWmSFFi6gLHERyEJvydFs+OpYUffzS/+90eKOyfxsIcVDKKRDhvRop3Nm
+	 StTaIF3A2xtUn0JUnppXMLPOLRHzV1BD9hJNlaEh+zuzlRgVjCfPNqxSSWFDCYW5VwA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795426488;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:CC:Subject:
+	 Thread-Topic:Thread-Index:Date:Message-ID:Accept-Language:
+	 Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
+	 x-ms-publictraffictype:x-ms-traffictypediagnostic:
+	 x-ms-office365-filtering-correlation-id:
+	 x-ms-exchange-slblob-mailprops:x-microsoft-antispam:
+	 x-microsoft-antispam-message-info:
+	 x-ms-exchange-antispam-messagedata-chunkcount:
+	 x-ms-exchange-antispam-messagedata-0:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-AuthAs:X-MS-Exchange-CrossTenant-AuthSource:
+	 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-originalarrivaltime:
+	 X-MS-Exchange-CrossTenant-fromentityheader:
+	 X-MS-Exchange-CrossTenant-id:
+	 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=Vr9js6lJ45Qmm2DWd4ewv+0Q2ymoCpee1vMvzWkkXyc=;
+	b=qd4Wk0I+z+FsgzVceHTME2kYkahQ3DBUWgB+V+c2kgpV0ISCBKCn35LJj3gmaQ7CBTAg
+	 rFEd2Tr6sfmw31vzDDPs7m2BS2ww2g7mUas2Nmobab2FScdy2EKpQVxVUj2WV0QUQGzMF
+	 zBtzLXtHjpaHbiiHMFtj8s1A/BWWKy8x9+GpceW7cdAtJ5qIx/LKbdASIYxkOgIFnd/LS
+	 5dn/6rO/Ip0Vg/qs3auYIx9FAMeb+BLld1QzbGSgdbvkUrPsN5voZlHNJsvKvmFtyrumn
+	 QTiN3it6IuoKSBhcibNToi0bP7g5YMsDzm6qRpP0X9PVuQGtbWYP5zt6fyfpABr0WRA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=outlook.com;
+	spf=pass smtp.mailfrom=outlook.com;
+	dkim=pass header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=UEt+N5NP;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.14.71
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazolkn19012071.outbound.protection.outlook.com [52.103.14.71])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9369606A31A
-	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 09:30:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51FA606A31E
+	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 09:34:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C51FA606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mzuq5skw
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81AE21F000C6;
-	Mon, 23 Nov 2026 09:30:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795426212;
-	bh=Y0dcZzE5PYWnSyhhAQw+jR5ki5g3iIuGW62hn6AQhDk=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=mzuq5skweNR4Mh/rLy/zOtMKEH6Mf2K+g+UOoDhAlZ9sQLET8y/hSy8jgliWIABCz
-	 rPayG3Wn2ORNZpb02FiHB5yqZMJe5B2WlYO620pDeAlAOCG4Vi43oMHvcdE/d8um5g
-	 5kt8y/MEhSKye2p8Em8vjPKlStkvMzsis3tgRGjnr0g6Hc86TimHZ3+vCWMAZPmPQB
-	 7/Z/xUNtYWpkuB4pUpWvPVls0jRFsp3sXVOfkyGbmeZRnClyfNPQ3TaZTTP6C7mJNw
-	 xx2wkZEJx+vft42RLf3kt459WVgTP8Cnzq5Sqgxhy1lw4LympGrPqpGDO7Mb5x4AK+
-	 dIJao9JXLjnxw==
-Message-ID: <sashiko-outbox-228974@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v7] mptcp: bpf: fix NULL deref and UAF in
- bpf_mptcp_sock_from_subflow()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Kalpan Jani" <kalpan.jani@mpiricsoftware.com>, mptcp@lists.linux.dev
-In-Reply-To: <20261123084836.1704274-1-kalpan.jani@mpiricsoftware.com>
-References: <20261123084836.1704274-1-kalpan.jani@mpiricsoftware.com>
-Content-Type: text/plain; charset=utf-8
+	dkim=pass (2048-bit key, unprotected) header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=UEt+N5NP
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=L251MSlMmxXdNldXDfzWIAOMk/luqDNg960RQsqh0T7xoJtCQ4d0Q3FonmXKV0aB9Xw4VjM2D5xHeUHnpt0+AefQffayaL1Z3hNcwfDTnfdWIbhXq4GdP0nNFlwupdBFroyQmqKf60yrjJoQSrfK1QIekJqDhsizVRtcmMOF5KGykJmYqGMXQvY1dYeskHykqIuX6MtVe8a48rfx0eSS/YHCu8SEIswg6IKNgCHz5ppLJpcoo6IEcMEp4O827MP37iGxk8ePOFbP8Rey0hptgPr2cHFQ9rPL77u40b+KD5/l3Tc16aRr6LW4Zf2Ps2VlWI/7bBt6O22Ce5Nz+OZJ0w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
+ bh=Vr9js6lJ45Qmm2DWd4ewv+0Q2ymoCpee1vMvzWkkXyc=;
+ b=mwSoS9e+CJTYKvRMH/2R5A9re2G9neFDHz6r/Cuj2RVphfBCKKDb79P/zRXdMOuzaP4qVe2eKdMi6DkPWn6NvWdpQghl7vLJiYAv0owM6jMH+Tz1ggmmYktZFJsC3QwO6VLMjhwzszNaiXQ/fi6gmVWrnnMOVaGOiTr/3Ze8jDsufgsdyDTo4gd9EGT8wBKwBlBNhGi7D0HsXRW4ZufMffVfmXdua9eobP2uqVEo4lTLoBPuOPHOC28/v08YIIUcfS9DK0pp2eBN6mBlf2buBkbKyM9nlvqxskm3WQYKzeCjrBHInEtg3oxer53HMrHIcPJfIiNFYFC44EbU47T4CA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Vr9js6lJ45Qmm2DWd4ewv+0Q2ymoCpee1vMvzWkkXyc=;
+ b=UEt+N5NP1JUdezmzP0LJ7+muMma2rkyWyxerOCdM5W4/wtwXsgdT6zB5Ql7vlm92nGYU6wVksOk6cFFlAeBFzbjMjX03ZLk7xqv73ucuuQeyfpDyvQaZE4hhvCyguNhuwSko11EqYL7kIXO4p29UkizcawLk7POfpE2OwbU/Rhbwq1tGKNjl1okhjhTJBUtw0sU5QnwodJnFLwTVy21NEE58JFqslEPYB8UAkYiEjYpP1bofC649K5RXe9s3GNtwxXyMRHYOo+cPGFM40MiMTQTCy3DOFZE4AL1gwol6StPE/2pc9XjPP4MX95QPSA9kShGsnVKZ8Z17V0PG2HFt+A==
+Received: from BN6PR05MB3281.namprd05.prod.outlook.com (2603:10b6:405:40::35)
+ by SJ0PR05MB8664.namprd05.prod.outlook.com (2603:10b6:a03:394::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.14; Mon, 23 Nov
+ 2026 09:04:32 +0000
+Received: from BN6PR05MB3281.namprd05.prod.outlook.com
+ ([fe80::5b9b:67c7:5397:c42]) by BN6PR05MB3281.namprd05.prod.outlook.com
+ ([fe80::5b9b:67c7:5397:c42%5]) with mapi id 15.21.0639.011; Mon, 23 Nov 2026
+ 09:04:32 +0000
+From: Yingjie Wang <x-professor@outlook.com>
+To: "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC: "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"corbet@lwn.net" <corbet@lwn.net>, "skhan@linuxfoundation.org"
+	<skhan@linuxfoundation.org>, "rdunlap@infradead.org" <rdunlap@infradead.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"edumazet@kernel.org" <edumazet@kernel.org>, "ncardwell@google.com"
+	<ncardwell@google.com>, "gang.yan@linux.dev" <gang.yan@linux.dev>,
+	"kuniyu@google.com" <kuniyu@google.com>, "davem@davemloft.net"
+	<davem@davemloft.net>, "kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>, "horms@kernel.org"
+	<horms@kernel.org>, "matttbe@kernel.org" <matttbe@kernel.org>,
+	"martineau@kernel.org" <martineau@kernel.org>, "geliang@kernel.org"
+	<geliang@kernel.org>, "ycheng@google.com" <ycheng@google.com>,
+	"weiwan@google.com" <weiwan@google.com>, "joel.granados@kernel.org"
+	<joel.granados@kernel.org>
+Subject: [PATCH net-next v4 0/2] tcp/mptcp: prevent blackhole timeout
+ arithmetic wraparound
+Thread-Topic: [PATCH net-next v4 0/2] tcp/mptcp: prevent blackhole timeout
+ arithmetic wraparound
+Thread-Index: AQHdeymn8lJ4XQWO202US2XHZsJUCQ==
+Date: Mon, 23 Nov 2026 09:04:32 +0000
+Message-ID: <cover.1795424546.git.x-professor@outlook.com>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN6PR05MB3281:EE_|SJ0PR05MB8664:EE_
+x-ms-office365-filtering-correlation-id: b5fc9a9b-08bf-4007-fbfa-08df4940c9d1
+x-ms-exchange-slblob-mailprops:
+ obhAqMD0nT+6TxoHw5fNkboUl/ASnSn2aDUe2oMT6Cctkw//qk4l6AkPKai972W72OdusDyVSzWWS2jzYgy39Z+/fICAYBAtQaXz1/FPo24Av8NgM2ZeQcB/4rGa2+YLTCAfkG7IpjKIZ2L9i4kOaDZfm6oWSjJKf7AtSbG92kzNjXzELIv97ttufCQSqzkLzlO/kaz2WcVrW8yStxgviWAwsnZhLLXFXj6H9L7HrccF0kJ4mZ+s4r+k83NZBL27fl6c9lJTcY5jqQD4heh334e6CDlvyoIsYifczTxsDADQxY8CX++FtmqhGrvmNttkEOQ2E8TEnMTjZ4gRM7Qj2ML3rjMGxEDoQ2Ad48rcM4C10mRzKjpbq6MqkC/4FVG1X3kzaekAmA6SxdL7GKW+9jcIWLjApf8zJrBwadFgO2PgN5Swy7kTKyPjU1lsodUdj9lYHYsVKvHQn/ueYjPZufPrIg1pIyd6MJlV28y5pr8+sB/VmQTGxKyJXngQaqJ57Qv2Ny8vBl1gvgnUMMY791xV/TLmUalJ0z9xUZUtEISFcKDZ+vvBRAxD0vQSmWCVctkk4Zc7Zg0pTeUmHE03hp0ezmNWKBOho90/2ok7E3naI0S/Sq76Jk94aJf6uUybVaehG0ryLp/+xRBkA0GBqxvPezwWYW3giBAtIf5kGBbA0eWIUENZvUSVlT6T5Osl7zZYwM0rcqSj/J/l50RuBEQwiGLUrBNTfxIAFY4v6hj9TUGBL3C1Oml2YkLG5vELuC5aCZOjUnNz1FXxr5gOyRCDO1tmDmhMBoyxY1NC9ujrMl09SE+tV4Z9lSejciCH
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|15080799012|31061999003|38102599003|22091999003|5062599005|8062599012|19110799012|8060799015|51005399006|24121999003|25010399006|4140399003|24021099003|4302099013|440099028|3412199025|102099032|1602099012|10035399007|40105399003|26121999007;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?VKSWSIZo24L0zQ+Urek3XyawcMEvtaI1x718WBcUErGmbz590EoP667Cx0?=
+ =?iso-8859-1?Q?HN19EJGwZcgubiiQEWvl+Pinut1cjkx3hoOvmNUaSr11Xr3EuBp4azXS+a?=
+ =?iso-8859-1?Q?20SK+9pH6UOeDFzUIJaNm6p6v1D5gPMmikR6urq5mFliNexnYEKXrN7XGA?=
+ =?iso-8859-1?Q?qCDj+NzuI8jrLlsqPehyF+6fvov8w9jUDdLJHO2vZZl2da1MbrXsty4/Ve?=
+ =?iso-8859-1?Q?4gwKOvUTcM3U7ioknaWPE68FPU3JWxWL6cKf7cM1EzNwTlnh1rYZ6gdvdy?=
+ =?iso-8859-1?Q?4c5/nADhVBiArl7ep9uxjnG8Wem9s+fNyGtLhKzpJBqPunMEtZdgYv84qn?=
+ =?iso-8859-1?Q?1pBOzTFRClaXphVqfUwhNRtbBOZh0FT+Be3ZeZdqBiyyyls0Tglt78GWs8?=
+ =?iso-8859-1?Q?M5ZUkikuBTy5C3SsTgtae1kKeQWQlBfW7VXuNznBeFoSmp9PAHfL0ev/SE?=
+ =?iso-8859-1?Q?aEG0/eUh42MyPtuhtn3BFxzaSe/Js5Nog9hBZ0nTq4sJscyBHYJLlo5GcJ?=
+ =?iso-8859-1?Q?KO0OMYnWvsnM1mahR13OBQiD1F4HU0uXjFunAl028QfkFavVSaG/bf0R1O?=
+ =?iso-8859-1?Q?7UjczVSLx78eVX86ILrdr8zkPkBIkyLVdq2864n7V7CqnfWzlQp0QHVqHR?=
+ =?iso-8859-1?Q?uBLsA3TZ1dsYdhOeN6Uh2ouykcO1O0dRX6vbCr2lS3BFO+5mI8gYLLBOqx?=
+ =?iso-8859-1?Q?LwuWIlMi4X5JdpTW+Pv9C+Vh7osUx1jyk8MiprBfFISDNZRi8q7INK1FPb?=
+ =?iso-8859-1?Q?biqdSmao3EFL34netEDu4IA1Xt+YuwPSZJ2hFTvZ4Pmowky3SjVDWR1sPn?=
+ =?iso-8859-1?Q?ro6PMw7tmfxNtbZ6NxUfPMdX+oYgPmJFRuxdn2/cFSuwO0diZqEw/96LmN?=
+ =?iso-8859-1?Q?HPUeSpKSyS8swJ93zhYeGC9gkVzhnBEEiZYw2fo1dq71DEQR8GvEuaX/rY?=
+ =?iso-8859-1?Q?nbwci6iJhzeiPunGhm6owID1P6WvJZT+DyqLn4zIDPJDzw2BBPpWRD12cy?=
+ =?iso-8859-1?Q?XzsymrFQjiX2Dh+h2fisEc3oeGhKSlZIgmY2w0XewmOG4Gq1RwPqwnwv4C?=
+ =?iso-8859-1?Q?fIjWv2ZFvEOtYpr3C8Fzx869txuJN13w3HXVOk8yT8HJU2s0BRG5hE6nIE?=
+ =?iso-8859-1?Q?fTtRWmILxEmOyR6dtPa0vUpnL8Rb57I/moXMv6S1BkIhPyPXNe?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?5/QAZHTV84GhZcoRM1AOkL9ApqCcyhoJFyNtGgcF1bjhxUUGVMkU8proNw?=
+ =?iso-8859-1?Q?ed8w6jyuH3Zua2FDCc6o4NRjiwYTmG+TuuEhhLUVTqG/eVAQQq+KxJWV1t?=
+ =?iso-8859-1?Q?nV30z7hSthqVxVKl1PAIqXVoAkCD25Q2AJVoG/VYicSb9Yuammdbccp7B+?=
+ =?iso-8859-1?Q?z4rlL5MKcCRNcZZeRPxYrUWg2Cd/JKVMzuBw/cYCWV3MpXUe1gECeMPsnI?=
+ =?iso-8859-1?Q?I8xmoAy0QKml2swXqLCI9NmS07FpE6dNMcBGaR0ahLuD/rDNmBl9GkkhzU?=
+ =?iso-8859-1?Q?rmZGXFdnS5FnHrFGzT0m8B0pA6ze0gLzDKeEK/wT625iU0asyxkRiEd3CE?=
+ =?iso-8859-1?Q?WSOeYFlOvQfdlNvMGWE6KJfhQL2irFvzyFQTmZqdqHTRwWdA5QTr3uJYLJ?=
+ =?iso-8859-1?Q?IBvYSCQ52teLoEkMTuwRjU98y/IvXJ52Iu6mXdJj3kOWyBZrQJROa73wsw?=
+ =?iso-8859-1?Q?eZ0TtEc2jAAxro3HQi4OVBEPQdvkKfOy5qN7D2vzYTZ8/0uUBOiO0/9a8E?=
+ =?iso-8859-1?Q?axspG7qbkDPkLNDutTjw5D0m3ftBWoV4SG6LrRv5jxWOd2vRczOtio3r1P?=
+ =?iso-8859-1?Q?4i9b4Rg+WKm9Lw4z9vkuv3F1agFxcvf4JMuNGFZVQrJ2i7TdebPEzLw1mg?=
+ =?iso-8859-1?Q?XPpkxAK71zgrl3RyQORhRcSd8CHEmOQ1CKrAFqaKIqyZDFhr+FKthys0Pi?=
+ =?iso-8859-1?Q?wfSi0gmrPYCSAEvzTXVznMpiyhCYDaNwyPfHouaV3js5+u29oNrx4HRa8s?=
+ =?iso-8859-1?Q?FzfR+3G68j2V/5SP8lw5BXt7em/l6UsRP4pkPv8abmZq0XOJT5STB1FbAZ?=
+ =?iso-8859-1?Q?USAbOh66eLuGul21urrxchGXjoZgu/7mg/zw7oKEZjl+5+wquNJn89HHW8?=
+ =?iso-8859-1?Q?ep04XxcWN+sIHftar1bXjJowZwH4ueTXLTfvz5GPo6z5md7v4g2G/S9AeD?=
+ =?iso-8859-1?Q?KD2HRlhCssTnssSxEaVK59xVpPJYy/qxh6YeZLzE4YHLWO96Z9NZmAvl+J?=
+ =?iso-8859-1?Q?swwk/tNf4S8mRhYM9k4LfjPgT9New2qYyF1XfSeXqSChvBcx5yCyApxGd7?=
+ =?iso-8859-1?Q?l6wrs/vRXgrQzGIBUOO/NaS+SRZ4cZuLFaJ1LK51zvkemnoX2Dv9K1uJPm?=
+ =?iso-8859-1?Q?AI/5+HEpFRjhqee+01WIvULzljXPtPF7khpXYb/2oDs8QZYjQD0MoN2906?=
+ =?iso-8859-1?Q?uER3sLKE/i3Dd7QQc1yDrMIHKQ4/nWs5aUffT4W4CaL+z3iHDv2Zj0JbRh?=
+ =?iso-8859-1?Q?AfUNCkgtUqafCPofqs7ANPGythj14SIEJkhkWT3hb2rDuXWsXCweyBonF4?=
+ =?iso-8859-1?Q?kFCA38RTbZIXjnqtxkZKDFFpEdcSQZ2Ds54SK+AmcSkZD6lDCfZe4KYb8J?=
+ =?iso-8859-1?Q?sOEh44H/SS8Ujlb4uNJUdGsnBx1/2sykziao4UP+cGRgnZtAQtwSAIz6bj?=
+ =?iso-8859-1?Q?aDMl9EbzkOcq80oA?=
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 23 Nov 2026 09:30:12 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -58,223 +163,80 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN6PR05MB3281.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: b5fc9a9b-08bf-4007-fbfa-08df4940c9d1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Nov 2026 09:04:32.2213
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR05MB8664
 
-Thank you for your contribution! Sashiko AI review found 5 potential
-issues to consider:
-- [High] bpf: missing MEM_RCU tagging and sleepable gate in
-  check_helper_call()
-- [High] mptcp: NULL deref in mptcp_subflow_process_delegated() after
-  ULP release
-- [High] mptcp: setting SOCK_RCU_FREE in subflow_create_ctx() leaks
-  socket refs
-- [High] mptcp: NULL deref in subflow_data_ready() racing with listener
-  close
-- [Medium] mptcp: bpf: UAF on subflow ctx due to uncleared icsk_ulp_data
---
-
-commit f52b13bf0febdfcc37197ba78c9e6dab39011b6b
-Author: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-
-mptcp: bpf: fix NULL deref and UAF in bpf_mptcp_sock_from_subflow()
-
-This commit uses RCU and release/acquire ordering to synchronize
-bpf_mptcp_sock_from_subflow() with subflow creation, fallback and teardown,
-sets SOCK_RCU_FREE on parent and subflow sockets, and adds a needs_rcu
-helper check in the BPF verifier.
-
-> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> index 5f874979b8d75..15f3136fafa52 100644
-> --- a/kernel/bpf/verifier.c
-> +++ b/kernel/bpf/verifier.c
-> @@ -10912,6 +10912,14 @@ static int check_helper_call(struct bpf_verifier=
-_env *env, struct bpf_insn *insn
->  		return -EINVAL;
->  	}
-> =20
-> +	if (fn->needs_rcu && in_sleepable(env) &&
-> +	    !env->cur_state->active_rcu_locks) {
-> +		verbose(env,
-> +			"helper %s#%d requires bpf_rcu_read_lock() in sleepable context\n",
-> +			func_id_name(func_id), func_id);
-> +		return -EINVAL;
-> +	}
-> +
->  	/* Track non-sleepable context for helpers. */
->  	if (!in_sleepable_context(env))
->  		env->insn_aux_data[insn_idx].non_sleepable =3D true;
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 29260951aa871..c6032fe843627 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -1746,7 +1746,7 @@ tracing_prog_func_proto(enum bpf_func_id func_id, c=
-onst struct bpf_prog *prog)
->  	case BPF_FUNC_skc_to_unix_sock:
->  		return &bpf_skc_to_unix_sock_proto;
->  	case BPF_FUNC_skc_to_mptcp_sock:
-> -		return &bpf_skc_to_mptcp_sock_proto;
-> +		return prog->sleepable ? NULL : &bpf_skc_to_mptcp_sock_proto;
->  	case BPF_FUNC_sk_storage_get:
->  		return &bpf_sk_storage_get_tracing_proto;
->  	case BPF_FUNC_sk_storage_delete:
-
-[Severity: High]
-Does check_helper_call() leave the returned mptcp_sock pointer untagged with
-MEM_RCU when fn->needs_rcu is true?
-
-When a sleepable context such as a bpf_wq or bpf_task_work callback calls
-bpf_skc_to_mptcp_sock() inside bpf_rcu_read_lock(), check_helper_call() sets
-R0 to PTR_TO_BTF_ID | ret_flag without MEM_RCU.  On bpf_rcu_read_unlock(),
-invalidate_rcu_protected_refs() only demotes registers carrying MEM_RCU to
-PTR_UNTRUSTED, so the BPF program can keep using the unreferenced mptcp_sock
-pointer after the RCU read section ends and trigger a use-after-free.
-
-In addition, tracing_prog_func_proto() returns NULL whenever prog->sleepable
-is set, which rejects bpf_skc_to_mptcp_sock() in sleepable tracing, LSM and
-syscall programs before check_helper_call() reaches the fn->needs_rcu check,
-even when the call is wrapped in bpf_rcu_read_lock().
-
-[ ... ]
-
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index f0a6725d2c376..d8721d38467ec 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-
-[ ... ]
-
-> @@ -1857,6 +1867,8 @@ static struct mptcp_subflow_context *subflow_create=
-_ctx(struct sock *sk,
->  	if (!ctx)
->  		return NULL;
-> =20
-> +	/* BPF readers may access the subflow socket under RCU. */
-> +	sock_set_flag(sk, SOCK_RCU_FREE);
->  	rcu_assign_pointer(icsk->icsk_ulp_data, ctx);
->  	INIT_LIST_HEAD(&ctx->node);
->  	INIT_LIST_HEAD(&ctx->delegated_node);
-
-[Severity: High]
-Does setting SOCK_RCU_FREE on full TCP subflow sockets break
-sk_is_refcounted() and leak socket references on BPF lookups?
-
-include/net/sock.h:sk_is_refcounted() {
-	/* Only full sockets have sk->sk_flags. */
-	return !sk_fullsock(sk) || !sock_flag(sk, SOCK_RCU_FREE);
-}
-
-When a BPF program looks up an established or connecting subflow socket via
-bpf_sk_lookup_tcp() or bpf_skc_lookup_tcp(), __inet_lookup_established()
-increments sk->sk_refcnt.  Because SOCK_RCU_FREE is now set on the subflow
-socket, sk_is_refcounted(sk) returns false, so bpf_sk_release() skips
-sock_gen_put(sk) and permanently leaks the socket reference.  bpf_sk_assign=
-()
-also relies on sk_is_refcounted(sk) and will skip taking a reference on the
-subflow socket.
-
-> @@ -2040,6 +2052,11 @@ static void subflow_ulp_release(struct sock *ssk)
->  		if (!release && !test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW,
->  						  &mptcp_sk(sk)->flags))
->  			mptcp_schedule_work(sk);
-> +
-> +		/* hide the parent from lockless readers (e.g. BPF) before
-> +		 * dropping the subflow-owned reference
-> +		 */
-> +		smp_store_release(&ctx->conn, NULL);
->  		sock_put(sk);
->  	}
-> =20
-
-[Severity: High]
-Can clearing ctx->conn here and in mptcp_subflow_drop_ctx() cause a NULL
-pointer dereference in mptcp_subflow_process_delegated()?
-
-CPU0                                  CPU1
-mptcp_subflow_delegate(ssk,
-  MPTCP_DELEGATE_SEND)
-  set_bit(MPTCP_DELEGATE_SEND,
-    &subflow->delegated_status)
-  list_add_tail(&subflow->delegated_node,
-    &delegated->head)
-                                      __mptcp_close_ssk(..., ssk, ...)
-                                        __tcp_close(ssk, 0)
-                                          inet_csk_destroy_sock(ssk)
-                                            ...
-                                              subflow_ulp_release(ssk)
-                                                smp_store_release(&ctx->con=
-n,
-                                                  NULL)
-                                                mptcp_subflow_ops_undo_over=
-ride(ssk)
-                                        release_sock(ssk)
-mptcp_napi_poll()
-  mptcp_subflow_process_delegated(ssk,
-    xchg(&subflow->delegated_status, 0))
-    sk =3D subflow->conn
-    mptcp_data_lock(sk)  <-- NULL pointer dereference
-
-Once mptcp_subflow_delegate() queues ssk on the per-CPU
-mptcp_delegated_actions list, only mptcp_napi_poll() on that CPU dequeues i=
-t.
-When subflow_ulp_release() runs first, it clears ctx->conn and restores
-ssk->sk_prot, so release_sock(ssk) no longer runs tcp_release_cb_override()
-to drain delegated_status.  mptcp_napi_poll() then calls
-mptcp_subflow_process_delegated() with pending status bits and a NULL
-subflow->conn.
-
-[Severity: High]
-Can clearing ctx->conn in subflow_ulp_release() also cause a NULL pointer
-dereference in subflow_data_ready() when racing with listener close?
-
-CPU0 (<softirq>)                      CPU1
-tcp_v4_rcv()
-  tcp_child_process(listener_ssk, ...)
-                                      __mptcp_destroy_sock()
-                                        ...
-                                          __mptcp_close_ssk(..., listener_s=
-sk, ...)
-                                            __tcp_close(listener_ssk, 0)
-                                              ...
-                                                subflow_ulp_release(listene=
-r_ssk)
-                                                  smp_store_release(&ctx->c=
-onn,
-                                                    NULL)
-    listener_ssk->sk_data_ready(listener_ssk)
-      subflow_data_ready(listener_ssk)
-        parent =3D subflow->conn
-        msk =3D mptcp_sk(parent)
-        parent->sk_data_ready(parent)  <-- NULL pointer dereference
-
-tcp_child_process() calls parent->sk_data_ready(parent) under rcu_read_lock=
-()
-without holding the listener socket lock.  Because subflow_ulp_release() se=
-ts
-ctx->conn to NULL while leaving sk_data_ready set to subflow_data_ready(),
-subflow_data_ready() loads a NULL parent pointer and dereferences it in
-mptcp_sk(parent) (when CONFIG_DEBUG_NET is enabled) or
-parent->sk_data_ready(parent).
-
-[Severity: Medium]
-Can bpf_mptcp_sock_from_subflow() still read a freed subflow context after
-kfree_rcu(ctx, rcu)?
-
-net/mptcp/subflow.c:subflow_ulp_release() {
-	...
-	mptcp_subflow_ops_undo_override(ssk);
-	if (release)
-		kfree_rcu(ctx, rcu);
-}
-
-subflow_ulp_release() (as well as __mptcp_close_ssk() and
-mptcp_subflow_drop_ctx() when icsk_ulp_ops has already been cleared by
-tcp_cleanup_ulp()) frees ctx via kfree_rcu() without clearing
-inet_csk(ssk)->icsk_ulp_data or tcp_sk(ssk)->is_mptcp.  If ssk outlives ctx=
-'s
-RCU grace period, such as while in-flight TX skbs still hold
-ssk->sk_wmem_alloc, a BPF program calling bpf_skc_to_mptcp_sock(ssk) will
-observe sk_is_mptcp(ssk) =3D=3D 1 and dereference the dangling icsk_ulp_data
-pointer at smp_load_acquire(&ctx->conn).
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261123084836.1704=
-274-1-kalpan.jani@mpiricsoftware.com?part=3D1
+The TCP Fast Open and MPTCP blackhole timeout calculations can wrap in=0A=
+32-bit unsigned arithmetic, even on 64-bit kernels. With HZ=3D1000 and a=0A=
+64-fold backoff, 67109 seconds becomes 8.7 seconds instead of about=0A=
+50 days.=0A=
+=0A=
+Compute both delays in u64, cap them at MAX_JIFFY_OFFSET, and limit both=0A=
+initial timeout sysctls to one day. The new input limits reject values=0A=
+that were previously accepted, so this series remains for net-next and=0A=
+is not intended for stable.=0A=
+=0A=
+Changes since v3:=0A=
+=0A=
+- Drop the Fixes tags from both patches.=0A=
+- Leave the existing comments unchanged, as requested by Matthieu.=0A=
+- Combine the MPTCP arithmetic fix and input limit into one patch.=0A=
+- Name the MPTCP limit one_day_secs, as in TCP.=0A=
+- Drop Gang Yan's Reviewed-by from the combined MPTCP patch because the=0A=
+  added input limit was outside the patch he reviewed. Keep Eric's=0A=
+  Suggested-by for the MPTCP input limit.=0A=
+- Add Kuniyuki's Suggested-by for requesting a limit on the TCP sysctl.=0A=
+- Move the test notes out of the commit messages, as requested by Eric.=0A=
+- Rebase on net-next eb6d6c80d354.=0A=
+=0A=
+v3: https://lore.kernel.org/r/cover.1794847474.git.x-professor@outlook.com=
+=0A=
+v2: https://lore.kernel.org/r/cover.1794672619.git.x-professor@outlook.com=
+=0A=
+v1: https://lore.kernel.org/r/cover.1794325665.git.x-professor@outlook.com=
+=0A=
+=0A=
+Testing on v4 and its unmodified base, x86-64, HZ=3D1000:=0A=
+=0A=
+- Loopback reproducers induced 12 blackholes with a 67109 second timeout=0A=
+  and opened another connection 10 seconds later. The base kernel=0A=
+  retried active TFO and MP_CAPABLE; v4 kept both disabled. Both probes=0A=
+  completed using TCP on v4.=0A=
+- Both sysctls accepted 0, 1, 3600, 86399 and 86400, and rejected negative=
+=0A=
+  and above-limit values with EINVAL without changing the stored value.=0A=
+  These checks passed in the initial and a new network namespace, with=0A=
+  unchanged defaults and independent namespace values.=0A=
+- The affected objects built at each commit on x86-64 and i386 with=0A=
+  W=3D1 and KCFLAGS=3D-Werror.=0A=
+=0A=
+The 32-bit cap was checked by compilation and arithmetic, not at runtime.=
+=0A=
+The TCP and MPTCP selftests were not run locally.=0A=
+=0A=
+Yingjie Wang (2):=0A=
+  tcp: avoid wrapping Fast Open blackhole timeout=0A=
+  mptcp: avoid wrapping blackhole timeout=0A=
+=0A=
+ Documentation/networking/ip-sysctl.rst    | 1 +=0A=
+ Documentation/networking/mptcp-sysctl.rst | 1 +=0A=
+ net/ipv4/sysctl_net_ipv4.c                | 1 +=0A=
+ net/ipv4/tcp_fastopen.c                   | 4 +++-=0A=
+ net/mptcp/ctrl.c                          | 6 +++++-=0A=
+ 5 files changed, 11 insertions(+), 2 deletions(-)=0A=
+=0A=
+=0A=
+base-commit: eb6d6c80d35449c27471b1874f13066c09a8964d=0A=
+-- =0A=
+2.43.0=0A=
+=0A=
