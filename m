@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1795415541;
-	b=En7TaF4H68O8MYj0gDNifQ/7UV5nseMRfbc0MNCPCSjhRLqbkifowEXfAoKqd4YFyy/H
-	 8fREpsXmBlZ1P5u0B/8Eg84xgKUYRpl98/wXBj/4IEsS43vW+7nYMxDSuf6pD6mYGkJ/F
-	 cGUX6xexnKe30f9RWLK9IWNRBaL1elq0EASbk9GHi96TlBlB5QTuWrwBt88FDhvid7qbl
-	 zB+UAD7M7JKXnivBGSgqB3F7sq666NAxf1y+rPrxVIYXv9pRJ4jodNh6IEKDoskLxCWj3
-	 mvdZ0/JBOFsRTmS5dzE9yp7n3RmgHPFiUYWMjLIVhP97RpIYNwaTIHmNqn9B99F9OeA==
+	b=MFv1BHeScZ2NNbvoJfbqW2KRl663H1TJvGjySHXeU7mlKQZMgFz/D1ltSMsURfDUovAU
+	 LJwC9/QEHgyuEKo4kMJK5AsEhXBg6qjB4S4nnmOBw5sDliwLHFPHcWjjlaE8Yrk5ewsi4
+	 vkDQf/m1XeG7sDdwzck8DQMm7k9JRpOCt/U9EwZiXSJ1195r8ytCxwred/qZW9O3uz8Go
+	 +a9FQUAtJMq7Yvu+J4fAHlpbnkr9w3uG4JjZImjfie0lEvsHWvGlQJnHAuZ/QCBXBOT+g
+	 Di+iQrGhhvwJH0G9OQlk6ImYtLXA81Xp7uurMTgri+xG7Oyx1DSiZAsKOAz2D3h8AmA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1795415541;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=TYglbUN6uIaZovIVLIQw1cNaiPlcrsvWmUmnrLfoMTY=;
-	b=d0fsKvH+NaM1gUf/r4qoBT2MF3M5pX1Q+hD+nOrKwypuRC1y8RP0US7VUrY51xkYbdcR
-	 BEyk2kEl1D8I5/RrruDzM4cNVTs0YdrYRTzHgCeAoamVxw2j+C67tZ9iMP0jKAghvKED2
-	 fSVpxqiieArkiPx9XlZVwpdFHIlxV/ipPJnlnGCMVoq4N0/ug+GxHKgaWwG/dXcJRC5j9
-	 ZNFBf84xjbF0qtB0cWoO7AJWtDUJBWQf7ZRtiAMx/EjGSR+Vrn6zY9+GJch4nZI8eedaS
-	 oS5yIjlGgA70ud5YRqPQ2mP8zAr2lykt+3yO4na/OqqpmxEF7oSay1K8Wl3Nv1zgJZw==
+	bh=77AKUs7nQVrvfD+JltN663SChrUH2+SoLD+kEPWx+lY=;
+	b=3efvQMHlRES8+8C38Mc2mlhjgjy5y6SEUKfGdkB65FVqveqHVlNYh52EP3tyJLeu/G0E
+	 X6zHJoqQBMyRN+1HC8lyBBHzTDZaRPubI2pHiwTw9zEzpL2XFlFOYlI+ZGKX076y9SpRE
+	 ToKEbDoSazeyMAcmYnS2edOGVqnFisN3GaUnkpPMQEMOnGEu/VkqNQ6Hhfwa0VqIMa8xH
+	 Ybbvzc3KatLNAr08KrBl7BPIstQbYZXyk3bcnPtrgyGreOPAs7fvh/omtULdkwB0rn3O9
+	 skrvjIZayTXwbDKTdu9SrIr/L0mQe4kNkEhyP5iaOi4UTMpdSXMBrOXT3hg7KUaUkaQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iQdWC37P;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dkkXJ+ib;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2B1606A31A
-	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 06:32:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC089606A31A
+	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 06:32:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iQdWC37P
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B8831F000C6;
-	Mon, 23 Nov 2026 06:32:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dkkXJ+ib
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E3281F000D8;
+	Mon, 23 Nov 2026 06:32:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795415540;
-	bh=TYglbUN6uIaZovIVLIQw1cNaiPlcrsvWmUmnrLfoMTY=;
+	s=k20260515; t=1795415541;
+	bh=77AKUs7nQVrvfD+JltN663SChrUH2+SoLD+kEPWx+lY=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=iQdWC37PzcnaB8QSrt6iyUpi5nNMKumjYS5NmlxuJ8I2zmZtT6ZzxF6xgMu7bBfX1
-	 Hq5BV6/Ym0xgnC47fnIBvy+OUwXiDRBX0ildkSgTxVreZXCf8YCfvZszIVxQg375Gq
-	 EPrkX4oc+v0OF96WPxxNzQvbHEjl9RJWv82mfMKocNUViYuT6ETu2nEADJ3itSvxES
-	 YWW2+8iGDn8iWoOH+gc77uQdrtSuhi1m0LNWc78mgBtSaiI2N0h3e4CJwtG93ajZtE
-	 TLa7RT//xidKQfKGVfitrS0Sr/hncmK3yI0zMTo6RJxwWeTCcx1nY7wMWLv8wQ7DY6
-	 FSx39ea5Vxn3g==
-Subject: Re: [PATCH mptcp-net v2 06/62] mptcp: pm: don't drop an RM_ADDR
- because of an ADD_ADDR
+	b=dkkXJ+iboomrP2QMb3PvjB6P06YclKY8t2u32YxAsSCtdp+qTSv3DMqyRIdlC//zo
+	 BjTG5hkFqhD76Xyd3vIa4+E2wMaI35Ug3uFZW4+XtdpxyY3FI4cKMoT/oKO62sy6P9
+	 ZrwViW++t6NPK6/ariL3Cs82UEv5MR8+XOurkzfex0fCJVN8HhACL1E1/pAss5gM5X
+	 93pL3CB25xh1i+KlZxM24RqqMfw6OHj/RzZ0R1tn+rCPCnnmkIVB9cNT4R92ltIiib
+	 ZwnG/C8imflr2CxTbPn7IcCgg7iviGOfLUSlHY9CMveoG0uQ+ZfSMSjYzgoY0/Ri54
+	 GY9i5JyA9MMBg==
+Subject: Re: [PATCH mptcp-net v2 12/62] mptcp: keep an orphan while it can
+ send its data
 From: netdev-bot+sashiko@kernel.org
 To: matttbe@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Mon, 23 Nov 2026 06:32:19 +0000
-Message-ID: <179541553975.3133.677293475472069830@kernel.org>
-In-Reply-To: <20261121-mptcp-cmason-fixes-v2-6-00327fd1de1f@kernel.org>
-References: <20261121-mptcp-cmason-fixes-v2-6-00327fd1de1f@kernel.org>
-X-sashiko-severity: Medium
+Date: Mon, 23 Nov 2026 06:32:20 +0000
+Message-ID: <179541554087.3133.1709563113530925995@kernel.org>
+In-Reply-To: <20261121-mptcp-cmason-fixes-v2-12-00327fd1de1f@kernel.org>
+References: <20261121-mptcp-cmason-fixes-v2-12-00327fd1de1f@kernel.org>
+X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -62,105 +62,109 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue(s) to consider.
+Thank you for your contribution! Sashiko AI review found more severe
+issue(s) in other patches of this series. This mail is only an FYI, in case
+you want to address the nit picks below when you respin.
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 0
+Low priority / nit picks for your consideration:
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
-
-- [Medium] In mptcp_pm_remove_addr() (net/mptcp/pm.c:543-551), the new
-  loop decides that an ACK carried no signal by comparing the whole…
+- [Low] The patch adds an unconditional close-timeout restart for orphans
+  in mptcp_check_send_data_fin() (net/mptcp/protocol.c:3479-3481).
 
 --
 
-mptcp: pm: don't drop an RM_ADDR because of an ADD_ADDR
+mptcp: keep an orphan while it can send its data
 
-With this patch, mptcp_pm_remove_addr() only refuses an RM_ADDR when
-another RM_ADDR is already pending. A pending ADD_ADDR or echo no longer
-blocks it. Up to three pure ACKs are then sent right away so that the
-RM_ADDR goes out after any pending ADD_ADDR or echo, preferably on a
-subflow that is not being removed.
+Before this patch, the close timeout of an orphaned MPTCP socket ran from
+close() and reset the connection when it expired, even if data was still
+waiting for the peer's window to open. The patch restarts the timeout when
+the DATA_FIN is sent. It also restarts the timeout and pushes the pending
+data again when the timeout expires before the DATA_FIN, as long as an
+active subflow has recently heard from the peer.
 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index f1f4b13c54590..cdd62433e0a6d 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/647
+
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index d64e04245963c..944c9d11d2116 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
 
 [ ... ]
 
-> @@ -538,7 +539,16 @@ int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_list *rm_
->  	msk->pm.rm_list_tx = *rm_list;
->  	rm_addr |= BIT(MPTCP_RM_ADDR_SIGNAL);
->  	WRITE_ONCE(msk->pm.addr_signal, rm_addr);
-> -	mptcp_pm_addr_send_ack_avoid_list(msk, rm_list);
+> @@ -3449,6 +3476,10 @@ static void mptcp_check_send_data_fin(struct sock *sk)
+>  
+>  	WRITE_ONCE(msk->snd_nxt, msk->write_seq);
+>  
+> +	/* an orphan's close timeout is for the DATA_FIN exchange */
+> +	if (sock_flag(sk, SOCK_DEAD))
+> +		mptcp_start_tout_timer(sk);
 > +
-> +	/* pending ADD_ADDR and echo take the first ACKs: one more each */
-> +	for (i = 0; i < 3 && mptcp_pm_should_rm_signal(msk); i++) {
-> +		u8 signal = READ_ONCE(msk->pm.addr_signal);
-> +
-> +		mptcp_pm_addr_send_ack_avoid_list(msk, rm_list);
-> +		/* no signal sent, e.g. after a fallback: no more ACKs */
-> +		if (READ_ONCE(msk->pm.addr_signal) == signal)
-> +			break;
 
-[Severity: Medium]
-Can this comparison see an ABA on the echo bit and stop after an ACK
-that did carry a signal?
+[Severity: Low]
+Can this restart overwrite the forced expiry that __mptcp_close_ssk() sets
+when the last subflow of an orphan reaches TCP_CLOSE?
 
-mptcp_pm_addr_send_ack_avoid_list() ends up in mptcp_pm_send_ack(), and
-that function drops pm.lock while the ACK is sent:
+__mptcp_close_ssk() expects the worker to destroy the orphan on its next
+run:
 
-net/mptcp/pm.c:mptcp_pm_send_ack() {
-	spin_unlock_bh(&msk->pm.lock);
-	__mptcp_pm_send_ack(msk, subflow, prio, backup);
-	spin_lock_bh(&msk->pm.lock);
+net/mptcp/protocol.c:__mptcp_close_ssk() {
+    ...
+		if (sock_flag(sk, SOCK_DEAD)) {
+			/* let the worker close and destroy the orphan */
+			mptcp_set_close_tout(sk, tcp_jiffies32 -
+					     (mptcp_close_timeout(sk) + 1));
+			mptcp_schedule_work(sk);
+    ...
 }
 
-Say the loop starts with signal == ECHO|RM. The pure ACK carries the echo
-first, and mptcp_pm_add_addr_signal() clears ECHO. While pm.lock is
-dropped, another HMAC-valid ADD_ADDR from the peer could arrive on a
-different CPU, for example a retransmission because our echo was late.
-mptcp_pm_add_addr_received() handles it in softirq under pm.lock. On the
-userspace PM path or the in-kernel reject path it calls:
+In mptcp_worker(), mptcp_pm_worker() runs before
+mptcp_check_send_data_fin(), and both run before the
+mptcp_close_tout_expired() checks.
 
-	mptcp_pm_announce_addr(msk, addr, true);
-	mptcp_pm_add_addr_send_ack(msk);
+When an orphan's last data is pushed from BH, __mptcp_subflow_push_pending()
+leaves the DATA_FIN to the worker:
 
-mptcp_pm_announce_addr() only checks BIT(MPTCP_ADD_ADDR_ECHO), so this
-succeeds and ECHO is set again.
+		if (msk->snd_data_fin_enable &&
+		    msk->snd_nxt + 1 == msk->write_seq)
+			mptcp_schedule_work(sk);
 
-Once the loop takes the lock back, addr_signal is again ECHO|RM, which
-is equal to signal. The loop then breaks on the "no signal sent" path
-while the RM_ADDR is still pending. The same thing can happen with
-SIG|ECHO|RM pending.
+Suppose an RM_ADDR from the peer is queued before that worker runs. A
+userspace PM subflow destroy has the same effect. Then a single worker run
+does this:
 
-In mptcp_nl_remove_subflow_and_signal_addr(), mptcp_pm_rm_subflow() runs
-right after this. mptcp_subflow_shutdown() then sends a pure ACK on the
-subflow being removed. That ACK takes the re-set echo, so the RM_ADDR is
-left for the next packet on that subflow, such as its FIN.
+mptcp_worker()
+  mptcp_pm_worker()
+    mptcp_pm_rm_addr_recv()
+      mptcp_pm_rm_addr_or_subflow()
+        mptcp_close_ssk()
+          __mptcp_close_ssk()
+            /* last subflow to TCP_CLOSE, close tout forced into the past */
+  mptcp_check_send_data_fin()
+    /* gate still open, snd_nxt = write_seq, SOCK_DEAD set */
+    mptcp_start_tout_timer()
+      /* probe_timestamp = tcp_jiffies32 */
+  mptcp_close_tout_expired()
+    /* now false, so __mptcp_destroy_sock() is skipped */
 
-The commit message describes the v2 loop as avoiding exactly this:
+Without this patch the orphan was destroyed in that same worker run. With
+it, the msk and its rtx queue stay around for another TCP_TIMEWAIT_LEN,
+although no subflow is left to carry the DATA_FIN exchange the new comment
+refers to. The orphan is freed only when the tout timer fires, because
+mptcp_orphan_keep() then returns false (snd_nxt == write_seq).
 
-  Otherwise, the RM_ADDR would go with the next packet, which could be
-  sent on a subflow being removed
+The delay is bounded and happens only once, so this is not a leak.
 
-If that path is dead, which is a common reason to remove an endpoint,
-the peer would never learn about the RM_ADDR. TCP retransmissions would
-not resend it, because the signal bit has already been cleared.
+Would it make sense to restart only if the timeout has not already expired,
+for example:
 
-Would it be more robust to check whether progress was made, for example
-with a counter of sent signals, or by checking the RM bit itself, instead
-of comparing the whole byte? Even with such a check, the fixed limit of
-three ACKs could still run out if new signals keep being set.
+	if (sock_flag(sk, SOCK_DEAD) && !mptcp_close_tout_expired(sk))
+		mptcp_start_tout_timer(sk);
 
-> +	}
->  	return 0;
->  }
+or to restart only while a subflow can still send?
+
+>  	mptcp_for_each_subflow(msk, subflow) {
+>  		struct sock *tcp_sk = mptcp_subflow_tcp_sock(subflow);
+>
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f%40kernel.org
