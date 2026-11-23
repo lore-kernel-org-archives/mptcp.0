@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795415550;
-	b=S9sT55gORTGnAkqqwRtCeFkw/mlhSV3C4fONTivINzqlkzZw2IebgUiDbheGt7UmsKWV
-	 2RBkYkPz4zwE86dbeYBxFwDLwXj2dvUPegnVCtBnTyhLVYEASsfRT7Yq0x+3XLD/rR2Yv
-	 DKEtJDINqhKkGf2VIQ5qer7P6FaZPG7II4ZeqDqcLelelUWtM3as/3KWZmSGUdVqFS2SG
-	 sq6VGMnyhgrY7hABTg/Z0yY3mDCjYBB871uBg33KOB2DpONKe7H0ITZeBXPiNytUCXlmY
-	 twfHYG2PF4rYbEx1VHp8a/T7i7NlSaYdhW0CS+QuGefI3doYlAevIGP56HH5auwFdSQ==
+	t=1795415551;
+	b=SasY2rkTWUI6888jS+eZJTkSADAXsD1Sm3dwn8VjxdMAf1c4LXYALKOecpLaLAPfemK3
+	 IFRXxKX7gHHPHFeYMlTqLUo6PfnRNhYl33FeSiD0Jsrv+UpFE8NZJDLJB3lNkzlRsJi8+
+	 RrUvyJzr+6Vfo0b8vwHws2ZYJQGf5Hn/ggORFoCUlD7vDH1eBl8ZnTZHbt17rzU+wiq1K
+	 ujZAGFMbR45I545U8huufgF8rmhxeMQqkmuAsNpnqh9GfeZxSJW8u82z308mM06NOdxCN
+	 8GYE3ElsD7G5IOEOqjmy3WuNd4WWSrDG6sYMNecD1N+bvQHrKecekuJnlO6AUYwFe5A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795415550;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795415551;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=F/GZR6mAJ+7ZmFx5zcuDaK4Qn1RDGI3ZI/3lv7Eqers=;
-	b=i3JYOqY6+QUfd/qbaqhDpcAbrcXGqyUmeOG/jGQkU0Kmnl1yz7PWVtzVBpT1eV5lq5dF
-	 K5dHicm2RR58FJUpnHviQRCAv5rZ/yMWy0UUoW7wtvAzREFWc6QOZW57y1VLUTyMlYk1i
-	 jjlPadFGKJEFOeHQy+hcpi2FixxpCyGqDNELukxQ4895yK4vv4nXWK5E5/9r6MhvsA0ZI
-	 E+PrYkkjRR0+Bvn/Uql5BNc2WwMOR7a9IAuYr0X9YfL3AWwYhPqXYZHGe0dYepaDqP3bP
-	 H2kNIX67hUpwpXPdIc567Px6h6g/0pPzlpP+LD9a7VS4dKoNYwXpuQHOIpv/7P8jtJA==
+	bh=CQWW0t7l1f53J04oCvzAbGjbfKaVwZ5h+T7Jd4R2u68=;
+	b=nFGFZxS2JFYPHXV8rDooTXgtOtwGR1vqr+2J4LNAIsZqpHJISk2JD6MzmbtJy97ohuPW
+	 ELz5/A419DR7syQ41Wvw4u8936GzftdpjXYxOxGnLvDBmVo2wJYzvYvAABWhjdXAAbGh2
+	 cUaE+fRSjydnP+gTNXXrGSCaQ9jKwTu/PMs8k97GMbBfFh5R3TA3vwfZ2PfBbakQ88MOJ
+	 F7U/E6LQJdpTzsrIq4IPF8kWL4gdwfazfc4sJwZ83YrBpVrL5HnIENIOW4Dq1T0dCcjgg
+	 ntmDYT8FE/kU+87lToNZ5XH+m/Vz3/xexegHg2mPi9w1OK9Bfe61t8qtEUGBJlq2CNw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KykW40Nv;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kKy80TnJ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7806C606A31A
-	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 06:32:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F06606A31A
+	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 06:32:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KykW40Nv
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DCE01F000C0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kKy80TnJ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5FB11F000D2;
 	Mon, 23 Nov 2026 06:32:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795415550;
-	bh=F/GZR6mAJ+7ZmFx5zcuDaK4Qn1RDGI3ZI/3lv7Eqers=;
+	s=k20260515; t=1795415551;
+	bh=CQWW0t7l1f53J04oCvzAbGjbfKaVwZ5h+T7Jd4R2u68=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=KykW40NvM6RPD6d0sr6xWcVGO4ywrYPGBCP9ETWdB9b6uibAVMAzpzQM1tdp8ffzW
-	 n3SwBy3ersNSZ+vGi++3rWc5SN5aQkNTl4uR7lW/pNOHiswIWmzab2c49BkUZ9oe6y
-	 7W7Hh1YViEW/4fOdFA2lg3D4aRnIy3ToL2jHUA6xVX11EtVDJ2/OTfQ40DD0+g4y4d
-	 7n07k/dDFGyTZZn/fz9QngUyvXpm0As8rt6X5ONFxsrLK6Wk1Hy7knovMMGJ4BadAt
-	 QRSgoYdZglMSfcTPA5cBoXh1aGBINXU9dVyrjX1O1HqS47gEBkGka5qzheyEiGB35h
-	 YMsPc9KW9ym9g==
-Subject: Re: [PATCH mptcp-net v2 22/62] mptcp: no sf left: process pending
- MP_FASTCLOSE
+	b=kKy80TnJJyEAwjNCf7IY3oIJC5RAQjROI9iMglZxKODTngCMTH1qx4DxzjZIy7Qi6
+	 7tnwiOMahSB670M3Jddl2dwYVzQO11RZQWmNgtX1XIkBp4Z/HtDXsBsgP0C39sXGdr
+	 ynhEyZ54YyK7GZGwY3SL0wh1PBm1I4AZe6jQINQO7xGsd8UDYjkoB6DJis52Zn3w0m
+	 RLCRyAeTvImwnfvj3at4cuY46W3c6qQfrG4bRuxehc0NNdTKwsXuKuGXZA6ArXnn+o
+	 T+ylIlxqZiMeHH1UveJ3z40FTwa7WWcQcsOdKfuSJiWpC0O6RFWhoBwWk5BCa62fTU
+	 GzxWWDfd481nw==
+Subject:
+ Re: [PATCH mptcp-net v2 23/62] mptcp: no sf left: process pending DATA_FIN
 From: netdev-bot+sashiko@kernel.org
 To: matttbe@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Mon, 23 Nov 2026 06:32:29 +0000
-Message-ID: <179541554976.3133.9470417903882322773@kernel.org>
-In-Reply-To: <20261121-mptcp-cmason-fixes-v2-22-00327fd1de1f@kernel.org>
-References: <20261121-mptcp-cmason-fixes-v2-22-00327fd1de1f@kernel.org>
+Date: Mon, 23 Nov 2026 06:32:30 +0000
+Message-ID: <179541555052.3133.2432257885712070240@kernel.org>
+In-Reply-To: <20261121-mptcp-cmason-fixes-v2-23-00327fd1de1f@kernel.org>
+References: <20261121-mptcp-cmason-fixes-v2-23-00327fd1de1f@kernel.org>
 X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -73,94 +73,55 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [Medium] The commit message describes a symptom that an earlier patch
-  in this series has already removed.
+- [Medium] mptcp: tcp_disconnect() clears SOCK_DONE before
+  mptcp_check_rcv_close()
 
 --
 
-mptcp: no sf left: process pending MP_FASTCLOSE
-
-This patch calls mptcp_check_fastclose() in __mptcp_close_ssk() before
-the MPTCP socket moves to TCP_CLOSE. That path runs when the last subflow
-is closed while the socket is not in TCP_ESTABLISHED. The goal is to
-handle an MP_FASTCLOSE that arrives after the worker has already run
-mptcp_check_fastclose(), which is otherwise ignored once the socket is
-closed.
-
-> When the last subflow is closed while the MPTCP socket is no longer in
-> the ESTABLISHED state, e.g. in CLOSE_WAIT after a DATA_FIN, the MPTCP
-> socket moves to TCP_CLOSE. But this subflow could have been closed by
-> a reset carrying an MP_FASTCLOSE, not processed yet: if this reset is
-> received while the worker is running, after mptcp_check_fastclose(),
-> and before __mptcp_close_subflow(). At the next run of the worker, the
-> MPTCP socket being closed, the MP_FASTCLOSE is ignored: no error is
-> reported, and SEND_SHUTDOWN is not set. With data still to be sent,
-> poll() then reports EPOLLHUP, but neither EPOLLOUT, nor EPOLLERR.
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2818,9 +2830,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+>  			mptcp_schedule_work(sk);
+>  		} else if (sk->sk_state != TCP_ESTABLISHED ||
+>  			   msk->in_accept_queue) {
+> -			/* After the close, an MP_FASTCLOSE would be ignored */
+> -			mptcp_check_fastclose(msk);
+> -
+> +			mptcp_check_rcv_close(sk);
+>  			mptcp_set_state(sk, TCP_CLOSE);
+>  			WRITE_ONCE(sk->sk_shutdown,
+>  				   sk->sk_shutdown | SEND_SHUTDOWN);
 >
-> This issue was causing the "fastclose test" subtest from mptcp_join.sh
-> to be flaky: after the DATA_FIN from the client, then its MP_FASTCLOSE,
-> the server, still having data to send, was killed after the timeout,
-> with its MPTCP socket closed with RCV_SHUTDOWN only (-->):
 
 [Severity: Medium]
+On a fallback connection, I think this is called too late for
+mptcp_check_data_fin() to propagate SOCK_DONE to the MPTCP socket.
 
-Is "SEND_SHUTDOWN is not set" still accurate at this point in the series?
+To reach this branch, msk->first is the only subflow and is already in
+TCP_CLOSE, and the msk is not SOCK_DEAD, so dispose_it is false. That
+means __mptcp_subflow_disconnect() has already been called on
+msk->first before jumping to out:. With the subflow in TCP_CLOSE, it
+calls tcp_disconnect(ssk, 0), which unconditionally clears SOCK_DONE
+on the subflow.
 
-The earlier patch "mptcp: wake up blocked senders when no sf left" already
-sets it in the same branch of __mptcp_close_ssk() that this patch changes.
-These are the context lines around the new mptcp_check_fastclose() call:
+mptcp_check_rcv_close() then spools the backlog and calls
+mptcp_check_data_fin(). On fallback, that function only sets SOCK_DONE
+on sk if msk->first still has SOCK_DONE, which tcp_disconnect() just
+reset. This is the exact case the patch is fixing: the last data and
+the FIN were received while the worker owned the msk, so the data is
+still in msk->backlog_list. In that case rcv_data_fin is consumed, but
+SOCK_DONE is never set on sk.
 
-net/mptcp/protocol.c:__mptcp_close_ssk() {
-    ...
-		} else if (sk->sk_state != TCP_ESTABLISHED ||
-			   msk->in_accept_queue) {
-			mptcp_set_state(sk, TCP_CLOSE);
-			WRITE_ONCE(sk->sk_shutdown,
-				   sk->sk_shutdown | SEND_SHUTDOWN);
-    ...
-}
+That matters for mptcp_recvmsg() and mptcp_splice_read(). Suppose
+sk_err gets set afterwards, e.g. by a RST following the peer's FIN, or
+by the error set on close from FIN_WAIT1/CLOSING later in this series.
+Without SOCK_DONE on sk, the reader would get -ECONNRESET or -EPIPE
+after draining the data instead of 0 (EOF).
 
-With SEND_SHUTDOWN set, mptcp_poll() reports EPOLLOUT:
-
-		if (shutdown & SEND_SHUTDOWN)
-			mask |= EPOLLOUT | EPOLLWRNORM;
-
-The next write then gets EPIPE from mptcp_sendmsg():
-
-	ret = -EPIPE;
-	if (unlikely(READ_ONCE(sk->sk_err) || (sk->sk_shutdown & SEND_SHUTDOWN)))
-		goto do_error;
-
-Can the server in the fastclose test still time out with only the earlier
-patch applied?
-
-The server is started with "-f -1", which sets cfg_rcv_trunc. In that
-case copyfd_io_poll() in mptcp_connect.c treats EPIPE as expected:
-
-					if (cfg_rcv_trunc &&
-					    (errno == ECONNRESET ||
-					     errno == EPIPE)) {
-						fds.events &= ~POLLOUT;
-						continue;
-					}
-
-If so, the server would exit normally instead of being killed with exit
-code 143. The RCV_SHUTDOWN-only state ("-->") in the quoted ss output
-also seems to come from a kernel without the earlier patch.
-
-On top of the earlier patch, the remaining change from this patch seems to
-be what mptcp_check_fastclose() does for the pending MP_FASTCLOSE:
-
-  - sk_err set to EPIPE or ECONNRESET
-  - SHUTDOWN_MASK and sk_error_report()
-  - the token destruction
-  - the DATA_FIN and backlog handling
-
-Could the commit message describe that effect instead? It could also
-claim the flaky subtest fix only if the subtest still fails with just the
-earlier patch. Both patches carry the same Fixes: 27e5ccc2d5a5 tag, so
-the current wording may give stable backports the wrong idea about which
-patch fixes the selftest.
+Should SOCK_DONE on msk->first be sampled before the subflow is
+disconnected? Or should mptcp_check_rcv_close() be called earlier in
+__mptcp_close_ssk(), before __mptcp_subflow_disconnect()?
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f%40kernel.org
