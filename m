@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795415554;
-	b=hYxlY9sYXAx3XchFPf+g6dRovAvsrNrWid6aDWTdqvhxeIw8pm4suUfTkEPW4Vyaoxfw
-	 HlQ1wbiCM+7yOs/WkG5D1mhKRSVmqMOQQhJtm6xdCVIfoy21gB7UpevKMODD0yqwWSUz4
-	 snaJVrMNsctoUYzcSZgneRntFYCYk9IFsDDiRZLWIiZ8g8dON2bpHQyIZuTg0kCkVoBKv
-	 j5G4Vu4+j8u1VgrBxgsBcZi9gDhRVM4GIoMT65bCsI5BPgH1KgmHmye+bzifAQsZ00yad
-	 lLiND/mKLO2Cj4Ei6GJ0r0a1lJgreT6x20i4bX1Hro9rYWRiyCF0frc8mugCUt5NiPw==
+	t=1795415555;
+	b=tnjl19FG501AWTrTqrluOjT7Mkv25110bJuwxe460KUVVlL72+azo27DxJrXSx1Wrzl3
+	 Ht4UXdQelcgqu1AvDufctcK+BVxz9f/Yu1gL3U0m8AnmhOBie91U3MZrECuBTVC43JDmU
+	 RBZScoPyVD0pSXdmU8NxqkTZolwFQiVCFtrrQd4NCN4AF1/QV8WLZYPhTdxYLjb6/NkAE
+	 JjMCW2s6ncFpsrqv2zaJxaixiKYaKd/gC7gnHsAAn3BxIYg0wphUTLoggQeDhqEe5oaFH
+	 bDdmkH14CWZ75dKsG4YpOusrzmH3JXwtt1V4S6rc9xqIxbIo1l3xwUsRx15zbmyO8CQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795415554;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795415555;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=MCWm7uaHfRwhk8fSxvgvyXd1iGJ/sZZr+m3P7Vt3yn0=;
-	b=Jr3j8BYJXIIMSiAfyK2Htn9koIWANPppsP5JRyW6WD8um7iA/ksjKHMtuJX/aFCqdUVu
-	 RoGsY+c5rjBtlclsFfOdRSmNlRvhqdmrHoRPKfLRBFEtBH7cjkywcZ8bL40ft8aPDnfD+
-	 /0SAM7hjktpFRyKq6Dda7guWE5+T0yPIHoVbQPHPJCjzmL89gapxoYSbvPS4PSALS97Dp
-	 POh/fYRhG2ZgBMsaE3xA6ZQGstfqAYLzR9Do26Rd5494J7shvomVWMrap7CA6hkBizvsH
-	 c51pFXWW5Pz8Wn4sYKDKKn+TR/oTaoQ3T1SV/7BYf2DSy1eDSw+frEJ71TpWIO2KIAQ==
+	bh=rcz9FiQg7TdbYrSK2DxbpPuSlBg7VN9x4AsPSrOXpw4=;
+	b=TFucKX+1r9p5XUSN9NMe9jGorXjazgr+PHAwANoZb+6PKsMPtkT7EmzeLiY2BHPkNBO8
+	 jOLTAYfmwgPN/UVEzXqKTqlPlmNIViHfNhEL9cFErpoT4jFvyT44GFvWuWEUSLKQy/01d
+	 urMjfwbTgduiBoDEMJRO/L7GXIfvTNqbfk0OcvoWjbNPCWEy4q5HAw62iAWV+fscSDTie
+	 Fxchl7WDO6ixaUTMRedsKTn3KIDJgM37+kydqj8lm23X2NgIrevtQ0XkjSbJHrOPHqLnV
+	 Qd3FHJT/ScqWBrgoas4ihaHnTd/oH5o7EBjVgA+9HkPxKu3tKzRA+ih52+D7osjB5AQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HW0VqIue;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Jmu0OybS;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B83606A31A
-	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 06:32:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D990606A31A
+	for <mptcp@lists.linux.dev>; Mon, 23 Nov 2026 06:32:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HW0VqIue
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0974F1F000E6;
-	Mon, 23 Nov 2026 06:32:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Jmu0OybS
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB9901F000CA;
+	Mon, 23 Nov 2026 06:32:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1795415554;
-	bh=MCWm7uaHfRwhk8fSxvgvyXd1iGJ/sZZr+m3P7Vt3yn0=;
+	bh=rcz9FiQg7TdbYrSK2DxbpPuSlBg7VN9x4AsPSrOXpw4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=HW0VqIueNeP2TSKFyygMHYN4w4ak3opl+JhApUNJ8HFHWqqODZeUE/aVeCLB/DvFn
-	 LUdWtu/8BZFK6AVORrxaxMzVp5lxTOz3L7yhyVgdDRVUaPR0eCD9h1zZwaUhqlk5Q0
-	 2fxQ95fhRzL5+M2idM/UyBIR5MMg24nEecUUI+/LjUK64ZLjMIMrjg8BZTVT3qljhh
-	 bX+Cq5vhOS8r/0g8Crd3qbzKiqmDOfimQZ/Lnk/BT2oaYAc1SIrl0GtZWisXwDCck8
-	 WTiJ2M8Ro03Pln8f9ZZUrWhX9e4QUtL+5D5wkOG99k295l5CI3is76+iRYZKuH/BHa
-	 CLkhnQ18/QU3g==
-Subject: Re: [PATCH mptcp-net v2 29/62] mptcp: keep listening after
- MSG_FASTOPEN errors
+	b=Jmu0OybSNsfH19P6mCXGI5pxGYQXp9MWMpdT8aF0IqjHgm3uFAAzdopwmocUVRe2e
+	 TXJxBImtfJTlkNrVgIRSq7O50MfHWZlehuo95lYcpiazABrG7QABte0wGjdopkRljz
+	 B2XRyjNu0ANfYWWDn9SSOzuiVs+F/F28Y+y4Xw2HqjrgbInaEM48JQrf0fmGt7SVmJ
+	 q/UKd5XSYu26oL8MYYH5ttspCs71g+8VDIKC/ReJcfpcR7kn+JN5+IrOfgM4v0h1xx
+	 oQFltKc6q28qMZSVnIokU3VrtIFV4d3MQTMW7oAjNBLS0qnAV19GYW2kVTXDiASLFN
+	 HP1OXz6lDhDoQ==
+Subject: Re: [PATCH mptcp-net v2 38/62] mptcp: send the infinite map in a
+ single segment
 From: netdev-bot+sashiko@kernel.org
 To: matttbe@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Mon, 23 Nov 2026 06:32:33 +0000
-Message-ID: <179541555362.3133.15360891097208549475@kernel.org>
-In-Reply-To: <20261121-mptcp-cmason-fixes-v2-29-00327fd1de1f@kernel.org>
-References: <20261121-mptcp-cmason-fixes-v2-29-00327fd1de1f@kernel.org>
+Date: Mon, 23 Nov 2026 06:32:34 +0000
+Message-ID: <179541555434.3133.14142600677566167518@kernel.org>
+In-Reply-To: <20261121-mptcp-cmason-fixes-v2-38-00327fd1de1f@kernel.org>
+References: <20261121-mptcp-cmason-fixes-v2-38-00327fd1de1f@kernel.org>
 X-sashiko-severity: High
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -73,101 +73,93 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [High] This patch is incomplete.
+- [High] The fix holds only while the subflow MSS never drops below the
+  pre-fallback MSS.
 
 --
 
-mptcp: keep listening after MSG_FASTOPEN errors
+mptcp: send the infinite map in a single segment
 
-This patch skips the mptcp_disconnect() retry in mptcp_sendmsg_fastopen()
-when the msk is a listener. A failed sendmsg() with MSG_FASTOPEN then no
-longer closes an MPTCP listener. The retry exists to redo a disconnect
-that failed inside __inet_stream_connect().
+This commit caps the skb that carries the MPTCP infinite mapping at one
+MSS in mptcp_sendmsg_frag(), using the MSS computed before the fallback.
+Before this change, the skb could be sized with the pre-fallback size
+goal. After the fallback, its segments still carried a DSS option and
+could exceed the MTU, which stalled the transfer.
 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 55ff0298e5dd2..6f4e418d712c8 100644
+> index d16269d27b1da..e2fb81f52df2e 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -2004,11 +2004,12 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
->  		 */
->  		if (ret && ret != -EINPROGRESS && ret != -ERESTARTSYS && ret != -EINTR)
->  			*copied_syn = 0;
-> -	} else if (ret && ret != -EINPROGRESS) {
-> +	} else if (ret && ret != -EINPROGRESS && sk->sk_state != TCP_LISTEN) {
+> @@ -1483,6 +1483,12 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+>  	info->mss_now = tcp_send_mss(ssk, &info->size_goal, info->flags);
+>  	copy = info->size_goal;
+>  
+> +	/* After the fallback, the MSS no longer includes the DSS option of the
+> +	 * infinite mapping: send it in a single segment.
+> +	 */
+> +	if (unlikely(mptcp_subflow_ctx(ssk)->send_infinite_map))
+> +		copy = info->mss_now;
 
 [Severity: High]
-Does the TCP_LISTEN check fully cover the case described in the commit
-message, where there is nothing to retry?
 
-__inet_stream_connect() calls disconnect() in only two places. One is
-the AF_UNSPEC branch, which tcp_sendmsg_fastopen() already rejects. The
-other is the sock_error label:
+Does this keep the infinite mapping in a single segment only while the
+subflow MSS stays at or above the pre-fallback info->mss_now?
 
-sock_error:
-	err = sock_error(sk) ? : -ECONNABORTED;
-	sock->state = SS_UNCONNECTED;
-	sk->sk_disconnects++;
-	if (sk->sk_prot->disconnect(sk, flags))
-		sock->state = SS_DISCONNECTING;
+Right after this skb is queued, mptcp_update_infinite_map() clears the
+flag:
 
-Other errors return without trying a disconnect. One example:
+	mptcp_subflow_ctx(ssk)->send_infinite_map = 0;
 
-	case SS_CONNECTED:
-		err = -EISCONN;
-		goto out;
+After that, MSS computations call mptcp_established_options() with
+skb == NULL, and it reserves no option space:
 
-The same is true of -EINVAL, and of the -EOPNOTSUPP, -EALREADY and
--ENOBUFS returns in tcp_sendmsg_fastopen(), which happen before
-__inet_stream_connect() is called. For a msk that is not a listener,
-the mptcp_disconnect() retry still runs for all of these errors.
+	if (unlikely(__mptcp_check_fallback(msk) && !mptcp_check_infinite_map(skb)))
+		return 0;
 
-This sequence looks reachable:
+The queued skb still has mpext->infinite_map = 1, though. It is still
+sent with a DSS option, about 28 bytes with ack64.
 
-  - an established MPTCP socket calls shutdown(SHUT_WR), and the msk
-    goes to FIN_WAIT1, then FIN_WAIT2
-  - the peer sends data, then a DATA_FIN. mptcp_check_data_fin() moves
-    the msk to TCP_CLOSE. sock->state stays SS_CONNECTED, and the data
-    stays unread in sk_receive_queue
-  - the application calls send(fd, buf, len, MSG_FASTOPEN)
-  - __mptcp_nmpc_sk() accepts TCPF_CLOSE.
-    tcp_sendmsg_fastopen()->__inet_stream_connect() returns -EISCONN
-    from the SS_CONNECTED case without trying a disconnect
-  - back in mptcp_sendmsg_fastopen(), sk_state is TCP_CLOSE rather than
-    TCP_LISTEN, so mptcp_disconnect(sk, 0) runs. It succeeds because
-    fastopening is 0 by then
+The PMTU can drop while this skb is unsent or unacked. One example is an
+ICMP Frag-Needed for this very segment, which can be the first full-size
+segment when MP_FAIL arrives before any data. In that case, would the
+retransmission path split the skb with an MSS that has no room for the
+DSS?
 
-mptcp_disconnect()->mptcp_destroy_common() then does:
+tcp_v4_mtu_reduced()
+  tcp_sync_mss()
+  tcp_simple_retransmit()
+...
+__tcp_retransmit_skb()
+  cur_mss = tcp_current_mss(sk);   /* no DSS room after the fallback */
+  tcp_fragment(sk, TCP_FRAG_IN_RTX_QUEUE, skb, len, cur_mss, GFP_ATOMIC)
+    mptcp_skb_ext_copy(buff, skb); /* infinite_map copied to each piece */
 
-	__skb_queue_purge(&sk->sk_receive_queue);
-	skb_rbtree_purge(&msk->out_of_order_queue);
+tso_fragment() copies the extension in the same way. Each piece is then
+cur_mss plus the DSS option, which is larger than the new PMTU.
 
-On top of that:
+With DF set, ip_fragment() drops the piece. The local ICMP carries the
+same MTU, so icsk_pmtu_cookie is not lowered.
 
-  - the subflows are fast-closed
-  - the token and PM state are destroyed
-  - sk_shutdown and SOCK_DONE are cleared
-  - the socket is forced to SS_UNCONNECTED
+Would every RTO retransmission be rebuilt the same way, so that the
+connection stalls until tcp_retries2 is reached?
 
-Userspace sees only -EISCONN, but the unread data and the EOF are gone.
-Plain TCP returns -EISCONN via sk_stream_error() and leaves the socket
-and its data untouched.
+A smaller overshoot also looks possible when TCP timestamps are not
+negotiated. The skb is sized for the DSS option without SACK. If SACK
+blocks appear later, the post-fallback MSS reserves room only for the
+SACK blocks. The DSS option plus SACK blocks could then put the segment
+4 to 12 bytes over the MTU.
 
-The same unwanted disconnect seems to happen on a TCP_CLOSE msk when the
-TFO client sysctl is disabled and tcp_sendmsg_fastopen() returns
--EOPNOTSUPP.
+The later patch "mptcp: keep room for infinite map after fallback"
+reserves DSS space only while send_infinite_map is set. That is before
+this skb is created, so the gap seems to remain at the end of the series.
 
-Would it make sense to retry only when a disconnect really failed?
-__inet_stream_connect() sets sock->state to SS_DISCONNECTING in exactly
-that case. Another option is for mptcp_disconnect() to record that it
-returned -EBUSY.
+Would it be more robust to keep the DSS space reserved in the MSS
+calculation (skb == NULL) until the infinite-map skb has been acked? That
+would also make this cap unnecessary.
 
-Either check would also cover the listener, which stays SS_UNCONNECTED.
-It could then replace the TCP_LISTEN check instead of being added next
-to it.
-
-This code appears unchanged at the end of the series.
-
-[ ... ]
+>  	skb = tcp_write_queue_tail(ssk);
+>  	if (skb && copy > skb->len) {
+>  		/* Limit the write to the size available in the
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261121-mptcp-cmason-fixes-v2-0-00327fd1de1f%40kernel.org
