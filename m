@@ -1,48 +1,48 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795440328;
-	b=E+pvSo3MhXndsHE+9ICKQ/4ZBmFGqil2bKrbNyDjSgl+dfGJKCwDWczNFAy2ju9oozt6
-	 FjJpNYU5YhqMQ3QxS9f5//w083I8cr7/r1lMtcxfgF63Z/Qnv7fsW++Prz4+Cj5UByxLM
-	 UUezXb8aUYNQ+5Q7gEbW9eO76cZF4+nSPQlBBdftWG1tPKPe0rfOYK2E5sjPgFm1Ah1gN
-	 sDcgbS6ZPf2K0+iHKvxqVpW2KzeGZQDLkUMCaDs8OszjLwV0++yJif/K+58ZOjf7mBDak
-	 f3E3nPxbGXbBpY/nY2FhTHe77DawhBjSl0pweev8OSwAJ58o+LFfEtLC3ueT5zQ9rFw==
+	t=1795440331;
+	b=r47wX0Dybv2tnFp+0WOzfBTQRkO73Sj79VhFyPzxm0TUS3R7cSxe29y2AOJey9Ohq5NE
+	 gcmlVTiJuXo1kFOppRQAj0778k5g00Z4sacs1u/dGNpXH2p67in74/CuY6VCpjGkcl4Cr
+	 M2fi7MvcqG2oHKA1+5RUCx2odhh9qh1vH46QpcvZKPQQ9zRjP73HbYF26ivRRGY8uRwWX
+	 4DTWuE8tWA+dsNRk9/KSiM6hikiroe5825H2TfGkeuTRIZWeFdI5jA1SRjUTO+jGsWs9M
+	 Bgpw53ekJaigbXuI2ePGFa8xq8z+cJUTliSddufQVSnjZKTJv1TQsUxJCpAlbQYt96w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795440328;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795440331;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=6R0zS6N172iECvWqZi/RpO1fp5+dWMwp4TBDt1rOy7s=;
-	b=5gOS2EIvEIpLjcOnrIRf5NGeku7zH2vhDQ8iLPW120oi5OxJo3yaHdSfKG8G017QOXuU
-	 r4skZMSZ4eRTgCqEcmMcJ57cQ0WOkd1lQk+kLU+6bNVBWVKwgOpORGuyMg4gm3Ys2dCw0
-	 uT7KgqPL0tcLIZqSdhFGM8gA7H9jgyX0xBTxx9s+ZcjAaf1aEsLbvK3UdFslSbhH0pVm8
-	 sWJuH+TunKIr3brlpt326DqPIDCYT8UVQMrMBRaM1ThjT+AUowGmkz+p+FpqkoDO89aYz
-	 aQ5TsekgvOR+hfllY3ON5ADinUZjn7cFuBhPw2AvBnw1PL1cWyX6wYYezxn74yKiWfg==
+	bh=5Og4wPEpf33bGTGjibI2FKvY8gzfx4KipgO1zg400HI=;
+	b=46JF105YN+WbWK1XqbjAOFFlaDVBD9rfPqNSlCojCFZ5gnItsNKx62Qazlg0EjFwdhHL
+	 UcrsMYztjR96fAlrRhXXDjYWCRcXaNs4EjcASwTMTYNgsxeo8tCGaA6BOToI+Aent1YmI
+	 m4Gtl+sCybI50zqiTse8Ut7RT38HBnDq5UonFlfk8qvdaRYZJoEnvPtTRgHowKgSHFjl4
+	 ZCNWkfyMIQ/tM81iRk1R6YH+mx4i7HqklnnrCJjRfzQgJoMJ/7orju6aCPgm0s/PD0Lcv
+	 xnY6Do2YVbEeJAS9fMGv69WgpRSRxC44JwpI1vIDT4sEMNM8Q0ifOExwf/pDejF0wfQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UEDwx3+u;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SYrLs4xx;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB19606A31E;
-	Mon, 23 Nov 2026 13:25:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C849606A31A;
+	Mon, 23 Nov 2026 13:25:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UEDwx3+u
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 844C81F000C0;
-	Mon, 23 Nov 2026 13:25:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SYrLs4xx
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CC1A1F000C0;
+	Mon, 23 Nov 2026 13:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795440327;
-	bh=6R0zS6N172iECvWqZi/RpO1fp5+dWMwp4TBDt1rOy7s=;
+	s=k20260515; t=1795440330;
+	bh=5Og4wPEpf33bGTGjibI2FKvY8gzfx4KipgO1zg400HI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=UEDwx3+uNiHMUL4GO+K4dqiEN0B6XHou27kEd5w84rx8hnSsoSGKvY9Me7j01NG3w
-	 8zNkBG2nEmVECvJ95ohI0fiqpXmGxeLe3mTf9xmJP6I4jRVNvJXw2SviBPuStQMSqy
-	 ahyfPtC/0U+qNIoeFOaowGeCwZVhUQ1UA48+dy54MJ20ZuGru9dgseCk8R8m8oOZMB
-	 HhrZisbYfr7PvY6xoAYNudBRcxJ4j7P/oR92cdpQqr55kqOVml+Aj8tyQ1x9AF9N9p
-	 woo1wTprHvY/8zbhz36YQYasIu+ITRuZ9EsitXT4IZfg/SRjxuNvXyywvFSuskgxtu
-	 4r3CoycoOjDmQ==
+	b=SYrLs4xxjlE+W9jwIaVnjMfMZQps17wlsnjriKk1pYedZzY6MTXo53ZqG+N1XiBTs
+	 eXAdnjJkn6XMUkCnZUFzWmfgKOzkO04ii9/L0DAQnyFm2Ej3UQyH90P+VIhYtXid70
+	 kXvRIT7EBzZ8A/cAoDfezzKIoXfdKuzeRAKGAVk13yZok6OzF20TOrTGhvq8OZnlIF
+	 Wk8hohNYFcc+fYQ3EqsyfYfgth5huC/0ZUIeRO1YYYfIq39IAwWTGjgQ+VNn6g695+
+	 Mt+0itpsBlmIdjYtcsAZhacI5Ddn1sV8GnepfDYfrBCsR5ssryIJBoX2EM4Luqe33L
+	 fxRFdP0Y+qWFw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 23 Nov 2026 14:24:49 +0100
-Subject: [PATCH net 01/10] tcp: drain the queues of a listen() that fails
+Date: Mon, 23 Nov 2026 14:24:50 +0100
+Subject: [PATCH net 02/10] mptcp: drain the queues of a listen() that fails
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -54,7 +54,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261123-net-mptcp-misc-fixes-7-4-rc5-v1-1-278042217e8d@kernel.org>
+Message-Id: <20261123-net-mptcp-misc-fixes-7-4-rc5-v1-2-278042217e8d@kernel.org>
 References: <20261123-net-mptcp-misc-fixes-7-4-rc5-v1-0-278042217e8d@kernel.org>
 In-Reply-To: <20261123-net-mptcp-misc-fixes-7-4-rc5-v1-0-278042217e8d@kernel.org>
 To: Eric Dumazet <edumazet@kernel.org>, 
@@ -66,96 +66,71 @@ To: Eric Dumazet <edumazet@kernel.org>,
 Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
  Davide Caratti <dcaratti@redhat.com>, 
  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Chris Mason <mason@kernel.org>, stable@vger.kernel.org, 
- Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>
+ Chris Mason <mason@kernel.org>, stable@vger.kernel.org
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3626; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=KnhMwAMfUYPYaDgdpX1a2kmd2Cm5s4SvnOfH/+Eo+Og=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJZ7HYkGLsnnXU/4BrlKNnWGdxxTmhh1ZzQQ/tOqRtHv
- 5Xd8Seno5SFQYyLQVZMkUW6LTJ/5vMq3hIvPwuYOaxMIEMYuDgFYCLu8xgZ/hueWrSIXWsHJ9M2
- 3kmCXIq3rfsrmCdcC2yL+7vdXpL/AMN/r5gK3jLDz5rf57xxfSzM37jjlQ33x6rMIwxSwVdtPh7
- kAAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2354; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=2rgOVhu1I0CypO/fm+P6652Bhfc+fCsfBf4Pl3a7+LY=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJZ7HbetzsQ+cIjN7gu+155cF/wf626O2U3PM7Pt+o9I
+ 5ZiVZ3TUcrCIMbFICumyCLdFpk/83kVb4mXnwXMHFYmkCEMXJwCMBGlqQz/69/4LyjzOxL2+uUE
+ Ie3VfoVn+rLlClKFpa9lVShVyXonMvyVdzw0wfORZ9TT6hf5PgdEHtefk3DQWG9l/pRvmcI6YRV
+ mAA==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 From: Chris Mason <mason@kernel.org>
 
-If listen() fails on a TCP socket that has listened before, the sockets
-of connections from the earlier listen() can leak, together with their
-network namespace.
+Sockets and their network namespace can leak, if a handshake completes
+while listen() fails on an MPTCP socket that has listened before.
 
-inet_csk_listen_start() sets TCP_LISTEN before it calls get_port() and
-hash(), and its error path sets TCP_CLOSE again, then purges the Fast
-Open RST queue since commit 342e62fd34c2 ("tcp: purge Fast Open RST
-queue when listen() fails"), but not the accept queue. Pending request
-socks outlive an earlier listen() and still point to the socket, so in
-TCP_LISTEN, inet_csk_reqsk_queue_add() adds them to the accept queue,
-with their new child. These entries, and the sockets that they hold,
-are never freed, since close() drains this queue only in TCP_LISTEN and
-the next listen() stores NULL in rskq_accept_head.
+mptcp_listen() passes the first subflow through __inet_listen_sk() to
+inet_csk_listen_start(), which sets TCP_LISTEN, then calls get_port()
+and hash(), and sets TCP_CLOSE again if either fails. Until then the
+subflow is in TCP_LISTEN, so a request sock of a previous listen() that
+still points to it can get a new child and be added to the subflow's
+accept queue. But neither close() nor the next listen() frees what is
+queued, and the earlier commit "tcp: drain the queues of a listen() that
+fails" only purges the RST queue of an MPTCP subflow, which needs
+mptcp_subflow_queue_clean() before a drain.
 
-The fix used here is to call inet_csk_listen_stop() after the error path
-sets TCP_CLOSE, which also purges the RST queue, except for an MPTCP
-subflow, which needs mptcp_subflow_queue_clean() first: only its RST
-queue is purged here, and mptcp_listen() has to drain its accept queue,
-which is done in the next patch, "mptcp: drain the queues of a listen()
-that fails".
+The fix used here is to call mptcp_subflow_queue_clean() and then
+inet_csk_listen_stop() on the subflow in mptcp_listen(), if
+__inet_listen_sk() returns an error with the subflow in TCP_CLOSE.
 
 This issue has been found with the help of an LLM, and reproduced in a
-VM, with the reproducer shared with the original version of this patch,
-run as an unprivileged user: listen() failing with EADDRINUSE in a loop,
-while the connections of an earlier listen() complete. Without this
-patch, sockets were leaked, and network namespaces too when each round
-was in its own one, without any message from the kernel:
+VM, with the reproducer of the previous commit, modified to use MPTCP
+sockets, on both sides. Without this patch, sockets were leaked, and
+network namespaces too when each round was in its own one, without any
+message from the kernel:
 
-  result: request socks: 10000 made, 2535 left. Sockets: 33373 made, 5070 left
+  result: request socks: 10000 made, 1151 left. Sockets: 64982 made, 5755 left
   [...]
-  result: namespaces: 1000 made, 694 taken down, 306 left
+  result: namespaces: 1000 made, 923 taken down, 77 left
 
-Fixes: 079096f103fa ("tcp/dccp: install syn_recv requests into ehash table")
+Fixes: 76e2a55d1625 ("mptcp: better msk-level shutdown.")
 Cc: stable@vger.kernel.org
 Signed-off-by: Chris Mason <mason@kernel.org>
-[ Shorter comments. Commit message: how the issue was found, and its
-  symptoms. On top of commit 342e62fd34c2, with a Fixes tag for the
-  accept queue. ]
+[ Shorter comment. Add a Fixes tag. Commit message: how the issue was
+  found, and its symptoms. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Cc: Neal Cardwell <ncardwell@google.com>
-Cc: Kuniyuki Iwashima <kuniyu@google.com>
----
- net/ipv4/inet_connection_sock.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ net/mptcp/protocol.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
-index 9a3b05edb62b..2e27b3e592a8 100644
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -1382,8 +1382,8 @@ int inet_csk_listen_start(struct sock *sk)
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index b375da1f17fe..fd88104f0631 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -4340,6 +4340,11 @@ static int mptcp_listen(struct socket *sock, int backlog)
  
- 	/* There is race window here: we announce ourselves listening,
- 	 * but this transition is still not validated by get_port().
--	 * It is OK, because this socket enters to hash table only
--	 * after validation is complete.
-+	 * This socket enters to hash table only after validation is
-+	 * complete, but reqs of an earlier listen() may queue children.
- 	 */
- 	inet_sk_state_store(sk, TCP_LISTEN);
- 	err = sk->sk_prot->get_port(sk, inet->inet_num);
-@@ -1401,9 +1401,13 @@ int inet_csk_listen_start(struct sock *sk)
- 
- 	/* A Fast Open child accepted before a previous shutdown() of this
- 	 * listener might have queued its request in rskq_rst_head while
--	 * we were transiently in TCP_LISTEN state.
-+	 * we were transiently in TCP_LISTEN state. The accept queue of an
-+	 * MPTCP subflow is drained by mptcp_listen().
- 	 */
--	reqsk_fastopen_purge_rst(&icsk->icsk_accept_queue);
-+	if (sk_is_mptcp(sk))
-+		reqsk_fastopen_purge_rst(&icsk->icsk_accept_queue);
-+	else
-+		inet_csk_listen_stop(sk);
- 	return err;
- }
+ 	lock_sock(ssk);
+ 	err = __inet_listen_sk(ssk, backlog);
++	if (err && ssk->sk_state == TCP_CLOSE) {
++		/* inet_csk_listen_start() leaves this drain to MPTCP */
++		mptcp_subflow_queue_clean(sk, ssk);
++		inet_csk_listen_stop(ssk);
++	}
+ 	release_sock(ssk);
+ 	mptcp_set_state(sk, inet_sk_state_load(ssk));
  
 
 -- 
