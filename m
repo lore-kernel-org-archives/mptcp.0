@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795557684;
-	b=WWyrisw8FWtzZ4GdEXnlD+0kCK3Qa+yNZDV+ebRLPMhXgXwMEhJAA2K9GKN1MtTb0brG
-	 MrCTaAc7I58tt801JaD7jCxykmzJhggFGICkQybYp6f4cnhxj2WQ1ymjyoBjuZ6yLBE6m
-	 C669KM4fGzK3oeK1IIEm2Droe4mU/tcj0durG4o91KGMTLNoKUkOa/HPEonGRV6JikM0b
-	 hmn+QEYDD0TwWdqPi6CQTSlkhEPjkK3BgtA0RAY5/IZBcdqiM61MxRrLYCSN66VyGsZxJ
-	 Ub1Kcp97y0oRPcOcplfMK045kU5YgAd5BWogkxgXwjxHXNEkpeDtqmC6ctFFzscGvRQ==
+	t=1795557686;
+	b=SJTvTNuCUgb0IjuQ4rZQYbEUjC5a0vkU95QPnSGYGO6qWyhoC7M1LK6jTuwMbsX+Jdqf
+	 AnB9t+8IDZbkqFSaz1lU4bee/sMemWQ/c9qOzl2qjccfZSPccWgu+9CW8xKLimern31lG
+	 ao0XtahJSN4o9gtwPR2XCNmNmRAKhVKFSlOg9isolv0stPA6Ai960V1PVamqgUfbWcbM3
+	 UFqIo8m8PG7peWppkUbvmh0RAHdl7FtWj7vOKhpYtCBouSkzMCgt1KegRMjgisLJ6kvpq
+	 P+2vUQtIn9guCPp7ijoLH87SHXlUNedBMfE/WB/4B2+MiUm7Pd/BW/Z7Jt+d1wxDcvQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795557684;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795557686;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=ACdOpzli2hAJck7wLWoXpCFORkP8HXDrXOSuZKiRKb4=;
-	b=a0e3aPHRvJVsSzxeYNp/cYlxMTa6DorA1gHfCs7VqOki8VHDzRTZc9FotJsxna1Oh/tI
-	 CJwOB3RFKXCECuKCGm/JngfL7QX9ttbxoYiC0FowdOT3uzh6qcVkmzL9cH4lGIHTue5rD
-	 3wDUtxOdeHdCiVfDFVKpj1dF+oA2m3/OAiRKtI9q4WyS7sDaT+U1+W9E/dWNrFQq2aqI7
-	 JDFWQH8Yyxbdg8p40jSgO94CExzAP9aUk1DwHegiv8x7f5/ZkuZdR5QeyQKaHkZlnjXeb
-	 RnniYjxUTMoos45iMMAktJb6U1uxtpr8ptLW9dE46PP6+W2Wdy7IvA8U0OTM4SZPOWw==
+	bh=CBbmcC3SquL/sUh0/0abO4UmG3Cbv//EVoTMLeRnei4=;
+	b=PatqXcdRnJq5ENTdnPuK6DZ5B6CPNTi5+LXAtWG5w82wokIjZq/+f92ZezzmUev0a6oZ
+	 cq0e/OymAK9offz1E0IdROijlSB7w9F0ICkSNinbBPvhmGZydFw4R48Lr5LJCq3jFeNpw
+	 zt1Xk3/hW3QllQNkahYRU6cvWn4chaV3HK1wYo3nhKyFFwYMVeE12oMl2REmlnybvSt/4
+	 DTU+knUFPQchM5hAs/eue7K2G51Scq3eKn3Zmen/Y36g4LsARAyBZ5X/JIMEl/KSrRyO9
+	 JZsAO/JQZ9/HJie1MDMs7u6qmDctB5fn7mfTXmTfF261ABJrwpKHlq7L1bxQCPUVIvQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NjO2VYgw;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YfMYa7Xk;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54C3606A327
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 22:01:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DAEE606A31E
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 22:01:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NjO2VYgw
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90BCA1F000CA;
-	Tue, 24 Nov 2026 22:01:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YfMYa7Xk
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E83111F000C4;
+	Tue, 24 Nov 2026 22:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795557684;
-	bh=ACdOpzli2hAJck7wLWoXpCFORkP8HXDrXOSuZKiRKb4=;
+	s=k20260515; t=1795557685;
+	bh=CBbmcC3SquL/sUh0/0abO4UmG3Cbv//EVoTMLeRnei4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=NjO2VYgwUfnv636Q2w+F69b3OGUhN/pShWoTKqYk6xtti2Qn42/zp3Qhs20sauNZj
-	 eEjxaLG/bMObaE4ecjcyqNgQFiKoUTKzzHmLHZCtu7rdSLAh4L/eOqclLEQjgjA0Qe
-	 7dZMYVyEsXRcOrXLnWjzP3Ya0dlerxn1mP/CnydyImqwqO//iT1UrZPnvvjpTX98Se
-	 duPbk8DRxR8NAyVjayeQHJRMbWdYddWcT/8tdAS6WrsZgoxgEQeQ49Xl8MBp3lGSrx
-	 pqVWMbC+lFTfsISpLhXh4tgXMmCdAEF2U9v8dPhCHPDAINg3oxvxoKzNa6CJQ1WiG+
-	 w/s9fRAEPRuUw==
+	b=YfMYa7XkG3WPtH31c/p8U3jRi6hli6ga7S+6FRUvDcjpSHOufdD2viwotNTPdFR3R
+	 7NwjjnWwjxak8cYSUQAzYFG8DYoGRII83iGVZgo/6/KPHF8lkdDWUuQX4GY1AeVI3P
+	 YvyVQyHAK9T4zNw/KDUGJVnjiYNf9QhOFwYFy36z0OdKQYrSQkSGzWsdfHsa56pfiW
+	 tyFA25oEGolMD2WlholoxiHgVBDzbJSrV0P5xr6wXpuiS2saSiJXcxwYztqWUhwfQm
+	 SFd6LHhsXX9nd4USLlF3zjHpPQzTqTilP0O2p7Xj9WjZZZOKIsfhWLICq+yVTlfBwH
+	 r9d9rblvQd4zQ==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 24 Nov 2026 22:59:39 +0100
-Subject: [PATCH mptcp-net v3 22/50] mptcp: close a subflow reset for a bad
- mapping
+Date: Tue, 24 Nov 2026 22:59:40 +0100
+Subject: [PATCH mptcp-net v3 23/50] mptcp: pm: kernel: count endpoint
+ listeners as sockets in use
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,86 +55,107 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261124-mptcp-cmason-fixes-v3-22-416c0920c73f@kernel.org>
+Message-Id: <20261124-mptcp-cmason-fixes-v3-23-416c0920c73f@kernel.org>
 References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
 In-Reply-To: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Chris Mason <mason@kernel.org>
+ Kyuwon Cho <kyuwoncho18@gmail.com>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2949; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=3LxmFeGM2amj88vfcrVoUccXI2tbsiD/vhieWyNYcKE=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLZOFm2F1xzVrn5I5yNkX9tjanX7bNGwbKNCoyiRtOq/
- H7+aN7YUcrCIMbFICumyCLdFpk/83kVb4mXnwXMHFYmkCEMXJwCMJG3Pxn+GenHsvycbfvV/ffE
- 4N32bZsqd8T/37rz42SLa+cOiDguE2f4xaTLzS/m8SN4xvdVmbcEJqqyXfy26gGritW1+EyhwMo
- yNgA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3964; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=OPRvotvx8HNkyVDGOs6cqb6T0ZZWlYYOMAuy5o5R+7w=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLZOFnzt0j3WLI9n60dPYH1uk7os1c1EWf73lTtmGfH/
+ W7J6x0XO0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACZyvZ3hf9wzg4z65uViS81y
+ X5UHnJ5SeMbJOVb0g/zhiS2H3rJIuDAyfF8+Wdn5t5GdeZjQVcVjrnJfQ8wWB771vZLawhUxV6a
+ YDQA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Chris Mason <mason@kernel.org>
+The listener that the in-kernel path manager creates for a "signal"
+endpoint with a port is not counted in the "sockets" column of the MPTCP
+or MPTCPv6 row of /proc/net/protocols, but it is uncounted when it is
+closed. Each removal of such an endpoint then hides one MPTCP socket of
+the same family from this column, for the lifetime of the netns.
 
-An MPTCP socket can stay in the ESTABLISHED state after MPTCP has reset
-its only subflow because of data with no valid mapping, and recv() and
-send() then block with no error.
+mptcp_check_listen_stop() decrements this counter for any MPTCP socket
+closed in TCP_LISTEN state, and mptcp_listen() increments it when
+listen() succeeds. But mptcp_pm_nl_create_listen_socket() sets its MPTCP
+socket in TCP_LISTEN state without incrementing it. This socket is
+closed when the endpoint is deleted or flushed, when adding the endpoint
+fails after the creation of the listener, e.g. because its ID is already
+used, and when the netns is dismantled.
 
-If data arrives with no valid mapping and a fallback to TCP is not
-possible, subflow_check_data_avail() resets the subflow: it moves the
-TCP socket to TCP_CLOSE with tcp_set_state() and sends a RST. The MPTCP
-worker then has to close the subflow in __mptcp_close_subflow(), and
-closing the last subflow starts a timer that moves the MPTCP socket to
-TCP_CLOSE. But the worker only calls that function if the bit
-MPTCP_WORK_CLOSE_SUBFLOW is set, and this reset neither sets the bit nor
-schedules the worker.
+Nothing depends on this counter, it is only displayed. But it is wrong
+once such an endpoint has been added: its listener is not counted while
+"ss -Ml" lists it, and after its removal, the total is one below the
+number of MPTCP sockets of the same family in use, a negative total
+being displayed as 0 by sock_prot_inuse_get().
 
-The fix used here is to call subflow_sched_work_if_closed() after the
-reset, which sets the bit and schedules the worker. This also covers
-the reset done after a bad checksum, when MP_FAIL cannot be used.
+The counter was introduced by commit c558246ee73e ("mptcp: add
+statistics for mptcp socket in use"), when only the subflow of this
+socket was in TCP_LISTEN state. Commit 57fc0f1ceaa4 ("mptcp: ensure
+listener is unhashed before updating the sk status") then set this
+socket in TCP_LISTEN state too, without counting it.
 
-This issue has been found with the help of an LLM, and reproduced in a
-VM, with the reproducer shared with the original version of this patch,
-and with a new Packetdrill test: data without DSS while the fallback is
-not possible, here because of out-of-order data at the MPTCP level.
-Without this patch, the subflow was reset, but the MPTCP socket stayed
-established, with no subflow: read() returned EAGAIN and send() timed
-out, for good:
+The fix used here is to increment the counter when __inet_listen_sk()
+succeeds, as mptcp_listen() does. If it fails, the subflow is back in
+TCP_CLOSE: move this socket back to this state too, also as
+mptcp_listen() does. It was left in TCP_LISTEN, which triggered a
+warning when it was released, e.g. after a socket in TCP repair mode
+had been bound to the same address and port in between, as reported by
+Sashiko:
 
-  dss_drop_ooo_reset_server.pkt:30: runtime error in read call: Expected errno 107 (Transport endpoint is not connected) but got 11 (Resource temporarily unavailable)
+  WARNING: net/mptcp/protocol.c:3542 at mptcp_check_listen_stop.part.0+0x4f/0xb0, CPU#0: ip/2816
+  Call Trace:
+   __mptcp_close+0x2bf/0x310
+   mptcp_close+0x23/0x80
+   inet_release+0x43/0x80
+   sock_release+0x24/0x70
+   mptcp_pm_nl_add_addr_doit+0x266/0x3b0
 
-Fixes: 40947e13997a ("mptcp: schedule worker when subflow is closed")
-Signed-off-by: Chris Mason <mason@kernel.org>
-[ Add a Fixes tag. Moved before "mptcp: continue the last mapping after
-  a fallback", which makes this reset path reachable in more cases.
-  Commit message: how the issue was found, and its symptoms. ]
+This issue has been found by an AI code review agent, while reviewing
+the code of the commit "mptcp: pm: don't let listeners pin their netns",
+and confirmed with a new Packetdrill test, and with a shell script
+adding and flushing such an endpoint 3 times in a new netns, then
+creating 3 MPTCP listeners. Without this patch:
+
+  kernel_listener_inuse.pkt:15: error executing `test $(awk '/^MPTCP/ { n += $3 } END { print n }' /proc/net/protocols) -eq 2` command: non-zero status 1
+
+  inuse: endpoint 1 present: 0 (expected 1)
+  [...]
+  inuse: 3 user listeners: 0 (expected 3)
+
+Fixes: 57fc0f1ceaa4 ("mptcp: ensure listener is unhashed before updating the sk status")
+Reported-by: Kyuwon Cho <kyuwoncho18@gmail.com>
+Closes: https://lore.kernel.org/mptcp/179502042942.2742790.17887994424282536144@gmail.com
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v2: commit msg: the reset after a bad checksum too (Sashiko)
+v2: count the listener once listen() succeeded, and restore TCP_CLOSE
+    otherwise, to avoid a warning (Sashiko, then reported by Kyuwon Cho)
 ---
- net/mptcp/subflow.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/mptcp/pm_kernel.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 91698d154c40..a216d88d35ee 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1505,8 +1505,8 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 		}
+diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+index 2680d4672d58..73261685ae4c 100644
+--- a/net/mptcp/pm_kernel.c
++++ b/net/mptcp/pm_kernel.c
+@@ -915,7 +915,14 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+ 	if (!err)
+ 		mptcp_event_pm_listener(ssk, MPTCP_EVENT_LISTENER_CREATED);
+ 	release_sock(ssk);
+-	return err;
++	if (err) {
++		/* the subflow is back in TCP_CLOSE: like in mptcp_listen() */
++		inet_sk_state_store(newsk, TCP_CLOSE);
++		return err;
++	}
++
++	sock_prot_inuse_add(sock_net(newsk), newsk->sk_prot, 1);
++	return 0;
+ }
  
- 		if (!mptcp_try_fallback(ssk, MPTCP_MIB_DSSFALLBACK)) {
--			/* fatal protocol error, close the socket.
--			 * subflow_error_report() will introduce the appropriate barriers
-+			/* fatal protocol error, reset the subflow and let the
-+			 * worker close it
- 			 */
- 			subflow->reset_transient = 0;
- 			MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSRESET);
-@@ -1521,6 +1521,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 				sk_eat_skb(ssk, skb);
- 			mptcp_send_active_reset_reason(ssk);
- 			WRITE_ONCE(subflow->data_avail, false);
-+			subflow_sched_work_if_closed(msk, ssk);
- 			return false;
- 		}
- 	}
+ static int mptcp_pm_kernel_get_local_id(struct mptcp_sock *msk,
 
 -- 
 2.55.0
