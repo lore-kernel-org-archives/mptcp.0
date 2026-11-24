@@ -1,54 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795563043;
-	b=WNI068/CGp+oAWqcdFLdF+OACZJovRQHz98iFBLEGUeAA4h9J4ZMn+kl8KJmeBm3kIY3
-	 65oErzfuKojtTsjmzjd9BS6ARbQRDr2esIRtLIjACNd6iD2CyKRwtZ5IlRU7RQF3R5USi
-	 mA1ECy+Jt20OjdPVI37IN9jyJHintZnVnfsIbfh0gRZIuivFvY2Nk1WJMkmC4+5I+E5RO
-	 80aBhsn3f7TviylqkRukXI5kuImK0FWhb2lYgUi+W8E5ilzszRFZBdGuEQXrobOJYveG1
-	 WhgRdwRGhqbFQzo7IuucXncxEHM2Dmc2cL74/Ief18yKly8PTh5T6QEUf4Nmj7+zyhw==
+	t=1795563045;
+	b=fDlfRc843NxZ8Wx45akJft6b+Lk0Jk37KdonyjQqEw5wNMJQbJo+WuxixcG+n460Cg6g
+	 QeKDuIs5DZizcLskfaRsvr5gdLQ0pRiO3R4/HEh6ZCSqmGeKXF85B5g8s2d/elQ0pGeDe
+	 qT/b2wualeKmw5hplDYUl/1lspF+ZbmRvKD3Io5Gwuyi8yvj0Hb3FNHxGbp7M/PGzoSqU
+	 nhwfHewz2WzVdair+agrDWFftRCrrHSu0LfMm2ZtMSLoho6qrL7zdL3sZT6CmukB8E+LW
+	 lJl4vBMromxDqueuYB1hxrYMTchgQ+XOahaD/+lpBHyuIAo4B6jC6uRLzE5auurzkUA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795563043;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795563045;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=qaue+IXHWY1nZGak3Y74QwLfFQRmoAcTdyibsPwS/IE=;
-	b=kRB3bXUEXGnDQvxY2nGy5yk3/e4i6iRrqiHIEcBw+FBGTUA460tPqCy3Jd9x1wYZFY92
-	 5VAUdN5Fu+m8DDRnCYgr0JdANsufeQZZIQPDUN2TSIBD6C0ZdMxSQyNdt4kLHpXNtgptf
-	 wi4UmX6YRCpfugV12akn9xNh/9885S9kzF05xdKieg/sf07v90po5YZo/87nX6SurILTf
-	 /M0hH96377adowYiXdTYwYXH7zO7PnvQSwj7u/WxqhYASOh6b5vJDr6SUb7Ne45BFDq3I
-	 +s5D8+M4v/Qds/5zdim8tT49hIQxtRdz+k7pbJ6NN+WzSpY8xeTuly77baTm0ivC7jw==
+	bh=LIG5ugrfPBzX0yhaNnUKDtZ/5tjxw6qkLJ8kof+gcjE=;
+	b=jR8mrwkDtcDyVtZAHJfBfx+Om7bDvwTeX35JIKjubuP+7hrYSLqnsVQcA8oKWsz+QSRs
+	 XUgW7SUJ0+kHL3M1Nt7hfj1NWzWqTimdQX43zDw8oXnHn2DmLxBWoXWGW4gBhem9qtwYu
+	 Zzqek0rpfC+JaD4fTWr/ip06BSR6OY+rhtmMndDFrTN+5uePd2sPXvY+Wyi6cSZBjXTHy
+	 FCy2wU1VAivSVPzrjAUNmFhKtY1ezedFxvwATMYsFxpZcnyF8SHZo4Hrsc5WyquHV3q7S
+	 8usy8+sS0OTekaqX69mIibUjSQ5XI3DZenghCJoeh6w134b8ijL0kAda8T2Larz9idQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gyKIDz+j;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jOILQEfC;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E61606A33C
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 23:30:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15936606A680
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 23:30:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gyKIDz+j
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10FD81F000D1;
-	Tue, 24 Nov 2026 23:30:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jOILQEfC
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 694F41F000F0;
+	Tue, 24 Nov 2026 23:30:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795563043;
-	bh=qaue+IXHWY1nZGak3Y74QwLfFQRmoAcTdyibsPwS/IE=;
+	s=k20260515; t=1795563044;
+	bh=LIG5ugrfPBzX0yhaNnUKDtZ/5tjxw6qkLJ8kof+gcjE=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=gyKIDz+jSgb/L/fpigbehvg8tc2ZHcWiLCcXNWnt7koBqi7KemZnUU3V7Eg8NZd/L
-	 ikyWa0EyVCpO3EHqF6wUc18Qz8NxmbRWayMG+vRCLSo1wgGoLgJrKzPFofSO6KmGfK
-	 Tdv2HKwmBY3FeaKUmIn+/Es7qEvI/g2p/BtcFSlR67do30Ydtjttzp6lCm5kQwyXy/
-	 8Jr2+Ll7KpVZbEUCziQWTsD0VJEkjaWVK6QlDpgSg+sC4ca6ZwSG28WifkMapmynei
-	 3mtJ7zqZDZoAkU3cFMZmvrI0lP0OITWMQxXmcTiEJ2bzYUeC7QP7Zu9EbDDzHQ2R45
-	 N865Rce5QVaJw==
-Subject: Re: [PATCH mptcp-next v8 5/7] mptcp: handle SO_ZEROCOPY in setsockopt
+	b=jOILQEfCnUdiAKBWaYwNuKkkUSrjkQlC32jy7vCY0XCmFFdqo9YD2KfXwfds+cEKB
+	 AxTZLYFZIRZxnfdcoH8aSpeakRsSXVV6mS/YVrls/BO2RriaIXhnMPrJq9c2203JXQ
+	 UVnuzuJ5VfEZNcVHTqzBiUFdV3bpn7ZiNZysOmpBXSc2EREURtzdoknayGK5qNZTL8
+	 WgwWBowr8L5QmIpAS8l933C8+idmoJhOOWpAWBdfZqMpIcN/1y/VxdX7oZwr1OuEsY
+	 M4nF5rypL2ZkloeuA1Y1lHrBtNh9QrgqN3msKtXtX7Hod0htK2Rr1ZXcsH3RrxnoSQ
+	 lqB1aX4bWH2kQ==
+Subject:
+ Re: [PATCH mptcp-next v8 6/7] selftests: mptcp: connect: add zerocopy io mode
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Tue, 24 Nov 2026 23:30:42 +0000
-Message-ID: <179556304261.3133.6680231180875461080@kernel.org>
-In-Reply-To: <154898fde8a9acdf6562d2adda67ebfe3ddd7246.1795421388.git.tanggeliang@kylinos.cn>
-References: <154898fde8a9acdf6562d2adda67ebfe3ddd7246.1795421388.git.tanggeliang@kylinos.cn>
-X-sashiko-severity: High
+Date: Tue, 24 Nov 2026 23:30:43 +0000
+Message-ID: <179556304397.3133.5986898017753720348@kernel.org>
+In-Reply-To: <9d10433a1bc453357a5994906ff3029f0e1f76a1.1795421388.git.tanggeliang@kylinos.cn>
+References: <9d10433a1bc453357a5994906ff3029f0e1f76a1.1795421388.git.tanggeliang@kylinos.cn>
+X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -61,10 +62,10 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 7 potential
+Thank you for your contribution! Sashiko AI review found 6 potential
 issue(s) to consider.
 
-Critical: 0 · High: 3 · Medium: 2 · Low: 2
+Critical: 0 · High: 0 · Medium: 3 · Low: 3
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -72,310 +73,473 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [High] mptcp_poll() in net/mptcp/protocol.c only sets EPOLLERR from
-  READ_ONCE(sk->sk_err) (line 4696).
-- [High] This patch lets unprivileged users turn on SOCK_ZEROCOPY on the
-  msk, which exposes a gap in pinned-page accounting in…
-- [High] On kernels with PAGE_SIZE >= 65536 (for example arm64 or ppc64le
-  built with 64K pages), mptcp_sendmsg_zerocopy_iter()…
-- [Medium] Now that SO_ZEROCOPY can be set on MPTCP, mptcp_sendmsg()
-  (net/mptcp/protocol.c:2118-2119) clears MSG_ZEROCOPY whenever…
-- [Medium] mptcp: SO_ZEROCOPY lost on passive TCP fallback in
-  mptcp_stream_accept()
-- [Low] The comment in mptcp_recvmsg() (net/mptcp/protocol.c:2530), '/*
-  MSG_ERRQUEUE is really a no-op till we support IP_RECVERR */', is now…
-- [Low] Documentation/networking/msg_zerocopy.rst says 'The feature is
-  currently implemented for TCP, UDP and VSOCK (with virtio transport)…
+- [Medium] In tools/testing/selftests/net/mptcp/mptcp_connect.c,
+  wait_for_completions_zc() does not actually check that MSG_ZEROCOPY…
+- [Medium] mptcp_poll() in net/mptcp/protocol.c sets EPOLLERR only when
+  READ_ONCE(sk->sk_err) is set.
+- [Medium] selftests: mptcp: undersized msg_control buffer in
+  drain_errqueue_zc()
+- [Low] Author/Signed-off-by mismatch.
+- [Low] The zerocopy mode changes how the existing -T and -S options of
+  mptcp_connect behave.
+- [Low] The comment in mptcp_recvmsg() (net/mptcp/protocol.c) says '/*
+  MSG_ERRQUEUE is really a no-op till we support IP_RECVERR */'.
 
 --
 
-mptcp: handle SO_ZEROCOPY in setsockopt
+selftests: mptcp: connect: add zerocopy io mode
 
-This patch lets SO_ZEROCOPY be set on MPTCP sockets through the
-SOL_SOCKET setsockopt dispatcher. The new helper,
-mptcp_setsockopt_sol_socket_zerocopy(), accepts 0 or 1 and toggles
-SOCK_ZEROCOPY on the msk. mptcp_sendmsg() then checks that flag to
-enable the MSG_ZEROCOPY path.
+This adds a zerocopy I/O mode to the mptcp_connect selftest. The mode
+enables SO_ZEROCOPY and sends the input file with sendmsg(MSG_ZEROCOPY).
+It then drains completion notifications from the socket error queue,
+polling up to a timeout.
 
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index fcf6feb2a9eb5..abcc7d4452b41 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-> @@ -175,6 +175,19 @@ static int mptcp_setsockopt_sol_socket_tstamp(struct mptcp_sock *msk, int optnam
->  	return 0;
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+
+[Severity: Low]
+This isn't a bug, but the Author line uses geliang@kernel.org and the only
+Signed-off-by uses tanggeliang@kylinos.cn. checkpatch.pl reports this as
+FROM_SIGN_OFF_MISMATCH.
+
+Could the From: address be changed, or a matching Signed-off-by be added?
+
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> index 178d98d91fea2..b93c73c5a2016 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+
+[ ... ]
+
+> @@ -1000,6 +1002,180 @@ static int copyfd_io_splice(int infd, int peerfd, int outfd, unsigned int size,
+>  	return err;
 >  }
 >  
-> +static int mptcp_setsockopt_sol_socket_zerocopy(struct mptcp_sock *msk, int val)
+> +static bool process_cmsg_zc(struct msghdr *errmsg)
 > +{
-> +	struct sock *sk = (struct sock *)msk;
+
+[ ... ]
+
+> +		serr = (struct sock_extended_err *)CMSG_DATA(cm);
+> +		if (serr->ee_origin == SO_EE_ORIGIN_ZEROCOPY)
+> +			return true;
+> +	}
 > +
-> +	if (val != 0 && val != 1)
-> +		return -EINVAL;
-> +
-> +	lock_sock(sk);
-> +	sock_valbool_flag(sk, SOCK_ZEROCOPY, val);
-
-[Severity: Medium]
-Does SOCK_ZEROCOPY survive a passive fallback to plain TCP?
-
-This sets the flag only on the msk. It doesn't bump
-msk->setsockopt_seq the way mptcp_sol_socket_sync_intval() does.
-sync_socket_options() copies SOCK_KEEPOPEN, SOCK_LINGER and SOCK_DBG
-to the subflows, but not SOCK_ZEROCOPY. So the listening subflow
-msk->first never gets the flag, whether SO_ZEROCOPY is set before or
-after listen().
-
-Now suppose a non-MP_CAPABLE client connects to such a listener.
-subflow_syn_recv_sock() creates the child through
-listener->icsk_af_ops->syn_recv_sock(). That clones it from the
-listening TCP subflow, so the child inherits the ssk's sk_flags rather
-than the msk's. The fallback path then calls mptcp_subflow_drop_ctx()
-on the child and returns it without ever calling
-mptcp_sk_clone_init().
-
-mptcp_stream_accept() then takes the tcpfallback branch.
-__inet_accept() grafts the plain TCP child onto newsock, and the ops
-are switched to mptcp_fallback_tcp_ops(). From that point sendmsg()
-goes to tcp_sendmsg_locked() and getsockopt() goes to sk_getsockopt(),
-both on the TCP child, where SOCK_ZEROCOPY is clear.
-
-TCP zerocopy servers commonly set SO_ZEROCOPY on the listener and rely
-on accepted sockets inheriting it. With this patch,
-getsockopt(SO_ZEROCOPY) on the accepted socket returns 0. A
-sendmsg(MSG_ZEROCOPY) is silently copied and no SO_EE_ORIGIN_ZEROCOPY
-notification is queued. An application waiting on MSG_ERRQUEUE for
-one completion per send could stall.
-
-This also conflicts with the commit message's claim that setting the
-flag on the msk alone is honoured on every data path without any
-cross-socket propagation.
-
-Should SOCK_ZEROCOPY be propagated to the subflows in
-sync_socket_options(), as SOCK_DBG is, with a setsockopt_seq bump
-here? Or would you rather copy it from the msk in the fallback accept
-path?
-
-[Severity: High]
-Will poll() ever report the zerocopy completions that this enables?
-
-mptcp_sendmsg() calls msg_zerocopy_realloc() on the msk. The
-SO_EE_ORIGIN_ZEROCOPY notifications therefore go on msk->sk_error_queue,
-and sk_err stays 0. mptcp_poll() in net/mptcp/protocol.c only checks
-sk_err:
-
-net/mptcp/protocol.c:mptcp_poll() {
-    ...
-	if (READ_ONCE(sk->sk_err))
-		mask |= EPOLLERR;
-    ...
-}
-
-tcp_poll() checks the error queue as well:
-
-net/ipv4/tcp.c:tcp_poll() {
-    ...
-	if (READ_ONCE(sk->sk_err) ||
-	    !skb_queue_empty_lockless(&sk->sk_error_queue))
-		mask |= EPOLLERR;
-    ...
-}
-
-Documentation/networking/msg_zerocopy.rst says poll "will set POLLERR in
-its output flags" while a notification is outstanding. Its example uses
-poll(&pfd, 1, -1).
-
-When __msg_zerocopy_callback() calls sk_error_report(), the waiter wakes
-up and runs mptcp_poll() again. It gets no EPOLLERR and goes back to
-sleep. Level-triggered epoll misses the event in the same way.
-
-Wouldn't an application that follows the documented pattern on an MPTCP
-socket block forever, with the uncollected notifications still holding
-optmem?
-
-The selftest added later in the series ("selftests: mptcp: connect: add
-zerocopy io mode") doesn't catch this. wait_for_completions_zc() calls
-recvmsg(MSG_ERRQUEUE) itself and limits each poll() to 200 ms. No later
-patch in the series changes mptcp_poll().
-
-[Severity: High]
-With this opt-in in place, can userspace hit the WARN_ON_ONCE() in
-mptcp_sendmsg_zerocopy_iter() on kernels built with 64K pages?
-
-net/mptcp/protocol.c:mptcp_sendmsg_zerocopy_iter() {
-    ...
-	if (pg_len > U16_MAX) {
-		iov_iter_revert(&msg->msg_iter, pg_len - U16_MAX);
-		pg_len = U16_MAX;
-	}
-
-	if (pg_off > U16_MAX) {
-		...
-	}
-
-	if (pg_off + pg_len > U16_MAX) {
-		size_t len = U16_MAX - pg_off;
-
-		iov_iter_revert(&msg->msg_iter, pg_len - len);
-		pg_len = len;
-		if (WARN_ON_ONCE(!pg_len)) {
-			put_page(pages[0]);
-			return -EFAULT;
-		}
-	}
-    ...
-}
-
-With PAGE_SIZE == 65536, take a sendmsg(MSG_ZEROCOPY) of 64KB or more
-from a page-aligned buffer. The first call gets pg_off == 0 and
-pg_len == 65536, and reverting one byte clamps pg_len to 65535.
-
-The next iteration gets the last byte of the same page, with
-pg_off == 65535 and pg_len == 1. The pg_off > U16_MAX check doesn't
-catch pg_off == U16_MAX, so len becomes 0 and the WARN fires. Sending a
-single byte from buf + 65535 triggers it directly.
-
-The function then returns -EFAULT. mptcp_sendmsg() either returns a
-short write or aborts the ubuf and falls back to copying. On 64K-page
-systems zerocopy would keep falling back to copying. With panic_on_warn
-set, the first such send would panic the kernel.
-
-This code was added by the previous patch, but it only becomes reachable
-now that SOCK_ZEROCOPY can be set on the msk.
-
-[Severity: High]
-Does this opt-in let an unprivileged user pin far more user pages than
-the send buffer should allow?
-
-Each mptcp_sendmsg_zerocopy_iter() call pins one full user page. It
-charges the msk only for the bytes used plus the dfrag header:
-
-net/mptcp/protocol.c:mptcp_sendmsg_zerocopy_iter() {
-    ...
-	pg_len = iov_iter_get_pages2(&msg->msg_iter, pages,
-				     copy_limit, 1, &pg_off);
-    ...
-	dfrag->overhead = sizeof(struct mptcp_data_frag);
-    ...
-	sk_wmem_queued_add(sk, pg_len + dfrag->overhead);
-    ...
-}
-
-With ITER_IOVEC, a 1-byte iovec segment gives pg_len == 1 but still
-pins a whole page. On 64-bit, each pinned page then adds only about 49
-bytes to sk_wmem_queued.
-
-The only per-socket limit in the send loop is mptcp_send_limit(), which
-compares sk_wmem_queued against sk_sndbuf. One msk could therefore pin
-roughly sk_sndbuf / 49 pages.
-
-For comparison, TCP charges the page-aligned size of each pinned page in
-zerocopy_fill_skb_from_iter():
-
-	skb->truesize += PAGE_ALIGN(copied + start);
-
-The subflow side doesn't account for the pages either. For
-pure-zerocopy skbs, mptcp_sendmsg_frag() adds only copy:
-
-	skb->truesize += copy;
-	sk_wmem_queued_add(ssk, copy);
-	if (!skb_zcopy_pure(skb))
-		sk_mem_charge(ssk, copy);
-
-dfrag_uncharge() also skips sk_mem_uncharge() for ubuf dfrags.
-
-mm_account_pinned_pages() charges RLIMIT_MEMLOCK by byte length:
-
-	num_pg = (size >> PAGE_SHIFT) + 2;	/* worst case */
-
-So 1024 one-byte iovecs on 1024 different pages are charged as 2 pages.
-
-The pages stay pinned while the data sits unacknowledged in
-msk->rtx_queue, for example when the local peer never reads.
-
-Should the dfrag be charged for the full pinned page, as TCP does?
-
-[Severity: Medium]
-Now that applications can opt in, is it intended that MSG_FASTOPEN sends
-silently drop MSG_ZEROCOPY without queueing a completion notification?
-
-net/mptcp/protocol.c:mptcp_sendmsg() {
-    ...
-	if (msg->msg_flags & MSG_FASTOPEN || !sock_flag(sk, SOCK_ZEROCOPY))
-		msg->msg_flags &= ~MSG_ZEROCOPY;
-    ...
-}
-
-For these sends msg_zerocopy_realloc() is never called. sk_zckey
-doesn't advance and no notification is queued.
-
-Documentation/networking/msg_zerocopy.rst describes MSG_ZEROCOPY as "a
-contract that the kernel will queue a completion notification".
-
-TCP keeps that contract on the fastopen path:
-
-net/ipv4/tcp.c:tcp_sendmsg_locked() {
-    ...
-	err = tcp_sendmsg_fastopen(sk, msg, &copied_syn, size, uarg);
-    ...
-}
-
-The tcp_zerocopy_fastopen-client.pkt and -server.pkt packetdrill tests
-check this behaviour. In its non-SG fallback cases, TCP queues a
-"copied" notification (SO_EE_CODE_ZEROCOPY_COPIED) instead.
-
-A TCP application that uses sendto(MSG_FASTOPEN | MSG_ZEROCOPY) and
-waits for one notification per send would get nothing on MPTCP. It
-could wait forever.
-
-The previous patch's commit message says this downgrade is intentional.
-This patch is what makes it visible to userspace.
-
-> +	release_sock(sk);
-> +	return 0;
+> +	return false;
 > +}
 > +
+> +static bool drain_errqueue_zc(int peerfd)
+> +{
 
 [ ... ]
 
-> @@ -342,6 +357,7 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
->  	case SO_TIMESTAMP_NEW:
->  	case SO_TIMESTAMPNS_OLD:
->  	case SO_TIMESTAMPNS_NEW:
-> +	case SO_ZEROCOPY:
->  		return mptcp_setsockopt_sol_socket_int(msk, optname, optval,
->  						       optlen);
+> +	while (!found) {
+> +		errmsg.msg_controllen = ctl_len;
+> +		if (recvmsg(peerfd, &errmsg, MSG_ERRQUEUE) < 0)
+> +			break;
+> +
+> +		found = process_cmsg_zc(&errmsg);
+> +	}
 
 [Severity: Low]
-This isn't a bug, but Documentation/networking/msg_zerocopy.rst still
+This loop depends on recvmsg(MSG_ERRQUEUE) returning zerocopy completions
+on an MPTCP socket. However, mptcp_recvmsg() in net/mptcp/protocol.c still
 says:
 
-  The feature is currently implemented for TCP, UDP and VSOCK (with
-  virtio transport) sockets.
+    /* MSG_ERRQUEUE is really a no-op till we support IP_RECVERR */
+    if (unlikely(flags & MSG_ERRQUEUE))
+        return inet_recv_error(sk, msg, len);
 
-Should MPTCP be added there now that SO_ZEROCOPY is accepted on
-IPPROTO_MPTCP sockets? The list already leaves out RDS, so it was
-incomplete before this series.
+The earlier patch in this series, "mptcp: add MSG_ZEROCOPY support", makes
+__msg_zerocopy_callback() queue notifications on msk->sk_error_queue, so
+this path is no longer a no-op.
+
+Should that comment be updated as part of the series?
+
+> +
+> +	free(ctl);
+> +	return found;
+> +}
+> +
+> +static void wait_for_completions_zc(int peerfd)
+> +{
+> +	struct pollfd pfd = { .fd = peerfd, .events = POLLERR };
+> +	struct timespec start, now;
+> +	int timeout_ms = 5000;
+> +
+> +	if (cfg_time > 0)
+> +		timeout_ms = cfg_time;
+
+[Severity: Low]
+Is -T meant to double as the completion wait timeout? It is documented as
+the expected runtime of the whole transfer.
+
+With -T, a late completion can use up the whole budget, and copyfd_io()
+then fails with "transfer slower than expected". Without -T, the same case
+passes silently after 5000 ms.
+
+do_sendmsg_zc() also waits whenever size > 0, even when sendmsg() failed
+and nothing was queued:
+
+    if (size > 0)
+        wait_for_completions_zc(peerfd);
+
+In that case mptcp_sendmsg() calls net_zcopy_put_abort(), uarg->len drops
+to 0, and __msg_zerocopy_callback() skips the notification:
+
+    if (!uarg->len || sock_flag(sk, SOCK_DEAD))
+        goto release;
+
+As a result, the error path always stalls for the full timeout.
+
+Separately, copyfd_io_zc() always does:
+
+    set_sndbuf(peerfd, size * 2);
+
+This overrides any -S value already applied through
+"if (cfg_sndbuf) set_sndbuf(fd, cfg_sndbuf)" and locks SO_SNDBUF, so -S is
+silently ignored in this mode.
+
+Should this mode keep cfg_sndbuf when it is set?
+
+> +
+> +	clock_gettime(CLOCK_MONOTONIC, &start);
+> +	for (;;) {
+> +		long elapsed_ms, remaining_ms;
+> +
+> +		if (drain_errqueue_zc(peerfd))
+> +			break;
+> +
+> +		clock_gettime(CLOCK_MONOTONIC, &now);
+> +		elapsed_ms = (now.tv_sec - start.tv_sec) * 1000L +
+> +			     (now.tv_nsec - start.tv_nsec) / 1000000L;
+> +		if (elapsed_ms >= timeout_ms)
+> +			break;
+> +
+> +		remaining_ms = timeout_ms - elapsed_ms;
+> +		if (remaining_ms > 200)
+> +			remaining_ms = 200;
+> +		if (poll(&pfd, 1, remaining_ms) < 0)
+> +			break;
+> +	}
+> +}
+
+[Severity: Medium]
+Will this poll() ever be woken by a zerocopy completion on an MPTCP
+socket?
+
+mptcp_poll() in net/mptcp/protocol.c sets EPOLLERR only from sk_err:
+
+    if (READ_ONCE(sk->sk_err))
+        mask |= EPOLLERR;
+
+tcp_poll() also checks the error queue:
+
+    if (READ_ONCE(sk->sk_err) ||
+        !skb_queue_empty_lockless(&sk->sk_error_queue))
+        mask |= EPOLLERR;
+
+Since "mptcp: add MSG_ZEROCOPY support" earlier in this series,
+__msg_zerocopy_callback() queues completions on msk->sk_error_queue
+without setting sk_err. The poll-for-POLLERR pattern described in
+Documentation/networking/msg_zerocopy.rst therefore never wakes up on
+MPTCP sockets.
+
+Here each poll() sleeps its full 200 ms cap before the next drain, which
+does not happen with TCP. Because the loop drains again unconditionally,
+the test also cannot catch the missing POLLERR.
+
+Should mptcp_poll() check sk_error_queue the way tcp_poll() does?
+
+> +
+> +static int do_sendmsg_zc(int infd, int peerfd, size_t size,
+> +			 struct wstate *winfo)
+> +{
 
 [ ... ]
 
-> @@ -387,7 +403,6 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
->  	 * SO_CNX_ADVICE is currently unsupported, could possibly be relevant,
->  	 * but likely needs careful design
->  	 *
-> -	 * SO_ZEROCOPY is currently unsupported, TODO in sndmsg
->  	 * SO_TXTIME is currently unsupported
->  	 */
+> +	while (sent < size) {
+> +		iov.iov_base = buf + sent;
+> +		iov.iov_len = size - sent;
+> +
+> +		ret = sendmsg(peerfd, &msg, MSG_ZEROCOPY);
+> +		if (ret <= 0) {
+> +			if (ret < 0) {
+> +				perror("sendmsg MSG_ZEROCOPY");
+> +				err = 1;
+> +			}
+> +			break;
+> +		}
+> +		sent += ret;
+> +	}
+> +	if (sent != size)
+> +		fprintf(stderr, "sendmsg short: %zu/%zu bytes queued\n",
+> +			sent, size);
+> +
+> +	if (size > 0)
+> +		wait_for_completions_zc(peerfd);
+> +
+> +out:
+> +	free(buf);
+> +	return err;
+> +}
 
-[Severity: Low]
-This isn't a bug, but the matching comment in mptcp_recvmsg() in
-net/mptcp/protocol.c is now out of date:
+[Severity: Medium]
+Does this check that the zerocopy completions actually arrived?
 
-	/* MSG_ERRQUEUE is really a no-op till we support IP_RECVERR */
-	if (unlikely(flags & MSG_ERRQUEUE))
-		return inet_recv_error(sk, msg, len);
+wait_for_completions_zc() returns void. If no notification arrives before
+the timeout, do_sendmsg_zc() still returns 0 and the test passes.
 
-Userspace now uses recvmsg(MSG_ERRQUEUE) to collect the zerocopy
-completion notifications. Should that comment be updated as well?
+When a notification does arrive, drain_errqueue_zc() stops at the first
+one. process_cmsg_zc() only checks ee_origin, and nothing compares the
+[ee_info, ee_data] range with the number of sendmsg(MSG_ZEROCOPY) calls
+made above.
+
+mptcp_sendmsg() allocates a new uarg for each call:
+
+    ubuf = msg_zerocopy_realloc(sk, len, NULL, false);
+
+A short sendmsg() return therefore produces several IDs, and only the
+first is waited for. That can happen on a signal, on SO_SNDTIMEO, or on a
+partial copy followed by an error.
+
+Could a kernel regression where completions never fire, or fire only
+partly, go unnoticed here? The data still arrives intact, so the test
+would pass.
+
+On the timeout or partial path, free(buf) runs while skbs or dfrags may
+still reference the pinned pages. Is that safe? A later malloc(), for
+example on the next -I iteration in listen mode, could reuse the memory
+and overwrite data that is still in flight or queued for retransmit.
+
+The commit message says:
+
+    The completion notification draining uses batched polling to handle
+    large transfers that may generate multiple completion events across
+    different TCP segments.
+
+The loop accepts the first event, or none at all.
+
+Should the test track the expected ID range and fail if it is not fully
+completed before the timeout?
+
+[ ... ]
+
+> @@ -1014,6 +1016,180 @@ static int copyfd_io_splice(int infd, int peerfd, int outfd, unsigned int size,
+>  	return err;
+>  }
+>  
+> +static bool process_cmsg_zc(struct msghdr *errmsg)
+> +{
+> +	struct sock_extended_err *serr;
+> +	struct cmsghdr *cm;
+> +
+> +	for (cm = CMSG_FIRSTHDR(errmsg); cm; cm = CMSG_NXTHDR(errmsg, cm)) {
+> +		if (cm->cmsg_level != SOL_IP && cm->cmsg_level != SOL_IPV6)
+> +			continue;
+> +		if (cm->cmsg_type != IP_RECVERR &&
+> +		    cm->cmsg_type != IPV6_RECVERR)
+> +			continue;
+> +
+> +		serr = (struct sock_extended_err *)CMSG_DATA(cm);
+> +		if (serr->ee_origin == SO_EE_ORIGIN_ZEROCOPY)
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +static bool drain_errqueue_zc(int peerfd)
+> +{
+> +	size_t ctl_len = CMSG_SPACE(sizeof(struct sock_extended_err));
+> +	struct msghdr errmsg = {};
+> +	bool found = false;
+> +	char *ctl;
+> +
+> +	ctl = malloc(ctl_len);
+> +	if (!ctl) {
+> +		perror("malloc ctl");
+> +		return false;
+> +	}
+> +
+> +	errmsg.msg_control = ctl;
+> +
+> +	while (!found) {
+> +		errmsg.msg_controllen = ctl_len;
+> +		if (recvmsg(peerfd, &errmsg, MSG_ERRQUEUE) < 0)
+> +			break;
+> +
+> +		found = process_cmsg_zc(&errmsg);
+> +	}
+> +
+> +	free(ctl);
+> +	return found;
+> +}
+> +
+> +static void wait_for_completions_zc(int peerfd)
+> +{
+> +	struct pollfd pfd = { .fd = peerfd, .events = POLLERR };
+> +	struct timespec start, now;
+> +	int timeout_ms = 5000;
+> +
+> +	if (cfg_time > 0)
+> +		timeout_ms = cfg_time;
+> +
+> +	clock_gettime(CLOCK_MONOTONIC, &start);
+> +	for (;;) {
+> +		long elapsed_ms, remaining_ms;
+> +
+> +		if (drain_errqueue_zc(peerfd))
+> +			break;
+> +
+> +		clock_gettime(CLOCK_MONOTONIC, &now);
+> +		elapsed_ms = (now.tv_sec - start.tv_sec) * 1000L +
+> +			     (now.tv_nsec - start.tv_nsec) / 1000000L;
+> +		if (elapsed_ms >= timeout_ms)
+> +			break;
+> +
+> +		remaining_ms = timeout_ms - elapsed_ms;
+> +		if (remaining_ms > 200)
+> +			remaining_ms = 200;
+> +		if (poll(&pfd, 1, remaining_ms) < 0)
+> +			break;
+> +	}
+> +}
+> +
+> +static int do_sendmsg_zc(int infd, int peerfd, size_t size,
+> +			 struct wstate *winfo)
+> +{
+> +	struct iovec iov = {};
+> +	struct msghdr msg = {
+> +		.msg_iov = &iov,
+> +		.msg_iovlen = 1,
+> +	};
+> +	size_t sent = 0;
+> +	ssize_t ret;
+> +	void *buf;
+> +	int err;
+> +
+> +	err = spool_buf(peerfd, winfo);
+> +	if (err)
+> +		return err;
+> +
+> +	buf = malloc(size);
+> +	if (!buf) {
+> +		perror("malloc");
+> +		return 1;
+> +	}
+> +
+> +	if (read(infd, buf, size) != (ssize_t)size) {
+> +		perror("read input");
+> +		err = 1;
+> +		goto out;
+> +	}
+> +
+> +	while (sent < size) {
+> +		iov.iov_base = buf + sent;
+> +		iov.iov_len = size - sent;
+> +
+> +		ret = sendmsg(peerfd, &msg, MSG_ZEROCOPY);
+> +		if (ret <= 0) {
+> +			if (ret < 0) {
+> +				perror("sendmsg MSG_ZEROCOPY");
+> +				err = 1;
+> +			}
+> +			break;
+> +		}
+> +		sent += ret;
+> +	}
+> +	if (sent != size)
+> +		fprintf(stderr, "sendmsg short: %zu/%zu bytes queued\n",
+> +			sent, size);
+> +
+> +	if (size > 0)
+> +		wait_for_completions_zc(peerfd);
+> +
+> +out:
+> +	free(buf);
+> +	return err;
+> +}
+> +
+> +static int copyfd_io_zc(int infd, int peerfd, int outfd, unsigned int size,
+> +			bool *in_closed_after_out, struct wstate *winfo)
+> +{
+> +	socklen_t len;
+> +	int on = 1;
+> +	int err;
+> +
+> +	set_sndbuf(peerfd, size * 2);
+> +
+> +	len = sizeof(on);
+> +	if (setsockopt(peerfd, SOL_SOCKET, SO_ZEROCOPY, &on, len)) {
+> +		perror("setsockopt SO_ZEROCOPY");
+> +		return 1;
+> +	}
+> +
+> +	on = -1;
+> +	if (getsockopt(peerfd, SOL_SOCKET, SO_ZEROCOPY, &on, &len) ||
+> +	    on != 1) {
+> +		perror("getsockopt SO_ZEROCOPY");
+> +		return 1;
+> +	}
+> +
+> +	if (listen_mode) {
+> +		err = do_recvfile(peerfd, outfd);
+> +		if (err)
+> +			return err;
+> +
+> +		err = do_sendmsg_zc(infd, peerfd, size, winfo);
+> +	} else {
+> +		err = do_sendmsg_zc(infd, peerfd, size, winfo);
+> +		if (err)
+> +			return err;
+> +
+> +		shut_wr(peerfd);
+> +
+> +		err = do_recvfile(peerfd, outfd);
+> +		*in_closed_after_out = true;
+> +	}
+> +
+> +	return err;
+> +}
+> +
+>  static int copyfd_io(int infd, int peerfd, int outfd, bool close_peerfd, struct wstate *winfo)
+>  {
+>  	bool in_closed_after_out = false;
+
+[Severity: Medium]
+Is ctl_len big enough for what ip_recv_error() and ipv6_recv_error()
+write into the control buffer?
+
+Both emit IP_RECVERR/IPV6_RECVERR with a payload made of struct
+sock_extended_err followed by the offender address, either struct
+sockaddr_in or struct sockaddr_in6. On 64-bit that is a CMSG_LEN() of
+48 or 60 bytes. CMSG_SPACE(sizeof(struct sock_extended_err)) is only
+32 bytes.
+
+As a result, put_cmsg() sets MSG_CTRUNC on every MSG_ERRQUEUE read
+here. The sock_extended_err part survives the truncation, so the plain
+case works, but only by accident.
+
+The problem gets worse when timestamps are enabled. Both
+ip_recv_error() and ipv6_recv_error() call sock_recv_timestamp()
+before put_cmsg().
+
+With -c TIMESTAMPNS, apply_cmsg_types() enables SO_TIMESTAMPNS_NEW.
+The 32-byte timestamp cmsg then fills the whole buffer and leaves
+msg_controllen at 0. put_cmsg() drops the IP_RECVERR cmsg entirely,
+but the error queue skb is still consumed.
+
+process_cmsg_zc() never sees SO_EE_ORIGIN_ZEROCOPY, so the
+notification is lost. wait_for_completions_zc() then keeps polling
+until the timeout, and the test still passes.
+
+Should the buffer be sized for the full errhdr with a sockaddr_in6,
+plus room for any timestamp cmsgs? A fixed array with headroom, like
+the control buffer in do_recv_completion() in
+tools/testing/selftests/net/msg_zerocopy.c, would do.
+
+Checking MSG_CTRUNC in errmsg.msg_flags would also make this kind of
+truncation visible instead of silently losing completions.
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1795421388.git.tanggeliang%40kylinos.cn
