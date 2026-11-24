@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795520441;
-	b=EwNr6x7EuQgogcqlE62rBdsS3EKSbON/3JmksEDOjtNR5QvtQX950U2+6qJMFuQ5v2BZ
-	 0AQbcjBXAg3WLCngE4TL9me8pTzrbkRSiGw16W3OddQfz3g8/9ewkCpMlTKNGyX0JiQzN
-	 eIcPKSBbP6BarFq6lQQw7CgxGOQ73HYSjOlWKIwXVBdlnNgzfjQTv4WLZRZIT8hTC+5ST
-	 qW0jpoDNMKGK8RbIRH8ihy+D4Z/Jbhg87zYO6sAO/aj3D3SQ1x/Nokqzd2siFUA0/j/ui
-	 arS7e33ENydZEnI8hoMwb3mm+mdj4CRV2y1TH7DGIWZyHQ5B8KDH3/31CvxgTdgxxUg==
+	t=1795520937;
+	b=N2uUEXtjnmsBTRpdyQru44F7G5prtymGSRyP4DLuZuGMW2xrMfDy3FFd/DFPdjOnNEHM
+	 mLMzSQY2uNb7OTIeKK2GaovuRbUhZ0aNEfI44ybiCGYktFh1GrE+IXRW1RY9iZmiiXCBZ
+	 f5d6NZgkUupnE2Nru026opSMCZ0EuG5Sahiaw4ZiuYvdlIbsxc3fffub6MN/gY5f+EEjg
+	 OvNHu3CwvJSNUiv52K11mhZPD4o6Y/evymOf6KQqpfFCFF7LaEA7dGDwqV8864W7XWHQ7
+	 J0xlQEYnGrzkRxw/PxB33A5rJnWFO01neqRUoSHifDrysA1FBe8mSqJXUMU6Sfe12kw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795520441;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795520937;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=wjS9Ue2xC7HZMzKTp4xtpVpKUB2zZscFciFeNWKIkTM=;
-	b=e+uBrp+evzTJZCTgucxmX2LOq46tejnJAXjixqjtD3TnHPOX+XLqbrWNZ+sy6Z11V/g3
-	 tmJmYDtpXAxXPqQhU7jmUtsvsP7Rm+pdT6cR7Zos6a80wnnA2bEFsEgKerR5S8MW64Pvu
-	 AZsQ079j2uiKo8Zw+ocRpKSI9kJtqpkA9McaC+YnyPLrnwQ+kQDSAWO+8owl+24j7KTSO
-	 aSREgLWZhzi+PCUctJLuKKdgIYxLkmut8lEk55aEm7FWD1KmzAYL+r5be/GPxs34oRnmU
-	 Ojn6L8aeRRfEtFH2RsmU3ueJWRuuJQ3ivxaXhiUtVRwLlxFmExYW2vEEf7mrjfD0y1g==
+	bh=aEW4KNhQW2LvIxISIMcdtV8inFLGo/DqVkwhEeNf678=;
+	b=o3T6Zy+54t6Br52pqHUzo58DjJ6dDciS9NspbAdwY1J8Yltvnsw1AY4T3F2gAm3w9usN
+	 +UpM/B4QzR8TxLn5V4PcqBxj+m0EMJNbmcjl+Cv0SmvE5actzTXoNiSngiqHx0DR0FX7K
+	 8UsbLy758dB5AzleUjfU9OghrOY+FzOaF9bx4vY5NKbxDheHLO7mHwZBBR4IckBSqW9lM
+	 pbsdxZAcvIBYsXPcdJlCTcZKqxGFw+STtWOp/4Tm6rslRMG05VQMaC/boK2eTong9cwWd
+	 5G8huHRPwVsxM8ECTAW37BCy/zcJVZyKLiHiq9Cf0FQD5eYyYvfFQ4J6g3eCjCUsQaQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lg4Eb34T;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Rw44i/pA";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E836A606A321
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 11:40:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAFF3606A31E
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 11:48:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lg4Eb34T
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7B4B1F000CF;
-	Tue, 24 Nov 2026 11:40:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Rw44i/pA
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF0C71F000CA;
+	Tue, 24 Nov 2026 11:48:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795520440;
-	bh=wjS9Ue2xC7HZMzKTp4xtpVpKUB2zZscFciFeNWKIkTM=;
+	s=k20260515; t=1795520937;
+	bh=aEW4KNhQW2LvIxISIMcdtV8inFLGo/DqVkwhEeNf678=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=lg4Eb34Te9XgHi2lwgbeiemxf0RX/IWZFJZCYjDvWLbRgdJSxOezDtEndbnVTewgR
-	 r2xQ1qyVwet2WpXVXBEYcYRqEiEsv0HxmyQ2sAjJ8cvGEhePnbdscwekODA/DH8sRa
-	 Kehigl/pEbeB0VP2VOZdpqSMFl0VrAzUSe4jIL9QKKKCIBtpgddUEKxPmhDGSjNoBH
-	 ScjMJvq2VeIcTVUVkmwdelsv0zLuKITGKwKd7VfcAV0brU0hWTQh9pGPIKG+YUcJgh
-	 ucd/+3ZaTSOWDs3VAnm/ukcxBQifwvusN0DM25NaCsRZHHtwx0Ke0jk9hI07UyFr7J
-	 iiFGHuolTcTSQ==
-Message-ID: <710a9876-79c7-49c2-9aec-ef0214632c20@kernel.org>
-Date: Tue, 24 Nov 2026 12:40:38 +0100
+	b=Rw44i/pAiiTBjVIZtj1qzMFmLXkXeKVrg6wju3uhQyePkPJHCz6w8yzOU3kosMJq9
+	 TuuAu3ml2goJ76fu2fKVJipeGdAyIUntOrKwqY2kDDIXe6BsARcM7ZHMCvFXHVnKAW
+	 PZtKtV7saqdjdfiafqh/uXU7rGc8SSRjvhVp+PIea5S/crYailLiaRN9l1B0UtmZGA
+	 i+hTgglk0O/9SeozRvDC+HGFw1FKJQPSUtXoR5fJHcXrzJKfcC6gHmSl93TjIkabF+
+	 tnuP9459KpqPMsyZMisdqH56NDqyekQ+6Iy3Ut0O+pi1ecP358lImS4mvlwxv6+wMU
+	 IsfGCiWrgs+kQ==
+Message-ID: <6250ba38-4ceb-4b5f-81c7-0b937aabaf23@kernel.org>
+Date: Tue, 24 Nov 2026 12:48:55 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,13 +52,13 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 13/62] mptcp: limit an orphan probing a zero
- window
+Subject: Re: [PATCH mptcp-net v2 15/62] mptcp: return EOF after a DATA_FIN, as
+ TCP does
 Content-Language: fr
 To: netdev-bot+sashiko@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-References: <20261121-mptcp-cmason-fixes-v2-13-00327fd1de1f@kernel.org>
- <179541554231.3133.10776173874685565@kernel.org>
+References: <20261121-mptcp-cmason-fixes-v2-15-00327fd1de1f@kernel.org>
+ <179541554480.3133.8039878521061914181@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -104,54 +104,28 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <179541554231.3133.10776173874685565@kernel.org>
+In-Reply-To: <179541554480.3133.8039878521061914181@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 On 23/11/2026 07:32, netdev-bot+sashiko@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential
+> Thank you for your contribution! Sashiko AI review found 3 potential
 > issue(s) to consider.
-> 
-> Critical: 0 · High: 0 · Medium: 1 · Low: 0
+>
+> - [Medium] In mptcp_check_fastclose() (net/mptcp/protocol.c), the patch
+>   reads msk->rcv_data_fin, drains msk->backlog_list with…
 
-(...)
+Correct, will fix in v3.
 
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index 944c9d11d2116..ff71f19540771 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -2886,7 +2912,8 @@ static bool mptcp_orphan_keep(struct sock *sk)
->>  		/* a live peer acks at least the probes, every TCP_RTO_MAX */
->>  		if (__mptcp_subflow_active(subflow) &&
->>  		    tcp_jiffies32 - READ_ONCE(tcp_sk(ssk)->rcv_tstamp) <
->> -		    2 * TCP_RTO_MAX)
->> +		    2 * TCP_RTO_MAX &&
->> +		    !mptcp_subflow_probe_timed_out(ssk))
->>  			return true;
->>  	}
-> 
-> [Severity: Medium]
-> 
-> Can a remote peer still keep this orphan forever if the subflow is idle
-> at TCP level?
+> - [Medium] mptcp: early return in mptcp_check_fastclose() skips subflow
+>   close in FIN_WAIT2
 
-Only a misbehaving one, acking the data at the TCP level only, and these
-orphans are bounded by tcp_max_orphans and tcp_mem since the next patch,
-as with TCP.
+No leak: reset subflows are released at close()
 
-(...)
+> - [Medium] mptcp: mptcp_check_data_fin() misses SOCK_DONE after subflow
+>   disconnect
 
-> The commit message also says:
-> 
->   Two corner cases needing non-default settings are not covered, which is
->   fine: an idle subflow refreshed by keepalives still keeps the orphan
->   when the stale detection is disabled, and tcp_orphan_retries is ignored.
-> 
-> Is this accurate?
-
-Yes: mptcp_subflow_active(), used by the scheduler, checks
-subflow->stale, and the data of a stale subflow is reinjected on the
-idle one, which then probes too. I will add a note in v3.
+The connection will be reset by the peer anyway.
 
 Cheers,
 Matt
