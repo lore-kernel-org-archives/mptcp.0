@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795557678;
-	b=wA36g/+ekcWEewc6ikqR2a8nymZO0Ke6RE9b6hQhZYKz1elM4m4vszgp+7N9nDBUFfyl
-	 bA1MbCs/dPp19pGijJ9AbnL+oBLZyMPOptvBN8bGNkSE5U9xsQjC/ESKCNdaefmf6zHjN
-	 mtGySMT4Nxn9pbQLf9bSnGhxvzeYSfDZp6aJXtg3t59NwarERCn64TG6T/bcVO8Qr3kvl
-	 0LKZX83g5ZToYY4ca8aAZEZw3MmPn568/FNdB5N+543N2wu36I6PCq9dNFO/UyK895iL6
-	 MSGwGmORimSJ8ettdMwp0ogygytmGZWgI+MlOkqEeb76xKm35WhDXb8Bms6KMpSBQ5w==
+	t=1795557680;
+	b=KrVEPbMsfysvrJvjG7Fkq3tfr5Jh89qSwi0eMCw9hcLWNn+GEvIuymx9GUWRjFlcZ21H
+	 vxlQR0QeATPTmld/oaEn5yqAOEHpZwTAqex2dxNfHz6rPsPvbSry2aPazhWeQVPGZf27+
+	 9yKkT3eysaKnXfJ/XQ5k9kvPUMV0f3V7kbgCY3WdbKLllYJ/O66JcSmPXsgjqoW+3zh6h
+	 tfGisnEiZ3YJoy2sEbF6U+BmJoAZrqVtAm4iGT9strluq8emsqhVvhdtz1Wq0+ODKJxDi
+	 MUcGWiyKvZUz0CKMT1ie2B4P5LRQawBEAsmL2WNArCk30cdAhtYJXJn8aSEmYvE6tmw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795557678;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795557680;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=IUgGOpysbTOEziieM2X3tGQbL6K6Uw7HbwzTMwuc+Xs=;
-	b=QWCGIASiZ81xCJ4/ejNqST3716rHgzqcHBAErX2hbzjSCD99ZYCa4pQFafHG9KUa1ZVw
-	 iaOydEaGrTqOfIvz1jjZ9UvSxZURDEuF3i4fsacGy9aWpDnBWRhqymkCTZdZV7CIGdTwf
-	 RTIA01ChRST/SPrzhiGMFx+UX65XjLy913vB48jxy/yORRfXGOpoeWWUdR52bXRRKM8z0
-	 z7bojXbHe8Kr7k9PiEzRiReNOX3hIN3aw6m8G7ElxtkqRSvwbEjIs+Ww1CanV+hBVz96v
-	 5P3BYlE7Gt5slFAdLXkV1J3CjYWjIL2n8fRSK9fxuRPcNUDhne4/eRP7ocfiLTl6CIA==
+	bh=zBGah4EmGUH3pDG2nlvhXDiNZ2Gmxwj0IOr8CwyevVw=;
+	b=Q/rQHkQJ9R5nN0pYRXgdkVhHSju6ACSptSWx/kRBSnJhJZbC+pXkQJI1ymt7b7+7Cjiz
+	 sLaW1caODpKaOtybFE4wwc6Fk5PcjgrAr67UnzKpt/G2u779wnbeViFgNIGT3P5B9clUd
+	 traB5Hoz03B9BRpbs2ICGFW6I71nXleYktsG89Vg1uuS4Jh1KaSsdUIMKl8btqkFCdfbo
+	 faRGjHwGRqpixqvkiACZcSmfMy32jg6/uTefz4QxzO9QQPHWuCqS3ZeusrYNEXGSaa8Q2
+	 cN9PY0eE1Z7+QqGSjsx2Q47iAiMcLZh0xUGbJm8luFP0JkhA2JghJt0UpaD1XwMBgsg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jJ92sUnA;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=b4lzEhVD;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3EB606A31E
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 22:01:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09D6B606A31E
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 22:01:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jJ92sUnA
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3954F1F000E1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=b4lzEhVD
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 147C21F000C0;
 	Tue, 24 Nov 2026 22:01:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795557678;
-	bh=IUgGOpysbTOEziieM2X3tGQbL6K6Uw7HbwzTMwuc+Xs=;
+	s=k20260515; t=1795557679;
+	bh=zBGah4EmGUH3pDG2nlvhXDiNZ2Gmxwj0IOr8CwyevVw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=jJ92sUnAO/ISDNvj5AB3H7Pc7Toso9LS02+QIngG3ZZf2vUBUsKmVy+9+AUrP3VQq
-	 3cb/OTk3b+hJtMtqGx3Ugr2aQ1MZnDn5JWCNcBs9iUMUegaiQ17EOZW1SG5LNRqYCe
-	 NomkpQt2iCEBCgm8Z/j2Dn8XCKYSlFxBMqlDcPlrLye1XZykQ78jr8hlDTbFwDNXg6
-	 XLW5ZWAdatE+JwR33OxDsfKxdGKvmvSQ24OH8zzbmdLZZZGWaDkrP0SZitVgY14MU6
-	 tjvejsAxvn/jE4pEy4btpiXFgcgpHcsd5HiiPeUCwUrUUt0je6IjGxv8PC/pB2Kduf
-	 hzPQlC0V6BP8g==
+	b=b4lzEhVDQ/oTk+oiRe0S0JLZvHicHtsZlTiqkbgzHveH+57hRBCQojX3CFhLHLa0W
+	 0FwXL0cQ/15+NfeOa6QeecsOrXROeJlAoxGOSsxq+VUU3xeC7E5GVyyztnV2QU5Ycu
+	 EwIAy4lzK7LN3k7cUfYrkgRuMIf0X1nEOF4esr/w53d74LFvMRyasfvuiLHygSlgmY
+	 ZJYCanqmaarCadkMJdBEI5PgFOhqlq4mi/FAy/eeTUf2UsHa6dN+KJTLUwc+GDG71s
+	 wmkGn7G5rGXWyixipXeb5QXqetqRmCgPMbicSo5y4+c5yj7nNhuQ/zcH97l9vCv3Co
+	 sKqrBqy4Unqwg==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 24 Nov 2026 22:59:34 +0100
-Subject: [PATCH mptcp-net v3 17/50] mptcp: report sf aborts during deferred
- connect
+Date: Tue, 24 Nov 2026 22:59:35 +0100
+Subject: [PATCH mptcp-net v3 18/50] mptcp: no fastclose reset from SYN_SENT
+ subflows
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,111 +55,69 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261124-mptcp-cmason-fixes-v3-17-416c0920c73f@kernel.org>
+Message-Id: <20261124-mptcp-cmason-fixes-v3-18-416c0920c73f@kernel.org>
 References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
 In-Reply-To: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4320; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=bhtVu3TjvWCT3TuBvU5Xhp7ILbUH9r7lfcLejtyHhg0=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLZOBkvl1QKHH3ecDPlqcXi0zvczBtUjqg8eHXQTXt7A
- We6xWeOjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIksnsnwz6rge2pC9P753bd/
- ek90z+AWEs7vUn0qfq6eYc48gz7r44wM32Yv0+GTe3Qms7VF+uzmV/x6nfzmq+bXq0X4Td3GeeA
- kDwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2185; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=DRtfIxZFihaTl/+OPHDFWHSAXRjs2KpkNXgrn/k5jyk=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLZOJlWlnfeVq3TdnvhmbbnkaNsYe6ddrn3iqpuxstrW
+ X7pX/nZUcrCIMbFICumyCLdFpk/83kVb4mXnwXMHFYmkCEMXJwCMJHbxxgZjqYuiGgIWBW2UfPZ
+ 549b8iQ1ElnrBR6ysgulVXP/v3+mieF/reGBXUf6buzZu5k/8ddW9el8qzdIWfTzmejt3rPJx1S
+ dDwA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-With TCP_FASTOPEN_CONNECT, connect() on an MPTCP socket only sets
-DEFER_CONNECT on the first subflow and on the msk, and the first write()
-sends the SYN with data via mptcp_sendmsg_fastopen().
+mptcp_do_fastclose() sends a reset with an MP_FASTCLOSE on each subflow
+not in LISTEN or CLOSE, also on the ones in SYN_SENT, while TCP sends no
+reset in this state, see tcp_need_reset() used by tcp_disconnect(). On a
+disconnect in SYN_SENT, e.g. with connect(AF_UNSPEC), an MPTCP client
+then sends a reset with an MP_FASTCLOSE carrying an unknown key, 0. With
+TCP_FASTOPEN_CONNECT, this reset is even sent before any SYN.
 
-If the first subflow is aborted by tcp_abort(), e.g. via a sock_diag
-destroy request or the bpf_sock_destroy() kfunc, while mptcp_sendmsg()
-already owns the msk socket and is waiting for the subflow lock:
+Before the commit below, these resets were sent by tcp_disconnect(), so
+not in SYN_SENT. Skip them again in this state, as TCP does, but move
+the subflow to TCP_CLOSE at once, as tcp_disconnect() does: a SYN-ACK
+received before the end of the close cannot complete the connection, and
+a later one gets a reset from the stack.
 
-- tcp_abort() clears DEFER_CONNECT on the subflow, and moves it to
-  TCP_CLOSE;
-- subflow_error_report() can only set MPTCP_ERROR_REPORT, because the
-  msk is owned by the user: the msk stays in SYN_SENT, with
-  DEFER_CONNECT still set.
+This issue has been found by an AI code review agent, while reviewing
+"mptcp: clear DEFER_CONNECT on disconnect", and confirmed with a new
+Packetdrill test: a disconnect in SYN_SENT, then the SYN-ACK. Without
+this patch, a reset with MPTCP options was sent at the disconnect,
+before the one replying to the SYN-ACK:
 
-tcp_sendmsg_fastopen() then skips tcp_connect(), and calls
-__inet_stream_connect() with the msk socket, the first subflow being
-grafted to it. Because DEFER_CONNECT is set on the msk, -EISCONN is
-returned to userspace, on a connection that has just been aborted.
+  disconnect_in_syn_sent.pkt:16: error handling packet: live packet field ipv4_total_length: expected: 40 (0x28) vs actual: 56 (0x38)
 
-Detect this case once the subflow lock is held: if DEFER_CONNECT is set
-on the msk, but no longer on the subflow, the subflow has been aborted,
-or disconnected. Propagate the subflow error to the msk directly,
-instead of waiting for the msk release callback. mptcp_sendmsg() will
-then report this error via sk_stream_wait_connect(), like plain TCP
-after tcp_abort(), e.g. -ECONNABORTED. The deferred error report is then
-a no-op, so the error is not reported twice.
-
-Without the race, the msk is already in TCP_CLOSE with the error set:
-the same check also avoids going through tcp_sendmsg_fastopen() and
-__inet_stream_connect() in this case, except with MSG_FASTOPEN. As TCP
-does, write() then reports the error without disconnecting the socket.
-With MSG_FASTOPEN, the socket has to be disconnected, as with TCP, for
-the next sendto() to connect again, and the race cannot happen:
-__mptcp_nmpc_sk() requires an msk in TCP_CLOSE.
-
-Clearing DEFER_CONNECT on the msk from tcp_abort_override() instead
-would not be enough: tcp_abort() is called on the subflow without the
-msk lock, and mptcp_sendmsg() checks the msk bit before taking the
-subflow lock. The abort can then happen in between, and write() would
-return -EALREADY, followed by a disconnect of the msk dropping the
-deferred error. In this path, only mptcp_sendmsg_fastopen() holds both
-the msk and the subflow locks, and sees a consistent state.
-
-This issue has been reported by Sashiko, while reviewing the commit
-below. It has not been reproduced: the abort has to happen while write()
-owns the msk socket, and waits for the subflow lock.
-
-Fixes: 93723db43e51 ("tcp: Clear DEFER_CONNECT before tcp_connect() and in tcp_abort().")
+Fixes: ae155060247b ("mptcp: fix duplicate reset on fastclose")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v2: new, for an issue spotted by Sashiko
-v3: comment and msg: also after a disconnect, and what write() does
-    without the race (Clashiko)
+v2: new, for an issue found by a review agent
+v3: move the subflow to TCP_CLOSE at once, not to complete the
+    connection with a SYN-ACK received in between (Clashiko)
 ---
- net/mptcp/protocol.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ net/mptcp/protocol.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 257c851c8a76..87f6da0f6cab 100644
+index 87f6da0f6cab..6c712f677220 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1960,8 +1960,6 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
- 	/* on flags based fastopen the mptcp is supposed to create the
- 	 * first subflow right now. Otherwise we are in the defer_connect
- 	 * path, and the first subflow must be already present.
--	 * Since the defer_connect flag is cleared after the first succsful
--	 * fastopen attempt, no need to check for additional subflow status.
- 	 */
- 	if (msg->msg_flags & MSG_FASTOPEN) {
- 		ssk = __mptcp_nmpc_sk(msk);
-@@ -1974,6 +1972,19 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
- 	ssk = msk->first;
+@@ -3321,6 +3321,12 @@ static void mptcp_do_fastclose(struct sock *sk)
  
- 	lock_sock(ssk);
+ 		subflow->send_fastclose = 1;
+ 
++		/* no reset in SYN_SENT, but a close at once, as TCP does */
++		if (ssk->sk_state == TCP_SYN_SENT) {
++			tcp_set_state(ssk, TCP_CLOSE);
++			goto unlock;
++		}
 +
-+	/* subflow aborted or disconnected: its error report may be deferred.
-+	 * With MSG_FASTOPEN, the socket is disconnected below, as with TCP.
-+	 */
-+	if (unlikely(!(msg->msg_flags & MSG_FASTOPEN) &&
-+		     inet_test_bit(DEFER_CONNECT, sk) &&
-+		     !inet_test_bit(DEFER_CONNECT, ssk))) {
-+		inet_clear_bit(DEFER_CONNECT, sk);
-+		__mptcp_subflow_error_report(sk, ssk);
-+		release_sock(ssk);
-+		return 0;
-+	}
-+
- 	msg->msg_flags |= MSG_DONTWAIT;
- 	msk->fastopening = 1;
- 	ret = tcp_sendmsg_fastopen(ssk, msg, copied_syn, len, NULL);
+ 		/* Initialize rcv_mss to TCP_MIN_MSS to avoid division by 0
+ 		 * issue in __tcp_select_window(), see tcp_disconnect().
+ 		 */
 
 -- 
 2.55.0
