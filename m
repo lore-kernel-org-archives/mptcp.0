@@ -1,56 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795482331;
-	b=CXFy/ooJtfgHY0TNFJRnNuyLyCiKZ2lDicYbrE3OkM+zWtIrQ/ac/w71VQCiM9Uehqya
-	 lb5FqOfNr9MgLtBeUWkiBjY/ufvSu0nvpqYqIIgAPclQLDR4k7m640QH6gK2yDh7KdBd/
-	 5Prnco+CFkB1YoMbO6fJTVSmPTnt2pFTsrmvZ13Kmyo95Fi3LQyjyKJIFZpeJmMowKtER
-	 8ssINmJk1r1ah3MErvQKrxAQ4amWlOqUpRARTl4eeyWh2it+4oFFXm0etO0VwteQJdnXl
-	 CJZlk0eX320vlTkjnTlyOqoVCxjdl1/lBKLxizEvbxSrN9dUBjzbUKhIp45KaQw2CVQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795482331;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=8RpeiboGQNacPtPiG3iW2EcvywiIZJwxKeXwV+ruIVw=;
-	b=GkwP6LaLVaEsaeqJ3v5rRnKZRYIBEDeTKGMZppmLK+OGXTFVP65bku3WF97ZDZpHPDfG
-	 RrpT7ULwZhWXIXBTb2jdiiNYzCXvdM502tEmAu9E+xBxvqZXgVQhAFEWjtGtlDjY0K8uv
-	 R++Tt4FP0UEXJ++iaSl0Wwt1L2OHzZH7mVHoRQB9MO2ETaTqeTaxauMOBPAozy4HQcPPh
-	 UYcZp6TnwFyJ/LpVqiL26ivNk+1pc2n03QqRePCrKdQYXastAsBs9cgEbyNpA05rwf78h
-	 cOH75MGSkiNfWwJHK+WUCvce7pZucw0H2qHb1Fp9sdZRKolhQix2xcKP3IqhEp5HRqA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=akH3Somj;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.54
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795515750;
+	b=M03Eo7UfHD1TtO7ePiuV3GNR18asbO1lZkTR9IH/VG76qXFYVc5E98PAzklCP9TomWMY
+	 TzBoOl/fxBJV6dOn13EnKEfF8GNv6oSLuBLEAY6pQ7+AVoTl63HSrAFRUvttkSx6oZ7Ki
+	 T6M/xm++MmBrjqHxrMaxqCGz7t0pKYpaCRTha3k/b0LuTdPdcJ17uwcmRB24QJpYoYmg7
+	 hvreEFNJnNTJPtlOjnlNqOWGo/8PiyOkOks5FQ4RFZSs2ChWz4SklbaAIAzeu74Vlxzyf
+	 BBQ5XOctnMk0x7MyRUdsncqojjtG5lhfUGu6/eB5N3tqGR/EpBL6wWPfo+Rdrn+BoLA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795515750;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 X-ZohoMailClient;
+	bh=fmJZudSW+re/Gte4tARmGg5h9220OBdubhx05DToHWA=;
+	b=uZqs5vlbZ1yg3n4ZKSIR8fWEdhKRuy1AraCGtAxT7ddjPq91G+ftF+hPWFRY85c0Q+od
+	 2Rd2OFFOm/uEZwQWVCNIpebRq7O6PTbtxjaUp6aidc845WdVkPLLJhQ3fffQ1MQvbhik5
+	 eej2yBnuOam9XI8W0zPYr9zV37VWkIwmd8KU5nX4BJ94isnLVuIS8ZDz999ZQgtZ5dlK8
+	 hfD9R2Cho+fljBSnWbxStnXILZ/pIgM5b6z2X73KHvnSkwE3lVrnE+D4Ass2Pwb525YXw
+	 fCfT5u4CCOefg1dNBwdbU3j+MNTyBG93yeu46DmDhYwVB1U0mn9e8ZcRDK5/+POOolg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=mpiricsoftware.com;
+	spf=pass smtp.mailfrom=mpiricsoftware.com;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.54
+Received: from sender5-of-o54.zoho.com (sender5-of-o54.zoho.com [165.173.182.54])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6110606A31E
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 01:05:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=akH3Somj
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29AAA1F000D4;
-	Tue, 24 Nov 2026 01:05:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795482330;
-	bh=8RpeiboGQNacPtPiG3iW2EcvywiIZJwxKeXwV+ruIVw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=akH3Somj3AG+PSpnu+IcrQO8slFJQmhgIq+EB4OPNbK929PIVvKtKcYv8uzvpj0aE
-	 XHZnnfBCP3kQXZ4AwGQRIwDZjNoMxkC7Ly5zmAyLBSiqZ3CbDT7eeW14Y2pBtZjhJB
-	 nQgSzG4FpW5skrl4qs0adn9tbqe9cBZZHtCzNnZNxvzOLTaGNj3pqnvAKYukPZ6LgO
-	 OvPTN6R3O4sTyIN7tkCajXItEc4PxZ9T19jBPJ+eQNUVgjLMPXX01irmThKHf0lWZI
-	 7y3+5TbSey7juRKIhu/Wb59b3j7cXKxw/LK/BlIcluULEF3MOe/T464rS3OKm/liZb
-	 sfWkVWdavBOqg==
-Subject: Re: [PATCH mptcp-net v2 4/4] mptcp: add mptcp_inq() for SIOCINQ
-From: netdev-bot+sashiko@kernel.org
-To: geliang@kernel.org
-Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Tue, 24 Nov 2026 01:05:29 +0000
-Message-ID: <179548232967.3133.6523672027761488381@kernel.org>
-In-Reply-To: <66c8d6fa77da5d076888ad6199f1699bf513fa28.1795348666.git.tanggeliang@kylinos.cn>
-References: <66c8d6fa77da5d076888ad6199f1699bf513fa28.1795348666.git.tanggeliang@kylinos.cn>
-X-sashiko-severity: Low
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2EDE606A31E
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 10:22:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D2EDE606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
+ARC-Seal: i=1; a=rsa-sha256; t=1795515747; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=i87y8uau2mNZ3aRwvRcWjUMOnut5tCMfRks93bB5FgOB9PL6DmPBXWS3koJWKkQUlY1MDkAwfOIq03dkGZzUUB7cVT9vJvjBh60jkdWvM4N6a9VuLNbXnGSsj7wY+my/akSTwOgLez9s1Bt6qU9Qt+XudYvSGSsNyR9T4kQ8bJc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1795515747; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=fmJZudSW+re/Gte4tARmGg5h9220OBdubhx05DToHWA=; 
+	b=M1coJFH5146izE2e7X19Gh+cLSZiCxdt8FHk7kPyZ4JHCX5yyzeyujqX/tlF4E03/VN5UZ4efcs9Fhdl6kBIUV1hmj0cYr3T2uH3Ftj8wf76zl5iqONfKkDdbUb4ddcks20I1ZT+fR8ErWy+y0PwhFqh4JIX+D1xOBOtqzWGwPI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
+	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
+DKIM-Signature: a=rsa-sha256; b=q8SgG/1sJK5nbtXVGnSAe31FPaUNmYmfUu8aMC6O9acByTX08/Xgb6Z9DQFFiG0KhEQB2QsJDtHg+0jPCSr09C4wpV9lvEMi/dgarxzRE2Oo7uhy1dR5Ef2UBYxtZnIlWO58X0hX/kKD+kaGH7b8O+AOZIncN08vVqq4iS0YG9c=; c=relaxed/relaxed; s=mpiric; d=mpiricsoftware.com; v=1; bh=fmJZudSW+re/Gte4tARmGg5h9220OBdubhx05DToHWA=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1795515744623307.0445198742955;
+	Tue, 24 Nov 2026 02:22:24 -0800 (PST)
+From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+To: mptcp@lists.linux.dev
+Cc: shardul.b@mpiricsoftware.com,
+	janak@mpiric.us,
+	kalpanjani009@gmail.com,
+	Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Subject: [PATCH mptcp-next v8 0/2] mptcp: add core-enforced subflow avoid flag
+Date: Tue, 24 Nov 2026 15:52:12 +0530
+Message-ID: <20261124102214.3930527-1-kalpan.jani@mpiricsoftware.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -60,91 +63,50 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Thank you for your contribution! Sashiko AI review found more severe
-issue(s) in other patches of this series. This mail is only an FYI, in case
-you want to address the nit picks below when you respin.
+The MPTCP scheduler needs a persistent way for BPF schedulers to
+mark subflows that should be avoided across scheduling rounds.
 
-Low priority / nit picks for your consideration:
+This series introduces a scheduler-owned avoid flag in
+mptcp_subflow_context, exposes it to BPF struct_ops schedulers
+through a kfunc, and exports its state through MPTCP diagnostics.
 
-- [Low] The From:/Signed-off-by email addresses do not match.
-- [Low] No in-tree selftest covers the behaviour this patch changes.
+The MPTCP core enforces the avoid preference for send and
+retransmission selection. Non-avoided subflows are preferred while
+preserving the existing active/backup selection priorities.
+Avoided subflows remain available as fallback candidates.
 
---
+When a BPF scheduler schedules both avoided and non-avoided
+subflows, the core drops the avoided selections. If only avoided
+subflows are selected, the core retries through the default selector.
 
-mptcp: add mptcp_inq() for SIOCINQ
+The second patch adds a BPF struct_ops selftest that deliberately
+schedules avoided and non-avoided subflows and checks core filtering
+and persistent avoid state across scheduling rounds.
 
-This commit adds mptcp_inq(). It reports the readable bytes at the MPTCP
-level as bytes_received - bytes_consumed and does not count the DATA_FIN
-byte. SIOCINQ now uses mptcp_inq() instead of mptcp_inq_hint(), so
-FIONREAD matches tcp_ioctl() when DATA_FIN is pending.
+Changes since v7:
+- Enforce avoid preference in core send and retransmission selection.
+- Preserve active/backup priorities and avoided fallback candidates.
+- Exercise core filtering and persistent state in the BPF selftest.
+- Handle scheduler success without a selected subflow correctly.
 
->     Co-developed-by: Zqiang <qiang.zhang@linux.dev>
->     Signed-off-by: Zqiang <qiang.zhang@linux.dev>
->     Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+Kalpan Jani (2):
+  mptcp: sched: add subflow avoid flag for BPF schedulers
+  selftests: mptcp: bpf: exercise the subflow avoid flag across rounds
 
-[Severity: Low]
-This isn't a bug, but the author address and the author's Signed-off-by
-address are different:
-
-Author: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-
-checkpatch doesn't read .mailmap, so this patch triggers its
-FROM_SIGN_OFF_MISMATCH warning.
-
-Could the author and the sign-off use the same address?
-
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 7ef37f978f5b1..d9144fffe0163 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-
-[ ... ]
-
-> @@ -4153,7 +4168,7 @@ static int mptcp_ioctl(struct sock *sk, int cmd, int *karg)
->  		lock_sock(sk);
->  		if (mptcp_move_skbs(sk))
->  			mptcp_cleanup_rbuf(msk, 0);
-> -		*karg = mptcp_inq_hint(sk);
-> +		*karg = mptcp_inq(sk);
-
-[Severity: Low]
-This isn't a bug, but does any selftest cover the FIONREAD change made
-here?
-
-The MPTCP selftests call FIONREAD in only one place. It is in
-process_one_client() in tools/testing/selftests/net/mptcp/mptcp_inq.c,
-inside the polling loop that runs before the peer shuts down:
-
-		ret = ioctl(fd, FIONREAD, &queued);
-		...
-		if (queued > expect_len)
-
-No DATA_FIN has arrived at that point, so mptcp_inq_hint() and
-mptcp_inq() return the same value.
-
-After the "shut"/"closed" exchange, one data byte and the DATA_FIN are
-pending. That is the only state where this patch changes the result. The
-test only checks the TCP_CM_INQ cmsg there:
-
-	iov.iov_len = 1;
-	ret = recvmsg(fd, &msg, 0);
-	...
-	/* tcp_inq should be 1 due to received fin. */
-	assert(tcp_inq == 1);
-
-The cmsg value still comes from mptcp_inq_hint() in mptcp_recvmsg(),
-which this patch doesn't change. So the selftest passes with both the old
-N+1 result and the new N result.
-
-Would it make sense to add a FIONREAD check that expects 1 just before
-that recvmsg() call in process_one_client()? The old code would return 2
-there.
-
->  		release_sock(sk);
->  		break;
->  	case SIOCOUTQ:
+ include/uapi/linux/mptcp.h                    |   1 +
+ net/mptcp/bpf.c                               |   1 +
+ net/mptcp/diag.c                              |   2 +
+ net/mptcp/protocol.c                          |  76 +++++++---
+ net/mptcp/protocol.h                          |   3 +
+ net/mptcp/sched.c                             | 141 ++++++++++++++++--
+ .../testing/selftests/bpf/prog_tests/mptcp.c  |  15 ++
+ .../selftests/bpf/progs/mptcp_bpf_avoid.c     |  86 +++++++++++
+ 8 files changed, 287 insertions(+), 38 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_avoid.c
 
 -- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1795348666.git.tanggeliang%40kylinos.cn
+2.43.0
+
