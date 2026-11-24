@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795559777;
-	b=z0WMvySdj6IntUjr9ermyk6CXi92l68ckFVxZP36ZsIEHOqrA9tLNK9CoyjsYDqJWopC
-	 JikCuul/PvzorsixO6ChBAfRKmE8qea759PjVa2xwOjkRvL4OPw0ubyWIxu0XzViylM2N
-	 opYoHk0o5T+sp4hyC2q/hv/nxlDagmnubczZ9MiTxyTGCo+V1+CjMD590sA4G1RvEws12
-	 kn/XdB4rb3o5Gqn4TNIPP/gzJNQ3nlGuPIHW/7sZYV0Dw1mai1QH/pwv/xcvWLwn053jU
-	 wDPglTi6Zmr+YOuunhu9vWg9ln2RIXvaUhW5FU/du1xTMvB2z+N4lThdmvU0wr2SvTA==
+	t=1795559782;
+	b=H9NZ4+srZH3mhc3jjqpWK7mD9fUF5kGt+olUT/Pm0rCc7wmr2ISiVT4JWS0laibNh14f
+	 z8rUgCM4uvvtAC7uSt0t3SRWm4d92koLUGPyBgiSsq2cHJoR8O7bUXay22VpHJ7n4MhKS
+	 qaKOyLturCFQjdNqsh2m6hrRyzaLK4DTxCJ612N3T8AjIEkY0otS4EQNN1JVytMIEihJb
+	 kgXYkexaRaSMcnGpiIT6VBLjnZR3wrLDOWSeo1ptBvk+GRACB8RjfwdMT3dm/BKQ39HYB
+	 LboQeumPXYvJd3lxOrCyJbzD3IrYa9yr8rDg5wSpP2FE9U97NILEi9Y74nafGPLd07w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795559777;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795559782;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=DL8eFcxU72ohnWw98p+FRKkJ0djeVprsGV6XQCBQhH8=;
-	b=25SVzQ2i+kZKij+ksM7vUHzcQgvhFNYk/2xELQVtX3vZWeS43O1Z9oeHeNq7HOEEEh5W
-	 /4YzawUjWx6CsCDNnDvpHzHpeIAdB1Keii61Z9ra7whUm5DltqgSIPvXGiyP7wXDe9n8t
-	 Cmj9qa8gGXSoiNlvxMbiaF5W71AAMheUWbCW2WEIrwmTCapLN8LGZWnWTREG9eHC8yi20
-	 g563oc9kYXGEX6iTnhzsfULh5G/2SlyCFAWdsr3PZPs2oybp7k91V67kdLveSxBjBMf5h
-	 o17dot8EWOmCQgIlhxucARplx+chP2/25QuXY5bsfvyaYe5QyBcPfgnLII9K/7ZiVlg==
+	bh=9FGsiOYkk4skWHVXTrxLh3Jvp88t2/xr6/jY8uWr8zk=;
+	b=Hu1FaSOYgtGwp89BznQBXFPGRGpFWWniGyHp4lFb1y4yEKJY7xxr24O2brTeemBkD3wM
+	 OUwPn7d+b9I+IA3WtCygNvtMcB4R29Phx/lS3TwllWxkOc2HOYQyb12gs0939ghVnOOTv
+	 UUQKd/vlcEvH8zQbePLUv+gIWfDIUHLiiHDitRnGB4R2FPrPujOHxCTrt3xhxdiEBVj+h
+	 xG144KUR1PlFfx8GRFV4GHJvOzv57PxyfN8BUzk6Rtq1xoBSswXVWCg71kOug0aeo4t+R
+	 4PrnuGkWaGBuaEgH2P4RJYF9gs66Cf/fqO0Ymm22CHbWAdhntZ0JnmJlPnIS3UJZSLQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=odAdbQ5Q;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="QMRA3R/p";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F02606A31E
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 22:36:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF624606A31E
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 22:36:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=odAdbQ5Q
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA6D41F000C0;
-	Tue, 24 Nov 2026 22:36:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QMRA3R/p
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85D571F000C0;
+	Tue, 24 Nov 2026 22:36:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795559777;
-	bh=DL8eFcxU72ohnWw98p+FRKkJ0djeVprsGV6XQCBQhH8=;
+	s=k20260515; t=1795559782;
+	bh=9FGsiOYkk4skWHVXTrxLh3Jvp88t2/xr6/jY8uWr8zk=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=odAdbQ5QQwouT+A9VEyeOrevWx4wNI98v3va55L23PZVBF2xDAXhvj1Y7rMBkoaMV
-	 h72O95Wm1RLMN03Pqb6g++63mqswZNgNKoKhueKtbh1rQtN0Ly1+P0K3TvqS+Rqkrg
-	 wDCPh8aJqYqYZZ71hdWGnPRXMM2wJ4CCk36uE2JGmq8lMCFwZzYAYUxwpQsTTA0DMy
-	 PFCJ1fadHXL+Xljqr0ajusSwy9/ImBDAwzaL/2dRr/00HWHV1jbhn2LtOIJ5HmmCLn
-	 pEcusbhjG0ZSsDmuyX2cctb0RoTISSOQ2r51tr0lHZb0giJR+9TtpQMAljZV2BL7GC
-	 QkG8zCL2N2Cow==
-Message-ID: <sashiko-outbox-232141@kernel.org>
+	b=QMRA3R/plDsoeh60t5tucEaZxIzvcCCKgTXGZksXsIKBOurBsybNpGgCTRy65PIyn
+	 KctgQ8e0s30U1oR9SQP5JAlnOf7Lg36AP7tgrahXs16XXHrqHMjaxFMajeZfKaQa8B
+	 tmRbrdKq5NXFotwwNKfblnPzOTF7D74Me1zzR9k2Gw8cECF2eLZP8oMMyx37Ej3PVe
+	 mreFkirKz2B1PKkNddyeX2k5b/ZZGvSYTmCdEAgSY0eeSnX9ZsbdA0JC7g3voLkHwi
+	 vQ5IMl6+QmtkNaNYBcBacI2u/FD41wB/VT+a+m60gwh8LYx9yP/2jojqCIHjE1+vSh
+	 +1X/M6jwwycIg==
+Message-ID: <sashiko-outbox-232142@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-net v3 29/50] mptcp: don't resend data acked
- without MPTCP opts
+Subject: Re: [PATCH RFC mptcp-next mptcp-net v3 50/50] mptcp: reset when the
+ DSS disappears after a DATA_ACK
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>, "MPTCP
  Linux" <mptcp@lists.linux.dev>
-In-Reply-To: <20261124-mptcp-cmason-fixes-v3-29-416c0920c73f@kernel.org>
+In-Reply-To: <20261124-mptcp-cmason-fixes-v3-50-416c0920c73f@kernel.org>
 References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
- <20261124-mptcp-cmason-fixes-v3-29-416c0920c73f@kernel.org>
+ <20261124-mptcp-cmason-fixes-v3-50-416c0920c73f@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 24 Nov 2026 22:36:16 +0000
+Date: Tue, 24 Nov 2026 22:36:22 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -63,88 +63,73 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue to consider:
-- [Medium] mptcp: false reset in check_fully_established() due to stale
-  opt_ack_seq
+- [Medium] mptcp: fallback after dss_confirmed in mptcp_dss_corruption()
+  on partial map
 --
 
-commit d927d8fcbe3e60d7a3edc0251d874227df06db6e
+commit 52bcf0ed394d73280e0a61e58a2314837d68feb0
 Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-mptcp: don't resend data acked without MPTCP opts
+mptcp: reset when the DSS disappears after a DATA_ACK
 
-This commit tracks the highest TCP ack_seq received with MPTCP options in
-subflow->opt_ack_seq and resets the subflow instead of resending data if
-snd_una has advanced past opt_ack_seq before any MP_JOIN subflow is
-established.
+This commit tracks whether a received DATA_ACK has acknowledged sent data
+on a subflow and resets the subflow instead of falling back to TCP when a
+subsequent packet lacks a DSS mapping or has an invalid mapping.
 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index f9b65d0c6290a..05b9c66aaed63 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 190c75311ff69..efbd3efd379ed 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
 [ ... ]
-
-> @@ -1287,11 +1291,16 @@ bool mptcp_incoming_options(struct sock *sk, stru=
-ct sk_buff *skb)
->  	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
->  		return sk->sk_state !=3D TCP_CLOSE;
+> @@ -1523,7 +1542,9 @@ static bool subflow_check_data_avail(struct sock *s=
+sk)
+>  			return true;
+>  		}
 > =20
-> -	/* MPTCP opt acking the old data, not an infinite map: no fallback */
-> -	if (unlikely(subflow->old_data_pending) && mp_opt.suboptions &&
-> -	    !(mp_opt.use_map && !mp_opt.data_len) &&
-> -	    !before(TCP_SKB_CB(skb)->ack_seq, subflow->old_data_end))
-> -		subflow->old_data_pending =3D 0;
-> +	/* MPTCP opts, not an infinite map: the peer did not fall back */
-> +	if (mp_opt.suboptions && !(mp_opt.use_map && !mp_opt.data_len)) {
-> +		u32 ack_seq =3D TCP_SKB_CB(skb)->ack_seq;
-> +
-> +		if (after(ack_seq, subflow->opt_ack_seq))
-> +			subflow->opt_ack_seq =3D ack_seq;
-> +		if (unlikely(subflow->old_data_pending) &&
-> +		    !before(ack_seq, subflow->old_data_end))
-> +			subflow->old_data_pending =3D 0;
-> +	}
+> -		if (!mptcp_try_fallback(ssk, MPTCP_MIB_DSSFALLBACK)) {
+> +		if (((status =3D=3D MAPPING_NODSS || status =3D=3D MAPPING_INVALID) &&
+> +		     subflow_nodss_is_fatal(msk, subflow)) ||
+> +		    !mptcp_try_fallback(ssk, MPTCP_MIB_DSSFALLBACK)) {
+>  			/* fatal protocol error, reset the subflow and let the
+>  			 * worker close it
+>  			 */
 
 [Severity: Medium]
-Can calling check_fully_established() before updating subflow->opt_ack_seq
-falsely reset a passive TFO subflow?
+Can an skb that starts within the current mapping but extends past
+subflow->map_data_len (for example, after middlebox resegmentation or
+coalescing) still trigger a fallback after subflow->dss_confirmed is set?
 
-On a passive TFO child (tcp_sk(ssk)->syn_fastopen_child), if an out-of-order
-packet transitions ssk to TCP_ESTABLISHED before subflow->fully_established
-is set, the server can already send data on ssk.  When the peer's packet wi=
-th
-valid MPTCP options (such as OPTION_MPTCP_MPC_ACK) arrives and acknowledges
-that data, tcp_ack() advances tcp_sk(ssk)->snd_una before
-mptcp_incoming_options() runs.
+In get_mapping_status(), validate_mapping() only checks that the starting
+subflow sequence number lies within the active mapping range, without
+verifying that the mapping covers the full skb length:
 
-Because check_fully_established() runs before subflow->opt_ack_seq is
-updated:
-
-net/mptcp/options.c:check_fully_established() {
-    ...
-	mptcp_data_lock(sk);
-	__mptcp_subflow_fully_established(msk, subflow, mp_opt);
-	if (tcp_sk(ssk)->syn_fastopen_child)
-		__mptcp_check_push(sk, ssk);
-	mptcp_data_unlock(sk);
-    ...
+net/mptcp/subflow.c:validate_mapping() {
+	...
+	if (unlikely(before(ssn, subflow->map_subflow_seq))) {
+		...
+		return false;
+	}
+	if (unlikely(!before(ssn, subflow->map_subflow_seq +
+				  subflow->map_data_len))) {
+		...
+		return false;
+	}
+	return true;
 }
 
-__mptcp_check_push() -> mptcp_sendmsg_frag() sees after(tcp_sk(ssk)->snd_un=
-a,
-subflow->opt_ack_seq) as true.  If mptcp_sendmsg_frag() sends a zero-window
-probe or old data (before64(data_seq, msk->snd_nxt)), it resets the subflow
-with MPTCP_RST_EMIDDLEBOX even though the incoming packet carried valid MPT=
-CP
-options.
+get_mapping_status() therefore returns MAPPING_OK, bypassing
+subflow_nodss_is_fatal() in subflow_check_data_avail().  When
+__mptcp_move_skbs_from_subflow() then sees map_remaining < len, it calls
+mptcp_dss_corruption(), which calls mptcp_try_fallback() directly without
+checking subflow->dss_confirmed:
 
-In addition, if __mptcp_check_push() inside check_fully_established() resets
-ssk on a packet without OPTION_MPTCP_DSS, check_fully_established() still
-returns true and mptcp_incoming_options() returns true before checking
-sk->sk_state =3D=3D TCP_CLOSE, leaving tcp_data_queue() to process the skb =
-on a
-closed subflow.
+net/mptcp/protocol.c:mptcp_dss_corruption() {
+	if (!mptcp_try_fallback(ssk, MPTCP_MIB_DSSCORRUPTIONFALLBACK)) {
+		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSCORRUPTIONRESET);
+		mptcp_subflow_reset(ssk);
+	}
+}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261124-mptcp-cmas=
-on-fixes-v3-0-416c0920c73f@kernel.org?part=3D29
+on-fixes-v3-0-416c0920c73f@kernel.org?part=3D50
