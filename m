@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795482328;
-	b=iMNNeWwWRrTEBnXOlzp1KHIcJ+I3tEldrOgBWSSNxCLXro7uZdKXhxd1Rf3DpTeVsHM3
-	 U+/qlvm5xb3XVc0YtgKT/c5IWypNmXMMrQzHgpR4x0cSMTAY19KGbLi3/pq55jiSAohGx
-	 R/bQcai4zvvHvcfFwVR+shso737XtKy6CdPpU6LGyp4VgptAaCteBSnIrfWTGWCinkw7I
-	 2SfKY+4wpQD9ZmoaOltZ3SSctBWe4khQk59SWiD3Hs+wYndEKEmE85YmOKGxsNrNlqwvu
-	 x7rHQk4vbUowsf4rNHJPlX+nB9pvgC920s4h1tQaOumf1oZViQGxIIStp2aPfso1iYQ==
+	t=1795482329;
+	b=a93mnaEr3NrioYivzGIlQlQDpSv+1kHw2CWaK6/K6cpAO5JgsPSkaYZV+/DiQ79QpkSJ
+	 yQLhuhRQ64Rr9J7AfOGNwTlWbLjLyV8HALQpkRq6RrjGIfPb63rPXoBEj2lx87gBt4BBB
+	 iSNTzbI7d2FecxTUBdcDz6BuCwMTtZV4Ii4gKsM2TDm//56LLnLR4yj5tVwlIMhDVDLGX
+	 vKgZUcN652xwHeu0Zv3rXM40hxt7hket+PwJxXqxFvnmdj4yWMXzy7js4rDQJyyfZsgIU
+	 Yz0e9yb9ziywfhkikCova1RIBphisQh2G8TBZBptEz5qDvMUzzj/N9QArckWdXDTq9Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795482328;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795482329;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=K88EdfLUGBdD2wsvtEoy4mPQ4vruucvZ4ot++4G2ph4=;
-	b=5doC59WPLjH/7v9h6nd6z3+DdN/mu8zofZlWqFIawaMLLslfR591wPEPG9BUrmCB4Ru/
-	 VS6NR34azdkIxGhYpmd2A2L9sZbQjallDSdqPnJY49NaXa/NEMP6V4JrAADuKNxpOVQCg
-	 7gHYAJWibY/PFFGAaJ945KO4XiGa1xRGIUUt6yV1veXN2gsQyZgplZN/1w5TBVvAEpkyS
-	 TKeHg9t+r4TGu1YZAhz4yqWA95CgBfR4MKu2M3Ic50+ApMQMxQUtd+A8cRj3iQp3uhYq+
-	 Zzur0mleQutkC/K8AWKqj/uzF/dagSERSkaduFBbYMRcU1rHS+rF5vMUk/f3AAmLXUg==
+	bh=8UwysR+VwpEbQicXVbm9MlL7BO3AC6BqGqw3cKmCrXk=;
+	b=fT4yLrawMxs136JilBORibe3tS7VriFmI21ZuZtk+1dwA0ceotG3V0gGdhUYtf/RR++O
+	 obL5IB5nBQVGPCVb1wU5B/YBtK6yEffg5QpzcfTaB5W/UL62THedbgdDGAnyeZs4/r3O9
+	 FjG2Guc+d9r/HsxanT2vMezbWWIAs7COP0DKhjgE+0cGjuh5q+sBkLdZc3MSVeAGtLd80
+	 ZUE+tmc+gxHU/ZbiSNmcLnfrylbvXxUJyEn/ghXq3gO+eUtN09/2s6OrhUe/TW+hGxquI
+	 LCCob8ykLtnv8Efd51bgU0eOaWVutdl8y2XwZoBlMQ0nj3THhKbRNYv9B12TWtbQ4vA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="aY/ktrPJ";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=B3vzQRPW;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6AA1606A32E
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 01:05:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89708606A31E
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 01:05:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aY/ktrPJ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3E3E1F000C4;
-	Tue, 24 Nov 2026 01:05:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=B3vzQRPW
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 056781F000E1;
+	Tue, 24 Nov 2026 01:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795482328;
-	bh=K88EdfLUGBdD2wsvtEoy4mPQ4vruucvZ4ot++4G2ph4=;
+	s=k20260515; t=1795482329;
+	bh=8UwysR+VwpEbQicXVbm9MlL7BO3AC6BqGqw3cKmCrXk=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=aY/ktrPJfQ91IlUeVv+8zQGzpUk5hkp8bqyJuUkYBnWEMxiL3qsb1KQXsjEWKMRzw
-	 xVhDuUvnbFBkwmkvY9VsUqUzybK6uyzPENvwfNi+UabZgxXf3vl7MVkCMwyPldZd1+
-	 yh8j1Dk0p0T9mxgAJ2UCvvq1qpCvatycKOBiZgxssngkyeesRSRQ9RLV+Jswg26l18
-	 EZFzYpY2nRC6ZpduNN5t962TOZRWT9YRgXe0QdWWHvuE/yH5JaJTs8CcIKtdZz4EbS
-	 UeFhXn5bOEthSfLwkVweJABagrc6o1mMnQHzektCYm1PxZT1h8qqQBTqvQNRo9se3s
-	 3mIBJ0UBdWiNA==
-Subject: Re: [PATCH mptcp-net v2 2/4] mptcp: add missing memory barriers for
- rcv_data_fin_seq
+	b=B3vzQRPWMlyKfjSVmUX8OVJk8HbjtVYuOuVg3XmyFoiGtBA4Bh+POGxBJS532amye
+	 5bKzQIvO16g8dRRMJm4AacUkPv0plmNAjyNhjiUBAyF+tOerCL3fpd+7NVXMIoc4Uq
+	 uFpvcWTHZUoZGSJLTA9YvG+l3Ygxm//hJU3MfCvLLRMYzvg0TOzZlI3veMrckbya08
+	 dMsuTobOiAscShyWsbCs/qm3M6CxerOfhmvt2JB5o5edAsQ4POd32B/8juKyqeydgm
+	 ce0isLFfKfHTva6Iaqum/6Gxwo74hNIgoQe0AOiRyiknAUxEzMzCUuFfQNkmHUDSRb
+	 hs5X60/04G/9w==
+Subject: Re: [PATCH mptcp-net v2 3/4] mptcp: fix TFO SIOCINQ overflow in
+ mptcp_inq_hint
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Tue, 24 Nov 2026 01:05:27 +0000
-Message-ID: <179548232731.3133.14387340969806272954@kernel.org>
-In-Reply-To: <da8ae9e6c48df602b08475d151a87841ad632400.1795348666.git.tanggeliang@kylinos.cn>
-References: <da8ae9e6c48df602b08475d151a87841ad632400.1795348666.git.tanggeliang@kylinos.cn>
-X-sashiko-severity: Low
+Date: Tue, 24 Nov 2026 01:05:28 +0000
+Message-ID: <179548232859.3133.11411610594175565373@kernel.org>
+In-Reply-To: <692168c4f75bdb59bc8a9ec9ed116674747c3898.1795348666.git.tanggeliang@kylinos.cn>
+References: <692168c4f75bdb59bc8a9ec9ed116674747c3898.1795348666.git.tanggeliang@kylinos.cn>
+X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -62,84 +62,153 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found more severe
-issue(s) in other patches of this series. This mail is only an FYI, in case
-you want to address the nit picks below when you respin.
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue(s) to consider.
 
-Low priority / nit picks for your consideration:
+Critical: 0 · High: 0 · Medium: 1 · Low: 0
 
-- [Low] The commit message overstates one failure mode.
-- [Low] The commit author address does not match the Signed-off-by
-  address.
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
+
+- [Medium] The FIN-byte guard in mptcp_inq_hint() (net/mptcp/protocol.c)
+  is wrong.
 
 --
 
-mptcp: add missing memory barriers for rcv_data_fin_seq
+mptcp: fix TFO SIOCINQ overflow in mptcp_inq_hint
 
-This commit adds an smp_wmb() between the rcv_data_fin_seq and
-rcv_data_fin stores in mptcp_update_rcv_data_fin(). It also adds a
-matching smp_rmb() between the two loads in mptcp_pending_data_fin(),
-so readers can't see rcv_data_fin == 1 together with a stale
-rcv_data_fin_seq.
+This patch changes mptcp_inq_hint() to compute the available bytes with
+mptcp_data_avail(), instead of ack_seq minus the head skb's map_seq. The old
+calculation overflowed on passive TFO connections. The patch also moves the
+DATA_FIN sequence check into a new mptcp_data_fin() helper, adds one byte
+for the FIN, and resets rcv_data_fin_seq in mptcp_disconnect().
 
-> On weakly-ordered
-> architectures, the reader could observe rcv_data_fin == 1 with a
-> stale (or zero) rcv_data_fin_seq, causing mptcp_check_data_fin()
-> to either process the DATA_FIN prematurely or skip it entirely.
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 259a16068afad..7ef37f978f5b1 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -558,6 +558,21 @@ static void mptcp_check_data_fin_ack(struct sock *sk)
+>  	}
+>  }
+>  
+> +static bool mptcp_data_fin(const struct mptcp_sock *msk, u64 *seq)
+> +{
+> +	u64 rcv_data_fin_seq;
+> +
+> +	smp_rmb(); /* pair with smp_wmb() in mptcp_update_rcv_data_fin() */
+> +	rcv_data_fin_seq = READ_ONCE(msk->rcv_data_fin_seq);
+> +	if (!before64(READ_ONCE(msk->ack_seq), rcv_data_fin_seq)) {
+> +		if (seq)
+> +			*seq = rcv_data_fin_seq;
+> +
+> +		return true;
+> +	}
+> +	return false;
+> +}
+> +
 
-[Severity: Low]
-Can the "skip it entirely" case actually happen?
+[ ... ]
 
-In mptcp_check_data_fin(), rcv_data_fin is only cleared on the true
-branch of mptcp_pending_data_fin():
+> @@ -2364,22 +2370,18 @@ static bool mptcp_move_skbs(struct sock *sk)
+>  static unsigned int mptcp_inq_hint(const struct sock *sk)
+>  {
+>  	const struct mptcp_sock *msk = mptcp_sk(sk);
+> -	const struct sk_buff *skb;
+> -
+> -	skb = skb_peek(&sk->sk_receive_queue);
+> -	if (skb) {
+> -		u64 hint_val = READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
+> +	u64 hint_val = mptcp_data_avail(msk);
+>  
+> -		if (hint_val >= INT_MAX)
+> -			return INT_MAX;
+> +	if (hint_val >= INT_MAX)
+> +		return INT_MAX;
+>  
+> -		return (unsigned int)hint_val;
+> +	if (READ_ONCE(msk->rcv_data_fin) ||
+> +	    sk->sk_state == TCP_CLOSE || (sk->sk_shutdown & RCV_SHUTDOWN)) {
+> +		if (mptcp_data_fin(msk, NULL))
+> +			hint_val += 1;
+>  	}
+>  
+> -	if (sk->sk_state == TCP_CLOSE || (sk->sk_shutdown & RCV_SHUTDOWN))
+> -		return 1;
+> -
+> -	return 0;
+> +	return (unsigned int)hint_val;
+>  }
 
-net/mptcp/protocol.c:mptcp_check_data_fin() {
-    ...
-	if (mptcp_pending_data_fin(sk, &rcv_data_fin_seq)) {
-		WRITE_ONCE(msk->ack_seq, msk->ack_seq + 1);
-		WRITE_ONCE(msk->rcv_data_fin, 0);
-    ...
-}
+[Severity: Medium]
+Can the TCP_CLOSE and RCV_SHUTDOWN arms of this condition add a FIN byte
+that was never received?
 
-So a false negative leaves the DATA_FIN pending. Each writer path also
-forces another evaluation later. mptcp_incoming_options() and the
-subflow.c callers call mptcp_schedule_work() after
-mptcp_update_rcv_data_fin():
+The only function that writes a real value to rcv_data_fin_seq is
+mptcp_update_rcv_data_fin() in net/mptcp/options.c. It sets the field
+together with rcv_data_fin:
 
-	    mptcp_update_rcv_data_fin(msk, mp_opt.data_seq, mp_opt.dsn64))
-		mptcp_schedule_work((struct sock *)msk);
+	WRITE_ONCE(msk->rcv_data_fin_seq,
+		   mptcp_expand_seq(READ_ONCE(msk->ack_seq), data_fin_seq, use_64bit));
+	smp_wmb(); /* ensure rcv_data_fin_seq is visible before rcv_data_fin */
+	WRITE_ONCE(msk->rcv_data_fin, 1);
 
-The other subflow.c writers are followed on the same CPU by the check
-in move_skbs_to_msk():
+The msk can reach TCP_CLOSE or RCV_SHUTDOWN without any DATA_FIN. One
+example is mptcp_check_fastclose() after the peer sends MP_FASTCLOSE:
 
-	if (mptcp_pending_data_fin(sk, NULL))
-		mptcp_schedule_work(sk);
+	mptcp_set_state(sk, TCP_CLOSE);
+	WRITE_ONCE(sk->sk_shutdown, SHUTDOWN_MASK);
 
->From that, a stale read only seems to delay the DATA_FIN.
+A subflow reset or error propagation, or a local shutdown(SHUT_RD), leads
+to the same state.
 
-The real problem looks like the premature case. If the reader sees
-rcv_data_fin == 1 with the initial rcv_data_fin_seq of 0, then
-!before64(ack_seq, 0) is true whenever bit 63 of ack_seq is clear.
-mptcp_check_data_fin() then bumps ack_seq, sets RCV_SHUTDOWN and moves
-the msk to CLOSE_WAIT, CLOSING or CLOSE before all data has arrived.
-The application would see an early EOF or truncated data.
+In these cases rcv_data_fin_seq is still 0, so mptcp_data_fin() evaluates
+!before64(ack_seq, 0). That reduces to (s64)ack_seq >= 0.
 
-Since this carries a Fixes: tag, could the commit message describe that
-user-visible effect instead of the "skip it entirely" wording?
+subflow_set_remote_key() sets msk->ack_seq to subflow->iasn, which is
+derived from a hash of the peer's key. The result therefore looks random
+per connection. Fallback connections start with ack_seq at 0, so for them
+the check is always true.
 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+There seem to be two possible outcomes:
 
-[Severity: Low]
-This isn't a bug, but the author address doesn't match the sign-off.
-The author is "Geliang Tang <geliang@kernel.org>", and the only
-Signed-off-by is "Geliang Tang <tanggeliang@kylinos.cn>".
+  - top bit of ack_seq clear: N queued bytes are reported as N + 1
+  - top bit set: an empty queue in TCP_CLOSE or RCV_SHUTDOWN reports 0,
+    where the old code returned 1
 
-checkpatch.pl will warn about this with FROM_SIGN_OFF_MISMATCH. The
-in-body "From: Geliang Tang <tanggeliang@kylinos.cn>" line may have
-been dropped.
+The commit message says:
 
-Could that From: line be restored, or a matching Signed-off-by added?
-The other patches in the series seem to have the same mismatch.
+    The FIN byte (+1) is guarded by checking rcv_data_fin, TCP_CLOSE, or
+    RCV_SHUTDOWN before calling mptcp_data_fin().
+
+Only the rcv_data_fin arm seems to guarantee that rcv_data_fin_seq holds a
+valid value.
+
+The new reset in mptcp_disconnect() has the same problem:
+
+	WRITE_ONCE(msk->rcv_data_fin_seq, 0);
+
+0 doesn't work as a "no FIN" marker here, because the comparison is
+modular against ack_seq.
+
+The TCP_CLOSE and RCV_SHUTDOWN arms also skip the rcv_data_fin read that
+the smp_rmb() in mptcp_data_fin() is meant to pair with. Subflow context
+writes rcv_data_fin_seq without holding the msk lock. A concurrent or torn
+(on 32-bit) value could therefore feed the same comparison.
+
+This still seems to be present at the end of the series. The later patch
+"mptcp: add mptcp_inq() for SIOCINQ" moves SIOCINQ to mptcp_inq(). However,
+mptcp_inq_hint() still feeds the TCP_CM_INQ cmsg in mptcp_recvmsg():
+
+	unsigned int inq = mptcp_inq_hint(sk);
+
+It also feeds the receive buffer autotuning in mptcp_rcv_space_adjust():
+
+	copied -= mptcp_inq_hint(sk);
+
+Should the +1 only be added when rcv_data_fin is set?
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1795348666.git.tanggeliang%40kylinos.cn
