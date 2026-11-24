@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795560304;
-	b=t7NSWPqd2IDE4yHsvk9B9nnX0Xb3vkGRUAkDnxGeowYRwpxT3A+1V1JYt5CRY4uRlN5C
-	 8LQfFO8peemnSJo3f1I+7emxrSs5VVUwknXakj62T0sDqyMAy0ruqvEBy3+n7TTbkNRl2
-	 tl+SN3DMjSH3dWSddeiP39j0DaYbO0qleCCPa7y9KQInFfCcU/GPlUXJTTVlMd1V0grcj
-	 sTYOSo6hJ+hBkA4SksHpcN817kxtHloQLlam/BIdPjm9/Y0DUBW+mZYOKu1R/SzoLj+yG
-	 5dsR6oU1uzdzZ0MxFeJ/sVmSV96debxbeVlhduD+yzfgZnzijgtSWPvLQgAhuaAyVag==
+	t=1795560356;
+	b=u9oVXBngcZEYcZF5fh2BjFcKVyiuOmbjxwHnC5A8E05RJ4ujMo67f5tcWigJHIsn9YaX
+	 7IgCki2Wc64mP798AukMJkcJ9jYoug3trjPKZ644BikFFUlhHqg6w0jtIqb+snpqww8Nf
+	 Us1CbBVER0/fBLFPdE+MjIQ7d09hL9b7yEwy5lgdwgB+oJv7cVNS/6aXxRAhFzQrkF3u6
+	 AZHjO0Bc+RbSkav0h5e1CBazAqwjoNNm8L5GCX3QUbsqtJpXle+z94fnJJdns/dpcSGwL
+	 kiks3+WOW7vkkkSbQLvYEGqUWJzQ4FzQYK0hhMkHZIzML9SXkYiVVmVxgGgzBuPkQsw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795560304;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795560356;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=gc+cfHpg14mWCZQ/0GqHFvz/YVfwMgpgRPdz9z7pT4I=;
-	b=ywGrd3hgxzWfnKJKHtyB9nnkTaD0nfxG6jf4IwLX54mRZWXzs674IwhuNXCyW/IfpE5A
-	 HsYsKKBVy+zroS7g2iPm4IO2FQruDzgMlGIFl1zFNeSjhRn9DQU3hfQCUPXseKyUUpbka
-	 +4EeISS2oAScNa17I1Y5l1CJrL3m+J5eFhm91CHA8QKP20hZNfPtFZZR06xGnG3YgST72
-	 zbON0BJQEh6g3H4j3Iqk5rk2Jn2X32CFOpAlxo0T7JIxUYHmD2ftieqcn22pZJdSelSty
-	 n6+3NSi6MJoPGYMdWC8wXSIxoCFm1Sd0iF6sWybb5TZh5s2LFcL7Lwdlr6Gy+02Fdug==
+	bh=CDdqShsWjfxXOeiqeSeVyjCHGnQL4GwD2gOTYO9A1pI=;
+	b=fMxTo9gHW3aNZBoWWqEMvIk+3M3C4MsE1XAvBltoZItJUOosxGGOFbF7qaib6cMZ2wU8
+	 fsoRbi3r7JaYVRvBP5N51a4JjVDAlrswcoCP8cd5qIfwxktC6rhm2xdYmkC30S+cehc65
+	 nLsUne2kL/qYA+w/Xig4zx2kAUC5zd/AvxsqX8FczLaQgBJphDc3qKW0vTFm47QN4Jogl
+	 b/FLiv+0YFbGaCE9Iu5kbYuekDrk3SmC7np/GjlaJnLwG4iurEJqF25DNejlxtAM2uM4S
+	 DDCNnTylvMSfS1BlM54kKX1BPdAKHXxT9bZl1YS0jQqJsJMLD6VbE2bolYXCBmQjE6w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=f6EPCCpB;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=T8NKXWN8;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE62606A327
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 22:45:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E32606A332
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 22:45:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=f6EPCCpB
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 750801F000C0;
-	Tue, 24 Nov 2026 22:45:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=T8NKXWN8
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5E5E1F000CF;
+	Tue, 24 Nov 2026 22:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795560304;
-	bh=gc+cfHpg14mWCZQ/0GqHFvz/YVfwMgpgRPdz9z7pT4I=;
+	s=k20260515; t=1795560355;
+	bh=CDdqShsWjfxXOeiqeSeVyjCHGnQL4GwD2gOTYO9A1pI=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=f6EPCCpBGCf8N04ons6/IvIwzMQIW6vGZlDej9ANv0VtovBNUqjm5hT1o9zIeDQrx
-	 HdA0FSeB/6E73hBWVuR9v6bCE98x2Y3ca0fMxwct5Bcx60kV+NbBmr1ToMqLDAQ7Lx
-	 y3nsY+XHAKsyUOstkq0YWGHYHeJhCZuBzLhpRWYYtxEqhHGx9Wf2lcbTdfSqF4YnxD
-	 qg9MXtpD8LTQNV72gPYzBf5FH88dL/s1tc9sN1RplDBmx5/2L7HMf0tt660MDakb64
-	 b+3c4743CqdGv6QE8Y+yi8WlbeazpiZekwA3lzljPTghwVI6ESEfH2r1PFA/8ZALY6
-	 tHOGtk7xehyeg==
-Message-ID: <sashiko-outbox-232153@kernel.org>
+	b=T8NKXWN8eQK/FOglfyCnYcGcRUk8zvuo8sy4u45ooHxnsfKX3EJoyXslbv8wez5wG
+	 mjNIb6LV684PXMPK+hG38t5EV4zMpZSh1SXMwgFgFhU3R03bYhSyWEXyUzY8AKr7jo
+	 OvP54L8nhLeVx40J3ASLa8uxJ4XlXhm6MK19c+FFtIODkdfkvBHg0vdZJ0Q9mDcptf
+	 AJ9sDOgo7IgqQteiCmHY8w1kJFx8fk6OxZtZT2dXCj0T0S/Nk+T2p7kEGATef7Fa4B
+	 sE6txUTJkmBcJIEAxMiCx2bMYMmMBSR9OVPI8vCkEq9vCHqG733g/4hXDERKvaAnUU
+	 nlkxVhx5FmexQ==
+Message-ID: <sashiko-outbox-232155@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-net v3 46/50] Squash to "bpf: Export mptcp packet
- scheduler helpers"
+Subject: Re: [PATCH mptcp-net v3 37/50] mptcp: keep the first byte after a
+ simult connect
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>, "MPTCP
  Linux" <mptcp@lists.linux.dev>
-In-Reply-To: <20261124-mptcp-cmason-fixes-v3-46-416c0920c73f@kernel.org>
+In-Reply-To: <20261124-mptcp-cmason-fixes-v3-37-416c0920c73f@kernel.org>
 References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
- <20261124-mptcp-cmason-fixes-v3-46-416c0920c73f@kernel.org>
+ <20261124-mptcp-cmason-fixes-v3-37-416c0920c73f@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 24 Nov 2026 22:45:04 +0000
+Date: Tue, 24 Nov 2026 22:45:55 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -63,71 +63,83 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue to consider:
-- [Medium] mptcp: mptcp_sched_get_send() skips mptcp_set_timeout() on
-  scheduled subflow
+- [Medium] mptcp: mptcp_syn_options() sets ssn_offset on MP_JOIN simult
+  connect
 --
 
-commit a82acd8ca33d023de6cf973e96c25c49bb5f9fc5
+commit dbb5c11e7bc9fc6242718c808b25e1938f5448b0
 Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Squash to "bpf: Export mptcp packet scheduler helpers"
+mptcp: keep the first byte after a simult connect
 
-This commit calls mptcp_set_timeout() in mptcp_sched_get_send() when a
-non-default scheduler is configured so that msk->timer_ival is initialized
-even if a subflow is already scheduled or the BPF scheduler does not set
-the timeout itself.
+This commit initializes subflow->ssn_offset when sending a SYN-ACK in
+TCP_SYN_RECV after a simultaneous connect and only updates it in
+subflow_finish_connect() when the incoming packet carries TCPHDR_SYN.
 
-> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
-> index 1e59072d478c9..01500f9f9f8a6 100644
-> --- a/net/mptcp/sched.c
-> +++ b/net/mptcp/sched.c
-> @@ -182,6 +182,10 @@ int mptcp_sched_get_send(struct mptcp_sock *msk)
->  		return -EINVAL;
->  	}
-> =20
-> +	/* as the default scheduler: the rtx timer needs an interval */
-> +	if (msk->sched && msk->sched !=3D &mptcp_sched_default)
-> +		mptcp_set_timeout((struct sock *)msk);
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 05b9c66aaed63..41eb39968a9a6 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -474,6 +474,11 @@ bool mptcp_syn_options(struct sock *sk, const struct=
+ sk_buff *skb,
+>  	 * in mptcp_established_options_mp()
+>  	 */
+>  	subflow->snd_isn =3D TCP_SKB_CB(skb)->end_seq;
 > +
->  	mptcp_for_each_subflow(msk, subflow) {
->  		if (READ_ONCE(subflow->scheduled))
->  			return 0;
-> @@ -189,6 +193,7 @@ int mptcp_sched_get_send(struct mptcp_sock *msk)
-> =20
->  	if (msk->sched =3D=3D &mptcp_sched_default || !msk->sched)
->  		return mptcp_sched_default_get_send(msk);
+> +	/* simult connect: the peer's SYN-ACK will not set ssn_offset */
+> +	if (unlikely(sk->sk_state =3D=3D TCP_SYN_RECV))
+> +		subflow->ssn_offset =3D tcp_sk(sk)->rcv_nxt - 1;
 > +
->  	return msk->sched->get_send(msk);
->  }
+>  	if (subflow->request_mptcp) {
+>  		if (unlikely(subflow_simultaneous_connect(sk))) {
+>  			WARN_ON_ONCE(!mptcp_try_fallback(sk, MPTCP_MIB_SIMULTCONNFALLBACK));
 
 [Severity: Medium]
-Does guarding mptcp_set_timeout() with msk->sched !=3D &mptcp_sched_default
-still leave msk->timer_ival at 0 when a subflow is already scheduled under
-the default scheduler?
+Can setting subflow->ssn_offset before checking subflow->request_mptcp
+leave an active MP_JOIN subflow with a valid ssn_offset after a crossed
+SYN?
 
-With the default scheduler, mptcp_set_timeout() is normally called inside
-mptcp_sched_default_get_send() -> mptcp_subflow_get_send().  However, a
-subflow can retain subflow->scheduled =3D=3D true after all pending data is
-acknowledged and mptcp_stop_rtx_timer() resets msk->timer_ival to 0.  For
-example, in ack_update_msk() during recovery, __mptcp_check_push() runs
-before __mptcp_data_acked() -> __mptcp_clean_una(): the push can schedule a
-second subflow and delegate MPTCP_DELEGATE_SEND right before
-__mptcp_clean_una() clears msk->first_pending and stops the rtx timer.
-When __mptcp_subflow_push_pending() later runs on that delegated subflow,
-mptcp_send_head(sk) is NULL, so the push loop is not entered and
-subflow->scheduled is never cleared.
+An active MP_JOIN subflow enters TCP_SYN_SENT with request_join =3D 1,
+remote_key_valid =3D 1, and mp_join =3D 0.  If a crossed bare SYN moves it =
+to
+TCP_SYN_RECV, mptcp_syn_options() now sets subflow->ssn_offset to the
+peer's ISN without falling back or resetting the subflow.  When a 3rd ACK
+with seq =3D=3D ssn_offset + 1 arrives in TCP_SYN_RECV,
+tcp_rcv_state_process() transitions to TCP_ESTABLISHED without calling
+subflow_finish_connect() and enters check_fully_established():
 
-On the next send, mptcp_sched_get_send() skips mptcp_set_timeout() above,
-sees READ_ONCE(subflow->scheduled), and returns 0 without calling
-mptcp_sched_default_get_send().  If __subflow_push_pending() then exits
-before its own mptcp_set_timeout() call (because mptcp_sendmsg_frag() fails
-or msk->snd_burst <=3D 0 after the first fragment), mptcp_reset_rtx_timer()
-arms the retransmit timer with msk->timer_ival =3D=3D 0, causing it to fire
-every jiffy.
+net/mptcp/options.c:check_fully_established() {
+    ...
+	if (TCP_SKB_CB(skb)->seq !=3D subflow->ssn_offset + 1) {
+		if (subflow->mp_join)
+			goto reset;
+		if (subflow->is_mptfo && mp_opt->suboptions & OPTION_MPTCP_MPC_ACK)
+			goto set_fully_established;
+		return subflow->mp_capable;
+	}
 
-Calling mptcp_set_timeout() unconditionally here (or in the early return
-when subflow->scheduled is set) would cover the default scheduler as well.
+	if (subflow->remote_key_valid &&
+	    (((mp_opt->suboptions & OPTION_MPTCP_DSS) && mp_opt->use_ack) ||
+	     ((mp_opt->suboptions & OPTION_MPTCP_ADD_ADDR) &&
+	      (!mp_opt->echo || subflow->mp_join)))) {
+		goto set_fully_established;
+	}
+    ...
+}
+
+Because seq =3D=3D subflow->ssn_offset + 1 now matches while mp_join is sti=
+ll
+0 and remote_key_valid is 1, an ACK carrying a DSS ACK marks the subflow
+fully established without MP_JOIN HMAC validation and triggers
+WARN_ON_ONCE(!__mptcp_check_fallback(msk) && !subflow->mp_capable &&
+!subflow->mp_join && !(state & TCPF_CLOSE)) in subflow_data_ready() if
+data arrives, while a bare ACK attempts TCP fallback on the parent msk
+instead of resetting the MP_JOIN subflow.
+
+Moving the subflow->ssn_offset assignment inside the
+subflow_simultaneous_connect(sk) block under if (subflow->request_mptcp)
+would avoid initializing it on MP_JOIN subflows.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261124-mptcp-cmas=
-on-fixes-v3-0-416c0920c73f@kernel.org?part=3D46
+on-fixes-v3-0-416c0920c73f@kernel.org?part=3D37
