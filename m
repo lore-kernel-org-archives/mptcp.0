@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795557697;
-	b=ERw7Kq7tqhWCCv4gztyMSm4oiJk80un3S4P1yFHtN0SnuFAVLvEZaYCvipm9gbi6yWou
-	 suL90vdglzDutgPGnNmafghj7clL4TyzbhINXbTl10tyctzaH8ierfAuVhqpz7UnOC3tw
-	 oeK2VTsbB4j1lJyuu56DpqiH6kr8OLManlfk0z/TCTugnLSh6Z+6JqZzj6yruR4wrOJfx
-	 NrkFHxNAen215f9H3LbFUK6z+YZSCuQB6EuORCnByXGdIZCSBj6C+73BLoMiCMBkJIe2e
-	 BVhrqgA66qre2qc2bbkohORI3j5A4UBSKp/tGBU5Qm16PnPxpXyQ53YfsK/gz2qwCbQ==
+	t=1795557698;
+	b=jHfUCNfzoMSZMQ7a+2XKjfhPSVZoSAf+E1i9/92kdC/45CduRmZdtLvvcRWCwqNWXi86
+	 uv2IhHH85Yzz3s6FDmPlZoPsODJsJjcKH8SYvQXAAJd7XHo+jK8B8twqy0JzGVjpZZ62F
+	 j7synGmZmlaV+nPFIOVE6mLE8qODRV4tVLOc+rh8mmynJ/z9F4agieC2wo2ijXb0UULDN
+	 OT52Zp4f4uNVu3B5jSrf8TvkbG6rERetGuA0C3tf3s77qk/k//QJDXvGfy/ll3dZdiw4Q
+	 5tapEy2neqiKhL/AgFF7tV6jFOJVeCV6ISfep6PhSrVGT+5LlGwsLUGwDT47z+38vlQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795557697;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795557698;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=MSb2J0ZqhG2VmwfH23ZJbs/41OHMAOYAQLojgljwPa4=;
-	b=fQGDKKATwmsRr0Ij2Yl2g3fLbk9wIFIefmFdGvMsHUk2BwQv8dm9WMjY7/Ex/Fuc8xJf
-	 Frf7J/O65Fh9CP1zL3cGnFWbTgLMB++dPwO0H5896HdfnMvNm0EmPEiEnEFTw1VT6ppaR
-	 aKplrwkGRuizpOkAl90oavxifACNAY9uctPlFcswCLAZ3fhrJI2EvbU+2vzVWPll9V4hP
-	 5UBgdRmsFRX3JVmP1174K4NECaXws65viuThP/sSyTio2eKVPJmb91T50nCwttHm8soLV
-	 jVqzrFJocV+YtwsfDG7TTBoVIRp2N06XwXdfrPKMCMoa4ikCOUxN2aMgUZNYX5AxpWw==
+	bh=tqIiU8oA3Ea6GzOf3YO9Deukk0xTiDwg/VILq8hG/NQ=;
+	b=DZiR4y7RtkKf7BuYCqnmjt9GM8RDO0tZZM5lMMJ/4B5lhZCKdmHbRb6Km1dunyzBTFYH
+	 qPsbRtHakuFRUpnDAhm/6iW0TM1zayHDm1+DtaiYbwT9BFZPLM4V01H/PV1cAIDk9aphr
+	 GLuYuZs8q4tlkGR39OPmPP6LmEQqeF3NGHrLxrhEuge2BFbz2DuV1KrILq7v5Hxmc+sci
+	 /qgjg2v5gY0f3+evs9fa1Zx0hcXXzuPBGxG/EcBSON2z2hSpNGFL/YOcwu/XS5EyCTBJu
+	 FLQXsTzZECJUOwKZ7EK3YMC7GBXvsImAJWH8VchdmSdPi18Ci1zZw0Eq+hiZ3bQbDXg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HMRHk11Z;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=D3X1fbfL;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0414606A31E
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 22:01:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D895B606A31E
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 22:01:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HMRHk11Z
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 008601F000E1;
-	Tue, 24 Nov 2026 22:01:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=D3X1fbfL
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE3281F000C0;
+	Tue, 24 Nov 2026 22:01:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795557697;
-	bh=MSb2J0ZqhG2VmwfH23ZJbs/41OHMAOYAQLojgljwPa4=;
+	s=k20260515; t=1795557698;
+	bh=tqIiU8oA3Ea6GzOf3YO9Deukk0xTiDwg/VILq8hG/NQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=HMRHk11Zuc9jqAzq5epRJodI0ypq1Zq9gQQOADzv4MN8Z0qvsGoqu/A1j5uzhiGj6
-	 Su/WIbq4vEFMtIb54abcTMKZ/C9cs9xo9FTVbeh8oAT0ziORfQ8ZZrS69FK+KQhqX7
-	 uy26mMWVLbMA75mQBl+QlaxNX+D3gMUQ9n30WxRjofnakGGEUptrNEht40+jCmCI9A
-	 DKhl4VrNtUjRVbh2YRGFbULcff1KakcYHyvbXpCGA71z/2BV87krhdL6h5XBh0PuD/
-	 s9xK5glVzx3BnJcCRBm0bbjSQcqrvO9/dQfg4EuVRd9mFWoNoO9UWYxgupoP+qLdxn
-	 tQZFl4in0z6xw==
+	b=D3X1fbfLsIBGw7lHnxOBg4BjcTrXVh4zuP7BppHhNGTndFR2ZhIHG3z57zLwF5+Fw
+	 ZQ8faAc00MEQ5XL40eCukMOdQf9u5JWDylNHsVqIykyWRTX5dqC7f9VCd7IojNaBFO
+	 WEJk27WMF/bECXNPO6HvdOcgHebfgFu0QtSM+cgjmaSM+XhCN7nIdzt5qeWYOUsLVx
+	 P88WL+VLoyklo3Q7LsEqHP/zbVrPmhkx16eeX+5jkU0nk46P6qT8pugq/TKxOPZPuk
+	 07hL/ad2cky4IkIqAnQByxY8FOAm9lRcdOSQ33hzop/rDqtCBDVg5pF/cZeusjIbCm
+	 AVU5O04dYYokA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 24 Nov 2026 22:59:49 +0100
-Subject: [PATCH mptcp-net v3 32/50] mptcp: reclaim forward memory after
- coalescing skbs
+Date: Tue, 24 Nov 2026 22:59:50 +0100
+Subject: [PATCH mptcp-net v3 33/50] mptcp: don't charge a shared page twice
+ at accept()
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,93 +55,119 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261124-mptcp-cmason-fixes-v3-32-416c0920c73f@kernel.org>
+Message-Id: <20261124-mptcp-cmason-fixes-v3-33-416c0920c73f@kernel.org>
 References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
 In-Reply-To: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
  Chris Mason <mason@kernel.org>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3133; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=kI2nu9d4O553MYbh4Xf7mn+DNy11OkedNos71ZehiQY=;
- b=kA0DAAoWfCLwwvNHCpcByyZiAGsGCQqhK6TAuy45gPcd1ft/Ou6W5kaaU2fN8cu94eCuldkfL
- oh1BAAWCgAdFiEEG4ZZb5nneg10Sk44fCLwwvNHCpcFAmsGCQoACgkQfCLwwvNHCpfZmwD/fSod
- 25AVwCMc4dd4FbjBcAZiBMLbQerdQ+stY5O9RzAA/3dcBj1eSSuX/V0vJzxwTk1e/bM8n6xLERx
- OlnnW9nAP
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3830; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=3M+uO3msi9DlDnR0ux8zXB1gpWarWZ39JrK6SLoroH8=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLZOLktOk494b0935zNYYqxDXubskFQ6uc683XVtmynn
+ x56lq7UUcrCIMbFICumyCLdFpk/83kVb4mXnwXMHFYmkCEMXJwCMJG7kYwMH/L/d7SpT82afuFL
+ 3J83ky6xXM16bqtjYvOr/c9kuWd74hkZ5on/0hZZ2xLxWlv1h9Tle+sbPd6tKrOdoy2j8P/csaJ
+ 6fgA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 From: Chris Mason <mason@kernel.org>
 
-If MPTCP sockets receive many small segments whose data stays queued,
-TCP can stall on the whole host, and an MPTCP server can be OOM killed
-in its memory cgroup, although almost no memory is in use.
+accept() of an MPTCP connection that has already received data can leak
+one page of memory cgroup charge, and the leaked charges can get the
+server OOM killed.
 
-When the MPTCP socket (msk) takes over an skb from a subflow,
-mptcp_borrow_fwdmem() adds skb->truesize to the sk_forward_alloc of the
-msk, and the subflow reserves new memory for the next skb. Both
-sk_forward_alloc and sk_rmem_alloc count against tcp_mem and the memory
-cgroup, but only sk_rmem_alloc has a limit, sk_rcvbuf, so what queueing
-the skb does not move to sk_rmem_alloc has to be released. But
-mptcp_try_coalesce() moves only the increase in truesize of the skb that
-receives the data, and skb_condense() in mptcp_data_queue_ofo() can
-lower skb->truesize, so the rest piles up in sk_forward_alloc.
+At accept(), __inet_accept() charges the MPTCP socket (msk) for the
+memory that it holds, rounded up to whole pages, and
+mptcp_graft_subflows() does the same for each subflow. A page is
+uncharged only once, when the socket that holds it releases it, so
+rounding up each socket on its own is only correct while each page
+belongs to one socket. But for each skb that the msk takes over from a
+subflow, it borrows skb->truesize bytes from the pages that the subflow
+reserved, so the two can share a page:
 
-The fix used here is to return every whole page of sk_forward_alloc with
-sk_mem_reclaim(), in mptcp_try_coalesce() once the merged skb is freed,
-and in mptcp_data_queue_ofo() once the skb is queued.
+    reserved by the subflow      4096 bytes  1 page
+      now held by the msk         896 bytes  charged for 1 page
+      still held by the subflow  3200 bytes  charged for 1 page
+
+The fix used here is to keep a running sum of what the msk and its
+subflows hold, and to let the new mptcp_charge_subflow() charge each
+subflow only for the pages that it adds to the rounded-up sum.
 
 This issue has been found with the help of an LLM, and reproduced in a
 VM, with the reproducer shared with the original version of this patch:
-a remote peer sends 33000 segments of one byte after a hole in the data
-sequence, which are merged in the out-of-order queue. Without this
-patch, the memory forward-allocated by the MPTCP socket -- msk_f -- grew
-with each merged segment, above 29 MB, versus 3200 bytes with it:
+an MPTCP server in a memory cgroup, the first byte of the client
+arriving before accept(). Without this patch, 4096 bytes stayed charged
+to the memory cgroup for each connection, after its end:
 
-  SNAP label=stage1-1-connections tcp_mem_pages=7168 [...] msk_f=29445248 [...]
-  [...] OFOQueue=33000 OFOMerge=32862 [...]
+  SNAP label=after-1000 rounds=1000 sockets_left_in_srv=0 [...] c_sock=4096000 [...]
+  SNAP label=after-5000 rounds=5000 sockets_left_in_srv=0 [...] c_sock=20480000 [...]
 
-With more connections, the original version of this patch reported that
-the TCP memory went above tcp_mem[2], stalling the other TCP
-connections, or that the memory cgroup went above its limit.
+With a memory limit, the original version of this patch reported that
+the server was killed by the OOM killer after about 14,400 connections.
 
 Fixes: 9db5b3cec4ec ("mptcp: borrow forward memory from subflow")
 Signed-off-by: Chris Mason <mason@kernel.org>
-[ Shorter comment. Commit message: the rest of the borrowed amount has
-  to be released + how the issue was found, and its symptoms. ]
+[ Shorter comment. Commit message: how the issue was found, and its
+  symptoms. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Note (Clashiko on v2): with an owned skb, the new reclaim is a no-op,
-sock_rfree() having already reclaimed: the comment is for the borrowed
-skbs, the ones needing it.
+Note (Clashiko on v2): the backlog can still be charged twice here: this
+is fixed by the next patch.
 ---
- net/mptcp/protocol.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ net/mptcp/protocol.c | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index f3dd15293bc8..f8cb585da0b3 100644
+index f8cb585da0b3..504fe4a9954f 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -197,6 +197,9 @@ static bool mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
- 	sk_mem_charge(sk, delta);
- 	kfree_skb_partial(from, fragstolen);
- 
-+	/* release what is left of the borrowed 'from' truesize */
-+	sk_mem_reclaim(sk);
-+
- 	return true;
+@@ -4664,10 +4664,26 @@ static int mptcp_listen(struct socket *sock, int backlog)
+ 	return err;
  }
  
-@@ -422,6 +425,9 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
- end:
- 	skb_condense(skb);
- 	skb_set_owner_r(skb, sk);
++/* The msk and its subflows share pages: charge their rounded-up sum */
++static int mptcp_charge_subflow(struct sock *sk, struct sock *ssk, int mem)
++{
++	int new_mem = mem + ssk->sk_forward_alloc +
++		      atomic_read(&ssk->sk_rmem_alloc);
++	int amt = sk_mem_pages(new_mem) - sk_mem_pages(mem);
++	gfp_t gfp = GFP_KERNEL | __GFP_NOFAIL;
 +
-+	/* skb_condense() can shrink the truesize borrowed from the subflow */
-+	sk_mem_reclaim(sk);
- }
++	mem_cgroup_sk_inherit(sk, ssk);
++	if (amt > 0)
++		mem_cgroup_sk_charge(ssk, amt, gfp);
++	kmem_cache_charge(ssk, gfp);
++	return new_mem;
++}
++
+ static void mptcp_graft_subflows(struct sock *sk)
+ {
+ 	struct mptcp_subflow_context *subflow;
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
++	int mem;
  
- static void mptcp_init_skb(struct sock *ssk, struct sk_buff *skb, int offset,
+ 	if (mem_cgroup_sockets_enabled) {
+ 		LIST_HEAD(join_list);
+@@ -4685,6 +4701,9 @@ static void mptcp_graft_subflows(struct sock *sk)
+ 		__mptcp_flush_join_list(sk, &join_list);
+ 	}
+ 
++	/* What __inet_accept() just charged for the msk, before rounding up. */
++	mem = sk->sk_forward_alloc + atomic_read(&sk->sk_rmem_alloc);
++
+ 	mptcp_for_each_subflow(msk, subflow) {
+ 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+ 
+@@ -4700,7 +4719,7 @@ static void mptcp_graft_subflows(struct sock *sk)
+ 			goto unlock;
+ 
+ 		__mptcp_inherit_cgrp_data(sk, ssk);
+-		__mptcp_inherit_memcg(sk, ssk, GFP_KERNEL);
++		mem = mptcp_charge_subflow(sk, ssk, mem);
+ 
+ unlock:
+ 		release_sock(ssk);
 
 -- 
 2.55.0
