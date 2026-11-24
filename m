@@ -1,56 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795533997;
-	b=hOzxRT7x+ExIGiLue9MgVnn0mEnP7V9wjkLGKDrnQfmYdOx+pZy0sna9Miu3/CKLOEXW
-	 qvXkxj+/fAwwju677kCkAJY5sZuF2fdj71XdYqtlbdx5a868UY+t0os5wm+Y3lBKfjRvz
-	 nl3iVPAvuv1mp031i5C024e34CwZmTFF7zgyBwhb8xVSk+a9EL/5G8tIpgn6GdYMz3p+C
-	 2Z5pTADuZEvfnfyvyak8yIhNUUsUvY9SZscNvKcpfQk8hFLUQzF1fTw6to9E1CmlQSApY
-	 pI8Uw64OdT7vTQN7xUIdgfTN+A7E81rWrTCzJ//Snxt0myrXVCxNFeiyG8HaUErY6ug==
+	t=1795537934;
+	b=fibyR4mdlPxtIp8copGTRg1xP2rgcXlRnB72VYVXFinCmnbkpbRmi44ysx+PyA/68Ro1
+	 GFGt4BLsHZn+FaSrfHeOmNPnT0upZ6caw/GaugFRKNDncLWRvDUXlYfpF/dymiR0BusOE
+	 TOaxMM5xPh3wkpXUxhemLfi7D2O58IYEc9fjL/zp3aKjg4sajRdFW+dA1k+j1ksgdXThL
+	 Lg+7zk83fbFghEOdF3CDjzfds2RrW1OKjYGR4ocaTJD6cgQ2IM0vulayZxtj7eEkz8NOE
+	 /W6+cSs92kPm8bQcln1Ky62ETUXEKnkCrAWUSNIt3WM/8feiPBXDieyUyaw7nmq92gQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795533997;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=JIt/okRqpopLzlEs/I2qtC6yb4cOIpN3Wy0aj1R3W/s=;
-	b=aVLW3LdmqRAbUIEfNElarV/Wdwt3gQF0eH2dvw+JDkp06Ffd7E/4zi8ZFdklnoxlMJEn
-	 8r7TwwEs1Zo8EeqbfJXX98jpPXPUW6J3Ip+sXT9g9jK/nW0und0ATrDFUXXsY/KlZ+nUN
-	 lRi/TQclonbchkMDHjEDYmTfehGAKe3u+87ye8wUEQC/Z2sSe+KAyI+ULaDzm1jkB/IlZ
-	 2HTKu6Xk3jE1GXBvzlM7nWCyXiSkAdSb1FvFaoFgTtQjtqYDxttNFP06tGUEp/Wg8qYmO
-	 mHf0xKdQJGaQmXsUr8+TigmBbSqBA4KmUTSLpGf3BKqwD5QlOlvHbbOwpyOk2gQXtHg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795537934;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=yzDOW1zG9/3kXSnyibd4oXEO0Iy4OXMD0dlWjeA5kAs=;
+	b=144a7LRECBZzbVOU/dXtMudl7E00RjC3hwHV79dj5pCYKqQmWV71192Rf7YeV3BRQB+c
+	 CG2NFXAEddzSE/GK5PuEx+jBEdYEuDJGWJUNs7cm+twX2qiRHtHiUyk62umhj5mvUxZ8G
+	 4ethZJkTBRy3419QROcBWueDS5+I48rNt7WDREw5zKsXvmaSZYhhoTC/p5QgFQnrDKKcq
+	 5Lx9hotNjPLvyd1Hdy+hdx4nfTwhdZMnk04NEcB9Gg2v1Qsx+j9cumOPDrwrbunwS5r2p
+	 5keoL2rD4ddwJsCa1hsxDA6xJusIrMH74HhB00V6k1X4CSepyzza2aOWtDiz23r47fA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jGzCkHPj;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="h/eJhUo/";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1C0606A337
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 15:26:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3C9606A31E
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 16:32:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jGzCkHPj
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D92C31F000E0;
-	Tue, 24 Nov 2026 15:26:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=h/eJhUo/
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AFCD1F000D8;
+	Tue, 24 Nov 2026 16:32:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795533997;
-	bh=JIt/okRqpopLzlEs/I2qtC6yb4cOIpN3Wy0aj1R3W/s=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=jGzCkHPjzZWApHcwY15MSvVbUxxpR6HweClAYU2mbFE8HVnBC2U8gHVjpIkhlMroc
-	 txTMnhRnQEGjODvm5sW7QFw4dZ9H8M8rO4uhXdYaDi2aV/oKxnjl7Jx6lLaQpnz4Ix
-	 H7rgYlmERgL23z0YZM582lSz7tVLK1rr+Br0RdZMilLCkLAs5Rzrv8JFkNxyBMxNoi
-	 KkoRL9Drc+9oMjRhEwnj/l8SCq5bGeI8rO+pf8VNHx1RoBAoyXYmRdgjartgztTaca
-	 Hu5iGRJo9YnTqMrTG8uMHhAumv/1GLQ5NUlh3SBUkrpjJY07z/mlNmfGnPzqHankUK
-	 qPLyO2jh/I4sg==
-Subject: Re: [PATCH mptcp-net v3 4/4] mptcp: add mptcp_inq() for SIOCINQ
-From: netdev-bot+sashiko@kernel.org
-To: geliang@kernel.org
-Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Tue, 24 Nov 2026 15:26:36 +0000
-Message-ID: <179553399645.3133.8807553916762589643@kernel.org>
-In-Reply-To: <bb8866b3e5b103dab9102d27d13cf1c91556f707.1795396910.git.tanggeliang@kylinos.cn>
-References: <bb8866b3e5b103dab9102d27d13cf1c91556f707.1795396910.git.tanggeliang@kylinos.cn>
-X-sashiko-severity: Medium
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20260515; t=1795537934;
+	bh=yzDOW1zG9/3kXSnyibd4oXEO0Iy4OXMD0dlWjeA5kAs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=h/eJhUo/RgP3FCTrCyJUIAYaRrMU2slKjkn6gJ//+lMf7oauAJAH52PmMRSVZRN21
+	 x13zIt4N6AAIVpTPA9OdlSqyxoKzPRBAa1vNLmqMBDIzCmwylrYKEkm8MXLfi8ZdNy
+	 TNl0HnxjRMIZo6xXQqWx1ObH/VOk5U9MjKehiNX/At96nNxHKW92m1rhlByP4H3r9e
+	 nRVbinkkGji6YsWP17XJSFGQGUjLenvEXQpYVdC4MwiYDPwNmD6rxxIcOXz3Q7+eNm
+	 YiTDVsRxwLB5PFmX+IFUTk2eK73lKtfsrsAP5GOoxHuuNzeI6Lg0PT9hM3ghbWTeo5
+	 1aUcQdh0T1kkw==
+Message-ID: <2a05dabe-0f74-4c66-8c62-e68169566d8a@kernel.org>
+Date: Tue, 24 Nov 2026 17:32:11 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -60,77 +51,79 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net v2 27/62] mptcp: report sf aborts during
+ deferred connect
+Content-Language: fr
+To: netdev-bot+sashiko@kernel.org
+Cc: mptcp@lists.linux.dev, kuba@kernel.org
+References: <20261121-mptcp-cmason-fixes-v2-27-00327fd1de1f@kernel.org>
+ <179541555209.3133.8166839441596353366@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <179541555209.3133.8166839441596353366@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue(s) to consider.
+On 23/11/2026 07:32, netdev-bot+sashiko@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found more severe
+> issue(s) in other patches of this series. This mail is only an FYI, in case
+> you want to address the nit picks below when you respin.
+> 
+> Low priority / nit picks for your consideration:
+> 
+> - [Low] mptcp_sendmsg_fastopen() (net/mptcp/protocol.c:1979-1986) adds an
+>   early `return 0` for 'DEFER_CONNECT set on the msk but cleared on…
+> - [Low] The new comment in mptcp_sendmsg_fastopen()
+>   (net/mptcp/protocol.c:1976) says 'subflow aborted by tcp_abort(): its…
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 0
+Yes, I can update the commit message and comment...
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
-
-- [Medium] The commit message describes one user-visible change to
-  SIOCINQ/FIONREAD: N is reported instead of N+1 when N bytes are unread…
-
---
-
-mptcp: add mptcp_inq() for SIOCINQ
-
-This adds mptcp_inq(), which computes the readable bytes at the MPTCP level
-using mptcp_data_avail(). SIOCINQ switches from mptcp_inq_hint() to
-mptcp_inq(), so FIONREAD no longer includes the FIN byte.
-
-> Unlike mptcp_inq_hint(), mptcp_inq() does not include the FIN byte. Switch
-> SIOCINQ from mptcp_inq_hint() to mptcp_inq() so that FIONREAD reports N
-> (not N+1) when N bytes are unread with DATA_FIN pending, matching TCP's
-> tcp_ioctl() which subtracts the FIN byte.
-
-[Severity: Medium]
-Is this description complete? Switching mptcp_ioctl(SIOCINQ) to mptcp_inq()
-in net/mptcp/protocol.c changes FIONREAD in more cases than the pending
-DATA_FIN case described here.
-
-Before this series, an empty receive queue in TCP_CLOSE or with RCV_SHUTDOWN
-set hit this exit in mptcp_inq_hint():
-
-	if (sk->sk_state == TCP_CLOSE || (sk->sk_shutdown & RCV_SHUTDOWN))
-		return 1;
-
-So FIONREAD returned 1, and mptcp_inq() now returns 0. The cases affected
-are:
-
-  - EOF after a processed DATA_FIN (mptcp_check_data_fin() sets
-    RCV_SHUTDOWN)
-  - a never connected socket (mptcp_ioctl() only rejects TCP_LISTEN)
-  - a socket that moved to TCP_CLOSE after a reset
-  - a local shutdown(SHUT_RD)
-
-After the previous patch in this series ("mptcp: fix TFO SIOCINQ overflow
-in mptcp_inq_hint"), mptcp_inq_hint() adds the extra byte based on socket
-state, whether or not a FIN was received:
-
-	if (((sk->sk_state == TCP_CLOSE || (sk->sk_shutdown & RCV_SHUTDOWN)) &&
-	     !READ_ONCE(msk->rcv_fastclose)) ||
-	    (READ_ONCE(msk->rcv_data_fin) && mptcp_data_fin(msk, NULL)))
-		hint_val += 1;
-
-With N bytes queued after a local shutdown(SHUT_RD), or in a TCP_CLOSE
-state that is not a fastclose with no FIN received, SIOCINQ reported N+1
-after that patch. This patch brings it back to N. TCP_CM_INQ still uses
-mptcp_inq_hint() and keeps the +1.
-
-Since that +1 is not limited to a received DATA_FIN, is "mptcp_inq_hint()
-... include the FIN byte" accurate?
-
-The new values match what tcp_inq() returns, so the code change itself looks
-fine. This patch carries a Fixes: tag, so it is likely to be backported to
-stable. Could the commit message say that FIONREAD now returns 0 instead of
-1 at EOF and on unconnected sockets? Could it also say that this patch needs
-to go with its parent to undo the N+1 that the parent introduced for
-SIOCINQ?
-
+Cheers,
+Matt
 -- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1795396910.git.tanggeliang%40kylinos.cn
+Sponsored by the NGI0 Core fund.
+
