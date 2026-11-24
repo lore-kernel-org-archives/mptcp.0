@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795560746;
-	b=Ot2qpBYp6aRyTRf6h35Xy75DzIQEL5iNrvAwUgFofog9nh8AC2kaBGPoCVPcYBDzPPYT
-	 I5pWsQ3qG/AGoLhyO6woxRWeEAOW7YksbwLdjlW8i2Y7fvHPr/FDJobJo0vnXNIvrcuf5
-	 t/uCj4AquVOErLE5EeamN0M/P2RTy6Sb6yvns3jqzBGlchPPL1+FIX47RblXzuPpkcEFg
-	 FuPbAeZmGdknFLK7bAimwfzfiV2LsYU/qzjF7AsoA2OWCEc7xogEq8Ti5xXfGhI4HOWqo
-	 TEiQW/l/HfDKpFynOT0AaNDGztFfd7VOaisOJIWqtldp3c7Y43p0MPxyvgrK1YwLqfQ==
+	t=1795563039;
+	b=E75Q4iANP9OiPnAHY0FSnaAAasga8ljr8lFVeKwJe5Ab3aWds+Qa4y9RGRw8Qbmpv6VE
+	 froLeeYwKFrbbjO7cZsnFanlzPoUV/eKYIcvDKEJA02SkTjGOME5BKFjX9JpTsmH90XFF
+	 3ji/nDpGeT0es4B7SVr4mM6IuzlNgTmYQGWjehy8JqDSM0uvpsnjFFv8wI4CaaqjBU1io
+	 yANvU+PQpqv8gH29bAb6YG3cyr3EiKW88MPo4Z7MwEBmvuaRm1PNHYXdseWAsY+WO0vRx
+	 2YhNSx7Ukr5TiHgSs+A6TBs6IkfFNh962dP0xQYZiNQoTQhJvM9jm5sQASKPVB8Xo+Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795560746;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=LETH7OgAmG+334Ij7eNqcfK+sy6+4c8Y8aoko3Z9OGg=;
-	b=pY+nE3tNCs4c4aFOK21vRKPMDxvK+e1D9rUhj8A10bWyU4CoSNzeFJfDJIWzLKts9fZS
-	 /zEkbSLVIY9pXtNHKYye7itW04DsEU1wt0OdC61+uUq81pofHhtFVQhVObQgWnzK2FmF+
-	 9RHQdaPJLr5k1uMx9csa2SWWP522utsSb1MtdIizi/lBlUbt4re3Kw5rZP2uRO3iEPT5c
-	 +vy4rWqrwd31owMo4+cjqnSXMkUEL/ejEPO8LIEqz5Q8OHH2Wz0oVY0TUIilhpTydFbi5
-	 kso3754Ru5zbBX9AXQ2W/Hn551cMQaPQEfrtIbgZWOJ21V8Q1ZYaW7tBABlMeQymtvQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795563039;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=EjOqGS4g84AidL/UHivCcBsk99dwz+GvluKlncfMXm0=;
+	b=KvUNiVYc1L5GaZdOAdtp5zCxO9sQFds1rYN/2g9lFblD3eGFUnFL9xkj2ASl412HueWM
+	 ezzFwRqeQ1NQvzadIA6l1NSD9nojjUmDqyL0i0h1NmtxA/xtom4vOxURnx7taTj+hC1Q/
+	 juj2Pbc3ELfzJD8oekHKIN69dxhmUvmviXuDFRedSvQ7te6h9a/er7+/uM4SA9Ic99uM0
+	 U9Pyn/mxOr1Qu+h1zZelu8IomozUQjnLs10OC4m95PJcTMicXTsFoTcLJbfSmlnfFi1PZ
+	 LoODaNcbNp5A7knhiMK3xAGULyphvuFcA5iiCWWlilI6L0vxirlspdt7lGg1XZokfDQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YcHj1m5U;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WjQvY6BQ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2F4606A321
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 22:52:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0624D606A323
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 23:30:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YcHj1m5U
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAD8B1F000C4;
-	Tue, 24 Nov 2026 22:52:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WjQvY6BQ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2796B1F000C6;
+	Tue, 24 Nov 2026 23:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795560746;
-	bh=LETH7OgAmG+334Ij7eNqcfK+sy6+4c8Y8aoko3Z9OGg=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=YcHj1m5UlM2kphhB/qAqUFmX0BBaXKMtUtghIUZbJvI9gSDlSY5l4jdzj3Tu+BEip
-	 KOcbiSDvto7mEAqdeoQvaJc8fWTGSBzJFbo3w1ACNMzLOlpE6oLR75d1S9jr2T3+j7
-	 s1pNfoscdQFYUSQg6UMGkD6jqU4WQJ3ioO0v/i9tIn4TpQtUZWJqqGmL2dI0WrknBf
-	 Q1wpu2EiLQ1OeCtMfS2pT9bx3W6z50IMaP9NqvC42FsEHpWhwHEj32jYtIm+/mckyr
-	 XzLZlTFq3dJ60HWIjpnZ5MsRRvy57n5js9aqgBm0S+SLRQOE0b/Ut64lfzXgTRBQfG
-	 vnOFwH1zjROSg==
-Message-ID: <sashiko-outbox-232164@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next mptcp-net v3 48/50] mptcp: report errors as
- TCP does when closing
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>, "MPTCP
- Linux" <mptcp@lists.linux.dev>
-In-Reply-To: <20261124-mptcp-cmason-fixes-v3-48-416c0920c73f@kernel.org>
-References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
- <20261124-mptcp-cmason-fixes-v3-48-416c0920c73f@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 24 Nov 2026 22:52:25 +0000
+	s=k20260515; t=1795563038;
+	bh=EjOqGS4g84AidL/UHivCcBsk99dwz+GvluKlncfMXm0=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=WjQvY6BQwoXWhvWemGw0Jlykt++PcsfeGiAKc4nV/Da8ptvILlku+Tt6WFheqwV9C
+	 Llrmkuvh4rzOjJ2e22N1LDX+2a70aNWlI30avZRdRU7M53rPlJXUVIG//jB6wv1BV8
+	 4xnkjO4BGpS0/pqAulxRfEJuEvWZu+z80OFcMltJ/gm4MEzfQ2WyiH718Lm7gYv9yo
+	 SWqOMhraFo8YsCEKWuKzlrjfhdAZf1YEYDcUgO6psxu3zCsiu15ADkrevArYLjELmV
+	 dvu4gmaSzoUkQmEuc1qw2AjLEJiNoldAJYn9bwQtSXjnUlUhsSSsb+dj2/abFRMQc9
+	 ZJr0Xpb1oRCbA==
+Subject:
+ Re: [PATCH mptcp-next v8 1/7] ipv4: fix uninitialized memory in zerocopy cmsg
+From: netdev-bot+sashiko@kernel.org
+To: geliang@kernel.org
+Cc: mptcp@lists.linux.dev, kuba@kernel.org
+Date: Tue, 24 Nov 2026 23:30:37 +0000
+Message-ID: <179556303770.3133.17186828372504774658@kernel.org>
+In-Reply-To: <2819758329599addb172d144f078727112ecf17c.1795421388.git.tanggeliang@kylinos.cn>
+References: <2819758329599addb172d144f078727112ecf17c.1795421388.git.tanggeliang@kylinos.cn>
+X-sashiko-severity: Medium
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -60,229 +60,118 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 4 potential
-issues to consider:
-- [Medium] mptcp: premature TCP_CLOSE and wakeup before
-  mptcp_close_err() on timeout
-- [Medium] mptcp: emulated fallback DATA_FIN on reset causes EPIPE in
-  mptcp_close_last_err()
-- [Medium] mptcp: missing mptcp_check_data_fin_ack() call in
-  mptcp_check_rcv_close()
-- [Medium] mptcp: skipped mptcp_check_rcv_close() in __mptcp_close_ssk()
-  when ESTABLISHED
+Thank you for your contribution! Sashiko AI review found 2 potential
+issue(s) to consider.
+
+Critical: 0 · High: 0 · Medium: 1 · Low: 1
+
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
+
+- [Medium] The commit message describes an uninitialized-memory leak that
+  cannot happen in the current tree.
+- [Low] The commit metadata has an author/sign-off identity mismatch.
+
 --
 
-commit c9c65f9a90b8849493c3af38e75cc7959566f4e9
-Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+ipv4: fix uninitialized memory in zerocopy cmsg
 
-mptcp: report errors as TCP does when closing
+This patch adds an early return to ipv4_datagram_support_cmsg() when
+ee_origin is SO_EE_ORIGIN_ZEROCOPY. The stated reason is that the IP_PKTINFO
+path reads ip_hdr(skb)->saddr on zerocopy completion skbs, which have no IP
+header, and so leaks uninitialized memory to userspace.
 
-This commit updates MPTCP socket closing paths to set SHUTDOWN_MASK and
-propagate subflow or state-dependent socket errors when the last subflow
-closes or the close timeout expires, matching tcp_done_with_error().
+> Fixes: 829ae9d61165 ("net-timestamp: allow reading recv cmsg on errqueue with origin tstamp")
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/648
+[Severity: Low]
+This isn't a bug, but the author address (geliang@kernel.org) doesn't match
+the Signed-off-by address (tanggeliang@kylinos.cn). checkpatch reports this
+as FROM_SIGN_OFF_MISMATCH.
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 016b16b3cc925..0a7600aea181e 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -518,6 +518,56 @@ static void mptcp_close_wake_up(struct sock *sk)
->  		sk_wake_async(sk, SOCK_WAKE_WAITD, POLL_IN);
->  }
-> =20
-> +/* Mirror the tcp_reset() error propagation */
-> +static int mptcp_reset_err(const struct sock *sk)
-> +{
-> +	int err;
+Could the sign-off use the author address, or the author be changed to
+match? The other patches in this series have the same mismatch.
+
+> diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
+> index e06c1f48ecad6..db15a57cccf16 100644
+> --- a/net/ipv4/ip_sockglue.c
+> +++ b/net/ipv4/ip_sockglue.c
+> @@ -504,6 +504,12 @@ static bool ipv4_datagram_support_cmsg(const struct sock *sk,
+>  	if (ee_origin == SO_EE_ORIGIN_LOCAL)
+>  		return false;
+>  
+> +	/* Zerocopy completion notifications don't have IP headers,
+> +	 * so IP_PKTINFO cmsg is not applicable.
+> +	 */
+> +	if (ee_origin == SO_EE_ORIGIN_ZEROCOPY)
+> +		return false;
 > +
-> +	switch (sk->sk_state) {
-> +	case TCP_SYN_SENT:
-> +		err =3D ECONNREFUSED;
-> +		break;
-> +	case TCP_CLOSE_WAIT:
-> +		err =3D EPIPE;
-> +		break;
-> +	default:
-> +		err =3D ECONNRESET;
-> +	}
-> +
-> +	return err;
-> +}
-> +
-> +/* No more data can be exchanged: report it, as tcp_done_with_error() do=
-es */
-> +static void mptcp_close_err(struct sock *sk, int err)
-> +{
-> +	WRITE_ONCE(sk->sk_err, err);
-> +	/* This barrier is coupled with smp_rmb() in mptcp_poll() */
-> +	smp_wmb();
-> +	WRITE_ONCE(sk->sk_shutdown, SHUTDOWN_MASK);
-> +	mptcp_set_state(sk, TCP_CLOSE);
-> +	if (sock_flag(sk, SOCK_DEAD))
-> +		return;
-> +
-> +	mptcp_close_wake_up(sk);
-> +	sk_error_report(sk);
-> +}
-> +
-> +/* As TCP: the error of the last subflow, e.g. ETIMEDOUT, but after a re=
-set
-> + * (EBADMSG: by MPTCP) or without error, it depends on the msk state
-> + */
-> +static void mptcp_close_last_err(struct sock *sk, int err)
-> +{
-> +	switch (err) {
-> +	case 0:
-> +	case ECONNREFUSED:
-> +	case ECONNRESET:
-> +	case EPIPE:
-> +	case EBADMSG:
-> +		err =3D mptcp_reset_err(sk);
-> +	}
-> +	mptcp_close_err(sk, err);
-> +}
 
 [Severity: Medium]
-Can mptcp_close_last_err() report EPIPE instead of ECONNRESET when a
-fallen-back subflow is reset while mptcp_worker() holds the msk socket
-lock?
+Before this patch, could ipv4_datagram_support_cmsg() ever reach
+ip_hdr(skb)->saddr for a zerocopy notification?
 
-When msk->first receives a TCP RST in TCP_ESTABLISHED while mptcp_worker()
-holds lock_sock(sk), subflow_error_report() defers __mptcp_error_report()
-via MPTCP_ERROR_REPORT, and subflow_sched_work_if_closed() sets
-msk->rcv_data_fin =3D 1 and MPTCP_WORK_CLOSE_SUBFLOW because
-subflow_is_done(ssk) is true on TCP_CLOSE:
+The commit message says ipi_ifindex "aliases the ops pointer in
+ubuf_info_msgzc stored in skb->cb" and is non-zero. But the only producer
+of SO_EE_ORIGIN_ZEROCOPY error queue skbs, __msg_zerocopy_callback() in
+net/core/skbuff.c, clears skb->cb before it queues the skb:
 
-net/mptcp/protocol.c:mptcp_check_data_fin() {
+net/core/skbuff.c:__msg_zerocopy_callback() {
     ...
-		/* on fallback, also emulated after a reset: check for a FIN */
-		if (!__mptcp_check_fallback(msk) ||
-		    (msk->first && sock_flag(msk->first, SOCK_DONE)))
-			sock_set_flag(sk, SOCK_DONE);
-		smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
-
-		switch (sk->sk_state) {
-		case TCP_ESTABLISHED:
-			mptcp_set_state(sk, TCP_CLOSE_WAIT);
-			break;
+	serr = SKB_EXT_ERR(skb);
+	memset(serr, 0, sizeof(*serr));
+	serr->ee.ee_errno = 0;
+	serr->ee.ee_origin = SO_EE_ORIGIN_ZEROCOPY;
     ...
 }
 
-Although mptcp_check_data_fin() avoids setting SOCK_DONE when the fallback
-subflow was reset without a FIN, it still advances sk->sk_state from
-TCP_ESTABLISHED to TCP_CLOSE_WAIT (or from TCP_FIN_WAIT2 to TCP_CLOSE)
-before __mptcp_close_ssk() runs.  In __mptcp_close_ssk(), msk->first is
-disconnected rather than disposed, so __mptcp_subflow_error_report() is
-skipped and mptcp_close_last_err(sk, ECONNRESET) overwrites ECONNRESET
-with mptcp_reset_err(sk) (EPIPE in TCP_CLOSE_WAIT) and wakes waiters
-before release_sock(sk) runs __mptcp_error_report().  If sk was in
-TCP_FIN_WAIT2, mptcp_check_data_fin() moves sk to TCP_CLOSE and wakes
-waiters while sk->sk_err is still 0, and __mptcp_close_ssk() then skips
-mptcp_close_last_err().
+It copies len, id and zerocopy out of uarg before the memset. So by the time
+the skb reaches sk_error_queue, the ubuf_info_msgzc contents, including ops,
+are gone.
 
-[ ... ]
+struct sock_exterr_skb starts with header.h4, and struct inet_skb_parm
+starts with int iif. PKTINFO_SKB_CB(skb) is a cast of skb->cb, and
+ipi_ifindex is the first int of struct in_pktinfo. So it reads the same
+zeroed bytes at cb offset 0.
 
-> @@ -2905,13 +2957,15 @@ static void __mptcp_close_ssk(struct sock *sk, st=
-ruct sock *ssk,
->  			mptcp_set_close_tout(sk, tcp_jiffies32 -
->  					     (mptcp_close_timeout(sk) + 1));
->  			mptcp_schedule_work(sk);
-> +		} else if (sk->sk_state =3D=3D TCP_CLOSE) {
-> +			mptcp_close_wake_up(sk);
->  		} else if (sk->sk_state !=3D TCP_ESTABLISHED ||
->  			   msk->in_accept_queue) {
+skb_zerocopy_notify_extend() only updates ee.ee_data. Neither
+sock_dequeue_err_skb() nor ip_recv_error() writes header before this call.
 
-[Severity: Medium]
-Does gating mptcp_check_rcv_close(sk) on sk->sk_state !=3D TCP_ESTABLISHED
-miss a pending DATA_FIN in msk->backlog_list (or a pending MP_FASTCLOSE)
-when the last subflow closes on an accepted socket?
+Given that, wouldn't the existing check already return false for every
+zerocopy notification?
 
-If the peer sends final data with DATA_FIN and closes or resets the only
-subflow while mptcp_worker() holds lock_sock(sk), the incoming data sits
-in msk->backlog_list while msk->rcv_data_fin is set, so
-mptcp_check_data_fin() in mptcp_worker() cannot advance msk->ack_seq to
-msk->rcv_data_fin_seq and leaves sk->sk_state in TCP_ESTABLISHED.  When
-__mptcp_close_subflow() -> __mptcp_close_ssk() then runs on a non-fallback
-socket, it skips this branch and starts the close timeout timer instead of
-calling mptcp_check_rcv_close(sk) to spool the backlog, move sk to
-TCP_CLOSE_WAIT, and close immediately via mptcp_close_last_err();
-mptcp_release_cb() then transitions sk to TCP_CLOSE_WAIT with no subflows
-left, leaving the socket to wait for the close timeout and fail with
-ETIMEDOUT.
+	info = PKTINFO_SKB_CB(skb);
+	if (!(READ_ONCE(sk->sk_tsflags) & SOF_TIMESTAMPING_OPT_CMSG) ||
+	    !info->ipi_ifindex)
+		return false;
 
->  			mptcp_check_rcv_close(sk);
-> -			mptcp_set_state(sk, TCP_CLOSE);
-> -			WRITE_ONCE(sk->sk_shutdown,
-> -				   sk->sk_shutdown | SEND_SHUTDOWN);
-> -			mptcp_close_wake_up(sk);
-> +			if (sk->sk_state =3D=3D TCP_CLOSE)
-> +				mptcp_close_wake_up(sk);
-> +			else
-> +				mptcp_close_last_err(sk, ssk_err);
->  		} else {
->  			mptcp_start_tout_timer(sk);
->  		}
+If so, the new check does not change runtime behavior. The "fix
+uninitialized memory" subject and the Fixes: tag, which would pull this into
+stable, don't seem to match the code.
 
-[Severity: Medium]
-Should mptcp_check_rcv_close(sk) also call mptcp_check_data_fin_ack(sk)
-before __mptcp_close_ssk() checks whether sk->sk_state reached TCP_CLOSE?
+Could the commit message describe this as a clarity or hardening change, and
+the Fixes: tag be dropped?
 
-When an incoming DATA_ACK acknowledges our outgoing DATA_FIN in softirq,
-ack_update_msk() updates msk->snd_una and schedules mptcp_worker(), which
-is the only caller of mptcp_check_data_fin_ack(sk).  If __mptcp_close_ssk()
-runs on the last subflow while mptcp_pending_data_fin_ack(sk) is true in
-TCP_LAST_ACK, TCP_CLOSING, or TCP_FIN_WAIT1 (for example, during
-mptcp_pm_worker() or when the DATA_ACK and subflow close arrive after
-mptcp_check_data_fin_ack() in mptcp_worker()), mptcp_check_rcv_close(sk)
-only checks rcv_data_fin and rcv_fastclose, leaving sk->sk_state !=3D
-TCP_CLOSE so mptcp_close_last_err() sets ECONNRESET on a cleanly closed
-connection.
+Also, if the premise were correct, wouldn't ip6_datagram_support_cmsg() in
+net/ipv6/datagram.c have the same problem? It is gated only on
+IP6CB(skb)->iif:
 
-[ ... ]
+	if (serr->ee.ee_origin == SO_EE_ORIGIN_LOCAL)
+		return false;
 
-> @@ -3441,8 +3485,7 @@ static void mptcp_worker(struct work_struct *work)
->  		mptcp_do_fastclose(sk);
->  		mptcp_for_each_subflow_safe(msk, subflow, tmp)
->  			__mptcp_close_ssk(sk, subflow->tcp_sock, subflow, 0);
-> -		WRITE_ONCE(sk->sk_shutdown, sk->sk_shutdown | SEND_SHUTDOWN);
-> -		mptcp_close_wake_up(sk);
-> +		mptcp_close_err(sk, ETIMEDOUT);
->  	}
+	if (!IP6CB(skb)->iif)
+		return false;
 
-[Severity: Medium]
-Does calling mptcp_do_fastclose(sk) and __mptcp_close_ssk() before
-mptcp_close_err(sk, ETIMEDOUT) wake lockless pollers and SO_ERROR readers
-with sk->sk_state =3D=3D TCP_CLOSE before sk->sk_err and SHUTDOWN_MASK are =
-set?
+This patch does not change it.
 
-mptcp_do_fastclose(sk) sets sk->sk_state to TCP_CLOSE while sk->sk_err is
-still 0 and sk->sk_shutdown does not have SHUTDOWN_MASK, and
-__mptcp_close_ssk() then hits the new sk->sk_state =3D=3D TCP_CLOSE branch =
-and
-calls mptcp_close_wake_up(sk):
+>  	/* Support IP_PKTINFO on tstamp packets if requested, to correlate
+>  	 * timestamp with egress dev. Not possible for packets without iif
+>  	 * or without payload (SOF_TIMESTAMPING_OPT_TSONLY).
 
-kworker                           CPU1
-mptcp_worker()
-  mptcp_do_fastclose(sk)
-    mptcp_set_state(sk, TCP_CLOSE)
-  __mptcp_close_ssk(sk, ...)
-    mptcp_close_wake_up(sk)
-                                  mptcp_poll() / getsockopt(SO_ERROR)
-                                    state =3D=3D TCP_CLOSE
-                                    sk_shutdown =3D=3D 0
-                                    sk_err =3D=3D 0  <-- misses ETIMEDOUT
-  mptcp_close_err(sk, ETIMEDOUT)
-
-A thread woken from poll() or calling getsockopt(SO_ERROR) before
-mptcp_close_err() runs can observe TCP_CLOSE with sk_err =3D=3D 0 and
-sk_shutdown =3D=3D 0, reporting EPOLLHUP without EPOLLERR, EPOLLIN, or
-EPOLLOUT and returning 0 from SO_ERROR instead of ETIMEDOUT.
-mptcp_check_fastclose() similarly calls mptcp_set_state(sk, TCP_CLOSE)
-before WRITE_ONCE(sk->sk_shutdown, SHUTDOWN_MASK) and without the
-smp_wmb() after writing sk->sk_err that mptcp_close_err() uses.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261124-mptcp-cmas=
-on-fixes-v3-0-416c0920c73f@kernel.org?part=3D48
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1795421388.git.tanggeliang%40kylinos.cn
