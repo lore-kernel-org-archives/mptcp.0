@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795521924;
-	b=DeMkaKuNNLYtWhzVq8El8rTic1D7TObVCYIhKBIzKEZ7aXUsS+5ZK7UORyLTuCUXSKG9
-	 OeCLd7mTCkgyFbfxNIstuwVLgWfP64oyOLEtZlI7BnJIERTIFEVfEZJqmhstnhN1Xmn+b
-	 5s9EfAa24EIppBkqT/sV+StOMOO6edxwhIBNYjo5c10TnrPl2sgDd9Sit8WMO3eVYW02M
-	 rsN9TObgPZc8JY7yCdy1VRJolgulw/zCw3MYXZwK2d2fMrkTnhwBrBl1PxR9OfSkhKxYl
-	 Zkt9XjrWgGEn7Cigi1g3rheAvoSO01dot2mRl6h78IsVagizprPyb+TCuTs7tXH+agg==
+	t=1795522083;
+	b=JjTvGGTMuWSdswSECgo/9n5zd5J6al2d1jQpMpNZsiKuOmoNkqGxrGXiKJerYTj224dO
+	 /pvygt0SjbP2pS9TCXMwrhF/JmykSDKUeVArzps6d8VCL1AZJmgVecZAAnGuR9qprzDh0
+	 wQU/Rzc88irNLJ2Toz5FXt7W7sWUSoYUWDj8M9+tArYBRHzXP3Do+DFgJFcC5nvFvNX6M
+	 xbe3X9+TAcbHUppkZsPuUpVpiLiAKeiKblmH6WbEklphzCPx3gKizxtaDcjuRUujzzByC
+	 f6aTFY7V9hNtjLf1pyZbU7zBj/E4JGk4jzt6diRfxsg/JPcXhOqsGGljCTML3ZKW1+Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795521924;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795522083;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=D0fQMDGh7txolGgxr2lcBTA67bhAeTt4rLAGTBDbfik=;
-	b=Mpk3h0UKkN37xzDFX4FZRGT+oFhFJBxw5+oDUDAbIqYvDQmoii9hwLg98bkmuYL6rbjJ
-	 YJExGgyIJ6EdCGlNbUOsGnTt7niGTKhGapH8yfQSJyuJQ8sBDxchdORlQ1LEHEQ3zD/JG
-	 NOv0IdmtF0By7fA/2DuiIoavGM9GMMRHxrTMI0wDNOYKkqZLxCWKjNMjlYSHWXydjjE1Q
-	 YJrSw7Bb1r7+Z3pO/cRcy0VnQCGGGmzps28c2jcxxSPhK6dlqQf2wdcdtvizpJHjKQSJs
-	 V/gYehY7JijckMJwlW+3qENTlZDjzKOF5FZQWkmEt44w+R4f6y/D/s9MmWcCngKYlrQ==
+	bh=uFf5fZ7w6URodqgEXaVbttqY6WzRAetM9KTO3R4Sa4g=;
+	b=XlKQPcdHrayUFAZyFUP4omVEIpAATnzURNr5Wx4bo7yRFF5n60Co4n0ZWYGG0ed7fnTj
+	 iy1povARB/Ez7KBT3GL//oQPeGCGbrPImFIvYLKaHsDXBStON0G1xKYz9Z1ASi21SYcqV
+	 ihZK6+uiIepxk7HGGdMMXVqhPdyv6YUIVomnJ4XXnagjoT4Jf8U/xrL2PK/KyXyfyR9CG
+	 D7ImYyagnzpr7/RiGe9UuNVNa9mPm1E8VWEp4OP1CnHLUXlaAFBXlXnLe6R4CEr2V+cNw
+	 RnoTYRgb8brWt6f4RhcRnYOYBAROHCGeVYsMRh4szUH4kWaCa7Wq7eiP2w7Zvh4gNoQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YUkOsSHv;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ax5lP29Z;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92383606A31E
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 12:05:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16832606A31E
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 12:08:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YUkOsSHv
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EFA81F000CF;
-	Tue, 24 Nov 2026 12:05:23 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ax5lP29Z
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A84181F000C4;
+	Tue, 24 Nov 2026 12:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795521924;
-	bh=D0fQMDGh7txolGgxr2lcBTA67bhAeTt4rLAGTBDbfik=;
+	s=k20260515; t=1795522082;
+	bh=uFf5fZ7w6URodqgEXaVbttqY6WzRAetM9KTO3R4Sa4g=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=YUkOsSHvX8guXiv8VCVPdtlQe9N9hn5WIWCtLjEfcc0HqiJHgJk26/2fcSkWEtUrf
-	 2s1aMutOwIUvQ2PkC2Q5JlFkJnoPvyt5xDQAGjDaJUEpyTha+pOZwr2BDJuNSwHw1x
-	 IO6IdoK/W4p8+l2i7mY9ban6gtzQiKy0qg3XNt2QafcpORAmnIe+Wpw75SoUqG+G7B
-	 C+LyBNbtnpxGgOiyreFFnP6dLDremCGCZ2XfPE9V1gXkGjpCb+4GJ7+y9vltEgAdUi
-	 mG/ZoS7WBk0/VL1wXZyd7hUU8m0weblmIhTFA8Wwya+nTXPbdKHa4cwDTE5I7y2+jD
-	 4WnLO3B+jNsBw==
-Message-ID: <daa42e5d-9f35-452a-8b5e-cf3907ec9a49@kernel.org>
-Date: Tue, 24 Nov 2026 13:05:21 +0100
+	b=ax5lP29Zz0QXI6978SkoGfEx2nf/dBe+S/YdbWVcevkVMKBZPINXmQpdri4zR2XLF
+	 PfPKr6CPUgwFBe78ljGAqZ5IG0cEF5xJj1Db0u4X/chKm8eXhrHOKNdiCiP0cglUGZ
+	 zGMS8EGiE+2LfMpq6KKrLUHlDMzb3NGA/eJf7Frdksh111JGGudJ/5GsU3GjB24V7q
+	 E/zuSHsDhaTPaa8A5QgWZ907C6C8+UH7cCRPk6TEBuVwVL8xJiHYUVJ9t1IbSzQ5IP
+	 ry83GunDDENHCQLuc8I62kou59daJM5bNOZe4O01EeH1akDXFuZGwJ2NuNPjB1ZYe3
+	 STMoHvCuqjpRQ==
+Message-ID: <4d862d3c-70a0-46a7-b4de-e431648f4b23@kernel.org>
+Date: Tue, 24 Nov 2026 13:08:00 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,13 +52,13 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 23/62] mptcp: no sf left: process pending
- DATA_FIN
+Subject: Re: [PATCH mptcp-net v2 24/62] mptcp: process pending close events at
+ accept()
 Content-Language: fr
 To: netdev-bot+sashiko@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-References: <20261121-mptcp-cmason-fixes-v2-23-00327fd1de1f@kernel.org>
- <179541555052.3133.2432257885712070240@kernel.org>
+References: <20261121-mptcp-cmason-fixes-v2-24-00327fd1de1f@kernel.org>
+ <179541555125.3133.3545716635498279995@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -104,27 +104,18 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <179541555052.3133.2432257885712070240@kernel.org>
+In-Reply-To: <179541555125.3133.3545716635498279995@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 On 23/11/2026 07:32, netdev-bot+sashiko@kernel.org wrote:
 > Thank you for your contribution! Sashiko AI review found 1 potential
 > issue(s) to consider.
-> 
-> Critical: 0 · High: 0 · Medium: 1 · Low: 0
-> 
-> If you believe none of the issues are legitimate, please reply to each
-> issue of Medium severity or higher and explain why the AI is wrong.
-> If any of them are legitimate and you plan to respin, please let patchwork
-> know by including "pw-bot: cr" as a separate line at the end of your reply
-> (one such reply per series is enough).
-> 
-> - [Medium] mptcp: tcp_disconnect() clears SOCK_DONE before
->   mptcp_check_rcv_close()
 
-This looks like the same issue as the one described in the review of
-patch 15. So that will be fixed there.
+> - [Medium] mptcp: dummy fallback DATA_FIN processed on reset in
+>   mptcp_stream_accept()
+
+Pre-existing: I will see if I can fix that.
 
 Cheers,
 Matt
