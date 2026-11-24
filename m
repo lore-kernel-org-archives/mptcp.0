@@ -1,57 +1,63 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795526773;
-	b=Ab9+8kBnnrh47WbrqJLuEwOYu0UoqWTVNI0tepZwAWWoTKF/sx9bdzdgDiCppIWZw9MB
-	 0YNAFLsuGY19oqDmL6Ti5ML7ljfITj3XXhqT1Ju9wxGffHeAm8V1VwCWjYkWRf75CL3Pw
-	 15Dh+4tNINPKohxz6laI/Kif1n0powjfDCfvXHED8CUPcsSRTGus0da5Jg1gvgrUDWqpl
-	 YxonpvSxcfHnThhui+ZnkboOU+i24mYrWANXyGAclujsK+m9BFNDPDrLD8/hgnC9qqu3E
-	 zxrYexvjFq0OBZFwSU2Tv7kabDXL5l+mnpcHO/9crhLVmY5HiyA8/4zinQVdxcXzwhw==
+	t=1795530413;
+	b=m7aP1Yyc8iJDoPUbRVy+mAI5BGZt5ZWswMa7+mZuuvTnXLrfODsT3Xglp4PoOSiI7/Dt
+	 u2nBW1NDu/LIxMkX1RTHqZ8OpMrr7lr/VjDjwgo1VqpA3o3/qa+gVUBbCgGT/Z73ZD4r4
+	 fEGPML7RDFHO6/h8B4XCZP3GSZG6/JljWmXVuC4LC5OTEK45ehwDGmDlDx3h5InLOuP29
+	 flPP6f+cx4xevpnhFjfD7tRDHRHUrA/dji/f6fjo6mt7Y8vglpqgXjOY4jRGYZL82STK0
+	 JGqrZPFZDuEPXFHkUD51ddow3U+ONjrEvWw0OUncSONlKXU4SfQDP2ky9n9OIPWxXnA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795526773;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=Kz0t8oBESZodiEmssbz2bY2o3ZLD3qqhLqHDIQsZIsY=;
-	b=dnKnn+XchsirnDqt1hCvA+zMmTcQxwPZaZ934mvchOEdQ568wVYOMW9qswwvdgWczoFY
-	 h6uHl2QA8SldGL5AMzgAQd67lHrZGSLs+tyB7NKGjrsZ8NtdfsB3OTlJ+RUZgjUbXB4eH
-	 c4o5hrULmbobgibSHDUNqgXSJRHnydLPs8ErTrFEXhMWc8TBQ9b6EjZ67vJGSRirs1eT7
-	 1SZC2DsHmeYlj44kdz3067LPSgbREnrSNru4on6FE0I3ZHZva2HKnM+FaN7s8ITKDg7TJ
-	 Hz7fSX+8VaBelrtCDWmGp9/6e9cRrUm/67VUMMNM5nOt75sHEtqhf7StjmrYwR5iRDA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795530413;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=mTwBFRyFSROWCnCFCSSel89ouxGBgoxE6b1oZnyUXq4=;
+	b=wE9dX2kk6M7avozW0o+Je6gCmHzmv3nUHYQDmOd1jNQ/aOq5blqh/ga/HVa2m8G81rnP
+	 3mzvVTZod9Chl1W3imuj9pVCdcdZ2xmM5VnF31jYqLjpg+VO7BkPYYGmpGfoszkZWt7JF
+	 1+6qyrcMdeULMG7rguLLTnMYgpPG10sgJnWZCYuON8R5h+LTyfC4yEahES8V747GU3Etq
+	 h2DD6VNHJwCbZwDyUMK7k2Ea5mzQ7M46KKnES5XCP55TVwF3S+jdxaeyQvncjiCmyljvJ
+	 yWSvt07nvnzlm9y1Sfm5wKdmfo10++Ryn4vOQodfxDmvUsB7YYQ0/6iazu/WvJ9v1IQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=D6Dyew3P;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n5UEACMU;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0C4606A31E
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 13:26:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B17606A321;
+	Tue, 24 Nov 2026 14:26:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=D6Dyew3P
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09A521F000CA;
-	Tue, 24 Nov 2026 13:26:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n5UEACMU
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0CC91F000C6;
+	Tue, 24 Nov 2026 14:26:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795526773;
-	bh=Kz0t8oBESZodiEmssbz2bY2o3ZLD3qqhLqHDIQsZIsY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=D6Dyew3P0ixNZi6m5kFjVaZgMjpV9wd7puvGlqxiA0cq8+1B7/AbYQ8srx6dtDksM
-	 dOLwqvqemj6wkTnI8bM6PDvQ19Q6MniXS+0VLQLTcIgrjvDB7oDAcVwByKnl6vbd0Y
-	 w7AH1XHmtW6y1LUnZ2o6fS6a0GvLpUKEevPsl+zMc5lBRn3Lv7jThN4cs7rNZ+WXHM
-	 NOmBvq1Jhi0KTt6YSVLdy8EizwCZbSIP8GT4skT6IjXG3cRv6oUvC5F/nc0W//+zTt
-	 WOYHYI1511LSNzRC+4YODs1rSY/BBOwqLLaNMjKoKNE4c1yIBwoVD4fVHZcZKHSDVD
-	 wDW8x3vPsvvyQ==
-Message-ID: <sashiko-outbox-231206@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH net 08/10] mptcp: pm: don't let listeners pin their
- netns
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-In-Reply-To: <20261123-net-mptcp-misc-fixes-7-4-rc5-v1-8-278042217e8d@kernel.org>
-References: <20261123-net-mptcp-misc-fixes-7-4-rc5-v1-0-278042217e8d@kernel.org>
- <20261123-net-mptcp-misc-fixes-7-4-rc5-v1-8-278042217e8d@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 24 Nov 2026 13:26:12 +0000
+	s=k20260515; t=1795530413;
+	bh=mTwBFRyFSROWCnCFCSSel89ouxGBgoxE6b1oZnyUXq4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=n5UEACMURgjfpgLFKrsVZFmC2awe4D2PQaskzHFD4iJKlNUhanPH9qPBzrspXZY91
+	 baGS4Fj1wT/jhTrGgr7T1gMIx0J3gfqmR77tS6normc8sU1b6DqOcRfcJJ1YgxX9hb
+	 OT5lNHfWt0gW3ayaKFpt/Pi55o0akAfLOAe+1s/I8SRbMktmNzMAKx+UwcCA264ZtM
+	 snimwJfXoSB3HZeOoF5i+K2nfaLIteU4laOZv3YWc3kyo8xdD0g6i3XmkehtZMxa+U
+	 Es/BMhvxtxpu3zTaohOPN1BTmL0Kh67iz83EfFLMYmRWG0r5WehR6lLFK3cG4Cbvgf
+	 kTEwORPTf0lYg==
+Subject: Re: [PATCH net 04/10] mptcp: fix use-after-free of the subflow
+ context on the delegated list
+From: netdev-bot+sashiko@kernel.org
+To: matttbe@kernel.org
+Cc: edumazet@kernel.org, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com, willemb@google.com, horms@kernel.org, martineau@kernel.org,
+ geliang@kernel.org, cpaasch@openai.com, fw@strlen.de, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev, dcaratti@redhat.com, mason@kernel.org,
+ stable@vger.kernel.org, ncardwell@google.com, kuniyu@google.com, kafai@fb.com,
+ daniel@iogearbox.net, ast@kernel.org, martin.lau@kernel.org,
+ bpf@vger.kernel.org
+Date: Tue, 24 Nov 2026 14:26:51 +0000
+Message-ID: <179553041150.3135.10012593386905502123@kernel.org>
+In-Reply-To: <20261123-net-mptcp-misc-fixes-7-4-rc5-v1-4-278042217e8d@kernel.org>
+References: <20261123-net-mptcp-misc-fixes-7-4-rc5-v1-4-278042217e8d@kernel.org>
+X-sashiko-severity: Low
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -60,94 +66,108 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [High] mptcp: netns leak in subflow_syn_recv_sock() on non-MP_JOIN
-  syncookie ACK
+Thank you for your contribution! Sashiko AI review found more severe
+issue(s) in other patches of this series. This mail is only an FYI, in case
+you want to address the nit picks below when you respin.
+
+Low priority / nit picks for your consideration:
+
+- [Low] The comment in the sock_owned_by_user() branch of
+  mptcp_napi_poll() (net/mptcp/protocol.c) is now wrong for the case…
+
 --
 
-commit 6179aee66fd5371bdb738c5d1e0414c3ccde4437
-Author: Josef Bacik <josef@toxicpanda.com>
+mptcp: fix use-after-free of the subflow context on the delegated list
 
-mptcp: pm: don't let listeners pin their netns
+This fixes a use-after-free. subflow_ulp_release() frees the subflow
+context with kfree_rcu() while the context is still linked on the per-CPU
+delegated napi list. A new MPTCP_DELEGATE_DEAD bit hands the free to
+mptcp_napi_poll() when the subflow is scheduled, skips delegated actions
+for dead contexts, and moves delegated_status out of struct_group(reset).
 
-This commit skips upgrading the network namespace reference count on
-subflows created for kernel MPTCP sockets, and instead takes a network
-namespace reference in subflow_syn_recv_sock() when cloning a child
-socket from a kernel listener.
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 50c294d925b0c..23d35f43b566e 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
 
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 20d5062350742..3e674c21bdb2a 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -844,6 +844,22 @@ void __mptcp_subflow_fully_established(struct mptcp_=
-sock *msk,
->  	WRITE_ONCE(msk->fully_established, true);
->  }
-> =20
-> +/* Children of a kernel listener need a netns ref for their timers */
-> +static bool subflow_child_get_net(struct sock *child)
-> +{
-> +	struct net *net =3D sock_net(child);
+[ ... ]
+
+> @@ -4803,10 +4803,13 @@ static int mptcp_napi_poll(struct napi_struct *napi, int budget)
+>  	delegated = container_of(napi, struct mptcp_delegated_action, napi);
+>  	while ((subflow = mptcp_subflow_delegated_next(delegated)) != NULL) {
+>  		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+> +		long status;
+>  
+>  		bh_lock_sock_nested(ssk);
+>  		if (!sock_owned_by_user(ssk)) {
+> -			mptcp_subflow_process_delegated(ssk, xchg(&subflow->delegated_status, 0));
+> +			status = xchg(&subflow->delegated_status, 0);
+> +			if (!(status & BIT(MPTCP_DELEGATE_DEAD)))
+> +				mptcp_subflow_process_delegated(ssk, status);
+>  		} else {
+>  			/* tcp_release_cb_override already processed
+>  			 * the action or will do at next release_sock().
+> @@ -4814,11 +4817,15 @@ static int mptcp_napi_poll(struct napi_struct *napi, int budget)
+>  			 * CPU that scheduled it.
+>  			 */
+>  			smp_wmb();
+> -			clear_bit(MPTCP_DELEGATE_SCHEDULED, &subflow->delegated_status);
+> +			status = set_mask_bits(&subflow->delegated_status,
+> +					       BIT(MPTCP_DELEGATE_SCHEDULED), 0);
+
+[Severity: Low]
+This isn't a bug, but is the comment above this branch still accurate
+once MPTCP_DELEGATE_DEAD is set?
+
+The comment says tcp_release_cb_override "already processed the action or
+will do at next release_sock()". However, every path that reaches
+mptcp_subflow_free_ctx() runs after mptcp_subflow_ops_undo_override() has
+restored ssk->sk_prot to plain tcp_prot/tcpv6_prot:
+
+net/mptcp/subflow.c:subflow_ulp_release() {
+    ...
+	mptcp_subflow_ops_undo_override(ssk);
+	if (release)
+		mptcp_subflow_free_ctx(ctx);
+}
+
+mptcp_subflow_drop_ctx() reaches the same undo through
+subflow_ulp_fallback(). __mptcp_close_ssk() only calls
+mptcp_subflow_free_ctx() when icsk_ulp_ops is already NULL.
+
+So for a dead context, the next release_sock() calls tcp_release_cb()
+rather than tcp_release_cb_override(). Any pending action bits are dropped,
+and the commit message says that is intended ("the pending actions must not
+run").
+
+A dead context can reach this branch. __mptcp_close_ssk() holds
+lock_sock_nested(ssk) across this chain:
+
+__tcp_close()->inet_csk_destroy_sock()->tcp_cleanup_ulp()->
+    subflow_ulp_release()->mptcp_subflow_free_ctx()
+
+That means a concurrent mptcp_napi_poll() can see sock_owned_by_user(ssk)
+after DEAD has been set.
+
+Could the comment be updated to say that dead contexts have their pending
+actions discarded here? It could also mention that status is captured so
+the context can be freed with kfree_rcu() after bh_unlock_sock() and
+sock_put().
+
+>  		}
+>  		bh_unlock_sock(ssk);
+>  		sock_put(ssk);
+>  
+> +		if (status & BIT(MPTCP_DELEGATE_DEAD))
+> +			kfree_rcu(subflow, rcu);
 > +
-> +	if (likely(child->sk_net_refcnt))
-> +		return true;
-> +
-> +	if (!maybe_get_net(net))
-> +		return false;
-> +
-> +	__sk_net_refcnt_upgrade(child, GFP_ATOMIC);
-> +	put_net(net);
-> +	return true;
-> +}
-> +
->  static struct sock *subflow_syn_recv_sock(const struct sock *sk,
->  					  struct sk_buff *skb,
->  					  struct request_sock *req,
-> @@ -912,6 +928,11 @@ static struct sock *subflow_syn_recv_sock(const stru=
-ct sock *sk,
-> =20
->  		tcp_rsk(req)->drop_req =3D false;
-> =20
-> +		if (!subflow_child_get_net(child)) {
-> +			subflow_add_reset_reason(skb, MPTCP_RST_EUNSPEC);
-> +			goto dispose_child;
-> +		}
-> +
->  		/* we need to fallback on ctx allocation failure and on pre-reqs
->  		 * checking above. In the latter scenario we additionally need
->  		 * to reset the context to non MPTCP status.
+>  		if (++work_done == budget)
+>  			return budget;
+>  	}
 
-[Severity: High]
-Can this still leak the network namespace when SYN cookies are active on
-an in-kernel PM listener?
+[ ... ]
 
-subflow_check_req() rejects non-MP_JOIN SYNs when listener->pm_listener is
-true, and for an MP_JOIN SYN under SYN cookies tcp_conn_request() sends a
-SYN+ACK with a valid TCP syncookie and frees the request_sock.  If the
-peer replies with a third ACK carrying that syncookie but omitting
-OPTION_MPTCP_MPJ_ACK (for example, a plain TCP ACK or one carrying
-OPTION_MPTCP_MPC_ACK), cookie_tcp_reqsk_init() calls
-mptcp_subflow_init_cookie_req(), which does not check
-listener->pm_listener and returns 0 with subflow_req->mp_join =3D=3D 0.
-
-When tcp_get_cookie_sock() then calls subflow_syn_recv_sock(),
-fallback_is_fatal is false because subflow_req->mp_join is 0.
-subflow_child_get_net(child) upgrades child->sk_net_refcnt to 1 before
-the fallback and ctx->mp_join checks, and subflow_syn_recv_sock() returns
-child with tcp_rsk(req)->drop_req =3D=3D false (via goto fallback for a pla=
-in
-TCP ACK, or via ctx->mp_capable after cloning listener->conn).
-tcp_get_cookie_sock() then queues child into the PM listener's
-icsk_accept_queue, where nothing ever accepts it, pinning the network
-namespace indefinitely.
-
-Checking listener->pm_listener in mptcp_subflow_init_cookie_req() (or
-rejecting non-MP_JOIN children of a PM listener before upgrading
-child->sk_net_refcnt) would prevent queueing unaccepted children with a
-netns reference.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261123-net-mptcp-=
-misc-fixes-7-4-rc5-v1-0-278042217e8d@kernel.org?part=3D8
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261123-net-mptcp-misc-fixes-7-4-rc5-v1-0-278042217e8d%40kernel.org
