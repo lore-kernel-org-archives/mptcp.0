@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795519036;
-	b=jgduD51jOSid2QSwCSyY/D7+9CSkN8ib4AvoVAfOe0wddI9bzTA1osPn3XuY7Mmyd8Xy
-	 dg9g3D1F4dFvQuM38kqgHBTXcOC8r53o9fh0AnpsHzPwD+GgemuEpHNsLqZjufY6RnXfz
-	 SyNrc2KBeCI0610LT/Lf9g79/jAEqxCZRysWS2B13lFLDeyWrKEiNFsztHjgTLRW70Nwj
-	 rzpQGA/PYusuMouJ1E1+exM6MZdOk3aTnxocHhNuraQ4JUbiPvbvU5zeQ1CiMpAFwdGf0
-	 scIr5BbnnvJrWWjKEc+7ZF2Vr4TMQptBpn5kUnBc7YPy2ZgW54yWKwJvJFkB3AAknzg==
+	t=1795520441;
+	b=EwNr6x7EuQgogcqlE62rBdsS3EKSbON/3JmksEDOjtNR5QvtQX950U2+6qJMFuQ5v2BZ
+	 0AQbcjBXAg3WLCngE4TL9me8pTzrbkRSiGw16W3OddQfz3g8/9ewkCpMlTKNGyX0JiQzN
+	 eIcPKSBbP6BarFq6lQQw7CgxGOQ73HYSjOlWKIwXVBdlnNgzfjQTv4WLZRZIT8hTC+5ST
+	 qW0jpoDNMKGK8RbIRH8ihy+D4Z/Jbhg87zYO6sAO/aj3D3SQ1x/Nokqzd2siFUA0/j/ui
+	 arS7e33ENydZEnI8hoMwb3mm+mdj4CRV2y1TH7DGIWZyHQ5B8KDH3/31CvxgTdgxxUg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795519036;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795520441;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=9b0baDy1DGNiSmksJk8Tx9Zd3z3NuWwMptXJp6zFIqA=;
-	b=tQNVwalL1pnHiJ4SYq3Eeog8glprMLJDymnwOEcdQkoKJtFtIvIG0tjGw/qstGsdGc66
-	 cazPDuzy07FlBP7Uqs/CmDlU4gP5DawZKa+WycZt4diZ+6YWNpr1S0Z+/D6X1RYLOkWzb
-	 HVfKsHIms38/LWoKp/d+8YpA8oj0a6YLGgtAEE1Gw8y8ywm7SCde9AF4RG5sY+CqTmnZK
-	 6uVy+w9Ytr9A3pMpOvktTwZI2pn7b/qUwhDBPwaEaDVW/6MMGfOpwvOzlvS5z/Fc2FGqr
-	 GGAeHesTBXueqlRRlARHJ8BH4gnvYApTwQYG2ZSH4p6MbZBDBbnbK+J6FVYPCOx/o9A==
+	bh=wjS9Ue2xC7HZMzKTp4xtpVpKUB2zZscFciFeNWKIkTM=;
+	b=e+uBrp+evzTJZCTgucxmX2LOq46tejnJAXjixqjtD3TnHPOX+XLqbrWNZ+sy6Z11V/g3
+	 tmJmYDtpXAxXPqQhU7jmUtsvsP7Rm+pdT6cR7Zos6a80wnnA2bEFsEgKerR5S8MW64Pvu
+	 AZsQ079j2uiKo8Zw+ocRpKSI9kJtqpkA9McaC+YnyPLrnwQ+kQDSAWO+8owl+24j7KTSO
+	 aSREgLWZhzi+PCUctJLuKKdgIYxLkmut8lEk55aEm7FWD1KmzAYL+r5be/GPxs34oRnmU
+	 Ojn6L8aeRRfEtFH2RsmU3ueJWRuuJQ3ivxaXhiUtVRwLlxFmExYW2vEEf7mrjfD0y1g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WgZS1Q4h;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lg4Eb34T;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA45606A31E;
-	Tue, 24 Nov 2026 11:17:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E836A606A321
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 11:40:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WgZS1Q4h
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83D201F000D3;
-	Tue, 24 Nov 2026 11:17:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lg4Eb34T
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7B4B1F000CF;
+	Tue, 24 Nov 2026 11:40:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795519035;
-	bh=9b0baDy1DGNiSmksJk8Tx9Zd3z3NuWwMptXJp6zFIqA=;
+	s=k20260515; t=1795520440;
+	bh=wjS9Ue2xC7HZMzKTp4xtpVpKUB2zZscFciFeNWKIkTM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=WgZS1Q4hhutTQF9SnsFjOgHtBLtKdJ9TlSBT2lBaIotBuKGkWk4jkQ/nIOHc8txNJ
-	 12jRKuTZ6J9LGppXFjWgTzGQfsaoE3Q/8PTErZvEfZz0ckoxqPVZB1udNZNjxntUY0
-	 9Op9NZSxXMx/TWy5fOgfrChJbDc6+zkkZ/TrsiL/rgr/Rn3wWVBItfPYzfvdPSfoIb
-	 tQBD3PWtlmfux4o94jHEgOX3MdkSuwAsqop628V9SgBRmREic6nahFUdyV2/5SmYzG
-	 eku5aINkwB6yPSuvqknVhU8bRkGFGW4PApMM/TvQBT+7QshlPGxlOvWuIAcd8tpIMB
-	 eMHNuslHozZfA==
-Message-ID: <a9526d12-87db-466d-aac8-ae575559e010@kernel.org>
-Date: Tue, 24 Nov 2026 12:17:10 +0100
+	b=lg4Eb34Te9XgHi2lwgbeiemxf0RX/IWZFJZCYjDvWLbRgdJSxOezDtEndbnVTewgR
+	 r2xQ1qyVwet2WpXVXBEYcYRqEiEsv0HxmyQ2sAjJ8cvGEhePnbdscwekODA/DH8sRa
+	 Kehigl/pEbeB0VP2VOZdpqSMFl0VrAzUSe4jIL9QKKKCIBtpgddUEKxPmhDGSjNoBH
+	 ScjMJvq2VeIcTVUVkmwdelsv0zLuKITGKwKd7VfcAV0brU0hWTQh9pGPIKG+YUcJgh
+	 ucd/+3ZaTSOWDs3VAnm/ukcxBQifwvusN0DM25NaCsRZHHtwx0Ke0jk9hI07UyFr7J
+	 iiFGHuolTcTSQ==
+Message-ID: <710a9876-79c7-49c2-9aec-ef0214632c20@kernel.org>
+Date: Tue, 24 Nov 2026 12:40:38 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,15 +52,13 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: gate diag sequence counters on
- CAP_NET_ADMIN
+Subject: Re: [PATCH mptcp-net v2 13/62] mptcp: limit an orphan probing a zero
+ window
 Content-Language: fr
-To: Dominik Maier <dmnk@google.com>
-Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev,
- netdev@vger.kernel.org, dmnk+artist@google.com,
- Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-References: <20261119192159.2646113-1-dmnk@google.com>
+To: netdev-bot+sashiko@kernel.org
+Cc: mptcp@lists.linux.dev, kuba@kernel.org
+References: <20261121-mptcp-cmason-fixes-v2-13-00327fd1de1f@kernel.org>
+ <179541554231.3133.10776173874685565@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -106,48 +104,54 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20261119192159.2646113-1-dmnk@google.com>
+In-Reply-To: <179541554231.3133.10776173874685565@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Dominik,
-
-(+cc Kalpan)
-
-On 19/11/2026 20:21, Dominik Maier wrote:
-> In net/mptcp/diag.c, subflow_get_info() restricts MPTCP sequence-related
-> subflow attributes (rel_write_seq, map_seq, map_subflow_seq, ssn_offset)
-> to callers holding CAP_NET_ADMIN in the network namespace.
+On 23/11/2026 07:32, netdev-bot+sashiko@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential
+> issue(s) to consider.
 > 
-> However, mptcp_diag_get_info() unconditionally exports mptcpi_write_seq,
-> mptcpi_snd_una, and mptcpi_rcv_nxt via INET_DIAG_INFO because
-> .idiag_get_info does not receive the caller's net_admin status. Any
-> unprivileged local user can therefore dump or query cross-UID MPTCP
-> sockets by token via SOCK_DIAG_BY_FAMILY and read live 64-bit MPTCP Data
-> Sequence Numbers.
+> Critical: 0 · High: 0 · Medium: 1 · Low: 0
 
-Thank you for this patch!
+(...)
 
-> Emit INET_DIAG_INFO from an .idiag_get_aux callback in mptcp_diag (which
-> already receives net_admin from inet_sk_diag_fill(), while msk never
-> sets icsk_ca_ops so netlink attribute ordering is unchanged) and zero
-> mptcpi_write_seq, mptcpi_snd_una, and mptcpi_rcv_nxt when !net_admin.
-> getsockopt(SOL_MPTCP, MPTCP_INFO) for the socket owner and token-based
-> lookup in mptcp_diag_dump_one() remain unchanged.
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index 944c9d11d2116..ff71f19540771 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+>> @@ -2886,7 +2912,8 @@ static bool mptcp_orphan_keep(struct sock *sk)
+>>  		/* a live peer acks at least the probes, every TCP_RTO_MAX */
+>>  		if (__mptcp_subflow_active(subflow) &&
+>>  		    tcp_jiffies32 - READ_ONCE(tcp_sk(ssk)->rcv_tstamp) <
+>> -		    2 * TCP_RTO_MAX)
+>> +		    2 * TCP_RTO_MAX &&
+>> +		    !mptcp_subflow_probe_timed_out(ssk))
+>>  			return true;
+>>  	}
+> 
+> [Severity: Medium]
+> 
+> Can a remote peer still keep this orphan forever if the subflow is idle
+> at TCP level?
 
-Oh, that's a good idea, I didn't think about .idiag_get_aux callback.
+Only a misbehaving one, acking the data at the TCP level only, and these
+orphans are bounded by tcp_max_orphans and tcp_mem since the next patch,
+as with TCP.
 
-Kalpan was trying to fix the same thing:
+(...)
 
+> The commit message also says:
+> 
+>   Two corner cases needing non-default settings are not covered, which is
+>   fine: an idle subflow refreshed by keepalives still keeps the orphan
+>   when the stale detection is disabled, and tcp_orphan_retries is ignored.
+> 
+> Is this accurate?
 
-https://lore.kernel.org/20261123054324.561321-1-kalpan.jani@mpiricsoftware.com
-
-@Kalpan: what do you think of this? If it looks good to you, and you
-tested it, can you send your Tested-by tag?
-
-We can add:
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/445
+Yes: mptcp_subflow_active(), used by the scheduler, checks
+subflow->stale, and the data of a stale subflow is reinjected on the
+idle one, which then probes too. I will add a note in v3.
 
 Cheers,
 Matt
