@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795557691;
-	b=Izvk55Alm3p1z3fFd+IGtTN653vrIc0CSmtb3AXRalxwy4NTR06/3PCHNyP78DfDOTFy
-	 HCoZP6z5GvnfY4+Nn7T3RJvDXn1h74XWMrXaGzzhA7jpHFg+so3KUbCnDlgm+faLxKpmQ
-	 /pXit4pO9kZXJ/uI23JrDlPYoqq/Xg0tOzyCbArKrfSuYiN9eoqjSPYvRiDyv6vteQjSa
-	 wHSKhstTmQTBrPe7fKrO7TG1f0BHXsRl0uT13BZNihVNBKAhEFDzz61gzc/SOXh8GA39g
-	 Cfyu7gFG+K4fH/MKCqcwr5D3Yo6aGP7LpfjCLu7HY5zJrJ/3V2KiVbaYzU6rEzI75TA==
+	t=1795557692;
+	b=0DM74wjjNrVbJ/CMt5ibVeljvRkKQ8wqJLjg7pxGYOt5rJFeZHp7USTx6fvzC1n49Ly0
+	 XSzSDN5DC3Lj19bWkHGAlhw0fBxrCync2seMTmkuu5HIaeAeL29P0KsnHD2hPwOzIAK2G
+	 e4rZ0HkTJlk4qvN8DtlrD6eDyPdd12Qza0Sk0V4uTTXa9LEdWMauiSABMAKOqXhceU82V
+	 ATY2AxMGB84vvRurb8nTAlJSvITqJ9VSlpth/gIQ6lovr2vlOrH9theqUF27P21lj2SE3
+	 l2BK70Kvny7q5QxPHKFK3S2l+BekLD487mJWZFCWnjj6HJxgtP9nHVYq0kwyodaP36g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795557691;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795557692;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=8rGcvMb/ci9H+FeLt1r90ebY+DfeaHXwhwvO3CL7YsI=;
-	b=qDY64tjahHSE1sF12rxzqUZFULWFyOcCHWdSyv9GbJrnWCT00HCy0DJR2eEpLoOnSMri
-	 3BV3hsFeL+VIb3nmvOs9UXNdAouxMJquYn9xVAY5watJdbqgYBkC7hnS9oXZqsv+AKAyK
-	 myaWgnsxMamsF+ioDZsjSscMCuGkNWgewfk2LyqHvC+3TGrLEzTZvgF/v/5sfNd+9y8li
-	 8KS2pxDCi9YK4+qvBgODSh8YHY1sI0o7gggAQpQAthF62xBDNpFj8Shy+z+Lck8NmsZ2j
-	 Fab4C2Ks1FDCgbzabXBfjK2CnBpwwRcF89EFQH6rK6lTuTRuiXsL2vaKTOrLAdIyAhQ==
+	bh=Ejs34/aeaKW6GH/ZfrQ2RXtxbeWYo7WwaUXzenlhXis=;
+	b=EFMfZiDLJOCKz5V2min8gCUKNgSyaVWkuOlfFIGkZn8PPkSvCQ7NI3YDNurusDR/YFE1
+	 /qkvxO0cAEppMmx/081LiXIhcTztPIbZhwDgQAwcv/yK+PTAYmpyWjtCzxu4uyf4nSdAK
+	 P3XX9Pg/Yn19yrUQ0J1YvKm1E6vsiXNhMpS/W0SeNCsn3YKL+n//o/7Y84zTfozAVl+8m
+	 o0Gelx1pMoMQdV+FQElg183u4HqSed2p6Bud9/D7+iCotiN7svgPEar1SyQzJZVJgl7c0
+	 nOXDdE5kqpe1gLngK47CLjUZoGonCBBpaegKU/oWDnue+btRsVbVznti2mQSf6LeZpw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bxbh0PZE;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oahh6yRI;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB147606A32C
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 22:01:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A79A0606A326
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 22:01:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bxbh0PZE
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 375151F000D2;
-	Tue, 24 Nov 2026 22:01:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oahh6yRI
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A33381F000C0;
+	Tue, 24 Nov 2026 22:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795557690;
-	bh=8rGcvMb/ci9H+FeLt1r90ebY+DfeaHXwhwvO3CL7YsI=;
+	s=k20260515; t=1795557692;
+	bh=Ejs34/aeaKW6GH/ZfrQ2RXtxbeWYo7WwaUXzenlhXis=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=bxbh0PZEHEyjlL2y/UoOd4FCh230kwmQV3G7nVAxkssJX/U1g64g3G5dujgNBNS6d
-	 TFVwg9Idtqk+bFzL/TLJyPVl7qkjNVy3LeBlS28C1dLbc2zNiPqwFbYdf3pLzvq8CO
-	 mxq8JUcfOTefPc35u7pUGn5Y+tbTI9aIb/DieNlKYKnofH/U3A1cb9UAuHYlsIEiIf
-	 8R5Dt+G7kuT0z/ff3aX7pg3rHQg29ioiuGPW8fTSj60hXSXZLJd4ofF5gCEQ69KST7
-	 A86xhOA/Ku+1nOa+LUmM239Reecma7HKMgTUJ6hjZDAjkhG2MWOWRK1gES7ArqVfus
-	 I0PNCo8o5n2yA==
+	b=oahh6yRIAvQy1dO73Ul4zsA4IIJ9YuPby3v+0UOvGNUgUqsixpNvxhwEyUmChvtLv
+	 pDpIa7zy6HaiaYaszOINZNjDc6J9lC9TM9qsyoE+mHgQ0dfZkNOoaqPlDzwvyFKKvg
+	 S4R3g3FH44ADxFUvn4Zm1CBs7oMx5vV6ODuPXX50wbV5MpmL22xSukb2FVxOpAPUhn
+	 Z4A6PtYhhOBsmEJk1C80kfZp3+cXu/MqZzCrnPJedpbLmTAPL+O7X/waM12+w7H+3Y
+	 EGhiFFXrMy+TLwDBqLSF+GAl9paOWh0UOY5mILx7CQbfHLvLpNOHDeehQfpO37PWtL
+	 kGym0RdEviAYA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 24 Nov 2026 22:59:44 +0100
-Subject: [PATCH mptcp-net v3 27/50] mptcp: do not fallback while old data
- is in flight
+Date: Tue, 24 Nov 2026 22:59:45 +0100
+Subject: [PATCH mptcp-net v3 28/50] mptcp: stop resending data to a peer
+ that fell back
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,219 +55,228 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261124-mptcp-cmason-fixes-v3-27-416c0920c73f@kernel.org>
+Message-Id: <20261124-mptcp-cmason-fixes-v3-28-416c0920c73f@kernel.org>
 References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
 In-Reply-To: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
  Chris Mason <mason@kernel.org>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9121; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=OeXCnNe7JxwjJWiMcirJ+96Z1LyJat0vWuQbRMlA8YY=;
- b=kA0DAAoWfCLwwvNHCpcByyZiAGsGCQfIU7TowPB++rO5BXPpetoHj7DEPLwB12FgcxOlPLXva
- oh1BAAWCgAdFiEEG4ZZb5nneg10Sk44fCLwwvNHCpcFAmsGCQcACgkQfCLwwvNHCpcYEAEAwi5A
- 99GO8B71sp9kxXV5pUAuQroPcmgodhUKDJWSOAABALHp9jtWrtET8FU5RXl+/89d8Nm929b2DMb
- 9YxAL7usB
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9462; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=nT1g/O+nYYGBWeFOd26UmVAPsfy6LRAxK5eSzPy75yk=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLZODnWrj+ck1rpcGHlqXa/x66Pr+0z+TX5evOCcnM2t
+ 4NtIWvFOkpZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACbCEcnw31fPP8fj962F3Isy
+ ba/99pUIrGM66md4ys7whOe8xj+JhYwM3cFcX+6bcPmmB91SfP7zUtlvkblPojdWWxukL5zckfW
+ LGwA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 From: Chris Mason <mason@kernel.org>
 
-If an established MPTCP connection falls back to TCP while a zero window
-probe or reinjected data is queued or in flight, recv() can return data
-twice with no error, so the stream is silently corrupted.
+recv() on an established MPTCP connection can silently return data that
+it has returned before, again and again, if the receiver falls back to
+TCP and the sender does not.
 
-After a fallback mptcp_established_options() writes a DSS option only
-for an infinite mapping, so an skb that mptcp_sendmsg_frag() queued with
-a mapping to data sequence numbers (DSN) is sent without that mapping.
-The receiver treats the bytes of the subflow, in sequence order, as the
-rest of the stream, so a fallback is only correct if the subflow carries
-each byte of the stream once. But allow_infinite_fallback, the flag that
-permits a fallback, stays set in two cases in which old data is queued
-again on the only subflow.
-
-First, a zero window probe is a copy of the next unsent byte, mapped to
-the last acknowledged DSN so that the peer drops it as a duplicate.
-Second, when a subflow whose MP_JOIN handshake has failed is closed,
-__mptcp_retransmit_pending_data() marks all data that has no DATA_ACK
-yet as unsent, although no second subflow has joined. If the sender
-falls back while such bytes are queued, they are sent without their
-mapping and the receiver delivers them as new data, as here for a probe:
+While no DATA_ACK arrives, the MPTCP retransmit timer makes
+mptcp_sendmsg_frag() queue old data on the subflow again: either
+fragments from __mptcp_retrans(), or a zero window probe. That is only
+correct while the receiver reads the DSS mapping of these bytes and
+drops them as duplicates: a receiver that has fallen back to TCP
+delivers them as new data. But mptcp_incoming_options() ignores a bare
+ACK, one with no MPTCP option, on a fully established subflow, so a
+sender that gets only bare ACKs from that receiver stays in MPTCP mode:
 
     sender                            receiver
     ======                            ========
-    queue a probe, a copy of byte N
-    get data with no DSS, fall back
-                                      read, open the window
-    send the probe with no DSS
+    send bytes N to M
+    (a middlebox removes the DSS)
                                       no DSS: fall back
-                                      deliver byte N
-    send byte N as data
-                                      deliver byte N again /* corrupt */
+                                      deliver N to M, send a bare ACK
+    no DATA_ACK, the timer expires
+    send bytes N to M again
+                                      deliver N to M again  <-- wrong
+                                      send a bare ACK
 
-The fix used here is to refuse the fallback while old data is in flight:
-- when mptcp_sendmsg_frag() maps bytes to a DSN below snd_nxt of the
-  MPTCP socket, set the new bit old_data_pending of the subflow, and
-  store the TCP sequence number after these bytes in its new member
-  old_data_end
-- clear the bit in mptcp_incoming_options() when a segment with a DSS,
-  other than an infinite mapping, acknowledges that sequence number
-- make mptcp_try_fallback() fail while the bit is set, so that its
-  callers reset the subflow
-- delay the infinite mapping that answers an MP_FAIL, and the fallback
-  that comes with it, to the first data that is queued with the bit
-  clear, and send plain mappings until then
-- after a fallback, skip data below snd_nxt in mptcp_sendmsg_frag(): a
-  reinjection that has not reached the subflow yet does not set the bit
+The fix used here is to:
+- reset the subflow, with the reason "middlebox interference", when
+  mptcp_sendmsg_frag() has more old data to queue and only bare ACKs
+  have acknowledged the old data queued so far. The test reads
+  old_data_pending, which the earlier commit "mptcp: do not fallback
+  while old data is in flight" sets when old data is queued. That commit
+  clears it when a segment with a DSS, other than an infinite mapping,
+  acknowledges old_data_end, the TCP sequence number after that data.
+  The reset is counted in FallbackFailed: the peer has likely fallen
+  back, but this side cannot
+- clear old_data_pending for a segment with any other MPTCP option too,
+  in mptcp_incoming_options(). An infinite mapping stays the exception
+- skip a zero window probe while the TCP retransmit queue of the subflow
+  holds data: the MPTCP retransmit timer, armed when a push leaves data
+  behind, tries again later
+- drop the segment in mptcp_incoming_options() if the push done when
+  processing its DATA_ACK resets the subflow: it is not queued on the
+  closed subflow then, as with a reset done earlier
 
-This only prevents a fallback of this side: if a middlebox removes the
-DSS of these old bytes, the peer can still fall back on its own, and
-deliver them as new data, as it cannot tell that they are old. The next
-commits limit this case, but cannot prevent it entirely.
+This limits the repeats, but does not prevent the first one: data that
+was new when it was first sent does not set old_data_pending, so its
+first MPTCP-level retransmission is still delivered twice by a peer that
+has fallen back. After a failed MP_JOIN, more of the reinjected data can
+be. The same is true for a zero window probe whose DSS is removed: a
+peer falling back on it delivers it as the next byte, then this byte
+again, when it is sent as new data.
 
-A consequence: if the old data reached the peer with its mapping, but
-the DSS acknowledging it is still on its way back, or lost its options,
-a fallback attempted meanwhile resets the subflow, although it would
-have been safe. This window lasts about one round trip, or as long as
-the acknowledgments lose their options.
+A consequence: a peer still in MPTCP mode, whose options are removed on
+the way back for a while only, recovered once the options came back.
+Its subflow is now reset as soon as more old data is due.
 
 This issue has been found with the help of an LLM, and reproduced in a
 VM, with the reproducer shared with the original version of this patch:
-between two unmodified Linux hosts, nftables removing the MPTCP options,
-e.g. while a zero window probe is pending, or after a failed MP_JOIN.
-Without this patch, the reader got some data twice, with a regular end
-of file: the stream was silently corrupted:
+between two unmodified Linux hosts, nftables removing the MPTCP options
+in the middle of the transfer, so that only the receiver falls back.
+Without this patch, the reader got the same data again and again, here
+65 MB more than once in 120 seconds:
 
-  receiver   4.692: READ-TOTAL outcome iii-repeat-or-gap bytes 8388609 of 8388608 missing 0 twice 1 [...] end: eof
-  [...]
-  receiver   8.611: READ-TOTAL outcome iii-repeat-or-gap bytes 26000 of 14000 missing 0 twice 12000 [...] end: eof
+  receiver 127.514: READ-TOTAL outcome iii-repeat-or-gap bytes 68255744 of 8388608 missing 0 twice 65650688 [...]
+  [...] took 120.0 s end: limit: still data after 120 s
 
-Note for the backports: this patch depends on commit 119d51e225fe
-("mptcp: fallback when MPTCP opts are dropped after 1st data") and
-commit f8a1d9b18c5e ("mptcp: make fallback action and fallback decision
-atomic"), two fixes which may have already been backported: they allowed
-the fallback in the reproduced cases, once data has been acknowledged
-without checksums, and after a failed MP_JOIN.
-
-Fixes: 1e39e5a32ad7 ("mptcp: infinite mapping sending")
+Fixes: 119d51e225fe ("mptcp: fallback when MPTCP opts are dropped after 1st data")
 Signed-off-by: Chris Mason <mason@kernel.org>
-[ Shorter comments. Move old_data_end to an existing hole, after
-  subflow_id. Commit message: mention the reset that can now replace a
-  safe fallback + how the issue was found, and its symptoms + note for
-  the backports. Moved before "mptcp: continue the last mapping after a
-  fallback". Commit message: the peer can still fall back alone. ]
+[ Shorter comments, also in struct mptcp_subflow_context. No timer
+  arming when a probe is skipped: "mptcp: arm the rtx timer if a push
+  leaves data behind" already does it. Commit message: the first repeat
+  is still delivered, and a peer that loses its options for a while only
+  is now reset + how the issue was found, and its symptoms. Count the
+  reset in MPTCP_MIB_FALLBACKFAILED. Drop the segment if the push resets
+  the subflow, update comments, and commit message: the zero window probe
+  whose DSS is removed. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v2: commit message: the peer can still fall back alone (Clashiko). Only
-    clamp to one MSS when sending the infinite mapping (Sashiko)
-
-Note (Sashiko on v1): an infinite mapping can stay pending, but nothing
-waits for it: an MP_FAIL is only accepted before any join or MPTCP-level
-retransmission, so TCP retransmits the data in flight.
+v2: drop the segment if the push resets the subflow, update comments,
+    and mention the probe case (Sashiko, Clashiko)
 ---
- net/mptcp/options.c  |  6 ++++++
- net/mptcp/protocol.c | 20 ++++++++++++++++++--
- net/mptcp/protocol.h |  9 ++++++++-
- 3 files changed, 32 insertions(+), 3 deletions(-)
+ net/mptcp/mib.h      |  2 +-
+ net/mptcp/options.c  | 16 ++++++++++------
+ net/mptcp/protocol.c | 21 ++++++++++++++++++++-
+ net/mptcp/protocol.h |  2 +-
+ 4 files changed, 32 insertions(+), 9 deletions(-)
 
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index 1ebdb55e9534..34a065b9e8dd 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -93,7 +93,7 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_DSSFALLBACK,		/* Bad or missing DSS */
+ 	MPTCP_MIB_DSSRESET,		/* MP_RST: bad data mapping */
+ 	MPTCP_MIB_SIMULTCONNFALLBACK,	/* Simultaneous connect */
+-	MPTCP_MIB_FALLBACKFAILED,	/* Can't fallback due to msk status */
++	MPTCP_MIB_FALLBACKFAILED,	/* Can't fallback: msk/subflow status */
+ 	MPTCP_MIB_WINPROBE,		/* MPTCP-level zero window probe */
+ 	MPTCP_MIB_BACKLOGDROP,		/* Backlog over memory limit */
+ 	MPTCP_MIB_RCVPRUNED,		/* Dropped due to memory constraints */
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 6b1a3994fb49..9133e3d6e5d9 100644
+index 9133e3d6e5d9..f9b65d0c6290 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -1333,6 +1333,12 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
- 			return true;
- 	}
+@@ -1287,6 +1287,12 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+ 	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
+ 		return sk->sk_state != TCP_CLOSE;
  
-+	/* DSS acking the old data, not an infinite map: no peer fallback */
-+	if (unlikely(subflow->old_data_pending) &&
++	/* MPTCP opt acking the old data, not an infinite map: no fallback */
++	if (unlikely(subflow->old_data_pending) && mp_opt.suboptions &&
 +	    !(mp_opt.use_map && !mp_opt.data_len) &&
 +	    !before(TCP_SKB_CB(skb)->ack_seq, subflow->old_data_end))
 +		subflow->old_data_pending = 0;
 +
+ 	if (unlikely(mp_opt.suboptions != OPTION_MPTCP_DSS)) {
+ 		if ((mp_opt.suboptions & OPTION_MPTCP_FASTCLOSE) &&
+ 		    READ_ONCE(msk->local_key) == mp_opt.fc_recv_key) {
+@@ -1333,12 +1339,6 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+ 			return true;
+ 	}
+ 
+-	/* DSS acking the old data, not an infinite map: no peer fallback */
+-	if (unlikely(subflow->old_data_pending) &&
+-	    !(mp_opt.use_map && !mp_opt.data_len) &&
+-	    !before(TCP_SKB_CB(skb)->ack_seq, subflow->old_data_end))
+-		subflow->old_data_pending = 0;
+-
  	/* we can't wait for recvmsg() to update the ack_seq, otherwise
  	 * monodirectional flows will stuck
  	 */
+@@ -1359,6 +1359,10 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+ 		return true;
+ 	}
+ 
++	/* the push from ack_update_msk() can reset the subflow */
++	if (unlikely(sk->sk_state == TCP_CLOSE))
++		return false;
++
+ 	mpext = skb_ext_add(skb, SKB_EXT_MPTCP);
+ 	if (!mpext)
+ 		return false;
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 39490ff40aa4..7df5a2863555 100644
+index 7df5a2863555..61cc4ae2a7b8 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1486,9 +1486,16 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	/* After the fallback, the MSS no longer includes the DSS option of the
- 	 * infinite mapping: send it in a single segment.
- 	 */
--	if (unlikely(mptcp_subflow_ctx(ssk)->send_infinite_map))
-+	if (unlikely(mptcp_subflow_ctx(ssk)->send_infinite_map &&
-+		     !mptcp_subflow_ctx(ssk)->old_data_pending))
- 		copy = info->mss_now;
+@@ -1455,6 +1455,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 			      struct mptcp_data_frag *dfrag,
+ 			      struct mptcp_sendmsg_info *info)
+ {
++	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+ 	u64 data_seq = dfrag->data_seq + info->sent;
+ 	int offset = dfrag->offset + info->sent;
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+@@ -1545,11 +1546,29 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 			return 0;
+ 		}
  
-+	/* after a fallback, the subflow got all data below snd_nxt already */
-+	if (unlikely(__mptcp_check_fallback(msk) &&
-+		     before64(data_seq, msk->snd_nxt)))
-+		return min_t(u64, msk->snd_nxt - data_seq,
-+			     info->limit - info->sent);
++		/* a new probe would move old_data_end: one at a time */
++		if (!tcp_rtx_queue_empty(ssk)) {
++			tcp_remove_empty_skb(ssk);
++			return 0;
++		}
 +
- 	skb = tcp_write_queue_tail(ssk);
- 	if (skb && copy > skb->len) {
- 		/* Limit the write to the size available in the
-@@ -1569,6 +1576,12 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 		zero_window_probe = true;
+ 		data_seq = snd_una - 1;
+ 		copy = 1;
+ 	}
+ 
++	/* old data acked without MPTCP opts: the peer may have fallen back */
++	if (unlikely(before64(data_seq, msk->snd_nxt) &&
++		     subflow->old_data_pending &&
++		     !before(tcp_sk(ssk)->snd_una, subflow->old_data_end))) {
++		tcp_remove_empty_skb(ssk);
++		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_FALLBACKFAILED);
++		subflow->reset_transient = 0;
++		subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
++		mptcp_subflow_reset(ssk);
++		return -EAGAIN;
++	}
++
+ 	copy = min_t(size_t, copy, info->limit - info->sent);
+ 
+ 	/* like TCP, allow some progress up to tcp_wmem[0] */
+@@ -1576,7 +1595,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
  	TCP_SKB_CB(skb)->end_seq += copy;
  	tcp_skb_pcount_set(skb, 0);
  
-+	/* old data mapped again: no fallback until acked with a DSS */
-+	if (unlikely(before64(data_seq, msk->snd_nxt))) {
-+		mptcp_subflow_ctx(ssk)->old_data_end = tcp_sk(ssk)->write_seq;
-+		mptcp_subflow_ctx(ssk)->old_data_pending = 1;
-+	}
-+
- 	/* on skb reuse we just need to update the DSS len */
- 	if (reuse_skb) {
- 		TCP_SKB_CB(skb)->tcp_flags &= ~TCPHDR_PSH;
-@@ -1599,7 +1612,10 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- out:
- 	if (READ_ONCE(msk->csum_enabled))
- 		mptcp_update_data_checksum(skb, copy);
--	if (mptcp_subflow_ctx(ssk)->send_infinite_map)
-+
-+	/* the infinite map implies a fallback: wait for old data acks */
-+	if (mptcp_subflow_ctx(ssk)->send_infinite_map &&
-+	    !mptcp_subflow_ctx(ssk)->old_data_pending)
- 		mptcp_update_infinite_map(msk, ssk, mpext);
- 	trace_mptcp_sendmsg_frag(mpext);
- 	mptcp_subflow_ctx(ssk)->rel_write_seq += copy;
+-	/* old data mapped again: no fallback until acked with a DSS */
++	/* old data mapped again: no fallback until acked with MPTCP opts */
+ 	if (unlikely(before64(data_seq, msk->snd_nxt))) {
+ 		mptcp_subflow_ctx(ssk)->old_data_end = tcp_sk(ssk)->write_seq;
+ 		mptcp_subflow_ctx(ssk)->old_data_pending = 1;
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 888ee9d66967..6dbd912e08d8 100644
+index 6dbd912e08d8..dfeabe03180b 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -605,7 +605,8 @@ struct mptcp_subflow_context {
+@@ -605,7 +605,7 @@ struct mptcp_subflow_context {
  		is_mptfo : 1,	    /* subflow is doing TFO */
  		mpc_drop : 1,	    /* the MPC option has been dropped in a rtx */
  		resetting : 1,	    /* subflow is resetting */
--		__unused : 9;
-+		old_data_pending : 1, /* old_data_end not acked with a DSS */
-+		__unused : 8;
+-		old_data_pending : 1, /* old_data_end not acked with a DSS */
++		old_data_pending : 1, /* old data not acked with MPTCP opts */
+ 		__unused : 8;
  	bool	data_avail;
  	bool	scheduled;
- 	bool	pm_listener;	    /* a listener managed by the kernel PM? */
-@@ -633,6 +634,7 @@ struct mptcp_subflow_context {
- 				     */
- 
- 	u32	subflow_id;
-+	u32	old_data_end;	    /* TCP write_seq after the last old data */
- 
- 	unsigned long	fail_tout;
- 
-@@ -1346,6 +1348,11 @@ static inline bool mptcp_try_fallback(struct sock *ssk, int fb_mib)
- 	struct mptcp_sock *msk;
- 
- 	msk = mptcp_sk(sk);
-+
-+	/* queued old data would be sent without mapping after a fallback */
-+	if (subflow->old_data_pending && !__mptcp_check_fallback(msk))
-+		return false;
-+
- 	if (!__mptcp_try_fallback(msk, fb_mib))
- 		return false;
- 
 
 -- 
 2.55.0
