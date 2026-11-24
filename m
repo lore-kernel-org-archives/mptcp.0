@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795539523;
-	b=xWm2coBQgRGEasIyery4CmCbsBYiowjbAgofrmneL1AyIY/EJwCiMdujuvtmTgz2qPyx
-	 HXW4Qj8HhvPKr8k4Whjqu/xoJyxl6KMj57vhjSQQuXEB5JBNJGH9tdYwNJsnyUh5wPGmB
-	 ox8X5qJBmLIFldX86q/c50FrLGGToR3KvqVowfZ2DMDV82nBn6njb7VsZh0Scn3nESzRn
-	 h2Ag0W0hWJB5MJ0VOQw0KT/LGaMCFoQK2wWttKcfkGPv5ct5GTY3mlLbjR7rCvTfDm7KX
-	 +/BxLVZhACFOqO/IeqTjsfFda1FxxalSiAmVHy0gaiibda7Qfa4OAkE5IJm2djaCksg==
+	t=1795540114;
+	b=WXL7OWZnair/hjtCun2icbAJL5FdFqjUCs12kt9ShY+QkvviCM7QrOzwb7YRp0E/7RXg
+	 RctKY2r4ivEyRiZilA1uI/n9CyNEzjHBoivOiur9W1k4m3Hz6TdeLsvLWO49jHKqwbmlW
+	 FzgV99w7ycwpl5dM5Q9oyZfNxy/PwnvZeb7aVu8XvIkMSIkZ50lbZzd8pOce7+9WAN4TE
+	 y0C4vxLa68OrZ46C4SeudPxbvpAugfC2HB5dQNwfq5KxP2/yx/yBVGd+SV7RjcJv/Yb4c
+	 BOoTil59EvZEdeW4K9Yq9pj/8r5Ct8+sE6d4whVdUaFB0Xjgq9dSlPy1xcH/q5VjPPQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795539523;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795540114;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=eHsnBaxBmQGoIJUeUlzJuErhbcGl+7GiPF8z+JaeIMA=;
-	b=suq8lL/vQEyyRYHdl/lXXwHeZSaMsuu1TgEsaGX5yfCTiJF45SioNcEQXWtRK4SIT3Qn
-	 gTSmK1tNrKGYm8eBUssqPxNaPB4kAhv5BUFcnlsZwEuY2n2ZaBAfO5opfg0QodsyRfNwS
-	 rNKtl85Cdwlg6nknFqSIdjXpI57MIuMoDxLMDQR8vpPNm29vh+f3TpQfh3n2ssvr3k2zZ
-	 5XG2VQ9GdZ/tcrF+wXEHg34VUI4cn3SFFAZYfIAz0towMX1NKcvPRXIj0njiNeXhTdJG7
-	 gFev0UOSXyZD5lhBoF8OhBNk/TUFnYpuqIb5rmv85vHhtf+tmPuire1MvTdcKRsCOJQ==
+	bh=KAjUhxBRn3u+CUx5phLRCMUBpKwm47PHXM0wYipIabU=;
+	b=nDB7itR972Np9S9bfo42PH/8Gz/KVT6uo5J+GhO5q3EJnf0enxprXesU8LWD5disfZSl
+	 gzU6KS7bZE5isk5Eo7n7X3X4zOCeui8LbFP8uz3TTc6Dty9TC2hpF8GKdzAGwnhnC0Syt
+	 1zp8qsy346XHmYhei0FVdwl/9+MCr5C2XyxexMmzMGY39LR0b3fo0n1z7KU1XV7weySdz
+	 xBJXRIGng6bt2B/siqe2QbYIHboLuoG/vEJ8cb2a8RDuIktc+2lWOjfaz0yUwIK9Y+jNx
+	 xc/5j7gSQAKn6AdNDL4CryMrtBzFxykYnhRnQrCk+OO+V7FtG6/3xb4tEvRGZcHrWfA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lGJ8WllI;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hVJESwbw;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06008606A321;
-	Tue, 24 Nov 2026 16:58:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7481A60A260B
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 17:08:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lGJ8WllI
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B00FE1F000C6;
-	Tue, 24 Nov 2026 16:58:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hVJESwbw
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14BD61F000F2;
+	Tue, 24 Nov 2026 17:08:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795539522;
-	bh=eHsnBaxBmQGoIJUeUlzJuErhbcGl+7GiPF8z+JaeIMA=;
+	s=k20260515; t=1795540113;
+	bh=KAjUhxBRn3u+CUx5phLRCMUBpKwm47PHXM0wYipIabU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=lGJ8WllI9Qt0HkomMWvWGBn5x1rznruEwe+F4WjZtAa78f6bSfHS91IbwQS1VNlJK
-	 CSE18bMi0avham49OZAnsLODB9kxzDyVybNtCU+hCBzqJDdetteBVNxbR8B7hvC5Os
-	 f8lqtZdvzTgeKlal+6ek9l+2DEJ8g+VsMiQsJ1TdoMgoSvJzGR82WuVMP83MLLwuNw
-	 zNbu2JwdNpzvxpPgfmxKudvSReBFRZpQF60ONlh9wnUoN56CyLjy/voVm16AfYkfq6
-	 FX1Jxh6do6bGVvwZFLJc6+ukcNvYT18VuPf0u10uRXPV6HALJ3TsPI5pMUWbrnReke
-	 xEvlULGHup+PA==
-Message-ID: <f1d92526-8468-4ad4-a9c0-13fc7dc641e0@kernel.org>
-Date: Tue, 24 Nov 2026 17:58:33 +0100
+	b=hVJESwbwNv6f/+mSdhY70Tj8tSN7pauswCDORkDwKyOEtp2wyvt17D/pJ7EkY3ors
+	 5BncOCbHeGa8xU4+eZBALcsl+i01Bqonxhd+bn8YCduXs9wXLBG3GjJpTp4uMwKNoC
+	 aCXvCEkVh3iTMUgBR8Ot/EwCCnSXUuPXvok13WQg9AMsxkqPKJZFrHvmUl7BCVQGFZ
+	 /eD9aC9CvrnQCBKtMxVWnBSqQ0kYpc6ttDIl+oTJ0U3qBAOzXIEOh9QkVD0Gc3nAMa
+	 VyFtP2H7uSbdnAUPAwE02SrkLNPf4NUD4pDQQVoq8kWGSTs9C51lymrZFC+1NU0QWu
+	 HmAwI138uU9Sg==
+Message-ID: <e8ee5405-e5fe-4f35-8d94-5b557f6de258@kernel.org>
+Date: Tue, 24 Nov 2026 18:08:30 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,22 +52,13 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net 00/10] mptcp: misc fixes for v7.4-rc5
+Subject: Re: [PATCH mptcp-net v2 38/62] mptcp: send the infinite map in a
+ single segment
 Content-Language: fr
-To: netdev@vger.kernel.org
-Cc: Eric Dumazet <edumazet@kernel.org>, "David S. Miller"
- <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Willem de Bruijn <willemb@google.com>,
- Simon Horman <horms@kernel.org>, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, Christoph Paasch <cpaasch@openai.com>,
- Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev,
- Davide Caratti <dcaratti@redhat.com>, Chris Mason <mason@kernel.org>,
- stable@vger.kernel.org, Neal Cardwell <ncardwell@google.com>,
- Kuniyuki Iwashima <kuniyu@google.com>, Hyunwoo Kim <imv4bel@gmail.com>,
- Josef Bacik <josef@toxicpanda.com>, Martin KaFai Lau <kafai@fb.com>,
- Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>,
- Martin KaFai Lau <martin.lau@kernel.org>, bpf@vger.kernel.org
-References: <20261123-net-mptcp-misc-fixes-7-4-rc5-v1-0-278042217e8d@kernel.org>
+To: netdev-bot+sashiko@kernel.org
+Cc: mptcp@lists.linux.dev, kuba@kernel.org
+References: <20261121-mptcp-cmason-fixes-v2-38-00327fd1de1f@kernel.org>
+ <179541555434.3133.14142600677566167518@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -113,41 +104,21 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20261123-net-mptcp-misc-fixes-7-4-rc5-v1-0-278042217e8d@kernel.org>
+In-Reply-To: <179541555434.3133.14142600677566167518@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
+On 23/11/2026 07:32, netdev-bot+sashiko@kernel.org wrote:
+> Does this keep the infinite mapping in a single segment only while the
+> subflow MSS stays at or above the pre-fallback info->mss_now?
 
-On 23/11/2026 14:24, Matthieu Baerts (NGI0) wrote:
-> Here are some unrelated fixes:
-> 
-> - Patches 1-2: drain the queues of a TCP or MPTCP socket when listen()
->   fails, not to leak sockets and their netns. Fixes for v4.4 and v5.11.
-> 
-> - Patch 3: clear inet_opt in the child of an IPv6 listener, to avoid a
->   double free with SELinux and NetLabel. A fix for v5.6.
-> 
-> - Patch 4: fix UaF in corner cases from delegated actions. A fix for
->   v5.12.
-> 
-> - Patches 5-6: do not leak an orphan moved to the CLOSE state outside
->   the worker. Fixes for v6.15, and for another fix introduced in v6.6
->   and targeting v5.11.
-> 
-> - Patches 7-8: do not let PM listeners pin their netns, leaked
->   otherwise. A fix for v5.12.
-> 
-> - Patch 9: initialize drop_req, not to leak sockets with SO_REUSEPORT
->   migration. A fix for v5.14.
-> 
-> - Patch 10: do not pass a BPF request sock to an MPTCP listener, to
->   avoid a slab-out-of-bounds write. A fix for v6.9.
+Wow... that's theoretical and from what I got, it needs DSS checksums,
+an MP_FAIL, and a PMTU drop (or SACK blocks without TS) while the
+infinite mapping is in flight!!
 
-TL;DR regarding Clashiko's reviews: no new versions needed I think.
+Same comment on patch 39.
 
 Cheers,
 Matt
 -- 
 Sponsored by the NGI0 Core fund.
-
