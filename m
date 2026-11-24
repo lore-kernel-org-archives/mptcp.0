@@ -1,47 +1,91 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.109
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795522083;
-	b=JjTvGGTMuWSdswSECgo/9n5zd5J6al2d1jQpMpNZsiKuOmoNkqGxrGXiKJerYTj224dO
-	 /pvygt0SjbP2pS9TCXMwrhF/JmykSDKUeVArzps6d8VCL1AZJmgVecZAAnGuR9qprzDh0
-	 wQU/Rzc88irNLJ2Toz5FXt7W7sWUSoYUWDj8M9+tArYBRHzXP3Do+DFgJFcC5nvFvNX6M
-	 xbe3X9+TAcbHUppkZsPuUpVpiLiAKeiKblmH6WbEklphzCPx3gKizxtaDcjuRUujzzByC
-	 f6aTFY7V9hNtjLf1pyZbU7zBj/E4JGk4jzt6diRfxsg/JPcXhOqsGGljCTML3ZKW1+Q==
+	t=1795525627;
+	b=yt9hsYSaetB6qiTQiGUe+RErPWL0dT209yREvk66rbotazhBEKoEw0siAffCuQRSj4NV
+	 AN7Ea+e2xANPu5IYgb7xiyLZl9wonyyvQjcBJkjDT1M7FG1CICPxYleXBsipP9PViZcqh
+	 +ida2se/FNQi/jH1g34iHHaP5bpUO8fr/xCkw0M+abBnYfVUVI0w3MuUJYdUVKvOY3SJF
+	 fKNxUiWv9nmz3IYchbzey3G6b9ZhfgKxZ6vaDhgJCGZMcFNuzBQ/VN3H2zfe69GCP2E+8
+	 PCAtn9QYdQrnITME1aJvrC35fy0bzfHAMWt84MtaPWjll3Uuz4jqM99Zf/bxDuDbxNg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795522083;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=uFf5fZ7w6URodqgEXaVbttqY6WzRAetM9KTO3R4Sa4g=;
-	b=XlKQPcdHrayUFAZyFUP4omVEIpAATnzURNr5Wx4bo7yRFF5n60Co4n0ZWYGG0ed7fnTj
-	 iy1povARB/Ez7KBT3GL//oQPeGCGbrPImFIvYLKaHsDXBStON0G1xKYz9Z1ASi21SYcqV
-	 ihZK6+uiIepxk7HGGdMMXVqhPdyv6YUIVomnJ4XXnagjoT4Jf8U/xrL2PK/KyXyfyR9CG
-	 D7ImYyagnzpr7/RiGe9UuNVNa9mPm1E8VWEp4OP1CnHLUXlaAFBXlXnLe6R4CEr2V+cNw
-	 RnoTYRgb8brWt6f4RhcRnYOYBAROHCGeVYsMRh4szUH4kWaCa7Wq7eiP2w7Zvh4gNoQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795525627;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=bSBhVF5Lg/aftBcFeP0ZcFRWzxNk9JeoO9EZBLr5Nyk=;
+	b=J8FPGAbtppwulpjtJa2sNVhImGzhQcU7o3gnv68ocHlgRnlsIaIbPkLeHNhK+IVWRpCd
+	 xvEDJTugAMX1lhMStw5phqEBzlaSLn+cd55h6Z2MoStwIr84cTUYzC9bhOY98Codfgi58
+	 x1CAuM7IcFMFMPCbJmS7MbhZh2jXsSbFWs93k8IsyQT1ykaLaXZviWRVAdHMvNQEHInn0
+	 ECSBRNXIYFVvAZZkvlvkIEBw34mOHdnAqWfdHNYOcXPyvAkviB6C5UJBL2eCKSvISiFlT
+	 bauVXN5qSPw23bLF7f+V2eeJMk8YyCcQQGBcFiLGkeTHjaT8zBbghefT9+yBsPyT8ZA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ax5lP29Z;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=iSFdGQRx;
+	arc=none smtp.remote-ip=95.215.58.109
+Received: from mta1.migadu.com (out-109.mta1.migadu.com [95.215.58.109])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16832606A31E
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 12:08:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5418606A32C
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 13:07:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E5418606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ax5lP29Z
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A84181F000C4;
-	Tue, 24 Nov 2026 12:08:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795522082;
-	bh=uFf5fZ7w6URodqgEXaVbttqY6WzRAetM9KTO3R4Sa4g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=ax5lP29Zz0QXI6978SkoGfEx2nf/dBe+S/YdbWVcevkVMKBZPINXmQpdri4zR2XLF
-	 PfPKr6CPUgwFBe78ljGAqZ5IG0cEF5xJj1Db0u4X/chKm8eXhrHOKNdiCiP0cglUGZ
-	 zGMS8EGiE+2LfMpq6KKrLUHlDMzb3NGA/eJf7Frdksh111JGGudJ/5GsU3GjB24V7q
-	 E/zuSHsDhaTPaa8A5QgWZ907C6C8+UH7cCRPk6TEBuVwVL8xJiHYUVJ9t1IbSzQ5IP
-	 ry83GunDDENHCQLuc8I62kou59daJM5bNOZe4O01EeH1akDXFuZGwJ2NuNPjB1ZYe3
-	 STMoHvCuqjpRQ==
-Message-ID: <4d862d3c-70a0-46a7-b4de-e431648f4b23@kernel.org>
-Date: Tue, 24 Nov 2026 13:08:00 +0100
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=iSFdGQRx
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=iiLNzMF0Hans49fhb1kEknTfJDMcyGgHhBCScKBOdZU=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1795525624; v=1; x=1796130424;
+ b=iSFdGQRxN8u4gjnzBj2a4pDQ5omVWpay2kR60Kl28vkrEV1pJUy31NMfurRga/rXsyuQm3zZ
+ 0bcY6qHjxmUf0puESrhK+0hoGQa4+mFOLUrHHFfC26foH7CBybTOrzweGsy1EgFHcMFRMCDwEYv
+ D+2+Ldb3Xp5chZhjhnGJfqYY=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 0517dbc925f7ffb6;
+	Tue, 24 Nov 2026 13:07:04 +0000
+X-Mizu-Trace-ID: 0517dbc925f7ffb6
+X-Migadu-Flow: FLOW_OUT
+From: Xuanqiang Luo <xuanqiang.luo@linux.dev>
+To: netdev@vger.kernel.org
+Cc: "David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Emil Tsalapatis <emil@etsalapatis.com>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	David Ahern <dsahern@kernel.org>,
+	Ido Schimmel <idosch@nvidia.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Neal Cardwell <ncardwell@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Florian Westphal <fw@strlen.de>,
+	Phil Sutter <phil@nwl.cc>,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	Xuanqiang Luo <luoxuanqiang@kylinos.cn>
+Subject: [PATCH net-next v1 0/6] net: avoid stack canaries in TCP/IPv4 fast paths
+Date: Tue, 24 Nov 2026 22:06:25 +0900
+Message-ID: <20261124130631.1886963-1-xuanqiang.luo@linux.dev>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -51,74 +95,66 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 24/62] mptcp: process pending close events at
- accept()
-Content-Language: fr
-To: netdev-bot+sashiko@kernel.org
-Cc: mptcp@lists.linux.dev, kuba@kernel.org
-References: <20261121-mptcp-cmason-fixes-v2-24-00327fd1de1f@kernel.org>
- <179541555125.3133.3545716635498279995@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <179541555125.3133.3545716635498279995@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 23/11/2026 07:32, netdev-bot+sashiko@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential
-> issue(s) to consider.
+From: Xuanqiang Luo <luoxuanqiang@kylinos.cn>
 
-> - [Medium] mptcp: dummy fallback DATA_FIN processed on reset in
->   mptcp_stream_accept()
+With CONFIG_STACKPROTECTOR_STRONG=y, a function that has a local array or
+passes the address of one of its locals to another function needs a stack
+canary. The canary is set up and checked on every call, also when the
+local is only used on a path that almost never runs.
 
-Pre-existing: I will see if I can fix that.
+This series removes the canary from functions of the TCP/IPv4 fast paths,
+by returning results by value, by using storage that is not on the stack,
+or by not calling a function that has nothing to do.
 
-Cheers,
-Matt
+Patch 1 returns the two mptcp_space() values in a structure, so that
+__tcp_select_window() no longer needs a canary.
+
+Patch 2 changes ip_neigh_gw4() to take a pointer to the address, like
+ip_neigh_gw6(), so that ip_finish_output2() no longer needs a canary.
+
+Patch 3 uses pskb_may_pull() in icmp_filter(), so that
+raw_local_deliver() no longer needs a canary.
+
+Patch 4 turns skb_try_coalesce() into an inline wrapper over a function
+returning its results by value, so that its callers no longer need a
+canary because of it.
+
+Patch 5 returns the result of the TCP receive coalescing by value, so
+that tcp_rcv_established() and tcp_data_queue() no longer need a canary.
+
+Patch 6 calls bpf_skops_write_hdr_opt(), which needs a canary, only if a
+BPF program reserved room for TCP options.
+
+The bloat-o-meter numbers are from gcc 16.2 on x86_64. The functions
+named in patches 1 to 5 also lose their canary with clang 23.1.6 on
+x86_64, with and without ThinLTO, and on arm64.
+
+Xuanqiang Luo (6):
+  tcp: avoid a stack canary in __tcp_select_window()
+  ipv4: avoid a stack canary in ip_finish_output2()
+  ipv4: raw: do not use skb_header_pointer() in icmp_filter()
+  net: avoid stack canaries in skb_try_coalesce() callers
+  tcp: avoid a stack canary in tcp_rcv_established()
+  tcp: do not call bpf_skops_write_hdr_opt() unless needed
+
+ include/linux/filter.h           |  2 +-
+ include/linux/skbuff.h           | 35 ++++++++++-
+ include/net/mptcp.h              | 13 ++++-
+ include/net/route.h              | 16 +++---
+ net/core/filter.c                |  2 +-
+ net/core/skbuff.c                | 50 ++++++++--------
+ net/ipv4/raw.c                   | 25 ++++----
+ net/ipv4/route.c                 | 15 +++--
+ net/ipv4/tcp_input.c             | 99 +++++++++++++++++---------------
+ net/ipv4/tcp_output.c            | 25 ++++----
+ net/mptcp/subflow.c              |  9 ++-
+ net/netfilter/nf_flow_table_ip.c |  4 +-
+ 12 files changed, 178 insertions(+), 117 deletions(-)
+
+
+base-commit: a4c450594f5d1dc0fc4daacfb95d40554d99dead
 -- 
-Sponsored by the NGI0 Core fund.
+2.43.0
 
