@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795539494;
-	b=N85mZikJBLYjv7Iu1M4X3NXCjBWpkmgLZHmWoYo7QEzQD8NCoivOgucD+FmP2u3YoAZd
-	 45Hr9Kvh3eCrOES/F1PlaPE8Lou8+LpRrGAfV3htmN3PkgP5Pa3iXvd+9WyATmvL1jKXz
-	 ZwD6uByqZKB0QWIPT1noEN79/8DWF0VZbhJpPkw1n/+QLVc1X5JvYyGlpQHsIkZf+O7XF
-	 M7soungqfmKCihktenCEL+S+movl8msoCTA1m1tgDEzf0zwsfU4tv1tRPDkstTQtWosNS
-	 CgkNy3PecludW1f9vI2xKitHeyLXCMa/gFiAL2jBTVhiLBoEBGnp3z0Aqw0qqDxdIJw==
+	t=1795539523;
+	b=xWm2coBQgRGEasIyery4CmCbsBYiowjbAgofrmneL1AyIY/EJwCiMdujuvtmTgz2qPyx
+	 HXW4Qj8HhvPKr8k4Whjqu/xoJyxl6KMj57vhjSQQuXEB5JBNJGH9tdYwNJsnyUh5wPGmB
+	 ox8X5qJBmLIFldX86q/c50FrLGGToR3KvqVowfZ2DMDV82nBn6njb7VsZh0Scn3nESzRn
+	 h2Ag0W0hWJB5MJ0VOQw0KT/LGaMCFoQK2wWttKcfkGPv5ct5GTY3mlLbjR7rCvTfDm7KX
+	 +/BxLVZhACFOqO/IeqTjsfFda1FxxalSiAmVHy0gaiibda7Qfa4OAkE5IJm2djaCksg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795539494;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795539523;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=7bzqAqpmFimjeJFcxVgTHaPyYVyV1TyY7rhQFKp6yio=;
-	b=tCtPfp6gpCw9wKffKQP/+8BFxsxY2toGOJSQpUMoMef3o8TxHEfKSFf0DG2wF7xMSJdh
-	 B/Clo2ZfM69UwELqrx0AC0z5ToB4FpGBQc5ZPnhywRdu7A6MQU3wzDOhAMPLdm8V6HWK7
-	 FZOcW5nE878CE/6N6wIRNH0KKgIeE/h/SrJ6s/8tXZ+tNKZMmuw5uEPscsInbDSSD81Ab
-	 e3PciyECUb2ym/bzMHZmDWcjwPwtOtcSb/kCRs+q0LMgCdFM5spWYy+kdnuQ+K/JRkyMN
-	 y/lL3PAPgQS3xcnrFDtPi6jVnJLkIjWP1Raetuy3hYe3DD08tdsxI3LA9Ghx8fFl0Sg==
+	bh=eHsnBaxBmQGoIJUeUlzJuErhbcGl+7GiPF8z+JaeIMA=;
+	b=suq8lL/vQEyyRYHdl/lXXwHeZSaMsuu1TgEsaGX5yfCTiJF45SioNcEQXWtRK4SIT3Qn
+	 gTSmK1tNrKGYm8eBUssqPxNaPB4kAhv5BUFcnlsZwEuY2n2ZaBAfO5opfg0QodsyRfNwS
+	 rNKtl85Cdwlg6nknFqSIdjXpI57MIuMoDxLMDQR8vpPNm29vh+f3TpQfh3n2ssvr3k2zZ
+	 5XG2VQ9GdZ/tcrF+wXEHg34VUI4cn3SFFAZYfIAz0towMX1NKcvPRXIj0njiNeXhTdJG7
+	 gFev0UOSXyZD5lhBoF8OhBNk/TUFnYpuqIb5rmv85vHhtf+tmPuire1MvTdcKRsCOJQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WvYVBtuT;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lGJ8WllI;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52333606A33D;
-	Tue, 24 Nov 2026 16:58:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06008606A321;
+	Tue, 24 Nov 2026 16:58:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WvYVBtuT
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CDB31F000C6;
-	Tue, 24 Nov 2026 16:58:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lGJ8WllI
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B00FE1F000C6;
+	Tue, 24 Nov 2026 16:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795539494;
-	bh=7bzqAqpmFimjeJFcxVgTHaPyYVyV1TyY7rhQFKp6yio=;
+	s=k20260515; t=1795539522;
+	bh=eHsnBaxBmQGoIJUeUlzJuErhbcGl+7GiPF8z+JaeIMA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=WvYVBtuTFXAF5q1MbcgyTZ6v/USmCbK7qJaXXQnPjFqspRJKqHZPYiEf/vD1YH0Y6
-	 gYgD+2nWq9q++UnvbZ9dcF80jj3KaCsDwJiaJnlpZ6G0lNXGQIY6mcpFxxJQXNMgIh
-	 ODDpbFjZGyzo2VkF4TVAQpWEbkGYkZyx0MZXtYpO0/HI8ah5Y+aRMTX0DbaNi8AKB+
-	 P6g4oOSJdhHqpQOLj6O6QgwGmZyn20/bPfRroUq0IkseV5wcmjk20Pzf4DMJ1IO1OV
-	 IvqdgrVdi0gGmDt0+RS77LFgHGn8FfmvTZ0RRIju5dKkHB9cU68pl6dF42XAdkPXyc
-	 3JWEXGH3R1ddA==
-Message-ID: <0f4420d2-c4cd-4b93-9841-20d95d98d9e3@kernel.org>
-Date: Tue, 24 Nov 2026 17:58:05 +0100
+	b=lGJ8WllI9Qt0HkomMWvWGBn5x1rznruEwe+F4WjZtAa78f6bSfHS91IbwQS1VNlJK
+	 CSE18bMi0avham49OZAnsLODB9kxzDyVybNtCU+hCBzqJDdetteBVNxbR8B7hvC5Os
+	 f8lqtZdvzTgeKlal+6ek9l+2DEJ8g+VsMiQsJ1TdoMgoSvJzGR82WuVMP83MLLwuNw
+	 zNbu2JwdNpzvxpPgfmxKudvSReBFRZpQF60ONlh9wnUoN56CyLjy/voVm16AfYkfq6
+	 FX1Jxh6do6bGVvwZFLJc6+ukcNvYT18VuPf0u10uRXPV6HALJ3TsPI5pMUWbrnReke
+	 xEvlULGHup+PA==
+Message-ID: <f1d92526-8468-4ad4-a9c0-13fc7dc641e0@kernel.org>
+Date: Tue, 24 Nov 2026 17:58:33 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,18 +52,22 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net 08/10] mptcp: pm: don't let listeners pin their netns
+Subject: Re: [PATCH net 00/10] mptcp: misc fixes for v7.4-rc5
 Content-Language: fr
-To: netdev-bot+sashiko@kernel.org
-Cc: edumazet@kernel.org, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, willemb@google.com, horms@kernel.org,
- martineau@kernel.org, geliang@kernel.org, cpaasch@openai.com, fw@strlen.de,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, dcaratti@redhat.com,
- mason@kernel.org, stable@vger.kernel.org, ncardwell@google.com,
- kuniyu@google.com, kafai@fb.com, daniel@iogearbox.net, ast@kernel.org,
- martin.lau@kernel.org, bpf@vger.kernel.org
-References: <20261123-net-mptcp-misc-fixes-7-4-rc5-v1-8-278042217e8d@kernel.org>
- <179553041337.3135.9610172277728846515@kernel.org>
+To: netdev@vger.kernel.org
+Cc: Eric Dumazet <edumazet@kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Willem de Bruijn <willemb@google.com>,
+ Simon Horman <horms@kernel.org>, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, Christoph Paasch <cpaasch@openai.com>,
+ Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev,
+ Davide Caratti <dcaratti@redhat.com>, Chris Mason <mason@kernel.org>,
+ stable@vger.kernel.org, Neal Cardwell <ncardwell@google.com>,
+ Kuniyuki Iwashima <kuniyu@google.com>, Hyunwoo Kim <imv4bel@gmail.com>,
+ Josef Bacik <josef@toxicpanda.com>, Martin KaFai Lau <kafai@fb.com>,
+ Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>,
+ Martin KaFai Lau <martin.lau@kernel.org>, bpf@vger.kernel.org
+References: <20261123-net-mptcp-misc-fixes-7-4-rc5-v1-0-278042217e8d@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -109,37 +113,38 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <179553041337.3135.9610172277728846515@kernel.org>
+In-Reply-To: <20261123-net-mptcp-misc-fixes-7-4-rc5-v1-0-278042217e8d@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hello,
 
-On 24/11/2026 15:26, netdev-bot+sashiko@kernel.org wrote:
-> - [High] The netns leak this patch claims to fix can still be triggered
->   through the SYN-cookie path.
+On 23/11/2026 14:24, Matthieu Baerts (NGI0) wrote:
+> Here are some unrelated fixes:
+> 
+> - Patches 1-2: drain the queues of a TCP or MPTCP socket when listen()
+>   fails, not to leak sockets and their netns. Fixes for v4.4 and v5.11.
+> 
+> - Patch 3: clear inet_opt in the child of an IPv6 listener, to avoid a
+>   double free with SELinux and NetLabel. A fix for v5.6.
+> 
+> - Patch 4: fix UaF in corner cases from delegated actions. A fix for
+>   v5.12.
+> 
+> - Patches 5-6: do not leak an orphan moved to the CLOSE state outside
+>   the worker. Fixes for v6.15, and for another fix introduced in v6.6
+>   and targeting v5.11.
+> 
+> - Patches 7-8: do not let PM listeners pin their netns, leaked
+>   otherwise. A fix for v5.12.
+> 
+> - Patch 9: initialize drop_req, not to leak sockets with SO_REUSEPORT
+>   migration. A fix for v5.14.
+> 
+> - Patch 10: do not pass a BPF request sock to an MPTCP listener, to
+>   avoid a slab-out-of-bounds write. A fix for v6.9.
 
-(...)
-
-> Doesn't that leak the namespace the same way as before this patch?
-
-Yep! But this is not a regression: before this patch, these children
-also held a netns reference, and the listener itself always pinned the
-netns.
-
-(...)
-
-> Could the reference be taken only for MP_JOIN children that get attached
-> to an msk? Another option would be to reject non-MP_JOIN cookie ACKs on a
-> pm_listener in mptcp_subflow_init_cookie_req().
-
-The second option is already pending on the MPTCP ML, for a separate
-*pre-existing* issue. It will be sent with the next batch:
-
-
-https://lore.kernel.org/20261121-mptcp-cmason-fixes-v2-31-00327fd1de1f@kernel.org
-
-So no need to change this patch, it can be applied as is.
+TL;DR regarding Clashiko's reviews: no new versions needed I think.
 
 Cheers,
 Matt
