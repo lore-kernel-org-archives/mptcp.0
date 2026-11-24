@@ -1,53 +1,53 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795563042;
-	b=G/Rik6sU06QH8R5GQqG+EuJYrFRwOO8WmRwsX1EXBiRNgbho5aRcW45qddpsgyOZLaQH
-	 qndKk5qIUtr4wl98CM1gMAaPooCSkBMFypKkhwPK5r09/nmziaMD3wARSgMBNXI1GCXfj
-	 ZhVnhRvG5/E6FHGP/2kn3UVmGvwl8umeQpjHCCcWK+LR+HtAVv8WVBHytHe5QVXzv1eou
-	 xkN3TlAmNunrkwr24I/sTRkJFYWJG3qLTRQVZazOF1ATvbgpS4SftvYMD1zVd7M1yOJAD
-	 vI7xQC0xUHvCiACVfBibzxGly1ec2pvNeaHxOmNan5qj5/z6+sFurCxmLJPi3gnPlZw==
+	t=1795563043;
+	b=WNI068/CGp+oAWqcdFLdF+OACZJovRQHz98iFBLEGUeAA4h9J4ZMn+kl8KJmeBm3kIY3
+	 65oErzfuKojtTsjmzjd9BS6ARbQRDr2esIRtLIjACNd6iD2CyKRwtZ5IlRU7RQF3R5USi
+	 mA1ECy+Jt20OjdPVI37IN9jyJHintZnVnfsIbfh0gRZIuivFvY2Nk1WJMkmC4+5I+E5RO
+	 80aBhsn3f7TviylqkRukXI5kuImK0FWhb2lYgUi+W8E5ilzszRFZBdGuEQXrobOJYveG1
+	 WhgRdwRGhqbFQzo7IuucXncxEHM2Dmc2cL74/Ief18yKly8PTh5T6QEUf4Nmj7+zyhw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795563042;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795563043;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=+yXU3gyvxnsCBLQFxc7hi7GyVJg2UEG6995FK4KckLQ=;
-	b=OMlaeZ4Q21/UDPQD52P7c9WWft5A93gUOCCR+7LSaS+oen9XfAYnx0F6CmZNzybKXnFn
-	 /AV8G8EsmucW35EWKUf3gVbdi8lwvkumJhtTKY7xLFUj+EcWVLk/jYn4yBVFwAP+CtyyN
-	 H7hsHDp8ctwRloDEfgBYhEqcLa30NeXw4eyoAyw+H12SKPrUEJEC3xWUuS0lCDvP8FGPV
-	 HISx4+/xJHdp/ZDZSm/ILJYf1N3qvEtIPgYB1xRlHF9qPyeIABf8xb7E/cueeZFd7nuTJ
-	 izMtYeLZ9xWyYHTD8v8CqBT92xf2o7KCpRR2tR+NI86D2N1EZAARgNLRpBun71zAr9g==
+	bh=qaue+IXHWY1nZGak3Y74QwLfFQRmoAcTdyibsPwS/IE=;
+	b=kRB3bXUEXGnDQvxY2nGy5yk3/e4i6iRrqiHIEcBw+FBGTUA460tPqCy3Jd9x1wYZFY92
+	 5VAUdN5Fu+m8DDRnCYgr0JdANsufeQZZIQPDUN2TSIBD6C0ZdMxSQyNdt4kLHpXNtgptf
+	 wi4UmX6YRCpfugV12akn9xNh/9885S9kzF05xdKieg/sf07v90po5YZo/87nX6SurILTf
+	 /M0hH96377adowYiXdTYwYXH7zO7PnvQSwj7u/WxqhYASOh6b5vJDr6SUb7Ne45BFDq3I
+	 +s5D8+M4v/Qds/5zdim8tT49hIQxtRdz+k7pbJ6NN+WzSpY8xeTuly77baTm0ivC7jw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Y8CiawDD;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gyKIDz+j;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAAC0606A33E
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 23:30:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E61606A33C
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 23:30:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Y8CiawDD
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8AA51F000D1;
-	Tue, 24 Nov 2026 23:30:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gyKIDz+j
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10FD81F000D1;
+	Tue, 24 Nov 2026 23:30:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795563042;
-	bh=+yXU3gyvxnsCBLQFxc7hi7GyVJg2UEG6995FK4KckLQ=;
+	s=k20260515; t=1795563043;
+	bh=qaue+IXHWY1nZGak3Y74QwLfFQRmoAcTdyibsPwS/IE=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=Y8CiawDDgwcaX7E8Jrzs0S8sdFc/i3GOAZaVKvj13djvZwPd2cwGvMq0sgoxGvy4U
-	 c3j18CN1zGhvHPpGBhrruQE2pfdNekAXwL+zHz/UjhsvL13H6OeYeTIMNwu+cYUsSf
-	 fYJ18vADi2ce0s02iLy72lkcWF5RSUTlUR0UKO4brNhbtLOplYQ4bNl4unBgOHpY2c
-	 gvtd7joe4a7HV2ZCCeDc2q01RxmSVv3g60Kd3rew0dD+p9GOrJGqt5M/1Tr0S5ne6e
-	 U6Yis2SeJdVXG+balpjKH9966c3GlHtyopv3xI/U5nb5KrOkfKoknQIhgYCC4TqVD3
-	 Q59V1U6mWSm3w==
-Subject: Re: [PATCH mptcp-next v8 4/7] mptcp: add MSG_ZEROCOPY support
+	b=gyKIDz+jSgb/L/fpigbehvg8tc2ZHcWiLCcXNWnt7koBqi7KemZnUU3V7Eg8NZd/L
+	 ikyWa0EyVCpO3EHqF6wUc18Qz8NxmbRWayMG+vRCLSo1wgGoLgJrKzPFofSO6KmGfK
+	 Tdv2HKwmBY3FeaKUmIn+/Es7qEvI/g2p/BtcFSlR67do30Ydtjttzp6lCm5kQwyXy/
+	 8Jr2+Ll7KpVZbEUCziQWTsD0VJEkjaWVK6QlDpgSg+sC4ca6ZwSG28WifkMapmynei
+	 3mtJ7zqZDZoAkU3cFMZmvrI0lP0OITWMQxXmcTiEJ2bzYUeC7QP7Zu9EbDDzHQ2R45
+	 N865Rce5QVaJw==
+Subject: Re: [PATCH mptcp-next v8 5/7] mptcp: handle SO_ZEROCOPY in setsockopt
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Tue, 24 Nov 2026 23:30:41 +0000
-Message-ID: <179556304139.3133.296848158995571353@kernel.org>
-In-Reply-To: <3f30ee2209176e73f716ad379bb6385145b05fa8.1795421388.git.tanggeliang@kylinos.cn>
-References: <3f30ee2209176e73f716ad379bb6385145b05fa8.1795421388.git.tanggeliang@kylinos.cn>
+Date: Tue, 24 Nov 2026 23:30:42 +0000
+Message-ID: <179556304261.3133.6680231180875461080@kernel.org>
+In-Reply-To: <154898fde8a9acdf6562d2adda67ebfe3ddd7246.1795421388.git.tanggeliang@kylinos.cn>
+References: <154898fde8a9acdf6562d2adda67ebfe3ddd7246.1795421388.git.tanggeliang@kylinos.cn>
 X-sashiko-severity: High
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -61,10 +61,10 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 8 potential
+Thank you for your contribution! Sashiko AI review found 7 potential
 issue(s) to consider.
 
-Critical: 0 · High: 1 · Medium: 5 · Low: 2
+Critical: 0 · High: 3 · Medium: 2 · Low: 2
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -72,248 +72,96 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [High] On 64K-page kernels (arm64 with 64K pages, ppc64le by default),
-  mptcp_sendmsg_zerocopy_iter() in net/mptcp/protocol.c has an off-by-…
-- [Medium] mptcp_poll() never reports EPOLLERR for a non-empty
-  sk_error_queue, but MSG_ZEROCOPY completions for MPTCP are queued on…
-- [Medium] A MSG_ZEROCOPY sendmsg() can return success without being
-  assigned a notification ID.
-- [Medium] mptcp_sendmsg_zerocopy_iter() leaks a page reference when
-  iov_iter_get_pages2() returns 0.
-- [Medium] mptcp: missing DEFER_CONNECT check for MSG_ZEROCOPY in
-  mptcp_sendmsg()
-- [Medium] mptcp: unbalanced sk_wmem_schedule() in
-  mptcp_sendmsg_zerocopy_iter()
-- [Low] Documentation/networking/msg_zerocopy.rst still says 'The feature
-  is currently implemented for TCP, UDP and VSOCK (with virtio…
-- [Low] The commit author is 'Geliang Tang <geliang@kernel.org>' but the
-  only Signed-off-by is 'Geliang Tang <tanggeliang@kylinos.cn>'.
+- [High] mptcp_poll() in net/mptcp/protocol.c only sets EPOLLERR from
+  READ_ONCE(sk->sk_err) (line 4696).
+- [High] This patch lets unprivileged users turn on SOCK_ZEROCOPY on the
+  msk, which exposes a gap in pinned-page accounting in…
+- [High] On kernels with PAGE_SIZE >= 65536 (for example arm64 or ppc64le
+  built with 64K pages), mptcp_sendmsg_zerocopy_iter()…
+- [Medium] Now that SO_ZEROCOPY can be set on MPTCP, mptcp_sendmsg()
+  (net/mptcp/protocol.c:2118-2119) clears MSG_ZEROCOPY whenever…
+- [Medium] mptcp: SO_ZEROCOPY lost on passive TCP fallback in
+  mptcp_stream_accept()
+- [Low] The comment in mptcp_recvmsg() (net/mptcp/protocol.c:2530), '/*
+  MSG_ERRQUEUE is really a no-op till we support IP_RECVERR */', is now…
+- [Low] Documentation/networking/msg_zerocopy.rst says 'The feature is
+  currently implemented for TCP, UDP and VSOCK (with virtio transport)…
 
 --
 
-mptcp: add MSG_ZEROCOPY support
+mptcp: handle SO_ZEROCOPY in setsockopt
 
-This commit adds MSG_ZEROCOPY support to MPTCP sockets. It pins user pages
-with iov_iter_get_pages2() and stores them in a separately allocated
-mptcp_data_frag that holds a reference on the ubuf_info. Subflow skbs are
-marked with skb_zcopy_set() and SKBFL_PURE_ZEROCOPY, the same way TCP does
-it.
+This patch lets SO_ZEROCOPY be set on MPTCP sockets through the
+SOL_SOCKET setsockopt dispatcher. The new helper,
+mptcp_setsockopt_sol_socket_zerocopy(), accepts 0 or 1 and toggles
+SOCK_ZEROCOPY on the msk. mptcp_sendmsg() then checks that flag to
+enable the MSG_ZEROCOPY path.
 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-
-[Severity: Low]
-The Author is Geliang Tang <geliang@kernel.org>, but the only sign-off uses
-a different address. checkpatch.pl reports a From:/Signed-off-by: email
-address mismatch for this.
-
-Could the author and sign-off addresses be made to match, or could an
-explicit matching From: line be added?
-
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index be8432e12bf8c..8bbb123bd240f 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-
-[ ... ]
-
-> @@ -1998,22 +2023,110 @@ static void mptcp_rps_record_subflows(const struct mptcp_sock *msk)
->  	}
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index fcf6feb2a9eb5..abcc7d4452b41 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -175,6 +175,19 @@ static int mptcp_setsockopt_sol_socket_tstamp(struct mptcp_sock *msk, int optnam
+>  	return 0;
 >  }
 >  
-> +static ssize_t mptcp_sendmsg_zerocopy_iter(struct sock *sk, struct msghdr *msg,
-> +					   struct ubuf_info *ubuf,
-> +					   u32 copy_limit)
+> +static int mptcp_setsockopt_sol_socket_zerocopy(struct mptcp_sock *msk, int val)
 > +{
-> +	struct mptcp_sock *msk = mptcp_sk(sk);
-> +	struct mptcp_data_frag *dfrag;
-> +	struct page *pages[1] = {};
-> +	size_t pg_off = 0;
-> +	ssize_t pg_len;
+> +	struct sock *sk = (struct sock *)msk;
 > +
-> +	pg_len = iov_iter_get_pages2(&msg->msg_iter, pages,
-> +				     copy_limit, 1, &pg_off);
-> +	if (pg_len < 0)
-> +		return pg_len;
-> +	/* pg_len == 0 means the iterator is exhausted */
-> +	if (pg_len == 0)
-> +		return -EFAULT;
+> +	if (val != 0 && val != 1)
+> +		return -EINVAL;
+> +
+> +	lock_sock(sk);
+> +	sock_valbool_flag(sk, SOCK_ZEROCOPY, val);
 
 [Severity: Medium]
-Can this leak a page reference? Every other error exit in this helper calls
-put_page(pages[0]), but this one does not.
+Does SOCK_ZEROCOPY survive a passive fallback to plain TCP?
 
-For ITER_BVEC iterators, __iov_iter_get_pages_alloc() can take a reference
-and still return 0. Take a current bvec segment with zero length and a bv_offset
-that is not page aligned:
+This sets the flag only on the msk. It doesn't bump
+msk->setsockopt_seq the way mptcp_sol_socket_sync_intval() does.
+sync_socket_options() copies SOCK_KEEPOPEN, SOCK_LINGER and SOCK_DBG
+to the subflows, but not SOCK_ZEROCOPY. So the listening subflow
+msk->first never gets the flag, whether SO_ZEROCOPY is set before or
+after listen().
 
-  first_bvec_segment() caps maxsize to 0
-  want_pages_array() still returns n = 1, because *start != 0
-  folio_get() is called on the page stored in pages[0]
-  maxsize = min(0, ...) = 0 is returned
+Now suppose a non-MP_CAPABLE client connects to such a listener.
+subflow_syn_recv_sock() creates the child through
+listener->icsk_af_ops->syn_recv_sock(). That clones it from the
+listening TCP subflow, so the child inherits the ssk's sk_flags rather
+than the msk's. The fallback path then calls mptcp_subflow_drop_ctx()
+on the child and returns it without ever calling
+mptcp_sk_clone_init().
 
-It isn't clear whether any real in-kernel caller builds such an iterator.
-Even so, would something like this be safer?
+mptcp_stream_accept() then takes the tcpfallback branch.
+__inet_accept() grafts the plain TCP child onto newsock, and the ops
+are switched to mptcp_fallback_tcp_ops(). From that point sendmsg()
+goes to tcp_sendmsg_locked() and getsockopt() goes to sk_getsockopt(),
+both on the TCP child, where SOCK_ZEROCOPY is clear.
 
-    if (pg_len == 0) {
-        if (pages[0])
-            put_page(pages[0]);
-        return -EFAULT;
-    }
+TCP zerocopy servers commonly set SO_ZEROCOPY on the listener and rely
+on accepted sockets inheriting it. With this patch,
+getsockopt(SO_ZEROCOPY) on the accepted socket returns 0. A
+sendmsg(MSG_ZEROCOPY) is silently copied and no SO_EE_ORIGIN_ZEROCOPY
+notification is queued. An application waiting on MSG_ERRQUEUE for
+one completion per send could stall.
 
-> +
-> +	if (pg_len > U16_MAX) {
-> +		iov_iter_revert(&msg->msg_iter, pg_len - U16_MAX);
-> +		pg_len = U16_MAX;
-> +	}
-> +
-> +	if (pg_off > U16_MAX) {
-> +		iov_iter_revert(&msg->msg_iter, pg_len);
-> +		put_page(pages[0]);
-> +		return -EFAULT;
-> +	}
-> +
-> +	if (pg_off + pg_len > U16_MAX) {
-> +		size_t len = U16_MAX - pg_off;
-> +
-> +		iov_iter_revert(&msg->msg_iter, pg_len - len);
-> +		pg_len = len;
-> +		if (WARN_ON_ONCE(!pg_len)) {
-> +			put_page(pages[0]);
-> +			return -EFAULT;
-> +		}
-> +	}
+This also conflicts with the commit message's claim that setting the
+flag on the msk alone is honoured on every data path without any
+cross-socket propagation.
 
-[Severity: Medium]
-Is this sk_wmem_schedule() balanced anywhere?
-
-When sk->sk_forward_alloc is smaller than pg_len + sizeof(*dfrag),
-__sk_mem_schedule() grows sk_forward_alloc in page units. It also
-charges tcp_memory_allocated and the socket memcg. The copy path in
-mptcp_sendmsg() consumes that with sk_forward_alloc_add(sk, -total_ts),
-but nothing here calls sk_mem_charge(). On the release side,
-dfrag_uncharge() now skips sk_mem_uncharge() for zerocopy dfrags, so
-sk_mem_reclaim() is not reached from that path either.
-
-Take a socket that only does MSG_ZEROCOPY sends. The forward
-allocation from the first schedule can be up to roughly 17 pages on
-4K page kernels, since pg_len can be close to 64K. It stays charged to
-the protocol and to the memcg until another path reclaims it or the
-socket is closed.
-
-This also makes zerocopy sends subject to the protocol memory limits.
-Under tcp memory pressure __sk_mem_schedule() can fail. The -EAGAIN
-return then sends mptcp_sendmsg() into wait_for_memory, even though
-no socket memory is actually charged for this data.
-
-The commit message says these pages bypass kernel memory accounting.
-tcp_sendmsg_locked() likewise skips tcp_wmem_schedule() for pure
-zerocopy skbs.
-
-Should this call be dropped, to match TCP and the dfrag_uncharge()
-change? Or should the dfrag be charged with sk_mem_charge() here and
-uncharged normally in dfrag_uncharge()?
+Should SOCK_ZEROCOPY be propagated to the subflows in
+sync_socket_options(), as SOCK_DBG is, with a setsockopt_seq bump
+here? Or would you rather copy it from the msk in the fallback accept
+path?
 
 [Severity: High]
-On 64K page kernels, can userspace trigger this WARN_ON_ONCE()?
+Will poll() ever report the zerocopy completions that this enables?
 
-With maxpages == 1, iov_iter_get_pages2() gives pg_off + pg_len <=
-PAGE_SIZE, which is 65536 here. For a page-aligned buffer, the first pass
-gets pg_off = 0 and pg_len = 65536. The pg_len > U16_MAX check caps that to
-65535 and reverts one byte.
-
-The next pass then gets pg_off = 65535 and pg_len = 1. The pg_off > U16_MAX
-check is false, but pg_off + pg_len > U16_MAX is true, so:
-
-    len = U16_MAX - pg_off;    /* 0 */
-    pg_len = len;
-    if (WARN_ON_ONCE(!pg_len)) {
-
-The warning fires and -EFAULT is returned. The same thing happens for any
-chunk that ends exactly at the end of a 64K page, because that chunk gets
-trimmed by one byte.
-
-In mptcp_sendmsg() this becomes a short write when copied > 0. When the
-remainder is retried (copied == 0), the zerocopy request is aborted and the
-data is copied instead. With panic_on_warn, an unprivileged user with
-SO_ZEROCOPY set can crash the system this way.
-
-Is the stricter bound needed? In __mptcp_clean_una(), dfrag->offset only
-grows by delta < data_len, so pg_off + pg_len == 65536 seems to still fit
-both u16 fields. Would checking against U16_MAX + 1 be enough here?
-
-[ ... ]
-
->  static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->  {
->  	struct mptcp_sock *msk = mptcp_sk(sk);
-> +	struct ubuf_info *ubuf = NULL;
->  	struct page_frag *pfrag;
->  	size_t copied = 0;
-> +	bool zc = false;
->  	int ret = 0;
->  	long timeo;
->  
->  	/* silently ignore everything else */
->  	msg->msg_flags &= MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL |
-> -			  MSG_FASTOPEN | MSG_EOR;
-> +			  MSG_FASTOPEN | MSG_EOR | MSG_ZEROCOPY;
-
-[Severity: Low]
-This isn't a bug, but Documentation/networking/msg_zerocopy.rst still says:
-
-  The feature is currently implemented for TCP, UDP and VSOCK (with
-  virtio transport) sockets.
-
-Should MPTCP be added there, along with any MPTCP-specific behaviour?
-Documentation/networking/ is not changed anywhere in the series.
-
->  
->  	lock_sock(sk);
->  
->  	mptcp_rps_record_subflows(msk);
->  
-> +	if (msg->msg_flags & MSG_FASTOPEN || !sock_flag(sk, SOCK_ZEROCOPY))
-> +		msg->msg_flags &= ~MSG_ZEROCOPY;
-> +
-> +	if ((msg->msg_flags & MSG_ZEROCOPY) && len) {
-> +		ubuf = msg_zerocopy_realloc(sk, len, NULL, false);
-
-[Severity: Medium]
-Does MSG_ZEROCOPY also need to be dropped when DEFER_CONNECT is set?
-
-The downgrade here only tests MSG_FASTOPEN. The fastopen branch just
-below is also entered when inet_test_bit(DEFER_CONNECT, sk) is set.
-After setsockopt(TCP_FASTOPEN_CONNECT) and connect(), a plain
-sendmsg(MSG_ZEROCOPY) therefore allocates ubuf with zc = true and then
-goes through mptcp_sendmsg_fastopen().
-
-mptcp_sendmsg_fastopen() passes a NULL uarg to tcp_sendmsg_fastopen().
-The bytes placed in the SYN are copied, but the ubuf is never attached
-to the SYN skb and uarg->zerocopy is never cleared. When that call
-returns -EINPROGRESS with copied_syn > 0, we jump to out: and
-net_zcopy_put(ubuf) drops the last reference. The completion is then
-queued immediately, while the SYN data is still unacknowledged. It is
-also reported without SO_EE_CODE_ZEROCOPY_COPIED, even though every
-byte was copied.
-
-The user buffer was copied, so reusing it is not unsafe. Still, the
-application gets a wrong report for this send. This also doesn't match
-the commit message, which says zerocopy is downgraded for fastopen.
-
-TCP hands its uarg to tcp_sendmsg_fastopen() for this case. Would it
-be simpler to add the DEFER_CONNECT test to the downgrade condition, or
-should the ubuf be passed through the MPTCP fastopen path the same way
-TCP does it?
-
-[Severity: Medium]
-Zerocopy completions are now queued on the msk sk_error_queue. Does
-mptcp_poll() need to report EPOLLERR when that queue is not empty?
-
-msg_zerocopy_alloc() allocates the notification skb with sock_omalloc() on
-the msk. __msg_zerocopy_callback() queues it on sk->sk_error_queue and calls
-sk_error_report().
-
-mptcp_poll() only checks sk_err:
+mptcp_sendmsg() calls msg_zerocopy_realloc() on the msk. The
+SO_EE_ORIGIN_ZEROCOPY notifications therefore go on msk->sk_error_queue,
+and sk_err stays 0. mptcp_poll() in net/mptcp/protocol.c only checks
+sk_err:
 
 net/mptcp/protocol.c:mptcp_poll() {
     ...
@@ -322,7 +170,7 @@ net/mptcp/protocol.c:mptcp_poll() {
     ...
 }
 
-tcp_poll() also checks the error queue:
+tcp_poll() checks the error queue as well:
 
 net/ipv4/tcp.c:tcp_poll() {
     ...
@@ -332,93 +180,202 @@ net/ipv4/tcp.c:tcp_poll() {
     ...
 }
 
-Documentation/networking/msg_zerocopy.rst says poll() blocks until a
-notification is outstanding and then sets POLLERR. Its example uses
-poll(&pfd, 1, -1) with events = 0.
+Documentation/networking/msg_zerocopy.rst says poll "will set POLLERR in
+its output flags" while a notification is outstanding. Its example uses
+poll(&pfd, 1, -1).
 
-On an MPTCP socket the completion does wake the waiter. The recomputed mask
-has no EPOLLERR, though, so the waiter goes back to sleep.
+When __msg_zerocopy_callback() calls sk_error_report(), the waiter wakes
+up and runs mptcp_poll() again. It gets no EPOLLERR and goes back to
+sleep. Level-triggered epoll misses the event in the same way.
 
-The comment in mptcp_recvmsg() also looks stale now:
+Wouldn't an application that follows the documented pattern on an MPTCP
+socket block forever, with the uncollected notifications still holding
+optmem?
 
-	/* MSG_ERRQUEUE is really a no-op till we support IP_RECVERR */
+The selftest added later in the series ("selftests: mptcp: connect: add
+zerocopy io mode") doesn't catch this. wait_for_completions_zc() calls
+recvmsg(MSG_ERRQUEUE) itself and limits each poll() to 200 ms. No later
+patch in the series changes mptcp_poll().
 
-The selftest in this series polls with a 200ms timeout and drains the queue
-again, which hides this.
+[Severity: High]
+With this opt-in in place, can userspace hit the WARN_ON_ONCE() in
+mptcp_sendmsg_zerocopy_iter() on kernels built with 64K pages?
 
-> +		if (!ubuf) {
-> +			ret = -ENOBUFS;
-> +			goto do_error;
-> +		}
-> +		zc = true;
-> +	}
-> +
+net/mptcp/protocol.c:mptcp_sendmsg_zerocopy_iter() {
+    ...
+	if (pg_len > U16_MAX) {
+		iov_iter_revert(&msg->msg_iter, pg_len - U16_MAX);
+		pg_len = U16_MAX;
+	}
 
-[ ... ]
+	if (pg_off > U16_MAX) {
+		...
+	}
 
-> @@ -2052,6 +2165,25 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->  		if (!copy_limit)
->  			goto wait_for_memory;
->  
-> +		if (zc) {
-> +			ret = mptcp_sendmsg_zerocopy_iter(sk, msg, ubuf,
-> +							  copy_limit);
-> +			if (ret == -EAGAIN || ret == -ENOMEM)
-> +				goto wait_for_memory;
-> +			if (ret == -EFAULT) {
-> +				if (copied)
-> +					goto do_error;
-> +				net_zcopy_put_abort(ubuf, true);
-> +				zc = false;
-> +				ubuf = NULL;
+	if (pg_off + pg_len > U16_MAX) {
+		size_t len = U16_MAX - pg_off;
+
+		iov_iter_revert(&msg->msg_iter, pg_len - len);
+		pg_len = len;
+		if (WARN_ON_ONCE(!pg_len)) {
+			put_page(pages[0]);
+			return -EFAULT;
+		}
+	}
+    ...
+}
+
+With PAGE_SIZE == 65536, take a sendmsg(MSG_ZEROCOPY) of 64KB or more
+from a page-aligned buffer. The first call gets pg_off == 0 and
+pg_len == 65536, and reverting one byte clamps pg_len to 65535.
+
+The next iteration gets the last byte of the same page, with
+pg_off == 65535 and pg_len == 1. The pg_off > U16_MAX check doesn't
+catch pg_off == U16_MAX, so len becomes 0 and the WARN fires. Sending a
+single byte from buf + 65535 triggers it directly.
+
+The function then returns -EFAULT. mptcp_sendmsg() either returns a
+short write or aborts the ubuf and falls back to copying. On 64K-page
+systems zerocopy would keep falling back to copying. With panic_on_warn
+set, the first such send would panic the kernel.
+
+This code was added by the previous patch, but it only becomes reachable
+now that SOCK_ZEROCOPY can be set on the msk.
+
+[Severity: High]
+Does this opt-in let an unprivileged user pin far more user pages than
+the send buffer should allow?
+
+Each mptcp_sendmsg_zerocopy_iter() call pins one full user page. It
+charges the msk only for the bytes used plus the dfrag header:
+
+net/mptcp/protocol.c:mptcp_sendmsg_zerocopy_iter() {
+    ...
+	pg_len = iov_iter_get_pages2(&msg->msg_iter, pages,
+				     copy_limit, 1, &pg_off);
+    ...
+	dfrag->overhead = sizeof(struct mptcp_data_frag);
+    ...
+	sk_wmem_queued_add(sk, pg_len + dfrag->overhead);
+    ...
+}
+
+With ITER_IOVEC, a 1-byte iovec segment gives pg_len == 1 but still
+pins a whole page. On 64-bit, each pinned page then adds only about 49
+bytes to sk_wmem_queued.
+
+The only per-socket limit in the send loop is mptcp_send_limit(), which
+compares sk_wmem_queued against sk_sndbuf. One msk could therefore pin
+roughly sk_sndbuf / 49 pages.
+
+For comparison, TCP charges the page-aligned size of each pinned page in
+zerocopy_fill_skb_from_iter():
+
+	skb->truesize += PAGE_ALIGN(copied + start);
+
+The subflow side doesn't account for the pages either. For
+pure-zerocopy skbs, mptcp_sendmsg_frag() adds only copy:
+
+	skb->truesize += copy;
+	sk_wmem_queued_add(ssk, copy);
+	if (!skb_zcopy_pure(skb))
+		sk_mem_charge(ssk, copy);
+
+dfrag_uncharge() also skips sk_mem_uncharge() for ubuf dfrags.
+
+mm_account_pinned_pages() charges RLIMIT_MEMLOCK by byte length:
+
+	num_pg = (size >> PAGE_SHIFT) + 2;	/* worst case */
+
+So 1024 one-byte iovecs on 1024 different pages are charged as 2 pages.
+
+The pages stay pinned while the data sits unacknowledged in
+msk->rtx_queue, for example when the local peer never reads.
+
+Should the dfrag be charged for the full pinned page, as TCP does?
 
 [Severity: Medium]
-Can a MSG_ZEROCOPY sendmsg() return success here without being given a
-notification ID?
+Now that applications can opt in, is it intended that MSG_FASTOPEN sends
+silently drop MSG_ZEROCOPY without queueing a completion notification?
 
-When mptcp_sendmsg_zerocopy_iter() returns -EFAULT with copied == 0,
-net_zcopy_put_abort() ends up in msg_zerocopy_put_abort():
+net/mptcp/protocol.c:mptcp_sendmsg() {
+    ...
+	if (msg->msg_flags & MSG_FASTOPEN || !sock_flag(sk, SOCK_ZEROCOPY))
+		msg->msg_flags &= ~MSG_ZEROCOPY;
+    ...
+}
 
-    atomic_dec(&sk->sk_zckey);
-    uarg_to_msgzc(uarg)->len--;
+For these sends msg_zerocopy_realloc() is never called. sk_zckey
+doesn't advance and no notification is queued.
 
-As a result, __msg_zerocopy_callback() frees the uarg later without queueing
-a notification. The loop then carries on through the copy path. If the copy
-succeeds, sendmsg() returns a positive byte count with no ID and no
-completion.
+Documentation/networking/msg_zerocopy.rst describes MSG_ZEROCOPY as "a
+contract that the kernel will queue a completion notification".
 
-Documentation/networking/msg_zerocopy.rst says "Each send call with
-MSG_ZEROCOPY that successfully sends data increments the counter."
+TCP keeps that contract on the fastopen path:
 
-TCP only aborts the uarg on its out_err path, where nothing was sent. When it
-falls back to copying on a successful send, it keeps the uarg and reports
-SO_EE_CODE_ZEROCOPY_COPIED.
+net/ipv4/tcp.c:tcp_sendmsg_locked() {
+    ...
+	err = tcp_sendmsg_fastopen(sk, msg, &copied_syn, size, uarg);
+    ...
+}
 
-This path can be reached on 64K page kernels on every retry after the short
-write described above (pg_off == 65535). On 256K page kernels it can be
-reached through the pg_off > U16_MAX case. Applications that count
-successful sends and wait for the matching completion IDs would wait
-forever.
+The tcp_zerocopy_fastopen-client.pkt and -server.pkt packetdrill tests
+check this behaviour. In its non-SG fallback cases, TCP queues a
+"copied" notification (SO_EE_CODE_ZEROCOPY_COPIED) instead.
 
-The commit message describes this -EFAULT only as signalling iterator
-exhaustion:
+A TCP application that uses sendto(MSG_FASTOPEN | MSG_ZEROCOPY) and
+waits for one notification per send would get nothing on MPTCP. It
+could wait forever.
 
-  When iov_iter_get_pages2() returns 0, the function returns -EFAULT
-  to properly signal iterator exhaustion.
+The previous patch's commit message says this downgrade is intentional.
+This patch is what makes it visible to userspace.
 
-It doesn't mention the silent downgrade to copy. Should this path keep the
-uarg and clear uarg->zerocopy, the way TCP does?
-
-> +			} else if (ret < 0) {
-> +				goto do_error;
-> +			} else {
-> +				copied += ret;
-> +				continue;
-> +			}
-> +		}
+> +	release_sock(sk);
+> +	return 0;
+> +}
 > +
 
 [ ... ]
+
+> @@ -342,6 +357,7 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
+>  	case SO_TIMESTAMP_NEW:
+>  	case SO_TIMESTAMPNS_OLD:
+>  	case SO_TIMESTAMPNS_NEW:
+> +	case SO_ZEROCOPY:
+>  		return mptcp_setsockopt_sol_socket_int(msk, optname, optval,
+>  						       optlen);
+
+[Severity: Low]
+This isn't a bug, but Documentation/networking/msg_zerocopy.rst still
+says:
+
+  The feature is currently implemented for TCP, UDP and VSOCK (with
+  virtio transport) sockets.
+
+Should MPTCP be added there now that SO_ZEROCOPY is accepted on
+IPPROTO_MPTCP sockets? The list already leaves out RDS, so it was
+incomplete before this series.
+
+[ ... ]
+
+> @@ -387,7 +403,6 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
+>  	 * SO_CNX_ADVICE is currently unsupported, could possibly be relevant,
+>  	 * but likely needs careful design
+>  	 *
+> -	 * SO_ZEROCOPY is currently unsupported, TODO in sndmsg
+>  	 * SO_TXTIME is currently unsupported
+>  	 */
+
+[Severity: Low]
+This isn't a bug, but the matching comment in mptcp_recvmsg() in
+net/mptcp/protocol.c is now out of date:
+
+	/* MSG_ERRQUEUE is really a no-op till we support IP_RECVERR */
+	if (unlikely(flags & MSG_ERRQUEUE))
+		return inet_recv_error(sk, msg, len);
+
+Userspace now uses recvmsg(MSG_ERRQUEUE) to collect the zerocopy
+completion notifications. Should that comment be updated as well?
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1795421388.git.tanggeliang%40kylinos.cn
