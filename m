@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795516873;
-	b=YfnGViTLQGbjYD45pcDTntoCPuqJalH2w3E2mp8Z9kCANyfwwZH5EIzoCBqDPw68L4aF
-	 uZc8BjOKeQDknYJgvfjf8kPc7oXKcll8kUou9UMYMJYnmShIydRhuj6pJHk33ZjVYfKpT
-	 6tFh6kXmhS5C7f0nC0ko+eubLDZpQgCKG+1cHOwBiCepXpF1O8hDTDVHdqCtT0giEzQbt
-	 zSsDoK0q4xrV9Mhn/KAZ4rW/c/kxZAG2nk85cqXB8Xc/O0UnhUk882DDuEYq+pVaYvrn/
-	 ylP45ej1Ti5NtH3Zwf5Ys8WjQEYbxJSI0jpw88KuQX8OGJBB0VnjXSxRL/c01+X7N7w==
+	t=1795517458;
+	b=Vq7yIx38OVExP9q2lQnu6+KTAtbSgEl8Ze7TDk9MCX3WCcBA3XeKKJgpqcQjBOtNJavd
+	 2Bj2QQYmaNV+hA6nfETxUXj55L5rFjUo3MDk94xwgnWYhtReXKqAiCt/kSOFaWoGyXVLe
+	 yiZtkSFAkjVwg+kUaJfLXfP5Z8unvHurd9hTJyygqRCukwQJcyaio17zpgrunRxEyYSkW
+	 REw5ZMz/viluL3hb85c2Du28ivwHdVn1bT6Ew/46w/rnitl2rnKDCNZ5GBd5o/2N3eadk
+	 SXf1UbZ5CJHdUpTM/f1B739M5Ap+4fd3fm3meybDQ5bZ95XI6LbpDlKZUdwksPfRb1A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795516873;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795517458;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=sE6ePLMMMHh+ZSJHFwXfOhRlLbg+XAg03wgRoUf1Sbo=;
-	b=f/TGFuZU7V97yNbNRRbnpWhyCQtyZPNaDP3pYuPcxqL8kY78FPaRLpEbxrbw4Jub7lVX
-	 qWTDruN3tXub0bpVdaLc4CToGzwsqxnxDUeK+1n1SnW+u0fZgSy0HJVeJ99BQt5MF2k5m
-	 oQoxeaLH0AM1Is3WMEDTMag/g7tSXpbwcB7meHrU5h1eDWYHFA3siamcg0Nt8xzFhKlxz
-	 qiGNOyTiacF7XOxUK+Q4scEmivt/9lCLsJwdW/EWn0hNMl+TtfHJYRKD37vGwVuT01nvw
-	 H93JY31xx1ZU+0N9z5HJwxh+s/jLG9cVibQgUcJVW4NANBTdAwr34iF6IH6y+sbhd+w==
+	bh=bUeAcidrQsSFX25IzJe7FXpPeYZGctYNkLsQ8CeRyRs=;
+	b=tfCOEuavV0VDyXIqvpX0qyUASFHUjnyir56KiOXt6xfwdys29sV4McrjoY0Jp+TjZdAf
+	 T7AWtUhXwrzM95eQ25b3jkDmQpQ32THUZj+v4+IufAqVCaY01h90/ppnQj3ZmPXe/F14Y
+	 c0eCo9fsKxpvioNqEpRgJytBSA+MOFI+OyzklzFE6uIx37VpciMLlSKDmpPV/Oze7O1xR
+	 3bHdGRwJggv4lqQ8mo1ukJOkWuCoJu8UrdVXA8DWi2MnqGiJ1r42RTOv//Git4ls8QM+G
+	 JPb2npLA8b+9ycMjxom2ysVvCy3rNLM3O2UNjtfQPr68zJrZSYJgVoHSNogUcaDXqaw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bS2hDwvp;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EpvsehN5;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495FD606A321;
-	Tue, 24 Nov 2026 10:41:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829FD606A31E
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 10:50:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bS2hDwvp
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED4921F000C4;
-	Tue, 24 Nov 2026 10:41:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EpvsehN5
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A94A91F000C0;
+	Tue, 24 Nov 2026 10:50:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795516872;
-	bh=sE6ePLMMMHh+ZSJHFwXfOhRlLbg+XAg03wgRoUf1Sbo=;
+	s=k20260515; t=1795517457;
+	bh=bUeAcidrQsSFX25IzJe7FXpPeYZGctYNkLsQ8CeRyRs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=bS2hDwvprKevfXXLmk6HqNrBpHnXCRuxmzRYXt8tWKlOe1Yj7Zqy4CnCkCMXLjUpj
-	 gZeF770bHCehreTKxBZyDtlcjTsTQ1qzcRxQg6dSUIaiq3PEwh9buyfyl+s1Lyq2Xn
-	 nYG6Jhc0m8qnPJ6jUDYWdWwthaRjFObmj/IniNUfuFbZkFREUIYutQ2Dao99Y1ti87
-	 xZosc7DRWQn8MkqPqFThtHJ+uiLxRJL6TkVhClNvsuWApbIyJE+KgsUSKj5gwuqvjS
-	 EOwJy+h/2gVHqpWAcjgk4fAZwJjRWxDiR+J4trAsq+Lt/L4tTLaq7Nj9mdMobGu+aj
-	 79Bhq8VFSBFLQ==
-Message-ID: <7da8ca7b-f985-402d-a314-454c9094eb44@kernel.org>
-Date: Tue, 24 Nov 2026 11:41:09 +0100
+	b=EpvsehN5jv7EGbNvjC6/RWNeceE0wlKD3MSChGaw3xyVRIFcFqMQa1NrjYhNnwjK7
+	 k4cQgm07lAIXWnysIUpH6gwBvFOvUrkcYZ3q1edt1H1s3iughx4CLZLhRbsBfGe1xv
+	 ebK9rCohGQk3//05VHttN4FJ6zT+xHn6Vp9rBBxmLLrmZossKKMyM7qW3QF1jYd0KH
+	 TAG3ezz1nOpjnDh2DQBnItwN9Q8dt12x9LH+8pQSoYm+UWsnzmhtHMesoNki0lBrYt
+	 QetS47rwiTaLOTSz7A+IK0Tnjt8aPpkRro3Tz9UlUkDf90YD7wkT/7xKnq6p2rX45I
+	 VvXTQdhTDexzA==
+Message-ID: <5c2c389f-f669-4284-afbd-088d5324e1fa@kernel.org>
+Date: Tue, 24 Nov 2026 11:50:54 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,12 +52,13 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH iproute2-next] ss: move to its own directory and split up
- ss.c
+Subject: Re: [PATCH mptcp-next v8 0/2] mptcp: add core-enforced subflow avoid
+ flag
 Content-Language: fr
-To: Stephen Hemminger <stephen@networkplumber.org>
-Cc: netdev@vger.kernel.org, dsahern@kernel.org, mptcp@lists.linux.dev
-References: <20261119024049.3109143-1-stephen@networkplumber.org>
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Cc: mptcp@lists.linux.dev, shardul.b@mpiricsoftware.com, janak@mpiric.us,
+ kalpanjani009@gmail.com
+References: <20261124102214.3930527-1-kalpan.jani@mpiricsoftware.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -103,71 +104,24 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20261119024049.3109143-1-stephen@networkplumber.org>
+In-Reply-To: <20261124102214.3930527-1-kalpan.jani@mpiricsoftware.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Stephen,
+Hi Kalpan,
 
-On 19/11/2026 03:40, Stephen Hemminger wrote:
-> The ss command has grown over time and was a single large file.
-> Move it and its filter parser to ss/ with their own Makefile, and
-> split ss.c by function:
-> 
->   ss.h        shared types, option flags and prototypes
->   ss.c        main() and option parsing
->   output.c    column layout and buffered output
->   sock.c      output common to all socket families
->   filter.c    socket selection and filter expressions
->   users.c     socket owners and SELinux contexts from /proc
->   service.c   port to service name resolution
->   inet.c      inet_diag dumps, kill and TCPDIAG_FILE replay
->   tcp.c       TCP, TLS and MPTCP details
->   sctp.c      SCTP details
->   bpf.c       BPF socket-local storage
->   unix.c, packet.c, xdp.c, netlink.c, vsock.c, tipc.c
->               one file per socket family
->   events.c    -E event monitoring
->   summary.c   -s summary
+On 24/11/2026 11:22, Kalpan Jani wrote:
+> The MPTCP scheduler needs a persistent way for BPF schedulers to
+> mark subflows that should be avoided across scheduling rounds.
 
-Good idea to split ss.c!
+Thank you for the new version. I didn't review this series yet, but just
+a quick note: could you please not rename the patch series (here "mptcp:
+add core-enforced subflow avoid flag" and before "mptcp: add
+scheduler-owned subflow avoid flag") otherwise it is hard for us to
+track versions, and it doesn't help to follow the modifications.
 
-> Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
-> ---
->  Makefile                      |    2 +-
->  misc/Makefile                 |    6 +-
->  misc/ss.c                     | 5845 ---------------------------------
->  ss/.gitignore                 |    2 +
->  ss/Makefile                   |   21 +
->  ss/bpf.c                      |  337 ++
->  ss/events.c                   |   95 +
->  ss/filter.c                   |  927 ++++++
->  ss/inet.c                     |  580 ++++
->  ss/netlink.c                  |  205 ++
->  ss/output.c                   |  529 +++
->  ss/packet.c                   |  216 ++
->  ss/sctp.c                     |  140 +
->  ss/service.c                  |  246 ++
->  ss/sock.c                     |  276 ++
->  ss/ss.c                       |  603 ++++
->  ss/ss.h                       |  386 +++
->  ss/ss_util.h                  |   23 +
->  ss/ssfilter.h                 |   34 +
->  ss/ssfilter.y                 |  369 +++
->  ss/ssfilter_check.c           |  104 +
->  ss/summary.c                  |  167 +
->  ss/tcp.c                      |  623 ++++
->  ss/tipc.c                     |  119 +
->  ss/unix.c                     |  140 +
->  ss/users.c                    |  333 ++
->  ss/vsock.c                    |   87 +
->  ss/xdp.c                      |  170 +
->  testsuite/Makefile            |    2 +-
->  testsuite/tests/ss/ssfilter.t |    2 +-
->  30 files changed, 6736 insertions(+), 5853 deletions(-)
-
-I was surprised that you ended up with ~900 more lines, but I think you
-missed the removal of misc/ssfilter* files.
+Ideally, try to do the same with the patches as well: change their
+titles only when the scope changes.
 
 Cheers,
 Matt
