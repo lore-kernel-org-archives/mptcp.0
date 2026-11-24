@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795537934;
-	b=fibyR4mdlPxtIp8copGTRg1xP2rgcXlRnB72VYVXFinCmnbkpbRmi44ysx+PyA/68Ro1
-	 GFGt4BLsHZn+FaSrfHeOmNPnT0upZ6caw/GaugFRKNDncLWRvDUXlYfpF/dymiR0BusOE
-	 TOaxMM5xPh3wkpXUxhemLfi7D2O58IYEc9fjL/zp3aKjg4sajRdFW+dA1k+j1ksgdXThL
-	 Lg+7zk83fbFghEOdF3CDjzfds2RrW1OKjYGR4ocaTJD6cgQ2IM0vulayZxtj7eEkz8NOE
-	 /W6+cSs92kPm8bQcln1Ky62ETUXEKnkCrAWUSNIt3WM/8feiPBXDieyUyaw7nmq92gQ==
+	t=1795538144;
+	b=NyB2Lm/ulG+W+IJjjv2VU7FbpZRvf6AaDgzc3PF8p0vcHT3Swd2QLehGqXBgp8fDVgUi
+	 A8R1g5laXs/8f2tqDf9IOTH8Wy1MQdx/x6SicvlA9f72wLW3ZkeKipmozvd0JbSIzyt0g
+	 17dxLDsNBrxS8pew6aZCPt5JVzUYPW5D2nQpRJqO6rYN4W6zGsp8cRZ35i1MO9s5i1UWa
+	 BTY3MhZLJT9c7A56c6yMfTLXRA6BeqHxhmb/e18oY7+uPk1VEcZpvKRteqzH9leXuRLEU
+	 q1a8ZTDor/dRe438jOQYWFRQPn6rbMYlW8jPNzErvyuOlo9Cpl13TZWxj7d++yeAPmQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795537934;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795538144;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=yzDOW1zG9/3kXSnyibd4oXEO0Iy4OXMD0dlWjeA5kAs=;
-	b=144a7LRECBZzbVOU/dXtMudl7E00RjC3hwHV79dj5pCYKqQmWV71192Rf7YeV3BRQB+c
-	 CG2NFXAEddzSE/GK5PuEx+jBEdYEuDJGWJUNs7cm+twX2qiRHtHiUyk62umhj5mvUxZ8G
-	 4ethZJkTBRy3419QROcBWueDS5+I48rNt7WDREw5zKsXvmaSZYhhoTC/p5QgFQnrDKKcq
-	 5Lx9hotNjPLvyd1Hdy+hdx4nfTwhdZMnk04NEcB9Gg2v1Qsx+j9cumOPDrwrbunwS5r2p
-	 5keoL2rD4ddwJsCa1hsxDA6xJusIrMH74HhB00V6k1X4CSepyzza2aOWtDiz23r47fA==
+	bh=OBMQw7/vhRF0vwaX0C2BAIakFeOT6gsUdxCLmJj3Ge4=;
+	b=3FZljp1nsQIdVFdAvzeZoU7keE+i8u8wQ+6oDOtdIxxHTTB50DN8s4ks0IQCC8OMiGDe
+	 7XvnDY7582qFZqzGXDK3oCl7RmAKa83UPBbxxk9cBVKI/Fmw+AjdD5l40b5HxFc/A7IQo
+	 zLu5POgTofZab++K35+uCKI1iQ2EWDIjl5KAtimYAFgU3brYGf8UhWADHsKLhjVM5fE5J
+	 KAvgnCLbBAhBCS3ZyXIpqMM9/F5+D3F3RU+H9C57h6MKK3hzYA7STXpq02Xp5Rt6ANr/m
+	 y32M+zHQQ81ahdHYYIhYZ8LJ3YeHD2Fr95YtUcjsu3a+3WMn/foDsui9c+VQzasH+lQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="h/eJhUo/";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="ODIxksv/";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3C9606A31E
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 16:32:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE732606A31E
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 16:35:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=h/eJhUo/
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AFCD1F000D8;
-	Tue, 24 Nov 2026 16:32:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ODIxksv/
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D6801F000C4;
+	Tue, 24 Nov 2026 16:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795537934;
-	bh=yzDOW1zG9/3kXSnyibd4oXEO0Iy4OXMD0dlWjeA5kAs=;
+	s=k20260515; t=1795538143;
+	bh=OBMQw7/vhRF0vwaX0C2BAIakFeOT6gsUdxCLmJj3Ge4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=h/eJhUo/RgP3FCTrCyJUIAYaRrMU2slKjkn6gJ//+lMf7oauAJAH52PmMRSVZRN21
-	 x13zIt4N6AAIVpTPA9OdlSqyxoKzPRBAa1vNLmqMBDIzCmwylrYKEkm8MXLfi8ZdNy
-	 TNl0HnxjRMIZo6xXQqWx1ObH/VOk5U9MjKehiNX/At96nNxHKW92m1rhlByP4H3r9e
-	 nRVbinkkGji6YsWP17XJSFGQGUjLenvEXQpYVdC4MwiYDPwNmD6rxxIcOXz3Q7+eNm
-	 YiTDVsRxwLB5PFmX+IFUTk2eK73lKtfsrsAP5GOoxHuuNzeI6Lg0PT9hM3ghbWTeo5
-	 1aUcQdh0T1kkw==
-Message-ID: <2a05dabe-0f74-4c66-8c62-e68169566d8a@kernel.org>
-Date: Tue, 24 Nov 2026 17:32:11 +0100
+	b=ODIxksv/Ag5hQSUBRkXaChaNQBgFLnX1vpXVy6VIY7dyKthoR4toBnVyc0O9JIEq0
+	 No+rNhQhQm9hP2pZtBhbHLc+h8c0A//7iTbnvpjW5ZJDom1+JUDPUPL61Hawo5fGjH
+	 vnZlVH34XscTzJuqltDZo73AuJu5LyGnua+W2tqoORxwr6Bva3aPMYBFUN9DWNwFzB
+	 m48jNYouEOibTND4oR59Hs3pd2JUJz/X6IacD8QD/h/DOG15HwW58kX69fwNu0+kTv
+	 b/x600MNpxYezNGvy2uFGz88TsGWMeiSi/r/6311OsW9y60g3K12Pvm33gt51PCgTF
+	 vubc+w8NoYscw==
+Message-ID: <f4a2955e-90d2-49f7-813b-f09319f18788@kernel.org>
+Date: Tue, 24 Nov 2026 17:35:41 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,13 +52,13 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 27/62] mptcp: report sf aborts during
- deferred connect
+Subject: Re: [PATCH mptcp-net v2 28/62] mptcp: no fastclose reset from
+ SYN_SENT subflows
 Content-Language: fr
 To: netdev-bot+sashiko@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-References: <20261121-mptcp-cmason-fixes-v2-27-00327fd1de1f@kernel.org>
- <179541555209.3133.8166839441596353366@kernel.org>
+References: <20261121-mptcp-cmason-fixes-v2-28-00327fd1de1f@kernel.org>
+ <179541555288.3133.1892545149485565462@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -104,23 +104,41 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <179541555209.3133.8166839441596353366@kernel.org>
+In-Reply-To: <179541555288.3133.1892545149485565462@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 On 23/11/2026 07:32, netdev-bot+sashiko@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found more severe
-> issue(s) in other patches of this series. This mail is only an FYI, in case
-> you want to address the nit picks below when you respin.
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index f80fac0c22c06..55ff0298e5dd2 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+>> @@ -3297,6 +3297,10 @@ static void mptcp_do_fastclose(struct sock *sk)
+>>  
+>>  		subflow->send_fastclose = 1;
+>>  
+>> +		/* no reset in SYN_SENT, as TCP does */
+>> +		if (ssk->sk_state == TCP_SYN_SENT)
+>> +			goto unlock;
+>> +
 > 
-> Low priority / nit picks for your consideration:
+> [Severity: Medium]
+> The commit message says:
 > 
-> - [Low] mptcp_sendmsg_fastopen() (net/mptcp/protocol.c:1979-1986) adds an
->   early `return 0` for 'DEFER_CONNECT set on the msk but cleared on…
-> - [Low] The new comment in mptcp_sendmsg_fastopen()
->   (net/mptcp/protocol.c:1976) says 'subflow aborted by tcp_abort(): its…
+>   "Skip them again in this state, as TCP does: the subflow is still
+>   moved to TCP_CLOSE, and a later SYN-ACK gets a reset from the stack."
+> 
+> With this branch, a SYN_SENT subflow leaves mptcp_do_fastclose() with only
+> send_fastclose set. It is still TCP_SYN_SENT and still hashed.
 
-Yes, I can update the commit message and comment...
+Indeed.
+
+(...)
+
+> Could this branch move the subflow to TCP_CLOSE, for example with
+> tcp_set_state(ssk, TCP_CLOSE), before jumping to release_sock(ssk)?
+
+Yep, will fix in v3.
 
 Cheers,
 Matt
