@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795557666;
-	b=Mi+X42a5kNzkienRazN3FTZf9UxD802xMaynwHjkXISqpRC6R0MSSNaltNWSZLlBGCpL
-	 mjGPygL9vCn1uBccKEUdUDzNagHvEVzsRlocFaV/46PASat5buNfQzGH0ek1cYA9hTDcn
-	 dgRRlHhjC4EUgsGQ81EgTodaKJ4lQ+t4wHQYj1APyGuW5ImK+GUcy18l2I3ZfxtQuRpvJ
-	 4iu84Y/mQ1YN+qd/Ft4Qg3KypH/kfi77bGVTWSXVzuSoiPnb7QvoqWz9cjp523vu0VAyo
-	 oogMnJ+Qci3xd2/INGsE7FxFBblJjd/SAN9qjyz/8DwY2LZYrg+bhxhILZt8cmtteTg==
+	t=1795557667;
+	b=oaZQ9tO13RWbDdGe7p2qZDMCREC2RWEmveGFc/1JoN/1EC+qI3z5l8v3tUp0dKOEFvls
+	 bbm89NtxBCOcvntUTSiCUSIBALxs7LbUJFEpTTgdbXXvyOFp+BRfjAyJU1B5ZlrDKIiIq
+	 T0Imo4a+jUnGJnnOh762DNrv6uo9DoEp7t4FEisb30pAn2VAU5GQ84X0J3DVsV5PI00Jv
+	 fS83Fs1B5Fu5wg8BcnQI1uOUtvGcPfyOqfOE1aLSUKE1udmTY7Byllc8sYzSPFhLDfUWn
+	 fOmgo8wubY7FehCqr5+U57dTJPK4fQYhQ1W5/CfXU1ywUrGhCc/yrjO3uykXdfztILw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795557666;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795557667;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=NC8NjKXPPOZb89SBcxp2L8Kabw77plC0RF/TOei9Alo=;
-	b=pA1vFS9uCGKIXzMno2usEqQW0At45osjqMdKO9Qj6wDxT+n+9yvuGy6K2s02V8sq26JN
-	 Tmdss2EJxh8MiABccqZbnf/yO1nZojG7Yl4kxrqPr2XBsiD8e5we1EPF0ZtEW6esPZ3of
-	 rYQnm0YbOJ7xfCP5c8J/fqxmNoZos9YvvajCN7wXOriNX0TBiXmSL2RF0Z0ZQ9s/+DPvX
-	 rZfPvx2/5KT6YQIH4TvEz1dliC/5haGc2WHNUfDFwiEHrvhf9MvCg2MQWTvp8TxgcFEo1
-	 Lb3OC+QEGmoupGj/y2aZm8enqSwHFuKEtnCoZ7QF67/vnZrDAOyKJbpKYdJsKKxzkUQ==
+	bh=VETGxmR8wNKj/imU7IijmkgeBkHY+lhHhlHq0BILz+Q=;
+	b=CaQbdODjhRRFZg0Xm6jLZYpxFBcD2lzFPK+PYEbpA1GV6YAP0f655T1NbMYJo8xsg138
+	 55zCV78bveaJFfzVHdlUgrX9GIBYnyNOSou8jCA38nW1ujVAbo/kkU1gesFK6yq1KTplL
+	 X/J6Pzn+Bu83yowriagsSKLKQiv1QgF+wy9A2azGJvXtSeNcbSAo+6MJEQExeeZvE1eAB
+	 omBJTYiP5Znc45Q60ItBQdxz6GXhzu7sCc9gOw2HGhd7vShjVKSG+PxkW045/C0CFvDj2
+	 lamudgcOcRbW8DMpanBgqbYYPHOF6evicX/PMFyQ++fQjRe+22PuxUi3l9Y/Drq44Eg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Yl5Fjbpq;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hEK68anu;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D777B606A323
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 22:01:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9B1606A329
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 22:01:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Yl5Fjbpq
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F13A1F008B2;
-	Tue, 24 Nov 2026 22:01:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hEK68anu
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3E281F000D0;
+	Tue, 24 Nov 2026 22:01:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795557666;
-	bh=NC8NjKXPPOZb89SBcxp2L8Kabw77plC0RF/TOei9Alo=;
+	s=k20260515; t=1795557667;
+	bh=VETGxmR8wNKj/imU7IijmkgeBkHY+lhHhlHq0BILz+Q=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=Yl5Fjbpq9NS1BT8L2LNTnylxMG9uL+2NHL3pw1bo51xGqiSUJ3pWC6KZen8njEMVE
-	 7tmShPDu7MUjbD6GyI24ubvkdeWMnreIA1ogYpHAfTmboNlkSZom3NjR99v6f3wGov
-	 Sg37Njb+ACTXublwOWAG4qXLokX1mDonO6HVmsK1Q1JRReVne2+tLKLuKi9aVKtBsX
-	 Pij9uPPhjmbtlkQURs46+k081HMGtxy1/e8lUJxQpR13qaK5n91OFR98zPEISjt2YU
-	 yY7ymPjHyG06SIlacUqnuVovGtTeemh/Za3tU8ld7FXjBUndyEHOxgnjcbyosmY1QV
-	 MBSWOxOPd0v9A==
+	b=hEK68anubg8f5mUT3BRs9ulFNNuek+yS97+ZU/rwAONXoQUTMZol/crxrbOKvaNKR
+	 YM1eAw9MmYOTt7+EO9ie873qP/LqkZxZHq8XErFDqoUhnKz0fZ1Gym+QgOuuW27CK1
+	 jRsKM880UfoRObTWECeR+JHPYzpdSiWY7dlJMfGeHibqJBu/H93TJKBwaHDHycPKM9
+	 iLoUwjnBiwa3NgC8AQo15OV8fJzxUKkmTJDjifX0cWgEUGUszNYUrWVAA+4obrwlYa
+	 AlOdAAli52eag7ZOOUS3pgFAs306xUZCRiJWHjBeQtS/HlMPbHn0M56r+gpVmpJW2j
+	 QS7beq2gd/ppw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 24 Nov 2026 22:59:24 +0100
-Subject: [PATCH mptcp-net v3 07/50] mptcp: wake up blocked senders when no
- sf left
+Date: Tue, 24 Nov 2026 22:59:25 +0100
+Subject: [PATCH mptcp-net v3 08/50] mptcp: set SEND_SHUTDOWN on close by an
+ sf error
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,72 +55,70 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261124-mptcp-cmason-fixes-v3-7-416c0920c73f@kernel.org>
+Message-Id: <20261124-mptcp-cmason-fixes-v3-8-416c0920c73f@kernel.org>
 References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
 In-Reply-To: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2404; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=potabgVVuKyV53rWviiJ5aw/44XrcNt/e+Efyw6woVc=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLZOH7ffDJ7iUTAdMV/Mw5bXH8/Kz/tiKnsyV/+ZqpJb
- VoVPaaTO0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACYSHsHIsMi+2+M3X9aaGuvY
- zjhzP/YPcyalGft/2pUdEmgw00iVm+Gv/K1e3eKd7BatLhmxj32f1K97ev2KXpvsZlb/ooo6w2B
- mAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2263; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=w/V3HpV0/PH+pPe5qMiv6etcBkbZVYwqmw7fMpP+OZM=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLZOH5HnNzypv/e2qvyKefC4/h471jFha8RaJMom8n10
+ e68n+zljlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIkoFDD84Tjy3+gRt5LDhFSd
+ hQ9mTii+9W56oreWw9rcmT43Tr4ymcrwz3x7YMKUxfoWkfMMbkz8FNmaOcn53Zvox+GqaouOn3J
+ czgMA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-When an MPTCP socket moves to TCP_CLOSE because its last subflow is
-closed, after the close timeout or not, sk_shutdown was not updated, and
-no error was set in most cases. A thread blocked in send() was then
-never woken up for good.
+After a fallback to TCP, or during the MPC connection, an error on a
+subflow is propagated to the MPTCP socket, which moves to TCP_CLOSE.
+But sk_shutdown was not updated, while tcp_done() does it. A thread
+blocked in send() was then only woken up by the socket error: if
+another thread consumed it first, the sender went back to sleep, for
+good.
 
-Set SEND_SHUTDOWN in these cases: no more data can be sent. The blocked
-send() then returns EPIPE, as a send() called after the close timeout
-already does. Reporting another error first, e.g. ETIMEDOUT as TCP does
-after a timeout, would change the behaviour seen by the applications:
-this is left for net-next.
+Set SEND_SHUTDOWN here too, after the error, as tcp_done_with_error()
+does, not to have poll() reporting a close without error in between.
+Setting RCV_SHUTDOWN, as tcp_done() does, would change what recv()
+returns once the error has been consumed: this is left for net-next.
 
-This was reported on GitHub, with a reproducer: the only subflow dies by
-RTO, and send() was never woken up, while it returned ETIMEDOUT after a
-few seconds with TCP. With this patch, send() returns EPIPE after the
-subflow timeout (like TCP) and the close timeout (by default at 60
-seconds). This is also validated with new Packetdrill tests, with the
-close timeout, and with a reset received in CLOSE_WAIT. Without this
-patch, send() stayed blocked in both cases:
+This issue has been found by an AI code review agent, while fixing a
+similar issue, and confirmed with a reproducer: after a fallback to TCP,
+a thread reads and another one writes on the same socket, until the peer
+resets the connection. A part of the writers were then still blocked in
+send(), and none with TCP or with this patch.
 
-  close_timeout_blocked_send.pkt:24: runtime error: exiting while a blocking system call is in progress
-  close_wait_reset_blocked_send.pkt:25: runtime error: exiting while a blocking system call is in progress
-
-Fixes: 27e5ccc2d5a5 ("mptcp: fix dangling connection hang-up")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/648
+Fixes: 15cc10453398 ("mptcp: deliver ssk errors to msk")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v2: new, for issue #648 reported on GitHub
+v2: new, for a similar issue found by a review agent
+
+Note (Clashiko on v2): the comment in mptcp_poll() names
+__mptcp_error_report(), not __mptcp_subflow_error_report():
+pre-existing, can be fixed in net-next.
 ---
- net/mptcp/protocol.c | 3 +++
- 1 file changed, 3 insertions(+)
+ net/mptcp/protocol.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index bbb28f778d81..d54ca367fc39 100644
+index d54ca367fc39..d1bbba582aa1 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2814,6 +2814,8 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 		} else if (sk->sk_state != TCP_ESTABLISHED ||
- 			   msk->in_accept_queue) {
- 			mptcp_set_state(sk, TCP_CLOSE);
-+			WRITE_ONCE(sk->sk_shutdown,
-+				   sk->sk_shutdown | SEND_SHUTDOWN);
- 			mptcp_close_wake_up(sk);
- 		} else {
- 			mptcp_start_tout_timer(sk);
-@@ -3330,6 +3332,7 @@ static void mptcp_worker(struct work_struct *work)
- 		mptcp_do_fastclose(sk);
- 		mptcp_for_each_subflow_safe(msk, subflow, tmp)
- 			__mptcp_close_ssk(sk, subflow->tcp_sock, subflow, 0);
+@@ -979,9 +979,13 @@ static bool __mptcp_subflow_error_report(struct sock *sk, struct sock *ssk)
+ 	/* a FIN received before still leads to EOF, as with TCP */
+ 	if (sock_flag(ssk, SOCK_DONE) && mptcp_pending_data_fin(sk, NULL))
+ 		sock_set_flag(sk, SOCK_DONE);
+-	if (ssk_state == TCP_CLOSE && !sock_flag(sk, SOCK_DEAD))
+-		mptcp_set_state(sk, ssk_state);
+ 	WRITE_ONCE(sk->sk_err, -err);
++	if (ssk_state == TCP_CLOSE && !sock_flag(sk, SOCK_DEAD)) {
++		/* This barrier is coupled with smp_rmb() in mptcp_poll() */
++		smp_wmb();
 +		WRITE_ONCE(sk->sk_shutdown, sk->sk_shutdown | SEND_SHUTDOWN);
- 		mptcp_close_wake_up(sk);
- 	}
++		mptcp_set_state(sk, ssk_state);
++	}
+ 	report = true;
+ 	propagated = true;
  
 
 -- 
