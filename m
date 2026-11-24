@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795559782;
-	b=H9NZ4+srZH3mhc3jjqpWK7mD9fUF5kGt+olUT/Pm0rCc7wmr2ISiVT4JWS0laibNh14f
-	 z8rUgCM4uvvtAC7uSt0t3SRWm4d92koLUGPyBgiSsq2cHJoR8O7bUXay22VpHJ7n4MhKS
-	 qaKOyLturCFQjdNqsh2m6hrRyzaLK4DTxCJ612N3T8AjIEkY0otS4EQNN1JVytMIEihJb
-	 kgXYkexaRaSMcnGpiIT6VBLjnZR3wrLDOWSeo1ptBvk+GRACB8RjfwdMT3dm/BKQ39HYB
-	 LboQeumPXYvJd3lxOrCyJbzD3IrYa9yr8rDg5wSpP2FE9U97NILEi9Y74nafGPLd07w==
+	t=1795560304;
+	b=t7NSWPqd2IDE4yHsvk9B9nnX0Xb3vkGRUAkDnxGeowYRwpxT3A+1V1JYt5CRY4uRlN5C
+	 8LQfFO8peemnSJo3f1I+7emxrSs5VVUwknXakj62T0sDqyMAy0ruqvEBy3+n7TTbkNRl2
+	 tl+SN3DMjSH3dWSddeiP39j0DaYbO0qleCCPa7y9KQInFfCcU/GPlUXJTTVlMd1V0grcj
+	 sTYOSo6hJ+hBkA4SksHpcN817kxtHloQLlam/BIdPjm9/Y0DUBW+mZYOKu1R/SzoLj+yG
+	 5dsR6oU1uzdzZ0MxFeJ/sVmSV96debxbeVlhduD+yzfgZnzijgtSWPvLQgAhuaAyVag==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795559782;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795560304;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=9FGsiOYkk4skWHVXTrxLh3Jvp88t2/xr6/jY8uWr8zk=;
-	b=Hu1FaSOYgtGwp89BznQBXFPGRGpFWWniGyHp4lFb1y4yEKJY7xxr24O2brTeemBkD3wM
-	 OUwPn7d+b9I+IA3WtCygNvtMcB4R29Phx/lS3TwllWxkOc2HOYQyb12gs0939ghVnOOTv
-	 UUQKd/vlcEvH8zQbePLUv+gIWfDIUHLiiHDitRnGB4R2FPrPujOHxCTrt3xhxdiEBVj+h
-	 xG144KUR1PlFfx8GRFV4GHJvOzv57PxyfN8BUzk6Rtq1xoBSswXVWCg71kOug0aeo4t+R
-	 4PrnuGkWaGBuaEgH2P4RJYF9gs66Cf/fqO0Ymm22CHbWAdhntZ0JnmJlPnIS3UJZSLQ==
+	bh=gc+cfHpg14mWCZQ/0GqHFvz/YVfwMgpgRPdz9z7pT4I=;
+	b=ywGrd3hgxzWfnKJKHtyB9nnkTaD0nfxG6jf4IwLX54mRZWXzs674IwhuNXCyW/IfpE5A
+	 HsYsKKBVy+zroS7g2iPm4IO2FQruDzgMlGIFl1zFNeSjhRn9DQU3hfQCUPXseKyUUpbka
+	 +4EeISS2oAScNa17I1Y5l1CJrL3m+J5eFhm91CHA8QKP20hZNfPtFZZR06xGnG3YgST72
+	 zbON0BJQEh6g3H4j3Iqk5rk2Jn2X32CFOpAlxo0T7JIxUYHmD2ftieqcn22pZJdSelSty
+	 n6+3NSi6MJoPGYMdWC8wXSIxoCFm1Sd0iF6sWybb5TZh5s2LFcL7Lwdlr6Gy+02Fdug==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="QMRA3R/p";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=f6EPCCpB;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF624606A31E
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 22:36:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE62606A327
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 22:45:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QMRA3R/p
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85D571F000C0;
-	Tue, 24 Nov 2026 22:36:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=f6EPCCpB
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 750801F000C0;
+	Tue, 24 Nov 2026 22:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795559782;
-	bh=9FGsiOYkk4skWHVXTrxLh3Jvp88t2/xr6/jY8uWr8zk=;
+	s=k20260515; t=1795560304;
+	bh=gc+cfHpg14mWCZQ/0GqHFvz/YVfwMgpgRPdz9z7pT4I=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=QMRA3R/plDsoeh60t5tucEaZxIzvcCCKgTXGZksXsIKBOurBsybNpGgCTRy65PIyn
-	 KctgQ8e0s30U1oR9SQP5JAlnOf7Lg36AP7tgrahXs16XXHrqHMjaxFMajeZfKaQa8B
-	 tmRbrdKq5NXFotwwNKfblnPzOTF7D74Me1zzR9k2Gw8cECF2eLZP8oMMyx37Ej3PVe
-	 mreFkirKz2B1PKkNddyeX2k5b/ZZGvSYTmCdEAgSY0eeSnX9ZsbdA0JC7g3voLkHwi
-	 vQ5IMl6+QmtkNaNYBcBacI2u/FD41wB/VT+a+m60gwh8LYx9yP/2jojqCIHjE1+vSh
-	 +1X/M6jwwycIg==
-Message-ID: <sashiko-outbox-232142@kernel.org>
+	b=f6EPCCpBGCf8N04ons6/IvIwzMQIW6vGZlDej9ANv0VtovBNUqjm5hT1o9zIeDQrx
+	 HdA0FSeB/6E73hBWVuR9v6bCE98x2Y3ca0fMxwct5Bcx60kV+NbBmr1ToMqLDAQ7Lx
+	 y3nsY+XHAKsyUOstkq0YWGHYHeJhCZuBzLhpRWYYtxEqhHGx9Wf2lcbTdfSqF4YnxD
+	 qg9MXtpD8LTQNV72gPYzBf5FH88dL/s1tc9sN1RplDBmx5/2L7HMf0tt660MDakb64
+	 b+3c4743CqdGv6QE8Y+yi8WlbeazpiZekwA3lzljPTghwVI6ESEfH2r1PFA/8ZALY6
+	 tHOGtk7xehyeg==
+Message-ID: <sashiko-outbox-232153@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC mptcp-next mptcp-net v3 50/50] mptcp: reset when the
- DSS disappears after a DATA_ACK
+Subject: Re: [PATCH mptcp-net v3 46/50] Squash to "bpf: Export mptcp packet
+ scheduler helpers"
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>, "MPTCP
  Linux" <mptcp@lists.linux.dev>
-In-Reply-To: <20261124-mptcp-cmason-fixes-v3-50-416c0920c73f@kernel.org>
+In-Reply-To: <20261124-mptcp-cmason-fixes-v3-46-416c0920c73f@kernel.org>
 References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
- <20261124-mptcp-cmason-fixes-v3-50-416c0920c73f@kernel.org>
+ <20261124-mptcp-cmason-fixes-v3-46-416c0920c73f@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 24 Nov 2026 22:36:22 +0000
+Date: Tue, 24 Nov 2026 22:45:04 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -63,73 +63,71 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue to consider:
-- [Medium] mptcp: fallback after dss_confirmed in mptcp_dss_corruption()
-  on partial map
+- [Medium] mptcp: mptcp_sched_get_send() skips mptcp_set_timeout() on
+  scheduled subflow
 --
 
-commit 52bcf0ed394d73280e0a61e58a2314837d68feb0
+commit a82acd8ca33d023de6cf973e96c25c49bb5f9fc5
 Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-mptcp: reset when the DSS disappears after a DATA_ACK
+Squash to "bpf: Export mptcp packet scheduler helpers"
 
-This commit tracks whether a received DATA_ACK has acknowledged sent data
-on a subflow and resets the subflow instead of falling back to TCP when a
-subsequent packet lacks a DSS mapping or has an invalid mapping.
+This commit calls mptcp_set_timeout() in mptcp_sched_get_send() when a
+non-default scheduler is configured so that msk->timer_ival is initialized
+even if a subflow is already scheduled or the BPF scheduler does not set
+the timeout itself.
 
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 190c75311ff69..efbd3efd379ed 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-[ ... ]
-> @@ -1523,7 +1542,9 @@ static bool subflow_check_data_avail(struct sock *s=
-sk)
->  			return true;
->  		}
+> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+> index 1e59072d478c9..01500f9f9f8a6 100644
+> --- a/net/mptcp/sched.c
+> +++ b/net/mptcp/sched.c
+> @@ -182,6 +182,10 @@ int mptcp_sched_get_send(struct mptcp_sock *msk)
+>  		return -EINVAL;
+>  	}
 > =20
-> -		if (!mptcp_try_fallback(ssk, MPTCP_MIB_DSSFALLBACK)) {
-> +		if (((status =3D=3D MAPPING_NODSS || status =3D=3D MAPPING_INVALID) &&
-> +		     subflow_nodss_is_fatal(msk, subflow)) ||
-> +		    !mptcp_try_fallback(ssk, MPTCP_MIB_DSSFALLBACK)) {
->  			/* fatal protocol error, reset the subflow and let the
->  			 * worker close it
->  			 */
+> +	/* as the default scheduler: the rtx timer needs an interval */
+> +	if (msk->sched && msk->sched !=3D &mptcp_sched_default)
+> +		mptcp_set_timeout((struct sock *)msk);
+> +
+>  	mptcp_for_each_subflow(msk, subflow) {
+>  		if (READ_ONCE(subflow->scheduled))
+>  			return 0;
+> @@ -189,6 +193,7 @@ int mptcp_sched_get_send(struct mptcp_sock *msk)
+> =20
+>  	if (msk->sched =3D=3D &mptcp_sched_default || !msk->sched)
+>  		return mptcp_sched_default_get_send(msk);
+> +
+>  	return msk->sched->get_send(msk);
+>  }
 
 [Severity: Medium]
-Can an skb that starts within the current mapping but extends past
-subflow->map_data_len (for example, after middlebox resegmentation or
-coalescing) still trigger a fallback after subflow->dss_confirmed is set?
+Does guarding mptcp_set_timeout() with msk->sched !=3D &mptcp_sched_default
+still leave msk->timer_ival at 0 when a subflow is already scheduled under
+the default scheduler?
 
-In get_mapping_status(), validate_mapping() only checks that the starting
-subflow sequence number lies within the active mapping range, without
-verifying that the mapping covers the full skb length:
+With the default scheduler, mptcp_set_timeout() is normally called inside
+mptcp_sched_default_get_send() -> mptcp_subflow_get_send().  However, a
+subflow can retain subflow->scheduled =3D=3D true after all pending data is
+acknowledged and mptcp_stop_rtx_timer() resets msk->timer_ival to 0.  For
+example, in ack_update_msk() during recovery, __mptcp_check_push() runs
+before __mptcp_data_acked() -> __mptcp_clean_una(): the push can schedule a
+second subflow and delegate MPTCP_DELEGATE_SEND right before
+__mptcp_clean_una() clears msk->first_pending and stops the rtx timer.
+When __mptcp_subflow_push_pending() later runs on that delegated subflow,
+mptcp_send_head(sk) is NULL, so the push loop is not entered and
+subflow->scheduled is never cleared.
 
-net/mptcp/subflow.c:validate_mapping() {
-	...
-	if (unlikely(before(ssn, subflow->map_subflow_seq))) {
-		...
-		return false;
-	}
-	if (unlikely(!before(ssn, subflow->map_subflow_seq +
-				  subflow->map_data_len))) {
-		...
-		return false;
-	}
-	return true;
-}
+On the next send, mptcp_sched_get_send() skips mptcp_set_timeout() above,
+sees READ_ONCE(subflow->scheduled), and returns 0 without calling
+mptcp_sched_default_get_send().  If __subflow_push_pending() then exits
+before its own mptcp_set_timeout() call (because mptcp_sendmsg_frag() fails
+or msk->snd_burst <=3D 0 after the first fragment), mptcp_reset_rtx_timer()
+arms the retransmit timer with msk->timer_ival =3D=3D 0, causing it to fire
+every jiffy.
 
-get_mapping_status() therefore returns MAPPING_OK, bypassing
-subflow_nodss_is_fatal() in subflow_check_data_avail().  When
-__mptcp_move_skbs_from_subflow() then sees map_remaining < len, it calls
-mptcp_dss_corruption(), which calls mptcp_try_fallback() directly without
-checking subflow->dss_confirmed:
-
-net/mptcp/protocol.c:mptcp_dss_corruption() {
-	if (!mptcp_try_fallback(ssk, MPTCP_MIB_DSSCORRUPTIONFALLBACK)) {
-		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSCORRUPTIONRESET);
-		mptcp_subflow_reset(ssk);
-	}
-}
+Calling mptcp_set_timeout() unconditionally here (or in the early return
+when subflow->scheduled is set) would cover the default scheduler as well.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261124-mptcp-cmas=
-on-fixes-v3-0-416c0920c73f@kernel.org?part=3D50
+on-fixes-v3-0-416c0920c73f@kernel.org?part=3D46
