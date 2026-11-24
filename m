@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795538631;
-	b=oNya3E7t6yM7uPuC7caO/ufzffY960GlAIL2BoVvrRtqWKO0Jf+56gV62Qux0g0O8x3u
-	 spSYli6wKOkF27WokTXpDf8jaRbCI+juLdkrw3c8XrHPAGK/Tu+0rfZi6CCA3bwal7XIg
-	 J4P1kQ1wpJeijw19E4rjv4Iu5ZcQxs4jnbnziL56yIBls8hNLhwKISFmRVquHfr3eNVYH
-	 9QRCv9eZB6t6KPRXMV1qP2qwI3ZsbgxxdyAEoV0ufiIMK0y3oKcsvLlrVVQr4Exp0XmiA
-	 oZaYKj3hsIegaDhgdJX4CJD/5EFVczMg20PcZjZC6qXvy2SN2pF3GJQsiW6kB6c0EdQ==
+	t=1795539494;
+	b=N85mZikJBLYjv7Iu1M4X3NXCjBWpkmgLZHmWoYo7QEzQD8NCoivOgucD+FmP2u3YoAZd
+	 45Hr9Kvh3eCrOES/F1PlaPE8Lou8+LpRrGAfV3htmN3PkgP5Pa3iXvd+9WyATmvL1jKXz
+	 ZwD6uByqZKB0QWIPT1noEN79/8DWF0VZbhJpPkw1n/+QLVc1X5JvYyGlpQHsIkZf+O7XF
+	 M7soungqfmKCihktenCEL+S+movl8msoCTA1m1tgDEzf0zwsfU4tv1tRPDkstTQtWosNS
+	 CgkNy3PecludW1f9vI2xKitHeyLXCMa/gFiAL2jBTVhiLBoEBGnp3z0Aqw0qqDxdIJw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795538631;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795539494;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=bYBsXpThEADFupEH5HYByDy3IAwpm6WyUNkYruNTqsc=;
-	b=UrmzK4ylPjnGRBQiKrro3ei2JuVIUuMoqScHtoHqKrRquPrcUGANkQ91zuxIkhPbgaja
-	 ksRjEgSYFsa63b7FazSuKj06MudOgGxrb4TWHiWsPLKokr+Uh4V/uGNwZKnliOeol4WGC
-	 EjHLR6zKzrupBu5HewYIQ055qsMXpM/CZsr1cIYpow0q0fNzoiGAKjg9ac4OJkiaVfDg6
-	 rB+TF578TRrfVLbW1pmYDx1XOhygyqZDY+6QSWXZZsEHhKGiaNZI6kyqYYJHrm6+WNt1I
-	 MpIvXwcvrX2cd0bM5BOxq/UqEiW9xf4uAw5dlgRzqTziFfiD9zOhDBawFeS2+ejlAGA==
+	bh=7bzqAqpmFimjeJFcxVgTHaPyYVyV1TyY7rhQFKp6yio=;
+	b=tCtPfp6gpCw9wKffKQP/+8BFxsxY2toGOJSQpUMoMef3o8TxHEfKSFf0DG2wF7xMSJdh
+	 B/Clo2ZfM69UwELqrx0AC0z5ToB4FpGBQc5ZPnhywRdu7A6MQU3wzDOhAMPLdm8V6HWK7
+	 FZOcW5nE878CE/6N6wIRNH0KKgIeE/h/SrJ6s/8tXZ+tNKZMmuw5uEPscsInbDSSD81Ab
+	 e3PciyECUb2ym/bzMHZmDWcjwPwtOtcSb/kCRs+q0LMgCdFM5spWYy+kdnuQ+K/JRkyMN
+	 y/lL3PAPgQS3xcnrFDtPi6jVnJLkIjWP1Raetuy3hYe3DD08tdsxI3LA9Ghx8fFl0Sg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jF++oC0Y;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WvYVBtuT;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA94D606A68B
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 16:43:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52333606A33D;
+	Tue, 24 Nov 2026 16:58:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jF++oC0Y
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C00F1F000C0;
-	Tue, 24 Nov 2026 16:43:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WvYVBtuT
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CDB31F000C6;
+	Tue, 24 Nov 2026 16:58:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795538631;
-	bh=bYBsXpThEADFupEH5HYByDy3IAwpm6WyUNkYruNTqsc=;
+	s=k20260515; t=1795539494;
+	bh=7bzqAqpmFimjeJFcxVgTHaPyYVyV1TyY7rhQFKp6yio=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=jF++oC0YetMe7gKdbFoiKShzJJux4WK1/q0CKNIcPnLNe+UtpOuvfnRwf4IEAXOZR
-	 d21qezMbsdKeO6yQfQoSt5BZO5BV9itAv8ZPEDQ81lgbfhsIl/LIqcQ9q1bUlt+tgh
-	 8JneWi/Kw+JaPrX8ZEsJp9HAAVTCFgNbZuxY3l96N61I3M0mdneIiYGn1l6XfbMjb6
-	 7zN94VlzDad4uLTfzH+mhoaHnMPGL8eej9lkc+tvjZ+FEfiRgr3moDEvmw7lTsq+jG
-	 pT+c6aSovK0hp1Wa/om7Kq7csaZLSUWl4JwJEdMInktinWepEk8fCClyTDSBf8BTa/
-	 lQcSOvxibneGg==
-Message-ID: <755f6fed-fe95-4608-8b61-2e452192b9aa@kernel.org>
-Date: Tue, 24 Nov 2026 17:43:48 +0100
+	b=WvYVBtuTFXAF5q1MbcgyTZ6v/USmCbK7qJaXXQnPjFqspRJKqHZPYiEf/vD1YH0Y6
+	 gYgD+2nWq9q++UnvbZ9dcF80jj3KaCsDwJiaJnlpZ6G0lNXGQIY6mcpFxxJQXNMgIh
+	 ODDpbFjZGyzo2VkF4TVAQpWEbkGYkZyx0MZXtYpO0/HI8ah5Y+aRMTX0DbaNi8AKB+
+	 P6g4oOSJdhHqpQOLj6O6QgwGmZyn20/bPfRroUq0IkseV5wcmjk20Pzf4DMJ1IO1OV
+	 IvqdgrVdi0gGmDt0+RS77LFgHGn8FfmvTZ0RRIju5dKkHB9cU68pl6dF42XAdkPXyc
+	 3JWEXGH3R1ddA==
+Message-ID: <0f4420d2-c4cd-4b93-9841-20d95d98d9e3@kernel.org>
+Date: Tue, 24 Nov 2026 17:58:05 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,13 +52,18 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 29/62] mptcp: keep listening after
- MSG_FASTOPEN errors
+Subject: Re: [PATCH net 08/10] mptcp: pm: don't let listeners pin their netns
 Content-Language: fr
 To: netdev-bot+sashiko@kernel.org
-Cc: mptcp@lists.linux.dev, kuba@kernel.org
-References: <20261121-mptcp-cmason-fixes-v2-29-00327fd1de1f@kernel.org>
- <179541555362.3133.15360891097208549475@kernel.org>
+Cc: edumazet@kernel.org, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com, willemb@google.com, horms@kernel.org,
+ martineau@kernel.org, geliang@kernel.org, cpaasch@openai.com, fw@strlen.de,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, dcaratti@redhat.com,
+ mason@kernel.org, stable@vger.kernel.org, ncardwell@google.com,
+ kuniyu@google.com, kafai@fb.com, daniel@iogearbox.net, ast@kernel.org,
+ martin.lau@kernel.org, bpf@vger.kernel.org
+References: <20261123-net-mptcp-misc-fixes-7-4-rc5-v1-8-278042217e8d@kernel.org>
+ <179553041337.3135.9610172277728846515@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -104,14 +109,37 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <179541555362.3133.15360891097208549475@kernel.org>
+In-Reply-To: <179553041337.3135.9610172277728846515@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 23/11/2026 07:32, netdev-bot+sashiko@kernel.org wrote:
-> Would it make sense to retry only when a disconnect really failed?
+Hello,
 
-Indeed, I can filter out disconnected sockets in v3.
+On 24/11/2026 15:26, netdev-bot+sashiko@kernel.org wrote:
+> - [High] The netns leak this patch claims to fix can still be triggered
+>   through the SYN-cookie path.
+
+(...)
+
+> Doesn't that leak the namespace the same way as before this patch?
+
+Yep! But this is not a regression: before this patch, these children
+also held a netns reference, and the listener itself always pinned the
+netns.
+
+(...)
+
+> Could the reference be taken only for MP_JOIN children that get attached
+> to an msk? Another option would be to reject non-MP_JOIN cookie ACKs on a
+> pm_listener in mptcp_subflow_init_cookie_req().
+
+The second option is already pending on the MPTCP ML, for a separate
+*pre-existing* issue. It will be sent with the next batch:
+
+
+https://lore.kernel.org/20261121-mptcp-cmason-fixes-v2-31-00327fd1de1f@kernel.org
+
+So no need to change this patch, it can be applied as is.
 
 Cheers,
 Matt
