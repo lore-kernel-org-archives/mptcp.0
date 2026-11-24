@@ -1,62 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.54
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795515771;
-	b=Q+pXIdoVAoPYJicWflpVFOCNyjscXggY6EhlFKlXfT6XlDfADVZC/cVOT2VZyMpYsctd
-	 Qpf7xDbe19xL899pEZQo84xrxoabkcQgb7cK/Dwu6Ish7Oxu8uoC8gzN9Cc5kFHzTHjqM
-	 3gtlwmtxPoyJtUDmqW481KWDG/8PzLIjY5j8lMrxs9nmi0IRAF0H/UNLbzCrCG41jdrgM
-	 opVUbnOtzPfyZ3OdeH/207dUyw81DEC8kLAJDr3YenP8Xsm17tLLlBHbZYtXQIz849ao6
-	 hP/todaFHl38rzWjbaRJjTdGdjO6tr0PcApHXWO8pApA3Fws3JVvmhlRM9JT0SdVd7g==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795515771;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-ZohoMailClient;
-	bh=N4lrEpcd8et+a52ywMc+lslexeF9JYaw/RIUcy3J5EM=;
-	b=QVssVzI73CMQuMAu/t6Urob104m3+RF5c6iaKLD85QH05eDvrli4LBzW+Ebz3XZP1qA9
-	 QOl3V1RRbFk0SYmSYe3RoST9N6ugqQAyvWRNxDe+3uCxbhEFS+AMxgFlmAXzbLa4KAYTC
-	 ucVADWUbzWRyQnZ59lbapNWns50xYife2to56dNSCXNA9BTJ72Acg4amEojFZAOFp4Zuj
-	 YFuHHcRUEPD6ys91xTpMhfFMAN/FhNaLKmNyp9Z7B31GnVIp8xzEXPT6cRtZQxPjxqF1R
-	 Fwl6R7TWb57XNuppGlO3fHU+BfpiWvAvcdJIBc4ujbMjwMb+4qwWRJwxpgMX49P/9Ag==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=mpiricsoftware.com;
-	spf=pass smtp.mailfrom=mpiricsoftware.com;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.54
-Received: from sender6-of-o54.zoho.com (sender6-of-o54.zoho.com [165.173.180.54])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795516873;
+	b=YfnGViTLQGbjYD45pcDTntoCPuqJalH2w3E2mp8Z9kCANyfwwZH5EIzoCBqDPw68L4aF
+	 uZc8BjOKeQDknYJgvfjf8kPc7oXKcll8kUou9UMYMJYnmShIydRhuj6pJHk33ZjVYfKpT
+	 6tFh6kXmhS5C7f0nC0ko+eubLDZpQgCKG+1cHOwBiCepXpF1O8hDTDVHdqCtT0giEzQbt
+	 zSsDoK0q4xrV9Mhn/KAZ4rW/c/kxZAG2nk85cqXB8Xc/O0UnhUk882DDuEYq+pVaYvrn/
+	 ylP45ej1Ti5NtH3Zwf5Ys8WjQEYbxJSI0jpw88KuQX8OGJBB0VnjXSxRL/c01+X7N7w==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795516873;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=sE6ePLMMMHh+ZSJHFwXfOhRlLbg+XAg03wgRoUf1Sbo=;
+	b=f/TGFuZU7V97yNbNRRbnpWhyCQtyZPNaDP3pYuPcxqL8kY78FPaRLpEbxrbw4Jub7lVX
+	 qWTDruN3tXub0bpVdaLc4CToGzwsqxnxDUeK+1n1SnW+u0fZgSy0HJVeJ99BQt5MF2k5m
+	 oQoxeaLH0AM1Is3WMEDTMag/g7tSXpbwcB7meHrU5h1eDWYHFA3siamcg0Nt8xzFhKlxz
+	 qiGNOyTiacF7XOxUK+Q4scEmivt/9lCLsJwdW/EWn0hNMl+TtfHJYRKD37vGwVuT01nvw
+	 H93JY31xx1ZU+0N9z5HJwxh+s/jLG9cVibQgUcJVW4NANBTdAwr34iF6IH6y+sbhd+w==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bS2hDwvp;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC46606A32A
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 10:22:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1AC46606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
-ARC-Seal: i=1; a=rsa-sha256; t=1795515756; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=mJIVKlvKvI9etoo/d13oFiYNAtJuglpMG4CljGPH3NeEPeibdUwSaCRphjITJLAFSw8BG1y5qhyaGldV2ytt4gOtHD8O/ckdVY6PvyfK8D5wMq6URXVIjSCIGBzyv243BXrg4pzq3lTrHq48rXzkBVK+gjbkTGCcsJu+eeCAopk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1795515756; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=N4lrEpcd8et+a52ywMc+lslexeF9JYaw/RIUcy3J5EM=; 
-	b=mBiv0f24RAuq5Ax0U5zqyO2M3ZPAUlhx+7AGvijlR3QxPfW0ClJfVhPVrDEE/xrRnbYzh2y4t8bGcVpLRDgtS470TePOL0MhSlZt37KccPTimCk29VLENoYXozftZk9jIdZ2PmHCfLqZ0fwEaPsv7OYvRjJi6IZSrooP7owKGkE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=mpiricsoftware.com;
-	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
-	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
-DKIM-Signature: a=rsa-sha256; b=LPNjaW8uZmZBrt6cHHtFeMI69J2kH5b5aWSC9Qi2qVyO2TyszsfV5F6KeaZ8/ElJ6ZsbXAoXub92gwiJ6FvcmHnst7QE5bzUumTHs2Ebn5o2f41TI/HAKKM+xpKU1rN1++BfTdmlC6lCMqF3kx8n7VCQVXSn4289HP9mevWWikQ=; c=relaxed/relaxed; s=mpiric; d=mpiricsoftware.com; v=1; bh=N4lrEpcd8et+a52ywMc+lslexeF9JYaw/RIUcy3J5EM=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1795515753172581.1298773355794;
-	Tue, 24 Nov 2026 02:22:33 -0800 (PST)
-From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-To: mptcp@lists.linux.dev
-Cc: shardul.b@mpiricsoftware.com,
-	janak@mpiric.us,
-	kalpanjani009@gmail.com,
-	Kalpan Jani <kalpan.jani@mpiricsoftware.com>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH mptcp-next v8 2/2] selftests: mptcp: bpf: exercise the subflow avoid flag across rounds
-Date: Tue, 24 Nov 2026 15:52:14 +0530
-Message-ID: <20261124102214.3930527-3-kalpan.jani@mpiricsoftware.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261124102214.3930527-1-kalpan.jani@mpiricsoftware.com>
-References: <20261124102214.3930527-1-kalpan.jani@mpiricsoftware.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495FD606A321;
+	Tue, 24 Nov 2026 10:41:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bS2hDwvp
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED4921F000C4;
+	Tue, 24 Nov 2026 10:41:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795516872;
+	bh=sE6ePLMMMHh+ZSJHFwXfOhRlLbg+XAg03wgRoUf1Sbo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=bS2hDwvprKevfXXLmk6HqNrBpHnXCRuxmzRYXt8tWKlOe1Yj7Zqy4CnCkCMXLjUpj
+	 gZeF770bHCehreTKxBZyDtlcjTsTQ1qzcRxQg6dSUIaiq3PEwh9buyfyl+s1Lyq2Xn
+	 nYG6Jhc0m8qnPJ6jUDYWdWwthaRjFObmj/IniNUfuFbZkFREUIYutQ2Dao99Y1ti87
+	 xZosc7DRWQn8MkqPqFThtHJ+uiLxRJL6TkVhClNvsuWApbIyJE+KgsUSKj5gwuqvjS
+	 EOwJy+h/2gVHqpWAcjgk4fAZwJjRWxDiR+J4trAsq+Lt/L4tTLaq7Nj9mdMobGu+aj
+	 79Bhq8VFSBFLQ==
+Message-ID: <7da8ca7b-f985-402d-a314-454c9094eb44@kernel.org>
+Date: Tue, 24 Nov 2026 11:41:09 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -66,176 +51,126 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH iproute2-next] ss: move to its own directory and split up
+ ss.c
+Content-Language: fr
+To: Stephen Hemminger <stephen@networkplumber.org>
+Cc: netdev@vger.kernel.org, dsahern@kernel.org, mptcp@lists.linux.dev
+References: <20261119024049.3109143-1-stephen@networkplumber.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
+ YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
+ c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
+ WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
+ CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
+ nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
+ TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
+ nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
+ VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
+ 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
+ YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
+ AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
+ EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
+ /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
+ MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
+ cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
+ iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
+ jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
+ 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
+ VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
+ BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
+ ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
+ 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
+ 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
+ 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
+ mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
+ Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
+ Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
+ Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
+ x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
+ V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
+ Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
+ HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
+ 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
+ Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
+ voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
+ KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
+ UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
+ vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
+ mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
+ JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20261119024049.3109143-1-stephen@networkplumber.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add a BPF struct_ops scheduler selftest for
-mptcp_subflow_set_avoid(), and add the required extern declarations
-for it and for mptcp_subflow_active().
+Hi Stephen,
 
-The test marks the second subflow as avoided once it becomes
-available. Unlike a scheduler that filters avoided subflows itself,
-the test deliberately schedules both avoided and non-avoided
-subflows when they are active.
+On 19/11/2026 03:40, Stephen Hemminger wrote:
+> The ss command has grown over time and was a single large file.
+> Move it and its filter parser to ss/ with their own Makefile, and
+> split ss.c by function:
+> 
+>   ss.h        shared types, option flags and prototypes
+>   ss.c        main() and option parsing
+>   output.c    column layout and buffered output
+>   sock.c      output common to all socket families
+>   filter.c    socket selection and filter expressions
+>   users.c     socket owners and SELinux contexts from /proc
+>   service.c   port to service name resolution
+>   inet.c      inet_diag dumps, kill and TCPDIAG_FILE replay
+>   tcp.c       TCP, TLS and MPTCP details
+>   sctp.c      SCTP details
+>   bpf.c       BPF socket-local storage
+>   unix.c, packet.c, xdp.c, netlink.c, vsock.c, tipc.c
+>               one file per socket family
+>   events.c    -E event monitoring
+>   summary.c   -s summary
 
-This exercises the MPTCP core enforcement: when both kinds are
-scheduled, the core must discard the avoided selection and retain
-the eligible one. When only avoided subflows are selected, the
-core falls back to its default selector.
+Good idea to split ss.c!
 
-The test also verifies that the avoid state persists across
-subsequent scheduling rounds without calling set_avoid() again.
-Per-msk state is kept in BPF_MAP_TYPE_SK_STORAGE, following the
-pattern used by mptcp_bpf_rr.c.
+> Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
+> ---
+>  Makefile                      |    2 +-
+>  misc/Makefile                 |    6 +-
+>  misc/ss.c                     | 5845 ---------------------------------
+>  ss/.gitignore                 |    2 +
+>  ss/Makefile                   |   21 +
+>  ss/bpf.c                      |  337 ++
+>  ss/events.c                   |   95 +
+>  ss/filter.c                   |  927 ++++++
+>  ss/inet.c                     |  580 ++++
+>  ss/netlink.c                  |  205 ++
+>  ss/output.c                   |  529 +++
+>  ss/packet.c                   |  216 ++
+>  ss/sctp.c                     |  140 +
+>  ss/service.c                  |  246 ++
+>  ss/sock.c                     |  276 ++
+>  ss/ss.c                       |  603 ++++
+>  ss/ss.h                       |  386 +++
+>  ss/ss_util.h                  |   23 +
+>  ss/ssfilter.h                 |   34 +
+>  ss/ssfilter.y                 |  369 +++
+>  ss/ssfilter_check.c           |  104 +
+>  ss/summary.c                  |  167 +
+>  ss/tcp.c                      |  623 ++++
+>  ss/tipc.c                     |  119 +
+>  ss/unix.c                     |  140 +
+>  ss/users.c                    |  333 ++
+>  ss/vsock.c                    |   87 +
+>  ss/xdp.c                      |  170 +
+>  testsuite/Makefile            |    2 +-
+>  testsuite/tests/ss/ssfilter.t |    2 +-
+>  30 files changed, 6736 insertions(+), 5853 deletions(-)
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/349
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
----
-Changes since v7:
-- Deliberately schedule both avoided and non-avoided active
-  subflows to exercise MPTCP core filtering.
-- Verify that the avoid state persists across scheduling rounds
-  without setting the flag again.
-- Keep per-MPTCP-socket test state in BPF_MAP_TYPE_SK_STORAGE.
+I was surprised that you ended up with ~900 more lines, but I think you
+missed the removal of misc/ssfilter* files.
 
-v7: https://lore.kernel.org/all/20261123123730.3265284-3-kalpan.jani@mpiricsoftware.com/
----
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 15 ++++
- .../selftests/bpf/progs/mptcp_bpf_avoid.c     | 86 +++++++++++++++++++
- 2 files changed, 101 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_avoid.c
-
-diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index d77c9f8c53c75..3bff30d0d5300 100644
---- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -18,6 +18,7 @@
- #include "mptcp_bpf_rr.skel.h"
- #include "mptcp_bpf_red.skel.h"
- #include "mptcp_bpf_burst.skel.h"
-+#include "mptcp_bpf_avoid.skel.h"
- 
- #define NS_TEST "mptcp_ns"
- #define ADDR_1	"10.0.1.1"
-@@ -820,6 +821,18 @@ static void test_burst(void)
- 	mptcp_bpf_burst__destroy(skel);
- }
- 
-+static void test_avoid(void)
-+{
-+	struct mptcp_bpf_avoid *skel;
-+
-+	skel = mptcp_bpf_avoid__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "open_and_load: avoid"))
-+		return;
-+
-+	test_bpf_sched(skel->maps.avoid, "avoid", WITH_DATA, WITHOUT_DATA);
-+	mptcp_bpf_avoid__destroy(skel);
-+}
-+
- void test_mptcp(void)
- {
- 	if (test__start_subtest("base"))
-@@ -842,4 +855,6 @@ void test_mptcp(void)
- 		test_red();
- 	if (test__start_subtest("burst"))
- 		test_burst();
-+	if (test__start_subtest("avoid"))
-+		test_avoid();
- }
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_avoid.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_avoid.c
-new file mode 100644
-index 0000000000000..4152f9d04a0df
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_avoid.c
-@@ -0,0 +1,86 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2026, MPTCP. */
-+
-+#include "mptcp_bpf.h"
-+#include <bpf/bpf_tracing.h>
-+
-+extern bool mptcp_subflow_active(struct mptcp_subflow_context *subflow) __ksym;
-+extern void mptcp_subflow_set_avoid(struct mptcp_subflow_context *subflow,
-+				    bool avoid) __ksym;
-+
-+char _license[] SEC("license") = "GPL";
-+
-+struct mptcp_avoid_storage {
-+	bool avoid_marked;
-+};
-+
-+struct {
-+	__uint(type, BPF_MAP_TYPE_SK_STORAGE);
-+	__uint(map_flags, BPF_F_NO_PREALLOC);
-+	__type(key, int);
-+	__type(value, struct mptcp_avoid_storage);
-+} mptcp_avoid_map SEC(".maps");
-+
-+SEC("struct_ops")
-+void BPF_PROG(mptcp_sched_avoid_init, struct mptcp_sock *msk)
-+{
-+	bpf_sk_storage_get(&mptcp_avoid_map, msk, 0,
-+			   BPF_LOCAL_STORAGE_GET_F_CREATE);
-+}
-+
-+SEC("struct_ops")
-+void BPF_PROG(mptcp_sched_avoid_release, struct mptcp_sock *msk)
-+{
-+	bpf_sk_storage_delete(&mptcp_avoid_map, msk);
-+}
-+
-+SEC("struct_ops")
-+int BPF_PROG(bpf_avoid_get_send, struct mptcp_sock *msk)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct mptcp_subflow_context *first = NULL;
-+	struct mptcp_avoid_storage *ptr;
-+	bool scheduled = false;
-+
-+	ptr = bpf_sk_storage_get(&mptcp_avoid_map, msk, 0,
-+				 BPF_LOCAL_STORAGE_GET_F_CREATE);
-+	if (!ptr)
-+		return -1;
-+
-+	/*
-+	 * Mark the second subflow as avoided once, but deliberately
-+	 * schedule it when active. Core should filter it when another
-+	 * non-avoided subflow is scheduled.
-+	 */
-+	bpf_for_each(mptcp_subflow, subflow, (struct sock *)msk) {
-+		if (!first) {
-+			first = subflow;
-+			continue;
-+		}
-+
-+		if (!ptr->avoid_marked) {
-+			mptcp_subflow_set_avoid(subflow, true);
-+			ptr->avoid_marked = true;
-+		}
-+
-+		if (mptcp_subflow_active(subflow)) {
-+			mptcp_subflow_set_scheduled(subflow, true);
-+			scheduled = true;
-+		}
-+	}
-+
-+	if (first && mptcp_subflow_active(first)) {
-+		mptcp_subflow_set_scheduled(first, true);
-+		scheduled = true;
-+	}
-+
-+	return scheduled ? 0 : -1;
-+}
-+
-+SEC(".struct_ops.link")
-+struct mptcp_sched_ops avoid = {
-+	.init		= (void *)mptcp_sched_avoid_init,
-+	.release	= (void *)mptcp_sched_avoid_release,
-+	.get_send	= (void *)bpf_avoid_get_send,
-+	.name		= "bpf_avoid",
-+};
+Cheers,
+Matt
 -- 
-2.43.0
+Sponsored by the NGI0 Core fund.
 
