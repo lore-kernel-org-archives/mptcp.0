@@ -1,48 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795557661;
-	b=j9gI7B/VldDVAEMrozXNaOZDzzgRRSpwQ8yLA4io42t7If6YMPKfeTEGXNjKvXDb729t
-	 ruMelHfjn4Pp9/O/ngYfRE16Daga8DZd5L6dAHqucqfk/gmURTh8yfVdrHFDGCqWIPZqC
-	 EvCx8Q7REvpyJSuARhS43sW+bSSKOcnGhmwRZKJneOjyQzWvEP7tn+Cbk0HPBml0QLLdA
-	 RmcqSzUUFKvtmAWed1Qgpl9rd5ALhUVT3WeMG5v+NW3+V5miR/0LHk2W90eolfAnrbQeR
-	 6Tta/74u8CXOG3eKe+wOQ3plSPnSCFWqVl6WXTgjWmodv83/1SUTf7XzPpIPl9GZRwA==
+	t=1795557663;
+	b=lwBg3fYQaqd+97M2mM25z8/kDsFItiPRIV1yggBuzBzFOcrOouIhPRwID/j8OBj6F+Xn
+	 R+iDGysR1EDTh4K8KZ5T4YbZXK98NLv/JZuPskFYx428wDGY7hB+RLZbDMEy/UNPr6Mo1
+	 moCHfgXqE0eYRmnpBR8zL3dgNbGgJh5ZpyLGqz63guQI8mJ/0nwLF+1XaPLn41tMeh3hY
+	 q6tUdVSfA1JhQpPMzfT50moo3pJirrVckk1KH7Nwvsbk730j0KOMqrA2ijOwVXTx95z0V
+	 tcQRpCMGeqf8YrFPomKx2i6exZ3O8QZOAVedw0UC28sCPifeXouAWxizg9AfYvmNQag==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795557661;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795557663;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=j7YnxP6rOSNn2PLyHdvoPa30Rf+gWB4c1ghCXQvP3qE=;
-	b=HjiNdYKEkpF0S1F5N8g3sFnhF3qkbBGP0bfGatGrDg8sBLZ+9xXMnrjSNuTMuUe+9rX2
-	 rXtHxUbOgSbV8RCeOLI6y63bF050TP8XNf3JVQzAMCvAd9gxL27p1woBCUJncFdVq8OSL
-	 gwjT8jhnqNqT/6dufQZwxPMBjykD7J5JKmMU3GKPqIi04bx2G7d/ZNf+FrnJhakc19qTI
-	 c6b+gU3HPPtvtZe3/wQQQwACbfwbNTf63lKcZdAog91kIJA0i2+HQQpe5qC1Bludki9px
-	 EnrNHdHThcQ0Y+qadI1Sq0p+xPmu4p7vRzmit5UEOO9tlHJbSnhTyP6wavV9xswnYNQ==
+	bh=fbeDYkmV6VhSwEDRHYGI8E7aGE9via/0e814aCWXP8k=;
+	b=XyBVqDI6kfh8pANMkYCieEI8X+I7vLMJjE52nAG23NDKpbfLKd57Co7IzZ/iSWV40psm
+	 ijzqGtJ2cOcqqej74cZMuXCmMr2lo7Foc6p3LoAdC2kYdndhSerat1h9GTKajuGCG3VG4
+	 TKAOYpHAJy9dua6mXA6B490iGbjk/ulCuf4kfBaojgPlTLhSGXvTYDqUSfLQUl07mzmIN
+	 rE8HfVl5RYcEZ6dldGPl3XJIcZo6Lk48/jCFcvwtCR6MPFE208zN87HhEaKub+hHYx/aj
+	 mNiMU/uOU7rybEgSonkGxxAJ889VgEOoebVRQFpc8k2wGqShtSv8ljHgON378dCgYnw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mAZrFlms;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=f2PiHCFJ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F955606A321
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 22:01:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E3B606A337
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 22:01:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mAZrFlms
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBBFB1F000E6;
-	Tue, 24 Nov 2026 22:01:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=f2PiHCFJ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2152F1F000C0;
+	Tue, 24 Nov 2026 22:01:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795557661;
-	bh=j7YnxP6rOSNn2PLyHdvoPa30Rf+gWB4c1ghCXQvP3qE=;
+	s=k20260515; t=1795557662;
+	bh=fbeDYkmV6VhSwEDRHYGI8E7aGE9via/0e814aCWXP8k=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=mAZrFlmsf02t7X6Rj9b69lfChEnfNrmowdsxTeeKhgj4pVtyjGKRmMcTq0t5j1so4
-	 cZhO01NWK7oeqvWN+TppSVVN7eyLPdA6XFN530qVh9QOvLCjrZJO7NeO65szC3l9l1
-	 2dJTSSZbL1jO6T8jiWlxq6v1sHrWt8PDGCgUSxhB9Mg9hvG+cayZsfuk5gdVntP7KW
-	 LUw1u417+0u1s7Wx+ienaY8qRWGzSCo9zWre4HoXVEjIdSoyskCLs4SVQZNVqGXuCg
-	 WTwXirJoKHRiSmxA/ZH8ecs1MOuPCLtNlk96HQG8rkNI/GhV9M66xOFjE94309M++j
-	 PRGOOVJlHJTtg==
+	b=f2PiHCFJEfF2wZ9WRRfrnGz/urIoTPbDjWYPxMI+QmzuCD3g2nPrZlADjO3G2ZGdP
+	 6dv9Nrv+dPERRFgHfsRWj28A6yJP4jGH9SvBm+rwb6dwcxBzSYJnMOxtsPzXNi6zUx
+	 S9s16yxICITc+jX8dVYDRXm82HTkMjmiy8SdCWPL+SyDmrGxiLv+s9ayY4wDIlWxXE
+	 qibY2xpasvRXfSNg9frOL4qbBuGIwomi4jwpp6Ofm3OaEx77PwFUnscYqKkJtou6jp
+	 JkfMCEtw5YXFSvzi1jv0haOAk0rAFLVe6liNwuQzpDzlzGkZ1t6zvs1MepyvJo+G00
+	 SB3v9CE3TDs9A==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 24 Nov 2026 22:59:20 +0100
-Subject: [PATCH mptcp-net v3 03/50] mptcp: count orphans as TCP does
+Date: Tue, 24 Nov 2026 22:59:21 +0100
+Subject: [PATCH mptcp-net v3 04/50] mptcp: return EOF after a DATA_FIN, as
+ TCP does
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -54,125 +55,153 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261124-mptcp-cmason-fixes-v3-3-416c0920c73f@kernel.org>
+Message-Id: <20261124-mptcp-cmason-fixes-v3-4-416c0920c73f@kernel.org>
 References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
 In-Reply-To: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3856; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=Vg4GQk5+3D7+3VKlhfVN6aAsV+cniQHjHlFCuV3qc70=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLZOH68+he2dX28y/2PL641zj6+cPtU5XyP1YuusbS75
- bpUs1vrdZSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAExk8haGPxw3DAI2/GPiqy5o
- tMkQvxP3fOksW9cgXc2pmjHTWy7kTmb4Z/NoqaFFhiLfkxl/m5afabHaH8BnJ++8xGjyhzCn8mI
- LHgA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5590; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=9ZM9ZrqkI1nmyNEvqaYHn+7jnnuCy59ahMcpu9T5G3Y=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLZOH5WGlS4iNVvXffitWvaBL6X5zs6K5XYeV+uqE459
+ uT2wUtaHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABPhbmb4X52e99FieltG7ZkG
+ PqYTq9mfVK67/zDxeOED+7s+LltP6TMytL998/68l4ZUztUNR7vmT1vw2KNMTiXM/vx17S1zr7z
+ p5gMA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The MPTCP sockets orphaned by close() were not counted in
-tcp_orphan_count, contrary to TCP: tcp_max_orphans did not limit them,
-and they were not visible in /proc/net/sockstat.
+Once an MPTCP socket has received a DATA_FIN, recv() returns the
+remaining data, then EOF. But if the connection was then reset, e.g. by
+an MP_FASTCLOSE, recv() returned an error after the data, e.g. EPIPE,
+instead of EOF as TCP does. A proxy resetting the other connection on
+read errors then dropped the data it still had to forward.
 
-This is all the more needed since commit "mptcp: keep an orphan while it
-can send its data": an orphan can then be kept longer than its close
-timeout, e.g., as Sashiko noticed, by a peer acking the data at the TCP
-level only, without moving the DATA_ACK.
+As TCP does with a FIN, set SOCK_DONE when processing the DATA_FIN, and
+check it before the socket error in recvmsg(). With an MP_FASTCLOSE, the
+data still in the backlog is moved first, not to miss the DATA_FIN.
+After a fallback, a DATA_FIN is also emulated after a reset: only set
+SOCK_DONE after a FIN, not to hide a reset behind an EOF. This FIN is
+cleared when the first subflow is disconnected: process this DATA_FIN
+before.
 
-Count them, and as TCP does, reset an orphan when there are too many
-orphans, or when TCP uses too much memory: at close(), and when its
-close timeout expires while it is kept to send its data. This is similar
-to what tcp_out_of_resources() does from the TCP timers, without the
-stricter limit for the stalled orphans. These resets are counted in
-TCPAbortOnMemory, not in a new MPTCP counter: the MPTCP orphans now
-share the TCP orphan count and limits.
+This was reported on GitHub, and is validated with new Packetdrill
+tests: data and a DATA_FIN are received, then an MP_FASTCLOSE; and
+after a fallback, data, a FIN and a reset. Without this patch, the
+second read() returned EPIPE in both cases:
 
-This has been found by a review agent, and validated with a script
-closing 8 connections whose peer doesn't read, with tcp_max_orphans set
-to 4: the MPTCP orphans were all kept, without being counted, while
-other orphans were reset. Now, only 5 or 6 are kept, vs 4 or 5 with TCP,
-which also checks the limit from the timers of its orphans.
+  receive_fastclose_after_data_fin.pkt:27: runtime error in read call: Expected result 0 but got -1 with errno 32 (Broken pipe)
+  v1_connect_tcpfallback_fin_reset.pkt:19: runtime error in read call: Expected result 0 but got -1 with errno 32 (Broken pipe)
 
-Fixes: e16163b6e2b7 ("mptcp: refactor shutdown and close")
+Note for the backports: the issue with an MP_FASTCLOSE comes from commit
+69800e516e96 ("mptcp: propagate fastclose error"), in v6.1. Before that,
+the modifications in mptcp_check_fastclose() and mptcp_disconnect() are
+not needed.
+
+Fixes: 15cc10453398 ("mptcp: deliver ssk errors to msk")
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/647
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v2: new, spotted by a review agent
+v2: new, for issue #647 reported on GitHub
+v3: process the DATA_FIN before disconnecting the first subflow, which
+    clears its FIN (Clashiko)
 
-Note (Clashiko on v2): the reset reason stays TCP_ABORT_ON_CLOSE, as for
-the other fastclose resets: only the tracepoint is affected.
+Note (Clashiko on v2): with a DATA_FIN, then an MP_FASTCLOSE in
+FIN_WAIT2, the reset subflows are only released at close(): not a leak.
+A DATA_FIN mapped on another CPU while an MP_FASTCLOSE is processed can
+still lead to ECONNRESET: two subflows racing, and the connection reset
+by the peer anyway.
 ---
- net/mptcp/protocol.c | 24 ++++++++++++++++++++++--
- net/mptcp/protocol.h |  1 +
- 2 files changed, 23 insertions(+), 2 deletions(-)
+ net/mptcp/protocol.c | 31 +++++++++++++++++++++++++++++--
+ 1 file changed, 29 insertions(+), 2 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index ff71f1954077..9e297fa08bfe 100644
+index 9e297fa08bfe..de6da0b6c4ca 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2897,6 +2897,16 @@ static bool mptcp_subflow_probe_timed_out(struct sock *ssk)
- 	return ret;
- }
+@@ -714,6 +714,10 @@ static void mptcp_check_data_fin(struct sock *sk)
+ 		WRITE_ONCE(msk->rcv_data_fin, 0);
  
-+/* As TCP orphans: limited in number and memory */
-+static bool mptcp_orphan_oom(struct sock *sk)
-+{
-+	if (!tcp_check_oom(sk, 0))
-+		return false;
-+
-+	NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPABORTONMEMORY);
-+	return true;
-+}
-+
- /* Before its DATA_FIN, keep an orphan while a subflow can send its data */
- static bool mptcp_orphan_keep(struct sock *sk)
- {
-@@ -2914,7 +2924,7 @@ static bool mptcp_orphan_keep(struct sock *sk)
- 		    tcp_jiffies32 - READ_ONCE(tcp_sk(ssk)->rcv_tstamp) <
- 		    2 * TCP_RTO_MAX &&
- 		    !mptcp_subflow_probe_timed_out(ssk))
--			return true;
-+			return !mptcp_orphan_oom(sk);
- 	}
+ 		WRITE_ONCE(sk->sk_shutdown, sk->sk_shutdown | RCV_SHUTDOWN);
++		/* on fallback, also emulated after a reset: check for a FIN */
++		if (!__mptcp_check_fallback(msk) ||
++		    (msk->first && sock_flag(msk->first, SOCK_DONE)))
++			sock_set_flag(sk, SOCK_DONE);
+ 		smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
  
- 	return false;
-@@ -3547,6 +3557,9 @@ static void __mptcp_destroy_sock(struct sock *sk)
- 	sk_stream_kill_queues(sk);
- 	xfrm_sk_free_policy(sk);
- 
-+	if (test_and_clear_bit(MPTCP_ORPHAN_COUNTED, &msk->flags))
-+		tcp_orphan_count_dec();
-+
- 	sock_put(sk);
- }
- 
-@@ -3636,8 +3649,15 @@ bool __mptcp_close(struct sock *sk, long timeout)
- 	/* all the subflows are closed, only timeout can change the msk
- 	 * state, let's not keep resources busy for no reasons
+ 		switch (sk->sk_state) {
+@@ -972,6 +976,9 @@ static bool __mptcp_subflow_error_report(struct sock *sk, struct sock *ssk)
+ 	 * destroy the msk as needed.
  	 */
--	if (subflows_alive == 0)
-+	if (subflows_alive == 0) {
- 		mptcp_set_state(sk, TCP_CLOSE);
-+	} else if (sk->sk_state != TCP_CLOSE) {
-+		/* as TCP orphans: counted, and limited */
-+		tcp_orphan_count_inc();
-+		set_bit(MPTCP_ORPHAN_COUNTED, &msk->flags);
-+		if (mptcp_orphan_oom(sk))
-+			mptcp_do_fastclose(sk);
+ 	ssk_state = inet_sk_state_load(ssk);
++	/* a FIN received before still leads to EOF, as with TCP */
++	if (sock_flag(ssk, SOCK_DONE) && mptcp_pending_data_fin(sk, NULL))
++		sock_set_flag(sk, SOCK_DONE);
+ 	if (ssk_state == TCP_CLOSE && !sock_flag(sk, SOCK_DEAD))
+ 		mptcp_set_state(sk, ssk_state);
+ 	WRITE_ONCE(sk->sk_err, -err);
+@@ -2494,6 +2501,9 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 			    !timeo)
+ 				break;
+ 		} else {
++			if (sock_flag(sk, SOCK_DONE))
++				break;
++
+ 			copied = sock_error(sk);
+ 			if (copied)
+ 				break;
+@@ -2813,6 +2823,8 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 		     struct mptcp_subflow_context *subflow)
+ {
++	struct mptcp_sock *msk = mptcp_sk(sk);
++
+ 	/* The first subflow can already be closed or disconnected */
+ 	if (subflow->close_event_done || READ_ONCE(subflow->local_id) < 0)
+ 		return;
+@@ -2820,12 +2832,21 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 	subflow->close_event_done = true;
+ 
+ 	if (sk->sk_state == TCP_ESTABLISHED)
+-		mptcp_event(MPTCP_EVENT_SUB_CLOSED, mptcp_sk(sk), ssk, GFP_KERNEL);
++		mptcp_event(MPTCP_EVENT_SUB_CLOSED, msk, ssk, GFP_KERNEL);
+ 
+ 	/* subflow aborted before reaching the fully_established status
+ 	 * attempt the creation of the next subflow
+ 	 */
+-	mptcp_pm_subflow_check_next(mptcp_sk(sk), subflow);
++	mptcp_pm_subflow_check_next(msk, subflow);
++
++	/* On fallback, the FIN of the first subflow is cleared when it is
++	 * disconnected: process the DATA_FIN emulated from it before.
++	 */
++	if (ssk == msk->first && __mptcp_check_fallback(msk) &&
++	    READ_ONCE(msk->rcv_data_fin) && !sock_flag(sk, SOCK_DEAD)) {
++		mptcp_move_skbs(sk);
++		mptcp_check_data_fin(sk);
 +	}
  
- 	sock_hold(sk);
- 	pr_debug("msk=%p state=%d\n", sk, sk->sk_state);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 2c9a442dacd6..888ee9d66967 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -117,6 +117,7 @@
- #define MPTCP_FALLBACK_DONE	2
- #define MPTCP_WORK_CLOSE_SUBFLOW 3
- #define MPTCP_RTX_ENABLED	4
-+#define MPTCP_ORPHAN_COUNTED	5
+ 	__mptcp_close_ssk(sk, ssk, subflow, MPTCP_CF_PUSH);
+ }
+@@ -2938,6 +2959,11 @@ static void mptcp_check_fastclose(struct mptcp_sock *msk)
+ 	if (likely(!READ_ONCE(msk->rcv_fastclose)))
+ 		return;
  
- /* MPTCP socket release cb flags */
- #define MPTCP_PUSH_PENDING	1
++	/* a DATA_FIN received before still leads to EOF, as with TCP */
++	if (READ_ONCE(msk->rcv_data_fin))
++		mptcp_move_skbs(sk);
++	mptcp_check_data_fin(sk);
++
+ 	mptcp_token_destroy(msk);
+ 
+ 	mptcp_for_each_subflow_safe(msk, subflow, tmp) {
+@@ -3797,6 +3823,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
+ 	atomic64_set(&msk->rcv_wnd_sent, 0);
+ 
+ 	WRITE_ONCE(sk->sk_shutdown, 0);
++	sock_reset_flag(sk, SOCK_DONE);
+ 	sk_error_report(sk);
+ 	return 0;
+ }
 
 -- 
 2.55.0
