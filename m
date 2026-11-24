@@ -1,47 +1,60 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795517458;
-	b=Vq7yIx38OVExP9q2lQnu6+KTAtbSgEl8Ze7TDk9MCX3WCcBA3XeKKJgpqcQjBOtNJavd
-	 2Bj2QQYmaNV+hA6nfETxUXj55L5rFjUo3MDk94xwgnWYhtReXKqAiCt/kSOFaWoGyXVLe
-	 yiZtkSFAkjVwg+kUaJfLXfP5Z8unvHurd9hTJyygqRCukwQJcyaio17zpgrunRxEyYSkW
-	 REw5ZMz/viluL3hb85c2Du28ivwHdVn1bT6Ew/46w/rnitl2rnKDCNZ5GBd5o/2N3eadk
-	 SXf1UbZ5CJHdUpTM/f1B739M5Ap+4fd3fm3meybDQ5bZ95XI6LbpDlKZUdwksPfRb1A==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795517458;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=bUeAcidrQsSFX25IzJe7FXpPeYZGctYNkLsQ8CeRyRs=;
-	b=tfCOEuavV0VDyXIqvpX0qyUASFHUjnyir56KiOXt6xfwdys29sV4McrjoY0Jp+TjZdAf
-	 T7AWtUhXwrzM95eQ25b3jkDmQpQ32THUZj+v4+IufAqVCaY01h90/ppnQj3ZmPXe/F14Y
-	 c0eCo9fsKxpvioNqEpRgJytBSA+MOFI+OyzklzFE6uIx37VpciMLlSKDmpPV/Oze7O1xR
-	 3bHdGRwJggv4lqQ8mo1ukJOkWuCoJu8UrdVXA8DWi2MnqGiJ1r42RTOv//Git4ls8QM+G
-	 JPb2npLA8b+9ycMjxom2ysVvCy3rNLM3O2UNjtfQPr68zJrZSYJgVoHSNogUcaDXqaw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EpvsehN5;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.54
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795518501;
+	b=5gEhvvFeByRcJzLnjUV1YPGXMTpLbrFkUyECbLIbWN5dOupmoQR/mSdiCup3pLzuxcts
+	 FNNjl+fndvPvTrRZcuSil6pRKiXDN6XtpSlpn+mfwV0B1zxDIsLz4EssVklaMvqRVBdJQ
+	 cHcuRQfPgoJAm3HdO475sGBsQbTrVB7QAt9q4iWREKxC+5igND2od/9MdwIv4xIY2+r68
+	 4nUhmAZixq+VHhqjNYWwvnVgw8Z28PbGDgjzd9N7Sckq7iKsVL+m/ueN3/YOcOvsdKELi
+	 1yOMHcDyZ6jPqrS/cbKCgdD5b5ZRFA8HoOZ2vDmR2qkywUChATItNU3gf7mUR8o6nGw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795518501;
+	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Message-ID:
+	 In-Reply-To:References:Subject:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:Importance:User-Agent:X-Mailer;
+	bh=5Q0nUsmS5dYPNLn3YcCxx6eDOdrN0AGP4TE6bHVglfI=;
+	b=o96PlPI0I3mvMmR0korrEflkr7KpptOG3NEn4dwo24atsFU+WiVtLJOT+RUrGIOHFHHn
+	 okRMCpJQG8LOXYkGlAp9g84v2QEQAwZrhhsbrI0KIqN8j305ct6C++XBX9TFG4QKUuUEi
+	 tyfVcU7XbnpXBuBpZ3aEeJaNVh51QOGT0fjlyq8b6y6NFBbkH/LB7y5CCJvV3+p+SPFpQ
+	 ZACLJQUf+gNnLhU7/1Ov48ZJ6ZFhcT8XF4wJTA/oYEfMJglNshhMsbCX0LPHyipvFS3EA
+	 Y3m4YYttNUQEIUWu/lltVsZHQM8GzP/3sAy19jsu870FjUJ4CiJXQ4/LYyxfxIkHMVQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=mpiricsoftware.com;
+	spf=pass smtp.mailfrom=mpiricsoftware.com;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.54
+Received: from sender5-of-o54.zoho.com (sender5-of-o54.zoho.com [165.173.182.54])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829FD606A31E
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 10:50:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EpvsehN5
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A94A91F000C0;
-	Tue, 24 Nov 2026 10:50:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795517457;
-	bh=bUeAcidrQsSFX25IzJe7FXpPeYZGctYNkLsQ8CeRyRs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=EpvsehN5jv7EGbNvjC6/RWNeceE0wlKD3MSChGaw3xyVRIFcFqMQa1NrjYhNnwjK7
-	 k4cQgm07lAIXWnysIUpH6gwBvFOvUrkcYZ3q1edt1H1s3iughx4CLZLhRbsBfGe1xv
-	 ebK9rCohGQk3//05VHttN4FJ6zT+xHn6Vp9rBBxmLLrmZossKKMyM7qW3QF1jYd0KH
-	 TAG3ezz1nOpjnDh2DQBnItwN9Q8dt12x9LH+8pQSoYm+UWsnzmhtHMesoNki0lBrYt
-	 QetS47rwiTaLOTSz7A+IK0Tnjt8aPpkRro3Tz9UlUkDf90YD7wkT/7xKnq6p2rX45I
-	 VvXTQdhTDexzA==
-Message-ID: <5c2c389f-f669-4284-afbd-088d5324e1fa@kernel.org>
-Date: Tue, 24 Nov 2026 11:50:54 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E59A606A31E
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 11:08:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4E59A606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
+ARC-Seal: i=1; a=rsa-sha256; t=1795518497; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=hQHEoekoMs4lc57XXa+dm4tri7mrGojYB/H+wNlOW5/mPWfEw1fYoPrPU+y650LfCzahwwlhamus0/kcybphBoeSJIAEeig6kDfcXQCBVGd4wrsVoZyJHQbdxEy7OMulNZIAGo+lEbv1CCv4k6sBN71MVmityyHQ/2D0op8ghag=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1795518497; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=5Q0nUsmS5dYPNLn3YcCxx6eDOdrN0AGP4TE6bHVglfI=; 
+	b=A6ED0R3nz+w+bFmXb51yukP9Sl52Jnd9HWMiHU/3t2rzff6uRYVYMqK+lT9N7gvpnrVMjMl/RrLQdkGA5G1W3ThK8pw5mSs1Gn8UWvhQ4ix+PgQXikHajHvzX058CE6KG5Fcpp/ivg0Bg2IdDqAJ00o2rB8fqp81H3dunqPvUV8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
+	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
+DKIM-Signature: a=rsa-sha256; b=dwn8UKasrD9UkXH9t02+R1w+I5gohJViTIAlI7T3YZeJsZjr7vM+d2+IcH0q6cmdq+zEumzpKzvpzbBLYvGD6CTaf930QTwv/hLVG8NYMrML6bz8fsX/g0sZwtbJqhPFGj+icMTr/MgQn3J+A5EG56edKBYEeqnKQULJcTV0+KA=; c=relaxed/relaxed; s=mpiric; d=mpiricsoftware.com; v=1; bh=5Q0nUsmS5dYPNLn3YcCxx6eDOdrN0AGP4TE6bHVglfI=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1795518492523393.4838538486845; Tue, 24 Nov 2026 03:08:12 -0800 (PST)
+Date: Tue, 24 Nov 2026 16:38:12 +0530
+From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+To: "Matthieu Baerts" <matttbe@kernel.org>
+Cc: "mptcp" <mptcp@lists.linux.dev>,
+	"shardul.b" <shardul.b@mpiricsoftware.com>,
+	"janak" <janak@mpiric.us>, "kalpanjani009" <kalpanjani009@gmail.com>
+Message-ID: <1a20d3def10.5b910baf7779.702190847381737510@mpiricsoftware.com>
+In-Reply-To: <5c2c389f-f669-4284-afbd-088d5324e1fa@kernel.org>
+References: <20261124102214.3930527-1-kalpan.jani@mpiricsoftware.com> <5c2c389f-f669-4284-afbd-088d5324e1fa@kernel.org>
+Subject: Re: [PATCH mptcp-next v8 0/2] mptcp: add core-enforced subflow
+ avoid flag
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -51,80 +64,50 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v8 0/2] mptcp: add core-enforced subflow avoid
- flag
-Content-Language: fr
-To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-Cc: mptcp@lists.linux.dev, shardul.b@mpiricsoftware.com, janak@mpiric.us,
- kalpanjani009@gmail.com
-References: <20261124102214.3930527-1-kalpan.jani@mpiricsoftware.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20261124102214.3930527-1-kalpan.jani@mpiricsoftware.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
 
-Hi Kalpan,
+Hi Matt,
 
-On 24/11/2026 11:22, Kalpan Jani wrote:
-> The MPTCP scheduler needs a persistent way for BPF schedulers to
-> mark subflows that should be avoided across scheduling rounds.
+Thank you for the feedback.
 
-Thank you for the new version. I didn't review this series yet, but just
-a quick note: could you please not rename the patch series (here "mptcp:
-add core-enforced subflow avoid flag" and before "mptcp: add
-scheduler-owned subflow avoid flag") otherwise it is hard for us to
-track versions, and it doesn't help to follow the modifications.
+Understood. I'll keep the series title and individual patch titles consistent across future revisions, changing them only when the scope changes.
 
-Ideally, try to do the same with the patches as well: change their
-titles only when the scope changes.
+I'll follow this approach in the next version.
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+Kalpan Jani
+
+
+From: Matthieu Baerts <matttbe@kernel.org>
+To: "Kalpan Jani"<kalpan.jani@mpiricsoftware.com>
+Cc: <mptcp@lists.linux.dev>, <shardul.b@mpiricsoftware.com>, <janak@mpiric.us>, <kalpanjani009@gmail.com>
+Date: Tue, 24 Nov 2026 16:20:54 +0530
+Subject: Re: [PATCH mptcp-next v8 0/2] mptcp: add core-enforced subflow avoid flag
+
+ > Hi Kalpan,
+ > 
+ > On 24/11/2026 11:22, Kalpan Jani wrote:
+ > > The MPTCP scheduler needs a persistent way for BPF schedulers to
+ > > mark subflows that should be avoided across scheduling rounds.
+ > 
+ > Thank you for the new version. I didn't review this series yet, but just
+ > a quick note: could you please not rename the patch series (here "mptcp:
+ > add core-enforced subflow avoid flag" and before "mptcp: add
+ > scheduler-owned subflow avoid flag") otherwise it is hard for us to
+ > track versions, and it doesn't help to follow the modifications.
+ > 
+ > Ideally, try to do the same with the patches as well: change their
+ > titles only when the scope changes.
+ > 
+ > Cheers,
+ > Matt
+ > -- 
+ > Sponsored by the NGI0 Core fund.
+ > 
+ > 
+
 
