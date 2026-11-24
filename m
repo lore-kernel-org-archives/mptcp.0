@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795520937;
-	b=N2uUEXtjnmsBTRpdyQru44F7G5prtymGSRyP4DLuZuGMW2xrMfDy3FFd/DFPdjOnNEHM
-	 mLMzSQY2uNb7OTIeKK2GaovuRbUhZ0aNEfI44ybiCGYktFh1GrE+IXRW1RY9iZmiiXCBZ
-	 f5d6NZgkUupnE2Nru026opSMCZ0EuG5Sahiaw4ZiuYvdlIbsxc3fffub6MN/gY5f+EEjg
-	 OvNHu3CwvJSNUiv52K11mhZPD4o6Y/evymOf6KQqpfFCFF7LaEA7dGDwqV8864W7XWHQ7
-	 J0xlQEYnGrzkRxw/PxB33A5rJnWFO01neqRUoSHifDrysA1FBe8mSqJXUMU6Sfe12kw==
+	t=1795521713;
+	b=zYkLONbjKzBAy/3HNN6r3mZRs0yyBi3R/EX+OAUstVLPJqMZEhTESMFud7jYnE2J7zpY
+	 OvKzJo3jt7R5cWCW+ZAI196CxfQHXZpe6MSNo4f8c44h+s5DSJXOrsC0BS8zByOGBq3uS
+	 eBoT+krFiVq5AAOQIQXy7p9zTib5inXaimXE2tzY2pVBMw1TNC412oPiNXutshb+l5P+K
+	 C6L3o+PKVyrQLTzA9aAGoTko5d2xOhhB9Tbb4eVmjiYO1xiHZOqV63umBH3n0EJ2hDB8b
+	 R7FlTM3+r2u/OV4oSljPy/9bn8JE1LNzE9O/wV+sDFylefPaeL++J33ve3Me9Ih2kKQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795520937;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795521713;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=aEW4KNhQW2LvIxISIMcdtV8inFLGo/DqVkwhEeNf678=;
-	b=o3T6Zy+54t6Br52pqHUzo58DjJ6dDciS9NspbAdwY1J8Yltvnsw1AY4T3F2gAm3w9usN
-	 +UpM/B4QzR8TxLn5V4PcqBxj+m0EMJNbmcjl+Cv0SmvE5actzTXoNiSngiqHx0DR0FX7K
-	 8UsbLy758dB5AzleUjfU9OghrOY+FzOaF9bx4vY5NKbxDheHLO7mHwZBBR4IckBSqW9lM
-	 pbsdxZAcvIBYsXPcdJlCTcZKqxGFw+STtWOp/4Tm6rslRMG05VQMaC/boK2eTong9cwWd
-	 5G8huHRPwVsxM8ECTAW37BCy/zcJVZyKLiHiq9Cf0FQD5eYyYvfFQ4J6g3eCjCUsQaQ==
+	bh=bIazfeejOy6zK+kki1n21vnIBUW+AkYhFPAq3AWYKqQ=;
+	b=uSyAYBY2LO+D37OXTCCvtxMniCAdUs9ogOIh1vChcgyEyZ9K4oNXvYmv6BVj4whB3YmW
+	 A7HDapb/3f0KljXowZXLCAxkhDJ7/ib9OU93Fy1CARpKzKW83CYeqgyL2r27Lj8X4loXz
+	 6gNhzYnbWZgXKFF8O7A6eQipot2GapN3i2TjBlf4IlEJcaFxqJmTtPqTl/HCTaIqdSTW7
+	 EXRL5rw8UlyjnJxF8Gr1MTQVkDSlLkTbd9mXdyWcOUdQzJJ0mAVCw1g0P3hUa5dauT2fw
+	 x23gtwitC0IuKffDslZv2nyqaIRuXsx59v+qNh6LEU2/H+5IwY9n57ClJiZDyE6r3Bw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Rw44i/pA";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NXolFECE;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAFF3606A31E
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 11:48:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96E3606A331
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 12:01:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Rw44i/pA
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF0C71F000CA;
-	Tue, 24 Nov 2026 11:48:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NXolFECE
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE0B31F01566;
+	Tue, 24 Nov 2026 12:01:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795520937;
-	bh=aEW4KNhQW2LvIxISIMcdtV8inFLGo/DqVkwhEeNf678=;
+	s=k20260515; t=1795521712;
+	bh=bIazfeejOy6zK+kki1n21vnIBUW+AkYhFPAq3AWYKqQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Rw44i/pAiiTBjVIZtj1qzMFmLXkXeKVrg6wju3uhQyePkPJHCz6w8yzOU3kosMJq9
-	 TuuAu3ml2goJ76fu2fKVJipeGdAyIUntOrKwqY2kDDIXe6BsARcM7ZHMCvFXHVnKAW
-	 PZtKtV7saqdjdfiafqh/uXU7rGc8SSRjvhVp+PIea5S/crYailLiaRN9l1B0UtmZGA
-	 i+hTgglk0O/9SeozRvDC+HGFw1FKJQPSUtXoR5fJHcXrzJKfcC6gHmSl93TjIkabF+
-	 tnuP9459KpqPMsyZMisdqH56NDqyekQ+6Iy3Ut0O+pi1ecP358lImS4mvlwxv6+wMU
-	 IsfGCiWrgs+kQ==
-Message-ID: <6250ba38-4ceb-4b5f-81c7-0b937aabaf23@kernel.org>
-Date: Tue, 24 Nov 2026 12:48:55 +0100
+	b=NXolFECE+OyAIv9zQ91+mqXG2DbDN4U50YSmsfJz+fWMzn0gMIzfKqJsDQy1sln5W
+	 hwXTNjOqg/1i+8cnNLkNjmU1KtosAy0BSn894/6+GkrG3yf+z7jT/wmCTiQW1gh5ji
+	 gIIJ20CLEzHmrX71C6dt7gINIgQ62dgmtzigQtjJ2PbBYHvOFJeP/6XgFp2N2Qkxue
+	 rQLS8BAXcIm/+AZ5M5ZZu7phppOsmIQRdSoxmoGanx2Ri79H9azo8Ydvu06rh0DGGf
+	 MZMeYB65TlINbNuZWiCUgUlWnEov12yJkIiQ3fq8Ellvx57E3PutKUQiQcBvaxxQn2
+	 M9VtfBV360bXQ==
+Message-ID: <14a41955-807e-424e-9f07-527954dac0fe@kernel.org>
+Date: Tue, 24 Nov 2026 13:01:50 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,13 +52,13 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 15/62] mptcp: return EOF after a DATA_FIN, as
- TCP does
+Subject: Re: [PATCH mptcp-net v2 20/62] mptcp: start close timeout on initial
+ sf shutdown
 Content-Language: fr
 To: netdev-bot+sashiko@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-References: <20261121-mptcp-cmason-fixes-v2-15-00327fd1de1f@kernel.org>
- <179541554480.3133.8039878521061914181@kernel.org>
+References: <20261121-mptcp-cmason-fixes-v2-20-00327fd1de1f@kernel.org>
+ <179541554861.3133.16159737553641124171@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -104,28 +104,15 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <179541554480.3133.8039878521061914181@kernel.org>
+In-Reply-To: <179541554861.3133.16159737553641124171@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 On 23/11/2026 07:32, netdev-bot+sashiko@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 3 potential
-> issue(s) to consider.
->
-> - [Medium] In mptcp_check_fastclose() (net/mptcp/protocol.c), the patch
->   reads msk->rcv_data_fin, drains msk->backlog_list with…
+> - [Medium] In __mptcp_close_ssk() (net/mptcp/protocol.c:2826-2834), the
+>   new else-if arms the close timeout for every msk state except…
 
-Correct, will fix in v3.
-
-> - [Medium] mptcp: early return in mptcp_check_fastclose() skips subflow
->   close in FIN_WAIT2
-
-No leak: reset subflows are released at close()
-
-> - [Medium] mptcp: mptcp_check_data_fin() misses SOCK_DONE after subflow
->   disconnect
-
-The connection will be reset by the peer anyway.
+I didn't manage to reproduce this, I will add a note for v3.
 
 Cheers,
 Matt
