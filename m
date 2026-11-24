@@ -1,47 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795540765;
-	b=cWi1HFEUGoiUKPNgaTG0Tm2ngbPmsBH8p+FVVnqX5X4otI2Ph+m9UWmaaGkuZG5QaLTr
-	 2ul+jn+ThyFFUnzOwLXml2RAusrR5RtLrj9PjUHZcDTQHRB09USdR72RYySz1cCb4Av8S
-	 UWT7O+lDcGFqGFHX8AWN+aKA2xL2uijALKnpkz42m+SIKX3QoI7VHqduDQhpsw/Tyk6KE
-	 5wH99Njk7pWqWDY0lENVM8nL9w5fi/H0mIipK6qJM0c/LtNhGjtXGTChe30rO3uNJsVp4
-	 xEyEBp2uSmcHIKsKuonhV0+Cz/YOM+MQOXhIweErf9cc8cxjCAQId3ifcHLimqefJ7g==
+	t=1795547018;
+	b=S7YF7GJ5qISVW+Njl2GJ0yjoEEcut4zz/3hCO/J0SPJKiM0bIK7G0pTSAS63ya2Ur87m
+	 jCOC/pUqVIVC4yXVtVgc+MfOMjjZrR02+R1GU1vsv+mbCJo4MhvaHbMGot9CDuRCsl6oq
+	 iEMSgklm+rMIq010svd2fpFMiBsXVLLWaTm7DmjhiMdta2tRY90dzkx2vEG5jHaJw7wJK
+	 bs3erPVNwheafy9dj1/eWnDPOc/ryapPsDa03KQZPU4tTh/4vK4mEh39HFYvW941r4+2t
+	 nYsBsIRL+lh/jm31Kk2CY9iR+i6L5ML0dXmn3UxoxRHPJuFiT7oBGkul4mavGq6z/nw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795540765;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=2W18Sl1KVJQ4zdfQeYoRiZTmHNyLVcwiGsFXGI4ms/0=;
-	b=xUStBnjd3Gl4s9WYXiihxVKq24E90AQOQSHrXsdKOemsgBovefFzCHg1cuk5L3vrtZoz
-	 qM1rbIf7eGV0NXWMVZQ57KT+5uvrs1OyJZBQd9bvGOHsdw1A09cZpXHPSS40UUTIXXe+P
-	 yRp3jQBQOgWNs0RFiH/yzHr8P3iww6hxoa/sEZLxqurHaDA7WOAwIhiTYc2mKxOTVqxyT
-	 Kyez5xMSyB0HGeKkoGzTO+MxC4dJxe+oNIsaPJQMfyDujwaQvdluNptc7zp30F7W6L0+9
-	 +FHxecBLFfp0xSGoRvBF8jw2+SDBYnDHj3C/Fz7McUdhPaP/h1G8sVg0EcSgRkIrmrw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795547018;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=3NHkiK89FGhMqxmhyPjWv59hYEFcdhqG3oRKdQBbdbI=;
+	b=DWd4Skd4F5yGAWVj7TOAuTMGT9s1Gyyusto+DwrxG2W1M9EIOA19uFbJXmMpwhyKK4qy
+	 WPOKtKpZjV/rP2Tn2UBVHfGQHf8wLPSHIbtIg02iyGpsmU3W9eKeOYQSJq5OqKUBv1zdv
+	 qgjYfcYde5m2SepHTFXV9wL0ovfoluSA7WKwxm86SzzxgytGR1kbGyE8hb/3Sb0AfTeWl
+	 +J1gdmcBktt9uVaKvscC1QYKxwNJ7zIxf2eVMfgr3+Wzlg6jwbdV+SYWymGG4a3R6MdOG
+	 xNx3ExQG9VMu4+YYHvQtNtANY5Uch2rOe2lQ+iHbsnUmC2lEC/G5fSjbpm9FcBuwVYQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kTNHWafD;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hQuUL4U0;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854A1606A321
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 17:19:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF564606A31E
+	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 19:03:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kTNHWafD
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E7A21F000ED;
-	Tue, 24 Nov 2026 17:19:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hQuUL4U0
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 879961F000C0;
+	Tue, 24 Nov 2026 19:03:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795540765;
-	bh=2W18Sl1KVJQ4zdfQeYoRiZTmHNyLVcwiGsFXGI4ms/0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=kTNHWafDt8gj5FFNNJ2+k7WcsYD+iPd9y1sTGkCZ+8JwnMDm/jRpUXgc5QZxomXH5
-	 ZSduWCxiMVsDSH9EGKhUOxJKavMt9vL2OTuJA1P171C3Vgz3huvUBbHFBpehAW3wch
-	 UHLp3hNScVU0ObvqUCFseBR0/jz3ceBCyJ99Mv2pcp0sAU6t2YVJIcUrABhbJpd6Cg
-	 flq7hTjEwDIbdnlQFfN392U3NFdFSD0VhOUQLiyyV1AidlZprfgKkxM6DB/4n2Aatm
-	 kr7LAHDwhQf+H49hIS9BhdKQjgJVJyy5474StEeLk+FcoothyI/7nZSM+VB8Sxd48x
-	 q2mHVdtabaNhw==
-Message-ID: <43d2d331-920f-4835-9ab3-fa71b6022d8d@kernel.org>
-Date: Tue, 24 Nov 2026 18:19:22 +0100
+	s=k20260515; t=1795547017;
+	bh=3NHkiK89FGhMqxmhyPjWv59hYEFcdhqG3oRKdQBbdbI=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=hQuUL4U0KYbvYANxbBxCUG+yl3QK7mxptFwxq0oE3y5h9tfdLnt5jt1KfheiHBfC7
+	 GkWSTfHWtVuuaeVkcKNLkLn+9xgl+p1PoxdyJV9CjzNguPlbmydk5MieYZiRVHWblC
+	 tylJ2aoYzIJZ4G4Nq++KjAICbS3eWbVUofL4GKvF1UQWJdoeYPiHB9uGQLqfh7aal5
+	 lVSkb5OeYoF5nAbHvDwYRnoTSg9aoJqVaCfgjaoIOd368LAf3DKLNxF1c5KyHdG7wI
+	 KNfB8JiaHnATY91lKT1AnuiQ61tSxNz/6rjQXURMLk4n6NzatrGg9YfE+/Wx6ZMlTg
+	 kicCCLdn5EH3w==
+Subject:
+ Re: [PATCH mptcp-net v14] mptcp: hide sequence numbers in Netlink diagnostics
+From: netdev-bot+sashiko@kernel.org
+To: kalpan.jani@mpiricsoftware.com
+Cc: mptcp@lists.linux.dev, shardul.b@mpiricsoftware.com, janak@mpiric.us,
+ kalpanjani009@gmail.com, kuba@kernel.org
+Date: Tue, 24 Nov 2026 19:03:37 +0000
+Message-ID: <179554701704.3133.17670693401738699374@kernel.org>
+In-Reply-To: <20261123054324.561321-1-kalpan.jani@mpiricsoftware.com>
+References: <20261123054324.561321-1-kalpan.jani@mpiricsoftware.com>
+X-sashiko-severity: Medium
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -51,126 +62,130 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 50/62] mptcp: continue the last mapping after
- a fallback
-Content-Language: fr
-To: netdev-bot+sashiko@kernel.org
-Cc: mptcp@lists.linux.dev, kuba@kernel.org
-References: <20261121-mptcp-cmason-fixes-v2-50-00327fd1de1f@kernel.org>
- <179541555937.3133.8595018877227525015@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <179541555937.3133.8595018877227525015@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 23/11/2026 07:32, netdev-bot+sashiko@kernel.org wrote:
->> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
->> index 3590c1207e88b..f73e4b8deca42 100644
->> --- a/net/mptcp/subflow.c
->> +++ b/net/mptcp/subflow.c
-> 
-> [ ... ]
-> 
->> @@ -1438,6 +1440,17 @@ static bool mptcp_subflow_fail(struct mptcp_sock *msk, struct sock *ssk)
->>  	return true;
->>  }
->>  
->> +/* Fallback: dummy maps go on from the last valid one, unless it is old */
->> +static void subflow_update_dsn_base(struct mptcp_subflow_context *subflow)
->> +{
->> +	u32 end = subflow->map_seq + subflow->map_data_len;
->> +
->> +	subflow->dsn_base = subflow->map_seq - subflow->map_subflow_seq + 1;
->> +	subflow->map_old = before(end, subflow->dsn_end);
->> +	if (!subflow->map_old)
->> +		subflow->dsn_end = end;
->> +}
-> 
-> [Severity: Medium]
-> Can this deliver bytes twice to the application when only the receiver
-> falls back, even if the sender runs a current kernel?
-> 
-> A probe or reinjection whose map ends exactly at dsn_end moves dsn_base
-> but leaves map_old at 0, because before(end, dsn_end) is false.
-> 
-> Take two zero window probes. The receiver has DATA_ACKed up to DSN E,
-> so dsn_end = E, and its MPTCP window is zero:
-> 
->   probe 1  SSN P,   DSN E-1, 1 byte (content of byte E), with DSS
->            -> dsn_base = E - P, end = E, map_old = 0
->   receiver reads and sends a window update with DSS
->   probe 2  SSN P+1, DSN E-1, sent before the window update arrives,
->            DSS stripped by a middlebox
+Thank you for your contribution! Sashiko AI review found 3 potential
+issue(s) to consider.
 
-Mmh, it needs a middlebox dropping the DSS of one probe, but not of the
-other one... I don't think we need to support that: if middlebox wants
-to mess up with TCP packets, they can already do that from various ways.
-Upper protocols will detect that.
+Critical: 0 · High: 0 · Medium: 1 · Low: 2
 
-(...)
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
 
->> @@ -1501,6 +1516,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
->>  				subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
->>  				goto reset;
->>  			}
->> +			subflow_update_dsn_base(subflow);
->>  			WRITE_ONCE(subflow->data_avail, true);
->>  			return true;
->>  		}
-> 
-> [Severity: Low]
-> Should map_old be checked here, before this branch commits to a graceful
-> MP_FAIL?
+- [Medium] In net/mptcp/mptcp_diag.c, mptcp_diag_get_info() (lines
+  219-221) sets mptcpi_write_seq, mptcpi_snd_una and mptcpi_rcv_nxt to 0…
+- [Low] The same helper, mptcp_diag_fill_info()
+  (net/mptcp/sockopt.c:1013, 1027-1028), fills struct mptcp_info for…
+- [Low] The in-tree selftest helper
+  tools/testing/selftests/net/mptcp/mptcp_diag.c, print_info_msg() at…
 
-No: it needs DSS checksums, a reinjection and a corruption...
+--
 
-Cheers,
-Matt
+mptcp: hide sequence numbers in Netlink diagnostics
+
+This commit clears mptcpi_write_seq, mptcpi_snd_una and mptcpi_rcv_nxt in
+mptcp_diag_get_info(), so MPTCP data-level sequence numbers are no longer
+exposed through INET_DIAG_INFO. The fields are cleared for all requesters.
+getsockopt(MPTCP_INFO) and getsockopt(MPTCP_FULL_INFO) still report the
+real values.
+
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/445
+
+> diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
+> index 136c2d05c0eeb..fe1603ce80162 100644
+> --- a/net/mptcp/mptcp_diag.c
+> +++ b/net/mptcp/mptcp_diag.c
+> @@ -215,6 +215,10 @@ static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
+>  		return;
+>  
+>  	mptcp_diag_fill_info(msk, info);
+> +
+> +	info->mptcpi_write_seq = 0;
+> +	info->mptcpi_snd_una = 0;
+> +	info->mptcpi_rcv_nxt = 0;
+
+[Severity: Medium]
+Should these values be hidden from CAP_NET_ADMIN requesters too? After
+this change, a privileged user running ss -Mi always sees 0 for these
+fields.
+
+The commit message says:
+
+  However, the current diagnostic callback does not
+  provide the privilege information needed to distinguish requesters.
+
+Is that accurate? The idiag_get_info() signature doesn't carry the flag.
+But net_admin is already in scope at the call site in inet_sk_diag_fill(),
+and the next statement passes it to the sibling callback:
+
+net/ipv4/inet_diag.c:inet_sk_diag_fill() {
+    ...
+	handler->idiag_get_info(sk, r, info);
+
+	if (ext & (1 << (INET_DIAG_INFO - 1)) && handler->idiag_get_aux)
+		if (handler->idiag_get_aux(sk, net_admin, skb) < 0)
+			goto errout;
+    ...
+}
+
+mptcp_diag_dump() already computes it with
+netlink_net_capable(cb->skb, CAP_NET_ADMIN) and passes it through
+sk_diag_dump() into inet_sk_diag_fill(). Only tcp, udp, raw, sctp and
+mptcp implement idiag_get_info, so adding a net_admin argument looks
+like a small change.
+
+The MPTCP subflow diag already follows this policy in subflow_get_info()
+in net/mptcp/diag.c:
+
+	/* Only export seq related counters to user with CAP_NET_ADMIN */
+	if (net_admin &&
+	    (nla_put_u32(skb, MPTCP_SUBFLOW_ATTR_RELWRITE_SEQ,
+			 sf->rel_write_seq) ||
+	     nla_put_u64_64bit(skb, MPTCP_SUBFLOW_ATTR_MAP_SEQ, sf->map_seq,
+	...
+
+With this patch, root can still read the data-level MAP_SEQ for each
+subflow. For the same connection, though, root always gets 0 for the
+connection-level write_seq, snd_una and rcv_nxt.
+
+Would it be more consistent to gate these three fields on net_admin, as
+subflow_get_info() does? This patch has a Fixes: tag, so it will also
+reach stable trees. Privileged tooling there would silently stop seeing
+these values.
+
+[Severity: Low]
+This isn't a bug, but mptcp_diag_fill_info() fills struct mptcp_info for
+both getsockopt(MPTCP_INFO/MPTCP_FULL_INFO) and INET_DIAG_INFO. After this
+change, these three fields carry real values on the getsockopt path and a
+constant 0 on the sock_diag path.
+
+Neither struct mptcp_info in include/uapi/linux/mptcp.h nor
+mptcp_diag_get_info() has a comment noting this. The subflow diag drops
+hidden attributes from the message. mptcp_info is a fixed binary struct,
+so here the hiding shows up as a silent 0.
+
+Could a short comment be added here, or in the uAPI header, saying these
+fields are intentionally reported as 0 over sock_diag?
+
+[Severity: Low]
+This isn't a bug, but print_info_msg() in the selftest helper
+tools/testing/selftests/net/mptcp/mptcp_diag.c still prints these fields
+from the INET_DIAG_INFO payload:
+
+	printf("\nTransmission Info\n");
+	printf("write_seq:        %llu\n", info->mptcpi_write_seq);
+	printf("snd_una:          %llu\n", info->mptcpi_snd_una);
+	printf("rcv_nxt:          %llu\n", info->mptcpi_rcv_nxt);
+
+On a patched kernel these will always print 0. chk_dump_one() in diag.sh
+only parses the token from this tool, so no test covers the new zeroing.
+
+The changelog says the dedicated selftest was removed following
+maintainer feedback, so the missing coverage looks deliberate. Printing
+whatever the kernel reports is also fine for a tool that has to run on
+older kernels. This is noted only for completeness.
+
 -- 
-Sponsored by the NGI0 Core fund.
-
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261123054324.561321-1-kalpan.jani%40mpiricsoftware.com
