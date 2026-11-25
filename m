@@ -1,57 +1,93 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.161.54
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795563046;
-	b=DHHqpXQDABjcad8PRDtyH98D1K9HGqKoS0HkXqAqfQe8Fz12Nc+3TnZm5YzlDp1EHGgh
-	 S9PPNd5Rlj8RSsq2gYs0WjywQ7Qw9PeVveXF+7LYkLI9gYFICRDDriH3uChTsCT1rMojx
-	 IS8vj8aVXjm34ZjlPIu9lCVEv942Pyuojsp3xYWg+piuuX3hWmY5+SIOL5lTFZbgCa9Tb
-	 zm2e3YQb0bq84d7yrzyR2GcT7jJoky/lqHgqBMrTzvWuTfAr4OuaG82/UuCRv9+ER+iwx
-	 bE/y14lbYnoHfvdTvgycb8luo6BcWdALZUnYZayBjMJhTRa9GUswoGQwPur8M2E6zYg==
+	t=1795567194;
+	b=z+xmKyAyTpmt5gzmUfOB/R3ZpI0QF6mVnoQ5g9UROiOzAp7cBzZVd/Y16hURfHsChvct
+	 IsWPZkAWh7mfIw/3vtfoka8zcGWpw4c2eJpofngOMkCf9/6+q8jB/45pTFhW/JyqhOL4l
+	 WPq4yzU+RSEaSPVa15ERTqYj99bW0b41toT/DVNMRlP2BljxdzqeryK4SI3bMe21TBxp4
+	 HQ3HJ8aIvWVAtzFxutbIGY6qo30OasmctezJpXKmuc+a5hTaiIGOFH0wPbLCEHYNRm9ho
+	 XJLsEWbp9sv70p0q9L1S+z9FvZpLeZj5fA4Hpl8lJnuBjejzcbwJnX/UVg+VaRGd0ug==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795563046;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=lRAlquOZIDf4NvGpi3ysBHcQ5nuCwj6Jp1Q9nPygGNA=;
-	b=r/biFebrBjywsFhhhVXvJaxtyHp4Je47+CjRDTwzX2NDI/BxrPDXg0TEeo54aVPfjcv4
-	 ahUMdPAkU3+sssMDwyneZ9mF5YuPslG9lXdQTo60mI+qV7gU1nEyWntkjttGsN4l78bYZ
-	 iaI/2RL5OKR7PQTijuz2aVAHV7PakFw4cLT/uuvW/f4n2NgUVybazOpPVxEOwLuG7HupB
-	 9A9i+7BB7CJmMSUV+uXCp33dg5G+bIHshfqiJpybNUnzp5tQM/95C1ZiUE4wzXg2F/YpY
-	 MgBS1gkE6zDsEmZ9RkgSB9g3Wvf47OWOJLxNcHSUdDNCzFL3Wjt6aOc/Es/Gg0KQhdg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795567194;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
+	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
+	 Date:MIME-Version:Content-Type;
+	bh=YVZHZ3mibs47LFjlVCpIQFA7BohfXHuvJS28L4a66UU=;
+	b=AyeF8VgY6SM64tJUyqMGKOJ3R+BwBtsHSeWDA65wBCWS7iigp5KwPsTGgBbQ9zmd+7MW
+	 cOeASXItOT0tAlkA22yVEq9qVOLUqK/Be8RncvBR7Qus66+FLZ3HHBBeqS2q/kMjDZsj8
+	 WWTehVOwFnyKB6vfkRieL5x4nn9YFk1Unt/czX5Mr3HemMUsaeIj4rV+BSO8yBagtFvfo
+	 mZstsdktSodJAeGbhJCa8MSkiXO1hrziWdFBQaKPoTH75kxdvPLdXB7TyaNOGupNWzvc1
+	 EDbp8tL2yvtZE14ht4SF8ht6VNxFiQ4BeURmNDKQ0SVefG3ai5VYptyl5lR7OiguRoA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IKQUpztm;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=qp4HRnU1;
+	arc=none smtp.remote-ip=209.85.161.54
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D932D606A321
-	for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 23:30:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50288606A32E
+	for <mptcp@lists.linux.dev>; Wed, 25 Nov 2026 00:39:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 50288606A32E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IKQUpztm
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D94AC1F000F0;
-	Tue, 24 Nov 2026 23:30:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795563046;
-	bh=lRAlquOZIDf4NvGpi3ysBHcQ5nuCwj6Jp1Q9nPygGNA=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=IKQUpztmSIK87Of2LCJaP8Rqc9uJNjujaVHsNZY3j5SHetIQr8RrOfL26QNA6O/9N
-	 RwCWjn7gByQhIjP3c9jOiN+lSIDKtkwrrSNcTouDqkyrPeYI+VcOXgKf5vsmqZeevy
-	 cFvIGkGLRaSb+Ukb0NC0GkmXJi1l1eBuUa6mt5PuEufunHzq8sY55DGysRBHINZ7ti
-	 aJ41grCC9BZng+zmy1giTMekZB++k74ib00TIWUQBdsOBFYfe3TyXVtG8LUQuybzJY
-	 AP1oQNnSmVBaZL3fxXea7BpvbOfgdpeTQvrR8FRVlX0gVPkj15ycFV+1pHkTHdlmRV
-	 1+v2aGC2xTnng==
-Subject:
- Re: [PATCH mptcp-next v8 7/7] selftests: mptcp: connect: cover zerocopy mode
-From: netdev-bot+sashiko@kernel.org
-To: geliang@kernel.org
-Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Tue, 24 Nov 2026 23:30:45 +0000
-Message-ID: <179556304544.3133.4992026873532064641@kernel.org>
-In-Reply-To: <0f5e8a01d62f02de8f2b7af3bd49c9e70b960c58.1795421388.git.tanggeliang@kylinos.cn>
-References: <0f5e8a01d62f02de8f2b7af3bd49c9e70b960c58.1795421388.git.tanggeliang@kylinos.cn>
-X-sashiko-severity: Medium
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=qp4HRnU1
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-70bf1671c21so2968272eaf.1
+        for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 16:39:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795567193; x=1796171993; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=YVZHZ3mibs47LFjlVCpIQFA7BohfXHuvJS28L4a66UU=;
+        b=qp4HRnU1AYpei3NCNHI4BE5nta+YU8Eu3HIMmNR+Th8t8FXx+kvGuj9dfTXhCsvwbJ
+         lMzpT6F0dPqbHvQfgjqolA191JTRbWXW6WjAteoELs0NeqPm3LiV6qAWAilvkHW6Jwt1
+         o4y30B96kicI0kekzgyRQsd+iDxcS7IVuc0Qu9NYes2+k3EE+LP1oSgaVOGtrLc/u/77
+         b5gdv5GrrHpDNW3yY39X6hQiul391Wy5CwD0UjWroUgnNvU03vDi6t5GeYYza4hX0e1e
+         swBNcP51MhvKjsqjhdNMTofBAIg2j3TCuLZbmIHFYNmlHJwV3zHsLVmbcJCIc2m43Wc1
+         kdcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795567193; x=1796171993;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=YVZHZ3mibs47LFjlVCpIQFA7BohfXHuvJS28L4a66UU=;
+        b=RSXXtMZ7Ly4DNQypiUrGa9u1PRC9564Ku9JwTDYEn8LRxvyfja/qFiT12fThU8oeaD
+         UnGdXNp4bHoaEeiJ1L6LxKamsqnGML9Au6cQQ1ZB+lLEOeD9qNU3Rf7/iSBlUJYHzmuh
+         URhkq8jEl59irKrTr6ZdS9YsJMx0idoeIPUMHE2j0kv2Dy05aRQcr9iCX913MpPfNqCL
+         Lu64vPBGiJ3invnrq1dj6WGt+026QIlhj73ZIFsEcJ89Ad3IjWrUmd7eGiRPzJECKLEB
+         JXrN+0m8nuD9G9az65KjMxYlS38INfNxqvypMiFR12v8jXtIlqXWV3/IEeE1gEzLFE+b
+         9+KA==
+X-Gm-Message-State: APuU4Z9++0Qm0fAy6MfcmTdEJPGEcWUm0FRBDJ4GwDMarDeN7vfjHH4v
+	effnC5RyoOpCBu2GVziSPF9TrUSD5moek+eNY88zxGQaOG1Lqy78Ysw=
+X-Gm-Gg: AZFdTZflqaXkQ9B9Tud+8K3CkziZValAadKcFKLnNWmaU4+ZUedoXhWDra8xwga03Z3
+	zAwgL0Lj5GPXweLvGnodn104l/bpb2CG8qMVC1ILtOt4r/ZHVAczaLwtXv6XxSOqRrw2sQ8hrod
+	KHBVysy3mU5g2xLfj9ai0YP5T91+SoolHLpibCk9ZjF9m7rzV1HfjbmN7fH7Zvrj2bof1uidYdL
+	BV3KcikyYJetk1QHiBkxL0GROpTRPu+qMPcWqcv9idZx9iNQGzDdv+Qpav4gmr3IJEW9lfcvHp2
+	ksI461xyUuxMhBpEPoO4gaVenkQC0q9hY14YnaiHi2F2+Aecls2LnbYzaOEq0xzmC9nxjuKce9Q
+	dCyuWA5HHgynGt04PvF/h6XV5W+cwOc0QIbrOyB88JsXgegS7/HkdgnFwZ9ufUOe82R4fuxpcWX
+	LJ13zONA8IQZeL8LFOy7rSWUtfTfW79FZkAp/HRd0m+QKsW9q6hHNXSjkqv32p1XrjpjBsGhZCl
+	PIcFmU2M0PMbkRL5zLnA4QDUebI9jkNeiQOnY3vz8al166v7dUKRkOTPehfRhcwrgIZN6VlL29O
+	izue3nBOyc968AgtuQsfHco50Atv9CLnJ060cZ1k4faC
+X-Received: by 2002:a05:6820:55d5:20b0:71a:facc:5a3a with SMTP id 006d021491bc7-71b395a1fa0mr9247424eaf.64.1795567193005;
+        Tue, 24 Nov 2026 16:39:53 -0800 (PST)
+Received: from github.com ([64.236.135.119])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-71b380b6f82sm9596877eaf.10.2026.11.24.16.39.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Nov 2026 16:39:50 -0800 (PST)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
+References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
+Subject: Re: [PATCH mptcp-net v3 00/50] mptcp: misc fixes
+Message-ID: <fdfa2ced-395a-9de9-036f-c3b582442a86@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 25 Nov 2026 00:39:48 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -61,121 +97,67 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issue(s) to consider.
+Hi Matthieu,
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 1
+Thank you for your modifications, that's great!
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
+Our CI did some validations and here is its report:
 
-- [Medium] The new wrapper mptcp_connect_zerocopy.sh is added to
-  TEST_PROGS in tools/testing/selftests/net/mptcp/Makefile.
-- [Low] The commit author is 'Geliang Tang <geliang@kernel.org>', but the
-  only Signed-off-by line is 'Geliang Tang <tanggeliang@kylinos.cn>'.
+- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): packetdrill_regressions =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): selftest_diag =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: debug (only =
+selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only=
+ bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only =
+bpftest_all): Success! =E2=9C=85
+- Perf: Unstable: 5 failed test(s): =
+regression:sched-cpu-preempt regression:sched-mem-pressure(5) =
+regression:sched-serverlim(3) validation:sched-loss(3) =
+validation:sched-weak-secondary =E2=9A=A0=EF=B8=8F  (56 new outliers to =
+review)
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/run=
+s/45501866736
 
---
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/ecc8ef853125
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1221333
 
-selftests: mptcp: connect: cover zerocopy mode
 
-This commit adds a wrapper script, mptcp_connect_zerocopy.sh, which runs
-mptcp_connect.sh with -m zerocopy. It also adds the script to TEST_PROGS
-so that the MSG_ZEROCOPY mode runs as part of the regular mptcp
-selftests.
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-[Severity: Low]
+For more details:
 
-This isn't a bug, but the author is Geliang Tang <geliang@kernel.org>,
-while the only Signed-off-by line is for tanggeliang@kylinos.cn.
-checkpatch reports this as FROM_SIGN_OFF_MISMATCH.
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-The other patches in the series have the same mismatch. When the series
-is resent, could a Signed-off-by be added for the author address, or the
-author be changed to match the sign-off?
 
-[ ... ]
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect_zerocopy.sh b/tools/testing/selftests/net/mptcp/mptcp_connect_zerocopy.sh
-> new file mode 100755
-> index 0000000000000..0220d29ad68ee
-> --- /dev/null
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect_zerocopy.sh
-> @@ -0,0 +1,5 @@
-> +#!/bin/bash
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +MPTCP_LIB_KSFT_TEST="$(basename "${0}" .sh)" \
-> +	"$(dirname "${0}")/mptcp_connect.sh" -m zerocopy "${@}"
-
-[Severity: Medium]
-
-The commit message says this "ensures the MSG_ZEROCOPY path is exercised
-in the regular test suite". Can this wrapper fail if the zerocopy send
-path regresses?
-
-The zerocopy mode was added to mptcp_connect.c earlier in this series.
-In that mode, the only zerocopy-specific checks that can fail seem to be
-the setsockopt() and getsockopt() calls for SO_ZEROCOPY. Otherwise the
-result only depends on the data arriving intact.
-
-wait_for_completions_zc() returns void and leaves its poll loop on
-timeout:
-
-tools/testing/selftests/net/mptcp/mptcp_connect.c:wait_for_completions_zc() {
-    ...
-		if (elapsed_ms >= timeout_ms)
-			break;
-    ...
-}
-
-So if no SO_EE_ORIGIN_ZEROCOPY completion arrives, neither
-do_sendmsg_zc() nor its caller is told.
-
-process_cmsg_zc() returns true on the first zerocopy notification:
-
-tools/testing/selftests/net/mptcp/mptcp_connect.c:process_cmsg_zc() {
-    ...
-		serr = (struct sock_extended_err *)CMSG_DATA(cm);
-		if (serr->ee_origin == SO_EE_ORIGIN_ZEROCOPY)
-			return true;
-    ...
-}
-
-It ignores ee_code, so SO_EE_CODE_ZEROCOPY_COPIED is accepted. It also
-does not check that the ee_info..ee_data range covers every sendmsg()
-call made in the while (sent < size) loop.
-
-On the kernel side, mptcp_sendmsg() clears the flag without an error and
-uses the normal copy path:
-
-net/mptcp/protocol.c:mptcp_sendmsg() {
-    ...
-	if (msg->msg_flags & MSG_FASTOPEN || !sock_flag(sk, SOCK_ZEROCOPY))
-		msg->msg_flags &= ~MSG_ZEROCOPY;
-    ...
-}
-
-Several regressions would still give byte-identical output, and every
-subtest would pass:
-
-  - MSG_ZEROCOPY is masked off.
-  - mptcp_sendmsg_zerocopy_iter() is never reached.
-  - Completions are never sent, or are lost for later chunks (for
-    example, a ubuf refcount leak).
-  - Pages are always copied.
-
-The only visible symptom would be up to 5 seconds of extra run time per
-sending side.
-
-Should the zerocopy mode in mptcp_connect.c fail when no completion
-arrives before the timeout? Should it also fail when the reported
-completion range does not cover all the sendmsg() calls?
-
--- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1795421388.git.tanggeliang%40kylinos.cn
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
