@@ -1,53 +1,52 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795569583;
-	b=IzxbXmc9hthxk7JoeMjXcRsMAqFdmrhsm9KBGvBqI/mdzGZ/ZG6ibdHMOyxCKTlLK8JK
-	 apP6LGCZ9DEoBjFP+u+V5Tg6FkxjTUsmUwjOJoVPXRJrK2oUDl7sRvgP3PIe8CAhe9JaP
-	 RbJ/cb5kFCpZ4Q8MRH9aFr4P9L2dshQULuw001go62QOiWAyLcre9t0KPa7yjFlWjIjv5
-	 qO3NPRKfHURMpqkn0zxE0OWVJbWHcSuJvWZHOEhLtfXm+Pq4hpWjdMqXQCd+xrJoHQE8X
-	 XaYQu8cfVWxuMDaiQsg6bp6pshZa0hy1hiIidTME0vNsDGo3cmfGhOiufaF3IeLHRHg==
+	t=1795569686;
+	b=zOCT01kG1/vVBpH8c5fNvqjUufsRnrr9dtVz/WQI3Zv3jsbELaN49Q70vY9Jm9+c1ToL
+	 fzUfTKyimixR/6upwNLpnZXmAodOlrYqR9wsXEOBcx8Y/QcwwOpKY3+nvkJA3gkwH6JFU
+	 EiGf2TUlwNQ+sik/ANDtTaXJf9JqehjHvmctk4Y3IFjo2yDEge/vah2mqSj3FFxs5SW7Z
+	 0UjQyzxUVHVv2TYYqas4dCcGrmlpFGpJjnYWYQGs/0Uftox5S+SVymwwsOLfWuTVPmHIo
+	 gYKSH9ONBLqjOaX/ZCmEtfmEcoPv2hKq5lxogWHIaeuthjNlcz3+I/NMhzxLpbUEwAg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795569583;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795569686;
 	h=Received:DKIM-Signature:Date:From:To:cc:Subject:In-Reply-To:
 	 Message-ID:References:MIME-Version:Content-Type;
-	bh=cO0gq1divFpBoIZSpdvR5/SVI9qDnGq/ykzG8Zd7MRU=;
-	b=OEHi+fX5zgSTeJ5f74W7mIj7leWDA8tloMvV0Md9VkuP9bTlss2UW1VkY0zdPBQ2Nx83
-	 WvuWc3Hqu72la2OMs9IZkXLLNBOCcAifZiQ5IQUv+KOk+McpbU8Zn+a0gwevRm7YCxV3I
-	 OnrE/Z2bp5jz9ZBBaJMtzkEAIxtcn11URnuD+Fh/7D5o3hR7ZKzEY8+oEP3ROrLBT/nxV
-	 L7Q7VB+JRGQE2ZyWNriWDIlVbYjMCGaTlNQNmd/DcEavAn6pk9dALet2ylJQ0Lm5O7Cn3
-	 O0dMJWNer2NespSVJ2Up34CDDmWWKaxsfGwxc0HDumVV7h+wsqeeOVhuRH854qHyp5A==
+	bh=GXi1aaTtmSj7TVSgPnBO8IcgHLEk08kh+UlOmbAaeW8=;
+	b=GCjT3uDdLKVw4J6VzFMsT8syz7jsAknQ+9ebDhURoCyzRRMlo78mFT7dpDKLuz+zHhi7
+	 3+534AgIwUXfcFm5aGZo/cDcTTiMcyoTTZopYj6sujX5wXDAAN3kpfyjlGjw0HGoegOFV
+	 ar38KeUShiVIM4ffOSYqm5KRHJSNK3EJMTiYaifFlCswnlFrF7i6sz6IgHoHff/Tx8EEr
+	 Af+RCEJGk9nFJTIXxrkspZoN2rEanxn3aq+8cPiHL/JDfJvgVtzCD+DeD969QiL+epSeU
+	 GihrLKTWttTdGUnQpUMKTZg/ozI3jdl9Mw07bB3OB2RwJQrbgCa7U7TpS4zwiPamutQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fzAMs8UJ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LIhfTrua;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16D4606A31E
-	for <mptcp@lists.linux.dev>; Wed, 25 Nov 2026 01:19:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F58C606A31E
+	for <mptcp@lists.linux.dev>; Wed, 25 Nov 2026 01:21:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fzAMs8UJ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A926C1F000C4;
-	Wed, 25 Nov 2026 01:19:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LIhfTrua
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 433671F000CA;
+	Wed, 25 Nov 2026 01:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795569583;
-	bh=cO0gq1divFpBoIZSpdvR5/SVI9qDnGq/ykzG8Zd7MRU=;
+	s=k20260515; t=1795569686;
+	bh=GXi1aaTtmSj7TVSgPnBO8IcgHLEk08kh+UlOmbAaeW8=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References;
-	b=fzAMs8UJ64yMO4vFhCvh7T+qVSKWXlFXWctSsbnb+VVYBUGAZPHp4ZDLmIZ9085fR
-	 FF2WWEVVjsxqGeO0/ZlnylPQNkQuP9roMwpfO21vBXXhXEaGKohciB1jCfptfRGgfe
-	 rJynwTg384FsZE/6ieUOKcXiM0GJlXy29pJbxnAgA97Yq9qghrOd+C9A4ZAMFfWVfy
-	 Fkj9pT08lbmFhgjlTOmeVEDfb0EVCcpaPgceSguGLDeXy02bH/nqlnTIUI2zeuf30f
-	 Bxg9N+Prhdd/N9LYkAWqv2Ah35Bz57rAnMV+e4SyYkQYrQFSYNbIp317lg3Q8Kq8+z
-	 cOAZptMizf1zw==
-Date: Tue, 24 Nov 2026 17:19:43 -0800 (PST)
+	b=LIhfTruak7Q3eRWZWT0vpiKuJj7JvUTyQcWYnKDOcbiHFEc+Y8pRStMC5z6gIGNex
+	 QbR1rqWnDyZ3s6DjDp03WrCsYfWaBMkLnVCTa82iY6aIGEKPhQRQ7Yv1hc8VpDN1Vy
+	 KmI5R99hZoIyF8ZfX0p6m0pQQn6jcfyYwpC96p28L+WpLuxlB4UlnQMV/G/Hh8l2Rk
+	 2t+L/q0ooyhVBkHUo5w1gSnFm3t0KCZdGLK7u1ST6FcJmNUaYkofaVSmF0nO85EVIP
+	 dT4D8jR0txG+rySYIm3TCSAixf3TMkd/ilchKIraMCr1ZEpsUBxfJH/EVquxlUGTWR
+	 86gw7LTSwt/UQ==
+Date: Tue, 24 Nov 2026 17:21:25 -0800 (PST)
 From: Mat Martineau <martineau@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 cc: MPTCP Linux <mptcp@lists.linux.dev>
-Subject: Re: [PATCH mptcp-net v3 02/50] mptcp: limit an orphan probing a zero
- window
-In-Reply-To: <20261124-mptcp-cmason-fixes-v3-2-416c0920c73f@kernel.org>
-Message-ID: <0be81ccc-8d01-19d7-53af-6538924a05bc@kernel.org>
-References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org> <20261124-mptcp-cmason-fixes-v3-2-416c0920c73f@kernel.org>
+Subject: Re: [PATCH mptcp-net v3 03/50] mptcp: count orphans as TCP does
+In-Reply-To: <20261124-mptcp-cmason-fixes-v3-3-416c0920c73f@kernel.org>
+Message-ID: <3c2617a1-5fa9-eb64-65f1-4be239d29c7e@kernel.org>
+References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org> <20261124-mptcp-cmason-fixes-v3-3-416c0920c73f@kernel.org>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -61,28 +60,28 @@ Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Tue, 24 Nov 2026, Matthieu Baerts (NGI0) wrote:
 
-> Since the previous commit, an orphan with data to send is kept while
-> the peer acks something, at least the window probes: a peer keeping its
-> window closed, e.g. not reading, could then keep the orphan forever.
+> The MPTCP sockets orphaned by close() were not counted in
+> tcp_orphan_count, contrary to TCP: tcp_max_orphans did not limit them,
+> and they were not visible in /proc/net/sockstat.
 >
-> TCP limits this for its orphans: tcp_probe_timer() aborts them instead
-> of probing again after the max interval. The subflows of an MPTCP orphan
-> are not orphaned: they probe again then, and back off once more, up to
-> tcp_retries2. So check if TCP would have aborted them, when the close
-> timeout expires. Same with data in flight, when the peer has shrunk its
-> window to zero: tcp_retransmit_timer() only aborts orphans then.
+> This is all the more needed since commit "mptcp: keep an orphan while it
+> can send its data": an orphan can then be kept longer than its close
+> timeout, e.g., as Sashiko noticed, by a peer acking the data at the TCP
+> level only, without moving the DATA_ACK.
 >
-> Two corner cases needing non-default settings are not covered, which is
-> fine: an idle subflow refreshed by keepalives still keeps the orphan
-> when the stale detection is disabled, and tcp_orphan_retries is ignored.
+> Count them, and as TCP does, reset an orphan when there are too many
+> orphans, or when TCP uses too much memory: at close(), and when its
+> close timeout expires while it is kept to send its data. This is similar
+> to what tcp_out_of_resources() does from the TCP timers, without the
+> stricter limit for the stalled orphans. These resets are counted in
+> TCPAbortOnMemory, not in a new MPTCP counter: the MPTCP orphans now
+> share the TCP orphan count and limits.
 >
-> This was found by an AI code review agent, while reviewing the previous
-> commit. With its reproducer and a long pause, the orphan was kept until
-> the end of the pause. It is now reset as TCP does, respecting
-> tcp_retries2.
->
-> Note for the backports: this patch is needed with the previous one, and
-> before v6.15, tcp_rto_max() can be replaced by TCP_RTO_MAX.
+> This has been found by a review agent, and validated with a script
+> closing 8 connections whose peer doesn't read, with tcp_max_orphans set
+> to 4: the MPTCP orphans were all kept, without being counted, while
+> other orphans were reset. Now, only 5 or 6 are kept, vs 4 or 5 with TCP,
+> which also checks the limit from the timers of its orphans.
 >
 > Fixes: e16163b6e2b7 ("mptcp: refactor shutdown and close")
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
@@ -90,64 +89,84 @@ On Tue, 24 Nov 2026, Matthieu Baerts (NGI0) wrote:
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 
 > ---
-> v2: new, to limit the orphans kept by the previous patch, with the same
->    Fixes tag to backport them together.
+> v2: new, spotted by a review agent
 >
-> Note (Clashiko on v2): a peer acking the data at the TCP level only
-> keeps the orphan, but this is bounded by tcp_max_orphans and tcp_mem
-> since the next patch. With the stale detection, the probing subflow is
-> marked as stale, and its data is moved to the idle one.
+> Note (Clashiko on v2): the reset reason stays TCP_ABORT_ON_CLOSE, as for
+> the other fastclose resets: only the tracepoint is affected.
 > ---
-> net/mptcp/protocol.c | 29 ++++++++++++++++++++++++++++-
-> 1 file changed, 28 insertions(+), 1 deletion(-)
+> net/mptcp/protocol.c | 24 ++++++++++++++++++++++--
+> net/mptcp/protocol.h |  1 +
+> 2 files changed, 23 insertions(+), 2 deletions(-)
 >
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 944c9d11d211..ff71f1954077 100644
+> index ff71f1954077..9e297fa08bfe 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -2871,6 +2871,32 @@ static bool mptcp_close_tout_expired(const struct sock *sk)
-> 		  inet_csk(sk)->icsk_mtup.probe_timestamp + mptcp_close_timeout(sk));
+> @@ -2897,6 +2897,16 @@ static bool mptcp_subflow_probe_timed_out(struct sock *ssk)
+> 	return ret;
 > }
 >
-> +/* Would TCP abort this subflow if it were an orphan probing a zero window? */
-> +static bool mptcp_subflow_probe_timed_out(struct sock *ssk)
+> +/* As TCP orphans: limited in number and memory */
+> +static bool mptcp_orphan_oom(struct sock *sk)
 > +{
-> +	u8 retries2 = READ_ONCE(sock_net(ssk)->ipv4.sysctl_tcp_retries2);
-> +	struct inet_connection_sock *icsk = inet_csk(ssk);
-> +	const struct tcp_sock *tp = tcp_sk(ssk);
-> +	unsigned long limit;
-> +	bool slow, ret;
-> +	u64 when;
+> +	if (!tcp_check_oom(sk, 0))
+> +		return false;
 > +
-> +	slow = lock_sock_fast_nested(ssk);
-> +	limit = tcp_rto_max(ssk);
-> +	if (tp->packets_out) {
-> +		ret = !tp->snd_wnd && icsk->icsk_rto >= limit;
-> +	} else {
-> +		if (icsk->icsk_backoff < retries2)
-> +			limit *= 2;
-> +		/* a shift of 32 already exceeds the limit */
-> +		when = (u64)icsk->icsk_rto << min_t(u8, icsk->icsk_backoff, 32);
-> +		ret = tcp_send_head(ssk) && when >= limit;
-> +	}
-> +	unlock_sock_fast(ssk, slow);
-> +
-> +	return ret;
+> +	NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPABORTONMEMORY);
+> +	return true;
 > +}
 > +
 > /* Before its DATA_FIN, keep an orphan while a subflow can send its data */
 > static bool mptcp_orphan_keep(struct sock *sk)
 > {
-> @@ -2886,7 +2912,8 @@ static bool mptcp_orphan_keep(struct sock *sk)
-> 		/* a live peer acks at least the probes, every TCP_RTO_MAX */
-> 		if (__mptcp_subflow_active(subflow) &&
+> @@ -2914,7 +2924,7 @@ static bool mptcp_orphan_keep(struct sock *sk)
 > 		    tcp_jiffies32 - READ_ONCE(tcp_sk(ssk)->rcv_tstamp) <
-> -		    2 * TCP_RTO_MAX)
-> +		    2 * TCP_RTO_MAX &&
-> +		    !mptcp_subflow_probe_timed_out(ssk))
-> 			return true;
+> 		    2 * TCP_RTO_MAX &&
+> 		    !mptcp_subflow_probe_timed_out(ssk))
+> -			return true;
+> +			return !mptcp_orphan_oom(sk);
 > 	}
 >
+> 	return false;
+> @@ -3547,6 +3557,9 @@ static void __mptcp_destroy_sock(struct sock *sk)
+> 	sk_stream_kill_queues(sk);
+> 	xfrm_sk_free_policy(sk);
+>
+> +	if (test_and_clear_bit(MPTCP_ORPHAN_COUNTED, &msk->flags))
+> +		tcp_orphan_count_dec();
+> +
+> 	sock_put(sk);
+> }
+>
+> @@ -3636,8 +3649,15 @@ bool __mptcp_close(struct sock *sk, long timeout)
+> 	/* all the subflows are closed, only timeout can change the msk
+> 	 * state, let's not keep resources busy for no reasons
+> 	 */
+> -	if (subflows_alive == 0)
+> +	if (subflows_alive == 0) {
+> 		mptcp_set_state(sk, TCP_CLOSE);
+> +	} else if (sk->sk_state != TCP_CLOSE) {
+> +		/* as TCP orphans: counted, and limited */
+> +		tcp_orphan_count_inc();
+> +		set_bit(MPTCP_ORPHAN_COUNTED, &msk->flags);
+> +		if (mptcp_orphan_oom(sk))
+> +			mptcp_do_fastclose(sk);
+> +	}
+>
+> 	sock_hold(sk);
+> 	pr_debug("msk=%p state=%d\n", sk, sk->sk_state);
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 2c9a442dacd6..888ee9d66967 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -117,6 +117,7 @@
+> #define MPTCP_FALLBACK_DONE	2
+> #define MPTCP_WORK_CLOSE_SUBFLOW 3
+> #define MPTCP_RTX_ENABLED	4
+> +#define MPTCP_ORPHAN_COUNTED	5
+>
+> /* MPTCP socket release cb flags */
+> #define MPTCP_PUSH_PENDING	1
 >
 > -- 
 > 2.55.0
