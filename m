@@ -1,50 +1,52 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795591389;
-	b=sDTuXNSNelzOA2FYH8CXxcAygWCTKiAn6mq6eCqVapwWKi8YrOITfClOufc9kme1m/WP
-	 OKm9mrOr6c/dMnVrk2V1O5fPNZ1bDE6X9/1mtsezo0w5tgTodjtgwniJl93RObkBK6cii
-	 I4l4vIX8EBNpCmYa1xMsARin3SFyznPuIy/LZXKkBgwzKiYd3IL4BnqtZL4TKokiAUMPQ
-	 wE9oJebrG+3PSPUqarjlOVkCIpmNYnSgsuE9GJbipdxxfGwfXjwlWNck1cIi/tOP9YF0L
-	 XrMLFMFovmH7du6OkmPFfNC2uztuj1tz62xGqXxogGa9utHJgAmbB+HgC/ehKXLC06A==
+	t=1795591391;
+	b=dH32HxsH8Ews+dz9cvW0o0CAaqocusYf0fPGTcZrcmaWdWjnhotg2yVhqZS7lnzh/EX2
+	 BCDOauOD7MQQ0TLJBDUcBWHKhWptTxkh09M90ye0OBx4Fcz7wVfdZURe5XtIDemIa3D5B
+	 tQwiQdiaqniFPrAsapl5naqTwIu7OvcgCpA9LV/HhluDNRdMAKyJqX2d/50hfnFBYVlXJ
+	 G8tLSjPLSIdgKVLBoqkt2Tk7tY7ExlAzd97y1vHIJahsq4UjVzoN5WF4m1EV45oonPT4K
+	 1Fisae+jNe4wsfEaD+fbYRD3vT4WkW4dPJ6bxo0B+PdRgVKiQulc98yFF/MESDXtzng==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795591389;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795591391;
 	h=Received:DKIM-Signature:From:To:Subject:Date:Message-ID:X-Mailer:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=WmX6kN4rzhJg2sGs35sVRXc00lhJI4Vfsl1NFKXqaa0=;
-	b=O1xJXYjnkK4KDxlr3/DqLGXpegkRPP9oB7y+nJI8H8bEtuNYLf1fXpwC7RoeOKNmxty/
-	 eAF9q+f6pXqAvHJQYHf9LuDdJcyQt/9cqU20F+tcIufpmdCNhfJp/ESBRFrAUP/A+ZrLb
-	 gcA+N5pNovkB0RJ1VQInSf01pk9ZSsygje8AlthVxagym26I9KivIUv2Ozg0ldQr7lwVr
-	 bjLhg8wLnQg4BOwjObhaEWWgFrQUElPEnZikD3Bj/FQIUx5Nc+8KGP1Ef71VtA1K4Omio
-	 Sa3d5rcUJyOHaaxHZUsN6xOpy/AZRnv8UklB8btG/eH0DS+0wDEmDV3fQ3d4AAJkLkQ==
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+	bh=kGbDCUUEghTXfUDed29AI32A6nM+GTG8GbtYwF0dp8w=;
+	b=1zptwj9ZPinXf+pkC6sw9EoS384xcVJBewHFuOE2JQQ+riUNkyuFWPR8Uy9REu7TSODY
+	 UQoh22i5vXfXVrOAPCsCILd9GuDxPPZuDvmqWN0tUVAavky1C6+Rw9X5okS7dN/b5KU96
+	 d5Am9wHGEsj2681GDT4NujoHuKQH1HxKGfmvh5dgyEGoqTC64YaTG4O854MI1Z/VZptJf
+	 4rFvn7H2kg0hNxUR7PuSxV2AqG2kB0iVV1CWa3gOlEIGE79AHRRHWUpZz7mtkUIuiR9Hm
+	 4LB3i50WZ0knPlfzFasKh89ZmoXJRdpaV7tHPpAvxcUTEO8iZ0cIYK8Pgh4/IQFheAg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=j4NgL8J3;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XfW3yO9c;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D43606A31E
-	for <mptcp@lists.linux.dev>; Wed, 25 Nov 2026 07:23:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244AD606A31E
+	for <mptcp@lists.linux.dev>; Wed, 25 Nov 2026 07:23:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=j4NgL8J3
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 087121F000C0
-	for <mptcp@lists.linux.dev>; Wed, 25 Nov 2026 07:23:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XfW3yO9c
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8EFB1F000D0
+	for <mptcp@lists.linux.dev>; Wed, 25 Nov 2026 07:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795591389;
-	bh=WmX6kN4rzhJg2sGs35sVRXc00lhJI4Vfsl1NFKXqaa0=;
-	h=From:To:Subject:Date;
-	b=j4NgL8J3YRP5G1f+dNd6bDEC7Ofs3Xhe5PGdnTXQwa1cJPr6NQBD1ta3wZT5fVfVx
-	 /3ZdtoAc1bs9AhP5ctPxDrxeUwXV94nIHDtZjjXQ+UFrRwgH/NMG6QOn0zU+Idtgr/
-	 xSQyPaRAWnsFNp7mrBNoj7IGtxD5C2iupJodJmRMCBGYUx0LkdwX6IE+uJxupysNDp
-	 KKaC0Uiv2SJFQLo1Z3V7SJa1g/65nZymWOYvNcxzyJU3exRw0qFWyczGGVzogSiIyh
-	 3Iv9hOH5JkltKg8jIrYOb34NO3gpMXkixsUvKPwqIeEWshcYQqUfO6yhUFuU0YGUgN
-	 z6n/dCczOlUhw==
+	s=k20260515; t=1795591390;
+	bh=kGbDCUUEghTXfUDed29AI32A6nM+GTG8GbtYwF0dp8w=;
+	h=From:To:Subject:Date:In-Reply-To:References;
+	b=XfW3yO9cLaxWk7W0c4KIXEXlb6UCy3b6Oza0jsCRuhNOlAdZnsNsiKTTenL2mZWFm
+	 nrzIc8ISci5Kphg7NudUzcbhgCdRm0S1hJoj9DtZoUBVPhe+nf18hllwSaaJtC0+tF
+	 bW1KAh4+HOPlZct1wmHrKsxLBE0Xp5YgavvLjYE22shiRmVgYZHkuR3ahfjYbrHdqR
+	 OGGWqy2GuWjhn8lfi9gQ6fioagttlPxZB1+EEzS1aQT4DLuXVayEiNzI/9I4sHRzi8
+	 LUKx75aVEPn+GXJfRgMTQaoFVNnGjL0UzSWoZU7di5H4NejJmQmQGwVzpPYNA3bG4H
+	 gAbg0bkB4WU2Q==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v9 0/7] mptcp: add MSG_ZEROCOPY support
-Date: Wed, 25 Nov 2026 15:22:58 +0800
-Message-ID: <cover.1795591278.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v9 1/7] mptcp: use local variable tp in sendmsg_frag
+Date: Wed, 25 Nov 2026 15:22:59 +0800
+Message-ID: <d78ad0fbee64b4495d852c1676614c25330357f5.1795591278.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <cover.1795591278.git.tanggeliang@kylinos.cn>
+References: <cover.1795591278.git.tanggeliang@kylinos.cn>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -58,163 +60,55 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This series adds MSG_ZEROCOPY support for MPTCP sockets, allowing
-userspace to transmit data without intermediate kernel copies, and
-provides corresponding selftests to exercise the new path.
+In mptcp_sendmsg_frag(), tcp_sk(ssk) is called multiple times.
+Introduce a local variable 'tp' to hold the tcp_sock pointer and
+use it throughout the function. This improves code readability,
+with no functional change.
 
-v9:
-- drop "ipv4: fix uninitialized memory in zerocopy cmsg".
-- patch 3:
-  The dfrag memory accounting now uses PAGE_SIZE for zerocopy dfrags
-  instead of the actual data length, and sk_wmem_schedule checks are
-  skipped for zerocopy paths.
-  A page reference leak was fixed when iov_iter_get_pages2 returns zero.
-  mptcp_sendmsg_fastopen helper now accepts and forwards the ubuf
-  parameter.
-  Error handling has been improved by using uarg_to_msgzc()->zerocopy = 0
-  instead of net_zcopy_put_abort, and the success path now checks ubuf
-  directly rather than the zc flag.
-  Additionally, MSG_FASTOPEN flag clearing is handled separately from the
-  SOCK_ZEROCOPY check.
-- patch 4:
-  mptcp_setsockopt_sol_socket_zerocopy helper now increments the setsockopt
-  sequence counter and iterates through all subflows, setting SOCK_ZEROCOPY
-  on each one and updating their setsockopt_seq values.
-  Additionally, sync_socket_options has been updated to synchronize the
-  SOCK_ZEROCOPY flag to keep subflows consistent with the msk.
-- patch 5:
-  Documentation has been updated to reflect MPTCP support in the
-  msg_zerocopy guide.
-- patch 6:
-  add mptcp support for selftests msg_zerocopy.c.
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ net/mptcp/protocol.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-v8:
-- Add pg_off + pg_len overflow check in mptcp_sendmsg_zerocopy_iter() to
-  cap the sum at U16_MAX, preventing silent wraparound in dfrag->offset
-  during partial ACK processing.
-- Reorder kzalloc_obj() before sk_wmem_schedule() to eliminate erroneous
-  sk_forward_alloc_add() on allocation failure path.
-- Update caller to handle -EAGAIN/-ENOMEM by jumping to wait_for_memory,
-  preserving blocking socket semantics.
-- Refactor wait_for_completions_zc() to use clock_gettime(CLOCK_MONOTONIC)
-  instead of loop counter, preventing premature exit when poll() returns
-  immediately after shut_wr().
-- Add retry loop in do_sendmsg_zc() to handle short writes from
-  sendmsg(MSG_ZEROCOPY).
-- Skip wait_for_completions_zc() when size is 0 to avoid 5-second stall on
-  MPTFO transfers.
-- https://patchwork.kernel.org/project/mptcp/cover/cover.1795421388.git.tanggeliang@kylinos.cn/
-
-v7:
-- Add the pg_len / pg_off defensive truncation directly inside
-  mptcp_sendmsg_zerocopy_iter() (the new helper in patch 5). When
-  iov_iter_get_pages2() returns more than U16_MAX bytes, the excess
-  is reverted from the iov_iter so the next iteration picks it up
-  cleanly. When the page offset exceeds U16_MAX (on 256KB-page
-  kernels like PowerPC and Hexagon), the call returns -EFAULT
-  instead of silently truncating. The non-zerocopy path is left
-  untouched.
-- Refactor mptcp_sendmsg_zerocopy_iter() to return the per-iteration
-  byte count as ssize_t so the caller can simply accumulate via
-  copied += ret; this drops a ssize_t *copied out-parameter.
-- Clean up and fix the zerocopy completion path in mptcp_connect.c
-- https://patchwork.kernel.org/project/mptcp/cover/cover.1784260668.git.tanggeliang@kylinos.cn/
-
-v6:
-- Add patch 2 to widen offset field in struct mptcp_data_frag from u16 to
-  u32 to support page sizes up to 4GB on architectures with large page
-  sizes (256KB on PowerPC and Hexagon). This prevents offset wrap-around
-  when page fragment offset exceeds 65535.
-- Add patch 5 to fix uninitialized memory leak in IPv4 error queue
-  handling for zerocopy completion notifications. Add early check for
-  SO_EE_ORIGIN_ZEROCOPY in ipv4_datagram_support_cmsg() to prevent
-  reading uninitialized memory from ip_hdr(skb)->saddr.
-- Refactor zerocopy completion notification draining logic in selftests.
-  Extract process_zc_cmsg() helper to process individual control messages.
-  Extract drain_errqueue() helper to handle error queue draining.
-  Simplify wait_for_zc_completions() main loop from 6 levels to 3 levels.
-  Move variables to their actual usage scope for better maintainability.
-- Use batched polling (200ms intervals with 5s total timeout) to drain
-  completion notifications for large transfers that may generate multiple
-  completion events.
-- Parse error queue messages to verify all sent data has been ACKed before
-  breaking the completion loop.
-- Reset msg_controllen each iteration of the inner reap loop to prevent
-  truncation of control messages.
-- Use >= instead of > in the MPTFO size adjustment so file_size reaches 0
-  when the whole file is sent via fast open.
-- https://patchwork.kernel.org/project/mptcp/cover/cover.1784188064.git.tanggeliang@kylinos.cn/
-
-v5:
-- A new patch to align struct mptcp_data_frag to 8 bytes on 32-bit.
-- Prevent coalescing of dfrags with different ubuf instances into the same
-  subflow skb to avoid premature completion notifications.
-- Return -EFAULT instead of -EAGAIN when iov_iter_get_pages2() returns 0
-  to properly signal iterator exhaustion.
-- Account for dfrag metadata overhead in sk_wmem_queued_add() to prevent
-  bypassing socket memory limits.
-- Widen data_len field from u16 to u32 to prevent truncation on 64KB-page
-  kernels (ARM64, PPC64).
-- In selftests, use batched polling (200ms intervals with 5s total timeout)
-  to drain completion notifications for large transfers that may generate
-  multiple completion events.
-- https://patchwork.kernel.org/project/mptcp/cover/cover.1784113088.git.tanggeliang@kylinos.cn/
-
-v4:
-- two more cleanups, patch 2 and patch 7.
-- net/mptcp/protocol.c, mptcp_sendmsg_frag(): pull the type-mismatch
-  check out of the if (can_coalesce) block and use the standard
-  skb_zcopy_pure() helper; mptcp_sendmsg_zerocopy_iter() now
-  calls iov_iter_revert() before put_page() in the kzalloc failure
-  path so a retry starts from the same iterator offset.
-- tools/testing/selftests/net/mptcp/mptcp_connect.c, copyfd_io_zc():
-  reset msg_controllen each iteration of the inner reap loop using a
-  do {} while block; use >= instead of > in the MPTFO size
-  adjustment so file_size reaches 0 when the whole file is sent via
-  fast open.
-- https://patchwork.kernel.org/project/mptcp/cover/cover.1783992745.git.tanggeliang@kylinos.cn/
-
-v3:
- - Force fresh skb when mixing zerocopy and kernel-copy fragments.
- - Simplify zero-copy availability check by using SOCK_ZEROCOPY flag
-   directly.
- - Validate SO_ZEROCOPY value in setsockopt and avoid affecting
-   fallback subflow.
- - In selftests, drain MPTFO partial data, use poll+recvmsg for completion
-   notifications with timeout, and verify getsockopt round-trip.
- - https://patchwork.kernel.org/project/mptcp/cover/cover.1783913332.git.tanggeliang@kylinos.cn/
-
-v2:
- - patch 2, never mix PURE_ZEROCOPY frags with kernel-copy frags in the
-   same skb; handle fallback, return values.
- - patch 3, a new patch to handle SO_ZEROCOPY in setsockopt.
- - patch 4, set SO_ZEROCOPY, handle listen_mode, error queue.
- - https://patchwork.kernel.org/project/mptcp/cover/cover.1783821830.git.tanggeliang@kylinos.cn/
-
-v1:
- - https://patchwork.kernel.org/project/mptcp/cover/cover.1783774784.git.tanggeliang@kylinos.cn/
-
-Geliang Tang (7):
-  mptcp: use local variable tp in sendmsg_frag
-  mptcp: remove redundant orig_offset in carve_data_frag
-  mptcp: add MSG_ZEROCOPY support
-  mptcp: handle SO_ZEROCOPY in setsockopt
-  Documentation: msg_zerocopy: add MPTCP support
-  selftests: net: msg_zerocopy: add MPTCP support
-  selftests: mptcp: cover msg_zerocopy test
-
- Documentation/networking/msg_zerocopy.rst     |   4 +-
- net/mptcp/protocol.c                          | 173 ++++++++++++++++--
- net/mptcp/protocol.h                          |   1 +
- net/mptcp/sockopt.c                           |  30 ++-
- tools/testing/selftests/net/mptcp/.gitignore  |   1 +
- tools/testing/selftests/net/mptcp/Makefile    |   5 +
- .../selftests/net/mptcp/msg_zerocopy.sh       |   1 +
- tools/testing/selftests/net/msg_zerocopy.c    |   6 +
- tools/testing/selftests/net/msg_zerocopy.sh   |   8 +-
- 9 files changed, 206 insertions(+), 23 deletions(-)
- create mode 120000 tools/testing/selftests/net/mptcp/msg_zerocopy.sh
-
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index d64e04245963..b9ae52caf47e 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1447,6 +1447,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 	u64 data_seq = dfrag->data_seq + info->sent;
+ 	int offset = dfrag->offset + info->sent;
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
++	struct tcp_sock *tp = tcp_sk(ssk);
+ 	bool zero_window_probe = false;
+ 	struct mptcp_ext *mpext = NULL;
+ 	bool can_coalesce = false;
+@@ -1483,14 +1484,14 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 		mpext = mptcp_get_ext(skb);
+ 		if (!mptcp_skb_can_collapse_to(data_seq, skb, mpext)) {
+ 			TCP_SKB_CB(skb)->eor = 1;
+-			tcp_mark_push(tcp_sk(ssk), skb);
++			tcp_mark_push(tp, skb);
+ 			goto alloc_skb;
+ 		}
+ 
+ 		i = skb_shinfo(skb)->nr_frags;
+ 		can_coalesce = skb_can_coalesce(skb, i, dfrag->page, offset);
+ 		if (!can_coalesce && i >= READ_ONCE(net_hotdata.sysctl_max_skb_frags)) {
+-			tcp_mark_push(tcp_sk(ssk), skb);
++			tcp_mark_push(tp, skb);
+ 			goto alloc_skb;
+ 		}
+ 
+@@ -1548,7 +1549,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 	skb->truesize += copy;
+ 	sk_wmem_queued_add(ssk, copy);
+ 	sk_mem_charge(ssk, copy);
+-	WRITE_ONCE(tcp_sk(ssk)->write_seq, tcp_sk(ssk)->write_seq + copy);
++	WRITE_ONCE(tp->write_seq, tp->write_seq + copy);
+ 	TCP_SKB_CB(skb)->end_seq += copy;
+ 	tcp_skb_pcount_set(skb, 0);
+ 
 -- 
 2.55.0
 
