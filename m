@@ -1,77 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795598074;
-	b=OoEmcTbMf4LSmANBVp+JqAzCKTQrK3l1UocEwvzQk4Ccc36DbybI4/KM06Txo+VGx5w0
-	 N/8L9K6wmB6op2+DzLnM+JQkjNrMR986/mcwQnv9zdSiRiak9Oq9AeYk6fXHmG3PGzolN
-	 iDghoJNBUN5dC2NlcvTiG7pgZzeBoO8n/EVKUwzGYrl1kjHAjMQOwCsBUW7nTG52GZqXI
-	 8kDoghgyy9PeST/RoFVMGEuAZnxYdC9clqhsPVAXgi/LXTQEKqnPNskBQFrqdIrHfNCkl
-	 OouuKb7HX9h5uEcWS+08LwhaGs8Jzoqx3rlWDg0hJ2U2L9TAIjvhgR7fAF6Cxr9MBCA==
+	t=1795598119;
+	b=VAlGPN2lYihikkB6/4p+s25tMVBpxWWmMBWCzHq4HrYyThSJaF8AS+hlArfEkLD6aKXP
+	 z7B+7k1Rfa1Zzz02QKBpTEF7bUzmB5M0MjuZQSfeUkWRI1g4ziC6GfsSYx4P8ZT/4dz4I
+	 P6uYq02buzZKBXEcVMu6z7BLmVsOKR2wfPsMo9o7hFC++Snotvuf57+Qkz5mvHMWwWKXi
+	 SuB756E5zn9s9SPvuSrK6uI7Tnw0SmVZkyB2EDSMVGzH7v6juFy9KZWkJq0iiWeM/1+EW
+	 y38u8OKLXzLcrjYSvQbkJ86XRd0aj5749BmMXdFucifYD9tn+en9MsrfpXfYTYDteYA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795598074;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:From:To:
-	 Cc:Subject:Message-ID:User-Agent;
-	bh=lJmZ5WwGx3iTDReIcuVpB8iK8HmwCxvHVqZlo81WFn0=;
-	b=2QnZ0WyIKHTLKQA83IgNwuBhTkofqXnX8gdqLscY5vaMyZiwlZkZtmOONyWyz/ikmMmL
-	 NT+wzLeJx975sc9oStF6UAXNZsDzUrBKE8Gliu9t/HAdSzBpoKYDaPrTUSTSbDVrc/swe
-	 up1qBjKxjK89q4MDuydTINFU3l4peay4y/Vmg4Fq5BtwLRQo9bTeW8vdhENxsWGuN8Y/L
-	 WN4GWx1dkH7Zo755pz9mINL6hH5Ls+2dcLZIIH5HCuoU16mde7LIGj4epYX/p0pWr1Xf0
-	 HyEr/Do2pbCoDaURFiT2jbcNFKMlu+HPyKx5kU0TUhxDId7M0lNCzCCPduDoHMlVVzw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795598119;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=At1d4DsGvoBkrkeqmLrpO5m115sUYRFdd0heKIcaWwI=;
+	b=ZaObDTpAQslR6KqUjonqTifuCJAYD4axPS+Oab5Zjdcda9iVpAC2uXzgGAGl/B4YZThq
+	 PAJp77DWQiqRo2NgnErYJUPfhheNFN654m/Q+QC+DBFKJnu0Yn33makNBGzd3T7NSn8Cs
+	 FXmHXSCz/aKjYRQlO2zsUxkeuCjBq5yF1kzd3KQeJ2zxy0UjtHpCmkxOfMmV64NEspPbu
+	 5HpAbh3JcDzPBT9/h2OzEtcHnK25cpSbgOH/5B8gEL+MREbQSxA0SYa2GlUP9pUqFhLoN
+	 kmy6766hO3QGUdKILtf43pU4VRUM5hfpT1rd4Q7LMJo3gzOgNW4vcwNbvdJvA6Ku/hA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=KRCKWP2y;
-	arc=none smtp.remote-ip=198.175.65.12
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QQVEFCae;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED81606A33D;
-	Wed, 25 Nov 2026 09:14:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AED81606A33D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B35606A33A;
+	Wed, 25 Nov 2026 09:15:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=KRCKWP2y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795598068; x=1827134068;
-  h=date:from:to:cc:subject:message-id;
-  bh=tDcs7amqTljem4iggVez3OGMG3D2Bt7FnNdwoEY8GWw=;
-  b=KRCKWP2ydjWRBqgxb810EhDVsdRExFFiMcRGyFI5I6LRkK7/JUyR99hH
-   KlYqpoyaYgzYe9SxoB1a7IAbb56UIgmp1BEvcNAljS2bEeqKkSuib2eQh
-   UiTlsMMrUYjFy6wU9KJ2KSVog2C4ZMtbrhnE8jJHrZ6jVe9qRUmaqs7A+
-   8XL/PBidRaihqu+Y3yZ//H1efbrXUraDsxZr1MWFFEhKmvbSlt8lu6kqR
-   AVJMgR/XwtwVFC74A3jAZnYna5PZ4qq2b/CeVeqU6zO2baGQOVAFK6FVz
-   9rvu5sj84A8XAr+daDFdmRebSnJGeI895mOsn7PcBdxs9RXMmpCOLj+B7
-   Q==;
-X-CSE-ConnectionGUID: 0eMP+KoESOqIBWKjwtCSww==
-X-CSE-MsgGUID: S6n6AkgKTU+doEL9oD4JTA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11976"; a="4369244"
-X-IronPort-AV: E=Sophos;i="6.27,232,1787036400"; 
-   d="scan'208";a="4369244"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 01:14:27 -0800
-X-CSE-ConnectionGUID: fROSgHZmRkekyW/t/+ubBA==
-X-CSE-MsgGUID: DcxunBAMQiGwQyGDdWztgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,232,1787036400"; 
-   d="scan'208";a="12030200"
-Received: from igk-lkp-server01.igk.intel.com (HELO 99c479ab0aeb) ([10.211.93.152])
-  by fmviesa003.fm.intel.com with ESMTP; 25 Nov 2026 01:14:25 -0800
-Received: from kbuild by 99c479ab0aeb with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1xW955-0000000006B-2F0B;
-	Wed, 25 Nov 2026 09:14:23 +0000
-Date: Wed, 25 Nov 2026 10:14:16 +0100
-From: kernel test robot <lkp@intel.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, mptcp@lists.linux.dev,
- matthieu.baerts@tessares.net
-Subject: [mptcp:export 22/56] .github/ISSUE_TEMPLATE/01-bug.yml:
- warning: ignored by one of the .gitignore files
-Message-ID: <20261125101222.Olptea6x-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QQVEFCae
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98DEF1F000CF;
+	Wed, 25 Nov 2026 09:15:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795598119;
+	bh=At1d4DsGvoBkrkeqmLrpO5m115sUYRFdd0heKIcaWwI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=QQVEFCaevC7OTekhbBH2fgLn4bFnpcyHnzmYrRUGMUcC5JrLTKUIxKjfqOj6VPeg3
+	 LTXhE4pmeFxRUkpOluQWzi6TDDsfzXAfeUT+fLVZ+ovCyKffXaTIm/kLqEBHDL6JM6
+	 MTxr7UOGEI5GVWqAY/LonJF9cdbdWEof0Xc3rPwNJLTQi1NB+muhq6qViOsqiW3uH4
+	 yaUK/haeqkqCJDEYjt61wNoMxmdD/DYMYUj4GwXtUAeQ+VFTPZmQJ0K/Xfu6aVoWKP
+	 J8mcQEsbf0ni5BgSbLUyy5ILwP8q1f206/aWTNEXSLqHCpPGdSjBvl5wpSYtnJ+Edu
+	 STtAhutLpek8A==
+Message-ID: <16abfc2d-daf1-477b-87a0-7a6993370b6f@kernel.org>
+Date: Wed, 25 Nov 2026 10:15:13 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -80,36 +50,106 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [BUG] mptcp: pm: WARNING in mptcp_check_listen_stop() when listen
+ fails on a new endpoint listener
+Content-Language: fr
+To: Kyuwon Cho <kyuwoncho18@gmail.com>
+Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
+ Simon Horman <horms@kernel.org>, mptcp@lists.linux.dev,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <179502042942.2742790.17887994424282536144@gmail.com>
+ <5d651146-b21d-44da-9f15-860f0c9c2dc5@kernel.org>
+ <179502653236.3033236.9177220287548482679@gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <179502653236.3033236.9177220287548482679@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tree:   https://github.com/multipath-tcp/mptcp_net-next.git export
-head:   1cec70813ada37937c1048b76c60cb6b44fdf0ab
-commit: 382699ec4bcf25e1380ddfc82a45028112f08cbd [22/56] DO-NOT-MERGE: mptcp: add CI support
-config: powerpc-randconfig-2002-20261125 (https://download.01.org/0day-ci/archive/20261125/20261125101222.Olptea6x-lkp@intel.com/config)
-compiler: powerpc-linux-gcc (GCC) 9.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261125/20261125101222.Olptea6x-lkp@intel.com/reproduce)
+Hi Kyuwon,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/20261125101222.Olptea6x-lkp@intel.com/
+On 18/11/2026 19:31, Kyuwon Cho wrote:
+> Hi Matt,
+> 
+> On 18/11/2026 19:18, Matthieu Baerts wrote:
+>> Please always decode stacktraces with ./scripts/decode_stacktrace.sh.
+> 
+> I'll keep that in mind and decode them in my next reports.
+> 
+>> Out of curiosity: if your LLM has already analysed the root cause and
+>> has a reproducer, why not ask to generate a fix and send this patch
+>> instead of the bug report?
+> 
+> I'm more used to communities like LLVM, which are cautious about
+> LLM-generated patches, and I was hesitant to send a fix for code I
+> don't know well, made in a way I couldn't fully judge. So I only sent
+> the root cause analysis. Thanks for explaining; I'll send a tested
+> patch with later reports when I can.
 
-All warnings (new ones prefixed by >>):
+Thanks!
 
-   .b4-config: warning: ignored by one of the .gitignore files
-   .git_markup: warning: ignored by one of the .gitignore files
-   .github/FUNDING.yml: warning: ignored by one of the .gitignore files
->> .github/ISSUE_TEMPLATE/01-bug.yml: warning: ignored by one of the .gitignore files
->> .github/ISSUE_TEMPLATE/02-feature.yml: warning: ignored by one of the .gitignore files
->> .github/ISSUE_TEMPLATE/03-question.yml: warning: ignored by one of the .gitignore files
->> .github/dependabot.yml: warning: ignored by one of the .gitignore files
-   .github/workflows/build-validation.yml: warning: ignored by one of the .gitignore files
-   .github/workflows/checkpatch.yml: warning: ignored by one of the .gitignore files
-   .github/workflows/notif.yml: warning: ignored by one of the .gitignore files
-   .github/workflows/stable.yml: warning: ignored by one of the .gitignore files
-   .github/workflows/tests.yml: warning: ignored by one of the .gitignore files
-   .github/workflows/update-tg-tree.yml: warning: ignored by one of the .gitignore files
-   Documentation/.renames.txt: warning: ignored by one of the .gitignore files
+> For this one we do have a small candidate fix, tested with the
+> reproducer: it puts the MPTCP socket back to TCP_CLOSE when
+> __inet_listen_sk() fails. Since you already have a fix for v2, would it
+> still help if we posted it, or should we leave it to your series?
 
+In the meantime, I guess you saw the patch I sent to the MPTCP ML:
+
+
+https://lore.kernel.org/20261121-mptcp-cmason-fixes-v2-36-00327fd1de1f@kernel.org
+
+If the fix was different and your reproducer still see the WARN with the
+patch I sent, feel free to share yours.
+
+Cheers,
+Matt
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Sponsored by the NGI0 Core fund.
+
