@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795570278;
-	b=NJlDAeOgWzOYsTdGFqqaIGBTRCUu0Uz8k8pqiyhKYxR9vA5A2jI2Rx3ny3s0fqiq1bSW
-	 75uF1OcLP2lINihrY1NRNqEirmX+dgzKGlsFVDHotKAS20xeLMB9RmAiymYvCswtrxnK/
-	 VTy9aHQcXqT9FVVFTwRbr0f01FlJ5d3/1fiKTKLmjJr5/Ru2woXSHHkTLQ6RAxlLDc8Lo
-	 FKcdKPxQnTI82Y+rGqM6ajWZ85c4Oq4GdErujf6ACc78DVwVb7UeqlEF/qarW1L64lgfE
-	 3pusCz3O3Vo/WObAgPOGmTXA2Zy7E8k7zHAasQUQkfgTKkaioqeKCjyYzVtEENltMEA==
+	t=1795570279;
+	b=JPQSv8x3VT620jupsSWUajH8a5v0QlQ4dPyYjR1X2i9fYa43Vsgv8lTkVxR6B9dMFSta
+	 mUki4w+o4Fjmdr3vlIqKnlE/i+O5Le1zkEg/tzbnYZ7L5SJmaFs4Z+nR2eNSprKLB79nt
+	 HdQfWidOAWeKksloxmuRVGNnjOVch4tYUC6QNeb1KCf9qRwqz5lTKMXxaUUYgMCAUY5Hg
+	 55Xxnz55sgeLNB8PTyh5YtbCxYFAIPQ63LaE3zgKUgkqb3kFNGKfc8/ALGJ/Ldpu9yj7x
+	 J/qEho8PRfprTAsSa9fP/VKdO5mrvqjRpKMF+uHpiVNdKCHRPo/GsZQA0ks52adrnRQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795570278;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795570279;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=E7mdx/1Jy1AZ4AgE/fuZqOZQ4rNMNCYnAybwwuBcyIQ=;
-	b=a8Rb7BGP0gCzooj2BzPeB9MP8569AbDe+I7Fw3vbLpWt41uNMPU7zus+72guUrm8crrW
-	 ZyQTg8laGNN8bQTpFcXK40ehGXGmPT6ltOsrQwSwYwnMhExmnX4IP2oMhqCsixsUEopYx
-	 FgridKZFX16ekMLpzAm+XWhpTR4BlsvX0Vm6oOheajyIt5QOvqD5w/PDUgppAKLhnSPOd
-	 k3jDVqu7Ex2hr2bmGsxHoTClUkaoPnypPxNcIORVuI7sSIU58pdCB258tmctH3FCLZS6Y
-	 gyuGS7GK7iEbKQlJ+XCsfkdu8cKQpYNCtakWHO0M8bmIoD8+o3rVVZk4Gf70MSEf79w==
+	bh=3B5KM3Fb5XXbJiUHIqya6nhcBepOCl0IH3pADwmgzrE=;
+	b=msccbV3r0yNmTGt9m5blGtl0Xxq2gkvJdm8D+SftET8fiMVvvy3U+B3Vridex8472G8p
+	 sK2XS57J6mL8JpMHmSSz0xeGbPaUhb6sXOPiGk7dGHB2JRIfs3OQ0idWhD4AskylTY33h
+	 S866R4iho6jQwSOsObtoy+zt+DYf+FwFTdLHpK2svtYSIK0Um2tm4i8CQeY37oQXeEmvX
+	 h5kmz8fdvnAoJhMgG8kUEeDU2QDlro5rwhN9+UuC+AH5d6K7aswosbD3A3ZkSW5eyxuci
+	 nek98/Ts2icC7s1AURpOovaKHhZ2ro9jdE+TC0zwYX//emDdi/hfCY9CaZsnLQCbIzw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cafmkMBL;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bwD3MJwm;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93A2606A31E
-	for <mptcp@lists.linux.dev>; Wed, 25 Nov 2026 01:31:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD19C606A31E
+	for <mptcp@lists.linux.dev>; Wed, 25 Nov 2026 01:31:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cafmkMBL
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EC0D1F000C4;
-	Wed, 25 Nov 2026 01:31:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bwD3MJwm
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E11131F000C4;
+	Wed, 25 Nov 2026 01:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795570277;
-	bh=E7mdx/1Jy1AZ4AgE/fuZqOZQ4rNMNCYnAybwwuBcyIQ=;
+	s=k20260515; t=1795570279;
+	bh=3B5KM3Fb5XXbJiUHIqya6nhcBepOCl0IH3pADwmgzrE=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=cafmkMBLrjuzggVFZBm445FcTRNS1qusaHn+WBCzjvo3UfVf4LamCc54l6MLvdwOu
-	 mnrJ3BeqTSbqYx0uIJFkNDdDo+JdFGC7GHk155iShrK6laiq8dk6UkQ5CaaaGaWRjF
-	 gjNvhOzKZEIxJE7cP2XSG0fakQO3iUbPWkxVI6l/S36EJ9Ybmw+KOjVDTpuUat+7fr
-	 1Mqc7R7H8eDmZ2xReMrUW74KSSX7POGYO/xiyZBqo4rOQrx7/CkjrS4EzUQNJs6rZU
-	 FgBQpg9ww/JLF+s6tJQZDyJMP8/ze6fxwaJ+9J0WgpT4Zyjulx0qQPmVFMOID0Djov
-	 vvGbP3eT2QoPg==
-Subject: Re: [PATCH mptcp-next v7 1/2] mptcp: sched: add subflow avoid flag
- for BPF schedulers
+	b=bwD3MJwmK+Ten9sZL+WXKjCFqkholWR14Tg4Z+Kwbwx/sBOtW/LbeDxMpbjpHTZnT
+	 InaXD96td4AHyO0Nkir9WsVjZurp2anhgzFP1Opd9Jq1mMYPwe7cboFXskxUp/WKCL
+	 +cBPZt7/cnARvxDNqwMaEb8jszu9gMjeLLC97VvB1Yn7FDMPygXBcPkYr0LSqC6Tt9
+	 g+KnAPL+AJ/EhIgU97x/4imN65Ri+QyzQXazeZ60ZzNVc8T5lx6wOPW0PGjtC3gKUi
+	 o3DZrgg+XDWLK3bIhljIxEa9s4/hMd3UK5IsKV/JIYgn5lupC6MQiZlCE+hARQHHeT
+	 qbDS+wSjU8WfQ==
+Subject: Re: [PATCH mptcp-next v7 2/2] selftests: mptcp: bpf: exercise the
+ subflow avoid flag across rounds
 From: netdev-bot+sashiko@kernel.org
 To: kalpan.jani@mpiricsoftware.com
 Cc: mptcp@lists.linux.dev, shardul.b@mpiricsoftware.com, janak@mpiric.us,
  kalpanjani009@gmail.com, pabeni@redhat.com, kuba@kernel.org
-Date: Wed, 25 Nov 2026 01:31:17 +0000
-Message-ID: <179557027703.3133.4249741891623868683@kernel.org>
-In-Reply-To: <20261123123730.3265284-2-kalpan.jani@mpiricsoftware.com>
-References: <20261123123730.3265284-2-kalpan.jani@mpiricsoftware.com>
+Date: Wed, 25 Nov 2026 01:31:18 +0000
+Message-ID: <179557027850.3133.2018668236611241328@kernel.org>
+In-Reply-To: <20261123123730.3265284-3-kalpan.jani@mpiricsoftware.com>
+References: <20261123123730.3265284-3-kalpan.jani@mpiricsoftware.com>
 X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -74,127 +74,187 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [Medium] mptcp: sched: subflow avoid flag is unused by MPTCP core
-- [Low] The commit message says "only mptcp_subflow_set_avoid() writes it
-  ... so only a BPF scheduler can change its value".
-- [Low] The new kfunc mptcp_subflow_set_avoid() (net/mptcp/sched.c)
-  stores a BPF-supplied `bool avoid` with `WRITE_ONCE(subflow->avoid,…
+- [Medium] In tools/testing/selftests/bpf/progs/mptcp_bpf_avoid.c,
+  bpf_avoid_get_send() always returns 0, including when it scheduled no…
+- [Low] bpf_avoid_get_send() in
+  tools/testing/selftests/bpf/progs/mptcp_bpf_avoid.c treats `avoid` as…
+- [Low] The commit message misdescribes the extern declarations.
 
 --
 
-mptcp: sched: add subflow avoid flag for BPF schedulers
+selftests: mptcp: bpf: exercise the subflow avoid flag across rounds
 
-This patch adds an "avoid" bool to struct mptcp_subflow_context. BPF
-struct_ops schedulers set it through a new mptcp_subflow_set_avoid()
-kfunc. The flag is also exported to userspace through MPTCP diag as
-MPTCP_SUBFLOW_FLAG_AVOID.
+This adds a BPF struct_ops MPTCP scheduler selftest. The scheduler calls
+mptcp_subflow_set_avoid() once, on the second subflow, and in later rounds
+relies on reading the avoid flag back. Per-msk state lives in SK_STORAGE,
+and the harness checks that the avoided path carried no data.
 
 Link: https://github.com/multipath-tcp/mptcp_net-next/issues/349
 
-> Add a scheduler-owned "avoid" bool to mptcp_subflow_context:
->
->  - only mptcp_subflow_set_avoid() writes it. It is exposed to BPF
->    struct_ops schedulers as a kfunc with the same registration and
->    filter as mptcp_subflow_set_scheduled(), so only a BPF scheduler
->    can change its value;
+> Add a BPF struct_ops scheduler selftest for mptcp_subflow_set_avoid(),
+> and add the required extern declarations for it and for
+> mptcp_subflow_active(), both declared locally in this file rather
+> than in the shared mptcp_bpf.h. mptcp_subflow_active()'s extern was
+> missing here even though the other BPF scheduler progs already have
+> it (see mptcp_bpf_burst.c).
 
 [Severity: Low]
-Is this description accurate? The new field is declared inside
-struct_group(reset, ...) in struct mptcp_subflow_context. That means
-mptcp_subflow_ctx_reset() also clears it:
+Is this description accurate? mptcp_bpf_avoid.c is a new file, so the
+extern can't have been missing from it before.
 
-net/mptcp/protocol.h:mptcp_subflow_ctx_reset() {
-	memset(&subflow->reset, 0, sizeof(subflow->reset));
-	...
-}
+Among the existing scheduler progs, only mptcp_bpf_burst.c declares
+mptcp_subflow_active(). mptcp_bpf_rr.c, mptcp_bpf_red.c, mptcp_bpf_first.c
+and mptcp_bpf_bkup.c don't declare it, and mptcp_bpf.h doesn't either.
 
-The core reaches this from two places. One is
-__mptcp_close_ssk()->__mptcp_subflow_disconnect(), which includes
-msk->first being reset for reuse. The other is the error path of
-mptcp_connect().
+The message also doesn't say why both externs stay local. The extern for
+the sibling kfunc mptcp_subflow_set_scheduled() is in mptcp_bpf.h. The
+preceding patch, "mptcp: sched: add subflow avoid flag for BPF
+schedulers", registers mptcp_subflow_set_avoid() in the same kfunc set in
+net/mptcp/bpf.c.
 
-Resetting the flag together with the rest of the subflow context is
-probably the intended behaviour. Could the commit message, or the field
-comment, say that avoid is cleared on subflow context reset, so BPF
-scheduler authors know the core can clear it?
+Could this wording be left over from an earlier revision?
+
+> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_avoid.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_avoid.c
+> new file mode 100644
+> index 0000000000000..8276ceb0e5397
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_avoid.c
+> @@ -0,0 +1,87 @@
 
 [ ... ]
 
-> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
-> index 1e59072d478c9..0ce59eb093df6 100644
-> --- a/net/mptcp/sched.c
-> +++ b/net/mptcp/sched.c
-> @@ -165,6 +165,12 @@ void mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
->  	WRITE_ONCE(subflow->scheduled, scheduled);
->  }
->
-> +__bpf_kfunc void mptcp_subflow_set_avoid(struct mptcp_subflow_context *subflow,
-> +					 bool avoid)
+> +SEC("struct_ops")
+> +int BPF_PROG(bpf_avoid_get_send, struct mptcp_sock *msk)
 > +{
-> +	WRITE_ONCE(subflow->avoid, avoid);
+> +	struct mptcp_subflow_context *subflow;
+> +	struct mptcp_subflow_context *first = NULL;
+> +	struct mptcp_avoid_storage *ptr;
+> +
+> +	ptr = bpf_sk_storage_get(&mptcp_avoid_map, msk, 0,
+> +				 BPF_LOCAL_STORAGE_GET_F_CREATE);
+> +	if (!ptr)
+> +		return -1;
+> +
 
-[Severity: Medium]
-This version drops the avoid checks from mptcp_subflow_get_send() and
-mptcp_subflow_get_retrans(). Does anything in the MPTCP core still read
-subflow->avoid?
+[ ... ]
 
-As far as I can see, the only reader left is subflow_get_info() in
-diag.c. The only writer is mptcp_subflow_set_avoid(), and
-bpf_mptcp_common_kfunc_filter() limits that kfunc to
-bpf_mptcp_sched_ops struct_ops programs. So the field ends up as one
-byte of per-subflow scratch storage owned by the BPF scheduler. The
-core never acts on it in the send, retransmission, stale or
-mptcp_subflow_active() paths.
-
-The selftest in patch 2 shows the same thing. bpf_avoid_get_send()
-sets the flag with mptcp_subflow_set_avoid() and then reads it back in
-its own get_send callback to decide whether to call
-mptcp_subflow_set_scheduled(). A BPF scheduler can already keep this
-kind of per-subflow state in a BPF map without any kernel change.
-
-This matters because the patch also adds MPTCP_SUBFLOW_FLAG_AVOID to
-include/uapi/linux/mptcp.h. Once released, that bit is uAPI, but its
-meaning depends entirely on whichever BPF scheduler is loaded. The
-kernel itself attaches no semantics to it.
-
-Earlier review of this series asked for a working scenario that the
-scheduled bit cannot already cover, with the core actually making use
-of the new state. Is a follow-up planned where the core honours avoid
-in code that runs regardless of which scheduler is attached? If not,
-would it be better to drop the field, the kfunc and the uAPI bit, and
-keep this state inside the BPF scheduler?
+> +	bpf_for_each(mptcp_subflow, subflow, (struct sock *)msk) {
+> +		if (!first) {
+> +			first = subflow;
+> +			continue;
+> +		}
+> +
+> +		if (!ptr->avoid_marked) {
+> +			mptcp_subflow_set_avoid(subflow, true);
+> +			ptr->avoid_marked = true;
+> +			continue;
+> +		}
+> +
+> +		if (subflow->avoid)
+> +			continue;
 
 [Severity: Low]
-Can a BPF scheduler store a non-canonical bool here?
+Should avoid be a hard exclusion here? struct mptcp_subflow_context
+documents the field as:
 
-The verifier classifies a bool kfunc parameter as a plain ARG_SCALAR in
-get_kfunc_arg_type(), and the ARG_SCALAR case applies no range check. A
-struct_ops scheduler could therefore pass a value such as 2 in R2, using
-raw BPF instructions or an extern declared with an int parameter. That
-byte would then be written into the _Bool field unchanged.
+	bool	avoid;		    /* pkt scheduler: skip subflow if possible */
 
-Any user can later reach the read side through the MPTCP inet_diag dump:
+Once avoid_marked is set, this loop always skips the avoided subflow. The
+fallback after the loop only schedules first, and only when first is
+active and not avoided.
 
-net/mptcp/diag.c:subflow_get_info() {
-	...
-	if (READ_ONCE(sf->avoid))
-		flags |= MPTCP_SUBFLOW_FLAG_AVOID;
-	...
+That leaves nothing scheduled in at least two cases:
+
+  - The head subflow goes stale. mptcp_pm_subflow_chk_stale() only marks
+    it stale when another active subflow exists, and here that is the
+    avoided one.
+
+  - The head subflow is closed or reset. The avoided subflow then becomes
+    first and is rejected by !first->avoid.
+
+No get_retrans op is set, so retransmissions also go through get_send and
+stall the same way. On the __mptcp_push_pending() path, nothing is sent on
+any retry.
+
+Could the scheduler fall back to the avoided subflow when no other
+subflow is usable?
+
+> +
+> +		if (mptcp_subflow_active(subflow)) {
+> +			mptcp_subflow_set_scheduled(subflow, true);
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	if (first && mptcp_subflow_active(first) && !first->avoid)
+> +		mptcp_subflow_set_scheduled(first, true);
+> +
+> +	return 0;
+
+[Severity: Medium]
+Can this return 0 even when no subflow was scheduled? The core reads a 0
+return from get_send as "a subflow has been scheduled".
+
+The in-tree implementations return an error when they find nothing.
+mptcp_sched_default_get_send() returns -EINVAL, and the get_send ops in
+mptcp_bpf_first.c and mptcp_bpf_burst.c return -1.
+
+In __mptcp_subflow_push_pending(), the scheduler exit is only taken on a
+nonzero return:
+
+net/mptcp/protocol.c:__mptcp_subflow_push_pending() {
+    ...
+	while (mptcp_send_head(sk) && keep_pushing) {
+		...
+		if (mptcp_sched_get_send(msk))
+			goto out;
+
+		if (READ_ONCE(subflow->scheduled)) {
+			...
+		}
+
+		mptcp_for_each_subflow(msk, subflow) {
+			if (READ_ONCE(subflow->scheduled)) {
+				...
+					keep_pushing = false;
+		...
+	}
+    ...
 }
 
-Loading a _Bool that holds a value other than 0 or 1 is undefined
-behaviour. CONFIG_UBSAN_BOOL would report it, and depending on codegen
-it could put unexpected bits into MPTCP_SUBFLOW_ATTR_FLAGS.
+If the return is 0 and nothing is scheduled, keep_pushing stays true. The
+BPF prog then sees the same state on every iteration.
 
-Would storing !!avoid here avoid this? mptcp_subflow_set_scheduled() has
-the same pattern, but this patch adds a new instance and exposes the
-value to userspace.
+Doesn't this loop then spin forever in softirq with the msk data lock
+held?
+
+One way to get there, starting from the stale case above:
+
+mptcp_pm_subflow_chk_stale()
+    subflow->stale = 1;   /* head subflow; the avoided one is active */
+    __mptcp_retransmit_pending_data(sk);
+
+and then a DATA_ACK arrives on the avoided subflow:
+
+ack_update_msk()
+    __mptcp_check_push()
+        __mptcp_subflow_push_pending()
+            mptcp_sched_get_send()
+                bpf_avoid_get_send()   /* returns 0, nothing scheduled */
+
+Closing or resetting the initial subflow leads to the same state.
+mptcp_subflow_process_delegated() is another entry into this loop.
+
+The core's missing guard here is pre-existing, and mptcp_bpf_bkup.c uses
+the same return 0 pattern. Because this scheduler excludes a subflow on
+purpose, the empty case is more likely here.
+
+Would returning -1 when nothing was scheduled avoid this? The function
+already does that for the !ptr case.
 
 > +}
-> +
->  int mptcp_sched_get_send(struct mptcp_sock *msk)
->  {
->  	struct mptcp_subflow_context *subflow;
+
+[ ... ]
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261123123730.3265284-1-kalpan.jani%40mpiricsoftware.com
