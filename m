@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795612148;
-	b=ciGnUYe1KmHee2zZ9ST4LI9m5X3SxUpJ8IqvcuVScqkgZfgOp3zVnkf+LG5xZpWm86dd
-	 SvULQN6dgNXKnn0OtVKzwBha39pkvxVSUUfheUGuNjv4Sr7tCcoHQlyPoN3YbY+MRouYf
-	 p8Yqv6UCch0g8E84amxnPQcYGNaunYB/y+AKGASP237HED/s5aef/fNs+Jaw6IcQgjIfn
-	 +Fp58qCzzO7Xexufj0AFqAIRAdOMo4Adch0Mbgc1bR4clp6fCtyWwxUTxC3krGcTFt8g6
-	 Ci41Ai+qEgyHMVHlPaNfes99RIy/R7br6HJJzFLCFvdic2zDI5/BfnFw1d4wzHkHwPw==
+	t=1795612149;
+	b=mBBLtqF+2ThubGYBtBvtwaSqH9xoZrpjgi3mq8keXj5p9N4QfbIqKYe4UyXH0djUYwZV
+	 2vClk5oqgGcDmVF+CVe/gwRzahNf2e6Zc4aku/wfAQXl2BsXFkL9TwJGn8ZJ4NOyMGE9d
+	 aGys4XyfTfGLMF9FAcGjufs4rpQ6B0j8upmpolmfxJXN3d9EnqktkxeIN4cO9ClH/qjLS
+	 KRLSm2FlBc3cbWOdaKQDDHHTRXnOsqOz0JWnM54gXKpqd2b1bqVl/M9jzduxTjSnlrjh6
+	 2pkoXTHtH5Vxf8f84+5aWVrZ5uID/TMtYK6t+L0U2A7GjH5wkCsXejGYNA9i/LTzV+g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795612148;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795612149;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=n+Vb31kCyLFO0i6gl9GYE7pyYhRP0kQ5pPK8kLdNUz8=;
-	b=lWGBHTmPuNEnScpUfl2wRjMCT9AWe+jZt50T45gJbadSMYL3nBOmyMpvpg5KyruTqEzC
-	 uKgP0Oy95dPNfp/9q/iwraPhNLwjBO56lIbXMMcwtmYGf1cEM/zYNhmZQMCXZ89sg81pE
-	 fxmjAGCZYL3wKcUnvzDSJNsVh42DzDMAcmx4BARr0HDsqlfOzG/E+fbmHND4gFkFbwwJm
-	 fjNdJwcp2rHtPVpLQyv4Dc29gFGC2tI75cwZQq+Qx56ohIPmWaA85/a7Jh4k6wrPIYjfw
-	 X5iH2i2aKiLrHACOo9Ik2Y/lP0RTjpPbfWStqd7ZWHxuEXJ3GoIGErvW7dmTDMuJd3Q==
+	bh=P2CI3omyDspma2vJvXkUINUb035EDn0PEqafPwJibLY=;
+	b=wNC0YvmFsc6kxe8iPCKEcJ4y9nbOerUUbNV/anHT6J6EoQnUCW4QUgmhnUOYfkcfDpqs
+	 MnR+8X5TaVQQmvyOTgu97TVTybpI353G33qOi9lSJsaGXs/JWKZKTwWDd+pzMUe+Pl4yv
+	 vIiRxvfsLHQ/XJkYkgo5Vm4ldK2iIWbjQXYS90llvFz0eG/l9NfNYe+40bMSAKh6Ga1QH
+	 ZE6NmVor0f8RWE01+YimIakWLmlyvZkHnheLhwIrFabsR4ZEl+WtvutwlYVcLV3DNa8tu
+	 GwpKWxikvhwAAT7rKhMLan0Vm5VuV5a9L4kiI4nWTupkr8Sb1ayAmPEhqbIQPW9zLMw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="lkHf9/Dd";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d0WBqVQ1;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA3C606A321;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6859606A329;
 	Wed, 25 Nov 2026 13:09:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lkHf9/Dd
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F07A01F000C4;
-	Wed, 25 Nov 2026 13:09:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d0WBqVQ1
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99CE91F000C6;
+	Wed, 25 Nov 2026 13:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1795612148;
-	bh=n+Vb31kCyLFO0i6gl9GYE7pyYhRP0kQ5pPK8kLdNUz8=;
+	bh=P2CI3omyDspma2vJvXkUINUb035EDn0PEqafPwJibLY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=lkHf9/DdM5oXbhhSeha53O7cpxG4NPMyvTkcWyT7A4MqBFb5FFOWpBvuthOdwKg2N
-	 x26dSAIf//wFqqZzYbA9bxGdTWamO08kptWPELD1+ULrvJqv3M0XIOD4dkepP78Oku
-	 yQ/Guk6otch8rXDxBrrM/fxvEmOqfehyTHIFUXjSGVNhuQz6Wk4XJIHhWuOVve9bnb
-	 hDIlWFTdEPqgkIuNTCHr85mRQBHSMQSONm/B5AvS98l5V0n4C1xtzfwMf0jDfMnwNy
-	 SIEJQ/H+q01aOfqudorV3wPNpms79Cw8GFDeulh//RmTK2ysZWfuUhkxyTBXr8MVMu
-	 CCwdWJU9Mcc9Q==
-Message-ID: <sashiko-outbox-233459@kernel.org>
+	b=d0WBqVQ1HHLVMoRPdDFDxGhWdISvCO+vahOWtvkaJ/jnG/NPFsmwqXN8opwPUS8wY
+	 Ta4J2lcy0PyU3RulhCVaTGFFjmxuieEFllQ6EnqR5NSENriuNcla8KlzbNSg1NpFmm
+	 kL7yDY4xqtEr1I92FTcgGYWiQeJf7YrT+vgMuZaK0noGNoQtArZTzTDPOZZ7pOp8Yp
+	 ZIxbpz6SMTdpWTW9A6t4gNXoVIbVv/N7rWv093dUKTUNJVb6jZWIVsci3PCzWVPACg
+	 iiIcc8fjotLt91IyqKotLe0607815evowKdNFgZYRuVoxZ9jHwA2CvRe0H4CodFy9C
+	 xiMnm+Di6RbkQ==
+Message-ID: <sashiko-outbox-233462@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH net-next v1 2/6] ipv4: avoid a stack canary in
- ip_finish_output2()
+Subject: Re: [PATCH net-next v1 5/6] tcp: avoid a stack canary in
+ tcp_rcv_established()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Xuanqiang Luo" <xuanqiang.luo@linux.dev>
 Cc: bpf@vger.kernel.org, mptcp@lists.linux.dev
-In-Reply-To: <20261124130631.1886963-3-xuanqiang.luo@linux.dev>
+In-Reply-To: <20261124130631.1886963-6-xuanqiang.luo@linux.dev>
 References: <20261124130631.1886963-1-xuanqiang.luo@linux.dev>
- <20261124130631.1886963-3-xuanqiang.luo@linux.dev>
+ <20261124130631.1886963-6-xuanqiang.luo@linux.dev>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 25 Nov 2026 13:09:07 +0000
+Date: Wed, 25 Nov 2026 13:09:08 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -64,104 +64,90 @@ Precedence: list
 Thank you for your contribution! Sashiko AI review found no new issues
 in this patch, but noticed 1 related pre-existing issue it does not
 introduce:
-- [High] bpf: device mismatch in bpf_out_neigh_v4() on RTN_LOCAL routes
-  [1]
+- [High] tcp: post-FIN segments queued in tcp_rcv_state_process() and
+  tcp_data_queue() [1]
 --
 
-commit ca3d30f8ff839a5ead3ac3b6137813b8e1486837
+commit a4b62910075d79274253c31ee8181da76c593e87
 Author: Xuanqiang Luo <luoxuanqiang@kylinos.cn>
 
-ipv4: avoid a stack canary in ip_finish_output2()
+tcp: avoid a stack canary in tcp_rcv_established()
 
-This commit changes ip_neigh_gw4() to take a pointer to the IPv4 address
-instead of passing it by value, avoiding a stack canary in callers such as
-ip_finish_output2() and deduplicating inlined calls in ip_neigh_for_gw()
-and ipv4_dst_neigh_lookup().
+This commit changes tcp_try_coalesce(), tcp_ooo_try_coalesce() and
+tcp_queue_rcv() to return an enum tcp_eaten by value instead of taking a
+boolean pointer for fragstolen, avoiding a stack canary in
+tcp_rcv_established() and tcp_data_queue().
 
-[ ... ]
-
-> diff --git a/include/net/route.h b/include/net/route.h
-> index 3fccd31eb74df..1571e1c6082cc 100644
-> --- a/include/net/route.h
-> +++ b/include/net/route.h
+> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> index 801c76744ed8a..3d0a8b7e883e4 100644
+> --- a/net/ipv4/tcp_input.c
+> +++ b/net/ipv4/tcp_input.c
 
 [ ... ]
 
-> @@ -425,17 +425,17 @@ static inline struct neighbour *ip_neigh_for_gw(str=
-uct rtable *rt,
->  						bool *is_v6gw)
->  {
->  	struct net_device *dev =3D rt->dst.dev;
-> -	struct neighbour *neigh;
-> +	const __be32 *daddr;
+> @@ -5756,7 +5761,7 @@ static void tcp_data_queue(struct sock *sk, struct =
+sk_buff *skb)
+>  			sk_forced_mem_schedule(sk, skb->truesize);
+>  		}
 > =20
->  	if (likely(rt->rt_gw_family =3D=3D AF_INET)) {
-> -		neigh =3D ip_neigh_gw4(dev, rt->rt_gw4);
-> +		daddr =3D &rt->rt_gw4;
->  	} else if (rt->rt_gw_family =3D=3D AF_INET6) {
-> -		neigh =3D ip_neigh_gw6(dev, &rt->rt_gw6);
->  		*is_v6gw =3D true;
-> +		return ip_neigh_gw6(dev, &rt->rt_gw6);
->  	} else {
-> -		neigh =3D ip_neigh_gw4(dev, ip_hdr(skb)->daddr);
-> +		daddr =3D &ip_hdr(skb)->daddr;
->  	}
-> -	return neigh;
-> +	return ip_neigh_gw4(dev, daddr);
->  }
-> =20
->  #endif	/* _ROUTE_H */
-> diff --git a/net/core/filter.c b/net/core/filter.c
-> index f42ecfb5841f9..8ee023c87c243 100644
-> --- a/net/core/filter.c
-> +++ b/net/core/filter.c
-> @@ -2376,7 +2376,7 @@ static int bpf_out_neigh_v4(struct net *net, struct=
- sk_buff *skb,
->  		neigh =3D ip_neigh_gw6(dev, &nh->ipv6_nh);
->  		is_v6gw =3D true;
->  	} else if (nh->nh_family =3D=3D AF_INET) {
-> -		neigh =3D ip_neigh_gw4(dev, nh->ipv4_nh);
-> +		neigh =3D ip_neigh_gw4(dev, &nh->ipv4_nh);
->  	} else {
->  		rcu_read_unlock();
->  		goto out_drop;
+> -		eaten =3D tcp_queue_rcv(sk, skb, &fragstolen);
+> +		eaten =3D tcp_queue_rcv(sk, skb);
+>  		if (skb->len)
+>  			tcp_event_data_recv(sk, skb);
+>  		if (TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN)
 
 [Severity: High]
-This problem wasn't introduced by this patch, but can bpf_out_neigh_v4()
-resolve the neighbour on the wrong device when nh is NULL [1]?
+This problem wasn't introduced by this patch, but can a peer queue
+post-FIN payload onto sk->sk_receive_queue and advance tp->rcv_nxt after
+EOF [1]?
 
-When __bpf_redirect_neigh_v4() resolves an RTN_LOCAL route via
-ip_route_output_flow(), rt->dst.dev is set to net->loopback_dev (or the VRF
-device) rather than the target redirect device dev:
+After an in-order FIN has been processed, RCV_SHUTDOWN is set and
+tp->rcv_nxt has advanced past the FIN sequence number.  If a socket in
+TCP_CLOSE_WAIT, TCP_CLOSING, or TCP_LAST_ACK with a non-zero receive
+window receives a segment with seq =3D=3D tp->rcv_nxt - 1, 1 byte of payloa=
+d,
+and TCPHDR_FIN set (end_seq =3D=3D tp->rcv_nxt + 1), both checks in
+tcp_rcv_state_process() are bypassed:
 
-net/core/filter.c:bpf_out_neigh_v4() {
-	...
-	skb->dev =3D dev;
-	skb_clear_tstamp(skb);
-
-	if (unlikely(skb_headroom(skb) < hh_len && dev->header_ops)) {
-		skb =3D skb_expand_head(skb, hh_len);
-		if (!skb)
-			return -ENOMEM;
-	}
-
-	rcu_read_lock();
-	if (!nh) {
-		struct rtable *rt =3D skb_rtable(skb);
-
-		neigh =3D ip_neigh_for_gw(rt, skb, &is_v6gw);
-	...
+net/ipv4/tcp_input.c:tcp_rcv_state_process() {
+    ...
+	case TCP_CLOSE_WAIT:
+	case TCP_CLOSING:
+	case TCP_LAST_ACK:
+		if (!before(TCP_SKB_CB(skb)->seq, tp->rcv_nxt)) {
+			...
+			break;
+		}
+		fallthrough;
+	case TCP_FIN_WAIT1:
+	case TCP_FIN_WAIT2:
+		if (sk->sk_shutdown & RCV_SHUTDOWN) {
+			if (TCP_SKB_CB(skb)->end_seq !=3D TCP_SKB_CB(skb)->seq &&
+			    after(TCP_SKB_CB(skb)->end_seq - th->fin, tp->rcv_nxt)) {
+				NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPABORTONDATA);
+				tcp_reset(sk, skb);
+				return SKB_DROP_REASON_TCP_ABORT_ON_DATA;
+			}
+		}
+		fallthrough;
+	case TCP_ESTABLISHED:
+		tcp_data_queue(sk, skb);
+    ...
 }
 
-Because ip_neigh_for_gw() uses rt->dst.dev instead of dev, neigh_output()
-is invoked with a loopback_dev neighbour (which uses eth_header_ops) while
-skb->dev points to dev.  If dev is an L3 device where dev->header_ops is
-NULL (such as a tun interface), bpf_out_neigh_v4() skips skb_expand_head(),
-and neigh_output() pushes an Ethernet header without sufficient headroom,
-triggering skb_under_panic().
+Subtracting th->fin from end_seq yields tp->rcv_nxt, so the RCV_SHUTDOWN
+check does not reset the connection and calls tcp_data_queue().  Because
+seq < tp->rcv_nxt < end_seq, tcp_data_queue() treats the packet as a
+partial overlap and jumps to queue_and_out, where tcp_queue_rcv() queues
+the post-FIN data and advances tp->rcv_nxt.
 
-[1] https://sashiko.dev/#/bug/linux-26626829-3abf-4baa-b906-b783eeb1b107
+This corrupts tcp_inq() unread byte accounting after EOF and
+desynchronizes tp->copied_seq from kTLS record consumption in
+tcp_read_done(), which stops at the first skb carrying TCPHDR_FIN while
+tls_strp_check_queue_ok() accepts multi-skb records across FIN boundaries.
+
+[1] https://sashiko.dev/#/bug/linux-ddef83cf-eb5a-48d6-b4ef-687a557a5260
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261124130631.1886=
-963-1-xuanqiang.luo@linux.dev?part=3D2
+963-1-xuanqiang.luo@linux.dev?part=3D5
