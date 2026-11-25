@@ -1,56 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795592054;
-	b=pMtTk0Q2+X+nZHvjnZQKOoHOJ33lYVnVcJUlDc3y5OdWI3PG+kESgAnVOW2xiQONJzaN
-	 JuNYNsmKeg4HrDkzCpshHre3CjxaizQGebbZKHBrPPsGdXnpT2vMWQi/xFBupz51AZGT7
-	 b7VfbxmBHdZ/0M8TOX9BmyKhEumx7HEFybucJsikyREhhedBtLkNTkRRT+3PAiKWa6X4J
-	 /F2lSW3ydmYs60l0JByKLnD4qj2L/ivTwe537cWmbBtY16hSvdEcD0vADcoO+AAsr073m
-	 a7n8wQNkX051ptpZZKHcQS8OykIwDYDwf0VGnFfyo8aMTU58uEtx+slF0ZmWvO8Ke/Q==
+	t=1795592671;
+	b=Fs4BO5VB8bZ7rSTQKjrlgM/5m+DFt5X1jDPFMAvGzN7v86zpsbolMiksXOFr1XQNDOwd
+	 jHwl/WK/3azpIc0b7faxktpo/ZUc2mU8czxY61y/qTuoec9kgQ8be3F0wqqrg55jcgQrB
+	 4Qycc86dyPt1Mwrr6N4gWNhe8bQpwl3r43cTIQLmKGa0gv3bPZFjjIsrjzRRMEp/7EYbg
+	 bIfuCkM2FuiZJcDBr+zeKyRpX4+veHtTseXJRTh2nIRdexYBItrTiPGi2D7iCYbZ648yb
+	 6m3vHNe2oxmjSWy/0dpvrnoD+oBmPwCJQulkfd23JJJngRe6K7D75J3I7kVWmQxRw5w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795592054;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795592671;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=+hidPzSaZXf/EdZVVynJe1JKfb9moPGDqK9aH2vjNo4=;
-	b=O13Cswdo7jWq5OaOiwWD3I/nyOnYDIinlugv7SFpwP7d0Tc+3e2+xDbLQ7i5+kcHpkV6
-	 mCLRe+JZbX4kKAMhTgyAvRtBRnuKPGj+61NK86MlReE0QrZfAG1VymKsEsgO5Pe8xDNcd
-	 QXeRidhLN9JBYdEQ9OD1V91ClzHSfL+OGmCAq8M03n3Ath+/YcVQxjFx9lmoqEJm19EUR
-	 WloLE/fWosFD3krXYJ26MIVPe7n0tyJCSx9mkdEnf7QKJ0XFzwKOrUTga58thXv6I4dmp
-	 hywQFg/9WmI/wnuNcZF8oJ3fltXJjfrPezszNzH/aIrLd8B4/P+re+99twdCYoT8dGw==
+	bh=kXfwnoesV7OxqjmmVyKi1hSlmlO6K5UsvC42GvD37w4=;
+	b=Hgpj5iKtCCmxctbMb/sgYgI0lmPVm3444qSo9KCNcWhwfjYzI8NczOZA3gFQVXVncg6H
+	 f3kaNQS/ZzQd+/9gTZggmqBYUyvWm9LK1g3/JnYjIJWA6Jl5SdbKQwGfaiHtTQRq+mQxz
+	 02cx9Nu3VsKC9zct2OYYwT+2JSW7R+u3fiRkmK8OeXmR9TjoqkbN0ijDQ4oe9EY9YxU20
+	 ZYtc5u7LgSmQjJDK3EvgMZlgoCB4oYV1I3VoXvusJgK4O5iYdu4PevxShMO/C8H6GC7Qr
+	 i1Rtgf6ZdYnrSIqMxKBnYt0Eq48Fy8nSXK3sEVFGn2LiJuFJbpbQy0yOTshxPnL/DYg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=O+xWrTZU;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fsbrgvap;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25111606A321
-	for <mptcp@lists.linux.dev>; Wed, 25 Nov 2026 07:34:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D65F8606A31E
+	for <mptcp@lists.linux.dev>; Wed, 25 Nov 2026 07:44:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=O+xWrTZU
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10FE11F000CF;
-	Wed, 25 Nov 2026 07:34:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fsbrgvap
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55E461F000D0;
+	Wed, 25 Nov 2026 07:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795592053;
-	bh=+hidPzSaZXf/EdZVVynJe1JKfb9moPGDqK9aH2vjNo4=;
+	s=k20260515; t=1795592671;
+	bh=kXfwnoesV7OxqjmmVyKi1hSlmlO6K5UsvC42GvD37w4=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=O+xWrTZUjPUm0XwPFFtlFilga7MyuYUuHlxdzOxAcT2DO23SY3RLztdMnG8Vz/jkO
-	 4/80FjVZ0TjInwcxAJloONllpV0d4jux6LSD7HaDfY8BfNpLKdQwN4J63WTHTlpoDE
-	 IRuVnfToHZbH0mMlf0+CC9XnyOQE5VNgnKv0jcu3jG3LzGAPFLva3UL1p9I8TL6L0G
-	 5Ne84bcJzALYX8vmm1Z3qo4mmGge6tZW91Kkezabzne0TFlGdGyOT26VP5c2v0uHjU
-	 ddksk/aS78w5Locz/jlxWoyZfNwiUAz8OfZRlkrt+8UlSMqX9oV0AXXsMrUmmN0Wy9
-	 +uiuEiFpLlYSw==
-Message-ID: <sashiko-outbox-232814@kernel.org>
+	b=fsbrgvapAMkJTSKvxli/DcCQwAFyQPOOaFO1W4iDAp9erZooo6+MXb2Wr2WzvGgsh
+	 xOWhIcFE0mcD9dKNnm267BiG3/6q3Jl9yPOG+HqdM0uGrtdrX5M9fkKtKxSkPQYGO7
+	 h7CSxW9EAnngyRwvFGGgtDJ0c9mAVUPFBufdmOpvlWwWFX1zxzzq2TsZk9OvXyF70I
+	 zr+SEm7X3WYfZMIJeF545ZvAK7zA06HF9ap4J80iYUa566YviUcbKAIlC/LtniZMYC
+	 2WAa9YywHX7n9OP88UCv2HRIZl/SAEVebzgohi1DYxOOQ/lVDffAQZhc0rLEAkSm1G
+	 hMFdSe1A8/E0w==
+Message-ID: <sashiko-outbox-232823@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v9 7/7] selftests: mptcp: cover msg_zerocopy
- test
+Subject: Re: [PATCH mptcp-next v9 4/7] mptcp: handle SO_ZEROCOPY in
+ setsockopt
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <3bd50e8f16d828fd027f3c0c8ce0df829401a362.1795591278.git.tanggeliang@kylinos.cn>
+In-Reply-To: <aaf330d9dbfe6e4f8b15542106d5e687e719a8cf.1795591278.git.tanggeliang@kylinos.cn>
 References: <cover.1795591278.git.tanggeliang@kylinos.cn>
- <3bd50e8f16d828fd027f3c0c8ce0df829401a362.1795591278.git.tanggeliang@kylinos.cn>
+ <aaf330d9dbfe6e4f8b15542106d5e687e719a8cf.1795591278.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 25 Nov 2026 07:34:11 +0000
+Date: Wed, 25 Nov 2026 07:44:30 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -62,43 +62,67 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue to consider:
-- [Medium] selftests: mptcp: missing CONFIG_DUMMY in config for
-  msg_zerocopy.sh
+- [Medium] mptcp: 0-length skb queued in mptcp_sendmsg_frag() on
+  zerocopy wmem failure
 --
 
-commit 5b3ee281d765d4c4bfa0409eafb89f384c870ea5
+commit c40bf75d2e840f9a30a3c937060e37a47f1aa32c
 Author: Geliang Tang <geliang@kernel.org>
 
-selftests: mptcp: cover msg_zerocopy test
+mptcp: handle SO_ZEROCOPY in setsockopt
 
-This commit adds the msg_zerocopy test to the MPTCP selftest suite by
-symlinking ../msg_zerocopy.sh and building msg_zerocopy from
-../msg_zerocopy.c.
+This commit enables SO_ZEROCOPY in MPTCP setsockopt by setting
+SOCK_ZEROCOPY on the MPTCP socket and propagating it to all subflows.
 
-> diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/s=
-elftests/net/mptcp/Makefile
-> index 22ba0da2adb85..17d0d1051165c 100644
-> --- a/tools/testing/selftests/net/mptcp/Makefile
-> +++ b/tools/testing/selftests/net/mptcp/Makefile
-> @@ -14,6 +14,7 @@ TEST_PROGS :=3D \
->  	mptcp_connect_splice.sh \
->  	mptcp_join.sh \
->  	mptcp_sockopt.sh \
-> +	msg_zerocopy.sh \
->  	pm_netlink.sh \
->  	simult_flows.sh \
->  	userspace_pm.sh \
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index 922f6ae5c80cb..3391f7a9d9834 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -184,6 +184,31 @@ static int mptcp_setsockopt_sol_socket_tstamp(struct=
+ mptcp_sock *msk, int optnam
+>  	return 0;
+>  }
+> =20
+> +static int mptcp_setsockopt_sol_socket_zerocopy(struct mptcp_sock *msk, =
+int val)
+> +{
+> +	struct mptcp_subflow_context *subflow;
+> +	struct sock *sk =3D (struct sock *)msk;
+> +
+> +	if (val !=3D 0 && val !=3D 1)
+> +		return -EINVAL;
+> +
+> +	lock_sock(sk);
+> +	sock_valbool_flag(sk, SOCK_ZEROCOPY, val);
 
 [Severity: Medium]
-Does tools/testing/selftests/net/mptcp/config also need CONFIG_DUMMY=3Dy?
+Can enabling SOCK_ZEROCOPY cause mptcp_sendmsg_frag() to leave a 0-length
+skb on ssk->sk_write_queue when tcp_wmem_schedule() returns 0?
 
-msg_zerocopy.sh runs under set -e and unconditionally creates a dummy
-network device with "ip link add ... type dummy" for every subtest.
-Unlike tools/testing/selftests/net/config, the mptcp config only enables
-CONFIG_VETH=3Dy and omits CONFIG_DUMMY, so running the mptcp selftests on a
-kernel built from tools/testing/selftests/net/mptcp/config will fail when
-msg_zerocopy.sh tries to create dummy0.
+With SOCK_ZEROCOPY set, mptcp_sendmsg() queues mptcp_data_frag entries
+with dfrag->ubuf set.  When __subflow_push_pending() pushes such a
+fragment under subflow wmem pressure, mptcp_sendmsg_frag() skips the
+avail <=3D 0 check but still overwrites copy with avail:
+
+net/mptcp/protocol.c:mptcp_sendmsg_frag() {
+    ...
+	avail =3D tcp_wmem_schedule(ssk, copy);
+	if (!dfrag->ubuf && avail <=3D 0) {
+		tcp_remove_empty_skb(ssk);
+		return -ENOMEM;
+	}
+	copy =3D avail;
+    ...
+}
+
+When tcp_wmem_schedule() returns 0 on a newly allocated skb, execution
+continues with copy =3D=3D 0, attaches a 0-byte page fragment and a
+dfrag->ubuf reference via skb_zcopy_set(), and leaves the empty skb
+(end_seq =3D=3D seq) on ssk->sk_write_queue.  Once a non-coalescing skb is
+queued behind it, tcp_write_xmit() stalls at tcp_send_head(ssk), wedging
+transmission on the subflow and holding the ubuf reference until the
+subflow is closed.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1795591278.gi=
-t.tanggeliang@kylinos.cn?part=3D7
+t.tanggeliang@kylinos.cn?part=3D4
