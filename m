@@ -1,95 +1,53 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795568097;
-	b=UQbuQbzsoeFCaYNtBAwif/jCACGG4WyUCxf77YGcozQ0UETSO7xZsq98cCHYAAF5koJN
-	 3KyCTsrqTFhSBUcas2euah5egr5/Zp5ag6tK9UV8mG/Gg+X7hFjXAmEEgf/9mLObXHZ9g
-	 4tZyYNmpT0j1R8AOR8RSAuZZrYeggOLYg3u/rOXl8Jv3M6Rz0/U0ehDS/wvpEyS6h1t1m
-	 ZKUbQNL6FJNIFE7+HJVjulQO0oWOM7P6SoRG843lKbzfpzh2ubzO7hsfUam4I0jlPjbCd
-	 +N3m3bzrwwqe1ErdyeH3iT4OD05nkB+9K9L2DbqUHn30qGlAN2CV78uT5BS0tSgiiUA==
+	t=1795569401;
+	b=0p/A5XAbFXXt5sWK1YLtdi9CbxKDUGYXSBs8DIaTnTtvI8DcS8dkyuQZeFcnPxN4EF/K
+	 zk+zCgQzUDoGQyqSmtXzuGhIwzHQVKK13jr8jnKBXzmFVpSZKK15+zuOlCAQ0KmtNUBYn
+	 YWSrqyRBzsAaaXdL+6eIiKAwojzfotDfkza1Lw4F8ikIKgn1zfwpltEZy//H7AkJ1qi7+
+	 7E5LnQJKdaQcf6I+W9PW3qU+zLmIA2ehOCOKTE1sxglamOkvSIALAV7owtk/X3wMElqB0
+	 xPOPo8FPeRaAUtWCdFpDOm5HB7k698WKopAsZrve3wvSEZGERUYmIuIVHrzMKiFeEZg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795568097;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding;
-	bh=OqrY6P/OIPvBETWqNv5UBHtX+h2IdAEY9f4eiNCVm1Y=;
-	b=CgpAXOdlF1TfEWlwf2+VscCCgej1WN7FXin03T2qXr2oxpcEXl1gpNXlYohQJ55drG+f
-	 LFMqQXHH/GWB2aJC+w3do5NQts89xbZFylYYd6ZK0pXATEEJ/q3x/4H+TKHXMqf65dIVj
-	 v8SkO9Uy7kND6fiancH4gfdn5QiE4u4RJKylO6YJtNR05bfJETav3pzxTFJAyRc9QFlxK
-	 eUY5tqNZU1agAQn3aRjQ9te7I8iTI6dF/0S7O8PlzCUcDRMCuxjm6j6Z5Kv3ReY6Gp78I
-	 ABZXynPiRLsyeWqV8vyQuIoIPeLt0vvCzjIJ9SObi4Kqd2wIFLKGjPQzh8oQzD8MBmw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795569401;
+	h=Received:DKIM-Signature:Date:From:To:cc:Subject:In-Reply-To:
+	 Message-ID:References:MIME-Version:Content-Type;
+	bh=mPeUKVrby5s/00oAftRiuhUntjSJr3dyrU8f5MuDaoY=;
+	b=XEZSf+0ONhPdKTwykRi8efnkv47urytm49cv/TYl4TInJLVz6Im0nGzGU2TOn9PlaFsr
+	 724YPAxn/FwE1GBAqFO8GHL0xQlZfSsHxhit9ZBWuLTsm9nnXcagHgedlw6nkA6vGlwQj
+	 Pqaj3l2X9LhlXdoCKaC1Jxu/aW9Reb4sWHeKjGFA6BPnyINo82Vo9/NOIMF0HCrJeQLg/
+	 sPHDdhDIO8rMzt5YtRohqbldFHD9J+h+lApbDcpNoHZZbhRA4dew0lTklNYs3AAuGdAiK
+	 S+MXOdg7GplJymW28VY6BEtkzsTYNp+3qtBssaWhp0CoVK5sfA7Ga+WlfzmR1gVAidg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=networkplumber.org;
-	spf=pass smtp.mailfrom=networkplumber.org;
-	dkim=pass header.d=networkplumber-org.20260707.gappssmtp.com header.i=@networkplumber-org.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=sJ7WXICF;
-	arc=none smtp.remote-ip=209.85.214.179
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mI48Sa6f;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAFD5606A31E
-	for <mptcp@lists.linux.dev>; Wed, 25 Nov 2026 00:54:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EAFD5606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C16D606A31E
+	for <mptcp@lists.linux.dev>; Wed, 25 Nov 2026 01:16:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20260707.gappssmtp.com header.i=@networkplumber-org.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=sJ7WXICF
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2f04f61282dso22108065ad.1
-        for <mptcp@lists.linux.dev>; Tue, 24 Nov 2026 16:54:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20260707.gappssmtp.com; s=20260707; t=1795568096; x=1796172896; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=OqrY6P/OIPvBETWqNv5UBHtX+h2IdAEY9f4eiNCVm1Y=;
-        b=sJ7WXICFfS5fVFxJ1LVhEe38Bkax3TIyoygp5MDAqyY2pxwiCDf7JF7CsICpRAYr4z
-         ep/Etpo74K+69TPr17qoZXgLWgDMlRy4Yr0uLeWy3V2CGn3jqAQ7BW2ZvdZcgmOlUvAK
-         fJqu/Xz9iRRQjZGEsGIHMdrKuwXd4K/fECBpisBpSwMe8PfoV+WEd1gckXOcsrGwMpTJ
-         Obo0J+Cmfe+bX+gAyQOEcmkHci5ODHtvHzTGP5Q02UIdM6hmszjNcqDtLMfjIJ0jCpzr
-         hqEK7T8FhIT3amNB0i+D3YSFHA0mADcHLpq+wSL6l9oYZsqfJn5Nxgxq9b6k55Ui0pvC
-         D67A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795568096; x=1796172896;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=OqrY6P/OIPvBETWqNv5UBHtX+h2IdAEY9f4eiNCVm1Y=;
-        b=p7ZncPuCje50aWgJ2b5TUjZRmiT333GBY85b8LjCY/apebhE5tYOl9EypwgjF7wYXX
-         zQdxRKsH2pHmR3XkBYfULmAAxeIT1KahUlGXJeecsSXg2i48hZYeK+c6QZvfqZ6PfmTI
-         CM0rI02gH4EX8UibBFjNVdfUZYfgveCxXny4iS/dWGEONvB6ynpnowj0H+B276EMtLkV
-         keLZYeZzRvNDUbFwvO9T8RUcfLlQKqeYWDJRr+mBoVljGgtEtzCgOkNEzciN/YemICm5
-         nPKjFqQzo9N2GOzPWgIEnseAhDzorttZoZQ0o6+Ds6QslKGlbQu/65/LjMn+kbSl5Gyc
-         cp9A==
-X-Forwarded-Encrypted: i=1; AL+hErHBXKZ/aKCMcDIhwvbrZobgpn3Nc+NbEoFM83Mt6TbruJshYS8WND69LHkxG4C0S36EW3gh5A==@lists.linux.dev
-X-Gm-Message-State: APuU4Z+yGA5MOZFuJBnhoTLm4H1/F1E1wlzdwMi/0U6SQYxBckhy1Qgz
-	urk3fGMKE73uI8w4ueCI9Kj+ZJhF9yC70wPkThLK1KIoGweK2wdoeTjMsKdttDm0DSk=
-X-Gm-Gg: AZFdTZdRIG1j5fn3kKZiVpOB4ND29YGLZRKsGVw1sLsqkwlKM+T5b8T917mnNSqkQ14
-	QqfSt4d6b3mT2wFHmkRfXCIsdZ1iXTj0OP/68y6LlbVw7te/MZmvTZ8mrUZ83FuJHUEZFlWYBU0
-	HloGh8jjJ92YEyMaYPHQ4cgQcnNBcH+wFgA4fzKgQ/3kmA9oIP41X/TRsdozgato5Lq1VrQM8Dz
-	gAK+4o4SpnxsCCxMUqHK+0W8pMHP+4rnVAYnyRCA1iNQigWvoC8TXIo/zPyEvZXupnqQu9zGYzZ
-	sF60befEadomoqfuGuFvht8cJynXrjllaiW+g4hA6jxXDi0XNEcgItc1GDTV3OKM1S8L1HxbB8J
-	aQA/d5yNWttBv1mABWBreKUFbcEjjPNVhmyCrndehO2NP6YJep/1pncqcSpgiFSJSpwYYo20Eq6
-	mj+j3Z6gUda5osIv9tiEN9JA+RPZ/dB6tnn3yj36uH+ikDbwyBOqg6wXNqwjPy3+yQ8ryREy4yg
-	rqe8qZm6RnxkdbHaTQl7HLeOww0l+1ecYR4DnT5kk06MWpWrjbsLQ+cgV0lgSAKiNHGBkF+yb7c
-	JxJc7I4OPAJ/wfllfNfUm0VP3IbMDxRDhj0k3jzw5C7JC/5Iv3lPi3bBZi9MPBWr501Vly/llJg
-	oAXQdrWEAleqfEvsM
-X-Received: by 2002:a17:903:38c8:b0:2ed:2e3a:1fa4 with SMTP id d9443c01a7336-2f03f207ea4mr168163845ad.62.1795568096305;
-        Tue, 24 Nov 2026 16:54:56 -0800 (PST)
-Received: from phoenix.local (204-195-112-43.wavecable.com. [204.195.112.43])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2f03f1207f1sm75703755ad.64.2026.11.24.16.54.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Nov 2026 16:54:56 -0800 (PST)
-Date: Tue, 24 Nov 2026 16:54:54 -0800
-From: Stephen Hemminger <stephen@networkplumber.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: netdev@vger.kernel.org, dsahern@kernel.org, mptcp@lists.linux.dev
-Subject: Re: [PATCH iproute2-next] ss: move to its own directory and split
- up ss.c
-Message-ID: <20261124165454.36367923@phoenix.local>
-In-Reply-To: <7da8ca7b-f985-402d-a314-454c9094eb44@kernel.org>
-References: <20261119024049.3109143-1-stephen@networkplumber.org>
-	<7da8ca7b-f985-402d-a314-454c9094eb44@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mI48Sa6f
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC2F61F000CA;
+	Wed, 25 Nov 2026 01:16:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795569400;
+	bh=mPeUKVrby5s/00oAftRiuhUntjSJr3dyrU8f5MuDaoY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References;
+	b=mI48Sa6fvhWqssFGXIRU04RQmsqaI0w7PX0iMcoPfntd24EjqP6haRv7MIZHxX3M8
+	 5ZznwTx/U2FFA8gN7H6AcE9caR+jzilgSJXGNQ6IowDeuLtdjdAbdJkdCHWzzit+SP
+	 qT0Bd1HDF1YNPEEe2Jh+zcg4fUmbJLKr1td3qSy0aSgTVoaEq7q9uaKcSZUnwT7T41
+	 4THk2FBtQ86TMmCsI4e6tnTEOfN6FUwXFqgIyU5fcLt+Le9/Do1FhvoQHeXDFislBv
+	 KmJMQy3+XH2ucA6yoDqgifRa44kd/GyCkb459C1kb6k99v9yuk1YlAqSV0pNLKnnSb
+	 2vJnlroA3LP9g==
+Date: Tue, 24 Nov 2026 17:16:40 -0800 (PST)
+From: Mat Martineau <martineau@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+cc: MPTCP Linux <mptcp@lists.linux.dev>
+Subject: Re: [PATCH mptcp-net v3 01/50] mptcp: keep an orphan while it can
+ send its data
+In-Reply-To: <20261124-mptcp-cmason-fixes-v3-1-416c0920c73f@kernel.org>
+Message-ID: <61bfa741-5112-5709-c5ab-95e609fcdd7b@kernel.org>
+References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org> <20261124-mptcp-cmason-fixes-v3-1-416c0920c73f@kernel.org>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -99,17 +57,111 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Tue, 24 Nov 2026 11:41:09 +0100
-Matthieu Baerts <matttbe@kernel.org> wrote:
+On Tue, 24 Nov 2026, Matthieu Baerts (NGI0) wrote:
 
-> I was surprised that you ended up with ~900 more lines, but I think you
-> missed the removal of misc/ssfilter* files.
-> 
-> Cheers,
-> Matt
+> The close timeout of an orphaned MPTCP socket started at close(), and
+> its expiry reset the connection, while some data could still be waiting
+> for the peer to open its window: a peer reading slowly or pausing got a
+> reset 60 seconds after close(), and lost the end of the data, while TCP
+> delivers it.
+>
+> This timeout is there for the DATA_FIN exchange, see commit d866ae9aaa43
+> ("mptcp: add a new sysctl for make after break timeout"), and for an
+> orphan that can no longer send anything. So restart it when the DATA_FIN
+> is sent, and when it expires before, as long as a subflow can still send
+> the data, which is then pushed again: an established subflow, on which
+> the peer acked something recently, at least the window probes. Until
+> then, as for a TCP socket that is not orphaned, nothing limits how long
+> the peer can keep its window closed, while it acks the window probes.
+> The timeout still starts at close(): the subflows are not TCP orphans,
+> so its expiry is the only check that the orphan can still send.
+>
+> This was reported on GitHub, with a reproducer: a server writes 2 MB,
+> then calls close(), while the client pauses before reading the rest.
+> After a pause of 90 seconds, the client got ECONNRESET, while TCP
+> delivered everything, as MPTCP now does. If the client vanishes instead,
+> the orphan is now reset as TCP does.
+>
+> Fixes: e16163b6e2b7 ("mptcp: refactor shutdown and close")
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/647
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Most of the ssfilter* files are build results from flex/bison
-so not actually in the repo.
+v2 LGTM:
+
+Reviewed-by: Mat Martineau <martineau@kernel.org>
+
+> ---
+> v2: new, for issue #647 reported on GitHub
+>
+> Note (Clashiko on v2): when the last subflow is closed in the same
+> worker run, before the DATA_FIN is sent, the destruction of the orphan
+> is delayed once, by the close timeout. Not restarting the timeout once
+> expired would reset an orphan sending its DATA_FIN after a long probing.
+> ---
+> net/mptcp/protocol.c | 31 +++++++++++++++++++++++++++++++
+> 1 file changed, 31 insertions(+)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index d64e04245963..944c9d11d211 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2871,6 +2871,28 @@ static bool mptcp_close_tout_expired(const struct sock *sk)
+> 		  inet_csk(sk)->icsk_mtup.probe_timestamp + mptcp_close_timeout(sk));
+> }
+>
+> +/* Before its DATA_FIN, keep an orphan while a subflow can send its data */
+> +static bool mptcp_orphan_keep(struct sock *sk)
+> +{
+> +	struct mptcp_sock *msk = mptcp_sk(sk);
+> +	struct mptcp_subflow_context *subflow;
+> +
+> +	if (!sock_flag(sk, SOCK_DEAD) || msk->snd_nxt == msk->write_seq)
+> +		return false;
+> +
+> +	mptcp_for_each_subflow(msk, subflow) {
+> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+> +
+> +		/* a live peer acks at least the probes, every TCP_RTO_MAX */
+> +		if (__mptcp_subflow_active(subflow) &&
+> +		    tcp_jiffies32 - READ_ONCE(tcp_sk(ssk)->rcv_tstamp) <
+> +		    2 * TCP_RTO_MAX)
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> static void mptcp_check_fastclose(struct mptcp_sock *msk)
+> {
+> 	struct mptcp_subflow_context *subflow, *tmp;
+> @@ -3208,6 +3230,11 @@ static void mptcp_worker(struct work_struct *work)
+> 	if (test_and_clear_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
+> 		__mptcp_close_subflow(sk);
+>
+> +	if (mptcp_close_tout_expired(sk) && mptcp_orphan_keep(sk)) {
+> +		mptcp_start_tout_timer(sk);
+> +		__mptcp_push_pending(sk, 0);
+> +	}
+> +
+> 	if (mptcp_close_tout_expired(sk)) {
+> 		struct mptcp_subflow_context *subflow, *tmp;
+>
+> @@ -3449,6 +3476,10 @@ static void mptcp_check_send_data_fin(struct sock *sk)
+>
+> 	WRITE_ONCE(msk->snd_nxt, msk->write_seq);
+>
+> +	/* an orphan's close timeout is for the DATA_FIN exchange */
+> +	if (sock_flag(sk, SOCK_DEAD))
+> +		mptcp_start_tout_timer(sk);
+> +
+> 	mptcp_for_each_subflow(msk, subflow) {
+> 		struct sock *tcp_sk = mptcp_subflow_tcp_sock(subflow);
+>
+>
+> -- 
+> 2.55.0
+>
+>
+>
