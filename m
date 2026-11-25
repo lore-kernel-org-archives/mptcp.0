@@ -1,93 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795599600;
-	b=1GEJT9Bk7LcBMAUbPcVO7tsRMVvsji3vRKY980DNOZqxTX8152VVnO6GJZbHFcUQ79w/
-	 +u/l+A1IOy50tRuRrZJDngfQFFHm+flbxeUVXCr3Af3bET0yMMCfIKMAF3axK+LFsSXUA
-	 n+2Kry6x/dBnGRY1wnIEwab+ZZ48vbloh8JSjBQpymyRab2hGat4FXx6uVLZWqY9ya3+2
-	 ITXoriMobD2l3nfZ1da7b1TRA/69J/Uq4EwrS6/u0BNvyjOx7OUxwkkZWnODuXAuR02rz
-	 C90ZcCpXnjVOZ/IGKJU9Oq8ttlFlcYbCtNnnhmOoY/NUw8vo5CTPFIWDa+zB8qXFL/g==
+	t=1795612148;
+	b=ciGnUYe1KmHee2zZ9ST4LI9m5X3SxUpJ8IqvcuVScqkgZfgOp3zVnkf+LG5xZpWm86dd
+	 SvULQN6dgNXKnn0OtVKzwBha39pkvxVSUUfheUGuNjv4Sr7tCcoHQlyPoN3YbY+MRouYf
+	 p8Yqv6UCch0g8E84amxnPQcYGNaunYB/y+AKGASP237HED/s5aef/fNs+Jaw6IcQgjIfn
+	 +Fp58qCzzO7Xexufj0AFqAIRAdOMo4Adch0Mbgc1bR4clp6fCtyWwxUTxC3krGcTFt8g6
+	 Ci41Ai+qEgyHMVHlPaNfes99RIy/R7br6HJJzFLCFvdic2zDI5/BfnFw1d4wzHkHwPw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795599600;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
-	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
-	 Date:MIME-Version:Content-Type;
-	bh=n2DWaQ7oAyf3hnwhyVZDdQOyjyCDfRI8wZ9fxH5nT64=;
-	b=WQi2u1n8mk7zPk70MTBU9PbI3WJyq2ah4RxMA0QgOno3DHF19dk9LJ9/jstlKasGi6iO
-	 ELub7CiuoXs9FsrT4LAvvmHTC1br83fxdiC5laA7pJy3AS4H08onunidflvDhWk0RPBrG
-	 o8IVIjKJTWmFjin37PRLB7RKqRMAS3HVBCzIbl+/YAbBXOQTk8siN2nAhcJtX3hWzJCDa
-	 c1EYYvZE/v14MJ+qlU4ZJWQ7yQQqIFr7Avwl6I0cgTJuuuz4AtJdfjYiqabfdAZYARlxF
-	 4HmpJgNRDKEOJzva2ZloIDf5EcqRbDemv2cRfjxLOIRFu6TOukUhrAJFfC54+twmwkQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795612148;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=n+Vb31kCyLFO0i6gl9GYE7pyYhRP0kQ5pPK8kLdNUz8=;
+	b=lWGBHTmPuNEnScpUfl2wRjMCT9AWe+jZt50T45gJbadSMYL3nBOmyMpvpg5KyruTqEzC
+	 uKgP0Oy95dPNfp/9q/iwraPhNLwjBO56lIbXMMcwtmYGf1cEM/zYNhmZQMCXZ89sg81pE
+	 fxmjAGCZYL3wKcUnvzDSJNsVh42DzDMAcmx4BARr0HDsqlfOzG/E+fbmHND4gFkFbwwJm
+	 fjNdJwcp2rHtPVpLQyv4Dc29gFGC2tI75cwZQq+Qx56ohIPmWaA85/a7Jh4k6wrPIYjfw
+	 X5iH2i2aKiLrHACOo9Ik2Y/lP0RTjpPbfWStqd7ZWHxuEXJ3GoIGErvW7dmTDMuJd3Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=x9T8gGNE;
-	arc=none smtp.remote-ip=209.85.210.52
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="lkHf9/Dd";
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B93606A332
-	for <mptcp@lists.linux.dev>; Wed, 25 Nov 2026 09:39:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A3B93606A332
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA3C606A321;
+	Wed, 25 Nov 2026 13:09:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=x9T8gGNE
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-862aca1ed4dso2235366a34.0
-        for <mptcp@lists.linux.dev>; Wed, 25 Nov 2026 01:39:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795599598; x=1796204398; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=n2DWaQ7oAyf3hnwhyVZDdQOyjyCDfRI8wZ9fxH5nT64=;
-        b=x9T8gGNE0HuK9bwSCn/kk3Gs1/uU2i6BimEm7UBz+PTHsQhgg2JEN88U2RJP5btH7j
-         LjklAy2NL3BHazwR13eoAqVqLEEUVtRWGRjttkXzq4McYqPDoU6pF7/FGBoRJQHYOQxo
-         JF1PWs7VhuYx0RyQtOmqjWGHOSDRdDO7oxQrjQUWC357U+b0G63ZI0VL+PkwFV8VlGnj
-         eL03CpAwpZGjUhrSgrsjeZcSRMLIhgEWhWyFnaMDypsT35YyNHGLqHVJc8xM7fDF/s1V
-         dMId3sJL69HZsksu10VL1wRk8HPAz5Q19B7PRD/Du0HLvSrvaZalb2La331Hxa4sItBm
-         T6VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795599598; x=1796204398;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=n2DWaQ7oAyf3hnwhyVZDdQOyjyCDfRI8wZ9fxH5nT64=;
-        b=fDhbbaFiqGpKjOppyc4TCbIDdwdSh1ahJe1HqcbDlCtiMPFUXGvribrB9EjJZRhSl0
-         tp18IP2+cHd/G/vwYoIe0YzU0dlQq988hNpEdm5bfODt1A9PaP9o779/kecsGk3+UVZe
-         uympnZq83rjxriJos+jMR1Rdmt7JdBbyPAWE+fzEYnCjA57Vbgl1+lsnuhxW84ZrkSSQ
-         1GmaTaJLPYYsloxpA8sCysr+rLjlPs6+TNczkblMmxwhUdFDu3SMKCfJMEraH6HU2UHz
-         LInzHFfD8KvJeOSVK2M4Y6E5bVBXY8+pl8wQ6yo1QBryEgnP/34sf+M7dL5IY5SUFBgN
-         yLsQ==
-X-Gm-Message-State: APuU4Z/RNy9gjdKpyD8Bt/YX1RLPihwCQPxBJ2ApIMPV/uxjE9wXBJvy
-	z7Z/Y38QkiCghkUD//IGnbG06OubrIKJCGXPYQL0Ab/ywcgt64PLCFFqaiC5Fmc=
-X-Gm-Gg: AZFdTZf42Aorf2dItvyBnhatWmgzaGsYucwjJgx5Gv2qlU+vMWWtj+9esfqZCAftFbk
-	RMhxSAyk6I4XhRi1eVyAwzqWteuGRC2SzImj8y8zSnGDujIQpRyPRcO9AZkKiGIn2CygAqTG248
-	YBRDJHG5DtUPu0OOM9tViCRICGluagPGu+Mp6m/gt3Qpj+UHy8kDI8LEYXX7NI1o0p76mzrmezg
-	RCEgbwc/g9C7CIAyEXDJEPmrGDA8JPMkarU4TzUNV7vrz2BGOpTByRZDbCrPONVtPXzlgKMQh9L
-	bADOjONHNhIdx9baP8ERUU1Bc8dHp9ofiTW5oUtSIrQek+oI87aMSYkhh57hc32ISeFQ46dOFb5
-	3F84MeAMl4WJl4AR7Mo1VWqIZa+zuQVKJNkdO57N/57mZ/qtASLW32p1jyJNKALuC7TnoWLV47A
-	UDihi0HbAkhoSqMzs2s5RrjpaY2XzxeH3lsqnKUhdk8KFQQDiAONsCYRtlFWVzH3MxlJbBly9m9
-	JrQb0TJBdTnd8YfGHBAuQUExycCy1Dhm0rHGEnYqKgjCLpo5MgbfKNSEZOiBMen7PR55+Jolyyi
-	tCfn0qdILJxfXB/EubxE3smv/zfus/liWWv5FNB6nQ==
-X-Received: by 2002:a05:6830:348e:b0:81e:abb6:749f with SMTP id 46e09a7af769-86315490d2emr17311325a34.8.1795599598395;
-        Wed, 25 Nov 2026 01:39:58 -0800 (PST)
-Received: from github.com ([52.230.180.3])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-863168dcf38sm12431537a34.9.2026.11.25.01.39.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Nov 2026 01:39:57 -0800 (PST)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1795591278.git.tanggeliang@kylinos.cn>
-References: <cover.1795591278.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v9 0/7] mptcp: add MSG_ZEROCOPY support
-Message-ID: <3bf3b8ec-c0f9-fad8-1c8c-3df0e57e3918@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lkHf9/Dd
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F07A01F000C4;
+	Wed, 25 Nov 2026 13:09:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795612148;
+	bh=n+Vb31kCyLFO0i6gl9GYE7pyYhRP0kQ5pPK8kLdNUz8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=lkHf9/DdM5oXbhhSeha53O7cpxG4NPMyvTkcWyT7A4MqBFb5FFOWpBvuthOdwKg2N
+	 x26dSAIf//wFqqZzYbA9bxGdTWamO08kptWPELD1+ULrvJqv3M0XIOD4dkepP78Oku
+	 yQ/Guk6otch8rXDxBrrM/fxvEmOqfehyTHIFUXjSGVNhuQz6Wk4XJIHhWuOVve9bnb
+	 hDIlWFTdEPqgkIuNTCHr85mRQBHSMQSONm/B5AvS98l5V0n4C1xtzfwMf0jDfMnwNy
+	 SIEJQ/H+q01aOfqudorV3wPNpms79Cw8GFDeulh//RmTK2ysZWfuUhkxyTBXr8MVMu
+	 CCwdWJU9Mcc9Q==
+Message-ID: <sashiko-outbox-233459@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH net-next v1 2/6] ipv4: avoid a stack canary in
+ ip_finish_output2()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Xuanqiang Luo" <xuanqiang.luo@linux.dev>
+Cc: bpf@vger.kernel.org, mptcp@lists.linux.dev
+In-Reply-To: <20261124130631.1886963-3-xuanqiang.luo@linux.dev>
+References: <20261124130631.1886963-1-xuanqiang.luo@linux.dev>
+ <20261124130631.1886963-3-xuanqiang.luo@linux.dev>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 25 Nov 2026 09:39:55 +0000
+Date: Wed, 25 Nov 2026 13:09:07 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -96,66 +60,108 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 
-Hi Geliang,
+Thank you for your contribution! Sashiko AI review found no new issues
+in this patch, but noticed 1 related pre-existing issue it does not
+introduce:
+- [High] bpf: device mismatch in bpf_out_neigh_v4() on RTN_LOCAL routes
+  [1]
+--
 
-Thank you for your modifications, that's great!
+commit ca3d30f8ff839a5ead3ac3b6137813b8e1486837
+Author: Xuanqiang Luo <luoxuanqiang@kylinos.cn>
 
-Our CI did some validations and here is its report:
+ipv4: avoid a stack canary in ip_finish_output2()
 
-- KVM Validation: normal (except selftest_mptcp_join): Unstable: 2 failed =
-test(s): packetdrill_regressions selftest_msg_zerocopy =
-=E2=9A=A0=EF=B8=8F=20
-- KVM Validation: normal (only selftest_mptcp_join): =
-Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): =
-Unstable: 1 failed test(s): selftest_msg_zerocopy =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Perf: Unstable: 5 failed test(s): regression:sched-baseline(7) =
-regression:sched-bbr(5) regression:sched-clientlim regression:sched-mem-pre=
-ssure validation:sched-loss(2) =E2=9A=A0=EF=B8=8F  (3 improvements, 56 new =
-outliers to review)
-- Task: https://github.com/multipath-tcp/mptcp_net-next=
-/actions/runs/45570779969
+This commit changes ip_neigh_gw4() to take a pointer to the IPv4 address
+instead of passing it by value, avoiding a stack canary in callers such as
+ip_finish_output2() and deduplicating inlined calls in ip_neigh_for_gw()
+and ipv4_dst_neigh_lookup().
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/95b50a4b8e=
-72
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1221715
+[ ... ]
 
+> diff --git a/include/net/route.h b/include/net/route.h
+> index 3fccd31eb74df..1571e1c6082cc 100644
+> --- a/include/net/route.h
+> +++ b/include/net/route.h
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+[ ... ]
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+> @@ -425,17 +425,17 @@ static inline struct neighbour *ip_neigh_for_gw(str=
+uct rtable *rt,
+>  						bool *is_v6gw)
+>  {
+>  	struct net_device *dev =3D rt->dst.dev;
+> -	struct neighbour *neigh;
+> +	const __be32 *daddr;
+> =20
+>  	if (likely(rt->rt_gw_family =3D=3D AF_INET)) {
+> -		neigh =3D ip_neigh_gw4(dev, rt->rt_gw4);
+> +		daddr =3D &rt->rt_gw4;
+>  	} else if (rt->rt_gw_family =3D=3D AF_INET6) {
+> -		neigh =3D ip_neigh_gw6(dev, &rt->rt_gw6);
+>  		*is_v6gw =3D true;
+> +		return ip_neigh_gw6(dev, &rt->rt_gw6);
+>  	} else {
+> -		neigh =3D ip_neigh_gw4(dev, ip_hdr(skb)->daddr);
+> +		daddr =3D &ip_hdr(skb)->daddr;
+>  	}
+> -	return neigh;
+> +	return ip_neigh_gw4(dev, daddr);
+>  }
+> =20
+>  #endif	/* _ROUTE_H */
+> diff --git a/net/core/filter.c b/net/core/filter.c
+> index f42ecfb5841f9..8ee023c87c243 100644
+> --- a/net/core/filter.c
+> +++ b/net/core/filter.c
+> @@ -2376,7 +2376,7 @@ static int bpf_out_neigh_v4(struct net *net, struct=
+ sk_buff *skb,
+>  		neigh =3D ip_neigh_gw6(dev, &nh->ipv6_nh);
+>  		is_v6gw =3D true;
+>  	} else if (nh->nh_family =3D=3D AF_INET) {
+> -		neigh =3D ip_neigh_gw4(dev, nh->ipv4_nh);
+> +		neigh =3D ip_neigh_gw4(dev, &nh->ipv4_nh);
+>  	} else {
+>  		rcu_read_unlock();
+>  		goto out_drop;
 
-For more details:
+[Severity: High]
+This problem wasn't introduced by this patch, but can bpf_out_neigh_v4()
+resolve the neighbour on the wrong device when nh is NULL [1]?
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+When __bpf_redirect_neigh_v4() resolves an RTN_LOCAL route via
+ip_route_output_flow(), rt->dst.dev is set to net->loopback_dev (or the VRF
+device) rather than the target redirect device dev:
 
+net/core/filter.c:bpf_out_neigh_v4() {
+	...
+	skb->dev =3D dev;
+	skb_clear_tstamp(skb);
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+	if (unlikely(skb_headroom(skb) < hh_len && dev->header_ops)) {
+		skb =3D skb_expand_head(skb, hh_len);
+		if (!skb)
+			return -ENOMEM;
+	}
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+	rcu_read_lock();
+	if (!nh) {
+		struct rtable *rt =3D skb_rtable(skb);
+
+		neigh =3D ip_neigh_for_gw(rt, skb, &is_v6gw);
+	...
+}
+
+Because ip_neigh_for_gw() uses rt->dst.dev instead of dev, neigh_output()
+is invoked with a loopback_dev neighbour (which uses eth_header_ops) while
+skb->dev points to dev.  If dev is an L3 device where dev->header_ops is
+NULL (such as a tun interface), bpf_out_neigh_v4() skips skb_expand_head(),
+and neigh_output() pushes an Ethernet header without sufficient headroom,
+triggering skb_under_panic().
+
+[1] https://sashiko.dev/#/bug/linux-26626829-3abf-4baa-b906-b783eeb1b107
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261124130631.1886=
+963-1-xuanqiang.luo@linux.dev?part=3D2
