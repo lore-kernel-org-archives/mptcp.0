@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795596349;
-	b=uD2NooDx9RUUWADKsfmMmhJAyKN0FkH966GaxfyzlaUNkf/1uJoReTSl4h2Rp1rKIdUA
-	 aQLVG3afnpcIf5oF7xGKAlFXT5IP7bTpInlt2VMZRwTDl1X510a6BiCRZEC+CV4C7H0uI
-	 fm/a2263ss1qP4ZaSNaRwK77XV4zcPK3S0CCst9UenLqcq25SOZ+CF97gC9UYEA+szspO
-	 RgcenQGQ9posGOZUMgStMzagq2GAMNMA9W5yVbCZhVIIS3qxb5d2sv5QgEqac/x5jj8jZ
-	 LdGAuh3tTifsvltldIYqAGGUQj8aKCxSAm0Ww+IkTUq0fabGQIl87F0nm/70tpjobZQ==
+	t=1795596938;
+	b=wL5wpcEuV7lalqDVCbaRF8VP7gDG6IEH47GxVZAqtgqxJdQOB6gJF5HD2a3baPNx55dB
+	 65pMLhY2KdkB+gHG3PSDsnIXlvMOExqf0wnrtSbzSYE0ynfykQvO6XVohfaXTtZLfsEjP
+	 +uAF2hLgWfHDuC3OypjZy4KvaXTKn0jKvEiraNUcuglFn/IS9o/Ayaw2ni3752qA10bha
+	 FQvmg7NDsGq9Tn6TZRhagFRJUGx4WIoKYoCkhQXkN8SNIWqgs6Jb/8xHcwuO7MhcQOH7o
+	 5tXubkMwZZ1os22MGBEtvbKrsMp5+ZOAeYfDGt+sUgFe0xu+AaL4ls0o6DUKuAGujTQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795596349;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795596938;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=ryoqsrjoXubEgpswsBR+23g/2lrkh3bv49o6yJigIik=;
-	b=CbtD5683e5IQnL7iHRx+kxkQ1APV5ixDwxFJjabwVV34y9XfzVr9O+AXNYsWENCP1cyx
-	 wK+Sy77uVQZFN7K5rxUCZ9mz/HvqlZkPmKpbaKirSofR9LPEuiUWGJ7EtOX6XZdE40LG6
-	 DFMQOn/5YPBTlSVio6xxalx7/Jvq2qMHIxkS/LYDMv/TkDLDBllPrFt+9J2HwOV9NCj0u
-	 K8JiaSNaln7Ec/0U4mhjNuD+OKnLKwL0lEUGRpR1NqwhQFCXZulaV6t0WGdgg0mgXfkWT
-	 VUZ4+caWpPa+v/yyeKpxFeJxqEAAqBhdFdnzjfk8CooDQtc4e8B5VugAbz4WDs1PMcg==
+	bh=tTpUi0ILw5EG17akaEX6b7XqQuzxRpKcK9YSXdbQtZI=;
+	b=lZ4su9abbml5uYa3l8HCKd8QlD3uTlKjqREMeYDMDOeIy+tKpK9lOw7ENqf0OPoJ1402
+	 xZQ5kugvYbB8lBlN8GeaMaXvx0pH//OcX++Ok/W/xvc3RkPxZp4SemCf7Sq88KNWYkfS0
+	 iISiWFw9V9kIHInumG3E3R5XIMP7RT9ShzehYDbIDZZ502ldLm8osvvx2fI33MsmQO5h0
+	 Spoma4ha9lEbOiCROtT+10QKf4odDJkzX8/9XNEwzpo2Fh1N2CdgagqE0qYgKnpy9lZWq
+	 t6mbHMaKYGhYk7mDpvMnOmMDupCofkZLZay7RPIbhc4+qSKgIxEcVom+6JIR3yyv9+A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M7azc6BU;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gWq4C8zE;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEE0606A31E;
-	Wed, 25 Nov 2026 08:45:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1414F606A326;
+	Wed, 25 Nov 2026 08:55:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M7azc6BU
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50C151F000CA;
-	Wed, 25 Nov 2026 08:45:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gWq4C8zE
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72FF01F000CF;
+	Wed, 25 Nov 2026 08:55:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795596348;
-	bh=ryoqsrjoXubEgpswsBR+23g/2lrkh3bv49o6yJigIik=;
+	s=k20260515; t=1795596937;
+	bh=tTpUi0ILw5EG17akaEX6b7XqQuzxRpKcK9YSXdbQtZI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=M7azc6BUPwINZU77PSf79ayyBtOJ9PbEQJ3Klaj8/Y+qcl+idFE7qRwwbRdYEfYyv
-	 P6Z5Xlzyb/+y0D4BbO0jiMisEGZpKuuq0+qT6bW3Wp6OwiQ5iFZi+4baAMeeUjr0ko
-	 5xU887gtjgTM15EeuH/gESoJnTK+c1Kjzz9wpVBSGubyx/rBOj+FOJw/+BtbCfVhsP
-	 Q/Wrg99Utw9o8Wyd2GzW3Oo3Ytfv2+j+alTqMZBFFs/ic4WSS28rrNDW1BLQDKRapS
-	 9Mj9aqmHz3kIrWxeo2fgIXMfFtpuez4Kdv3rQia/q4YH78Z5joENdHmwKuEWc05nFC
-	 6IxGmLZ2bZmRg==
-Message-ID: <b2d353ed-d684-4327-a2e7-5042a07a2927@kernel.org>
-Date: Wed, 25 Nov 2026 09:45:42 +0100
+	b=gWq4C8zEP1i3TuB6Ew5njZ1TreqMRfk14GYmncPr9GmXeCLrGldtJWY7UN2yiBpDu
+	 YLZY7QMlub0k2l289kPwFVIcvSfMvgpqPxce5xcF10AtpTv1hIXGN3GPAYr+Yviirj
+	 3V65ENHlgjyCYkrU/thlwsNxqiA21ClysqrWUTcf2D0WmG9PxWxBWGVVHR6GK/STFs
+	 D12Tnq2qpWMpRyH5qm7Chk5tczb6oX9arPo9V36Mi2Sy7zm59AotNsHPdCbKDVuJz/
+	 hlfc4yFo0Jq6HN8GC5Yw9r3ncUt3Z5ooZzioPvL325S92OpNa2O1VdsbMjvHUbF4u8
+	 FGX+5TJzUK0SQ==
+Message-ID: <ef8ce4ac-fcb6-41fd-947e-ecdf83527a42@kernel.org>
+Date: Wed, 25 Nov 2026 09:55:34 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,19 +52,14 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: gate diag sequence counters on
- CAP_NET_ADMIN
+Subject: Re: [PATCH iproute2-next] ss: move to its own directory and split up
+ ss.c
 Content-Language: fr
-To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-Cc: Dominik Maier <dmnk@google.com>, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- mptcp <mptcp@lists.linux.dev>, netdev <netdev@vger.kernel.org>,
- dmnk+artist <dmnk+artist@google.com>,
- Shardul B <shardul.b@mpiricsoftware.com>,
- Mpiric Private Limited <janak@mpiric.us>
-References: <20261119192159.2646113-1-dmnk@google.com>
- <a9526d12-87db-466d-aac8-ae575559e010@kernel.org>
- <1a2110afc5e.30756196125300.3918439705196063429@mpiricsoftware.com>
+To: Stephen Hemminger <stephen@networkplumber.org>
+Cc: netdev@vger.kernel.org, dsahern@kernel.org, mptcp@lists.linux.dev
+References: <20261119024049.3109143-1-stephen@networkplumber.org>
+ <7da8ca7b-f985-402d-a314-454c9094eb44@kernel.org>
+ <20261124165454.36367923@phoenix.local>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -110,33 +105,26 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <1a2110afc5e.30756196125300.3918439705196063429@mpiricsoftware.com>
+In-Reply-To: <20261124165454.36367923@phoenix.local>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Kalpan,
-
-On 25/11/2026 05:51, Kalpan Jani wrote:
-> Hi Matt, Hi Dominik,
+On 25/11/2026 01:54, Stephen Hemminger wrote:
+> On Tue, 24 Nov 2026 11:41:09 +0100
+> Matthieu Baerts <matttbe@kernel.org> wrote:
 > 
-> I tested the proposed change on a locally built kernel with MPTCP enabled.
+>> I was surprised that you ended up with ~900 more lines, but I think you
+>> missed the removal of misc/ssfilter* files.
+>>
+>> Cheers,
+>> Matt
 > 
-> Runtime testing passed for both client and server sockets:
-> - Privileged Netlink requests return the actual sequence counters, matching getsockopt(MPTCP_INFO).
-> - Unprivileged Netlink requests return zero for mptcpi_write_seq, mptcpi_snd_una and mptcpi_rcv_nxt.
-> - Other diagnostic information remains available to unprivileged users.
-> 
-> The full kernel build and runtime tests completed successfully.
-> 
-> Tested-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-Thank you for having tested that and your previous work!
+> Most of the ssfilter* files are build results from flex/bison
+> so not actually in the repo.
 
-Dominik's patch looks good to me:
-
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
-@netdev maintainers: I see this patch is still listed on Suie, can you
-please apply it in -net directly?
+Indeed, but in your patch, it looks like you are creating new
+ss/ssfilter{.h,.y,_check.c} files instead of moving them from the "misc"
+directory. Or maybe I missed something?
 
 Cheers,
 Matt
