@@ -1,52 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795591401;
-	b=ZhzrAXmrhALAVVdYYzOleiZdcN7i51+7zkaRZgjzHqCRUpl+ou2d09h+T7+mZ4B1sWvT
-	 aSdKVvNnZFe7e0bzPJQdIwhxY+yIMtEejgPe6AgGsAOtWoLXB9V6O21ZpJqEGxHcwDAek
-	 T4lrW8jig8g3U/+uCJCWX0mM+KX/Q9xc1/Pw1A/QnR47oY+ToxebW7DIYf1j91OV4jZQH
-	 RivL2xqAcXsJhDdT+gTgkpFQI527GeUbFlpu3BcL+holVJsMx6EqKvhT46JO2aXBEclw/
-	 YldoeEOqDhCAeG9SFbftAsYbf5zKcTKHUPUxRgpqJn3svKXvNbuEIiNELRdIyAeufzw==
+	t=1795592054;
+	b=pMtTk0Q2+X+nZHvjnZQKOoHOJ33lYVnVcJUlDc3y5OdWI3PG+kESgAnVOW2xiQONJzaN
+	 JuNYNsmKeg4HrDkzCpshHre3CjxaizQGebbZKHBrPPsGdXnpT2vMWQi/xFBupz51AZGT7
+	 b7VfbxmBHdZ/0M8TOX9BmyKhEumx7HEFybucJsikyREhhedBtLkNTkRRT+3PAiKWa6X4J
+	 /F2lSW3ydmYs60l0JByKLnD4qj2L/ivTwe537cWmbBtY16hSvdEcD0vADcoO+AAsr073m
+	 a7n8wQNkX051ptpZZKHcQS8OykIwDYDwf0VGnFfyo8aMTU58uEtx+slF0ZmWvO8Ke/Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795591401;
-	h=Received:DKIM-Signature:From:To:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=J92Qo7WMwZoKpkdT60N7mxxDmyA0luIC4GV4VqOzfE8=;
-	b=xX/TvTTJyw3rzlUcjoO7LMfDH7jV8Yf3bNyOe/498mMZAdqjou9BAFkoELdbDoUkGtQm
-	 2prmhqeUrAxDt3CzNKi3t2Ucm/gXsQQHtgQO41UQDawkfo3JJcagI7x9T//ayZd5GjqIW
-	 Jt7ToqHzsOp36LZX8OfrKsnLgRUOxtJidStHQUmAQO6p/teZLODQceax6hprh0dXxPnlE
-	 JuOGEvdmIdvkcN1CZhDQmAuNYIaswbz0SxHwyRj7jbWy1FjPCVxnyksyhZNWdtJ7KDj/0
-	 vQbA3VovpWRsLRh8ZQXUVkKUxKHMi1UaZuzXuxtwbWeFH0hVTRjWCB6jRnDLYiJ08KQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795592054;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=+hidPzSaZXf/EdZVVynJe1JKfb9moPGDqK9aH2vjNo4=;
+	b=O13Cswdo7jWq5OaOiwWD3I/nyOnYDIinlugv7SFpwP7d0Tc+3e2+xDbLQ7i5+kcHpkV6
+	 mCLRe+JZbX4kKAMhTgyAvRtBRnuKPGj+61NK86MlReE0QrZfAG1VymKsEsgO5Pe8xDNcd
+	 QXeRidhLN9JBYdEQ9OD1V91ClzHSfL+OGmCAq8M03n3Ath+/YcVQxjFx9lmoqEJm19EUR
+	 WloLE/fWosFD3krXYJ26MIVPe7n0tyJCSx9mkdEnf7QKJ0XFzwKOrUTga58thXv6I4dmp
+	 hywQFg/9WmI/wnuNcZF8oJ3fltXJjfrPezszNzH/aIrLd8B4/P+re+99twdCYoT8dGw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Co+TyhE0;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=O+xWrTZU;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E410606A334
-	for <mptcp@lists.linux.dev>; Wed, 25 Nov 2026 07:23:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25111606A321
+	for <mptcp@lists.linux.dev>; Wed, 25 Nov 2026 07:34:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Co+TyhE0
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E27D1F000C4
-	for <mptcp@lists.linux.dev>; Wed, 25 Nov 2026 07:23:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=O+xWrTZU
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10FE11F000CF;
+	Wed, 25 Nov 2026 07:34:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795591401;
-	bh=J92Qo7WMwZoKpkdT60N7mxxDmyA0luIC4GV4VqOzfE8=;
-	h=From:To:Subject:Date:In-Reply-To:References;
-	b=Co+TyhE0DgJVfN9DrApPhHp46HlIWdJnK+uC+TtJZ8hPkg9OdDrXjhwsMYxo/z6EU
-	 pcsa2016bhM3kJ5DzPLdnShvT81WaEMSF0s2wtQFruoO7ZEkIX2EQ7pIMUalysr8ct
-	 ugPCO3SKtROQs1UiQH1LJV5xFco4QIIfAqXOFa+Ebzw0HcGjkUFg4CAogXMa/HGGFj
-	 PnMRA6ZNXM/VxI1h63rqslJtplpvq6wnMqDV6yotS9ABKggDvdTxSSkWJ2DFyAeBww
-	 UjYs1draPBjD3NqIZ9IM9P1XHjHa8w4FAzL9QOPwQaRWDzjtIUAVzh02u84JCp/8EE
-	 +mxit3o/WDv9w==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v9 7/7] selftests: mptcp: cover msg_zerocopy test
-Date: Wed, 25 Nov 2026 15:23:05 +0800
-Message-ID: <3bd50e8f16d828fd027f3c0c8ce0df829401a362.1795591278.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <cover.1795591278.git.tanggeliang@kylinos.cn>
+	s=k20260515; t=1795592053;
+	bh=+hidPzSaZXf/EdZVVynJe1JKfb9moPGDqK9aH2vjNo4=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=O+xWrTZUjPUm0XwPFFtlFilga7MyuYUuHlxdzOxAcT2DO23SY3RLztdMnG8Vz/jkO
+	 4/80FjVZ0TjInwcxAJloONllpV0d4jux6LSD7HaDfY8BfNpLKdQwN4J63WTHTlpoDE
+	 IRuVnfToHZbH0mMlf0+CC9XnyOQE5VNgnKv0jcu3jG3LzGAPFLva3UL1p9I8TL6L0G
+	 5Ne84bcJzALYX8vmm1Z3qo4mmGge6tZW91Kkezabzne0TFlGdGyOT26VP5c2v0uHjU
+	 ddksk/aS78w5Locz/jlxWoyZfNwiUAz8OfZRlkrt+8UlSMqX9oV0AXXsMrUmmN0Wy9
+	 +uiuEiFpLlYSw==
+Message-ID: <sashiko-outbox-232814@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH mptcp-next v9 7/7] selftests: mptcp: cover msg_zerocopy
+ test
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
+In-Reply-To: <3bd50e8f16d828fd027f3c0c8ce0df829401a362.1795591278.git.tanggeliang@kylinos.cn>
 References: <cover.1795591278.git.tanggeliang@kylinos.cn>
+ <3bd50e8f16d828fd027f3c0c8ce0df829401a362.1795591278.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 25 Nov 2026 07:34:11 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,74 +59,46 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Medium] selftests: mptcp: missing CONFIG_DUMMY in config for
+  msg_zerocopy.sh
+--
 
-Add the msg_zerocopy test to the MPTCP selftest suite by creating a
-symlink to the existing msg_zerocopy.sh script in the net selftests
-directory.
+commit 5b3ee281d765d4c4bfa0409eafb89f384c870ea5
+Author: Geliang Tang <geliang@kernel.org>
 
-Update the Makefile to add msg_zerocopy.sh to TEST_PROGS, add
-msg_zerocopy binary to TEST_GEN_FILES, and add build rule to compile
-msg_zerocopy from ../msg_zerocopy.c. Also add msg_zerocopy binary
-to .gitignore.
+selftests: mptcp: cover msg_zerocopy test
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/.gitignore      | 1 +
- tools/testing/selftests/net/mptcp/Makefile        | 5 +++++
- tools/testing/selftests/net/mptcp/msg_zerocopy.sh | 1 +
- 3 files changed, 7 insertions(+)
- create mode 120000 tools/testing/selftests/net/mptcp/msg_zerocopy.sh
+This commit adds the msg_zerocopy test to the MPTCP selftest suite by
+symlinking ../msg_zerocopy.sh and building msg_zerocopy from
+../msg_zerocopy.c.
 
-diff --git a/tools/testing/selftests/net/mptcp/.gitignore b/tools/testing/selftests/net/mptcp/.gitignore
-index 833279fb34e2..1f318a297f70 100644
---- a/tools/testing/selftests/net/mptcp/.gitignore
-+++ b/tools/testing/selftests/net/mptcp/.gitignore
-@@ -3,5 +3,6 @@ mptcp_connect
- mptcp_diag
- mptcp_inq
- mptcp_sockopt
-+msg_zerocopy
- pm_nl_ctl
- *.pcap
-diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
-index 22ba0da2adb8..17d0d1051165 100644
---- a/tools/testing/selftests/net/mptcp/Makefile
-+++ b/tools/testing/selftests/net/mptcp/Makefile
-@@ -14,6 +14,7 @@ TEST_PROGS := \
- 	mptcp_connect_splice.sh \
- 	mptcp_join.sh \
- 	mptcp_sockopt.sh \
-+	msg_zerocopy.sh \
- 	pm_netlink.sh \
- 	simult_flows.sh \
- 	userspace_pm.sh \
-@@ -24,6 +25,7 @@ TEST_GEN_FILES := \
- 	mptcp_diag \
- 	mptcp_inq \
- 	mptcp_sockopt \
-+	msg_zerocopy \
- 	pm_nl_ctl \
- # end of TEST_GEN_FILES
- 
-@@ -37,3 +39,6 @@ TEST_INCLUDES := ../lib.sh $(wildcard ../lib/sh/*.sh)
- EXTRA_CLEAN := *.pcap
- 
- include ../../lib.mk
-+
-+$(OUTPUT)/msg_zerocopy: ../msg_zerocopy.c
-+	$(CC) $< $(CFLAGS) $(CPPFLAGS) -o $@
-diff --git a/tools/testing/selftests/net/mptcp/msg_zerocopy.sh b/tools/testing/selftests/net/mptcp/msg_zerocopy.sh
-new file mode 120000
-index 000000000000..b2f82b8fa5f2
---- /dev/null
-+++ b/tools/testing/selftests/net/mptcp/msg_zerocopy.sh
-@@ -0,0 +1 @@
-+../msg_zerocopy.sh
-\ No newline at end of file
--- 
-2.55.0
+> diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/s=
+elftests/net/mptcp/Makefile
+> index 22ba0da2adb85..17d0d1051165c 100644
+> --- a/tools/testing/selftests/net/mptcp/Makefile
+> +++ b/tools/testing/selftests/net/mptcp/Makefile
+> @@ -14,6 +14,7 @@ TEST_PROGS :=3D \
+>  	mptcp_connect_splice.sh \
+>  	mptcp_join.sh \
+>  	mptcp_sockopt.sh \
+> +	msg_zerocopy.sh \
+>  	pm_netlink.sh \
+>  	simult_flows.sh \
+>  	userspace_pm.sh \
 
+[Severity: Medium]
+Does tools/testing/selftests/net/mptcp/config also need CONFIG_DUMMY=3Dy?
+
+msg_zerocopy.sh runs under set -e and unconditionally creates a dummy
+network device with "ip link add ... type dummy" for every subtest.
+Unlike tools/testing/selftests/net/config, the mptcp config only enables
+CONFIG_VETH=3Dy and omits CONFIG_DUMMY, so running the mptcp selftests on a
+kernel built from tools/testing/selftests/net/mptcp/config will fail when
+msg_zerocopy.sh tries to create dummy0.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1795591278.gi=
+t.tanggeliang@kylinos.cn?part=3D7
