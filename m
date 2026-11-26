@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795725841;
-	b=q31qMI/WRllY0dGp41fc1BYjwbsATESkDOipde31FxJh/Zj96giiP2grWWO1EtTOxxyn
-	 htw01Kt83Qm3Z3RNsG6hFs+KDWzm0sZVHBuBoubmd4F4lw7Yk5XPfnkEoOAtJkDvpuk9E
-	 c2OrEslwBbpwGcczTHSVicvxEz4CbJauZYe31Rnhc2H/6GPOouUJYH9x+s1CvrUulcXc6
-	 4sJ69Lncqsfc15GbyppN/AQJP96ATy7TKWEWWSqmMp0Oc3JP/0CjiBvDhoWIBatbjgnrl
-	 HixZd6VFTkbvu5kJI6iN37rZpVJ1jOiWi+f8g/zHYkd6O7Z14bYiYwisS2sELWMTukw==
+	t=1795725842;
+	b=UjGsNMmq+7hblVR91cjsyOO6qqPGziA0rxtCBI5hePV3gsiCSaVQcYNRLzRdkm11j1iz
+	 thrrpdQnpKEPb40ePZ71qDyhcPqPCqZI3fc+M4m3Yn0PWdMfx21z3yPAiQGYy59+n2nfs
+	 8xa5v9NaEchUtrUzBQMRCBlhYCV9Qr2KdT6JrRBlR+STRwXcfOItxC1OQMnFNVg/D/SHu
+	 N3NP2De9IaiOGWWN1wjCHsKvVL7IR1r4/SkOqzXPFSTZtf1etfe0f+4JD0ejh4ue8EDYU
+	 RvNEHZv/HwxVnfycB5QvRYpQXjTK4Gc+G/fY2S8a5DTSdgLRf8UuoerawsiszWR+iyw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795725841;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795725842;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=N8FdICBFqsBvJCqoln3G1UyJ/OXhtK4yDYC5Ebbokhs=;
-	b=i/2ucJ7W7xJg02A7O3t/xHdB/+sQBEziNdAa6RvtFaIyeoIgvjJ7L2qORYDUhyeijlTm
-	 Euj0NLU1+dzRI0zb4GH6W4wvr2jEY1I58rt2UIuORE5lnKgfLQDiXEGh18h8LRdYdQ7kn
-	 e6UZ8cVSngKckhYYATBYovfOyL7sWeXsvr27S/JxH9dXTfB9KfTAoKRHdQq1MoZpQKX+P
-	 Vh4iGAYImzG2KxnL/mu9ilcECl5D4y3JBokfClcfNkylJSrYmyolwwDmXiLSNFE4ed+yH
-	 uM6vOyvnZ/QYZcknib2pk5d/bdb4aMbGhUdiaVZ8At6LJDydZYpZWXui54VviVDoMcw==
+	bh=SoiBuQSyttmWSlIw9JClVAIxG5bImuatlUysRrjJYFw=;
+	b=BcERT0TIixFLLRK+h1uXuG+yFa7S02GeVEA5kKHtIv8XdNvLgLCWmV3f6AFNRsdDDSs9
+	 Emnv0era43YOTIQtxH2YZiDjdkICaT3JwTLZVXjIFfzF2WPNc3J2i9UoC8W89RyUUWUKn
+	 o+WTaGXB4o19N46o9qpE2+hL9xXUYs5hVFKuCapnZsWtbz8sAYCblSA30w8fqqCnAKf+t
+	 LdgKNOnND+aiCDoPRRwCpV7hhab5yaOUq9CakGJf3B5MefVUwHJQ5yHQbqzQnwDC4JUZl
+	 e0zg9g0QmFJaeAcZdfsqi9Q8WQSiU+B64AChkQmzENNWxmwdEW5M76ke2mXdlo2OFrQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Sd9ZCdq7;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EHnDqGYz;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD752606A6A7
-	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 20:44:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913C1606A6AA
+	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 20:44:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Sd9ZCdq7
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C3231F000C1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EHnDqGYz
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02AD51F000C1;
 	Thu, 26 Nov 2026 20:44:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795725841;
-	bh=N8FdICBFqsBvJCqoln3G1UyJ/OXhtK4yDYC5Ebbokhs=;
+	s=k20260515; t=1795725842;
+	bh=SoiBuQSyttmWSlIw9JClVAIxG5bImuatlUysRrjJYFw=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=Sd9ZCdq7ZPI8GUMkaVq4HL3JYdOWvkFerriP0NaB2svYZanhamzM1H5cnkOcv9Z1D
-	 upDxQBYd0Iidg6KFxoWbS53LGxDs65JreZuAF4z3Va/s8ENOymMFpxufPwExHDA4Nz
-	 sX7PCRbDajucCmp2ocgmYFyN4dM/ErruHV5liT9EVJ3HSDK7VTo6Ebz4IgyUaY13a6
-	 QH7clWvB/5Z6doa2ulMvdWftjJt31M4KCA8p2p9XghUDKVmNSEc4gysAvTzNNW5LzC
-	 jGcx/8nK4kEeas0XAsAM8mMmVmJGKAk5cuD5akfFFx27UUm3TKd9YRE/UQiC5Irbaq
-	 5Xs08US+N2H+g==
-Subject:
- Re: [PATCH mptcp-next v9 1/7] mptcp: use local variable tp in sendmsg_frag
+	b=EHnDqGYz2k2jOhzbyrAT96wq2YsnHHq7G1TbHbWy1ltpHku+fKrebKBq+0G4Tcou3
+	 jFwODVL2FEGewAoBdAxxQMv6n7Jux2tTv19rsnCP6XtSnyF3etouD++yaLizY9OWvm
+	 KGX60S5YFETVHsaIK9atiQvdJiQY50Au5BJ8EWBAdoBPkqjQzSjnXy9ky7owIoazpo
+	 xfd2nwnDkRRlp1EH9a+Rubljm+n6tI5DdkcYA1YQ0U5OD+WgRmVVw3K9ha7iaawGTG
+	 HbW/pfMhY5MKsL5ZvcmN6nIa7l4B8wRyKMEsD+LrcMsYPIuIY4j9Ap/w7mEabdqu1r
+	 JI8zoy20IxT1w==
+Subject: Re: [PATCH mptcp-next v9 2/7] mptcp: remove redundant orig_offset in
+ carve_data_frag
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Thu, 26 Nov 2026 20:44:00 +0000
-Message-ID: <179572584070.3133.13336174201368005732@kernel.org>
-In-Reply-To: <d78ad0fbee64b4495d852c1676614c25330357f5.1795591278.git.tanggeliang@kylinos.cn>
-References: <d78ad0fbee64b4495d852c1676614c25330357f5.1795591278.git.tanggeliang@kylinos.cn>
+Date: Thu, 26 Nov 2026 20:44:01 +0000
+Message-ID: <179572584149.3133.16595001385232000510@kernel.org>
+In-Reply-To: <ba564038b16dc170e4605bd733a988808a86037c.1795591278.git.tanggeliang@kylinos.cn>
+References: <ba564038b16dc170e4605bd733a988808a86037c.1795591278.git.tanggeliang@kylinos.cn>
 X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -68,42 +68,37 @@ you want to address the nit picks below when you respin.
 
 Low priority / nit picks for your consideration:
 
-- [Low] The From:/Signed-off-by: email addresses do not match.
+- [Low] The authorship and sign-off identities don't match.
 
 --
 
-mptcp: use local variable tp in sendmsg_frag
+mptcp: remove redundant orig_offset in carve_data_frag
 
-This commit adds a local variable tp to hold tcp_sk(ssk) in
-mptcp_sendmsg_frag() in net/mptcp/protocol.c. It then uses tp for the
-tcp_mark_push() calls and the write_seq update. No functional change is
-intended.
+This commit removes the orig_offset parameter from
+mptcp_carve_data_frag() in net/mptcp/protocol.c. The function now reads
+pfrag->offset itself, and the only caller, mptcp_sendmsg(), is updated
+to match.
 
 > Author: Geliang Tang <geliang@kernel.org>
-
-[ ... ]
-
+> ...
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 
 [Severity: Low]
-This isn't a bug, but the From: and Signed-off-by: email addresses don't
-match. The author is geliang@kernel.org, and the only sign-off uses
-tanggeliang@kylinos.cn.
+This isn't a bug, but the author address and the Signed-off-by address
+are different. No Signed-off-by line uses geliang@kernel.org.
 
-The .mailmap file maps both addresses to the same person:
+checkpatch reports this as FROM_SIGN_OFF_MISMATCH:
 
-    Geliang Tang <geliang@kernel.org> <tanggeliang@kylinos.cn>
+scripts/checkpatch.pl:
+    "From:/Signed-off-by: email address mismatch: $sob_msg\n");
 
-The author sign-off check in scripts/checkpatch.pl does not read
-.mailmap, so it still warns:
+.mailmap maps tanggeliang@kylinos.cn to geliang@kernel.org, but
+checkpatch does not read .mailmap, so the warning still fires. The
+other six patches in the series have the same mismatch.
 
-    WARN("FROM_SIGN_OFF_MISMATCH",
-         "From:/Signed-off-by: email address mismatch: $sob_msg\n");
-
-The netdev patchwork CI will probably flag this too.
-
-Could the author be set to the kylinos.cn address, or could a
-Signed-off-by with the kernel.org address be added?
+Could this be resent with an in-body "From: Geliang Tang
+<tanggeliang@kylinos.cn>" line, or with a Signed-off-by that uses the
+geliang@kernel.org address?
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1795591278.git.tanggeliang%40kylinos.cn
