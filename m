@@ -1,52 +1,91 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.75
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.171
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795682890;
-	b=efufjCEZjb1GzCl5VTFf8HMsIaStfMPtNwQnTkaTU/MjZGfRDJI5PX8vmA+71JcGXVw3
-	 bNn9kWhedSKe6HpzMs+Pp13OiWSC4XnGeFinwgpi81BDIopEeSO8BOBIBWXitXhssrR3a
-	 Gfb3xY2sboVCFx/eiDiREt6jld2Y3Yk8IDI9KWiG2cOyFipvXFO6Eufi5FL/nj4C+PNxQ
-	 reGbmzTfU5DSpl9oO8AD61O8R361adhtyHRVgM0ucpwHYdAUPSdxRjnmr68qFZPy5NDFB
-	 RoZ666j1hZDPKwQHsf4fJIgxwdwBIpxNd+2ZVfj7OdNJSUn2pri1hQNIyqX760DQDpQ==
+	t=1795688305;
+	b=r0v/hTt/m2x2HhtqINBQN+mDv4UlXa8L4hGoBWmu5mz8WhEa8UsWdgB8jNXjtHAhsd9U
+	 4ROZR4FEDTcDT1vnmHhk+JgFikCwoKa7rSx9Q/PpXnmgyq9Cz3fTnDUbLzCF4IOwcN0Hy
+	 bLmPT64B93d9DaZFiqnBkWATtMjzL4saJFulteipzO8EQcjNNr6GUrp6W/sZB4uX9Nz3d
+	 6+KMo6Mm5wH9E7/+P1vAGBBh13zxRbnPG/4vPIahTgOl7sBB3tqMTKdbUQyHshVthZ9Lj
+	 RXaITa9XzsB/0KYCLi3Ty87cDKC8N2CJAQn+xMErKpB3c84RqcWpLg0PRtpvoLu3Rng==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795682890;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:MIME-Version:Date:Content-Type:
-	 Content-Transfer-Encoding:From:Message-ID:TLS-Required:Subject:To:Cc:
-	 In-Reply-To:References;
-	bh=eEqrglkqWiQv9ByDl8q6YHM+PPnMMtPyGy7NziGSOCE=;
-	b=MNfQxCRSiNWiSvpr4vJoMDoEN4bNkkjKkjs1vZ3AE88EXZKpx5IGaKnfNzdVvkw2Pd64
-	 xmKz+46CRgAg6goRj284wSRj5ydqEDCSWV2EZ0B2mr1DoIRtAy6Ti5eVnZl0ZSuAA5kNT
-	 D9/Gck0neZ6+Jtsnwg3bnCUEVN9GBd6p05gQBAO50s2AZKrvSuoj2GgPFrANF9AovgCxV
-	 ceNx3cnoVFYwkn3PQT9AI4u3K7n9S58QGflltXdbWkY35O4C7jF2KVUWFwKtdkBWS1WTA
-	 Oxh9L13M1a29Zfz93DRxpBp3AQBE0eqOoOvVg1l8GDTzJQSL6Sw6OH8nq7+JW6ASz8A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795688305;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=QiWnylv6wFNOmDeyBKtJKVb8TFmJ9oHgIMjFjSpXJiw=;
+	b=GQWvqeWbd73vX+lk1PHAzWCyMpz5NAwH18inttcIAoRm3iUxgsMBuL97r0f5jgyUOnjF
+	 8bkpi3kpB/iTZq9xixYy4G2+Jc+E0vDq37KFxnGhOpFSA3GUVcwmGlHPjYQXGiAgsSEWy
+	 kn05y/lnZRYZBorv6Z5kyQ8VjnL2ST99VjxlCmK27HClGHKqlVVSH9M603KP8W8GuTFhM
+	 BY3N0yDIuiYdU3kCyT4qv+m8YE8+OKOd8d/6shhME0Go6+Jw9AFm2VeeVWcia5dh32gr/
+	 H1cgOVi9lfRPmG8rXc27kmfu6jvQhJBViDDg2enfaRObwMr98BD4jazLLy1I0La1pXA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=NoJtdc7e;
-	arc=none smtp.remote-ip=91.218.175.75
-Received: from mta0.migadu.com (out-75.mta0.migadu.com [91.218.175.75])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=WPFD8MGa;
+	arc=none smtp.remote-ip=74.125.82.171
+Received: from mail-dy1-f171.google.com (mail-dy1-f171.google.com [74.125.82.171])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E217A606A337
-	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 08:48:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E217A606A337
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F82606A31E
+	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 10:18:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 75F82606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=NoJtdc7e
-X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=WzPAXzKv5qNfueG+8GIA/dCl0/+muC6HE/6UOijGqYY=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795682888; v=1; x=1796287688;
- b=NoJtdc7eHcyjs0Gk2e+oksFBOH6DdHwmMxLokBqwbEPNc6bCNY6l4Hi8Z/XBHHbpCSwakxn5
- Rl5EVvNk/AKV9yLLBGN0gtsePes7OiB/95gsXHQCJ1O5KM+9/kVx1AnWaCL8y1gfXw0lG7NG2do
- qMUHkLES9nTAO0Zd5Dn7Q9U8=
-X-Envelope-To: mptcp@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 5446df3b68f9b5ae;
-	Thu, 26 Nov 2026 08:48:07 +0000
-X-Mizu-Trace-ID: 5446df3b68f9b5ae
-X-Migadu-Flow: FLOW_OUT
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=WPFD8MGa
+Received: by mail-dy1-f171.google.com with SMTP id 5a478bee46e88-385d8a00598so10082396eec.1
+        for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 02:18:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795688304; x=1796293104; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=QiWnylv6wFNOmDeyBKtJKVb8TFmJ9oHgIMjFjSpXJiw=;
+        b=WPFD8MGaMYCUuXKlAX0RxvPB1BfWczvKFMjQY4ht3B916N4L3aYp9IoaiDCKciddt3
+         Vp+GgLMYe4LNk3hMc3//N+gxKwL1CjbfIoeW69IibEizeAlrtyoz3uIDnpK4ITTKOU1s
+         Q45ePkpUg5P/jqJPuIrQPJStXC/gMRaq5ppXCWE2nNNdPE0DsobylcZPsDFQvnxvEoq3
+         QPpq1eDmZoaKRJsJ/7Sr+juC10aP+M5lhcqLmfHY/tY6DMPS9G11YUETEQ0WqWjj16If
+         /4XEvHtoE2cV7TJpYehjQxtePehWTCLCosHxrdgi2KbSP1QJHt3YR1aIYK2qRf00Vp2k
+         Sp6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795688304; x=1796293104;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=QiWnylv6wFNOmDeyBKtJKVb8TFmJ9oHgIMjFjSpXJiw=;
+        b=WCEIasUc1uDS+u1fy6yZZ4IqMrSSv+fRuI8tU2NgsPl2DI3juUEhN5J3cCrngHCff/
+         F0Ge33GE3aBnsQdpBRIDVXa5LjbRhR4VrW87MyEJpHY3ntmAC5gALgVc9yC0/V8zwXgP
+         7MWfVfc2mJdyrUjTWuGnbHT1nR7ekIvVqOC85AkdiJYOzrbJCR92NIIFlRrJ+QZ2ZLIo
+         z82SJIffU80xssL7vPysvBqcoty3x+cmUgHJ93PeGgoNrCzjl6XOLQScEafZXbC1sutv
+         9khX1sdcJQw1TXm+MAZmDu69T/gK2BYy9OIYpJWSA8WtAyPOVUKc9OMstNMNxTMDxN8G
+         qI2A==
+X-Gm-Message-State: APuU4Z8rb4QcQD1aLJX7FWp9Wajnm9MA3waUky2rCE+zjb2oj5D4L+WO
+	to/rAfS/GMEsVpxk6pBs9s+Elx8+zWWhQ42bIk9HB9hn1vfxrlDyEDIIop+cpA==
+X-Gm-Gg: AZFdTZe9omos8s09RlkKZOo5iXmixgHXzCQ1gKMhlVsXT04SPEZf4B5r5BzfSgd+mgj
+	Wkr0MtiB8/MXw5FfSTDiierHXnel55IeWKadDDQd6g/Cd6zFUifVGacdSAa0jb3JHbu0TkOlMt4
+	onvNw8yoYzHe8/hVOf2nwli5wkW3P6Rdk6okvJ4cDx6/ZL160qNIdSQ9fTKase4NKOLMhMQx2fg
+	t2hGL0jYm8CSEPK1LXztmqABJWIiz2eTrP3nIzPoQJqaOUDmP4pvoId1Y38efAIp0k1La0z7uvX
+	MVCmceA4KmMmKURWR/7UFI/Up5kcxO7+tquvflwIsTZcnG2qXV8lTgoieihrdRHcHQRaRYHXAcN
+	0ukjkjHQx3Cw0nRdxSwp2KQB1KuI1ckLi9Sxsl9w5qUDQHb0cGvwunbUcuTfKpsYpvsKj0ABuWt
+	2J+LSCMncjNMs1t28tEjM66ft8kBLwAeK/+sGYJzGQPR94Adr/furQIn6EL6mmPveY0IXXa1N4y
+	amk0KoNvsxNM0xMQmADgMTP4qOZVpBxNN8m8HnYe7FIXpLprkI4yq+9iqKPp42dD5sLjeSJ6sAS
+	3APasKfs28LguMpBflW1wIa3HgQc2fIhZIA=
+X-Received: by 2002:a05:693c:88d4:20b0:386:a8de:2bfc with SMTP id 5a478bee46e88-386a8de2f67mr13532700eec.6.1795688304342;
+        Thu, 26 Nov 2026 02:18:24 -0800 (PST)
+Received: from mptcp-lab.w453y.xyz ([59.164.88.43])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-38566cd40c5sm74221227eec.10.2026.11.26.02.18.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Nov 2026 02:18:23 -0800 (PST)
+From: Abdul Wasey <w453y.me@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	"Mohit P. Tahiliani" <tahiliani@nitk.edu.in>
+Subject: [PATCH mptcp-net v9 0/2] mptcp: pm: in-kernel: fullmesh: re-add of the initial subflow endp
+Date: Thu, 26 Nov 2026 10:18:16 +0000
+Message-ID: <20261126101818.3916631-1-w453y.me@gmail.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -56,120 +95,96 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Date: Thu, 26 Nov 2026 08:48:07 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-From: gang.yan@linux.dev
-Message-ID: <133c1ca98af6beb48c0db1e6bb539a2a76ccda49@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH net-next v1 0/6] net: avoid stack canaries in TCP/IPv4
- fast paths
-To: "Xuanqiang Luo" <xuanqiang.luo@linux.dev>, netdev@vger.kernel.org
-Cc: "David S . Miller" <davem@davemloft.net>, "Eric Dumazet"
- <edumazet@kernel.org>, "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni"
- <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>, "Alexei
- Starovoitov" <ast@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>,
- "John Fastabend" <john.fastabend@gmail.com>, "Andrii Nakryiko"
- <andrii@kernel.org>, "Eduard Zingerman" <eddyz87@gmail.com>, "Kumar
- Kartikeya Dwivedi" <memxor@gmail.com>, "Martin KaFai Lau"
- <martin.lau@linux.dev>, "Song Liu" <song@kernel.org>, "Yonghong Song"
- <yonghong.song@linux.dev>, "Jiri Olsa" <jolsa@kernel.org>, "Emil
- Tsalapatis" <emil@etsalapatis.com>, "Ihor Solodrai"
- <ihor.solodrai@linux.dev>, "Matthieu Baerts" <matttbe@kernel.org>, "Mat
- Martineau" <martineau@kernel.org>, "Geliang Tang" <geliang@kernel.org>,
- "David Ahern" <dsahern@kernel.org>, "Ido Schimmel" <idosch@nvidia.com>,
- "Stanislav Fomichev" <sdf@fomichev.me>, "Neal Cardwell"
- <ncardwell@google.com>, "Kuniyuki Iwashima" <kuniyu@google.com>, "Pablo
- Neira Ayuso" <pablo@netfilter.org>, "Florian Westphal" <fw@strlen.de>,
- "Phil Sutter" <phil@nwl.cc>, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, mptcp@lists.linux.dev,
- netfilter-devel@vger.kernel.org, coreteam@netfilter.org, "Xuanqiang Luo"
- <luoxuanqiang@kylinos.cn>
-In-Reply-To: <20261124130631.1886963-1-xuanqiang.luo@linux.dev>
-References: <20261124130631.1886963-1-xuanqiang.luo@linux.dev>
+Content-Transfer-Encoding: 8bit
 
-November 24, 2026 at 9:06 PM, "Xuanqiang Luo" <xuanqiang.luo@linux.dev ma=
-ilto:xuanqiang.luo@linux.dev?to=3D%22Xuanqiang%20Luo%22%20%3Cxuanqiang.lu=
-o%40linux.dev%3E > wrote:
+With fullmesh endpoints, removing and re-adding the endpoint used by the
+initial subflow never creates a new subflow from it: the closed initial
+subflow stays in the conn_list, and makes the PM think the remote ID 0
+is already used, or picks its reset remote address. If the initial
+subflow was the only one, no address is left for the remote ID 0 at all.
 
+Patch 1 fixes that, patch 2 adds tests for it.
 
->=20
->=20From: Xuanqiang Luo <luoxuanqiang@kylinos.cn>
->=20
->=20With CONFIG_STACKPROTECTOR_STRONG=3Dy, a function that has a local ar=
-ray or
-> passes the address of one of its locals to another function needs a sta=
-ck
-> canary. The canary is set up and checked on every call, also when the
-> local is only used on a path that almost never runs.
->=20
->=20This series removes the canary from functions of the TCP/IPv4 fast pa=
-ths,
-> by returning results by value, by using storage that is not on the stac=
-k,
-> or by not calling a function that has nothing to do.
->=20
->=20Patch 1 returns the two mptcp_space() values in a structure, so that
-> __tcp_select_window() no longer needs a canary.
->=20
->=20Patch 2 changes ip_neigh_gw4() to take a pointer to the address, like
-> ip_neigh_gw6(), so that ip_finish_output2() no longer needs a canary.
->=20
->=20Patch 3 uses pskb_may_pull() in icmp_filter(), so that
-> raw_local_deliver() no longer needs a canary.
->=20
->=20Patch 4 turns skb_try_coalesce() into an inline wrapper over a functi=
-on
-> returning its results by value, so that its callers no longer need a
-> canary because of it.
->=20
->=20Patch 5 returns the result of the TCP receive coalescing by value, so
-> that tcp_rcv_established() and tcp_data_queue() no longer need a canary=
-.
->=20
->=20Patch 6 calls bpf_skops_write_hdr_opt(), which needs a canary, only i=
-f a
-> BPF program reserved room for TCP options.
->=20
->=20The bloat-o-meter numbers are from gcc 16.2 on x86_64. The functions
-> named in patches 1 to 5 also lose their canary with clang 23.1.6 on
-> x86_64, with and without ThinLTO, and on arm64.
->=20
+Found with a router flapping one of its links: the link carrying the
+initial subflow never rejoined the existing connections. Tested on top
+of export-net: the new tests fail without patch 1, and the whole
+mptcp_join.sh passes with it.
 
-Hi=20Xuanqiang,
+Changes in v9, after the review of v8 by Matthieu:
+- Patch 2: drop the test adding another endpoint after the removal of
+  the initial one: it already passed without patch 1.
+- Patch 2: merge the test with the initial subflow alone into the first
+  one, to save the setup time: after the re-add, both endpoints are
+  removed, then the initial one is re-added alone.
+- Rebased on top of export-net.
+- v8: https://lore.kernel.org/mptcp/20261024111842.1069878-1-w453y.me@gmail.com/
 
-Thanks for this series. Besides the code size, do you have any runtime pe=
-rf
-numbers (TCP_RR, cycles per packet...)? I think it may help the maintaine=
-rs
-judge the real gain.
+Changes in v8, after the review of v7 by Sashiko on mptcp and on netdev,
+and the MPTCP CI:
+- Patch 2: use nftables in the "after reset" test, as the rest of
+  mptcp_join.sh does now: export-net also got be3b69f3cedf, so
+  ${iptables} was empty there too, and the test failed on v7.
+- Patch 2: stop the transfer and the event listeners before marking that
+  test as skipped: when all features are expected, the skip exits.
+- v7: https://lore.kernel.org/mptcp/20261023110321.403874-1-w453y.me@gmail.com/
 
-Thanks
-Gang
+Changes in v7, after the review of v6 by Sashiko on netdev:
+- Patch 2: in the two tests with the initial subflow alone, wait until
+  the PM worker has accounted the initial subflow endpoint before
+  removing it: a join on a third endpoint is created in the same worker
+  run, then that endpoint is removed. v6 only detected the race.
+- Patch 2: wait a bit before counting the subflows after the removal,
+  as the other tests do: the closed subflow can still be listed.
+- v6: https://lore.kernel.org/mptcp/20261022085041.211318-1-w453y.me@gmail.com/
 
-> Xuanqiang Luo (6):
->  tcp: avoid a stack canary in __tcp_select_window()
->  ipv4: avoid a stack canary in ip_finish_output2()
->  ipv4: raw: do not use skb_header_pointer() in icmp_filter()
->  net: avoid stack canaries in skb_try_coalesce() callers
->  tcp: avoid a stack canary in tcp_rcv_established()
->  tcp: do not call bpf_skops_write_hdr_opt() unless needed
->=20
->=20 include/linux/filter.h | 2 +-
->  include/linux/skbuff.h | 35 ++++++++++-
->  include/net/mptcp.h | 13 ++++-
->  include/net/route.h | 16 +++---
->  net/core/filter.c | 2 +-
->  net/core/skbuff.c | 50 ++++++++--------
->  net/ipv4/raw.c | 25 ++++----
->  net/ipv4/route.c | 15 +++--
->  net/ipv4/tcp_input.c | 99 +++++++++++++++++---------------
->  net/ipv4/tcp_output.c | 25 ++++----
->  net/mptcp/subflow.c | 9 ++-
->  net/netfilter/nf_flow_table_ip.c | 4 +-
->  12 files changed, 178 insertions(+), 117 deletions(-)
->=20
->=20base-commit: a4c450594f5d1dc0fc4daacfb95d40554d99dead
-> --=20
->=202.43.0
->
+Changes in v6, after the review of v5 by Sashiko on netdev:
+- Patch 1: in the commit message, the closed initial subflow keeps its
+  remote address: only the destination port is zeroed, not the address.
+- Patch 2: skip the "after reset" test if the iptables rule cannot be
+  added, instead of passing, and check that the reset closed the
+  subflow.
+- Patch 2: in the two tests with the initial subflow alone, check it is
+  gone after the removal of its endpoint: the ESTABLISHED event comes
+  before the PM worker accounts that endpoint, so a removal right after
+  it can miss the subflow.
+- v5: https://lore.kernel.org/mptcp/20261021070324.50533-1-w453y.me@gmail.com/
+
+Changes in v5:
+- Patch 1: when no subflow is left to take the remote ID 0 address from,
+  use the remote address of the MPTCP socket, as fill_remote_addr()
+  does. Without it, v4 also broke adding another endpoint after the
+  removal of the initial one, when it was the only subflow (Sashiko on
+  netdev).
+- Patch 2: add two tests for the initial subflow alone: re-adding its
+  endpoint, and adding another endpoint.
+- v4: https://lore.kernel.org/mptcp/20261019190558.465270-1-w453y.me@gmail.com/
+
+Changes in v4:
+- Patch 2: only check the joins when the iptables rule has been added
+  (Sashiko).
+- v3: https://lore.kernel.org/mptcp/20261019185512.458313-1-w453y.me@gmail.com/
+
+Changes in v3:
+- Patch 2: use iptables instead of init_nftables(), which is only in
+  net-next (Sashiko).
+- v2: https://lore.kernel.org/mptcp/20261019180306.382039-1-w453y.me@gmail.com/
+
+Changes in v2:
+- Patch 1: also skip the subflows in TCP_CLOSE: the initial subflow can
+  be disconnected and its context reset, clearing the 'closing' flag and
+  zeroing its remote address (Sashiko).
+- Patch 2: validate this case too, by resetting the initial subflow
+  before removing its endpoint.
+- v1: https://lore.kernel.org/mptcp/20261019170751.200446-1-w453y.me@gmail.com/
+
+Abdul Wasey (2):
+  mptcp: pm: in-kernel: fullmesh: skip closed subflows
+  selftests: mptcp: join: re-add the initial subflow endp with fullmesh
+
+ net/mptcp/pm_kernel.c                         | 33 +++++++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 79 +++++++++++++++++++
+ 2 files changed, 111 insertions(+), 1 deletion(-)
+
+-- 
+2.43.0
+
