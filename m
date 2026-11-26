@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795735786;
-	b=yXlGApvgIdsyD0VX7Uze/XRInvfDafptTeQXQ7L82DyOn1V5Z2342hhCDYOYduYRTBb3
-	 cUI2MUYwczgv8H6KV/qE84hK9KcQWF4nTWVWyFTTNlcCLX39oSOUK76xxXUWSDrUirQk0
-	 wun2plXx+B1YZhKa7b0fGwPDwRHSyerheNQyRkYDWC8bDN3BymxUGOlvRGhxHHE4gfKdF
-	 coG2NCZYS+yiTHMfMnbIW1pG2R0y5e4APQInRkSB5Z90Y0sIa+iShJi2rAxSPB2PsZxI7
-	 xI3y1AngR7zAoWkk2eHCjhWAmJQxB2JzT3D82iCfY5TjtDIcVhswJ/tPxbENF8Ctx7w==
+	t=1795735787;
+	b=hVtS7UkWYZscLIcjBl4BvqbZ/zrB5vEuZlp1v4eCx2lqZVFEoOwCbjyb9LZM7n1YOlie
+	 iBM6BQkAInBEj/vAw3G6h864INQXLsXGQD7f/+AGU2o/izKG0U40gFdKXvcliOiUeS3fo
+	 1dvYXwhk/KCXNlfI+lO9/Xosg+qiJW3UbUN4MGIATpL4vqjmPnsCtLElgW0XtavaC6quD
+	 bVSfvfspkUGoqwljh9hyM2siGwk2ISDIZF3WgmyyZyJ/jUoYcRlS5lKf8YFpkPaIeemGB
+	 sJ16TGtl91W0MFgynCXpjGz4YG/Icd4OF1tJZkccxUqcTaev9s8H6fcrG5bAcATrTkw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795735786;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795735787;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=hTtaK9fwVJ4KMIeK5gDyZrOB2hk/FBwHnc9+dQ59hwA=;
-	b=MaLtATR+OS5a/I0zqtgXG9Ex1ol9FQ7tYMmg+h6VQtpJ0TCzJZ0jbc/jqyg/NLVie3d4
-	 ai7JTrmtG983LXPoJrr0UjIfcZ95yYqCu4AnHv7D7VGRZIFCJ39s68/JOiDA8Z6RIe5/T
-	 at0fKPU52FXw/wLdrsD+Ln086dMDVDs4bBAlDuJuMVLA57TBVqwU0r58ZgPPJOkyAXnEH
-	 LWH2rReLDIY4T+H05XKzDkB9KG/tFPWYQFcAXMzSMHHMPuMr4LeoheN9yX38sZuY/set9
-	 R38gBYuLaickm71mkM+pdR8Cea3nccFcJMWsbCHTVZ0Vyj1A/nVoAvk1o7T/hlCbxXQ==
+	bh=jNoFr8ZdBedQAATzXSVAtuhB6ZugoxoF8geKmRQtU3Y=;
+	b=slWtZWAvAqV6is4RdfWxPfHh8kKvzmc4nKVaIUD36WruTBGeGUK6t330eZIfrbUiH4So
+	 eEIPYAzaqhKpTTc1s6LTuh+uxtt2CqiVg6wNUclRO3v5Ej/EkHsLO2Hy1WVO6hSX2Kew0
+	 z8J8M9RRyCkoKKG8pEdHRoOBIElZNkCQ+bIpJU02p7HYvXriu1vMAyzhP8GvAyNFvo428
+	 L5mBJXIdXRaPglZaRnbHOcF49mn9XUC2VS+gNNDCRaPvV5RN409L61si5tacnH6moRjjD
+	 okfe9YnFV3l9vU/zUlikPF/Z8IONH+S3gniOAfNfgg/85WeUvKlaPkpVL5lWbEeOdug==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DLD9sHLb;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MVGq4Yn0;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93477606A31C
-	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 23:29:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCBE9606A31C
+	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 23:29:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DLD9sHLb
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B7701F0089A;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MVGq4Yn0
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E518C1F000C1;
 	Thu, 26 Nov 2026 23:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795735786;
-	bh=hTtaK9fwVJ4KMIeK5gDyZrOB2hk/FBwHnc9+dQ59hwA=;
+	s=k20260515; t=1795735787;
+	bh=jNoFr8ZdBedQAATzXSVAtuhB6ZugoxoF8geKmRQtU3Y=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=DLD9sHLbFLSh89sbIRgqPUIfkZ46rEpbdwtJK6Hgh2pwVRQAfSbdJWv1hh9Zc49Tx
-	 Y+lydWNmtf5dtv/tAQ3db+ptdBcGc6ZzbNoNQAjTy11rN9+J9pv5z7/D8gS4He9Hdf
-	 96iOyUHWpBzLgzSr6bJHDQkene/dZCMUDF7dUkQIYyXlr44419UF2WQ+Xtti2jijrC
-	 IY8fZ62h2hId+kfuypka0IhNY6/TkT0uv44ssVigMJm/CyMBW/hYPSo6z1pBfFFqJK
-	 gCAjWP9X/R524YMXs3aw4FmFwDN6wB94R8e9CbsVYZTM+cOtrT3mAHweOXb7FQ02nn
-	 Hq858xLOqbNDg==
-Subject: Re: [PATCH mptcp-net v3 06/50] mptcp: reset the subflow on abort
- after fallback
+	b=MVGq4Yn036BzyByCwjmtIddy5BytcItr7jV4vdA4Z1f304ixX0kx4X8Br8plavwwO
+	 NRKCl/o7ncmkxaM29uXSsUGGyVW3ebfzEbyfLvZXzapRIk9/4NgNZ8INQRXKSeCMqB
+	 /f6Upy5NxmvJ9gyA/XSN8GcTWnKLe4EoIYWf5Ira6J+x0qw2cGYe/sqSw/kTjCx/bh
+	 hvSnoYpU89apnZYpLguk3c7fQIT1iEgLY421FSHKPGmi249VaUUO3twFOVrQhT/I8m
+	 1a/qBKN/8HUbRsyTHd1jjiuHQb8V9bXYLGNnTAyQKBMadeYeO+r+N6+oV1x4G3QfGZ
+	 /0FWUKkRWYSTg==
+Subject: Re: [PATCH mptcp-net v3 10/50] mptcp: process a DATA_FIN received
+ with old data
 From: netdev-bot+sashiko@kernel.org
 To: matttbe@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Thu, 26 Nov 2026 23:29:45 +0000
-Message-ID: <179573578572.3133.9946844363721576755@kernel.org>
-In-Reply-To: <20261124-mptcp-cmason-fixes-v3-6-416c0920c73f@kernel.org>
-References: <20261124-mptcp-cmason-fixes-v3-6-416c0920c73f@kernel.org>
+Date: Thu, 26 Nov 2026 23:29:46 +0000
+Message-ID: <179573578651.3133.16486371070677916352@kernel.org>
+In-Reply-To: <20261124-mptcp-cmason-fixes-v3-10-416c0920c73f@kernel.org>
+References: <20261124-mptcp-cmason-fixes-v3-10-416c0920c73f@kernel.org>
 X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -68,144 +68,66 @@ you want to address the nit picks below when you respin.
 
 Low priority / nit picks for your consideration:
 
-- [Low] The commit message says that, after a fallback to TCP, closing
-  with SO_LINGER and a zero timeout "did not reset the connection as TCP…
-- [Low] With the fallback early return gone, mptcp_do_fastclose()
-  (net/mptcp/protocol.c:3272-3289) sends a plain TCP RST with…
+- [Low] In get_mapping_status() (net/mptcp/subflow.c), the patch moves
+  `if (updated) mptcp_schedule_work((struct sock *)msk);` from the…
 
 --
 
-mptcp: reset the subflow on abort after fallback
+mptcp: process a DATA_FIN received with old data
 
-This patch removes the fallback early return in mptcp_do_fastclose(). As
-a result, a plain TCP reset is now sent on each subflow when an MPTCP
-socket that fell back to TCP is aborted. It also moves the switch of
-fastclosed subflows to TCP_CLOSE earlier in __mptcp_close_ssk(), so that
-inet_child_forget() does not send a second reset to children of a closed
-listener that were never accepted.
+A DATA_FIN can be recorded by get_mapping_status() while it arrives with
+data that is old at the MPTCP level, or in the middle of such a mapping.
+Because that data is never moved to the msk, the DATA_FIN was never
+processed or acked. This patch schedules the MPTCP worker whenever the
+DATA_FIN is first recorded, so mptcp_check_data_fin() can handle it.
 
-> After a fallback to TCP, closing an MPTCP socket with unread data, or
-> with SO_LINGER and a zero timeout, did not reset the connection as TCP
-> does: the data still in the MPTCP send queue was dropped, and the
-> subflow was closed with a FIN.
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 054ee992904e0..67a749643ad75 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1242,6 +1242,10 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
+>  			bool updated = mptcp_update_rcv_data_fin(msk, mpext->data_seq,
+>  								 mpext->dsn64);
+>  			pr_debug("DATA_FIN with no payload seq=%llu\n", mpext->data_seq);
+> +			/* The current mapping can be old, and then not moved */
+> +			if (updated)
+> +				mptcp_schedule_work((struct sock *)msk);
+> +
+>  			if (subflow->map_valid) {
 
 [Severity: Low]
-Is the SO_LINGER part of this description accurate? It looks like the
-zero linger case already sent a TCP reset before this patch.
+This isn't a bug, but the new comment only seems to describe one of the
+two paths that now run this mptcp_schedule_work() call.
 
-SO_LINGER is copied to every subflow. mptcp_setsockopt_sol_socket_linger()
-does it for existing subflows, and sync_socket_options() does it for
-subflows created later:
+In get_mapping_status(), the call has moved above the
+if (subflow->map_valid) test. So it now covers the case where a
+DATA_FIN-only DSS arrives in the middle of an existing mapping, and also
+the !subflow->map_valid case that returns MAPPING_DATA_FIN.
 
-net/mptcp/sockopt.c:sync_socket_options() {
-    ...
-	if (sock_flag(sk, SOCK_LINGER)) {
-		ssk->sk_lingertime = sk->sk_lingertime;
-		sock_set_flag(ssk, SOCK_LINGER);
-    ...
-}
+In the !map_valid case there is no current mapping. The worker is
+scheduled there because a DATA_FIN outside a mapping never reaches the
+msk through the data-move path. Before this patch, that was the only
+reason for the call.
 
-Before this patch, the SO_LINGER(0) close of a fallen-back socket went
-through:
+Could the comment cover both cases? For example, "The current mapping,
+if any, can be old ...", or a short note about the no-mapping case.
+Otherwise a later reader might think the scheduling is only needed for
+old mappings.
 
-__mptcp_close()
-  mptcp_do_fastclose()   <- returned early after fallback
-  __mptcp_destroy_sock()
-    mptcp_destroy()
-      mptcp_destroy_common()
-        __mptcp_close_ssk()
-          __tcp_close(ssk, 0)
-
-send_fastclose was never set, so the subflow was not moved to TCP_CLOSE.
-__tcp_close() then reached the zero linger branch:
-
-net/ipv4/tcp.c:__tcp_close() {
-    ...
-	} else if (sock_flag(sk, SOCK_LINGER) && !sk->sk_lingertime) {
-		/* Check zero linger _after_ checking for unread data. */
-		sk->sk_prot->disconnect(sk, 0);
-    ...
-}
-
-tcp_disconnect() sends a reset for every state in tcp_need_reset().
-
-Only the unread data case seems to have sent a FIN. That is the case the
-Packetdrill test covers: the unread data was in the msk receive queue, so
-__tcp_close() on the subflow saw neither unread data nor zero linger.
-
-Could the commit message be limited to the unread data case?
-
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index f28262f072820..bbb28f778d81d 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
+>  				/* A DATA_FIN might arrive in a DSS
+>  				 * option before the previous mapping
+> @@ -1252,9 +1256,6 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
+>  				return MAPPING_OK;
+>  			}
+>  
+> -			if (updated)
+> -				mptcp_schedule_work((struct sock *)msk);
+> -
+>  			return MAPPING_DATA_FIN;
+>  		}
+>  
 
 [ ... ]
-
-> @@ -3268,10 +3269,7 @@ static void mptcp_do_fastclose(struct sock *sk)
->  	mptcp_backlog_purge(sk);
->  	msk->fastclosing = 1;
->  
-> -	/* Explicitly send the fastclose reset as need */
-> -	if (__mptcp_check_fallback(msk))
-> -		return;
-> -
-> +	/* Explicitly send the fastclose reset, a plain one after a fallback */
->  	mptcp_for_each_subflow_safe(msk, subflow, tmp) {
->  		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
->  
-
-[Severity: Low]
-With the early return gone, the loop now filters fallen-back subflows
-only by LISTEN and CLOSE:
-
-net/mptcp/protocol.c:mptcp_do_fastclose() {
-    ...
-		/* Some subflow socket states don't allow/need a reset.*/
-		if ((1 << ssk->sk_state) & (TCPF_LISTEN | TCPF_CLOSE))
-			goto unlock;
-    ...
-		tcp_send_active_reset(ssk, SK_RST_REASON_TCP_ABORT_ON_CLOSE);
-    ...
-}
-
-Plain TCP uses a narrower rule in tcp_disconnect():
-
-net/ipv4/tcp.c:tcp_disconnect() {
-    ...
-	} else if (tcp_need_reset(old_state)) {
-		tcp_send_active_reset(sk, SK_RST_REASON_TCP_STATE);
-		WRITE_ONCE(sk->sk_err, ECONNRESET);
-	} else if (tp->snd_nxt != tp->write_seq &&
-		   (1 << old_state) & (TCPF_CLOSING | TCPF_LAST_ACK)) {
-    ...
-}
-
-tcp_need_reset() covers only ESTABLISHED, CLOSE_WAIT, FIN_WAIT1,
-FIN_WAIT2 and SYN_RECV.
-
-Before this patch, these fallen-back subflows were torn down by
-tcp_disconnect(). On SO_LINGER(0) close, that happened through the zero
-linger branch of __tcp_close(). On disconnect() and on the orphan close
-timeout, it happened through __mptcp_subflow_disconnect().
-
-Can a fallen-back subflow in CLOSING or LAST_ACK now get a reset that
-plain TCP would not send? That would be the case when all its data and
-its FIN were already sent (snd_nxt == write_seq), on close() with
-SO_LINGER{1,0}, connect(AF_UNSPEC), the orphan close timeout in
-mptcp_worker(), or mptcp_orphan_oom().
-
-For close() with unread data, TCP also resets in these states, so that
-path matches.
-
-SYN_SENT subflows are handled later in this series by "mptcp: no
-fastclose reset from SYN_SENT subflows". Only the CLOSING and LAST_ACK
-difference remains at the end of the series.
-
-The commit message says the reset is now sent as without a fallback.
-Only the v2 note below the "---" line mentions this difference, and
-git am drops that note. Should the permanent commit message, or a
-comment in mptcp_do_fastclose(), mention it?
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261124-mptcp-cmason-fixes-v3-0-416c0920c73f%40kernel.org
