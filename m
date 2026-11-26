@@ -1,96 +1,111 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.177
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.49
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795688311;
-	b=bPW7DY2B2XtLuG1eTuasfJPFaR5p43+jjZb+UB4GtkJM+YGO1mCwDhuzWu828ARwhez6
-	 XshUZ14fmjWDgQ0VwX3J6ljB7ASTUjJ+RP6Qls5t+8wYuFMpLnO3HcCGWAlCO/MpxtKo0
-	 209fbXSTVPBcZNG4vq4sw0/rs5jt9aM3Gtx+EvuDvFHN/QXlSZqO5WmNzW0vf89IdrPxF
-	 zoyQ25wLytpXBmJt6Eao4X74YB7JGCGVgt0NzQ7wums8Qs05fTYcvThxcptWFd+dfNfRZ
-	 hQVgwvg+1n1k97IhwlbWJc27dtQ1dmEhw6rBPps3RWC0/nD+T4YpMf7WkwLb9BxovbQ==
+	t=1795688462;
+	b=0pXrhH8EX0DRUeXaTHcbWS1/5x2sZLafjC+e7h/SBHHxXf/0z2B3PW2Zz3A2iFpnUwUM
+	 mJWpPCDUiJUKbsNwZVkJRfmQwegU6ex6G1seho8rxeqK/6G1caqpgKfHoBnB3h72Gnfjn
+	 15R4P+XCqSHAD32xbNZANO0whEp3BlVE/jSm+S35hGMm6ApflaP+OkKqX+8xRJxbFCZF6
+	 ijPsfkWAE/g+cHclC4mXDdfTTpH+QPlLueJ8/1MiQn6BjTRWYJn40wYg05fIV41Eh01oM
+	 KhoNp2xmoaCUa+a6mQF1uT2ollcRg1Apl//j5ibpZ0VBn0RG551y63wvuuoGcdw/NCw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795688311;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795688462;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=ugE/krQOnUdasnCh/aZgODTXRFrG9aKhHyU/6uxiQCo=;
-	b=eiQApCpssl/Pp3jzE6/pz7bM+PDc6RgL2ctuxD1FfixEWKy+IklvAMRYXhpOMgy9Eo1c
-	 V2JSJMYTxE6Fzvs8HuKmLY9elyvjbBrNTukO80DMJNqGF3hgSlaM64CyNdWvPHr87PJ9u
-	 DiRqkCJF6GtAqheFf04h3fQtA7OHk2qaCh4Lk6mc8WVnggosqrcjMU7FQ/jSkW/9Lm85W
-	 kPG4ETkLF6hihLVRPnnkNJIy71t5p6l0Ay7Lx9T1pcFYROkS2GMkMBmSKAw7SCLXYDdsl
-	 W9KfA6gPwy+XWgyW4dxCacFwTpgyEHxhtbCFr3KHC2oVCaaL8OXdQtYK6Ufktc6NQcg==
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:X-Mailer:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=Dz5Obh5lP0tOLHLiHWSWNzgVimL59XKVdrhzCbJPLAQ=;
+	b=ii8SfX1TbvFUzmXlnJeCgMIdrKz66Elm6JzRQaZgWUUCtjZ3faWGeNlg9LXdJ/6+HZ8w
+	 XFVzSa7ac+5dWgkS+CxT2ECJzuGwyLLl5Jlx+KpcY7F1X/gaJxw8dEDb8nVNRZa2BJUBq
+	 USBhbqDBuqxONLtwXFv0ze8tS6MjU3x2xE2c4vylO1E7MaqKCb6MYNJ6nDUMvO6uPB038
+	 ebO/AXiOA8qlPUe4RpeaQ3aacyTfQNph5DBOWK9pwBdKB715HTedNTTgxzM/ItYVJK9p0
+	 mf77zjy9bmFjuKo5/bNp3lA2MTtaVoLDP9jbrP+u72MUQ9iunEY8SEK1XvvTA1SbzZA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="TaQLn/Pd";
-	arc=none smtp.remote-ip=74.125.82.177
-Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=SPqmfLMn;
+	arc=none smtp.remote-ip=209.85.221.49
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D26606A31C
-	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 10:18:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 25D26606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444D8606A327
+	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 10:21:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 444D8606A327
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=TaQLn/Pd
-Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-3863db981d4so9643511eec.0
-        for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 02:18:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=SPqmfLMn
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-48e46e449e8so4437564f8f.3
+        for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 02:21:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795688310; x=1796293110; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=ugE/krQOnUdasnCh/aZgODTXRFrG9aKhHyU/6uxiQCo=;
-        b=TaQLn/PdPJw7zDn69+FwlLlkmuSlT2bnj7iKuLtYzb7w0x7JsZr3wYLiJq64EJg1A4
-         GA51BPUqYSD3ThZQ2YpYU1NqRKfRigAhkPu7B/hZsByeuRNDdQVJqj4WyXMPcLX3w8dZ
-         Q1hxEmvtZZJd6UhOrkEbJMFVqS6VW1TtJZ8W09XOcoA++sCObYomt1PmkevKdCIUSyfo
-         fDpyI5Lt7rlyX0NMzsBNskSlO9gvEns9CmazcG3WdAQeCt9O1sV5MtWZwvvCt3eVZyX7
-         n9uVTa7ppcB9l0Hg8T4FU/kBrwaABIJfh2B9hz+LFt1bmGCGXdmXN9Khur+zCNKeond3
-         wNhw==
+        d=gmail.com; s=20260707; t=1795688460; x=1796293260; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Dz5Obh5lP0tOLHLiHWSWNzgVimL59XKVdrhzCbJPLAQ=;
+        b=SPqmfLMnfsv0ebnmIedvGW26ZlomCjeSWJj9fL0s8Gb4b0WuCd+Apa+QlYjlCPC11i
+         Jnh6Gtp29leRfu9Dsb6Ka0TL+oGx+fJrbYciUCW2HwUXHKeQj5+FQM248iobmHgeNXls
+         1NdhnOWTevMCT52HLV5V8rG10ECatNK3vWw4LFUooFnxNzN0Zd9llKx8VXUFLZZpfUy7
+         FgvR//1jt/6ThgNlcyeilPTLUTSaNyvywQB/2cew2y0foXRz0ArGBHSQuSgoxBBRMIL9
+         XJyuR5qJgPqXUJ6rxfRVFgGLzLDRh8Ltamv7nXvy3wgVsR9ipDNV5rxSxf6g6OVf0U6K
+         uikQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795688310; x=1796293110;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=ugE/krQOnUdasnCh/aZgODTXRFrG9aKhHyU/6uxiQCo=;
-        b=vLNFqm0TFCv6AtMlhaH1SfUHsyD5drx+E/9mHDxywKjIR/Jj+otWiccZzczijb3vRD
-         jpjNcqyO6weLYBrcS1LwBI0kHfr9b4yScpsuggBELJCceqMGoGqeh1sfU2+s+ZrIK6of
-         uqOoL9KnUR4qgpdBRVDVGeQLQurppfeSCx1CqBwhCJ4n5Pl666Kia96t7JdH0TJeuVic
-         RQSEh7VwLjbUCGnN9xpDHz0RwpTr3JH6zAEKBzeiAeY/igTIjm1mCWi/Dy26F/dAbHlz
-         H9IGPc1yYZQINv1ni3XL2kxOG4We+pG7n9ndt3VAwqjOpQyO2DxFnvoaRTLgcSFr2sQ8
-         L65Q==
-X-Gm-Message-State: APuU4Z+lyf81uqDW17NasE2aml0gJha3pALjkKwjlIhpjF32ayd7Jg/W
-	5abPd1IgesXRx8D9sWimXdGwFGBdqFaf1Hj9qN3ZEGFBNGd45y0ZFX6Zxv5ZUQ==
-X-Gm-Gg: AZFdTZf2YXkgoizDDoOJz1s2TQHoB6GVUWU5EOOWIQM3vf5wpXvhXwnvdVDa1B3NUko
-	Igea7cTghDGIio7rL4qhNrCXj7Wh+ptSYOOS6p2ots7mSMxr2qeftvZtR88kYu0ads7hjUykSLq
-	nLaVYAOjygRIUpWVH9P5yHN4n7LDwh9JeK664/ii52dXD5zEqAQAcwmZMXoL8Y1AyyMOqJWVzWN
-	CwuQ9+JC0u9YRMrKmQu2+rZRQX2Zvmld6+rp1KRqjILtaJIBNG1XlesYjXvbIdAkEcCknitnl6g
-	toRHv5fs/0UCfTO3WabrVQBhnAIqzjLXof2JpRcmMFndCQU2q/DcoxXERXToN+JB69v5Agem8Dq
-	0Oi+WcNy6KR2TUZah7cPbgAL+lAdinhVuQcg9WwCvA+O/Eg1Ein2v+Y2LWQCzExuuTRQ6sbc0J8
-	RRP0XBY1aV8jrWoPXI4MlYeqUh/P01dDPEYPvDUeCHU3n7XGHFfloU60CG8TacppHCR+TwrkVTR
-	3oNk3Dtt/Btj4vk+M5p1LCDOiT8mNhHHlMhA+YppuSEGcRJsRj38cbFKtyx+n8N//uI6RQZpYg8
-	S+FgN4JE1kmDH8GHMFIgKuWcCV/IOZpSWvs=
-X-Received: by 2002:a05:7301:6181:10b0:386:b2ac:1f17 with SMTP id 5a478bee46e88-386b2ac2832mr12047770eec.7.1795688310218;
-        Thu, 26 Nov 2026 02:18:30 -0800 (PST)
-Received: from mptcp-lab.w453y.xyz ([59.164.88.43])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-38566cd40c5sm74221227eec.10.2026.11.26.02.18.27
+        d=1e100.net; s=20260707; t=1795688460; x=1796293260;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Dz5Obh5lP0tOLHLiHWSWNzgVimL59XKVdrhzCbJPLAQ=;
+        b=Cogd+h4Mzf1zpTQQXNcSU+rOKgorSgaiE4cp3zLU0DGFzuzU0hs+Rw54Kcv48vV9br
+         zA6pi8COITVtXN/x5xXBqHHPWFvQmChvB2cEwo8yMXeEy4DIVvixMOm8SpISvFC5MaX0
+         uviuVOwaJ8l0FmQ2Te4FYiinbmiyzS998v34zH62uVja50otFt1m5gDDZenqeIxh58y4
+         k/yd93oEiYyZu4dOIVFRoRqztGJavHO0g5xJ9waOm+JC/WME1wZzKIJXXa77GHAROvIl
+         3D8nN2QmtzhLoSdq6wbV9+SV9rmpwSfLL1WZXetrWNwYHZGzLGKNizacABEyFQPyYBUs
+         HY8A==
+X-Forwarded-Encrypted: i=1; AL+hErE7sNaudJ0HzTpSR4id8q59WCTFRrWP5vwZh6WA9oLz/kvWfLsrzRTBJR18Q50ZwydRYXg5KA==@lists.linux.dev
+X-Gm-Message-State: APuU4Z+u7MsZeUFjOxOQ/Hhk1F+t/5KXuiM8VQjzMySSJMDdkbYvWk/Y
+	mNqN6TuiTj3xtVjRga4aP/BYjL1B/jMUhObM2juf5l5QysHVEgQB7k6m
+X-Gm-Gg: AZFdTZeT8ol3lcdaKTqFdiRiENfVhM8m09CKoViYRkm5RgR5GQE3peLTIYTd4Xyh0Gp
+	W67I9IV4gFSv+8xhom2oMe0GnFO0qmjM3z5R8cHUzQEZ6BnotF/E2Tnrj34eCXoxOGmcRy6flP4
+	HjkKMEZ3wTcpBo+zbnbj97VLAp9QrJPBdNlBXALrQPlJ0Jhyy5UrazGdgdRoNZ2MAr5xn5jGtf0
+	9bratfxNe3bF9cXzWcgYVhcvgTxKMjI9zJyObIVzOpwjL9/Zdp6v3YhOKTMdCGIJ4fZufQpK27N
+	ymWKwbHf7CYEtTQ1p+Sr41tu7atDb+5ZxowIZRi30MvnJ744q/V0TwnRWgwz35GGli9nvBQY7c1
+	7AA8RQRsCqsMVvPFPsoJjZ5k7yuFfTNpqB/OvBonept0a0X9YJmdyILFvCuUZvGfTMRubj8eZ/C
+	kTkuiB/80uanoyGHXUZudRlkdylyqTV5ACI85XolC/+rk+5o4YZUasNNlsmObdV9HHo/meHtYKM
+	+wVtC2bc5YcUPcH5F8CiX+HF7+amSZ5oPOcegA9puTm0NxpgExFj+91sDwQh6jZNCwQ50BhmAas
+	/BtcNV0Yli36dVYLyj4Dy/trzQ7CEy32/Qs/WPPBfBGwjWY+mxE9kyYlqH1qoh6Vig==
+X-Received: by 2002:a05:600c:3ac9:b0:4a2:a3b:7aa8 with SMTP id 5b1f17b1804b1-4bb887e068emr432378915e9.3.1795688460499;
+        Thu, 26 Nov 2026 02:21:00 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb8538b2c5sm581334935e9.5.2026.11.26.02.20.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Nov 2026 02:18:29 -0800 (PST)
-From: Abdul Wasey <w453y.me@gmail.com>
-To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	"Mohit P. Tahiliani" <tahiliani@nitk.edu.in>,
-	stable@vger.kernel.org
-Subject: [PATCH mptcp-net v9 2/2] selftests: mptcp: join: re-add the initial subflow endp with fullmesh
-Date: Thu, 26 Nov 2026 10:18:18 +0000
-Message-ID: <20261126101818.3916631-3-w453y.me@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261126101818.3916631-1-w453y.me@gmail.com>
-References: <20261126101818.3916631-1-w453y.me@gmail.com>
+        Thu, 26 Nov 2026 02:21:00 -0800 (PST)
+Date: Thu, 26 Nov 2026 10:20:58 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Xuanqiang Luo <xuanqiang.luo@linux.dev>
+Cc: netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Alexei
+ Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, John
+ Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>,
+ Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya Dwivedi
+ <memxor@gmail.com>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu
+ <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa
+ <jolsa@kernel.org>, Emil Tsalapatis <emil@etsalapatis.com>, Ihor Solodrai
+ <ihor.solodrai@linux.dev>, Matthieu Baerts <matttbe@kernel.org>, Mat
+ Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, David
+ Ahern <dsahern@kernel.org>, Ido Schimmel <idosch@nvidia.com>, Stanislav
+ Fomichev <sdf@fomichev.me>, Neal Cardwell <ncardwell@google.com>, Kuniyuki
+ Iwashima <kuniyu@google.com>, Pablo Neira Ayuso <pablo@netfilter.org>,
+ Florian Westphal <fw@strlen.de>, Phil Sutter <phil@nwl.cc>,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org, mptcp@lists.linux.dev,
+ netfilter-devel@vger.kernel.org, coreteam@netfilter.org, Xuanqiang Luo
+ <luoxuanqiang@kylinos.cn>
+Subject: Re: [PATCH net-next v1 0/6] net: avoid stack canaries in TCP/IPv4
+ fast paths
+Message-ID: <20261126102058.1fecf50f@pumpkin>
+In-Reply-To: <20261124130631.1886963-1-xuanqiang.luo@linux.dev>
+References: <20261124130631.1886963-1-xuanqiang.luo@linux.dev>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -100,118 +115,34 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The "delete and re-add" test validates the removal and the re-addition
-of the endpoint used by the initial subflow, but without the fullmesh
-flag.
+On Tue, 24 Nov 2026 22:06:25 +0900
+Xuanqiang Luo <xuanqiang.luo@linux.dev> wrote:
 
-Do the same with the fullmesh flag: with a second subflow, then once no
-subflow is left, and after a reset of the initial subflow. Without the
-previous patch, no new subflow is created.
+> From: Xuanqiang Luo <luoxuanqiang@kylinos.cn>
+> 
+> With CONFIG_STACKPROTECTOR_STRONG=y, a function that has a local array or
+> passes the address of one of its locals to another function needs a stack
+> canary. The canary is set up and checked on every call, also when the
+> local is only used on a path that almost never runs.
+> 
+> This series removes the canary from functions of the TCP/IPv4 fast paths,
+> by returning results by value, by using storage that is not on the stack,
+> or by not calling a function that has nothing to do.
+> 
+> Patch 1 returns the two mptcp_space() values in a structure, so that
+> __tcp_select_window() no longer needs a canary.
 
-The 'Fixes' tag here below is the same as the one from the previous
-commit: this patch here is not fixing anything wrong in the selftests,
-but it validates the previous fix for an issue introduced by this commit
-ID.
+While all (I think) architectures can return a big integer in two
+registers (dx:ax on x86), not all ABI do the same for small structures.
+For those architectures returning a struct by value is implemented by
+passing the address of a hidden on stack structure.
+So code generation may be worse than passing the values by reference.
+I can't remember the list of architectures, mostly old ones - but not
+32bit x86 because the compiler option was set when regparm=3 was added
+for 2.6.
+(Note that this is different from passing small structures by value.)
 
-Fixes: 045e9d812868 ("mptcp: fix duplicate subflow creation")
-Cc: stable@vger.kernel.org
-Signed-off-by: Abdul Wasey <w453y.me@gmail.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 79 +++++++++++++++++++
- 1 file changed, 79 insertions(+)
-
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index f4d8afaeda4f..05572c97ff48 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -4424,6 +4424,85 @@ endpoint_tests()
- 		chk_rm_nr 4 4
- 	fi
- 
-+	# remove and re-add the endpoint of the initial subflow, with fullmesh
-+	if reset_with_events "delete and re-add, fullmesh" &&
-+	   continue_if mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 0 2
-+		pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullmesh
-+		pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2 flags subflow,fullmesh
-+		{ timeout_test=120 test_linkfail=128 speed=5 \
-+			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
-+		local tests_pid=$!
-+
-+		wait_event ns2 MPTCP_LIB_EVENT_ESTABLISHED 1
-+		wait_mpj 1
-+		chk_subflow_nr "before delete id 0" 2
-+
-+		pm_nl_del_endpoint $ns2 1 10.0.1.2
-+		sleep 0.5
-+		chk_subflow_nr "after delete id 0" 1
-+
-+		pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullmesh
-+		wait_mpj 2
-+		chk_subflow_nr "after re-add id 0" 2
-+
-+		# no live subflow left to take the remote address from
-+		pm_nl_del_endpoint $ns2 1 10.0.1.2
-+		wait_rm_addr $ns1 1
-+		pm_nl_del_endpoint $ns2 2 10.0.2.2
-+		sleep 0.5
-+		chk_subflow_nr "after delete all" 0
-+
-+		pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullmesh
-+		wait_mpj 3
-+		chk_subflow_nr "after re-add id 0 alone" 1
-+
-+		mptcp_lib_kill_group_wait $tests_pid
-+		kill_events_pids
-+
-+		chk_join_nr 3 3 3
-+		chk_rm_nr 3 3
-+	fi
-+
-+	# same, but the initial subflow is reset before removing its endpoint
-+	if reset_with_events "delete and re-add, fullmesh, after reset" &&
-+	   continue_if mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 0 2
-+		pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullmesh
-+		pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2 flags subflow,fullmesh
-+		{ timeout_test=120 test_linkfail=128 speed=5 \
-+			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
-+		local tests_pid=$!
-+
-+		wait_event ns2 MPTCP_LIB_EVENT_ESTABLISHED 1
-+		wait_mpj 1
-+		chk_subflow_nr "before reset" 2
-+
-+		local filtered=0
-+		init_nftables
-+		if ip netns exec "${ns1}" nft add rule ip filter INPUT \
-+				ip saddr "10.0.1.2" meta l4proto tcp \
-+				tcp option mptcp exists reject with tcp reset; then
-+			filtered=1
-+			wait_event ns2 MPTCP_LIB_EVENT_SUB_CLOSED 1
-+			ip netns exec "${ns1}" nft flush chain ip filter INPUT
-+			chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_CLOSED 1 error 1
-+
-+			pm_nl_del_endpoint $ns2 1 10.0.1.2
-+			pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullmesh
-+			wait_mpj 2
-+			chk_mptcp_info subflows 2 subflows 2
-+			chk_join_nr 2 2 2
-+		fi
-+
-+		mptcp_lib_kill_group_wait $tests_pid
-+		kill_events_pids
-+		# after the cleanup: this exits when all features are expected
-+		[ "${filtered}" = 1 ] || mark_as_skipped "unable to set the filter rules"
-+	fi
-+
- 	# remove and re-add
- 	if reset_with_events "delete re-add signal" &&
- 	   continue_if mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
--- 
-2.43.0
-
+David
