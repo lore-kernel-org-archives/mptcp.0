@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795712005;
-	b=zXSk8pa//ZGnG0bmYutDAEsDRrC8RUUt37gDT3dgIyE9vpt10op6VfO6e9LUkvY6v/ud
-	 HmMRwuxoD/G2tJdFtYaf85BOvqlV3yr0b2q1QwqoP+qCAx71HW9+sCHCMEGSU10AspTjF
-	 sV25H5+qanEqAIx4PjMouTET9sH7kqScPq6RwkFtzj9qvKndemfJprf4WLPXzdb4dmz+l
-	 jl5rBQu0c0WSE0+eVkOuy6qrPHqPxMLHgJ88Nr9nhQ8xEsnlELY4sdNuVjgcJwkcBkTwi
-	 aXCSnyFVrL/SFKrPvMuI0VpQ+SnppGI73yZwOrxWATcG96iImiBT65EViIZFY7XxLpg==
+	t=1795712090;
+	b=XQ65hux55D/GKYHmJi1wdNVfYE3cCUrcpilLCpsYeWvOy5y+ulXtGROhlZG1O+TSH4zh
+	 Rb0lE7Bfd/cGYiwk9FwDb9lbZoZD7AJlmNLMt/w95OWfpG/wqEZNuevZF2uhGt0kKChbV
+	 +DMpwy6SXv1g/NKMetFZLpY/3jveXy7+WMTVtWRD74z4uW3CKnqVK4blcDtLgzFKICCOZ
+	 tjfkHku2Aih0wYcmOrZg3Fbljp6j/1Q9ceqZnm3OgUG9AayaAZUJozSI+tjqAyT6hM/J1
+	 JdHy1WSDYifrV+iAh2hRHQtKCDupcsPQIqxIOaDxEYWhm1d3cwGUDWx8H3Enz5oLIjA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795712005;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795712090;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:References:From:Cc:Autocrypt:Organization:
+	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=bd45wiOajzgLB8+XZmYdlEmTEig8tS3+F/qOAFOI1wo=;
-	b=v2yaSxJf6GNw30nh3s+kaJBqf1p7VUFb34MNY6ij+LSkYRwXZeP/0O1JOgcXOouEyZvQ
-	 qhZ7eyq53RaYwgc8e11B/qdm2mfqAi0WGt8scCJbWNi42MVWJiQNZvnvAYgRm9oYTyPgH
-	 hWG1JUH5Iz/UcKBotgERaQJKbbkZvWdsVwCaLAlDoNmskukHrUc9ffTCXUA6DuXSmKdXy
-	 LLgCVjNQoT9laL5UI7bOQ6P3z4qltvr+J/WXsZxCehZcCtpgzT+inmyo8Xnvuo5UKSo12
-	 lChF/MHS3VqCx/9EHgux95Zs3AhT7LQ5e3uLFpInkoY1u0gQsMYZ1NmlzjbX+kacbXA==
+	bh=FoyEK8bQSgz+ER6xs2i5yO+LP3VUbpY4J9vorYoZunk=;
+	b=vIuLchAzugqb1XO4SKAVWZAZb3X8DGP9f5F+252kgLlTuyVkz35zCTzQ9IrsU+uaXQhb
+	 t2aGG/hUIc1dKAmRaWlXhlf5TwocIum0pUuu0GzT2M9LccitqjRbDByqNUsemI0jV2rKi
+	 MthDzNCHNzKEzWCgAvgTTVdzI9J62FBUvvvaGJGMiBn91C2aca9Hi0GD8MMDPZoOrAVnx
+	 Wffa7G6NZWmmTb09JYpS8VrvXLjicC0/RrZc9Sx8qSb1lSXol6XTdad0lP4WWZK034o+2
+	 8oDqIUjfnJDjpmsx/fwmhI00NDd36cbMGo93fymjF3aOYNDfijCugWDVbuu/0NQfV5g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ECv2Oa9S;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OFNPTp+g;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C729606A31C;
-	Thu, 26 Nov 2026 16:53:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5427D606A31E
+	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 16:54:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ECv2Oa9S
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8063F1F000C4;
-	Thu, 26 Nov 2026 16:53:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OFNPTp+g
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27ED21F000CF;
+	Thu, 26 Nov 2026 16:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795712005;
-	bh=bd45wiOajzgLB8+XZmYdlEmTEig8tS3+F/qOAFOI1wo=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To;
-	b=ECv2Oa9SzY7rsSfNIeJXAw+4n4OBebQiDnXfPwYKf6eR8H0XhJFpOY7ActmRl54fJ
-	 YYmtAKJQIrAs0G83FbTrdGcowXl299xIU+fgetl2nelYgZJ7FpxSXHGgDhJoWoJqck
-	 aB0rs21KEJBJe/x7YqDCV7jPOZl25oNSnk3WPvAB3iMlS9OhhUYBgZj7v4bxU8zOnz
-	 F/f3WSFPv3zEZ3oH1t5AK/t2LI5BZsYlUCiSLx4UIPU8rooiqW+EUhTXEnRagoaVl6
-	 85R7nb8c5WbXlA+R9fXbHmpbf8jkFXDjQGoAVtGE5ZvkMKTqyyPnRt5e3mS8XiloTA
-	 8Z43mFV5fPCxQ==
-Message-ID: <9ff56380-0de5-470b-a1a4-d89d752c6e16@kernel.org>
-Date: Thu, 26 Nov 2026 17:53:22 +0100
+	s=k20260515; t=1795712089;
+	bh=FoyEK8bQSgz+ER6xs2i5yO+LP3VUbpY4J9vorYoZunk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=OFNPTp+gvOKX2J7f+dq/O6D2uquUaYGjVQwHlgBtNzdEb7XP1xZ36nZT25KdM3uuV
+	 6ZJqv5SIdx1xz+aRy21jI37DmBI4tAe9NihYx7+B4EvbyHOCaZmuCbXsMadbUc+rky
+	 XFAy9gyDFoSdkocH+fFug+BqaDP4ww1hMIlUOzyDznvBuT9geCQrJCbVdto0gUukVr
+	 AYgpXhGYCjoSC3OgakhDG4cObFAwXR9ds8/4m7dlHmrBWvyQ4pOjdFwXmZaBGND6kB
+	 XEIkCcpZSo+JxCs9VIABfFBBKfeSXrSApNIdnaFMLrWsXel4QpUlEf7iP45Kj+zD0f
+	 R0uKvlD36V71g==
+Message-ID: <431fc4b6-897f-462e-a9fe-9cdb72550e94@kernel.org>
+Date: Thu, 26 Nov 2026 17:54:46 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,15 +52,13 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v3 29/50] mptcp: don't resend data acked without
- MPTCP opts
+Subject: Re: [PATCH mptcp-net v3 00/50] mptcp: misc fixes
 Content-Language: fr
-To: sashiko-reviews@lists.linux.dev
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
+Cc: Chris Mason <mason@kernel.org>, Kyuwon Cho <kyuwoncho18@gmail.com>,
+ Josef Bacik <josef@toxicpanda.com>, MPTCP Linux <mptcp@lists.linux.dev>
 References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
- <20261124-mptcp-cmason-fixes-v3-29-416c0920c73f@kernel.org>
- <sashiko-outbox-232141@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -105,44 +103,25 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <sashiko-outbox-232141@kernel.org>
+In-Reply-To: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 24/11/2026 23:36, sashiko-bot@kernel.org wrote:
->> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
->> index f9b65d0c6290a..05b9c66aaed63 100644
->> --- a/net/mptcp/options.c
->> +++ b/net/mptcp/options.c
-> 
-> [ ... ]
-> 
->> @@ -1287,11 +1291,16 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
->>  	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
->>  		return sk->sk_state != TCP_CLOSE;
->>  
->> -	/* MPTCP opt acking the old data, not an infinite map: no fallback */
->> -	if (unlikely(subflow->old_data_pending) && mp_opt.suboptions &&
->> -	    !(mp_opt.use_map && !mp_opt.data_len) &&
->> -	    !before(TCP_SKB_CB(skb)->ack_seq, subflow->old_data_end))
->> -		subflow->old_data_pending = 0;
->> +	/* MPTCP opts, not an infinite map: the peer did not fall back */
->> +	if (mp_opt.suboptions && !(mp_opt.use_map && !mp_opt.data_len)) {
->> +		u32 ack_seq = TCP_SKB_CB(skb)->ack_seq;
->> +
->> +		if (after(ack_seq, subflow->opt_ack_seq))
->> +			subflow->opt_ack_seq = ack_seq;
->> +		if (unlikely(subflow->old_data_pending) &&
->> +		    !before(ack_seq, subflow->old_data_end))
->> +			subflow->old_data_pending = 0;
->> +	}
-> 
-> [Severity: Medium]
-> Can calling check_fully_established() before updating subflow->opt_ack_seq
-> falsely reset a passive TFO subflow?
+Hello,
 
-The push done there for a TFO child only sends new data: no resend nor
-probe, so no reset. No need to change, but I can clarify the commit message.
+On 24/11/2026 22:59, Matthieu Baerts (NGI0) wrote:
+> Here are various fixes, some from Chris Mason and Josef Bacik:
+
+In order to help to trim this series down, and avoid blocking other ones
+for too long, I suggest applying the 37 first patches. So up to "mptcp:
+continue the last mapping after a fallback", which is the last patch
+from Chris.
+
+I applied Mat and Clashiko's comments (minor tweaks in the commit
+messages and comments), and I will send a v4 with the rest.
+
+Of course, I can always change patches applied in our tree with
+squash-to patches, and add RvB tags.
 
 Cheers,
 Matt
