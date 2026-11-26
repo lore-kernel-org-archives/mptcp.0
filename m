@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795711845;
-	b=CBjB/uiLd09Sy32HMUAmzO3lzkh37E4mdHnFkeHBvUT4YKNrw93gkILacRZDnX6dk36/
-	 FI/PPtjf8ilPyOGaZRD7jgnC4oTk/NQsP4mlyWxRm5acyDpCE2sB3zVtPXjFU4bDLFzFL
-	 WYYFXj7PfE7sB5/R0NRJaYFzr+38a5aUysVpQMAlJ+tnHH7OEcwp075SS+Q9WT1C6wZqi
-	 gzKJ4Ua4vCsqoXmQaXJr3hKStgKvhCsRmZhs2nEIJN3sdxObwHNzwqLBmmCwbG5XhXRJM
-	 3qG15X1GA4gVZqD3vYV2d3mPr4ALfsBTGSR7PNjfJk/c+4I92Y83Xm9p2FbGScc2Pfw==
+	t=1795712005;
+	b=zXSk8pa//ZGnG0bmYutDAEsDRrC8RUUt37gDT3dgIyE9vpt10op6VfO6e9LUkvY6v/ud
+	 HmMRwuxoD/G2tJdFtYaf85BOvqlV3yr0b2q1QwqoP+qCAx71HW9+sCHCMEGSU10AspTjF
+	 sV25H5+qanEqAIx4PjMouTET9sH7kqScPq6RwkFtzj9qvKndemfJprf4WLPXzdb4dmz+l
+	 jl5rBQu0c0WSE0+eVkOuy6qrPHqPxMLHgJ88Nr9nhQ8xEsnlELY4sdNuVjgcJwkcBkTwi
+	 aXCSnyFVrL/SFKrPvMuI0VpQ+SnppGI73yZwOrxWATcG96iImiBT65EViIZFY7XxLpg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795711845;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795712005;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:References:From:Cc:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=W9nAynEzQufitJjFrV2piTFuL135Pqrqr5oFKSxRaUE=;
-	b=r6ulyhdydPGTZe/WOy4S0Ws8iyuF/lW7MHivCMAU4JFzIh5bXYa/I8f7skXk8zPH3UXG
-	 eFyZfBw4NP+jceIBEOWTiZ7eNKrwGO66YmkkIg9ZLHMSG3buTqRqNeEY8lFYhotNICc9m
-	 apdG6OYps8Tmr7vpa58KoNjNFO4T78tK49u5Ct28qQ5xbvWxwzlsI25uuy64SNaqP9NvN
-	 zR/67yoPd0ziWuZa5qXrIYBIBhMX0JyEtyoRHJeEPZkjnDnt4c5JFhMPAEbsuB0rHDVdD
-	 XbNUVp0bcP5a+v2XCBbcZMdHhEUYBPYTinZS7OWpgHKlK+P3eq0ZyUd+ollHTTWOi6Q==
+	bh=bd45wiOajzgLB8+XZmYdlEmTEig8tS3+F/qOAFOI1wo=;
+	b=v2yaSxJf6GNw30nh3s+kaJBqf1p7VUFb34MNY6ij+LSkYRwXZeP/0O1JOgcXOouEyZvQ
+	 qhZ7eyq53RaYwgc8e11B/qdm2mfqAi0WGt8scCJbWNi42MVWJiQNZvnvAYgRm9oYTyPgH
+	 hWG1JUH5Iz/UcKBotgERaQJKbbkZvWdsVwCaLAlDoNmskukHrUc9ffTCXUA6DuXSmKdXy
+	 LLgCVjNQoT9laL5UI7bOQ6P3z4qltvr+J/WXsZxCehZcCtpgzT+inmyo8Xnvuo5UKSo12
+	 lChF/MHS3VqCx/9EHgux95Zs3AhT7LQ5e3uLFpInkoY1u0gQsMYZ1NmlzjbX+kacbXA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bT0hqT0w;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ECv2Oa9S;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B61606A31C;
-	Thu, 26 Nov 2026 16:50:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C729606A31C;
+	Thu, 26 Nov 2026 16:53:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bT0hqT0w
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D3121F000CF;
-	Thu, 26 Nov 2026 16:50:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ECv2Oa9S
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8063F1F000C4;
+	Thu, 26 Nov 2026 16:53:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795711844;
-	bh=W9nAynEzQufitJjFrV2piTFuL135Pqrqr5oFKSxRaUE=;
+	s=k20260515; t=1795712005;
+	bh=bd45wiOajzgLB8+XZmYdlEmTEig8tS3+F/qOAFOI1wo=;
 	h=Date:Subject:To:References:From:Cc:In-Reply-To;
-	b=bT0hqT0w+b6Pds+TGUBUbPfuefqjHUO57AbDWTJ7WWfVVm9iX9tEWJLn5Tk3UUmGq
-	 yIRhupF6A3AP2p0iv5x3pDW65Z6tr6OwmdsSbLtbMKUEXflTRN03wTuyhHjlnbubFT
-	 BJxV7w+EXkdMFIp9IETHcgvRsDnuUdn4D2eCSCQmW2RQbwW+ZmdLBLR9Db+5xD6j7u
-	 lAlJNRLOPOB1gyJadQkgsO3KNe6xitkc96+K/EevrdSQXmbY0LP8kEBCdGHqDY/hC+
-	 +5VHBccFTDxOlvvDOG03CFR98qIAtp+hmyZFO4VBNVI25vHlV47l06JGpMPQ2JHe0Q
-	 v+ND6wXxVT+yw==
-Message-ID: <a4fe18ce-e8d1-4b54-abee-2dd181be2dbf@kernel.org>
-Date: Thu, 26 Nov 2026 17:50:42 +0100
+	b=ECv2Oa9SzY7rsSfNIeJXAw+4n4OBebQiDnXfPwYKf6eR8H0XhJFpOY7ActmRl54fJ
+	 YYmtAKJQIrAs0G83FbTrdGcowXl299xIU+fgetl2nelYgZJ7FpxSXHGgDhJoWoJqck
+	 aB0rs21KEJBJe/x7YqDCV7jPOZl25oNSnk3WPvAB3iMlS9OhhUYBgZj7v4bxU8zOnz
+	 F/f3WSFPv3zEZ3oH1t5AK/t2LI5BZsYlUCiSLx4UIPU8rooiqW+EUhTXEnRagoaVl6
+	 85R7nb8c5WbXlA+R9fXbHmpbf8jkFXDjQGoAVtGE5ZvkMKTqyyPnRt5e3mS8XiloTA
+	 8Z43mFV5fPCxQ==
+Message-ID: <9ff56380-0de5-470b-a1a4-d89d752c6e16@kernel.org>
+Date: Thu, 26 Nov 2026 17:53:22 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,13 +52,13 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v3 12/50] mptcp: no sf left: process pending
- DATA_FIN
+Subject: Re: [PATCH mptcp-net v3 29/50] mptcp: don't resend data acked without
+ MPTCP opts
 Content-Language: fr
 To: sashiko-reviews@lists.linux.dev
 References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
- <20261124-mptcp-cmason-fixes-v3-12-416c0920c73f@kernel.org>
- <sashiko-outbox-232136@kernel.org>
+ <20261124-mptcp-cmason-fixes-v3-29-416c0920c73f@kernel.org>
+ <sashiko-outbox-232141@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Cc: MPTCP Linux <mptcp@lists.linux.dev>
 Autocrypt: addr=matttbe@kernel.org; keydata=
@@ -105,39 +105,44 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <sashiko-outbox-232136@kernel.org>
+In-Reply-To: <sashiko-outbox-232141@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
-
-On 24/11/2026 23:33, sashiko-bot@kernel.org wrote:
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index bcdad00d35732..b57d0f82b416e 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
-
-(...)
-
->> @@ -2819,9 +2831,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
->>  			mptcp_schedule_work(sk);
->>  		} else if (sk->sk_state != TCP_ESTABLISHED ||
->>  			   msk->in_accept_queue) {
->> -			/* After the close, an MP_FASTCLOSE would be ignored */
->> -			mptcp_check_fastclose(msk);
->> -
->> +			mptcp_check_rcv_close(sk);
->>  			mptcp_set_state(sk, TCP_CLOSE);
->>  			WRITE_ONCE(sk->sk_shutdown,
->>  				   sk->sk_shutdown | SEND_SHUTDOWN);
+On 24/11/2026 23:36, sashiko-bot@kernel.org wrote:
+>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+>> index f9b65d0c6290a..05b9c66aaed63 100644
+>> --- a/net/mptcp/options.c
+>> +++ b/net/mptcp/options.c
+> 
+> [ ... ]
+> 
+>> @@ -1287,11 +1291,16 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+>>  	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
+>>  		return sk->sk_state != TCP_CLOSE;
+>>  
+>> -	/* MPTCP opt acking the old data, not an infinite map: no fallback */
+>> -	if (unlikely(subflow->old_data_pending) && mp_opt.suboptions &&
+>> -	    !(mp_opt.use_map && !mp_opt.data_len) &&
+>> -	    !before(TCP_SKB_CB(skb)->ack_seq, subflow->old_data_end))
+>> -		subflow->old_data_pending = 0;
+>> +	/* MPTCP opts, not an infinite map: the peer did not fall back */
+>> +	if (mp_opt.suboptions && !(mp_opt.use_map && !mp_opt.data_len)) {
+>> +		u32 ack_seq = TCP_SKB_CB(skb)->ack_seq;
+>> +
+>> +		if (after(ack_seq, subflow->opt_ack_seq))
+>> +			subflow->opt_ack_seq = ack_seq;
+>> +		if (unlikely(subflow->old_data_pending) &&
+>> +		    !before(ack_seq, subflow->old_data_end))
+>> +			subflow->old_data_pending = 0;
+>> +	}
 > 
 > [Severity: Medium]
-> Should mptcp_check_rcv_close(sk) run before the
-> sk->sk_state != TCP_ESTABLISHED check?
-In ESTABLISHED, the DATA_FIN is processed when the backlog is spooled at
-the release of the socket: the reader gets the data, then EOF, and the
-close timeout closes the socket, as before. So no need to change if I'm
-not mistaken. I can clarify the commit message.
+> Can calling check_fully_established() before updating subflow->opt_ack_seq
+> falsely reset a passive TFO subflow?
+
+The push done there for a TFO child only sends new data: no resend nor
+probe, so no reset. No need to change, but I can clarify the commit message.
 
 Cheers,
 Matt
