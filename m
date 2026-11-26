@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795703529;
-	b=Wh+g4/fK2qif+Nit2wFiKRGGdBLdzPKnhmjteiVAmzULLy+PhaCXEOnjQnMtDpc+22Ik
-	 e41hPvG6tq124zL7+wekPQgZqYoXd+WjnmJgPFI5QfSoxj52j/Fs2RBXj7JpQdRdxqkrT
-	 kgQOQ2mQl9mNqsXHNl3NDZvWxBsVYyXBT8tXMho8bLVCjHoy4MuMiEexW63+O8j9Y1oS8
-	 KyqY+GugxcWviEFsAXRJhZ3dpEVtpeMaYokrvYy5+kLghV6muGY9OIx1mxPItMeCW2bfB
-	 1l5Vw1XXNpevMJ0jlNA9jMjej+mDOuXLMV8zVIavewPSTImJWLmFhqutK9VsTB47rhg==
+	t=1795704077;
+	b=QmPN9DNOuOeFu2w7lXCtu1v5LbaW7CYuZ5SA/moRJ1Aom2kxon6qrpJdTn5KiaqL5QSw
+	 nSoSeibKjrGwTrZEUCyoriCLe2ZPC42+8rWMesTVc0wfxzqimq+UfT5z6Vw01kRTjUGNh
+	 WwfR5wt16dZi/ZrytK8zXgA5GCK9RPslf17p8n9PjoVrIfnVQWKOX75QZtGMmktZcN7AD
+	 MSCXYsSMXpORQ61d87F2+uKe6XzUC2MtBrR6OSPaOBBSvmOI9sOC/KOABGE5PiCXYMKEV
+	 tPxVZRQTaFAl5Xkigzj3f91fN+iOf2RWaZ3EgNBpRPrNzLnYuG2YL5Z61igyr10Eejw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795703529;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795704077;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=wPzmjdGQDhaVZKR6eg682hzMxJin6Qounz2geCrdUcs=;
-	b=gIrPtht/7REHuYYuyf2qrWeIpDBqheTqmhmH7JydKHLRxSdLbXq6YeE3WJn9rZ/4JQV4
-	 JyrpWyVIXvrx4u+IGzhi+8gYAaS7vcTRl3haH9Z94L4iC7Ex10XLQUlCoij+GTWd3y5S3
-	 uDfvYpSH8+jhrbbniHTktv0mz1ocmS7/rTkDyfqQ44QzY+GszAofp8XZ4E4eOGfh8WUxW
-	 WACkhIjwSz0hk0qaI7PCqnXyHYCTUbxq4Qph0+BwM6+Ud83Ws2EAefMK2S/e6ChOWhNeH
-	 G5Xilk+ihkuXEWdfrdP8/vlyVDktH+rw5uO6cskT9AVMrajwTWYgSc7uUsplcs0U0lQ==
+	bh=XOYA3lxqSpJINPlJ8ItySiuPAb3kUEsg0YUuY/7JAAo=;
+	b=sv2vP96IES2TpYNBmWAZmbHI4T4rz15wjeBiPdLUhJCrg4U7aqFH2qCn80Kyzgm+oZqS
+	 0Ach51DG93n1ja9qzyW207ZNgKMBjyWVPMT5H5uQXfSHzNi3xdKQjGNgR64OfIXT7o7aq
+	 rGShAsd2dVqtAYJIJPzJxAnfSoqPVPeC5Wb9kgVWu8Wu15P/wyDudmUnM7qm3715uxAJx
+	 ssYVYR/sdLCC1OqeR4xAlyAZhFgAP3PnnmLIqADIgPT4vHbNLZHGQxWUBhBmNrI4gLa0K
+	 97kmfr099TyjWN/QynhKKeyyi4Nk7PHvWKvXr7+QatzWxq7ZGWSD7jljQ2FHIp9Zl8w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=l5G0m7Ub;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HZptpJBD;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67A6606A685
-	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 14:32:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DA6606A33A
+	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 14:41:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=l5G0m7Ub
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E5201F000CF;
-	Thu, 26 Nov 2026 14:32:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HZptpJBD
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C31F81F000C0;
+	Thu, 26 Nov 2026 14:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795703528;
-	bh=wPzmjdGQDhaVZKR6eg682hzMxJin6Qounz2geCrdUcs=;
+	s=k20260515; t=1795704077;
+	bh=XOYA3lxqSpJINPlJ8ItySiuPAb3kUEsg0YUuY/7JAAo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=l5G0m7UbBBLiG/jthB83RR2swIcC1SKWf9yJE5pecE1bLTZfixIPo53H5t4KikWCu
-	 bgFfdGO62FEo4tHkTlMNwdBGvW6cpe4hizlDhqdap2qR6gjmcaPU9LuGo/12qFsYH7
-	 F0xebAgd+WmJGUPxbrGfvawv/Z3CNJWuYONDPAjWk2L0aaCJ6l53ZUGBOHhKPHxgZb
-	 GRAkbnMTkOvtW907bDv5Cml8QYrU9LIGG7dHDuYgb2bi0IFlNfNTJBtT7pioJ3ylXR
-	 sqGdfjNgpNM64hMU8BRGq0LmzVM9jtO+UNygTyHXPn7q/7NnT64X+poOQb6Nzqpzfw
-	 +OJ18oPpQCqSQ==
-Message-ID: <527e1d5d-29cf-4fa4-9d0d-067f5ebed443@kernel.org>
-Date: Thu, 26 Nov 2026 15:32:06 +0100
+	b=HZptpJBDRweAgEwomP6svQYawO5zdcKRUPPmxnkOd50K4n4jW2PCoDTKOawvXKNIo
+	 BTrrFb5/8772Ud1qIJBiQwDvsDkjBuamw+WKwGBsiFzcqtPhDBmQsuTxFIa2NAvHzJ
+	 DKSzrsaEXeLHF1sr0fKuGMtwt6/N5C1/iMI6mD/Uw2rijbLz2vsHWCg1gGaO+NmwQn
+	 koqFu/Wu5E9p4xFLLQIPkQaeBTaSXutbgvsrGdTZdzSSgcwKKnEJB0BjUKCcWAYHF+
+	 0ABoY0UYvxUwVtPkkqlFEcYzVRO43cihLvT/2L6FKpfwsAa3TaDI30lnpmrl+rSQ6U
+	 faY33JPgIs75Q==
+Message-ID: <a69f2a23-b2a8-4cc9-b6de-a9240c86775f@kernel.org>
+Date: Thu, 26 Nov 2026 15:41:15 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,14 +52,14 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v3 33/50] mptcp: don't charge a shared page
- twice at accept()
+Subject: Re: [PATCH mptcp-net v3 34/50] mptcp: don't charge the backlog twice
+ at accept()
 Content-Language: fr
 To: Mat Martineau <martineau@kernel.org>
 Cc: MPTCP Linux <mptcp@lists.linux.dev>, Chris Mason <mason@kernel.org>
 References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
- <20261124-mptcp-cmason-fixes-v3-33-416c0920c73f@kernel.org>
- <6e1bc879-784e-5115-fa6c-0365182929a1@kernel.org>
+ <20261124-mptcp-cmason-fixes-v3-34-416c0920c73f@kernel.org>
+ <089c2aae-6368-14d4-ef3f-77021a35408e@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -105,84 +105,72 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <6e1bc879-784e-5115-fa6c-0365182929a1@kernel.org>
+In-Reply-To: <089c2aae-6368-14d4-ef3f-77021a35408e@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Mat,
 
-Thank you for the reviews!
+Thank you for the review!
 
-On 26/11/2026 03:20, Mat Martineau wrote:
+On 26/11/2026 03:43, Mat Martineau wrote:
 > On Tue, 24 Nov 2026, Matthieu Baerts (NGI0) wrote:
 > 
 >> From: Chris Mason <mason@kernel.org>
 >>
->> accept() of an MPTCP connection that has already received data can leak
->> one page of memory cgroup charge, and the leaked charges can get the
->> server OOM killed.
+>> accept() can permanently overcharge the memory cgroup of an MPTCP
+>> server, so the server can be OOM killed, if the new connection received
+>> data while its MPTCP socket was locked.
 >>
->> At accept(), __inet_accept() charges the MPTCP socket (msk) for the
->> memory that it holds, rounded up to whole pages, and
->> mptcp_graft_subflows() does the same for each subflow. A page is
->> uncharged only once, when the socket that holds it releases it, so
->> rounding up each socket on its own is only correct while each page
->> belongs to one socket. But for each skb that the msk takes over from a
->> subflow, it borrows skb->truesize bytes from the pages that the subflow
->> reserved, so the two can share a page:
+>> The sockets of an MPTCP connection have no memory cgroup before
+>> accept(), which then charges the sk_forward_alloc and the sk_rmem_alloc
+>> of the MPTCP socket (msk) and of each subflow. mptcp_graft_subflows()
+>> also charges msk->backlog_unaccounted: the truesize of the skbs that
+>> __mptcp_add_backlog() queued while the socket lock of the msk was held
+>> and their subflow had no memory cgroup. But the first charge already
+>> covers each of these skbs that has not been freed, in the sk_rmem_alloc
+>> of its subflow or of the msk, so no later uncharge matches the extra
+>> charge.
 >>
->>    reserved by the subflow      4096 bytes  1 page
->>      now held by the msk         896 bytes  charged for 1 page
->>      still held by the subflow  3200 bytes  charged for 1 page
->>
->> The fix used here is to keep a running sum of what the msk and its
->> subflows hold, and to let the new mptcp_charge_subflow() charge each
->> subflow only for the pages that it adds to the rounded-up sum.
+>> The fix used here is to remove msk->backlog_unaccounted, its charge in
+>> mptcp_graft_subflows() and the warning that tests it in
+>> mptcp_can_spool_backlog(). An RFC patch [1] removes the same lines, as
+>> part of another approach.
 >>
 >> This issue has been found with the help of an LLM, and reproduced in a
->> VM, with the reproducer shared with the original version of this patch:
->> an MPTCP server in a memory cgroup, the first byte of the client
->> arriving before accept(). Without this patch, 4096 bytes stayed charged
->> to the memory cgroup for each connection, after its end:
+>> VM, with the reproducer shared with the original version of this patch,
+>> on a kernel with the previous patch: 100,000 connections to an MPTCP
+>> server in a memory cgroup. Without this patch, about 63 MB stayed
+>> charged to this memory cgroup once all the connections were closed, and
+>> to its parent after its removal:
 >>
->>  SNAP label=after-1000 rounds=1000 sockets_left_in_srv=0 [...]
->> c_sock=4096000 [...]
->>  SNAP label=after-5000 rounds=5000 sockets_left_in_srv=0 [...]
->> c_sock=20480000 [...]
+>>  SNAP label=after-100000 rounds=100000 sockets_left_in_srv=0
+>> tcp_mem_pages=0 [...] c_sock=63295488 [...]
+>>  [...]
+>>  SNAP label=c-removed rounds=100000 sockets_left_in_srv=0
+>> tcp_mem_pages=0 c=removed [...] p_sock=63295488 [...]
 >>
->> With a memory limit, the original version of this patch reported that
->> the server was killed by the OOM killer after about 14,400 connections.
->>
->> Fixes: 9db5b3cec4ec ("mptcp: borrow forward memory from subflow")
->> Signed-off-by: Chris Mason <mason@kernel.org>
->> [ Shorter comment. Commit message: how the issue was found, and its
->>  symptoms. ]
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> Note (Clashiko on v2): the backlog can still be charged twice here: this
->> is fixed by the next patch.
->> ---
->> net/mptcp/protocol.c | 21 ++++++++++++++++++++-
->> 1 file changed, 20 insertions(+), 1 deletion(-)
->>
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index f8cb585da0b3..504fe4a9954f 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -4664,10 +4664,26 @@ static int mptcp_listen(struct socket *sock,
->> int backlog)
->>     return err;
->> }
->>
->> +/* The msk and its subflows share pages: charge their rounded-up sum */
+>> And about 12 MB with only 50 connections, each getting 20,000 duplicates
+>> of a byte before accept(), beside bare ACKs with RM_ADDR, which make the
+>> MPTCP worker take the socket lock:
 > 
-> I suggest adding a note that this is similar to __sk_charge() (to make
-> it easier keep the two functions consistent if either has future
-> changes). But otherwise the patch looks good.
+> What does "20,000 duplicates of a byte" mean? Just that each connection
+> received 20kbytes before accept? If the test case happens to use the
+> same byte value for every data byte in the payload, that's superfluous
+> information.
 
-Good idea! The v4 will contain:
+Yes, that was not clear what I added :)
 
-/* Similar to __sk_charge(), but the msk and its subflows share pages */
+I just re-checked Chris' repro, and I meant to say 20,000 one-byte
+segments that are new for TCP but all have the same data seq number.
+
+I will replace this paragraph with:
+
+And about 12 MB with only 50 connections, each getting 20,000 one-byte
+segments before accept(), new for TCP but with the same data sequence
+number, so the msk drops them as duplicates. Bare ACKs with RM_ADDR,
+sent at the same time, make the MPTCP worker take the socket lock, so
+that some of these segments go through the backlog: (...)
 
 Cheers,
 Matt
