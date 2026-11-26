@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795680411;
-	b=t8NQ3T2lF2CedyPq6zbIccntHlOuuS4lBCi30aiSbvBQY7d0yAX/26AO5EuY2UIV0DX2
-	 Vn848pbzEoRPwpJ5wC7MGeMu1ne0zDBk3BRc7OLQKZLXvvHLgP0eXAmLgEjIJSPX44NOo
-	 BmzPcmqqvAT9AsuDrMozPqiqpB4zEJX3wSE/g73pY6P9WoFYHrlDuRtA4MFB57PoOeAli
-	 XlQ9JYOJbjk3WxKvSZr4vgnoq4waYmBj0O7ORCojxSvlrZxcSAhRsRYfBPoOFmDul1jLz
-	 4d+gbZmb6HU87DoRwaEhnBAYmXnlQLFyAo+0ek6779+nHc5hZvcsB2G/ReZUsCSLYRA==
+	t=1795680940;
+	b=PtAcLD6eiFARPiWrez+/9AuWbWERAsVQct+XeFacgHvRROw6l9yoOjGjdVYe1uaqablH
+	 HELICxo/lRvpW37VIYDRzViffblxqVEGdApaADlG0lvFfLKU2OrWnq8Ly9XNv+xRjK+HR
+	 txuJ277LooYzuZFTepTk4tHi+bAkYZM4ojljcKVPjUK/U/26KKRHBQ/OAv4zIH/oFr2O2
+	 43PrArr+aOhbkO2P2guLNYjgWOus0XMsHXqDnNloQnVQvI++E04onfbF5GBByOucwDCKX
+	 S7X4WtSUGB40TX4nSTRWGbJdgTO4z8eOBSsT1CsS5lhJbUn3efzLtDd8VglgmrQAm9A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795680411;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795680940;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:Cc:References:From:Autocrypt:Organization:
+	 Subject:Content-Language:To:References:From:Cc:Autocrypt:Organization:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=LYk9aLxQnOu/bvDfPUNB6csOP2HH0Y/ZASDygmFPqEs=;
-	b=oncQKY8B1KjSf/EzldJ7n/YrXJ3KTcBxiRR8kUzRkYKHyK0cJjJqNWS/tVjjHGkGbBh3
-	 cYAL5NF8X18mfUlwvqd+wwoq7n8w0lVrUVnxUnmYzln1ex+2G6V1uBC5ZwKm/sYEi+5Dw
-	 +CmHNzEiQX7p+kRuQMM0L19hYnWTlmEm4+9t6OLNCFGZDF/gTPYFh+nusJMgF5FXtNYfw
-	 ou5g+I2QIoWqhhxV3+j/LdU1QRa6mA9ZuYM5Ig6f86Y51jIJkjkXv2J8Xu8wo9lgOkWgP
-	 PtmXBFubFPgQmnfJicQV+fSgdiqDNVOM3yhXMFe9dJP5TAvL6mlmWQCJ7n1fgQTBdHA==
+	bh=b7lbPIQLNlVsEj95Citm4eh1mbFI6ZwEstW1WJp6Nbs=;
+	b=nQoQgxUtmKmgjR8JBbacu/ARONmZ+Vhl/m+aG4YqwYNwJfujN4SvPgVUt78im+iYfCWt
+	 g0OtpNmippON1gAmyz8Rqr97zflnmzdrlw36AGhMcPB3jPFlR6zEvKKkOFdRNQXCjre/g
+	 D71j5QSZnoiBgURY58/oFgnjoIAOIqx5CRH20LCNHp0TedNRDbkaOZDeztwj/nn3vYMLE
+	 XWbHEF5OSNsO0cnVs45PaCZM5htegBJS8dMWpbYEA4rlPs7ttAhemqFeKHhBoDgSTGOLG
+	 xmKSkx1GQHnzYM9OggXt+rVwYY8op8l1jGlBuBd2cVV7+MFFf98X506WQDMW9Ep9cDQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NFB4OnRi;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KL5kTtsX;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DACD606A323
-	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 08:06:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC13606A327
+	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 08:15:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NFB4OnRi
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C321D1F000C4;
-	Thu, 26 Nov 2026 08:06:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KL5kTtsX
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D575A1F000D4;
+	Thu, 26 Nov 2026 08:15:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795680410;
-	bh=LYk9aLxQnOu/bvDfPUNB6csOP2HH0Y/ZASDygmFPqEs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=NFB4OnRiqj7SzqGRwYDXceEMNtTseL/wYtip74UEp6u9cY/RMXghwpDtJq2jeglGX
-	 KXe2cyOs9OL5nmG1rDdkoHTswmZemkgQ9Lwxc+nwLK959XV2pKQKN9wmMy/kMOYfsJ
-	 IyCXSAGG3ju2nfs37Lia0/5WlJB91Qupm79TDR+DXfrzxiyd6h3HixPHVUc6POBA17
-	 obB+LUSTuoRCKudOzx5pTsIaw9exd66v3lNLpz1qdxwKNRlPprHbZ9P0Ca10+3WqTK
-	 nwmMC6zszBDyLwVeec5730Pg1539uTDmoL+6erOtyyuPw1XPWKlK6EjgDB/2eW9HAu
-	 xiW2rictpkS1w==
-Message-ID: <dfca6534-d547-4e50-bb6f-66985ead05d0@kernel.org>
-Date: Thu, 26 Nov 2026 09:06:47 +0100
+	s=k20260515; t=1795680940;
+	bh=b7lbPIQLNlVsEj95Citm4eh1mbFI6ZwEstW1WJp6Nbs=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To;
+	b=KL5kTtsX64Mcxiv1OCdMKA+D1/Gdyfj0OnrAlCIn8SeA+pDh5uqEF0ALbeX+QZSyD
+	 JKpB4pL7jGfujygy81fe6cbTTfMhPD3SbxU/FllSlZk9mXyzs7ucYqeQSoEhI+ZZDR
+	 2rnk3HaEs06h+DDLjRl6rvuH8sxUb6C/iM4pMdNwCMaG1Y9uKTa90qD4pN3PupPpuZ
+	 aSNdXp3TzhUYIYdOa94LrSBIvaisie/5IH69KZ6ycLV4U9YhbkcgZL0n7cZ9k0fdaI
+	 RI2AKrpYIZ3qvbOkc8Iikbh3nCG3gIbVR4ExNd1kuAk9j9EvGDlbpzR0uaDbCdSp4f
+	 FGNjo4AzlfSxA==
+Message-ID: <57840818-900f-4c5e-b24c-ddba1eddb93e@kernel.org>
+Date: Thu, 26 Nov 2026 09:15:37 +0100
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -52,16 +52,15 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v3 04/50] mptcp: return EOF after a DATA_FIN, as
+Subject: Re: [PATCH mptcp-net v3 15/50] mptcp: clear sk_err on connect(), as
  TCP does
 Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>, Mat Martineau <martineau@kernel.org>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>
+To: Geliang Tang <geliang@kernel.org>
 References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
- <20261124-mptcp-cmason-fixes-v3-4-416c0920c73f@kernel.org>
- <39c8abe7-1af4-7e26-a394-f7cf0b5d86d8@kernel.org>
- <229f98a10259d919820fd8ef31fbf21f9e0dbfeb.camel@kernel.org>
+ <20261124-mptcp-cmason-fixes-v3-15-416c0920c73f@kernel.org>
+ <16b6809a6e7f12a4f611442fcb04d91b0bae48de.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -106,67 +105,65 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <229f98a10259d919820fd8ef31fbf21f9e0dbfeb.camel@kernel.org>
+In-Reply-To: <16b6809a6e7f12a4f611442fcb04d91b0bae48de.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang, Mat,
+Hi Geliang,
 
-Thank you for the reviews!
+Thank you for the review!
 
-On 26/11/2026 03:59, Geliang Tang wrote:
-> Hi Matt, Mat,
+On 26/11/2026 07:40, Geliang Tang wrote:> Hi Matt,
 > 
-> On Wed, 2026-11-25 at 17:57 -0800, Mat Martineau wrote:
->> On Tue, 24 Nov 2026, Matthieu Baerts (NGI0) wrote:
+> On Tue, 2026-11-24 at 22:59 +0100, Matthieu Baerts (NGI0) wrote:
+>> After a disconnect with connect(AF_UNSPEC), an error from the previous
+>> connection, e.g. a reset not reported yet to the application, was still
+>> reported for the next connection, by poll(), SO_ERROR, and the first
+>> send() or recv(). TCP clears it in tcp_connect_init(): do the same,
+>> once the subflow connect() succeeded, so an early failure keeps it.
 >>
->>> Once an MPTCP socket has received a DATA_FIN, recv() returns the
->>> remaining data, then EOF. But if the connection was then reset, e.g. by
->>> an MP_FASTCLOSE, recv() returned an error after the data, e.g. EPIPE,
->>> instead of EOF as TCP does. A proxy resetting the other connection on
->>> read errors then dropped the data it still had to forward.
->>>
->>> As TCP does with a FIN, set SOCK_DONE when processing the DATA_FIN, and
->>> check it before the socket error in recvmsg(). With an MP_FASTCLOSE, the
->>> data still in the backlog is moved first, not to miss the DATA_FIN.
->>> After a fallback, a DATA_FIN is also emulated after a reset: only set
->>> SOCK_DONE after a FIN, not to hide a reset behind an EOF. This FIN is
->>> cleared when the first subflow is disconnected: process this DATA_FIN
->>> before.
->>>
->>> This was reported on GitHub, and is validated with new Packetdrill
->>> tests: data and a DATA_FIN are received, then an MP_FASTCLOSE; and
->>> after a fallback, data, a FIN and a reset. Without this patch, the
->>> second read() returned EPIPE in both cases:
->>>
->>>  receive_fastclose_after_data_fin.pkt:27: runtime error in read call: Expected result 0 but got -1 with errno 32 (Broken pipe)
->>>  v1_connect_tcpfallback_fin_reset.pkt:19: runtime error in read call: Expected result 0 but got -1 with errno 32 (Broken pipe)
->>>
->>> Note for the backports: the issue with an MP_FASTCLOSE comes from commit
->>> 69800e516e96 ("mptcp: propagate fastclose error"), in v6.1. Before that,
->>> the modifications in mptcp_check_fastclose() and mptcp_disconnect() are
->>> not needed.
->>>
->>> Fixes: 15cc10453398 ("mptcp: deliver ssk errors to msk")
->>> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/647
->>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> This issue has been found by an AI code review agent, while reviewing
+>> other fixes, and confirmed with a reproducer: the peer resets the
+>> connection, the error is not read, then the socket is disconnected and
+>> connected again. SO_ERROR then reported ECONNRESET each time, while TCP
+>> reported no error, as MPTCP now does.
 >>
->> Reviewed-by: Mat Martineau <martineau@kernel.org>
+>> Fixes: 3d1d6d66e156 ("mptcp: implement support for user-space disconnect")
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > 
-> Thanks for adding this SOCK_DONE patch; it is very helpful for my work on
-> modifying mptcp_inq_hint(). mptcp_inq_hint() should check SOCK_DONE, just like
-> tcp_inq_hint() does.
+> Thanks for this fix. Looks good to me!
 > 
->     Acked-by: Geliang Tang <geliang@kernel.org>
+>     Reviewed-by: Geliang Tang <geliang@kernel.org>
 > 
-> I'm wondering whether this patch should come before patch 1, because patch 1
-> checks SOCK_DONE, but SOCK_DONE isn't set at that point.
+>> ---
+>> v2: new, for an issue found by a review agent
+>> ---
+>>  net/mptcp/protocol.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index ff1dcf306723..6328815ad273 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+>> @@ -4452,6 +4452,8 @@ static int mptcp_connect(struct sock *sk, struct sockaddr_unsized *uaddr,
+>>  	if (err < 0)
+>>  		goto out;
+>>  
+>> +	/* as tcp_connect_init(): drop an error from a previous connection */
+>> +	WRITE_ONCE(sk->sk_err, 0);
+> 
+> tcp_connect_init() also calls sock_reset_flag(sk, SOCK_DONE) here; maybe MPTCP
+> needs this sock_reset_flag(sk, SOCK_DONE) too.
 
-Yes, maybe. I mean: this patch 4 fixes an issue that got discovered when
-working on patch 1. We could but if there are no objections, I would
-prefer to keep this like that: the 6 first patches are likely to be sent
-together, and both patches 1 and 4 should be backported to v5.15. So no
-for extra work here?
+We are doing that in mptcp_disconnect() and I think that's enough. From
+what I see a reused msk can't reach mptcp_connect() without it, and
+nothing can set SOCK_DONE again before the next connection is
+established. In fact, I think the sock_reset_flag(sk, SOCK_DONE) in
+tcp_connect_init() is redundant and not needed.
+
+(Note that on the other end, it seems better to clear sk_err here than
+in the disconnect, similar to TCP, so the error can still be seen after
+disconnect(), and before connect()).
 
 Cheers,
 Matt
