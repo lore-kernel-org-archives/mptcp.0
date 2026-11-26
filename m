@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795735792;
-	b=L+BaIUb82ohj50vHsO7wPYyF5lppnxAw/CuiCv4w44DFQ8nAwZ0/u4kbdwLq+DmOFmZX
-	 KjRty1xBklzJqArm1hgDmSHl4pKADavI/JfQ76B+aALaazHwXSXoBOPOZMpGMfit3ODmX
-	 AnoW2/o5I4DvO6PmyHrEewnYaDStWLNZiKSrIiAP0DbSVAV3Nab9cQygxQczHs1rcHM1E
-	 uxqfJmR8fOSxprRSGFCGKreSLEh/RdWOcEDC4Yj51nxvQ2aCIawVBr+iVR4h27VKnteAq
-	 DgUZkmRtDzqpMu+JSEnUWVhkWUC5pClmGojHX1UW3mqN8h20G+t5o+D1xkaYm4XbBJg==
+	t=1795735793;
+	b=n62M6rkDvAKsi7N3CegNu1i213tFI2AXXS//+Zq2ldV+97KZX3hcBwp++uq/EwM92KUH
+	 wrZiS/twQyhz2DvfYNuN2h32iHLoyfc4vHZleajSKnLK6A7CnopoIStnkXZESnOAZoApY
+	 jUS6fKjH7fO65rJF/bNY9vBZwztcyv3cc8abzd+xPTbcILZWVm3xOjQ9mp+TdScFziE8+
+	 q4Gr/9aQ8tInTpAMQDu3Wcp5XcxKSfs+dylLTmfC38RKo4kdiGFDy4cQv7lEvvscAwDmU
+	 79j5TRMLFpSxVRMYcqrsAES3ir7uWLQ1A7Sr70H6gyowmCaouAeNMW436CwLC8qIWKA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795735792;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795735793;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=d88Sg/ZWXtAMcfuXgLDkbJSj0CuJQF+yrMoP+c+kfOA=;
-	b=uRyOXpJ3O40gHATBvHJZg6sBcJuC4PhzXhHVtZmic4bfme1+j8UTfBxTNdSlyYwKKZ4e
-	 1DgxHBWRyLMvzdS8RN1PmVlJn48LcYqIWo2cDFcIRxl8z1KrhEA6E8E48RxLLrvUuPwZ7
-	 vZUyvKL8+SNBtGRS1ttjOJW7jVruMJasu3DjbccUzUhmDH3cASf82qdVV3p6HtEApvpQ/
-	 jGdPEWAlHB5pFwVjQjJXbJhYqRMG+weiPivxCyryZS37j3r1TFje101O41bwYCCPRjFNh
-	 Gf5i7IBRHNXMh6pLrk+D36/MCO+EdxC363VeAhR5H7i8NJil/sGS8oTqHlLbq7CH5QQ==
+	bh=wOp1UgpKWba8CQ9RRDggBwaiTYjWj/PHOi8Q8ZdrBI0=;
+	b=19U/Y3M5BFVEwQhLnTtno0zp4BPrQpz0wzTt22q7f06TqdHwGmo/fu9c9EGhpjPybwSA
+	 yTy8VUz1jCyHoepS0othejhRVAVpPI56eFHWKzKWr6n9egqv7rGnbeDQIu23oySuLNPGv
+	 Jn8tfJg/7FOH2ysX9KPWgnUMU66F9eV+XL5dRIi9LU/lRsBSN3j1Iq7eR7WrBoSL8slcz
+	 IVjYRTcdEp2VZbAFU7MpQljnIFgKdivi9LNVK1XX+XCw+PyYKmjDJxWoNXmp+mJtODWFr
+	 ctnBWOiKvT/UeudwWWzzrVjr/FLhs+AevkIN1LehzfohfGhRR6JZjRcyKxtCZVfYTOg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=H19VZVJc;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="FsdXnEx/";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34CBF606A31C
-	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 23:29:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97EA1606A31C
+	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 23:29:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=H19VZVJc
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A30941F0089B;
-	Thu, 26 Nov 2026 23:29:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FsdXnEx/
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A18FC1F00926;
+	Thu, 26 Nov 2026 23:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795735791;
-	bh=d88Sg/ZWXtAMcfuXgLDkbJSj0CuJQF+yrMoP+c+kfOA=;
+	s=k20260515; t=1795735792;
+	bh=wOp1UgpKWba8CQ9RRDggBwaiTYjWj/PHOi8Q8ZdrBI0=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=H19VZVJcVvnpH+yPjEkAmdZxVH+iOoWKBdTwnoxBPPapUYFB3y0+wD7onf3kr47xK
-	 BlrNB1OwZddrRvJmv+9FaZm2ummyseRiz1MlF9a+SQCew7cASwiBvhS03kNX2FdD9b
-	 uO5wgTiT68tukbwhfQdt42aqgnPTWeDWUNLJA/2C6dRFnOW3HlS6K3MnJIGXU9x+kh
-	 L1Snli//6CXStXwv8D3gjoRcdmmvMyGtBe+QCYIgA4ROHxiwMEcKOi8bWg/U5Y+TNa
-	 mCYC8oP9ca5+rc76io8R98p5mk61OPLO2sDCf0MpWZof6vR3MfGRkDh5U2B8B63x0V
-	 Xj8cd0LNOo7QQ==
-Subject: Re: [PATCH mptcp-net v3 29/50] mptcp: don't resend data acked without
- MPTCP opts
+	b=FsdXnEx/X6z+7mjIB+gaFJq03wz1hyp2Nyydd2VaRvqqzoHdk9pMTF9bUTGy23udY
+	 TqJ4YWd+bkRuQ1zkSk9QCT990OrPr0ck42VtIILY+t99j7gC/rJ1mHwzqhEwKME6K1
+	 GQ5Bq9smF4b6z2m/QXcxO0Qk4mX6IIO51yAug1ZQn5y9k6EzZ199iDQs0iKTokmBpv
+	 Z0FAbXvlXmbcHpzxbnwxypKRxyWCXzliJf9HsdOqR/52orJdFRfRUEWKdObkM8feiv
+	 1262pOMyotEei24Q5WK/wv+ZcrPJWB+XtB6rhrzkxld/PugmC99eQaXtfKPbLzrUR+
+	 9ocWO73t+dZMA==
+Subject: Re: [PATCH mptcp-net v3 36/50] mptcp: continue the last mapping after
+ a fallback
 From: netdev-bot+sashiko@kernel.org
 To: matttbe@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Thu, 26 Nov 2026 23:29:51 +0000
-Message-ID: <179573579122.3133.15496285352485527171@kernel.org>
-In-Reply-To: <20261124-mptcp-cmason-fixes-v3-29-416c0920c73f@kernel.org>
-References: <20261124-mptcp-cmason-fixes-v3-29-416c0920c73f@kernel.org>
-X-sashiko-severity: Low
+Date: Thu, 26 Nov 2026 23:29:52 +0000
+Message-ID: <179573579223.3133.15918575004608443729@kernel.org>
+In-Reply-To: <20261124-mptcp-cmason-fixes-v3-36-416c0920c73f@kernel.org>
+References: <20261124-mptcp-cmason-fixes-v3-36-416c0920c73f@kernel.org>
+X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -62,116 +62,107 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found more severe
-issue(s) in other patches of this series. This mail is only an FYI, in case
-you want to address the nit picks below when you respin.
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue(s) to consider.
 
-Low priority / nit picks for your consideration:
+Critical: 0 · High: 0 · Medium: 1 · Low: 0
 
-- [Low] In net/mptcp/protocol.c, mptcp_sendmsg_frag() (lines 1566-1568)
-  used to reset the subflow under `before64(data_seq, msk->snd_nxt) &&…
-- [Low] For a passive MP_JOIN, MPTCP_JOINED is only set by
-  mptcp_subflow_joined(), called from __mptcp_finish_join().
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
+
+- [Medium] After this patch, a dummy mapping always continues in a
+  straight line from the last mapping that went through…
 
 --
 
-mptcp: don't resend data acked without MPTCP opts
+mptcp: continue the last mapping after a fallback
 
-This patch adds opt_ack_seq, a per-subflow field that tracks the highest
-TCP ack_seq received with MPTCP options. Data acked without MPTCP options
-now makes the subflow reset instead of being resent at the MPTCP level.
-The check only applies until a new MPTCP_JOINED msk flag gets set, which
-happens once an MP_JOIN subflow has been established.
+After a fallback, this commit builds the dummy mapping from the peer's
+last valid mapping (dsn_base) and no longer from iasn. Zero window probes
+and reinjections therefore stop pushing later data into the out-of-order
+queue. It also tracks the highest end of the peer's mappings (dsn_end),
+and mptcp_try_fallback() now fails while the last mapping ends below it.
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 61cc4ae2a7b81..f3dd15293bc8c 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1090,6 +1090,9 @@ static void mptcp_subflow_joined(struct mptcp_sock *msk, struct sock *ssk)
->  {
->  	mptcp_subflow_ctx(ssk)->map_seq = READ_ONCE(msk->ack_seq);
->  	msk->allow_infinite_fallback = false;
-> +	/* an active join is added once fully established, see options.c */
-> +	if (!mptcp_subflow_ctx(ssk)->request_join)
-> +		set_bit(MPTCP_JOINED, &msk->flags);
->  	mptcp_event(MPTCP_EVENT_SUB_ESTABLISHED, msk, ssk, GFP_ATOMIC);
->  }
-
-[Severity: Low]
-For a passive MP_JOIN, is this the only place where MPTCP_JOINED gets set?
-If the user owns the msk when the third ACK arrives, mptcp_finish_join()
-only queues the subflow:
-
-net/mptcp/protocol.c:mptcp_finish_join() {
-    ...
-	} else {
-		sock_hold(ssk);
-		list_add_tail(&subflow->node, &msk->join_list);
-		__set_bit(MPTCP_FLUSH_JOIN_LIST, &msk->cb_flags);
-    ...
-}
-
-mptcp_subflow_joined() then runs only later, through
-mptcp_release_cb()->__mptcp_flush_join_list().
-
-Until then, code running under the same ownership can still call
-mptcp_sendmsg_frag() on the first subflow while MPTCP_JOINED is clear.
-Two examples are mptcp_worker()->__mptcp_retrans() and a zero window probe
-from the sendmsg path.
-
-Suppose the peer already considers the join established and leaves out a
-Data ACK that does not advance on the first subflow. The commit message
-says RFC 8684 section 3.3.2 allows this after a join. tcp_ack() then moves
-snd_una, but opt_ack_seq does not move.
-
-Would mptcp_sendmsg_frag() then reset the first subflow with
-MPTCP_RST_EMIDDLEBOX and increment MPTCP_MIB_FALLBACKFAILED, even though a
-join has already been accepted?
-
-The window is narrow. It needs the msk lock to be held across a round
-trip, and a non-Linux peer that leaves out non-advancing Data ACKs only
-after a join. mptcp_release_cb() flushes the join list before it handles
-PUSH_PENDING and RETRANSMIT, so the release path itself looks correctly
-ordered.
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 3590c1207e88b..f73e4b8deca42 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
 
 [ ... ]
 
-> @@ -1557,10 +1560,12 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
->  		copy = 1;
->  	}
+> @@ -1438,6 +1440,17 @@ static bool mptcp_subflow_fail(struct mptcp_sock *msk, struct sock *ssk)
+>  	return true;
+>  }
 >  
-> -	/* old data acked without MPTCP opts: the peer may have fallen back */
-> +	/* data acked without MPTCP opts: the peer may have fallen back, only
-> +	 * possible before a join, see RFC 8684
-> +	 */
->  	if (unlikely(before64(data_seq, msk->snd_nxt) &&
-> -		     subflow->old_data_pending &&
-> -		     !before(tcp_sk(ssk)->snd_una, subflow->old_data_end))) {
-> +		     !test_bit(MPTCP_JOINED, &msk->flags) &&
-> +		     after(tcp_sk(ssk)->snd_una, subflow->opt_ack_seq))) {
+> +/* Fallback: dummy maps go on from the last valid one, unless it is old */
+> +static void subflow_update_dsn_base(struct mptcp_subflow_context *subflow)
+> +{
+> +	u32 end = subflow->map_seq + subflow->map_data_len;
+> +
+> +	subflow->dsn_base = subflow->map_seq - subflow->map_subflow_seq + 1;
+> +	subflow->map_old = before(end, subflow->dsn_end);
 
-[Severity: Low]
-This isn't a bug, but could the commit message say that this also changes
-what the previous commit added in "mptcp: stop resending data to a peer
-that fell back"?
+[Severity: Medium]
 
-The old condition reset the subflow for data that had already been resent
-and was then acked without MPTCP options. It did this whether or not any
-join had happened.
+Can a resend that ends exactly at dsn_end still get stale bytes delivered
+as new data?
 
-This patch drops the old_data_pending term and gates the whole check on
-MPTCP_JOINED. After an MP_JOIN subflow is established, that reset no
-longer happens, and the data is resent again.
+A zero window probe, or a reinjection of the stream tail, ends exactly at
+dsn_end, so before(end, subflow->dsn_end) is false. map_old stays 0, so
+mptcp_try_fallback() still allows the fallback, and dsn_base is rebased
+onto the resend.
 
-The commit message says:
+Now say the next resend of the same byte has its DSS stripped.
+get_mapping_status() returns MAPPING_NODSS, or the infinite mapping
+status, and subflow_check_data_avail() jumps to the fallback label. That
+segment is never compared with dsn_end. Its dummy mapping is then:
 
-    Only before any MP_JOIN subflow has been established
-    ...
-    Two other new tests check that this data is still resent after a join,
+    subflow->dsn_base + subflow->map_subflow_seq - 1
 
-It doesn't say that the reset for data that was already resent is now
-also skipped after a join. The code itself looks fine; this is only about
-the description.
+That value is msk->ack_seq, so __mptcp_move_skb() delivers the stale byte
+in order. Using the notation from the commit message:
+
+    data     SSN 1 to 1000   DSN iasn to iasn + 999
+    probe 1  SSN 1001        DSN iasn + 999 with DSS, map_old = 0
+    probe 2  SSN 1002        no DSS, dummy DSN iasn + 1000, delivered
+    probe 3  SSN 1003        no DSS, dummy DSN iasn + 1001, delivered
+
+Probes 2 and 3 carry the byte at iasn + 999 again, and the application
+reads them as new data with no error. The old iasn + SSN - 1 formula sent
+probe 2 to the out-of-order queue, so the reader stalled instead.
+
+The commit message covers this with:
+
+  "unless the sender resets the subflow before, as it does since
+  "mptcp: don't resend data acked without MPTCP opts""
+
+A fully patched Linux sender does reset first for a repeated probe, via
+the check in mptcp_sendmsg_frag(). Older kernels and other MPTCP stacks do
+not. Even a patched sender still allows the first MPTCP-level
+retransmission of data that was acked with MPTCP options. After an earlier
+probe or reinjection, that case also goes from a stall to a duplicate.
+
+The last patch of the series, "mptcp: reset when the DSS disappears after
+a DATA_ACK", only covers this when the receiver's own data was DATA_ACKed:
+subflow_nodss_is_fatal() requires dss_confirmed. It also skips
+MAPPING_INFINITE, and it has no Fixes: tag. A stable tree that picks up
+this patch through its Fixes: tag would turn a visible hang into silent
+stream corruption against non-resetting peers, without that mitigation.
+
+Could the receiver also treat a mapping that ends exactly at dsn_end, and
+re-maps data at or below ack_seq, as old? If not, could the commit message
+say that this safety depends on the remote kernel or stack? Today only the
+note below the '---' line mentions "e.g. with an older kernel", and that
+note is dropped when the patch is applied.
+
+> +	if (!subflow->map_old)
+> +		subflow->dsn_end = end;
+> +}
+
+[ ... ]
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261124-mptcp-cmason-fixes-v3-0-416c0920c73f%40kernel.org
