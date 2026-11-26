@@ -1,53 +1,59 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795660992;
-	b=XVHHFva597tUXNQ5zQzYengWmTqa1FlkVuRJCNhhYnfKO8xlkTQK7SQGA981ZjqIMGiD
-	 I3xjGqLWxa4qYKXr4BvcFq69Dj8QXTXuY+3sbnOnBm12CxEgoiLI2CI1Rk82im3/5afs1
-	 E64zLwj7t7eXuZdPIW765H2L20jDBVwe5KeHh/lHKwnRU3vKkUgDnp4yDPfHsjZ0nZllH
-	 kEbNpcbNLInTB042KoFiIY33EUneb/JQBIgJSKEecp6oy64GvkcT3+q+TP5r2cFZQ+wvB
-	 12TMaCMh41LEbW/tikNLSGkzpotcARamz1geBwku27P7C/1NtXoqFjDWeTqIcrHCzlQ==
+	t=1795661992;
+	b=f36gi6TO4CjEiEQzMz2Y3qS7yTHjtR4Z1T9YRO2bSjgyDnGC5IAdSK17SgN4siKJ1JtN
+	 K0td2CijehL5NoJxVmUs1AEbzQn85roCjOiDNDQScmpAlVmWaFi/hnmFe8UAfRC4x9LLT
+	 HrhLcLeW7n9cBw4x+JnQHXubfFOfLMQfI0MDM3K8Ii/F4nAPOvTmiPGn5ffNqN4+E490U
+	 TquZOcHvSukEJ3wiK6iFmNIaom3hwBxjemPnY8wxJtLeDmgOjk7DMEvXPB6qhcv5/KB3w
+	 mcrFa+CMdaPm/FpJ4B5eTOW5KnhIH8j2JBoe+8/VmmwZY5rLWIpqCBfx1SGUv5ZvJ+g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795660992;
-	h=Received:DKIM-Signature:Date:From:To:cc:Subject:In-Reply-To:
-	 Message-ID:References:MIME-Version:Content-Type;
-	bh=BO+9ehr6cUmT7ceRx3pGU32nyY2GwmNc/cfojEnv7kc=;
-	b=0NK1sbm+RtIQ9Pa29webtj7O89IKWpehFYw/nAOWsy4A4M8ZjbC3MAbNPa1Id/LsJYkm
-	 viQ0eErp2O5Re+FIsubxgnIsa/vsW/EabyKW6hlW3g6Nr0YunJ9jjoJxHOWVxvpWAADvM
-	 J4yYjeVR7Non+dlYN4BpH8LvuL4f4gXOdVvuIkDfTmLVTFY723yXgZQPTXjcPkTfRm76T
-	 HA8XA7d+5Q4t/zcoYWEe0t0u+HImEcrUeOFKWGCi/8HVCSrR9msSvhsksxYK6w3ZBMWa8
-	 /bBxP0in3SqShhuSv8GjJ7APDIY+q3yjtBnSqbvq+Z1VMt6PgLDyjiSggO2+XU5aEbg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795661992;
+	h=Received:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
+	 In-Reply-To:References:Content-Type:User-Agent:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=80/bjJkFb6sj9Z1Vt7BmZ7mq6ImiVjPIuE2K4Wmr4hY=;
+	b=4Xw80kuMgYV3pHtp4qT1mWudigf8640+UQEjhym+3+tC/uDdcIgBCG+ooddi/sERDpAV
+	 Eyet/LPPz9jS9kiWcvgCpwArAU8eFRaqhPELHgHyYAQy7NyogoOU2FtiDfjQelyAXVPos
+	 FbwIbbrKcWp+p+0eju5vAQJPa5APemmDAx6WSFNe+CHxkffET/JVqGDdJREhXAFWCs558
+	 4/c7M8SCZQwmVC6lOQZRs/ty97+OAUXHnyyKDwISqgDEAfJl8H+EHfSKpD9+c4ZoixQsZ
+	 1XEO/NY51t6qY/kWEaQVxJf6bEGdKmLBCOp51gfGqSWgQ3A5AWat0IgBPBJrPQ61lmA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F3YdiZ1X;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fTNNeeEP;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B7E606A31E
-	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 02:43:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36465606A31E
+	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 02:59:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F3YdiZ1X
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DDBC1F000C0;
-	Thu, 26 Nov 2026 02:43:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fTNNeeEP
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C47241F000C0;
+	Thu, 26 Nov 2026 02:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795660992;
-	bh=BO+9ehr6cUmT7ceRx3pGU32nyY2GwmNc/cfojEnv7kc=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References;
-	b=F3YdiZ1Xpomu+SrgdS1J3q8A8KgomPavM+utPjXIFpzIhictUATZ2ejMosi5lsICm
-	 3tYrfcI0OUzDI4giJTI9w/7cLLk7GYIH86CCsEpBADKHFC0Mb+qnQ8NZ/CbQbd64J/
-	 +dhKGsrOe7i2LZPD6T20uBHGFQpp0If+xQ8zv2i+eavTUKEejtuIeBnz5nyz4Cs/7V
-	 NbZeqSww2hXDhhi7Fu7eqT9f6AKz3JxvxiU5PNJIHEy7+i2gTp/s3RKhH0aKxpu26V
-	 YuER2v+PnHKbWzjqTrq+z6jKy+HWuSS4IciwAcK77yOdO+g66tPM2pX8jycEkjiWUU
-	 dIMQT/RT/Ix7w==
-Date: Wed, 25 Nov 2026 18:43:09 -0800 (PST)
-From: Mat Martineau <martineau@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-cc: MPTCP Linux <mptcp@lists.linux.dev>, Chris Mason <mason@kernel.org>
-Subject: Re: [PATCH mptcp-net v3 34/50] mptcp: don't charge the backlog twice
- at accept()
-In-Reply-To: <20261124-mptcp-cmason-fixes-v3-34-416c0920c73f@kernel.org>
-Message-ID: <089c2aae-6368-14d4-ef3f-77021a35408e@kernel.org>
-References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org> <20261124-mptcp-cmason-fixes-v3-34-416c0920c73f@kernel.org>
+	s=k20260515; t=1795661992;
+	bh=80/bjJkFb6sj9Z1Vt7BmZ7mq6ImiVjPIuE2K4Wmr4hY=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=fTNNeeEPoBM/u/H/GL9kC+sixkGxoxa8mjYSoxU2dymfAHSxoW8RMqHs3wrvC1Gd8
+	 3cMgKEFUFeqca1UxMXYxrCMnHsEZF7muEwWMP7We2nlMVX8mi17BK2ICaZL+O13oz+
+	 /+9NF6upZ939sCsdwN5jDlohyybHL3rkgtcDpRf3UU+9fKW3x5XanSnNnnIQVVGV7w
+	 O/8N/TLjASZlzgtGc0y4tWIo3gveymSjKBYYWtM2KlPLcdRcDBAjYZoS8PlSMwYg2v
+	 zH37LeXOXADbl8/721gXJQ9i6vafgbOxCffaXP4xzzyL6SxyvLgiAR4G/XUNQBQfFR
+	 4A8ioD4t+K/KQ==
+Message-ID: <229f98a10259d919820fd8ef31fbf21f9e0dbfeb.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net v3 04/50] mptcp: return EOF after a DATA_FIN,
+ as TCP does
+From: Geliang Tang <geliang@kernel.org>
+To: Mat Martineau <martineau@kernel.org>, "Matthieu Baerts (NGI0)"
+	 <matttbe@kernel.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>
+Date: Thu, 26 Nov 2026 10:59:47 +0800
+In-Reply-To: <39c8abe7-1af4-7e26-a394-f7cf0b5d86d8@kernel.org>
+References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
+	 <20261124-mptcp-cmason-fixes-v3-4-416c0920c73f@kernel.org>
+	 <39c8abe7-1af4-7e26-a394-f7cf0b5d86d8@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-10build1 
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -57,152 +63,164 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, 24 Nov 2026, Matthieu Baerts (NGI0) wrote:
+Hi Matt, Mat,
 
-> From: Chris Mason <mason@kernel.org>
->
-> accept() can permanently overcharge the memory cgroup of an MPTCP
-> server, so the server can be OOM killed, if the new connection received
-> data while its MPTCP socket was locked.
->
-> The sockets of an MPTCP connection have no memory cgroup before
-> accept(), which then charges the sk_forward_alloc and the sk_rmem_alloc
-> of the MPTCP socket (msk) and of each subflow. mptcp_graft_subflows()
-> also charges msk->backlog_unaccounted: the truesize of the skbs that
-> __mptcp_add_backlog() queued while the socket lock of the msk was held
-> and their subflow had no memory cgroup. But the first charge already
-> covers each of these skbs that has not been freed, in the sk_rmem_alloc
-> of its subflow or of the msk, so no later uncharge matches the extra
-> charge.
->
-> The fix used here is to remove msk->backlog_unaccounted, its charge in
-> mptcp_graft_subflows() and the warning that tests it in
-> mptcp_can_spool_backlog(). An RFC patch [1] removes the same lines, as
-> part of another approach.
->
-> This issue has been found with the help of an LLM, and reproduced in a
-> VM, with the reproducer shared with the original version of this patch,
-> on a kernel with the previous patch: 100,000 connections to an MPTCP
-> server in a memory cgroup. Without this patch, about 63 MB stayed
-> charged to this memory cgroup once all the connections were closed, and
-> to its parent after its removal:
->
->  SNAP label=after-100000 rounds=100000 sockets_left_in_srv=0 tcp_mem_pages=0 [...] c_sock=63295488 [...]
->  [...]
->  SNAP label=c-removed rounds=100000 sockets_left_in_srv=0 tcp_mem_pages=0 c=removed [...] p_sock=63295488 [...]
->
-> And about 12 MB with only 50 connections, each getting 20,000 duplicates
-> of a byte before accept(), beside bare ACKs with RM_ADDR, which make the
-> MPTCP worker take the socket lock:
+On Wed, 2026-11-25 at 17:57 -0800, Mat Martineau wrote:
+> On Tue, 24 Nov 2026, Matthieu Baerts (NGI0) wrote:
+> 
+> > Once an MPTCP socket has received a DATA_FIN, recv() returns the
+> > remaining data, then EOF. But if the connection was then reset, e.g. by
+> > an MP_FASTCLOSE, recv() returned an error after the data, e.g. EPIPE,
+> > instead of EOF as TCP does. A proxy resetting the other connection on
+> > read errors then dropped the data it still had to forward.
+> > 
+> > As TCP does with a FIN, set SOCK_DONE when processing the DATA_FIN, and
+> > check it before the socket error in recvmsg(). With an MP_FASTCLOSE, the
+> > data still in the backlog is moved first, not to miss the DATA_FIN.
+> > After a fallback, a DATA_FIN is also emulated after a reset: only set
+> > SOCK_DONE after a FIN, not to hide a reset behind an EOF. This FIN is
+> > cleared when the first subflow is disconnected: process this DATA_FIN
+> > before.
+> > 
+> > This was reported on GitHub, and is validated with new Packetdrill
+> > tests: data and a DATA_FIN are received, then an MP_FASTCLOSE; and
+> > after a fallback, data, a FIN and a reset. Without this patch, the
+> > second read() returned EPIPE in both cases:
+> > 
+> >  receive_fastclose_after_data_fin.pkt:27: runtime error in read call: Expected result 0 but got -1 with errno 32 (Broken pipe)
+> >  v1_connect_tcpfallback_fin_reset.pkt:19: runtime error in read call: Expected result 0 but got -1 with errno 32 (Broken pipe)
+> > 
+> > Note for the backports: the issue with an MP_FASTCLOSE comes from commit
+> > 69800e516e96 ("mptcp: propagate fastclose error"), in v6.1. Before that,
+> > the modifications in mptcp_check_fastclose() and mptcp_disconnect() are
+> > not needed.
+> > 
+> > Fixes: 15cc10453398 ("mptcp: deliver ssk errors to msk")
+> > Link: https://github.com/multipath-tcp/mptcp_net-next/issues/647
+> > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-What does "20,000 duplicates of a byte" mean? Just that each connection 
-received 20kbytes before accept? If the test case happens to use the same 
-byte value for every data byte in the payload, that's superfluous 
-information.
+Thanks for adding this SOCK_DONE patch; it is very helpful for my work on
+modifying mptcp_inq_hint(). mptcp_inq_hint() should check SOCK_DONE, just like
+tcp_inq_hint() does.
 
-Other than that, the patch LGTM.
+    Acked-by: Geliang Tang <geliang@kernel.org>
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+I'm wondering whether this patch should come before patch 1, because patch 1
+checks SOCK_DONE, but SOCK_DONE isn't set at that point.
 
->
->  SNAP label=after-50 rounds=50 sockets_left_in_srv=0 tcp_mem_pages=256 [...] c_sock=12881920 [...]
->
-> Fixes: 6228efe0cc01 ("mptcp: leverage the backlog for RX packet processing")
-> Link: https://lore.kernel.org/all/20260924080219.1036588-4-caixinchen1@huawei.com/ [1]
-> Signed-off-by: Chris Mason <mason@kernel.org>
-> [ No comment change: the commit message explains why the backlog is
->  covered. Commit message: refer to the RFC [1] removing the same lines
->  + how the issue was found, and its symptoms. ]
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> net/mptcp/protocol.c | 35 +----------------------------------
-> net/mptcp/protocol.h |  1 -
-> 2 files changed, 1 insertion(+), 35 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 504fe4a9954f..c9ef23276399 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -802,12 +802,6 @@ static void __mptcp_add_backlog(struct sock *sk,
->
-> account:
-> 	WRITE_ONCE(msk->backlog_len, msk->backlog_len + delta);
-> -
-> -	/* Possibly not accept()ed yet, keep track of memory not CG
-> -	 * accounted, mptcp_graft_subflows() will handle it.
-> -	 */
-> -	if (!mem_cgroup_from_sk(ssk))
-> -		msk->backlog_unaccounted += delta;
-> }
->
-> static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
-> @@ -2456,12 +2450,6 @@ static bool mptcp_can_spool_backlog(struct sock *sk, struct list_head *skbs)
-> {
-> 	struct mptcp_sock *msk = mptcp_sk(sk);
->
-> -	/* After CG initialization, subflows should never add skb before
-> -	 * gaining the CG themself.
-> -	 */
-> -	DEBUG_NET_WARN_ON_ONCE(msk->backlog_unaccounted && sk->sk_socket &&
-> -			       mem_cgroup_from_sk(sk));
-> -
-> 	if (list_empty(&msk->backlog_list))
-> 		return false;
->
-> @@ -4691,8 +4679,7 @@ static void mptcp_graft_subflows(struct sock *sk)
-> 		/* Subflows joining after __inet_accept() will get the
-> 		 * mem CG properly initialized at mptcp_finish_join() time,
-> 		 * but subflows pending in join_list need explicit
-> -		 * initialization before flushing `backlog_unaccounted`
-> -		 * or MPTCP can later unexpectedly observe unaccounted memory.
-> +		 * initialization by the loop below.
-> 		 */
-> 		mptcp_data_lock(sk);
-> 		list_splice_init(&msk->join_list, &join_list);
-> @@ -4724,26 +4711,6 @@ static void mptcp_graft_subflows(struct sock *sk)
-> unlock:
-> 		release_sock(ssk);
-> 	}
-> -
-> -	if (mem_cgroup_sk_enabled(sk)) {
-> -		gfp_t gfp = GFP_KERNEL | __GFP_NOFAIL;
-> -		int amt;
-> -
-> -		/* Account the backlog memory; prior accept() is aware of
-> -		 * fwd and rmem only.
-> -		 */
-> -		mptcp_data_lock(sk);
-> -		amt = sk_mem_pages(sk->sk_forward_alloc +
-> -				   msk->backlog_unaccounted +
-> -				   atomic_read(&sk->sk_rmem_alloc)) -
-> -		      sk_mem_pages(sk->sk_forward_alloc +
-> -				   atomic_read(&sk->sk_rmem_alloc));
-> -		msk->backlog_unaccounted = 0;
-> -		mptcp_data_unlock(sk);
-> -
-> -		if (amt)
-> -			mem_cgroup_sk_charge(sk, amt, gfp);
-> -	}
-> }
->
-> static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index d0ae782c9ade..9a9dbab672af 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -394,7 +394,6 @@ struct mptcp_sock {
->
-> 	struct list_head backlog_list;	/* protected by the data lock */
-> 	u32		backlog_len;
-> -	u32		backlog_unaccounted;
-> };
->
-> #define mptcp_data_lock(sk) spin_lock_bh(&(sk)->sk_lock.slock)
->
-> -- 
-> 2.55.0
->
->
->
+Thanks,
+-Geliang
+
+> 
+> > ---
+> > v2: new, for issue #647 reported on GitHub
+> > v3: process the DATA_FIN before disconnecting the first subflow, which
+> >    clears its FIN (Clashiko)
+> > 
+> > Note (Clashiko on v2): with a DATA_FIN, then an MP_FASTCLOSE in
+> > FIN_WAIT2, the reset subflows are only released at close(): not a leak.
+> > A DATA_FIN mapped on another CPU while an MP_FASTCLOSE is processed can
+> > still lead to ECONNRESET: two subflows racing, and the connection reset
+> > by the peer anyway.
+> > ---
+> > net/mptcp/protocol.c | 31 +++++++++++++++++++++++++++++--
+> > 1 file changed, 29 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > index 9e297fa08bfe..de6da0b6c4ca 100644
+> > --- a/net/mptcp/protocol.c
+> > +++ b/net/mptcp/protocol.c
+> > @@ -714,6 +714,10 @@ static void mptcp_check_data_fin(struct sock *sk)
+> > 		WRITE_ONCE(msk->rcv_data_fin, 0);
+> > 
+> > 		WRITE_ONCE(sk->sk_shutdown, sk->sk_shutdown | RCV_SHUTDOWN);
+> > +		/* on fallback, also emulated after a reset: check for a FIN */
+> > +		if (!__mptcp_check_fallback(msk) ||
+> > +		    (msk->first && sock_flag(msk->first, SOCK_DONE)))
+> > +			sock_set_flag(sk, SOCK_DONE);
+> > 		smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
+> > 
+> > 		switch (sk->sk_state) {
+> > @@ -972,6 +976,9 @@ static bool __mptcp_subflow_error_report(struct sock *sk, struct sock *ssk)
+> > 	 * destroy the msk as needed.
+> > 	 */
+> > 	ssk_state = inet_sk_state_load(ssk);
+> > +	/* a FIN received before still leads to EOF, as with TCP */
+> > +	if (sock_flag(ssk, SOCK_DONE) && mptcp_pending_data_fin(sk, NULL))
+> > +		sock_set_flag(sk, SOCK_DONE);
+> > 	if (ssk_state == TCP_CLOSE && !sock_flag(sk, SOCK_DEAD))
+> > 		mptcp_set_state(sk, ssk_state);
+> > 	WRITE_ONCE(sk->sk_err, -err);
+> > @@ -2494,6 +2501,9 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+> > 			    !timeo)
+> > 				break;
+> > 		} else {
+> > +			if (sock_flag(sk, SOCK_DONE))
+> > +				break;
+> > +
+> > 			copied = sock_error(sk);
+> > 			if (copied)
+> > 				break;
+> > @@ -2813,6 +2823,8 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+> > void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+> > 		     struct mptcp_subflow_context *subflow)
+> > {
+> > +	struct mptcp_sock *msk = mptcp_sk(sk);
+> > +
+> > 	/* The first subflow can already be closed or disconnected */
+> > 	if (subflow->close_event_done || READ_ONCE(subflow->local_id) < 0)
+> > 		return;
+> > @@ -2820,12 +2832,21 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+> > 	subflow->close_event_done = true;
+> > 
+> > 	if (sk->sk_state == TCP_ESTABLISHED)
+> > -		mptcp_event(MPTCP_EVENT_SUB_CLOSED, mptcp_sk(sk), ssk, GFP_KERNEL);
+> > +		mptcp_event(MPTCP_EVENT_SUB_CLOSED, msk, ssk, GFP_KERNEL);
+> > 
+> > 	/* subflow aborted before reaching the fully_established status
+> > 	 * attempt the creation of the next subflow
+> > 	 */
+> > -	mptcp_pm_subflow_check_next(mptcp_sk(sk), subflow);
+> > +	mptcp_pm_subflow_check_next(msk, subflow);
+> > +
+> > +	/* On fallback, the FIN of the first subflow is cleared when it is
+> > +	 * disconnected: process the DATA_FIN emulated from it before.
+> > +	 */
+> > +	if (ssk == msk->first && __mptcp_check_fallback(msk) &&
+> > +	    READ_ONCE(msk->rcv_data_fin) && !sock_flag(sk, SOCK_DEAD)) {
+> > +		mptcp_move_skbs(sk);
+> > +		mptcp_check_data_fin(sk);
+> > +	}
+> > 
+> > 	__mptcp_close_ssk(sk, ssk, subflow, MPTCP_CF_PUSH);
+> > }
+> > @@ -2938,6 +2959,11 @@ static void mptcp_check_fastclose(struct mptcp_sock *msk)
+> > 	if (likely(!READ_ONCE(msk->rcv_fastclose)))
+> > 		return;
+> > 
+> > +	/* a DATA_FIN received before still leads to EOF, as with TCP */
+> > +	if (READ_ONCE(msk->rcv_data_fin))
+> > +		mptcp_move_skbs(sk);
+> > +	mptcp_check_data_fin(sk);
+> > +
+> > 	mptcp_token_destroy(msk);
+> > 
+> > 	mptcp_for_each_subflow_safe(msk, subflow, tmp) {
+> > @@ -3797,6 +3823,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
+> > 	atomic64_set(&msk->rcv_wnd_sent, 0);
+> > 
+> > 	WRITE_ONCE(sk->sk_shutdown, 0);
+> > +	sock_reset_flag(sk, SOCK_DONE);
+> > 	sk_error_report(sk);
+> > 	return 0;
+> > }
+> > 
+> > -- 
+> > 2.55.0
+> > 
+> > 
+> > 
