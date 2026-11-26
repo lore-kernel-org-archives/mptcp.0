@@ -1,47 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795631190;
-	b=dl+lefzsrO0wg2LsFfgisncCsdJtaq1OU7ClMcQL6l87ZMyzPwg/m2gMNO0sFdTuRyuy
-	 lt0X6Gp5BHsttjjiAYAiKfc2BrkH9Q+iEaU5hwAJ6z+bBHYttV5416GnrsAIwJIc3WhD5
-	 uANDdRB88CUOaLaPSnx4RDH0AMuU72aCv0OOcmasrfu8qLe+N/AoqbNekuw8EDfHEtbyI
-	 P6hTIRLH5J93/cMVFkfwIN7bNUnCyxZnbqH1himCXolrRd5XfeBZqKaVziZDvN4uSUD1C
-	 bZyJ2/hPPVCI1BU9vnDD1tc4H4TgSjtvLsqDC5ZLtZa0OfdlJPlEl01WqksOId50k2g==
+	t=1795651939;
+	b=h52qnE6Gq5W2tqSNcm9TSbwldztRVtf7Cwh2jut2tPd8gMmMkdtvg8BfUVVCEYR051AU
+	 RQdQ6Ehg+jxl8faFNsjDsXwI/9+T+TlLFuCRWQbj3EDBpxYLoOAmb9EgJH61qa83Y/IFm
+	 xtXuB6Bs+M76xC82SV2BlkiXG3zA4WuvVeoP8ImNxi7sgHSx734pJI097J90CdR4ncC3z
+	 GDUUP3+vQxlHECeSM++awC32e/zo+NEzY2AQofE2OXCCUYZULNrDuESYd/jsPmQWlsPPv
+	 D3JhWHOe194gyVl5vSFeu/p3YRthf27ZwRS1CaH78E6TPNzxmRd2rOW9gFQlmnOOhtA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795631190;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:From:To:Cc:References:Autocrypt:Organization:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=qM1YySooHoHm1gj23kEOsBOeRg2NG9r9DRyC2BeZWks=;
-	b=20A6yjnkE+89tkJe32g8bKkvyfeOK6W8vHZBq384Taj4SZ5cepMegY8eYYJlOvoC+DWO
-	 Hg4L3rDtYSe+5zBj4w8ED/vMeet+wVeWAJco/dZlcwwn56aTS8HmfjK6qAkzI7lpxNoPm
-	 pI6AOjMlHSi14AiOLzTD5nngUzOqWy86lGt8ews4UbRoxEQtnBWx56jKP8g1R+L9C9xlA
-	 IvhNai2yvm5Ldvwi1JC26os1UB8ALZU/L/zwv3Lec3GN/xnFSNAp2cWtA0hAw2c8+BP78
-	 NDeCapRmsHyyMUnPSVmellgtiO3a+3KgEkf0HoA4wtjPMMAQRgvmFfBcf8H8TWO49RQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795651939;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=8m7u2E8o1BxsHptW/XAQO5bZWgJgsJyQcHFpELAdf7I=;
+	b=ST91XkRhmlahEChm7ob1g+/ic71pmYODN9iRTrdDb3Ge0Gno+ItlILDcV/2dGFywKaUA
+	 p1I5Abe+5sjkINZYFyDSFM/lAjP6fdm2Zsaj9Rn+SSFt7aE03SasI/FA/7v/mgRs3NPaZ
+	 6ar808FKesTt0PaUB37RfEop85DgPme9mKDYxI4MpJFbBABtcy5hPdctfMOf6I188Ry4k
+	 wK/wuJ8L5QZlgAGY/d7fGayO3bH4Qbl6wO8YB++ZSkqTTRU23w/FjokWAfQ94oA9K20I7
+	 lp3eGSGWNZrsvgvR/UHjS0uJpNstAWN9u7Xh1Yv7y6avlOJPYUg57PmnSLyAKN+kcEA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SUOUCdu4;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hBBdtqGq;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B36606A327
-	for <mptcp@lists.linux.dev>; Wed, 25 Nov 2026 18:26:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47168606A321
+	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 00:12:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SUOUCdu4
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A02E1F000C0;
-	Wed, 25 Nov 2026 18:26:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hBBdtqGq
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EC201F000C0;
+	Thu, 26 Nov 2026 00:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795631190;
-	bh=qM1YySooHoHm1gj23kEOsBOeRg2NG9r9DRyC2BeZWks=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To;
-	b=SUOUCdu4e+/a/HWSC8c9BGZu01AjyoIXQ4BtniNpFzyLY3G5ELAs8Apvx5nDiZw25
-	 uYf4aNalq+Ci4utPyRdX6XHFXBSfWywIWOltNR6el23uAOrNrDj7iGXLZIJgVrM385
-	 ADLK6bfpdyHv5p+yBzRYECziDg/IAGkKL1EcwZGYIFVYXjpGXKlUQELs1/xEy8iSqD
-	 jRK9ZLcC8AYVJpfi9ronnTLVfcNoK8iUhJMYxJEHSg3q5r5XnKpgYcSxwH/HrKtw6H
-	 COGdi/iPPnZvLmeqCnnabOAz7qDP6aj6XUkXV1zNlpBxIxo18qaTilYhzJlOS1LA/h
-	 ZZVD2H8BJCD1Q==
-Message-ID: <4bb59be0-1b1a-4bd8-ba71-5f5e01e48482@kernel.org>
-Date: Wed, 25 Nov 2026 19:26:27 +0100
+	s=k20260515; t=1795651938;
+	bh=8m7u2E8o1BxsHptW/XAQO5bZWgJgsJyQcHFpELAdf7I=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=hBBdtqGqRpiJgohhhO8ETkldReZyNsbaHUq72wvFrk0QQjJwjEmKVMMfNonjs+xgP
+	 3b9xluYxQBXKehmi0B/weWZ5gTnauP3KDFJBcdharp6SQrn9h7yMuRwykQkEOTB3rt
+	 c0JMfNlAi3xIQYpd03f+9xQidcIWzGNGAYV3gFt2k8HiwPBE4f8F2FurRCCQW1a1CP
+	 fuyOlPVsSNyJRvuF/xZGo2fHkSYxPB6rSKY9HyJ56mpMY0ibUz1fzp6AX2wREeQCmg
+	 Wesj+A/10+E86TeRsZTDKHZB7VorAOUUb3sPeM38/mHPLfOU/+EkaEjGTJ8XhcuOCb
+	 QfnpYvERjHYOg==
+Subject: Re: [PATCH mptcp-next v8 1/2] mptcp: sched: add subflow avoid flag
+ for BPF schedulers
+From: netdev-bot+sashiko@kernel.org
+To: kalpan.jani@mpiricsoftware.com
+Cc: mptcp@lists.linux.dev, shardul.b@mpiricsoftware.com, janak@mpiric.us,
+ kalpanjani009@gmail.com, pabeni@redhat.com, kuba@kernel.org
+Date: Thu, 26 Nov 2026 00:12:17 +0000
+Message-ID: <179565193796.3133.5945806971196572908@kernel.org>
+In-Reply-To: <20261124102214.3930527-2-kalpan.jani@mpiricsoftware.com>
+References: <20261124102214.3930527-2-kalpan.jani@mpiricsoftware.com>
+X-sashiko-severity: Critical
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -51,130 +62,248 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v8 2/2] selftests: mptcp: join: re-add the
- initial subflow endp with fullmesh
-Content-Language: fr
-From: Matthieu Baerts <matttbe@kernel.org>
-To: Abdul Wasey <w453y.me@gmail.com>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-References: <20261024111842.1069878-1-w453y.me@gmail.com>
- <20261024111842.1069878-3-w453y.me@gmail.com>
- <28a5ce9c-900b-4145-bc99-f6842f19572e@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <28a5ce9c-900b-4145-bc99-f6842f19572e@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 25/11/2026 19:21, Matthieu Baerts wrote:> Hi Abdul,
-> 
-> On 24/10/2026 13:18, Abdul Wasey wrote:
->> The "delete and re-add" test validates the removal and the re-addition
->> of the endpoint used by the initial subflow, but without the fullmesh
->> flag.
->>
->> Do the same with the fullmesh flag: with a second subflow, after a reset
->> of the initial subflow, and with the initial subflow only, then re-adding
->> its endpoint or adding another one. Without the previous patch, no new
->> subflow is created, except when adding another endpoint.
-> 
-> Thank you for these patches, and for your patience.
-> 
-> Regarding the new tests, I think we should only add the minimum and
-> avoid overlapping. Currently, these patches add 2 minutes in a debug
-> build on the CI.
-> 
-> I think it would be better to drop the 4th subtest because it is
-> redundant (and already passing before the previous patch). I would also
-> combine 1st and 3rd ones to save time with the setup: at the end of the
-> 1st one, so after the re-add, delete both endpoints and check there are
-> 0 subflows ; re-add the ID 0 endpoint alone and check there is 1 subflow
-> ; update the checks (wait_mpj 3, chk_join_nr 3 3 3, and the RM counters
-> I suppose).
-> 
-> Because you might not remember all that from one month ago, please tell
-> me if it is not clear or if you prefer me to edit the patch.
+Thank you for your contribution! Sashiko AI review found 3 potential
+issue(s) to consider.
 
-Just in case, something like that? (untested, just moving lines from the
-3rd to the 1st and adapting some)
+Critical: 1 · High: 0 · Medium: 1 · Low: 1
 
------------------------------ 8< -----------------------------
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -4447,11 +4447,21 @@ endpoint_tests()
-                wait_mpj 2
-                chk_subflow_nr "after re-add id 0" 2
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
 
-+               pm_nl_del_endpoint $ns2 1 10.0.1.2
-+               wait_rm_addr $ns1 1
-+               pm_nl_del_endpoint $ns2 2 10.0.2.2
-+               sleep 0.5
-+               chk_subflow_nr "after delete all" 0
-+
-+               pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow,fullmesh
-+               wait_mpj 3
-+               chk_subflow_nr "after re-add id 0 alone" 1
-+
-                mptcp_lib_kill_group_wait $tests_pid
-                kill_events_pids
+- [Critical] A BPF struct_ops scheduler can store a value other than 0 or
+  1 in the bool field subflow->avoid.
+- [Medium] The core enforcement of `avoid` can throw away a usable BPF
+  selection and send or retransmit nothing.
+- [Low] The patch changes the result and scheduled-flag semantics of
+  mptcp_sched_get_send() and mptcp_sched_get_retrans() for every…
 
--               chk_join_nr 2 2 2
--               chk_rm_nr 1 1
-+               chk_join_nr 3 3 3
-+               chk_rm_nr 3 3
-        fi
+--
 
-        # same, but the initial subflow is reset before removing its endpoint
------------------------------ 8< -----------------------------
+mptcp: sched: add subflow avoid flag for BPF schedulers
 
-(+ removing the 4th one)
+This adds an "avoid" bool to mptcp_subflow_context. BPF struct_ops
+schedulers set it through a new mptcp_subflow_set_avoid() kfunc, and it
+is exported through MPTCP diag. The default send and retransmit
+selectors now prefer non-avoided subflows, and mptcp_sched_get_send() /
+mptcp_sched_get_retrans() either drop avoided selections or fall back
+to the default selector when only avoided subflows are scheduled.
 
-Cheers,
-Matt
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/349
+
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index d64e04245963c..44a727236d432 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1639,26 +1639,30 @@ bool mptcp_subflow_active(struct mptcp_subflow_context *subflow)
+>   */
+>  struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+>  {
+> -	struct subflow_send_info send_info[SSK_MODE_MAX];
+> +	struct subflow_send_info send_info[SSK_MODE_MAX][2];
+>  	struct mptcp_subflow_context *subflow;
+
+[ ... ]
+
+>  	mptcp_for_each_subflow(msk, subflow) {
+>  		bool backup = subflow->backup || subflow->request_bkup;
+> +		bool avoid = READ_ONCE(subflow->avoid);
+> +		int mode = backup ? SSK_MODE_BACKUP : SSK_MODE_ACTIVE;
+
+[ ... ]
+
+> @@ -1673,17 +1677,29 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+>  				continue;
+>  		}
+>  
+> -		linger_time = div_u64((u64)READ_ONCE(ssk->sk_wmem_queued) << 32, pace);
+> -		if (linger_time < send_info[backup].linger_time) {
+> -			send_info[backup].ssk = ssk;
+> -			send_info[backup].linger_time = linger_time;
+> +		linger_time = div_u64((u64)READ_ONCE(ssk->sk_wmem_queued) << 32,
+> +				      pace);
+> +		if (linger_time < send_info[mode][avoid].linger_time) {
+> +			send_info[mode][avoid].ssk = ssk;
+> +			send_info[mode][avoid].linger_time = linger_time;
+
+[Severity: Critical]
+Can subflow->avoid hold a value other than 0 or 1 here?
+
+Its only writer is the new kfunc:
+
+net/mptcp/sched.c:mptcp_subflow_set_avoid() {
+	WRITE_ONCE(subflow->avoid, avoid);
+}
+
+The verifier treats the bool argument as a plain scalar.
+check_func_args() does no range check for ARG_SCALAR. The x86-64 JIT
+passes the full BPF R2 in RSI. The callee assumes a _Bool argument is
+already 0 or 1, so it stores the low byte unchanged.
+
+libbpf also treats integer types as compatible for ksym externs. A
+struct_ops scheduler could declare the extern with a __u64 parameter and
+call mptcp_subflow_set_avoid(subflow, 0xff).
+
+In that case, would send_info[mode][avoid] be indexed with a value up to
+255? That would read and write .ssk and .linger_time on the stack, well
+past the end of the 2x2 array.
+
+The same applies to mptcp_subflow_get_retrans(). There a struct sock
+pointer would be written past the end of the 2-element pick[] and
+backup[] arrays:
+
+	if (!pick[avoid])
+		pick[avoid] = ssk;
+
+Could the kfunc take a u32 or int parameter and store !!avoid?
+Alternatively, the users could index with READ_ONCE(subflow->avoid) ?
+1 : 0.
+
+[ ... ]
+
+> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+> index 1e59072d478c9..822904fa939a7 100644
+> --- a/net/mptcp/sched.c
+> +++ b/net/mptcp/sched.c
+
+[ ... ]
+
+> @@ -182,34 +237,92 @@ int mptcp_sched_get_send(struct mptcp_sock *msk)
+>  		return -EINVAL;
+>  	}
+>  
+> -	mptcp_for_each_subflow(msk, subflow) {
+> -		if (READ_ONCE(subflow->scheduled))
+> -			return 0;
+> +	state = mptcp_sched_get_subflow_state(msk);
+> +	if (state == MPTCP_SCHED_SUBFLOW_ELIGIBLE)
+> +		return 0;
+> +
+> +	if (state == MPTCP_SCHED_SUBFLOW_AVOIDED_ONLY) {
+> +		mptcp_sched_clear_scheduled(msk);
+> +		return mptcp_sched_default_get_send(msk);
+>  	}
+>  
+>  	if (msk->sched == &mptcp_sched_default || !msk->sched)
+> +		err = mptcp_sched_default_get_send(msk);
+> +	else
+> +		err = msk->sched->get_send(msk);
+> +
+> +	state = mptcp_sched_get_subflow_state(msk);
+> +	if (state == MPTCP_SCHED_SUBFLOW_ELIGIBLE) {
+> +		if (err) {
+> +			mptcp_sched_clear_scheduled(msk);
+> +			return err;
+> +		}
+> +		return 0;
+> +	}
+> +
+> +	if (state == MPTCP_SCHED_SUBFLOW_AVOIDED_ONLY) {
+> +		if (err) {
+> +			mptcp_sched_clear_scheduled(msk);
+> +			return err;
+> +		}
+> +
+> +		if (msk->sched == &mptcp_sched_default || !msk->sched)
+> +			return 0;
+> +
+> +		mptcp_sched_clear_scheduled(msk);
+>  		return mptcp_sched_default_get_send(msk);
+
+[Severity: Medium]
+Can this throw away a usable selection from the BPF scheduler and send
+nothing?
+
+The commit message says:
+
+  "Avoided subflows remain usable when no non-avoided alternative is
+  available."
+
+Suppose a scheduler returns 0 with only an avoided subflow X scheduled.
+This branch clears X and uses the default selector instead.
+
+mptcp_subflow_get_send() now always takes the best non-avoided candidate
+Y when there is one. It checks free memory only on that candidate:
+
+	ssk = send_info[SSK_MODE_ACTIVE][0].ssk;
+	if (!ssk)
+		ssk = send_info[SSK_MODE_ACTIVE][1].ssk;
+	...
+	if (!ssk || !sk_stream_memory_free(ssk))
+		return NULL;
+
+If Y has full wmem and X has room, the result is -EINVAL.
+__mptcp_push_pending() then stops without sending, even though X was the
+scheduler's explicit choice.
+
+mptcp_sched_get_retrans() has the same override.
+mptcp_subflow_get_retrans() skips any subflow that still has TCP-level
+data queued:
+
+	if (!tcp_rtx_and_write_queues_empty(ssk)) {
+		...
+		continue;
+	}
+
+It also uses backups only when min_stale_count > 1. So if a BPF
+get_retrans() picks an avoided subflow with data in flight, could that
+become -EINVAL and leave __mptcp_retrans() with nothing retransmitted?
+Before this patch the BPF selection was used.
+
+The early AVOIDED_ONLY branch at function entry acts on leftover
+scheduled flags. One example is a flag left on a delegated subflow by
+__mptcp_subflow_push_pending(). Another is an avoided fallback picked by
+the default selector itself.
+
+Is it intended that this branch replaces those flags with a fresh
+default selection before msk->sched->get_send() runs? That path also
+updates msk->snd_burst, avg_pacing_rate and timer_ival for a
+BPF-scheduled socket. The retrans entry path has the same branch.
+
+The stall seems to recover once wmem frees, a subflow goes stale, or the
+rtx timer fires. Still, avoid acts as more than a preference here.
+
+> -	return msk->sched->get_send(msk);
+> +	}
+> +
+> +	return err ?: -EINVAL;
+>  }
+
+[Severity: Low]
+This changes the return value and scheduled-flag behaviour for every
+scheduler, including BPF schedulers that never call
+mptcp_subflow_set_avoid(). Should the commit message describe this?
+
+A scheduler that returns 0 with nothing scheduled now gets -EINVAL.
+Before, the 0 was passed through.
+
+In __mptcp_subflow_push_pending(), the old behaviour could keep the loop
+spinning: keep_pushing stays true and the scheduler is called again on
+every iteration:
+
+	if (mptcp_sched_get_send(msk))
+		goto out;
+
+So this looks like a fix for an existing hang. Would it fit better as a
+separate patch with a Fixes: tag, so it can be considered for stable?
+
+Two more changes apply to all schedulers:
+
+- A scheduler that returns an error after scheduling subflows now has
+  all of its flags cleared.
+- mptcp_sched_get_subflow_state() now clears scheduled on avoided
+  subflows whenever a non-avoided subflow is also scheduled.
+
+mptcp_sched_get_retrans() has the same changes.
+
+The only mention is the changelog line "Handle scheduler success without
+a selected subflow correctly". It sits below the --- line, so it won't
+reach git history.
+
+[ ... ]
+
 -- 
-Sponsored by the NGI0 Core fund.
-
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261124102214.3930527-1-kalpan.jani%40mpiricsoftware.com
