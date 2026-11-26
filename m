@@ -1,47 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795680940;
-	b=PtAcLD6eiFARPiWrez+/9AuWbWERAsVQct+XeFacgHvRROw6l9yoOjGjdVYe1uaqablH
-	 HELICxo/lRvpW37VIYDRzViffblxqVEGdApaADlG0lvFfLKU2OrWnq8Ly9XNv+xRjK+HR
-	 txuJ277LooYzuZFTepTk4tHi+bAkYZM4ojljcKVPjUK/U/26KKRHBQ/OAv4zIH/oFr2O2
-	 43PrArr+aOhbkO2P2guLNYjgWOus0XMsHXqDnNloQnVQvI++E04onfbF5GBByOucwDCKX
-	 S7X4WtSUGB40TX4nSTRWGbJdgTO4z8eOBSsT1CsS5lhJbUn3efzLtDd8VglgmrQAm9A==
+	t=1795681244;
+	b=wUxLU0dnq45bY08RellqHtuxhxtT0vlqPlNccCru0gAPmFr+O/5pfZHyXEjBNxifVRVn
+	 Glk3X2Z7R+/F5qx83vJRV5zXRpOurbEMYC/SOuM5JDIx0OdaeV3KGKuQPsj9nODMoklNw
+	 eOH6gE89lqpg+iGeBSBU9wuuCX0OQ2ir5P1ACzVtfLDhg1SqF/5wiMPgxiN+k2zW+Ea33
+	 nvtDMPficLyrPNW+FblWiPfr2dBqRgB1fEZYWgPf6/5q7EtxT+j0V8TqCQQxSeut2IAev
+	 Oee5AKfX2lUzpqs1RbBGOsOXErg/e7KjTbpWuDbxePWyeutTIXus+X7Eq+lOb8ZklEQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795680940;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:References:From:Cc:Autocrypt:Organization:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=b7lbPIQLNlVsEj95Citm4eh1mbFI6ZwEstW1WJp6Nbs=;
-	b=nQoQgxUtmKmgjR8JBbacu/ARONmZ+Vhl/m+aG4YqwYNwJfujN4SvPgVUt78im+iYfCWt
-	 g0OtpNmippON1gAmyz8Rqr97zflnmzdrlw36AGhMcPB3jPFlR6zEvKKkOFdRNQXCjre/g
-	 D71j5QSZnoiBgURY58/oFgnjoIAOIqx5CRH20LCNHp0TedNRDbkaOZDeztwj/nn3vYMLE
-	 XWbHEF5OSNsO0cnVs45PaCZM5htegBJS8dMWpbYEA4rlPs7ttAhemqFeKHhBoDgSTGOLG
-	 xmKSkx1GQHnzYM9OggXt+rVwYY8op8l1jGlBuBd2cVV7+MFFf98X506WQDMW9Ep9cDQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795681244;
+	h=Received:DKIM-Signature:Message-ID:Subject:From:To:Date:In-Reply-To:
+	 References:Content-Type:User-Agent:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=0+gP73+QLITwAOLfZXIopVBXnESuNTo3XGjUirLDXXw=;
+	b=YtxZ1odFqJcVPxAVHlezO40+wZL+6znwOumb5NVCtMpkryG0dSQoJy3/OGbLruD+OczZ
+	 lconN/jSn4vujfUoZCmhTjkWf6e1IqCGD3nSRkFWVoem7mO4pYEaSyaqpmiZknemafnfw
+	 Vkru0SzQnfmPO+M53+R6zp3bFs3UByf4rFZzeo2MuDGQgszyn3yy5I3benHzkckiophpL
+	 WlqYwaMV7LdtoxN6A/d/zD7h3qGa5tYrBFXa07Vw88DcJwqAb3zqZ1JhSPpeYNV3SLdqA
+	 iYJp/pgrTo4VA0FxaIeBRAQLPl/6xiLDI4FXwbPK6SovG5kjmSw9ylA71OJNcPlhpxw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KL5kTtsX;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="D4/Ukuke";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC13606A327
-	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 08:15:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7548A606A321
+	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 08:20:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KL5kTtsX
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D575A1F000D4;
-	Thu, 26 Nov 2026 08:15:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=D4/Ukuke
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72C081F000CA;
+	Thu, 26 Nov 2026 08:20:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795680940;
-	bh=b7lbPIQLNlVsEj95Citm4eh1mbFI6ZwEstW1WJp6Nbs=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To;
-	b=KL5kTtsX64Mcxiv1OCdMKA+D1/Gdyfj0OnrAlCIn8SeA+pDh5uqEF0ALbeX+QZSyD
-	 JKpB4pL7jGfujygy81fe6cbTTfMhPD3SbxU/FllSlZk9mXyzs7ucYqeQSoEhI+ZZDR
-	 2rnk3HaEs06h+DDLjRl6rvuH8sxUb6C/iM4pMdNwCMaG1Y9uKTa90qD4pN3PupPpuZ
-	 aSNdXp3TzhUYIYdOa94LrSBIvaisie/5IH69KZ6ycLV4U9YhbkcgZL0n7cZ9k0fdaI
-	 RI2AKrpYIZ3qvbOkc8Iikbh3nCG3gIbVR4ExNd1kuAk9j9EvGDlbpzR0uaDbCdSp4f
-	 FGNjo4AzlfSxA==
-Message-ID: <57840818-900f-4c5e-b24c-ddba1eddb93e@kernel.org>
-Date: Thu, 26 Nov 2026 09:15:37 +0100
+	s=k20260515; t=1795681243;
+	bh=0+gP73+QLITwAOLfZXIopVBXnESuNTo3XGjUirLDXXw=;
+	h=Subject:From:To:Date:In-Reply-To:References;
+	b=D4/UkukeXrqdYzH2cRlgL6Au8MndrSK7YvftVB8iyMDG0DXkJFTOXdJ28CkYX2bbS
+	 obY9XdUeqtm9GsfinAlURoqwWtbl9aGfWUxY9m7sHuAeTDlmQZjUFFgCxf0aW8Lz/2
+	 RR76O28XsebkoRyFAtGKmCWEPsZmPLnDBF2SWySbFcV0R8RBg7vDt6P3GpyPQ8GGze
+	 hfrLJKaxwgybHujRIyig/EOi9rQqwEev4fOz6FXojPSDuk9apSoOd9GQbOjXhUL7a0
+	 uX3Jxler2nJFP6PPuPwTjN9XWkLH30iWNpdineEgfANuADglpqrwLz9azEjFUKdD7s
+	 PR1Ne8sGl1Gag==
+Message-ID: <dd53bb0e7fe24c1f6469a0395d6bb12f6b3974b7.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net v3 19/50] mptcp: fastopen: keep listeners and
+ connections
+From: Geliang Tang <geliang@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, MPTCP Linux
+	 <mptcp@lists.linux.dev>
+Date: Thu, 26 Nov 2026 16:20:37 +0800
+In-Reply-To: <20261124-mptcp-cmason-fixes-v3-19-416c0920c73f@kernel.org>
+References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
+	 <20261124-mptcp-cmason-fixes-v3-19-416c0920c73f@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-10build1 
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -51,122 +61,74 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v3 15/50] mptcp: clear sk_err on connect(), as
- TCP does
-Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>
-References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
- <20261124-mptcp-cmason-fixes-v3-15-416c0920c73f@kernel.org>
- <16b6809a6e7f12a4f611442fcb04d91b0bae48de.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <16b6809a6e7f12a4f611442fcb04d91b0bae48de.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Matt,
 
-Thank you for the review!
-
-On 26/11/2026 07:40, Geliang Tang wrote:> Hi Matt,
+On Tue, 2026-11-24 at 22:59 +0100, Matthieu Baerts (NGI0) wrote:
+> A sendmsg() with MSG_FASTOPEN on an MPTCP listener fails, e.g. with
+> EISCONN, as with TCP, but it also closes the listener: after any error,
+> mptcp_sendmsg_fastopen() retries the disconnect that could have failed
+> in __inet_stream_connect(), while there is nothing to retry for a
+> listener. On a connection closed by both sides, with data still to be
+> read, the same retry also drops this data and the end of the stream.
 > 
-> On Tue, 2026-11-24 at 22:59 +0100, Matthieu Baerts (NGI0) wrote:
->> After a disconnect with connect(AF_UNSPEC), an error from the previous
->> connection, e.g. a reset not reported yet to the application, was still
->> reported for the next connection, by poll(), SO_ERROR, and the first
->> send() or recv(). TCP clears it in tcp_connect_init(): do the same,
->> once the subflow connect() succeeded, so an early failure keeps it.
->>
->> This issue has been found by an AI code review agent, while reviewing
->> other fixes, and confirmed with a reproducer: the peer resets the
->> connection, the error is not read, then the socket is disconnected and
->> connected again. SO_ERROR then reported ECONNRESET each time, while TCP
->> reported no error, as MPTCP now does.
->>
->> Fixes: 3d1d6d66e156 ("mptcp: implement support for user-space disconnect")
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Skip this disconnect for a listener and for a connected socket:
+> __inet_stream_connect() returned without trying to disconnect them. They
+> are then kept as they are, as with TCP.
 > 
-> Thanks for this fix. Looks good to me!
+> This issue has been found by an AI code review agent, while reviewing
+> "mptcp: report sf aborts during deferred connect", and confirmed with a
+> new Packetdrill test: sendto() with MSG_FASTOPEN on a listener, then a
+> SYN. Without this patch, the SYN got a reset instead of a SYN-ACK:
 > 
->     Reviewed-by: Geliang Tang <geliang@kernel.org>
+>   listen_sendto_fastopen.pkt:14: error handling packet: live packet field ipv4_total_length: expected: 60 (0x3c) vs actual: 40 (0x28)
 > 
->> ---
->> v2: new, for an issue found by a review agent
->> ---
->>  net/mptcp/protocol.c | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index ff1dcf306723..6328815ad273 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -4452,6 +4452,8 @@ static int mptcp_connect(struct sock *sk, struct sockaddr_unsized *uaddr,
->>  	if (err < 0)
->>  		goto out;
->>  
->> +	/* as tcp_connect_init(): drop an error from a previous connection */
->> +	WRITE_ONCE(sk->sk_err, 0);
+> The case of the closed connection has been found by an AI code review
+> agent (Clashiko), while reviewing a previous version of this patch, and
+> confirmed with another Packetdrill test: after a shutdown(), data and a
+> DATA_FIN are received, then sendto() with MSG_FASTOPEN fails with
+> EISCONN. Without this patch, the data could no longer be read:
 > 
-> tcp_connect_init() also calls sock_reset_flag(sk, SOCK_DONE) here; maybe MPTCP
-> needs this sock_reset_flag(sk, SOCK_DONE) too.
+>   closed_sendto_fastopen.pkt:30: runtime error in read call: Expected result 1000 but got -1 with errno 107 (Transport endpoint is not connected)
+> 
+> Fixes: 7d803344fdc3 ("mptcp: fix deadlock in fastopen error path")
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-We are doing that in mptcp_disconnect() and I think that's enough. From
-what I see a reused msk can't reach mptcp_connect() without it, and
-nothing can set SOCK_DONE again before the next connection is
-established. In fact, I think the sock_reset_flag(sk, SOCK_DONE) in
-tcp_connect_init() is redundant and not needed.
+Looks good. Thanks!
 
-(Note that on the other end, it seems better to clear sk_err here than
-in the disconnect, similar to TCP, so the error can still be seen after
-disconnect(), and before connect()).
+    Reviewed-by: Geliang Tang <geliang@kernel.org>
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+> ---
+> v2: new, for an issue found by a review agent
+> v3: also skip it for a connected socket, not to drop unread data
+>     (Clashiko)
+> 
+> Note (Clashiko on v2): only retrying a disconnect that failed, with
+> SS_DISCONNECTING, would leave a deferred socket stuck after an early
+> error from tcp_sendmsg_fastopen(), DEFER_CONNECT being cleared on the
+> msk: then, the disconnect is still retried, as before.
+> ---
+>  net/mptcp/protocol.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 6c712f677220..d529cfb582a5 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2004,11 +2004,14 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
+>  		 */
+>  		if (ret && ret != -EINPROGRESS && ret != -ERESTARTSYS && ret != -EINTR)
+>  			*copied_syn = 0;
+> -	} else if (ret && ret != -EINPROGRESS) {
+> +	} else if (ret && ret != -EINPROGRESS && sk->sk_state != TCP_LISTEN &&
+> +		   sk->sk_socket->state != SS_CONNECTED) {
+>  		/* The disconnect() op called by tcp_sendmsg_fastopen()/
+>  		 * __inet_stream_connect() can fail, due to looking check,
+>  		 * see mptcp_disconnect().
+>  		 * Attempt it again outside the problematic scope.
+> +		 * A listener or a connected socket is not disconnected there,
+> +		 * as with TCP.
+>  		 */
+>  		if (!mptcp_disconnect(sk, 0)) {
+>  			sk->sk_disconnects++;
