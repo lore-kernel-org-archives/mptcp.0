@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795735794;
-	b=wMKDMay5mMAXuT8Q4vlJnLWkQlNdoDfrAeaCuHV5Kc/kkPh3f+IhtFtBJLrMbZXD8BG7
-	 Zfoi0ccTk2qZ5zLSKEBgG4SYQfiEyU3wnOxBRWAp+dLR8vSBhVY1YqPfsRGS+jJpJcVXI
-	 tfruG9EHZ+d1O56D+nkDkkjXyYIs/V0P6IMPbN/fqkI36upSnUn3js5IQBo7dI6iagMu9
-	 TwLWh/5FmKCjs5e3s0eQJUgFntfshpy3SvaV3aTouXmPPzmuuG0B7ol9yzZTo2NHlDi31
-	 olJfsqCi+7dd5iHNn+G3ho3NZK4zsLU3A7RaQcWNHvuChocMcc08emKieDsQqpFdQHA==
+	t=1795735795;
+	b=1PXrn/LYbB5PhG62OsWrZ5V2FVevyNYJ12jbDWqMtTHBpde/fvEmSqdmj/87tY+rqeir
+	 0RR6CmWKw1GNC6vouTWMHnBwfviV604GeN0Y8/pcn5FeWRVjBFkEfLIIj9Xv3kZ7BsTpv
+	 Pm8s/Pp35K689Q6I9QxSTZwRgxqUL7kD2mxSo91w0V4SOHy/A1Ih79qAf7ZCkBMp8UCxS
+	 l6A2tZAqMvMJF3p9ce1/xU+p0dYniMyrBgOgdQ2Z28N0itz2YAAyScGYADhHC7noYrYj9
+	 RqIi2DvEO07Za1cAdeAgV4VKQ30P72hcOaiOYAymbk51e2rAoPlsKN1vCrbN8alfPqg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795735794;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795735795;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=GrJsTVCV5iXDhoYKH4Mu017SrXtovaEt6A28iTVjnNc=;
-	b=083HyiMDVJtDJasrXnlveXWE9IOsyZ5orcZYDIjvWR1twf+yDlYAx2kC1XN08S2jAuZt
-	 DY0Yo5RpYN0FGfKTvsPH9LaUpiWf8tYPycSkLVxUNAMP98XPrLVJrQkKcyPfjcVVNX3Cb
-	 BemSZayuRWsNGJa3ANWfPNyyE5Wt4dl61Gyk2GroAuPJEBvmPI+7oKJASpYMFGZWZryY5
-	 DspDw/c52gR7NrnSkVDVSZvG+KYE/G0mP7sQzrO/Dqy3i/0PLbdBj7FGjcyZkXOHGcKoQ
-	 rhex3IyNa24p708fGbykGwknCIA+WC1sUNcIAY62h8oBn2jwG1tZ3miXTKkRa8RGixg==
+	bh=elaJlETvQ/s1WTOiTlZ2vZXAmN2IQz5RkG9b1uLNoV0=;
+	b=ylF3BBbo6bZ3ALokp4z3eRT7HDDIBgnUHUw6q9gSq3N/8er/PgD28ceNOty5ZHxTntTc
+	 jUY1g6xJONSHDKZ1biBJaVVA7muuE+bwUHmeRxp4SXrOT5uy/SQb1KrvFBqBGXAbLjv/d
+	 HfioxaTQ7dCf3KwBwuTxcVqJ5VvriVn/7cKy3LLKT2eiIwv0V/x2pxd2mdN7XXRjfPwpw
+	 PMAMcKhDja2Le/R2X8++RvC4lJXRoe9tIFuOFuCQ6ZYHfp4Po1OJsLvsZKxft4vM9+1ow
+	 xTyTKF43rhbX6lWJcwn5DeR6rf2nuYQNyU9JcouajzOCzO5Gr2LajStWwZWsEgBHJ7Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YqNivcOP;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XYpAYT1a;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12CA606A31C
-	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 23:29:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C59C606A31C
+	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 23:29:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YqNivcOP
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D60B31F00893;
-	Thu, 26 Nov 2026 23:29:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XYpAYT1a
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A0001F00929;
+	Thu, 26 Nov 2026 23:29:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795735794;
-	bh=GrJsTVCV5iXDhoYKH4Mu017SrXtovaEt6A28iTVjnNc=;
+	s=k20260515; t=1795735795;
+	bh=elaJlETvQ/s1WTOiTlZ2vZXAmN2IQz5RkG9b1uLNoV0=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=YqNivcOPS7WmmRonAeQ34HL/D7zuW4V41trhR1elkDwZvxMFOoi1Y4HGB6J8Z4QJa
-	 mA8L7pxSreG7fT87n9Es9qINXz3m+u4YzZfF8X0gdQRPDYYby82dB4rvrzcslkBZBw
-	 MCmpzvIK/mx6cb/46M9TTmAWmZBH9Wq6eNSFhelPoV+wi1DHgiVMNVAatEYsR9OfgP
-	 EQOV8zcVRphSfSyNPT3tDaYEvaL4seVdo847MWGD1WCWj0KQoddO1/aMXXMWmjZlia
-	 metlxgGhK7Duow+hlDDepQC3U95mmwZx2/fNCPUFqv1aEtMQjXtdVZ2DMD+JQu1kwN
-	 iBVJ/a1HvricQ==
-Subject: Re: [PATCH mptcp-net v3 37/50] mptcp: keep the first byte after a
- simult connect
+	b=XYpAYT1aCWuTqdCVsbWjo97ZCRwsfwkcAuL+nNEgyAWNWBdqL183ZSpGi2TURBJwM
+	 bBLioHmPEn/EdccgvryONEA5rFgtxOEVa1at3IL5v0SHq8Q/o2PtzDWWsm5G/vp8V6
+	 kBIiw/eQe9RA3HBZeZ47fPJHJ41uYBZr32w9Sn9pQyuWIZOjAvdz+4gM+aOAqNswAJ
+	 0Fd7ZZEYaz53Y+5zkbooXDoN2dkEblAg+WKR2rAg/F23t8Nbwqske5OUgJ1xsoLMMk
+	 bzhbGL2fptyzZoHypYZ5PS1IgqlNUJv+w5wIuGau5Uk8ID/mKy2FrsbVsoSNLrZNXl
+	 sQ5ELeZxWgD8A==
+Subject: Re: [PATCH mptcp-net v3 40/50] mptcp: send the DATA_ACK after moving
+ the backlog
 From: netdev-bot+sashiko@kernel.org
 To: matttbe@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Thu, 26 Nov 2026 23:29:53 +0000
-Message-ID: <179573579346.3133.9770579761176811228@kernel.org>
-In-Reply-To: <20261124-mptcp-cmason-fixes-v3-37-416c0920c73f@kernel.org>
-References: <20261124-mptcp-cmason-fixes-v3-37-416c0920c73f@kernel.org>
-X-sashiko-severity: High
+Date: Thu, 26 Nov 2026 23:29:54 +0000
+Message-ID: <179573579467.3133.15201406203716765653@kernel.org>
+In-Reply-To: <20261124-mptcp-cmason-fixes-v3-40-416c0920c73f@kernel.org>
+References: <20261124-mptcp-cmason-fixes-v3-40-416c0920c73f@kernel.org>
+X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -65,7 +65,7 @@ MIME-Version: 1.0
 Thank you for your contribution! Sashiko AI review found 2 potential
 issue(s) to consider.
 
-Critical: 0 · High: 1 · Medium: 1 · Low: 0
+Critical: 0 · High: 0 · Medium: 1 · Low: 1
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -73,162 +73,148 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [High] The fix is incomplete: there is still a simultaneous-connect
-  path where ssn_offset ends up wrong, and on that path the patch makes…
-- [Medium] mptcp: mptcp_syn_options() sets ssn_offset on MP_JOIN simult
-  connect
+- [Medium] The fix tries only one subflow, the one recorded from the last
+  backlog skb with a non-NULL skb->sk, and gives up if that subflow…
+- [Low] The new mptcp_subflow_schedule_ack()
+  (net/mptcp/protocol.c:2421-2428) calls tcp_send_delayed_ack(ssk) on a…
 
 --
 
-mptcp: keep the first byte after a simult connect
+mptcp: send the DATA_ACK after moving the backlog
 
-After a simultaneous connect, this patch sets subflow->ssn_offset in
-mptcp_syn_options() when the crossed SYN-ACK is sent from SYN_RECV.
-subflow_finish_connect() now takes ssn_offset only from a SYN. The first
-non-SYN packet received in ESTABLISHED no longer overwrites it, so the
-first received byte is kept.
+Data received while the msk is owned by the user goes to the backlog.
+The TCP ACKs sent for it carry the old DATA_ACK, so the peer can do a
+spurious MPTCP-level retransmission. This patch schedules a delayed ACK
+on the subflow of the last skb spooled from the backlog, if no ACK is
+already pending there.
 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 05b9c66aaed63..41eb39968a9a6 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -474,6 +474,11 @@ bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
->  	 * in mptcp_established_options_mp()
->  	 */
->  	subflow->snd_isn = TCP_SKB_CB(skb)->end_seq;
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 0ff84d9684f13..2f89719e84545 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2417,10 +2417,21 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
+>  	msk->rcvq_space.time = mstamp;
+>  }
+>  
+> +/* The ACKs of the data put in the backlog carried the previous DATA_ACK */
+> +static void mptcp_subflow_schedule_ack(struct sock *ssk)
+> +{
+> +	bool slow = lock_sock_fast(ssk);
 > +
-> +	/* simult connect: the peer's SYN-ACK will not set ssn_offset */
-> +	if (unlikely(sk->sk_state == TCP_SYN_RECV))
-> +		subflow->ssn_offset = tcp_sk(sk)->rcv_nxt - 1;
+> +	if (tcp_can_send_ack(ssk) && !inet_csk_ack_scheduled(ssk))
+> +		tcp_send_delayed_ack(ssk);
+
+[Severity: Low]
+Is the side effect on the subflow's TCP delayed-ACK heuristics intended?
+
+At this point TCP has already ACKed the data, possibly right away, so
+the subflow has no new TCP data to acknowledge. tcp_send_delayed_ack()
+still sets ICSK_ACK_SCHED | ICSK_ACK_TIMER and arms icsk_delack_timer.
+
+The patch targets the case where the peer has nothing more to send. If
+nothing goes out on this subflow within ato, the timer fires and
+tcp_delack_timer_handler() treats it as a missed delayed ACK:
+
+net/ipv4/tcp_timer.c:tcp_delack_timer_handler() {
+    ...
+	if (inet_csk_ack_scheduled(sk)) {
+		if (!inet_csk_in_pingpong_mode(sk)) {
+			/* Delayed ACK missed: inflate ATO. */
+			icsk->icsk_ack.ato = min3((u32)icsk->icsk_ack.ato << 1,
+						  icsk->icsk_rto,
+						  (u32)TCP_DELACK_MAX);
+		} else {
+			...
+			inet_csk_exit_pingpong_mode(sk);
+			icsk->icsk_ack.ato      = TCP_ATO_MIN;
+		}
+		...
+		__NET_INC_STATS(sock_net(sk), LINUX_MIB_DELAYEDACKS);
+	}
+}
+
+This can happen every time data lands in the msk backlog while the msk
+is owned, for example when recvmsg() or the worker overlaps incoming
+data. Each time, the subflow's ato can be inflated or pingpong mode can
+be exited for a reason that has nothing to do with TCP.
+TcpExtDelayedACKs is also incremented.
+
+The commit message only says the DATA_ACK is sent "when the delayed ACK
+timer expires". Could it mention these effects? Alternatively, could the
+DATA_ACK be sent without going through the TCP delayed-ACK state?
+
+> +	unlock_sock_fast(ssk, slow);
+> +}
 > +
->  	if (subflow->request_mptcp) {
->  		if (unlikely(subflow_simultaneous_connect(sk))) {
->  			WARN_ON_ONCE(!mptcp_try_fallback(sk, MPTCP_MIB_SIMULTCONNFALLBACK));
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index f73e4b8deca42..439a11d92281b 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -591,7 +591,9 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
->  	subflow->rel_write_seq = 1;
->  	subflow->opt_ack_seq = tcp_sk(sk)->snd_una;
->  	subflow->conn_finished = 1;
-> -	subflow->ssn_offset = TCP_SKB_CB(skb)->seq;
-> +	/* simult connect: not a SYN-ACK, see mptcp_syn_options() */
-> +	if (TCP_SKB_CB(skb)->tcp_flags & TCPHDR_SYN)
-> +		subflow->ssn_offset = TCP_SKB_CB(skb)->seq;
+>  static bool __mptcp_move_skbs(struct sock *sk, struct list_head *skbs, u32 *delta)
+>  {
+>  	struct sk_buff *skb = list_first_entry(skbs, struct sk_buff, list);
+>  	struct mptcp_sock *msk = mptcp_sk(sk);
+> +	struct sock *ssk = NULL;
+>  	bool moved = false;
+>  
+>  	while (1) {
+> @@ -2428,6 +2439,9 @@ static bool __mptcp_move_skbs(struct sock *sk, struct list_head *skbs, u32 *delt
+>  		list_del(&skb->list);
+>  		*delta += skb->truesize;
+>  
+> +		/* NULL if the subflow has been closed */
+> +		if (skb->sk)
+> +			ssk = skb->sk;
+>  		moved |= __mptcp_move_skb(sk, skb);
+>  		if (list_empty(skbs))
+>  			break;
+> @@ -2439,6 +2453,9 @@ static bool __mptcp_move_skbs(struct sock *sk, struct list_head *skbs, u32 *delt
+>  	if (!moved)
+>  		return false;
+>  
+> +	if (ssk && !__mptcp_check_fallback(msk))
+> +		mptcp_subflow_schedule_ack(ssk);
 
 [Severity: Medium]
-Does this assignment also need to be limited to the MPC case?
+Only one subflow is tried here. What happens when that subflow cannot
+carry the updated DATA_ACK?
 
-It is done for any subflow in TCP_SYN_RECV, before the request_mptcp
-check. An active MP_JOIN subflow created by __mptcp_subflow_connect()
-(request_join = 1, remote_key_valid = 1, mp_join = 0) can also receive
-a crossed bare SYN while in TCP_SYN_SENT.
-tcp_rcv_synsent_state_process() then sets rcv_nxt to the peer ISN + 1,
-moves the socket to TCP_SYN_RECV and calls tcp_send_synack(). That ends
-up here, so ssn_offset now becomes the peer ISN on the join subflow.
-This path has no fallback and no reset, because
-subflow_simultaneous_connect() is only checked under request_mptcp.
+In two cases nothing gets scheduled even though msk->ack_seq has moved
+forward.
 
-Suppose the peer then sends an ACK with seq == ssn_offset + 1.
-tcp_rcv_state_process() moves the subflow from TCP_SYN_RECV to
-TCP_ESTABLISHED without going through sk_rx_dst_set(), so
-subflow_finish_connect() never validates the MP_JOIN handshake. The
-same skb then goes through tcp_data_queue() -> mptcp_incoming_options()
--> check_fully_established().
+First, a subflow may be closed with MPTCP_CF_PUSH while the msk is
+owned, for example by a PM subflow destroy or a worker close. If data
+arrived on that subflow before the close, mptcp_cleanup_ssk_backlog()
+clears skb->sk on its backlog skbs:
 
-Before this patch, ssn_offset was still 0 at that point, so the
-"TCP_SKB_CB(skb)->seq != subflow->ssn_offset + 1" test returned early.
-Now the test passes with mp_join == 0, and there are three outcomes:
-
-- If the ACK carries a DSS with use_ack, or a non-echo ADD_ADDR, the
-  remote_key_valid check jumps to set_fully_established without any
-  HMAC validation. Any payload then triggers the WARN_ON_ONCE() in
-  subflow_data_ready(), because neither mp_capable nor mp_join is set.
-
-- If the ACK carries no MPTCP option, the subflow is not reset because
-  mp_join is 0. Instead, mptcp_try_fallback(ssk,
-  MPTCP_MIB_MPCAPABLEDATAFALLBACK) can make the parent msk fall back
-  to TCP while allow_infinite_fallback is still true.
-
-- If the ACK carries an MP_CAPABLE option on a client msk, it triggers
-  WARN_ONCE(1, "bogus mpc option on established client sk").
-
-A remote peer can drive all of this by crossing a SYN with one of our
-MP_JOIN SYNs.
-
-Should the new ssn_offset assignment move under the request_mptcp &&
-subflow_simultaneous_connect() branch, where the fallback is actually
-done? Or should an MP_JOIN subflow hitting a simultaneous connect be
-reset instead?
-
-[Severity: High]
-Can ssn_offset stay at 0 here after a simultaneous connect?
-
-With this change, mptcp_syn_options() is the only place that sets
-ssn_offset for a simultaneous connect. It only runs if the crossed
-SYN-ACK gets far enough to build its options. The return value of
-tcp_send_synack() is ignored by its caller:
-
-net/ipv4/tcp_input.c:tcp_rcv_synsent_state_process() {
+net/mptcp/protocol.c:mptcp_cleanup_ssk_backlog() {
     ...
-		tcp_send_synack(sk);
+		atomic_sub(skb->truesize, &skb->sk->sk_rmem_alloc);
+		skb->sk = NULL;
     ...
 }
 
-tcp_send_synack() can fail before any option is built:
+If all spooled skbs came from that subflow, ssk stays NULL in
+__mptcp_move_skbs() and mptcp_subflow_schedule_ack() is never called.
 
-net/ipv4/tcp_output.c:tcp_send_synack() {
-    ...
-			nskb = skb_copy(skb, GFP_ATOMIC);
-			...
-			if (!nskb)
-				return -ENOMEM;
-    ...
-}
+Second, the last skb's subflow may move to TCP_CLOSE after its data was
+queued and before spooling, for example after an RST and before
+__mptcp_close_ssk() runs. tcp_can_send_ack(ssk) then returns false
+inside mptcp_subflow_schedule_ack(), and nothing is scheduled.
 
-The clone or copy in __tcp_transmit_skb() can also return -ENOBUFS
-before tcp_syn_options() is reached.
+In both cases no other entry in msk->conn_list is tried, even if another
+subflow is ESTABLISHED and could carry the connection-level DATA_ACK.
 
-When that happens, neither the new ssn_offset assignment nor the
-SIMULTCONN fallback runs. Suppose the peer's crossed SYN-ACK then moves
-the socket to ESTABLISHED before the RTO retransmits our SYN-ACK. The
-next skb that subflow_finish_connect() sees is not a SYN, so ssn_offset
-keeps its initial value of 0.
+The later mptcp_cleanup_rbuf(msk, 0) from release_cb doesn't seem to
+cover this. With copied == 0 it only acts on subflows that already have
+an ACK scheduled and more than rcv_mss of unacked data. So the peer
+would keep the stale DATA_ACK and could still do the spurious
+retransmission this patch is meant to avoid.
 
-The later "mptcp: move to ESTABLISHED after a simult connect" change in
-subflow_state_change() only applies when mptcp_check_fallback(sk) is
-already true. It doesn't set ssn_offset either, so this path still
-seems reachable at the end of the series.
+The v2 note covers the second case, but the commit message itself
+mentions neither case. Would it make sense to fall back to another
+subflow in conn_list that can send ACKs?
 
-With ssn_offset at 0, the fallback dummy mapping in
-subflow_check_data_avail() becomes:
-
-	subflow->map_subflow_seq = TCP_SKB_CB(skb)->seq - subflow->ssn_offset;
-	subflow->map_seq = __mptcp_expand_seq(subflow->map_seq,
-					      subflow->dsn_base +
-					      subflow->map_subflow_seq - 1);
-
-Every mapping is then off by the peer's ISN relative to msk->ack_seq,
-which starts at 0 after the fallback.
-
-Would the received data then be dropped as old, or left in the msk
-out-of-order queue forever? It has already been acked at the TCP level,
-so it would not be retransmitted.
-
-Before this patch, this path lost one byte. After it, the whole receive
-stream looks like it could be lost.
-
-The v2 note below the '---' calls the allocation failure case
-theoretical, but that note won't end up in the commit message.
-
-Could subflow_finish_connect() keep a fallback assignment for non-SYN
-skbs on this path? Another option would be to derive the peer ISN once
-the socket reaches ESTABLISHED.
-
->  	pr_debug("subflow=%p synack seq=%x\n", subflow, subflow->ssn_offset);
->  
->  	mptcp_get_options(skb, &mp_opt);
+> +
+>  	/* Only the worker can close an orphan, as it must then destroy it */
+>  	if (!sock_flag(sk, SOCK_DEAD))
+>  		mptcp_check_data_fin(sk);
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261124-mptcp-cmason-fixes-v3-0-416c0920c73f%40kernel.org
