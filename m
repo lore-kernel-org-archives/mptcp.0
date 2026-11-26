@@ -1,54 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795725843;
-	b=OBXKHbGRKkvSTk4ZE92haAZ4wCa2OKxLtx/OgRQ7NZhTFAlTAP1s+xn80KMXyk99uVmZ
-	 XxQhIr9/wOqfemPt4XpB42enVmJuXPujfxDX7g2Jjhkt312/uJVLx4pYyyeYNJ2tFHgAH
-	 3RD6k7mzeHg6jfd/Zlgn0y//PIdirVQhf2HY/w2ptj0G5GoQnB/cI8snothZ1trfkDMOK
-	 PkFM+6EyVUMpP5o2xOIGuo8I3/VGkFnDVO1osj/EGdgt5/x1r9GpwTXt+1I51rr7SQgEY
-	 In3MSc7uw/VSdneqSDFeexoGAfUzIHv3FR0rc+a2dBYKv5WeCwujQ7UBIVu+st5vziQ==
+	t=1795725845;
+	b=MN7TBIe8DFugsFZuFmz+xZ4ujsxYGushL7ecm+9iFkYdm9lBqTO24ytyREfms0RhrKAE
+	 9NOT5YDnbTqUhkCwXXTMkiXMB+gHQcb3gw8uOZ65m0DrilAOEYi0wgwo3fnYozEkjJKuN
+	 ldHT0UnyctZAytFEtlqGKm6nOQN+YYUF12mzNZFttlzoeTvJTsj2fGNZ01qR7rVqodpqq
+	 h6suhiDp4MYyQPow1fYY3TNXs2MOiNrYzSR8PDJeIuttMC5N6I8vpQkDECuEIUdmqtnY/
+	 abQzZJZ7TkFWJ7eoVm/cnmYI2TJMAP07ZT9+rce36foQRD0LODF0s0ZVihv2MwVkmmQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795725843;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795725845;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=EBawKmi/RdVVrHAVKPmy9VzogMedHqA1pyvmDuGM2pE=;
-	b=emMkQSLdnGaeg4xkBag6/LfFgIbzmpJjfMWkrIDJhvCS0o90s+GUGUDQ+UTdrO9syHJK
-	 W8QUPPk+YSIJ49Ve2qe7s8ev1gv4N/V3uR8t6g90g9TBt4lAxW3Nqs9ZH00AXij38VRrP
-	 JFV7gjE3VTcsv+GXBlfs3M7e3yHNwklTTKvxVPXmhamXqYmIbuMdzc9pbgYb4dlcG6omW
-	 DdzrYF9nFubJF5JkNYIZzcRFMvXXGdxqsVvsrE4YWiUqOsuoS/Kl69UEK+8j/0pAsdKDh
-	 9+Kq8U/S1CgV3ksw67W9aLEdiWiPfPLo8LYuuPoZTuE2SFx7zIwJU5Wt9SPvNBUgDLg==
+	bh=vNx/uCXWwDvPhIzcpK0XfJ8D3OdzmfMVM7s7BULmDFM=;
+	b=JW0eKT7fklyHuWH9iTeE0ERdtFxY2MDpUR9uFsGbhXlIiP0mjnnUnEADXDuQfOK/f8I9
+	 uFAlLUA8QAlFmVMFonnqpzP79jlOGYAC2kVGyYwUlLmDDxwqb1x9UsarJx0wqspTtQ8kf
+	 d9CDcCVPe+PnHDlo0c6YpetwGV6K5NvReU0lr8W7Q+joup0qTc2cc2UNj8GX6Sx5wBt5r
+	 C+8WTslDKimSj5yNDaQeSfrfgxN4M6ZCop/k+rk3ZCbe0Fm4vJXypdud8jbshL8zQ4cdn
+	 awOtnfcK+hfYYX5kLunTzCv1lrHebTmj5toL6pQjmSI5FXoPdVeQBcElDWbLvrHRLNw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Kp09yyVG;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Yx1ziD3F;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2111606A69D
-	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 20:44:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F2E606A6AE
+	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 20:44:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Kp09yyVG
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AA051F00893;
-	Thu, 26 Nov 2026 20:44:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Yx1ziD3F
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 596011F00893;
+	Thu, 26 Nov 2026 20:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795725843;
-	bh=EBawKmi/RdVVrHAVKPmy9VzogMedHqA1pyvmDuGM2pE=;
+	s=k20260515; t=1795725844;
+	bh=vNx/uCXWwDvPhIzcpK0XfJ8D3OdzmfMVM7s7BULmDFM=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=Kp09yyVGektrbT+GO7l4tTPlP8RyTiv+BxaF5hGJolALLU39ksKoybgDjDfjqc3d3
-	 JIT7qhkRBvLlYqyd6c5MY4VIJJDBGy1mvsAyzPiF/YPs+MPOnnhpOOlx5w6IqHMd1l
-	 hVUP58laBMmp+MPrFg1nxGHDtL14LdU8BKcZ8HQsJIbR93lCqZIs3Sx94F7pYTbBem
-	 6MdEi0LdjCK+yOMXewvpqYGBeSnqvf0s2FZ52xnJSFt/8q3zGq0W+7IFZXvayCZBrI
-	 1S2h8GD3/sOBUZ0U+94wdpNgu2mtZn75KGgyQlmEcXFlPprHbQ0CfYYqsbR/3dMXpU
-	 ApGWr3MTk3m4Q==
-Subject: Re: [PATCH mptcp-next v9 4/7] mptcp: handle SO_ZEROCOPY in setsockopt
+	b=Yx1ziD3F0DOKMzrO84F7rNw/kK0cxkiLHMaBY9EQnpW1WXmjpqFN4gZQyP6guOD8i
+	 emHy+omENKR6yQGK9vhv5E3D6pIrh4E7uVVBKWyDLFCTM86wU7AM3Rw6ZFTguSp84S
+	 2L1a7x0Is5XANyKVdavLKTT42+vwtHuXWo4HtperSnheSM9jr/okw+4fawIEH64gL1
+	 bWh7gFNOYuWRZs/EzQ+fTOk1ktTiruYRuE9+JekxlVEdACGotI+HPFOp8B3O8o95gl
+	 XaTGVGoMVQj4wpaKcmS+BVO0u4HgrukkufH7kHp7OTGvZoiJSpdsPidsxHTobA0NsW
+	 T/mZnrKpbC9Qw==
+Subject:
+ Re: [PATCH mptcp-next v9 5/7] Documentation: msg_zerocopy: add MPTCP support
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
 Date: Thu, 26 Nov 2026 20:44:03 +0000
-Message-ID: <179572584314.3133.7930166357274276359@kernel.org>
-In-Reply-To: <aaf330d9dbfe6e4f8b15542106d5e687e719a8cf.1795591278.git.tanggeliang@kylinos.cn>
-References: <aaf330d9dbfe6e4f8b15542106d5e687e719a8cf.1795591278.git.tanggeliang@kylinos.cn>
-X-sashiko-severity: Medium
+Message-ID: <179572584387.3133.12939272108333770181@kernel.org>
+In-Reply-To: <f3aa500269ed8fd0a8c219cf245e93682370ca1c.1795591278.git.tanggeliang@kylinos.cn>
+References: <f3aa500269ed8fd0a8c219cf245e93682370ca1c.1795591278.git.tanggeliang@kylinos.cn>
+X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -61,148 +62,78 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue(s) to consider.
+Thank you for your contribution! Sashiko AI review found more severe
+issue(s) in other patches of this series. This mail is only an FYI, in case
+you want to address the nit picks below when you respin.
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 0
+Low priority / nit picks for your consideration:
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
-
-- [Medium] This patch adds mptcp_setsockopt_sol_socket_zerocopy()
-  (net/mptcp/sockopt.c), the first way to set SOCK_ZEROCOPY on an MPTCP…
+- [Low] Commit "Documentation: msg_zerocopy: add MPTCP support" adds
+  MPTCP to the protocol list in the Intro of…
 
 --
 
-mptcp: handle SO_ZEROCOPY in setsockopt
+Documentation: msg_zerocopy: add MPTCP support
 
-Until now MPTCP setsockopt() rejected SO_ZEROCOPY with -EOPNOTSUPP, so on
-MPTCP sockets MSG_ZEROCOPY quietly fell back to copying. This patch adds
-mptcp_setsockopt_sol_socket_zerocopy(), which checks that val is 0 or 1,
-sets or clears SOCK_ZEROCOPY on the msk and pushes the flag to every
-subflow. sync_socket_options() also copies the flag to new subflows.
+This commit adds MPTCP to the list of protocols that support
+MSG_ZEROCOPY in the Intro section of
+Documentation/networking/msg_zerocopy.rst.
 
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index 922f6ae5c80cb..3391f7a9d9834 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-> @@ -184,6 +184,31 @@ static int mptcp_setsockopt_sol_socket_tstamp(struct mptcp_sock *msk, int optnam
->  	return 0;
->  }
+> diff --git a/Documentation/networking/msg_zerocopy.rst b/Documentation/networking/msg_zerocopy.rst
+> index 78fb70e748b77..0b91beb2f5bea 100644
+> --- a/Documentation/networking/msg_zerocopy.rst
+> +++ b/Documentation/networking/msg_zerocopy.rst
+> @@ -7,8 +7,8 @@ Intro
+>  =====
 >  
-> +static int mptcp_setsockopt_sol_socket_zerocopy(struct mptcp_sock *msk, int val)
-> +{
-> +	struct mptcp_subflow_context *subflow;
-> +	struct sock *sk = (struct sock *)msk;
-> +
-> +	if (val != 0 && val != 1)
-> +		return -EINVAL;
-> +
-> +	lock_sock(sk);
-> +	sock_valbool_flag(sk, SOCK_ZEROCOPY, val);
+>  The MSG_ZEROCOPY flag enables copy avoidance for socket send calls.
+> -The feature is currently implemented for TCP, UDP and VSOCK (with
+> -virtio transport) sockets.
+> +The feature is currently implemented for TCP, MPTCP, UDP and VSOCK
+> +(with virtio transport) sockets.
 
-[Severity: Medium]
-This is the first way to set SOCK_ZEROCOPY on an msk. That means
-unprivileged userspace can now reach the ubuf dfrag path in
-mptcp_sendmsg_frag(), which the earlier patch in this series, "mptcp: add
-MSG_ZEROCOPY support", added. Does that path handle memory pressure
-correctly?
+[Severity: Low]
+Should the protocol-specific sections later in msg_zerocopy.rst also
+mention MPTCP? After this change they still only name TCP/UDP and VSOCK.
 
-In net/mptcp/protocol.c:mptcp_sendmsg_frag(), every dfrag goes through
-tcp_wmem_schedule(), including pure zero-copy ones. The early exit is then
-skipped for ubuf dfrags:
+The Notification Parsing section says:
 
-net/mptcp/protocol.c:mptcp_sendmsg_frag() {
+    The level and type fields in the control data are protocol family
+    specific, IP_RECVERR or IPV6_RECVERR (for TCP or UDP socket).
+    For VSOCK socket, cmsg_level will be SOL_VSOCK and cmsg_type will be
+    VSOCK_RECVERR.
+
+MPTCP error queue reads go through inet_recv_error():
+
+net/mptcp/protocol.c:mptcp_recvmsg() {
     ...
-	avail = tcp_wmem_schedule(ssk, copy);
-	if (!dfrag->ubuf && avail <= 0) {
-		tcp_remove_empty_skb(ssk);
-		return -ENOMEM;
-	}
-	copy = avail;
+	if (unlikely(flags & MSG_ERRQUEUE))
+		return inet_recv_error(sk, msg, len);
     ...
 }
 
-tcp_wmem_schedule() can return 0 in two cases: when sk_wmem_schedule()
-fails with sk_forward_alloc at 0, and when the subflow already has at least
-tcp_wmem[0] queued.
+So MPTCP sockets also get IP_RECVERR/IPV6_RECVERR. The text doesn't say
+so.
 
-Plain TCP avoids this by skipping the schedule for pure zero-copy skbs, and
-by treating 0 as wait_for_space:
+The Implementation/Loopback section has the same gap:
 
-net/ipv4/tcp.c:tcp_sendmsg_locked() {
-    ...
-			if (!skb_zcopy_pure(skb)) {
-				copy = tcp_wmem_schedule(sk, copy);
-				if (!copy)
-					goto wait_for_space;
-			}
-    ...
-}
+    For TCP and UDP:
+    Data sent to local sockets can be queued indefinitely if the receive
+    process does not read its socket. ...
 
-When copy is 0 on the MPTCP side, mptcp_sendmsg_frag() still does this:
+    For VSOCK:
+    Data path sent to local sockets is the same as for non-local sockets.
 
-		get_page(dfrag->page);
-		skb_fill_page_desc(skb, i, dfrag->page, offset, copy);
+MPTCP subflows are TCP, so the TCP deferred copy behaviour should
+apply. The document doesn't say that MPTCP is covered there either.
 
-		if (dfrag->ubuf && !skb_zcopy(skb)) {
-			skb_zcopy_set(skb, dfrag->ubuf, NULL);
-			skb_shinfo(skb)->flags |= SKBFL_PURE_ZEROCOPY;
-		}
+Later patches in this series don't change msg_zerocopy.rst again.
 
-So a zero-size frag is added, and page and uarg references are taken for
-zero bytes.
+Could these two sections be updated to include MPTCP alongside TCP?
 
-On the alloc_skb path, __mptcp_alloc_tx_skb() has already called
-tcp_skb_entail(), so the skb is on the subflow write queue. The function
-then writes the mapping:
-
-	mpext->data_len = copy;
-	mpext->use_map = 1;
-
-and returns 0 without calling tcp_remove_empty_skb(). RFC 8684 reserves
-data_len 0 for the infinite mapping.
-
-The other two early returns in this function call tcp_remove_empty_skb()
-to avoid exactly this state. __subflow_push_pending() treats ret <= 0 as
-"stop pushing" and does not remove the skb.
-
-Could mptcp_push_release()->tcp_push() then send a zero-length data
-segment carrying a data_len 0 DSS mapping? That segment would also be
-counted in packets_out and could be retransmitted by RTO.
-
-The triggering sequence would be:
-
-setsockopt(SOL_SOCKET, SO_ZEROCOPY, 1)
-sendmsg(MSG_ZEROCOPY)
-  mptcp_sendmsg_zerocopy_iter()  /* dfrag->ubuf != NULL */
-  __mptcp_push_pending()
-    mptcp_sendmsg_frag()
-
-This needs tcp_wmem[0] or more queued on the subflow, sk_forward_alloc at
-0, and __sk_mem_schedule() failing. The last condition can happen under
-global TCP memory pressure above tcp_mem[2], or with a tight memcg.
-
-On the reuse path with !can_coalesce, the same thing appends a zero-size
-frag to an existing skb. If sk_forward_alloc could go negative here, copy =
-avail would also wrap to a huge size_t value. I couldn't confirm that
-sk_forward_alloc goes negative on this path, though.
-
-The code is still the same at the end of the series.
-
-Would it make sense to fix the ubuf handling in mptcp_sendmsg_frag() before
-exposing SO_ZEROCOPY? For example, skip tcp_wmem_schedule() for pure
-zero-copy dfrags as TCP does, or handle a 0 result with
-tcp_remove_empty_skb().
-
-> +	sockopt_seq_inc(msk);
-> +
-> +	mptcp_for_each_subflow(msk, subflow) {
-
-[ ... ]
+>  
+>  
+>  Opportunity and Caveats
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1795591278.git.tanggeliang%40kylinos.cn
