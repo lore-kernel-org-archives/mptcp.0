@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1795725845;
-	b=MN7TBIe8DFugsFZuFmz+xZ4ujsxYGushL7ecm+9iFkYdm9lBqTO24ytyREfms0RhrKAE
-	 9NOT5YDnbTqUhkCwXXTMkiXMB+gHQcb3gw8uOZ65m0DrilAOEYi0wgwo3fnYozEkjJKuN
-	 ldHT0UnyctZAytFEtlqGKm6nOQN+YYUF12mzNZFttlzoeTvJTsj2fGNZ01qR7rVqodpqq
-	 h6suhiDp4MYyQPow1fYY3TNXs2MOiNrYzSR8PDJeIuttMC5N6I8vpQkDECuEIUdmqtnY/
-	 abQzZJZ7TkFWJ7eoVm/cnmYI2TJMAP07ZT9+rce36foQRD0LODF0s0ZVihv2MwVkmmQ==
+	b=qbcbRwVR+9s4GlZ5SFuaJjW4jn3nGekVoqxlameqD/EAcPGiP54/9m+zDiJsRcycKhE/
+	 Wbt7V3Dz+oc5cUw3zdrROVDuiG1JYQWoVGa1+JnnONfK+xwsQgT6DuRpTH2ME0rl0OzJ6
+	 iIP/9UUqK1Tm3Wzxxc+waSjTX/KkqSYFS6DiMfKMNMAPbdmQVtwPJD66LGlMJMj/vLTRT
+	 EGFGkuJj7MvAWrypRKjLQV+zIqLi0Ae3+UvENjpaVg1mudpgzh5xBJJZbL6lSBgFz/0wY
+	 /UYOD1pzEak6bLUsFrSvvld5NnXlVczWI63g5sLgkfSPldcDdi2FL02O7+30jIQBEbg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1795725845;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=vNx/uCXWwDvPhIzcpK0XfJ8D3OdzmfMVM7s7BULmDFM=;
-	b=JW0eKT7fklyHuWH9iTeE0ERdtFxY2MDpUR9uFsGbhXlIiP0mjnnUnEADXDuQfOK/f8I9
-	 uFAlLUA8QAlFmVMFonnqpzP79jlOGYAC2kVGyYwUlLmDDxwqb1x9UsarJx0wqspTtQ8kf
-	 d9CDcCVPe+PnHDlo0c6YpetwGV6K5NvReU0lr8W7Q+joup0qTc2cc2UNj8GX6Sx5wBt5r
-	 C+8WTslDKimSj5yNDaQeSfrfgxN4M6ZCop/k+rk3ZCbe0Fm4vJXypdud8jbshL8zQ4cdn
-	 awOtnfcK+hfYYX5kLunTzCv1lrHebTmj5toL6pQjmSI5FXoPdVeQBcElDWbLvrHRLNw==
+	bh=+1LdW0+9eeK/n5JwMFKXMYxxGfYxQkNjX71qdqG+qj0=;
+	b=zLowZYcGZ7gS1I8e3LniO9EL6bXWqioehvDp/c6xZcUFlyXKXP5NYpI/qB913ZLt4Gqh
+	 dLfuY6O3JgqLeIGZJDHLFi15PhKtMth30vDgPED1lTdHdADPP0rwu/3GzPucU6eJBzIho
+	 HX8B+Q5VLvbJUUqtMuCwNURcyzKO10UKddEmgPOOYRxLV0GcDq7jje1yjtTgdBEmRwRvn
+	 I7XIkLf2BX98mbxG2SwcELgEjjoyjwEM4tvkEXKgQg8MeYMjLBQHJLjdx5jw/kiDxIwxM
+	 73ZEOKo/6d8nszjOAB+FVYVs+gT6m5DhwKV/okZPzIarPEykJ2oiRT+68QZboEiSPlQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Yx1ziD3F;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UAmzVxM2;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F2E606A6AE
-	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 20:44:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929EE606A6B3
+	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 20:44:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Yx1ziD3F
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 596011F00893;
-	Thu, 26 Nov 2026 20:44:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UAmzVxM2
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2697C1F000C1;
+	Thu, 26 Nov 2026 20:44:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795725844;
-	bh=vNx/uCXWwDvPhIzcpK0XfJ8D3OdzmfMVM7s7BULmDFM=;
+	s=k20260515; t=1795725845;
+	bh=+1LdW0+9eeK/n5JwMFKXMYxxGfYxQkNjX71qdqG+qj0=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=Yx1ziD3F0DOKMzrO84F7rNw/kK0cxkiLHMaBY9EQnpW1WXmjpqFN4gZQyP6guOD8i
-	 emHy+omENKR6yQGK9vhv5E3D6pIrh4E7uVVBKWyDLFCTM86wU7AM3Rw6ZFTguSp84S
-	 2L1a7x0Is5XANyKVdavLKTT42+vwtHuXWo4HtperSnheSM9jr/okw+4fawIEH64gL1
-	 bWh7gFNOYuWRZs/EzQ+fTOk1ktTiruYRuE9+JekxlVEdACGotI+HPFOp8B3O8o95gl
-	 XaTGVGoMVQj4wpaKcmS+BVO0u4HgrukkufH7kHp7OTGvZoiJSpdsPidsxHTobA0NsW
-	 T/mZnrKpbC9Qw==
+	b=UAmzVxM2tJrWL8N0Ic57pMVglYLDHwztTRP8YqzIVOL11tUKrGFWNYO95OrRdgWIN
+	 0E3ipG5fMQzdMDAnT22iBtRa9oV7t2/LLRuidxwHxD4ooOB7zPAUn1HUP4ytLdBiL9
+	 ZaU9whxtDapgN5ARjRshOg3vOEYfY/qp5FelGUR+xImtSHEk/aAYysCqN4EeKFdNIL
+	 nDVDdsBOytCv+zpp72G6Q37nSOprFwtDleIkjOasdBAvXQEOJukzdBcEwviZumu9VO
+	 87RfVRXi/zTCWSV6LKSUXA+rkpzT2QYC4AF4b31NuJrmQm5MYBWzN+3s2nTuu50odr
+	 9waUCKC4Bq4hQ==
 Subject:
- Re: [PATCH mptcp-next v9 5/7] Documentation: msg_zerocopy: add MPTCP support
+ Re: [PATCH mptcp-next v9 6/7] selftests: net: msg_zerocopy: add MPTCP support
 From: netdev-bot+sashiko@kernel.org
 To: geliang@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Thu, 26 Nov 2026 20:44:03 +0000
-Message-ID: <179572584387.3133.12939272108333770181@kernel.org>
-In-Reply-To: <f3aa500269ed8fd0a8c219cf245e93682370ca1c.1795591278.git.tanggeliang@kylinos.cn>
-References: <f3aa500269ed8fd0a8c219cf245e93682370ca1c.1795591278.git.tanggeliang@kylinos.cn>
-X-sashiko-severity: Low
+Date: Thu, 26 Nov 2026 20:44:04 +0000
+Message-ID: <179572584472.3133.9042620065604383437@kernel.org>
+In-Reply-To: <89bb061e82fa0cf48cf44697041947bf9c99b110.1795591278.git.tanggeliang@kylinos.cn>
+References: <89bb061e82fa0cf48cf44697041947bf9c99b110.1795591278.git.tanggeliang@kylinos.cn>
+X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -62,78 +62,118 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found more severe
-issue(s) in other patches of this series. This mail is only an FYI, in case
-you want to address the nit picks below when you respin.
+Thank you for your contribution! Sashiko AI review found 2 potential
+issue(s) to consider.
 
-Low priority / nit picks for your consideration:
+Critical: 0 · High: 0 · Medium: 1 · Low: 1
 
-- [Low] Commit "Documentation: msg_zerocopy: add MPTCP support" adds
-  MPTCP to the protocol list in the Intro of…
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
+
+- [Medium] The patch adds `$0 4 mptcp -t 1` and `$0 6 mptcp -t 1` to the
+  default (no-argument) suite in…
+- [Low] The header comment of tools/testing/selftests/net/msg_zerocopy.c
+  lists the 'supported protocols and modes', including protocol variants…
 
 --
 
-Documentation: msg_zerocopy: add MPTCP support
+selftests: net: msg_zerocopy: add MPTCP support
 
-This commit adds MPTCP to the list of protocols that support
-MSG_ZEROCOPY in the Intro section of
-Documentation/networking/msg_zerocopy.rst.
+This patch adds an "mptcp" test mode to msg_zerocopy.c. The new mode opens
+SOCK_STREAM sockets with IPPROTO_MPTCP, with a fallback definition for
+older headers. msg_zerocopy.sh is also changed to run IPv4 and IPv6 MPTCP
+tests in the default test suite.
 
-> diff --git a/Documentation/networking/msg_zerocopy.rst b/Documentation/networking/msg_zerocopy.rst
-> index 78fb70e748b77..0b91beb2f5bea 100644
-> --- a/Documentation/networking/msg_zerocopy.rst
-> +++ b/Documentation/networking/msg_zerocopy.rst
-> @@ -7,8 +7,8 @@ Intro
->  =====
->  
->  The MSG_ZEROCOPY flag enables copy avoidance for socket send calls.
-> -The feature is currently implemented for TCP, UDP and VSOCK (with
-> -virtio transport) sockets.
-> +The feature is currently implemented for TCP, MPTCP, UDP and VSOCK
-> +(with virtio transport) sockets.
+> diff --git a/tools/testing/selftests/net/msg_zerocopy.c b/tools/testing/selftests/net/msg_zerocopy.c
+> index 1d5d3c4e7e872..3a130f80d662f 100644
+> --- a/tools/testing/selftests/net/msg_zerocopy.c
+> +++ b/tools/testing/selftests/net/msg_zerocopy.c
+
+[ ... ]
+
+> @@ -816,6 +820,8 @@ int main(int argc, char **argv)
+>  		do_test(cfg_family, SOCK_RAW, IPPROTO_RAW);
+>  	else if (!strcmp(cfg_test, "tcp"))
+>  		do_test(cfg_family, SOCK_STREAM, 0);
+> +	else if (!strcmp(cfg_test, "mptcp"))
+> +		do_test(cfg_family, SOCK_STREAM, IPPROTO_MPTCP);
 
 [Severity: Low]
-Should the protocol-specific sections later in msg_zerocopy.rst also
-mention MPTCP? After this change they still only name TCP/UDP and VSOCK.
+This isn't a bug, but should the header comment at the top of
+msg_zerocopy.c also list the new mode? It currently says:
 
-The Notification Parsing section says:
+ * Send traffic between two processes over one of the supported
+ * protocols and modes:
+ *
+ * PF_INET/PF_INET6
+ * - SOCK_STREAM
+ * - SOCK_DGRAM
+ * - SOCK_DGRAM with UDP_CORK
+ * - SOCK_RAW
+ * - SOCK_RAW with IP_HDRINCL
 
-    The level and type fields in the control data are protocol family
-    specific, IP_RECVERR or IPV6_RECVERR (for TCP or UDP socket).
-    For VSOCK socket, cmsg_level will be SOL_VSOCK and cmsg_type will be
-    VSOCK_RECVERR.
+Other protocol variants such as "SOCK_RAW with IP_HDRINCL" are listed
+there, but SOCK_STREAM with IPPROTO_MPTCP is not. The usage string in
+msg_zerocopy.sh was updated to include mptcp.
 
-MPTCP error queue reads go through inet_recv_error():
+>  	else if (!strcmp(cfg_test, "udp"))
+>  		do_test(cfg_family, SOCK_DGRAM, 0);
+>  	else if (!strcmp(cfg_test, "rds"))
+> diff --git a/tools/testing/selftests/net/msg_zerocopy.sh b/tools/testing/selftests/net/msg_zerocopy.sh
+> index 28178a38a4e7b..83424758c452a 100755
+> --- a/tools/testing/selftests/net/msg_zerocopy.sh
+> +++ b/tools/testing/selftests/net/msg_zerocopy.sh
+> @@ -31,6 +31,8 @@ if [[ "$#" -eq "0" ]]; then
+>  	$0 6 tcp -t 1 || ret=1
+>  	$0 4 udp -t 1 || ret=1
+>  	$0 6 udp -t 1 || ret=1
+> +	$0 4 mptcp -t 1 || ret=1
+> +	$0 6 mptcp -t 1 || ret=1
 
-net/mptcp/protocol.c:mptcp_recvmsg() {
-    ...
-	if (unlikely(flags & MSG_ERRQUEUE))
-		return inet_recv_error(sk, msg, len);
-    ...
-}
+[Severity: Medium]
+Will this make the whole default suite fail on kernels where MPTCP, or
+MPTCP SO_ZEROCOPY, is not available? Previously only tcp and udp ran here.
+These new cases run unconditionally, and there is no feature check or
+kselftest skip (exit 4).
 
-So MPTCP sockets also get IP_RECVERR/IPV6_RECVERR. The text doesn't say
-so.
+On kernels without CONFIG_MPTCP, or for the IPv6 run without
+CONFIG_MPTCP_IPV6, socket() fails. The tx side hits a hard error in
+do_setup_tx():
 
-The Implementation/Loopback section has the same gap:
+	fd = socket(domain, type, protocol);
+	if (fd == -1)
+		error(1, errno, "socket t");
 
-    For TCP and UDP:
-    Data sent to local sockets can be queued indefinitely if the receive
-    process does not read its socket. ...
+do_setup_rx() fails the same way with "socket r".
 
-    For VSOCK:
-    Data path sent to local sockets is the same as for non-local sockets.
+On kernels that have MPTCP but not "mptcp: handle SO_ZEROCOPY in
+setsockopt", the "-z" run calls do_setsockopt(fd, SOL_SOCKET,
+SO_ZEROCOPY, 1). In that case mptcp_setsockopt_sol_socket() ends with:
 
-MPTCP subflows are TCP, so the TCP deferred copy behaviour should
-apply. The document doesn't say that MPTCP is covered there either.
+	 * SO_ZEROCOPY is currently unsupported, TODO in sndmsg
+	 * SO_TXTIME is currently unsupported
+	 */
 
-Later patches in this series don't change msg_zerocopy.rst again.
+	return -EOPNOTSUPP;
 
-Could these two sections be updated to include MPTCP alongside TCP?
+do_setsockopt() then calls error(1, ...), and the script sets ret=1.
+
+msg_zerocopy.sh is in the net TEST_PROGS. The last patch in the series,
+"selftests: mptcp: cover msg_zerocopy test", also links this script into
+the MPTCP selftests. Those are often run on stable and older kernels, and
+that patch does not add a feature check either.
+
+Could the mptcp cases detect missing MPTCP or SO_ZEROCOPY support and
+report a skip instead of a failure?
 
 >  
->  
->  Opportunity and Caveats
+>  	[[ "$ret" == "0" ]] && echo "OK. All tests passed"
+>  	exit $ret
+
+[ ... ]
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/cover.1795591278.git.tanggeliang%40kylinos.cn
