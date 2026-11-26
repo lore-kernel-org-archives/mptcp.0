@@ -1,57 +1,52 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.75
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795681244;
-	b=wUxLU0dnq45bY08RellqHtuxhxtT0vlqPlNccCru0gAPmFr+O/5pfZHyXEjBNxifVRVn
-	 Glk3X2Z7R+/F5qx83vJRV5zXRpOurbEMYC/SOuM5JDIx0OdaeV3KGKuQPsj9nODMoklNw
-	 eOH6gE89lqpg+iGeBSBU9wuuCX0OQ2ir5P1ACzVtfLDhg1SqF/5wiMPgxiN+k2zW+Ea33
-	 nvtDMPficLyrPNW+FblWiPfr2dBqRgB1fEZYWgPf6/5q7EtxT+j0V8TqCQQxSeut2IAev
-	 Oee5AKfX2lUzpqs1RbBGOsOXErg/e7KjTbpWuDbxePWyeutTIXus+X7Eq+lOb8ZklEQ==
+	t=1795682890;
+	b=efufjCEZjb1GzCl5VTFf8HMsIaStfMPtNwQnTkaTU/MjZGfRDJI5PX8vmA+71JcGXVw3
+	 bNn9kWhedSKe6HpzMs+Pp13OiWSC4XnGeFinwgpi81BDIopEeSO8BOBIBWXitXhssrR3a
+	 Gfb3xY2sboVCFx/eiDiREt6jld2Y3Yk8IDI9KWiG2cOyFipvXFO6Eufi5FL/nj4C+PNxQ
+	 reGbmzTfU5DSpl9oO8AD61O8R361adhtyHRVgM0ucpwHYdAUPSdxRjnmr68qFZPy5NDFB
+	 RoZ666j1hZDPKwQHsf4fJIgxwdwBIpxNd+2ZVfj7OdNJSUn2pri1hQNIyqX760DQDpQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795681244;
-	h=Received:DKIM-Signature:Message-ID:Subject:From:To:Date:In-Reply-To:
-	 References:Content-Type:User-Agent:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=0+gP73+QLITwAOLfZXIopVBXnESuNTo3XGjUirLDXXw=;
-	b=YtxZ1odFqJcVPxAVHlezO40+wZL+6znwOumb5NVCtMpkryG0dSQoJy3/OGbLruD+OczZ
-	 lconN/jSn4vujfUoZCmhTjkWf6e1IqCGD3nSRkFWVoem7mO4pYEaSyaqpmiZknemafnfw
-	 Vkru0SzQnfmPO+M53+R6zp3bFs3UByf4rFZzeo2MuDGQgszyn3yy5I3benHzkckiophpL
-	 WlqYwaMV7LdtoxN6A/d/zD7h3qGa5tYrBFXa07Vw88DcJwqAb3zqZ1JhSPpeYNV3SLdqA
-	 iYJp/pgrTo4VA0FxaIeBRAQLPl/6xiLDI4FXwbPK6SovG5kjmSw9ylA71OJNcPlhpxw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795682890;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:MIME-Version:Date:Content-Type:
+	 Content-Transfer-Encoding:From:Message-ID:TLS-Required:Subject:To:Cc:
+	 In-Reply-To:References;
+	bh=eEqrglkqWiQv9ByDl8q6YHM+PPnMMtPyGy7NziGSOCE=;
+	b=MNfQxCRSiNWiSvpr4vJoMDoEN4bNkkjKkjs1vZ3AE88EXZKpx5IGaKnfNzdVvkw2Pd64
+	 xmKz+46CRgAg6goRj284wSRj5ydqEDCSWV2EZ0B2mr1DoIRtAy6Ti5eVnZl0ZSuAA5kNT
+	 D9/Gck0neZ6+Jtsnwg3bnCUEVN9GBd6p05gQBAO50s2AZKrvSuoj2GgPFrANF9AovgCxV
+	 ceNx3cnoVFYwkn3PQT9AI4u3K7n9S58QGflltXdbWkY35O4C7jF2KVUWFwKtdkBWS1WTA
+	 Oxh9L13M1a29Zfz93DRxpBp3AQBE0eqOoOvVg1l8GDTzJQSL6Sw6OH8nq7+JW6ASz8A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="D4/Ukuke";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=NoJtdc7e;
+	arc=none smtp.remote-ip=91.218.175.75
+Received: from mta0.migadu.com (out-75.mta0.migadu.com [91.218.175.75])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7548A606A321
-	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 08:20:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E217A606A337
+	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 08:48:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E217A606A337
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=D4/Ukuke
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72C081F000CA;
-	Thu, 26 Nov 2026 08:20:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795681243;
-	bh=0+gP73+QLITwAOLfZXIopVBXnESuNTo3XGjUirLDXXw=;
-	h=Subject:From:To:Date:In-Reply-To:References;
-	b=D4/UkukeXrqdYzH2cRlgL6Au8MndrSK7YvftVB8iyMDG0DXkJFTOXdJ28CkYX2bbS
-	 obY9XdUeqtm9GsfinAlURoqwWtbl9aGfWUxY9m7sHuAeTDlmQZjUFFgCxf0aW8Lz/2
-	 RR76O28XsebkoRyFAtGKmCWEPsZmPLnDBF2SWySbFcV0R8RBg7vDt6P3GpyPQ8GGze
-	 hfrLJKaxwgybHujRIyig/EOi9rQqwEev4fOz6FXojPSDuk9apSoOd9GQbOjXhUL7a0
-	 uX3Jxler2nJFP6PPuPwTjN9XWkLH30iWNpdineEgfANuADglpqrwLz9azEjFUKdD7s
-	 PR1Ne8sGl1Gag==
-Message-ID: <dd53bb0e7fe24c1f6469a0395d6bb12f6b3974b7.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net v3 19/50] mptcp: fastopen: keep listeners and
- connections
-From: Geliang Tang <geliang@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, MPTCP Linux
-	 <mptcp@lists.linux.dev>
-Date: Thu, 26 Nov 2026 16:20:37 +0800
-In-Reply-To: <20261124-mptcp-cmason-fixes-v3-19-416c0920c73f@kernel.org>
-References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
-	 <20261124-mptcp-cmason-fixes-v3-19-416c0920c73f@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.2-10build1 
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=NoJtdc7e
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=WzPAXzKv5qNfueG+8GIA/dCl0/+muC6HE/6UOijGqYY=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1795682888; v=1; x=1796287688;
+ b=NoJtdc7eHcyjs0Gk2e+oksFBOH6DdHwmMxLokBqwbEPNc6bCNY6l4Hi8Z/XBHHbpCSwakxn5
+ Rl5EVvNk/AKV9yLLBGN0gtsePes7OiB/95gsXHQCJ1O5KM+9/kVx1AnWaCL8y1gfXw0lG7NG2do
+ qMUHkLES9nTAO0Zd5Dn7Q9U8=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 5446df3b68f9b5ae;
+	Thu, 26 Nov 2026 08:48:07 +0000
+X-Mizu-Trace-ID: 5446df3b68f9b5ae
+X-Migadu-Flow: FLOW_OUT
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -61,74 +56,120 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Date: Thu, 26 Nov 2026 08:48:07 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+From: gang.yan@linux.dev
+Message-ID: <133c1ca98af6beb48c0db1e6bb539a2a76ccda49@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH net-next v1 0/6] net: avoid stack canaries in TCP/IPv4
+ fast paths
+To: "Xuanqiang Luo" <xuanqiang.luo@linux.dev>, netdev@vger.kernel.org
+Cc: "David S . Miller" <davem@davemloft.net>, "Eric Dumazet"
+ <edumazet@kernel.org>, "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni"
+ <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>, "Alexei
+ Starovoitov" <ast@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>,
+ "John Fastabend" <john.fastabend@gmail.com>, "Andrii Nakryiko"
+ <andrii@kernel.org>, "Eduard Zingerman" <eddyz87@gmail.com>, "Kumar
+ Kartikeya Dwivedi" <memxor@gmail.com>, "Martin KaFai Lau"
+ <martin.lau@linux.dev>, "Song Liu" <song@kernel.org>, "Yonghong Song"
+ <yonghong.song@linux.dev>, "Jiri Olsa" <jolsa@kernel.org>, "Emil
+ Tsalapatis" <emil@etsalapatis.com>, "Ihor Solodrai"
+ <ihor.solodrai@linux.dev>, "Matthieu Baerts" <matttbe@kernel.org>, "Mat
+ Martineau" <martineau@kernel.org>, "Geliang Tang" <geliang@kernel.org>,
+ "David Ahern" <dsahern@kernel.org>, "Ido Schimmel" <idosch@nvidia.com>,
+ "Stanislav Fomichev" <sdf@fomichev.me>, "Neal Cardwell"
+ <ncardwell@google.com>, "Kuniyuki Iwashima" <kuniyu@google.com>, "Pablo
+ Neira Ayuso" <pablo@netfilter.org>, "Florian Westphal" <fw@strlen.de>,
+ "Phil Sutter" <phil@nwl.cc>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, mptcp@lists.linux.dev,
+ netfilter-devel@vger.kernel.org, coreteam@netfilter.org, "Xuanqiang Luo"
+ <luoxuanqiang@kylinos.cn>
+In-Reply-To: <20261124130631.1886963-1-xuanqiang.luo@linux.dev>
+References: <20261124130631.1886963-1-xuanqiang.luo@linux.dev>
 
-Hi Matt,
+November 24, 2026 at 9:06 PM, "Xuanqiang Luo" <xuanqiang.luo@linux.dev ma=
+ilto:xuanqiang.luo@linux.dev?to=3D%22Xuanqiang%20Luo%22%20%3Cxuanqiang.lu=
+o%40linux.dev%3E > wrote:
 
-On Tue, 2026-11-24 at 22:59 +0100, Matthieu Baerts (NGI0) wrote:
-> A sendmsg() with MSG_FASTOPEN on an MPTCP listener fails, e.g. with
-> EISCONN, as with TCP, but it also closes the listener: after any error,
-> mptcp_sendmsg_fastopen() retries the disconnect that could have failed
-> in __inet_stream_connect(), while there is nothing to retry for a
-> listener. On a connection closed by both sides, with data still to be
-> read, the same retry also drops this data and the end of the stream.
-> 
-> Skip this disconnect for a listener and for a connected socket:
-> __inet_stream_connect() returned without trying to disconnect them. They
-> are then kept as they are, as with TCP.
-> 
-> This issue has been found by an AI code review agent, while reviewing
-> "mptcp: report sf aborts during deferred connect", and confirmed with a
-> new Packetdrill test: sendto() with MSG_FASTOPEN on a listener, then a
-> SYN. Without this patch, the SYN got a reset instead of a SYN-ACK:
-> 
->   listen_sendto_fastopen.pkt:14: error handling packet: live packet field ipv4_total_length: expected: 60 (0x3c) vs actual: 40 (0x28)
-> 
-> The case of the closed connection has been found by an AI code review
-> agent (Clashiko), while reviewing a previous version of this patch, and
-> confirmed with another Packetdrill test: after a shutdown(), data and a
-> DATA_FIN are received, then sendto() with MSG_FASTOPEN fails with
-> EISCONN. Without this patch, the data could no longer be read:
-> 
->   closed_sendto_fastopen.pkt:30: runtime error in read call: Expected result 1000 but got -1 with errno 107 (Transport endpoint is not connected)
-> 
-> Fixes: 7d803344fdc3 ("mptcp: fix deadlock in fastopen error path")
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Looks good. Thanks!
+>=20
+>=20From: Xuanqiang Luo <luoxuanqiang@kylinos.cn>
+>=20
+>=20With CONFIG_STACKPROTECTOR_STRONG=3Dy, a function that has a local ar=
+ray or
+> passes the address of one of its locals to another function needs a sta=
+ck
+> canary. The canary is set up and checked on every call, also when the
+> local is only used on a path that almost never runs.
+>=20
+>=20This series removes the canary from functions of the TCP/IPv4 fast pa=
+ths,
+> by returning results by value, by using storage that is not on the stac=
+k,
+> or by not calling a function that has nothing to do.
+>=20
+>=20Patch 1 returns the two mptcp_space() values in a structure, so that
+> __tcp_select_window() no longer needs a canary.
+>=20
+>=20Patch 2 changes ip_neigh_gw4() to take a pointer to the address, like
+> ip_neigh_gw6(), so that ip_finish_output2() no longer needs a canary.
+>=20
+>=20Patch 3 uses pskb_may_pull() in icmp_filter(), so that
+> raw_local_deliver() no longer needs a canary.
+>=20
+>=20Patch 4 turns skb_try_coalesce() into an inline wrapper over a functi=
+on
+> returning its results by value, so that its callers no longer need a
+> canary because of it.
+>=20
+>=20Patch 5 returns the result of the TCP receive coalescing by value, so
+> that tcp_rcv_established() and tcp_data_queue() no longer need a canary=
+.
+>=20
+>=20Patch 6 calls bpf_skops_write_hdr_opt(), which needs a canary, only i=
+f a
+> BPF program reserved room for TCP options.
+>=20
+>=20The bloat-o-meter numbers are from gcc 16.2 on x86_64. The functions
+> named in patches 1 to 5 also lose their canary with clang 23.1.6 on
+> x86_64, with and without ThinLTO, and on arm64.
+>=20
 
-    Reviewed-by: Geliang Tang <geliang@kernel.org>
+Hi=20Xuanqiang,
 
-> ---
-> v2: new, for an issue found by a review agent
-> v3: also skip it for a connected socket, not to drop unread data
->     (Clashiko)
-> 
-> Note (Clashiko on v2): only retrying a disconnect that failed, with
-> SS_DISCONNECTING, would leave a deferred socket stuck after an early
-> error from tcp_sendmsg_fastopen(), DEFER_CONNECT being cleared on the
-> msk: then, the disconnect is still retried, as before.
-> ---
->  net/mptcp/protocol.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 6c712f677220..d529cfb582a5 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2004,11 +2004,14 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
->  		 */
->  		if (ret && ret != -EINPROGRESS && ret != -ERESTARTSYS && ret != -EINTR)
->  			*copied_syn = 0;
-> -	} else if (ret && ret != -EINPROGRESS) {
-> +	} else if (ret && ret != -EINPROGRESS && sk->sk_state != TCP_LISTEN &&
-> +		   sk->sk_socket->state != SS_CONNECTED) {
->  		/* The disconnect() op called by tcp_sendmsg_fastopen()/
->  		 * __inet_stream_connect() can fail, due to looking check,
->  		 * see mptcp_disconnect().
->  		 * Attempt it again outside the problematic scope.
-> +		 * A listener or a connected socket is not disconnected there,
-> +		 * as with TCP.
->  		 */
->  		if (!mptcp_disconnect(sk, 0)) {
->  			sk->sk_disconnects++;
+Thanks for this series. Besides the code size, do you have any runtime pe=
+rf
+numbers (TCP_RR, cycles per packet...)? I think it may help the maintaine=
+rs
+judge the real gain.
+
+Thanks
+Gang
+
+> Xuanqiang Luo (6):
+>  tcp: avoid a stack canary in __tcp_select_window()
+>  ipv4: avoid a stack canary in ip_finish_output2()
+>  ipv4: raw: do not use skb_header_pointer() in icmp_filter()
+>  net: avoid stack canaries in skb_try_coalesce() callers
+>  tcp: avoid a stack canary in tcp_rcv_established()
+>  tcp: do not call bpf_skops_write_hdr_opt() unless needed
+>=20
+>=20 include/linux/filter.h | 2 +-
+>  include/linux/skbuff.h | 35 ++++++++++-
+>  include/net/mptcp.h | 13 ++++-
+>  include/net/route.h | 16 +++---
+>  net/core/filter.c | 2 +-
+>  net/core/skbuff.c | 50 ++++++++--------
+>  net/ipv4/raw.c | 25 ++++----
+>  net/ipv4/route.c | 15 +++--
+>  net/ipv4/tcp_input.c | 99 +++++++++++++++++---------------
+>  net/ipv4/tcp_output.c | 25 ++++----
+>  net/mptcp/subflow.c | 9 ++-
+>  net/netfilter/nf_flow_table_ip.c | 4 +-
+>  12 files changed, 178 insertions(+), 117 deletions(-)
+>=20
+>=20base-commit: a4c450594f5d1dc0fc4daacfb95d40554d99dead
+> --=20
+>=202.43.0
+>
