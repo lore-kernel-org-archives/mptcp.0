@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795735797;
-	b=yMLQ9bkT2rNCMTaW/JUAoa4ctXdFY4D9/QGAp+p3Drh6SXtevVYUZXOmWROYhj3HNybt
-	 RBW9kI/XB1K4s+qmHHP9ypWraIFSnz949mpPp6Ab01014WhHUBU/SUW5XwGDjJ7aVRuhp
-	 yQausA9bF9Ux0BacGOr6lZpi2aIUmvwq16sLuSzXFm2DFo9jL0MoqclUmfk1yyDvTdpWk
-	 9oK8mfOhzy6IYeBDpIxyZwG/XQbAu8XplwI2a3n13RNDYYw7rZf7U9LwDMe8tnh5VhZ7C
-	 igt490+ZFKrNPPHv+dclPIIkJ9gMAIu7zlcWoKA/+GNFvoo/WPJ2jSQdKz0mIddhg6g==
+	t=1795735798;
+	b=D/MJP4hpvCzBQmiHmvwU8RG1004k/5HGRwWvlQwf9OcSsnaHPkLZQ/+pGPE8yNs08ptL
+	 JA+b6i4eml0Bu0VwM8s3hgHU+IlGe+XwJIs+oJdW48klTjOkNmJ6uidI1SVGsa33tKWA/
+	 nhg11/b7NVjPHP9fgd0ifSpYAHbBQQAuM80W1AK2/sj7MEDLXMYgZ/3cl3zfCzGs7p5G8
+	 sKHgPelQ4Mz3WMlk30ZyS1xWLu4kcaxxH18vm2wAmR+ohYpkJYC9tAVnfJctpDNK1lbFg
+	 TPj3wFKGw7AkgRx8BTfRhLX6a8UgutYFPjsALUiZvNYqO4Or6RKW9qFpf/DsBwKJwxg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795735797;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795735798;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=ji7hT5znZzhHtSQP2St7VLevtUOErPUrxvoKH7fKhbc=;
-	b=oDXB0A4ssmPcK8xJusAsqN2krBZHvcP2nwg9HF/uTaR9pEbmh7AVP4s4sEioe9Zgwioy
-	 3jzPzAYgJUB8zR4yjW7OVqM7O+QM0rmd9fg3PgMwGwKycuib8OpcQFxuksdCig9eLqrid
-	 +KGsQWxnQK5ySNyccsCvwtSxCvXKRbAOlpuiQIILMb9r2kRAyTnJ+d6+0sMujysNE/DdV
-	 FVub7OumNMcTJY1bs7SjqtELHZT37X9PuhKmMQrkfpaWI4laFIVxt9EJUNbEnY+m04dbF
-	 rkTiPkEuLuNIzMefuXXchdxlmsRKHUzU7TtcqqYZSXZE1m77l7zb04i+1tGUrMFBBNw==
+	bh=P7VYUqRvbKp9sW1toZ3pyyDLcBpc3ajBVuccrGOr91c=;
+	b=zs5aiZshW8DAnlov39ubiCSQCWdX9T+SnpC41s/sDQUuBEsrdv597KwTysziitKvTE3Z
+	 e3snqwYXbrKS3cJhLqAXofWcIVnXiJES0/5fRscFUygzt4I8rDGjb8L8RgHoLFiVnfi5d
+	 S4Z1DIcDHKqsHH6QfMuBB55pDbJ/81pUhUzKSOoHhQjJh+QjFy88RKervJicLAI+KQDEK
+	 eCQKbDF53GQXsN0ZOOEzecGy6VclAJIBF4foMrG6xjHk1CSNW0HeuImwyK3Iwob9H2zW9
+	 cAGfk8NwiZU/OVOo246a2S07nQrg0aVYaFZRpPUYHA7Lljt4W+lmXgIf+SETb51R7rg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="j2D/eG4R";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="R+tZl5/f";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2AC3606A31C
-	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 23:29:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9DC606A31E
+	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 23:29:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=j2D/eG4R
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 300D71F00896;
-	Thu, 26 Nov 2026 23:29:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=R+tZl5/f
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BFF91F0089C;
+	Thu, 26 Nov 2026 23:29:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795735797;
-	bh=ji7hT5znZzhHtSQP2St7VLevtUOErPUrxvoKH7fKhbc=;
+	s=k20260515; t=1795735798;
+	bh=P7VYUqRvbKp9sW1toZ3pyyDLcBpc3ajBVuccrGOr91c=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=j2D/eG4RIuitW4+dET+n6oHj+7ckLELKJub2Lnqwt+9EUA6LCzU8hbCF6S9uE+ZE0
-	 T+0m3KggrpCW7yNr1i8fU0WtpJbO09VN8GbkD9ksCL532CLcUhRxuzZEUF9q6QodGU
-	 Z/RJMu+JCZDr0xkewNGk/WzwdejmQOAleBEw0y1lMVNBj9DIfaJaWdDAtb8K8TjjKJ
-	 FSQb+bwE7XbxCH15BHdobdMiCN5ctX7e4wZar136iL5LKx+QTyi+ukc440iaKNOEOw
-	 rWakntnEcLOe3RIUeB0sg94LpFTRwmj8BLDIl5WxoQ1jfBH6GLnOI4zeti4OBxjlpj
-	 6pyqSLBTVk5Fw==
-Subject: Re: [PATCH mptcp-net v3 45/50] Squash to "bpf: Add mptcp packet
- scheduler struct_ops"
+	b=R+tZl5/f9rhb+wtYOIJmEIjwqrApdRyOiWcyIVCrwy0S1msbDeZ5bRfiHg46Kn9Hh
+	 RtdZ8lxMfGOY6gL1GBeqsYcPIOYyTMNgwOHZFSO4VsdtY11mFONugj5S0b1dpg8x1K
+	 FjmSr9JpNosk8gMjcbM/teZKkhP/bURWiwUKknUUlqWqYbfOvKJ2+ig28u0RKUHZlR
+	 JfEpT/8qtlm9FjQOSvlYrUx213sOP0vozRjPY9o5YoR8MS++gxulpFBalH/ynUUA+D
+	 W+ie+Gqgaqzy3VUbeBV9+SgYgGB/UKSNi/VpzIwRJWWnHZ0oDSvlia72PS600nociv
+	 T0fuveNXPhpdg==
+Subject: Re: [PATCH mptcp-net v3 46/50] Squash to "bpf: Export mptcp packet
+ scheduler helpers"
 From: netdev-bot+sashiko@kernel.org
 To: matttbe@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Thu, 26 Nov 2026 23:29:56 +0000
-Message-ID: <179573579674.3133.17888225434751779864@kernel.org>
-In-Reply-To: <20261124-mptcp-cmason-fixes-v3-45-416c0920c73f@kernel.org>
-References: <20261124-mptcp-cmason-fixes-v3-45-416c0920c73f@kernel.org>
-X-sashiko-severity: Low
+Date: Thu, 26 Nov 2026 23:29:57 +0000
+Message-ID: <179573579795.3133.13591447919440768699@kernel.org>
+In-Reply-To: <20261124-mptcp-cmason-fixes-v3-46-416c0920c73f@kernel.org>
+References: <20261124-mptcp-cmason-fixes-v3-46-416c0920c73f@kernel.org>
+X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: mptcp@lists.linux.dev
@@ -62,81 +62,66 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found more severe
-issue(s) in other patches of this series. This mail is only an FYI, in case
-you want to address the nit picks below when you respin.
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue(s) to consider.
 
-Low priority / nit picks for your consideration:
+Critical: 0 · High: 0 · Medium: 1 · Low: 0
 
-- [Low] This squash moves undocumented changes to the core push loop into
-  a commit whose message is only about BPF.
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
+
+- [Medium] mptcp: mptcp_sched_get_send() skips mptcp_set_timeout() on
+  scheduled subflow
 
 --
 
-Squash to "bpf: Add mptcp packet scheduler struct_ops"
-
-This squash fixes two infinite push loops that can happen when a BPF
-scheduler picks no subflow, or keeps picking a subflow that cannot send.
-In __mptcp_subflow_push_pending(), the loop now stops when no subflow is
-scheduled. In __mptcp_push_pending(), push_count is now decremented after
-any failure.
-
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index f361cd40a8e40..a3c2d8f93bd71 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1901,10 +1901,7 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+> --- a/net/mptcp/sched.c
+> +++ b/net/mptcp/sched.c
+> @@ -182,6 +182,10 @@ int mptcp_sched_get_send(struct mptcp_sock *msk)
+>  		return -EINVAL;
+>  	}
 >  
->  				ret = __subflow_push_pending(sk, ssk, &info);
->  				if (ret <= 0) {
-> -					if (ret != -EAGAIN ||
-> -					    (1 << ssk->sk_state) &
-> -					     (TCPF_FIN_WAIT1 | TCPF_FIN_WAIT2 | TCPF_CLOSE))
-> -						push_count--;
-> +					push_count--;
->  					continue;
->  				}
->  				copied = true;
-> @@ -1961,6 +1958,9 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool
->  				keep_pushing = false;
->  			else
->  				copied += ret;
-> +		} else {
-> +			/* a BPF scheduler might not pick any subflow */
-> +			keep_pushing = false;
->  		}
->  
->  		mptcp_for_each_subflow(msk, subflow) {
+> +	/* as the default scheduler: the rtx timer needs an interval */
+> +	if (msk->sched && msk->sched != &mptcp_sched_default)
+> +		mptcp_set_timeout((struct sock *)msk);
+> +
+>  	mptcp_for_each_subflow(msk, subflow) {
+>  		if (READ_ONCE(subflow->scheduled))
+>  			return 0;
 
-[Severity: Low]
-This isn't a bug, but after the squash, will the message of "bpf: Add
-mptcp packet scheduler struct_ops" still match what that commit does?
+[Severity: Medium]
+The v3 change covers the already-scheduled case for BPF schedulers
+only, but the same early return is taken with the default scheduler
+too. In that case mptcp_sched_default_get_send() is not called, so
+mptcp_subflow_get_send() does not run. Neither msk->timer_ival nor
+msk->snd_burst is refreshed.
 
-Right now that commit only modifies net/mptcp/bpf.c. Its message covers
-registering the bpf_struct_ops and allowing write access to the scheduled
-flag through .btf_struct_access.
+Can a subflow keep subflow->scheduled set after all data has been
+acked, with msk->timer_ival reset to 0 by mptcp_stop_rtx_timer()? It
+looks possible. In ack_update_msk(), __mptcp_check_push() runs before
+__mptcp_data_acked(). During recovery, the default scheduler can then
+mark and delegate another subflow. Right after that,
+__mptcp_clean_una() clears msk->first_pending and stops the timer.
 
-With this squash, it would also change the generic transmit path in
-net/mptcp/protocol.c. All schedulers use that path, including the default
-one:
+When the delegated action later runs
+__mptcp_subflow_push_pending(sk, ssk, true), mptcp_send_head() is
+NULL. The loop is skipped, and the scheduled flag is never cleared.
 
-  - __mptcp_push_pending() drops the -EAGAIN exception for FIN_WAIT1,
-    FIN_WAIT2 and CLOSE. That exception came from commit 0fa1b3783a17
-    ("mptcp: use get_send wrapper"). push_count is now always
-    decremented.
+On the next push, mptcp_sched_get_send() then returns 0 with
+msk->timer_ival == 0. __subflow_push_pending() can bail out before
+its own mptcp_set_timeout() call. That happens if mptcp_sendmsg_frag()
+fails, or if msk->snd_burst is <= 0 after the first fragment. In that
+case mptcp_reset_rtx_timer() arms the rtx timer with a 0 interval, and
+it fires every jiffy. This is the same issue this patch is trying to
+fix, only with the default scheduler.
 
-  - __mptcp_subflow_push_pending() gets a new else branch that sets
-    keep_pushing to false.
-
-The code changes themselves look fine. The explanation of why both are
-needed, and why the default scheduler is not affected, is only in this
-squash message. Nothing asks for it to be carried over into the target
-commit message. Later patches in the series do not seem to cover this
-either.
-
-Could this explanation be added to the target commit message? That way,
-git blame and bisect users can find out why the -EAGAIN retry from
-0fa1b3783a17 was dropped.
+Would it make sense to call mptcp_set_timeout() unconditionally
+before the scheduled loop, whatever the scheduler? Or is the stale
+scheduled flag the real bug, to be cleared elsewhere?
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261124-mptcp-cmason-fixes-v3-0-416c0920c73f%40kernel.org
