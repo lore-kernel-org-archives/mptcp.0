@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795735789;
-	b=DBMJO9t86fh0lG82QKGquOgX2A1B0sxmM7yiXGduV4AJho6CftfCVu741jSTzmH5bZx+
-	 3bNoYFEZe2Tmv9PEoF4isX+aRdbZ8wr5DNyq357tFlWb+JI+hkUrEz6We1vT7HZk/UEtU
-	 WREmcELNqVQF0Hv4+hqarVeOiobL/+OcCyaah2k2Iz9sGgOxEmd83mtOJ9aTi9HYMdWUA
-	 NYckhrgqTM5ESelMv65avqvLBzrXDUTCeOiiDWlQICTu7aQP0zaEM4Xt4SUz84yvLsE19
-	 M8fGGOEgPk6JUl5km/93cr4tGAj9H9dRGESpZ7PMa+syt0Mzhop5ngPiBiVwkxHX5vA==
+	t=1795735790;
+	b=NBnxvmkaWVdJcUElimV2Dvpdu4oGFdxsmvUu7go+rNLO3gr9RazI5KjKrVOy1YhvAAv3
+	 OHdqK4D1D9rZK3QfiMm2TsfMeLDRNoO+13u0+v61YZxryb3fdgBQRbuE4oEnZdWpX+Sbp
+	 W+makCMPsxu+BaaXk55ioTvNvGcuKGZmLeAI4oL7b7zvIkMCDB/Oaz4LDkUpBmKs29yTd
+	 Y2y7dA2/0E/eK47fyCHfRorYsMRWC0nTRC2AGhVPKqKmhfPbe7c0HpczkB+i+qEbahsCL
+	 MPuF3OToZolWM+zMBNBWiHXFpGw7v5Z6zXrZ+QkPDJXmcbfoZMt2pTJ2NMkvNDXUUlw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795735789;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795735790;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=mRj7mzZy9jRNAx8CoPHsr3dUT7jyrOAs0hvMWwbw7ZM=;
-	b=O6XtES/MezOMp6nm6WRAYNAixQJ/dyCjrRvhAAqFD353eix8Q1u2LgSYZWhEe/2b3XV1
-	 d2o8L+DguFjs0QQuto0w+6u2ktqvfr5w4qaL1ophvUo8uAsWkfMTueohAB0G0D1XQI6G0
-	 PY3FP75Oh1NjZLCW/xgC4Be6ghnj+rumoy9KNcCz5KU7I+yLnIm78PQ1R/DJ1sZ0raxtr
-	 FaOz5MmM2mFmF+icINdKcMJiGZE2OKYHYAsqwidp3jzYPSOdLF1JeY1tHFuj1ubgkaIUs
-	 iWqX9DSP2A2g9Qt1lo4f0Cng6rTWP3swjQXKIxUs6KVq9VgTwhgLkCYUWXAR6Mp7b5Q==
+	bh=bpqGJ/W35WCyBpnbs/ti5vAfcmNy/TaM+XoaTClDbco=;
+	b=LO9boBqJw1JaDTehsXjLs84SBPz6kbvHMCnqhbLGmxeg6X/vjWKPM9cJERG0C2idG2Ja
+	 2z3pQQMJ4/rY98D+CkxaP3+gDigMkYZLK1/iBMPAqSJcUEAV5iaw9YYsVIFrNuO0qp5Oz
+	 lR8quQRGUGKkSh/ebfWw2NsLfnJSq31STvuQ0rUFsuLkeIZt3frVcCDqkaq6Lr7eNxyfx
+	 teNJIN84OC4RHlTpWSQqqEQH+ltySzFb+U67QcMzbdMuKI9c7Gx+sphs6mDpKRVcC+52z
+	 prvXHhgytpAEKzPm5g7ZVC5MN4XGW7K16gigpSPXdqY8Gxz6/LFeB/lids7D/KvbHqQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UBkAUiGv;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FhPHnn2Z;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21107606A31C
-	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 23:29:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A80606A326
+	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 23:29:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UBkAUiGv
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43C371F0089C;
-	Thu, 26 Nov 2026 23:29:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FhPHnn2Z
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 961DE1F00923;
+	Thu, 26 Nov 2026 23:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795735788;
-	bh=mRj7mzZy9jRNAx8CoPHsr3dUT7jyrOAs0hvMWwbw7ZM=;
+	s=k20260515; t=1795735789;
+	bh=bpqGJ/W35WCyBpnbs/ti5vAfcmNy/TaM+XoaTClDbco=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=UBkAUiGviWYayavn87wtD5PNkwOl2JwwCe+iFOZnXfKNMF4pQ9bJky2mBTZRNWrlT
-	 Ss//gbM/T3xF+uVewTtKvDjrInRhAFmnAMuq947HxEqPTYfD+eGZQSjBjLPhf2f0Ce
-	 OpIH4H/tCKPCFgFV08p1Od1mDn0ikl0PJh7wP8FBxS6NW0R5g3Xjrk94ppOXoOG9VW
-	 e4gmqQ7DuCzx0zn2+biHGI071kE2W26XUBhce7ZDSeEbX/tJEW7vsdVWqafpoRzzJ0
-	 imm650Ed3MOvdWO4doCswghxnleoOMKRpCU4dQwrnGXkoMh5PuYUKJsJMVkRIQVOZW
-	 IHOzPpIeCjauA==
-Subject:
- Re: [PATCH mptcp-net v3 12/50] mptcp: no sf left: process pending DATA_FIN
+	b=FhPHnn2ZlTh8FdCPlx8BuWsSy6Jz4FFOPxmZt+AH0Bx23XHGnj6GRby1irAQGmk9P
+	 iCFGCPRgSKLZI+hYkZSAr8zX4PFyUoVZPHg1RSqQxhUTqUuwzujwArupzH9Vw/JYas
+	 eeFN7OcfzcmmNGquwXbRQ/Ml3xuiWgbNINM//51zs2pVqEMEe7f6L+5IZIRH9uJzIr
+	 iQiNsmNugxXHnYBGu5u9VvfB7Hiql7kW0SI7nW4yjgse+gkIJp1NHAtBCUYj5WlRre
+	 2voMCd8mTOG469qS7lWsB7rJHtpYTuYVfAI5ZIA10TDlV80m7aK7DKljM6PN7J2xyM
+	 8w6tHTwsks2uA==
+Subject: Re: [PATCH mptcp-net v3 25/50] mptcp: send the infinite map in a
+ single segment
 From: netdev-bot+sashiko@kernel.org
 To: matttbe@kernel.org
 Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Thu, 26 Nov 2026 23:29:47 +0000
-Message-ID: <179573578786.3133.16425345231871953312@kernel.org>
-In-Reply-To: <20261124-mptcp-cmason-fixes-v3-12-416c0920c73f@kernel.org>
-References: <20261124-mptcp-cmason-fixes-v3-12-416c0920c73f@kernel.org>
+Date: Thu, 26 Nov 2026 23:29:49 +0000
+Message-ID: <179573578915.3133.6767634288026914577@kernel.org>
+In-Reply-To: <20261124-mptcp-cmason-fixes-v3-25-416c0920c73f@kernel.org>
+References: <20261124-mptcp-cmason-fixes-v3-25-416c0920c73f@kernel.org>
 X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -62,10 +62,10 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 2 potential
+Thank you for your contribution! Sashiko AI review found 1 potential
 issue(s) to consider.
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 1
+Critical: 0 · High: 0 · Medium: 1 · Low: 0
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -73,164 +73,102 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [Medium] mptcp: pending DATA_FIN skipped for TCP_ESTABLISHED in
-  __mptcp_close_ssk()
-- [Low] The commit message's evidence does not test what this commit
-  changes.
+- [Medium] The new cap in mptcp_sendmsg_frag()
+  (net/mptcp/protocol.c:1489-1490, `copy = info->mss_now` while…
 
 --
 
-mptcp: no sf left: process pending DATA_FIN
+mptcp: send the infinite map in a single segment
 
-This adds mptcp_check_rcv_close(). When the last subflow is closed, the
-helper spools the MPTCP-level backlog and processes a pending DATA_FIN,
-and a pending MP_FASTCLOSE, before __mptcp_close_ssk() moves the msk to
-TCP_CLOSE. Without it, RCV_SHUTDOWN is never set if the DATA_FIN was
-still waiting behind data in the backlog.
-
-> This issue was causing the "Infinite map" subtest from mptcp_join.sh to
-> be flaky: the server only got EPOLLHUP after having received all the
-> data, and spun until the timeout:
-
-[ ... ]
-
-> The same issue was causing the 'peek mode' and 'full disconnect'
-> subtests from mptcp_connect.sh to be flaky, in the MPTCP to TCP cases,
-> so after a fallback at the connection: the client never got the end of
-> file:
-
-[ ... ]
-
-> The root cause has been confirmed with a debug patch keeping the worker
-> in FIN_WAIT2 after a fallback, until the subflow is closed: the same
-> failures have been seen in the "Infinite map" subtest, and in the 'peek
-> mode' and 'full disconnect' parts of mptcp_connect.sh, with the socket
-> closed before the DATA_FIN:
-
-[ ... ]
-
-> To fix this, spool the backlog and process the pending DATA_FIN before
-> the close, if the socket is still in use. This is done in a new helper,
-> mptcp_check_rcv_close(), also processing a pending MP_FASTCLOSE: the
-> next commit uses it at accept() time too. With the same debug patch,
-> these subtests no longer failed.
-
-[Severity: Low]
-Do these reproducers actually run the code this commit adds? Every one
-of them is a fallback case.
-
-For fallback, the earlier commit in this series, "mptcp: return EOF after
-a DATA_FIN, as TCP does", already does the same spool and check in
-mptcp_close_ssk(), just before it calls __mptcp_close_ssk():
-
-net/mptcp/protocol.c:mptcp_close_ssk() {
-    ...
-	if (ssk == msk->first && __mptcp_check_fallback(msk) &&
-	    READ_ONCE(msk->rcv_data_fin) && !sock_flag(sk, SOCK_DEAD)) {
-		mptcp_move_skbs(sk);
-		mptcp_check_data_fin(sk);
-	}
-
-	__mptcp_close_ssk(sk, ssk, subflow, MPTCP_CF_PUSH);
-    ...
-}
-
-At that point the msk is still in FIN_WAIT1 or FIN_WAIT2. If the
-DATA_FIN can be processed, mptcp_check_data_fin() clears rcv_data_fin.
-The new mptcp_check_rcv_close() call in __mptcp_close_ssk() then reads
-rcv_data_fin as false and skips its own spool and check.
-
-If the first attempt cannot process the DATA_FIN, nothing that happens
-before the second attempt changes that. No new data reaches the msk, so
-the same mptcp_move_skbs() + mptcp_check_data_fin() sequence gives the
-same result.
-
-After a fallback, msk->first is the only subflow. The other direct
-callers of __mptcp_close_ssk() don't reach this branch with a pending
-DATA_FIN in a state where it could be processed. Those callers are the
-close-timeout path in mptcp_worker(), which runs after
-mptcp_do_fastclose(), and mptcp_destroy_common().
-
-So in this series, the DATA_FIN part of the new helper seems to change
-behaviour only for non-fallback MPTCP connections. One example is
-FIN_WAIT2 after shutdown(SHUT_WR), with data and the DATA_FIN still in
-the msk backlog when the last subflow is removed by a reset or by the PM.
-
-Could the commit message describe that non-fallback case instead? Could
-it also explain why mptcp_close_ssk() and mptcp_check_rcv_close() both
-do the same spool and DATA_FIN check?
-
-The v2 note after the --- line mentions the earlier commit, but that note
-won't be kept in the git history. As written, "With the same debug
-patch, these subtests no longer failed" gives this commit credit for
-fixes the earlier commit already made.
-
-[ ... ]
+After an MP_FAIL with a single subflow, the skb carrying the infinite
+mapping could be sized from the pre-fallback size goal. Its segments then
+grew past the MTU once the post-fallback MSS stopped reserving room for
+the DSS option. This patch caps the copy size to mss_now while
+send_infinite_map is set, so the infinite mapping is sent in a single
+segment.
 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index c57bfedc86a84..39490ff40aa4f 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -2819,9 +2831,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
->  			mptcp_schedule_work(sk);
->  		} else if (sk->sk_state != TCP_ESTABLISHED ||
->  			   msk->in_accept_queue) {
-> -			/* After the close, an MP_FASTCLOSE would be ignored */
-> -			mptcp_check_fastclose(msk);
-> -
-> +			mptcp_check_rcv_close(sk);
->  			mptcp_set_state(sk, TCP_CLOSE);
->  			WRITE_ONCE(sk->sk_shutdown,
->  				   sk->sk_shutdown | SEND_SHUTDOWN);
->
+> @@ -1483,6 +1483,12 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+>  	info->mss_now = tcp_send_mss(ssk, &info->size_goal, info->flags);
+>  	copy = info->size_goal;
+>  
+> +	/* After the fallback, the MSS no longer includes the DSS option of the
+> +	 * infinite mapping: send it in a single segment.
+> +	 */
+> +	if (unlikely(mptcp_subflow_ctx(ssk)->send_infinite_map))
+> +		copy = info->mss_now;
+> +
+>  	skb = tcp_write_queue_tail(ssk);
+>  	if (skb && copy > skb->len) {
 
 [Severity: Medium]
-Does this still miss the DATA_FIN when the last subflow goes away
-while the msk is in TCP_ESTABLISHED?
+Does lowering copy here stop the "Infinite map" subtest from reaching
+the InfiniteMapRx check it is meant to fix?
 
-mptcp_check_rcv_close() is only called from the branch taken when
-sk->sk_state != TCP_ESTABLISHED. But a DATA_FIN stuck behind data in
-msk->backlog_list is exactly what keeps the msk in TCP_ESTABLISHED
-instead of moving it to TCP_CLOSE_WAIT.
+Before this patch, an unsent write queue tail with
+mss_now <= skb->len < size_goal still passed the copy > skb->len test,
+and the infinite mapping was put on that tail. With the cap, such a tail
+fails the test, a new skb is allocated, and mptcp_update_infinite_map()
+makes the msk fall back right away.
 
-Take a non-fallback msk in TCP_ESTABLISHED that is not in the accept
-queue and not orphaned. The peer sends its last data and the DATA_FIN
-while mptcp_worker() owns the msk. mptcp_data_ready() queues the data
-on msk->backlog_list, so msk->ack_seq does not move. The last subflow
-is then reset or removed by the PM:
+After that, mptcp_established_options() in net/mptcp/options.c skips
+every skb other than the infinite-map one:
 
-mptcp_worker()
-  mptcp_check_data_fin(sk)
-    ack_seq < rcv_data_fin_seq, state stays TCP_ESTABLISHED
-  __mptcp_close_subflow(sk)
-    mptcp_close_ssk()
-      no spool here, this is not a fallback socket
-      __mptcp_close_ssk()
-        sk_state == TCP_ESTABLISHED
-        mptcp_start_tout_timer(sk)
-release_sock(sk)
-  mptcp_release_cb()
-    spools msk->backlog_list
-    mptcp_check_data_fin(sk)
-      TCP_ESTABLISHED -> TCP_CLOSE_WAIT
+	if (unlikely(__mptcp_check_fallback(msk) && !mptcp_check_infinite_map(skb)))
+		return 0;
 
-At that point the msk has no usable subflow left. It is in
-TCP_CLOSE_WAIT without SEND_SHUTDOWN. Nothing re-evaluates the "all
-subflows closed" condition, because only __mptcp_close_ssk() does
-that. The msk is closed only when the close timeout fires, 60 seconds
-later by default.
+So the tail, whose mpext still has a normal mapping, goes out with no
+DSS option.
 
-Now suppose the same data had arrived while the msk was not owned.
-The DATA_FIN would have been processed first, so __mptcp_close_ssk()
-would have seen TCP_CLOSE_WAIT. The msk would then have been moved to
-TCP_CLOSE and woken up right away. So the outcome depends on whether
-the worker happened to own the socket. That is the same kind of
-timing dependency this commit is trying to remove.
+On the receiver, get_mapping_status() in net/mptcp/subflow.c sees data
+with no DSS and !map_valid, and returns MAPPING_NODSS.
+subflow_check_data_avail() then falls back via MPTCP_MIB_DSSFALLBACK.
 
-Should the DATA_FIN part of mptcp_check_rcv_close() run before the
-sk->sk_state test? Then the choice between closing the msk and
-starting the timeout would be made on the state after the DATA_FIN
-has been processed. Or is staying in TCP_CLOSE_WAIT until the timeout
-intended here? If so, could the commit message say so?
+When the infinite-map segment arrives later, get_mapping_status() returns
+early:
+
+	if (mptcp_check_fallback(ssk))
+		return MAPPING_DUMMY;
+
+That return comes before the data_len == 0 branch that increments
+MPTCP_MIB_INFINITEMAPRX.
+
+The sender counts InfiniteMapTx=1 and the receiver counts
+InfiniteMapRx=0. mptcp_join.sh fail_tests() still expects:
+
+	join_fail_nr=1 join_rst_nr=0 join_infi_nr=1 \
+
+Would this sub-case then hit the same failure the commit message quotes
+as the flaky symptom?
+
+	infi rx server       [FAIL] got 0 infinite map[s] RX expected 1
+
+The fb_dss check would still pass, because the NODSS path uses the same
+DSSFALLBACK counter.
+
+The subtest pushes 128KB in bulk, and the trace in the commit message
+shows notsent:98333. An unsent tail larger than one MSS when MP_FAIL
+arrives therefore seems plausible.
+
+The commit message does describe the side effect:
+
+  A side effect: when the last unsent skb is bigger than one MSS, the
+  infinite mapping is now put on a new skb. This unsent skb is then sent
+  without DSS after the fallback, as it was already the case for the ones
+  before it, and the peer falls back before receiving the infinite
+  mapping.
+
+It doesn't say that this path leaves the receiver's InfiniteMapRx at 0,
+which keeps the cited selftest check failing. In this case the fallback
+is also signalled on the wire by data without a DSS option, not by the
+infinite mapping.
+
+Would it make sense to keep putting the infinite mapping on such a tail,
+for example by splitting it at mss_now? Alternatively, could the selftest
+expectations and the commit message cover this case?
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261124-mptcp-cmason-fixes-v3-0-416c0920c73f%40kernel.org
