@@ -1,103 +1,233 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.182
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.131
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795791871;
-	b=rTc/iGpMGX8UjsDc7/Sb9X3Ht6OBngv5ETadvoR+DZbbVJZWO1ayQ7BoB/A5lOz94cvO
-	 rvx//5b/pmOjvMwZAVgfsbsE+WP7O3Rd+FVw2BdpImsGXJK+AF0js+WUjEUDGiu5oKIUW
-	 mCUYc5lcPpPM2AR5w3k/J6R1LBqNxxSOFAQBGWxpcGGtbZuJsH1WQnkQab00SmeWaCueX
-	 WCpOmEYj6e323Vbb2fiFKC7qxLP5r678kTUV/Jgy5PqDhuYUT7WS625nB5lmKM0WIazAe
-	 jQnTOdpLAab0iv9uLYN1xAKheynbbQIUK/34eGcZWdjVjOVcmZgINFR1U9vSvmCd6TA==
+	t=1795799966;
+	b=awCM1rnp5U//Oh5/fMzfbEMVTDPVyvOli8x6bVpjq2iqD/0L+dbyGIOpkaRzKY+2NRhK
+	 r2EIjnWu9z72pXNtZfsHyRNJxnEuVMJmBzLHVWjrrQjr5vqgiajVXMtprb/bJpJYBlLYm
+	 ThfiHaiVe4H00I+2MF+NXA/Tqelg2FJS3s4KLVjNVpayvKerKzfJyKbSkLmvY5zKFDmN1
+	 SEcXC8kohYMpaxJAuUo3ol2oVNMRtNmcZMWNnnruYsfvgZIV5y6Km1RYmxHyn6ANwDMZN
+	 VIDToEJmMqEKWGDYq4j06G/OmPUn6ecuvvsexR+NgSA8cpigDzqhZ1SO5SBBr2DH0dQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795791871;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=evZv5hVWWdGZaCGpsWgw0bSasbGvdKzP09x7/rjAc+Y=;
-	b=ovyiOFbnyF7gLFGM5jijmfaLdIFiir3iio0KBOx6W4KzhxjiGDlyimQ5w0dmehepTWsx
-	 UY0oZhOu1iNLyNC9v/iwzkpP0h/kUZkzfDmHpopo9C37gkzVxP+x/nDFyuVNKVH3dZwc5
-	 dMEuoG7tJmBaJ7TC04WMYHi9+puzQua9fFYJQVXxkjCmQRf/ZcFIyntyPSH0a9XmEs3DQ
-	 eCQXvMd2sRpOsd+EfylLHdngN1fiN/0mEcagvpIDys947X4xRnpa55Atpr8MC7umIBTof
-	 MU4bLGQPXYRdhJQfERrAt4JhY2rpSnNMJIjAVRH+Q+W6VkMrnG/p8P/W2Kky4faiZGg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795799966;
+	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
+	 DKIM-Signature:Received:Received:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:X-Spam-Flag:X-Spam-Level:X-Spamd-Result:
+	 X-Spam-Score;
+	bh=l6KDTp9AWWZ9hox0U3P6CJB8WnT0hXzqKr1cOglPDpk=;
+	b=gb6vcS567wsPZ0/cCVTWYiq5MW3np1waEVnQjZXmLMqDQNBzeHJ80OAauzSV3+B/yVbY
+	 J+Uq7iB+fl7amlbbi21m6F+/4UC6N304cNYyG3YqCGw3sRq7B4vOyPznvDgl3JN2zpVfy
+	 KQ2H3imqfBGlcI2NPOtEICYkwa0aL0b8ViD2MnKGnIz9/tLmk4zIYulp2Jg3qp3yoN9r0
+	 5/yU81ztZiLhxxzaxLP3Zl3g+7+xlTYdpkVcNiUEg1zAPk2FmWYm6IvnxonGQ/xniAehZ
+	 EMbgEOdLZztzdRTjET68Yh1hhXmw0c6wX4JH2VikN/2roMEFEibJUM3Vxd6Mygzby4w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=sBS+Kwv1;
-	arc=none smtp.remote-ip=74.125.82.182
-Received: from mail-dy1-f182.google.com (mail-dy1-f182.google.com [74.125.82.182])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=suse.de;
+	spf=pass smtp.mailfrom=suse.de;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b="oDC/JNTR";
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=EHURwYEh;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b="oDC/JNTR";
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=EHURwYEh;
+	arc=none smtp.remote-ip=195.135.223.131
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A99C606A31E
-	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 15:04:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2A99C606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89150606A31C;
+	Fri, 27 Nov 2026 17:19:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 89150606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=sBS+Kwv1
-Received: by mail-dy1-f182.google.com with SMTP id 5a478bee46e88-3863db981d4so11545518eec.0
-        for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 07:04:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795791870; x=1796396670; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=evZv5hVWWdGZaCGpsWgw0bSasbGvdKzP09x7/rjAc+Y=;
-        b=sBS+Kwv1apsr0sXvwSxl9Yf43o85aG5Jq+OMMSW040A5eQu/SmemhPtgBZpXXbznfX
-         0DNYrXB1110BlbMiro4ySva9yo8jn4wWofa/nOS23rwTEaegsVEOytv5+iXgaV3/5/hy
-         IAkOMttgYskE68cPq6jp0Gz9e06dmQgWSJrZfBMEm4yBYeKWHVfxTj+dowbp4K+xDIIt
-         DqskPuWGxHXA9PmhbrdKkHjbvCsSTz0lxW1eH5nfb0mnYqIhfCpf1761FKcg068bMMe4
-         BCDQSTDVVgyFr3fnaGofqbVKhjiDPJ+R1VB6KGwdhrj+gF3jtv3PVZeURSnKhrbcbuYk
-         yl4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795791870; x=1796396670;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=evZv5hVWWdGZaCGpsWgw0bSasbGvdKzP09x7/rjAc+Y=;
-        b=fmnzlh2pkDpqhddEGvQsskhQhPh/VTb9/DWzraCQTXkAcS0+4VFPPLYwBQxDe+KOpD
-         bxc70VxHmSNmDJ9StWBF9NN7DYYouIVsH9TQci1jw5T25NUYUrbH4wTHZ/U0U6/DHVbM
-         omk8BST49ql47EDxH60VjBT71f2jVt6O5Ic4aCKxBiHF38WJRc5JPgn8FrsG+FX5uXFe
-         11/DX9KonrphDxFqePSIgfCTgiM8m3JQRyORXtPy9z7cLQ+WCERgsQdk0+w11fqPFTCI
-         w1z5+R1gz0apZcxjhrTjBSx9y7rVSf9V/fNtMYY8dA6X4j+5e2I/6TH1Afg3xp9S0t5r
-         DUxQ==
-X-Forwarded-Encrypted: i=1; AL+hErGW/EiNJUCrg1QqgpXglrlVwgwsWsHX4/tlRa3urrVDyalI5PRmR4XuUXajOEavbD5CCUk9Gg==@lists.linux.dev
-X-Gm-Message-State: APuU4Z9POsPF5IO3yPZNkHcXOpOcT7AST8HmqVpHbrTkrsLDw8TOGA0r
-	Fdv8Zqee+GXXFHeicBUPCeWC4oJ16QBpSAe9NLdsTGEQ2ulnTiP1odKml+dG2/7N06ncHg==
-X-Gm-Gg: AZFdTZfq7NJNyhn2K2CKEzp8KbARwMT3VS2/9O2CBg+YeavVnsKnrKQyBiwtmfw/Y9A
-	blvH6JhPSUlVTH7p7Intx88JGreCaUY+vvMbERmFKQc9ksOIzlMsEiRaoHsihz77WgdIMjKtOhv
-	IyT9I6dWpVVw5nDgn5l+hUStcT9Gnr8w+Hr8eFSrxYl8Fm4rxclTVvd6qNvrzQNU3f3aoEJJQM/
-	ZtlVfaltuz7mroFel/HqZP6idkhcd+NH0n2Db9KzOwX/bv4eckpmuP03FUlVRjZ4c9bDEhysuUR
-	88b9KAfCyDXLFBquVHVQkwqfTih+s+1CO+TDI/qQxLjFt2Rb0SwbeARy5pFMETHkeWZjGN4Er3D
-	S6+3JizSTcwqdbCt90hleRtj+wHo9RXTcDQ4cuyDwEORmNe90FwqkRGUKAmDD6c2V1aORYZsweJ
-	aHZK0dssQRpUPXMppE+0U/2RZms69THhZ07rlh4r1hKImVgF+6ysMBEKfvPRVMX83QWMkAhb2/T
-	0HIksNx66+08yORUFgAPhkrvHg53IWH67TZ6VgLPH1JiAgdajSpQuyW1j7pcD9vYyeihpTwMZx1
-	voB/9uavLrjFcc2h8S22MaGKol16YYC+oPJMsISYWweOvw==
-X-Received: by 2002:a05:7301:929:b0:376:37a2:87f3 with SMTP id 5a478bee46e88-38570f25262mr22505837eec.31.1795791870034;
-        Fri, 27 Nov 2026 07:04:30 -0800 (PST)
-Received: from localhost ([2605:52c0:1:e99:982a:f6ff:fe2e:6e83])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-385665f21aesm87628909eec.4.2026.11.27.07.04.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Nov 2026 07:04:29 -0800 (PST)
-From: Lin Lei <llleigoing@gmail.com>
-To: Eric Dumazet <edumazet@kernel.org>
-Cc: netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	ncardwell@google.com,
-	kuniyu@google.com,
-	davem@davemloft.net,
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=oDC/JNTR;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=EHURwYEh;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=oDC/JNTR;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=EHURwYEh
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 7D7571F82A;
+	Fri, 27 Nov 2026 17:19:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1795799962; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l6KDTp9AWWZ9hox0U3P6CJB8WnT0hXzqKr1cOglPDpk=;
+	b=oDC/JNTRdhufWmtQ8gsZnRlfTzaN+yWwDlH/GY7GmbWkxfbM6BdrjYjllxcx14tdIidXQq
+	GCYsGEuCNPqtG2YkZ2/3tBrPRrdKo21lD0KuGuk2hOcPIfAfjg2ymuVxYWD034IFBKWWjd
+	1ECdO7xSuay5KtekCj/l1HqK3V2tOAg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1795799962;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l6KDTp9AWWZ9hox0U3P6CJB8WnT0hXzqKr1cOglPDpk=;
+	b=EHURwYEhuIKtnbVjh6/HDWZKHfyMHUoBk4qPcU0GCKH8Hmrgq5RwExERFyEtoW44ciAIdg
+	5l072xN9g9V7ttDA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1795799962; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l6KDTp9AWWZ9hox0U3P6CJB8WnT0hXzqKr1cOglPDpk=;
+	b=oDC/JNTRdhufWmtQ8gsZnRlfTzaN+yWwDlH/GY7GmbWkxfbM6BdrjYjllxcx14tdIidXQq
+	GCYsGEuCNPqtG2YkZ2/3tBrPRrdKo21lD0KuGuk2hOcPIfAfjg2ymuVxYWD034IFBKWWjd
+	1ECdO7xSuay5KtekCj/l1HqK3V2tOAg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1795799962;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l6KDTp9AWWZ9hox0U3P6CJB8WnT0hXzqKr1cOglPDpk=;
+	b=EHURwYEhuIKtnbVjh6/HDWZKHfyMHUoBk4qPcU0GCKH8Hmrgq5RwExERFyEtoW44ciAIdg
+	5l072xN9g9V7ttDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 41D7313432;
+	Fri, 27 Nov 2026 17:19:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id /Yb1MH67CWuMAwAAD6G6ig:T2
+	(envelope-from <fmancera@suse.de>); Fri, 27 Nov 2026 17:19:16 +0000
+From: Fernando Fernandez Mancera <fmancera@suse.de>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
 	kuba@kernel.org,
+	edumazet@kernel.org,
 	pabeni@redhat.com,
 	horms@kernel.org,
-	matttbe@kernel.org,
-	martineau@kernel.org,
-	geliang@kernel.org,
-	llleigoing@outlook.com
-Subject: Re: [PATCH net 2/3] net: bound receive window predictions before narrowing
-Date: Fri, 27 Nov 2026 15:04:25 +0000
-Message-ID: <20261127150425.1393380-1-llleigoing@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <CAL4WiiqM1E9wzfjCzHcOy2SN6j0CjN6r94JYdPNt=RoLLDL5hw@mail.gmail.com>
-References: <20261117052200.1507847-1-llleigoing@outlook.com> <20261117052200.1507847-3-llleigoing@outlook.com> <CAL4WiiqM1E9wzfjCzHcOy2SN6j0CjN6r94JYdPNt=RoLLDL5hw@mail.gmail.com>
+	Fernando Fernandez Mancera <fmancera@suse.de>,
+	Chuck Lever <cel@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Elad Nachman <eladv6@gmail.com>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Mark Bloch <mbloch@nvidia.com>,
+	Ido Schimmel <idosch@nvidia.com>,
+	Petr Machata <petrm@nvidia.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Alex Austin <alex.austin@amd.com>,
+	Andy Moreton <andy.moreton@amd.com>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Arend van Spriel <arend.vanspriel@broadcom.com>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Keith Busch <kbusch@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Alexandra Winter <wintera@linux.ibm.com>,
+	Aswin Karuvally <aswin@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Varun Prakash <varun@chelsio.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <mkp@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Marek Lindner <marek.lindner@mailbox.org>,
+	Simon Wunderlich <sw@simonwunderlich.de>,
+	Antonio Quartulli <antonio@mandelbit.com>,
+	Sven Eckelmann <sven@narfation.org>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Florian Westphal <fw@strlen.de>,
+	Phil Sutter <phil@nwl.cc>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	Julian Anastasov <ja@ssi.bg>,
+	Allison Henderson <achender@kernel.org>,
+	Jamal Hadi Salim <jhs@mojatatu.com>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>,
+	"D. Wythe" <alibuda@linux.alibaba.com>,
+	Dust Li <dust.li@linux.alibaba.com>,
+	Sidraya Jayagond <sidraya@linux.ibm.com>,
+	Mahanta Jambigi <mjambigi@linux.ibm.com>,
+	Tony Lu <tonylu@linux.alibaba.com>,
+	Wen Gu <guwen@linux.alibaba.com>,
+	Jon Maloy <jmaloy@redhat.com>,
+	Tung Quang Nguyen <tung.quang.nguyen@est.tech>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Qingfang Deng <qingfang.deng@linux.dev>,
+	Julian Braha <julianbraha@gmail.com>,
+	Ethan Nelson-Moore <enelsonmoore@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Eric Biggers <ebiggers@kernel.org>,
+	David Disseldorp <ddiss@suse.de>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Lukas Prause <lukas.prause@ikt.uni-hannover.de>,
+	Tim Fuechsel <t.fuechsel@gmx.de>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	Martin KaFai Lau <martin.lau@kernel.org>,
+	Amery Hung <ameryhung@gmail.com>,
+	Alyssa Ross <hi@alyssa.is>,
+	linux-rdma@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	linux-net-drivers@amd.com,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-wireless@vger.kernel.org,
+	brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com,
+	linux-nvme@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	target-devel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-afs@lists.infradead.org,
+	linux-nfs@vger.kernel.org,
+	b.a.t.m.a.n@lists.open-mesh.org,
+	bridge@lists.linux.dev,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	mptcp@lists.linux.dev,
+	lvs-devel@vger.kernel.org,
+	rds-devel@oss.oracle.com,
+	linux-sctp@vger.kernel.org,
+	tipc-discussion@lists.sourceforge.net,
+	ipsec@lists.linux.dev,
+	linux-security-module@vger.kernel.org
+Subject: [PATCH net-next v4 01/16] ipv4: introduce CONFIG_IPV4 to decouple the IPv4 stack
+Date: Fri, 27 Nov 2026 18:17:46 +0100
+Message-ID: <20261127171824.27362-2-fmancera@suse.de>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20261127171824.27362-1-fmancera@suse.de>
+References: <20261127171824.27362-1-fmancera@suse.de>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -108,227 +238,1239 @@ List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Spamd-Result: default: False [-12.30 / 50.00];
+	SUSE_INTERNAL_BYPASS(-9.00)[];
+	REPLY(-4.00)[];
+	BAYES_HAM(-3.00)[100.00%];
+	FORGED_RECIPIENTS(2.00)[m:netdev@vger.kernel.org,m:davem@davemloft.net,m:fmancera@suse.de,m:jgg@ziepe.ca,m:zyjzyj2000@gmail.com,m:anthony.l.nguyen@intel.com,m:przemyslaw.kitszel@intel.com,m:eladv6@gmail.com,m:jiri@resnulli.us,m:alex.austin@amd.com,m:andy.moreton@amd.com,m:maxime.chevallier@bootlin.com,m:mcoquelin.stm32@gmail.com,m:alexandre.torgue@foss.st.com,m:arend.vanspriel@broadcom.com,m:miriam.rachel.korenblit@intel.com,m:axboe@kernel.dk,m:sagi@grimberg.me,m:varun@chelsio.com,m:James.Bottomley@HansenPartnership.com,m:viro@zeniv.linux.org.uk,m:jack@suse.cz,m:marc.dionne@auristor.com,m:neil@brown.name,m:tom@talpey.com,m:willemb@google.com,m:sw@simonwunderlich.de,m:razor@blackwall.org,m:fw@strlen.de,m:ja@ssi.bg,m:marcelo.leitner@gmail.com,m:lucien.xin@gmail.com,m:tung.quang.nguyen@est.tech,m:steffen.klassert@secunet.com,m:herbert@gondor.apana.org.au,m:casey@schaufler-ca.com,m:serge@hallyn.com,m:julianbraha@gmail.com,m:enelsonmoore@gmail.com,m:ddiss@suse.de,m:lukas.prause@ikt.uni-h
+ annover.de,m:t.fuechsel@gmx.de,m:kuniyu@google.com,m:ameryhung@gmail.com,s:linux-afs@lists.infradead.org,s:linux-arm-kernel@lists.infradead.org,s:linux-nvme@lists.infradead.org,s:brcm80211@lists.linux.dev,s:bridge@lists.linux.dev,s:ipsec@lists.linux.dev,s:mptcp@lists.linux.dev,s:b.a.t.m.a.n@lists.open-mesh.org,s:intel-wired-lan@lists.osuosl.org,s:tipc-discussion@lists.sourceforge.net,s:coreteam@netfilter.org,s:rds-devel@oss.oracle.com];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_CC(0.00)[davemloft.net,kernel.org,redhat.com,suse.de,ziepe.ca,gmail.com,lunn.ch,intel.com,nvidia.com,resnulli.us,amd.com,bootlin.com,foss.st.com,broadcom.com,kernel.dk,lst.de,grimberg.me,linux.ibm.com,chelsio.com,HansenPartnership.com,zeniv.linux.org.uk,suse.cz,auristor.com,brown.name,oracle.com,talpey.com,google.com,mailbox.org,simonwunderlich.de,mandelbit.com,narfation.org,blackwall.org,netfilter.org,strlen.de,nwl.cc,ssi.bg,mojatatu.com,linux.alibaba.com,est.tech,secunet.com,gondor.apana.org.au,schaufler-ca.com,paul-moore.com,namei.org,hallyn.com,linux.dev,linuxfoundation.org,ikt.uni-hannover.de,gmx.de,alyssa.is,vger.kernel.org,lists.osuosl.org,st-md-mailman.stormreply.com,lists.infradead.org,lists.linux.dev,lists.open-mesh.org,oss.oracle.com,lists.sourceforge.net];
+	RCPT_COUNT_GT_50(0.00)[126];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_HAS_DN(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email];
+	TAGGED_RCPT(0.00)[netdev];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RLzeow1uo65t7jnifdz1xj1e4d)];
+	RCVD_TLS_ALL(0.00)[]
+X-Spam-Score: -12.30
 
-Hi Eric,
+Historically, the IPv4 protocol has been linked to the core INET
+subsystem. Because shared infrastructure like the TCP/UDP engine,
+routing or INET hashtables live inside net/ipv4/, it has been impossible
+to compile a kernel with only IPv6 support.
 
-Sorry for the late reply -- it took me some time to put together clean
-WAN reproducers and check the tracepoints carefully before getting back
-to you.
+This patch introduces the CONFIG_IPV4 Kconfig symbol, which is set to
+'def_bool y' for now. This does not allow to completely disable the
+IPv4 stack yet but it lays the necessary build-system work for that
+goal.
 
-Reading your comments on patches 1 and 2, I realize my v1 changelogs
-did not explain the failure mode clearly and conflated two separate
-issues:
+In addition, multiple subsystems Kconfig symbols across networking
+features like tunnels, drivers and filesystems have been adjusted to
+depend on IPv4. Keep on mind that follow-up work is required to convert
+the Kconfig symbol to bool and remove the dependency on IPv4 where it
+makes sense.
 
-  1) an implementation bug where 32-bit wrap coupled with the
-     unconditional rcvq_space.space update can leave sk_rcvbuf stuck at
-     its initial value across subsequent steady in-order streaming; and
-  2) the pre-existing overshoot of the slow-start heuristic itself on
-     burst or backlog samples.
+Acked-by: Chuck Lever <cel@kernel.org>
+Signed-off-by: Fernando Fernandez Mancera <fmancera@suse.de>
+---
+ drivers/infiniband/Kconfig                    |  2 +-
+ drivers/infiniband/sw/rxe/Kconfig             |  2 +-
+ drivers/net/Kconfig                           | 23 ++++++++++---------
+ drivers/net/ethernet/chelsio/Kconfig          |  2 +-
+ drivers/net/ethernet/intel/Kconfig            |  2 ++
+ drivers/net/ethernet/marvell/prestera/Kconfig |  1 +
+ .../net/ethernet/mellanox/mlx5/core/Kconfig   |  3 ++-
+ drivers/net/ethernet/mellanox/mlxsw/Kconfig   |  1 +
+ drivers/net/ethernet/qlogic/Kconfig           |  2 ++
+ drivers/net/ethernet/rocker/Kconfig           |  1 +
+ drivers/net/ethernet/sfc/Kconfig              |  1 +
+ drivers/net/ethernet/stmicro/stmmac/Kconfig   |  1 +
+ drivers/net/ethernet/sun/Kconfig              |  2 +-
+ drivers/net/ethernet/via/Kconfig              |  1 +
+ drivers/net/ppp/Kconfig                       |  1 +
+ .../broadcom/brcm80211/brcmfmac/Kconfig       |  1 +
+ drivers/net/wireless/intel/iwlwifi/Kconfig    |  1 +
+ drivers/nvme/host/Kconfig                     |  2 +-
+ drivers/nvme/target/Kconfig                   |  2 +-
+ drivers/s390/net/Kconfig                      |  1 +
+ drivers/scsi/cxgbi/cxgb3i/Kconfig             |  2 +-
+ drivers/scsi/cxgbi/cxgb4i/Kconfig             |  2 +-
+ drivers/target/iscsi/Kconfig                  |  2 +-
+ drivers/target/iscsi/cxgbit/Kconfig           |  2 +-
+ fs/Kconfig                                    |  1 +
+ fs/afs/Kconfig                                |  2 +-
+ fs/nfs/Kconfig                                |  2 +-
+ fs/nfsd/Kconfig                               |  2 +-
+ net/Kconfig                                   | 12 ++++++----
+ net/batman-adv/Kconfig                        |  6 ++---
+ net/bridge/Kconfig                            |  2 +-
+ net/bridge/netfilter/Kconfig                  |  3 ++-
+ net/ipv4/Kconfig                              | 21 ++++++++++++++---
+ net/ipv4/Makefile                             | 21 ++++++++---------
+ net/ipv4/netfilter/Kconfig                    |  2 +-
+ net/ipv6/Kconfig                              | 17 ++++++++++----
+ net/ipv6/netfilter/Kconfig                    |  2 +-
+ net/l2tp/Kconfig                              |  2 +-
+ net/mptcp/Kconfig                             |  2 +-
+ net/netfilter/Kconfig                         |  2 +-
+ net/netfilter/ipset/Kconfig                   |  2 +-
+ net/netfilter/ipvs/Kconfig                    |  2 +-
+ net/rds/Kconfig                               |  1 +
+ net/rxrpc/Kconfig                             |  2 +-
+ net/sched/Kconfig                             |  2 +-
+ net/sctp/Kconfig                              |  2 +-
+ net/smc/Kconfig                               |  2 +-
+ net/sunrpc/Kconfig                            |  2 +-
+ net/tipc/Kconfig                              |  1 +
+ net/xfrm/Kconfig                              | 10 ++++++--
+ security/smack/Kconfig                        |  1 +
+ 51 files changed, 120 insertions(+), 66 deletions(-)
 
-I think it is clearer to look at them separately. Replies inline below.
+diff --git a/drivers/infiniband/Kconfig b/drivers/infiniband/Kconfig
+index 086195758a8a..e9302002b6ea 100644
+--- a/drivers/infiniband/Kconfig
++++ b/drivers/infiniband/Kconfig
+@@ -3,7 +3,7 @@ menuconfig INFINIBAND
+ 	tristate "InfiniBand support"
+ 	depends on HAS_IOMEM && HAS_DMA
+ 	depends on NET
+-	depends on INET
++	depends on INET && IPV4
+ 	depends on !ALPHA
+ 	select DMA_SHARED_BUFFER
+ 	select IRQ_POLL
+diff --git a/drivers/infiniband/sw/rxe/Kconfig b/drivers/infiniband/sw/rxe/Kconfig
+index 1ed5b63f8afc..e4272f863944 100644
+--- a/drivers/infiniband/sw/rxe/Kconfig
++++ b/drivers/infiniband/sw/rxe/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config RDMA_RXE
+ 	tristate "Software RDMA over Ethernet (RoCE) driver"
+-	depends on INET && PCI && INFINIBAND && 64BIT
++	depends on INET && IPV4 && PCI && INFINIBAND && 64BIT
+ 	depends on INFINIBAND_VIRT_DMA
+ 	select NET_UDP_TUNNEL
+ 	select CRC32
+diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
+index cb4d4bb87afc..cfee984cbc64 100644
+--- a/drivers/net/Kconfig
++++ b/drivers/net/Kconfig
+@@ -40,7 +40,7 @@ if NET_CORE
+ 
+ config BONDING
+ 	tristate "Bonding driver support"
+-	depends on INET
++	depends on INET && IPV4
+ 	depends on TLS || TLS_DEVICE=n
+ 	help
+ 	  Say 'Y' or 'M' if you wish to be able to 'bond' multiple Ethernet
+@@ -73,7 +73,7 @@ config DUMMY
+ 
+ config WIREGUARD
+ 	tristate "WireGuard secure network tunnel"
+-	depends on NET && INET
++	depends on NET && INET && IPV4
+ 	select NET_UDP_TUNNEL
+ 	select DST_CACHE
+ 	select CRYPTO_LIB_CURVE25519
+@@ -102,7 +102,7 @@ config WIREGUARD_DEBUG
+ 
+ config OVPN
+ 	tristate "OpenVPN data channel offload"
+-	depends on NET && INET
++	depends on NET && INET && IPV4
+ 	select DST_CACHE
+ 	select NET_UDP_TUNNEL
+ 	select CRYPTO
+@@ -198,7 +198,7 @@ config IPVLAN_L3S
+ 
+ config IPVLAN
+ 	tristate "IP-VLAN support"
+-	depends on INET
++	depends on INET && IPV4
+ 	help
+ 	  This allows one to create virtual devices off of a main interface
+ 	  and packets will be delivered based on the dest L3 (IPv6/IPv4 addr)
+@@ -229,7 +229,7 @@ config IPVTAP
+ 
+ config VXLAN
+ 	tristate "Virtual eXtensible Local Area Network (VXLAN)"
+-	depends on INET
++	depends on INET && IPV4
+ 	select NET_UDP_TUNNEL
+ 	select GRO_CELLS
+ 	help
+@@ -244,7 +244,7 @@ config VXLAN
+ 
+ config GENEVE
+ 	tristate "Generic Network Virtualization Encapsulation"
+-	depends on INET
++	depends on INET && IPV4
+ 	select NET_UDP_TUNNEL
+ 	select GRO_CELLS
+ 	help
+@@ -259,7 +259,7 @@ config GENEVE
+ 
+ config BAREUDP
+ 	tristate "Bare UDP Encapsulation"
+-	depends on INET
++	depends on INET && IPV4
+ 	select NET_UDP_TUNNEL
+ 	select GRO_CELLS
+ 	help
+@@ -271,7 +271,7 @@ config BAREUDP
+ 
+ config GTP
+ 	tristate "GPRS Tunneling Protocol datapath (GTP-U)"
+-	depends on INET
++	depends on INET && IPV4
+ 	select NET_UDP_TUNNEL
+ 	help
+ 	  This allows one to create gtp virtual interfaces that provide
+@@ -288,7 +288,7 @@ config GTP
+ 
+ config PFCP
+ 	tristate "Packet Forwarding Control Protocol (PFCP)"
+-	depends on INET
++	depends on INET && IPV4
+ 	select NET_UDP_TUNNEL
+ 	help
+ 	  This allows one to create PFCP virtual interfaces that allows to
+@@ -301,7 +301,7 @@ config PFCP
+ 
+ config AMT
+ 	tristate "Automatic Multicast Tunneling (AMT)"
+-	depends on INET && IP_MULTICAST
++	depends on INET && IP_MULTICAST && IPV4
+ 	select NET_UDP_TUNNEL
+ 	help
+ 	  This allows one to create AMT(Automatic Multicast Tunneling)
+@@ -471,6 +471,7 @@ config NETKIT
+ 
+ config NET_VRF
+ 	tristate "Virtual Routing and Forwarding (Lite)"
++	depends on IPV4
+ 	depends on IP_MULTIPLE_TABLES
+ 	depends on NET_L3_MASTER_DEV
+ 	depends on IPV6_MULTIPLE_TABLES || IPV6=n
+@@ -604,7 +605,7 @@ source "drivers/net/hyperv/Kconfig"
+ config NETDEVSIM
+ 	tristate "Simulated networking device"
+ 	depends on DEBUG_FS
+-	depends on INET
++	depends on INET && IPV4
+ 	depends on PSAMPLE || PSAMPLE=n
+ 	depends on PTP_1588_CLOCK_MOCK || PTP_1588_CLOCK_MOCK=n
+ 	depends on TLS || TLS=n
+diff --git a/drivers/net/ethernet/chelsio/Kconfig b/drivers/net/ethernet/chelsio/Kconfig
+index 96d7779cd2f0..c738820688e0 100644
+--- a/drivers/net/ethernet/chelsio/Kconfig
++++ b/drivers/net/ethernet/chelsio/Kconfig
+@@ -48,7 +48,7 @@ config CHELSIO_T1_1G
+ 
+ config CHELSIO_T3
+ 	tristate "Chelsio Communications T3 10Gb Ethernet support"
+-	depends on PCI && INET
++	depends on PCI && INET && IPV4
+ 	select FW_LOADER
+ 	select MDIO
+ 	help
+diff --git a/drivers/net/ethernet/intel/Kconfig b/drivers/net/ethernet/intel/Kconfig
+index 780f113986ea..ce1c68e9cdf6 100644
+--- a/drivers/net/ethernet/intel/Kconfig
++++ b/drivers/net/ethernet/intel/Kconfig
+@@ -195,6 +195,7 @@ config IXGBE_IPSEC
+ 	bool "IPSec XFRM cryptography-offload acceleration"
+ 	depends on IXGBE
+ 	depends on XFRM_OFFLOAD
++	depends on IPV4 || !INET
+ 	default y
+ 	select XFRM_ALGO
+ 	help
+@@ -221,6 +222,7 @@ config IXGBEVF_IPSEC
+ 	bool "IPSec XFRM cryptography-offload acceleration"
+ 	depends on IXGBEVF
+ 	depends on XFRM_OFFLOAD
++	depends on IPV4 || !INET
+ 	default y
+ 	select XFRM_ALGO
+ 	help
+diff --git a/drivers/net/ethernet/marvell/prestera/Kconfig b/drivers/net/ethernet/marvell/prestera/Kconfig
+index f2f7663c3d10..257afbb3c434 100644
+--- a/drivers/net/ethernet/marvell/prestera/Kconfig
++++ b/drivers/net/ethernet/marvell/prestera/Kconfig
+@@ -7,6 +7,7 @@ config PRESTERA
+ 	tristate "Marvell Prestera Switch ASICs support"
+ 	depends on NET_SWITCHDEV && VLAN_8021Q
+ 	depends on BRIDGE || BRIDGE=n
++	depends on IPV4 || !INET
+ 	select NET_DEVLINK
+ 	select PHYLINK
+ 	help
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Kconfig b/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
+index 925ee25d05b4..99d998aa7e9b 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
++++ b/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
+@@ -12,6 +12,7 @@ config MLX5_CORE
+ 	depends on PTP_1588_CLOCK_OPTIONAL
+ 	depends on PCI_HYPERV_INTERFACE || !PCI_HYPERV_INTERFACE
+ 	depends on HWMON || !HWMON
++	depends on IPV4 || !INET
+ 	help
+ 	  Core driver for low level functionality of the ConnectX-4 and
+ 	  Connect-IB cards by Mellanox Technologies.
+@@ -28,7 +29,7 @@ config MLX5_FPGA
+ 
+ config MLX5_CORE_EN
+ 	bool "Mellanox 5th generation network adapters (ConnectX series) Ethernet support"
+-	depends on NETDEVICES && ETHERNET && INET && PCI && MLX5_CORE
++	depends on NETDEVICES && ETHERNET && INET && PCI && MLX5_CORE && IPV4
+ 	select PAGE_POOL
+ 	select PAGE_POOL_STATS
+ 	select DIMLIB
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/Kconfig b/drivers/net/ethernet/mellanox/mlxsw/Kconfig
+index 2229a2694aa5..fb3028600724 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/Kconfig
++++ b/drivers/net/ethernet/mellanox/mlxsw/Kconfig
+@@ -53,6 +53,7 @@ config MLXSW_I2C
+ 
+ config MLXSW_SPECTRUM
+ 	tristate "Mellanox Technologies Spectrum family support"
++	depends on IPV4 || !INET
+ 	depends on MLXSW_CORE && MLXSW_PCI && NET_SWITCHDEV && VLAN_8021Q
+ 	depends on PSAMPLE || PSAMPLE=n
+ 	depends on BRIDGE || BRIDGE=n
+diff --git a/drivers/net/ethernet/qlogic/Kconfig b/drivers/net/ethernet/qlogic/Kconfig
+index 1203353238e5..aed78311ecaf 100644
+--- a/drivers/net/ethernet/qlogic/Kconfig
++++ b/drivers/net/ethernet/qlogic/Kconfig
+@@ -29,6 +29,7 @@ config QLA3XXX
+ config QLCNIC
+ 	tristate "QLOGIC QLCNIC 1/10Gb Converged Ethernet NIC Support"
+ 	depends on PCI
++	depends on IPV4 || !INET
+ 	select FW_LOADER
+ 	help
+ 	  This driver supports QLogic QLE8240 and QLE8242 Converged Ethernet
+@@ -68,6 +69,7 @@ config QLCNIC_HWMON
+ 
+ config NETXEN_NIC
+ 	tristate "NetXen Multi port (1/10) Gigabit Ethernet NIC"
++	depends on IPV4 || !INET
+ 	depends on PCI
+ 	select FW_LOADER
+ 	help
+diff --git a/drivers/net/ethernet/rocker/Kconfig b/drivers/net/ethernet/rocker/Kconfig
+index 2318811ff75a..2f994bd6f9bd 100644
+--- a/drivers/net/ethernet/rocker/Kconfig
++++ b/drivers/net/ethernet/rocker/Kconfig
+@@ -19,6 +19,7 @@ if NET_VENDOR_ROCKER
+ config ROCKER
+ 	tristate "Rocker switch driver (EXPERIMENTAL)"
+ 	depends on PCI && NET_SWITCHDEV && BRIDGE
++	depends on IPV4 || !INET
+ 	select CRC32
+ 	help
+ 	  This driver supports Rocker switch device.
+diff --git a/drivers/net/ethernet/sfc/Kconfig b/drivers/net/ethernet/sfc/Kconfig
+index e2898ec2e6e9..2bf5c2a185d2 100644
+--- a/drivers/net/ethernet/sfc/Kconfig
++++ b/drivers/net/ethernet/sfc/Kconfig
+@@ -18,6 +18,7 @@ if NET_VENDOR_SOLARFLARE
+ 
+ config SFC
+ 	tristate "Solarflare SFC9100/EF100-family support"
++	depends on IPV4 || !INET
+ 	depends on PCI
+ 	depends on PTP_1588_CLOCK_OPTIONAL
+ 	select MDIO
+diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
+index c6559e749c0c..3facf3e02898 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
++++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config STMMAC_ETH
+ 	tristate "STMicroelectronics Multi-Gigabit Ethernet driver"
++	depends on IPV4 || !INET
+ 	depends on HAS_IOMEM && HAS_DMA
+ 	depends on PTP_1588_CLOCK_OPTIONAL
+ 	depends on ETHTOOL_NETLINK
+diff --git a/drivers/net/ethernet/sun/Kconfig b/drivers/net/ethernet/sun/Kconfig
+index b0d3f9a2950c..75cde07dedd5 100644
+--- a/drivers/net/ethernet/sun/Kconfig
++++ b/drivers/net/ethernet/sun/Kconfig
+@@ -73,7 +73,7 @@ config CASSINI
+ config SUNVNET_COMMON
+ 	tristate "Common routines to support Sun Virtual Networking"
+ 	depends on SUN_LDOMS
+-	depends on INET
++	depends on INET && IPV4
+ 	default m
+ 
+ config SUNVNET
+diff --git a/drivers/net/ethernet/via/Kconfig b/drivers/net/ethernet/via/Kconfig
+index 00773f5e4d7e..dbb24d35dfbd 100644
+--- a/drivers/net/ethernet/via/Kconfig
++++ b/drivers/net/ethernet/via/Kconfig
+@@ -45,6 +45,7 @@ config VIA_RHINE_MMIO
+ 
+ config VIA_VELOCITY
+ 	tristate "VIA Velocity support"
++	depends on IPV4 || !INET
+ 	depends on (PCI || (OF_ADDRESS && OF_IRQ))
+ 	depends on HAS_DMA
+ 	select CRC32
+diff --git a/drivers/net/ppp/Kconfig b/drivers/net/ppp/Kconfig
+index 4047f13b83dc..c5200fae5e4a 100644
+--- a/drivers/net/ppp/Kconfig
++++ b/drivers/net/ppp/Kconfig
+@@ -160,6 +160,7 @@ config PPPOE_HASH_BITS
+ 
+ config PPTP
+ 	tristate "PPP over IPv4 (PPTP)"
++	depends on IPV4 || !INET
+ 	depends on NET_IPGRE_DEMUX
+ 	select PPPOX
+ 	help
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/Kconfig b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/Kconfig
+index 32794c1eca23..01a5b3310e1e 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/Kconfig
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/Kconfig
+@@ -1,6 +1,7 @@
+ config BRCMFMAC
+ 	tristate "Broadcom FullMAC WLAN driver"
+ 	depends on CFG80211
++	depends on IPV4 || !INET
+ 	select BRCMUTIL
+ 	help
+ 	  This module adds support for wireless adapters based on Broadcom
+diff --git a/drivers/net/wireless/intel/iwlwifi/Kconfig b/drivers/net/wireless/intel/iwlwifi/Kconfig
+index 153a8368b412..3719fa0727c2 100644
+--- a/drivers/net/wireless/intel/iwlwifi/Kconfig
++++ b/drivers/net/wireless/intel/iwlwifi/Kconfig
+@@ -2,6 +2,7 @@
+ config IWLWIFI
+ 	tristate "Intel Wireless WiFi Next Gen AGN - Wireless-N/Advanced-N/Ultimate-N (iwlwifi) "
+ 	depends on PCI && HAS_IOMEM && CFG80211
++	depends on IPV4 || !INET
+ 	depends on IWLMEI || !IWLMEI
+ 	select FW_LOADER
+ 	help
+diff --git a/drivers/nvme/host/Kconfig b/drivers/nvme/host/Kconfig
+index 31974c7dd20c..6e119cf475de 100644
+--- a/drivers/nvme/host/Kconfig
++++ b/drivers/nvme/host/Kconfig
+@@ -82,7 +82,7 @@ config NVME_FC
+ 
+ config NVME_TCP
+ 	tristate "NVM Express over Fabrics TCP host driver"
+-	depends on INET
++	depends on INET && IPV4
+ 	depends on BLOCK
+ 	select CRC32
+ 	select NET_CRC32C
+diff --git a/drivers/nvme/target/Kconfig b/drivers/nvme/target/Kconfig
+index 69bde270115e..f731a043f6a9 100644
+--- a/drivers/nvme/target/Kconfig
++++ b/drivers/nvme/target/Kconfig
+@@ -86,7 +86,7 @@ config NVME_TARGET_FCLOOP
+ 
+ config NVME_TARGET_TCP
+ 	tristate "NVMe over Fabrics TCP target support"
+-	depends on INET
++	depends on INET && IPV4
+ 	depends on NVME_TARGET
+ 	help
+ 	  This enables the NVMe TCP target support, which allows exporting NVMe
+diff --git a/drivers/s390/net/Kconfig b/drivers/s390/net/Kconfig
+index 0fd700c5745a..bfaedd228425 100644
+--- a/drivers/s390/net/Kconfig
++++ b/drivers/s390/net/Kconfig
+@@ -62,6 +62,7 @@ config QETH_L3
+ 	def_tristate y
+ 	prompt "qeth layer 3 device support"
+ 	depends on QETH
++	depends on IPV4 || !INET
+ 	help
+ 	  Select this option to be able to run qeth devices in layer 3 mode.
+ 	  To compile as a module choose M. The module name is qeth_l3.
+diff --git a/drivers/scsi/cxgbi/cxgb3i/Kconfig b/drivers/scsi/cxgbi/cxgb3i/Kconfig
+index 143e881ec77e..abb4a462cb37 100644
+--- a/drivers/scsi/cxgbi/cxgb3i/Kconfig
++++ b/drivers/scsi/cxgbi/cxgb3i/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config SCSI_CXGB3_ISCSI
+ 	tristate "Chelsio T3 iSCSI support"
+-	depends on PCI && INET
++	depends on PCI && INET && IPV4
+ 	select NETDEVICES
+ 	select ETHERNET
+ 	select NET_VENDOR_CHELSIO
+diff --git a/drivers/scsi/cxgbi/cxgb4i/Kconfig b/drivers/scsi/cxgbi/cxgb4i/Kconfig
+index dd1c8ff36b00..04b3e7b053dc 100644
+--- a/drivers/scsi/cxgbi/cxgb4i/Kconfig
++++ b/drivers/scsi/cxgbi/cxgb4i/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config SCSI_CXGB4_ISCSI
+ 	tristate "Chelsio T4 iSCSI support"
+-	depends on PCI && INET
++	depends on PCI && INET && IPV4
+ 	depends on PTP_1588_CLOCK_OPTIONAL
+ 	depends on THERMAL || !THERMAL
+ 	depends on ETHERNET
+diff --git a/drivers/target/iscsi/Kconfig b/drivers/target/iscsi/Kconfig
+index 44bbf1f32859..9488050028d1 100644
+--- a/drivers/target/iscsi/Kconfig
++++ b/drivers/target/iscsi/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config ISCSI_TARGET
+ 	tristate "SCSI Target Mode Stack"
+-	depends on INET
++	depends on INET && IPV4
+ 	select CRC32
+ 	select CRYPTO_LIB_MD5
+ 	select CRYPTO_LIB_SHA1
+diff --git a/drivers/target/iscsi/cxgbit/Kconfig b/drivers/target/iscsi/cxgbit/Kconfig
+index bdeefa75f29e..7a2e585d76d7 100644
+--- a/drivers/target/iscsi/cxgbit/Kconfig
++++ b/drivers/target/iscsi/cxgbit/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config ISCSI_TARGET_CXGB4
+ 	tristate "Chelsio iSCSI target offload driver"
+-	depends on ISCSI_TARGET && CHELSIO_T4 && INET
++	depends on ISCSI_TARGET && CHELSIO_T4 && INET && IPV4
+ 	select CHELSIO_LIB
+ 	help
+ 	To compile this driver as module, choose M here: the module
+diff --git a/fs/Kconfig b/fs/Kconfig
+index 70a1d0760d28..c2847bcb5e8b 100644
+--- a/fs/Kconfig
++++ b/fs/Kconfig
+@@ -357,6 +357,7 @@ config GRACE_PERIOD
+ 
+ config LOCKD
+ 	tristate
++	depends on IPV4 || !INET
+ 	depends on FILE_LOCKING
+ 	select CRC32
+ 	select GRACE_PERIOD
+diff --git a/fs/afs/Kconfig b/fs/afs/Kconfig
+index 682bd8ec2c10..e7ed46426f81 100644
+--- a/fs/afs/Kconfig
++++ b/fs/afs/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config AFS_FS
+ 	tristate "Andrew File System support (AFS)"
+-	depends on INET
++	depends on INET && IPV4
+ 	select AF_RXRPC
+ 	select DNS_RESOLVER
+ 	select NETFS_SUPPORT
+diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
+index fd430718d02b..5d7c431082e1 100644
+--- a/fs/nfs/Kconfig
++++ b/fs/nfs/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config NFS_FS
+ 	tristate "NFS client support"
+-	depends on INET && FILE_LOCKING && MULTIUSER
++	depends on INET && FILE_LOCKING && MULTIUSER && IPV4
+ 	select CRC32
+ 	select LOCKD
+ 	select SUNRPC
+diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+index ffb76761d6a8..153a9918214d 100644
+--- a/fs/nfsd/Kconfig
++++ b/fs/nfsd/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config NFSD
+ 	tristate "NFS server support"
+-	depends on INET
++	depends on INET && IPV4
+ 	depends on FILE_LOCKING
+ 	depends on FSNOTIFY
+ 	select CRC32
+diff --git a/net/Kconfig b/net/Kconfig
+index 76ab44aa439a..ca86f20540dd 100644
+--- a/net/Kconfig
++++ b/net/Kconfig
+@@ -135,9 +135,12 @@ config INET
+ if INET
+ source "net/ipv4/Kconfig"
+ source "net/ipv6/Kconfig"
+-source "net/netlabel/Kconfig"
+ source "net/mptcp/Kconfig"
+ 
++if IPV4
++source "net/netlabel/Kconfig"
++endif # if IPV4
++
+ endif # if INET
+ 
+ config NETWORK_SECMARK
+@@ -232,6 +235,7 @@ config BRIDGE_NETFILTER
+ 	depends on BRIDGE
+ 	depends on NETFILTER && INET
+ 	depends on NETFILTER_ADVANCED
++	depends on IPV4
+ 	select NETFILTER_FAMILY_BRIDGE
+ 	select SKB_EXTENSIONS
+ 	help
+@@ -384,7 +388,7 @@ menu "Network testing"
+ 
+ config NET_PKTGEN
+ 	tristate "Packet Generator (USE WITH CAUTION)"
+-	depends on INET && PROC_FS
++	depends on INET && IPV4 && PROC_FS
+ 	help
+ 	  This module will inject preconfigured packets, at a configurable
+ 	  rate, out of a given interface.  It is used for network interface
+@@ -451,7 +455,7 @@ config LWTUNNEL
+ 
+ config LWTUNNEL_BPF
+ 	bool "Execute BPF program as route nexthop action"
+-	depends on LWTUNNEL && INET
++	depends on LWTUNNEL && INET && IPV4
+ 	default y if LWTUNNEL=y
+ 	help
+ 	  Allows to run BPF programs as a nexthop action following a route
+@@ -473,7 +477,7 @@ config NET_IEEE8021Q_HELPERS
+ 
+ config NET_SELFTESTS
+ 	def_tristate PHYLIB
+-	depends on PHYLIB && INET
++	depends on PHYLIB && INET && IPV4
+ 
+ config NET_SOCK_MSG
+ 	bool
+diff --git a/net/batman-adv/Kconfig b/net/batman-adv/Kconfig
+index 58c408b7a7d9..5c66122c137c 100644
+--- a/net/batman-adv/Kconfig
++++ b/net/batman-adv/Kconfig
+@@ -33,7 +33,7 @@ config BATMAN_ADV_BATMAN_V
+ 
+ config BATMAN_ADV_BLA
+ 	bool "Bridge Loop Avoidance"
+-	depends on BATMAN_ADV && INET
++	depends on BATMAN_ADV && INET && IPV4
+ 	select CRC16
+ 	select NET_CRC32C
+ 	default y
+@@ -46,7 +46,7 @@ config BATMAN_ADV_BLA
+ 
+ config BATMAN_ADV_DAT
+ 	bool "Distributed ARP Table"
+-	depends on BATMAN_ADV && INET
++	depends on BATMAN_ADV && INET && IPV4
+ 	default y
+ 	help
+ 	  This option enables DAT (Distributed ARP Table), a DHT based
+@@ -56,7 +56,7 @@ config BATMAN_ADV_DAT
+ 
+ config BATMAN_ADV_MCAST
+ 	bool "Multicast optimisation"
+-	depends on BATMAN_ADV && INET && !(BRIDGE=m && BATMAN_ADV=y)
++	depends on BATMAN_ADV && INET && !(BRIDGE=m && BATMAN_ADV=y) && IPV4
+ 	default y
+ 	help
+ 	  This option enables the multicast optimisation which aims to
+diff --git a/net/bridge/Kconfig b/net/bridge/Kconfig
+index 318715c8fc9b..c7737d3ebac8 100644
+--- a/net/bridge/Kconfig
++++ b/net/bridge/Kconfig
+@@ -36,7 +36,7 @@ config BRIDGE
+ config BRIDGE_IGMP_SNOOPING
+ 	bool "IGMP/MLD snooping"
+ 	depends on BRIDGE
+-	depends on INET
++	depends on INET && IPV4
+ 	default y
+ 	help
+ 	  If you say Y here, then the Ethernet bridge will be able selectively
+diff --git a/net/bridge/netfilter/Kconfig b/net/bridge/netfilter/Kconfig
+index 4fd5a6ea26b4..31e388ce503f 100644
+--- a/net/bridge/netfilter/Kconfig
++++ b/net/bridge/netfilter/Kconfig
+@@ -28,6 +28,7 @@ endif # NF_TABLES_BRIDGE
+ config NF_CONNTRACK_BRIDGE
+ 	tristate "IPv4/IPV6 bridge connection tracking support"
+ 	depends on NF_CONNTRACK
++	depends on IPV4 || !INET
+ 	default n
+ 	help
+ 	  Connection tracking keeps a record of what packets have passed
+@@ -188,7 +189,7 @@ config BRIDGE_EBT_VLAN
+ #
+ config BRIDGE_EBT_ARPREPLY
+ 	tristate "ebt: arp reply target support"
+-	depends on BRIDGE_NF_EBTABLES && INET
++	depends on BRIDGE_NF_EBTABLES && INET && IPV4
+ 	help
+ 	  This option adds the arp reply target, which allows
+ 	  automatically sending arp replies to arp requests.
+diff --git a/net/ipv4/Kconfig b/net/ipv4/Kconfig
+index 3545fb0a045b..f34e31f06c7f 100644
+--- a/net/ipv4/Kconfig
++++ b/net/ipv4/Kconfig
+@@ -2,6 +2,9 @@
+ #
+ # IP configuration
+ #
++config IPV4
++	def_bool y
++
+ config IP_MULTICAST
+ 	bool "IP: multicasting"
+ 	help
+@@ -62,7 +65,7 @@ config IP_FIB_TRIE_STATS
+ 
+ config IP_MULTIPLE_TABLES
+ 	bool "IP: policy routing"
+-	depends on IP_ADVANCED_ROUTER
++	depends on IPV4 && IP_ADVANCED_ROUTER
+ 	select FIB_RULES
+ 	help
+ 	  Normally, a router decides what to do with a received packet based
+@@ -105,6 +108,7 @@ config IP_ROUTE_CLASSID
+ 
+ config IP_PNP
+ 	bool "IP: kernel level autoconfiguration"
++	depends on IPV4
+ 	help
+ 	  This enables automatic configuration of IP addresses of devices and
+ 	  of the routing table during kernel boot, based on either information
+@@ -161,6 +165,7 @@ config IP_PNP_RARP
+ 
+ config NET_IPIP
+ 	tristate "IP: tunneling"
++	depends on IPV4
+ 	select INET_TUNNEL
+ 	select NET_IP_TUNNEL
+ 	help
+@@ -185,12 +190,14 @@ config NET_IPGRE_DEMUX
+ 
+ config NET_IP_TUNNEL
+ 	tristate
++	depends on IPV4
+ 	select DST_CACHE
+ 	select GRO_CELLS
+ 	default n
+ 
+ config NET_IPGRE
+ 	tristate "IP: GRE tunnels over IP"
++	depends on IPV4
+ 	depends on NET_IPGRE_DEMUX
+ 	select NET_IP_TUNNEL
+ 	help
+@@ -219,7 +226,7 @@ config IP_MROUTE_COMMON
+ 
+ config IP_MROUTE
+ 	bool "IP: multicast routing"
+-	depends on IP_MULTICAST
++	depends on IP_MULTICAST && IPV4
+ 	select IP_MROUTE_COMMON
+ 	help
+ 	  This is used if you want your machine to act as a router for IP
+@@ -267,6 +274,7 @@ config IP_PIMSM_V2
+ 
+ config SYN_COOKIES
+ 	bool "IP: TCP syncookie support"
++	depends on IPV4
+ 	help
+ 	  Normal TCP/IP networking is open to an attack known as "SYN
+ 	  flooding". This denial-of-service attack prevents legitimate remote
+@@ -303,6 +311,7 @@ config SYN_COOKIES
+ 
+ config NET_IPVTI
+ 	tristate "Virtual (secure) IP: tunneling"
++	depends on IPV4
+ 	select INET_TUNNEL
+ 	select NET_IP_TUNNEL
+ 	select XFRM
+@@ -315,11 +324,13 @@ config NET_IPVTI
+ 
+ config NET_UDP_TUNNEL
+ 	tristate
++	depends on IPV4
+ 	select NET_IP_TUNNEL
+ 	default n
+ 
+ config NET_FOU
+ 	tristate "IP: Foo (IP protocols) over UDP"
++	depends on IPV4
+ 	select NET_UDP_TUNNEL
+ 	help
+ 	  Foo over UDP allows any IP protocol to be directly encapsulated
+@@ -338,6 +349,7 @@ config NET_FOU_IP_TUNNELS
+ 
+ config INET_AH
+ 	tristate "IP: AH transformation"
++	depends on IPV4
+ 	select XFRM_AH
+ 	help
+ 	  Support for IPsec AH (Authentication Header).
+@@ -353,6 +365,7 @@ config INET_AH
+ 
+ config INET_ESP
+ 	tristate "IP: ESP transformation"
++	depends on IPV4
+ 	select XFRM_ESP
+ 	help
+ 	  Support for IPsec ESP (Encapsulating Security Payload).
+@@ -393,6 +406,7 @@ config INET_ESPINTCP
+ 
+ config INET_IPCOMP
+ 	tristate "IP: IPComp transformation"
++	depends on IPV4
+ 	select INET_XFRM_TUNNEL
+ 	select XFRM_IPCOMP
+ 	help
+@@ -759,7 +773,7 @@ config TCP_AO
+ 	select CRYPTO_LIB_SHA1
+ 	select CRYPTO_LIB_SHA256
+ 	select CRYPTO_LIB_UTILS
+-	depends on 64BIT # seq-number extension needs WRITE_ONCE(u64)
++	depends on IPV4 && 64BIT # seq-number extension needs WRITE_ONCE(u64)
+ 	help
+ 	  TCP-AO specifies the use of stronger Message Authentication Codes (MACs),
+ 	  protects against replays for long-lived TCP connections, and
+@@ -770,6 +784,7 @@ config TCP_AO
+ 
+ config TCP_MD5SIG
+ 	bool "TCP: MD5 Signature Option support (RFC2385)"
++	depends on IPV4
+ 	select CRYPTO_LIB_MD5
+ 	select CRYPTO_LIB_UTILS
+ 	help
+diff --git a/net/ipv4/Makefile b/net/ipv4/Makefile
+index e8a0e9605b90..361868ad9252 100644
+--- a/net/ipv4/Makefile
++++ b/net/ipv4/Makefile
+@@ -3,18 +3,17 @@
+ # Makefile for the Linux TCP/IP (INET) layer.
+ #
+ 
+-obj-y     := route.o inetpeer.o protocol.o \
+-	     ip_input.o ip_fragment.o ip_forward.o ip_options.o \
+-	     ip_output.o ip_sockglue.o inet_hashtables.o \
+-	     inet_timewait_sock.o inet_connection_sock.o \
+-	     tcp.o tcp_input.o tcp_output.o tcp_timer.o tcp_ipv4.o \
++obj-y     := inetpeer.o protocol.o inet_hashtables.o inet_timewait_sock.o \
++	     inet_connection_sock.o tcp.o tcp_input.o tcp_output.o tcp_timer.o \
+ 	     tcp_minisocks.o tcp_cong.o tcp_metrics.o tcp_fastopen.o \
+-	     tcp_recovery.o tcp_ulp.o \
+-	     tcp_offload.o tcp_plb.o datagram.o raw.o udp.o \
+-	     udp_offload.o arp.o icmp.o devinet.o af_inet.o igmp.o \
+-	     fib_frontend.o fib_semantics.o fib_trie.o fib_notifier.o \
+-	     inet_fragment.o ping.o ip_tunnel_core.o gre_offload.o \
+-	     metrics.o netlink.o nexthop.o udp_tunnel_stub.o
++	     tcp_recovery.o tcp_ulp.o tcp_offload.o tcp_plb.o raw.o udp.o \
++	     udp_offload.o af_inet.o inet_fragment.o ping.o ip_tunnel_core.o \
++	     gre_offload.o metrics.o netlink.o nexthop.o udp_tunnel_stub.o
++
++obj-$(CONFIG_IPV4) += route.o ip_input.o ip_fragment.o ip_forward.o ip_options.o \
++		      ip_sockglue.o tcp_ipv4.o datagram.o icmp.o arp.o devinet.o \
++		      igmp.o fib_notifier.o ip_output.o fib_frontend.o \
++		      fib_semantics.o fib_trie.o
+ 
+ obj-$(CONFIG_NET_IP_TUNNEL) += ip_tunnel.o
+ obj-$(CONFIG_SYSCTL) += sysctl_net_ipv4.o
+diff --git a/net/ipv4/netfilter/Kconfig b/net/ipv4/netfilter/Kconfig
+index 7dc9772fe2d8..ab4fa6a6d453 100644
+--- a/net/ipv4/netfilter/Kconfig
++++ b/net/ipv4/netfilter/Kconfig
+@@ -4,7 +4,7 @@
+ #
+ 
+ menu "IP: Netfilter Configuration"
+-	depends on INET && NETFILTER
++	depends on INET && NETFILTER && IPV4
+ 
+ config NF_DEFRAG_IPV4
+ 	tristate
+diff --git a/net/ipv6/Kconfig b/net/ipv6/Kconfig
+index c3806c6ac96f..f83efc1505cc 100644
+--- a/net/ipv6/Kconfig
++++ b/net/ipv6/Kconfig
+@@ -47,6 +47,7 @@ config IPV6_OPTIMISTIC_DAD
+ config INET6_AH
+ 	tristate "IPv6: AH transformation"
+ 	select XFRM_AH
++	depends on IPV4
+ 	help
+ 	  Support for IPsec AH (Authentication Header).
+ 
+@@ -61,6 +62,7 @@ config INET6_AH
+ 
+ config INET6_ESP
+ 	tristate "IPv6: ESP transformation"
++	depends on IPV4
+ 	select XFRM_ESP
+ 	help
+ 	  Support for IPsec ESP (Encapsulating Security Payload).
+@@ -101,6 +103,7 @@ config INET6_ESPINTCP
+ 
+ config INET6_IPCOMP
+ 	tristate "IPv6: IPComp transformation"
++	depends on IPV4
+ 	select INET6_XFRM_TUNNEL
+ 	select XFRM_IPCOMP
+ 	help
+@@ -111,6 +114,7 @@ config INET6_IPCOMP
+ 
+ config IPV6_MIP6
+ 	tristate "IPv6: Mobility"
++	depends on IPV4
+ 	select XFRM
+ 	help
+ 	  Support for IPv6 Mobility described in RFC 3775.
+@@ -119,6 +123,7 @@ config IPV6_MIP6
+ 
+ config IPV6_ILA
+ 	tristate "IPv6: Identifier Locator Addressing (ILA)"
++	depends on IPV4
+ 	depends on NETFILTER
+ 	select DST_CACHE
+ 	select LWTUNNEL
+@@ -149,6 +154,7 @@ config INET6_TUNNEL
+ 
+ config IPV6_VTI
+ 	tristate "Virtual (secure) IPv6: tunneling"
++	depends on IPV4
+ 	select IPV6_TUNNEL
+ 	select NET_IP_TUNNEL
+ 	select XFRM
+@@ -161,6 +167,7 @@ config IPV6_VTI
+ 
+ config IPV6_SIT
+ 	tristate "IPv6: IPv6-in-IPv4 tunnel (SIT driver)"
++	depends on IPV4
+ 	select INET_TUNNEL
+ 	select NET_IP_TUNNEL
+ 	select IPV6_NDISC_NODETYPE
+@@ -198,6 +205,7 @@ config IPV6_NDISC_NODETYPE
+ 
+ config IPV6_TUNNEL
+ 	tristate "IPv6: IP-in-IPv6 tunnel (RFC2473)"
++	depends on IPV4
+ 	select INET6_TUNNEL
+ 	select DST_CACHE
+ 	select GRO_CELLS
+@@ -209,6 +217,7 @@ config IPV6_TUNNEL
+ 
+ config IPV6_GRE
+ 	tristate "IPv6: GRE tunnel"
++	depends on IPV4
+ 	select IPV6_TUNNEL
+ 	select NET_IP_TUNNEL
+ 	depends on NET_IPGRE_DEMUX
+@@ -256,7 +265,7 @@ config IPV6_SUBTREES
+ 
+ config IPV6_MROUTE
+ 	bool "IPv6: multicast routing"
+-	depends on IPV6
++	depends on IPV4 && IPV6
+ 	select IP_MROUTE_COMMON
+ 	help
+ 	  Support for IPv6 multicast forwarding.
+@@ -285,7 +294,7 @@ config IPV6_PIMSM_V2
+ 
+ config IPV6_SEG6_LWTUNNEL
+ 	bool "IPv6: Segment Routing Header encapsulation support"
+-	depends on IPV6
++	depends on IPV4 && IPV6
+ 	select LWTUNNEL
+ 	select DST_CACHE
+ 	select IPV6_MULTIPLE_TABLES
+@@ -316,7 +325,7 @@ config IPV6_SEG6_BPF
+ 
+ config IPV6_RPL_LWTUNNEL
+ 	bool "IPv6: RPL Source Routing Header support"
+-	depends on IPV6
++	depends on IPV4 && IPV6
+ 	select LWTUNNEL
+ 	select DST_CACHE
+ 	help
+@@ -327,7 +336,7 @@ config IPV6_RPL_LWTUNNEL
+ 
+ config IPV6_IOAM6_LWTUNNEL
+ 	bool "IPv6: IOAM Pre-allocated Trace insertion support"
+-	depends on IPV6
++	depends on IPV4 && IPV6
+ 	select LWTUNNEL
+ 	select DST_CACHE
+ 	help
+diff --git a/net/ipv6/netfilter/Kconfig b/net/ipv6/netfilter/Kconfig
+index 81daf82ddc2d..f99a2176bf3d 100644
+--- a/net/ipv6/netfilter/Kconfig
++++ b/net/ipv6/netfilter/Kconfig
+@@ -4,7 +4,7 @@
+ #
+ 
+ menu "IPv6: Netfilter Configuration"
+-	depends on INET && IPV6 && NETFILTER
++	depends on INET && IPV6 && NETFILTER && IPV4
+ 
+ # old sockopt interface and eval loop
+ config IP6_NF_IPTABLES_LEGACY
+diff --git a/net/l2tp/Kconfig b/net/l2tp/Kconfig
+index 0de178d5baba..e92cf6d94135 100644
+--- a/net/l2tp/Kconfig
++++ b/net/l2tp/Kconfig
+@@ -5,7 +5,7 @@
+ 
+ menuconfig L2TP
+ 	tristate "Layer Two Tunneling Protocol (L2TP)"
+-	depends on INET
++	depends on INET && IPV4
+ 	select NET_UDP_TUNNEL
+ 	help
+ 	  Layer Two Tunneling Protocol
+diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
+index be71fc9b4638..c5b660fdda4c 100644
+--- a/net/mptcp/Kconfig
++++ b/net/mptcp/Kconfig
+@@ -1,7 +1,7 @@
+ 
+ config MPTCP
+ 	bool "MPTCP: Multipath TCP"
+-	depends on INET
++	depends on INET && IPV4
+ 	select SKB_EXTENSIONS
+ 	select CRYPTO_LIB_SHA256
+ 	select CRYPTO_LIB_UTILS
+diff --git a/net/netfilter/Kconfig b/net/netfilter/Kconfig
+index 09874c26fd13..857af95fbb48 100644
+--- a/net/netfilter/Kconfig
++++ b/net/netfilter/Kconfig
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ menu "Core Netfilter Configuration"
+-	depends on INET && NETFILTER
++	depends on INET && IPV4 && NETFILTER
+ 
+ config NETFILTER_INGRESS
+ 	bool "Netfilter ingress support"
+diff --git a/net/netfilter/ipset/Kconfig b/net/netfilter/ipset/Kconfig
+index 6c4d54758106..e6537c842a45 100644
+--- a/net/netfilter/ipset/Kconfig
++++ b/net/netfilter/ipset/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ menuconfig IP_SET
+ 	tristate "IP set support"
+-	depends on INET && NETFILTER
++	depends on INET && IPV4 && NETFILTER
+ 	select NETFILTER_NETLINK
+ 	help
+ 	  This option adds IP set support to the kernel.
+diff --git a/net/netfilter/ipvs/Kconfig b/net/netfilter/ipvs/Kconfig
+index 7724cb44e6de..fb09218d84d0 100644
+--- a/net/netfilter/ipvs/Kconfig
++++ b/net/netfilter/ipvs/Kconfig
+@@ -4,7 +4,7 @@
+ #
+ menuconfig IP_VS
+ 	tristate "IP virtual server support"
+-	depends on INET && NETFILTER
++	depends on INET && NETFILTER && IPV4
+ 	depends on (NF_CONNTRACK || NF_CONNTRACK=n)
+ 	help
+ 	  IP Virtual Server support will let you build a high-performance
+diff --git a/net/rds/Kconfig b/net/rds/Kconfig
+index f007730aa2bb..af5632b37dd7 100644
+--- a/net/rds/Kconfig
++++ b/net/rds/Kconfig
+@@ -17,6 +17,7 @@ config RDS_RDMA
+ config RDS_TCP
+ 	tristate "RDS over TCP"
+ 	depends on RDS
++	depends on IPV4
+ 	depends on IPV6 || !IPV6
+ 	help
+ 	  Allow RDS to use TCP as a transport.
+diff --git a/net/rxrpc/Kconfig b/net/rxrpc/Kconfig
+index 2cebb666dc07..2029d2d1065f 100644
+--- a/net/rxrpc/Kconfig
++++ b/net/rxrpc/Kconfig
+@@ -5,7 +5,7 @@
+ 
+ config AF_RXRPC
+ 	tristate "RxRPC session sockets"
+-	depends on INET
++	depends on INET && IPV4
+ 	select CRYPTO
+ 	select CRYPTO_LIB_DES if RXKAD
+ 	select KEYS
+diff --git a/net/sched/Kconfig b/net/sched/Kconfig
+index 6ddff028b81a..bb782822c3fb 100644
+--- a/net/sched/Kconfig
++++ b/net/sched/Kconfig
+@@ -807,7 +807,7 @@ config NET_ACT_SKBEDIT
+ 
+ config NET_ACT_CSUM
+ 	tristate "Checksum Updating"
+-	depends on NET_CLS_ACT && INET
++	depends on NET_CLS_ACT && INET && IPV4
+ 	select NET_CRC32C
+ 	help
+ 	  Say Y here to update some common checksum after some direct
+diff --git a/net/sctp/Kconfig b/net/sctp/Kconfig
+index fc989a3791b3..eb3e2bf1ec3a 100644
+--- a/net/sctp/Kconfig
++++ b/net/sctp/Kconfig
+@@ -5,7 +5,7 @@
+ 
+ menuconfig IP_SCTP
+ 	tristate "The SCTP Protocol"
+-	depends on INET
++	depends on INET && IPV4
+ 	select CRYPTO_LIB_SHA1
+ 	select CRYPTO_LIB_SHA256
+ 	select CRYPTO_LIB_UTILS
+diff --git a/net/smc/Kconfig b/net/smc/Kconfig
+index 277ef504bc26..faac6586b848 100644
+--- a/net/smc/Kconfig
++++ b/net/smc/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config SMC
+ 	tristate "SMC socket protocol family"
+-	depends on INET && INFINIBAND && DIBS
++	depends on INET && IPV4 && INFINIBAND && DIBS
+ 	help
+ 	  SMC-R provides a "sockets over RDMA" solution making use of
+ 	  RDMA over Converged Ethernet (RoCE) technology to upgrade
+diff --git a/net/sunrpc/Kconfig b/net/sunrpc/Kconfig
+index e7808e5714dc..58e6f6db3100 100644
+--- a/net/sunrpc/Kconfig
++++ b/net/sunrpc/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config SUNRPC
+ 	tristate
+-	depends on MULTIUSER
++	depends on MULTIUSER && IPV4
+ 
+ config SUNRPC_GSS
+ 	tristate
+diff --git a/net/tipc/Kconfig b/net/tipc/Kconfig
+index 18f62135e47b..2db479597c79 100644
+--- a/net/tipc/Kconfig
++++ b/net/tipc/Kconfig
+@@ -30,6 +30,7 @@ config TIPC_MEDIA_IB
+ config TIPC_MEDIA_UDP
+ 	bool "IP/UDP media type support"
+ 	depends on TIPC
++	depends on IPV4
+ 	select NET_UDP_TUNNEL
+ 	default y
+ 	help
+diff --git a/net/xfrm/Kconfig b/net/xfrm/Kconfig
+index 4a62817a88f8..203188b05be4 100644
+--- a/net/xfrm/Kconfig
++++ b/net/xfrm/Kconfig
+@@ -4,7 +4,7 @@
+ #
+ config XFRM
+ 	bool
+-	depends on INET
++	depends on INET && IPV4
+ 	select GRO_CELLS
+ 	select SKB_EXTENSIONS
+ 
+@@ -13,6 +13,7 @@ config XFRM_OFFLOAD
+ 
+ config XFRM_ALGO
+ 	tristate
++	depends on IPV4
+ 	select XFRM
+ 	select CRYPTO
+ 	select CRYPTO_AEAD
+@@ -23,6 +24,7 @@ if INET
+ config XFRM_USER
+ 	tristate "Transformation user configuration interface"
+ 	select XFRM_ALGO
++	depends on IPV4
+ 	help
+ 	  Support for Transformation(XFRM) user configuration interface
+ 	  like IPsec used by native Linux tools.
+@@ -42,7 +44,7 @@ config XFRM_USER_COMPAT
+ 
+ config XFRM_INTERFACE
+ 	tristate "Transformation virtual interface"
+-	depends on XFRM && IPV6
++	depends on XFRM && IPV4 && IPV6
+ 	help
+ 	  This provides a virtual interface to route IPsec traffic.
+ 
+@@ -83,6 +85,7 @@ config XFRM_STATISTICS
+ # RFC 8221 lists as MUST be implemented.
+ config XFRM_AH
+ 	tristate
++	depends on IPV4
+ 	select XFRM_ALGO
+ 	select CRYPTO
+ 	select CRYPTO_HMAC
+@@ -92,6 +95,7 @@ config XFRM_AH
+ # algorithms that RFC 8221 lists as MUST be implemented.
+ config XFRM_ESP
+ 	tristate
++	depends on IPV4
+ 	select XFRM_ALGO
+ 	select CRYPTO
+ 	select CRYPTO_AES
+@@ -105,12 +109,14 @@ config XFRM_ESP
+ 
+ config XFRM_IPCOMP
+ 	tristate
++	depends on IPV4
+ 	select XFRM_ALGO
+ 	select CRYPTO
+ 	select CRYPTO_DEFLATE
+ 
+ config NET_KEY
+ 	tristate "PF_KEY sockets (deprecated)"
++	depends on IPV4
+ 	select XFRM_ALGO
+ 	help
+ 	  PF_KEYv2 socket family, compatible to KAME ones.
+diff --git a/security/smack/Kconfig b/security/smack/Kconfig
+index 5a8dfad469c3..b4e6d0168bd1 100644
+--- a/security/smack/Kconfig
++++ b/security/smack/Kconfig
+@@ -3,6 +3,7 @@ config SECURITY_SMACK
+ 	bool "Simplified Mandatory Access Control Kernel Support"
+ 	depends on NET
+ 	depends on INET
++	depends on IPV4
+ 	depends on SECURITY
+ 	select NETLABEL
+ 	select SECURITY_NETWORK
+-- 
+2.56.1
 
-On Thu, 19 Nov 2026 08:56:32 +0100, Eric Dumazet wrote:
-> What happens today: this round gets a smaller sk_rcvbuf increase than
-> the formula asked for (or none). sk_rcvbuf never shrinks here, and
-> the next measurement has a sane @oldval. So we lose one step.
-
-Looking closer at tcp_rcvbuf_grow(), it seems this can lose more than
-one step -- once @rcvwin wraps, sk_rcvbuf can stay stuck at its initial
-value across subsequent steady in-order RTTs (barring an OOO packet
-hitting tcp_data_queue_ofo() or another multi-RTT stall).
-
-In tcp_rcvbuf_grow(), tp->rcvq_space.space is overwritten with @newval
-at the top of the function, even when u32 @rcvwin wraps and
-sk->sk_rcvbuf (and therefore tp->window_clamp) is not updated:
-
-  void tcp_rcvbuf_grow(struct sock *sk, u32 newval)
-  {
-          ...
-          oldval = tp->rcvq_space.space;
-          tp->rcvq_space.space = newval;   /* updated unconditionally */
-          ...
-          rcvwin = newval << 1;
-          ...
-          grow = div_u64(((u64)rcvwin << 1) * (newval - oldval), oldval);
-          rcvwin += grow;                  /* wraps in u32 */
-          ...
-          rcvbuf = min_t(u32, tcp_space_from_win(sk, rcvwin), cap);
-          if (rcvbuf > sk->sk_rcvbuf) {    /* false after wrap */
-                  WRITE_ONCE(sk->sk_rcvbuf, rcvbuf);
-                  WRITE_ONCE(tp->window_clamp,
-                             tcp_win_from_space(sk, rcvbuf));
-          }
-  }
-
-Concretely, taking the values from the TCP trace below (rtt_us = 100000,
-ooo = 0, scaling_ratio = 158):
-
-  1. Initial sk_rcvbuf = 6,382,000 gives tp->window_clamp = 3,938,890,
-     with initial oldval = 14,480.
-
-  2. After an initial receiver stall, a measurement sees copied =
-     3,987,000 and inq = 39,096, so net @newval = 3,947,904:
-       - tp->rcvq_space.space becomes 3,947,904;
-       - the unnarrowed prediction is 4,297,614,134 (2^32 + 2,646,838),
-         which wraps in u32 @rcvwin to 2,646,838 -> rcvbuf = 4,288,547;
-       - since rcvbuf < sk->sk_rcvbuf, neither sk->sk_rcvbuf nor
-         tp->window_clamp changes.
-
-  3. Now tp->rcvq_space.space (3,947,904) exceeds tp->window_clamp
-     (3,938,890) by 9,014 bytes. (tcp_measure_rcv_mss() clamps
-     rcvq_space.space down to window_clamp only when scaling_ratio
-     changes.)
-
-  4. Across the rest of the 64 MiB steady in-order transfer with
-     continuous reads, each ~1-RTT sample stays below 3,947,904, so
-     tcp_rcv_space_adjust() keeps taking:
-
-       if (copied <= tp->rcvq_space.space)
-           goto new_measure;
-
-     no further tcp_rcvbuf_grow tracepoint fires, and sk_rcvbuf stays
-     at 6,382,000.
-
-A similar lock-in happens in mptcp_rcvbuf_grow(): once
-msk->rcvq_space.space is set to 3,963,800 (with oldval = 14,600,
-wrapping 4,296,650,602 to 1,683,306 -> rcvbuf = 3,215,868 at
-scaling_ratio = 134), sk_rcvbuf stays at 6,553,600 (whose full-budget
-window at that ratio is ~3.43 MB) throughout steady streaming.
-
-> For TCP, the slow start branch is only taken if the RTT is above
-> tcp_rcvbuf_low_rtt (1ms by default). I guess you had to change this
-> sysctl to get this result over loopback ? Please describe the full
-> setup, including tcp_rmem[1].
->
-> More importantly, reaching tcp_rmem[2] after a single 4MB burst is
-> not a goal. What is the user visible problem here ? Do you have
-> numbers (throughput, drops, rcv window) for a real flow ?
-
-Yes -- my v1 loopback test for TCP had lowered tcp_rcvbuf_low_rtt
-(MPTCP has no low_rtt check). To test without touching that sysctl, I
-reran over a simulated WAN on 7.4.0-rc2 (mptcp_net-next commit
-800508bf1ccd, keeping tcp_rcvbuf_low_rtt = 1000 us and tcp_timestamps =
-1 at defaults, with tcp_wmem raised so the sender is not
-send-buffer-bound):
-
-1) WAN reproducer setup and results:
-
-   I tuned tcp_rmem[1] and the initial write size here specifically to
-   land inside the narrow (~1.8 KB on TCP, ~1.6 KB on MPTCP)
-   non-growing wrap window and verify whether the flow recovers on
-   subsequent RTTs; I do not have data suggesting this narrow window is
-   hit frequently on mainline.
-
-   Trigger conditions:
-     - Path: two netns over veth + tc netem with 100 ms RTT and
-       1 Gbit/s (BDP = 12.5 MB), MTU 1500, TSO/GSO/GRO disabled.
-     - Budgets: tcp_rmem[1] ~ 6.1-6.25 MiB, tcp_rmem[2] = 64 MiB,
-       tcp_wmem[1] = 16 MiB on TCP / 8 MiB on MPTCP, tcp_wmem[2] =
-       64 MiB.
-     - Traffic: Phase 1 queues an initial burst before draining so that
-       the resulting sample lands in the first 4 GiB wrap window (on
-       Phase 1's drain for MPTCP, and as Phase 2 starts for TCP);
-       Phase 2 streams 64 MiB with normal continuous reads.
-
-   Results (Phase 2 application goodput over 64 MiB):
-     - Plain TCP (tcp_rmem = "4096 6382000 67108864"):
-       * unpatched: SO_RCVBUF stays 6382000 -> 6382000 -> 6382000;
-         trace_tcp_rcvbuf_grow fires once (time=113917 rtt_us=100000
-         copied=3987000 inq=39096 space=14480 ooo=0 scaling_ratio=158
-         window_clamp=3938890); 64 MiB takes 1.823s (294.4 Mbit/s).
-       * with v1 patches 1+2: SO_RCVBUF reaches 67108864 and 64 MiB
-         takes 0.767s (699.8 Mbit/s).
-
-     - MPTCP (tcp_rmem = "4096 6553600 67108864"):
-       * unpatched: SO_RCVBUF stays 6553600 -> 6553600 -> 6553600;
-         trace_mptcp_rcvbuf_grow fires once; 64 MiB takes 2.019s
-         (265.9 Mbit/s).
-       * with v1 patches 1+2: SO_RCVBUF reaches 67108864 and 64 MiB
-         takes 0.815s (658.8 Mbit/s).
-
-   Standalone reproducer scripts for TCP and MPTCP:
-     https://gist.githubusercontent.com/llleixx/5201855b015831b5377a02478f843949/raw/repro_tcp_lockin.sh
-     https://gist.githubusercontent.com/llleixx/5201855b015831b5377a02478f843949/raw/repro_mptcp_lockin.sh
-
-2) Original workload (your question on patch 1): I first ran into a
-   stuck receive buffer on an Ubuntu 6.8 kernel with default tcp_rmem
-   ("4096 131072 6291456") on MPTCP over a high-jitter path; in a local
-   6.8 reproduction of that setup, sk_rcvbuf stayed at 131,072
-   alongside msk->rcvq_space.space = 16,282,074. (On 6.8,
-   mptcp_rcv_space_adjust() kept rcvwin in u64 but narrowed at int win
-   in __tcp_space_from_win(), and its older msk rtt_us caching could
-   allow a longer sampling interval.) While auditing current mainline
-   from there, I noticed the u32 @rcvwin wrap above as well.
-
-> This needs @newval to be ~256 times @oldval between two consecutive
-> measurements. The "allow the sender to double its rate" logic was
-> never meant to be meaningful for such a sample: a 4GB prediction
-> out of 4MB copied to user space is garbage, wrapped or not.
-> [...]
-> What happens with your patch: a single sample like this sends
-> sk_rcvbuf straight to tcp_rmem[2].
->
-> This is the kind of sk_rcvbuf inflation we have been trying to avoid
-> lately, see commit aa251c84636c and the tcp_rcvbuf_low_rtt logic.
-> I am not convinced this is an improvement.
-> [...]
-> If there is a real case where growth is too slow, I would rather
-> discuss the heuristic than the type of @rcvwin.
-
-Agreed -- a 4 GB prediction from a 4 MB read makes no sense, and
-jumping straight to tcp_rmem[2] on a single burst is undesirable.
-
-It seems this overshoot is inherent to the current formula rather than
-caused by widening @rcvwin: even on unpatched mainline, with
-oldval = 14,480 and scaling_ratio = 158, a burst or OOO release of
-~382 KiB already yields rcvwin > 39.5 MiB and sends sk_rcvbuf straight
-to a 64 MiB tcp_rmem[2] (~342 KiB already reaches ~51 MiB). Around
-~3.95 MB, the u32 wrap turns that overshoot into the lock-in above.
-
-Following the comment above the formula ("slow start: allow the sender
-to double its rate"), one option (with u64 @rcvwin) might be to cap the
-growth ratio (newval - oldval) / oldval at 1:
-
-  grow = rcvwin << 1;
-  if (newval - oldval < oldval)
-          grow = div_u64(grow * (newval - oldval), oldval);
-
-That leaves rising samples up to 2x unchanged while bounding larger
-jumps to a 6 * newval window (~3.6 MiB rcvbuf instead of 64 MiB for a
-382 KiB burst, though a 3.95 MB burst still yields ~36.6 MiB). Since
-genuine slow-start samples can exceed 2x slightly (e.g. ~2.2x in commit
-aa251c84636c's trace), this would still need to be evaluated against
-the slow-start workloads from aa251c84636c to check the ramp-up vs.
-peak-budget trade-off.
-
-> If you send this again:
->
-> - net-next, no Fixes: tag, unless you can show a real regression.
->
-> - Please split TCP and MPTCP changes. One patch with a "net:" prefix
->   touching both, with a single Fixes: tag pointing to a TCP commit
->   is not right for mptcp_rcvbuf_grow().
-> [...]
-> Same remark about the Signed-off-by: than for patch 1.
-
-Understood -- for any follow-up patches, I will target net-next without
-Fixes:, split TCP and MPTCP, and fix my From:/Signed-off-by:
-consistency. On patch 1, I also agree with your point about huge
-best-effort SO_RCVLOWAT values.
-
-To summarize:
-
-  1) The 32-bit @rcvwin wrap coupled with the unconditional
-     rcvq_space.space update is an implementation bug that can leave
-     sk_rcvbuf stuck across steady in-order streaming on both TCP and
-     MPTCP, rather than only losing one step.
-  2) Jumping straight to tcp_rmem[2] on a burst is a separate
-     limitation of the current unbounded slow-start extrapolation,
-     which could potentially be tamed by bounding (newval - oldval) /
-     oldval (e.g. at 1, subject to slow-start benchmarking).
-
-The above is just my personal take on these issues -- I would really
-appreciate your thoughts and advice.
-
-Thanks,
-Lin
