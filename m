@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795809737;
-	b=x4y0uFfrAh2AzmoCr0g3TrCgyNNkc6a7PmCdWMlho2nnxRgl5t7pk6TafHSrcc9x+eoN
-	 IoV/DggLLayhAx6hgLMzRiA0hDQgA7ZCfcbclwimiTpbtvKbl3gAXOVQPrf4G/Iupc6kH
-	 0mWPGARZArWPTqZsnlx31pfQKO+gQLl0h0MlWU7CHhlsytReeNKr+3WgQo7gMNuFaevup
-	 USF7TcPmwlBeCCXbcimoNHWMfKbi8tXxAEmK11pTqe4yz3YRCrGLRX6BJB0HcWeCeJHjm
-	 Shx2mhH5oZB/WTLs9G0OivhGnPKpWMZw24HnvHf+lH+zhy3XUqtJ3AqHzDlhzFc3ZEA==
+	t=1795809738;
+	b=isBZ40r996UYKXrYTSM8sgH+O9+BwS/uKtjxll+kU7Lztr6+kFU0xoBBGh0Xogf4wp2N
+	 Nm8VxSpezu7SY+ZNI5O6rul9mV+0rlhNQO162pjRbIWe9I+Hl9t5BR4oMwJiDzRNEUtND
+	 iCnIgudtXWDQLAeD0K6ARnvAwkyxGulszuLrUmPz+jLCwxCBKdMoYcFIgmv2TfUfrratW
+	 szIafv06qd5LJ2qrKt1c9VlhmTPMsJh1lCs2PdUsoaBE7BopTDOTcJNIVmeBDQl8wDg6v
+	 u0Gpjp0X6UUnCb579VEpfpfj1q96oDQU3Hdpr3vbn6pVGOf+Lw44hGVmQ/S71F6UUdQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795809737;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795809738;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=pbkFg5Qq1vOCWpPJ8PK9U6ASoLutRVaSSpiEA6DCS/U=;
-	b=dGDZUocq0YSb6zGJbl0M+GDSnhgq3Z5Oj0LCpzrpa+0PLp2pSg24UtMBNeedHQHlEzBW
-	 4rvNkXVHG937rllrzGURkNqO1kKEzyjtEGR7108S+lp4xp29ep7ttEZZRpVkun+ZncJC9
-	 PdPbxpJi7dHNQPBsFBNtEyqA/qW6+fIU6ab39EQSDvGoL+yLMlqofvKalZn1IVmIehRe0
-	 JH1fxPluzJFpz+JtXPqugf/EL0ptdeu72wKYS6UwA1ZJ4Gvj27Dij+zugaN7VFWHzyt3t
-	 GMlxanCyCmR1Eq8BsOPb20gHeNWfFBXsL/hFdGINfSr2Tuf/tYpXtpt6N5KIKk5Y92Q==
+	bh=UDuf4f/gSUF6CgOoO70K8K1KA/PcON7n+wO5IQFXWIE=;
+	b=eu9xNK99YuE7qdWsXcWyrCsW5cbSlrwYB0Cx2jaSi+B0K/FNYDiujELTYvs4/Cmpf8je
+	 fOLxENAFmrf751WoxUHnkb4vnZ9pG5yQ7QP4kK1kbEpRBBWlMMUFvy7OaazzsIYN5eNvn
+	 rWjTox14UGR4KuBbm2U9zwZ1oLzM1MTLGtLcz5ljXkBwDAYw5x8NM80Wmrif9QK/iaSdE
+	 12RqmAMvp+q6E+Flfi4TJeT2GN+MPOZUlFhdYvBDQWfspgseBF1+Nc8wPNldcpVwUXgta
+	 11XLrJ57DRul1/HhsmlmDz+HgSoR3zIx1fm5lD4rk6CBL6dZIvnrxA7F4TfuztZ3dCA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=U1CK63wR;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IY7U9fSt;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F587606A31C
-	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 20:02:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575AD606A31C
+	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 20:02:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=U1CK63wR
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39DDA1F00924;
-	Fri, 27 Nov 2026 20:02:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IY7U9fSt
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9249B1F0089C;
+	Fri, 27 Nov 2026 20:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795809736;
-	bh=pbkFg5Qq1vOCWpPJ8PK9U6ASoLutRVaSSpiEA6DCS/U=;
+	s=k20260515; t=1795809738;
+	bh=UDuf4f/gSUF6CgOoO70K8K1KA/PcON7n+wO5IQFXWIE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=U1CK63wReK+DDgyQV0xTlW4qoqH3WQIxv28KPp7cViSsCQJ8ul8fflPyb9MujQrFo
-	 DcUjaG1Z+YOAXBBgeGXRfUcR+3caRogubKICFTpNTBhV2OG2DDFKGVO9CjTf/wabFg
-	 BzBMRz1TRkIxtwdg7qC3kqNPVGylgI7CPquJcQX6zal7r6UurhkSzkVeRZ/bCDx+2m
-	 zuafaIMWavGzIrqYmM3/C6VYrngvapj5KXHKQn9jVpx6bqEkNmFXyfi+pX3V3bPyyj
-	 6T4gL8iHmTHfoy7dySA565TKkXHuYIKJWvTdaljIcEZNdlqW0q8RlXw5+e6HLDP3kR
-	 IgDDoh4BfN/3w==
+	b=IY7U9fStcVdbKViGyeOJ+py0oQqRti82KE+H/t312VyZW3QJL8e3/xPrRMp+TBtTY
+	 pt04S/BrR6HM0niFjCbTQh7HwmzeZlRivstzfqKHrxGiQe5nwUYmI7vjMzMvVEy1yN
+	 As9M3bUNcih22IZWpsGU9CvKoM3Ikc+901Pi1rxMTprEnGhQS9qC7bamYiKAh3h33B
+	 Mp7yl80VRqQkjkWnbXsPRvsH4rnV8zy3mEra6azPy9UZ8FsWm1q2PHEeoh3SQHgI8M
+	 gsN2c8BtdBX8xynEHvE9pn29wAJ4wHhhHxkBw3JgddRlSvss4i1TH1F43jkHEuxt/c
+	 LgQZaZ53hz5NA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 27 Nov 2026 21:01:37 +0100
-Subject: [PATCH mptcp-net v4 13/20] mptcp: sched: avoid truncating the
- pacing rate in the scheduler
+Date: Fri, 27 Nov 2026 21:01:38 +0100
+Subject: [PATCH mptcp-net v4 14/20] Squash to "bpf: Add mptcp packet
+ scheduler struct_ops"
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,154 +55,104 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261127-mptcp-cmason-fixes-v4-13-3f393ea8c48d@kernel.org>
+Message-Id: <20261127-mptcp-cmason-fixes-v4-14-3f393ea8c48d@kernel.org>
 References: <20261127-mptcp-cmason-fixes-v4-0-3f393ea8c48d@kernel.org>
 In-Reply-To: <20261127-mptcp-cmason-fixes-v4-0-3f393ea8c48d@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Shardul Bankar <shardul.b@mpiricsoftware.com>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5490; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=eQteMsL6mjtW+2daGRDK146efxgAK8k7NgMdi+2wUmk=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLI5H26yeq/KvutP51WGOokYO6Vz2/h3rDoq0v3GkPV5k
- ZdpYylDRykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwES23Gf4X+kdcmPpqZ1TFqYe
- 3XXLrddKYlrn7J1/PvO8eWhhfto9r5KRYcrW5141O5++NVzQ4LMz3e9up43B2YATxy+bSnQ01Dn
- F8gIA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3358; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=9EVyhx1UsI9e1Hb+QJD9yWNsd1GtRvt2vmpOebg4vJA=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLI5H25mKw6Y4+VcvnhpV5X4XZ7dglkFObeyJcw7ajMk9
+ vBcK53VUcrCIMbFICumyCLdFpk/83kVb4mXnwXMHFYmkCEMXJwCMBHFOYwMG21/7XztOelX2Y3V
+ Il3Hvh350lHmvmTrrbNcj8PnPF4w25Thv/OGGo47ix18g5dfEY9q9UqXjr91m+fhnf8OL/s0be6
+ XcAAA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Shardul Bankar <shardul.b@mpiricsoftware.com>
+A BPF scheduler can return 0 from get_send() without picking any
+subflow, e.g. the bkup one from the BPF selftests, when all the subflows
+are backup on both sides. With data to send, a DATA_ACK received while
+the msk is not owned by the user then makes the push loop of
+__mptcp_subflow_push_pending() spin forever, in softirq:
 
-mptcp_subflow_get_send() computes the linger time of each subflow and a
-running average of its pacing rate through a u32 "pace", while
-sk_pacing_rate and avg_pacing_rate are unsigned long: the rates above
-4 GB/s are truncated, skewing the subflow selection on fast paths.
+  watchdog: BUG: soft lockup - CPU#2 stuck for 49s! [python3:182]
+  (...)
+  RIP: 0010:bpf_iter_mptcp_subflow_next+0xf/0x40
+  (...)
+  Call Trace:
+   <IRQ>
+   bpf_prog_bf2471f1d206d5cc_bpf_bkup_get_send+0x78/0xd7
+   bpf__mptcp_sched_ops_get_send+0x4c/0xb0
+   __mptcp_subflow_push_pending+0x148/0x390
+   mptcp_incoming_options+0x836/0xba0
+   tcp_data_queue+0x6da/0x10c0
+   tcp_rcv_established+0x2d5/0xce0
+   tcp_v4_do_rcv+0x13f/0x300
+   tcp_v4_rcv+0xbff/0x1200
+   (...)
 
-The running average can also wrap: on 32-bit, the uncast product of
-sk_pacing_rate and burst wraps at ordinary rates, and on 64-bit, the one
-of avg_pacing_rate and wmem wraps with a high rate and a send queue near
-the 2 GB that sk_wmem_queued allows. The fastest subflow can then look
-like the slowest one.
+Stop this loop when the current subflow is not picked: if another one
+is, the loop already stops after delegating the push to it. The default
+scheduler always picks a subflow when returning 0: not affected.
 
-Widen "pace" to unsigned long, and compute each product of the average
-with mul_u64_u64_div_u64(). Dividing each term first would avoid the
-wrap more cheaply, but the quotient becomes zero once the queue holds a
-second or more of data: exactly the bufferbloated subflow this estimate
-needs to describe.
+This issue has been found by an AI code review agent, while reviewing a
+patch for the BPF schedulers, and confirmed with a reproducer: the bkup
+scheduler on the client side, its only subflow marked as backup on both
+sides, data queued by the client, then data sent by the server, carrying
+the DATA_ACK causing the soft lockup above.
 
-Sockets also start with sk_pacing_rate set to ~0UL, until the congestion
-control sets it, and the scheduler can pick a subflow before that, e.g.
-after a passive MP_JOIN. Without the truncation, the average would be
-seeded with this value: this subflow would then always be picked, and
-look like the fastest one for long. The average is then only seeded once
-the congestion control sets the rate, and once the RTT is known: e.g.
-without timestamps after a retransmitted SYN, tcp_update_pacing_rate()
-does not divide the rate by the RTT until the first sample.
+Similarly, the push loop of __mptcp_push_pending() spins forever, with
+the msk and subflow locks held, when a BPF scheduler keeps picking a
+subflow that cannot send, e.g. a new subflow in SYN_SENT picked by the
+bkup scheduler before its backup flag is set: mptcp_sendmsg_frag() then
+returns -EAGAIN, which does not decrease push_count in this state.
+Decrease it after any failure: -EAGAIN is only returned for a subflow
+that cannot send, or that has just been reset. The default scheduler
+does not pick such subflows: not affected.
 
-The running average has been added later, in v5.17, by commit
-3ce0852c86b9 ("mptcp: enforce HoL-blocking estimation"): before, only
-the truncation of the rate is to be fixed.
+This second issue has been found by an AI code review agent (Clashiko),
+while reviewing a previous version of this patch.
 
-Fixes: d5f49190def6 ("mptcp: allow picking different xmit subflows")
-Suggested-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
-[ Do not seed the average with the initial ~0UL rate, nor before the
-  first RTT sample. div64_ul() for the linger time, the full rate in the
-  tracepoint, one Fixes tag, and a shorter commit message. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- include/trace/events/mptcp.h |  8 +++++---
- net/mptcp/protocol.c         | 29 ++++++++++++++++++++++-------
- 2 files changed, 27 insertions(+), 10 deletions(-)
+v2: new, for an issue found by a review agent
+v3: also stop the push loop of __mptcp_push_pending() when the picked
+    subflow cannot send (Clashiko)
 
-diff --git a/include/trace/events/mptcp.h b/include/trace/events/mptcp.h
-index c47fa2672b84..bd2b4a8fc271 100644
---- a/include/trace/events/mptcp.h
-+++ b/include/trace/events/mptcp.h
-@@ -31,7 +31,7 @@ TRACE_EVENT(mptcp_subflow_get_send,
- 		__field(bool, active)
- 		__field(bool, free)
- 		__field(u32, snd_wnd)
--		__field(u32, pace)
-+		__field(u64, pace)
- 		__field(u8, backup)
- 		__field(u64, ratio)
- 	),
-@@ -57,12 +57,14 @@ TRACE_EVENT(mptcp_subflow_get_send,
- 		}
- 
- 		if (ssk && sk_fullsock(ssk) && __entry->pace)
--			__entry->ratio = div_u64((u64)ssk->sk_wmem_queued << 32, __entry->pace);
-+			__entry->ratio =
-+				div64_u64((u64)ssk->sk_wmem_queued << 32,
-+					  __entry->pace);
- 		else
- 			__entry->ratio = 0;
- 	),
- 
--	TP_printk("active=%d free=%d snd_wnd=%u pace=%u backup=%u ratio=%llu",
-+	TP_printk("active=%d free=%d snd_wnd=%u pace=%llu backup=%u ratio=%llu",
- 		  __entry->active, __entry->free,
- 		  __entry->snd_wnd, __entry->pace,
- 		  __entry->backup, __entry->ratio)
+Note: when squashing, the commit message could explain why these loops
+are stopped, and why the default scheduler is not affected (Clashiko on
+v3).
+---
+ net/mptcp/protocol.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index c83c123449fb..7d9031940360 100644
+index 7d9031940360..178792ebcc78 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1693,7 +1693,8 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 	struct subflow_send_info send_info[SSK_MODE_MAX];
- 	struct mptcp_subflow_context *subflow;
- 	struct sock *sk = (struct sock *)msk;
--	u32 pace, burst, wmem;
-+	unsigned long pace;
-+	u32 burst, wmem;
- 	int i, nr_active = 0;
- 	struct sock *ssk;
- 	u64 linger_time;
-@@ -1718,13 +1719,20 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 		pace = subflow->avg_pacing_rate;
- 		if (unlikely(!pace)) {
- 			/* init pacing rate from socket */
--			subflow->avg_pacing_rate = READ_ONCE(ssk->sk_pacing_rate);
--			pace = subflow->avg_pacing_rate;
-+			pace = READ_ONCE(ssk->sk_pacing_rate);
- 			if (!pace)
- 				continue;
-+
-+			/* ~0UL until set by the CC, and not divided by the srtt
-+			 * until known: not to be averaged
-+			 */
-+			if (pace == ~0UL || !READ_ONCE(tcp_sk(ssk)->srtt_us))
-+				pace = U32_MAX;
-+			else
-+				subflow->avg_pacing_rate = pace;
+@@ -1910,10 +1910,7 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+ 
+ 				ret = __subflow_push_pending(sk, ssk, &info);
+ 				if (ret <= 0) {
+-					if (ret != -EAGAIN ||
+-					    (1 << ssk->sk_state) &
+-					     (TCPF_FIN_WAIT1 | TCPF_FIN_WAIT2 | TCPF_CLOSE))
+-						push_count--;
++					push_count--;
+ 					continue;
+ 				}
+ 				copied = true;
+@@ -1970,6 +1967,9 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool
+ 				keep_pushing = false;
+ 			else
+ 				copied += ret;
++		} else {
++			/* a BPF scheduler might not pick any subflow */
++			keep_pushing = false;
  		}
  
--		linger_time = div_u64((u64)READ_ONCE(ssk->sk_wmem_queued) << 32, pace);
-+		linger_time = div64_ul((u64)READ_ONCE(ssk->sk_wmem_queued) << 32, pace);
- 		if (linger_time < send_info[backup].linger_time) {
- 			send_info[backup].ssk = ssk;
- 			send_info[backup].linger_time = linger_time;
-@@ -1757,9 +1765,16 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 		return ssk;
- 
- 	subflow = mptcp_subflow_ctx(ssk);
--	subflow->avg_pacing_rate = div_u64((u64)subflow->avg_pacing_rate * wmem +
--					   READ_ONCE(ssk->sk_pacing_rate) * burst,
--					   burst + wmem);
-+	pace = READ_ONCE(ssk->sk_pacing_rate);
-+	if (subflow->avg_pacing_rate) {
-+		/* 64-bit arithmetic overflows at high rate with large queues */
-+		subflow->avg_pacing_rate =
-+			mul_u64_u64_div_u64(subflow->avg_pacing_rate, wmem,
-+					    burst + wmem) +
-+			mul_u64_u64_div_u64(pace, burst, burst + wmem);
-+	} else if (pace != ~0UL && READ_ONCE(tcp_sk(ssk)->srtt_us)) {
-+		subflow->avg_pacing_rate = pace;
-+	}
- 	msk->snd_burst = burst;
- 	return ssk;
- }
+ 		mptcp_for_each_subflow(msk, subflow) {
 
 -- 
 2.55.0
