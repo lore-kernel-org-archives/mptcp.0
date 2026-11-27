@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795754189;
-	b=BtA3XUroqfyxNVRHe+OyMyIJto295XqqusT5Bvo2q1auuj0vg8CpWAxv6/ee+8InJEIM
-	 jdKCQMaZxuaOe3rgS/voNoi8F8fD8A8Q9xHmm5nYdAPFQo1H82VO56RYxoBxmJrYvGlyE
-	 +ZCJ4pSK828EiWcKLfFgvZCnnTbx2l4jPVw2qgMqi/A9dAoPlpCIbnsG3nUlN2nW3N+KA
-	 vTr4wEP/T1EcGbhl8hfbeubLNZXRPPVCUqGVIyVmiYva136K36CwrB7h//3qYojokNyYt
-	 h7pfex0rlkveZPbFX3ULYa6ePbEpTn25NpAqZUUedfiPi+sJ4du0kP2Mlt8CQgbKNCA==
+	t=1795754192;
+	b=IHnXmMZZSqkM8Qi5IbzyOEcuE0sZTFTo1HZP3jsYmAaJFsqUPePXDRCNBbFsbOrzBINz
+	 CLMFAISfSIXlz8Y55rLtsM2gkO8bGxCjnBNBAYAF0VnibGacvygBmCg81rKvE+lvF7h2g
+	 GSsUZmBv3y/08lr8mmGyoMgHclFks6GBm/GQOR72l/SPLrSLE6NokCM76smATLkgkVAL7
+	 PAsIfIyCyuHP/jArK+SBbuKTTxktdDuIB2y3lSkOgrR4rzV+wBhOEVksZm0bD2/TgJFN5
+	 PZ401rtADXbIGs3KjQbLYQNZenc/I2UgGvQJ5yA2WZLTA/eJj5hXDUpEm+Tg+EXNfng==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795754189;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795754192;
 	h=Received:DKIM-Signature:From:To:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=kGbDCUUEghTXfUDed29AI32A6nM+GTG8GbtYwF0dp8w=;
-	b=mLW8rvkeHaxQto0cOtdWqriMdh2j52Vcuhf/+GD7Uc85kyUtWgfSU4chkv80T1Ye4W6t
-	 PqrHp61pjPChOGm6ezy61auCFqtF3Rh3mVZGRVKF+xx0h74qOjIeG4xn0Lnpfs71hhoxM
-	 BRbxwk0qiWHCV4S8kfzhoPe153lOB6IB9lIaabxIJIiOCAuhuH9a9Dvo6KaY3S7m0IrrE
-	 jQh22O/tQCB1ZvtGrmxoJ46WgErAzvY42mjJB+/+vDSUvGlPnlFlF3XnyHRTt8dOZZAM7
-	 2Y5BtGMOpbTwBQ8zkOr1i1gmdNcuG8H6ifSVy9SNVEIFaspKVRnYy6v3Kff0X1FaTIw==
+	bh=uSe9WMIjgNivZz+mf4oQPcRc7qsTQtjfI7P1LdxS+k4=;
+	b=RYPOQqEs/YNYPNh73VoNJbUslXABfaM8rZ9E1NTRK3Arv9XNdVAz3A0gsCBtHiGjPcuc
+	 iabN8Z/dL9b21UwAN+xsZYUDRDttk8enOXc2eBvwtwfHUFC0XnoQKQwSaOPxMPczqrmdk
+	 XKP3GUwmxwY9tEEs6+nNFblpjszQEnos08w5r7RhinksDarpf42bstRrEdrCZf5GN/zui
+	 HscwX0SmDoSociV6mr95A8HIeKuprE62rdmbPwWONrJmG1ZDwZR3BeO8dzcUNwlis7DsY
+	 S8JAOwW8Ah/TS0UYuyXvAzjgAuGB9L7B+Ox5CHKHD8HGTiFaNFULpPb/8TREbS51PAA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=A8TBRW9n;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FuEn1Upg;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E902606A31C
-	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 04:36:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7507606A31C
+	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 04:36:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=A8TBRW9n
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 155E51F00898
-	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 04:36:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FuEn1Upg
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9AD51F0089C
+	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 04:36:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795754188;
-	bh=kGbDCUUEghTXfUDed29AI32A6nM+GTG8GbtYwF0dp8w=;
+	s=k20260515; t=1795754192;
+	bh=uSe9WMIjgNivZz+mf4oQPcRc7qsTQtjfI7P1LdxS+k4=;
 	h=From:To:Subject:Date:In-Reply-To:References;
-	b=A8TBRW9nFKXlwTRLkAez1gapxZz+56TCvRrZxqCzT37m219zNEfeUElxTK6sIXZws
-	 0NAPHzdfx1tZfGyUaKpw1o7pCfhQx2lqPq4r23zcumD8fqs6hsH+BgCU+4JZPm+Mu4
-	 06jDHif1FW4bAVccHj5C25zo5C4Q5TN88psv6ytX9m08R+2lRpIO4LKpcsU/a9TI79
-	 btEQ1zUlDrKusLki1d5OZdXFUeQhGraMPk1JlxbGT8khDUPhwRs95VxunJ+pzUTZuL
-	 q/pVX+uVvnnD7LJr9PolS5RtOO+Y/yeCUE/K7Wk2TFxhnrRqP91IF1B3X7mpICg09/
-	 HsMN0q659o97g==
+	b=FuEn1UpgEF6vcDVRXU92K3t1oKHxWSbVgqEzVBwoMHxO8E45WQDxARJgnDFV94v5s
+	 dSJFlz/rbakIscvv561VVbXGOwOixmj5NQXq1xoOTWiBHe1Tf7kIIifPGfj0zlEp41
+	 cCLak6dGN4bZe3PkERJvWNUBN5U6goEEllAw7yG5vWpMbf7s6Ii4PvvNNDWiGEuEji
+	 nZKQSz1UuqezyEoc3cbceAc7ZvgQScThspjPNDxdWRTcEB2WQB0Wp/tWN6uUSEYPQF
+	 wC5nh3E47r2N2/2SNOvMMLlOH98q8jQvv5Kc63NwM/3LU2ezxQLRHtd77K7GUU2LmP
+	 uFGD8xr5lxCkQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v10 1/7] mptcp: use local variable tp in sendmsg_frag
-Date: Fri, 27 Nov 2026 12:36:14 +0800
-Message-ID: <80305d70e90d69946206bd13feffd9943c409a63.1795753727.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v10 2/7] mptcp: remove redundant orig_offset in carve_data_frag
+Date: Fri, 27 Nov 2026 12:36:15 +0800
+Message-ID: <90ddf1a1390104c4e793311dda36bb834e2453a4.1795753727.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <cover.1795753727.git.tanggeliang@kylinos.cn>
 References: <cover.1795753727.git.tanggeliang@kylinos.cn>
@@ -60,54 +60,42 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-In mptcp_sendmsg_frag(), tcp_sk(ssk) is called multiple times.
-Introduce a local variable 'tp' to hold the tcp_sock pointer and
-use it throughout the function. This improves code readability,
-with no functional change.
+mptcp_carve_data_frag() already receives struct page_frag via its 'pfrag'
+parameter, making the separate 'orig_offset' parameter redundant since it
+merely duplicates pfrag->offset.
 
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Simplify the function signature by removing this unnecessary parameter
+and directly accessing the offset from struct pfrag internally.
+
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ net/mptcp/protocol.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index d64e04245963..b9ae52caf47e 100644
+index b9ae52caf47e..504d0b196d84 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1447,6 +1447,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	u64 data_seq = dfrag->data_seq + info->sent;
- 	int offset = dfrag->offset + info->sent;
- 	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct tcp_sock *tp = tcp_sk(ssk);
- 	bool zero_window_probe = false;
- 	struct mptcp_ext *mpext = NULL;
- 	bool can_coalesce = false;
-@@ -1483,14 +1484,14 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 		mpext = mptcp_get_ext(skb);
- 		if (!mptcp_skb_can_collapse_to(data_seq, skb, mpext)) {
- 			TCP_SKB_CB(skb)->eor = 1;
--			tcp_mark_push(tcp_sk(ssk), skb);
-+			tcp_mark_push(tp, skb);
- 			goto alloc_skb;
- 		}
+@@ -1302,9 +1302,9 @@ static bool mptcp_page_frag_refill(struct sock *sk, struct page_frag *pfrag)
+ }
  
- 		i = skb_shinfo(skb)->nr_frags;
- 		can_coalesce = skb_can_coalesce(skb, i, dfrag->page, offset);
- 		if (!can_coalesce && i >= READ_ONCE(net_hotdata.sysctl_max_skb_frags)) {
--			tcp_mark_push(tcp_sk(ssk), skb);
-+			tcp_mark_push(tp, skb);
- 			goto alloc_skb;
- 		}
+ static struct mptcp_data_frag *
+-mptcp_carve_data_frag(const struct mptcp_sock *msk, struct page_frag *pfrag,
+-		      int orig_offset)
++mptcp_carve_data_frag(const struct mptcp_sock *msk, struct page_frag *pfrag)
+ {
++	int orig_offset = pfrag->offset;
+ 	int offset = ALIGN(orig_offset, sizeof(long));
+ 	struct mptcp_data_frag *dfrag;
  
-@@ -1548,7 +1549,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	skb->truesize += copy;
- 	sk_wmem_queued_add(ssk, copy);
- 	sk_mem_charge(ssk, copy);
--	WRITE_ONCE(tcp_sk(ssk)->write_seq, tcp_sk(ssk)->write_seq + copy);
-+	WRITE_ONCE(tp->write_seq, tp->write_seq + copy);
- 	TCP_SKB_CB(skb)->end_seq += copy;
- 	tcp_skb_pcount_set(skb, 0);
+@@ -2111,7 +2111,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 			if (!mptcp_page_frag_refill(sk, pfrag))
+ 				goto wait_for_memory;
+ 
+-			dfrag = mptcp_carve_data_frag(msk, pfrag, pfrag->offset);
++			dfrag = mptcp_carve_data_frag(msk, pfrag);
+ 			frag_truesize = dfrag->overhead;
+ 		}
  
 -- 
 2.55.0
