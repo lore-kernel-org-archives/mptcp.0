@@ -1,57 +1,92 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.181
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795811963;
-	b=z9ZggXKoJxFTahiBa0XbHe7uJ1x+QugF4jOD91argxgk8Uk4O3lhJ35VALLepqBly3nQ
-	 BfwzaQnEd+XTve2KmvjQbRPkoDnPfrkbG4waIIlynyctjbRpWuGOf4fbJMb09dwyaRlkE
-	 ILB4QxnPKY9WjTsrYmxrlkFkXcPjxa6vy/q7KNSiigy+jRhKtdTTGUf/LnVa85oFPuG+i
-	 nFP1HQ3POdtaxAkByJ1LIOXKX2TK8Z3JIc+e/asfferSexgnCvBiLUq1c2EvvAV7qxJgZ
-	 fHG/Mh+S0orEOu1sWZYcng5iRHXKWvLJou0NTUccTiZQxNr7cSCdb5yW9i46RDHUaiQ==
+	t=1795815485;
+	b=OIk1N3J4g1uoevRJcaJ7OKEMCreuNf8ub+cV3xRssCu1jEy+vrESFkvvqUMiiZwJNxKa
+	 CAc2fA5qMRG44o/OrQjlwnkcwuNcunOp9FcsGK0INBNl8GUoCQ5TWATe6lPgrH5b7Vi3D
+	 NBkuRlP35R2Dzjb5eIYqmG2chHq3ukTWQUASKPOphElabo/bN5fTCwVMdvUFpex6Cxc+B
+	 tZEJwPhqh6tv7HdbsvzheSpviP6+LyFyXIpLHLUzmFxvcrv+9L1Q6YVIqzSWgICgj9HvW
+	 etlhmvaZO5PFny4YbjBlwD/dKe1LV8ISlFUpfElTvgMWkSnmS3hCnpS55xCMWb9FD5w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795811963;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=37FaiEa+TNgU5bZpWXGXXR/BJ1kEljL7dDQkGL5QEKs=;
-	b=Aa/P94IEv01da4L2a/9dwKrGPAFBbPnOa9UILAVo65uphS1v+YuBD2+KbpZ8sfGqHTJw
-	 ZJ7YI2n38NiotRRsBhECpI1pR9lVpWIceP1QwBKfQkEmiq/h+UtXkhiZG5RgJfR6Q4nQ8
-	 /S3x8ZOqzHrJawRE6Wib+nlFxMwAUavPL+dZD4uekS4nlKJz/bf5MREoinJHbGUwLPpZq
-	 cXa7ZUOBOhkyKwsXNgeKAwRp9XA1Nz0D3gw19v0aACVlq8dLzMhwinaT5tmGfzY0ynNwl
-	 E/pbTPJXH20COqOunfKR0rxh434kNv4/WhqjAKmQDZz8ukYqpbqbR2iSigG2J+RzC1Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795815485;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=5Tyjug1HXAO8p9JtbK3tNaWqFP2zoj73Dx5OEOiGp8g=;
+	b=QZn4Z/79tKjEcM1mMPxZpuCyn8nzkhWDWn99t4hU7XIutu3HrrWLp/WWPn+9ekWxe+6r
+	 9Vcs13L7um+WJMBKqdfM4gSFXws/WCaZP3iO3JoyM/3zLIPaw19CgQiYcFtiCLH+LKpup
+	 GQozINPP2VluryFxYPXJTYBSa8o0hV83wPSq6yGd5BNU7M+OjhPp7MrIGv/cbqoh8kAGW
+	 fj1YtutFVqNacBFYrqsrfavwEkmx04rxoa4ckweUNFiQMV277vnpbJWr2D1Hm1z7AfRRG
+	 3Tf2tUvVErsordkViSV/Q1XwvG1jqHCH1je53z0x8SlSuMK23Cpb/hboVtbROhlL99Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EzGaSR1p;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=FB2+MAlY;
+	arc=none smtp.remote-ip=74.125.82.181
+Received: from mail-dy1-f181.google.com (mail-dy1-f181.google.com [74.125.82.181])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8430A606A31C
-	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 20:39:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC41B606A31C
+	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 21:38:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AC41B606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EzGaSR1p
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9AC31F000C1;
-	Fri, 27 Nov 2026 20:39:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795811962;
-	bh=37FaiEa+TNgU5bZpWXGXXR/BJ1kEljL7dDQkGL5QEKs=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=EzGaSR1pClyN0Qx0cJ5lwt6J1up2VZakay0P0KMg7nGeK7uraq5PMRTVQmxl6TRNH
-	 MVJHridISx1xN6CC4qj9eZNG6m+zimXpo6fgOBBegdPmzyfMk87OUSKrs4gY54+30f
-	 nLPbdjx2CK4QQXWMiLS3jgNctnE/0c9psvftvMxfuHJqNJgeFhwQKo1gMaAvKHnWcq
-	 HN0JFVzn7annnb3LveVeyGXLSbokAI5RvuoZd4rSSVSG6STeikUStHoDJ2kKL9F+tZ
-	 S8Wct4EdGkeEslrT6ej2uXohv8iLddyPYVRWbrY1Iit8W9kj5B9zwNK78vCcss9eOr
-	 fRW4ud2tOs04w==
-Message-ID: <sashiko-outbox-238268@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next mptcp-net v4 17/20] mptcp: report errors as
- TCP does when closing
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWF0dGhpZXUgQmFlcnRzIChOR0kwKQ==?= <matttbe@kernel.org>, "MPTCP
- Linux" <mptcp@lists.linux.dev>
-In-Reply-To: <20261127-mptcp-cmason-fixes-v4-17-3f393ea8c48d@kernel.org>
-References: <20261127-mptcp-cmason-fixes-v4-0-3f393ea8c48d@kernel.org>
- <20261127-mptcp-cmason-fixes-v4-17-3f393ea8c48d@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 27 Nov 2026 20:39:22 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=FB2+MAlY
+Received: by mail-dy1-f181.google.com with SMTP id 5a478bee46e88-386c336eab8so4983996eec.0
+        for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 13:38:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795815484; x=1796420284; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=5Tyjug1HXAO8p9JtbK3tNaWqFP2zoj73Dx5OEOiGp8g=;
+        b=FB2+MAlYX5Zy5VifBdqXncmgTz7/DtmvkEJVXtineAVmngwD0deRbotIdVsI51ZaY/
+         tqfSpDcPkqx8QX3NYh2gbEGoQeLeFfxaGIs6eUjQ+M9Sqo/rdtagNTEJgyAg0QQ+Xz41
+         fbqjtEsfSp5ST0UQirFivA+VcbWRR7HFJC7qN4X95/7LlAbDeKORwDTwV1pzzbEYm9Jy
+         yTEmEDcWNsRuVFNK/hLkM0hxgW/JFHpLoKVZmHzSdaZzyVWhkzzLA/QINdkei0fx2zDp
+         GUcml6N12LdCdb1oAUz85qn3V5wnB+9FbNVFTWObyyJDHbZ9sO8bQEkLs7RrcRcm+KCE
+         q63w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795815484; x=1796420284;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=5Tyjug1HXAO8p9JtbK3tNaWqFP2zoj73Dx5OEOiGp8g=;
+        b=SkIuIZzjdHhUjC362EPPP7TYxoZxrlVRlFtXv1Sz+8D1LwYBKlk8LbF5OOUnidRQRr
+         Tf4eDMhVj5pWWGasSuinco1BA7KXh6MwyBlnTvcRO2BsKc4F2h5ZTELhKUBJz0y3SKn5
+         ieatWk8P1y9M1ndiJzxeZan9AJWJE1ltAFi9pjP5CLr7sBFyQx011OeAGjU/VpfxdXHJ
+         RDDTTOqaPz+FQ/Log0cHrRIw32O5b4NagEBG3kxwuvaG2EL6VyULx0iLBjQBmqrGF2JV
+         qbIjzRulmYr03/+4MF6VlahxMlHM5guSX7SVCF9QF3fM58yqLrcXEjElR6N5p5JgQuFX
+         hF7w==
+X-Gm-Message-State: APuU4Z87LF5eAEIp+6GTP3WJZBp6DWXyL1FqXUc6uLjvIeN6wbwvHQuE
+	mcnd0AhE69wC3IZ427t1ITpxgVk9Aiak7V6sFoCa9c13Wk69GuYiPTM0oAtQEA==
+X-Gm-Gg: AZFdTZdKHnoZhApVn9sRYEWdrAfJsuuTtQVRckGoeemRpRc2lalnTbzpp9hz4tBODtt
+	j4yaLy6SpDDQMALA6iEqznJFSCnCTOWRj1oLLG+OjADeTx2UfSBJb5TkT4pMOX2VRm1c256vYcg
+	eCAFGZ/GOQ6DKxnZg9dvINzy5isXXNaF9umVJrDZxVtSIUdxtNs2JaCnGOWl7IUDMMyf5n2YM36
+	zDL2X5KyT2d3MRbBSZ22G05hhSCDT3Wm1vNkWSeotkF3mmSoGZ4O8OAvRqGd25JdwDQx3D1Hjcb
+	db6UHyVpZE+Sb/8Ka0hApRTcNpl38G+Fdum11ZMXlw1iPWqxn+FNZFEjOrG1Zi9Yp6Qcr0ANucB
+	i9/VVPiBh2Xxv1aEGO10b+YOfao/71yEkrVjLWUGGzeg1+yR68O/UfSl8l3JoJhy+51o5M1TJFi
+	rn9qevbx9/qaeR5VDUv2DXpJhTjNmn/OFChDU1g5sNENrC1Jgr7N+z714PDtVcEJL1swwpoQOWA
+	5VMm4vDAMJmk3y4DUilgm926FimVELThwtIOzz//dT12Ixi8NjcBDs+Pmxgo3iTzy40+j7SFjtH
+	A7awtqXrkTJcRpCNI9Zq/GM53cf5FrCr5JQ=
+X-Received: by 2002:a05:701b:4588:10b0:1b2:6b17:28e6 with SMTP id a92af1059eb24-1b5568c3439mr22943519c88.9.1795815483515;
+        Fri, 27 Nov 2026 13:38:03 -0800 (PST)
+Received: from mptcp-lab.w453y.xyz ([59.164.88.43])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b5567ff27bsm67825547c88.6.2026.11.27.13.38.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Nov 2026 13:38:03 -0800 (PST)
+From: Abdul Wasey <w453y.me@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	"Mohit P. Tahiliani" <tahiliani@nitk.edu.in>,
+	Gang Yan <gang.yan@linux.dev>
+Subject: [PATCH mptcp-net v10 0/2] mptcp: pm: in-kernel: fullmesh: re-add of the initial subflow endp
+Date: Fri, 27 Nov 2026 21:37:54 +0000
+Message-ID: <20261127213756.4154872-1-w453y.me@gmail.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -60,179 +95,105 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential
-issues to consider:
-- [Medium] mptcp: missing mptcp_check_rcv_close() in __mptcp_close_ssk()
-  when ESTABLISHED
-- [Medium] mptcp: dummy DATA_FIN on fallback reset causes EPIPE in
-  __mptcp_close_ssk()
-- [Medium] mptcp: premature TCP_CLOSE and wakeup before
-  mptcp_close_err() on timeout
---
+With fullmesh endpoints, removing and re-adding the endpoint used by the
+initial subflow never creates a new subflow from it: the closed initial
+subflow stays in the conn_list, and makes the PM think the remote ID 0
+is already used, or picks its reset remote address. If the initial
+subflow was the only one, no address is left for the remote ID 0 at all.
 
-commit 6ce8d717af5ad3fbd6c9029fe140c704cbd41b8e
-Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Patch 1 fixes that, patch 2 adds tests for it.
 
-mptcp: report errors as TCP does when closing
+Found with a router flapping one of its links: the link carrying the
+initial subflow never rejoined the existing connections. Tested on top
+of export-net: the new tests fail without patch 1, and the whole
+mptcp_join.sh passes with it.
 
-This commit updates MPTCP socket closure on close timeouts and last-subflow
-closure outside TCP_ESTABLISHED to set SHUTDOWN_MASK and report errors based
-on the last subflow error and MPTCP socket state, matching TCP behavior.
+Changes in v10, after the review of v9 by Gang and Matthieu:
+- Patch 1: use fill_remote_addr() for the remote ID 0 fallback, instead
+  of duplicating it.
+- Patch 1: drop the comment above mptcp_subflow_is_closed(), and shorten
+  the one above the fallback.
+- Rebased on top of export-net.
+- v9: https://lore.kernel.org/mptcp/20261126101818.3916631-1-w453y.me@gmail.com/
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/648
+Changes in v9, after the review of v8 by Matthieu:
+- Patch 2: drop the test adding another endpoint after the removal of
+  the initial one: it already passed without patch 1.
+- Patch 2: merge the test with the initial subflow alone into the first
+  one, to save the setup time: after the re-add, both endpoints are
+  removed, then the initial one is re-added alone.
+- Rebased on top of export-net.
+- v8: https://lore.kernel.org/mptcp/20261024111842.1069878-1-w453y.me@gmail.com/
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 64fc04ea997c8..d8661fba643a9 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
+Changes in v8, after the review of v7 by Sashiko on mptcp and on netdev,
+and the MPTCP CI:
+- Patch 2: use nftables in the "after reset" test, as the rest of
+  mptcp_join.sh does now: export-net also got be3b69f3cedf, so
+  ${iptables} was empty there too, and the test failed on v7.
+- Patch 2: stop the transfer and the event listeners before marking that
+  test as skipped: when all features are expected, the skip exits.
+- v7: https://lore.kernel.org/mptcp/20261023110321.403874-1-w453y.me@gmail.com/
 
-[ ... ]
+Changes in v7, after the review of v6 by Sashiko on netdev:
+- Patch 2: in the two tests with the initial subflow alone, wait until
+  the PM worker has accounted the initial subflow endpoint before
+  removing it: a join on a third endpoint is created in the same worker
+  run, then that endpoint is removed. v6 only detected the race.
+- Patch 2: wait a bit before counting the subflows after the removal,
+  as the other tests do: the closed subflow can still be listed.
+- v6: https://lore.kernel.org/mptcp/20261022085041.211318-1-w453y.me@gmail.com/
 
-> @@ -2818,7 +2868,7 @@ static void __mptcp_close_ssk(struct sock *sk, stru=
-ct sock *ssk,
->  {
->  	struct mptcp_sock *msk =3D mptcp_sk(sk);
->  	bool dispose_it, need_push =3D false;
-> -	int fwd_remaining;
-> +	int fwd_remaining, ssk_err;
-> =20
->  	/* Do not pass RX data to the msk, even if the subflow socket is not
->  	 * going to be freed (i.e. even for the first subflow on graceful
-> @@ -2826,6 +2876,8 @@ static void __mptcp_close_ssk(struct sock *sk, stru=
-ct sock *ssk,
->  	 */
->  	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
->  	subflow->closing =3D 1;
-> +	/* in case it is the last subflow: before its disconnect or dispose */
-> +	ssk_err =3D READ_ONCE(ssk->sk_err);
+Changes in v6, after the review of v5 by Sashiko on netdev:
+- Patch 1: in the commit message, the closed initial subflow keeps its
+  remote address: only the destination port is zeroed, not the address.
+- Patch 2: skip the "after reset" test if the iptables rule cannot be
+  added, instead of passing, and check that the reset closed the
+  subflow.
+- Patch 2: in the two tests with the initial subflow alone, check it is
+  gone after the removal of its endpoint: the ESTABLISHED event comes
+  before the PM worker accounts that endpoint, so a removal right after
+  it can miss the subflow.
+- v5: https://lore.kernel.org/mptcp/20261021070324.50533-1-w453y.me@gmail.com/
 
-[Severity: Medium]
-On a fallback socket, if msk->first is closed by a TCP RST without a prior
-FIN while mptcp_worker() holds lock_sock(sk), can this report EPIPE instead
-of ECONNRESET and then report the error a second time on release_sock(sk)?
+Changes in v5:
+- Patch 1: when no subflow is left to take the remote ID 0 address from,
+  use the remote address of the MPTCP socket, as fill_remote_addr()
+  does. Without it, v4 also broke adding another endpoint after the
+  removal of the initial one, when it was the only subflow (Sashiko on
+  netdev).
+- Patch 2: add two tests for the initial subflow alone: re-adding its
+  endpoint, and adding another endpoint.
+- v4: https://lore.kernel.org/mptcp/20261019190558.465270-1-w453y.me@gmail.com/
 
-When the reset arrives in softirq while sk is owned, subflow_error_report()
-defers MPTCP_ERROR_REPORT to mptcp_release_cb() (leaving ssk->sk_err set to
-ECONNRESET), and subflow_sched_work_if_closed() emulates a dummy DATA_FIN
-because ssk->sk_state is TCP_CLOSE.  Before __mptcp_close_ssk() runs,
-mptcp_check_data_fin() processes that dummy rcv_data_fin and moves
-sk->sk_state from TCP_ESTABLISHED to TCP_CLOSE_WAIT (or from TCP_FIN_WAIT2
-to TCP_CLOSE) even when SOCK_DONE is not set on msk->first:
+Changes in v4:
+- Patch 2: only check the joins when the iptables rule has been added
+  (Sashiko).
+- v3: https://lore.kernel.org/mptcp/20261019185512.458313-1-w453y.me@gmail.com/
 
-net/mptcp/protocol.c:mptcp_check_data_fin() {
-    ...
-		/* on fallback, also emulated after a reset: check for a FIN */
-		if (!__mptcp_check_fallback(msk) ||
-		    (msk->first && sock_flag(msk->first, SOCK_DONE)))
-			sock_set_flag(sk, SOCK_DONE);
-		smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
+Changes in v3:
+- Patch 2: use iptables instead of init_nftables(), which is only in
+  net-next (Sashiko).
+- v2: https://lore.kernel.org/mptcp/20261019180306.382039-1-w453y.me@gmail.com/
 
-		switch (sk->sk_state) {
-		case TCP_ESTABLISHED:
-			mptcp_set_state(sk, TCP_CLOSE_WAIT);
-			break;
-    ...
-}
+Changes in v2:
+- Patch 1: also skip the subflows in TCP_CLOSE: the initial subflow can
+  be disconnected and its context reset, clearing the 'closing' flag and
+  zeroing its remote address (Sashiko).
+- Patch 2: validate this case too, by resetting the initial subflow
+  before removing its endpoint.
+- v1: https://lore.kernel.org/mptcp/20261019170751.200446-1-w453y.me@gmail.com/
 
-In __mptcp_close_ssk(), dispose_it is false for msk->first, so it jumps to
-out: without calling __mptcp_subflow_error_report().  In TCP_CLOSE_WAIT,
-mptcp_close_last_err(sk, ECONNRESET) then maps ECONNRESET through
-mptcp_reset_err(sk) to EPIPE (or in TCP_FIN_WAIT2 finds sk->sk_state
-already in TCP_CLOSE and wakes waiters with sk_err =3D=3D 0).  Because
-ssk->sk_err was only read with READ_ONCE() and not consumed,
-mptcp_release_cb() later runs __mptcp_error_report(sk), which consumes
-ssk->sk_err, overwrites sk->sk_err with ECONNRESET, and calls
-sk_error_report(sk) a second time.
+Abdul Wasey (2):
+  mptcp: pm: in-kernel: fullmesh: skip closed subflows
+  selftests: mptcp: join: re-add the initial subflow endp with fullmesh
 
-[ ... ]
+ net/mptcp/pm_kernel.c                         | 21 ++++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 79 +++++++++++++++++++
+ 2 files changed, 99 insertions(+), 1 deletion(-)
 
-> @@ -2914,13 +2966,17 @@ static void __mptcp_close_ssk(struct sock *sk, st=
-ruct sock *ssk,
->  			mptcp_set_close_tout(sk, tcp_jiffies32 -
->  					     (mptcp_close_timeout(sk) + 1));
->  			mptcp_schedule_work(sk);
-> +		} else if (sk->sk_state =3D=3D TCP_CLOSE) {
-> +			mptcp_close_wake_up(sk);
->  		} else if (sk->sk_state !=3D TCP_ESTABLISHED ||
->  			   msk->in_accept_queue) {
->  			mptcp_check_rcv_close(sk);
-> -			mptcp_set_state(sk, TCP_CLOSE);
-> -			WRITE_ONCE(sk->sk_shutdown,
-> -				   sk->sk_shutdown | SEND_SHUTDOWN);
-> -			mptcp_close_wake_up(sk);
-> +			/* the ack of our DATA_FIN might not be processed yet */
-> +			mptcp_check_data_fin_ack(sk);
-> +			if (sk->sk_state =3D=3D TCP_CLOSE)
-> +				mptcp_close_wake_up(sk);
-> +			else
-> +				mptcp_close_last_err(sk, ssk_err);
->  		} else {
->  			mptcp_start_tout_timer(sk);
->  		}
+-- 
+2.43.0
 
-[Severity: Medium]
-Does gating mptcp_check_rcv_close(sk) behind sk->sk_state !=3D TCP_ESTABLIS=
-HED
-miss a pending DATA_FIN or MP_FASTCLOSE when the last subflow of an
-accepted, non-fallback socket closes?
-
-If final data with DATA_FIN and a subflow close arrive in softirq while
-mptcp_worker() holds lock_sock(sk), the data sits in msk->backlog_list, so
-mptcp_check_data_fin() in mptcp_worker() cannot advance msk->ack_seq to
-msk->rcv_data_fin_seq and sk->sk_state stays TCP_ESTABLISHED (the same
-happens if DATA_FIN or MP_FASTCLOSE arrives after mptcp_worker() has
-already run mptcp_check_fastclose() and mptcp_check_data_fin()).  Because
-mptcp_close_ssk() only spools the backlog beforehand when
-__mptcp_check_fallback(msk) is true, __mptcp_close_ssk() sees
-sk->sk_state =3D=3D TCP_ESTABLISHED, skips mptcp_check_rcv_close(sk) and
-mptcp_close_last_err(), and starts the close timeout timer instead.  When
-release_sock(sk) subsequently drains msk->backlog_list via
-mptcp_release_cb() -> __mptcp_move_skbs(), mptcp_check_data_fin() moves
-sk->sk_state to TCP_CLOSE_WAIT after subflow->close_event_done is already
-set, leaving the socket stranded in TCP_CLOSE_WAIT with no subflows until
-the close timeout expires and reports ETIMEDOUT instead of EPIPE.
-
-Calling mptcp_check_rcv_close(sk) before checking sk->sk_state in the
-all-subflows-closed block would process the queued DATA_FIN or fastclose
-first.
-
-[ ... ]
-
-> @@ -3450,8 +3496,7 @@ static void mptcp_worker(struct work_struct *work)
->  		mptcp_do_fastclose(sk);
->  		mptcp_for_each_subflow_safe(msk, subflow, tmp)
->  			__mptcp_close_ssk(sk, subflow->tcp_sock, subflow, 0);
-> -		WRITE_ONCE(sk->sk_shutdown, sk->sk_shutdown | SEND_SHUTDOWN);
-> -		mptcp_close_wake_up(sk);
-> +		mptcp_close_err(sk, ETIMEDOUT);
->  	}
-
-[Severity: Medium]
-When the close timeout expires here, doesn't __mptcp_close_ssk() wake
-pollers after mptcp_do_fastclose() sets TCP_CLOSE but before
-mptcp_close_err() publishes ETIMEDOUT and SHUTDOWN_MASK?
-
-kworker (mptcp_worker)            CPU1
-----------------------            ----
-mptcp_do_fastclose(sk)
-  mptcp_set_state(sk, TCP_CLOSE)
-__mptcp_close_ssk(...)
-  if (sk->sk_state =3D=3D TCP_CLOSE)
-    mptcp_close_wake_up(sk)
-                                  mptcp_poll() / getsockopt(SO_ERROR)
-                                    state =3D=3D TCP_CLOSE
-                                    sk_shutdown =3D=3D 0
-                                    sk_err =3D=3D 0  <-- misses ETIMEDOUT
-mptcp_close_err(sk, ETIMEDOUT)
-  WRITE_ONCE(sk->sk_err, ETIMEDOUT)
-  smp_wmb()
-  WRITE_ONCE(sk->sk_shutdown, SHUTDOWN_MASK)
-
-Because mptcp_poll() and sk_getsockopt(SO_ERROR) run without locking sk,
-a waiter woken by __mptcp_close_ssk() can see EPOLLHUP without EPOLLERR,
-EPOLLIN or EPOLLOUT, and read SO_ERROR =3D=3D 0 instead of ETIMEDOUT.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261127-mptcp-cmas=
-on-fixes-v4-0-3f393ea8c48d@kernel.org?part=3D17
