@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795783558;
-	b=CLpK2hK585uVcWtnJM9ZdD8iQPzE9T73R5Wg/rSs9tIFLIyGMw09GyaRBMXS0Pqxpmll
-	 AYpVDaENbNgtKSJq5qiHTXyGiweQCvOK4p8KRsLul++krqnEspXmTJNIyRL3cB7xPvDcZ
-	 EFQGBkmspb+zwuuT5OPl4ziWXBQVd/NzkTX1y+BEaIeLEw7P2/j2705TCfl+xI5nKRWKX
-	 b0pSudYCXjqXte1T5iGIah9tQm6XgOKmtz22SrspnpzodSDhkbS8scq78W7hnQ1SNfU+H
-	 /nj7Y3hWdfaTSrnOFDpKHc6dArlURGeMcByHUuXDwAUcoFsWx0dNh5oJf5nLzApThIQ==
+	t=1795783559;
+	b=E+IIXnRlT/1PTNryQgWIVDyyyz26kjHDE3toIoub2pM3MynIqQ2TJYkgcNXOdP3PXTz7
+	 kH6yJyUbzgCgduyWbVze3bDxE3J5V3NP5qupxpoUe18H78MVABpTNbT7kCBJZmzCQKMhG
+	 hdXKt3Tey6k593DP5e/1I9G6nmfNxqi6pZH7047oq9LZjOXtQoUSTJAVREewIB96FzTOf
+	 JYBUo5eQnYqL2/ckXhSkGjIwL4m8BZ00vXquEyGyN9qwMnejTTRGSg5Kku7vaRrzVahvZ
+	 494h2KEewyLwzq6D1Q1mfOh/ioFWfRc6ZyD2hkA3a8/JeAa85XMf5qMRfXgRzkL9Orw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795783558;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795783559;
 	h=Received:DKIM-Signature:From:To:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=qjzVSDkyRctbGysNYaskZkqTQpFyE7jnSVdTF1Y78yY=;
-	b=rYaRM2IsJUBUlsrMNUMS30b79iWZh/dWR1YU6PGhoaU4Rrs/90Brvb8e1zbvr9d1PZFi
-	 VQEkDLMZpL1iVq0Usp9SkkHUh3s3ie62F+FyGSvxRg41MS7OE8IcTZxzPNj5xWXClOqf6
-	 IxFfNxICE3JGBdzIn3iKXwb+UcOxBl8JaWAe/GakIZBUkaVH6FSZ+69WUhlxglt11hBsG
-	 JqfqmkTiPztDhK0pMszsBOgA8da3vLf11YcFdi4XfCFclv3TnanQ/94EfWmY6pda8DL9e
-	 /RtQ9ktHx5Dx5P7gbKH2DfP5yk95vaHqCsRgsTahLnqqeTZKUNA4NISjSQvsgmatHAQ==
+	bh=Uvx3V+cYsj7D8+s+WhqvTp6ybQYMgrjTwhE4XEmfor8=;
+	b=feuR/oFp6ew/kwvC9MhMvuGtkDqOJFfkCrvQPBJcX/qGyXLR8X1FgNNcndN/Mz3F4QMQ
+	 11/vClRIQoUMbpwNt28vBvD2AXOdKX3BILGzbRN8mUKthpa55tHuKOVFGJjfrpka+fSnt
+	 3AOl3gpX77DADU1XOF6ITsHLaXnLk6+RXsNDcoFNYqN5sU9sHqen/licpbQz0FbQE+ajT
+	 vub6U0GY59XFLTEdk24Rf9Vf2tQGX4et76YulvVo7vnkjWsv6qLJLGMG9R/qIC7UIEr71
+	 M+/XVgcAs+R32aCCh6ju8CZz9xvd+3MJrIDyW6CBE+WTZQwO1Aau8slsub3ji28UrjQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=A4yPHcST;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="NU7LD8W/";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6842606A324
-	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 12:45:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4FAF606A32D
+	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 12:45:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=A4yPHcST
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 937741F0089A
-	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 12:45:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NU7LD8W/
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B42D31F00893
+	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 12:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795783558;
-	bh=qjzVSDkyRctbGysNYaskZkqTQpFyE7jnSVdTF1Y78yY=;
+	s=k20260515; t=1795783559;
+	bh=Uvx3V+cYsj7D8+s+WhqvTp6ybQYMgrjTwhE4XEmfor8=;
 	h=From:To:Subject:Date:In-Reply-To:References;
-	b=A4yPHcST71dd9IedVEkwH7nniF79NU7QeeivrhoQNWQ0vMGodC1C0pIm8jo8l67eK
-	 fRoI4m2+MMfRzSwg3Mt59eMD50i/VVc1dgjwpisKJHVGuAKGnOccUjSwawo27zvepI
-	 IWrs+11MfiONv/tElTnQPTYN6kK1fVXH0S2H3hLAXPrXECnpSxPVTBTvkbnTv/3AM3
-	 T7v+aEZcnrlnYnky4CogpkpzLn0iSVyV4oLHMnidBkmxSKJyHRgIisfXPpsURxChph
-	 w6xosqmAlV/NjnR/9n8uQ6b4AhQBqj7XHOYeeckcBTHCYAAautoGo0z52o3pR3FHbZ
-	 9/SpJQthtTCwg==
+	b=NU7LD8W/0ZL0rCLpNtH0GSlGkkKGfRAkoIvEgvqwBqgQu+u4yVu/nG6s2nBCqbfnU
+	 gdC2rd10nnRsgXXOV1jPoXujToU7dMrHjdTnFShtln6vvgfpj849cy8z4VfIN3NCAB
+	 g/dKR1LDH3MbDjuMrJtJ1Jovuxvigtq66XzsTh1pzqCDPVvxBWpWkVKBO+rsjbAPFK
+	 j8D8hfIsXJXa2m2DDZXZAUYDVJt9ml89w0dtfFhnzUofDMp1yvJPdSHGFLOBXH0SJe
+	 FKuzvI3ZoTmeO6hYF95VdsJp7Ezxvw5eRX4m7jQVqgujJyU/91be24BO9ZBOUx5js1
+	 Gg9s/S4WWTcjQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v11 4/7] mptcp: handle SO_ZEROCOPY in setsockopt
-Date: Fri, 27 Nov 2026 20:45:24 +0800
-Message-ID: <430d5645bcfe26ea0caf89ba54b9c3a1b5c2d9e5.1795783388.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v11 5/7] Documentation: msg_zerocopy: add MPTCP support
+Date: Fri, 27 Nov 2026 20:45:25 +0800
+Message-ID: <7706bf0aac6bea0b5b389bbeb38805f214c5953c.1795783388.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <cover.1795783388.git.tanggeliang@kylinos.cn>
 References: <cover.1795783388.git.tanggeliang@kylinos.cn>
@@ -60,91 +60,49 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-SO_ZEROCOPY is currently rejected by MPTCP setsockopt with -EOPNOTSUPP,
-even though the matching MSG_ZEROCOPY path in mptcp_sendmsg() is wired up.
-As a result MSG_ZEROCOPY silently falls back to a copy on MPTCP sockets
-because the opt-in flag is never set.
-
-Expose SO_ZEROCOPY through the SOL_SOCKET setsockopt dispatcher. The new
-mptcp_setsockopt_sol_socket_zerocopy() helper validates that val is 0 or 1
-(matching standard TCP sk_setsockopt), flips SOCK_ZEROCOPY on the msk, and
-propagates it to all subflows. sync_socket_options() also synchronizes the
-flag to keep subflows consistent.
+Update the MSG_ZEROCOPY documentation to list MPTCP as one of the
+protocols that support this feature, alongside TCP, UDP and VSOCK.
+Also mention MPTCP in the notification error queue and Loopback
+sections.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/sockopt.c | 30 +++++++++++++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
+ Documentation/networking/msg_zerocopy.rst | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 922f6ae5c80c..3391f7a9d983 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -184,6 +184,31 @@ static int mptcp_setsockopt_sol_socket_tstamp(struct mptcp_sock *msk, int optnam
- 	return 0;
- }
+diff --git a/Documentation/networking/msg_zerocopy.rst b/Documentation/networking/msg_zerocopy.rst
+index 78fb70e748b7..a06055f1243a 100644
+--- a/Documentation/networking/msg_zerocopy.rst
++++ b/Documentation/networking/msg_zerocopy.rst
+@@ -7,8 +7,8 @@ Intro
+ =====
  
-+static int mptcp_setsockopt_sol_socket_zerocopy(struct mptcp_sock *msk, int val)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct sock *sk = (struct sock *)msk;
-+
-+	if (val != 0 && val != 1)
-+		return -EINVAL;
-+
-+	lock_sock(sk);
-+	sock_valbool_flag(sk, SOCK_ZEROCOPY, val);
-+	sockopt_seq_inc(msk);
-+
-+	mptcp_for_each_subflow(msk, subflow) {
-+		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+		bool slow = lock_sock_fast(ssk);
-+
-+		sock_valbool_flag(ssk, SOCK_ZEROCOPY, val);
-+		subflow->setsockopt_seq = msk->setsockopt_seq;
-+		unlock_sock_fast(ssk, slow);
-+	}
-+
-+	release_sock(sk);
-+	return 0;
-+}
-+
- static int mptcp_setsockopt_sol_socket_int(struct mptcp_sock *msk, int optname,
- 					   sockptr_t optval,
- 					   unsigned int optlen)
-@@ -212,6 +237,8 @@ static int mptcp_setsockopt_sol_socket_int(struct mptcp_sock *msk, int optname,
- 	case SO_TIMESTAMPNS_OLD:
- 	case SO_TIMESTAMPNS_NEW:
- 		return mptcp_setsockopt_sol_socket_tstamp(msk, optname, val);
-+	case SO_ZEROCOPY:
-+		return mptcp_setsockopt_sol_socket_zerocopy(msk, val);
- 	}
+ The MSG_ZEROCOPY flag enables copy avoidance for socket send calls.
+-The feature is currently implemented for TCP, UDP and VSOCK (with
+-virtio transport) sockets.
++The feature is currently implemented for TCP, MPTCP, UDP and VSOCK
++(with virtio transport) sockets.
  
- 	return -ENOPROTOOPT;
-@@ -351,6 +378,7 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
- 	case SO_TIMESTAMP_NEW:
- 	case SO_TIMESTAMPNS_OLD:
- 	case SO_TIMESTAMPNS_NEW:
-+	case SO_ZEROCOPY:
- 		return mptcp_setsockopt_sol_socket_int(msk, optname, optval,
- 						       optlen);
- 	case SO_TIMESTAMPING_OLD:
-@@ -396,7 +424,6 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
- 	 * SO_CNX_ADVICE is currently unsupported, could possibly be relevant,
- 	 * but likely needs careful design
- 	 *
--	 * SO_ZEROCOPY is currently unsupported, TODO in sndmsg
- 	 * SO_TXTIME is currently unsupported
- 	 */
  
-@@ -1682,6 +1709,7 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
- 	}
+ Opportunity and Caveats
+@@ -175,7 +175,7 @@ read_notification() call in the previous snippet. A notification
+ is encoded in the standard error format, sock_extended_err.
  
- 	sock_valbool_flag(ssk, SOCK_DBG, sock_flag(sk, SOCK_DBG));
-+	sock_valbool_flag(ssk, SOCK_ZEROCOPY, sock_flag(sk, SOCK_ZEROCOPY));
+ The level and type fields in the control data are protocol family
+-specific, IP_RECVERR or IPV6_RECVERR (for TCP or UDP socket).
++specific, IP_RECVERR or IPV6_RECVERR (for TCP, MPTCP or UDP socket).
+ For VSOCK socket, cmsg_level will be SOL_VSOCK and cmsg_type will be
+ VSOCK_RECVERR.
  
- 	if (inet_csk(sk)->icsk_ca_ops != inet_csk(ssk)->icsk_ca_ops)
- 		tcp_set_congestion_control(ssk, msk->ca_name, false, true);
+@@ -238,7 +238,7 @@ Implementation
+ Loopback
+ --------
+ 
+-For TCP and UDP:
++For TCP, MPTCP and UDP:
+ Data sent to local sockets can be queued indefinitely if the receive
+ process does not read its socket. Unbound notification latency is not
+ acceptable. For this reason all packets generated with MSG_ZEROCOPY
 -- 
 2.55.0
 
