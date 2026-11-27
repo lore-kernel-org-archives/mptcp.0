@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795783561;
-	b=fHpQjt88h8lFOT7RWQ8bWen60Gunx4/PoFfAh1+IVdXToxK7zVO9ZA2Dnk4pjros07Nl
-	 aiMZZqMLi25hNzNAYs9CCZnVH9O7Lew/VWwBUd/43PHmwd/ZyeSDzek2tuSrB15q1YFq1
-	 THBX8vz+h/ume+qQYFQ2f/UoUJ9jRO4INY1J8R1hS7mF1Ks9eLMEwHMGYdxko8ZfSH2oM
-	 bvuzczdAP3K7BRUBP7f+jOSSt1KF6bEC8pVQH4o2xo30ywnj7D4tWPNKHSAPPO5LeOTqw
-	 NcmdKQyMcuHdDYY16Xb3cyKbwobmvj/piiWAitMfY4VfdZJNQao7XPzyYXqrCYgQJMQ==
+	t=1795783563;
+	b=YJ+tEKHpESHhjMnIb7E03E5NjaswrFXquIckum1MP7lnQeAXklnUEIYLNoLTels4ZqbH
+	 YQgb64ZfPt8FCRPcBZ/im0mn+elaIcW9+Xh0OqW8JIThAYI3b5DuEKfYNdlKmJd/7iOOX
+	 BWMvecLswKy6b9oRb03aC2SGlgg/QfHL2bPsrIBw57nf40xyIXND55FKzNdB5fnnIvZ+2
+	 KdRvi43p08DtRZSpMvT9IhkseZvAW75BnqQnEQ77xd9VFO38lB1jKNlksOpWOCm7pnNKw
+	 yeedzvAT0al4SAzZjzbqmCsUWrGzPoN1W2sXc5dkU1LOJgGc9uVhQXhXPPCOTg1sCFQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795783561;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795783563;
 	h=Received:DKIM-Signature:From:To:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=d9sp1bmXb1HBqgVShqnbCi7xlyxusRrhl8qj7nUiYsw=;
-	b=yE3u47DMn1zAGeTPJ+wkFA9vXNWiLCH/nJBbIAMi162dfmWbEyZRW+PId8ZhDnDQVncK
-	 sHF6XUzqN+SxylR2dcfYsoO5VmrCigThts/Btg6ozKtZnQ9KLYY/KJ7csn2foiyA959nc
-	 AdFG74Roc+wKhZdQT7yCJoE1HG0fADco65d/EOBvz+EndsGVEFu5khlUac78MMPzdzCcX
-	 eCBy1xblHy+xrvHK0KxsUsIm7SWjW6VcEjmepMiSGyX0TYbo/j/jgBu6OgbtJHcdMTCdK
-	 xOnXnG2jkTZK62K2e7dfneS0cAZ5TeHk67v1ItNa1W3Ziih78R7cga/AiptTSkD6bHQ==
+	bh=PI9rz6q7sDMfLzucfM0el/mPeVp37lkTW6DeJCxNFek=;
+	b=lIKv1qxi5J6o0DIhfyI5ymVNzUZ0/sxxqRkfliMCW3+KHTKvcCYDgckv6QmZPYxUbrCF
+	 AbW+bziXFYDooTA5EY5oxezRc9EErbIqJMMVOR6810fdhWCtSbgZa49U/giVfVI60kWk7
+	 eyx/+qQngDd5qsVOX01A1oJwqam+olH0kdWJGS+DQvMa9iYICJUGEdjtk5qUZzNWJwxl0
+	 43yseQ8bkqkbwFd07VRmfFdCwrWRznGN5McxIyPs2obfQHGDRhvKeM9CiIKvCGoIj03+n
+	 eFrxf7k0iPEkmcrYRXxZBhrjIARRHV5AOdjClpajO2G7WrQEJ7EXjSlscZDxZlyFarQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eL3+1xFJ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eRg37jf0;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D686606A335
-	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 12:46:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B36606A326
+	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 12:46:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eL3+1xFJ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15AF11F00893
-	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 12:45:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eRg37jf0
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AD021F00923
+	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 12:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795783560;
-	bh=d9sp1bmXb1HBqgVShqnbCi7xlyxusRrhl8qj7nUiYsw=;
+	s=k20260515; t=1795783562;
+	bh=PI9rz6q7sDMfLzucfM0el/mPeVp37lkTW6DeJCxNFek=;
 	h=From:To:Subject:Date:In-Reply-To:References;
-	b=eL3+1xFJ/GELfyVW1LsxD1LWdiSSudUqEK1QzD91h4xgLGYpujsreZ4+STLzUUbv/
-	 eEZ4kgWRvQn16Bsp79tMQD1KLm/y9OcwifT03aUFiaouEg+lgV2NBXz2vnDPTuj5gw
-	 w5VDyN0sc/DjyMqcdMcgcB6DYeOEnFmsQzQ/6sQ+ro3coelWHjscO/HN6O1ktZ1fRo
-	 oUh4tTPhnm1tgbAtMBTrV5MJdOnWFDrs/vUhKVP6MvXc3ITmLSSj2d4a4NAP5Qt3aj
-	 Dw5PatOuMFN2oOznEpGSDQqVNxXIqCItVlp1eEgWcizRC+lErS294zEGQmYYbqdvqw
-	 k1IcPefu6vZVQ==
+	b=eRg37jf0GydasFqVkk5MzdI+9fnQOROp8/vOcJbjTJF5cbDwneDWka4RX5QU6M4vl
+	 iq2ppRgsrTuYJu2YONTW7grCYmxdLchUJ7fhc2qpxqDGcpITf9XbocyMgWh1AoztWH
+	 VMJMd8Z9xYqm5RwEoZHz8WQ5ECYbEnkm5a9LbxJ2o1okPzhhXwlWazbuzg8U928zBd
+	 t/Dd8xNVMXdAnE34N6CyqBzdzubj9NwmsPqjIcV7wVi6KlyifwSxHX98WzUmBEltI7
+	 plx+oizWfQDnugjM3xf98tx/NJ2javDGzhQqamCQKirivcUnu/afqij75YW+GEA2yr
+	 i6IiSOieJY9Sw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v11 6/7] selftests: net: msg_zerocopy: add MPTCP support
-Date: Fri, 27 Nov 2026 20:45:26 +0800
-Message-ID: <3c4914ba16cf7712f0cda60f9d8ca1bc7d8e49ca.1795783388.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v11 7/7] selftests: mptcp: cover msg_zerocopy test
+Date: Fri, 27 Nov 2026 20:45:27 +0800
+Message-ID: <52f67bef0305ff81d900244811035f639a16bd05.1795783388.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <cover.1795783388.git.tanggeliang@kylinos.cn>
 References: <cover.1795783388.git.tanggeliang@kylinos.cn>
@@ -60,124 +60,99 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Add support for testing MSG_ZEROCOPY over MPTCP sockets. This enables
-the existing msg_zerocopy test to exercise the zerocopy send path on
-MPTCP connections by specifying "mptcp" as the test mode. A new
-"check" mode is also added to verify that MPTCP and its zerocopy
-support are available before running the tests.
+Add the msg_zerocopy test to the MPTCP selftest suite by creating a
+wrapper script that checks for MPTCP zerocopy support before executing
+the existing msg_zerocopy.sh script in the net selftests directory.
 
-A fallback definition for IPPROTO_MPTCP (262) is provided for systems
-with older headers that do not include it.
-
-Usage example:
-    ./msg_zerocopy -4 -t 1 -D 127.0.0.1 mptcp
-    ./msg_zerocopy -4 -t 1 -D 127.0.0.1 -z mptcp
-
-msg_zerocopy.sh is updated to run IPv4 and IPv6 MPTCP tests in the
-default test suite, skipping them if MPTCP is not supported.
+Update the Makefile to add msg_zerocopy.sh to TEST_PROGS, add
+msg_zerocopy binary to TEST_GEN_FILES, add build rule to compile
+msg_zerocopy from ../msg_zerocopy.c, and add ../msg_zerocopy.sh to
+TEST_INCLUDES for out-of-tree builds. Also add msg_zerocopy binary
+to .gitignore and CONFIG_DUMMY=y to the config file.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/msg_zerocopy.c  | 27 +++++++++++++++++++++
- tools/testing/selftests/net/msg_zerocopy.sh | 13 +++++++---
- 2 files changed, 37 insertions(+), 3 deletions(-)
+ tools/testing/selftests/net/mptcp/.gitignore      |  1 +
+ tools/testing/selftests/net/mptcp/Makefile        |  7 ++++++-
+ tools/testing/selftests/net/mptcp/config          |  1 +
+ tools/testing/selftests/net/mptcp/msg_zerocopy.sh | 15 +++++++++++++++
+ 4 files changed, 23 insertions(+), 1 deletion(-)
+ create mode 100755 tools/testing/selftests/net/mptcp/msg_zerocopy.sh
 
-diff --git a/tools/testing/selftests/net/msg_zerocopy.c b/tools/testing/selftests/net/msg_zerocopy.c
-index 1d5d3c4e7e87..8c7567c79198 100644
---- a/tools/testing/selftests/net/msg_zerocopy.c
-+++ b/tools/testing/selftests/net/msg_zerocopy.c
-@@ -5,6 +5,7 @@
-  *
-  * PF_INET/PF_INET6
-  * - SOCK_STREAM
-+ * - SOCK_STREAM with IPPROTO_MPTCP
-  * - SOCK_DGRAM
-  * - SOCK_DGRAM with UDP_CORK
-  * - SOCK_RAW
-@@ -74,6 +75,10 @@
- #define MSG_ZEROCOPY	0x4000000
- #endif
+diff --git a/tools/testing/selftests/net/mptcp/.gitignore b/tools/testing/selftests/net/mptcp/.gitignore
+index 833279fb34e2..1f318a297f70 100644
+--- a/tools/testing/selftests/net/mptcp/.gitignore
++++ b/tools/testing/selftests/net/mptcp/.gitignore
+@@ -3,5 +3,6 @@ mptcp_connect
+ mptcp_diag
+ mptcp_inq
+ mptcp_sockopt
++msg_zerocopy
+ pm_nl_ctl
+ *.pcap
+diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
+index 22ba0da2adb8..c23e36482194 100644
+--- a/tools/testing/selftests/net/mptcp/Makefile
++++ b/tools/testing/selftests/net/mptcp/Makefile
+@@ -14,6 +14,7 @@ TEST_PROGS := \
+ 	mptcp_connect_splice.sh \
+ 	mptcp_join.sh \
+ 	mptcp_sockopt.sh \
++	msg_zerocopy.sh \
+ 	pm_netlink.sh \
+ 	simult_flows.sh \
+ 	userspace_pm.sh \
+@@ -24,6 +25,7 @@ TEST_GEN_FILES := \
+ 	mptcp_diag \
+ 	mptcp_inq \
+ 	mptcp_sockopt \
++	msg_zerocopy \
+ 	pm_nl_ctl \
+ # end of TEST_GEN_FILES
  
-+#ifndef IPPROTO_MPTCP
-+#define IPPROTO_MPTCP	262
-+#endif
+@@ -32,8 +34,11 @@ TEST_FILES := \
+ 	settings \
+ # end of TEST_FILES
+ 
+-TEST_INCLUDES := ../lib.sh $(wildcard ../lib/sh/*.sh)
++TEST_INCLUDES := ../lib.sh ../msg_zerocopy.sh $(wildcard ../lib/sh/*.sh)
+ 
+ EXTRA_CLEAN := *.pcap
+ 
+ include ../../lib.mk
 +
- static int  cfg_cork;
- static bool cfg_cork_mixed;
- static int  cfg_cpu		= -1;		/* default: pin to last cpu */
-@@ -798,6 +803,24 @@ static void parse_opts(int argc, char **argv)
- 		usage(argv[0]);
- }
- 
-+static void check_mptcp_support(int family, bool zerocopy)
-+{
-+	int fd = socket(family, SOCK_STREAM, IPPROTO_MPTCP);
-+	int val = 1;
++$(OUTPUT)/msg_zerocopy: ../msg_zerocopy.c
++	$(LINK.c) $^ $(LDLIBS) -o $@
+diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
+index 6a96cfbbc461..b44358c178af 100644
+--- a/tools/testing/selftests/net/mptcp/config
++++ b/tools/testing/selftests/net/mptcp/config
+@@ -1,3 +1,4 @@
++CONFIG_DUMMY=y
+ CONFIG_INET_DIAG=m
+ CONFIG_INET_MPTCP_DIAG=m
+ CONFIG_IP_ADVANCED_ROUTER=y
+diff --git a/tools/testing/selftests/net/mptcp/msg_zerocopy.sh b/tools/testing/selftests/net/mptcp/msg_zerocopy.sh
+new file mode 100755
+index 000000000000..de2807df225a
+--- /dev/null
++++ b/tools/testing/selftests/net/mptcp/msg_zerocopy.sh
+@@ -0,0 +1,15 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
 +
-+	if (fd == -1)
-+		exit(1);
-+	if (zerocopy) {
-+		if (setsockopt(fd, SOL_SOCKET, SO_ZEROCOPY,
-+			       &val, sizeof(val))) {
-+			close(fd);
-+			exit(1);
-+		}
-+	}
-+	close(fd);
-+	exit(0);
-+}
++. "$(dirname "${0}")/mptcp_lib.sh"
 +
- int main(int argc, char **argv)
- {
- 	const char *cfg_test;
-@@ -820,6 +843,10 @@ int main(int argc, char **argv)
- 		do_test(cfg_family, SOCK_DGRAM, 0);
- 	else if (!strcmp(cfg_test, "rds"))
- 		do_test(PF_RDS, SOCK_SEQPACKET, 0);
-+	else if (!strcmp(cfg_test, "check"))
-+		check_mptcp_support(cfg_family, cfg_zerocopy);
-+	else if (!strcmp(cfg_test, "mptcp"))
-+		do_test(cfg_family, SOCK_STREAM, IPPROTO_MPTCP);
- 	else
- 		error(1, 0, "unknown cfg_test %s", cfg_test);
- 
-diff --git a/tools/testing/selftests/net/msg_zerocopy.sh b/tools/testing/selftests/net/msg_zerocopy.sh
-index 28178a38a4e7..a9cb6b449f34 100755
---- a/tools/testing/selftests/net/msg_zerocopy.sh
-+++ b/tools/testing/selftests/net/msg_zerocopy.sh
-@@ -32,13 +32,20 @@ if [[ "$#" -eq "0" ]]; then
- 	$0 4 udp -t 1 || ret=1
- 	$0 6 udp -t 1 || ret=1
- 
-+	if ${BIN} -4 -t 1 check && ${BIN} -4 -t 1 check -z; then
-+		$0 4 mptcp -t 1 || ret=1
-+		$0 6 mptcp -t 1 || ret=1
-+	else
-+		echo "SKIP: MPTCP tests (not supported)"
-+	fi
++mptcp_lib_check_mptcp
 +
- 	[[ "$ret" == "0" ]] && echo "OK. All tests passed"
- 	exit $ret
- fi
- 
- # Argument parsing
- if [[ "$#" -lt "2" ]]; then
--	echo "Usage: $0 [4|6] [tcp|udp|raw|raw_hdrincl|packet|packet_dgram] <args>"
-+	echo "Usage: $0 [4|6] [tcp|mptcp|udp|raw|raw_hdrincl|packet|packet_dgram] <args>"
- 	exit 1
- fi
- 
-@@ -143,8 +150,8 @@ do_test() {
- 		-S "${SADDR}" -D "${DADDR}" ${ARGS} "${TXMODE}" -Z 0 || ret=1
- 	wait
- 
--	# next test is unconnected tx to dummy0, cannot exercise with tcp
--	[[ "${TXMODE}" == "tcp" ]] && return
-+	# next test is unconnected tx to dummy0, cannot exercise with tcp/mptcp
-+	[[ "${TXMODE}" == "tcp" || "${TXMODE}" == "mptcp" ]] && return
- 
- 	# tx-only test: send out dummy0
- 	# packets leaving the host are not copied,
++BIN="$(dirname "${0}")/msg_zerocopy"
++if ! "${BIN}" -4 -t 1 check || ! "${BIN}" -4 -t 1 check -z; then
++	mptcp_lib_pr_skip "MPTCP zerocopy not supported"
++	mptcp_lib_fail_if_expected_feature "MPTCP zerocopy"
++	exit "${KSFT_SKIP}"
++fi
++
++exec "$(dirname "${0}")/../msg_zerocopy.sh" "$@"
 -- 
 2.55.0
 
