@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795809739;
-	b=u3CAfxKlt+f5fd4nPEEGqTWp8Ucezd92mN5MRoNc24+MbcJVqzDQysznq3WC3AhE97DQ
-	 v0Upthri8gL/p4+ll4MghiX0GvL5Vi09GfskVW7lL7oSkP8LVScMnIqUSYcg3ZCdfGXlc
-	 +RCuutuz/mIXuy89rwTLTKolhh32hmWCHEH5gu1G48Q/RECKEzyzy6O+Nv2U4O7Qydusd
-	 h20FxGTnQdyuTVvO07HlaBG2QsVOrRZ1CDuBOWqQLN7Ggnr5z92MBaGFuvY+3uKDrbWOA
-	 TBRGcO4xdHikhFD6yI5og00yPx4GUCCE9SVELBkVJrkn1HaETHyFZuBcGRmHnsQpCGw==
+	t=1795809740;
+	b=073RAPHTO914bTufpOBsT+Vlz2DqXGlh5STe4+WDTZuZPB3+eYVr+mRO1a8/z4/OLQ0X
+	 998bs47I2QtMoJJ422Jce2g7c0BVjznwV9wxZLRzEoBLrCbuT0CLTWG9NmOqr1d7M2UVw
+	 u4EV7LP206UkYEf+chIYxf8odWd2EOkbRl3kF/PGp4RBYcZxvXVkHmt6CCdyrGg8LGqFb
+	 Cx6O8unEGLeSdCOf+HsJtINPOSvW7zI9rbg/4UHV4a3/gS/GzCF2lMoo/aLOkxjkBqFig
+	 2T5xKdpfwU593KpjzDEN8jSuYSNxvIyNJldBd+eJ2zp00x2UQrH9KgrBnOV43RYsCQQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795809739;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795809740;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=lruY+wQL9xM2fmu0XEDdPVXHTfL2Zw8q+DIgvImjJCM=;
-	b=qpzFtKhV8kbpP5Tufclr9Omps6mewMOaO+Gnb3vglrL5VyCbWK3aBvWqc/fDTcobm+Eu
-	 4oNRVoFUpcEbAnQbWboe1KDGkFvO1YXOmpIbseT1Gm+uoE/wYbVGrChtT3RIBS8OGSgyR
-	 gw5ZvZLNmfEi6XP4I28BRxYnQb1RVoXU9Vi66DNMnOOSJRULwd+ANEcpzvvkTb7at047p
-	 QteMMNLWbqPDaSY0FUfkiVaYpYrpp8A0D4kAfSn419kmxwvc1VZ1iy+KuNrqXW8TRIVXm
-	 deg4k6NwD7bM3vQDpl3gXX7lNqMb+r9Mg2ivbUYUoy75uraMaQ6/KzCidhFqu3WjOwQ==
+	bh=lPZij7tIRjyQBtLC031Og0k2bsUafJZymDbadiP56uE=;
+	b=tzuUT7B6AFRV0DDmq1gfAiGHtV6zKvmtDwQ989id5kpL9jWu978e2xUHRgyg1ezh6kBN
+	 iWfsqLzgd9GX6dzs776UfVWjN6/b5t63V5I/TehgJmUWbS1xBialDHbkLj2LZBq2xSQWY
+	 p0vSpn3fo5UXJbjzZeAUo65wc6G1V7s24TRL2AWDmkJdl8LX27f1LFf4i76pYC01LoTyZ
+	 HNuD4GUPPw9QIJay46kSt9ipvGMHmR0NILoVUna9Owoz/dl9+IitFnbtiXKlUkjDyWaHW
+	 BhbNvRx1icTGvP+wXyqubIZuFoXgrDCDRlcM+8mizSfpJIaExbbUDYQ9fdWRrFWucDA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eghskOFQ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=S2WL+lNR;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2800606A31C
-	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 20:02:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2074606A31C
+	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 20:02:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eghskOFQ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED8011F008A0;
-	Fri, 27 Nov 2026 20:02:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=S2WL+lNR
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26AF51F00923;
+	Fri, 27 Nov 2026 20:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795809739;
-	bh=lruY+wQL9xM2fmu0XEDdPVXHTfL2Zw8q+DIgvImjJCM=;
+	s=k20260515; t=1795809740;
+	bh=lPZij7tIRjyQBtLC031Og0k2bsUafJZymDbadiP56uE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=eghskOFQSxGUJBFmhvQ9Mv4o0ZitLRVo8isTwP5OaSX/t3B+52KrQUzDjOXIN7e08
-	 r/u7I8eOMeikdH47P0ITUZGfBzWqmSC1y/8jGMhP+BVGWvKFFgXZO0l7NdaKNsodbt
-	 iRxQvl5vS+Zs+VYGEuQPhEVBlLsz/Tb+y9rTTLj3r7Qr2jtQXqGiq1GJT3tiEP8DN0
-	 KCY8JHh30zEDjAvtGiMZmPdvXdO6YeFatkGOy2WDKUy2Hv96oHBSPsMZuGt59H+Umd
-	 JW3bkl4ke7Mdapy39zM67tlmXfhJ2az8oKHUB6O/jixNcUYAqdzp2NqIPvX7ubeJDo
-	 qrIjfuPlpV0tQ==
+	b=S2WL+lNRXIhXlYy4n5/McMYYc0ZZY46LHV7MiJc6fydpuGfhbQiB/bLjtbFTL8G1m
+	 +EttwJvk/Mk3nNrWb40wD1LxCIYaH/d1EU5mWHVCkQdQpDQldKJpZvygxK13JlyjYo
+	 YfuQX1dwxxspTIhWAdHyJGd5tI2rPGyZ3SVKHdBg3AxjHZX/qRvJuAcXDMOxYEFd0u
+	 ME54iNbbgMpHS68tFx+gP1xwdBHJugxexDPyYJvFzHYBsAwQzMki9HjVzbKyVpEfMH
+	 RT5YsB7LmKc16XDjKgeCIFEMLohRd5hkeEbB/Q4oGJl1CWVdURdZfJXijqEmNE47ra
+	 g7KRRcGfVl5bQ==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 27 Nov 2026 21:01:39 +0100
-Subject: [PATCH mptcp-net v4 15/20] Squash to "bpf: Export mptcp packet
- scheduler helpers"
+Date: Fri, 27 Nov 2026 21:01:40 +0100
+Subject: [PATCH mptcp-next mptcp-net v4 16/20] mptcp: push pending data
+ after a fallback on reception
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,69 +55,69 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261127-mptcp-cmason-fixes-v4-15-3f393ea8c48d@kernel.org>
+Message-Id: <20261127-mptcp-cmason-fixes-v4-16-3f393ea8c48d@kernel.org>
 References: <20261127-mptcp-cmason-fixes-v4-0-3f393ea8c48d@kernel.org>
 In-Reply-To: <20261127-mptcp-cmason-fixes-v4-0-3f393ea8c48d@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1923; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=fh0PqDon6abSfkKhSY5BYGApkpcuMzQnRw7KTx6M4Bw=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLI5H27p4j9inHzM37p+swiDeN0yLuFZqmsfaNTOW3qtx
- OVwh6ZqRykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwEQuBTP8L9u7aenlzV/D40p6
- 9/tO2tbu1Cu1e/3Vp1qdlZL+M251GTIy/Pr7MCdU7pqw1ncNqU+7P3tafxdNmfRr4gJj7wWz9Lm
- /8QMA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2273; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=eUCaWqilve6p4gBgluFq2NlttraZkifS6zeGEd23WAs=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLI5H271YAidcuP5meB1vHU3/ujNdsj3KRbnOv43aVtRQ
+ I+ckdeXjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIkECTMyHAqQ9hX10PvTHnEx
+ MvK4+tQ9pV+XCN08yLVrme1u3gVGWxn++89i7ZuYqbMqMPaBlE/mhffewY4iTpofzTxtl59bev8
+ 6OwA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-With a BPF scheduler, the rtx timer interval, msk->timer_ival, is only
-set if the scheduler calls the mptcp_set_timeout() kfunc: only the burst
-one does. Otherwise, the rtx timer is armed with an interval not based
-on the subflows' timeouts, e.g. the minimum RTO once all the data has
-been acked, which can cause spurious retransmissions.
+When received data without DSS makes the MPTCP socket fall back to TCP,
+the data not sent yet is not pushed: on fallback, this is done by
+mptcp_incoming_options(), which already processed this packet before
+the fallback. This data, and the FIN of an earlier shutdown, then wait
+for the next packet from the peer, or for the MPTCP retransmission
+timer armed before the fallback: up to one RTO.
 
-Set this interval before calling a BPF scheduler, as the default one
-does when picking a subflow, also when a subflow is already scheduled,
-as the scheduler is then not called.
+Push it from mptcp_data_ready(), which follows these fallbacks, also
+the ones after a DSS corruption. For the next packets, this push comes
+after the one from mptcp_incoming_options(), which already sent what it
+could.
 
-This issue has been found by Clashiko, while reviewing "mptcp: arm the
-rtx timer if a push leaves data behind". Not reproduced.
+This issue has been found by Clashiko, while reviewing "mptcp: don't
+send a FIN before the pending data on fallback", and confirmed with a
+new Packetdrill test: after a shutdown, with data still in the MPTCP
+socket, the peer sends data without MPTCP options. Without this patch,
+with an RTO of one second, the data is sent about one second later:
 
+  dss_fallback_push_pending_server.pkt:27: error handling packet: timing error: expected outbound packet at 0.312538 sec but happened at 1.274089 sec; tolerance 0.100000 sec
+
+With this patch, the data and the FIN are sent right after the fallback.
+
+Note for the backports: the fallback after receiving data without DSS
+comes from commit 119d51e225fe ("mptcp: fallback when MPTCP opts are
+dropped after 1st data"), also in v6.12, and backported down to v5.15.
+
+Fixes: e32d262c89e2 ("mptcp: handle consistently DSS corruption")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v2: new, for an issue spotted by Clashiko
-v3: also set the interval when a subflow is already scheduled (Clashiko)
-v4: msg: the interval is no longer 0 since "mptcp: reset the rtx
-    interval to the min RTO"
-
-Note: when squashing, the commit message could mention that
-mptcp_sched_get_send() now sets the rtx timer interval with a BPF
-scheduler, as the default one does.
+v2: new, for mptcp-next, for an issue spotted by Clashiko in a fix
+    pending in net
 ---
- net/mptcp/sched.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/mptcp/protocol.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
-index 1e59072d478c..01500f9f9f8a 100644
---- a/net/mptcp/sched.c
-+++ b/net/mptcp/sched.c
-@@ -182,6 +182,10 @@ int mptcp_sched_get_send(struct mptcp_sock *msk)
- 		return -EINVAL;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 178792ebcc78..64fc04ea997c 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1077,6 +1077,10 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
+ 	} else {
+ 		__mptcp_move_skbs_from_subflow(msk, ssk, false);
  	}
- 
-+	/* as the default scheduler: the rtx timer needs an interval */
-+	if (msk->sched && msk->sched != &mptcp_sched_default)
-+		mptcp_set_timeout((struct sock *)msk);
 +
- 	mptcp_for_each_subflow(msk, subflow) {
- 		if (READ_ONCE(subflow->scheduled))
- 			return 0;
-@@ -189,6 +193,7 @@ int mptcp_sched_get_send(struct mptcp_sock *msk)
- 
- 	if (msk->sched == &mptcp_sched_default || !msk->sched)
- 		return mptcp_sched_default_get_send(msk);
-+
- 	return msk->sched->get_send(msk);
++	/* mptcp_incoming_options() can't push if this data caused a fallback */
++	if (__mptcp_check_fallback(msk) && sk_stream_memory_free(ssk))
++		__mptcp_check_push(sk, ssk);
+ 	mptcp_data_unlock(sk);
  }
  
 
