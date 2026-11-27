@@ -1,56 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795755026;
-	b=0FGubwovbB0qVrA5dt7brqIzugabIOQp2ROZfAQFhIPUeN8+QB4n1Rr51A3S88Bz46PF
-	 qgP3uS6MxRxKx1sLUn2jDlgo2U2Nopj/s0Ot1yPIKOsZIYYA18se4lgAxWI+wrvOxPeTq
-	 GfBNCXoPQtYrsuBxDi31GmHQzR/OnXAcBP9da18E9dykH5zg8ThtZ8GCYdR8NIwcXzHTT
-	 WL7yVQWd8UZXBgCkVRVjtueYTivkXvxFsHt84ihoO3ETQE1tE2eNuD4vcLvLLbS83EvCY
-	 /Y/zWd4+ed8RljPDubNVJ2h9yKcSeRq/tBgBvub21lJbgex6jPuiRB63bScRaNuD0SA==
+	t=1795755856;
+	b=HSO+sh/jicOhjQnvQrBRkhlTM1t8Yuq6RExubn9Kwk5ntOMt7C/3Wmcu/TwwZHufa0mv
+	 pkDnYr857iKxOrXkchTWq+EuA73QOjujxRonf4I2EFDI6CEJO41rDh7Hzf6KQmu+c1sZc
+	 xlFbjedsBmeNFeOSYaxI6qlm6rTj5XV/VyatJdnDfnHtzt8so/nPKk67QD9vlDJid0Pqx
+	 KJdyr1DNUW/pr5lHqUEcxeMVFvz2oPWRdI6kztQcUuOogrTVQ1Kwdi8faaZZBy7TjWL0G
+	 +w506mGtNo0DFlqhcqIE+VbzZqgR4AhbgPRtvkLK2+4dz/toUqZb4TCXHHbbnireUtg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795755026;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795755856;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=LehYK4qM3IA+qBTVKksihvaQOeKSsRTjLpQrzFNtE9w=;
-	b=hWnje77+KAjwkO/utDuyfm+H2sS6TrATIuBTH3WsaBlMLoCtXZDAPeD1hM93NWHoxq6H
-	 qr3+x0rd19KUhqt+7Ui8TqIX4Ib75YgQlCFtXv+L1A448t3LElYMA8AuqwRfyDtBoeQii
-	 0WFmC6J9B49a8mNzGtXDcERpBCRLt0Q6KKV3sy19+aMx83tGRuryPSB3AbYd1Bhsgz3wG
-	 g+fHcreldSTKvCh1BXZKM4+vpQtoKHJHbA9fbW0tzn1n+lyVJ2FXjyvWgnBfulJ8T6YvB
-	 xJB6Cv913Abi6Up61rqbdxjjslyjE41Wh/3HZhe8lXe/mcLwFuO2ND0iDweCwfixE+g==
+	bh=0ffDPINStj4lRiqTeo4LPdwyN7du01bykKSuY2RBzs8=;
+	b=wkmmoNpAJrMqHVJKu6ddSdlt2SGeEBMSFvRWbwvaMQ4Xpl9/6gZpz7auFjOBFLDX+Adn
+	 O9P419pkwfBxiBLTAO2XjgxcNzQSx5lvK8Oj00npxj7jZ0d79s0iVrilRTN2IkaaQelPa
+	 76MNVs5XD9YUukPvBXPFfZOPopOjX9GboReK+qsxlLgslNGo1g8sw2bJ/AXnPMvHcps7G
+	 cDOqlrPuLpxs1ELIjVMG0BeTI4qhsK8pfCfRnlUw7cYxF6DxjtWdF+qpUqxyAxXnFzI21
+	 etA0XbWHtQWhp3WPoJ4uIPHkGXvOdrL6rPtxIcs2DKnyWe2Kk/3XfwKrHOrwLwlGV6Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=APDZRbCz;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SL7OdpbK;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219DE606A31C
-	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 04:50:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73360606A31C
+	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 05:04:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=APDZRbCz
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F3B51F00899;
-	Fri, 27 Nov 2026 04:50:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SL7OdpbK
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB0601F00893;
+	Fri, 27 Nov 2026 05:04:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795755025;
-	bh=LehYK4qM3IA+qBTVKksihvaQOeKSsRTjLpQrzFNtE9w=;
+	s=k20260515; t=1795755856;
+	bh=0ffDPINStj4lRiqTeo4LPdwyN7du01bykKSuY2RBzs8=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=APDZRbCzt8F2FCZA5v59VU06Ln6vuHL7DVCeDWKc5jd7w0cFhElwVfbp5fueqYcBt
-	 GQQnulY7nlDQnTaOxPgp047qcbQKDpwgWiR+tFBI+iD99/6drQZRcRvOUrPHCObRll
-	 24zmVOrfiI13g8qVGXohXrk+AEFJYX/CrTY0bD9HHmvtzHubSDEDLsYGWIX4GrCIvJ
-	 AY7Oh0alfDCNXSmafWEA7rcxorRz17WCVsVya2rJs9cTE/AJZZCueIDCF0p0NokbWg
-	 y/0wAF1h+XYPEc+5h9taAu8LACyK+zQxcPdHWVXpw3PurlkQEnZRBaNsMv0RGwonU8
-	 /e+TbEEDeQw5Q==
-Message-ID: <sashiko-outbox-236620@kernel.org>
+	b=SL7OdpbKRij7XdxvxlJwAWZmq8gLs3s13OLVMnaIuQ5vtTOsVsv+kvJRM+6DOp3yw
+	 zdbP/+5iQEDoSlo36AX3S95xiBC3KxTPVuY4peVRNTJwA9p1JLzqJrM6EgzFyl50t/
+	 ckB/NAHQd+NklQxaaW16ihFH8BY7oyfJnbr1XbfbX58fD5gSITNz8tpnU/LU9rt3pY
+	 luE8wVI5uwEWD9Rcca59ectiQSpJKmFkEWMxjYlVqazOoai2wkPpBtGoW1DZN2D2Zy
+	 MDW7iwzVq1TiUohpzizmn9+FVSWzMkE6IpV/ML/3FibxB2yvD3vhOPNfgWsADUl0lA
+	 ZHcgxNFJ+cH9g==
+Message-ID: <sashiko-outbox-236633@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v10 7/7] selftests: mptcp: cover msg_zerocopy
- test
+Subject: Re: [PATCH mptcp-next v10 3/7] mptcp: add MSG_ZEROCOPY support
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <00df42f4717147821e9d1d9481389aa3f7c9a842.1795753727.git.tanggeliang@kylinos.cn>
+In-Reply-To: <73d24deb26196f8a9ee7060d93c117a7ce5bd265.1795753727.git.tanggeliang@kylinos.cn>
 References: <cover.1795753727.git.tanggeliang@kylinos.cn>
- <00df42f4717147821e9d1d9481389aa3f7c9a842.1795753727.git.tanggeliang@kylinos.cn>
+ <73d24deb26196f8a9ee7060d93c117a7ce5bd265.1795753727.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 27 Nov 2026 04:50:25 +0000
+Date: Fri, 27 Nov 2026 05:04:15 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -60,101 +59,130 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 3 potential
+Thank you for your contribution! Sashiko AI review found 2 potential
 issues to consider:
-- [Medium] selftests: mptcp: missing ../msg_zerocopy.sh in Makefile
-  TEST_INCLUDES
-- [Medium] selftests: mptcp: msg_zerocopy.sh returns KSFT_PASS when
-  MPTCP is skipped
-- [Low] selftests: mptcp: commit message claims symlink and omits
-  CONFIG_DUMMY=3Dy
+- [High] mptcp: broken non-SG zerocopy fallback in mptcp_sendmsg_frag()
+- [Medium] mptcp: incomplete fastopen zerocopy handling in
+  mptcp_sendmsg()
 --
 
-commit 3cb1f313dd3fac2f574cee09c7b454ff59f42063
+commit c58f22d48411d595b383144989fbe0b88bbec032
 Author: Geliang Tang <geliang@kernel.org>
 
-selftests: mptcp: cover msg_zerocopy test
+mptcp: add MSG_ZEROCOPY support
 
-This commit adds a wrapper script and build rules to run the net
-msg_zerocopy selftest as part of the MPTCP selftest suite.
+This commit adds MSG_ZEROCOPY support for MPTCP sockets by pinning user
+pages into mptcp_data_frag structures and tracking ubuf_info_msgzc
+references across the MPTCP retransmission queue and subflow skbs.
 
-> Add the msg_zerocopy test to the MPTCP selftest suite by creating a
-> symlink to the existing msg_zerocopy.sh script in the net selftests
-> directory.
->=20
-> Update the Makefile to add msg_zerocopy.sh to TEST_PROGS, add
-> msg_zerocopy binary to TEST_GEN_FILES, and add build rule to compile
-> msg_zerocopy from ../msg_zerocopy.c. Also add msg_zerocopy binary
-> to .gitignore.
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 504d0b196d84b..d29ecdb05beb9 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
 
-[Severity: Low]
-This isn't a bug, but the commit message says msg_zerocopy.sh is created
-as a symlink whereas the patch adds a wrapper script, and it does not
-mention adding CONFIG_DUMMY=3Dy to tools/testing/selftests/net/mptcp/config.
-
-> diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/s=
-elftests/net/mptcp/Makefile
-> index 22ba0da2adb85..ec243e400f4b4 100644
-> --- a/tools/testing/selftests/net/mptcp/Makefile
-> +++ b/tools/testing/selftests/net/mptcp/Makefile
 [ ... ]
-> @@ -37,3 +39,6 @@ TEST_INCLUDES :=3D ../lib.sh $(wildcard ../lib/sh/*.sh)
->  EXTRA_CLEAN :=3D *.pcap
+
+> @@ -1530,25 +1552,42 @@ static int mptcp_sendmsg_frag(struct sock *sk, st=
+ruct sock *ssk,
+>  	copy =3D min_t(size_t, copy, info->limit - info->sent);
 > =20
->  include ../../lib.mk
+>  	/* like TCP, allow some progress up to tcp_wmem[0] */
+> -	avail =3D tcp_wmem_schedule(ssk, copy);
+> -	if (avail <=3D 0) {
+> +	if (!dfrag->ubuf) {
+> +		avail =3D tcp_wmem_schedule(ssk, copy);
+> +		copy =3D avail > 0 ? avail : 0;
+> +	}
 > +
-> +$(OUTPUT)/msg_zerocopy: ../msg_zerocopy.c
-> +	$(LINK.c) $^ $(LDLIBS) -o $@
+> +	if (!copy) {
+>  		tcp_remove_empty_skb(ssk);
+>  		return -ENOMEM;
+>  	}
+> -	copy =3D avail;
+> =20
+>  	if (can_coalesce) {
+>  		skb_frag_size_add(&skb_shinfo(skb)->frags[i - 1], copy);
+>  	} else {
+>  		get_page(dfrag->page);
+>  		skb_fill_page_desc(skb, i, dfrag->page, offset, copy);
+> +
+> +		if (dfrag->ubuf && !skb_zcopy(skb)) {
+> +			if (ssk->sk_route_caps & NETIF_F_SG) {
+> +				skb_zcopy_set(skb, dfrag->ubuf, NULL);
+> +				skb_shinfo(skb)->flags |=3D SKBFL_PURE_ZEROCOPY;
+> +				zc =3D true;
+> +			} else {
+> +				uarg_to_msgzc(dfrag->ubuf)->zerocopy =3D 0;
+> +			}
+> +		}
+>  	}
+> =20
+> +	if (!zc)
+> +		zc =3D skb_zcopy_pure(skb);
+> +
+>  	skb->len +=3D copy;
+>  	skb->data_len +=3D copy;
+> -	skb->truesize +=3D copy;
+> -	sk_wmem_queued_add(ssk, copy);
+> -	sk_mem_charge(ssk, copy);
+> +	skb->truesize +=3D zc ? PAGE_SIZE : copy;
+> +	sk_wmem_queued_add(ssk, zc ? PAGE_SIZE : copy);
+> +	if (!zc)
+> +		sk_mem_charge(ssk, copy);
+
+[Severity: High]
+Does the non-NETIF_F_SG fallback corrupt ssk->sk_forward_alloc and leave
+the pinned user page attached to skb without a dfrag->ubuf reference?
+
+When dfrag->ubuf is set and ssk->sk_route_caps lacks NETIF_F_SG,
+tcp_wmem_schedule() is skipped, but zc remains false and sk_mem_charge()
+charges unscheduled bytes against ssk->sk_forward_alloc; freeing skb in
+tcp_wmem_free_skb() then uncharges and reclaims memory that was never
+scheduled.
+
+In addition, dfrag->page is already a pinned user page attached via
+skb_fill_page_desc(), so skipping skb_zcopy_set() leaves skb holding the
+user page without a dfrag->ubuf reference or SKBFL_ZEROCOPY_FRAG, allowing
+dfrag_clear() to complete the zerocopy notification while skb is still in
+flight.
+
+[ ... ]
+
+> @@ -2048,27 +2088,116 @@ static void mptcp_rps_record_subflows(const stru=
+ct mptcp_sock *msk)
+
+[ ... ]
+
+>  	if (unlikely(inet_test_bit(DEFER_CONNECT, sk) ||
+>  		     msg->msg_flags & MSG_FASTOPEN)) {
+>  		int copied_syn =3D 0;
+> =20
+> -		ret =3D mptcp_sendmsg_fastopen(sk, msg, len, &copied_syn);
+> +		if (zc && (msg->msg_flags & MSG_FASTOPEN)) {
+> +			uarg_to_msgzc(ubuf)->zerocopy =3D 0;
+> +			zc =3D false;
+> +		}
+> +
+> +		ret =3D mptcp_sendmsg_fastopen(sk, msg, len, &copied_syn, ubuf);
+>  		copied +=3D copied_syn;
+>  		if (ret =3D=3D -EINPROGRESS && copied_syn > 0)
+>  			goto out;
 
 [Severity: Medium]
-Should TEST_INCLUDES also list ../msg_zerocopy.sh?
+Can fastopen with MSG_ZEROCOPY complete ubuf prematurely or omit
+SO_EE_CODE_ZEROCOPY_COPIED?
 
-When running or installing the net/mptcp target out-of-tree or standalone
-(for example with TARGETS=3Dnet/mptcp), lib.mk only copies parent-directory
-files listed in TEST_INCLUDES, so msg_zerocopy.sh will fail to exec
-../msg_zerocopy.sh with "No such file or directory".
+When MSG_FASTOPEN clears zc on a blocking send that has data remaining
+after the SYN (or when no TFO cookie is cached and copied_syn is 0), the
+send loop queues the remaining payload via the regular copy path without
+taking a ubuf reference, so net_zcopy_put(ubuf) at out: fires the
+completion notification before that data is acknowledged.
 
-> diff --git a/tools/testing/selftests/net/mptcp/msg_zerocopy.sh b/tools/te=
-sting/selftests/net/mptcp/msg_zerocopy.sh
-> new file mode 100755
-> index 0000000000000..118fff27dc5cd
-> --- /dev/null
-> +++ b/tools/testing/selftests/net/mptcp/msg_zerocopy.sh
-> @@ -0,0 +1,8 @@
-> +#!/bin/bash
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +. "$(dirname "${0}")/mptcp_lib.sh"
-> +
-> +mptcp_lib_check_mptcp
-> +
-> +exec "$(dirname "${0}")/../msg_zerocopy.sh" "$@"
-
-[Severity: Medium]
-Does this exit with 0 (KSFT_PASS) instead of KSFT_SKIP when MPTCP
-zerocopy is not supported or when net.mptcp.enabled=3D0 in the initial
-network namespace?
-
-mptcp_lib_check_mptcp only checks that /proc/sys/net/mptcp/enabled exists,
-while ../msg_zerocopy.sh runs TCP and UDP tests first and then checks
-MPTCP socket and SO_ZEROCOPY support in the initial namespace:
-
-tools/testing/selftests/net/msg_zerocopy.sh:
-	if ${BIN} -4 -t 1 check && ${BIN} -4 -t 1 check -z; then
-		$0 4 mptcp -t 1 || ret=3D1
-		$0 6 mptcp -t 1 || ret=3D1
-	else
-		echo "SKIP: MPTCP tests (not supported)"
-	fi
-
-	[[ "$ret" =3D=3D "0" ]] && echo "OK. All tests passed"
-	exit $ret
-
-If that check fails, ../msg_zerocopy.sh skips the MPTCP subtests and exits
-with $ret (0 if TCP and UDP passed), reporting a pass for the MPTCP test
-without running any MPTCP test cases or honoring
-SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES=3D1.
+Also, when fastopen is entered via DEFER_CONNECT (TCP_FASTOPEN_CONNECT)
+without MSG_FASTOPEN in msg->msg_flags, uarg_to_msgzc(ubuf)->zerocopy is
+not cleared even though tcp_send_syn_data() copies the SYN payload into a
+page_frag and attaches ubuf via skb_zcopy_set().
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1795753727.gi=
-t.tanggeliang@kylinos.cn?part=3D7
+t.tanggeliang@kylinos.cn?part=3D3
