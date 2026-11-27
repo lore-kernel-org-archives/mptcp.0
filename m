@@ -1,56 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795742239;
-	b=Rxv59x2h2eT1C46plKK0bRhAdn1fKoxGtuZwuUCwOTe+l67RTB7jt5ZQqB5QkekGLy0f
-	 YKBpSfvizt/68pK6gtZhaqSoP9bHe30eBSrAJrcvzze6ZmqtqgminuXKf65tli3/gziDC
-	 cdlFVFCQpiVfPtEzMqM73oxWxba5tWasAKxc7KgZLBwwvRGA3sc7CHLroBEo+A7qrRMFq
-	 LfOF34TuSn7daE4Z36mzK7zjCuZnqBkvc0M2Rqg3NUv1D4lB2uATt12KATDG5pYBd6kRt
-	 wznblZHSL3AU7wiHgclJ5HAilxEKwPR7AqR6BfyK4B4kOaBTBLMJLToEFv31QqjNvJw==
+	t=1795742279;
+	b=fgRiRIWUrWFP9PTokWFPKGNeHoTm+iByfk2uv1lmLpUK6s8g+Zc4ZNWIzfsBC467wqXJ
+	 YtsimM01E7NEUo61k916zoSQ4hfeeIut0/1itx+vAzWJsMue6Go71zrCzZRlylwWH/+fJ
+	 wiEZ6hmHFOj8llU7e8afgJGwIhUwH5UN2pDVaCn6nCr8kIwHXgPEzrjG5df+FqNpGawzM
+	 WeHlQEDjEogwRF4WYeRm+buZtCBzBn8kaMz9nP5qg8W2MjD8N/4jkc1B+OzAedbJl2WL8
+	 15ZQsoqd7Vu/RWc0e6p1pekw3lNVNoYGWKhGI8bHtssLeqzcGA30s+Xe5qL5aNrEmHw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795742239;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795742279;
 	h=Received:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
 	 In-Reply-To:References:Content-Type:User-Agent:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=1Gvu+yrkeXGohUB07/+hs1cKtWrmuGESC+qjRU5ss48=;
-	b=wluB0rilitVXE1agsU/CuRkfnK7m7C/j9GG15tCGQHVDS5hcUMl2KskQnMuLCejMAcp3
-	 cZ9RlQnNLTt8IhBUMBg3D+XMxN2PVUivuhNvGdsnp4G8/g/id/p5/po2GoZ+suEiVObAh
-	 gxfZz+QtXPZf2lxya3MgtntMTwpRAuI2Voz2Y3J6VBCHlVivS3boSck19TJWMb7HwExrR
-	 efv8Gwc4wC7Nh0Q4MFpCOJdPpnolSs5H4JqLOmJJ6VxE4+5xA+QOt9TFx5n15t4Paf4ns
-	 0mN8dTzi525wpA7EnQLvPo/WUctImee1/L7Emr9ZxYyYCxBHGz3W3kNLUS4Q/duMKBw==
+	bh=zWsq7quUgjqbp/gtxEB2QnqEiko+2mnOaviyKF5VOwg=;
+	b=TBjc71QIWyuHwXhEssGAe5ploHpKfVcLIJ0P3Fh5qrlq6PmG/nZk9bSTy4fge/VsQcLr
+	 araKQpHcin/G5OctrPaR4cWBaN1BNl3XCin59LDQ7hYJIaNlZCWl9eHO2vfL/kNA3HW+p
+	 LUnBwGDC9ynmn/cL0N+Q9FhZ/ReLQAc+9Jv5AZFSnguVDwKKZytfVOYGW89G0+OzPQfHT
+	 2hX500cqAJLjubCKR9nBSEgY3e0gUIscrr40utXjb3do85iKZXt2wVeQrA8Ph5N4Xs53K
+	 1Q+23MyjWK7IKdNP7uD9j3c1EHuryb7kOoT0Hph29isK2UGCV0PZFwGiBEzETDCsKsQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WGbWfAvZ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Ju/ITPxO";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B607606A31C
-	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 01:17:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64822606A31C
+	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 01:17:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WGbWfAvZ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48A3A1F0089A;
-	Fri, 27 Nov 2026 01:17:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ju/ITPxO
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D14BD1F000C1;
+	Fri, 27 Nov 2026 01:17:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795742238;
-	bh=1Gvu+yrkeXGohUB07/+hs1cKtWrmuGESC+qjRU5ss48=;
+	s=k20260515; t=1795742279;
+	bh=zWsq7quUgjqbp/gtxEB2QnqEiko+2mnOaviyKF5VOwg=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=WGbWfAvZKXjS9iiUQTNhyDaWKu9hViUqW2v22OD7Yz/0JReEWjoCntf99+/X98ogh
-	 SL3RmzQSTVchEcpZv/g/dlq1/bHBVcgG2w/P/pxOvdH7OtFUFrI958i9oZg6Ml25vd
-	 ySETcCC60wnIWKpob/aCWGnLggshtHArMv679qrSDiDPwK8u9kYaTJ4KSe/fHoHleK
-	 CRd8XNVqSJvnKzhAq9Paei7A5EiSXAW6m+XPJaerqR/d/jz+pfKEJcmJX9A1am1Cg6
-	 hLDzA3VM9ohPEeD68V5D9Zp8suaXDS+r8VwAm3Ie3rZ4CS2fjPgPS3WFQ8xJanzfB8
-	 o3HWublidnJyQ==
-Message-ID: <d0bc374160ef47466604564e2ab179a84d7fba79.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net v3 21/50] mptcp: drop non-MP_JOIN cookie ACKs
- on PM listeners
+	b=Ju/ITPxOmfLwcK+ASMIz9P5wAbCbOE8DRcJl6q25OPVm82MxcO3L140HADR3jIsTx
+	 NJ16cPd6bSL22TixqaMfBkOIPM/vT++RWF4NZCTb48W7Zj7HMbkO/Vc53+7iztBNrf
+	 X++02hh80c3JisPLpxvecPPjvi8flC8nOtpCISlpT6etvBYIeTqR75kM0NW4ahjcPa
+	 iFydA/TdaeI0KsCiUiSfVsSROJBoiLJtIbe6B6p9yOlqBRGCOuQvpJzFAOkVdggNZk
+	 jMAEP519G2vQw0WnBG/1UEAZ4bPIWPIJUrbvQsoJw7twfveB1NJNER+HvPDsoIK/OP
+	 eOY9OyPs+z8AQ==
+Message-ID: <9cd6e922fff2072fca01653f02bf4775fc6b79d1.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net v3 22/50] mptcp: close a subflow reset for a
+ bad mapping
 From: Geliang Tang <geliang@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, MPTCP Linux
 	 <mptcp@lists.linux.dev>
 Cc: Chris Mason <mason@kernel.org>
-Date: Fri, 27 Nov 2026 09:17:14 +0800
-In-Reply-To: <20261124-mptcp-cmason-fixes-v3-21-416c0920c73f@kernel.org>
+Date: Fri, 27 Nov 2026 09:17:55 +0800
+In-Reply-To: <20261124-mptcp-cmason-fixes-v3-22-416c0920c73f@kernel.org>
 References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
-	 <20261124-mptcp-cmason-fixes-v3-21-416c0920c73f@kernel.org>
+	 <20261124-mptcp-cmason-fixes-v3-22-416c0920c73f@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.2-10build1 
 X-Mailing-List: mptcp@lists.linux.dev
@@ -69,56 +69,38 @@ Hi Matt,
 On Tue, 2026-11-24 at 22:59 +0100, Matthieu Baerts (NGI0) wrote:
 > From: Chris Mason <mason@kernel.org>
 > 
-> With SYN cookies enabled, a port-based MPTCP signal endpoint can stop
-> accepting new subflows until it is deleted.
+> An MPTCP socket can stay in the ESTABLISHED state after MPTCP has reset
+> its only subflow because of data with no valid mapping, and recv() and
+> send() then block with no error.
 > 
-> Nobody calls accept() on the listener that the in-kernel path manager
-> opens for such an endpoint, so it must create only MP_JOIN subflows,
-> which never enter the accept queue. The listener is marked pm_listener,
-> and since commit 3d041393ea8c ("mptcp: prevent MPC handshake on
-> port-based signal endpoints") subflow_check_req() refuses a SYN with no
-> MP_JOIN option on it. But a SYN cookie does not record the MPTCP option
-> of the SYN, so mptcp_subflow_init_cookie_req() picks the kind of child
-> from the options of the ACK, without looking at pm_listener:
+> If data arrives with no valid mapping and a fallback to TCP is not
+> possible, subflow_check_data_avail() resets the subflow: it moves the
+> TCP socket to TCP_CLOSE with tcp_set_state() and sends a RST. The MPTCP
+> worker then has to close the subflow in __mptcp_close_subflow(), and
+> closing the last subflow starts a timer that moves the MPTCP socket to
+> TCP_CLOSE. But the worker only calls that function if the bit
+> MPTCP_WORK_CLOSE_SUBFLOW is set, and this reset neither sets the bit nor
+> schedules the worker.
 > 
->     ACK with a valid cookie and no MP_JOIN option
->       creates a plain TCP child, or an MPTCP one if it has MP_CAPABLE
->         which stays on the accept queue until the endpoint is deleted
->           once the queue is full, the listener drops MP_JOIN SYNs too
-> 
-> These children also hold a reference on the netns: since commit "mptcp:
-> pm: don't let listeners pin their netns", they are what keeps it alive
-> for ever once its last process is gone, unless somebody deletes the
-> endpoint, as noted by Clashiko on that commit.
-> 
-> The fix used here is to refuse an ACK with no MP_JOIN option on such a
-> listener in mptcp_subflow_init_cookie_req(), so that the request sock is
-> freed and the ACK is dropped.
+> The fix used here is to call subflow_sched_work_if_closed() after the
+> reset, which sets the bit and schedules the worker. This also covers
+> the reset done after a bad checksum, when MP_FAIL cannot be used.
 > 
 > This issue has been found with the help of an LLM, and reproduced in a
-> VM, with the reproducer shared with the original version of this patch:
-> a client sent 1025 ACKs with valid SYN cookies and no MP_JOIN to the
-> listener of such an endpoint. Without this patch, its accept queue
-> stayed full, and another client could not create its additional subflow,
-> even 130 seconds later:
+> VM, with the reproducer shared with the original version of this patch,
+> and with a new Packetdrill test: data without DSS while the fallback is
+> not possible, here because of out-of-order data at the MPTCP level.
+> Without this patch, the subflow was reset, but the MPTCP socket stayed
+> established, with no subflow: read() returned EAGAIN and send() timed
+> out, for good:
 > 
->   TCP: request_sock_subflow_v4: Possible SYN flooding on port 10.9.0.2:6666. Sending cookies.
->   [...]
->   C2         4.007  [130 s after C1 has gone] RESULT: subflows established 1, in SYN_SENT 1, the service works
->   --- V, after that try of C2
->       listener 10.9.0.2:6666 Recv-Q 1025 Send-Q 1024
+>   dss_drop_ooo_reset_server.pkt:30: runtime error in read call: Expected errno 107 (Transport endpoint is not connected) but got 11 (Resource temporarily unavailable)
 > 
-> With the same reproducer, adapted to delete the namespace of the
-> listener after a few of these ACKs, this namespace was not freed:
-> 
->   srv: listener of the endpoint: Recv-Q 4
->   srv: deleted, then NOT taken down after 60 s
-> 
-> Fixes: 1729cf186d8a ("mptcp: create the listening socket for new port")
+> Fixes: 40947e13997a ("mptcp: schedule worker when subflow is closed")
 > Signed-off-by: Chris Mason <mason@kernel.org>
-> [ Shorter comment, the details are in the commit message. Commit
->   message: how the issue was found, its symptoms, and the netns pinned
->   by the queued children. ]
+> [ Add a Fixes tag. Moved before "mptcp: continue the last mapping after
+>   a fallback", which makes this reset path reachable in more cases.
+>   Commit message: how the issue was found, and its symptoms. ]
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 Looks good to me!
@@ -129,24 +111,31 @@ Thanks,
 -Geliang
 
 > ---
-> v3: commit msg: the netns pinned by the queued children (Clashiko)
+> v2: commit msg: the reset after a bad checksum too (Sashiko)
 > ---
->  net/mptcp/subflow.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  net/mptcp/subflow.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
 > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 67a749643ad7..91698d154c40 100644
+> index 91698d154c40..a216d88d35ee 100644
 > --- a/net/mptcp/subflow.c
 > +++ b/net/mptcp/subflow.c
-> @@ -315,6 +315,11 @@ int mptcp_subflow_init_cookie_req(struct request_sock *req,
+> @@ -1505,8 +1505,8 @@ static bool subflow_check_data_avail(struct sock *ssk)
+>  		}
 >  
->  	opt_mp_capable = !!(mp_opt.suboptions & OPTION_MPTCP_MPC_ACK);
->  	opt_mp_join = !!(mp_opt.suboptions & OPTION_MPTCP_MPJ_ACK);
-> +
-> +	/* PM listeners only take MP_JOIN, like in subflow_check_req() */
-> +	if (unlikely(listener->pm_listener) && !opt_mp_join)
-> +		return subflow_reset_req_endp(req, skb);
-> +
->  	if (opt_mp_capable && listener->request_mptcp) {
->  		if (mp_opt.sndr_key == 0)
->  			return -EINVAL;
+>  		if (!mptcp_try_fallback(ssk, MPTCP_MIB_DSSFALLBACK)) {
+> -			/* fatal protocol error, close the socket.
+> -			 * subflow_error_report() will introduce the appropriate barriers
+> +			/* fatal protocol error, reset the subflow and let the
+> +			 * worker close it
+>  			 */
+>  			subflow->reset_transient = 0;
+>  			MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSRESET);
+> @@ -1521,6 +1521,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
+>  				sk_eat_skb(ssk, skb);
+>  			mptcp_send_active_reset_reason(ssk);
+>  			WRITE_ONCE(subflow->data_avail, false);
+> +			subflow_sched_work_if_closed(msk, ssk);
+>  			return false;
+>  		}
+>  	}
