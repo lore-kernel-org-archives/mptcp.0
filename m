@@ -1,55 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.54
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795755856;
-	b=HSO+sh/jicOhjQnvQrBRkhlTM1t8Yuq6RExubn9Kwk5ntOMt7C/3Wmcu/TwwZHufa0mv
-	 pkDnYr857iKxOrXkchTWq+EuA73QOjujxRonf4I2EFDI6CEJO41rDh7Hzf6KQmu+c1sZc
-	 xlFbjedsBmeNFeOSYaxI6qlm6rTj5XV/VyatJdnDfnHtzt8so/nPKk67QD9vlDJid0Pqx
-	 KJdyr1DNUW/pr5lHqUEcxeMVFvz2oPWRdI6kztQcUuOogrTVQ1Kwdi8faaZZBy7TjWL0G
-	 +w506mGtNo0DFlqhcqIE+VbzZqgR4AhbgPRtvkLK2+4dz/toUqZb4TCXHHbbnireUtg==
+	t=1795760307;
+	b=Oh1wnq7UhLEf/1DLdXaQSwCDPfL4pZsiMscGPFQ5qnUAI17/VD1TZVy/VKqftKAJWyfT
+	 qX+e+W/DDsw5yPMxvKtArpCnOsfWBPuSeoiHkM+6GNz1kT4Dly9+wI2bPEXcBEozdnpij
+	 TNO/pYjthIp304x8STvNxc7MyEVy3lxFRsHKe4Eq0zjA2H3vAnXE/4YbrHK99IYfzAVw9
+	 SL1BhOZKT0iWCSDb+14RppeVCKeyyZxRg/JoS/FnSkNjEbIguR9kmgvq1wVDfQxXe7ayl
+	 IY8K9kQCnEKRuyEEehggEuMa+dWhs1E8c6+vVt3q0Cp7iZY4Twm+zJl4fpAV5v/Lz/g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795755856;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=0ffDPINStj4lRiqTeo4LPdwyN7du01bykKSuY2RBzs8=;
-	b=wkmmoNpAJrMqHVJKu6ddSdlt2SGeEBMSFvRWbwvaMQ4Xpl9/6gZpz7auFjOBFLDX+Adn
-	 O9P419pkwfBxiBLTAO2XjgxcNzQSx5lvK8Oj00npxj7jZ0d79s0iVrilRTN2IkaaQelPa
-	 76MNVs5XD9YUukPvBXPFfZOPopOjX9GboReK+qsxlLgslNGo1g8sw2bJ/AXnPMvHcps7G
-	 cDOqlrPuLpxs1ELIjVMG0BeTI4qhsK8pfCfRnlUw7cYxF6DxjtWdF+qpUqxyAxXnFzI21
-	 etA0XbWHtQWhp3WPoJ4uIPHkGXvOdrL6rPtxIcs2DKnyWe2Kk/3XfwKrHOrwLwlGV6Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795760307;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=Xall2LvYqrNEWJ3haGr3baDKY0fqS4yjvxamjxNnjGY=;
+	b=XgKC0L9vosigAvciVufIgrj43LJ+6quBW+zPD1w6rkHlf101YrQFFaZoZlAbd3tbfpog
+	 JVGMkkSVlRoPQ4cwchI38wmOShNoFo/cDhUjUvnfIfZhW/NbF5yt4Zf05ryfeUpePSCJX
+	 6QpcW1rzCQ/lvh25Lf9WtPXQ2N3Nq4IYj4SB1c1Vftly6nDy/5TonSiZkGmDNelIrkXgo
+	 xnq21MUBaoxYnghcAK53rQGXWUyiQIAFofh3nIC5XDwaeig5XhH8wSIx2xe5rD0sGA6XX
+	 KiWEJk5qD446ih4k3F9cJZ4dksDYU0X+fn2s1jEDRBWFh/7urUlSX8f4z/XrbqD7R9Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SL7OdpbK;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=sKr55MTO;
+	arc=none smtp.remote-ip=91.218.175.54
+Received: from mta0.migadu.com (out-54.mta0.migadu.com [91.218.175.54])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73360606A31C
-	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 05:04:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55567606A31E
+	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 06:18:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 55567606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SL7OdpbK
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB0601F00893;
-	Fri, 27 Nov 2026 05:04:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795755856;
-	bh=0ffDPINStj4lRiqTeo4LPdwyN7du01bykKSuY2RBzs8=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=SL7OdpbKRij7XdxvxlJwAWZmq8gLs3s13OLVMnaIuQ5vtTOsVsv+kvJRM+6DOp3yw
-	 zdbP/+5iQEDoSlo36AX3S95xiBC3KxTPVuY4peVRNTJwA9p1JLzqJrM6EgzFyl50t/
-	 ckB/NAHQd+NklQxaaW16ihFH8BY7oyfJnbr1XbfbX58fD5gSITNz8tpnU/LU9rt3pY
-	 luE8wVI5uwEWD9Rcca59ectiQSpJKmFkEWMxjYlVqazOoai2wkPpBtGoW1DZN2D2Zy
-	 MDW7iwzVq1TiUohpzizmn9+FVSWzMkE6IpV/ML/3FibxB2yvD3vhOPNfgWsADUl0lA
-	 ZHcgxNFJ+cH9g==
-Message-ID: <sashiko-outbox-236633@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-next v10 3/7] mptcp: add MSG_ZEROCOPY support
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <73d24deb26196f8a9ee7060d93c117a7ce5bd265.1795753727.git.tanggeliang@kylinos.cn>
-References: <cover.1795753727.git.tanggeliang@kylinos.cn>
- <73d24deb26196f8a9ee7060d93c117a7ce5bd265.1795753727.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 27 Nov 2026 05:04:15 +0000
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=sKr55MTO
+X-Envelope-To: mptcp@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=kS24aWEDVFAGZg9av7QpzpXRdTf89yuZQQWrd8Pe7YI=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1795760304; v=1; x=1796365104;
+ b=sKr55MTON/+6jrOYoyP4mbHJKogHVXu9Sy8xuEmw89uAYd4PLeivI6FcOlRQwTBLAeu3cSVF
+ uh7hEohrUeSmHTgPd+SFC4C0L1YiokNOradNPZrh86Ik6+ihBWo4j2q8XICHqB01t4IjwRlu1z1
+ xSzqw+oyTwgaacapk//YEWLo=
+X-Envelope-To: mptcp@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 7a6dd275991888ae;
+	Fri, 27 Nov 2026 06:18:24 +0000
+X-Mizu-Trace-ID: 7a6dd275991888ae
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <d5c55d47-8651-4c75-a0b6-2734a1394a9e@linux.dev>
+Date: Fri, 27 Nov 2026 15:18:02 +0900
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -58,131 +57,133 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v1 0/6] net: avoid stack canaries in TCP/IPv4
+ fast paths
+To: gang.yan@linux.dev, netdev@vger.kernel.org
+Cc: "David S . Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
+ Emil Tsalapatis <emil@etsalapatis.com>,
+ Ihor Solodrai <ihor.solodrai@linux.dev>, Matthieu Baerts
+ <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, David Ahern <dsahern@kernel.org>,
+ Ido Schimmel <idosch@nvidia.com>, Stanislav Fomichev <sdf@fomichev.me>,
+ Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>,
+ Pablo Neira Ayuso <pablo@netfilter.org>, Florian Westphal <fw@strlen.de>,
+ Phil Sutter <phil@nwl.cc>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, mptcp@lists.linux.dev,
+ netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+ Xuanqiang Luo <luoxuanqiang@kylinos.cn>, david.laight.linux@gmail.com
+References: <20261124130631.1886963-1-xuanqiang.luo@linux.dev>
+ <133c1ca98af6beb48c0db1e6bb539a2a76ccda49@linux.dev>
+From: Xuanqiang Luo <xuanqiang.luo@linux.dev>
+In-Reply-To: <133c1ca98af6beb48c0db1e6bb539a2a76ccda49@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issues to consider:
-- [High] mptcp: broken non-SG zerocopy fallback in mptcp_sendmsg_frag()
-- [Medium] mptcp: incomplete fastopen zerocopy handling in
-  mptcp_sendmsg()
---
+On 2026/11/26 at 17:48 gang.yan@linux.dev wrote:
+> November 24, 2026 at 9:06 PM, "Xuanqiang Luo" <xuanqiang.luo@linux.dev mailto:xuanqiang.luo@linux.dev?to=%22Xuanqiang%20Luo%22%20%3Cxuanqiang.luo%40linux.dev%3E > wrote:
+> 
+> 
+>>
+>> From: Xuanqiang Luo <luoxuanqiang@kylinos.cn>
+>>
+>> With CONFIG_STACKPROTECTOR_STRONG=y, a function that has a local array or
+>> passes the address of one of its locals to another function needs a stack
+>> canary. The canary is set up and checked on every call, also when the
+>> local is only used on a path that almost never runs.
+>>
+>> This series removes the canary from functions of the TCP/IPv4 fast paths,
+>> by returning results by value, by using storage that is not on the stack,
+>> or by not calling a function that has nothing to do.
+>>
+>> Patch 1 returns the two mptcp_space() values in a structure, so that
+>> __tcp_select_window() no longer needs a canary.
+>>
+>> Patch 2 changes ip_neigh_gw4() to take a pointer to the address, like
+>> ip_neigh_gw6(), so that ip_finish_output2() no longer needs a canary.
+>>
+>> Patch 3 uses pskb_may_pull() in icmp_filter(), so that
+>> raw_local_deliver() no longer needs a canary.
+>>
+>> Patch 4 turns skb_try_coalesce() into an inline wrapper over a function
+>> returning its results by value, so that its callers no longer need a
+>> canary because of it.
+>>
+>> Patch 5 returns the result of the TCP receive coalescing by value, so
+>> that tcp_rcv_established() and tcp_data_queue() no longer need a canary.
+>>
+>> Patch 6 calls bpf_skops_write_hdr_opt(), which needs a canary, only if a
+>> BPF program reserved room for TCP options.
+>>
+>> The bloat-o-meter numbers are from gcc 16.2 on x86_64. The functions
+>> named in patches 1 to 5 also lose their canary with clang 23.1.6 on
+>> x86_64, with and without ThinLTO, and on arm64.
+>>
+> 
+> Hi Xuanqiang,
+> 
+> Thanks for this series. Besides the code size, do you have any runtime perf
+> numbers (TCP_RR, cycles per packet...)? I think it may help the maintainers
+> judge the real gain.
+Hi Gang,
 
-commit c58f22d48411d595b383144989fbe0b88bbec032
-Author: Geliang Tang <geliang@kernel.org>
+I omitted runtime numbers from the cover letter because earlier cross-NIC
+TCP_RR runs were within boot-to-boot noise, and I did not want to overstate
+the gain. I re-ran the full 6-patch series against its base commit
+(a4c450594f5d) in a tighter setup on an x86_64 server (Hygon C86-4G,
+ConnectX-5 10GbE mlx5, GCC 12.3, CONFIG_STACKPROTECTOR_STRONG=y, identical
+.config, nokaslr, boost off, isolated CPUs/IRQs, busy_read=0, 3 alternating
+boots per kernel x 4 runs):
 
-mptcp: add MSG_ZEROCOPY support
+1. Single-CPU loopback 1-byte TCP_RR (both endpoints on 1 CPU running the
+    kernel under test, 99.9% busy with no cross-CPU lock contention; each
+    RR counts 2 TX + 2 RX = 4 Tcp InSegs+OutSegs):
+    - instructions:k / tx:  33,562.3 -> 33,410.6 (-151.8, -0.45%, CV 0.01%)
+    - instructions:k / seg:  8,372.8 ->  8,336.1 ( -36.8, -0.44%, CV 0.02%)
+    - branches:k / tx:       7,627.9 ->  7,604.4 ( -23.5, -0.31%, CV 0.03%)
+    - cycles:k / tx:        48,883.8 -> 48,613.8 (-270.0, -0.55%)
+    - throughput:           52,804   -> 53,068 tps (+0.50%)
 
-This commit adds MSG_ZEROCOPY support for MPTCP sockets by pinning user
-pages into mptcp_data_frag structures and tracking ubuf_info_msgzc
-references across the MPTCP retransmission queue and subflow skbs.
+2. Cross-host 10GbE mlx5 8-flow 1-byte TCP_RR (server CPU-bound on 1 app
+    CPU + 1 IRQ CPU, client pinned on a fixed peer kernel):
+    - instructions:k / pkt: 12,040.6 -> 11,946.0 ( -94.6, -0.79%, CV 0.43%)
+    - cycles:k / pkt:       19,652.2 -> 19,450.1 (-202.1, -1.03%, CV 0.52%)
+    - throughput:           79,455   -> 79,883 tps (+0.54%)
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 504d0b196d84b..d29ecdb05beb9 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
+3. Loopback small-write TCP_STREAM (-m 512 -D, 2 CPUs):
+    - instructions:k / seg:  5,805.6 ->  5,713.7 ( -91.9, -1.58%)
+    - cycles:k / seg:        8,538.5 ->  8,416.8 (-121.7, -1.42%)
+    - throughput:            641.8   ->  650.5 Mbit/s (+1.37%)
+    (Note: in the 2-CPU / multi-flow cases above, perf shows part of the
+     larger per-packet drop comes from fewer spinlock-slowpath and idle-loop
+     samples in addition to the direct TCP path savings; test 1 isolates
+     the direct instruction/branch reduction.)
 
-[ ... ]
+4. perf record (cycles:k and instructions:k) confirms
+    bpf_skops_write_hdr_opt() drops from 0.04-0.12% to 0.00% across all
+    profiled workloads, with consistent drops in tcp_rcv_established(),
+    __tcp_transmit_skb(), and __tcp_select_window().
 
-> @@ -1530,25 +1552,42 @@ static int mptcp_sendmsg_frag(struct sock *sk, st=
-ruct sock *ssk,
->  	copy =3D min_t(size_t, copy, info->limit - info->sent);
-> =20
->  	/* like TCP, allow some progress up to tcp_wmem[0] */
-> -	avail =3D tcp_wmem_schedule(ssk, copy);
-> -	if (avail <=3D 0) {
-> +	if (!dfrag->ubuf) {
-> +		avail =3D tcp_wmem_schedule(ssk, copy);
-> +		copy =3D avail > 0 ? avail : 0;
-> +	}
-> +
-> +	if (!copy) {
->  		tcp_remove_empty_skb(ssk);
->  		return -ENOMEM;
->  	}
-> -	copy =3D avail;
-> =20
->  	if (can_coalesce) {
->  		skb_frag_size_add(&skb_shinfo(skb)->frags[i - 1], copy);
->  	} else {
->  		get_page(dfrag->page);
->  		skb_fill_page_desc(skb, i, dfrag->page, offset, copy);
-> +
-> +		if (dfrag->ubuf && !skb_zcopy(skb)) {
-> +			if (ssk->sk_route_caps & NETIF_F_SG) {
-> +				skb_zcopy_set(skb, dfrag->ubuf, NULL);
-> +				skb_shinfo(skb)->flags |=3D SKBFL_PURE_ZEROCOPY;
-> +				zc =3D true;
-> +			} else {
-> +				uarg_to_msgzc(dfrag->ubuf)->zerocopy =3D 0;
-> +			}
-> +		}
->  	}
-> =20
-> +	if (!zc)
-> +		zc =3D skb_zcopy_pure(skb);
-> +
->  	skb->len +=3D copy;
->  	skb->data_len +=3D copy;
-> -	skb->truesize +=3D copy;
-> -	sk_wmem_queued_add(ssk, copy);
-> -	sk_mem_charge(ssk, copy);
-> +	skb->truesize +=3D zc ? PAGE_SIZE : copy;
-> +	sk_wmem_queued_add(ssk, zc ? PAGE_SIZE : copy);
-> +	if (!zc)
-> +		sk_mem_charge(ssk, copy);
+One caveat to be transparent: on a loopback 1-byte UDP_RR control (which
+only exercises patch 2's ip_finish_output2() canary removal),
+instructions:k/tx changed by the expected -23.2 insns/tx (-0.07%) and
+branches:k/tx was flat (+0.02%), yet wall-clock tps/cycles still shifted
+by -0.80%/+0.68% due to fixed code-layout/IPC differences under nokaslr.
 
-[Severity: High]
-Does the non-NETIF_F_SG fallback corrupt ssk->sk_forward_alloc and leave
-the pinned user page attached to skb without a dfrag->ubuf reference?
+So the reliable runtime signal here is the deterministic drop in kernel
+instructions and branches (~152 insns / ~23.5 branches per loopback TCP_RR)
+and the disappearance of bpf_skops_write_hdr_opt() from the profile, while
+wall-clock TCP_RR tps/cycles (~0.5%) remain in the same range as
+code-alignment effects on this machine.
 
-When dfrag->ubuf is set and ssk->sk_route_caps lacks NETIF_F_SG,
-tcp_wmem_schedule() is skipped, but zc remains false and sk_mem_charge()
-charges unscheduled bytes against ssk->sk_forward_alloc; freeing skb in
-tcp_wmem_free_skb() then uncharges and reclaims memory that was never
-scheduled.
-
-In addition, dfrag->page is already a pinned user page attached via
-skb_fill_page_desc(), so skipping skb_zcopy_set() leaves skb holding the
-user page without a dfrag->ubuf reference or SKBFL_ZEROCOPY_FRAG, allowing
-dfrag_clear() to complete the zerocopy notification while skb is still in
-flight.
-
-[ ... ]
-
-> @@ -2048,27 +2088,116 @@ static void mptcp_rps_record_subflows(const stru=
-ct mptcp_sock *msk)
-
-[ ... ]
-
->  	if (unlikely(inet_test_bit(DEFER_CONNECT, sk) ||
->  		     msg->msg_flags & MSG_FASTOPEN)) {
->  		int copied_syn =3D 0;
-> =20
-> -		ret =3D mptcp_sendmsg_fastopen(sk, msg, len, &copied_syn);
-> +		if (zc && (msg->msg_flags & MSG_FASTOPEN)) {
-> +			uarg_to_msgzc(ubuf)->zerocopy =3D 0;
-> +			zc =3D false;
-> +		}
-> +
-> +		ret =3D mptcp_sendmsg_fastopen(sk, msg, len, &copied_syn, ubuf);
->  		copied +=3D copied_syn;
->  		if (ret =3D=3D -EINPROGRESS && copied_syn > 0)
->  			goto out;
-
-[Severity: Medium]
-Can fastopen with MSG_ZEROCOPY complete ubuf prematurely or omit
-SO_EE_CODE_ZEROCOPY_COPIED?
-
-When MSG_FASTOPEN clears zc on a blocking send that has data remaining
-after the SYN (or when no TFO cookie is cached and copied_syn is 0), the
-send loop queues the remaining payload via the regular copy path without
-taking a ubuf reference, so net_zcopy_put(ubuf) at out: fires the
-completion notification before that data is acknowledged.
-
-Also, when fastopen is entered via DEFER_CONNECT (TCP_FASTOPEN_CONNECT)
-without MSG_FASTOPEN in msg->msg_flags, uarg_to_msgzc(ubuf)->zerocopy is
-not cleared even though tcp_send_syn_data() copies the SYN payload into a
-page_frag and attaches ubuf via skb_zcopy_set().
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1795753727.gi=
-t.tanggeliang@kylinos.cn?part=3D3
+Thanks,
+Xuanqiang
