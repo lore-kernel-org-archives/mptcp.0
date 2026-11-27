@@ -1,54 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.163
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.160.170
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795761218;
-	b=jCId9RSQeLXoAbwVROxCugjtZYIUno/FCJnm4hQDtOHeZ+mrj2VkjJupFSdX2G0pGed6
-	 3IzNpq0N2LL7W2eWr+LfuibjqhrHSxeWZcqMrf5my2jUPJKW9slF2g1BzIy9aDuFtJdQI
-	 02c+84YZbXnHWxBo/TxkPQv7nrbBdfLuJiozZ94QyRHG/eDBStSDe5+EnkojZcow7yDmA
-	 IKxStQXU7ZyVX/e5CUIFHBr/XVskRRSel/IJzMQIXpM7RaEOmOLsRdz7pdgNPmu8D7uI2
-	 ihpfgZXtan+1O5AMGBP1rEl60nBwbLi/Pcs5h2naV9lS+RTsR4l29i+TQvMixlb+YmA==
+	t=1795764244;
+	b=GGTySOkoNQM9wSOXQ42kNOxsU6mvQQv2hB96e5Pgz+zzby2eTQzorEGyDO753UKR2S4C
+	 QubqZ3oQfc9kf6QZmD7ZoxYoJG7+pOZazYVzRmyovvq9o1z9yQuob8AveFBhkncbdaxUs
+	 eLMo8Qx2dhxzH+fhBoipoF0rkuPZ3W1VgVbNVvwYIQb1QkhEaKW5uf/mxCM56vdKIMj/u
+	 hrxH0X/7GRoDqDk8rRLkdA3vO0QCOaO6ogEOFyX7vyDPq1kQeluns5FYPwoGVO/zy5kqT
+	 6Y4jl2iY6eXgXD2dkGJ2OrU3+vDDa5+1VdnwNPF+3meskc9JKuE8UuflwcJCQ25bjGw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795761218;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=6LC43k933l8Ek/GrSPWgwkIQo2nW1+6+OwznWt8NdeU=;
-	b=tfvtfPutSfMhaJ1/BfiiRx0NWdaKVx+PYy2kBwHty2lKF0ZjWHBpJFVe9wFqXmUvcaMm
-	 6siOUAu0mjuGa3+BxiuRgN8ozMCngi3WnJvtmaAP6FKle06fxESF+9P2K6aPHfh99H/4D
-	 6DYCccoVL0TUjWH8jrJxW8J+vAkqw2U81vXLNzDSaFqdmwvDH1Ief+74/6j3dXhWdNlf/
-	 fOvX83wygrZ0o17/BsHpCwbmdYt9pRQZJ6TBMkQEf/mF2VmtpdO/GgiFtDSy2MRJKL66y
-	 Q5XgGq0ofjWr+mXH1eRGd+NTT9JdaJcR0ZSE2mkJWEoE2iT1B6LIxKS9Qd2jfHOQptg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795764244;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Reply-To:
+	 In-Reply-To:References:Subject:Message-ID:Content-Transfer-Encoding:
+	 Date:MIME-Version:Content-Type;
+	bh=iuoPT7GWHCy8y3Pnq7fa2Pgny3M41VIvCq3XqYr43v4=;
+	b=wMf6HkQ0magigVkjKOgGWfBDR3707OF1GlaNAxFRPcjP2MAhZpN+koc0kUZJ/z4iNmeE
+	 565oJ7/Bl5OgdCNyshqregIKFQ7OSaJwXZAFEmC7v2rYNHmkRpKsyRSgDCPT7a39nrzL8
+	 4Bcn/PjsZdCi85V1KRps9W/EcOJtsxjDHZ1DMY0l4iGUrbbs8NqxaukMTWNngb49TXrQ9
+	 5Kv3TKOkL+CwhFVIIfg1VXuULE30yk8OI9nbksc4ya7CueMVdHD9q8T+hhEuI6XCUYfDR
+	 8A2s9VGDjG+z6nGYjeyuUwTewftLAxgIlWIOdi9LSNp/iU0lcBv0eiR/9iMgDdQ/W7Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=Pyc4YtWB;
-	arc=none smtp.remote-ip=91.218.175.163
-Received: from mta0.migadu.com (out-163.mta0.migadu.com [91.218.175.163])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="A//963ox";
+	arc=none smtp.remote-ip=209.85.160.170
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E8A606A31C
-	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 06:33:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 48E8A606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB650606A31C
+	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 07:24:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DB650606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=Pyc4YtWB
-X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=Aqo9Gh/z13+vrH5nhABhxwXDDFLj9lawY51vL3ULqrs=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795761215; v=1; x=1796366015;
- b=Pyc4YtWBMb+uDyjRZFohccHRXDcqxjekMGI9XBuOksTtl7RsTdQSl90YeRagfq6ustsfEyj9
- RXxSbMkwBQgQSKiCwi2CDTcdMz72XIz3prRT/9iFhHufQspLXgM2e/yR5BFUF99cVMJIl7Yeejd
- l3jHHduYcvGqugwctNqkEQD4=
-X-Envelope-To: mptcp@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id bf87ac2432157dd5;
-	Fri, 27 Nov 2026 06:33:35 +0000
-X-Mizu-Trace-ID: bf87ac2432157dd5
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <bffee809-2992-40eb-97c7-72d919de0aed@linux.dev>
-Date: Fri, 27 Nov 2026 15:33:15 +0900
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=A//963ox
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-5365d725440so69468081cf.0
+        for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 23:24:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795764243; x=1796369043; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=iuoPT7GWHCy8y3Pnq7fa2Pgny3M41VIvCq3XqYr43v4=;
+        b=A//963oxqYeQSgM6WPZyeY/WDq1hoBtjOeXIV1h1z5qXi2JLYG46X6BwbAe2eQ+WKm
+         H/2GTLdliBOFMcbv9RW0i2xMINcGcS7dm3VlAZZHoF/+vJByxTRfZCadCEJzR5Vmauga
+         PLIqjUAonw6ntTveUuQWviNa1/Rhx2c2U9ClK9iAeed30BAoH3WNipKM9iQDloXIuQ8y
+         okrjmnQdYkA2hA8nm18Eto6mY0MyRjwRAUHv9HtCj0aeIYaMQHPUpn7Gc0dwuH8WsQ08
+         FM0xHmu4+BBuRWsdIWKlE2xVLMf5Sge5iGP7hZUvhhs/43R7LOp+vLNJFa4wnIdwgVoQ
+         i0tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795764243; x=1796369043;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=iuoPT7GWHCy8y3Pnq7fa2Pgny3M41VIvCq3XqYr43v4=;
+        b=arH5amS2kdmgGMIrm+v64e6KUPMvsug6zxuCqlwOGTcrSNdNs/MT7BBPw8YLJnHZ33
+         va98e8BP6Cj2WWHbBULlkQYJ9A1GTjTFxY+OyLmkeON1oWhhWvr7wj2T/hx59ZzsfkaT
+         rvrejyNX9+zUYU1x205Vm6NMpKPo7+1hOdgDyqI7aQPu8sMM+8liIvUAhB3A+qqz1A2G
+         fXgXpdFmNZDe2eRhx8YZvlfa4rKdEx5FDAXVOah8fzExWSvf7VgO81f+EyeTfJis7jzE
+         /13cdsz/7kELSJ4ma5TS1ZBZMzFrkANi3DIdWQ1pZicyPVih4OTAU4vs1eS5Awu4MPmz
+         CXQQ==
+X-Gm-Message-State: APuU4Z/A4C1dZvqbl0AmcGneUjymXk9BZVd7JE4jgJwpIJTeKotxGDIo
+	5Q4GlyxU20WF3iBv+FkE/f35fEEorT8XouzqIsz7otdQ02TjoLTs4x3C4fM8
+X-Gm-Gg: AZFdTZdwmKyfd2Mo9QuF4Ybu7JX8mP2Av9K2ZiFvD+keTdf+pvPM4TDscUVNHbPxWuL
+	PSPtoenGocUcCbpSOIp5Zy4+lVLXRLgjME1rYXoR0GJDzHHqaGDveul31wOTK2NXsOdJzhlFhNN
+	/y7v+YfBiRpSNJISN1eOZFtUkKx3NlR8usEhlxHE4hLdR4P3L+7MqUpz6ucOAVvUBBxzfL9uH3w
+	p7IC6xh2qczW1rPw8DNjca4kfBmT+au+q6wWKT28Pd/Gepm5kWwtvirMzvaHXGVyiL8UUjTwfUY
+	mKkVMoqserK4G0whFgL/SdNei7mnt7m9wtolQQlqMBiwU67K7GyI8x+Z5UzNwXOwwuQ/kINcjZx
+	mP+f0WkU2lQbIstj0oPq4EF/RFOOxA62J2u8ddW9QtG7tjHrEoeI2mxdy16Ko597QjDCtHFq/Et
+	Olh+Ze445GVn46pMG8IlXqI27UE1ovlxD40AeFYjXwkLoGqyD+lpCaxs/tikXtfGPFoYEExYUYM
+	8aIKktOFocDo/E9GXfHdGplV2y4qTjuclyXXdoeF01TSLjAsydQMdbmJdXUkKpb9DQXJdhFu/bX
+	sw1Ap1TgJpiaxL5ZhyztxrmYHgmiTbZPibpB7dCQSBOsvAZwVjLqo5eULjgroSJmxZgjgJEL9ac
+	vvlPa9jen
+X-Received: by 2002:ac8:5f0b:0:b0:54b:5cc6:6036 with SMTP id d75a77b69052e-55d76afed61mr462747101cf.58.1795764242881;
+        Thu, 26 Nov 2026 23:24:02 -0800 (PST)
+Received: from github.com (ec2-3-41-210-135.compute-1.amazonaws.com. [3.41.210.135])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-9213514d20esm209732356d6.23.2026.11.26.23.24.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Nov 2026 23:24:02 -0800 (PST)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1795753727.git.tanggeliang@kylinos.cn>
+References: <cover.1795753727.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v10 0/7] mptcp: add MSG_ZEROCOPY support
+Message-ID: <3fe63f2d-ef55-cd35-9e27-6facaee62a3b@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 27 Nov 2026 07:24:01 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -58,91 +98,66 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v1 0/6] net: avoid stack canaries in TCP/IPv4
- fast paths
-To: David Laight <david.laight.linux@gmail.com>
-Cc: netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>,
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>,
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
- Emil Tsalapatis <emil@etsalapatis.com>,
- Ihor Solodrai <ihor.solodrai@linux.dev>, Matthieu Baerts
- <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, David Ahern <dsahern@kernel.org>,
- Ido Schimmel <idosch@nvidia.com>, Stanislav Fomichev <sdf@fomichev.me>,
- Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>,
- Pablo Neira Ayuso <pablo@netfilter.org>, Florian Westphal <fw@strlen.de>,
- Phil Sutter <phil@nwl.cc>, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, mptcp@lists.linux.dev,
- netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
- Xuanqiang Luo <luoxuanqiang@kylinos.cn>
-References: <20261124130631.1886963-1-xuanqiang.luo@linux.dev>
- <20261126102058.1fecf50f@pumpkin>
-From: Xuanqiang Luo <xuanqiang.luo@linux.dev>
-In-Reply-To: <20261126102058.1fecf50f@pumpkin>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 
-On 2026/11/26 at 19:20 David Laight wrote:
-> On Tue, 24 Nov 2026 22:06:25 +0900
-> Xuanqiang Luo <xuanqiang.luo@linux.dev> wrote:
-> 
->> From: Xuanqiang Luo <luoxuanqiang@kylinos.cn>
->>
->> With CONFIG_STACKPROTECTOR_STRONG=y, a function that has a local array or
->> passes the address of one of its locals to another function needs a stack
->> canary. The canary is set up and checked on every call, also when the
->> local is only used on a path that almost never runs.
->>
->> This series removes the canary from functions of the TCP/IPv4 fast paths,
->> by returning results by value, by using storage that is not on the stack,
->> or by not calling a function that has nothing to do.
->>
->> Patch 1 returns the two mptcp_space() values in a structure, so that
->> __tcp_select_window() no longer needs a canary.
-> 
-> While all (I think) architectures can return a big integer in two
-> registers (dx:ax on x86), not all ABI do the same for small structures.
-> For those architectures returning a struct by value is implemented by
-> passing the address of a hidden on stack structure.
-> So code generation may be worse than passing the values by reference.
-> I can't remember the list of architectures, mostly old ones - but not
-> 32bit x86 because the compiler option was set when regparm=3 was added
-> for 2.6.
-> (Note that this is different from passing small structures by value.)
-> 
-> David
+Hi Geliang,
 
-Hi David,
+Thank you for your modifications, that's great!
 
-Good point! thanks for bringing that up.
+Our CI did some validations and here is its report:
 
-The small-struct-by-value pattern in patches 1 and 4 follows the same
-approach Eric used in commit 7a4cd71fa451 ("net: add
-vlan_get_protocol_offset_inline() helper"), which returns a 2-field
-struct vlan_type_depth to avoid stack canaries in callers.
+- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): packetdrill_regressions =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): selftest_diag =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: debug (only =
+selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only=
+ bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only =
+bpftest_all): Success! =E2=9C=85
+- Perf: Unstable: 4 failed test(s): =
+regression:sched-clientlim regression:sched-mem-pressure =
+regression:sched-rmem(4) validation:sched-loss =E2=9A=A0=EF=B8=8F  (43 new =
+outliers to review)
+- Task: https://github.com/multipath-tcp/mptcp_net-next=
+/actions/runs/45945376877
 
-I did note the 8-byte struct ABI distinction you mentioned:
-- On the main 64-bit targets (x86_64, arm64, riscv64, ppc64le, loongarch64)
-   as well as 32-bit x86 (with -mregparm=3 / reg-struct-return), both
-   8-byte structs (struct mptcp_space_info and struct skb_coalesce_res) are
-   returned in registers and the stack canaries are dropped cleanly.
-- On ABIs that return structs (> 4 bytes on 32-bit ARM EABI, or any struct
-   on s390x) via a hidden stack buffer, it indeed falls back to a hidden
-   pointer. Even there, the callers previously passed *two* pointers to
-   locals (&space/&full_space in patch 1, &fragstolen/&delta_truesize in
-   patch 4), so passing one hidden 8-byte return slot should not be worse
-   than before, while keeping the code cleaner and type-safe.
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/9f256aa238=
+6e
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1223936
 
-That said, if maintainers prefer packing the two fields into a u64 so that
-even 32-bit ARM / s390x return them in registers, I'd be happy to change
-patches 1 and 4 to do that in v2.
 
-Thanks,
-Xuanqiang
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
