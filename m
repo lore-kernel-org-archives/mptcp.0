@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795735801;
-	b=tgkwBPJT8CB7zgaBAO2kPbeoZpEpdNgQBvIp2LsVWUXiHsSYDqKZbdRzxabYmUjy6rcn
-	 ggdcbfF9QjXuPRapX4L2YpCFzq2xngGyMxY2vrTt5Kz+W8NVeMvsrSwNPBwK3NFNQLQBh
-	 40+fWYV/eYBw1aKaQMiet7mXa7PH4QeGIu6WB/DmJKKx9n1iyiJfPGY4mUksJ2REyMfuH
-	 NzfLSG93cNA5DRJszIfLYNFWBBnxY4IuN2YV1FVZLni9xybQ0qYyEL4LARVN+qZMU+DZC
-	 gbpjcaiLVXmRGP0KEmlKdkyNC8H6PqbcrxZ2Pwk+nCSfsTYNAHUVHapJ7YsiS+t5gPA==
+	t=1795741252;
+	b=J3PfNcirFFkZUQR9zWm16uoRXY8VgZ/puBk91amW6QMkEcwvTcWtyHTxO/yDBtUVaxfc
+	 PHKo8oGWwME6/6fYHlCuhlff8LPZLN9F2aqWUaE9Cq/7DlORPHutl0JtTm5AQc0Jw85bi
+	 6QUrz1MZFwL5DIT//gYegkewTy7qe4gYYB2ihjoYFqwSELnYnzglhwYLnaAf5HP7UYYZa
+	 BtXkfTcKJFh8VpBalFxPzT4cxvzasnpSQ74iXs4kHmrwLtndWz4njDegHwDZR/nnOkP77
+	 ZJHa3oEy5l9ftRrhDckTjdAxinubIfY7M/9h+rteuJA/+m4Lk+ljjLXiPA1+zuhIOqA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795735801;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=VpCpCO+C7SnL+1IpbQu6SCpuw3cLABlt6jpGnPBXfPA=;
-	b=GnPXU55ZXYQYuRZrdaDJzP/wVl9DlMRVvV06GGG+zSX037khGXFty3SNYnUzTZsvpAN5
-	 9jKFuog8Zt4yyjo4xOwZFTesdFos7mXEAAIWRRuh79kYiD/85oJSB2O0rMGVe+VwflcmP
-	 bEA3g8/iqjVvcEVLLHAqqPGKG8dj56pTL0HSge7NP4LJI2DjppM89Odbx4Cc2o4nVUbfs
-	 46hf9PboHNA7kvplt388bt564SWGXzEYOB3Tcrtu5a7ZeB6bQjqBqqRPU+XP4Pj30bb7d
-	 BFqlosGaGTRpP9e9lptqdXt0qfjmgVRTT+6q5sRbq1XDioWPlLqliGYmG1tdbMpqRrg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795741252;
+	h=Received:DKIM-Signature:Message-ID:Subject:From:To:Date:In-Reply-To:
+	 References:Content-Type:User-Agent:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=xhnWkhQ/u/hE+v2p9kK0TLtztvPtZiRlajvfeyQhhWE=;
+	b=404f9vmgM5PezkUEX2wvLmc4aIfsI5VQwSAbkchA/mVYazqeh1scEylj0r4K1FaD3bA9
+	 qZPZQvDOh5675p+vw4lJSoddS/CiQrQoKC8WrRQsDpEDqXkoL+VQcMev6u35nshgeYy/5
+	 kxLkh293pA2fPBeiIkkxWmGvSMj17lx8BszLfp0+eXKssi8QuYwrTtxQVmgzk4PLvjSiP
+	 oKbu+8bo2aetCxA+6qqf9NEfjEitJG8gAZXibZY2RC+ijkw4+zpt1o+WdJ6fhFgMCvx9v
+	 qwETEjccsNpKx1fgTgF4fxcR5+1R7fT0sb0BW0boZJkCSEN87OAy1vO1dneiwEOTu5Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TiBkYa8I;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PXehlAat;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65386606A31C
-	for <mptcp@lists.linux.dev>; Thu, 26 Nov 2026 23:30:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C5C606A31C
+	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 01:00:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TiBkYa8I
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 864A61F00896;
-	Thu, 26 Nov 2026 23:30:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PXehlAat
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 807B21F000C1;
+	Fri, 27 Nov 2026 01:00:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795735800;
-	bh=VpCpCO+C7SnL+1IpbQu6SCpuw3cLABlt6jpGnPBXfPA=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=TiBkYa8Ivyn1MKfXpiF/zKd/9KbmAybwh+FMKMyYC6LyczSrCKYfL82VostqBxigy
-	 7BRJEjMw7g+gW1CSiTMddHxuuygwP1B17ZY0PlnsTutOVyNBkot8TE6vDDKhDI6A32
-	 e73WW06FxfCISe7PnayGLH+4J2VrcnOlV/HfZK8NstJJ8GUO1vv1f/03+x2dbgaKW1
-	 SQgOsDOelXSMijsQQtBYlIENdPH3v6iAt39ku4hfIu6pbAiHwYKTqtmM5KcFTfrFFc
-	 ticcGqA+nT1bn3T2sDAglEftcpO4y9nxFF6uuSFR9QeSx2m/Z0yq1VxrDTgIQzZv+S
-	 xYylHn975pbhw==
-Subject: Re: [PATCH RFC mptcp-next mptcp-net v3 50/50] mptcp: reset when the
- DSS disappears after a DATA_ACK
-From: netdev-bot+sashiko@kernel.org
-To: matttbe@kernel.org
-Cc: mptcp@lists.linux.dev, kuba@kernel.org
-Date: Thu, 26 Nov 2026 23:29:59 +0000
-Message-ID: <179573579993.3133.10747290585204924101@kernel.org>
-In-Reply-To: <20261124-mptcp-cmason-fixes-v3-50-416c0920c73f@kernel.org>
-References: <20261124-mptcp-cmason-fixes-v3-50-416c0920c73f@kernel.org>
-X-sashiko-severity: High
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20260515; t=1795741251;
+	bh=xhnWkhQ/u/hE+v2p9kK0TLtztvPtZiRlajvfeyQhhWE=;
+	h=Subject:From:To:Date:In-Reply-To:References;
+	b=PXehlAatHmjchHBwqofSUou7c+NSLi7U6kLaWygO5NxXfeZCqZcPg8FOwvllSUXrv
+	 DMu/qhnv6yxU93/guv0EAj8M2Nt3D5tNxx4ePeonmNKGcWDJNQ1UykiVo00cUOU4Tt
+	 6Vye7UFNCuac3rH5E3WH5UrOauuf/Ofnz3/pct5jdW6lkJLvV+moLT19h/dBqfTI1w
+	 Egl0o1GPvNX/ok2piuE68LHhuwDk16PBX8sGPVuJHQgIzC6n6KHuA7bIZksplWLaCQ
+	 GnCBCRnWZkeLdUjJKQwsTOMF7Y2jJR485mSB/JW92AwbZEMbWB7TgkmEiAaiB2HGRg
+	 lnxxcaxILgU6g==
+Message-ID: <3363a6547aa50f3f8ceaf2aced847bca39e3c2e1.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net v3 17/50] mptcp: report sf aborts during
+ deferred connect
+From: Geliang Tang <geliang@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, MPTCP Linux
+	 <mptcp@lists.linux.dev>
+Date: Fri, 27 Nov 2026 09:00:47 +0800
+In-Reply-To: <20261124-mptcp-cmason-fixes-v3-17-416c0920c73f@kernel.org>
+References: <20261124-mptcp-cmason-fixes-v3-0-416c0920c73f@kernel.org>
+	 <20261124-mptcp-cmason-fixes-v3-17-416c0920c73f@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-10build1 
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -61,162 +61,106 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issue(s) to consider.
+Hi Matt,
 
-Critical: 0 · High: 1 · Medium: 1 · Low: 0
+On Tue, 2026-11-24 at 22:59 +0100, Matthieu Baerts (NGI0) wrote:
+> With TCP_FASTOPEN_CONNECT, connect() on an MPTCP socket only sets
+> DEFER_CONNECT on the first subflow and on the msk, and the first write()
+> sends the SYN with data via mptcp_sendmsg_fastopen().
+> 
+> If the first subflow is aborted by tcp_abort(), e.g. via a sock_diag
+> destroy request or the bpf_sock_destroy() kfunc, while mptcp_sendmsg()
+> already owns the msk socket and is waiting for the subflow lock:
+> 
+> - tcp_abort() clears DEFER_CONNECT on the subflow, and moves it to
+>   TCP_CLOSE;
+> - subflow_error_report() can only set MPTCP_ERROR_REPORT, because the
+>   msk is owned by the user: the msk stays in SYN_SENT, with
+>   DEFER_CONNECT still set.
+> 
+> tcp_sendmsg_fastopen() then skips tcp_connect(), and calls
+> __inet_stream_connect() with the msk socket, the first subflow being
+> grafted to it. Because DEFER_CONNECT is set on the msk, -EISCONN is
+> returned to userspace, on a connection that has just been aborted.
+> 
+> Detect this case once the subflow lock is held: if DEFER_CONNECT is set
+> on the msk, but no longer on the subflow, the subflow has been aborted,
+> or disconnected. Propagate the subflow error to the msk directly,
+> instead of waiting for the msk release callback. mptcp_sendmsg() will
+> then report this error via sk_stream_wait_connect(), like plain TCP
+> after tcp_abort(), e.g. -ECONNABORTED. The deferred error report is then
+> a no-op, so the error is not reported twice.
+> 
+> Without the race, the msk is already in TCP_CLOSE with the error set:
+> the same check also avoids going through tcp_sendmsg_fastopen() and
+> __inet_stream_connect() in this case, except with MSG_FASTOPEN. As TCP
+> does, write() then reports the error without disconnecting the socket.
+> With MSG_FASTOPEN, the socket has to be disconnected, as with TCP, for
+> the next sendto() to connect again, and the race cannot happen:
+> __mptcp_nmpc_sk() requires an msk in TCP_CLOSE.
+> 
+> Clearing DEFER_CONNECT on the msk from tcp_abort_override() instead
+> would not be enough: tcp_abort() is called on the subflow without the
+> msk lock, and mptcp_sendmsg() checks the msk bit before taking the
+> subflow lock. The abort can then happen in between, and write() would
+> return -EALREADY, followed by a disconnect of the msk dropping the
+> deferred error. In this path, only mptcp_sendmsg_fastopen() holds both
+> the msk and the subflow locks, and sees a consistent state.
+> 
+> This issue has been reported by Sashiko, while reviewing the commit
+> below. It has not been reproduced: the abort has to happen while write()
+> owns the msk socket, and waits for the subflow lock.
+> 
+> Fixes: 93723db43e51 ("tcp: Clear DEFER_CONNECT before tcp_connect() and in tcp_abort().")
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
+It took me a bit of time to understand this patch. Looks good to me!
 
-- [High] The patch is incomplete: after a DATA_ACK confirmation, an skb
-  that runs past the end of its mapping still makes the receiver fall…
-- [Medium] The MAPPING_INFINITE exemption ('but not for an infinite
-  mapping, the fallback signal from the RFC') does not work when the…
+    Reviewed-by: Geliang Tang <geliang@kernel.org>
 
---
+Thanks,
+-Geliang
 
-mptcp: reset when the DSS disappears after a DATA_ACK
-
-Following RFC 8684 section 3.7, this commit resets a subflow when it
-receives data without a DSS, or with an invalid mapping, after a DATA_ACK
-on that subflow acknowledged sent data. The exception is an MP_FAIL
-exchange in progress. ack_update_msk() sets a new dss_confirmed flag, and
-infinite mappings get a new MAPPING_INFINITE status so they still fall
-back.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/519
-
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 41eb39968a9a6..e561143dd1219 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-
-[ ... ]
-
-> @@ -1356,8 +1359,8 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
->  	/* we can't wait for recvmsg() to update the ack_seq, otherwise
->  	 * monodirectional flows will stuck
+> ---
+> v2: new, for an issue spotted by Sashiko
+> v3: comment and msg: also after a disconnect, and what write() does
+>     without the race (Clashiko)
+> ---
+>  net/mptcp/protocol.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 257c851c8a76..87f6da0f6cab 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1960,8 +1960,6 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
+>  	/* on flags based fastopen the mptcp is supposed to create the
+>  	 * first subflow right now. Otherwise we are in the defer_connect
+>  	 * path, and the first subflow must be already present.
+> -	 * Since the defer_connect flag is cleared after the first succsful
+> -	 * fastopen attempt, no need to check for additional subflow status.
 >  	 */
-> -	if (mp_opt.use_ack)
-> -		ack_update_msk(msk, sk, skb, &mp_opt);
-> +	if (mp_opt.use_ack && ack_update_msk(msk, sk, skb, &mp_opt))
-> +		subflow->dss_confirmed = 1; /* MPTCP opts pass both ways */
->  	rwin_update(msk, sk, skb);
+>  	if (msg->msg_flags & MSG_FASTOPEN) {
+>  		ssk = __mptcp_nmpc_sk(msk);
+> @@ -1974,6 +1972,19 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
+>  	ssk = msk->first;
 >  
->  	/* Zero-data-length packets are dropped by the caller and not
-
-[Severity: Medium]
-What happens if the peer sends its infinite mapping on a zero-length
-segment? For example, a pure ACK could carry a DSS with data_len == 0 and
-a DATA_ACK that acknowledges our data.
-
-dss_confirmed is set here, before the zero-length check that comes next
-in mptcp_incoming_options():
-
-	if (TCP_SKB_CB(skb)->seq == TCP_SKB_CB(skb)->end_seq) {
-		if (mp_opt.data_fin && mp_opt.data_len == 1 &&
-		    mptcp_update_rcv_data_fin(msk, mp_opt.data_seq, mp_opt.dsn64))
-			mptcp_schedule_work((struct sock *)msk);
-
-		return true;
-	}
-
-No mptcp_ext is attached in that case, so get_mapping_status() never
-returns MAPPING_INFINITE for this segment. The peer's next data, sent
-without a DSS, then gives MAPPING_NODSS.
-
-Without a prior MP_FAIL, allow_subflows is still set. So
-subflow_nodss_is_fatal() returns true, and subflow_check_data_avail()
-resets the subflow with MPTCP_RST_EMIDDLEBOX instead of calling
-mptcp_try_fallback(). Before this patch, the same sequence fell back to
-TCP.
-
-Linux itself only attaches the infinite mapping to data skbs, after an
-MP_FAIL, so this depends on how other implementations send it.
-
-Should the MAPPING_INFINITE exemption described in the commit message
-also cover this case?
-
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 190c75311ff69..efbd3efd379ed 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-
-[ ... ]
-
-> @@ -1523,7 +1542,9 @@ static bool subflow_check_data_avail(struct sock *ssk)
->  			return true;
->  		}
->  
-> -		if (!mptcp_try_fallback(ssk, MPTCP_MIB_DSSFALLBACK)) {
-> +		if (((status == MAPPING_NODSS || status == MAPPING_INVALID) &&
-> +		     subflow_nodss_is_fatal(msk, subflow)) ||
-> +		    !mptcp_try_fallback(ssk, MPTCP_MIB_DSSFALLBACK)) {
->  			/* fatal protocol error, reset the subflow and let the
->  			 * worker close it
->  			 */
-
-[Severity: High]
-Does this cover all the invalid mappings that the commit message
-mentions? The message says:
-
-    The same is done when a mapping is invalid, e.g. when it does not cover
-    the received data after a resegmentation by a middlebox, ...
-
-validate_mapping() only checks the start of the skb against the mapping:
-
-	u32 ssn = tcp_sk(ssk)->copied_seq - subflow->ssn_offset;
-	...
-	if (unlikely(!before(ssn, subflow->map_subflow_seq +
-				  subflow->map_data_len))) {
-
-Take an skb whose payload runs past the end of its mapping, for example
-two segments merged by a middlebox that keeps only the first DSS. It gets
-MAPPING_OK here, and with checksums disabled (the default) it is
-accepted.
-
-The mismatch is only caught later, in __mptcp_move_skbs_from_subflow():
-
-			if (unlikely(map_remaining < len)) {
-				DEBUG_NET_WARN_ON_ONCE(1);
-				mptcp_dss_corruption(msk, ssk);
-			}
-
-mptcp_dss_corruption() still falls back without looking at
-dss_confirmed:
-
-	if (!mptcp_try_fallback(ssk, MPTCP_MIB_DSSCORRUPTIONFALLBACK)) {
-		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSCORRUPTIONRESET);
-		mptcp_subflow_reset(ssk);
-	}
-
-The non-FIN branch in __mptcp_move_skbs_from_subflow() calls it in the
-same way.
-
-On a single subflow with allow_infinite_fallback still set, can the
-receiver then fall back on its own after the DSS was confirmed in both
-directions?
-
-That is the late receiver-only fallback this patch is meant to remove. An
-older sender keeps resending data at the MPTCP level, and the receiver
-delivers it as new data.
-
-Commit e32d262c89e2 ("mptcp: handle consistently DSS corruption") notes
-that buggy peers can send corrupted DSS options that hit these paths. So
-they look reachable from remote input.
-
-The note after the --- marker already says that mptcp_dss_corruption()
-still falls back after a DATA_ACK, but that note won't be in the
-committed changelog.
-
-Should mptcp_dss_corruption() also apply the dss_confirmed check? Or
-should validate_mapping() reject an skb that extends past the end of the
-mapping?
-
--- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261124-mptcp-cmason-fixes-v3-0-416c0920c73f%40kernel.org
+>  	lock_sock(ssk);
+> +
+> +	/* subflow aborted or disconnected: its error report may be deferred.
+> +	 * With MSG_FASTOPEN, the socket is disconnected below, as with TCP.
+> +	 */
+> +	if (unlikely(!(msg->msg_flags & MSG_FASTOPEN) &&
+> +		     inet_test_bit(DEFER_CONNECT, sk) &&
+> +		     !inet_test_bit(DEFER_CONNECT, ssk))) {
+> +		inet_clear_bit(DEFER_CONNECT, sk);
+> +		__mptcp_subflow_error_report(sk, ssk);
+> +		release_sock(ssk);
+> +		return 0;
+> +	}
+> +
+>  	msg->msg_flags |= MSG_DONTWAIT;
+>  	msk->fastopening = 1;
+>  	ret = tcp_sendmsg_fastopen(ssk, msg, copied_syn, len, NULL);
