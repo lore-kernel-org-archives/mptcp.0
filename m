@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795783559;
-	b=E+IIXnRlT/1PTNryQgWIVDyyyz26kjHDE3toIoub2pM3MynIqQ2TJYkgcNXOdP3PXTz7
-	 kH6yJyUbzgCgduyWbVze3bDxE3J5V3NP5qupxpoUe18H78MVABpTNbT7kCBJZmzCQKMhG
-	 hdXKt3Tey6k593DP5e/1I9G6nmfNxqi6pZH7047oq9LZjOXtQoUSTJAVREewIB96FzTOf
-	 JYBUo5eQnYqL2/ckXhSkGjIwL4m8BZ00vXquEyGyN9qwMnejTTRGSg5Kku7vaRrzVahvZ
-	 494h2KEewyLwzq6D1Q1mfOh/ioFWfRc6ZyD2hkA3a8/JeAa85XMf5qMRfXgRzkL9Orw==
+	t=1795783561;
+	b=fHpQjt88h8lFOT7RWQ8bWen60Gunx4/PoFfAh1+IVdXToxK7zVO9ZA2Dnk4pjros07Nl
+	 aiMZZqMLi25hNzNAYs9CCZnVH9O7Lew/VWwBUd/43PHmwd/ZyeSDzek2tuSrB15q1YFq1
+	 THBX8vz+h/ume+qQYFQ2f/UoUJ9jRO4INY1J8R1hS7mF1Ks9eLMEwHMGYdxko8ZfSH2oM
+	 bvuzczdAP3K7BRUBP7f+jOSSt1KF6bEC8pVQH4o2xo30ywnj7D4tWPNKHSAPPO5LeOTqw
+	 NcmdKQyMcuHdDYY16Xb3cyKbwobmvj/piiWAitMfY4VfdZJNQao7XPzyYXqrCYgQJMQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795783559;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795783561;
 	h=Received:DKIM-Signature:From:To:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=Uvx3V+cYsj7D8+s+WhqvTp6ybQYMgrjTwhE4XEmfor8=;
-	b=feuR/oFp6ew/kwvC9MhMvuGtkDqOJFfkCrvQPBJcX/qGyXLR8X1FgNNcndN/Mz3F4QMQ
-	 11/vClRIQoUMbpwNt28vBvD2AXOdKX3BILGzbRN8mUKthpa55tHuKOVFGJjfrpka+fSnt
-	 3AOl3gpX77DADU1XOF6ITsHLaXnLk6+RXsNDcoFNYqN5sU9sHqen/licpbQz0FbQE+ajT
-	 vub6U0GY59XFLTEdk24Rf9Vf2tQGX4et76YulvVo7vnkjWsv6qLJLGMG9R/qIC7UIEr71
-	 M+/XVgcAs+R32aCCh6ju8CZz9xvd+3MJrIDyW6CBE+WTZQwO1Aau8slsub3ji28UrjQ==
+	bh=d9sp1bmXb1HBqgVShqnbCi7xlyxusRrhl8qj7nUiYsw=;
+	b=yE3u47DMn1zAGeTPJ+wkFA9vXNWiLCH/nJBbIAMi162dfmWbEyZRW+PId8ZhDnDQVncK
+	 sHF6XUzqN+SxylR2dcfYsoO5VmrCigThts/Btg6ozKtZnQ9KLYY/KJ7csn2foiyA959nc
+	 AdFG74Roc+wKhZdQT7yCJoE1HG0fADco65d/EOBvz+EndsGVEFu5khlUac78MMPzdzCcX
+	 eCBy1xblHy+xrvHK0KxsUsIm7SWjW6VcEjmepMiSGyX0TYbo/j/jgBu6OgbtJHcdMTCdK
+	 xOnXnG2jkTZK62K2e7dfneS0cAZ5TeHk67v1ItNa1W3Ziih78R7cga/AiptTSkD6bHQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="NU7LD8W/";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eL3+1xFJ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4FAF606A32D
-	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 12:45:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D686606A335
+	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 12:46:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NU7LD8W/
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B42D31F00893
-	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 12:45:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eL3+1xFJ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15AF11F00893
+	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 12:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795783559;
-	bh=Uvx3V+cYsj7D8+s+WhqvTp6ybQYMgrjTwhE4XEmfor8=;
+	s=k20260515; t=1795783560;
+	bh=d9sp1bmXb1HBqgVShqnbCi7xlyxusRrhl8qj7nUiYsw=;
 	h=From:To:Subject:Date:In-Reply-To:References;
-	b=NU7LD8W/0ZL0rCLpNtH0GSlGkkKGfRAkoIvEgvqwBqgQu+u4yVu/nG6s2nBCqbfnU
-	 gdC2rd10nnRsgXXOV1jPoXujToU7dMrHjdTnFShtln6vvgfpj849cy8z4VfIN3NCAB
-	 g/dKR1LDH3MbDjuMrJtJ1Jovuxvigtq66XzsTh1pzqCDPVvxBWpWkVKBO+rsjbAPFK
-	 j8D8hfIsXJXa2m2DDZXZAUYDVJt9ml89w0dtfFhnzUofDMp1yvJPdSHGFLOBXH0SJe
-	 FKuzvI3ZoTmeO6hYF95VdsJp7Ezxvw5eRX4m7jQVqgujJyU/91be24BO9ZBOUx5js1
-	 Gg9s/S4WWTcjQ==
+	b=eL3+1xFJ/GELfyVW1LsxD1LWdiSSudUqEK1QzD91h4xgLGYpujsreZ4+STLzUUbv/
+	 eEZ4kgWRvQn16Bsp79tMQD1KLm/y9OcwifT03aUFiaouEg+lgV2NBXz2vnDPTuj5gw
+	 w5VDyN0sc/DjyMqcdMcgcB6DYeOEnFmsQzQ/6sQ+ro3coelWHjscO/HN6O1ktZ1fRo
+	 oUh4tTPhnm1tgbAtMBTrV5MJdOnWFDrs/vUhKVP6MvXc3ITmLSSj2d4a4NAP5Qt3aj
+	 Dw5PatOuMFN2oOznEpGSDQqVNxXIqCItVlp1eEgWcizRC+lErS294zEGQmYYbqdvqw
+	 k1IcPefu6vZVQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v11 5/7] Documentation: msg_zerocopy: add MPTCP support
-Date: Fri, 27 Nov 2026 20:45:25 +0800
-Message-ID: <7706bf0aac6bea0b5b389bbeb38805f214c5953c.1795783388.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v11 6/7] selftests: net: msg_zerocopy: add MPTCP support
+Date: Fri, 27 Nov 2026 20:45:26 +0800
+Message-ID: <3c4914ba16cf7712f0cda60f9d8ca1bc7d8e49ca.1795783388.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <cover.1795783388.git.tanggeliang@kylinos.cn>
 References: <cover.1795783388.git.tanggeliang@kylinos.cn>
@@ -60,49 +60,124 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Update the MSG_ZEROCOPY documentation to list MPTCP as one of the
-protocols that support this feature, alongside TCP, UDP and VSOCK.
-Also mention MPTCP in the notification error queue and Loopback
-sections.
+Add support for testing MSG_ZEROCOPY over MPTCP sockets. This enables
+the existing msg_zerocopy test to exercise the zerocopy send path on
+MPTCP connections by specifying "mptcp" as the test mode. A new
+"check" mode is also added to verify that MPTCP and its zerocopy
+support are available before running the tests.
+
+A fallback definition for IPPROTO_MPTCP (262) is provided for systems
+with older headers that do not include it.
+
+Usage example:
+    ./msg_zerocopy -4 -t 1 -D 127.0.0.1 mptcp
+    ./msg_zerocopy -4 -t 1 -D 127.0.0.1 -z mptcp
+
+msg_zerocopy.sh is updated to run IPv4 and IPv6 MPTCP tests in the
+default test suite, skipping them if MPTCP is not supported.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- Documentation/networking/msg_zerocopy.rst | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/testing/selftests/net/msg_zerocopy.c  | 27 +++++++++++++++++++++
+ tools/testing/selftests/net/msg_zerocopy.sh | 13 +++++++---
+ 2 files changed, 37 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/networking/msg_zerocopy.rst b/Documentation/networking/msg_zerocopy.rst
-index 78fb70e748b7..a06055f1243a 100644
---- a/Documentation/networking/msg_zerocopy.rst
-+++ b/Documentation/networking/msg_zerocopy.rst
-@@ -7,8 +7,8 @@ Intro
- =====
+diff --git a/tools/testing/selftests/net/msg_zerocopy.c b/tools/testing/selftests/net/msg_zerocopy.c
+index 1d5d3c4e7e87..8c7567c79198 100644
+--- a/tools/testing/selftests/net/msg_zerocopy.c
++++ b/tools/testing/selftests/net/msg_zerocopy.c
+@@ -5,6 +5,7 @@
+  *
+  * PF_INET/PF_INET6
+  * - SOCK_STREAM
++ * - SOCK_STREAM with IPPROTO_MPTCP
+  * - SOCK_DGRAM
+  * - SOCK_DGRAM with UDP_CORK
+  * - SOCK_RAW
+@@ -74,6 +75,10 @@
+ #define MSG_ZEROCOPY	0x4000000
+ #endif
  
- The MSG_ZEROCOPY flag enables copy avoidance for socket send calls.
--The feature is currently implemented for TCP, UDP and VSOCK (with
--virtio transport) sockets.
-+The feature is currently implemented for TCP, MPTCP, UDP and VSOCK
-+(with virtio transport) sockets.
++#ifndef IPPROTO_MPTCP
++#define IPPROTO_MPTCP	262
++#endif
++
+ static int  cfg_cork;
+ static bool cfg_cork_mixed;
+ static int  cfg_cpu		= -1;		/* default: pin to last cpu */
+@@ -798,6 +803,24 @@ static void parse_opts(int argc, char **argv)
+ 		usage(argv[0]);
+ }
  
++static void check_mptcp_support(int family, bool zerocopy)
++{
++	int fd = socket(family, SOCK_STREAM, IPPROTO_MPTCP);
++	int val = 1;
++
++	if (fd == -1)
++		exit(1);
++	if (zerocopy) {
++		if (setsockopt(fd, SOL_SOCKET, SO_ZEROCOPY,
++			       &val, sizeof(val))) {
++			close(fd);
++			exit(1);
++		}
++	}
++	close(fd);
++	exit(0);
++}
++
+ int main(int argc, char **argv)
+ {
+ 	const char *cfg_test;
+@@ -820,6 +843,10 @@ int main(int argc, char **argv)
+ 		do_test(cfg_family, SOCK_DGRAM, 0);
+ 	else if (!strcmp(cfg_test, "rds"))
+ 		do_test(PF_RDS, SOCK_SEQPACKET, 0);
++	else if (!strcmp(cfg_test, "check"))
++		check_mptcp_support(cfg_family, cfg_zerocopy);
++	else if (!strcmp(cfg_test, "mptcp"))
++		do_test(cfg_family, SOCK_STREAM, IPPROTO_MPTCP);
+ 	else
+ 		error(1, 0, "unknown cfg_test %s", cfg_test);
  
- Opportunity and Caveats
-@@ -175,7 +175,7 @@ read_notification() call in the previous snippet. A notification
- is encoded in the standard error format, sock_extended_err.
+diff --git a/tools/testing/selftests/net/msg_zerocopy.sh b/tools/testing/selftests/net/msg_zerocopy.sh
+index 28178a38a4e7..a9cb6b449f34 100755
+--- a/tools/testing/selftests/net/msg_zerocopy.sh
++++ b/tools/testing/selftests/net/msg_zerocopy.sh
+@@ -32,13 +32,20 @@ if [[ "$#" -eq "0" ]]; then
+ 	$0 4 udp -t 1 || ret=1
+ 	$0 6 udp -t 1 || ret=1
  
- The level and type fields in the control data are protocol family
--specific, IP_RECVERR or IPV6_RECVERR (for TCP or UDP socket).
-+specific, IP_RECVERR or IPV6_RECVERR (for TCP, MPTCP or UDP socket).
- For VSOCK socket, cmsg_level will be SOL_VSOCK and cmsg_type will be
- VSOCK_RECVERR.
++	if ${BIN} -4 -t 1 check && ${BIN} -4 -t 1 check -z; then
++		$0 4 mptcp -t 1 || ret=1
++		$0 6 mptcp -t 1 || ret=1
++	else
++		echo "SKIP: MPTCP tests (not supported)"
++	fi
++
+ 	[[ "$ret" == "0" ]] && echo "OK. All tests passed"
+ 	exit $ret
+ fi
  
-@@ -238,7 +238,7 @@ Implementation
- Loopback
- --------
+ # Argument parsing
+ if [[ "$#" -lt "2" ]]; then
+-	echo "Usage: $0 [4|6] [tcp|udp|raw|raw_hdrincl|packet|packet_dgram] <args>"
++	echo "Usage: $0 [4|6] [tcp|mptcp|udp|raw|raw_hdrincl|packet|packet_dgram] <args>"
+ 	exit 1
+ fi
  
--For TCP and UDP:
-+For TCP, MPTCP and UDP:
- Data sent to local sockets can be queued indefinitely if the receive
- process does not read its socket. Unbound notification latency is not
- acceptable. For this reason all packets generated with MSG_ZEROCOPY
+@@ -143,8 +150,8 @@ do_test() {
+ 		-S "${SADDR}" -D "${DADDR}" ${ARGS} "${TXMODE}" -Z 0 || ret=1
+ 	wait
+ 
+-	# next test is unconnected tx to dummy0, cannot exercise with tcp
+-	[[ "${TXMODE}" == "tcp" ]] && return
++	# next test is unconnected tx to dummy0, cannot exercise with tcp/mptcp
++	[[ "${TXMODE}" == "tcp" || "${TXMODE}" == "mptcp" ]] && return
+ 
+ 	# tx-only test: send out dummy0
+ 	# packets leaving the host are not copied,
 -- 
 2.55.0
 
