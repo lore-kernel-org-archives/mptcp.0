@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795809730;
-	b=CEyjNW1tf/0GdAlcooQ2puunB34CxwungjL3+HqOwcSSahFcn/EeEOp5IyXe4AbmKJ2x
-	 Y75Z6O4ICd7hoYpHGdS5Rnc2hPauy3hp5wocqOTSUUUWyZ7FaILZ5GPrY+iezRlk4aWwC
-	 Y6TZOTuPLBwssqU4xjx5rTqqcTX28ECC67IpLqHW/gRY744ZBi4/mKPJ9KX388X1+kway
-	 pxKO3oNbBfPA6e5xvEQJtDRh8ADDbZeQz9YbhGsp5X0NXHJUsAOdCipImbXSnXHjAy51e
-	 YSM78dYLpld8Kn8rqrjwOPZ9dJ/mgZvHxo/nQlocPlF9oxXNmtFWoMLtm4Kb0sFtBVQ==
+	t=1795809731;
+	b=OQ1B8z+ADLPZZ82hjRhDl2qwoAwl7HIdfHVydGgcqIB/XQVwX+xLDH6QzeQ7F0U4xpJ9
+	 NIe8Pa25gLtsTRAvzCpFSpdJHfCgeQy3VDKluZ+BAY3p8+dFPIJhK/VginASQJnsGmq7w
+	 CQYtUeYwaFYPFtpNl6B+Q+alWiGvi48hNlW4/CsWarTh/0VKyL8Fyg//A3yJgRYEOCgcp
+	 TGfirLFIL0Z7QUjY/zu5JbHz8+gt612D2l9ee7L/fseG8i9xZeC8O8d4+U5a7v21MbK8U
+	 Hon0D4w1Lmm3kZKSNL0BNpIT/QKCJBOMqZ+6DPOkh0XUhe3CInzUS41Kb1+3lls4QYw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795809730;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795809731;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=PEZwwhiUvCNmEuUcG+vzYmc9W2vxSlt/Vn/YGDhEMBY=;
-	b=2YQZ9c1sUdgW5ev0hj+SN6Hz4StyBEWhqmvFaYTOOTP7/vzptyWqDoftaIIWbeDS7HRB
-	 UAjLX4QQCyUJVkELH21FZsG/wxzvK7wKHQ7McmaEzihKAr4QCwTZneEryth6ifecMOIMy
-	 7gZ4/btXOhkQkWKWgw2O3SUXhfNmhSFRmL0a2PQ1PNZQopOi61hpfJE15wiNxs99eJhTw
-	 +/n3JyQJybbUMknkhRfQYaFOgsPlJbcOzGic4Xzstn+z03ZFUgww4UG33rdUF3mSjLSz8
-	 zeAsHUl4tV6uQRvqwY8ABq/phw9f06WKEeBpW+htzq89ijzNUlz14Iu/cf7wujf765w==
+	bh=jdvNIuFiF7c2WLrU9wdVEPY34Wtk0JKJAPabdIK35ZA=;
+	b=MgTDAY8VNZsNp+Fcc5CeoeyivJqd29d+2U7NV1rfWt4+hclOtRo2hBxiji09610SERfk
+	 zvI1HCJ+W/JLOb9ouCD7RPR7QPSthKiZDOZPG51sYDR6QEY+EbjJwky2bHIXoUZ1Mzr7y
+	 soFnepRrlKpdLB2MB6FDC2O10UmsTH/hiAYehHwvkRrRp+cbd4d68iiQrANisNQpjLsKQ
+	 IrHtSnqe7m6XwSRZamkY6uj8koSQEQJCq6QmXBQcJ13I0yjJ5jhK5GrgGxgsOnn8k37o6
+	 /y1oEUk2J+n1sLg31aalPzYTN2c4hF6ZPjpGfU0fF0RYlVBYB7oa+8r71Bkf9XOEy4g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ex2ijy52;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XTnumOGz;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3A8606A31C
-	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 20:02:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71CE9606A31C
+	for <mptcp@lists.linux.dev>; Fri, 27 Nov 2026 20:02:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ex2ijy52
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E27B1F00893;
-	Fri, 27 Nov 2026 20:02:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XTnumOGz
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B02601F000C1;
+	Fri, 27 Nov 2026 20:02:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795809729;
-	bh=PEZwwhiUvCNmEuUcG+vzYmc9W2vxSlt/Vn/YGDhEMBY=;
+	s=k20260515; t=1795809731;
+	bh=jdvNIuFiF7c2WLrU9wdVEPY34Wtk0JKJAPabdIK35ZA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=Ex2ijy52raYtaHbvxwlLJXxbBNdDGHcgvbiGdQNNrOotB+8EErPB0+EvHvd7UBjq1
-	 v4rM7AcIXSBoKncHaUNAc9hRttMCybyZ/vfj2ZYp4g68UsstBRu5/zMAdZin/uALB5
-	 EEuPrLhTl/XhijkCjoa6U1badTjO2mQfcSVJVukq55FCKb4yJgfiVz4HBRgGvxRLUJ
-	 4ygF4dPJQ3c3btqoQmdvzHtdhPzvfx0AXX9Ybn0Wyn6V+G4FGd9mA5IiBycfLKvy7E
-	 z4yRHgsBtST3Ra1O/DV7Zhj4esuc4aNj2C7Qyk56NnI8TuvU5/9+UtOaeuknePGbYE
-	 h7WpxCdGJ2a1A==
+	b=XTnumOGztjldcaR/5dIPQzMKkYILKb9Srw8FMAXpmI44UghXgAn8wE9y3qZGQLuyA
+	 b5AbEQrQfVcYO4wnwUy8Uch3s8L5r50Iy1/heUcYP2qdHLtmAOpkNzwI0zD6umwAsb
+	 OZ0tFVPrYKbg+7u2YLjJUczEUPkQsV7wywuqnQZ8bcya7wyFc/ncEgcPid5zGpSUbH
+	 Mr3VpLNy9XgeuBX4PkDC5RLkfVeuwr45tcFgCWpdbvuHS4TSTpkaUdLv5u9StPr5fT
+	 c+XQnI8VI9uGXTCzTbX8COKenEQLtImcd2rDfghU0DL8P9RwiAe2/FXznzzxiKXVro
+	 fV0koXBSkuACA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 27 Nov 2026 21:01:31 +0100
-Subject: [PATCH mptcp-net v4 07/20] selftests: mptcp: connect: trunc: wait
- for acks
+Date: Fri, 27 Nov 2026 21:01:32 +0100
+Subject: [PATCH mptcp-net v4 08/20] selftests: mptcp: connect: splice:
+ handle MPTFO
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -55,99 +55,102 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261127-mptcp-cmason-fixes-v4-7-3f393ea8c48d@kernel.org>
+Message-Id: <20261127-mptcp-cmason-fixes-v4-8-3f393ea8c48d@kernel.org>
 References: <20261127-mptcp-cmason-fixes-v4-0-3f393ea8c48d@kernel.org>
 In-Reply-To: <20261127-mptcp-cmason-fixes-v4-0-3f393ea8c48d@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2970; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=0RLcJEopSMRfxvOzmTtDqRvHPeGB9K5sSrOYzXnOaes=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLI5H64pz5+y79YML4dApvwX6WKp17Z+PbmCJS9SyIT/5
- Cn5+6rzO0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACay0oGRYb9VhwZz0b2rT7/w
- ybSdmtEnMWmdTz2f9qLvjz62xPaVSDAybAuuPJhmu7hNQVd+qlLY2av13o3rry78W6BdpPNm8+s
- /HAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2866; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=LG3Pz7btPobwU6rAagCP+cZn8lv8oGFyx1SgHmm+hVY=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLI5H6512t/UkOXRtJjxgEO+woU/VnvEfvkkVuruWs7DI
+ 33ATHt5RykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwEQWtDH8lfSWeWmbz3VX4HkX
+ J1PkVUMVE1YtVTORl1l/Ir1rS8QUGRnuVXw2D9BXssxh4Z6x5/b/ZeZme1u0nb9VTuc/5eK9s54
+ fAA==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The "fastclose server test" subtest from mptcp_join.sh was still failing
-from time to time, because the client output file didn't have the
-expected size, e.g. on NIPA:
+With MPTFO, the client reads the beginning of its input file to send it
+with the SYN, and keeps the size of what it read in winfo->total_len. In
+splice mode, this size is also removed from the length passed to
+splice() when reading the reply: with an input file of 8 KB or less,
+this length is 0, and the client never reads the reply.
 
-  [FAIL] file received by client output file has wrong size (866, 1024)
-  Server ns stats (...)
+The size of this file is random, and rarely that small. This has been
+observed once, with a client file of 4252 bytes, and the test timed out:
+
+  # INFO: with MPTFO start
+  # 57 ns2 MPTCP -> ns1 (10.0.1.1:10054      ) MPTCP     timeout
   (...)
-    TcpExtTCPOrigDataSent           3
-    TcpExtTCPDelivered              2
+  # (duration 61192ms) [FAIL] client exit code 0, server 143
 
-Here, the server sent 3 data segments only, the last one not acked yet,
-and the client received all the data from these segments. The rest of
-the data, already written by the server, was still queued, e.g. held by
-Nagle, waiting for the last segment to be acked. But the server then
-closed its socket, with data from the client still to read, as expected
-here: an MP_FASTCLOSE is then sent, and the data still queued is
-discarded, as with a TCP reset.
+It can be reproduced with small files, e.g. with '-f 4000': the file
+received by the client is then empty.
 
-To fix this, wait for the written data to be acked, with SIOCOUTQ,
-before stopping in the truncate mode, so before closing the socket. A
-timeout is reported: it would look like this issue otherwise.
+Only use winfo when sending, and send what is left in the buffer first,
+as the other modes do.
 
-This issue has been confirmed on a debug kernel, where this subtest
-failed a few times: each time, the client didn't have any data left in
-its queues, and the data received matched the data in the segments sent
-by the server. With this patch, it no longer failed.
-
-Fixes: 6bf41020b72b ("selftests: mptcp: update and extend fastclose test-cases")
+Fixes: 6a059c6bfb55 ("selftests: mptcp: add splice io mode")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v2: new, for a flaky selftest
----
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 24 ++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 8c788977e594..861fa2bd70d0 100644
+index 861fa2bd70d0..99e8278a1dd5 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -643,6 +643,26 @@ static void shut_wr(int fd)
- 	shutdown(fd, SHUT_WR);
+@@ -971,13 +971,22 @@ static int copyfd_io_sendfile(int infd, int peerfd, int outfd,
+ 	return err;
  }
  
-+/* the data still queued would be dropped by a reset: wait for its ack */
-+static void wait_for_ack(int fd)
-+{
-+	struct pollfd pfd = { .fd = fd };
-+	int i, queued;
+-static int do_splice(const int infd, const int outfd, const size_t len,
++/* winfo: only when sending, with what MPTFO did not send yet */
++static int do_splice(const int infd, const int outfd, size_t len,
+ 		     struct wstate *winfo)
+ {
+ 	ssize_t in_bytes, out_bytes;
+ 	int pipefd[2];
+ 	int err;
+ 
++	if (winfo) {
++		err = spool_buf(outfd, winfo);
++		if (err)
++			return err;
 +
-+	for (i = 0; poll_timeout < 0 || i < poll_timeout; i += 10) {
-+		if (quit || ioctl(fd, SIOCOUTQ, &queued) < 0 || queued <= 0)
-+			return;
-+
-+		/* e.g. reset: the data will not be acked */
-+		if (poll(&pfd, 1, 0) > 0 && (pfd.revents & POLLERR))
-+			return;
-+
-+		usleep(10000);
++		len -= winfo->total_len;
 +	}
 +
-+	fprintf(stderr, "timeout while waiting for the data to be acked\n");
-+}
-+
- static int copyfd_io_poll(int infd, int peerfd, int outfd,
- 			  bool *in_closed_after_out, struct wstate *winfo)
- {
-@@ -768,8 +788,10 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
- 		}
- 
- 		if (cfg_truncate > 0 && total_wlen >= cfg_truncate &&
--		    total_rlen >= cfg_truncate)
-+		    total_rlen >= cfg_truncate) {
-+			wait_for_ack(peerfd);
- 			break;
-+		}
+ 	err = pipe(pipefd);
+ 	if (err) {
+ 		perror("pipe");
+@@ -985,7 +994,7 @@ static int do_splice(const int infd, const int outfd, const size_t len,
  	}
  
- 	/* leave some time for late join/announce */
+ again:
+-	in_bytes = splice(infd, NULL, pipefd[1], NULL, len - winfo->total_len,
++	in_bytes = splice(infd, NULL, pipefd[1], NULL, len,
+ 			  SPLICE_F_MOVE | SPLICE_F_MORE);
+ 	if (in_bytes < 0) {
+ 		perror("splice in");
+@@ -1017,7 +1026,7 @@ static int copyfd_io_splice(int infd, int peerfd, int outfd, unsigned int size,
+ 	int err;
+ 
+ 	if (listen_mode) {
+-		err = do_splice(peerfd, outfd, size, winfo);
++		err = do_splice(peerfd, outfd, size, NULL);
+ 		if (err)
+ 			return err;
+ 
+@@ -1029,7 +1038,7 @@ static int copyfd_io_splice(int infd, int peerfd, int outfd, unsigned int size,
+ 
+ 		shut_wr(peerfd);
+ 
+-		err = do_splice(peerfd, outfd, size, winfo);
++		err = do_splice(peerfd, outfd, size, NULL);
+ 		*in_closed_after_out = true;
+ 	}
+ 
 
 -- 
 2.55.0
