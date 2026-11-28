@@ -1,55 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795864823;
-	b=S4e5t79bq9WGPB09+kCte56kyJr43ycgyUAqI6gcNX1fjh/624kWi5CIlsfgz12ar5+m
-	 U8jxzOBT/vy/UCdylVftHMUzzsiQnMIsoDkrujr00zHhlPLPadPn1aaZB9DWUAKA+T0xI
-	 EkSoDrF2l7IvmwrmZLuYOEu3wTW+ocjMk/J7V1wLkDfBT2GOgfIgrd0U+czWhG7USLPly
-	 Lr3eAq4V8N8Ag2vtwRwuNCCcHPKxWigTp3lkREld2mk1fBwDu9w7FUpV4fPEdqkCfCs38
-	 ku2XkBc7eZFBctYesJFyg44CaasGMEDu/N9Ant4mGpiTpw5yqFLB73sJ9S/85vLvQLA==
+	t=1795865101;
+	b=InNZodqYRAAfZqldGqXeE0+XpAx7IeSynreMjNcsp2VWAFyFLbQCpGq4t7a0FtoXsdYp
+	 vjJO57G2ZcQdW9Vvjk8JVsC2y0sG81zt6z+wapXaQ8GRdBtKqc6yXnbQl0k6/NUDQst8y
+	 igUzAmDfet4Ea+C5dQpcgxBym+CcW4IE1CQEZ85dQp6nAsaNdIRjBlkVoN10XPEeolHky
+	 yxpr4Ale4C79gj3ucTpXPLarIlCEoc/4AnbPA0S6ffvt63TLYjzw5QbYC+ptAoToyaHh1
+	 G5pG1jRoQD8I00RO8Kf11ZwK37waj08HTIG6WFwKh/uc5io7hnYA+tOOAaYAeIlaUJg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795864823;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795865101;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=jI7PJyjB2Kukv2xfKTyd8H3/t9Z5JAE1JHL7X0K7tA4=;
-	b=plubPJj+a/tjVQ1SKmnXCHk7EcjB0ydGh7o+sqcV8PPH0SMwMG8yGinGJg2zcILFaJee
-	 9008oFLB9BCW22iJWGnE5sh4YtIVk6PNTirj5eg94ZOcGOsKILOSrQ2aKo6lWen8AgqQM
-	 WWUzn4sciMj5GI4TTnitXOccM7Oja5A1ze/3G8N+DZqlcTPWjv9LfhHIq0mdibFbWjZY3
-	 HAKWriwq3A230R5f/pp+t4sz8LnvPLIyA69hs8NNZ1i+Ec2GTQ4o11xRZD1t/rV62PWlb
-	 IMQTe4mNvsEZFPAbupyyGNtDkTWRaNEsjEjWKLXxoEjtA7+lkGW/OE4wqfq7L/s8Hkw==
+	bh=jQSR+PMVdet0vPbxKG321ML8KR6fJ9x9A4DjN72ta8o=;
+	b=cQm37CatAb2NGaDQfhwXUIqtQWHS9B4p6M6K+lxbPqMRNMYsDeVPKsRd2czx/lN6UiM4
+	 9FAWCn3gi0O0J0spF4/md+Y1czXFRX58uyC0a+UMsuExgicdqxFanQIrUuSGleth1sALV
+	 jnkE20UGjJ2Dn1VQ1YcF2hk5c+I7oWw8SSpJg7UvvlnEOjIDSU4VVA73QroWRgDZLEZ2y
+	 Q+lrY9W5M8ZAiJXDFx+mm59SkmC7AYMd02T5trqGmQ8TozW1S1+zz4156tebWD/H5ZCrZ
+	 X64kl+q+Z4iDK1UJ6YuA4C1+sKLgERUrUYtMhAI25SlNUEoLMM1Ru84M1dYNE4qcXaw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=c6JXp2sa;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZDduOi8T;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A68606A31C
-	for <mptcp@lists.linux.dev>; Sat, 28 Nov 2026 11:20:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1004A606A31C
+	for <mptcp@lists.linux.dev>; Sat, 28 Nov 2026 11:25:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=c6JXp2sa
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3627D1F00893;
-	Sat, 28 Nov 2026 11:20:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZDduOi8T
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84A181F00893;
+	Sat, 28 Nov 2026 11:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795864823;
-	bh=jI7PJyjB2Kukv2xfKTyd8H3/t9Z5JAE1JHL7X0K7tA4=;
+	s=k20260515; t=1795865100;
+	bh=jQSR+PMVdet0vPbxKG321ML8KR6fJ9x9A4DjN72ta8o=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=c6JXp2saJ1Mca3l9+ZMRUyjxn3wLaUphgZROSrRVVs/vXTlaWPG/LKAdEA6st0DRu
-	 t/rAA6Zm/4Bz1LDNlfvnUUkAoBak2G8yFoXM8+5Y1V/Dpxfff0ImFhdTvkUr7puSrd
-	 P3eE5RR32gfPNuxRSKrh1N1cwv0Ixz9Rbyggc4RKXkKL2CA6/+KYJxb7wYkH43ZhRm
-	 t2Io0QpisyETBfZYf65d9szhjzbnhZyVYOkV6XfqTzF93kmACzN96j3kKfqTxrjsKW
-	 ftIuWNo+tlLcufjl+dWPK/dXq7nFakbJDrNddFCAQ0pr2aQiVtG8Yk9AZkL6H3j/33
-	 l9nwuqbJZMC/A==
-Message-ID: <sashiko-outbox-238656@kernel.org>
+	b=ZDduOi8TBsuennmMMmX9Xjn+B/nRpAFbmeDuucklYwT4NfZyD4zXZXbduTK+9HZZ4
+	 hyMoLXkMDPvGgiBcM0jqoM/+sO56sbySmoG4C0IUwbvLgqIZsLg2A0BQMBF/Tjrlgi
+	 RPhJxvEjSvS/ZAoRh2r1Ez9wnADeeLCfx9qh3oTZnQ6qY0bxZ4mtdVKG0YxzC+YaqQ
+	 TuQ8hgvsAjwBfH7t0KEdL2dLfsNRewB8nO7FkAemYjvgj28bSuYSboWfdoOwnQopfH
+	 bsn4mJnhkxYXGT78ednx5receXRUwGNGq+oA4ze5UW4s+ngc1WjrV+5ViVD9hcBDuA
+	 GQsFu+Xzarz8Q==
+Message-ID: <sashiko-outbox-238659@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH mptcp-net v4 2/4] mptcp: use SOCK_DONE in mptcp_inq_hint
+Subject: Re: [PATCH mptcp-net v4 3/4] mptcp: fix TFO SIOCINQ overflow in
+ mptcp_inq_hint
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Geliang Tang" <geliang@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <a9eb2043cc9dec009979c30c940f940f2cba2953.1795863454.git.tanggeliang@kylinos.cn>
+In-Reply-To: <36402c6a6c41fdd1c5c4a06edbe9f95f4657e573.1795863454.git.tanggeliang@kylinos.cn>
 References: <cover.1795863454.git.tanggeliang@kylinos.cn>
- <a9eb2043cc9dec009979c30c940f940f2cba2953.1795863454.git.tanggeliang@kylinos.cn>
+ <36402c6a6c41fdd1c5c4a06edbe9f95f4657e573.1795863454.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 28 Nov 2026 11:20:22 +0000
+Date: Sat, 28 Nov 2026 11:25:00 +0000
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -61,40 +62,80 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue to consider:
-- [Low] mptcp: inaccurate SOCK_DONE setters and behavior description in
-  commit message
+- [Medium] mptcp: spurious FIN byte in mptcp_inq_hint() on fallback TCP
+  reset
 --
 
-commit 29686dc34959b6d287ae3e6764bcdbaa2489bcad
+commit e8009d5eaab8f8edb7310542593678227a6679d0
 Author: Geliang Tang <geliang@kernel.org>
 
-mptcp: use SOCK_DONE in mptcp_inq_hint
+mptcp: fix TFO SIOCINQ overflow in mptcp_inq_hint
 
-This commit switches mptcp_inq_hint() from checking TCP_CLOSE and
-RCV_SHUTDOWN to checking SOCK_DONE when the receive queue is empty.
+This commit updates mptcp_inq_hint() to compute readable bytes from
+mptcp_data_avail() and adds a mptcp_data_fin() helper to account for a
+pending FIN byte.
 
-> mptcp_inq_hint() checks sk_state =3D=3D TCP_CLOSE and RCV_SHUTDOWN to
-> decide whether to return a non-zero hint when the receive queue is
-> empty. This is redundant: SOCK_DONE is the canonical indicator that
-> no more data will arrive, and it is set in all the relevant paths -
-> __mptcp_data_fin_incoming(), __mptcp_subflow_error_report(), and
-> __mptcp_close().
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 52b5b6d2f1ce9..69facb6a86f04 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
 
-[Severity: Low]
-Is the commit message accurate about where SOCK_DONE is set and how this
-changes mptcp_inq_hint()?
+[ ... ]
 
-There is no __mptcp_data_fin_incoming() function; incoming DATA_FIN (or
-fallback TCP FIN) sets SOCK_DONE in mptcp_check_data_fin().  Also,
-__mptcp_close() sets sk->sk_shutdown to SHUTDOWN_MASK and orphans the
-socket, but does not set SOCK_DONE.
+> @@ -2437,22 +2443,16 @@ static bool mptcp_move_skbs(struct sock *sk)
+>  static unsigned int mptcp_inq_hint(const struct sock *sk)
+>  {
+>  	const struct mptcp_sock *msk =3D mptcp_sk(sk);
+> -	const struct sk_buff *skb;
+> +	u64 hint_val =3D mptcp_data_avail(msk);
+> =20
+> -	skb =3D skb_peek(&sk->sk_receive_queue);
+> -	if (skb) {
+> -		u64 hint_val =3D READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
+> +	if (hint_val >=3D INT_MAX)
+> +		return INT_MAX;
+> =20
+> -		if (hint_val >=3D INT_MAX)
+> -			return INT_MAX;
+> +	if (sock_flag(sk, SOCK_DONE) ||
+> +	    (READ_ONCE(msk->rcv_data_fin) && mptcp_data_fin(msk, NULL)))
+> +		hint_val +=3D 1;
+> =20
+> -		return (unsigned int)hint_val;
+> -	}
+> -
+> -	if (sock_flag(sk, SOCK_DONE))
+> -		return 1;
+> -
+> -	return 0;
+> +	return (unsigned int)hint_val;
+>  }
 
-Because SOCK_DONE is only set when a peer DATA_FIN or fallback FIN is
-received, this is not just removing a redundant check: on an empty receive
-queue after a local shutdown(SHUT_RD), on a closed or unconnected socket,
-or after an abortive MP_FASTCLOSE or fallback reset without a prior FIN,
-mptcp_inq_hint() now returns 0 instead of 1 (matching tcp_inq_hint()).
+[Severity: Medium]
+Can mptcp_inq_hint() add a spurious FIN byte when a fallback connection is
+closed by a TCP RST?
+
+On fallback, subflow_sched_work_if_closed() sets msk->rcv_data_fin whenever
+the subflow enters TCP_CLOSE, including after receiving a TCP RST without a
+prior FIN.  mptcp_check_data_fin() and __mptcp_subflow_error_report() both
+check sock_flag(ssk, SOCK_DONE) before setting SOCK_DONE on sk, and
+__mptcp_subflow_error_report() moves sk to TCP_CLOSE without clearing
+msk->rcv_data_fin:
+
+net/mptcp/protocol.c:mptcp_check_data_fin() {
+    ...
+		/* on fallback, also emulated after a reset: check for a FIN */
+		if (!__mptcp_check_fallback(msk) ||
+		    (msk->first && sock_flag(msk->first, SOCK_DONE)))
+			sock_set_flag(sk, SOCK_DONE);
+    ...
+}
+
+Because mptcp_inq_hint() checks msk->rcv_data_fin and mptcp_data_fin()
+directly without verifying the socket state or whether a fallback subflow
+actually received a FIN, TCP_CM_INQ (and mptcp_rcv_space_adjust()) will
+count an extra FIN byte that was never received.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1795863454.gi=
-t.tanggeliang@kylinos.cn?part=3D2
+t.tanggeliang@kylinos.cn?part=3D3
