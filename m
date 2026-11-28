@@ -1,52 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.248
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795824160;
-	b=A3FIpoc5aDqQC7HNi3Dst3DGlwPo1KJAP5I/dxHhPlAKeuTRyi80O0RGtlvBPMnMa2Z0
-	 OVw+JqQGYVb3t2ARIb9SIdhcbLscjv9/WReyJe2j3iIcTwtIk8ZqQXNq2scxwCBqCXfwZ
-	 hWd+LQGMmgFQqypSHveD0fKsc1qMYV8rwKLTeDpbuMIzBkfUbmWAuMb2h3tlIUclY2m5G
-	 vlSKdKxBo1c+SIsJHhTiJhuowtnNM82MbWhEmoIEu3sL2jUzABG5CxJrZzSUSN0SQ+4dB
-	 oT1E5Sm5RUv7PFq8BM/E8hXrNaRJBnlgy2MgT8ufoC3tmdtzHHmYWWhl0a5tu8KxgOA==
+	t=1795864111;
+	b=ZNXr6IIyqtqK6MBhMz/TFSYbaq0o+5G5+T6W+e7XkmRvkwaj8If8bA8AOhP1q7q3/G1a
+	 cvI0taMyh8W0cuDiNvunujy9H8/c3qaXLXfOrG0h7SGc1SLHbxwHH3TqqnCM3iYzgROgT
+	 DxM6p9QXUkvQ7AsZtHb5QUpZEfxhtWWeGDqnBEEVCRrHk+BZb1ZwTChbdD+tVQu3Nv6mM
+	 fmQk/A7BSg27WUH4aXdNISzRkvtsY/fIR3wlw+mFP9kLAafZHIE2vJ+Unje4PBG+gOOK7
+	 NOago6ZuKRd1/V7afLaUdWQUvtBoZZkF6i2FjjEULwP5mBzrzIoo2xKrFYKyppOhOZw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795824160;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:MIME-Version:Date:Content-Type:
-	 Content-Transfer-Encoding:From:Message-ID:TLS-Required:Subject:To:Cc:
-	 In-Reply-To:References;
-	bh=4ZLS6a32u2SsroRYbtW4gJwlixCmphvsqZgeXv5FA2w=;
-	b=xlarX+TkcT05d726ljqZwgIzYb4Kgxg/0ETfOi4tekeqGUkehSBCyyMmj01xLiQF85Up
-	 BuRJRx9Y3i3qMDLuLEQseoPgmZL5v0co1wmrROGjcbDs8uu8XcYHKpgEfG8Bptn84WdzS
-	 yd+BzJfA0PlM8mfPicc81mZVypSTIuCmrAIkiboLt2jSR/lugzND7DeW3/NG3EHTaSrkV
-	 ddKXMoVr215iSeYxDpF5RNgJ2NrAFminAHJvhle6iZ6vLRwD8kGsvdyCQbaGogwmbicjG
-	 5DE1bqn02ZrhgDCgwnmkCY6vrq/rqWZVKxBD2josDO//E66tCEYu655iiShWUx04Plg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795864111;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=+oOd0XpXY1VXoiyUnjStDGp6fHK+MxpnjKyz8n8u3R8=;
+	b=MrexuqMLYj0fJ0T3qco/eE//1apURg5By/uRzudBOP8kQ8SR8W09ZvI21NHnGnX0O32T
+	 m926/si+V6aovUa2oIPytJMC/r2qaPANJhHYy+JhzucnLDESqF8Sc4zgta3+QuzY/sYox
+	 /1q4e2t9SGqQFxYdy0tRmx+Gzj7psxWjgYZ3fLeKJrQgq1MJmoGLs8u7xH368UsSFKSsO
+	 cm+u3+zsWhbD5Ig28T5A8ZoNFEIV3gmfDMHxNKfngtt+qfXX384ZhxLYFMQ3PQ7s93+uB
+	 BqpIc5vtnea4GMrBHp4NEvsTjbWJP7LuH29kaBongJ7xzmjQTIZ/UOERKDFev1jkURw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b="YLK82nT/";
-	arc=none smtp.remote-ip=95.215.58.248
-Received: from mta1.migadu.com (out-248.mta1.migadu.com [95.215.58.248])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jaBK1pm+;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4335606A31C
-	for <mptcp@lists.linux.dev>; Sat, 28 Nov 2026 00:02:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D4335606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B467606A321
+	for <mptcp@lists.linux.dev>; Sat, 28 Nov 2026 11:08:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=YLK82nT/
-X-Envelope-To: mptcp@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=/suaZrbhY33p54vbc3ZqMcQPDilQeSKhEa+pO35DDfU=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795824156; v=1; x=1796428956;
- b=YLK82nT/IFLWAuOOxJc81HEj+gAznVwamjVFg4M26Pnxme/0dcbUCOYPS0Tkt+AMGaLl9cwz
- sJJVzkvSwwdpuwdGAWz5N3upl8plku8594f3atr5KUj59KxXFbOLFDn/6YQAyAmx7gtT2z5YPzN
- hpcvIur9345SUFsjS/4tNySk=
-X-Envelope-To: mptcp@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id caa90b19f0d4129a;
-	Sat, 28 Nov 2026 00:02:36 +0000
-X-Mizu-Trace-ID: caa90b19f0d4129a
-X-Migadu-Flow: FLOW_OUT
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jaBK1pm+
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C4981F00898;
+	Sat, 28 Nov 2026 11:08:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795864111;
+	bh=+oOd0XpXY1VXoiyUnjStDGp6fHK+MxpnjKyz8n8u3R8=;
+	h=From:To:Cc:Subject:Date;
+	b=jaBK1pm+T/PSLSh0dj7wjglFv/Fco1uVdT6iWLD/jX/oyxQ/Yj2cHl21JC3MN2ZO0
+	 HT5El6216vVID1e6emmGBpzNyyyyu2/h/kHAdR4SFTAFUWNqNojBCtqglZZt86qQxZ
+	 BG9KOnjwk0Sr0k/TWCqpeiPOq1Lj1tqlfbB/0Azx3J5tMgksShLgFktoF5ONe2U13t
+	 yI5QIMsw8H75Q07SUVWJy4Dp+FbWThj+F7SdBsXZRHtKvFby4as3t5VECkzOlcVeW1
+	 4lycCmNxGivT44oEzn8vIiLlghs50aZv2AMQKJ7UrLC23FlH82qBEGQCUx6GjkHU3R
+	 FxpP4U6WITfJQ==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-net v4 0/4] mptcp: fixes for SIOCINQ
+Date: Sat, 28 Nov 2026 19:08:02 +0800
+Message-ID: <cover.1795863454.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.55.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Post: <mailto:mptcp@lists.linux.dev>
@@ -56,137 +55,65 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:mptcp+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Date: Sat, 28 Nov 2026 00:02:32 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-From: gang.yan@linux.dev
-Message-ID: <46df7273bf182ac9e1666c706d3f56d3af8d0b59@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH mptcp-net v10 1/2] mptcp: pm: in-kernel: fullmesh: skip
- closed subflows
-To: "Abdul Wasey" <w453y.me@gmail.com>, mptcp@lists.linux.dev
-Cc: "Matthieu Baerts" <matttbe@kernel.org>, "Mat Martineau"
- <martineau@kernel.org>, "Geliang Tang" <geliang@kernel.org>, "Paolo
- Abeni" <pabeni@redhat.com>, "Mohit P. Tahiliani" <tahiliani@nitk.edu.in>,
- stable@vger.kernel.org
-In-Reply-To: <20261127213756.4154872-2-w453y.me@gmail.com>
-References: <20261127213756.4154872-1-w453y.me@gmail.com>
- <20261127213756.4154872-2-w453y.me@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-November 28, 2026 at 5:37 AM, "Abdul Wasey" <w453y.me@gmail.com mailto:w4=
-53y.me@gmail.com?to=3D%22Abdul%20Wasey%22%20%3Cw453y.me%40gmail.com%3E > =
-wrote:
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
+v4:
+ - drop patch 1 "handle ack_seq advancing past rcv_data_fin_seq": revert
+   '!before64()' back to '==' in mptcp_pending_data_fin(), the OFO queue
+   edge case is not a real issue
+ - add patch 2 "use SOCK_DONE in mptcp_inq_hint": replace the
+   TCP_CLOSE/RCV_SHUTDOWN check with sock_flag(sk, SOCK_DONE), aligning
+   with tcp_inq_hint()
+ - patch 3: use sock_flag(sk, SOCK_DONE) to add FIN byte instead of
+   checking TCP_CLOSE/RCV_SHUTDOWN and rcv_fastclose, simplifying the
+   condition.
 
->=20
->=20With fullmesh endpoints, if the endpoint used by the initial subflow =
-is
-> removed and then added back, no new subflow is created from it: the
-> connection never uses this local address again.
->=20
->=20The initial subflow is kept in the conn_list once closed. If it was
-> still established when closed, it keeps the local ID 0, which is also
-> the ID used by the re-added endpoint, and
-> fill_remote_addresses_fullmesh() then marks its remote ID as
-> unavailable. If it was already in TCP_CLOSE, e.g. after a reset, it is
-> disconnected and its context is reset: the 'closing' flag and the remot=
-e
-> ID are cleared, and its destination port is zeroed. It is then picked a=
-s
-> a remote address, with the port 0 and the ID 0, which also marks the
-> remote ID 0 as unavailable. In both cases, when the peer has a single
-> address, all subflows use the remote ID 0, and no valid remote address
-> is left.
->=20
->=20Skip the subflows being closed or in TCP_CLOSE state, both when looki=
-ng
-> for the remote IDs already in use and when picking the remote addresses=
-.
-> __mptcp_subflow_active() cannot be used here: subflows still being
-> established have to keep their remote ID marked as in use, to avoid
-> creating duplicated subflows.
->=20
->=20When no subflow is left to take the remote ID 0 address from, e.g. wh=
-en
-> the initial subflow was the only one, use fill_remote_addr(), as for
-> non-fullmesh endpoints: it takes the remote address of the MPTCP socket=
-.
-> Before, re-adding the initial endpoint created no subflow in this case
-> either, and another endpoint only worked by picking the closed initial
-> subflow.
->=20
->=20Without the fullmesh flag, the remote address is taken from the MPTCP
-> socket, so this issue is specific to fullmesh endpoints.
->=20
->=20Fixes: 045e9d812868 ("mptcp: fix duplicate subflow creation")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Abdul Wasey <w453y.me@gmail.com>
-> ---
->  net/mptcp/pm_kernel.c | 21 ++++++++++++++++++++-
->  1 file changed, 20 insertions(+), 1 deletion(-)
->=20
->=20diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-> index 88610aed45a2..f1e1576fb375 100644
-> --- a/net/mptcp/pm_kernel.c
-> +++ b/net/mptcp/pm_kernel.c
-> @@ -199,6 +199,13 @@ fill_remote_addr(struct mptcp_sock *msk, struct mp=
-tcp_addr_info *local,
->  return 1;
->  }
->=20=20
->=20+static bool mptcp_subflow_is_closed(struct mptcp_subflow_context *su=
-bflow)
-> +{
-> + struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-> +
-> + return subflow->closing || inet_sk_state_load(ssk) =3D=3D TCP_CLOSE;
-> +}
-> +
->  static unsigned int
->  fill_remote_addresses_fullmesh(struct mptcp_sock *msk,
->  struct mptcp_addr_info *local,
-> @@ -216,11 +223,18 @@ fill_remote_addresses_fullmesh(struct mptcp_sock =
-*msk,
->  * already created by incoming ADD_ADDR
->  */
->  bitmap_zero(unavail_id, MPTCP_PM_MAX_ADDR_ID + 1);
-> - mptcp_for_each_subflow(msk, subflow)
-> + mptcp_for_each_subflow(msk, subflow) {
-> + if (mptcp_subflow_is_closed(subflow))
-> + continue;
-> +
->  if (READ_ONCE(subflow->local_id) =3D=3D local->id)
->  __set_bit(subflow->remote_id, unavail_id);
-> + }
->=20=20
->=20 mptcp_for_each_subflow(msk, subflow) {
-> + if (mptcp_subflow_is_closed(subflow))
-> + continue;
-> +
->  ssk =3D mptcp_subflow_tcp_sock(subflow);
->  mptcp_remote_address((struct sock_common *)ssk, &addrs[i]);
->  addrs[i].id =3D READ_ONCE(subflow->remote_id);
-> @@ -243,6 +257,11 @@ fill_remote_addresses_fullmesh(struct mptcp_sock *=
-msk,
->  break;
->  }
->=20=20
+v3:
+ - patch 3: fix Sashiko AI review comment
+   avoid comparing ack_seq with unset rcv_data_fin_seq (0)
+   check TCP_CLOSE/RCV_SHUTDOWN directly, only call mptcp_data_fin() when
+   rcv_data_fin is true, exclude MP_FASTCLOSE from +1
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1795396910.git.tanggeliang@kylinos.cn/
 
-Hi=20Abdul,
+v2:
+ - patch 3: drop mptcp_data_fin_seq(), reuse mptcp_data_fin()
+   - u64 return couldn't distinguish "no DATA_FIN" from "DATA_FIN at seq 0"
+   - mptcp_inq_hint() checks rcv_data_fin/TCP_CLOSE/RCV_SHUTDOWN first
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1795348666.git.tanggeliang@kylinos.cn/
 
-Thanks for the new version.
+v1:
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1795318567.git.tanggeliang@kylinos.cn/
 
-Reviewed-by: Gang Yan <yangang@kylinos.cn>
+The goal of this series is to make MPTCP's SIOCINQ fully consistent with
+TCP's: both report the number of readable data bytes, excluding the FIN
+byte.
 
+Patch 1 fixes mptcp_pending_data_fin() to use >= instead of == so that
+DATA_FIN is processed when ack_seq advances past rcv_data_fin_seq due to
+OFO queue processing.
 
-> + /* If the initial subflow is closed, use fill_remote_addr */
-> + if (!test_bit(0, unavail_id) && i < addrs_size &&
-> + msk->pm.extra_subflows < limit_extra_subflows)
-> + i +=3D fill_remote_addr(msk, local, &addrs[i]);
-> +
->  return i;
->  }
->=20=20
->=20--=20
->=202.43.0
->
+Patch 2 adds missing smp_wmb/smp_rmb barriers for rcv_data_fin_seq on
+weakly-ordered architectures.
+
+Patch 3 fixes mptcp_inq_hint() INT_MAX overflow on passive TFO by using
+mptcp_data_avail() instead of ack_seq minus map_seq, and reuses
+mptcp_data_fin() to guard the FIN byte (+1).
+
+Patch 4 adds mptcp_inq() that excludes the FIN byte, matching TCP's
+tcp_inq() behavior, and switches SIOCINQ to it.
+
+Geliang Tang (4):
+  mptcp: add missing memory barriers for rcv_data_fin_seq
+  mptcp: use SOCK_DONE in mptcp_inq_hint
+  mptcp: fix TFO SIOCINQ overflow in mptcp_inq_hint
+  mptcp: add mptcp_inq() for SIOCINQ
+
+ net/mptcp/options.c  |  1 +
+ net/mptcp/protocol.c | 62 ++++++++++++++++++++++++++++----------------
+ 2 files changed, 41 insertions(+), 22 deletions(-)
+
+-- 
+2.55.0
+
